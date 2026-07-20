@@ -170,6 +170,33 @@ export const useIntentionPoolStore = create<IntentionPoolState>((set, get) => ({
       )
       await dataBridge.forward(envelope)
       withBroadcast(EVENT_NAMES.POOL_CHANGED, { action: 'add', pool: POOL, symbol: normalizedSymbol })
+
+      // 自动流转到研究池（意向池 → 研究池，通过 updateStock 更新 pool 字段）
+      try {
+        const transitionEnvelope = EnvelopeFactory.create(
+          {
+            source: MODULE_ID.pool,
+            target: ENVELOPE_TARGET.db,
+            action: ENVELOPE_ACTION.updateStock,
+            traceId: `pool-intention-to-research-${nanoid(8)}-${normalizedSymbol}`,
+          },
+          {
+            symbol: normalizedSymbol,
+            pool: 'research' as PoolType,
+            researchStatus: 'candidate' as IntentionStatus,
+          },
+        )
+        await dataBridge.forward(transitionEnvelope)
+        withBroadcast(EVENT_NAMES.POOL_CHANGED, { action: 'transition', pool: 'research', symbol: normalizedSymbol })
+        logger.info(`[intentionPoolStore] 自动流转到研究池: ${normalizedSymbol}`)
+      } catch (researchErr) {
+        // 研究池流转失败不影响意向池录入成功
+        logger.warn('[intentionPoolStore] 自动流转到研究池失败', {
+          symbol: normalizedSymbol,
+          error: researchErr instanceof Error ? researchErr.message : String(researchErr),
+        })
+      }
+
       return true
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
@@ -416,4 +443,12 @@ function destroyIntentionPoolStoreSubscriptions(): void {
     _debounceTimer = null
   }
   logger.info('[intentionPoolStore] 订阅已销毁')
+}
+
+/**
+ * 测试用：重置订阅状态
+ */
+export function _resetIntentionPoolStoreSubscriptionsForTest(): void {
+  destroyIntentionPoolStoreSubscriptions()
+  logger.info('[intentionPoolStore] 订阅已重置（测试）')
 }

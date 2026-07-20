@@ -25,6 +25,8 @@ export interface DataSourceConfig {
   interval: number
   /** API 端点（REST 数据源时使用） */
   endpoint?: string
+  /** 目标标的代码（个股维度采集时使用，如 600519.SH） */
+  symbol?: string
   /** 额外请求参数 */
   params?: Record<string, unknown>
   /** 是否启用 */
@@ -52,6 +54,14 @@ export interface RawMarketData {
     | 'chatHistory'
     | 'hotSectors'
     | 'valuePit'
+    | 'kline'
+    | 'news'
+    | 'reports'
+    | 'stockProfile'
+    | 'stockComparison'
+    | 'chipDistribution'
+    | 'competitors'
+    | 'indexCorrelation'
   /** 原始 payload */
   payload: unknown
   /** 数据来源标识 */

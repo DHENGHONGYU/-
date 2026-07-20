@@ -285,6 +285,43 @@ export class V6Database {
     }
   }
 
+  /**
+   * 按索引批量删除匹配记录（级联删除使用）
+   *
+   * @param storeName 目标 store 名
+   * @param indexName 索引名
+   * @param value 索引值
+   * @returns 实际删除的记录条数
+   */
+  async deleteByIndex(storeName: string, indexName: string, value: string): Promise<number> {
+    try {
+      const db = this.ensureDB()
+      logger.debug(`[DB] deleteByIndex: store="${storeName}", index="${indexName}", value="${value}"`)
+      return await new Promise<number>((resolve, reject) => {
+        const tx = db.transaction(storeName, 'readwrite')
+        const store = tx.objectStore(storeName)
+        const index = store.index(indexName)
+        const request = index.getAllKeys(value)
+        let deletedCount = 0
+        request.onsuccess = () => {
+          const keys = request.result
+          deletedCount = keys.length
+          for (const key of keys) {
+            store.delete(key)
+          }
+        }
+        request.onerror = () => reject(request.error instanceof Error ? request.error : new Error(String(request.error)))
+        tx.oncomplete = () => resolve(deletedCount)
+        tx.onerror = () => reject(tx.error instanceof Error ? tx.error : new Error(String(tx.error)))
+        tx.onabort = () => reject(new Error('[DB] deleteByIndex transaction aborted'))
+      })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error(`[DB] deleteByIndex failed: store="${storeName}", index="${indexName}", value="${value}"`, { error: message })
+      throw err
+    }
+  }
+
   async reset(): Promise<void> {
     try {
       this.ensureDB()

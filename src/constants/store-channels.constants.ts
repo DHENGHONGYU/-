@@ -66,6 +66,9 @@ export const EVENT_NAMES = {
   // ---- 数据采集向导事件 ----
   /** 采集向导状态变更（collectionWizardStore 写操作触发） */
   COLLECTION_WIZARD_CHANGED: 'collection_wizard:changed',
+  // ---- 投研闭环状态事件 ----
+  /** 闭环阶段状态变更（loopStatusStore 写操作触发） */
+  LOOP_STATUS_CHANGED: 'loop_status:changed',
 } as const
 
 export type EventName = (typeof EVENT_NAMES)[keyof typeof EVENT_NAMES]

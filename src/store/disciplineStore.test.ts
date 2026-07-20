@@ -75,6 +75,8 @@ vi.mock('@/config/dbConfig', () => ({
 // ============================================================
 
 import { useDisciplineStore, initDisciplineStoreSubscriptions } from './disciplineStore'
+import { eventBus } from '@/lib/eventBus'
+import { EVENT_NAMES } from '@/constants/store-channels.constants'
 
 // ============================================================
 // Helpers
@@ -419,6 +421,54 @@ describe('useDisciplineStore', () => {
     expect(state.error).toBeNull()
     expect(state.isRefreshing).toBe(false)
     expect(state.lastUpdated).toBe(0)
+  })
+
+  // ============================================================
+  // DISCIPLINE_CHANGED 广播（LoopBanner 复盘阶段脉搏）
+  // ============================================================
+
+  it('recalculate: 成功完成时广播 DISCIPLINE_CHANGED', async () => {
+    const emitSpy = vi.spyOn(eventBus, 'emit')
+    mockGenerateReviewAsync.mockResolvedValue(createMockReport())
+    mockClassifyErrors.mockReturnValue(createMockClassification())
+
+    await useDisciplineStore.getState().recalculate([createMockOrder()])
+
+    expect(emitSpy).toHaveBeenCalledWith(
+      EVENT_NAMES.DISCIPLINE_CHANGED,
+      expect.objectContaining({ action: 'recalculate' }),
+    )
+    emitSpy.mockRestore()
+  })
+
+  it('refresh: 有持久化记录时广播 DISCIPLINE_CHANGED，无记录不广播', async () => {
+    const report = createMockReport()
+    mockQuery.mockResolvedValue({
+      success: true,
+      data: {
+        id: 'latest',
+        generatedAt: 12345,
+        report,
+        tradeErrors: [],
+        disciplineScore: 80,
+        skillRoadmap: [],
+        psychologicalProfile: report.errorAnalysis.psychologicalProfile,
+      },
+    })
+
+    const emitSpy = vi.spyOn(eventBus, 'emit')
+    await useDisciplineStore.getState().refresh()
+    expect(emitSpy).toHaveBeenCalledWith(
+      EVENT_NAMES.DISCIPLINE_CHANGED,
+      expect.objectContaining({ action: 'refresh', generatedAt: 12345 }),
+    )
+
+    // 无持久化记录：不广播
+    emitSpy.mockClear()
+    mockQuery.mockResolvedValue({ success: true, data: null })
+    await useDisciplineStore.getState().refresh()
+    expect(emitSpy).not.toHaveBeenCalledWith(EVENT_NAMES.DISCIPLINE_CHANGED, expect.anything())
+    emitSpy.mockRestore()
   })
 })
 

@@ -119,3 +119,43 @@ export interface AnalysisRunResult {
   data?: AnalysisResult
   error?: string
 }
+
+/**
+ * 单只股票的资料摘要（profileIntegrationService.gatherProfileSummary 产物，
+ * 供 LLM 分析上下文使用）
+ *
+ * 注：本类型定义于 types/ 层（零依赖约束），域/情绪等枚举以基础类型表达，
+ * 实际取值见 @/data/types/types.profile 的 ProfileDomain / SentimentLabel。
+ */
+export interface ProfileDataSummary {
+  /** 资料总数 */
+  totalItems: number
+  /** 各域资料数量（key 为 D1-D8 域标识） */
+  domainCounts: Record<string, number>
+  /** 高质量资料 Top N */
+  topItems: Array<{
+    /** 所属域（D1-D8） */
+    domain: string
+    /** 标题 */
+    title: string
+    /** 摘要（截断至 150 字） */
+    summary: string
+    /** 来源 */
+    source: string
+    /** 质量分（0-100） */
+    qualityScore?: number
+    /** 情绪标签 */
+    sentiment: string
+  }>
+  /** 证据摘要（按评分层分组，无证据时为 undefined） */
+  evidenceSummary?: Array<{
+    /** 评分层 ID */
+    layerId: string
+    /** 该层证据数量 */
+    evidenceCount: number
+    /** 正面证据描述（截断至 80 字） */
+    topPositive: string[]
+    /** 负面证据描述（截断至 80 字） */
+    topNegative: string[]
+  }>
+}

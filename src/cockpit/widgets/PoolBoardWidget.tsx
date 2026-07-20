@@ -1,20 +1,28 @@
-import React, { useState } from 'react'
-import { Plus, ChevronLeft, ChevronRight } from 'lucide-react'
+/**
+ * @fileoverview 驾驶舱 · 研究池管理 Widget（增强版）
+ *
+ * 整合完整的研究池管理功能：
+ * - 看板/列表视图切换
+ * - 状态流转（candidate → screened → deepDive → watching → archived）
+ * - 分组筛选与批量操作
+ * - 数据质量筛选
+ *
+ * 注：研究候选池总览 + 采集进度已迁移至输入舱 PoolBoardPage。
+ *
+ * @module cockpit/widgets/PoolBoardWidget
+ * @created 2026-07-19
+ */
+
+import React from 'react'
 import { WidgetStateShell } from './components/WidgetStateShell'
 import { Skeleton } from '@/components/molecules/states'
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/atoms/Table'
-import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import type { WidgetConfig, MarketData, PoolBoardItem } from '@/types/modules/widget.types'
-import { getStockColorClass } from '@/constants/theme.tokens'
+import { PoolBoard } from '@/components/organisms/pool/PoolBoard'
+import { usePoolBoard } from '@/hooks/usePoolBoard'
+import type { WidgetConfig, MarketData } from '@/types/modules/widget.types'
+import { twText, twBg, DARK } from '@/constants/theme.tokens'
+import { cn } from '@/lib/utils'
 
 interface PoolBoardWidgetProps {
   config: WidgetConfig
@@ -22,140 +30,154 @@ interface PoolBoardWidgetProps {
 }
 
 /**
- * 获取涨跌幅颜色（A 股标准：红涨绿跌）
- * @remarks 颜色必须从 STOCK_COLOR_TOKENS 令牌系统读取，禁止硬编码
+ * 研究池管理 Widget
+ *
+ * 整合看板/列表视图、状态流转、分组筛选、批量操作。
  */
-function getChangeColorClass(changePercent: number): string {
-  return getStockColorClass(changePercent)
-}
+export default function PoolBoardWidget({ config }: PoolBoardWidgetProps): React.JSX.Element {
+  const board = usePoolBoard()
 
-/**
- * 股票池看板 Widget
- * @description 展示股票池列表，支持分页与添加股票（Mock），数据来自 MarketData.poolBoard
- * @remarks 真实数据替换：将 endpoint 切换为证券行情 API（如 /api/stock/pool）
- */
-export default function PoolBoardWidget({ config, data }: PoolBoardWidgetProps): React.JSX.Element {
-  const { data: marketData, loadingMap, errorMap, refreshWidget } = useMarketData()
-  const sourceData = data ?? marketData
-  const { items, total, page: initialPage, pageSize } = sourceData.poolBoard
-
-  const [page, setPage] = useState(initialPage)
-  const totalPages = Math.max(1, Math.ceil(total / pageSize))
-
-  const loading = !!loadingMap[config.instanceId]
-  const error = errorMap[config.instanceId] ?? null
-  const visualState = error
+  const visualState = board.error
     ? 'error'
-    : loading
+    : board.loading
       ? 'loading'
-      : items.length === 0
+      : board.filteredItems.length === 0
         ? 'empty'
         : 'ready'
-
-  const handleAddItem = () => {
-    // TODO[阻塞·UI]: 需弹窗收集 symbol 后调 inputService.addStock；Widget 不内嵌弹窗，待 onAddItem 回调或全局弹窗方案。关联 #7 接真实数据源。
-    // 当前 Mock 阶段为占位交互，点击后无实际后端调用
-  }
-
-  const formatChange = (changePercent: number) => {
-    const sign = changePercent > 0 ? '+' : ''
-    return `${sign}${changePercent.toFixed(2)}%`
-  }
 
   return (
     <WidgetStateShell
       title={config.title}
       visualState={visualState}
-      error={error}
-      onRetry={() => refreshWidget(config.instanceId)}
-      loadingLabel="加载股票池…"
-      emptyTitle="暂无股票数据"
-      emptyDescription="当前股票池为空，可点击右上角添加股票"
+      error={board.error}
+      onRetry={() => void board.refresh()}
+      loadingLabel="加载研究池…"
+      emptyTitle="暂无研究池标的"
+      emptyDescription="请先通过批量导入功能添加股票到研究候选池"
       skeleton={
         <div className="space-y-3">
+          <div className="flex gap-2">
+            <Skeleton variant="text" className="h-8 w-24" />
+            <Skeleton variant="text" className="h-8 w-32" />
+          </div>
           <div className="rounded-md border">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex items-center gap-4 p-3 border-b last:border-b-0">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="flex items-center gap-4 border-b p-3 last:border-b-0">
                 <Skeleton variant="text" className="h-4 w-20" />
                 <Skeleton variant="text" className="h-4 w-24" />
                 <Skeleton variant="text" className="h-4 flex-1" />
-                <Skeleton variant="text" className="h-4 w-16" />
               </div>
             ))}
           </div>
         </div>
       }
       titleAction={
-        <Button size="sm" onClick={handleAddItem}>
-          <Plus className="h-4 w-4 mr-1" />
-          添加股票
-        </Button>
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className={cn('text-[10px]', twText('stone', 500))}>
+            {board.items.length} 只
+          </Badge>
+        </div>
       }
       className="h-full flex flex-col"
     >
       <div className="flex-1 overflow-auto flex flex-col">
-        <div className="rounded-md border flex-1 overflow-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-24">股票代码</TableHead>
-                <TableHead>名称</TableHead>
-                <TableHead className="text-right">最新价</TableHead>
-                <TableHead className="text-right">涨跌幅</TableHead>
-                <TableHead className="text-right">成交额</TableHead>
-                <TableHead className="text-right">换手率</TableHead>
-                <TableHead>状态</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {items.map((item: PoolBoardItem) => (
-                <TableRow key={item.code}>
-                  <TableCell className="font-medium">{item.code}</TableCell>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell className="text-right">{item.price.toFixed(2)}</TableCell>
-                  <TableCell className={`text-right ${getChangeColorClass(item.changePercent)}`}>
-                    {formatChange(item.changePercent)}
-                  </TableCell>
-                  <TableCell className="text-right">{item.turnover}</TableCell>
-                  <TableCell className="text-right">{item.turnoverRate}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <div className={`h-2 w-8 rounded-full ${item.statusColor}`} />
-                      <Badge variant="outline" className="text-xs">
-                        {item.statusLabel}
-                      </Badge>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        {/* ── 工具栏 ── */}
+        <div className="mb-2 flex flex-wrap items-center gap-2">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => void board.refresh()}
+            disabled={board.loading}
+          >
+            {board.loading ? '刷新中...' : '刷新'}
+          </Button>
+
+          {/* 视图切换 */}
+          <div className={cn('flex rounded-lg p-0.5', twBg('stone', 100), DARK.bgNeutral800)}>
+            <button
+              className={cn(
+                'rounded-md px-2 py-1 text-xs font-medium transition-all',
+                board.viewMode === 'kanban'
+                  ? [twBg('white'), 'shadow-sm', DARK.bgNeutral700, twText('stone', 800), DARK.textNeutral100]
+                  : [twText('stone', 500), DARK.textNeutral400],
+              )}
+              onClick={() => board.setViewMode('kanban')}
+            >
+              看板
+            </button>
+            <button
+              className={cn(
+                'rounded-md px-2 py-1 text-xs font-medium transition-all',
+                board.viewMode === 'list'
+                  ? [twBg('white'), 'shadow-sm', DARK.bgNeutral700, twText('stone', 800), DARK.textNeutral100]
+                  : [twText('stone', 500), DARK.textNeutral400],
+              )}
+              onClick={() => board.setViewMode('list')}
+            >
+              列表
+            </button>
+          </div>
+
+          {/* 分组筛选 */}
+          <select
+            className={cn('h-7 rounded-md border bg-background px-2 text-xs', twText('stone', 600), DARK.borderNeutral700, DARK.bgNeutral800, DARK.textNeutral200)}
+            value={board.selectedGroup || board.ALL_GROUPS_VALUE}
+            onChange={(e) =>
+              board.setSelectedGroup(
+                e.target.value === board.ALL_GROUPS_VALUE ? '' : e.target.value,
+              )
+            }
+            aria-label="分组筛选"
+          >
+            <option value={board.ALL_GROUPS_VALUE}>全部组</option>
+            {board.allGroups.map((g) => (
+              <option key={g} value={g}>{g}</option>
+            ))}
+          </select>
+
+          {/* 质量筛选 */}
+          <select
+            className={cn('h-7 rounded-md border bg-background px-2 text-xs', twText('stone', 600), DARK.borderNeutral700, DARK.bgNeutral800, DARK.textNeutral200)}
+            value={board.qualityFilter}
+            onChange={(e) =>
+              board.setQualityFilter(e.target.value as typeof board.qualityFilter)
+            }
+            aria-label="数据质量筛选"
+          >
+            <option value="all">全部质量</option>
+            <option value="missingBasic">缺基础数据</option>
+            <option value="missingKline">缺行情</option>
+            <option value="missingFinance">缺财务</option>
+          </select>
+
+          {/* 批量操作 */}
+          {board.selectedSymbols.length > 0 && (
+            <>
+              <span className={cn('text-xs', twText('stone', 500))}>
+                已选 {board.selectedSymbols.length}
+              </span>
+              <Button size="sm" variant="secondary" onClick={() => void board.handleBulkArchive()}>
+                归档
+              </Button>
+              <Button size="sm" variant="ghost" onClick={() => board.setSelectedSymbols([])}>
+                清除
+              </Button>
+            </>
+          )}
         </div>
 
-        {/* 分页 */}
-        <div className="flex items-center justify-between mt-3">
-          <span className="text-xs text-muted-foreground">
-            共 {total} 条，第 {page} / {totalPages} 页
-          </span>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page <= 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page >= totalPages}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
+        {/* ── 看板/列表 ── */}
+        <PoolBoard
+          items={board.filteredItems}
+          viewMode={board.viewMode}
+          selectedSymbols={board.selectedSymbols}
+          allGroups={board.allGroups}
+          onSelectToggle={board.handleSelectToggle}
+          onTransition={(symbol, status) => void board.handleTransition(symbol, status)}
+          onChangeGroup={(symbol, group) => void board.handleChangeGroup(symbol, group)}
+          onRefreshKline={(item) => void board.handleRefreshKline(item)}
+          onAnalyze={board.handleAnalyze}
+        />
       </div>
     </WidgetStateShell>
   )

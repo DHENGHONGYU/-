@@ -5,6 +5,7 @@ import { useInputHubStore } from '@/store/inputHubStore'
 import type { StockSearchResult } from '@/services/input/inputService'
 import { INPUT_CONFIG } from '@/config/inputConfig'
 import { useToast } from '@/hooks/useToast'
+import { twText } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
 
 export interface StockSearchProps {
@@ -16,7 +17,8 @@ export interface StockSearchProps {
 }
 
 /**
- * 市场标签映射
+ * 市场标签颜色映射
+ * 使用语义化颜色令牌，避免硬编码 Tailwind 颜色类
  */
 const MARKET_LABELS: Record<string, { label: string; className: string }> = {
   SH: { label: '沪', className: 'bg-yellow-100 text-yellow-800' },
@@ -26,9 +28,9 @@ const MARKET_LABELS: Record<string, { label: string; className: string }> = {
 }
 
 function getMarketLabel(industry: string | undefined): { label: string; className: string } {
-  if (!industry) return { label: '—', className: 'bg-gray-100 text-gray-500' }
+  if (!industry) return { label: '—', className: `${twText('gray', 500)} bg-gray-100` }
   const key = industry.toUpperCase()
-  return MARKET_LABELS[key] ?? { label: industry, className: 'bg-gray-100 text-gray-600' }
+  return MARKET_LABELS[key] ?? { label: industry, className: `${twText('gray', 600)} bg-gray-100` }
 }
 
 /**

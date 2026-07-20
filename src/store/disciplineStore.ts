@@ -240,6 +240,12 @@ export const useDisciplineStore = create<DisciplineState>()(
           disciplineScore: derived.disciplineScore,
           totalTrades: report.summary.totalTrades,
         })
+        // 复盘脉搏广播：LoopBanner 等下游依赖 DISCIPLINE_CHANGED 感知复盘阶段活性
+        withBroadcast(EVENT_NAMES.DISCIPLINE_CHANGED, {
+          action: 'recalculate',
+          disciplineScore: derived.disciplineScore,
+          totalTrades: report.summary.totalTrades,
+        })
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err)
         logger.error('[disciplineStore] recalculate 失败，回滚到旧快照', { error: message })
@@ -324,6 +330,12 @@ export const useDisciplineStore = create<DisciplineState>()(
         })
 
         logger.info('[disciplineStore] refresh 完成', {
+          disciplineScore: record.disciplineScore,
+          generatedAt: record.generatedAt,
+        })
+        // 复盘脉搏广播：仅在有持久化记录恢复时广播；无记录/失败路径不广播
+        withBroadcast(EVENT_NAMES.DISCIPLINE_CHANGED, {
+          action: 'refresh',
           disciplineScore: record.disciplineScore,
           generatedAt: record.generatedAt,
         })

@@ -7,11 +7,16 @@ const baseArticle: NewsArticle = {
   id: 'a1',
   title: '上证指数突破 3500 点整数关口',
   content: '今日沪深两市震荡上行，上证指数收盘站上 3500 点，市场情绪明显回暖，板块轮动加快。',
+  url: 'https://example.com/news/a1',
   source: '财经早知道',
   publishTime: '2026-07-19T09:30:00.000Z',
+  fetchTime: '2026-07-19T09:35:00.000Z',
   category: '宏观',
   sentiment: 'positive',
+  sentimentConfidence: 0.9,
   relatedStocks: ['600519', '000001'],
+  keywords: ['上证指数', '3500点'],
+  hash: 'hash-a1',
 }
 
 describe('NewsCard 独立复检（验收闸门一档实跑）', () => {

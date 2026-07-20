@@ -42,6 +42,8 @@ export interface BulkImportResult {
   total: number
   success: number
   failed: number
+  /** 跳过数（已在意向池中，非失败） */
+  skipped: number
   errors: Array<{ row: number; raw: string; error: string }>
   stocks: Stock[]
 }

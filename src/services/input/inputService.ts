@@ -9,6 +9,8 @@ import { INPUT_CONFIG } from '@/config/inputConfig'
 import type { DataLayerResult, Stock } from '@/data/types'
 import { fetchBasicDataUseCase, fetchKlineDataUseCase } from '@/services/useCase/fetcherOrchestrator.useCase'
 import { getLogger } from '@/lib/logger'
+import { withBroadcast } from '@/lib/withBroadcast'
+import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { searchFullMarket } from '@/services/stock/FullMarketStockService'
 
 import { nanoid } from 'nanoid'
@@ -80,7 +82,8 @@ async function fetchBasicIfNeeded(
   stock: Stock,
   options: AddStockOptions,
 ): Promise<{ stock: Stock; warning?: string }> {
-  if (!options.fetchBasicAfterAdd) return { stock }
+  // 默认自动采集基础数据，除非显式设为 false
+  if (options.fetchBasicAfterAdd === false) return { stock }
   logger.info('[inputService] 拉取基础数据', { symbol: stock.symbol })
   const fetchResult = await fetchBasicDataUseCase({ symbol: stock.symbol })
   if (fetchResult.success && fetchResult.data) {
@@ -168,6 +171,40 @@ export async function addStock(
     logger.info('[inputService] 写入数据库', { symbol, envelopeAction: ENVELOPE_ACTION.insertStock })
     await dataBridge.forward(envelope)
     logger.info('[inputService] 数据库写入成功', { symbol })
+
+    // 广播 POOL_CHANGED 事件，通知各池模块刷新
+    await withBroadcast(EVENT_NAMES.POOL_CHANGED, {
+      action: 'add',
+      pool: stock.pool,
+      symbol,
+    })
+
+    // 自动流转到研究池（意向池 → 研究池，通过 updateStock 更新 pool 字段）
+    if (stock.pool === 'intention') {
+      try {
+        const transitionEnvelope = EnvelopeFactory.create(
+          {
+            source: MODULE_ID.pool,
+            target: ENVELOPE_TARGET.db,
+            action: ENVELOPE_ACTION.updateStock,
+            traceId: `input-intention-to-research-${nanoid(8)}-${symbol}`,
+          },
+          {
+            symbol,
+            pool: 'research' as Stock['pool'],
+            researchStatus: 'candidate' as Stock['researchStatus'],
+          },
+        )
+        await dataBridge.forward(transitionEnvelope)
+        await withBroadcast(EVENT_NAMES.POOL_CHANGED, { action: 'transition', pool: 'research', symbol })
+        logger.info('[inputService] 自动流转到研究池成功', { symbol })
+      } catch (researchErr) {
+        logger.warn('[inputService] 自动流转到研究池失败（不影响意向池录入）', {
+          symbol,
+          error: researchErr instanceof Error ? researchErr.message : String(researchErr),
+        })
+      }
+    }
 
     const basic = await fetchBasicIfNeeded(stock, options)
     stock = basic.stock

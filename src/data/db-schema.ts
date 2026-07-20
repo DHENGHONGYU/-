@@ -510,4 +510,52 @@ export function createSchema(
     ],
   })
 
+  // ── profileItems：八域资料条目（v32 新增，ADR-010） ──
+  ensureStore(db, STORE_NAME.profileItems, logger, {
+    storeOptions: { keyPath: 'id' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-symbol', keyPath: 'symbol' },
+      { name: 'by-symbol-domain-quality', keyPath: ['symbol', 'domain', 'qualityScore'] },
+      { name: 'by-symbol-type', keyPath: ['symbol', 'itemType'] },
+      { name: 'by-hash', keyPath: 'dataHash' },
+      { name: 'by-published-at', keyPath: 'publishedAt' },
+      { name: 'by-source', keyPath: 'source' },
+    ],
+  })
+
+  // ── scoreEvidence：评分证据链（v32 新增，ADR-010） ──
+  ensureStore(db, STORE_NAME.scoreEvidence, logger, {
+    storeOptions: { keyPath: 'id' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-symbol', keyPath: 'symbol' },
+      { name: 'by-symbol-layer', keyPath: ['symbol', 'layer'] },
+      { name: 'by-profile-item', keyPath: 'profileItemId' },
+      { name: 'by-weight', keyPath: 'weight' },
+    ],
+  })
+
+  // ── stockProfiles：股票资料包元数据（v32 新增，ADR-010） ──
+  ensureStore(db, STORE_NAME.stockProfiles, logger, {
+    storeOptions: { keyPath: 'symbol' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-updated-at', keyPath: 'lastUpdatedAt' },
+      { name: 'by-coverage', keyPath: 'evidenceCoverage' },
+    ],
+  })
+
+  // ── profileTags：资料标签库（v32 新增，ADR-010） ──
+  ensureStore(db, STORE_NAME.profileTags, logger, {
+    storeOptions: { keyPath: 'id' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-category', keyPath: 'category' },
+      { name: 'by-name', keyPath: 'name', options: { unique: true } },
+      { name: 'by-usage', keyPath: 'usageCount' },
+      { name: 'by-parent', keyPath: 'parentId' },
+    ],
+  })
+
 }

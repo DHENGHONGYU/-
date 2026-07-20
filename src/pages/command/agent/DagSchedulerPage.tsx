@@ -1,15 +1,15 @@
 import React, { useState, useCallback } from 'react'
 import {
-  PlusIcon,
-  PlayIcon,
-  PauseIcon,
-  PencilIcon,
-  TrashIcon,
-  ClockIcon,
-  CheckCircleIcon,
-  XCircleIcon,
-  ArrowPathIcon,
-} from '@heroicons/react/24/outline'
+  Plus as PlusIcon,
+  Play as PlayIcon,
+  Pause as PauseIcon,
+  Pencil as PencilIcon,
+  Trash2 as TrashIcon,
+  Clock as ClockIcon,
+  CheckCircle2 as CheckCircleIcon,
+  XCircle as XCircleIcon,
+  RefreshCw as ArrowPathIcon,
+} from 'lucide-react'
 import { PageContainer } from '@/components/templates/PageContainer'
 import { Button } from '@/components/atoms/Button'
 import { Input } from '@/components/atoms/Input'

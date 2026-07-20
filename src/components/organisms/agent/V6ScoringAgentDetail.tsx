@@ -14,7 +14,7 @@ import {
 import type { AgentDetailComponentProps } from '@/components/organisms/agent/agentComponentRegistry'
 import { COLOR_TOKENS, COLOR_SHADES, twBg, twText } from '@/constants/theme.tokens'
 
-const V6_SCORE_ROUTE = '/analysis/stock-score'
+const V6_SCORE_ROUTE = '/analysis/intelligent-score'
 
 const SCORE_LAYERS = [
   { name: 'L-0 行业评分', description: '行业景气度与板块轮动信号', weight: '15%' },
@@ -142,9 +142,9 @@ export default function V6ScoringAgentDetail({ agentId }: AgentDetailComponentPr
         <h2 className="text-lg font-semibold">关联功能</h2>
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base">V6 个股评分</CardTitle>
+            <CardTitle className="text-base">个股智能分析</CardTitle>
             <CardDescription>
-              在分析舱中查看完整的 V6 九维评分界面
+              在分析舱中查看完整的个股智能分析界面
             </CardDescription>
           </CardHeader>
           <CardContent>

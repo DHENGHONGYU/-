@@ -84,3 +84,35 @@ export interface ResearchReport {
   /** 数据来源标签（采集管线使用） */
   _source?: string
 }
+
+/** 社区帖子（雪球/股吧等 UGC 内容，供 communitySyncService 归集到八域资料体系） */
+export interface CommunityPost {
+  /** 帖子唯一 ID */
+  id: string
+  /** 标题 */
+  title: string
+  /** 正文内容 */
+  content?: string
+  /** 来源平台标识（如 xueqiu / eastmoney） */
+  source: string
+  /** 原文链接 */
+  url?: string
+  /** 作者 */
+  author?: string
+  /** 发布日期（ISO 字符串） */
+  date: string
+  /** 关键点/要点列表 */
+  keyPoints?: string[]
+  /** 外部预评质量分（0-100） */
+  qualityScore?: number
+  /** 阅读数 */
+  views?: number
+  /** 评论数 */
+  comments?: number
+  /** 点赞数 */
+  likes?: number
+  /** 情绪标签 */
+  sentiment?: 'positive' | 'negative' | 'neutral'
+  /** 数据来源标签（采集管线使用） */
+  _source?: string
+}
