@@ -521,6 +521,9 @@ export function createHandlerRegistry(): HandlerRegistry {
       ENVELOPE_ACTION.bulkSaveScores,
       ENVELOPE_ACTION.bulkSaveFinancialReports,
       ENVELOPE_ACTION.bulkSaveNews,
+      // 八域资料体系（v32 新增，ADR-010）
+      ENVELOPE_ACTION.bulkSaveProfileItems,
+      ENVELOPE_ACTION.bulkSaveScoreEvidence,
     ])
   )
 
@@ -538,6 +541,10 @@ export function createHandlerRegistry(): HandlerRegistry {
       ENVELOPE_ACTION.deleteWorkflowTrigger,
       ENVELOPE_ACTION.deleteCollectionHistory,
       ENVELOPE_ACTION.deleteScheduleConfig,
+      // 八域资料体系（v32 新增，ADR-010）
+      ENVELOPE_ACTION.deleteProfileItem,
+      ENVELOPE_ACTION.deleteScoreEvidence,
+      ENVELOPE_ACTION.deleteProfileTag,
     ])
   )
 
@@ -598,6 +605,11 @@ export function createHandlerRegistry(): HandlerRegistry {
       ENVELOPE_ACTION.saveScheduleConfig,
       ENVELOPE_ACTION.saveProofreadReport,
       ENVELOPE_ACTION.saveAnalysisResult,
+      // 八域资料体系（v32 新增，ADR-010）
+      ENVELOPE_ACTION.saveProfileItem,
+      ENVELOPE_ACTION.saveScoreEvidence,
+      ENVELOPE_ACTION.saveStockProfile,
+      ENVELOPE_ACTION.saveProfileTag,
     ])
   )
 
