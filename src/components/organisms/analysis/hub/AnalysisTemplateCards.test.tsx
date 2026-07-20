@@ -15,7 +15,7 @@ function renderWithRouter(ui: React.ReactElement) {
     <MemoryRouter initialEntries={['/analysis']}>
       <Routes>
         <Route path="/analysis" element={ui} />
-        <Route path="/analysis/stock-score" element={<div>Stock Score</div>} />
+        <Route path="/analysis/intelligent-score" element={<div>Stock Score</div>} />
         <Route path="/analysis/industry-score" element={<div>Industry Score</div>} />
         <Route path="/analysis/backtest" element={<div>Backtest</div>} />
       </Routes>

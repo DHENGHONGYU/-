@@ -146,7 +146,7 @@ export function usePoolBoard() {
 
   const handleAnalyze = useCallback(
     (symbolToAnalyze: string): void => {
-      void navigate(`/analysis/stock-score/${symbolToAnalyze}`)
+      void navigate(`/analysis/intelligent-score/${symbolToAnalyze}`)
     },
     [navigate],
   )

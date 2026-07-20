@@ -183,6 +183,22 @@ export const MIGRATIONS: readonly Migration[] = [
   },
   {
     version: DB_VERSION,
+    name: 'seed_profile_system_tracker',
+    up({ tx }) {
+      if (!tx) return
+      if (tx.db.objectStoreNames.contains(STORE_NAME.schemaMigrations)) {
+        const store = tx.objectStore(STORE_NAME.schemaMigrations)
+        store.put({
+          id: 'profile_system_initialized',
+          version: DB_VERSION,
+          appliedAt: Date.now(),
+          note: '八域资料体系 4 表（profile_items/score_evidence/stock_profiles/profile_tags）由 createSchema 创建（ADR-010）',
+        })
+      }
+    },
+  },
+  {
+    version: DB_VERSION,
     name: 'seed_schema_migrations_tracker',
     up({ tx }) {
       if (!tx) return

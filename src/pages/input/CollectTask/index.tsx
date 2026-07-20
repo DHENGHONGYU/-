@@ -89,6 +89,7 @@ export default function CollectTaskPage(): React.JSX.Element {
         <CollectTaskStatsCards
           taskStats={taskStats}
           successRate={stats.successRate}
+          realSuccessRate={stats.realSuccessRate}
           avgLatency={stats.avgLatency}
           fallbackCount={stats.fallbackCount}
           writeRate={stats.writeRate}
@@ -217,6 +218,8 @@ export default function CollectTaskPage(): React.JSX.Element {
           <TabsContent value="quality">
             <DataQualityTab
               successRate={stats.successRate}
+              realSuccessRate={stats.realSuccessRate}
+              completeness={stats.completeness}
               writeRate={stats.writeRate}
               fallbackCount={stats.fallbackCount}
               totalCollects={stats.totalCollects}

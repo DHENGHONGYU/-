@@ -36,6 +36,8 @@ export interface ImportStocksOptions extends AddStockOptions {
 /** 单行导入结果（用于批次聚合） */
 interface RowImportOutcome {
   ok: boolean
+  /** 跳过（已在意向池中），不计入失败 */
+  skipped?: boolean
   row: number
   raw: string
   error: string
@@ -59,6 +61,7 @@ export async function importStocks(
     total: rows.length,
     success: 0,
     failed: 0,
+    skipped: 0,
     errors: [],
     stocks: [],
   }
@@ -87,12 +90,7 @@ export async function importStocks(
     })
     const exists = existsResult.success && existsResult.data != null
     if (exists) {
-      result.failed++
-      result.errors.push({
-        row: i + 1,
-        raw: `${row.code} ${row.name}`,
-        error: '股票已存在',
-      })
+      result.skipped++
       continue
     }
 
@@ -158,7 +156,7 @@ async function importOneRow(
       source: MODULE_ID.pool,
     })
     const exists = existsResult.success && existsResult.data != null
-    if (exists) return { ok: false, row: globalIdx, raw: `${row.code} ${row.name}`, error: '股票已存在', stock: null }
+    if (exists) return { ok: false, skipped: true, row: globalIdx, raw: `${row.code} ${row.name}`, error: '股票已在意向池中', stock: null }
     const addResult = await addStock(
       { symbol: row.symbol, name: row.name },
       {
@@ -178,6 +176,10 @@ function applyOutcome(result: BulkImportResult, o: RowImportOutcome): void {
   if (o.ok && o.stock) {
     result.success++
     result.stocks.push(o.stock)
+    return
+  }
+  if (o.skipped) {
+    result.skipped++
     return
   }
   result.failed++
@@ -216,6 +218,7 @@ export async function importStocksWithProgress(
     total: importableRows.length,
     success: 0,
     failed: 0,
+    skipped: 0,
     errors: [],
     stocks: [],
   }

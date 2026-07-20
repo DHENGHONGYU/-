@@ -1,14 +1,14 @@
 import React, { useState, useCallback } from 'react'
 import {
-  PlusIcon,
-  PencilIcon,
-  TrashIcon,
-  KeyIcon,
-  LinkIcon,
-  EyeIcon,
-  EyeSlashIcon,
-  ArrowPathIcon,
-} from '@heroicons/react/24/outline'
+  Plus as PlusIcon,
+  Pencil as PencilIcon,
+  Trash2 as TrashIcon,
+  Key as KeyIcon,
+  Link as LinkIcon,
+  Eye as EyeIcon,
+  EyeOff as EyeSlashIcon,
+  RefreshCw as ArrowPathIcon,
+} from 'lucide-react'
 import { PageContainer } from '@/components/templates/PageContainer'
 import { PageHeader } from '@/components/templates/PageHeader'
 import { Button } from '@/components/atoms/Button'

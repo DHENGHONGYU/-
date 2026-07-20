@@ -320,18 +320,6 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
 
   // 分析舱子页面（统一通过 PortalShell → AnalysisApp 分发，保持 TopBar + Sidebar 导航）
   {
-    path: '/analysis/stock-score',
-    component: React.lazy(() => import('@/portal/PortalShell')),
-    category: 'analysis',
-    description: '个股九维评分分析',
-  },
-  {
-    path: '/analysis/stock-score/:symbol',
-    component: React.lazy(() => import('@/portal/PortalShell')),
-    category: 'analysis',
-    description: '个股九维评分分析（带代码）',
-  },
-  {
     path: '/analysis/sector',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'analysis',
@@ -353,7 +341,13 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     path: '/analysis/intelligent-score',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'analysis',
-    description: 'V6 个股智能评分',
+    description: '个股智能分析',
+  },
+  {
+    path: '/analysis/intelligent-score/:symbol',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'analysis',
+    description: '个股智能分析（带代码）',
   },
   {
     path: '/analysis/score-docs',
@@ -455,7 +449,7 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     path: '/input/pool-board',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'input',
-    description: '股票池看板（候选池管理）',
+    description: '研究候选池总览（基本信息 + 采集进度）',
   },
 
   // Mock 测试页

@@ -14,6 +14,8 @@ interface CollectTaskStatsCardsProps {
   taskStats: TaskStats
   // 性能统计（来自 collectionRuntimeStore.stats）
   successRate: number
+  /** 真实数据源成功率（排除 mock，防假绿灯） */
+  realSuccessRate: number
   avgLatency: number
   fallbackCount: number
   writeRate: number
@@ -37,6 +39,7 @@ function formatFreshness(ts: number | null): string {
 export function CollectTaskStatsCards({
   taskStats,
   successRate,
+  realSuccessRate,
   avgLatency,
   fallbackCount,
   writeRate,
@@ -51,14 +54,18 @@ export function CollectTaskStatsCards({
         <StatCard label="失败" value={taskStats.failedCount} color={COLOR_TOKENS.danger.hex} />
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard label="采集成功率" value={`${successRate}%`} color={COLOR_TOKENS.success.hex} />
+        <StatCard label="成功率(含Mock)" value={`${successRate}%`} color={COLOR_TOKENS.success.hex} />
         <StatCard label="平均延迟" value={`${avgLatency}ms`} color={COLOR_TOKENS.info.hex} />
         <StatCard label="降级次数" value={fallbackCount} color={COLOR_TOKENS.warning.hex} />
         <StatCard label="写入成功率" value={`${writeRate}%`} color={COLOR_TOKENS.success.hex} />
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <StatCard label="数据新鲜度" value={formatFreshness(lastSuccessAt)} color={COLOR_TOKENS.info.hex} />
-        <StatCard label="采集成功率" value={`${successRate}%`} color={COLOR_TOKENS.success.hex} />
+        <StatCard
+          label="真实成功率(不含Mock)"
+          value={`${realSuccessRate}%`}
+          color={realSuccessRate >= 80 ? COLOR_TOKENS.success.hex : COLOR_TOKENS.danger.hex}
+        />
       </div>
     </>
   )

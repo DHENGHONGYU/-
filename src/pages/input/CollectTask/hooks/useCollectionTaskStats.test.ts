@@ -76,7 +76,7 @@ describe('useCollectionTaskStats', () => {
         mockSuccesses: 0,
         realSuccessRate: 0,
         completeness: 0,
-        sourceCounts: { tencent: 0, sina: 0, netease: 0, akshare: 0, mock: 0 },
+        sourceCounts: { tencent: 0, sina: 0, netease: 0, akshare: 0, tushare: 0, mock: 0 },
         fallbackCount: 0,
         writeSuccess: 0,
         writeTotal: 0,

@@ -33,7 +33,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { cn } from '@/lib/utils'
-import { CHART_PALETTE } from '@/constants/theme.tokens'
+import { CHART_PALETTE, COLOR_SHADES } from '@/constants/theme.tokens'
 import { usePerfTrace } from '@/hooks/usePerfTrace'
 
 interface LineChartProps {
@@ -121,7 +121,7 @@ export const LineChart = memo(
       if (loading) {
         return (
           <div ref={ref} className={cn('w-full animate-pulse', className)}>
-            <div className="rounded-lg bg-gray-100" style={{ height }} />
+            <div className={cn('rounded-lg', COLOR_SHADES.gray[100])} style={{ height }} />
           </div>
         )
       }

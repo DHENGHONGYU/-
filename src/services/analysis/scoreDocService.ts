@@ -317,6 +317,21 @@ export async function saveScoreDoc(input: ScoreDocInput): Promise<DataLayerResul
     if (!result.success) {
       return { success: false, error: result.error }
     }
+
+    // ── 八域资料体系：异步归档评分报告（ADR-010） ──
+    // fire-and-forget，不阻塞主流程；失败不影响结果
+    ;(async () => {
+      try {
+        const { onScoreDocGenerated } = await import('@/services/profile/scoreDocArchiveService')
+        await onScoreDocGenerated(doc)
+      } catch (err) {
+        logger.warn('评分报告归档资料体系失败', {
+          symbol: input.symbol,
+          error: err instanceof Error ? err.message : String(err),
+        })
+      }
+    })()
+
     return { success: true, data: doc }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)

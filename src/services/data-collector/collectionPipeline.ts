@@ -14,7 +14,6 @@
 
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'
-import { MOCK_NEWS_URL_TEMPLATE } from '@/config/marketDataEndpoints'
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, MODULE_ID, ENVELOPE_TARGET } from '@/config/dbConfig'
 import type { EnvelopeAction } from '@/config/dbConfig'
@@ -89,132 +88,8 @@ const DIMENSION_TO_MODE: Readonly<Record<string, CollectionMode>> = {
   '08': 'research',
 }
 
-// ── Mock 维度数据生成器 ──
-
-/** 用标的与维度生成确定性哈希，保证同股票同维度 mock 数据一致 */
-function mockHash(symbol: string, dimensionCode: string): number {
-  let h = 0
-  const str = `${symbol}:${dimensionCode}`
-  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) & 0x7fffffff
-  return h
-}
-
-function generateMockChipData(symbol: string): Record<string, unknown> {
-  const seed = mockHash(symbol, '03')
-  return {
-    id: `chip-${symbol}`,
-    symbol,
-    concentrationRatio: 20 + (seed % 40),
-    avgCost: 10 + (seed % 90),
-    profitRatio90: -(seed % 30),
-    profitRatio70: -(seed % 20),
-    pressureLevels: [10 + (seed % 5), 15 + (seed % 8), 25 + (seed % 10)],
-    supportLevels: [5 + (seed % 3), 8 + (seed % 4)],
-    dataDate: new Date().toISOString().slice(0, 10),
-    _mock: true,
-  }
-}
-
-function generateMockNewsItem(symbol: string, dimensionCode: string): Record<string, unknown> {
-  const seed = mockHash(symbol, dimensionCode)
-  const titles: Record<string, string[]> = {
-    '04': [`${symbol} 2025 年报发布`, `${symbol} 重大资产重组进展`, `${symbol} 分红派息公告`],
-    '05': [`【热点】${symbol} 获机构密集调研`, `市场关注：${symbol} 技术突破`, `${symbol} 入选行业龙头指数`],
-  }
-  const titleList = titles[dimensionCode] ?? [`${symbol} 相关资讯`]
-  return {
-    id: `news-${dimensionCode}-${symbol}-${Date.now()}`,
-    title: titleList[seed % titleList.length]!,
-    content: `这是关于 ${symbol} 的${dimensionCode === '04' ? '重大事项' : '热点新闻'} mock 数据内容。`,
-    url: `${MOCK_NEWS_URL_TEMPLATE}/${symbol}`,
-    source: 'mock',
-    category: dimensionCode === '04' ? 'announcement' : 'hot_news',
-    publishTime: new Date(Date.now() - seed % 86400000).toISOString(),
-    fetchTime: new Date().toISOString(),
-    sentiment: (['positive', 'neutral', 'negative'] as const)[seed % 3],
-    sentimentConfidence: 0.5 + (seed % 50) / 100,
-    relatedStocks: [symbol],
-    keywords: [symbol, dimensionCode === '04' ? '公告' : '热点'],
-    hash: `mock-${seed}`,
-    _mock: true,
-  }
-}
-
-function generateMockCompetitorData(symbol: string): Record<string, unknown> {
-  const seed = mockHash(symbol, '06')
-  const fakeCompetitors = ['COMP1', 'COMP2', 'COMP3']
-  return {
-    id: `competitor-${symbol}-${Date.now()}`,
-    sectorCode: `SECTOR-${seed % 10}`,
-    scoreDate: new Date().toISOString().slice(0, 10),
-    dimensions: {
-      marketShare: 5 + (seed % 30),
-      revenueGrowth: -(seed % 20) + 10,
-      profitability: 5 + (seed % 25),
-      innovation: 3 + (seed % 10),
-    },
-    composite: 40 + (seed % 50),
-    isCore: (seed % 3) === 0,
-    modelUsed: 'mock-v1',
-    createdAt: new Date().toISOString(),
-    competitors: fakeCompetitors.map((c) => ({
-      symbol: c,
-      score: 30 + ((seed + c.charCodeAt(0)) % 60),
-    })),
-    _mock: true,
-  }
-}
-
-function generateMockIndexCorrelation(symbol: string): Record<string, unknown> {
-  const seed = mockHash(symbol, '07')
-  const indices = ['000300.SH', '000905.SH', '399006.SZ']
-  return {
-    id: `index-corr-${symbol}-${Date.now()}`,
-    sectorCode: `IDX-CORR-${seed % 5}`,
-    scoreDate: new Date().toISOString().slice(0, 10),
-    dimensions: {
-      correlation: 0.3 + (seed % 50) / 100,
-      beta: 0.5 + (seed % 150) / 100,
-      alpha: -(seed % 10),
-      trackingError: 0.1 + (seed % 20) / 100,
-    },
-    composite: 30 + (seed % 60),
-    isCore: true,
-    modelUsed: 'mock-v1',
-    createdAt: new Date().toISOString(),
-    relatedIndices: indices.map((idx) => ({
-      code: idx,
-      correlation: 0.2 + ((idx.charCodeAt(0) + seed) % 80) / 100,
-    })),
-    _mock: true,
-  }
-}
-
-function generateMockResearchReport(symbol: string): Record<string, unknown> {
-  const seed = mockHash(symbol, '08')
-  const institutions = ['中信证券', '华泰证券', '招商证券', '中金公司']
-  const ratings = ['买入', '增持', '中性', '减持']
-  return {
-    id: seed % 100000,
-    traceId: `research-${symbol}-${Date.now()}`,
-    timestamp: Date.now(),
-    actor: 'mock-collector',
-    action: 'save_research',
-    targetType: 'stock',
-    targetCode: symbol,
-    payload: JSON.stringify({
-      symbol,
-      institution: institutions[seed % institutions.length],
-      rating: ratings[seed % ratings.length],
-      targetPrice: (10 + (seed % 90)) * (1 + (seed % 10) / 100),
-      reportDate: new Date(Date.now() - (seed % 30) * 86400000).toISOString().slice(0, 10),
-      title: `${symbol} 深度研究报告`,
-      summary: `这是 ${symbol} 的 mock 研报摘要。`,
-      _mock: true,
-    }),
-    _mock: true,
-  }
-}
+// ── Mock 维度数据生成器（已禁用 —— MOCK 数据不真实，真实源失败直接报错）──
+// 保留代码供开发参考，生产环境不调用。历史代码见 git log collectionPipeline.ts。
 
 // ── 通用维度 mock 写入 ──
 
@@ -278,21 +153,9 @@ async function generateDataForDimension(symbol: string, dimensionCode: string): 
     fallbackReason = `real_source_threw: ${err instanceof Error ? err.message : String(err)}`
   }
 
-  // 降级到 Mock
-  if (import.meta.env.PROD) {
-    logger.warn(`[collectionPipeline] PROD 环境降级 Mock: 维度 ${dimensionCode}（${symbol}）。原因: ${fallbackReason}`)
-  }
-  let mockResult: Record<string, unknown>
-  switch (dimensionCode) {
-    case '03': mockResult = generateMockChipData(symbol); break
-    case '04': mockResult = generateMockNewsItem(symbol, '04'); break
-    case '05': mockResult = generateMockNewsItem(symbol, '05'); break
-    case '06': mockResult = generateMockCompetitorData(symbol); break
-    case '07': mockResult = generateMockIndexCorrelation(symbol); break
-    case '08': mockResult = generateMockResearchReport(symbol); break
-    default: mockResult = { _mock: true, error: `unknown dimension: ${dimensionCode}` }; break
-  }
-  return { ...mockResult, _source: 'mock', _fallbackReason: fallbackReason }
+  // MOCK 禁用：真实源失败直接返回错误标记，不生成 mock
+  logger.warn(`[collectionPipeline] 维度 ${dimensionCode} 真实数据不可用，禁止 mock: ${symbol}。原因: ${fallbackReason}`)
+  return { _source: 'mock', _mock: true, _fallbackReason: fallbackReason, error: fallbackReason }
 }
 
 /** 业务数据源 → 直连行情数据源的默认映射（MVP 阶段） */
@@ -339,9 +202,14 @@ export function resolveDimensionMode(dimensionCode: string): CollectionMode {
 
 /**
  * buildDefaultSourcePriority
+ *
+ * @param dimension 维度配置
+ * @param allowMockFallback 是否注入 mock 兜底（缺省 true 保持旧行为；
+ *   传 false 时映射表中的 mock 项与末尾 mock 兜底均被剔除 —— 假绿灯修复）
  */
 export function buildDefaultSourcePriority(
   dimension: DimensionPipelineConfig,
+  allowMockFallback = true,
 ): SourcePriorityItem[] {
   const seen = new Set<QuoteDataSourceId>()
   const items: SourcePriorityItem[] = []
@@ -350,6 +218,7 @@ export function buildDefaultSourcePriority(
   for (const businessSource of dimension.sources) {
     const mapped = BUSINESS_TO_QUOTE_SOURCE[businessSource] ?? ['mock']
     for (const id of mapped) {
+      if (!allowMockFallback && id === 'mock') continue
       if (seen.has(id)) continue
       seen.add(id)
       items.push({ id, priority, enabled: true })
@@ -357,8 +226,8 @@ export function buildDefaultSourcePriority(
     }
   }
 
-  // 兜底：确保至少包含 mock
-  if (!seen.has('mock')) {
+  // 兜底：允许 mock 时确保至少包含 mock
+  if (allowMockFallback && !seen.has('mock')) {
     items.push({ id: 'mock', priority, enabled: true })
   }
 
@@ -367,6 +236,10 @@ export function buildDefaultSourcePriority(
 
 /**
  * resolveQuoteChain
+ *
+ * 按 fallbackPolicy.allowMockFallback 决定 mock 是否在链中：
+ * 显式配置了 fallbackPolicy 且 allowMockFallback=false 时剔除 mock（假绿灯修复）；
+ * 未配置 fallbackPolicy 的维度保持旧行为（含 mock）。
  * @param dimension
  * @returns QuoteDataSourceId[]
  */
@@ -374,23 +247,28 @@ export function resolveQuoteChain(dimension: DimensionPipelineConfig): QuoteData
   const chain = dimension.sourcePriority && dimension.sourcePriority.length > 0
     ? dimension.sourcePriority
     : buildDefaultSourcePriority(dimension)
+  const allowMock = dimension.fallbackPolicy?.allowMockFallback ?? true
   return chain
     .filter((item) => item.enabled)
+    .filter((item) => allowMock || item.id !== 'mock')
     .sort((a, b) => a.priority - b.priority)
     .map((item) => item.id)
 }
 
 /**
  * resolveKlineChain
+ *
+ * mock 追加同样受 fallbackPolicy.allowMockFallback 门禁（假绿灯修复）。
  * @param dimension
  * @returns QuoteDataSourceId[]
  */
 export function resolveKlineChain(dimension: DimensionPipelineConfig): QuoteDataSourceId[] {
   const quoteChain = resolveQuoteChain(dimension)
+  const allowMock = dimension.fallbackPolicy?.allowMockFallback ?? true
   // 腾讯同时支持行情+K线，优先使用
   const klineSources = quoteChain.filter((id) => id !== 'mock')
-  if (klineSources.length > 0) return [...klineSources, 'mock']
-  return ['mock']
+  if (klineSources.length > 0) return allowMock ? [...klineSources, 'mock'] : klineSources
+  return allowMock ? ['mock'] : []
 }
 
 /**
@@ -440,11 +318,52 @@ function auditRecord(storeName: string, payload: unknown): void {
   }
 }
 
+/**
+ * 判断字段值是否"有效"（非 null/undefined/空串/NaN/Infinity）。
+ * @param value 待检查字段值
+ * @returns 有效返回 true
+ */
+function isFieldPresent(value: unknown): boolean {
+  if (value == null) return false
+  if (typeof value === 'string') return value.trim() !== ''
+  if (typeof value === 'number') return Number.isFinite(value)
+  return true
+}
+
+/** 行情完整率校验字段（RealtimeQuote 核心 9 字段，symbol 由上游强制覆盖故不计） */
+const QUOTE_COMPLETENESS_FIELDS = ['name', 'price', 'change', 'changePercent', 'open', 'high', 'low', 'volume', 'amount'] as const
+
+/** K 线单 bar 完整率校验字段（KlineBar 核心 7 字段，turnoverRate 可选不计） */
+const KLINE_COMPLETENESS_FIELDS = ['date', 'open', 'high', 'low', 'close', 'volume', 'amount'] as const
+
+/**
+ * 统计行情数据字段完整率并上报 qualityMetricsCollector（P0：接通 recordCompleteness）。
+ * @param quote 实时行情数据
+ */
+function reportQuoteCompleteness(quote: RealtimeQuote): void {
+  const nonNull = QUOTE_COMPLETENESS_FIELDS.filter((f) => isFieldPresent(quote[f])).length
+  getQualityMetrics().recordCompleteness({ nonNull, total: QUOTE_COMPLETENESS_FIELDS.length })
+}
+
+/**
+ * 统计 K 线数据字段完整率（跨 bar 聚合）并上报 qualityMetricsCollector（P0：接通 recordCompleteness）。
+ * @param klines K 线数据数组
+ */
+function reportKlineCompleteness(klines: KlineBar[]): void {
+  if (klines.length === 0) return
+  let nonNull = 0
+  for (const bar of klines) {
+    nonNull += KLINE_COMPLETENESS_FIELDS.filter((f) => isFieldPresent(bar[f])).length
+  }
+  getQualityMetrics().recordCompleteness({ nonNull, total: klines.length * KLINE_COMPLETENESS_FIELDS.length })
+}
+
 async function writeQuoteToStock(symbol: string, quote: RealtimeQuote, source?: string): Promise<void> {
   // 防御：上游已归一化 symbol，此处强制执行覆盖，防止 API 返回字段缺失导致 DB 写入被拒
   const stock = quoteToStock(quote, source)
   stock.symbol = symbol
   auditRecord('stocks', stock)
+  reportQuoteCompleteness(quote)
 
   // 优先使用 updateStock（合并现有字段，不覆盖用户手动修改的 researchStatus/group 等）
   try {
@@ -486,6 +405,7 @@ async function writeKlineToDailyQuotes(symbol: string, klines: KlineBar[], sourc
   if (Array.isArray(dailyQuotes) && dailyQuotes.length > 0) {
     auditRecord('dailyQuotes', dailyQuotes[0])
   }
+  reportKlineCompleteness(klines)
   await dataBridge.forward({
     meta: {
       source: MODULE_ID.fetcher,
@@ -602,7 +522,40 @@ export async function runSingleTrace(
         traceId,
         taskId,
         dimensionCode,
+        allowMockFallback: dimension.fallbackPolicy?.allowMockFallback ?? true,
       })
+
+      // Mock 禁用 + 全源失败：不写入、不计成功（假绿灯修复）
+      if (!result.success || !result.data) {
+        const failReason = result.error ?? '所有真实数据源失败'
+        addStage('source:fail', `真实源不可用: ${failReason}`, result.source, failReason)
+        span.result = 'fail'
+        span.error = failReason
+        span.fallbackCount = Math.max(0, result.fallbackChain.length - 1)
+        span.totalDurationMs = Date.now() - start
+        span.completedAt = Date.now()
+        emit(COLLECTION_EVENTS.COMPLETE, {
+          traceId,
+          taskId,
+          dimensionCode,
+          symbol: normalizedSymbol,
+          sourceId: result.source,
+          message: '行情采集失败（真实源不可用，Mock 已禁用）',
+          error: failReason,
+        })
+        addStage('complete', `采集失败: ${failReason}`, result.source, failReason)
+        emitTrace(span)
+        getQualityMetrics().recordCollect(false, result.source, span.totalDurationMs, result.fallbackChain)
+        return {
+          success: false,
+          symbol: normalizedSymbol,
+          dimensionCode,
+          source: result.source,
+          latency: span.totalDurationMs,
+          fallbackCount: span.fallbackCount,
+          error: failReason,
+        }
+      }
 
       addStage('source:success', `${result.source} 获取成功`, result.source)
       emit(COLLECTION_EVENTS.TRANSFORM, {
@@ -681,7 +634,40 @@ export async function runSingleTrace(
         traceId,
         taskId,
         dimensionCode,
+        allowMockFallback: dimension.fallbackPolicy?.allowMockFallback ?? true,
       })
+
+      // Mock 禁用 + 全源失败：不写入、不计成功（假绿灯修复）
+      if (!result.success || !result.data) {
+        const failReason = result.error ?? 'K 线所有真实数据源失败'
+        addStage('source:fail', `真实源不可用: ${failReason}`, result.source, failReason)
+        span.result = 'fail'
+        span.error = failReason
+        span.fallbackCount = Math.max(0, result.fallbackChain.length - 1)
+        span.totalDurationMs = Date.now() - start
+        span.completedAt = Date.now()
+        emit(COLLECTION_EVENTS.COMPLETE, {
+          traceId,
+          taskId,
+          dimensionCode,
+          symbol: normalizedSymbol,
+          sourceId: result.source,
+          message: 'K 线采集失败（真实源不可用，Mock 已禁用）',
+          error: failReason,
+        })
+        addStage('complete', `采集失败: ${failReason}`, result.source, failReason)
+        emitTrace(span)
+        getQualityMetrics().recordCollect(false, result.source, span.totalDurationMs, result.fallbackChain)
+        return {
+          success: false,
+          symbol: normalizedSymbol,
+          dimensionCode,
+          source: result.source,
+          latency: span.totalDurationMs,
+          fallbackCount: span.fallbackCount,
+          error: failReason,
+        }
+      }
 
       addStage('source:success', `${result.source} K 线获取成功`, result.source)
       emit(COLLECTION_EVENTS.TRANSFORM, {
@@ -752,7 +738,8 @@ export async function runSingleTrace(
       }
     }
 
-    // ── 03–08 非行情维度 mock 链路 ──
+    // ── 03–08 非行情维度数据链路 ──
+    // 策略：仅使用真实数据源，禁用 mock 兜底。真实源失败 = 维度失败。
     if (mode === 'news' || mode === 'research' || mode === 'competitor' || mode === 'index' || mode === 'chip') {
       const storeAction = DIMENSION_TO_ACTION[dimensionCode]
       if (!storeAction) {
@@ -766,56 +753,84 @@ export async function runSingleTrace(
       }
 
       try {
-        const mockData = await generateDataForDimension(normalizedSymbol, dimensionCode)
+        const dimData = await generateDataForDimension(normalizedSymbol, dimensionCode)
         const modeLabel = { news: '资讯', research: '研报', competitor: '竞品', index: '关联指数', chip: '筹码' }[mode] ?? mode
 
-        addStage('source:success', `mock:${mode} 数据生成完成`, 'mock')
+        // MOCK 禁用：真实源失败 → 维度失败，不写入假数据
+        if (dimData._source === 'mock' || dimData._mock === true) {
+          const failReason = String(dimData._fallbackReason || '所有真实数据源均不可用')
+          logger.warn(`[collectionPipeline] 维度 ${dimensionCode} 真实源失败，禁用 mock，上报失败: ${normalizedSymbol}`, { reason: failReason })
+          emit(COLLECTION_EVENTS.SOURCE_FAIL, {
+            traceId, taskId, dimensionCode, symbol: normalizedSymbol,
+            message: `[${modeLabel}] ${failReason}`,
+            error: `真实源不可用（${modeLabel}），未使用 mock 数据`,
+          })
+          addStage('source:fail', `真实源不可用: ${failReason}`, undefined, failReason)
+          span.result = 'fail'
+          span.error = failReason
+          span.totalDurationMs = Date.now() - start
+          span.completedAt = Date.now()
+          emit(COLLECTION_EVENTS.COMPLETE, {
+            traceId, taskId, dimensionCode, symbol: normalizedSymbol,
+            message: `[${modeLabel}] 采集失败（真实源不可用）`,
+            error: failReason,
+          })
+          addStage('complete', `采集失败: ${failReason}`, undefined, failReason)
+          emitTrace(span)
+          getQualityMetrics().recordCollect(false, 'mock' as QuoteDataSourceId, span.totalDurationMs, [])
+          return { success: false, symbol: normalizedSymbol, dimensionCode, latency: span.totalDurationMs, fallbackCount: 0, error: failReason }
+        }
+
+        // 真实数据写入
+        // 真实数据写入
+        const sourceLabel = dimData._source as string || 'real'
+        addStage('source:success', `${sourceLabel}:${mode} 数据获取成功`, sourceLabel as QuoteDataSourceId)
         emit(COLLECTION_EVENTS.TRANSFORM, {
           traceId, taskId, dimensionCode, symbol: normalizedSymbol,
-          sourceId: 'mock' as QuoteDataSourceId,
-          message: `[示例] ${modeLabel} mock 数据适配完成`,
+          sourceId: sourceLabel as QuoteDataSourceId,
+          message: `${modeLabel} 真实数据适配完成（来源: ${sourceLabel}）`,
         })
-        addStage('transform', `[示例] ${modeLabel} mock 数据适配完成`, 'mock')
+        addStage('transform', `${modeLabel} 真实数据适配完成`, sourceLabel as QuoteDataSourceId)
 
         emit(COLLECTION_EVENTS.WRITE_START, {
           traceId, taskId, dimensionCode, symbol: normalizedSymbol,
-          sourceId: 'mock' as QuoteDataSourceId,
-          message: `准备写入 ${dimensionCode} 维度数据`,
+          sourceId: sourceLabel as QuoteDataSourceId,
+          message: `准备写入 ${dimensionCode} 维度真实数据`,
         })
-        addStage('write:start', `准备写入 ${dimensionCode} 维度数据`, 'mock')
+        addStage('write:start', `准备写入 ${dimensionCode} 维度数据`, sourceLabel as QuoteDataSourceId)
 
-        await writeMockDimensionData(normalizedSymbol, dimensionCode, mockData, storeAction)
+        await writeMockDimensionData(normalizedSymbol, dimensionCode, dimData, storeAction)
         getQualityMetrics().recordWrite(true)
 
         emit(COLLECTION_EVENTS.WRITE_SUCCESS, {
           traceId, taskId, dimensionCode, symbol: normalizedSymbol,
-          sourceId: 'mock' as QuoteDataSourceId,
-          message: `[示例] ${modeLabel} 数据写入成功`,
+          sourceId: sourceLabel as QuoteDataSourceId,
+          message: `${modeLabel} 真实数据写入成功`,
         })
-        addStage('write:success', `[示例] ${modeLabel} 数据写入成功`, 'mock')
+        addStage('write:success', `${modeLabel} 真实数据写入成功`, sourceLabel as QuoteDataSourceId)
 
         span.result = 'success'
-        span.finalSource = 'mock' as QuoteDataSourceId
+        span.finalSource = sourceLabel as QuoteDataSourceId
         span.totalDurationMs = Date.now() - start
         span.completedAt = Date.now()
-        span.metadata = { _mock: true, dataType: mode }
+        span.metadata = { _mock: false, dataType: mode, source: sourceLabel }
         emit(COLLECTION_EVENTS.COMPLETE, {
           traceId, taskId, dimensionCode, symbol: normalizedSymbol,
-          sourceId: 'mock' as QuoteDataSourceId,
+          sourceId: sourceLabel as QuoteDataSourceId,
           durationMs: span.totalDurationMs,
-          message: `[示例] ${modeLabel} 采集完成`,
+          message: `${modeLabel} 真实数据采集完成（来源: ${sourceLabel}）`,
           payload: { span },
         })
-        addStage('complete', `[示例] ${modeLabel} 采集完成`, 'mock')
+        addStage('complete', `${modeLabel} 采集完成`, sourceLabel as QuoteDataSourceId)
         emitTrace(span)
 
-        getQualityMetrics().recordCollect(true, 'mock' as QuoteDataSourceId, span.totalDurationMs, [])
+        getQualityMetrics().recordCollect(true, sourceLabel as QuoteDataSourceId, span.totalDurationMs, [])
 
         return {
           success: true,
           symbol: normalizedSymbol,
           dimensionCode,
-          source: 'mock' as QuoteDataSourceId,
+          source: sourceLabel as QuoteDataSourceId,
           latency: span.totalDurationMs,
           fallbackCount: 0,
         }
@@ -971,17 +986,22 @@ function emitTrace(span: CollectionTraceSpan): void {
 export function upgradeDimensionsToPipeline(
   dimensions: DimensionPipelineConfig[],
 ): DimensionPipelineConfig[] {
-  return dimensions.map((dim) => ({
-    ...dim,
-    sourcePriority:
-      dim.sourcePriority && dim.sourcePriority.length > 0
-        ? dim.sourcePriority
-        : buildDefaultSourcePriority(dim),
-    concurrency: dim.concurrency ?? 1,
-    retryPolicy: dim.retryPolicy ?? { maxRetries: 2, backoffMultiplier: 2, initialDelayMs: 500 },
-    timeoutPolicy: dim.timeoutPolicy ?? { requestTimeoutMs: 5000, dimensionTimeoutMs: 30000 },
-    fallbackPolicy: dim.fallbackPolicy ?? { allowFallback: true, allowMockFallback: !import.meta.env.PROD, alertFailureRate: 80 },
-  }))
+  return dimensions.map((dim) => {
+    // 先解析 fallbackPolicy，再用其 allowMockFallback 决定默认链是否注入 mock（假绿灯修复）
+    const fallbackPolicy =
+      dim.fallbackPolicy ?? { allowFallback: true, allowMockFallback: !import.meta.env.PROD, alertFailureRate: 80 }
+    return {
+      ...dim,
+      sourcePriority:
+        dim.sourcePriority && dim.sourcePriority.length > 0
+          ? dim.sourcePriority
+          : buildDefaultSourcePriority(dim, fallbackPolicy.allowMockFallback),
+      concurrency: dim.concurrency ?? 1,
+      retryPolicy: dim.retryPolicy ?? { maxRetries: 2, backoffMultiplier: 2, initialDelayMs: 500 },
+      timeoutPolicy: dim.timeoutPolicy ?? { requestTimeoutMs: 5000, dimensionTimeoutMs: 30000 },
+      fallbackPolicy,
+    }
+  })
 }
 
 /**

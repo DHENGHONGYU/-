@@ -393,3 +393,11 @@ function destroyResearchPoolStoreSubscriptions(): void {
   }
   logger.info('[researchPoolStore] 订阅已销毁')
 }
+
+/**
+ * 测试用：重置订阅状态
+ */
+export function _resetResearchPoolStoreSubscriptionsForTest(): void {
+  destroyResearchPoolStoreSubscriptions()
+  logger.info('[researchPoolStore] 订阅已重置（测试）')
+}

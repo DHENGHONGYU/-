@@ -22,6 +22,8 @@ import { initSignalStoreGlobalSubscriptions, _resetSignalStoreSubscriptionsForTe
 import { initMarketDataStoreGlobalSubscriptions, _resetMarketDataStoreSubscriptionsForTest } from '@/store/marketDataStore'
 import { initDualStrategyStoreGlobalSubscriptions, _resetDualStrategyStoreSubscriptionsForTest } from '@/store/dualStrategyStore'
 import { initRiskStoreGlobalSubscriptions, _resetRiskStoreSubscriptionsForTest } from '@/store/riskStore'
+import { initIntentionPoolStoreSubscriptions, _resetIntentionPoolStoreSubscriptionsForTest } from '@/store/intentionPoolStore'
+import { initResearchPoolStoreSubscriptions, _resetResearchPoolStoreSubscriptionsForTest } from '@/store/researchPoolStore'
 
 const logger = getLogger()
 
@@ -39,11 +41,13 @@ export function initAllGlobalSubscriptions(): void {
 
   logger.info('[initGlobalSubscriptions] Initializing all global store subscriptions...')
 
-  // 按数据依赖顺序初始化：基础数据 → 分析计算 → 信号输出
+  // 按数据依赖顺序初始化：基础数据 → 分析计算 → 信号输出 → 池管理
   initMarketDataStoreGlobalSubscriptions()
   initDualStrategyStoreGlobalSubscriptions()
   initRiskStoreGlobalSubscriptions()
   initSignalStoreGlobalSubscriptions()
+  initIntentionPoolStoreSubscriptions()
+  initResearchPoolStoreSubscriptions()
 
   _initialized = true
   logger.info('[initGlobalSubscriptions] All global store subscriptions initialized')
@@ -58,6 +62,8 @@ export function _resetAllGlobalSubscriptionsForTest(): void {
   _resetDualStrategyStoreSubscriptionsForTest()
   _resetRiskStoreSubscriptionsForTest()
   _resetSignalStoreSubscriptionsForTest()
+  _resetIntentionPoolStoreSubscriptionsForTest()
+  _resetResearchPoolStoreSubscriptionsForTest()
   _initialized = false
   logger.info('[initGlobalSubscriptions] All subscriptions reset for test')
 }

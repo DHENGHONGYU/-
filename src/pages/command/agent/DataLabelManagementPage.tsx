@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from 'react'
 import {
-  PlusIcon,
-  PencilIcon,
-  TrashIcon,
-  ArrowDownTrayIcon,
-  ArrowUpTrayIcon,
-  MagnifyingGlassIcon,
-} from '@heroicons/react/24/outline'
+  Plus as PlusIcon,
+  Pencil as PencilIcon,
+  Trash2 as TrashIcon,
+  Download as ArrowDownTrayIcon,
+  Upload as ArrowUpTrayIcon,
+  Search as MagnifyingGlassIcon,
+} from 'lucide-react'
 import { PageContainer } from '@/components/templates/PageContainer'
 import { PageHeader } from '@/components/templates/PageHeader'
 import { Button } from '@/components/atoms/Button'

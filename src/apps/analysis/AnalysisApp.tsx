@@ -14,7 +14,6 @@ import {
 } from '@/store/analysisStore'
 
 // ── Lazy 页面导入 ────────────────────────────────────────────────────────────
-const StockAnalysisPage = React.lazy(() => import('@/pages/analysis/StockAnalysisPage'))
 const SectorAnalysisPage = React.lazy(() => import('@/pages/analysis/SectorAnalysisPage'))
 const BacktestPage = React.lazy(() => import('@/pages/analysis/BacktestPage'))
 const IndustryScorePage = React.lazy(() => import('@/pages/analysis/IndustryScorePage'))
@@ -40,12 +39,11 @@ interface AnalysisRoute {
 }
 
 const ANALYSIS_ROUTES: AnalysisRoute[] = [
-  { path: '/analysis/stock-score', branch: 'stock-score', componentName: 'StockAnalysisPage', exact: false, component: <StockAnalysisPage />, fallback: '加载个股评分页...' },
+  { path: '/analysis/intelligent-score', branch: 'intelligent-score', componentName: 'IntelligentScorePage', exact: false, component: <IntelligentScorePage />, fallback: '加载个股智能分析页...' },
   { path: '/analysis/sector', branch: 'sector', componentName: 'SectorAnalysisPage', component: <SectorAnalysisPage />, fallback: '加载板块分析页...' },
   { path: '/analysis/backtest', branch: 'backtest', componentName: 'BacktestPage', component: <BacktestPage />, fallback: '加载回测页...' },
   { path: '/analysis/industry-score', branch: 'industry-score', componentName: 'IndustryScorePage', component: <IndustryScorePage />, fallback: '加载行业评分页...' },
   { path: '/analysis/industry-dashboard', branch: 'industry-dashboard', componentName: 'IndustryDashboardPage', component: <IndustryDashboardPage />, fallback: '加载行业全景仪表盘...' },
-  { path: '/analysis/intelligent-score', branch: 'intelligent-score', componentName: 'IntelligentScorePage', component: <IntelligentScorePage />, fallback: '加载智能评分页...' },
   { path: '/analysis/score-docs', branch: 'score-docs', componentName: 'ScoreDocPage', component: <ScoreDocPage />, fallback: '加载评分文档页...' },
   { path: '/analysis/score-comparison', branch: 'score-comparison', componentName: 'ScoreComparisonPage', component: <ScoreComparisonPage />, fallback: '加载评分比对看板...' },
   { path: '/analysis/news', branch: 'news', componentName: 'NewsPage', component: <NewsPage />, fallback: '加载新闻页...' },
