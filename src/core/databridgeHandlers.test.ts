@@ -3,7 +3,7 @@
  * @covers_docs [V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008, V9-DOC-BACK-012]
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ENVELOPE_ACTION, STORE_NAME, type StoreName, type EnvelopeAction } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, STORE_NAME, type EnvelopeAction } from '@/config/dbConfig'
 import { EnvelopeError, type StandardEnvelope } from './envelope'
 import { CascadeError } from '@/types/modules/cascade.types'
 import type { Stock, CustomAgent } from '@/data/types'
@@ -789,7 +789,7 @@ describe('databridgeHandlers', () => {
       const txMock = { objectStore: vi.fn(() => objectStoreMock) }
       vi.mocked(dbModule.db.withTransaction).mockImplementation(
         (_stores: string[], _mode: IDBTransactionMode, callback: (tx: IDBTransaction) => Promise<unknown> | unknown) => {
-          callback(txMock as unknown as IDBTransaction)
+          return Promise.resolve(callback(txMock as unknown as IDBTransaction))
         },
       )
 
@@ -853,7 +853,7 @@ describe('databridgeHandlers', () => {
       const txMock = { objectStore: vi.fn(() => objectStoreMock) }
       vi.mocked(dbModule.db.withTransaction).mockImplementation(
         (_stores: string[], _mode: IDBTransactionMode, callback: (tx: IDBTransaction) => Promise<unknown> | unknown) => {
-          callback(txMock as unknown as IDBTransaction)
+          return Promise.resolve(callback(txMock as unknown as IDBTransaction))
         },
       )
 

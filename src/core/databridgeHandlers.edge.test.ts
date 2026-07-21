@@ -17,9 +17,21 @@ import {
 import { mockLogger, dbModule, makeEnvelope } from './databridgeHandlers.test-utils'
 
 // 将 handler 实际依赖的 @/data/db 重定向到 dbModule mock
-vi.mock('@/data/db', () => dbModule)
-// 将 @/core/cascadeExecutor 重定向到 mock，使 vi.mocked(cascadeExecutor.execute) 生效
-vi.mock('@/core/cascadeExecutor', () => ({ execute: vi.fn() }))
+// 使用 async 工厂避免 vi.mock 提升期引用 import（否则 "Cannot access before initialization"）
+vi.mock('@/data/db', async () => {
+  const { dbModule } = await import('./databridgeHandlers.test-utils')
+  return dbModule
+})
+// handler 通过 getLogger() 获取日志器；重定向到 mockLogger 使 logger.debug/info 可断言
+vi.mock('@/lib/logger', async () => {
+  const { mockLogger } = await import('./databridgeHandlers.test-utils')
+  return { getLogger: () => mockLogger }
+})
+// 将 @/core/cascadeExecutor 重定向到 mock。
+// 注意 handler 导入的是具名导出 cascadeExecutor（含 execute 方法），故返回 { cascadeExecutor: {...} }
+vi.mock('@/core/cascadeExecutor', () => ({
+  cascadeExecutor: { execute: vi.fn() },
+}))
 
 const logger = mockLogger
 

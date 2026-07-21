@@ -89,7 +89,7 @@ function createMockStock(overrides: Partial<Stock> = {}): Stock {
 function createMockQuotes(overrides: Partial<DailyQuotes> = {}): DailyQuotes {
   return {
     symbol: '000001.SZ',
-    latest: { date: Date.now(), open: 15.0, close: 15.5, high: 15.8, low: 14.9, volume: 1000000, amount: 15500000 },
+    latest: { date: String(Date.now()), open: 15.0, close: 15.5, high: 15.8, low: 14.9, volume: 1000000, amount: 15500000 },
     history: [],
     period: 'daily',
     adjust: 'qfq',
@@ -121,9 +121,10 @@ function createMockIntelligentScore(overrides: Partial<IntelligentScore> = {}): 
     basis: '基于多维度分析',
     missingFields: [],
     sourceSnapshot: { stock: undefined, fileNames: [], reportLength: 0 },
+    configSnapshot: { model: 'test-model', baseURL: 'http://localhost' },
     scoredAt: Date.now() - 5400000,
     ...overrides,
-  }
+  } as IntelligentScore
 }
 
 // 辅助函数：创建 mock 行业评分
@@ -137,9 +138,10 @@ function createMockIndustryScore(overrides: Partial<IndustryScore> = {}): Indust
     basis: '基本面分析',
     missingFields: [],
     sectorSnapshot: { composite: 70, recommendation: '持有', positionPct: '10%', subTracks: [] },
+    configSnapshot: { model: 'test-model', baseURL: 'http://localhost' },
     scoredAt: Date.now() - 9000000,
     ...overrides,
-  }
+  } as IndustryScore
 }
 
 // 辅助函数：创建 mock 板块轮动评分

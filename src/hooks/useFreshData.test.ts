@@ -160,10 +160,9 @@ describe('useFreshData', () => {
     })
 
     it('正在刷新时重复调用被跳过（防重入）', () => {
-      let _resolveRefresh: () => void
       const refresh = vi.fn().mockImplementation(
-        () => new Promise<void>((resolve) => {
-          _resolveRefresh = resolve
+        () => new Promise<void>(() => {
+          // 永不 resolve，保持 pending 状态以测试防重入
         })
       )
       const options = createOptions({

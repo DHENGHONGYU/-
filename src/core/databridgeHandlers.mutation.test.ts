@@ -16,10 +16,19 @@ import {
 } from './databridgeHandlers'
 import { mockLogger, dbModule, makeEnvelope } from './databridgeHandlers.test-utils'
 
-// 将 handler 实际依赖的 @/data/db 重定向到 dbModule mock（否则 handler 会调用真实 db 抛 "Database not initialized"）
-vi.mock('@/data/db', () => dbModule)
+// 将 handler 实际依赖的 @/data/db 重定向到 dbModule mock。
+// 使用 async 工厂避免 vi.mock 提升期引用 import（否则 "Cannot access before initialization"）
+vi.mock('@/data/db', async () => {
+  const { dbModule } = await import('./databridgeHandlers.test-utils')
+  return dbModule
+})
+// handler 通过 getLogger() 获取日志器；重定向到 mockLogger 使 logger.debug/info 可断言
+vi.mock('@/lib/logger', async () => {
+  const { mockLogger } = await import('./databridgeHandlers.test-utils')
+  return { getLogger: () => mockLogger }
+})
 
-const logger = mockLogger
+const logger = mockLogger! // vi.mock 工厂闭包引用同模块顶层 import，TS 判定可能 undefined（hoisting 陷阱），运行时必定义
 
 function getHandlerFromRegistry(action: string): EnvelopeHandler | undefined {
   const registry = createHandlerRegistry()
@@ -41,8 +50,8 @@ describe('databridgeHandlers (mutation)', () => {
 
       await handler.handle(envelope, STORE_NAME.v6Scores)
 
-      expect(dbModule.db.put).toHaveBeenCalledTimes(1)
-      expect(dbModule.db.put).toHaveBeenCalledWith(STORE_NAME.v6Scores, {
+      expect(dbModule!.db.put).toHaveBeenCalledTimes(1)
+      expect(dbModule!.db.put).toHaveBeenCalledWith(STORE_NAME.v6Scores, {
         symbol: '600519',
         score: 85,
       })
@@ -64,17 +73,17 @@ describe('databridgeHandlers (mutation)', () => {
 
       await handler.handle(envelope, STORE_NAME.financialReports)
 
-      expect(dbModule.db.put).toHaveBeenCalledTimes(1)
-      expect(dbModule.db.put).toHaveBeenCalledWith(STORE_NAME.financialReports, payload)
+      expect(dbModule!.db.put).toHaveBeenCalledTimes(1)
+      expect(dbModule!.db.put).toHaveBeenCalledWith(STORE_NAME.financialReports, payload)
       expect(logger.info).toHaveBeenCalled()
-      expect(logger.info.mock.calls[0][0]).toContain('开始保存财务数据')
-      expect(logger.info.mock.calls[1][0]).toContain('财务数据保存完成')
+      expect(logger.info.mock.calls[0]![0]).toContain('开始保存财务数据')
+      expect(logger.info.mock.calls[1]![0]).toContain('财务数据保存完成')
     })
 
     it('db.put 抛出异常时正确传播', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.saveScores)!
       const envelope = makeEnvelope(ENVELOPE_ACTION.saveScores, { symbol: '600519' })
-      const putMock = vi.mocked(dbModule.db.put)
+      const putMock = vi.mocked(dbModule!.db.put)
       putMock.mockRejectedValueOnce(new Error('DB error'))
 
       await expect(handler.handle(envelope, STORE_NAME.v6Scores)).rejects.toThrow('DB error')
@@ -98,7 +107,7 @@ describe('databridgeHandlers (mutation)', () => {
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
-      expect(dbModule.db.put).toHaveBeenCalledWith(STORE_NAME.stocks, stock)
+      expect(dbModule!.db.put).toHaveBeenCalledWith(STORE_NAME.stocks, stock)
       expect(logger.debug).toHaveBeenCalledWith(
         expect.stringContaining('insertStock'),
       )
@@ -113,7 +122,7 @@ describe('databridgeHandlers (mutation)', () => {
       await expect(promise1).rejects.toThrow(
         'missing or empty "symbol"',
       )
-      expect(dbModule.db.put).not.toHaveBeenCalled()
+      expect(dbModule!.db.put).not.toHaveBeenCalled()
     })
 
     it('symbol 为 undefined 时抛出 EnvelopeError', async () => {
@@ -125,7 +134,7 @@ describe('databridgeHandlers (mutation)', () => {
       await expect(promise2).rejects.toThrow(
         'missing or empty "symbol"',
       )
-      expect(dbModule.db.put).not.toHaveBeenCalled()
+      expect(dbModule!.db.put).not.toHaveBeenCalled()
     })
 
     it('日志记录正确', async () => {
@@ -161,7 +170,7 @@ describe('databridgeHandlers (mutation)', () => {
 
     it('正常更新股票（合并现有数据）', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStock)!
-      vi.mocked(dbModule.db.get).mockResolvedValueOnce(existingStock)
+      vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStock, {
         symbol: '600519',
         price: 1800,
@@ -169,9 +178,9 @@ describe('databridgeHandlers (mutation)', () => {
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
-      expect(dbModule.db.get).toHaveBeenCalledWith(STORE_NAME.stocks, '600519')
-      expect(dbModule.db.put).toHaveBeenCalledTimes(1)
-      const putArg = vi.mocked(dbModule.db.put).mock.calls[0][1] as Stock
+      expect(dbModule!.db.get).toHaveBeenCalledWith(STORE_NAME.stocks, '600519')
+      expect(dbModule!.db.put).toHaveBeenCalledTimes(1)
+      const putArg = vi.mocked(dbModule!.db.put).mock.calls[0]![1] as Stock
       expect(putArg.symbol).toBe('600519')
       expect(putArg.name).toBe('贵州茅台')
       expect(putArg.price).toBe(1800)
@@ -179,35 +188,35 @@ describe('databridgeHandlers (mutation)', () => {
 
     it('dataVersion 递增', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStock)!
-      vi.mocked(dbModule.db.get).mockResolvedValueOnce(existingStock)
+      vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStock, { symbol: '600519' })
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
-      const putArg = vi.mocked(dbModule.db.put).mock.calls[0][1] as Stock
+      const putArg = vi.mocked(dbModule!.db.put).mock.calls[0]![1] as Stock
       expect(putArg.dataVersion).toBe(4)
     })
 
     it('updatedAt 更新', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStock)!
-      vi.mocked(dbModule.db.get).mockResolvedValueOnce(existingStock)
+      vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStock, { symbol: '600519' })
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
-      const putArg = vi.mocked(dbModule.db.put).mock.calls[0][1] as Stock
+      const putArg = vi.mocked(dbModule!.db.put).mock.calls[0]![1] as Stock
       expect(putArg.updatedAt).toBeGreaterThan(existingStock.updatedAt!)
     })
 
     it('股票不存在时抛出 EnvelopeError', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStock)!
-      vi.mocked(dbModule.db.get).mockResolvedValueOnce(undefined)
+      vi.mocked(dbModule!.db.get).mockResolvedValueOnce(undefined)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStock, { symbol: '999999' })
 
       const promise = handler.handle(envelope, STORE_NAME.stocks)
       await expect(promise).rejects.toThrow(EnvelopeError)
       await expect(promise).rejects.toThrow('Stock not found')
-      expect(dbModule.db.put).not.toHaveBeenCalled()
+      expect(dbModule!.db.put).not.toHaveBeenCalled()
       expect(logger.warn).toHaveBeenCalledWith(
         expect.stringContaining('updateStock failed'),
       )
@@ -215,7 +224,7 @@ describe('databridgeHandlers (mutation)', () => {
 
     it('日志记录正确', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStock)!
-      vi.mocked(dbModule.db.get).mockResolvedValueOnce(existingStock)
+      vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStock, { symbol: '600519' })
 
       await handler.handle(envelope, STORE_NAME.stocks)
@@ -241,7 +250,7 @@ describe('databridgeHandlers (mutation)', () => {
 
     it('正常更新 researchStatus', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStockStatus)!
-      vi.mocked(dbModule.db.get).mockResolvedValueOnce(existingStock)
+      vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStockStatus, {
         symbol: '600519',
         status: 'research',
@@ -249,14 +258,14 @@ describe('databridgeHandlers (mutation)', () => {
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
-      const putArg = vi.mocked(dbModule.db.put).mock.calls[0][1] as Stock
+      const putArg = vi.mocked(dbModule!.db.put).mock.calls[0]![1] as Stock
       expect(putArg.researchStatus).toBe('research')
       expect(putArg.name).toBe('贵州茅台')
     })
 
     it('dataVersion 递增', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStockStatus)!
-      vi.mocked(dbModule.db.get).mockResolvedValueOnce(existingStock)
+      vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStockStatus, {
         symbol: '600519',
         status: 'research',
@@ -264,13 +273,13 @@ describe('databridgeHandlers (mutation)', () => {
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
-      const putArg = vi.mocked(dbModule.db.put).mock.calls[0][1] as Stock
+      const putArg = vi.mocked(dbModule!.db.put).mock.calls[0]![1] as Stock
       expect(putArg.dataVersion).toBe(4)
     })
 
     it('股票不存在时抛出 EnvelopeError', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStockStatus)!
-      vi.mocked(dbModule.db.get).mockResolvedValueOnce(undefined)
+      vi.mocked(dbModule!.db.get).mockResolvedValueOnce(undefined)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStockStatus, {
         symbol: '999999',
         status: 'research',
@@ -279,7 +288,7 @@ describe('databridgeHandlers (mutation)', () => {
       const promiseStatus = handler.handle(envelope, STORE_NAME.stocks)
       await expect(promiseStatus).rejects.toThrow(EnvelopeError)
       await expect(promiseStatus).rejects.toThrow('Stock not found')
-      expect(dbModule.db.put).not.toHaveBeenCalled()
+      expect(dbModule!.db.put).not.toHaveBeenCalled()
     })
   })
 
@@ -298,7 +307,7 @@ describe('databridgeHandlers (mutation)', () => {
 
     it('正常更新 group', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStockGroup)!
-      vi.mocked(dbModule.db.get).mockResolvedValueOnce(existingStock)
+      vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStockGroup, {
         symbol: '600519',
         group: '白酒板块',
@@ -306,14 +315,14 @@ describe('databridgeHandlers (mutation)', () => {
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
-      const putArg = vi.mocked(dbModule.db.put).mock.calls[0][1] as Stock
+      const putArg = vi.mocked(dbModule!.db.put).mock.calls[0]![1] as Stock
       expect(putArg.group).toBe('白酒板块')
       expect(putArg.name).toBe('贵州茅台')
     })
 
     it('dataVersion 递增', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStockGroup)!
-      vi.mocked(dbModule.db.get).mockResolvedValueOnce(existingStock)
+      vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStockGroup, {
         symbol: '600519',
         group: '白酒板块',
@@ -321,13 +330,13 @@ describe('databridgeHandlers (mutation)', () => {
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
-      const putArg = vi.mocked(dbModule.db.put).mock.calls[0][1] as Stock
+      const putArg = vi.mocked(dbModule!.db.put).mock.calls[0]![1] as Stock
       expect(putArg.dataVersion).toBe(4)
     })
 
     it('股票不存在时抛出 EnvelopeError', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStockGroup)!
-      vi.mocked(dbModule.db.get).mockResolvedValueOnce(undefined)
+      vi.mocked(dbModule!.db.get).mockResolvedValueOnce(undefined)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStockGroup, {
         symbol: '999999',
         group: '测试组',
@@ -336,7 +345,7 @@ describe('databridgeHandlers (mutation)', () => {
       const promiseGroup = handler.handle(envelope, STORE_NAME.stocks)
       await expect(promiseGroup).rejects.toThrow(EnvelopeError)
       await expect(promiseGroup).rejects.toThrow('Stock not found')
-      expect(dbModule.db.put).not.toHaveBeenCalled()
+      expect(dbModule!.db.put).not.toHaveBeenCalled()
     })
   })
 
@@ -346,9 +355,14 @@ describe('databridgeHandlers (mutation)', () => {
   describe('CustomAgentSaveHandler', () => {
     const mockNow = 1700000000000
 
+    // handler 的 now() 来自 @/data/db 的 dbModule.now；固定其返回值以匹配断言
+    beforeEach(() => {
+      vi.mocked(dbModule.now).mockReturnValue(mockNow)
+    })
+
     it('新增智能体（补齐 createdAt/updatedAt）', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.saveCustomAgent)!
-      vi.mocked(dbModule.db.get).mockResolvedValueOnce(undefined)
+      vi.mocked(dbModule!.db.get).mockResolvedValueOnce(undefined)
       const agentData = {
         id: 'agent-1',
         name: '测试智能体',
@@ -365,7 +379,7 @@ describe('databridgeHandlers (mutation)', () => {
 
       await handler.handle(envelope, STORE_NAME.customAgents)
 
-      const putArg = vi.mocked(dbModule.db.put).mock.calls[0][1] as CustomAgent
+      const putArg = vi.mocked(dbModule!.db.put).mock.calls[0]![1] as CustomAgent
       expect(putArg.id).toBe('agent-1')
       expect(putArg.createdAt).toBe(mockNow)
       expect(putArg.updatedAt).toBe(mockNow)
@@ -387,7 +401,7 @@ describe('databridgeHandlers (mutation)', () => {
         createdAt: 1600000000000,
         updatedAt: 1600000000000,
       }
-      vi.mocked(dbModule.db.get).mockResolvedValueOnce(existing)
+      vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existing)
       const envelope = makeEnvelope(ENVELOPE_ACTION.saveCustomAgent, {
         id: 'agent-1',
         name: '新名称',
@@ -403,7 +417,7 @@ describe('databridgeHandlers (mutation)', () => {
 
       await handler.handle(envelope, STORE_NAME.customAgents)
 
-      const putArg = vi.mocked(dbModule.db.put).mock.calls[0][1] as CustomAgent
+      const putArg = vi.mocked(dbModule!.db.put).mock.calls[0]![1] as CustomAgent
       expect(putArg.name).toBe('新名称')
       expect(putArg.createdAt).toBe(1600000000000)
       expect(putArg.updatedAt).toBe(mockNow)
@@ -411,7 +425,7 @@ describe('databridgeHandlers (mutation)', () => {
 
     it('传入 createdAt 时保留原值（新增场景）', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.saveCustomAgent)!
-      vi.mocked(dbModule.db.get).mockResolvedValueOnce(undefined)
+      vi.mocked(dbModule!.db.get).mockResolvedValueOnce(undefined)
       const customCreatedAt = 1650000000000
       const agentData = {
         id: 'agent-2',
@@ -430,7 +444,7 @@ describe('databridgeHandlers (mutation)', () => {
 
       await handler.handle(envelope, STORE_NAME.customAgents)
 
-      const putArg = vi.mocked(dbModule.db.put).mock.calls[0][1] as CustomAgent
+      const putArg = vi.mocked(dbModule!.db.put).mock.calls[0]![1] as CustomAgent
       expect(putArg.createdAt).toBe(customCreatedAt)
       expect(putArg.updatedAt).toBe(mockNow)
     })
@@ -452,7 +466,7 @@ describe('databridgeHandlers (mutation)', () => {
       const putMock = vi.fn()
       const objectStoreMock = { put: putMock }
       const txMock = { objectStore: vi.fn(() => objectStoreMock) }
-      vi.mocked(dbModule.db.withTransaction).mockImplementation(
+      vi.mocked(dbModule!.db.withTransaction).mockImplementation(
         (_stores: string[], _mode: IDBTransactionMode, callback: (tx: IDBTransaction) => Promise<unknown> | unknown) => {
           callback(txMock as unknown as IDBTransaction)
         },
@@ -460,7 +474,7 @@ describe('databridgeHandlers (mutation)', () => {
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
-      expect(dbModule.db.withTransaction).toHaveBeenCalledWith(
+      expect(dbModule!.db.withTransaction).toHaveBeenCalledWith(
         [STORE_NAME.stocks],
         'readwrite',
         expect.any(Function),
@@ -477,7 +491,7 @@ describe('databridgeHandlers (mutation)', () => {
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
-      expect(dbModule.db.withTransaction).not.toHaveBeenCalled()
+      expect(dbModule!.db.withTransaction).not.toHaveBeenCalled()
       expect(logger.debug).toHaveBeenCalledWith(
         expect.stringContaining('empty array'),
       )
@@ -496,7 +510,7 @@ describe('databridgeHandlers (mutation)', () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.bulkInsertStock)!
       const envelope = makeEnvelope(ENVELOPE_ACTION.bulkInsertStock, [{ symbol: '600519' }])
 
-      vi.mocked(dbModule.db.withTransaction).mockRejectedValueOnce(
+      vi.mocked(dbModule!.db.withTransaction).mockRejectedValueOnce(
         new Error('Transaction failed'),
       )
 
@@ -516,7 +530,7 @@ describe('databridgeHandlers (mutation)', () => {
 
       const objectStoreMock = { put: vi.fn() }
       const txMock = { objectStore: vi.fn(() => objectStoreMock) }
-      vi.mocked(dbModule.db.withTransaction).mockImplementation(
+      vi.mocked(dbModule!.db.withTransaction).mockImplementation(
         (_stores: string[], _mode: IDBTransactionMode, callback: (tx: IDBTransaction) => Promise<unknown> | unknown) => {
           callback(txMock as unknown as IDBTransaction)
         },
