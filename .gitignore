@@ -184,9 +184,10 @@ docs/reports/_generated/
 docs/reports/**/*.html
 docs/reports/automation-pipeline/*.json
 
-# Generated audit/proofread reports in scripts/docs/reports/
+# Generated audit/proofread/style-lint reports in scripts/docs/reports/
 /scripts/docs/reports/audit/*.json
 /scripts/docs/reports/proofread/*.json
+/scripts/docs/reports/style-lint/*.json
 
 # 测试运行产物（一次性，可重建，不入 VCS）
 /test-results-tmp/
@@ -194,3 +195,4 @@ docs/reports/automation-pipeline/*.json
 /test-output.json
 /scripts/audit/docs/reports/
 /.encoding-recovery/
+/.encoding-scan.json
