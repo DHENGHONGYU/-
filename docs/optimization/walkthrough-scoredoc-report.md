@@ -39,7 +39,7 @@
 | 拍照服务 | `src/services/analysis/scoreDocService.ts` | `saveScoreDoc` / `getNextVersion` / `makeScoreDocId` / `buildReportMarkdown` / `validateScoreDocInput` / `getRecentVersions` / `getFileLibraryStats` / `buildChangeFromPrev` / **`buildScoreDocDiff`(本次新增)** |
 | 评分标准 | `src/services/scoring/v6-engine/config.ts` | `DEFAULT_THRESHOLDS` / `DEFAULT_WEIGHTS` / `INDUSTRY_BENCHMARKS` / `RISK_WARNINGS` |
 | 数据类型 | `src/data/types.ts` | `ScoreDocVersion` / `V6LayerScore` / `FileLibraryStats` |
-| 历史面板 | `src/components/analysis/score/ScoreHistoryPanel.tsx` | 间接验证(依赖 `buildScoreDocDiff` 与 `ScoreDocDiff` 类型) |
+| 历史面板 | `src/components/organisms/analysis/score/ScoreHistoryPanel.tsx` | 间接验证(依赖 `buildScoreDocDiff` 与 `ScoreDocDiff` 类型) |
 
 ### 1.3 测试覆盖维度
 

@@ -15,7 +15,7 @@
 1. **类型** — `src/types/modules/screening.types.ts`
 2. **Store** — `src/store/multiFactorScreeningStore.ts`
 3. **Builder** — `src/services/screening/multiFactorScreeningEngine.ts`
-4. **UI** — `src/pages/analysis/MultiFactorScreeningPage.tsx` + `src/components/analysis/screening/MultiFactorFilterPanel.tsx`
+4. **UI** — `src/pages/analysis/MultiFactorScreeningPage.tsx` + `src/components/organisms/analysis/screening/MultiFactorFilterPanel.tsx`
 
 ## 核心类型
 

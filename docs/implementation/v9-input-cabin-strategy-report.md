@@ -130,7 +130,7 @@ change_log:
 | `src/services/input/hotSectorService.ts` 增强 | 返回 factor 明细、排名、轮动建议 | 支持热门板块进度条与文案 |
 | `src/services/fetcher/fetcherService.ts` 增强 | 增加 `checkDataSources`、`probeQuote`、`cleanData` | 支持采集测试多维度能力 |
 | `src/services/fetcher/fetcherConfigService.ts`（新增） | 读写 `fetcherConfig` 到 IndexedDB | 支持 UI 配置持久化 |
-| `src/components/pool/PoolCard.tsx` 增强 | 集成 `QualityIndicator`、复选框 | 看板信息密度提升 |
+| `src/components/organisms/pool/PoolCard.tsx` 增强 | 集成 `QualityIndicator`、复选框 | 看板信息密度提升 |
 | `src/portal/PortalShell.tsx` 增强 | 增加面包屑、底部状态栏（可选） | 全局导航与状态可见 |
 
 ---
@@ -222,7 +222,7 @@ change_log:
 2. **搜索组件的数据源**：使用本地 mock 股票库、接入 AKShare 搜索接口，还是仅对候选池做本地过滤？
 3. **热门板块数据**：继续 mock，还是优先接入 V4 行业评分 SKILL？
 4. **采集配置是否立即持久化到 IndexedDB**：建议 Phase 3 先做内存配置，验证稳定后再持久化。
-5. **是否保留 `/input/prototype`**：建议 Phase 4 删除，或移动到 `docs/implementation/prototype-reference.md` 作为设计档案。
+5. **是否保留 `/input/prototype`**：建议 Phase 4 删除，或移动到 `../archive/prototype-reference.md` 作为设计档案。
 
 ---
 

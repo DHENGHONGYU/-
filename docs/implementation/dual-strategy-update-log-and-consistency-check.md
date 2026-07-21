@@ -68,9 +68,9 @@ status: active
 
 | 文件 | 职责 | 输入 | 输出 |
 |:---|:---|:---|:---|
-| `src/services/trading/hotSectorAnalyzer.ts` | 热门板块五维评分 | `Stock[]` | `HotSectorScore[]`（`src/data/types.ts`） |
-| `src/services/trading/valuePitAnalyzer.ts` | 价值洼地五维评分 | `Stock[]` | `ValuePitScore[]`（`src/data/types.ts`） |
-| `src/services/trading/rotationSignalDetector.ts` | 轮动信号检测 | `ValuePitScore[]` | `Signal[]` + watchlistCandidates |
+| `src/services/scoring/hotSectorAnalyzer.ts` | 热门板块五维评分 | `Stock[]` | `HotSectorScore[]`（`src/data/types.ts`） |
+| `src/services/scoring/valuePitAnalyzer.ts` | 价值洼地五维评分 | `Stock[]` | `ValuePitScore[]`（`src/data/types.ts`） |
+| `src/services/scoring/rotationSignalDetector.ts` | 轮动信号检测 | `ValuePitScore[]` | `Signal[]` + watchlistCandidates |
 | `src/services/trading/dualStrategyEngine.ts` | 双策略编排 | `Stock[]` | `DualStrategyResult` |
 
 #### 版本 B：`src/services/scoring/*`（基于自定义输入类型，被 DataBridge/页面/Store 使用）
@@ -130,9 +130,9 @@ status: active
 | `src/services/scoring/hotSectorAnalyzer.test.ts` | 维度评分函数单元测试 |
 | `src/services/scoring/valuePitAnalyzer.test.ts` | 维度评分函数单元测试 |
 | `src/services/scoring/rotationSignalDetector.test.ts` | 成交量/资金/金叉检测单元测试 |
-| `src/services/trading/hotSectorAnalyzer.test.ts` | `trading` 版本热门板块分析 |
-| `src/services/trading/valuePitAnalyzer.test.ts` | `trading` 版本价值洼地分析 |
-| `src/services/trading/rotationSignalDetector.test.ts` | `trading` 版本轮动信号检测 |
+| `src/services/scoring/hotSectorAnalyzer.test.ts` | `trading` 版本热门板块分析 |
+| `src/services/scoring/valuePitAnalyzer.test.ts` | `trading` 版本价值洼地分析 |
+| `src/services/scoring/rotationSignalDetector.test.ts` | `trading` 版本轮动信号检测 |
 
 ---
 
@@ -169,7 +169,7 @@ status: active
 
 | 编号 | 任务 | 涉及文件 | 验收标准 |
 |:---|:---|:---|:---|
-| FIX-001 | 统一双策略 Analyzer 实现 | `src/services/trading/hotSectorAnalyzer.ts`、`valuePitAnalyzer.ts`、`rotationSignalDetector.ts`、`dualStrategyEngine.ts` | 删除或合并重复实现；`tsc`、`lint`、`test` 全通过 |
+| FIX-001 | 统一双策略 Analyzer 实现 | `src/services/scoring/hotSectorAnalyzer.ts`、`valuePitAnalyzer.ts`、`rotationSignalDetector.ts`、`dualStrategyEngine.ts` | 删除或合并重复实现；`tsc`、`lint`、`test` 全通过 |
 | FIX-002 | 统一类型定义 | `src/data/types.ts`、`src/types/modules/widget.types.ts`、`src/services/scoring/*` | `HotSectorScore` / `ValuePitScore` 字段与 Widget 的 `HotSectorData` / `ValuePitData` 一致；消除类型转换警告 |
 | FIX-003 | 更新 ADR-009 实施状态 | `docs/implementation/adr/2026-06-27-dual-strategy-system.md` | 所有已实现项勾选为 `[x]`；未实现项（如交易执行差异化）保留为 `[ ]` 并说明计划 |
 

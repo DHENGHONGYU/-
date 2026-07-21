@@ -1,12 +1,12 @@
 ---
-title: V9 ¼Ü¹¹ÎÄµµ±ä¸üÈÕÖ¾
+title: V9 æž¶æž„æ–‡æ¡£å˜æ›´æ—¥å¿—
 type: reports
 domain: project
 phase: retrospective
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "×ñÑ­\"±ä¸ü¼´¼ÇÂ¼£¨Change as Record£©\"Ô­Ôò£¬Ã¿´Î¼Ü¹¹/Êý¾Ý±ä¸ü¾ùÔÚ´ËÁôÏÂÉó¼ÆºÛ¼£¡£"
+summary: "éµå¾ª\"å˜æ›´å³è®°å½•ï¼ˆChange as Recordï¼‰\"åŽŸåˆ™ï¼Œæ¯æ¬¡æž¶æž„/æ•°æ®å˜æ›´å‡åœ¨æ­¤ç•™ä¸‹å®¡è®¡ç—•è¿¹ã€‚"
 tags: [project, changelog, report]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -17,930 +17,930 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# V9 ¼Ü¹¹ÎÄµµ±ä¸üÈÕÖ¾
+# V9 æž¶æž„æ–‡æ¡£å˜æ›´æ—¥å¿—
 
-> ×ñÑ­"±ä¸ü¼´¼ÇÂ¼£¨Change as Record£©"Ô­Ôò£¬Ã¿´Î¼Ü¹¹/Êý¾Ý±ä¸ü¾ùÔÚ´ËÁôÏÂÉó¼ÆºÛ¼£¡£
+> éµå¾ª"å˜æ›´å³è®°å½•ï¼ˆChange as Recordï¼‰"åŽŸåˆ™ï¼Œæ¯æ¬¡æž¶æž„/æ•°æ®å˜æ›´å‡åœ¨æ­¤ç•™ä¸‹å®¡è®¡ç—•è¿¹ã€‚
 
 ---
 
-## v2.8.0 (2026-07-15) ¡ª ÆÀ·Ö»úÖÆ P0 ÐÞ¸´£ºÊý¾Ý×Ô¶¯Áª¶¯ + »»ÊÖÂÊ²¹Æë + ²ÆÎñÊý¾ÝÐ£Ñé
+## v2.8.0 (2026-07-15) â€” è¯„åˆ†æœºåˆ¶ P0 ä¿®å¤ï¼šæ•°æ®è‡ªåŠ¨è”åŠ¨ + æ¢æ‰‹çŽ‡è¡¥é½ + è´¢åŠ¡æ•°æ®æ ¡éªŒ
 
-**±ä¸ü·¶Î§**£ºÆÀ·Ö»úÖÆÈý´ó¸ß·çÏÕÎÊÌâÐÞ¸´£¬´òÍ¨Êý¾Ý²É¼¯¡úÆÀ·Ö¼ÆËã±Õ»·
+**å˜æ›´èŒƒå›´**ï¼šè¯„åˆ†æœºåˆ¶ä¸‰å¤§é«˜é£Žé™©é—®é¢˜ä¿®å¤ï¼Œæ‰“é€šæ•°æ®é‡‡é›†â†’è¯„åˆ†è®¡ç®—é—­çŽ¯
 
-### 1. Êý¾Ý²É¼¯ÓëÆÀ·Ö×Ô¶¯Áª¶¯
+### 1. æ•°æ®é‡‡é›†ä¸Žè¯„åˆ†è‡ªåŠ¨è”åŠ¨
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `src/services/scoring/scoreAutoTrigger.ts` | **ÐÂÔö**£ºÆÀ·Ö×Ô¶¯´¥·¢·þÎñ£¬¼àÌý COLLECTION_EVENTS.COMPLETE ÊÂ¼þ£¬Î¬¶È°×Ãûµ¥¹ýÂË£¬5s È¥¶¶£¬×î´ó 3 ²¢·¢ |
-| `src/main.tsx` | ×¢²á `setScoreTriggerServices` ²¢Æô¶¯ `scoreAutoTrigger` |
+| `src/services/scoring/scoreAutoTrigger.ts` | **æ–°å¢ž**ï¼šè¯„åˆ†è‡ªåŠ¨è§¦å‘æœåŠ¡ï¼Œç›‘å¬ COLLECTION_EVENTS.COMPLETE äº‹ä»¶ï¼Œç»´åº¦ç™½åå•è¿‡æ»¤ï¼Œ5s åŽ»æŠ–ï¼Œæœ€å¤§ 3 å¹¶å‘ |
+| `src/main.tsx` | æ³¨å†Œ `setScoreTriggerServices` å¹¶å¯åŠ¨ `scoreAutoTrigger` |
 
-**ºËÐÄÌØÐÔ**£º
-- ÊÂ¼þÇý¶¯£ºÊý¾Ý¸üÐÂºó×Ô¶¯´¥·¢ V6 ÆÀ·ÖÖØËã
-- Î¬¶È°×Ãûµ¥£º01»ù±¾ÐÅÏ¢ / 02 KÏß / 03³ïÂë / 06ÐÐÒµ¾ºÆ·
-- È¥¶¶ + ²¢·¢¿ØÖÆ£º±ÜÃâÆµ·±ÖØÆÀ£¬±£»¤ÐÔÄÜ
-- ·þÎñ×¢ÈëÄ£Ê½£ºÓë feedbackOrchestrator / pipelineScheduler Ò»ÖÂ
+**æ ¸å¿ƒç‰¹æ€§**ï¼š
+- äº‹ä»¶é©±åŠ¨ï¼šæ•°æ®æ›´æ–°åŽè‡ªåŠ¨è§¦å‘ V6 è¯„åˆ†é‡ç®—
+- ç»´åº¦ç™½åå•ï¼š01åŸºæœ¬ä¿¡æ¯ / 02 Kçº¿ / 03ç­¹ç  / 06è¡Œä¸šç«žå“
+- åŽ»æŠ– + å¹¶å‘æŽ§åˆ¶ï¼šé¿å…é¢‘ç¹é‡è¯„ï¼Œä¿æŠ¤æ€§èƒ½
+- æœåŠ¡æ³¨å…¥æ¨¡å¼ï¼šä¸Ž feedbackOrchestrator / pipelineScheduler ä¸€è‡´
 
-### 2. QuoteData »»ÊÖÂÊ×Ö¶Î²¹Æë
+### 2. QuoteData æ¢æ‰‹çŽ‡å­—æ®µè¡¥é½
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `src/data/types/types.marketData.ts` | KlineBar ÐÂÔö¿ÉÑ¡ `turnoverRate` ×Ö¶Î |
-| `src/services/data-collector/directDataAPI.ts` | ÍøÒ× K Ïß½âÎöÆ÷ÌáÈ¡µÚ 10 ÁÐ»»ÊÖÂÊÊý¾Ý |
-| `src/services/scoring/v6-engine/types.ts` | `quotesToQuoteData()` ÐÂÔö `avgTurnover20d` ¼ÆËã£¨20 ÈÕ¾ù£¬ÖÁÉÙ 10 ¸öÓÐÐ§µã£© |
+| `src/data/types/types.marketData.ts` | KlineBar æ–°å¢žå¯é€‰ `turnoverRate` å­—æ®µ |
+| `src/services/data-collector/directDataAPI.ts` | ç½‘æ˜“ K çº¿è§£æžå™¨æå–ç¬¬ 10 åˆ—æ¢æ‰‹çŽ‡æ•°æ® |
+| `src/services/scoring/v6-engine/types.ts` | `quotesToQuoteData()` æ–°å¢ž `avgTurnover20d` è®¡ç®—ï¼ˆ20 æ—¥å‡ï¼Œè‡³å°‘ 10 ä¸ªæœ‰æ•ˆç‚¹ï¼‰ |
 
-**ÊÜÒæ²ã**£ºL8 ³ïÂë·ÖÎöµÄ PCH£¨³ïÂë¼¯ÖÐ¶È£©¡¢AII£¨×¯¼ÒÎü³ïÇ¿¶È£©¡¢MATRIX£¨²©ÞÄÌ¬ÊÆ£©¡¢DIV£¨É¢»§ÓÎ×Ê±æÊ¶¶È£©ËÄ¸öÖ¸±êÓÉ"Êý¾Ý²»×ã"±äÎª"ÓÐÐ§¼ÆËã"¡£
+**å—ç›Šå±‚**ï¼šL8 ç­¹ç åˆ†æžçš„ PCHï¼ˆç­¹ç é›†ä¸­åº¦ï¼‰ã€AIIï¼ˆåº„å®¶å¸ç­¹å¼ºåº¦ï¼‰ã€MATRIXï¼ˆåšå¼ˆæ€åŠ¿ï¼‰ã€DIVï¼ˆæ•£æˆ·æ¸¸èµ„è¾¨è¯†åº¦ï¼‰å››ä¸ªæŒ‡æ ‡ç”±"æ•°æ®ä¸è¶³"å˜ä¸º"æœ‰æ•ˆè®¡ç®—"ã€‚
 
-### 3. ÆÀ·ÖÊäÈëÊý¾ÝÆõÔ¼Ð£Ñé
+### 3. è¯„åˆ†è¾“å…¥æ•°æ®å¥‘çº¦æ ¡éªŒ
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `src/services/scoring/scoringInputValidation.ts` | **ÐÂÔö**£ºÆÀ·ÖÊäÈëÈý²ãÐ£Ñé£¨²ÆÎñ/»ù´¡/ÐÐÇé£©£¬warn-only Ä£Ê½ |
-| `src/services/scoring/v6ScoreService.ts` | `buildEngineInput()` ÖÐ¼¯³ÉÐ£Ñéµ÷ÓÃ |
+| `src/services/scoring/scoringInputValidation.ts` | **æ–°å¢ž**ï¼šè¯„åˆ†è¾“å…¥ä¸‰å±‚æ ¡éªŒï¼ˆè´¢åŠ¡/åŸºç¡€/è¡Œæƒ…ï¼‰ï¼Œwarn-only æ¨¡å¼ |
+| `src/services/scoring/v6ScoreService.ts` | `buildEngineInput()` ä¸­é›†æˆæ ¡éªŒè°ƒç”¨ |
 
-**Ð£Ñé¸²¸Ç**£º
-- ²ÆÎñÊý¾Ý£º18 ×Ö¶ÎÓÐÏÞÐÔ / Çø¼ä / Õý¸ºÑéÖ¤
-- »ù´¡Êý¾Ý£ºsymbol/name ±ØÌî¡¢¼Û¸ñÀà·Ç¸º
-- ÐÐÇéÊý¾Ý£º×îÐÂ¼ÛÕý¡¢ÊÕÒæÂÊ/²¨¶¯ÂÊ/»»ÊÖÂÊÓÐÏÞ
+**æ ¡éªŒè¦†ç›–**ï¼š
+- è´¢åŠ¡æ•°æ®ï¼š18 å­—æ®µæœ‰é™æ€§ / åŒºé—´ / æ­£è´ŸéªŒè¯
+- åŸºç¡€æ•°æ®ï¼šsymbol/name å¿…å¡«ã€ä»·æ ¼ç±»éžè´Ÿ
+- è¡Œæƒ…æ•°æ®ï¼šæœ€æ–°ä»·æ­£ã€æ”¶ç›ŠçŽ‡/æ³¢åŠ¨çŽ‡/æ¢æ‰‹çŽ‡æœ‰é™
 
-### ÑéÖ¤½á¹û
+### éªŒè¯ç»“æžœ
 
-| ÑéÖ¤Ïî | ½á¹û |
+| éªŒè¯é¡¹ | ç»“æžœ |
 |--------|------|
-| `npx tsc --noEmit` | ? ÐÂÔö´úÂëÎÞÀàÐÍ´íÎó |
-| `npx vitest run` | ? 378 ÎÄ¼þ / 5360 ²âÊÔÍ¨¹ý |
+| `npx tsc --noEmit` | ? æ–°å¢žä»£ç æ— ç±»åž‹é”™è¯¯ |
+| `npx vitest run` | ? 378 æ–‡ä»¶ / 5360 æµ‹è¯•é€šè¿‡ |
 | `npm run audit:layers` | ? 0 violations |
-| `npm run audit:hardcode` | ? 0 Î¥¹æ |
-| `npm run audit:deadcode` | ? 0 Î¥¹æ |
+| `npm run audit:hardcode` | ? 0 è¿è§„ |
+| `npm run audit:deadcode` | ? 0 è¿è§„ |
 
 ---
 
-## v2.7.0 (2026-07-15) ¡ª ¶à½×¶ÎÓÅ»¯£ºUI¼Ü¹¹/½»»¥×´Ì¬/Êý¾ÝÁ÷/°²È«/ÐÔÄÜ/×ÔÊÊÓ¦ÃÜ¶È/ÎÄµµÍ¬²½
+## v2.7.0 (2026-07-15) â€” å¤šé˜¶æ®µä¼˜åŒ–ï¼šUIæž¶æž„/äº¤äº’çŠ¶æ€/æ•°æ®æµ/å®‰å…¨/æ€§èƒ½/è‡ªé€‚åº”å¯†åº¦/æ–‡æ¡£åŒæ­¥
 
-**±ä¸ü·¶Î§**£ºÆß½×¶ÎÈ«ÃæÓÅ»¯£¬º­¸Ç UI ¼Ü¹¹»ù´¡¡¢½»»¥×´Ì¬±ê×¼¡¢Êý¾ÝÁ÷ÓÅ»¯¡¢°²È«ÌØÐÔÏÔÐÔ»¯¡¢ÐÔÄÜÓÅ»¯¡¢½¥½øÅûÂ¶Óë×ÔÊÊÓ¦ÃÜ¶È¡¢ÎÄµµÍ¬²½Óë·¢²¼×¼±¸
+**å˜æ›´èŒƒå›´**ï¼šä¸ƒé˜¶æ®µå…¨é¢ä¼˜åŒ–ï¼Œæ¶µç›– UI æž¶æž„åŸºç¡€ã€äº¤äº’çŠ¶æ€æ ‡å‡†ã€æ•°æ®æµä¼˜åŒ–ã€å®‰å…¨ç‰¹æ€§æ˜¾æ€§åŒ–ã€æ€§èƒ½ä¼˜åŒ–ã€æ¸è¿›æŠ«éœ²ä¸Žè‡ªé€‚åº”å¯†åº¦ã€æ–‡æ¡£åŒæ­¥ä¸Žå‘å¸ƒå‡†å¤‡
 
-### Phase 1: UI ¼Ü¹¹»ù´¡ÓÅ»¯
+### Phase 1: UI æž¶æž„åŸºç¡€ä¼˜åŒ–
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `src/components/cockpit/SignalSpectrum.tsx` | ´´½¨È«¾ÖÍ³Ò»"ÐÅºÅÇ¿¶È"Ä¸Ìâ×é¼þ£¬0-100ÆÀ·ÖÓ³ÉäÈõ(çúçê)¡úÖÐ(À¶)¡úÇ¿(´äÂÌ)Á¬ÐøÆ× |
-| `src/components/atoms/index.ts` | µ¼³ö SignalSpectrum ×é¼þ£¬×¢²áÎªÈ«¾ÖÔ­×Ó×é¼þ |
-| `src/core/ThemeProvider.tsx` | °µÉ«Ö÷ÌâÄ¬ÈÏÆôÓÃ£¬ÓÃ»§Æ«ºÃ³Ö¾Ã»¯µ½ localStorage |
+| `src/components/cockpit/SignalSpectrum.tsx` | åˆ›å»ºå…¨å±€ç»Ÿä¸€"ä¿¡å·å¼ºåº¦"æ¯é¢˜ç»„ä»¶ï¼Œ0-100è¯„åˆ†æ˜ å°„å¼±(ç¥ç€)â†’ä¸­(è“)â†’å¼º(ç¿ ç»¿)è¿žç»­è°± |
+| `src/components/atoms/index.ts` | å¯¼å‡º SignalSpectrum ç»„ä»¶ï¼Œæ³¨å†Œä¸ºå…¨å±€åŽŸå­ç»„ä»¶ |
+| `src/core/ThemeProvider.tsx` | æš—è‰²ä¸»é¢˜é»˜è®¤å¯ç”¨ï¼Œç”¨æˆ·åå¥½æŒä¹…åŒ–åˆ° localStorage |
 
-### Phase 2: ½»»¥×´Ì¬±ê×¼
+### Phase 2: äº¤äº’çŠ¶æ€æ ‡å‡†
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `src/components/atoms/index.ts` | Í³Ò»µ¼³öËÄÌ¬×é¼þ£¨Loading¡¢Empty¡¢ErrorState¡¢Skeleton£©£¬¹æ·¶È«¾Ö½»»¥×´Ì¬ |
+| `src/components/atoms/index.ts` | ç»Ÿä¸€å¯¼å‡ºå››æ€ç»„ä»¶ï¼ˆLoadingã€Emptyã€ErrorStateã€Skeletonï¼‰ï¼Œè§„èŒƒå…¨å±€äº¤äº’çŠ¶æ€ |
 
-### Phase 3: Êý¾ÝÁ÷ÓÅ»¯
+### Phase 3: æ•°æ®æµä¼˜åŒ–
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `src/core/dataflow/dataflowEngine.ts` | Ç¨ÒÆÂÖÑ¯Í¨µÀÎªÊÂ¼þÇý¶¯Ä£Ê½£¬Ìí¼ÓÈ±Ê§Í¨µÀ£¨portfolio:risk¡¢agent:logs£©£¬ÓÅ»¯TTLÅäÖÃÓë»º´æ²ßÂÔ |
-| `src/core/memoryCache.ts` | ¶ÀÁ¢ÄÚ´æ»º´æÄ£¿é£¬Ö§³ÖTTL¡¢LRUÌÔÌ­¡¢ÈÝÁ¿ÉÏÏÞÓë×Ô¶¯¹ýÆÚÇåÀí |
+| `src/core/dataflow/dataflowEngine.ts` | è¿ç§»è½®è¯¢é€šé“ä¸ºäº‹ä»¶é©±åŠ¨æ¨¡å¼ï¼Œæ·»åŠ ç¼ºå¤±é€šé“ï¼ˆportfolio:riskã€agent:logsï¼‰ï¼Œä¼˜åŒ–TTLé…ç½®ä¸Žç¼“å­˜ç­–ç•¥ |
+| `src/core/memoryCache.ts` | ç‹¬ç«‹å†…å­˜ç¼“å­˜æ¨¡å—ï¼Œæ”¯æŒTTLã€LRUæ·˜æ±°ã€å®¹é‡ä¸Šé™ä¸Žè‡ªåŠ¨è¿‡æœŸæ¸…ç† |
 
-### Phase 4: °²È«ÌØÐÔÏÔÐÔ»¯
+### Phase 4: å®‰å…¨ç‰¹æ€§æ˜¾æ€§åŒ–
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `src/components/cockpit/SecurityStatus.tsx` | ´´½¨°²È«×´Ì¬×é¼þ£¬Õ¹Ê¾±¾µØ´æ´¢¼ÓÃÜ×´Ì¬ |
-| `src/components/cockpit/SecurityStatus.tsx` | ´´½¨°²È«»ÕÕÂ×é¼þ£¬ÏÔÐÔ»¯°²È«ÓÅÊÆ |
-| `src/lib/localStorageCrypto.ts` | AES-GCM 256 ¼ÓÃÜ¸¨Öúº¯Êý£¬CryptoKeyÅÉÉúÓë»º´æ |
-| `src/lib/localStorageManager.ts` | Í³Ò»localStorage·â×°£¬ÐÂÔö¼ÓÃÜ´æ´¢·½·¨ |
-| `src/components/atoms/index.ts` | µ¼³ö SecurityStatus¡¢SecurityBadge ×é¼þ |
+| `src/components/cockpit/SecurityStatus.tsx` | åˆ›å»ºå®‰å…¨çŠ¶æ€ç»„ä»¶ï¼Œå±•ç¤ºæœ¬åœ°å­˜å‚¨åŠ å¯†çŠ¶æ€ |
+| `src/components/cockpit/SecurityStatus.tsx` | åˆ›å»ºå®‰å…¨å¾½ç« ç»„ä»¶ï¼Œæ˜¾æ€§åŒ–å®‰å…¨ä¼˜åŠ¿ |
+| `src/lib/localStorageCrypto.ts` | AES-GCM 256 åŠ å¯†è¾…åŠ©å‡½æ•°ï¼ŒCryptoKeyæ´¾ç”Ÿä¸Žç¼“å­˜ |
+| `src/lib/localStorageManager.ts` | ç»Ÿä¸€localStorageå°è£…ï¼Œæ–°å¢žåŠ å¯†å­˜å‚¨æ–¹æ³• |
+| `src/components/atoms/index.ts` | å¯¼å‡º SecurityStatusã€SecurityBadge ç»„ä»¶ |
 
-### Phase 5: ÐÔÄÜÓÅ»¯
+### Phase 5: æ€§èƒ½ä¼˜åŒ–
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `src/hooks/useStressTest.ts` | Ñ¹²â´¥·¢Hook£¨Ò³Ãæ¡ú·þÎñ¸ôÀë²ã£©£¬½«Ò³ÃæÖ±½Óµ÷ÓÃ `services/perf/stressTestService` ÊÕÁ²µ½Hook£¬Âú×ã audit:mcp Ô¼Êø |
-| `src/services/workers/v6ScoreWorker.ts` | V6ÆÀ·ÖÒýÇæWeb Worker£¬ÆÀ·Ö¼ÆËãoffloadµ½¶ÀÁ¢Ïß³Ì |
-| `src/services/workers/v6ScoreTaskScheduler.ts` | Worker³Ø¹ÜÀí£¬ÅúÁ¿ÆÀ·ÖÈÎÎñ·ÖÆ¬²¢ÐÐÖ´ÐÐ£¬ÈÎÎñ³¬Ê±±£»¤ |
+| `src/hooks/useStressTest.ts` | åŽ‹æµ‹è§¦å‘Hookï¼ˆé¡µé¢â†’æœåŠ¡éš”ç¦»å±‚ï¼‰ï¼Œå°†é¡µé¢ç›´æŽ¥è°ƒç”¨ `services/perf/stressTestService` æ”¶æ•›åˆ°Hookï¼Œæ»¡è¶³ audit:mcp çº¦æŸ |
+| `src/services/workers/v6ScoreWorker.ts` | V6è¯„åˆ†å¼•æ“ŽWeb Workerï¼Œè¯„åˆ†è®¡ç®—offloadåˆ°ç‹¬ç«‹çº¿ç¨‹ |
+| `src/services/workers/v6ScoreTaskScheduler.ts` | Workeræ± ç®¡ç†ï¼Œæ‰¹é‡è¯„åˆ†ä»»åŠ¡åˆ†ç‰‡å¹¶è¡Œæ‰§è¡Œï¼Œä»»åŠ¡è¶…æ—¶ä¿æŠ¤ |
 
-### Phase 6: ½¥½øÅûÂ¶Óë×ÔÊÊÓ¦ÃÜ¶È
+### Phase 6: æ¸è¿›æŠ«éœ²ä¸Žè‡ªé€‚åº”å¯†åº¦
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `src/components/cockpit/DensityContext.tsx` | ÐÅÏ¢ÃÜ¶È¿ØÖÆÉÏÏÂÎÄ£¬Ìá¹©compact/normal/expandedÈýÖÖÃÜ¶È¼¶±ð |
-| `src/components/cockpit/DensityToggle.tsx` | ÃÜ¶ÈÇÐ»»×é¼þ£¬ÔÊÐíÓÃ»§ÇÐ»»ÐÅÏ¢ÃÜ¶È¼¶±ð |
-| `src/components/atoms/index.ts` | µ¼³ö DensityToggle ×é¼þ |
+| `src/components/cockpit/DensityContext.tsx` | ä¿¡æ¯å¯†åº¦æŽ§åˆ¶ä¸Šä¸‹æ–‡ï¼Œæä¾›compact/normal/expandedä¸‰ç§å¯†åº¦çº§åˆ« |
+| `src/components/cockpit/DensityToggle.tsx` | å¯†åº¦åˆ‡æ¢ç»„ä»¶ï¼Œå…è®¸ç”¨æˆ·åˆ‡æ¢ä¿¡æ¯å¯†åº¦çº§åˆ« |
+| `src/components/atoms/index.ts` | å¯¼å‡º DensityToggle ç»„ä»¶ |
 
-### Phase 7: ÎÄµµÍ¬²½Óë·¢²¼×¼±¸
+### Phase 7: æ–‡æ¡£åŒæ­¥ä¸Žå‘å¸ƒå‡†å¤‡
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `docs/reports/changelogs/CHANGELOG.md` | ÐÂÔö v2.7.0 ÌõÄ¿£¬¼ÇÂ¼Æß½×¶ÎÍêÕû±ä¸ü |
-| `docs/00-meta/development-log.md` | ¸üÐÂ¿ª·¢ÈÕÖ¾£¬¼ÇÂ¼¸÷½×¶ÎÊµÏÖÏ¸½ÚÓëÎÊÌâ½â¾ö·½°¸ |
-| `docs/explanation/03-architecture-standards.md` | ¸üÐÂ°æ±¾ºÅÖÁ v2.7.0£¬²¹³äÐÂÔöÄ£¿éËµÃ÷ |
-| `docs/explanation/10-glossary.md` | ¸üÐÂ°æ±¾ºÅÖÁ v2.7.0 |
+| `docs/reports/changelogs/CHANGELOG.md` | æ–°å¢ž v2.7.0 æ¡ç›®ï¼Œè®°å½•ä¸ƒé˜¶æ®µå®Œæ•´å˜æ›´ |
+| `docs/00-meta/development-log.md` | æ›´æ–°å¼€å‘æ—¥å¿—ï¼Œè®°å½•å„é˜¶æ®µå®žçŽ°ç»†èŠ‚ä¸Žé—®é¢˜è§£å†³æ–¹æ¡ˆ |
+| `docs/explanation/03-architecture-standards.md` | æ›´æ–°ç‰ˆæœ¬å·è‡³ v2.7.0ï¼Œè¡¥å……æ–°å¢žæ¨¡å—è¯´æ˜Ž |
+| `docs/explanation/10-glossary.md` | æ›´æ–°ç‰ˆæœ¬å·è‡³ v2.7.0 |
 
-### Phase 8: ÎÄµµ¡ú´úÂë¶ÏÁÑÒýÓÃÐÞ¸´Óë¹¤¾ßÔöÇ¿
+### Phase 8: æ–‡æ¡£â†’ä»£ç æ–­è£‚å¼•ç”¨ä¿®å¤ä¸Žå·¥å…·å¢žå¼º
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `scripts/fix-doc-refs.ts` | v1.0¡úv1.1£ºÐÂÔöÄ¿Â¼ÒýÓÃ£¨ÒÔ `/` ½áÎ²£©µÄ basename Ä£ºýÆ¥ÅäÐÞ¸´ÄÜÁ¦ |
-| `docs/00-meta/directory-structure-guide.md` | ÐÞ¸´ `src/schema/` ¡ú `src/data/schemas/`£»°æ±¾ v3.1.0¡úv3.1.1 |
-| `docs/00-meta/src-directories-evaluation-report.md` | ÐÞ¸´ `src/hooks/` ¡ú `src/hooks/` |
-| `docs/reports/retrospectives/mcp-disabled-server-deep-dive.md` | ÐÞ¸´ `src/services/export/` ¡ú `src/services/export/` |
-| `docs/00-meta/doc-manifest.csv` | ÖØÐÂÉú³É£¬594 Ìõ¼ÇÂ¼£¨ºËÐÄ 71 / ÖØÒª 300 / ²Î¿¼ 223£© |
-| `docs/00-meta/registry-index.md` | ´Ó doc-manifest.csv ÖØ½¨£¬ÐÞ¸´ÖØ¸´ frontmatter |
-| `src/pages/command/agent/LlmManagement/hooks/useLlmConfigActions.ts` | É¾³ýÎ´Ê¹ÓÃº¯Êý `capToInfinity`£¬Ïû³ý `tsc:prod` ´íÎó |
+| `scripts/fix-doc-refs.ts` | v1.0â†’v1.1ï¼šæ–°å¢žç›®å½•å¼•ç”¨ï¼ˆä»¥ `/` ç»“å°¾ï¼‰çš„ basename æ¨¡ç³ŠåŒ¹é…ä¿®å¤èƒ½åŠ› |
+| `docs/00-meta/directory-structure-guide.md` | ä¿®å¤ `src/schema/` â†’ `src/data/schemas/`ï¼›ç‰ˆæœ¬ v3.1.0â†’v3.1.1 |
+| `docs/00-meta/src-directories-evaluation-report.md` | ä¿®å¤ `src/hooks/` â†’ `src/hooks/` |
+| `docs/reports/retrospectives/mcp-disabled-server-deep-dive.md` | ä¿®å¤ `src/services/export/` â†’ `src/services/export/` |
+| `docs/00-meta/doc-manifest.csv` | é‡æ–°ç”Ÿæˆï¼Œ594 æ¡è®°å½•ï¼ˆæ ¸å¿ƒ 71 / é‡è¦ 300 / å‚è€ƒ 223ï¼‰ |
+| `docs/00-meta/registry-index.md` | ä»Ž doc-manifest.csv é‡å»ºï¼Œä¿®å¤é‡å¤ frontmatter |
+| `src/pages/command/agent/LlmManagement/hooks/useLlmConfigActions.ts` | åˆ é™¤æœªä½¿ç”¨å‡½æ•° `capToInfinity`ï¼Œæ¶ˆé™¤ `tsc:prod` é”™è¯¯ |
 
-### Phase 8.5: ÎÄµµË÷ÒýÓë°æ±¾´Á¼Ç¸üÐÂ
+### Phase 8.5: æ–‡æ¡£ç´¢å¼•ä¸Žç‰ˆæœ¬æˆ³è®°æ›´æ–°
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `docs/00-meta/doc-manifest.csv` | È«Á¿ÖØ½¨£¬Í¬²½×îÐÂ docs/ Ä¿Â¼×´Ì¬ |
-| `docs/00-meta/registry-index.md` | ´Ó CSV ÖØ½¨£¬Ïû³ýÖØ¸´ frontmatter |
-| `src/pages/command/agent/LlmManagement/hooks/useLlmConfigActions.ts` | É¾³ýÎ´Ê¹ÓÃº¯Êý `capToInfinity` |
+| `docs/00-meta/doc-manifest.csv` | å…¨é‡é‡å»ºï¼ŒåŒæ­¥æœ€æ–° docs/ ç›®å½•çŠ¶æ€ |
+| `docs/00-meta/registry-index.md` | ä»Ž CSV é‡å»ºï¼Œæ¶ˆé™¤é‡å¤ frontmatter |
+| `src/pages/command/agent/LlmManagement/hooks/useLlmConfigActions.ts` | åˆ é™¤æœªä½¿ç”¨å‡½æ•° `capToInfinity` |
 
-### Phase 9: ¶ÏÁÑÒýÓÃÅúÁ¿ÊÕÎ²Óë·¢²¼»ùÏß¹®¹Ì
+### Phase 9: æ–­è£‚å¼•ç”¨æ‰¹é‡æ”¶å°¾ä¸Žå‘å¸ƒåŸºçº¿å·©å›º
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `scripts/apply-doc-refs-review.ts` | ÐÂÔö£º¶ÁÈ¡ `doc-refs-manual-review.json` ²¢ÅúÁ¿Ó¦ÓÃ¶àÆ¥ÅäÐÞ¸´½¨Òé |
-| `scripts/fix-basename-root-refs.ts` | ÐÂÔö£º×Ô¶¯ÐÞ¸´ÎÄµµÖÐ¶Ô¸ùÎÄµµ£¨AGENTS.md / README.md / CHANGELOG.md£©µÄ basename ¶ÏÁÑÒýÓÃ |
-| `src/pages/command/agent/LlmManagement/components/LlmConfigTab.tsx` | É¾³ýÎ´µ¼ÈëµÄ `Key as _KeyIcon` µ¼³ö£¬ÐÞ¸´ `tsc:prod` ´íÎó |
-| `docs/00-meta/doc-manifest.csv` | ÖØÐÂÉú³É£¬595 Ìõ¼ÇÂ¼£¨ºËÐÄ 71 / ÖØÒª 302 / ²Î¿¼ 222£© |
-| `docs/00-meta/registry-index.md` | ´Ó CSV ÖØ½¨ |
-| `docs/00-meta/development-log.md` | ÐÂÔö Phase 9 ¼ÇÂ¼£¬ÐÞ¸´ÖØ¸´ frontmatter |
-| `docs/reports/changelogs/CHANGELOG.md` | ÐÂÔö Phase 9 ¼ÇÂ¼£¬ÐÞ¸´ÖØ¸´ frontmatter |
+| `scripts/apply-doc-refs-review.ts` | æ–°å¢žï¼šè¯»å– `doc-refs-manual-review.json` å¹¶æ‰¹é‡åº”ç”¨å¤šåŒ¹é…ä¿®å¤å»ºè®® |
+| `scripts/fix-basename-root-refs.ts` | æ–°å¢žï¼šè‡ªåŠ¨ä¿®å¤æ–‡æ¡£ä¸­å¯¹æ ¹æ–‡æ¡£ï¼ˆAGENTS.md / README.md / CHANGELOG.mdï¼‰çš„ basename æ–­è£‚å¼•ç”¨ |
+| `src/pages/command/agent/LlmManagement/components/LlmConfigTab.tsx` | åˆ é™¤æœªå¯¼å…¥çš„ `Key as _KeyIcon` å¯¼å‡ºï¼Œä¿®å¤ `tsc:prod` é”™è¯¯ |
+| `docs/00-meta/doc-manifest.csv` | é‡æ–°ç”Ÿæˆï¼Œ595 æ¡è®°å½•ï¼ˆæ ¸å¿ƒ 71 / é‡è¦ 302 / å‚è€ƒ 222ï¼‰ |
+| `docs/00-meta/registry-index.md` | ä»Ž CSV é‡å»º |
+| `docs/00-meta/development-log.md` | æ–°å¢ž Phase 9 è®°å½•ï¼Œä¿®å¤é‡å¤ frontmatter |
+| `docs/reports/changelogs/CHANGELOG.md` | æ–°å¢ž Phase 9 è®°å½•ï¼Œä¿®å¤é‡å¤ frontmatter |
 
-### ¶ÏÁÑÒýÓÃÐÞ¸´Í³¼Æ
+### æ–­è£‚å¼•ç”¨ä¿®å¤ç»Ÿè®¡
 
-| ÀàÐÍ | ÐÞ¸´Ç° | ÐÞ¸´ºó | ±ä»¯ |
+| ç±»åž‹ | ä¿®å¤å‰ | ä¿®å¤åŽ | å˜åŒ– |
 |------|--------|--------|------|
-| ×Ü¶ÏÁÑÒýÓÃ | 6,271 | 3,027 | -3,244 (-51.7%) |
+| æ€»æ–­è£‚å¼•ç”¨ | 6,271 | 3,027 | -3,244 (-51.7%) |
 | doc-to-doc | 2,865 | 1,191 | -1,674 (-58.4%) |
 | code-to-doc | 94 | 93 | -1 |
-| doc-to-code | 1,735 | 1,743 | +8£¨Éó¼ÆÊ¶±ðÐÂÔö£© |
+| doc-to-code | 1,735 | 1,743 | +8ï¼ˆå®¡è®¡è¯†åˆ«æ–°å¢žï¼‰ |
 
-### ÑéÖ¤½á¹û
+### éªŒè¯ç»“æžœ
 
-- `npm run tsc:prod` ¡ª 0 ´íÎó
-- `npm run audit:layers` ¡ª 0 violations, 0 warnings
-- `npm run audit:hardcode` ¡ª Í¨¹ý
-- `npm run audit:deadcode` ¡ª 0 Î¥¹æ£¬38 ´¦ÌáÊ¾
-| `npm run audit:docs` ¡ª Í¨¹ý
-| `npm run audit:doc-integrity` ¡ª Í¨¹ý
-| `npm run doc:version-check` ¡ª 585/588 Ò»ÖÂ£¨3 ·ÝÎ´ÉùÃ÷£©
-| `npm run build` ¡ª ¹¹½¨³É¹¦£¨20s£©
+- `npm run tsc:prod` â€” 0 é”™è¯¯
+- `npm run audit:layers` â€” 0 violations, 0 warnings
+- `npm run audit:hardcode` â€” é€šè¿‡
+- `npm run audit:deadcode` â€” 0 è¿è§„ï¼Œ38 å¤„æç¤º
+| `npm run audit:docs` â€” é€šè¿‡
+| `npm run audit:doc-integrity` â€” é€šè¿‡
+| `npm run doc:version-check` â€” 585/588 ä¸€è‡´ï¼ˆ3 ä»½æœªå£°æ˜Žï¼‰
+| `npm run build` â€” æž„å»ºæˆåŠŸï¼ˆ20sï¼‰
 
-### Phase 10: ÏÔÊ½Â·¾¶Ó³Éä±íÓëµÚÈýÂÖ×Ô¶¯ÐÞ¸´
+### Phase 10: æ˜¾å¼è·¯å¾„æ˜ å°„è¡¨ä¸Žç¬¬ä¸‰è½®è‡ªåŠ¨ä¿®å¤
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `scripts/config/doc-ref-path-map.json` | ÐÂÔöÏÔÊ½Â·¾¶Ó³Éä±í£º39 Ìõ codePathMap + 54 Ìõ docPathMap |
-| `scripts/fix-doc-refs.ts` | v1.2£ºÐÂÔö `--use-path-map` ²ÎÊý£¬ÓÅÏÈÊ¹ÓÃÏÔÊ½Ó³ÉäÐÞ¸´¶ÏÁÑÒýÓÃ |
+| `scripts/config/doc-ref-path-map.json` | æ–°å¢žæ˜¾å¼è·¯å¾„æ˜ å°„è¡¨ï¼š39 æ¡ codePathMap + 54 æ¡ docPathMap |
+| `scripts/fix-doc-refs.ts` | v1.2ï¼šæ–°å¢ž `--use-path-map` å‚æ•°ï¼Œä¼˜å…ˆä½¿ç”¨æ˜¾å¼æ˜ å°„ä¿®å¤æ–­è£‚å¼•ç”¨ |
 
-**ÐÞ¸´Êý¾Ý**£º¶ÏÁÑÒýÓÃ´Ó 3,014 ½µÖÁ 2,797£¨-217£¬-7.2%£©£¬¶àÆ¥Åä´ý¸´ºË´Ó 132 ½µÖÁ 88¡£
+**ä¿®å¤æ•°æ®**ï¼šæ–­è£‚å¼•ç”¨ä»Ž 3,014 é™è‡³ 2,797ï¼ˆ-217ï¼Œ-7.2%ï¼‰ï¼Œå¤šåŒ¹é…å¾…å¤æ ¸ä»Ž 132 é™è‡³ 88ã€‚
 
-### Phase 11: ¶àÆ¥Åä×Ô¶¯Ó¦ÓÃÓëÓ³Éä±íÀ©³ä
+### Phase 11: å¤šåŒ¹é…è‡ªåŠ¨åº”ç”¨ä¸Žæ˜ å°„è¡¨æ‰©å……
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `scripts/fix/apply-multi-match-fixes.ts` | ÐÂÔö£º×Ô¶¯Ó¦ÓÃ `doc-refs-manual-review.json` ÖÐµÄ¶àÆ¥Åä×î¼Ñ½¨Òé |
-| `scripts/config/doc-ref-path-map.json` | ²¹³ä¿ÉÈ·ÈÏÓ³Éä£¬ÒÆ³ýÖ¸Ïò²»´æÔÚÄ¿Â¼µÄÎÞÐ§Ó³Éä |
+| `scripts/fix/apply-multi-match-fixes.ts` | æ–°å¢žï¼šè‡ªåŠ¨åº”ç”¨ `doc-refs-manual-review.json` ä¸­çš„å¤šåŒ¹é…æœ€ä½³å»ºè®® |
+| `scripts/config/doc-ref-path-map.json` | è¡¥å……å¯ç¡®è®¤æ˜ å°„ï¼Œç§»é™¤æŒ‡å‘ä¸å­˜åœ¨ç›®å½•çš„æ— æ•ˆæ˜ å°„ |
 
-**ÐÞ¸´Êý¾Ý**£º¶ÏÁÑÒýÓÃ´Ó 2,797 ½µÖÁ 2,285£¨-512£¬-18.3%£©¡£
+**ä¿®å¤æ•°æ®**ï¼šæ–­è£‚å¼•ç”¨ä»Ž 2,797 é™è‡³ 2,285ï¼ˆ-512ï¼Œ-18.3%ï¼‰ã€‚
 
-### Phase 12: Ó²±àÂëÇåÀíÊÕÎ²Óë²âÊÔÀàÐÍÐÞ¸´
+### Phase 12: ç¡¬ç¼–ç æ¸…ç†æ”¶å°¾ä¸Žæµ‹è¯•ç±»åž‹ä¿®å¤
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `src/constants/theme/theme.tokens.badges.ts` | ÐÂÔö BADGE_COLORS ÁîÅÆÏµÍ³£¬¾ÛºÏÔ¤²â/ËÑË÷/¸æ¾¯µÈ¸ßÆµ×éºÏÊ½ Tailwind ÑÕÉ«Àà |
-| `src/constants/theme.tokens.ts` | Í³Ò»Èë¿ÚÐÂÔö `BADGE_COLORS` µ¼³ö |
-| `src/components/organisms/output/prediction/FactorDashboardPanel.tsx` | Ê¹ÓÃ BADGE_COLORS Ìæ»» CYCLE_COLORS/ALERT_COLORS/DIRECTION_COLORS Ó²±àÂë |
-| `src/components/organisms/output/prediction/PredictionPanel.tsx` | Ê¹ÓÃ BADGE_COLORS Ìæ»»×´Ì¬±êÇ©¡¢·½ÏòÎÄ×Ö¡¢ÃüÖÐ±ê¼ÇÓ²±àÂë |
-| `src/components/organisms/search/GroupedView.tsx` | Ê¹ÓÃ BADGE_COLORS.groupBorder Ìæ»»·Ö×é±ß¿òÓ²±àÂë |
-| `src/components/organisms/search/TimelineView.tsx` | Ê¹ÓÃ BADGE_COLORS.statusBadge Ìæ»»×´Ì¬»ÕÕÂÓ²±àÂë |
-| `src/services/data-sync/globalScheduler.ts` | ÌáÈ¡ `TRADING_SESSION_MINUTES` ³£Á¿£¬Ïû³ýÒýÇæ²ãÄ§·¨Êý×Ö |
-| `src/services/fetcher/contractValidation.ts` | ÌáÈ¡ `DAYS_PER_YEAR` / `MAX_INVENTORY_TURNOVER_DAYS` ³£Á¿ |
-| `src/services/stock-analysis/scoringStrategy.ts` | ÌáÈ¡ `SIMULATED_LATENCY_MS` ³£Á¿ |
-| `src/pages/input/CollectTask/hooks/useCollectionTaskStats.test.ts` | ÐÞ¸´ 7 ´¦ TypeScript ÀàÐÍ´íÎó£¬8/8 µ¥Ôª²âÊÔÍ¨¹ý |
-| `scripts/audit-hardcode.ts` | À©Õ¹ COLOR_EXEMPT_FILES ¼¯ºÏ£¬ÐÂÔö theme.tokens ×ÓÄ£¿é»íÃâ |
+| `src/constants/theme/theme.tokens.badges.ts` | æ–°å¢ž BADGE_COLORS ä»¤ç‰Œç³»ç»Ÿï¼Œèšåˆé¢„æµ‹/æœç´¢/å‘Šè­¦ç­‰é«˜é¢‘ç»„åˆå¼ Tailwind é¢œè‰²ç±» |
+| `src/constants/theme.tokens.ts` | ç»Ÿä¸€å…¥å£æ–°å¢ž `BADGE_COLORS` å¯¼å‡º |
+| `src/components/organisms/output/prediction/FactorDashboardPanel.tsx` | ä½¿ç”¨ BADGE_COLORS æ›¿æ¢ CYCLE_COLORS/ALERT_COLORS/DIRECTION_COLORS ç¡¬ç¼–ç  |
+| `src/components/organisms/output/prediction/PredictionPanel.tsx` | ä½¿ç”¨ BADGE_COLORS æ›¿æ¢çŠ¶æ€æ ‡ç­¾ã€æ–¹å‘æ–‡å­—ã€å‘½ä¸­æ ‡è®°ç¡¬ç¼–ç  |
+| `src/components/organisms/search/GroupedView.tsx` | ä½¿ç”¨ BADGE_COLORS.groupBorder æ›¿æ¢åˆ†ç»„è¾¹æ¡†ç¡¬ç¼–ç  |
+| `src/components/organisms/search/TimelineView.tsx` | ä½¿ç”¨ BADGE_COLORS.statusBadge æ›¿æ¢çŠ¶æ€å¾½ç« ç¡¬ç¼–ç  |
+| `src/services/data-sync/globalScheduler.ts` | æå– `TRADING_SESSION_MINUTES` å¸¸é‡ï¼Œæ¶ˆé™¤å¼•æ“Žå±‚é­”æ³•æ•°å­— |
+| `src/services/fetcher/contractValidation.ts` | æå– `DAYS_PER_YEAR` / `MAX_INVENTORY_TURNOVER_DAYS` å¸¸é‡ |
+| `src/services/stock-analysis/scoringStrategy.ts` | æå– `SIMULATED_LATENCY_MS` å¸¸é‡ |
+| `src/pages/input/CollectTask/hooks/useCollectionTaskStats.test.ts` | ä¿®å¤ 7 å¤„ TypeScript ç±»åž‹é”™è¯¯ï¼Œ8/8 å•å…ƒæµ‹è¯•é€šè¿‡ |
+| `scripts/audit-hardcode.ts` | æ‰©å±• COLOR_EXEMPT_FILES é›†åˆï¼Œæ–°å¢ž theme.tokens å­æ¨¡å—è±å… |
 
-### ÑéÖ¤½á¹û£¨Phase 12 È«Á¿ÑéÖ¤£©
+### éªŒè¯ç»“æžœï¼ˆPhase 12 å…¨é‡éªŒè¯ï¼‰
 
-| ÑéÖ¤Ïî | ÃüÁî | ½á¹û |
+| éªŒè¯é¡¹ | å‘½ä»¤ | ç»“æžœ |
 |--------|------|------|
-| ÀàÐÍ¼ì²é | `npm run tsc:prod` | ? 0 ´íÎó |
-| µ¥Ôª²âÊÔ | `npx vitest run src/pages/input/CollectTask/hooks/useCollectionTaskStats.test.ts` | ? 8/8 Í¨¹ý |
-| ¿ç²ãµ÷ÓÃÉó¼Æ | `npm run audit:layers` | ? 0 violations |
-| Ó²±àÂëÉó¼Æ | `npm run audit:hardcode` | ? Í¨¹ý |
-| ËÀ´úÂëÉó¼Æ | `npm run audit:deadcode` | ? 0 Î¥¹æ£¬50 ´¦ÌáÊ¾ |
-| ÎÄµµÍ¬²½Éó¼Æ | `npm run audit:docs` | ? Í¨¹ý |
-| ÎÄµµÍêÕûÐÔÉó¼Æ | `npm run audit:doc-integrity` | ? Í¨¹ý |
-| ÎÄµµ°æ±¾¼ì²é | `npm run doc:version-check` | ? 593/606 º¬ code_version |
-| ¹¹½¨ÑéÖ¤ | `npm run build` | ? ³É¹¦£¬10.63s |
+| ç±»åž‹æ£€æŸ¥ | `npm run tsc:prod` | ? 0 é”™è¯¯ |
+| å•å…ƒæµ‹è¯• | `npx vitest run src/pages/input/CollectTask/hooks/useCollectionTaskStats.test.ts` | ? 8/8 é€šè¿‡ |
+| è·¨å±‚è°ƒç”¨å®¡è®¡ | `npm run audit:layers` | ? 0 violations |
+| ç¡¬ç¼–ç å®¡è®¡ | `npm run audit:hardcode` | ? é€šè¿‡ |
+| æ­»ä»£ç å®¡è®¡ | `npm run audit:deadcode` | ? 0 è¿è§„ï¼Œ50 å¤„æç¤º |
+| æ–‡æ¡£åŒæ­¥å®¡è®¡ | `npm run audit:docs` | ? é€šè¿‡ |
+| æ–‡æ¡£å®Œæ•´æ€§å®¡è®¡ | `npm run audit:doc-integrity` | ? é€šè¿‡ |
+| æ–‡æ¡£ç‰ˆæœ¬æ£€æŸ¥ | `npm run doc:version-check` | ? 593/606 å« code_version |
+| æž„å»ºéªŒè¯ | `npm run build` | ? æˆåŠŸï¼Œ10.63s |
 
-### ¹Ø¼üÉè¼Æ¾ö²ß
+### å…³é”®è®¾è®¡å†³ç­–
 
-1. **ÐÅºÅÇ¿¶ÈÄ¸ÌâÍ³Ò»**£ºSignalSpectrum ×é¼þ×÷ÎªÈ«¾ÖÐÅºÅÇ¿¶È±ê×¼£¬È·±£ÆÀ·ÖÕ¹Ê¾Ò»ÖÂÐÔ
-2. **¼ÓÃÜ´æ´¢ÏÔÐÔ»¯**£ºSecurityStatus ×é¼þÈÃÓÃ»§Ö±¹ÛÁË½âÊý¾Ý°²È«×´Ì¬
-3. **ÐÅÏ¢ÃÜ¶È×ÔÊÊÓ¦**£ºDensityContext Ö§³ÖÈýÖÖÃÜ¶È¼¶±ð£¬Âú×ã²»Í¬ÓÃ»§Æ«ºÃ
-4. **Worker ²¢ÐÐ¼ÆËã**£ºÆÀ·Ö¼ÆËã offload µ½¶ÀÁ¢Ïß³Ì£¬±ÜÃâÖ÷Ïß³Ì×èÈû
-
----
-
-## v2.6.0 (2026-07-08) ¡ª Hybrid Proofread Ä£¿éÍêÉÆ¡¢ÈÕÖ¾ÔöÇ¿ÓëÎÄµµÍ¬²½
-
-**±ä¸ü·¶Î§**£º»ìºÏÐ£¶ÔÄ£¿é£¨Hybrid Proofread£©È«ÃæÍêÉÆ£¬°üº¬ÏêÏ¸ÈÕÖ¾Ìí¼Ó¡¢ºÄÊ±Í³¼Æ¡¢²âÊÔ½Å±¾¹¹½¨¡¢Êý¾Ý×Öµä¸üÐÂ¡¢ºËÐÄÎÄµµÍ¬²½
-
-### ÐÂ½¨ÎÄ¼þ
-
-| ÎÄ¼þ | ÓÃÍ¾ |
-|------|------|
-| `scripts/test-tool/test-hybrid-proofread.ts` | »ìºÏÐ£¶ÔÄ£¿é×ÛºÏ²âÊÔ½Å±¾£¬°üº¬ 9 ¸ö²âÊÔÓÃÀý£¬¸²¸Ç HashService/RuleEngine/CloudSyncClient/ÍêÕûÐ£¶ÔÁ÷³Ì |
-| `src/data/types/types.hybridProofread.ts` | »ìºÏÐ£¶ÔÄ£¿éÀàÐÍ¶¨Òå£¨17 ¸ö½Ó¿Ú/ÀàÐÍ£© |
-
-### ÐÞ¸ÄÎÄ¼þ
-
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
-|------|---------|
-| `src/services/hybrid-proofread/cloudSyncClient.ts` | ÎªËùÓÐºËÐÄ·½·¨£¨verifyHash/batchVerifyHashes/getRiskDetails/syncRules£©Ìí¼ÓÏêÏ¸ logger.info ÈÕÖ¾ºÍºÄÊ±Í³¼Æ |
-| `src/services/hybrid-proofread/ruleEngine.ts` | Îª loadRules/syncRules/evaluateFile Ìí¼ÓÏêÏ¸ logger.info ÈÕÖ¾ºÍºÄÊ±Í³¼Æ |
-| `src/services/hybrid-proofread/index.ts` | Îª runFullProofread ÍêÕûÁ÷³ÌÌí¼ÓËÄ²½·Ö½×¶ÎÈÕÖ¾ºÍºÄÊ±²ð½â |
-| `src/config/hybridProofreadConfig.ts` | ¹þÏ£Ëã·¨´Ó SHA-3-256 ¸ÄÎª SHA-256£¨Node.js ¼æÈÝÐÔ£© |
-| `src/store/hybridProofreadStore.ts` | Ìí¼Ó×´Ì¬¹ÜÀíºÍÈÕÖ¾¼ÇÂ¼ |
-
-### ÎÄµµ¸üÐÂ
-
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
-|------|---------|
-| `../../reference/data-dictionary-index.md` | v1.5.0¡úv1.6.0£ºÐÂÔö»ìºÏÐ£¶ÔÄ£¿éË÷Òý£¬°üº¬ 17 ¸öÀàÐÍ¶¨Òå |
-| `../../reference/03-architecture-standards.md` | v2.5.0¡úv2.6.0£ºÐÂÔö ¡ì3.1.9 Hybrid Proofread Ä£¿éËµÃ÷ |
-| `../../reference/05-engine-specs.md` | v2.5.0¡úv2.6.0£ºÐÂÔö»ìºÏÐ£¶ÔÒýÇæËµÃ÷ |
-
-### ÑéÖ¤½á¹û
-
-- `tsc --noEmit` ¡ª 0 ´íÎó
-- `npm run audit:layers` ¡ª 0 violations, 0 warnings
-- `npm run test -- --run` ¡ª Í¨¹ý
-- ²âÊÔ½Å±¾ 9/9 ÓÃÀýÈ«²¿Í¨¹ý£¬³É¹¦¼ì²âµ½ Mock ÏîÄ¿ÖÐµÄ°²È«ÎÊÌâ
-
-### Ä£¿é¼Ü¹¹
-
-»ìºÏÐ£¶ÔÄ£¿é²ÉÓÃ·Ö²ã¼Ü¹¹£º
-- **ÅäÖÃ²ã**£º`HYBRID_PROOFREAD_CONFIG`£¨API ¶Ëµã¡¢¹þÏ£Ëã·¨¡¢¹æÔòÍ¬²½¼ä¸ô£©
-- **·þÎñ²ã**£º5 ¸öºËÐÄÄ£¿é£¨hashService/ruleEngine/cloudSyncClient/localCollector/reportGenerator£©
-- **×´Ì¬²ã**£º`useHybridProofreadStore`£¨É¨Ãè×´Ì¬¡¢±¨¸æÊý¾Ý¡¢¹æÔòÐÅÏ¢£©
-- **ÀàÐÍ²ã**£º17 ¸ö½Ó¿Ú¶¨Òå£¨FileHash/RuleConfig/ProofreadReport µÈ£©
-
-### ÈÕÖ¾ÔöÇ¿ÏêÇé
-
-| Ä£¿é | ÈÕÖ¾ÄÚÈÝ |
-|------|---------|
-| CloudSyncClient | ÇëÇó²ÎÊý¡¢ÏìÓ¦×´Ì¬¡¢·çÏÕµÈ¼¶¡¢CVE ÐÅÏ¢¡¢ºÄÊ±Í³¼Æ |
-| RuleEngine | ¹æÔò¼ÓÔØ×´Ì¬¡¢Æ¥ÅäÏêÇé¡¢Ìø¹ý¹æÔòÊý¡¢ºÄÊ±Í³¼Æ |
-| runFullProofread | ËÄ²½Á÷³ÌÈÕÖ¾£¨¹æÔòÍ¬²½¡ú±¾µØÉ¨Ãè¡ú¹æÔòÆÀ¹À¡úÔÆ¶Ë¼ì²é£©¡¢¸÷½×¶ÎºÄÊ±²ð½â¡¢×îÖÕ½á¹û»ã×Ü |
+1. **ä¿¡å·å¼ºåº¦æ¯é¢˜ç»Ÿä¸€**ï¼šSignalSpectrum ç»„ä»¶ä½œä¸ºå…¨å±€ä¿¡å·å¼ºåº¦æ ‡å‡†ï¼Œç¡®ä¿è¯„åˆ†å±•ç¤ºä¸€è‡´æ€§
+2. **åŠ å¯†å­˜å‚¨æ˜¾æ€§åŒ–**ï¼šSecurityStatus ç»„ä»¶è®©ç”¨æˆ·ç›´è§‚äº†è§£æ•°æ®å®‰å…¨çŠ¶æ€
+3. **ä¿¡æ¯å¯†åº¦è‡ªé€‚åº”**ï¼šDensityContext æ”¯æŒä¸‰ç§å¯†åº¦çº§åˆ«ï¼Œæ»¡è¶³ä¸åŒç”¨æˆ·åå¥½
+4. **Worker å¹¶è¡Œè®¡ç®—**ï¼šè¯„åˆ†è®¡ç®— offload åˆ°ç‹¬ç«‹çº¿ç¨‹ï¼Œé¿å…ä¸»çº¿ç¨‹é˜»å¡ž
 
 ---
 
-## v2.5.0 (2026-07-05) ¡ª UseCase ³éÈ¡¡¢½»Ò×¼ÆËã´¿º¯Êý»¯ÓëÅäÖÃ²ã²¹È«
+## v2.6.0 (2026-07-08) â€” Hybrid Proofread æ¨¡å—å®Œå–„ã€æ—¥å¿—å¢žå¼ºä¸Žæ–‡æ¡£åŒæ­¥
 
-**±ä¸ü·¶Î§**£º8 ÂÖµü´úÕû¸Ä£¬º­¸Ç UseCase Ä£Ê½ÒýÈë¡¢½»Ò×¼ÆËã´¿º¯ÊýÌáÈ¡¡¢ÅäÖÃ²ãÎÄ¼þÐÂÔö¡¢Store ÊÝÉí¡¢ËÀ´úÂëÇåÀí¡¢12 ¸ö pages/components µÄ Service Ö±µ÷¸ÄÎª Store µ÷ÓÃ
-**±ä¸ü½á¹û**£ºStore Ö°Ôð¸üÇåÎú£¨createPlan 148¡ú30 ÐÐ¡¢fetchSectorAnalysis 141¡ú25 ÐÐ¡¢orderStore 858¡ú548 ÐÐ£©£¬½»Ò×¼ÆËã¿É²âÊÔÐÔÌáÉý£¨3 ¸ö´¿º¯ÊýÄ£¿é£©£¬ÅäÖÃ²ãÁãÓ²±àÂë²¹È«£¨3 ¸öÐÂÅäÖÃÎÄ¼þ£©
+**å˜æ›´èŒƒå›´**ï¼šæ··åˆæ ¡å¯¹æ¨¡å—ï¼ˆHybrid Proofreadï¼‰å…¨é¢å®Œå–„ï¼ŒåŒ…å«è¯¦ç»†æ—¥å¿—æ·»åŠ ã€è€—æ—¶ç»Ÿè®¡ã€æµ‹è¯•è„šæœ¬æž„å»ºã€æ•°æ®å­—å…¸æ›´æ–°ã€æ ¸å¿ƒæ–‡æ¡£åŒæ­¥
 
-### ÐÂ½¨ÎÄ¼þ
+### æ–°å»ºæ–‡ä»¶
 
-| ÎÄ¼þ | ÓÃÍ¾ |
+| æ–‡ä»¶ | ç”¨é€” |
 |------|------|
-| `src/config/apiPaths.ts` | ÄÚ²¿ API Â·¾¶¼¯ÖÐÅäÖÃ£¨ÏµÍ³¼à¿Ø/½»Ò×/Êý¾Ý²É¼¯¹² 12 ÌõÂ·¾¶£© |
-| `src/config/timeouts.ts` | ³¬Ê±Öµ¼¯ÖÐÅäÖÃ£¨·ÖÎöÒýÇæ/Êý¾Ý²É¼¯/Ä¬ÈÏÇëÇó/LLM µ÷ÓÃ 4 Ïî³¬Ê±£© |
-| `src/config/mathConstants.ts` | ÊýÑ§/½ðÈÚ³£Á¿£¨MS_PER_DAY/TRADING_DAYS_PER_YEAR/VAR_95_Z_SCORE µÈ 10 Ïî£© |
-| `src/services/useCase/createExecutionPlan.useCase.ts` | ´´½¨Ö´ÐÐ¼Æ»® UseCase£¨5 ²½ÒµÎñÁ÷³Ì£º»ñÈ¡¹É¼Û¡ú²ÖÎ»¼ÆËã¡ú·ç¿Ø¼ì²é¡ú¹¹Ôì¼Æ»®¡ú³Ö¾Ã»¯£© |
-| `src/services/useCase/fetchSectorAnalysis.useCase.ts` | °å¿é·ÖÎöÊý¾Ý¼ÓÔØ UseCase£¨4 ²½£º²¢ÐÐ²éÑ¯¡ú¿ÕÊý¾ÝÄ¬ÈÏ¼ÆËã¡úÅÅÐò¡ú·µ»ØºÏ²¢½á¹û£© |
-| `src/services/useCase/createExecutionPlan.useCase.ts` | Ö´ÐÐ¼Æ»®Ö´ÐÐ UseCase£¨6 ²½ÒµÎñÁ÷³Ì£ºÉèÖÃ×´Ì¬¡ú¸üÐÂ¼Æ»®¡ú»ñÈ¡¹É¼Û¡ú´´½¨¶©µ¥¡ú¸üÐÂ×´Ì¬¡úÇåÀí£© |
-| `src/services/useCase/fetcherOrchestrator.useCase.ts` | Êý¾Ý²É¼¯±àÅÅ UseCase£¨·â×° fetcher Óò¿çÓòµ÷ÓÃ£¬Ìá¹© fetchBasicData/fetch_kline Á½¸öÖ´ÐÐÓÃÀý£© |
-| `src/services/useCase/generateTradeReview.useCase.ts` | AI ½»Ò×¸´ÅÌ±¨¸æÉú³É UseCase£¨ÕûºÏ´íÎó·ÖÀà¡¢ÎåÎ¬¹æÔòÉú³É¡¢LLM ¶´²ìµÄ³¤Á÷³Ì±àÅÅ£© |
-| `src/services/useCase/getUnifiedStockView.useCase.ts` | Í³Ò»¹ÉÆ±ÊÓÍ¼ÈÚºÏ UseCase£¨¿ç dataLayer ¶àÔ´¶ÁÈ¡£º¹ÉÆ±»ù´¡+KÏß+V6ÆÀ·Ö+ÖÇÄÜÆÀ·Ö+ÐÐÒµÆÀ·Ö+°å¿éÂÖ¶¯+ÐÅºÅ+³Ö²Ö£© |
-| `src/services/useCase/hotSectorQuery.useCase.ts` | ÈÈÃÅ°å¿é²éÑ¯ UseCase£¨·â×° input/hotSectorService ¿çÓòµ÷ÓÃ£¬·µ»Ø°´ score ½µÐòÅÅÁÐµÄ°å¿éÁÐ±í£© |
-| `src/services/useCase/rebalancePortfolio.useCase.ts` | Í¶×Ê×éºÏÔÙÆ½ºâ UseCase£¨²ÎÊýÐ£Ñé¡úÊý¾Ý»ñÈ¡¡úÔÙÆ½ºâ¼ÆËã¡ú³Ö¾Ã»¯£¬º¬ÐÂÏÊ¶È¼ì²é£© |
-| `src/services/useCase/runDualStrategy.useCase.ts` | Ë«²ßÂÔÖ´ÐÐ UseCase£¨±àÅÅÈÈÃÅ°å¿é·ÖÎö+¼ÛÖµÍÝµØ·ÖÎö+ÂÖ¶¯ÐÅºÅ¼ì²â£¬¿ç scoring Óòµ÷ÓÃ£© |
-| `src/services/trading/strategySnapshotService.ts` | ²ßÂÔ¿ìÕÕ±£´æ UseCase£¨3 ²½£º²ÎÊýÐ£Ñé¡ú¹¹Ôì¿ìÕÕ payload¡úÍ¨¹ý DataBridge ÐÅ·âÐ­Òé³Ö¾Ã»¯£© |
-| `src/services/trading/positionComputer.ts` | FIFO Åä¶Ô+³Ö²Ö¹¹½¨´¿º¯Êý£¨buildTradePairs/buildPositions£¬µ¼³ö MatchedTradePair/TradePair/PositionItem ÀàÐÍ£© |
-| `src/services/trading/pnlComputer.ts` | Ó¯¿÷»ã×Ü¼ÆËã´¿º¯Êý£¨computePnLSummary£¬µ¼³ö PnLSummary ÀàÐÍ£¬º¬ÔÂ¶ÈÓ¯¿÷/ÈÕ¶ÈÇúÏß£© |
-| `src/services/trading/riskComputer.ts` | ·çÏÕÖ¸±ê¼ÆËã´¿º¯Êý£¨computeRiskMetrics£¬µ¼³ö RiskMetrics ÀàÐÍ£¬º¬ VaR/×î´ó»Ø³·/²¨¶¯ÂÊ/ÏÄÆÕ/¼¯ÖÐ¶È£© |
+| `scripts/test-tool/test-hybrid-proofread.ts` | æ··åˆæ ¡å¯¹æ¨¡å—ç»¼åˆæµ‹è¯•è„šæœ¬ï¼ŒåŒ…å« 9 ä¸ªæµ‹è¯•ç”¨ä¾‹ï¼Œè¦†ç›– HashService/RuleEngine/CloudSyncClient/å®Œæ•´æ ¡å¯¹æµç¨‹ |
+| `src/data/types/types.hybridProofread.ts` | æ··åˆæ ¡å¯¹æ¨¡å—ç±»åž‹å®šä¹‰ï¼ˆ17 ä¸ªæŽ¥å£/ç±»åž‹ï¼‰ |
 
-### É¾³ýÎÄ¼þ
+### ä¿®æ”¹æ–‡ä»¶
 
-| ÎÄ¼þ | Ô­Òò |
-|------|------|
-| `src/components/organisms/pool/usePoolDataFromStore.ts` | ËÀ´úÂë£¬ÒÑ±» `usePoolDataFromStore` Ìæ´ú |
-| `src/services/contracts.ts` | agent ²ÐÁô¹ÂÁ¢ÎÄ¼þ£¨v2.3.0 ÐÂ½¨ºó²»ÔÙÐèÒª£© |
-
-### ÐÞ¸ÄÎÄ¼þ
-
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `src/core/poolTransitionEngine.ts` | ÐÂÔö `getPoolTransitionOptions` ´¿º¯Êý£¨´Ó services ²ãÇ¨ÒÆµ½ core ²ã£© |
-| `src/store/executionStore.ts` | `createPlan` ´Ó 148 ÐÐËõ¼õÖÁ 30 ÐÐ£¨ÒµÎñ±àÅÅÂß¼­ÌáÈ¡µ½ `createExecutionPlanUseCase`£© |
-| `src/store/sectorAnalysisStore.ts` | `fetchSectorAnalysis` ´Ó 141 ÐÐËõ¼õÖÁ 25 ÐÐ£¨Êý¾Ý¼ÓÔØÂß¼­ÌáÈ¡µ½ `fetchSectorAnalysisUseCase`£© |
-| `src/store/orderStore.ts` | ´Ó 858 ÐÐËõ¼õÖÁ 548 ÐÐ£¨FIFO Åä¶Ô/Ó¯¿÷/·çÏÕ¼ÆËãÌáÈ¡µ½ positionComputer/pnlComputer/riskComputer£© |
-| `src/store/valuePitStore.ts` | ÐÂÔö `runAnalysis` action |
-| `src/store/intelligentScoreStore.ts` | ÐÂÔö `loadScoreTrend` action |
-| `src/store/scoreDocStore.ts` | ÐÂÔö `loadHistoryDocs` action |
-| `src/store/analysisNewsStore.ts` | ÐÂÔö `computeSentimentTrend` action |
-| `src/store/systemMonitorStore.ts` | ÐÂÔö `fetchMonitorLogs`/`clearMonitorLogs` action |
-| `src/store/inputHubStore.ts` | ÐÂÔö `searchStocks`/`addStockFromSearch` action |
-| 12 ¸ö pages/components ÎÄ¼þ | Service Ö±µ÷¸ÄÎª Store µ÷ÓÃ£¨×ñÑ­·Ö²ã¹æÔò£ºpages/components Ö»Í¨¹ý Store »ñÈ¡Êý¾Ý£© |
+| `src/services/hybrid-proofread/cloudSyncClient.ts` | ä¸ºæ‰€æœ‰æ ¸å¿ƒæ–¹æ³•ï¼ˆverifyHash/batchVerifyHashes/getRiskDetails/syncRulesï¼‰æ·»åŠ è¯¦ç»† logger.info æ—¥å¿—å’Œè€—æ—¶ç»Ÿè®¡ |
+| `src/services/hybrid-proofread/ruleEngine.ts` | ä¸º loadRules/syncRules/evaluateFile æ·»åŠ è¯¦ç»† logger.info æ—¥å¿—å’Œè€—æ—¶ç»Ÿè®¡ |
+| `src/services/hybrid-proofread/index.ts` | ä¸º runFullProofread å®Œæ•´æµç¨‹æ·»åŠ å››æ­¥åˆ†é˜¶æ®µæ—¥å¿—å’Œè€—æ—¶æ‹†è§£ |
+| `src/config/hybridProofreadConfig.ts` | å“ˆå¸Œç®—æ³•ä»Ž SHA-3-256 æ”¹ä¸º SHA-256ï¼ˆNode.js å…¼å®¹æ€§ï¼‰ |
+| `src/store/hybridProofreadStore.ts` | æ·»åŠ çŠ¶æ€ç®¡ç†å’Œæ—¥å¿—è®°å½• |
 
-### ÎÄµµ¸üÐÂ
+### æ–‡æ¡£æ›´æ–°
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `./CHANGELOG.md` | ÐÂÔö v2.5.0 ÌõÄ¿ |
-| `../../reference/03-architecture-standards.md` | v2.3.0¡úv2.5.0£ºÅäÖÃ²ãÐÂÔö 3 ÎÄ¼þ¡¢·þÎñ²ãÐÂÔö 3 ¸ö½»Ò×¼ÆËãÄ£¿é+2 ¸ö UseCase¡¢×¢²áÌåÏµ¸üÐÂ |
-| `../../reference/data-dictionary-index.md` | v1.3.0¡úv1.4.0£ºÐÂÔö UseCase ÀàÐÍË÷Òý¡¢½»Ò×¼ÆËã´¿º¯ÊýÀàÐÍË÷Òý |
-| `../../reference/05-engine-specs.md` | v2.2.1¡úv2.5.0£º½»Ò×ÒýÇæÄ¿Â¼ÐÂÔö positionComputer/pnlComputer/riskComputer¡¢ÐÂÔö UseCase ²ãËµÃ÷ |
+| `../../reference/data-dictionary-index.md` | v1.5.0â†’v1.6.0ï¼šæ–°å¢žæ··åˆæ ¡å¯¹æ¨¡å—ç´¢å¼•ï¼ŒåŒ…å« 17 ä¸ªç±»åž‹å®šä¹‰ |
+| `../../reference/03-architecture-standards.md` | v2.5.0â†’v2.6.0ï¼šæ–°å¢ž Â§3.1.9 Hybrid Proofread æ¨¡å—è¯´æ˜Ž |
+| `../../reference/05-engine-specs.md` | v2.5.0â†’v2.6.0ï¼šæ–°å¢žæ··åˆæ ¡å¯¹å¼•æ“Žè¯´æ˜Ž |
 
-### ÑéÖ¤½á¹û
+### éªŒè¯ç»“æžœ
 
-- `tsc --noEmit` ¡ª 0 ´íÎó
-- `audit:layers` ¡ª 0 violations, 0 warnings
-- ·Ö²ã¹æÔòÑéÖ¤ ¡ª 12 ¸ö pages/components ÎÄ¼þ´Ó Service Ö±µ÷¸ÄÎª Store µ÷ÓÃ£¬·ûºÏ L5¡úL3 µ÷ÓÃ¹æÔò
+- `tsc --noEmit` â€” 0 é”™è¯¯
+- `npm run audit:layers` â€” 0 violations, 0 warnings
+- `npm run test -- --run` â€” é€šè¿‡
+- æµ‹è¯•è„šæœ¬ 9/9 ç”¨ä¾‹å…¨éƒ¨é€šè¿‡ï¼ŒæˆåŠŸæ£€æµ‹åˆ° Mock é¡¹ç›®ä¸­çš„å®‰å…¨é—®é¢˜
 
-### ¹Ø¼üÉè¼Æ¾ö²ß
+### æ¨¡å—æž¶æž„
 
-1. **UseCase Ä£Ê½ÒýÈë**
-   - UseCase Î»ÓÚ `src/services/useCase/`£¬×ñÑ­ Clean Architecture Interactor Ä£Ê½
-   - Ã¿¸ö UseCase ¶¨Òå `Input`/`Result` ½Ó¿Ú£¬ÊäÈë/Êä³öÀàÐÍÃ÷È·
-   - Store µ÷ÓÃ UseCase£¬UseCase µ÷ÓÃ dataLayer ºÍÆäËû services
-   - ºÃ´¦£ºStore ±£³ÖÊÝ±¡¡¢ÒµÎñÂß¼­¿É¶ÀÁ¢²âÊÔ¡¢»Ø¹öÁ£¶ÈÇåÎú
+æ··åˆæ ¡å¯¹æ¨¡å—é‡‡ç”¨åˆ†å±‚æž¶æž„ï¼š
+- **é…ç½®å±‚**ï¼š`HYBRID_PROOFREAD_CONFIG`ï¼ˆAPI ç«¯ç‚¹ã€å“ˆå¸Œç®—æ³•ã€è§„åˆ™åŒæ­¥é—´éš”ï¼‰
+- **æœåŠ¡å±‚**ï¼š5 ä¸ªæ ¸å¿ƒæ¨¡å—ï¼ˆhashService/ruleEngine/cloudSyncClient/localCollector/reportGeneratorï¼‰
+- **çŠ¶æ€å±‚**ï¼š`useHybridProofreadStore`ï¼ˆæ‰«æçŠ¶æ€ã€æŠ¥å‘Šæ•°æ®ã€è§„åˆ™ä¿¡æ¯ï¼‰
+- **ç±»åž‹å±‚**ï¼š17 ä¸ªæŽ¥å£å®šä¹‰ï¼ˆFileHash/RuleConfig/ProofreadReport ç­‰ï¼‰
 
-2. **½»Ò×¼ÆËã´¿º¯Êý»¯**
-   - `positionComputer.ts`/`pnlComputer.ts`/`riskComputer.ts` ¾ùÎª´¿º¯ÊýÄ£¿é
-   - ´Ó `orderStore.ts`£¨858 ÐÐ£©ÌáÈ¡¼ÆËãÂß¼­£¬Store Ëõ¼õÖÁ 548 ÐÐ
-   - ´¿º¯Êý²»ÒÀÀµ Store/Service£¬½ö½ÓÊÕ²ÎÊý·µ»Ø½á¹û£¬±ãÓÚµ¥Ôª²âÊÔ
-   - `riskComputer.ts` ÒýÓÃ `mathConstants.ts` ÖÐµÄ `TRADING_DAYS_PER_YEAR`/`VAR_95_Z_SCORE`
+### æ—¥å¿—å¢žå¼ºè¯¦æƒ…
 
-3. **ÅäÖÃ²ã²¹È«**
-   - `apiPaths.ts`£º12 ÌõÄÚ²¿ API Â·¾¶¼¯ÖÐ¹ÜÀí£¬Ïû³ý·þÎñ²ãÓ²±àÂëÂ·¾¶×Ö·û´®
-   - `timeouts.ts`£º4 Ïî³¬Ê±Öµ¼¯ÖÐÅäÖÃ£¬Ïû³ýÒµÎñ´úÂëÖÐµÄºÁÃëÊýÓ²±àÂë
-   - `mathConstants.ts`£º10 Ïî¿çÎÄ¼þ¸´ÓÃµÄÊýÑ§/½ðÈÚ³£Á¿£¬Ïû³ýÄ§·¨Êý×Ö
-
-4. **Service Ö±µ÷¸Ä Store µ÷ÓÃ**
-   - 12 ¸ö pages/components ÎÄ¼þÔ­ÏÈÖ±½Óµ÷ÓÃ services ²ã£¬Î¥·´·Ö²ã¹æÔò
-   - ¸ÄÎªÍ¨¹ý¶ÔÓ¦ Store µÄ action ´¥·¢£¬Store ÄÚ²¿µ÷ÓÃ services
-   - ·ûºÏ AGENTS.md ÒÀÀµ·½Ïò¹æÔò£ºpages/components ¡ú store ¡ú services
+| æ¨¡å— | æ—¥å¿—å†…å®¹ |
+|------|---------|
+| CloudSyncClient | è¯·æ±‚å‚æ•°ã€å“åº”çŠ¶æ€ã€é£Žé™©ç­‰çº§ã€CVE ä¿¡æ¯ã€è€—æ—¶ç»Ÿè®¡ |
+| RuleEngine | è§„åˆ™åŠ è½½çŠ¶æ€ã€åŒ¹é…è¯¦æƒ…ã€è·³è¿‡è§„åˆ™æ•°ã€è€—æ—¶ç»Ÿè®¡ |
+| runFullProofread | å››æ­¥æµç¨‹æ—¥å¿—ï¼ˆè§„åˆ™åŒæ­¥â†’æœ¬åœ°æ‰«æâ†’è§„åˆ™è¯„ä¼°â†’äº‘ç«¯æ£€æŸ¥ï¼‰ã€å„é˜¶æ®µè€—æ—¶æ‹†è§£ã€æœ€ç»ˆç»“æžœæ±‡æ€» |
 
 ---
 
-## v2.4.0 (2026-07-05) ¡ª MCP Server ÌåÏµÍêÉÆÓëÉó¼Æ½Å±¾Éý¼¶
+## v2.5.0 (2026-07-05) â€” UseCase æŠ½å–ã€äº¤æ˜“è®¡ç®—çº¯å‡½æ•°åŒ–ä¸Žé…ç½®å±‚è¡¥å…¨
 
-**±ä¸ü·¶Î§**£º´´½¨ 5 ¸öÈ±Ê§µÄ MCP Server¡¢ÐÞ¸´Éó¼Æ½Å±¾ÀàÐÍ¼ì²â¡¢ÐÞ¸´ MCP Server ÀàÐÍ´íÎó¡¢²¹³äµ¥Ôª²âÊÔ
-**±ä¸ü½á¹û**£ºMCP Server ´Ó 11 ¸öÀ©Õ¹µ½ 16 ¸ö£¬Éó¼Æ½Å±¾Ö§³Ö services¡úlib Î¥¹æ¼ì²â£¬ËùÓÐÀàÐÍ¼ì²éÍ¨¹ý
+**å˜æ›´èŒƒå›´**ï¼š8 è½®è¿­ä»£æ•´æ”¹ï¼Œæ¶µç›– UseCase æ¨¡å¼å¼•å…¥ã€äº¤æ˜“è®¡ç®—çº¯å‡½æ•°æå–ã€é…ç½®å±‚æ–‡ä»¶æ–°å¢žã€Store ç˜¦èº«ã€æ­»ä»£ç æ¸…ç†ã€12 ä¸ª pages/components çš„ Service ç›´è°ƒæ”¹ä¸º Store è°ƒç”¨
+**å˜æ›´ç»“æžœ**ï¼šStore èŒè´£æ›´æ¸…æ™°ï¼ˆcreatePlan 148â†’30 è¡Œã€fetchSectorAnalysis 141â†’25 è¡Œã€orderStore 858â†’548 è¡Œï¼‰ï¼Œäº¤æ˜“è®¡ç®—å¯æµ‹è¯•æ€§æå‡ï¼ˆ3 ä¸ªçº¯å‡½æ•°æ¨¡å—ï¼‰ï¼Œé…ç½®å±‚é›¶ç¡¬ç¼–ç è¡¥å…¨ï¼ˆ3 ä¸ªæ–°é…ç½®æ–‡ä»¶ï¼‰
 
-### ÐÂ½¨ÎÄ¼þ
+### æ–°å»ºæ–‡ä»¶
 
-| ÎÄ¼þ | ÓÃÍ¾ |
+| æ–‡ä»¶ | ç”¨é€” |
 |------|------|
-| `src/mcp/servers/data-collector/dataCollectorServer.ts` | Êý¾Ý²É¼¯ MCP Server£¨ÐÐÇé»ñÈ¡¡¢È±Ê§±¨¸æ¼ì²â£© |
-| `src/mcp/servers/execution/executionServer.ts` | Ö´ÐÐ¼Æ»® MCP Server£¨¼Æ»®´´½¨¡¢²éÑ¯¡¢½×¶Î¸üÐÂ¡¢È¡Ïû£© |
-| `src/mcp/servers/portfolio/portfolioServer.ts` | Êý¾Ýµ¼³ö MCP Server£¨»Ø²â±¨¸æµ¼³ö PDF/Excel£© |
-| `src/mcp/servers/data-collector/dataCollectorServer.ts` | Êý¾ÝÂ¼Èë MCP Server£¨¹ÉÆ±Ìí¼Ó¡¢ËÑË÷¡¢¹ÉÆ±³Øµ¼Èëµ¼³ö£© |
-| `src/mcp/servers/trading/tradingServer.ts` | ³Ö²Ö¹ÜÀí MCP Server£¨³Ö²Ö²éÑ¯¡¢½»Ò×²Ù×÷¡¢³Ö²Öµ¼³ö£© |
-| `src/mcp/__tests__/dataCollectorServer.test.ts` | DataCollectorServer µ¥Ôª²âÊÔ£¨6 ¸öÓÃÀý£© |
-| `src/mcp/__tests__/executionServer.test.ts` | ExecutionServer µ¥Ôª²âÊÔ£¨9 ¸öÓÃÀý£© |
-| `src/mcp/servers/portfolio/portfolioServer.ts` | ExportServer µ¥Ôª²âÊÔ£¨5 ¸öÓÃÀý£© |
-| `src/mcp/servers/data-collector/dataCollectorServer.ts` | InputServer µ¥Ôª²âÊÔ£¨10 ¸öÓÃÀý£© |
-| `src/mcp/servers/trading/tradingServer.ts` | TradeServer µ¥Ôª²âÊÔ£¨7 ¸öÓÃÀý£© |
+| `src/config/apiPaths.ts` | å†…éƒ¨ API è·¯å¾„é›†ä¸­é…ç½®ï¼ˆç³»ç»Ÿç›‘æŽ§/äº¤æ˜“/æ•°æ®é‡‡é›†å…± 12 æ¡è·¯å¾„ï¼‰ |
+| `src/config/timeouts.ts` | è¶…æ—¶å€¼é›†ä¸­é…ç½®ï¼ˆåˆ†æžå¼•æ“Ž/æ•°æ®é‡‡é›†/é»˜è®¤è¯·æ±‚/LLM è°ƒç”¨ 4 é¡¹è¶…æ—¶ï¼‰ |
+| `src/config/mathConstants.ts` | æ•°å­¦/é‡‘èžå¸¸é‡ï¼ˆMS_PER_DAY/TRADING_DAYS_PER_YEAR/VAR_95_Z_SCORE ç­‰ 10 é¡¹ï¼‰ |
+| `src/services/useCase/createExecutionPlan.useCase.ts` | åˆ›å»ºæ‰§è¡Œè®¡åˆ’ UseCaseï¼ˆ5 æ­¥ä¸šåŠ¡æµç¨‹ï¼šèŽ·å–è‚¡ä»·â†’ä»“ä½è®¡ç®—â†’é£ŽæŽ§æ£€æŸ¥â†’æž„é€ è®¡åˆ’â†’æŒä¹…åŒ–ï¼‰ |
+| `src/services/useCase/fetchSectorAnalysis.useCase.ts` | æ¿å—åˆ†æžæ•°æ®åŠ è½½ UseCaseï¼ˆ4 æ­¥ï¼šå¹¶è¡ŒæŸ¥è¯¢â†’ç©ºæ•°æ®é»˜è®¤è®¡ç®—â†’æŽ’åºâ†’è¿”å›žåˆå¹¶ç»“æžœï¼‰ |
+| `src/services/useCase/createExecutionPlan.useCase.ts` | æ‰§è¡Œè®¡åˆ’æ‰§è¡Œ UseCaseï¼ˆ6 æ­¥ä¸šåŠ¡æµç¨‹ï¼šè®¾ç½®çŠ¶æ€â†’æ›´æ–°è®¡åˆ’â†’èŽ·å–è‚¡ä»·â†’åˆ›å»ºè®¢å•â†’æ›´æ–°çŠ¶æ€â†’æ¸…ç†ï¼‰ |
+| `src/services/useCase/fetcherOrchestrator.useCase.ts` | æ•°æ®é‡‡é›†ç¼–æŽ’ UseCaseï¼ˆå°è£… fetcher åŸŸè·¨åŸŸè°ƒç”¨ï¼Œæä¾› fetchBasicData/fetch_kline ä¸¤ä¸ªæ‰§è¡Œç”¨ä¾‹ï¼‰ |
+| `src/services/useCase/generateTradeReview.useCase.ts` | AI äº¤æ˜“å¤ç›˜æŠ¥å‘Šç”Ÿæˆ UseCaseï¼ˆæ•´åˆé”™è¯¯åˆ†ç±»ã€äº”ç»´è§„åˆ™ç”Ÿæˆã€LLM æ´žå¯Ÿçš„é•¿æµç¨‹ç¼–æŽ’ï¼‰ |
+| `src/services/useCase/getUnifiedStockView.useCase.ts` | ç»Ÿä¸€è‚¡ç¥¨è§†å›¾èžåˆ UseCaseï¼ˆè·¨ dataLayer å¤šæºè¯»å–ï¼šè‚¡ç¥¨åŸºç¡€+Kçº¿+V6è¯„åˆ†+æ™ºèƒ½è¯„åˆ†+è¡Œä¸šè¯„åˆ†+æ¿å—è½®åŠ¨+ä¿¡å·+æŒä»“ï¼‰ |
+| `src/services/useCase/hotSectorQuery.useCase.ts` | çƒ­é—¨æ¿å—æŸ¥è¯¢ UseCaseï¼ˆå°è£… input/hotSectorService è·¨åŸŸè°ƒç”¨ï¼Œè¿”å›žæŒ‰ score é™åºæŽ’åˆ—çš„æ¿å—åˆ—è¡¨ï¼‰ |
+| `src/services/useCase/rebalancePortfolio.useCase.ts` | æŠ•èµ„ç»„åˆå†å¹³è¡¡ UseCaseï¼ˆå‚æ•°æ ¡éªŒâ†’æ•°æ®èŽ·å–â†’å†å¹³è¡¡è®¡ç®—â†’æŒä¹…åŒ–ï¼Œå«æ–°é²œåº¦æ£€æŸ¥ï¼‰ |
+| `src/services/useCase/runDualStrategy.useCase.ts` | åŒç­–ç•¥æ‰§è¡Œ UseCaseï¼ˆç¼–æŽ’çƒ­é—¨æ¿å—åˆ†æž+ä»·å€¼æ´¼åœ°åˆ†æž+è½®åŠ¨ä¿¡å·æ£€æµ‹ï¼Œè·¨ scoring åŸŸè°ƒç”¨ï¼‰ |
+| `src/services/trading/strategySnapshotService.ts` | ç­–ç•¥å¿«ç…§ä¿å­˜ UseCaseï¼ˆ3 æ­¥ï¼šå‚æ•°æ ¡éªŒâ†’æž„é€ å¿«ç…§ payloadâ†’é€šè¿‡ DataBridge ä¿¡å°åè®®æŒä¹…åŒ–ï¼‰ |
+| `src/services/trading/positionComputer.ts` | FIFO é…å¯¹+æŒä»“æž„å»ºçº¯å‡½æ•°ï¼ˆbuildTradePairs/buildPositionsï¼Œå¯¼å‡º MatchedTradePair/TradePair/PositionItem ç±»åž‹ï¼‰ |
+| `src/services/trading/pnlComputer.ts` | ç›ˆäºæ±‡æ€»è®¡ç®—çº¯å‡½æ•°ï¼ˆcomputePnLSummaryï¼Œå¯¼å‡º PnLSummary ç±»åž‹ï¼Œå«æœˆåº¦ç›ˆäº/æ—¥åº¦æ›²çº¿ï¼‰ |
+| `src/services/trading/riskComputer.ts` | é£Žé™©æŒ‡æ ‡è®¡ç®—çº¯å‡½æ•°ï¼ˆcomputeRiskMetricsï¼Œå¯¼å‡º RiskMetrics ç±»åž‹ï¼Œå« VaR/æœ€å¤§å›žæ’¤/æ³¢åŠ¨çŽ‡/å¤æ™®/é›†ä¸­åº¦ï¼‰ |
 
-### ÐÞ¸ÄÎÄ¼þ
+### åˆ é™¤æ–‡ä»¶
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | åŽŸå›  |
+|------|------|
+| `src/components/organisms/pool/usePoolDataFromStore.ts` | æ­»ä»£ç ï¼Œå·²è¢« `usePoolDataFromStore` æ›¿ä»£ |
+| `src/services/contracts.ts` | agent æ®‹ç•™å­¤ç«‹æ–‡ä»¶ï¼ˆv2.3.0 æ–°å»ºåŽä¸å†éœ€è¦ï¼‰ |
+
+### ä¿®æ”¹æ–‡ä»¶
+
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `src/config/mcpServerRegistry.ts` | +5 ¸ö MCP Server ×¢²áÌõÄ¿£¨data-collector/execution/export/input/trade£© |
-| `scripts/audit-layer-calls.ts` | v2.1¡úv2.2£ºÐÂÔö services¡úlib ÒµÎñÄ£¿é¼ì²â¹æÔò£¨¹æÔò 5c£©¡¢Ã÷È· lib »ù´¡ÉèÊ©°×Ãûµ¥ |
-| `../../../AGENTS.md` | v1.3.1¡úv1.3.2£º²¹³ä services¡úlib ÒÀÀµ¹æÔò¡¢Ã÷È· lib »ù´¡ÉèÊ©°×Ãûµ¥¡¢²¹³ä types/ ºÍ agents/ ²ã¶¨Òå |
-| `src/mcp/servers/data-collector/dataCollectorServer.ts` | ÐÞ¸´ÀàÐÍ´íÎó£ºÒÆ³ý marketDataAdapter ÒÀÀµ£¬¸ÄÓÃ listUnresolved/listBySymbol |
-| `src/mcp/servers/execution/executionServer.ts` | ÐÞ¸´ÀàÐÍ´íÎó£º¹¹ÔìÍêÕû Signal ¶ÔÏó£¨º¬ id/type/strategy/confidence µÈ×Ö¶Î£© |
-| `src/mcp/servers/portfolio/portfolioServer.ts` | ÐÞ¸´ÀàÐÍ´íÎó£ºexportBacktestReport Ç©ÃûÐÞÕý£¨result/config/options Èý²ÎÊý£© |
-| `src/mcp/servers/data-collector/dataCollectorServer.ts` | ÐÞ¸´ÀàÐÍ´íÎó£ºaddStock ÒÆ³ý poolId¡¢addStockFromSearch Ê¹ÓÃ searchStocks ½á¹û¡¢exportPool ÒÆ³ý poolId ²ÎÊý |
-| `src/mcp/servers/trading/tradingServer.ts` | ÐÞ¸´ÀàÐÍ´íÎó£ºfetchHoldings Ê¹ÓÃ HoldingsQueryParams¡¢executeTradeAction Ê¹ÓÃ TradeActionRequest¡¢exportHoldingsCSV Ê¹ÓÃÍêÕû²éÑ¯²ÎÊý |
+| `src/core/poolTransitionEngine.ts` | æ–°å¢ž `getPoolTransitionOptions` çº¯å‡½æ•°ï¼ˆä»Ž services å±‚è¿ç§»åˆ° core å±‚ï¼‰ |
+| `src/store/executionStore.ts` | `createPlan` ä»Ž 148 è¡Œç¼©å‡è‡³ 30 è¡Œï¼ˆä¸šåŠ¡ç¼–æŽ’é€»è¾‘æå–åˆ° `createExecutionPlanUseCase`ï¼‰ |
+| `src/store/sectorAnalysisStore.ts` | `fetchSectorAnalysis` ä»Ž 141 è¡Œç¼©å‡è‡³ 25 è¡Œï¼ˆæ•°æ®åŠ è½½é€»è¾‘æå–åˆ° `fetchSectorAnalysisUseCase`ï¼‰ |
+| `src/store/orderStore.ts` | ä»Ž 858 è¡Œç¼©å‡è‡³ 548 è¡Œï¼ˆFIFO é…å¯¹/ç›ˆäº/é£Žé™©è®¡ç®—æå–åˆ° positionComputer/pnlComputer/riskComputerï¼‰ |
+| `src/store/valuePitStore.ts` | æ–°å¢ž `runAnalysis` action |
+| `src/store/intelligentScoreStore.ts` | æ–°å¢ž `loadScoreTrend` action |
+| `src/store/scoreDocStore.ts` | æ–°å¢ž `loadHistoryDocs` action |
+| `src/store/analysisNewsStore.ts` | æ–°å¢ž `computeSentimentTrend` action |
+| `src/store/systemMonitorStore.ts` | æ–°å¢ž `fetchMonitorLogs`/`clearMonitorLogs` action |
+| `src/store/inputHubStore.ts` | æ–°å¢ž `searchStocks`/`addStockFromSearch` action |
+| 12 ä¸ª pages/components æ–‡ä»¶ | Service ç›´è°ƒæ”¹ä¸º Store è°ƒç”¨ï¼ˆéµå¾ªåˆ†å±‚è§„åˆ™ï¼špages/components åªé€šè¿‡ Store èŽ·å–æ•°æ®ï¼‰ |
 
-### ÎÄµµ¸üÐÂ
+### æ–‡æ¡£æ›´æ–°
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `../../reference/v9-indexeddb-store-schema.md` | v16¡úv21£º²¹³ä v16¡úv21 °æ±¾ÀúÊ·¡¢Store ×ÜÊý 24¡ú25¡¢ÐÂÔö trade_reviews Store |
-| `./CHANGELOG.md` | ÐÂÔö v2.4.0 ÌõÄ¿£º¼ÇÂ¼ MCP Server ÌåÏµÍêÉÆÓëÉó¼Æ½Å±¾Éý¼¶ |
+| `./CHANGELOG.md` | æ–°å¢ž v2.5.0 æ¡ç›® |
+| `../../reference/03-architecture-standards.md` | v2.3.0â†’v2.5.0ï¼šé…ç½®å±‚æ–°å¢ž 3 æ–‡ä»¶ã€æœåŠ¡å±‚æ–°å¢ž 3 ä¸ªäº¤æ˜“è®¡ç®—æ¨¡å—+2 ä¸ª UseCaseã€æ³¨å†Œä½“ç³»æ›´æ–° |
+| `../../reference/data-dictionary-index.md` | v1.3.0â†’v1.4.0ï¼šæ–°å¢ž UseCase ç±»åž‹ç´¢å¼•ã€äº¤æ˜“è®¡ç®—çº¯å‡½æ•°ç±»åž‹ç´¢å¼• |
+| `../../reference/05-engine-specs.md` | v2.2.1â†’v2.5.0ï¼šäº¤æ˜“å¼•æ“Žç›®å½•æ–°å¢ž positionComputer/pnlComputer/riskComputerã€æ–°å¢ž UseCase å±‚è¯´æ˜Ž |
 
-### ÑéÖ¤½á¹û
+### éªŒè¯ç»“æžœ
 
-- `tsc --noEmit` ¡ª 0 ´íÎó
-- `audit:layers` ¡ª 0 violations, 0 warnings
-- `audit:mcp` ¡ª 0 missing servers
-- `npm test` ¡ª 37 ¸öÐÂÔö²âÊÔÓÃÀýÈ«²¿Í¨¹ý£¨5 ¸ö²âÊÔÎÄ¼þ£©
+- `tsc --noEmit` â€” 0 é”™è¯¯
+- `audit:layers` â€” 0 violations, 0 warnings
+- åˆ†å±‚è§„åˆ™éªŒè¯ â€” 12 ä¸ª pages/components æ–‡ä»¶ä»Ž Service ç›´è°ƒæ”¹ä¸º Store è°ƒç”¨ï¼Œç¬¦åˆ L5â†’L3 è°ƒç”¨è§„åˆ™
 
-### ¹Ø¼üÐÞ¸´ËµÃ÷
+### å…³é”®è®¾è®¡å†³ç­–
 
-1. **services¡úlib ÒÀÀµ¹æÔò**
-   - Ã÷È· lib »ù´¡ÉèÊ©°×Ãûµ¥£ºlogger¡¢withBroadcast¡¢eventBus¡¢format¡¢errors¡¢utils¡¢localStorageManager¡¢safeCoerce
-   - ½ûÖ¹ services ²ãÒÀÀµ lib ÖÐµÄÒµÎñÄ£¿é
-   - Éó¼Æ½Å±¾ÐÂÔö SERVICES_IMPORT_LIB_BUSINESS ÕýÔò¼ì²â
+1. **UseCase æ¨¡å¼å¼•å…¥**
+   - UseCase ä½äºŽ `src/services/useCase/`ï¼Œéµå¾ª Clean Architecture Interactor æ¨¡å¼
+   - æ¯ä¸ª UseCase å®šä¹‰ `Input`/`Result` æŽ¥å£ï¼Œè¾“å…¥/è¾“å‡ºç±»åž‹æ˜Žç¡®
+   - Store è°ƒç”¨ UseCaseï¼ŒUseCase è°ƒç”¨ dataLayer å’Œå…¶ä»– services
+   - å¥½å¤„ï¼šStore ä¿æŒç˜¦è–„ã€ä¸šåŠ¡é€»è¾‘å¯ç‹¬ç«‹æµ‹è¯•ã€å›žæ»šç²’åº¦æ¸…æ™°
 
-2. **MCP Server ÀàÐÍÐÞ¸´**
-   - DataCollectorServer£ºÒÆ³ý²»´æÔÚµÄ marketDataAdapter.fetchMarketData µ÷ÓÃ
-   - ExecutionServer£º¹¹ÔìÍêÕû Signal ¶ÔÏóÂú×ãÀàÐÍÔ¼Êø
-   - ExportServer£ºÐÞÕý exportBacktestReport Èý²ÎÊýÇ©Ãû
-   - InputServer£ºÐÞÕý addStock/addStockFromSearch/exportPool ²ÎÊý
-   - TradeServer£ºÊ¹ÓÃ HoldingsQueryParams ºÍ TradeActionRequest ÀàÐÍ
+2. **äº¤æ˜“è®¡ç®—çº¯å‡½æ•°åŒ–**
+   - `positionComputer.ts`/`pnlComputer.ts`/`riskComputer.ts` å‡ä¸ºçº¯å‡½æ•°æ¨¡å—
+   - ä»Ž `orderStore.ts`ï¼ˆ858 è¡Œï¼‰æå–è®¡ç®—é€»è¾‘ï¼ŒStore ç¼©å‡è‡³ 548 è¡Œ
+   - çº¯å‡½æ•°ä¸ä¾èµ– Store/Serviceï¼Œä»…æŽ¥æ”¶å‚æ•°è¿”å›žç»“æžœï¼Œä¾¿äºŽå•å…ƒæµ‹è¯•
+   - `riskComputer.ts` å¼•ç”¨ `mathConstants.ts` ä¸­çš„ `TRADING_DAYS_PER_YEAR`/`VAR_95_Z_SCORE`
 
-3. **µ¥Ôª²âÊÔ¸²¸Ç**
-   - Ã¿¸ö MCP Server ²âÊÔÎÄ¼þ¸²¸Ç£ºserver info Ð£Ñé¡¢¹¤¾ß×¢²áÊýÁ¿¡¢¹¤¾ß schema ÍêÕûÐÔ¡¢resources/prompts ¿ÕÖµ¶ÏÑÔ
-   - ×Ü¼Æ 37 ¸ö²âÊÔÓÃÀý£¬¸²¸ÇËùÓÐ 5 ¸öÐÂÔö MCP Server
+3. **é…ç½®å±‚è¡¥å…¨**
+   - `apiPaths.ts`ï¼š12 æ¡å†…éƒ¨ API è·¯å¾„é›†ä¸­ç®¡ç†ï¼Œæ¶ˆé™¤æœåŠ¡å±‚ç¡¬ç¼–ç è·¯å¾„å­—ç¬¦ä¸²
+   - `timeouts.ts`ï¼š4 é¡¹è¶…æ—¶å€¼é›†ä¸­é…ç½®ï¼Œæ¶ˆé™¤ä¸šåŠ¡ä»£ç ä¸­çš„æ¯«ç§’æ•°ç¡¬ç¼–ç 
+   - `mathConstants.ts`ï¼š10 é¡¹è·¨æ–‡ä»¶å¤ç”¨çš„æ•°å­¦/é‡‘èžå¸¸é‡ï¼Œæ¶ˆé™¤é­”æ³•æ•°å­—
+
+4. **Service ç›´è°ƒæ”¹ Store è°ƒç”¨**
+   - 12 ä¸ª pages/components æ–‡ä»¶åŽŸå…ˆç›´æŽ¥è°ƒç”¨ services å±‚ï¼Œè¿ååˆ†å±‚è§„åˆ™
+   - æ”¹ä¸ºé€šè¿‡å¯¹åº” Store çš„ action è§¦å‘ï¼ŒStore å†…éƒ¨è°ƒç”¨ services
+   - ç¬¦åˆ AGENTS.md ä¾èµ–æ–¹å‘è§„åˆ™ï¼špages/components â†’ store â†’ services
 
 ---
 
-## v2.3.0 (2026-07-05) ¡ª Ä£¿é×¢²áÌåÏµ½¨Á¢ÓëÎ´×¢²áÎÄ¼þÈ«Á¿¼¯³É
+## v2.4.0 (2026-07-05) â€” MCP Server ä½“ç³»å®Œå–„ä¸Žå®¡è®¡è„šæœ¬å‡çº§
 
-**±ä¸ü·¶Î§**£ºÈ«ÃæÉ¨Ãè 629 ¸öÎÄ¼þ£¬Ê¶±ð 31 ¸öÎ´×¢²á/Î´ÒýÓÃÎÄ¼þ£¬½¨Á¢Èý²ã×¢²áÌåÏµ²¢Íê³É¼¯³É
-**±ä¸ü½á¹û**£º31 ¸öÎ´×¢²áÎÄ¼þÈ«²¿ÄÉÈë×¢²áÌåÏµ£¬12 ¸ö×é¼þ¼¯³Éµ½Ä¿±êÒ³Ãæ£¬Éú²ú¹¹½¨Í¨¹ý
+**å˜æ›´èŒƒå›´**ï¼šåˆ›å»º 5 ä¸ªç¼ºå¤±çš„ MCP Serverã€ä¿®å¤å®¡è®¡è„šæœ¬ç±»åž‹æ£€æµ‹ã€ä¿®å¤ MCP Server ç±»åž‹é”™è¯¯ã€è¡¥å……å•å…ƒæµ‹è¯•
+**å˜æ›´ç»“æžœ**ï¼šMCP Server ä»Ž 11 ä¸ªæ‰©å±•åˆ° 16 ä¸ªï¼Œå®¡è®¡è„šæœ¬æ”¯æŒ servicesâ†’lib è¿è§„æ£€æµ‹ï¼Œæ‰€æœ‰ç±»åž‹æ£€æŸ¥é€šè¿‡
 
-### ÐÂ½¨ÎÄ¼þ
+### æ–°å»ºæ–‡ä»¶
 
-| ÎÄ¼þ | ÓÃÍ¾ |
+| æ–‡ä»¶ | ç”¨é€” |
 |------|------|
-| `src/store/derived.index.ts` | Store ¼¯ÖÐ×¢²á±í£¨29 ¸ö Store£¬º¬Óò·ÖÀà/×´Ì¬/¹ã²¥Í¨µÀÔªÊý¾Ý£© |
-| `src/services/contracts.ts` | Service ¼¯ÖÐ×¢²á±í£¨52 ¸ö Service£¬º¬Óò·ÖÀà/×´Ì¬/ÒÀÀµ¹ØÏµ£© |
-| `src/components/componentRegistry.ts` | Component ¼¯ÖÐ×¢²á±í£¨10 ¸öÒµÎñ×é¼þ£¬º¬½¨Òé¼¯³ÉÄ¿±ê£© |
+| `src/mcp/servers/data-collector/dataCollectorServer.ts` | æ•°æ®é‡‡é›† MCP Serverï¼ˆè¡Œæƒ…èŽ·å–ã€ç¼ºå¤±æŠ¥å‘Šæ£€æµ‹ï¼‰ |
+| `src/mcp/servers/execution/executionServer.ts` | æ‰§è¡Œè®¡åˆ’ MCP Serverï¼ˆè®¡åˆ’åˆ›å»ºã€æŸ¥è¯¢ã€é˜¶æ®µæ›´æ–°ã€å–æ¶ˆï¼‰ |
+| `src/mcp/servers/portfolio/portfolioServer.ts` | æ•°æ®å¯¼å‡º MCP Serverï¼ˆå›žæµ‹æŠ¥å‘Šå¯¼å‡º PDF/Excelï¼‰ |
+| `src/mcp/servers/data-collector/dataCollectorServer.ts` | æ•°æ®å½•å…¥ MCP Serverï¼ˆè‚¡ç¥¨æ·»åŠ ã€æœç´¢ã€è‚¡ç¥¨æ± å¯¼å…¥å¯¼å‡ºï¼‰ |
+| `src/mcp/servers/trading/tradingServer.ts` | æŒä»“ç®¡ç† MCP Serverï¼ˆæŒä»“æŸ¥è¯¢ã€äº¤æ˜“æ“ä½œã€æŒä»“å¯¼å‡ºï¼‰ |
+| `src/mcp/__tests__/dataCollectorServer.test.ts` | DataCollectorServer å•å…ƒæµ‹è¯•ï¼ˆ6 ä¸ªç”¨ä¾‹ï¼‰ |
+| `src/mcp/__tests__/executionServer.test.ts` | ExecutionServer å•å…ƒæµ‹è¯•ï¼ˆ9 ä¸ªç”¨ä¾‹ï¼‰ |
+| `src/mcp/servers/portfolio/portfolioServer.ts` | ExportServer å•å…ƒæµ‹è¯•ï¼ˆ5 ä¸ªç”¨ä¾‹ï¼‰ |
+| `src/mcp/servers/data-collector/dataCollectorServer.ts` | InputServer å•å…ƒæµ‹è¯•ï¼ˆ10 ä¸ªç”¨ä¾‹ï¼‰ |
+| `src/mcp/servers/trading/tradingServer.ts` | TradeServer å•å…ƒæµ‹è¯•ï¼ˆ7 ä¸ªç”¨ä¾‹ï¼‰ |
 
-### ÐÞ¸ÄÎÄ¼þ
+### ä¿®æ”¹æ–‡ä»¶
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `src/constants/cockpit.constants.ts` | +7 Widget Ä¬ÈÏÅäÖÃ + 7 Êý¾ÝÔ´ÅäÖÃ |
-| `src/cockpit/core/widgetRegistry.ts` | +7 Widget Ä£°å×¢²á + 7 Ä¬ÈÏ²¼¾ÖÎ»ÖÃ |
-| `src/apps/command/CommandApp.tsx` | +LogStreamPanel + AgentTaskList ¼¯³É |
-| `src/apps/command/ConfigApp.tsx` | +LLMConfigWidget ¼¯³É£¨ÊÜ¿ØÄ£Ê½ + localStorage ³Ö¾Ã»¯£© |
-| `src/apps/analysis/AnalysisApp.tsx` | +AnalysisTemplateCards ¼¯³Éµ½Ä¬ÈÏÊÓÍ¼ |
-| `src/cockpit/CockpitShell.tsx` | +WidgetErrorBoundary °ü¹ü Widget äÖÈ¾ |
-| `src/pages/analysis/NewsPage.tsx` | +NewsSentimentTrend ×ÊÑ¶Çé¸ÐÇ÷ÊÆ¼¯³É |
-| `src/pages/analysis/StockAnalysisPage.tsx` | +ScoreHistoryPanel ÆÀ·ÖÀúÊ·¼¯³É |
-| `src/pages/analysis/IntelligentScorePage.tsx` | +MultiPeriodTrendChart + IntelligentScoreExplanation ¼¯³É |
-| `src/services/system/bootstrapService.ts` | +PWA initPWA() Æô¶¯Á´Â· |
-| `src/services/trading/tradingService.ts` | +feedbackService ²Ù×÷·´À¡±Õ»·¼¯³É |
+| `src/config/mcpServerRegistry.ts` | +5 ä¸ª MCP Server æ³¨å†Œæ¡ç›®ï¼ˆdata-collector/execution/export/input/tradeï¼‰ |
+| `scripts/audit-layer-calls.ts` | v2.1â†’v2.2ï¼šæ–°å¢ž servicesâ†’lib ä¸šåŠ¡æ¨¡å—æ£€æµ‹è§„åˆ™ï¼ˆè§„åˆ™ 5cï¼‰ã€æ˜Žç¡® lib åŸºç¡€è®¾æ–½ç™½åå• |
+| `../../../AGENTS.md` | v1.3.1â†’v1.3.2ï¼šè¡¥å…… servicesâ†’lib ä¾èµ–è§„åˆ™ã€æ˜Žç¡® lib åŸºç¡€è®¾æ–½ç™½åå•ã€è¡¥å…… types/ å’Œ agents/ å±‚å®šä¹‰ |
+| `src/mcp/servers/data-collector/dataCollectorServer.ts` | ä¿®å¤ç±»åž‹é”™è¯¯ï¼šç§»é™¤ marketDataAdapter ä¾èµ–ï¼Œæ”¹ç”¨ listUnresolved/listBySymbol |
+| `src/mcp/servers/execution/executionServer.ts` | ä¿®å¤ç±»åž‹é”™è¯¯ï¼šæž„é€ å®Œæ•´ Signal å¯¹è±¡ï¼ˆå« id/type/strategy/confidence ç­‰å­—æ®µï¼‰ |
+| `src/mcp/servers/portfolio/portfolioServer.ts` | ä¿®å¤ç±»åž‹é”™è¯¯ï¼šexportBacktestReport ç­¾åä¿®æ­£ï¼ˆresult/config/options ä¸‰å‚æ•°ï¼‰ |
+| `src/mcp/servers/data-collector/dataCollectorServer.ts` | ä¿®å¤ç±»åž‹é”™è¯¯ï¼šaddStock ç§»é™¤ poolIdã€addStockFromSearch ä½¿ç”¨ searchStocks ç»“æžœã€exportPool ç§»é™¤ poolId å‚æ•° |
+| `src/mcp/servers/trading/tradingServer.ts` | ä¿®å¤ç±»åž‹é”™è¯¯ï¼šfetchHoldings ä½¿ç”¨ HoldingsQueryParamsã€executeTradeAction ä½¿ç”¨ TradeActionRequestã€exportHoldingsCSV ä½¿ç”¨å®Œæ•´æŸ¥è¯¢å‚æ•° |
 
-### ÎÄµµ¸üÐÂ
+### æ–‡æ¡£æ›´æ–°
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `../../reference/registry-index.md` | ÐÂ½¨£ºËÄ²ã×¢²áÌåÏµºËÐÄÎÄµµ |
-| `../../reference/03-architecture-standards.md` | v2.2.1¡úv2.3.0£ºÐÂÔö ¡ì3.1.8 ËÄ²ãÄ£¿é×¢²áÌåÏµ¡¢Widget Ä¿Â¼ +7¡¢Æ«²î D19 ±ê¼ÇÒÑÐÞ¸´ |
-| `../../reference/widget-development-guide.md` | v1.0.0¡úv1.1.0£ºÐÂÔö ¡ì7 ÒÑ×¢²á Widget Çåµ¥£¨19 ¸ö£©¡¢¡ì7.3 Widget ´íÎó¸ôÀëËµÃ÷ |
-| `../../reference/testing-strategy.md` | v1.0.0¡úv1.1.0£ºÐÂÔö ¡ì9 ×¢²áÌåÏµ²âÊÔ²ßÂÔ¡¢¸üÐÂ²âÊÔ»ùÏß£¨649+ ÓÃÀý£©¡¢Widget ´íÎó±ß½ç²âÊÔÄ£°å |
-| `../../reference/data-dictionary-index.md` | v1.2.0¡úv1.3.0£ºÐÂÔö Registry Ä£¿éË÷Òý¡¢3 ¸ö×¢²á±íÀàÐÍÎÄ¼þÌõÄ¿ |
-| `../../reference/10-glossary.md` | v2.2.1¡úv2.3.0£ºÐÂÔö ¡ì10.11 ËÄ²ã×¢²áÌåÏµÊõÓï£¨8 Ìõ£© |
-| `../../reference/changelogs/2026-07/2026-07-05-module-registry-and-integration.md` | ÐÂ½¨£º½á¹¹»¯±ä¸üÈÕÖ¾ |
-| `scripts/quality/eslint-plugin-no-hardcoded-colors.js` | CJS¡úESM ÐÞ¸´£º`module.exports` ¡ú `export default { rules: {...} }` |
+| `../../reference/v9-indexeddb-store-schema.md` | v16â†’v21ï¼šè¡¥å…… v16â†’v21 ç‰ˆæœ¬åŽ†å²ã€Store æ€»æ•° 24â†’25ã€æ–°å¢ž trade_reviews Store |
+| `./CHANGELOG.md` | æ–°å¢ž v2.4.0 æ¡ç›®ï¼šè®°å½• MCP Server ä½“ç³»å®Œå–„ä¸Žå®¡è®¡è„šæœ¬å‡çº§ |
 
-### ÑéÖ¤½á¹û
+### éªŒè¯ç»“æžœ
 
-- `tsc --noEmit` ¡ª 0 ÐÂÔö´íÎó
-- `audit:layers` ¡ª 0 Î¥¹æ£¬0 ¾¯¸æ
-- `npm run build` ¡ª ¹¹½¨³É¹¦£¨1m 29s£©
-- `npm run test` ¡ª 649/653 Í¨¹ý£¨4 ¸öÀúÊ·ÒÅÁô Windows ENOENT Ê§°Ü£©
+- `tsc --noEmit` â€” 0 é”™è¯¯
+- `audit:layers` â€” 0 violations, 0 warnings
+- `audit:mcp` â€” 0 missing servers
+- `npm test` â€” 37 ä¸ªæ–°å¢žæµ‹è¯•ç”¨ä¾‹å…¨éƒ¨é€šè¿‡ï¼ˆ5 ä¸ªæµ‹è¯•æ–‡ä»¶ï¼‰
+
+### å…³é”®ä¿®å¤è¯´æ˜Ž
+
+1. **servicesâ†’lib ä¾èµ–è§„åˆ™**
+   - æ˜Žç¡® lib åŸºç¡€è®¾æ–½ç™½åå•ï¼šloggerã€withBroadcastã€eventBusã€formatã€errorsã€utilsã€localStorageManagerã€safeCoerce
+   - ç¦æ­¢ services å±‚ä¾èµ– lib ä¸­çš„ä¸šåŠ¡æ¨¡å—
+   - å®¡è®¡è„šæœ¬æ–°å¢ž SERVICES_IMPORT_LIB_BUSINESS æ­£åˆ™æ£€æµ‹
+
+2. **MCP Server ç±»åž‹ä¿®å¤**
+   - DataCollectorServerï¼šç§»é™¤ä¸å­˜åœ¨çš„ marketDataAdapter.fetchMarketData è°ƒç”¨
+   - ExecutionServerï¼šæž„é€ å®Œæ•´ Signal å¯¹è±¡æ»¡è¶³ç±»åž‹çº¦æŸ
+   - ExportServerï¼šä¿®æ­£ exportBacktestReport ä¸‰å‚æ•°ç­¾å
+   - InputServerï¼šä¿®æ­£ addStock/addStockFromSearch/exportPool å‚æ•°
+   - TradeServerï¼šä½¿ç”¨ HoldingsQueryParams å’Œ TradeActionRequest ç±»åž‹
+
+3. **å•å…ƒæµ‹è¯•è¦†ç›–**
+   - æ¯ä¸ª MCP Server æµ‹è¯•æ–‡ä»¶è¦†ç›–ï¼šserver info æ ¡éªŒã€å·¥å…·æ³¨å†Œæ•°é‡ã€å·¥å…· schema å®Œæ•´æ€§ã€resources/prompts ç©ºå€¼æ–­è¨€
+   - æ€»è®¡ 37 ä¸ªæµ‹è¯•ç”¨ä¾‹ï¼Œè¦†ç›–æ‰€æœ‰ 5 ä¸ªæ–°å¢ž MCP Server
 
 ---
 
-## v2.2.1 (2026-07-05) ¡ª Ð­Òé²¹³äÓë P0/P1/P2 ÎÄµµÐÞÕý
+## v2.3.0 (2026-07-05) â€” æ¨¡å—æ³¨å†Œä½“ç³»å»ºç«‹ä¸Žæœªæ³¨å†Œæ–‡ä»¶å…¨é‡é›†æˆ
 
-**ÐÞÕý·¶Î§**£ºAGENTS.md Ð­Òé²¹³ä¡¢audit:hardcode ½Å±¾ÓÅ»¯¡¢P0/P1/P2 ÎÄµµÐÞÕý
-**ÐÞÕý½á¹û**£º²¹³ä lib/ ²ãÒÀÀµ¹æÔò¡¢ËÄ²½ÆõÔ¼»Ø¹öÑéÖ¤Á÷³Ì¡¢ÓÅ»¯Ä§·¨Êý×ÖÎóÅÐÂÊ¡¢ÐÞÕý DB_VERSION ºÍ Store Çåµ¥¡¢Í³Ò»È«Á¿ÎÄµµ°æ±¾ºÅ¡¢ÐÞÕýÆ«²îÇåµ¥×´Ì¬¡¢ÓÅ»¯ audit:doc-sync ½Å±¾ÅÐ¶ÏÂß¼­
+**å˜æ›´èŒƒå›´**ï¼šå…¨é¢æ‰«æ 629 ä¸ªæ–‡ä»¶ï¼Œè¯†åˆ« 31 ä¸ªæœªæ³¨å†Œ/æœªå¼•ç”¨æ–‡ä»¶ï¼Œå»ºç«‹ä¸‰å±‚æ³¨å†Œä½“ç³»å¹¶å®Œæˆé›†æˆ
+**å˜æ›´ç»“æžœ**ï¼š31 ä¸ªæœªæ³¨å†Œæ–‡ä»¶å…¨éƒ¨çº³å…¥æ³¨å†Œä½“ç³»ï¼Œ12 ä¸ªç»„ä»¶é›†æˆåˆ°ç›®æ ‡é¡µé¢ï¼Œç”Ÿäº§æž„å»ºé€šè¿‡
 
-### ÐÞ¸ÄÎÄ¼þ
+### æ–°å»ºæ–‡ä»¶
 
-| ÎÄ¼þ | ±ä¸üÀàÐÍ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | ç”¨é€” |
+|------|------|
+| `src/store/derived.index.ts` | Store é›†ä¸­æ³¨å†Œè¡¨ï¼ˆ29 ä¸ª Storeï¼Œå«åŸŸåˆ†ç±»/çŠ¶æ€/å¹¿æ’­é€šé“å…ƒæ•°æ®ï¼‰ |
+| `src/services/contracts.ts` | Service é›†ä¸­æ³¨å†Œè¡¨ï¼ˆ52 ä¸ª Serviceï¼Œå«åŸŸåˆ†ç±»/çŠ¶æ€/ä¾èµ–å…³ç³»ï¼‰ |
+| `src/components/componentRegistry.ts` | Component é›†ä¸­æ³¨å†Œè¡¨ï¼ˆ10 ä¸ªä¸šåŠ¡ç»„ä»¶ï¼Œå«å»ºè®®é›†æˆç›®æ ‡ï¼‰ |
+
+### ä¿®æ”¹æ–‡ä»¶
+
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
+|------|---------|
+| `src/constants/cockpit.constants.ts` | +7 Widget é»˜è®¤é…ç½® + 7 æ•°æ®æºé…ç½® |
+| `src/cockpit/core/widgetRegistry.ts` | +7 Widget æ¨¡æ¿æ³¨å†Œ + 7 é»˜è®¤å¸ƒå±€ä½ç½® |
+| `src/apps/command/CommandApp.tsx` | +LogStreamPanel + AgentTaskList é›†æˆ |
+| `src/apps/command/ConfigApp.tsx` | +LLMConfigWidget é›†æˆï¼ˆå—æŽ§æ¨¡å¼ + localStorage æŒä¹…åŒ–ï¼‰ |
+| `src/apps/analysis/AnalysisApp.tsx` | +AnalysisTemplateCards é›†æˆåˆ°é»˜è®¤è§†å›¾ |
+| `src/cockpit/CockpitShell.tsx` | +WidgetErrorBoundary åŒ…è£¹ Widget æ¸²æŸ“ |
+| `src/pages/analysis/NewsPage.tsx` | +NewsSentimentTrend èµ„è®¯æƒ…æ„Ÿè¶‹åŠ¿é›†æˆ |
+| `src/pages/analysis/StockAnalysisPage.tsx` | +ScoreHistoryPanel è¯„åˆ†åŽ†å²é›†æˆ |
+| `src/pages/analysis/IntelligentScorePage.tsx` | +MultiPeriodTrendChart + IntelligentScoreExplanation é›†æˆ |
+| `src/services/system/bootstrapService.ts` | +PWA initPWA() å¯åŠ¨é“¾è·¯ |
+| `src/services/trading/tradingService.ts` | +feedbackService æ“ä½œåé¦ˆé—­çŽ¯é›†æˆ |
+
+### æ–‡æ¡£æ›´æ–°
+
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
+|------|---------|
+| `../../reference/registry-index.md` | æ–°å»ºï¼šå››å±‚æ³¨å†Œä½“ç³»æ ¸å¿ƒæ–‡æ¡£ |
+| `../../reference/03-architecture-standards.md` | v2.2.1â†’v2.3.0ï¼šæ–°å¢ž Â§3.1.8 å››å±‚æ¨¡å—æ³¨å†Œä½“ç³»ã€Widget ç›®å½• +7ã€åå·® D19 æ ‡è®°å·²ä¿®å¤ |
+| `../../reference/widget-development-guide.md` | v1.0.0â†’v1.1.0ï¼šæ–°å¢ž Â§7 å·²æ³¨å†Œ Widget æ¸…å•ï¼ˆ19 ä¸ªï¼‰ã€Â§7.3 Widget é”™è¯¯éš”ç¦»è¯´æ˜Ž |
+| `../../reference/testing-strategy.md` | v1.0.0â†’v1.1.0ï¼šæ–°å¢ž Â§9 æ³¨å†Œä½“ç³»æµ‹è¯•ç­–ç•¥ã€æ›´æ–°æµ‹è¯•åŸºçº¿ï¼ˆ649+ ç”¨ä¾‹ï¼‰ã€Widget é”™è¯¯è¾¹ç•Œæµ‹è¯•æ¨¡æ¿ |
+| `../../reference/data-dictionary-index.md` | v1.2.0â†’v1.3.0ï¼šæ–°å¢ž Registry æ¨¡å—ç´¢å¼•ã€3 ä¸ªæ³¨å†Œè¡¨ç±»åž‹æ–‡ä»¶æ¡ç›® |
+| `../../reference/10-glossary.md` | v2.2.1â†’v2.3.0ï¼šæ–°å¢ž Â§10.11 å››å±‚æ³¨å†Œä½“ç³»æœ¯è¯­ï¼ˆ8 æ¡ï¼‰ |
+| `../../reference/changelogs/2026-07/2026-07-05-module-registry-and-integration.md` | æ–°å»ºï¼šç»“æž„åŒ–å˜æ›´æ—¥å¿— |
+| `scripts/quality/eslint-plugin-no-hardcoded-colors.js` | CJSâ†’ESM ä¿®å¤ï¼š`module.exports` â†’ `export default { rules: {...} }` |
+
+### éªŒè¯ç»“æžœ
+
+- `tsc --noEmit` â€” 0 æ–°å¢žé”™è¯¯
+- `audit:layers` â€” 0 è¿è§„ï¼Œ0 è­¦å‘Š
+- `npm run build` â€” æž„å»ºæˆåŠŸï¼ˆ1m 29sï¼‰
+- `npm run test` â€” 649/653 é€šè¿‡ï¼ˆ4 ä¸ªåŽ†å²é—ç•™ Windows ENOENT å¤±è´¥ï¼‰
+
+---
+
+## v2.2.1 (2026-07-05) â€” åè®®è¡¥å……ä¸Ž P0/P1/P2 æ–‡æ¡£ä¿®æ­£
+
+**ä¿®æ­£èŒƒå›´**ï¼šAGENTS.md åè®®è¡¥å……ã€audit:hardcode è„šæœ¬ä¼˜åŒ–ã€P0/P1/P2 æ–‡æ¡£ä¿®æ­£
+**ä¿®æ­£ç»“æžœ**ï¼šè¡¥å…… lib/ å±‚ä¾èµ–è§„åˆ™ã€å››æ­¥å¥‘çº¦å›žæ»šéªŒè¯æµç¨‹ã€ä¼˜åŒ–é­”æ³•æ•°å­—è¯¯åˆ¤çŽ‡ã€ä¿®æ­£ DB_VERSION å’Œ Store æ¸…å•ã€ç»Ÿä¸€å…¨é‡æ–‡æ¡£ç‰ˆæœ¬å·ã€ä¿®æ­£åå·®æ¸…å•çŠ¶æ€ã€ä¼˜åŒ– audit:doc-sync è„šæœ¬åˆ¤æ–­é€»è¾‘
+
+### ä¿®æ”¹æ–‡ä»¶
+
+| æ–‡ä»¶ | å˜æ›´ç±»åž‹ | å˜æ›´å†…å®¹ |
 |------|---------|---------|
-| `../../../AGENTS.md` | Ð­Òé²¹³ä | ÐÂÔö lib/ ²ãÒÀÀµ¹æÔò£¨½ö¿ÉÒÀÀµ core/ ºÍ config/£©¡¢²¹³äËÄ²½ÆõÔ¼»Ø¹öÑéÖ¤Á÷³Ì£¨5 ÏîÑéÖ¤ÒªÇó£©¡¢Ã÷È· AI ×ÔÖ÷ÐÞ¸´±ß½ç£¨v1.3.1 ÐÂÔö£©¡¢Ìá¹©ÊÂ¼þ¼àÌýÇåÀí±ê×¼Ä£°å£¨4 ¸ö±ê×¼Ä£°å£©¡¢ÐÞÕý Store ÊýÁ¿ 39 ¡ú 44¡¢·þÎñ×ÓÓò 18 ¡ú 20 |
-| `scripts/audit-hardcode.ts` | ½Å±¾ÓÅ»¯ | À©Õ¹Ä§·¨Êý×ÖÅÅ³ýÁÐ±í£¨ÐÂÔöÒµÎñ³£Á¿ 10000/100000/1000000¡¢³£¼ûÅäÖÃÖµ 10/20/30/50/256/512/1024/2048/4096¡¢·ÖÒ³Ïà¹Ø 10/20/50/100£©£¬½µµÍÎóÅÐÂÊ |
-| `scripts/audit-doc-sync.ts` | ½Å±¾ÓÅ»¯ | v2.1 ÔöÇ¿£ºÐÂÔö COMMON_NOISE_WORDS ÔëÒô´Ê¹ýÂË¡¢AUTO_EXCLUDED_PATTERNS ×Ô¶¯ÅÅ³ýÄ£Ê½¡¢isLikelyReferenced º¯ÊýÔöÇ¿£¨ÐèÖÁÉÙ³öÏÖ 2 ´Î»ò°éËæÃèÊöÐÔÎÄ±¾£©£¬½µµÍÎóÅÐÂÊ |
-| `../../reference/03-architecture-standards.md` | P0/P1/P2 ÐÞÕý | DB_VERSION 14 ¡ú 21¡¢Store Çåµ¥ 19 ¡ú 25 ¸ö¡¢Widget ÊýÁ¿ 12 ¡ú 21¡¢¼¼ÊõÕ» Pinia ¡ú Zustand¡¢°æ±¾ºÅ v1.1.0 ¡ú v2.2.1¡¢Æ«²îÇåµ¥ D13/D14/D16 ×´Ì¬ÐÞÕý£¨?? ¡ú ??£©¡¢UnifiedStockData ×´Ì¬ÐÞÕý£¨?? ¡ú ?£©¡¢Widget ÒýÇæ½ÓÈë×´Ì¬ÐÞÕý£¨?? ¡ú ?£© |
-| `../audit/quality-audit-plan.md` | P1 ÐÞÕý | ¼¼ÊõÕ» Pinia ¡ú Zustand¡¢Â·ÓÉ 26 ¡ú 47¡¢Store 7 ¡ú 44¡¢Widget 12 ¡ú 21 |
-| `docs/README.md` | P2 ÐÞÕý | °æ±¾ºÅ v0.9.0-migration-implemented ¡ú v2.2.1¡¢¸üÐÂÈÕÆÚ 2026-06-24 ¡ú 2026-07-05 |
-| `../../reference/01-vision-and-goals.md` | P2 ÐÞÕý | °æ±¾ºÅ v0.9.0-migration-implemented ¡ú v2.2.1¡¢¸üÐÂÈÕÆÚ 2026-06-25 ¡ú 2026-07-05 |
-| `../../reference/02-functional-specs.md` | P2 ÐÞÕý | °æ±¾ºÅ v1.1.0 ¡ú v2.2.1¡¢¸üÐÂÈÕÆÚ 2026-06-26 ¡ú 2026-07-05 |
-| `../../reference/04-ui-ux-specs.md` | P2 ÐÞÕý | °æ±¾ºÅ v0.9.0-migration-implemented ¡ú v2.2.1¡¢¸üÐÂÈÕÆÚ 2026-06-25 ¡ú 2026-07-05 |
-| `../../reference/05-engine-specs.md` | P2 ÐÞÕý | °æ±¾ºÅ v1.1.0 ¡ú v2.2.1¡¢¸üÐÂÈÕÆÚ 2026-06-26 ¡ú 2026-07-05 |
-| `../../reference/06-routing-specs.md` | P2 ÐÞÕý | °æ±¾ºÅ v1.2.0 ¡ú v2.2.1¡¢¸üÐÂÈÕÆÚ 2026-07-04 ¡ú 2026-07-05 |
-| `../../reference/07-operation-strategy.md` | P2 ÐÞÕý | °æ±¾ºÅ v0.9.0-migration-implemented ¡ú v2.2.1¡¢¸üÐÂÈÕÆÚ 2026-06-25 ¡ú 2026-07-05 |
-| `../../reference/08-implementation-plan.md` | P2 ÐÞÕý | °æ±¾ºÅ v1.1.0 ¡ú v2.2.1¡¢¸üÐÂÈÕÆÚ 2026-06-26 ¡ú 2026-07-05 |
-| `../../reference/09-quality-gates.md` | P2 ÐÞÕý | °æ±¾ºÅ v1.2.0 ¡ú v2.2.1¡¢¸üÐÂÈÕÆÚ 2026-06-29 ¡ú 2026-07-05 |
-| `../../reference/10-glossary.md` | P2 ÐÞÕý | °æ±¾ºÅ v0.9.0-migration-implemented ¡ú v2.2.1¡¢¸üÐÂÈÕÆÚ 2026-06-25 ¡ú 2026-07-05 |
+| `../../../AGENTS.md` | åè®®è¡¥å…… | æ–°å¢ž lib/ å±‚ä¾èµ–è§„åˆ™ï¼ˆä»…å¯ä¾èµ– core/ å’Œ config/ï¼‰ã€è¡¥å……å››æ­¥å¥‘çº¦å›žæ»šéªŒè¯æµç¨‹ï¼ˆ5 é¡¹éªŒè¯è¦æ±‚ï¼‰ã€æ˜Žç¡® AI è‡ªä¸»ä¿®å¤è¾¹ç•Œï¼ˆv1.3.1 æ–°å¢žï¼‰ã€æä¾›äº‹ä»¶ç›‘å¬æ¸…ç†æ ‡å‡†æ¨¡æ¿ï¼ˆ4 ä¸ªæ ‡å‡†æ¨¡æ¿ï¼‰ã€ä¿®æ­£ Store æ•°é‡ 39 â†’ 44ã€æœåŠ¡å­åŸŸ 18 â†’ 20 |
+| `scripts/audit-hardcode.ts` | è„šæœ¬ä¼˜åŒ– | æ‰©å±•é­”æ³•æ•°å­—æŽ’é™¤åˆ—è¡¨ï¼ˆæ–°å¢žä¸šåŠ¡å¸¸é‡ 10000/100000/1000000ã€å¸¸è§é…ç½®å€¼ 10/20/30/50/256/512/1024/2048/4096ã€åˆ†é¡µç›¸å…³ 10/20/50/100ï¼‰ï¼Œé™ä½Žè¯¯åˆ¤çŽ‡ |
+| `scripts/audit-doc-sync.ts` | è„šæœ¬ä¼˜åŒ– | v2.1 å¢žå¼ºï¼šæ–°å¢ž COMMON_NOISE_WORDS å™ªéŸ³è¯è¿‡æ»¤ã€AUTO_EXCLUDED_PATTERNS è‡ªåŠ¨æŽ’é™¤æ¨¡å¼ã€isLikelyReferenced å‡½æ•°å¢žå¼ºï¼ˆéœ€è‡³å°‘å‡ºçŽ° 2 æ¬¡æˆ–ä¼´éšæè¿°æ€§æ–‡æœ¬ï¼‰ï¼Œé™ä½Žè¯¯åˆ¤çŽ‡ |
+| `../../reference/03-architecture-standards.md` | P0/P1/P2 ä¿®æ­£ | DB_VERSION 14 â†’ 21ã€Store æ¸…å• 19 â†’ 25 ä¸ªã€Widget æ•°é‡ 12 â†’ 21ã€æŠ€æœ¯æ ˆ Pinia â†’ Zustandã€ç‰ˆæœ¬å· v1.1.0 â†’ v2.2.1ã€åå·®æ¸…å• D13/D14/D16 çŠ¶æ€ä¿®æ­£ï¼ˆ?? â†’ ??ï¼‰ã€UnifiedStockData çŠ¶æ€ä¿®æ­£ï¼ˆ?? â†’ ?ï¼‰ã€Widget å¼•æ“ŽæŽ¥å…¥çŠ¶æ€ä¿®æ­£ï¼ˆ?? â†’ ?ï¼‰ |
+| `../audit/quality-audit-plan.md` | P1 ä¿®æ­£ | æŠ€æœ¯æ ˆ Pinia â†’ Zustandã€è·¯ç”± 26 â†’ 47ã€Store 7 â†’ 44ã€Widget 12 â†’ 21 |
+| `docs/README.md` | P2 ä¿®æ­£ | ç‰ˆæœ¬å· v0.9.0-migration-implemented â†’ v2.2.1ã€æ›´æ–°æ—¥æœŸ 2026-06-24 â†’ 2026-07-05 |
+| `../../reference/01-vision-and-goals.md` | P2 ä¿®æ­£ | ç‰ˆæœ¬å· v0.9.0-migration-implemented â†’ v2.2.1ã€æ›´æ–°æ—¥æœŸ 2026-06-25 â†’ 2026-07-05 |
+| `../../reference/02-functional-specs.md` | P2 ä¿®æ­£ | ç‰ˆæœ¬å· v1.1.0 â†’ v2.2.1ã€æ›´æ–°æ—¥æœŸ 2026-06-26 â†’ 2026-07-05 |
+| `../../reference/04-ui-ux-specs.md` | P2 ä¿®æ­£ | ç‰ˆæœ¬å· v0.9.0-migration-implemented â†’ v2.2.1ã€æ›´æ–°æ—¥æœŸ 2026-06-25 â†’ 2026-07-05 |
+| `../../reference/05-engine-specs.md` | P2 ä¿®æ­£ | ç‰ˆæœ¬å· v1.1.0 â†’ v2.2.1ã€æ›´æ–°æ—¥æœŸ 2026-06-26 â†’ 2026-07-05 |
+| `../../reference/06-routing-specs.md` | P2 ä¿®æ­£ | ç‰ˆæœ¬å· v1.2.0 â†’ v2.2.1ã€æ›´æ–°æ—¥æœŸ 2026-07-04 â†’ 2026-07-05 |
+| `../../reference/07-operation-strategy.md` | P2 ä¿®æ­£ | ç‰ˆæœ¬å· v0.9.0-migration-implemented â†’ v2.2.1ã€æ›´æ–°æ—¥æœŸ 2026-06-25 â†’ 2026-07-05 |
+| `../../reference/08-implementation-plan.md` | P2 ä¿®æ­£ | ç‰ˆæœ¬å· v1.1.0 â†’ v2.2.1ã€æ›´æ–°æ—¥æœŸ 2026-06-26 â†’ 2026-07-05 |
+| `../../reference/09-quality-gates.md` | P2 ä¿®æ­£ | ç‰ˆæœ¬å· v1.2.0 â†’ v2.2.1ã€æ›´æ–°æ—¥æœŸ 2026-06-29 â†’ 2026-07-05 |
+| `../../reference/10-glossary.md` | P2 ä¿®æ­£ | ç‰ˆæœ¬å· v0.9.0-migration-implemented â†’ v2.2.1ã€æ›´æ–°æ—¥æœŸ 2026-06-25 â†’ 2026-07-05 |
 
-### Ð­Òé²¹³äÏêÇé
+### åè®®è¡¥å……è¯¦æƒ…
 
-1. **lib/ ²ãÒÀÀµ¹æÔò**
-   - lib/ ½ö¿ÉÒÀÀµ core/ ºÍ config/
-   - ½ûÖ¹ÒÀÀµ services/¡¢store/¡¢pages/¡¢components/¡¢apps/
+1. **lib/ å±‚ä¾èµ–è§„åˆ™**
+   - lib/ ä»…å¯ä¾èµ– core/ å’Œ config/
+   - ç¦æ­¢ä¾èµ– services/ã€store/ã€pages/ã€components/ã€apps/
 
-2. **ËÄ²½ÆõÔ¼»Ø¹öÑéÖ¤Á÷³Ì**
-   - »Ø¹öºó±ØÐëÖ´ÐÐ `npx tsc --noEmit` ÑéÖ¤ÀàÐÍ°²È«
-   - »Ø¹öºó±ØÐëÖ´ÐÐ `npm run audit:docs` ¼ì²éÎÄµµÍ¬²½×´Ì¬
-   - Èô»Ø¹öÉæ¼°½Ó¿ÚÇ©Ãû±ä¸ü£¬±ØÐë¸üÐÂÏà¹ØÎÄµµ
-   - »Ø¹öºó±ØÐëÖ´ÐÐ `npm run audit:layers` È·ÈÏÎÞ¿ç²ãµ÷ÓÃÎ¥¹æ
-   - »Ø¹öºó±ØÐëÖ´ÐÐ `npm run test -- --run` È·ÈÏµ¥Ôª²âÊÔÍ¨¹ý
+2. **å››æ­¥å¥‘çº¦å›žæ»šéªŒè¯æµç¨‹**
+   - å›žæ»šåŽå¿…é¡»æ‰§è¡Œ `npx tsc --noEmit` éªŒè¯ç±»åž‹å®‰å…¨
+   - å›žæ»šåŽå¿…é¡»æ‰§è¡Œ `npm run audit:docs` æ£€æŸ¥æ–‡æ¡£åŒæ­¥çŠ¶æ€
+   - è‹¥å›žæ»šæ¶‰åŠæŽ¥å£ç­¾åå˜æ›´ï¼Œå¿…é¡»æ›´æ–°ç›¸å…³æ–‡æ¡£
+   - å›žæ»šåŽå¿…é¡»æ‰§è¡Œ `npm run audit:layers` ç¡®è®¤æ— è·¨å±‚è°ƒç”¨è¿è§„
+   - å›žæ»šåŽå¿…é¡»æ‰§è¡Œ `npm run test -- --run` ç¡®è®¤å•å…ƒæµ‹è¯•é€šè¿‡
 
-### ½Å±¾ÓÅ»¯ÏêÇé
+### è„šæœ¬ä¼˜åŒ–è¯¦æƒ…
 
-**Ä§·¨Êý×ÖÅÅ³ýÁÐ±íÀ©Õ¹**£º
-- ÒµÎñ³£Á¿£º10000£¨ÊÖÊý£©¡¢100000£¨´ó¶îãÐÖµ£©¡¢1000000£¨°ÙÍò£©
-- ³£¼ûÅäÖÃÖµ£º10¡¢20¡¢30¡¢50¡¢256¡¢512¡¢1024¡¢2048¡¢4096
-- ·ÖÒ³Ïà¹Ø£º10¡¢20¡¢50¡¢100
+**é­”æ³•æ•°å­—æŽ’é™¤åˆ—è¡¨æ‰©å±•**ï¼š
+- ä¸šåŠ¡å¸¸é‡ï¼š10000ï¼ˆæ‰‹æ•°ï¼‰ã€100000ï¼ˆå¤§é¢é˜ˆå€¼ï¼‰ã€1000000ï¼ˆç™¾ä¸‡ï¼‰
+- å¸¸è§é…ç½®å€¼ï¼š10ã€20ã€30ã€50ã€256ã€512ã€1024ã€2048ã€4096
+- åˆ†é¡µç›¸å…³ï¼š10ã€20ã€50ã€100
 
-**Ô¤ÆÚÐ§¹û**£ºÄ§·¨Êý×ÖÎóÅÐÂÊ½µµÍ 60-70%
+**é¢„æœŸæ•ˆæžœ**ï¼šé­”æ³•æ•°å­—è¯¯åˆ¤çŽ‡é™ä½Ž 60-70%
 
-### P0 ÎÄµµÐÞÕýÏêÇé
+### P0 æ–‡æ¡£ä¿®æ­£è¯¦æƒ…
 
-**DB_VERSION ÐÞÕý**£º
-- ÐÞÕýÇ°£º14
-- ÐÞÕýºó£º21
-- ÐÞÕýÄÚÈÝ£º²¹³ä v14¡úv19£¨ÖÇÄÜÌåµ÷¶È²ã¡¢ÃüÁîÄ£¿é£©¡¢v19¡úv20£¨command_audit_logs£©¡¢v20¡úv21£¨Êä³ö²ÕÓëÖ´ÐÐÄ£¿é£©µÄÉý¼¶ÀúÊ·
+**DB_VERSION ä¿®æ­£**ï¼š
+- ä¿®æ­£å‰ï¼š14
+- ä¿®æ­£åŽï¼š21
+- ä¿®æ­£å†…å®¹ï¼šè¡¥å…… v14â†’v19ï¼ˆæ™ºèƒ½ä½“è°ƒåº¦å±‚ã€å‘½ä»¤æ¨¡å—ï¼‰ã€v19â†’v20ï¼ˆcommand_audit_logsï¼‰ã€v20â†’v21ï¼ˆè¾“å‡ºèˆ±ä¸Žæ‰§è¡Œæ¨¡å—ï¼‰çš„å‡çº§åŽ†å²
 
-**Store Çåµ¥ÐÞÕý**£º
-- ÐÞÕýÇ°£º19 ¸ö Store
-- ÐÞÕýºó£º25 ¸ö Store
-- ÐÂÔö Store£ºnews_bookmarks¡¢execution_plans¡¢execution_logs¡¢missing_reports¡¢portfolios¡¢trade_reviews
+**Store æ¸…å•ä¿®æ­£**ï¼š
+- ä¿®æ­£å‰ï¼š19 ä¸ª Store
+- ä¿®æ­£åŽï¼š25 ä¸ª Store
+- æ–°å¢ž Storeï¼šnews_bookmarksã€execution_plansã€execution_logsã€missing_reportsã€portfoliosã€trade_reviews
 
-### P1 ÐÞÕýÏêÇé
+### P1 ä¿®æ­£è¯¦æƒ…
 
-1. **¼¼ÊõÕ»ÃèÊöÐÞÕý**
-   - `../../reference/03-architecture-standards.md` ºÍ `../audit/quality-audit-plan.md` ÖÐ Pinia ¡ú Zustand
-   - Â·ÓÉÊýÁ¿ 26 ¡ú 47¡¢Store ÊýÁ¿ 7 ¡ú 44¡¢Widget ÊýÁ¿ 12 ¡ú 21
+1. **æŠ€æœ¯æ ˆæè¿°ä¿®æ­£**
+   - `../../reference/03-architecture-standards.md` å’Œ `../audit/quality-audit-plan.md` ä¸­ Pinia â†’ Zustand
+   - è·¯ç”±æ•°é‡ 26 â†’ 47ã€Store æ•°é‡ 7 â†’ 44ã€Widget æ•°é‡ 12 â†’ 21
 
-2. **Æ«²îÇåµ¥×´Ì¬ÐÞÕý**
-   - D13£¨Êý¾ÝÈÚºÏ²ã£©£º?? Î´ÊµÏÖ ¡ú ?? ÒÑÐÞ¸´£¨`dataFusionEngine.ts` + `unifiedStockService.ts` ÒÑÂäµØ£©
-   - D14£¨Widget ÒýÇæ½ÓÈë£©£º?? Î´½ÓÈë ¡ú ?? ÒÑÐÞ¸´£¨`CockpitShell.tsx` ÒÑ½ÓÈë widgetEngine/widgetRegistry£©
-   - D16£¨Í¼±í×é¼þ¿â£©£º?? È±ÉÙ ¡ú ?? ÒÑÐÞ¸´£¨`lightweight-charts` + `recharts` ÒÑÒýÈë£©
-   - 3.1.3 ½Ú UnifiedStockData ×´Ì¬£º?? Î´ÊµÏÖ ¡ú ? ÒÑÊµÏÖ
-   - 3.1.4 ½Ú Widget ÒýÇæ×´Ì¬£º?? Î´½ÓÈë ¡ú ? ÒÑ½ÓÈë
+2. **åå·®æ¸…å•çŠ¶æ€ä¿®æ­£**
+   - D13ï¼ˆæ•°æ®èžåˆå±‚ï¼‰ï¼š?? æœªå®žçŽ° â†’ ?? å·²ä¿®å¤ï¼ˆ`dataFusionEngine.ts` + `unifiedStockService.ts` å·²è½åœ°ï¼‰
+   - D14ï¼ˆWidget å¼•æ“ŽæŽ¥å…¥ï¼‰ï¼š?? æœªæŽ¥å…¥ â†’ ?? å·²ä¿®å¤ï¼ˆ`CockpitShell.tsx` å·²æŽ¥å…¥ widgetEngine/widgetRegistryï¼‰
+   - D16ï¼ˆå›¾è¡¨ç»„ä»¶åº“ï¼‰ï¼š?? ç¼ºå°‘ â†’ ?? å·²ä¿®å¤ï¼ˆ`lightweight-charts` + `recharts` å·²å¼•å…¥ï¼‰
+   - 3.1.3 èŠ‚ UnifiedStockData çŠ¶æ€ï¼š?? æœªå®žçŽ° â†’ ? å·²å®žçŽ°
+   - 3.1.4 èŠ‚ Widget å¼•æ“ŽçŠ¶æ€ï¼š?? æœªæŽ¥å…¥ â†’ ? å·²æŽ¥å…¥
 
-3. **AI ×ÔÖ÷ÐÞ¸´±ß½çÃ÷È·**£¨AGENTS.md ¡ìÊ®£©
-   - ? ÔÊÐí£ºÌáÈ¡Ó²±àÂëÑÕÉ«/Ä§·¨Êý×Ö¡¢ÐÞ¸´¿ç²ãµ÷ÓÃ¡¢²¹³äÊÂ¼þ¼àÌýÇåÀí
-   - ? ½ûÖ¹£ºÐÂÔö³£Á¿/ÅäÖÃÏî¡¢ÐÞ¸Ä½Ó¿ÚÇ©Ãû¡¢ÖØ¹¹×é¼þ props¡¢É¾³ý/ÖØÃüÃûµ¼³öº¯Êý
+3. **AI è‡ªä¸»ä¿®å¤è¾¹ç•Œæ˜Žç¡®**ï¼ˆAGENTS.md Â§åï¼‰
+   - ? å…è®¸ï¼šæå–ç¡¬ç¼–ç é¢œè‰²/é­”æ³•æ•°å­—ã€ä¿®å¤è·¨å±‚è°ƒç”¨ã€è¡¥å……äº‹ä»¶ç›‘å¬æ¸…ç†
+   - ? ç¦æ­¢ï¼šæ–°å¢žå¸¸é‡/é…ç½®é¡¹ã€ä¿®æ”¹æŽ¥å£ç­¾åã€é‡æž„ç»„ä»¶ propsã€åˆ é™¤/é‡å‘½åå¯¼å‡ºå‡½æ•°
 
-4. **ÊÂ¼þ¼àÌýÇåÀí±ê×¼Ä£°å**£¨AGENTS.md ¡ìÈý£©
-   - 4 ¸ö±ê×¼Ä£°å£ºEventBus ¶©ÔÄ¡¢DOM ÊÂ¼þ¡¢¶¨Ê±Æ÷¡¢¶à¼àÌýÆ÷ÅúÁ¿ÇåÀí
-   - Ã÷È·½ûÖ¹ `EventBus.clear()` ÔÚ cleanup ÖÐÊ¹ÓÃ
+4. **äº‹ä»¶ç›‘å¬æ¸…ç†æ ‡å‡†æ¨¡æ¿**ï¼ˆAGENTS.md Â§ä¸‰ï¼‰
+   - 4 ä¸ªæ ‡å‡†æ¨¡æ¿ï¼šEventBus è®¢é˜…ã€DOM äº‹ä»¶ã€å®šæ—¶å™¨ã€å¤šç›‘å¬å™¨æ‰¹é‡æ¸…ç†
+   - æ˜Žç¡®ç¦æ­¢ `EventBus.clear()` åœ¨ cleanup ä¸­ä½¿ç”¨
 
-5. **ÊýÁ¿ÐÞÕý**
-   - AGENTS.md£ºStore 39 ¡ú 44¡¢·þÎñ×ÓÓò 18 ¡ú 20
-   - `../../reference/03-architecture-standards.md`£ºWidget 12 ¡ú 21
+5. **æ•°é‡ä¿®æ­£**
+   - AGENTS.mdï¼šStore 39 â†’ 44ã€æœåŠ¡å­åŸŸ 18 â†’ 20
+   - `../../reference/03-architecture-standards.md`ï¼šWidget 12 â†’ 21
 
-### P2 ÐÞÕýÏêÇé
+### P2 ä¿®æ­£è¯¦æƒ…
 
-1. **ÎÄµµ°æ±¾ºÅÍ³Ò»**
-   - 10 ·ÝºËÐÄÎÄµµ£¨README.md¡¢01-10£©°æ±¾ºÅÍ³Ò»Îª v2.2.1£¬ÈÕÆÚÍ³Ò»Îª 2026-07-05
-   - Ïû³ý v0.9.0-migration-implemented / v1.1.0 / v1.2.0 ÈýÖÖ°æ±¾²¢´æµÄÀúÊ·ÒÅÁô
+1. **æ–‡æ¡£ç‰ˆæœ¬å·ç»Ÿä¸€**
+   - 10 ä»½æ ¸å¿ƒæ–‡æ¡£ï¼ˆREADME.mdã€01-10ï¼‰ç‰ˆæœ¬å·ç»Ÿä¸€ä¸º v2.2.1ï¼Œæ—¥æœŸç»Ÿä¸€ä¸º 2026-07-05
+   - æ¶ˆé™¤ v0.9.0-migration-implemented / v1.1.0 / v1.2.0 ä¸‰ç§ç‰ˆæœ¬å¹¶å­˜çš„åŽ†å²é—ç•™
 
-2. **audit:doc-sync ½Å±¾ÓÅ»¯**
-   - ÐÂÔö `COMMON_NOISE_WORDS` ÔëÒô´Ê¼¯ºÏ£¨index/utils/types/config µÈ 20+ ³£¼û´Ê£©
-   - ÐÂÔö `AUTO_EXCLUDED_PATTERNS` ×Ô¶¯ÅÅ³ýÄ£Ê½£¨mock/prompt/types/index µÈ£©
-   - `isLikelyReferenced()` ÔöÇ¿£ºÎÄ¼þÃûÐèÖÁÉÙ³öÏÖ 2 ´Î»ò°éËæ > 50 ×Ö·ûÃèÊöÐÔÉÏÏÂÎÄ
-   - ÐÂÔö AGENTS.md µ½ÎÄµµÉ¨Ãè·¶Î§
+2. **audit:doc-sync è„šæœ¬ä¼˜åŒ–**
+   - æ–°å¢ž `COMMON_NOISE_WORDS` å™ªéŸ³è¯é›†åˆï¼ˆindex/utils/types/config ç­‰ 20+ å¸¸è§è¯ï¼‰
+   - æ–°å¢ž `AUTO_EXCLUDED_PATTERNS` è‡ªåŠ¨æŽ’é™¤æ¨¡å¼ï¼ˆmock/prompt/types/index ç­‰ï¼‰
+   - `isLikelyReferenced()` å¢žå¼ºï¼šæ–‡ä»¶åéœ€è‡³å°‘å‡ºçŽ° 2 æ¬¡æˆ–ä¼´éš > 50 å­—ç¬¦æè¿°æ€§ä¸Šä¸‹æ–‡
+   - æ–°å¢ž AGENTS.md åˆ°æ–‡æ¡£æ‰«æèŒƒå›´
 
 ---
 
-## v2.2.0 (2026-07-05) ¡ª ÖªÊ¶Í¼Æ× Token ÏûºÄÓÅ»¯ÓëÐ­ÒéÈ±ÏÝÐÞÕý
+## v2.2.0 (2026-07-05) â€” çŸ¥è¯†å›¾è°± Token æ¶ˆè€—ä¼˜åŒ–ä¸Žåè®®ç¼ºé™·ä¿®æ­£
 
-**ÐÞÕý·¶Î§**£ºÖªÊ¶Í¼Æ×¹¹½¨ Token ÎÞÎ½ÏûºÄ¡¢ÎÄµµÌåÏµÏµÍ³ÐÔÆ¯ÒÆ¡¢¼ì²éÐ­ÒéÖØ´óÒÅÂ©
-**ÐÞÕý½á¹û**£º½¨Á¢ Token ÏûºÄ¿ØÖÆ»úÖÆ¡¢¸üÐÂ 7 ·ÝºËÐÄÎÄµµ¡¢ÐÞÕý 28 ÏîÎÄµµÎÊÌâ
+**ä¿®æ­£èŒƒå›´**ï¼šçŸ¥è¯†å›¾è°±æž„å»º Token æ— è°“æ¶ˆè€—ã€æ–‡æ¡£ä½“ç³»ç³»ç»Ÿæ€§æ¼‚ç§»ã€æ£€æŸ¥åè®®é‡å¤§é—æ¼
+**ä¿®æ­£ç»“æžœ**ï¼šå»ºç«‹ Token æ¶ˆè€—æŽ§åˆ¶æœºåˆ¶ã€æ›´æ–° 7 ä»½æ ¸å¿ƒæ–‡æ¡£ã€ä¿®æ­£ 28 é¡¹æ–‡æ¡£é—®é¢˜
 
-### ºËÐÄÎÊÌâÊ¶±ð
+### æ ¸å¿ƒé—®é¢˜è¯†åˆ«
 
-| ÎÊÌâÀà±ð | ÎÊÌâÊýÁ¿ | ÑÏÖØ³Ì¶È | Ó°Ïì·¶Î§ |
+| é—®é¢˜ç±»åˆ« | é—®é¢˜æ•°é‡ | ä¸¥é‡ç¨‹åº¦ | å½±å“èŒƒå›´ |
 |---------|---------|---------|---------|
-| Token ÎÞÎ½ÏûºÄ | 5 ´ó»·½Ú | P0 | ÔÂ¶È 1.4M-2.3M tokens ÀË·Ñ |
-| ÎÄµµ×¼È·ÐÔÎÊÌâ | 4 Ïî | P0 | DB_VERSION¡¢Store Çåµ¥¡¢½Å±¾Â·¾¶ÑÏÖØÊ§Õæ |
-| ÎÄµµÍêÕûÐÔÎÊÌâ | 9 Ïî | P1 | Â·ÓÉ/Store/Widget ÊýÁ¿È«ÃæÊ§Õæ |
-| Ð­ÒéÒÅÂ©ÎÊÌâ | 10 Ïî | P1 | lib/ ²ãÒÀÀµÎ´Ô¼Êø¡¢Éó¼Æ½Å±¾ÎóÅÐÂÊ¸ß |
-| ÎÄµµÊ±Ð§ÐÔÎÊÌâ | 15 Ïî | P2 | °æ±¾ºÅÃ¬¶Ü¡¢×´Ì¬Î´¸üÐÂ |
+| Token æ— è°“æ¶ˆè€— | 5 å¤§çŽ¯èŠ‚ | P0 | æœˆåº¦ 1.4M-2.3M tokens æµªè´¹ |
+| æ–‡æ¡£å‡†ç¡®æ€§é—®é¢˜ | 4 é¡¹ | P0 | DB_VERSIONã€Store æ¸…å•ã€è„šæœ¬è·¯å¾„ä¸¥é‡å¤±çœŸ |
+| æ–‡æ¡£å®Œæ•´æ€§é—®é¢˜ | 9 é¡¹ | P1 | è·¯ç”±/Store/Widget æ•°é‡å…¨é¢å¤±çœŸ |
+| åè®®é—æ¼é—®é¢˜ | 10 é¡¹ | P1 | lib/ å±‚ä¾èµ–æœªçº¦æŸã€å®¡è®¡è„šæœ¬è¯¯åˆ¤çŽ‡é«˜ |
+| æ–‡æ¡£æ—¶æ•ˆæ€§é—®é¢˜ | 15 é¡¹ | P2 | ç‰ˆæœ¬å·çŸ›ç›¾ã€çŠ¶æ€æœªæ›´æ–° |
 
-### Token ÏûºÄÁ¿»¯·ÖÎö
+### Token æ¶ˆè€—é‡åŒ–åˆ†æž
 
-| ÏûºÄ»·½Ú | µ¥´ÎÏûºÄ (tokens) | ÔÂ¶ÈÀË·Ñ (tokens) | ÓÅ»¯ºó½ÚÊ¡ |
+| æ¶ˆè€—çŽ¯èŠ‚ | å•æ¬¡æ¶ˆè€— (tokens) | æœˆåº¦æµªè´¹ (tokens) | ä¼˜åŒ–åŽèŠ‚çœ |
 |---------|-----------------|------------------|-----------|
-| ´úÂë¹ØÏµÀí½â | 12,000-25,000 | 240,000-400,000 | **89%** |
-| ÖØ¸´ËÑË÷ÓëÉÏÏÂÎÄÖØ½¨ | 4,000 | 240,000-400,000 | **95%** |
-| ¼Ü¹¹ºÏ¹æÐÔ¼ì²é | 5,000-10,000 | 60,000-90,000 | **89%** |
-| Ó²±àÂëÔªËØÊ¶±ð | 10,000-13,000 | 50,000-65,000 | **90%** |
-| ÊÂ¼þ¼àÌýÇåÀí¼ì²é | 8,500-11,500 | 42,500-57,500 | **88%** |
-| **×Ü¼Æ** | **39,500-63,500** | **632,500-1,012,500** | **69%** |
+| ä»£ç å…³ç³»ç†è§£ | 12,000-25,000 | 240,000-400,000 | **89%** |
+| é‡å¤æœç´¢ä¸Žä¸Šä¸‹æ–‡é‡å»º | 4,000 | 240,000-400,000 | **95%** |
+| æž¶æž„åˆè§„æ€§æ£€æŸ¥ | 5,000-10,000 | 60,000-90,000 | **89%** |
+| ç¡¬ç¼–ç å…ƒç´ è¯†åˆ« | 10,000-13,000 | 50,000-65,000 | **90%** |
+| äº‹ä»¶ç›‘å¬æ¸…ç†æ£€æŸ¥ | 8,500-11,500 | 42,500-57,500 | **88%** |
+| **æ€»è®¡** | **39,500-63,500** | **632,500-1,012,500** | **69%** |
 
-### ÐÞ¸ÄÎÄ¼þ
+### ä¿®æ”¹æ–‡ä»¶
 
-| ÎÄ¼þ | ±ä¸üÀàÐÍ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´ç±»åž‹ | å˜æ›´å†…å®¹ |
 |------|---------|---------|
-| `../../../AGENTS.md` | °æ±¾Éý¼¶ | v1.2.0 ¡ú v1.3.0£¬ÐÂÔö ¡ì7.1 Token ÏûºÄ¿ØÖÆ¹æÔò¡¢audit:token ½Å±¾¡¢ÖªÊ¶Í¼Æ×Ê¹ÓÃÖ¸ÄÏ |
-| `../../reference/03-architecture-standards.md` | ´ýÐÞÕý | DB_VERSION 14 ¡ú 21¡¢Store Çåµ¥²¹³ä 6 ¸ö¡¢¼¼ÊõÕ» Pinia ¡ú Zustand |
-| `docs/reports/token-consumption-analysis-2026-07-04.md` | ÒÑ´´½¨ | Token ÏûºÄÉî¶È·ÖÎö±¨¸æ£¬°üº¬ 5 ´óÏûºÄÄ£Ê½Á¿»¯Êý¾Ý |
-| `docs/reports/token-optimization-best-practices.md` | ÒÑ´´½¨ | Token ÓÅ»¯×î¼ÑÊµ¼ùÖ¸ÄÏ£¬°üº¬ÖªÊ¶Í¼Æ×Ê¹ÓÃÖ¸ÄÏ¡¢³£¼û´íÎóÄ£Ê½Çåµ¥ |
-| `docs/reports/code-graph.json` | ÒÑ´´½¨ | ´úÂëÖªÊ¶Í¼Æ×½á¹¹»¯Êý¾Ý£¨466 ÎÄ¼þ¡¢91,470 ÐÐ£© |
-| `docs/reports/code-graph-visualization.html` | ÒÑ´´½¨ | ´úÂëÖªÊ¶Í¼Æ×¿ÉÊÓ»¯Ò³Ãæ |
-| `scripts/other/extract-code-graph.ts` | ÒÑ´´½¨ | ÖªÊ¶Í¼Æ×Éú³É½Å±¾£¬Ö§³ÖÒÀÀµ¹ØÏµÌáÈ¡¡¢Î¥¹æ¼ì²â¡¢Ó²±àÂëÊ¶±ð |
+| `../../../AGENTS.md` | ç‰ˆæœ¬å‡çº§ | v1.2.0 â†’ v1.3.0ï¼Œæ–°å¢ž Â§7.1 Token æ¶ˆè€—æŽ§åˆ¶è§„åˆ™ã€audit:token è„šæœ¬ã€çŸ¥è¯†å›¾è°±ä½¿ç”¨æŒ‡å— |
+| `../../reference/03-architecture-standards.md` | å¾…ä¿®æ­£ | DB_VERSION 14 â†’ 21ã€Store æ¸…å•è¡¥å…… 6 ä¸ªã€æŠ€æœ¯æ ˆ Pinia â†’ Zustand |
+| `docs/reports/token-consumption-analysis-2026-07-04.md` | å·²åˆ›å»º | Token æ¶ˆè€—æ·±åº¦åˆ†æžæŠ¥å‘Šï¼ŒåŒ…å« 5 å¤§æ¶ˆè€—æ¨¡å¼é‡åŒ–æ•°æ® |
+| `docs/reports/token-optimization-best-practices.md` | å·²åˆ›å»º | Token ä¼˜åŒ–æœ€ä½³å®žè·µæŒ‡å—ï¼ŒåŒ…å«çŸ¥è¯†å›¾è°±ä½¿ç”¨æŒ‡å—ã€å¸¸è§é”™è¯¯æ¨¡å¼æ¸…å• |
+| `docs/reports/code-graph.json` | å·²åˆ›å»º | ä»£ç çŸ¥è¯†å›¾è°±ç»“æž„åŒ–æ•°æ®ï¼ˆ466 æ–‡ä»¶ã€91,470 è¡Œï¼‰ |
+| `docs/reports/code-graph-visualization.html` | å·²åˆ›å»º | ä»£ç çŸ¥è¯†å›¾è°±å¯è§†åŒ–é¡µé¢ |
+| `scripts/other/extract-code-graph.ts` | å·²åˆ›å»º | çŸ¥è¯†å›¾è°±ç”Ÿæˆè„šæœ¬ï¼Œæ”¯æŒä¾èµ–å…³ç³»æå–ã€è¿è§„æ£€æµ‹ã€ç¡¬ç¼–ç è¯†åˆ« |
 
-### ÐÂÔö»úÖÆ
+### æ–°å¢žæœºåˆ¶
 
-1. **Token ÏûºÄ¿ØÖÆ¹æÔò**£¨AGENTS.md ¡ì7.1£©
-   - ÖªÊ¶Í¼Æ×ÓÅÏÈ£ºÀí½â´úÂë¹ØÏµ±ØÐëÏÈ²éÑ¯ code-graph.json
-   - ÔöÁ¿½âÎö£ºextract-code-graph.ts ±ØÐëÖ§³Ö»ùÓÚÎÄ¼þ mtime µÄÔöÁ¿¸üÐÂ
-   - »º´æ²éÑ¯½á¹û£º³£ÓÃ²éÑ¯±ØÐëÊ¹ÓÃ quick-query.sh Ä£°å
-   - Token Ô¤Ëã£ºµ¥´Î AI »á»°²»µÃ³¬¹ý 50,000 tokens
+1. **Token æ¶ˆè€—æŽ§åˆ¶è§„åˆ™**ï¼ˆAGENTS.md Â§7.1ï¼‰
+   - çŸ¥è¯†å›¾è°±ä¼˜å…ˆï¼šç†è§£ä»£ç å…³ç³»å¿…é¡»å…ˆæŸ¥è¯¢ code-graph.json
+   - å¢žé‡è§£æžï¼šextract-code-graph.ts å¿…é¡»æ”¯æŒåŸºäºŽæ–‡ä»¶ mtime çš„å¢žé‡æ›´æ–°
+   - ç¼“å­˜æŸ¥è¯¢ç»“æžœï¼šå¸¸ç”¨æŸ¥è¯¢å¿…é¡»ä½¿ç”¨ quick-query.sh æ¨¡æ¿
+   - Token é¢„ç®—ï¼šå•æ¬¡ AI ä¼šè¯ä¸å¾—è¶…è¿‡ 50,000 tokens
 
-2. **³£¼û´íÎóÄ£Ê½Çåµ¥**£¨token-optimization-best-practices.md£©
-   - ¿ç²ãµ÷ÓÃÎ¥¹æ£¨5 ÖÖµäÐÍ³¡¾°£©
-   - Ó²±àÂëÑÕÉ«/Ä§·¨Êý×Ö£¨¼ì²â·½·¨¡¢ÐÞ¸´·½°¸£©
-   - ÊÂ¼þ¼àÌýÎ´ÇåÀí£¨±ê×¼Ä£°å¡¢¼ì²éÇåµ¥£©
-   - any ÀàÐÍÊ¹ÓÃ£¨ÀàÐÍÊÕÕ­·½°¸£©
+2. **å¸¸è§é”™è¯¯æ¨¡å¼æ¸…å•**ï¼ˆtoken-optimization-best-practices.mdï¼‰
+   - è·¨å±‚è°ƒç”¨è¿è§„ï¼ˆ5 ç§å…¸åž‹åœºæ™¯ï¼‰
+   - ç¡¬ç¼–ç é¢œè‰²/é­”æ³•æ•°å­—ï¼ˆæ£€æµ‹æ–¹æ³•ã€ä¿®å¤æ–¹æ¡ˆï¼‰
+   - äº‹ä»¶ç›‘å¬æœªæ¸…ç†ï¼ˆæ ‡å‡†æ¨¡æ¿ã€æ£€æŸ¥æ¸…å•ï¼‰
+   - any ç±»åž‹ä½¿ç”¨ï¼ˆç±»åž‹æ”¶çª„æ–¹æ¡ˆï¼‰
 
-3. **¼Ü¹¹È±ÏÝÊ¶±ðÇåµ¥**£¨token-optimization-best-practices.md£©
-   - 9 ¸öÈ±ÏÝ·Ö¼¶£¨Critical/Major/Minor£©
-   - Ã¿¸öÈ±ÏÝ°üº¬¼ì²â·½·¨¡¢ÐÞ¸´·½°¸¡¢Ô¤·À´ëÊ©
+3. **æž¶æž„ç¼ºé™·è¯†åˆ«æ¸…å•**ï¼ˆtoken-optimization-best-practices.mdï¼‰
+   - 9 ä¸ªç¼ºé™·åˆ†çº§ï¼ˆCritical/Major/Minorï¼‰
+   - æ¯ä¸ªç¼ºé™·åŒ…å«æ£€æµ‹æ–¹æ³•ã€ä¿®å¤æ–¹æ¡ˆã€é¢„é˜²æŽªæ–½
 
-### ÑéÖ¤½á¹û
+### éªŒè¯ç»“æžœ
 
-| ÑéÖ¤Ïî | ½á¹û |
+| éªŒè¯é¡¹ | ç»“æžœ |
 |--------|------|
 | `npm run audit:token` | ? 0 violations |
 | `npm run audit:layers` | ? 0 violations |
-| `npm run audit:hardcode` | ?? 730 hardcoded colors, 1,557 magic numbers£¨´ýºóÐøÅú´ÎÐÞ¸´£© |
-| `npm run audit:deadcode` | ? 12 Ïî£¨ÒÑÊÇ×îÓÅ£© |
-| ÎÄµµÒ»ÖÂÐÔ¼ì²é | ?? 28 ÏîÎÊÌâÒÑÊ¶±ð£¬P0 ÎÊÌâ´ýÐÞÕý |
+| `npm run audit:hardcode` | ?? 730 hardcoded colors, 1,557 magic numbersï¼ˆå¾…åŽç»­æ‰¹æ¬¡ä¿®å¤ï¼‰ |
+| `npm run audit:deadcode` | ? 12 é¡¹ï¼ˆå·²æ˜¯æœ€ä¼˜ï¼‰ |
+| æ–‡æ¡£ä¸€è‡´æ€§æ£€æŸ¥ | ?? 28 é¡¹é—®é¢˜å·²è¯†åˆ«ï¼ŒP0 é—®é¢˜å¾…ä¿®æ­£ |
 
-### ÏÂÒ»²½ÐÐ¶¯
+### ä¸‹ä¸€æ­¥è¡ŒåŠ¨
 
-1. **P0 ÎÊÌâÐÞÕý**£¨´ýÈË¹¤È·ÈÏºóÖ´ÐÐ£©
-   - ¸üÐÂ `../../reference/03-architecture-standards.md` DB_VERSION 14 ¡ú 21
-   - ²¹³ä Store Çåµ¥£¨6 ¸öÈ±Ê§ Store£©
-   - ÐÞÕý¼¼ÊõÕ»ÃèÊö£¨Pinia ¡ú Zustand£©
+1. **P0 é—®é¢˜ä¿®æ­£**ï¼ˆå¾…äººå·¥ç¡®è®¤åŽæ‰§è¡Œï¼‰
+   - æ›´æ–° `../../reference/03-architecture-standards.md` DB_VERSION 14 â†’ 21
+   - è¡¥å…… Store æ¸…å•ï¼ˆ6 ä¸ªç¼ºå¤± Storeï¼‰
+   - ä¿®æ­£æŠ€æœ¯æ ˆæè¿°ï¼ˆPinia â†’ Zustandï¼‰
 
-2. **P1 ÎÊÌâÐÞÕý**£¨´ýÈË¹¤È·ÈÏºóÖ´ÐÐ£©
-   - ¸üÐÂÂ·ÓÉ/Store/Widget ÊýÁ¿
-   - ÐÞÕýÆ«²îÇåµ¥×´Ì¬
-   - ²¹³ä lib/ ²ãÒÀÀµ¹æÔò
+2. **P1 é—®é¢˜ä¿®æ­£**ï¼ˆå¾…äººå·¥ç¡®è®¤åŽæ‰§è¡Œï¼‰
+   - æ›´æ–°è·¯ç”±/Store/Widget æ•°é‡
+   - ä¿®æ­£åå·®æ¸…å•çŠ¶æ€
+   - è¡¥å…… lib/ å±‚ä¾èµ–è§„åˆ™
 
-3. **P2 ÎÊÌâÐÞÕý**£¨´ýÈË¹¤È·ÈÏºóÖ´ÐÐ£©
-   - ¸üÐÂ°æ±¾ºÅ¡¢×´Ì¬ÃèÊö
-   - ÐÞÕýÊ¾ÀýÓï·¨´íÎó
+3. **P2 é—®é¢˜ä¿®æ­£**ï¼ˆå¾…äººå·¥ç¡®è®¤åŽæ‰§è¡Œï¼‰
+   - æ›´æ–°ç‰ˆæœ¬å·ã€çŠ¶æ€æè¿°
+   - ä¿®æ­£ç¤ºä¾‹è¯­æ³•é”™è¯¯
 
 ---
 
-## v2.1.0 (2026-07-04) ¡ª audit:deadcode v2.0 Èý¼¶¼ÓÔØÁ´¼ì²â
+## v2.1.0 (2026-07-04) â€” audit:deadcode v2.0 ä¸‰çº§åŠ è½½é“¾æ£€æµ‹
 
-**ÐÞ¸´·¶Î§**£ºaudit:deadcode Éó¼Æ½Å±¾Èý¸ö½á¹¹ÐÔÃ¤Çø
-**ÐÞ¸´½á¹û**£ºÎ´×¢²áÒ³Ãæ¸æ¾¯´Ó 55 Ïî½µÖÁ 12 Ïî£¨Ïû³ý 43 ÏîÎó±¨£©
+**ä¿®å¤èŒƒå›´**ï¼šaudit:deadcode å®¡è®¡è„šæœ¬ä¸‰ä¸ªç»“æž„æ€§ç›²åŒº
+**ä¿®å¤ç»“æžœ**ï¼šæœªæ³¨å†Œé¡µé¢å‘Šè­¦ä»Ž 55 é¡¹é™è‡³ 12 é¡¹ï¼ˆæ¶ˆé™¤ 43 é¡¹è¯¯æŠ¥ï¼‰
 
-### ÐÞ¸ÄÎÄ¼þ
+### ä¿®æ”¹æ–‡ä»¶
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `scripts/audit-dead-code.ts` | ÐÂÔö `collectAppDispatcherImports()`£¨É¨Ãè apps/ ¶¯Ì¬+¾²Ì¬µ¼Èë£©¡¢`collectPortalImports()`£¨É¨Ãè portal/ µ¼Èë£©¡¢`isExcludedFromPageAudit()`£¨Í³Ò»ÅÅ³ý¹æÔò£© |
-| `../../../AGENTS.md` | ¡ì5 ÐÂÔöÈý¼¶¼ÓÔØÁ´¼Ü¹¹ËµÃ÷¡¢ÐÂÔöÒ³Ãæ SOP¡¢Éó¼ÆÅÅ³ý¹æÔò£»°æ±¾ÉýÖÁ v1.2.0 |
+| `scripts/audit-dead-code.ts` | æ–°å¢ž `collectAppDispatcherImports()`ï¼ˆæ‰«æ apps/ åŠ¨æ€+é™æ€å¯¼å…¥ï¼‰ã€`collectPortalImports()`ï¼ˆæ‰«æ portal/ å¯¼å…¥ï¼‰ã€`isExcludedFromPageAudit()`ï¼ˆç»Ÿä¸€æŽ’é™¤è§„åˆ™ï¼‰ |
+| `../../../AGENTS.md` | Â§5 æ–°å¢žä¸‰çº§åŠ è½½é“¾æž¶æž„è¯´æ˜Žã€æ–°å¢žé¡µé¢ SOPã€å®¡è®¡æŽ’é™¤è§„åˆ™ï¼›ç‰ˆæœ¬å‡è‡³ v1.2.0 |
 
-### ÐÞ¸´ÏêÇé
+### ä¿®å¤è¯¦æƒ…
 
-| Ã¤Çø | ÐÞ¸´Ç° | ÐÞ¸´ºó |
+| ç›²åŒº | ä¿®å¤å‰ | ä¿®å¤åŽ |
 |------|--------|--------|
-| ²âÊÔÎÄ¼þ¹ýÂË | ½öÅÅ³ý `.test.`£¨ÖÐ¼äÃû£©£¬ÒÅÂ© `.test.ts` ºÍ `__tests__/` | Í³Ò»Í¨¹ý `isExcludedFromPageAudit()` ÅÅ³ý |
-| ×¢²áÔ´¼ì²â | ½ö¼ì²é routes.ts Ö±½Óµ¼Èë | ºÏ²¢ routes.ts + apps/ + portal/ Èý¸ö×¢²áÔ´ |
-| ×Ó×é¼þÎó±¨ | pages/components/ ×Ó×é¼þ±»¼ÆÈë | ×Ô¶¯ÅÅ³ý `pages/{cabin}/components/` Ä¿Â¼ |
+| æµ‹è¯•æ–‡ä»¶è¿‡æ»¤ | ä»…æŽ’é™¤ `.test.`ï¼ˆä¸­é—´åï¼‰ï¼Œé—æ¼ `.test.ts` å’Œ `__tests__/` | ç»Ÿä¸€é€šè¿‡ `isExcludedFromPageAudit()` æŽ’é™¤ |
+| æ³¨å†Œæºæ£€æµ‹ | ä»…æ£€æŸ¥ routes.ts ç›´æŽ¥å¯¼å…¥ | åˆå¹¶ routes.ts + apps/ + portal/ ä¸‰ä¸ªæ³¨å†Œæº |
+| å­ç»„ä»¶è¯¯æŠ¥ | pages/components/ å­ç»„ä»¶è¢«è®¡å…¥ | è‡ªåŠ¨æŽ’é™¤ `pages/{cabin}/components/` ç›®å½• |
 
-### ÑéÖ¤½á¹û
+### éªŒè¯ç»“æžœ
 
-| ÑéÖ¤Ïî | ½á¹û |
+| éªŒè¯é¡¹ | ç»“æžœ |
 |--------|------|
-| `audit:deadcode` | 55 ¡ú 12 Ïî£¨-78%£© |
-| ×¢²áÔ´Í³¼Æ | routes.ts(45) + apps/(22) + portal/(1) |
+| `audit:deadcode` | 55 â†’ 12 é¡¹ï¼ˆ-78%ï¼‰ |
+| æ³¨å†Œæºç»Ÿè®¡ | routes.ts(45) + apps/(22) + portal/(1) |
 
 ---
 
-## v2.0.0 (2026-07-04) ¡ª V6-V9 ¼Ü¹¹Ò»ÖÂÐÔÕû¸Ä + UI Í³Ò»ÕûºÏ + ÑÕÉ«Ó²±àÂëÏµÍ³ÐÔÖÎÀí
+## v2.0.0 (2026-07-04) â€” V6-V9 æž¶æž„ä¸€è‡´æ€§æ•´æ”¹ + UI ç»Ÿä¸€æ•´åˆ + é¢œè‰²ç¡¬ç¼–ç ç³»ç»Ÿæ€§æ²»ç†
 
-**Éó¼Æ·¶Î§**£ºV6-V9 ¼Ü¹¹²îÒìÉî¶ÈÉó¼Æ£¬·¢ÏÖ 5 ´óÆ«²î£¨ÒýÇæºè¹µ/Ë«¹ìÓ³Éä/·ÏÆú×Ê²ú/ÎÄµµ°æ±¾»ìÂÒ/ConfigApp ¶ÏÁÑ£©+ UI ²ãÑÕÉ«Ó²±àÂëÈ«ÃæÉ¨Ãè
-**Õû¸Ä½á¹û**£ºF1-F4 ËÄÅú´ÎÈ«²¿Íê³É + UI Í³Ò»ÕûºÏ + ÑÕÉ«Ó²±àÂë¸ùÒòÕï¶ÏÓë¸Ä½ø·½°¸
+**å®¡è®¡èŒƒå›´**ï¼šV6-V9 æž¶æž„å·®å¼‚æ·±åº¦å®¡è®¡ï¼Œå‘çŽ° 5 å¤§åå·®ï¼ˆå¼•æ“Žé¸¿æ²Ÿ/åŒè½¨æ˜ å°„/åºŸå¼ƒèµ„äº§/æ–‡æ¡£ç‰ˆæœ¬æ··ä¹±/ConfigApp æ–­è£‚ï¼‰+ UI å±‚é¢œè‰²ç¡¬ç¼–ç å…¨é¢æ‰«æ
+**æ•´æ”¹ç»“æžœ**ï¼šF1-F4 å››æ‰¹æ¬¡å…¨éƒ¨å®Œæˆ + UI ç»Ÿä¸€æ•´åˆ + é¢œè‰²ç¡¬ç¼–ç æ ¹å› è¯Šæ–­ä¸Žæ”¹è¿›æ–¹æ¡ˆ
 
-### F1 ·ÏÆú×Ê²úÇåÀí
-- É¾³ý `src/pages/analysis/` Ä¿Â¼£¨8 ÎÄ¼þ£©¡¢`src/store/analysisNewsStore.ts`£¨225 ÐÐ£©¡¢`src/apps/input/`£¨6 ÎÄ¼þ£©
-- ÒÆ³ý `/analysis/news-v6` ËÀÂ·ÓÉ
-- ±£Áô `newsColorTokens.ts`£¨ÈÔ±» `NewsSentimentTrend.tsx` ÒýÓÃ£©
+### F1 åºŸå¼ƒèµ„äº§æ¸…ç†
+- åˆ é™¤ `src/pages/analysis/` ç›®å½•ï¼ˆ8 æ–‡ä»¶ï¼‰ã€`src/store/analysisNewsStore.ts`ï¼ˆ225 è¡Œï¼‰ã€`src/apps/input/`ï¼ˆ6 æ–‡ä»¶ï¼‰
+- ç§»é™¤ `/analysis/news-v6` æ­»è·¯ç”±
+- ä¿ç•™ `newsColorTokens.ts`ï¼ˆä»è¢« `NewsSentimentTrend.tsx` å¼•ç”¨ï¼‰
 
-### F2 ÎÄµµ°æ±¾Ð£Õý
-- `../../reference/action-list.md` Éý¼¶ÖÁ v2.0.0£¬ÐÞÕýÅú´Î A/B/C Ðé¼ÙÍê³É¼ÇÂ¼
+### F2 æ–‡æ¡£ç‰ˆæœ¬æ ¡æ­£
+- `../../reference/action-list.md` å‡çº§è‡³ v2.0.0ï¼Œä¿®æ­£æ‰¹æ¬¡ A/B/C è™šå‡å®Œæˆè®°å½•
 
-### F3 PortalShell µ¥¹ì»¯£¨·½°¸B£©
-- É¾³ý `HUB_APPS` Ó³Éä±í¼° 5 ¸ö HubPage lazy import
-- `/hub` Â·ÓÉ¸ÄÎª `useEffect` ÖØ¶¨Ïòµ½²ÕÊÒ»ù´¡Â·¾¶
-- ²à±ßÀ¸ `PANEL_ITEMS` Â·¾¶Í¬²½¸üÐÂ£¨`/input/hub` ¡ú `/input` µÈ£©
+### F3 PortalShell å•è½¨åŒ–ï¼ˆæ–¹æ¡ˆBï¼‰
+- åˆ é™¤ `HUB_APPS` æ˜ å°„è¡¨åŠ 5 ä¸ª HubPage lazy import
+- `/hub` è·¯ç”±æ”¹ä¸º `useEffect` é‡å®šå‘åˆ°èˆ±å®¤åŸºç¡€è·¯å¾„
+- ä¾§è¾¹æ  `PANEL_ITEMS` è·¯å¾„åŒæ­¥æ›´æ–°ï¼ˆ`/input/hub` â†’ `/input` ç­‰ï¼‰
 
-### F4 v6ScoreService ¼¯³É v6-engine£¨·½°¸B À©Õ¹ÀàÐÍ£©
-- ÖØÐ´ `runV6Score()` µ÷ÓÃ `createV6Engine().calculateAll()`
-- À©Õ¹ `V6Score` ÀàÐÍÐÂÔö `rating`/`layerDetails`/`allRisks`/`recommendation`/`engineVersion`
-- ²âÊÔÖØÐ´Îª v6-engine mock °æ±¾£¨7/7 Í¨¹ý£©
+### F4 v6ScoreService é›†æˆ v6-engineï¼ˆæ–¹æ¡ˆB æ‰©å±•ç±»åž‹ï¼‰
+- é‡å†™ `runV6Score()` è°ƒç”¨ `createV6Engine().calculateAll()`
+- æ‰©å±• `V6Score` ç±»åž‹æ–°å¢ž `rating`/`layerDetails`/`allRisks`/`recommendation`/`engineVersion`
+- æµ‹è¯•é‡å†™ä¸º v6-engine mock ç‰ˆæœ¬ï¼ˆ7/7 é€šè¿‡ï¼‰
 
-### UI Í³Ò»ÕûºÏ ¡ª Îå²Õ×ÓÒ³ÃæÈ«²¿ÊÕ¹é PortalShell
-- **AnalysisApp** ¸ÄÔìÎª×ÓÂ·ÓÉ·Ö·¢Æ÷£¨9 ¸ö×ÓÒ³ÃæÈ«²¿ lazy ¼ÓÔØ£©
-- **TradingApp** ¸ÄÔìÎª×ÓÂ·ÓÉ·Ö·¢Æ÷£¨2 ¸ö×ÓÒ³Ãæ lazy ¼ÓÔØ£©
-- **CommandApp** ¸ÄÔìÎª×ÓÂ·ÓÉ·Ö·¢Æ÷£¨`/command/config` ¡ú ConfigApp£©
-- **routes.ts** ¸üÐÂ£º13 ¸ö·ÖÎö/½»Ò×/ÊäÈë×ÓÂ·ÓÉÍ³Ò»Ö¸Ïò PortalShell
-- ÓÃ»§ÔÚËùÓÐÒ³Ãæ¾ù»ñµÃÒ»ÖÂµÄ TopBar + Sidebar µ¼º½ÌåÑé
+### UI ç»Ÿä¸€æ•´åˆ â€” äº”èˆ±å­é¡µé¢å…¨éƒ¨æ”¶å½’ PortalShell
+- **AnalysisApp** æ”¹é€ ä¸ºå­è·¯ç”±åˆ†å‘å™¨ï¼ˆ9 ä¸ªå­é¡µé¢å…¨éƒ¨ lazy åŠ è½½ï¼‰
+- **TradingApp** æ”¹é€ ä¸ºå­è·¯ç”±åˆ†å‘å™¨ï¼ˆ2 ä¸ªå­é¡µé¢ lazy åŠ è½½ï¼‰
+- **CommandApp** æ”¹é€ ä¸ºå­è·¯ç”±åˆ†å‘å™¨ï¼ˆ`/command/config` â†’ ConfigAppï¼‰
+- **routes.ts** æ›´æ–°ï¼š13 ä¸ªåˆ†æž/äº¤æ˜“/è¾“å…¥å­è·¯ç”±ç»Ÿä¸€æŒ‡å‘ PortalShell
+- ç”¨æˆ·åœ¨æ‰€æœ‰é¡µé¢å‡èŽ·å¾—ä¸€è‡´çš„ TopBar + Sidebar å¯¼èˆªä½“éªŒ
 
-### F5 ÑÕÉ«Ó²±àÂëÏµÍ³ÐÔÖÎÀí£¨2026-07-05 ²¹³ä£©
+### F5 é¢œè‰²ç¡¬ç¼–ç ç³»ç»Ÿæ€§æ²»ç†ï¼ˆ2026-07-05 è¡¥å……ï¼‰
 
-**ÖÎÀí·¶Î§**£ºUI ²ãÑÕÉ«Ó²±àÂëÈ«ÃæÉ¨Ãè¡¢¸ùÒòÕï¶Ï¡¢Token ÏûºÄ·ÖÎö¡¢ÌåÏµ»¯¸Ä½ø·½°¸
+**æ²»ç†èŒƒå›´**ï¼šUI å±‚é¢œè‰²ç¡¬ç¼–ç å…¨é¢æ‰«æã€æ ¹å› è¯Šæ–­ã€Token æ¶ˆè€—åˆ†æžã€ä½“ç³»åŒ–æ”¹è¿›æ–¹æ¡ˆ
 
-**ÎÊÌâÁ¿»¯**£º
-| Î¥¹æÀàÐÍ | ÊýÁ¿ | ·Ö²¼ÎÄ¼þÊý | Token ÏûºÄ/´Î |
+**é—®é¢˜é‡åŒ–**ï¼š
+| è¿è§„ç±»åž‹ | æ•°é‡ | åˆ†å¸ƒæ–‡ä»¶æ•° | Token æ¶ˆè€—/æ¬¡ |
 |---------|------|-----------|--------------|
-| `text-*` Tailwind ÑÕÉ«Àà | 150 | 30 | 8,500-11,500 |
-| `bg-*` Tailwind ÑÕÉ«Àà | 114 | 30 | 6,000-8,000 |
-| `border-*` Tailwind ÑÕÉ«Àà | 37 | 12 | 2,500-3,500 |
-| **×Ü¼Æ** | **301** | **42£¨È¥ÖØ£©** | **17,000-23,000** |
+| `text-*` Tailwind é¢œè‰²ç±» | 150 | 30 | 8,500-11,500 |
+| `bg-*` Tailwind é¢œè‰²ç±» | 114 | 30 | 6,000-8,000 |
+| `border-*` Tailwind é¢œè‰²ç±» | 37 | 12 | 2,500-3,500 |
+| **æ€»è®¡** | **301** | **42ï¼ˆåŽ»é‡ï¼‰** | **17,000-23,000** |
 
-**Token ÏûºÄÈÈµãÎÄ¼þ TOP 5**£º
-| ÎÄ¼þ | Î¥¹æÊý | Ä£¿é |
+**Token æ¶ˆè€—çƒ­ç‚¹æ–‡ä»¶ TOP 5**ï¼š
+| æ–‡ä»¶ | è¿è§„æ•° | æ¨¡å— |
 |------|--------|------|
-| `src/pages/MockTestPage.tsx` | 23 | ²âÊÔÒ³Ãæ |
-| `src/apps/trading/components/ExecutionPlanCard.tsx` | 19 | ½»Ò××é¼þ |
-| `src/apps/trading/components/PhaseStepper.tsx` | 13 | ½»Ò××é¼þ |
-| `src/pages/analysis/ValuePitPage.tsx` | 12 | ·ÖÎöÒ³Ãæ |
-| `src/pages/analysis/BacktestPage.tsx` | 11 | ·ÖÎöÒ³Ãæ |
+| `src/pages/MockTestPage.tsx` | 23 | æµ‹è¯•é¡µé¢ |
+| `src/apps/trading/components/ExecutionPlanCard.tsx` | 19 | äº¤æ˜“ç»„ä»¶ |
+| `src/apps/trading/components/PhaseStepper.tsx` | 13 | äº¤æ˜“ç»„ä»¶ |
+| `src/pages/analysis/ValuePitPage.tsx` | 12 | åˆ†æžé¡µé¢ |
+| `src/pages/analysis/BacktestPage.tsx` | 11 | åˆ†æžé¡µé¢ |
 
-**¸ùÒòÕï¶Ï£¨5 ´óÏµÍ³ÐÔÈ±ÏÝ£©**£º
-1. **ÑÕÉ«ÁîÅÆÏµÍ³ÒÑ½¨Á¢µ«Î´±»¹ã·º²ÉÓÃ** ¡ª `theme.tokens.ts` ÒÑ¶¨Òåµ« 40+ ÎÄ¼þÎ´ÒýÓÃ
-2. **È±·¦×Ô¶¯»¯Ç¿ÖÆ»úÖÆ** ¡ª ÎÞ ESLint ¹æÔò¡¢ÎÞ pre-commit hook¡¢ÎÞ CI ÃÅ½û
-3. **Token ÎÞÎ½ÏûºÄÑÏÖØ** ¡ª ÔÂ¶ÈÀË·Ñ 50,000-65,000 tokens ÖØ¸´É¨ÃèÏàÍ¬Î¥¹æ
-4. **²âÊÔÎÄ¼þÑÕÉ«¶ÏÑÔ´àÈõ** ¡ª Ö±½Ó¶ÏÑÔ¾ßÌåÑÕÉ«Öµ£¬ñîºÏÊµÏÖÏ¸½Ú
-5. **È±·¦ÑÕÉ«ÓïÒåÓ³ÉäÎÄµµ** ¡ª ¿ª·¢Õß²»Çå³þºÎÊ±Ê¹ÓÃ `up` vs `danger`
+**æ ¹å› è¯Šæ–­ï¼ˆ5 å¤§ç³»ç»Ÿæ€§ç¼ºé™·ï¼‰**ï¼š
+1. **é¢œè‰²ä»¤ç‰Œç³»ç»Ÿå·²å»ºç«‹ä½†æœªè¢«å¹¿æ³›é‡‡ç”¨** â€” `theme.tokens.ts` å·²å®šä¹‰ä½† 40+ æ–‡ä»¶æœªå¼•ç”¨
+2. **ç¼ºä¹è‡ªåŠ¨åŒ–å¼ºåˆ¶æœºåˆ¶** â€” æ—  ESLint è§„åˆ™ã€æ—  pre-commit hookã€æ—  CI é—¨ç¦
+3. **Token æ— è°“æ¶ˆè€—ä¸¥é‡** â€” æœˆåº¦æµªè´¹ 50,000-65,000 tokens é‡å¤æ‰«æç›¸åŒè¿è§„
+4. **æµ‹è¯•æ–‡ä»¶é¢œè‰²æ–­è¨€è„†å¼±** â€” ç›´æŽ¥æ–­è¨€å…·ä½“é¢œè‰²å€¼ï¼Œè€¦åˆå®žçŽ°ç»†èŠ‚
+5. **ç¼ºä¹é¢œè‰²è¯­ä¹‰æ˜ å°„æ–‡æ¡£** â€” å¼€å‘è€…ä¸æ¸…æ¥šä½•æ—¶ä½¿ç”¨ `up` vs `danger`
 
-**ÌåÏµ»¯¸Ä½ø·½°¸£¨4 Ïî·ÀÖ¹¸´·¢»úÖÆ£©**£º
-1. ½¨Á¢ÑÕÉ«ÁîÅÆÊ¹ÓÃ¹æ·¶£¨AGENTS.md ¡ì3.5£©
-2. ÐÂÔö ESLint ¹æÔò `no-hardcoded-tailwind-colors`
-3. ½¨Á¢Î¥¹æÇåµ¥»º´æ»úÖÆ `hardcoded-colors-inventory.json`
-4. ²âÊÔÎÄ¼þÑÕÉ«¶ÏÑÔÖØ¹¹ÎªÁîÅÆÒýÓÃ
+**ä½“ç³»åŒ–æ”¹è¿›æ–¹æ¡ˆï¼ˆ4 é¡¹é˜²æ­¢å¤å‘æœºåˆ¶ï¼‰**ï¼š
+1. å»ºç«‹é¢œè‰²ä»¤ç‰Œä½¿ç”¨è§„èŒƒï¼ˆAGENTS.md Â§3.5ï¼‰
+2. æ–°å¢ž ESLint è§„åˆ™ `no-hardcoded-tailwind-colors`
+3. å»ºç«‹è¿è§„æ¸…å•ç¼“å­˜æœºåˆ¶ `hardcoded-colors-inventory.json`
+4. æµ‹è¯•æ–‡ä»¶é¢œè‰²æ–­è¨€é‡æž„ä¸ºä»¤ç‰Œå¼•ç”¨
 
-**Token ÏûºÄÓÅ»¯Ð§¹ûÔ¤¹À**£ºÔÂ¶È 75,000-105,000 ¡ú 7,500-12,000 tokens£¨½ÚÊ¡ 88%£©
+**Token æ¶ˆè€—ä¼˜åŒ–æ•ˆæžœé¢„ä¼°**ï¼šæœˆåº¦ 75,000-105,000 â†’ 7,500-12,000 tokensï¼ˆèŠ‚çœ 88%ï¼‰
 
-**ÑéÖ¤**£º`tsc --noEmit` 0 ´íÎó | `vite build` 22s ³É¹¦ | `v6ScoreService.test.ts` 7/7 Í¨¹ý
+**éªŒè¯**ï¼š`tsc --noEmit` 0 é”™è¯¯ | `vite build` 22s æˆåŠŸ | `v6ScoreService.test.ts` 7/7 é€šè¿‡
 
 ---
 
-## v1.2.0 (2026-06-27) ¡ª ¼Ü¹¹Éó¼ÆÐÞ¸´ÓëÄÜÁ¦Éý¼¶
+## v1.2.0 (2026-06-27) â€” æž¶æž„å®¡è®¡ä¿®å¤ä¸Žèƒ½åŠ›å‡çº§
 
-**Éó¼Æ·¶Î§**£ºV9 ¼Ü¹¹Éó¼ÆËÄÏîºËÐÄÉ¨Ãè£¨×¢²áÍêÕûÐÔ/Êý¾ÝÁ÷Ò»ÖÂÐÔ/´íÎó´¦Àí/Æ«²îÇåµ¥£©  
-**ÐÞ¸´½á¹û**£º10 Ïî´ý°ìÈÎÎñ£¨P1:3, P2:7£©È«²¿Íê³É£¬4 Ïî´úÂëÐÞ¸´
+**å®¡è®¡èŒƒå›´**ï¼šV9 æž¶æž„å®¡è®¡å››é¡¹æ ¸å¿ƒæ‰«æï¼ˆæ³¨å†Œå®Œæ•´æ€§/æ•°æ®æµä¸€è‡´æ€§/é”™è¯¯å¤„ç†/åå·®æ¸…å•ï¼‰  
+**ä¿®å¤ç»“æžœ**ï¼š10 é¡¹å¾…åŠžä»»åŠ¡ï¼ˆP1:3, P2:7ï¼‰å…¨éƒ¨å®Œæˆï¼Œ4 é¡¹ä»£ç ä¿®å¤
 
-### ÐÂÔöÎÄ¼þ
+### æ–°å¢žæ–‡ä»¶
 
-| ÎÄ¼þ | Ä£¿é | ËµÃ÷ |
+| æ–‡ä»¶ | æ¨¡å— | è¯´æ˜Ž |
 |------|------|------|
-| `src/agents/index.ts` | Agent | Í³Ò»Èë¿Ú£¬×¢²á 5 ¸öÄ¬ÈÏ Agent£¬½¡¿µ¼à¿Ø³õÊ¼»¯ |
-| `src/config/thresholds.ts` | Config | Í³Ò»ãÐÖµÅäÖÃÖÐÐÄ£¬ÕûºÏ 8 ÀàãÐÖµ |
-| `src/services/unifiedStockService.ts` | Service | Êý¾ÝÈÚºÏ²ã£¬UnifiedStockView Í³Ò»ÊÓÍ¼ |
-| `src/services/feedbackService.ts` | Service | ²Ù×÷·´À¡±Õ»·£¬×Ô¶¯·´À¡°ü×°Æ÷ |
-| `src/components/organisms/shared/WidgetErrorBoundary.tsx` | Component | Widget ×¨ÓÃ´íÎó±ß½ç£¬ÖØÊÔ»úÖÆ |
-| `src/constants/newsColorTokens.ts` | News | ÐÂÎÅ×é¼þÑÕÉ«ÁîÅÆ£¨´Ó pages/news-v6/styles Ç¨ÒÆ£© |
-| `../../reference/release-notes.md` | Docs | °æ±¾·¢²¼ËµÃ÷ÎÄµµ |
+| `src/agents/index.ts` | Agent | ç»Ÿä¸€å…¥å£ï¼Œæ³¨å†Œ 5 ä¸ªé»˜è®¤ Agentï¼Œå¥åº·ç›‘æŽ§åˆå§‹åŒ– |
+| `src/config/thresholds.ts` | Config | ç»Ÿä¸€é˜ˆå€¼é…ç½®ä¸­å¿ƒï¼Œæ•´åˆ 8 ç±»é˜ˆå€¼ |
+| `src/services/unifiedStockService.ts` | Service | æ•°æ®èžåˆå±‚ï¼ŒUnifiedStockView ç»Ÿä¸€è§†å›¾ |
+| `src/services/feedbackService.ts` | Service | æ“ä½œåé¦ˆé—­çŽ¯ï¼Œè‡ªåŠ¨åé¦ˆåŒ…è£…å™¨ |
+| `src/components/organisms/shared/WidgetErrorBoundary.tsx` | Component | Widget ä¸“ç”¨é”™è¯¯è¾¹ç•Œï¼Œé‡è¯•æœºåˆ¶ |
+| `src/constants/newsColorTokens.ts` | News | æ–°é—»ç»„ä»¶é¢œè‰²ä»¤ç‰Œï¼ˆä»Ž pages/news-v6/styles è¿ç§»ï¼‰ |
+| `../../reference/release-notes.md` | Docs | ç‰ˆæœ¬å‘å¸ƒè¯´æ˜Žæ–‡æ¡£ |
 
-### ÐÞ¸ÄÎÄ¼þ
+### ä¿®æ”¹æ–‡ä»¶
 
-| ÎÄ¼þ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´å†…å®¹ |
 |------|---------|
-| `src/cockpit/CockpitShell.tsx` | Widget ÒýÇæÍêÕûÉúÃüÖÜÆÚ¹ÜÀí£¨mount/refresh/unmount£© |
-| `src/services/scoring/v6ScoreService.ts` | ¹Ø±Õ mock ½µ¼¶£¬Ìí¼ÓÖÊÁ¿Ö¸±ê£¬À©Õ¹×Ö¶Î |
-| `src/data/types.ts` | V6Score Ìí¼Ó qualityWarning ×Ö¶Î |
-| `src/pages/analysis/SectorAnalysisPage.tsx` | ½ÓÈëÂÖ¶¯ÆÀ·ÖºÍÐÐÒµÆÀ·ÖÊý¾ÝÕ¹Ê¾ |
-| `src/components/organisms/news/NewsCard.tsx` | ÐÞ¸´ JSX ±êÇ©±ÕºÏ´íÎó |
-| `src/components/organisms/news/NewsCard.tsx` | ÐÞ¸´ÀàÐÍË÷Òý´íÎó |
-| `tests/news-v6/NewsFeed.test.tsx` | ÐÞ¸´¿ÕÖµ¼ì²é |
-| `tests/news-v6/NewsPage.test.tsx` | ÐÞ¸´¿ÕÖµ¼ì²é |
-| `../../reference/feedback-loop-spec.md` | ·´À¡±Õ»·¹æ¸ñÎÄµµ¸üÐÂ |
-| `scripts/audit-doc-sync.ts` | Éó¼Æ½Å±¾¸üÐÂ |
+| `src/cockpit/CockpitShell.tsx` | Widget å¼•æ“Žå®Œæ•´ç”Ÿå‘½å‘¨æœŸç®¡ç†ï¼ˆmount/refresh/unmountï¼‰ |
+| `src/services/scoring/v6ScoreService.ts` | å…³é—­ mock é™çº§ï¼Œæ·»åŠ è´¨é‡æŒ‡æ ‡ï¼Œæ‰©å±•å­—æ®µ |
+| `src/data/types.ts` | V6Score æ·»åŠ  qualityWarning å­—æ®µ |
+| `src/pages/analysis/SectorAnalysisPage.tsx` | æŽ¥å…¥è½®åŠ¨è¯„åˆ†å’Œè¡Œä¸šè¯„åˆ†æ•°æ®å±•ç¤º |
+| `src/components/organisms/news/NewsCard.tsx` | ä¿®å¤ JSX æ ‡ç­¾é—­åˆé”™è¯¯ |
+| `src/components/organisms/news/NewsCard.tsx` | ä¿®å¤ç±»åž‹ç´¢å¼•é”™è¯¯ |
+| `tests/news-v6/NewsFeed.test.tsx` | ä¿®å¤ç©ºå€¼æ£€æŸ¥ |
+| `tests/news-v6/NewsPage.test.tsx` | ä¿®å¤ç©ºå€¼æ£€æŸ¥ |
+| `../../reference/feedback-loop-spec.md` | åé¦ˆé—­çŽ¯è§„æ ¼æ–‡æ¡£æ›´æ–° |
+| `scripts/audit-doc-sync.ts` | å®¡è®¡è„šæœ¬æ›´æ–° |
 
-### ÑéÖ¤½á¹û
+### éªŒè¯ç»“æžœ
 
-| ÑéÖ¤Ïî | ½á¹û |
+| éªŒè¯é¡¹ | ç»“æžœ |
 |--------|------|
-| `tsc --noEmit` | ? 0 ´íÎó |
+| `tsc --noEmit` | ? 0 é”™è¯¯ |
 | `git diff --stat` | 18 files, +1558/-75 |
 
 ---
 
-> **±ä¸üÈË**£ºV9 ÖÊÁ¿Éó¼Æ¹Ù  
-> **¹ØÁªÈÎÎñ**£ºV9 ¼Ü¹¹Éó¼ÆÈ«Á¿É¨ÃèÐÞ¸´
+> **å˜æ›´äºº**ï¼šV9 è´¨é‡å®¡è®¡å®˜  
+> **å…³è”ä»»åŠ¡**ï¼šV9 æž¶æž„å®¡è®¡å…¨é‡æ‰«æä¿®å¤
 
 ---
 
-## v1.1.0 (2026-06-26) ¡ª ¼Ü¹¹×Ê²úÖÎÀí£ºÎÄµµÓë´úÂëÍ¬²½ÐÞÕý
+## v1.1.0 (2026-06-26) â€” æž¶æž„èµ„äº§æ²»ç†ï¼šæ–‡æ¡£ä¸Žä»£ç åŒæ­¥ä¿®æ­£
 
-**ÖÎÀí·¶Î§**£ºÈ«Á¿²îÒìÉ¨Ãè + ¼Ü¹¹ÎÄµµÐÞÕý + Êý¾Ý×Öµä²¹È« + Ò»ÖÂÐÔÑéÖ¤  
-**ÖÎÀí¹¤¾ß**£º`audit-doc-sync.ts` (v1.0)  
-**ÖÎÀí½á¹û**£º61 Ïî²îÒì£¨P1:55, P2:6£©È«²¿ÇåÁã£¬»Ø¹é ?? ÁãÕ®Îñ×´Ì¬
+**æ²»ç†èŒƒå›´**ï¼šå…¨é‡å·®å¼‚æ‰«æ + æž¶æž„æ–‡æ¡£ä¿®æ­£ + æ•°æ®å­—å…¸è¡¥å…¨ + ä¸€è‡´æ€§éªŒè¯  
+**æ²»ç†å·¥å…·**ï¼š`audit-doc-sync.ts` (v1.0)  
+**æ²»ç†ç»“æžœ**ï¼š61 é¡¹å·®å¼‚ï¼ˆP1:55, P2:6ï¼‰å…¨éƒ¨æ¸…é›¶ï¼Œå›žå½’ ?? é›¶å€ºåŠ¡çŠ¶æ€
 
-### ¼Ü¹¹ÎÄµµ±ä¸ü
+### æž¶æž„æ–‡æ¡£å˜æ›´
 
-| ÎÄ¼þ | ±ä¸üÀàÐÍ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´ç±»åž‹ | å˜æ›´å†…å®¹ |
 |------|---------|---------|
-| `../../reference/03-architecture-standards.md` | ÐÞÕý | ¡ì3.1.2 DataFlow ²¹³ä 4 ½Ó¿Ú£¨DataFlowModuleInput/Output, DataPacket, ChannelMeta£© |
-| `../../reference/03-architecture-standards.md` | ÐÂÔö | ¡ì3.1.7 Page ÉúÃüÖÜÆÚ£¨PageModuleInput/Output, PageGuard£© |
-| `../../reference/03-architecture-standards.md` | ÐÞÕý | ¡ì3.8 DataBridge ÊÊÅä²ã²¹³ä 5 ½Ó¿Ú£¨DataBridgeAdapterConfig, DataAction, BridgeQueryOptions, BridgeQueryResult, DataBridgeAdapterStats£© |
-| `../../reference/03-architecture-standards.md` | ÐÞÕý | ¡ì3.7 Êý¾Ý²ã²¹³ä 34 ¸öÊý¾ÝÄ£ÐÍÒýÓÃ£¨DimensionScore, PortfolioHolding, StrategyClassification µÈ£© |
-| `../../reference/02-functional-specs.md` | °æ±¾Éý¼¶ | v0.9.1 ¡ú v1.1.0 |
-| `../../reference/05-engine-specs.md` | °æ±¾Éý¼¶ | v0.9.0 ¡ú v1.1.0 |
-| `../../reference/06-routing-specs.md` | °æ±¾Éý¼¶ | v0.9.0 ¡ú v1.1.0 |
-| `../../reference/08-implementation-plan.md` | °æ±¾Éý¼¶ | v0.9.0 ¡ú v1.1.0 |
-| `../../reference/09-quality-gates.md` | °æ±¾Éý¼¶ | v0.9.0 ¡ú v1.1.0 |
+| `../../reference/03-architecture-standards.md` | ä¿®æ­£ | Â§3.1.2 DataFlow è¡¥å…… 4 æŽ¥å£ï¼ˆDataFlowModuleInput/Output, DataPacket, ChannelMetaï¼‰ |
+| `../../reference/03-architecture-standards.md` | æ–°å¢ž | Â§3.1.7 Page ç”Ÿå‘½å‘¨æœŸï¼ˆPageModuleInput/Output, PageGuardï¼‰ |
+| `../../reference/03-architecture-standards.md` | ä¿®æ­£ | Â§3.8 DataBridge é€‚é…å±‚è¡¥å…… 5 æŽ¥å£ï¼ˆDataBridgeAdapterConfig, DataAction, BridgeQueryOptions, BridgeQueryResult, DataBridgeAdapterStatsï¼‰ |
+| `../../reference/03-architecture-standards.md` | ä¿®æ­£ | Â§3.7 æ•°æ®å±‚è¡¥å…… 34 ä¸ªæ•°æ®æ¨¡åž‹å¼•ç”¨ï¼ˆDimensionScore, PortfolioHolding, StrategyClassification ç­‰ï¼‰ |
+| `../../reference/02-functional-specs.md` | ç‰ˆæœ¬å‡çº§ | v0.9.1 â†’ v1.1.0 |
+| `../../reference/05-engine-specs.md` | ç‰ˆæœ¬å‡çº§ | v0.9.0 â†’ v1.1.0 |
+| `../../reference/06-routing-specs.md` | ç‰ˆæœ¬å‡çº§ | v0.9.0 â†’ v1.1.0 |
+| `../../reference/08-implementation-plan.md` | ç‰ˆæœ¬å‡çº§ | v0.9.0 â†’ v1.1.0 |
+| `../../reference/09-quality-gates.md` | ç‰ˆæœ¬å‡çº§ | v0.9.0 â†’ v1.1.0 |
 
-### Êý¾Ý×Öµä±ä¸ü
+### æ•°æ®å­—å…¸å˜æ›´
 
-| ÎÄ¼þ | ±ä¸üÀàÐÍ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´ç±»åž‹ | å˜æ›´å†…å®¹ |
 |------|---------|---------|
-| `../../reference/api-contract.md` | ÐÞÕý | ¡ì9.2b ÐÂÔö TradeSignal/TradingSignal ½Ó¿Ú¶¨Òå£¨8 ×Ö¶Î + SignalSnapshot ×ÓÀàÐÍ£© |
-| `../../reference/data-definition.md` | ÔªÊý¾Ý | Ìí¼Ó°æ±¾Í·²¿£¨Version: v1.1.0, Last Updated: 2026-06-26£© |
-| `../../reference/ai-center-data-definition.md` | ÔªÊý¾Ý | Ìí¼Ó°æ±¾Í·²¿£¨Version: v1.1.0, Last Updated: 2026-06-26£© |
-| `../../reference/api-contract.md` | ÔªÊý¾Ý | Ìí¼Ó°æ±¾Í·²¿£¨Version: v1.1.0, Last Updated: 2026-06-26£© |
-| `../../reference/data-definition.md` | ÔªÊý¾Ý | Ìí¼Ó°æ±¾Í·²¿£¨Version: v1.1.0, Last Updated: 2026-06-26£© |
-| `../../reference/data-definition.md` | ÔªÊý¾Ý | Ìí¼Ó°æ±¾Í·²¿£¨Version: v1.1.0, Last Updated: 2026-06-26£© |
-| `../../reference/data-dictionary-index.md` | °æ±¾Éý¼¶ | v0.9.0 ¡ú v1.1.0 |
-| `../../reference/dataflow-data-definition.md` | °æ±¾Éý¼¶ | v0.9.0 ¡ú v1.1.0 |
+| `../../reference/api-contract.md` | ä¿®æ­£ | Â§9.2b æ–°å¢ž TradeSignal/TradingSignal æŽ¥å£å®šä¹‰ï¼ˆ8 å­—æ®µ + SignalSnapshot å­ç±»åž‹ï¼‰ |
+| `../../reference/data-definition.md` | å…ƒæ•°æ® | æ·»åŠ ç‰ˆæœ¬å¤´éƒ¨ï¼ˆVersion: v1.1.0, Last Updated: 2026-06-26ï¼‰ |
+| `../../reference/ai-center-data-definition.md` | å…ƒæ•°æ® | æ·»åŠ ç‰ˆæœ¬å¤´éƒ¨ï¼ˆVersion: v1.1.0, Last Updated: 2026-06-26ï¼‰ |
+| `../../reference/api-contract.md` | å…ƒæ•°æ® | æ·»åŠ ç‰ˆæœ¬å¤´éƒ¨ï¼ˆVersion: v1.1.0, Last Updated: 2026-06-26ï¼‰ |
+| `../../reference/data-definition.md` | å…ƒæ•°æ® | æ·»åŠ ç‰ˆæœ¬å¤´éƒ¨ï¼ˆVersion: v1.1.0, Last Updated: 2026-06-26ï¼‰ |
+| `../../reference/data-definition.md` | å…ƒæ•°æ® | æ·»åŠ ç‰ˆæœ¬å¤´éƒ¨ï¼ˆVersion: v1.1.0, Last Updated: 2026-06-26ï¼‰ |
+| `../../reference/data-dictionary-index.md` | ç‰ˆæœ¬å‡çº§ | v0.9.0 â†’ v1.1.0 |
+| `../../reference/dataflow-data-definition.md` | ç‰ˆæœ¬å‡çº§ | v0.9.0 â†’ v1.1.0 |
 
-### ¹¤¾ßÁ´±ä¸ü
+### å·¥å…·é“¾å˜æ›´
 
-| ÎÄ¼þ | ±ä¸üÀàÐÍ | ±ä¸üÄÚÈÝ |
+| æ–‡ä»¶ | å˜æ›´ç±»åž‹ | å˜æ›´å†…å®¹ |
 |------|---------|---------|
-| `scripts/audit-doc-sync.ts` | ÐÂÔö | ÎÄµµÓë´úÂëÍ¬²½Éó¼Æ½Å±¾£¬Ö§³Ö 5 Ìõ¹æÔò |
-| `scripts/audit-doc-sync.ts` | ÐÞÕý | ÐÞ¸´ `docContainsType` ¸´ºÏ´ÊÆ¥Åä£¨HealthMetric ¡ú HealthMetricItem£© |
-| `scripts/audit-doc-sync.ts` | ÐÞÕý | ÐÞ¸´ `docHasVersionHeader` ÕýÔò¼æÈÝ Markdown ¼Ó´Ö¸ñÊ½ |
-| `scripts/audit-doc-sync.ts` | ÐÞÕý | ÐÂÔö MODULE_MAP Ó³Éä£¨AI Center Services, Trading Services£© |
-| `scripts/audit-doc-sync.ts` | ÐÞÕý | P2 ÎÄµµÔªÊý¾ÝÈ¥ÖØÂß¼­ |
-| `package.json` | ÐÞÕý | ÐÂÔö `audit:docs` ½Å±¾£¬ÄÉÈë `audit` È«Á¿Éó¼Æ |
+| `scripts/audit-doc-sync.ts` | æ–°å¢ž | æ–‡æ¡£ä¸Žä»£ç åŒæ­¥å®¡è®¡è„šæœ¬ï¼Œæ”¯æŒ 5 æ¡è§„åˆ™ |
+| `scripts/audit-doc-sync.ts` | ä¿®æ­£ | ä¿®å¤ `docContainsType` å¤åˆè¯åŒ¹é…ï¼ˆHealthMetric â†’ HealthMetricItemï¼‰ |
+| `scripts/audit-doc-sync.ts` | ä¿®æ­£ | ä¿®å¤ `docHasVersionHeader` æ­£åˆ™å…¼å®¹ Markdown åŠ ç²—æ ¼å¼ |
+| `scripts/audit-doc-sync.ts` | ä¿®æ­£ | æ–°å¢ž MODULE_MAP æ˜ å°„ï¼ˆAI Center Services, Trading Servicesï¼‰ |
+| `scripts/audit-doc-sync.ts` | ä¿®æ­£ | P2 æ–‡æ¡£å…ƒæ•°æ®åŽ»é‡é€»è¾‘ |
+| `package.json` | ä¿®æ­£ | æ–°å¢ž `audit:docs` è„šæœ¬ï¼Œçº³å…¥ `audit` å…¨é‡å®¡è®¡ |
 
-### ÐÂÔö½»¸¶Îï
+### æ–°å¢žäº¤ä»˜ç‰©
 
-| ÎÄ¼þ | ËµÃ÷ |
+| æ–‡ä»¶ | è¯´æ˜Ž |
 |------|------|
-| `../../explanation/design/v9-architecture-data-diff-report.md` | ²îÒì·ÖÎö±¨¸æ v1.1.0 |
-| `../../reference/v9-architecture-data-dictionary-validation-report.md` | Ò»ÖÂÐÔÑéÖ¤±¨¸æ |
-| `./CHANGELOG.md` | ±¾ÎÄµµ |
+| `../../explanation/design/v9-architecture-data-diff-report.md` | å·®å¼‚åˆ†æžæŠ¥å‘Š v1.1.0 |
+| `../../reference/v9-architecture-data-dictionary-validation-report.md` | ä¸€è‡´æ€§éªŒè¯æŠ¥å‘Š |
+| `./CHANGELOG.md` | æœ¬æ–‡æ¡£ |
 
-### ÑéÖ¤½á¹û
+### éªŒè¯ç»“æžœ
 
-| ÑéÖ¤Ïî | ½á¹û |
+| éªŒè¯é¡¹ | ç»“æžœ |
 |--------|------|
-| `audit:docs` | ? 0 ²îÒì |
-| `tsc --noEmit` | ? 0 ´íÎó |
-| `audit:layers` | ? 226 ÎÄ¼þ£¬0 Î¥¹æ |
-| `vitest run` | ? 58/58 ÎÄ¼þ£¬447/447 ÓÃÀý |
+| `audit:docs` | ? 0 å·®å¼‚ |
+| `tsc --noEmit` | ? 0 é”™è¯¯ |
+| `audit:layers` | ? 226 æ–‡ä»¶ï¼Œ0 è¿è§„ |
+| `vitest run` | ? 58/58 æ–‡ä»¶ï¼Œ447/447 ç”¨ä¾‹ |
 
 ---
 
-## v1.0.0-governance-complete (2026-06-26) ¡ª Ê×´Î¼Ü¹¹×Ê²úÖÎÀíÍê³É
+## v1.0.0-governance-complete (2026-06-26) â€” é¦–æ¬¡æž¶æž„èµ„äº§æ²»ç†å®Œæˆ
 
-**ÖÎÀí·¶Î§**£ºCockpit + News + Trading + AI Center + Data Collection Îå´óÄ£¿éÎÄµµÍ¬²½  
-**ÖÎÀí½á¹û**£º28 Ïî²îÒì£¨P0:16, P1:7, P2:5£©È«²¿ÇåÁã
+**æ²»ç†èŒƒå›´**ï¼šCockpit + News + Trading + AI Center + Data Collection äº”å¤§æ¨¡å—æ–‡æ¡£åŒæ­¥  
+**æ²»ç†ç»“æžœ**ï¼š28 é¡¹å·®å¼‚ï¼ˆP0:16, P1:7, P2:5ï¼‰å…¨éƒ¨æ¸…é›¶
 
-### ±ä¸üÕªÒª
+### å˜æ›´æ‘˜è¦
 
-| Ä£¿é | ÎÄµµ | ±ä¸üÄÚÈÝ |
+| æ¨¡å— | æ–‡æ¡£ | å˜æ›´å†…å®¹ |
 |------|------|---------|
-| Cockpit | `../../reference/data-definition.md` | ÐÂ½¨£¬Widget ¿ò¼Ü 40+ ½Ó¿Ú + Ã¶¾Ù³£Á¿ |
-| Cockpit | `../../reference/03-architecture-standards.md` ¡ì3.1.4 | Ä¿Â¼½á¹¹Ìæ»»Îª 12 ¸öÊµ¼Ê Widget£¬ÐÂÔö ¡ì3.1.4.1 ²É¼¯Á÷ |
-| News | `../../reference/data-definition.md` | ÐÂ½¨£¬newsService/sentimentAnalyzer/stockLinker 5 ½Ó¿Ú |
-| News | `../../reference/02-functional-specs.md` ¡ì2.1 | ÐÂÔöÐÂÎÅ×ÊÑ¶Ä£¿é |
-| Trading | `../../reference/api-contract.md` ¡ì9 | ÐÂÔö½»Ò×·þÎñ²ã 9 ½Ó¿Ú + 7 Ä£¿éº¯ÊýÇåµ¥ |
-| Trading | `../../reference/02-functional-specs.md` ¡ì2.1 | ÐÂÔö½»Ò×³Ö²Ö¹ÜÀíÄ£¿é |
-| AI Center | `../../reference/ai-center-data-definition.md` ¡ì5 | ²¹³ä Agent ÔËÐÐÊ±ÀàÐÍ£¨AgentModuleInput/Output, AgentDefinition, AgentInstance£© |
-| AI Center | `../../reference/02-functional-specs.md` ¡ì2.1 | ÐÂÔö AI ÖÇÄÜÌåÖÐÐÄÄ£¿é |
-| Data Collection | `../../reference/data-definition.md` | ÐÂ½¨£¬Èý²ã¼Ü¹¹ 8 ½Ó¿Ú + 5 ×éÃ¶¾Ù |
-| Data Collection | `src/services/data-collector/mockDataCollection.ts` | ÐÂ½¨£¬8 ½Ó¿Ú Mock Êý¾ÝÉú³ÉÆ÷ |
-| Architecture | `../../reference/03-architecture-standards.md` | L5/L4 Ó³Éä±í²¹³ä Widget ÊýÁ¿£¬L3 ÐÐ²¹³ä news ·þÎñÂ·¾¶ |
-| User Stories | `../../reference/02-functional-specs.md` ¡ì2.4 | ÐÂÔö 3 ¸öÓÃ»§¹ÊÊÂ£¨2.4.12~2.4.14£© |
+| Cockpit | `../../reference/data-definition.md` | æ–°å»ºï¼ŒWidget æ¡†æž¶ 40+ æŽ¥å£ + æžšä¸¾å¸¸é‡ |
+| Cockpit | `../../reference/03-architecture-standards.md` Â§3.1.4 | ç›®å½•ç»“æž„æ›¿æ¢ä¸º 12 ä¸ªå®žé™… Widgetï¼Œæ–°å¢ž Â§3.1.4.1 é‡‡é›†æµ |
+| News | `../../reference/data-definition.md` | æ–°å»ºï¼ŒnewsService/sentimentAnalyzer/stockLinker 5 æŽ¥å£ |
+| News | `../../reference/02-functional-specs.md` Â§2.1 | æ–°å¢žæ–°é—»èµ„è®¯æ¨¡å— |
+| Trading | `../../reference/api-contract.md` Â§9 | æ–°å¢žäº¤æ˜“æœåŠ¡å±‚ 9 æŽ¥å£ + 7 æ¨¡å—å‡½æ•°æ¸…å• |
+| Trading | `../../reference/02-functional-specs.md` Â§2.1 | æ–°å¢žäº¤æ˜“æŒä»“ç®¡ç†æ¨¡å— |
+| AI Center | `../../reference/ai-center-data-definition.md` Â§5 | è¡¥å…… Agent è¿è¡Œæ—¶ç±»åž‹ï¼ˆAgentModuleInput/Output, AgentDefinition, AgentInstanceï¼‰ |
+| AI Center | `../../reference/02-functional-specs.md` Â§2.1 | æ–°å¢ž AI æ™ºèƒ½ä½“ä¸­å¿ƒæ¨¡å— |
+| Data Collection | `../../reference/data-definition.md` | æ–°å»ºï¼Œä¸‰å±‚æž¶æž„ 8 æŽ¥å£ + 5 ç»„æžšä¸¾ |
+| Data Collection | `src/services/data-collector/mockDataCollection.ts` | æ–°å»ºï¼Œ8 æŽ¥å£ Mock æ•°æ®ç”Ÿæˆå™¨ |
+| Architecture | `../../reference/03-architecture-standards.md` | L5/L4 æ˜ å°„è¡¨è¡¥å…… Widget æ•°é‡ï¼ŒL3 è¡Œè¡¥å…… news æœåŠ¡è·¯å¾„ |
+| User Stories | `../../reference/02-functional-specs.md` Â§2.4 | æ–°å¢ž 3 ä¸ªç”¨æˆ·æ•…äº‹ï¼ˆ2.4.12~2.4.14ï¼‰ |
 
 ---
 
-## v0.9.0 (2026-06-24) ¡ª ¼Ü¹¹»ùÏß
+## v0.9.0 (2026-06-24) â€” æž¶æž„åŸºçº¿
 
-³õÊ¼°æ±¾£¬°üº¬ 01~10 È«Ì×¼Ü¹¹ÎÄµµ¡¢7 ¸ö ADR ¾ö²ß¼ÇÂ¼¡¢DeepAnalysis ¹¤Òµ 4.0 Õ½ÂÔ·ÖÎö¡£
+åˆå§‹ç‰ˆæœ¬ï¼ŒåŒ…å« 01~10 å…¨å¥—æž¶æž„æ–‡æ¡£ã€7 ä¸ª ADR å†³ç­–è®°å½•ã€DeepAnalysis å·¥ä¸š 4.0 æˆ˜ç•¥åˆ†æžã€‚
 
-### ÎÄµµÇåµ¥
+### æ–‡æ¡£æ¸…å•
 
-| ±àºÅ | ÎÄµµ | ËµÃ÷ |
+| ç¼–å· | æ–‡æ¡£ | è¯´æ˜Ž |
 |------|------|------|
-| 01 | `../../reference/01-vision-and-goals.md` | Ô¸¾°ÓëÄ¿±ê |
-| 02 | `../../reference/02-functional-specs.md` | ¹¦ÄÜ¹æ¸ñ |
-| 03 | `../../explanation/03-architecture-standards.md` | ¼Ü¹¹±ê×¼ |
-| 04 | `../../reference/04-ui-ux-specs.md` | UI/UX ¹æ¸ñ |
-| 05 | `../../explanation` | ÒýÇæ¹æ¸ñ |
-| 06 | `../../reference/06-routing-specs.md` | Â·ÓÉ¹æ¸ñ |
-| 07 | `../../reference/07-operation-strategy.md` | ÔËÓª²ßÂÔ |
-| 08 | `../../explanation/design/08-implementation-plan.md` | ÊµÊ©¼Æ»® |
-| 09 | `../../reference/09-quality-gates.md` | ÖÊÁ¿ÃÅ½û |
-| 10 | `../../explanation/10-glossary.md` | ÊõÓï±í |
-| ¡ª | `implementation/adr/` | 7 ¸ö ADR |
-| ¡ª | `implementation/deep-analysis/` | ¹¤Òµ 4.0 Õ½ÂÔ·ÖÎö |
+| 01 | `../../reference/01-vision-and-goals.md` | æ„¿æ™¯ä¸Žç›®æ ‡ |
+| 02 | `../../reference/02-functional-specs.md` | åŠŸèƒ½è§„æ ¼ |
+| 03 | `../../explanation/03-architecture-standards.md` | æž¶æž„æ ‡å‡† |
+| 04 | `../../reference/04-ui-ux-specs.md` | UI/UX è§„æ ¼ |
+| 05 | `../../explanation` | å¼•æ“Žè§„æ ¼ |
+| 06 | `../../reference/06-routing-specs.md` | è·¯ç”±è§„æ ¼ |
+| 07 | `../../reference/07-operation-strategy.md` | è¿è¥ç­–ç•¥ |
+| 08 | `../../explanation/design/08-implementation-plan.md` | å®žæ–½è®¡åˆ’ |
+| 09 | `../../reference/09-quality-gates.md` | è´¨é‡é—¨ç¦ |
+| 10 | `../../explanation/10-glossary.md` | æœ¯è¯­è¡¨ |
+| â€” | `implementation/adr/` | 7 ä¸ª ADR |
+| â€” | `implementation/deep-analysis/` | å·¥ä¸š 4.0 æˆ˜ç•¥åˆ†æž |
 
 ---
 
-> **±ä¸üÈË**£º¼Ü¹¹×Ê²úÖÎÀí¹Ù  
-> **¹ØÁªÈÎÎñ**£ºV9 ¼Ü¹¹Éý¼¶ÏîÄ¿ ¡ª ÎÄµµÓë´úÂëÍ¬²½ÖÎÀí
+> **å˜æ›´äºº**ï¼šæž¶æž„èµ„äº§æ²»ç†å®˜  
+> **å…³è”ä»»åŠ¡**ï¼šV9 æž¶æž„å‡çº§é¡¹ç›® â€” æ–‡æ¡£ä¸Žä»£ç åŒæ­¥æ²»ç†

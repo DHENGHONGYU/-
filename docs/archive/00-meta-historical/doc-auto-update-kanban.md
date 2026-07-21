@@ -1,7 +1,7 @@
 ---
 title: doc-auto-update-kanban
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
@@ -99,7 +99,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 
 > **本轮已交付（07-12 N2/N3，P0 全闭环）**：
 > - **N1** — 映射表 §二 全部目标文档路径对齐磁盘真实文件；补充文档中文路径一并修正（`《DataBridge端点与数据映射清单》`→`docs/01-requirements/`、`《V9核心数据字典…》`/`《功能模块数据契约》`→`docs/02-design/`）。
-> - **N2** — 13 个原缺失目标文档全部可解析：9 个修订映射表指向已有真实文档（`01-requirements/`、`02-design/`），4 个确实缺失者已新建（`../explanation/state-management.md`、`../how-to/hooks-guide.md`、`../explanation/page-structure.md`、`../reference/data-definition.md`，内容均由代码实况派生、统一 blockquote 风格）。T1–T9 共 19 个 `docsToUpdate` 路径逐项验证 ✓ EXISTS。
+> - **N2** — 13 个原缺失目标文档全部可解析：9 个修订映射表指向已有真实文档（`01-requirements/`、`02-design/`），4 个确实缺失者已新建（`../../explanation/state-management.md`、`../../how-to/hooks-guide.md`、`../../explanation/page-structure.md`、`../reference/data-definition.md`，内容均由代码实况派生、统一 blockquote 风格）。T1–T9 共 19 个 `docsToUpdate` 路径逐项验证 ✓ EXISTS。
 > - **N3** — `doc-update-trigger --auto-update` 空桩落地：新增 `--since/--base-ref/--files/--dry-run/--strict` 参数校验；`DocGenerator` 注册表扩展点（内置 `defaultDocGenerator`=建骨架+幂等校验标记、`versionCheckGenerator`=对接 `doc:version-check`）；按映射表路由生成 → 按需 `audit:docs`；修复 `matchPattern` 的 `**/*.ts` 不匹配顶层文件缺陷；新增 T9/T10 规则与 `auditDocs` 字段。
 > - **验证**：契约 20/20；`audit:layers` 0/0；`audit:docs` ✅；`lint:colors` 0；`doc:version-check` exit 0；`tsc` 0 错误；`--auto-update` 非 dry-run 实跑（写标记 + `audit:docs 通过` + exit 0，标记已回退）。
 

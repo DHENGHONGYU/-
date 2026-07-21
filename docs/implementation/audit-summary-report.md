@@ -140,7 +140,7 @@ status: active
 | `src/store/newsStore.ts` | 新闻资讯 | Zustand Store，管理 articles/loading/filter/bookmark 状态 |
 | `src/store/holdingsStore.ts` | 交易持仓 | Zustand Store，管理 data/filter/pagination/modal 状态 |
 
-> **说明**：`src/config/thresholds.ts`、`src/services/unifiedStockService.ts`、`src/services/feedbackService.ts`、`src/components/WidgetErrorBoundary.tsx` 为 v1.2.0 版本已存在文件，不属于本次批次1审计修复产物。
+> **说明**：`src/config/thresholds.ts`、`src/services/unifiedStockService.ts`、`src/services/feedbackService.ts`、`src/components/organisms/shared/WidgetErrorBoundary.tsx` 为 v1.2.0 版本已存在文件，不属于本次批次1审计修复产物。
 
 ---
 

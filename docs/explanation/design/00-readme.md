@@ -115,13 +115,13 @@ change_log:
 | 文档 | 废弃日期 | 废弃原因 |
 |:---|:---|:---|
 | [deprecated/DEPRECATED_cockpit-news-doc-correction-plan.md](DEPRECATED_cockpit-news-doc-correction-plan.md) | 2026-06-27 | 内容为 cockpit-news-doc-fix-plan.md 的子集 |
-| [deprecated/DEPRECATED_ui-module-alignment.md](../01-requirements/DEPRECATED_ui-module-alignment.md) | 2026-06-27 | 内容已被 v6pro-ui-page-diff-report.md 覆盖 |
+| [deprecated/DEPRECATED_ui-module-alignment.md](../../implementation/deprecated/DEPRECATED_ui-module-alignment.md) | 2026-06-27 | 内容已被 v6pro-ui-page-diff-report.md 覆盖 |
 | [deprecated/DEPRECATED_doc-sync-gap-list.md](DEPRECATED_doc-sync-gap-list.md) | 2026-06-27 | 差异项已闭环，合并至 doc-sync-execution-plan.md |
 | [deprecated/DEPRECATED_batch1-merge-report.md](DEPRECATED_batch1-merge-report.md) | 2026-06-27 | 合并至 batch-merge-reports.md |
-| [deprecated/DEPRECATED_batch2-merge-report.md](../03-development/DEPRECATED_batch2-merge-report.md) | 2026-06-27 | 合并至 batch-merge-reports.md |
+| [deprecated/DEPRECATED_batch2-merge-report.md](../../implementation/deprecated/DEPRECATED_batch2-merge-report.md) | 2026-06-27 | 合并至 batch-merge-reports.md |
 | [deprecated/DEPRECATED_batch3-merge-report.md](DEPRECATED_batch3-merge-report.md) | 2026-06-27 | 合并至 batch-merge-reports.md |
-| [deprecated/DEPRECATED_v9-issue-execution-board.md](../07-archive/DEPRECATED_v9-issue-execution-board.md) | 2026-06-27 | 合并至 v9-issue-management.md |
-| [deprecated/DEPRECATED_v9-issue-resolution-schedule.md](../03-development/DEPRECATED_v9-issue-resolution-schedule.md) | 2026-06-27 | 合并至 v9-issue-management.md |
+| [deprecated/DEPRECATED_v9-issue-execution-board.md](../../implementation/deprecated/DEPRECATED_v9-issue-execution-board.md) | 2026-06-27 | 合并至 v9-issue-management.md |
+| [deprecated/DEPRECATED_v9-issue-resolution-schedule.md](../../implementation/deprecated/DEPRECATED_v9-issue-resolution-schedule.md) | 2026-06-27 | 合并至 v9-issue-management.md |
 | [deprecated/DEPRECATED_v9-parallel-task-schedule.md](DEPRECATED_v9-parallel-task-schedule.md) | 2026-06-27 | 合并至 v9-issue-management.md |
 
 ---
@@ -204,7 +204,7 @@ change_log:
 |:---|:---|:---|:---|
 | 1 | 目录索引 | [00-README.md](00-README.md) | 统一导航入口，含分类/状态/关联代码 |
 | 2 | 合并后的文档 | `*.md`（31 份活跃文档） | 已归并去重、注入 Frontmatter |
-| 3 | 废弃文档 | [deprecated/](../07-archive/DEPRECATED_v9-issue-execution-board.md) | 存放 9 份已废弃的旧文档 |
+| 3 | 废弃文档 | [deprecated/](../../implementation/deprecated/DEPRECATED_v9-issue-execution-board.md) | 存放 9 份已废弃的旧文档 |
 | 4 | 健康度报告 | [health-report.md](health-report.md) | 每份文档的保鲜度评分与标签 |
 | 5 | 时间轴报告 | [timeline-report.md](timeline-report.md) | 变更历史时间线 + 沉默期分析 |
 | 6 | 告警清单 | [freshness-alerts.md](freshness-alerts.md) | 当前需关注的文档列表 |

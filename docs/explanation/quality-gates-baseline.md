@@ -134,6 +134,6 @@ npm run audit:deadcode
 - `vite.config.ts`：覆盖率阈值配置。
 - `eslint.config.js`：Lint 规则。
 - `package.json`：脚本定义。
-- `scripts/audit-dead-code.ts`：死代码审计脚本。
-- `scripts/audit-hardcode.ts`：硬编码审计脚本。
-- `scripts/audit-layer-calls.ts`：分层调用审计脚本。
+- `scripts/audit/audit-dead-code.ts`：死代码审计脚本。
+- `scripts/audit/audit-hardcode.ts`：硬编码审计脚本。
+- `scripts/audit/audit-layer-calls.ts`：分层调用审计脚本。

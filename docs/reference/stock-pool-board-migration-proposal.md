@@ -20,13 +20,13 @@
 | 模块 | 当前位置 | 职责 | 与本任务关系 |
 |---|---|---|---|
 | `InputDashboard` | `src/apps/input/InputDashboard.tsx` | 输入舱首页，包含统计卡片区、候选股票录入区、股票池看板区 | 看板代码位于文件底部（约 100 行），需整体迁出 |
-| `PoolBoard` | `src/components/pool/PoolBoard.tsx` | 纯展示组件，支持看板/列表视图、按研究状态分池 | 可直接复用，迁移成本低 |
+| `PoolBoard` | `src/components/organisms/pool/PoolBoard.tsx` | 纯展示组件，支持看板/列表视图、按研究状态分池 | 可直接复用，迁移成本低 |
 | `AnalysisApp` | `src/apps/analysis/AnalysisApp.tsx` | 分析舱子路由分发（使用 `useLocation` + 条件渲染） | 需新增 `/analysis/stock-pool` 分支 |
 | `ROUTE_REGISTRY` | `src/config/routes.ts` | 项目路由唯一真相源 | 需注册新路由 |
 | `PortalShell` | `src/portal/PortalShell.tsx` | 顶栏 + 侧边栏导航 | 需在分析舱菜单新增“股票池看板”，并处理输入舱原入口 |
 | `collectionRuntimeStore` | `src/store/collectionRuntimeStore.ts` | 采集运行时状态（traceSpans / taskStatuses / logs / stats） | 进度与汇报面板的数据源 |
 | `collectConfig` | `src/config/collectConfig.ts` | 8 个采集维度（01~08）的元数据与名称 | 用于将维度 code 映射为业务类型名称 |
-| `poolStore` | `src/store/poolStore.ts` | 股票池数据与分组 | 新页面仍需消费 |
+| `poolStore` | `src/store/poolStore.test.ts` | 股票池数据与分组 | 新页面仍需消费 |
 
 ---
 
@@ -185,8 +185,8 @@ StockPoolBoardPage
 ### 新增文件
 
 1. `src/pages/analysis/StockPoolBoardPage.tsx` — 迁移后的独立页面。
-2. `src/components/collection/CollectionProgressPanel.tsx` — 进度展示（后迁移至采集任务页）。
-3. `src/components/collection/CollectionReportPanel.tsx` — 汇报面板（后迁移至采集任务页）。
+2. `src/components/organisms/collection/CollectionProgressPanel.tsx` — 进度展示（后迁移至采集任务页）。
+3. `src/components/organisms/collection/CollectionReportPanel.tsx` — 汇报面板（后迁移至采集任务页）。
 4. `src/services/data-collector/collectionReportService.ts` — 聚合计算服务（保持 UI 薄）。
 5. `src/hooks/useStockPoolBoard.ts` — 股票池看板逻辑 Hook。
 

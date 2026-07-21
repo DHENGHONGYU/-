@@ -80,14 +80,14 @@
 
 | 组件 | 路径 | 优先级 | 来源 |
 |------|------|--------|------|
-| `QualityIndicator` | `src/components/input/QualityIndicator.tsx` | P0 | 采集完整性进度条 |
+| `QualityIndicator` | `src/components/organisms/input/QualityIndicator.tsx` | P0 | 采集完整性进度条 |
 | `RiskBanner` | `src/components/trading/RiskBanner.tsx` | P1 | V6 Pro 风控三态 |
 | `FinalConfirm` | `src/components/trading/FinalConfirm.tsx` | P1 | V6 Pro 最终确认关卡 |
 | `DebaterPanel` | `src/components/analysis/DebaterPanel.tsx` | P2 | V6 Pro 多空辩论 |
 | `GatewayPanel` | `src/components/command/GatewayPanel.tsx` | P2 | V6 Pro 系统网关面板 |
 | `ReviewDrawer` | `src/components/output/ReviewDrawer.tsx` | P2 | V6 Pro 信号质量复盘 |
-| `ReportGenerator` | `src/components/output/ReportGenerator.tsx` | P2 | V6 Pro 报告生成 |
-| `LoopBanner` | `src/portal/components/LoopBanner.tsx` | P2 | V6 Pro 回路状态提示 |
+| `ReportGenerator` | `src/services/hybrid-proofread/reportGenerator.ts` | P2 | V6 Pro 报告生成 |
+| `LoopBanner` | `src/components/organisms/shared/LoopBanner.tsx` | P2 | V6 Pro 回路状态提示 |
 
 ---
 

@@ -894,7 +894,7 @@ git commit -m "test: add CommandHubPage integration tests"
 #### Task 3.1: 颜色系统合规性检查
 
 **Files:**
-- Audit Script: `scripts/audit-color-tokens.ts`
+- Audit Script: `scripts/audit/audit-color-tokens.ts`
 - Target: 所有 `src/**/*.tsx` 文件
 
 - [ ] **Step 1: 创建颜色审计脚本**
@@ -972,7 +972,7 @@ git commit -m "fix: replace hardcoded colors with theme tokens"
 #### Task 3.2: 间距系统合规性检查
 
 **Files:**
-- Audit Script: `scripts/audit-spacing.ts`
+- Audit Script: `scripts/audit/audit-spacing.ts`
 - Target: 所有 `src/**/*.tsx` 文件
 
 - [ ] **Step 1: 创建间距审计脚本**

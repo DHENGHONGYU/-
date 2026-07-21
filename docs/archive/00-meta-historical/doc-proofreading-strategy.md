@@ -105,7 +105,7 @@ npm run doc:gate
 | 回退 | 触发条件 | 行为 | 防护 |
 |------|----------|------|------|
 | A. 根级裸名 | 目标为裸文件名（无斜杠），如 `AGENTS.md` / `README.md` / `CHANGELOG.md` 被子目录文档裸名引用 | 回退到 `仓库根/裸名` 判 valid | 仅当根级确实同名存在才 valid；站点内其它裸名（如 `../explanation/design/implementation-governance.md` 在 `docs/` 嵌套处）仍按原逻辑断链 |
-| B. `..` 越界 | 主解析结果**逃逸仓库根**（如 `docs/../../README.md`、`../../../CHANGELOG.md` 经 `resolve` 爬出 rootDir） | 回退到 `仓库根/basename` 判 valid | 仅当确实逃逸 rootDir 才触发；**站内相对断链**（解析结果仍在 rootDir 内，如 `../archive/nonexistent-placeholder.md`）不受此影响，仍如实断链 |
+| B. `..` 越界 | 主解析结果**逃逸仓库根**（如 `docs/../../README.md`、`../../../CHANGELOG.md` 经 `resolve` 爬出 rootDir） | 回退到 `仓库根/basename` 判 valid | 仅当确实逃逸 rootDir 才触发；**站内相对断链**（解析结果仍在 rootDir 内，如 `../nonexistent-placeholder.md`）不受此影响，仍如实断链 |
 
 > 已实测：根级裸名 12 条、`..` 越界中意图指向本仓库根的文件全部转 valid；
 > 另有 2 条 `C:\Users\huawei\Desktop\...` 绝对路径（指向其它机器）属真实断链，

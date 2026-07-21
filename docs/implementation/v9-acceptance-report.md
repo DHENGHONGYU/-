@@ -159,7 +159,7 @@ npx vitest run --reporter=verbose
 | 文档路径 | 说明 |
 |---------|------|
 | `docs/implementation/v6pro-v9-gap-analysis-final.md` | 差异分析最终版 |
-| `docs/implementation/dual-strategy-divergence-list.md` | 分裂点清单与收敛方案（完成版） |
+| `../archive/dual-strategy-divergence-list.md` | 分裂点清单与收敛方案（完成版） |
 | `docs/strategy/stock-selection-strategy.md` | 选股策略总文档 |
 | `docs/strategy/core-scarce-strategy.md` | 核心稀缺资源策略 |
 | `docs/strategy/hot-momentum-strategy.md` | 热门赛道策略 |

@@ -232,9 +232,9 @@ font-variant-numeric: tabular-nums;  /* 等宽数字 */
 | `src/index.css` | 主样式文件，包含所有 CSS 变量和工具类 |
 | `tailwind.config.js` | Tailwind 配置，扩展颜色和动画 |
 | `src/constants/theme.tokens.ts` | TypeScript 设计令牌常量 |
-| `src/components/ui/Button.tsx` | 按钮组件，支持渐变和多种变体 |
-| `src/components/ui/Badge.tsx` | 徽章组件，涨跌语义化 |
-| `src/components/ui/Card.tsx` | 卡片组件，统一圆角和阴影 |
+| `src/components/atoms/Button.tsx` | 按钮组件，支持渐变和多种变体 |
+| `src/components/atoms/Badge.tsx` | 徽章组件，涨跌语义化 |
+| `src/components/atoms/Card.tsx` | 卡片组件，统一圆角和阴影 |
 
 ---
 

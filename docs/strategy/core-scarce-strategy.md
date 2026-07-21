@@ -129,7 +129,7 @@ core-scarce 标的在双策略评分中：
 | 四分类引擎 | `src/services/trading/strategyEngine.ts` | `classify()` 中优先级 1 判定 |
 | 组合构建器 | `src/services/trading/portfolioBuilder.ts` | 等权组合构建 |
 | 评分适配器 | `src/services/trading/scoringAdapter.ts` | 聚合 V6/智能/行业评分 |
-| 核心稀缺面板 | `src/apps/trading/components/CoreResourcePanel.tsx` | 驾驶舱展示 |
+| 核心稀缺面板 | `src/apps/trading/panels/CoreResourcePanel.tsx` | 驾驶舱展示 |
 
 ---
 

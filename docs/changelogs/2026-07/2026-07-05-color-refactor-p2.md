@@ -211,7 +211,7 @@ cat docs/reports/hardcoded-colors-inventory.json
 
 - `AGENTS.md` - §3.5 颜色令牌使用规范
 - `eslint.config.js` - ESLint 规则配置
-- `scripts/eslint-plugin-no-hardcoded-colors.js` - 自定义 ESLint 规则
+- `scripts/quality/eslint-plugin-no-hardcoded-colors.js` - 自定义 ESLint 规则
 - `package.json` - `lint:colors` 脚本
 - `.github/workflows/quality-check.yml` - CI 配置
 - `.husky/pre-commit` - Pre-commit 钩子

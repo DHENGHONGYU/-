@@ -59,9 +59,9 @@ npm run audit:docs       # 1 violation (已修复)
 - 已索引文件：595
 - 未索引文件：4
   - `docs/00-meta/functional-module-guide.md`
-  - `../04-testing/pre-testing-checklist.md`（占位文件）
+  - `../../04-testing/pre-testing-checklist.md`（占位文件）
   - `../README.md`（占位文件）
-  - `../reference/v9核心数据字典与类型定义(整合版).md`（编码问题）
+  - `../../reference/v9核心数据字典与类型定义(整合版).md`（编码问题）
 - 孤立索引项：3
 
 ### 2.4 已修复的引用断裂

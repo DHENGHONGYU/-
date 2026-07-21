@@ -55,7 +55,7 @@
 | `src/apps/trading/components/PhaseStepper.tsx` | 修复 COLOR_SHADES.white/gray 不存在 | 类型错误修复 |
 | `src/pages/analysis/ValuePitPage.tsx` | 恢复 COLOR_SHADES 导入 | 类型错误修复 |
 | `src/pages/analysis/BacktestPage.tsx` | 移除未使用 twBg 导入 | 类型错误修复 |
-| `scripts/eslint-plugin-no-hardcoded-colors.js` | CJS→ESM 导出 + rules 包装 | ESLint 配置修复 |
+| `scripts/quality/eslint-plugin-no-hardcoded-colors.js` | CJS→ESM 导出 + rules 包装 | ESLint 配置修复 |
 | `docs/CHANGELOG.md` | +v2.3.0 条目 + 文档更新表格 | 文档同步 |
 | `docs/REGISTRY_INDEX.md` | 新建注册体系核心文档 | 文档新增 |
 | `docs/03-architecture-standards.md` | v2.2.1→v2.3.0：§3.1.8 注册体系、Widget +7、D19 修复 | 架构文档 |

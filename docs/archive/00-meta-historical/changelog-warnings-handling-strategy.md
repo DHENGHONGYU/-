@@ -1,7 +1,7 @@
 ---
 title: changelog-warnings-handling-strategy
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, docs/archive/00-meta-historical/V9-PRE-LAUNCH-AUDIT-REPORT-20260713.md]
 ---
@@ -30,7 +30,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, docs/archive/00-meta-historica
 | 分类 | 典型路径 | 说明 |
 |:---|:---|:---|
 | 旧版架构文档 | `../reference/03-architecture-standards.md` | 已迁移到 `docs/02-design/architecture/` |
-| 代码审查文档 | `../reference/code-review.md` | 已迁移到 `../how-to/code-review-guide.md` |
+| 代码审查文档 | `../reference/code-review.md` | 已迁移到 `../../how-to/code-review-guide.md` |
 | 数据字典文档 | `docs/RISK_DERIVED_data-definition.md` | 已归档到 `archive/docs/07-archive/` |
 | UI 组件 | `src/components/templates/PageContainer.tsx` | 组件结构变更 |
 | 临时报告 | `docs/reports/code-graph.json` | 临时产物，已过期 |
@@ -62,13 +62,13 @@ CHANGELOG.md 第 6 行已添加声明：
 | 旧路径 | 新路径 | 状态 |
 |:---|:---|:---|
 | `../reference/03-architecture-standards.md` | `../explanation/architecture.md` | ✅ 映射 |
-| `../reference/code-review.md` | `../how-to/code-review-guide.md` | ✅ 映射 |
+| `../reference/code-review.md` | `../../how-to/code-review-guide.md` | ✅ 映射 |
 | `docs/RISK_DERIVED_data-definition.md` | `archive/docs/07-archive/RISK_DERIVED_data-definition.md.DEPRECATED` | ✅ 已归档 |
 | `../reference/data-dictionary-index.md` | `../reference/data-dictionary-index.md` | ✅ 映射 |
-| `../reference/code-review-cheatsheet.md` | `../how-to/code-review-guide.md` | ✅ 已合并 |
-| `../explanation/design/code-review-training.md` | `../how-to/code-review-guide.md` | ✅ 已合并 |
-| `../explanation/design/solo-review.md` | `../how-to/code-review-guide.md` | ✅ 已合并 |
-| `../explanation/design/tech-debt.md` | `../explanation/design/tech-debt.md` | ✅ 映射 |
+| `../../reference/code-review-cheatsheet.md` | `../../how-to/code-review-guide.md` | ✅ 已合并 |
+| `../../explanation/design/code-review-training.md` | `../../how-to/code-review-guide.md` | ✅ 已合并 |
+| `../../explanation/design/solo-review.md` | `../../how-to/code-review-guide.md` | ✅ 已合并 |
+| `../../../explanation/design/tech-debt.md` | `../../../explanation/design/tech-debt.md` | ✅ 映射 |
 
 ---
 
@@ -76,7 +76,7 @@ CHANGELOG.md 第 6 行已添加声明：
 
 ### 3.1 audit:doc-integrity 配置
 
-在 `scripts/audit-doc-integrity.ts` 中，CHANGELOG.md 的警告已设置为非阻断性：
+在 `scripts/audit/audit-doc-integrity.ts` 中，CHANGELOG.md 的警告已设置为非阻断性：
 
 ```typescript
 // CHANGELOG.md 历史引用警告为非阻断

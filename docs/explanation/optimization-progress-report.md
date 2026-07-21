@@ -260,7 +260,7 @@ tier: reference
 ### 7.4 回归机制（每次优化后无新增违规）
 
 - 新增 npm script `optimize:verify`：`tsc:prod && complexity-scan && audit && test:clean`（覆盖 10 项 audit 门禁 + 类型 + 复杂度 + 测试子集）。
-- 同步将 `perf` 加入 `scripts/audit-layer-calls.ts` 的 `lib` 基础设施白名单与 `AGENTS.md §一`，使性能工具可被 `services`/`core` 合法依赖（与 `logger` 同级）。
+- 同步将 `perf` 加入 `scripts/audit/audit-layer-calls.ts` 的 `lib` 基础设施白名单与 `AGENTS.md §一`，使性能工具可被 `services`/`core` 合法依赖（与 `logger` 同级）。
 - 本轮门禁回归：`tsc:prod` ✅、`audit:layers` 0、`audit:atomic` 0、`audit:tokens` 0、`audit:hardcode` 0 Critical、`complexity-scan` 0/0/0、`lint:colors` 0；**`test:clean` 最终确认：317 files / 4610 tests passed / 15 skipped / exit 0**。
 
 ---

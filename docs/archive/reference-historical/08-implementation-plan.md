@@ -83,7 +83,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 | 2.3.9 | 采集测试多维度健康度（P1） | P1 | 2.1 | 🟡 | `DataTestPanel` 多数据源健康列表、延迟、实时行情探测、清洗检查 |
 | 2.3.10 | 采集配置 UI（P2） | P2 | 2.1, 2.3.9 | 🔴 | `FetcherConfigPanel` 维度/频率/数据源优先级/限流配置；先内存配置，稳定后持久化到 IndexedDB |
 | 2.3.11 | 采集任务进度与汇报（P1） | P1 | 2.3.3, 2.1 | ✅ | `CollectionProgressPanel` / `CollectionReportPanel` 在 `/input/collect-tasks` 按 8 个采集维度展示进度与失败记录 |
-| 2.3.12 | 原子组件体系重构（P1） | P1 | 2.3.11 | ✅ | 建立 `atoms/molecules/organisms/templates` 四级目录；迁移 `PoolBoard`、`CollectionProgressPanel`、`CollectionReportPanel` 到 `organisms/`；新增 `componentRegistry.ts` 与 `./atomic-component-system.md` |
+| 2.3.12 | 原子组件体系重构（P1） | P1 | 2.3.11 | ✅ | 建立 `atoms/molecules/organisms/templates` 四级目录；迁移 `PoolBoard`、`CollectionProgressPanel`、`CollectionReportPanel` 到 `organisms/`；新增 `componentRegistry.ts` 与 `../../reference/atomic-component-system.md` |
 | 2.4 | 板块轮动与行业分析 | P1 | 1.9 | TBD | `SectorAnalysisPage` 展示行业评分与轮动信号；V4 行业评分可保存 |
 | **2.4.1** | **板块轮动评分引擎** | **P1** | **2.4** | **🟡** | **代码已存在，待上层 `SectorAnalysisPage` 接入** |
 | 2.5 | 择时信号引擎 | P0 | 2.2 | ✅ | 实现 SignalGenerator，输出 buy_dip / buy_pivot / sell_profit_taking / sell_trailing_stop / hold / watch / composite 信号；参数化配置 |

@@ -161,7 +161,7 @@ docs/06-routing-specs.md          # 更新路由表
 ### P2：数据层配合改造
 
 1. 股票池分组/策略模板（影响 `src/data/`、`src/services/`、`usePoolData`）。
-2. 七维采集配置 + 采集任务监控（影响 `src/data/collectConfig`、`fetcherService`）。
+2. 七维采集配置 + 采集任务监控（影响 `src/config/collectConfig.ts`、`fetcherService`）。
 3. 板块轮动（影响 `src/data/rotationData`、`rotationService`）。
 
 ### P3：可选新模块

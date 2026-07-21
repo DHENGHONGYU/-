@@ -453,7 +453,7 @@
 | `package.json` | 项目版本 |
 | `CHANGELOG.md` | 更新日志 |
 | `README.md` | 项目说明 |
-| `src/components/ui/Switch.tsx` | Switch 组件源码（辅助核对） |
+| `src/components/atoms/Switch.tsx` | Switch 组件源码（辅助核对） |
 | `docs/implementation/data-collection-route-ui-audit.md` | 数据采集路由UI审计（参考） |
 | `docs/implementation/data-collection-gap-analysis.md` | 数据采集差距分析（参考） |
 

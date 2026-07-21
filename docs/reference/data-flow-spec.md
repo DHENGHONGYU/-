@@ -2,7 +2,7 @@
 title: data-flow-spec
 code_version: 2.0.0
 
-tier: core
+tier: important
 ---
 
 ---

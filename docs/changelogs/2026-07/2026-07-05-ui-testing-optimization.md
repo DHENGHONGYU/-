@@ -20,9 +20,9 @@
 
 | 脚本路径 | 功能描述 |
 |---------|---------|
-| `scripts/audit-color-tokens.ts` | 颜色系统合规性检查，检测硬编码 HEX/RGB/HSL 颜色 |
-| `scripts/audit-spacing.ts` | 间距系统合规性检查，检测非 4px 栅格的硬编码间距 |
-| `scripts/audit-typography.ts` | 字体系统合规性检查，检测硬编码字体大小/字重/行高 |
+| `scripts/audit/audit-color-tokens.ts` | 颜色系统合规性检查，检测硬编码 HEX/RGB/HSL 颜色 |
+| `scripts/audit/audit-spacing.ts` | 间距系统合规性检查，检测非 4px 栅格的硬编码间距 |
+| `scripts/audit/audit-typography.ts` | 字体系统合规性检查，检测硬编码字体大小/字重/行高 |
 
 **使用方法**:
 ```bash
@@ -62,8 +62,8 @@ npx tsx scripts/audit-typography.ts
 
 | 文件 | 修复内容 |
 |-----|---------|
-| `src/components/ui/Button.test.tsx` | 6 个测试用例：CSS 类名断言从 `from-primary` 修正为 `bg-primary`，`border-2` 修正为 `border`，`from-destructive` 修正为 `bg-destructive`，`from-positive` 修正为 `bg-green-500`，移除 isLoading 的 disabled 断言 |
-| `src/components/ui/Card.test.tsx` | 2 个测试用例：CSS 类名断言从 `rounded-xl` 修正为 `rounded-lg` |
+| `src/components/atoms/Button.test.tsx` | 6 个测试用例：CSS 类名断言从 `from-primary` 修正为 `bg-primary`，`border-2` 修正为 `border`，`from-destructive` 修正为 `bg-destructive`，`from-positive` 修正为 `bg-green-500`，移除 isLoading 的 disabled 断言 |
+| `src/components/atoms/Card.test.tsx` | 2 个测试用例：CSS 类名断言从 `rounded-xl` 修正为 `rounded-lg` |
 
 ### 2. 硬编码颜色修复
 
@@ -102,10 +102,10 @@ npx tsx scripts/audit-typography.ts
 
 | 文件 | 错误类型 |
 |-----|---------|
-| `src/agents/agentComponentRegistry.test.ts` | 对象可能未定义 |
+| `src/components/organisms/agent/__tests__/agentComponentRegistry.test.ts` | 对象可能未定义 |
 | `src/blueprints/__tests__/dataRelationship.test.ts` | 缺少必需属性 `strategy` |
-| `src/components/ScoreFactorDeltaPanel.test.tsx` | 类型未导出 |
-| `src/components/ui/Skeleton.test.tsx` | 组件不支持 ref |
+| `src/components/organisms/shared/ScoreFactorDeltaPanel.test.tsx` | 类型未导出 |
+| `src/components/atoms/Skeleton.test.tsx` | 组件不支持 ref |
 | `src/data/dataLayer.test.ts` | 多个类型不匹配 |
 | `src/services/data-collector/missingReportDetector.test.ts` | 缺少 `createdAt` |
 | `src/services/execution/executionLogService.test.ts` | 缺少 `name` 属性 |

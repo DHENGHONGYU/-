@@ -715,8 +715,8 @@ PR-6 大型模块分拆方案
 ### 8.3 文档更新要求
 
 PR-7 实施后需要更新以下文档：
-1. `docs/changelogs/2026-07/pr-6-module-split-plan.md` — §5.3 标注"由 PR-7 接管，方案已修订"
-2. 新建 `docs/changelogs/2026-07/trade-error-classifier-split-completion-archive.md` — 完成归档
+1. `../../../archive/pr-6-module-split-plan.md` — §5.3 标注"由 PR-7 接管，方案已修订"
+2. 新建 `../../../archive/trade-error-classifier-split-completion-archive.md` — 完成归档
 3. `../../06-routing-specs.md` — 如有接口签名变更（本次无）
 
 ---

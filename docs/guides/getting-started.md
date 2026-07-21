@@ -213,10 +213,10 @@ npm run build
 |-------------|----------|------|
 | 全局架构 | architecture/overview.md | `docs/architecture/overview.md` |
 | 舱室详情 | cabins-overview.md | `docs/architecture/cabins-overview.md` |
-| 服务子域 | services-catalog.md | `docs/architecture/services-catalog.md` |
+| 服务子域 | services-catalog.md | `../reference/services-catalog.md` |
 | 数据定义 | DATA_DICTIONARY_INDEX.md | `docs/standards/DATA_DICTIONARY_INDEX.md` |
 | 编码规范 | AGENTS.md | `AGENTS.md` |
-| 颜色令牌 | design-token-mapping.md | `docs/02-design/design-token-mapping.md` |
+| 颜色令牌 | design-token-mapping.md | `../reference/design-token-mapping.md` |
 | 如何新增 Store | how-to-add-store.md | `docs/guides/how-to-add-store.md` |
 | 如何新增 Service | how-to-add-service.md | `docs/guides/how-to-add-service.md` |
 | 如何新增 Widget | how-to-add-widget.md | `docs/guides/how-to-add-widget.md` |

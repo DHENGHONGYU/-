@@ -307,10 +307,10 @@ npm exec -- tsx scripts/audit/audit-version-drift.ts
 
 | 文档 | doc_id | 路径 | 关系 |
 |------|--------|------|------|
-| 八域资料体系设计 | V9-DOC-DATA-029 | `explanation/design/profile-eight-domains-design.md` | 本 ADR 的详细设计展开 |
-| 衍生指标引擎设计 | V9-DOC-DATA-030 | `explanation/design/derived-metrics-engine-design.md` | `derived_metric` 型证据的计算来源 |
-| 文件系统映射规范 | V9-DOC-DATA-031 | `explanation/design/filesystem-mapping-spec.md` | 资料体系的本地文件镜像（P3 规划） |
-| ADR-003: DataBridge | V9-DOC-DATA-013 | `reference/adr-003-databridge-over-direct-datalayer.md` | 写入路径的前置约束 |
+| 八域资料体系设计 | V9-DOC-DATA-029 | `../explanation/design/profile-eight-domains-design.md` | 本 ADR 的详细设计展开 |
+| 衍生指标引擎设计 | V9-DOC-DATA-030 | `../explanation/design/derived-metrics-engine-design.md` | `derived_metric` 型证据的计算来源 |
+| 文件系统映射规范 | V9-DOC-DATA-031 | `../explanation/design/filesystem-mapping-spec.md` | 资料体系的本地文件镜像（P3 规划） |
+| ADR-003: DataBridge | V9-DOC-DATA-013 | `./adr-003-databridge-over-direct-datalayer.md` | 写入路径的前置约束 |
 | V9 IndexedDB Store Schema | V9-DOC-DATA-031 | `explanation/design/v9-indexeddb-store-schema.md` | Store 注册规范 |
 | V6 评分引擎规格 | V9-DOC-BACK-001 | `reference/05-engine-specs.md` | 11 层评分模型定义 |
 

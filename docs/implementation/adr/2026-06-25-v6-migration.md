@@ -86,9 +86,9 @@ V6 Pro 在浏览器端积累了大量用户数据，包括自选股、评分、�
 
 | 文件 | 说明 |
 |------|------|
-| `src/services/v6Migration/v6MigrationService.ts` | 迁移服务入口：解析 JSON、按顺序导入、冲突处理 |
+| `src/services/system/v6MigrationService.ts` | 迁移服务入口：解析 JSON、按顺序导入、冲突处理 |
 | `src/services/v6Migration/converters/*.ts` | 12 个核心 store 的转换函数 |
-| `src/components/settings/MigrationPanel.tsx` | 迁移面板 UI：选择文件、显示进度、跳过/覆盖选项 |
+| `src/components/organisms/system/MigrationPanel.tsx` | 迁移面板 UI：选择文件、显示进度、跳过/覆盖选项 |
 | 对应 `*.test.ts` / `*.test.tsx` | 19 个单元测试 |
 
 ### 转换的 12 个核心 store

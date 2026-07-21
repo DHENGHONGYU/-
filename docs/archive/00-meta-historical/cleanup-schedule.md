@@ -1,7 +1,7 @@
 ---
 title: cleanup-schedule
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
@@ -66,7 +66,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 [4] 双人确认 ── 6 个月满期后，需 2 人确认无价值方可删除（GitHub PR 审批）
     │
     ▼
-[5] 删除 ── 从 Git 历史移除（`git rm`），登记至 `../archive/deletion-log.md`
+[5] 删除 ── 从 Git 历史移除（`git rm`），登记至 `../deletion-log.md`
 ```
 
 **禁止**：直接删除活跃目录中的文档而不经标记→迁移流程。

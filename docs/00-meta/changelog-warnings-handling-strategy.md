@@ -2,7 +2,7 @@
 title: changelog-warnings-handling-strategy
 code_version: 2.0.0
 
-tier: core
+tier: reference
 ---
 
 ---
@@ -81,7 +81,7 @@ CHANGELOG.md 第 6 行已添加声明：
 
 ### 3.1 audit:doc-integrity 配置
 
-在 `scripts/audit-doc-integrity.ts` 中，CHANGELOG.md 的警告已设置为非阻断性：
+在 `scripts/audit/audit-doc-integrity.ts` 中，CHANGELOG.md 的警告已设置为非阻断性：
 
 ```typescript
 // CHANGELOG.md 历史引用警告为非阻断

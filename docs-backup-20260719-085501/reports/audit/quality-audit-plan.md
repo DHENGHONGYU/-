@@ -14,215 +14,215 @@ code_version: 2.0.0
 change_log: 
 ---
 
-# V9 Ä£¿éÍê³É¶ÈÄæÏòÐ£Ñé ¡ª Ö´ÐÐ¼Æ»®
+# V9 æ¨¡å—å®Œæˆåº¦é€†å‘æ ¡éªŒ â€” æ‰§è¡Œè®¡åˆ’
 
-## Ò»¡¢ÏîÄ¿¸Å¿ö
+## ä¸€ã€é¡¹ç›®æ¦‚å†µ
 
-| ÏîÄ¿ | ÐÅÏ¢ |
+| é¡¹ç›® | ä¿¡æ¯ |
 |:---|:---|
-| ÏîÄ¿Ãû³Æ | ÖÇÄÜÍ¶ÑÐ¸´ÅÌÏµÍ³ V9 |
-| ¼¼ÊõÕ» | React 19 + TypeScript + Vite + Zustand + Tailwind |
-| ºËÐÄ¼Ü¹¹ | DataBridge£¨Êý¾Ý²ã£©¡ú Store£¨×´Ì¬²ã£©¡ú Engine£¨Âß¼­²ã£©¡ú UI£¨Õ¹Ê¾²ã£© |
-| ÒÑ×¢²áÂ·ÓÉ | **48 Ìõ**£¨¸²¸Ç 5 ²Õ + ÃÅ»§ + ÆäËû£© |
-| ÒÑ×¢²á Store | **47 ¸ö**£¨analysisStore / tradingStore / agentStore / widgetStore / databridgeStore µÈ£© |
-| ÒÑ×¢²á Widget | **21 ¸ö**£¨Cockpit ¼ÝÊ»²Õ£© |
-| Îå²Õ¼Ü¹¹ | ÊäÈë²Õ / ·ÖÎö²Õ / ½»Ò×²Õ / Êä³ö²Õ / ×Ü¿Ø²Õ |
-| Éó¼ÆÈë¿Ú×ÜÊý | **48 ¸ö**£¨º¬ÃÅ»§¡¢Îå²Õ¡¢Agent ×ÓÏµÍ³¡¢ÏµÍ³¼à¿Ø¡¢Mock ²âÊÔÒ³£© |
+| é¡¹ç›®åç§° | æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ V9 |
+| æŠ€æœ¯æ ˆ | React 19 + TypeScript + Vite + Zustand + Tailwind |
+| æ ¸å¿ƒæž¶æž„ | DataBridgeï¼ˆæ•°æ®å±‚ï¼‰â†’ Storeï¼ˆçŠ¶æ€å±‚ï¼‰â†’ Engineï¼ˆé€»è¾‘å±‚ï¼‰â†’ UIï¼ˆå±•ç¤ºå±‚ï¼‰ |
+| å·²æ³¨å†Œè·¯ç”± | **48 æ¡**ï¼ˆè¦†ç›– 5 èˆ± + é—¨æˆ· + å…¶ä»–ï¼‰ |
+| å·²æ³¨å†Œ Store | **47 ä¸ª**ï¼ˆanalysisStore / tradingStore / agentStore / widgetStore / databridgeStore ç­‰ï¼‰ |
+| å·²æ³¨å†Œ Widget | **21 ä¸ª**ï¼ˆCockpit é©¾é©¶èˆ±ï¼‰ |
+| äº”èˆ±æž¶æž„ | è¾“å…¥èˆ± / åˆ†æžèˆ± / äº¤æ˜“èˆ± / è¾“å‡ºèˆ± / æ€»æŽ§èˆ± |
+| å®¡è®¡å…¥å£æ€»æ•° | **48 ä¸ª**ï¼ˆå«é—¨æˆ·ã€äº”èˆ±ã€Agent å­ç³»ç»Ÿã€ç³»ç»Ÿç›‘æŽ§ã€Mock æµ‹è¯•é¡µï¼‰ |
 
 ---
 
-## ¶þ¡¢¹¦ÄÜÈë¿ÚÇåµ¥£¨ÓÃ»§ÊÓ½Ç£¬×Ô¶¥ÏòÏÂ£©
+## äºŒã€åŠŸèƒ½å…¥å£æ¸…å•ï¼ˆç”¨æˆ·è§†è§’ï¼Œè‡ªé¡¶å‘ä¸‹ï¼‰
 
-### Åú´Î A£ºÃÅ»§Óë¼ÝÊ»²Õ£¨2 ¸öÈë¿Ú + 21 Widget£©
+### æ‰¹æ¬¡ Aï¼šé—¨æˆ·ä¸Žé©¾é©¶èˆ±ï¼ˆ2 ä¸ªå…¥å£ + 21 Widgetï¼‰
 
-| ±àºÅ | ¹¦ÄÜÈë¿Ú | Â·ÓÉ | ¶ÔÓ¦×é¼þ | ÓÃ»§¸ÐÖª |
+| ç¼–å· | åŠŸèƒ½å…¥å£ | è·¯ç”± | å¯¹åº”ç»„ä»¶ | ç”¨æˆ·æ„ŸçŸ¥ |
 |:---|:---|:---|:---|:---|
-| A1 | Ê×Ò³ | `/` | `src/pages/HomePage` | ÏµÍ³Èë¿ÚÒ³ |
-| A2 | ¼ÝÊ»²Õ | `/cockpit` | `src/cockpit/CockpitShell` + 21 Widgets | ¶à Widget ÒÇ±íÅÌ |
+| A1 | é¦–é¡µ | `/` | `src/pages/HomePage` | ç³»ç»Ÿå…¥å£é¡µ |
+| A2 | é©¾é©¶èˆ± | `/cockpit` | `src/cockpit/CockpitShell` + 21 Widgets | å¤š Widget ä»ªè¡¨ç›˜ |
 
-**¼ÝÊ»²Õ Widget Çåµ¥£¨21 ¸ö£©**£ºMarketIndicesWidget¡¢HotSectorWidget¡¢AgentPerformanceWidget¡¢PnLAnalysisWidget¡¢NewsSummaryWidget¡¢WatchlistWidget¡¢PositionOverviewWidget¡¢StrategyStatusWidget¡¢RiskAlertWidget¡¢TradingSignalsWidget¡¢MarketBreadthWidget¡¢RotationMapWidget¡¢FactorHeatmapWidget¡¢EarningsCalendarWidget¡¢MacroIndicatorWidget¡¢SentimentGaugeWidget¡¢FlowTrackerWidget¡¢DividendTrackerWidget¡¢RepoMonitorWidget¡¢CalendarWidget¡¢NotesWidget
+**é©¾é©¶èˆ± Widget æ¸…å•ï¼ˆ21 ä¸ªï¼‰**ï¼šMarketIndicesWidgetã€HotSectorWidgetã€AgentPerformanceWidgetã€PnLAnalysisWidgetã€NewsSummaryWidgetã€WatchlistWidgetã€PositionOverviewWidgetã€StrategyStatusWidgetã€RiskAlertWidgetã€TradingSignalsWidgetã€MarketBreadthWidgetã€RotationMapWidgetã€FactorHeatmapWidgetã€EarningsCalendarWidgetã€MacroIndicatorWidgetã€SentimentGaugeWidgetã€FlowTrackerWidgetã€DividendTrackerWidgetã€RepoMonitorWidgetã€CalendarWidgetã€NotesWidget
 
-### Åú´Î B£ºÊäÈë²Õ£¨8 ¸ö×ÓÒ³Ãæ + 1 ¸ö Hub = 9 Èë¿Ú£©
+### æ‰¹æ¬¡ Bï¼šè¾“å…¥èˆ±ï¼ˆ8 ä¸ªå­é¡µé¢ + 1 ä¸ª Hub = 9 å…¥å£ï¼‰
 
-| ±àºÅ | ¹¦ÄÜÈë¿Ú | Â·ÓÉ | ¶ÔÓ¦×é¼þ |
+| ç¼–å· | åŠŸèƒ½å…¥å£ | è·¯ç”± | å¯¹åº”ç»„ä»¶ |
 |:---|:---|:---|:---|
-| B1 | ÊäÈë²Õ Hub | `/input/hub` | `src/apps/input/InputApp.tsx` |
-| B2 | Â¼Èë¿´°å | `/input` | `src/apps/input/InputApp` |
-| B3 | ÅúÁ¿µ¼Èë | `/input/bulk-import` | `src/apps/input/InputApp`£¨×ÓÂ·ÓÉ£© |
-| B4 | ÈÈÃÅ°å¿é | `/input/hot-sectors` | `src/apps/input/InputApp`£¨×ÓÂ·ÓÉ£© |
-| B5 | ±¾µØÖªÊ¶¿â | `/input/local-knowledge` | `src/pages/input/LocalKnowledgePage` |
-| B6 | ²É¼¯²âÊÔ | `/input/data-test` | `src/apps/input/InputApp`£¨×ÓÂ·ÓÉ£© |
-| B7 | ÆßÎ¬·ÖÎö | `/input/seven-dim` | `src/apps/input/InputApp`£¨×ÓÂ·ÓÉ£© |
-| B8 | ²É¼¯Æ÷ÅäÖÃ | `/input/collector-config` | `src/apps/input/InputApp`£¨×ÓÂ·ÓÉ£© |
-| B9 | ²É¼¯ÈÎÎñ | `/input/collection-tasks` | `src/apps/input/InputApp`£¨×ÓÂ·ÓÉ£© |
+| B1 | è¾“å…¥èˆ± Hub | `/input/hub` | `src/apps/input/InputApp.tsx` |
+| B2 | å½•å…¥çœ‹æ¿ | `/input` | `src/apps/input/InputApp` |
+| B3 | æ‰¹é‡å¯¼å…¥ | `/input/bulk-import` | `src/apps/input/InputApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| B4 | çƒ­é—¨æ¿å— | `/input/hot-sectors` | `src/apps/input/InputApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| B5 | æœ¬åœ°çŸ¥è¯†åº“ | `/input/local-knowledge` | `src/pages/input/LocalKnowledgePage` |
+| B6 | é‡‡é›†æµ‹è¯• | `/input/data-test` | `src/apps/input/InputApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| B7 | ä¸ƒç»´åˆ†æž | `/input/seven-dim` | `src/apps/input/InputApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| B8 | é‡‡é›†å™¨é…ç½® | `/input/collector-config` | `src/apps/input/InputApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| B9 | é‡‡é›†ä»»åŠ¡ | `/input/collection-tasks` | `src/apps/input/InputApp`ï¼ˆå­è·¯ç”±ï¼‰ |
 
-### Åú´Î C£º·ÖÎö²Õ£¨10 ¸ö×ÓÒ³Ãæ + 1 ¸ö Hub + 1 ¸ö¸ùÂ·ÓÉ = 12 Èë¿Ú£©
+### æ‰¹æ¬¡ Cï¼šåˆ†æžèˆ±ï¼ˆ10 ä¸ªå­é¡µé¢ + 1 ä¸ª Hub + 1 ä¸ªæ ¹è·¯ç”± = 12 å…¥å£ï¼‰
 
-| ±àºÅ | ¹¦ÄÜÈë¿Ú | Â·ÓÉ | ¶ÔÓ¦×é¼þ |
+| ç¼–å· | åŠŸèƒ½å…¥å£ | è·¯ç”± | å¯¹åº”ç»„ä»¶ |
 |:---|:---|:---|:---|
-| C1 | ·ÖÎö²Õ Hub | `/analysis/hub` | `src/apps/analysis/AnalysisApp.tsx` |
-| C2 | V4 ÐÐÒµÆÀ·Ö | `/analysis/industry-score` | `src/pages/analysis/IndustryScorePage` |
-| C3 | V6 ¸ö¹É¾ÅÎ¬ÆÀ·Ö | `/analysis/stock-score` | `src/pages/analysis/StockAnalysisPage` |
-| C3b | ¸ö¹ÉÆÀ·Ö£¨´ø´úÂë£© | `/analysis/stock-score/:code` | `src/pages/analysis/StockAnalysisPage`£¨²ÎÊý»¯Â·ÓÉ£© |
-| C4 | V6 ÖÇÄÜÆÀ·Ö | `/analysis/intelligent-score` | `src/pages/analysis/IntelligentScorePage` |
-| C5 | °å¿éÂÖ¶¯·ÖÎö | `/analysis/sector` | `src/pages/analysis/SectorAnalysisPage` |
-| C6 | ²ßÂÔ»Ø²â | `/analysis/backtest` | `src/pages/analysis/BacktestPage` |
-| C7 | ÆÀ·ÖÎÄµµ°æ±¾¿â | `/analysis/score-docs` | `src/pages/analysis/ScoreDocPage` |
-| C8 | ÖÇÄÜ×ÊÑ¶ | `/analysis/news` | `src/pages/analysis/NewsPage` |
-| C9 | ÈÈÃÅ°å¿é²ßÂÔ | `/analysis/hot-sector-strategy` | `src/pages/analysis/HotSectorPage.tsx` |
-| C10 | ¼ÛÖµÍÝµØ²ßÂÔ | `/analysis/value-pit` | `src/pages/analysis/ValuePitPage` |
-| C11 | ·ÖÎö²Õ¸ùÂ·ÓÉ | `/analysis` | `src/apps/analysis/AnalysisApp`£¨¸ùÂ·ÓÉ·Ö·¢£© |
+| C1 | åˆ†æžèˆ± Hub | `/analysis/hub` | `src/apps/analysis/AnalysisApp.tsx` |
+| C2 | V4 è¡Œä¸šè¯„åˆ† | `/analysis/industry-score` | `src/pages/analysis/IndustryScorePage` |
+| C3 | V6 ä¸ªè‚¡ä¹ç»´è¯„åˆ† | `/analysis/stock-score` | `src/pages/analysis/StockAnalysisPage` |
+| C3b | ä¸ªè‚¡è¯„åˆ†ï¼ˆå¸¦ä»£ç ï¼‰ | `/analysis/stock-score/:code` | `src/pages/analysis/StockAnalysisPage`ï¼ˆå‚æ•°åŒ–è·¯ç”±ï¼‰ |
+| C4 | V6 æ™ºèƒ½è¯„åˆ† | `/analysis/intelligent-score` | `src/pages/analysis/IntelligentScorePage` |
+| C5 | æ¿å—è½®åŠ¨åˆ†æž | `/analysis/sector` | `src/pages/analysis/SectorAnalysisPage` |
+| C6 | ç­–ç•¥å›žæµ‹ | `/analysis/backtest` | `src/pages/analysis/BacktestPage` |
+| C7 | è¯„åˆ†æ–‡æ¡£ç‰ˆæœ¬åº“ | `/analysis/score-docs` | `src/pages/analysis/ScoreDocPage` |
+| C8 | æ™ºèƒ½èµ„è®¯ | `/analysis/news` | `src/pages/analysis/NewsPage` |
+| C9 | çƒ­é—¨æ¿å—ç­–ç•¥ | `/analysis/hot-sector-strategy` | `src/pages/analysis/HotSectorPage.tsx` |
+| C10 | ä»·å€¼æ´¼åœ°ç­–ç•¥ | `/analysis/value-pit` | `src/pages/analysis/ValuePitPage` |
+| C11 | åˆ†æžèˆ±æ ¹è·¯ç”± | `/analysis` | `src/apps/analysis/AnalysisApp`ï¼ˆæ ¹è·¯ç”±åˆ†å‘ï¼‰ |
 
-### Åú´Î D£º½»Ò×²Õ£¨3 ¸ö×ÓÒ³Ãæ + 1 ¸ö Hub = 4 Èë¿Ú£©
+### æ‰¹æ¬¡ Dï¼šäº¤æ˜“èˆ±ï¼ˆ3 ä¸ªå­é¡µé¢ + 1 ä¸ª Hub = 4 å…¥å£ï¼‰
 
-| ±àºÅ | ¹¦ÄÜÈë¿Ú | Â·ÓÉ | ¶ÔÓ¦×é¼þ |
+| ç¼–å· | åŠŸèƒ½å…¥å£ | è·¯ç”± | å¯¹åº”ç»„ä»¶ |
 |:---|:---|:---|:---|
-| D1 | ½»Ò×²Õ Hub | `/trading/hub` | `src/apps/trading/TradingApp.tsx` |
-| D2 | ½»Ò×ÐÅºÅ¿´°å | `/trading` | `src/apps/trading/TradingApp` |
-| D3 | ²ßÂÔ¿ìÕÕ | `/trading/strategy-snapshots` | `src/pages/trading/StrategySnapshotPage` |
-| D4 | ³Ö²Ö¹ÜÀí | `/trading/holdings` | `src/pages/trading/HoldingsPage` |
+| D1 | äº¤æ˜“èˆ± Hub | `/trading/hub` | `src/apps/trading/TradingApp.tsx` |
+| D2 | äº¤æ˜“ä¿¡å·çœ‹æ¿ | `/trading` | `src/apps/trading/TradingApp` |
+| D3 | ç­–ç•¥å¿«ç…§ | `/trading/strategy-snapshots` | `src/pages/trading/StrategySnapshotPage` |
+| D4 | æŒä»“ç®¡ç† | `/trading/holdings` | `src/pages/trading/HoldingsPage` |
 
-### Åú´Î E£ºÊä³ö²Õ + ×Ü¿Ø²Õ + ÆäËû£¨21 ¸öÈë¿Ú£©
+### æ‰¹æ¬¡ Eï¼šè¾“å‡ºèˆ± + æ€»æŽ§èˆ± + å…¶ä»–ï¼ˆ21 ä¸ªå…¥å£ï¼‰
 
-#### E.1 Êä³ö²Õ£¨5 ¸öÈë¿Ú£©
+#### E.1 è¾“å‡ºèˆ±ï¼ˆ5 ä¸ªå…¥å£ï¼‰
 
-| ±àºÅ | ¹¦ÄÜÈë¿Ú | Â·ÓÉ | ¶ÔÓ¦×é¼þ |
+| ç¼–å· | åŠŸèƒ½å…¥å£ | è·¯ç”± | å¯¹åº”ç»„ä»¶ |
 |:---|:---|:---|:---|
-| E1a | Êä³ö²Õ Hub | `/output` | `src/apps/output/OutputApp` |
-| E1b | ±¨¸æÉú³É | `/output/generate` | `src/apps/output/OutputApp`£¨×ÓÂ·ÓÉ£© |
-| E1c | ±¨¸æÁÐ±í | `/output/reports` | `src/apps/output/OutputApp`£¨×ÓÂ·ÓÉ£© |
-| E1d | µ¼³öÅäÖÃ | `/output/export-config` | `src/apps/output/OutputApp`£¨×ÓÂ·ÓÉ£© |
-| E1e | Ä£°å¹ÜÀí | `/output/templates` | `src/apps/output/OutputApp`£¨×ÓÂ·ÓÉ£© |
+| E1a | è¾“å‡ºèˆ± Hub | `/output` | `src/apps/output/OutputApp` |
+| E1b | æŠ¥å‘Šç”Ÿæˆ | `/output/generate` | `src/apps/output/OutputApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| E1c | æŠ¥å‘Šåˆ—è¡¨ | `/output/reports` | `src/apps/output/OutputApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| E1d | å¯¼å‡ºé…ç½® | `/output/export-config` | `src/apps/output/OutputApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| E1e | æ¨¡æ¿ç®¡ç† | `/output/templates` | `src/apps/output/OutputApp`ï¼ˆå­è·¯ç”±ï¼‰ |
 
-#### E.2 ×Ü¿Ø²Õ Hub + ¸ùÂ·ÓÉ£¨2 ¸öÈë¿Ú£©
+#### E.2 æ€»æŽ§èˆ± Hub + æ ¹è·¯ç”±ï¼ˆ2 ä¸ªå…¥å£ï¼‰
 
-| ±àºÅ | ¹¦ÄÜÈë¿Ú | Â·ÓÉ | ¶ÔÓ¦×é¼þ |
+| ç¼–å· | åŠŸèƒ½å…¥å£ | è·¯ç”± | å¯¹åº”ç»„ä»¶ |
 |:---|:---|:---|:---|
-| E2 | ×Ü¿Ø²Õ Hub | `/command/hub` | `src/apps/command/CommandApp.tsx` |
-| E3 | ×Ü¿Ø²Õ¸ùÂ·ÓÉ | `/command` | `src/apps/command/CommandApp` |
+| E2 | æ€»æŽ§èˆ± Hub | `/command/hub` | `src/apps/command/CommandApp.tsx` |
+| E3 | æ€»æŽ§èˆ±æ ¹è·¯ç”± | `/command` | `src/apps/command/CommandApp` |
 
-#### E.3 Agent ¹ÜÀí×ÓÏµÍ³£¨10 ¸öÈë¿Ú£©
+#### E.3 Agent ç®¡ç†å­ç³»ç»Ÿï¼ˆ10 ä¸ªå…¥å£ï¼‰
 
-| ±àºÅ | ¹¦ÄÜÈë¿Ú | Â·ÓÉ | ¶ÔÓ¦×é¼þ |
+| ç¼–å· | åŠŸèƒ½å…¥å£ | è·¯ç”± | å¯¹åº”ç»„ä»¶ |
 |:---|:---|:---|:---|
-| E3a | Agent ÁÐ±í | `/command/agents` | `src/apps/command/CommandApp`£¨×ÓÂ·ÓÉ£© |
-| E3b | Agent ÏêÇé | `/command/agents/:id` | `src/apps/command/CommandApp`£¨×ÓÂ·ÓÉ£© |
-| E3c | Agent ×¢²á | `/command/agents/register` | `src/apps/command/CommandApp`£¨×ÓÂ·ÓÉ£© |
-| E3d | ÄÜÁ¦Í¼Æ× | `/command/agents/capability` | `src/apps/command/CommandApp`£¨×ÓÂ·ÓÉ£© |
-| E3e | DAG µ÷¶ÈÆ÷ | `/command/agents/dag` | `src/apps/command/CommandApp`£¨×ÓÂ·ÓÉ£© |
-| E3f | ´¥·¢Æ÷¹ÜÀí | `/command/agents/triggers` | `src/apps/command/CommandApp`£¨×ÓÂ·ÓÉ£© |
-| E3g | ·´À¡¹ÜÀí | `/command/agents/feedback` | `src/apps/command/CommandApp`£¨×ÓÂ·ÓÉ£© |
-| E3h | ÈÎÎñ¹ÜÀí | `/command/agents/tasks` | `src/apps/command/CommandApp`£¨×ÓÂ·ÓÉ£© |
-| E3i | LLM ÅäÖÃ | `/command/agents/llm-config` | `src/apps/command/CommandApp`£¨×ÓÂ·ÓÉ£© |
-| E3j | ×Ô¶¨Òå Agent | `/command/agents/custom` | `src/apps/command/CommandApp`£¨×ÓÂ·ÓÉ£© |
+| E3a | Agent åˆ—è¡¨ | `/command/agents` | `src/apps/command/CommandApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| E3b | Agent è¯¦æƒ… | `/command/agents/:id` | `src/apps/command/CommandApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| E3c | Agent æ³¨å†Œ | `/command/agents/register` | `src/apps/command/CommandApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| E3d | èƒ½åŠ›å›¾è°± | `/command/agents/capability` | `src/apps/command/CommandApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| E3e | DAG è°ƒåº¦å™¨ | `/command/agents/dag` | `src/apps/command/CommandApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| E3f | è§¦å‘å™¨ç®¡ç† | `/command/agents/triggers` | `src/apps/command/CommandApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| E3g | åé¦ˆç®¡ç† | `/command/agents/feedback` | `src/apps/command/CommandApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| E3h | ä»»åŠ¡ç®¡ç† | `/command/agents/tasks` | `src/apps/command/CommandApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| E3i | LLM é…ç½® | `/command/agents/llm-config` | `src/apps/command/CommandApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| E3j | è‡ªå®šä¹‰ Agent | `/command/agents/custom` | `src/apps/command/CommandApp`ï¼ˆå­è·¯ç”±ï¼‰ |
 
-#### E.4 ÏµÍ³¼à¿Ø×ÓÏµÍ³£¨3 ¸öÈë¿Ú£©
+#### E.4 ç³»ç»Ÿç›‘æŽ§å­ç³»ç»Ÿï¼ˆ3 ä¸ªå…¥å£ï¼‰
 
-| ±àºÅ | ¹¦ÄÜÈë¿Ú | Â·ÓÉ | ¶ÔÓ¦×é¼þ |
+| ç¼–å· | åŠŸèƒ½å…¥å£ | è·¯ç”± | å¯¹åº”ç»„ä»¶ |
 |:---|:---|:---|:---|
-| E4a | ¼à¿ØÒÇ±íÅÌ | `/command/monitor` | `src/apps/command/CommandApp`£¨×ÓÂ·ÓÉ£© |
-| E4b | ÈÕÖ¾²é¿´Æ÷ | `/command/logs` | `src/apps/command/CommandApp`£¨×ÓÂ·ÓÉ£© |
-| E4c | ÐÔÄÜÖ¸±ê | `/command/performance` | `src/apps/command/CommandApp`£¨×ÓÂ·ÓÉ£© |
+| E4a | ç›‘æŽ§ä»ªè¡¨ç›˜ | `/command/monitor` | `src/apps/command/CommandApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| E4b | æ—¥å¿—æŸ¥çœ‹å™¨ | `/command/logs` | `src/apps/command/CommandApp`ï¼ˆå­è·¯ç”±ï¼‰ |
+| E4c | æ€§èƒ½æŒ‡æ ‡ | `/command/performance` | `src/apps/command/CommandApp`ï¼ˆå­è·¯ç”±ï¼‰ |
 
-#### E.5 ÆäËû£¨1 ¸öÈë¿Ú£©
+#### E.5 å…¶ä»–ï¼ˆ1 ä¸ªå…¥å£ï¼‰
 
-| ±àºÅ | ¹¦ÄÜÈë¿Ú | Â·ÓÉ | ¶ÔÓ¦×é¼þ |
+| ç¼–å· | åŠŸèƒ½å…¥å£ | è·¯ç”± | å¯¹åº”ç»„ä»¶ |
 |:---|:---|:---|:---|
-| E5 | Mock ²âÊÔÒ³ | `/mock-test` | `src/pages/MockTestPage` |
+| E5 | Mock æµ‹è¯•é¡µ | `/mock-test` | `src/pages/MockTestPage` |
 
-> **Åú´Î E ºÏ¼Æ**£º5£¨Êä³ö²Õ£©+ 2£¨×Ü¿Ø²Õ Hub+¸ù£©+ 10£¨Agent×ÓÏµÍ³£©+ 3£¨ÏµÍ³¼à¿Ø£©+ 1£¨Mock²âÊÔ£©= **21 ¸öÈë¿Ú**
+> **æ‰¹æ¬¡ E åˆè®¡**ï¼š5ï¼ˆè¾“å‡ºèˆ±ï¼‰+ 2ï¼ˆæ€»æŽ§èˆ± Hub+æ ¹ï¼‰+ 10ï¼ˆAgentå­ç³»ç»Ÿï¼‰+ 3ï¼ˆç³»ç»Ÿç›‘æŽ§ï¼‰+ 1ï¼ˆMockæµ‹è¯•ï¼‰= **21 ä¸ªå…¥å£**
 
 ---
 
-## Èý¡¢Éó¼ÆÁ÷³Ì
+## ä¸‰ã€å®¡è®¡æµç¨‹
 
-### 3.1 Îå²ã×·ËÝ±ê×¼
+### 3.1 äº”å±‚è¿½æº¯æ ‡å‡†
 
-| ²ã¼¶ | Ð£ÑéÄÚÈÝ | ÅÐ¶¨±ê×¼ |
+| å±‚çº§ | æ ¡éªŒå†…å®¹ | åˆ¤å®šæ ‡å‡† |
 |:---|:---|:---|
-| **L1 ÓÃ»§½çÃæ²ã** | Ò³ÃæÄÜ·ñÕý³£´ò¿ª£¿UI ÊÇ·ñÍêÕû£¿ÓÐÎÞ loading/error/empty ÈýÖÖ×´Ì¬£¿ | ? ÍêÕû / ?? ²¿·Ö / ? È±Ê§ |
-| **L2 ×´Ì¬¹ÜÀí²ã** | ¶ÔÓ¦µÄ Store ÊÇ·ñ´æÔÚ£¿state/getters/actions ÊÇ·ñÍêÕû£¿ | ? ÍêÕû / ?? ²¿·Ö / ? È±Ê§ |
-| **L3 Êý¾Ý½ÓÈë²ã** | DataBridge ¶ËµãÊÇ·ñ´æÔÚ£¿Êý¾ÝÄÜ·ñÕý³£Á÷Èë Store£¿ | ? ÍêÕû / ?? ²¿·Ö / ? È±Ê§ |
-| **L4 ÒµÎñÂß¼­²ã** | ºËÐÄ¼ÆËã/Ð£Ñé/×ª»»Âß¼­ÊÇ·ñÕýÈ·ÊµÏÖ£¿ | ? ÍêÕû / ?? ²¿·Ö / ? È±Ê§ |
-| **L5 ×¢²á¼¯³É²ã** | Â·ÓÉÊÇ·ñ×¢²á£¿ÊÇ·ñ±»ÆäËûÄ£¿éÕýÈ·ÒýÓÃ£¿Widget/Agent ÊÇ·ñ×¢²á£¿ | ? ÍêÕû / ?? ²¿·Ö / ? È±Ê§ |
+| **L1 ç”¨æˆ·ç•Œé¢å±‚** | é¡µé¢èƒ½å¦æ­£å¸¸æ‰“å¼€ï¼ŸUI æ˜¯å¦å®Œæ•´ï¼Ÿæœ‰æ—  loading/error/empty ä¸‰ç§çŠ¶æ€ï¼Ÿ | ? å®Œæ•´ / ?? éƒ¨åˆ† / ? ç¼ºå¤± |
+| **L2 çŠ¶æ€ç®¡ç†å±‚** | å¯¹åº”çš„ Store æ˜¯å¦å­˜åœ¨ï¼Ÿstate/getters/actions æ˜¯å¦å®Œæ•´ï¼Ÿ | ? å®Œæ•´ / ?? éƒ¨åˆ† / ? ç¼ºå¤± |
+| **L3 æ•°æ®æŽ¥å…¥å±‚** | DataBridge ç«¯ç‚¹æ˜¯å¦å­˜åœ¨ï¼Ÿæ•°æ®èƒ½å¦æ­£å¸¸æµå…¥ Storeï¼Ÿ | ? å®Œæ•´ / ?? éƒ¨åˆ† / ? ç¼ºå¤± |
+| **L4 ä¸šåŠ¡é€»è¾‘å±‚** | æ ¸å¿ƒè®¡ç®—/æ ¡éªŒ/è½¬æ¢é€»è¾‘æ˜¯å¦æ­£ç¡®å®žçŽ°ï¼Ÿ | ? å®Œæ•´ / ?? éƒ¨åˆ† / ? ç¼ºå¤± |
+| **L5 æ³¨å†Œé›†æˆå±‚** | è·¯ç”±æ˜¯å¦æ³¨å†Œï¼Ÿæ˜¯å¦è¢«å…¶ä»–æ¨¡å—æ­£ç¡®å¼•ç”¨ï¼ŸWidget/Agent æ˜¯å¦æ³¨å†Œï¼Ÿ | ? å®Œæ•´ / ?? éƒ¨åˆ† / ? ç¼ºå¤± |
 
-### 3.2 Éó¼Æ·½·¨
+### 3.2 å®¡è®¡æ–¹æ³•
 
 ```text
-¶ÔÓÚÃ¿¸ö¹¦ÄÜÈë¿Ú£º
-  1. L1: ¶ÁÈ¡ UI ×é¼þÔ´Âë ¡ú ¼ì²é JSX ½á¹¹¡¢×´Ì¬¸²¸Ç£¨loading/error/empty£©¡¢½»»¥Âß¼­
-  2. L2: ´Ó UI ×é¼þ×·×Ù useXxxStore() µ÷ÓÃ ¡ú ¼ì²é¶ÔÓ¦ Store µÄ state/actions ¶¨Òå
-  3. L3: ´Ó Store ×·×Ù DataBridge.subscribe() / forward() µ÷ÓÃ ¡ú ¼ì²é¶ËµãÊÇ·ñ´æÔÚ
-  4. L4: ×·×ÙÒµÎñÂß¼­º¯Êý£¨Services/Engines/Utils£©¡ú ¼ì²éÊµÏÖÍêÕûÐÔ
-  5. L5: ¼ì²éÂ·ÓÉ×¢²á±í (routes.ts) ¡ú ¼ì²é Widget ×¢²á±í (widgetRegistry.ts) ¡ú ¼ì²é¿çÄ£¿éÒýÓÃ
+å¯¹äºŽæ¯ä¸ªåŠŸèƒ½å…¥å£ï¼š
+  1. L1: è¯»å– UI ç»„ä»¶æºç  â†’ æ£€æŸ¥ JSX ç»“æž„ã€çŠ¶æ€è¦†ç›–ï¼ˆloading/error/emptyï¼‰ã€äº¤äº’é€»è¾‘
+  2. L2: ä»Ž UI ç»„ä»¶è¿½è¸ª useXxxStore() è°ƒç”¨ â†’ æ£€æŸ¥å¯¹åº” Store çš„ state/actions å®šä¹‰
+  3. L3: ä»Ž Store è¿½è¸ª DataBridge.subscribe() / forward() è°ƒç”¨ â†’ æ£€æŸ¥ç«¯ç‚¹æ˜¯å¦å­˜åœ¨
+  4. L4: è¿½è¸ªä¸šåŠ¡é€»è¾‘å‡½æ•°ï¼ˆServices/Engines/Utilsï¼‰â†’ æ£€æŸ¥å®žçŽ°å®Œæ•´æ€§
+  5. L5: æ£€æŸ¥è·¯ç”±æ³¨å†Œè¡¨ (routes.ts) â†’ æ£€æŸ¥ Widget æ³¨å†Œè¡¨ (widgetRegistry.ts) â†’ æ£€æŸ¥è·¨æ¨¡å—å¼•ç”¨
 ```
 
-### 3.3 Íê³É¶ÈÆÊÃæÍ¼¸ñÊ½
+### 3.3 å®Œæˆåº¦å‰–é¢å›¾æ ¼å¼
 
 ```text
-## ¹¦ÄÜÈë¿Ú£ºXXX
-| ²ã¼¶ | ÄÚÈÝ | ×´Ì¬ | ·¢ÏÖ |
+## åŠŸèƒ½å…¥å£ï¼šXXX
+| å±‚çº§ | å†…å®¹ | çŠ¶æ€ | å‘çŽ° |
 |:---|:---|:---|:---|
-| L1 ½çÃæ | ×é¼þÎÄ¼þ | ?/??/? | ¾ßÌå·¢ÏÖ |
-| L2 ×´Ì¬ | Store Ãû³Æ | ?/??/? | ¾ßÌå·¢ÏÖ |
-| L3 Êý¾Ý | DataBridge ¶Ëµã | ?/??/? | ¾ßÌå·¢ÏÖ |
-| L4 Âß¼­ | ÒµÎñÂß¼­ | ?/??/? | ¾ßÌå·¢ÏÖ |
-| L5 ¼¯³É | Â·ÓÉ/×¢²á | ?/??/? | ¾ßÌå·¢ÏÖ |
+| L1 ç•Œé¢ | ç»„ä»¶æ–‡ä»¶ | ?/??/? | å…·ä½“å‘çŽ° |
+| L2 çŠ¶æ€ | Store åç§° | ?/??/? | å…·ä½“å‘çŽ° |
+| L3 æ•°æ® | DataBridge ç«¯ç‚¹ | ?/??/? | å…·ä½“å‘çŽ° |
+| L4 é€»è¾‘ | ä¸šåŠ¡é€»è¾‘ | ?/??/? | å…·ä½“å‘çŽ° |
+| L5 é›†æˆ | è·¯ç”±/æ³¨å†Œ | ?/??/? | å…·ä½“å‘çŽ° |
 ```
 
 ---
 
-## ËÄ¡¢Åú´Î»®·Ö
+## å››ã€æ‰¹æ¬¡åˆ’åˆ†
 
-| Åú´Î | Èë¿ÚÊý | ¹¦ÄÜÈë¿Ú | Ô¤¼Æ¹¤×÷Á¿ |
+| æ‰¹æ¬¡ | å…¥å£æ•° | åŠŸèƒ½å…¥å£ | é¢„è®¡å·¥ä½œé‡ |
 |:---|:---|:---|:---|
-| **Åú´Î A** | 2 | Ê×Ò³ + ¼ÝÊ»²Õ£¨21 Widgets£© | ×î´ó£¨¼ÝÊ»²Õº¬ 21 ¸ö×ÓÄ£¿é£© |
-| **Åú´Î B** | 9 | ÊäÈë²ÕÈ«²¿×ÓÒ³Ãæ | ×î´ó |
-| **Åú´Î C** | 12 | ·ÖÎö²ÕÈ«²¿×ÓÒ³Ãæ | ×î´ó |
-| **Åú´Î D** | 4 | ½»Ò×²ÕÈ«²¿×ÓÒ³Ãæ | ÖÐµÈ |
-| **Åú´Î E** | 21 | Êä³ö²Õ + ×Ü¿Ø²Õ£¨º¬ Agent ×ÓÏµÍ³ + ÏµÍ³¼à¿Ø£©+ Mock ²âÊÔÒ³ | ×î´ó |
+| **æ‰¹æ¬¡ A** | 2 | é¦–é¡µ + é©¾é©¶èˆ±ï¼ˆ21 Widgetsï¼‰ | æœ€å¤§ï¼ˆé©¾é©¶èˆ±å« 21 ä¸ªå­æ¨¡å—ï¼‰ |
+| **æ‰¹æ¬¡ B** | 9 | è¾“å…¥èˆ±å…¨éƒ¨å­é¡µé¢ | æœ€å¤§ |
+| **æ‰¹æ¬¡ C** | 12 | åˆ†æžèˆ±å…¨éƒ¨å­é¡µé¢ | æœ€å¤§ |
+| **æ‰¹æ¬¡ D** | 4 | äº¤æ˜“èˆ±å…¨éƒ¨å­é¡µé¢ | ä¸­ç­‰ |
+| **æ‰¹æ¬¡ E** | 21 | è¾“å‡ºèˆ± + æ€»æŽ§èˆ±ï¼ˆå« Agent å­ç³»ç»Ÿ + ç³»ç»Ÿç›‘æŽ§ï¼‰+ Mock æµ‹è¯•é¡µ | æœ€å¤§ |
 
 ---
 
-## Îå¡¢Êä³öÎï
+## äº”ã€è¾“å‡ºç‰©
 
-| ÐòºÅ | ½»¸¶Îï | Â·¾¶ | ËµÃ÷ |
+| åºå· | äº¤ä»˜ç‰© | è·¯å¾„ | è¯´æ˜Ž |
 |:---|:---|:---|:---|
-| 1 | Ö´ÐÐ¼Æ»® | `./quality-audit-plan.md` | ±¾ÎÄµµ |
-| 2 | Íê³É¶ÈÆÊÃæÍ¼ | `../../reference/completeness-profile.md` | ËùÓÐÄ£¿éµÄÎå²ãÆÊÃæÍ¼»ã×Ü |
-| 3 | ÐÞ¸´ÐÐ¶¯Çåµ¥ | `../../reference/action-list.md` | °´ P0/P1/P2 ÅÅÐòµÄÐÞ¸´½¨Òé |
+| 1 | æ‰§è¡Œè®¡åˆ’ | `./quality-audit-plan.md` | æœ¬æ–‡æ¡£ |
+| 2 | å®Œæˆåº¦å‰–é¢å›¾ | `../../reference/completeness-profile.md` | æ‰€æœ‰æ¨¡å—çš„äº”å±‚å‰–é¢å›¾æ±‡æ€» |
+| 3 | ä¿®å¤è¡ŒåŠ¨æ¸…å• | `../../reference/action-list.md` | æŒ‰ P0/P1/P2 æŽ’åºçš„ä¿®å¤å»ºè®® |
 
 ---
 
-## Áù¡¢µ±Ç°×´Ì¬
+## å…­ã€å½“å‰çŠ¶æ€
 
-| ½×¶Î | ×´Ì¬ | Íê³ÉÈÕÆÚ |
+| é˜¶æ®µ | çŠ¶æ€ | å®Œæˆæ—¥æœŸ |
 |:---|:---|:---|
-| Ö´ÐÐ¼Æ»® | ? ÒÑÉú³É | 2026-06-27 |
-| ÓÃ»§È·ÈÏ | ? ÒÑÈ·ÈÏ | 2026-06-27 |
-| Åú´Î A Éó¼Æ | ? ÒÑÍê³É | 2026-07-05 |
-| Åú´Î B Éó¼Æ | ? ÒÑÍê³É | 2026-07-05 |
-| Åú´Î C Éó¼Æ | ? ÒÑÍê³É | 2026-07-05 |
-| Åú´Î D Éó¼Æ | ? ÒÑÍê³É | 2026-07-05 |
-| Åú´Î E Éó¼Æ | ? ÒÑÍê³É | 2026-07-05 |
-| Íê³É¶ÈÆÊÃæÍ¼ | ? ÒÑÉú³É | 2026-07-05 |
-| ÐÞ¸´ÐÐ¶¯Çåµ¥ | ? ÒÑÉú³É | 2026-07-05 |
+| æ‰§è¡Œè®¡åˆ’ | ? å·²ç”Ÿæˆ | 2026-06-27 |
+| ç”¨æˆ·ç¡®è®¤ | ? å·²ç¡®è®¤ | 2026-06-27 |
+| æ‰¹æ¬¡ A å®¡è®¡ | ? å·²å®Œæˆ | 2026-07-05 |
+| æ‰¹æ¬¡ B å®¡è®¡ | ? å·²å®Œæˆ | 2026-07-05 |
+| æ‰¹æ¬¡ C å®¡è®¡ | ? å·²å®Œæˆ | 2026-07-05 |
+| æ‰¹æ¬¡ D å®¡è®¡ | ? å·²å®Œæˆ | 2026-07-05 |
+| æ‰¹æ¬¡ E å®¡è®¡ | ? å·²å®Œæˆ | 2026-07-05 |
+| å®Œæˆåº¦å‰–é¢å›¾ | ? å·²ç”Ÿæˆ | 2026-07-05 |
+| ä¿®å¤è¡ŒåŠ¨æ¸…å• | ? å·²ç”Ÿæˆ | 2026-07-05 |
 
-**Éó¼Æ½á¹ûÕªÒª**£º
-- Éó¼ÆÈë¿Ú£º48 ¸ö£¨Åú´Î A 2 + Åú´Î B 9 + Åú´Î C 12 + Åú´Î D 4 + Åú´Î E 21£©
-- ÎÊÌâ×ÜÊý£º35 Ïî£¨P0=7 / P1=13 / P2=15£©
-- ÕûÌå½¡¿µÂÊ£º39.6%£¨Îå²ãÈ«Í¨Èë¿ÚÕ¼±È£©
-- ×î±¡Èõ²ã£ºL3 Êý¾Ý½ÓÈë²ã£¨60.4%£©
-- ×î¼ÑÅú´Î£ºÅú´Î E£¨½¡¿µÂÊ 61.9%£©
-- ×î²îÅú´Î£ºÅú´Î D£¨½¡¿µÂÊ 0%£©¡¢Åú´Î B£¨½¡¿µÂÊ 11.1%£©
+**å®¡è®¡ç»“æžœæ‘˜è¦**ï¼š
+- å®¡è®¡å…¥å£ï¼š48 ä¸ªï¼ˆæ‰¹æ¬¡ A 2 + æ‰¹æ¬¡ B 9 + æ‰¹æ¬¡ C 12 + æ‰¹æ¬¡ D 4 + æ‰¹æ¬¡ E 21ï¼‰
+- é—®é¢˜æ€»æ•°ï¼š35 é¡¹ï¼ˆP0=7 / P1=13 / P2=15ï¼‰
+- æ•´ä½“å¥åº·çŽ‡ï¼š39.6%ï¼ˆäº”å±‚å…¨é€šå…¥å£å æ¯”ï¼‰
+- æœ€è–„å¼±å±‚ï¼šL3 æ•°æ®æŽ¥å…¥å±‚ï¼ˆ60.4%ï¼‰
+- æœ€ä½³æ‰¹æ¬¡ï¼šæ‰¹æ¬¡ Eï¼ˆå¥åº·çŽ‡ 61.9%ï¼‰
+- æœ€å·®æ‰¹æ¬¡ï¼šæ‰¹æ¬¡ Dï¼ˆå¥åº·çŽ‡ 0%ï¼‰ã€æ‰¹æ¬¡ Bï¼ˆå¥åº·çŽ‡ 11.1%ï¼‰
 
-> ÏêÏ¸½á¹û¼û `../../reference/completeness-profile.md`£¨Íê³É¶ÈÆÊÃæÍ¼£©ºÍ `../../reference/action-list.md`£¨ÐÞ¸´ÐÐ¶¯Çåµ¥£©
+> è¯¦ç»†ç»“æžœè§ `../../reference/completeness-profile.md`ï¼ˆå®Œæˆåº¦å‰–é¢å›¾ï¼‰å’Œ `../../reference/action-list.md`ï¼ˆä¿®å¤è¡ŒåŠ¨æ¸…å•ï¼‰
 
 ---
 
-## Æß¡¢±ä¸üÈÕÖ¾
+## ä¸ƒã€å˜æ›´æ—¥å¿—
 
-| ÈÕÆÚ | °æ±¾ | ±ä¸üÄÚÈÝ | ±ä¸üÈË |
+| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´å†…å®¹ | å˜æ›´äºº |
 |:---|:---|:---|:---|
-| 2026-07-05 | v1.1.0 | È«Á¿ÎåÅú´ÎÉó¼ÆÍê³É£»¹¦ÄÜÈë¿Ú 25¡ú48£¨ÊäÈë²Õ+3¡¢·ÖÎö²Õ+3¡¢½»Ò×²Õ+0¡¢×Ü¿Ø²Õ+11¡¢Êä³ö²Õ+1¡¢ÆäËû+2£©£»Widget 12¡ú21£»ËùÓÐÅú´Î×´Ì¬±ê¼ÇÎªÒÑÍê³É£»ÐÂÔöÉó¼Æ½á¹ûÕªÒª£»Éú³ÉÅäÌ×Íê³É¶ÈÆÊÃæÍ¼ÓëÐÞ¸´ÐÐ¶¯Çåµ¥ | Quality Auditor |
-| 2026-06-27 | v1.0.0 | ³õÊ¼´´½¨£ºÉó¼ÆÖ´ÐÐ¼Æ»®£¬¸²¸Ç 25 ¸ö¹¦ÄÜÈë¿Ú£¬5 ¸öÅú´Î | Quality Auditor |
+| 2026-07-05 | v1.1.0 | å…¨é‡äº”æ‰¹æ¬¡å®¡è®¡å®Œæˆï¼›åŠŸèƒ½å…¥å£ 25â†’48ï¼ˆè¾“å…¥èˆ±+3ã€åˆ†æžèˆ±+3ã€äº¤æ˜“èˆ±+0ã€æ€»æŽ§èˆ±+11ã€è¾“å‡ºèˆ±+1ã€å…¶ä»–+2ï¼‰ï¼›Widget 12â†’21ï¼›æ‰€æœ‰æ‰¹æ¬¡çŠ¶æ€æ ‡è®°ä¸ºå·²å®Œæˆï¼›æ–°å¢žå®¡è®¡ç»“æžœæ‘˜è¦ï¼›ç”Ÿæˆé…å¥—å®Œæˆåº¦å‰–é¢å›¾ä¸Žä¿®å¤è¡ŒåŠ¨æ¸…å• | Quality Auditor |
+| 2026-06-27 | v1.0.0 | åˆå§‹åˆ›å»ºï¼šå®¡è®¡æ‰§è¡Œè®¡åˆ’ï¼Œè¦†ç›– 25 ä¸ªåŠŸèƒ½å…¥å£ï¼Œ5 ä¸ªæ‰¹æ¬¡ | Quality Auditor |

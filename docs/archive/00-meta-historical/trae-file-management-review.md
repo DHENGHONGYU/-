@@ -1,7 +1,7 @@
 ---
 title: trae-file-management-review
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 referenced_by: [V9-DOC-META-000, docs/archive/00-meta-historical/FILE-MANAGEMENT-GUIDE-RCA-report.md, docs/archive/00-meta-historical/FILE-MANAGEMENT-GUIDE-task-list.md, V9-DOC-PROJ-176]
 ---
@@ -23,7 +23,7 @@ referenced_by: [V9-DOC-META-000, docs/archive/00-meta-historical/FILE-MANAGEMENT
 > 1. **公共目录单点收敛（SSOT）**：已有 `utils/`/`lib/`/`components/`/`hooks/` 则禁止另起炉灶；业务源码严格归入 `src/`。
 > 2. **归档标准 / 禁止散落根目录**：脚本→`scripts/` 或 `tools/`；媒体→`assets/` 或 `public/`；文档→`docs/`；源码→`src/`。
 > 3. **命名规范**：文件/目录名全小写，推荐 kebab-case（连字符）。
-> 4. **3 文件底线（AI-Native）**：只保留 `.trae/skills` 或 `rules`（技术宪法）+ `../archive/feature-xxx-template.md`（Living PRD 唯一真相源）+ `./GOVERNANCE.md`（记录"为什么选 A 不选 B"）；中间文档不堆项目内。
+> 4. **3 文件底线（AI-Native）**：只保留 `.trae/skills` 或 `rules`（技术宪法）+ `../feature-xxx-template.md`（Living PRD 唯一真相源）+ `../../00-meta/GOVERNANCE.md`（记录"为什么选 A 不选 B"）；中间文档不堆项目内。
 > 5. **模块化 + 文件元信息 + 规范注释**；先输出目录结构树再写码。
 
 ---
@@ -68,7 +68,7 @@ referenced_by: [V9-DOC-META-000, docs/archive/00-meta-historical/FILE-MANAGEMENT
 | 孤儿文档 | 40 | 孤儿问题真实；但 `docs/` 根 8 个散落 `.md` + 根级 `file-management-system/`(502) + `articles/`(29) **未被计入** | 🔴 例外（低估） | 孤儿口径过窄（仅 docs 内），漏算根级散落 |
 | 目录健康 | 30 | 2 空目录（`design/`、`project-management/`）✅；3 错位含 `architecture/` vs `architecture-radar-v2/` 拆分、`file-management-system/` 根级 | ✅ 确认 | — |
 | 自动产物 | 50 | `docs/reports/` = 1414 文件 / 90 MB，gitignore 仅覆盖 `audit/*.json` | 🔴 例外（低估） | 这是**头号膨胀源**，33.1% 表述偏轻 |
-| 令牌指南 | 50 | `../reference/design-token-mapping.md` 存在（无场景 cookbook） | 🟡 偏差 | 非"全缺"，属"有映射无菜谱" |
+| 令牌指南 | 50 | `../../reference/design-token-mapping.md` 存在（无场景 cookbook） | 🟡 偏差 | 非"全缺"，属"有映射无菜谱" |
 | 过程产物 | 40 | `drafts/`(9)+`plans/`(4)+`blueprints/`(1)+`.trae/logs/`+`lint-*.txt` 均未忽略 | 🔴 例外（外溢） | 过程产物还外溢到 `.trae/` 日志/ lint 输出 |
 | 数据一致 | 20 | 10 个 `DATA_DEFINITION*`，但**仅 3 个同名真重复**，7 个为独立域定义 | 🔴 例外（误报） | "10 份重复"应改为"3 真重复 + 7 按域拆分（命名不一致）" |
 | 归档状态 | 40 | 9 份 DEPRECATED，8 散落活跃目录，1 在 `07-archive/` | ✅ 确认 | — |
@@ -121,8 +121,8 @@ referenced_by: [V9-DOC-META-000, docs/archive/00-meta-historical/FILE-MANAGEMENT
 - **匹配度：50** —— 文档侧过宽过深，且存在死目录与割裂。
 
 ### D. 文档分类（Living PRD / DECISIONS / 最小中间文档 / AI 规则）
-- **TRAE 规则**：`../archive/feature-xxx-template.md` 作唯一需求源；`./GOVERNANCE.md` 记"为什么选 A 不选 B"；中间文档不堆项目内；AI 规则入 `.trae/skills` 或 `rules`。
-- **V9 现状**：已有**八类文档归类体系**（超 TRAE 最小主义，适合规模）✅；`.trae/skills/v9-gatekeeper` + `rules` + MCP 已落地 ✅。但 **无单一 Living PRD / 无 `./GOVERNANCE.md`（9 份 ADR 式文档散落无主索引）** ❌；**`drafts/`(9)/`plans/`(4)/`blueprints/`(1) 囤积中间文档** ❌（违背 3 文件底线）；`docs/` 缺主控索引 ❌。
+- **TRAE 规则**：`../feature-xxx-template.md` 作唯一需求源；`../../00-meta/GOVERNANCE.md` 记"为什么选 A 不选 B"；中间文档不堆项目内；AI 规则入 `.trae/skills` 或 `rules`。
+- **V9 现状**：已有**八类文档归类体系**（超 TRAE 最小主义，适合规模）✅；`.trae/skills/v9-gatekeeper` + `rules` + MCP 已落地 ✅。但 **无单一 Living PRD / 无 `../../00-meta/GOVERNANCE.md`（9 份 ADR 式文档散落无主索引）** ❌；**`drafts/`(9)/`plans/`(4)/`blueprints/`(1) 囤积中间文档** ❌（违背 3 文件底线）；`docs/` 缺主控索引 ❌。
 - **匹配度：60** —— 分类框架与 AI 规则好，但缺 PRD/DECISIONS 主轴、囤中间文档、无索引。
 
 ### E. 开发习惯一致性（已用 TRAE 但结构未遵从）
@@ -154,7 +154,7 @@ referenced_by: [V9-DOC-META-000, docs/archive/00-meta-historical/FILE-MANAGEMENT
 2. 🔴 `docs/reports/` 90 MB / 1414 文件未隔离，将随提交污染仓库。
 3. 🔴 根级散落（`_*.cjs`×4、`.zip`×2、`articles/`×29）且 `.gitignore` 未覆盖。
 4. 🟡 `DATA_DEFINITION` 重复口径误报（3 真重复非 10）；令牌/索引/AI 缓存三项得分口径过严。
-5. 🟡 缺 `docs/README.md` 主控索引、`./GOVERNANCE.md`、单一 Living PRD；`drafts/plans/blueprints` 囤积中间文档。
+5. 🟡 缺 `docs/README.md` 主控索引、`../../00-meta/GOVERNANCE.md`、单一 Living PRD；`drafts/plans/blueprints` 囤积中间文档。
 6. 🟡 `architecture/` 与 `architecture-radar-v2/` 割裂；2 个空目录；`docs/` 根 8 个散落 `.md`。
 
 ---
@@ -181,7 +181,7 @@ referenced_by: [V9-DOC-META-000, docs/archive/00-meta-historical/FILE-MANAGEMENT
 ### P2（中优，持续）
 | 动作 | 对应 TRAE 规则 | 文件/目录 | 验收 |
 |------|----------------|-----------|------|
-| 建 `./GOVERNANCE.md`（收口 9 份 ADR 式文档）+ 单一 Living PRD 索引（指向 `01-requirements/`） | 3 文件底线 | 根级 / `../reference/README.md` | 决策有主索引、需求有唯一源 |
+| 建 `../../00-meta/GOVERNANCE.md`（收口 9 份 ADR 式文档）+ 单一 Living PRD 索引（指向 `01-requirements/`） | 3 文件底线 | 根级 / `../reference/README.md` | 决策有主索引、需求有唯一源 |
 | 设节奏将 `drafts/plans/blueprints` 归档进 `07-archive/` | 最小中间文档 | `docs/` | 中间文档不长期堆项目内 |
 | 正式将 `public/ai-memory-index.json` 立为 AI 文档索引（命名可加 `.ai-index` 软链），关闭"AI 缓存 0%"缺口 | AI 索引 | `public/` | AI 检索有官方索引 |
 

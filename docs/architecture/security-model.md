@@ -438,7 +438,7 @@ npm run test -- --run
 | 存储管理 | `src/lib/localStorageManager.ts` | LocalStorageManager + setEncrypted |
 | MCP ACL 矩阵 | `src/config/mcpAclMatrix.ts` | MCP_ACL_MATRIX |
 | MCP ACL 拦截器 | `src/mcp/core/mcpAclInterceptor.ts` | mcpAclInterceptor |
-| MCP 开发指南 | `docs/guides/mcp-acl-guide.md` | 双端校验 + 角色决策树 |
+| MCP 开发指南 | `../how-to/mcp-acl-guide.md` | 双端校验 + 角色决策树 |
 | AGENTS.md 安全约束 | `AGENTS.md` §三/六/八 | 代码风格 + LLM 约束 + DB 版本 |
 
 ---

@@ -76,7 +76,7 @@
 #### 根因 #6：Tabs 组件懒渲染导致元素不可见
 
 - **现象**：交易表格测试失败，`screen.getByText('买入')` 抛出 `Unable to find an element`。
-- **本质**：`src/components/ui/Tabs.tsx` 的 `TabsContent` 实现懒渲染——当 `activeValue !== value` 时 `return null`，不渲染非活跃 tab 内容。BacktestPage 默认 `activeTab='results'`，导致 `'trades'` tab 内的交易表格不渲染。
+- **本质**：`src/components/molecules/Tabs.tsx` 的 `TabsContent` 实现懒渲染——当 `activeValue !== value` 时 `return null`，不渲染非活跃 tab 内容。BacktestPage 默认 `activeTab='results'`，导致 `'trades'` tab 内的交易表格不渲染。
 - **影响测试**：3 个交易表格测试（混合买卖色、盈利 pnl 色、亏损 pnl 色）。
 
 #### 根因 #7：SVG 选择器误匹配 lucide 图标 path

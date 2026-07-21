@@ -279,7 +279,7 @@ import { COLOR_TOKENS } from '@/constants/theme.tokens'
 - 需要特定色阶时使用 `COLOR_SHADES` 或 `twText/twBg/twBorder`。
 - 暗色模式、悬停、Focus、渐变、SVG fill 使用 `DARK / HOVER / FOCUS / FILL / GRADIENT`。
 - 新组件优先使用 `SEMANTIC_COLOR_ROLES`（主题感知）。
-- 不确定时参考 `docs/design-token-mapping.md`。
+- 不确定时参考 `./design-token-mapping.md`。
 ```
 
 ---
@@ -299,7 +299,7 @@ import { COLOR_TOKENS } from '@/constants/theme.tokens'
 - [ ] 字号、字重、行高、间距、圆角、图标尺寸均走 `THEME_TOKENS`；
 - [ ] 运行 `npm run lint:colors` 无 error；
 - [ ] 运行 `npm run audit:tokens` 无违规；
-- [ ] 不确定时查看 `docs/design-token-mapping.md`。
+- [ ] 不确定时查看 `./design-token-mapping.md`。
 
 ---
 
@@ -313,5 +313,5 @@ import { COLOR_TOKENS } from '@/constants/theme.tokens'
 - `src/constants/theme/theme.tokens.stock.ts` — L5 股票颜色
 - `src/constants/theme/theme.tokens.design.ts` — L6 设计系统
 - `src/config/chartColors.ts` — 图表与业务调色板
-- `docs/ui-migration-checklist.md` — UI 迁移检查清单
+- `./ui-migration-checklist.md` — UI 迁移检查清单
 - `AGENTS.md` §3.5 — 颜色令牌规范

@@ -251,7 +251,7 @@ get(key: string): T | undefined {
 
 ### ✅ 7. 分层审计工具自动化检查
 
-**文件**: `scripts/audit-layer-calls.ts` (299 行)
+**文件**: `scripts/audit/audit-layer-calls.ts` (299 行)
 
 **符合 MCP 的设计**:
 - ✅ **静态分析**: 通过正则匹配检测跨层调用违规

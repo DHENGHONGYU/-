@@ -1,12 +1,12 @@
 ---
-title: V9 Êı¾İ¹ØÏµÀ¶Í¼ÈÎÎñ¸ú×Ù¼Æ»®
+title: V9 æ•°æ®å…³ç³»è“å›¾ä»»åŠ¡è·Ÿè¸ªè®¡åˆ’
 type: reports
 domain: data
 phase: retrospective
 tier: reference
 status: active
 maintainer: V9 Architecture Team
-summary: "Goal: È·±£ `docs/blueprints/` ÖĞµÄÊı¾İ¹ØÏµÓëÊ±¼ä¹ØÏµÀ¶Í¼ÓëÔ´Âë³ÖĞøÒ»ÖÂ£¬²¢½«ÆäĞ£ÑéÄÉÈëÈÕ³£¿ª·¢Á÷³Ì¡£"
+summary: "Goal: ç¡®ä¿ `docs/blueprints/` ä¸­çš„æ•°æ®å…³ç³»ä¸æ—¶é—´å…³ç³»è“å›¾ä¸æºç æŒç»­ä¸€è‡´ï¼Œå¹¶å°†å…¶æ ¡éªŒçº³å…¥æ—¥å¸¸å¼€å‘æµç¨‹ã€‚"
 tags: [data, spec, report, checklist, data-definition, store]
 version: v1.3.0
 last_updated: 2026-06-30
@@ -14,98 +14,98 @@ code_version: 2.0.0
 change_log: 
 ---
 
-# V9 Êı¾İ¹ØÏµÀ¶Í¼ÈÎÎñ¸ú×Ù¼Æ»®
+# V9 æ•°æ®å…³ç³»è“å›¾ä»»åŠ¡è·Ÿè¸ªè®¡åˆ’
 
-> **Goal:** È·±£ `docs/blueprints/` ÖĞµÄÊı¾İ¹ØÏµÓëÊ±¼ä¹ØÏµÀ¶Í¼ÓëÔ´Âë³ÖĞøÒ»ÖÂ£¬²¢½«ÆäĞ£ÑéÄÉÈëÈÕ³£¿ª·¢Á÷³Ì¡£
+> **Goal:** ç¡®ä¿ `docs/blueprints/` ä¸­çš„æ•°æ®å…³ç³»ä¸æ—¶é—´å…³ç³»è“å›¾ä¸æºç æŒç»­ä¸€è‡´ï¼Œå¹¶å°†å…¶æ ¡éªŒçº³å…¥æ—¥å¸¸å¼€å‘æµç¨‹ã€‚
 
 ---
 
-## ÈÎÎñ×ÜÀÀ
+## ä»»åŠ¡æ€»è§ˆ
 
-| Åú´Î | ÓÅÏÈ¼¶ | ÈÎÎñ | ×´Ì¬ | ¸ºÔğÈË | ÑéÊÕ±ê×¼ |
+| æ‰¹æ¬¡ | ä¼˜å…ˆçº§ | ä»»åŠ¡ | çŠ¶æ€ | è´Ÿè´£äºº | éªŒæ”¶æ ‡å‡† |
 |------|--------|------|------|--------|----------|
-| A | P0 | ĞŞ¸´À¶Í¼×ÔÉó·¢ÏÖµÄÔ´Âë gap | ? ÒÑÍê³É | V9 Team | `validate:blueprint` ÎŞĞÂÔöÈ±Ê§£»ÎÄµµÓëÔ´ÂëÒ»ÖÂ |
-| B | P1 | ½«À¶Í¼Ğ£ÑéÄÉÈë CI / ÖÊÁ¿ÃÅ½û | ? ÒÑÍê³É£¨B-1 ÖÊÁ¿ÃÅ½ûÒÑ×¢²á£»B-2 ´ı CI Ìõ¼ş´¥·¢£© | V9 Team | `../../reference/09-quality-gates.md` ÒÑĞÂÔö¡¸Êı¾İÀ¶Í¼Ò»ÖÂĞÔ¡¹ÃÅ½û£»CI ¹¤×÷Á÷´ı `.github/workflows/ci.yml` ÆôÓÃ |
-| C | P1 | ÎªÊı¾İ¹ÜÏßÌí¼Ó freshness ÔËĞĞÊ±Ğ£Ñé | ? ÒÑÍê³É | V9 Team | V6/²ßÂÔ/ĞÅºÅºËĞÄÈë¿ÚÒÑ½ÓÈë `dataFreshnessGuard`£»À¶Í¼Ê±¼äÏßÒÑ¼ÇÂ¼Ğ£Ñé×´Ì¬ |
-| D | P2 | ½¨Á¢À¶Í¼¶¨ÆÚÎ¬»¤»úÖÆ | ? ÒÑÍê³É£¨D-1 ¼ì²éµ¥ÂäµØ£»D-2 TRAE Schedule ÒÑÆôÓÃ£¬Ã¿ÖÜÒ» 09:00 ±±¾©Ê±¼ä×Ô¶¯Ö´ĞĞ£© | V9 Team | Ã¿ÖÜÉ¨ÃèÒ»´Î Store/ÀàĞÍ/ÎÄµµÒ»ÖÂĞÔ |
-| E | P1 | v15/v16 ĞÂÔö Store À¶Í¼²¹È« | ? ÒÑÍê³É£¨E-1 À¶Í¼ÎÄµµ / E-2 Ğ´ÈëÄ£¿é / E-3 Freshness Ğ£ÑéÈ«²¿±Õ»·£© | V9 Team | 4 ¸öĞÂ Store ÊµÌå/Ë÷Òı/¹ØÏµ/Ê±ĞòÈ«²¿µÇ¼Ç£»4 ¸ö Service + ACL + 10 Ìõ Freshness ¹æÔò + 67 ²âÊÔÓÃÀı |
+| A | P0 | ä¿®å¤è“å›¾è‡ªå®¡å‘ç°çš„æºç  gap | ? å·²å®Œæˆ | V9 Team | `validate:blueprint` æ— æ–°å¢ç¼ºå¤±ï¼›æ–‡æ¡£ä¸æºç ä¸€è‡´ |
+| B | P1 | å°†è“å›¾æ ¡éªŒçº³å…¥ CI / è´¨é‡é—¨ç¦ | ? å·²å®Œæˆï¼ˆB-1 è´¨é‡é—¨ç¦å·²æ³¨å†Œï¼›B-2 å¾… CI æ¡ä»¶è§¦å‘ï¼‰ | V9 Team | `../../reference/09-quality-gates.md` å·²æ–°å¢ã€Œæ•°æ®è“å›¾ä¸€è‡´æ€§ã€é—¨ç¦ï¼›CI å·¥ä½œæµå¾… `.github/workflows/ci.yml` å¯ç”¨ |
+| C | P1 | ä¸ºæ•°æ®ç®¡çº¿æ·»åŠ  freshness è¿è¡Œæ—¶æ ¡éªŒ | ? å·²å®Œæˆ | V9 Team | V6/ç­–ç•¥/ä¿¡å·æ ¸å¿ƒå…¥å£å·²æ¥å…¥ `dataFreshnessGuard`ï¼›è“å›¾æ—¶é—´çº¿å·²è®°å½•æ ¡éªŒçŠ¶æ€ |
+| D | P2 | å»ºç«‹è“å›¾å®šæœŸç»´æŠ¤æœºåˆ¶ | ? å·²å®Œæˆï¼ˆD-1 æ£€æŸ¥å•è½åœ°ï¼›D-2 TRAE Schedule å·²å¯ç”¨ï¼Œæ¯å‘¨ä¸€ 09:00 åŒ—äº¬æ—¶é—´è‡ªåŠ¨æ‰§è¡Œï¼‰ | V9 Team | æ¯å‘¨æ‰«æä¸€æ¬¡ Store/ç±»å‹/æ–‡æ¡£ä¸€è‡´æ€§ |
+| E | P1 | v15/v16 æ–°å¢ Store è“å›¾è¡¥å…¨ | ? å·²å®Œæˆï¼ˆE-1 è“å›¾æ–‡æ¡£ / E-2 å†™å…¥æ¨¡å— / E-3 Freshness æ ¡éªŒå…¨éƒ¨é—­ç¯ï¼‰ | V9 Team | 4 ä¸ªæ–° Store å®ä½“/ç´¢å¼•/å…³ç³»/æ—¶åºå…¨éƒ¨ç™»è®°ï¼›4 ä¸ª Service + ACL + 10 æ¡ Freshness è§„åˆ™ + 67 æµ‹è¯•ç”¨ä¾‹ |
 
 ---
 
-## Åú´Î A£ºĞŞ¸´Ô´Âë gap£¨P0£©
+## æ‰¹æ¬¡ Aï¼šä¿®å¤æºç  gapï¼ˆP0ï¼‰
 
-### A-1: ²¹Æë `NewsBookmark` TypeScript ½Ó¿Ú
+### A-1: è¡¥é½ `NewsBookmark` TypeScript æ¥å£
 
-**ÎÊÌâ£º** `STORE_NAME.newsBookmarks` ÒÑ´æÔÚ£¬µ« `src/data/types.ts` ÖĞÈ±ÉÙ `NewsBookmark` ½Ó¿Ú£¬µ¼ÖÂÀ¶Í¼½Ó¿ÚÓ³Éä²»ÍêÕû¡£
+**é—®é¢˜ï¼š** `STORE_NAME.newsBookmarks` å·²å­˜åœ¨ï¼Œä½† `src/data/types.ts` ä¸­ç¼ºå°‘ `NewsBookmark` æ¥å£ï¼Œå¯¼è‡´è“å›¾æ¥å£æ˜ å°„ä¸å®Œæ•´ã€‚
 
-**Ô´ÂëÏÖ×´£º**
-- `src/store/newsStore.ts:24` ÒÑ¶¨Òå¾Ö²¿ `NewsBookmarkRecord { id: string; bookmarkedAt: number }`
-- `src/data/db.ts:263` ¶¨Òå store keyPath Îª `id`£¬Ë÷Òı×Ö¶ÎÎª `bookmarkedAt`
+**æºç ç°çŠ¶ï¼š**
+- `src/store/newsStore.ts:24` å·²å®šä¹‰å±€éƒ¨ `NewsBookmarkRecord { id: string; bookmarkedAt: number }`
+- `src/data/db.ts:263` å®šä¹‰ store keyPath ä¸º `id`ï¼Œç´¢å¼•å­—æ®µä¸º `bookmarkedAt`
 
-**Ö´ĞĞ²½Öè£º**
-1. ÔÚ `src/data/types.ts` ĞÂÔö `NewsBookmark` ½Ó¿Ú
-2. ÔÚ `src/store/analysisNewsStore.ts` ÖĞ½« `NewsBookmarkRecord` Ìæ»»Îª `import type { NewsBookmark }`
-3. ¸üĞÂ `src/blueprints/` ½« `NewsBookmark` ¼ÓÈë entityStoreMap
-4. ÔËĞĞ²âÊÔ£º`npx vitest run src/blueprints/__tests__/dataRelationship.test.ts`
-5. ÔËĞĞĞ£Ñé£º`npm run validate:blueprint`
-6. Ìá½»
+**æ‰§è¡Œæ­¥éª¤ï¼š**
+1. åœ¨ `src/data/types.ts` æ–°å¢ `NewsBookmark` æ¥å£
+2. åœ¨ `src/store/analysisNewsStore.ts` ä¸­å°† `NewsBookmarkRecord` æ›¿æ¢ä¸º `import type { NewsBookmark }`
+3. æ›´æ–° `src/blueprints/` å°† `NewsBookmark` åŠ å…¥ entityStoreMap
+4. è¿è¡Œæµ‹è¯•ï¼š`npx vitest run src/blueprints/__tests__/dataRelationship.test.ts`
+5. è¿è¡Œæ ¡éªŒï¼š`npm run validate:blueprint`
+6. æäº¤
 
-**ÑéÊÕ±ê×¼£º**
-- `src/data/types.ts` µ¼³ö `NewsBookmark`
-- `newsStore.ts` ÎŞ¾Ö²¿ÖØ¸´ÀàĞÍ
-- À¶Í¼²âÊÔÍ¨¹ı
+**éªŒæ”¶æ ‡å‡†ï¼š**
+- `src/data/types.ts` å¯¼å‡º `NewsBookmark`
+- `newsStore.ts` æ— å±€éƒ¨é‡å¤ç±»å‹
+- è“å›¾æµ‹è¯•é€šè¿‡
 
-### A-2: Í¬²½ DB_VERSION ±ê×¢
+### A-2: åŒæ­¥ DB_VERSION æ ‡æ³¨
 
-**ÎÊÌâ£º** ÔçÆÚ `../../reference/v9-Êı¾İÑªÔµ×·×Ù.md` ±ê×¢ `DB_VERSION = 14`£¬¶ø `src/config/dbConfig.ts` Êµ¼ÊÎª `14`£¨v15/v16 Éı¼¶Ç°£©¡£
+**é—®é¢˜ï¼š** æ—©æœŸ `../../reference/v9-æ•°æ®è¡€ç¼˜è¿½è¸ª.md` æ ‡æ³¨ `DB_VERSION = 14`ï¼Œè€Œ `src/config/dbConfig.ts` å®é™…ä¸º `14`ï¼ˆv15/v16 å‡çº§å‰ï¼‰ã€‚
 
-**¾ö²ß£º** ÒÔÔ´ÂëÎª×¼£¬ĞŞÕıÎÄµµ±ê×¢¡£½öÔÚÓĞ schema ±ä¸üÊ±°´¹æ·¶µİÔö DB_VERSION£»µ±Ç°ÒÑÎª v16£¨º¬ v15 execution_logs/missing_reports Óë v16 executionPlans/portfolios£©¡£
+**å†³ç­–ï¼š** ä»¥æºç ä¸ºå‡†ï¼Œä¿®æ­£æ–‡æ¡£æ ‡æ³¨ã€‚ä»…åœ¨æœ‰ schema å˜æ›´æ—¶æŒ‰è§„èŒƒé€’å¢ DB_VERSIONï¼›å½“å‰å·²ä¸º v16ï¼ˆå« v15 execution_logs/missing_reports ä¸ v16 executionPlans/portfoliosï¼‰ã€‚
 
-**Ö´ĞĞ²½Öè£º**
-1. ¶ÁÈ¡ `../../reference/v9-Êı¾İÑªÔµ×·×Ù.md` ÖĞ DB_VERSION Ïà¹ØĞĞ
-2. ½«ÆäĞŞÕıÎª 16£¨Óë `src/config/dbConfig.ts` Ò»ÖÂ£©
-3. ÔËĞĞĞ£Ñé£º`npm run validate:blueprint`
-4. Ìá½»
+**æ‰§è¡Œæ­¥éª¤ï¼š**
+1. è¯»å– `../../reference/v9-æ•°æ®è¡€ç¼˜è¿½è¸ª.md` ä¸­ DB_VERSION ç›¸å…³è¡Œ
+2. å°†å…¶ä¿®æ­£ä¸º 16ï¼ˆä¸ `src/config/dbConfig.ts` ä¸€è‡´ï¼‰
+3. è¿è¡Œæ ¡éªŒï¼š`npm run validate:blueprint`
+4. æäº¤
 
-**ÑéÊÕ±ê×¼£º**
-- ÎÄµµÓëÔ´Âë DB_VERSION Ò»ÖÂ
-- `validate:blueprint` ÈÔÍ¨¹ı
+**éªŒæ”¶æ ‡å‡†ï¼š**
+- æ–‡æ¡£ä¸æºç  DB_VERSION ä¸€è‡´
+- `validate:blueprint` ä»é€šè¿‡
 
 ---
 
-## Åú´Î B£ºÄÉÈë CI / ÖÊÁ¿ÃÅ½û£¨P1£©
+## æ‰¹æ¬¡ Bï¼šçº³å…¥ CI / è´¨é‡é—¨ç¦ï¼ˆP1ï¼‰
 
-### B-1: ÔÚ `../../reference/09-quality-gates.md` ÖĞ×¢²áÀ¶Í¼Ğ£Ñé
+### B-1: åœ¨ `../../reference/09-quality-gates.md` ä¸­æ³¨å†Œè“å›¾æ ¡éªŒ
 
-**Ö´ĞĞ²½Öè£º**
-1. ÔÚ `../../reference/09-quality-gates.md` µÄ¡¸ÖÊÁ¿ÃÅ½ûÇåµ¥¡¹ÖĞĞÂÔöÒ»ĞĞ£º
-   - Ğ£ÑéÏî£ºÊı¾İÀ¶Í¼Ò»ÖÂĞÔ
-   - ÃüÁî£º`npm run validate:blueprint && npx vitest run src/blueprints/__tests__/dataRelationship.test.ts`
-   - ãĞÖµ£º0 Ê§°Ü
-2. Ìá½»
+**æ‰§è¡Œæ­¥éª¤ï¼š**
+1. åœ¨ `../../reference/09-quality-gates.md` çš„ã€Œè´¨é‡é—¨ç¦æ¸…å•ã€ä¸­æ–°å¢ä¸€è¡Œï¼š
+   - æ ¡éªŒé¡¹ï¼šæ•°æ®è“å›¾ä¸€è‡´æ€§
+   - å‘½ä»¤ï¼š`npm run validate:blueprint && npx vitest run src/blueprints/__tests__/dataRelationship.test.ts`
+   - é˜ˆå€¼ï¼š0 å¤±è´¥
+2. æäº¤
 
-### B-2: ´´½¨ GitHub Actions ¹¤×÷Á÷£¨ÈôºóĞøÆôÓÃ CI£©
+### B-2: åˆ›å»º GitHub Actions å·¥ä½œæµï¼ˆè‹¥åç»­å¯ç”¨ CIï¼‰
 
-**Ö´ĞĞ²½Öè£º**
-1. ´´½¨ `.github/workflows/ci.yml`£¨ÈçÏîÄ¿Î´À´ÆôÓÃ GitHub CI£©
-2. Ìí¼Ó²½Öè£º
+**æ‰§è¡Œæ­¥éª¤ï¼š**
+1. åˆ›å»º `.github/workflows/ci.yml`ï¼ˆå¦‚é¡¹ç›®æœªæ¥å¯ç”¨ GitHub CIï¼‰
+2. æ·»åŠ æ­¥éª¤ï¼š
    ```yaml
    - name: Validate data blueprint
      run: npm run validate:blueprint
    - name: Run blueprint tests
      run: npx vitest run src/blueprints/__tests__/dataRelationship.test.ts
    ```
-3. µ±Ç°ÏîÄ¿ÎŞ CI£¬±¾ÈÎÎñ±ê¼ÇÎª¡¸´ıÌõ¼ş´¥·¢¡¹
+3. å½“å‰é¡¹ç›®æ—  CIï¼Œæœ¬ä»»åŠ¡æ ‡è®°ä¸ºã€Œå¾…æ¡ä»¶è§¦å‘ã€
 
 ---
 
-## Åú´Î C£ºFreshness ÔËĞĞÊ±Ğ£Ñé£¨P1£©
+## æ‰¹æ¬¡ Cï¼šFreshness è¿è¡Œæ—¶æ ¡éªŒï¼ˆP1ï¼‰
 
-### C-1: ĞÂÔö `dataFreshnessGuard.ts`
+### C-1: æ–°å¢ `dataFreshnessGuard.ts`
 
-**Ä¿±ê£º** ÔÚ V6 ÆÀ·Ö¡¢²ßÂÔÆÀ·Ö¡¢ĞÅºÅÉú³ÉµÈºËĞÄ¼ÆËãÇ°¼ì²éÊäÈëÊı¾İ freshness¡£
+**ç›®æ ‡ï¼š** åœ¨ V6 è¯„åˆ†ã€ç­–ç•¥è¯„åˆ†ã€ä¿¡å·ç”Ÿæˆç­‰æ ¸å¿ƒè®¡ç®—å‰æ£€æŸ¥è¾“å…¥æ•°æ® freshnessã€‚
 
-**½Ó¿ÚÉè¼Æ£º**
+**æ¥å£è®¾è®¡ï¼š**
 ```typescript
 export interface FreshnessCheck {
   output: string
@@ -121,181 +121,181 @@ export function checkFreshness(
 ): FreshnessCheck
 ```
 
-**Ö´ĞĞ²½Öè£º**
-1. ´´½¨ `src/services/analysis/dataFreshnessGuard.ts`
-2. ±àĞ´µ¥Ôª²âÊÔ `src/services/analysis/__tests__/dataFreshnessGuard.test.ts`
-3. ÔÚ `v6ScoreService.ts`¡¢`hotSectorAnalyzer.ts`¡¢`valuePitAnalyzer.ts`¡¢`signalGenerator.ts` µÄÈë¿Úµ÷ÓÃ freshness ¼ì²é
-4. Ìá½»
+**æ‰§è¡Œæ­¥éª¤ï¼š**
+1. åˆ›å»º `src/services/analysis/dataFreshnessGuard.ts`
+2. ç¼–å†™å•å…ƒæµ‹è¯• `src/services/analysis/__tests__/dataFreshnessGuard.test.ts`
+3. åœ¨ `v6ScoreService.ts`ã€`hotSectorAnalyzer.ts`ã€`valuePitAnalyzer.ts`ã€`signalGenerator.ts` çš„å…¥å£è°ƒç”¨ freshness æ£€æŸ¥
+4. æäº¤
 
-### C-2: ÔÚÀ¶Í¼ÖĞ¼ÇÂ¼ÔËĞĞÊ±Ğ£Ñéµã
+### C-2: åœ¨è“å›¾ä¸­è®°å½•è¿è¡Œæ—¶æ ¡éªŒç‚¹
 
-**Ö´ĞĞ²½Öè£º**
-1. ÔÚ `../../reference/v9-data-timeline.md` µÚ 3.2 ½Ú×·¼Ó¡¸ÔËĞĞÊ±Ğ£ÑéÊµÏÖ×´Ì¬¡¹ÁĞ
-2. Ìá½»
-
----
-
-## Åú´Î D£º¶¨ÆÚÎ¬»¤»úÖÆ£¨P2£©
-
-### D-1: ´´½¨Î¬»¤¼ì²éµ¥
-
-ÒÑÔÚ±¾ÎÄµµÄ©Î²´´½¨¡¸Ã¿ÖÜÎ¬»¤¼ì²éµ¥¡¹£¨¼ûµÚ 8 ÕÂ£©¡£
-
-### D-2: ÅäÖÃ×Ô¶¯»¯ÌáĞÑ£¨¿ÉÑ¡£©
-
-**Ö´ĞĞ²½Öè£º**
-1. ÈçÊ¹ÓÃ TRAE Schedule£¬¿É´´½¨Ã¿ÖÜÒ»Ôç 9 µãµÄÈÎÎñ£º
-   - ÏûÏ¢£ºÔËĞĞ `npm run validate:blueprint` ÓëÀ¶Í¼²âÊÔ£¬¼ì²é Store/½Ó¿Ú/ÎÄµµÒ»ÖÂĞÔ£¬Êä³ö½á¹ûµ½ `docs/blueprints/weekly-check-YYYY-MM-DD.md`
-2. µ±Ç°ÏÈÊÖ¶¯Ö´ĞĞ£¬ºóĞø¸ù¾İÍÅ¶ÓÏ°¹ßÅäÖÃ
+**æ‰§è¡Œæ­¥éª¤ï¼š**
+1. åœ¨ `../../reference/v9-data-timeline.md` ç¬¬ 3.2 èŠ‚è¿½åŠ ã€Œè¿è¡Œæ—¶æ ¡éªŒå®ç°çŠ¶æ€ã€åˆ—
+2. æäº¤
 
 ---
 
-## Åú´Î E£ºv15/v16 ĞÂÔö Store À¶Í¼²¹È«£¨P1£©
+## æ‰¹æ¬¡ Dï¼šå®šæœŸç»´æŠ¤æœºåˆ¶ï¼ˆP2ï¼‰
 
-> **±³¾°**£º`src/config/dbConfig.ts` ÒÑÉı¼¶µ½ DB_VERSION = 16£¬IndexedDB ÒÑĞÂÔö 4 ¸ö Store
-> £¨`execution_logs`, `missing_reports`, `executionPlans`, `portfolios`£©£¬µ« ER/Timeline À¶Í¼ÉĞÎ´ÍêÕûµÇ¼Ç¡£
+### D-1: åˆ›å»ºç»´æŠ¤æ£€æŸ¥å•
 
-### E-1: À¶Í¼ÎÄµµ²¹Æë£¨ÒÑÍê³É£©
+å·²åœ¨æœ¬æ–‡æ¡£æœ«å°¾åˆ›å»ºã€Œæ¯å‘¨ç»´æŠ¤æ£€æŸ¥å•ã€ï¼ˆè§ç¬¬ 8 ç« ï¼‰ã€‚
 
-**Ö´ĞĞ²½Öè£º**
-1. `../../explanation/v9-data-relationship-er.md` ÒÑÔÚ ¡ì1 Store Çåµ¥×·¼Ó 4 ĞĞ£»¡ì2 ÊµÌå¹ØÏµ²¹ 4 Ìõ£»
-   ¡ì3 ER Í¼ĞÂÔö 4 Ìõ±ß£»DB_VERSION 14¡ú16
-2. `../../reference/v9-data-timeline.md` ÒÑÔÚ ¡ì1 ×·¼Ó P12/P13/P14/P15 ËÄ¸ö¹ÜÏß½×¶Î£»¡ì3.1 Ë¢ĞÂÆµÂÊ±í²¹ 4 ĞĞ
-3. `scripts/other/validate-data-blueprint.ts` µÄ Store ÊıÁ¿Ô¤ÆÚ´Ó 20¡ú41£¨µ±Ç° expectedStores=41£©
+### D-2: é…ç½®è‡ªåŠ¨åŒ–æé†’ï¼ˆå¯é€‰ï¼‰
 
-**ÑéÊÕ±ê×¼£º**
-- 4 ¸öĞÂ Store ÊµÌå/Ë÷Òı/¹ØÏµ/Ê±ĞòÈ«²¿µÇ¼Ç
-- `npm run validate:blueprint` Í¨¹ı
-- `dataRelationship.test.ts` Í¨¹ı
-
-### E-2: Ğ´ÈëÄ£¿éÓë ACL ½ÓÈë£¨ÒÑÍê³É£©
-
-**Ö´ĞĞ²½Öè£¨´ıÈË¹¤ÊµÏÖºó»ØÌî½ø¶È£©£º**
-1. ´´½¨ `src/services/execution/executionPlanService.ts`¡¢`executionLogService.ts`
-2. ´´½¨ `src/services/portfolio/portfolioService.ts`
-3. ÔÚ `src/services/data-collector/missingReportDetector.ts` ÊµÏÖÈ±Ê§±¨¸æµÇ¼Ç
-4. ÔÚ `src/core/acl.ts`£¨»òÍ¬µÈµÄ ACL ÅäÖÃ£©²¹ 4 ¸ö Store µÄ¶ÁĞ´È¨ÏŞÌõÄ¿
-5. Ìá½»¶ÔÓ¦µ¥Ôª²âÊÔ
-
-**ÑéÊÕ±ê×¼£º**
-- 4 ¸öĞÂ Store ¶¼ÓĞ¶ÔÓ¦µÄ Service Ğ´ÈëÈë¿Ú
-- ACL ¾ØÕóÖĞ `execution` / `portfolio` / `data-collector` Èı¸öÄ£¿é±»ÊÚÈ¨
-- ĞÂÔö 4 ¸ö Store µÄÀ¶Í¼Ò»ÖÂĞÔ²âÊÔÍ¨¹ı
-
-### E-3: À¶Í¼ÔËĞĞÊ±Ğ£Ñé²¹È«£¨ÒÑÍê³É£©
-
-**Ä¿±ê**£ºÎª 4 ¸öĞÂ Store Ìí¼Ó `dataFreshnessGuard` ¹æÔò£º
-- Ö´ĞĞ¼Æ»®£º `executionPlans.createdAt >= signals.createdAt`
-- Í¶×Ê×éºÏ£º `portfolios.updatedAt >= max(orders.createdAt)`
-- Ö´ĞĞÈÕÖ¾£º `execution_logs.timestamp >= executionPlans.createdAt`
-- È±Ê§±¨¸æ£º `missing_reports.detectedAt` Ó¦Ğ¡ÓÚµ±Ç°¼ÆËãÊ±¼ä
-
-**ÑéÊÕ±ê×¼**£ºÔÚ `dataFreshnessGuard.ts` ÖĞÔö¼Ó 4 ¸ö `check*` º¯Êı£¬µ÷ÓÃ·½¸²¸Ç Service Èë¿Ú¡£
+**æ‰§è¡Œæ­¥éª¤ï¼š**
+1. å¦‚ä½¿ç”¨ TRAE Scheduleï¼Œå¯åˆ›å»ºæ¯å‘¨ä¸€æ—© 9 ç‚¹çš„ä»»åŠ¡ï¼š
+   - æ¶ˆæ¯ï¼šè¿è¡Œ `npm run validate:blueprint` ä¸è“å›¾æµ‹è¯•ï¼Œæ£€æŸ¥ Store/æ¥å£/æ–‡æ¡£ä¸€è‡´æ€§ï¼Œè¾“å‡ºç»“æœåˆ° `docs/blueprints/weekly-check-YYYY-MM-DD.md`
+2. å½“å‰å…ˆæ‰‹åŠ¨æ‰§è¡Œï¼Œåç»­æ ¹æ®å›¢é˜Ÿä¹ æƒ¯é…ç½®
 
 ---
 
-## Ö´ĞĞ×´Ì¬¿´°å
+## æ‰¹æ¬¡ Eï¼šv15/v16 æ–°å¢ Store è“å›¾è¡¥å…¨ï¼ˆP1ï¼‰
+
+> **èƒŒæ™¯**ï¼š`src/config/dbConfig.ts` å·²å‡çº§åˆ° DB_VERSION = 16ï¼ŒIndexedDB å·²æ–°å¢ 4 ä¸ª Store
+> ï¼ˆ`execution_logs`, `missing_reports`, `executionPlans`, `portfolios`ï¼‰ï¼Œä½† ER/Timeline è“å›¾å°šæœªå®Œæ•´ç™»è®°ã€‚
+
+### E-1: è“å›¾æ–‡æ¡£è¡¥é½ï¼ˆå·²å®Œæˆï¼‰
+
+**æ‰§è¡Œæ­¥éª¤ï¼š**
+1. `../../explanation/v9-data-relationship-er.md` å·²åœ¨ Â§1 Store æ¸…å•è¿½åŠ  4 è¡Œï¼›Â§2 å®ä½“å…³ç³»è¡¥ 4 æ¡ï¼›
+   Â§3 ER å›¾æ–°å¢ 4 æ¡è¾¹ï¼›DB_VERSION 14â†’16
+2. `../../reference/v9-data-timeline.md` å·²åœ¨ Â§1 è¿½åŠ  P12/P13/P14/P15 å››ä¸ªç®¡çº¿é˜¶æ®µï¼›Â§3.1 åˆ·æ–°é¢‘ç‡è¡¨è¡¥ 4 è¡Œ
+3. `scripts/other/validate-data-blueprint.ts` çš„ Store æ•°é‡é¢„æœŸä» 20â†’41ï¼ˆå½“å‰ expectedStores=41ï¼‰
+
+**éªŒæ”¶æ ‡å‡†ï¼š**
+- 4 ä¸ªæ–° Store å®ä½“/ç´¢å¼•/å…³ç³»/æ—¶åºå…¨éƒ¨ç™»è®°
+- `npm run validate:blueprint` é€šè¿‡
+- `dataRelationship.test.ts` é€šè¿‡
+
+### E-2: å†™å…¥æ¨¡å—ä¸ ACL æ¥å…¥ï¼ˆå·²å®Œæˆï¼‰
+
+**æ‰§è¡Œæ­¥éª¤ï¼ˆå¾…äººå·¥å®ç°åå›å¡«è¿›åº¦ï¼‰ï¼š**
+1. åˆ›å»º `src/services/execution/executionPlanService.ts`ã€`executionLogService.ts`
+2. åˆ›å»º `src/services/portfolio/portfolioService.ts`
+3. åœ¨ `src/services/data-collector/missingReportDetector.ts` å®ç°ç¼ºå¤±æŠ¥å‘Šç™»è®°
+4. åœ¨ `src/core/acl.ts`ï¼ˆæˆ–åŒç­‰çš„ ACL é…ç½®ï¼‰è¡¥ 4 ä¸ª Store çš„è¯»å†™æƒé™æ¡ç›®
+5. æäº¤å¯¹åº”å•å…ƒæµ‹è¯•
+
+**éªŒæ”¶æ ‡å‡†ï¼š**
+- 4 ä¸ªæ–° Store éƒ½æœ‰å¯¹åº”çš„ Service å†™å…¥å…¥å£
+- ACL çŸ©é˜µä¸­ `execution` / `portfolio` / `data-collector` ä¸‰ä¸ªæ¨¡å—è¢«æˆæƒ
+- æ–°å¢ 4 ä¸ª Store çš„è“å›¾ä¸€è‡´æ€§æµ‹è¯•é€šè¿‡
+
+### E-3: è“å›¾è¿è¡Œæ—¶æ ¡éªŒè¡¥å…¨ï¼ˆå·²å®Œæˆï¼‰
+
+**ç›®æ ‡**ï¼šä¸º 4 ä¸ªæ–° Store æ·»åŠ  `dataFreshnessGuard` è§„åˆ™ï¼š
+- æ‰§è¡Œè®¡åˆ’ï¼š `executionPlans.createdAt >= signals.createdAt`
+- æŠ•èµ„ç»„åˆï¼š `portfolios.updatedAt >= max(orders.createdAt)`
+- æ‰§è¡Œæ—¥å¿—ï¼š `execution_logs.timestamp >= executionPlans.createdAt`
+- ç¼ºå¤±æŠ¥å‘Šï¼š `missing_reports.detectedAt` åº”å°äºå½“å‰è®¡ç®—æ—¶é—´
+
+**éªŒæ”¶æ ‡å‡†**ï¼šåœ¨ `dataFreshnessGuard.ts` ä¸­å¢åŠ  4 ä¸ª `check*` å‡½æ•°ï¼Œè°ƒç”¨æ–¹è¦†ç›– Service å…¥å£ã€‚
+
+---
+
+## æ‰§è¡ŒçŠ¶æ€çœ‹æ¿
 
 ```markdown
-- [x] ´´½¨À¶Í¼ÎÄµµ£¨ER¡¢Timeline¡¢Sequence£©
-- [x] ´´½¨¿ÉÖ´ĞĞ²âÊÔÓëĞ£Ñé½Å±¾
-- [x] ¸üĞÂÎÄµµË÷ÒıÓë CHANGELOG
-- [x] A-1 ²¹Æë NewsBookmark ½Ó¿Ú
-- [x] A-2 Í¬²½ DB_VERSION ±ê×¢
-- [x] B-1 ×¢²áµ½ÖÊÁ¿ÃÅ½û
-- [x] B-2 ÅäÖÃ CI£¨Ìõ¼ş´¥·¢£©
-- [x] C-1 ÊµÏÖÔËĞĞÊ± freshness Ğ£Ñé
-- [x] C-2 ¸üĞÂÀ¶Í¼ÔËĞĞÊ±×´Ì¬
-- [x] freshness-review `tradeReviewAI.generateReview` / `generateReviewAsync` ½ÓÈë `checkReviewFreshness`
-- [x] freshness-news `newsService.saveNewsArticle` ½ÓÈë `checkSentimentCacheFreshness`
-- [x] freshness-verify ÔËĞĞÏà¹Ø²âÊÔÓëĞ£Ñé£¬¸üĞÂ `../../reference/v9-data-timeline.md` Óë `../../../CHANGELOG.md`
-- [x] freshness-deep Éî»¯ Freshness£ºĞÂÔö×èÈû/·Ç×èÈûÄ£Ê½ + checkSnapshotFreshness + checkPortfolioFreshness
-- [x] test-fix È«Á¿²âÊÔĞŞ¸´£º145/145 ÎÄ¼ş£¬1826/1826 ²âÊÔÍ¨¹ı
-- [x] code-opt ´úÂëÓÅ»¯£ºSentimentAnalysisResult ÃüÃû½Ó¿Ú + SyncReviewOptions ½Ó¿Ú
-- [x] D-1 ÖÆ¶¨Ã¿ÖÜÎ¬»¤¼ì²éµ¥
-- [x] D-2 ÅäÖÃ×Ô¶¯»¯ÌáĞÑ£¨TRAE Schedule ÒÑÆôÓÃ£¬Ã¿ÖÜÒ» 09:00 ±±¾©Ê±¼ä£¬ID: f6152f1d£©
-- [x] E-1 À¶Í¼ÎÄµµ²¹Æë£ºER/Timeline/validate:blueprint Í¬²½ v15/v16
-- [x] E-2 Ğ´ÈëÄ£¿éÓë ACL ½ÓÈë£¨executionPlanService/executionLogService/portfolioService/missingReportDetector£©
-- [x] E-3 4 ¸öĞÂ Store µÄ Freshness ÔËĞĞÊ±Ğ£Ñé
+- [x] åˆ›å»ºè“å›¾æ–‡æ¡£ï¼ˆERã€Timelineã€Sequenceï¼‰
+- [x] åˆ›å»ºå¯æ‰§è¡Œæµ‹è¯•ä¸æ ¡éªŒè„šæœ¬
+- [x] æ›´æ–°æ–‡æ¡£ç´¢å¼•ä¸ CHANGELOG
+- [x] A-1 è¡¥é½ NewsBookmark æ¥å£
+- [x] A-2 åŒæ­¥ DB_VERSION æ ‡æ³¨
+- [x] B-1 æ³¨å†Œåˆ°è´¨é‡é—¨ç¦
+- [x] B-2 é…ç½® CIï¼ˆæ¡ä»¶è§¦å‘ï¼‰
+- [x] C-1 å®ç°è¿è¡Œæ—¶ freshness æ ¡éªŒ
+- [x] C-2 æ›´æ–°è“å›¾è¿è¡Œæ—¶çŠ¶æ€
+- [x] freshness-review `tradeReviewAI.generateReview` / `generateReviewAsync` æ¥å…¥ `checkReviewFreshness`
+- [x] freshness-news `newsService.saveNewsArticle` æ¥å…¥ `checkSentimentCacheFreshness`
+- [x] freshness-verify è¿è¡Œç›¸å…³æµ‹è¯•ä¸æ ¡éªŒï¼Œæ›´æ–° `../../reference/v9-data-timeline.md` ä¸ `../../../CHANGELOG.md`
+- [x] freshness-deep æ·±åŒ– Freshnessï¼šæ–°å¢é˜»å¡/éé˜»å¡æ¨¡å¼ + checkSnapshotFreshness + checkPortfolioFreshness
+- [x] test-fix å…¨é‡æµ‹è¯•ä¿®å¤ï¼š145/145 æ–‡ä»¶ï¼Œ1826/1826 æµ‹è¯•é€šè¿‡
+- [x] code-opt ä»£ç ä¼˜åŒ–ï¼šSentimentAnalysisResult å‘½åæ¥å£ + SyncReviewOptions æ¥å£
+- [x] D-1 åˆ¶å®šæ¯å‘¨ç»´æŠ¤æ£€æŸ¥å•
+- [x] D-2 é…ç½®è‡ªåŠ¨åŒ–æé†’ï¼ˆTRAE Schedule å·²å¯ç”¨ï¼Œæ¯å‘¨ä¸€ 09:00 åŒ—äº¬æ—¶é—´ï¼ŒID: f6152f1dï¼‰
+- [x] E-1 è“å›¾æ–‡æ¡£è¡¥é½ï¼šER/Timeline/validate:blueprint åŒæ­¥ v15/v16
+- [x] E-2 å†™å…¥æ¨¡å—ä¸ ACL æ¥å…¥ï¼ˆexecutionPlanService/executionLogService/portfolioService/missingReportDetectorï¼‰
+- [x] E-3 4 ä¸ªæ–° Store çš„ Freshness è¿è¡Œæ—¶æ ¡éªŒ
 ```
 
 ---
 
-## ·çÏÕÓë½µ¼¶
+## é£é™©ä¸é™çº§
 
-| ·çÏÕ | Ó¦¶Ô |
+| é£é™© | åº”å¯¹ |
 |------|------|
-| ĞŞ¸Ä `DB_VERSION` µ¼ÖÂÓÃ»§ IndexedDB Ç¨ÒÆÊ§°Ü | ²»ËæÒâÉı¼¶°æ±¾£»½öÔÚÓĞ schema ±ä¸üÊ±°´¹æ·¶µİÔö |
-| ĞÂÔö½Ó¿ÚÓ°ÏìÏÖÓĞ newsStore | ±£³Ö×Ö¶ÎÓëÏÖÓĞ `NewsBookmarkRecord` ÍêÈ«Ò»ÖÂ£¬½öÇ¨ÒÆÀàĞÍÎ»ÖÃ |
-| CI ¹¤×÷Á÷Óë±¾µØ»·¾³²îÒì | ÏÈ±¾µØÑéÖ¤£¬ÔÙÖğ²½ÆôÓÃ GitHub Actions |
-| Freshness Ğ£Ñé¹ıÓÚÑÏ¸ñÓ°ÏìĞÔÄÜ | Ä¬ÈÏ½öĞ£ÑéÊ±¼ä´Á£¬²»×èÈû¼ÆËã£»Ìá¹©¿ª¹Ø |
+| ä¿®æ”¹ `DB_VERSION` å¯¼è‡´ç”¨æˆ· IndexedDB è¿ç§»å¤±è´¥ | ä¸éšæ„å‡çº§ç‰ˆæœ¬ï¼›ä»…åœ¨æœ‰ schema å˜æ›´æ—¶æŒ‰è§„èŒƒé€’å¢ |
+| æ–°å¢æ¥å£å½±å“ç°æœ‰ newsStore | ä¿æŒå­—æ®µä¸ç°æœ‰ `NewsBookmarkRecord` å®Œå…¨ä¸€è‡´ï¼Œä»…è¿ç§»ç±»å‹ä½ç½® |
+| CI å·¥ä½œæµä¸æœ¬åœ°ç¯å¢ƒå·®å¼‚ | å…ˆæœ¬åœ°éªŒè¯ï¼Œå†é€æ­¥å¯ç”¨ GitHub Actions |
+| Freshness æ ¡éªŒè¿‡äºä¸¥æ ¼å½±å“æ€§èƒ½ | é»˜è®¤ä»…æ ¡éªŒæ—¶é—´æˆ³ï¼Œä¸é˜»å¡è®¡ç®—ï¼›æä¾›å¼€å…³ |
 
 ---
 
-## 8. Ã¿ÖÜÎ¬»¤¼ì²éµ¥
+## 8. æ¯å‘¨ç»´æŠ¤æ£€æŸ¥å•
 
-> **ÓÃÍ¾**£ºÃ¿´Î°æ±¾µü´ú»òÃ¿ÖÜ¹Ì¶¨Ê±¼äÓÉÖµ°àÈËÖ´ĞĞ£¬È·±£À¶Í¼ÓëÔ´Âë³ÖĞøÒ»ÖÂ¡£  
-> **Êä³ö**£º½«½á¹û¼ÇÂ¼µ½ `docs/blueprints/weekly-check-YYYY-MM-DD.md`£¨¿ÉÖ±½Ó¸´ÖÆ±¾¼ì²éµ¥×÷ÎªÄ£°å£©¡£
+> **ç”¨é€”**ï¼šæ¯æ¬¡ç‰ˆæœ¬è¿­ä»£æˆ–æ¯å‘¨å›ºå®šæ—¶é—´ç”±å€¼ç­äººæ‰§è¡Œï¼Œç¡®ä¿è“å›¾ä¸æºç æŒç»­ä¸€è‡´ã€‚  
+> **è¾“å‡º**ï¼šå°†ç»“æœè®°å½•åˆ° `docs/blueprints/weekly-check-YYYY-MM-DD.md`ï¼ˆå¯ç›´æ¥å¤åˆ¶æœ¬æ£€æŸ¥å•ä½œä¸ºæ¨¡æ¿ï¼‰ã€‚
 
-### 8.1 Ö´ĞĞÇ°×¼±¸
+### 8.1 æ‰§è¡Œå‰å‡†å¤‡
 
-- [ ] ÇĞ»»µ½ `main` ·ÖÖ§²¢À­È¡×îĞÂ´úÂë
-- [ ] È·ÈÏ Node °æ±¾Óë `.nvmrc` Ò»ÖÂ£º`node -v`
-- [ ] °²×°ÒÀÀµ£º`npm ci`£¨ÈçÓĞ package-lock ±ä¸ü£©
+- [ ] åˆ‡æ¢åˆ° `main` åˆ†æ”¯å¹¶æ‹‰å–æœ€æ–°ä»£ç 
+- [ ] ç¡®è®¤ Node ç‰ˆæœ¬ä¸ `.nvmrc` ä¸€è‡´ï¼š`node -v`
+- [ ] å®‰è£…ä¾èµ–ï¼š`npm ci`ï¼ˆå¦‚æœ‰ package-lock å˜æ›´ï¼‰
 
-### 8.2 Ò»ÖÂĞÔÉ¨Ãè
+### 8.2 ä¸€è‡´æ€§æ‰«æ
 
-- [ ] ÔËĞĞÀ¶Í¼Ğ£Ñé½Å±¾£º
+- [ ] è¿è¡Œè“å›¾æ ¡éªŒè„šæœ¬ï¼š
   ```bash
   npm run validate:blueprint
   ```
-  - [ ] Store ÊıÁ¿ = 24
-  - [ ] Interface ÊıÁ¿ÓëÔ¤ÆÚÒ»ÖÂ
-  - [ ] ÎŞĞÂÔöÈ±Ê§Ó³Éä
+  - [ ] Store æ•°é‡ = 24
+  - [ ] Interface æ•°é‡ä¸é¢„æœŸä¸€è‡´
+  - [ ] æ— æ–°å¢ç¼ºå¤±æ˜ å°„
 
-- [ ] ÔËĞĞÀ¶Í¼µ¥Ôª²âÊÔ£º
+- [ ] è¿è¡Œè“å›¾å•å…ƒæµ‹è¯•ï¼š
   ```bash
   npx vitest run src/blueprints/__tests__/dataRelationship.test.ts
   ```
-  - [ ] Store ÊıÁ¿ = 24 ÇÒÎŞÖØ¸´
-  - [ ] ºËĞÄÊµÌå¾ùÓ³Éäµ½ Store
-  - [ ] Ê±¼äÒ»ÖÂĞÔ¹æÔòÍ¨¹ı
+  - [ ] Store æ•°é‡ = 24 ä¸”æ— é‡å¤
+  - [ ] æ ¸å¿ƒå®ä½“å‡æ˜ å°„åˆ° Store
+  - [ ] æ—¶é—´ä¸€è‡´æ€§è§„åˆ™é€šè¿‡
 
-### 8.3 Ô´Âë±ä¸ü¼ì²é
+### 8.3 æºç å˜æ›´æ£€æŸ¥
 
-- [ ] ¼ì²é±¾ÖÜĞÂÔö/ĞŞ¸ÄµÄ IndexedDB Store£º
-  - ÎÄ¼ş£º`src/config/dbConfig.ts`
-  - È·ÈÏÃ¿¸ö Store ÔÚ `../../explanation/v9-data-relationship-er.md` ÖĞÓĞ¶¨Òå
-  - È·ÈÏÃ¿¸ö Store ÔÚ `src/blueprints/` µÄ `expectedStores` ÁĞ±íÖĞ
+- [ ] æ£€æŸ¥æœ¬å‘¨æ–°å¢/ä¿®æ”¹çš„ IndexedDB Storeï¼š
+  - æ–‡ä»¶ï¼š`src/config/dbConfig.ts`
+  - ç¡®è®¤æ¯ä¸ª Store åœ¨ `../../explanation/v9-data-relationship-er.md` ä¸­æœ‰å®šä¹‰
+  - ç¡®è®¤æ¯ä¸ª Store åœ¨ `src/blueprints/` çš„ `expectedStores` åˆ—è¡¨ä¸­
 
-- [ ] ¼ì²é±¾ÖÜĞÂÔö/ĞŞ¸ÄµÄ TypeScript ½Ó¿Ú£º
-  - ÎÄ¼ş£º`src/data/types.ts`
-  - È·ÈÏºËĞÄÊµÌå½Ó¿ÚÒÑ¼ÓÈë `entityStoreMap`
-  - È·ÈÏ½Ó¿Ú×Ö¶Î±ä¸üÒÑÍ¬²½µ½À¶Í¼ÎÄµµ
+- [ ] æ£€æŸ¥æœ¬å‘¨æ–°å¢/ä¿®æ”¹çš„ TypeScript æ¥å£ï¼š
+  - æ–‡ä»¶ï¼š`src/data/types.ts`
+  - ç¡®è®¤æ ¸å¿ƒå®ä½“æ¥å£å·²åŠ å…¥ `entityStoreMap`
+  - ç¡®è®¤æ¥å£å­—æ®µå˜æ›´å·²åŒæ­¥åˆ°è“å›¾æ–‡æ¡£
 
-- [ ] ¼ì²éÊ±¼ä´Á×Ö¶Î±ä¸ü£º
-  - ÎÄ¼ş£º`src/data/types.ts` ¼°Ïà¹Ø¼ÆËãÊä³öÀàĞÍ
-  - È·ÈÏĞÂÔö/ÖØÃüÃûµÄÊ±¼ä´Á×Ö¶ÎÒÑÔÚ `../../reference/v9-data-timeline.md` 3.2 ½ÚµÇ¼Ç
-  - È·ÈÏÒÑÔÚ `dataFreshnessGuard.ts` Ìí¼Ó¶ÔÓ¦Ğ£Ñéº¯Êı£¨ÈçÊÊÓÃ£©
+- [ ] æ£€æŸ¥æ—¶é—´æˆ³å­—æ®µå˜æ›´ï¼š
+  - æ–‡ä»¶ï¼š`src/data/types.ts` åŠç›¸å…³è®¡ç®—è¾“å‡ºç±»å‹
+  - ç¡®è®¤æ–°å¢/é‡å‘½åçš„æ—¶é—´æˆ³å­—æ®µå·²åœ¨ `../../reference/v9-data-timeline.md` 3.2 èŠ‚ç™»è®°
+  - ç¡®è®¤å·²åœ¨ `dataFreshnessGuard.ts` æ·»åŠ å¯¹åº”æ ¡éªŒå‡½æ•°ï¼ˆå¦‚é€‚ç”¨ï¼‰
 
-### 8.4 Freshness ÔËĞĞÊ±Ğ£Ñé¼ì²é
+### 8.4 Freshness è¿è¡Œæ—¶æ ¡éªŒæ£€æŸ¥
 
-- [ ] ¼ì²é±¾ÖÜĞÂÔöµÄºËĞÄ¼ÆËãÈë¿ÚÊÇ·ñ½ÓÈë `dataFreshnessGuard`£º
-  - V6 ÆÀ·ÖÈë¿Ú£º`src/services/scoring/v6ScoreService.ts`
-  - ÈÈÃÅ°å¿é²ßÂÔÈë¿Ú£º`src/services/scoring/hotSectorAnalyzer.ts`
-  - ¼ÛÖµÍİµØ²ßÂÔÈë¿Ú£º`src/services/scoring/valuePitAnalyzer.ts`
-  - ½»Ò×ĞÅºÅÈë¿Ú£º`src/services/trading/signalGenerator.ts`
+- [ ] æ£€æŸ¥æœ¬å‘¨æ–°å¢çš„æ ¸å¿ƒè®¡ç®—å…¥å£æ˜¯å¦æ¥å…¥ `dataFreshnessGuard`ï¼š
+  - V6 è¯„åˆ†å…¥å£ï¼š`src/services/scoring/v6ScoreService.ts`
+  - çƒ­é—¨æ¿å—ç­–ç•¥å…¥å£ï¼š`src/services/scoring/hotSectorAnalyzer.ts`
+  - ä»·å€¼æ´¼åœ°ç­–ç•¥å…¥å£ï¼š`src/services/scoring/valuePitAnalyzer.ts`
+  - äº¤æ˜“ä¿¡å·å…¥å£ï¼š`src/services/trading/signalGenerator.ts`
 
-- [ ] ¼ì²é `../../reference/v9-data-timeline.md` 3.2 ½ÚÔËĞĞÊ±Ğ£Ñé×´Ì¬±íÊÇ·ñ×îĞÂ
+- [ ] æ£€æŸ¥ `../../reference/v9-data-timeline.md` 3.2 èŠ‚è¿è¡Œæ—¶æ ¡éªŒçŠ¶æ€è¡¨æ˜¯å¦æœ€æ–°
 
-### 8.5 ÖÊÁ¿ÃÅ½û×´Ì¬
+### 8.5 è´¨é‡é—¨ç¦çŠ¶æ€
 
-- [ ] È·ÈÏ `../../reference/09-quality-gates.md` ÖĞ¡¸Êı¾İÀ¶Í¼Ò»ÖÂĞÔ¡¹ÃÅ½ûÃüÁîÈÔ¿ÉÔËĞĞ
-- [ ] ¼ÇÂ¼±¾ÖÜ `tsc --noEmit` / `npm run lint` / `npm run test` »ùÏß£¨½ö¹Ø×¢ÓëÀ¶Í¼Ïà¹Ø´íÎó£©
+- [ ] ç¡®è®¤ `../../reference/09-quality-gates.md` ä¸­ã€Œæ•°æ®è“å›¾ä¸€è‡´æ€§ã€é—¨ç¦å‘½ä»¤ä»å¯è¿è¡Œ
+- [ ] è®°å½•æœ¬å‘¨ `tsc --noEmit` / `npm run lint` / `npm run test` åŸºçº¿ï¼ˆä»…å…³æ³¨ä¸è“å›¾ç›¸å…³é”™è¯¯ï¼‰
 
-### 8.6 ÊÕÎ²
+### 8.6 æ”¶å°¾
 
-- [ ] ÌîĞ´¼ì²é½áÂÛ£¨Í¨¹ı / ·¢ÏÖ N ÏîÆ«²î£©
-- [ ] ÈçÓĞÆ«²î£¬´´½¨¶ÔÓ¦ĞŞ¸´ÈÎÎñ²¢·ÖÅäÓÅÏÈ¼¶
-- [ ] ¸üĞÂ±¾ÎÄµµ¡¸Ö´ĞĞ×´Ì¬¿´°å¡¹ÖĞÏà¹ØÏî×´Ì¬
-- [ ] ÔÚ CHANGELOG ÖĞ×·¼ÓÎ¬»¤¼ÇÂ¼£¨Èç·¢ÉúÆ«²î»ò¹æÔò¸üĞÂ£©
+- [ ] å¡«å†™æ£€æŸ¥ç»“è®ºï¼ˆé€šè¿‡ / å‘ç° N é¡¹åå·®ï¼‰
+- [ ] å¦‚æœ‰åå·®ï¼Œåˆ›å»ºå¯¹åº”ä¿®å¤ä»»åŠ¡å¹¶åˆ†é…ä¼˜å…ˆçº§
+- [ ] æ›´æ–°æœ¬æ–‡æ¡£ã€Œæ‰§è¡ŒçŠ¶æ€çœ‹æ¿ã€ä¸­ç›¸å…³é¡¹çŠ¶æ€
+- [ ] åœ¨ CHANGELOG ä¸­è¿½åŠ ç»´æŠ¤è®°å½•ï¼ˆå¦‚å‘ç”Ÿåå·®æˆ–è§„åˆ™æ›´æ–°ï¼‰

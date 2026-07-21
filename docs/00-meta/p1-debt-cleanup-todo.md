@@ -60,7 +60,7 @@ date: 2026-07-17
 |------|----------|-------------|----------|-------------|--------|------|
 | P1-L1 | 清理前 50% lint warnings | 优先处理 `no-magic-numbers`、`strict-boolean-expressions`、`no-unsafe-*` 三类警告 | warnings 数 ≤ 826；`npm run lint` 通过 | 2026-08-18 | 当前开发者 | 待开始 |
 | P1-L2 | 清理剩余 lint warnings | 处理 `no-unnecessary-condition`、`prefer-nullish-coalescing` 等剩余警告 | warnings 数 ≤ 100；`npm run lint` 通过 | 2026-08-22 | 当前开发者 | 待开始 |
-| P1-L3 | 建立架构债务巡检机制 + P1 总结 | 编写 `./archive/01-architecture-audit-report-2026-07-16.md`；在 CI 中加入双周 `audit:layers` + `audit:hardcode` 巡检；更新 SKILL | 文档合并；CI 脚本可执行；SKILL v1.0 发布 | 2026-08-25 | 当前开发者 | 待开始 |
+| P1-L3 | 建立架构债务巡检机制 + P1 总结 | 编写 `../archive/01-architecture-audit-report-2026-07-16.md`；在 CI 中加入双周 `audit:layers` + `audit:hardcode` 巡检；更新 SKILL | 文档合并；CI 脚本可执行；SKILL v1.0 发布 | 2026-08-25 | 当前开发者 | 待开始 |
 
 ---
 

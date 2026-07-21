@@ -33,7 +33,7 @@ change_log:
 | `warning` | 警告/需关注 | 5000 ms | 数据缺失、降级、部分成功 |
 | `info` | 中性提示 | 4000 ms | 开始加载、状态变更、帮助说明 |
 
-> 当前基础组件实现见 `src/components/ui/Toast.tsx` 与 `src/hooks/useToast.tsx`。
+> 当前基础组件实现见 `src/components/atoms/Toast.tsx` 与 `src/hooks/useToast.tsx`。
 
 ### 2.2 优先级与去重规则
 

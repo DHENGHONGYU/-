@@ -184,7 +184,7 @@ code_version: 2.0.0
 | 文件 | 变更内容 |
 |------|---------|
 | `src/config/mcpServerRegistry.ts` | +5 个 MCP Server 注册条目（data-collector/execution/export/input/trade） |
-| `scripts/audit-layer-calls.ts` | v2.1→v2.2：新增 services→lib 业务模块检测规则（规则 5c）、明确 lib 基础设施白名单 |
+| `scripts/audit/audit-layer-calls.ts` | v2.1→v2.2：新增 services→lib 业务模块检测规则（规则 5c）、明确 lib 基础设施白名单 |
 | `../../AGENTS.md` | v1.3.1→v1.3.2：补充 services→lib 依赖规则、明确 lib 基础设施白名单、补充 types/ 和 agents/ 层定义 |
 | `src/mcp/servers/data-collector/dataCollectorServer.ts` | 修复类型错误：移除 marketDataAdapter 依赖，改用 listUnresolved/listBySymbol |
 | `src/mcp/servers/execution/executionServer.ts` | 修复类型错误：构造完整 Signal 对象（含 id/type/strategy/confidence 等字段） |
@@ -287,8 +287,8 @@ code_version: 2.0.0
 | 文件 | 变更类型 | 变更内容 |
 |------|---------|---------|
 | `../../AGENTS.md` | 协议补充 | 新增 lib/ 层依赖规则（仅可依赖 core/ 和 config/）、补充四步契约回滚验证流程（5 项验证要求）、明确 AI 自主修复边界（v1.3.1 新增）、提供事件监听清理标准模板（4 个标准模板）、修正 Store 数量 39 → 44、服务子域 18 → 20 |
-| `scripts/audit-hardcode.ts` | 脚本优化 | 扩展魔法数字排除列表（新增业务常量 10000/100000/1000000、常见配置值 10/20/30/50/256/512/1024/2048/4096、分页相关 10/20/50/100），降低误判率 |
-| `scripts/audit-doc-sync.ts` | 脚本优化 | v2.1 增强：新增 COMMON_NOISE_WORDS 噪音词过滤、AUTO_EXCLUDED_PATTERNS 自动排除模式、isLikelyReferenced 函数增强（需至少出现 2 次或伴随描述性文本），降低误判率 |
+| `scripts/audit/audit-hardcode.ts` | 脚本优化 | 扩展魔法数字排除列表（新增业务常量 10000/100000/1000000、常见配置值 10/20/30/50/256/512/1024/2048/4096、分页相关 10/20/50/100），降低误判率 |
+| `scripts/audit/audit-doc-sync.ts` | 脚本优化 | v2.1 增强：新增 COMMON_NOISE_WORDS 噪音词过滤、AUTO_EXCLUDED_PATTERNS 自动排除模式、isLikelyReferenced 函数增强（需至少出现 2 次或伴随描述性文本），降低误判率 |
 | `./03-architecture-standards.md` | P0/P1/P2 修正 | DB_VERSION 14 → 21、Store 清单 19 → 25 个、Widget 数量 12 → 21、技术栈 Pinia → Zustand、版本号 v1.1.0 → v2.2.1、偏差清单 D13/D14/D16 状态修正（🔴 → 🟢）、UnifiedStockData 状态修正（🔴 → ✅）、Widget 引擎接入状态修正（🟡 → ✅） |
 | `../reports/audit/quality-audit-plan.md` | P1 修正 | 技术栈 Pinia → Zustand、路由 26 → 47、Store 7 → 44、Widget 12 → 21 |
 | `docs/README.md` | P2 修正 | 版本号 v0.9.0-migration-implemented → v2.2.1、更新日期 2026-06-24 → 2026-07-05 |
@@ -468,7 +468,7 @@ code_version: 2.0.0
 
 | 文件 | 变更内容 |
 |------|---------|
-| `scripts/audit-dead-code.ts` | 新增 `collectAppDispatcherImports()`（扫描 apps/ 动态+静态导入）、`collectPortalImports()`（扫描 portal/ 导入）、`isExcludedFromPageAudit()`（统一排除规则） |
+| `scripts/audit/audit-dead-code.ts` | 新增 `collectAppDispatcherImports()`（扫描 apps/ 动态+静态导入）、`collectPortalImports()`（扫描 portal/ 导入）、`isExcludedFromPageAudit()`（统一排除规则） |
 | `../../AGENTS.md` | §5 新增三级加载链架构说明、新增页面 SOP、审计排除规则；版本升至 v1.2.0 |
 
 ### 修复详情
@@ -588,7 +588,7 @@ code_version: 2.0.0
 | `tests/news-v6/NewsFeed.test.tsx` | 修复空值检查 |
 | `tests/news-v6/NewsPage.test.tsx` | 修复空值检查 |
 | `./feedback-loop-spec.md` | 反馈闭环规格文档更新 |
-| `scripts/audit-doc-sync.ts` | 审计脚本更新 |
+| `scripts/audit/audit-doc-sync.ts` | 审计脚本更新 |
 
 ### 验证结果
 
@@ -641,11 +641,11 @@ code_version: 2.0.0
 
 | 文件 | 变更类型 | 变更内容 |
 |------|---------|---------|
-| `scripts/audit-doc-sync.ts` | 新增 | 文档与代码同步审计脚本，支持 5 条规则 |
-| `scripts/audit-doc-sync.ts` | 修正 | 修复 `docContainsType` 复合词匹配（HealthMetric → HealthMetricItem） |
-| `scripts/audit-doc-sync.ts` | 修正 | 修复 `docHasVersionHeader` 正则兼容 Markdown 加粗格式 |
-| `scripts/audit-doc-sync.ts` | 修正 | 新增 MODULE_MAP 映射（AI Center Services, Trading Services） |
-| `scripts/audit-doc-sync.ts` | 修正 | P2 文档元数据去重逻辑 |
+| `scripts/audit/audit-doc-sync.ts` | 新增 | 文档与代码同步审计脚本，支持 5 条规则 |
+| `scripts/audit/audit-doc-sync.ts` | 修正 | 修复 `docContainsType` 复合词匹配（HealthMetric → HealthMetricItem） |
+| `scripts/audit/audit-doc-sync.ts` | 修正 | 修复 `docHasVersionHeader` 正则兼容 Markdown 加粗格式 |
+| `scripts/audit/audit-doc-sync.ts` | 修正 | 新增 MODULE_MAP 映射（AI Center Services, Trading Services） |
+| `scripts/audit/audit-doc-sync.ts` | 修正 | P2 文档元数据去重逻辑 |
 | `package.json` | 修正 | 新增 `audit:docs` 脚本，纳入 `audit` 全量审计 |
 
 ### 新增交付物

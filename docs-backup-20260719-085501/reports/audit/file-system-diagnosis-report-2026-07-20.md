@@ -1,12 +1,12 @@
 ---
-title: V9 ÏîÄ¿ÎÄ¼şÏµÍ³È«¾ÖÕï¶Ï±¨¸æ
+title: V9 é¡¹ç›®æ–‡ä»¶ç³»ç»Ÿå…¨å±€è¯Šæ–­æŠ¥å‘Š
 type: reports
 domain: qa
 phase: testing
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "É¨Ãè·¶Î§£ºD:\FinSightV9£¨ÅÅ³ı node_modules/.git/dist/build/coverage/.venv£© Í³¼ÆÊ±¼ä£º2026-07-20 ÎÄ¼ş×ÜÊı£º~4,400+£¨·Ç..."
+summary: "æ‰«æèŒƒå›´ï¼šD:\FinSightV9ï¼ˆæ’é™¤ node_modules/.git/dist/build/coverage/.venvï¼‰ ç»Ÿè®¡æ—¶é—´ï¼š2026-07-20 æ–‡ä»¶æ€»æ•°ï¼š~4,400+ï¼ˆé..."
 tags: [qa, audit, report]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -17,351 +17,351 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# V9 ÏîÄ¿ÎÄ¼şÏµÍ³È«¾ÖÕï¶Ï±¨¸æ
+# V9 é¡¹ç›®æ–‡ä»¶ç³»ç»Ÿå…¨å±€è¯Šæ–­æŠ¥å‘Š
 
-> **É¨Ãè·¶Î§**£ºD:\FinSightV9£¨ÅÅ³ı node_modules/.git/dist/build/coverage/.venv£©
-> **Í³¼ÆÊ±¼ä**£º2026-07-20
-> **ÎÄ¼ş×ÜÊı**£º~4,400+£¨·Ç node_modules Ô´ÎÄ¼ş£©
+> **æ‰«æèŒƒå›´**ï¼šD:\FinSightV9ï¼ˆæ’é™¤ node_modules/.git/dist/build/coverage/.venvï¼‰
+> **ç»Ÿè®¡æ—¶é—´**ï¼š2026-07-20
+> **æ–‡ä»¶æ€»æ•°**ï¼š~4,400+ï¼ˆé node_modules æºæ–‡ä»¶ï¼‰
 
 ---
 
-## Ò»¡¢Ä¿Â¼Ê÷£¨Éî¶È3²ã£©ÓëºËĞÄÓÃÍ¾
+## ä¸€ã€ç›®å½•æ ‘ï¼ˆæ·±åº¦3å±‚ï¼‰ä¸æ ¸å¿ƒç”¨é€”
 
 ```
 FinSightV9/
-©À©¤©¤ .agents/              # AI Agent ÔËĞĞÊ±¼¼ÄÜÎÄ¼ş£¨×Ô¶¯¹ÜÀí£¬²»ÊÖ¶¯ĞŞ¸Ä£©
-©À©¤©¤ .codebuddy/           # AI ¸¨Öú±àÂë¹¤¾ß±¾µØÅäÖÃ£¨ÁÙÊ±ÎÄ¼ş£©
-©À©¤©¤ .dbg/                 # µ÷ÊÔ½ØÍ¼£¨×Ô¶¯²ú³ö£¬Ó¦¶¨ÆÚÇåÀí£©
-©À©¤©¤ .github/              # GitHub ¹¤×÷Á÷£¨CI/CD ×Ô¶¯»¯£©?
-©À©¤©¤ .husky/               # Git ¹³×Ó£¨pre-commit µÈ£©?
-©À©¤©¤ .playwright-mcp/      # MCP ä¯ÀÀÆ÷²âÊÔÁÙÊ±Êı¾İ£¨¹ıÆÚÊı¾İ£©
-©À©¤©¤ .trae/                # Trae AI ¹¤¾ß±¾µØÅäÖÃÓëÈÕÖ¾£¨ÁÙÊ±ÎÄ¼ş£©
-©À©¤©¤ .vscode/              # VSCode ÅäÖÃ£¨²å¼ş¡¢snippet£©?
-©À©¤©¤ .workbuddy/           # WorkBuddy ¹¤¾ßÈÕÖ¾£¨´óÁ¿ log ÎÄ¼ş£¬Ó¦ÇåÀí£©
-©À©¤©¤ build-artifacts/      # ¹¹½¨²úÎï±¸·İ£¨¿ÉÇåÀí£©
-©À©¤©¤ code-quality-compliance/  # ¶ÀÁ¢ Skill °ü£¨ÒÑ°²×°²å¼ş£©
-©À©¤©¤ design-tokens/        # Figma Éè¼ÆÁîÅÆÍ¬²½Êı¾İ ?
-©À©¤©¤ docs/                 # ÎÄµµÖ÷Ä¿Â¼£¨ĞèÖØ¹¹£©??
-©À©¤©¤ e2e/                  # Playwright ¶Ëµ½¶Ë²âÊÔ ?
-©À©¤©¤ eslint-rules/         # ×Ô¶¨Òå ESLint ¹æÔò£¨ÑÕÉ«Ó²±àÂë¼ì²é£©?
-©À©¤©¤ outputs/              # AI ²ú³öÎïÄ¿Â¼£¨ÁÙÊ±ÎÄ¼ş£©
-©À©¤©¤ packages/             # ×Ó°ü£¨audit-utils, store-audit£©?
-©À©¤©¤ plugins/              # Kimi ²å¼ş°²×°Ä¿Â¼£¨ÔËĞĞÊ±£©?
-©À©¤©¤ prompts/              # ÏµÍ³ÌáÊ¾´ÊÄ£°å£¨AI ¿ª·¢¹¤¾ß£©?
-©À©¤©¤ public/               # ¾²Ì¬×ÊÔ´£¨Í¼±ê¡¢manifest£©?
-©À©¤©¤ python/               # Python Êı¾İ·şÎñ¶Ëµã£¨ÇáÁ¿·şÎñ£©?
-©À©¤©¤ releases/             # ·¢²¼°ü ZIP£¨¿ÉÇåÀí¾É°æ±¾£©
-©À©¤©¤ scripts/              # ÏîÄ¿½Å±¾£¨120+ ÎÄ¼ş£¬42 ¸ö¹ÂÁ¢£©??
-©À©¤©¤ src/                  # Ô´´úÂëÖ÷Ä¿Â¼£¨¹æ·¶Á¼ºÃ£©?
-©À©¤©¤ temp/                 # ÁÙÊ±ÎÄ¼şÄ¿Â¼£¨80+ ÎÄ¼ş£¬~180MB£©??
-©À©¤©¤ test-output/          # ²âÊÔÊä³ö£¨proofread-report µÈ£©??
-©À©¤©¤ tests/                # ²âÊÔÄ¿Â¼£¨138 ¸ö²âÊÔÎÄ¼ş£©?
-©À©¤©¤ AGENTS.md             # AI ĞĞÎªÔ¼ÊøÆõÔ¼£¨¸ù¼¶°×Ãûµ¥£©?
-©À©¤©¤ architecture.md       # ¼Ü¹¹ÎÄµµ£¨Ó¦ÒÆÈë docs/£©??
-©À©¤©¤ CHANGELOG.md          # ±ä¸üÈÕÖ¾£¨¸ù¼¶°×Ãûµ¥£©?
-©À©¤©¤ README.md             # ÏîÄ¿×ÔÊö£¨¸ù¼¶°×Ãûµ¥£©?
-©À©¤©¤ overview.md           # ÏîÄ¿¸ÅÀÀ£¨Ó¦ÒÆÈë docs/£©??
-©À©¤©¤ index.html            # Èë¿ÚÎÄ¼ş£¨¸ù¼¶°×Ãûµ¥£©?
-©À©¤©¤ package.json          # °üÅäÖÃ£¨¸ù¼¶°×Ãûµ¥£©?
-©À©¤©¤ eslint.config.js      # ESLint ÅäÖÃ ?
-©À©¤©¤ eslint.colors.config.js  # ÑÕÉ«×¨ÓÃ ESLint ÅäÖÃ ?
-©À©¤©¤ tsconfig.json         # TS Ö÷ÅäÖÃ ?
-©À©¤©¤ tsconfig.api.json     # TS API ÅäÖÃ ?
-©À©¤©¤ tsconfig.scripts.json # TS ½Å±¾ÅäÖÃ ?
-©À©¤©¤ tsconfig.test.json    # TS ²âÊÔÅäÖÃ ?
-©À©¤©¤ vite.config.ts        # Vite ¹¹½¨ÅäÖÃ ?
-©¸©¤©¤ playwright.config.ts  # Playwright ÅäÖÃ ?
+â”œâ”€â”€ .agents/              # AI Agent è¿è¡Œæ—¶æŠ€èƒ½æ–‡ä»¶ï¼ˆè‡ªåŠ¨ç®¡ç†ï¼Œä¸æ‰‹åŠ¨ä¿®æ”¹ï¼‰
+â”œâ”€â”€ .codebuddy/           # AI è¾…åŠ©ç¼–ç å·¥å…·æœ¬åœ°é…ç½®ï¼ˆä¸´æ—¶æ–‡ä»¶ï¼‰
+â”œâ”€â”€ .dbg/                 # è°ƒè¯•æˆªå›¾ï¼ˆè‡ªåŠ¨äº§å‡ºï¼Œåº”å®šæœŸæ¸…ç†ï¼‰
+â”œâ”€â”€ .github/              # GitHub å·¥ä½œæµï¼ˆCI/CD è‡ªåŠ¨åŒ–ï¼‰?
+â”œâ”€â”€ .husky/               # Git é’©å­ï¼ˆpre-commit ç­‰ï¼‰?
+â”œâ”€â”€ .playwright-mcp/      # MCP æµè§ˆå™¨æµ‹è¯•ä¸´æ—¶æ•°æ®ï¼ˆè¿‡æœŸæ•°æ®ï¼‰
+â”œâ”€â”€ .trae/                # Trae AI å·¥å…·æœ¬åœ°é…ç½®ä¸æ—¥å¿—ï¼ˆä¸´æ—¶æ–‡ä»¶ï¼‰
+â”œâ”€â”€ .vscode/              # VSCode é…ç½®ï¼ˆæ’ä»¶ã€snippetï¼‰?
+â”œâ”€â”€ .workbuddy/           # WorkBuddy å·¥å…·æ—¥å¿—ï¼ˆå¤§é‡ log æ–‡ä»¶ï¼Œåº”æ¸…ç†ï¼‰
+â”œâ”€â”€ build-artifacts/      # æ„å»ºäº§ç‰©å¤‡ä»½ï¼ˆå¯æ¸…ç†ï¼‰
+â”œâ”€â”€ code-quality-compliance/  # ç‹¬ç«‹ Skill åŒ…ï¼ˆå·²å®‰è£…æ’ä»¶ï¼‰
+â”œâ”€â”€ design-tokens/        # Figma è®¾è®¡ä»¤ç‰ŒåŒæ­¥æ•°æ® ?
+â”œâ”€â”€ docs/                 # æ–‡æ¡£ä¸»ç›®å½•ï¼ˆéœ€é‡æ„ï¼‰??
+â”œâ”€â”€ e2e/                  # Playwright ç«¯åˆ°ç«¯æµ‹è¯• ?
+â”œâ”€â”€ eslint-rules/         # è‡ªå®šä¹‰ ESLint è§„åˆ™ï¼ˆé¢œè‰²ç¡¬ç¼–ç æ£€æŸ¥ï¼‰?
+â”œâ”€â”€ outputs/              # AI äº§å‡ºç‰©ç›®å½•ï¼ˆä¸´æ—¶æ–‡ä»¶ï¼‰
+â”œâ”€â”€ packages/             # å­åŒ…ï¼ˆaudit-utils, store-auditï¼‰?
+â”œâ”€â”€ plugins/              # Kimi æ’ä»¶å®‰è£…ç›®å½•ï¼ˆè¿è¡Œæ—¶ï¼‰?
+â”œâ”€â”€ prompts/              # ç³»ç»Ÿæç¤ºè¯æ¨¡æ¿ï¼ˆAI å¼€å‘å·¥å…·ï¼‰?
+â”œâ”€â”€ public/               # é™æ€èµ„æºï¼ˆå›¾æ ‡ã€manifestï¼‰?
+â”œâ”€â”€ python/               # Python æ•°æ®æœåŠ¡ç«¯ç‚¹ï¼ˆè½»é‡æœåŠ¡ï¼‰?
+â”œâ”€â”€ releases/             # å‘å¸ƒåŒ… ZIPï¼ˆå¯æ¸…ç†æ—§ç‰ˆæœ¬ï¼‰
+â”œâ”€â”€ scripts/              # é¡¹ç›®è„šæœ¬ï¼ˆ120+ æ–‡ä»¶ï¼Œ42 ä¸ªå­¤ç«‹ï¼‰??
+â”œâ”€â”€ src/                  # æºä»£ç ä¸»ç›®å½•ï¼ˆè§„èŒƒè‰¯å¥½ï¼‰?
+â”œâ”€â”€ temp/                 # ä¸´æ—¶æ–‡ä»¶ç›®å½•ï¼ˆ80+ æ–‡ä»¶ï¼Œ~180MBï¼‰??
+â”œâ”€â”€ test-output/          # æµ‹è¯•è¾“å‡ºï¼ˆproofread-report ç­‰ï¼‰??
+â”œâ”€â”€ tests/                # æµ‹è¯•ç›®å½•ï¼ˆ138 ä¸ªæµ‹è¯•æ–‡ä»¶ï¼‰?
+â”œâ”€â”€ AGENTS.md             # AI è¡Œä¸ºçº¦æŸå¥‘çº¦ï¼ˆæ ¹çº§ç™½åå•ï¼‰?
+â”œâ”€â”€ architecture.md       # æ¶æ„æ–‡æ¡£ï¼ˆåº”ç§»å…¥ docs/ï¼‰??
+â”œâ”€â”€ CHANGELOG.md          # å˜æ›´æ—¥å¿—ï¼ˆæ ¹çº§ç™½åå•ï¼‰?
+â”œâ”€â”€ README.md             # é¡¹ç›®è‡ªè¿°ï¼ˆæ ¹çº§ç™½åå•ï¼‰?
+â”œâ”€â”€ overview.md           # é¡¹ç›®æ¦‚è§ˆï¼ˆåº”ç§»å…¥ docs/ï¼‰??
+â”œâ”€â”€ index.html            # å…¥å£æ–‡ä»¶ï¼ˆæ ¹çº§ç™½åå•ï¼‰?
+â”œâ”€â”€ package.json          # åŒ…é…ç½®ï¼ˆæ ¹çº§ç™½åå•ï¼‰?
+â”œâ”€â”€ eslint.config.js      # ESLint é…ç½® ?
+â”œâ”€â”€ eslint.colors.config.js  # é¢œè‰²ä¸“ç”¨ ESLint é…ç½® ?
+â”œâ”€â”€ tsconfig.json         # TS ä¸»é…ç½® ?
+â”œâ”€â”€ tsconfig.api.json     # TS API é…ç½® ?
+â”œâ”€â”€ tsconfig.scripts.json # TS è„šæœ¬é…ç½® ?
+â”œâ”€â”€ tsconfig.test.json    # TS æµ‹è¯•é…ç½® ?
+â”œâ”€â”€ vite.config.ts        # Vite æ„å»ºé…ç½® ?
+â””â”€â”€ playwright.config.ts  # Playwright é…ç½® ?
 ```
 
 ---
 
-## ¶ş¡¢ÎÄ¼şÀàĞÍ·Ö²¼Í³¼Æ
+## äºŒã€æ–‡ä»¶ç±»å‹åˆ†å¸ƒç»Ÿè®¡
 
-| ÀàĞÍ | ÊıÁ¿ | Õ¼±È | ËµÃ÷ |
+| ç±»å‹ | æ•°é‡ | å æ¯” | è¯´æ˜ |
 |------|------|------|------|
-| json | 1,317 | 30% | ´óÁ¿²âÊÔÊı¾İ¡¢ÅäÖÃ¡¢API ÏìÓ¦ |
-| ts | 808 | 18% | ºËĞÄÔ´Âë£¨º¬²âÊÔ£© |
-| md | 799 | 18% | ÎÄµµ£¨´óÁ¿ÖØ¸´/¹ıÊ±£© |
-| tsx | 219 | 5% | React ×é¼ş |
-| png | 91 | 2% | ½ØÍ¼¡¢±¨¸æÍ¼±í |
-| log | 87 | 2% | ÈÕÖ¾ÎÄ¼ş£¨ĞèÇåÀí£© |
-| py | 42 | 1% | ½Å±¾¡¢¹¤¾ß |
-| yml | 40 | 1% | CI/CD ÅäÖÃ |
-| html | 21 | 0.5% | ±¨¸æ¡¢ÑİÊ¾Ò³Ãæ |
-| cjs/js | 41 | 1% | ÅäÖÃ¡¢½Å±¾ |
-| zip | 10 | 0.2% | ·¢²¼°ü |
-| ÆäËû | ~1,000 | ~23% | sh, ps1, svg, mmd, mjs, txt µÈ |
+| json | 1,317 | 30% | å¤§é‡æµ‹è¯•æ•°æ®ã€é…ç½®ã€API å“åº” |
+| ts | 808 | 18% | æ ¸å¿ƒæºç ï¼ˆå«æµ‹è¯•ï¼‰ |
+| md | 799 | 18% | æ–‡æ¡£ï¼ˆå¤§é‡é‡å¤/è¿‡æ—¶ï¼‰ |
+| tsx | 219 | 5% | React ç»„ä»¶ |
+| png | 91 | 2% | æˆªå›¾ã€æŠ¥å‘Šå›¾è¡¨ |
+| log | 87 | 2% | æ—¥å¿—æ–‡ä»¶ï¼ˆéœ€æ¸…ç†ï¼‰ |
+| py | 42 | 1% | è„šæœ¬ã€å·¥å…· |
+| yml | 40 | 1% | CI/CD é…ç½® |
+| html | 21 | 0.5% | æŠ¥å‘Šã€æ¼”ç¤ºé¡µé¢ |
+| cjs/js | 41 | 1% | é…ç½®ã€è„šæœ¬ |
+| zip | 10 | 0.2% | å‘å¸ƒåŒ… |
+| å…¶ä»– | ~1,000 | ~23% | sh, ps1, svg, mmd, mjs, txt ç­‰ |
 
-**¹Ø¼ü·¢ÏÖ**£º
-- log ÎÄ¼ş 87 ¸ö£¬´ó²¿·ÖÔÚ `temp/`£¨~62 ¸ö£¬~180MB£©ºÍ `.workbuddy/`£¨10 ¸ö£©
-- html ÎÄ¼ş½ö 5 ¸ö£¨º¬ dist/index.html ¹¹½¨²úÎï£©£¬Ó°ÏìÃæĞ¡
-- md ÎÄ¼ş 799 ¸ö£¬·Ö²¼ÔÚ `docs/`£¨~500+£©ºÍ `.agents/skills/`£¨~100+£©
+**å…³é”®å‘ç°**ï¼š
+- log æ–‡ä»¶ 87 ä¸ªï¼Œå¤§éƒ¨åˆ†åœ¨ `temp/`ï¼ˆ~62 ä¸ªï¼Œ~180MBï¼‰å’Œ `.workbuddy/`ï¼ˆ10 ä¸ªï¼‰
+- html æ–‡ä»¶ä»… 5 ä¸ªï¼ˆå« dist/index.html æ„å»ºäº§ç‰©ï¼‰ï¼Œå½±å“é¢å°
+- md æ–‡ä»¶ 799 ä¸ªï¼Œåˆ†å¸ƒåœ¨ `docs/`ï¼ˆ~500+ï¼‰å’Œ `.agents/skills/`ï¼ˆ~100+ï¼‰
 
 ---
 
-## Èı¡¢ÎÊÌâÇøÓòÏêÏ¸Ê¶±ğ
+## ä¸‰ã€é—®é¢˜åŒºåŸŸè¯¦ç»†è¯†åˆ«
 
-### 3.1 ²âÊÔÎÄ¼ş·Ö²¼£¨332 ¸ö£©
+### 3.1 æµ‹è¯•æ–‡ä»¶åˆ†å¸ƒï¼ˆ332 ä¸ªï¼‰
 
-| Î»ÖÃ | ÊıÁ¿ | ËµÃ÷ | ÎÊÌâµÈ¼¶ |
+| ä½ç½® | æ•°é‡ | è¯´æ˜ | é—®é¢˜ç­‰çº§ |
 |------|------|------|---------|
-| src/ ÏÂ£¨º¬×ÓÄ¿Â¼£© | 194 | ÓëÔ´Âë»ì·Å£¬Èç `src/components/atoms/Badge.test.tsx` | ?? ÖĞµÈ |
-| tests/ ÏÂ | 138 | ¶ÀÁ¢²âÊÔÄ¿Â¼£¬½á¹¹Á¼ºÃ | ? Õı³£ |
-| e2e/ ÏÂ | 15+ | ¶Ëµ½¶Ë²âÊÔ£¬½á¹¹Á¼ºÃ | ? Õı³£ |
-| **¸ùÄ¿Â¼** | 0 | ÎŞÉ¢Âä | ? Õı³£ |
+| src/ ä¸‹ï¼ˆå«å­ç›®å½•ï¼‰ | 194 | ä¸æºç æ··æ”¾ï¼Œå¦‚ `src/components/atoms/Badge.test.tsx` | ?? ä¸­ç­‰ |
+| tests/ ä¸‹ | 138 | ç‹¬ç«‹æµ‹è¯•ç›®å½•ï¼Œç»“æ„è‰¯å¥½ | ? æ­£å¸¸ |
+| e2e/ ä¸‹ | 15+ | ç«¯åˆ°ç«¯æµ‹è¯•ï¼Œç»“æ„è‰¯å¥½ | ? æ­£å¸¸ |
+| **æ ¹ç›®å½•** | 0 | æ— æ•£è½ | ? æ­£å¸¸ |
 
-**·ÖÎö**£º`src/` ÏÂ 194 ¸ö²âÊÔÎÄ¼şÕ¼×ÜÊı 58%£¬µ«ÕâÊÇÔÚ src/ ÄÚ¹²ÖÃ£¨co-location£©Ä£Ê½£¬ÊÇ Vitest µÄÍÆ¼öÊµ¼ù¡£Ç¨ÒÆµ½ `tests/` »á¸Ä±ä¿ª·¢Ï°¹ß£¬ĞèÒªÈ¨ºâ¡£½¨Òé±£Áô¹²ÖÃ£¬µ«ĞèÇåÀíÖØ¸´²âÊÔ¡£
+**åˆ†æ**ï¼š`src/` ä¸‹ 194 ä¸ªæµ‹è¯•æ–‡ä»¶å æ€»æ•° 58%ï¼Œä½†è¿™æ˜¯åœ¨ src/ å†…å…±ç½®ï¼ˆco-locationï¼‰æ¨¡å¼ï¼Œæ˜¯ Vitest çš„æ¨èå®è·µã€‚è¿ç§»åˆ° `tests/` ä¼šæ”¹å˜å¼€å‘ä¹ æƒ¯ï¼Œéœ€è¦æƒè¡¡ã€‚å»ºè®®ä¿ç•™å…±ç½®ï¼Œä½†éœ€æ¸…ç†é‡å¤æµ‹è¯•ã€‚
 
-### 3.2 ÁÙÊ±ÎÄ¼ş£¨~80+ ¸ö£¬~180MB£©
+### 3.2 ä¸´æ—¶æ–‡ä»¶ï¼ˆ~80+ ä¸ªï¼Œ~180MBï¼‰
 
-| Î»ÖÃ | ÎÄ¼şÊı | ´óĞ¡ | ÎÊÌâ |
+| ä½ç½® | æ–‡ä»¶æ•° | å¤§å° | é—®é¢˜ |
 |------|--------|------|------|
-| temp/*.log | 50+ | ~90MB | ´óÁ¿ÖØ¸´ coverage ²âÊÔÈÕÖ¾£¬ÎŞ±£Áô¼ÛÖµ |
-| temp/*.txt | 10+ | ~5MB | ²âÊÔÊä³ö¡¢ÑéÖ¤±¨¸æ |
-| temp/*.json | 5+ | ~0.5MB | ºó¶ËÑéÖ¤±¨¸æ |
-| temp/*.png | 5 | ~0.5MB | Â·ÓÉ·ÖÎöÍ¼ |
-| temp/*.svg | 2 | ~0.1MB | À×´ïÍ¼ |
-| temp/*.py | 5 | ~0.1MB | ÑéÖ¤½Å±¾ |
-| temp/*.mjs | 5 | ~0.1MB | ²âÊÔ½Å±¾ |
-| temp/½µ¼¶Á´²âÊÔ±¨¸æ.md | 1 | ~0.1MB | ÖĞÎÄ²âÊÔ±¨¸æ |
-| .workbuddy/*.log | 10 | ~20MB | ¹¤×÷ÈÕÖ¾ |
-| .workbuddy/memory/*.md | 8 | ~1MB | Ã¿ÈÕ¼ÇÒä |
-| coverage/.tmp | 1 | ~5MB | ÁÙÊ±¸²¸ÇÂÊÊı¾İ |
-| e2e/snapshot-baseline-*.log | 1 | ~0.1MB | ¿ìÕÕ»ùÏßÈÕÖ¾ |
-| test-output/ | 3 | ~0.01MB | proofread ±¨¸æ |
-| build-artifacts/_backup/ | 1 | ~0.1MB | ¹¹½¨±¸·İ |
-| outputs/ | 35 | ~5MB | AI ²ú³öÎï£¨²¿·Ö¿É¹éµµ£© |
+| temp/*.log | 50+ | ~90MB | å¤§é‡é‡å¤ coverage æµ‹è¯•æ—¥å¿—ï¼Œæ— ä¿ç•™ä»·å€¼ |
+| temp/*.txt | 10+ | ~5MB | æµ‹è¯•è¾“å‡ºã€éªŒè¯æŠ¥å‘Š |
+| temp/*.json | 5+ | ~0.5MB | åç«¯éªŒè¯æŠ¥å‘Š |
+| temp/*.png | 5 | ~0.5MB | è·¯ç”±åˆ†æå›¾ |
+| temp/*.svg | 2 | ~0.1MB | é›·è¾¾å›¾ |
+| temp/*.py | 5 | ~0.1MB | éªŒè¯è„šæœ¬ |
+| temp/*.mjs | 5 | ~0.1MB | æµ‹è¯•è„šæœ¬ |
+| temp/é™çº§é“¾æµ‹è¯•æŠ¥å‘Š.md | 1 | ~0.1MB | ä¸­æ–‡æµ‹è¯•æŠ¥å‘Š |
+| .workbuddy/*.log | 10 | ~20MB | å·¥ä½œæ—¥å¿— |
+| .workbuddy/memory/*.md | 8 | ~1MB | æ¯æ—¥è®°å¿† |
+| coverage/.tmp | 1 | ~5MB | ä¸´æ—¶è¦†ç›–ç‡æ•°æ® |
+| e2e/snapshot-baseline-*.log | 1 | ~0.1MB | å¿«ç…§åŸºçº¿æ—¥å¿— |
+| test-output/ | 3 | ~0.01MB | proofread æŠ¥å‘Š |
+| build-artifacts/_backup/ | 1 | ~0.1MB | æ„å»ºå¤‡ä»½ |
+| outputs/ | 35 | ~5MB | AI äº§å‡ºç‰©ï¼ˆéƒ¨åˆ†å¯å½’æ¡£ï¼‰ |
 
-**ÎÊÌâµÈ¼¶**£º?? ¸ß ¡ª temp/ Ä¿Â¼´óÁ¿ÈÕÖ¾ÎŞ°æ±¾¿ØÖÆ¼ÛÖµ£¬Õ¼ÓÃ 180MB
+**é—®é¢˜ç­‰çº§**ï¼š?? é«˜ â€” temp/ ç›®å½•å¤§é‡æ—¥å¿—æ— ç‰ˆæœ¬æ§åˆ¶ä»·å€¼ï¼Œå ç”¨ 180MB
 
-### 3.3 HTML ÎÄ¼ş£¨5 ¸ö£¬·Ç¹¹½¨²úÎï£©
+### 3.3 HTML æ–‡ä»¶ï¼ˆ5 ä¸ªï¼Œéæ„å»ºäº§ç‰©ï¼‰
 
-| ÎÄ¼ş | Â·¾¶ | ËµÃ÷ | ½¨Òé |
+| æ–‡ä»¶ | è·¯å¾„ | è¯´æ˜ | å»ºè®® |
 |------|------|------|------|
-| P1-P2ÂäÊµ×·×Ù±¨¸æ | docs/P1-P2ÂäÊµ×·×Ù±¨¸æ_2026-07-09.html | ÏîÄ¿×·×Ù±¨¸æ | ÒÆÈë docs/reports/ |
-| v9-interaction-flows | docs/v9-interaction-flows.html | ½»»¥Á÷ÑİÊ¾ | ÒÆÈë docs/reports/design/ |
-| proofread-report | test-output/proofread-report.html | Ğ£¶Ô±¨¸æ | ÒÆÈë docs/reports/test/ |
-| index.html | ¸ùÄ¿Â¼ | Èë¿ÚÎÄ¼ş | ? ±£Áô |
-| dist/index.html | ¹¹½¨²úÎï | ×Ô¶¯Éú³É | ? ºöÂÔ |
+| P1-P2è½å®è¿½è¸ªæŠ¥å‘Š | docs/P1-P2è½å®è¿½è¸ªæŠ¥å‘Š_2026-07-09.html | é¡¹ç›®è¿½è¸ªæŠ¥å‘Š | ç§»å…¥ docs/reports/ |
+| v9-interaction-flows | docs/v9-interaction-flows.html | äº¤äº’æµæ¼”ç¤º | ç§»å…¥ docs/reports/design/ |
+| proofread-report | test-output/proofread-report.html | æ ¡å¯¹æŠ¥å‘Š | ç§»å…¥ docs/reports/test/ |
+| index.html | æ ¹ç›®å½• | å…¥å£æ–‡ä»¶ | ? ä¿ç•™ |
+| dist/index.html | æ„å»ºäº§ç‰© | è‡ªåŠ¨ç”Ÿæˆ | ? å¿½ç•¥ |
 
-### 3.4 ¹ÂÁ¢½Å±¾£¨42 ¸ö£¬Õ¼ scripts/ 35%£©
+### 3.4 å­¤ç«‹è„šæœ¬ï¼ˆ42 ä¸ªï¼Œå  scripts/ 35%ï¼‰
 
-**ÒÑÒıÓÃ½Å±¾£¨~78 ¸ö£¬Í¨¹ı package.json scripts£©**£º
-- `audit:*` ÏµÁĞ£ºaudit-layers, audit-hardcode, audit-deadcode, audit-docs...£¨Ô¼ 20 ¸ö£©
-- `test:*` ÏµÁĞ£ºtest, test:watch, test:ci, test:e2e...£¨Ô¼ 10 ¸ö£©
-- `doc:*` ÏµÁĞ£ºdoc-update-trigger, doc-freshness-alert...£¨Ô¼ 5 ¸ö£©
-- `generate:*` ÏµÁĞ£ºgenerate-tokens, generate-doc-list...£¨Ô¼ 5 ¸ö£©
-- ÆäËû£ºcomplexity-scan, fix-layer-violations, pre-review-check...£¨Ô¼ 38 ¸ö£©
+**å·²å¼•ç”¨è„šæœ¬ï¼ˆ~78 ä¸ªï¼Œé€šè¿‡ package.json scriptsï¼‰**ï¼š
+- `audit:*` ç³»åˆ—ï¼šaudit-layers, audit-hardcode, audit-deadcode, audit-docs...ï¼ˆçº¦ 20 ä¸ªï¼‰
+- `test:*` ç³»åˆ—ï¼štest, test:watch, test:ci, test:e2e...ï¼ˆçº¦ 10 ä¸ªï¼‰
+- `doc:*` ç³»åˆ—ï¼šdoc-update-trigger, doc-freshness-alert...ï¼ˆçº¦ 5 ä¸ªï¼‰
+- `generate:*` ç³»åˆ—ï¼šgenerate-tokens, generate-doc-list...ï¼ˆçº¦ 5 ä¸ªï¼‰
+- å…¶ä»–ï¼šcomplexity-scan, fix-layer-violations, pre-review-check...ï¼ˆçº¦ 38 ä¸ªï¼‰
 
-**¹ÂÁ¢½Å±¾·ÖÀà£¨42 ¸ö£©**£º
+**å­¤ç«‹è„šæœ¬åˆ†ç±»ï¼ˆ42 ä¸ªï¼‰**ï¼š
 
-| Àà±ğ | ÎÄ¼ş | ½¨Òé |
+| ç±»åˆ« | æ–‡ä»¶ | å»ºè®® |
 |------|------|------|
-| ÁÙÊ±¹¤¾ß£¨Ç°×º `_`£© | _cmp.cjs, _cx_filter.cjs, _debug_hash.py, _debug_url.py, _dupq.cjs, _extract_d4.cjs, _smoke_playwright.py | ±£Áô»ò¹éµµ£¨¿ÉÄÜÎªÁÙÊ±Õï¶Ï£© |
-| Î´½ÓÈëÉó¼ÆÁ÷Ë®Ïß | batch-add-jsdoc.ts, batch-fix-tsc.ts, cleanup-reports.ts, file-dedup-scan.mjs, gen-cleanup-list.py, generate-doc-list-simple.ts, generate-doc-update-list.ts, generate-rectification-pdf.ts | ÆÀ¹ÀÊÇ·ñ½ÓÈë CI |
-| ²¿Êğ/¹¤¾ß½Å±¾ | check-types.ps1, check-types.sh, deploy-rectification-toolkit.ts, git-push-with-retry.ps1, rotate-ark-api-key.ps1, run_browser_test.ps1, stress-test-realtime-quotes.sh | ±£Áô£¨ÔËÎ¬ÓÃ£© |
-| µ÷ÊÔ/ÑéÖ¤ | audit-path-match.mjs, audit-path-match.ts, browser_verify_agent_b.py, test_browser.py, test_connectivity.py, test_diag.py, test_file.py, verify-m1.ts, verify-m2-m3.ts | ±£Áô£¨¿ª·¢µ÷ÊÔ£© |
-| Êı¾İ´¦Àí | component-audit-data.json, component-audit-report.txt, generate_data_link_diagram.py, llm-doc-generator.ts, p1-1-migrate.py, pitfall_check.py, regression_news_v6.py, regression_news_v6_test.cjs | ÆÀ¹ÀÊÇ·ñ½ÓÈë×Ô¶¯»¯ |
-| ÎÄµµ/Í¨Öª | doc-notify.ts, doc-pipeline.ts, doc-retry.ts | Èô doc-auto-updater ÒÑ¸²¸Ç£¬¿É¹éµµ |
-| ÆäËû | compare-visual-baselines.sh, run-with-log.ts | ±£Áô£¨CI ÓÃ£© |
+| ä¸´æ—¶å·¥å…·ï¼ˆå‰ç¼€ `_`ï¼‰ | _cmp.cjs, _cx_filter.cjs, _debug_hash.py, _debug_url.py, _dupq.cjs, _extract_d4.cjs, _smoke_playwright.py | ä¿ç•™æˆ–å½’æ¡£ï¼ˆå¯èƒ½ä¸ºä¸´æ—¶è¯Šæ–­ï¼‰ |
+| æœªæ¥å…¥å®¡è®¡æµæ°´çº¿ | batch-add-jsdoc.ts, batch-fix-tsc.ts, cleanup-reports.ts, file-dedup-scan.mjs, gen-cleanup-list.py, generate-doc-list-simple.ts, generate-doc-update-list.ts, generate-rectification-pdf.ts | è¯„ä¼°æ˜¯å¦æ¥å…¥ CI |
+| éƒ¨ç½²/å·¥å…·è„šæœ¬ | check-types.ps1, check-types.sh, deploy-rectification-toolkit.ts, git-push-with-retry.ps1, rotate-ark-api-key.ps1, run_browser_test.ps1, stress-test-realtime-quotes.sh | ä¿ç•™ï¼ˆè¿ç»´ç”¨ï¼‰ |
+| è°ƒè¯•/éªŒè¯ | audit-path-match.mjs, audit-path-match.ts, browser_verify_agent_b.py, test_browser.py, test_connectivity.py, test_diag.py, test_file.py, verify-m1.ts, verify-m2-m3.ts | ä¿ç•™ï¼ˆå¼€å‘è°ƒè¯•ï¼‰ |
+| æ•°æ®å¤„ç† | component-audit-data.json, component-audit-report.txt, generate_data_link_diagram.py, llm-doc-generator.ts, p1-1-migrate.py, pitfall_check.py, regression_news_v6.py, regression_news_v6_test.cjs | è¯„ä¼°æ˜¯å¦æ¥å…¥è‡ªåŠ¨åŒ– |
+| æ–‡æ¡£/é€šçŸ¥ | doc-notify.ts, doc-pipeline.ts, doc-retry.ts | è‹¥ doc-auto-updater å·²è¦†ç›–ï¼Œå¯å½’æ¡£ |
+| å…¶ä»– | compare-visual-baselines.sh, run-with-log.ts | ä¿ç•™ï¼ˆCI ç”¨ï¼‰ |
 
-### 3.5 ÅäÖÃÎÄ¼şÈ¥ÖØ¼ì²é
+### 3.5 é…ç½®æ–‡ä»¶å»é‡æ£€æŸ¥
 
-| ÅäÖÃ | ÎÄ¼ş | ×´Ì¬ | ½¨Òé |
+| é…ç½® | æ–‡ä»¶ | çŠ¶æ€ | å»ºè®® |
 |------|------|------|------|
-| ESLint | `eslint.config.js`£¨Ö÷£©, `eslint.colors.config.js`£¨ÑÕÉ«×¨ÓÃ£©, `eslint-rules/no-hardcoded-colors.js`£¨×Ô¶¨Òå¹æÔò£© | ?? 3 ¸öÎÄ¼ş | ¿ÉºÏ²¢ÎªÒ»¸ö£¬ÑÕÉ«×¨ÓÃÓÃ extends |
-| TypeScript | `tsconfig.json`£¨Ö÷£©, `tsconfig.api.json`, `tsconfig.scripts.json`, `tsconfig.test.json` | ? ·Ö²ãºÏÀí | ±£Áô£¬¸÷³¡¾°¸ôÀë |
-| Tailwind | `tailwind.config.js` | ? Î¨Ò» | ±£Áô |
-| Vite | `vite.config.ts` | ? Î¨Ò» | ±£Áô |
+| ESLint | `eslint.config.js`ï¼ˆä¸»ï¼‰, `eslint.colors.config.js`ï¼ˆé¢œè‰²ä¸“ç”¨ï¼‰, `eslint-rules/no-hardcoded-colors.js`ï¼ˆè‡ªå®šä¹‰è§„åˆ™ï¼‰ | ?? 3 ä¸ªæ–‡ä»¶ | å¯åˆå¹¶ä¸ºä¸€ä¸ªï¼Œé¢œè‰²ä¸“ç”¨ç”¨ extends |
+| TypeScript | `tsconfig.json`ï¼ˆä¸»ï¼‰, `tsconfig.api.json`, `tsconfig.scripts.json`, `tsconfig.test.json` | ? åˆ†å±‚åˆç† | ä¿ç•™ï¼Œå„åœºæ™¯éš”ç¦» |
+| Tailwind | `tailwind.config.js` | ? å”¯ä¸€ | ä¿ç•™ |
+| Vite | `vite.config.ts` | ? å”¯ä¸€ | ä¿ç•™ |
 
-**½áÂÛ**£ºESLint ÅäÖÃ¿ÉºÏ²¢¼ò»¯£¬µ«·Ç½ô¼±¡£TypeScript ·Ö²ãÅäÖÃºÏÀí¡£
+**ç»“è®º**ï¼šESLint é…ç½®å¯åˆå¹¶ç®€åŒ–ï¼Œä½†éç´§æ€¥ã€‚TypeScript åˆ†å±‚é…ç½®åˆç†ã€‚
 
-### 3.6 docs/ ·Ç SDLC Ä¿Â¼Ê¶±ğ
+### 3.6 docs/ é SDLC ç›®å½•è¯†åˆ«
 
 ```
 docs/
-©À©¤©¤ 00-meta/              ? SDLC Phase 0£¨ÔªÊı¾İ£©
-©À©¤©¤ 01-requirements/      ? SDLC Phase 1
-©À©¤©¤ 02-design/            ? SDLC Phase 2
-©À©¤©¤ 03-development/       ? SDLC Phase 3
-©À©¤©¤ 04-testing/           ? SDLC Phase 4
-©À©¤©¤ 05-deployment/        ? SDLC Phase 5
-©À©¤©¤ 06-project-management/ ? SDLC Phase 6
-©À©¤©¤ 07-archive/           ? SDLC Phase 7
-©À©¤©¤ .ai-index/            ?? AI Ë÷Òı£¨ÒÆÈë 00-meta/£©
-©À©¤©¤ ai/                   ?? AI ¼¯³ÉÖ¸ÄÏ£¨ÒÆÈë 03-development/£©
-©À©¤©¤ architecture/         ?? ¼Ü¹¹ÎÄµµ£¨ÒÆÈë 02-design/ADR/£©
-©À©¤©¤ architecture-radar-v2/ ?? ¼Ü¹¹À×´ï£¨ÒÆÈë 02-design/£©
-©À©¤©¤ assets/               ?? ¾²Ì¬×ÊÔ´£¨±£Áô£¬µ«Ğè README£©
-©À©¤©¤ audit/                ?? Éó¼Æ±¨¸æ£¨ÒÆÈë 04-testing/ »ò 06-project-management/£©
-©À©¤©¤ blueprints/           ?? À¶Í¼£¨ÒÆÈë 02-design/£©
-©À©¤©¤ changelogs/           ?? ±ä¸üÈÕÖ¾£¨ÒÆÈë 06-project-management/£©
-©À©¤©¤ cockpit/              ?? ¼İÊ»²ÕÊı¾İ¶¨Òå£¨ÒÆÈë 02-design/ »ò standards/£©
-©À©¤©¤ drafts/               ?? ²İ¸å£¨ÒÆÈë playground/ »ò 07-archive/£©
-©À©¤©¤ guides/               ?? ¿ª·¢Ö¸ÄÏ£¨ÒÆÈë 03-development/£©
-©À©¤©¤ implementation/       ?? ÊµÊ©½ØÍ¼£¨ÒÆÈë 03-development/ »ò 07-archive/£©
-©À©¤©¤ modules/              ?? Ä£¿éÎÄµµ£¨ÒÆÈë 02-design/£©
-©À©¤©¤ ops/                  ?? ÔËÎ¬ÎÄµµ£¨ÒÆÈë 05-deployment/£©
-©À©¤©¤ plans/                ?? ¼Æ»®£¨ÒÆÈë 06-project-management/£©
-©À©¤©¤ plugins/              ?? ²å¼şÎÄµµ£¨ÒÆÈë 03-development/£©
-©À©¤©¤ reports/              ?? ±¨¸æ£¨ÒÆÈë 04-testing/ »ò 06-project-management/£©
-©À©¤©¤ standards/            ?? ±ê×¼£¨ÒÆÈë 02-design/ »ò 03-development/£©
-©À©¤©¤ testing/              ?? ²âÊÔÄ¿Â¼£¨Óë 04-testing/ ºÏ²¢£©
-©¸©¤©¤ topics/               ?? Ö÷Ìâ£¨ÒÆÈë 02-design/£©
+â”œâ”€â”€ 00-meta/              ? SDLC Phase 0ï¼ˆå…ƒæ•°æ®ï¼‰
+â”œâ”€â”€ 01-requirements/      ? SDLC Phase 1
+â”œâ”€â”€ 02-design/            ? SDLC Phase 2
+â”œâ”€â”€ 03-development/       ? SDLC Phase 3
+â”œâ”€â”€ 04-testing/           ? SDLC Phase 4
+â”œâ”€â”€ 05-deployment/        ? SDLC Phase 5
+â”œâ”€â”€ 06-project-management/ ? SDLC Phase 6
+â”œâ”€â”€ 07-archive/           ? SDLC Phase 7
+â”œâ”€â”€ .ai-index/            ?? AI ç´¢å¼•ï¼ˆç§»å…¥ 00-meta/ï¼‰
+â”œâ”€â”€ ai/                   ?? AI é›†æˆæŒ‡å—ï¼ˆç§»å…¥ 03-development/ï¼‰
+â”œâ”€â”€ architecture/         ?? æ¶æ„æ–‡æ¡£ï¼ˆç§»å…¥ 02-design/ADR/ï¼‰
+â”œâ”€â”€ architecture-radar-v2/ ?? æ¶æ„é›·è¾¾ï¼ˆç§»å…¥ 02-design/ï¼‰
+â”œâ”€â”€ assets/               ?? é™æ€èµ„æºï¼ˆä¿ç•™ï¼Œä½†éœ€ READMEï¼‰
+â”œâ”€â”€ audit/                ?? å®¡è®¡æŠ¥å‘Šï¼ˆç§»å…¥ 04-testing/ æˆ– 06-project-management/ï¼‰
+â”œâ”€â”€ blueprints/           ?? è“å›¾ï¼ˆç§»å…¥ 02-design/ï¼‰
+â”œâ”€â”€ changelogs/           ?? å˜æ›´æ—¥å¿—ï¼ˆç§»å…¥ 06-project-management/ï¼‰
+â”œâ”€â”€ cockpit/              ?? é©¾é©¶èˆ±æ•°æ®å®šä¹‰ï¼ˆç§»å…¥ 02-design/ æˆ– standards/ï¼‰
+â”œâ”€â”€ drafts/               ?? è‰ç¨¿ï¼ˆç§»å…¥ playground/ æˆ– 07-archive/ï¼‰
+â”œâ”€â”€ guides/               ?? å¼€å‘æŒ‡å—ï¼ˆç§»å…¥ 03-development/ï¼‰
+â”œâ”€â”€ implementation/       ?? å®æ–½æˆªå›¾ï¼ˆç§»å…¥ 03-development/ æˆ– 07-archive/ï¼‰
+â”œâ”€â”€ modules/              ?? æ¨¡å—æ–‡æ¡£ï¼ˆç§»å…¥ 02-design/ï¼‰
+â”œâ”€â”€ ops/                  ?? è¿ç»´æ–‡æ¡£ï¼ˆç§»å…¥ 05-deployment/ï¼‰
+â”œâ”€â”€ plans/                ?? è®¡åˆ’ï¼ˆç§»å…¥ 06-project-management/ï¼‰
+â”œâ”€â”€ plugins/              ?? æ’ä»¶æ–‡æ¡£ï¼ˆç§»å…¥ 03-development/ï¼‰
+â”œâ”€â”€ reports/              ?? æŠ¥å‘Šï¼ˆç§»å…¥ 04-testing/ æˆ– 06-project-management/ï¼‰
+â”œâ”€â”€ standards/            ?? æ ‡å‡†ï¼ˆç§»å…¥ 02-design/ æˆ– 03-development/ï¼‰
+â”œâ”€â”€ testing/              ?? æµ‹è¯•ç›®å½•ï¼ˆä¸ 04-testing/ åˆå¹¶ï¼‰
+â””â”€â”€ topics/               ?? ä¸»é¢˜ï¼ˆç§»å…¥ 02-design/ï¼‰
 ```
 
-**docs/ ¸ù¼¶É¢ÂäÎÄ¼ş**£º
-- `23-core-docs-functional-match-report.json` ¡ú ÒÆÈë 00-meta/
-- `../../00-meta/cleanup-schedule.md` ¡ú ÒÑÓĞ 07-archive/../../00-meta/cleanup-schedule.md£¬´Ë¸ù¼¶Îª¸±±¾£¬É¾³ı
-- `../../00-meta/GOVERNANCE.md` ¡ú ÒÆÈë 00-meta/£¨»òºÏ²¢µ½ÏÖÓĞ ../../00-meta/GOVERNANCE.md£©
-- `P1-P2ÂäÊµ×·×Ù±¨¸æ_2026-07-09.html` ¡ú ÒÆÈë docs/reports/ »ò 06-project-management/
-- `../../../README.md` ¡ú ±£Áô£¨docs Ä¿Â¼Èë¿Ú£©
-- `../../00-meta/registry-index.md` ¡ú ÒÑÓĞ 00-meta/../../00-meta/registry-index.md£¬´Ë¸ù¼¶Îª¸±±¾£¬É¾³ı
-- `v9-interaction-flows.html` ¡ú ÒÆÈë docs/reports/design/
+**docs/ æ ¹çº§æ•£è½æ–‡ä»¶**ï¼š
+- `23-core-docs-functional-match-report.json` â†’ ç§»å…¥ 00-meta/
+- `../../00-meta/cleanup-schedule.md` â†’ å·²æœ‰ 07-archive/../../00-meta/cleanup-schedule.mdï¼Œæ­¤æ ¹çº§ä¸ºå‰¯æœ¬ï¼Œåˆ é™¤
+- `../../00-meta/GOVERNANCE.md` â†’ ç§»å…¥ 00-meta/ï¼ˆæˆ–åˆå¹¶åˆ°ç°æœ‰ ../../00-meta/GOVERNANCE.mdï¼‰
+- `P1-P2è½å®è¿½è¸ªæŠ¥å‘Š_2026-07-09.html` â†’ ç§»å…¥ docs/reports/ æˆ– 06-project-management/
+- `../../../README.md` â†’ ä¿ç•™ï¼ˆdocs ç›®å½•å…¥å£ï¼‰
+- `../../00-meta/registry-index.md` â†’ å·²æœ‰ 00-meta/../../00-meta/registry-index.mdï¼Œæ­¤æ ¹çº§ä¸ºå‰¯æœ¬ï¼Œåˆ é™¤
+- `v9-interaction-flows.html` â†’ ç§»å…¥ docs/reports/design/
 
 ---
 
-## ËÄ¡¢¿ÉĞĞĞÔÂÛÖ¤
+## å››ã€å¯è¡Œæ€§è®ºè¯
 
-### 4.1 ¿É°²È«Ö´ĞĞ£¨µÍ·çÏÕ£©
+### 4.1 å¯å®‰å…¨æ‰§è¡Œï¼ˆä½é£é™©ï¼‰
 
-| ²Ù×÷ | ·çÏÕ | ÀíÓÉ |
+| æ“ä½œ | é£é™© | ç†ç”± |
 |------|------|------|
-| ÇåÀí temp/*.log | ?? ÎŞ·çÏÕ | ÈÕÖ¾ÎÄ¼şÎŞ°æ±¾¿ØÖÆ¼ÛÖµ£¬ÎŞÒıÓÃ |
-| ÇåÀí .workbuddy/*.log | ?? ÎŞ·çÏÕ | ¹¤×÷ÈÕÖ¾£¬¿ÉÖØ½¨ |
-| É¾³ı coverage/.tmp | ?? ÎŞ·çÏÕ | ÁÙÊ±¸²¸ÇÂÊÊı¾İ |
-| É¾³ı docs/ ¸ù¼¶ÖØ¸´ÎÄ¼ş£¨../../00-meta/cleanup-schedule.md, registry-index.md£© | ?? ÎŞ·çÏÕ | ×ÓÄ¿Â¼ÒÑÓĞÕıÊ½°æ±¾ |
-| ÒÆ¶¯ architecture.md ¡ú docs/02-design/ | ?? ÎŞ·çÏÕ | ÎŞÎÄ¼şÒıÓÃ´ËÂ·¾¶ |
-| ÒÆ¶¯ overview.md ¡ú docs/01-requirements/ | ?? ÎŞ·çÏÕ | ÎŞÒıÓÃ |
-| ÒÆ¶¯ HTML ±¨¸æµ½ docs/reports/ | ?? µÍ·çÏÕ | Ğè¸üĞÂÄÚ²¿Á´½Ó£¨Èç´æÔÚ£© |
+| æ¸…ç† temp/*.log | ?? æ— é£é™© | æ—¥å¿—æ–‡ä»¶æ— ç‰ˆæœ¬æ§åˆ¶ä»·å€¼ï¼Œæ— å¼•ç”¨ |
+| æ¸…ç† .workbuddy/*.log | ?? æ— é£é™© | å·¥ä½œæ—¥å¿—ï¼Œå¯é‡å»º |
+| åˆ é™¤ coverage/.tmp | ?? æ— é£é™© | ä¸´æ—¶è¦†ç›–ç‡æ•°æ® |
+| åˆ é™¤ docs/ æ ¹çº§é‡å¤æ–‡ä»¶ï¼ˆ../../00-meta/cleanup-schedule.md, registry-index.mdï¼‰ | ?? æ— é£é™© | å­ç›®å½•å·²æœ‰æ­£å¼ç‰ˆæœ¬ |
+| ç§»åŠ¨ architecture.md â†’ docs/02-design/ | ?? æ— é£é™© | æ— æ–‡ä»¶å¼•ç”¨æ­¤è·¯å¾„ |
+| ç§»åŠ¨ overview.md â†’ docs/01-requirements/ | ?? æ— é£é™© | æ— å¼•ç”¨ |
+| ç§»åŠ¨ HTML æŠ¥å‘Šåˆ° docs/reports/ | ?? ä½é£é™© | éœ€æ›´æ–°å†…éƒ¨é“¾æ¥ï¼ˆå¦‚å­˜åœ¨ï¼‰ |
 
-### 4.2 Ğè½÷É÷Ö´ĞĞ£¨ÖĞµÈ·çÏÕ£©
+### 4.2 éœ€è°¨æ…æ‰§è¡Œï¼ˆä¸­ç­‰é£é™©ï¼‰
 
-| ²Ù×÷ | ·çÏÕ | ÀíÓÉ |
+| æ“ä½œ | é£é™© | ç†ç”± |
 |------|------|------|
-| ºÏ²¢ docs/standards/ ¡ú 02-design/ | ?? ÖĞµÍ | ¿ÉÄÜÓĞÍâ²¿Á´½ÓÒıÓÃ |
-| ºÏ²¢ docs/guides/ ¡ú 03-development/ | ?? ÖĞµÍ | ¿ÉÄÜÓĞÍâ²¿Á´½ÓÒıÓÃ |
-| ºÏ²¢ docs/audit/ ¡ú 04-testing/ | ?? ÖĞµÈ | ±¨¸æÎÄ¼ş¿ÉÄÜ±»ÆäËûÎÄµµÒıÓÃ |
-| ÕûÀí scripts/ ¹ÂÁ¢½Å±¾ | ?? ÖĞµÈ | ½Å±¾¿ÉÄÜ±»ÊÖ¶¯µ÷ÓÃ£¬·Ç package.json ÒıÓÃ |
-| ÕûÀí src/ ÏÂ²âÊÔÎÄ¼ş | ?? ÖĞµÈ | ¹²ÖÃÄ£Ê½ÊÇ Vitest ÍÆ¼ö£¬Ç¨ÒÆĞè¸ÄÅäÖÃ |
+| åˆå¹¶ docs/standards/ â†’ 02-design/ | ?? ä¸­ä½ | å¯èƒ½æœ‰å¤–éƒ¨é“¾æ¥å¼•ç”¨ |
+| åˆå¹¶ docs/guides/ â†’ 03-development/ | ?? ä¸­ä½ | å¯èƒ½æœ‰å¤–éƒ¨é“¾æ¥å¼•ç”¨ |
+| åˆå¹¶ docs/audit/ â†’ 04-testing/ | ?? ä¸­ç­‰ | æŠ¥å‘Šæ–‡ä»¶å¯èƒ½è¢«å…¶ä»–æ–‡æ¡£å¼•ç”¨ |
+| æ•´ç† scripts/ å­¤ç«‹è„šæœ¬ | ?? ä¸­ç­‰ | è„šæœ¬å¯èƒ½è¢«æ‰‹åŠ¨è°ƒç”¨ï¼Œé package.json å¼•ç”¨ |
+| æ•´ç† src/ ä¸‹æµ‹è¯•æ–‡ä»¶ | ?? ä¸­ç­‰ | å…±ç½®æ¨¡å¼æ˜¯ Vitest æ¨èï¼Œè¿ç§»éœ€æ”¹é…ç½® |
 
-### 4.3 ²»¿ÉÖ´ĞĞ£¨¸ß·çÏÕ£©
+### 4.3 ä¸å¯æ‰§è¡Œï¼ˆé«˜é£é™©ï¼‰
 
-| ²Ù×÷ | ·çÏÕ | ÀíÓÉ |
+| æ“ä½œ | é£é™© | ç†ç”± |
 |------|------|------|
-| ºÏ²¢ ESLint ÅäÖÃ | ?? ¸ß·çÏÕ | ¿ÉÄÜÆÆ»µ lint ¹æÔò£¬Ğèµ¥¶À²âÊÔ |
-| Ç¨ÒÆ src/ ²âÊÔµ½ tests/ | ?? ¸ß·çÏÕ | 194 ¸ö²âÊÔÎÄ¼ş£¬Ğè¸Ä import Â·¾¶ºÍ vitest ÅäÖÃ£¬¹¤×÷Á¿¾Ş´ó |
-| É¾³ı .agents/ »ò .trae/ ÎÄ¼ş | ?? ¸ß·çÏÕ | AI ¹¤¾ßÔËĞĞÊ±ÎÄ¼ş£¬¿ÉÄÜÕıÔÚÊ¹ÓÃ |
-| É¾³ı build-artifacts/ ÄÚÈİ | ?? ÖĞµÍ | ¿ÉÄÜÎª×î½ü±¸·İ£¬ĞèÈ·ÈÏ |
+| åˆå¹¶ ESLint é…ç½® | ?? é«˜é£é™© | å¯èƒ½ç ´å lint è§„åˆ™ï¼Œéœ€å•ç‹¬æµ‹è¯• |
+| è¿ç§» src/ æµ‹è¯•åˆ° tests/ | ?? é«˜é£é™© | 194 ä¸ªæµ‹è¯•æ–‡ä»¶ï¼Œéœ€æ”¹ import è·¯å¾„å’Œ vitest é…ç½®ï¼Œå·¥ä½œé‡å·¨å¤§ |
+| åˆ é™¤ .agents/ æˆ– .trae/ æ–‡ä»¶ | ?? é«˜é£é™© | AI å·¥å…·è¿è¡Œæ—¶æ–‡ä»¶ï¼Œå¯èƒ½æ­£åœ¨ä½¿ç”¨ |
+| åˆ é™¤ build-artifacts/ å†…å®¹ | ?? ä¸­ä½ | å¯èƒ½ä¸ºæœ€è¿‘å¤‡ä»½ï¼Œéœ€ç¡®è®¤ |
 
 ---
 
-## Îå¡¢Ö´ĞĞÓÅÏÈ¼¶Óë½×¶Î¹æ»®
+## äº”ã€æ‰§è¡Œä¼˜å…ˆçº§ä¸é˜¶æ®µè§„åˆ’
 
-»ùÓÚ¿ÉĞĞĞÔÂÛÖ¤£¬½«Áù½×¶Îµ÷ÕûÎªÒÔÏÂÖ´ĞĞË³Ğò£º
+åŸºäºå¯è¡Œæ€§è®ºè¯ï¼Œå°†å…­é˜¶æ®µè°ƒæ•´ä¸ºä»¥ä¸‹æ‰§è¡Œé¡ºåºï¼š
 
 ```
-½×¶Î 1£ºÕï¶Ï±¨¸æ£¨ÒÑÍê³É£©
-    ¡ı
-½×¶Î 2A£º°²È«ÇåÀí£¨ÎŞ·çÏÕ£©
-    - ÇåÀí temp/*.log + .workbuddy/*.log + coverage/.tmp
-    - É¾³ı docs/ ¸ù¼¶ÖØ¸´ÎÄ¼ş
-    - ÒÆ¶¯¸ù¼¶ .md µ½ docs/
-    ¡ı
-½×¶Î 2B£ºÎÄµµÇ¨ÒÆ£¨µÍ·çÏÕ£©
-    - HTML ±¨¸æ ¡ú docs/reports/
-    - ·Ç SDLC Ä¿Â¼ÕûºÏ£¨standards ¡ú 02-design, guides ¡ú 03-development£©
-    - docs/ ¸ù¼¶É¢ÂäÎÄ¼ş¹éÎ»
-    ¡ı
-½×¶Î 3£º½Å±¾ÖÎÀí£¨ÖĞµÈ·çÏÕ£©
-    - ¹ÂÁ¢½Å±¾·ÖÀà±ê×¢
-    - ·ÏÆú½Å±¾ÒÆÈë archive/
-    - ±£Áô½Å±¾Ìí¼Ó README ËµÃ÷
-    ¡ı
-½×¶Î 4£º¾­Ñé½ÌÑµİÍÈ¡£¨ÖªÊ¶³Áµí£©
-    - É¨Ãè docs/audit/ ºÍ docs/reports/lessons-learned/
-    - Éú³É½á¹¹»¯ lessons-learned.md
-    ¡ı
-½×¶Î 5£ºMCP ¹Ì»¯£¨ÒÑÍê³É£©
-    - Registry ÒÑµ÷ÕûÎª 12 enabled / 6 disabled
-    ¡ı
-½×¶Î 6£º×Ô¶¯»¯»úÖÆ
-    - Ìí¼Ó file:check ½Å±¾µ½ package.json
-    - Ìí¼Ó Husky ¹³×Ó£¨°×Ãûµ¥¼ì²é£©
+é˜¶æ®µ 1ï¼šè¯Šæ–­æŠ¥å‘Šï¼ˆå·²å®Œæˆï¼‰
+    â†“
+é˜¶æ®µ 2Aï¼šå®‰å…¨æ¸…ç†ï¼ˆæ— é£é™©ï¼‰
+    - æ¸…ç† temp/*.log + .workbuddy/*.log + coverage/.tmp
+    - åˆ é™¤ docs/ æ ¹çº§é‡å¤æ–‡ä»¶
+    - ç§»åŠ¨æ ¹çº§ .md åˆ° docs/
+    â†“
+é˜¶æ®µ 2Bï¼šæ–‡æ¡£è¿ç§»ï¼ˆä½é£é™©ï¼‰
+    - HTML æŠ¥å‘Š â†’ docs/reports/
+    - é SDLC ç›®å½•æ•´åˆï¼ˆstandards â†’ 02-design, guides â†’ 03-developmentï¼‰
+    - docs/ æ ¹çº§æ•£è½æ–‡ä»¶å½’ä½
+    â†“
+é˜¶æ®µ 3ï¼šè„šæœ¬æ²»ç†ï¼ˆä¸­ç­‰é£é™©ï¼‰
+    - å­¤ç«‹è„šæœ¬åˆ†ç±»æ ‡æ³¨
+    - åºŸå¼ƒè„šæœ¬ç§»å…¥ archive/
+    - ä¿ç•™è„šæœ¬æ·»åŠ  README è¯´æ˜
+    â†“
+é˜¶æ®µ 4ï¼šç»éªŒæ•™è®­èƒå–ï¼ˆçŸ¥è¯†æ²‰æ·€ï¼‰
+    - æ‰«æ docs/audit/ å’Œ docs/reports/lessons-learned/
+    - ç”Ÿæˆç»“æ„åŒ– lessons-learned.md
+    â†“
+é˜¶æ®µ 5ï¼šMCP å›ºåŒ–ï¼ˆå·²å®Œæˆï¼‰
+    - Registry å·²è°ƒæ•´ä¸º 12 enabled / 6 disabled
+    â†“
+é˜¶æ®µ 6ï¼šè‡ªåŠ¨åŒ–æœºåˆ¶
+    - æ·»åŠ  file:check è„šæœ¬åˆ° package.json
+    - æ·»åŠ  Husky é’©å­ï¼ˆç™½åå•æ£€æŸ¥ï¼‰
 ```
 
 ---
 
-## Áù¡¢Á¢¼´Ö´ĞĞÇåµ¥£¨½×¶Î 2A + 2B£©
+## å…­ã€ç«‹å³æ‰§è¡Œæ¸…å•ï¼ˆé˜¶æ®µ 2A + 2Bï¼‰
 
-### 2A-1£ºÇåÀíÁÙÊ±ÎÄ¼ş£¨ÎŞ·çÏÕ£©
+### 2A-1ï¼šæ¸…ç†ä¸´æ—¶æ–‡ä»¶ï¼ˆæ— é£é™©ï¼‰
 
 ```bash
-# ÇåÀí temp/ ÈÕÖ¾£¨±£Áô×î½ü7Ìì£©
+# æ¸…ç† temp/ æ—¥å¿—ï¼ˆä¿ç•™æœ€è¿‘7å¤©ï¼‰
 find temp/ -name "*.log" -mtime +7 -delete
 
-# ÇåÀí .workbuddy/ ÈÕÖ¾£¨±£Áô×î½ü7Ìì£©
+# æ¸…ç† .workbuddy/ æ—¥å¿—ï¼ˆä¿ç•™æœ€è¿‘7å¤©ï¼‰
 find .workbuddy/ -name "*.log" -mtime +7 -delete
 
-# É¾³ı coverage/.tmp
+# åˆ é™¤ coverage/.tmp
 coverage/.tmp
 
-# É¾³ı docs/ ¸ù¼¶ÖØ¸´ÎÄ¼ş
-rm docs/../../00-meta/cleanup-schedule.md  # ÒÑÓĞ docs/07-archive/../../00-meta/cleanup-schedule.md
-rm docs/registry-index.md     # ÒÑÓĞ docs/00-meta/registry-index.md
+# åˆ é™¤ docs/ æ ¹çº§é‡å¤æ–‡ä»¶
+rm docs/../../00-meta/cleanup-schedule.md  # å·²æœ‰ docs/07-archive/../../00-meta/cleanup-schedule.md
+rm docs/registry-index.md     # å·²æœ‰ docs/00-meta/registry-index.md
 ```
 
-### 2A-2£ºÇ¨ÒÆ¸ù¼¶É¢ÂäÎÄ¼ş
+### 2A-2ï¼šè¿ç§»æ ¹çº§æ•£è½æ–‡ä»¶
 
 ```bash
-# ÒÆ¶¯¸ù¼¶ .md µ½ docs/
+# ç§»åŠ¨æ ¹çº§ .md åˆ° docs/
 mv architecture.md docs/02-design/
 mv overview.md docs/01-requirements/
 
-# ÒÆ¶¯ HTML ±¨¸æµ½ docs/reports/
-mv docs/P1-P2ÂäÊµ×·×Ù±¨¸æ_2026-07-09.html docs/reports/
+# ç§»åŠ¨ HTML æŠ¥å‘Šåˆ° docs/reports/
+mv docs/P1-P2è½å®è¿½è¸ªæŠ¥å‘Š_2026-07-09.html docs/reports/
 mv docs/v9-interaction-flows.html docs/reports/design/
 mv test-output/proofread-report.html docs/reports/test/
 ```
 
-### 2B£º·Ç SDLC Ä¿Â¼ÕûºÏ
+### 2Bï¼šé SDLC ç›®å½•æ•´åˆ
 
-| Ô´Ä¿Â¼ | Ä¿±êÄ¿Â¼ | ²Ù×÷ |
+| æºç›®å½• | ç›®æ ‡ç›®å½• | æ“ä½œ |
 |--------|---------|------|
-| docs/standards/ | docs/02-design/standards/ | ÒÆ¶¯ |
-| docs/guides/ | docs/03-development/guides/ | ÒÆ¶¯ |
-| docs/audit/ | docs/04-testing/audit-reports/ | ÒÆ¶¯ |
-| docs/reports/ | docs/04-testing/reports/ + docs/06-project-management/reports/ | °´ÄÚÈİ²ğ·Ö |
-| docs/plans/ | docs/06-project-management/plans/ | ÒÆ¶¯ |
-| docs/changelogs/ | docs/06-project-management/changelogs/ | ÒÆ¶¯ |
-| docs/ops/ | docs/05-deployment/ops/ | ÒÆ¶¯ |
-| docs/blueprints/ | docs/02-design/blueprints/ | ÒÆ¶¯ |
-| docs/modules/ | docs/02-design/modules/ | ÒÆ¶¯ |
-| docs/topics/ | docs/02-design/topics/ | ÒÆ¶¯ |
-| docs/testing/ | docs/04-testing/ | ºÏ²¢ |
-| docs/.ai-index/ | docs/00-meta/ai-index/ | ÒÆ¶¯ |
-| docs/ai/ | docs/03-development/ai/ | ÒÆ¶¯ |
-| docs/drafts/ | docs/playground/ | ÒÆ¶¯ |
-| docs/implementation/ | docs/07-archive/implementation/ | ÒÆ¶¯£¨¹ıÊ±½ØÍ¼£© |
-| docs/cockpit/ | docs/02-design/cockpit/ | ÒÆ¶¯ |
-| docs/assets/ | docs/assets/ | ±£Áô£¨Ìí¼Ó README£© |
-| docs/architecture/ | docs/02-design/architecture/ | ÒÆ¶¯ |
-| docs/architecture-radar-v2/ | docs/02-design/architecture-radar/ | ÒÆ¶¯ |
-| docs/plugins/ | docs/03-development/plugins/ | ÒÆ¶¯ |
+| docs/standards/ | docs/02-design/standards/ | ç§»åŠ¨ |
+| docs/guides/ | docs/03-development/guides/ | ç§»åŠ¨ |
+| docs/audit/ | docs/04-testing/audit-reports/ | ç§»åŠ¨ |
+| docs/reports/ | docs/04-testing/reports/ + docs/06-project-management/reports/ | æŒ‰å†…å®¹æ‹†åˆ† |
+| docs/plans/ | docs/06-project-management/plans/ | ç§»åŠ¨ |
+| docs/changelogs/ | docs/06-project-management/changelogs/ | ç§»åŠ¨ |
+| docs/ops/ | docs/05-deployment/ops/ | ç§»åŠ¨ |
+| docs/blueprints/ | docs/02-design/blueprints/ | ç§»åŠ¨ |
+| docs/modules/ | docs/02-design/modules/ | ç§»åŠ¨ |
+| docs/topics/ | docs/02-design/topics/ | ç§»åŠ¨ |
+| docs/testing/ | docs/04-testing/ | åˆå¹¶ |
+| docs/.ai-index/ | docs/00-meta/ai-index/ | ç§»åŠ¨ |
+| docs/ai/ | docs/03-development/ai/ | ç§»åŠ¨ |
+| docs/drafts/ | docs/playground/ | ç§»åŠ¨ |
+| docs/implementation/ | docs/07-archive/implementation/ | ç§»åŠ¨ï¼ˆè¿‡æ—¶æˆªå›¾ï¼‰ |
+| docs/cockpit/ | docs/02-design/cockpit/ | ç§»åŠ¨ |
+| docs/assets/ | docs/assets/ | ä¿ç•™ï¼ˆæ·»åŠ  READMEï¼‰ |
+| docs/architecture/ | docs/02-design/architecture/ | ç§»åŠ¨ |
+| docs/architecture-radar-v2/ | docs/02-design/architecture-radar/ | ç§»åŠ¨ |
+| docs/plugins/ | docs/03-development/plugins/ | ç§»åŠ¨ |
 
 ---
 
-## Æß¡¢ÑéÖ¤Çåµ¥£¨Ö´ĞĞºó£©
+## ä¸ƒã€éªŒè¯æ¸…å•ï¼ˆæ‰§è¡Œåï¼‰
 
-- [ ] temp/ Ä¿Â¼Ö»Ê£ 7 ÌìÄÚÈÕÖ¾£¨»òÍêÈ«ÇåÀí£©
-- [ ] .workbuddy/*.log ÇåÀíÖÁ 7 ÌìÄÚ
-- [ ] coverage/.tmp ÒÑÉ¾³ı
-- [ ] docs/ ¸ù¼¶ÎŞÖØ¸´ÎÄ¼ş£¨README.md ±£Áô£©
-- [ ] architecture.md ºÍ overview.md ÒÑÒÆÈë docs/
-- [ ] 5 ¸ö HTML ÎÄ¼şÒÑ·ÖÀàµ½ docs/reports/
-- [ ] 20 ¸ö·Ç SDLC Ä¿Â¼ÒÑÕûºÏµ½ SDLC ½á¹¹
-- [ ] Ã¿¸ö SDLC ×ÓÄ¿Â¼ÓĞ README.md
-- [ ] npm run file:check Í¨¹ı£¨½×¶Î 6 Ìí¼Ó£©
-- [ ] MCP Registry getStats() ·µ»Ø totalServers: 12
-- [ ] Æô¶¯ÈÕÖ¾ÎŞ module not found ´íÎó
-- [ ] lessons-learned.md ÒÑÉú³É
+- [ ] temp/ ç›®å½•åªå‰© 7 å¤©å†…æ—¥å¿—ï¼ˆæˆ–å®Œå…¨æ¸…ç†ï¼‰
+- [ ] .workbuddy/*.log æ¸…ç†è‡³ 7 å¤©å†…
+- [ ] coverage/.tmp å·²åˆ é™¤
+- [ ] docs/ æ ¹çº§æ— é‡å¤æ–‡ä»¶ï¼ˆREADME.md ä¿ç•™ï¼‰
+- [ ] architecture.md å’Œ overview.md å·²ç§»å…¥ docs/
+- [ ] 5 ä¸ª HTML æ–‡ä»¶å·²åˆ†ç±»åˆ° docs/reports/
+- [ ] 20 ä¸ªé SDLC ç›®å½•å·²æ•´åˆåˆ° SDLC ç»“æ„
+- [ ] æ¯ä¸ª SDLC å­ç›®å½•æœ‰ README.md
+- [ ] npm run file:check é€šè¿‡ï¼ˆé˜¶æ®µ 6 æ·»åŠ ï¼‰
+- [ ] MCP Registry getStats() è¿”å› totalServers: 12
+- [ ] å¯åŠ¨æ—¥å¿—æ—  module not found é”™è¯¯
+- [ ] lessons-learned.md å·²ç”Ÿæˆ
