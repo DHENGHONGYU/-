@@ -588,7 +588,7 @@ ${C.bold}示例:${C.reset}
   npx tsx scripts/changelog-query.ts --summary
   npx tsx scripts/changelog-query.ts --all --json
   npx tsx scripts/changelog-query.ts --all --export=markdown
-  npx tsx scripts/changelog-query.ts --date=2026-07 --export=markdown --output=../../docs/reports/2026-07-09-update-log.md
+  npx tsx scripts/changelog-query.ts --date=2026-07 --export=markdown --output=../../docs/reports/changelogs/2026-07-09-update-log.md
 
 ${C.bold}npm 脚本:${C.reset}
   npm run changelog:query -- --date=2026-07-04

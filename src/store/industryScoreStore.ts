@@ -167,8 +167,10 @@ export interface IndustryScoreState {
   loadLogs: (code: string) => Promise<void>
   /** 运行行业智能评分 */
   runScore: (input?: Partial<RunIndustryScoreInput> & { code?: string }) => Promise<void>
-  /** 重置结果及关联状态 */
+  /** 重置结果及关联状态（保留输入态 selectedCode/files/llmConfig） */
   resetResult: () => void
+  /** 重置 store 到初始空状态（含输入态），用于登出/切换账户 */
+  reset: () => void
 }
 
 // ============================================================
@@ -196,6 +198,7 @@ const initialState: Omit<
   | 'loadLogs'
   | 'runScore'
   | 'resetResult'
+  | 'reset'
 > = {
   selectedCode: '',
   sectors: SECTORS_SKILL_RANKED,
@@ -412,6 +415,12 @@ export const useIndustryScoreStore = create<IndustryScoreState>((set, get) => ({
       progressMessage: '',
       error: '',
     })
+    withBroadcast(EVENT_NAMES.INDUSTRY_SCORES_CHANGED, { action: 'reset' })
+  },
+
+  reset: () => {
+    logger.info('[industryScoreStore] reset')
+    set({ ...initialState })
     withBroadcast(EVENT_NAMES.INDUSTRY_SCORES_CHANGED, { action: 'reset' })
   },
 }))

@@ -77,6 +77,8 @@ interface ExecutionState {
   markReviewed: (planId: string) => Promise<void>
   /** 通过 DataBridge 全量刷新 */
   refresh: () => Promise<void>
+  /** 重置 store 到初始空状态。用于登出/切换账户等场景，清除执行计划残留 */
+  reset: () => void
 }
 
 // ============================================================
@@ -85,7 +87,7 @@ interface ExecutionState {
 
 const initialState: Omit<
   ExecutionState,
-  'createPlan' | 'confirmPlan' | 'executePlan' | 'cancelPlan' | 'markReviewed' | 'refresh'
+  'createPlan' | 'confirmPlan' | 'executePlan' | 'cancelPlan' | 'markReviewed' | 'refresh' | 'reset'
 > = {
   plans: [],
   activePlans: [],
@@ -549,6 +551,20 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
       logger.error('[executionStore] markReviewed 失败', { error: message, planId })
       set({ error: message })
     }
+  },
+
+  // ----------------------------------------------------------
+  // reset -- 重置到初始空状态
+  // ----------------------------------------------------------
+
+  /**
+   * 重置 store 到初始空状态。
+   * 清除全部执行计划、活跃计划、处理中标记。
+   * 用于登出/切换账户/重新初始化等场景。
+   */
+  reset: () => {
+    logger.info('[executionStore] reset')
+    set({ ...initialState })
   },
 }))
 
