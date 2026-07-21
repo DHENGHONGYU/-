@@ -4,6 +4,7 @@ name: data-flow-integrity-audit
 title: "数据流完整性审计与修复标准工作流"
 description: "覆盖数据采集板块内部数据传递、按钮-数据联动、跨板块数据传递、数据呈现全链路的完整性审计与修复流程。基于 FinSightV9 采集链路 ①-⑦+ACL 修复全流程的 20 条教训提炼，对标业界 WAP 模式与数据质量门禁最佳实践。"
 agent_created: true
+category: data-flow
 triggers:
   keywords: [按钮点击无响应, 功能键不可点击, 数据采集链路断裂, 板块间数据传递异常, 假绿灯, KPI 看板数据与实际不一致, 数据流完整性审计, 采集维度覆盖度验证, Vite 缓存, EnvelopeAction, ACL_MATRIX]
   files:
