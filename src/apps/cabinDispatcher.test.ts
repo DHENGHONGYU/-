@@ -8,8 +8,8 @@ import {
 
 // jsdom 中无 requestIdleCallback，先注入 polyfill
 if (typeof window !== 'undefined' && !('requestIdleCallback' in window)) {
-  window.requestIdleCallback = (cb: IdleRequestCallback) =>
-    setTimeout(() => cb({ didTimeout: false, timeRemaining: () => 50 } as IdleDeadline), 0)
+  (window as Window & typeof globalThis).requestIdleCallback = (cb: IdleRequestCallback) =>
+    setTimeout(() => cb({ didTimeout: false, timeRemaining: () => 50 } as IdleDeadline), 0) as unknown as number
 }
 
 describe('cabinDispatcher', () => {
