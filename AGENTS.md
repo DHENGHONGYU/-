@@ -1,3 +1,12 @@
+---
+title: AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
+doc_id: V9-DOC-ROOT-902
+tier: important
+status: active
+version: v1.0.0
+last_updated: 2026-07-21
+code_version: 2.0.0
+---
 # AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 
 > **版本**: v1.5.5 | **日期**: 2026-07-21
@@ -26,13 +35,11 @@
 >
 > **文档与复杂度规范**：为提升代码可维护性，新增公共函数、组件、Hook、Store 必须补充 JSDoc（见 `docs/03-development/jsdoc-convention.md`）；新增代码应避免深层嵌套、长链式条件与过长函数（见 `docs/03-development/complexity-governance.md`）。
 >
-> **项目级 SKILL 索引**：本项目在 `.workbuddy/skills/` 维护可复用的 AI 操作技能，覆盖高频开发场景：
-> - `collection-pipeline-testing`：采集链路代码改动的测试验证（怎么测）
-> - `mock-data-diagnosis`：Mock 数据残留三维诊断（查什么）
-> - `data-flow-integrity-audit`：全链路数据流完整性审计（从哪查到哪）
-> - `devops-automation`：备份分支 + 批量部署（运维自动化）
-> - `bash-conventions`：Bash 执行规范与命令速查（怎么跑命令，§十六 配套操作手册）
-> - `module-sync-checklist`：模块改动十域同步校对（严禁代码先行，一切改动的交付闸口）
+> **项目级 SKILL 索引**（按业务域分四类，category 字段见各 SKILL.md frontmatter 与 skill-registry.json）：
+> - **文档治理 doc-governance**：`doc-encoding-remediation`（文档编码乱码诊断与安全转码，GBK 二次损坏前置修复）
+> - **代码质量 code-quality**：`module-sync-checklist`（模块改动十域同步校对，交付闸口）、`bash-conventions`（Bash 执行规范与命令速查）
+> - **数据流 data-flow**：`collection-pipeline-testing`（采集链路测试）、`data-flow-integrity-audit`（数据流完整性审计）、`mock-data-diagnosis`（Mock 残留诊断）
+> - **部署运维 devops**：`devops-automation`（备份分支 + 批量部署）
 
 ### 技能路由表（任务开始时必须先匹配，v1.5.3 新增）
 
@@ -46,6 +53,7 @@
 | 定时备份、批量部署、注册周期任务、排查备份/部署失败 | `devops-automation` | advisory | 脚本零破坏性检查 + 敏感文件排除校验 |
 | 执行任何 Bash 命令、路径/解释器/门禁命令选择（全局生效） | `bash-conventions` | advisory | 按该技能 §4「执行后联动义务」表选必跑命令 |
 | 任何代码改动交付前（改动 `src/services|store|core|pages|components/**`）、重构/接口变更/重命名、新增 skill 或注册表变更 | `module-sync-checklist` | mandatory | 十域同步清单 + `npx tsc --noEmit` + `npm run tsc:prod` + `npm run audit:layers` + `npm run audit:acl-consistency` |
+| 发现文档乱码 / 中文变问号、准备执行文档链接修复（fix-doc-refs 等）前、排查 GBK 二次损坏风险 | `doc-encoding-remediation` | advisory | 三维 Grep（fix 脚本无硬编码 utf-8）+ 编码探测报告 + 复测 GBK_TOTAL=0（排除备份目录） |
 
 > **变更纪律**：新增技能 = ① 新建 `.workbuddy/skills/<name>/SKILL.md`（frontmatter 含 `triggers`/`gates`/`mandatory`）→ ② 同步 `.workbuddy/skills/skill-registry.json`（L1 注册表）→ ③ 更新本索引与路由表 → ④ 跑 `npm run audit:skill-coverage` 校验三方一致。钩子状态：pre-commit 挂 `--remind --log`（提醒模式，命中记录写入 `.workbuddy/skills/usage.log`）；pre-push 挂 `--enforce --since <base>`（强制模式，mandatory 命中未确认即拦截，旁路 `SKILL_GATE_CONFIRM=1 git push`）。`npm run skill:route` 可随时手工查询。
 

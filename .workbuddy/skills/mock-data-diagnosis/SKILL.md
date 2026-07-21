@@ -4,6 +4,7 @@ name: mock-data-diagnosis
 title: Mock 数据残留诊断与数据校对
 description: 对前端/全栈项目做 Mock 数据残留全面诊断：数据传递链路残留、信息孤岛识别、Mock 与真实数据切换兼容性风险。适用场景：项目从开发后期/测试阶段向真实环境过渡前的 Mock 清理审计；数据流健康度检查；Mock→真实切换就绪度评估。输出遗留问题清单、风险等级（P0/P1/P2）及修复优先级建议。
 agent_created: true
+category: data-flow
 triggers:
   keywords: [排查Mock数据残留, Mock到真实数据过渡, 数据链路Mock残留, 信息孤岛诊断, Mock与真实数据兼容性, 数据检查与校对, mock data diagnosis, mock audit, 数据流健康度, Mock→真实切换, 假数据, Mock残留]
   files:
