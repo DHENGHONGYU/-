@@ -41,7 +41,8 @@ interface IndustryDashboardState {
   fetchDashboard: (forceRefresh?: boolean) => Promise<void>
   setLoading: (loading: boolean) => void
   setError: (error: string | null) => void
-  clear: () => void
+  /** 重置 store 到初始空状态 */
+  reset: () => void
 }
 
 // ============================================================
@@ -122,5 +123,5 @@ export const useIndustryDashboardStore = create<IndustryDashboardState>((set, ge
 
   setError: (error: string | null) => set({ error }),
 
-  clear: () => set({ ...initialState }),
+  reset: () => set({ ...initialState }),
 }))

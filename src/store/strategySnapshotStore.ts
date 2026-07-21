@@ -60,6 +60,8 @@ interface StrategySnapshotActions {
   saveSnapshot: (trigger?: string) => Promise<void>
   selectSnapshot: (id: string) => void
   clearError: () => void
+  /** 重置 Store 到初始状态 */
+  reset: () => void
 }
 
 const initialItems: ClassifiedItems = { core: [], hot: [], value: [] }
@@ -249,6 +251,11 @@ export const useStrategySnapshotStore = create<StrategySnapshotState & StrategyS
 
     clearError: () => {
       set({ error: null })
+    },
+
+    reset: () => {
+      logger.info('[strategySnapshotStore] reset')
+      set({ ...initialState })
     },
   }),
 )

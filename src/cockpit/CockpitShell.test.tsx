@@ -56,6 +56,7 @@ vi.mock('lucide-react', () => ({
   Plus: () => <svg data-testid="icon-plus" />,
   Target: () => <svg data-testid="icon-target" />,
   AlertTriangle: () => <svg data-testid="icon-alert-triangle" />,
+  ChevronRight: () => <svg data-testid="icon-chevron-right" />,
 }))
 
 // ============================================================

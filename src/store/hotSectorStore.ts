@@ -33,7 +33,9 @@ export interface HotSectorState {
   setScores: (scores: HotSectorScore[]) => void
   setLoading: (loading: boolean) => void
   setError: (error: string | null) => void
+  /** 全局重置 store 到初始空状态（用于登出/切换账户/模块卸载） */
   reset: () => void
+  /** 业务局部清除：清空评分数据但保留 Store 活跃状态，用于重新执行分析前清理旧结果 */
   clearScores: () => void
   /**
    * 执行热门板块评分。

@@ -18,7 +18,7 @@ const __filename = new URL(import.meta.url).pathname
 const __dirname = dirname(__filename).replace(/^\/([A-Z]:)/, '$1')
 const PROJECT_ROOT = resolve(__dirname, '..', '..')
 const PROJECT_DOCS_DIR = join(PROJECT_ROOT, 'docs')
-const EXTERNAL_DOCS_DIR = 'C:/Users/DELL/Desktop/docs'
+const EXTERNAL_DOCS_DIR = 'C:/Users/huawei/Desktop/docs'
 
 interface DocMapping {
   externalPattern: string[]

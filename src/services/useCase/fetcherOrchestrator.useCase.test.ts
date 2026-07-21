@@ -47,6 +47,8 @@ describe('fetcherOrchestratorUseCase', () => {
     symbol: '000001.SZ',
     name: '平安银行',
     price: 12.5,
+    researchStatus: 'candidate',
+    source: 'akshare',
     dataVersion: 1001,
   }
 

@@ -294,6 +294,7 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
     useWatchlistStore.getState().reset()
     useSignalAdviceStore.getState().reset()
     usePortfolioStore.getState().reset()
+    useOrderStore.getState().reset()
     set({ ...initialState, processingSymbols: new Set<string>() })
   },
 }))

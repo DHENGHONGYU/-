@@ -56,6 +56,8 @@ interface RiskState {
   setCircuitState: (state: CircuitState) => void
   /** 清空裁决记录 */
   clearVerdicts: () => void
+  /** 重置 store 到初始空状态（含 triState/circuitState），用于登出/切换账户 */
+  reset: () => void
 }
 
 // ============================================================
@@ -200,6 +202,19 @@ export const useRiskStore = create<RiskState>((set, get) => ({
     logger.info('[riskStore] clearVerdicts')
     set({ verdicts: [] })
     withBroadcast(EVENT_NAMES.RISK_CHANGED, { action: 'clearVerdicts' })
+  },
+
+  reset: () => {
+    logger.info('[riskStore] reset')
+    set({
+      triState: 'normal',
+      circuitState: 'closed',
+      verdicts: [],
+      loading: false,
+      error: null,
+      lastChecked: 0,
+    })
+    withBroadcast(EVENT_NAMES.RISK_CHANGED, { action: 'reset' })
   },
 }))
 

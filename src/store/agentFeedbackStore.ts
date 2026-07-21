@@ -20,6 +20,8 @@ interface AgentFeedbackState {
   resolveFeedback: (id: string) => void
   getSummary: (agentId: string) => AgentFeedbackSummary
   refreshSummaries: () => void
+  /** 重置 store 到初始空状态，清除全部反馈和汇总缓存 */
+  reset: () => void
 }
 
 /**
@@ -78,5 +80,14 @@ export const useAgentFeedbackStore = create<AgentFeedbackState>((set, get) => ({
     }
     set({ summaries: map })
     logger.info('[AgentFeedbackStore] Summaries refreshed', { count: map.size })
+  },
+
+  reset: () => {
+    logger.info('[AgentFeedbackStore] reset')
+    set({
+      feedbacks: [],
+      summaries: new Map(),
+      isLoading: false,
+    })
   },
 }))

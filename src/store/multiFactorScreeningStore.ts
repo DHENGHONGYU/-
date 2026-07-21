@@ -79,6 +79,10 @@ export interface MultiFactorScreeningState {
   runScreening: () => Promise<void>
   clearResults: () => void
 
+  // Actions: 全局重置
+  /** 重置 store 到初始空状态（含 templates），用于登出/切换账户 */
+  reset: () => void
+
   // Actions: 模板持久化
   saveTemplate: (name: string, description?: string) => ScreeningTemplate | null
   loadTemplate: (templateId: string) => void
@@ -179,6 +183,22 @@ export const useMultiFactorScreeningStore = create<MultiFactorScreeningState>((s
   },
 
   clearResults: () => set({ results: [], error: null }),
+
+  reset: () => {
+    set({
+      conditionGroups: [createDefaultGroup()],
+      results: [],
+      loading: false,
+      error: null,
+      templates: [],
+    })
+    // 同时清除持久化的模板
+    try {
+      storage.remove(MULTI_FACTOR_SCREENING_STORAGE_KEY)
+    } catch {
+      // localStorage 可能不可用，忽略错误
+    }
+  },
 
   saveTemplate: (name, description) => {
     const trimmed = name.trim()
