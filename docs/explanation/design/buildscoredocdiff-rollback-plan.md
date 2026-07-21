@@ -1,45 +1,45 @@
 ---
-title: buildScoreDocDiff ??  ????
+title: buildScoreDocDiff ޸  عԤ
 type: explanation
 domain: backend
 phase: design
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "???: v1.0 | : 2026-07-04 : Bug ?? +  ???????: ???????? ????: ?? (?? 1 ??,3 ,?????)..."
+summary: "汾: v1.0 | : 2026-07-04 : Bug ޸ +  Ӱ췶Χ: ձȶԹģ յȼ: ?? (޸ 1 ļ,3 ,漰ַ)..."
 tags: [backend, scoring, plan]
 version: v1.0.0
 last_updated: 2026-07-17
 code_version: 2.0.0
 doc_id: V9-DOC-BACK-037
-referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-331, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-179, docs/00-meta/deprecated-docs/old-versions/registry-index-v1.0.0-02-design.md, V9-DOC-PROJ-149]
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:
   - version: v1.0.0
 changes: Initial version established
 date: 2026-07-17
 ---
 
-# buildScoreDocDiff ??  ????
+# buildScoreDocDiff ޸  عԤ
 
-> **???**: v1.0 | ****: 2026-07-04
-> ****: Bug ?? + 
-> **???????**: ????????
-> **????**: ?? (?? 1 ??,3 ,?????)
-> **??????**: ??  5  / ????  3 
+> **汾**: v1.0 | ****: 2026-07-04
+> ****: Bug ޸ + 
+> **Ӱ췶Χ**: ձȶԹģ
+> **յȼ**: ?? (޸ 1 ļ,3 ,漰ַ)
+> **عԤʱ**: ع  5  / ֻع  3 
 
 ---
 
-## ??
+## һ
 
-### 1.1 ?????
+### 1.1 ļ嵥
 
-| ???? |  |  | ???? |
+| ļ· |  |  | յȼ |
 |----------|------|----------|----------|
-| [src/services/analysis/scoreDocService.ts](../../../src/services/analysis/scoreDocService.ts) | ?? | +75 / -1 | ??  |
+| [src/services/analysis/scoreDocService.ts](../../../src/services/analysis/scoreDocService.ts) | ޸ | +75 / -1 | ??  |
 
 ### 1.2 
 
-???? 3 , `src/services/analysis/scoreDocService.ts`:
+޸İ 3 , `src/services/analysis/scoreDocService.ts`:
 
 ####  1: DEFAULT_THRESHOLDS ( 11 )
 
@@ -48,12 +48,12 @@ date: 2026-07-17
 import { DEFAULT_THRESHOLDS } from '@/services/scoring/v6-engine/config'
 ```
 
-**??**: ?? 3(?????)?????
+**Ŀ**: Ϊ 3(滻Ӳ)ṩá
 
-####  2: ScoreDocDiff ?? buildScoreDocDiff ( 111-184 )
+####  2: ScoreDocDiff ӿ buildScoreDocDiff ( 111-184 )
 
 ```typescript
-/** ?????(???????) */
+/** ĵṹ(ʷ汾Ա) */
 export interface ScoreDocDiff {
   newerVersion: number
   olderVersion: number
@@ -73,264 +73,264 @@ export interface ScoreDocDiff {
 }
 
 export function buildScoreDocDiff(newer: ScoreDocVersion, older: ScoreDocVersion): ScoreDocDiff {
-  // ... ??
+  // ... ʵ
 }
 ```
 
-**??**: ?? `ScoreHistoryPanel.tsx`  `src/services/analysis/__tests__/scoreDocService.test.ts` ?????? `buildScoreDocDiff` ??
+**Ŀ**: ޸ `ScoreHistoryPanel.tsx`  `src/services/analysis/__tests__/scoreDocService.test.ts` жԲڵ `buildScoreDocDiff` ô
 
-####  3:?????( 305 ,?? 229 )
+####  3:滻Ӳ( 305 ,ԭ 229 )
 
 ```typescript
-// ????
+// ޸ǰ
 const coreStocks = all.filter((d) => d.composite >= 4.0).length
 
-// ??
+// ޸
 const coreStocks = all.filter((d) => d.composite >= DEFAULT_THRESHOLDS.rating.strongBuy).length
 ```
 
-**??**: ??, AGENTS.md ?????????,???????? `DEFAULT_THRESHOLDS.rating.strongBuy` ??
+**Ŀ**: Ӳ, AGENTS.md ڡӲ롹Լ,ʹĹƱֵ `DEFAULT_THRESHOLDS.rating.strongBuy` ͬ
 
-### 1.3 ??
+### 1.3 Ӱ
 
-| ?? | ?? |
+| Ӱ | ˵ |
 |--------|------|
-| **??????** | `ScoreHistoryPanel.tsx`(UI )`scoreDocService.test.ts`(??) |
-| **??** | ?????????(????  ??) |
-| **??** | ? ??(?????????,) |
-| **API ** | ? ??(,????????) |
-| **??** | ? ??(???? `DEFAULT_THRESHOLDS` ) |
+| **ֱӵ÷** | `ScoreHistoryPanel.tsx`(UI )`scoreDocService.test.ts`(Ԫ) |
+| **Ӱ** | ʷ汾Աû(޷Ⱦ  Ⱦ) |
+| **ݼ** | ? ȫ(δ޸ݽṹ,) |
+| **API ** | ? ȫ(,δɾ޸е) |
+| **ü** | ? ȫ(Ѵڵ `DEFAULT_THRESHOLDS` ) |
 
 ---
 
-## ????
+## ǰ֤
 
-### 2.1 ?????
+### 2.1 ֤嵥
 
-| ?? |  |  | ?? |
+| ֤ |  |  | ˵ |
 |--------|------|------|------|
-| ?? | `npx tsc --noEmit` | ? | `scoreDocService.ts`  `ScoreHistoryPanel.tsx` ?? |
-| ESLint | `npx eslint src/services/analysis/scoreDocService.ts` | ? | 0 errors,19 warnings(????) |
-| ?? | `npx vitest run src/services/analysis/__tests__/scoreDocService.test.ts` | ? | 4/4 ??(buildScoreDocDiff) |
-| ?? | `npx vitest run walkthroughScoreDoc` | ? | 43/43 ??(2.49s) |
-| ?? | `npm run audit:layers` | ? | 0 violations,1 warning(???? SectorAnalysisPage ) |
-|  | `npx vite build` | ?? | ??(???? `trade.constants` ,???????) |
+| ͼ | `npx tsc --noEmit` | ? | `scoreDocService.ts`  `ScoreHistoryPanel.tsx` ʹ |
+| ESLint | `npx eslint src/services/analysis/scoreDocService.ts` | ? | 0 errors,19 warnings(ΪԤ) |
+| Ԫ | `npx vitest run src/services/analysis/__tests__/scoreDocService.test.ts` | ? | 4/4 ͨ(buildScoreDocDiff) |
+| в | `npx vitest run walkthroughScoreDoc` | ? | 43/43 ͨ(2.49s) |
+| ܹ | `npm run audit:layers` | ? | 0 violations,1 warning(Ԥڵ SectorAnalysisPage ) |
+|  | `npx vite build` | ?? | ʧ(Ԥڵ `trade.constants` ,뱾޸޹) |
 
-### 2.2 ????
+### 2.2 Ԥ˵
 
-?????? `src/services/trading/tradeErrorClassifier.ts`  `trade.constants.ts` ???? `PERCENTAGE_BASE``MAX_SCORE``MIN_SCORE` ??? `buildScoreDocDiff` ??**????**,?? P0 ,??????????
+ʧܵԭ `src/services/trading/tradeErrorClassifier.ts`  `trade.constants.ts` вڵ `PERCENTAGE_BASE``MAX_SCORE``MIN_SCORE` 뱾 `buildScoreDocDiff` ޸**ȫ޹**,ڶ P0 ,ڱλعΧڡ
 
 ---
 
-## ??
+## ع
 
-### 3.1 ??(?????)
+### 3.1 ع(һ㼴)
 
-| # |  | ????? | ?? |
+| # |  | ⷽʽ | ض |
 |---|------|----------|--------|
-| 1 | `ScoreHistoryPanel.tsx` ?? | ?? /  | ??  |
-| 2 | `buildScoreDocDiff` ??( delta ) | ???? / ?? | ??  |
-| 3 | `getFileLibraryStats` ?? coreStocks ?? | ?? / ?? | ??  |
-| 4 | ???? | `npx tsc --noEmit` | ??  |
-| 5 | ???? | `npx vitest run walkthroughScoreDoc` | ??  |
+| 1 | `ScoreHistoryPanel.tsx` Ⱦ | û /  | ??  |
+| 2 | `buildScoreDocDiff` ش( delta ) | Ԫʧ / û | ??  |
+| 3 | `getFileLibraryStats` ش coreStocks ͳ | û / У | ??  |
+| 4 | ͼ´ | `npx tsc --noEmit` | ??  |
+| 5 | вʧ | `npx vitest run walkthroughScoreDoc` | ??  |
 
-### 3.2 ????
+### 3.2 ѡع
 
-| # |  | ????? | ?? |
+| # |  | ⷽʽ | ض |
 |---|------|----------|--------|
-| 6 | ??(buildScoreDocDiff ???? > 100ms) | ?? | ??  |
+| 6 | ܻ(buildScoreDocDiff ִʱ > 100ms) | ܼ | ??  |
 | 7 | ESLint  warnings | `npm run lint` | ??  |
 
 ---
 
-## ????
+## ġع
 
-### 4.1 ??(??:?? 3 )
+### 4.1 ع(Ƽ:ȫ 3 )
 
-**??**:  1+2+3 ??( buildScoreDocDiff ??)
+**ó**:  1+2+3 ع( buildScoreDocDiff ߼)
 
-**????**:  5 
+**Ԥʱ**:  5 
 
 ****:
 
 ```powershell
-#  1:??????
-cd C:\Users\huawei\Documents\kimi\Workspaces\????????V9
+#  1:ĿĿ¼
+cd C:\Users\huawei\Documents\kimi\Workspaces\ͶиϵͳV9
 
-#  2:??? git ????,??????
+#  2:鿴 git ״̬,ȷ޸ļ
 git status src/services/analysis/scoreDocService.ts
 
-#  3:???
+#  3:鿴
 git diff src/services/analysis/scoreDocService.ts
 
-#  4:?????????(???????)
-# ?? A:???????,?? checkout
+#  4:ع޸ǰ汾(޸ǰύ)
+# ʽ A:޸δύ,ʹ checkout
 git checkout HEAD -- src/services/analysis/scoreDocService.ts
 
-# ?? B:?????,?? revert
+# ʽ B:޸ύ,ʹ revert
 git revert <commit-hash> --no-edit
 
-#  5:????
+#  5:֤ع
 npx tsc --noEmit 2>&1 | Select-String "scoreDocService"
-# ??:( ScoreHistoryPanel.tsx ??,??????????)
+# Ԥ:( ScoreHistoryPanel.tsx ±,ǻعԤ״̬)
 
-#  6:?? ScoreHistoryPanel.tsx ??(????)
+#  6:ȷ ScoreHistoryPanel.tsx ±(ԤΪ)
 npx tsc --noEmit 2>&1 | Select-String "ScoreHistoryPanel"
-# ??:?? buildScoreDocDiff ????
+# Ԥ:ʾ buildScoreDocDiff ڵĴ
 
 #  7:()
-# Ctrl+C ???? vite dev,??
+# Ctrl+C ֹͣ vite dev,Ȼ
 npm run dev
 ```
 
-### 4.2 ???? A:?? 3(?????)
+### 4.2 ֻع A:ع 3(Ӳ滻)
 
-**??**: `DEFAULT_THRESHOLDS.rating.strongBuy` ??, `buildScoreDocDiff` 
+**ó**: `DEFAULT_THRESHOLDS.rating.strongBuy` õ, `buildScoreDocDiff` 
 
-**????**:  2 
+**Ԥʱ**:  2 
 
 ****:
 
 ```typescript
-// ??? src/services/analysis/scoreDocService.ts  305 
+// ༭ src/services/analysis/scoreDocService.ts  305 
 // :
 const coreStocks = all.filter((d) => d.composite >= DEFAULT_THRESHOLDS.rating.strongBuy).length
-// ??:
+// Ļ:
 const coreStocks = all.filter((d) => d.composite >= 4.0).length
 ```
 
-**??**:
+**֤**:
 
 ```powershell
 npx vitest run walkthroughScoreDoc --reporter=default
-# ??:43/43 ??( 4.6 ????,?? 4.0 === DEFAULT_THRESHOLDS.rating.strongBuy)
+# Ԥ:43/43 ͨ( 4.6 Ӳͨ,Ϊ 4.0 === DEFAULT_THRESHOLDS.rating.strongBuy)
 ```
 
-### 4.3 ???? B:?? 2(buildScoreDocDiff )
+### 4.3 ֻع B:ع 2(buildScoreDocDiff )
 
-**??**: `buildScoreDocDiff` , P1 ????
+**ó**: `buildScoreDocDiff` , P1 Ӳ޸
 
-**????**:  3 
+**Ԥʱ**:  3 
 
 ****:
 
 ```typescript
-// ??? src/services/analysis/scoreDocService.ts
-// ?? 111-184 ?? ScoreDocDiff ?? buildScoreDocDiff 
-//  11 ?? DEFAULT_THRESHOLDS 
-//  305 ?? DEFAULT_THRESHOLDS.rating.strongBuy 
+// ༭ src/services/analysis/scoreDocService.ts
+// ɾ 111-184 е ScoreDocDiff ӿ buildScoreDocDiff 
+//  11 е DEFAULT_THRESHOLDS 
+//  305 е DEFAULT_THRESHOLDS.rating.strongBuy 
 ```
 
-**??**: ??????? `ScoreHistoryPanel.tsx`  `scoreDocService.test.ts` ????????????????:
+**ע**: ˻عᵼ `ScoreHistoryPanel.tsx`  `scoreDocService.test.ts` ±Ҫͬʱעͻعļ:
 
 ```powershell
-# ???? ScoreHistoryPanel.tsx ?? buildScoreDocDiff 
-# ?? scoreDocService.test.ts ?? buildScoreDocDiff 
+# ʱע ScoreHistoryPanel.tsx е buildScoreDocDiff 
+# ʱ scoreDocService.test.ts е buildScoreDocDiff 
 ```
 
-### 4.4 ??(??)
+### 4.4 ع(޸)
 
-**??**: ,????
+**ó**: ,Ҫع
 
-**????**:  1 
+**Ԥʱ**:  1 
 
 ****:
 
 ```powershell
-#  1:????
-# (????????)
+#  1:ֹͣ
+# (ʵʲʽִ)
 
-#  2:??
+#  2:ع
 git checkout HEAD~1 -- src/services/analysis/scoreDocService.ts
 
-#  3:??()
+#  3:¹()
 npm run build
 
 #  4:
-# (????????)
+# (ʵʲʽִ)
 
-#  5:??????
-# ????????????
+#  5:֪ͨԱ
+# ֪ͨŶӡƷά
 ```
 
 ---
 
-## ??????????
+## 塢ع֤嵥
 
-### 5.1 ????
+### 5.1 ع֤
 
-| # | ?? |  | ???? |
+| # | ֤ |  | Ԥڽ |
 |---|--------|------|----------|
-| 1 | ?????? | `git status src/services/analysis/scoreDocService.ts` | ?? |
-| 2 | ?? | `npx tsc --noEmit 2>&1 \| Select-String "scoreDocService"` | (scoreDocService.ts ??) |
-| 3 | ScoreHistoryPanel  | `npx tsc --noEmit 2>&1 \| Select-String "ScoreHistoryPanel"` | ?? buildScoreDocDiff (??) |
-| 4 | ?? | `npx vitest run walkthroughScoreDoc` | ??(??,?? buildScoreDocDiff) |
-| 5 | ?? | `npx vitest run src/services/analysis/__tests__/scoreDocService.test.ts` | ??(??, buildScoreDocDiff) |
+| 1 | ļ״̬ | `git status src/services/analysis/scoreDocService.ts` | ޸ |
+| 2 | ͼ | `npx tsc --noEmit 2>&1 \| Select-String "scoreDocService"` | (scoreDocService.ts ޴) |
+| 3 | ScoreHistoryPanel  | `npx tsc --noEmit 2>&1 \| Select-String "ScoreHistoryPanel"` | ʾ buildScoreDocDiff (Ԥ) |
+| 4 | в | `npx vitest run walkthroughScoreDoc` | ʧ(Ԥ,ļ buildScoreDocDiff) |
+| 5 | Ԫ | `npx vitest run src/services/analysis/__tests__/scoreDocService.test.ts` | ʧ(Ԥ, buildScoreDocDiff) |
 
-### 5.2 ??????
+### 5.2 ֻع֤
 
-???? A/B,????????:
+ݻع A/B,ִжӦ֤:
 
-- ** A(????)**: ?? 43/43 ??
-- ** B(?? buildScoreDocDiff)**: ?????? ScoreHistoryPanel.tsx ??
+- ** A(عӲ)**: в 43/43 ͨ
+- ** B(ع buildScoreDocDiff)**: ͬʱع ScoreHistoryPanel.tsx ļ
 
 ---
 
 ## 
 
 ```
-???
+쳣
     
-      ScoreHistoryPanel ???
-          ??(4.1)
+      ScoreHistoryPanel Ⱦ?
+          ع(4.1)
           
     
-      buildScoreDocDiff ???
-          ??(4.1)???????? B(4.3)
+      buildScoreDocDiff ش?
+          ع(4.1)򲿷ֻع B(4.3)
           
     
-      getFileLibraryStats  coreStocks ?????
-          ???? A(4.2)
+      getFileLibraryStats  coreStocks ͳƴ?
+          ֻع A(4.2)
           
     
-     ?????
-          ??(4.1)
+     ͼ´?
+          ع(4.1)
           
     
-     ???????
-          ??(4.1)
+     Ǵвʧ?
+          ع(4.1)
           
     
-       ??
+       ع
 ```
 
 ---
 
-## ??
+## ߡ
 
-### 7.1 ??
+### 7.1 վ
 
-|  |  | ?? | ???? | ?? |
+|  |  | Ӱ | յȼ | ʩ |
 |--------|------|------|----------|----------|
-| `buildScoreDocDiff` ?? |  |  | ??  | 4 ?? + 4 ?? |
-| `DEFAULT_THRESHOLDS.rating.strongBuy` ?????? coreStocks ???? |  |  | ??  | ?? config.ts ?????? 4.0 |
-| ????? |  |  | ??  | ????(services ??) |
-| `ScoreHistoryPanel.tsx` ????? |  |  | ??  | ????,?? |
-| ?? `ScoreHistoryPanel.tsx` ?? | 100% |  | ??  | ??????(????) |
+| `buildScoreDocDiff` ߼ |  |  | ??  | 4 Ԫ + 4 в |
+| `DEFAULT_THRESHOLDS.rating.strongBuy` ֵ޸ĵ coreStocks ͳƫ |  |  | ??  | ֵ config.ts ѹ̶Ϊ 4.0 |
+| 뵼ѭ |  |  | ??  | ܹͨ(services ͬ) |
+| `ScoreHistoryPanel.tsx` Ⱦ쳣 |  |  | ??  | ͼͨ,ȷ |
+| ع `ScoreHistoryPanel.tsx` ± | 100% |  | ??  | عԤ˵(ԤΪ) |
 
-### 7.2 ??
+### 7.2 ع
 
-|  |  | ?? | ?? |
+|  |  | Ӱ | ʩ |
 |--------|------|------|----------|
-| ?? `ScoreHistoryPanel.tsx` ?? | 100% |  | ?????????? |
-| ?? `scoreDocService.test.ts` ?? | 100% |  | ???????? |
-| ?????? |  |  | ?? `git checkout <file>`  `git reset --hard` |
+| ع `ScoreHistoryPanel.tsx` ± | 100% |  | ͬʱعע͸ |
+| ع `scoreDocService.test.ts` ʧ | 100% |  | ͬʱعò |
+| عɾ޸ |  |  | ʹ `git checkout <file>`  `git reset --hard` |
 
 ---
 
-## ???????
+## ˡ鸽¼
 
-### 8.1  diff(??)
+### 8.1  diff(ο)
 
 ```diff
 --- a/src/services/analysis/scoreDocService.ts
@@ -347,7 +347,7 @@ npm run build
    }
  }
 
-+/** ?????(???????) */
++/** ĵṹ(ʷ汾Ա) */
 +export interface ScoreDocDiff {
 +  newerVersion: number
 +  olderVersion: number
@@ -367,7 +367,7 @@ npm run build
 +}
 +
 +export function buildScoreDocDiff(newer: ScoreDocVersion, older: ScoreDocVersion): ScoreDocDiff {
-+  // ... ??
++  // ... ʵ
 +}
 +
  export async function getNextVersion(symbol: string): Promise<number> {
@@ -379,66 +379,66 @@ npm run build
 +    const coreStocks = all.filter((d) => d.composite >= DEFAULT_THRESHOLDS.rating.strongBuy).length
 ```
 
-### 8.2 ??(????,??)
+### 8.2 ļ(δ޸,Ӱ)
 
-| ???? | ?? | ?? |
+| ļ· | Ӱ | ˵ |
 |----------|----------|------|
-| [src/components/analysis/score/ScoreHistoryPanel.tsx](../../../src/components/organisms/analysis/score/ScoreHistoryPanel.tsx) | ?? |  `buildScoreDocDiff`,???? |
-| [src/services/analysis/__tests__/scoreDocService.test.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/????????V9/src/services/analysis/__tests__/scoreDocService.test.ts) |  | 4  buildScoreDocDiff ?? |
-| [tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts](../../../tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts) |  | 43 ???? |
+| [src/components/analysis/score/ScoreHistoryPanel.tsx](../../../src/components/organisms/analysis/score/ScoreHistoryPanel.tsx) | ÷ |  `buildScoreDocDiff`,ͼͨ |
+| [src/services/analysis/__tests__/scoreDocService.test.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/ͶиϵͳV9/src/services/analysis/__tests__/scoreDocService.test.ts) |  | 4  buildScoreDocDiff ͨ |
+| [tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts](../../../tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts) |  | 43 вͨ |
 
 ---
 
-## ????
+## šϵ
 
 ### 9.1 
 
-1. **???**  ???????
-2. **??**  ????
-3. **??**  ????
-4. **??????**  ????
-5. **????**  ?????
-6. **??????**  ????????
-7. **??**  ,?? lessons learned
+1. **쳣**  ¼븴ֲ
+2. **ض**  οڴ
+3. **ع**  οھ
+4. **ִлع**  Ľڲ
+5. **֤ع**  嵥֤
+6. **֪ͨط**  ŶӡƷά
+7. **º**  ,¼ lessons learned
 
-### 9.2 ??
+### 9.2 ع
 
-| ?? |  |  |
+| ȼ |  |  |
 |--------|------|--------|
-| P0 | ????,?? |  |
-| P0 | ?? |  |
-| P1 | ??????? |  + ?? |
-| P2 | ??,?? |  |
-| P2 | ??,???? |  |
+| P0 | عԭ,λ |  |
+| P0 | ޸ |  |
+| P1 | ²޸汾 |  + ά |
+| P2 | ²,© |  |
+| P2 | ĵ,¼¼ |  |
 
 ---
 
-## ????:????
+## ʮ¼:֤ٲ
 
 ```powershell
-# ??( scoreDocService )
+# ͼ( scoreDocService )
 npx tsc --noEmit 2>&1 | Select-String "scoreDocService|ScoreHistoryPanel" -SimpleMatch
 
 # ESLint( scoreDocService)
 npx eslint src/services/analysis/scoreDocService.ts
 
-# ??(buildScoreDocDiff)
+# Ԫ(buildScoreDocDiff)
 npx vitest run src/services/analysis/__tests__/scoreDocService.test.ts --reporter=default
 
-# ??(43 )
+# в(43 )
 npx vitest run walkthroughScoreDoc --reporter=default
 
-# ??(??)
+# ܹ(ֲ)
 npm run audit:layers
 
-# (??:?? trade.constants ?????)
+# (ע:Ԥ trade.constants ᵼʧ)
 npx vite build
 ```
 
 ---
 
-## ??????
+## ʮһ־
 
-| ??? |  | ???? |
+| 汾 |  | ժҪ |
 |------|------|----------|
-| v1.0 | 2026-07-04 | ?????: 3 ???? |
+| v1.0 | 2026-07-04 | ʼ汾: 3 عԤ |

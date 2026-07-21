@@ -18,101 +18,101 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# V9 Êı¾İ×ÖµäË÷Òı
+# V9 æ•°æ®å­—å…¸ç´¢å¼•
 
 > **Status**: Current  
 > **Version**: v1.6.0  
 > **Last Updated**: 2026-07-08  
-> ±¾ÎÄµµ»ã×Ü V9 ÏîÄ¿ËùÓĞÄ£¿é¼¶Êı¾İ×ÖµäÈë¿Ú£¬±ãÓÚ¿ìËÙ²éÕÒ×Ö¶Î¶¨Òå¡¢Ã¶¾ÙÖµ¡¢·şÎñ API Óë DataBridge Ó³Éä¡£
+> æœ¬æ–‡æ¡£æ±‡æ€» V9 é¡¹ç›®æ‰€æœ‰æ¨¡å—çº§æ•°æ®å­—å…¸å…¥å£ï¼Œä¾¿äºå¿«é€ŸæŸ¥æ‰¾å­—æ®µå®šä¹‰ã€æšä¸¾å€¼ã€æœåŠ¡ API ä¸ DataBridge æ˜ å°„ã€‚
 
 ---
 
-## °´Ä£¿éË÷Òı
+## æŒ‰æ¨¡å—ç´¢å¼•
 
-| Ä£¿é | Êı¾İ×Öµä | Ô´ÂëÈë¿Ú | ¸²¸Ç·¶Î§ |
+| æ¨¡å— | æ•°æ®å­—å…¸ | æºç å…¥å£ | è¦†ç›–èŒƒå›´ |
 |------|----------|----------|----------|
-| ½»Ò×³Ö²Ö¹ÜÀí | `../../../reference/data-definition.md`£¨¡ìA£©¡¢`../../../reference/api-contract.md` | `src/pages/trading/`¡¢`src/types/modules/trade.types.ts`¡¢`src/constants/trade.constants.ts`¡¢`src/store/holdingsStore.ts` | ³Ö²ÖÃ÷Ï¸¡¢²éÑ¯²ÎÊı¡¢½»Ò×²Ù×÷¡¢·ÖÒ³/É¸Ñ¡×´Ì¬¡¢Store ×´Ì¬¹ÜÀí£¨Zustand£© |
-| ÖÇÄÜ×ÊÑ¶ÖĞĞÄ£¨NewsPage£© | `../../../reference/news-contract.md`¡¢`../../../reference/data-definition.md` | `src/pages/analysis/`¡¢`src/services/news/`¡¢`src/data/types.ts`¡¢`src/store/analysisNewsStore.ts` | `NewsArticle`¡¢`NewsStockMap`¡¢`SentimentCache`¡¢V6/V9 ÊÊÅä¡¢Â·ÓÉ¡¢Store ×´Ì¬¹ÜÀí£¨Zustand£© |
-| AI ÖÇÄÜÌåµ÷¶ÈÖĞĞÄ / ½¡¿µ¼à¿Ø / Õï¶Ï·ÖÎö | `../../../reference/ai-center-data-definition.md` | `src/constants/ai-center.constants.ts`¡¢`src/constants/health.constants.ts`¡¢`src/types/modules/ai-center.types.ts`¡¢`src/services/ai-center/` | Agent¡¢½¡¿µÖ¸±ê¡¢Õï¶Ï±¨¸æ¡¢Í³Ò» `AICenterData` |
-| ½ğÈÚÒµÎñ¼İÊ»²Õ Widget | `../../../reference/data-definition.md`£¨¡ìB Êı¾İ²É¼¯ / ¡ìC Cockpit Widget ¿ò¼Ü£© | `src/cockpit/widgets/`¡¢`src/services/stock-analysis/`¡¢`src/services/data-collector/`¡¢`src/types/modules/widget.types.ts`¡¢`src/store/widgetStore.ts` | Í¶×Ê»­Ïñ¡¢¹ÉÆ±³Ø¡¢KAI ÆÀ·Ö¡¢Ä£ĞÍ¶Ô±È¡¢ÁÄÌì½çÃæ¡¢Widget ÊµÀı¹ÜÀí |
-| Èı²ãÄ£¿é×¢²áÌåÏµ | `../../../reference/registry-index.md` | ~~`src/store/derived.index.ts`~~£¨ÒÑÉ¾³ı£¬´ıÖØ½¨£©¡¢`src/components/componentRegistry.ts`¡¢`src/cockpit/core/widgetRegistry.ts` | ~~Store ×¢²á±í£¨29 ÌõÄ¿£©~~£¨ÒÑÉ¾³ı£¬´ıÖØ½¨£©¡¢Component ×¢²á±í£¨10+ ÌõÄ¿£©¡¢Widget ×¢²á±í£¨21 ÌõÄ¿£©£¬°´Óò/×´Ì¬²éÑ¯£¬Í³¼Æº¯Êı |
-| UseCase ÓÃÀı²ã | ÄÚÁªÀàĞÍ¶¨Òå | `src/services/useCase/createExecutionPlan.useCase.ts`¡¢`src/services/useCase/createExecutionPlan.useCase.ts`¡¢`src/services/useCase/fetchSectorAnalysis.useCase.ts`¡¢`src/services/useCase/fetcherOrchestrator.useCase.ts`¡¢`src/services/useCase/generateTradeReview.useCase.ts`¡¢`src/services/useCase/getUnifiedStockView.useCase.ts`¡¢`src/services/useCase/hotSectorQuery.useCase.ts`¡¢`src/services/useCase/rebalancePortfolio.useCase.ts`¡¢`src/services/useCase/runDualStrategy.useCase.ts`¡¢`src/services/trading/strategySnapshotService.ts`¡¢`src/services/trading/tradingService.ts` | `CreateExecutionPlanInput`/`CreateExecutionPlanResult`¡¢`ExecutePlanContext`/`ExecutePlanResult`¡¢`FetchSectorAnalysisInput`/`FetchSectorAnalysisResult`¡¢`FetchBasicDataInput`/`FetchKlineDataInput`¡¢`TradeReviewReport`£¨ÒıÓÃ×Ô `tradeReviewAI.types.ts`£©¡¢`UnifiedStockView`/`FusionOptions`¡¢`HotSectorQueryInput`/`HotSectorQueryResult`¡¢`RebalanceOptions`¡¢`RunDualStrategyInput`¡¢`SaveStrategySnapshotInput`/`SaveStrategySnapshotResult`¡¢`SubmitOrderInput`/`SubmitOrderResult` |
-| ½»Ò×¼ÆËã´¿º¯Êı | ÄÚÁªÀàĞÍ¶¨Òå | `src/services/trading/positionComputer.ts`¡¢`src/services/trading/pnlComputer.ts`¡¢`src/services/trading/riskComputer.ts` | `MatchedTradePair`¡¢`TradePair`¡¢`PositionItem`¡¢`PnLSummary`¡¢`RiskMetrics` |
-| ½»Ò×ÒıÇæ£¨ĞÅºÅ/²ÖÎ»/·ç¿Ø£© | ÄÚÁªÀàĞÍ¶¨Òå | `src/services/trading/signalGenerator.ts`¡¢`src/services/trading/positionSizer.ts`¡¢`src/services/trading/riskEngine.ts` | `TradingSignal`£¨= `Signal`£©¡¢`SignalSnapshot`¡¢`SignalDirection`¡¢`PositionSizingInput`/`PositionSizingResult`¡¢`OrderRiskInput`/`RiskCheckResult` |
-| ¹ÉÆ±³Ø·Ö×é | ÄÚÁªÀàĞÍ¶¨Òå | `src/data/types.ts`£¨`PoolGroupMeta`£©¡¢`src/config/dbConfig.ts`£¨`DEFAULT_POOL_GROUP`£©¡¢`src/store/poolStore.test.ts`£¨`PoolState`£© | `PoolGroupMeta`¡¢`DEFAULT_POOL_GROUP`¡¢`PoolState`£¨º¬ `stocks`/`loading`/`error`/`isRefreshing`/`lastUpdated`£©¡¢`Stock.group` ×Ö¶Î |
-| »ìºÏĞ£¶ÔÄ£¿é£¨Hybrid Proofread£© | `src/data/types/types.hybridProofread.ts` | `src/services/hybrid-proofread/`£¨cloudSyncClient/hashService/localCollector/reportGenerator/ruleEngine/index£©¡¢`src/config/hybridProofreadConfig.ts`¡¢`src/store/hybridProofreadStore.ts` | `FileHash`¡¢`RuleConfig`¡¢`RuleMatchResult`¡¢`LocalScanResult`¡¢`CloudRiskResult`¡¢`ProofreadReport`¡¢`RiskDetail`¡¢`RulesSyncResult`¡¢`HashVerifyRequest/Response`¡¢`HashBatchVerifyRequest/Response`¡¢`RiskDetailsRequest/Response`¡¢`PerformanceMetric` |
-| Store ÅÉÉú¼ÆËã | `src/store/*.derived.ts` | `src/store/analysisStore.derived.ts`£¨22º¯Êı£©¡¢`src/store/chatStore.derived.ts`£¨23º¯Êı£©¡¢`src/store/riskStore.derived.ts`£¨22º¯Êı£©¡¢`src/store/signalQualityStore.derived.ts`£¨30º¯Êı£© | ÅÉÉú²éÑ¯º¯Êı¡¢ÀàĞÍ¶¨Òå£¨ScoreLevelDistribution/SymbolRiskStatsµÈ£©¡¢»º´æ²ßÂÔ£¨memoizeByRef£©¡¢React Hooks |
-| Store ÊÂ¼ş¶©ÔÄ | `src/store/executionStoreSubscriptions.ts` | initExecutionStoreSubscriptions¡¢_handleSignalEnvelope¡¢_handleOrderEnvelope¡¢_debouncedRefresh | DataBridge ¶©ÔÄ¹ÜÀí¡¢ÊÂ¼şÇı¶¯¼Ü¹¹¡¢100ms ·À¶¶»úÖÆ |
-| È«¾Ö´íÎó´¦Àí | `src/components/organisms/shared/installGlobalErrorHandler.ts` | installGlobalErrorHandler | window.error ÊÂ¼ş¡¢unhandledrejection ÊÂ¼ş¡¢´íÎó×ÜÏß¼¯³É |
-| UI »ù´¡×é¼ş | `src/components/ui/` | `src/components/templates/PageContainer.tsx`£¨Ò³ÃæÈİÆ÷£©¡¢`src/components/templates/PageHeader.tsx`£¨Ò³ÃæÒ³Í·£© | Ò³Ãæ²¼¾ÖÒ»ÖÂĞÔ¡¢ÅÅ°æ½×Ìİ¡¢²Ù×÷Çø²¼¾Ö |
-| ÅÉÉú»º´æ¹¤¾ß | `src/lib/derivedCache.ts` | memoizeByRef¡¢memoizeByKey¡¢buildIndex¡¢safeLength¡¢safeDivide¡¢average | ÅÉÉú²éÑ¯¼ÇÒä»¯»º´æ¡¢ĞÔÄÜÓÅ»¯¡¢VERBOSE ÈÕÖ¾Âñµã |
-| ±¾µØ´æ´¢¼ÓÃÜ | `src/lib/localStorageCrypto.ts` | getOrCreateCryptoKey¡¢generateIv¡¢arrayBufferToBase64¡¢base64ToArrayBuffer | AES-GCM 256 ¼ÓÃÜ¡¢CryptoKey ÅÉÉú¡¢°²È«²ßÂÔ STOR-001 |
-| ´íÎó×ÜÏß | `src/services/errorBus.ts` | captureError¡¢onErrorCaptured¡¢ERROR_CAPTURED_EVENT | Í³Ò»´íÎó²¶»ñ¡¢V9Error ÊÕÁ²¡¢È«¾Ö´íÎó×ÜÏß |
-| ÈÍĞÔ¹¤¾ß | `src/services/resilience.ts` | withRetry¡¢createCircuitBreaker¡¢withFallback¡¢withResilience | Ö¸ÊıÍË±ÜÖØÊÔ¡¢ÈÛ¶Ï±£»¤Æ÷¡¢Ê§°Ü½µ¼¶¡¢Ò»Õ¾Ê½·â×° |
-| È·ÈÏ¶Ô»°¿ò Hook | `src/hooks/useConfirmDialog.tsx` | useConfirmDialog£¨confirm¡¢ConfirmDialog£© | ÃüÁîÊ½È·ÈÏ¶Ô»°¿ò¡¢Ìæ´ú window.confirm¡¢Promise Ê½ API |
-| °å¿é³£Á¿ | `src/constants/sectorConstants.ts` | HOT_TRACKS£¨15 ÌõÈÈÃÅÈüµÀ£© | °å¿é·ÖÀà¡¢ÈÈÃÅÈüµÀ±êÇ©¡¢ÈÈÁ¦µÈ¼¶ |
+| äº¤æ˜“æŒä»“ç®¡ç† | `../../../reference/data-definition.md`ï¼ˆÂ§Aï¼‰ã€`../../../reference/api-contract.md` | `src/pages/trading/`ã€`src/types/modules/trade.types.ts`ã€`src/constants/trade.constants.ts`ã€`src/store/holdingsStore.ts` | æŒä»“æ˜ç»†ã€æŸ¥è¯¢å‚æ•°ã€äº¤æ˜“æ“ä½œã€åˆ†é¡µ/ç­›é€‰çŠ¶æ€ã€Store çŠ¶æ€ç®¡ç†ï¼ˆZustandï¼‰ |
+| æ™ºèƒ½èµ„è®¯ä¸­å¿ƒï¼ˆNewsPageï¼‰ | `../../../reference/news-contract.md`ã€`../../../reference/data-definition.md` | `src/pages/analysis/`ã€`src/services/news/`ã€`src/data/types.ts`ã€`src/store/analysisNewsStore.ts` | `NewsArticle`ã€`NewsStockMap`ã€`SentimentCache`ã€V6/V9 é€‚é…ã€è·¯ç”±ã€Store çŠ¶æ€ç®¡ç†ï¼ˆZustandï¼‰ |
+| AI æ™ºèƒ½ä½“è°ƒåº¦ä¸­å¿ƒ / å¥åº·ç›‘æ§ / è¯Šæ–­åˆ†æ | `../../../reference/ai-center-data-definition.md` | `src/constants/ai-center.constants.ts`ã€`src/constants/health.constants.ts`ã€`src/types/modules/ai-center.types.ts`ã€`src/services/ai-center/` | Agentã€å¥åº·æŒ‡æ ‡ã€è¯Šæ–­æŠ¥å‘Šã€ç»Ÿä¸€ `AICenterData` |
+| é‡‘èä¸šåŠ¡é©¾é©¶èˆ± Widget | `../../../reference/data-definition.md`ï¼ˆÂ§B æ•°æ®é‡‡é›† / Â§C Cockpit Widget æ¡†æ¶ï¼‰ | `src/cockpit/widgets/`ã€`src/services/stock-analysis/`ã€`src/services/data-collector/`ã€`src/types/modules/widget.types.ts`ã€`src/store/widgetStore.ts` | æŠ•èµ„ç”»åƒã€è‚¡ç¥¨æ± ã€KAI è¯„åˆ†ã€æ¨¡å‹å¯¹æ¯”ã€èŠå¤©ç•Œé¢ã€Widget å®ä¾‹ç®¡ç† |
+| ä¸‰å±‚æ¨¡å—æ³¨å†Œä½“ç³» | `../../../reference/registry-index.md` | ~~`src/store/derived.index.ts`~~ï¼ˆå·²åˆ é™¤ï¼Œå¾…é‡å»ºï¼‰ã€`src/components/componentRegistry.ts`ã€`src/cockpit/core/widgetRegistry.ts` | ~~Store æ³¨å†Œè¡¨ï¼ˆ29 æ¡ç›®ï¼‰~~ï¼ˆå·²åˆ é™¤ï¼Œå¾…é‡å»ºï¼‰ã€Component æ³¨å†Œè¡¨ï¼ˆ10+ æ¡ç›®ï¼‰ã€Widget æ³¨å†Œè¡¨ï¼ˆ21 æ¡ç›®ï¼‰ï¼ŒæŒ‰åŸŸ/çŠ¶æ€æŸ¥è¯¢ï¼Œç»Ÿè®¡å‡½æ•° |
+| UseCase ç”¨ä¾‹å±‚ | å†…è”ç±»å‹å®šä¹‰ | `src/services/useCase/createExecutionPlan.useCase.ts`ã€`src/services/useCase/createExecutionPlan.useCase.ts`ã€`src/services/useCase/fetchSectorAnalysis.useCase.ts`ã€`src/services/useCase/fetcherOrchestrator.useCase.ts`ã€`src/services/useCase/generateTradeReview.useCase.ts`ã€`src/services/useCase/getUnifiedStockView.useCase.ts`ã€`src/services/useCase/hotSectorQuery.useCase.ts`ã€`src/services/useCase/rebalancePortfolio.useCase.ts`ã€`src/services/useCase/runDualStrategy.useCase.ts`ã€`src/services/trading/strategySnapshotService.ts`ã€`src/services/trading/tradingService.ts` | `CreateExecutionPlanInput`/`CreateExecutionPlanResult`ã€`ExecutePlanContext`/`ExecutePlanResult`ã€`FetchSectorAnalysisInput`/`FetchSectorAnalysisResult`ã€`FetchBasicDataInput`/`FetchKlineDataInput`ã€`TradeReviewReport`ï¼ˆå¼•ç”¨è‡ª `tradeReviewAI.types.ts`ï¼‰ã€`UnifiedStockView`/`FusionOptions`ã€`HotSectorQueryInput`/`HotSectorQueryResult`ã€`RebalanceOptions`ã€`RunDualStrategyInput`ã€`SaveStrategySnapshotInput`/`SaveStrategySnapshotResult`ã€`SubmitOrderInput`/`SubmitOrderResult` |
+| äº¤æ˜“è®¡ç®—çº¯å‡½æ•° | å†…è”ç±»å‹å®šä¹‰ | `src/services/trading/positionComputer.ts`ã€`src/services/trading/pnlComputer.ts`ã€`src/services/trading/riskComputer.ts` | `MatchedTradePair`ã€`TradePair`ã€`PositionItem`ã€`PnLSummary`ã€`RiskMetrics` |
+| äº¤æ˜“å¼•æ“ï¼ˆä¿¡å·/ä»“ä½/é£æ§ï¼‰ | å†…è”ç±»å‹å®šä¹‰ | `src/services/trading/signalGenerator.ts`ã€`src/services/trading/positionSizer.ts`ã€`src/services/trading/riskEngine.ts` | `TradingSignal`ï¼ˆ= `Signal`ï¼‰ã€`SignalSnapshot`ã€`SignalDirection`ã€`PositionSizingInput`/`PositionSizingResult`ã€`OrderRiskInput`/`RiskCheckResult` |
+| è‚¡ç¥¨æ± åˆ†ç»„ | å†…è”ç±»å‹å®šä¹‰ | `src/data/types.ts`ï¼ˆ`PoolGroupMeta`ï¼‰ã€`src/config/dbConfig.ts`ï¼ˆ`DEFAULT_POOL_GROUP`ï¼‰ã€`src/store/poolStore.test.ts`ï¼ˆ`PoolState`ï¼‰ | `PoolGroupMeta`ã€`DEFAULT_POOL_GROUP`ã€`PoolState`ï¼ˆå« `stocks`/`loading`/`error`/`isRefreshing`/`lastUpdated`ï¼‰ã€`Stock.group` å­—æ®µ |
+| æ··åˆæ ¡å¯¹æ¨¡å—ï¼ˆHybrid Proofreadï¼‰ | `src/data/types/types.hybridProofread.ts` | `src/services/hybrid-proofread/`ï¼ˆcloudSyncClient/hashService/localCollector/reportGenerator/ruleEngine/indexï¼‰ã€`src/config/hybridProofreadConfig.ts`ã€`src/store/hybridProofreadStore.ts` | `FileHash`ã€`RuleConfig`ã€`RuleMatchResult`ã€`LocalScanResult`ã€`CloudRiskResult`ã€`ProofreadReport`ã€`RiskDetail`ã€`RulesSyncResult`ã€`HashVerifyRequest/Response`ã€`HashBatchVerifyRequest/Response`ã€`RiskDetailsRequest/Response`ã€`PerformanceMetric` |
+| Store æ´¾ç”Ÿè®¡ç®— | `src/store/*.derived.ts` | `src/store/analysisStore.derived.ts`ï¼ˆ22å‡½æ•°ï¼‰ã€`src/store/chatStore.derived.ts`ï¼ˆ23å‡½æ•°ï¼‰ã€`src/store/riskStore.derived.ts`ï¼ˆ22å‡½æ•°ï¼‰ã€`src/store/signalQualityStore.derived.ts`ï¼ˆ30å‡½æ•°ï¼‰ | æ´¾ç”ŸæŸ¥è¯¢å‡½æ•°ã€ç±»å‹å®šä¹‰ï¼ˆScoreLevelDistribution/SymbolRiskStatsç­‰ï¼‰ã€ç¼“å­˜ç­–ç•¥ï¼ˆmemoizeByRefï¼‰ã€React Hooks |
+| Store äº‹ä»¶è®¢é˜… | `src/store/executionStoreSubscriptions.ts` | initExecutionStoreSubscriptionsã€_handleSignalEnvelopeã€_handleOrderEnvelopeã€_debouncedRefresh | DataBridge è®¢é˜…ç®¡ç†ã€äº‹ä»¶é©±åŠ¨æ¶æ„ã€100ms é˜²æŠ–æœºåˆ¶ |
+| å…¨å±€é”™è¯¯å¤„ç† | `src/components/organisms/shared/installGlobalErrorHandler.ts` | installGlobalErrorHandler | window.error äº‹ä»¶ã€unhandledrejection äº‹ä»¶ã€é”™è¯¯æ€»çº¿é›†æˆ |
+| UI åŸºç¡€ç»„ä»¶ | `src/components/ui/` | `src/components/templates/PageContainer.tsx`ï¼ˆé¡µé¢å®¹å™¨ï¼‰ã€`src/components/templates/PageHeader.tsx`ï¼ˆé¡µé¢é¡µå¤´ï¼‰ | é¡µé¢å¸ƒå±€ä¸€è‡´æ€§ã€æ’ç‰ˆé˜¶æ¢¯ã€æ“ä½œåŒºå¸ƒå±€ |
+| æ´¾ç”Ÿç¼“å­˜å·¥å…· | `src/lib/derivedCache.ts` | memoizeByRefã€memoizeByKeyã€buildIndexã€safeLengthã€safeDivideã€average | æ´¾ç”ŸæŸ¥è¯¢è®°å¿†åŒ–ç¼“å­˜ã€æ€§èƒ½ä¼˜åŒ–ã€VERBOSE æ—¥å¿—åŸ‹ç‚¹ |
+| æœ¬åœ°å­˜å‚¨åŠ å¯† | `src/lib/localStorageCrypto.ts` | getOrCreateCryptoKeyã€generateIvã€arrayBufferToBase64ã€base64ToArrayBuffer | AES-GCM 256 åŠ å¯†ã€CryptoKey æ´¾ç”Ÿã€å®‰å…¨ç­–ç•¥ STOR-001 |
+| é”™è¯¯æ€»çº¿ | `src/services/errorBus.ts` | captureErrorã€onErrorCapturedã€ERROR_CAPTURED_EVENT | ç»Ÿä¸€é”™è¯¯æ•è·ã€V9Error æ”¶æ•›ã€å…¨å±€é”™è¯¯æ€»çº¿ |
+| éŸ§æ€§å·¥å…· | `src/services/resilience.ts` | withRetryã€createCircuitBreakerã€withFallbackã€withResilience | æŒ‡æ•°é€€é¿é‡è¯•ã€ç†”æ–­ä¿æŠ¤å™¨ã€å¤±è´¥é™çº§ã€ä¸€ç«™å¼å°è£… |
+| ç¡®è®¤å¯¹è¯æ¡† Hook | `src/hooks/useConfirmDialog.tsx` | useConfirmDialogï¼ˆconfirmã€ConfirmDialogï¼‰ | å‘½ä»¤å¼ç¡®è®¤å¯¹è¯æ¡†ã€æ›¿ä»£ window.confirmã€Promise å¼ API |
+| æ¿å—å¸¸é‡ | `src/constants/sectorConstants.ts` | HOT_TRACKSï¼ˆ15 æ¡çƒ­é—¨èµ›é“ï¼‰ | æ¿å—åˆ†ç±»ã€çƒ­é—¨èµ›é“æ ‡ç­¾ã€çƒ­åŠ›ç­‰çº§ |
 
 ---
 
-## Í¨ÓÃÀàĞÍÓë³£Á¿
+## é€šç”¨ç±»å‹ä¸å¸¸é‡
 
-| ÀàĞÍ/³£Á¿ÎÄ¼ş | ËµÃ÷ | ±»ÄÄĞ©×ÖµäÒıÓÃ |
+| ç±»å‹/å¸¸é‡æ–‡ä»¶ | è¯´æ˜ | è¢«å“ªäº›å­—å…¸å¼•ç”¨ |
 |---------------|------|----------------|
-| `src/data/types.ts` | È«¾ÖÊı¾İÀàĞÍ£º`Stock`¡¢`Order`¡¢`Portfolio`¡¢`NewsArticle`¡¢`NewsStockMap`¡¢`SentimentCache` µÈ | News¡¢Trade¡¢Widget ×Öµä |
-| `src/config/dbConfig.ts` | IndexedDB store ÅäÖÃ¡¢`EnvelopeAction`¡¢`EnvelopeTarget` | News¡¢Trade¡¢AI Center ×Öµä |
-| `src/constants/cockpit.constants.ts` | ¼İÊ»²Õ³£Á¿£ºÑÕÉ«Ó³Éä¡¢ÆÀ·ÖµÈ¼¶¡¢Î¬¶ÈÃû³Æ¡¢Ä£ĞÍ°æ±¾¡¢ÂÖÑ¯¼ä¸ô | Widget ×Öµä |
-| `src/constants/ai-center.constants.ts` | AI ÖĞĞÄ³£Á¿£ºAgent ×´Ì¬/±êÇ©/ÀàĞÍ¡¢Êı¾İÔ´ÅäÖÃ | AI Center ×Öµä |
-| `src/constants/health.constants.ts` | ½¡¿µ¼à¿Ø³£Á¿£º½¡¿µ×´Ì¬¡¢Ä£¿é·ÖÀà¡¢Õï¶ÏµÈ¼¶¡¢ÆÀ·ÖãĞÖµ | AI Center ×Öµä |
-| ~~`src/store/derived.index.ts`~~£¨ÒÑÉ¾³ı£¬´ıÖØ½¨£© | ~~Store ×¢²á±í£º`StoreRegistryEntry`¡¢`StoreDomain`¡¢`StoreStatus` ÀàĞÍ£¬29 ÌõÄ¿~~£¨ÒÑÉ¾³ı£¬´ıÖØ½¨£© | Registry ×Öµä |
-| `src/components/componentRegistry.ts` | Component ×¢²á±í£º`ComponentRegistryEntry` ÀàĞÍ£¬10+ ÌõÄ¿ | Registry ×Öµä |
-| `src/config/apiPaths.ts` | ÄÚ²¿ API Â·¾¶¼¯ÖĞÅäÖÃ£¨13 ÌõÂ·¾¶£©£ºÏµÍ³¼à¿Ø 4 Ìõ£¨`API_SYSTEM_AGENT_HEALTH`/`API_SYSTEM_ENGINE_STATUS`/`API_SYSTEM_ARCHITECTURE`/`API_SYSTEM_RISK_MONITOR`£©¡¢½»Ò× 6 Ìõ£¨`API_TRADE_PNL_ANALYSIS`/`API_TRADE_POSITIONS`/`API_TRADE_SIGNALS`/`API_TRADE_HOLDINGS`/`API_TRADE_ADD_POSITION`/`API_TRADE_CLOSE_POSITION`/`API_TRADE_HOLDINGS_EXPORT`£©¡¢Êı¾İ²É¼¯ 2 Ìõ£¨`API_COLLECT_BASIC`/`API_COLLECT_KLINE`£© | UseCase¡¢Service ²ã |
-| `src/config/timeouts.ts` | ³¬Ê±Öµ¼¯ÖĞÅäÖÃ£¨4 Ïî£©£º`ANALYSIS_ENGINE_TIMEOUT_MS`£¨30s£©¡¢`DATA_COLLECTION_TIMEOUT_MS`£¨10s£©¡¢`DEFAULT_REQUEST_TIMEOUT_MS`£¨5s£©¡¢`LLM_CALL_TIMEOUT_MS`£¨60s£© | Service ²ã |
-| `src/config/mathConstants.ts` | ÊıÑ§/½ğÈÚ³£Á¿£¨10 Ïî£©£º`MS_PER_DAY`¡¢`TRADING_DAYS_PER_YEAR`¡¢`VAR_95_Z_SCORE`¡¢`WAN_TO_YUAN_MULTIPLIER`¡¢`DJB2_HASH_INIT`¡¢`DJB2_HASH_MULTIPLIER`¡¢`LOG_SNIPPET_MAX_CHARS`¡¢`LLM_PROMPT_INPUT_MAX_CHARS`¡¢`MCP_CALL_HISTORY_MAX_SIZE`¡¢`HTTP_OK`/`HTTP_INTERNAL_ERROR` | ½»Ò×¼ÆËã´¿º¯Êı¡¢Service ²ã |
-| `src/config/dataSourceUrls.ts` | Íâ²¿Êı¾İÔ´ URL ¼¯ÖĞÅäÖÃ£¨9 Ïî£©£º`TENCENT_QUOTE_API`¡¢`TENCENT_KLINE_API`¡¢`SINA_QUOTE_API`¡¢`NETEASE_HISTORY_API`¡¢`MOCK_NEWS_URL_PREFIX`¡¢`MOCK_TENCENT_BASE_URL`¡¢`MOCK_SINA_BASE_URL`¡¢`MOCK_NETEASE_BASE_URL`¡¢`MOCK_AKSHARE_BASE_URL` | Fetcher ²ã¡¢Service ²ã |
-| `src/config/tradingConfig.ts` | ½»Ò×ÒıÇæÅäÖÃ£º`SignalDirection`£¨`'buy' \| 'sell' \| 'hold' \| 'watch'`£©¡¢`SignalThresholds`¡¢Kelly/·ç¿Ø²ÎÊı | ½»Ò×ÒıÇæ£¨ĞÅºÅ/²ÖÎ»/·ç¿Ø£©×Öµä |
-| `src/data/types.ts` ¡ú `Signal` | ½»Ò×ĞÅºÅÀàĞÍ£º`id`¡¢`symbol`¡¢`direction`¡¢`type`¡¢`strategy`¡¢`confidence`¡¢`rationale`¡¢`snapshot`¡¢`createdAt` | ½»Ò×ÒıÇæ×Öµä |
-| `src/data/types.ts` ¡ú `SignalSnapshot` | ĞÅºÅ¿ìÕÕ£º`pePercentile`¡¢`pbPercentile`¡¢`priceToMA20`¡¢`priceToMA60`¡¢`volumeRatio`¡¢`rsi14`¡¢`macdDirection` | ½»Ò×ÒıÇæ×Öµä |
-| `src/data/types.ts` ¡ú `PoolGroupMeta` | ¹ÉÆ±³Ø·Ö×éÔªÊı¾İ£º`name`£¨·Ö×éÃû³Æ£© | ¹ÉÆ±³Ø·Ö×é×Öµä |
-| `src/constants/healthStatusStyles.ts` | ½¡¿µ¶ÈÒÇ±íÅÌ×´Ì¬ÑùÊ½£¨´øÍ¸Ã÷¶È Tailwind ×éºÏ£© | ½¡¿µ¶ÈÒÇ±íÅÌ |
-| `src/store/collectionWizardStore.ts` | ²É¼¯Ïòµ¼×´Ì¬¹ÜÀí£º`CollectionWizardState`¡¢`WizardStep`¡¢Ä£°å¼ÓÔØ/±£´æ/²½ÖèÍÆ½ø | Êı¾İ²É¼¯Ïòµ¼ |
-| `src/showcase/UIComponentShowcase.tsx` | Ô­×Ó×é¼şÕ¹Ê¾¿â£¨Button/Input/Checkbox/Switch/Select/Toast µÈ£© | Éè¼ÆÏµÍ³/×é¼şÕ¹Ê¾ |
-| `src/showcase/ColorTokenShowcase.tsx` | ÑÕÉ«ÁîÅÆÕ¹Ê¾¿â | Éè¼ÆÏµÍ³/×é¼şÕ¹Ê¾ |
-| `src/showcase/StockDataShowcase.tsx` | ¹ÉÆ±Êı¾İ¿ÉÊÓ»¯Õ¹Ê¾¿â | Éè¼ÆÏµÍ³/×é¼şÕ¹Ê¾ |
-| `src/showcase/WidgetStateShowcase.tsx` | Widget ×´Ì¬Õ¹Ê¾¿â | Éè¼ÆÏµÍ³/×é¼şÕ¹Ê¾ |
-| `src/showcase/ShowcaseSection.tsx` | Õ¹Ê¾Çø¿éÍ¨ÓÃÈİÆ÷ | Éè¼ÆÏµÍ³/×é¼şÕ¹Ê¾ |
+| `src/data/types.ts` | å…¨å±€æ•°æ®ç±»å‹ï¼š`Stock`ã€`Order`ã€`Portfolio`ã€`NewsArticle`ã€`NewsStockMap`ã€`SentimentCache` ç­‰ | Newsã€Tradeã€Widget å­—å…¸ |
+| `src/config/dbConfig.ts` | IndexedDB store é…ç½®ã€`EnvelopeAction`ã€`EnvelopeTarget` | Newsã€Tradeã€AI Center å­—å…¸ |
+| `src/constants/cockpit.constants.ts` | é©¾é©¶èˆ±å¸¸é‡ï¼šé¢œè‰²æ˜ å°„ã€è¯„åˆ†ç­‰çº§ã€ç»´åº¦åç§°ã€æ¨¡å‹ç‰ˆæœ¬ã€è½®è¯¢é—´éš” | Widget å­—å…¸ |
+| `src/constants/ai-center.constants.ts` | AI ä¸­å¿ƒå¸¸é‡ï¼šAgent çŠ¶æ€/æ ‡ç­¾/ç±»å‹ã€æ•°æ®æºé…ç½® | AI Center å­—å…¸ |
+| `src/constants/health.constants.ts` | å¥åº·ç›‘æ§å¸¸é‡ï¼šå¥åº·çŠ¶æ€ã€æ¨¡å—åˆ†ç±»ã€è¯Šæ–­ç­‰çº§ã€è¯„åˆ†é˜ˆå€¼ | AI Center å­—å…¸ |
+| ~~`src/store/derived.index.ts`~~ï¼ˆå·²åˆ é™¤ï¼Œå¾…é‡å»ºï¼‰ | ~~Store æ³¨å†Œè¡¨ï¼š`StoreRegistryEntry`ã€`StoreDomain`ã€`StoreStatus` ç±»å‹ï¼Œ29 æ¡ç›®~~ï¼ˆå·²åˆ é™¤ï¼Œå¾…é‡å»ºï¼‰ | Registry å­—å…¸ |
+| `src/components/componentRegistry.ts` | Component æ³¨å†Œè¡¨ï¼š`ComponentRegistryEntry` ç±»å‹ï¼Œ10+ æ¡ç›® | Registry å­—å…¸ |
+| `src/config/apiPaths.ts` | å†…éƒ¨ API è·¯å¾„é›†ä¸­é…ç½®ï¼ˆ13 æ¡è·¯å¾„ï¼‰ï¼šç³»ç»Ÿç›‘æ§ 4 æ¡ï¼ˆ`API_SYSTEM_AGENT_HEALTH`/`API_SYSTEM_ENGINE_STATUS`/`API_SYSTEM_ARCHITECTURE`/`API_SYSTEM_RISK_MONITOR`ï¼‰ã€äº¤æ˜“ 6 æ¡ï¼ˆ`API_TRADE_PNL_ANALYSIS`/`API_TRADE_POSITIONS`/`API_TRADE_SIGNALS`/`API_TRADE_HOLDINGS`/`API_TRADE_ADD_POSITION`/`API_TRADE_CLOSE_POSITION`/`API_TRADE_HOLDINGS_EXPORT`ï¼‰ã€æ•°æ®é‡‡é›† 2 æ¡ï¼ˆ`API_COLLECT_BASIC`/`API_COLLECT_KLINE`ï¼‰ | UseCaseã€Service å±‚ |
+| `src/config/timeouts.ts` | è¶…æ—¶å€¼é›†ä¸­é…ç½®ï¼ˆ4 é¡¹ï¼‰ï¼š`ANALYSIS_ENGINE_TIMEOUT_MS`ï¼ˆ30sï¼‰ã€`DATA_COLLECTION_TIMEOUT_MS`ï¼ˆ10sï¼‰ã€`DEFAULT_REQUEST_TIMEOUT_MS`ï¼ˆ5sï¼‰ã€`LLM_CALL_TIMEOUT_MS`ï¼ˆ60sï¼‰ | Service å±‚ |
+| `src/config/mathConstants.ts` | æ•°å­¦/é‡‘èå¸¸é‡ï¼ˆ10 é¡¹ï¼‰ï¼š`MS_PER_DAY`ã€`TRADING_DAYS_PER_YEAR`ã€`VAR_95_Z_SCORE`ã€`WAN_TO_YUAN_MULTIPLIER`ã€`DJB2_HASH_INIT`ã€`DJB2_HASH_MULTIPLIER`ã€`LOG_SNIPPET_MAX_CHARS`ã€`LLM_PROMPT_INPUT_MAX_CHARS`ã€`MCP_CALL_HISTORY_MAX_SIZE`ã€`HTTP_OK`/`HTTP_INTERNAL_ERROR` | äº¤æ˜“è®¡ç®—çº¯å‡½æ•°ã€Service å±‚ |
+| `src/config/dataSourceUrls.ts` | å¤–éƒ¨æ•°æ®æº URL é›†ä¸­é…ç½®ï¼ˆ9 é¡¹ï¼‰ï¼š`TENCENT_QUOTE_API`ã€`TENCENT_KLINE_API`ã€`SINA_QUOTE_API`ã€`NETEASE_HISTORY_API`ã€`MOCK_NEWS_URL_PREFIX`ã€`MOCK_TENCENT_BASE_URL`ã€`MOCK_SINA_BASE_URL`ã€`MOCK_NETEASE_BASE_URL`ã€`MOCK_AKSHARE_BASE_URL` | Fetcher å±‚ã€Service å±‚ |
+| `src/config/tradingConfig.ts` | äº¤æ˜“å¼•æ“é…ç½®ï¼š`SignalDirection`ï¼ˆ`'buy' \| 'sell' \| 'hold' \| 'watch'`ï¼‰ã€`SignalThresholds`ã€Kelly/é£æ§å‚æ•° | äº¤æ˜“å¼•æ“ï¼ˆä¿¡å·/ä»“ä½/é£æ§ï¼‰å­—å…¸ |
+| `src/data/types.ts` â†’ `Signal` | äº¤æ˜“ä¿¡å·ç±»å‹ï¼š`id`ã€`symbol`ã€`direction`ã€`type`ã€`strategy`ã€`confidence`ã€`rationale`ã€`snapshot`ã€`createdAt` | äº¤æ˜“å¼•æ“å­—å…¸ |
+| `src/data/types.ts` â†’ `SignalSnapshot` | ä¿¡å·å¿«ç…§ï¼š`pePercentile`ã€`pbPercentile`ã€`priceToMA20`ã€`priceToMA60`ã€`volumeRatio`ã€`rsi14`ã€`macdDirection` | äº¤æ˜“å¼•æ“å­—å…¸ |
+| `src/data/types.ts` â†’ `PoolGroupMeta` | è‚¡ç¥¨æ± åˆ†ç»„å…ƒæ•°æ®ï¼š`name`ï¼ˆåˆ†ç»„åç§°ï¼‰ | è‚¡ç¥¨æ± åˆ†ç»„å­—å…¸ |
+| `src/constants/healthStatusStyles.ts` | å¥åº·åº¦ä»ªè¡¨ç›˜çŠ¶æ€æ ·å¼ï¼ˆå¸¦é€æ˜åº¦ Tailwind ç»„åˆï¼‰ | å¥åº·åº¦ä»ªè¡¨ç›˜ |
+| `src/store/collectionWizardStore.ts` | é‡‡é›†å‘å¯¼çŠ¶æ€ç®¡ç†ï¼š`CollectionWizardState`ã€`WizardStep`ã€æ¨¡æ¿åŠ è½½/ä¿å­˜/æ­¥éª¤æ¨è¿› | æ•°æ®é‡‡é›†å‘å¯¼ |
+| `src/showcase/UIComponentShowcase.tsx` | åŸå­ç»„ä»¶å±•ç¤ºåº“ï¼ˆButton/Input/Checkbox/Switch/Select/Toast ç­‰ï¼‰ | è®¾è®¡ç³»ç»Ÿ/ç»„ä»¶å±•ç¤º |
+| `src/showcase/ColorTokenShowcase.tsx` | é¢œè‰²ä»¤ç‰Œå±•ç¤ºåº“ | è®¾è®¡ç³»ç»Ÿ/ç»„ä»¶å±•ç¤º |
+| `src/showcase/StockDataShowcase.tsx` | è‚¡ç¥¨æ•°æ®å¯è§†åŒ–å±•ç¤ºåº“ | è®¾è®¡ç³»ç»Ÿ/ç»„ä»¶å±•ç¤º |
+| `src/showcase/WidgetStateShowcase.tsx` | Widget çŠ¶æ€å±•ç¤ºåº“ | è®¾è®¡ç³»ç»Ÿ/ç»„ä»¶å±•ç¤º |
+| `src/showcase/ShowcaseSection.tsx` | å±•ç¤ºåŒºå—é€šç”¨å®¹å™¨ | è®¾è®¡ç³»ç»Ÿ/ç»„ä»¶å±•ç¤º |
 
 ---
 
-## ĞÂÔöÄ£¿é SOP
+## æ–°å¢æ¨¡å— SOP
 
-ĞÂÔöÄ£¿éÈçĞè²¹³äÊı¾İ×Öµä£¬Çë°´ÒÔÏÂ²½ÖèÖ´ĞĞ£º
+æ–°å¢æ¨¡å—å¦‚éœ€è¡¥å……æ•°æ®å­—å…¸ï¼Œè¯·æŒ‰ä»¥ä¸‹æ­¥éª¤æ‰§è¡Œï¼š
 
-1. ÔÚ `src/constants/` ÖĞ¶¨ÒåÑÕÉ«¡¢×´Ì¬¡¢Ã¶¾Ù¡¢Ä£ĞÍ°æ±¾¡¢ÂÖÑ¯¼ä¸ôµÈ³£Á¿£»
-2. ÔÚ `src/types/modules/` ÖĞ¶¨Òå TypeScript ½Ó¿Ú£»
-3. ÔÚ `src/services/` ÖĞÊµÏÖ·şÎñ²ã API£»
-4. ÔÚ `docs/` ÏÂĞÂÔö `MODULE_NAME_data-definition.md`£»
-5. ¸üĞÂ±¾ÎÄµµË÷Òı±í£»
-6. ¸üĞÂ `../../../../CHANGELOG.md`£»
-7. Ö´ĞĞ `tsc ¡ú lint ¡ú test ¡ú build` ÑéÖ¤¡£
+1. åœ¨ `src/constants/` ä¸­å®šä¹‰é¢œè‰²ã€çŠ¶æ€ã€æšä¸¾ã€æ¨¡å‹ç‰ˆæœ¬ã€è½®è¯¢é—´éš”ç­‰å¸¸é‡ï¼›
+2. åœ¨ `src/types/modules/` ä¸­å®šä¹‰ TypeScript æ¥å£ï¼›
+3. åœ¨ `src/services/` ä¸­å®ç°æœåŠ¡å±‚ APIï¼›
+4. åœ¨ `docs/` ä¸‹æ–°å¢ `MODULE_NAME_data-definition.md`ï¼›
+5. æ›´æ–°æœ¬æ–‡æ¡£ç´¢å¼•è¡¨ï¼›
+6. æ›´æ–° `../../../../CHANGELOG.md`ï¼›
+7. æ‰§è¡Œ `tsc â†’ lint â†’ test â†’ build` éªŒè¯ã€‚
 
 ---
 
-## ´ı²¹³ä×Öµä
+## å¾…è¡¥å……å­—å…¸
 
-| Ä£¿é | ×´Ì¬ | ËµÃ÷ |
+| æ¨¡å— | çŠ¶æ€ | è¯´æ˜ |
 |------|------|------|
-| Êı¾İÁ÷ÒıÇæ£¨DataFlow Engine£© | ? ÒÑ²¹³ä | ÒÑĞÂÔö `../../../reference/dataflow-data-definition.md`£¬¸²¸Ç `DataChannel`¡¢`DataPacket`¡¢`ChannelMeta`¡¢API¡¢ÊÂ¼ş¡¢»ØÍËÊı¾İ¡¢ÖØÁ¬²ßÂÔ |
-| Êı¾İÈÚºÏÒıÇæ£¨Data Fusion£© | ? ÒÑÊµÏÖ | `src/services/unifiedStockService.ts` ÒÑÂäµØ£¬`UnifiedStockView` Í³Ò»ÊÓÍ¼ÕûºÏ 7 ÖÖÊı¾İÔ´ |
-| ¹ÉÆ±³Ø·Ö×é | ? ÒÑ²¹³ä | `PoolGroupMeta`£¨`src/data/types.ts`£©¡¢`DEFAULT_POOL_GROUP`£¨`src/config/dbConfig.ts`£©¡¢`PoolState`£¨`src/store/poolStore.test.ts`£©¡¢`Stock.group` ×Ö¶ÎÒÑÄÉÈëË÷Òı |
-| ½»Ò×ÒıÇæ£¨ĞÅºÅ/²ÖÎ»/·ç¿Ø£© | ? ÒÑ²¹³ä | `signalGenerator.ts`£¨`TradingSignal`/`SignalSnapshot`/`SignalDirection`£©¡¢`positionSizer.ts`£¨`PositionSizingInput`/`PositionSizingResult`£©¡¢`riskEngine.ts`£¨`OrderRiskInput`/`RiskCheckResult`£©ÒÑÄÉÈëË÷Òı |
-| ·ç¿ØÅÉÉú¼ÆËã | ? ÒÑ²¹³ä | ÒÑĞÂÔö `docs/RISK_DERIVED_data-definition.md`£¬¸²¸Ç `riskStore.derived.ts` µÄ 22 ¸öº¯Êı¡¢4 ¸öÀàĞÍ¶¨Òå¡¢·ç¿ØÈıÌ¬¹æÔò¡¢ÈÛ¶Ï×´Ì¬»ú¡¢Ç÷ÊÆ·ÖÎö¹æÔò |
-| V6 ÆÀ·ÖÒıÇæ L3 ¸¨Öúº¯Êı | ? ÒÑ²¹³ä | `src/services/scoring/v6-engine/calculators/l3/helpers.ts` °üº¬ `scoreMoat()`£¨»¤³ÇºÓÆÀ·Ö£©ºÍ `scoreCompetition()`£¨¾ºÕù¸ñ¾ÖÆÀ·Ö£©£¬1-5 ·ÖÖÆ£¬»ùÓÚÃ«ÀûÂÊ/ÓªÊÕÔöËÙ/ROE Á¿»¯¼ÆËã |
+| æ•°æ®æµå¼•æ“ï¼ˆDataFlow Engineï¼‰ | ? å·²è¡¥å…… | å·²æ–°å¢ `../../../reference/dataflow-data-definition.md`ï¼Œè¦†ç›– `DataChannel`ã€`DataPacket`ã€`ChannelMeta`ã€APIã€äº‹ä»¶ã€å›é€€æ•°æ®ã€é‡è¿ç­–ç•¥ |
+| æ•°æ®èåˆå¼•æ“ï¼ˆData Fusionï¼‰ | ? å·²å®ç° | `src/services/unifiedStockService.ts` å·²è½åœ°ï¼Œ`UnifiedStockView` ç»Ÿä¸€è§†å›¾æ•´åˆ 7 ç§æ•°æ®æº |
+| è‚¡ç¥¨æ± åˆ†ç»„ | ? å·²è¡¥å…… | `PoolGroupMeta`ï¼ˆ`src/data/types.ts`ï¼‰ã€`DEFAULT_POOL_GROUP`ï¼ˆ`src/config/dbConfig.ts`ï¼‰ã€`PoolState`ï¼ˆ`src/store/poolStore.test.ts`ï¼‰ã€`Stock.group` å­—æ®µå·²çº³å…¥ç´¢å¼• |
+| äº¤æ˜“å¼•æ“ï¼ˆä¿¡å·/ä»“ä½/é£æ§ï¼‰ | ? å·²è¡¥å…… | `signalGenerator.ts`ï¼ˆ`TradingSignal`/`SignalSnapshot`/`SignalDirection`ï¼‰ã€`positionSizer.ts`ï¼ˆ`PositionSizingInput`/`PositionSizingResult`ï¼‰ã€`riskEngine.ts`ï¼ˆ`OrderRiskInput`/`RiskCheckResult`ï¼‰å·²çº³å…¥ç´¢å¼• |
+| é£æ§æ´¾ç”Ÿè®¡ç®— | ? å·²è¡¥å…… | å·²æ–°å¢ `docs/RISK_DERIVED_data-definition.md`ï¼Œè¦†ç›– `riskStore.derived.ts` çš„ 22 ä¸ªå‡½æ•°ã€4 ä¸ªç±»å‹å®šä¹‰ã€é£æ§ä¸‰æ€è§„åˆ™ã€ç†”æ–­çŠ¶æ€æœºã€è¶‹åŠ¿åˆ†æè§„åˆ™ |
+| V6 è¯„åˆ†å¼•æ“ L3 è¾…åŠ©å‡½æ•° | ? å·²è¡¥å…… | `src/services/scoring/v6-engine/calculators/l3/helpers.ts` åŒ…å« `scoreMoat()`ï¼ˆæŠ¤åŸæ²³è¯„åˆ†ï¼‰å’Œ `scoreCompetition()`ï¼ˆç«äº‰æ ¼å±€è¯„åˆ†ï¼‰ï¼Œ1-5 åˆ†åˆ¶ï¼ŒåŸºäºæ¯›åˆ©ç‡/è¥æ”¶å¢é€Ÿ/ROE é‡åŒ–è®¡ç®— |
 
 ---
 
-## Ïà¹ØÎÄµµ
+## ç›¸å…³æ–‡æ¡£
 
-- `../../../reports/retrospectives/doc-sync-execution-plan.md`£º´úÂë-ÎÄµµÍ¬²½ÕûÌå·½°¸
-- `../../../explanation/design/deprecated-doc-sync-gap-list.md`£º²îÒìÇåµ¥Óë±Õ»·×·×Ù
-- `../../../reference/03-architecture-standards.md`£º¼Ü¹¹±ê×¼Óë·Ö²ãÔ¼¶¨
-- `../../../reference/09-quality-gates.md`£ºÖÊÁ¿ÃÅ½ûÓëÉó¼Æ»ùÏß
+- `../../../reports/retrospectives/doc-sync-execution-plan.md`ï¼šä»£ç -æ–‡æ¡£åŒæ­¥æ•´ä½“æ–¹æ¡ˆ
+- `../../../explanation/design/deprecated-doc-sync-gap-list.md`ï¼šå·®å¼‚æ¸…å•ä¸é—­ç¯è¿½è¸ª
+- `../../../reference/03-architecture-standards.md`ï¼šæ¶æ„æ ‡å‡†ä¸åˆ†å±‚çº¦å®š
+- `../../../reference/09-quality-gates.md`ï¼šè´¨é‡é—¨ç¦ä¸å®¡è®¡åŸºçº¿
