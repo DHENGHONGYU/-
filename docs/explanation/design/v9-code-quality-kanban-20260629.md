@@ -4,14 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-title: V9 代码质量校对分析 — 过程透明看板
-version: v1.2.0
-date: 2026-06-30
-updater: V9 Quality Audit Team
-status: active
-tier: important
----
 
 # V9 代码质量校对分析 — 过程透明看板
 

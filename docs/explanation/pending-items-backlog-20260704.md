@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/explanation/pending-items-backlog-20260704.md
-code_version: 2.0.0
-tier: important
----
 
 # V9 待处理事项清单（Backlog）
 

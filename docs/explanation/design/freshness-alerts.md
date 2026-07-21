@@ -4,18 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-title: V9 实施文档保鲜度告警清单
-version: v1.0.0
-last_updated: 2026-06-27
-maintainer: Documentation Governor
-status: active
-change_log:
-  - date: 2026-06-27
-    author: Documentation Governor
-    desc: 初始创建：Phase 5 保鲜度告警清单
-tier: important
----
 
 # V9 实施文档保鲜度告警清单
 

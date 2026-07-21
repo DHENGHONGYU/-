@@ -3,13 +3,12 @@ title: security-model
 code_version: 2.0.0
 
 tier: important
+status: active
+version: v1.0.0
+last_updated: 2026-07-21
+doc_id: V9-DOC-REF-902
 ---
 
----
-title: docs/reference/security-model.md
-code_version: 2.0.0
-tier: important
----
 
 # Security Model — V9 智能投研复盘系统安全架构
 

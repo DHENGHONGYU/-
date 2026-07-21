@@ -5,15 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: V9 模块完成度剖面图 — 批次 D（交易舱）
-version: v1.0.0
-last_updated: 2026-06-27
-maintainer: Quality Auditor
-status: active
-code_version: 2.0.0
-tier: important
----
 
 # V9 模块完成度剖面图 — 批次 D（交易舱）
 

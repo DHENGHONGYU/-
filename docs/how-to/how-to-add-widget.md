@@ -3,13 +3,12 @@ title: how-to-add-widget
 code_version: 2.0.0
 
 tier: important
+status: active
+version: v1.0.0
+last_updated: 2026-07-21
+doc_id: V9-DOC-HOW-901
 ---
 
----
-title: docs/how-to/how-to-add-widget.md
-code_version: 2.0.0
-tier: important
----
 
 # 如何新增一个 Widget（WidgetShell + 事件总线）
 

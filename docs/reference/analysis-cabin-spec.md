@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/reference/analysis-cabin-spec.md
-code_version: 2.0.0
-tier: important
----
 
 # Analysis 舱规格（analysis-cabin-spec）
 

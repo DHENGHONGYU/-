@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: docs/00-meta/file-management-guide-task-list.md
-code_version: 2.0.0
-tier: core
----
 
 # file-management-guide.md 修订任务清单
 

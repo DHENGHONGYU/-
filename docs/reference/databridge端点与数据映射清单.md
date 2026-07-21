@@ -4,39 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-title: DataBridge 端点与数据映射清单
-version: v1.2.0
-last_updated: 2026-07-05
-maintainer: V9质量治理小组
-status: active
-changelog:
-  - date: 2026-07-05
-    author: V9质量治理小组
-    desc: v1.2.0：新增 §2.11 执行日志与缺失报告端点（5个）；新增 §2.12 Query路由（3个）；附录A新增序号40-47；DB路由计数修正为36，合计修正为42
-  - date: 2026-07-05
-    author: V9开发团队
-    desc: v1.1.0：新增 §2.9 LoadHoldingsDataHandler（持仓查询，查询不写 DB）；附录A新增序号39
-  - date: 2026-06-30
-    author: V9数据层改造小组
-    desc: Phase 7：输出舱/总控舱功能扩展，无新增 DataBridge 端点，确认现有端点有效性
-  - date: 2026-06-29
-    author: V9质量治理小组
-    desc: Phase 6：评分 Store 闭环，analysisStore 新增，无新增端点，确认现有端点有效性
-  - date: 2026-06-29
-    author: V9质量治理小组
-    desc: Phase 5：废弃 Store 清理，无新增端点，确认现有端点有效性
-  - date: 2026-06-29
-    author: V9质量治理小组
-    desc: Phase 4：新增 runBacktest / saveBacktestResult 回测相关端点
-  - date: 2026-06-29
-    author: V9数据层改造小组
-    desc: Phase 3：新增 createExecutionPlan / updateExecutionPhase 端点，executionPlans 频道
-  - date: 2026-06-28
-    author: 数据治理架构师
-    desc: 初始版本
-tier: core
----
 
 # DataBridge 端点与数据映射清单
 

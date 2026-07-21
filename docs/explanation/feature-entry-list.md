@@ -5,19 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: V9 功能入口清单（阶段二）
-version: v1.0.0
-last_updated: 2026-06-27
-maintainer: Quality Auditor
-status: active
-change_log:
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: 阶段二：扫描 routes.ts + pages/ + apps/ 生成完整功能入口清单
-code_version: 2.0.0
-tier: important
----
 
 # V9 功能入口清单
 

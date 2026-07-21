@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: docs/explanation/a11y-contrast-report.md
-code_version: 2.0.0
-tier: reference
----
 
 # T-09 WCAG 对比度复核报告
 

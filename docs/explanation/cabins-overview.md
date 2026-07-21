@@ -3,13 +3,12 @@ title: cabins-overview
 code_version: 2.0.0
 
 tier: important
+status: active
+version: v1.0.0
+last_updated: 2026-07-21
+doc_id: V9-DOC-EXP-902
 ---
 
----
-title: docs/explanation/cabins-overview.md
-code_version: 2.0.0
-tier: important
----
 
 # V9 舱室总览（Cabins Overview）
 

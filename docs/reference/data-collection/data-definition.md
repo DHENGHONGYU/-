@@ -4,10 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-tier: core
-code_version: 2.0.0
----
 
 > **Version**: v1.2.0  
 > **Last Updated**: 2026-07-06  

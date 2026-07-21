@@ -5,14 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: portfolio-contract.md
-status: draft
-owner: 架构组
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
 
 # portfolio-contract.md — 投资组合（Portfolio）接口契约
 

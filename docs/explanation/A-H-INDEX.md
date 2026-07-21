@@ -5,16 +5,7 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/explanation/a-h-index.md
-code_version: 2.0.0
-tier: important
----
 
----
-title: docs/explanation/a-h-index.md
-code_version: 2.0.0
----
 
 # V9 文档体系 — A-H 分类索引（真实映射）
 

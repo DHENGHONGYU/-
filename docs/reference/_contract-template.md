@@ -5,14 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: Service 子域契约模板
-status: template
-owner: 架构组 / 各子域 owner
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
 
 # {subdomain}-contract.md — {子域中文名} 接口契约
 

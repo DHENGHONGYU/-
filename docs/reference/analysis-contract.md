@@ -5,14 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: analysis-contract.md
-status: draft
-owner: 架构组
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
 
 # analysis-contract.md — 投研分析核心子域接口契约
 

@@ -5,14 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: stock-analysis-contract.md — 个股分析子域接口契约
-status: draft
-owner: 架构组
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
 
 # stock-analysis-contract.md — 个股分析子域接口契约
 

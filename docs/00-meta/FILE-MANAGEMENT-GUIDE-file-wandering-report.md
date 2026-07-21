@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: docs/00-meta/file-management-guide-file-wandering-report.md
-code_version: 2.0.0
-tier: core
----
 
 # 文件流浪检查报告
 

@@ -4,10 +4,6 @@ tier: reference
 code_version: 2.0.0
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
 
 # 审计脚本误报分析报告
 

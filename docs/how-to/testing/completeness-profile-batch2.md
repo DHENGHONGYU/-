@@ -4,14 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-title: V9 模块完成度剖面图 — 批次 B（输入舱）
-version: v1.0.0
-last_updated: 2026-06-27
-maintainer: Quality Auditor
-status: active
-tier: important
----
 
 # V9 模块完成度剖面图 — 批次 B（输入舱）
 

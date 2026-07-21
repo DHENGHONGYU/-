@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: docs/00-meta/23-core-docs-functional-match-report.md
-code_version: 2.0.0
-tier: core
----
 
 # V9 智能投研复盘系统 — 23个核心文档 · 功能匹配最终报告
 

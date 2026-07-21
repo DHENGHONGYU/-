@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/reference/command-cabin-spec.md
-code_version: 2.0.0
-tier: important
----
 
 # Command 舱规格（command-cabin-spec）
 

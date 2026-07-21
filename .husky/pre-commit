@@ -10,6 +10,8 @@ command -v npx >/dev/null 2>&1 || npx() { npx.cmd "$@"; }
 command -v npm >/dev/null 2>&1 || npm() { npm.cmd "$@"; }
 
 echo ""
+
+echo ""
 echo "🚦 V9 预提交门禁启动 ..."
 echo "================================================"
 
@@ -32,10 +34,10 @@ echo ""
 echo "🎨 [2/16] 运行 lint:colors（颜色硬编码检查）..."
 npm run lint:colors
 
-# 4. 生产类型检查
+# 4. 生产类型检查（用系统 Node24 直驱，规避受管 Node22 npm 段错误/Could not determine Node.js install directory）
 echo ""
 echo "🔍 [3/16] 运行 tsc:prod（生产类型检查）..."
-npm run tsc:prod
+"C:/Program Files/nodejs/node.exe" ./node_modules/typescript/bin/tsc -p tsconfig.prod.json --noEmit
 
 # 5. 分层调用审计
 echo ""

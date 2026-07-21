@@ -4,18 +4,6 @@ tier: reference
 code_version: 2.0.0
 ---
 
----
-title: V9 智能投研复盘系统 — 当前状态全面梳理（按实施进度）
-version: v0.9.0
-last_updated: 2026-06-25
-maintainer: V9 Architecture Team
-status: active
-change_log:
-  - date: 2026-06-25
-    author: Documentation Governor
-    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
-tier: reference
----
 # V9 智能投研复盘系统 — 当前状态全面梳理（按实施进度）
 
 > **Status**: Current  

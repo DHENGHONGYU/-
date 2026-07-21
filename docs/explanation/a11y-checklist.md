@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/explanation/a11y-checklist.md
-code_version: 2.0.0
-tier: important
----
 
 # V9 无障碍（Accessibility）检查清单
 

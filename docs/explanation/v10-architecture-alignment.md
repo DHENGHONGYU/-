@@ -5,19 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: V10 架构白皮书与 V9 对齐报告
-version: v0.9.0
-last_updated: 2026-06-24
-maintainer: V9 Architecture Team
-status: active
-change_log:
-  - date: 2026-06-24
-    author: Documentation Governor
-    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
-code_version: 2.0.0
-tier: important
----
 # V10 架构白皮书与 V9 对齐报告
 
 > **Status: Future Reference / Deferred**  

@@ -5,22 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: V9 模块完成度剖面图 — 批次 1
-version: v2.0.0
-last_updated: 2026-06-27
-maintainer: Quality Auditor
-status: active
-change_log:
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: 批次 1 修复：新闻筛选/收藏/分页实现，驾驶舱布局持久化，临时原型页清理；所有模块状态更新为 🟢
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: 批次 1：首页 + 驾驶舱 + 新闻资讯 + 交易持仓 + 录入看板 初始审计
-code_version: 2.0.0
-tier: important
----
 
 # V9 模块完成度剖面图 — 批次 1
 

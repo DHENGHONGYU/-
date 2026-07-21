@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/explanation/regression-suite.md
-code_version: 2.0.0
-tier: important
----
 
 # 回归测试套件模板
 

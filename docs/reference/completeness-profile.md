@@ -4,38 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-title: V9 模块完成度剖面图 — 全量汇总
-version: v7.0.0
-last_updated: 2026-07-05
-maintainer: Quality Auditor
-status: completed
-audit_scope: 5 批次 / 48 入口 / 21 Widget
-audit_method: L1界面 → L2状态 → L3数据 → L4逻辑 → L5集成（五层逆向追溯）
-change_log:
-  - date: 2026-07-05
-    author: Quality Auditor
-    desc: 全量五批次审计完成，48 个入口五层剖面图汇总，新增 P0/P1/P2 分级统计
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: 新增批次 E（输出舱 + 总控舱 4 模块）审计结果
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: 新增批次 D（交易舱 4 模块）审计结果
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: 新增批次 C（分析舱 9 模块）审计结果
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: 新增批次 B（输入舱 6 模块）审计结果
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: 同步批次1修复状态：所有模块更新为健康
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: 汇总批次 1（5 模块）五层剖面图
-tier: important
----
 
 # V9 模块完成度剖面图 — 全量汇总
 

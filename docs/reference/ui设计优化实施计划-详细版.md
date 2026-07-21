@@ -4,10 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-tier: important
-code_version: 2.0.0
----
 
 # UI 设计优化实施计划（详细版）
 

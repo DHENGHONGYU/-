@@ -3,13 +3,12 @@ title: code-review-guide
 code_version: 2.0.0
 
 tier: reference
+status: active
+version: v1.0.0
+last_updated: 2026-07-21
+doc_id: V9-DOC-HOW-904
 ---
 
----
-title: docs/how-to/code-review-guide.md
-code_version: 2.0.0
-tier: reference
----
 
 # 代码评审指南与质量门禁 SOP
 

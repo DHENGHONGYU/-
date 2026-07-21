@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/explanation/token-usage-cookbook.md
-code_version: 2.0.0
-tier: important
----
 
 # 令牌使用 Cookbook（token-usage-cookbook）
 

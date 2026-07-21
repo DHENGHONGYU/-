@@ -5,20 +5,7 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: docs/explanation/adr-005-portalshell-dark-kimi-layout.md
-code_version: 2.0.0
-tier: reference
----
 
----
-title: ADR-005: PortalShell 深色 Kimi 经典布局
-status: accepted
-owner: V9 Architecture Team
-decision_date: 2026-06-23
-supersedes: ""
-superseded_by: ""
----
 
 # ADR-005: PortalShell 深色 Kimi 经典布局
 

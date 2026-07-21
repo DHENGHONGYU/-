@@ -4,10 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-tier: important
-code_version: 2.0.0
----
 
 # 本周执行任务清单（2026-07-05 至 2026-07-12）
 

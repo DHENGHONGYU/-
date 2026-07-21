@@ -5,16 +5,7 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/how-to/file-management-guide.md
-code_version: 2.0.0
-tier: important
----
 
----
-title: docs/how-to/file-management-guide.md
-code_version: 2.0.0
----
 
 # V9 文件管理规范
 

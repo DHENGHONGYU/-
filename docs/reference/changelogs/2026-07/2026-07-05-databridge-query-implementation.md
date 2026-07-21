@@ -4,10 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-tier: core
-code_version: 2.0.0
----
 
 # 技术日志：DataBridge.query() 实现与 dataLayer 读操作改造
 

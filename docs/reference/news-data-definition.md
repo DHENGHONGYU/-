@@ -4,10 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-tier: core
-code_version: 2.0.0
----
 
 # NewsPage（智能资讯中心）数据字典
 

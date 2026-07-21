@@ -4,10 +4,6 @@ tier: reference
 code_version: 2.0.0
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
 
 # 变更日志 — 2026-07-05 开发后复盘修复
 

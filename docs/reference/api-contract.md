@@ -1,3 +1,12 @@
+---
+title: 全局接口契约（API Contract）
+doc_id: V9-DOC-REF-905
+tier: important
+status: active
+version: v1.0.0
+last_updated: 2026-07-21
+code_version: 2.0.0
+---
 > **Version**: v1.1.0  
 > **Last Updated**: 2026-06-26  
 > **Maintainer**: 架构资产治理官

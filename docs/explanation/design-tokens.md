@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/explanation/design-tokens.md
-code_version: 2.0.0
-tier: important
----
 
 # Design Tokens 系统使用指南
 

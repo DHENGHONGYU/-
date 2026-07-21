@@ -256,7 +256,7 @@ Kimi 官方推荐的项目文件管理策略：
 | 新增页面必须同步更新 `ROUTE_REGISTRY` 和 `../reference/06-routing-specs.md` | 无 `../how-to-add-page.md` 操作指南 | 仍缺失 |
 | 修改 `UserType` 不得破坏 `user-type.spec.ts` | 无 `../type-evolution-guide.md` | 仍缺失 |
 | 所有 `useEffect` 清理模板（4 个） | 无 `../react-lifecycle-patterns.md` | 仍缺失 |
-| 颜色令牌 8 个场景（A–H） | 无 `../../../explanation/token-usage-cookbook.md`（`../../reference/design-token-mapping.md` 不够场景化） | ✅ **已创建** `../../../explanation/token-usage-cookbook.md` |
+| 颜色令牌 8 个场景（A–H） | 无 `../../explanation/token-usage-cookbook.md`（`../../reference/design-token-mapping.md` 不够场景化） | ✅ **已创建** `../../explanation/token-usage-cookbook.md` |
 
 ---
 
@@ -385,7 +385,7 @@ find docs/.ai-index -type f | sort                # 3 份（README/code-graph/ai
 
 | 落差模式 | 初检典型案例 | 修订状态 | 影响 |
 |----------|-------------|----------|------|
-| **存在落差** | 23 个 Service 子域运行中，但无 `../../../reference/services-catalog.md` | ✅ **已修复**：`../../../reference/services-catalog.md` 覆盖 23 子域 | 新开发者可快速定位服务职责边界 |
+| **存在落差** | 23 个 Service 子域运行中，但无 `../../reference/services-catalog.md` | ✅ **已修复**：`../../reference/services-catalog.md` 覆盖 23 子域 | 新开发者可快速定位服务职责边界 |
 | **规格落差** | analysis/trading/output/command 四舱共 25+ 页面，但无 cabin spec | ✅ **已修复**：4 舱 spec 已补齐（02-design/ 下） | AI 生成代码时有舱室级约束输入 |
 | **指南落差** | 48 个 Store 已运行，但无 `../how-to/how-to-add-store.md` | ✅ **已补齐**：how-to-add-*.md 系列已创建（2026-07-12） | 新增 Store 时有标准 SOP 可参考 |
 | **索引落差** | 66 条路由 100% 注册，但无 `docs/README.md` 总入口 | ✅ **已修复**：README.md 已创建 | Kimi/AI 可快速建立上下文 |
