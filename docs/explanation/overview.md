@@ -127,7 +127,7 @@ tier: important
 
 ### 步骤 0：构建 `audit:atomic` 层级边界审计脚本 ✅
 
-- 新建 `scripts/audit-atomic.ts`，按 `_audit-pipeline` 契约（stdout=JSON / stderr=人类可读 / 退出码 0·1·2）实现：
+- 新建 `scripts/audit/audit-atomic.ts`，按 `_audit-pipeline` 契约（stdout=JSON / stderr=人类可读 / 退出码 0·1·2）实现：
   - 依据 `componentRegistry` + 目录推断组件层级（atom/molecule/organism/template）
   - 校验层级边界：atom 不引 store/service/molecule/organism/template/page/app；molecule 不引 organism/template/store/service；template 不引 organism/store/service
   - 校验 `ui/` shim 为纯 re-export

@@ -39,7 +39,7 @@
 |----|------|----------|--------------|----------|--------|------------|------|
 | ~~GAP-001~~ | ~~V9 问题整改闭环~~ | ~~`src/vite-env.d.ts`、`.env.example`~~ | ~~数据字典/类型声明~~ | ~~DOC-001：已确认 `VITE_AKSHARE_BASE_URL` 在 `src/vite-env.d.ts` 中存在声明~~ | ~~P1~~ | ~~Doc-Sync-Fix~~ | ~~已闭环 2026-06-26~~ |
 | ~~GAP-002~~ | ~~数据流引擎~~ | ~~`src/core/dataflow/*`~~ | ~~架构说明/数据字典~~ | ~~已新增 `docs/DATAFLOW_DATA_DEFINITION.md`；`docs/05-engine-specs.md` 已引用该字典并保持“部分实现”状态~~ | ~~P1~~ | ~~Architecture-Fix~~ | ~~已闭环 2026-06-26~~ |
-| GAP-003 | 数据融合引擎 | `src/services/analysis/unifiedStockService.ts` | 架构说明/数据字典 | 2.1.9 数据融合引擎未实现或缺少文档化说明 | P1 | Architecture-Fix | 待执行 |
+| GAP-003 | 数据融合引擎 | `src/services/unifiedStockService.ts` | 架构说明/数据字典 | 2.1.9 数据融合引擎未实现或缺少文档化说明 | P1 | Architecture-Fix | 待执行 |
 | ~~GAP-004~~ | ~~路由规格同步~~ | ~~`src/config/routes.ts`~~ | ~~路由规格~~ | ~~DOC-007：已更新 `docs/06-routing-specs.md` 第 8 节，补全 `/analysis/news-v6`、`/trading/holdings`、`/mock-test` 等路由~~ | ~~P1~~ | ~~Doc-Sync-Fix~~ | ~~已闭环 2026-06-26~~ |
 | ~~GAP-005~~ | ~~质量门禁基线~~ | ~~`docs/09-quality-gates.md`~~ | ~~质量门禁~~ | ~~DOC-006：已更新 E2E 状态、硬编码基线（749）、死代码基线（0/0/16）；跨层调用基线修正为 0/0~~ | ~~P1~~ | ~~Doc-Sync-Fix~~ | ~~已闭环 2026-06-26~~ |
 | GAP-006 | 文档版本号统一 | `docs/01~10`、`docs/implementation/*` | frontmatter | DOC-005：核心/实施文档 `Version` frontmatter 未全部统一为 `v0.9.0-doc-sync-plan`；需批量扫描更新 | P1 | Doc-Sync-Fix | 部分闭环 |
@@ -51,7 +51,7 @@
 | ID | 模块 | 涉及文件 | 缺失文档类型 | 问题描述 | 优先级 | 建议责任人 | 状态 |
 |----|------|----------|--------------|----------|--------|------------|------|
 | GAP-009 | 数据字典索引 | `docs/*DATA_DEFINITION*.md` | 索引页 | 缺少 `docs/DATA_DICTIONARY_INDEX.md` 汇总所有模块数据字典入口 | P2 | Doc-Sync Agent | 待执行 |
-| ~~GAP-010~~ | ~~自动化扫描脚本~~ | ~~`scripts/audit-doc-sync.ts`~~ | ~~工具脚本~~ | ~~已实现 `scripts/audit-doc-sync.ts`，支持 git diff 与全量 src 扫描；`npm run audit:docs` 通过，0 个未引用文件~~ | ~~P2~~ | ~~Doc-Sync Agent~~ | ~~已闭环 2026-06-26~~ |
+| ~~GAP-010~~ | ~~自动化扫描脚本~~ | ~~`scripts/audit/audit-doc-sync.ts`~~ | ~~工具脚本~~ | ~~已实现 `scripts/audit/audit-doc-sync.ts`，支持 git diff 与全量 src 扫描；`npm run audit:docs` 通过，0 个未引用文件~~ | ~~P2~~ | ~~Doc-Sync Agent~~ | ~~已闭环 2026-06-26~~ |
 | GAP-011 | Agent 运行时框架 | `src/agents/*` | 架构说明 | 2.17 Agent 运行时框架代码已存在，但架构说明与监控文档待补齐 | P2 | Architecture-Fix | 待执行 |
 | GAP-012 | 操作反馈闭环 | `src/components/ui/`、各 App | UI/UX 规格 | 2.20 操作反馈闭环增强尚未落地，文档与实际存在偏差 | P2 | Interaction-Fix | 待规划 |
 

@@ -93,10 +93,10 @@ code_version: 2.0.0
 | 子类 | 内容 | 代表文件 |
 |------|------|----------|
 | 审计/检视报告 | 架构/安全/智能体审计 | `docs/reports/audit/*`、`agent-audit-report.md` |
-| 定期更新报告 | 文档治理/同步报告 | `docs/reports/2026-07-08-documentation-summary-report.md` |
+| 定期更新报告 | 文档治理/同步报告 | `../reports/changelogs/2026-07-08-documentation-summary-report.md` |
 | 复盘/诊断 | 故障 RCA、功能遗漏诊断 | `docs/archive/2026-07-12-security-audit.md`、`V9_MCP_Server与Agent功能遗漏诊断.html` |
 | 计划/看板 | 整改计划、执行看板 | `docs/00-meta/doc-auto-update-kanban.md`、`prompt-execute-remediation.md` |
-| 验证基线 | 集成基线比对、完成度校验 | `reports/report-12-integration-baseline-comparison.md`、`quality-audit-plan.md` |
+| 验证基线 | 集成基线比对、完成度校验 | `../reports/audit/report-12-integration-baseline-comparison.md`、`quality-audit-plan.md` |
 
 ---
 

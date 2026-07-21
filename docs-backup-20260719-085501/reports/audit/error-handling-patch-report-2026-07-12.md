@@ -1,12 +1,12 @@
 ---
-title: Í³Ò»´íÎó´¦Àí²¹¶¡±¨¸æ
+title: ç»Ÿä¸€é”™è¯¯å¤„ç†è¡¥ä¸æŠ¥å‘Š
 type: reports
 domain: qa
 phase: testing
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "**Date**£º2026-07-12T06:41:54.485Z ĞŞ¸ÄÎÄ¼ş£º1 ×ÜĞŞ¸ÄÊı£º1"
+summary: "**Date**ï¼š2026-07-12T06:41:54.485Z ä¿®æ”¹æ–‡ä»¶ï¼š1 æ€»ä¿®æ”¹æ•°ï¼š1"
 tags: [qa, audit, report]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -17,23 +17,23 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# Í³Ò»´íÎó´¦Àí²¹¶¡±¨¸æ
+# ç»Ÿä¸€é”™è¯¯å¤„ç†è¡¥ä¸æŠ¥å‘Š
 
-> **Date**£º2026-07-12T06:41:54.485Z
-> ĞŞ¸ÄÎÄ¼ş£º1
-> ×ÜĞŞ¸ÄÊı£º1
+> **Date**ï¼š2026-07-12T06:41:54.485Z
+> ä¿®æ”¹æ–‡ä»¶ï¼š1
+> æ€»ä¿®æ”¹æ•°ï¼š1
 
-## °²È«¹¤¾ßº¯Êı
+## å®‰å…¨å·¥å…·å‡½æ•°
 
-¹¤¾ßÎÄ¼ş: `src/lib/safeCoerce.ts`
+å·¥å…·æ–‡ä»¶: `src/lib/safeCoerce.ts`
 
 ```typescript
 export const fallback = {
-  loading: '¼ÓÔØÖĞ¡­',
-  empty: 'ÔİÎŞÊı¾İ',
-  error: 'ÇëÇóÒì³££¬ÇëÉÔºóÖØÊÔ',
-  unknown: 'Î´Öª',
-  noContent: 'ÎŞÄÚÈİÕªÒª',
+  loading: 'åŠ è½½ä¸­â€¦',
+  empty: 'æš‚æ— æ•°æ®',
+  error: 'è¯·æ±‚å¼‚å¸¸ï¼Œè¯·ç¨åé‡è¯•',
+  unknown: 'æœªçŸ¥',
+  noContent: 'æ— å†…å®¹æ‘˜è¦',
 }
 
 export function getSafeString(value: string | undefined | null): string {
@@ -49,15 +49,15 @@ export function getSafeArray<T>(value: T[] | undefined | null): T[] {
 }
 ```
 
-## ĞŞ¸ÄÇåµ¥
+## ä¿®æ”¹æ¸…å•
 
-- `src/components/widgets/WidgetShell.tsx`: 1 ´¦
+- `src/components/widgets/WidgetShell.tsx`: 1 å¤„
 
-## Ê¹ÓÃËµÃ÷
+## ä½¿ç”¨è¯´æ˜
 
-1. ËùÓĞ¾²Ä¬»ØÍËÒÑÌæ»»Îª°²È«¹¤¾ßº¯Êı
-2. Í³Ò»»ØÍË³£Á¿¶¨ÒåÔÚ `src/lib/safeCoerce.ts`
-3. Ê¹ÓÃ·½Ê½:
+1. æ‰€æœ‰é™é»˜å›é€€å·²æ›¿æ¢ä¸ºå®‰å…¨å·¥å…·å‡½æ•°
+2. ç»Ÿä¸€å›é€€å¸¸é‡å®šä¹‰åœ¨ `src/lib/safeCoerce.ts`
+3. ä½¿ç”¨æ–¹å¼:
    ```typescript
    import { getSafeString, getSafeNumber, getSafeArray, fallback } from '@/lib/safeCoerce'
    ```

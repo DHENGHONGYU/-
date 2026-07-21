@@ -1,12 +1,12 @@
 ---
-title: MCP Server ½©Ê¬Ä£¿éÉó¼Æ±¨¸æ
+title: MCP Server åƒµå°¸æ¨¡å—å®¡è®¡æŠ¥å‘Š
 type: reports
 domain: ai
 phase: testing
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "Éó¼ÆÈÕÆÚ: 2026-07-20 Éó¼Æ·¶Î§: `src/mcp/servers/` ÏÂÈ«²¿ 18 ¸ö Server£¨12 enabled + 6 disabled£© Éó¼Æ·½·¨:..."
+summary: "å®¡è®¡æ—¥æœŸ: 2026-07-20 å®¡è®¡èŒƒå›´: `src/mcp/servers/` ä¸‹å…¨éƒ¨ 18 ä¸ª Serverï¼ˆ12 enabled + 6 disabledï¼‰ å®¡è®¡æ–¹æ³•:..."
 tags: [ai, mcp, audit]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -17,169 +17,169 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# MCP Server ½©Ê¬Ä£¿éÉó¼Æ±¨¸æ
+# MCP Server åƒµå°¸æ¨¡å—å®¡è®¡æŠ¥å‘Š
 
-> **Éó¼ÆÈÕÆÚ**: 2026-07-20  
-> **Éó¼Æ·¶Î§**: `src/mcp/servers/` ÏÂÈ«²¿ 18 ¸ö Server£¨12 enabled + 6 disabled£©  
-> **Éó¼Æ·½·¨**: ¾²Ì¬´úÂë·ÖÎö£¨ÅÅ³ı²âÊÔÎÄ¼ş£©£¬×·×Ù `mcpBridge.callTool()` Ö±½Óµ÷ÓÃ + `AgentComponentRegistry` ¼ä½Ó×¢²á  
-> **Éó¼Æ½Å±¾**: `scripts/audit/mcp-tool-usage-audit.py`
-
----
-
-## Ò»¡¢Éó¼Æ·½·¨
-
-1. **Tool Ãû³ÆÌáÈ¡**: ¾«È·½âÎöÃ¿¸ö Server µÄ `getTools()` ·½·¨Ìå£¬ÌáÈ¡ `name: 'xxx'` ¶¨Òå¡£
-2. **Ö±½Óµ÷ÓÃ×·×Ù**: È«ÏîÄ¿ËÑË÷ `mcpBridge.callTool('server', 'toolName', ...)` Ä£Ê½£¬¶¨Î»Êµ¼ÊÒµÎñµ÷ÓÃµã¡£
-3. **¼ä½Óµ÷ÓÃ×·×Ù**: ¼ì²é `src/components/organisms/agent/agentComponentRegistry.ts` ÖĞ×¢²áµÄ Agent£¬ÕâĞ© Agent Í¨¹ı `agentRuntime.ts` ¶¯Ì¬µ÷ÓÃ MCP Tool¡£
-4. **ÑÏ¸ñ¹ıÂË**: ÅÅ³ı `__tests__/`¡¢`.test.*` ÎÄ¼şºÍ Server ×ÔÉí¶¨ÒåÎÄ¼ş£¬½öÍ³¼ÆÒµÎñ´úÂëÒıÓÃ¡£
+> **å®¡è®¡æ—¥æœŸ**: 2026-07-20  
+> **å®¡è®¡èŒƒå›´**: `src/mcp/servers/` ä¸‹å…¨éƒ¨ 18 ä¸ª Serverï¼ˆ12 enabled + 6 disabledï¼‰  
+> **å®¡è®¡æ–¹æ³•**: é™æ€ä»£ç åˆ†æï¼ˆæ’é™¤æµ‹è¯•æ–‡ä»¶ï¼‰ï¼Œè¿½è¸ª `mcpBridge.callTool()` ç›´æ¥è°ƒç”¨ + `AgentComponentRegistry` é—´æ¥æ³¨å†Œ  
+> **å®¡è®¡è„šæœ¬**: `scripts/audit/mcp-tool-usage-audit.py`
 
 ---
 
-## ¶ş¡¢12 ¸ö Enabled Server Éó¼Æ½á¹û
+## ä¸€ã€å®¡è®¡æ–¹æ³•
 
-### ?? ÍêÈ«½©Ê¬ Server£¨0 ÒµÎñµ÷ÓÃ£©
+1. **Tool åç§°æå–**: ç²¾ç¡®è§£ææ¯ä¸ª Server çš„ `getTools()` æ–¹æ³•ä½“ï¼Œæå– `name: 'xxx'` å®šä¹‰ã€‚
+2. **ç›´æ¥è°ƒç”¨è¿½è¸ª**: å…¨é¡¹ç›®æœç´¢ `mcpBridge.callTool('server', 'toolName', ...)` æ¨¡å¼ï¼Œå®šä½å®é™…ä¸šåŠ¡è°ƒç”¨ç‚¹ã€‚
+3. **é—´æ¥è°ƒç”¨è¿½è¸ª**: æ£€æŸ¥ `src/components/organisms/agent/agentComponentRegistry.ts` ä¸­æ³¨å†Œçš„ Agentï¼Œè¿™äº› Agent é€šè¿‡ `agentRuntime.ts` åŠ¨æ€è°ƒç”¨ MCP Toolã€‚
+4. **ä¸¥æ ¼è¿‡æ»¤**: æ’é™¤ `__tests__/`ã€`.test.*` æ–‡ä»¶å’Œ Server è‡ªèº«å®šä¹‰æ–‡ä»¶ï¼Œä»…ç»Ÿè®¡ä¸šåŠ¡ä»£ç å¼•ç”¨ã€‚
 
-| Server | Tool ÊıÁ¿ | ¸ùÒò·ÖÎö | ½¨Òé |
+---
+
+## äºŒã€12 ä¸ª Enabled Server å®¡è®¡ç»“æœ
+
+### ?? å®Œå…¨åƒµå°¸ Serverï¼ˆ0 ä¸šåŠ¡è°ƒç”¨ï¼‰
+
+| Server | Tool æ•°é‡ | æ ¹å› åˆ†æ | å»ºè®® |
 |--------|----------|---------|------|
-| **execution** | 5 | ÎŞÈÎºÎ `callTool` µ÷ÓÃ£¬Agent Registry Î´×¢²á£¬½öÓĞµ¥Ôª²âÊÔ¸²¸Ç | ?? ÆÀ¹À½µ¼¶»òÒÆ³ı |
-| **knowledge** | 1 | `query_knowledge` ÎŞÈÎºÎÒµÎñÒıÓÃ£¬Agent Registry Î´×¢²á | ?? ÆÀ¹À½µ¼¶»òÒÆ³ı |
-| **portfolio** | 3 | ÎŞÈÎºÎ `callTool` µ÷ÓÃ£¬Agent Registry Î´×¢²á£¬½öÓĞµ¥Ôª²âÊÔ¸²¸Ç | ?? ÆÀ¹À½µ¼¶»òÒÆ³ı |
-| **workflow** | 17 | ÎŞÈÎºÎÒµÎñ´úÂëµ÷ÓÃ×ÔÉíµÄ CRUD Tool£»`workflowServer.ts:1175` µÄ `callTool` ÊÇ**µ÷ÓÃÆäËû Server** ¶ø·Ç×ÔÉí±»µ÷ÓÃ£»Agent Registry Î´×¢²á | ?? ÆÀ¹À½µ¼¶»ò±£ÁôÎª»ù´¡ÉèÊ© |
-| **analysis** | 3 | `screen_stocks` ½öÔÚ ACL ¾ØÕóÖĞ×Ö·û´®ÒıÓÃ£¬ÎŞÊµ¼Êµ÷ÓÃ£»`analyze_stock`/`analyze_sector` ÁãÒµÎñÒıÓÃ£»Agent Registry Î´×¢²á | ?? ÆÀ¹À½µ¼¶»òÒÆ³ı |
+| **execution** | 5 | æ— ä»»ä½• `callTool` è°ƒç”¨ï¼ŒAgent Registry æœªæ³¨å†Œï¼Œä»…æœ‰å•å…ƒæµ‹è¯•è¦†ç›– | ?? è¯„ä¼°é™çº§æˆ–ç§»é™¤ |
+| **knowledge** | 1 | `query_knowledge` æ— ä»»ä½•ä¸šåŠ¡å¼•ç”¨ï¼ŒAgent Registry æœªæ³¨å†Œ | ?? è¯„ä¼°é™çº§æˆ–ç§»é™¤ |
+| **portfolio** | 3 | æ— ä»»ä½• `callTool` è°ƒç”¨ï¼ŒAgent Registry æœªæ³¨å†Œï¼Œä»…æœ‰å•å…ƒæµ‹è¯•è¦†ç›– | ?? è¯„ä¼°é™çº§æˆ–ç§»é™¤ |
+| **workflow** | 17 | æ— ä»»ä½•ä¸šåŠ¡ä»£ç è°ƒç”¨è‡ªèº«çš„ CRUD Toolï¼›`workflowServer.ts:1175` çš„ `callTool` æ˜¯**è°ƒç”¨å…¶ä»– Server** è€Œéè‡ªèº«è¢«è°ƒç”¨ï¼›Agent Registry æœªæ³¨å†Œ | ?? è¯„ä¼°é™çº§æˆ–ä¿ç•™ä¸ºåŸºç¡€è®¾æ–½ |
+| **analysis** | 3 | `screen_stocks` ä»…åœ¨ ACL çŸ©é˜µä¸­å­—ç¬¦ä¸²å¼•ç”¨ï¼Œæ— å®é™…è°ƒç”¨ï¼›`analyze_stock`/`analyze_sector` é›¶ä¸šåŠ¡å¼•ç”¨ï¼›Agent Registry æœªæ³¨å†Œ | ?? è¯„ä¼°é™çº§æˆ–ç§»é™¤ |
 
-> **×¢**: workflow Server Çé¿öÌØÊâ¡ª¡ªËüÊÇÒ»¸ö±àÅÅÒıÇæ£¬ÀíÂÛÉÏÓ¦ÓÉÍâ²¿ÏµÍ³´¥·¢£¨Èç¶¨Ê±µ÷¶È¡¢UI ²Ù×÷£©£¬µ«µ±Ç°Ã»ÓĞÈÎºÎÒµÎñ´úÂëµ÷ÓÃÆä `create_workflow`/`run_workflow` µÈÈë¿Ú¡£
+> **æ³¨**: workflow Server æƒ…å†µç‰¹æ®Šâ€”â€”å®ƒæ˜¯ä¸€ä¸ªç¼–æ’å¼•æ“ï¼Œç†è®ºä¸Šåº”ç”±å¤–éƒ¨ç³»ç»Ÿè§¦å‘ï¼ˆå¦‚å®šæ—¶è°ƒåº¦ã€UI æ“ä½œï¼‰ï¼Œä½†å½“å‰æ²¡æœ‰ä»»ä½•ä¸šåŠ¡ä»£ç è°ƒç”¨å…¶ `create_workflow`/`run_workflow` ç­‰å…¥å£ã€‚
 
-### ?? ²¿·Ö½©Ê¬ Server£¨ÓĞ»îÔ¾ Tool£¬µ«Ò²ÓĞ½©Ê¬ Tool£©
+### ?? éƒ¨åˆ†åƒµå°¸ Serverï¼ˆæœ‰æ´»è·ƒ Toolï¼Œä½†ä¹Ÿæœ‰åƒµå°¸ Toolï¼‰
 
-| Server | »îÔ¾/×ÜÊı | ½©Ê¬ Tool | »îÔ¾ Tool ¼°µ÷ÓÃµã |
+| Server | æ´»è·ƒ/æ€»æ•° | åƒµå°¸ Tool | æ´»è·ƒ Tool åŠè°ƒç”¨ç‚¹ |
 |--------|----------|----------|-------------------|
-| fetcher | 2/5 | `fetch_stocks_basic`, `fetch_kline`, `refresh_symbol` | `fetch_stock_basic` ¡ú Agent Registry (`fetcher-agent`); `test_source_connectivity` ¡ú `FetcherConfigPage.tsx` |
-| llm | 1/4 | `analyze_with_context`, `list_models`, `get_model_config` | `chat_completion` ¡ú Agent Registry (`llm-intelligent-agent`) |
-| news | 1/3 | `analyze_sentiment`, `get_sentiment_trend` | `fetch_news` ¡ú Agent Registry (`news-analyzer-agent`) |
-| scoring | 2/6 | `get_all_scores`, `get_engine_config`, `detect_rotation`, `analyze_value_pit` | `score_stock` ¡ú Agent Registry (`v6-scoring-agent`); `analyze_hot_sector` ¡ú Agent Registry (`v4-industrial-agent`) |
-| system | 7/9 | `get_stats`, `reset_system` | `parse_v6_export`/`transform_v6_to_v9`/`import_to_v9`/`run_v6_migration`/`generate_migration_report` ¡ú `useMcpMigration.ts`; `fetch_health_report` ¡ú `HealthDashboardPage.tsx`; `export_data` ¡ú `useMcpMigration.ts` |
-| trading | 1/10 | `scan_signals`, `advise_stock`, `get_orders`, `create_buy_order`, `create_sell_order`, `check_order_risk`, `calculate_position`, `get_strategy_snapshot`, `generate_trade_review` | `generate_mock_trading_data` ¡ú `TradingFlowPage.tsx`£¨½ö DEV »·¾³£© |
-| data-collector | 1/3 | `fetch_market_data`, `detect_missing_reports` | `build_collection_report` ¡ú `CollectTaskPage.tsx` |
+| fetcher | 2/5 | `fetch_stocks_basic`, `fetch_kline`, `refresh_symbol` | `fetch_stock_basic` â†’ Agent Registry (`fetcher-agent`); `test_source_connectivity` â†’ `FetcherConfigPage.tsx` |
+| llm | 1/4 | `analyze_with_context`, `list_models`, `get_model_config` | `chat_completion` â†’ Agent Registry (`llm-intelligent-agent`) |
+| news | 1/3 | `analyze_sentiment`, `get_sentiment_trend` | `fetch_news` â†’ Agent Registry (`news-analyzer-agent`) |
+| scoring | 2/6 | `get_all_scores`, `get_engine_config`, `detect_rotation`, `analyze_value_pit` | `score_stock` â†’ Agent Registry (`v6-scoring-agent`); `analyze_hot_sector` â†’ Agent Registry (`v4-industrial-agent`) |
+| system | 7/9 | `get_stats`, `reset_system` | `parse_v6_export`/`transform_v6_to_v9`/`import_to_v9`/`run_v6_migration`/`generate_migration_report` â†’ `useMcpMigration.ts`; `fetch_health_report` â†’ `HealthDashboardPage.tsx`; `export_data` â†’ `useMcpMigration.ts` |
+| trading | 1/10 | `scan_signals`, `advise_stock`, `get_orders`, `create_buy_order`, `create_sell_order`, `check_order_risk`, `calculate_position`, `get_strategy_snapshot`, `generate_trade_review` | `generate_mock_trading_data` â†’ `TradingFlowPage.tsx`ï¼ˆä»… DEV ç¯å¢ƒï¼‰ |
+| data-collector | 1/3 | `fetch_market_data`, `detect_missing_reports` | `build_collection_report` â†’ `CollectTaskPage.tsx` |
 
-### ? È«²¿»îÔ¾ Server
+### ? å…¨éƒ¨æ´»è·ƒ Server
 
-ÎŞ¡£ËùÓĞ 12 ¸ö Enabled Server ¾ù´æÔÚ²»Í¬³Ì¶ÈµÄ½©Ê¬ Tool¡£
+æ— ã€‚æ‰€æœ‰ 12 ä¸ª Enabled Server å‡å­˜åœ¨ä¸åŒç¨‹åº¦çš„åƒµå°¸ Toolã€‚
 
 ---
 
-## Èı¡¢6 ¸ö Disabled Server Éó¼Æ½á¹û£¨²Î¿¼£©
+## ä¸‰ã€6 ä¸ª Disabled Server å®¡è®¡ç»“æœï¼ˆå‚è€ƒï¼‰
 
-| Server | ×´Ì¬ | ËµÃ÷ |
+| Server | çŠ¶æ€ | è¯´æ˜ |
 |--------|------|------|
-| backtest | ? È«²¿»îÔ¾ | `run_backtest` ÓĞÒµÎñÒıÓÃ£¬µ«Òò²ÎÊı¸´ÔÓ²»ÊÊºÏ MCP ±í´ï£¬ÒÑ disabled |
-| export | ? ÍêÈ«½©Ê¬ | `export_backtest_report` ÁãÒµÎñÒıÓÃ£¬ÒÑ disabled |
-| input | ? ÍêÈ«½©Ê¬ | 6 ¸ö tool È«²¿ÁãÒµÎñÒıÓÃ£¬ÒÑ disabled |
-| screening | ? ÍêÈ«½©Ê¬ | 2 ¸ö tool È«²¿ÁãÒµÎñÒıÓÃ£¬ÒÑ disabled |
-| stockpool | ?? ²¿·Ö½©Ê¬ | `list_pool_stocks`/`list_groups` ÓĞ ACL ¾ØÕóÒıÓÃ£»`transition_stock` ÁãÒıÓÃ£»ÒÑ disabled |
-| trade | ? ÍêÈ«½©Ê¬ | 3 ¸ö tool È«²¿ÁãÒµÎñÒıÓÃ£¬ÒÑ disabled£¨Óë trading ÖØµş£© |
+| backtest | ? å…¨éƒ¨æ´»è·ƒ | `run_backtest` æœ‰ä¸šåŠ¡å¼•ç”¨ï¼Œä½†å› å‚æ•°å¤æ‚ä¸é€‚åˆ MCP è¡¨è¾¾ï¼Œå·² disabled |
+| export | ? å®Œå…¨åƒµå°¸ | `export_backtest_report` é›¶ä¸šåŠ¡å¼•ç”¨ï¼Œå·² disabled |
+| input | ? å®Œå…¨åƒµå°¸ | 6 ä¸ª tool å…¨éƒ¨é›¶ä¸šåŠ¡å¼•ç”¨ï¼Œå·² disabled |
+| screening | ? å®Œå…¨åƒµå°¸ | 2 ä¸ª tool å…¨éƒ¨é›¶ä¸šåŠ¡å¼•ç”¨ï¼Œå·² disabled |
+| stockpool | ?? éƒ¨åˆ†åƒµå°¸ | `list_pool_stocks`/`list_groups` æœ‰ ACL çŸ©é˜µå¼•ç”¨ï¼›`transition_stock` é›¶å¼•ç”¨ï¼›å·² disabled |
+| trade | ? å®Œå…¨åƒµå°¸ | 3 ä¸ª tool å…¨éƒ¨é›¶ä¸šåŠ¡å¼•ç”¨ï¼Œå·² disabledï¼ˆä¸ trading é‡å ï¼‰ |
 
 ---
 
-## ËÄ¡¢Êµ¼ÊÒµÎñµ÷ÓÃµã»ã×Ü
+## å››ã€å®é™…ä¸šåŠ¡è°ƒç”¨ç‚¹æ±‡æ€»
 
-### Ö±½Ó `mcpBridge.callTool()` µ÷ÓÃ£¨°´ÎÄ¼ş£©
+### ç›´æ¥ `mcpBridge.callTool()` è°ƒç”¨ï¼ˆæŒ‰æ–‡ä»¶ï¼‰
 
-| ÎÄ¼ş | µ÷ÓÃ Server | µ÷ÓÃ Tool | ËµÃ÷ |
+| æ–‡ä»¶ | è°ƒç”¨ Server | è°ƒç”¨ Tool | è¯´æ˜ |
 |------|------------|----------|------|
-| `useMcpMigration.ts:29` | system | `parse_v6_export`, `transform_v6_to_v9`, `import_to_v9`, `run_v6_migration` | V6¡úV9 Êı¾İÇ¨ÒÆ |
-| `useMcpMigration.ts:75` | system | `generate_migration_report` | Éú³ÉÇ¨ÒÆ±¨¸æ |
-| `HealthDashboardPage.tsx:75` | system | `fetch_health_report` | ½¡¿µ dashboard |
-| `CollectTaskPage.tsx:225` | data-collector | `build_collection_report` | ²É¼¯ÈÎÎñ¼à¿Ø |
-| `TradingFlowPage.tsx:61` | trading | `generate_mock_trading_data` | ¿ª·¢»·¾³Ä£ÄâÊı¾İ |
-| `MCPServerDashboardPage.tsx:58` | *(Í¨ÓÃ)* | *(Í¨ÓÃ)* | MCP Server ¹ÜÀíºóÌ¨£¨ÓÃ»§ÊÖ¶¯µ÷ÓÃ£© |
-| `agentRuntime.ts:132` | *(¶¯Ì¬)* | *(¶¯Ì¬)* | Agent ÔËĞĞÊ±¸ù¾İ Registry ÅäÖÃ¶¯Ì¬µ÷ÓÃ |
+| `useMcpMigration.ts:29` | system | `parse_v6_export`, `transform_v6_to_v9`, `import_to_v9`, `run_v6_migration` | V6â†’V9 æ•°æ®è¿ç§» |
+| `useMcpMigration.ts:75` | system | `generate_migration_report` | ç”Ÿæˆè¿ç§»æŠ¥å‘Š |
+| `HealthDashboardPage.tsx:75` | system | `fetch_health_report` | å¥åº· dashboard |
+| `CollectTaskPage.tsx:225` | data-collector | `build_collection_report` | é‡‡é›†ä»»åŠ¡ç›‘æ§ |
+| `TradingFlowPage.tsx:61` | trading | `generate_mock_trading_data` | å¼€å‘ç¯å¢ƒæ¨¡æ‹Ÿæ•°æ® |
+| `MCPServerDashboardPage.tsx:58` | *(é€šç”¨)* | *(é€šç”¨)* | MCP Server ç®¡ç†åå°ï¼ˆç”¨æˆ·æ‰‹åŠ¨è°ƒç”¨ï¼‰ |
+| `agentRuntime.ts:132` | *(åŠ¨æ€)* | *(åŠ¨æ€)* | Agent è¿è¡Œæ—¶æ ¹æ® Registry é…ç½®åŠ¨æ€è°ƒç”¨ |
 
-### Agent Registry ¼ä½Óµ÷ÓÃ£¨`src/components/organisms/agent/agentComponentRegistry.ts`£©
+### Agent Registry é—´æ¥è°ƒç”¨ï¼ˆ`src/components/organisms/agent/agentComponentRegistry.ts`ï¼‰
 
-| Agent ID | MCP Server | Default Tool | ËµÃ÷ |
+| Agent ID | MCP Server | Default Tool | è¯´æ˜ |
 |----------|-----------|--------------|------|
-| v6-scoring-agent | scoring:v6 | `score_stock` | V6 ¾ÅÎ¬ÆÀ·Ö |
-| v4-industrial-agent | scoring:v6 | `analyze_hot_sector` | V4 ĞĞÒµÆÀ·Ö |
-| llm-intelligent-agent | llm | `chat_completion` | LLM ÖÇÄÜ·ÖÎö |
-| fetcher-agent | fetcher | `fetch_stock_basic` | Êı¾İ²É¼¯ |
-| news-analyzer-agent | news | `fetch_news` | ĞÂÎÅ·ÖÎö |
+| v6-scoring-agent | scoring:v6 | `score_stock` | V6 ä¹ç»´è¯„åˆ† |
+| v4-industrial-agent | scoring:v6 | `analyze_hot_sector` | V4 è¡Œä¸šè¯„åˆ† |
+| llm-intelligent-agent | llm | `chat_completion` | LLM æ™ºèƒ½åˆ†æ |
+| fetcher-agent | fetcher | `fetch_stock_basic` | æ•°æ®é‡‡é›† |
+| news-analyzer-agent | news | `fetch_news` | æ–°é—»åˆ†æ |
 
 ---
 
-## Îå¡¢ºËĞÄ·¢ÏÖ
+## äº”ã€æ ¸å¿ƒå‘ç°
 
-### 5.1 Enabled Server ÕæÊµÊ¹ÓÃÂÊ
+### 5.1 Enabled Server çœŸå®ä½¿ç”¨ç‡
 
-ÔÚ 12 ¸ö Enabled Server ÖĞ£¬**ÕæÕı±»ÒµÎñ´úÂë»ò Agent ÏµÍ³µ÷ÓÃµÄÖ»ÓĞ 7 ¸ö**£º
+åœ¨ 12 ä¸ª Enabled Server ä¸­ï¼Œ**çœŸæ­£è¢«ä¸šåŠ¡ä»£ç æˆ– Agent ç³»ç»Ÿè°ƒç”¨çš„åªæœ‰ 7 ä¸ª**ï¼š
 
-- **system** ¡ª ±»Êı¾İÇ¨ÒÆºÍ½¡¿µ dashboard Ö±½Óµ÷ÓÃ£¨7 ¸ö tool »îÔ¾£©
-- **data-collector** ¡ª ±»²É¼¯ÈÎÎñ¼à¿ØÒ³Ö±½Óµ÷ÓÃ£¨1 ¸ö tool »îÔ¾£©
-- **trading** ¡ª ±»½»Ò×Á÷³ÌÒ³ÔÚ DEV »·¾³ÏÂÖ±½Óµ÷ÓÃ£¨1 ¸ö tool »îÔ¾£©
-- **scoring** ¡ª ±» 2 ¸ö Agent ¼ä½Óµ÷ÓÃ£¨2 ¸ö tool »îÔ¾£©
-- **fetcher** ¡ª ±» 1 ¸ö Agent + ÅäÖÃÒ³µ÷ÓÃ£¨2 ¸ö tool »îÔ¾£©
-- **llm** ¡ª ±» 1 ¸ö Agent ¼ä½Óµ÷ÓÃ£¨1 ¸ö tool »îÔ¾£©
-- **news** ¡ª ±» 1 ¸ö Agent ¼ä½Óµ÷ÓÃ£¨1 ¸ö tool »îÔ¾£©
+- **system** â€” è¢«æ•°æ®è¿ç§»å’Œå¥åº· dashboard ç›´æ¥è°ƒç”¨ï¼ˆ7 ä¸ª tool æ´»è·ƒï¼‰
+- **data-collector** â€” è¢«é‡‡é›†ä»»åŠ¡ç›‘æ§é¡µç›´æ¥è°ƒç”¨ï¼ˆ1 ä¸ª tool æ´»è·ƒï¼‰
+- **trading** â€” è¢«äº¤æ˜“æµç¨‹é¡µåœ¨ DEV ç¯å¢ƒä¸‹ç›´æ¥è°ƒç”¨ï¼ˆ1 ä¸ª tool æ´»è·ƒï¼‰
+- **scoring** â€” è¢« 2 ä¸ª Agent é—´æ¥è°ƒç”¨ï¼ˆ2 ä¸ª tool æ´»è·ƒï¼‰
+- **fetcher** â€” è¢« 1 ä¸ª Agent + é…ç½®é¡µè°ƒç”¨ï¼ˆ2 ä¸ª tool æ´»è·ƒï¼‰
+- **llm** â€” è¢« 1 ä¸ª Agent é—´æ¥è°ƒç”¨ï¼ˆ1 ä¸ª tool æ´»è·ƒï¼‰
+- **news** â€” è¢« 1 ä¸ª Agent é—´æ¥è°ƒç”¨ï¼ˆ1 ä¸ª tool æ´»è·ƒï¼‰
 
-**ÍêÈ«ÎŞµ÷ÓÃµÄ Enabled Server ÓĞ 5 ¸ö**£º
+**å®Œå…¨æ— è°ƒç”¨çš„ Enabled Server æœ‰ 5 ä¸ª**ï¼š
 `execution`, `knowledge`, `portfolio`, `workflow`, `analysis`
 
-### 5.2 ½©Ê¬ Tool Í³¼Æ
+### 5.2 åƒµå°¸ Tool ç»Ÿè®¡
 
-| Àà±ğ | ÊıÁ¿ |
+| ç±»åˆ« | æ•°é‡ |
 |------|------|
-| 18 ¸ö Server ×Ü Tool Êı | 89 |
-| ÒµÎñ»îÔ¾µÄ Tool Êı | 24 |
-| ½©Ê¬ Tool Êı£¨½ö²âÊÔ/ACL¾ØÕóÒıÓÃ£© | 65 |
-| ½©Ê¬ÂÊ | **73%** |
+| 18 ä¸ª Server æ€» Tool æ•° | 89 |
+| ä¸šåŠ¡æ´»è·ƒçš„ Tool æ•° | 24 |
+| åƒµå°¸ Tool æ•°ï¼ˆä»…æµ‹è¯•/ACLçŸ©é˜µå¼•ç”¨ï¼‰ | 65 |
+| åƒµå°¸ç‡ | **73%** |
 
 ---
 
-## Áù¡¢½¨ÒéĞĞ¶¯
+## å…­ã€å»ºè®®è¡ŒåŠ¨
 
-### Á¢¼´Ö´ĞĞ£¨P0£©
+### ç«‹å³æ‰§è¡Œï¼ˆP0ï¼‰
 
-1. **½« 5 ¸öÍêÈ«½©Ê¬µÄ Enabled Server ±ê¼ÇÎª Disabled**£º
+1. **å°† 5 ä¸ªå®Œå…¨åƒµå°¸çš„ Enabled Server æ ‡è®°ä¸º Disabled**ï¼š
    - `execution`, `knowledge`, `portfolio`, `workflow`, `analysis`
-   - ÀíÓÉ£ºÔ´Âë´æÔÚµ«ÒµÎñÁãµ÷ÓÃ£¬¼ÌĞøÆôÓÃ»áÕ¼ÓÃÆô¶¯×ÊÔ´²¢Ôö¼ÓÎ¬»¤¸ºµ£
-   - ÔÚ `mcpServerRegistry.ts` ÖĞ½«Æä `enabled: false`£¬×¢ÊÍËµÃ÷"ÁãÒµÎñµ÷ÓÃ£¬´ıĞèÇóÈ·ÈÏºó»Ö¸´"
+   - ç†ç”±ï¼šæºç å­˜åœ¨ä½†ä¸šåŠ¡é›¶è°ƒç”¨ï¼Œç»§ç»­å¯ç”¨ä¼šå ç”¨å¯åŠ¨èµ„æºå¹¶å¢åŠ ç»´æŠ¤è´Ÿæ‹…
+   - åœ¨ `mcpServerRegistry.ts` ä¸­å°†å…¶ `enabled: false`ï¼Œæ³¨é‡Šè¯´æ˜"é›¶ä¸šåŠ¡è°ƒç”¨ï¼Œå¾…éœ€æ±‚ç¡®è®¤åæ¢å¤"
 
-2. **ÇåÀíÍêÈ«½©Ê¬µÄ Tool**£º
-   - ¶ÔÓÚÒÑÈ·ÈÏÓÀ²»»á±»µ÷ÓÃµÄ Tool£¬´Ó Server µÄ `getTools()` ÖĞÒÆ³ı£¬¼õÉÙ API ±íÃæ»ı
-   - ÓÅÏÈÇåÀí£º`analysis.analyze_stock`, `analysis.analyze_sector`, `knowledge.query_knowledge`
+2. **æ¸…ç†å®Œå…¨åƒµå°¸çš„ Tool**ï¼š
+   - å¯¹äºå·²ç¡®è®¤æ°¸ä¸ä¼šè¢«è°ƒç”¨çš„ Toolï¼Œä» Server çš„ `getTools()` ä¸­ç§»é™¤ï¼Œå‡å°‘ API è¡¨é¢ç§¯
+   - ä¼˜å…ˆæ¸…ç†ï¼š`analysis.analyze_stock`, `analysis.analyze_sector`, `knowledge.query_knowledge`
 
-### ¶ÌÆÚÓÅ»¯£¨P1£©
+### çŸ­æœŸä¼˜åŒ–ï¼ˆP1ï¼‰
 
-3. **Agent Registry ²¹È«**£º
-   - Èô `execution`, `portfolio`, `workflow` ÓĞÃ÷È·µÄ Agent Ê¹ÓÃ³¡¾°£¬Ó¦ÔÚ `agentComponentRegistry.ts` ÖĞ×¢²á¶ÔÓ¦ Agent
-   - ·ñÔòÓ¦±£³Ö disabled ×´Ì¬
+3. **Agent Registry è¡¥å…¨**ï¼š
+   - è‹¥ `execution`, `portfolio`, `workflow` æœ‰æ˜ç¡®çš„ Agent ä½¿ç”¨åœºæ™¯ï¼Œåº”åœ¨ `agentComponentRegistry.ts` ä¸­æ³¨å†Œå¯¹åº” Agent
+   - å¦åˆ™åº”ä¿æŒ disabled çŠ¶æ€
 
-4. **workflow Server ¾ö²ß**£º
-   - Èç¹ûworkflowÊÇºËĞÄ»ù´¡ÉèÊ©£¨¹©¶¨Ê±µ÷¶ÈÊ¹ÓÃ£©£¬ĞèÒª²¹³äµ÷¶ÈÆ÷´úÂëµ÷ÓÃÆä Tool
-   - Èç¹ûÔİÊ±ÎŞµ÷¶ÈĞèÇó£¬½¨Òé disabled ²¢ÔÚ»Ö¸´Ê±²¹È«µ÷ÓÃÁ´
+4. **workflow Server å†³ç­–**ï¼š
+   - å¦‚æœworkflowæ˜¯æ ¸å¿ƒåŸºç¡€è®¾æ–½ï¼ˆä¾›å®šæ—¶è°ƒåº¦ä½¿ç”¨ï¼‰ï¼Œéœ€è¦è¡¥å……è°ƒåº¦å™¨ä»£ç è°ƒç”¨å…¶ Tool
+   - å¦‚æœæš‚æ—¶æ— è°ƒåº¦éœ€æ±‚ï¼Œå»ºè®® disabled å¹¶åœ¨æ¢å¤æ—¶è¡¥å…¨è°ƒç”¨é“¾
 
-### ÖĞÆÚÖÎÀí£¨P2£©
+### ä¸­æœŸæ²»ç†ï¼ˆP2ï¼‰
 
-5. **½¨Á¢ Tool µ÷ÓÃ¼à¿Ø**£º
-   - ÔÚ `mcpBridge.callTool()` »ò `agentRuntime.ts` ÖĞÌí¼Óµ÷ÓÃ¼ÆÊıÆ÷
-   - Ã¿ÔÂÊä³ö "MCP Tool µ÷ÓÃÈÈÁ¦Í¼"£¬³ÖĞø·¢ÏÖĞÂµÄ½©Ê¬ Tool
+5. **å»ºç«‹ Tool è°ƒç”¨ç›‘æ§**ï¼š
+   - åœ¨ `mcpBridge.callTool()` æˆ– `agentRuntime.ts` ä¸­æ·»åŠ è°ƒç”¨è®¡æ•°å™¨
+   - æ¯æœˆè¾“å‡º "MCP Tool è°ƒç”¨çƒ­åŠ›å›¾"ï¼ŒæŒç»­å‘ç°æ–°çš„åƒµå°¸ Tool
 
-6. **MCP Server ÉúÃüÖÜÆÚ¹ÜÀí SOP**£º
-   - ĞÂÔö Server ±ØĞë¸½´øÖÁÉÙÒ»¸öÒµÎñµ÷ÓÃµã£¨Ò³Ãæ¡¢Agent¡¢»ò¶¨Ê±ÈÎÎñ£©
-   - ĞÂÔö Tool ±ØĞëÔÚ `agentComponentRegistry.ts` »òÒ³Ãæ´úÂëÖĞ×¢²áÒıÓÃ
-   - ºÏ²¢Èë `./mcp-module-status.md`
+6. **MCP Server ç”Ÿå‘½å‘¨æœŸç®¡ç† SOP**ï¼š
+   - æ–°å¢ Server å¿…é¡»é™„å¸¦è‡³å°‘ä¸€ä¸ªä¸šåŠ¡è°ƒç”¨ç‚¹ï¼ˆé¡µé¢ã€Agentã€æˆ–å®šæ—¶ä»»åŠ¡ï¼‰
+   - æ–°å¢ Tool å¿…é¡»åœ¨ `agentComponentRegistry.ts` æˆ–é¡µé¢ä»£ç ä¸­æ³¨å†Œå¼•ç”¨
+   - åˆå¹¶å…¥ `./mcp-module-status.md`
 
 ---
 
-## Æß¡¢¸½Â¼£ºÉó¼Æ½Å±¾Ê¹ÓÃËµÃ÷
+## ä¸ƒã€é™„å½•ï¼šå®¡è®¡è„šæœ¬ä½¿ç”¨è¯´æ˜
 
 ```bash
-# ÔËĞĞÉó¼Æ½Å±¾£¨ĞèÒª Python 3£©
+# è¿è¡Œå®¡è®¡è„šæœ¬ï¼ˆéœ€è¦ Python 3ï¼‰
 python scripts/mcp-tool-usage-audit.py
 
-# Êä³öÎÄ¼ş
-# mcp_zombie_strict_report.json ¡ª Ã¿¸ö Server µÄ Tool ¼¶ÒıÓÃÏêÇé
+# è¾“å‡ºæ–‡ä»¶
+# mcp_zombie_strict_report.json â€” æ¯ä¸ª Server çš„ Tool çº§å¼•ç”¨è¯¦æƒ…
 ```
 
 ---
 
-*±¾±¨¸æ»ùÓÚ `src/` Ä¿Â¼ÏÂ½ØÖÁ 2026-07-20 µÄ´úÂë¾²Ì¬·ÖÎöÉú³É¡£ÈçºóĞøÓĞ¶¯Ì¬µ÷ÓÃ£¨Èç×Ö·û´®Æ´½ÓµÄ Server/Tool Ãû£©¿ÉÄÜÎ´±»²¶»ñ¡£*
+*æœ¬æŠ¥å‘ŠåŸºäº `src/` ç›®å½•ä¸‹æˆªè‡³ 2026-07-20 çš„ä»£ç é™æ€åˆ†æç”Ÿæˆã€‚å¦‚åç»­æœ‰åŠ¨æ€è°ƒç”¨ï¼ˆå¦‚å­—ç¬¦ä¸²æ‹¼æ¥çš„ Server/Tool åï¼‰å¯èƒ½æœªè¢«æ•è·ã€‚*

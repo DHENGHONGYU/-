@@ -342,7 +342,7 @@ covered_by_skills:
 
 #### 4.3 SKILL 索引文件
 
-新建 `.trae/skills/INDEX.md`：
+新建 `../reference/index.md`：
 ```markdown
 # V9 SKILL 索引
 
@@ -358,7 +358,7 @@ covered_by_skills:
 
 将三套 SKILL 体系统一到 `.trae/skills/`：
 - `.workbuddy/skills/*` → 迁移到 `.trae/skills/`（保留软链接兼容）
-- `plugins/*/SKILL.md` → 保留原位置，但在 `.trae/skills/INDEX.md` 中登记
+- `plugins/*/SKILL.md` → 保留原位置，但在 `../reference/index.md` 中登记
 
 #### 4.5 SKILL 提炼机制
 

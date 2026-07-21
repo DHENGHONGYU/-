@@ -320,22 +320,22 @@ V9 当前约 13 条路由，集中在 `analysis` 舱：
 
 | 优先级 | 模块名称 | V6 Pro 来源 | V9 目标位置 | 业务价值 | 迁移要点 |
 |--------|----------|-------------|------------|----------|----------|
-| ⭐⭐⭐ | **七维数据架构与采集配置页** | `src/data/storage/architecture.ts`<br>`src/pages/SevenDimCollectPage.tsx`<br>`src/components/collect/CollectParamPanel.tsx` | `src/apps/input/` 或新增 `/input/seven-dim` | 补齐输入舱核心能力，与现有 `fetcherConfig.ts` 联动 | 将七维架构定义抽象为 V9 配置；采集进度页改为调用 `fetcherService` |
+| ⭐⭐⭐ | **七维数据架构与采集配置页** | `src/services/system/architectureService.ts`<br>`src/pages/SevenDimCollectPage.tsx`<br>`src/components/collect/CollectParamPanel.tsx` | `src/apps/input/` 或新增 `/input/seven-dim` | 补齐输入舱核心能力，与现有 `fetcherConfig.ts` 联动 | 将七维架构定义抽象为 V9 配置；采集进度页改为调用 `fetcherService` |
 | ⭐⭐⭐ | **股票池管理页增强** | `src/pages/StockPoolPage.tsx`<br>`src/pages/StockPool.tsx` | `src/apps/input/InputDashboard.tsx` 或新增 `/input/stock-pool` | V9 数据层已就绪（stocks/group/status），缺完整管理页 | 复用 V6 列表/筛选/分组能力，接入 V9 `stockpoolService` |
 | ⭐⭐⭐ | **板块轮动评分** | `src/data/rotationData.ts`<br>`src/data/sectorData.ts` | `src/services/analysis/rotationScoreService.ts` + `/analysis/sector-rotation` | 替代 `hotSectorService` 静态样本，提供量化轮动 | 新增 `rotation_scores` store；迁移五因子模型；LLM 调用改为 `services/llm/llmClient` |
 | ⭐⭐⭐ | **十五五板块定义与评分** | `src/data/sectorData.ts`<br>`src/data/sectorSkillData.ts` | 合并至 `src/data/sectorSkillData.ts` + `src/services/scoring/industryScoreService.ts` | 直接补强 V9 行业评分能力 | 将 V6 板块定义数据下沉到 V9 数据层；复用 V4 行业评分流程 |
-| ⭐⭐ | **V6 评分报告版本库** | `src/data/types.ts`（V6Score/ScoreDocVersion）<br>`src/data/dataLayer.ts`（scoreDocs） | `src/data/dataLayer.ts` 新增 `scoreDocStore` + `src/services/scoring/scoreDocService.ts` | 支持单股多版本报告、diff、导出 Markdown | 新增 `score_docs` store；保持 V9 `IntelligentScore` / `IndustryScore` 不变 |
+| ⭐⭐ | **V6 评分报告版本库** | `src/data/types.ts`（V6Score/ScoreDocVersion）<br>`src/data/dataLayer.ts`（scoreDocs） | `src/data/dataLayer.ts` 新增 `scoreDocStore` + `src/services/analysis/scoreDocService.ts` | 支持单股多版本报告、diff、导出 Markdown | 新增 `score_docs` store；保持 V9 `IntelligentScore` / `IndustryScore` 不变 |
 | ⭐⭐ | **策略快照与变更追踪** | `src/data/types.ts`（StrategySnapshot/StrategyChangeLog）<br>`src/data/dataLayer.ts`（strategy_snapshots） | `src/services/trading/strategySnapshotService.ts` | 支持 core/hot/value 分组快照与 diff | 新增 `strategy_snapshots` store；与 `strategyEngine` 输出结构对齐 |
 
 ### 8.3 P1 — 中高价值（需 UI/服务层较大改造）
 
 | 优先级 | 模块名称 | V6 Pro 来源 | V9 目标位置 | 业务价值 | 迁移要点 |
 |--------|----------|-------------|------------|----------|----------|
-| ⭐⭐ | **可编辑 Widget 驾驶舱框架** | `src/cockpit/core/registry.ts`<br>`src/cockpit/core/engine.ts`<br>`src/cockpit/core/dataflow.ts`<br>`src/cockpit/core/bus.ts`<br>`src/cockpit/layout/grid.ts` | 重构 `src/cockpit/CockpitShell.tsx` | 将静态 Dashboard 升级为可插拔卡片系统 | 保留 V9 UI 风格，替换 V6 单例 Map 为 Zustand 或 Context；SSE 改为轮询或事件总线 |
+| ⭐⭐ | **可编辑 Widget 驾驶舱框架** | `src/mcp/core/registry.ts`<br>`src/services/scoring/v6-engine/engine.ts`<br>`src/cockpit/core/dataflow.ts`<br>`src/cockpit/core/bus.ts`<br>`src/components/atoms/Grid.tsx` | 重构 `src/cockpit/CockpitShell.tsx` | 将静态 Dashboard 升级为可插拔卡片系统 | 保留 V9 UI 风格，替换 V6 单例 Map 为 Zustand 或 Context；SSE 改为轮询或事件总线 |
 | ⭐⭐ | **市场类 Widget** | `src/cockpit/widgets/market/*` | `src/cockpit/widgets/market/*` | 驾驶舱核心内容 | 用 V9 组件重写；接入 `fetcherService` 或 Mock 数据 |
 | ⭐⭐ | **持仓/组合 Widget** | `src/cockpit/widgets/portfolio/*`<br>`src/components/trading/PortfolioManager.tsx` | `src/cockpit/widgets/portfolio/*` + `src/apps/trading/` | 交易舱核心内容 | 复用 V9 `Portfolio` 类型；重写 UI |
 | ⭐⭐ | **交易记录 / 模拟交易页** | `src/pages/Trading.tsx`<br>`src/components/trading/SimulatedTrading.tsx` | `src/apps/trading/` | 补足交易舱功能 | 将 V6 tRPC 调用替换为 `tradingService`；接入 V9 风控/仓位引擎 |
-| ⭐⭐ | **AI 交易复盘** | `src/components/trading/TradeReviewDashboard.tsx`<br>`src/data/tradeReviewAI.ts` | `src/apps/trading/` 或 `src/apps/command/` | 高价值复盘能力 | 将 tRPC 替换为本地 LLM 调用；接入 V9 `Order` 数据 |
+| ⭐⭐ | **AI 交易复盘** | `src/components/trading/TradeReviewDashboard.tsx`<br>`src/services/trading/tradeReviewAI.ts` | `src/apps/trading/` 或 `src/apps/command/` | 高价值复盘能力 | 将 tRPC 替换为本地 LLM 调用；接入 V9 `Order` 数据 |
 | ⭐⭐ | **资讯与情感数据层** | `src/data/types.ts`（NewsArticle/NewsStockMap/SentimentCache）<br>`src/agents/news/*` | `src/services/news/*` + `/input/news` 或 `/command/news` | 输入舱信息入口 | 新增 `news/news_stock_map/sentiment_cache` 三个 store；迁移财经源适配器 |
 | ⭐ | **本地知识库** | `src/pages/LocalKnowledge.tsx`<br>`src/data/knowledgeBase.ts`<br>`src/lib/rag.ts` | `src/apps/command/` 或独立 `/knowledge` | RAG/文档管理 | 新增 `local_docs` store；LLM 调用改为 V9 `llmClient` |
 
@@ -343,7 +343,7 @@ V9 当前约 13 条路由，集中在 `analysis` 舱：
 
 | 优先级 | 模块名称 | V6 Pro 来源 | V9 目标位置 | 业务价值 | 迁移要点 |
 |--------|----------|-------------|------------|----------|----------|
-| ⭐⭐ | **Agent 中心与管理** | `src/agents/core/*`<br>`src/pages/AgentHubPage.tsx`<br>`src/pages/AgentManagerPage.tsx`<br>`src/components/agents/AgentManagerPanel.tsx` | `src/apps/command/` | 总控舱核心能力 | V6 是完整 Agent 运行时；V9 当前无后端，需评估是否作为纯前端状态机或延迟到 V10 |
+| ⭐⭐ | **Agent 中心与管理** | `src/agents/core/*`<br>`src/pages/command/agent/AgentHubPage.tsx`<br>`src/pages/AgentManagerPage.tsx`<br>`src/components/agents/AgentManagerPanel.tsx` | `src/apps/command/` | 总控舱核心能力 | V6 是完整 Agent 运行时；V9 当前无后端，需评估是否作为纯前端状态机或延迟到 V10 |
 | ⭐ | **AI 助手对话页** | `src/pages/AIAssistant.tsx` | `src/apps/command/` 或全局浮窗 | 用户交互入口 | 依赖 LLM 与 RAG，可先作为 `llmClient` + `local_docs` 的查询界面 |
 | ⭐ | **数据管理页** | `src/pages/DataManagement.tsx`<br>`src/pages/DataHubPage.tsx` | `src/apps/command/` | 系统管理 | 导出/导入/清空 IndexedDB，与 V9 `systemService` 能力重合 |
 | ⭐ | **shadcn/ui 组件库补齐** | `src/components/ui/*` | `src/components/ui/*` | 提升 UI 一致性与开发效率 | 按 V9 主题变量逐个迁移，避免一次性引入过多组件 |
@@ -451,7 +451,7 @@ V9 的优势在于**架构规范清晰、纯前端离线可用、路由注册规
 
 - 已完成迁移规范中间文档：`docs/implementation/v6-to-v9-migration-spec.md`，作为 `v6MigrationService` 的唯一权威转换依据。
 - 已完成迁移服务：`src/services/system/v6MigrationService.ts`，支持解析 V6 全量导出、转换 12 个核心 store、按依赖顺序导入 V9，默认跳过已存在记录并支持覆盖。
-- 已完成迁移 UI：`src/components/system/MigrationPanel.tsx`，支持文件上传、转换预览、导入执行、报告展示。
+- 已完成迁移 UI：`src/components/organisms/system/MigrationPanel.tsx`，支持文件上传、转换预览、导入执行、报告展示。
 - 已在总控舱集成入口：`src/apps/command/CommandApp.tsx` 新增"V6 迁移"按钮。
 - 已补充单元测试：`tests/v6MigrationService.test.ts`（19 tests）、`tests/MigrationPanel.test.tsx`（4 tests）。
 - 全量质量门禁通过：tsc / lint / test（291 passed）/ build / e2e（5 passed）。

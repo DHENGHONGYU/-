@@ -1,12 +1,12 @@
 ---
-title: ²âÊÔ/¹¹½¨²úÎïÇåÀí¼ÇÂ¼£¨×îÖÕ×´Ì¬£©
+title: æµ‹è¯•/æ„å»ºäº§ç‰©æ¸…ç†è®°å½•ï¼ˆæœ€ç»ˆçŠ¶æ€ï¼‰
 type: reports
 domain: qa
 phase: testing
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "Date£º2026-07-12 Éó¼Æ×´Ì¬£ºtest:clean È«ÂÌ£¨317 files / 4610 passed / exit 0£©£¬Éó¼ÆÎŞÎó¡£ ÓÃ»§Ö¸Áî£ºÉó¼ÆÎŞÎóºóÉ¾³ı¶Ô APP..."
+summary: "Dateï¼š2026-07-12 å®¡è®¡çŠ¶æ€ï¼štest:clean å…¨ç»¿ï¼ˆ317 files / 4610 passed / exit 0ï¼‰ï¼Œå®¡è®¡æ— è¯¯ã€‚ ç”¨æˆ·æŒ‡ä»¤ï¼šå®¡è®¡æ— è¯¯ååˆ é™¤å¯¹ APP..."
 tags: [qa, cleanup, test]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -17,35 +17,35 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# ²âÊÔ/¹¹½¨²úÎïÇåÀí¼ÇÂ¼£¨×îÖÕ×´Ì¬£©
+# æµ‹è¯•/æ„å»ºäº§ç‰©æ¸…ç†è®°å½•ï¼ˆæœ€ç»ˆçŠ¶æ€ï¼‰
 
-> **Date**£º2026-07-12
-> Éó¼Æ×´Ì¬£ºtest:clean È«ÂÌ£¨317 files / 4610 passed / exit 0£©£¬Éó¼ÆÎŞÎó¡£
-> ÓÃ»§Ö¸Áî£ºÉó¼ÆÎŞÎóºóÉ¾³ı¶Ô APP ÔËÓªÎŞÓÃµÄ²âÊÔ/¹¹½¨²úÎï¡£
+> **Date**ï¼š2026-07-12
+> å®¡è®¡çŠ¶æ€ï¼štest:clean å…¨ç»¿ï¼ˆ317 files / 4610 passed / exit 0ï¼‰ï¼Œå®¡è®¡æ— è¯¯ã€‚
+> ç”¨æˆ·æŒ‡ä»¤ï¼šå®¡è®¡æ— è¯¯ååˆ é™¤å¯¹ APP è¿è¥æ— ç”¨çš„æµ‹è¯•/æ„å»ºäº§ç‰©ã€‚
 
-## Ö´ĞĞ½á¹û
+## æ‰§è¡Œç»“æœ
 
-### ? ÒÑÍê³É£ºroot ÎÄ¼şÇåÀí£¨193 ¸öÈ«²¿É¾³ı£©
-- ËùÓĞ `*.log`£¨º¬Òş²Ø `.audit-layers-*.log` / `.tsc-batch-b.log` / `.tmp-audit-verbose.log`£©
-- ²âÊÔ/Éó¼ÆÁãÉ¢Êä³ö£º`test-*.txt` / `test-output.json` / `test-results.json` / `junit_*.xml` / `quality-gate-result.json` / `route-audit-tmp.json` / `complexity-now.json` / `complexity-baseline-current.json` / `complexity-plan.json` / `eslint-*.json` / `eslint-*.txt` / `vite.config.ts.timestamp-*.mjs` / `tmp_*.png` / `audit-tests-output*.txt` / `lint-*.txt` / `failed-*.txt` / `tsc-*.txt` / `type-errors-*.txt` / `deadcode-result.txt` µÈ
-- º¬±¾´Î»á»°²úÉúµÄ `test-clean-output.log` Ò²ÒÑÉ¾³ı
+### ? å·²å®Œæˆï¼šroot æ–‡ä»¶æ¸…ç†ï¼ˆ193 ä¸ªå…¨éƒ¨åˆ é™¤ï¼‰
+- æ‰€æœ‰ `*.log`ï¼ˆå«éšè— `.audit-layers-*.log` / `.tsc-batch-b.log` / `.tmp-audit-verbose.log`ï¼‰
+- æµ‹è¯•/å®¡è®¡é›¶æ•£è¾“å‡ºï¼š`test-*.txt` / `test-output.json` / `test-results.json` / `junit_*.xml` / `quality-gate-result.json` / `route-audit-tmp.json` / `complexity-now.json` / `complexity-baseline-current.json` / `complexity-plan.json` / `eslint-*.json` / `eslint-*.txt` / `vite.config.ts.timestamp-*.mjs` / `tmp_*.png` / `audit-tests-output*.txt` / `lint-*.txt` / `failed-*.txt` / `tsc-*.txt` / `type-errors-*.txt` / `deadcode-result.txt` ç­‰
+- å«æœ¬æ¬¡ä¼šè¯äº§ç”Ÿçš„ `test-clean-output.log` ä¹Ÿå·²åˆ é™¤
 
-### ? Î´´¦Àí£º16 ¸öÄ¿Â¼£¨ÓÃ»§¾ö¶¨Ôİ²»É¾³ı£©
-É³ÏäÅúÁ¿É¾³ı±£»¤£¨µ¥Ä¿Â¼ÎÄ¼şÊı >50 ´¥·¢ `SAFE_DELETE_BULK_REJECTED`£¬ºÏ¼Æ 2363 ÎÄ¼ş£©À¹½ØÁË `rm -rf`£¬ÓÃ»§¾Ü¾øÈ¨ÏŞ¸²¸Ç¡£
+### ? æœªå¤„ç†ï¼š16 ä¸ªç›®å½•ï¼ˆç”¨æˆ·å†³å®šæš‚ä¸åˆ é™¤ï¼‰
+æ²™ç®±æ‰¹é‡åˆ é™¤ä¿æŠ¤ï¼ˆå•ç›®å½•æ–‡ä»¶æ•° >50 è§¦å‘ `SAFE_DELETE_BULK_REJECTED`ï¼Œåˆè®¡ 2363 æ–‡ä»¶ï¼‰æ‹¦æˆªäº† `rm -rf`ï¼Œç”¨æˆ·æ‹’ç»æƒé™è¦†ç›–ã€‚
 
-°´ÓÃ»§Ñ¡Ôñ£¬·ÖÁ½Àà±£Áô£º
-- **²âÊÔ/¸²¸ÇÂÊÄ¿Â¼£¨10 ¸ö£¬´ıÓÃ»§ÈÕºóÊÖ¶¯´¦Àí£©**£º
+æŒ‰ç”¨æˆ·é€‰æ‹©ï¼Œåˆ†ä¸¤ç±»ä¿ç•™ï¼š
+- **æµ‹è¯•/è¦†ç›–ç‡ç›®å½•ï¼ˆ10 ä¸ªï¼Œå¾…ç”¨æˆ·æ—¥åæ‰‹åŠ¨å¤„ç†ï¼‰**ï¼š
   `coverage/` `coverage_cmd/` `widget_test_logs/` `widget_test_logs_run2/` `widget_test_logs_run3/` `test-output/` `test-results/` `test-results-f01/` `e2e-test-report/` `playwright-report/`
-- **ÁÙÊ±¹¹½¨»º´æÄ¿Â¼£¨6 ¸ö£¬°´ÓÃ»§Ñ¡Ôñ±£Áô£©**£º
+- **ä¸´æ—¶æ„å»ºç¼“å­˜ç›®å½•ï¼ˆ6 ä¸ªï¼ŒæŒ‰ç”¨æˆ·é€‰æ‹©ä¿ç•™ï¼‰**ï¼š
   `dist_e2e/` `dist_preview/` `dist_s1verify/` `dist-e2e/` `dist-test/` `dist-verify/`
 
-## ±£ÁôÏî£¨Î´¶¯£©
-- Éú²ú¹¹½¨£º`dist/`
-- Ô´ÂëÓë²âÊÔÔ´Âë£º`src/` `tests/` `e2e/` `scripts/` `public/`
-- ÒÀÀµ£º`node_modules/`
-- ÅäÖÃÓëÎÄµµ£º`*.ts/*.js/*.json/*.md` ÅäÖÃÀà
-- ½»¸¶Îï£º`v9-roadmap-execution.zip` `code-quality-compliance/`+zip `patch-bundle.patch` `checklist_record.json` Òş²Ø»ùÏß `.complexity-baseline.json` `.token-baseline.json`
+## ä¿ç•™é¡¹ï¼ˆæœªåŠ¨ï¼‰
+- ç”Ÿäº§æ„å»ºï¼š`dist/`
+- æºç ä¸æµ‹è¯•æºç ï¼š`src/` `tests/` `e2e/` `scripts/` `public/`
+- ä¾èµ–ï¼š`node_modules/`
+- é…ç½®ä¸æ–‡æ¡£ï¼š`*.ts/*.js/*.json/*.md` é…ç½®ç±»
+- äº¤ä»˜ç‰©ï¼š`v9-roadmap-execution.zip` `code-quality-compliance/`+zip `patch-bundle.patch` `checklist_record.json` éšè—åŸºçº¿ `.complexity-baseline.json` `.token-baseline.json`
 
-## ËµÃ÷
-- ¸ùÄ¿Â¼ÎÄ¼şÒÑÏÔÖø¾«¼ò£¨´ÓÔ¼ 250 ¸öÎÄ¼ş½µÖÁ ~56 ¸ö£©¡£
-- ÈôÈÕºóĞèÇåÀíÉÏÊö 16 ¸öÄ¿Â¼£¬¿ÉÔÚÎÄ¼ş×ÊÔ´¹ÜÀíÆ÷ÊÖ¶¯É¾³ı£¬»òÓÉÓÃ»§µ÷ÕûÉ³ÏäÅúÁ¿ãĞÖµºóÖØÊÔ¡£
+## è¯´æ˜
+- æ ¹ç›®å½•æ–‡ä»¶å·²æ˜¾è‘—ç²¾ç®€ï¼ˆä»çº¦ 250 ä¸ªæ–‡ä»¶é™è‡³ ~56 ä¸ªï¼‰ã€‚
+- è‹¥æ—¥åéœ€æ¸…ç†ä¸Šè¿° 16 ä¸ªç›®å½•ï¼Œå¯åœ¨æ–‡ä»¶èµ„æºç®¡ç†å™¨æ‰‹åŠ¨åˆ é™¤ï¼Œæˆ–ç”±ç”¨æˆ·è°ƒæ•´æ²™ç®±æ‰¹é‡é˜ˆå€¼åé‡è¯•ã€‚

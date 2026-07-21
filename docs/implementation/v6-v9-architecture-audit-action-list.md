@@ -53,7 +53,7 @@ audit_source:
 |:---|:---|:---|:---|:---|:---|
 | P1-01 | V6 UI 迁移资产完整目录仍留在仓库，且 `.gitignore` 仅忽略未删除 | `v6-ui-assets/source-migration/` | 仓库体积膨胀，组件同名冲突，开发者易误引用旧实现 | 从工作区删除；如必须归档，移到仓库外或独立分支 | B |
 | P1-02 | 临时备份目录 `temp/backup/` 含旧服务/Store/文档备份 | `temp/backup/` | 废弃代码占用，存在被误加载风险 | 删除目录；如需保留快照，使用 git history | B |
-| P1-03 | 资讯模块同时存在 V9 与 V6 两个 `NewsPage` / `NewsCard` | `src/pages/analysis/NewsPage.tsx`<br>`src/pages/news-v6/NewsPage.tsx`<br>`src/components/news/NewsCard.tsx`<br>`src/pages/news-v6/components/NewsCard.tsx` | 同功能两套 UI、两套状态、两套数据类型 | 以 `src/pages/analysis/NewsPage.tsx` 为 canonical 实现，删除 `news-v6/` 目录及 `/analysis/news-v6` 路由 | B |
+| P1-03 | 资讯模块同时存在 V9 与 V6 两个 `NewsPage` / `NewsCard` | `src/pages/analysis/NewsPage.tsx`<br>`src/pages/analysis/NewsPage.tsx`<br>`src/components/organisms/news/NewsCard.tsx`<br>`src/components/organisms/news/NewsCard.tsx` | 同功能两套 UI、两套状态、两套数据类型 | 以 `src/pages/analysis/NewsPage.tsx` 为 canonical 实现，删除 `news-v6/` 目录及 `/analysis/news-v6` 路由 | B |
 | P1-04 | 输入舱原型目录与正式面板职责完全重叠 | `src/apps/input/prototype/` | 原型代码未被路由引用，但与正式面板同名同责，造成维护困惑 | 删除 `prototype/` 目录；如后续需要，从 git 历史恢复 | B |
 | P1-05 | `ConfigPage.tsx` 是 `ConfigApp` 的冗余包装，且无任何路由引用 | `src/pages/command/ConfigPage.tsx` | 孤儿页面，增加认知负担 | 删除 `ConfigPage.tsx` | B |
 | P1-06 | `/input/local-knowledge` 直接渲染独立页面，绕过 `PortalShell` | `src/config/routes.ts:226-230` | 该页面缺少顶部导航与侧边栏，与其他输入舱子页面布局不一致 | 改为 `PortalShell` 内部子路由，由 `InputApp` 分发 | C |
@@ -70,10 +70,10 @@ audit_source:
 | P2-02 | DataBridge `DataAction` 枚举与 `EnvelopeAction` 语义缺口 | `src/databridge/index.ts` | 动作协议不一致，扩展受限 | 统一动作枚举或添加适配映射 | D |
 | P2-03 | 多数 Store 仅本地 setState，未通过 EventBus 广播变更 | `src/store/*` | 跨组件状态同步依赖隐式传递 | 为写操作统一补充 `eventBus.emit`；参考 `engineStore.ts` | D |
 | P2-04 | 页面层未普遍实现 `isVisible` / `isClickable` 计算变量与 Tooltip 反馈 | `src/pages/*` | 交互状态控制薄弱，不符合四步契约 | 在核心页面组件中补全；优先高交互页面 | D |
-| P2-05 | `v6MigrationService.ts` 与 `migrationTransformers.ts` 为一次性 V6 迁移服务 | `src/services/system/v6MigrationService.ts`<br>`src/utils/migrationTransformers.ts` | 迁移完成后代码冗余 | 评估是否已无需迁移：若是则删除；若需保留则标记 `@legacy` 并缩减入口 | E |
+| P2-05 | `v6MigrationService.ts` 与 `migrationTransformers.ts` 为一次性 V6 迁移服务 | `src/services/system/v6MigrationService.ts`<br>`src/services/system/migration/migrationTransformers.ts` | 迁移完成后代码冗余 | 评估是否已无需迁移：若是则删除；若需保留则标记 `@legacy` 并缩减入口 | E |
 | P2-06 | 多个 Mock Provider 长期占位 | `src/services/ai-center/mockAICenterProvider.ts`<br>`src/services/stock-analysis/mockStockAnalysisProvider.ts`<br>`src/services/data-collector/mockDataCollection.ts`<br>`src/services/trading/mockHoldingsData.ts` | 生产与测试边界模糊 | 明确 mock 使用范围；生产路径改为真实 Provider 或统一 mock 开关 | E |
 | P2-07 | 输入舱 `inputService.ts` 仍使用 `MOCK_STOCK_LIBRARY` | `src/services/input/inputService.ts` | 输入舱核心服务依赖 mock 股票库 | 接入真实 `stockApi` 或 `unifiedStockService`，保留降级策略 | E |
-| P2-08 | `src/components/cockpit/providers/MarketDataProvider.tsx` 标为 `@deprecated` | `src/components/cockpit/providers/MarketDataProvider.tsx` | 废弃组件仍占用源码目录 | 删除并替换所有引用 | E |
+| P2-08 | `src/cockpit/providers/MarketDataProvider.tsx` 标为 `@deprecated` | `src/cockpit/providers/MarketDataProvider.tsx` | 废弃组件仍占用源码目录 | 删除并替换所有引用 | E |
 | P2-09 | `cockpit.constants.ts` 含 `DEPRECATED_*` 颜色常量 | `src/constants/cockpit.constants.ts` | 废弃常量可能被误用 | 删除废弃常量；同步替换引用 | E |
 | P2-10 | `v6-competitive-analysis` 等静态 V6 报告目录与 V9 报告并列 | `v6-competitive-analysis/` | 顶层目录 cluttered | 移入 `docs/archives/` 或删除 | E |
 | P2-11 | 部分 Widget 在 V6 迁移资产中存在同名实现 | `v6-ui-assets/source-migration/widgets/widgets/*` | 同 V6 资产清理项 | 随 P1-01 一并删除 | B |
@@ -81,7 +81,7 @@ audit_source:
 | P2-13 | `Dashboard` 在 V6 迁移资产中两个目录各有一份 | `v6-ui-assets/source-migration/pages/Dashboard.tsx`<br>`v6-ui-assets/source-migration/pages-all/Dashboard.tsx` | 重复定义 | 随 P1-01 一并删除 | B |
 | P2-14 | `/trading/signals` 与 `/command/monitor` 子路径未拆分，仍落入 App 内部 | `src/config/routes.ts:214-244` | 路由层次与文档规格存在偏差 | 如需独立页面，拆分独立组件；如设计保留，更新文档说明 | D |
 | P2-15 | `docs/06-routing-specs.md` 已声明“子页面未拆分”为已知偏差，但未明确是否接受 | `docs/06-routing-specs.md` | 规格模糊 | 在文档中明确标注 accepted deviation 及原因 | D |
-| P2-16 | `v6-engine` 测试与 `v6ScoreService` 测试并存，主流程切换后需回归验证 | `src/services/scoring/v6-engine/*.test.ts`<br>`src/tests/services/v6ScoreService.test.ts` | 测试重复、维护成本高 | 切换主入口后，合并/删除旧测试；确保 L-1~L8 覆盖率不下降 | A |
+| P2-16 | `v6-engine` 测试与 `v6ScoreService` 测试并存，主流程切换后需回归验证 | `src/services/scoring/v6-engine/*.test.ts`<br>`src/services/scoring/v6ScoreService.test.ts` | 测试重复、维护成本高 | 切换主入口后，合并/删除旧测试；确保 L-1~L8 覆盖率不下降 | A |
 
 ---
 

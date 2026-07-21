@@ -1,7 +1,7 @@
 ---
 title: doc-style-remediation-plan
 code_version: 2.0.0
-tier: core
+tier: reference
 source: 文档风格统一整改方案（基于 doc-style-standard）
 generated: 2026-07-16
 status: archived

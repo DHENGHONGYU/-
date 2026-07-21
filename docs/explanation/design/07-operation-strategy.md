@@ -97,7 +97,7 @@ Status: Future Reference / Deferred
 | 文档 | 来源 | 状态 | 说明 |
 |------|------|------|------|
 | `../../reference/v10-architecture-alignment.md` | V10 白皮书 | Future Reference / Deferred | V10 框架思想对齐参考 |
-| `docs/explanation/ui-module-alignment.md` | V6 Pro UI 比对 | Future Reference / Deferred | V6 Pro UI 模式吸收参考 |
+| `../../archive/ui-module-alignment.md` | V6 Pro UI 比对 | Future Reference / Deferred | V6 Pro UI 模式吸收参考 |
 | `../../reference/v6-cockpit-ui-reference.md` | v6 UI 参考 | Future Reference / Deferred | v6 可复用 UI 组件总结 |
 | `../trading-core-factors.md` | v6 交易报告 | Future Reference / Deferred | v6 交易因子导入参考 |
 

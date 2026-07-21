@@ -37,7 +37,7 @@ tier: reference
 | 6 | `../../../reports/audit/quality-audit-plan.md` | v1.0.0 | v1.1.0 | 全量审计完成 + 入口补全 |
 | 7 | `../../completeness-profile.md` | — | v1.0.0 | 新建：五层追溯完成度剖面图 |
 | 8 | `../../action-list.md` | — | v1.0.0 | 新建：35 项修复行动清单 |
-| 9 | `scripts/audit-hardcode.ts` | v2.4 | v2.5 | 检测范围扩展（+cockpit/+apps） |
+| 9 | `scripts/audit/audit-hardcode.ts` | v2.4 | v2.5 | 检测范围扩展（+cockpit/+apps） |
 | 10 | `tests/__tests__/scripts/audit-layer-calls.test.ts` | — | 新建 | 11 个测试用例 |
 | 11 | `tests/__tests__/scripts/audit-hardcode.test.ts` | — | 新建 | 13 个测试用例 |
 | 12 | `tests/__tests__/scripts/audit-dead-code.test.ts` | — | 新建 | 12 个测试用例 |

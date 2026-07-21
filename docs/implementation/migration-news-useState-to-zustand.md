@@ -46,7 +46,7 @@ change_log:
 
 ## 3. 变更文件
 
-### `src/pages/news-v6/NewsPage.tsx`
+### `src/pages/analysis/NewsPage.tsx`
 
 **变更清单：**
 

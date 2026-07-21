@@ -54,7 +54,7 @@ V9 当前已通过 ADR-008 引入「第四次工业革命稀缺核心资源」�
 ### 选项 A：新增独立 Store + 独立 Analyzer + dualStrategyEngine 编排（推荐）
 
 - 新增 `hot_sector_scores`、`value_pit_scores` 两个 IndexedDB Store；
-- 新增 `src/services/trading/hotSectorAnalyzer.ts`、`valuePitAnalyzer.ts`、`rotationSignalDetector.ts`；
+- 新增 `src/services/scoring/hotSectorAnalyzer.ts`、`valuePitAnalyzer.ts`、`rotationSignalDetector.ts`；
 - 新增 `src/services/trading/dualStrategyEngine.ts` 作为编排入口；
 - 新增 `src/config/dualStrategyRules.ts` 承载双策略阈值；
 - 驾驶舱新增 `HotSectorWidget`、`ValuePitWidget`，走 `MarketDataProvider` 统一数据管线；
@@ -124,13 +124,13 @@ V9 当前已通过 ADR-008 引入「第四次工业革命稀缺核心资源」�
 
 ### 第二阶段：分析引擎
 
-1. `src/services/trading/hotSectorAnalyzer.ts`：
+1. `src/services/scoring/hotSectorAnalyzer.ts`：
    - 输入：股票列表 + 市场热点；
    - 输出：`HotSectorScore[]`（momentum / sentiment / technical / valuation / composite 五维）。
-2. `src/services/trading/valuePitAnalyzer.ts`：
+2. `src/services/scoring/valuePitAnalyzer.ts`：
    - 输入：股票列表；
    - 输出：`ValuePitScore[]`（catalyst / valuation / chip / rotation / liquidity 五维，rotation 复用 `rotationScoreService.ts`）。
-3. `src/services/trading/rotationSignalDetector.ts`：
+3. `src/services/scoring/rotationSignalDetector.ts`：
    - 对 `ValuePitScore` 候选检测成交量放大 + 资金净流入 + 技术金叉；
    - 命中：生成 `TradingSignal`；
    - 未命中：返回观察池候选。
@@ -212,9 +212,9 @@ V9 当前已通过 ADR-008 引入「第四次工业革命稀缺核心资源」�
 - [ ] 更新 `src/core/databridge.ts`（action 路由）
 - [ ] 更新 `src/data/dataLayer.ts`（Store helper）
 - [ ] 新建 `src/config/dualStrategyRules.ts`
-- [ ] 新建 `src/services/trading/hotSectorAnalyzer.ts`
-- [ ] 新建 `src/services/trading/valuePitAnalyzer.ts`
-- [ ] 新建 `src/services/trading/rotationSignalDetector.ts`
+- [ ] 新建 `src/services/scoring/hotSectorAnalyzer.ts`
+- [ ] 新建 `src/services/scoring/valuePitAnalyzer.ts`
+- [ ] 新建 `src/services/scoring/rotationSignalDetector.ts`
 - [ ] 新建 `src/services/trading/dualStrategyEngine.ts`
 - [ ] 新建 `src/cockpit/widgets/HotSectorWidget.tsx`
 - [ ] 新建 `src/cockpit/widgets/ValuePitWidget.tsx`

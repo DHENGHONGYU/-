@@ -357,7 +357,7 @@ interface StandardEnvelope {
 | **D15** | **评分算法能力降级** | `src/services/scoring/v6ScoreService.ts` 仅启发式计算 + 随机数降级，缺少 LLM 集成与报告生成 | Phase 2 升级评分引擎，接入真实数据与 LLM |
 | **D16** | **缺少图表组件库（规格已起草，代码待引入）** | `src/components/ui/` 无 `lightweight-charts` / `recharts`；`docs/implementation/chart-integration.md` 已定义选型、API 与 DataFlow 对接 | Phase 2 引入图表组件 |
 | **D17** | **`rotationScoreService.ts` 已实现五因子十六指标模型，上层 `SectorAnalysisPage` 待充分接入** | 板块轮动评分已可计算，上层展示与调用待完善 | Phase 2 在 `SectorAnalysisPage` 接入轮动评分 |
-| **D18** | **缺少操作反馈闭环（规格已起草，代码待引入）** | `src/components/ui/Toast.tsx` 已提供基础组件；`docs/implementation/feedback-loop-spec.md` 已定义 FeedbackService 与 EventBus 集成 | Phase 2 完善反馈机制 |
+| **D18** | **缺少操作反馈闭环（规格已起草，代码待引入）** | `src/components/atoms/Toast.tsx` 已提供基础组件；`docs/implementation/feedback-loop-spec.md` 已定义 FeedbackService 与 EventBus 集成 | Phase 2 完善反馈机制 |
 | **D19** | **`ErrorBoundary.tsx` 已存在并被 `App.tsx` 使用，Widget 级隔离待专项接入（规格已起草）** | 全局错误边界已落地；`docs/implementation/widget-error-handling.md` 已定义 Widget 级包裹与降级 UI | Phase 2 在 Widget 渲染管线中接入 ErrorBoundary |
 | **D20** | **缺少热门板块与价值洼地双策略体系** | 策略引擎仅有主题/价值/热门动量三分类，缺少用户规格中的 HotSectorScore / ValuePitScore 双评分输出与轮动信号检测 | Phase 2 新增独立 Store、Analyzer、Detector、Widget；详见 ADR-009 |
 
@@ -423,14 +423,14 @@ interface StandardEnvelope {
 | `docs/implementation/implementation-governance.md` | 实施治理与 ADR 规范 |
 | `docs/implementation/v9-input-cabin-strategy-report.md` | 输入舱升级策略报告 |
 | `docs/implementation/v10-architecture-alignment.md` | V10 白皮书对齐报告 |
-| `docs/implementation/ui-module-alignment.md` | V6 Pro UI 模块对齐报告 |
+| `../archive/ui-module-alignment.md` | V6 Pro UI 模块对齐报告 |
 | `docs/implementation/v6-cockpit-ui-reference.md` | v6 UI 参考 |
 | `docs/implementation/trading-core-factors.md` | 交易核心因子导入 |
 | `docs/implementation/chart-integration.md` | 图表组件技术选型与 DataBridge 对接 |
 | `docs/implementation/feedback-loop-spec.md` | 操作反馈闭环与 EventBus 集成 |
 | `docs/implementation/widget-error-handling.md` | Widget 错误边界与降级 UI |
 | `docs/implementation/pwa-offline-guide.md` | PWA Service Worker 与离线缓存 |
-| `docs/implementation/adr/ADR-001~009.md` | 架构决策记录 |
+| `../archive/ADR-001~009.md` | 架构决策记录 |
 | `CHANGELOG.md` | 版本变更日志 |
 
 ---

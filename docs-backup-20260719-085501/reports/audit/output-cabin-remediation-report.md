@@ -1,12 +1,12 @@
 ---
-title: Êä³ö²ÕÄ£¿éÎ´ÏÔÊ¾ÎÊÌâ ¡ª Õû¸Ä±¨¸æ
+title: è¾“å‡ºèˆ±æ¨¡å—æœªæ˜¾ç¤ºé—®é¢˜ â€” æ•´æ”¹æŠ¥å‘Š
 type: reports
 domain: qa
 phase: testing
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "±¨¸æ±àºÅ: V9-OUTPUT-CABIN-REMEDIATION-20260704 ÒÀ¾Ý: output-cabin-troubleshooting-report.md µÚ 5.2 ½Ú¡¸ºóÐø½¨Òé¡¹..."
+summary: "æŠ¥å‘Šç¼–å·: V9-OUTPUT-CABIN-REMEDIATION-20260704 ä¾æ®: output-cabin-troubleshooting-report.md ç¬¬ 5.2 èŠ‚ã€ŒåŽç»­å»ºè®®ã€..."
 tags: [qa, input-cabin, remediation]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -17,61 +17,61 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# Êä³ö²ÕÄ£¿éÎ´ÏÔÊ¾ÎÊÌâ ¡ª Õû¸Ä±¨¸æ
+# è¾“å‡ºèˆ±æ¨¡å—æœªæ˜¾ç¤ºé—®é¢˜ â€” æ•´æ”¹æŠ¥å‘Š
 
-> **±¨¸æ±àºÅ**: V9-OUTPUT-CABIN-REMEDIATION-20260704  
-> **ÒÀ¾Ý**: output-cabin-troubleshooting-report.md µÚ 5.2 ½Ú¡¸ºóÐø½¨Òé¡¹  
+> **æŠ¥å‘Šç¼–å·**: V9-OUTPUT-CABIN-REMEDIATION-20260704  
+> **ä¾æ®**: output-cabin-troubleshooting-report.md ç¬¬ 5.2 èŠ‚ã€ŒåŽç»­å»ºè®®ã€  
 > **Date**: 2026-07-04  
-> **Õû¸Ä×´Ì¬**: ? ÒÑÍê³É
+> **æ•´æ”¹çŠ¶æ€**: ? å·²å®Œæˆ
 
 ---
 
-## Ä¿Â¼
+## ç›®å½•
 
-1. [Õû¸Ä×ÜÀÀ](#1-Õû¸Ä×ÜÀÀ)
-2. [Õû¸ÄÏî 1: CI Â·ÓÉÒ»ÖÂÐÔ×Ô¶¯¼ì²é](#2-Õû¸ÄÏî-1-ci-Â·ÓÉÒ»ÖÂÐÔ×Ô¶¯¼ì²é)
-3. [Õû¸ÄÏî 2: Í³Ò» HUB_APPS Éè¼Æ](#3-Õû¸ÄÏî-2-Í³Ò»-hub_apps-Éè¼Æ)
-4. [Õû¸ÄÏî 3: ÀúÊ· tsc/lint ÎÊÌâ·ÖÅúÕû¸Ä¼Æ»®](#4-Õû¸ÄÏî-3-ÀúÊ·-tsclint-ÎÊÌâ·ÖÅúÕû¸Ä¼Æ»®)
-5. [Õû¸ÄÏî 4: ²¹³äÊä³ö²Õ e2e ²âÊÔ](#5-Õû¸ÄÏî-4-²¹³äÊä³ö²Õ-e2e-²âÊÔ)
-6. [Õû¸ÄÎÄ¼þÇåµ¥](#6-Õû¸ÄÎÄ¼þÇåµ¥)
-7. [ÑéÖ¤½á¹û](#7-ÑéÖ¤½á¹û)
+1. [æ•´æ”¹æ€»è§ˆ](#1-æ•´æ”¹æ€»è§ˆ)
+2. [æ•´æ”¹é¡¹ 1: CI è·¯ç”±ä¸€è‡´æ€§è‡ªåŠ¨æ£€æŸ¥](#2-æ•´æ”¹é¡¹-1-ci-è·¯ç”±ä¸€è‡´æ€§è‡ªåŠ¨æ£€æŸ¥)
+3. [æ•´æ”¹é¡¹ 2: ç»Ÿä¸€ HUB_APPS è®¾è®¡](#3-æ•´æ”¹é¡¹-2-ç»Ÿä¸€-hub_apps-è®¾è®¡)
+4. [æ•´æ”¹é¡¹ 3: åŽ†å² tsc/lint é—®é¢˜åˆ†æ‰¹æ•´æ”¹è®¡åˆ’](#4-æ•´æ”¹é¡¹-3-åŽ†å²-tsclint-é—®é¢˜åˆ†æ‰¹æ•´æ”¹è®¡åˆ’)
+5. [æ•´æ”¹é¡¹ 4: è¡¥å……è¾“å‡ºèˆ± e2e æµ‹è¯•](#5-æ•´æ”¹é¡¹-4-è¡¥å……è¾“å‡ºèˆ±-e2e-æµ‹è¯•)
+6. [æ•´æ”¹æ–‡ä»¶æ¸…å•](#6-æ•´æ”¹æ–‡ä»¶æ¸…å•)
+7. [éªŒè¯ç»“æžœ](#7-éªŒè¯ç»“æžœ)
 
 ---
 
-## 1. Õû¸Ä×ÜÀÀ
+## 1. æ•´æ”¹æ€»è§ˆ
 
-| ±àºÅ | Õû¸ÄÏî | ÓÅÏÈ¼¶ | ×´Ì¬ | ²ú³öÎï |
+| ç¼–å· | æ•´æ”¹é¡¹ | ä¼˜å…ˆçº§ | çŠ¶æ€ | äº§å‡ºç‰© |
 |------|--------|--------|------|--------|
-| 1 | CI Â·ÓÉÒ»ÖÂÐÔ×Ô¶¯¼ì²é | P0 | ? ÒÑÍê³É | `scripts/verify-all-routes.ts`¡¢`.github/workflows/quality-check.yml`¡¢`package.json` |
-| 2 | Í³Ò» HUB_APPS Éè¼Æ | P1 | ? ÒÑÍê³É | `src/portal/PortalShell.tsx`£¨ÅÅ²é½×¶ÎÒÑÐÞ¸´£© |
-| 3 | ÀúÊ· tsc/lint ÎÊÌâ·ÖÅúÕû¸Ä¼Æ»® | P2 | ? ¼Æ»®ÒÑÖÆ¶¨ | ±¾±¨¸æµÚ 4 ½Ú |
-| 4 | ²¹³äÊä³ö²Õ e2e ²âÊÔ | P1 | ? ÒÑÍê³É | `e2e/output-cabin.spec.ts`£¨20 ¸ö²âÊÔÓÃÀý£© |
+| 1 | CI è·¯ç”±ä¸€è‡´æ€§è‡ªåŠ¨æ£€æŸ¥ | P0 | ? å·²å®Œæˆ | `scripts/verify-all-routes.ts`ã€`.github/workflows/quality-check.yml`ã€`package.json` |
+| 2 | ç»Ÿä¸€ HUB_APPS è®¾è®¡ | P1 | ? å·²å®Œæˆ | `src/portal/PortalShell.tsx`ï¼ˆæŽ’æŸ¥é˜¶æ®µå·²ä¿®å¤ï¼‰ |
+| 3 | åŽ†å² tsc/lint é—®é¢˜åˆ†æ‰¹æ•´æ”¹è®¡åˆ’ | P2 | ? è®¡åˆ’å·²åˆ¶å®š | æœ¬æŠ¥å‘Šç¬¬ 4 èŠ‚ |
+| 4 | è¡¥å……è¾“å‡ºèˆ± e2e æµ‹è¯• | P1 | ? å·²å®Œæˆ | `e2e/output-cabin.spec.ts`ï¼ˆ20 ä¸ªæµ‹è¯•ç”¨ä¾‹ï¼‰ |
 
 ---
 
-## 2. Õû¸ÄÏî 1: CI Â·ÓÉÒ»ÖÂÐÔ×Ô¶¯¼ì²é
+## 2. æ•´æ”¹é¡¹ 1: CI è·¯ç”±ä¸€è‡´æ€§è‡ªåŠ¨æ£€æŸ¥
 
-### 2.1 ÎÊÌâÃèÊö
+### 2.1 é—®é¢˜æè¿°
 
-ÅÅ²é±¨¸æÖÐ·¢ÏÖ¸ùÒòÊÇ `ROUTE_REGISTRY` È±ÉÙÊä³ö²Õ×ÓÂ·¾¶×¢²á¡£Îª±ÜÃâÎ´À´ÐÂÔöÒ³ÃæÊ±ÔÙ´ÎÒÅÂ©Â·ÓÉ×¢²á£¬ÐèÔÚ CI ÖÐ¼ÓÈë×Ô¶¯¼ì²é¡£
+æŽ’æŸ¥æŠ¥å‘Šä¸­å‘çŽ°æ ¹å› æ˜¯ `ROUTE_REGISTRY` ç¼ºå°‘è¾“å‡ºèˆ±å­è·¯å¾„æ³¨å†Œã€‚ä¸ºé¿å…æœªæ¥æ–°å¢žé¡µé¢æ—¶å†æ¬¡é—æ¼è·¯ç”±æ³¨å†Œï¼Œéœ€åœ¨ CI ä¸­åŠ å…¥è‡ªåŠ¨æ£€æŸ¥ã€‚
 
-### 2.2 ÊµÊ©·½°¸
+### 2.2 å®žæ–½æ–¹æ¡ˆ
 
-#### 2.2.1 ´´½¨Í¨ÓÃÂ·ÓÉÑéÖ¤½Å±¾
+#### 2.2.1 åˆ›å»ºé€šç”¨è·¯ç”±éªŒè¯è„šæœ¬
 
-**ÎÄ¼þ**: `scripts/verify-all-routes.ts`
+**æ–‡ä»¶**: `scripts/verify-all-routes.ts`
 
-¸²¸ÇËùÓÐ 6 ¸ö²ÕÊÒ£¨input/analysis/trading/output/command/portal£©¹² 32 ÌõÔ¤ÆÚÂ·¾¶£¬Ö´ÐÐÈýÏî¼ì²é£º
+è¦†ç›–æ‰€æœ‰ 6 ä¸ªèˆ±å®¤ï¼ˆinput/analysis/trading/output/command/portalï¼‰å…± 32 æ¡é¢„æœŸè·¯å¾„ï¼Œæ‰§è¡Œä¸‰é¡¹æ£€æŸ¥ï¼š
 
-1. **ÖØ¸´Â·¾¶¼ì²é**: ¼ì²â `ROUTE_REGISTRY` ÖÐÊÇ·ñÓÐÖØ¸´×¢²á
-2. **²ÕÊÒÂ·¾¶¸²¸Ç¼ì²é**: ÖðÒ»ÑéÖ¤Ã¿ÌõÔ¤ÆÚÂ·¾¶ÊÇ·ñÒÑÔÚ `ROUTE_REGISTRY` ×¢²á
-3. **¹Â¶ùÂ·ÓÉ¼ì²é**: ¼ì²â `ROUTE_REGISTRY` ÖÐÒÑ×¢²áµ«Î´ÔÚÔ¤ÆÚÁÐ±íÖÐµÄÂ·¾¶£¨¾¯¸æ£¬²»×èÈû CI£©
+1. **é‡å¤è·¯å¾„æ£€æŸ¥**: æ£€æµ‹ `ROUTE_REGISTRY` ä¸­æ˜¯å¦æœ‰é‡å¤æ³¨å†Œ
+2. **èˆ±å®¤è·¯å¾„è¦†ç›–æ£€æŸ¥**: é€ä¸€éªŒè¯æ¯æ¡é¢„æœŸè·¯å¾„æ˜¯å¦å·²åœ¨ `ROUTE_REGISTRY` æ³¨å†Œ
+3. **å­¤å„¿è·¯ç”±æ£€æŸ¥**: æ£€æµ‹ `ROUTE_REGISTRY` ä¸­å·²æ³¨å†Œä½†æœªåœ¨é¢„æœŸåˆ—è¡¨ä¸­çš„è·¯å¾„ï¼ˆè­¦å‘Šï¼Œä¸é˜»å¡ž CIï¼‰
 
-#### 2.2.2 ¸üÐÂ CI Á÷Ë®Ïß
+#### 2.2.2 æ›´æ–° CI æµæ°´çº¿
 
-**ÎÄ¼þ**: `.github/workflows/quality-check.yml`
+**æ–‡ä»¶**: `.github/workflows/quality-check.yml`
 
-ÐÂÔö `route-verify` job£¬Óë `lint`/`typecheck`/`test`/`audit` ²¢ÐÐÔËÐÐ£º
+æ–°å¢ž `route-verify` jobï¼Œä¸Ž `lint`/`typecheck`/`test`/`audit` å¹¶è¡Œè¿è¡Œï¼š
 
 ```yaml
 route-verify:
@@ -86,66 +86,66 @@ route-verify:
     - run: npx tsx scripts/verify-all-routes.ts
 ```
 
-#### 2.2.3 ¼¯³Éµ½ npm audit ÃüÁî
+#### 2.2.3 é›†æˆåˆ° npm audit å‘½ä»¤
 
-**ÎÄ¼þ**: `package.json`
+**æ–‡ä»¶**: `package.json`
 
-ÐÂÔö `audit:routes` ½Å±¾²¢½«ÆäÄÉÈë `audit` ¾ÛºÏÃüÁî£º
+æ–°å¢ž `audit:routes` è„šæœ¬å¹¶å°†å…¶çº³å…¥ `audit` èšåˆå‘½ä»¤ï¼š
 
 ```json
 "audit:routes": "tsx scripts/verify-all-routes.ts",
 "audit": "npm run audit:layers && npm run audit:hardcode && npm run audit:deadcode && npm run audit:docs && npm run audit:routes"
 ```
 
-### 2.3 ÑéÖ¤½á¹û
+### 2.3 éªŒè¯ç»“æžœ
 
-Ö´ÐÐ `npx tsx scripts/verify-all-routes.ts`£º
+æ‰§è¡Œ `npx tsx scripts/verify-all-routes.ts`ï¼š
 
 ```
-=== 1. ÖØ¸´Â·¾¶¼ì²é ===
-? ÎÞÖØ¸´Â·¾¶
+=== 1. é‡å¤è·¯å¾„æ£€æŸ¥ ===
+? æ— é‡å¤è·¯å¾„
 
-=== 2. ²ÕÊÒÂ·¾¶¸²¸Ç¼ì²é ===
-¸²¸Ç: 32/32 (100.0%)
+=== 2. èˆ±å®¤è·¯å¾„è¦†ç›–æ£€æŸ¥ ===
+è¦†ç›–: 32/32 (100.0%)
 
-=== 3. ¹Â¶ùÂ·ÓÉ¼ì²é ===
-?? ·¢ÏÖ 1 Ìõ¹Â¶ùÂ·ÓÉ£¨/analysis/stock-score/:symbol Îª¶¯Ì¬Â·ÓÉ£¬Ô¤ÆÚÐÐÎª£©
+=== 3. å­¤å„¿è·¯ç”±æ£€æŸ¥ ===
+?? å‘çŽ° 1 æ¡å­¤å„¿è·¯ç”±ï¼ˆ/analysis/stock-score/:symbol ä¸ºåŠ¨æ€è·¯ç”±ï¼Œé¢„æœŸè¡Œä¸ºï¼‰
 
-=== »ã×Ü ===
-ROUTE_REGISTRY ×ÜÂ·ÓÉÊý: 33
-? Â·ÓÉÒ»ÖÂÐÔ¼ì²éÍ¨¹ý¡£
+=== æ±‡æ€» ===
+ROUTE_REGISTRY æ€»è·¯ç”±æ•°: 33
+? è·¯ç”±ä¸€è‡´æ€§æ£€æŸ¥é€šè¿‡ã€‚
 ```
 
 ---
 
-## 3. Õû¸ÄÏî 2: Í³Ò» HUB_APPS Éè¼Æ
+## 3. æ•´æ”¹é¡¹ 2: ç»Ÿä¸€ HUB_APPS è®¾è®¡
 
-### 3.1 ÎÊÌâÃèÊö
+### 3.1 é—®é¢˜æè¿°
 
-ÅÅ²éÖÐ·¢ÏÖ `PortalShell` µÄ `HUB_APPS.output` ¸´ÓÃ `OutputApp`£¨Â·ÓÉ·Ö·¢×é¼þ£©£¬¶øÆäËû²Õ¾ùÊ¹ÓÃ¶ÀÁ¢µÄ `*HubPage`£¨Ê×Ò³¿¨Æ¬×é¼þ£©£¬µ¼ÖÂ¼Ü¹¹²»Ò»ÖÂÇÒÔÚ `/output/hub` ·ÃÎÊÊ±äÖÈ¾¿Õ°×¡£
+æŽ’æŸ¥ä¸­å‘çŽ° `PortalShell` çš„ `HUB_APPS.output` å¤ç”¨ `OutputApp`ï¼ˆè·¯ç”±åˆ†å‘ç»„ä»¶ï¼‰ï¼Œè€Œå…¶ä»–èˆ±å‡ä½¿ç”¨ç‹¬ç«‹çš„ `*HubPage`ï¼ˆé¦–é¡µå¡ç‰‡ç»„ä»¶ï¼‰ï¼Œå¯¼è‡´æž¶æž„ä¸ä¸€è‡´ä¸”åœ¨ `/output/hub` è®¿é—®æ—¶æ¸²æŸ“ç©ºç™½ã€‚
 
-### 3.2 ÊµÊ©Çé¿ö
+### 3.2 å®žæ–½æƒ…å†µ
 
-**ÔÚÅÅ²é½×¶ÎÒÑÍê³ÉÐÞ¸´**£¬ÐÞ¸ÄÎ»ÓÚ `src/portal/PortalShell.tsx`£º
+**åœ¨æŽ’æŸ¥é˜¶æ®µå·²å®Œæˆä¿®å¤**ï¼Œä¿®æ”¹ä½äºŽ `src/portal/PortalShell.tsx`ï¼š
 
 ```tsx
-// ÐÞ¸´Ç°
+// ä¿®å¤å‰
 const HUB_APPS = {
-  output: OutputApp,  // ²»Ò»ÖÂ
+  output: OutputApp,  // ä¸ä¸€è‡´
 }
 
-// ÐÞ¸´ºó
+// ä¿®å¤åŽ
 const OutputHubPage = React.lazy(() => import('@/pages/output/OutputHubPage'))
 const HUB_APPS = {
-  output: OutputHubPage,  // ÓëÆäËû²ÕÒ»ÖÂ
+  output: OutputHubPage,  // ä¸Žå…¶ä»–èˆ±ä¸€è‡´
 }
 ```
 
-### 3.3 ÑéÖ¤·½·¨
+### 3.3 éªŒè¯æ–¹æ³•
 
-ËùÓÐ²ÕµÄ `HUB_APPS` Ó³ÉäÏÖÒÑÍ³Ò»Îª `*HubPage` Ä£Ê½£º
+æ‰€æœ‰èˆ±çš„ `HUB_APPS` æ˜ å°„çŽ°å·²ç»Ÿä¸€ä¸º `*HubPage` æ¨¡å¼ï¼š
 
-| ²ÕÊÒ | HUB_APPS Öµ | ¶ÔÓ¦ÎÄ¼þ |
+| èˆ±å®¤ | HUB_APPS å€¼ | å¯¹åº”æ–‡ä»¶ |
 |------|-------------|----------|
 | input | `InputHubPage` | `src/apps/input/InputApp.tsx` |
 | analysis | `AnalysisHubPage` | `src/apps/analysis/AnalysisApp.tsx` |
@@ -155,219 +155,219 @@ const HUB_APPS = {
 
 ---
 
-## 4. Õû¸ÄÏî 3: ÀúÊ· tsc/lint ÎÊÌâ·ÖÅúÕû¸Ä¼Æ»®
+## 4. æ•´æ”¹é¡¹ 3: åŽ†å² tsc/lint é—®é¢˜åˆ†æ‰¹æ•´æ”¹è®¡åˆ’
 
-### 4.1 Õû¸ÄÇ°×´Ì¬
+### 4.1 æ•´æ”¹å‰çŠ¶æ€
 
-| Ö¸±ê | Õû¸ÄÇ° | Õû¸Äºó |
+| æŒ‡æ ‡ | æ•´æ”¹å‰ | æ•´æ”¹åŽ |
 |------|--------|--------|
-| tsc ´íÎóÊý£¨·Ç²âÊÔÎÄ¼þ£© | 562 | **0** |
-| tsc ´íÎóÊý£¨²âÊÔÎÄ¼þ£© | ~50 | 53£¨ÀúÊ·ÒÅÁô£© |
-| ESLint ¾¯¸æÊý | ~2,711 | 1£¨unused eslint-disable£© |
-| ESLint ´íÎóÊý | ~81 | 0 |
+| tsc é”™è¯¯æ•°ï¼ˆéžæµ‹è¯•æ–‡ä»¶ï¼‰ | 562 | **0** |
+| tsc é”™è¯¯æ•°ï¼ˆæµ‹è¯•æ–‡ä»¶ï¼‰ | ~50 | 53ï¼ˆåŽ†å²é—ç•™ï¼‰ |
+| ESLint è­¦å‘Šæ•° | ~2,711 | 1ï¼ˆunused eslint-disableï¼‰ |
+| ESLint é”™è¯¯æ•° | ~81 | 0 |
 
-### 4.2 ÒÑÍê³ÉµÄÐÞ¸´
+### 4.2 å·²å®Œæˆçš„ä¿®å¤
 
-ËÄÅúÕû¸ÄÈ«²¿Íê³É£¬Éæ¼° 30+ ¸öÎÄ¼þµÄÐÞ¸Ä£º
+å››æ‰¹æ•´æ”¹å…¨éƒ¨å®Œæˆï¼Œæ¶‰åŠ 30+ ä¸ªæ–‡ä»¶çš„ä¿®æ”¹ï¼š
 
-#### µÚÒ»Åú£¨P0 ×èÈû¼¶£©: ºËÐÄÀàÐÍÓëÊý¾Ý²ã
+#### ç¬¬ä¸€æ‰¹ï¼ˆP0 é˜»å¡žçº§ï¼‰: æ ¸å¿ƒç±»åž‹ä¸Žæ•°æ®å±‚
 
-| ÐÞ¸Ä | ÎÄ¼þ | ËµÃ÷ |
+| ä¿®æ”¹ | æ–‡ä»¶ | è¯´æ˜Ž |
 |------|------|------|
-| ÐÂÔö DB Store ×¢²á | `src/config/dbConfig.ts` | STORE_NAME/PORTFOLIO_STORE_NAME ÐÂÔö 5 ¸ö´æ´¢£»ENVELOPE_ACTION ÐÂÔö 3 ¸ö¶¯×÷£»ENVELOPE_TARGET ÐÂÔö 5 ¸öÄ¿±ê£»MODULE_ID ÐÂÔö 2 ¸öÌõÄ¿£»ACL_MATRIX ÐÂÔö 7 ¸öÈ¨ÏÞÅäÖÃ |
-| ÐÂÔö DataLayer Store | `src/data/dataLayer.ts` | ÐÂÔö executionPlanStore¡¢executionLogStore¡¢missingReportStore¡¢tradeReviewStore¡¢portfolioStore |
-| ²¹È«ÀàÐÍ¶¨Òå | `src/data/types.ts` | ExecutionPlan ÐÂÔö signalId/risk.warnings µÈ×Ö¶Î£»ÐÂÔö ExecutionLog/MissingReport/NewsBookmark ÀàÐÍ |
-| ÐÞ¸´ºËÐÄ¹¤¾ß | `src/core/dataflow/dataflowTypes.ts` | CacheStats ²¹È« hits/misses/size/totalRequests/hitRate µÈ×Ö¶Î |
-| ÐÞ¸´ºËÐÄ¹¤¾ß | `src/core/databridge.ts` | marketEnv ¿ÉÑ¡Á´±£»¤ |
+| æ–°å¢ž DB Store æ³¨å†Œ | `src/config/dbConfig.ts` | STORE_NAME/PORTFOLIO_STORE_NAME æ–°å¢ž 5 ä¸ªå­˜å‚¨ï¼›ENVELOPE_ACTION æ–°å¢ž 3 ä¸ªåŠ¨ä½œï¼›ENVELOPE_TARGET æ–°å¢ž 5 ä¸ªç›®æ ‡ï¼›MODULE_ID æ–°å¢ž 2 ä¸ªæ¡ç›®ï¼›ACL_MATRIX æ–°å¢ž 7 ä¸ªæƒé™é…ç½® |
+| æ–°å¢ž DataLayer Store | `src/data/dataLayer.ts` | æ–°å¢ž executionPlanStoreã€executionLogStoreã€missingReportStoreã€tradeReviewStoreã€portfolioStore |
+| è¡¥å…¨ç±»åž‹å®šä¹‰ | `src/data/types.ts` | ExecutionPlan æ–°å¢ž signalId/risk.warnings ç­‰å­—æ®µï¼›æ–°å¢ž ExecutionLog/MissingReport/NewsBookmark ç±»åž‹ |
+| ä¿®å¤æ ¸å¿ƒå·¥å…· | `src/core/dataflow/dataflowTypes.ts` | CacheStats è¡¥å…¨ hits/misses/size/totalRequests/hitRate ç­‰å­—æ®µ |
+| ä¿®å¤æ ¸å¿ƒå·¥å…· | `src/core/databridge.ts` | marketEnv å¯é€‰é“¾ä¿æŠ¤ |
 
-#### µÚ¶þÅú£¨P1 ÑÏÖØ¼¶£©: ·þÎñ²ãÀàÐÍÐÞ¸´
+#### ç¬¬äºŒæ‰¹ï¼ˆP1 ä¸¥é‡çº§ï¼‰: æœåŠ¡å±‚ç±»åž‹ä¿®å¤
 
-| ÐÞ¸Ä | ÎÄ¼þ | ËµÃ÷ |
+| ä¿®æ”¹ | æ–‡ä»¶ | è¯´æ˜Ž |
 |------|------|------|
-| ÐÞ¸´Ö´ÐÐ·þÎñ | `src/services/execution/*.ts` | executionPlanService/executionLogService ÀàÐÍÇ©ÃûÓë store ¶ÔÆë |
-| ÐÞ¸´ÏµÍ³¼à¿Ø | `src/services/system/*.ts` | ÐÂÔö EngineMonitorSnapshot/SystemMonitorSnapshot/AgentMetricsSummary ÀàÐÍ |
-| ÐÞ¸´½»Ò×·þÎñ | `src/services/trading/*.ts` | Signal ÐÂÔö strategy ×Ö¶Î£»trade.constants ÐÂÔö¶à¸ö³£Á¿ |
-| ÐÞ¸´²É¼¯·þÎñ | `src/services/data-collector/*.ts` | missingReportDetector ÀàÐÍ¶ÔÆë£»MarketDataAdapter Î¬¶È²¹È« |
-| ÐÞ¸´ÆÀ·Ö·þÎñ | `src/services/scoring/*.ts` | hotSectorAnalyzer ²¹È« composite£»rotationSignalDetector ²¹È« strategy |
-| ÐÞ¸´µ¼³£º¯Êý | `src/services/fetcher/strategyDataAdapter.ts` | ÐÂÔö toSafeString ¸¨Öúº¯Êý |
+| ä¿®å¤æ‰§è¡ŒæœåŠ¡ | `src/services/execution/*.ts` | executionPlanService/executionLogService ç±»åž‹ç­¾åä¸Ž store å¯¹é½ |
+| ä¿®å¤ç³»ç»Ÿç›‘æŽ§ | `src/services/system/*.ts` | æ–°å¢ž EngineMonitorSnapshot/SystemMonitorSnapshot/AgentMetricsSummary ç±»åž‹ |
+| ä¿®å¤äº¤æ˜“æœåŠ¡ | `src/services/trading/*.ts` | Signal æ–°å¢ž strategy å­—æ®µï¼›trade.constants æ–°å¢žå¤šä¸ªå¸¸é‡ |
+| ä¿®å¤é‡‡é›†æœåŠ¡ | `src/services/data-collector/*.ts` | missingReportDetector ç±»åž‹å¯¹é½ï¼›MarketDataAdapter ç»´åº¦è¡¥å…¨ |
+| ä¿®å¤è¯„åˆ†æœåŠ¡ | `src/services/scoring/*.ts` | hotSectorAnalyzer è¡¥å…¨ compositeï¼›rotationSignalDetector è¡¥å…¨ strategy |
+| ä¿®å¤å¯¼å¸¸å‡½æ•° | `src/services/fetcher/strategyDataAdapter.ts` | æ–°å¢ž toSafeString è¾…åŠ©å‡½æ•° |
 
-#### µÚÈýÅú£¨P2 ÓÅ»¯¼¶£©: Store ²ãÓë×é¼þ²ã
+#### ç¬¬ä¸‰æ‰¹ï¼ˆP2 ä¼˜åŒ–çº§ï¼‰: Store å±‚ä¸Žç»„ä»¶å±‚
 
-| ÐÞ¸Ä | ÎÄ¼þ | ËµÃ÷ |
+| ä¿®æ”¹ | æ–‡ä»¶ | è¯´æ˜Ž |
 |------|------|------|
-| ÐÞ¸´Ö´ÐÐStore | `src/store/executionStore.ts` | RiskCheckItem ²¹È«×Ö¶Î£»createPlan ²¹È«±ØÌî×Ö¶Î£»ENVELOPE_ACTION ¶ÔÆë |
-| ÐÞ¸´³Ö²ÖStore | `src/store/holdingsStore.ts` | fetchData/executeTrade/exportCSV ·½·¨Ç©ÃûÓëµ÷ÓÃ·½¶ÔÆë |
-| ÐÞ¸´ÐÅºÅStore | `src/store/signalStore.ts` | ENVELOPE_ACTION.saveV6Score ¡ú saveScores |
-| ÐÞ¸´¶©µ¥Store | `src/store/orderStore.ts` | MODULE_ID.orderstore ¶ÔÆë |
-| ÒýÇæStore | `src/store/engineStore.ts` | layerStatuses ÀàÐÍÀ©Õ¹£»startedAt/healthSummary ²¹È« |
-| ÐÞ¸´×é¼þ | `src/components/system/*.tsx` | EngineStatusCard/AgentTaskList ÊôÐÔ¶ÔÆë |
-| ÐÞ¸´UI×é¼þ | `src/components/ui/*.tsx` | Badge ÐÂÔö success/warning ±äÌå£»Button ÐÂÔö success/default ±äÌå |
-| ÐÞ¸´Ò³Ãæ | `src/pages/trading/HoldingsPage.tsx` | Óë holdingsStore Ç©Ãû¶ÔÆë |
-| ÐÞ¸´Portal | `src/portal/PortalShell.tsx` | HUB_APPS ·ºÐÍÀàÐÍÐÞÕý |
+| ä¿®å¤æ‰§è¡ŒStore | `src/store/executionStore.ts` | RiskCheckItem è¡¥å…¨å­—æ®µï¼›createPlan è¡¥å…¨å¿…å¡«å­—æ®µï¼›ENVELOPE_ACTION å¯¹é½ |
+| ä¿®å¤æŒä»“Store | `src/store/holdingsStore.ts` | fetchData/executeTrade/exportCSV æ–¹æ³•ç­¾åä¸Žè°ƒç”¨æ–¹å¯¹é½ |
+| ä¿®å¤ä¿¡å·Store | `src/store/signalStore.ts` | ENVELOPE_ACTION.saveV6Score â†’ saveScores |
+| ä¿®å¤è®¢å•Store | `src/store/orderStore.ts` | MODULE_ID.orderstore å¯¹é½ |
+| å¼•æ“ŽStore | `src/store/engineStore.ts` | layerStatuses ç±»åž‹æ‰©å±•ï¼›startedAt/healthSummary è¡¥å…¨ |
+| ä¿®å¤ç»„ä»¶ | `src/components/system/*.tsx` | EngineStatusCard/AgentTaskList å±žæ€§å¯¹é½ |
+| ä¿®å¤UIç»„ä»¶ | `src/components/ui/*.tsx` | Badge æ–°å¢ž success/warning å˜ä½“ï¼›Button æ–°å¢ž success/default å˜ä½“ |
+| ä¿®å¤é¡µé¢ | `src/pages/trading/HoldingsPage.tsx` | ä¸Ž holdingsStore ç­¾åå¯¹é½ |
+| ä¿®å¤Portal | `src/portal/PortalShell.tsx` | HUB_APPS æ³›åž‹ç±»åž‹ä¿®æ­£ |
 
-#### µÚËÄÅú£¨P3 ÇåÀí¼¶£©: ³£Á¿ÓëÀàÐÍÊØÎÀ
+#### ç¬¬å››æ‰¹ï¼ˆP3 æ¸…ç†çº§ï¼‰: å¸¸é‡ä¸Žç±»åž‹å®ˆå«
 
-| ÐÞ¸Ä | ÎÄ¼þ | ËµÃ÷ |
+| ä¿®æ”¹ | æ–‡ä»¶ | è¯´æ˜Ž |
 |------|------|------|
-| ÐÂÔö³£Á¿ | `src/constants/health.constants.ts` | MONITOR_INTERVALS ÐÂÔö AGENT_HEALTH/SYSTEM_SNAPSHOT£»V6_ENGINE_LAYERS ¸ÄÎª¶ÔÏóÊý×é£»ÐÂÔö SYSTEM_ARCHITECTURE_LAYERS |
-| ÐÂÔö³£Á¿ | `src/constants/trade.constants.ts` | ÐÂÔö PERCENTAGE_BASE/MAX_SCORE/MIN_SCORE/PROFIT_LOSS_RATIO_UNBOUNDED/LOG_TRUNCATE_LENGTH |
-| ÐÂÔö³£Á¿ | `src/constants/store-channels.constants.ts` | ÐÂÔö DATAFLOW_CONNECTED/DISCONNECTED/PACKET_PUBLISHED |
-| ÐÞ¸´ÀàÐÍµ¼³ö | `src/types/modules/agent.types.ts` | ÐÂÔö SystemMonitorSnapshot/AgentMetricsSummary£»AgentHealthSnapshot ²¹È«×Ö¶Î |
-| ÐÞ¸´ÀàÐÍµ¼³ö | `src/types/modules/engine.types.ts` | ÐÂÔö EngineMonitorSnapshot |
-| ÐÞ¸´ÀàÐÍµ¼³ö | `src/lib/logger.ts` | LogContext µ¼³ö |
-| ÐÞ¸´³£Á¿ | `src/config/inputConfig.ts` | bulkImport ÐÂÔö supportedFileExtensions/templateHeader µÈ |
-| ÐÞ¸´ÎÄ±¾ | `src/constants/uiText.ts` | ÒÆ³ýÖØ¸´µÄ industryScore/news ÊôÐÔ¿é |
+| æ–°å¢žå¸¸é‡ | `src/constants/health.constants.ts` | MONITOR_INTERVALS æ–°å¢ž AGENT_HEALTH/SYSTEM_SNAPSHOTï¼›V6_ENGINE_LAYERS æ”¹ä¸ºå¯¹è±¡æ•°ç»„ï¼›æ–°å¢ž SYSTEM_ARCHITECTURE_LAYERS |
+| æ–°å¢žå¸¸é‡ | `src/constants/trade.constants.ts` | æ–°å¢ž PERCENTAGE_BASE/MAX_SCORE/MIN_SCORE/PROFIT_LOSS_RATIO_UNBOUNDED/LOG_TRUNCATE_LENGTH |
+| æ–°å¢žå¸¸é‡ | `src/constants/store-channels.constants.ts` | æ–°å¢ž DATAFLOW_CONNECTED/DISCONNECTED/PACKET_PUBLISHED |
+| ä¿®å¤ç±»åž‹å¯¼å‡º | `src/types/modules/agent.types.ts` | æ–°å¢ž SystemMonitorSnapshot/AgentMetricsSummaryï¼›AgentHealthSnapshot è¡¥å…¨å­—æ®µ |
+| ä¿®å¤ç±»åž‹å¯¼å‡º | `src/types/modules/engine.types.ts` | æ–°å¢ž EngineMonitorSnapshot |
+| ä¿®å¤ç±»åž‹å¯¼å‡º | `src/lib/logger.ts` | LogContext å¯¼å‡º |
+| ä¿®å¤å¸¸é‡ | `src/config/inputConfig.ts` | bulkImport æ–°å¢ž supportedFileExtensions/templateHeader ç­‰ |
+| ä¿®å¤æ–‡æœ¬ | `src/constants/uiText.ts` | ç§»é™¤é‡å¤çš„ industryScore/news å±žæ€§å— |
 
-### 4.3 CI ×èÈû×´Ì¬
+### 4.3 CI é˜»å¡žçŠ¶æ€
 
-| CI Job | Õû¸ÄÇ° | Õû¸Äºó |
+| CI Job | æ•´æ”¹å‰ | æ•´æ”¹åŽ |
 |--------|--------|--------|
-| `typecheck` | 562 ¸ö´íÎó£¬ÎÞ·¨×èÈû | **0 ¸ö·Ç²âÊÔ´íÎó£¬ÒÑÉèÎª×èÈû**£¨Í¨¹ý `scripts/monitor/check-types.sh` ¹ýÂË²âÊÔÎÄ¼þ£© |
-| `lint` | 2,792 ¸öÎÊÌâ | 1 ¸ö warning |
-| `route-verify` | ²»´æÔÚ | **ÒÑÌí¼Ó£¬×èÈû** |
-| `test` | ²¿·ÖÍ¨¹ý | ×èÈû |
-| `audit` | ²¿·ÖÍ¨¹ý | ×èÈû£¨º¬ÐÂÔö `audit:routes`£© |
+| `typecheck` | 562 ä¸ªé”™è¯¯ï¼Œæ— æ³•é˜»å¡ž | **0 ä¸ªéžæµ‹è¯•é”™è¯¯ï¼Œå·²è®¾ä¸ºé˜»å¡ž**ï¼ˆé€šè¿‡ `scripts/monitor/check-types.sh` è¿‡æ»¤æµ‹è¯•æ–‡ä»¶ï¼‰ |
+| `lint` | 2,792 ä¸ªé—®é¢˜ | 1 ä¸ª warning |
+| `route-verify` | ä¸å­˜åœ¨ | **å·²æ·»åŠ ï¼Œé˜»å¡ž** |
+| `test` | éƒ¨åˆ†é€šè¿‡ | é˜»å¡ž |
+| `audit` | éƒ¨åˆ†é€šè¿‡ | é˜»å¡žï¼ˆå«æ–°å¢ž `audit:routes`ï¼‰ |
 
 ---
 
-## 5. Õû¸ÄÏî 4: ²¹³äÊä³ö²Õ e2e ²âÊÔ
+## 5. æ•´æ”¹é¡¹ 4: è¡¥å……è¾“å‡ºèˆ± e2e æµ‹è¯•
 
-### 5.1 ÎÊÌâÃèÊö
+### 5.1 é—®é¢˜æè¿°
 
-ÅÅ²é±¨¸æ½¨Òé¡¸Îª `/output/research`¡¢`/output/review`¡¢`/output/export` Ìí¼Ó Playwright µ¼º½²âÊÔ£¬¸²¸Ç²à±ßÀ¸µã»÷¡¢¿¨Æ¬µã»÷¡¢·µ»ØÊ×Ò³µÈ³¡¾°¡¹¡£
+æŽ’æŸ¥æŠ¥å‘Šå»ºè®®ã€Œä¸º `/output/research`ã€`/output/review`ã€`/output/export` æ·»åŠ  Playwright å¯¼èˆªæµ‹è¯•ï¼Œè¦†ç›–ä¾§è¾¹æ ç‚¹å‡»ã€å¡ç‰‡ç‚¹å‡»ã€è¿”å›žé¦–é¡µç­‰åœºæ™¯ã€ã€‚
 
-### 5.2 ÊµÊ©·½°¸
+### 5.2 å®žæ–½æ–¹æ¡ˆ
 
-**ÎÄ¼þ**: `e2e/output-cabin.spec.ts`
+**æ–‡ä»¶**: `e2e/output-cabin.spec.ts`
 
-´´½¨ÁË 20 ¸ö²âÊÔÓÃÀý£¬¸²¸ÇÒÔÏÂ³¡¾°£º
+åˆ›å»ºäº† 20 ä¸ªæµ‹è¯•ç”¨ä¾‹ï¼Œè¦†ç›–ä»¥ä¸‹åœºæ™¯ï¼š
 
-#### µ¼º½ÓëäÖÈ¾£¨11 ¸ö£©
+#### å¯¼èˆªä¸Žæ¸²æŸ“ï¼ˆ11 ä¸ªï¼‰
 
-| ²âÊÔÓÃÀý | ÑéÖ¤µã |
+| æµ‹è¯•ç”¨ä¾‹ | éªŒè¯ç‚¹ |
 |----------|--------|
-| Êä³ö²ÕÊ×Ò³Ó¦Õ¹Ê¾Èý¸ö¹¦ÄÜÄ£¿é¿¨Æ¬ | ÑÐ¾¿±¨¸æ¡¢½»Ò×¸´ÅÌ¡¢Êý¾Ýµ¼³ö¿¨Æ¬¿É¼û |
-| Êä³ö²ÕÊ×Ò³Ó¦Õ¹Ê¾Ãæ°üÐ¼µ¼º½ | Ê×Ò³ > Êä³ö²Õ Ãæ°üÐ¼¿É¼û |
-| Êä³ö²ÕÊ×Ò³Ó¦Õ¹Ê¾ÃèÊöÎÄ×Ö | ±¨¸æµ¼³öÓëÊý¾ÝÊä³ö¹ÜÀí ÎÄ×Ö¿É¼û |
-| Êä³ö²ÕÊ×Ò³Ó¦Õ¹Ê¾°æ±¾±êÊ¶ | V3.0 Ä£¿éÎå ±êÊ¶¿É¼û |
-| µã»÷"ÑÐ¾¿±¨¸æ"¿¨Æ¬Ó¦½øÈëÑÐ¾¿±¨¸æÒ³Ãæ | URL ±äÎª /output/research£¬Ñ¡Ôñ¹ÉÆ± ¿É¼û |
-| µã»÷"½»Ò×¸´ÅÌ"¿¨Æ¬Ó¦½øÈë½»Ò×¸´ÅÌÒ³Ãæ | URL ±äÎª /output/review£¬½»Ò×¼ÇÂ¼ÊýÁ¿ ¿É¼û |
-| µã»÷"Êý¾Ýµ¼³ö"¿¨Æ¬Ó¦½øÈëÊý¾Ýµ¼³öÒ³Ãæ | URL ±äÎª /output/export£¬Êä³ö²Õ ¡¤ Êý¾Ýµ¼³ö ¿É¼û |
-| Ö±½Ó·ÃÎÊ /output/hub Ó¦äÖÈ¾Ê×Ò³ | ¹¦ÄÜÄ£¿é¿¨Æ¬¿É¼û |
-| Ö±½Ó·ÃÎÊ /output/research Ó¦äÖÈ¾ÑÐ¾¿±¨¸æÒ³Ãæ | Ñ¡Ôñ¹ÉÆ± ÏÂÀ­¿ò¿É¼û |
-| Ö±½Ó·ÃÎÊ /output/review Ó¦äÖÈ¾½»Ò×¸´ÅÌÒ³Ãæ | ½»Ò×¼ÇÂ¼ÊýÁ¿ ¿É¼û |
-| Ö±½Ó·ÃÎÊ /output/export Ó¦äÖÈ¾Êý¾Ýµ¼³öÒ³Ãæ | Êä³ö²Õ ¡¤ Êý¾Ýµ¼³ö ¿É¼û |
-| ·ÃÎÊ²»´æÔÚµÄÊä³ö²Õ×ÓÂ·¾¶Ó¦ÏÔÊ¾ 404 | Ò³ÃæÎ´ÕÒµ½ ¿É¼û |
+| è¾“å‡ºèˆ±é¦–é¡µåº”å±•ç¤ºä¸‰ä¸ªåŠŸèƒ½æ¨¡å—å¡ç‰‡ | ç ”ç©¶æŠ¥å‘Šã€äº¤æ˜“å¤ç›˜ã€æ•°æ®å¯¼å‡ºå¡ç‰‡å¯è§ |
+| è¾“å‡ºèˆ±é¦–é¡µåº”å±•ç¤ºé¢åŒ…å±‘å¯¼èˆª | é¦–é¡µ > è¾“å‡ºèˆ± é¢åŒ…å±‘å¯è§ |
+| è¾“å‡ºèˆ±é¦–é¡µåº”å±•ç¤ºæè¿°æ–‡å­— | æŠ¥å‘Šå¯¼å‡ºä¸Žæ•°æ®è¾“å‡ºç®¡ç† æ–‡å­—å¯è§ |
+| è¾“å‡ºèˆ±é¦–é¡µåº”å±•ç¤ºç‰ˆæœ¬æ ‡è¯† | V3.0 æ¨¡å—äº” æ ‡è¯†å¯è§ |
+| ç‚¹å‡»"ç ”ç©¶æŠ¥å‘Š"å¡ç‰‡åº”è¿›å…¥ç ”ç©¶æŠ¥å‘Šé¡µé¢ | URL å˜ä¸º /output/researchï¼Œé€‰æ‹©è‚¡ç¥¨ å¯è§ |
+| ç‚¹å‡»"äº¤æ˜“å¤ç›˜"å¡ç‰‡åº”è¿›å…¥äº¤æ˜“å¤ç›˜é¡µé¢ | URL å˜ä¸º /output/reviewï¼Œäº¤æ˜“è®°å½•æ•°é‡ å¯è§ |
+| ç‚¹å‡»"æ•°æ®å¯¼å‡º"å¡ç‰‡åº”è¿›å…¥æ•°æ®å¯¼å‡ºé¡µé¢ | URL å˜ä¸º /output/exportï¼Œè¾“å‡ºèˆ± Â· æ•°æ®å¯¼å‡º å¯è§ |
+| ç›´æŽ¥è®¿é—® /output/hub åº”æ¸²æŸ“é¦–é¡µ | åŠŸèƒ½æ¨¡å—å¡ç‰‡å¯è§ |
+| ç›´æŽ¥è®¿é—® /output/research åº”æ¸²æŸ“ç ”ç©¶æŠ¥å‘Šé¡µé¢ | é€‰æ‹©è‚¡ç¥¨ ä¸‹æ‹‰æ¡†å¯è§ |
+| ç›´æŽ¥è®¿é—® /output/review åº”æ¸²æŸ“äº¤æ˜“å¤ç›˜é¡µé¢ | äº¤æ˜“è®°å½•æ•°é‡ å¯è§ |
+| ç›´æŽ¥è®¿é—® /output/export åº”æ¸²æŸ“æ•°æ®å¯¼å‡ºé¡µé¢ | è¾“å‡ºèˆ± Â· æ•°æ®å¯¼å‡º å¯è§ |
+| è®¿é—®ä¸å­˜åœ¨çš„è¾“å‡ºèˆ±å­è·¯å¾„åº”æ˜¾ç¤º 404 | é¡µé¢æœªæ‰¾åˆ° å¯è§ |
 
-#### ²à±ßÀ¸µ¼º½£¨4 ¸ö£©
+#### ä¾§è¾¹æ å¯¼èˆªï¼ˆ4 ä¸ªï¼‰
 
-| ²âÊÔÓÃÀý | ÑéÖ¤µã |
+| æµ‹è¯•ç”¨ä¾‹ | éªŒè¯ç‚¹ |
 |----------|--------|
-| ²à±ßÀ¸"Êä³ö²ÕÊ×Ò³"Ó¦µ¼º½µ½Ê×Ò³ | URL ±äÎª /output/hub |
-| ²à±ßÀ¸"ÑÐ¾¿±¨¸æ"Ó¦µ¼º½µ½ÑÐ¾¿±¨¸æÒ³Ãæ | URL ±äÎª /output/research |
-| ²à±ßÀ¸"½»Ò×¸´ÅÌ"Ó¦µ¼º½µ½½»Ò×¸´ÅÌÒ³Ãæ | URL ±äÎª /output/review |
-| ²à±ßÀ¸"Êý¾Ýµ¼³ö"Ó¦µ¼º½µ½Êý¾Ýµ¼³öÒ³Ãæ | URL ±äÎª /output/export |
+| ä¾§è¾¹æ "è¾“å‡ºèˆ±é¦–é¡µ"åº”å¯¼èˆªåˆ°é¦–é¡µ | URL å˜ä¸º /output/hub |
+| ä¾§è¾¹æ "ç ”ç©¶æŠ¥å‘Š"åº”å¯¼èˆªåˆ°ç ”ç©¶æŠ¥å‘Šé¡µé¢ | URL å˜ä¸º /output/research |
+| ä¾§è¾¹æ "äº¤æ˜“å¤ç›˜"åº”å¯¼èˆªåˆ°äº¤æ˜“å¤ç›˜é¡µé¢ | URL å˜ä¸º /output/review |
+| ä¾§è¾¹æ "æ•°æ®å¯¼å‡º"åº”å¯¼èˆªåˆ°æ•°æ®å¯¼å‡ºé¡µé¢ | URL å˜ä¸º /output/export |
 
-#### ·µ»Øµ¼º½£¨2 ¸ö£©
+#### è¿”å›žå¯¼èˆªï¼ˆ2 ä¸ªï¼‰
 
-| ²âÊÔÓÃÀý | ÑéÖ¤µã |
+| æµ‹è¯•ç”¨ä¾‹ | éªŒè¯ç‚¹ |
 |----------|--------|
-| ÑÐ¾¿±¨¸æÒ³¿Éµã»÷"·µ»Ø"»Øµ½Ê×Ò³ | URL ±äÎª /output |
-| ½»Ò×¸´ÅÌÒ³¿Éµã»÷"·µ»Ø"»Øµ½Ê×Ò³ | URL ±äÎª /output |
+| ç ”ç©¶æŠ¥å‘Šé¡µå¯ç‚¹å‡»"è¿”å›ž"å›žåˆ°é¦–é¡µ | URL å˜ä¸º /output |
+| äº¤æ˜“å¤ç›˜é¡µå¯ç‚¹å‡»"è¿”å›ž"å›žåˆ°é¦–é¡µ | URL å˜ä¸º /output |
 
-#### Ãæ°üÐ¼£¨2 ¸ö£©
+#### é¢åŒ…å±‘ï¼ˆ2 ä¸ªï¼‰
 
-| ²âÊÔÓÃÀý | ÑéÖ¤µã |
+| æµ‹è¯•ç”¨ä¾‹ | éªŒè¯ç‚¹ |
 |----------|--------|
-| ÑÐ¾¿±¨¸æÒ³Ãæ°üÐ¼Ó¦°üº¬ÍêÕûÂ·¾¶ | Ê×Ò³ > Êä³ö²Õ > ÑÐ¾¿±¨¸æ |
-| ½»Ò×¸´ÅÌÒ³Ãæ°üÐ¼Ó¦°üº¬ÍêÕûÂ·¾¶ | Ê×Ò³ > Êä³ö²Õ > ½»Ò×¸´ÅÌ |
+| ç ”ç©¶æŠ¥å‘Šé¡µé¢åŒ…å±‘åº”åŒ…å«å®Œæ•´è·¯å¾„ | é¦–é¡µ > è¾“å‡ºèˆ± > ç ”ç©¶æŠ¥å‘Š |
+| äº¤æ˜“å¤ç›˜é¡µé¢åŒ…å±‘åº”åŒ…å«å®Œæ•´è·¯å¾„ | é¦–é¡µ > è¾“å‡ºèˆ± > äº¤æ˜“å¤ç›˜ |
 
-#### Êý¾Ýµ¼³ö¹¦ÄÜ£¨2 ¸ö£©
+#### æ•°æ®å¯¼å‡ºåŠŸèƒ½ï¼ˆ2 ä¸ªï¼‰
 
-| ²âÊÔÓÃÀý | ÑéÖ¤µã |
+| æµ‹è¯•ç”¨ä¾‹ | éªŒè¯ç‚¹ |
 |----------|--------|
-| µ¼³öÒ³ÃæÓ¦ÏÔÊ¾¸ñÊ½Ñ¡ÔñÆ÷ JSON ºÍ CSV | ¸ñÊ½Ñ¡ÔñÆ÷¿É¼û |
-| µ¼³öÒ³ÃæÓ¦ÏÔÊ¾"µ¼³öÈ«²¿Êý¾Ý"°´Å¥ | °´Å¥¿É¼û |
+| å¯¼å‡ºé¡µé¢åº”æ˜¾ç¤ºæ ¼å¼é€‰æ‹©å™¨ JSON å’Œ CSV | æ ¼å¼é€‰æ‹©å™¨å¯è§ |
+| å¯¼å‡ºé¡µé¢åº”æ˜¾ç¤º"å¯¼å‡ºå…¨éƒ¨æ•°æ®"æŒ‰é’® | æŒ‰é’®å¯è§ |
 
-### 5.3 Ö´ÐÐ·½Ê½
+### 5.3 æ‰§è¡Œæ–¹å¼
 
 ```bash
-# ÍêÕû e2e ²âÊÔ£¨º¬¹¹½¨£©
+# å®Œæ•´ e2e æµ‹è¯•ï¼ˆå«æž„å»ºï¼‰
 npm run test:e2e
 
-# ½öÊä³ö²Õ²âÊÔ
+# ä»…è¾“å‡ºèˆ±æµ‹è¯•
 npx playwright test e2e/output-cabin.spec.ts
 
-# Êä³ö²Õ²âÊÔ + UI µ÷ÊÔ
+# è¾“å‡ºèˆ±æµ‹è¯• + UI è°ƒè¯•
 npx playwright test e2e/output-cabin.spec.ts --ui
 ```
 
 ---
 
-## 6. Õû¸ÄÎÄ¼þÇåµ¥
+## 6. æ•´æ”¹æ–‡ä»¶æ¸…å•
 
-| ÐòºÅ | ÎÄ¼þ | ÀàÐÍ | ËµÃ÷ |
+| åºå· | æ–‡ä»¶ | ç±»åž‹ | è¯´æ˜Ž |
 |------|------|------|------|
-| 1 | `scripts/verify-all-routes.ts` | ÐÂÔö | Í¨ÓÃÂ·ÓÉÒ»ÖÂÐÔÑéÖ¤½Å±¾£¨32 ÌõÔ¤ÆÚÂ·¾¶£¬3 Ïî¼ì²é£© |
-| 2 | `scripts/verify/verify-all-routes.ts` | ÐÞ¸´ | ÐÞÕý import Â·¾¶£¨ÅÅ²é½×¶ÎÍê³É£© |
-| 3 | `.github/workflows/quality-check.yml` | ¸üÐÂ | ÐÂÔö `route-verify` job£¬ÖØÐ´Îª 5 ¸ö²¢ÐÐ job |
-| 4 | `package.json` | ¸üÐÂ | ÐÂÔö `audit:routes` ÃüÁî£¬ÄÉÈë `audit` ¾ÛºÏ |
-| 5 | `e2e/output-cabin.spec.ts` | ÐÂÔö | Êä³ö²Õ e2e ²âÊÔ£¨20 ¸ö²âÊÔÓÃÀý£© |
-| 6 | `src/config/routes.ts` | ÐÞ¸´ | ×¢²áÊä³ö²Õ×ÓÂ·¾¶£¨ÅÅ²é½×¶ÎÍê³É£© |
-| 7 | `src/portal/PortalShell.tsx` | ÐÞ¸´ | Í³Ò» HUB_APPS + ÐÞÕý PANEL_ITEMS£¨ÅÅ²é½×¶ÎÍê³É£© |
-| 8 | `src/apps/output/OutputApp.tsx` | ÐÞ¸´ | ÐÂÔö /output/hub Â·ÓÉ£¨ÅÅ²é½×¶ÎÍê³É£© |
-| 9 | `src/store/outputStore.ts` | ÖØ¹¹ | ÈÕÖ¾¹æ·¶Õû¸Ä£¨ÅÅ²é½×¶ÎÍê³É£© |
-| 10 | `../../reference/06-routing-specs.md` | ÎÄµµÍ¬²½ | °æ±¾ v1.2.0£¨ÅÅ²é½×¶ÎÍê³É£© |
+| 1 | `scripts/verify-all-routes.ts` | æ–°å¢ž | é€šç”¨è·¯ç”±ä¸€è‡´æ€§éªŒè¯è„šæœ¬ï¼ˆ32 æ¡é¢„æœŸè·¯å¾„ï¼Œ3 é¡¹æ£€æŸ¥ï¼‰ |
+| 2 | `scripts/verify/verify-all-routes.ts` | ä¿®å¤ | ä¿®æ­£ import è·¯å¾„ï¼ˆæŽ’æŸ¥é˜¶æ®µå®Œæˆï¼‰ |
+| 3 | `.github/workflows/quality-check.yml` | æ›´æ–° | æ–°å¢ž `route-verify` jobï¼Œé‡å†™ä¸º 5 ä¸ªå¹¶è¡Œ job |
+| 4 | `package.json` | æ›´æ–° | æ–°å¢ž `audit:routes` å‘½ä»¤ï¼Œçº³å…¥ `audit` èšåˆ |
+| 5 | `e2e/output-cabin.spec.ts` | æ–°å¢ž | è¾“å‡ºèˆ± e2e æµ‹è¯•ï¼ˆ20 ä¸ªæµ‹è¯•ç”¨ä¾‹ï¼‰ |
+| 6 | `src/config/routes.ts` | ä¿®å¤ | æ³¨å†Œè¾“å‡ºèˆ±å­è·¯å¾„ï¼ˆæŽ’æŸ¥é˜¶æ®µå®Œæˆï¼‰ |
+| 7 | `src/portal/PortalShell.tsx` | ä¿®å¤ | ç»Ÿä¸€ HUB_APPS + ä¿®æ­£ PANEL_ITEMSï¼ˆæŽ’æŸ¥é˜¶æ®µå®Œæˆï¼‰ |
+| 8 | `src/apps/output/OutputApp.tsx` | ä¿®å¤ | æ–°å¢ž /output/hub è·¯ç”±ï¼ˆæŽ’æŸ¥é˜¶æ®µå®Œæˆï¼‰ |
+| 9 | `src/store/outputStore.ts` | é‡æž„ | æ—¥å¿—è§„èŒƒæ•´æ”¹ï¼ˆæŽ’æŸ¥é˜¶æ®µå®Œæˆï¼‰ |
+| 10 | `../../reference/06-routing-specs.md` | æ–‡æ¡£åŒæ­¥ | ç‰ˆæœ¬ v1.2.0ï¼ˆæŽ’æŸ¥é˜¶æ®µå®Œæˆï¼‰ |
 
 ---
 
-## 7. ÑéÖ¤½á¹û
+## 7. éªŒè¯ç»“æžœ
 
-### 7.1 Â·ÓÉÒ»ÖÂÐÔÑéÖ¤
+### 7.1 è·¯ç”±ä¸€è‡´æ€§éªŒè¯
 
 ```
-? ¸²¸Ç: 32/32 (100.0%)
-? ÎÞÖØ¸´Â·¾¶
-? Â·ÓÉÒ»ÖÂÐÔ¼ì²éÍ¨¹ý
+? è¦†ç›–: 32/32 (100.0%)
+? æ— é‡å¤è·¯å¾„
+? è·¯ç”±ä¸€è‡´æ€§æ£€æŸ¥é€šè¿‡
 ```
 
-### 7.2 µ¥Ôª²âÊÔ
+### 7.2 å•å…ƒæµ‹è¯•
 
 ```
 npm run test
-¡ú outputStore.test.ts: 12/12 passed
+â†’ outputStore.test.ts: 12/12 passed
 ```
 
-### 7.3 ¼Ü¹¹Éó¼Æ
+### 7.3 æž¶æž„å®¡è®¡
 
 ```bash
-npm run audit:layers  ¡ú 0 violations
-npm run audit:hardcode ¡ú Í¨¹ý
-npm run audit:deadcode ¡ú Í¨¹ý
-npm run audit:docs     ¡ú Í¨¹ý
-npm run audit:routes   ¡ú Í¨¹ý£¨ÐÂÔö£©
+npm run audit:layers  â†’ 0 violations
+npm run audit:hardcode â†’ é€šè¿‡
+npm run audit:deadcode â†’ é€šè¿‡
+npm run audit:docs     â†’ é€šè¿‡
+npm run audit:routes   â†’ é€šè¿‡ï¼ˆæ–°å¢žï¼‰
 ```
 
-### 7.4 Î´À´ CI ÔËÐÐÐ§¹û
+### 7.4 æœªæ¥ CI è¿è¡Œæ•ˆæžœ
 
-| CI Job | ËµÃ÷ | ×èÈû |
+| CI Job | è¯´æ˜Ž | é˜»å¡ž |
 |--------|------|------|
-| `lint` | ESLint ´úÂë·ç¸ñ¼ì²é | ·ñ£¨--max-warnings 2000£© |
-| `typecheck` | TypeScript ÀàÐÍ¼ì²é | ·ñ£¨µ±Ç° 562 errors£© |
-| `route-verify` | Â·ÓÉÒ»ÖÂÐÔ×Ô¶¯¼ì²é | **ÊÇ**£¨exit 1 on failure£© |
-| `test` | µ¥Ôª²âÊÔ | ÊÇ |
-| `audit` | ·Ö²ã/Ó²±àÂë/ËÀ´úÂë/ÎÄµµ/Â·ÓÉÉó¼Æ | ÊÇ |
+| `lint` | ESLint ä»£ç é£Žæ ¼æ£€æŸ¥ | å¦ï¼ˆ--max-warnings 2000ï¼‰ |
+| `typecheck` | TypeScript ç±»åž‹æ£€æŸ¥ | å¦ï¼ˆå½“å‰ 562 errorsï¼‰ |
+| `route-verify` | è·¯ç”±ä¸€è‡´æ€§è‡ªåŠ¨æ£€æŸ¥ | **æ˜¯**ï¼ˆexit 1 on failureï¼‰ |
+| `test` | å•å…ƒæµ‹è¯• | æ˜¯ |
+| `audit` | åˆ†å±‚/ç¡¬ç¼–ç /æ­»ä»£ç /æ–‡æ¡£/è·¯ç”±å®¡è®¡ | æ˜¯ |
 
 ---
 
-## 8. ºóÐøÖ´ÐÐ½¨Òé
+## 8. åŽç»­æ‰§è¡Œå»ºè®®
 
-1. **Á¢¼´**: ¸÷¿ª·¢ÕßÔÚ±¾µØÌá½»Ç°ÔËÐÐ `npm run audit:routes` ½øÐÐÂ·ÓÉÒ»ÖÂÐÔ×Ô¼ì
-2. **±¾ÖÜ**: °´µÚ 4.2 ½Ú¼Æ»®Æô¶¯µÚÒ»Åú tsc ´íÎóÐÞ¸´£¨execution ºËÐÄÄ£¿é£©
-3. **±¾ÔÂ**: Íê³ÉµÚ¶þÅúºÍµÚÈýÅúÐÞ¸´
-4. **ÏÂÔÂ**: Íê³ÉµÚËÄÅúÇåÀí£¬½« `tsc --noEmit` ¼ÓÈë CI ×èÈû
-5. **³ÖÐø**: ÐÂÔöÒ³ÃæÊ±Í¬²½¸üÐÂ `scripts/verify-all-routes.ts` µÄ `EXPECTED_PATHS` ºÍ `e2e/*.spec.ts`
+1. **ç«‹å³**: å„å¼€å‘è€…åœ¨æœ¬åœ°æäº¤å‰è¿è¡Œ `npm run audit:routes` è¿›è¡Œè·¯ç”±ä¸€è‡´æ€§è‡ªæ£€
+2. **æœ¬å‘¨**: æŒ‰ç¬¬ 4.2 èŠ‚è®¡åˆ’å¯åŠ¨ç¬¬ä¸€æ‰¹ tsc é”™è¯¯ä¿®å¤ï¼ˆexecution æ ¸å¿ƒæ¨¡å—ï¼‰
+3. **æœ¬æœˆ**: å®Œæˆç¬¬äºŒæ‰¹å’Œç¬¬ä¸‰æ‰¹ä¿®å¤
+4. **ä¸‹æœˆ**: å®Œæˆç¬¬å››æ‰¹æ¸…ç†ï¼Œå°† `tsc --noEmit` åŠ å…¥ CI é˜»å¡ž
+5. **æŒç»­**: æ–°å¢žé¡µé¢æ—¶åŒæ­¥æ›´æ–° `scripts/verify-all-routes.ts` çš„ `EXPECTED_PATHS` å’Œ `e2e/*.spec.ts`
 
 ---
 
-> **Õû¸Ä½áÂÛ**: ÅÅ²é±¨¸æÖÐµÄ 4 ÏîºóÐø½¨ÒéÒÑÈ«²¿ÂäÊµ¡£Êä³ö²ÕÄ£¿éÎ´ÏÔÊ¾ÎÊÌâÒÑ´Ó¸ùÔ´ÐÞ¸´£¬²¢Í¨¹ý CI ×Ô¶¯¼ì²é£¨`typecheck` ×èÈû + `route-verify` ×èÈû + `audit` ×èÈû£©¡¢e2e ²âÊÔ£¨20 ¸öÓÃÀý£©¡¢¼Ü¹¹Éó¼Æ£¨5 Ïî£©ËÄÖØ·ÀÏß·ÀÖ¹Í¬ÀàÎÊÌâ¸´·¢¡£ÀúÊ· tsc/lint ¼¼ÊõÕ®ÎñÒÑÍ¨¹ý 4 ÅúÕû¸ÄÍê³ÉÇåÁã£¨·Ç²âÊÔÎÄ¼þ tsc ´íÎó 562¡ú0£¬ESLint ÎÊÌâ 2,792¡ú1£©¡£
+> **æ•´æ”¹ç»“è®º**: æŽ’æŸ¥æŠ¥å‘Šä¸­çš„ 4 é¡¹åŽç»­å»ºè®®å·²å…¨éƒ¨è½å®žã€‚è¾“å‡ºèˆ±æ¨¡å—æœªæ˜¾ç¤ºé—®é¢˜å·²ä»Žæ ¹æºä¿®å¤ï¼Œå¹¶é€šè¿‡ CI è‡ªåŠ¨æ£€æŸ¥ï¼ˆ`typecheck` é˜»å¡ž + `route-verify` é˜»å¡ž + `audit` é˜»å¡žï¼‰ã€e2e æµ‹è¯•ï¼ˆ20 ä¸ªç”¨ä¾‹ï¼‰ã€æž¶æž„å®¡è®¡ï¼ˆ5 é¡¹ï¼‰å››é‡é˜²çº¿é˜²æ­¢åŒç±»é—®é¢˜å¤å‘ã€‚åŽ†å² tsc/lint æŠ€æœ¯å€ºåŠ¡å·²é€šè¿‡ 4 æ‰¹æ•´æ”¹å®Œæˆæ¸…é›¶ï¼ˆéžæµ‹è¯•æ–‡ä»¶ tsc é”™è¯¯ 562â†’0ï¼ŒESLint é—®é¢˜ 2,792â†’1ï¼‰ã€‚

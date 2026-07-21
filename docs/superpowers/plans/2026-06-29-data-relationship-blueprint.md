@@ -19,7 +19,7 @@
 | `docs/blueprints/v9-data-timeline.md` | 创建 | 数据产生、刷新、消费的时序与生命周期 |
 | `docs/blueprints/v9-pipeline-sequence.mmd` | 创建 | 核心管线 Mermaid 序列图 |
 | `src/blueprints/__tests__/dataRelationship.test.ts` | 创建 | 关系与时间表的可执行校验测试 |
-| `scripts/validate-data-blueprint.ts` | 创建 | 扫描类型与 Store 定义，自动比对蓝图一致性 |
+| `scripts/other/validate-data-blueprint.ts` | 创建 | 扫描类型与 Store 定义，自动比对蓝图一致性 |
 
 ---
 
@@ -398,7 +398,7 @@ git commit -m "test(blueprint): add data relationship and timeline validation te
 ### Task 5: 编写蓝图一致性扫描脚本
 
 **Files:**
-- Create: `scripts/validate-data-blueprint.ts`
+- Create: `scripts/other/validate-data-blueprint.ts`
 - Reference: `src/config/dbConfig.ts`, `src/data/types.ts`
 
 - [ ] **Step 1: 实现 TS 扫描脚本**

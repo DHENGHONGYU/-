@@ -26,7 +26,7 @@ date: 2026-07-17
 > 1. **公共目录单点收敛（SSOT）**：已有 `utils/`/`lib/`/`components/`/`hooks/` 则禁止另起炉灶；业务源码严格归入 `src/`。
 > 2. **归档标准 / 禁止散落根目录**：脚本→`scripts/` 或 `tools/`；媒体→`assets/` 或 `public/`；文档→`docs/`；源码→`src/`。
 > 3. **命名规范**：文件/目录名全小写，推荐 kebab-case（连字符）。
-> 4. **3 文件底线（AI-Native）**：只保留 `.trae/skills` 或 `rules`（技术宪法）+ `../archive/feature-xxx.md`（Living PRD 唯一真相源）+ `./GONANCE.md`（记录"为什么选 A 不选 B"）；中间文档不堆项目内。
+> 4. **3 文件底线（AI-Native）**：只保留 `.trae/skills` 或 `rules`（技术宪法）+ `../archive/feature-xxx-template.md`（Living PRD 唯一真相源）+ `./GONANCE.md`（记录"为什么选 A 不选 B"）；中间文档不堆项目内。
 > 5. **模块化 + 文件元信息 + 规范注释**；先输出目录结构树再写码。
 
 ---
@@ -124,7 +124,7 @@ date: 2026-07-17
 - **匹配度：50** —— 文档侧过宽过深，且存在死目录与割裂。
 
 ### D. 文档分类（Living PRD / DECISIONS / 最小中间文档 / AI 规则）
-- **TRAE 规则**：`../archive/feature-xxx.md` 作唯一需求源；`./GONANCE.md` 记"为什么选 A 不选 B"；中间文档不堆项目内；AI 规则入 `.trae/skills` 或 `rules`。
+- **TRAE 规则**：`../archive/feature-xxx-template.md` 作唯一需求源；`./GONANCE.md` 记"为什么选 A 不选 B"；中间文档不堆项目内；AI 规则入 `.trae/skills` 或 `rules`。
 - **V9 现状**：已有**八类文档归类体系**（超 TRAE 最小主义，适合规模）✅；`.trae/skills/v9-gatekeeper` + `rules` + MCP 已落地 ✅。但 **无单一 Living PRD / 无 `./GONANCE.md`（9 份 ADR 式文档散落无主索引）** ❌；**`drafts/`(9)/`plans/`(4)/`blueprints/`(1) 囤积中间文档** ❌（违背 3 文件底线）；`docs/` 缺主控索引 ❌。
 - **匹配度：60** —— 分类框架与 AI 规则好，但缺 PRD/DECISIONS 主轴、囤中间文档、无索引。
 

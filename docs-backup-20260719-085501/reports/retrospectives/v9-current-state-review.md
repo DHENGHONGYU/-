@@ -6,7 +6,7 @@ phase: retrospective
 tier: reference
 status: active
 maintainer: V9 Architecture Team
-summary: "±¾ÎÄµµ°´ÏîÄ¿ÊµÊ©½ø¶ÈÖØĞÂÊáÀí V9 ÏµÍ³£º´Ó»ù´¡¼Ü¹¹ ¡ú ÊäÈë²Õ ¡ú ·ÖÎö²Õ ¡ú ³ØÁ÷×ª ¡ú Êı¾İ²É¼¯ ¡ú ½»Ò×²Õ ¡ú Êä³ö/×Ü¿Ø²Õ ¡ú ½øĞĞÖĞ/´ı½¨Ïî¡£ Í¬Ê±°üº¬¸÷°å¿é¶ÔÓ¦µÄÒıÇæ/·şÎñ¡¢UI..."
+summary: "æœ¬æ–‡æ¡£æŒ‰é¡¹ç›®å®æ–½è¿›åº¦é‡æ–°æ¢³ç† V9 ç³»ç»Ÿï¼šä»åŸºç¡€æ¶æ„ â†’ è¾“å…¥èˆ± â†’ åˆ†æèˆ± â†’ æ± æµè½¬ â†’ æ•°æ®é‡‡é›† â†’ äº¤æ˜“èˆ± â†’ è¾“å‡º/æ€»æ§èˆ± â†’ è¿›è¡Œä¸­/å¾…å»ºé¡¹ã€‚ åŒæ—¶åŒ…å«å„æ¿å—å¯¹åº”çš„å¼•æ“/æœåŠ¡ã€UI..."
 tags: [project, spec, report, state, governance, documentation, audit]
 version: v0.9.0
 last_updated: 2026-06-25
@@ -14,470 +14,470 @@ code_version: 2.0.0
 change_log: 
 ---
 
-# V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª µ±Ç°×´Ì¬È«ÃæÊáÀí£¨°´ÊµÊ©½ø¶È£©
+# V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” å½“å‰çŠ¶æ€å…¨é¢æ¢³ç†ï¼ˆæŒ‰å®æ–½è¿›åº¦ï¼‰
 
 > **Status**: Current  
 > **Version**: v0.9.0-migration-implemented  
 > **Last Updated**: 2026-06-25
 >
-> ±¾ÎÄµµ°´ÏîÄ¿ÊµÊ©½ø¶ÈÖØĞÂÊáÀí V9 ÏµÍ³£º´Ó»ù´¡¼Ü¹¹ ¡ú ÊäÈë²Õ ¡ú ·ÖÎö²Õ ¡ú ³ØÁ÷×ª ¡ú Êı¾İ²É¼¯ ¡ú ½»Ò×²Õ ¡ú Êä³ö/×Ü¿Ø²Õ ¡ú ½øĞĞÖĞ/´ı½¨Ïî¡£  
-> Í¬Ê±°üº¬¸÷°å¿é¶ÔÓ¦µÄÒıÇæ/·şÎñ¡¢UI ¼Ü¹¹×ÓÏî¡¢±¾ÂÖ±ä¸üÇ°ºó±È¶Ô£¬ÒÔ¼°ÎÄ¼şÒıÓÃÒ»ÖÂĞÔ×Ô²é½á¹û¡£  
-> Ä¿±ê¶ÁÕß£ººËĞÄ¿ª·¢Õß¡¢¼Ü¹¹Ê¦¡¢ÏîÄ¿¹ÜÀíÕß¡£
+> æœ¬æ–‡æ¡£æŒ‰é¡¹ç›®å®æ–½è¿›åº¦é‡æ–°æ¢³ç† V9 ç³»ç»Ÿï¼šä»åŸºç¡€æ¶æ„ â†’ è¾“å…¥èˆ± â†’ åˆ†æèˆ± â†’ æ± æµè½¬ â†’ æ•°æ®é‡‡é›† â†’ äº¤æ˜“èˆ± â†’ è¾“å‡º/æ€»æ§èˆ± â†’ è¿›è¡Œä¸­/å¾…å»ºé¡¹ã€‚  
+> åŒæ—¶åŒ…å«å„æ¿å—å¯¹åº”çš„å¼•æ“/æœåŠ¡ã€UI æ¶æ„å­é¡¹ã€æœ¬è½®å˜æ›´å‰åæ¯”å¯¹ï¼Œä»¥åŠæ–‡ä»¶å¼•ç”¨ä¸€è‡´æ€§è‡ªæŸ¥ç»“æœã€‚  
+> ç›®æ ‡è¯»è€…ï¼šæ ¸å¿ƒå¼€å‘è€…ã€æ¶æ„å¸ˆã€é¡¹ç›®ç®¡ç†è€…ã€‚
 
 ---
 
-## ÊµÊ©×ÜÀÀ
+## å®æ–½æ€»è§ˆ
 
 ```
-Phase 1: »ù´¡¼Ü¹¹ÓëÊı¾İ²ã    ? ÒÑÍê³É
-Phase 2: ÊäÈë²Õ              ? ºËĞÄÍê³É£»½üÆÚÔöÇ¿½»»¥
-Phase 3: ·ÖÎö²Õ              ? ºËĞÄÍê³É£»½üÆÚĞÂÔöÉ¸Ñ¡ÒıÇæ
-Phase 4: ¹ÉÆ±³ØÁ÷×ª          ? ÒÑÍê³É
-Phase 5: Êı¾İ²É¼¯            ? ÒÑÍê³É£¨Python ·şÎñ + Ç°¶ËÊÊÅä£©
-Phase 6: ½»Ò×²Õ              ? ºËĞÄÍê³É£»½üÆÚĞÂÔöĞÅºÅ³Ö¾Ã»¯
-Phase 7: Êä³ö²Õ / ×Ü¿Ø²Õ     ? ÒÑÍê³É
-Phase 8: ¸´ÅÌÒıÇæ / E2E / CI / PWA  ?? ´ı½¨
+Phase 1: åŸºç¡€æ¶æ„ä¸æ•°æ®å±‚    ? å·²å®Œæˆ
+Phase 2: è¾“å…¥èˆ±              ? æ ¸å¿ƒå®Œæˆï¼›è¿‘æœŸå¢å¼ºäº¤äº’
+Phase 3: åˆ†æèˆ±              ? æ ¸å¿ƒå®Œæˆï¼›è¿‘æœŸæ–°å¢ç­›é€‰å¼•æ“
+Phase 4: è‚¡ç¥¨æ± æµè½¬          ? å·²å®Œæˆ
+Phase 5: æ•°æ®é‡‡é›†            ? å·²å®Œæˆï¼ˆPython æœåŠ¡ + å‰ç«¯é€‚é…ï¼‰
+Phase 6: äº¤æ˜“èˆ±              ? æ ¸å¿ƒå®Œæˆï¼›è¿‘æœŸæ–°å¢ä¿¡å·æŒä¹…åŒ–
+Phase 7: è¾“å‡ºèˆ± / æ€»æ§èˆ±     ? å·²å®Œæˆ
+Phase 8: å¤ç›˜å¼•æ“ / E2E / CI / PWA  ?? å¾…å»º
 ```
 
 ---
 
-## Phase 1: »ù´¡¼Ü¹¹ÓëÊı¾İ²ã
+## Phase 1: åŸºç¡€æ¶æ„ä¸æ•°æ®å±‚
 
-### 1.1 Îå²ã¼Ü¹¹
+### 1.1 äº”å±‚æ¶æ„
 
 ```
-©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
-©¦  L5 Õ¹Ê¾²ã£ºpages/, components/, portal/, cockpit/                       ©¦
-©¦  Ò³Ãæ¡¢¿É¸´ÓÃ UI ×é¼ş¡¢ÃÅ»§µ¼º½¡¢¼İÊ»²Õ Dashboard                         ©¦
-©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
-©¦  L4 Ó¦ÓÃ²ã£ºapps/£¨ÊäÈë/·ÖÎö/½»Ò×/Êä³ö/×Ü¿ØÎå²Õ£©                         ©¦
-©¦  Îå²ÕÓ¦ÓÃÈë¿Ú¡¢ÒµÎñ±àÅÅ¡¢×ÓÒ³Ãæ×éºÏ                                       ©¦
-©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
-©¦  L3 ÒıÇæ/·şÎñ²ã£ºservices/, core/                                         ©¦
-©¦  ÒµÎñ·şÎñ¡¢É¸Ñ¡/ÆÀ·Ö/½»Ò×/·ç¿Ø/²É¼¯ÒıÇæ¡¢DataBridge¡¢ACL¡¢ĞÅ·â            ©¦
-©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
-©¦  L2 Êı¾İ²ã£ºdata/                                                         ©¦
-©¦  IndexedDB ·â×°£¨db.ts£©¡¢Í³Ò»Êı¾İ½Ó¿Ú£¨dataLayer.ts£©¡¢ÀàĞÍ¶¨Òå£¨types.ts£©©¦
-©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
-©¦  L1 »ù´¡ÉèÊ©²ã£ºlib/, config/                                             ©¦
-©¦  ÊÂ¼ş×ÜÏß¡¢ÈÕÖ¾¡¢¹¤¾ßº¯Êı¡¢¸÷ÀàÅäÖÃ¡¢Ö÷ÌâÁîÅÆ                               ©¦
-©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  L5 å±•ç¤ºå±‚ï¼špages/, components/, portal/, cockpit/                       â”‚
+â”‚  é¡µé¢ã€å¯å¤ç”¨ UI ç»„ä»¶ã€é—¨æˆ·å¯¼èˆªã€é©¾é©¶èˆ± Dashboard                         â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â”‚  L4 åº”ç”¨å±‚ï¼šapps/ï¼ˆè¾“å…¥/åˆ†æ/äº¤æ˜“/è¾“å‡º/æ€»æ§äº”èˆ±ï¼‰                         â”‚
+â”‚  äº”èˆ±åº”ç”¨å…¥å£ã€ä¸šåŠ¡ç¼–æ’ã€å­é¡µé¢ç»„åˆ                                       â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â”‚  L3 å¼•æ“/æœåŠ¡å±‚ï¼šservices/, core/                                         â”‚
+â”‚  ä¸šåŠ¡æœåŠ¡ã€ç­›é€‰/è¯„åˆ†/äº¤æ˜“/é£æ§/é‡‡é›†å¼•æ“ã€DataBridgeã€ACLã€ä¿¡å°            â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â”‚  L2 æ•°æ®å±‚ï¼šdata/                                                         â”‚
+â”‚  IndexedDB å°è£…ï¼ˆdb.tsï¼‰ã€ç»Ÿä¸€æ•°æ®æ¥å£ï¼ˆdataLayer.tsï¼‰ã€ç±»å‹å®šä¹‰ï¼ˆtypes.tsï¼‰â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â”‚  L1 åŸºç¡€è®¾æ–½å±‚ï¼šlib/, config/                                             â”‚
+â”‚  äº‹ä»¶æ€»çº¿ã€æ—¥å¿—ã€å·¥å…·å‡½æ•°ã€å„ç±»é…ç½®ã€ä¸»é¢˜ä»¤ç‰Œ                               â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
-### 1.2 ºËĞÄ¼Ü¹¹Ô­Ôò
+### 1.2 æ ¸å¿ƒæ¶æ„åŸåˆ™
 
-| Ô­Ôò | ËµÃ÷ | ÂäµØ¼ì²é |
+| åŸåˆ™ | è¯´æ˜ | è½åœ°æ£€æŸ¥ |
 |------|------|----------|
-| ´¿Ç°¶Ë + ±¾µØÊı¾İÖ÷È¨ | Êı¾İ´æ´¢ÓÚ IndexedDB£¨`V6ProDB`£¬°æ±¾ `4`£© | ? `src/config/dbConfig.ts` / `src/data/db.ts` |
-| ¿çÄ£¿éĞ´²Ù×÷×ßĞÅ·â | ËùÓĞĞ´²Ù×÷Í¨¹ı `DataBridge.forward(StandardEnvelope)` | ? Éó¼Æ½Å±¾ 0 Î¥¹æ |
-| ÉÏ²ã½ûÖ¹Ö±½ÓĞ´ L2 | L5/L4 ²»Ö±½Óµ÷ÓÃ `dataLayer.*.(add/save/update/delete)` | ? ×é¼ş²ã½öÍ¨¹ı Service ·ÃÎÊ |
-| Îå²Õ¹¤×÷Á÷ | ÊäÈë ¡ú ·ÖÎö ¡ú ½»Ò× ¡ú Êä³ö ¡ú ×Ü¿Ø | ? `workflowStore` + `PortalShell` |
-| ÑĞ¾¿ÌåÏµ²»ÒÀÀµ½»Ò×²ã | É¾³ı½»Ò×²ãºóÑĞ¾¿¹¦ÄÜÈÔ¿ÉÍêÕûÔËĞĞ | ? `orders/signals` Îª¶ÀÁ¢ Store |
+| çº¯å‰ç«¯ + æœ¬åœ°æ•°æ®ä¸»æƒ | æ•°æ®å­˜å‚¨äº IndexedDBï¼ˆ`V6ProDB`ï¼Œç‰ˆæœ¬ `4`ï¼‰ | ? `src/config/dbConfig.ts` / `src/data/db.ts` |
+| è·¨æ¨¡å—å†™æ“ä½œèµ°ä¿¡å° | æ‰€æœ‰å†™æ“ä½œé€šè¿‡ `DataBridge.forward(StandardEnvelope)` | ? å®¡è®¡è„šæœ¬ 0 è¿è§„ |
+| ä¸Šå±‚ç¦æ­¢ç›´æ¥å†™ L2 | L5/L4 ä¸ç›´æ¥è°ƒç”¨ `dataLayer.*.(add/save/update/delete)` | ? ç»„ä»¶å±‚ä»…é€šè¿‡ Service è®¿é—® |
+| äº”èˆ±å·¥ä½œæµ | è¾“å…¥ â†’ åˆ†æ â†’ äº¤æ˜“ â†’ è¾“å‡º â†’ æ€»æ§ | ? `workflowStore` + `PortalShell` |
+| ç ”ç©¶ä½“ç³»ä¸ä¾èµ–äº¤æ˜“å±‚ | åˆ é™¤äº¤æ˜“å±‚åç ”ç©¶åŠŸèƒ½ä»å¯å®Œæ•´è¿è¡Œ | ? `orders/signals` ä¸ºç‹¬ç«‹ Store |
 
-### 1.3 Êı¾İÁ÷
+### 1.3 æ•°æ®æµ
 
 ```
 UI / Pages / Apps (L5/L4)
-        ¡ı µ÷ÓÃ Service
+        â†“ è°ƒç”¨ Service
    src/services/{module}/*.ts (L3)
-        ¡ı ¹¹Ôì StandardEnvelope
+        â†“ æ„é€  StandardEnvelope
    DataBridge.forward(envelope) (L3)
-        ¡ı validate + ACL + audit + broadcast
+        â†“ validate + ACL + audit + broadcast
    dataLayer.*Store.save/add/... (L2)
-        ¡ı db.put / db.get / db.getAll
+        â†“ db.put / db.get / db.getAll
    IndexedDB (V6ProDB)
 ```
 
-- **¶ÁÂ·¾¶**£º`UI ¡ú Service ¡ú dataLayer ¡ú db`£¨²»¾­¹ı DataBridge£©¡£
-- **Ğ´Â·¾¶**£º`Service ¡ú DataBridge ¡ú ACL ¡ú dataLayer ¡ú db`£¬²¢×Ô¶¯Ğ´Èë `research_logs` Éó¼Æ¡£
+- **è¯»è·¯å¾„**ï¼š`UI â†’ Service â†’ dataLayer â†’ db`ï¼ˆä¸ç»è¿‡ DataBridgeï¼‰ã€‚
+- **å†™è·¯å¾„**ï¼š`Service â†’ DataBridge â†’ ACL â†’ dataLayer â†’ db`ï¼Œå¹¶è‡ªåŠ¨å†™å…¥ `research_logs` å®¡è®¡ã€‚
 
-### 1.4 »ù´¡ÉèÊ©ÎÄ¼ş
+### 1.4 åŸºç¡€è®¾æ–½æ–‡ä»¶
 
-| ÎÄ¼ş | Ö°Ôğ |
+| æ–‡ä»¶ | èŒè´£ |
 |------|------|
-| `src/core/databridge.ts` | ĞÅ·âÂ·ÓÉ¡¢ACL Ğ£Ñé¡¢Éó¼ÆÈÕÖ¾¡¢¹ã²¥¶©ÔÄ |
-| `src/core/envelope.ts` | ±ê×¼ĞÅ·â´´½¨ÓëĞ£Ñé |
-| `src/core/acl.ts` | ACL È¨ÏŞÒıÇæ |
-| `src/core/poolTransitionEngine.ts` | ¹ÉÆ±³Ø×´Ì¬»úÓëºÏ·¨Á÷×ª¶¨Òå |
-| `src/data/dataLayer.ts` | Í³Ò»Êı¾İ·ÃÎÊ²ã£¨stocks/dailyQuotes/v6Scores/orders/signals µÈ£© |
-| `src/data/db.ts` | IndexedDB ·â×°£¨`V6Database`£© |
-| `src/data/types.ts` | Êı¾İÄ£ĞÍÀàĞÍ¶¨Òå |
-| `src/lib/eventBus.ts` | ÊÂ¼ş×ÜÏß |
-| `src/lib/logger.ts` | ÈÕÖ¾ |
-| `src/lib/utils.ts` | `cn` µÈ¹¤¾ßº¯Êı |
+| `src/core/databridge.ts` | ä¿¡å°è·¯ç”±ã€ACL æ ¡éªŒã€å®¡è®¡æ—¥å¿—ã€å¹¿æ’­è®¢é˜… |
+| `src/core/envelope.ts` | æ ‡å‡†ä¿¡å°åˆ›å»ºä¸æ ¡éªŒ |
+| `src/core/acl.ts` | ACL æƒé™å¼•æ“ |
+| `src/core/poolTransitionEngine.ts` | è‚¡ç¥¨æ± çŠ¶æ€æœºä¸åˆæ³•æµè½¬å®šä¹‰ |
+| `src/data/dataLayer.ts` | ç»Ÿä¸€æ•°æ®è®¿é—®å±‚ï¼ˆstocks/dailyQuotes/v6Scores/orders/signals ç­‰ï¼‰ |
+| `src/data/db.ts` | IndexedDB å°è£…ï¼ˆ`V6Database`ï¼‰ |
+| `src/data/types.ts` | æ•°æ®æ¨¡å‹ç±»å‹å®šä¹‰ |
+| `src/lib/eventBus.ts` | äº‹ä»¶æ€»çº¿ |
+| `src/lib/logger.ts` | æ—¥å¿— |
+| `src/lib/utils.ts` | `cn` ç­‰å·¥å…·å‡½æ•° |
 
-### 1.5 IndexedDB Schema£¨v4£©
+### 1.5 IndexedDB Schemaï¼ˆv4ï¼‰
 
-| Store | keyPath | ËµÃ÷ |
+| Store | keyPath | è¯´æ˜ |
 |-------|---------|------|
-| `stocks` | `symbol` | ¹ÉÆ±»ù´¡ĞÅÏ¢Óë³Ø×´Ì¬ |
-| `daily_quotes` | `symbol` | ÈÕ K Ïß/ĞĞÇéÊı¾İ |
-| `v6_scores` | `symbol` | V6 ×Ô¶¯ÆÀ·Ö |
-| `intelligent_scores` | `id`£¨autoIncrement£© | V6 ¸ö¹ÉÖÇÄÜÆÀ·Ö |
-| `industry_scores` | `id`£¨autoIncrement£© | V4 ĞĞÒµÖÇÄÜÆÀ·Ö |
-| `signals` | `id` | ½»Ò×ĞÅºÅ |
-| `orders` | `id` | Ä£Äâ¶©µ¥ |
-| `watchlists` | `id` | ¹Û²ìÁĞ±í |
-| `research_logs` | `id`£¨autoIncrement£© | Éó¼ÆÈÕÖ¾ |
+| `stocks` | `symbol` | è‚¡ç¥¨åŸºç¡€ä¿¡æ¯ä¸æ± çŠ¶æ€ |
+| `daily_quotes` | `symbol` | æ—¥ K çº¿/è¡Œæƒ…æ•°æ® |
+| `v6_scores` | `symbol` | V6 è‡ªåŠ¨è¯„åˆ† |
+| `intelligent_scores` | `id`ï¼ˆautoIncrementï¼‰ | V6 ä¸ªè‚¡æ™ºèƒ½è¯„åˆ† |
+| `industry_scores` | `id`ï¼ˆautoIncrementï¼‰ | V4 è¡Œä¸šæ™ºèƒ½è¯„åˆ† |
+| `signals` | `id` | äº¤æ˜“ä¿¡å· |
+| `orders` | `id` | æ¨¡æ‹Ÿè®¢å• |
+| `watchlists` | `id` | è§‚å¯Ÿåˆ—è¡¨ |
+| `research_logs` | `id`ï¼ˆautoIncrementï¼‰ | å®¡è®¡æ—¥å¿— |
 
-### 1.6 »ù´¡ UI ×é¼ş
+### 1.6 åŸºç¡€ UI ç»„ä»¶
 
 ```
 src/components/ui/
-©À©¤©¤ Button.tsx
-©À©¤©¤ Card.tsx
-©À©¤©¤ Input.tsx
-©À©¤©¤ Badge.tsx
-©À©¤©¤ Checkbox.tsx    # ĞÂÔö
-©À©¤©¤ Progress.tsx
-©¸©¤©¤ Textarea.tsx
+â”œâ”€â”€ Button.tsx
+â”œâ”€â”€ Card.tsx
+â”œâ”€â”€ Input.tsx
+â”œâ”€â”€ Badge.tsx
+â”œâ”€â”€ Checkbox.tsx    # æ–°å¢
+â”œâ”€â”€ Progress.tsx
+â””â”€â”€ Textarea.tsx
 ```
 
-### 1.7 Â·ÓÉÓëµ¼º½
+### 1.7 è·¯ç”±ä¸å¯¼èˆª
 
-| ÎÄ¼ş | Ö°Ôğ |
+| æ–‡ä»¶ | èŒè´£ |
 |------|------|
-| `src/config/routes.ts` | Â·ÓÉ×¢²á±í£¨Î¨Ò»ÕæÏàÔ´£© |
-| `src/App.tsx` | HashRouter + ¶¥²ãÂ·ÓÉ |
-| `src/portal/PortalShell.tsx` | Îå²ÕÃÅ»§¿ò¼Ü£¨ÉîÉ«Ä£Ê½£© |
-| `src/cockpit/CockpitShell.tsx` | ¼İÊ»²Õ Dashboard |
-| `src/store/workflowStore.ts` | µ±Ç°¼¤»î²ÕÊÒ×´Ì¬ |
+| `src/config/routes.ts` | è·¯ç”±æ³¨å†Œè¡¨ï¼ˆå”¯ä¸€çœŸç›¸æºï¼‰ |
+| `src/App.tsx` | HashRouter + é¡¶å±‚è·¯ç”± |
+| `src/portal/PortalShell.tsx` | äº”èˆ±é—¨æˆ·æ¡†æ¶ï¼ˆæ·±è‰²æ¨¡å¼ï¼‰ |
+| `src/cockpit/CockpitShell.tsx` | é©¾é©¶èˆ± Dashboard |
+| `src/store/workflowStore.ts` | å½“å‰æ¿€æ´»èˆ±å®¤çŠ¶æ€ |
 
 ---
 
-## Phase 2: ÊäÈë²Õ
+## Phase 2: è¾“å…¥èˆ±
 
-### 2.1 Ó¦ÓÃÈë¿Ú
+### 2.1 åº”ç”¨å…¥å£
 
-| ÎÄ¼ş | Ö°Ôğ |
+| æ–‡ä»¶ | èŒè´£ |
 |------|------|
-| `src/apps/input/InputApp.tsx` | ÊäÈë²ÕÓ¦ÓÃÈë¿Ú |
-| `src/apps/input/InputDashboard.tsx` | Â¼Èë¿´°å£¨¹ÉÆ±³Ø¡¢ËÑË÷¡¢Í³¼Æ¡¢ÅúÁ¿²Ù×÷£© |
-| `src/apps/input/BulkImportPanel.tsx` | ÅúÁ¿ÎÄ±¾µ¼Èë |
-| `src/apps/input/HotSectorPanel.tsx` | ÈÈÃÅ°å¿éÍÆ¼ö |
-| `src/apps/input/DataTestPanel.tsx` | Êı¾İ²É¼¯²âÊÔ |
+| `src/apps/input/InputApp.tsx` | è¾“å…¥èˆ±åº”ç”¨å…¥å£ |
+| `src/apps/input/InputDashboard.tsx` | å½•å…¥çœ‹æ¿ï¼ˆè‚¡ç¥¨æ± ã€æœç´¢ã€ç»Ÿè®¡ã€æ‰¹é‡æ“ä½œï¼‰ |
+| `src/apps/input/BulkImportPanel.tsx` | æ‰¹é‡æ–‡æœ¬å¯¼å…¥ |
+| `src/apps/input/HotSectorPanel.tsx` | çƒ­é—¨æ¿å—æ¨è |
+| `src/apps/input/DataTestPanel.tsx` | æ•°æ®é‡‡é›†æµ‹è¯• |
 
-### 2.2 ÊäÈë²Õ·şÎñ
+### 2.2 è¾“å…¥èˆ±æœåŠ¡
 
-| ÎÄ¼ş | ¹Ø¼üµ¼³ö | Ö°Ôğ |
+| æ–‡ä»¶ | å…³é”®å¯¼å‡º | èŒè´£ |
 |------|----------|------|
-| `src/services/input/inputService.ts` | `addStock`¡¢`addStockFromSearch`¡¢`searchStocks`¡¢`exportPool`¡¢`importPool` | ¹ÉÆ±Â¼Èë¡¢ËÑË÷¡¢ºòÑ¡³Øµ¼Èëµ¼³ö |
-| `src/services/input/batchImportService.ts` | `parseBulkInput`¡¢`importStocks` | ÅúÁ¿ÎÄ±¾½âÎöÓëµ¼Èë |
-| `src/services/input/hotSectorService.ts` | `getHotSectors`¡¢`addHotSectorStocks` | ÈÈÃÅ°å¿éÍÆ¼ö |
-| `src/services/input/mockStockLibrary.ts` | `MOCK_STOCK_LIBRARY` | ÀëÏß mock ¹ÉÆ±¿â |
+| `src/services/input/inputService.ts` | `addStock`ã€`addStockFromSearch`ã€`searchStocks`ã€`exportPool`ã€`importPool` | è‚¡ç¥¨å½•å…¥ã€æœç´¢ã€å€™é€‰æ± å¯¼å…¥å¯¼å‡º |
+| `src/services/input/batchImportService.ts` | `parseBulkInput`ã€`importStocks` | æ‰¹é‡æ–‡æœ¬è§£æä¸å¯¼å…¥ |
+| `src/services/input/hotSectorService.ts` | `getHotSectors`ã€`addHotSectorStocks` | çƒ­é—¨æ¿å—æ¨è |
+| `src/services/input/mockStockLibrary.ts` | `MOCK_STOCK_LIBRARY` | ç¦»çº¿ mock è‚¡ç¥¨åº“ |
 
-### 2.3 ÊäÈë²Õ UI ×é¼ş
+### 2.3 è¾“å…¥èˆ± UI ç»„ä»¶
 
 ```
 src/components/input/
-©À©¤©¤ StockSearch.tsx      # Ö§³Ö mode='fill'|'add'
-©¸©¤©¤ QualityIndicator.tsx
+â”œâ”€â”€ StockSearch.tsx      # æ”¯æŒ mode='fill'|'add'
+â””â”€â”€ QualityIndicator.tsx
 
 src/components/pool/
-©À©¤©¤ PoolBoard.tsx        # ¿´°å/ÁĞ±íÊÓÍ¼ÇĞ»»
-©À©¤©¤ PoolColumn.tsx
-©À©¤©¤ PoolCard.tsx         # ĞÂÔö¸´Ñ¡¿ò
-©À©¤©¤ PoolList.tsx         # ĞÂÔöÁĞ±íÊÓÍ¼
-©¸©¤©¤ usePoolData.ts
+â”œâ”€â”€ PoolBoard.tsx        # çœ‹æ¿/åˆ—è¡¨è§†å›¾åˆ‡æ¢
+â”œâ”€â”€ PoolColumn.tsx
+â”œâ”€â”€ PoolCard.tsx         # æ–°å¢å¤é€‰æ¡†
+â”œâ”€â”€ PoolList.tsx         # æ–°å¢åˆ—è¡¨è§†å›¾
+â””â”€â”€ usePoolData.ts
 ```
 
-### 2.4 ÊäÈë²ÕÅäÖÃ
+### 2.4 è¾“å…¥èˆ±é…ç½®
 
-| ÎÄ¼ş | Ö°Ôğ |
+| æ–‡ä»¶ | èŒè´£ |
 |------|------|
-| `src/config/inputConfig.ts` | ËÑË÷¡¢ÅúÁ¿µ¼Èë¡¢Êı¾İÖÊÁ¿¹æÔòÅäÖÃ |
+| `src/config/inputConfig.ts` | æœç´¢ã€æ‰¹é‡å¯¼å…¥ã€æ•°æ®è´¨é‡è§„åˆ™é…ç½® |
 
-### 2.5 ±¾ÂÖÊäÈë²ÕÔöÇ¿£¨±ä¸üÇ°ºó±È¶Ô£©
+### 2.5 æœ¬è½®è¾“å…¥èˆ±å¢å¼ºï¼ˆå˜æ›´å‰åæ¯”å¯¹ï¼‰
 
-| Î¬¶È | ±ä¸üÇ° | ±ä¸üºó |
+| ç»´åº¦ | å˜æ›´å‰ | å˜æ›´å |
 |------|--------|--------|
-| ¹ÉÆ±ËÑË÷ | ½öÖ§³Ö»ØÌî´úÂë/Ãû³Æ | ĞÂÔö `mode='add'`£¬Ñ¡Ôñ¼´Â¼ÈëºòÑ¡³Ø |
-| ¹ÉÆ±³ØÊÓÍ¼ | ½ö¿´°åÊÓÍ¼ | ĞÂÔö `PoolList` ÁĞ±íÊÓÍ¼£¬Ö§³Ö¿´°å/ÁĞ±íÇĞ»» |
-| ÅúÁ¿²Ù×÷ | ÎŞ¸´Ñ¡¿ò | `PoolCard`/`PoolList` Ö§³Ö¸´Ñ¡£¬`InputDashboard` Ö§³ÖÅúÁ¿¹éµµ/Á÷×ª |
-| Êı¾İÖÊÁ¿É¸Ñ¡ | ÎŞ | ĞÂÔö `qualityFilter`£ºall / missingBasic / missingKline / missingFinance |
-| Ô­×Ó×é¼ş | ÎŞ Checkbox | ĞÂÔö `Checkbox` ×é¼ş |
+| è‚¡ç¥¨æœç´¢ | ä»…æ”¯æŒå›å¡«ä»£ç /åç§° | æ–°å¢ `mode='add'`ï¼Œé€‰æ‹©å³å½•å…¥å€™é€‰æ±  |
+| è‚¡ç¥¨æ± è§†å›¾ | ä»…çœ‹æ¿è§†å›¾ | æ–°å¢ `PoolList` åˆ—è¡¨è§†å›¾ï¼Œæ”¯æŒçœ‹æ¿/åˆ—è¡¨åˆ‡æ¢ |
+| æ‰¹é‡æ“ä½œ | æ— å¤é€‰æ¡† | `PoolCard`/`PoolList` æ”¯æŒå¤é€‰ï¼Œ`InputDashboard` æ”¯æŒæ‰¹é‡å½’æ¡£/æµè½¬ |
+| æ•°æ®è´¨é‡ç­›é€‰ | æ—  | æ–°å¢ `qualityFilter`ï¼šall / missingBasic / missingKline / missingFinance |
+| åŸå­ç»„ä»¶ | æ—  Checkbox | æ–°å¢ `Checkbox` ç»„ä»¶ |
 
 ---
 
-## Phase 3: ·ÖÎö²Õ
+## Phase 3: åˆ†æèˆ±
 
-### 3.1 Ó¦ÓÃÈë¿ÚÓëÒ³Ãæ
+### 3.1 åº”ç”¨å…¥å£ä¸é¡µé¢
 
-| ÎÄ¼ş | Ö°Ôğ |
+| æ–‡ä»¶ | èŒè´£ |
 |------|------|
-| `src/apps/analysis/AnalysisApp.tsx` | ·ÖÎö²ÕÓ¦ÓÃÈë¿Ú |
-| `src/pages/analysis/StockAnalysisPage.tsx` | ¸ö¹É·ÖÎö/V6 ÆÀ·Ö |
-| `src/pages/analysis/IndustryScorePage.tsx` | V4 ĞĞÒµÖÇÄÜÆÀ·Ö |
-| `src/pages/analysis/IntelligentScorePage.tsx` | V6 ¸ö¹ÉÖÇÄÜÆÀ·Ö£¨LLM£© |
-| `src/pages/analysis/SectorAnalysisPage.tsx` | ĞĞÒµ°å¿é·ÖÎö |
-| `src/pages/analysis/BacktestPage.tsx` | ²ßÂÔ»Ø²â |
+| `src/apps/analysis/AnalysisApp.tsx` | åˆ†æèˆ±åº”ç”¨å…¥å£ |
+| `src/pages/analysis/StockAnalysisPage.tsx` | ä¸ªè‚¡åˆ†æ/V6 è¯„åˆ† |
+| `src/pages/analysis/IndustryScorePage.tsx` | V4 è¡Œä¸šæ™ºèƒ½è¯„åˆ† |
+| `src/pages/analysis/IntelligentScorePage.tsx` | V6 ä¸ªè‚¡æ™ºèƒ½è¯„åˆ†ï¼ˆLLMï¼‰ |
+| `src/pages/analysis/SectorAnalysisPage.tsx` | è¡Œä¸šæ¿å—åˆ†æ |
+| `src/pages/analysis/BacktestPage.tsx` | ç­–ç•¥å›æµ‹ |
 
-### 3.2 ÆÀ·Ö·şÎñ
+### 3.2 è¯„åˆ†æœåŠ¡
 
-| ÎÄ¼ş | ¹Ø¼üµ¼³ö | Ö°Ôğ |
+| æ–‡ä»¶ | å…³é”®å¯¼å‡º | èŒè´£ |
 |------|----------|------|
-| `src/services/scoring/v6ScoreService.ts` | `runV6Score` | V6 ¾ÅÎ¬×Ô¶¯ÆÀ·Ö |
-| `src/services/scoring/intelligentScoreService.ts` | `runIntelligentScore` | V6 ¸ö¹ÉÖÇÄÜÆÀ·Ö£¨LLM£© |
-| `src/services/scoring/industryScoreService.ts` | `runIndustryScore` | V4 ĞĞÒµÖÇÄÜÆÀ·Ö |
-| `src/services/scoring/intelligentScorePrompt.ts` | `buildIntelligentScorePrompt` | ¸ö¹ÉÆÀ·Ö Prompt |
-| `src/services/scoring/industryScorePrompt.ts` | `buildIndustryScorePrompt` | ĞĞÒµÆÀ·Ö Prompt |
+| `src/services/scoring/v6ScoreService.ts` | `runV6Score` | V6 ä¹ç»´è‡ªåŠ¨è¯„åˆ† |
+| `src/services/scoring/intelligentScoreService.ts` | `runIntelligentScore` | V6 ä¸ªè‚¡æ™ºèƒ½è¯„åˆ†ï¼ˆLLMï¼‰ |
+| `src/services/scoring/industryScoreService.ts` | `runIndustryScore` | V4 è¡Œä¸šæ™ºèƒ½è¯„åˆ† |
+| `src/services/scoring/intelligentScorePrompt.ts` | `buildIntelligentScorePrompt` | ä¸ªè‚¡è¯„åˆ† Prompt |
+| `src/services/scoring/industryScorePrompt.ts` | `buildIndustryScorePrompt` | è¡Œä¸šè¯„åˆ† Prompt |
 
-### 3.3 ·ÖÎö²ÕÊı¾İ±àÅÅ
+### 3.3 åˆ†æèˆ±æ•°æ®ç¼–æ’
 
-| ÎÄ¼ş | ¹Ø¼üµ¼³ö | Ö°Ôğ |
+| æ–‡ä»¶ | å…³é”®å¯¼å‡º | èŒè´£ |
 |------|----------|------|
-| `src/services/analysis/analysisService.ts` | `listStocks`¡¢`listV6Scores` | ·ÖÎö²Õ»ù´¡Êı¾İ¼ÓÔØ |
-| `src/services/analysis/scorePageService.ts` | `loadStockForAnalysis`¡¢`loadV6ScoreForAnalysis` µÈ | ·ÖÎöÒ³ÃæÊı¾İ±àÅÅ |
+| `src/services/analysis/analysisService.ts` | `listStocks`ã€`listV6Scores` | åˆ†æèˆ±åŸºç¡€æ•°æ®åŠ è½½ |
+| `src/services/analysis/scorePageService.ts` | `loadStockForAnalysis`ã€`loadV6ScoreForAnalysis` ç­‰ | åˆ†æé¡µé¢æ•°æ®ç¼–æ’ |
 
-### 3.4 É¸Ñ¡ÒıÇæ£¨±¾ÂÖĞÂÔö£©
+### 3.4 ç­›é€‰å¼•æ“ï¼ˆæœ¬è½®æ–°å¢ï¼‰
 
-| ÎÄ¼ş | ¹Ø¼üµ¼³ö | Ö°Ôğ |
+| æ–‡ä»¶ | å…³é”®å¯¼å‡º | èŒè´£ |
 |------|----------|------|
-| `src/services/analysis/screeningEngine.ts` | `runScreening`¡¢`screenSingleStock` | ¹ÉÆ±³Ø×Ô¶¯É¸Ñ¡½úÉı£¨candidate¡úscreened¡údeepDive£© |
-| `src/config/screeningConfig.ts` | `getDefaultScreeningThresholds` | É¸Ñ¡ãĞÖµÅäÖÃ |
+| `src/services/analysis/screeningEngine.ts` | `runScreening`ã€`screenSingleStock` | è‚¡ç¥¨æ± è‡ªåŠ¨ç­›é€‰æ™‹å‡ï¼ˆcandidateâ†’screenedâ†’deepDiveï¼‰ |
+| `src/config/screeningConfig.ts` | `getDefaultScreeningThresholds` | ç­›é€‰é˜ˆå€¼é…ç½® |
 
-### 3.5 ÆÀ·ÖÏà¹Ø UI ×é¼ş
+### 3.5 è¯„åˆ†ç›¸å…³ UI ç»„ä»¶
 
 ```
 src/components/
-©À©¤©¤ ScoreFactorDeltaPanel.tsx
-©¸©¤©¤ ScoreUpdateAlert.tsx
+â”œâ”€â”€ ScoreFactorDeltaPanel.tsx
+â””â”€â”€ ScoreUpdateAlert.tsx
 ```
 
-### 3.6 ±¾ÂÖÉ¸Ñ¡ÒıÇæÔöÇ¿£¨±ä¸üÇ°ºó±È¶Ô£©
+### 3.6 æœ¬è½®ç­›é€‰å¼•æ“å¢å¼ºï¼ˆå˜æ›´å‰åæ¯”å¯¹ï¼‰
 
-| Î¬¶È | ±ä¸üÇ° | ±ä¸üºó |
+| ç»´åº¦ | å˜æ›´å‰ | å˜æ›´å |
 |------|--------|--------|
-| É¸Ñ¡ÄÜÁ¦ | ÊÖ¶¯µã»÷Á÷×ª | ×Ô¶¯°´ãĞÖµ½úÉı candidate¡úscreened¡údeepDive |
-| ÅäÖÃ | ÎŞ | ĞÂÔö `src/config/screeningConfig.ts` |
-| ²âÊÔ | ÎŞ | ĞÂÔö `tests/screeningEngine.test.ts` |
-| ACL ºÏ¹æ | ¡ª | ·ÖÎö²ÕÎŞ stocks Ğ´È¨ÏŞ£¬Í¨¹ı `stockpoolService.transitionStock()` ¼ä½ÓÇı¶¯ |
+| ç­›é€‰èƒ½åŠ› | æ‰‹åŠ¨ç‚¹å‡»æµè½¬ | è‡ªåŠ¨æŒ‰é˜ˆå€¼æ™‹å‡ candidateâ†’screenedâ†’deepDive |
+| é…ç½® | æ—  | æ–°å¢ `src/config/screeningConfig.ts` |
+| æµ‹è¯• | æ—  | æ–°å¢ `tests/screeningEngine.test.ts` |
+| ACL åˆè§„ | â€” | åˆ†æèˆ±æ—  stocks å†™æƒé™ï¼Œé€šè¿‡ `stockpoolService.transitionStock()` é—´æ¥é©±åŠ¨ |
 
 ---
 
-## Phase 4: ¹ÉÆ±³ØÁ÷×ª
+## Phase 4: è‚¡ç¥¨æ± æµè½¬
 
-### 4.1 ×´Ì¬»ú
+### 4.1 çŠ¶æ€æœº
 
 ```
-candidate ¡ú screened ¡ú deepDive ¡ú watching ¡ú archived
+candidate â†’ screened â†’ deepDive â†’ watching â†’ archived
 ```
 
-| ×´Ì¬ | º¬Òå |
+| çŠ¶æ€ | å«ä¹‰ |
 |------|------|
-| `candidate` | ºòÑ¡³Ø£¨¸ÕÂ¼Èë£© |
-| `screened` | ³õÉ¸³Ø |
-| `deepDive` | Éî¶ÈÑĞ¾¿³Ø |
-| `watching` | ¹Û²ì³Ø£¨µÈ´ı½»Ò×ĞÅºÅ£© |
-| `archived` | ¹éµµ³Ø |
+| `candidate` | å€™é€‰æ± ï¼ˆåˆšå½•å…¥ï¼‰ |
+| `screened` | åˆç­›æ±  |
+| `deepDive` | æ·±åº¦ç ”ç©¶æ±  |
+| `watching` | è§‚å¯Ÿæ± ï¼ˆç­‰å¾…äº¤æ˜“ä¿¡å·ï¼‰ |
+| `archived` | å½’æ¡£æ±  |
 
-### 4.2 Á÷×ª·şÎñ
+### 4.2 æµè½¬æœåŠ¡
 
-| ÎÄ¼ş | ¹Ø¼üµ¼³ö | Ö°Ôğ |
+| æ–‡ä»¶ | å…³é”®å¯¼å‡º | èŒè´£ |
 |------|----------|------|
-| `src/services/pool/poolService.ts` | `transitionStock`¡¢`getStocksByStatus`¡¢`getAllPoolGroups` | ¹ÉÆ±³Ø×´Ì¬Á÷×ª¡¢·Ö×é¼ÓÔØ |
-| `src/core/poolTransitionEngine.ts` | `POOL_TRANSITIONS`¡¢`isValidTransition`¡¢`getNextStatuses` | ¹ÉÆ±³Ø×´Ì¬»ú |
+| `src/services/pool/poolService.ts` | `transitionStock`ã€`getStocksByStatus`ã€`getAllPoolGroups` | è‚¡ç¥¨æ± çŠ¶æ€æµè½¬ã€åˆ†ç»„åŠ è½½ |
+| `src/core/poolTransitionEngine.ts` | `POOL_TRANSITIONS`ã€`isValidTransition`ã€`getNextStatuses` | è‚¡ç¥¨æ± çŠ¶æ€æœº |
 
-### 4.3 µ÷ÓÃÁ´
+### 4.3 è°ƒç”¨é“¾
 
-- Á÷×ª´¥·¢£º`UI ¡ú stockpoolService.transitionStock() ¡ú DataBridge.forward(UPDATE_STOCK) ¡ú stocks Store`
-- ÊÂ¼şÍ¨Öª£º`eventBus.emit('stocks:changed')`
+- æµè½¬è§¦å‘ï¼š`UI â†’ stockpoolService.transitionStock() â†’ DataBridge.forward(UPDATE_STOCK) â†’ stocks Store`
+- äº‹ä»¶é€šçŸ¥ï¼š`eventBus.emit('stocks:changed')`
 
 ---
 
-## Phase 5: Êı¾İ²É¼¯
+## Phase 5: æ•°æ®é‡‡é›†
 
-### 5.1 Ç°¶Ë²É¼¯·şÎñ
+### 5.1 å‰ç«¯é‡‡é›†æœåŠ¡
 
-| ÎÄ¼ş | ¹Ø¼üµ¼³ö | Ö°Ôğ |
+| æ–‡ä»¶ | å…³é”®å¯¼å‡º | èŒè´£ |
 |------|----------|------|
-| `src/services/fetcher/fetcherService.ts` | `fetchStockBasic`¡¢`fetchStockKline`¡¢`refreshSymbol` | ¹ÉÆ±»ù´¡Êı¾İ/KÏß²É¼¯±àÅÅ |
-| `src/services/fetcher/fetcherClient.ts` | `collectBasic`¡¢`collectKline` | Python ²É¼¯·şÎñ HTTP ¿Í»§¶Ë |
-| `src/services/fetcher/fetcherAdapter.ts` | `adaptBasicDataToStock`¡¢`adaptKlineDataToDailyQuotes` | ²É¼¯Êı¾İÊÊÅä±¾µØÄ£ĞÍ |
-| `src/services/fetcher/fetcherScheduler.ts` | `getFetcherScheduler` | ÊÖ¶¯/ÊÂ¼ş´¥·¢µ÷¶È |
-| `src/services/fetcher/fetcherTypes.ts` | ²É¼¯½Ó¿ÚÀàĞÍ | ÀàĞÍ¶¨Òå |
+| `src/services/fetcher/fetcherService.ts` | `fetchStockBasic`ã€`fetchStockKline`ã€`refreshSymbol` | è‚¡ç¥¨åŸºç¡€æ•°æ®/Kçº¿é‡‡é›†ç¼–æ’ |
+| `src/services/fetcher/fetcherClient.ts` | `collectBasic`ã€`collectKline` | Python é‡‡é›†æœåŠ¡ HTTP å®¢æˆ·ç«¯ |
+| `src/services/fetcher/fetcherAdapter.ts` | `adaptBasicDataToStock`ã€`adaptKlineDataToDailyQuotes` | é‡‡é›†æ•°æ®é€‚é…æœ¬åœ°æ¨¡å‹ |
+| `src/services/fetcher/fetcherScheduler.ts` | `getFetcherScheduler` | æ‰‹åŠ¨/äº‹ä»¶è§¦å‘è°ƒåº¦ |
+| `src/services/fetcher/fetcherTypes.ts` | é‡‡é›†æ¥å£ç±»å‹ | ç±»å‹å®šä¹‰ |
 
-### 5.2 Python ²É¼¯·şÎñ
+### 5.2 Python é‡‡é›†æœåŠ¡
 
-| ÎÄ¼ş | Ö°Ôğ |
+| æ–‡ä»¶ | èŒè´£ |
 |------|------|
-| `python/data_service/collect_endpoints.py` | FastAPI Â·ÓÉ£º½¡¿µ¼ì²é¡¢»ù´¡Êı¾İ¡¢KÏß²É¼¯ |
+| `python/data_service/collect_endpoints.py` | FastAPI è·¯ç”±ï¼šå¥åº·æ£€æŸ¥ã€åŸºç¡€æ•°æ®ã€Kçº¿é‡‡é›† |
 
-### 5.3 ÅäÖÃ
+### 5.3 é…ç½®
 
-| ÎÄ¼ş | Ö°Ôğ |
+| æ–‡ä»¶ | èŒè´£ |
 |------|------|
-| `src/config/fetcherConfig.ts` | Êı¾İ²É¼¯·şÎñÅäÖÃ |
+| `src/config/fetcherConfig.ts` | æ•°æ®é‡‡é›†æœåŠ¡é…ç½® |
 
 ---
 
-## Phase 6: ½»Ò×²Õ
+## Phase 6: äº¤æ˜“èˆ±
 
-### 6.1 Ó¦ÓÃÈë¿Ú
+### 6.1 åº”ç”¨å…¥å£
 
-| ÎÄ¼ş | Ö°Ôğ |
+| æ–‡ä»¶ | èŒè´£ |
 |------|------|
-| `src/apps/trading/TradingApp.tsx` | ½»Ò×²ÕÓ¦ÓÃÈë¿Ú£¨ĞÅºÅÉ¨Ãè¡¢½»Ò×½¨Òé¡¢Ä£ÄâÏÂµ¥¡¢³Ö²Ö¶©µ¥£© |
+| `src/apps/trading/TradingApp.tsx` | äº¤æ˜“èˆ±åº”ç”¨å…¥å£ï¼ˆä¿¡å·æ‰«æã€äº¤æ˜“å»ºè®®ã€æ¨¡æ‹Ÿä¸‹å•ã€æŒä»“è®¢å•ï¼‰ |
 
-### 6.2 ½»Ò×·şÎñ
+### 6.2 äº¤æ˜“æœåŠ¡
 
-| ÎÄ¼ş | ¹Ø¼üµ¼³ö | Ö°Ôğ |
+| æ–‡ä»¶ | å…³é”®å¯¼å‡º | èŒè´£ |
 |------|----------|------|
-| `src/services/trading/tradingService.ts` | `scanWatchingSignals`¡¢`adviseForStock`¡¢`createBuyOrder`¡¢`createSellOrder` | ĞÅºÅÉ¨Ãè¡¢½»Ò×½¨Òé¡¢Ä£ÄâÏÂµ¥ |
-| `src/services/trading/signalGenerator.ts` | `generateSignalsForSymbol`¡¢`pickStrongestSignal` | ¼¼ÊõĞÅºÅÉú³É |
-| `src/services/trading/positionSizer.ts` | `calculatePosition` | ²ÖÎ»¼ÆËã£¨°ë Kelly + ·ç¿ØÔ¼Êø£© |
-| `src/services/trading/riskEngine.ts` | `checkOrderRisk` | ¶©µ¥·ç¿Ø¼ì²é |
+| `src/services/trading/tradingService.ts` | `scanWatchingSignals`ã€`adviseForStock`ã€`createBuyOrder`ã€`createSellOrder` | ä¿¡å·æ‰«æã€äº¤æ˜“å»ºè®®ã€æ¨¡æ‹Ÿä¸‹å• |
+| `src/services/trading/signalGenerator.ts` | `generateSignalsForSymbol`ã€`pickStrongestSignal` | æŠ€æœ¯ä¿¡å·ç”Ÿæˆ |
+| `src/services/trading/positionSizer.ts` | `calculatePosition` | ä»“ä½è®¡ç®—ï¼ˆåŠ Kelly + é£æ§çº¦æŸï¼‰ |
+| `src/services/trading/riskEngine.ts` | `checkOrderRisk` | è®¢å•é£æ§æ£€æŸ¥ |
 
-### 6.3 ½»Ò×ÅäÖÃ
+### 6.3 äº¤æ˜“é…ç½®
 
-| ÎÄ¼ş | Ö°Ôğ |
+| æ–‡ä»¶ | èŒè´£ |
 |------|------|
-| `src/config/tradingConfig.ts` | ĞÅºÅãĞÖµ¡¢Kelly ²ÖÎ»¡¢·ç¿Ø²ÎÊı |
+| `src/config/tradingConfig.ts` | ä¿¡å·é˜ˆå€¼ã€Kelly ä»“ä½ã€é£æ§å‚æ•° |
 
-### 6.4 ĞÅºÅ³Ö¾Ã»¯£¨±¾ÂÖĞÂÔö£©
+### 6.4 ä¿¡å·æŒä¹…åŒ–ï¼ˆæœ¬è½®æ–°å¢ï¼‰
 
-| Î¬¶È | ±ä¸üÇ° | ±ä¸üºó |
+| ç»´åº¦ | å˜æ›´å‰ | å˜æ›´å |
 |------|--------|--------|
-| ĞÅºÅ´æ´¢ | ĞÅºÅ½öÔÚÄÚ´æÖĞ·µ»Ø | `tradingService.scanWatchingSignals()` ½«ĞÅºÅĞ´Èë `signals` Store |
-| ĞÅ·â¶¯×÷ | ÎŞ `INSERT_SIGNAL` | ĞÂÔö `INSERT_SIGNAL` action |
-| ACL | ÎŞ | `tradinghub` Ôö¼Ó `signals` ¶Á/Ğ´È¨ÏŞ |
-| Êı¾İ²ã | ÎŞ `signalStore` | `dataLayer.signals.save/list/listBySymbol` |
-| DataBridge Â·ÓÉ | ÎŞ | ĞÂÔö `insertSignal` ·ÖÖ§ |
-| ²âÊÔ | ÎŞ | ĞÂÔö `tests/signalPersistence.test.ts` |
+| ä¿¡å·å­˜å‚¨ | ä¿¡å·ä»…åœ¨å†…å­˜ä¸­è¿”å› | `tradingService.scanWatchingSignals()` å°†ä¿¡å·å†™å…¥ `signals` Store |
+| ä¿¡å°åŠ¨ä½œ | æ—  `INSERT_SIGNAL` | æ–°å¢ `INSERT_SIGNAL` action |
+| ACL | æ—  | `tradinghub` å¢åŠ  `signals` è¯»/å†™æƒé™ |
+| æ•°æ®å±‚ | æ—  `signalStore` | `dataLayer.signals.save/list/listBySymbol` |
+| DataBridge è·¯ç”± | æ—  | æ–°å¢ `insertSignal` åˆ†æ”¯ |
+| æµ‹è¯• | æ—  | æ–°å¢ `tests/signalPersistence.test.ts` |
 
 ---
 
-## Phase 7: Êä³ö²Õ / ×Ü¿Ø²Õ
+## Phase 7: è¾“å‡ºèˆ± / æ€»æ§èˆ±
 
-### 7.1 Êä³ö²Õ
+### 7.1 è¾“å‡ºèˆ±
 
-| ÎÄ¼ş | Ö°Ôğ |
+| æ–‡ä»¶ | èŒè´£ |
 |------|------|
-| `src/apps/output/OutputApp.tsx` | ÑĞ¾¿±¨¸æ¡¢Êı¾İµ¼³ö |
+| `src/apps/output/OutputApp.tsx` | ç ”ç©¶æŠ¥å‘Šã€æ•°æ®å¯¼å‡º |
 
-### 7.2 ×Ü¿Ø²Õ
+### 7.2 æ€»æ§èˆ±
 
-| ÎÄ¼ş | Ö°Ôğ |
+| æ–‡ä»¶ | èŒè´£ |
 |------|------|
-| `src/apps/command/CommandApp.tsx` | ÏµÍ³¼à¿Ø¡¢Êı¾İÖØÖÃ¡¢È«Á¿µ¼³ö |
+| `src/apps/command/CommandApp.tsx` | ç³»ç»Ÿç›‘æ§ã€æ•°æ®é‡ç½®ã€å…¨é‡å¯¼å‡º |
 
-### 7.3 ÏµÍ³·şÎñ
+### 7.3 ç³»ç»ŸæœåŠ¡
 
-| ÎÄ¼ş | ¹Ø¼üµ¼³ö | Ö°Ôğ |
+| æ–‡ä»¶ | å…³é”®å¯¼å‡º | èŒè´£ |
 |------|----------|------|
-| `src/services/system/systemService.ts` | `loadSystemStats`¡¢`resetAll`¡¢`exportAll` | ÏµÍ³Í³¼Æ¡¢ÖØÖÃ¡¢µ¼³ö |
+| `src/services/system/systemService.ts` | `loadSystemStats`ã€`resetAll`ã€`exportAll` | ç³»ç»Ÿç»Ÿè®¡ã€é‡ç½®ã€å¯¼å‡º |
 
 ---
 
-## Phase 8: ½øĞĞÖĞ / ´ı½¨Ïî
+## Phase 8: è¿›è¡Œä¸­ / å¾…å»ºé¡¹
 
-| ÏîÄ¿ | ×´Ì¬ | ÎÄµµÎ»ÖÃ | ¼Æ»® |
+| é¡¹ç›® | çŠ¶æ€ | æ–‡æ¡£ä½ç½® | è®¡åˆ’ |
 |------|------|----------|------|
-| ¸´ÅÌÒıÇæ£¨ReviewEngine£© | ?? Î´ÊµÏÖ | ADR-007 | ´ıÏÂÒ»ÂÖÊµÏÖ |
-| `tradeErrorClassifier.ts` | ?? Î´½¨ | `../../reference/05-engine-specs.md` ¡ì3.2 | Phase 2/3 ´ı½¨ |
-| `tradeReviewAI.ts` | ?? Î´½¨ | `../../reference/05-engine-specs.md` ¡ì3.2/¡ì3.8 | Phase 2/3 ´ı½¨ |
-| E2E ²âÊÔ | ?? Î´½¨Á¢ | `../../reference/09-quality-gates.md` ÃÅ½û #9 | Phase 3 ÒıÈë Playwright |
-| CI ¹¤×÷Á÷ | ?? Î´½¨Á¢ | `../../reference/09-quality-gates.md` ¡ì6.1 | Phase 3 ½¨Á¢ |
-| PWA ÀëÏßÑéÖ¤ | ?? Î´½¨Á¢ | `../../reference/09-quality-gates.md` ÃÅ½û #11 | Phase 3 ÅäÖÃ |
+| å¤ç›˜å¼•æ“ï¼ˆReviewEngineï¼‰ | ?? æœªå®ç° | ADR-007 | å¾…ä¸‹ä¸€è½®å®ç° |
+| `tradeErrorClassifier.ts` | ?? æœªå»º | `../../reference/05-engine-specs.md` Â§3.2 | Phase 2/3 å¾…å»º |
+| `tradeReviewAI.ts` | ?? æœªå»º | `../../reference/05-engine-specs.md` Â§3.2/Â§3.8 | Phase 2/3 å¾…å»º |
+| E2E æµ‹è¯• | ?? æœªå»ºç«‹ | `../../reference/09-quality-gates.md` é—¨ç¦ #9 | Phase 3 å¼•å…¥ Playwright |
+| CI å·¥ä½œæµ | ?? æœªå»ºç«‹ | `../../reference/09-quality-gates.md` Â§6.1 | Phase 3 å»ºç«‹ |
+| PWA ç¦»çº¿éªŒè¯ | ?? æœªå»ºç«‹ | `../../reference/09-quality-gates.md` é—¨ç¦ #11 | Phase 3 é…ç½® |
 
 ---
 
-## ACL ¾ØÕó
+## ACL çŸ©é˜µ
 
-ACL ÅäÖÃ¶¨ÒåÓÚ `src/config/dbConfig.ts`£¬Ğ£ÑéÂß¼­ÔÚ `src/core/acl.ts`¡£
+ACL é…ç½®å®šä¹‰äº `src/config/dbConfig.ts`ï¼Œæ ¡éªŒé€»è¾‘åœ¨ `src/core/acl.ts`ã€‚
 
-| Module | ¶ÁÈ¨ÏŞ | Ğ´È¨ÏŞ |
+| Module | è¯»æƒé™ | å†™æƒé™ |
 |--------|--------|--------|
-| `fetcher` | ¡ª | `stocks`¡¢`daily_quotes` |
-| `stockpool` | `stocks`¡¢`v6_scores` | `stocks` |
-| `analyzer` | `stocks`¡¢`v6_scores`¡¢`intelligent_scores`¡¢`industry_scores` | `v6_scores`¡¢`intelligent_scores`¡¢`industry_scores` |
-| `tradinghub` | `stocks`¡¢`v6_scores`¡¢`orders`¡¢`signals` | `orders`¡¢`signals` |
-| `system` | È«²¿ | È«²¿ |
-| `user` | `stocks`¡¢`v6_scores`¡¢`orders` | `stocks`¡¢`orders` |
+| `fetcher` | â€” | `stocks`ã€`daily_quotes` |
+| `stockpool` | `stocks`ã€`v6_scores` | `stocks` |
+| `analyzer` | `stocks`ã€`v6_scores`ã€`intelligent_scores`ã€`industry_scores` | `v6_scores`ã€`intelligent_scores`ã€`industry_scores` |
+| `tradinghub` | `stocks`ã€`v6_scores`ã€`orders`ã€`signals` | `orders`ã€`signals` |
+| `system` | å…¨éƒ¨ | å…¨éƒ¨ |
+| `user` | `stocks`ã€`v6_scores`ã€`orders` | `stocks`ã€`orders` |
 
-> `research_logs` ½öÓÉ `DataBridge` ÄÚ²¿×Ô¶¯Ğ´Èë£¬²»¶ÔÍâ±©Â¶Ö±½ÓĞ´Èë½Ó¿Ú¡£
+> `research_logs` ä»…ç”± `DataBridge` å†…éƒ¨è‡ªåŠ¨å†™å…¥ï¼Œä¸å¯¹å¤–æš´éœ²ç›´æ¥å†™å…¥æ¥å£ã€‚
 
 ---
 
-## È«¾Ö UI ¼Ü¹¹
+## å…¨å±€ UI æ¶æ„
 
-### ÑùÊ½ÌåÏµ
+### æ ·å¼ä½“ç³»
 
-- **Tailwind CSS**£º`src/index.css` Èë¿Ú£¬`tailwind.config.js` ÅäÖÃ¡£
-- **shadcn/ui ·ç¸ñ**£º×Ô½¨Ô­×Ó×é¼ş£¬Ê¹ÓÃ `cn()`£¨`clsx` + `tailwind-merge`£©¡£
-- **CSS ±äÁ¿Ö÷Ìâ**£ºÇ³É«/ÉîÉ«Ä£Ê½£¬À©Õ¹ËÎ´ÉÓïÒåÉ«£¨ÈêÀ¶¡¢¹ÙÂÌ¡¢ÖìÉ°µÈ£©¡£
-- **ÉîÉ«Ä£Ê½**£º`PortalShell.tsx` ¸ù½ÚµãÓ²±àÂë `className="dark"`£¬²ÕÊÒÄ¬ÈÏÉîÉ«¡£
+- **Tailwind CSS**ï¼š`src/index.css` å…¥å£ï¼Œ`tailwind.config.js` é…ç½®ã€‚
+- **shadcn/ui é£æ ¼**ï¼šè‡ªå»ºåŸå­ç»„ä»¶ï¼Œä½¿ç”¨ `cn()`ï¼ˆ`clsx` + `tailwind-merge`ï¼‰ã€‚
+- **CSS å˜é‡ä¸»é¢˜**ï¼šæµ…è‰²/æ·±è‰²æ¨¡å¼ï¼Œæ‰©å±•å®‹ç“·è¯­ä¹‰è‰²ï¼ˆæ±è“ã€å®˜ç»¿ã€æœ±ç ‚ç­‰ï¼‰ã€‚
+- **æ·±è‰²æ¨¡å¼**ï¼š`PortalShell.tsx` æ ¹èŠ‚ç‚¹ç¡¬ç¼–ç  `className="dark"`ï¼Œèˆ±å®¤é»˜è®¤æ·±è‰²ã€‚
 
-### Â·ÓÉ½á¹¹
+### è·¯ç”±ç»“æ„
 
-- **HashRouter**£¨`src/App.tsx`£©¡£
-- Îå²ÕÈë¿ÚäÖÈ¾ `PortalShell`£¬ÓÉ `PortalShell` ÀÁ¼ÓÔØ¶ÔÓ¦ `src/apps/{cabin}/{Cabin}App.tsx`¡£
-- ·ÖÎö²Õ×ÓÒ³Ãæ£¨`/analysis/*`£©µ¥¶ÀÅäÖÃ£¬±ÜÃâ±» `PortalShell` ÍÌµô¡£
+- **HashRouter**ï¼ˆ`src/App.tsx`ï¼‰ã€‚
+- äº”èˆ±å…¥å£æ¸²æŸ“ `PortalShell`ï¼Œç”± `PortalShell` æ‡’åŠ è½½å¯¹åº” `src/apps/{cabin}/{Cabin}App.tsx`ã€‚
+- åˆ†æèˆ±å­é¡µé¢ï¼ˆ`/analysis/*`ï¼‰å•ç‹¬é…ç½®ï¼Œé¿å…è¢« `PortalShell` åæ‰ã€‚
 
-### ×é¼ş²ã¼¶£¨ÊäÈë²ÕÊ¾Àı£©
+### ç»„ä»¶å±‚çº§ï¼ˆè¾“å…¥èˆ±ç¤ºä¾‹ï¼‰
 
 ```
 InputApp.tsx
-©¸©¤©¤ InputDashboard.tsx
-    ©À©¤©¤ Card / Button / Input / Badge
-    ©À©¤©¤ StockSearch
-    ©¸©¤©¤ PoolBoard
-        ©À©¤©¤ PoolColumn (kanban)
-        ©¦   ©¸©¤©¤ PoolCard
-        ©¦       ©À©¤©¤ Checkbox
-        ©¦       ©À©¤©¤ QualityIndicator
-        ©¦       ©À©¤©¤ Badge
-        ©¦       ©¸©¤©¤ Button
-        ©¸©¤©¤ PoolList (list)
-            ©À©¤©¤ Checkbox
-            ©À©¤©¤ QualityIndicator
-            ©À©¤©¤ Badge
-            ©¸©¤©¤ Button
+â””â”€â”€ InputDashboard.tsx
+    â”œâ”€â”€ Card / Button / Input / Badge
+    â”œâ”€â”€ StockSearch
+    â””â”€â”€ PoolBoard
+        â”œâ”€â”€ PoolColumn (kanban)
+        â”‚   â””â”€â”€ PoolCard
+        â”‚       â”œâ”€â”€ Checkbox
+        â”‚       â”œâ”€â”€ QualityIndicator
+        â”‚       â”œâ”€â”€ Badge
+        â”‚       â””â”€â”€ Button
+        â””â”€â”€ PoolList (list)
+            â”œâ”€â”€ Checkbox
+            â”œâ”€â”€ QualityIndicator
+            â”œâ”€â”€ Badge
+            â””â”€â”€ Button
 ```
 
 ---
 
-## ÎÄ¼şÒıÓÃÒ»ÖÂĞÔ×Ô²é½á¹û
+## æ–‡ä»¶å¼•ç”¨ä¸€è‡´æ€§è‡ªæŸ¥ç»“æœ
 
-### ÒÑĞŞ¸´µÄÎÄµµÆ¯ÒÆ
+### å·²ä¿®å¤çš„æ–‡æ¡£æ¼‚ç§»
 
-| # | ÎÄ¼ş | ÎÊÌâ | ĞŞ¸´ÄÚÈİ |
+| # | æ–‡ä»¶ | é—®é¢˜ | ä¿®å¤å†…å®¹ |
 |---|------|------|----------|
-| 1 | `../../../README.md` | ²âÊÔ¼ÆÊıĞ´Îª¡¸6/6¡¹£¬¹¦ÄÜÁĞ±í¹ıÊ± | ¸üĞÂÎª¡¸291/291£¬44 ¸ö²âÊÔÎÄ¼ş¡¹£»²¹³äÉ¸Ñ¡ÒıÇæ¡¢ĞÅºÅ³Ö¾Ã»¯¡¢ÊäÈë²ÕÔöÇ¿¡¢V6 Êı¾İÇ¨ÒÆ |
-| 2 | `../../reference/03-architecture-standards.md` | DB °æ±¾Ğ´Îª `3`£»`inputConfig.ts` ±êÎª´ı½¨£»L2 Êı¾İ²ãÎ´Ìá¼° `signals` | DB °æ±¾¸üĞÂÎª `4`£»`inputConfig.ts` ±êÎªÒÑ½¨£»Æ«²îÇåµ¥ D07 ¸ÄÎªÒÑĞŞ¸´£»L2 Ó³Éä²¹³ä `signals` |
-| 3 | `../../reference/05-engine-specs.md` | `EnvelopeAction` ÒÅÂ© `INSERT_SIGNAL`£»ACL ¾ØÕóÒÅÂ© tradinghub ¶Á `signals`£»Æ«²îÇåµ¥ÈÔĞ´ÊäÈë²ÕÈ±ÉÙ `inputConfig.ts` | ²¹³ä `INSERT_SIGNAL`£»ACL ¾ØÕó¸üĞÂ£»Æ«²îÇåµ¥¸üĞÂ |
-| 4 | `../../explanation/design/implementation-governance.md` | ADR ±íÖ»µ½ ADR-006£»ADR Ä¿Â¼×´Ì¬Îª¡¸´ı½¨Á¢¡¹ | ²¹³ä ADR-007£»ADR Ä¿Â¼×´Ì¬¸ÄÎªÒÑ½¨Á¢ 7 ¸ö ADR |
-| 5 | `../../reference/data-interaction-protocols.md` | `orders.signalId` ×Ö¶ÎÔÚ´úÂëÖĞ²»´æÔÚ | ±ê×¢Îª¡¸¹æ»®ÖĞ¡¹£¬ËµÃ÷½«ÔÚ¸´ÅÌÒıÇæ½×¶Î²¹Æë |
-| 6 | `../../reference/02-functional-specs.md` | µ¼³öÊ¾Àı½öº¬ stocks/v6_scores/orders/watchlists | ²¹³äÈ«²¿ Store |
-| 7 | `docs/README.md` | ×¨ÏîÎÄµµµ¼º½±íÒÅÂ© `../../reference/input-cabin-ui-reshaping.md` Óë `../../explanation/design/investment-pipeline-stage-analysis.md` | ²¹Â¼Á½ÏîÎÄµµ |
-| 8 | `../../reference/09-quality-gates.md` | µ±Ç°É¨Ãè»ùÏßÈÔĞ´ 107/107 passed£»Æ«²îÊÕÁ²¼Æ»®ÈÔĞ´ÊäÈë²ÕÈ±ÉÙ `inputConfig.ts` | ¸üĞÂÎª 291/291 passed£»E2E »ùÏß¸üĞÂÎª 5/5 passed£»Æ«²îÏî¸ÄÎªÒÑĞŞ¸´ |
+| 1 | `../../../README.md` | æµ‹è¯•è®¡æ•°å†™ä¸ºã€Œ6/6ã€ï¼ŒåŠŸèƒ½åˆ—è¡¨è¿‡æ—¶ | æ›´æ–°ä¸ºã€Œ291/291ï¼Œ44 ä¸ªæµ‹è¯•æ–‡ä»¶ã€ï¼›è¡¥å……ç­›é€‰å¼•æ“ã€ä¿¡å·æŒä¹…åŒ–ã€è¾“å…¥èˆ±å¢å¼ºã€V6 æ•°æ®è¿ç§» |
+| 2 | `../../reference/03-architecture-standards.md` | DB ç‰ˆæœ¬å†™ä¸º `3`ï¼›`inputConfig.ts` æ ‡ä¸ºå¾…å»ºï¼›L2 æ•°æ®å±‚æœªæåŠ `signals` | DB ç‰ˆæœ¬æ›´æ–°ä¸º `4`ï¼›`inputConfig.ts` æ ‡ä¸ºå·²å»ºï¼›åå·®æ¸…å• D07 æ”¹ä¸ºå·²ä¿®å¤ï¼›L2 æ˜ å°„è¡¥å…… `signals` |
+| 3 | `../../reference/05-engine-specs.md` | `EnvelopeAction` é—æ¼ `INSERT_SIGNAL`ï¼›ACL çŸ©é˜µé—æ¼ tradinghub è¯» `signals`ï¼›åå·®æ¸…å•ä»å†™è¾“å…¥èˆ±ç¼ºå°‘ `inputConfig.ts` | è¡¥å…… `INSERT_SIGNAL`ï¼›ACL çŸ©é˜µæ›´æ–°ï¼›åå·®æ¸…å•æ›´æ–° |
+| 4 | `../../explanation/design/implementation-governance.md` | ADR è¡¨åªåˆ° ADR-006ï¼›ADR ç›®å½•çŠ¶æ€ä¸ºã€Œå¾…å»ºç«‹ã€ | è¡¥å…… ADR-007ï¼›ADR ç›®å½•çŠ¶æ€æ”¹ä¸ºå·²å»ºç«‹ 7 ä¸ª ADR |
+| 5 | `../../reference/data-interaction-protocols.md` | `orders.signalId` å­—æ®µåœ¨ä»£ç ä¸­ä¸å­˜åœ¨ | æ ‡æ³¨ä¸ºã€Œè§„åˆ’ä¸­ã€ï¼Œè¯´æ˜å°†åœ¨å¤ç›˜å¼•æ“é˜¶æ®µè¡¥é½ |
+| 6 | `../../reference/02-functional-specs.md` | å¯¼å‡ºç¤ºä¾‹ä»…å« stocks/v6_scores/orders/watchlists | è¡¥å……å…¨éƒ¨ Store |
+| 7 | `docs/README.md` | ä¸“é¡¹æ–‡æ¡£å¯¼èˆªè¡¨é—æ¼ `../../reference/input-cabin-ui-reshaping.md` ä¸ `../../explanation/design/investment-pipeline-stage-analysis.md` | è¡¥å½•ä¸¤é¡¹æ–‡æ¡£ |
+| 8 | `../../reference/09-quality-gates.md` | å½“å‰æ‰«æåŸºçº¿ä»å†™ 107/107 passedï¼›åå·®æ”¶æ•›è®¡åˆ’ä»å†™è¾“å…¥èˆ±ç¼ºå°‘ `inputConfig.ts` | æ›´æ–°ä¸º 291/291 passedï¼›E2E åŸºçº¿æ›´æ–°ä¸º 5/5 passedï¼›åå·®é¡¹æ”¹ä¸ºå·²ä¿®å¤ |
 
-### ×Ô²é½áÂÛ
+### è‡ªæŸ¥ç»“è®º
 
-- **¼Ü¹¹Óë´úÂëÒ»ÖÂ**£ºÎå²ã¼Ü¹¹¡¢ÎåÌ¬¹ÉÆ±³Ø¡¢DataBridge ĞÅ·âÁ÷¡¢ACL ¾ØÕó¾ùÓë´úÂë¶ÔÆë¡£
-- **¿ç²ãµ÷ÓÃºÏ¹æ**£º`audit:layers` 0 Î¥¹æ / 0 ¾¯¸æ£»UI ²ãÎ´Ö±½Óµ÷ÓÃ `dataLayer` Ğ´²Ù×÷¡£
-- **ÎÄµµÆ¯ÒÆÒÑÊÕÁ²**£º±¾ÂÖ×Ô²éĞŞ¸´ÁË 8 ´¦Óë×îĞÂ´úÂë²»Ò»ÖÂµÄÎÄµµÒıÓÃ¡£
-- **´ıÊµÏÖÏîÒÑ³ÏÊµ¼ÇÂ¼**£º¸´ÅÌÒıÇæ¡¢E2E/CI/PWA µÈÎ´ÂäµØÏîÔÚ ADR ÓëÖÊÁ¿ÃÅ½ûÎÄµµÖĞ¾ùÓĞÃ÷È·±ê×¢¡£
+- **æ¶æ„ä¸ä»£ç ä¸€è‡´**ï¼šäº”å±‚æ¶æ„ã€äº”æ€è‚¡ç¥¨æ± ã€DataBridge ä¿¡å°æµã€ACL çŸ©é˜µå‡ä¸ä»£ç å¯¹é½ã€‚
+- **è·¨å±‚è°ƒç”¨åˆè§„**ï¼š`audit:layers` 0 è¿è§„ / 0 è­¦å‘Šï¼›UI å±‚æœªç›´æ¥è°ƒç”¨ `dataLayer` å†™æ“ä½œã€‚
+- **æ–‡æ¡£æ¼‚ç§»å·²æ”¶æ•›**ï¼šæœ¬è½®è‡ªæŸ¥ä¿®å¤äº† 8 å¤„ä¸æœ€æ–°ä»£ç ä¸ä¸€è‡´çš„æ–‡æ¡£å¼•ç”¨ã€‚
+- **å¾…å®ç°é¡¹å·²è¯šå®è®°å½•**ï¼šå¤ç›˜å¼•æ“ã€E2E/CI/PWA ç­‰æœªè½åœ°é¡¹åœ¨ ADR ä¸è´¨é‡é—¨ç¦æ–‡æ¡£ä¸­å‡æœ‰æ˜ç¡®æ ‡æ³¨ã€‚
 
 ---
 
-## ÖÊÁ¿ÃÅ½ûµ±Ç°»ùÏß
+## è´¨é‡é—¨ç¦å½“å‰åŸºçº¿
 
 ```
 ? tsc --noEmit           0 errors
 ? npm run lint           0 warnings/errors
-? npm run test           291/291 passed£¨44 ¸ö²âÊÔÎÄ¼ş£©
+? npm run test           291/291 passedï¼ˆ44 ä¸ªæµ‹è¯•æ–‡ä»¶ï¼‰
 ? npm run test:e2e       5/5 passed
 ? npm run build          success
-? npm run audit:layers   0 Î¥¹æ / 0 ¾¯¸æ£¨É¨Ãè 92 ¸öÎÄ¼ş£©
+? npm run audit:layers   0 è¿è§„ / 0 è­¦å‘Šï¼ˆæ‰«æ 92 ä¸ªæ–‡ä»¶ï¼‰
 ```
 
 ---
 
-## ÏÂÒ»²½½¨Òé
+## ä¸‹ä¸€æ­¥å»ºè®®
 
-1. **¸´ÅÌÒıÇæ**£º°´ ADR-007 ÂäµØ `src/services/output/index.ts` »ò `src/services/system/systemService.ts`£¬²¹Æë½»Ò×¸´ÅÌ±Ê¼Ç¡¢´íÎó¹éÀà¡¢ĞÅºÅ-¶©µ¥ÑªÔµ¡£
-2. **ĞÅºÅ-ÆÀ·ÖÁª¶¯**£º½« V6 ÆÀ·ÖÒò×Ó×÷Îª `signalGenerator.ts` µÄÊäÈë£¬ÌáÉı½»Ò×ĞÅºÅÖÊÁ¿¡£
-3. **E2E/CI**£ºÒıÈë Playwright ²¢½¨Á¢ `.github/workflows/ci.yml`£¬°ÑÖÊÁ¿ÃÅ½û×Ô¶¯»¯¡£
-4. **¼Ü¹¹°æ±¾±È¶ÔÎÄµµ**£ºÍ¬²½¸üĞÂ `../../reference/architecture-version-comparison.md`£¬·´Ó³ v0.9.0-docs-review µÄ×îĞÂ±ä»¯¡£
-5. **ÊäÈë²ÕÔ­ĞÍÇåÀí**£º`src/apps/input/` ÔÚÕıÊ½¹¦ÄÜÎÈ¶¨ºó¿É¿¼ÂÇÒÆ³ı»ò¹éµµ£¬¼õÉÙÎ¬»¤Ãæ¡£
+1. **å¤ç›˜å¼•æ“**ï¼šæŒ‰ ADR-007 è½åœ° `src/services/output/index.ts` æˆ– `src/services/system/systemService.ts`ï¼Œè¡¥é½äº¤æ˜“å¤ç›˜ç¬”è®°ã€é”™è¯¯å½’ç±»ã€ä¿¡å·-è®¢å•è¡€ç¼˜ã€‚
+2. **ä¿¡å·-è¯„åˆ†è”åŠ¨**ï¼šå°† V6 è¯„åˆ†å› å­ä½œä¸º `signalGenerator.ts` çš„è¾“å…¥ï¼Œæå‡äº¤æ˜“ä¿¡å·è´¨é‡ã€‚
+3. **E2E/CI**ï¼šå¼•å…¥ Playwright å¹¶å»ºç«‹ `.github/workflows/ci.yml`ï¼ŒæŠŠè´¨é‡é—¨ç¦è‡ªåŠ¨åŒ–ã€‚
+4. **æ¶æ„ç‰ˆæœ¬æ¯”å¯¹æ–‡æ¡£**ï¼šåŒæ­¥æ›´æ–° `../../reference/architecture-version-comparison.md`ï¼Œåæ˜  v0.9.0-docs-review çš„æœ€æ–°å˜åŒ–ã€‚
+5. **è¾“å…¥èˆ±åŸå‹æ¸…ç†**ï¼š`src/apps/input/` åœ¨æ­£å¼åŠŸèƒ½ç¨³å®šåå¯è€ƒè™‘ç§»é™¤æˆ–å½’æ¡£ï¼Œå‡å°‘ç»´æŠ¤é¢ã€‚

@@ -83,7 +83,7 @@ git commit -m "chore: remove 3 deprecated stores (hotSector/valuePit/rotationSig
 **Files:**
 - Modify: `src/store/orderStore.ts` — initOrderStoreSubscriptions 的 debounce callback 中添加 isRefreshing 检查
 - Modify: `src/store/holdingsStore.ts` — 同上
-- Modify: `src/store/poolStore.ts` — 同上
+- Modify: `src/store/poolStore.test.ts` — 同上
 - Test: `tests/storeSubscriptions.test.ts`
 
 - [ ] **Step 1: 编写失败测试 — orderStore 去抖后无重入保护**

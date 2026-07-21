@@ -1,12 +1,12 @@
 ---
-title: TypeScript ´íÎó´¦ÀíºÍÀàĞÍ°²È«¼ì²â±¨¸æ
+title: TypeScript é”™è¯¯å¤„ç†å’Œç±»å‹å®‰å…¨æ£€æµ‹æŠ¥å‘Š
 type: reports
 domain: qa
 phase: testing
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "¼ì²âÊ±¼ä: 2026-06-30 ÏîÄ¿Â·¾¶: `c:\Users\huawei\Documents\kimi\Workspaces\ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³V9` ¼ì²éÎÄ¼ş×ÜÊı: 147"
+summary: "æ£€æµ‹æ—¶é—´: 2026-06-30 é¡¹ç›®è·¯å¾„: `c:\Users\huawei\Documents\kimi\Workspaces\æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»ŸV9` æ£€æŸ¥æ–‡ä»¶æ€»æ•°: 147"
 tags: [qa, audit, report]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -17,129 +17,129 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# TypeScript ´íÎó´¦ÀíºÍÀàĞÍ°²È«¼ì²â±¨¸æ
+# TypeScript é”™è¯¯å¤„ç†å’Œç±»å‹å®‰å…¨æ£€æµ‹æŠ¥å‘Š
 
-**¼ì²âÊ±¼ä**: 2026-06-30
-**ÏîÄ¿Â·¾¶**: `c:\Users\huawei\Documents\kimi\Workspaces\ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³V9`
-**¼ì²éÎÄ¼ş×ÜÊı**: 147
+**æ£€æµ‹æ—¶é—´**: 2026-06-30
+**é¡¹ç›®è·¯å¾„**: `c:\Users\huawei\Documents\kimi\Workspaces\æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»ŸV9`
+**æ£€æŸ¥æ–‡ä»¶æ€»æ•°**: 147
 
 ---
 
-## ¼ì²â½á¹ûÕªÒª
+## æ£€æµ‹ç»“æœæ‘˜è¦
 
-| ÎÊÌâÀàĞÍ | ÊıÁ¿ | ×´Ì¬ |
+| é—®é¢˜ç±»å‹ | æ•°é‡ | çŠ¶æ€ |
 |---------|------|------|
-| `any` ÀàĞÍÊ¹ÓÃ£¨Î¥¹æ£© | 4 | ĞèĞŞ¸´ |
-| `as` Ç¿ÖÆÀàĞÍ×ª»»£¨³¬¹ıÏŞÖÆ£© | 504´Î£¨44¸öÎÄ¼ş£© | ĞèĞŞ¸´ |
-| Async º¯ÊıÈ±ÉÙ try-catch | 11 | ĞèĞŞ¸´ |
-| `throw` È±ÉÙ message | 0 | Í¨¹ı |
-| Î´²¶»ñµÄ Promise rejection | 282 | ĞèĞŞ¸´ |
-| **×Ü¼Æ** | **801** | |
+| `any` ç±»å‹ä½¿ç”¨ï¼ˆè¿è§„ï¼‰ | 4 | éœ€ä¿®å¤ |
+| `as` å¼ºåˆ¶ç±»å‹è½¬æ¢ï¼ˆè¶…è¿‡é™åˆ¶ï¼‰ | 504æ¬¡ï¼ˆ44ä¸ªæ–‡ä»¶ï¼‰ | éœ€ä¿®å¤ |
+| Async å‡½æ•°ç¼ºå°‘ try-catch | 11 | éœ€ä¿®å¤ |
+| `throw` ç¼ºå°‘ message | 0 | é€šè¿‡ |
+| æœªæ•è·çš„ Promise rejection | 282 | éœ€ä¿®å¤ |
+| **æ€»è®¡** | **801** | |
 
 ---
 
-## 1. any ÀàĞÍÊ¹ÓÃ¼ì²â£¨½û¾ø£©
+## 1. any ç±»å‹ä½¿ç”¨æ£€æµ‹ï¼ˆç¦ç»ï¼‰
 
-### Î¥¹æÏêÇé
+### è¿è§„è¯¦æƒ…
 
-| ÎÄ¼şÂ·¾¶ | ĞĞºÅ | ÉÏÏÂÎÄ |
+| æ–‡ä»¶è·¯å¾„ | è¡Œå· | ä¸Šä¸‹æ–‡ |
 |---------|------|--------|
 | `components\ui\List.tsx` | 5 | `export interface ListProps<T = any>` |
 | `components\ui\List.tsx` | 45 | `type ListComponent = (<T = any>(props:...)` |
 | `components\ui\List.tsx` | 52 | `forwardRef<HTMLDivElement, ListProps<any>>` |
 | `config\routes.ts` | 16 | `component: LazyExoticComponent<ComponentType<any> \| ...>` |
 
-**ĞŞ¸´½¨Òé**: Ê¹ÓÃ `unknown` Ìæ´ú `any`£¬»òÔÚÃ÷È·ÖªµÀÀàĞÍÊ±Ê¹ÓÃ¾ßÌåÀàĞÍ¡£
+**ä¿®å¤å»ºè®®**: ä½¿ç”¨ `unknown` æ›¿ä»£ `any`ï¼Œæˆ–åœ¨æ˜ç¡®çŸ¥é“ç±»å‹æ—¶ä½¿ç”¨å…·ä½“ç±»å‹ã€‚
 
 ---
 
-## 2. as Ç¿ÖÆÀàĞÍ×ª»»¼ì²â£¨Ã¿ÎÄ¼şÏŞ3´Î£©
+## 2. as å¼ºåˆ¶ç±»å‹è½¬æ¢æ£€æµ‹ï¼ˆæ¯æ–‡ä»¶é™3æ¬¡ï¼‰
 
-### ³¬¹ıÏŞÖÆµÄÎÄ¼ş£¨44¸ö£©
+### è¶…è¿‡é™åˆ¶çš„æ–‡ä»¶ï¼ˆ44ä¸ªï¼‰
 
-| ÎÄ¼şÂ·¾¶ | Ê¹ÓÃ´ÎÊı | ×´Ì¬ |
+| æ–‡ä»¶è·¯å¾„ | ä½¿ç”¨æ¬¡æ•° | çŠ¶æ€ |
 |---------|---------|------|
-| `services\analysis\screeningEngine.ts` | 20 | ÑÏÖØ³¬ÏŞ |
-| `services\scoring\v6-engine\calculators\l0_l1_l2.ts` | 19 | ÑÏÖØ³¬ÏŞ |
-| `services\scoring\v6-engine\calculators\l3.ts` | 17 | ÑÏÖØ³¬ÏŞ |
-| `services\scoring\v6-engine\calculators\l4_l5_l6.ts` | 15 | ÑÏÖØ³¬ÏŞ |
-| `services\scoring\v6-engine\calculators\l7_l8.ts` | 14 | ÑÏÖØ³¬ÏŞ |
-| `cockpit\data\mockDataProvider.ts` | 12 | ÑÏÖØ³¬ÏŞ |
-| `devtools\testDataFlow.ts` | 11 | ÑÏÖØ³¬ÏŞ |
-| `services\trade\mockHoldingsData.ts` | 11 | ÑÏÖØ³¬ÏŞ |
-| `services\data-collector\mockDataCollection.ts` | 10 | ÑÏÖØ³¬ÏŞ |
-| `services\data-collector\collectors\MockCollector.ts` | 10 | ÑÏÖØ³¬ÏŞ |
-| `data\db.ts` | 10 | ÑÏÖØ³¬ÏŞ |
-| `lib\localStorageManager.ts` | 10 | ÑÏÖØ³¬ÏŞ |
-| `core\databridge.ts` | 9 | ÑÏÖØ³¬ÏŞ |
-| `services\analysis\rotation\rotationCalculator.ts` | 9 | ÑÏÖØ³¬ÏŞ |
-| `config\chartColors.ts` | 8 | ÑÏÖØ³¬ÏŞ |
-| `services\backtest\BacktestEngine.ts` | 8 | ÑÏÖØ³¬ÏŞ |
-| `services\scoring\v6ScoreService.ts` | 7 | ÑÏÖØ³¬ÏŞ |
-| `services\fetcher\fetcherService.ts` | 7 | ÑÏÖØ³¬ÏŞ |
-| `config\dbConfig.ts` | 7 | ÑÏÖØ³¬ÏŞ |
-| `config\rotationConfig.ts` | 6 | ÑÏÖØ³¬ÏŞ |
-| `services\analysis\stockAnalysisEngine.ts` | 6 | ÑÏÖØ³¬ÏŞ |
-| `constants\cockpit.constants.ts` | 6 | ÑÏÖØ³¬ÏŞ |
-| `config\thresholds.ts` | 6 | ÑÏÖØ³¬ÏŞ |
-| `data\dataLayer.ts` | 6 | ÑÏÖØ³¬ÏŞ |
-| `services\system\migration\storeMigrators.ts` | 6 | ÑÏÖØ³¬ÏŞ |
-| `services\system\migration\migrationTransformers.ts` | 6 | ÑÏÖØ³¬ÏŞ |
-| `constants\ai-center.constants.ts` | 5 | ÑÏÖØ³¬ÏŞ |
-| `constants\trade.constants.ts` | 5 | ÑÏÖØ³¬ÏŞ |
-| `services\trading\scoringAdapter.ts` | 5 | ÑÏÖØ³¬ÏŞ |
-| `services\trading\riskEngine.ts` | 5 | ÑÏÖØ³¬ÏŞ |
-| `services\scoring\hotSectorAnalyzer.ts` | 5 | ÑÏÖØ³¬ÏŞ |
-| `services\scoring\valuePitAnalyzer.ts` | 5 | ÑÏÖØ³¬ÏŞ |
-| `services\scoring\v6-engine\enhancer.ts` | 5 | ÑÏÖØ³¬ÏŞ |
-| `services\scoring\v6-engine\calculators\lMinus1.ts` | 5 | ÑÏÖØ³¬ÏŞ |
-| `services\data-collector\MarketDataAdapter.ts` | 5 | ÑÏÖØ³¬ÏŞ |
-| `apps\input\InputDashboard.tsx` | 5 | ÑÏÖØ³¬ÏŞ |
-| `components\pool\usePoolData.ts` | 5 | ÑÏÖØ³¬ÏŞ |
-| `store\poolStore.ts` | 5 | ÑÏÖØ³¬ÏŞ |
-| `store\tradingStore.ts` | 5 | ÑÏÖØ³¬ÏŞ |
-| `store\dualStrategyStore.ts` | 5 | ÑÏÖØ³¬ÏŞ |
-| `store\intelligentScoreStore.ts` | 5 | ÑÏÖØ³¬ÏŞ |
-| `store\executionStore.ts` | 5 | ÑÏÖØ³¬ÏŞ |
-| `config\inputConfig.ts` | 4 | ³¬³öÏŞÖÆ |
+| `services\analysis\screeningEngine.ts` | 20 | ä¸¥é‡è¶…é™ |
+| `services\scoring\v6-engine\calculators\l0_l1_l2.ts` | 19 | ä¸¥é‡è¶…é™ |
+| `services\scoring\v6-engine\calculators\l3.ts` | 17 | ä¸¥é‡è¶…é™ |
+| `services\scoring\v6-engine\calculators\l4_l5_l6.ts` | 15 | ä¸¥é‡è¶…é™ |
+| `services\scoring\v6-engine\calculators\l7_l8.ts` | 14 | ä¸¥é‡è¶…é™ |
+| `cockpit\data\mockDataProvider.ts` | 12 | ä¸¥é‡è¶…é™ |
+| `devtools\testDataFlow.ts` | 11 | ä¸¥é‡è¶…é™ |
+| `services\trade\mockHoldingsData.ts` | 11 | ä¸¥é‡è¶…é™ |
+| `services\data-collector\mockDataCollection.ts` | 10 | ä¸¥é‡è¶…é™ |
+| `services\data-collector\collectors\MockCollector.ts` | 10 | ä¸¥é‡è¶…é™ |
+| `data\db.ts` | 10 | ä¸¥é‡è¶…é™ |
+| `lib\localStorageManager.ts` | 10 | ä¸¥é‡è¶…é™ |
+| `core\databridge.ts` | 9 | ä¸¥é‡è¶…é™ |
+| `services\analysis\rotation\rotationCalculator.ts` | 9 | ä¸¥é‡è¶…é™ |
+| `config\chartColors.ts` | 8 | ä¸¥é‡è¶…é™ |
+| `services\backtest\BacktestEngine.ts` | 8 | ä¸¥é‡è¶…é™ |
+| `services\scoring\v6ScoreService.ts` | 7 | ä¸¥é‡è¶…é™ |
+| `services\fetcher\fetcherService.ts` | 7 | ä¸¥é‡è¶…é™ |
+| `config\dbConfig.ts` | 7 | ä¸¥é‡è¶…é™ |
+| `config\rotationConfig.ts` | 6 | ä¸¥é‡è¶…é™ |
+| `services\analysis\stockAnalysisEngine.ts` | 6 | ä¸¥é‡è¶…é™ |
+| `constants\cockpit.constants.ts` | 6 | ä¸¥é‡è¶…é™ |
+| `config\thresholds.ts` | 6 | ä¸¥é‡è¶…é™ |
+| `data\dataLayer.ts` | 6 | ä¸¥é‡è¶…é™ |
+| `services\system\migration\storeMigrators.ts` | 6 | ä¸¥é‡è¶…é™ |
+| `services\system\migration\migrationTransformers.ts` | 6 | ä¸¥é‡è¶…é™ |
+| `constants\ai-center.constants.ts` | 5 | ä¸¥é‡è¶…é™ |
+| `constants\trade.constants.ts` | 5 | ä¸¥é‡è¶…é™ |
+| `services\trading\scoringAdapter.ts` | 5 | ä¸¥é‡è¶…é™ |
+| `services\trading\riskEngine.ts` | 5 | ä¸¥é‡è¶…é™ |
+| `services\scoring\hotSectorAnalyzer.ts` | 5 | ä¸¥é‡è¶…é™ |
+| `services\scoring\valuePitAnalyzer.ts` | 5 | ä¸¥é‡è¶…é™ |
+| `services\scoring\v6-engine\enhancer.ts` | 5 | ä¸¥é‡è¶…é™ |
+| `services\scoring\v6-engine\calculators\lMinus1.ts` | 5 | ä¸¥é‡è¶…é™ |
+| `services\data-collector\MarketDataAdapter.ts` | 5 | ä¸¥é‡è¶…é™ |
+| `apps\input\InputDashboard.tsx` | 5 | ä¸¥é‡è¶…é™ |
+| `components\pool\usePoolData.ts` | 5 | ä¸¥é‡è¶…é™ |
+| `store\poolStore.ts` | 5 | ä¸¥é‡è¶…é™ |
+| `store\tradingStore.ts` | 5 | ä¸¥é‡è¶…é™ |
+| `store\dualStrategyStore.ts` | 5 | ä¸¥é‡è¶…é™ |
+| `store\intelligentScoreStore.ts` | 5 | ä¸¥é‡è¶…é™ |
+| `store\executionStore.ts` | 5 | ä¸¥é‡è¶…é™ |
+| `config\inputConfig.ts` | 4 | è¶…å‡ºé™åˆ¶ |
 
-**ĞŞ¸´½¨Òé**: ¼õÉÙÀàĞÍ¶ÏÑÔÊ¹ÓÃ£¬¾¡Á¿Í¨¹ıÀàĞÍÊØÎÀ¡¢ÀàĞÍÍÆ¶Ï»òÏÔÊ½ÀàĞÍ¼ì²éÀ´È·±£ÀàĞÍ°²È«¡£
+**ä¿®å¤å»ºè®®**: å‡å°‘ç±»å‹æ–­è¨€ä½¿ç”¨ï¼Œå°½é‡é€šè¿‡ç±»å‹å®ˆå«ã€ç±»å‹æ¨æ–­æˆ–æ˜¾å¼ç±»å‹æ£€æŸ¥æ¥ç¡®ä¿ç±»å‹å®‰å…¨ã€‚
 
 ---
 
-## 3. Async º¯ÊıÈ±ÉÙ try-catch
+## 3. Async å‡½æ•°ç¼ºå°‘ try-catch
 
-### Î¥¹æÏêÇé
+### è¿è§„è¯¦æƒ…
 
-| ÎÄ¼şÂ·¾¶ | ĞĞºÅ | asyncº¯ÊıÃû | ÎÊÌâ |
+| æ–‡ä»¶è·¯å¾„ | è¡Œå· | asyncå‡½æ•°å | é—®é¢˜ |
 |---------|------|------------|------|
-| `services\scoring\v6-engine\calculators\lMinus1.ts` | 66 | anonymous | È±ÉÙtry-catch |
-| `services\scoring\v6-engine\calculators\l3.ts` | 62 | calculateFinancialMetrics | È±ÉÙtry-catch |
-| `services\scoring\v6-engine\calculators\l4_l5_l6.ts` | 61 | anonymous | È±ÉÙtry-catch |
-| `services\scoring\v6-engine\calculators\l4_l5_l6.ts` | 78 | anonymous | È±ÉÙtry-catch |
-| `services\scoring\v6-engine\calculators\l7_l8.ts` | 57 | anonymous | È±ÉÙtry-catch |
-| `services\scoring\v6-engine\calculators\l7_l8.ts` | 71 | calculateSecondCurveScore | È±ÉÙtry-catch |
-| `services\scoring\v6-engine\engine.ts` | 51 | calculateLayer | È±ÉÙtry-catch |
-| `services\scoring\v6-engine\engine.ts` | 66 | calculateAllLayers | È±ÉÙtry-catch |
-| `services\scoring\v6ScoreService.ts` | 50 | calculateV6Score | È±ÉÙtry-catch |
-| `services\scoring\valuePitAnalyzer.ts` | 55 | analyze | È±ÉÙtry-catch |
-| `services\scoring\valuePitAnalyzer.ts` | 63 | analyzeBatch | È±ÉÙtry-catch |
+| `services\scoring\v6-engine\calculators\lMinus1.ts` | 66 | anonymous | ç¼ºå°‘try-catch |
+| `services\scoring\v6-engine\calculators\l3.ts` | 62 | calculateFinancialMetrics | ç¼ºå°‘try-catch |
+| `services\scoring\v6-engine\calculators\l4_l5_l6.ts` | 61 | anonymous | ç¼ºå°‘try-catch |
+| `services\scoring\v6-engine\calculators\l4_l5_l6.ts` | 78 | anonymous | ç¼ºå°‘try-catch |
+| `services\scoring\v6-engine\calculators\l7_l8.ts` | 57 | anonymous | ç¼ºå°‘try-catch |
+| `services\scoring\v6-engine\calculators\l7_l8.ts` | 71 | calculateSecondCurveScore | ç¼ºå°‘try-catch |
+| `services\scoring\v6-engine\engine.ts` | 51 | calculateLayer | ç¼ºå°‘try-catch |
+| `services\scoring\v6-engine\engine.ts` | 66 | calculateAllLayers | ç¼ºå°‘try-catch |
+| `services\scoring\v6ScoreService.ts` | 50 | calculateV6Score | ç¼ºå°‘try-catch |
+| `services\scoring\valuePitAnalyzer.ts` | 55 | analyze | ç¼ºå°‘try-catch |
+| `services\scoring\valuePitAnalyzer.ts` | 63 | analyzeBatch | ç¼ºå°‘try-catch |
 
-**ĞŞ¸´½¨Òé**: ÔÚËùÓĞ async º¯ÊıÖĞÌí¼Ó try-catch ¿é´¦Àí¿ÉÄÜµÄ´íÎó¡£
-
----
-
-## 4. throw È±ÉÙ message
-
-**×´Ì¬**: Í¨¹ı - Î´·¢ÏÖÎÊÌâ
+**ä¿®å¤å»ºè®®**: åœ¨æ‰€æœ‰ async å‡½æ•°ä¸­æ·»åŠ  try-catch å—å¤„ç†å¯èƒ½çš„é”™è¯¯ã€‚
 
 ---
 
-## 5. Î´²¶»ñµÄ Promise rejection
+## 4. throw ç¼ºå°‘ message
 
-### Ö÷ÒªÎÊÌâÎÄ¼ş£¨°´ÎÊÌâÊıÁ¿ÅÅĞò£©
+**çŠ¶æ€**: é€šè¿‡ - æœªå‘ç°é—®é¢˜
 
-| ÎÄ¼şÂ·¾¶ | ÎÊÌâÊı |
+---
+
+## 5. æœªæ•è·çš„ Promise rejection
+
+### ä¸»è¦é—®é¢˜æ–‡ä»¶ï¼ˆæŒ‰é—®é¢˜æ•°é‡æ’åºï¼‰
+
+| æ–‡ä»¶è·¯å¾„ | é—®é¢˜æ•° |
 |---------|-------|
 | `core\databridge.ts` | 59 |
 | `services\system\migration\storeMigrators.ts` | 15 |
@@ -161,24 +161,24 @@ date: 2026-07-17
 | `services\trading\dualStrategyEngine.ts` | 1 |
 | `services\trading\portfolioBuilder.ts` | 1 |
 
-**Ê¾ÀıÎÊÌâ**:
+**ç¤ºä¾‹é—®é¢˜**:
 
 ```
-ÎÄ¼şÂ·¾¶:ĞĞºÅ | PromiseÁ´ | Î´²¶»ñrejection
-services\scoring\intelligentScoreService.ts:296 | const layerScore = await L3vValuationCalculator.calculate(layerInput) | awaitºóÈ±ÉÙtry-catch
-services\scoring\intelligentScoreService.ts:305 | const layerScore = await L7SecondCurveCalculator.calculate(layerInput) | awaitºóÈ±ÉÙtry-catch
-services\scoring\intelligentScoreService.ts:314 | const layerScore = await L3aFinancialCalculator.calculate(layerInput) | awaitºóÈ±ÉÙtry-catch
-services\scoring\intelligentScoreService.ts:338 | const layerScore = await L8ChipCalculator.calculate(layerInput) | awaitºóÈ±ÉÙtry-catch
-services\scoring\intelligentScoreService.ts:355 | const layerScore = await L6HypeCalculator.calculate(layerInput) | awaitºóÈ±ÉÙtry-catch
+æ–‡ä»¶è·¯å¾„:è¡Œå· | Promiseé“¾ | æœªæ•è·rejection
+services\scoring\intelligentScoreService.ts:296 | const layerScore = await L3vValuationCalculator.calculate(layerInput) | awaitåç¼ºå°‘try-catch
+services\scoring\intelligentScoreService.ts:305 | const layerScore = await L7SecondCurveCalculator.calculate(layerInput) | awaitåç¼ºå°‘try-catch
+services\scoring\intelligentScoreService.ts:314 | const layerScore = await L3aFinancialCalculator.calculate(layerInput) | awaitåç¼ºå°‘try-catch
+services\scoring\intelligentScoreService.ts:338 | const layerScore = await L8ChipCalculator.calculate(layerInput) | awaitåç¼ºå°‘try-catch
+services\scoring\intelligentScoreService.ts:355 | const layerScore = await L6HypeCalculator.calculate(layerInput) | awaitåç¼ºå°‘try-catch
 ```
 
-**ĞŞ¸´½¨Òé**: ÎªËùÓĞ `await` µ÷ÓÃÌí¼Ó try-catch ¿é£¬»òÔÚ¶¥²ãÊ¹ÓÃ `.catch()` ´¦Àí Promise rejection¡£
+**ä¿®å¤å»ºè®®**: ä¸ºæ‰€æœ‰ `await` è°ƒç”¨æ·»åŠ  try-catch å—ï¼Œæˆ–åœ¨é¡¶å±‚ä½¿ç”¨ `.catch()` å¤„ç† Promise rejectionã€‚
 
 ---
 
-## ¸ß·çÏÕÎÄ¼ş£¨5+ ÎÊÌâ£©
+## é«˜é£é™©æ–‡ä»¶ï¼ˆ5+ é—®é¢˜ï¼‰
 
-| ÅÅÃû | ÎÄ¼şÂ·¾¶ | ÎÊÌâÊı |
+| æ’å | æ–‡ä»¶è·¯å¾„ | é—®é¢˜æ•° |
 |-----|---------|-------|
 | 1 | `core\databridge.ts` | 59 |
 | 2 | `constants\trade.constants.ts` | 22 |
@@ -203,36 +203,36 @@ services\scoring\intelligentScoreService.ts:355 | const layerScore = await L6Hyp
 
 ---
 
-## ĞŞ¸´ÓÅÏÈ¼¶½¨Òé
+## ä¿®å¤ä¼˜å…ˆçº§å»ºè®®
 
-### P0 - ½ô¼±ĞŞ¸´
+### P0 - ç´§æ€¥ä¿®å¤
 
-1. **4¸ö `any` ÀàĞÍÎ¥¹æ** - Á¢¼´ĞŞ¸´
-2. **11¸ö async º¯ÊıÈ±ÉÙ try-catch** - ÔÚºËĞÄÒµÎñÂß¼­ÖĞ¿ÉÄÜµ¼ÖÂÎ´´¦ÀíµÄÒì³£
+1. **4ä¸ª `any` ç±»å‹è¿è§„** - ç«‹å³ä¿®å¤
+2. **11ä¸ª async å‡½æ•°ç¼ºå°‘ try-catch** - åœ¨æ ¸å¿ƒä¸šåŠ¡é€»è¾‘ä¸­å¯èƒ½å¯¼è‡´æœªå¤„ç†çš„å¼‚å¸¸
 
-### P1 - ¸ßÓÅÏÈ¼¶
+### P1 - é«˜ä¼˜å…ˆçº§
 
-1. **44¸öÎÄ¼ş³¬¹ı `as` ×ª»»ÏŞÖÆ** - ÌØ±ğÊÇ³¬¹ı10´ÎµÄÎÄ¼ş
-2. **282¸öÎ´²¶»ñµÄ Promise rejection** - ¿ÉÄÜµ¼ÖÂ¾²Ä¬Ê§°Ü
+1. **44ä¸ªæ–‡ä»¶è¶…è¿‡ `as` è½¬æ¢é™åˆ¶** - ç‰¹åˆ«æ˜¯è¶…è¿‡10æ¬¡çš„æ–‡ä»¶
+2. **282ä¸ªæœªæ•è·çš„ Promise rejection** - å¯èƒ½å¯¼è‡´é™é»˜å¤±è´¥
 
-### ½¨Òé´ëÊ©
+### å»ºè®®æªæ–½
 
-1. **ÒıÈë ESLint ¹æÔò**:
+1. **å¼•å…¥ ESLint è§„åˆ™**:
    - `@typescript-eslint/no-explicit-any`
    - `@typescript-eslint/no-angle-bracket-type-assertion`
    - `@typescript-eslint/no-non-null-assertion`
-   - `no-await-in-loop` (ÔÚÑ­»·ÖĞ await)
+   - `no-await-in-loop` (åœ¨å¾ªç¯ä¸­ await)
 
-2. **´úÂëÉó²éÖØµã**:
-   - `core\databridge.ts` (59ÎÊÌâ)
-   - `services\scoring\*` ÏµÁĞÎÄ¼ş
-   - `store\*Store.ts` ÏµÁĞÎÄ¼ş
+2. **ä»£ç å®¡æŸ¥é‡ç‚¹**:
+   - `core\databridge.ts` (59é—®é¢˜)
+   - `services\scoring\*` ç³»åˆ—æ–‡ä»¶
+   - `store\*Store.ts` ç³»åˆ—æ–‡ä»¶
 
-3. **½¨Á¢´íÎó´¦Àí¹æ·¶**:
-   - ËùÓĞ async º¯Êı±ØĞëÓĞ try-catch
-   - Ê¹ÓÃ `Result` ÀàĞÍÌæ´úÂã Promise
-   - ÅäÖÃÈ«¾Ö Promise rejection ´¦ÀíÆ÷
+3. **å»ºç«‹é”™è¯¯å¤„ç†è§„èŒƒ**:
+   - æ‰€æœ‰ async å‡½æ•°å¿…é¡»æœ‰ try-catch
+   - ä½¿ç”¨ `Result` ç±»å‹æ›¿ä»£è£¸ Promise
+   - é…ç½®å…¨å±€ Promise rejection å¤„ç†å™¨
 
 ---
 
-*±¨¸æÉú³ÉÊ±¼ä: 2026-06-30*
+*æŠ¥å‘Šç”Ÿæˆæ—¶é—´: 2026-06-30*

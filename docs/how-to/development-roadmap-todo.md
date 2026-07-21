@@ -231,7 +231,7 @@ src/services/
   - 内部通过 `dataBridge.forward()` 写库（Service 层允许）
   - 校验：`npx tsc --noEmit`
 
-- [ ] **Step 3.2.2**：`src/store/trading/orderStore.ts`
+- [ ] **Step 3.2.2**：`src/store/orderStore.ts`
   - `placeOrder` action 改为调用 `placeOrderUseCase()`
   - Store 只保留状态更新 + 加载状态管理
   - 保持 action 签名不变，组件无感

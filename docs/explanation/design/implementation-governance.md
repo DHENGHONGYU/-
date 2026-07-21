@@ -130,9 +130,9 @@ change_log:
 
 | 审计项 | 脚本 | 更新时机 |
 |--------|------|----------|
-| 跨层调用 | `scripts/audit-layer-calls.ts` | 每次发布前 |
-| 硬编码 | `scripts/audit-hardcode.ts` | 每次发布前 |
-| 死代码/空壳 | `scripts/audit-dead-code.ts` | 每次发布前 |
+| 跨层调用 | `scripts/audit/audit-layer-calls.ts` | 每次发布前 |
+| 硬编码 | `scripts/audit/audit-hardcode.ts` | 每次发布前 |
+| 死代码/空壳 | `scripts/audit/audit-dead-code.ts` | 每次发布前 |
 | 路由一致性 | `audit-dead-code.ts` 路由校验 | 每次路由变更后 |
 
 ### 4.2 基线更新流程

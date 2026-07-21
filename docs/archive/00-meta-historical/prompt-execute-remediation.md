@@ -1,7 +1,7 @@
 ---
 title: prompt-execute-remediation
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
@@ -52,7 +52,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ## 4. 阶段门禁（每阶段结束必跑，失败即停）
 - **P0 门禁**：`docs/README.md` 存在 + `npm run audit:docs` 通过 + `tsc:prod` 无错 + 根级散落已清理（`git status` 干净或已确认）。
 - **P1 门禁**：`DATA_DEFINITION` 同名 0 + DEPRECATED 全部入 `07-archive/` + `npm run audit:layers` 0 违规 + `lint:colors` 0。
-- **P2 门禁**：`drafts/plans/blueprints` 已归档 + `./GOVERNANCE.md` 存在 + `npm run audit:tokens` 通过。
+- **P2 门禁**：`drafts/plans/blueprints` 已归档 + `../../00-meta/GOVERNANCE.md` 存在 + `npm run audit:tokens` 通过。
 - **P3 门禁（收尾）**：全部门禁绿 + 生成《执行校验报告》+ 更新 `../../CHANGELOG.md` 与当日 memory 日志。
 
 ## 5. 最终交付

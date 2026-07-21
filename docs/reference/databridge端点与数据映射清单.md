@@ -1,6 +1,6 @@
 ---
 title: databridge端点与数据映射清单
-tier: core
+tier: important
 code_version: 2.0.0
 ---
 

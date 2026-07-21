@@ -101,7 +101,7 @@ tier: reference
 | `../../reference/input-cabin-spec.md` | 未标注 | 🟡 `inputConfig.ts` 状态需更新 | 中 |
 | `../../reference/v9-system-blueprint.md` | 未标注 | 🔴 多处状态滞后 | 高 |
 | `../../reference/v10-architecture-alignment.md` | Future Reference | 🟡 对 `agents/` 目录判断已过时 | 低 |
-| `implementation/ui-module-alignment.md` | Future Reference | 🟢 参考文档，未作为代码依据 | 低 |
+| `../../archive/ui-module-alignment.md` | Future Reference | 🟢 参考文档，未作为代码依据 | 低 |
 | `../../reference/v6-to-v9-migration-spec.md` | 未标注 | 🟢 与实现一致 | 低 |
 
 ---
@@ -239,7 +239,7 @@ tier: reference
 | N2 | Agent 运行时规格 | `../../reference/agent-runtime-spec.md` | 中 | 补充 `src/agents/agentRuntime.ts` 的注册、调度、任务队列、超时机制 |
 | N3 | 板块轮动评分引擎规格 | `../../reference/rotation-score-spec.md` | 中 | 补充 `rotationScoreService.ts` 的五因子十六指标模型、输入输出、调用方式 |
 | N4 | 数据库迁移说明 v4→v6 | `../db-migration-v4-to-v6.md` | 高 | 记录每次 DB 版本升级的 schema 变更、回退策略、兼容性处理 |
-| N5 | 路由注册表审计说明 | `docs/explanation/route-registry-audit-notes.md` | 中 | 解释 HubPage 不进 `ROUTE_REGISTRY`、`/input/prototype` 临时路由、PortalShell 分发机制 |
+| N5 | 路由注册表审计说明 | `../../archive/route-registry-audit-notes.md` | 中 | 解释 HubPage 不进 `ROUTE_REGISTRY`、`/input/prototype` 临时路由、PortalShell 分发机制 |
 | N6 | 质量门禁当前基线说明 | `../quality-gates-baseline.md` | 高 | 详细记录 audit 脚本输出、问题分类、收敛计划 |
 | N7 | V6 Pro 迁移 ADR | `docs/implementation/adr/2026-06-24-v6-migration.md` | 中 | 将 V6 迁移决策正式归档为 ADR-009 |
 | N8 | 词汇表补充章节 | `../../reference/10-glossary.md` §10.8 | 中 | 增加 V6 迁移、数据流引擎、Agent 运行时相关术语 |
@@ -294,7 +294,7 @@ tier: reference
 1. 新增 `../../reference/dataflow-engine-spec.md`。
 2. 新增 `../../reference/agent-runtime-spec.md`。
 3. 新增 `../../reference/rotation-score-spec.md`。
-4. 新增 `docs/explanation/route-registry-audit-notes.md`。
+4. 新增 `../../archive/route-registry-audit-notes.md`。
 5. 新增 ADR-009 V6 Pro 迁移决策。
 6. 创建 `.nvmrc` 或移除 CI 引用。
 7. 配置 `vitest.config.ts` coverage 阈值。

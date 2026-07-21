@@ -55,7 +55,7 @@ change_log:
 | 16 | 策略回测 | `src/pages/analysis/BacktestPage.tsx` | `/analysis/backtest` | 策略回测功能 |
 | 17 | 评分文档 | `src/pages/analysis/ScoreDocPage.tsx` | `/analysis/score-docs` | 评分文档版本库 |
 | 18 | 智能资讯 | `src/pages/analysis/NewsPage.tsx` | `/analysis/news` | 智能资讯（V9 原生版） |
-| 19 | 智能资讯 V6 | `src/pages/news-v6/NewsPage.tsx` | `/analysis/news-v6` | 智能资讯（V6 风格迁移版），含 NewsCard/NewsFeed/FilterPanel 子组件 |
+| 19 | 智能资讯 V6 | `src/pages/analysis/NewsPage.tsx` | `/analysis/news-v6` | 智能资讯（V6 风格迁移版），含 NewsCard/NewsFeed/FilterPanel 子组件 |
 
 ---
 

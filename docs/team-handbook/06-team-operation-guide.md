@@ -78,9 +78,9 @@ change_log:
 | 阶段 | 时间 | 阅读内容 | 目标 |
 |------|------|----------|------|
 | **第 1 步** | 5 min | [team-handbook/README.md](file:///g:/FinSightV9/docs/team-handbook/README.md) | 了解手册结构、核心术语 |
-| **第 2 步** | 5 min | [team-handbook/01-design-philosophy.md](file:///g:/FinSightV9/docs/team-handbook/01-design-philosophy.md) | 理解设计哲学和宋韵美学 |
-| **第 3 步** | 10 min | [team-handbook/02-architecture.md](file:///g:/FinSightV9/docs/team-handbook/02-architecture.md) | 掌握六层架构和数据流 |
-| **第 4 步** | 5 min | 前端看 [03-ui-components.md](file:///g:/FinSightV9/docs/team-handbook/03-ui-components.md) / 算法看 [04-model-runtime.md](file:///g:/FinSightV9/docs/team-handbook/04-model-runtime.md) | 深入各自领域 |
+| **第 2 步** | 5 min | [team-handbook/01-design-philosophy.md](./01-design-philosophy.md) | 理解设计哲学和宋韵美学 |
+| **第 3 步** | 10 min | [team-handbook/02-architecture.md](./02-architecture.md) | 掌握六层架构和数据流 |
+| **第 4 步** | 5 min | 前端看 [03-ui-components.md](./03-ui-components.md) / 算法看 [04-model-runtime.md](./04-model-runtime.md) | 深入各自领域 |
 | **第 5 步** | 5 min | 本篇操作指南（本文） | 掌握日常开发操作 |
 
 #### 1.2 必须知道的 5 个核心概念
@@ -505,7 +505,7 @@ export function MyModuleList() {
 - 注释说明"为什么"而非"做什么"
 - 可测试性好，依赖注入清晰
 
-> **详细指南**：[code-review-guide.md](file:///g:/FinSightV9/docs/how-to/code-review-guide.md)、[CODE-REVIEW.md](file:///g:/FinSightV9/docs/reference/CODE-REVIEW.md)
+> **详细指南**：[code-review-guide.md](../how-to/code-review-guide.md)、[CODE-REVIEW.md](file:///g:/FinSightV9/docs/reference/CODE-REVIEW.md)
 
 ---
 
@@ -662,7 +662,7 @@ export function Button({
 
 **验证**：`npm run lint:colors` + `npm run audit:tokens`
 
-> **详细说明**：[team-handbook/01-design-philosophy.md](file:///g:/FinSightV9/docs/team-handbook/01-design-philosophy.md) §4
+> **详细说明**：[team-handbook/01-design-philosophy.md](./01-design-philosophy.md) §4
 
 ---
 
@@ -852,7 +852,7 @@ L1 基础设施层：lib/、config/、constants/、types/
 
 **验证**：`npm run audit:layers`
 
-> **详细架构**：[team-handbook/02-architecture.md](file:///g:/FinSightV9/docs/team-handbook/02-architecture.md)、[AGENTS.md](file:///g:/FinSightV9/AGENTS.md)
+> **详细架构**：[team-handbook/02-architecture.md](./02-architecture.md)、[AGENTS.md](file:///g:/FinSightV9/AGENTS.md)
 
 ---
 
@@ -1214,7 +1214,7 @@ npm run audit:atomic
 - [ ] Router 版本兼容性验证
 - [ ] SKILL 方法论与代码权重表对齐
 
-> **完整教训库**：[lessons-learned.md](file:///g:/FinSightV9/docs/reports/retrospectives/lessons-learned.md)、[lessons-learned-summary.md](file:///g:/FinSightV9/docs/reports/retrospectives/lessons-learned-summary.md)
+> **完整教训库**：[lessons-learned.md](../reports/retrospectives/lessons-learned.md)、[lessons-learned-summary.md](../reports/retrospectives/lessons-learned-summary.md)
 
 ---
 
@@ -1307,7 +1307,7 @@ change_log:
 - 新增页面 → 更新路由文档
 - 架构变更 → 更新 ADR 或架构文档
 
-> **详细规范**：[doc-style-standard.md](file:///g:/FinSightV9/docs/00-meta/doc-style-standard.md)、[jsdoc-convention.md](file:///g:/FinSightV9/docs/reference/jsdoc-convention.md)
+> **详细规范**：[doc-style-standard.md](../00-meta/doc-style-standard.md)、[jsdoc-convention.md](file:///g:/FinSightV9/docs/reference/jsdoc-convention.md)
 
 ---
 
@@ -1361,20 +1361,20 @@ change_log:
 | 类别 | 文档 | 路径 |
 |------|------|------|
 | **入门** | 团队手册 README | [team-handbook/README.md](file:///g:/FinSightV9/docs/team-handbook/README.md) |
-| | 设计哲学 | [01-design-philosophy.md](file:///g:/FinSightV9/docs/team-handbook/01-design-philosophy.md) |
-| | 架构总览 | [02-architecture.md](file:///g:/FinSightV9/docs/team-handbook/02-architecture.md) |
+| | 设计哲学 | [01-design-philosophy.md](./01-design-philosophy.md) |
+| | 架构总览 | [02-architecture.md](./02-architecture.md) |
 | **架构契约** | AGENTS.md | [AGENTS.md](file:///g:/FinSightV9/AGENTS.md) |
 | | 架构标准 | [03-architecture-standards.md](file:///g:/FinSightV9/docs/reference/03-architecture-standards.md) |
-| **开发流程** | 开发工作流 SOP | [development-workflow-sop.md](file:///g:/FinSightV9/docs/reference/development-workflow-sop.md) |
+| **开发流程** | 开发工作流 SOP | [development-workflow-sop.md](../reference/development-workflow-sop.md) |
 | | 编码规范 | [coding-conventions.md](file:///g:/FinSightV9/docs/reference/coding-conventions.md) |
 | | 质量门禁 | [09-quality-gates.md](file:///g:/FinSightV9/docs/reference/09-quality-gates.md) |
 | **专项指南** | 新增 Store | [how-to-add-store.md](file:///g:/FinSightV9/docs/how-to/how-to-add-store.md) |
 | | 新增 Service | [how-to-add-service.md](file:///g:/FinSightV9/docs/how-to/how-to-add-service.md) |
 | | 新增 Widget | [how-to-add-widget.md](file:///g:/FinSightV9/docs/how-to/how-to-add-widget.md) |
-| | 代码评审 | [code-review-guide.md](file:///g:/FinSightV9/docs/how-to/code-review-guide.md) |
-| **经验教训** | 完整教训库 | [lessons-learned.md](file:///g:/FinSightV9/docs/reports/retrospectives/lessons-learned.md) |
-| | 教训摘要 | [lessons-learned-summary.md](file:///g:/FinSightV9/docs/reports/retrospectives/lessons-learned-summary.md) |
-| | 项目历程 | [project-development-journey.md](file:///g:/FinSightV9/docs/reports/retrospectives/project-development-journey.md) |
+| | 代码评审 | [code-review-guide.md](../how-to/code-review-guide.md) |
+| **经验教训** | 完整教训库 | [lessons-learned.md](../reports/retrospectives/lessons-learned.md) |
+| | 教训摘要 | [lessons-learned-summary.md](../reports/retrospectives/lessons-learned-summary.md) |
+| | 项目历程 | [project-development-journey.md](../reports/retrospectives/project-development-journey.md) |
 
 ### 附录 B：命令速查
 

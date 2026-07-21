@@ -19,7 +19,7 @@
 | UseCase 用例层 | 内联类型定义 | `src/services/useCase/createExecutionPlan.useCase.ts`、`src/services/useCase/executePlan.useCase.ts`、`src/services/useCase/fetchSectorAnalysis.useCase.ts`、`src/services/useCase/fetcherOrchestrator.useCase.ts`、`src/services/useCase/generateTradeReview.useCase.ts`、`src/services/useCase/getUnifiedStockView.useCase.ts`、`src/services/useCase/hotSectorQuery.useCase.ts`、`src/services/useCase/rebalancePortfolio.useCase.ts`、`src/services/useCase/runDualStrategy.useCase.ts`、`src/services/useCase/strategySnapshotSave.useCase.ts`、`src/services/useCase/submitOrder.useCase.ts` | `CreateExecutionPlanInput`/`CreateExecutionPlanResult`、`ExecutePlanContext`/`ExecutePlanResult`、`FetchSectorAnalysisInput`/`FetchSectorAnalysisResult`、`FetchBasicDataInput`/`FetchKlineDataInput`、`TradeReviewReport`（引用自 `tradeReviewAI.types.ts`）、`UnifiedStockView`/`FusionOptions`、`HotSectorQueryInput`/`HotSectorQueryResult`、`RebalanceOptions`、`RunDualStrategyInput`、`SaveStrategySnapshotInput`/`SaveStrategySnapshotResult`、`SubmitOrderInput`/`SubmitOrderResult` |
 | 交易计算纯函数 | 内联类型定义 | `src/services/trading/positionComputer.ts`、`src/services/trading/pnlComputer.ts`、`src/services/trading/riskComputer.ts` | `MatchedTradePair`、`TradePair`、`PositionItem`、`PnLSummary`、`RiskMetrics` |
 | 交易引擎（信号/仓位/风控） | 内联类型定义 | `src/services/trading/signalGenerator.ts`、`src/services/trading/positionSizer.ts`、`src/services/trading/riskEngine.ts` | `TradingSignal`（= `Signal`）、`SignalSnapshot`、`SignalDirection`、`PositionSizingInput`/`PositionSizingResult`、`OrderRiskInput`/`RiskCheckResult` |
-| 股票池分组 | 内联类型定义 | `src/data/types.ts`（`PoolGroupMeta`）、`src/config/dbConfig.ts`（`DEFAULT_POOL_GROUP`）、`src/store/poolStore.ts`（`PoolState`） | `PoolGroupMeta`、`DEFAULT_POOL_GROUP`、`PoolState`（含 `stocks`/`loading`/`error`/`isRefreshing`/`lastUpdated`）、`Stock.group` 字段 |
+| 股票池分组 | 内联类型定义 | `src/data/types.ts`（`PoolGroupMeta`）、`src/config/dbConfig.ts`（`DEFAULT_POOL_GROUP`）、`src/store/poolStore.test.ts`（`PoolState`） | `PoolGroupMeta`、`DEFAULT_POOL_GROUP`、`PoolState`（含 `stocks`/`loading`/`error`/`isRefreshing`/`lastUpdated`）、`Stock.group` 字段 |
 
 ---
 
@@ -65,7 +65,7 @@
 |------|------|------|
 | 数据流引擎（DataFlow Engine） | ✅ 已补充 | 已新增 `docs/DATAFLOW_DATA_DEFINITION.md`，覆盖 `DataChannel`、`DataPacket`、`ChannelMeta`、API、事件、回退数据、重连策略 |
 | 数据融合引擎（Data Fusion） | ✅ 已实现 | `src/services/unifiedStockService.ts` 已落地，`UnifiedStockView` 统一视图整合 7 种数据源 |
-| 股票池分组 | ✅ 已补充 | `PoolGroupMeta`（`src/data/types.ts`）、`DEFAULT_POOL_GROUP`（`src/config/dbConfig.ts`）、`PoolState`（`src/store/poolStore.ts`）、`Stock.group` 字段已纳入索引 |
+| 股票池分组 | ✅ 已补充 | `PoolGroupMeta`（`src/data/types.ts`）、`DEFAULT_POOL_GROUP`（`src/config/dbConfig.ts`）、`PoolState`（`src/store/poolStore.test.ts`）、`Stock.group` 字段已纳入索引 |
 | 交易引擎（信号/仓位/风控） | ✅ 已补充 | `signalGenerator.ts`（`TradingSignal`/`SignalSnapshot`/`SignalDirection`）、`positionSizer.ts`（`PositionSizingInput`/`PositionSizingResult`）、`riskEngine.ts`（`OrderRiskInput`/`RiskCheckResult`）已纳入索引 |
 
 ---

@@ -2,7 +2,7 @@
 title: doc-system-check-v9
 code_version: 2.0.0
 
-tier: core
+tier: reference
 ---
 
 ---
@@ -258,9 +258,9 @@ Kimi 官方推荐的项目文件管理策略：
 
 | 契约要求 | 初检缺口 | 修订状态 |
 |----------|----------|----------|
-| 新增页面必须同步更新 `ROUTE_REGISTRY` 和 `../reference/06-routing-specs.md` | 无 `docs/how-to/how-to-add-page.md` 操作指南 | 仍缺失 |
-| 修改 `UserType` 不得破坏 `user-type.spec.ts` | 无 `docs/standards/type-evolution-guide.md` | 仍缺失 |
-| 所有 `useEffect` 清理模板（4 个） | 无 `docs/standards/react-lifecycle-patterns.md` | 仍缺失 |
+| 新增页面必须同步更新 `ROUTE_REGISTRY` 和 `../reference/06-routing-specs.md` | 无 `../archive/how-to-add-page.md` 操作指南 | 仍缺失 |
+| 修改 `UserType` 不得破坏 `user-type.spec.ts` | 无 `../archive/type-evolution-guide.md` | 仍缺失 |
+| 所有 `useEffect` 清理模板（4 个） | 无 `../archive/react-lifecycle-patterns.md` | 仍缺失 |
 | 颜色令牌 8 个场景（A–H） | 无 `../explanation/token-usage-cookbook.md`（`../reference/design-token-mapping.md` 不够场景化） | ✅ **已创建** `../explanation/token-usage-cookbook.md` |
 
 ---

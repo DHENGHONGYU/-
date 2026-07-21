@@ -760,7 +760,7 @@ V10 `StateBoard` V9  `eventBus` + DataBridge + Zustand
 | D03 | V6 / | `src/services/scoring/v6ScoreService.ts` |  | Phase 2 |
 | D04 |  | `src/config/routes.ts` |  404 | |
 | D05 |  `thresholds.ts` / `symbols.ts` | `src/config/` | | Phase 2  |
-| D06 |  | `scripts/audit-layer-calls.ts` |  0  / 0  |  |
+| D06 |  | `scripts/audit/audit-layer-calls.ts` |  0  / 0  |  |
 | D07 |  `inputConfig.ts`  | `src/config/inputConfig.ts` | //| |
 | D08 | | `src/config/routes.ts` vs `src/apps/`/`src/pages/` | /| Phase 2  `audit-dead-code.ts` - |
 | D09 | UI  Tailwind /| `src/apps/input/prototype/*` | | Phase 2  |

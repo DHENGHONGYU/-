@@ -60,7 +60,7 @@
 | 2.1.6 | Python 接口契约 | P1 | - | ✅ | `python/data_service/collect_endpoints.py` |
 | 2.1.7 | 单元测试 | P1 | 2.1.3 | ✅ | `tests/fetcherService.test.ts` |
 | **2.1.8** | **数据流引擎（DataFlow Engine）** | **P1** | **1.7** | **🟡** | **代码已存在 `src/core/dataflow/`，待文档补齐与正式验收** |
-| **2.1.9** | **数据融合引擎（Data Fusion）** | **P1** | **2.1.8** | **🔴** | **`src/services/analysis/unifiedStockService.ts`：统一 `UnifiedStockData` 视图** |
+| **2.1.9** | **数据融合引擎（Data Fusion）** | **P1** | **2.1.8** | **🔴** | **`src/services/unifiedStockService.ts`：统一 `UnifiedStockData` 视图** |
 | 2.2 | 真实行情/财务数据接入评分 | P1 | 2.1 | TBD | `v6ScoreService.ts` 使用真实数据计算因子分；综合分与随机数时代差异可解释 |
 | **2.2.1** | **评分报告生成** | **P1** | **2.2** | **🔴** | **`v6ScoreReportService.ts`：生成包含理由、目标价、风险的完整报告** |
 | 2.3 | 股票池流转 UI | P1 | 1.7, 1.9 | ✅ | candidate→screened→deepDive→watching→archived 可在 UI 上点击推送；流转经 `poolTransitionEngine` 校验 |

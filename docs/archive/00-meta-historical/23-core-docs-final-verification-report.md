@@ -1,7 +1,7 @@
 ---
 title: 23-core-docs-final-verification-report
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
@@ -33,9 +33,9 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 
 - **判定理由**：无 `docs/README.md`；`../reference/README.md` 是子目录导航，非顶层总入口
 
-### `./governance.md` 🔴
+### `../../00-meta/GOVERNANCE.md` 🔴
 
-- **判定理由**：无 `./governance.md`；`../explanation/design/implementation-governance.md` 是实施治理，非文档治理公约
+- **判定理由**：无 `../../00-meta/GOVERNANCE.md`；`../explanation/design/implementation-governance.md` 是实施治理，非文档治理公约
 
 ### `../explanation/overview.md` ✅
 
@@ -98,7 +98,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 
 ### `../reference/security-model.md` 🔴
 
-- **判定理由**：仅`../how-to/mcp-acl-guide.md`（MCP ACL），无整体安全/权限模型
+- **判定理由**：仅`../../how-to/mcp-acl-guide.md`（MCP ACL），无整体安全/权限模型
 
 ### `../reference/deployment.md` 🔴
 
@@ -135,14 +135,14 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ## 🔴 真正缺失文档清单（14个）
 
 - `docs/README.md` — `../reference/README.md` 是子目录导航，非顶层总入口
-- `./governance.md` — `../explanation/design/implementation-governance.md` 是实施治理，非文档治理公约
+- `../../00-meta/GOVERNANCE.md` — `../explanation/design/implementation-governance.md` 是实施治理，非文档治理公约
 - `../explanation/cabins-overview.md` — `../explanation/design/v9-current-state-review.md` 按实施进度描述五舱，非架构视角
 - `../reports/release-management/README.md` — 9份ADR散落各子目录
 - `../reports/release-management/README.md` — `01-requirements/adr/` 下无README.md
 - `../prompts/store-integration-guide.md` — 仅`../../prompts/store-prompt-template.md`有片段
 - `../prompts/service-integration-guide.md` — 仅`../../prompts/service-prompt-template.md`有片段
 - `../reference/test-catalog.md` — v9-test-cases.md偏一次性清单
-- `../reference/security-model.md` — 仅`../how-to/mcp-acl-guide.md`（MCP ACL），无整体安全/权限模型
+- `../reference/security-model.md` — 仅`../../how-to/mcp-acl-guide.md`（MCP ACL），无整体安全/权限模型
 - `../reference/deployment.md` — 仅`05-deployment/ADR-004`（HashRouter），无部署架构文档
 - `../explanation/runbook.md` — 无运行/故障手册
 - `../tutorials/getting-started.md` — `../reference/autonomous-workflow-user-guide.md`是自主工作流工具指南，非新手入门教程

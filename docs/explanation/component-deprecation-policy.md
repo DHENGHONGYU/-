@@ -168,7 +168,7 @@ export function DeprecatedComponent() {
 
 ### 4.1 审计脚本
 
-使用 `scripts/audit-component-usage.ts` 进行组件使用情况审计：
+使用 `scripts/audit/audit-component-usage.ts` 进行组件使用情况审计：
 
 ```bash
 npx tsx scripts/audit-component-usage.ts

@@ -1,12 +1,12 @@
 ---
-title: MCP ¼Ü¹¹Õû¸ÄĞĞ¶¯¼Æ»®
+title: MCP æ¶æ„æ•´æ”¹è¡ŒåŠ¨è®¡åˆ’
 type: reports
 domain: architecture
 phase: design
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "**»ùÓÚÎÄµµ**: mcp-architecture-audit-report-2026-07-08.md **ÖÆ¶¨ÈÕÆÚ**: 2026-07-08 **Ä¿±ê**: Õë¶Ô 5 ÌõºËĞÄ½ÌÑµ£¬°´ÓÅÏÈ..."
+summary: "**åŸºäºæ–‡æ¡£**: mcp-architecture-audit-report-2026-07-08.md **åˆ¶å®šæ—¥æœŸ**: 2026-07-08 **ç›®æ ‡**: é’ˆå¯¹ 5 æ¡æ ¸å¿ƒæ•™è®­ï¼ŒæŒ‰ä¼˜å…ˆ..."
 tags: [architecture, mcp, remediation]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -17,56 +17,56 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# MCP ¼Ü¹¹Õû¸ÄĞĞ¶¯¼Æ»®
+# MCP æ¶æ„æ•´æ”¹è¡ŒåŠ¨è®¡åˆ’
 
-> **»ùÓÚÎÄµµ**: mcp-architecture-audit-report-2026-07-08.md
-> **ÖÆ¶¨ÈÕÆÚ**: 2026-07-08
-> **Ä¿±ê**: Õë¶Ô 5 ÌõºËĞÄ½ÌÑµ£¬°´ÓÅÏÈ¼¶ÖÆ¶¨¿ÉÖ´ĞĞµÄ¼Ü¹¹Õû¸Ä¼Æ»®
+> **åŸºäºæ–‡æ¡£**: mcp-architecture-audit-report-2026-07-08.md
+> **åˆ¶å®šæ—¥æœŸ**: 2026-07-08
+> **ç›®æ ‡**: é’ˆå¯¹ 5 æ¡æ ¸å¿ƒæ•™è®­ï¼ŒæŒ‰ä¼˜å…ˆçº§åˆ¶å®šå¯æ‰§è¡Œçš„æ¶æ„æ•´æ”¹è®¡åˆ’
 
 ---
 
-## Õû¸Ä×ÜÀÀ
+## æ•´æ”¹æ€»è§ˆ
 
-| Åú´Î | ¶ÔÓ¦½ÌÑµ | Õû¸ÄÏîÊı | ÓÅÏÈ¼¶ | ºËĞÄÄ¿±ê |
+| æ‰¹æ¬¡ | å¯¹åº”æ•™è®­ | æ•´æ”¹é¡¹æ•° | ä¼˜å…ˆçº§ | æ ¸å¿ƒç›®æ ‡ |
 |------|---------|---------|--------|---------|
-| µÚÒ»Åú | ½ÌÑµ 5 + ½ÌÑµ 4 | 2 Ïî | P0 | ²¹Æë°²È«È±¿ÚºÍÉúÃüÖÜÆÚ¹ÜÀí |
-| µÚ¶şÅú | ½ÌÑµ 3 | 2 Ïî | P0 | ÂäÊµ LLM Í¸Ã÷¶ÈÇ¿ÖÆÒªÇó |
-| µÚÈıÅú | ½ÌÑµ 2 | 3 Ïî | P1 | ²¹È« MCP ÒµÎñÄÜÁ¦¸²¸Ç |
-| µÚËÄÅú | ½ÌÑµ 1 | 2 Ïî | P1 | ½â¾ö¼Ü¹¹¹æÔò³åÍ» |
-| µÚÎåÅú | ÒÅÁôÏî | 3 Ïî | P2 | ÇåÀíµÍ·çÏÕ¼¼ÊõÕ® |
+| ç¬¬ä¸€æ‰¹ | æ•™è®­ 5 + æ•™è®­ 4 | 2 é¡¹ | P0 | è¡¥é½å®‰å…¨ç¼ºå£å’Œç”Ÿå‘½å‘¨æœŸç®¡ç† |
+| ç¬¬äºŒæ‰¹ | æ•™è®­ 3 | 2 é¡¹ | P0 | è½å® LLM é€æ˜åº¦å¼ºåˆ¶è¦æ±‚ |
+| ç¬¬ä¸‰æ‰¹ | æ•™è®­ 2 | 3 é¡¹ | P1 | è¡¥å…¨ MCP ä¸šåŠ¡èƒ½åŠ›è¦†ç›– |
+| ç¬¬å››æ‰¹ | æ•™è®­ 1 | 2 é¡¹ | P1 | è§£å†³æ¶æ„è§„åˆ™å†²çª |
+| ç¬¬äº”æ‰¹ | é—ç•™é¡¹ | 3 é¡¹ | P2 | æ¸…ç†ä½é£é™©æŠ€æœ¯å€º |
 
 ---
 
-## µÚÒ»Åú£º°²È«ÓëÉúÃüÖÜÆÚ£¨P0 ¡ª ½ÌÑµ 5 + ½ÌÑµ 4£©
+## ç¬¬ä¸€æ‰¹ï¼šå®‰å…¨ä¸ç”Ÿå‘½å‘¨æœŸï¼ˆP0 â€” æ•™è®­ 5 + æ•™è®­ 4ï¼‰
 
-### Õû¸ÄÏî 1.1£ºMCP ²ãÈ¨ÏŞ¿ØÖÆ¼¯³É
+### æ•´æ”¹é¡¹ 1.1ï¼šMCP å±‚æƒé™æ§åˆ¶é›†æˆ
 
-**¶ÔÓ¦½ÌÑµ**: ½ÌÑµ 5 ¡ª È¨ÏŞ¿ØÖÆÓ¦ÔÚ¼Ü¹¹Èë¿Ú²ãÇ°ÖÃ
+**å¯¹åº”æ•™è®­**: æ•™è®­ 5 â€” æƒé™æ§åˆ¶åº”åœ¨æ¶æ„å…¥å£å±‚å‰ç½®
 
-**ÎÊÌâ**: MCP Tool/Resource µ÷ÓÃÎŞÈÎºÎÈ¨ÏŞĞ£Ñé£¬Óë DataBridge µÄ ACL_MATRIX ĞÎ³É°²È«È±¿Ú
+**é—®é¢˜**: MCP Tool/Resource è°ƒç”¨æ— ä»»ä½•æƒé™æ ¡éªŒï¼Œä¸ DataBridge çš„ ACL_MATRIX å½¢æˆå®‰å…¨ç¼ºå£
 
-**ÖØ¹¹Ä£¿é**:
+**é‡æ„æ¨¡å—**:
 
-| Ä£¿é | ÎÄ¼ş | ¸Ä¶¯ÀàĞÍ | ËµÃ÷ |
+| æ¨¡å— | æ–‡ä»¶ | æ”¹åŠ¨ç±»å‹ | è¯´æ˜ |
 |------|------|---------|------|
-| MCP È¨ÏŞ¶¨Òå | `src/config/mcpAclMatrix.ts`£¨ĞÂ½¨£© | ĞÂÔö | ¶¨Òå `MCP_ACL_MATRIX`£¬°´µ÷ÓÃ·½½ÇÉ«£¨agent/ui/ci£©ÏŞÖÆ¿É·ÃÎÊµÄ Server ºÍ Tool |
-| MCP Client | `src/mcp/core/client.ts` | ĞŞ¸Ä | `callTool()`/`readResource()` Èë¿ÚÔö¼Ó `aclEngine.assert()` µ÷ÓÃ |
-| MCP Bridge | `src/mcp/bridge/mcpBridge.ts` | ĞŞ¸Ä | `callTool()` ´«Èë caller Éí·İ±êÊ¶£¬Í¸´«ÖÁ ACL Ğ£Ñé |
-| ACL Engine | `src/core/acl.ts` | ĞŞ¸Ä | ĞÂÔö `assertMcpTool(caller, serverName, toolName)` ·½·¨ |
+| MCP æƒé™å®šä¹‰ | `src/config/mcpAclMatrix.ts`ï¼ˆæ–°å»ºï¼‰ | æ–°å¢ | å®šä¹‰ `MCP_ACL_MATRIX`ï¼ŒæŒ‰è°ƒç”¨æ–¹è§’è‰²ï¼ˆagent/ui/ciï¼‰é™åˆ¶å¯è®¿é—®çš„ Server å’Œ Tool |
+| MCP Client | `src/mcp/core/client.ts` | ä¿®æ”¹ | `callTool()`/`readResource()` å…¥å£å¢åŠ  `aclEngine.assert()` è°ƒç”¨ |
+| MCP Bridge | `src/mcp/bridge/mcpBridge.ts` | ä¿®æ”¹ | `callTool()` ä¼ å…¥ caller èº«ä»½æ ‡è¯†ï¼Œé€ä¼ è‡³ ACL æ ¡éªŒ |
+| ACL Engine | `src/core/acl.ts` | ä¿®æ”¹ | æ–°å¢ `assertMcpTool(caller, serverName, toolName)` æ–¹æ³• |
 
-**MCP ACL ¾ØÕóÉè¼Æ**:
+**MCP ACL çŸ©é˜µè®¾è®¡**:
 
 ```typescript
 // src/config/mcpAclMatrix.ts
 export const MCP_ACL_MATRIX: Record<string, McpPermission> = {
-  // AI Agent£º¿Éµ÷ÓÃËùÓĞ Server µÄËùÓĞ Tool
+  // AI Agentï¼šå¯è°ƒç”¨æ‰€æœ‰ Server çš„æ‰€æœ‰ Tool
   agent: { allowedServers: ['*'], allowedTools: ['*'] },
-  // UI ²ã£º½ö¿Éµ÷ÓÃ²éÑ¯Àà Tool£¬½ûÖ¹½»Ò×ÀàĞ´²Ù×÷
+  // UI å±‚ï¼šä»…å¯è°ƒç”¨æŸ¥è¯¢ç±» Toolï¼Œç¦æ­¢äº¤æ˜“ç±»å†™æ“ä½œ
   ui: {
     allowedServers: ['fetcher', 'stockpool', 'scoring:v6', 'analysis', 'news', 'llm', 'portfolio'],
     allowedTools: ['health_check', 'list_*', 'get_*', 'score_stock', 'fetch_*'],
   },
-  // CI Á÷Ë®Ïß£º½ö¿Éµ÷ÓÃÏµÍ³¹ÜÀíÀà Tool
+  // CI æµæ°´çº¿ï¼šä»…å¯è°ƒç”¨ç³»ç»Ÿç®¡ç†ç±» Tool
   ci: {
     allowedServers: ['system'],
     allowedTools: ['get_*', 'generate_migration_report'],
@@ -74,44 +74,44 @@ export const MCP_ACL_MATRIX: Record<string, McpPermission> = {
 }
 ```
 
-**ÑéÖ¤±ê×¼**:
-- [ ] `MCPClientImpl.callTool()` ÔÚµ÷ÓÃÇ°Ö´ĞĞ ACL Ğ£Ñé
-- [ ] ACL ¾Ü¾øÊ±·µ»Ø `isError: true` ÇÒ°üº¬ `ACL_PERMISSION_DENIED` ĞÅÏ¢
-- [ ] Éó¼ÆÈÕÖ¾¼ÇÂ¼ `aclResult` ×Ö¶Î
-- [ ] ĞÂÔöµ¥Ôª²âÊÔ¸²¸Ç 3 ÖÖ½ÇÉ«£¨agent/ui/ci£©µÄÈ¨ÏŞ±ß½ç
+**éªŒè¯æ ‡å‡†**:
+- [ ] `MCPClientImpl.callTool()` åœ¨è°ƒç”¨å‰æ‰§è¡Œ ACL æ ¡éªŒ
+- [ ] ACL æ‹’ç»æ—¶è¿”å› `isError: true` ä¸”åŒ…å« `ACL_PERMISSION_DENIED` ä¿¡æ¯
+- [ ] å®¡è®¡æ—¥å¿—è®°å½• `aclResult` å­—æ®µ
+- [ ] æ–°å¢å•å…ƒæµ‹è¯•è¦†ç›– 3 ç§è§’è‰²ï¼ˆagent/ui/ciï¼‰çš„æƒé™è¾¹ç•Œ
 
-**Ô¤¼ÆÓ°Ïì·¶Î§**: 4 ¸öÎÄ¼şĞŞ¸Ä£¬1 ¸öÎÄ¼şĞÂ½¨
+**é¢„è®¡å½±å“èŒƒå›´**: 4 ä¸ªæ–‡ä»¶ä¿®æ”¹ï¼Œ1 ä¸ªæ–‡ä»¶æ–°å»º
 
 ---
 
-### Õû¸ÄÏî 1.2£ºMCPServerBase ÉúÃüÖÜÆÚ¹ÜÀí
+### æ•´æ”¹é¡¹ 1.2ï¼šMCPServerBase ç”Ÿå‘½å‘¨æœŸç®¡ç†
 
-**¶ÔÓ¦½ÌÑµ**: ½ÌÑµ 4 ¡ª ÉúÃüÖÜÆÚ¹ÜÀíÊÇ Server ³éÏóµÄ±Ø±¸ÄÜÁ¦
+**å¯¹åº”æ•™è®­**: æ•™è®­ 4 â€” ç”Ÿå‘½å‘¨æœŸç®¡ç†æ˜¯ Server æŠ½è±¡çš„å¿…å¤‡èƒ½åŠ›
 
-**ÎÊÌâ**: MCPServerBase ÎŞ `start()`/`stop()`/`healthCheck()` ·½·¨
+**é—®é¢˜**: MCPServerBase æ—  `start()`/`stop()`/`healthCheck()` æ–¹æ³•
 
-**ÖØ¹¹Ä£¿é**:
+**é‡æ„æ¨¡å—**:
 
-| Ä£¿é | ÎÄ¼ş | ¸Ä¶¯ÀàĞÍ | ËµÃ÷ |
+| æ¨¡å— | æ–‡ä»¶ | æ”¹åŠ¨ç±»å‹ | è¯´æ˜ |
 |------|------|---------|------|
-| MCPServer ½Ó¿Ú | `src/types/modules/mcp.types.ts` | ĞŞ¸Ä | ½Ó¿ÚĞÂÔö `start()`/`stop()`/`healthCheck()` ·½·¨¶¨Òå |
-| Server »ùÀà | `src/mcp/core/server.ts` | ĞŞ¸Ä | MCPServerBase ĞÂÔöÉúÃüÖÜÆÚ·½·¨Ä¬ÈÏÊµÏÖ |
-| Registry | `src/mcp/core/registry.ts` | ĞŞ¸Ä | ĞÂÔö `startAll()`/`stopAll()`/`healthCheckAll()` |
-| 16 ¸ö Server | `src/mcp/servers/**/*.ts` | ĞŞ¸Ä | ¸÷ Server °´Ğè override `start()`/`stop()` |
-| MCP Bridge | `src/mcp/bridge/mcpBridge.ts` | ĞŞ¸Ä | ĞÂÔö `healthCheckAll()` ±ã½İ·½·¨ |
+| MCPServer æ¥å£ | `src/types/modules/mcp.types.ts` | ä¿®æ”¹ | æ¥å£æ–°å¢ `start()`/`stop()`/`healthCheck()` æ–¹æ³•å®šä¹‰ |
+| Server åŸºç±» | `src/mcp/core/server.ts` | ä¿®æ”¹ | MCPServerBase æ–°å¢ç”Ÿå‘½å‘¨æœŸæ–¹æ³•é»˜è®¤å®ç° |
+| Registry | `src/mcp/core/registry.ts` | ä¿®æ”¹ | æ–°å¢ `startAll()`/`stopAll()`/`healthCheckAll()` |
+| 16 ä¸ª Server | `src/mcp/servers/**/*.ts` | ä¿®æ”¹ | å„ Server æŒ‰éœ€ override `start()`/`stop()` |
+| MCP Bridge | `src/mcp/bridge/mcpBridge.ts` | ä¿®æ”¹ | æ–°å¢ `healthCheckAll()` ä¾¿æ·æ–¹æ³• |
 
-**½Ó¿ÚÉè¼Æ**:
+**æ¥å£è®¾è®¡**:
 
 ```typescript
-// src/types/modules/mcp.types.ts ĞÂÔö
+// src/types/modules/mcp.types.ts æ–°å¢
 export interface MCPServer {
-  // ... ÏÖÓĞ·½·¨ ...
+  // ... ç°æœ‰æ–¹æ³• ...
 
-  /** Æô¶¯ Server£¨³õÊ¼»¯×ÊÔ´¡¢Æô¶¯ºóÌ¨ÈÎÎñ£© */
+  /** å¯åŠ¨ Serverï¼ˆåˆå§‹åŒ–èµ„æºã€å¯åŠ¨åå°ä»»åŠ¡ï¼‰ */
   start(): Promise<void>
-  /** ÓÅÑÅ¹Ø±Õ£¨µÈ´ı½øĞĞÖĞ Tool µ÷ÓÃÍê³É¡¢ÊÍ·Å×ÊÔ´£© */
+  /** ä¼˜é›…å…³é—­ï¼ˆç­‰å¾…è¿›è¡Œä¸­ Tool è°ƒç”¨å®Œæˆã€é‡Šæ”¾èµ„æºï¼‰ */
   stop(): Promise<void>
-  /** ½¡¿µ¼ì²é */
+  /** å¥åº·æ£€æŸ¥ */
   healthCheck(): Promise<HealthStatus>
 }
 
@@ -122,134 +122,134 @@ export interface HealthStatus {
 }
 ```
 
-**ÑéÖ¤±ê×¼**:
-- [ ] `MCPServerBase` Ìá¹© `start()`/`stop()`/`healthCheck()` Ä¬ÈÏÊµÏÖ£¨¿Õ·½·¨ + ·µ»Ø healthy£©
-- [ ] `fetcher` Server override `start()` ³õÊ¼»¯Êı¾İÔ´Á¬½Ó
-- [ ] `registry.startAll()` °´ÓÅÏÈ¼¶ÒÀ´ÎÆô¶¯ËùÓĞ Server
-- [ ] `registry.healthCheckAll()` ·µ»ØËùÓĞ Server ½¡¿µ×´Ì¬
-- [ ] Ó¦ÓÃÍË³öÊ±µ÷ÓÃ `registry.stopAll()` ÓÅÑÅ¹Ø±Õ
+**éªŒè¯æ ‡å‡†**:
+- [ ] `MCPServerBase` æä¾› `start()`/`stop()`/`healthCheck()` é»˜è®¤å®ç°ï¼ˆç©ºæ–¹æ³• + è¿”å› healthyï¼‰
+- [ ] `fetcher` Server override `start()` åˆå§‹åŒ–æ•°æ®æºè¿æ¥
+- [ ] `registry.startAll()` æŒ‰ä¼˜å…ˆçº§ä¾æ¬¡å¯åŠ¨æ‰€æœ‰ Server
+- [ ] `registry.healthCheckAll()` è¿”å›æ‰€æœ‰ Server å¥åº·çŠ¶æ€
+- [ ] åº”ç”¨é€€å‡ºæ—¶è°ƒç”¨ `registry.stopAll()` ä¼˜é›…å…³é—­
 
-**Ô¤¼ÆÓ°Ïì·¶Î§**: 3 ¸öºËĞÄÎÄ¼ş + 16 ¸ö Server ÎÄ¼ş
+**é¢„è®¡å½±å“èŒƒå›´**: 3 ä¸ªæ ¸å¿ƒæ–‡ä»¶ + 16 ä¸ª Server æ–‡ä»¶
 
 ---
 
-## µÚ¶şÅú£ºLLM Í¸Ã÷¶È£¨P0 ¡ª ½ÌÑµ 3£©
+## ç¬¬äºŒæ‰¹ï¼šLLM é€æ˜åº¦ï¼ˆP0 â€” æ•™è®­ 3ï¼‰
 
-### Õû¸ÄÏî 2.1£ºV6 ÆÀ·Ö¹¤¾ß LLM ÔöÇ¿²ã±©Â¶
+### æ•´æ”¹é¡¹ 2.1ï¼šV6 è¯„åˆ†å·¥å…· LLM å¢å¼ºå±‚æš´éœ²
 
-**¶ÔÓ¦½ÌÑµ**: ½ÌÑµ 3 ¡ª LLM Í¸Ã÷¶ÈÒªÇóĞèÔÚ½Ó¿ÚÉè¼Æ½×¶ÎÂäÊµ
+**å¯¹åº”æ•™è®­**: æ•™è®­ 3 â€” LLM é€æ˜åº¦è¦æ±‚éœ€åœ¨æ¥å£è®¾è®¡é˜¶æ®µè½å®
 
-**ÎÊÌâ**: `score_stock` ¹¤¾ßÎŞ LLM ÔöÇ¿²ã¿ª¹Ø¡¢ÎŞÄ£ĞÍÑ¡Ôñ¡¢½á¹ûÎŞ LLM ±ê×¢
+**é—®é¢˜**: `score_stock` å·¥å…·æ—  LLM å¢å¼ºå±‚å¼€å…³ã€æ— æ¨¡å‹é€‰æ‹©ã€ç»“æœæ—  LLM æ ‡æ³¨
 
-**ÖØ¹¹Ä£¿é**:
+**é‡æ„æ¨¡å—**:
 
-| Ä£¿é | ÎÄ¼ş | ¸Ä¶¯ÀàĞÍ | ËµÃ÷ |
+| æ¨¡å— | æ–‡ä»¶ | æ”¹åŠ¨ç±»å‹ | è¯´æ˜ |
 |------|------|---------|------|
-| V6 Scoring Server | `src/mcp/servers/scoring/v6ScoringServer.ts` | ĞŞ¸Ä | `score_stock` inputSchema ĞÂÔö LLM ¿ØÖÆ²ÎÊı |
-| V6 Score Service | `src/services/scoring/v6ScoreService.ts` | ĞŞ¸Ä | `runV6Score()` ½ÓÊÜ LLM ÔöÇ¿ÅäÖÃ |
-| V6 Engine Config | `src/services/scoring/v6-engine/config.ts` | ĞŞ¸Ä | ĞÂÔö `llmEnhanceLayers` Ä¬ÈÏÅäÖÃ |
-| ÆÀ·Ö½á¹ûÀàĞÍ | `src/types/modules/score.types.ts` | ĞŞ¸Ä | ScoreLayer ĞÂÔö `llmEnhanced: boolean` ×Ö¶Î |
+| V6 Scoring Server | `src/mcp/servers/scoring/v6ScoringServer.ts` | ä¿®æ”¹ | `score_stock` inputSchema æ–°å¢ LLM æ§åˆ¶å‚æ•° |
+| V6 Score Service | `src/services/scoring/v6ScoreService.ts` | ä¿®æ”¹ | `runV6Score()` æ¥å— LLM å¢å¼ºé…ç½® |
+| V6 Engine Config | `src/services/scoring/v6-engine/config.ts` | ä¿®æ”¹ | æ–°å¢ `llmEnhanceLayers` é»˜è®¤é…ç½® |
+| è¯„åˆ†ç»“æœç±»å‹ | `src/types/modules/score.types.ts` | ä¿®æ”¹ | ScoreLayer æ–°å¢ `llmEnhanced: boolean` å­—æ®µ |
 
-**¹¤¾ß²ÎÊıÉè¼Æ**:
+**å·¥å…·å‚æ•°è®¾è®¡**:
 
 ```typescript
-// score_stock µÄĞÂ inputSchema
+// score_stock çš„æ–° inputSchema
 {
-  symbol: { type: 'string', description: '¹ÉÆ±´úÂë' },
+  symbol: { type: 'string', description: 'è‚¡ç¥¨ä»£ç ' },
   llmEnhanceLayers: {
     type: 'array',
     items: { type: 'string', enum: ['L0', 'L1', 'L2', 'L5', 'L6'] },
-    description: 'ÆôÓÃµÄ LLM ÔöÇ¿²ã£¨Ä¬ÈÏÈ«²¿ÆôÓÃ£¬´«¿ÕÊı×é½ûÓÃËùÓĞ LLM£©',
+    description: 'å¯ç”¨çš„ LLM å¢å¼ºå±‚ï¼ˆé»˜è®¤å…¨éƒ¨å¯ç”¨ï¼Œä¼ ç©ºæ•°ç»„ç¦ç”¨æ‰€æœ‰ LLMï¼‰',
   },
   llmModel: {
     type: 'string',
-    description: 'LLM Ä£ĞÍ ID£¨Áô¿ÕÊ¹ÓÃÄ¬ÈÏÄ£ĞÍ£©',
+    description: 'LLM æ¨¡å‹ IDï¼ˆç•™ç©ºä½¿ç”¨é»˜è®¤æ¨¡å‹ï¼‰',
   },
   disableLlm: {
     type: 'boolean',
-    description: 'ÍêÈ«½ûÓÃËùÓĞ LLM ÔöÇ¿²ã£¨¿ì½İ¿ª¹Ø£©',
+    description: 'å®Œå…¨ç¦ç”¨æ‰€æœ‰ LLM å¢å¼ºå±‚ï¼ˆå¿«æ·å¼€å…³ï¼‰',
   },
 }
 ```
 
-**ÑéÖ¤±ê×¼**:
-- [ ] `score_stock` ¹¤¾ßÖ§³Ö `llmEnhanceLayers`/`llmModel`/`disableLlm` ²ÎÊı
-- [ ] ·µ»Ø½á¹ûÖĞÃ¿¸ö layer ±ê×¢ `llmEnhanced: boolean`
-- [ ] ĞÂÔö `get_llm_enhance_config` ¹¤¾ß£¬·µ»Ø¸÷²ã LLM ÔöÇ¿Ö§³ÖÇé¿ö
-- [ ] µ¥Ôª²âÊÔ¸²¸Ç LLM È«ÆôÓÃ/²¿·ÖÆôÓÃ/È«½ûÓÃÈıÖÖ³¡¾°
+**éªŒè¯æ ‡å‡†**:
+- [ ] `score_stock` å·¥å…·æ”¯æŒ `llmEnhanceLayers`/`llmModel`/`disableLlm` å‚æ•°
+- [ ] è¿”å›ç»“æœä¸­æ¯ä¸ª layer æ ‡æ³¨ `llmEnhanced: boolean`
+- [ ] æ–°å¢ `get_llm_enhance_config` å·¥å…·ï¼Œè¿”å›å„å±‚ LLM å¢å¼ºæ”¯æŒæƒ…å†µ
+- [ ] å•å…ƒæµ‹è¯•è¦†ç›– LLM å…¨å¯ç”¨/éƒ¨åˆ†å¯ç”¨/å…¨ç¦ç”¨ä¸‰ç§åœºæ™¯
 
 ---
 
-### Õû¸ÄÏî 2.2£ºLLM Server ÆÀ·ÖÒò×ÓÕ¹Ê¾¹¤¾ß
+### æ•´æ”¹é¡¹ 2.2ï¼šLLM Server è¯„åˆ†å› å­å±•ç¤ºå·¥å…·
 
-**¶ÔÓ¦½ÌÑµ**: ½ÌÑµ 3 ¡ª LLM µ÷ÓÃÇ°ÏòÓÃ»§Õ¹Ê¾ÆÀ·ÖÒò×ÓÊ¹ÓÃÇé¿ö
+**å¯¹åº”æ•™è®­**: æ•™è®­ 3 â€” LLM è°ƒç”¨å‰å‘ç”¨æˆ·å±•ç¤ºè¯„åˆ†å› å­ä½¿ç”¨æƒ…å†µ
 
-**ÎÊÌâ**: LLMServer ÎŞ"ÆÀ·ÖÒò×ÓÊ¹ÓÃÇé¿ö"Õ¹Ê¾¹¤¾ß
+**é—®é¢˜**: LLMServer æ— "è¯„åˆ†å› å­ä½¿ç”¨æƒ…å†µ"å±•ç¤ºå·¥å…·
 
-**ÖØ¹¹Ä£¿é**:
+**é‡æ„æ¨¡å—**:
 
-| Ä£¿é | ÎÄ¼ş | ¸Ä¶¯ÀàĞÍ | ËµÃ÷ |
+| æ¨¡å— | æ–‡ä»¶ | æ”¹åŠ¨ç±»å‹ | è¯´æ˜ |
 |------|------|---------|------|
-| LLM Server | `src/mcp/servers/llm/llmServer.ts` | ĞŞ¸Ä | ĞÂÔö `get_scoring_factors` ¹¤¾ß |
-| LLM Gateway | `src/services/llm/llmGateway.ts` | ĞŞ¸Ä | ĞÂÔö `getScoringFactors()` ·½·¨ |
+| LLM Server | `src/mcp/servers/llm/llmServer.ts` | ä¿®æ”¹ | æ–°å¢ `get_scoring_factors` å·¥å…· |
+| LLM Gateway | `src/services/llm/llmGateway.ts` | ä¿®æ”¹ | æ–°å¢ `getScoringFactors()` æ–¹æ³• |
 
-**ÑéÖ¤±ê×¼**:
-- [ ] ĞÂÔö `get_scoring_factors` ¹¤¾ß·µ»Ø¸÷ÆÀ·ÖÒò×ÓµÄ LLM Ê¹ÓÃÇé¿ö
-- [ ] ·µ»Ø½á¹¹°üº¬£ºÒò×ÓÃû³Æ¡¢ÊÇ·ñÊ¹ÓÃ LLM¡¢Ä¬ÈÏÄ£ĞÍ¡¢¿ÉÅäÖÃ¿ª¹Ø
+**éªŒè¯æ ‡å‡†**:
+- [ ] æ–°å¢ `get_scoring_factors` å·¥å…·è¿”å›å„è¯„åˆ†å› å­çš„ LLM ä½¿ç”¨æƒ…å†µ
+- [ ] è¿”å›ç»“æ„åŒ…å«ï¼šå› å­åç§°ã€æ˜¯å¦ä½¿ç”¨ LLMã€é»˜è®¤æ¨¡å‹ã€å¯é…ç½®å¼€å…³
 
-**Ô¤¼ÆÓ°Ïì·¶Î§**: 2 ¸öÎÄ¼ş
+**é¢„è®¡å½±å“èŒƒå›´**: 2 ä¸ªæ–‡ä»¶
 
 ---
 
-## µÚÈıÅú£ºMCP ÄÜÁ¦¸²¸Ç²¹È«£¨P1 ¡ª ½ÌÑµ 2£©
+## ç¬¬ä¸‰æ‰¹ï¼šMCP èƒ½åŠ›è¦†ç›–è¡¥å…¨ï¼ˆP1 â€” æ•™è®­ 2ï¼‰
 
-### Õû¸ÄÏî 3.1£ºÓÅÏÈ²¹³ä 3 ¸ö¸ß¼ÛÖµ MCP Server
+### æ•´æ”¹é¡¹ 3.1ï¼šä¼˜å…ˆè¡¥å…… 3 ä¸ªé«˜ä»·å€¼ MCP Server
 
-**¶ÔÓ¦½ÌÑµ**: ½ÌÑµ 2 ¡ª MCP ÄÜÁ¦¸²¸ÇÓ¦ÏÈÓÚÉî¶ÈÓÅ»¯£¨21 ¸ö service ½ö 8 ¸öÓĞ MCP Server£©
+**å¯¹åº”æ•™è®­**: æ•™è®­ 2 â€” MCP èƒ½åŠ›è¦†ç›–åº”å…ˆäºæ·±åº¦ä¼˜åŒ–ï¼ˆ21 ä¸ª service ä»… 8 ä¸ªæœ‰ MCP Serverï¼‰
 
-**ĞÂÔö Server Çåµ¥£¨°´ÒµÎñ¼ÛÖµÅÅĞò£©**:
+**æ–°å¢ Server æ¸…å•ï¼ˆæŒ‰ä¸šåŠ¡ä»·å€¼æ’åºï¼‰**:
 
-| ÓÅÏÈ¼¶ | ĞÂ½¨ Server | ·â×°µÄ service | ¼ÛÖµËµÃ÷ |
+| ä¼˜å…ˆçº§ | æ–°å»º Server | å°è£…çš„ service | ä»·å€¼è¯´æ˜ |
 |--------|------------|---------------|---------|
-| ¸ß | `src/mcp/servers/system/systemServer.ts` | `services/rbac/*` | RBAC ÓÃ»§/½ÇÉ«/È¨ÏŞ¹ÜÀí£¬AI Agent °²È«¹ÜÀí»ù´¡ |
-| ¸ß | `src/mcp/servers/workflow/workflowServer.ts` | `services/useCase/*` | ¿ç·şÎñ±àÅÅ£¨Í³Ò»¹ÉÆ±ÊÓÍ¼¡¢Ë«²ßÂÔÔËĞĞ£©£¬8 ¸ö useCase ÖĞ 7 ¸öÎ´±©Â¶ |
-| ÖĞ | `src/mcp/servers/analysis/analysisServer.ts` | `services/ai-center/*` | ÖÇÄÜÌåµ÷¶ÈÖĞĞÄ£¨µ±Ç°Îª¹ÂÁ¢½©Ê¬Ä£¿é£© |
+| é«˜ | `src/mcp/servers/system/systemServer.ts` | `services/rbac/*` | RBAC ç”¨æˆ·/è§’è‰²/æƒé™ç®¡ç†ï¼ŒAI Agent å®‰å…¨ç®¡ç†åŸºç¡€ |
+| é«˜ | `src/mcp/servers/workflow/workflowServer.ts` | `services/useCase/*` | è·¨æœåŠ¡ç¼–æ’ï¼ˆç»Ÿä¸€è‚¡ç¥¨è§†å›¾ã€åŒç­–ç•¥è¿è¡Œï¼‰ï¼Œ8 ä¸ª useCase ä¸­ 7 ä¸ªæœªæš´éœ² |
+| ä¸­ | `src/mcp/servers/analysis/analysisServer.ts` | `services/ai-center/*` | æ™ºèƒ½ä½“è°ƒåº¦ä¸­å¿ƒï¼ˆå½“å‰ä¸ºå­¤ç«‹åƒµå°¸æ¨¡å—ï¼‰ |
 
-**RBAC Server ¹¤¾ßÉè¼Æ**:
+**RBAC Server å·¥å…·è®¾è®¡**:
 
-| ¹¤¾ßÃû | ¹¦ÄÜ | ¶ÔÓ¦ service ·½·¨ |
+| å·¥å…·å | åŠŸèƒ½ | å¯¹åº” service æ–¹æ³• |
 |--------|------|------------------|
-| `list_users` | ÁĞ³öËùÓĞÓÃ»§ | `rbacManagementService.listUsers()` |
-| `create_user` | ´´½¨ÓÃ»§ | `rbacManagementService.createUser()` |
-| `assign_role` | ¸øÓÃ»§·ÖÅä½ÇÉ« | `rbacManagementService.assignRole()` |
-| `revoke_role` | ³·ÏúÓÃ»§½ÇÉ« | `rbacManagementService.revokeRole()` |
-| `list_roles` | ÁĞ³öËùÓĞ½ÇÉ« | `rbacManagementService.listRoles()` |
-| `list_permissions` | ÁĞ³öËùÓĞÈ¨ÏŞ | `rbacManagementService.listPermissions()` |
-| `get_audit_logs` | ²éÑ¯È¨ÏŞÉó¼ÆÈÕÖ¾ | `rbacManagementService.getAuditLogs()` |
+| `list_users` | åˆ—å‡ºæ‰€æœ‰ç”¨æˆ· | `rbacManagementService.listUsers()` |
+| `create_user` | åˆ›å»ºç”¨æˆ· | `rbacManagementService.createUser()` |
+| `assign_role` | ç»™ç”¨æˆ·åˆ†é…è§’è‰² | `rbacManagementService.assignRole()` |
+| `revoke_role` | æ’¤é”€ç”¨æˆ·è§’è‰² | `rbacManagementService.revokeRole()` |
+| `list_roles` | åˆ—å‡ºæ‰€æœ‰è§’è‰² | `rbacManagementService.listRoles()` |
+| `list_permissions` | åˆ—å‡ºæ‰€æœ‰æƒé™ | `rbacManagementService.listPermissions()` |
+| `get_audit_logs` | æŸ¥è¯¢æƒé™å®¡è®¡æ—¥å¿— | `rbacManagementService.getAuditLogs()` |
 
-**UseCase Server ¹¤¾ßÉè¼Æ**:
+**UseCase Server å·¥å…·è®¾è®¡**:
 
-| ¹¤¾ßÃû | ¹¦ÄÜ | ¶ÔÓ¦ useCase |
+| å·¥å…·å | åŠŸèƒ½ | å¯¹åº” useCase |
 |--------|------|-------------|
-| `get_unified_stock_view` | Í³Ò»¹ÉÆ±ÊÓÍ¼£¨8 Ô´Êı¾İÈÚºÏ£© | `getUnifiedStockView.useCase` |
-| `run_dual_strategy` | Ë«²ßÂÔÔËĞĞ£¨ÈÈÃÅ+¼ÛÖµ+ÂÖ¶¯£© | `runDualStrategy.useCase` |
-| `rebalance_portfolio` | ×éºÏÔÙÆ½ºâ | `rebalancePortfolio.useCase` |
-| `query_hot_sector` | ÈÈÃÅ°å¿é²éÑ¯ | `hotSectorQuery.useCase` |
-| `fetch_sector_analysis` | °å¿é·ÖÎö | `fetchSectorAnalysis.useCase` |
-| `orchestrate_fetcher` | Êı¾İ²É¼¯±àÅÅ | `fetcherOrchestrator.useCase` |
+| `get_unified_stock_view` | ç»Ÿä¸€è‚¡ç¥¨è§†å›¾ï¼ˆ8 æºæ•°æ®èåˆï¼‰ | `getUnifiedStockView.useCase` |
+| `run_dual_strategy` | åŒç­–ç•¥è¿è¡Œï¼ˆçƒ­é—¨+ä»·å€¼+è½®åŠ¨ï¼‰ | `runDualStrategy.useCase` |
+| `rebalance_portfolio` | ç»„åˆå†å¹³è¡¡ | `rebalancePortfolio.useCase` |
+| `query_hot_sector` | çƒ­é—¨æ¿å—æŸ¥è¯¢ | `hotSectorQuery.useCase` |
+| `fetch_sector_analysis` | æ¿å—åˆ†æ | `fetchSectorAnalysis.useCase` |
+| `orchestrate_fetcher` | æ•°æ®é‡‡é›†ç¼–æ’ | `fetcherOrchestrator.useCase` |
 
-**ÑéÖ¤±ê×¼**:
-- [ ] 3 ¸öĞÂ Server ×¢²áµ½ `mcpServerRegistry.ts`
-- [ ] `audit:deadcode` ²»±¨"Î´×¢²á Server"
-- [ ] ¼¯³É²âÊÔ¸²¸ÇÃ¿¸öĞÂ Server µÄºËĞÄ¹¤¾ßÃ°ÑÌ²âÊÔ
+**éªŒè¯æ ‡å‡†**:
+- [ ] 3 ä¸ªæ–° Server æ³¨å†Œåˆ° `mcpServerRegistry.ts`
+- [ ] `audit:deadcode` ä¸æŠ¥"æœªæ³¨å†Œ Server"
+- [ ] é›†æˆæµ‹è¯•è¦†ç›–æ¯ä¸ªæ–° Server çš„æ ¸å¿ƒå·¥å…·å†’çƒŸæµ‹è¯•
 
 ---
 
-### Õû¸ÄÏî 3.2£º²¹³äÏÖÓĞ Server È±Ê§µÄ¹¤¾ß
+### æ•´æ”¹é¡¹ 3.2ï¼šè¡¥å……ç°æœ‰ Server ç¼ºå¤±çš„å·¥å…·
 
-**ÎÊÌâ**: ²¿·Ö service ·½·¨Î´±»¶ÔÓ¦ MCP Server ·â×°
+**é—®é¢˜**: éƒ¨åˆ† service æ–¹æ³•æœªè¢«å¯¹åº” MCP Server å°è£…
 
-| Server | È±Ê§¹¤¾ß | ¶ÔÓ¦ service ·½·¨ | ĞŞ¸´ÎÄ¼ş |
+| Server | ç¼ºå¤±å·¥å…· | å¯¹åº” service æ–¹æ³• | ä¿®å¤æ–‡ä»¶ |
 |--------|---------|------------------|---------|
 | fetcher | `refresh_symbol_kline` | `fetcherService.refreshSymbolKline` | `dataFetcherServer.ts` |
 | stockpool | `update_stock_group` | `stockpoolService.updateStockGroup` | `stockPoolServer.ts` |
@@ -257,107 +257,107 @@ export interface HealthStatus {
 | trading | `get_watchlist_stocks` | `tradingService.getWatchlistStocks` | `tradingServer.ts` |
 | system | `get_architecture_health` | `architectureService.checkHealth` | `systemServer.ts` |
 
-**ÑéÖ¤±ê×¼**:
-- [ ] Ã¿¸öÈ±Ê§¹¤¾ß²¹³äµ½¶ÔÓ¦ Server µÄ `getTools()` ·µ»ØÁĞ±í
-- [ ] ¹¤¾ß inputSchema ¶¨ÒåÍêÕû
-- [ ] ¼¯³É²âÊÔÃ°ÑÌ¸²¸Ç
+**éªŒè¯æ ‡å‡†**:
+- [ ] æ¯ä¸ªç¼ºå¤±å·¥å…·è¡¥å……åˆ°å¯¹åº” Server çš„ `getTools()` è¿”å›åˆ—è¡¨
+- [ ] å·¥å…· inputSchema å®šä¹‰å®Œæ•´
+- [ ] é›†æˆæµ‹è¯•å†’çƒŸè¦†ç›–
 
 ---
 
-### Õû¸ÄÏî 3.3£º´¦Àí ai-center ¹ÂÁ¢Ä£¿é
+### æ•´æ”¹é¡¹ 3.3ï¼šå¤„ç† ai-center å­¤ç«‹æ¨¡å—
 
-**ÎÊÌâ**: `src/services/ai-center/` È«ÏîÄ¿ÎŞÒıÓÃ£¬Îª½©Ê¬Ä£¿é
+**é—®é¢˜**: `src/services/ai-center/` å…¨é¡¹ç›®æ— å¼•ç”¨ï¼Œä¸ºåƒµå°¸æ¨¡å—
 
-**¾ö²ßµã**:
+**å†³ç­–ç‚¹**:
 
-| ·½°¸ | ËµÃ÷ | ½¨Òé |
+| æ–¹æ¡ˆ | è¯´æ˜ | å»ºè®® |
 |------|------|------|
-| A. ·ÏÆúÉ¾³ı | È·ÈÏÎªÒÅÁô·ÏÆú´úÂë£¬Ö±½ÓÉ¾³ı | Èç¹û AI ÖĞĞÄ¹¦ÄÜ²»ÔÙĞèÒª |
-| B. ½ÓÈë MCP | ĞÂ½¨ aiCenterServer ²¢½ÓÈë agentRuntime | Èç¹û AI ÖĞĞÄ¹¦ÄÜĞèÒª±£Áô |
+| A. åºŸå¼ƒåˆ é™¤ | ç¡®è®¤ä¸ºé—ç•™åºŸå¼ƒä»£ç ï¼Œç›´æ¥åˆ é™¤ | å¦‚æœ AI ä¸­å¿ƒåŠŸèƒ½ä¸å†éœ€è¦ |
+| B. æ¥å…¥ MCP | æ–°å»º aiCenterServer å¹¶æ¥å…¥ agentRuntime | å¦‚æœ AI ä¸­å¿ƒåŠŸèƒ½éœ€è¦ä¿ç•™ |
 
-**ÑéÖ¤±ê×¼**:
-- [ ] Óë¼Ü¹¹¸ºÔğÈËÈ·ÈÏ·½°¸ A »ò B
-- [ ] ·½°¸ A£ºÉ¾³ıÎÄ¼ş + ¸üĞÂ audit ÅÅ³ıÇåµ¥
-- [ ] ·½°¸ B£ºĞÂ½¨ Server + ×¢²á + ¼¯³É²âÊÔ
+**éªŒè¯æ ‡å‡†**:
+- [ ] ä¸æ¶æ„è´Ÿè´£äººç¡®è®¤æ–¹æ¡ˆ A æˆ– B
+- [ ] æ–¹æ¡ˆ Aï¼šåˆ é™¤æ–‡ä»¶ + æ›´æ–° audit æ’é™¤æ¸…å•
+- [ ] æ–¹æ¡ˆ Bï¼šæ–°å»º Server + æ³¨å†Œ + é›†æˆæµ‹è¯•
 
 ---
 
-## µÚËÄÅú£º¼Ü¹¹¹æÔò³åÍ»½â¾ö£¨P1 ¡ª ½ÌÑµ 1£©
+## ç¬¬å››æ‰¹ï¼šæ¶æ„è§„åˆ™å†²çªè§£å†³ï¼ˆP1 â€” æ•™è®­ 1ï¼‰
 
-### Õû¸ÄÏî 4.1£ºĞŞ¶© AGENTS.md ·Ö²ã¹æÔò
+### æ•´æ”¹é¡¹ 4.1ï¼šä¿®è®¢ AGENTS.md åˆ†å±‚è§„åˆ™
 
-**¶ÔÓ¦½ÌÑµ**: ½ÌÑµ 1 ¡ª ¼Ü¹¹¹æÔòÓëÊµÏÖ¹æÔò´æÔÚ³åÍ»
+**å¯¹åº”æ•™è®­**: æ•™è®­ 1 â€” æ¶æ„è§„åˆ™ä¸å®ç°è§„åˆ™å­˜åœ¨å†²çª
 
-**ÎÊÌâ**: AGENTS.md ¡ì1 ÔÊĞí `store/ ¡ú services/`£¬µ« MCP ÀíÄîÒªÇó½âñî
+**é—®é¢˜**: AGENTS.md Â§1 å…è®¸ `store/ â†’ services/`ï¼Œä½† MCP ç†å¿µè¦æ±‚è§£è€¦
 
-**ĞŞ¶©·½°¸**:
+**ä¿®è®¢æ–¹æ¡ˆ**:
 
-ÔÚ AGENTS.md ¡ì1 µÄÒÀÀµ·½Ïò¹æÔòÖĞĞÂÔö"MCP ±àÅÅ²ã"¶¨Òå£º
+åœ¨ AGENTS.md Â§1 çš„ä¾èµ–æ–¹å‘è§„åˆ™ä¸­æ–°å¢"MCP ç¼–æ’å±‚"å®šä¹‰ï¼š
 
 ```markdown
-### MCP ±àÅÅ²ã¹æÔò£¨ĞÂÔö£©
+### MCP ç¼–æ’å±‚è§„åˆ™ï¼ˆæ–°å¢ï¼‰
 
-- `store/` ¡ú ¿ÉÖ±½ÓÒÀÀµ `services/`£¨¹ı¶ÉÆÚ±£Áô£©£¬µ«ĞÂÔö store Ó¦ÓÅÏÈÍ¨¹ı `mcpBridge.callTool()` µ÷ÓÃ
-- `apps/` ¡ú ±ØĞëÍ¨¹ı `mcpBridge.callTool()` µ÷ÓÃ service£¬½ûÖ¹Ö±½Ó import service
-- `pages/` ºÍ `components/` ¡ú ±ØĞëÍ¨¹ı `store/` ¼ä½Óµ÷ÓÃ MCP£¬½ûÖ¹Ö±½Ó import service£¨ÀàĞÍµ¼Èë³ıÍâ£©
-- `agents/` ¡ú ±ØĞëÍ¨¹ı `mcpBridge.callTool()` µ÷ÓÃ service
+- `store/` â†’ å¯ç›´æ¥ä¾èµ– `services/`ï¼ˆè¿‡æ¸¡æœŸä¿ç•™ï¼‰ï¼Œä½†æ–°å¢ store åº”ä¼˜å…ˆé€šè¿‡ `mcpBridge.callTool()` è°ƒç”¨
+- `apps/` â†’ å¿…é¡»é€šè¿‡ `mcpBridge.callTool()` è°ƒç”¨ serviceï¼Œç¦æ­¢ç›´æ¥ import service
+- `pages/` å’Œ `components/` â†’ å¿…é¡»é€šè¿‡ `store/` é—´æ¥è°ƒç”¨ MCPï¼Œç¦æ­¢ç›´æ¥ import serviceï¼ˆç±»å‹å¯¼å…¥é™¤å¤–ï¼‰
+- `agents/` â†’ å¿…é¡»é€šè¿‡ `mcpBridge.callTool()` è°ƒç”¨ service
 
-### Ç¨ÒÆ¼Æ»®
+### è¿ç§»è®¡åˆ’
 
-- ½×¶Î 1£¨µ±Ç°£©£ºapps ²ãÇ¿ÖÆÖ´ĞĞ MCP µ÷ÓÃ£¨2 ÏîÎ¥¹æÓÅÏÈĞŞ¸´£©
-- ½×¶Î 2£ºstore ²ãÖğ²½Ç¨ÒÆ£¨42 ÏîÎ¥¹æ·ÖÅúÖØ¹¹£©
-- ½×¶Î 3£ºÈ«Ãæ½ûÖ¹ store ¡ú service Ö±½ÓÒÀÀµ
+- é˜¶æ®µ 1ï¼ˆå½“å‰ï¼‰ï¼šapps å±‚å¼ºåˆ¶æ‰§è¡Œ MCP è°ƒç”¨ï¼ˆ2 é¡¹è¿è§„ä¼˜å…ˆä¿®å¤ï¼‰
+- é˜¶æ®µ 2ï¼šstore å±‚é€æ­¥è¿ç§»ï¼ˆ42 é¡¹è¿è§„åˆ†æ‰¹é‡æ„ï¼‰
+- é˜¶æ®µ 3ï¼šå…¨é¢ç¦æ­¢ store â†’ service ç›´æ¥ä¾èµ–
 ```
 
-**ÑéÖ¤±ê×¼**:
-- [ ] AGENTS.md ĞÂÔö MCP ±àÅÅ²ã¹æÔò
-- [ ] `audit:layers` ½Å±¾ĞÂÔö MCP Î¥¹æ¼ì²â
-- [ ] `audit:contract` ½Å±¾¸²¸Ç MCP ±àÅÅ¹æÔò
+**éªŒè¯æ ‡å‡†**:
+- [ ] AGENTS.md æ–°å¢ MCP ç¼–æ’å±‚è§„åˆ™
+- [ ] `audit:layers` è„šæœ¬æ–°å¢ MCP è¿è§„æ£€æµ‹
+- [ ] `audit:contract` è„šæœ¬è¦†ç›– MCP ç¼–æ’è§„åˆ™
 
 ---
 
-### Õû¸ÄÏî 4.2£ºĞŞ¸´ apps ²ãÎ¥¹æ£¨Á¢¼´Ö´ĞĞ£©
+### æ•´æ”¹é¡¹ 4.2ï¼šä¿®å¤ apps å±‚è¿è§„ï¼ˆç«‹å³æ‰§è¡Œï¼‰
 
-**ÎÊÌâ**: `src/apps/input/InputDashboard.tsx` Ö±½Ó import service
+**é—®é¢˜**: `src/apps/input/InputDashboard.tsx` ç›´æ¥ import service
 
-**ÖØ¹¹Ä£¿é**:
+**é‡æ„æ¨¡å—**:
 
-| ÎÄ¼ş | µ±Ç° import | ¸ÄÎª MCP µ÷ÓÃ | ÒÀÀµ |
+| æ–‡ä»¶ | å½“å‰ import | æ”¹ä¸º MCP è°ƒç”¨ | ä¾èµ– |
 |------|------------|-------------|------|
-| `InputDashboard.tsx` L17 | `checkFetcherHealth` from fetcherService | `mcpBridge.callTool('fetcher', 'health_check')` | Õû¸ÄÏî 3.2 |
-| `InputDashboard.tsx` L18 | `refreshSymbolKline` from fetcherService | `mcpBridge.callTool('fetcher', 'refresh_symbol_kline')` | Õû¸ÄÏî 3.2 |
-| `InputDashboard.tsx` L21 | `transitionStock` from stockpoolService | `mcpBridge.callTool('stockpool', 'transition_stock')` | ÎŞ |
-| `InputDashboard.tsx` L21 | `updateStockGroup` from stockpoolService | `mcpBridge.callTool('stockpool', 'update_stock_group')` | Õû¸ÄÏî 3.2 |
+| `InputDashboard.tsx` L17 | `checkFetcherHealth` from fetcherService | `mcpBridge.callTool('fetcher', 'health_check')` | æ•´æ”¹é¡¹ 3.2 |
+| `InputDashboard.tsx` L18 | `refreshSymbolKline` from fetcherService | `mcpBridge.callTool('fetcher', 'refresh_symbol_kline')` | æ•´æ”¹é¡¹ 3.2 |
+| `InputDashboard.tsx` L21 | `transitionStock` from stockpoolService | `mcpBridge.callTool('stockpool', 'transition_stock')` | æ—  |
+| `InputDashboard.tsx` L21 | `updateStockGroup` from stockpoolService | `mcpBridge.callTool('stockpool', 'update_stock_group')` | æ•´æ”¹é¡¹ 3.2 |
 
-**ÑéÖ¤±ê×¼**:
-- [ ] `InputDashboard.tsx` ÎŞ `from '@/services/'` µÄÖµµ¼Èë
-- [ ] ¹¦ÄÜ²âÊÔÍ¨¹ı£¨½¡¿µ¼ì²é¡¢K ÏßË¢ĞÂ¡¢×´Ì¬±ä¸ü¡¢·Ö×é¸üĞÂ£©
+**éªŒè¯æ ‡å‡†**:
+- [ ] `InputDashboard.tsx` æ—  `from '@/services/'` çš„å€¼å¯¼å…¥
+- [ ] åŠŸèƒ½æµ‹è¯•é€šè¿‡ï¼ˆå¥åº·æ£€æŸ¥ã€K çº¿åˆ·æ–°ã€çŠ¶æ€å˜æ›´ã€åˆ†ç»„æ›´æ–°ï¼‰
 
 ---
 
-## µÚÎåÅú£ºµÍ·çÏÕ¼¼ÊõÕ®ÇåÀí£¨P2£©
+## ç¬¬äº”æ‰¹ï¼šä½é£é™©æŠ€æœ¯å€ºæ¸…ç†ï¼ˆP2ï¼‰
 
-### Õû¸ÄÏî 5.1£ºĞŞ¸´ useMcpMigration.ts BUG
+### æ•´æ”¹é¡¹ 5.1ï¼šä¿®å¤ useMcpMigration.ts BUG
 
-**ÎÊÌâ**: `useMcpMigration.ts:64` µÄ `callTool` ²ÎÊıÈ±Ê§£¬µ÷ÓÃ±ØÈ»Ê§°Ü
+**é—®é¢˜**: `useMcpMigration.ts:64` çš„ `callTool` å‚æ•°ç¼ºå¤±ï¼Œè°ƒç”¨å¿…ç„¶å¤±è´¥
 
-**ĞŞ¸´**:
+**ä¿®å¤**:
 
 ```typescript
-// ĞŞ¸´Ç°£¨´íÎó£©
+// ä¿®å¤å‰ï¼ˆé”™è¯¯ï¼‰
 const result = await mcpBridge.callTool('generate_migration_report', { migrationReport: report })
 
-// ĞŞ¸´ºó£¨ÕıÈ·£©
+// ä¿®å¤åï¼ˆæ­£ç¡®ï¼‰
 const result = await mcpBridge.callTool('system', 'generate_migration_report', { migrationReport: report })
 ```
 
 ---
 
-### Õû¸ÄÏî 5.2£ºÀàĞÍÇ¨ÒÆÖÁ types/modules/
+### æ•´æ”¹é¡¹ 5.2ï¼šç±»å‹è¿ç§»è‡³ types/modules/
 
-**ÎÊÌâ**: pages/components ²ã 7 ÏîÀàĞÍµ¼ÈëÎ¥¹æ
+**é—®é¢˜**: pages/components å±‚ 7 é¡¹ç±»å‹å¯¼å…¥è¿è§„
 
-| ÀàĞÍ | µ±Ç°Î»ÖÃ | Ç¨ÒÆÄ¿±ê |
+| ç±»å‹ | å½“å‰ä½ç½® | è¿ç§»ç›®æ ‡ |
 |------|---------|---------|
 | `RotationSignal` | `services/scoring/rotationSignalDetector` | `types/modules/scoring.types.ts` |
 | `HotSectorScore` | `services/scoring/hotSectorAnalyzer` | `types/modules/scoring.types.ts` |
@@ -369,76 +369,76 @@ const result = await mcpBridge.callTool('system', 'generate_migration_report', {
 
 ---
 
-### Õû¸ÄÏî 5.3£ºÇåÀíËÀÀàĞÍ + ²¹È«½Ó¿Ú
+### æ•´æ”¹é¡¹ 5.3ï¼šæ¸…ç†æ­»ç±»å‹ + è¡¥å…¨æ¥å£
 
-| ÏîÄ¿ | ÎÄ¼ş | ¸Ä¶¯ |
+| é¡¹ç›® | æ–‡ä»¶ | æ”¹åŠ¨ |
 |------|------|------|
-| JSONRPCRequest/Response ËÀÀàĞÍ | `mcp.types.ts` L231-248 | ±ê¼Ç `@deprecated` »òÔÚ StdioTransport ÊµÏÖÊ±ÆôÓÃ |
-| MCPServer ½Ó¿Ú²¹È« health_check | `mcp.types.ts` L158-180 | ÔÚÕû¸ÄÏî 1.2 ÖĞÒ»²¢Íê³É |
-| RootsManager.isAllowed ÆôÓÃ | `client.ts` readResource | ÔÚ `readResource` Èë¿Úµ÷ÓÃ `rootsManager.isAllowed()` |
+| JSONRPCRequest/Response æ­»ç±»å‹ | `mcp.types.ts` L231-248 | æ ‡è®° `@deprecated` æˆ–åœ¨ StdioTransport å®ç°æ—¶å¯ç”¨ |
+| MCPServer æ¥å£è¡¥å…¨ health_check | `mcp.types.ts` L158-180 | åœ¨æ•´æ”¹é¡¹ 1.2 ä¸­ä¸€å¹¶å®Œæˆ |
+| RootsManager.isAllowed å¯ç”¨ | `client.ts` readResource | åœ¨ `readResource` å…¥å£è°ƒç”¨ `rootsManager.isAllowed()` |
 
 ---
 
-## Ö´ĞĞË³ĞòÓëÒÀÀµ¹ØÏµ
+## æ‰§è¡Œé¡ºåºä¸ä¾èµ–å…³ç³»
 
 ```
-µÚÒ»Åú£¨P0 °²È«+ÉúÃüÖÜÆÚ£©
-©À©¤©¤ Õû¸ÄÏî 1.1£ºMCP È¨ÏŞ¿ØÖÆ ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
-©¸©¤©¤ Õû¸ÄÏî 1.2£ºServer ÉúÃüÖÜÆÚ¹ÜÀí ©¤©¤©¤©¤©¤©¤©¤©È
-                                          ©¦
-µÚ¶şÅú£¨P0 LLM Í¸Ã÷¶È£©                     ©¦
-©À©¤©¤ Õû¸ÄÏî 2.1£ºV6 ÆÀ·Ö LLM ÔöÇ¿²ã±©Â¶ ©¤©¤©¤©¤©È
-©¸©¤©¤ Õû¸ÄÏî 2.2£ºLLM ÆÀ·ÖÒò×ÓÕ¹Ê¾¹¤¾ß ©¤©¤©¤©¤©¤©È
-                                          ©¦
-µÚÈıÅú£¨P1 ÄÜÁ¦¸²¸Ç£©                       ©¦
-©À©¤©¤ Õû¸ÄÏî 3.1£ºĞÂ½¨ 3 ¸ö MCP Server ©¤©¤©¤©¤©¤©È
-©À©¤©¤ Õû¸ÄÏî 3.2£º²¹³äÏÖÓĞ Server È±Ê§¹¤¾ß ©¤©¤©à©¤©¤¡ú µÚËÄÅúÒÀÀµ£¨apps ²ãĞŞ¸´ĞèÒª¹¤¾ß¾ÍĞ÷£©
-©¸©¤©¤ Õû¸ÄÏî 3.3£ºai-center ¹ÂÁ¢Ä£¿é´¦Àí ©¤©¤©¤©È
-                                          ©¦
-µÚËÄÅú£¨P1 ¹æÔò³åÍ»£©                       ©¦
-©À©¤©¤ Õû¸ÄÏî 4.1£ºĞŞ¶© AGENTS.md ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
-©¸©¤©¤ Õû¸ÄÏî 4.2£ºĞŞ¸´ apps ²ãÎ¥¹æ ¡û©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
-                                          ©¦
-µÚÎåÅú£¨P2 ¼¼ÊõÕ®£©                         ©¦
-©À©¤©¤ Õû¸ÄÏî 5.1£ºuseMcpMigration BUG ĞŞ¸´ ©¤©È
-©À©¤©¤ Õû¸ÄÏî 5.2£ºÀàĞÍÇ¨ÒÆ ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
-©¸©¤©¤ Õû¸ÄÏî 5.3£ºËÀÀàĞÍÇåÀí ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
+ç¬¬ä¸€æ‰¹ï¼ˆP0 å®‰å…¨+ç”Ÿå‘½å‘¨æœŸï¼‰
+â”œâ”€â”€ æ•´æ”¹é¡¹ 1.1ï¼šMCP æƒé™æ§åˆ¶ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â””â”€â”€ æ•´æ”¹é¡¹ 1.2ï¼šServer ç”Ÿå‘½å‘¨æœŸç®¡ç† â”€â”€â”€â”€â”€â”€â”€â”¤
+                                          â”‚
+ç¬¬äºŒæ‰¹ï¼ˆP0 LLM é€æ˜åº¦ï¼‰                     â”‚
+â”œâ”€â”€ æ•´æ”¹é¡¹ 2.1ï¼šV6 è¯„åˆ† LLM å¢å¼ºå±‚æš´éœ² â”€â”€â”€â”€â”¤
+â””â”€â”€ æ•´æ”¹é¡¹ 2.2ï¼šLLM è¯„åˆ†å› å­å±•ç¤ºå·¥å…· â”€â”€â”€â”€â”€â”¤
+                                          â”‚
+ç¬¬ä¸‰æ‰¹ï¼ˆP1 èƒ½åŠ›è¦†ç›–ï¼‰                       â”‚
+â”œâ”€â”€ æ•´æ”¹é¡¹ 3.1ï¼šæ–°å»º 3 ä¸ª MCP Server â”€â”€â”€â”€â”€â”¤
+â”œâ”€â”€ æ•´æ”¹é¡¹ 3.2ï¼šè¡¥å……ç°æœ‰ Server ç¼ºå¤±å·¥å…· â”€â”€â”¼â”€â”€â†’ ç¬¬å››æ‰¹ä¾èµ–ï¼ˆapps å±‚ä¿®å¤éœ€è¦å·¥å…·å°±ç»ªï¼‰
+â””â”€â”€ æ•´æ”¹é¡¹ 3.3ï¼šai-center å­¤ç«‹æ¨¡å—å¤„ç† â”€â”€â”€â”¤
+                                          â”‚
+ç¬¬å››æ‰¹ï¼ˆP1 è§„åˆ™å†²çªï¼‰                       â”‚
+â”œâ”€â”€ æ•´æ”¹é¡¹ 4.1ï¼šä¿®è®¢ AGENTS.md â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â””â”€â”€ æ•´æ”¹é¡¹ 4.2ï¼šä¿®å¤ apps å±‚è¿è§„ â†â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                                          â”‚
+ç¬¬äº”æ‰¹ï¼ˆP2 æŠ€æœ¯å€ºï¼‰                         â”‚
+â”œâ”€â”€ æ•´æ”¹é¡¹ 5.1ï¼šuseMcpMigration BUG ä¿®å¤ â”€â”¤
+â”œâ”€â”€ æ•´æ”¹é¡¹ 5.2ï¼šç±»å‹è¿ç§» â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â””â”€â”€ æ•´æ”¹é¡¹ 5.3ï¼šæ­»ç±»å‹æ¸…ç† â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
-**¹Ø¼üÒÀÀµ**:
-- Õû¸ÄÏî 4.2£¨apps ²ãĞŞ¸´£©ÒÀÀµÕû¸ÄÏî 3.2£¨²¹³äÈ±Ê§¹¤¾ß£©Íê³É
-- Õû¸ÄÏî 1.1£¨È¨ÏŞ¿ØÖÆ£©ºÍ 1.2£¨ÉúÃüÖÜÆÚ£©¿É²¢ĞĞ
-- Õû¸ÄÏî 2.1 ºÍ 2.2 ¿É²¢ĞĞ
-- µÚÎåÅú¿ÉËæÊ±´©²åÖ´ĞĞ
+**å…³é”®ä¾èµ–**:
+- æ•´æ”¹é¡¹ 4.2ï¼ˆapps å±‚ä¿®å¤ï¼‰ä¾èµ–æ•´æ”¹é¡¹ 3.2ï¼ˆè¡¥å……ç¼ºå¤±å·¥å…·ï¼‰å®Œæˆ
+- æ•´æ”¹é¡¹ 1.1ï¼ˆæƒé™æ§åˆ¶ï¼‰å’Œ 1.2ï¼ˆç”Ÿå‘½å‘¨æœŸï¼‰å¯å¹¶è¡Œ
+- æ•´æ”¹é¡¹ 2.1 å’Œ 2.2 å¯å¹¶è¡Œ
+- ç¬¬äº”æ‰¹å¯éšæ—¶ç©¿æ’æ‰§è¡Œ
 
 ---
 
-## Ã¿Åú´ÎÑéÖ¤Çåµ¥
+## æ¯æ‰¹æ¬¡éªŒè¯æ¸…å•
 
-Ã¿Åú´ÎÍê³Éºó±ØĞëÍ¨¹ıÒÔÏÂÑéÖ¤£º
+æ¯æ‰¹æ¬¡å®Œæˆåå¿…é¡»é€šè¿‡ä»¥ä¸‹éªŒè¯ï¼š
 
 ```powershell
-# ÀàĞÍ¼ì²é
+# ç±»å‹æ£€æŸ¥
 npx tsc --noEmit
 
-# ¼Ü¹¹Éó¼Æ
+# æ¶æ„å®¡è®¡
 npm run audit:layers
 npm run audit:deadcode
 npm run audit:hardcode
 
-# ¼¯³É²âÊÔ
+# é›†æˆæµ‹è¯•
 npx vitest run tests/__tests__/integration/ --reporter=verbose
 
-# µ¥Ôª²âÊÔ
+# å•å…ƒæµ‹è¯•
 npm test -- --run
 ```
 
-**Åú´ÎÍê³É±ê×¼**:
-- [ ] ËùÓĞÑéÖ¤ÃüÁîÍ¨¹ı
-- [ ] ĞÂÔö/ĞŞ¸ÄÎÄ¼ş¾ùÓĞ¶ÔÓ¦²âÊÔ¸²¸Ç
-- [ ] ±ä¸üÈÕÖ¾¼ÇÂ¼µ½ `docs/changelogs/2026-07/`
-- [ ] AGENTS.md ÈçÓĞĞŞ¶©ÔòÍ¬²½¸üĞÂ
+**æ‰¹æ¬¡å®Œæˆæ ‡å‡†**:
+- [ ] æ‰€æœ‰éªŒè¯å‘½ä»¤é€šè¿‡
+- [ ] æ–°å¢/ä¿®æ”¹æ–‡ä»¶å‡æœ‰å¯¹åº”æµ‹è¯•è¦†ç›–
+- [ ] å˜æ›´æ—¥å¿—è®°å½•åˆ° `docs/changelogs/2026-07/`
+- [ ] AGENTS.md å¦‚æœ‰ä¿®è®¢åˆ™åŒæ­¥æ›´æ–°
 
 ---
 
-*ĞĞ¶¯¼Æ»®ÖÆ¶¨Ê±¼ä: 2026-07-08 (Asia/Shanghai)*
+*è¡ŒåŠ¨è®¡åˆ’åˆ¶å®šæ—¶é—´: 2026-07-08 (Asia/Shanghai)*

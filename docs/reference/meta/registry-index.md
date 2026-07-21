@@ -813,7 +813,7 @@ code_version: 2.0.0
 
 ### doc-governance-audit-report-2026-07-13.md
 
-- [doc-governance-audit-report-2026-07-13](../../reports/doc-governance-audit-report-2026-07-13.md)
+- [doc-governance-audit-report-2026-07-13](../../reports/audit/doc-governance-audit-report-2026-07-13.md)
 
 ### doc-sync-execution-plan.md
 
@@ -841,15 +841,15 @@ code_version: 2.0.0
 
 ### e2e-verify-25stocks-plan.md
 
-- [e2e-verify-25stocks-plan](../../reports/e2e-verify-25stocks-plan.md)
+- [e2e-verify-25stocks-plan](../../reports/retrospectives/e2e-verify-25stocks-plan.md)
 
 ### e2e-verify-25stocks-report.md
 
-- [e2e-verify-25stocks-report](../../reports/e2e-verify-25stocks-report.md)
+- [e2e-verify-25stocks-report](../../reports/retrospectives/e2e-verify-25stocks-report.md)
 
 ### e2e-verify-redundancy-report.md
 
-- [e2e-verify-redundancy-report](../../reports/e2e-verify-redundancy-report.md)
+- [e2e-verify-redundancy-report](../../reports/retrospectives/e2e-verify-redundancy-report.md)
 
 ### execution-contract.md
 

@@ -1,7 +1,7 @@
 ---
 title: doc-file-management-optimization-plan
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
@@ -24,7 +24,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 
 | 维度 | 现状 | 严重程度 |
 |------|------|----------|
-| **分类** | 三套互相矛盾的"分类"并存：①DocTaxonomy 设计稿(A–H) ②`../explanation/a-h-index.md` 幽灵索引（指向 50+ 个**磁盘不存在**的 `A/ B/ C/…` 文件）③物理数字目录（`00-meta`…`07-archive`）。无单一事实源 | 🔴 P0 |
+| **分类** | 三套互相矛盾的"分类"并存：①DocTaxonomy 设计稿(A–H) ②`../../explanation/A-H-INDEX.md` 幽灵索引（指向 50+ 个**磁盘不存在**的 `A/ B/ C/…` 文件）③物理数字目录（`00-meta`…`07-archive`）。无单一事实源 | 🔴 P0 |
 | **命名** | 5 种风格混用：`UPPER_SNAKE`(`directory-structure-guide.md`)、`V9-`前缀中文、`23-core-`数字前缀、`kebab`(`doc-auto-update-kanban.md`)、typo 目录(`standards`→应为 `standards`)。无强制约定 | 🔴 P0 |
 | **版本** | Frontmatter 版本散乱：`v1.0.0`/`v1.1.0`/`v2.0.0 rev.1`/`v1.4.3`/`v3.1.0`（宣称）。无"文档版本↔AGENTS.md 版本"绑定机制 | 🟡 P1 |
 | **权限** | 本地单用户工具，物理权限=仓库访问（合理）。真正缺口是 **AI 读取分级** 与 **变更权威**（治理文档谁能动） | 🟡 P1 |
@@ -32,7 +32,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 
 **根因**：诊断→报告→再诊断的循环从未收敛为"一次性整合落地"。每份新审计都新建文档，而非修订同一份权威文档，导致 `00-meta/` 膨胀、索引失焦、链接断裂。
 
-**本方案动作**：① 确立 `docs/README.md`(顶层入口) + `./governance.md`(宪法) + `directory-structure-guide.md`(目录指南) 三件套为**唯一权威**；② 把 `00-meta/` 的 44 文件**收敛至 5 份权威 + 其余归档**；③ 把幽灵 `../explanation/a-h-index.md` 重写为指向真实文件的映射索引；④ 修 SOP 全部断链 + 2 缺失引用；⑤ 落地命名/版本/权限三套规范，并升级 `audit:doc-integrity` 为**阻断级**以钉死链接完整性。
+**本方案动作**：① 确立 `docs/README.md`(顶层入口) + `../../00-meta/GOVERNANCE.md`(宪法) + `directory-structure-guide.md`(目录指南) 三件套为**唯一权威**；② 把 `00-meta/` 的 44 文件**收敛至 5 份权威 + 其余归档**；③ 把幽灵 `../../explanation/A-H-INDEX.md` 重写为指向真实文件的映射索引；④ 修 SOP 全部断链 + 2 缺失引用；⑤ 落地命名/版本/权限三套规范，并升级 `audit:doc-integrity` 为**阻断级**以钉死链接完整性。
 
 ---
 
@@ -43,7 +43,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 | 分类表述 | 载体 | 问题 |
 |----------|------|------|
 | A–H 八类（设计稿） | `文档归类体系结构.md` v1.1.0 | 纯设计，未落地为物理结构 |
-| A–H 索引（幽灵） | `../explanation/a-h-index.md` v1.0.0 | 声称"逻辑层 A–H + 物理层双轨制"，但链接的 `../archive/a-navigation-governance.md`、`../archive/b-architecture-design.md` 等 **50+ 文件磁盘全不存在**（已用 `ls docs/A…docs/H` 实测确认） |
+| A–H 索引（幽灵） | `../../explanation/A-H-INDEX.md` v1.0.0 | 声称"逻辑层 A–H + 物理层双轨制"，但链接的 `../a-navigation-governance.md`、`../b-architecture-design.md` 等 **50+ 文件磁盘全不存在**（已用 `ls docs/A…docs/H` 实测确认） |
 | 物理数字目录 | `00-meta` `01-requirements` `02-design` `03-development` `04-testing` `05-deployment` `06-project-management` `07-archive` | 真实存在，但**与 A–H 无 1:1 映射**（如 `02-design` 同时装架构/舱室/组件/标准；`00-meta` 装治理+体检+垃圾场） |
 
 **结论**：分类停留在"设计稿 + 失效索引"，物理目录自成一套。开发者无法从任一入口稳定定位文档。
@@ -60,7 +60,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 
 ### 1.3 版本控制：散乱无绑定
 
-- `governance.md` 无版本字段；`文档归类体系结构.md` v1.1.0；`../explanation/a-h-index.md` v1.0.0；SOP v2.0.0 rev.1；`../../AGENTS.md` v1.4.6；某处 GUIDE 自称 v3.1.0。
+- `governance.md` 无版本字段；`文档归类体系结构.md` v1.1.0；`../../explanation/A-H-INDEX.md` v1.0.0；SOP v2.0.0 rev.1；`../../AGENTS.md` v1.4.6；某处 GUIDE 自称 v3.1.0。
 - SOP §九 写"本 SOP 版本与 AGENTS.md 版本绑定"——但**无任何脚本/门禁校验该绑定**，纯靠人记，已失效。
 
 ### 1.4 访问权限：本地单用户，缺口在"读取分级 + 变更权威"
@@ -78,7 +78,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 | **权威（应留）** | `governance.md` `directory-structure-guide.md` `registry-index.md` `doc-trigger-action-map.md` `月度文档体检检查清单.md` | **保留** |
 | **三核心基底（本文已整合）** | `v9-文档治理修复行动计划.md` `文档归类体系结构.md` `23-core-docs-*-report.md`(`final`/`functional-match`/`v2-final` + json) `23个核心文档重新检索报告.md` | **归档至 `07-archive/`**（已整合进本文） |
 | **重叠审计/计划（应归档）** | `DIRECTORY_AUDIT_*` `directory-structure-audit-report.md` `directory-audit-report-v1.4.3.md` `doc-system-check-v9.md` `文档体系体检报告-v9.md` `文档体系修复执行计划-v1.md` `文档理解核查报告.md` `文档管理系统评分报告.md` `执行校验报告.md` `v9-项目健康状态总览.md` `v9-pre-launch-audit-report-20260713.md` | **归档至 `07-archive/`** |
-| **FILE-MANAGEMENT 系列（应归档）** | `file-management-guide-cleanup-decisions.md` `../archive/…-file-wandering-report.md` `../archive/…-optimization-prompt.md` `../archive/…-RCA-report.md` `../archive/…-task-list.md` | **归档至 `07-archive/`**（与本方案重复） |
+| **FILE-MANAGEMENT 系列（应归档）** | `file-management-guide-cleanup-decisions.md` `../…-file-wandering-report.md` `../…-optimization-prompt.md` `../…-RCA-report.md` `../…-task-list.md` | **归档至 `07-archive/`**（与本方案重复） |
 | **本人此前诊断产出（应归档）** | `directory-audit-feasibility-plan.md` `directory-audit-todo.md` | **归档至 `07-archive/`** |
 | **零散** | `cleanup-schedule.md` `migration-plan.md` `v9-next-phase-todo.md` `prompt-execute-remediation.md` `prompt-merge-dedup.md` `p5-verification-report.md` `outputs-and-undefined-src-evaluation-report.md` `src-directories-evaluation-report.md` `trae-file-management-review.md` `changelog-warnings-handling-strategy.md` `deprecated-docs/` `ai-index/` | 评估后归档/并入既有 |
 
@@ -86,13 +86,13 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 
 ### 1.6 链接完整性：SOP 锚点自己断链
 
-`../reference/development-workflow-sop.md`（用户指定的"所有文件整理规则依赖此"的锚点）现位于 `docs/02-design/standards/`，其 L6 四个关联链接**全部错位**：
+`../../reference/development-workflow-sop.md`（用户指定的"所有文件整理规则依赖此"的锚点）现位于 `docs/02-design/standards/`，其 L6 四个关联链接**全部错位**：
 
 | SOP 原链接 | 解析目标（错） | 真实位置 |
 |--------------|--------------|--------------|
 | `../../AGENTS.md` | `../../AGENTS.md` | 根 `../../AGENTS.md`（需 `../../AGENTS.md`） |
 | `../../AGENTS.md` | 根 `../../AGENTS.md` | 根 `../../AGENTS.md` |
-| `./governance.md` | `./governance.md` | `docs/00-meta/governance.md`（需 `./governance.md`） |
+| `../../00-meta/GOVERNANCE.md` | `../../00-meta/GOVERNANCE.md` | `docs/00-meta/governance.md`（需 `../../00-meta/GOVERNANCE.md`） |
 | `../explanation/architecture.md` | `../explanation/architecture.md` | `../explanation/architecture.md` |
 | `../../../../CHANGELOG.md` | `../reference/CHANGELOG.md` | 根 `../../CHANGELOG.md` |
 
@@ -108,7 +108,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 
 | 维度 | 成熟企业实践 | 本项目目标达标 | 差距 / 动作 |
 |------|--------------|------------------|--------------|
-| **协作效率** | 单一顶层入口 + 稳定分类检索 + 模板化 | `docs/README.md`(新) + 修正后的 `../explanation/a-h-index.md` 真实映射 + 模板 | 补 README + 修幽灵索引 + 建模板 |
+| **协作效率** | 单一顶层入口 + 稳定分类检索 + 模板化 | `docs/README.md`(新) + 修正后的 `../../explanation/A-H-INDEX.md` 真实映射 + 模板 | 补 README + 修幽灵索引 + 建模板 |
 | **安全性** | 最小权限 + 审计轨迹 + 变更受控 | 仓库访问(单用户合理) + Husky 门禁链 + 变更日志(`changelogs/`) + **AI 读取分级 T0/T1/T2** | 补 AI 读取分级；治理文档变更升 PR + 门禁 |
 | **可追溯性** | 语义版本 + 版本绑定 + 决策记录(ADR) + 变更日志 | Frontmatter `version` + **文档版本↔AGENTS.md 主版本绑定** + `changelogs/` + `adr/` | 落地版本绑定（脚本校验）；补 ADR 主索引 |
 | **可扩展性** | 自动索引 + 门禁守护 + 物理/逻辑分离 | `registry-index.md`(自动) + `audit:*` 门禁链 + 物理数字桶(稳定)↔逻辑 A–H(索引) | 升 `audit:doc-integrity` 为**阻断**以钉死链接 |
@@ -152,7 +152,7 @@ docs/
 └── a-h-index.md             ← 【修正】指向 REAL 文件的 A–H 映射（非幽灵）
 ```
 
-**映射关系（A–H ↔ 物理桶，写入修正后的 `../explanation/a-h-index.md`）**：
+**映射关系（A–H ↔ 物理桶，写入修正后的 `../../explanation/A-H-INDEX.md`）**：
 
 | 逻辑类 | 物理落点 | 说明 |
 |--------|----------|------|
@@ -273,7 +273,7 @@ docs/
 
 | 阶段 | 范围 | 关键动作 | 出口标准 |
 |------|------|----------|----------|
-| **P0（本周）** | 止血 | ① 建 `docs/README.md` ② 修 SOP 4 断链 + 2 缺失引用 ③ 重写 `../explanation/a-h-index.md` 为真实映射 ④ rename `standards`/`testing` typo ⑤ 收敛 `00-meta/` 至 5 权威 + 其余归档 | SOP 0 断链；`00-meta/` ≤5 文件；索引全可达 |
+| **P0（本周）** | 止血 | ① 建 `docs/README.md` ② 修 SOP 4 断链 + 2 缺失引用 ③ 重写 `../../explanation/A-H-INDEX.md` 为真实映射 ④ rename `standards`/`testing` typo ⑤ 收敛 `00-meta/` 至 5 权威 + 其余归档 | SOP 0 断链；`00-meta/` ≤5 文件；索引全可达 |
 | **P1（2 周）** | 规范落地 | ⑥ `governance.md` 补 §命名/§版本/§AI读取/§变更 ⑦ 升 `audit:doc-integrity` 阻断 + 扩链接扫描 ⑧ 接 `doc:version-check` 阻断 ⑨ Frontmatter 版本回填既有文档 | 命名/版本/权限规范生效；门禁钉死 |
 | **P2（1 月）** | 长效 | ⑩ 建文档模板(`templates/`) ⑪ ADR 主索引 ⑫ 月度体检防 sprawl 机制固化 | 可追溯性/可扩展性达标 |
 

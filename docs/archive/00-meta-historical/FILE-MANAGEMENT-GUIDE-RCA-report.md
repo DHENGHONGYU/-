@@ -1,7 +1,7 @@
 ---
 title: file-management-guide-rca-report
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 related_docs: [docs/archive/00-meta-historical/trae-file-management-review.md]
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
@@ -10,7 +10,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 # file-management-guide.md 根因分析与二次开发教训报告
 
 > **Date**: 2026-07-12
-> 关联报告: `../reports/audit/file-management-guide-test-report.md` (2026-07-20)
+> 关联报告: `../../reports/audit/file-management-guide-test-report.md` (2026-07-20)
 > 被审查文件: `../how-to/file-management-guide.md` (v1.0.0, 2026-07-02)
 > 参考基准: `../../../../AGENTS.md` (v1.4.3, 2026-07-10)
 

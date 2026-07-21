@@ -181,7 +181,7 @@ return 'neutral'
 
 | 路由 | 页面组件 | 说明 |
 |------|----------|------|
-| `/analysis/news-v6` | `src/pages/news-v6/NewsPage.tsx` | V6 迁移验证页面 |
+| `/analysis/news-v6` | `src/pages/analysis/NewsPage.tsx` | V6 迁移验证页面 |
 | `/analysis/news` | `src/pages/analysis/NewsPage.tsx` | V9 原生资讯页面 |
 
 ---

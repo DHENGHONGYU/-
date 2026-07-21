@@ -41,9 +41,9 @@ date: 2026-07-17
 
 | 脚本路径 | 功能描述 |
 |---------|---------|
-| `scripts/audit-color-tokens.ts` | 颜色系统合规性检查，检测硬编码 HEX/RGB/HSL 颜色 |
-| `scripts/audit-spacing.ts` | 间距系统合规性检查，检测非 4px 栅格的硬编码间距 |
-| `scripts/audit-typography.ts` | 字体系统合规性检查，检测硬编码字体大小/字重/行高 |
+| `scripts/audit/audit-color-tokens.ts` | 颜色系统合规性检查，检测硬编码 HEX/RGB/HSL 颜色 |
+| `scripts/audit/audit-spacing.ts` | 间距系统合规性检查，检测非 4px 栅格的硬编码间距 |
+| `scripts/audit/audit-typography.ts` | 字体系统合规性检查，检测硬编码字体大小/字重/行高 |
 
 **使用方法**:
 ```bash

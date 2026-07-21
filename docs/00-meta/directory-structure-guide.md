@@ -363,52 +363,52 @@ archive/
 | 步骤 | npm 命令 | 脚本路径 | 阻断性 | 用途 | 关联 SOP |
 |------|----------|----------|--------|------|----------|
 | 1 | `npx lint-staged` | — | ? 阻断 | 暂存区 ESLint --fix | §4.1 |
-| 2 | `npm run lint:colors` | `scripts/audit-color-tokens.ts` | ? 阻断 | 颜色硬编码扫描 | §3.2 |
+| 2 | `npm run lint:colors` | `scripts/audit/audit-color-tokens.ts` | ? 阻断 | 颜色硬编码扫描 | §3.2 |
 | 3 | `npm run tsc:prod` | — | ? 阻断 | TypeScript 零错误 | §2.4 |
 | 4 | — | — | ? 阻断 | （历史编号跳跃） | — |
-| 5 | `npm run audit:layers` | `scripts/audit-layer-calls.ts` | ? 阻断 | 跨层调用检查 | §3.1 |
-| 6 | `npm run audit:atomic` | `scripts/audit-atomic.ts` | ? 阻断 | 原子组件边界 | §3.1 |
+| 5 | `npm run audit:layers` | `scripts/audit/audit-layer-calls.ts` | ? 阻断 | 跨层调用检查 | §3.1 |
+| 6 | `npm run audit:atomic` | `scripts/audit/audit-atomic.ts` | ? 阻断 | 原子组件边界 | §3.1 |
 | 7 | `npm run file:check` | — | ? 阻断 | 文档规范检查 | §4.1 |
-| 8 | `npm run audit:docs` | `scripts/audit-doc-sync.ts` | ? 阻断 | 代码-文档同步 | §6.2 |
+| 8 | `npm run audit:docs` | `scripts/audit/audit-doc-sync.ts` | ? 阻断 | 代码-文档同步 | §6.2 |
 | 9 | `npm run verify:tokens` | — | ? 阻断 | 设计令牌映射 | §3.2 |
-| 10 | `npm run audit:tokens` | `scripts/audit-token-consumption.ts` | ? 阻断 | 令牌消费检查 | §3.2 |
-| 11 | `npm run audit:jsdoc` | `scripts/audit-jsdoc.ts` | ?? 警告 | JSDoc 覆盖 | §3.3 |
+| 10 | `npm run audit:tokens` | `scripts/audit/audit-token-consumption.ts` | ? 阻断 | 令牌消费检查 | §3.2 |
+| 11 | `npm run audit:jsdoc` | `scripts/audit/audit-jsdoc.ts` | ?? 警告 | JSDoc 覆盖 | §3.3 |
 | 12 | `npm run audit:complexity` | — | ?? 警告 | 代码复杂度 | §3.4 |
-| 13 | `npm run audit:widget-registry` | `scripts/audit-widget-registry.ts` | ? 阻断 | Widget 注册一致性 | §4.1 |
-| 14 | `npm run audit:ai-output` | `scripts/audit-ai-output.ts` | ? 阻断 | AI 输出校验 | §7.4 |
+| 13 | `npm run audit:widget-registry` | `scripts/audit/audit-widget-registry.ts` | ? 阻断 | Widget 注册一致性 | §4.1 |
+| 14 | `npm run audit:ai-output` | `scripts/audit/audit-ai-output.ts` | ? 阻断 | AI 输出校验 | §7.4 |
 
 ### 8.3 文档同步校验工具
 
 | 工具 | npm 命令 | 脚本路径 | 用途 | 触发时机 |
 |------|----------|----------|------|----------|
-| 文档-代码双向完整性 | `npm run audit:doc-integrity` | `scripts/audit-doc-integrity.ts` | 检查文档引用的 npm scripts、文件路径是否存在 | git commit / CI |
-| 代码-文档同步 | `npm run audit:docs` | `scripts/audit-doc-sync.ts` | 检查代码与文档的同步状态、版本漂移 | git commit / CI |
+| 文档-代码双向完整性 | `npm run audit:doc-integrity` | `scripts/audit/audit-doc-integrity.ts` | 检查文档引用的 npm scripts、文件路径是否存在 | git commit / CI |
+| 代码-文档同步 | `npm run audit:docs` | `scripts/audit/audit-doc-sync.ts` | 检查代码与文档的同步状态、版本漂移 | git commit / CI |
 | 文档规范检查 | `npm run file:check` | — | 检查文档格式、命名规范 | git commit |
 | 文档版本检查 | `npm run doc:version-check` | — | 检查文档版本一致性 | CI 定时 |
-| 文档路径匹配 | `npx tsx scripts/audit-path-match.ts` | `scripts/audit-path-match.ts` | 检查文档目录与内容的匹配度 | git commit（警告） |
+| 文档路径匹配 | `npx tsx scripts/audit/audit-path-match.ts` | `scripts/audit/audit-path-match.ts` | 检查文档目录与内容的匹配度 | git commit（警告） |
 | 文档保鲜度 | `npm run doc:freshness` | — | 文档更新频率评分、告警 | 月度定时 |
 
 ### 8.4 架构守护审计脚本
 
 | 审计项 | npm 命令 | 脚本路径 | 用途 | 运行频率 |
 |--------|----------|----------|------|----------|
-| 分层调用审计 | `npm run audit:layers` | `scripts/audit-layer-calls.ts` | 检查跨层调用违规 | 每次 import 变更 |
-| 原子组件边界 | `npm run audit:atomic` | `scripts/audit-atomic.ts` | 检查组件边界违规 | 每次组件变更 |
-| MCP 权限审计 | `npm run audit:mcp` | `scripts/audit-mcp.ts` | 检查 MCP Server 权限配置 | 每次 MCP 变更 |
-| Widget 注册审计 | `npm run audit:widget-registry` | `scripts/audit-widget-registry.ts` | 检查 Widget 三处注册一致性 | 每次 Widget 变更 |
+| 分层调用审计 | `npm run audit:layers` | `scripts/audit/audit-layer-calls.ts` | 检查跨层调用违规 | 每次 import 变更 |
+| 原子组件边界 | `npm run audit:atomic` | `scripts/audit/audit-atomic.ts` | 检查组件边界违规 | 每次组件变更 |
+| MCP 权限审计 | `npm run audit:mcp` | `scripts/audit/audit-mcp.ts` | 检查 MCP Server 权限配置 | 每次 MCP 变更 |
+| Widget 注册审计 | `npm run audit:widget-registry` | `scripts/audit/audit-widget-registry.ts` | 检查 Widget 三处注册一致性 | 每次 Widget 变更 |
 | 路由审计 | `npm run audit:routes` | `scripts/verify-all-routes.ts` | 检查路由与页面文件一致性 | 每次路由变更 |
-| DB 引用审计 | `npm run audit:db-references` | `scripts/audit-db-references.ts` | 检查数据库引用一致性 | 每次数据层变更 |
+| DB 引用审计 | `npm run audit:db-references` | `scripts/audit/audit-db-references.ts` | 检查数据库引用一致性 | 每次数据层变更 |
 
 ### 8.5 代码质量审计脚本
 
 | 审计项 | npm 命令 | 脚本路径 | 用途 | 运行频率 |
 |--------|----------|----------|------|----------|
-| 硬编码审计 | `npm run audit:hardcode` | `scripts/audit-hardcode.ts` | 检查硬编码常量 | 每周 |
-| 死代码审计 | `npm run audit:deadcode` | `scripts/audit-dead-code.ts` | 检查未使用代码 | 每周 |
-| 依赖审计 | `npm run audit:dependencies` | `scripts/audit-dependencies.ts` | 检查依赖版本和安全 | 每周 |
-| JSDoc 审计 | `npm run audit:jsdoc` | `scripts/audit-jsdoc.ts` | 检查 JSDoc 覆盖率 | 每次提交（警告） |
+| 硬编码审计 | `npm run audit:hardcode` | `scripts/audit/audit-hardcode.ts` | 检查硬编码常量 | 每周 |
+| 死代码审计 | `npm run audit:deadcode` | `scripts/audit/audit-dead-code.ts` | 检查未使用代码 | 每周 |
+| 依赖审计 | `npm run audit:dependencies` | `scripts/audit/audit-dependencies.ts` | 检查依赖版本和安全 | 每周 |
+| JSDoc 审计 | `npm run audit:jsdoc` | `scripts/audit/audit-jsdoc.ts` | 检查 JSDoc 覆盖率 | 每次提交（警告） |
 | 复杂度审计 | `npm run audit:complexity` | — | 检查代码复杂度 | 每次提交（警告） |
-| 组件复用审计 | `npx tsx scripts/audit-component-usage.ts` | `scripts/audit-component-usage.ts` | 检查组件复用情况 | 每月 |
+| 组件复用审计 | `npx tsx scripts/audit/audit-component-usage.ts` | `scripts/audit/audit-component-usage.ts` | 检查组件复用情况 | 每月 |
 
 ### 8.6 快速检索命令
 

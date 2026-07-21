@@ -75,7 +75,7 @@ change_log:
 
 | 层级 | 内容 | 状态 | 评估依据 |
 |:---|:---|:---|:---|
-| **L1 界面** | `src/pages/news-v6/NewsPage.tsx`（250 行） | ✅ 完整 | 含 `loading`/`error`/`empty` 三种状态（L33-36 状态声明，L122-130 错误提示，L133-143 NewsFeed 渲染）；文章详情弹窗（L146-247）；筛选变更回调；模拟数据生成按钮 |
+| **L1 界面** | `src/pages/analysis/NewsPage.tsx`（250 行） | ✅ 完整 | 含 `loading`/`error`/`empty` 三种状态（L33-36 状态声明，L122-130 错误提示，L133-143 NewsFeed 渲染）；文章详情弹窗（L146-247）；筛选变更回调；模拟数据生成按钮 |
 | **L2 状态** | 组件内 `useState`（无 Pinia Store） | 🟡 部分 | 状态管理完全在组件内实现（`articles`/`loading`/`hasMore`/`selectedArticle`/`error`），无独立 Store。缺少以下能力：① 跨组件共享（如 FilterPanel 筛选状态回传）；② 收藏状态持久化（`handleBookmark` L101-103 仅打印日志）；③ 新闻数据缓存 |
 | **L3 数据** | `src/services/news/newsService.ts`（通过 `dataLayer` 操作） | ✅ 完整 | `listNews`/`saveNewsArticles`/`generateMockArticles` 通过 `dataLayer.news` 操作 IndexedDB；`sentimentAnalyzer.getOrAnalyzeSentiment()` 分析情感；`stockLinker.linkArticleToStocks()` 关联股票 |
 | **L4 逻辑** | `src/services/news/`（3 文件） | ✅ 完整 | `newsService`：CRUD + 去重（hash）；`sentimentAnalyzer`：情感分析（positive/negative/neutral）；`stockLinker`：股票链接（关键词匹配 + 默认股票库）；`adaptV9ListToV6()` 适配器转换数据格式 |

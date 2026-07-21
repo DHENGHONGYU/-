@@ -1,12 +1,12 @@
 ---
-title: Â·ÓÉ×¢²áÈ±Ê§±¨¸æ
+title: è·¯ç”±æ³¨å†Œç¼ºå¤±æŠ¥å‘Š
 type: reports
 domain: frontend
 phase: retrospective
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "**Date**: 2026-07-09 | **ÑÏÖØ¼¶±ğ**: P1 | **Ó°Ïì·¶Î§**: ½»Ò×²Õ ¡Á 3, Êä³ö²Õ ¡Á 2 **Source**: E2E ²âÊÔ + µ¥Ôª»Ø¹é²âÊÔ `p1-..."
+summary: "**Date**: 2026-07-09 | **ä¸¥é‡çº§åˆ«**: P1 | **å½±å“èŒƒå›´**: äº¤æ˜“èˆ± Ã— 3, è¾“å‡ºèˆ± Ã— 2 **Source**: E2E æµ‹è¯• + å•å…ƒå›å½’æµ‹è¯• `p1-..."
 tags: [frontend, routing, spec, report]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -17,160 +17,160 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# Â·ÓÉ×¢²áÈ±Ê§±¨¸æ
+# è·¯ç”±æ³¨å†Œç¼ºå¤±æŠ¥å‘Š
 
-> **Date**: 2026-07-09 | **ÑÏÖØ¼¶±ğ**: P1 | **Ó°Ïì·¶Î§**: ½»Ò×²Õ ¡Á 3, Êä³ö²Õ ¡Á 2
-> **Source**: E2E ²âÊÔ + µ¥Ôª»Ø¹é²âÊÔ `p1-fix-regression.test.ts`
+> **Date**: 2026-07-09 | **ä¸¥é‡çº§åˆ«**: P1 | **å½±å“èŒƒå›´**: äº¤æ˜“èˆ± Ã— 3, è¾“å‡ºèˆ± Ã— 2
+> **Source**: E2E æµ‹è¯• + å•å…ƒå›å½’æµ‹è¯• `p1-fix-regression.test.ts`
 
 ---
 
-## Ò»¡¢¸ÅÊö
+## ä¸€ã€æ¦‚è¿°
 
-²à±ßÀ¸£¨`PortalShell.tsx` PANEL_ITEMS£©ÖĞ¶¨ÒåÁË 5 ¸ö°´Å¥£¬µ«ÆäÖ¸ÏòµÄÂ·¾¶Î´ÔÚÂ·ÓÉ×¢²á±í£¨`ROUTE_REGISTRY`£©ÖĞ×¢²á£¬µ¼ÖÂÓÃ»§µã»÷²à±ßÀ¸°´Å¥ºó½øÈë 404 Ò³Ãæ¡£
+ä¾§è¾¹æ ï¼ˆ`PortalShell.tsx` PANEL_ITEMSï¼‰ä¸­å®šä¹‰äº† 5 ä¸ªæŒ‰é’®ï¼Œä½†å…¶æŒ‡å‘çš„è·¯å¾„æœªåœ¨è·¯ç”±æ³¨å†Œè¡¨ï¼ˆ`ROUTE_REGISTRY`ï¼‰ä¸­æ³¨å†Œï¼Œå¯¼è‡´ç”¨æˆ·ç‚¹å‡»ä¾§è¾¹æ æŒ‰é’®åè¿›å…¥ 404 é¡µé¢ã€‚
 
-**Èı²ã¼Ü¹¹¶ÔÕÕ**£º
+**ä¸‰å±‚æ¶æ„å¯¹ç…§**ï¼š
 
 ```
-ROUTE_REGISTRY (routes.ts)  ¡ú  PortalShell ¡ú App ·Ö·¢Æ÷ ¡ú Ò³Ãæ×é¼ş
-     ? 5¸öÈ±¿Ú                    ? ÒÑ¶¨Òå       ? ÎŞ·ÖÖ§       ? ²»´æÔÚ
+ROUTE_REGISTRY (routes.ts)  â†’  PortalShell â†’ App åˆ†å‘å™¨ â†’ é¡µé¢ç»„ä»¶
+     ? 5ä¸ªç¼ºå£                    ? å·²å®šä¹‰       ? æ— åˆ†æ”¯       ? ä¸å­˜åœ¨
 ```
 
 ---
 
-## ¶ş¡¢È±Ê§Â·ÓÉÇåµ¥
+## äºŒã€ç¼ºå¤±è·¯ç”±æ¸…å•
 
-### È±¿Ú 1£º`/trading/portfolio` ¡ª Í¶×Ê×éºÏ
+### ç¼ºå£ 1ï¼š`/trading/portfolio` â€” æŠ•èµ„ç»„åˆ
 
-| ¼ì²éÏî | ×´Ì¬ | ËµÃ÷ |
+| æ£€æŸ¥é¡¹ | çŠ¶æ€ | è¯´æ˜ |
 |--------|------|------|
-| ROUTE_REGISTRY | ? Î´×¢²á | Â·ÓÉ±íÖĞÎŞ´ËÂ·¾¶ |
-| PortalShell PANEL_ITEMS | ? ÒÑ¶¨Òå | `key: 'portfolio', label: 'Í¶×Ê×éºÏ', path: '/trading/portfolio'` |
-| TradingApp ·Ö·¢·ÖÖ§ | ? ÎŞ·ÖÖ§ | ÏÖÓĞ·ÖÖ§£º`/trading/strategy-snapshots`, `/trading/holdings`, `/trading/execution-plans` |
-| Ò³Ãæ×é¼ş | ? ²»´æÔÚ | `src/pages/trading/` ÏÂ½öÓĞ `StrategySnapshotPage.tsx`, `HoldingsPage.tsx` |
-| µã»÷ºó¹û | 404 | Â·ÓÉÎ´×¢²á ¡ú ²à±ßÀ¸µ¼º½ ¡ú °×ÆÁ/404 |
+| ROUTE_REGISTRY | ? æœªæ³¨å†Œ | è·¯ç”±è¡¨ä¸­æ— æ­¤è·¯å¾„ |
+| PortalShell PANEL_ITEMS | ? å·²å®šä¹‰ | `key: 'portfolio', label: 'æŠ•èµ„ç»„åˆ', path: '/trading/portfolio'` |
+| TradingApp åˆ†å‘åˆ†æ”¯ | ? æ— åˆ†æ”¯ | ç°æœ‰åˆ†æ”¯ï¼š`/trading/strategy-snapshots`, `/trading/holdings`, `/trading/execution-plans` |
+| é¡µé¢ç»„ä»¶ | ? ä¸å­˜åœ¨ | `src/pages/trading/` ä¸‹ä»…æœ‰ `StrategySnapshotPage.tsx`, `HoldingsPage.tsx` |
+| ç‚¹å‡»åæœ | 404 | è·¯ç”±æœªæ³¨å†Œ â†’ ä¾§è¾¹æ å¯¼èˆª â†’ ç™½å±/404 |
 
-**ĞŞ¸´·½°¸**£º
-- ·½°¸ A£¨ÍÆ¼ö£©£º´´½¨ `src/pages/trading/PortfolioPage.tsx`£¬ÔÚ `ROUTE_REGISTRY` ×¢²á£¬ÔÚ `TradingApp.tsx` Ìí¼Ó·Ö·¢·ÖÖ§
-- ·½°¸ B£¨ÁÙÊ±£©£º½«²à±ßÀ¸°´Å¥Ö¸ÏòÒÑ´æÔÚµÄÂ·ÓÉ£¨Èç `/trading/holdings`£©
+**ä¿®å¤æ–¹æ¡ˆ**ï¼š
+- æ–¹æ¡ˆ Aï¼ˆæ¨èï¼‰ï¼šåˆ›å»º `src/pages/trading/PortfolioPage.tsx`ï¼Œåœ¨ `ROUTE_REGISTRY` æ³¨å†Œï¼Œåœ¨ `TradingApp.tsx` æ·»åŠ åˆ†å‘åˆ†æ”¯
+- æ–¹æ¡ˆ Bï¼ˆä¸´æ—¶ï¼‰ï¼šå°†ä¾§è¾¹æ æŒ‰é’®æŒ‡å‘å·²å­˜åœ¨çš„è·¯ç”±ï¼ˆå¦‚ `/trading/holdings`ï¼‰
 
 ---
 
-### È±¿Ú 2£º`/trading/execution` ¡ª Ö´ĞĞ¹ÜÀí
+### ç¼ºå£ 2ï¼š`/trading/execution` â€” æ‰§è¡Œç®¡ç†
 
-| ¼ì²éÏî | ×´Ì¬ | ËµÃ÷ |
+| æ£€æŸ¥é¡¹ | çŠ¶æ€ | è¯´æ˜ |
 |--------|------|------|
-| ROUTE_REGISTRY | ? Î´×¢²á | Â·ÓÉ±íÖĞÎŞ´ËÂ·¾¶ |
-| PortalShell PANEL_ITEMS | ? ÒÑ¶¨Òå | `key: 'execution', label: 'Ö´ĞĞ¹ÜÀí', path: '/trading/execution'` |
-| TradingApp ·Ö·¢·ÖÖ§ | ? ÎŞ·ÖÖ§ | ×¢Òâ£º´æÔÚ `/trading/execution-plans` Â·ÓÉ£¨Ö¸Ïò ExecutionPlanPanel£©£¬µ«²à±ßÀ¸Ö¸Ïò `/trading/execution` |
-| Ò³Ãæ×é¼ş | ? ²»´æÔÚ | ¿É¸´ÓÃ `ExecutionPlanPanel`£¨`src/apps/trading/panels/ExecutionPlanPanel`£© |
-| µã»÷ºó¹û | 404 | Â·ÓÉÎ´×¢²á ¡ú ²à±ßÀ¸µ¼º½ ¡ú °×ÆÁ/404 |
+| ROUTE_REGISTRY | ? æœªæ³¨å†Œ | è·¯ç”±è¡¨ä¸­æ— æ­¤è·¯å¾„ |
+| PortalShell PANEL_ITEMS | ? å·²å®šä¹‰ | `key: 'execution', label: 'æ‰§è¡Œç®¡ç†', path: '/trading/execution'` |
+| TradingApp åˆ†å‘åˆ†æ”¯ | ? æ— åˆ†æ”¯ | æ³¨æ„ï¼šå­˜åœ¨ `/trading/execution-plans` è·¯ç”±ï¼ˆæŒ‡å‘ ExecutionPlanPanelï¼‰ï¼Œä½†ä¾§è¾¹æ æŒ‡å‘ `/trading/execution` |
+| é¡µé¢ç»„ä»¶ | ? ä¸å­˜åœ¨ | å¯å¤ç”¨ `ExecutionPlanPanel`ï¼ˆ`src/apps/trading/panels/ExecutionPlanPanel`ï¼‰ |
+| ç‚¹å‡»åæœ | 404 | è·¯ç”±æœªæ³¨å†Œ â†’ ä¾§è¾¹æ å¯¼èˆª â†’ ç™½å±/404 |
 
-**ĞŞ¸´·½°¸**£º
-- ·½°¸ A£¨ÍÆ¼ö£©£ºÔÚ `ROUTE_REGISTRY` ×¢²á `/trading/execution`£¬ÔÚ `TradingApp.tsx` Ìí¼Ó·Ö·¢·ÖÖ§Ö¸Ïò `ExecutionPlanPanel`
-- ·½°¸ B£¨×îĞ¡¸Ä¶¯£©£º½«²à±ßÀ¸ path ¸ÄÎª `/trading/execution-plans`£¨ÒÑ´æÔÚµÄÂ·ÓÉ£©
+**ä¿®å¤æ–¹æ¡ˆ**ï¼š
+- æ–¹æ¡ˆ Aï¼ˆæ¨èï¼‰ï¼šåœ¨ `ROUTE_REGISTRY` æ³¨å†Œ `/trading/execution`ï¼Œåœ¨ `TradingApp.tsx` æ·»åŠ åˆ†å‘åˆ†æ”¯æŒ‡å‘ `ExecutionPlanPanel`
+- æ–¹æ¡ˆ Bï¼ˆæœ€å°æ”¹åŠ¨ï¼‰ï¼šå°†ä¾§è¾¹æ  path æ”¹ä¸º `/trading/execution-plans`ï¼ˆå·²å­˜åœ¨çš„è·¯ç”±ï¼‰
 
 ---
 
-### È±¿Ú 3£º`/trading/risk` ¡ª ·çÏÕ¿ØÖÆ
+### ç¼ºå£ 3ï¼š`/trading/risk` â€” é£é™©æ§åˆ¶
 
-| ¼ì²éÏî | ×´Ì¬ | ËµÃ÷ |
+| æ£€æŸ¥é¡¹ | çŠ¶æ€ | è¯´æ˜ |
 |--------|------|------|
-| ROUTE_REGISTRY | ? Î´×¢²á | Â·ÓÉ±íÖĞÎŞ´ËÂ·¾¶ |
-| PortalShell PANEL_ITEMS | ? ÒÑ¶¨Òå | `key: 'risk', label: '·çÏÕ¿ØÖÆ', path: '/trading/risk'` |
-| TradingApp ·Ö·¢·ÖÖ§ | ? ÎŞ·ÖÖ§ | ÎŞÈÎºÎ·çÏÕ¿ØÖÆÏà¹ØÒ³Ãæ |
-| Ò³Ãæ×é¼ş | ? ²»´æÔÚ | ĞèĞÂ½¨ |
-| µã»÷ºó¹û | 404 | Â·ÓÉÎ´×¢²á ¡ú ²à±ßÀ¸µ¼º½ ¡ú °×ÆÁ/404 |
+| ROUTE_REGISTRY | ? æœªæ³¨å†Œ | è·¯ç”±è¡¨ä¸­æ— æ­¤è·¯å¾„ |
+| PortalShell PANEL_ITEMS | ? å·²å®šä¹‰ | `key: 'risk', label: 'é£é™©æ§åˆ¶', path: '/trading/risk'` |
+| TradingApp åˆ†å‘åˆ†æ”¯ | ? æ— åˆ†æ”¯ | æ— ä»»ä½•é£é™©æ§åˆ¶ç›¸å…³é¡µé¢ |
+| é¡µé¢ç»„ä»¶ | ? ä¸å­˜åœ¨ | éœ€æ–°å»º |
+| ç‚¹å‡»åæœ | 404 | è·¯ç”±æœªæ³¨å†Œ â†’ ä¾§è¾¹æ å¯¼èˆª â†’ ç™½å±/404 |
 
-**ĞŞ¸´·½°¸**£º
-- ·½°¸ A£¨ÍÆ¼ö£©£º´´½¨ `src/pages/trading/RiskControlPage.tsx`£¬ÔÚ `ROUTE_REGISTRY` ×¢²á£¬ÔÚ `TradingApp.tsx` Ìí¼Ó·Ö·¢·ÖÖ§
-- ·½°¸ B£ºÈç¹ûÔİ²»ÊµÏÖ£¬´Ó PANEL_ITEMS ÖĞÒÆ³ı"·çÏÕ¿ØÖÆ"°´Å¥
+**ä¿®å¤æ–¹æ¡ˆ**ï¼š
+- æ–¹æ¡ˆ Aï¼ˆæ¨èï¼‰ï¼šåˆ›å»º `src/pages/trading/RiskControlPage.tsx`ï¼Œåœ¨ `ROUTE_REGISTRY` æ³¨å†Œï¼Œåœ¨ `TradingApp.tsx` æ·»åŠ åˆ†å‘åˆ†æ”¯
+- æ–¹æ¡ˆ Bï¼šå¦‚æœæš‚ä¸å®ç°ï¼Œä» PANEL_ITEMS ä¸­ç§»é™¤"é£é™©æ§åˆ¶"æŒ‰é’®
 
 ---
 
-### È±¿Ú 4£º`/output/reports` ¡ª ÑĞ±¨¸´ÅÌ£¨Â·¾¶²»Ò»ÖÂ£©
+### ç¼ºå£ 4ï¼š`/output/reports` â€” ç ”æŠ¥å¤ç›˜ï¼ˆè·¯å¾„ä¸ä¸€è‡´ï¼‰
 
-| ¼ì²éÏî | ×´Ì¬ | ËµÃ÷ |
+| æ£€æŸ¥é¡¹ | çŠ¶æ€ | è¯´æ˜ |
 |--------|------|------|
-| ROUTE_REGISTRY | ? Î´×¢²á | Â·ÓÉ±íÖĞÎŞ´ËÂ·¾¶ |
-| Êµ¼ÊÂ·ÓÉ | `/output/research` | ÒÑ×¢²á£¬Ö¸Ïò `ResearchReportPage` |
-| PortalShell PANEL_ITEMS | ?? Â·¾¶²»Ò»ÖÂ | `key: 'reports', label: 'ÑĞ±¨¸´ÅÌ', path: '/output/reports'` |
-| OutputApp ·Ö·¢·ÖÖ§ | ?? Ê¹ÓÃ `/output/research` | `else if (path === '/output/research') ¡ú ResearchReportPage` |
-| Ò³Ãæ×é¼ş | ? ÒÑ´æÔÚ | `ResearchReportPage.tsx` ÔÚ `/output/research` ÏÂÕı³£¹¤×÷ |
-| µã»÷ºó¹û | 404 | ²à±ßÀ¸µ¼º½µ½ `/output/reports` ¡ú Â·ÓÉÎ´×¢²á ¡ú 404 |
+| ROUTE_REGISTRY | ? æœªæ³¨å†Œ | è·¯ç”±è¡¨ä¸­æ— æ­¤è·¯å¾„ |
+| å®é™…è·¯ç”± | `/output/research` | å·²æ³¨å†Œï¼ŒæŒ‡å‘ `ResearchReportPage` |
+| PortalShell PANEL_ITEMS | ?? è·¯å¾„ä¸ä¸€è‡´ | `key: 'reports', label: 'ç ”æŠ¥å¤ç›˜', path: '/output/reports'` |
+| OutputApp åˆ†å‘åˆ†æ”¯ | ?? ä½¿ç”¨ `/output/research` | `else if (path === '/output/research') â†’ ResearchReportPage` |
+| é¡µé¢ç»„ä»¶ | ? å·²å­˜åœ¨ | `ResearchReportPage.tsx` åœ¨ `/output/research` ä¸‹æ­£å¸¸å·¥ä½œ |
+| ç‚¹å‡»åæœ | 404 | ä¾§è¾¹æ å¯¼èˆªåˆ° `/output/reports` â†’ è·¯ç”±æœªæ³¨å†Œ â†’ 404 |
 
-**¸ù±¾Ô­Òò**£º²à±ßÀ¸Â·¾¶ `/output/reports` ÓëÊµ¼ÊÒ³ÃæÂ·ÓÉ `/output/research` ²»Ò»ÖÂ¡£
+**æ ¹æœ¬åŸå› **ï¼šä¾§è¾¹æ è·¯å¾„ `/output/reports` ä¸å®é™…é¡µé¢è·¯ç”± `/output/research` ä¸ä¸€è‡´ã€‚
 
-**ĞŞ¸´·½°¸**£¨ÍÆ¼ö£©£º
-- ½« PortalShell PANEL_ITEMS ÖĞ `reports` µÄ `path` ´Ó `/output/reports` ¸ÄÎª `/output/research`
-- »òÔÚ ROUTE_REGISTRY ÖĞĞÂÔö `/output/reports` ×÷Îª `/output/research` µÄ±ğÃûÂ·ÓÉ
+**ä¿®å¤æ–¹æ¡ˆ**ï¼ˆæ¨èï¼‰ï¼š
+- å°† PortalShell PANEL_ITEMS ä¸­ `reports` çš„ `path` ä» `/output/reports` æ”¹ä¸º `/output/research`
+- æˆ–åœ¨ ROUTE_REGISTRY ä¸­æ–°å¢ `/output/reports` ä½œä¸º `/output/research` çš„åˆ«åè·¯ç”±
 
 ---
 
-### È±¿Ú 5£º`/output/dashboard` ¡ª ÒÇ±íÅÌ
+### ç¼ºå£ 5ï¼š`/output/dashboard` â€” ä»ªè¡¨ç›˜
 
-| ¼ì²éÏî | ×´Ì¬ | ËµÃ÷ |
+| æ£€æŸ¥é¡¹ | çŠ¶æ€ | è¯´æ˜ |
 |--------|------|------|
-| ROUTE_REGISTRY | ? Î´×¢²á | Â·ÓÉ±íÖĞÎŞ´ËÂ·¾¶ |
-| PortalShell PANEL_ITEMS | ? ÒÑ¶¨Òå | `key: 'dashboard', label: 'ÒÇ±íÅÌ', path: '/output/dashboard'` |
-| OutputApp ·Ö·¢·ÖÖ§ | ? ÎŞ·ÖÖ§ | OutputApp ½ö´¦Àí `/output/export`, `/output/research`, `/output/review`, `/output`(Hub) |
-| Ò³Ãæ×é¼ş | ? ²»´æÔÚ | ĞèĞÂ½¨ |
-| µã»÷ºó¹û | 404 | Â·ÓÉÎ´×¢²á ¡ú ²à±ßÀ¸µ¼º½ ¡ú °×ÆÁ/404 |
+| ROUTE_REGISTRY | ? æœªæ³¨å†Œ | è·¯ç”±è¡¨ä¸­æ— æ­¤è·¯å¾„ |
+| PortalShell PANEL_ITEMS | ? å·²å®šä¹‰ | `key: 'dashboard', label: 'ä»ªè¡¨ç›˜', path: '/output/dashboard'` |
+| OutputApp åˆ†å‘åˆ†æ”¯ | ? æ— åˆ†æ”¯ | OutputApp ä»…å¤„ç† `/output/export`, `/output/research`, `/output/review`, `/output`(Hub) |
+| é¡µé¢ç»„ä»¶ | ? ä¸å­˜åœ¨ | éœ€æ–°å»º |
+| ç‚¹å‡»åæœ | 404 | è·¯ç”±æœªæ³¨å†Œ â†’ ä¾§è¾¹æ å¯¼èˆª â†’ ç™½å±/404 |
 
-**ĞŞ¸´·½°¸**£º
-- ·½°¸ A£¨ÍÆ¼ö£©£º´´½¨ `src/pages/output/DashboardPage.tsx`£¬ÔÚ `ROUTE_REGISTRY` ×¢²á£¬ÔÚ `OutputApp.tsx` Ìí¼Ó·Ö·¢·ÖÖ§
-- ·½°¸ B£ºÈç¹ûÔİ²»ÊµÏÖ£¬´Ó PANEL_ITEMS ÖĞÒÆ³ı"ÒÇ±íÅÌ"°´Å¥
+**ä¿®å¤æ–¹æ¡ˆ**ï¼š
+- æ–¹æ¡ˆ Aï¼ˆæ¨èï¼‰ï¼šåˆ›å»º `src/pages/output/DashboardPage.tsx`ï¼Œåœ¨ `ROUTE_REGISTRY` æ³¨å†Œï¼Œåœ¨ `OutputApp.tsx` æ·»åŠ åˆ†å‘åˆ†æ”¯
+- æ–¹æ¡ˆ Bï¼šå¦‚æœæš‚ä¸å®ç°ï¼Œä» PANEL_ITEMS ä¸­ç§»é™¤"ä»ªè¡¨ç›˜"æŒ‰é’®
 
 ---
 
-## Èı¡¢Ó°Ïì»ã×Ü
+## ä¸‰ã€å½±å“æ±‡æ€»
 
-| ²ÕÊÒ | È±¿ÚÊı | Ó°ÏìÓÃ»§Êı | ÑÏÖØ¼¶±ğ |
+| èˆ±å®¤ | ç¼ºå£æ•° | å½±å“ç”¨æˆ·æ•° | ä¸¥é‡çº§åˆ« |
 |------|--------|-----------|---------|
-| ½»Ò×²Õ | 3 | È«²¿½»Ò×²ÕÓÃ»§ | P1£¨¸ß£© |
-| Êä³ö²Õ | 2 | È«²¿Êä³ö²ÕÓÃ»§ | P1£¨¸ß£© |
+| äº¤æ˜“èˆ± | 3 | å…¨éƒ¨äº¤æ˜“èˆ±ç”¨æˆ· | P1ï¼ˆé«˜ï¼‰ |
+| è¾“å‡ºèˆ± | 2 | å…¨éƒ¨è¾“å‡ºèˆ±ç”¨æˆ· | P1ï¼ˆé«˜ï¼‰ |
 
-**µ±Ç°ĞĞÎª**£ºÓÃ»§µã»÷Õâ 5 ¸ö²à±ßÀ¸°´Å¥ºó£¬Ò³Ãæ°×ÆÁ»òÏÔÊ¾ 404¡£
+**å½“å‰è¡Œä¸º**ï¼šç”¨æˆ·ç‚¹å‡»è¿™ 5 ä¸ªä¾§è¾¹æ æŒ‰é’®åï¼Œé¡µé¢ç™½å±æˆ–æ˜¾ç¤º 404ã€‚
 
 ---
 
-## ËÄ¡¢ĞŞ¸´ÓÅÏÈ¼¶½¨Òé
+## å››ã€ä¿®å¤ä¼˜å…ˆçº§å»ºè®®
 
-| ÓÅÏÈ¼¶ | È±¿Ú | ÀíÓÉ | ÍÆ¼ö·½°¸ |
+| ä¼˜å…ˆçº§ | ç¼ºå£ | ç†ç”± | æ¨èæ–¹æ¡ˆ |
 |--------|------|------|---------|
-| **P0£¨Á¢¼´ĞŞ¸´£©** | `/output/reports` | Ò³ÃæÒÑ´æÔÚ£¬½öÂ·¾¶²»Ò»ÖÂ£¬ĞŞ¸´³É±¾×îµÍ | ¸Ä²à±ßÀ¸ path Îª `/output/research` |
-| **P1£¨¾¡¿ìĞŞ¸´£©** | `/trading/execution` | ¿É¸´ÓÃ ExecutionPlanPanel£¬ĞŞ¸´³É±¾µÍ | ¸Ä²à±ßÀ¸ path Îª `/trading/execution-plans` »ò×¢²áÂ·ÓÉ |
-| **P2£¨¹æ»®ĞŞ¸´£©** | `/trading/portfolio` | ĞèĞÂ½¨Ò³Ãæ | ´´½¨ PortfolioPage + ×¢²áÂ·ÓÉ |
-| **P2£¨¹æ»®ĞŞ¸´£©** | `/trading/risk` | ĞèĞÂ½¨Ò³Ãæ | ´´½¨ RiskControlPage + ×¢²áÂ·ÓÉ |
-| **P2£¨¹æ»®ĞŞ¸´£©** | `/output/dashboard` | ĞèĞÂ½¨Ò³Ãæ | ´´½¨ DashboardPage + ×¢²áÂ·ÓÉ |
+| **P0ï¼ˆç«‹å³ä¿®å¤ï¼‰** | `/output/reports` | é¡µé¢å·²å­˜åœ¨ï¼Œä»…è·¯å¾„ä¸ä¸€è‡´ï¼Œä¿®å¤æˆæœ¬æœ€ä½ | æ”¹ä¾§è¾¹æ  path ä¸º `/output/research` |
+| **P1ï¼ˆå°½å¿«ä¿®å¤ï¼‰** | `/trading/execution` | å¯å¤ç”¨ ExecutionPlanPanelï¼Œä¿®å¤æˆæœ¬ä½ | æ”¹ä¾§è¾¹æ  path ä¸º `/trading/execution-plans` æˆ–æ³¨å†Œè·¯ç”± |
+| **P2ï¼ˆè§„åˆ’ä¿®å¤ï¼‰** | `/trading/portfolio` | éœ€æ–°å»ºé¡µé¢ | åˆ›å»º PortfolioPage + æ³¨å†Œè·¯ç”± |
+| **P2ï¼ˆè§„åˆ’ä¿®å¤ï¼‰** | `/trading/risk` | éœ€æ–°å»ºé¡µé¢ | åˆ›å»º RiskControlPage + æ³¨å†Œè·¯ç”± |
+| **P2ï¼ˆè§„åˆ’ä¿®å¤ï¼‰** | `/output/dashboard` | éœ€æ–°å»ºé¡µé¢ | åˆ›å»º DashboardPage + æ³¨å†Œè·¯ç”± |
 
 ---
 
-## Îå¡¢ĞŞ¸´ SOP
+## äº”ã€ä¿®å¤ SOP
 
-### ±ê×¼ĞÂÔöÒ³ÃæÁ÷³Ì£¨²Î¿¼ AGENTS.md ¡ì5£©
+### æ ‡å‡†æ–°å¢é¡µé¢æµç¨‹ï¼ˆå‚è€ƒ AGENTS.md Â§5ï¼‰
 
-1. ÔÚ `src/pages/{cabin}/` ´´½¨Ò³Ãæ×é¼ş
-2. ÔÚ `src/config/routes.ts` µÄ `ROUTE_REGISTRY` ÖĞ×¢²áÂ·ÓÉ
-3. ÔÚ¶ÔÓ¦ `src/apps/{cabin}/{Cabin}App.tsx` ÖĞÌí¼Ó `React.lazy()` µ¼ÈëºÍ else-if ·ÖÖ§
-4. ÔËĞĞ `npm run audit:deadcode` È·ÈÏÒ³Ãæ²»ÔÙ³öÏÖÔÚ¡¸Î´×¢²áÒ³Ãæ¡¹ÁĞ±íÖĞ
-5. ÔËĞĞ `npx vitest run tests/__tests__/regression/p1-fix-regression.test.ts` È·ÈÏ»Ø¹é²âÊÔÍ¨¹ı
+1. åœ¨ `src/pages/{cabin}/` åˆ›å»ºé¡µé¢ç»„ä»¶
+2. åœ¨ `src/config/routes.ts` çš„ `ROUTE_REGISTRY` ä¸­æ³¨å†Œè·¯ç”±
+3. åœ¨å¯¹åº” `src/apps/{cabin}/{Cabin}App.tsx` ä¸­æ·»åŠ  `React.lazy()` å¯¼å…¥å’Œ else-if åˆ†æ”¯
+4. è¿è¡Œ `npm run audit:deadcode` ç¡®è®¤é¡µé¢ä¸å†å‡ºç°åœ¨ã€Œæœªæ³¨å†Œé¡µé¢ã€åˆ—è¡¨ä¸­
+5. è¿è¡Œ `npx vitest run tests/__tests__/regression/p1-fix-regression.test.ts` ç¡®è®¤å›å½’æµ‹è¯•é€šè¿‡
 
-### ½öĞŞ¸´Â·¾¶²»Ò»ÖÂ£¨È±¿Ú 4£©
+### ä»…ä¿®å¤è·¯å¾„ä¸ä¸€è‡´ï¼ˆç¼ºå£ 4ï¼‰
 
-1. ĞŞ¸Ä `src/portal/PortalShell.tsx` ÖĞ PANEL_ITEMS µÄ `reports.path` Îª `/output/research`
-2. ¸üĞÂ `tests/__tests__/regression/p1-fix-regression.test.ts` ÖĞ KNOWN_SIDEBAR_ITEMS ¶ÔÓ¦ÌõÄ¿
-3. ÔËĞĞ E2E ²âÊÔ `npx playwright test e2e/output-cabin.spec.ts` ÑéÖ¤
+1. ä¿®æ”¹ `src/portal/PortalShell.tsx` ä¸­ PANEL_ITEMS çš„ `reports.path` ä¸º `/output/research`
+2. æ›´æ–° `tests/__tests__/regression/p1-fix-regression.test.ts` ä¸­ KNOWN_SIDEBAR_ITEMS å¯¹åº”æ¡ç›®
+3. è¿è¡Œ E2E æµ‹è¯• `npx playwright test e2e/output-cabin.spec.ts` éªŒè¯
 
 ---
 
-## Áù¡¢Ïà¹ØÎÄ¼ş
+## å…­ã€ç›¸å…³æ–‡ä»¶
 
-| ÎÄ¼ş | ½ÇÉ« |
+| æ–‡ä»¶ | è§’è‰² |
 |------|------|
-| `src/config/routes.ts` | Â·ÓÉ×¢²á±í£¨ROUTE_REGISTRY£© |
-| `src/portal/PortalShell.tsx` | ²à±ßÀ¸ÅäÖÃ£¨PANEL_ITEMS£© |
-| `src/apps/trading/TradingApp.tsx` | ½»Ò×²Õ×ÓÂ·ÓÉ·Ö·¢ |
-| `src/apps/output/OutputApp.tsx` | Êä³ö²Õ×ÓÂ·ÓÉ·Ö·¢ |
-| `tests/__tests__/regression/p1-fix-regression.test.ts` | »Ø¹é²âÊÔ£¨±ê¼ÇÎª skipped µÄ 5 ¸ö²âÊÔ£© |
-| `e2e/output-cabin.spec.ts` | Êä³ö²Õ E2E ²âÊÔ |
-| `e2e/data-migration.spec.ts` | Ãæ°üĞ¼µ¼º½ E2E ²âÊÔ |
+| `src/config/routes.ts` | è·¯ç”±æ³¨å†Œè¡¨ï¼ˆROUTE_REGISTRYï¼‰ |
+| `src/portal/PortalShell.tsx` | ä¾§è¾¹æ é…ç½®ï¼ˆPANEL_ITEMSï¼‰ |
+| `src/apps/trading/TradingApp.tsx` | äº¤æ˜“èˆ±å­è·¯ç”±åˆ†å‘ |
+| `src/apps/output/OutputApp.tsx` | è¾“å‡ºèˆ±å­è·¯ç”±åˆ†å‘ |
+| `tests/__tests__/regression/p1-fix-regression.test.ts` | å›å½’æµ‹è¯•ï¼ˆæ ‡è®°ä¸º skipped çš„ 5 ä¸ªæµ‹è¯•ï¼‰ |
+| `e2e/output-cabin.spec.ts` | è¾“å‡ºèˆ± E2E æµ‹è¯• |
+| `e2e/data-migration.spec.ts` | é¢åŒ…å±‘å¯¼èˆª E2E æµ‹è¯• |

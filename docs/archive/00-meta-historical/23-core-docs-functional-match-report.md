@@ -1,7 +1,7 @@
 ---
 title: 23-core-docs-functional-match-report
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
@@ -36,7 +36,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 - **预期功能**：顶层总入口（人工维护）
 - **判定理由**：无人工维护的顶层总入口；00-readme.md偏实施且已漂移
 
-**2. `./governance.md`** 🔴
+**2. `../../00-meta/GOVERNANCE.md`** 🔴
 
 - **预期功能**：文档治理公约（Frontmatter/DoD）
 - **判定理由**：无文档治理公约；implementation-governance.md偏实施非全文档
@@ -192,7 +192,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 
 ### 🟢 低优先级
 
-- **`./governance.md`** — 文档保鲜度与DoD规则，可从00-readme.md提升
+- **`../../00-meta/GOVERNANCE.md`** — 文档保鲜度与DoD规则，可从00-readme.md提升
 - **`../reference/test-catalog.md`** — 测试用例集中维护
 - **`../prompts/store-integration-guide.md + ../prompts/service-integration-guide.md`** — 从prompts模板抽离为独立文档
 - **`../reference/security-model.md`** — 安全合规

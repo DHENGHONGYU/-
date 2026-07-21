@@ -30,7 +30,7 @@ code_version: 2.0.0
 | A-01 | `../../dataflow-data-definition.md` | 新增 `ttl?` 字段 + §1.5 CacheStats 接口（11 字段） | v1.1.0 → v1.2.0 |
 | A-02 | `../../databridge端点与数据映射清单.md` | 新增 §2.9 LoadHoldingsDataHandler（查询不写 DB）+ 附录A #39 | v1.0.0 → v1.1.0 |
 | A-03 | `../../testing-strategy.md` | 新增 §10 Playwright 回归测试策略（5 子节：概述/覆盖矩阵/页面清单/定位器规范/双模式） | v1.1.0 → v1.2.0 |
-| A-04 | `scripts/audit-hardcode.ts` | 魔法数字排除列表去重分组（10 类）+ 新增 4 个上下文排除函数（数组/对象/枚举/return） | v2.1 → v2.4 |
+| A-04 | `scripts/audit/audit-hardcode.ts` | 魔法数字排除列表去重分组（10 类）+ 新增 4 个上下文排除函数（数组/对象/枚举/return） | v2.1 → v2.4 |
 | A-05 | `../../v9-indexeddb-store-schema.md` | 新增 §2.21-§2.25 共 5 个 Store 详细说明 + 更新 §1.3/§3.1/§3.3 | v21（内容更新） |
 | A-06 | `../../06-routing-specs.md` | 路由表 31→48 条 + 新增 §2.5 三级加载链架构 + 更新 §3.1/§7/§8 | v2.2.1 → v3.0.0 |
 

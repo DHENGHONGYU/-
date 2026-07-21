@@ -130,7 +130,7 @@ V6 Pro（MainLayout）
 |---|---|---|---|---|---|
 | 数据工场/模块 Hub 首页 | ✅ 6 大子模块卡片 + 4 Tab（模块总览/数据看板/七维状态/数据导出） | ❌ 无 | V9 输入舱无模块级总览 | ✅ 建议增加 | 需新增 `/input/hub` 页面；与现有 `/input` 子页面联动 |
 | 股票池管理 | ✅ 分组/导入/导出/添加/策略模板/搜索/排序/七维热力/操作列 | ✅ `InputDashboard` + `PoolBoard` 看板/列表 | V6 是表格+策略模板+分组筛选；V9 是看板流 | ✅ 可吸收表格视图+策略模板 | 需改造 `PoolBoard`/`PoolList`；`usePoolData` 增加分组/模板字段 |
-| 七维采集配置 | ✅ 7 维度开关 + 5 方向策略模板 + 字段明细 + 查看采集任务 | ❌ 无 | V9 只有 `DataTestPanel` 接口测试 | ✅ 建议增加 | 需新增 `CollectParamPanel`；`src/data/collectConfig` 数据模型 |
+| 七维采集配置 | ✅ 7 维度开关 + 5 方向策略模板 + 字段明细 + 查看采集任务 | ❌ 无 | V9 只有 `DataTestPanel` 接口测试 | ✅ 建议增加 | 需新增 `CollectParamPanel`；`src/config/collectConfig.ts` 数据模型 |
 | 采集任务监控 | ✅ 任务列表/评分卡片/采集日志 3 Tab + 状态卡 + 进度条 + 全部重采/批量采集 | ❌ 无（仅 DataTestPanel 单接口测试） | V9 缺失任务级监控 | ✅ 建议增加 | 需新增 `CollectMonitor`；与 `fetcherService` 对接 |
 | 智能资讯 | ✅ 新闻索引 + 研报中心 + 筛选面板 + 资讯卡片 + 情感分析 | ❌ 无 | V9 完全缺失 | ✅ 可增加 | 需新增 `news/*` 组件；需要资讯数据源 |
 | 抓取引擎 | ⚠️ 占位/简化实现（`FetcherPage` / `ModulePage`） | ✅ `DataTestPanel` 健康检查 + 单接口/批量测试 | V9 实际测试能力更强 | 保持现状 | — |
@@ -191,7 +191,7 @@ V6 Pro（MainLayout）
 |---|---|---|---|---|
 | shadcn/ui 组件库（Dialog/Tabs/Select/Table/Switch/Toast/Chart） | `src/components/ui/` | `src/components/ui/` 重构 | 全项目 UI 替换 | P0 |
 | 模块 Hub 首页模式 | `DataHubPage/AnalysisHubPage/TradingHubPage/AgentHubPage` | 各舱入口增加 Hub | 路由表 + PortalShell 子菜单 | P1 |
-| 七维采集参数面板 | `CollectParamPanel` + `SevenDimCollectPage` | `/input/seven-dim` | `src/data/collectConfig`、fetcherService | P1 |
+| 七维采集参数面板 | `CollectParamPanel` + `SevenDimCollectPage` | `/input/seven-dim` | `src/config/collectConfig.ts`、fetcherService | P1 |
 | 采集任务监控面板 | `CollectMonitor` + `CollectTaskPage` | `/input/collect-task` | fetcherService、新增任务数据模型 | P1 |
 | 股票池表格+策略模板视图 | `StockPoolPage` | `InputDashboard` / `PoolList` | `usePoolData`、PoolBoard | P1 |
 | 板块轮动页 | `SectorRotation` | `/analysis/sector-rotation` | `rotationData`、股票池数据 | P1 |
@@ -248,8 +248,8 @@ V6 Pro（MainLayout）
 
 ### 6.4 若增强股票池管理
 
-- `src/components/pool/PoolList.tsx`：增加表格列（分组、七维热力、操作列）
-- `src/components/pool/usePoolData.ts`：增加分组过滤、策略模板、排序
+- `src/components/organisms/pool/PoolList.tsx`：增加表格列（分组、七维热力、操作列）
+- `src/components/organisms/pool/usePoolDataFromStore.ts`：增加分组过滤、策略模板、排序
 - `src/apps/input/InputDashboard.tsx`：增加策略模板按钮、导入/导出/添加按钮
 - 联动：`StockAnalysisPage` 接收 `/analysis?symbol=` 跳转参数（V6 模式）
 
