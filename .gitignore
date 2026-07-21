@@ -213,3 +213,12 @@ scripts/restore-from-backup.py
 
 # 覆盖面分析脚本（若一次性则保持屏蔽）
 # parse_coverage.py
+
+# --- 2026-07-22 工作树噪音治理补充 ---
+# 文档自动备份目录（每次 AI 治理操作生成，不入 VCS）
+docs-backup-*/
+
+# E2E 测试产物（results.json 每次运行不同，不入 VCS）
+e2e/**/_tmp*/
+e2e/**/test-results-*/
+e2e/**/test-artifacts-temp/

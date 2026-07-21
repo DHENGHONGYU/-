@@ -4,10 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-tier: important
-code_version: 2.0.0
----
 
 # 08. 实施计划
 

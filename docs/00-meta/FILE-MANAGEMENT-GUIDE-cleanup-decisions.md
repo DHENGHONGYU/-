@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: docs/00-meta/file-management-guide-cleanup-decisions.md
-code_version: 2.0.0
-tier: core
----
 
 # FILE-MANAGEMENT-GUIDE 代码清理决策报告
 

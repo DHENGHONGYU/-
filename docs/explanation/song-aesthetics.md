@@ -3,13 +3,12 @@ title: song-aesthetics
 code_version: 2.0.0
 
 tier: important
+status: active
+version: v1.0.0
+last_updated: 2026-07-21
+doc_id: V9-DOC-EXP-903
 ---
 
----
-title: docs/explanation/song-aesthetics.md
-code_version: 2.0.0
-tier: important
----
 
 # 宋韵美学设计指南（Song Aesthetics）
 

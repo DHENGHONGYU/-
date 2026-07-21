@@ -5,16 +5,7 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/prompts/autonomous-workflow-user-guide.md
-code_version: 2.0.0
-tier: reference
----
 
----
-title: docs/prompts/autonomous-workflow-user-guide.md
-code_version: 2.0.0
----
 
 # V9 自主工作流使用指南
 

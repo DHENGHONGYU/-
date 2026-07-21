@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/reference/seven-dim-advanced-config-implementation.md
-code_version: 2.0.0
-tier: important
----
 
 # SevenDimConfigPage 高级配置补全方案
 

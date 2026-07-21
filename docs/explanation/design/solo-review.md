@@ -4,10 +4,6 @@ tier: reference
 code_version: 2.0.0
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
 
 # solo-review.md — 单人开发代码审查指南
 

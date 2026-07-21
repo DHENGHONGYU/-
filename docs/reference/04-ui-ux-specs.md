@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/reference/04-ui-ux-specs.md
-code_version: 2.0.0
-tier: important
----
 
 # 04. UI/UX 规范
 

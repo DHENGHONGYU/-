@@ -5,14 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: execution-contract.md — 交易执行子域接口契约
-status: draft
-owner: 架构组
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
 
 # execution-contract.md — 交易执行子域接口契约
 

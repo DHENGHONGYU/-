@@ -4,14 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-title: V9 选股策略总文档
-version: v1.0.0
-last_updated: 2026-06-27
-maintainer: V9 Architecture Team
-status: active
-tier: important
----
 
 # V9 选股策略总文档
 

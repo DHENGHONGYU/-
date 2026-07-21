@@ -4,10 +4,6 @@ tier: reference
 code_version: 2.0.0
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
 
 # V9 智能投研复盘系统 - API 文档
 

@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: MCP 权限控制开发指南
-code_version: 2.0.0
-tier: important
----
 
 # MCP 权限控制开发指南
 

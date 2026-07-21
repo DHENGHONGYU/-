@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: docs/00-meta/file-management-guide-optimization-prompt.md
-code_version: 2.0.0
-tier: core
----
 
 # file-management-guide.md 体系优化提示词
 

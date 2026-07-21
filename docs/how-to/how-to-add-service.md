@@ -3,13 +3,12 @@ title: how-to-add-service
 code_version: 2.0.0
 
 tier: important
+status: active
+version: v1.0.0
+last_updated: 2026-07-21
+doc_id: V9-DOC-HOW-903
 ---
 
----
-title: docs/how-to/how-to-add-service.md
-code_version: 2.0.0
-tier: important
----
 
 # 如何新增一个 Service（DataBridge + Envelope 路由）
 

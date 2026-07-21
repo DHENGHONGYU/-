@@ -3,21 +3,13 @@ title: service-integration-guide
 code_version: 2.0.0
 
 tier: important
+status: active
+version: v1.0.0
+last_updated: 2026-07-21
+doc_id: V9-DOC-PRM-901
 ---
 
----
-title: docs/prompts/service-integration-guide.md
-code_version: 2.0.0
-tier: reference
----
 
----
-title: Service 集成开发指南
-status: draft
-owner: services 子域 owner / 架构组
-updated: 2026-07-20
-code_version: 2.0.0
----
 
 # Service 集成开发指南
 

@@ -5,14 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: stockpool-contract.md — 股票池管理子域接口契约
-status: draft
-owner: 架构组
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
 
 # stockpool-contract.md — 股票池管理子域接口契约
 

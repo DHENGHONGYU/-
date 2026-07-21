@@ -4,18 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-title: 架构设计文档版本比对
-version: v0.9.0
-last_updated: 2026-06-25
-maintainer: V9 Architecture Team
-status: active
-change_log:
-  - date: 2026-06-25
-    author: Documentation Governor
-    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
-tier: important
----
 # 架构设计文档版本比对
 
 > **Status**: Current  

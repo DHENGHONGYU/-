@@ -5,20 +5,7 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: docs/explanation/adr-001-pure-frontend-architecture.md
-code_version: 2.0.0
-tier: reference
----
 
----
-title: ADR-001: 纯前端无后端架构
-status: accepted
-owner: V9 Architecture Team
-decision_date: 2026-06-20
-supersedes: ""
-superseded_by: ""
----
 
 # ADR-001: 纯前端无后端架构
 

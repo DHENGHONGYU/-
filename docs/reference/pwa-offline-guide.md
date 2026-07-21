@@ -4,17 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-title: V9 PWA 离线化实施指南
-version: v0.9.0-doc-sync-batch2
-last_review: 2026-06-27
-status: draft
-change_log:
-  - date: 2026-06-27
-    author: Documentation Governor
-    desc: 首次定义 Service Worker 注册策略、缓存清单、更新机制与 Lighthouse 测试标准
-tier: important
----
 
 # V9 PWA 离线化实施指南
 

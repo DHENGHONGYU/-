@@ -5,27 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: V9 五层追溯审计 — 修复行动清单
-version: v2.0.0
-last_updated: 2026-07-05
-maintainer: Quality Auditor
-status: active
-audit_scope: 5 批次 / 48 入口 / 21 Widget
-total_issues: 35
-p0_count: 7
-p1_count: 13
-p2_count: 15
-change_log:
-  - date: 2026-07-05
-    author: Quality Auditor
-    desc: 基于五批次全量审计结果重写，新增 P0=7 / P1=13 / P2=15，附修复路线图与验收标准
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: 初始版本：基于 28 模块审计结果
-code_version: 2.0.0
-tier: important
----
 
 # V9 五层追溯审计 — 修复行动清单
 

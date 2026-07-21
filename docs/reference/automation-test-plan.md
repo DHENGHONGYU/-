@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/reference/automation-test-plan.md
-code_version: 2.0.0
-tier: important
----
 
 # V9 智能投研复盘系统 全面自动化测试实施计划
 

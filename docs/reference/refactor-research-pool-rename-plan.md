@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/reference/refactor-research-pool-rename-plan.md
-code_version: 2.0.0
-tier: important
----
 
 # 「股票池」泛化旧名称 内部标识符重命名重构方案
 

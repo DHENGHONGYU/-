@@ -5,16 +5,7 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/explanation/jsdoc-convention.md
-code_version: 2.0.0
-tier: important
----
 
----
-title: docs/explanation/jsdoc-convention.md
-code_version: 2.0.0
----
 
 # JSDoc 编写规范
 

@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: docs/00-meta/p1-secondary-verification-report.md
-code_version: 2.0.0
-tier: core
----
 
 # P1 二次校对报告
 

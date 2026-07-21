@@ -5,15 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: 批次 B P2 问题修复方案
-version: v1.0.0
-last_updated: 2026-06-27
-maintainer: Quality Auditor
-status: draft
-code_version: 2.0.0
-tier: important
----
 
 # 批次 B P2 问题修复方案
 

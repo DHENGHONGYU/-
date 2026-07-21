@@ -4,18 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-title: 交易核心因子与复盘指标导入
-version: v0.9.0
-last_updated: 2026-06-24
-maintainer: V9 Architecture Team
-status: active
-change_log:
-  - date: 2026-06-24
-    author: Documentation Governor
-    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
-tier: important
----
 # 交易核心因子与复盘指标导入
 
 > **Status: Future Reference / Deferred**  

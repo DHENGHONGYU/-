@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: docs/explanation/regression-test-report.md
-code_version: 2.0.0
-tier: reference
----
 
 # 股票池看板迁移回归测试报告
 

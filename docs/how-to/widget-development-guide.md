@@ -5,15 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: Widget 开发指南
-version: v1.2.0
-last_updated: 2026-07-05
-maintainer: Quality Auditor
-status: active
-code_version: 2.0.0
-tier: important
----
 
 # Widget 开发指南
 

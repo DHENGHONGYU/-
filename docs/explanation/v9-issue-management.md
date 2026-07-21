@@ -5,19 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: V9 问题整改管理与调度记录
-version: v1.0.0
-last_updated: 2026-06-27
-maintainer: Issue Resolution Orchestrator
-status: active
-change_log:
-  - date: 2026-06-27
-    author: Documentation Governor
-    desc: 合并 v9-issue-execution-board / v9-issue-resolution-schedule / v9-parallel-task-schedule 为统一文档
-code_version: 2.0.0
-tier: important
----
 
 # V9 问题整改管理与调度记录
 

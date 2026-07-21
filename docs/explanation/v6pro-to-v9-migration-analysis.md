@@ -5,19 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: V6 Pro → V9 源码比对与二次开发重点模块梳理
-version: v0.9.0
-last_updated: 2026-06-25
-maintainer: V9 Architecture Team
-status: active
-change_log:
-  - date: 2026-06-25
-    author: Documentation Governor
-    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
-code_version: 2.0.0
-tier: important
----
 # V6 Pro → V9 源码比对与二次开发重点模块梳理
 
 > **Status**: Current  
