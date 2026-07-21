@@ -4,6 +4,7 @@ name: collection-pipeline-testing
 title: "采集链路测试与修复标准工作流"
 description: "FinSightV9 数据采集链路（sevenDimConfigStore + collectionPipeline 及其依赖）改动后的标准化测试、修复与门禁验证流程。基于 ①-⑦ 修复全流程的 16 条教训提炼。"
 agent_created: true
+category: code-quality
 triggers:
   keywords: [采集链路, 七维, collectionPipeline, sevenDimConfigStore, 采集维度, 采集测试, 联动测试]
   files:

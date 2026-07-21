@@ -4,6 +4,7 @@ name: module-sync-checklist
 title: "模块改动同步校对清单（严禁代码先行）"
 description: "任何代码改动交付前的强制同步校对流程。核心目标：严禁'代码先行、卫星产物未及时同步'——类型/消费者/测试/Mock/监控/注册表/文档/配置/Store/记忆 十域必须与代码同批落地，证据化验证 + 门禁全绿方可声称完成。基于 2026-07-20/21 采集域 P0 改造巩固校对实战提炼。"
 agent_created: true
+category: code-quality
 triggers:
   keywords: [模块同步, 代码校对, 交付前检查, 同步校对, module-sync, sync-checklist, 重构, 接口变更, 重命名, 四步集成, 巩固成果, 代码先行, 模块改动]
   files:

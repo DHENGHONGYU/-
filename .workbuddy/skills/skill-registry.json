@@ -1,12 +1,40 @@
 {
   "version": "1.0.0",
   "updated": "2026-07-21",
-  "note": "L1 注册层单一真相源。与各 SKILL.md frontmatter 的 triggers/gates/mandatory 保持一致；漂移由 npm run audit:skill-coverage 拦截。",
+  "note": "L1 注册层单一真相源。与各 SKILL.md frontmatter 的 triggers/gates/mandatory 保持一致；漂移由 npm run audit:skill-coverage 拦截。v1.5.6 新增 category 字段与 categories 四维分类索引（doc-governance / code-quality / data-flow / devops）。",
+  "categories": {
+    "doc-governance": "文档治理：编码修复、链接修复、迁移扫描等文档资产维护",
+    "code-quality": "代码质量与交付闸口：门禁、模块同步、执行规范",
+    "data-flow": "数据流与采集：采集链路测试、数据流完整性、Mock 诊断",
+    "devops": "部署运维：备份、部署、定时任务"
+  },
   "skills": [
+    {
+      "id": "V9-SKILL-DOC-ENCODING",
+      "name": "doc-encoding-remediation",
+      "path": ".workbuddy/skills/doc-encoding-remediation/SKILL.md",
+      "category": "doc-governance",
+      "triggers": {
+        "keywords": ["文档乱码", "GBK", "编码修复", "链接修复前置", "二次损坏", "fix-doc-refs", "utf-8 硬编码", "中文变问号", "U+FFFD", "编码探测"],
+        "files": [
+          "scripts/fix-doc-refs.ts",
+          "scripts/fix/*.ts",
+          "scripts/lib/encoding.ts"
+        ],
+        "events": ["doc-encoding-risk", "pre-link-fix", "gbk-detected"]
+      },
+      "gates": [
+        "三维 Grep 确认 fix 脚本族无残留硬编码 writeFileSync(...,'utf-8')（已统一走 encoding.ts）",
+        "编码探测产出报告：严格 UTF-8 失败且 gb18030 成功 = GBK，禁止用 charset_normalizer",
+        "转码后复测：全仓 GBK_TOTAL=0（排除 cache/gbk-backup/ 后）"
+      ],
+      "mandatory": false
+    },
     {
       "id": "V9-SKILL-BASH",
       "name": "bash-conventions",
       "path": ".workbuddy/skills/bash-conventions/SKILL.md",
+      "category": "code-quality",
       "triggers": {
         "keywords": ["跑命令", "执行脚本", "npm run", "Git Bash", "路径转换", "终端操作", "构建", "跑测试", "审计脚本", "Python 脚本", "pip", "vitest", "tsc", "门禁"],
         "files": [],
@@ -19,6 +47,7 @@
       "id": "V9-SKILL-COLLECTION",
       "name": "collection-pipeline-testing",
       "path": ".workbuddy/skills/collection-pipeline-testing/SKILL.md",
+      "category": "code-quality",
       "triggers": {
         "keywords": ["采集链路", "七维", "collectionPipeline", "sevenDimConfigStore", "采集维度", "采集测试", "联动测试"],
         "files": [
@@ -42,6 +71,7 @@
       "id": "V9-SKILL-DATAFLOW",
       "name": "data-flow-integrity-audit",
       "path": ".workbuddy/skills/data-flow-integrity-audit/SKILL.md",
+      "category": "data-flow",
       "triggers": {
         "keywords": ["按钮点击无响应", "功能键不可点击", "数据采集链路断裂", "板块间数据传递异常", "假绿灯", "KPI 看板数据与实际不一致", "数据流完整性审计", "采集维度覆盖度验证", "Vite 缓存", "EnvelopeAction", "ACL_MATRIX"],
         "files": [
@@ -64,6 +94,7 @@
       "id": "V9-SKILL-MOCK-DIAG",
       "name": "mock-data-diagnosis",
       "path": ".workbuddy/skills/mock-data-diagnosis/SKILL.md",
+      "category": "data-flow",
       "triggers": {
         "keywords": ["排查Mock数据残留", "Mock到真实数据过渡", "数据链路Mock残留", "信息孤岛诊断", "Mock与真实数据兼容性", "数据检查与校对", "mock data diagnosis", "mock audit", "数据流健康度", "Mock→真实切换", "假数据", "Mock残留"],
         "files": [
@@ -84,6 +115,7 @@
       "id": "V9-SKILL-MODULE-SYNC",
       "name": "module-sync-checklist",
       "path": ".workbuddy/skills/module-sync-checklist/SKILL.md",
+      "category": "code-quality",
       "triggers": {
         "keywords": ["模块同步", "代码校对", "交付前检查", "同步校对", "module-sync", "sync-checklist", "重构", "接口变更", "重命名", "四步集成", "巩固成果", "代码先行", "模块改动"],
         "files": [
@@ -108,6 +140,7 @@
       "id": "V9-SKILL-DEVOPS",
       "name": "devops-automation",
       "path": ".workbuddy/skills/devops-automation/SKILL.md",
+      "category": "devops",
       "triggers": {
         "keywords": ["定时备份", "自动提交", "Git 快照", "批量部署", "定时构建部署", "注册定时任务", "部署到静态托管", "周期性任务", "自动化 Skill", "备份失败", "部署失败"],
         "files": [
