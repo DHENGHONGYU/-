@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+# 无操作——该项目不依赖 prepare-commit-msg 逻辑
+exit 0

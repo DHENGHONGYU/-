@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/reference/output-cabin-spec.md
-code_version: 2.0.0
-tier: important
----
 
 # Output 舱规格（output-cabin-spec）
 

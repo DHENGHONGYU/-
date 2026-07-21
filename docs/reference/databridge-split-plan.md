@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/reference/databridge-split-plan.md
-code_version: 2.0.0
-tier: core
----
 
 # databridge.ts 详细分拆方案
 

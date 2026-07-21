@@ -5,22 +5,6 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: V6 → V9 架构一致性整改行动清单
-version: v2.0.0
-last_updated: 2026-07-04
-maintainer: Quality Auditor
-status: active
-audit_source:
-  - docs/implementation/completeness-profile.md 第十一章
-  - src/portal/PortalShell.tsx
-  - src/config/routes.ts
-  - src/services/scoring/v6ScoreService.ts
-  - src/services/scoring/v6-engine/
-  - v6-ui-assets/source-migration/
-code_version: 2.0.0
-tier: reference
----
 
 # V6 → V9 架构一致性整改行动清单
 

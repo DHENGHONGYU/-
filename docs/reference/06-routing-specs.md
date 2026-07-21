@@ -1,3 +1,12 @@
+---
+title: 路由规范（Routing Specs）
+doc_id: V9-DOC-REF-906
+tier: important
+status: active
+version: v1.0.0
+last_updated: 2026-07-21
+code_version: 2.0.0
+---
 # 路由规格文档 (Routing Specs)
 
 > 自动提取自 `src/config/routes.ts`，最后同步: 2026-07-18

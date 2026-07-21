@@ -5,18 +5,7 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/explanation/seven-dim-config-data-definition.md
-code_version: 2.0.0
-tier: important
----
 
----
-deprecated: true
-deprecated_date: 2026-07-14
-deprecated_reason: 已整合至 data-dictionary-index.md 索引，建议通过主索引访问
-replaced_by: docs/reference/data-dictionary-index.md
----
 
 # DEPRECATED - seven-dim-config-data-definition.md
 

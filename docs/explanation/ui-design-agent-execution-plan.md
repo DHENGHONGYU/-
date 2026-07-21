@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/explanation/ui-design-agent-execution-plan.md
-code_version: 2.0.0
-tier: important
----
 
 # V9 UI 设计优化分布式 AGENT 任务执行清单
 

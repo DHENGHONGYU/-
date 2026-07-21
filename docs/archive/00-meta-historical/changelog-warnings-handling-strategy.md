@@ -68,7 +68,7 @@ CHANGELOG.md 第 6 行已添加声明：
 | `../../reference/code-review-cheatsheet.md` | `../../how-to/code-review-guide.md` | ✅ 已合并 |
 | `../../explanation/design/code-review-training.md` | `../../how-to/code-review-guide.md` | ✅ 已合并 |
 | `../../explanation/design/solo-review.md` | `../../how-to/code-review-guide.md` | ✅ 已合并 |
-| `../../../explanation/design/tech-debt.md` | `../../../explanation/design/tech-debt.md` | ✅ 映射 |
+| `../../explanation/design/tech-debt.md` | `../../explanation/design/tech-debt.md` | ✅ 映射 |
 
 ---
 

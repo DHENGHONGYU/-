@@ -3,18 +3,13 @@ title: development-workflow-sop
 code_version: 2.0.0
 
 tier: important
+status: active
+version: v1.0.0
+last_updated: 2026-07-21
+doc_id: V9-DOC-REF-903
 ---
 
----
-title: docs/reference/development-workflow-sop.md
-code_version: 2.0.0
-tier: important
----
 
----
-title: docs/reference/development-workflow-sop.md
-code_version: 2.0.0
----
 
 # V9 智能投研复盘系统 — 开发工作流 SOP
 

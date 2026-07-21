@@ -5,19 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: V9 模块完成度逆向校验 — 批次 E（输出舱 + 总控舱）完成度剖面图
-version: v1.0.0
-last_updated: 2026-06-27
-maintainer: Quality Auditor
-status: active
-change_log:
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: 初始创建：批次 E 审计完成
-code_version: 2.0.0
-tier: important
----
 
 # V9 批次 E：输出舱 + 总控舱 + 其他 — 完成度剖面图
 

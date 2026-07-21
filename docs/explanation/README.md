@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/explanation/README.md
-code_version: 2.0.0
-tier: important
----
 
 # V9 智能投研复盘系统 — 文档中心（docs/ 总入口）
 

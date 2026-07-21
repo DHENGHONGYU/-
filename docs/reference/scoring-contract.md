@@ -5,14 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: scoring 服务契约
-status: active
-owner: scoring 子域 / 架构组
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
 
 # scoring-contract.md — 评分引擎服务
 

@@ -2,12 +2,12 @@
 title: jsdoc-convention
 tier: important
 code_version: 2.0.0
+status: active
+version: v1.0.0
+last_updated: 2026-07-21
+doc_id: V9-DOC-REF-904
 ---
 
----
-tier: important
-code_version: 2.0.0
----
 
 # JSDoc 与文档门禁规范
 

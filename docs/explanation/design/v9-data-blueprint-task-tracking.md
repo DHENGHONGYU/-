@@ -4,25 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-title: V9 数据关系蓝图任务跟踪计划
-version: v1.3.0
-last_updated: 2026-06-30
-maintainer: V9 Architecture Team
-status: active
-change_log:
-  - date: 2026-06-30
-    desc: 批次 E 全部完成（E-2 写入模块 + E-3 Freshness 校验）；4 个新 Service + 67 测试用例通过
-  - date: 2026-06-30
-    desc: 新增批次 E（v15/v16 Store 蓝图补全）；执行看板补 4 个新 Store 的蓝图与未覆盖写入模块
-  - date: 2026-06-30
-    desc: Store 数量 20→24 同步（执行 v15/v16 升级后）；每周检查单数量同步
-  - date: 2026-06-30
-    desc: Freshness 补全到 6 条规则
-  - date: 2026-06-29
-    desc: 初始版本
-tier: reference
----
 
 # V9 数据关系蓝图任务跟踪计划
 

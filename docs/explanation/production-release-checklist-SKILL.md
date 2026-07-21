@@ -5,21 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-name: production-release-checklist
-description: >
-  体系化上线测试检查清单与执行流程。覆盖前端/全栈项目上线前的
-  功能、性能、安全、兼容、数据、监控、发布回滚、架构质量门禁等
-  10大模块，对标 Front-End-Checklist、Cortex、CloudBees 及证监会
-  金融行业规范。适用于 React/Vite/Zustand/Tailwind 技术栈。
-trigger: >
-  用户提到"上线测试"、"发布检查"、"release checklist"、"上线前体检"
-  "生产环境检查"、"deployment checklist"、"上线准备"、"发布评审"
-  "pre-launch check"、"go-live checklist"、"production readiness"
-  或需要对项目进行上线前全面体检时触发。
-code_version: 2.0.0
-tier: important
----
 
 # 体系化上线测试检查清单 Skill
 

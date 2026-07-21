@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: docs/00-meta/p5-verification-report.md
-code_version: 2.0.0
-tier: core
----
 
 # P5 验证报告 — 系统性目录梳理收尾
 

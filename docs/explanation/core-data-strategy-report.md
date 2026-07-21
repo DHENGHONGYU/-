@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: docs/explanation/core-data-strategy-report.md
-code_version: 2.0.0
-tier: reference
----
 
 # V9 智能投研复盘系统 — 核心数据策略报告
 

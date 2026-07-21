@@ -5,16 +5,7 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/reference/unified-pool-storage-spec.md
-code_version: 2.0.0
-tier: important
----
 
----
-title: docs/reference/unified-pool-storage-spec.md
-code_version: 2.0.0
----
 
 # 股票池统一存储方案规范
 

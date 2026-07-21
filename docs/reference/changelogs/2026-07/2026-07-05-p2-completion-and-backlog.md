@@ -4,10 +4,6 @@ tier: reference
 code_version: 2.0.0
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
 
 # P2 批次完成报告 & 后续迭代任务清单 — 2026-07-05
 

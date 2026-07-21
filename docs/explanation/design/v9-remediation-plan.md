@@ -4,13 +4,6 @@ tier: reference
 code_version: 2.0.0
 ---
 
----
-title: V9 问题修复排期报告
-version: v1.0.0
-date: 2026-06-27
-severity_analysis: 依据三份V6 Pro参考文档比对结果
-tier: reference
----
 
 # V9 问题修复排期报告
 

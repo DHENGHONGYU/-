@@ -5,28 +5,8 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/reference/cockpit-news-doc-fix-plan.md
-code_version: 2.0.0
-tier: important
----
 
----
-title: docs/reference/cockpit-news-doc-fix-plan.md
-code_version: 2.0.0
----
 
----
-title: Cockpit + News 模块文档修正方案
-version: v0.9.1
-last_updated: 2026-06-26
-maintainer: V9 Architecture Team
-status: active
-change_log:
-  - date: 2026-06-26
-    author: Documentation Governor
-    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
----
 # Cockpit + News 模块文档修正方案
 
 > **基于**: [v9-architecture-data-diff-report.md](../explanation/design/v9-architecture-data-diff-report.md)  

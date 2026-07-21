@@ -4,21 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-title: V9 策略架构文档
-version: v0.9.8
-last_updated: 2026-06-29
-maintainer: V9 Architecture Team
-status: active
-changelog:
-  - date: 2026-06-29
-    author: V9质量治理小组
-    desc: P0+P1 质量整改完成：thresholds.ts v1.1.0（300+常量）、COLOR_TOKENS、DataState组件库、uiText.ts（1019文案）、fetcherInterceptor（HTTP拦截器）、no-magic-numbers ESLint规则
-  - date: 2026-06-27
-    author: V9 Architecture Team
-    desc: 初始版本
-tier: important
----
 
 # V9 策略架构文档
 

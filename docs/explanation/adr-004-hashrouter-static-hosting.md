@@ -5,16 +5,6 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: ADR-004: HashRouter 静态托管方案
-status: accepted
-owner: V9 Architecture Team
-decision_date: 2026-06-21
-supersedes: ""
-superseded_by: ""
-code_version: 2.0.0
-tier: reference
----
 
 # ADR-004: HashRouter 静态托管方案
 
