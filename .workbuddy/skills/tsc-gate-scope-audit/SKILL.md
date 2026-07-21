@@ -6,17 +6,20 @@ description: "当 husky pre-commit 的 tsc:prod（或 npm run build / npm run de
 agent_created: true
 category: code-quality
 triggers:
-  keywords: [tsc:prod 报错, tsc 门禁误锁, pre-commit tsc 失败, 类型检查全在测试文件, husky tsc 阻塞, tsconfig 范围过大, production 类型检查包含测试, build 被类型错误阻塞, 测试类型错误阻塞提交, gate 假红, 类型门禁误报, tsc 红灯]
+  keywords: [tsc:prod 报错, tsc 门禁误锁, pre-commit tsc 失败, 类型检查全在测试文件, husky tsc 阻塞, tsconfig 范围过大, production 类型检查包含测试, build 被类型错误阻塞, 测试类型错误阻塞提交, gate 假红, 类型门禁误报, tsc 红灯, 未跟踪文件堆积, 工作树脏数据, 测试类型债务, 测试文件遗留债, 门禁作用域检查]
   files:
     - "tsconfig.json"
     - "tsconfig.prod.json"
     - "tsconfig.test.json"
     - "package.json"
+    - ".gitignore"
+    - ".husky/pre-commit"
   events: [tsc-gate-red, pre-commit-blocked, build-type-error]
 gates:
   - "运行 tsc:prod 将原错误按 测试文件 / 非测试源码 分类，产出 file:line 证据"
   - "对每个错误文件 git status --short 区分 untracked / modified / clean@HEAD 三种来源"
   - "修复后 npm run tsc:prod（指向 tsconfig.prod.json）实测 0 错误并确认 vite build 不再被类型检查阻塞"
+  - "git status untracked 审计：扫描未跟踪测试文件（期望 0）及非测试生成物（期望白名单）"
 mandatory: false
 covers_docs: [AGENTS.md, outputs/tsc-prod-attribution-report.md, outputs/tsc-prod-remediation-plan.md]
 ---
@@ -150,3 +153,84 @@ npm run build                                       # 确认不再被类型检�
 - 错误在**非测试源码** → 真缺陷，走 `module-sync-checklist`（交付前十域同步）。
 - 报错涉及 **DataBridge/ACL/Mock 漂移** → 走 `data-flow-integrity-audit` / `mock-data-diagnosis`。
 - 本 skill 只负责「类型门禁作用域误配」这一类假红的诊断与收窄修复。
+
+---
+
+## 六、未跟踪生成物治理（2026-07-22 新增）
+
+> 门禁作用域修正确保 `tsc:prod` 不再误扫测试文件，但仅解决 Phase 1 的阻塞。
+> **Phase 2 转移债务（测试类型静默流失 + 非测试生成物堆积）需单独治理。**
+
+### 6.1 两阶段债务放大回忆
+
+```
+Phase 1 — 原始问题（宽 tsconfig + 未跟踪测试文件 → gate 假红 → 全量阻塞）
+         → 已通过 tsconfig.prod.json + 门禁作用域收窄修复
+
+Phase 2 — 转移债务（tsc:prod 排除测试后，测试类型错误成为静默累积；
+          非测试生成物未 gitignore → 工作树脏数据堆积）
+         → 本 § 治理
+```
+
+### 6.2 工件分类框架
+
+| 类型 | 示例 | 策略 |
+|---|---|---|
+| 一次性生成目录 | `cache/`, `_ref-*/`, `.workbuddy/tmp/` | 追加 `.gitignore` |
+| 一次性修复脚本 | `*restore*.py`, `parse_coverage.py`（条件性） | 若不复用：追加 `.gitignore`；若通用：提交到 `scripts/` |
+| 长期自动维护 | `.workbuddy/memory/*.md` | 保持未跟踪（AI 自动写入，不纳入版本管理） |
+| 测试文件遗留债 | `*.test.ts` 类型错误（tracked） | 走 `tsc:test` 渐进修复 |
+
+### 6.3 清账命令备忘
+
+```bash
+# 扫描未跟踪测试文件（期望 0）
+git status --porcelain | grep '??.*\.\(test\|test-utils\|spec\)\.\(ts\|tsx\)$'
+
+# 扫描未跟踪非测试工件（期望 0 或白名单）
+git status --porcelain | grep '^??'
+
+# 统计测试类型债务趋势
+npx tsc -p tsconfig.test.json --noEmit | grep -c 'error TS'
+```
+
+### 6.4 铁律
+
+> **任何 tsconfig / package.json / husky 的 tsc 配置变动后，必须执行本 skill 三步诊断 + 实测 tsc:prod 0 错误 + git untracked 审计。** 
+> 新增门禁前先问：「vite build / 实际构建真的查这个吗？」让门禁作用域镜像构建现实。
+
+---
+
+## 七、测试类型债务渐进恢复路径（2026-07-22 新增）
+
+### 7.1 当前基线（实测 2026-07-22）
+
+```
+tsc:test = 307 错误
+top 5 文件：
+  1. tests/__tests__/scripts/audit-mapping-integrity.test.ts      (60 err)
+  2. tests/__tests__/types/profile-types.spec.ts                   (39 err)
+  3. tests/services/profileService.test.ts                         (33 err)
+  4. tests/__tests__/scripts/audit-hardcode.test.ts                (19 err)
+  5. tests/bridge-integration.test.ts                              (16 err)
+```
+
+### 7.2 恢复路径
+
+```
+Phase 0: warn 接入 husky（立即执行）
+  └── pre-commit 末尾追加: npm run tsc:test || echo "⚠️ 测试类型错误 N 个"
+Phase 1: Top 5 漂移项清零（按错误集中度排序修复）
+  └── 目标：307 → < 100
+Phase 2: tsconfig.test.json 严格化
+  └── 补全 exclude: ["e2e", "node_modules", "dist"]（已正确，验证即可）
+Phase 3: 升至阻断门禁
+  └── 当 tsc:test < 50 且稳定 → 改为阻断（false-alarm 允许 --no-verify 但需加备注）
+```
+
+### 7.3 趋势监控
+
+```bash
+# 每周运行一次，追加到趋势文件
+echo "$(date '+%Y-%m-%d') $(npx tsc -p tsconfig.test.json --noEmit 2>&1 | grep -c 'error TS')" >> outputs/tsc-test-debt-trend.txt
+```

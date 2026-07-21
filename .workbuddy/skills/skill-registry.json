@@ -162,19 +162,22 @@
       "path": ".workbuddy/skills/tsc-gate-scope-audit/SKILL.md",
       "category": "code-quality",
       "triggers": {
-        "keywords": ["tsc:prod 报错", "tsc 门禁误锁", "pre-commit tsc 失败", "类型检查全在测试文件", "husky tsc 阻塞", "tsconfig 范围过大", "production 类型检查包含测试", "build 被类型错误阻塞", "测试类型错误阻塞提交", "gate 假红", "类型门禁误报", "tsc 红灯"],
+        "keywords": ["tsc:prod 报错", "tsc 门禁误锁", "pre-commit tsc 失败", "类型检查全在测试文件", "husky tsc 阻塞", "tsconfig 范围过大", "production 类型检查包含测试", "build 被类型错误阻塞", "测试类型错误阻塞提交", "gate 假红", "类型门禁误报", "tsc 红灯", "未跟踪文件堆积", "工作树脏数据", "测试类型债务", "测试文件遗留债", "门禁作用域检查"],
         "files": [
           "tsconfig.json",
           "tsconfig.prod.json",
           "tsconfig.test.json",
-          "package.json"
+          "package.json",
+          ".gitignore",
+          ".husky/pre-commit"
         ],
         "events": ["tsc-gate-red", "pre-commit-blocked", "build-type-error"]
       },
       "gates": [
         "运行 tsc:prod 将原错误按 测试文件 / 非测试源码 分类，产出 file:line 证据",
         "对每个错误文件 git status --short 区分 untracked / modified / clean@HEAD 三种来源",
-        "修复后 npm run tsc:prod（指向 tsconfig.prod.json）实测 0 错误并确认 vite build 不再被类型检查阻塞"
+        "修复后 npm run tsc:prod（指向 tsconfig.prod.json）实测 0 错误并确认 vite build 不再被类型检查阻塞",
+        "git status untracked 审计：扫描未跟踪测试文件（期望 0）及非测试生成物（期望白名单）"
       ],
       "mandatory": false
     }

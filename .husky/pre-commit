@@ -112,7 +112,20 @@ echo ""
 echo "📂 [warn] 运行 audit:doc-integrity（文档-代码双向完整性检查，warn 模式）..."
 npm run audit:doc-integrity || true
 
+# 19. 测试类型债务告警（warn 模式，不阻断；提示当前 tsc:test 错误数量）
+echo ""
+echo "📊 [warn] 运行 tsc:test（测试类型债务告警）..."
+TS_TEST_LOG=$(mktemp /tmp/tsc-test-warn.XXXXXX.log)
+npm run tsc:test > "$TS_TEST_LOG" 2>&1 || true
+TS_TEST_COUNT=$(grep -c "error TS" "$TS_TEST_LOG" 2>/dev/null || echo "0")
+rm -f "$TS_TEST_LOG"
+if [ "$TS_TEST_COUNT" -gt 0 ]; then
+  echo "⚠️  测试类型错误数: $TS_TEST_COUNT（非阻断警告，详见 tsc-gate-scope-audit §七）"
+else
+  echo "✅ 测试类型检查通过"
+fi
+
 echo ""
 echo "================================================"
-echo "✅ V9 预提交门禁全部通过（16/16 阻断项 + 2 warn 项），允许提交。"
+echo "✅ V9 预提交门禁全部通过（16/16 阻断项 + 3 warn 项），允许提交。"
 echo ""

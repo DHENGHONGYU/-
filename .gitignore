@@ -196,3 +196,20 @@ docs/reports/automation-pipeline/*.json
 /scripts/audit/docs/reports/
 /.encoding-recovery/
 /.encoding-scan.json
+# --- 2026-07-22 门禁作用域审计补充：未跟踪生成物治理 ---
+# 一次性参考快照（可重建，不入 VCS）
+_ref-20260715/
+cache/
+
+# AI 临时工作目录
+.workbuddy/tmp/
+
+# 遗留 GBK 编码恢复脚本（一次性工具，不复用）
+scripts/analyze-restore-coverage.py
+scripts/plan-encoding-restore.py
+scripts/prepare-encoding-restore-batches.py
+scripts/restore-encoding-damaged-docs.py
+scripts/restore-from-backup.py
+
+# 覆盖面分析脚本（若一次性则保持屏蔽）
+# parse_coverage.py
