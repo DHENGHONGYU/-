@@ -1,7 +1,7 @@
 /**
  * @fileoverview 50 只 A 股压力集中度测试脚本（方案 B 数据源）
  *
- * 本脚本读取 C:/Users/DELL/Desktop/股票清单/hot_stocks_50.csv，在以下数据源间自动降级：
+ * 本脚本读取 C:/Users/huawei/Desktop/股票清单/hot_stocks_50.csv，在以下数据源间自动降级：
  * 1. 项目方案 B 多源采集器（multiSourceFetcher / crawlerProvider）
  * 2. CSV 内建字段（主数据源，无 Token/无网络时完整可用）
  *
@@ -26,7 +26,7 @@ setLogLevel('error')
 const __filename = fileURLToPath(import.meta.url)
 const PROJECT_ROOT = path.resolve(__filename, '../..')
 
-const CSV_PATH = 'C:/Users/DELL/Desktop/股票清单/hot_stocks_50.csv'
+const CSV_PATH = 'C:/Users/huawei/Desktop/股票清单/hot_stocks_50.csv'
 const REPORT_PATH = path.join(PROJECT_ROOT, 'deliverables/software-company/concentration-test-report-2026-07-19-tushare.md')
 const ANALYSIS_DATE = '2026-07-19'
 
@@ -443,7 +443,7 @@ function buildReport(stocks: Stock[]): string {
   const lines: string[] = []
   lines.push('# 50 只股票集中度穿行测试报告（方案 B 数据源 · Tushare 真实数据重跑）')
   lines.push('')
-  lines.push('- **分析对象**：`C:\\Users\\DELL\\Desktop\\股票清单\\hot_stocks_50.csv`（50 只 A 股）')
+  lines.push('- **分析对象**：`%USERPROFILE%\\Desktop\\股票清单\\hot_stocks_50.csv`（50 只 A 股）')
   lines.push('- **数据字段**：股票代码 / 名称 / 所属板块 / 概念标签 / 是否热门板块 / 热度得分 / 近期涨跌幅(%) / 总市值(亿元)')
   lines.push('- **样本量**：50 只')
   lines.push(`- **分析日期**：${ANALYSIS_DATE}`)
