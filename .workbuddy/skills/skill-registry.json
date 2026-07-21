@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "updated": "2026-07-21",
+  "updated": "2026-07-22",
   "note": "L1 注册层单一真相源。与各 SKILL.md frontmatter 的 triggers/gates/mandatory 保持一致；漂移由 npm run audit:skill-coverage 拦截。v1.5.6 新增 category 字段与 categories 四维分类索引（doc-governance / code-quality / data-flow / devops）。",
   "categories": {
     "doc-governance": "文档治理：编码修复、链接修复、迁移扫描等文档资产维护",
@@ -153,6 +153,28 @@
       "gates": [
         "脚本零破坏性检查（无 reset --hard / rm -rf / 不切换主分支）",
         "敏感文件排除校验（.env / 密钥 / token 模式）"
+      ],
+      "mandatory": false
+    },
+    {
+      "id": "V9-SKILL-TSC-GATE-SCOPE",
+      "name": "tsc-gate-scope-audit",
+      "path": ".workbuddy/skills/tsc-gate-scope-audit/SKILL.md",
+      "category": "code-quality",
+      "triggers": {
+        "keywords": ["tsc:prod 报错", "tsc 门禁误锁", "pre-commit tsc 失败", "类型检查全在测试文件", "husky tsc 阻塞", "tsconfig 范围过大", "production 类型检查包含测试", "build 被类型错误阻塞", "测试类型错误阻塞提交", "gate 假红", "类型门禁误报", "tsc 红灯"],
+        "files": [
+          "tsconfig.json",
+          "tsconfig.prod.json",
+          "tsconfig.test.json",
+          "package.json"
+        ],
+        "events": ["tsc-gate-red", "pre-commit-blocked", "build-type-error"]
+      },
+      "gates": [
+        "运行 tsc:prod 将原错误按 测试文件 / 非测试源码 分类，产出 file:line 证据",
+        "对每个错误文件 git status --short 区分 untracked / modified / clean@HEAD 三种来源",
+        "修复后 npm run tsc:prod（指向 tsconfig.prod.json）实测 0 错误并确认 vite build 不再被类型检查阻塞"
       ],
       "mandatory": false
     }
