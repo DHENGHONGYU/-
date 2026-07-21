@@ -13,6 +13,7 @@
  */
 
 import { readFileSync, writeFileSync } from 'fs'
+import { readTextAdaptive, writeTextUtf8 } from '../lib/encoding'
 import { join, resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -56,7 +57,7 @@ function fixReportGeneratorTypography(): FixResult {
   const errors: string[] = []
 
   try {
-    const content = readFileSync(filePath, 'utf-8')
+    const content = readTextAdaptive(filePath)
     const lines = content.split('\n')
 
     let hasTypographyScaleImport = false

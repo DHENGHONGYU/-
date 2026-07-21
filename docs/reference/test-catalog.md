@@ -3,27 +3,14 @@ title: test-catalog
 code_version: 2.0.0
 
 tier: important
----
-
----
-title: docs/reference/test-catalog.md
-code_version: 2.0.0
-tier: important
----
-
----
-title: docs/reference/test-catalog.md
-code_version: 2.0.0
----
-
----
-title: V9 测试目录与策略
-description: 全量测试资产索引、运行命令、覆盖率基线与已知问题清单
-status: draft
-owner: 工程效能组 / QA
-updated: 2026-07-12
+status: active
 version: v1.0.0
+last_updated: 2026-07-21
+doc_id: V9-DOC-REF-901
 ---
+
+
+
 
 # V9 测试目录与策略
 

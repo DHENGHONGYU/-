@@ -39,6 +39,7 @@ import {
   copyFileSync,
   mkdirSync,
 } from 'node:fs'
+import { readTextAdaptive, writeTextUtf8 } from '../lib/encoding'
 import { join, resolve, dirname, relative, basename, extname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
@@ -540,7 +541,7 @@ function scan(scope: Scope, threshold: number, fuzzy: boolean): ScanResult {
     if (scope === 'active' && historical) continue
     if (scope === 'historical' && !historical) continue
 
-    const content = readFileSync(absFile, 'utf-8')
+    const content = readTextAdaptive(absFile)
     result.scannedFiles++
     const refs = extractRefs(content)
 
@@ -598,14 +599,14 @@ function applyWrites(result: ScanResult, makeBackup: boolean): string[] {
   const written: string[] = []
   for (const [relFile, fixes] of byFile) {
     const abs = join(ROOT, relFile)
-    const content = readFileSync(abs, 'utf-8')
+    const content = readTextAdaptive(abs)
     const updated = applyFixes(content, fixes)
     if (updated === content) continue
     if (makeBackup) {
       const bak = `${abs}.fixbak`
       if (!existsSync(bak)) copyFileSync(abs, bak)
     }
-    writeFileSync(abs, updated, 'utf-8')
+    writeTextUtf8(abs, updated)
     written.push(relFile)
   }
   return written

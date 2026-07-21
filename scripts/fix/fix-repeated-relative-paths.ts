@@ -16,6 +16,7 @@
  */
 
 import * as fs from 'node:fs'
+import { readTextAdaptive, writeTextUtf8 } from '../lib/encoding'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -127,7 +128,7 @@ function main(): void {
 
   for (const file of allFiles) {
     const rel = path.relative(ROOT, file).replace(/\\/g, '/')
-    const content = fs.readFileSync(file, 'utf-8')
+    const content = readTextAdaptive(file)
     const repeats = findRepeats(content, rel)
     if (repeats.length === 0) continue
 
@@ -164,13 +165,13 @@ function main(): void {
   let applied = 0
   for (const [rel, replacements] of replaceMap.entries()) {
     const absPath = path.resolve(ROOT, rel)
-    let content = fs.readFileSync(absPath, 'utf-8')
+    let content = readTextAdaptive(absPath)
     const original = content
     for (const [orig, norm] of replacements) {
       content = content.split(orig).join(norm)
     }
     if (content !== original) {
-      fs.writeFileSync(absPath, content, 'utf-8')
+      writeTextUtf8(absPath, content)
       applied++
     }
   }

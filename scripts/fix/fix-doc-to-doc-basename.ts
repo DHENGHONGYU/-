@@ -11,6 +11,7 @@
  */
 
 import * as fs from 'node:fs'
+import { readTextAdaptive, writeTextUtf8 } from '../lib/encoding'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -106,7 +107,7 @@ function main(): void {
     console.error('❌ 引用报告不存在:', reportPath)
     process.exit(1)
   }
-  const report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'))
+  const report = JSON.parse(readTextAdaptive(reportPath))
   const allBroken: BrokenRef[] = report.brokenReferences
   const d2d = allBroken.filter((r) => r.type === 'doc-to-doc')
   console.log(`📊 总引用: ${report.totalReferences}, 断裂: ${allBroken.length}, doc-to-doc: ${d2d.length}\n`)
@@ -183,7 +184,7 @@ function main(): void {
   for (const [source, changes] of fileChanges.entries()) {
     const absPath = path.resolve(ROOT, source)
     if (!fs.existsSync(absPath)) continue
-    let content = fs.readFileSync(absPath, 'utf-8')
+    let content = readTextAdaptive(absPath)
     const originalContent = content
     for (const c of changes) {
       const escaped = escapeRegExp(c.from)
@@ -195,7 +196,7 @@ function main(): void {
       }
     }
     if (content !== originalContent) {
-      fs.writeFileSync(absPath, content, 'utf-8')
+      writeTextUtf8(absPath, content)
     }
   }
 

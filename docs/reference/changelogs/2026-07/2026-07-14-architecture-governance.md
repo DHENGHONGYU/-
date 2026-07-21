@@ -4,10 +4,6 @@ tier: reference
 code_version: 2.0.0
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
 
 # 2026-07-14 架构治理与代码整理
 

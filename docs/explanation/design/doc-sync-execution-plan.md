@@ -4,18 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-title: 代码-文档同步整体方案与执行计划
-version: v0.9.1
-last_updated: 2026-06-26
-maintainer: V9 Architecture Team
-status: active
-change_log:
-  - date: 2026-06-26
-    author: Documentation Governor
-    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
-tier: important
----
 # 代码-文档同步整体方案与执行计划
 
 > **Status**: Current  

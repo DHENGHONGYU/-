@@ -10,6 +10,7 @@
  */
 
 import * as fs from 'node:fs'
+import { readTextAdaptive, writeTextUtf8 } from '../lib/encoding'
 import * as path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
@@ -76,7 +77,7 @@ interface FileFix {
 }
 
 function fixFile(absPath: string, relPath: string): FileFix | null {
-  let content = fs.readFileSync(absPath, 'utf-8')
+  let content = readTextAdaptive(absPath)
   const originalContent = content
   const changes: Array<{ from: string; to: string; line: number }> = []
   const lines = content.split('\n')
@@ -108,7 +109,7 @@ function fixFile(absPath: string, relPath: string): FileFix | null {
 
   if (content === originalContent) return null
 
-  fs.writeFileSync(absPath, content, 'utf-8')
+  writeTextUtf8(absPath, content)
   return { file: relPath, changes }
 }
 

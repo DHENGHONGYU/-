@@ -4,10 +4,6 @@ tier: important
 code_version: 2.0.0
 ---
 
----
-tier: important
-code_version: 2.0.0
----
 
 # PR-7 tradeErrorClassifier.ts 拆分方案文档
 
