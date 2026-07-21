@@ -1,7 +1,7 @@
 ---
 title: file-management-guide-file-wandering-report
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
@@ -156,7 +156,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
   | 系统评估 | `./V9-项目健康状态总览.md`, `./V9-项目健康状态总览.md` |
   | 图表输出 | `maturity-radar-2026-07-12.svg` |
   | 工具脚本 | `test-doc-auto-updater.mjs` |
-  | 治理报告 | `../archive/文件去重与整理治理方案.md`, `../archive/残留校对更新报告-2026-07-12.md` |
+  | 治理报告 | `../archive/文件去重与整理治理方案.md`, `../残留校对更新报告-2026-07-12.md` |
   | 文档输出 | `../archive/改进路线图实施计划.md`, `改进路线图实施计划.docx` |
 
 - **.gitignore 检查**:

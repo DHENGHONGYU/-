@@ -1,7 +1,7 @@
 ---
 title: file-management-guide-task-list
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 related_docs: [docs/archive/00-meta-historical/trae-file-management-review.md]
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
@@ -10,7 +10,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 # file-management-guide.md 修订任务清单
 
 > **Date**: 2026-07-20  
-> **关联报告**: `../reports/audit/file-management-guide-test-report.md`  
+> **关联报告**: `../../reports/audit/file-management-guide-test-report.md`  
 > **目标文件**: `../how-to/file-management-guide.md`  
 > **防止任务漂移原则**: 每个任务必须有明确的验收标准（AC），完成后打勾确认
 
@@ -182,7 +182,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 - **修改位置**: `../how-to/file-management-guide.md` 第 1 节
 - **验收标准**:
   - [ ] 新增 `docs/drafts/` 行：说明用途为"AI 生成中间产物（草稿、建议、临时报告）"
-  - [ ] 规定命名规则：`<描述>-<ISO时间戳>.<ext>`（如 `../archive/api-report.md`）
+  - [ ] 规定命名规则：`<描述>-<ISO时间戳>.<ext>`（如 `../api-report.md`）
   - [ ] 规定保留策略："定期归档至 `docs/07-archive/drafts/` 或删除，保留期限不超过 30 天"
   - [ ] 规定 `.gitignore` 策略：drafts/ 是否纳入版本控制
 - **阻塞风险**: 无

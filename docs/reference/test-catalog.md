@@ -187,7 +187,7 @@ V9 采用四层测试金字塔，工具链与职责如下：
 | **core** | `src/core/acl.test.ts`<br>`src/core/databridge.test.ts`<br>`src/core/dataflow/defaultDataBuilder.test.ts`<br>`src/core/envelope.test.ts`<br>`src/core/fallbackQueue.test.ts`<br>`src/core/feedbackOrchestrator.test.ts`<br>`src/core/memoryCache.test.ts`<br>`src/core/routeGuard.test.tsx` |
 | **data** | `src/config/dbConfig.test.ts`<br>`tests/dataLayer.test.ts`<br>`tests/db-connection.test.ts`<br>`tests/db-migrations.test.ts`<br>`tests/db-schema.test.ts`<br>`tests/db-utils.test.ts`<br>`tests/queryBuilder.test.ts` |
 | **lib** | `tests/logger.test.ts`<br>`tests/useDebounce.test.ts`<br>`tests/__tests__/lib/*.test.ts` |
-| **agents** | `src/agents/agentComponentRegistry.test.ts`<br>`src/agents/__tests__/agentRuntime.mcp.test.ts` |
+| **agents** | `src/components/organisms/agent/__tests__/agentComponentRegistry.test.ts`<br>`src/agents/__tests__/agentRuntime.mcp.test.ts` |
 
 ---
 

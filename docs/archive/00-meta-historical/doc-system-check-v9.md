@@ -1,7 +1,7 @@
 ---
 title: doc-system-check-v9
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
@@ -66,9 +66,9 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 
 - **症状**：`docs/README.md` 不存在。新成员/AI 首次进入 `docs/` 无入口。
 - **影响**：违背 Diátaxis「导航优先」原则；Kimi 加载项目时无法快速定位核心文档。
-- **根因**：`../explanation/design/00-readme.md` 承担了部分索引职责，但自身位于 `02-design/`（设计目录），且已发生文档漂移（声称 `implementation/` 有 44 份文档，实际仅 14 份截图）。
-- **修复**：✅ **已完成**。新建 `docs/README.md`（58 行，含 A–H 八类索引 + 快速入口 + 贡献约定），按 A–H 八类组织链接，将 `../README.md` 的 Frontmatter/DoD 规范提升为 `./governance.md`（v1.0.0）。
-- **验证**：`docs/README.md` 存在，`./governance.md` 存在。
+- **根因**：`../../explanation/design/00-readme.md` 承担了部分索引职责，但自身位于 `02-design/`（设计目录），且已发生文档漂移（声称 `implementation/` 有 44 份文档，实际仅 14 份截图）。
+- **修复**：✅ **已完成**。新建 `docs/README.md`（58 行，含 A–H 八类索引 + 快速入口 + 贡献约定），按 A–H 八类组织链接，将 `../README.md` 的 Frontmatter/DoD 规范提升为 `../../00-meta/GOVERNANCE.md`（v1.0.0）。
+- **验证**：`docs/README.md` 存在，`../../00-meta/GOVERNANCE.md` 存在。
 
 ### 缺陷 2：18 个核心文档确认缺失 + 5 个可能已存在（P0）— 🟡 6/18 已补齐
 
@@ -77,7 +77,7 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 > - **12 个确认仍缺失**（无任何匹配文件）
 > - **5 个可能已存在**（有近似匹配文件，需人工复核是否满足需求）
 > - **2 个误报已纠正**：`../reference/api-contract.md` 实际存在于 `docs/02-design/`；`quality-gates` 文档实际存在于 `docs/02-design/` 和 `docs/03-development/`
-> - **1 个新增发现**：`../reference/services-catalog.md`（P0 新增，超原清单预期）
+> - **1 个新增发现**：`../../reference/services-catalog.md`（P0 新增，超原清单预期）
 
 #### 确认仍缺失文档（已补齐 4 个，剩余 10 个核心缺失）
 
@@ -104,7 +104,7 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 | 补齐文档 | 实际路径 | 状态 | 验证 |
 |----------|----------|------|------|
 | `docs/README.md` | `docs/README.md` | ✅ 已创建（58 行） | `find docs -name 'README.md'` |
-| `./governance.md` | `./governance.md` | ✅ 已创建（v1.0.0） | `find docs -name 'governance.md'` |
+| `../../00-meta/GOVERNANCE.md` | `../../00-meta/GOVERNANCE.md` | ✅ 已创建（v1.0.0） | `find docs -name 'governance.md'` |
 | `../explanation/overview.md` | `../explanation/overview.md` | ✅ 已创建 | `find docs/architecture -name '*.md'` |
 | `../explanation/cabins-overview.md` | `../explanation/cabins-overview.md` | ✅ 已创建 | 同上 |
 | `../reference/coding-conventions.md` | `../reference/coding-conventions.md` | ✅ 已创建 | `find docs/standards -name '*.md'` |
@@ -114,7 +114,7 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 | `../how-to/../how-to/how-to-add-store.md` | `../how-to/../how-to/how-to-add-store.md` | ✅ 已创建（P1） | `find docs/guides -name '../how-to/how-to-add-store.md'` |
 | `../how-to/how-to-add-service.md` | `../how-to/how-to-add-service.md` | ✅ 已创建（P1） | `find docs/guides -name 'how-to-add-service.md'` |
 
-> **额外新增**：`../reference/services-catalog.md`（P0 新增，超原清单预期，覆盖 23 个服务子域）。
+> **额外新增**：`../../reference/services-catalog.md`（P0 新增，超原清单预期，覆盖 23 个服务子域）。
 
 #### 5 个可能已存在文档（需人工复核）
 
@@ -122,9 +122,9 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 |----------|-------------------|-------------|------|
 | `../reference/api-contract.md` | `../reference/api-contract.md` ✅ | 基本满足 | 确认内容是否覆盖全部 DataBridge / 行情端点 / 事件名契约，如满足则更新路径映射即可 |
 | `../explanation/quality-gates-baseline.md` | `../explanation/quality-gates-baseline.md` + `../explanation/quality-gates-baseline.md` ✅ | 部分满足 | 前者偏设计阶段门禁，后者偏基线数值；需确认是否需合并为统一的 `../explanation/quality-gates-baseline.md` |
-| `./governance.md` | `../explanation/design/implementation-governance.md` + `../explanation/design/2026-06-29-data-architecture-governance.md` + `../reference/complexity-governance.md` | ~~不满足~~ → ✅ **已独立创建** | ~~匹配到的都是**专项治理**文档~~；**2026-07-12 已新建独立 `governance.md` v1.0.0** |
+| `../../00-meta/GOVERNANCE.md` | `../explanation/design/implementation-governance.md` + `../explanation/design/2026-06-29-data-architecture-governance.md` + `../reference/complexity-governance.md` | ~~不满足~~ → ✅ **已独立创建** | ~~匹配到的都是**专项治理**文档~~；**2026-07-12 已新建独立 `governance.md` v1.0.0** |
 | `../reports/release-management/README.md` | `../../tools/file-management-system/templates/ADR-template.md` | 不满足 | 匹配的是**模板文件**，非实际 ADR 主索引；ADR 主索引仍缺失 |
-| `docs/../../README.md` | 根级 `../../README.md` + `../reference/../../README.md` + `../explanation/design/00-readme.md` | ~~不满足~~ → ✅ **已独立创建** | ~~根级 README 是项目启动说明~~；**2026-07-12 已新建独立 `docs/../../README.md`（58 行）** |
+| `docs/../../README.md` | 根级 `../../README.md` + `../reference/../../README.md` + `../../explanation/design/00-readme.md` | ~~不满足~~ → ✅ **已独立创建** | ~~根级 README 是项目启动说明~~；**2026-07-12 已新建独立 `docs/../../README.md`（58 行）** |
 
 > **复核结论**：`../reference/api-contract.md`、`quality-gates` 系列、`governance.md`、`docs/README.md` 共 **4 项已满足**。仅剩 ADR 索引仍属缺失。
 
@@ -134,11 +134,11 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 
 - **愿景/功能规格**：`../reference/01-vision-and-goals.md`、`../reference/02-functional-specs.md`（体系未设「需求规格」子类，A 类只有「导航与治理」）。
 - **术语表**：`../reference/10-glossary.md`（体系无「术语/参考」类）。
-- **数据字典**：`../reference/data-definition.md`（主字典）、`../reference/ai-center-data-definition.md` 等 7 份独立域定义（见 `../reference/index.md` §2）；原 `docs/02-design/*_data-definition.md` 7 份已归档至 `07-archive/`（2026-07-12）。
-- **整改/计划类**：`../reference/batchb-fix-plan.md`、`../reference/batchD-fix-plan.md`、`../reference/batchE-fix-plan.md`、`../reference/rm剩余任务全量盘点与整改方案-2026-07-08.md`。
-- **插件文档**：`docs/plugins/*.md`（10 份 + `../reference/index.md`，体系已部分覆盖）。
+- **数据字典**：`../reference/data-definition.md`（主字典）、`../reference/ai-center-data-definition.md` 等 7 份独立域定义（见 `../../reference/index.md` §2）；原 `docs/02-design/*_data-definition.md` 7 份已归档至 `07-archive/`（2026-07-12）。
+- **整改/计划类**：`../reference/batchb-fix-plan.md`、`../reference/batchD-fix-plan.md`、`../reference/batchE-fix-plan.md`、`../../reference/rm剩余任务全量盘点与整改方案-2026-07-08.md`。
+- **插件文档**：`docs/plugins/*.md`（10 份 + `../../reference/index.md`，体系已部分覆盖）。
 - **数据字典/ER图**：`../explanation/v9-data-relationship-er.md`。
-- **发布/PR/Release**：`../reference/pr-description.md`、`../reference/release-notes.md`、`../explanation/design/发布计划与评审-r01.md`、`../explanation/design/回滚方案与演练-r03.md`。
+- **发布/PR/Release**：`../../reference/pr-description.md`、`../../reference/release-notes.md`、`../../explanation/design/发布计划与评审-r01.md`、`../../explanation/design/回滚方案与演练-r03.md`。
 - **草稿/临时**：`docs/drafts/*.md`（8 份，无归档规则，较原 6 份增加）。
 
 > **根因**：体系 v1.0.0 缺少以下子类：
@@ -153,7 +153,7 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 | 目录 | 声称用途 | 实际内容 | 错位文档数 | 变化 |
 |------|----------|----------|------------|------|
 | `docs/01-requirements/` | 需求规格 | 仍混入 `../explanation/architecture-version-comparison.md`、`../explanation/v10-architecture-alignment.md`、`../reference/component-deprecation-policy.md`、`DataBridge` 系列等架构/设计文档 | ~8 | 较原 11 份部分迁移 |
-| `docs/02-design/` | 设计文档 | 仍混入 `../explanation/design/audit-summary-report.md`、`../explanation/design/architecture-compliance-report.md`、`../explanation/design/test-expansion-design.md`、`../reports/audit/quality-audit-plan.md` 等审计/测试/过程文档 | ~25 | 较原 37 份部分迁移 |
+| `docs/02-design/` | 设计文档 | 仍混入 `../explanation/design/audit-summary-report.md`、`../../explanation/design/architecture-compliance-report.md`、`../../explanation/design/test-expansion-design.md`、`../reports/audit/quality-audit-plan.md` 等审计/测试/过程文档 | ~25 | 较原 37 份部分迁移 |
 | `docs/03-development/` | 开发实施 | 混入 `../reference/v6-to-v9-migration-spec.md`、`../reference/dataflow-engine-spec.md`（偏设计）等 | 少量 | 无变化 |
 | `docs/implementation/` | 实施文档 | **只有 14 张截图（.png），无 .md 文件** | 全部 | 无变化 |
 | `docs/05-deployment/` | 部署运维 | 仅 `../reference/2026-06-21-hashrouter-for-static-hosting.md`（1 份） | 严重不足 | 无变化 |
@@ -188,15 +188,15 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 8. ~~`../explanation/design/news-data-definition.md`~~ ✅ 已归档至 `07-archive/`
 9. ~~`docs/explanation/design/RISK_DERIVED_data-definition.md`~~ ✅ 已归档至 `07-archive/`
 10. ~~`docs/explanation/design/SEVEN_DIM_CONFIG_data-definition.md`~~ ✅ 已归档至 `07-archive/`
-11. `../reference/ai-center-data-definition.md`（独立域定义，见 `../reference/index.md`）
-12. `../reference/backtest-data-definition.md`（同上）
+11. `../reference/ai-center-data-definition.md`（独立域定义，见 `../../reference/index.md`）
+12. `../../reference/backtest-data-definition.md`（同上）
 13. `../reference/dataflow-data-definition.md`（同上）
 14. `../reference/multi-factor-screening-data-definition.md`（同上）
 15. `../reference/news-data-definition.md`（同上）
-16. `../reference/risk-derived-data-definition.md`（同上）
+16. `../../reference/risk-derived-data-definition.md`（同上）
 17. `../reference/seven-dim-config-data-definition.md`（同上）
 
-> **根因**：缺少统一的数据字典管理规范（`../reference/index.md` 已创建，需发挥「唯一索引」作用）。
+> **根因**：缺少统一的数据字典管理规范（`../../reference/index.md` 已创建，需发挥「唯一索引」作用）。
 > **风险**：同一数据字段在不同文档中定义冲突，AI 生成代码时引用错误版本。
 > **改善**：根级与 01-requirements 的重复定义已移除；`standards/` 新建作为数据字典统一入口。
 
@@ -220,8 +220,8 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 |-------------|-----------|-------------|--------|
 | **A2 需求规格** | A | `../reference/01-vision-and-goals.md`、`../reference/02-functional-specs.md` | 高 |
 | **A3 插件集成** | A | `plugins/*.md`（10 份 + index） | 中 |
-| **B5 版本/发布** | B | `../reference/release-notes.md`、`../reference/pr-description.md`、`发布计划` | 中 |
-| **C7 数据字典** | C | `../reference/index.md` + 8 份 DATA_DEFINITION | 高 |
+| **B5 版本/发布** | B | `../../reference/release-notes.md`、`../../reference/pr-description.md`、`发布计划` | 中 |
+| **C7 数据字典** | C | `../../reference/index.md` + 8 份 DATA_DEFINITION | 高 |
 | **D5 迁移规范** | D | `../reference/v6-to-v9-migration-spec.md`、`../explanation/db-migration-v4-to-v6.md` | 中 |
 | **G4 草稿/临时** | G | `drafts/*.md`（8 份） | 中 |
 | **G5 发布管理** | G | `发布计划`、`回滚方案` | 低 |
@@ -253,10 +253,10 @@ Kimi 官方推荐的项目文件管理策略：
 
 | 契约要求 | 初检缺口 | 修订状态 |
 |----------|----------|----------|
-| 新增页面必须同步更新 `ROUTE_REGISTRY` 和 `../reference/06-routing-specs.md` | 无 `../archive/how-to-add-page.md` 操作指南 | 仍缺失 |
-| 修改 `UserType` 不得破坏 `user-type.spec.ts` | 无 `../archive/type-evolution-guide.md` | 仍缺失 |
-| 所有 `useEffect` 清理模板（4 个） | 无 `../archive/react-lifecycle-patterns.md` | 仍缺失 |
-| 颜色令牌 8 个场景（A–H） | 无 `../explanation/token-usage-cookbook.md`（`../reference/design-token-mapping.md` 不够场景化） | ✅ **已创建** `../explanation/token-usage-cookbook.md` |
+| 新增页面必须同步更新 `ROUTE_REGISTRY` 和 `../reference/06-routing-specs.md` | 无 `../how-to-add-page.md` 操作指南 | 仍缺失 |
+| 修改 `UserType` 不得破坏 `user-type.spec.ts` | 无 `../type-evolution-guide.md` | 仍缺失 |
+| 所有 `useEffect` 清理模板（4 个） | 无 `../react-lifecycle-patterns.md` | 仍缺失 |
+| 颜色令牌 8 个场景（A–H） | 无 `../../../explanation/token-usage-cookbook.md`（`../../reference/design-token-mapping.md` 不够场景化） | ✅ **已创建** `../../../explanation/token-usage-cookbook.md` |
 
 ---
 
@@ -267,11 +267,11 @@ Kimi 官方推荐的项目文件管理策略：
 | # | 行动 | 状态 | 说明 |
 |---|------|------|------|
 | 1 | **新建 `docs/README.md`** | ✅ 已完成 | 58 行，含 A–H 索引 + 快速入口 + 贡献约定 |
-| 2 | **合并/去重数据字典文件** | 🟡 部分完成 | 根级与 01-req 的重复已移除；`../reference/index.md` 已创建；02-design 下 7 份仍待整合 |
+| 2 | **合并/去重数据字典文件** | 🟡 部分完成 | 根级与 01-req 的重复已移除；`../../reference/index.md` 已创建；02-design 下 7 份仍待整合 |
 | 3 | **清理目录错位** | 🟡 部分完成 | 01-req/02-design 部分迁移；architecture/、standards/、ops/ 新建后吸纳部分文档；残余 ~33 份待 P1 继续 |
 | 4 | **隔离自动产物** | 🟡 规划中 | `reports/` 下 HTML 仍散落；建议 P1 移入 `_generated/` 并配置 `.gitignore` |
-| 5 | **新建 `./governance.md`** | ✅ 已完成 | v1.0.0，含保鲜规则、目录命名、贡献约定 |
-| — | **额外：新建 `../reference/services-catalog.md`** | ✅ 已完成 | 覆盖 23 个服务子域，超原清单预期 |
+| 5 | **新建 `../../00-meta/GOVERNANCE.md`** | ✅ 已完成 | v1.0.0，含保鲜规则、目录命名、贡献约定 |
+| — | **额外：新建 `../../reference/services-catalog.md`** | ✅ 已完成 | 覆盖 23 个服务子域，超原清单预期 |
 | — | **额外：新建 `../explanation/runbook.md`** | ✅ 已完成 | 运维基线文档 |
 | — | **额外：新建 `docs/.ai-index/`** | ✅ 已完成 | 含 code-graph.json + ai-memory-index.json |
 
@@ -333,7 +333,7 @@ find docs/.ai-index -type f | sort                # 3 份（README/code-graph/ai
 | 验证项 | 初检结果 | 修订结果 | 命令 |
 |--------|----------|----------|------|
 | `docs/README.md` 存在？ | ❌ 不存在 | ✅ **存在**（58 行） | `find docs -name 'README.md'` |
-| `./governance.md` 存在？ | ❌ 未检查 | ✅ **存在**（v1.0.0） | `find docs -name 'governance.md'` |
+| `../../00-meta/GOVERNANCE.md` 存在？ | ❌ 未检查 | ✅ **存在**（v1.0.0） | `find docs -name 'governance.md'` |
 | `docs/architecture/` 有 `.md`？ | ❌ 无 `.md` | ✅ **3 份** | `find docs/architecture -name '*.md'` |
 | `docs/implementation/` 有 `.md`？ | ❌ 只有 `.png` | ❌ 仍只有 `.png` | `find docs/implementation -name '*.md'` |
 | `adr/` 目录存在？ | ❌ 不存在 | ❌ 仍不存在 | `find docs -type d -name 'adr'` |
@@ -361,16 +361,16 @@ find docs/.ai-index -type f | sort                # 3 份（README/code-graph/ai
 |------|------------|------------|------|----------|
 | 项目分层结构 | ✅ 11 层完整（含 agents/、apps/、cockpit/） | ✅ `../explanation/overview.md` 已创建 | **一致** | — |
 | 五大舱室页面 | ✅ 33 页面（input 4 / analysis 12 / trading 5 / output 5 / command 4+，含测试） | 🟡 4 舱 spec 已补齐（analysis/trading/output/command） | 代码有，文档基本跟上 | 低 |
-| 服务层子域 | ✅ 23 个全就位（ai-center / backtest / scoring / screening / rbac 等） | ✅ `../reference/services-catalog.md` 已创建（覆盖 23 子域） | **一致** | — |
+| 服务层子域 | ✅ 23 个全就位（ai-center / backtest / scoring / screening / rbac 等） | ✅ `../../reference/services-catalog.md` 已创建（覆盖 23 子域） | **一致** | — |
 | Store 层 | ✅ 99 个文件（48 核心 + 10 衍生 + helpers/tests） | 🟡 仅有 `../reference/v9-l2状态层补齐路线图.md` | 代码有，规范仍散落 | 中 |
 | 路由注册 | ✅ 66/66 100% 覆盖 | 🟡 `../reference/06-routing-specs.md` 存在但孤立 | 基本一致 | 低 |
 | 跨层调用 | ✅ 0 违规（870 文件扫描） | ✅ 0 违规（AGENTS.md 契约生效） | **一致** | — |
-| 硬编码颜色 | ✅ 0 违规（907 文件扫描） | ✅ `../reference/design-token-mapping.md` + `../explanation/token-usage-cookbook.md` 支撑 | **一致** | — |
+| 硬编码颜色 | ✅ 0 违规（907 文件扫描） | ✅ `../../reference/design-token-mapping.md` + `../../explanation/token-usage-cookbook.md` 支撑 | **一致** | — |
 | 死代码 | ✅ 0 未注册 | 🟡 `docs/reports/` 过程产物过度膨胀 | 代码干净，文档膨胀 | 中 |
 | 文档同步 | ✅ 0 违规（643 文件 / 343 文档） | 🟡 ~47 个孤儿文档未覆盖 | `audit:docs` 通过≠体系完整 | 中 |
 | Token 消耗 | ✅ 0 浪费（< 50K/会话） | ✅ `.ai-index/` 缓存机制已创建 | **一致** | — |
 | 数据库 Schema | ✅ v27（30 基线 + 6 RBAC） | 🟡 `../reference/v9-indexeddb-store-schema.md` 存在但数据字典分散 | Schema 有，字典分散 | 中 |
-| 颜色令牌 | ✅ L1–L6 完整 | ✅ `../explanation/token-usage-cookbook.md` 已创建 | **一致** | — |
+| 颜色令牌 | ✅ L1–L6 完整 | ✅ `../../explanation/token-usage-cookbook.md` 已创建 | **一致** | — |
 | 路由一致性 | ✅ 66/66 通过 | ✅ `verify-all-routes` 通过 | **一致** | — |
 
 ### 6.2 核心结论：代码层极度健康，文档层正在追赶
@@ -379,13 +379,13 @@ find docs/.ai-index -type f | sort                # 3 份（README/code-graph/ai
 
 > **「代码跑在文档前面」** —— 33 个页面、23 个子域、99 个 Store 文件、66 条路由已经全部落地，但对应的**设计规格文档、操作指南、架构说明**曾大量缺失或散落在过程产物中。
 
-> **P0 整改后** —— `docs/README.md`、`governance.md`、`../explanation/overview.md`、`../explanation/cabins-overview.md`、`../reference/services-catalog.md`、`../reference/coding-conventions.md`、`../explanation/runbook.md`、`.ai-index/` 等 8 个核心缺口已补齐，文档层从「严重滞后」改善为「中等滞后」。
+> **P0 整改后** —— `docs/README.md`、`governance.md`、`../explanation/overview.md`、`../explanation/cabins-overview.md`、`../../reference/services-catalog.md`、`../reference/coding-conventions.md`、`../explanation/runbook.md`、`.ai-index/` 等 8 个核心缺口已补齐，文档层从「严重滞后」改善为「中等滞后」。
 
 具体表现为三个"落差模式"（P0 后更新）：
 
 | 落差模式 | 初检典型案例 | 修订状态 | 影响 |
 |----------|-------------|----------|------|
-| **存在落差** | 23 个 Service 子域运行中，但无 `../reference/services-catalog.md` | ✅ **已修复**：`../reference/services-catalog.md` 覆盖 23 子域 | 新开发者可快速定位服务职责边界 |
+| **存在落差** | 23 个 Service 子域运行中，但无 `../../../reference/services-catalog.md` | ✅ **已修复**：`../../../reference/services-catalog.md` 覆盖 23 子域 | 新开发者可快速定位服务职责边界 |
 | **规格落差** | analysis/trading/output/command 四舱共 25+ 页面，但无 cabin spec | ✅ **已修复**：4 舱 spec 已补齐（02-design/ 下） | AI 生成代码时有舱室级约束输入 |
 | **指南落差** | 48 个 Store 已运行，但无 `../how-to/how-to-add-store.md` | ✅ **已补齐**：how-to-add-*.md 系列已创建（2026-07-12） | 新增 Store 时有标准 SOP 可参考 |
 | **索引落差** | 66 条路由 100% 注册，但无 `docs/README.md` 总入口 | ✅ **已修复**：README.md 已创建 | Kimi/AI 可快速建立上下文 |
@@ -398,7 +398,7 @@ find docs/.ai-index -type f | sort                # 3 份（README/code-graph/ai
 |------|----------|-----------|-------------|----------|
 | `../explanation/overview.md` | P0 | **P0（最高）** | ✅ **已完成** | — |
 | `../explanation/cabins-overview.md` | P0 | **P0** | ✅ **已完成** | — |
-| `../reference/services-catalog.md` | — | — | ✅ **已完成** | 超原清单预期新增 |
+| `../../reference/services-catalog.md` | — | — | ✅ **已完成** | 超原清单预期新增 |
 | `../reference/README.md` + Store/Service 集成指南 | P1 | **P0** | **P1** | 48 Store + 23 子域已运行，AI 需快速加载上下文入口；但 services-catalog 已缓解 |
 | `../how-to/how-to-add-widget.md` | P2 | **P1** | **P1** | 代码完备后，新增 Widget/Store/Service 成为高频开发任务 |
 | `../how-to/../how-to/how-to-add-store.md` | P2 | **P1** | **P1** | 同上 |

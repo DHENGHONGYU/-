@@ -51,10 +51,10 @@ change_log:
 
 | 子项 | 用户规格 | 项目当前状态 | 差异说明 | 可行性方案 |
 |---|---|---|---|---|
-| 双策略评分输出 | `HotSectorScore`、`ValuePitScore` 两个独立 0–5 分评分 | 当前仅有 `V6Score`（综合分）、`IntelligentScore`、`IndustryScore`；策略引擎输出的是分类标签 `StrategyClassification` | 缺少用户规格中的双评分输出类型与引擎 | **推荐方案**：新建 `src/services/trading/hotSectorAnalyzer.ts` 和 `src/services/trading/valuePitAnalyzer.ts`，输出 `HotSectorScore` / `ValuePitScore` 类型；保持现有 `strategyEngine.ts` 作为编排入口，内部调用两个 Analyzer |
+| 双策略评分输出 | `HotSectorScore`、`ValuePitScore` 两个独立 0–5 分评分 | 当前仅有 `V6Score`（综合分）、`IntelligentScore`、`IndustryScore`；策略引擎输出的是分类标签 `StrategyClassification` | 缺少用户规格中的双评分输出类型与引擎 | **推荐方案**：新建 `src/services/scoring/hotSectorAnalyzer.ts` 和 `src/services/scoring/valuePitAnalyzer.ts`，输出 `HotSectorScore` / `ValuePitScore` 类型；保持现有 `strategyEngine.ts` 作为编排入口，内部调用两个 Analyzer |
 | 热门路径五维 | 动量 / 情绪 / 技术 / 估值 | `strategyEngine.ts` 已使用 `momentum`（priceToMA20）、`sector` 是否热门、`composite` 综合分；情绪/技术/估值维度未显式拆分 | 维度定义不一致 | 扩展 `HotSectorScore` 结构，显式包含 momentum / sentiment / technical / valuation 四维 + 综合；从已有 `v6ScoreService` 因子与 `daily_quotes` 计算 |
 | 洼地方径五维 | 催化 / 估值 / 筹码 / 轮动 / 流动性 | `rotationScoreService.ts` 已覆盖景气/资金/估值/β/量能五因子；个股级筹码/催化/轮动维度未显式建模 | 轮动因子有基础，但个股级洼地维度缺失 | 新建 `ValuePitAnalyzer`，复用 `rotationScoreService.ts` 板块评分作为「轮动」输入，从 `Stock` 和 `daily_quotes` 计算催化/估值/筹码/流动性 |
-| 轮动信号检测 | 成交量 + 资金 + 技术金叉，触发建仓或加入观察池 | `rotationScoreService.ts` 输出板块级信号；`poolTransitionEngine` 与 `stockpoolService` 已支持观察池流转；缺少个股级轮动触发器 | 板块级有，个股级无 | 新建 `src/services/trading/rotationSignalDetector.ts`，对 `value-bargain` 候选计算成交量突破、资金净流入、MA 金叉三条件，命中则生成 `TradingSignal` 触发建仓，否则通过 `DataBridge.forward(UPDATE_STOCK)` 写入 `watchlist` |
+| 轮动信号检测 | 成交量 + 资金 + 技术金叉，触发建仓或加入观察池 | `rotationScoreService.ts` 输出板块级信号；`poolTransitionEngine` 与 `stockpoolService` 已支持观察池流转；缺少个股级轮动触发器 | 板块级有，个股级无 | 新建 `src/services/scoring/rotationSignalDetector.ts`，对 `value-bargain` 候选计算成交量突破、资金净流入、MA 金叉三条件，命中则生成 `TradingSignal` 触发建仓，否则通过 `DataBridge.forward(UPDATE_STOCK)` 写入 `watchlist` |
 | 阈值体系 | 热门 V6>3.5 → HotSectorScore>4.0；洼地 V6 2.8–3.5 → ValuePitScore>4.0 | `strategyRules.ts`：`compositeMin=3.6`、`valueBargainCompositeMin=3.6`、`valueBargainValuationMin=4.0` | 阈值数值与触发口径不完全一致 | 新增 `src/config/dualStrategyRules.ts` 专门承载双策略阈值；或扩展 `StrategyRuleConfig` 增加 `hotSectorV6Min=3.5`、`valuePitV6Min=2.8`、`valuePitV6Max=3.5`、`actionThreshold=4.0` 等字段 |
 | 止盈止损 | 按策略分类差异化止盈止损 | `tradingConfig.ts` / `riskEngine.ts` 已有通用止损/仓位/冷却期，但无策略分类差异化 | 缺少策略差异化 | 在 `tradingConfig.ts` 增加 `HOT_MOMENTUM_STOP_LOSS=-0.08`、`VALUE_PIT_STOP_LOSS=-0.15`、`HOT_MOMENTUM_TAKE_PROFIT={0.15:0.5}`、`VALUE_PIT_TAKE_PROFIT={0.2:0.3}` 等配置，由 `riskEngine.ts` 根据持仓标的的 `StrategyClassification` 读取 |
 
@@ -110,7 +110,7 @@ export interface ValuePitScore {
 | 主题注册表 | `src/config/themeRegistry.ts` | 热门板块可扩展为主题匹配；价值洼地可与非主题池结合 |
 | 数据流引擎 | `src/core/dataflow/dataflowEngine.ts` | 注册新通道，供 Widget 订阅 |
 | Widget 注册表/引擎 | `src/cockpit/core/widgetRegistry.ts`、`widgetEngine.ts` | 直接注册新的 HotSectorWidget / ValuePitWidget |
-| 股票池流转 | `src/services/stockpool/poolTransitionEngine.ts` | 轮动信号未触发时，将标的转入 `watchlist` 观察池 |
+| 股票池流转 | `src/core/poolTransitionEngine.ts` | 轮动信号未触发时，将标的转入 `watchlist` 观察池 |
 | 风控/仓位 | `src/services/trading/riskEngine.ts`、`positionSizer.ts` | 读取策略分类，执行差异化止盈止损与仓位 |
 
 ---
@@ -136,9 +136,9 @@ export interface ValuePitScore {
 2. 新增 Store：`hot_sector_scores`、`value_pit_scores`（`src/data/db.ts`、`dbConfig.ts`），DB 版本 +1。
 3. 新增配置：`src/config/dualStrategyRules.ts`。
 4. 新增服务：
-   - `src/services/trading/hotSectorAnalyzer.ts`
-   - `src/services/trading/valuePitAnalyzer.ts`
-   - `src/services/trading/rotationSignalDetector.ts`
+   - `src/services/scoring/hotSectorAnalyzer.ts`
+   - `src/services/scoring/valuePitAnalyzer.ts`
+   - `src/services/scoring/rotationSignalDetector.ts`
 5. 扩展 `strategyEngine.ts`：内部调用上述 Analyzer，输出 `StrategyResult` 不变但增加 `hotSectorScores` / `valuePitScores` 字段，或新建 `runDualStrategy()` 函数。
 6. 新增测试覆盖：单元测试 + 集成测试。
 

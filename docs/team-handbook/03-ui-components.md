@@ -32,7 +32,7 @@
 ## 2. 组件注册表与门禁
 
 - `src/components/componentRegistry.ts`：`COMPONENT_REGISTRY` 每项含 `name/level/sourcePath/targetPath/status/description`，`status: active|migrating|deprecated`（当前全量 active）。
-- `audit:atomic`（`scripts/audit-atomic.ts`）：依据 registry 推断层级，扫描 `src/components/**/*.ts(x)`，按 `FORBIDDEN` 跨层表判定阻断性违规；含 `stale-ui-import`（探测已删的 `@/components/ui/`）、`unregistered` 警告。
+- `audit:atomic`（`scripts/audit/audit-atomic.ts`）：依据 registry 推断层级，扫描 `src/components/**/*.ts(x)`，按 `FORBIDDEN` 跨层表判定阻断性违规；含 `stale-ui-import`（探测已删的 `@/components/ui/`）、`unregistered` 警告。
 
 ---
 

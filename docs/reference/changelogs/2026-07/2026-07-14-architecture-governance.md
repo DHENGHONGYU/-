@@ -40,7 +40,7 @@ code_version: 2.0.0
   - `src/store/utils/riskDerived.stats.ts`
   - `src/store/utils/riskDerived.symbol.ts`
   - `src/store/utils/riskDerived.trend.ts`
-- `outputs/architecture-cleanup-completion-report-2026-07-14.md`：本次治理完成报告。
+- `../../../archive/architecture-cleanup-completion-report-2026-07-14.md`：本次治理完成报告。
 
 ### 修改文件
 

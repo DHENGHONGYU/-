@@ -142,7 +142,7 @@ analysis:main, portfolio:main, knowledge:local, execution:main, workflow:main
 
 ## 5. 监控机制
 
-1. **月度审计**：`scripts/audit-mcp-tool-usage.ts` 每月运行一次，输出：
+1. **月度审计**：`scripts/audit/audit-mcp-tool-usage.ts` 每月运行一次，输出：
    - 每个 Server 的 Tool 调用次数
    - 零调用 Server 列表（连续 30 天）
    - 建议变更状态（Under Review 推荐）
@@ -170,4 +170,4 @@ analysis:main, portfolio:main, knowledge:local, execution:main, workflow:main
 - `src/config/mcpServerRegistry.ts` — Registry 配置
 - `src/config/mcpAclMatrix.ts` — ACL 权限矩阵
 - `src/mcp/bridge/mcpBridge.ts` — Tool 调用计数器
-- `scripts/audit-mcp-tool-usage.ts` — 月度审计脚本
+- `scripts/audit/audit-mcp-tool-usage.ts` — 月度审计脚本

@@ -1,5 +1,5 @@
 ---
-title: ´úÂëÆÀÉó±¨¸æ ¡¤ WIP ¾Û½¹ÆÀÉó£¨2026-07-11£©
+title: ä»£ç è¯„å®¡æŠ¥å‘Š Â· WIP èšç„¦è¯„å®¡ï¼ˆ2026-07-11ï¼‰
 type: reports
 domain: qa
 phase: testing
@@ -16,169 +16,169 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# ´úÂëÆÀÉó±¨¸æ ¡¤ WIP ¾Û½¹ÆÀÉó£¨2026-07-11£©
+# ä»£ç è¯„å®¡æŠ¥å‘Š Â· WIP èšç„¦è¯„å®¡ï¼ˆ2026-07-11ï¼‰
 
-> **ÆÀÉó·¶Î§**£º¹¤×÷Ê÷ÖĞ 19 ¸öÎ´Ìá½»ÎÄ¼ş + Î´¸ú×ÙÎÄ¼ş£¨i18n/UI_TEXT¡¢½»Ò× Store ²ğ·Ö¡¢Êı¾İĞ£Ñé¡¢²âÊÔÖØĞ´£©
-> **ÆÀÉó½ÇÉ«**£ºCode Reviewer
-> **½áÂÛ**£º? ¿ÉÌá½»»ù´¡£¨tsc / audit:atomic / audit:layers È«ÂÌ£©£»·¢ÏÖ 4 ¸ö ?? ½¨Òé¡¢Èô¸É ?? ¸Ä½øµã£¬ÎŞ ?? ×è¶Ï¡£
+> **è¯„å®¡èŒƒå›´**ï¼šå·¥ä½œæ ‘ä¸­ 19 ä¸ªæœªæäº¤æ–‡ä»¶ + æœªè·Ÿè¸ªæ–‡ä»¶ï¼ˆi18n/UI_TEXTã€äº¤æ˜“ Store æ‹†åˆ†ã€æ•°æ®æ ¡éªŒã€æµ‹è¯•é‡å†™ï¼‰
+> **è¯„å®¡è§’è‰²**ï¼šCode Reviewer
+> **ç»“è®º**ï¼š? å¯æäº¤åŸºç¡€ï¼ˆtsc / audit:atomic / audit:layers å…¨ç»¿ï¼‰ï¼›å‘ç° 4 ä¸ª ?? å»ºè®®ã€è‹¥å¹² ?? æ”¹è¿›ç‚¹ï¼Œæ—  ?? é˜»æ–­ã€‚
 
 ---
 
-## Ò»¡¢ÃÅ½û×´Ì¬£¨Ìá½»Ç°Ó²ÃÅ¼÷£©
+## ä¸€ã€é—¨ç¦çŠ¶æ€ï¼ˆæäº¤å‰ç¡¬é—¨æ§›ï¼‰
 
-| ÃÅ½û | ÃüÁî | ½á¹û |
+| é—¨ç¦ | å‘½ä»¤ | ç»“æœ |
 |------|------|------|
-| ÀàĞÍ°²È« | `tsc:prod` | ? 0 ´íÎó£¨Õû¿ÃÔàÊ÷£© |
-| Ô­×Ó·Ö²ã | `audit:atomic` | ? 0 Î¥¹æ / 0 ¾¯¸æ£¨133 ÎÄ¼ş£© |
-| ¿ç²ãµ÷ÓÃ | `audit:layers` | ? 0 Î¥¹æ / 0 ¾¯¸æ£¨865 ÎÄ¼ş£© |
-| ÑÕÉ«ÁîÅÆ | `lint:colors` | ?? Î´ÅÜ£¨½¨ÒéÌá½»Ç°²¹ÅÜ£© |
-| µ¥Ôª²âÊÔ | `npm test` | ?? Î´ÅÜ£¨½¨ÒéÌá½»Ç°²¹ÅÜ£¬ÓÈÆä dataLayer.test 3362 ĞĞÖØĞ´£© |
+| ç±»å‹å®‰å…¨ | `tsc:prod` | ? 0 é”™è¯¯ï¼ˆæ•´æ£µè„æ ‘ï¼‰ |
+| åŸå­åˆ†å±‚ | `audit:atomic` | ? 0 è¿è§„ / 0 è­¦å‘Šï¼ˆ133 æ–‡ä»¶ï¼‰ |
+| è·¨å±‚è°ƒç”¨ | `audit:layers` | ? 0 è¿è§„ / 0 è­¦å‘Šï¼ˆ865 æ–‡ä»¶ï¼‰ |
+| é¢œè‰²ä»¤ç‰Œ | `lint:colors` | ?? æœªè·‘ï¼ˆå»ºè®®æäº¤å‰è¡¥è·‘ï¼‰ |
+| å•å…ƒæµ‹è¯• | `npm test` | ?? æœªè·‘ï¼ˆå»ºè®®æäº¤å‰è¡¥è·‘ï¼Œå°¤å…¶ dataLayer.test 3362 è¡Œé‡å†™ï¼‰ |
 
-> ×¢£º`src/lib/` Óë store¡ústore µÄ Facade ÒÀÀµ¾ù±» `audit:layers` ÈİÈÌ£¨0 ¾¯¸æ£©£¬²»×è¶ÏÌá½»¡£
+> æ³¨ï¼š`src/lib/` ä¸ storeâ†’store çš„ Facade ä¾èµ–å‡è¢« `audit:layers` å®¹å¿ï¼ˆ0 è­¦å‘Šï¼‰ï¼Œä¸é˜»æ–­æäº¤ã€‚
 
 ---
 
-## ¶ş¡¢`src/lib/validation.ts`£¨ĞÂÔö£¬°²È«Ïà¹Ø£©
+## äºŒã€`src/lib/validation.ts`ï¼ˆæ–°å¢ï¼Œå®‰å…¨ç›¸å…³ï¼‰
 
-ÕûÌåÖÊÁ¿¸ß£º·Ö²ãÇåÎú¡¢JSDoc ÍêÕû¡¢XSS/ÍÑÃô¿¼ÂÇÖÜÈ«£¬²¢ÅäÌ× `dataValidation.test.ts`¡£
+æ•´ä½“è´¨é‡é«˜ï¼šåˆ†å±‚æ¸…æ™°ã€JSDoc å®Œæ•´ã€XSS/è„±æ•è€ƒè™‘å‘¨å…¨ï¼Œå¹¶é…å¥— `dataValidation.test.ts`ã€‚
 
-### ?? ½¨Òé
+### ?? å»ºè®®
 
-**1. `sanitizeObject` È±Ñ­»·ÒıÓÃ±£»¤£¨Ç±ÔÚÕ»Òç³ö£©**
-Line 360-380£ºµİ¹é±éÀú¶ÔÏó£¬µ«ÎŞ `visited` ¼¯ºÏ¡£ÈÕÖ¾ÉÏÏÂÎÄ¶ÔÏó³£º¬»·ÒıÓÃ£¨ÈçÊÂ¼ş¶ÔÏó»¥Ö¸£©£¬»á´¥·¢ÎŞÏŞµİ¹é / `RangeError: Maximum call stack size exceeded`¡£
+**1. `sanitizeObject` ç¼ºå¾ªç¯å¼•ç”¨ä¿æŠ¤ï¼ˆæ½œåœ¨æ ˆæº¢å‡ºï¼‰**
+Line 360-380ï¼šé€’å½’éå†å¯¹è±¡ï¼Œä½†æ—  `visited` é›†åˆã€‚æ—¥å¿—ä¸Šä¸‹æ–‡å¯¹è±¡å¸¸å«ç¯å¼•ç”¨ï¼ˆå¦‚äº‹ä»¶å¯¹è±¡äº’æŒ‡ï¼‰ï¼Œä¼šè§¦å‘æ— é™é€’å½’ / `RangeError: Maximum call stack size exceeded`ã€‚
 
-**Why**£ºÈÕÖ¾¼ÇÂ¼ÊÇ¸ßÆµÂ·¾¶£¬´«Èëº¬»·¶ÔÏó»áÊ¹Õû¸öÈÕÖ¾µ÷ÓÃ±ÀÀ£¡£
-**Suggestion**£ºÓÃ `WeakSet` ¼ÇÂ¼ÒÑ·ÃÎÊ¶ÔÏó£º
+**Why**ï¼šæ—¥å¿—è®°å½•æ˜¯é«˜é¢‘è·¯å¾„ï¼Œä¼ å…¥å«ç¯å¯¹è±¡ä¼šä½¿æ•´ä¸ªæ—¥å¿—è°ƒç”¨å´©æºƒã€‚
+**Suggestion**ï¼šç”¨ `WeakSet` è®°å½•å·²è®¿é—®å¯¹è±¡ï¼š
 ```ts
 export function sanitizeObject<T>(obj: T, maxDepth = 5, seen = new WeakSet<object>()): T {
   if (maxDepth < 0 || obj === null || typeof obj !== 'object') return obj
-  if (seen.has(obj as object)) return obj  // »ò·µ»Ø '[Circular]'
+  if (seen.has(obj as object)) return obj  // æˆ–è¿”å› '[Circular]'
   seen.add(obj as object)
-  // ...µİ¹éÊ±´«Èë seen
+  // ...é€’å½’æ—¶ä¼ å…¥ seen
 }
 ```
 
-**2. `formatStockCode` ¶Ô·ÇÊı×ÖÊäÈë¾²Ä¬³ö´í**
-Line 115-117£º`String(code).padStart(6, '0')` ¶Ô `'AAPL'` ·µ»Ø `'0AAPL'`¡¢¶Ô `'00700.HK'` ·µ»Ø `'000700.HK'`£¬Óë A ¹É 6 Î»¼ÙÉè²»·û¡£
+**2. `formatStockCode` å¯¹éæ•°å­—è¾“å…¥é™é»˜å‡ºé”™**
+Line 115-117ï¼š`String(code).padStart(6, '0')` å¯¹ `'AAPL'` è¿”å› `'0AAPL'`ã€å¯¹ `'00700.HK'` è¿”å› `'000700.HK'`ï¼Œä¸ A è‚¡ 6 ä½å‡è®¾ä¸ç¬¦ã€‚
 
-**Why**£ºº¯ÊıÇ©Ãû½ÓÊÜ `string | number` µ«ÓïÒå½öÊÊÓÃÓÚ A ¹ÉÊı×Ö´úÂë£¬µ÷ÓÃ·½Ò×ÎóÓÃ¡£
-**Suggestion**£ºº¯ÊıÃû/×¢ÊÍÃ÷È·ÏŞ¶¨ A ¹É£»»ò¼ÓÀàĞÍÊØÎÀ `if (!/^\d+$/.test(String(code))) return String(code)`¡£
+**Why**ï¼šå‡½æ•°ç­¾åæ¥å— `string | number` ä½†è¯­ä¹‰ä»…é€‚ç”¨äº A è‚¡æ•°å­—ä»£ç ï¼Œè°ƒç”¨æ–¹æ˜“è¯¯ç”¨ã€‚
+**Suggestion**ï¼šå‡½æ•°å/æ³¨é‡Šæ˜ç¡®é™å®š A è‚¡ï¼›æˆ–åŠ ç±»å‹å®ˆå« `if (!/^\d+$/.test(String(code))) return String(code)`ã€‚
 
-**3. `isSensitiveField` ÓÃ `includes` µ¼ÖÂÎóÅĞ**
-Line 340£º`'author'.includes('auth') === true`£¬×Ö¶ÎÃû `author` »á±»µ±Ãô¸Ğ×Ö¶ÎÍÑÃô¡£
+**3. `isSensitiveField` ç”¨ `includes` å¯¼è‡´è¯¯åˆ¤**
+Line 340ï¼š`'author'.includes('auth') === true`ï¼Œå­—æ®µå `author` ä¼šè¢«å½“æ•æ„Ÿå­—æ®µè„±æ•ã€‚
 
-**Why**£º¹ı¶ÈÍÑÃô£¨µÍ·çÏÕ£¬µ«¿ÉÄÜÎóÉËÕı³£×Ö¶ÎÏÔÊ¾£©¡£
-**Suggestion**£º¶Ì token£¨`auth`/`pwd` µÈ£©ÓÃ¾«È·Æ¥Åä»ò´Ê±ß½ç£»³¤ token ±£Áô includes¡£
+**Why**ï¼šè¿‡åº¦è„±æ•ï¼ˆä½é£é™©ï¼Œä½†å¯èƒ½è¯¯ä¼¤æ­£å¸¸å­—æ®µæ˜¾ç¤ºï¼‰ã€‚
+**Suggestion**ï¼šçŸ­ tokenï¼ˆ`auth`/`pwd` ç­‰ï¼‰ç”¨ç²¾ç¡®åŒ¹é…æˆ–è¯è¾¹ç•Œï¼›é•¿ token ä¿ç•™ includesã€‚
 
-**4. `handleBuy` ÂòÈëÊıÁ¿È±¶µµ×**
-£¨¼û tradingStore ²¿·ÖµÚ 3 µã£¬Í¬Ô´ÎÊÌâ£©
+**4. `handleBuy` ä¹°å…¥æ•°é‡ç¼ºå…œåº•**
+ï¼ˆè§ tradingStore éƒ¨åˆ†ç¬¬ 3 ç‚¹ï¼ŒåŒæºé—®é¢˜ï¼‰
 
-### ?? ¸Ä½ø
+### ?? æ”¹è¿›
 
-- **`maskApiKey` / `maskToken` Âß¼­ÖØ¸´**£¨Line 291-307£©£ºÌáÈ¡¹²Ïí `maskSecret(s)`¡£
-- **`US_SHARE_CODE_REGEX` ×¢ÊÍ²»·û**£º×¢ÊÍĞ´"1-4 Î»×ÖÄ¸"£¬ÕıÔò `[A-Z]{1,5}` ÔÊĞí 5 Î»£¨Line 106-107£©¡£
-- **`isValidPercent/Score/Price` Î´ÊØ `typeof===number`**£ºTS ÀàĞÍÔ¼ÊøÁË±àÒëÆÚ£¬µ«ÔËĞĞÊ±´« `any` »á×ö×Ö·û´®Ç¿×ª£¨`isValidPrice('5')` ÎªÕæ£©¡£¿É¼ÓÀàĞÍ¶ÏÑÔÊØÎÀ¡£
+- **`maskApiKey` / `maskToken` é€»è¾‘é‡å¤**ï¼ˆLine 291-307ï¼‰ï¼šæå–å…±äº« `maskSecret(s)`ã€‚
+- **`US_SHARE_CODE_REGEX` æ³¨é‡Šä¸ç¬¦**ï¼šæ³¨é‡Šå†™"1-4 ä½å­—æ¯"ï¼Œæ­£åˆ™ `[A-Z]{1,5}` å…è®¸ 5 ä½ï¼ˆLine 106-107ï¼‰ã€‚
+- **`isValidPercent/Score/Price` æœªå®ˆ `typeof===number`**ï¼šTS ç±»å‹çº¦æŸäº†ç¼–è¯‘æœŸï¼Œä½†è¿è¡Œæ—¶ä¼  `any` ä¼šåšå­—ç¬¦ä¸²å¼ºè½¬ï¼ˆ`isValidPrice('5')` ä¸ºçœŸï¼‰ã€‚å¯åŠ ç±»å‹æ–­è¨€å®ˆå«ã€‚
 
-### ?? ÁÁµã
-- ÅäÖÃÃûĞ£Ñé¸²¸Ç XSS£¨HTML ±êÇ©¡¢Î£ÏÕĞ­Òé£©+ ÎÄ¼şÏµÍ³Ãô¸Ğ×Ö·û£¬·ÀÓùµ½Î»¡£
-- `isValidLlmBaseURL` ÏÈ¾ÜÎ£ÏÕĞ­ÒéÔÙ `new URL` Ğ£Ñé£¬Ë³ĞòÊÇ°²È«µÄ¡£
-- `safeParseNumber` ¶Ô NaN/Infinity/¿ÕÖµ¾ùÓĞ¶µµ×²¢Ö§³Ö clamp£¬½¡×³¡£
-- `SENSITIVE_FIELD_NAMES` + `sanitizeObject` ÌåÏÖÈÕÖ¾ÍÑÃôÒâÊ¶£¨LEAK-004£©¡£
-
----
-
-## Èı¡¢`src/store/tradingStore.ts`£¨Facade ÖØ¹¹£©
-
-½«µ¥Ìå Store ²ğ·ÖÎª `watchlistStore / signalAdviceStore / portfolioStore / orderStore` ËÄ¸ö×Ó Store£¬±¾ÎÄ¼şÍË»¯Îª**Ïòºó¼æÈİ Facade** + ¶©ÔÄÍ¬²½¡£¼Ü¹¹Ä£Ê½¸É¾»¡£
-
-### ?? ½¨Òé
-
-**1. `isRefreshing` ÊÇËÀ×´Ì¬**
-Line 71 ½Ó¿ÚÉùÃ÷ + Line 98 ³õÖµ£¬µ«È«ÎÄ¼şÎŞÈÎºÎµØ·½½«ÆäÖÃ `true`¡£×¢ÊÍ³ÆÆäÎª"²¢·¢Ëø"£¬µ« `loadStocks` Î´ÊµÏÖ²¢·¢±£»¤¡£
-
-**Why**£º½Ó¿Ú³ĞÅµÁË²¢·¢ËøÄÜÁ¦È´Î´ÂäµØ£¬Ò×Îóµ¼ºóĞøÎ¬»¤Õß¡£
-**Suggestion**£ºÒªÃ´ÔÚ `loadStocks/loadPortfolio` Èë¿ÚÓÃ `isRefreshing` ×ö `if (get().isRefreshing) return` ÊØÎÀ£¬ÒªÃ´É¾³ı¸Ã×Ö¶Î¼°×¢ÊÍ¡£
-
-**2. `loadStocks` ÎŞ²¢·¢±£»¤**
-Line 114-131£º¿ìËÙË«»÷"Ë¢ĞÂ"»á²¢·¢Ö´ĞĞÁ½´Î `loadStocks`£¬¸÷×Ô `await` ºóÖØ¸´ `set`£¬¿ÉÄÜÖØ¸´´¥·¢ `generateAdviceForStocks`¡£
-
-**Why**£ºÓëÉÏÊö `isRefreshing` ÒâÍ¼Ïà¹Ø£¬´æÔÚÖØ¸´¸±×÷ÓÃ·çÏÕ¡£
-**Suggestion**£ºÓÃ `isRefreshing` ÊØÎÀ£¨¼ûÉÏ£©£¬»ò¸´ÓÃ `processingSymbols` Ë¼Â·µÄÇáÁ¿Ëø¡£
-
-**3. ÂòÈë/Âô³öÊıÁ¿È±¶µµ×**
-Line 199£º`advice?.sizing?.action === 'buy' ? advice.sizing.targetShares : 100` ¡ª¡ª Èô `action==='buy'` µ« `targetShares` Îª `undefined`£¬`quantity` Îª `undefined` ´«Èë `createBuyOrder`¡£
-
-**Why**£ºÏÂÓÎ¿ÉÄÜÊÕµ½ `undefined` ÊıÁ¿£¬´¥·¢Òì³£»ò´íÎóÏÂµ¥¡£
-**Suggestion**£º¸ÄÎª `advice?.sizing?.targetShares ?? 100`¡£
-
-**4. Zustand `subscribe` Î´ÓÃ selector**
-Line 300-328£º`useXxxStore.subscribe((state) => {...})` ÔÚ×Ó Store **ÈÎÒâ**×´Ì¬±ä¸üÊ±¶¼»á´¥·¢£¬¶ø·Ç½öÍ¬²½×Ö¶Î±ä¸ü¡£
-
-**Why**£ºwatchlistStore ÈôÓĞÆäËü¸ßÆµ×Ö¶Î±ä¸ü£¬»áÆµ·± `useTradingStore.setState` Ôì³ÉÎŞÎ½ÖØäÖÈ¾¡£
-**Suggestion**£ºÈôÒÑ×° `subscribeWithSelector` ÖĞ¼ä¼ş£¬¸ÄÓÃ `subscribe(s => s.stocks, stocks => setState({stocks}))`£»·ñÔò¿É½ÓÊÜ£¨µ±Ç°×Ó Store ×Ö¶Î²»¶à£©¡£
-
-### ?? ¸Ä½ø
-
-- **ÈßÓàÍ¬²½**£º`loadStocks` ÄÚ `set({stocks})`£¨Line 123£©Óë watchlist ¶©ÔÄ `set({stocks})`£¨Line 301£©ÖØ¸´£¬ÃİµÈµ«ÀË·Ñ£¬¿É±£Áô¶©ÔÄ¡¢ÒÆ³ı loadStocks ÄÚÖ±½Ó set¡£
-- **ÎÄµµ²¹³ä**£º`store¡ústore` µÄ Facade Î¯ÍĞ±» `audit:layers` ÈİÈÌ£¬µ« `../../AGENTS.md` ¡ìÒ»Î´Ìá¼°¡£½¨ÒéÔÚ ../../AGENTS.md ×¢Ã÷"Store ¼ä Facade Î¯ÍĞÔÊĞí£¬½ûÖ¹·´Ïò»ò»·×´ÒÀÀµ"¡£
-
-### ?? ÁÁµã
-- `handleBuy/handleSell` ÓÃ `processingSymbols` Set ×öÍ¬ symbol ²¢·¢Ëø£¬`finally` ÖĞ±ØÇåÀí ¡ª¡ª ÂòÈë/Âô³öµÄ²¢·¢·À»¤Ğ´µÃºÜÎÈ¡£
-- `loadPortfolio` ÓĞÍêÕû try/catch£¬Ê§°ÜĞ´Èë×Ó Store error ²¢»ØÍË Facade ×´Ì¬¡£
-- `withBroadcast(EVENT_NAMES.ORDERS_CHANGED, ...)` ±£³Ö¿ç Tab ¶©µ¥Í¬²½£¬·ûºÏÏîÄ¿Ô¼¶¨¡£
-- `initTradingStoreFacadeSync` ÓÃÄ£¿é¼¶µ¥Àı + ÇåÀíº¯Êı£¬·ÀÖØ¸´¶©ÔÄ¡¢³õÊ¼Í¬²½Ò»´Î£¬ÉúÃüÖÜÆÚ¹ÜÀíÕıÈ·¡£
-- `tradingStore.test.ts` ËæÖØ¹¹Í¬²½¸üĞÂ£¨mock `portfolioService.loadPortfolioInput`£©£¬²âÊÔÎ¬»¤µ½Î»¡£
+### ?? äº®ç‚¹
+- é…ç½®åæ ¡éªŒè¦†ç›– XSSï¼ˆHTML æ ‡ç­¾ã€å±é™©åè®®ï¼‰+ æ–‡ä»¶ç³»ç»Ÿæ•æ„Ÿå­—ç¬¦ï¼Œé˜²å¾¡åˆ°ä½ã€‚
+- `isValidLlmBaseURL` å…ˆæ‹’å±é™©åè®®å† `new URL` æ ¡éªŒï¼Œé¡ºåºæ˜¯å®‰å…¨çš„ã€‚
+- `safeParseNumber` å¯¹ NaN/Infinity/ç©ºå€¼å‡æœ‰å…œåº•å¹¶æ”¯æŒ clampï¼Œå¥å£®ã€‚
+- `SENSITIVE_FIELD_NAMES` + `sanitizeObject` ä½“ç°æ—¥å¿—è„±æ•æ„è¯†ï¼ˆLEAK-004ï¼‰ã€‚
 
 ---
 
-## ËÄ¡¢`src/constants/uiText/`£¨i18n ÎÄ°¸³éÈ¡£©
+## ä¸‰ã€`src/store/tradingStore.ts`ï¼ˆFacade é‡æ„ï¼‰
 
-½« 1192 ĞĞµ¥ÎÄ¼ş²ğÎª 6 Ä£¿é + barrel£¬±£³ÖÔ­ API ¼æÈİ¡£cockpit widget ÒÑÇĞ»»ÒıÓÃ `UI_TEXT.analysis.hotSector.noData` / `valuePit.noData`£¨ÒÑºËÊµÂ·¾¶´æÔÚ£©¡£
+å°†å•ä½“ Store æ‹†åˆ†ä¸º `watchlistStore / signalAdviceStore / portfolioStore / orderStore` å››ä¸ªå­ Storeï¼Œæœ¬æ–‡ä»¶é€€åŒ–ä¸º**å‘åå…¼å®¹ Facade** + è®¢é˜…åŒæ­¥ã€‚æ¶æ„æ¨¡å¼å¹²å‡€ã€‚
 
-### ?? ¸Ä½ø
-- ½¨ÒéĞÂÔö lint ¹æÔò»ò CI ¼ì²é£¬È·±£**ĞÂÔöÓÃ»§¿É¼ûÎÄ°¸**×ß `UI_TEXT` ¶ø·ÇÓ²±àÂë£¬±ÜÃâ»ØÁ÷¡£
-- `src/constants/uiText/` ÊÇÄ¿Â¼£¬µ« `../../AGENTS.md` Ö»Ğ´ÁË `src/constants/` µ¥²ã ¡ª¡ª ·ÇÎÊÌâ£¬½öÌáÊ¾ÎÄµµ¿ÉÏ¸»¯¡£
+### ?? å»ºè®®
+
+**1. `isRefreshing` æ˜¯æ­»çŠ¶æ€**
+Line 71 æ¥å£å£°æ˜ + Line 98 åˆå€¼ï¼Œä½†å…¨æ–‡ä»¶æ— ä»»ä½•åœ°æ–¹å°†å…¶ç½® `true`ã€‚æ³¨é‡Šç§°å…¶ä¸º"å¹¶å‘é”"ï¼Œä½† `loadStocks` æœªå®ç°å¹¶å‘ä¿æŠ¤ã€‚
+
+**Why**ï¼šæ¥å£æ‰¿è¯ºäº†å¹¶å‘é”èƒ½åŠ›å´æœªè½åœ°ï¼Œæ˜“è¯¯å¯¼åç»­ç»´æŠ¤è€…ã€‚
+**Suggestion**ï¼šè¦ä¹ˆåœ¨ `loadStocks/loadPortfolio` å…¥å£ç”¨ `isRefreshing` åš `if (get().isRefreshing) return` å®ˆå«ï¼Œè¦ä¹ˆåˆ é™¤è¯¥å­—æ®µåŠæ³¨é‡Šã€‚
+
+**2. `loadStocks` æ— å¹¶å‘ä¿æŠ¤**
+Line 114-131ï¼šå¿«é€ŸåŒå‡»"åˆ·æ–°"ä¼šå¹¶å‘æ‰§è¡Œä¸¤æ¬¡ `loadStocks`ï¼Œå„è‡ª `await` åé‡å¤ `set`ï¼Œå¯èƒ½é‡å¤è§¦å‘ `generateAdviceForStocks`ã€‚
+
+**Why**ï¼šä¸ä¸Šè¿° `isRefreshing` æ„å›¾ç›¸å…³ï¼Œå­˜åœ¨é‡å¤å‰¯ä½œç”¨é£é™©ã€‚
+**Suggestion**ï¼šç”¨ `isRefreshing` å®ˆå«ï¼ˆè§ä¸Šï¼‰ï¼Œæˆ–å¤ç”¨ `processingSymbols` æ€è·¯çš„è½»é‡é”ã€‚
+
+**3. ä¹°å…¥/å–å‡ºæ•°é‡ç¼ºå…œåº•**
+Line 199ï¼š`advice?.sizing?.action === 'buy' ? advice.sizing.targetShares : 100` â€”â€” è‹¥ `action==='buy'` ä½† `targetShares` ä¸º `undefined`ï¼Œ`quantity` ä¸º `undefined` ä¼ å…¥ `createBuyOrder`ã€‚
+
+**Why**ï¼šä¸‹æ¸¸å¯èƒ½æ”¶åˆ° `undefined` æ•°é‡ï¼Œè§¦å‘å¼‚å¸¸æˆ–é”™è¯¯ä¸‹å•ã€‚
+**Suggestion**ï¼šæ”¹ä¸º `advice?.sizing?.targetShares ?? 100`ã€‚
+
+**4. Zustand `subscribe` æœªç”¨ selector**
+Line 300-328ï¼š`useXxxStore.subscribe((state) => {...})` åœ¨å­ Store **ä»»æ„**çŠ¶æ€å˜æ›´æ—¶éƒ½ä¼šè§¦å‘ï¼Œè€Œéä»…åŒæ­¥å­—æ®µå˜æ›´ã€‚
+
+**Why**ï¼šwatchlistStore è‹¥æœ‰å…¶å®ƒé«˜é¢‘å­—æ®µå˜æ›´ï¼Œä¼šé¢‘ç¹ `useTradingStore.setState` é€ æˆæ— è°“é‡æ¸²æŸ“ã€‚
+**Suggestion**ï¼šè‹¥å·²è£… `subscribeWithSelector` ä¸­é—´ä»¶ï¼Œæ”¹ç”¨ `subscribe(s => s.stocks, stocks => setState({stocks}))`ï¼›å¦åˆ™å¯æ¥å—ï¼ˆå½“å‰å­ Store å­—æ®µä¸å¤šï¼‰ã€‚
+
+### ?? æ”¹è¿›
+
+- **å†—ä½™åŒæ­¥**ï¼š`loadStocks` å†… `set({stocks})`ï¼ˆLine 123ï¼‰ä¸ watchlist è®¢é˜… `set({stocks})`ï¼ˆLine 301ï¼‰é‡å¤ï¼Œå¹‚ç­‰ä½†æµªè´¹ï¼Œå¯ä¿ç•™è®¢é˜…ã€ç§»é™¤ loadStocks å†…ç›´æ¥ setã€‚
+- **æ–‡æ¡£è¡¥å……**ï¼š`storeâ†’store` çš„ Facade å§”æ‰˜è¢« `audit:layers` å®¹å¿ï¼Œä½† `../../AGENTS.md` Â§ä¸€æœªæåŠã€‚å»ºè®®åœ¨ ../../AGENTS.md æ³¨æ˜"Store é—´ Facade å§”æ‰˜å…è®¸ï¼Œç¦æ­¢åå‘æˆ–ç¯çŠ¶ä¾èµ–"ã€‚
+
+### ?? äº®ç‚¹
+- `handleBuy/handleSell` ç”¨ `processingSymbols` Set åšåŒ symbol å¹¶å‘é”ï¼Œ`finally` ä¸­å¿…æ¸…ç† â€”â€” ä¹°å…¥/å–å‡ºçš„å¹¶å‘é˜²æŠ¤å†™å¾—å¾ˆç¨³ã€‚
+- `loadPortfolio` æœ‰å®Œæ•´ try/catchï¼Œå¤±è´¥å†™å…¥å­ Store error å¹¶å›é€€ Facade çŠ¶æ€ã€‚
+- `withBroadcast(EVENT_NAMES.ORDERS_CHANGED, ...)` ä¿æŒè·¨ Tab è®¢å•åŒæ­¥ï¼Œç¬¦åˆé¡¹ç›®çº¦å®šã€‚
+- `initTradingStoreFacadeSync` ç”¨æ¨¡å—çº§å•ä¾‹ + æ¸…ç†å‡½æ•°ï¼Œé˜²é‡å¤è®¢é˜…ã€åˆå§‹åŒæ­¥ä¸€æ¬¡ï¼Œç”Ÿå‘½å‘¨æœŸç®¡ç†æ­£ç¡®ã€‚
+- `tradingStore.test.ts` éšé‡æ„åŒæ­¥æ›´æ–°ï¼ˆmock `portfolioService.loadPortfolioInput`ï¼‰ï¼Œæµ‹è¯•ç»´æŠ¤åˆ°ä½ã€‚
 
 ---
 
-## Îå¡¢`src/lib/` ·Ö²ãËµÃ÷
+## å››ã€`src/constants/uiText/`ï¼ˆi18n æ–‡æ¡ˆæŠ½å–ï¼‰
 
-`src/lib/` º¬ `a11y / precision / timeUtils / xssSanitizer / dataValidation`£¨±¾´ÎĞÂÔö£©¡£Ëä²»ÔÚ `../../AGENTS.md` ±ê×¼·Ö²ã£¨¿âº¯ÊıÓ¦ÔÚ `src/lib/`£©£¬µ«Êô¼ÈÓĞÄ¿Â¼ÇÒ `audit:layers` 0 ¾¯¸æÈİÈÌ¡£
+å°† 1192 è¡Œå•æ–‡ä»¶æ‹†ä¸º 6 æ¨¡å— + barrelï¼Œä¿æŒåŸ API å…¼å®¹ã€‚cockpit widget å·²åˆ‡æ¢å¼•ç”¨ `UI_TEXT.analysis.hotSector.noData` / `valuePit.noData`ï¼ˆå·²æ ¸å®è·¯å¾„å­˜åœ¨ï¼‰ã€‚
 
-**Suggestion**£º¶şÑ¡Ò» ¡ª¡ª
-1. ÔÚ `../../AGENTS.md` ¡ìÒ»ÏÔÊ½ÁĞ³ö `src/lib/` ×÷Îª¿âº¯Êı²ã£¨Óë `src/lib/` ²¢´æ»òºÏ²¢£©£»
-2. ¹æ»®½« `src/utils/*` Ç¨Èë `src/lib/`£¬Ïû³ıË«¿âÄ¿Â¼¡£
-
----
-
-## Áù¡¢Ìá½»Ç°½¨ÒéÇåµ¥
-
-- [ ] ´¦Àí `dataValidation.sanitizeObject` Ñ­»·ÒıÓÃ±£»¤£¨?? ×î¸ßÓÅÏÈ£¬ÈÕÖ¾¸ßÆµÂ·¾¶£©
-- [ ] ´¦Àí `isRefreshing` ËÀ×´Ì¬ »ò ÂäµØ²¢·¢ÊØÎÀ£¨??£©
-- [ ] `handleBuy` ÊıÁ¿¶µµ× `?? 100`£¨??£©
-- [ ] ÅÜ `lint:colors` È·ÈÏÎŞĞÂÔöÑÕÉ«Ó²±àÂë
-- [ ] ÅÜ `npm test` È·ÈÏ dataLayer.test µÈÖØĞ´ºóÈ«ÂÌ
-- [ ] £¨¿ÉÑ¡£©`../../AGENTS.md` ²¹³ä `src/lib/` Óë store¡ústore Facade Ô¼¶¨
-
-> ÒÔÉÏ ?? ×è¶ÏÏî£ºÎŞ¡£½¨ÒéĞŞ¸´ ?? ÏîºóÔÙÌá½»£¬»ò×÷Îª follow-up Ìá½»²¢¹ØÁª issue¡£
+### ?? æ”¹è¿›
+- å»ºè®®æ–°å¢ lint è§„åˆ™æˆ– CI æ£€æŸ¥ï¼Œç¡®ä¿**æ–°å¢ç”¨æˆ·å¯è§æ–‡æ¡ˆ**èµ° `UI_TEXT` è€Œéç¡¬ç¼–ç ï¼Œé¿å…å›æµã€‚
+- `src/constants/uiText/` æ˜¯ç›®å½•ï¼Œä½† `../../AGENTS.md` åªå†™äº† `src/constants/` å•å±‚ â€”â€” éé—®é¢˜ï¼Œä»…æç¤ºæ–‡æ¡£å¯ç»†åŒ–ã€‚
 
 ---
 
-## Æß¡¢ĞŞ¸´×´Ì¬£¨2026-07-12£©
+## äº”ã€`src/lib/` åˆ†å±‚è¯´æ˜
 
-ÓÃ»§È·ÈÏ¡¸¼ÌĞøĞŞ¸´¡¹£¬ÒÑÂäµØÈ«²¿ ?? ½¨Òé²¢ÑéÖ¤Í¨¹ı¡£
+`src/lib/` å« `a11y / precision / timeUtils / xssSanitizer / dataValidation`ï¼ˆæœ¬æ¬¡æ–°å¢ï¼‰ã€‚è™½ä¸åœ¨ `../../AGENTS.md` æ ‡å‡†åˆ†å±‚ï¼ˆåº“å‡½æ•°åº”åœ¨ `src/lib/`ï¼‰ï¼Œä½†å±æ—¢æœ‰ç›®å½•ä¸” `audit:layers` 0 è­¦å‘Šå®¹å¿ã€‚
 
-| # | ÎÊÌâ | ÎÄ¼ş | ĞŞ¸´ |
+**Suggestion**ï¼šäºŒé€‰ä¸€ â€”â€”
+1. åœ¨ `../../AGENTS.md` Â§ä¸€æ˜¾å¼åˆ—å‡º `src/lib/` ä½œä¸ºåº“å‡½æ•°å±‚ï¼ˆä¸ `src/lib/` å¹¶å­˜æˆ–åˆå¹¶ï¼‰ï¼›
+2. è§„åˆ’å°† `src/utils/*` è¿å…¥ `src/lib/`ï¼Œæ¶ˆé™¤åŒåº“ç›®å½•ã€‚
+
+---
+
+## å…­ã€æäº¤å‰å»ºè®®æ¸…å•
+
+- [ ] å¤„ç† `dataValidation.sanitizeObject` å¾ªç¯å¼•ç”¨ä¿æŠ¤ï¼ˆ?? æœ€é«˜ä¼˜å…ˆï¼Œæ—¥å¿—é«˜é¢‘è·¯å¾„ï¼‰
+- [ ] å¤„ç† `isRefreshing` æ­»çŠ¶æ€ æˆ– è½åœ°å¹¶å‘å®ˆå«ï¼ˆ??ï¼‰
+- [ ] `handleBuy` æ•°é‡å…œåº• `?? 100`ï¼ˆ??ï¼‰
+- [ ] è·‘ `lint:colors` ç¡®è®¤æ— æ–°å¢é¢œè‰²ç¡¬ç¼–ç 
+- [ ] è·‘ `npm test` ç¡®è®¤ dataLayer.test ç­‰é‡å†™åå…¨ç»¿
+- [ ] ï¼ˆå¯é€‰ï¼‰`../../AGENTS.md` è¡¥å…… `src/lib/` ä¸ storeâ†’store Facade çº¦å®š
+
+> ä»¥ä¸Š ?? é˜»æ–­é¡¹ï¼šæ— ã€‚å»ºè®®ä¿®å¤ ?? é¡¹åå†æäº¤ï¼Œæˆ–ä½œä¸º follow-up æäº¤å¹¶å…³è” issueã€‚
+
+---
+
+## ä¸ƒã€ä¿®å¤çŠ¶æ€ï¼ˆ2026-07-12ï¼‰
+
+ç”¨æˆ·ç¡®è®¤ã€Œç»§ç»­ä¿®å¤ã€ï¼Œå·²è½åœ°å…¨éƒ¨ ?? å»ºè®®å¹¶éªŒè¯é€šè¿‡ã€‚
+
+| # | é—®é¢˜ | æ–‡ä»¶ | ä¿®å¤ |
 |---|------|------|------|
-| ??1 | `sanitizeObject` Ñ­»·ÒıÓÃÕ»Òç³ö | dataValidation.ts | Ôö¼Ó `WeakSet` Ñ­»·ÒıÓÃ±£»¤ + »Ø¹é²âÊÔ |
-| ??2 | `formatStockCode` ·ÇÊı×Ö¾²Ä¬³ö´í | dataValidation.ts | ·Ç´¿Êı×ÖÔ­Ñù·µ»Ø |
-| ??3 | `isSensitiveField` ÎóÅĞ | dataValidation.ts | ´Ê±ß½çÕıÔò£¬±ÜÃâ `author`¡ú`auth` |
-| ??4 | `handleBuy` ÊıÁ¿ÎŞ¶µµ× | tradingStore.ts | `targetShares ?? 100` |
-| ??5 | `isRefreshing` ËÀ×´Ì¬ | tradingStore.ts | ÂäµØÎª 4 ¸ö loader µÄ²¢·¢ÊØÎÀ£¨finally ¸´Î»£©|
-| ?? | `maskApiKey`/`maskToken` ÖØ¸´ | dataValidation.ts | ÌáÈ¡ `maskSecret` ¹²Ïí |
-| ?? | US ÕıÔò×¢ÊÍ²»·û | dataValidation.ts | ×¢ÊÍĞŞÕı |
-| ?? | ÊıÖµĞ£ÑéÎŞ typeof ÊØÎÀ | dataValidation.ts | Ôö¼Ó `typeof !== 'number' \|\| isNaN` |
+| ??1 | `sanitizeObject` å¾ªç¯å¼•ç”¨æ ˆæº¢å‡º | dataValidation.ts | å¢åŠ  `WeakSet` å¾ªç¯å¼•ç”¨ä¿æŠ¤ + å›å½’æµ‹è¯• |
+| ??2 | `formatStockCode` éæ•°å­—é™é»˜å‡ºé”™ | dataValidation.ts | éçº¯æ•°å­—åŸæ ·è¿”å› |
+| ??3 | `isSensitiveField` è¯¯åˆ¤ | dataValidation.ts | è¯è¾¹ç•Œæ­£åˆ™ï¼Œé¿å… `author`â†’`auth` |
+| ??4 | `handleBuy` æ•°é‡æ— å…œåº• | tradingStore.ts | `targetShares ?? 100` |
+| ??5 | `isRefreshing` æ­»çŠ¶æ€ | tradingStore.ts | è½åœ°ä¸º 4 ä¸ª loader çš„å¹¶å‘å®ˆå«ï¼ˆfinally å¤ä½ï¼‰|
+| ?? | `maskApiKey`/`maskToken` é‡å¤ | dataValidation.ts | æå– `maskSecret` å…±äº« |
+| ?? | US æ­£åˆ™æ³¨é‡Šä¸ç¬¦ | dataValidation.ts | æ³¨é‡Šä¿®æ­£ |
+| ?? | æ•°å€¼æ ¡éªŒæ—  typeof å®ˆå« | dataValidation.ts | å¢åŠ  `typeof !== 'number' \|\| isNaN` |
 
-**ÑéÖ¤½á¹û**£º`tsc:prod` ? 0 ´íÎó ¡¤ ²âÊÔ 46 È«¹ı ¡¤ `audit:atomic` ? 0 ¡¤ `audit:layers` ? 0 ¡¤ `lint:colors`(¸Ä¶¯ÎÄ¼ş) ? ¸É¾»¡£
+**éªŒè¯ç»“æœ**ï¼š`tsc:prod` ? 0 é”™è¯¯ Â· æµ‹è¯• 46 å…¨è¿‡ Â· `audit:atomic` ? 0 Â· `audit:layers` ? 0 Â· `lint:colors`(æ”¹åŠ¨æ–‡ä»¶) ? å¹²å‡€ã€‚
 
-**Î´´¦Àí£¨Ô­ ?? nit£¬±¾´Î±£Áô£©**£ºZustand subscribe Î´ÓÃ selector¡¢loadStocks ÈßÓà set¡¢`src/lib/` Î´Èë AGENTS.md ·Ö²ãÎÄµµ¡£
+**æœªå¤„ç†ï¼ˆåŸ ?? nitï¼Œæœ¬æ¬¡ä¿ç•™ï¼‰**ï¼šZustand subscribe æœªç”¨ selectorã€loadStocks å†—ä½™ setã€`src/lib/` æœªå…¥ AGENTS.md åˆ†å±‚æ–‡æ¡£ã€‚

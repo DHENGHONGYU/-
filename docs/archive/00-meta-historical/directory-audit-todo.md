@@ -1,7 +1,7 @@
 ---
 title: directory-audit-todo
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, docs/archive/00-meta-historical/V9-PRE-LAUNCH-AUDIT-REPORT-20260713.md]
 ---
@@ -123,7 +123,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, docs/archive/00-meta-historica
 ### ⏳ [CORE] 核心检查文档治理（待批准执行）
 
 - **C1 · 修 GOVERNANCE §七 3 死链**
-  - **任务描述**：删除/补建 `../reference/code-review.md`、`../explanation/design/tech-debt.md`、`./cleanup-schedule.md` 失效引用（已核实磁盘 MISSING）。
+  - **任务描述**：删除/补建 `../reference/code-review.md`、`../../explanation/design/tech-debt.md`、`./cleanup-schedule.md` 失效引用（已核实磁盘 MISSING）。
   - **预估工时**：0.5h ｜ **前置依赖**：无 ｜ **验收标准**：GOVERNANCE §七 无失效引用。
 - **C2 · 填实 GUIDE §2.2 `[CORE]` 列**
   - **任务描述**：分 `[CORE-SOP]`（人跑：development-workflow-sop / ui-migration-checklist / widget-integration-checklist / a11y-checklist / 月度文档体检检查清单）与 `[CORE-AUTO]`（CI 跑：doc-trigger-action-map / doc-update-trigger.ts / code-review-guide / ai-generate-audit-fix-loop），8–12 个。

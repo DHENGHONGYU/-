@@ -58,8 +58,8 @@ status: draft
 
 | 文件 | 操作 | 说明 |
 |:---|:---|:---|
-| `src/store/poolStore.ts` | 新建 | Zustand Store，替代 usePoolData |
-| `src/components/pool/usePoolData.ts` | 删除 | 迁移完成后删除 |
+| `src/store/poolStore.test.ts` | 新建 | Zustand Store，替代 usePoolData |
+| `src/components/organisms/pool/usePoolDataFromStore.ts` | 删除 | 迁移完成后删除 |
 | `src/apps/input/InputDashboard.tsx` | 修改 | 替换 usePoolData → usePoolStore |
 | `src/apps/input/BulkImportPanel.tsx` | 修改 | 替换 usePoolData → usePoolStore |
 | `src/apps/input/HotSectorPanel.tsx` | 修改 | 替换 usePoolData → usePoolStore |

@@ -8,7 +8,7 @@ updated: 2026-07-12
 # V9 架构决策记录（ADR）主索引
 
 > **定位**：本文是 `docs/architecture/adr/` 的顶层入口，统管 V9 全生命周期架构决策。任何影响分层边界、数据流方向、技术选型或模块职责的决策，必须在此登记。
-> **权威契约**：`AGENTS.md`（工程分层 + 四步集成） + `docs/GOVERNANCE.md`（文档生命周期）。
+> **权威契约**：`AGENTS.md`（工程分层 + 四步集成） + `../../00-meta/GOVERNANCE.md`（文档生命周期）。
 > **关联文档**：`../architecture/overview.md`（全局架构）、`../../02-design/05-engine-specs.md`（引擎规格）、`../../02-design/06-routing-specs.md`（路由规格）。
 
 ---
@@ -207,7 +207,7 @@ Step 6: 同步更新本索引的「已有 ADR 清单」
     ↓ 如替换旧 ADR，更新旧 ADR 状态为 `superseded`
 Step 7: 如决策涉及代码变更，执行 `tsc --noEmit` + `audit:layers` 验证
     ↓ 验证通过后合并
-Step 8: 如引入技术债，同步登记到 `docs/02-design/TECH-DEBT.md`
+Step 8: 如引入技术债，同步登记到 `../../TECH-DEBT.md`
 ```
 
 ### 5.2 评审 checklist
@@ -263,15 +263,15 @@ ADR（决策） → 引用 → 02-design 设计文档（实现规格）
 - ADR-003（DataBridge 统一写入）决定「所有写操作经 DataBridge」→ `02-design/05-engine-specs.md` §4 详细定义 Envelope 结构、Action 清单、ACL 矩阵、执行流程。
 - ADR-009（双策略体系）决定「引入 HotSectorScore + ValuePitScore」→ `02-design/05-engine-specs.md` §2.5 详细定义五因子模型、十六指标、轮动信号触发条件。
 
-### 6.3 与 `02-design/00-README.md` 的索引衔接
+### 6.3 与 `../../implementation/00-README.md` 的索引衔接
 
-`02-design/00-README.md` 在其 §1.8「架构决策记录」中列出了 ADR-001~ADR-009 的原始文件路径。当 ADR 文件归集到 `docs/architecture/adr/` 后：
+`../../implementation/00-README.md` 在其 §1.8「架构决策记录」中列出了 ADR-001~ADR-009 的原始文件路径。当 ADR 文件归集到 `docs/architecture/adr/` 后：
 
 1. 本文件（`adr/README.md`）成为 ADR 的**唯一主索引**。
-2. `02-design/00-README.md` 的 §1.8 应改为**引用**本文件（而非重复列出 ADR 清单），避免信息副本。
-3. `02-design/00-README.md` 保留 ADR 的「关联代码目录映射」和「文档分类索引」职责，不重复维护 ADR 状态。
+2. `../../implementation/00-README.md` 的 §1.8 应改为**引用**本文件（而非重复列出 ADR 清单），避免信息副本。
+3. `../../implementation/00-README.md` 保留 ADR 的「关联代码目录映射」和「文档分类索引」职责，不重复维护 ADR 状态。
 
-> **TODO[docs 治理组]**：P1 阶段更新 `02-design/00-README.md` §1.8，将 ADR 清单改为引用 `docs/architecture/adr/README.md`，并删除重复列出的 ADR 文件路径表。
+> **TODO[docs 治理组]**：P1 阶段更新 `../../implementation/00-README.md` §1.8，将 ADR 清单改为引用 `docs/architecture/adr/README.md`，并删除重复列出的 ADR 文件路径表。
 
 ---
 
@@ -328,7 +328,7 @@ ADR（决策） → 引用 → 02-design 设计文档（实现规格）
 - **新增 ADR 从哪开始** → 阅读 §1.1（门槛判断）→ §5（SOP）→ 使用 §2（模板）
 - **查看已有 ADR 在哪** → §4.1（清单）→ 原始文件位置（待归集）
 - **ADR 与 design 文档怎么配合** → §6（职责边界 + 引用关系）
-- **技术债怎么登记** → 本 ADR §4（后果）+ `../02-design/TECH-DEBT.md`
+- **技术债怎么登记** → 本 ADR §4（后果）+ `../../TECH-DEBT.md`
 - **回滚怎么操作** → 各 ADR 的 §5（实施与验证）中的回滚步骤
 
 ---

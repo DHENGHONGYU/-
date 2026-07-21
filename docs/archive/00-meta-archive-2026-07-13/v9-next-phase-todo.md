@@ -166,7 +166,7 @@ P0–P3 完成了**文档缺口填补**（README/GOVERNANCE/ADR/Service 契约�
 - **目标**：在 Husky pre-commit 中增加 `docs/audit-path-match.py`（或 `docs/audit-path-match.ts`）。
 - **自主决策等级**：⚠️ **人工确认**（涉及 Husky 配置变更，影响所有开发者提交）
 - **方案**：
-  1. 将 `scripts/audit-path-match.ts` 改造为 pre-commit hook
+  1. 将 `scripts/audit/audit-path-match.ts` 改造为 pre-commit hook
   2. 检查新增 `.md` 文件的目录与内容关键词是否匹配
   3. 配置为 warn 模式（不阻断提交，先积累数据）
 - **验证**：提交时能看到 `[docs-gate]` 提示

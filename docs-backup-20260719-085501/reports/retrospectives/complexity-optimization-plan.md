@@ -1,12 +1,12 @@
 ---
-title: È¦¸´ÔÓ¶ÈÓÅ»¯·½°¸
+title: åœˆå¤æ‚åº¦ä¼˜åŒ–æ–¹æ¡ˆ
 type: reports
 domain: architecture
 phase: planning
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "**Date**: 2026-07-12 **Éó¼ÆÀ´Ô´**: audit-split-quality.ts **ãĞÖµ**: CC ¡Ü 40"
+summary: "**Date**: 2026-07-12 **å®¡è®¡æ¥æº**: audit-split-quality.ts **é˜ˆå€¼**: CC â‰¤ 40"
 tags: [architecture, complexity, optimization]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -17,180 +17,180 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# È¦¸´ÔÓ¶ÈÓÅ»¯·½°¸
+# åœˆå¤æ‚åº¦ä¼˜åŒ–æ–¹æ¡ˆ
 
 > **Date**: 2026-07-12
-> **Éó¼ÆÀ´Ô´**: audit-split-quality.ts
-> **ãĞÖµ**: CC ¡Ü 40
+> **å®¡è®¡æ¥æº**: audit-split-quality.ts
+> **é˜ˆå€¼**: CC â‰¤ 40
 
 ---
 
-## Ò»¡¢ÎÊÌâ¸ÅÊö
+## ä¸€ã€é—®é¢˜æ¦‚è¿°
 
-¸ù¾İ `audit-split-quality` Éó¼Æ±¨¸æ£¬ÏîÄ¿ÖĞ¹²ÓĞ **50+** ¸öÎÄ¼ş´æÔÚÈ¦¸´ÔÓ¶È³¬±êÎÊÌâ£¨CC > 40£©¡£ÒÔÏÂÊÇ°´ÑÏÖØ³Ì¶ÈÅÅĞòµÄÓÅÏÈ¼¶Çåµ¥£º
+æ ¹æ® `audit-split-quality` å®¡è®¡æŠ¥å‘Šï¼Œé¡¹ç›®ä¸­å…±æœ‰ **50+** ä¸ªæ–‡ä»¶å­˜åœ¨åœˆå¤æ‚åº¦è¶…æ ‡é—®é¢˜ï¼ˆCC > 40ï¼‰ã€‚ä»¥ä¸‹æ˜¯æŒ‰ä¸¥é‡ç¨‹åº¦æ’åºçš„ä¼˜å…ˆçº§æ¸…å•ï¼š
 
-### P0 - ½ô¼±£¨CC > 100£©
+### P0 - ç´§æ€¥ï¼ˆCC > 100ï¼‰
 
-| ÅÅÃû | ÎÄ¼ş | CC | ĞĞÊı | ÎÊÌâÃèÊö |
+| æ’å | æ–‡ä»¶ | CC | è¡Œæ•° | é—®é¢˜æè¿° |
 |------|------|-----|------|---------|
-| 1 | `src/services/data-collector/MarketDataAdapter.ts` | **353** | 636 | ¼«¶Ë¸´ÔÓ£¬ÑÏÖØÓ°Ïì¿ÉÎ¬»¤ĞÔ |
-| 2 | `src/services/system/migration/migrationTransformers.ts` | **212** | 615 | Ç¨ÒÆÂß¼­¹ıÓÚ¼¯ÖĞ |
-| 3 | `src/services/scoring/v6-engine/calculators/l0_l1_l2.ts` | **114** | - | L0/L1/L2 ¼ÆËãÆ÷»ìºÏ |
-| 4 | `src/services/analysis/scoreDocService.ts` | **114** | 571 | ÆÀ·ÖÎÄµµÉú³ÉÂß¼­¸´ÔÓ |
-| 5 | `src/services/fetcher/directDataAPI.ts` | **109** | 635 | Êı¾İ»ñÈ¡Âß¼­¹ıÓÚ¼¯ÖĞ |
+| 1 | `src/services/data-collector/MarketDataAdapter.ts` | **353** | 636 | æç«¯å¤æ‚ï¼Œä¸¥é‡å½±å“å¯ç»´æŠ¤æ€§ |
+| 2 | `src/services/system/migration/migrationTransformers.ts` | **212** | 615 | è¿ç§»é€»è¾‘è¿‡äºé›†ä¸­ |
+| 3 | `src/services/scoring/v6-engine/calculators/l0_l1_l2.ts` | **114** | - | L0/L1/L2 è®¡ç®—å™¨æ··åˆ |
+| 4 | `src/services/analysis/scoreDocService.ts` | **114** | 571 | è¯„åˆ†æ–‡æ¡£ç”Ÿæˆé€»è¾‘å¤æ‚ |
+| 5 | `src/services/fetcher/directDataAPI.ts` | **109** | 635 | æ•°æ®è·å–é€»è¾‘è¿‡äºé›†ä¸­ |
 
-### P1 - ÑÏÖØ£¨CC 60-100£©
+### P1 - ä¸¥é‡ï¼ˆCC 60-100ï¼‰
 
-| ÅÅÃû | ÎÄ¼ş | CC | ĞĞÊı | ÎÊÌâÃèÊö |
+| æ’å | æ–‡ä»¶ | CC | è¡Œæ•° | é—®é¢˜æè¿° |
 |------|------|-----|------|---------|
-| 6 | `src/services/scoring/valuePitAnalyzer.ts` | **102** | 508 | ¼ÛÖµÍİµØ·ÖÎöÂß¼­¸´ÔÓ |
-| 7 | `src/core/databridge.ts` | **93** | 811 | Êı¾İÇÅºËĞÄÂß¼­ |
-| 8 | `src/pages/command/agent/LlmManagement/index.tsx` | **89** | 1044 | Ò³Ãæ×é¼ş¹ıÓÚÅÓ´ó |
-| 9 | `src/services/input/batchImportParsers.ts` | **88** | 572 | ÅúÁ¿µ¼Èë½âÎöÆ÷ |
-| 10 | `src/services/llm/llmClient.ts` | **85** | - | LLM ¿Í»§¶ËÂß¼­ |
-| 11 | `src/services/scoring/v6-engine/calculators/l7_l8.ts` | **76** | - | L7/L8 ¼ÆËãÆ÷ |
-| 12 | `src/services/data-collector/mockDataCollection.ts` | **76** | 1040 | Mock Êı¾İÉú³É |
-| 13 | `src/services/fetcher/fetcherService.ts` | **73** | - | Êı¾İ»ñÈ¡·şÎñ |
-| 14 | `src/services/scoring/v6-engine/calculators/l4_l5_l6.ts` | **64** | - | L4/L5/L6 ¼ÆËãÆ÷ |
-| 15 | `src/services/trading/strategySnapshotService.ts` | **61** | - | ²ßÂÔ¿ìÕÕ·şÎñ |
-| 16 | `src/services/rbac/rbacManagementService.ts` | **62** | 676 | RBAC ¹ÜÀí·şÎñ |
-| 17 | `src/pages/input/CollectTask/index.tsx` | **62** | 896 | ²É¼¯ÈÎÎñÒ³Ãæ |
-| 18 | `src/store/executionStore.ts` | **59** | - | Ö´ĞĞ×´Ì¬¹ÜÀí |
-| 19 | `src/services/data-collector/dataSourceOrchestrator.ts` | **58** | 730 | Êı¾İÔ´±àÅÅ |
-| 20 | `src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts` | **57** | - | L3 ²ÆÎñ¼ÆËãÆ÷ |
+| 6 | `src/services/scoring/valuePitAnalyzer.ts` | **102** | 508 | ä»·å€¼æ´¼åœ°åˆ†æé€»è¾‘å¤æ‚ |
+| 7 | `src/core/databridge.ts` | **93** | 811 | æ•°æ®æ¡¥æ ¸å¿ƒé€»è¾‘ |
+| 8 | `src/pages/command/agent/LlmManagement/index.tsx` | **89** | 1044 | é¡µé¢ç»„ä»¶è¿‡äºåºå¤§ |
+| 9 | `src/services/input/batchImportParsers.ts` | **88** | 572 | æ‰¹é‡å¯¼å…¥è§£æå™¨ |
+| 10 | `src/services/llm/llmClient.ts` | **85** | - | LLM å®¢æˆ·ç«¯é€»è¾‘ |
+| 11 | `src/services/scoring/v6-engine/calculators/l7_l8.ts` | **76** | - | L7/L8 è®¡ç®—å™¨ |
+| 12 | `src/services/data-collector/mockDataCollection.ts` | **76** | 1040 | Mock æ•°æ®ç”Ÿæˆ |
+| 13 | `src/services/fetcher/fetcherService.ts` | **73** | - | æ•°æ®è·å–æœåŠ¡ |
+| 14 | `src/services/scoring/v6-engine/calculators/l4_l5_l6.ts` | **64** | - | L4/L5/L6 è®¡ç®—å™¨ |
+| 15 | `src/services/trading/strategySnapshotService.ts` | **61** | - | ç­–ç•¥å¿«ç…§æœåŠ¡ |
+| 16 | `src/services/rbac/rbacManagementService.ts` | **62** | 676 | RBAC ç®¡ç†æœåŠ¡ |
+| 17 | `src/pages/input/CollectTask/index.tsx` | **62** | 896 | é‡‡é›†ä»»åŠ¡é¡µé¢ |
+| 18 | `src/store/executionStore.ts` | **59** | - | æ‰§è¡ŒçŠ¶æ€ç®¡ç† |
+| 19 | `src/services/data-collector/dataSourceOrchestrator.ts` | **58** | 730 | æ•°æ®æºç¼–æ’ |
+| 20 | `src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts` | **57** | - | L3 è´¢åŠ¡è®¡ç®—å™¨ |
 
-### P2 - ÖĞµÈ£¨CC 40-60£©
+### P2 - ä¸­ç­‰ï¼ˆCC 40-60ï¼‰
 
-| ÅÅÃû | ÎÄ¼ş | CC | ĞĞÊı | ÎÊÌâÃèÊö |
+| æ’å | æ–‡ä»¶ | CC | è¡Œæ•° | é—®é¢˜æè¿° |
 |------|------|-----|------|---------|
-| 21 | `src/components/cabin/IntelligentScoreBasisCard.tsx` | **54** | - | ÖÇÄÜÆÀ·Ö»ù´¡¿¨Æ¬ |
-| 22 | `src/core/dataflow/dataflowEngine.ts` | **57** | - | Êı¾İÁ÷ÒıÇæ |
-| 23 | `src/services/scoring/hotSectorDimensions.ts` | **57** | - | ÈÈÃÅ°å¿éÎ¬¶È |
-| 24 | `src/services/news/stockLinker.ts` | **58** | - | ¹ÉÆ±¹ØÁªÆ÷ |
-| 25 | `src/services/export/backtestExportService.ts` | **53** | - | »Ø²âµ¼³ö·şÎñ |
-| 26 | `src/lib/localStorageManager.ts` | **53** | - | ±¾µØ´æ´¢¹ÜÀí |
-| 27 | `src/services/scoring/rotationSignalDetector.ts` | **52** | - | ÂÖ¶¯ĞÅºÅ¼ì²â |
-| 28 | `src/services/screening/multiFactorScreeningEngine.ts` | **52** | - | ¶àÒò×ÓÉ¸Ñ¡ÒıÇæ |
-| 29 | `src/services/scoring/v6-engine/enhancer.ts` | **51** | - | ÔöÇ¿Æ÷ |
-| 30 | `src/core/entityValidators.ts` | **47** | - | ÊµÌåÑéÖ¤Æ÷ |
-| 31 | `src/services/scoring/hotSectorOrchestrator.ts` | **47** | - | ÈÈÃÅ°å¿é±àÅÅ |
-| 32 | `src/services/trading/portfolioBuilder.ts` | **47** | - | Í¶×Ê×éºÏ¹¹½¨ |
-| 33 | `src/services/trading/tradeErrorDetectors.ts` | **48** | - | ½»Ò×´íÎó¼ì²â |
-| 34 | `src/services/scoring/intelligentScoreService.ts` | **48** | - | ÖÇÄÜÆÀ·Ö·şÎñ |
-| 35 | `src/services/rbac/permissionRevocationService.ts` | **48** | 978 | È¨ÏŞ³·Ïú·şÎñ |
-| 36 | `src/services/resilience.ts` | **48** | - | µ¯ĞÔ·şÎñ |
-| 37 | `src/services/system/localDocService.ts` | **48** | - | ±¾µØÎÄµµ·şÎñ |
-| 38 | `src/services/trading/strategyEngine.ts` | **48** | - | ²ßÂÔÒıÇæ |
-| 39 | `src/data/db.ts` | **49** | 352 | Êı¾İ¿âºËĞÄ |
-| 40 | `src/store/strategySnapshotStore.ts` | **49** | - | ²ßÂÔ¿ìÕÕ×´Ì¬ |
+| 21 | `src/components/cabin/IntelligentScoreBasisCard.tsx` | **54** | - | æ™ºèƒ½è¯„åˆ†åŸºç¡€å¡ç‰‡ |
+| 22 | `src/core/dataflow/dataflowEngine.ts` | **57** | - | æ•°æ®æµå¼•æ“ |
+| 23 | `src/services/scoring/hotSectorDimensions.ts` | **57** | - | çƒ­é—¨æ¿å—ç»´åº¦ |
+| 24 | `src/services/news/stockLinker.ts` | **58** | - | è‚¡ç¥¨å…³è”å™¨ |
+| 25 | `src/services/export/backtestExportService.ts` | **53** | - | å›æµ‹å¯¼å‡ºæœåŠ¡ |
+| 26 | `src/lib/localStorageManager.ts` | **53** | - | æœ¬åœ°å­˜å‚¨ç®¡ç† |
+| 27 | `src/services/scoring/rotationSignalDetector.ts` | **52** | - | è½®åŠ¨ä¿¡å·æ£€æµ‹ |
+| 28 | `src/services/screening/multiFactorScreeningEngine.ts` | **52** | - | å¤šå› å­ç­›é€‰å¼•æ“ |
+| 29 | `src/services/scoring/v6-engine/enhancer.ts` | **51** | - | å¢å¼ºå™¨ |
+| 30 | `src/core/entityValidators.ts` | **47** | - | å®ä½“éªŒè¯å™¨ |
+| 31 | `src/services/scoring/hotSectorOrchestrator.ts` | **47** | - | çƒ­é—¨æ¿å—ç¼–æ’ |
+| 32 | `src/services/trading/portfolioBuilder.ts` | **47** | - | æŠ•èµ„ç»„åˆæ„å»º |
+| 33 | `src/services/trading/tradeErrorDetectors.ts` | **48** | - | äº¤æ˜“é”™è¯¯æ£€æµ‹ |
+| 34 | `src/services/scoring/intelligentScoreService.ts` | **48** | - | æ™ºèƒ½è¯„åˆ†æœåŠ¡ |
+| 35 | `src/services/rbac/permissionRevocationService.ts` | **48** | 978 | æƒé™æ’¤é”€æœåŠ¡ |
+| 36 | `src/services/resilience.ts` | **48** | - | å¼¹æ€§æœåŠ¡ |
+| 37 | `src/services/system/localDocService.ts` | **48** | - | æœ¬åœ°æ–‡æ¡£æœåŠ¡ |
+| 38 | `src/services/trading/strategyEngine.ts` | **48** | - | ç­–ç•¥å¼•æ“ |
+| 39 | `src/data/db.ts` | **49** | 352 | æ•°æ®åº“æ ¸å¿ƒ |
+| 40 | `src/store/strategySnapshotStore.ts` | **49** | - | ç­–ç•¥å¿«ç…§çŠ¶æ€ |
 
 ---
 
-## ¶ş¡¢Í¨ÓÃÓÅ»¯²ßÂÔ
+## äºŒã€é€šç”¨ä¼˜åŒ–ç­–ç•¥
 
-### 2.1 ²ßÂÔ·ÖÀà
+### 2.1 ç­–ç•¥åˆ†ç±»
 
-| ²ßÂÔ | ÊÊÓÃ³¡¾° | Ô¤ÆÚĞ§¹û |
+| ç­–ç•¥ | é€‚ç”¨åœºæ™¯ | é¢„æœŸæ•ˆæœ |
 |------|---------|---------|
-| **º¯ÊıÌáÈ¡** | µ¥º¯Êı¸´ÔÓ¶È¹ı¸ß | CC ½µµÍ 50-70% |
-| **²ßÂÔÄ£Ê½** | ´óÁ¿Ìõ¼ş·ÖÖ§ | CC ½µµÍ 60-80% |
-| **ÎÄ¼ş²ğ·Ö** | ÎÄ¼şĞĞÊı³¬¹ıãĞÖµ | Ã¿¸ö×ÓÎÄ¼ş CC < 20 |
-| **Ä£°å·½·¨** | ÏàËÆ´¦ÀíÁ÷³Ì | CC ½µµÍ 40-60% |
-| **×éºÏÄ£Ê½** | ¸´ÔÓÊı¾İ½á¹¹´¦Àí | CC ½µµÍ 30-50% |
+| **å‡½æ•°æå–** | å•å‡½æ•°å¤æ‚åº¦è¿‡é«˜ | CC é™ä½ 50-70% |
+| **ç­–ç•¥æ¨¡å¼** | å¤§é‡æ¡ä»¶åˆ†æ”¯ | CC é™ä½ 60-80% |
+| **æ–‡ä»¶æ‹†åˆ†** | æ–‡ä»¶è¡Œæ•°è¶…è¿‡é˜ˆå€¼ | æ¯ä¸ªå­æ–‡ä»¶ CC < 20 |
+| **æ¨¡æ¿æ–¹æ³•** | ç›¸ä¼¼å¤„ç†æµç¨‹ | CC é™ä½ 40-60% |
+| **ç»„åˆæ¨¡å¼** | å¤æ‚æ•°æ®ç»“æ„å¤„ç† | CC é™ä½ 30-50% |
 
-### 2.2 ÊµÊ©ÓÅÏÈ¼¶
+### 2.2 å®æ–½ä¼˜å…ˆçº§
 
-1. **Phase 1£¨P0 ÎÄ¼ş£©**: ÓÅÏÈ´¦Àí CC > 100 µÄÎÄ¼ş
-2. **Phase 2£¨P1 ÎÄ¼ş£©**: ´¦Àí CC 60-100 µÄÎÄ¼ş
-3. **Phase 3£¨P2 ÎÄ¼ş£©**: ´¦Àí CC 40-60 µÄÎÄ¼ş
-
----
-
-## Èı¡¢¾ßÌåÎÄ¼şÓÅ»¯·½°¸
-
-### 3.1 `src/services/data-collector/MarketDataAdapter.ts`£¨CC=353£©
-
-**ÎÊÌâ·ÖÎö**:
-- µ¥Ò»ÎÄ¼ş°üº¬¶àÖÖÊı¾İÔ´ÊÊÅäÂß¼­
-- ´óÁ¿Ìõ¼ş·ÖÖ§´¦Àí²»Í¬Êı¾İ¸ñÊ½
-- È±·¦ÇåÎúµÄÖ°Ôğ±ß½ç
-
-**ÓÅ»¯·½°¸**:
-
-```
-MarketDataAdapter.ts (CC=353, 636ĞĞ)
-©À©¤©¤ adapters/
-©¦   ©À©¤©¤ StockQuoteAdapter.ts      # ¹ÉÆ±±¨¼ÛÊÊÅä
-©¦   ©À©¤©¤ KlineDataAdapter.ts       # KÏßÊı¾İÊÊÅä
-©¦   ©À©¤©¤ FinancialAdapter.ts       # ²ÆÎñÊı¾İÊÊÅä
-©¦   ©À©¤©¤ IndustryAdapter.ts        # ĞĞÒµÊı¾İÊÊÅä
-©¦   ©¸©¤©¤ VolumeAdapter.ts          # ³É½»Á¿ÊÊÅä
-©À©¤©¤ parsers/
-©¦   ©À©¤©¤ JsonParser.ts             # JSON ½âÎö
-©¦   ©À©¤©¤ CsvParser.ts              # CSV ½âÎö
-©¦   ©¸©¤©¤ XmlParser.ts              # XML ½âÎö
-©À©¤©¤ normalizers/
-©¦   ©À©¤©¤ PriceNormalizer.ts        # ¼Û¸ñ¹éÒ»»¯
-©¦   ©À©¤©¤ DateNormalizer.ts         # ÈÕÆÚ¹éÒ»»¯
-©¦   ©¸©¤©¤ FieldNormalizer.ts        # ×Ö¶Î¹éÒ»»¯
-©À©¤©¤ MarketDataAdapter.ts          # Ö÷ÊÊÅäÆ÷£¨µ÷¶È£©
-©¸©¤©¤ types.ts                      # ÀàĞÍ¶¨Òå
-```
-
-**Ô¤ÆÚĞ§¹û**:
-- Ö÷ÎÄ¼ş CC: 353 ¡ú 15-20
-- Ã¿¸öÊÊÅäÆ÷ÎÄ¼ş CC: 20-30
+1. **Phase 1ï¼ˆP0 æ–‡ä»¶ï¼‰**: ä¼˜å…ˆå¤„ç† CC > 100 çš„æ–‡ä»¶
+2. **Phase 2ï¼ˆP1 æ–‡ä»¶ï¼‰**: å¤„ç† CC 60-100 çš„æ–‡ä»¶
+3. **Phase 3ï¼ˆP2 æ–‡ä»¶ï¼‰**: å¤„ç† CC 40-60 çš„æ–‡ä»¶
 
 ---
 
-### 3.2 `src/services/system/migration/migrationTransformers.ts`£¨CC=212£©
+## ä¸‰ã€å…·ä½“æ–‡ä»¶ä¼˜åŒ–æ–¹æ¡ˆ
 
-**ÎÊÌâ·ÖÎö**:
-- ËùÓĞ°æ±¾Ç¨ÒÆÂß¼­¼¯ÖĞÔÚÒ»¸öÎÄ¼ş
-- ´óÁ¿ if-else ·ÖÖ§´¦Àí²»Í¬°æ±¾
+### 3.1 `src/services/data-collector/MarketDataAdapter.ts`ï¼ˆCC=353ï¼‰
 
-**ÓÅ»¯·½°¸**:
+**é—®é¢˜åˆ†æ**:
+- å•ä¸€æ–‡ä»¶åŒ…å«å¤šç§æ•°æ®æºé€‚é…é€»è¾‘
+- å¤§é‡æ¡ä»¶åˆ†æ”¯å¤„ç†ä¸åŒæ•°æ®æ ¼å¼
+- ç¼ºä¹æ¸…æ™°çš„èŒè´£è¾¹ç•Œ
+
+**ä¼˜åŒ–æ–¹æ¡ˆ**:
 
 ```
-migrationTransformers.ts (CC=212, 615ĞĞ)
-©À©¤©¤ v1/
-©¦   ©À©¤©¤ v1ToV2.ts                 # v1 ¡ú v2 Ç¨ÒÆ
-©¦   ©¸©¤©¤ schema.ts                 # v1 Ä£Ê½¶¨Òå
-©À©¤©¤ v2/
-©¦   ©À©¤©¤ v2ToV3.ts                 # v2 ¡ú v3 Ç¨ÒÆ
-©¦   ©¸©¤©¤ schema.ts                 # v2 Ä£Ê½¶¨Òå
-©À©¤©¤ v3/
-©¦   ©À©¤©¤ v3ToV4.ts                 # v3 ¡ú v4 Ç¨ÒÆ
-©¦   ©¸©¤©¤ schema.ts                 # v3 Ä£Ê½¶¨Òå
-©À©¤©¤ migrationRegistry.ts          # Ç¨ÒÆ×¢²á±í
-©À©¤©¤ migrationRunner.ts            # Ç¨ÒÆÖ´ĞĞÆ÷
-©¸©¤©¤ types.ts                      # ÀàĞÍ¶¨Òå
+MarketDataAdapter.ts (CC=353, 636è¡Œ)
+â”œâ”€â”€ adapters/
+â”‚   â”œâ”€â”€ StockQuoteAdapter.ts      # è‚¡ç¥¨æŠ¥ä»·é€‚é…
+â”‚   â”œâ”€â”€ KlineDataAdapter.ts       # Kçº¿æ•°æ®é€‚é…
+â”‚   â”œâ”€â”€ FinancialAdapter.ts       # è´¢åŠ¡æ•°æ®é€‚é…
+â”‚   â”œâ”€â”€ IndustryAdapter.ts        # è¡Œä¸šæ•°æ®é€‚é…
+â”‚   â””â”€â”€ VolumeAdapter.ts          # æˆäº¤é‡é€‚é…
+â”œâ”€â”€ parsers/
+â”‚   â”œâ”€â”€ JsonParser.ts             # JSON è§£æ
+â”‚   â”œâ”€â”€ CsvParser.ts              # CSV è§£æ
+â”‚   â””â”€â”€ XmlParser.ts              # XML è§£æ
+â”œâ”€â”€ normalizers/
+â”‚   â”œâ”€â”€ PriceNormalizer.ts        # ä»·æ ¼å½’ä¸€åŒ–
+â”‚   â”œâ”€â”€ DateNormalizer.ts         # æ—¥æœŸå½’ä¸€åŒ–
+â”‚   â””â”€â”€ FieldNormalizer.ts        # å­—æ®µå½’ä¸€åŒ–
+â”œâ”€â”€ MarketDataAdapter.ts          # ä¸»é€‚é…å™¨ï¼ˆè°ƒåº¦ï¼‰
+â””â”€â”€ types.ts                      # ç±»å‹å®šä¹‰
 ```
 
-**Ô¤ÆÚĞ§¹û**:
-- Ö÷ÎÄ¼ş CC: 212 ¡ú 10-15
-- Ã¿¸öÇ¨ÒÆÎÄ¼ş CC: 25-35
+**é¢„æœŸæ•ˆæœ**:
+- ä¸»æ–‡ä»¶ CC: 353 â†’ 15-20
+- æ¯ä¸ªé€‚é…å™¨æ–‡ä»¶ CC: 20-30
 
 ---
 
-### 3.3 `src/services/scoring/v6-engine/calculators/l0_l1_l2.ts`£¨CC=114£©
+### 3.2 `src/services/system/migration/migrationTransformers.ts`ï¼ˆCC=212ï¼‰
 
-**ÎÊÌâ·ÖÎö**:
-- L0/L1/L2 Èı²ã¼ÆËãÂß¼­»ìºÏ
-- ´óÁ¿ÆÀ·Ö¹æÔòÌõ¼ş·ÖÖ§
+**é—®é¢˜åˆ†æ**:
+- æ‰€æœ‰ç‰ˆæœ¬è¿ç§»é€»è¾‘é›†ä¸­åœ¨ä¸€ä¸ªæ–‡ä»¶
+- å¤§é‡ if-else åˆ†æ”¯å¤„ç†ä¸åŒç‰ˆæœ¬
 
-**ÓÅ»¯·½°¸**:
+**ä¼˜åŒ–æ–¹æ¡ˆ**:
+
+```
+migrationTransformers.ts (CC=212, 615è¡Œ)
+â”œâ”€â”€ v1/
+â”‚   â”œâ”€â”€ v1ToV2.ts                 # v1 â†’ v2 è¿ç§»
+â”‚   â””â”€â”€ schema.ts                 # v1 æ¨¡å¼å®šä¹‰
+â”œâ”€â”€ v2/
+â”‚   â”œâ”€â”€ v2ToV3.ts                 # v2 â†’ v3 è¿ç§»
+â”‚   â””â”€â”€ schema.ts                 # v2 æ¨¡å¼å®šä¹‰
+â”œâ”€â”€ v3/
+â”‚   â”œâ”€â”€ v3ToV4.ts                 # v3 â†’ v4 è¿ç§»
+â”‚   â””â”€â”€ schema.ts                 # v3 æ¨¡å¼å®šä¹‰
+â”œâ”€â”€ migrationRegistry.ts          # è¿ç§»æ³¨å†Œè¡¨
+â”œâ”€â”€ migrationRunner.ts            # è¿ç§»æ‰§è¡Œå™¨
+â””â”€â”€ types.ts                      # ç±»å‹å®šä¹‰
+```
+
+**é¢„æœŸæ•ˆæœ**:
+- ä¸»æ–‡ä»¶ CC: 212 â†’ 10-15
+- æ¯ä¸ªè¿ç§»æ–‡ä»¶ CC: 25-35
+
+---
+
+### 3.3 `src/services/scoring/v6-engine/calculators/l0_l1_l2.ts`ï¼ˆCC=114ï¼‰
+
+**é—®é¢˜åˆ†æ**:
+- L0/L1/L2 ä¸‰å±‚è®¡ç®—é€»è¾‘æ··åˆ
+- å¤§é‡è¯„åˆ†è§„åˆ™æ¡ä»¶åˆ†æ”¯
+
+**ä¼˜åŒ–æ–¹æ¡ˆ**:
 
 ```
 l0_l1_l2.ts (CC=114)
-©À©¤©¤ l0/
-©¦   ©À©¤©¤ macroCalculator.ts        # ºê¹ÛÒò×Ó¼ÆËã
-©¦   ©À©¤©¤ sentimentCalculator.ts    # ÇéĞ÷Òò×Ó¼ÆËã
-©¦   ©¸©¤©¤ marketCalculator.ts       # ÊĞ³¡Òò×Ó¼ÆËã
-©À©¤©¤ l1/
-©¦   ©À©¤©¤ industryCalculator.ts     # ĞĞÒµÒò×Ó¼ÆËã
-©¦   ©À©¤©¤ competitiveCalculator.ts  # ¾ºÕùÁ¦Òò×Ó¼ÆËã
-©¦   ©¸©¤©¤ growthCalculator.ts       # Ôö³¤Òò×Ó¼ÆËã
-©À©¤©¤ l2/
-©¦   ©À©¤©¤ qualityCalculator.ts      # ÖÊÁ¿Òò×Ó¼ÆËã
-©¦   ©¸©¤©¤ stabilityCalculator.ts    # ÎÈ¶¨ĞÔÒò×Ó¼ÆËã
+â”œâ”€â”€ l0/
+â”‚   â”œâ”€â”€ macroCalculator.ts        # å®è§‚å› å­è®¡ç®—
+â”‚   â”œâ”€â”€ sentimentCalculator.ts    # æƒ…ç»ªå› å­è®¡ç®—
+â”‚   â””â”€â”€ marketCalculator.ts       # å¸‚åœºå› å­è®¡ç®—
+â”œâ”€â”€ l1/
+â”‚   â”œâ”€â”€ industryCalculator.ts     # è¡Œä¸šå› å­è®¡ç®—
+â”‚   â”œâ”€â”€ competitiveCalculator.ts  # ç«äº‰åŠ›å› å­è®¡ç®—
+â”‚   â””â”€â”€ growthCalculator.ts       # å¢é•¿å› å­è®¡ç®—
+â”œâ”€â”€ l2/
+â”‚   â”œâ”€â”€ qualityCalculator.ts      # è´¨é‡å› å­è®¡ç®—
+â”‚   â””â”€â”€ stabilityCalculator.ts    # ç¨³å®šæ€§å› å­è®¡ç®—

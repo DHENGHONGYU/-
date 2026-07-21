@@ -1124,7 +1124,7 @@
 > `basename` 仍存在，列出候选目标（basename_hits）。若唯一即可安全重写为该路径；若多值需人工消歧。
 
 ### AGENTS.md（5 条）
-- L89: `docs/01-requirements/FILE-MANAGEMENT-GUIDE.md` → 建议重写为 `docs/how-to/FILE-MANAGEMENT-GUIDE.md`
+- L89: `../how-to/FILE-MANAGEMENT-GUIDE.md` → 建议重写为 `docs/how-to/FILE-MANAGEMENT-GUIDE.md`
 - L1061: `../docs/03-development/templates/task-graph-template.md` → 歧义，候选：['docs/explanation/task-graph-template.md', 'docs/reference/templates/task-graph-template.md']
 - L1062: `../docs/03-development/templates/regression-suite.md` → 歧义，候选：['docs/explanation/regression-suite.md', 'docs/reference/templates/regression-suite.md']
 - L1105: `../../AGENTS.md` → 建议重写为 `AGENTS.md`
@@ -1142,45 +1142,45 @@
 ### docs/00-meta/deprecated-docs/old-versions/registry-index-v1.0.0-02-design.md（47 条）
 - L85: `../../../explanation/03-architecture-standards.md` → 建议重写为 `docs/reference/03-architecture-standards.md`
 - L471: `../../../reports/2026-07-05-document-update-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-05-document-update-report.md', 'docs/reports/changelogs/2026-07-05-document-update-report.md']
-- L472: `../../../reports/2026-07-08-document-update-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-08-document-update-report.md', 'docs/reports/changelogs/2026-07-08-document-update-report.md']
-- L473: `../../../reports/2026-07-08-documentation-summary-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-08-documentation-summary-report.md', 'docs/reports/changelogs/2026-07-08-documentation-summary-report.md']
-- L474: `../../../reports/2026-07-08-store-derived-documentation-analysis.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-08-store-derived-documentation-analysis.md', 'docs/reports/retrospectives/2026-07-08-store-derived-documentation-analysis.md']
-- L475: `../../../reports/2026-07-08-undocumented-files-jsdoc-templates.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-08-undocumented-files-jsdoc-templates.md', 'docs/reports/audit/2026-07-08-undocumented-files-jsdoc-templates.md']
-- L476: `../../../reports/2026-07-08-undocumented-files-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-08-undocumented-files-report.md', 'docs/reports/audit/2026-07-08-undocumented-files-report.md']
-- L477: `../../../reports/2026-07-09-collection-plan-panel-v6-audit.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-collection-plan-panel-v6-audit.md', 'docs/reports/audit/2026-07-09-collection-plan-panel-v6-audit.md']
-- L478: `../../../reports/2026-07-09-email-body.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-email-body.md', 'docs/reports/retrospectives/2026-07-09-email-body.md']
-- L479: `../../../reports/2026-07-09-four-category-problem-analysis.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-four-category-problem-analysis.md', 'docs/reports/retrospectives/2026-07-09-four-category-problem-analysis.md']
-- L480: `../../../reports/2026-07-09-jira-tasks.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-jira-tasks.md', 'docs/reports/retrospectives/2026-07-09-jira-tasks.md']
-- L481: `../../../reports/2026-07-09-p0-p1-fix-code-plan.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-p0-p1-fix-code-plan.md', 'docs/reports/retrospectives/2026-07-09-p0-p1-fix-code-plan.md']
-- L482: `../../../reports/2026-07-09-p0-todo-list.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-p0-todo-list.md', 'docs/reports/retrospectives/2026-07-09-p0-todo-list.md']
-- L483: `../../../reports/2026-07-09-p1-fix-technical-summary.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-p1-fix-technical-summary.md', 'docs/reports/retrospectives/2026-07-09-p1-fix-technical-summary.md']
-- L484: `../../../reports/2026-07-09-p1-gaps-fix-technical-review.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-p1-gaps-fix-technical-review.md', 'docs/reports/retrospectives/2026-07-09-p1-gaps-fix-technical-review.md']
-- L485: `../../../reports/2026-07-09-remaining-p1-gaps-fix-plan.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-remaining-p1-gaps-fix-plan.md', 'docs/reports/retrospectives/2026-07-09-remaining-p1-gaps-fix-plan.md']
-- L486: `../../../reports/2026-07-09-rm-audit-diff-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-rm-audit-diff-report.md', 'docs/reports/audit/2026-07-09-rm-audit-diff-report.md']
-- L487: `../../../reports/2026-07-09-route-registration-gap-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-route-registration-gap-report.md', 'docs/reports/retrospectives/2026-07-09-route-registration-gap-report.md']
-- L488: `../../../reports/2026-07-09-store-derived-documentation-analysis.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-store-derived-documentation-analysis.md', 'docs/reports/retrospectives/2026-07-09-store-derived-documentation-analysis.md']
-- L489: `../../../reports/2026-07-09-technical-sharing-ppt-outline.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-technical-sharing-ppt-outline.md', 'docs/reports/retrospectives/2026-07-09-technical-sharing-ppt-outline.md']
-- L490: `../../../reports/2026-07-09-undocumented-files-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-undocumented-files-report.md', 'docs/reports/audit/2026-07-09-undocumented-files-report.md']
-- L491: `../../../reports/2026-07-09-update-log.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-update-log.md', 'docs/reports/changelogs/2026-07-09-update-log.md']
-- L493: `../../../reports/audit-batch-c-analysis.md` → 建议重写为 `docs/reports/audit/audit-batch-c-analysis.md`
+- L472: `../reports/changelogs/2026-07-08-document-update-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-08-document-update-report.md', 'docs/reports/changelogs/2026-07-08-document-update-report.md']
+- L473: `../reports/changelogs/2026-07-08-documentation-summary-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-08-documentation-summary-report.md', 'docs/reports/changelogs/2026-07-08-documentation-summary-report.md']
+- L474: `../reports/retrospectives/2026-07-08-store-derived-documentation-analysis.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-08-store-derived-documentation-analysis.md', 'docs/reports/retrospectives/2026-07-08-store-derived-documentation-analysis.md']
+- L475: `../reports/audit/2026-07-08-undocumented-files-jsdoc-templates.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-08-undocumented-files-jsdoc-templates.md', 'docs/reports/audit/2026-07-08-undocumented-files-jsdoc-templates.md']
+- L476: `../reports/audit/2026-07-08-undocumented-files-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-08-undocumented-files-report.md', 'docs/reports/audit/2026-07-08-undocumented-files-report.md']
+- L477: `../reports/audit/2026-07-09-collection-plan-panel-v6-audit.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-collection-plan-panel-v6-audit.md', 'docs/reports/audit/2026-07-09-collection-plan-panel-v6-audit.md']
+- L478: `../reports/retrospectives/2026-07-09-email-body.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-email-body.md', 'docs/reports/retrospectives/2026-07-09-email-body.md']
+- L479: `../reports/retrospectives/2026-07-09-four-category-problem-analysis.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-four-category-problem-analysis.md', 'docs/reports/retrospectives/2026-07-09-four-category-problem-analysis.md']
+- L480: `../reports/retrospectives/2026-07-09-jira-tasks.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-jira-tasks.md', 'docs/reports/retrospectives/2026-07-09-jira-tasks.md']
+- L481: `../reports/retrospectives/2026-07-09-p0-p1-fix-code-plan.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-p0-p1-fix-code-plan.md', 'docs/reports/retrospectives/2026-07-09-p0-p1-fix-code-plan.md']
+- L482: `../reports/retrospectives/2026-07-09-p0-todo-list.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-p0-todo-list.md', 'docs/reports/retrospectives/2026-07-09-p0-todo-list.md']
+- L483: `../reports/retrospectives/2026-07-09-p1-fix-technical-summary.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-p1-fix-technical-summary.md', 'docs/reports/retrospectives/2026-07-09-p1-fix-technical-summary.md']
+- L484: `../reports/retrospectives/2026-07-09-p1-gaps-fix-technical-review.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-p1-gaps-fix-technical-review.md', 'docs/reports/retrospectives/2026-07-09-p1-gaps-fix-technical-review.md']
+- L485: `../reports/retrospectives/2026-07-09-remaining-p1-gaps-fix-plan.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-remaining-p1-gaps-fix-plan.md', 'docs/reports/retrospectives/2026-07-09-remaining-p1-gaps-fix-plan.md']
+- L486: `../reports/audit/2026-07-09-rm-audit-diff-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-rm-audit-diff-report.md', 'docs/reports/audit/2026-07-09-rm-audit-diff-report.md']
+- L487: `../reports/retrospectives/2026-07-09-route-registration-gap-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-route-registration-gap-report.md', 'docs/reports/retrospectives/2026-07-09-route-registration-gap-report.md']
+- L488: `../reports/retrospectives/2026-07-09-store-derived-documentation-analysis.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-store-derived-documentation-analysis.md', 'docs/reports/retrospectives/2026-07-09-store-derived-documentation-analysis.md']
+- L489: `../reports/retrospectives/2026-07-09-technical-sharing-ppt-outline.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-technical-sharing-ppt-outline.md', 'docs/reports/retrospectives/2026-07-09-technical-sharing-ppt-outline.md']
+- L490: `../reports/audit/2026-07-09-undocumented-files-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-undocumented-files-report.md', 'docs/reports/audit/2026-07-09-undocumented-files-report.md']
+- L491: `../reports/changelogs/2026-07-09-update-log.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-update-log.md', 'docs/reports/changelogs/2026-07-09-update-log.md']
+- L493: `../reports/audit/audit-batch-c-analysis.md` → 建议重写为 `docs/reports/audit/audit-batch-c-analysis.md`
 - L494: `../../../reports/audit-findings-2026-07-05.md` → 歧义，候选：['archive/docs/reports/reports/audit-findings-2026-07-05.md', 'docs/reports/audit/audit-findings-2026-07-05.md']
 - L495: `../../../reports/audit-hardcode-warning-distribution.md` → 歧义，候选：['archive/docs/reports/reports/audit-hardcode-warning-distribution.md', 'docs/reports/audit/audit-hardcode-warning-distribution.md']
-- L496: `../../../reports/batch-b-input-audit.md` → 建议重写为 `docs/reports/audit/batch-b-input-audit.md`
-- L497: `../../../reports/changelog-2026-07-04t06-45-59.md` → 建议重写为 `docs/reports/changelogs/changelog-2026-07-04t06-45-59.md`
+- L496: `../reports/audit/batch-b-input-audit.md` → 建议重写为 `docs/reports/audit/batch-b-input-audit.md`
+- L497: `../reports/changelogs/changelog-2026-07-04t06-45-59.md` → 建议重写为 `docs/reports/changelogs/changelog-2026-07-04t06-45-59.md`
 - L498: `../../../reports/code-quality-report-2026-07-06.md` → 歧义，候选：['archive/docs/reports/reports/code-quality-report-2026-07-06.md', 'docs/reports/audit/code-quality-report-2026-07-06.md']
-- L499: `../../../reports/code-review-wip-2026-07-11.md` → 歧义，候选：['archive/docs/reports/reports/code-review-wip-2026-07-11.md', 'docs/reports/audit/code-review-wip-2026-07-11.md']
+- L499: `../reports/audit/code-review-wip-2026-07-11.md` → 歧义，候选：['archive/docs/reports/reports/code-review-wip-2026-07-11.md', 'docs/reports/audit/code-review-wip-2026-07-11.md']
 - L500: `../../../reports/design-tokens-implementation-report.md` → 歧义，候选：['archive/docs/reports/reports/design-tokens-implementation-report.md', 'docs/reports/retrospectives/design-tokens-implementation-report.md']
 - L501: `../../../reports/full-audit-inventory-2026-07-05.md` → 歧义，候选：['archive/docs/reports/reports/full-audit-inventory-2026-07-05.md', 'docs/reports/audit/full-audit-inventory-2026-07-05.md']
 - L502: `../../../reports/hardcode-warning-root-cause-analysis.md` → 歧义，候选：['archive/docs/reports/reports/hardcode-warning-root-cause-analysis.md', 'docs/reports/audit/hardcode-warning-root-cause-analysis.md']
 - L503: `../../../reports/knowledge-graph-token-optimization-report.md` → 歧义，候选：['archive/docs/reports/reports/knowledge-graph-token-optimization-report.md', 'docs/reports/lessons-learned/knowledge-graph-token-optimization-report.md']
-- L506: `../../../reports/mcp-acl-fix-plan-2026-07-08.md` → 歧义，候选：['archive/docs/reports/reports/mcp-acl-fix-plan-2026-07-08.md', 'docs/reports/retrospectives/mcp-acl-fix-plan-2026-07-08.md']
-- L507: `../../../reports/mcp-architecture-audit-report-2026-07-08.md` → 歧义，候选：['archive/docs/reports/reports/mcp-architecture-audit-report-2026-07-08.md', 'docs/reports/audit/mcp-architecture-audit-report-2026-07-08.md']
-- L508: `../../../reports/mcp-architecture-remediation-plan-2026-07-08.md` → 歧义，候选：['archive/docs/reports/reports/mcp-architecture-remediation-plan-2026-07-08.md', 'docs/reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md']
-- L509: `../../../reports/mcp-integration-test-report-2026-07-08-v2.md` → 歧义，候选：['archive/docs/reports/reports/mcp-integration-test-report-2026-07-08-v2.md', 'docs/reports/audit/mcp-integration-test-report-2026-07-08-v2.md']
+- L506: `../reports/retrospectives/mcp-acl-fix-plan-2026-07-08.md` → 歧义，候选：['archive/docs/reports/reports/mcp-acl-fix-plan-2026-07-08.md', 'docs/reports/retrospectives/mcp-acl-fix-plan-2026-07-08.md']
+- L507: `../reports/audit/mcp-architecture-audit-report-2026-07-08.md` → 歧义，候选：['archive/docs/reports/reports/mcp-architecture-audit-report-2026-07-08.md', 'docs/reports/audit/mcp-architecture-audit-report-2026-07-08.md']
+- L508: `../reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md` → 歧义，候选：['archive/docs/reports/reports/mcp-architecture-remediation-plan-2026-07-08.md', 'docs/reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md']
+- L509: `../reports/audit/mcp-integration-test-report-2026-07-08-v2.md` → 歧义，候选：['archive/docs/reports/reports/mcp-integration-test-report-2026-07-08-v2.md', 'docs/reports/audit/mcp-integration-test-report-2026-07-08-v2.md']
 - L510: `../../../reports/monthly-2026-07.md` → 歧义，候选：['archive/docs/reports/reports/monthly-2026-07.md', 'docs/reports/changelogs/monthly-2026-07.md']
 - L511: `../../../reports/refactoring-plan-2026-07-04.md` → 歧义，候选：['archive/docs/reports/reports/refactoring-plan-2026-07-04.md', 'docs/reports/retrospectives/refactoring-plan-2026-07-04.md']
-- L512: `../../../reports/t11-compliance-audit-report.md` → 建议重写为 `docs/reports/audit/t11-compliance-audit-report.md`
-- L513: `../../../reports/test-artifacts-cleanup-list.md` → 歧义，候选：['archive/docs/reports/reports/test-artifacts-cleanup-list.md', 'docs/reports/retrospectives/test-artifacts-cleanup-list.md']
+- L512: `../reports/audit/t11-compliance-audit-report.md` → 建议重写为 `docs/reports/audit/t11-compliance-audit-report.md`
+- L513: `../reports/retrospectives/test-artifacts-cleanup-list.md` → 歧义，候选：['archive/docs/reports/reports/test-artifacts-cleanup-list.md', 'docs/reports/retrospectives/test-artifacts-cleanup-list.md']
 - L514: `../../../reports/test-coverage-comparison-v2.2.1.md` → 歧义，候选：['archive/docs/reports/reports/test-coverage-comparison-v2.2.1.md', 'docs/reports/audit/test-coverage-comparison-v2.2.1.md']
 - L515: `../../../reports/test-failure-analysis-report.md` → 歧义，候选：['archive/docs/reports/reports/test-failure-analysis-report.md', 'docs/reports/audit/test-failure-analysis-report.md']
 - L516: `../../../reports/token-consumption-analysis-2026-07-04.md` → 歧义，候选：['archive/docs/reports/reports/token-consumption-analysis-2026-07-04.md', 'docs/reports/lessons-learned/token-consumption-analysis-2026-07-04.md']
@@ -1189,7 +1189,7 @@
 - L519: `../../../reports/v2.2.1-test-coverage-comparison.md` → 歧义，候选：['archive/docs/reports/reports/v2.2.1-test-coverage-comparison.md', 'docs/reports/audit/v2.2.1-test-coverage-comparison.md']
 
 ### docs/00-meta/metadata-governance-phased-plan.md（1 条）
-- L213: `../type-domain-audit-worksheet.md` → 建议重写为 `docs/00-meta/type-domain-audit-worksheet.md`
+- L213: `./type-domain-audit-worksheet.md` → 建议重写为 `docs/00-meta/type-domain-audit-worksheet.md`
 
 ### docs/00-meta/p1-debt-cleanup-todo.md（1 条）
 - L26: `../.trae/skills/architecture-debt-remediation/SKILL.md` → 歧义，候选：['.agents/skills/architecture-cleanup/SKILL.md', '.agents/skills/architecture-radar-scan/SKILL.md', '.agents/skills/constant-migration/SKILL.md']
@@ -1197,21 +1197,21 @@
 ### docs/00-meta/type-domain-audit-worksheet.md（67 条）
 - L37: `explanation/design/ui-design-agent-execution-plan.md` → 歧义，候选：['docs/explanation/ui-design-agent-execution-plan.md', 'docs/explanation/design/ui-design-agent-execution-plan.md']
 - L38: `explanation/ui-design-agent-execution-plan.md` → 歧义，候选：['docs/explanation/ui-design-agent-execution-plan.md', 'docs/explanation/design/ui-design-agent-execution-plan.md']
-- L39: `how-to/mcp-acl-guide.md` → 建议重写为 `docs/how-to/mcp-acl-guide.md`
-- L40: `00-meta/agent-app-docs-classification.md` → 建议重写为 `docs/00-meta/agent-app-docs-classification.md`
+- L39: `../how-to/mcp-acl-guide.md` → 建议重写为 `docs/../how-to/mcp-acl-guide.md`
+- L40: `./agent-app-docs-classification.md` → 建议重写为 `docs/./agent-app-docs-classification.md`
 - L41: `00-meta/FILE-MANAGEMENT-GUIDE-optimization-prompt.md` → 歧义，候选：['docs/00-meta/FILE-MANAGEMENT-GUIDE-optimization-prompt.md', 'docs/archive/00-meta-historical/FILE-MANAGEMENT-GUIDE-optimization-prompt.md']
 - L42: `reference/ai-memory-layer.md` → 歧义，候选：['docs/explanation/ai-memory-layer.md', 'docs/reference/ai-memory-layer.md']
-- L43: `reference/ai-center-contract.md` → 建议重写为 `docs/reference/ai-center-contract.md`
-- L44: `reports/audit/mcp-usage/mcp-usage-report-1784135579861.md` → 建议重写为 `docs/reports/audit/mcp-usage/mcp-usage-report-1784135579861.md`
-- L45: `reports/retrospectives/mcp-zombie-server-audit-report.md` → 建议重写为 `docs/reports/retrospectives/mcp-zombie-server-audit-report.md`
+- L43: `../reference/ai-center-contract.md` → 建议重写为 `docs/../reference/ai-center-contract.md`
+- L44: `../reports/audit/mcp-usage/mcp-usage-report-1784135579861.md` → 建议重写为 `docs/../reports/audit/mcp-usage/mcp-usage-report-1784135579861.md`
+- L45: `../reports/retrospectives/mcp-zombie-server-audit-report.md` → 建议重写为 `docs/../reports/retrospectives/mcp-zombie-server-audit-report.md`
 - L51: `explanation/design/blueprints/README.md` → 歧义，候选：['README.md', 'archive/docs/07-archive/README.md', 'archive/docs/reports/reports/audit/README.md']
-- L52: `explanation/adr-004-hashrouter-static-hosting.md` → 建议重写为 `docs/explanation/adr-004-hashrouter-static-hosting.md`
-- L53: `00-meta/markdown-reorg-framework.md` → 建议重写为 `docs/00-meta/markdown-reorg-framework.md`
+- L52: `../explanation/adr-004-hashrouter-static-hosting.md` → 建议重写为 `docs/../explanation/adr-004-hashrouter-static-hosting.md`
+- L53: `./markdown-reorg-framework.md` → 建议重写为 `docs/./markdown-reorg-framework.md`
 - L54: `00-meta/lessons-architecture-review-2026-07-16.md` → 歧义，候选：['docs/00-meta/lessons-architecture-review-2026-07-16.md', 'docs/archive/00-meta-historical/lessons-architecture-review-2026-07-16.md']
 - L55: `reference/03-architecture-standards.md` → 建议重写为 `docs/reference/03-architecture-standards.md`
 - L56: `reference/v9-architecture-data-dictionary-validation-report.md` → 歧义，候选：['docs/archive/reference-historical/v9-architecture-data-dictionary-validation-report.md', 'docs/reference/v9-architecture-data-dictionary-validation-report.md']
-- L57: `reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md` → 歧义，候选：['archive/docs/reports/reports/mcp-architecture-remediation-plan-2026-07-08.md', 'docs/reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md']
-- L58: `reports/retrospectives/complexity-optimization-plan.md` → 建议重写为 `docs/reports/retrospectives/complexity-optimization-plan.md`
+- L57: `../reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md` → 歧义，候选：['archive/docs/reports/reports/mcp-architecture-remediation-plan-2026-07-08.md', 'docs/../reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md']
+- L58: `../reports/retrospectives/complexity-optimization-plan.md` → 建议重写为 `docs/../reports/retrospectives/complexity-optimization-plan.md`
 - L64: `explanation/design/value-bargain-strategy.md` → 建议重写为 `docs/explanation/design/value-bargain-strategy.md`
 - L65: `explanation/design/core-scarce-strategy.md` → 建议重写为 `docs/explanation/design/core-scarce-strategy.md`
 - L66: `how-to/how-to-add-service.md` → 歧义，候选：['docs/guides/how-to-add-service.md', 'docs/how-to/how-to-add-service.md']
@@ -1222,46 +1222,46 @@
 - L76: `explanation/data-layer-overview.md` → 歧义，候选：['docs/explanation/data-layer-overview.md', 'docs/modules/data-layer-overview.md']
 - L77: `explanation/design/dataflow-data-definition.md` → 歧义，候选：['docs/explanation/dataflow-data-definition.md', 'docs/explanation/design/dataflow-data-definition.md', 'docs/reference/dataflow-data-definition.md']
 - L78: `how-to/how-to-add-store.md` → 歧义，候选：['docs/guides/how-to-add-store.md', 'docs/how-to/how-to-add-store.md']
-- L79: `00-meta/deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md` → 建议重写为 `docs/00-meta/deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md`
-- L80: `00-meta/deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md` → 建议重写为 `docs/00-meta/deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md`
+- L79: `./deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md` → 建议重写为 `docs/./deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md`
+- L80: `./deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md` → 建议重写为 `docs/./deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md`
 - L81: `reference/data-collection/data-definition.md` → 歧义，候选：['docs/explanation/design/data-definition.md', 'docs/reference/data-definition.md', 'docs/reference/cockpit/data-definition.md']
 - L82: `modules/data-layer-overview.md` → 歧义，候选：['docs/explanation/data-layer-overview.md', 'docs/modules/data-layer-overview.md']
 - L83: `reports/retrospectives/data-collection-task-list.md` → 歧义，候选：['docs/reference/data-collection-task-list.md', 'docs/reports/retrospectives/data-collection-task-list.md']
 - L84: `reports/retrospectives/v9-data-blueprint-task-tracking.md` → 歧义，候选：['docs/explanation/design/v9-data-blueprint-task-tracking.md', 'docs/reports/retrospectives/v9-data-blueprint-task-tracking.md']
-- L90: `explanation/kimi-webbridge.md` → 建议重写为 `docs/explanation/kimi-webbridge.md`
+- L90: `../explanation/kimi-webbridge.md` → 建议重写为 `docs/../explanation/kimi-webbridge.md`
 - L91: `explanation/design/widget-integration-checklist.md` → 歧义，候选：['docs/explanation/design/widget-integration-checklist.md', 'docs/reference/widget-integration-checklist.md']
 - L92: `how-to/widget-development-guide.md` → 歧义，候选：['docs/how-to/widget-development-guide.md', 'docs/reference/widget-development-guide.md']
 - L93: `how-to/how-to-add-widget.md` → 歧义，候选：['docs/guides/how-to-add-widget.md', 'docs/how-to/how-to-add-widget.md']
 - L94: `reference/chart-integration.md` → 建议重写为 `docs/reference/chart-integration.md`
 - L95: `reference/ui-remediation-tracker.md` → 歧义，候选：['docs/archive/reference-historical/ui-remediation-tracker.md', 'docs/reference/ui-remediation-tracker.md']
 - L96: `reports/retrospectives/design-tokens-implementation-report.md` → 歧义，候选：['archive/docs/reports/reports/design-tokens-implementation-report.md', 'docs/reports/retrospectives/design-tokens-implementation-report.md']
-- L97: `reports/retrospectives/2026-07-09-route-registration-gap-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-route-registration-gap-report.md', 'docs/reports/retrospectives/2026-07-09-route-registration-gap-report.md']
-- L103: `explanation/production-release-checklist-SKILL.md` → 建议重写为 `docs/explanation/production-release-checklist-SKILL.md`
+- L97: `../reports/retrospectives/2026-07-09-route-registration-gap-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-route-registration-gap-report.md', 'docs/../reports/retrospectives/2026-07-09-route-registration-gap-report.md']
+- L103: `../explanation/production-release-checklist-SKILL.md` → 建议重写为 `docs/../explanation/production-release-checklist-SKILL.md`
 - L104: `explanation/01-vision-and-goals.md` → 歧义，候选：['docs/explanation/01-vision-and-goals.md', 'docs/reference/01-vision-and-goals.md']
 - L105: `reference/autonomous-workflow-user-guide.md` → 歧义，候选：['docs/prompts/autonomous-workflow-user-guide.md', 'docs/reference/autonomous-workflow-user-guide.md']
-- L106: `team-handbook/05-competitive-analysis.md` → 建议重写为 `docs/team-handbook/05-competitive-analysis.md`
+- L106: `../team-handbook/05-competitive-analysis.md` → 建议重写为 `docs/../team-handbook/05-competitive-analysis.md`
 - L112: `explanation/completeness-profile-batch2.md` → 歧义，候选：['docs/explanation/completeness-profile-batch2.md', 'docs/how-to/testing/completeness-profile-batch2.md']
 - L113: `explanation/README.md` → 歧义，候选：['README.md', 'archive/docs/07-archive/README.md', 'archive/docs/reports/reports/audit/README.md']
 - L114: `how-to/README.md` → 歧义，候选：['README.md', 'archive/docs/07-archive/README.md', 'archive/docs/reports/reports/audit/README.md']
-- L115: `how-to/hooks-guide.md` → 建议重写为 `docs/how-to/hooks-guide.md`
-- L116: `00-meta/deprecated-docs/old-versions/deployment-v1.0.0.md` → 建议重写为 `docs/00-meta/deprecated-docs/old-versions/deployment-v1.0.0.md`
+- L115: `../how-to/hooks-guide.md` → 建议重写为 `docs/../how-to/hooks-guide.md`
+- L116: `./deprecated-docs/old-versions/deployment-v1.0.0.md` → 建议重写为 `docs/./deprecated-docs/old-versions/deployment-v1.0.0.md`
 - L117: `00-meta/23-core-docs-final-verification-report.md` → 歧义，候选：['docs/00-meta/23-core-docs-final-verification-report.md', 'docs/archive/00-meta-historical/23-core-docs-final-verification-report.md']
 - L118: `reference/changelogs/2026-07/pr-8-dedup-plan.md` → 歧义，候选：['docs/reference/changelogs/2026-07/pr-8-dedup-plan.md', 'docs/reports/changelogs/pr-8-dedup-plan.md']
-- L119: `reference/trade-contract.md` → 建议重写为 `docs/reference/trade-contract.md`
-- L120: `reports/retrospectives/2026-07-09-technical-sharing-ppt-outline.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-technical-sharing-ppt-outline.md', 'docs/reports/retrospectives/2026-07-09-technical-sharing-ppt-outline.md']
-- L121: `reports/changelogs/2026-07-08-documentation-summary-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-08-documentation-summary-report.md', 'docs/reports/changelogs/2026-07-08-documentation-summary-report.md']
+- L119: `../reference/trade-contract.md` → 建议重写为 `docs/../reference/trade-contract.md`
+- L120: `../reports/retrospectives/2026-07-09-technical-sharing-ppt-outline.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-09-technical-sharing-ppt-outline.md', 'docs/../reports/retrospectives/2026-07-09-technical-sharing-ppt-outline.md']
+- L121: `../reports/changelogs/2026-07-08-documentation-summary-report.md` → 歧义，候选：['archive/docs/reports/reports/2026-07-08-documentation-summary-report.md', 'docs/../reports/changelogs/2026-07-08-documentation-summary-report.md']
 - L122: `tutorials/getting-started.md` → 歧义，候选：['docs/guides/getting-started.md', 'docs/tutorials/getting-started.md']
 - L123: `tutorials/README.md` → 歧义，候选：['README.md', 'archive/docs/07-archive/README.md', 'archive/docs/reports/reports/audit/README.md']
 - L129: `explanation/design/v9-code-quality-kanban-20260629.md` → 歧义，候选：['docs/explanation/design/v9-code-quality-kanban-20260629.md', 'docs/reports/audit/v9-code-quality-kanban-20260629.md']
-- L130: `explanation/design/automation-test-evaluation.md` → 建议重写为 `docs/explanation/design/automation-test-evaluation.md`
-- L131: `how-to/visual-regression-guide.md` → 建议重写为 `docs/how-to/visual-regression-guide.md`
+- L130: `../explanation/design/automation-test-evaluation.md` → 建议重写为 `docs/../explanation/design/automation-test-evaluation.md`
+- L131: `../how-to/visual-regression-guide.md` → 建议重写为 `docs/../how-to/visual-regression-guide.md`
 - L132: `how-to/testing/complexity-remediation-plan.md` → 歧义，候选：['docs/explanation/complexity-remediation-plan.md', 'docs/how-to/testing/complexity-remediation-plan.md']
 - L133: `00-meta/directory-audit-report-v1.4.3.md` → 歧义，候选：['docs/00-meta/directory-audit-report-v1.4.3.md', 'docs/archive/00-meta-historical/directory-audit-report-v1.4.3.md']
 - L134: `00-meta/directory-structure-audit-report.md` → 歧义，候选：['docs/00-meta/directory-structure-audit-report.md', 'docs/archive/00-meta-historical/directory-structure-audit-report.md']
 - L135: `reference/changelogs/2026-07/test-cache-fix-summary.md` → 建议重写为 `docs/reference/changelogs/2026-07/test-cache-fix-summary.md`
-- L136: `04-testing/security-test-plan.md` → 建议重写为 `docs/04-testing/security-test-plan.md`
-- L137: `reports/audit/audit-warning-report.md` → 歧义，候选：['archive/docs/reports/reports/audit/audit-warning-report.md', 'docs/reports/audit/audit-warning-report.md']
-- L138: `reports/retrospectives/e2e-verify-redundancy-report.md` → 建议重写为 `docs/reports/retrospectives/e2e-verify-redundancy-report.md`
+- L136: `../04-testing/security-test-plan.md` → 建议重写为 `docs/../04-testing/security-test-plan.md`
+- L137: `../reports/audit/audit-warning-report.md` → 歧义，候选：['archive/docs/reports/../reports/audit/audit-warning-report.md', 'docs/../reports/audit/audit-warning-report.md']
+- L138: `../reports/retrospectives/e2e-verify-redundancy-report.md` → 建议重写为 `docs/../reports/retrospectives/e2e-verify-redundancy-report.md`
 
 ### docs/archive/00-meta-historical/FILE-MANAGEMENT-GUIDE-RCA-report.md（1 条）
 - L197: `../../../../AGENTS.md` → 建议重写为 `AGENTS.md`

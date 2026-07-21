@@ -162,19 +162,19 @@
 
 | 组件 | 文件 | 无障碍特性 |
 |------|------|-----------|
-| Button | `src/components/ui/Button.tsx` | aria-disabled, aria-busy, focus-visible |
-| Dialog | `src/components/ui/Dialog.tsx` | aria-modal, aria-labelledby, FocusTrap, ESC 关闭 |
+| Button | `src/components/atoms/Button.tsx` | aria-disabled, aria-busy, focus-visible |
+| Dialog | `src/components/molecules/Dialog.tsx` | aria-modal, aria-labelledby, FocusTrap, ESC 关闭 |
 | FocusTrap | `src/components/ui/FocusTrap.tsx` | Tab 循环, 焦点管理 |
 
 ### 5.2 待更新组件
 
 | 组件 | 文件 | 待实现 |
 |------|------|--------|
-| Input | `src/components/ui/Input.tsx` | label 关联, error 关联 |
-| Select | `src/components/ui/Select.tsx` | listbox role |
-| Switch | `src/components/ui/Switch.tsx` | switch role |
-| Tabs | `src/components/ui/Tabs.tsx` | tablist/tab/tabpanel |
-| Tooltip | `src/components/ui/Tooltip.tsx` | aria-describedby |
+| Input | `src/components/atoms/Input.tsx` | label 关联, error 关联 |
+| Select | `src/components/atoms/Select.tsx` | listbox role |
+| Switch | `src/components/atoms/Switch.tsx` | switch role |
+| Tabs | `src/components/molecules/Tabs.tsx` | tablist/tab/tabpanel |
+| Tooltip | `src/components/atoms/Tooltip.tsx` | aria-describedby |
 
 ---
 

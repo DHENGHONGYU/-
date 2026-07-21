@@ -1,7 +1,7 @@
 ---
 title: file-management-guide-optimization-prompt
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
@@ -10,7 +10,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 
 > 用途: 嵌入 AI 系统提示词，防止文件管理规范漂移
 > **Version**: v1.0.0
-> 依据: `../reports/audit/file-management-guide-test-report.md`（2026-07-20，综合评分 4.55/10）
+> 依据: `../../reports/audit/file-management-guide-test-report.md`（2026-07-20，综合评分 4.55/10）
 
 ---
 
@@ -295,4 +295,4 @@ Step 7: 汇总决策
 
 ---
 
-> **溯源**: 本提示词基于 `../reports/audit/file-management-guide-test-report.md`（2026-07-20）的 19 个主要问题提炼，覆盖 5 个维度（架构一致性、.gitignore 合规性、实际文件分布、完整性、跨文档引用）和 16 项改进行动计划。每次项目架构变更时，应同步审查本提示词的有效性。
+> **溯源**: 本提示词基于 `../../reports/audit/file-management-guide-test-report.md`（2026-07-20）的 19 个主要问题提炼，覆盖 5 个维度（架构一致性、.gitignore 合规性、实际文件分布、完整性、跨文档引用）和 16 项改进行动计划。每次项目架构变更时，应同步审查本提示词的有效性。

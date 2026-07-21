@@ -18,7 +18,7 @@
 
 > **说明**: 本审计仅覆盖前端代码层面的安全问题，不包含后端 API、服务器配置、网络安全等维度。
 
-> **修复状态**（2026-07-01 同步）：高危 XSS-001（LLM 返回内容 XSS 防护）已通过 `src/utils/xssSanitizer.ts` 的 `sanitizeMarkdown`/`sanitizeHtml` 函数修复，并在 StockChatWidget 中集成；高危 STOR-001（LLM API Key 明文存储）已通过 localStorageManager 的 setEncrypted/getEncrypted 方法修复；中低危 10 项已在 F3 批次修复。剩余中低危项持续优化中。
+> **修复状态**（2026-07-01 同步）：高危 XSS-001（LLM 返回内容 XSS 防护）已通过 `src/lib/xssSanitizer.ts` 的 `sanitizeMarkdown`/`sanitizeHtml` 函数修复，并在 StockChatWidget 中集成；高危 STOR-001（LLM API Key 明文存储）已通过 localStorageManager 的 setEncrypted/getEncrypted 方法修复；中低危 10 项已在 F3 批次修复。剩余中低危项持续优化中。
 
 ---
 
@@ -112,7 +112,7 @@ function buildUrl(path: string): string {
 **涉及文件**:
 - `src/lib/localStorageManager.ts`
 - `src/store/industryScoreStore.ts`（推测通过 store 持久化）
-- `src/components/shared/LLMConfigWidget.tsx`
+- `src/components/organisms/shared/LLMConfigWidget.tsx`
 
 **代码证据**:
 ```typescript
@@ -219,7 +219,7 @@ get<T = unknown>(key: string): T | null {
 **问题描述**: `LLMConfigWidget` 中的 baseURL、apiKey、model 输入框仅做了非空校验，未进行格式校验，可能导致 SSRF、API Key 注入等问题。
 
 **涉及文件**:
-- `src/components/shared/LLMConfigWidget.tsx`
+- `src/components/organisms/shared/LLMConfigWidget.tsx`
 - `src/services/llm/llmClient.ts`
 
 **代码证据**:
@@ -248,9 +248,9 @@ get<T = unknown>(key: string): T | null {
 **问题描述**: 项目中大量使用 `parseInt`、`parseFloat`、`Number()` 进行数字转换（共 145 处，分布在 14 个文件中），但缺少统一的范围校验和错误处理，可能导致 NaN 传播、数组越界、无限循环等问题。
 
 **涉及文件示例**:
-- `src/utils/precision.ts`
+- `src/lib/precision.ts`
 - `src/pages/trading/components/Pagination.tsx`
-- `src/components/ui/Slider.tsx`
+- `src/components/atoms/Slider.tsx`
 - `src/services/system/migration/migrationTransformers.ts`
 
 **修复建议**:
@@ -269,7 +269,7 @@ get<T = unknown>(key: string): T | null {
 **问题描述**: 股票搜索、批量导入等功能的股票代码输入缺少严格的格式校验（如 A股 6 位数字、港股 5 位数字等）。
 
 **涉及文件**:
-- `src/components/input/StockSearch.tsx`
+- `src/components/organisms/input/StockSearch.tsx`
 - `src/services/input/batchImportService.ts`
 
 **修复建议**:
@@ -322,8 +322,8 @@ get<T = unknown>(key: string): T | null {
 - `src/data/db.ts`（59 处）
 - `src/store/commandStore.ts`
 - `src/store/outputStore.ts`
-- `src/components/ErrorBoundary.tsx`
-- `src/components/WidgetErrorBoundary.tsx`
+- `src/components/organisms/shared/ErrorBoundary.tsx`
+- `src/components/organisms/shared/WidgetErrorBoundary.tsx`
 - `src/services/pwa/registerServiceWorker.ts`
 - `src/App.tsx`
 

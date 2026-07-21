@@ -26,7 +26,7 @@ change_log:
 
 ### 2.1 复用全局 ErrorBoundary
 
-当前全局错误边界已实现于 `src/components/ErrorBoundary.tsx`，Widget 级复用该组件并传入自定义 `fallback`。
+当前全局错误边界已实现于 `src/components/organisms/shared/ErrorBoundary.tsx`，Widget 级复用该组件并传入自定义 `fallback`。
 
 ```tsx
 // src/cockpit/components/WidgetErrorBoundary.tsx

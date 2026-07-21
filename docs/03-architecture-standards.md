@@ -777,7 +777,7 @@ V10 的 `StateBoard` 要求跨模块共享状态必须通过统一字段契约�
 | D03 | V6 自动评分仍部分依赖随机数/模拟数据 | `src/services/scoring/v6ScoreService.ts` | 评分结果质量取决于真实数据完整度；缺少评分理由与报告 | Phase 2 接入真实数据；补充评分报告生成 |
 | D04 | 🟢 已修复：五舱入口与输入舱子路由均已注册 | `src/config/routes.ts` | 直接访问不再 404 | 保持，未来按功能增加子路由 |
 | D05 | 缺少 `thresholds.ts` / `symbols.ts` | `src/config/` | 阈值与代码池尚未集中 | Phase 2 按需创建 |
-| D06 | 🟢 已修复：跨层调用扫描脚本已建立 | `scripts/audit-layer-calls.ts` | 当前基线 0 违规 / 0 警告 | 持续维护 |
+| D06 | 🟢 已修复：跨层调用扫描脚本已建立 | `scripts/audit/audit-layer-calls.ts` | 当前基线 0 违规 / 0 警告 | 持续维护 |
 | D07 | 🟢 已修复：`inputConfig.ts` 已创建（已存在） | `src/config/inputConfig.ts` | 搜索/导入/质量规则已集中 | 持续补充高级筛选配置 |
 | D08 | 路由表缺少文件一致性审计 | `src/config/routes.ts` vs `src/apps/`/`src/pages/` | 新增/删除文件后可能漂移 | Phase 2 增强 `audit-dead-code.ts` 路由-文件校验 |
 | D09 | UI 层仍存硬编码 Tailwind 颜色/字符串 | `src/apps/input/prototype/*` 等 | 违反映射层规范 | Phase 2 落地正式组件时统一清理 |
@@ -789,7 +789,7 @@ V10 的 `StateBoard` 要求跨模块共享状态必须通过统一字段契约�
 | **D15** | **评分算法能力降级** | `src/services/scoring/v6ScoreService.ts` | 仅启发式计算 + 随机数降级，缺少 LLM 集成与报告生成 | Phase 2 升级评分引擎，接入真实数据与 LLM |
 | **D16** | 🟢 已修复：图表组件库已引入 | `package.json` | 已引入 `lightweight-charts` 和 `recharts`，数据可视化能力已具备 | 持续完善图表组件封装 |
 | **D17** | **`rotationScoreService.ts` 已实现五因子十六指标模型，上层 `SectorAnalysisPage` 待充分接入** | `src/services/analysis/rotationScoreService.ts` | 板块轮动评分已可计算，上层展示与调用待完善 | Phase 2 在 `SectorAnalysisPage` 接入轮动评分 |
-| **D18** | **缺少操作反馈闭环** | `src/components/ui/Toast.tsx` | 仅基础 Toast，缺少操作状态实时更新、数据质量反馈、评分理由 | Phase 2 完善反馈机制 |
+| **D18** | **缺少操作反馈闭环** | `src/components/atoms/Toast.tsx` | 仅基础 Toast，缺少操作状态实时更新、数据质量反馈、评分理由 | Phase 2 完善反馈机制 |
 | **D19** | 🟢 已修复：`WidgetErrorBoundary` 已接入 `CockpitShell` Widget 渲染管线 | `src/cockpit/CockpitShell.tsx` | Widget 级错误隔离已落地，每个 Widget 独立捕获渲染错误 | 保持，持续完善错误恢复策略 |
 | **D20** | **缺少热门板块与价值洼地双策略体系** | `src/services/trading/`、`src/cockpit/widgets/` | 策略引擎仅有主题/价值/热门动量三分类，缺少用户规格中的 HotSectorScore / ValuePitScore 双评分输出与轮动信号检测 | Phase 2 新增独立 Store、Analyzer、Detector、Widget；详见 `docs/implementation/adr/2026-06-27-dual-strategy-system.md` |
 

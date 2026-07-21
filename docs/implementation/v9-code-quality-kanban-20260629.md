@@ -83,7 +83,7 @@ status: active
 | P1-10 | 安全质量中危问题（6 个） | 多模块 | 🟠 P1 | 安全中危问题修复方案已制定，列入后续安全专项批次 | ✅ 已修复 |
 | P1-03 | D01：taskQueue.ts 独立文件缺失 | `src/agents/` | 🟠 P1 | `src/agents/taskQueue.ts` 已创建，含优先级调度(high>normal>low, FIFO)、按 agentId 并发控制 | ✅ 已修复 |
 | P1-04 | D12：TTL/容量/优先级分发未实现 | `src/core/dataflow/dataflowEngine.ts` | 🟠 P1 | `src/core/dataflow/dataflowEngine.ts` 已实现 TTL 过期、LRU 容量淘汰、priority 优先级分发 | ✅ 已修复 |
-| P2-01 | tradeReviewAI.ts 3 处硬编码阈值（L712-L950） | `src/services/scoring/tradeReviewAI.ts` | 🟢 P2 | F1 批次：硬编码阈值迁移到配置层（tradeReviewAI 3 处） | ✅ 已修复 |
+| P2-01 | tradeReviewAI.ts 3 处硬编码阈值（L712-L950） | `src/services/trading/tradeReviewAI.ts` | 🟢 P2 | F1 批次：硬编码阈值迁移到配置层（tradeReviewAI 3 处） | ✅ 已修复 |
 | P2-02 | signalGenerator.ts 4 处硬编码阈值（L16-L151） | `src/services/trading/signalGenerator.ts` | 🟢 P2 | F1 批次：硬编码阈值迁移到配置层（signalGenerator 4 处） | ✅ 已修复 |
 | P2-03 | v6ScoreService.ts 2 处硬编码阈值（L26-L45） | `src/services/scoring/v6ScoreService.ts` | 🟢 P2 | F1 批次：硬编码阈值迁移到配置层（v6ScoreService 2 处） | ✅ 已修复 |
 | P2-04 | rotationSignalDetector.ts 1 处硬编码阈值（L131） | `src/services/scoring/rotationSignalDetector.ts` | 🟢 P2 | F1 批次：硬编码阈值迁移到配置层（rotationSignalDetector 1 处） | ✅ 已修复 |

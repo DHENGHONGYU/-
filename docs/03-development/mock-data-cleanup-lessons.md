@@ -134,7 +134,7 @@ generateMockArticles: async () => {
 | `store → fixtures/` 依赖 | `audit:layers` 只扫 services/config/core/lib，不扫 store 对其他目录的引用 | `dualStrategyStore` 的 fixtures import 不被检测 |
 | `services → cockpit/` 依赖 | `audit:layers` 规则 5 只检测 services→store，不检测 services→cockpit | `MockCollector` 跨层 import 不被检测 |
 
-**建议**: 在 Phase 2 扩展 `scripts/audit-layer-calls.ts` 补充这两条规则。
+**建议**: 在 Phase 2 扩展 `scripts/audit/audit-layer-calls.ts` 补充这两条规则。
 
 ---
 

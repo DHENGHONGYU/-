@@ -339,7 +339,7 @@ export interface MetricCardProps {
 
 **步骤 0：构建 `audit:atomic` 层级边界审计脚本 — 已完成 ✅（2026-07-11）**
 
-- [x] 新建 `scripts/audit-atomic.ts`：依据 `componentRegistry` + 目录推断组件层级，校验 atom 不引 store/service/molecule/organism/template/page/app、molecule 不引 organism/template/store/service、template 不引 organism/store/service；校验 ui/ shim 为纯 re-export；登记未注册业务组件
+- [x] 新建 `scripts/audit/audit-atomic.ts`：依据 `componentRegistry` + 目录推断组件层级，校验 atom 不引 store/service/molecule/organism/template/page/app、molecule 不引 organism/template/store/service、template 不引 organism/store/service；校验 ui/ shim 为纯 re-export；登记未注册业务组件
 - [x] 注册 npm script `audit:atomic`
 - [x] 修复行注释正则语法错误（`//\/\/.*$/gm` → `/\/\/.*$/gm`）
 - [x] 修复注册表匹配逻辑：同时按 `sourcePath` 和 `targetPath` 匹配，已迁移到目标位置的组件不再误报为 unregistered

@@ -128,8 +128,8 @@
 - 参考《V9 核心数据字典与类型定义（整合版）》P0-3 核心评分实体
 - 参考《功能模块数据契约》第 1-3 节（评分模块）
 - 参考 `src/store/analysisStore.ts`、`src/store/scoreDocStore.ts`（如存在）
-- 参考 `src/services/score/intelligentScoreService.ts`
-- 参考 `src/components/widgets/SectorHeatmapWidget.tsx` 作为可视化风格参考
+- 参考 `src/services/scoring/intelligentScoreService.ts`
+- 参考 `src/cockpit/widgets/SectorHeatmapWidget.tsx` 作为可视化风格参考
 
 【输出】
 1. 完整代码实现（类型 → Store 改动 → Service/Engine 改动 → UI 组件 → 路由/Widget 注册）
@@ -171,7 +171,7 @@
 - 参考《功能模块数据契约》第 1-3 节（评分模块）
 - 参考《功能模块数据契约》第 9 节（DualStrategyStore）
 - 参考 `src/services/sector/sectorScoreService.ts`
-- 参考 `src/components/widgets/SectorHeatmapWidget.tsx`
+- 参考 `src/cockpit/widgets/SectorHeatmapWidget.tsx`
 - 参考 `src/store/screeningStore.ts`（如存在）或新建 `src/store/multiFactorScreeningStore.ts`
 
 【输出】
@@ -286,14 +286,14 @@ Phase 5: 按批次修复 P0/P1/P2 问题
 
 | 交付物 | 责任人 | 位置/命名建议 |
 |--------|--------|---------------|
-| 多周期趋势组件 | Agent-A | `src/components/analysis/score/MultiPeriodTrendChart.tsx` |
-| 评分历史回溯面板 | Agent-A | `src/components/analysis/score/ScoreHistoryPanel.tsx` |
-| 智能评分解释面板 | Agent-A | `src/components/analysis/score/IntelligentScoreExplanation.tsx` |
-| 板块轮动热力图 | Agent-B | `src/components/analysis/sector/SectorRotationHeatmap.tsx` |
-| 分析模板快捷入口 | Agent-B | `src/components/analysis/hub/AnalysisTemplateCards.tsx` |
-| 多因子筛选器 | Agent-B | `src/types/modules/screening.types.ts` / `src/store/multiFactorScreeningStore.ts` / `src/services/screening/screeningEngine.ts` / `src/pages/analysis/MultiFactorScreeningPage.tsx` |
+| 多周期趋势组件 | Agent-A | `src/components/organisms/analysis/score/MultiPeriodTrendChart.tsx` |
+| 评分历史回溯面板 | Agent-A | `src/components/organisms/analysis/score/ScoreHistoryPanel.tsx` |
+| 智能评分解释面板 | Agent-A | `src/components/organisms/analysis/score/IntelligentScoreExplanation.tsx` |
+| 板块轮动热力图 | Agent-B | `src/components/organisms/analysis/sector/SectorRotationHeatmap.tsx` |
+| 分析模板快捷入口 | Agent-B | `src/components/organisms/analysis/hub/AnalysisTemplateCards.tsx` |
+| 多因子筛选器 | Agent-B | `src/types/modules/screening.types.ts` / `src/store/multiFactorScreeningStore.ts` / `src/services/analysis/screeningEngine.ts` / `src/pages/analysis/MultiFactorScreeningPage.tsx` |
 | 回测导出服务 | Agent-C | `src/services/export/backtestExportService.ts` |
-| 情感趋势图 | Agent-C | `src/components/analysis/news/NewsSentimentTrend.tsx` |
+| 情感趋势图 | Agent-C | `src/components/organisms/analysis/news/NewsSentimentTrend.tsx` |
 | 因子贡献瀑布图 | Agent-D | `src/components/analysis/score/FactorContributionWaterfall.tsx` |
 | 更新后数据字典 | 全部 Agent | `docs/DATA_DICTIONARY_INDEX.md` 及相关模块字典 |
 

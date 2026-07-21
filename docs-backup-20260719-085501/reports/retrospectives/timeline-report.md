@@ -1,12 +1,12 @@
 ---
-title: V9 ÊµÊ©ÎÄµµÊ±¼äÖá±¨¸æ
+title: V9 å®æ–½æ–‡æ¡£æ—¶é—´è½´æŠ¥å‘Š
 type: reports
 domain: project
 phase: retrospective
 tier: reference
 status: active
 maintainer: Documentation Governor
-summary: "**Date**£º2026-06-27 Êı¾İÀ´Ô´£ºÎÄ¼şÏµÍ³ Last Modified Ê±¼ä´Á + 00-readme.md Ë÷Òı"
+summary: "**Date**ï¼š2026-06-27 æ•°æ®æ¥æºï¼šæ–‡ä»¶ç³»ç»Ÿ Last Modified æ—¶é—´æˆ³ + 00-readme.md ç´¢å¼•"
 tags: [project, spec, report, governance, documentation]
 version: v1.0.0
 last_updated: 2026-06-27
@@ -14,109 +14,109 @@ code_version: 2.0.0
 change_log: 
 ---
 
-# V9 ÊµÊ©ÎÄµµÊ±¼äÖá±¨¸æ
+# V9 å®æ–½æ–‡æ¡£æ—¶é—´è½´æŠ¥å‘Š
 
-> **Date**£º2026-06-27  
-> Êı¾İÀ´Ô´£ºÎÄ¼şÏµÍ³ Last Modified Ê±¼ä´Á + 00-readme.md Ë÷Òı
-
----
-
-## Ò»¡¢ÎÄµµ±ä¸üÊ±¼äÏß
-
-### 2026-06-20£¨¼Ü¹¹¾ö²ß½×¶Î£©
-
-| ÈÕÆÚ | ÎÄµµ | ÊÂ¼ş |
-|:---|:---|:---|
-| 06-20 | ADR-001 | ¾ö¶¨´¿Ç°¶ËÎŞºó¶Ë¼Ü¹¹ |
-| 06-20 | ADR-002 | ¾ö¶¨ IndexedDB Ìæ´ú localStorage |
-| 06-21 | ADR-003 | ¾ö¶¨ DataBridge Ìæ´úÖ±½Ó dataLayer |
-| 06-21 | ADR-004 | ¾ö¶¨ HashRouter ¾²Ì¬ÍĞ¹Ü·½°¸ |
-| 06-23 | ADR-005 | ¾ö¶¨ PortalShell ÉîÉ« Kimi ²¼¾Ö |
-
-### 2026-06-24£¨¼Ü¹¹Éè¼ÆÓë·ÖÎö½×¶Î£©
-
-| ÈÕÆÚ | ÎÄµµ | ÊÂ¼ş |
-|:---|:---|:---|
-| 06-24 | ADR-006 | ÊäÈë²Õ²ğ·ÖÎªËÄ×ÓÒ³Ãæ |
-| 06-24 | ADR-007 | ²¹ÆëÉ¸Ñ¡/ĞÅºÅ/¸´ÅÌÒıÇæ |
-| 06-24 | ADR-008 | ²ÉÓÃ V6 ºËĞÄ×ÊÔ´½»Ò×²ßÂÔ |
-| 06-24 | data-collection-architecture.md | Êı¾İ²É¼¯Ä£¿éÈı²ã¼Ü¹¹Éè¼Æ |
-| 06-24 | fourth-industrial-revolution-core-resource-strategy.md | ºËĞÄ×ÊÔ´½»Ò×²ßÂÔ½âÎö |
-| 06-24 | investment-pipeline-stage-analysis.md | Í¶×ÊÁ÷³Ì½×¶Î»¯·ÖÎö |
-| 06-24 | v10-architecture-alignment.md | V10 ¼Ü¹¹¶ÔÆë±¨¸æ |
-| 06-24 | trading-core-factors.md | ½»Ò×ºËĞÄÒò×ÓÓë¸´ÅÌÖ¸±ê |
-| 06-24 | factor-tracking-roadmap.md | Òò×ÓÌáÁ¶Óë×·×ÙÂ·¾¶ |
-| 06-24 | v9-input-cabin-strategy-report.md | ÊäÈë²ÕÉı¼¶²ßÂÔ |
-| 06-24 | v6pro-ui-page-diff-report.md | V6 Pro UI ²îÒìÈ«Á¿¶Ô±È |
-| 06-24 | v6-cockpit-ui-reference.md | V6 Pro Cockpit UI ²Î¿¼ |
-| 06-24 | ui-only-implementation-summary.md | V6 Pro UI ÎüÊÕÂäµØ×Ü½á |
-
-### 2026-06-25£¨ÊµÏÖ¹æ¸ñÓëÖÎÀí½×¶Î£©
-
-| ÈÕÆÚ | ÎÄµµ | ÊÂ¼ş |
-|:---|:---|:---|
-| 06-25 | ADR-009 | V6 Pro JSON È«Á¿µ¼³öÇ¨ÒÆ |
-| 06-25 | agent-runtime-spec.md | Agent Runtime ÊµÏÖ¹æ¸ñ |
-| 06-25 | dataflow-engine-spec.md | DataFlow Engine ÊµÏÖ¹æ¸ñ |
-| 06-25 | rotation-score-spec.md | Rotation Score ÊµÏÖ¹æ¸ñ |
-| 06-25 | input-cabin-spec.md | ÊäÈë²ÕÒµÎñ¹æ¸ñ |
-| 06-25 | db-migration-v4-to-v6.md | IndexedDB Éı¼¶¹æ·¶ |
-| 06-25 | v6-to-v9-migration-spec.md | V6¡úV9 Êı¾İÇ¨ÒÆ¹æ·¶ |
-| 06-25 | v6pro-to-v9-migration-analysis.md | V6¡úV9 Ô´Âë±È¶Ô |
-| 06-25 | input-cabin-ui-reshaping.md | ÊäÈë²Õ UI ÖØËÜ |
-| 06-25 | v9-system-blueprint.md | ÕûÌå¼Ü¹¹À¶Í¼ |
-| 06-25 | architecture-version-comparison.md | ¼Ü¹¹ÎÄµµ°æ±¾±È¶Ô |
-| 06-25 | data-interaction-protocols.md | Êı¾İ½»»¥Ğ­Òé |
-| 06-25 | v9-documentation-audit-report.md | ÎÄµµÌåÏµ»¯Éó¼Æ |
-| 06-25 | v9-current-state-review.md | µ±Ç°×´Ì¬È«ÃæÊáÀí |
-| 06-25 | implementation-governance.md | ÊµÊ©ÖÎÀí¼ÇÂ¼ |
-| 06-25 | quality-gates-baseline.md | ÖÊÁ¿ÃÅ½û»ùÏß |
-
-### 2026-06-26£¨ÎÄµµĞŞÕı½×¶Î£©
-
-| ÈÕÆÚ | ÎÄµµ | ÊÂ¼ş |
-|:---|:---|:---|
-| 06-26 | cockpit-news-doc-fix-plan.md | Cockpit + News ÎÄµµĞŞÕı·½°¸ |
-| 06-26 | doc-sync-execution-plan.md | ´úÂë-ÎÄµµÍ¬²½·½°¸ |
-
-### 2026-06-27£¨ÎÄµµÖÎÀí½×¶Î£©
-
-| ÈÕÆÚ | ÎÄµµ | ÊÂ¼ş |
-|:---|:---|:---|
-| 06-27 | v9-architecture-data-diff-report.md | ¼Ü¹¹×Ê²ú²îÒì·ÖÎö±¨¸æ£¨¸üĞÂ£© |
-| 06-27 | v9-architecture-data-dictionary-validation-report.md | Ò»ÖÂĞÔÑéÖ¤±¨¸æ£¨¸üĞÂ£© |
-| 06-27 | 00-readme.md | Ä¿Â¼Ë÷Òı´´½¨ |
-| 06-27 | batch-merge-reports.md | ½×¶ÎĞÔºÏ²¢±¨¸æ»ã×Ü |
-| 06-27 | v9-issue-management.md | ÎÊÌâÕû¸Ä¹ÜÀí¼ÇÂ¼ |
-| 06-27 | health-report.md | ÎÄµµ½¡¿µ¶È±¨¸æ |
-| 06-27 | È«²¿ 38 ·İÎÄµµ | Frontmatter ÔªÊı¾İ×¢Èë |
+> **Date**ï¼š2026-06-27  
+> æ•°æ®æ¥æºï¼šæ–‡ä»¶ç³»ç»Ÿ Last Modified æ—¶é—´æˆ³ + 00-readme.md ç´¢å¼•
 
 ---
 
-## ¶ş¡¢ÎÄµµ³ÁÄ¬ÆÚ·ÖÎö
+## ä¸€ã€æ–‡æ¡£å˜æ›´æ—¶é—´çº¿
 
-### ³ÁÄ¬ÆÚ¶¨Òå
-ÎÄµµ×îºóĞŞ¸ÄÈÕÆÚ > 7 ÌìÇÒ¹ØÁª´úÂëÄ¿Â¼ÓĞ Git ±ä¸ü¡£
+### 2026-06-20ï¼ˆæ¶æ„å†³ç­–é˜¶æ®µï¼‰
 
-### µ±Ç°×´Ì¬
+| æ—¥æœŸ | æ–‡æ¡£ | äº‹ä»¶ |
+|:---|:---|:---|
+| 06-20 | ADR-001 | å†³å®šçº¯å‰ç«¯æ— åç«¯æ¶æ„ |
+| 06-20 | ADR-002 | å†³å®š IndexedDB æ›¿ä»£ localStorage |
+| 06-21 | ADR-003 | å†³å®š DataBridge æ›¿ä»£ç›´æ¥ dataLayer |
+| 06-21 | ADR-004 | å†³å®š HashRouter é™æ€æ‰˜ç®¡æ–¹æ¡ˆ |
+| 06-23 | ADR-005 | å†³å®š PortalShell æ·±è‰² Kimi å¸ƒå±€ |
 
-| ¹ØÁª´úÂëÄ¿Â¼ | ¹ØÁªÎÄµµ | ÎÄµµ×îºó¸üĞÂ | ×´Ì¬ |
+### 2026-06-24ï¼ˆæ¶æ„è®¾è®¡ä¸åˆ†æé˜¶æ®µï¼‰
+
+| æ—¥æœŸ | æ–‡æ¡£ | äº‹ä»¶ |
+|:---|:---|:---|
+| 06-24 | ADR-006 | è¾“å…¥èˆ±æ‹†åˆ†ä¸ºå››å­é¡µé¢ |
+| 06-24 | ADR-007 | è¡¥é½ç­›é€‰/ä¿¡å·/å¤ç›˜å¼•æ“ |
+| 06-24 | ADR-008 | é‡‡ç”¨ V6 æ ¸å¿ƒèµ„æºäº¤æ˜“ç­–ç•¥ |
+| 06-24 | data-collection-architecture.md | æ•°æ®é‡‡é›†æ¨¡å—ä¸‰å±‚æ¶æ„è®¾è®¡ |
+| 06-24 | fourth-industrial-revolution-core-resource-strategy.md | æ ¸å¿ƒèµ„æºäº¤æ˜“ç­–ç•¥è§£æ |
+| 06-24 | investment-pipeline-stage-analysis.md | æŠ•èµ„æµç¨‹é˜¶æ®µåŒ–åˆ†æ |
+| 06-24 | v10-architecture-alignment.md | V10 æ¶æ„å¯¹é½æŠ¥å‘Š |
+| 06-24 | trading-core-factors.md | äº¤æ˜“æ ¸å¿ƒå› å­ä¸å¤ç›˜æŒ‡æ ‡ |
+| 06-24 | factor-tracking-roadmap.md | å› å­æç‚¼ä¸è¿½è¸ªè·¯å¾„ |
+| 06-24 | v9-input-cabin-strategy-report.md | è¾“å…¥èˆ±å‡çº§ç­–ç•¥ |
+| 06-24 | v6pro-ui-page-diff-report.md | V6 Pro UI å·®å¼‚å…¨é‡å¯¹æ¯” |
+| 06-24 | v6-cockpit-ui-reference.md | V6 Pro Cockpit UI å‚è€ƒ |
+| 06-24 | ui-only-implementation-summary.md | V6 Pro UI å¸æ”¶è½åœ°æ€»ç»“ |
+
+### 2026-06-25ï¼ˆå®ç°è§„æ ¼ä¸æ²»ç†é˜¶æ®µï¼‰
+
+| æ—¥æœŸ | æ–‡æ¡£ | äº‹ä»¶ |
+|:---|:---|:---|
+| 06-25 | ADR-009 | V6 Pro JSON å…¨é‡å¯¼å‡ºè¿ç§» |
+| 06-25 | agent-runtime-spec.md | Agent Runtime å®ç°è§„æ ¼ |
+| 06-25 | dataflow-engine-spec.md | DataFlow Engine å®ç°è§„æ ¼ |
+| 06-25 | rotation-score-spec.md | Rotation Score å®ç°è§„æ ¼ |
+| 06-25 | input-cabin-spec.md | è¾“å…¥èˆ±ä¸šåŠ¡è§„æ ¼ |
+| 06-25 | db-migration-v4-to-v6.md | IndexedDB å‡çº§è§„èŒƒ |
+| 06-25 | v6-to-v9-migration-spec.md | V6â†’V9 æ•°æ®è¿ç§»è§„èŒƒ |
+| 06-25 | v6pro-to-v9-migration-analysis.md | V6â†’V9 æºç æ¯”å¯¹ |
+| 06-25 | input-cabin-ui-reshaping.md | è¾“å…¥èˆ± UI é‡å¡‘ |
+| 06-25 | v9-system-blueprint.md | æ•´ä½“æ¶æ„è“å›¾ |
+| 06-25 | architecture-version-comparison.md | æ¶æ„æ–‡æ¡£ç‰ˆæœ¬æ¯”å¯¹ |
+| 06-25 | data-interaction-protocols.md | æ•°æ®äº¤äº’åè®® |
+| 06-25 | v9-documentation-audit-report.md | æ–‡æ¡£ä½“ç³»åŒ–å®¡è®¡ |
+| 06-25 | v9-current-state-review.md | å½“å‰çŠ¶æ€å…¨é¢æ¢³ç† |
+| 06-25 | implementation-governance.md | å®æ–½æ²»ç†è®°å½• |
+| 06-25 | quality-gates-baseline.md | è´¨é‡é—¨ç¦åŸºçº¿ |
+
+### 2026-06-26ï¼ˆæ–‡æ¡£ä¿®æ­£é˜¶æ®µï¼‰
+
+| æ—¥æœŸ | æ–‡æ¡£ | äº‹ä»¶ |
+|:---|:---|:---|
+| 06-26 | cockpit-news-doc-fix-plan.md | Cockpit + News æ–‡æ¡£ä¿®æ­£æ–¹æ¡ˆ |
+| 06-26 | doc-sync-execution-plan.md | ä»£ç -æ–‡æ¡£åŒæ­¥æ–¹æ¡ˆ |
+
+### 2026-06-27ï¼ˆæ–‡æ¡£æ²»ç†é˜¶æ®µï¼‰
+
+| æ—¥æœŸ | æ–‡æ¡£ | äº‹ä»¶ |
+|:---|:---|:---|
+| 06-27 | v9-architecture-data-diff-report.md | æ¶æ„èµ„äº§å·®å¼‚åˆ†ææŠ¥å‘Šï¼ˆæ›´æ–°ï¼‰ |
+| 06-27 | v9-architecture-data-dictionary-validation-report.md | ä¸€è‡´æ€§éªŒè¯æŠ¥å‘Šï¼ˆæ›´æ–°ï¼‰ |
+| 06-27 | 00-readme.md | ç›®å½•ç´¢å¼•åˆ›å»º |
+| 06-27 | batch-merge-reports.md | é˜¶æ®µæ€§åˆå¹¶æŠ¥å‘Šæ±‡æ€» |
+| 06-27 | v9-issue-management.md | é—®é¢˜æ•´æ”¹ç®¡ç†è®°å½• |
+| 06-27 | health-report.md | æ–‡æ¡£å¥åº·åº¦æŠ¥å‘Š |
+| 06-27 | å…¨éƒ¨ 38 ä»½æ–‡æ¡£ | Frontmatter å…ƒæ•°æ®æ³¨å…¥ |
+
+---
+
+## äºŒã€æ–‡æ¡£æ²‰é»˜æœŸåˆ†æ
+
+### æ²‰é»˜æœŸå®šä¹‰
+æ–‡æ¡£æœ€åä¿®æ”¹æ—¥æœŸ > 7 å¤©ä¸”å…³è”ä»£ç ç›®å½•æœ‰ Git å˜æ›´ã€‚
+
+### å½“å‰çŠ¶æ€
+
+| å…³è”ä»£ç ç›®å½• | å…³è”æ–‡æ¡£ | æ–‡æ¡£æœ€åæ›´æ–° | çŠ¶æ€ |
 |:---|:---|:---|:---|
-| `src/cockpit/` | cockpit-news-doc-fix-plan.md, v6-cockpit-ui-reference.md | 2026-06-26 / 2026-06-24 | ?? Õı³£ |
-| `src/core/databridge.ts` | data-interaction-protocols.md | 2026-06-25 | ?? Õı³£ |
-| `src/core/dataflow/` | dataflow-engine-spec.md | 2026-06-25 | ?? Õı³£ |
-| `src/data/db.ts` | db-migration-v4-to-v6.md | 2026-06-25 | ?? Õı³£ |
-| `src/pages/input-cabin/` | input-cabin-spec.md, input-cabin-ui-reshaping.md, v9-input-cabin-strategy-report.md | 2026-06-25 / 2026-06-24 | ?? Õı³£ |
-| `src/services/data-collector/` | data-collection-architecture.md | 2026-06-24 | ?? Õı³£ |
-| `src/services/trading/` | trading-core-factors.md, fourth-industrial-revolution-core-resource-strategy.md, factor-tracking-roadmap.md | 2026-06-24 | ?? Õı³£ |
-| `src/services/v6-migration/` | v6-to-v9-migration-spec.md | 2026-06-25 | ?? Õı³£ |
+| `src/cockpit/` | cockpit-news-doc-fix-plan.md, v6-cockpit-ui-reference.md | 2026-06-26 / 2026-06-24 | ?? æ­£å¸¸ |
+| `src/core/databridge.ts` | data-interaction-protocols.md | 2026-06-25 | ?? æ­£å¸¸ |
+| `src/core/dataflow/` | dataflow-engine-spec.md | 2026-06-25 | ?? æ­£å¸¸ |
+| `src/data/db.ts` | db-migration-v4-to-v6.md | 2026-06-25 | ?? æ­£å¸¸ |
+| `src/pages/input-cabin/` | input-cabin-spec.md, input-cabin-ui-reshaping.md, v9-input-cabin-strategy-report.md | 2026-06-25 / 2026-06-24 | ?? æ­£å¸¸ |
+| `src/services/data-collector/` | data-collection-architecture.md | 2026-06-24 | ?? æ­£å¸¸ |
+| `src/services/trading/` | trading-core-factors.md, fourth-industrial-revolution-core-resource-strategy.md, factor-tracking-roadmap.md | 2026-06-24 | ?? æ­£å¸¸ |
+| `src/services/v6-migration/` | v6-to-v9-migration-spec.md | 2026-06-25 | ?? æ­£å¸¸ |
 
-**½áÂÛ£ºÎŞ³ÁÄ¬ÆÚÎÄµµ¡£** ËùÓĞÎÄµµµÄ×îºó¸üĞÂÈÕÆÚ¾ùÔÚ 7 ÌìÄÚ£¬Óë´úÂë±ä¸ü±£³ÖÍ¬²½¡£
+**ç»“è®ºï¼šæ— æ²‰é»˜æœŸæ–‡æ¡£ã€‚** æ‰€æœ‰æ–‡æ¡£çš„æœ€åæ›´æ–°æ—¥æœŸå‡åœ¨ 7 å¤©å†…ï¼Œä¸ä»£ç å˜æ›´ä¿æŒåŒæ­¥ã€‚
 
 ---
 
-## Èı¡¢±ä¸üÈÕÖ¾
+## ä¸‰ã€å˜æ›´æ—¥å¿—
 
-| ÈÕÆÚ | °æ±¾ | ±ä¸üÄÚÈİ | ±ä¸üÈË |
+| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´å†…å®¹ | å˜æ›´äºº |
 |:---|:---|:---|:---|
-| 2026-06-27 | v1.0.0 | ³õÊ¼´´½¨£ºPhase 5 Ê±¼äÖáÊÓÍ¼ÓëÎÄµµ³ÁÄ¬ÆÚ·ÖÎö | Documentation Governor |
+| 2026-06-27 | v1.0.0 | åˆå§‹åˆ›å»ºï¼šPhase 5 æ—¶é—´è½´è§†å›¾ä¸æ–‡æ¡£æ²‰é»˜æœŸåˆ†æ | Documentation Governor |

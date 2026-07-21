@@ -1,7 +1,7 @@
 ---
 title: v9-pre-launch-audit-report-20260713
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 related_docs: [V9-DOC-QA-101, docs/archive/00-meta-historical/changelog-warnings-handling-strategy.md, V9-DOC-PROJ-007, docs/archive/00-meta-historical/directory-audit-todo.md, docs/archive/00-meta-historical/directory-audit-feasibility-plan.md]
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]

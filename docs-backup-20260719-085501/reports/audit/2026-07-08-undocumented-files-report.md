@@ -1,12 +1,12 @@
 ---
-title: V9 ÏîÄ¿Î´ÎÄµµ»¯ÎÄ¼þ±¨¸æ
+title: V9 é¡¹ç›®æœªæ–‡æ¡£åŒ–æ–‡ä»¶æŠ¥å‘Š
 type: reports
 domain: qa
 phase: testing
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "## Ò»¡¢Î´ÎÄµµ»¯ÎÄ¼þÇåµ¥ ### 1.1 ×´Ì¬²ã£¨Store£©¡ª 5 ¸öÎÄ¼þ"
+summary: "## ä¸€ã€æœªæ–‡æ¡£åŒ–æ–‡ä»¶æ¸…å• ### 1.1 çŠ¶æ€å±‚ï¼ˆStoreï¼‰â€” 5 ä¸ªæ–‡ä»¶"
 tags: [qa, audit, report]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -17,161 +17,161 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# V9 ÏîÄ¿Î´ÎÄµµ»¯ÎÄ¼þ±¨¸æ
+# V9 é¡¹ç›®æœªæ–‡æ¡£åŒ–æ–‡ä»¶æŠ¥å‘Š
 
 > **Date**: 2026-07-08  
-> **Éó¼Æ¹¤¾ß**: `npm run audit:docs`£¨audit-doc-sync.ts v3.0£©  
-> **É¨Ãè·¶Î§**: 566 ¸öÔ´ÎÄ¼þ£¬271 ¸öÎÄµµÎÄ¼þ  
-> **Î¥¹æÊý**: 15 ¸öÎÄ¼þ
+> **å®¡è®¡å·¥å…·**: `npm run audit:docs`ï¼ˆaudit-doc-sync.ts v3.0ï¼‰  
+> **æ‰«æèŒƒå›´**: 566 ä¸ªæºæ–‡ä»¶ï¼Œ271 ä¸ªæ–‡æ¡£æ–‡ä»¶  
+> **è¿è§„æ•°**: 15 ä¸ªæ–‡ä»¶
 
 ---
 
-## Ò»¡¢Î´ÎÄµµ»¯ÎÄ¼þÇåµ¥
+## ä¸€ã€æœªæ–‡æ¡£åŒ–æ–‡ä»¶æ¸…å•
 
-### 1.1 ×´Ì¬²ã£¨Store£©¡ª 5 ¸öÎÄ¼þ
+### 1.1 çŠ¶æ€å±‚ï¼ˆStoreï¼‰â€” 5 ä¸ªæ–‡ä»¶
 
-| # | ÎÄ¼þÂ·¾¶ | ÐÐÊý | ×´Ì¬ |
+| # | æ–‡ä»¶è·¯å¾„ | è¡Œæ•° | çŠ¶æ€ |
 |---|---------|------|------|
-| 1 | `src/store/analysisStore.derived.ts` | 301 | ?? ÒÑ°üº¬ JSDoc |
-| 2 | `src/store/chatStore.derived.ts` | 306 | ?? ÒÑ°üº¬ JSDoc |
-| 3 | `src/store/riskStore.derived.ts` | 322 | ?? ÒÑ°üº¬ JSDoc |
-| 4 | `src/store/signalQualityStore.derived.ts` | 452 | ?? ÒÑ°üº¬ JSDoc |
-| 5 | `src/store/executionStoreSubscriptions.ts` | 114 | ?? È±ÉÙÄ£¿é¼¶×¢ÊÍ |
+| 1 | `src/store/analysisStore.derived.ts` | 301 | ?? å·²åŒ…å« JSDoc |
+| 2 | `src/store/chatStore.derived.ts` | 306 | ?? å·²åŒ…å« JSDoc |
+| 3 | `src/store/riskStore.derived.ts` | 322 | ?? å·²åŒ…å« JSDoc |
+| 4 | `src/store/signalQualityStore.derived.ts` | 452 | ?? å·²åŒ…å« JSDoc |
+| 5 | `src/store/executionStoreSubscriptions.ts` | 114 | ?? ç¼ºå°‘æ¨¡å—çº§æ³¨é‡Š |
 
-### 1.2 ×é¼þ²ã£¨Components£©¡ª 3 ¸öÎÄ¼þ
+### 1.2 ç»„ä»¶å±‚ï¼ˆComponentsï¼‰â€” 3 ä¸ªæ–‡ä»¶
 
-| # | ÎÄ¼þÂ·¾¶ | ÐÐÊý | ×´Ì¬ |
+| # | æ–‡ä»¶è·¯å¾„ | è¡Œæ•° | çŠ¶æ€ |
 |---|---------|------|------|
-| 6 | `src/components/organisms/shared/installGlobalErrorHandler.ts` | 49 | ?? ÒÑ°üº¬ JSDoc |
-| 7 | `src/components/templates/PageContainer.tsx` | 34 | ?? ²¿·Ö×¢ÊÍ |
-| 8 | `src/components/templates/PageHeader.tsx` | 44 | ?? ²¿·Ö×¢ÊÍ |
+| 6 | `src/components/organisms/shared/installGlobalErrorHandler.ts` | 49 | ?? å·²åŒ…å« JSDoc |
+| 7 | `src/components/templates/PageContainer.tsx` | 34 | ?? éƒ¨åˆ†æ³¨é‡Š |
+| 8 | `src/components/templates/PageHeader.tsx` | 44 | ?? éƒ¨åˆ†æ³¨é‡Š |
 
-### 1.3 »ù´¡ÉèÊ©²ã£¨Lib£©¡ª 2 ¸öÎÄ¼þ
+### 1.3 åŸºç¡€è®¾æ–½å±‚ï¼ˆLibï¼‰â€” 2 ä¸ªæ–‡ä»¶
 
-| # | ÎÄ¼þÂ·¾¶ | ÐÐÊý | ×´Ì¬ |
+| # | æ–‡ä»¶è·¯å¾„ | è¡Œæ•° | çŠ¶æ€ |
 |---|---------|------|------|
-| 9 | `src/lib/derivedCache.ts` | 288 | ?? ÒÑ°üº¬ JSDoc |
-| 10 | `src/lib/localStorageCrypto.ts` | 114 | ?? ÒÑ°üº¬ JSDoc |
+| 9 | `src/lib/derivedCache.ts` | 288 | ?? å·²åŒ…å« JSDoc |
+| 10 | `src/lib/localStorageCrypto.ts` | 114 | ?? å·²åŒ…å« JSDoc |
 
-### 1.4 ·þÎñ²ã£¨Services£©¡ª 2 ¸öÎÄ¼þ
+### 1.4 æœåŠ¡å±‚ï¼ˆServicesï¼‰â€” 2 ä¸ªæ–‡ä»¶
 
-| # | ÎÄ¼þÂ·¾¶ | ÐÐÊý | ×´Ì¬ |
+| # | æ–‡ä»¶è·¯å¾„ | è¡Œæ•° | çŠ¶æ€ |
 |---|---------|------|------|
-| 11 | `src/services/errorBus.ts` | 67 | ?? ÒÑ°üº¬ JSDoc |
-| 12 | `src/services/resilience.ts` | 252 | ?? ÒÑ°üº¬ JSDoc |
+| 11 | `src/services/errorBus.ts` | 67 | ?? å·²åŒ…å« JSDoc |
+| 12 | `src/services/resilience.ts` | 252 | ?? å·²åŒ…å« JSDoc |
 
-### 1.5 ÆäËû²ã ¡ª 3 ¸öÎÄ¼þ
+### 1.5 å…¶ä»–å±‚ â€” 3 ä¸ªæ–‡ä»¶
 
-| # | ÎÄ¼þÂ·¾¶ | ÐÐÊý | ×´Ì¬ |
+| # | æ–‡ä»¶è·¯å¾„ | è¡Œæ•° | çŠ¶æ€ |
 |---|---------|------|------|
-| 13 | `src/services/scoring/v6-engine/calculators/l3/helpers.ts` | 71 | ?? ²¿·Ö×¢ÊÍ |
-| 14 | `src/constants/sectorConstants.ts` | 20 | ?? ²¿·Ö×¢ÊÍ |
-| 15 | `src/hooks/useConfirmDialog.tsx` | 101 | ?? ÒÑ°üº¬ JSDoc |
+| 13 | `src/services/scoring/v6-engine/calculators/l3/helpers.ts` | 71 | ?? éƒ¨åˆ†æ³¨é‡Š |
+| 14 | `src/constants/sectorConstants.ts` | 20 | ?? éƒ¨åˆ†æ³¨é‡Š |
+| 15 | `src/hooks/useConfirmDialog.tsx` | 101 | ?? å·²åŒ…å« JSDoc |
 
 ---
 
-## ¶þ¡¢ÎÄ¼þ×´Ì¬ËµÃ÷
+## äºŒã€æ–‡ä»¶çŠ¶æ€è¯´æ˜Ž
 
-### ?? ÒÑ°üº¬ JSDoc£¨10 ¸öÎÄ¼þ£©
+### ?? å·²åŒ…å« JSDocï¼ˆ10 ä¸ªæ–‡ä»¶ï¼‰
 
-ÕâÐ©ÎÄ¼þ**ÒÑÔÚ´úÂë²ãÃæÓÐÍêÕûµÄ JSDoc ×¢ÊÍ**£¬`audit:docs` ¼ì²âµ½µÄÊÇ¡¸ÎÄ¼þÎ´ÔÚ docs/*.md ÎÄµµÖÐ±»ÒýÓÃ¡¹£¬¶ø·Ç¡¸ÎÄ¼þÈ±ÉÙ×¢ÊÍ¡¹¡£
+è¿™äº›æ–‡ä»¶**å·²åœ¨ä»£ç å±‚é¢æœ‰å®Œæ•´çš„ JSDoc æ³¨é‡Š**ï¼Œ`audit:docs` æ£€æµ‹åˆ°çš„æ˜¯ã€Œæ–‡ä»¶æœªåœ¨ docs/*.md æ–‡æ¡£ä¸­è¢«å¼•ç”¨ã€ï¼Œè€Œéžã€Œæ–‡ä»¶ç¼ºå°‘æ³¨é‡Šã€ã€‚
 
-| ÎÄ¼þ | JSDoc ×´Ì¬ | È±Ê§ÄÚÈÝ |
+| æ–‡ä»¶ | JSDoc çŠ¶æ€ | ç¼ºå¤±å†…å®¹ |
 |------|-----------|---------|
-| analysisStore.derived.ts | ? ÍêÕû | ÔÚ data-dictionary-index.md ÖÐµÄÄ£¿éË÷Òý |
-| chatStore.derived.ts | ? ÍêÕû | ÔÚ data-dictionary-index.md ÖÐµÄÄ£¿éË÷Òý |
-| riskStore.derived.ts | ? ÍêÕû | ÔÚ data-dictionary-index.md ÖÐµÄÄ£¿éË÷Òý |
-| signalQualityStore.derived.ts | ? ÍêÕû | ÔÚ data-dictionary-index.md ÖÐµÄÄ£¿éË÷Òý |
-| installGlobalErrorHandler.ts | ? ÍêÕû | ÔÚ¼Ü¹¹ÎÄµµÖÐµÄËµÃ÷ |
-| derivedCache.ts | ? ÍêÕû | ÔÚ¼Ü¹¹ÎÄµµÖÐµÄËµÃ÷ |
-| localStorageCrypto.ts | ? ÍêÕû | ÔÚ¼Ü¹¹ÎÄµµÖÐµÄËµÃ÷ |
-| errorBus.ts | ? ÍêÕû | ÔÚ¼Ü¹¹ÎÄµµÖÐµÄËµÃ÷ |
-| resilience.ts | ? ÍêÕû | ÔÚ¼Ü¹¹ÎÄµµÖÐµÄËµÃ÷ |
-| useConfirmDialog.tsx | ? ÍêÕû | ÔÚ¼Ü¹¹ÎÄµµÖÐµÄËµÃ÷ |
+| analysisStore.derived.ts | ? å®Œæ•´ | åœ¨ data-dictionary-index.md ä¸­çš„æ¨¡å—ç´¢å¼• |
+| chatStore.derived.ts | ? å®Œæ•´ | åœ¨ data-dictionary-index.md ä¸­çš„æ¨¡å—ç´¢å¼• |
+| riskStore.derived.ts | ? å®Œæ•´ | åœ¨ data-dictionary-index.md ä¸­çš„æ¨¡å—ç´¢å¼• |
+| signalQualityStore.derived.ts | ? å®Œæ•´ | åœ¨ data-dictionary-index.md ä¸­çš„æ¨¡å—ç´¢å¼• |
+| installGlobalErrorHandler.ts | ? å®Œæ•´ | åœ¨æž¶æž„æ–‡æ¡£ä¸­çš„è¯´æ˜Ž |
+| derivedCache.ts | ? å®Œæ•´ | åœ¨æž¶æž„æ–‡æ¡£ä¸­çš„è¯´æ˜Ž |
+| localStorageCrypto.ts | ? å®Œæ•´ | åœ¨æž¶æž„æ–‡æ¡£ä¸­çš„è¯´æ˜Ž |
+| errorBus.ts | ? å®Œæ•´ | åœ¨æž¶æž„æ–‡æ¡£ä¸­çš„è¯´æ˜Ž |
+| resilience.ts | ? å®Œæ•´ | åœ¨æž¶æž„æ–‡æ¡£ä¸­çš„è¯´æ˜Ž |
+| useConfirmDialog.tsx | ? å®Œæ•´ | åœ¨æž¶æž„æ–‡æ¡£ä¸­çš„è¯´æ˜Ž |
 
-### ?? ²¿·Ö×¢ÊÍ£¨4 ¸öÎÄ¼þ£©
+### ?? éƒ¨åˆ†æ³¨é‡Šï¼ˆ4 ä¸ªæ–‡ä»¶ï¼‰
 
-ÕâÐ©ÎÄ¼þÓÐ²¿·Ö×¢ÊÍ£¬µ«È±ÉÙÍêÕûµÄÄ£¿é¼¶ JSDoc¡£
+è¿™äº›æ–‡ä»¶æœ‰éƒ¨åˆ†æ³¨é‡Šï¼Œä½†ç¼ºå°‘å®Œæ•´çš„æ¨¡å—çº§ JSDocã€‚
 
-| ÎÄ¼þ | µ±Ç°×´Ì¬ | ÐèÒª²¹³ä |
+| æ–‡ä»¶ | å½“å‰çŠ¶æ€ | éœ€è¦è¡¥å…… |
 |------|---------|---------|
-| PageContainer.tsx | ÓÐº¯Êý¼¶×¢ÊÍ | Ä£¿é¼¶ @module ×¢ÊÍ |
-| PageHeader.tsx | ÓÐº¯Êý¼¶×¢ÊÍ | Ä£¿é¼¶ @module ×¢ÊÍ |
-| l3/helpers.ts | ÓÐ¼òµ¥×¢ÊÍ | ÍêÕûÄ£¿é¼¶ JSDoc |
-| sectorConstants.ts | ÓÐ¼òµ¥×¢ÊÍ | ÍêÕûÄ£¿é¼¶ JSDoc |
+| PageContainer.tsx | æœ‰å‡½æ•°çº§æ³¨é‡Š | æ¨¡å—çº§ @module æ³¨é‡Š |
+| PageHeader.tsx | æœ‰å‡½æ•°çº§æ³¨é‡Š | æ¨¡å—çº§ @module æ³¨é‡Š |
+| l3/helpers.ts | æœ‰ç®€å•æ³¨é‡Š | å®Œæ•´æ¨¡å—çº§ JSDoc |
+| sectorConstants.ts | æœ‰ç®€å•æ³¨é‡Š | å®Œæ•´æ¨¡å—çº§ JSDoc |
 
-### ?? È±ÉÙ×¢ÊÍ£¨1 ¸öÎÄ¼þ£©
+### ?? ç¼ºå°‘æ³¨é‡Šï¼ˆ1 ä¸ªæ–‡ä»¶ï¼‰
 
-| ÎÄ¼þ | µ±Ç°×´Ì¬ | ÐèÒª²¹³ä |
+| æ–‡ä»¶ | å½“å‰çŠ¶æ€ | éœ€è¦è¡¥å…… |
 |------|---------|---------|
-| executionStoreSubscriptions.ts | ÎÞÄ£¿é¼¶×¢ÊÍ | ÍêÕûÄ£¿é¼¶ JSDoc |
+| executionStoreSubscriptions.ts | æ— æ¨¡å—çº§æ³¨é‡Š | å®Œæ•´æ¨¡å—çº§ JSDoc |
 
 ---
 
-## Èý¡¢·ÖÀàÍ³¼Æ
+## ä¸‰ã€åˆ†ç±»ç»Ÿè®¡
 
-| Ä£¿éÀàÐÍ | ÎÄ¼þÊý | ÒÑÍê³É | ´ý²¹³ä |
+| æ¨¡å—ç±»åž‹ | æ–‡ä»¶æ•° | å·²å®Œæˆ | å¾…è¡¥å…… |
 |---------|--------|--------|--------|
-| **×´Ì¬²ã (store)** | 5 | 4 | 1 |
-| **×é¼þ²ã (components)** | 3 | 1 | 2 |
-| **»ù´¡ÉèÊ©²ã (lib)** | 2 | 2 | 0 |
-| **·þÎñ²ã (services)** | 3 | 2 | 1 |
-| **³£Á¿²ã (constants)** | 1 | 0 | 1 |
+| **çŠ¶æ€å±‚ (store)** | 5 | 4 | 1 |
+| **ç»„ä»¶å±‚ (components)** | 3 | 1 | 2 |
+| **åŸºç¡€è®¾æ–½å±‚ (lib)** | 2 | 2 | 0 |
+| **æœåŠ¡å±‚ (services)** | 3 | 2 | 1 |
+| **å¸¸é‡å±‚ (constants)** | 1 | 0 | 1 |
 | **Hooks** | 1 | 1 | 0 |
-| **ºÏ¼Æ** | 15 | 10 | 5 |
+| **åˆè®¡** | 15 | 10 | 5 |
 
 ---
 
-## ËÄ¡¢ÎÄµµ»¯ÓÅÏÈ¼¶½¨Òé
+## å››ã€æ–‡æ¡£åŒ–ä¼˜å…ˆçº§å»ºè®®
 
-### P0 ¡ª Á¢¼´´¦Àí£¨Ó°ÏìºËÐÄ¹¦ÄÜ£©
+### P0 â€” ç«‹å³å¤„ç†ï¼ˆå½±å“æ ¸å¿ƒåŠŸèƒ½ï¼‰
 
-| ÎÄ¼þ | Ô­Òò |
+| æ–‡ä»¶ | åŽŸå›  |
 |------|------|
-| `src/store/executionStoreSubscriptions.ts` | ºËÐÄ½»Ò×Á÷³Ì£¬È±ÉÙÄ£¿é¼¶×¢ÊÍ |
-| `src/services/scoring/v6-engine/calculators/l3/helpers.ts` | ÆÀ·ÖÒýÇæºËÐÄÂß¼­£¬×¢ÊÍ²»ÍêÕû |
+| `src/store/executionStoreSubscriptions.ts` | æ ¸å¿ƒäº¤æ˜“æµç¨‹ï¼Œç¼ºå°‘æ¨¡å—çº§æ³¨é‡Š |
+| `src/services/scoring/v6-engine/calculators/l3/helpers.ts` | è¯„åˆ†å¼•æ“Žæ ¸å¿ƒé€»è¾‘ï¼Œæ³¨é‡Šä¸å®Œæ•´ |
 
-### P1 ¡ª ±¾ÖÜ´¦Àí£¨Ó°Ïì¿ª·¢Ð§ÂÊ£©
+### P1 â€” æœ¬å‘¨å¤„ç†ï¼ˆå½±å“å¼€å‘æ•ˆçŽ‡ï¼‰
 
-| ÎÄ¼þ | Ô­Òò |
+| æ–‡ä»¶ | åŽŸå›  |
 |------|------|
-| `src/components/templates/PageContainer.tsx` | ËùÓÐÒ³ÃæµÄ»ù´¡ÈÝÆ÷£¬Ó¦ÍêÉÆÎÄµµ |
-| `src/components/templates/PageHeader.tsx` | ËùÓÐÒ³ÃæµÄ»ù´¡×é¼þ£¬Ó¦ÍêÉÆÎÄµµ |
-| `src/constants/sectorConstants.ts` | °å¿é·ÖÎöºËÐÄÊý¾Ý£¬Ó¦ÍêÉÆÎÄµµ |
+| `src/components/templates/PageContainer.tsx` | æ‰€æœ‰é¡µé¢çš„åŸºç¡€å®¹å™¨ï¼Œåº”å®Œå–„æ–‡æ¡£ |
+| `src/components/templates/PageHeader.tsx` | æ‰€æœ‰é¡µé¢çš„åŸºç¡€ç»„ä»¶ï¼Œåº”å®Œå–„æ–‡æ¡£ |
+| `src/constants/sectorConstants.ts` | æ¿å—åˆ†æžæ ¸å¿ƒæ•°æ®ï¼Œåº”å®Œå–„æ–‡æ¡£ |
 
-### P2 ¡ª ±¾ÔÂ´¦Àí£¨ÍêÉÆÐÔ£©
+### P2 â€” æœ¬æœˆå¤„ç†ï¼ˆå®Œå–„æ€§ï¼‰
 
-| ÎÄ¼þ | Ô­Òò |
+| æ–‡ä»¶ | åŽŸå›  |
 |------|------|
-| `src/store/analysisStore.derived.ts` | ÔÚÊý¾Ý×ÖµäÖÐÌí¼ÓË÷Òý |
-| `src/store/chatStore.derived.ts` | ÔÚÊý¾Ý×ÖµäÖÐÌí¼ÓË÷Òý |
-| `src/store/riskStore.derived.ts` | ÔÚÊý¾Ý×ÖµäÖÐÌí¼ÓË÷Òý |
-| `src/store/signalQualityStore.derived.ts` | ÔÚÊý¾Ý×ÖµäÖÐÌí¼ÓË÷Òý |
+| `src/store/analysisStore.derived.ts` | åœ¨æ•°æ®å­—å…¸ä¸­æ·»åŠ ç´¢å¼• |
+| `src/store/chatStore.derived.ts` | åœ¨æ•°æ®å­—å…¸ä¸­æ·»åŠ ç´¢å¼• |
+| `src/store/riskStore.derived.ts` | åœ¨æ•°æ®å­—å…¸ä¸­æ·»åŠ ç´¢å¼• |
+| `src/store/signalQualityStore.derived.ts` | åœ¨æ•°æ®å­—å…¸ä¸­æ·»åŠ ç´¢å¼• |
 
 ---
 
-## Îå¡¢ÐÐ¶¯Çåµ¥
+## äº”ã€è¡ŒåŠ¨æ¸…å•
 
-### ¶ÌÆÚÐÐ¶¯£¨1-2 Ìì£©
+### çŸ­æœŸè¡ŒåŠ¨ï¼ˆ1-2 å¤©ï¼‰
 
-- [ ] Îª `executionStoreSubscriptions.ts` Ìí¼ÓÍêÕû JSDoc
-- [ ] Îª `l3/helpers.ts` Ìí¼ÓÍêÕû JSDoc
-- [ ] ¸üÐÂ data-dictionary-index.md£¬Ìí¼Ó store ÅÉÉúÄ£¿éË÷Òý
+- [ ] ä¸º `executionStoreSubscriptions.ts` æ·»åŠ å®Œæ•´ JSDoc
+- [ ] ä¸º `l3/helpers.ts` æ·»åŠ å®Œæ•´ JSDoc
+- [ ] æ›´æ–° data-dictionary-index.mdï¼Œæ·»åŠ  store æ´¾ç”Ÿæ¨¡å—ç´¢å¼•
 
-### ÖÐÆÚÐÐ¶¯£¨1 ÖÜ£©
+### ä¸­æœŸè¡ŒåŠ¨ï¼ˆ1 å‘¨ï¼‰
 
-- [ ] Îª PageContainer/PageHeader Ìí¼ÓÄ£¿é¼¶×¢ÊÍ
-- [ ] Îª sectorConstants Ìí¼ÓÍêÕû JSDoc
-- [ ] ¸üÐÂ¼Ü¹¹ÎÄµµ£¬²¹³äÕâÐ©Ä£¿éµÄËµÃ÷
+- [ ] ä¸º PageContainer/PageHeader æ·»åŠ æ¨¡å—çº§æ³¨é‡Š
+- [ ] ä¸º sectorConstants æ·»åŠ å®Œæ•´ JSDoc
+- [ ] æ›´æ–°æž¶æž„æ–‡æ¡£ï¼Œè¡¥å……è¿™äº›æ¨¡å—çš„è¯´æ˜Ž
 
-### ³¤ÆÚÐÐ¶¯£¨1 ÔÂ£©
+### é•¿æœŸè¡ŒåŠ¨ï¼ˆ1 æœˆï¼‰
 
-- [ ] ÔËÐÐ `npm run audit:docs` ÑéÖ¤ËùÓÐÎÄ¼þÒÑÎÄµµ»¯
-- [ ] ½¨Á¢ÎÄµµ»¯¼ì²éµÄ CI/CD Á÷³Ì
+- [ ] è¿è¡Œ `npm run audit:docs` éªŒè¯æ‰€æœ‰æ–‡ä»¶å·²æ–‡æ¡£åŒ–
+- [ ] å»ºç«‹æ–‡æ¡£åŒ–æ£€æŸ¥çš„ CI/CD æµç¨‹
 
 ---
 
-> **±¨¸æ½áÊø**  
+> **æŠ¥å‘Šç»“æŸ**  
 > **Date**: 2026-07-08  
-> **±¨¸æ°æ±¾**: v1.0.0  
-> **Éó¼Æ¹¤¾ß**: audit-doc-sync.ts v3.0
+> **æŠ¥å‘Šç‰ˆæœ¬**: v1.0.0  
+> **å®¡è®¡å·¥å…·**: audit-doc-sync.ts v3.0

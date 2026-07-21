@@ -394,7 +394,7 @@ Stock[] → runStrategy() → classify() → 20进13筛选 → StrategyResult
 | P0-基础 | V6 评分 LLM Prompt 模板 | `src/services/scoring/v6ScorePrompt.ts`（新建） |
 | P0-业务 | V6 评分 LLM 增强模式（规则+LLM混合） | `src/services/scoring/v6ScoreService.ts` |
 | P0-业务 | AI 复盘异步 LLM 洞察增强 | `src/services/trading/tradeReviewAI.ts` |
-| P1-UI | 可复用 LLM 配置 Widget（预设下拉） | `src/components/shared/LLMConfigWidget.tsx`（新建） |
+| P1-UI | 可复用 LLM 配置 Widget（预设下拉） | `src/components/organisms/shared/LLMConfigWidget.tsx`（新建） |
 | Phase-A | Engine 消除双实例 | `src/engine/index.ts` |
 | Phase-A | HealthMonitor 接入 | `src/agents/agentRuntime.ts` |
 | Phase-A | 并发控制 | `src/agents/agentRuntime.ts` |

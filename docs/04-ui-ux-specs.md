@@ -251,18 +251,18 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 
 | 组件 | 路径 | 说明 |
 |------|------|------|
-| Button | `src/components/ui/Button.tsx` | 主/次/危险/幽灵按钮 |
-| Card | `src/components/ui/Card.tsx` | 卡片容器 |
-| Input | `src/components/ui/Input.tsx` | 文本输入 |
-| Dialog | `src/components/ui/Dialog.tsx` | 模态对话框 |
-| Tabs | `src/components/ui/Tabs.tsx` | 标签页 |
-| Table | `src/components/ui/Table.tsx` | 表格 |
-| Badge | `src/components/ui/Badge.tsx` | 状态徽章 |
+| Button | `src/components/atoms/Button.tsx` | 主/次/危险/幽灵按钮 |
+| Card | `src/components/atoms/Card.tsx` | 卡片容器 |
+| Input | `src/components/atoms/Input.tsx` | 文本输入 |
+| Dialog | `src/components/molecules/Dialog.tsx` | 模态对话框 |
+| Tabs | `src/components/molecules/Tabs.tsx` | 标签页 |
+| Table | `src/components/atoms/Table.tsx` | 表格 |
+| Badge | `src/components/atoms/Badge.tsx` | 状态徽章 |
 | Skeleton | `src/components/ui/Skeleton.tsx` | 加载骨架 |
-| Toast | `src/components/ui/Toast.tsx` | 轻提示 |
-| Checkbox | `src/components/ui/Checkbox.tsx` | 复选框 |
-| Progress | `src/components/ui/Progress.tsx` | 进度条 |
-| Textarea | `src/components/ui/Textarea.tsx` | 多行文本输入 |
+| Toast | `src/components/atoms/Toast.tsx` | 轻提示 |
+| Checkbox | `src/components/atoms/Checkbox.tsx` | 复选框 |
+| Progress | `src/components/atoms/Progress.tsx` | 进度条 |
+| Textarea | `src/components/atoms/Textarea.tsx` | 多行文本输入 |
 | Dropdown | `src/components/ui/Dropdown.tsx` | 下拉菜单 |
 | Command | `src/components/ui/Command.tsx` | 命令面板 |
 | ScrollArea | `src/components/ui/ScrollArea.tsx` | 自定义滚动区域 |
@@ -271,14 +271,14 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 
 | 组件 | 路径 | 说明 |
 |------|------|------|
-| StockSearch | `src/components/input/StockSearch.tsx` | 股票搜索组件 |
-| QualityIndicator | `src/components/input/QualityIndicator.tsx` | 数据质量指示 |
-| PoolBoard | `src/components/pool/PoolBoard.tsx` | 股票池看板 |
-| PoolCard | `src/components/pool/PoolCard.tsx` | 股票卡片 |
-| PoolList | `src/components/pool/PoolList.tsx` | 股票列表视图 |
-| ScoreFactorDeltaPanel | `src/components/ScoreFactorDeltaPanel.tsx` | 评分因子变化面板 |
-| ScoreUpdateAlert | `src/components/ScoreUpdateAlert.tsx` | 评分更新提醒 |
-| ErrorBoundary | `src/components/ErrorBoundary.tsx` | 错误边界组件 |
+| StockSearch | `src/components/organisms/input/StockSearch.tsx` | 股票搜索组件 |
+| QualityIndicator | `src/components/organisms/input/QualityIndicator.tsx` | 数据质量指示 |
+| PoolBoard | `src/components/organisms/pool/PoolBoard.tsx` | 股票池看板 |
+| PoolCard | `src/components/organisms/pool/PoolCard.tsx` | 股票卡片 |
+| PoolList | `src/components/organisms/pool/PoolList.tsx` | 股票列表视图 |
+| ScoreFactorDeltaPanel | `src/components/organisms/shared/ScoreFactorDeltaPanel.tsx` | 评分因子变化面板 |
+| ScoreUpdateAlert | `src/components/organisms/shared/ScoreUpdateAlert.tsx` | 评分更新提醒 |
+| ErrorBoundary | `src/components/organisms/shared/ErrorBoundary.tsx` | 错误边界组件 |
 
 ### 图表组件（待建）
 

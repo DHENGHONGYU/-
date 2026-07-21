@@ -290,7 +290,7 @@ style={{ minHeight: '48px' }}  // 每次渲染创建新对象
 - `IntelligentScorePage.tsx` - 较复杂页面，部分计算值可 useMemo 化
 
 #### 问题 2.7：ScoreFactorDeltaPanel 等业务组件缺少 memo
-- **文件**：`src/components/ScoreFactorDeltaPanel.tsx`、`src/components/ScoreUpdateAlert.tsx` 等
+- **文件**：`src/components/organisms/shared/ScoreFactorDeltaPanel.tsx`、`src/components/organisms/shared/ScoreUpdateAlert.tsx` 等
 - **风险等级**：🟢 低
 - **问题描述**：业务组件未使用 memo，在父组件频繁重渲染时可能造成不必要的开销。
 
@@ -447,7 +447,7 @@ import dayjs from 'dayjs'
 | `src/services/scoring/valuePitAnalyzer.ts` | 541 | 🟡 中 |
 | `src/services/scoring/v6-engine/calculators/l3.ts` | 535 | 🟡 中 |
 | `src/services/scoring/v6-engine/calculators/l4_l5_l6.ts` | 402 | 🟢 低 |
-| `src/components/ui/ErrorState.tsx` | 323 | 🟢 低 |
+| `src/components/molecules/ErrorState.tsx` | 323 | 🟢 低 |
 | `src/pages/analysis/IntelligentScorePage.tsx` | 305 | 🟢 低 |
 | `src/pages/trading/HoldingsPage.tsx` | 301 | 🟢 低 |
 

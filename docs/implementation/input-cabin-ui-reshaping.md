@@ -27,7 +27,7 @@ change_log:
 | 顶部状态栏（56px） | `PortalShell` TopBar | `src/portal/PortalShell.tsx` |
 | 左侧侧边栏（260px，分组导航） | `PortalShell` Sidebar | `src/portal/PortalShell.tsx` |
 | 卡片网格 / 数据表格 | `Card`、`Table`、`PoolBoard` 等组件 | `src/components/ui/*`、`src/components/pool/*` |
-| 标签 / 徽章 | `Badge` 组件 | `src/components/ui/Badge.tsx` |
+| 标签 / 徽章 | `Badge` 组件 | `src/components/atoms/Badge.tsx` |
 | 进度条 | `DataTestPanel` 进度条 | `src/apps/input/DataTestPanel.tsx` |
 
 ---

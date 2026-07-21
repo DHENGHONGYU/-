@@ -2,7 +2,7 @@
 title: v9-architecture-data-dictionary-validation-report
 code_version: 2.0.0
 
-tier: core
+tier: important
 ---
 
 ---

@@ -164,7 +164,7 @@ export function checkFreshness(
 1. `docs/blueprints/v9-data-relationship-er.md` 已在 §1 Store 清单追加 4 行；§2 实体关系补 4 条；
    §3 ER 图新增 4 条边；DB_VERSION 14→16
 2. `docs/blueprints/v9-data-timeline.md` 已在 §1 追加 P12/P13/P14/P15 四个管线阶段；§3.1 刷新频率表补 4 行
-3. `scripts/validate-data-blueprint.ts` 的 Store 数量预期从 20→24
+3. `scripts/other/validate-data-blueprint.ts` 的 Store 数量预期从 20→24
 
 **验收标准：**
 - 4 个新 Store 实体/索引/关系/时序全部登记
@@ -177,7 +177,7 @@ export function checkFreshness(
 1. 创建 `src/services/execution/executionPlanService.ts`、`executionLogService.ts`
 2. 创建 `src/services/portfolio/portfolioService.ts`
 3. 在 `src/services/data-collector/missingReportDetector.ts` 实现缺失报告登记
-4. 在 `src/data/acl.ts`（或同等的 ACL 配置）补 4 个 Store 的读写权限条目
+4. 在 `src/core/acl.ts`（或同等的 ACL 配置）补 4 个 Store 的读写权限条目
 5. 提交对应单元测试
 
 **验收标准：**

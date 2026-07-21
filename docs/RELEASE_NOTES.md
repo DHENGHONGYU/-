@@ -201,7 +201,7 @@
 - 与 eventBus 集成，实现全局消息广播
 
 ### 5. Widget 专用错误边界
-**文件**：`src/components/WidgetErrorBoundary.tsx`
+**文件**：`src/components/organisms/shared/WidgetErrorBoundary.tsx`
 
 - 类组件错误边界，捕获 Widget 渲染错误
 - 显示错误状态和重试按钮
@@ -267,9 +267,9 @@
 | 文件 | 说明 |
 |------|------|
 | `src/agents/index.ts` | Agent 系统统一入口 |
-| `src/components/WidgetErrorBoundary.tsx` | Widget 专用错误边界 |
+| `src/components/organisms/shared/WidgetErrorBoundary.tsx` | Widget 专用错误边界 |
 | `src/config/thresholds.ts` | 统一阈值配置中心 |
-| `src/pages/news-v6/styles/newsColorTokens.ts` | 新闻组件颜色令牌 |
+| `src/constants/newsColorTokens.ts` | 新闻组件颜色令牌 |
 | `src/services/feedbackService.ts` | 操作反馈闭环服务 |
 | `src/services/unifiedStockService.ts` | 数据融合层 |
 

@@ -170,7 +170,7 @@ date: 2026-07-17
 2. **缺口 B 修复（STOCK 白名单）**：新增 `STOCK_COLOR_WHITELIST`（精确 6 串 `text-red-500/bg-red-500/text-green-500/bg-green-500/text-gray-400/bg-gray-400`），在 `COLOR_PATTERNS` 命中后、上报前比对放行，语义对齐 `audit-hardcode.ts` 的 `isStockColorUsage`（A股红涨绿跌固定色，豁免主题切换）。
 3. **修 `package.json` 预存引号 bug**：`lint:colors` 脚本原 `'...: error'` 单引号在 npm run 下被拆参导致 `eslint` 报 "No files matching the pattern 'error'" 无法运行；改为 `\"...: error\"` 双引号转义，门禁现已可正常执行。
 
-**RM-011 同步审计端（`scripts/audit-hardcode.ts`）**
+**RM-011 同步审计端（`scripts/audit/audit-hardcode.ts`）**
 
 - `COLOR_EXEMPT_FILES` 由精确 `Set.has(rel)` 改为前缀 `Array.some(rel.includes)` 匹配，补 `src/constants/theme/`、`src/constants/newsColorTokens.ts`，消除审计端同样误报，与 ESLint 规则口径一致。
 
@@ -193,7 +193,7 @@ date: 2026-07-17
 - `npm run audit:hardcode` → **阻塞级违规 0**（60 非阻塞 warning 均为"静默回退" `?? null` 防御性兜底，属规则过严误报，非颜色问题，见工作记忆）
 - 负向校验：src/components/__token_scan_tmp__.tsx 临时写 `text-blue-600/#ff0000` 等 → `lint:colors` 报错、`token-scan` 报 ≥1 违规且退出码非 0；校验后删除。
 
-本轮代码改动文件（P4）：`scripts/quality/eslint-plugin-no-hardcoded-colors.js`、`scripts/audit-hardcode.ts`、`scripts/other/token-scan.cjs`（新）、`package.json`、`src/portal/PortalShell.tsx`。
+本轮代码改动文件（P4）：`scripts/quality/eslint-plugin-no-hardcoded-colors.js`、`scripts/audit/audit-hardcode.ts`、`scripts/other/token-scan.cjs`（新）、`package.json`、`src/portal/PortalShell.tsx`。
 
 ---
 

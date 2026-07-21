@@ -1,6 +1,6 @@
 ---
 title: data-definition
-tier: core
+tier: important
 code_version: 2.0.0
 ---
 

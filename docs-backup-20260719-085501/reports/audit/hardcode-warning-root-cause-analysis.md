@@ -6,7 +6,7 @@ phase: testing
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "## ×ÜÀÀ ## A Àà: ¿ÉÐÂÔöÅÅ³ý¹æÔò (35 Ïî)"
+summary: "## æ€»è§ˆ ## A ç±»: å¯æ–°å¢žæŽ’é™¤è§„åˆ™ (35 é¡¹)"
 tags: [qa, research, audit, report]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -18,280 +18,280 @@ date: 2026-07-17
 ---
 
 > **Date**: 2026-07-05
-> Éó¼Æ½Å±¾: audit-hardcode.ts v2.4
-> ·ÖÎö·¶Î§: 107 Ïî Warning ¼¶¾²Ä¬»ØÍËÄ£Ê½
+> å®¡è®¡è„šæœ¬: audit-hardcode.ts v2.4
+> åˆ†æžèŒƒå›´: 107 é¡¹ Warning çº§é™é»˜å›žé€€æ¨¡å¼
 
 ---
 
-## ×ÜÀÀ
+## æ€»è§ˆ
 
-| ·ÖÀà | ÊýÁ¿ | Õ¼±È | ËµÃ÷ |
+| åˆ†ç±» | æ•°é‡ | å æ¯” | è¯´æ˜Ž |
 |------|------|------|------|
-| **A Àà: ¿ÉÐÂÔöÅÅ³ý¹æÔò** | 35 | 32.7% | Ä£Ê½Í³Ò»¡¢ÓïÒåÃ÷È·£¬Éó¼Æ½Å±¾ÕýÔòÎÞ·¨¸²¸Ç |
-| **B Àà: Ðè´úÂëÐÞ¸´** | 25 | 23.4% | `\|\|` Ó¦¸ÄÎª `??` »ò¿É¼ò»¯µÄÐ´·¨ |
-| **C Àà: ¿É½ÓÊÜ** | 47 | 43.9% | ºÏÀíÄ¬ÈÏÖµ£¬ÎÞÐèÐÞ¸Ä |
-| **ºÏ¼Æ** | **107** | **100%** | |
+| **A ç±»: å¯æ–°å¢žæŽ’é™¤è§„åˆ™** | 35 | 32.7% | æ¨¡å¼ç»Ÿä¸€ã€è¯­ä¹‰æ˜Žç¡®ï¼Œå®¡è®¡è„šæœ¬æ­£åˆ™æ— æ³•è¦†ç›– |
+| **B ç±»: éœ€ä»£ç ä¿®å¤** | 25 | 23.4% | `\|\|` åº”æ”¹ä¸º `??` æˆ–å¯ç®€åŒ–çš„å†™æ³• |
+| **C ç±»: å¯æŽ¥å—** | 47 | 43.9% | åˆç†é»˜è®¤å€¼ï¼Œæ— éœ€ä¿®æ”¹ |
+| **åˆè®¡** | **107** | **100%** | |
 
 ---
 
-## A Àà: ¿ÉÐÂÔöÅÅ³ý¹æÔò (35 Ïî)
+## A ç±»: å¯æ–°å¢žæŽ’é™¤è§„åˆ™ (35 é¡¹)
 
-**¸ùÒò**: Éó¼Æ½Å±¾µÄ 13 ÌõÅÅ³ý¹æÔò´æÔÚÕýÔò±í´ïÊ½¸²¸ÇÃ¤Çø¡£ÏÖÓÐÅÅ³ý 5 (`?.prop ??`)¡¢ÅÅ³ý 8 (`as Type ??`)¡¢ÅÅ³ý 9 (`toString()/String() ??`) ¾ùÊ¹ÓÃÕ­Æ¥ÅäÕýÔò£¬ÎÞ·¨¸²¸ÇÒÔÏÂ 5 ÖÖ×ÓÄ£Ê½¡£
+**æ ¹å› **: å®¡è®¡è„šæœ¬çš„ 13 æ¡æŽ’é™¤è§„åˆ™å­˜åœ¨æ­£åˆ™è¡¨è¾¾å¼è¦†ç›–ç›²åŒºã€‚çŽ°æœ‰æŽ’é™¤ 5 (`?.prop ??`)ã€æŽ’é™¤ 8 (`as Type ??`)ã€æŽ’é™¤ 9 (`toString()/String() ??`) å‡ä½¿ç”¨çª„åŒ¹é…æ­£åˆ™ï¼Œæ— æ³•è¦†ç›–ä»¥ä¸‹ 5 ç§å­æ¨¡å¼ã€‚
 
-### A-1: ¿ÉÑ¡Á´ + ·½·¨µ÷ÓÃ + ¶µµ×Öµ (14 Ïî)
+### A-1: å¯é€‰é“¾ + æ–¹æ³•è°ƒç”¨ + å…œåº•å€¼ (14 é¡¹)
 
-**Ä£Ê½**: `?.method(args) ?? fallback`
-**Î´¸²¸ÇÔ­Òò**: ÅÅ³ý 5 ÕýÔò `\?\.\w+\s*(?:\?\?|\|\|)` ÒªÇó `\w+` ºóÖ±½Ó¸ú `\s*??`£¬µ«·½·¨µ÷ÓÃ´ø²ÎÊý `(args)` ´ò¶ÏÁËÆ¥Åä¡£
-**½¨ÒéÐÂÔöÅÅ³ý¹æÔò**: `/\?\.\w+\([^)]*\)\s*(?:\?\?|\|\|)/` -- ¿ÉÑ¡Á´·½·¨µ÷ÓÃºó¶µµ×Öµ
+**æ¨¡å¼**: `?.method(args) ?? fallback`
+**æœªè¦†ç›–åŽŸå› **: æŽ’é™¤ 5 æ­£åˆ™ `\?\.\w+\s*(?:\?\?|\|\|)` è¦æ±‚ `\w+` åŽç›´æŽ¥è·Ÿ `\s*??`ï¼Œä½†æ–¹æ³•è°ƒç”¨å¸¦å‚æ•° `(args)` æ‰“æ–­äº†åŒ¹é…ã€‚
+**å»ºè®®æ–°å¢žæŽ’é™¤è§„åˆ™**: `/\?\.\w+\([^)]*\)\s*(?:\?\?|\|\|)/` -- å¯é€‰é“¾æ–¹æ³•è°ƒç”¨åŽå…œåº•å€¼
 
-| ÎÄ¼þ | ÐÐºÅ | ¾ßÌå´úÂë | ¶µµ×ÓïÒå |
+| æ–‡ä»¶ | è¡Œå· | å…·ä½“ä»£ç  | å…œåº•è¯­ä¹‰ |
 |------|------|---------|---------|
-| `services/analysis/dataFusionEngine.ts` | 340 | `ma5?.toFixed(2) ?? 'N/A'` | ÈÕÖ¾ÏÔÊ¾¶µµ× |
-| `services/analysis/dataFusionEngine.ts` | 341 | `ma20?.toFixed(2) ?? 'N/A'` | ÈÕÖ¾ÏÔÊ¾¶µµ× |
-| `services/analysis/dataFusionEngine.ts` | 342 | `rsi6?.toFixed(1) ?? 'N/A'` | ÈÕÖ¾ÏÔÊ¾¶µµ× |
-| `services/analysis/dataFusionEngine.ts` | 343 | `macdResult?.macd.toFixed(3) ?? 'N/A'` | ÈÕÖ¾ÏÔÊ¾¶µµ× |
-| `services/analysis/dataFusionEngine.ts` | 344 | `atr?.toFixed(2) ?? 'N/A'` | ÈÕÖ¾ÏÔÊ¾¶µµ× |
-| `services/input/batchImportService.ts` | 385 | `.pop()?.toLowerCase() ?? ''` | À©Õ¹ÃûÌáÈ¡¶µµ× |
-| `services/scoring/v6-engine/calculators/l7_l8.ts` | 322 | `chip.levels.CSR?.toFixed(1) ?? 'N/A'` | ÈÕÖ¾ÏÔÊ¾¶µµ× |
-| `services/trading/strategyEngine.ts` | 102 | `valuationScore?.toFixed(2) ?? 'null'` | ×Ö·û´®¸ñÊ½»¯ |
-| `services/trading/strategyEngine.ts` | 278 | `valuationScore?.toFixed(2) ?? '-'` | ×Ö·û´®¸ñÊ½»¯ |
-| `components/cabin/IndustryHistoryCard.tsx` | 30 | `record.overallScore?.toFixed(2) ?? 'N/A'` | ±í¸ñÏÔÊ¾¶µµ× |
-| `components/cabin/IntelligentScoreBasisCard.tsx` | 96 | `record.overallScore?.toFixed(2) ?? 'N/A'` | ±í¸ñÏÔÊ¾¶µµ× |
-| `components/cabin/ScoreHistoryTable.tsx` | 58 | `record.overallScore?.toFixed(2) ?? 'N/A'` | ±í¸ñÏÔÊ¾¶µµ× |
-| `pages/analysis/StockAnalysisPage.tsx` | 85 | `stock.price?.toFixed(2) ?? '¡ª'` | ¿¨Æ¬ÏÔÊ¾¶µµ× |
-| `pages/analysis/StockAnalysisPage.tsx` | 91 | `stock.pe?.toFixed(2) ?? '¡ª'` | ¿¨Æ¬ÏÔÊ¾¶µµ× |
-| `pages/analysis/StockAnalysisPage.tsx` | 97 | `stock.pb?.toFixed(2) ?? '¡ª'` | ¿¨Æ¬ÏÔÊ¾¶µµ× |
+| `services/analysis/dataFusionEngine.ts` | 340 | `ma5?.toFixed(2) ?? 'N/A'` | æ—¥å¿—æ˜¾ç¤ºå…œåº• |
+| `services/analysis/dataFusionEngine.ts` | 341 | `ma20?.toFixed(2) ?? 'N/A'` | æ—¥å¿—æ˜¾ç¤ºå…œåº• |
+| `services/analysis/dataFusionEngine.ts` | 342 | `rsi6?.toFixed(1) ?? 'N/A'` | æ—¥å¿—æ˜¾ç¤ºå…œåº• |
+| `services/analysis/dataFusionEngine.ts` | 343 | `macdResult?.macd.toFixed(3) ?? 'N/A'` | æ—¥å¿—æ˜¾ç¤ºå…œåº• |
+| `services/analysis/dataFusionEngine.ts` | 344 | `atr?.toFixed(2) ?? 'N/A'` | æ—¥å¿—æ˜¾ç¤ºå…œåº• |
+| `services/input/batchImportService.ts` | 385 | `.pop()?.toLowerCase() ?? ''` | æ‰©å±•åæå–å…œåº• |
+| `services/scoring/v6-engine/calculators/l7_l8.ts` | 322 | `chip.levels.CSR?.toFixed(1) ?? 'N/A'` | æ—¥å¿—æ˜¾ç¤ºå…œåº• |
+| `services/trading/strategyEngine.ts` | 102 | `valuationScore?.toFixed(2) ?? 'null'` | å­—ç¬¦ä¸²æ ¼å¼åŒ– |
+| `services/trading/strategyEngine.ts` | 278 | `valuationScore?.toFixed(2) ?? '-'` | å­—ç¬¦ä¸²æ ¼å¼åŒ– |
+| `components/cabin/IndustryHistoryCard.tsx` | 30 | `record.overallScore?.toFixed(2) ?? 'N/A'` | è¡¨æ ¼æ˜¾ç¤ºå…œåº• |
+| `components/cabin/IntelligentScoreBasisCard.tsx` | 96 | `record.overallScore?.toFixed(2) ?? 'N/A'` | è¡¨æ ¼æ˜¾ç¤ºå…œåº• |
+| `components/cabin/ScoreHistoryTable.tsx` | 58 | `record.overallScore?.toFixed(2) ?? 'N/A'` | è¡¨æ ¼æ˜¾ç¤ºå…œåº• |
+| `pages/analysis/StockAnalysisPage.tsx` | 85 | `stock.price?.toFixed(2) ?? 'â€”'` | å¡ç‰‡æ˜¾ç¤ºå…œåº• |
+| `pages/analysis/StockAnalysisPage.tsx` | 91 | `stock.pe?.toFixed(2) ?? 'â€”'` | å¡ç‰‡æ˜¾ç¤ºå…œåº• |
+| `pages/analysis/StockAnalysisPage.tsx` | 97 | `stock.pb?.toFixed(2) ?? 'â€”'` | å¡ç‰‡æ˜¾ç¤ºå…œåº• |
 
-> ×¢: StockAnalysisPage ÐÐ 85/91/97 Óë dataFusionEngine ÐÐ 340-344 ÎªÍêÈ«ÏàÍ¬µÄ `?.toFixed(N) ?? 'display'` Ä£Ê½¡£
+> æ³¨: StockAnalysisPage è¡Œ 85/91/97 ä¸Ž dataFusionEngine è¡Œ 340-344 ä¸ºå®Œå…¨ç›¸åŒçš„ `?.toFixed(N) ?? 'display'` æ¨¡å¼ã€‚
 
-### A-2: ·Ç ASCII ÊôÐÔ·ÃÎÊ + ¶µµ×Öµ (5 Ïî)
+### A-2: éž ASCII å±žæ€§è®¿é—® + å…œåº•å€¼ (5 é¡¹)
 
-**Ä£Ê½**: `?.ÖÐÎÄÊôÐÔÃû ?? value`
-**Î´¸²¸ÇÔ­Òò**: ÅÅ³ý 5 ÕýÔò `\?\.\w+` ÖÐ `\w` µÈ¼ÛÓÚ `[A-Za-z0-9_]`£¬²»Æ¥ÅäÖÐÎÄ×Ö·û¡£
-**½¨ÒéÐÂÔöÅÅ³ý¹æÔò**: `/\?\.[^\s(]+\s*(?:\?\?|\|\|)/` -- ½« `\w+` À©Õ¹Îª `[^\s(]+` ÒÔÖ§³Ö Unicode ÊôÐÔÃû
+**æ¨¡å¼**: `?.ä¸­æ–‡å±žæ€§å ?? value`
+**æœªè¦†ç›–åŽŸå› **: æŽ’é™¤ 5 æ­£åˆ™ `\?\.\w+` ä¸­ `\w` ç­‰ä»·äºŽ `[A-Za-z0-9_]`ï¼Œä¸åŒ¹é…ä¸­æ–‡å­—ç¬¦ã€‚
+**å»ºè®®æ–°å¢žæŽ’é™¤è§„åˆ™**: `/\?\.[^\s(]+\s*(?:\?\?|\|\|)/` -- å°† `\w+` æ‰©å±•ä¸º `[^\s(]+` ä»¥æ”¯æŒ Unicode å±žæ€§å
 
-| ÎÄ¼þ | ÐÐºÅ | ¾ßÌå´úÂë | ¶µµ×ÓïÒå |
+| æ–‡ä»¶ | è¡Œå· | å…·ä½“ä»£ç  | å…œåº•è¯­ä¹‰ |
 |------|------|---------|---------|
-| `services/analysis/dataFusionEngine.ts` | 460 | `v6Factors?.¶¯Á¿ ?? null` | Òò×ÓÓ³Éä |
-| `services/analysis/dataFusionEngine.ts` | 461 | `v6Factors?.¹ÀÖµ ?? null` | Òò×ÓÓ³Éä |
-| `services/analysis/dataFusionEngine.ts` | 462 | `v6Factors?.ÖÊÁ¿ ?? null` | Òò×ÓÓ³Éä |
-| `services/analysis/dataFusionEngine.ts` | 463 | `v6Factors?.ÇéÐ÷ ?? null` | Òò×ÓÓ³Éä |
-| `services/trading/scoringAdapter.ts` | 118 | `v6Score?.factors?.¹ÀÖµ ?? null` | Òò×ÓÓ³Éä |
+| `services/analysis/dataFusionEngine.ts` | 460 | `v6Factors?.åŠ¨é‡ ?? null` | å› å­æ˜ å°„ |
+| `services/analysis/dataFusionEngine.ts` | 461 | `v6Factors?.ä¼°å€¼ ?? null` | å› å­æ˜ å°„ |
+| `services/analysis/dataFusionEngine.ts` | 462 | `v6Factors?.è´¨é‡ ?? null` | å› å­æ˜ å°„ |
+| `services/analysis/dataFusionEngine.ts` | 463 | `v6Factors?.æƒ…ç»ª ?? null` | å› å­æ˜ å°„ |
+| `services/trading/scoringAdapter.ts` | 118 | `v6Score?.factors?.ä¼°å€¼ ?? null` | å› å­æ˜ å°„ |
 
-### A-3: º¯Êýµ÷ÓÃ + ¶µµ×Öµ (7 Ïî)
+### A-3: å‡½æ•°è°ƒç”¨ + å…œåº•å€¼ (7 é¡¹)
 
-**Ä£Ê½**: `functionCall(args) ?? value`
-**Î´¸²¸ÇÔ­Òò**: ÅÅ³ý 9 ½ö¸²¸Ç `toString()/String()`£¬ÅÅ³ý 11 ½ö¸²¸Ç `.get()`¡£ÆäËûº¯Êýµ÷ÓÃ£¨Èç `parseTimestamp()`¡¢`getMetricValue()`¡¢`.pop()`£©²»ÔÚÅÅ³ý·¶Î§¡£
-**½¨ÒéÐÂÔöÅÅ³ý¹æÔò**: `/\w+\([^)]*\)\s*(?:\?\?|\|\|)/` -- Í¨ÓÃº¯Êýµ÷ÓÃºó¶µµ×Öµ
+**æ¨¡å¼**: `functionCall(args) ?? value`
+**æœªè¦†ç›–åŽŸå› **: æŽ’é™¤ 9 ä»…è¦†ç›– `toString()/String()`ï¼ŒæŽ’é™¤ 11 ä»…è¦†ç›– `.get()`ã€‚å…¶ä»–å‡½æ•°è°ƒç”¨ï¼ˆå¦‚ `parseTimestamp()`ã€`getMetricValue()`ã€`.pop()`ï¼‰ä¸åœ¨æŽ’é™¤èŒƒå›´ã€‚
+**å»ºè®®æ–°å¢žæŽ’é™¤è§„åˆ™**: `/\w+\([^)]*\)\s*(?:\?\?|\|\|)/` -- é€šç”¨å‡½æ•°è°ƒç”¨åŽå…œåº•å€¼
 
-| ÎÄ¼þ | ÐÐºÅ | ¾ßÌå´úÂë | ¶µµ×ÓïÒå |
+| æ–‡ä»¶ | è¡Œå· | å…·ä½“ä»£ç  | å…œåº•è¯­ä¹‰ |
 |------|------|---------|---------|
-| `services/llm/llmClient.ts` | 325 | `lines.pop() ?? ''` | Á÷½âÎöÐÐ»º³å |
-| `services/system/migration/migrationTransformers.ts` | 203 | `parseTimestamp(q.updatedAt) ?? 0` | Ê±¼ä´Á½âÎö¶µµ× |
-| `services/trading/strategyEngine.ts` | 282 | `momentum ?? (() => {...})()` | IIFE ¶µµ×£¨º¬ logger.warn£© |
-| `services/trading/scoringAdapter.ts` | 150 | `Math.max(...) \|\| null` | Ê±¼ä´ÁÈ¡×î´óÖµ |
-| `components/analysis/sector/SectorRotationHeatmap.tsx` | 96 | `getMetricValue(a, metric) ?? 0` | ÅÅÐò±È½Ï¶µµ× |
-| `components/analysis/sector/SectorRotationHeatmap.tsx` | 97 | `getMetricValue(b, metric) ?? 0` | ÅÅÐò±È½Ï¶µµ× |
-| `pages/analysis/HotSectorPage.tsx` | 172 | `(value ?? 0) * 100` | À×´ïÍ¼ÊýÖµ×ª»» |
+| `services/llm/llmClient.ts` | 325 | `lines.pop() ?? ''` | æµè§£æžè¡Œç¼“å†² |
+| `services/system/migration/migrationTransformers.ts` | 203 | `parseTimestamp(q.updatedAt) ?? 0` | æ—¶é—´æˆ³è§£æžå…œåº• |
+| `services/trading/strategyEngine.ts` | 282 | `momentum ?? (() => {...})()` | IIFE å…œåº•ï¼ˆå« logger.warnï¼‰ |
+| `services/trading/scoringAdapter.ts` | 150 | `Math.max(...) \|\| null` | æ—¶é—´æˆ³å–æœ€å¤§å€¼ |
+| `components/analysis/sector/SectorRotationHeatmap.tsx` | 96 | `getMetricValue(a, metric) ?? 0` | æŽ’åºæ¯”è¾ƒå…œåº• |
+| `components/analysis/sector/SectorRotationHeatmap.tsx` | 97 | `getMetricValue(b, metric) ?? 0` | æŽ’åºæ¯”è¾ƒå…œåº• |
+| `pages/analysis/HotSectorPage.tsx` | 172 | `(value ?? 0) * 100` | é›·è¾¾å›¾æ•°å€¼è½¬æ¢ |
 
-### A-4: `.split().pop()` / `.listTools()` + ¶µµ×Öµ (4 Ïî)
+### A-4: `.split().pop()` / `.listTools()` + å…œåº•å€¼ (4 é¡¹)
 
-**Ä£Ê½**: `uri.split('/').pop() ?? ''` ºÍ `xxx.method() ?? []`
-**Î´¸²¸ÇÔ­Òò**: Í¬ A-3£¬Á´Ê½·½·¨µ÷ÓÃ `.pop()` ºÍ `.listTools()` ²»ÔÚÅÅ³ý·¶Î§¡£
-**½¨Òé**: ºÏ²¢µ½ A-3 µÄÍ¨ÓÃº¯Êýµ÷ÓÃÅÅ³ý¹æÔòÖÐ¡£
+**æ¨¡å¼**: `uri.split('/').pop() ?? ''` å’Œ `xxx.method() ?? []`
+**æœªè¦†ç›–åŽŸå› **: åŒ A-3ï¼Œé“¾å¼æ–¹æ³•è°ƒç”¨ `.pop()` å’Œ `.listTools()` ä¸åœ¨æŽ’é™¤èŒƒå›´ã€‚
+**å»ºè®®**: åˆå¹¶åˆ° A-3 çš„é€šç”¨å‡½æ•°è°ƒç”¨æŽ’é™¤è§„åˆ™ä¸­ã€‚
 
-| ÎÄ¼þ | ÐÐºÅ | ¾ßÌå´úÂë | ¶µµ×ÓïÒå |
+| æ–‡ä»¶ | è¡Œå· | å…·ä½“ä»£ç  | å…œåº•è¯­ä¹‰ |
 |------|------|---------|---------|
-| `mcp/servers/analysis/analysisServer.ts` | 111 | `uri.split('/').pop() ?? ''` | URI ½âÎö |
-| `mcp/servers/portfolio/portfolioServer.ts` | 98 | `uri.split('/').pop() ?? ''` | URI ½âÎö |
-| `mcp/servers/screening/screeningServer.ts` | 71 | `uri.split('/').pop() ?? ''` | URI ½âÎö |
-| `pages/command/agent/AgentTriggerPage.tsx` | 34 | `.listTools() ?? []` | ¹¤¾ßÁÐ±í¶µµ× |
+| `mcp/servers/analysis/analysisServer.ts` | 111 | `uri.split('/').pop() ?? ''` | URI è§£æž |
+| `mcp/servers/portfolio/portfolioServer.ts` | 98 | `uri.split('/').pop() ?? ''` | URI è§£æž |
+| `mcp/servers/screening/screeningServer.ts` | 71 | `uri.split('/').pop() ?? ''` | URI è§£æž |
+| `pages/command/agent/AgentTriggerPage.tsx` | 34 | `.listTools() ?? []` | å·¥å…·åˆ—è¡¨å…œåº• |
 
-### A-5: ÀàÐÍ¶ÏÑÔ `as Type)` + ¶µµ×Öµ (5 Ïî)
+### A-5: ç±»åž‹æ–­è¨€ `as Type)` + å…œåº•å€¼ (5 é¡¹)
 
-**Ä£Ê½**: `(args.x as Type) ?? defaultValue`
-**Î´¸²¸ÇÔ­Òò**: ÅÅ³ý 8 ÕýÔò `as\s+\w+\s*\?\?` ÒªÇó `as Type` ºóÖ±½Ó¸ú `??`£¬µ«Êµ¼Ê´úÂëÖÐ `as Type)` ÓÐÓÒÀ¨ºÅ `)` ´ò¶ÏÁËÆ¥Åä¡£
-**½¨ÒéÐÂÔöÅÅ³ý¹æÔò**: `/as\s+\w+\)\s*(?:\?\?|\|\|)/` -- ÀàÐÍ¶ÏÑÔº¬À¨ºÅºó¶µµ×Öµ
+**æ¨¡å¼**: `(args.x as Type) ?? defaultValue`
+**æœªè¦†ç›–åŽŸå› **: æŽ’é™¤ 8 æ­£åˆ™ `as\s+\w+\s*\?\?` è¦æ±‚ `as Type` åŽç›´æŽ¥è·Ÿ `??`ï¼Œä½†å®žé™…ä»£ç ä¸­ `as Type)` æœ‰å³æ‹¬å· `)` æ‰“æ–­äº†åŒ¹é…ã€‚
+**å»ºè®®æ–°å¢žæŽ’é™¤è§„åˆ™**: `/as\s+\w+\)\s*(?:\?\?|\|\|)/` -- ç±»åž‹æ–­è¨€å«æ‹¬å·åŽå…œåº•å€¼
 
-| ÎÄ¼þ | ÐÐºÅ | ¾ßÌå´úÂë | ¶µµ×ÓïÒå |
+| æ–‡ä»¶ | è¡Œå· | å…·ä½“ä»£ç  | å…œåº•è¯­ä¹‰ |
 |------|------|---------|---------|
-| `mcp/servers/backtest/backtestServer.ts` | 50 | `(args.strategy as string) ?? 'composite'` | MCP ²ÎÊýÄ¬ÈÏÖµ |
-| `mcp/servers/fetcher/dataFetcherServer.ts` | 121 | `(args.period as ...) ?? 'daily'` | MCP ²ÎÊýÄ¬ÈÏÖµ |
-| `mcp/servers/fetcher/dataFetcherServer.ts` | 122 | `(args.adjust as ...) ?? 'qfq'` | MCP ²ÎÊýÄ¬ÈÏÖµ |
-| `mcp/servers/portfolio/portfolioServer.ts` | 44 | `(args.targetWeight as number) ?? 0.1` | MCP ²ÎÊýÄ¬ÈÏÖµ |
-| `mcp/servers/trade/tradeServer.ts` | 54 | `(args.symbol as string) ?? ''` | MCP ²ÎÊýÄ¬ÈÏÖµ |
+| `mcp/servers/backtest/backtestServer.ts` | 50 | `(args.strategy as string) ?? 'composite'` | MCP å‚æ•°é»˜è®¤å€¼ |
+| `mcp/servers/fetcher/dataFetcherServer.ts` | 121 | `(args.period as ...) ?? 'daily'` | MCP å‚æ•°é»˜è®¤å€¼ |
+| `mcp/servers/fetcher/dataFetcherServer.ts` | 122 | `(args.adjust as ...) ?? 'qfq'` | MCP å‚æ•°é»˜è®¤å€¼ |
+| `mcp/servers/portfolio/portfolioServer.ts` | 44 | `(args.targetWeight as number) ?? 0.1` | MCP å‚æ•°é»˜è®¤å€¼ |
+| `mcp/servers/trade/tradeServer.ts` | 54 | `(args.symbol as string) ?? ''` | MCP å‚æ•°é»˜è®¤å€¼ |
 
 ---
 
-### A Àà»ã×Ü: ½¨ÒéÐÂÔöµÄ 4 ÌõÅÅ³ý¹æÔò
+### A ç±»æ±‡æ€»: å»ºè®®æ–°å¢žçš„ 4 æ¡æŽ’é™¤è§„åˆ™
 
 ```typescript
-// ÅÅ³ý 14: ¿ÉÑ¡Á´ + ·½·¨µ÷ÓÃ(º¬²ÎÊý) + ¶µµ×Öµ
+// æŽ’é™¤ 14: å¯é€‰é“¾ + æ–¹æ³•è°ƒç”¨(å«å‚æ•°) + å…œåº•å€¼
 if (/\?\.\w+\([^)]*\)\s*(?:\?\?|\|\|)/.test(raw)) continue
 
-// ÅÅ³ý 15: ·Ç ASCII ÊôÐÔ·ÃÎÊ + ¶µµ×Öµ (Unicode ÊôÐÔÃû)
+// æŽ’é™¤ 15: éž ASCII å±žæ€§è®¿é—® + å…œåº•å€¼ (Unicode å±žæ€§å)
 if (/\?\.[^\s(]+\s*(?:\?\?|\|\|)/.test(raw)) continue
 
-// ÅÅ³ý 16: Í¨ÓÃº¯Êýµ÷ÓÃ + ¶µµ×Öµ
+// æŽ’é™¤ 16: é€šç”¨å‡½æ•°è°ƒç”¨ + å…œåº•å€¼
 if (/\w+\([^)]*\)\s*(?:\?\?|\|\|)/.test(raw)) continue
 
-// ÅÅ³ý 17: ÀàÐÍ¶ÏÑÔº¬ÓÒÀ¨ºÅºó¶µµ×Öµ
+// æŽ’é™¤ 17: ç±»åž‹æ–­è¨€å«å³æ‹¬å·åŽå…œåº•å€¼
 if (/as\s+\w+\)\s*(?:\?\?|\|\|)/.test(raw)) continue
 ```
 
-**Ô¤¼ÆÐ§¹û**: ÐÂÔö 4 ÌõÅÅ³ý¹æÔòºó£¬35 Ïî Warning ½«±»Ïû³ý£¬Ê£Óà Warning ´Ó 107 ½µÖÁ 72¡£
+**é¢„è®¡æ•ˆæžœ**: æ–°å¢ž 4 æ¡æŽ’é™¤è§„åˆ™åŽï¼Œ35 é¡¹ Warning å°†è¢«æ¶ˆé™¤ï¼Œå‰©ä½™ Warning ä»Ž 107 é™è‡³ 72ã€‚
 
 ---
 
-## B Àà: Ðè´úÂëÐÞ¸´ (25 Ïî)
+## B ç±»: éœ€ä»£ç ä¿®å¤ (25 é¡¹)
 
-**¸ùÒò**: Ê¹ÓÃ `||` Ìæ´ú `??` ½øÐÐÄ¬ÈÏÖµ¶µµ×¡£`||` »á½«ËùÓÐ falsy Öµ£¨`0`¡¢`''`¡¢`false`¡¢`NaN`£©×ª»»ÎªÄ¬ÈÏÖµ£¬¶ø `??` ½ö¶Ô `null/undefined` ½øÐÐ¶µµ×£¬ÓïÒå¸ü¾«È·¡£
+**æ ¹å› **: ä½¿ç”¨ `||` æ›¿ä»£ `??` è¿›è¡Œé»˜è®¤å€¼å…œåº•ã€‚`||` ä¼šå°†æ‰€æœ‰ falsy å€¼ï¼ˆ`0`ã€`''`ã€`false`ã€`NaN`ï¼‰è½¬æ¢ä¸ºé»˜è®¤å€¼ï¼Œè€Œ `??` ä»…å¯¹ `null/undefined` è¿›è¡Œå…œåº•ï¼Œè¯­ä¹‰æ›´ç²¾ç¡®ã€‚
 
-### B-1: `||` Ó¦¸ÄÎª `??` (17 Ïî)
+### B-1: `||` åº”æ”¹ä¸º `??` (17 é¡¹)
 
-| ÎÄ¼þ | ÐÐºÅ | µ±Ç°´úÂë | ½¨ÒéÐÞ¸´ | ·çÏÕËµÃ÷ |
+| æ–‡ä»¶ | è¡Œå· | å½“å‰ä»£ç  | å»ºè®®ä¿®å¤ | é£Žé™©è¯´æ˜Ž |
 |------|------|---------|---------|---------|
-| `services/fetcher/directDataAPI.ts` | 300 | `period \|\| 'day'` | `period ?? 'day'` | ¿Õ×Ö·û´® period Ó¦±£Áô¶ø·Ç¸²¸Ç |
-| `services/scoring/industryScorePrompt.ts` | 48 | `reportText \|\| 'Î´Ìá¹©'` | `reportText ?? 'Î´Ìá¹©'` | ¿Õ×Ö·û´®ÊÇÓÐÐ§ÊäÈë |
-| `services/scoring/intelligentScorePrompt.ts` | 32 | `reportText \|\| 'Î´Ìá¹©'` | `reportText ?? 'Î´Ìá¹©'` | Í¬ÉÏ |
-| `services/scoring/v6ScorePrompt.ts` | 77 | `factorsInfo \|\| 'ÎÞ'` | `factorsInfo ?? 'ÎÞ'` | ¿Õ×Ö·û´®ÊÇÓÐÐ§ÊäÈë |
-| `services/trading/scoringAdapter.ts` | 150 | `Math.max(...) \|\| null` | `Math.max(...) ?? null` | \|\| »á½« 0 ×ªÎª null |
-| `components/cabin/IndustryHistoryCard.tsx` | 32 | `.join(', ') \|\| 'ÎÞ'` | `.join(', ') ?? 'ÎÞ'` | ¿ÕÊý×é join ½á¹û '' ±»×ª»» |
-| `components/cabin/IntelligentScoreBasisCard.tsx` | 41 | `.join(', ') \|\| 'ÎÞ'` | `.join(', ') ?? 'ÎÞ'` | Í¬ÉÏ |
-| `components/cabin/IntelligentScoreBasisCard.tsx` | 104 | `.join(', ') \|\| 'ÎÞ'` | `.join(', ') ?? 'ÎÞ'` | Í¬ÉÏ |
-| `components/cabin/ScoreHistoryTable.tsx` | 70 | `.join(', ') \|\| 'ÎÞ'` | `.join(', ') ?? 'ÎÞ'` | Í¬ÉÏ |
-| `components/input/StockSearch.tsx` | 144 | `placeholder \|\| 'ËÑË÷¹ÉÆ±'` | `placeholder ?? 'ËÑË÷¹ÉÆ±'` | ¿Õ×Ö·û´® placeholder ÓÐÐ§ |
-| `components/localDoc/LocalDocCard.tsx` | 34 | `summary \|\| 'ÎÞÄÚÈÝÕªÒª'` | `summary ?? 'ÎÞÄÚÈÝÕªÒª'` | ¿Õ×Ö·û´®ÊÇÓÐÐ§ÄÚÈÝ |
-| `components/ui/ErrorState.tsx` | 111 | `errorMessage \|\| '·¢ÉúÁËÎ´Öª´íÎó'` | `errorMessage ?? '·¢ÉúÁËÎ´Öª´íÎó'` | ¿Õ×Ö·û´®´íÎóÏûÏ¢ÓÐÐ§ |
-| `core/databridge.ts` | 941 | `.join(', ') \|\| 'ÎÞ'` | `.join(', ') ?? 'ÎÞ'` | ¿ÕÊý×é join ½á¹û '' ±»×ª»» |
-| `main.tsx` | 8 | `(...) \|\| 'info'` | `(...) ?? 'info'` | »·¾³±äÁ¿²»»áÊÇ¿Õ×Ö·û´® |
-| `pages/input/SevenDimConfigPage.tsx` | 452 | `Number(e.target.value) \|\| 0` | `Number(e.target.value) ?? 0` | NaN Ðè¶îÍâ´¦Àí |
-| `pages/input/SevenDimConfigPage.tsx` | 467 | `Number(e.target.value) \|\| 0` | `Number(e.target.value) ?? 0` | NaN Ðè¶îÍâ´¦Àí |
-| `pages/trading/components/TradeModal.tsx` | 133 | `quantity \|\| ''` | `quantity ?? ''` | 0 ÊÇÓÐÐ§ÊýÁ¿Öµ |
+| `services/fetcher/directDataAPI.ts` | 300 | `period \|\| 'day'` | `period ?? 'day'` | ç©ºå­—ç¬¦ä¸² period åº”ä¿ç•™è€Œéžè¦†ç›– |
+| `services/scoring/industryScorePrompt.ts` | 48 | `reportText \|\| 'æœªæä¾›'` | `reportText ?? 'æœªæä¾›'` | ç©ºå­—ç¬¦ä¸²æ˜¯æœ‰æ•ˆè¾“å…¥ |
+| `services/scoring/intelligentScorePrompt.ts` | 32 | `reportText \|\| 'æœªæä¾›'` | `reportText ?? 'æœªæä¾›'` | åŒä¸Š |
+| `services/scoring/v6ScorePrompt.ts` | 77 | `factorsInfo \|\| 'æ— '` | `factorsInfo ?? 'æ— '` | ç©ºå­—ç¬¦ä¸²æ˜¯æœ‰æ•ˆè¾“å…¥ |
+| `services/trading/scoringAdapter.ts` | 150 | `Math.max(...) \|\| null` | `Math.max(...) ?? null` | \|\| ä¼šå°† 0 è½¬ä¸º null |
+| `components/cabin/IndustryHistoryCard.tsx` | 32 | `.join(', ') \|\| 'æ— '` | `.join(', ') ?? 'æ— '` | ç©ºæ•°ç»„ join ç»“æžœ '' è¢«è½¬æ¢ |
+| `components/cabin/IntelligentScoreBasisCard.tsx` | 41 | `.join(', ') \|\| 'æ— '` | `.join(', ') ?? 'æ— '` | åŒä¸Š |
+| `components/cabin/IntelligentScoreBasisCard.tsx` | 104 | `.join(', ') \|\| 'æ— '` | `.join(', ') ?? 'æ— '` | åŒä¸Š |
+| `components/cabin/ScoreHistoryTable.tsx` | 70 | `.join(', ') \|\| 'æ— '` | `.join(', ') ?? 'æ— '` | åŒä¸Š |
+| `components/input/StockSearch.tsx` | 144 | `placeholder \|\| 'æœç´¢è‚¡ç¥¨'` | `placeholder ?? 'æœç´¢è‚¡ç¥¨'` | ç©ºå­—ç¬¦ä¸² placeholder æœ‰æ•ˆ |
+| `components/localDoc/LocalDocCard.tsx` | 34 | `summary \|\| 'æ— å†…å®¹æ‘˜è¦'` | `summary ?? 'æ— å†…å®¹æ‘˜è¦'` | ç©ºå­—ç¬¦ä¸²æ˜¯æœ‰æ•ˆå†…å®¹ |
+| `components/ui/ErrorState.tsx` | 111 | `errorMessage \|\| 'å‘ç”Ÿäº†æœªçŸ¥é”™è¯¯'` | `errorMessage ?? 'å‘ç”Ÿäº†æœªçŸ¥é”™è¯¯'` | ç©ºå­—ç¬¦ä¸²é”™è¯¯æ¶ˆæ¯æœ‰æ•ˆ |
+| `core/databridge.ts` | 941 | `.join(', ') \|\| 'æ— '` | `.join(', ') ?? 'æ— '` | ç©ºæ•°ç»„ join ç»“æžœ '' è¢«è½¬æ¢ |
+| `main.tsx` | 8 | `(...) \|\| 'info'` | `(...) ?? 'info'` | çŽ¯å¢ƒå˜é‡ä¸ä¼šæ˜¯ç©ºå­—ç¬¦ä¸² |
+| `pages/input/SevenDimConfigPage.tsx` | 452 | `Number(e.target.value) \|\| 0` | `Number(e.target.value) ?? 0` | NaN éœ€é¢å¤–å¤„ç† |
+| `pages/input/SevenDimConfigPage.tsx` | 467 | `Number(e.target.value) \|\| 0` | `Number(e.target.value) ?? 0` | NaN éœ€é¢å¤–å¤„ç† |
+| `pages/trading/components/TradeModal.tsx` | 133 | `quantity \|\| ''` | `quantity ?? ''` | 0 æ˜¯æœ‰æ•ˆæ•°é‡å€¼ |
 
-### B-2: ¿ÉÊ¹ÓÃ `??=` ¼ò»¯ (2 Ïî)
+### B-2: å¯ä½¿ç”¨ `??=` ç®€åŒ– (2 é¡¹)
 
-| ÎÄ¼þ | ÐÐºÅ | µ±Ç°´úÂë | ½¨ÒéÐÞ¸´ |
+| æ–‡ä»¶ | è¡Œå· | å½“å‰ä»£ç  | å»ºè®®ä¿®å¤ |
 |------|------|---------|---------|
 | `cockpit/widgets/StockChatWidget.tsx` | 79 | `listBuffer = listBuffer ?? []` | `listBuffer ??= []` |
 | `cockpit/widgets/StockChatWidget.tsx` | 89 | `listBuffer = listBuffer ?? []` | `listBuffer ??= []` |
 
-### B-3: ½¨ÒéÌáÈ¡Îª³£Á¿ (6 Ïî)
+### B-3: å»ºè®®æå–ä¸ºå¸¸é‡ (6 é¡¹)
 
-| ÎÄ¼þ | ÐÐºÅ | µ±Ç°´úÂë | ½¨ÒéÐÞ¸´ |
+| æ–‡ä»¶ | è¡Œå· | å½“å‰ä»£ç  | å»ºè®®ä¿®å¤ |
 |------|------|---------|---------|
-| `services/analysis/sectorAnalysisEngine.ts` | 33 | `scoreDate ?? '½ñÌì'` | ÌáÈ¡ `DEFAULT_DATE_LABEL = '½ñÌì'` |
-| `services/trading/strategySnapshotService.ts` | 300 | `trigger ?? 'manual'` | ÌáÈ¡ `DEFAULT_TRIGGER = 'manual'` |
-| `services/useCase/createExecutionPlan.useCase.ts` | 190 | `accountType ?? 'paper'` | ÌáÈ¡ `DEFAULT_ACCOUNT_TYPE` |
-| `mcp/core/progress.ts` | 63 | `message ?? 'Íê³É'` | ÌáÈ¡ `DEFAULT_COMPLETE_MSG` |
-| `components/ui/List.tsx` | 73 | `empty ?? 'ÔÝÎÞÊý¾Ý'` | ÌáÈ¡ `DEFAULT_EMPTY_TEXT` |
-| `components/ui/Menu.tsx` | 28 | `defaultSelectedKeys ?? []` | ÌáÈ¡ `EMPTY_KEYS = []` ³£Á¿ |
+| `services/analysis/sectorAnalysisEngine.ts` | 33 | `scoreDate ?? 'ä»Šå¤©'` | æå– `DEFAULT_DATE_LABEL = 'ä»Šå¤©'` |
+| `services/trading/strategySnapshotService.ts` | 300 | `trigger ?? 'manual'` | æå– `DEFAULT_TRIGGER = 'manual'` |
+| `services/useCase/createExecutionPlan.useCase.ts` | 190 | `accountType ?? 'paper'` | æå– `DEFAULT_ACCOUNT_TYPE` |
+| `mcp/core/progress.ts` | 63 | `message ?? 'å®Œæˆ'` | æå– `DEFAULT_COMPLETE_MSG` |
+| `components/ui/List.tsx` | 73 | `empty ?? 'æš‚æ— æ•°æ®'` | æå– `DEFAULT_EMPTY_TEXT` |
+| `components/ui/Menu.tsx` | 28 | `defaultSelectedKeys ?? []` | æå– `EMPTY_KEYS = []` å¸¸é‡ |
 
 ---
 
-## C Àà: ¿É½ÓÊÜ (47 Ïî)
+## C ç±»: å¯æŽ¥å— (47 é¡¹)
 
-**¸ùÒò**: ¼òµ¥±äÁ¿ + `??` Ä¬ÈÏÖµÄ£Ê½¡£ÕâÐ©ÊÇ TypeScript ·ÀÓùÐÔ±à³ÌµÄ±ê×¼Ð´·¨£¬±äÁ¿¿ÉÄÜÎª `null/undefined`£¬Ìá¹©Ä¬ÈÏÖµÊÇºÏÀíµÄ¡£ÏÖÓÐÉó¼Æ½Å±¾µÄÅÅ³ý¹æÔòÎ´¸²¸Ç"¼òµ¥±äÁ¿"³¡¾°£¬µ«ÕâÀà´úÂëÎÞÊµ¼Ê·çÏÕ¡£
+**æ ¹å› **: ç®€å•å˜é‡ + `??` é»˜è®¤å€¼æ¨¡å¼ã€‚è¿™äº›æ˜¯ TypeScript é˜²å¾¡æ€§ç¼–ç¨‹çš„æ ‡å‡†å†™æ³•ï¼Œå˜é‡å¯èƒ½ä¸º `null/undefined`ï¼Œæä¾›é»˜è®¤å€¼æ˜¯åˆç†çš„ã€‚çŽ°æœ‰å®¡è®¡è„šæœ¬çš„æŽ’é™¤è§„åˆ™æœªè¦†ç›–"ç®€å•å˜é‡"åœºæ™¯ï¼Œä½†è¿™ç±»ä»£ç æ— å®žé™…é£Žé™©ã€‚
 
-### C-1: ¼òµ¥±äÁ¿ `??` ÊýÖµ/Êý×éÄ¬ÈÏÖµ (9 Ïî)
+### C-1: ç®€å•å˜é‡ `??` æ•°å€¼/æ•°ç»„é»˜è®¤å€¼ (9 é¡¹)
 
-| ÎÄ¼þ | ÐÐºÅ | ´úÂë | ½ÓÊÜÀíÓÉ |
+| æ–‡ä»¶ | è¡Œå· | ä»£ç  | æŽ¥å—ç†ç”± |
 |------|------|------|---------|
-| `services/analysis/rotation/rotationCalculator.ts` | 59 | `v ?? 0` | ¸¨Öúº¯Êý°²È«×ª»»£¬undefined -> 0 ÊÇÔ¤ÆÚÐÐÎª |
-| `services/analysis/rotation/rotationCalculator.ts` | 139 | `poolStocks ?? []` | Êý×é¶µµ×£¬È·±£ºóÐø¿Éµü´ú |
-| `services/scoring/v6-engine/calculators/l0_l1_l2.ts` | 322 | `raw ?? 0` | ÆÀ·ÖÈ¨ÖØ¶µµ×£¬ÉÏÓÎÒÑÐ£Ñé |
-| `services/scoring/v6-engine/calculators/l4_l5_l6.ts` | 48 | `np ?? 0` | ¾»ÀûÈó¶µµ×£¬ÒÑÓÐ warn ÈÕÖ¾ |
-| `services/scoring/v6-engine/calculators/lMinus1.ts` | 64 | `sector ?? ''` / `name ?? ''` | °å¿éÃû/Ãû³Æ¶µµ×£¨Í¬ÐÐ 2 Ïî£© |
-| `services/scoring/v6-engine/factorContributions.ts` | 50 | `rawScore ?? 0` | ÆÀ·Ö¶µµ× |
-| `services/scoring/v6-engine/factorContributions.ts` | 51 | `rawWeight ?? 0` | È¨ÖØ¶µµ× |
-| `services/scoring/v6-engine/factorContributions.ts` | 57 | `rawW ?? 0` | È¨ÖØ¶µµ× |
+| `services/analysis/rotation/rotationCalculator.ts` | 59 | `v ?? 0` | è¾…åŠ©å‡½æ•°å®‰å…¨è½¬æ¢ï¼Œundefined -> 0 æ˜¯é¢„æœŸè¡Œä¸º |
+| `services/analysis/rotation/rotationCalculator.ts` | 139 | `poolStocks ?? []` | æ•°ç»„å…œåº•ï¼Œç¡®ä¿åŽç»­å¯è¿­ä»£ |
+| `services/scoring/v6-engine/calculators/l0_l1_l2.ts` | 322 | `raw ?? 0` | è¯„åˆ†æƒé‡å…œåº•ï¼Œä¸Šæ¸¸å·²æ ¡éªŒ |
+| `services/scoring/v6-engine/calculators/l4_l5_l6.ts` | 48 | `np ?? 0` | å‡€åˆ©æ¶¦å…œåº•ï¼Œå·²æœ‰ warn æ—¥å¿— |
+| `services/scoring/v6-engine/calculators/lMinus1.ts` | 64 | `sector ?? ''` / `name ?? ''` | æ¿å—å/åç§°å…œåº•ï¼ˆåŒè¡Œ 2 é¡¹ï¼‰ |
+| `services/scoring/v6-engine/factorContributions.ts` | 50 | `rawScore ?? 0` | è¯„åˆ†å…œåº• |
+| `services/scoring/v6-engine/factorContributions.ts` | 51 | `rawWeight ?? 0` | æƒé‡å…œåº• |
+| `services/scoring/v6-engine/factorContributions.ts` | 57 | `rawW ?? 0` | æƒé‡å…œåº• |
 
-### C-2: ¼òµ¥±äÁ¿ `??` ×Ö·û´®/null/Êý×éÄ¬ÈÏÖµ (38 Ïî)
+### C-2: ç®€å•å˜é‡ `??` å­—ç¬¦ä¸²/null/æ•°ç»„é»˜è®¤å€¼ (38 é¡¹)
 
-| ÎÄ¼þ | ÐÐºÅ | ´úÂë | ½ÓÊÜÀíÓÉ |
+| æ–‡ä»¶ | è¡Œå· | ä»£ç  | æŽ¥å—ç†ç”± |
 |------|------|------|---------|
-| `services/scoring/v6ScoreService.ts` | 167 | `quotes ?? null` | Êý¾Ý²éÑ¯½á¹û¶µµ× |
-| `services/screening/multiFactorScreeningEngine.ts` | 99 | `data ?? []` | Êý¾Ý¼ÓÔØ¶µµ× |
-| `services/system/migration/migrationTransformers.ts` | 87 | `v6Source ?? ''` | Ã¶¾ÙÖµ¶µµ× |
-| `services/system/migration/migrationTransformers.ts` | 209 | `ts ?? 0` | Ê±¼ä´Á¶µµ× |
-| `services/trading/strategySnapshotService.ts` | 300 | `trigger ?? 'manual'` | ´¥·¢ÀàÐÍ¶µµ× |
-| `services/useCase/createExecutionPlan.useCase.ts` | 190 | `accountType ?? 'paper'` | ÕË»§ÀàÐÍ¶µµ× |
-| `components/analysis/news/NewsSentimentTrend.tsx` | 63 | `value ?? ''` | ÏÔÊ¾Öµ¶µµ× |
-| `components/analysis/news/NewsSentimentTrend.tsx` | 136 | `error ?? ''` | ´íÎóÏûÏ¢¶µµ× |
-| `components/shared/LLMConfigWidget.tsx` | 103 | `className ?? ''` | CSS ÀàÃû¶µµ× |
-| `components/system/EngineStatusCard.tsx` | 128 | `startedAt ?? 0` | Ê±¼ä´Á¶µµ× |
-| `components/ui/ErrorState.tsx` | 111 | `errorMessage ?? '...'` | ´íÎóÏûÏ¢¶µµ× |
-| `components/ui/List.tsx` | 73 | `empty ?? 'ÔÝÎÞÊý¾Ý'` | ¿Õ×´Ì¬ÎÄ°¸¶µµ× |
-| `components/ui/Menu.tsx` | 28 | `defaultSelectedKeys ?? []` | Ñ¡ÖÐ¼ü¶µµ× |
-| `components/ui/Radio.tsx` | 29 | `defaultValue ?? ''` | Ä¬ÈÏÖµ¶µµ× |
-| `components/ui/Tabs.tsx` | 25 | `defaultValue ?? ''` | Ä¬ÈÏÖµ¶µµ× |
-| `store/agentFeedbackStore.ts` | 59 | `prev ?? 0` | ¼ÆÊýÆ÷¶µµ× |
-| `store/executionStore.ts` | 434 | `reason ?? 'ÊÖ¶¯È¡Ïû'` | È¡ÏûÔ­Òò¶µµ× |
-| `store/executionStore.ts` | 439 | `reason ?? 'ÊÖ¶¯È¡Ïû'` | È¡ÏûÔ­Òò¶µµ×(DB¸üÐÂ) |
-| `store/marketDataStore.ts` | 461 | `key ?? 'unknown'` | ÈÕÖ¾¼ü¶µµ× |
-| `store/multiFactorScreeningStore.ts` | 211 | `raw ?? []` | Ä£°åÁÐ±í¶µµ× |
-| `store/orderStore.ts` | 421 | `.find(...) ?? null` | ³Ö²Ö²éÕÒ¶µµ× |
-| `store/stockAnalysisStore.ts` | 104 | `stockData ?? null` | ¹ÉÆ±Êý¾Ý¶µµ× |
-| `store/stockAnalysisStore.ts` | 105 | `quotesData ?? null` | KÏßÊý¾Ý¶µµ× |
-| `store/stockAnalysisStore.ts` | 106 | `scoreData ?? null` | ÆÀ·ÖÊý¾Ý¶µµ× |
-| `store/strategySnapshotStore.ts` | 233 | `.find(...) ?? null` | ¿ìÕÕ²éÕÒ¶µµ× |
-| `core/dataflow/dataflowEngine.ts` | 98 | `url ?? 'none (...)'` | ÈÕÖ¾ÏÔÊ¾¶µµ× |
-| `core/freshnessGuard.ts` | 206 | `planId ?? 'unknown'` | ÈÕÖ¾ ID ¶µµ× |
-| `core/freshnessGuard.ts` | 225 | `planId ?? 'unknown'` | ÈÕÖ¾ ID ¶µµ× |
-| `core/freshnessGuard.ts` | 244 | `portfolioId ?? 'unknown'` | ÈÕÖ¾ ID ¶µµ× |
-| `core/freshnessGuard.ts` | 263 | `symbol ?? 'unknown'` | ÈÕÖ¾´úÂë¶µµ× |
-| `mcp/core/cancellation.ts` | 47 | `reason ?? 'Cancelled by user'` | È¡ÏûÔ­Òò¶µµ× |
-| `mcp/core/cancellation.ts` | 81 | `reason ?? 'Mass cancellation'` | È¡ÏûÔ­Òò¶µµ× |
-| `mcp/core/progress.ts` | 63 | `message ?? 'Íê³É'` | ½ø¶ÈÏûÏ¢¶µµ× |
-| `agents/agentRuntime.ts` | 177 | `status ?? 'all'` | ÈÕÖ¾×´Ì¬¶µµ× |
-| `cockpit/widgets/HotSectorWidget.tsx` | 102 | `(value ?? 0) * 20` | ½ø¶ÈÌõÊýÖµ¶µµ× |
-| `cockpit/widgets/HotSectorWidget.tsx` | 103 | `(value ?? 0).toFixed(1)` | ÏÔÊ¾ÊýÖµ¶µµ× |
-| `config/llmConfig.ts` | 165 | `cachedApiKey ?? ''` | API Key »º´æ¶µµ× |
-| `config/llmConfig.ts` | 180 | `cachedApiKey ?? ''` | API Key »º´æ¶µµ× |
-| `config/llmConfig.ts` | 192 | `key ?? ''` | Òì²½¶ÁÈ¡¶µµ× |
-| `lib/logger.ts` | 24 | `context ?? ''` | ÈÕÖ¾ÉÏÏÂÎÄ¶µµ× |
-| `lib/logger.ts` | 29 | `context ?? ''` | ÈÕÖ¾ÉÏÏÂÎÄ¶µµ× |
-| `lib/logger.ts` | 34 | `context ?? ''` | ÈÕÖ¾ÉÏÏÂÎÄ¶µµ× |
-| `lib/logger.ts` | 39 | `context ?? ''` | ÈÕÖ¾ÉÏÏÂÎÄ¶µµ× |
-| `pages/analysis/HotSectorPage.tsx` | 69 | `next ?? 'ÊÕÆð'` | ÈÕÖ¾ÏÔÊ¾¶µµ× |
-| `pages/trading/components/TradeModal.tsx` | 133 | `quantity ?? ''` | ÊäÈë¿òÖµ¶µµ× |
+| `services/scoring/v6ScoreService.ts` | 167 | `quotes ?? null` | æ•°æ®æŸ¥è¯¢ç»“æžœå…œåº• |
+| `services/screening/multiFactorScreeningEngine.ts` | 99 | `data ?? []` | æ•°æ®åŠ è½½å…œåº• |
+| `services/system/migration/migrationTransformers.ts` | 87 | `v6Source ?? ''` | æžšä¸¾å€¼å…œåº• |
+| `services/system/migration/migrationTransformers.ts` | 209 | `ts ?? 0` | æ—¶é—´æˆ³å…œåº• |
+| `services/trading/strategySnapshotService.ts` | 300 | `trigger ?? 'manual'` | è§¦å‘ç±»åž‹å…œåº• |
+| `services/useCase/createExecutionPlan.useCase.ts` | 190 | `accountType ?? 'paper'` | è´¦æˆ·ç±»åž‹å…œåº• |
+| `components/analysis/news/NewsSentimentTrend.tsx` | 63 | `value ?? ''` | æ˜¾ç¤ºå€¼å…œåº• |
+| `components/analysis/news/NewsSentimentTrend.tsx` | 136 | `error ?? ''` | é”™è¯¯æ¶ˆæ¯å…œåº• |
+| `components/shared/LLMConfigWidget.tsx` | 103 | `className ?? ''` | CSS ç±»åå…œåº• |
+| `components/system/EngineStatusCard.tsx` | 128 | `startedAt ?? 0` | æ—¶é—´æˆ³å…œåº• |
+| `components/ui/ErrorState.tsx` | 111 | `errorMessage ?? '...'` | é”™è¯¯æ¶ˆæ¯å…œåº• |
+| `components/ui/List.tsx` | 73 | `empty ?? 'æš‚æ— æ•°æ®'` | ç©ºçŠ¶æ€æ–‡æ¡ˆå…œåº• |
+| `components/ui/Menu.tsx` | 28 | `defaultSelectedKeys ?? []` | é€‰ä¸­é”®å…œåº• |
+| `components/ui/Radio.tsx` | 29 | `defaultValue ?? ''` | é»˜è®¤å€¼å…œåº• |
+| `components/ui/Tabs.tsx` | 25 | `defaultValue ?? ''` | é»˜è®¤å€¼å…œåº• |
+| `store/agentFeedbackStore.ts` | 59 | `prev ?? 0` | è®¡æ•°å™¨å…œåº• |
+| `store/executionStore.ts` | 434 | `reason ?? 'æ‰‹åŠ¨å–æ¶ˆ'` | å–æ¶ˆåŽŸå› å…œåº• |
+| `store/executionStore.ts` | 439 | `reason ?? 'æ‰‹åŠ¨å–æ¶ˆ'` | å–æ¶ˆåŽŸå› å…œåº•(DBæ›´æ–°) |
+| `store/marketDataStore.ts` | 461 | `key ?? 'unknown'` | æ—¥å¿—é”®å…œåº• |
+| `store/multiFactorScreeningStore.ts` | 211 | `raw ?? []` | æ¨¡æ¿åˆ—è¡¨å…œåº• |
+| `store/orderStore.ts` | 421 | `.find(...) ?? null` | æŒä»“æŸ¥æ‰¾å…œåº• |
+| `store/stockAnalysisStore.ts` | 104 | `stockData ?? null` | è‚¡ç¥¨æ•°æ®å…œåº• |
+| `store/stockAnalysisStore.ts` | 105 | `quotesData ?? null` | Kçº¿æ•°æ®å…œåº• |
+| `store/stockAnalysisStore.ts` | 106 | `scoreData ?? null` | è¯„åˆ†æ•°æ®å…œåº• |
+| `store/strategySnapshotStore.ts` | 233 | `.find(...) ?? null` | å¿«ç…§æŸ¥æ‰¾å…œåº• |
+| `core/dataflow/dataflowEngine.ts` | 98 | `url ?? 'none (...)'` | æ—¥å¿—æ˜¾ç¤ºå…œåº• |
+| `core/freshnessGuard.ts` | 206 | `planId ?? 'unknown'` | æ—¥å¿— ID å…œåº• |
+| `core/freshnessGuard.ts` | 225 | `planId ?? 'unknown'` | æ—¥å¿— ID å…œåº• |
+| `core/freshnessGuard.ts` | 244 | `portfolioId ?? 'unknown'` | æ—¥å¿— ID å…œåº• |
+| `core/freshnessGuard.ts` | 263 | `symbol ?? 'unknown'` | æ—¥å¿—ä»£ç å…œåº• |
+| `mcp/core/cancellation.ts` | 47 | `reason ?? 'Cancelled by user'` | å–æ¶ˆåŽŸå› å…œåº• |
+| `mcp/core/cancellation.ts` | 81 | `reason ?? 'Mass cancellation'` | å–æ¶ˆåŽŸå› å…œåº• |
+| `mcp/core/progress.ts` | 63 | `message ?? 'å®Œæˆ'` | è¿›åº¦æ¶ˆæ¯å…œåº• |
+| `agents/agentRuntime.ts` | 177 | `status ?? 'all'` | æ—¥å¿—çŠ¶æ€å…œåº• |
+| `cockpit/widgets/HotSectorWidget.tsx` | 102 | `(value ?? 0) * 20` | è¿›åº¦æ¡æ•°å€¼å…œåº• |
+| `cockpit/widgets/HotSectorWidget.tsx` | 103 | `(value ?? 0).toFixed(1)` | æ˜¾ç¤ºæ•°å€¼å…œåº• |
+| `config/llmConfig.ts` | 165 | `cachedApiKey ?? ''` | API Key ç¼“å­˜å…œåº• |
+| `config/llmConfig.ts` | 180 | `cachedApiKey ?? ''` | API Key ç¼“å­˜å…œåº• |
+| `config/llmConfig.ts` | 192 | `key ?? ''` | å¼‚æ­¥è¯»å–å…œåº• |
+| `lib/logger.ts` | 24 | `context ?? ''` | æ—¥å¿—ä¸Šä¸‹æ–‡å…œåº• |
+| `lib/logger.ts` | 29 | `context ?? ''` | æ—¥å¿—ä¸Šä¸‹æ–‡å…œåº• |
+| `lib/logger.ts` | 34 | `context ?? ''` | æ—¥å¿—ä¸Šä¸‹æ–‡å…œåº• |
+| `lib/logger.ts` | 39 | `context ?? ''` | æ—¥å¿—ä¸Šä¸‹æ–‡å…œåº• |
+| `pages/analysis/HotSectorPage.tsx` | 69 | `next ?? 'æ”¶èµ·'` | æ—¥å¿—æ˜¾ç¤ºå…œåº• |
+| `pages/trading/components/TradeModal.tsx` | 133 | `quantity ?? ''` | è¾“å…¥æ¡†å€¼å…œåº• |
 
 ---
 
-## ÐÞ¸´ÓÅÏÈ¼¶½¨Òé
+## ä¿®å¤ä¼˜å…ˆçº§å»ºè®®
 
-### µÚÒ»ÓÅÏÈ¼¶: ÐÂÔöÅÅ³ý¹æÔò (Ïû³ý 35 Ïî)
+### ç¬¬ä¸€ä¼˜å…ˆçº§: æ–°å¢žæŽ’é™¤è§„åˆ™ (æ¶ˆé™¤ 35 é¡¹)
 
-ÐÞ¸Ä `scripts/audit-hardcode.ts`£¬ÔÚÅÅ³ý 13 Ö®ºóÐÂÔö 4 ÌõÅÅ³ý¹æÔò£¨¼û A ÀàÄ©Î²µÄ´úÂëÊ¾Àý£©¡£Ô¤¼Æ¸Ä¶¯Ô¼ 10 ÐÐ½Å±¾´úÂë£¬Áã·çÏÕ£¬¿ÉÁ¢¼´Ïû³ý 32.7% µÄ Warning¡£
+ä¿®æ”¹ `scripts/audit-hardcode.ts`ï¼Œåœ¨æŽ’é™¤ 13 ä¹‹åŽæ–°å¢ž 4 æ¡æŽ’é™¤è§„åˆ™ï¼ˆè§ A ç±»æœ«å°¾çš„ä»£ç ç¤ºä¾‹ï¼‰ã€‚é¢„è®¡æ”¹åŠ¨çº¦ 10 è¡Œè„šæœ¬ä»£ç ï¼Œé›¶é£Žé™©ï¼Œå¯ç«‹å³æ¶ˆé™¤ 32.7% çš„ Warningã€‚
 
-### µÚ¶þÓÅÏÈ¼¶: ÐÞ¸´ `||` -> `??` (Ïû³ý 17 Ïî)
+### ç¬¬äºŒä¼˜å…ˆçº§: ä¿®å¤ `||` -> `??` (æ¶ˆé™¤ 17 é¡¹)
 
-½« B-1 ÖÐµÄ 17 ´¦ `||` Ìæ»»Îª `??`¡£ÕâÐ©¸Ä¶¯¾ùÎªµ¥ÐÐÐÞ¸Ä£¬¿ÉÍ¨¹ý ESLint `@typescript-eslint/prefer-nullish-coalescing` ¹æÔò×Ô¶¯¼ì²âºÍÐÞ¸´¡£
+å°† B-1 ä¸­çš„ 17 å¤„ `||` æ›¿æ¢ä¸º `??`ã€‚è¿™äº›æ”¹åŠ¨å‡ä¸ºå•è¡Œä¿®æ”¹ï¼Œå¯é€šè¿‡ ESLint `@typescript-eslint/prefer-nullish-coalescing` è§„åˆ™è‡ªåŠ¨æ£€æµ‹å’Œä¿®å¤ã€‚
 
-### µÚÈýÓÅÏÈ¼¶: ´úÂë¼ò»¯ (Ïû³ý 8 Ïî)
+### ç¬¬ä¸‰ä¼˜å…ˆçº§: ä»£ç ç®€åŒ– (æ¶ˆé™¤ 8 é¡¹)
 
-- B-2: 2 ´¦ `x = x ?? []` ¸ÄÎª `x ??= []`
-- B-3: 6 ´¦×Ö·û´®×ÖÃæÁ¿ÌáÈ¡Îª³£Á¿£¨¿ÉÑ¡£¬µÍÓÅÏÈ¼¶£©
+- B-2: 2 å¤„ `x = x ?? []` æ”¹ä¸º `x ??= []`
+- B-3: 6 å¤„å­—ç¬¦ä¸²å­—é¢é‡æå–ä¸ºå¸¸é‡ï¼ˆå¯é€‰ï¼Œä½Žä¼˜å…ˆçº§ï¼‰
 
-### ÐÞ¸´ºóÔ¤ÆÚÐ§¹û
+### ä¿®å¤åŽé¢„æœŸæ•ˆæžœ
 
-| ½×¶Î | ²Ù×÷ | Ê£Óà Warning |
+| é˜¶æ®µ | æ“ä½œ | å‰©ä½™ Warning |
 |------|------|-------------|
-| µ±Ç° | -- | 107 |
-| µÚÒ»ÓÅÏÈ¼¶ | ÐÂÔö 4 ÌõÅÅ³ý¹æÔò | 72 |
-| µÚ¶þÓÅÏÈ¼¶ | `\|\|` -> `??` ÐÞ¸´ | 55 |
-| µÚÈýÓÅÏÈ¼¶ | ´úÂë¼ò»¯ | 47 (È«²¿Îª C Àà) |
+| å½“å‰ | -- | 107 |
+| ç¬¬ä¸€ä¼˜å…ˆçº§ | æ–°å¢ž 4 æ¡æŽ’é™¤è§„åˆ™ | 72 |
+| ç¬¬äºŒä¼˜å…ˆçº§ | `\|\|` -> `??` ä¿®å¤ | 55 |
+| ç¬¬ä¸‰ä¼˜å…ˆçº§ | ä»£ç ç®€åŒ– | 47 (å…¨éƒ¨ä¸º C ç±») |
 
 ---
 
-## ¸½Â¼: °´Ä¿Â¼·Ö²¼Í³¼Æ
+## é™„å½•: æŒ‰ç›®å½•åˆ†å¸ƒç»Ÿè®¡
 
-| Ä¿Â¼ | ×ÜÊý | A Àà | B Àà | C Àà |
+| ç›®å½• | æ€»æ•° | A ç±» | B ç±» | C ç±» |
 |------|------|------|------|------|
 | `services/` | 38 | 12 | 7 | 19 |
 | `components/` | 15 | 5 | 7 | 3 |
 | `store/` | 10 | 0 | 0 | 10 |
 | `core/` | 6 | 0 | 1 | 5 |
 | `mcp/` | 8 | 8 | 0 | 0 |
-| ÆäËû | 30 | 10 | 10 | 10 |
-| **ºÏ¼Æ** | **107** | **35** | **25** | **47** |
+| å…¶ä»– | 30 | 10 | 10 | 10 |
+| **åˆè®¡** | **107** | **35** | **25** | **47** |

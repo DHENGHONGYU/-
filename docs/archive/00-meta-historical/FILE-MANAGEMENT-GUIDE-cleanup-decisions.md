@@ -1,7 +1,7 @@
 ---
 title: file-management-guide-cleanup-decisions
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---

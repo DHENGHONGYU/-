@@ -2,7 +2,7 @@
 title: 23-core-docs-functional-match-report
 code_version: 2.0.0
 
-tier: core
+tier: reference
 ---
 
 ---

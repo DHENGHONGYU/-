@@ -1,12 +1,12 @@
 ---
-title: MCP ²ãÈ¨ÏŞ¿ØÖÆĞŞ¸´·½°¸
+title: MCP å±‚æƒé™æ§åˆ¶ä¿®å¤æ–¹æ¡ˆ
 type: reports
 domain: ai
 phase: planning
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "ÎÊÌâ¼¶±ğ: P0 ¸ß·çÏÕ ¶ÔÓ¦Éó²éÏî: MCP Tool/Resource µ÷ÓÃÎŞÈÎºÎÈ¨ÏŞĞ£Ñé ·½°¸ÈÕÆÚ: 2026-07-08"
+summary: "é—®é¢˜çº§åˆ«: P0 é«˜é£é™© å¯¹åº”å®¡æŸ¥é¡¹: MCP Tool/Resource è°ƒç”¨æ— ä»»ä½•æƒé™æ ¡éªŒ æ–¹æ¡ˆæ—¥æœŸ: 2026-07-08"
 tags: [ai, mcp, fix]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -17,87 +17,87 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# MCP ²ãÈ¨ÏŞ¿ØÖÆĞŞ¸´·½°¸
+# MCP å±‚æƒé™æ§åˆ¶ä¿®å¤æ–¹æ¡ˆ
 
-> **ÎÊÌâ¼¶±ğ**: P0 ¸ß·çÏÕ
-> **¶ÔÓ¦Éó²éÏî**: MCP Tool/Resource µ÷ÓÃÎŞÈÎºÎÈ¨ÏŞĞ£Ñé
-> **·½°¸ÈÕÆÚ**: 2026-07-08
-
----
-
-## Ò»¡¢ÎÊÌâ·ÖÎö
-
-### µ±Ç°µ÷ÓÃÁ´Â·£¨ÎŞÈ¨ÏŞĞ£Ñé£©
-
-```
-µ÷ÓÃ·½ ¡ú MCPBridge.callTool(serverName, toolName, args)
-           ¡ú MCPClientImpl.callTool(serverName, toolName, args)
-              ¡ú registry.getServer(serverName)
-              ¡ú server.callTool(toolName, args)  ¡û Ö±½ÓÖ´ĞĞ£¬ÎŞÀ¹½Ø
-```
-
-### Ä¿±êµ÷ÓÃÁ´Â·£¨º¬È¨ÏŞÀ¹½Ø£©
-
-```
-µ÷ÓÃ·½ ¡ú MCPBridge.callTool(serverName, toolName, args, callerContext)
-           ¡ú MCPClientImpl.callTool(serverName, toolName, args, callerContext)
-              ¡ú mcpAclInterceptor.check(caller, serverName, toolName)  ¡û ĞÂÔöÀ¹½Ø
-              ¡ú registry.getServer(serverName)
-              ¡ú server.callTool(toolName, args)
-```
+> **é—®é¢˜çº§åˆ«**: P0 é«˜é£é™©
+> **å¯¹åº”å®¡æŸ¥é¡¹**: MCP Tool/Resource è°ƒç”¨æ— ä»»ä½•æƒé™æ ¡éªŒ
+> **æ–¹æ¡ˆæ—¥æœŸ**: 2026-07-08
 
 ---
 
-## ¶ş¡¢ĞŞ¸ÄÎÄ¼şÇåµ¥
+## ä¸€ã€é—®é¢˜åˆ†æ
 
-| ÎÄ¼ş | ¸Ä¶¯ÀàĞÍ | ËµÃ÷ |
+### å½“å‰è°ƒç”¨é“¾è·¯ï¼ˆæ— æƒé™æ ¡éªŒï¼‰
+
+```
+è°ƒç”¨æ–¹ â†’ MCPBridge.callTool(serverName, toolName, args)
+           â†’ MCPClientImpl.callTool(serverName, toolName, args)
+              â†’ registry.getServer(serverName)
+              â†’ server.callTool(toolName, args)  â† ç›´æ¥æ‰§è¡Œï¼Œæ— æ‹¦æˆª
+```
+
+### ç›®æ ‡è°ƒç”¨é“¾è·¯ï¼ˆå«æƒé™æ‹¦æˆªï¼‰
+
+```
+è°ƒç”¨æ–¹ â†’ MCPBridge.callTool(serverName, toolName, args, callerContext)
+           â†’ MCPClientImpl.callTool(serverName, toolName, args, callerContext)
+              â†’ mcpAclInterceptor.check(caller, serverName, toolName)  â† æ–°å¢æ‹¦æˆª
+              â†’ registry.getServer(serverName)
+              â†’ server.callTool(toolName, args)
+```
+
+---
+
+## äºŒã€ä¿®æ”¹æ–‡ä»¶æ¸…å•
+
+| æ–‡ä»¶ | æ”¹åŠ¨ç±»å‹ | è¯´æ˜ |
 |------|---------|------|
-| `src/config/mcpAclMatrix.ts` | **ĞÂ½¨** | MCP È¨ÏŞ¾ØÕó¶¨Òå |
-| `src/mcp/core/mcpAclInterceptor.ts` | **ĞÂ½¨** | È¨ÏŞÀ¹½ØÆ÷ |
-| `src/mcp/core/client.ts` | ĞŞ¸Ä | callTool/readResource/getPrompt Èë¿ÚÔö¼ÓÀ¹½Ø |
-| `src/mcp/bridge/mcpBridge.ts` | ĞŞ¸Ä | ĞÂÔö callerContext ²ÎÊıÍ¸´« |
-| `src/types/modules/mcp.types.ts` | ĞŞ¸Ä | ĞÂÔö McpCallerContext ÀàĞÍ |
+| `src/config/mcpAclMatrix.ts` | **æ–°å»º** | MCP æƒé™çŸ©é˜µå®šä¹‰ |
+| `src/mcp/core/mcpAclInterceptor.ts` | **æ–°å»º** | æƒé™æ‹¦æˆªå™¨ |
+| `src/mcp/core/client.ts` | ä¿®æ”¹ | callTool/readResource/getPrompt å…¥å£å¢åŠ æ‹¦æˆª |
+| `src/mcp/bridge/mcpBridge.ts` | ä¿®æ”¹ | æ–°å¢ callerContext å‚æ•°é€ä¼  |
+| `src/types/modules/mcp.types.ts` | ä¿®æ”¹ | æ–°å¢ McpCallerContext ç±»å‹ |
 
 ---
 
-## Èı¡¢¾ßÌå´úÂë
+## ä¸‰ã€å…·ä½“ä»£ç 
 
-### 3.1 ĞÂ½¨£º`src/config/mcpAclMatrix.ts`
+### 3.1 æ–°å»ºï¼š`src/config/mcpAclMatrix.ts`
 
 ```typescript
 /**
- * MCP È¨ÏŞ¾ØÕó
+ * MCP æƒé™çŸ©é˜µ
  *
  * @description
- * ¶¨Òå²»Í¬µ÷ÓÃ·½½ÇÉ«¿É·ÃÎÊµÄ MCP Server ºÍ Tool ·¶Î§¡£
- * Óë DataBridge µÄ ACL_MATRIX ĞÎ³É×İÉî·ÀÓù£º
- *   - ACL_MATRIX: Êı¾İ²ãÈ¨ÏŞ£¨module ¡ú store ¡ú operation£©
- *   - MCP_ACL_MATRIX: ¹¤¾ß²ãÈ¨ÏŞ£¨caller ¡ú server ¡ú tool£©
+ * å®šä¹‰ä¸åŒè°ƒç”¨æ–¹è§’è‰²å¯è®¿é—®çš„ MCP Server å’Œ Tool èŒƒå›´ã€‚
+ * ä¸ DataBridge çš„ ACL_MATRIX å½¢æˆçºµæ·±é˜²å¾¡ï¼š
+ *   - ACL_MATRIX: æ•°æ®å±‚æƒé™ï¼ˆmodule â†’ store â†’ operationï¼‰
+ *   - MCP_ACL_MATRIX: å·¥å…·å±‚æƒé™ï¼ˆcaller â†’ server â†’ toolï¼‰
  *
  * @module config/mcpAclMatrix
- * @created 2026-07-08 - P0 MCP È¨ÏŞ¿ØÖÆĞŞ¸´
+ * @created 2026-07-08 - P0 MCP æƒé™æ§åˆ¶ä¿®å¤
  */
 
-/** MCP µ÷ÓÃ·½½ÇÉ« */
+/** MCP è°ƒç”¨æ–¹è§’è‰² */
 export type McpCallerRole = 'agent' | 'ui' | 'ci' | 'system'
 
-/** MCP È¨ÏŞ¹æÔò */
+/** MCP æƒé™è§„åˆ™ */
 export interface McpPermissionRule {
-  /** ÔÊĞí·ÃÎÊµÄ Server Ãû³ÆÁĞ±í£¨`*` ±íÊ¾È«²¿£© */
+  /** å…è®¸è®¿é—®çš„ Server åç§°åˆ—è¡¨ï¼ˆ`*` è¡¨ç¤ºå…¨éƒ¨ï¼‰ */
   readonly allowedServers: readonly string[]
-  /** ÔÊµ÷ÓÃµÄ Tool Ãû³ÆÄ£Ê½ÁĞ±í£¨Ö§³Ö `*` Í¨Åä·û£¬Èç `list_*`¡¢`get_*`¡¢`*`£© */
+  /** å…è°ƒç”¨çš„ Tool åç§°æ¨¡å¼åˆ—è¡¨ï¼ˆæ”¯æŒ `*` é€šé…ç¬¦ï¼Œå¦‚ `list_*`ã€`get_*`ã€`*`ï¼‰ */
   readonly allowedTools: readonly string[]
 }
 
-/** MCP È¨ÏŞ¾ØÕó ¡ª °´µ÷ÓÃ·½½ÇÉ«¶¨Òå */
+/** MCP æƒé™çŸ©é˜µ â€” æŒ‰è°ƒç”¨æ–¹è§’è‰²å®šä¹‰ */
 export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> = {
-  // AI Agent£º¿Éµ÷ÓÃËùÓĞ Server µÄËùÓĞ Tool
+  // AI Agentï¼šå¯è°ƒç”¨æ‰€æœ‰ Server çš„æ‰€æœ‰ Tool
   agent: {
     allowedServers: ['*'],
     allowedTools: ['*'],
   },
 
-  // UI ²ã£º½ö¿Éµ÷ÓÃ²éÑ¯Àà Tool£¬½ûÖ¹½»Ò×ÀàĞ´²Ù×÷
+  // UI å±‚ï¼šä»…å¯è°ƒç”¨æŸ¥è¯¢ç±» Toolï¼Œç¦æ­¢äº¤æ˜“ç±»å†™æ“ä½œ
   ui: {
     allowedServers: [
       'fetcher', 'stockpool', 'scoring:v6', 'analysis',
@@ -116,43 +116,43 @@ export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> 
     ],
   },
 
-  // CI Á÷Ë®Ïß£º½ö¿Éµ÷ÓÃÏµÍ³¹ÜÀíÀà Tool
+  // CI æµæ°´çº¿ï¼šä»…å¯è°ƒç”¨ç³»ç»Ÿç®¡ç†ç±» Tool
   ci: {
     allowedServers: ['system'],
     allowedTools: ['get_*', 'generate_migration_report'],
   },
 
-  // ÏµÍ³ÄÚ²¿µ÷ÓÃ£º³¬¼¶È¨ÏŞ£¨ÓÃÓÚ bootstrap¡¢Ç¨ÒÆµÈÏµÍ³¼¶²Ù×÷£©
+  // ç³»ç»Ÿå†…éƒ¨è°ƒç”¨ï¼šè¶…çº§æƒé™ï¼ˆç”¨äº bootstrapã€è¿ç§»ç­‰ç³»ç»Ÿçº§æ“ä½œï¼‰
   system: {
     allowedServers: ['*'],
     allowedTools: ['*'],
   },
 }
 
-/** Ä¬ÈÏµ÷ÓÃ·½½ÇÉ«£¨Ïòºó¼æÈİ£ºÎ´´«Èë caller Ê±Ê¹ÓÃ£© */
+/** é»˜è®¤è°ƒç”¨æ–¹è§’è‰²ï¼ˆå‘åå…¼å®¹ï¼šæœªä¼ å…¥ caller æ—¶ä½¿ç”¨ï¼‰ */
 export const DEFAULT_MCP_CALLER: McpCallerRole = 'agent'
 ```
 
 ---
 
-### 3.2 ĞÂ½¨£º`src/mcp/core/mcpAclInterceptor.ts`
+### 3.2 æ–°å»ºï¼š`src/mcp/core/mcpAclInterceptor.ts`
 
 ```typescript
 /**
- * MCP ACL À¹½ØÆ÷
+ * MCP ACL æ‹¦æˆªå™¨
  *
  * @description
- * ÔÚ MCPClient.callTool / readResource / getPrompt Èë¿ÚÖ´ĞĞÈ¨ÏŞĞ£Ñé£¬
- * ¾Ü¾øÎ´ÊÚÈ¨µÄµ÷ÓÃ²¢·µ»Ø½á¹¹»¯´íÎó¡£
+ * åœ¨ MCPClient.callTool / readResource / getPrompt å…¥å£æ‰§è¡Œæƒé™æ ¡éªŒï¼Œ
+ * æ‹’ç»æœªæˆæƒçš„è°ƒç”¨å¹¶è¿”å›ç»“æ„åŒ–é”™è¯¯ã€‚
  *
- * È¨ÏŞĞ£ÑéÁ÷³Ì£º
- *   1. ´Ó MCP_ACL_MATRIX »ñÈ¡µ÷ÓÃ·½½ÇÉ«µÄÈ¨ÏŞ¹æÔò
- *   2. ¼ì²é serverName ÊÇ·ñÔÚ allowedServers ÖĞ£¨Ö§³Ö `*` Í¨Åä£©
- *   3. ¼ì²é toolName ÊÇ·ñÆ¥Åä allowedTools Ä£Ê½£¨Ö§³Ö `*` Í¨Åä£©
- *   4. È«²¿Í¨¹ıÔò·ÅĞĞ£¬·ñÔò·µ»Ø AclDeniedResult
+ * æƒé™æ ¡éªŒæµç¨‹ï¼š
+ *   1. ä» MCP_ACL_MATRIX è·å–è°ƒç”¨æ–¹è§’è‰²çš„æƒé™è§„åˆ™
+ *   2. æ£€æŸ¥ serverName æ˜¯å¦åœ¨ allowedServers ä¸­ï¼ˆæ”¯æŒ `*` é€šé…ï¼‰
+ *   3. æ£€æŸ¥ toolName æ˜¯å¦åŒ¹é… allowedTools æ¨¡å¼ï¼ˆæ”¯æŒ `*` é€šé…ï¼‰
+ *   4. å…¨éƒ¨é€šè¿‡åˆ™æ”¾è¡Œï¼Œå¦åˆ™è¿”å› AclDeniedResult
  *
  * @module mcp/core/mcpAclInterceptor
- * @created 2026-07-08 - P0 MCP È¨ÏŞ¿ØÖÆĞŞ¸´
+ * @created 2026-07-08 - P0 MCP æƒé™æ§åˆ¶ä¿®å¤
  */
 
 import { getLogger } from '@/lib/logger'
@@ -165,17 +165,17 @@ import {
 
 const logger = getLogger()
 
-/** È¨ÏŞĞ£ÑéÊäÈë */
+/** æƒé™æ ¡éªŒè¾“å…¥ */
 export interface McpAclCheckInput {
-  /** µ÷ÓÃ·½½ÇÉ« */
+  /** è°ƒç”¨æ–¹è§’è‰² */
   caller: McpCallerRole
-  /** Ä¿±ê Server Ãû³Æ */
+  /** ç›®æ ‡ Server åç§° */
   serverName: string
-  /** Ä¿±ê Tool/Resource/Prompt Ãû³Æ */
+  /** ç›®æ ‡ Tool/Resource/Prompt åç§° */
   resourceName: string
 }
 
-/** È¨ÏŞĞ£Ñé½á¹û */
+/** æƒé™æ ¡éªŒç»“æœ */
 export interface McpAclCheckResult {
   readonly allowed: boolean
   readonly reason: string
@@ -185,16 +185,16 @@ export interface McpAclCheckResult {
 }
 
 /**
- * Í¨Åä·ûÆ¥Åä
+ * é€šé…ç¬¦åŒ¹é…
  *
- * Ö§³ÖÁ½ÖÖÄ£Ê½£º
- *   - `*` Æ¥ÅäÈÎÒâ×Ö·û´®
- *   - `prefix_*` Æ¥ÅäÒÔ prefix_ ¿ªÍ·µÄ×Ö·û´®
+ * æ”¯æŒä¸¤ç§æ¨¡å¼ï¼š
+ *   - `*` åŒ¹é…ä»»æ„å­—ç¬¦ä¸²
+ *   - `prefix_*` åŒ¹é…ä»¥ prefix_ å¼€å¤´çš„å­—ç¬¦ä¸²
  */
 function matchPattern(pattern: string, value: string): boolean {
   if (pattern === '*') return true
   if (pattern.endsWith('_*')) {
-    const prefix = pattern.slice(0, -1) // ±£ÁôÄ©Î²ÏÂ»®Ïß
+    const prefix = pattern.slice(0, -1) // ä¿ç•™æœ«å°¾ä¸‹åˆ’çº¿
     return value.startsWith(prefix)
   }
   if (pattern.endsWith('*')) {
@@ -205,18 +205,18 @@ function matchPattern(pattern: string, value: string): boolean {
 }
 
 /**
- * MCP ACL À¹½ØÆ÷
+ * MCP ACL æ‹¦æˆªå™¨
  */
 export class McpAclInterceptor {
   /**
-   * Ğ£Ñéµ÷ÓÃ·½ÊÇ·ñÓĞÈ¨·ÃÎÊÖ¸¶¨ Server µÄÖ¸¶¨×ÊÔ´
+   * æ ¡éªŒè°ƒç”¨æ–¹æ˜¯å¦æœ‰æƒè®¿é—®æŒ‡å®š Server çš„æŒ‡å®šèµ„æº
    *
-   * @returns allowed=true ·ÅĞĞ£»allowed=false ¾Ü¾ø
+   * @returns allowed=true æ”¾è¡Œï¼›allowed=false æ‹’ç»
    */
   check({ caller, serverName, resourceName }: McpAclCheckInput): McpAclCheckResult {
     const rule: McpPermissionRule | undefined = MCP_ACL_MATRIX[caller]
 
-    // 1. ½ÇÉ«²»´æÔÚ
+    // 1. è§’è‰²ä¸å­˜åœ¨
     if (!rule) {
       logger.warn(`[MCP:ACL] caller role not found: ${caller}`)
       return {
@@ -228,7 +228,7 @@ export class McpAclInterceptor {
       }
     }
 
-    // 2. Server ¼¶±ğĞ£Ñé
+    // 2. Server çº§åˆ«æ ¡éªŒ
     const serverAllowed =
       rule.allowedServers.includes('*') || rule.allowedServers.includes(serverName)
     if (!serverAllowed) {
@@ -242,7 +242,7 @@ export class McpAclInterceptor {
       }
     }
 
-    // 3. Tool/Resource ¼¶±ğĞ£Ñé£¨Í¨Åä·ûÆ¥Åä£©
+    // 3. Tool/Resource çº§åˆ«æ ¡éªŒï¼ˆé€šé…ç¬¦åŒ¹é…ï¼‰
     const toolAllowed = rule.allowedTools.some((pattern) =>
       matchPattern(pattern, resourceName),
     )
@@ -268,7 +268,7 @@ export class McpAclInterceptor {
   }
 
   /**
-   * ¶ÏÑÔÈ¨ÏŞ£¨Ê§°ÜÊ±Å×³ö McpAclError£©
+   * æ–­è¨€æƒé™ï¼ˆå¤±è´¥æ—¶æŠ›å‡º McpAclErrorï¼‰
    */
   assert(input: McpAclCheckInput): void {
     const result = this.check(input)
@@ -278,7 +278,7 @@ export class McpAclInterceptor {
   }
 }
 
-/** MCP ACL ¾Ü¾ø´íÎó */
+/** MCP ACL æ‹’ç»é”™è¯¯ */
 export class McpAclError extends Error {
   constructor(
     message: string,
@@ -289,11 +289,11 @@ export class McpAclError extends Error {
   }
 }
 
-/** È«¾ÖÀ¹½ØÆ÷µ¥Àı */
+/** å…¨å±€æ‹¦æˆªå™¨å•ä¾‹ */
 export const mcpAclInterceptor = new McpAclInterceptor()
 
 /**
- * ½âÎöµ÷ÓÃ·½½ÇÉ«£¨ÓÃÓÚÏòºó¼æÈİ£ºÎ´´«Èë caller Ê±Ê¹ÓÃÄ¬ÈÏÖµ£©
+ * è§£æè°ƒç”¨æ–¹è§’è‰²ï¼ˆç”¨äºå‘åå…¼å®¹ï¼šæœªä¼ å…¥ caller æ—¶ä½¿ç”¨é»˜è®¤å€¼ï¼‰
  */
 export function resolveCaller(
   caller?: McpCallerRole,
@@ -304,34 +304,34 @@ export function resolveCaller(
 
 ---
 
-### 3.3 ĞŞ¸Ä£º`src/types/modules/mcp.types.ts`
+### 3.3 ä¿®æ”¹ï¼š`src/types/modules/mcp.types.ts`
 
-ÔÚÎÄ¼şÖĞĞÂÔö `McpCallerContext` ÀàĞÍ£¨·ÅÔÚÏÖÓĞÀàĞÍ¶¨ÒåÖ®ºó£©£º
+åœ¨æ–‡ä»¶ä¸­æ–°å¢ `McpCallerContext` ç±»å‹ï¼ˆæ”¾åœ¨ç°æœ‰ç±»å‹å®šä¹‰ä¹‹åï¼‰ï¼š
 
 ```typescript
 // ============================================================
-// MCP µ÷ÓÃ·½ÉÏÏÂÎÄ£¨P0 È¨ÏŞ¿ØÖÆĞÂÔö£©
+// MCP è°ƒç”¨æ–¹ä¸Šä¸‹æ–‡ï¼ˆP0 æƒé™æ§åˆ¶æ–°å¢ï¼‰
 // ============================================================
 
 import type { McpCallerRole } from '@/config/mcpAclMatrix'
 
-/** MCP µ÷ÓÃ·½ÉÏÏÂÎÄ ¡ª ÓÃÓÚÈ¨ÏŞĞ£Ñé */
+/** MCP è°ƒç”¨æ–¹ä¸Šä¸‹æ–‡ â€” ç”¨äºæƒé™æ ¡éªŒ */
 export interface McpCallerContext {
-  /** µ÷ÓÃ·½½ÇÉ« */
+  /** è°ƒç”¨æ–¹è§’è‰² */
   caller: McpCallerRole
-  /** µ÷ÓÃ·½±êÊ¶£¨Èç×é¼şÃû¡¢Agent ID£¬ÓÃÓÚÉó¼ÆÈÕÖ¾£© */
+  /** è°ƒç”¨æ–¹æ ‡è¯†ï¼ˆå¦‚ç»„ä»¶åã€Agent IDï¼Œç”¨äºå®¡è®¡æ—¥å¿—ï¼‰ */
   callerId?: string
 }
 ```
 
-Í¬Ê±ĞŞ¸Ä `MCPClient` ½Ó¿ÚµÄ `callTool` Ç©Ãû£º
+åŒæ—¶ä¿®æ”¹ `MCPClient` æ¥å£çš„ `callTool` ç­¾åï¼š
 
 ```typescript
 export interface MCPClient {
-  // ĞŞ¸ÄÇ°£º
+  // ä¿®æ”¹å‰ï¼š
   // callTool(serverName: string, toolName: string, args: Record<string, unknown>): Promise<ToolResult>
 
-  // ĞŞ¸Äºó£¨ĞÂÔö¿ÉÑ¡ context ²ÎÊı£¬Ïòºó¼æÈİ£©£º
+  // ä¿®æ”¹åï¼ˆæ–°å¢å¯é€‰ context å‚æ•°ï¼Œå‘åå…¼å®¹ï¼‰ï¼š
   callTool(
     serverName: string,
     toolName: string,
@@ -339,7 +339,7 @@ export interface MCPClient {
     context?: McpCallerContext,
   ): Promise<ToolResult>
 
-  // readResource ºÍ getPrompt Í¬ÀíĞÂÔö¿ÉÑ¡ context ²ÎÊı
+  // readResource å’Œ getPrompt åŒç†æ–°å¢å¯é€‰ context å‚æ•°
   readResource(uri: string, context?: McpCallerContext): Promise<ResourceContent>
   getPrompt(
     serverName: string,
@@ -352,15 +352,15 @@ export interface MCPClient {
 
 ---
 
-### 3.4 ĞŞ¸Ä£º`src/mcp/core/client.ts`
+### 3.4 ä¿®æ”¹ï¼š`src/mcp/core/client.ts`
 
 ```typescript
 /**
- * MCP Client ÊµÏÖ
+ * MCP Client å®ç°
  *
  * @description
- * Í³Ò»µÄ MCP µ÷ÓÃÈë¿Ú£¬Í¨¹ı×¢²áÖĞĞÄ²éÕÒ Server ²¢µ÷ÓÃÆä Tool/Resource/Prompt¡£
- * ÔÚÃ¿¸öµ÷ÓÃÈë¿Ú¼¯³É MCP ACL À¹½ØÆ÷£¬ÊµÏÖ¹¤¾ß²ãÈ¨ÏŞ¿ØÖÆ¡£
+ * ç»Ÿä¸€çš„ MCP è°ƒç”¨å…¥å£ï¼Œé€šè¿‡æ³¨å†Œä¸­å¿ƒæŸ¥æ‰¾ Server å¹¶è°ƒç”¨å…¶ Tool/Resource/Promptã€‚
+ * åœ¨æ¯ä¸ªè°ƒç”¨å…¥å£é›†æˆ MCP ACL æ‹¦æˆªå™¨ï¼Œå®ç°å·¥å…·å±‚æƒé™æ§åˆ¶ã€‚
  *
  * @module mcp/core/client
  */
@@ -390,7 +390,7 @@ export class MCPClientImpl implements MCPClient {
   }
 
   // ============================================================
-  // Tool ²Ù×÷
+  // Tool æ“ä½œ
   // ============================================================
 
   listAllTools(): Array<{ serverName: string; tool: ToolDescriptor }> {
@@ -418,7 +418,7 @@ export class MCPClientImpl implements MCPClient {
     const startTime = performance.now()
     const caller = resolveCaller(context?.caller)
 
-    // ©¤©¤ ACL È¨ÏŞÀ¹½Ø ©¤©¤
+    // â”€â”€ ACL æƒé™æ‹¦æˆª â”€â”€
     const aclResult = mcpAclInterceptor.check({
       caller,
       serverName,
@@ -459,7 +459,7 @@ export class MCPClientImpl implements MCPClient {
   }
 
   // ============================================================
-  // Resource ²Ù×÷
+  // Resource æ“ä½œ
   // ============================================================
 
   listAllResources(): Array<{ serverName: string; resource: ResourceTemplate }> {
@@ -487,7 +487,7 @@ export class MCPClientImpl implements MCPClient {
       for (const resource of resources) {
         const regex = this.uriTemplateToRegex(resource.uriTemplate)
         if (regex.test(uri)) {
-          // ©¤©¤ ACL È¨ÏŞÀ¹½Ø ©¤©¤
+          // â”€â”€ ACL æƒé™æ‹¦æˆª â”€â”€
           const aclResult = mcpAclInterceptor.check({
             caller,
             serverName: entry.server.info.name,
@@ -503,7 +503,7 @@ export class MCPClientImpl implements MCPClient {
             }
           }
 
-          logger.info(`[MCPClient] readResource() ${uri} ¡ú ${entry.server.info.name}`, { caller })
+          logger.info(`[MCPClient] readResource() ${uri} â†’ ${entry.server.info.name}`, { caller })
           return await entry.server.readResource(uri)
         }
       }
@@ -518,7 +518,7 @@ export class MCPClientImpl implements MCPClient {
   }
 
   // ============================================================
-  // Prompt ²Ù×÷
+  // Prompt æ“ä½œ
   // ============================================================
 
   listAllPrompts(): Array<{ serverName: string; prompt: PromptTemplate }> {
@@ -544,7 +544,7 @@ export class MCPClientImpl implements MCPClient {
   ): Promise<PromptMessage[]> {
     const caller = resolveCaller(context?.caller)
 
-    // ©¤©¤ ACL È¨ÏŞÀ¹½Ø ©¤©¤
+    // â”€â”€ ACL æƒé™æ‹¦æˆª â”€â”€
     const aclResult = mcpAclInterceptor.check({
       caller,
       serverName,
@@ -573,7 +573,7 @@ export class MCPClientImpl implements MCPClient {
   }
 
   // ============================================================
-  // ¹¤¾ß·½·¨
+  // å·¥å…·æ–¹æ³•
   // ============================================================
 
   private uriTemplateToRegex(template: string): RegExp {
@@ -587,15 +587,15 @@ export class MCPClientImpl implements MCPClient {
 
 ---
 
-### 3.5 ĞŞ¸Ä£º`src/mcp/bridge/mcpBridge.ts`
+### 3.5 ä¿®æ”¹ï¼š`src/mcp/bridge/mcpBridge.ts`
 
 ```typescript
 /**
- * MCPBridge ¡ª MCP ? ÏÖÓĞ¼Ü¹¹ÊÊÅä²ã
+ * MCPBridge â€” MCP ? ç°æœ‰æ¶æ„é€‚é…å±‚
  *
  * @description
- * ×÷Îª MCP ¼Ü¹¹ÓëÏÖÓĞ DataBridge/Store ²ãÖ®¼äµÄÊÊÅäÆ÷¡£
- * ĞÂÔö callerContext ²ÎÊıÍ¸´«ÖÁ MCPClient£¬ÊµÏÖÈ¨ÏŞ¿ØÖÆ¡£
+ * ä½œä¸º MCP æ¶æ„ä¸ç°æœ‰ DataBridge/Store å±‚ä¹‹é—´çš„é€‚é…å™¨ã€‚
+ * æ–°å¢ callerContext å‚æ•°é€ä¼ è‡³ MCPClientï¼Œå®ç°æƒé™æ§åˆ¶ã€‚
  *
  * @module mcp/bridge/mcpBridge
  */
@@ -611,7 +611,7 @@ import { DEFAULT_MCP_CALLER } from '@/config/mcpAclMatrix'
 import { nanoid } from 'nanoid'
 const logger = getLogger()
 
-/** MCPBridge µ¥Àı */
+/** MCPBridge å•ä¾‹ */
 export class MCPBridge {
   private static instance: MCPBridge | null = null
   private client: MCPClientImpl
@@ -633,12 +633,12 @@ export class MCPBridge {
   }
 
   /**
-   * ±ã½İ·½·¨£ºµ÷ÓÃ Tool
+   * ä¾¿æ·æ–¹æ³•ï¼šè°ƒç”¨ Tool
    *
-   * @param serverName - Server Ãû³Æ
-   * @param toolName - Tool Ãû³Æ
-   * @param args - µ÷ÓÃ²ÎÊı
-   * @param context - µ÷ÓÃ·½ÉÏÏÂÎÄ£¨ÓÃÓÚÈ¨ÏŞĞ£Ñé£¬Ä¬ÈÏ agent ½ÇÉ«£©
+   * @param serverName - Server åç§°
+   * @param toolName - Tool åç§°
+   * @param args - è°ƒç”¨å‚æ•°
+   * @param context - è°ƒç”¨æ–¹ä¸Šä¸‹æ–‡ï¼ˆç”¨äºæƒé™æ ¡éªŒï¼Œé»˜è®¤ agent è§’è‰²ï¼‰
    */
   async callTool(
     serverName: string,
@@ -658,7 +658,7 @@ export class MCPBridge {
 
       logger.info(`[MCPBridge] callTool() completed: server="${serverName}", tool="${toolName}", caller="${caller}", traceId="${traceId}", duration=${durationMs.toFixed(2)}ms, isError=${result.isError ?? false}`)
 
-      // Éó¼ÆÈÕÖ¾Ôö¼Ó caller ×Ö¶Î
+      // å®¡è®¡æ—¥å¿—å¢åŠ  caller å­—æ®µ
       await mcpAuditLogger.logToolCall(serverName, toolName, args, result, traceId, durationMs)
       return result
     } catch (err) {
@@ -674,19 +674,19 @@ export class MCPBridge {
   }
 
   /**
-   * ±ã½İ·½·¨£º¶ÁÈ¡ Resource
+   * ä¾¿æ·æ–¹æ³•ï¼šè¯»å– Resource
    *
    * @param uri - Resource URI
-   * @param context - µ÷ÓÃ·½ÉÏÏÂÎÄ
+   * @param context - è°ƒç”¨æ–¹ä¸Šä¸‹æ–‡
    */
   async readResource(uri: string, context?: McpCallerContext): Promise<ResourceContent> {
     return this.client.readResource(uri, context)
   }
 
   /**
-   * ±ã½İ·½·¨£º»ñÈ¡ Prompt
+   * ä¾¿æ·æ–¹æ³•ï¼šè·å– Prompt
    *
-   * @param context - µ÷ÓÃ·½ÉÏÏÂÎÄ
+   * @param context - è°ƒç”¨æ–¹ä¸Šä¸‹æ–‡
    */
   async getPrompt(
     serverName: string,
@@ -714,21 +714,21 @@ export class MCPBridge {
   }
 }
 
-/** È«¾Ö MCPBridge µ¥Àı */
+/** å…¨å±€ MCPBridge å•ä¾‹ */
 export const mcpBridge = MCPBridge.getInstance()
 ```
 
 ---
 
-## ËÄ¡¢µ÷ÓÃ·½Ê¹ÓÃÊ¾Àı
+## å››ã€è°ƒç”¨æ–¹ä½¿ç”¨ç¤ºä¾‹
 
-### 4.1 UI ²ãµ÷ÓÃ£¨ÊÜÏŞ½ÇÉ«£©
+### 4.1 UI å±‚è°ƒç”¨ï¼ˆå—é™è§’è‰²ï¼‰
 
 ```typescript
 // src/apps/input/InputDashboard.tsx
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'
 
-// UI ²ãÏÔÊ½´«Èë caller: 'ui'
+// UI å±‚æ˜¾å¼ä¼ å…¥ caller: 'ui'
 const result = await mcpBridge.callTool(
   'fetcher',
   'health_check',
@@ -736,10 +736,10 @@ const result = await mcpBridge.callTool(
   { caller: 'ui', callerId: 'InputDashboard' },
 )
 
-// Èç¹û UI ²ã³¢ÊÔµ÷ÓÃ½»Ò×Àà¹¤¾ß£¬»á±» ACL ¾Ü¾ø
+// å¦‚æœ UI å±‚å°è¯•è°ƒç”¨äº¤æ˜“ç±»å·¥å…·ï¼Œä¼šè¢« ACL æ‹’ç»
 const denied = await mcpBridge.callTool(
   'trading',
-  'create_buy_order',  // ¡û ui ½ÇÉ«²»ÔÊĞíµ÷ÓÃ´Ë¹¤¾ß
+  'create_buy_order',  // â† ui è§’è‰²ä¸å…è®¸è°ƒç”¨æ­¤å·¥å…·
   { symbol: '600519', quantity: 100 },
   { caller: 'ui' },
 )
@@ -747,13 +747,13 @@ const denied = await mcpBridge.callTool(
 // denied.content[0].text === 'ACL_PERMISSION_DENIED: Caller "ui" is not allowed to call tool "create_buy_order" on server "trading"'
 ```
 
-### 4.2 Agent µ÷ÓÃ£¨È«È¨ÏŞ½ÇÉ«£©
+### 4.2 Agent è°ƒç”¨ï¼ˆå…¨æƒé™è§’è‰²ï¼‰
 
 ```typescript
 // src/agents/agentRuntime.ts
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'
 
-// Agent Ä¬ÈÏÊ¹ÓÃ 'agent' ½ÇÉ«£¨È«È¨ÏŞ£©
+// Agent é»˜è®¤ä½¿ç”¨ 'agent' è§’è‰²ï¼ˆå…¨æƒé™ï¼‰
 const result = await mcpBridge.callTool('trading', 'create_buy_order', {
   symbol: '600519',
   quantity: 100,
@@ -763,7 +763,7 @@ const result = await mcpBridge.callTool('trading', 'create_buy_order', {
 })
 ```
 
-### 4.3 CI µ÷ÓÃ£¨×îĞ¡È¨ÏŞ½ÇÉ«£©
+### 4.3 CI è°ƒç”¨ï¼ˆæœ€å°æƒé™è§’è‰²ï¼‰
 
 ```typescript
 // scripts/ci-migration-check.ts
@@ -776,7 +776,7 @@ const result = await mcpBridge.callTool(
   { caller: 'ci', callerId: 'ci-pipeline' },
 )
 
-// CI ³¢ÊÔµ÷ÓÃ·Ç system Server »á±»¾Ü¾ø
+// CI å°è¯•è°ƒç”¨é system Server ä¼šè¢«æ‹’ç»
 const denied = await mcpBridge.callTool(
   'fetcher', 'health_check', {},
   { caller: 'ci' },
@@ -786,32 +786,32 @@ const denied = await mcpBridge.callTool(
 
 ---
 
-## Îå¡¢È¨ÏŞ¾ØÕóËÙ²é±í
+## äº”ã€æƒé™çŸ©é˜µé€ŸæŸ¥è¡¨
 
-| µ÷ÓÃ·½½ÇÉ« | ¿É·ÃÎÊ Server | ¿Éµ÷ÓÃ Tool Ä£Ê½ | µäĞÍ³¡¾° |
+| è°ƒç”¨æ–¹è§’è‰² | å¯è®¿é—® Server | å¯è°ƒç”¨ Tool æ¨¡å¼ | å…¸å‹åœºæ™¯ |
 |-----------|--------------|-----------------|---------|
-| `agent` | `*`£¨È«²¿£© | `*`£¨È«²¿£© | AI Agent ×ÔÖ÷µ÷ÓÃ |
-| `ui` | 9 ¸ö²éÑ¯Àà Server | `health_check`/`list_*`/`get_*`/`fetch_*`/`score_stock` µÈ | UI ½»»¥ |
-| `ci` | `system` | `get_*`/`generate_migration_report` | CI Á÷Ë®Ïß |
-| `system` | `*`£¨È«²¿£© | `*`£¨È«²¿£© | ÏµÍ³ÄÚ²¿µ÷ÓÃ£¨bootstrap¡¢Ç¨ÒÆ£© |
+| `agent` | `*`ï¼ˆå…¨éƒ¨ï¼‰ | `*`ï¼ˆå…¨éƒ¨ï¼‰ | AI Agent è‡ªä¸»è°ƒç”¨ |
+| `ui` | 9 ä¸ªæŸ¥è¯¢ç±» Server | `health_check`/`list_*`/`get_*`/`fetch_*`/`score_stock` ç­‰ | UI äº¤äº’ |
+| `ci` | `system` | `get_*`/`generate_migration_report` | CI æµæ°´çº¿ |
+| `system` | `*`ï¼ˆå…¨éƒ¨ï¼‰ | `*`ï¼ˆå…¨éƒ¨ï¼‰ | ç³»ç»Ÿå†…éƒ¨è°ƒç”¨ï¼ˆbootstrapã€è¿ç§»ï¼‰ |
 
 ---
 
-## Áù¡¢²âÊÔÑéÖ¤·½°¸
+## å…­ã€æµ‹è¯•éªŒè¯æ–¹æ¡ˆ
 
-### 6.1 µ¥Ôª²âÊÔ
+### 6.1 å•å…ƒæµ‹è¯•
 
 ```typescript
 // tests/__tests__/mcp/mcpAclInterceptor.test.ts
 describe('McpAclInterceptor', () => {
-  it('agent ½ÇÉ«Ó¦ÔÊĞí·ÃÎÊËùÓĞ Server µÄËùÓĞ Tool', () => {
+  it('agent è§’è‰²åº”å…è®¸è®¿é—®æ‰€æœ‰ Server çš„æ‰€æœ‰ Tool', () => {
     const result = mcpAclInterceptor.check({
       caller: 'agent', serverName: 'trading', resourceName: 'create_buy_order',
     })
     expect(result.allowed).toBe(true)
   })
 
-  it('ui ½ÇÉ«Ó¦¾Ü¾ø½»Ò×ÀàĞ´²Ù×÷', () => {
+  it('ui è§’è‰²åº”æ‹’ç»äº¤æ˜“ç±»å†™æ“ä½œ', () => {
     const result = mcpAclInterceptor.check({
       caller: 'ui', serverName: 'trading', resourceName: 'create_buy_order',
     })
@@ -819,28 +819,28 @@ describe('McpAclInterceptor', () => {
     expect(result.reason).toContain('not allowed to call tool')
   })
 
-  it('ui ½ÇÉ«Ó¦ÔÊĞí²éÑ¯Àà²Ù×÷', () => {
+  it('ui è§’è‰²åº”å…è®¸æŸ¥è¯¢ç±»æ“ä½œ', () => {
     const result = mcpAclInterceptor.check({
       caller: 'ui', serverName: 'stockpool', resourceName: 'list_pool_stocks',
     })
     expect(result.allowed).toBe(true)
   })
 
-  it('ci ½ÇÉ«Ó¦¾Ü¾ø·ÃÎÊ·Ç system Server', () => {
+  it('ci è§’è‰²åº”æ‹’ç»è®¿é—®é system Server', () => {
     const result = mcpAclInterceptor.check({
       caller: 'ci', serverName: 'fetcher', resourceName: 'health_check',
     })
     expect(result.allowed).toBe(false)
   })
 
-  it('Í¨Åä·û list_* Ó¦Æ¥Åä list_pool_stocks', () => {
+  it('é€šé…ç¬¦ list_* åº”åŒ¹é… list_pool_stocks', () => {
     const result = mcpAclInterceptor.check({
       caller: 'ui', serverName: 'stockpool', resourceName: 'list_pool_stocks',
     })
     expect(result.allowed).toBe(true)
   })
 
-  it('Í¨Åä·û * Ó¦Æ¥ÅäÈÎÒâ Tool', () => {
+  it('é€šé…ç¬¦ * åº”åŒ¹é…ä»»æ„ Tool', () => {
     const result = mcpAclInterceptor.check({
       caller: 'agent', serverName: 'fetcher', resourceName: 'any_unknown_tool',
     })
@@ -849,12 +849,12 @@ describe('McpAclInterceptor', () => {
 })
 ```
 
-### 6.2 ¼¯³É²âÊÔÑéÖ¤
+### 6.2 é›†æˆæµ‹è¯•éªŒè¯
 
 ```typescript
-// ÔÚÏÖÓĞ¼¯³É²âÊÔÖĞĞÂÔö ACL ÑéÖ¤Ì×¼ş
-describe('ACL È¨ÏŞÀ¹½Ø¼¯³É²âÊÔ', () => {
-  it('UI ½ÇÉ«µ÷ÓÃ½»Ò×Àà Tool Ó¦·µ»Ø ACL_PERMISSION_DENIED', async () => {
+// åœ¨ç°æœ‰é›†æˆæµ‹è¯•ä¸­æ–°å¢ ACL éªŒè¯å¥—ä»¶
+describe('ACL æƒé™æ‹¦æˆªé›†æˆæµ‹è¯•', () => {
+  it('UI è§’è‰²è°ƒç”¨äº¤æ˜“ç±» Tool åº”è¿”å› ACL_PERMISSION_DENIED', async () => {
     const result = await mcpBridge.callTool(
       'trading', 'create_buy_order',
       { symbol: 'TEST001', quantity: 100 },
@@ -865,12 +865,12 @@ describe('ACL È¨ÏŞÀ¹½Ø¼¯³É²âÊÔ', () => {
     expect((result.content[0] as { text: string }).text).toContain('ACL_PERMISSION_DENIED')
   })
 
-  it('Agent ½ÇÉ«µ÷ÓÃ²éÑ¯Àà Tool Ó¦³É¹¦', async () => {
+  it('Agent è§’è‰²è°ƒç”¨æŸ¥è¯¢ç±» Tool åº”æˆåŠŸ', async () => {
     const result = await mcpBridge.callTool(
       'fetcher', 'health_check', {},
       { caller: 'agent' },
     )
-    // health_check ¿ÉÄÜÒò Python ·şÎñÎ´Æô¶¯¶ø·µ»Ø false£¬µ«²»Ó¦ÊÇ ACL ¾Ü¾ø
+    // health_check å¯èƒ½å›  Python æœåŠ¡æœªå¯åŠ¨è€Œè¿”å› falseï¼Œä½†ä¸åº”æ˜¯ ACL æ‹’ç»
     expect(result.isError).not.toBe(true)
   })
 })
@@ -878,25 +878,25 @@ describe('ACL È¨ÏŞÀ¹½Ø¼¯³É²âÊÔ', () => {
 
 ---
 
-## Æß¡¢Ïòºó¼æÈİĞÔËµÃ÷
+## ä¸ƒã€å‘åå…¼å®¹æ€§è¯´æ˜
 
-1. **`context` ²ÎÊıÎª¿ÉÑ¡**£ºÏÖÓĞµ÷ÓÃ·½²»´« `context` Ê±£¬Ä¬ÈÏÊ¹ÓÃ `agent` ½ÇÉ«£¨È«È¨ÏŞ£©£¬ĞĞÎªÓëĞŞ¸´Ç°Ò»ÖÂ
-2. **½Ó¿ÚÇ©Ãû¼æÈİ**£º`MCPClient.callTool` ĞÂÔöµÚ 4 ¸ö¿ÉÑ¡²ÎÊı£¬²»ÆÆ»µÏÖÓĞµ÷ÓÃ
-3. **ÎŞÇ¿ÖÆÇ¨ÒÆ**£ºÏÖÓĞ´úÂëÎŞĞèÁ¢¼´ĞŞ¸Ä£¬ĞÂµ÷ÓÃ·½Ó¦ÏÔÊ½´«Èë `context`
+1. **`context` å‚æ•°ä¸ºå¯é€‰**ï¼šç°æœ‰è°ƒç”¨æ–¹ä¸ä¼  `context` æ—¶ï¼Œé»˜è®¤ä½¿ç”¨ `agent` è§’è‰²ï¼ˆå…¨æƒé™ï¼‰ï¼Œè¡Œä¸ºä¸ä¿®å¤å‰ä¸€è‡´
+2. **æ¥å£ç­¾åå…¼å®¹**ï¼š`MCPClient.callTool` æ–°å¢ç¬¬ 4 ä¸ªå¯é€‰å‚æ•°ï¼Œä¸ç ´åç°æœ‰è°ƒç”¨
+3. **æ— å¼ºåˆ¶è¿ç§»**ï¼šç°æœ‰ä»£ç æ— éœ€ç«‹å³ä¿®æ”¹ï¼Œæ–°è°ƒç”¨æ–¹åº”æ˜¾å¼ä¼ å…¥ `context`
 
-**½¨Òé**£ºÔÚÕû¸ÄÏî 4.2£¨apps ²ãÎ¥¹æĞŞ¸´£©ÖĞ£¬½«ËùÓĞ `mcpBridge.callTool` µ÷ÓÃ²¹³ä `caller: 'ui'` ²ÎÊı¡£
+**å»ºè®®**ï¼šåœ¨æ•´æ”¹é¡¹ 4.2ï¼ˆapps å±‚è¿è§„ä¿®å¤ï¼‰ä¸­ï¼Œå°†æ‰€æœ‰ `mcpBridge.callTool` è°ƒç”¨è¡¥å…… `caller: 'ui'` å‚æ•°ã€‚
 
 ---
 
-## °Ë¡¢ÑéÖ¤Çåµ¥
+## å…«ã€éªŒè¯æ¸…å•
 
-- [ ] `src/config/mcpAclMatrix.ts` ´´½¨Íê³É
-- [ ] `src/mcp/core/mcpAclInterceptor.ts` ´´½¨Íê³É
-- [ ] `src/mcp/core/client.ts` callTool/readResource/getPrompt Ôö¼Ó ACL À¹½Ø
-- [ ] `src/mcp/bridge/mcpBridge.ts` Í¸´« callerContext
-- [ ] `src/types/modules/mcp.types.ts` ĞÂÔö McpCallerContext ÀàĞÍ
-- [ ] µ¥Ôª²âÊÔ£º6 ¸öÓÃÀı¸²¸Ç 4 ÖÖ½ÇÉ« + Í¨Åä·ûÆ¥Åä
-- [ ] ¼¯³É²âÊÔ£ºACL ¾Ü¾ø³¡¾° + ACL ·ÅĞĞ³¡¾°
-- [ ] `npx tsc --noEmit` Í¨¹ı
-- [ ] `npm test -- --run` Í¨¹ı
-- [ ] `npm run audit:layers` Í¨¹ı
+- [ ] `src/config/mcpAclMatrix.ts` åˆ›å»ºå®Œæˆ
+- [ ] `src/mcp/core/mcpAclInterceptor.ts` åˆ›å»ºå®Œæˆ
+- [ ] `src/mcp/core/client.ts` callTool/readResource/getPrompt å¢åŠ  ACL æ‹¦æˆª
+- [ ] `src/mcp/bridge/mcpBridge.ts` é€ä¼  callerContext
+- [ ] `src/types/modules/mcp.types.ts` æ–°å¢ McpCallerContext ç±»å‹
+- [ ] å•å…ƒæµ‹è¯•ï¼š6 ä¸ªç”¨ä¾‹è¦†ç›– 4 ç§è§’è‰² + é€šé…ç¬¦åŒ¹é…
+- [ ] é›†æˆæµ‹è¯•ï¼šACL æ‹’ç»åœºæ™¯ + ACL æ”¾è¡Œåœºæ™¯
+- [ ] `npx tsc --noEmit` é€šè¿‡
+- [ ] `npm test -- --run` é€šè¿‡
+- [ ] `npm run audit:layers` é€šè¿‡

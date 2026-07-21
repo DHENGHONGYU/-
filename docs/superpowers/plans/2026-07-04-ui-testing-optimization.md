@@ -50,8 +50,8 @@
 #### Task 1.1: Button 组件全面测试
 
 **Files:**
-- Test: `src/components/ui/Button.test.tsx`
-- Component: `src/components/ui/Button.tsx`
+- Test: `src/components/atoms/Button.test.tsx`
+- Component: `src/components/atoms/Button.tsx`
 
 - [ ] **Step 1: 编写 Button 组件测试用例**
 
@@ -149,8 +149,8 @@ git commit -m "test: add comprehensive Button component tests"
 #### Task 1.2: Input 组件全面测试
 
 **Files:**
-- Test: `src/components/ui/Input.test.tsx`
-- Component: `src/components/ui/Input.tsx`
+- Test: `src/components/atoms/Input.test.tsx`
+- Component: `src/components/atoms/Input.tsx`
 
 - [ ] **Step 1: 编写 Input 组件测试用例**
 
@@ -232,8 +232,8 @@ git commit -m "test: add comprehensive Input component tests"
 #### Task 1.3: Dialog 组件全面测试
 
 **Files:**
-- Test: `src/components/ui/Dialog.test.tsx`
-- Component: `src/components/ui/Dialog.tsx`
+- Test: `src/components/molecules/Dialog.test.tsx`
+- Component: `src/components/molecules/Dialog.tsx`
 
 - [ ] **Step 1: 编写 Dialog 组件测试用例**
 
@@ -363,8 +363,8 @@ git commit -m "test: add comprehensive Dialog component tests"
 #### Task 1.4: Card 组件全面测试
 
 **Files:**
-- Test: `src/components/ui/Card.test.tsx`
-- Component: `src/components/ui/Card.tsx`
+- Test: `src/components/atoms/Card.test.tsx`
+- Component: `src/components/atoms/Card.tsx`
 
 - [ ] **Step 1: 编写 Card 组件测试用例**
 
@@ -873,7 +873,7 @@ git commit -m "test: add CommandHubPage integration tests"
 #### Task 3.1: 颜色系统合规性检查
 
 **Files:**
-- Audit Script: `scripts/audit-color-tokens.ts`
+- Audit Script: `scripts/audit/audit-color-tokens.ts`
 - Target: 所有 `src/**/*.tsx` 文件
 
 - [ ] **Step 1: 创建颜色审计脚本**
@@ -951,7 +951,7 @@ git commit -m "fix: replace hardcoded colors with theme tokens"
 #### Task 3.2: 间距系统合规性检查
 
 **Files:**
-- Audit Script: `scripts/audit-spacing.ts`
+- Audit Script: `scripts/audit/audit-spacing.ts`
 - Target: 所有 `src/**/*.tsx` 文件
 
 - [ ] **Step 1: 创建间距审计脚本**
@@ -1051,7 +1051,7 @@ git commit -m "fix: standardize spacing to 4px grid system"
 #### Task 4.1: 加载状态优化
 
 **Files:**
-- Component: `src/components/PageSkeleton.tsx`
+- Component: `src/components/organisms/shared/PageSkeleton.tsx`
 - Target: 所有页面组件
 
 - [ ] **Step 1: 检查所有页面的加载状态**
@@ -1108,7 +1108,7 @@ git commit -m "feat: enhance PageSkeleton visual feedback"
 #### Task 4.2: 错误状态处理
 
 **Files:**
-- Component: `src/components/ui/ErrorState.tsx`
+- Component: `src/components/molecules/ErrorState.tsx`
 - Target: 所有数据获取页面
 
 - [ ] **Step 1: 检查 ErrorState 组件**
@@ -1162,7 +1162,7 @@ git commit -m "feat: improve ErrorState component with retry action"
 #### Task 4.3: 空状态处理
 
 **Files:**
-- Component: `src/components/ui/EmptyState.tsx`
+- Component: `src/components/molecules/EmptyState.tsx`
 - Target: 所有列表页面
 
 - [ ] **Step 1: 检查 EmptyState 组件**

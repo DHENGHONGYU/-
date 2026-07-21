@@ -45,7 +45,7 @@
 | [输入舱升级策略报告](./implementation/v9-input-cabin-strategy-report.md) | 输入舱 UI/代码/路由/映射修改策略、利弊分析与实施计划 | Current (Active) |
 | [v6 UI 参考](./implementation/v6-cockpit-ui-reference.md) | v6-pro-cockpit 可复用的 UI 组件与模式总结 | Future Reference / Deferred |
 | [V10 架构对齐报告](./implementation/v10-architecture-alignment.md) | V10 白皮书框架思想与 V9 的对齐、吸收、暂缓建议 | Future Reference / Deferred |
-| [V6 Pro UI 模块对齐报告](./implementation/ui-module-alignment.md) | V6 Pro UI 模块比对结论与 V9 的吸收/保持/暂缓清单 | Future Reference / Deferred |
+| [V6 Pro UI 模块对齐报告](./archive/ui-module-alignment.md) | V6 Pro UI 模块比对结论与 V9 的吸收/保持/暂缓清单 | Future Reference / Deferred |
 | [V6 Pro → V9 数据迁移规范](./implementation/v6-to-v9-migration-spec.md) | V6 Pro JSON 全量导出 → V9 的字段映射、转换规则、导入顺序与冲突处理 | Current (Active) |
 | [V9 整体架构蓝图](./implementation/v9-system-blueprint.md) | 愿景、架构、数据协议、路由映射、UI 范式、实施路线统一归纳 | Current (Active) |
 | [第四次工业革命稀缺核心资源交易策略](./implementation/fourth-industrial-revolution-core-resource-strategy.md) | 解析 v6-pro-cockpit 核心稀缺策略，Phase 1（Schema/主题/评分/组合）已落地 | Current (Active) |

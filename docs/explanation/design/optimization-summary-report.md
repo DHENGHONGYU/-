@@ -37,7 +37,7 @@ code_version: 2.0.0
 
 | 优化项 | 涉及模块 | 当前状态 | 预期效果 |
 |--------|----------|----------|----------|
-| 分层调用审计脚本 v3.0 | `scripts/audit-layer-calls.ts` | 已完成 | 0 违规，防止 `pages`/`components` 直连 `dataLayer`、跨层引用 |
+| 分层调用审计脚本 v3.0 | `scripts/audit/audit-layer-calls.ts` | 已完成 | 0 违规，防止 `pages`/`components` 直连 `dataLayer`、跨层引用 |
 | DataBridge / RBAC / MCP ACL 并行整改 | `src/core/databridge.ts`、`src/services/rbac/`、`src/mcp/` | 已完成 | 建立统一数据总线与 ACL 访问控制，消除跨层 shim |
 | Store 拆分与职责收敛 | `executionStore`、`backtestStore` | 已完成 | 减少单文件行数，降低耦合 |
 | 数据层模块拆分 | `db-connection.ts`、`db-schema.ts`、`db-migrations.ts`、`db-utils.ts` | 已完成 | 明确连接、Schema、迁移、工具职责边界 |
@@ -59,7 +59,7 @@ code_version: 2.0.0
 | 代码审查体系建立 | `docs/CODE-REVIEW*.md`、PR 模板 | 已完成 | 规范 P0/P1/P2 三级审查流程 |
 | 技术债管理文档 | `./tech-debt.md` | 已完成 | 建立技术债登记与清理计划 |
 | 预审查脚本 v2.1 | `scripts/monitor/pre-review-check.ts` | 已完成 | 修复 ESLint 输出过大、临时文件捕获、错误判断 |
-| 文档同步机制 | `scripts/audit-doc-sync.ts` | 已完成 | 0 未文档化文件 |
+| 文档同步机制 | `scripts/audit/audit-doc-sync.ts` | 已完成 | 0 未文档化文件 |
 | 提交规范化 | `commitizen`、`.github/` | 已完成 | 统一提交信息，便于变更追溯 |
 
 ### 2.4 缺陷修复与数据完整性
@@ -76,7 +76,7 @@ code_version: 2.0.0
 
 | 优化项 | 涉及模块 | 当前状态 | 预期效果 |
 |--------|----------|----------|----------|
-| Token 消耗检测脚本 | `scripts/audit-token-consumption.ts` | 已完成 | 0 违规，避免全量扫描浪费 tokens |
+| Token 消耗检测脚本 | `scripts/audit/audit-token-consumption.ts` | 已完成 | 0 违规，避免全量扫描浪费 tokens |
 | 硬编码颜色违规清单缓存 | `docs/reports/hardcoded-colors-inventory.json` | 已完成 | 单次扫描从 ~20,000 tokens 降至 0 |
 | 审计脚本增量/缓存机制 | `audit-hardcode.ts --export-inventory` | 已完成 | 后续会话优先查缓存，减少重复扫描 |
 | 单次会话 Token 预算规则 | `AGENTS.md §7.1` | 已完成 | 强制 < 50,000 tokens/会话 |

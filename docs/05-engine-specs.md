@@ -356,9 +356,9 @@ runSectorRotation()
 
 | 文件 | 职责 |
 |------|------|
-| `src/services/trading/hotSectorAnalyzer.ts` | 热门板块策略五维评分 |
-| `src/services/trading/valuePitAnalyzer.ts` | 价值洼地策略五维评分 |
-| `src/services/trading/rotationSignalDetector.ts` | 价值洼地轮动信号检测 |
+| `src/services/scoring/hotSectorAnalyzer.ts` | 热门板块策略五维评分 |
+| `src/services/scoring/valuePitAnalyzer.ts` | 价值洼地策略五维评分 |
+| `src/services/scoring/rotationSignalDetector.ts` | 价值洼地轮动信号检测 |
 | `src/services/trading/dualStrategyEngine.ts` | 编排上述服务，输出 `DualStrategyResult` |
 | `src/config/dualStrategyRules.ts` | 双策略阈值与轮动信号条件配置 |
 

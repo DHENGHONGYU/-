@@ -61,7 +61,7 @@ npx tsc --noEmit
 
 | 文件 | 变更说明 |
 |------|---------|
-| `scripts/validate-data-blueprint.ts` | Store 数量预期从 20 升级到 24（与 v15/v16 同步） |
+| `scripts/other/validate-data-blueprint.ts` | Store 数量预期从 20 升级到 24（与 v15/v16 同步） |
 | `docs/blueprints/v9-data-relationship-er.md` | 补齐 4 个新 Store 清单 / 实体关系 / ER 图边；DB_VERSION 14→16；版本 v1.0.0→v1.1.0 |
 | `docs/blueprints/v9-data-timeline.md` | 追加 P12-P15 四个管线阶段；刷新频率表补 4 行；Status/Version 同步 |
 | `docs/blueprints/v9-data-blueprint-task-tracking.md` | 升级版本到 v1.2.0；新增批次 E（v15/v16 蓝图补全）；执行看板补 E-1/E-2/E-3 状态 |

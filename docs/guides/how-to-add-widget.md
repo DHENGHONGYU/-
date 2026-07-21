@@ -10,7 +10,7 @@
 
 - [ ] 已阅读 `docs/guides/getting-started.md`（了解四步集成契约）
 - [ ] 已阅读 `docs/02-design/widget-integration-checklist.md`（Widget 集成检查清单）
-- [ ] 已阅读 `docs/02-design/atomic-component-system.md`（原子组件系统）
+- [ ] 已阅读 `../reference/atomic-component-system.md`（原子组件系统）
 - [ ] 已确定 Widget 的数据来源（Store 或 Service）
 - [ ] 已确认 Widget 的宿主位置（驾驶舱 `/cockpit` 或页面内嵌）
 
@@ -18,7 +18,7 @@
 
 ## 步骤 1：定义 Widget 类型与配置（3 分钟）
 
-在 `src/types/widget.ts`（或新建 `src/types/modules/widget.ts`）中定义 Widget 类型：
+在 `src/types/widget.ts`（或新建 `src/types/widget.ts`）中定义 Widget 类型：
 
 ```typescript
 // 示例：新增 SectorHeatmapWidget 的类型
@@ -213,7 +213,7 @@ export default SectorHeatmapWidget
 
 ### 3.1 在 Widget 注册表中添加
 
-在驾驶舱或页面的 Widget 注册文件中添加（如 `src/cockpit/widgetRegistry.ts`）：
+在驾驶舱或页面的 Widget 注册文件中添加（如 `src/cockpit/core/widgetRegistry.ts`）：
 
 ```typescript
 import { SectorHeatmapWidget } from '@/components/widgets/SectorHeatmapWidget'
@@ -417,7 +417,7 @@ import { FixedSizeGrid } from 'react-window'
 | 新增 Service | `docs/guides/how-to-add-service.md` | Store 的下游依赖 |
 | Widget 集成检查清单 | `docs/02-design/widget-integration-checklist.md` | 逐项核对 |
 | Widget 错误处理 | `docs/02-design/widget-error-handling.md` | 错误边界与降级 |
-| 原子组件系统 | `docs/02-design/atomic-component-system.md` | 组件分层 |
+| 原子组件系统 | `../reference/atomic-component-system.md` | 组件分层 |
 | WidgetShell 源码 | `src/components/widgets/WidgetShell.tsx` | 外壳实现 |
 
 ---

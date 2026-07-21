@@ -94,7 +94,7 @@ change_log:
 | `implementation/input-cabin-spec.md` | 未标注 | 🟡 `inputConfig.ts` 状态需更新 | 中 |
 | `implementation/v9-system-blueprint.md` | 未标注 | 🔴 多处状态滞后 | 高 |
 | `implementation/v10-architecture-alignment.md` | Future Reference | 🟡 对 `agents/` 目录判断已过时 | 低 |
-| `implementation/ui-module-alignment.md` | Future Reference | 🟢 参考文档，未作为代码依据 | 低 |
+| `../archive/ui-module-alignment.md` | Future Reference | 🟢 参考文档，未作为代码依据 | 低 |
 | `implementation/v6-to-v9-migration-spec.md` | 未标注 | 🟢 与实现一致 | 低 |
 
 ---
@@ -232,7 +232,7 @@ change_log:
 | N2 | Agent 运行时规格 | `docs/implementation/agent-runtime-spec.md` | 中 | 补充 `src/agents/agentRuntime.ts` 的注册、调度、任务队列、超时机制 |
 | N3 | 板块轮动评分引擎规格 | `docs/implementation/rotation-score-spec.md` | 中 | 补充 `rotationScoreService.ts` 的五因子十六指标模型、输入输出、调用方式 |
 | N4 | 数据库迁移说明 v4→v6 | `docs/implementation/db-migration-v4-to-v6.md` | 高 | 记录每次 DB 版本升级的 schema 变更、回退策略、兼容性处理 |
-| N5 | 路由注册表审计说明 | `docs/implementation/route-registry-audit-notes.md` | 中 | 解释 HubPage 不进 `ROUTE_REGISTRY`、`/input/prototype` 临时路由、PortalShell 分发机制 |
+| N5 | 路由注册表审计说明 | `../archive/route-registry-audit-notes.md` | 中 | 解释 HubPage 不进 `ROUTE_REGISTRY`、`/input/prototype` 临时路由、PortalShell 分发机制 |
 | N6 | 质量门禁当前基线说明 | `docs/implementation/quality-gates-baseline.md` | 高 | 详细记录 audit 脚本输出、问题分类、收敛计划 |
 | N7 | V6 Pro 迁移 ADR | `docs/implementation/adr/2026-06-24-v6-migration.md` | 中 | 将 V6 迁移决策正式归档为 ADR-009 |
 | N8 | 词汇表补充章节 | `docs/10-glossary.md` §10.8 | 中 | 增加 V6 迁移、数据流引擎、Agent 运行时相关术语 |
@@ -249,7 +249,7 @@ change_log:
 | C4 | 数据流引擎状态 | `03-architecture-standards.md` §3.1.2 / `08-implementation-plan.md` 2.1.8 | 未实现 🔴 | `src/core/dataflow/` 已实现 | 🔴 高 |
 | C5 | 板块轮动评分状态 | `03-architecture-standards.md` D17 / `08-implementation-plan.md` 2.4.1 | 缺失/静态样本 🔴 | `rotationScoreService.ts` 已实现 | 🔴 高 |
 | C6 | Widget 框架状态 | `03-architecture-standards.md` D14 / `08-implementation-plan.md` 2.13 | 缺失 🔴 | `src/cockpit/core/widgetEngine.ts` 已存在 | 🟡 中 |
-| C7 | ErrorBoundary 状态 | `08-implementation-plan.md` 2.19 | 缺失 🔴 | `src/components/ErrorBoundary.tsx` 已存在并被 `App.tsx` 使用 | 🟡 中 |
+| C7 | ErrorBoundary 状态 | `08-implementation-plan.md` 2.19 | 缺失 🔴 | `src/components/organisms/shared/ErrorBoundary.tsx` 已存在并被 `App.tsx` 使用 | 🟡 中 |
 | C8 | 跨层调用基线 | `09-quality-gates.md` / `v9-system-blueprint.md` | 0 违规 / 0 警告 | 0 违规 / **2 警告** | 🔴 高 |
 | C9 | 硬编码基线 | `09-quality-gates.md` / `v9-system-blueprint.md` | 71 处 | **389 处** | 🔴 高 |
 | C10 | 死代码基线 | `09-quality-gates.md` / `v9-system-blueprint.md` | 4 处 | **11 处** | 🔴 高 |
@@ -287,7 +287,7 @@ change_log:
 1. 新增 `docs/implementation/dataflow-engine-spec.md`。
 2. 新增 `docs/implementation/agent-runtime-spec.md`。
 3. 新增 `docs/implementation/rotation-score-spec.md`。
-4. 新增 `docs/implementation/route-registry-audit-notes.md`。
+4. 新增 `../archive/route-registry-audit-notes.md`。
 5. 新增 ADR-009 V6 Pro 迁移决策。
 6. 创建 `.nvmrc` 或移除 CI 引用。
 7. 配置 `vitest.config.ts` coverage 阈值。

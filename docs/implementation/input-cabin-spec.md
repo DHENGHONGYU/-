@@ -215,10 +215,10 @@ interface FetcherService {
 
 | 组件 | 路径 | 用途 | 数据来源 |
 |------|------|------|----------|
-| `StockSearch` | `src/components/input/StockSearch.tsx` | 搜索录入 | `inputService.searchStocks` |
-| `QualityIndicator` | `src/components/input/QualityIndicator.tsx` | 数据质量点/进度条 | `stock.dataQuality` |
-| `PoolBoard` | `src/components/pool/PoolBoard.tsx` | 五态池看板 | `stockpoolService.getAllPoolGroups` |
-| `PoolCard` | `src/components/pool/PoolCard.tsx` | 单只股票卡片 | `Stock` + `dataQuality` |
+| `StockSearch` | `src/components/organisms/input/StockSearch.tsx` | 搜索录入 | `inputService.searchStocks` |
+| `QualityIndicator` | `src/components/organisms/input/QualityIndicator.tsx` | 数据质量点/进度条 | `stock.dataQuality` |
+| `PoolBoard` | `src/components/organisms/pool/PoolBoard.tsx` | 五态池看板 | `stockpoolService.getAllPoolGroups` |
+| `PoolCard` | `src/components/organisms/pool/PoolCard.tsx` | 单只股票卡片 | `Stock` + `dataQuality` |
 | `BulkImportPanel` | `src/apps/input/BulkImportPanel.tsx` | 批量导入页面 | `batchImportService` |
 | `HotSectorPanel` | `src/apps/input/HotSectorPanel.tsx` | 热门板块页面 | `hotSectorService` |
 | `DataTestPanel` | `src/apps/input/DataTestPanel.tsx` | 采集测试页面 | `fetcherService` |

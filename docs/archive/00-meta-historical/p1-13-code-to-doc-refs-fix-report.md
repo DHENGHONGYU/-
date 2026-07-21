@@ -58,7 +58,7 @@
 
 ### 2.3 手动修正
 
-`siginalQualityStore.ts` 引用的 `../archive/redundant-stores-supplementary-verification.md` 文件已被删除。修复方式：将 `@see` 改为指向 JSDoc 内联的 1-5 条验证信息。
+`siginalQualityStore.ts` 引用的 `../redundant-stores-supplementary-verification.md` 文件已被删除。修复方式：将 `@see` 改为指向 JSDoc 内联的 1-5 条验证信息。
 
 ---
 
@@ -100,8 +100,8 @@
 | `scripts/build/build-ai-memory-index.ts` | 8 | `../../AGENTS.md` | 代码注释中描述扫描文件列表 |
 | `scripts/build/build-ai-memory-index.ts` | 8 | 同上（根目录副本） | 同上 |
 | `scripts/build/deploy-rectification-toolkit.ts` | 299 |   ✅ README.md | `console.log` 输出 |
-| `scripts/docs-tool/doc-cross-ref-sync.ts` | 162 | `../reference/v9核心数据字典与类型定义(整合版).md` | 正则示例字符串 |
-| `scripts/fix/fix-silent-fallback.ts` | 168 | `../archive/silent-fallback-fix-report.md` | 运行时输出路径 |
+| `scripts/docs-tool/doc-cross-ref-sync.ts` | 162 | `../../reference/v9核心数据字典与类型定义(整合版).md` | 正则示例字符串 |
+| `scripts/fix/fix-silent-fallback.ts` | 168 | `../silent-fallback-fix-report.md` | 运行时输出路径 |
 | `scripts/fix/fix-silent-fallback.ts` | 168 | 同上（根目录副本） | 同上 |
 
 ---

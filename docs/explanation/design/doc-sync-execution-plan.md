@@ -97,7 +97,7 @@ V9 项目进入 Phase 2 中后期后，代码迭代速度显著加快，新增�
 |----------|--------|-----------|
 | 新文件 | 是否存在未纳入任何文档的 `src/**` 新文件 | `git diff --name-status` / `git status` |
 | 数据模型 | 新增/修改的 TypeScript 接口是否已在数据字典中定义 | 人工核对 + `grep` |
-| 枚举常量 | 新增的颜色、状态、维度、模型版本是否已常量化的同时被字典引用 | `scripts/audit-hardcode.ts` |
+| 枚举常量 | 新增的颜色、状态、维度、模型版本是否已常量化的同时被字典引用 | `scripts/audit/audit-hardcode.ts` |
 | 服务 API | 新增函数签名、参数、返回值是否已记录 | 人工核对 |
 | DataBridge | 新增 Store / Envelope Action 是否在数据字典与架构文档中体现 | `grep -R "SAVE_" src/config/dbConfig.ts` |
 | 路由 | 新增路由是否在 `../../reference/06-routing-specs.md` 中注册 | 比对 `src/config/routes.ts` 与文档 |
@@ -169,7 +169,7 @@ npm run build      # 生产构建成功
 | # | 任务 | 优先级 | 依赖 | 验收标准 |
 |---|------|--------|------|----------|
 | 7 | 将文档同步纳入 PR Checklist | P1 | 任务 1 | 每个 PR 必须勾选“已同步数据字典/架构说明/CHANGELOG” |
-| 8 | 自动化差异扫描脚本 | P1 | 任务 6 | `scripts/audit-doc-sync.ts`：扫描新增文件并提示缺失文档 |
+| 8 | 自动化差异扫描脚本 | P1 | 任务 6 | `scripts/audit/audit-doc-sync.ts`：扫描新增文件并提示缺失文档 |
 | 9 | 整改调度表文档项闭环 | P1 | `v9-issue-resolution-schedule.md` | DOC-001 ~ DOC-007 全部完成，状态更新为“已执行” |
 | 10 | 更新 `../../reference/08-implementation-plan.md` | P1 | 任务 1, 4 | 在实施计划中新增“文档同步”任务列，状态可追踪 |
 | 11 | 数据字典索引页 | P1 | 任务 2, 3, 4 | `../../reference/data-dictionary-index.md`：汇总所有模块数据字典入口 |

@@ -1,7 +1,7 @@
 ---
 title: 23-core-docs-v2-final-report
 code_version: 2.0.0
-tier: core
+tier: reference
 status: archived
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
@@ -33,7 +33,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 
 - **判定理由**：无 `docs/README.md`；`../README.md` 是子目录导航，非顶层总入口
 
-### `./governance.md` 🔶
+### `../../00-meta/GOVERNANCE.md` 🔶
 
 - **实际文档**：`../explanation/design/implementation-governance.md + ../README.md`
 - **判定理由**：`../explanation/design/implementation-governance.md` 含ADR模板/版本比对/审计基线/代码-文档同步；`../README.md` 含Frontmatter规范/保鲜度告警/DoD；但两者是独立文档，无统一『文档治理公约』总述
@@ -100,7 +100,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 
 ### `../reference/security-model.md` 🔴
 
-- **判定理由**：仅`../how-to/mcp-acl-guide.md`（MCP ACL）和`../reference/audit-b4-4-security.md`（前端安全审计），无整体安全/权限模型
+- **判定理由**：仅`../../how-to/mcp-acl-guide.md`（MCP ACL）和`../reference/audit-b4-4-security.md`（前端安全审计），无整体安全/权限模型
 
 ### `../reference/deployment.md` 🔴
 
@@ -138,7 +138,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 
 | 文档 | 第1轮判定 | 第2轮判定 | 修正说明 |
 |------|----------|----------|----------|
-| `./governance.md` | 🔴 缺失 | 🔶 部分满足 | `../explanation/design/implementation-governance.md`（ADR/版本比对/审计基线）+ `../README.md`（Frontmatter/DoD/保鲜度）合起来覆盖大部分治理内容，但分散在两个独立文档中，无统一治理总述 |
+| `../../00-meta/GOVERNANCE.md` | 🔴 缺失 | 🔶 部分满足 | `../explanation/design/implementation-governance.md`（ADR/版本比对/审计基线）+ `../README.md`（Frontmatter/DoD/保鲜度）合起来覆盖大部分治理内容，但分散在两个独立文档中，无统一治理总述 |
 | `../reference/test-catalog.md` | 🔴 缺失 | 🔶 部分满足 | `../reference/V9-TEST-CASES.md` 是1178行完整测试用例清单（10分类/60+用例），但体系结构认为『偏一次性清单』，非集中维护目录 |
 | 其余21个 | 不变 | 不变 | 复核确认无误 |
 
@@ -152,7 +152,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 - `../reports/release-management/README.md` — 与 `../reference/README.md` 是同一功能的不同路径建议
 - `../prompts/store-integration-guide.md` — `../../prompts/store-prompt-template.md` 是AI生成提示词，非集成指南
 - `../prompts/service-integration-guide.md` — `../../prompts/service-prompt-template.md` 是AI生成提示词，非集成指南
-- `../reference/security-model.md` — 仅`../how-to/mcp-acl-guide.md`（MCP ACL）和`../reference/audit-b4-4-security.md`（前端安全审计），无整体安全/权限模型
+- `../reference/security-model.md` — 仅`../../how-to/mcp-acl-guide.md`（MCP ACL）和`../reference/audit-b4-4-security.md`（前端安全审计），无整体安全/权限模型
 - `../reference/deployment.md` — 仅`05-deployment/ADR-004`（HashRouter静态托管），无部署架构文档
 - `../explanation/runbook.md` — `../reference/07-operation-strategy.md` 含风险控制/回滚原则，但非运维手册
 - `../tutorials/getting-started.md` — `../README.md` 是文档导航，非入门指南
@@ -163,7 +163,7 @@ referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 
 ## 部分满足文档清单（7个）
 
-- `./governance.md` → `../explanation/design/implementation-governance.md + ../README.md` — 但两者是独立文档，无统一『文档治理公约』总述
+- `../../00-meta/GOVERNANCE.md` → `../explanation/design/implementation-governance.md + ../README.md` — 但两者是独立文档，无统一『文档治理公约』总述
 - `../reference/api-contract.md` → `../reference/api-contract.md` — 仅交易持仓API契约，非全局DataBridge/行情端点/事件名契约
 - `../explanation/data-layer-overview.md` → `../reference/v9-indexeddb-store-schema.md` — 1009行，含25个Store完整Schema/索引/版本历史，但缺DataBridge/collection端到端数据地图
 - `../explanation/song-aesthetics.md` → `../reference/design-tokens.md + ../reference/04-ui-ux-specs.md` — design-tokens 495行（令牌使用指南），ui-design-system 279行（含『宋瓷绿』『古铜金』提及），但无独立『宋韵美学』总述文档

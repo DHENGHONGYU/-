@@ -73,7 +73,7 @@ date: 2026-07-17
 | ID | 模块 | 涉及文件 | 缺失文档类型 | 问题描述 | 优先级 | 建议责任人 | 状态 |
 |----|------|----------|--------------|----------|--------|------------|------|
 | GAP-009 | 数据字典索引 | `docs/*DATA_DEFINITION*.md` | 索引页 | 缺少 `../../reference/data-dictionary-index.md` 汇总所有模块数据字典入口 | P2 | Doc-Sync Agent | 待执行 |
-| ~~GAP-010~~ | ~~自动化扫描脚本~~ | ~~`scripts/audit-doc-sync.ts`~~ | ~~工具脚本~~ | ~~已实现 `scripts/audit-doc-sync.ts`，支持 git diff 与全量 src 扫描；`npm run audit:docs` 通过，0 个未引用文件~~ | ~~P2~~ | ~~Doc-Sync Agent~~ | ~~已闭环 2026-06-26~~ |
+| ~~GAP-010~~ | ~~自动化扫描脚本~~ | ~~`scripts/audit/audit-doc-sync.ts`~~ | ~~工具脚本~~ | ~~已实现 `scripts/audit/audit-doc-sync.ts`，支持 git diff 与全量 src 扫描；`npm run audit:docs` 通过，0 个未引用文件~~ | ~~P2~~ | ~~Doc-Sync Agent~~ | ~~已闭环 2026-06-26~~ |
 | GAP-011 | Agent 运行时框架 | `src/agents/*` | 架构说明 | 2.17 Agent 运行时框架代码已存在，但架构说明与监控文档待补齐 | P2 | Architecture-Fix | 待执行 |
 | GAP-012 | 操作反馈闭环 | `src/components/ui/`、各 App | UI/UX 规格 | 2.20 操作反馈闭环增强尚未落地，文档与实际存在偏差 | P2 | Interaction-Fix | 待规划 |
 

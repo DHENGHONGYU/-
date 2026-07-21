@@ -223,7 +223,7 @@ change_log:
 2. **搜索组件的数据源**：使用本地 mock 股票库、接入 AKShare 搜索接口，还是仅对候选池做本地过滤？
 3. **热门板块数据**：继续 mock，还是优先接入 V4 行业评分 SKILL？
 4. **采集配置是否立即持久化到 IndexedDB**：建议 Phase 3 先做内存配置，验证稳定后再持久化。
-5. **是否保留 `/input/prototype`**：建议 Phase 4 删除，或移动到 `../archive/prototype-reference.md` 作为设计档案。
+5. **是否保留 `/input/prototype`**：建议 Phase 4 删除，或移动到 `../prototype-reference.md` 作为设计档案。
 
 ---
 

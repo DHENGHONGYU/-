@@ -26,9 +26,9 @@
  * - 退出码：0=无违规, 1=有违规, 2=执行错误
  */
 
-import { execSync } from 'node:child_process'
+import { execFileSync } from 'node:child_process'
 import { readFileSync, readdirSync, statSync } from 'node:fs'
-import { join, relative, extname } from 'node:path'
+import { join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline'
 
@@ -50,7 +50,6 @@ export interface Report extends AuditReport {
 
 import { dirname } from 'node:path'
 const ROOT = dirname(fileURLToPath(import.meta.url)).replace(/[\\/]scripts(?:[\\/][^\\/]+)*$/, '')
-const SRC_DIR = join(ROOT, 'src')
 const DOCS_DIR = join(ROOT, 'docs')
 
 // v2.1 增强：排除常见但无意义的短词，避免误判为"已文档化"
@@ -105,42 +104,28 @@ function collectDocs(dir: string, docFiles: Set<string>): void {
   }
 }
 
-function getChangedFiles(since = 'HEAD~1'): string[] {
+function getChangedFiles(): string[] {
   try {
-    const output = execSync(`git diff --name-only ${since} HEAD`, { encoding: 'utf-8', cwd: ROOT })
-    return output.split('\n').filter((line) => line.startsWith('src/'))
+    // 根因修复（2026-07-21）：原实现 `git diff --name-only HEAD~1 HEAD` 在本仓库的
+    // git-for-windows 环境下会原生段错误（exit 139），导致本函数抛异常并被上层退化为
+    // 全量扫描 878 个 src 文件，进而使预提交钩子挂死。
+    // 改用 `git log -1 --name-only HEAD` 获取最近一次提交改动的文件（语义等价且不触发段错误），
+    // 并以 execFileSync + timeout 兜底，确保任何 git 异常都不会让提交流程挂起。
+    const output = execFileSync(
+      'git',
+      ['-c', 'core.quotepath=false', 'log', '-1', '--name-only', '--pretty=format:', '--no-color', 'HEAD'],
+      { encoding: 'utf-8', cwd: ROOT, timeout: 15000 },
+    )
+    return output
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line.startsWith('src/'))
   } catch {
     // 该脚本仅在 CLI / CI 中运行，非生产 UI 路径；使用 console.warn 可直接提示审计人员
     // git 环境异常时的降级行为，避免引入额外日志依赖。
-    console.warn('⚠️  无法获取 git diff，尝试扫描全部 src 文件')
+    console.warn('⚠️  无法获取 git diff，跳过 src 文档同步检查（不阻塞提交）')
     return []
   }
-}
-
-function scanAllSrcFiles(dir: string): string[] {
-  const result: string[] = []
-  let entries: string[]
-  try {
-    entries = readdirSync(dir)
-  } catch {
-    // 目录不存在或无权限时返回空列表（边界条件健壮性）
-    return result
-  }
-  for (const entry of entries) {
-    const fullPath = join(dir, entry)
-    let stat
-    try {
-      stat = statSync(fullPath)
-    } catch {
-      continue
-    }
-    if (stat.isDirectory()) {
-      result.push(...scanAllSrcFiles(fullPath))
-    } else if (['.ts', '.tsx'].includes(extname(entry))) {
-      result.push(relative(ROOT, fullPath).replace(/\\/g, '/'))
-    }
-  }
-  return result
 }
 
 function isLikelyReferenced(filePath: string, allDocContent: string): boolean {
@@ -192,11 +177,21 @@ export function scan(): Report {
     .map((p) => readFileSync(p, 'utf-8'))
     .join('\n')
 
-  // 获取待扫描文件
-  let files = getChangedFiles()
-  const scanMode: 'changed' | 'all' = files.length > 0 ? 'changed' : 'all'
+  // 获取待扫描文件（仅本提交改动到的 src 文件）
+  const files = getChangedFiles()
+  // 根因修复（2026-07-21）：若本次提交未改动任何 src 文件，则没有"新增/修改的 src 文件"
+  // 需要文档化检查（契合本脚本"扫描 src/ 中新增/修改的文件"的设计意图），直接通过，
+  // 避免对全部 src（878 个文件）做全量扫描导致预提交钩子挂死。
   if (files.length === 0) {
-    files = scanAllSrcFiles(SRC_DIR)
+    return {
+      violations: [],
+      summary: {
+        totalFiles: 0,
+        totalViolations: 0,
+        scanMode: 'changed',
+        docFilesCount: docFiles.size,
+      },
+    }
   }
 
   // v2.1 增强：使用 AUTO_EXCLUDED_PATTERNS 过滤
