@@ -1,3 +1,12 @@
+---
+title: V9 文档中心总入口
+doc_id: V9-DOC-ROOT-901
+tier: important
+status: active
+version: v1.0.0
+last_updated: 2026-07-21
+code_version: 2.0.0
+---
 # 智能投研复盘系统 V9 — 项目文档体系
 
 > **Status**: Current  

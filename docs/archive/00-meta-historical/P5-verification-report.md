@@ -68,7 +68,7 @@ Grep: pattern="src/utils/" type=ts
 
 ## 三、验证结果（已执行）
 
-> **环境发现**: Node.js v24.15.0 + npm 11.12.1 位于 `C:\Users\DELL\AppData\Local\Programs\kimi-desktop\resources\resources\runtime\`
+> **环境发现**: Node.js v24.15.0 + npm 11.12.1 位于 `C:\Users\huawei\AppData\Local\Programs\kimi-desktop\resources\resources\runtime\`
 > **验证时间**: 2026-07-12 15:36–15:37
 
 | 验证命令 | 结果 | 关键数据 |

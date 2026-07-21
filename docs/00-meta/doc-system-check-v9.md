@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: docs/00-meta/doc-system-check-v9.md
-code_version: 2.0.0
-tier: core
----
 
 # 智能投研复盘系统 V9 — 文档归类体系体检报告
 

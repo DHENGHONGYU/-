@@ -5,16 +5,7 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/explanation/component-deprecation-policy.md
-code_version: 2.0.0
-tier: important
----
 
----
-title: docs/explanation/component-deprecation-policy.md
-code_version: 2.0.0
----
 
 # V9 组件弃用政策
 

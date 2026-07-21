@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: docs/explanation/optimization-progress-report.md
-code_version: 2.0.0
-tier: reference
----
 
 # 优化计划执行进度报告（P1 服务层中优项推进）
 

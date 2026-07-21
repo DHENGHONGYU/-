@@ -8,6 +8,7 @@
  *   npx tsx scripts/fix-basename-root-refs.ts --apply  # 应用
  */
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs'
+import { readTextAdaptive, writeTextUtf8 } from './lib/encoding'
 import { dirname, relative, resolve } from 'node:path'
 
 const args = process.argv.slice(2)
@@ -31,7 +32,7 @@ function findBrokenRootRefs(): Array<{ source: string; line: number; target: str
     console.warn('未找到 audit-doc-code-references 报告')
     return result
   }
-  const audit = JSON.parse(readFileSync(latest, 'utf-8'))
+  const audit = JSON.parse(readTextAdaptive(latest))
   for (const ref of audit.brokenReferences || []) {
     const target = ref.target
     if (!ROOT_DOCS.includes(target)) continue
@@ -60,7 +61,7 @@ function computeRelative(source: string, target: string): string {
 function applyFix(item: { source: string; line: number; target: string }): boolean {
   const filePath = resolve(PROJECT_ROOT, item.source)
   if (!existsSync(filePath)) return false
-  const content = readFileSync(filePath, 'utf-8')
+  const content = readTextAdaptive(filePath)
   const lines = content.split('\n')
   const idx = item.line - 1
   if (idx < 0 || idx >= lines.length) return false

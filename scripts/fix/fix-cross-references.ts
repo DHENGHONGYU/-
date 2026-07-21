@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'fs';
+import { readTextAdaptive, writeTextUtf8 } from '../lib/encoding'
 import { join, dirname, basename, relative } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -15,7 +16,7 @@ interface MigrationEntry {
 }
 
 function loadMigrationLog(): MigrationEntry[] {
-  const content = readFileSync(MIGRATION_LOG_PATH, 'utf-8');
+  const content = readTextAdaptive(MIGRATION_LOG_PATH);
   return JSON.parse(content);
 }
 
@@ -55,7 +56,7 @@ function findAllMarkdownFiles(dir: string, files: string[] = []): string[] {
 }
 
 function fixReferences(filePath: string, mapping: Map<string, string>): { fixed: number; changed: boolean } {
-  let content = readFileSync(filePath, 'utf-8');
+  let content = readTextAdaptive(filePath);
   let fixed = 0;
   const fileDir = dirname(filePath).replace(/\\/g, '/');
   
@@ -96,7 +97,7 @@ function fixReferences(filePath: string, mapping: Map<string, string>): { fixed:
     }
   }
   
-  writeFileSync(filePath, content, 'utf-8');
+  writeTextUtf8(filePath, content);
   return { fixed, changed: fixed > 0 };
 }
 

@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: reference
 ---
 
----
-title: docs/00-meta/changelog-warnings-handling-strategy.md
-code_version: 2.0.0
-tier: core
----
 
 # CHANGELOG 警告处理策略
 
