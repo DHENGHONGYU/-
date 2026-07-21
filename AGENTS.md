@@ -32,6 +32,7 @@
 > - `data-flow-integrity-audit`：全链路数据流完整性审计（从哪查到哪）
 > - `devops-automation`：备份分支 + 批量部署（运维自动化）
 > - `bash-conventions`：Bash 执行规范与命令速查（怎么跑命令，§十六 配套操作手册）
+> - `module-sync-checklist`：模块改动十域同步校对（严禁代码先行，一切改动的交付闸口）
 
 ### 技能路由表（任务开始时必须先匹配，v1.5.3 新增）
 
@@ -44,6 +45,7 @@
 | 排查 Mock 残留 / 假数据 / 信息孤岛、Mock→真实切换、上线前 Mock 清理审计 | `mock-data-diagnosis` | advisory | 三维 Grep 扫描（每项 file:line 证据）+ 诊断报告归档 `outputs/` |
 | 定时备份、批量部署、注册周期任务、排查备份/部署失败 | `devops-automation` | advisory | 脚本零破坏性检查 + 敏感文件排除校验 |
 | 执行任何 Bash 命令、路径/解释器/门禁命令选择（全局生效） | `bash-conventions` | advisory | 按该技能 §4「执行后联动义务」表选必跑命令 |
+| 任何代码改动交付前（改动 `src/services|store|core|pages|components/**`）、重构/接口变更/重命名、新增 skill 或注册表变更 | `module-sync-checklist` | mandatory | 十域同步清单 + `npx tsc --noEmit` + `npm run tsc:prod` + `npm run audit:layers` + `npm run audit:acl-consistency` |
 
 > **变更纪律**：新增技能 = ① 新建 `.workbuddy/skills/<name>/SKILL.md`（frontmatter 含 `triggers`/`gates`/`mandatory`）→ ② 同步 `.workbuddy/skills/skill-registry.json`（L1 注册表）→ ③ 更新本索引与路由表 → ④ 跑 `npm run audit:skill-coverage` 校验三方一致。钩子状态：pre-commit 挂 `--remind --log`（提醒模式，命中记录写入 `.workbuddy/skills/usage.log`）；pre-push 挂 `--enforce --since <base>`（强制模式，mandatory 命中未确认即拦截，旁路 `SKILL_GATE_CONFIRM=1 git push`）。`npm run skill:route` 可随时手工查询。
 
