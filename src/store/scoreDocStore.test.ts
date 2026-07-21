@@ -187,7 +187,7 @@ describe('scoreDocStore', () => {
     })
 
     const store = useScoreDocStore.getState()
-    store.clear()
+    store.reset()
 
     const state = useScoreDocStore.getState()
     expect(state.symbol).toBe('')

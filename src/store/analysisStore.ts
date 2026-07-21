@@ -66,6 +66,8 @@ interface AnalysisState {
   loadTrend: (entityId: string, entityType: ScoreTrendEntityType, period?: ScoreTrendPeriod) => Promise<void>
   /** 清空趋势错误 */
   clearTrendError: () => void
+  /** 重置 Store 到初始状态 */
+  reset: () => void
 }
 
 // ============================================================
@@ -195,6 +197,11 @@ export const useAnalysisStore = create<AnalysisState>((set, get) => ({
 
   clearTrendError: () => {
     set({ trendError: null })
+  },
+
+  reset: () => {
+    logger.info('[analysisStore] reset')
+    set({ ...initialState })
   },
 }))
 

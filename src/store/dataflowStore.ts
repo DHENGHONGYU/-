@@ -13,6 +13,8 @@ interface DataflowState {
   updateChannelSubscribers: (channel: string, count: number) => void
   updateCache: (channel: string, data: unknown) => void
   refreshStats: () => void
+  /** 重置 Store 到初始状态 */
+  reset: () => void
 }
 
 /**
@@ -35,6 +37,12 @@ export const useDataflowStore = create<DataflowState>((set) => ({
     return { cache }
   }),
   refreshStats: () => set({ stats: dataFlowEngine.getStats() }),
+  reset: () => set({
+    connected: false,
+    channels: new Map(),
+    cache: new Map(),
+    stats: dataFlowEngine.getStats(),
+  }),
 }))
 
 const dataflowSubscriptions: Array<() => void> = []

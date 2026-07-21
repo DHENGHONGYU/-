@@ -93,8 +93,8 @@ export interface ScoreDocState {
   loadVersions: () => Promise<void>
   /** 刷新当前股票的评分文档版本 */
   refresh: () => Promise<void>
-  /** 清空当前选择及结果（保留股票列表） */
-  clear: () => void
+  /** 重置当前选择及结果（保留股票列表） */
+  reset: () => void
   /** 导出当前股票全部 Markdown */
   exportAll: () => Promise<void>
   /** 加载股票代码列表（供下拉选择，封装 DataBridge.query(queryList)）） */
@@ -233,10 +233,10 @@ export const useScoreDocStore = create<ScoreDocState>((set, get) => ({
     }
   },
 
-  clear: () => {
-    logger.info('[scoreDocStore] clear')
+  reset: () => {
+    logger.info('[scoreDocStore] reset')
     set({ symbol: '', versions: [], error: null, loading: false })
-    withBroadcast(EVENT_NAMES.SCORE_DOCS_CHANGED, { action: 'clear' })
+    withBroadcast(EVENT_NAMES.SCORE_DOCS_CHANGED, { action: 'reset' })
   },
 
   exportAll: async () => {

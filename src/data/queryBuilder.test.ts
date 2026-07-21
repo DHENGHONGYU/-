@@ -91,7 +91,7 @@ describe('QueryBuilder.queryStock — 参数校验', () => {
     expect(res.ok).toBe(false)
     if (!res.ok) {
       expect(res.error).toBeInstanceOf(ValidationError)
-      expect(res.error.field).toBe('symbol')
+      expect((res.error as ValidationError).field).toBe('symbol')
     }
   })
 
@@ -172,7 +172,7 @@ describe('QueryBuilder.queryStock — 各维度独立测试', () => {
 
     expect(res.ok).toBe(true)
     if (res.ok) {
-      expect(res.value.quotes?.close).toBe(10.5)
+      expect(res.value.quotes?.latest.close).toBe(10.5)
     }
   })
 
@@ -207,7 +207,7 @@ describe('QueryBuilder.queryStock — 各维度独立测试', () => {
 
     expect(res.ok).toBe(true)
     if (res.ok) {
-      expect(res.value.v6Score?.totalScore).toBe(75)
+      expect(res.value.v6Score?.score).toBe(75)
     }
   })
 
@@ -247,7 +247,7 @@ describe('QueryBuilder.queryStock — 各维度独立测试', () => {
     expect(res.ok).toBe(true)
     if (res.ok) {
       // 应返回 scoredAt 最新的那条 (2000)
-      expect(res.value.intelligentScore?.score).toBe(85)
+      expect(res.value.intelligentScore?.overallScore).toBe(85)
       expect(res.value.intelligentScore?.scoredAt).toBe(2000)
     }
   })
@@ -307,7 +307,7 @@ describe('QueryBuilder.queryStock — 各维度独立测试', () => {
 
     expect(res.ok).toBe(true)
     if (res.ok) {
-      expect(res.value.industryScore?.score).toBe(75)
+      expect(res.value.industryScore?.overallScore).toBe(75)
       expect(res.value.industryScore?.scoredAt).toBe(2000)
     }
   })
@@ -366,7 +366,7 @@ describe('QueryBuilder.queryStock — 各维度独立测试', () => {
     expect(res.ok).toBe(true)
     if (res.ok) {
       expect(res.value.signals).toHaveLength(2)
-      expect(res.value.signals?.[0].type).toBe('buy')
+      expect(res.value.signals?.[0]?.type).toBe('buy')
     }
   })
 
@@ -706,5 +706,25 @@ describe('QueryBuilder.queryStocksBatch — 批量查询', () => {
     expect(mockLogger.info).toHaveBeenCalledWith(
       expect.stringContaining('[QueryBuilder] queryStocksBatch'),
     )
+  })
+
+  it('单标的参数校验失败 → 跳过该标的（走 fail 分支）', async () => {
+    setupMockData({ get: {} })
+
+    // 空字符串 symbol 会导致 queryStock 返回 fail
+    const res = await queryBuilder.queryStocksBatch(
+      ['', '600000'],
+      { includeBasic: true },
+    )
+
+    expect(res.ok).toBe(true)
+    if (res.ok) {
+      // 只有 600000 成功，空 symbol 被跳过
+      expect(res.value.size).toBe(1)
+      expect(res.value.has('600000')).toBe(true)
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('跳过失败标的'),
+      )
+    }
   })
 })

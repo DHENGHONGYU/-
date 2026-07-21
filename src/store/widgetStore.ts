@@ -16,6 +16,8 @@ interface WidgetState {
   updateRuntimeState: (instanceId: string, state: Partial<WidgetRuntimeState>) => void
   refreshStats: () => void
   refreshInstance: (instanceId: string, newData?: unknown) => boolean
+  /** 重置 store 到初始空状态，清除全部实例/运行时状态/数据哈希，防止 Map 泄漏 */
+  reset: () => void
 }
 
 /**
@@ -82,6 +84,14 @@ export const useWidgetStore = create<WidgetState>((set) => ({
 
     eventBus.emit('WIDGET_REFRESH_SUCCESS', { instanceId })
     return true
+  },
+
+  reset: () => {
+    set({
+      instances: new Map(),
+      runtimeStates: new Map(),
+      dataHashes: new Map(),
+    })
   },
 }))
 

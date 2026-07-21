@@ -202,7 +202,7 @@ describe('useSectorAnalysisStore', () => {
       lastUpdated: 12345,
     })
 
-    useSectorAnalysisStore.getState().clear()
+    useSectorAnalysisStore.getState().reset()
 
     const state = useSectorAnalysisStore.getState()
     expect(state.rotationScores).toEqual([])

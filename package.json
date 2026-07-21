@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "type": "module",
   "scripts": {
-    "predev": "tsc --noEmit",
+    "predev": "tsc -p tsconfig.prod.json --noEmit",
     "prebuild": "npm run generate:tokens && npm run tsc:prod",
     "dev": "vite",
     "build": "vite build",
@@ -27,7 +27,7 @@
     "test:e2e:visual:docker:update": "docker compose -f e2e/docker-compose.yml run --rm visual-update",
     "coverage": "vitest run --coverage",
     "tsc": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit",
-    "tsc:prod": "tsc -p tsconfig.json --noEmit",
+    "tsc:prod": "tsc -p tsconfig.prod.json --noEmit",
     "tsc:test": "tsc -p tsconfig.test.json --noEmit",
     "build:stock-dict": "C:/Users/huawei/.workbuddy/binaries/python/envs/default/Scripts/python.exe scripts/generate-stock-dict.py",
     "build:stock-dict:verify": "C:/Users/huawei/.workbuddy/binaries/python/envs/default/Scripts/python.exe scripts/verify-stock-dict.py",

@@ -40,7 +40,8 @@ interface SectorAnalysisState {
   fetchSectorAnalysis: () => Promise<void>
   setLoading: (loading: boolean) => void
   setError: (error: string | null) => void
-  clear: () => void
+  /** 重置 store 到初始空状态 */
+  reset: () => void
 }
 
 // ============================================================
@@ -112,10 +113,10 @@ export const useSectorAnalysisStore = create<SectorAnalysisState>((set, get) => 
     set({ error })
   },
 
-  clear: () => {
-    logger.info('[sectorAnalysisStore] clear')
+  reset: () => {
+    logger.info('[sectorAnalysisStore] reset')
     set({ ...initialState })
-    withBroadcast(EVENT_NAMES.SECTOR_ANALYSIS_CHANGED, { action: 'clear' })
+    withBroadcast(EVENT_NAMES.SECTOR_ANALYSIS_CHANGED, { action: 'reset' })
   },
 }))
 

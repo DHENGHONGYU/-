@@ -33,6 +33,8 @@ interface PerfMetricsState {
   clearCurrent: () => void
   /** 设置运行状态 */
   setRunning: (running: boolean) => void
+  /** 重置 Store 到初始状态（清空全部，包括历史结果） */
+  reset: () => void
 }
 
 /**
@@ -64,6 +66,16 @@ export const usePerfMetricsStore = create<PerfMetricsState>((set) => ({
 
   setRunning: (running) => {
     set({ running })
+  },
+
+  reset: () => {
+    logger.info('[perfMetricsStore] reset')
+    set({
+      results: [],
+      lastRunId: undefined,
+      running: false,
+      currentMetrics: [],
+    })
   },
 }))
 

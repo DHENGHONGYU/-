@@ -477,14 +477,15 @@ describe('hotSectorQueryUseCase', () => {
       // 执行
       await hotSectorQueryUseCase()
 
-      // 验证
-      expect(mockLogger.error).toHaveBeenCalledTimes(1)
-      expect(mockLogger.error).toHaveBeenCalledWith(
-        '[hotSectorQueryUseCase] 查询失败',
-        expect.objectContaining({
-          error: '服务内部错误',
-        }),
+      // 验证：useCase 自身的错误日志（注意：captureError 也会记录一条 error 日志）
+      const errorCalls = mockLogger.error.mock.calls
+      const useCaseErrorCall = errorCalls.find(
+        (call) => (call[0] as string).includes('[hotSectorQueryUseCase] 查询失败'),
       )
+      expect(useCaseErrorCall).toBeDefined()
+      expect(useCaseErrorCall![1]).toMatchObject({
+        error: '服务内部错误',
+      })
     })
   })
 

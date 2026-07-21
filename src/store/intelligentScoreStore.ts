@@ -192,8 +192,10 @@ export interface IntelligentScoreState {
   runScore: (input?: Partial<RunIntelligentScoreInput> & { symbol?: string }) => Promise<void>
   /** 加载多周期评分趋势 */
   loadScoreTrend: (symbol: string, period: ScoreTrendPeriod) => Promise<void>
-  /** 重置结果及关联状态 */
+  /** 重置结果及关联状态（保留输入态 symbol/stocks/files/llmConfig） */
   resetResult: () => void
+  /** 重置 store 到初始空状态（含输入态），用于登出/切换账户 */
+  reset: () => void
 }
 
 // ============================================================
@@ -226,6 +228,7 @@ const initialState: Omit<
   | 'runScore'
   | 'loadScoreTrend'
   | 'resetResult'
+  | 'reset'
 > = {
   symbol: '',
   stocks: [],
@@ -513,5 +516,10 @@ export const useIntelligentScoreStore = create<IntelligentScoreState>((set, get)
       trendError: null,
     })
     withBroadcast(EVENT_NAMES.INTELLIGENT_SCORES_CHANGED, { action: 'reset' })
+  },
+
+  reset: () => {
+    logger.info('[intelligentScoreStore] reset')
+    set({ ...initialState })
   },
 }))

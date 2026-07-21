@@ -2,7 +2,7 @@
   "multi": [
     {
       "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
-      "line": 53,
+      "line": 48,
       "target": "docs/explanation/v9-current-state-review.md",
       "suggestion": "../implementation/v9-current-state-review.md"
     },
@@ -1406,25 +1406,25 @@
     },
     {
       "source": "docs\\00-meta\\文档体系体检报告-v9.md",
-      "line": 144,
+      "line": 140,
       "target": "../reference/ai-center-../reference/data-definition.md",
       "suggestion": "../reference/data-definition.md"
     },
     {
       "source": "docs\\00-meta\\文档体系体检报告-v9.md",
-      "line": 144,
+      "line": 140,
       "target": "BACKTEST_../reference/data-definition.md",
       "suggestion": "../reference/data-definition.md"
     },
     {
       "source": "docs\\00-meta\\文档体系体检报告-v9.md",
-      "line": 144,
+      "line": 140,
       "target": "dataflow-../reference/data-definition.md",
       "suggestion": "../reference/data-definition.md"
     },
     {
       "source": "docs\\00-meta\\文档体系体检报告-v9.md",
-      "line": 144,
+      "line": 140,
       "target": "NEWS_../reference/data-definition.md",
       "suggestion": "../reference/data-definition.md"
     },
@@ -1472,19 +1472,25 @@
     },
     {
       "source": "docs\\00-meta\\文档理解核查报告.md",
-      "line": 15,
+      "line": 11,
       "target": "../explanation/03-architecture-standards.md",
       "suggestion": "../reference/03-architecture-standards.md"
     },
     {
       "source": "docs\\00-meta\\文档理解核查报告.md",
-      "line": 40,
+      "line": 36,
       "target": "../explanation/03-architecture-standards.md",
       "suggestion": "../reference/03-architecture-standards.md"
     },
     {
       "source": "docs\\00-meta\\文档理解核查报告.md",
-      "line": 41,
+      "line": 37,
+      "target": "../explanation/03-architecture-standards.md",
+      "suggestion": "../reference/03-architecture-standards.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档理解核查报告.md",
+      "line": 60,
       "target": "../explanation/03-architecture-standards.md",
       "suggestion": "../reference/03-architecture-standards.md"
     },
@@ -1496,13 +1502,7 @@
     },
     {
       "source": "docs\\00-meta\\文档理解核查报告.md",
-      "line": 68,
-      "target": "../explanation/03-architecture-standards.md",
-      "suggestion": "../reference/03-architecture-standards.md"
-    },
-    {
-      "source": "docs\\00-meta\\文档理解核查报告.md",
-      "line": 163,
+      "line": 159,
       "target": "../explanation/03-architecture-standards.md",
       "suggestion": "../reference/03-architecture-standards.md"
     },
@@ -6812,25 +6812,25 @@
     },
     {
       "source": "docs\\explanation\\architecture-version-comparison.md",
-      "line": 55,
+      "line": 42,
       "target": "docs/explanation/03-architecture-standards.md",
       "suggestion": "../reference/03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\architecture-version-comparison.md",
-      "line": 67,
+      "line": 54,
       "target": "docs/explanation/03-architecture-standards.md",
       "suggestion": "../reference/03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\architecture-version-comparison.md",
-      "line": 77,
+      "line": 64,
       "target": "docs/explanation/03-architecture-standards.md",
       "suggestion": "../reference/03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\architecture-version-comparison.md",
-      "line": 92,
+      "line": 79,
       "target": "docs/explanation/03-architecture-standards.md",
       "suggestion": "../reference/03-architecture-standards.md"
     },
@@ -7016,19 +7016,19 @@
     },
     {
       "source": "docs\\explanation\\design\\doc-sync-execution-plan.md",
-      "line": 58,
+      "line": 46,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\doc-sync-execution-plan.md",
-      "line": 162,
+      "line": 150,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\doc-sync-execution-plan.md",
-      "line": 272,
+      "line": 260,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
@@ -7052,37 +7052,37 @@
     },
     {
       "source": "docs\\explanation\\design\\p4-文档去重清单与执行方案.md",
-      "line": 24,
+      "line": 20,
       "target": "../../reports/audit/../v9-架构缺陷与整改行动清单.md",
       "suggestion": "../../reports/audit/v9-架构缺陷与整改行动清单.md"
     },
     {
       "source": "docs\\explanation\\design\\p4-文档去重清单与执行方案.md",
-      "line": 46,
+      "line": 42,
       "target": "../../reports/audit/../v9-架构缺陷与整改行动清单.md",
       "suggestion": "../../reports/audit/v9-架构缺陷与整改行动清单.md"
     },
     {
       "source": "docs\\explanation\\design\\p4-文档去重清单与执行方案.md",
-      "line": 112,
+      "line": 108,
       "target": "../../reports/audit/../v9-架构缺陷与整改行动清单.md",
       "suggestion": "../../reports/audit/v9-架构缺陷与整改行动清单.md"
     },
     {
       "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
-      "line": 172,
+      "line": 168,
       "target": "src/apps/input/mockData.ts",
       "suggestion": "src/services/trading/mockDataGenerator.ts"
     },
     {
       "source": "docs\\explanation\\design\\registry-index.md",
-      "line": 76,
+      "line": 72,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\stock-selection-strategy.md",
-      "line": 196,
+      "line": 188,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
@@ -7124,61 +7124,97 @@
     },
     {
       "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
-      "line": 22,
+      "line": 14,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
-      "line": 121,
+      "line": 113,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
-      "line": 186,
+      "line": 178,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
-      "line": 262,
+      "line": 254,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
-      "line": 355,
+      "line": 347,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
-      "line": 356,
+      "line": 348,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
-      "line": 357,
+      "line": 349,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
-      "line": 45,
+      "line": 33,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
-      "line": 90,
+      "line": 78,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
-      "line": 116,
+      "line": 104,
+      "target": "../03-architecture-standards.md",
+      "suggestion": "../../03-architecture-standards.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
+      "line": 241,
+      "target": "../03-architecture-standards.md",
+      "suggestion": "../../03-architecture-standards.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
+      "line": 242,
+      "target": "../03-architecture-standards.md",
+      "suggestion": "../../03-architecture-standards.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
+      "line": 243,
+      "target": "../03-architecture-standards.md",
+      "suggestion": "../../03-architecture-standards.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
+      "line": 244,
+      "target": "../03-architecture-standards.md",
+      "suggestion": "../../03-architecture-standards.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
+      "line": 245,
+      "target": "../03-architecture-standards.md",
+      "suggestion": "../../03-architecture-standards.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
+      "line": 246,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
@@ -7190,67 +7226,31 @@
     },
     {
       "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
-      "line": 254,
-      "target": "../03-architecture-standards.md",
-      "suggestion": "../../03-architecture-standards.md"
-    },
-    {
-      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
-      "line": 255,
-      "target": "../03-architecture-standards.md",
-      "suggestion": "../../03-architecture-standards.md"
-    },
-    {
-      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
-      "line": 256,
-      "target": "../03-architecture-standards.md",
-      "suggestion": "../../03-architecture-standards.md"
-    },
-    {
-      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
-      "line": 257,
-      "target": "../03-architecture-standards.md",
-      "suggestion": "../../03-architecture-standards.md"
-    },
-    {
-      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
       "line": 258,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
-      "line": 265,
+      "line": 259,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
-      "line": 270,
+      "line": 267,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
-      "line": 271,
-      "target": "../03-architecture-standards.md",
-      "suggestion": "../../03-architecture-standards.md"
-    },
-    {
-      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
-      "line": 279,
-      "target": "../03-architecture-standards.md",
-      "suggestion": "../../03-architecture-standards.md"
-    },
-    {
-      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
-      "line": 305,
+      "line": 293,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-strategy-architecture.md",
-      "line": 539,
+      "line": 524,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
@@ -7286,13 +7286,13 @@
     },
     {
       "source": "docs\\explanation\\design\\数据治理路线图.md",
-      "line": 348,
+      "line": 344,
       "target": "../03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\pending-items-backlog-20260704.md",
-      "line": 183,
+      "line": 178,
       "target": "src/apps/input/mockData.ts",
       "suggestion": "src/services/trading/mockDataGenerator.ts"
     },
@@ -7310,13 +7310,13 @@
     },
     {
       "source": "docs\\explanation\\stock-selection-strategy.md",
-      "line": 207,
+      "line": 191,
       "target": "../explanation/03-architecture-standards.md",
       "suggestion": "../reference/03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\v9-strategy-architecture.md",
-      "line": 550,
+      "line": 527,
       "target": "../explanation/03-architecture-standards.md",
       "suggestion": "../reference/03-architecture-standards.md"
     },
@@ -7346,7 +7346,7 @@
     },
     {
       "source": "docs\\how-to\\FILE-MANAGEMENT-GUIDE.md",
-      "line": 65,
+      "line": 56,
       "target": "../explanation/03-architecture-standards.md",
       "suggestion": "../reference/03-architecture-standards.md"
     },
@@ -7508,7 +7508,7 @@
     },
     {
       "source": "docs\\prompts\\autonomous-workflow-user-guide.md",
-      "line": 122,
+      "line": 113,
       "target": "../explanation/03-architecture-standards.md",
       "suggestion": "../reference/03-architecture-standards.md"
     },
@@ -7532,13 +7532,13 @@
     },
     {
       "source": "docs\\reference\\autonomous-workflow-user-guide.md",
-      "line": 115,
+      "line": 111,
       "target": "../explanation/03-architecture-standards.md",
       "suggestion": "./03-architecture-standards.md"
     },
     {
       "source": "docs\\reference\\development-workflow-sop.md",
-      "line": 394,
+      "line": 389,
       "target": "../explanation/03-architecture-standards.md",
       "suggestion": "./03-architecture-standards.md"
     },
@@ -7556,7 +7556,7 @@
     },
     {
       "source": "docs\\reference\\meta\\registry-index.md",
-      "line": 40,
+      "line": 36,
       "target": "../../explanation/03-architecture-standards.md",
       "suggestion": "../../03-architecture-standards.md"
     },
@@ -12880,32 +12880,32 @@
   "none": [
     {
       "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
-      "line": 75,
+      "line": 70,
       "target": "prompts/store-prompt-template.md"
     },
     {
       "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
-      "line": 79,
+      "line": 74,
       "target": "prompts/service-prompt-template.md"
     },
     {
       "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
-      "line": 158,
+      "line": 153,
       "target": "prompts/store-prompt-template.md"
     },
     {
       "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
-      "line": 159,
+      "line": 154,
       "target": "prompts/service-prompt-template.md"
     },
     {
       "source": "docs\\00-meta\\23个核心文档重新检索报告.md",
-      "line": 86,
+      "line": 82,
       "target": "file-management-system/templates/ADR-template.md"
     },
     {
       "source": "docs\\00-meta\\23个核心文档重新检索报告.md",
-      "line": 285,
+      "line": 281,
       "target": "file-management-system/templates/ADR-template.md"
     },
     {
@@ -13175,17 +13175,17 @@
     },
     {
       "source": "docs\\00-meta\\doc-system-check-v9.md",
-      "line": 131,
+      "line": 126,
       "target": "file-management-system/templates/ADR-template.md"
     },
     {
       "source": "docs\\00-meta\\doc-system-check-v9.md",
-      "line": 190,
+      "line": 185,
       "target": "docs/explanation/design/BACKTEST_data-definition.md"
     },
     {
       "source": "docs\\00-meta\\doc-system-check-v9.md",
-      "line": 193,
+      "line": 188,
       "target": "docs/explanation/design/NEWS_data-definition.md"
     },
     {
@@ -13200,37 +13200,37 @@
     },
     {
       "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-cleanup-decisions.md",
-      "line": 75,
+      "line": 70,
       "target": "src/lib/sanitize.ts"
     },
     {
       "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-cleanup-decisions.md",
-      "line": 75,
+      "line": 70,
       "target": "src/lib/financeFormat.ts"
     },
     {
       "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
-      "line": 99,
+      "line": 94,
       "target": "src/core/ ← 核心工具与类型守卫（DataBridge/ACL/Envelope/MemoryCache/EventBus）"
     },
     {
       "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
-      "line": 110,
+      "line": 105,
       "target": "src/core/databridge.ts ← DataBridge 适配层（core 层扩展）"
     },
     {
       "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
-      "line": 118,
+      "line": 113,
       "target": "src/lib/dataValidation.test.ts"
     },
     {
       "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
-      "line": 126,
+      "line": 121,
       "target": "src/lib/ ← 库函数（logger/format/errors/utils/localStorageManager）"
     },
     {
       "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
-      "line": 143,
+      "line": 138,
       "target": "src/lib/common-utils.ts"
     },
     {
@@ -14075,37 +14075,37 @@
     },
     {
       "source": "docs\\00-meta\\执行校验报告.md",
-      "line": 67,
+      "line": 63,
       "target": "src/cockpit/CockpitShell.tsx(278): JSX 标签未闭合"
     },
     {
       "source": "docs\\00-meta\\文档体系体检报告-v9.md",
-      "line": 133,
+      "line": 129,
       "target": "file-management-system/templates/ADR-template.md"
     },
     {
       "source": "docs\\00-meta\\文档自动更新体系-架构梳理与任务清单.md",
-      "line": 150,
+      "line": 146,
       "target": "scripts/doc-notify.ts"
     },
     {
       "source": "docs\\00-meta\\文档自动更新体系-架构梳理与任务清单.md",
-      "line": 163,
+      "line": 159,
       "target": "scripts/doc-pipeline.ts"
     },
     {
       "source": "docs\\00-meta\\文档自动更新体系-架构梳理与任务清单.md",
-      "line": 274,
+      "line": 270,
       "target": "scripts/doc-pipeline.ts"
     },
     {
       "source": "docs\\00-meta\\文档自动更新体系-架构梳理与任务清单.md",
-      "line": 275,
+      "line": 271,
       "target": "scripts/doc-retry.ts"
     },
     {
       "source": "docs\\00-meta\\文档自动更新体系-架构梳理与任务清单.md",
-      "line": 276,
+      "line": 272,
       "target": "scripts/doc-notify.ts"
     },
     {
@@ -14575,22 +14575,22 @@
     },
     {
       "source": "docs\\explanation\\a11y-checklist.md",
-      "line": 180,
+      "line": 175,
       "target": "src/components/ui/FocusTrap.tsx"
     },
     {
       "source": "docs\\explanation\\b批次高价值孤儿集成状态报告-2026-07-08.md",
-      "line": 56,
+      "line": 52,
       "target": "src/pages/analysis/StockAnalysisPage.tsx"
     },
     {
       "source": "docs\\explanation\\completeness-profile-batch3.md",
-      "line": 161,
+      "line": 152,
       "target": "src/pages/analysis/StockAnalysisPage.tsx"
     },
     {
       "source": "docs\\explanation\\completeness-profile-batch4.md",
-      "line": 97,
+      "line": 88,
       "target": "src/pages/trading/TradingHubPage.tsx:36/42"
     },
     {
@@ -14605,12 +14605,12 @@
     },
     {
       "source": "docs\\explanation\\core-data-strategy-report.md",
-      "line": 826,
+      "line": 821,
       "target": "src/data/gateway/dataGateway.ts"
     },
     {
       "source": "docs\\explanation\\core-data-strategy-report.md",
-      "line": 841,
+      "line": 836,
       "target": "src/data/gateway/dataGateway.ts"
     },
     {
@@ -14690,27 +14690,27 @@
     },
     {
       "source": "docs\\explanation\\design\\code-review-training.md",
-      "line": 475,
+      "line": 471,
       "target": "src/services/xxx.ts:120-180"
     },
     {
       "source": "docs\\explanation\\design\\completeness-profile-batch4.md",
-      "line": 95,
+      "line": 87,
       "target": "src/pages/trading/TradingHubPage.tsx:36/42"
     },
     {
       "source": "docs\\explanation\\design\\doc-sync-execution-plan.md",
-      "line": 90,
+      "line": 78,
       "target": "docs/explanation/v9-issue-resolution-schedule.md"
     },
     {
       "source": "docs\\explanation\\design\\doc-sync-execution-plan.md",
-      "line": 165,
+      "line": 153,
       "target": "docs/explanation/doc-sync-gap-list.md"
     },
     {
       "source": "docs\\explanation\\design\\input-cabin-spec.md",
-      "line": 232,
+      "line": 220,
       "target": "src/apps/input/FetcherConfigPanel.tsx"
     },
     {
@@ -14720,37 +14720,37 @@
     },
     {
       "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
-      "line": 48,
+      "line": 44,
       "target": "src/agents/handlers/llmIntelligentHandler.ts:268,275"
     },
     {
       "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
-      "line": 51,
+      "line": 47,
       "target": "src/components/analysis/SectorRotationHeatmap.tsx:27,54"
     },
     {
       "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
-      "line": 167,
+      "line": 163,
       "target": "src/apps/input/BulkImportProto.tsx"
     },
     {
       "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
-      "line": 168,
+      "line": 164,
       "target": "src/apps/input/DashboardProto.tsx"
     },
     {
       "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
-      "line": 169,
+      "line": 165,
       "target": "src/apps/input/DataTestProto.tsx"
     },
     {
       "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
-      "line": 170,
+      "line": 166,
       "target": "src/apps/input/HotSectorProto.tsx"
     },
     {
       "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
-      "line": 171,
+      "line": 167,
       "target": "src/apps/input/InputPrototype.tsx"
     },
     {
@@ -14770,7 +14770,7 @@
     },
     {
       "source": "docs\\explanation\\design\\solo-review.md",
-      "line": 405,
+      "line": 401,
       "target": "src/lib/validators.ts"
     },
     {
@@ -14780,32 +14780,32 @@
     },
     {
       "source": "docs\\explanation\\design\\trading-core-factors.md",
-      "line": 210,
+      "line": 198,
       "target": "src/services/trading/timingEngine.ts"
     },
     {
       "source": "docs\\explanation\\design\\ui-design-agent-execution-plan.md",
-      "line": 308,
+      "line": 304,
       "target": "docs/ui-design-execution-plan.md"
     },
     {
       "source": "docs\\explanation\\design\\ui-only-implementation-summary.md",
-      "line": 172,
+      "line": 160,
       "target": "src/data/rotationData"
     },
     {
       "source": "docs\\explanation\\design\\ui改善部分检索报告.md",
-      "line": 33,
+      "line": 29,
       "target": "src/generated/tokens.css\\|tokens.ts"
     },
     {
       "source": "docs\\explanation\\design\\v6-v9-architecture-audit-action-list.md",
-      "line": 81,
+      "line": 66,
       "target": "src/services/ai-center/mockAICenterProvider.ts"
     },
     {
       "source": "docs\\explanation\\design\\v6-v9-architecture-audit-action-list.md",
-      "line": 81,
+      "line": 66,
       "target": "src/services/trading/mockHoldingsData.ts"
     },
     {
@@ -14815,7 +14815,7 @@
     },
     {
       "source": "docs\\explanation\\design\\v6-v9界面设计优化可行性计划.md",
-      "line": 87,
+      "line": 83,
       "target": "src/components/output/ResultCard.tsx"
     },
     {
@@ -14825,342 +14825,342 @@
     },
     {
       "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
-      "line": 61,
+      "line": 53,
       "target": "src/services/input/dataTestService.ts"
     },
     {
       "source": "docs\\explanation\\design\\v9-current-state-review.md",
-      "line": 211,
+      "line": 199,
       "target": "src/pages/analysis/StockAnalysisPage.tsx"
     },
     {
       "source": "docs\\explanation\\design\\v9-current-state-review.md",
-      "line": 481,
+      "line": 469,
       "target": "src/services/output/reviewEngine.ts"
     },
     {
       "source": "docs\\explanation\\design\\v9-current-state-review.md",
-      "line": 481,
+      "line": 469,
       "target": "src/services/system/reviewEngine.ts"
     },
     {
       "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
-      "line": 244,
+      "line": 232,
       "target": "docs/implementation/adr/2026-06-24-v6-migration.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-p0-remediation-plan.md",
-      "line": 845,
+      "line": 841,
       "target": "src/components/analysis/sector/SectorRotationHeatmap.test.tsx"
     },
     {
       "source": "docs\\explanation\\design\\v9-p0-remediation-plan.md",
-      "line": 854,
+      "line": 850,
       "target": "src/components/analysis/sector/SectorRotationHeatmap.test.tsx"
     },
     {
       "source": "docs\\explanation\\design\\v9-p0-remediation-plan.md",
-      "line": 869,
+      "line": 865,
       "target": "src/components/analysis/sector/SectorRotationHeatmap.test.tsx"
     },
     {
       "source": "docs\\explanation\\design\\v9-post-dev-review.md",
-      "line": 56,
+      "line": 52,
       "target": "src/store/stockAnalysisStore.ts"
     },
     {
       "source": "docs\\explanation\\design\\v9现有数据资产清单.md",
-      "line": 307,
+      "line": 303,
       "target": "src/services/analysis/dataFusionEngine.ts"
     },
     {
       "source": "docs\\explanation\\design\\v9现有数据资产清单.md",
-      "line": 309,
+      "line": 305,
       "target": "src/services/analysis/sectorScoreService.ts"
     },
     {
       "source": "docs\\explanation\\design\\双通道投研评分系统技术方案.md",
-      "line": 415,
+      "line": 411,
       "target": "src/store/stockAnalysisStore.ts"
     },
     {
       "source": "docs\\explanation\\design\\数据治理路线图.md",
-      "line": 171,
+      "line": 167,
       "target": "docs/data-store-schema.md"
     },
     {
       "source": "docs\\explanation\\design\\数据治理路线图.md",
-      "line": 172,
+      "line": 168,
       "target": "docs/data-store-schema.md"
     },
     {
       "source": "docs\\explanation\\design\\数据治理路线图.md",
-      "line": 183,
+      "line": 179,
       "target": "src/types/modules/common.types.ts"
     },
     {
       "source": "docs\\explanation\\design\\数据治理路线图.md",
-      "line": 184,
+      "line": 180,
       "target": "src/types/modules/common.types.ts"
     },
     {
       "source": "docs\\explanation\\design\\数据治理路线图.md",
-      "line": 222,
+      "line": 218,
       "target": "scripts/audit-data-consistency.ts"
     },
     {
       "source": "docs\\explanation\\design\\迁移风险复盘与应对策略文档.md",
-      "line": 389,
+      "line": 385,
       "target": "scripts/regression_news_v6_test.cjs"
     },
     {
       "source": "docs\\explanation\\feature-entry-list.md",
-      "line": 60,
+      "line": 47,
       "target": "src/pages/analysis/StockAnalysisPage.tsx"
     },
     {
       "source": "docs\\explanation\\feature-entry-list.md",
-      "line": 61,
+      "line": 48,
       "target": "src/pages/analysis/StockAnalysisPage.tsx"
     },
     {
       "source": "docs\\explanation\\optimization-progress-report.md",
-      "line": 55,
+      "line": 50,
       "target": "src/lib/dataValidation.test.ts"
     },
     {
       "source": "docs\\explanation\\optimization-progress-report.md",
-      "line": 185,
+      "line": 180,
       "target": "src/store/stockAnalysisStore.ts"
     },
     {
       "source": "docs\\explanation\\optimization-progress-report.md",
-      "line": 210,
+      "line": 205,
       "target": "src/core/databridgeHandlers.ts::deleteIndexedRecords"
     },
     {
       "source": "docs\\explanation\\optimization-progress-report.md",
-      "line": 214,
+      "line": 209,
       "target": "src/services/resilience.ts::withRetry"
     },
     {
       "source": "docs\\explanation\\optimization-progress-report.md",
-      "line": 235,
+      "line": 230,
       "target": "src/mcp/core/server.ts::readResource"
     },
     {
       "source": "docs\\explanation\\optimization-progress-report.md",
-      "line": 235,
+      "line": 230,
       "target": "src/mcp/core/client.ts::readResource"
     },
     {
       "source": "docs\\explanation\\optimization-progress-report.md",
-      "line": 255,
+      "line": 250,
       "target": "src/services/fetcher/fetcherClient.ts::request"
     },
     {
       "source": "docs\\explanation\\optimization-progress-report.md",
-      "line": 256,
+      "line": 251,
       "target": "src/services/scoring/v6-engine/engine.ts::calculateAll"
     },
     {
       "source": "docs\\explanation\\optimization-progress-report.md",
-      "line": 314,
+      "line": 309,
       "target": "src/services/resilience.ts::guard"
     },
     {
       "source": "docs\\explanation\\optimization-progress-report.md",
-      "line": 319,
+      "line": 314,
       "target": "src/store/marketDataStore.ts(462)"
     },
     {
       "source": "docs\\explanation\\pending-items-backlog-20260704.md",
-      "line": 59,
+      "line": 54,
       "target": "src/agents/handlers/llmIntelligentHandler.ts:268,275"
     },
     {
       "source": "docs\\explanation\\pending-items-backlog-20260704.md",
-      "line": 62,
+      "line": 57,
       "target": "src/components/analysis/SectorRotationHeatmap.tsx:27,54"
     },
     {
       "source": "docs\\explanation\\pending-items-backlog-20260704.md",
-      "line": 178,
+      "line": 173,
       "target": "src/apps/input/BulkImportProto.tsx"
     },
     {
       "source": "docs\\explanation\\pending-items-backlog-20260704.md",
-      "line": 179,
+      "line": 174,
       "target": "src/apps/input/DashboardProto.tsx"
     },
     {
       "source": "docs\\explanation\\pending-items-backlog-20260704.md",
-      "line": 180,
+      "line": 175,
       "target": "src/apps/input/DataTestProto.tsx"
     },
     {
       "source": "docs\\explanation\\pending-items-backlog-20260704.md",
-      "line": 181,
+      "line": 176,
       "target": "src/apps/input/HotSectorProto.tsx"
     },
     {
       "source": "docs\\explanation\\pending-items-backlog-20260704.md",
-      "line": 182,
+      "line": 177,
       "target": "src/apps/input/InputPrototype.tsx"
     },
     {
       "source": "docs\\explanation\\trading-core-factors.md",
-      "line": 212,
+      "line": 199,
       "target": "src/services/trading/timingEngine.ts"
     },
     {
       "source": "docs\\explanation\\ui-design-agent-execution-plan.md",
-      "line": 310,
+      "line": 305,
       "target": "docs/ui-design-execution-plan.md"
     },
     {
       "source": "docs\\explanation\\ui-only-implementation-summary.md",
-      "line": 174,
+      "line": 161,
       "target": "src/data/rotationData"
     },
     {
       "source": "docs\\explanation\\v10-architecture-alignment.md",
-      "line": 105,
+      "line": 92,
       "target": "src/apps/trading/gateway.ts"
     },
     {
       "source": "docs\\explanation\\v10-architecture-alignment.md",
-      "line": 117,
+      "line": 104,
       "target": "src/core/stateBoard.ts"
     },
     {
       "source": "docs\\explanation\\v6-v9-architecture-audit-action-list.md",
-      "line": 83,
+      "line": 67,
       "target": "src/services/ai-center/mockAICenterProvider.ts"
     },
     {
       "source": "docs\\explanation\\v6-v9-architecture-audit-action-list.md",
-      "line": 83,
+      "line": 67,
       "target": "src/services/trading/mockHoldingsData.ts"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 332,
+      "line": 319,
       "target": "src/pages/SevenDimCollectPage.tsx"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 332,
+      "line": 319,
       "target": "src/components/collect/CollectParamPanel.tsx"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 333,
+      "line": 320,
       "target": "src/pages/StockPoolPage.tsx"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 333,
+      "line": 320,
       "target": "src/pages/StockPool.tsx"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 334,
+      "line": 321,
       "target": "src/data/rotationData.ts"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 343,
+      "line": 330,
       "target": "src/cockpit/core/bus.ts"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 345,
+      "line": 332,
       "target": "src/components/trading/PortfolioManager.tsx"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 346,
+      "line": 333,
       "target": "src/components/trading/SimulatedTrading.tsx"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 347,
+      "line": 334,
       "target": "src/components/trading/TradeReviewDashboard.tsx"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 349,
+      "line": 336,
       "target": "src/data/knowledgeBase.ts"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 349,
+      "line": 336,
       "target": "src/lib/rag.ts"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 355,
+      "line": 342,
       "target": "src/pages/AgentManagerPage.tsx"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 355,
+      "line": 342,
       "target": "src/components/agents/AgentManagerPanel.tsx"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 356,
+      "line": 343,
       "target": "src/pages/AIAssistant.tsx"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 357,
+      "line": 344,
       "target": "src/pages/DataManagement.tsx"
     },
     {
       "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
-      "line": 357,
+      "line": 344,
       "target": "src/pages/DataHubPage.tsx"
     },
     {
       "source": "docs\\explanation\\v9-issue-management.md",
-      "line": 50,
+      "line": 37,
       "target": "src/data/themeSymbolPool.ts"
     },
     {
       "source": "docs\\explanation\\v9-代码实现分析报告.md",
-      "line": 55,
+      "line": 47,
       "target": "src/pages/analysis/StockAnalysisPage.tsx"
     },
     {
       "source": "docs\\explanation\\v9-架构缺陷与整改行动清单.md",
-      "line": 76,
+      "line": 68,
       "target": "src/pages/trading/TradingHubPage.tsx:36/42"
     },
     {
       "source": "docs\\explanation\\v9-架构缺陷与整改行动清单.md",
-      "line": 77,
+      "line": 69,
       "target": "src/pages/command/CommandHubPage.tsx:35/41"
     },
     {
       "source": "docs\\explanation\\v9-架构缺陷与整改行动清单.md",
-      "line": 95,
+      "line": 87,
       "target": "src/pages/analysis/StockAnalysisPage.tsx"
     },
     {
       "source": "docs\\explanation\\v9-架构缺陷与整改行动清单.md",
-      "line": 117,
+      "line": 109,
       "target": "src/pages/command/CommandHubPage.tsx:46-79"
     },
     {
       "source": "docs\\explanation\\双通道投研评分系统技术方案.md",
-      "line": 415,
+      "line": 411,
       "target": "src/store/stockAnalysisStore.ts"
     },
     {
       "source": "docs\\how-to\\code-review-guide.md",
-      "line": 221,
+      "line": 220,
       "target": "src/cockpit/widgets/XxxWidget.tsx"
     },
     {
@@ -15200,17 +15200,17 @@
     },
     {
       "source": "docs\\how-to\\FILE-MANAGEMENT-GUIDE.md",
-      "line": 228,
+      "line": 219,
       "target": "scripts/cleanup-temp.ts"
     },
     {
       "source": "docs\\how-to\\FILE-MANAGEMENT-GUIDE.md",
-      "line": 241,
+      "line": 232,
       "target": ".agents/skills/docs-as-mirror/SKILL.md"
     },
     {
       "source": "docs\\how-to\\FILE-MANAGEMENT-GUIDE.md",
-      "line": 241,
+      "line": 232,
       "target": "prompts/docs-as-mirror-quickref.md"
     },
     {
@@ -15230,7 +15230,7 @@
     },
     {
       "source": "docs\\how-to\\visual-regression-guide.md",
-      "line": 127,
+      "line": 122,
       "target": "scripts/compare-visual-baselines.sh"
     },
     {
@@ -16065,77 +16065,77 @@
     },
     {
       "source": "docs\\reference\\batchB-fix-plan.md",
-      "line": 169,
+      "line": 160,
       "target": "src/store/localDocStore.ts"
     },
     {
       "source": "docs\\reference\\batchD-fix-plan.md",
-      "line": 59,
+      "line": 50,
       "target": "src/pages/trading/TradingHubPage.tsx:32-51"
     },
     {
       "source": "docs\\reference\\batchE-fix-plan.md",
-      "line": 73,
+      "line": 64,
       "target": "src/pages/command/CommandHubPage.tsx:32-44"
     },
     {
       "source": "docs\\reference\\batchE-fix-plan.md",
-      "line": 94,
+      "line": 85,
       "target": "src/pages/command/SettingsPage.tsx"
     },
     {
       "source": "docs\\reference\\batchE-fix-plan.md",
-      "line": 209,
+      "line": 200,
       "target": "src/services/report/reportService.ts"
     },
     {
       "source": "docs\\reference\\batchE-fix-plan.md",
-      "line": 210,
+      "line": 201,
       "target": "src/pages/command/ReportExportPage.tsx"
     },
     {
       "source": "docs\\reference\\CHANGELOG.md",
-      "line": 173,
+      "line": 169,
       "target": "src/mcp/servers/export/exportServer.ts"
+    },
+    {
+      "source": "docs\\reference\\CHANGELOG.md",
+      "line": 170,
+      "target": "src/mcp/servers/input/inputServer.ts"
     },
     {
       "source": "docs\\reference\\CHANGELOG.md",
       "line": 174,
-      "target": "src/mcp/servers/input/inputServer.ts"
-    },
-    {
-      "source": "docs\\reference\\CHANGELOG.md",
-      "line": 178,
       "target": "src/mcp/__tests__/exportServer.test.ts"
     },
     {
       "source": "docs\\reference\\CHANGELOG.md",
-      "line": 179,
+      "line": 175,
       "target": "src/mcp/__tests__/inputServer.test.ts"
     },
     {
       "source": "docs\\reference\\CHANGELOG.md",
-      "line": 180,
+      "line": 176,
       "target": "src/mcp/__tests__/tradeServer.test.ts"
     },
     {
       "source": "docs\\reference\\CHANGELOG.md",
-      "line": 191,
+      "line": 187,
       "target": "src/mcp/servers/export/exportServer.ts"
     },
     {
       "source": "docs\\reference\\CHANGELOG.md",
-      "line": 192,
+      "line": 188,
       "target": "src/mcp/servers/input/inputServer.ts"
     },
     {
       "source": "docs\\reference\\CHANGELOG.md",
-      "line": 253,
+      "line": 249,
       "target": "src/pages/analysis/StockAnalysisPage.tsx"
     },
     {
       "source": "docs\\reference\\CHANGELOG.md",
-      "line": 587,
+      "line": 583,
       "target": "src/pages/news-v6/components/newsCardUtils.tsx"
     },
     {
@@ -16145,92 +16145,92 @@
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-05-post-dev-review.md",
-      "line": 68,
+      "line": 64,
       "target": "src/store/stockAnalysisStore.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 27,
+      "line": 23,
       "target": "src/services/backtest/backtestEngine.types.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 29,
+      "line": 25,
       "target": "src/store/collectionWizardStore.configActions.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 30,
+      "line": 26,
       "target": "src/store/collectionWizardStore.fieldActions.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 31,
+      "line": 27,
       "target": "src/store/collectionWizardStore.taskActions.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 32,
+      "line": 28,
       "target": "src/store/executionStore.actions.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 33,
+      "line": 29,
       "target": "src/store/executionStore.planOps.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 34,
+      "line": 30,
       "target": "src/store/marketDataStore.actions.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 35,
+      "line": 31,
       "target": "src/store/orderStore.actions.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 36,
+      "line": 32,
       "target": "src/store/orderStore.subscriptions.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 37,
+      "line": 33,
       "target": "src/store/utils/collectionWizardStore.constants.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 38,
+      "line": 34,
       "target": "src/store/utils/riskDerived.circuit.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 39,
+      "line": 35,
       "target": "src/store/utils/riskDerived.execution.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 40,
+      "line": 36,
       "target": "src/store/utils/riskDerived.stats.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 41,
+      "line": 37,
       "target": "src/store/utils/riskDerived.symbol.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 42,
+      "line": 38,
       "target": "src/store/utils/riskDerived.trend.ts"
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 51,
+      "line": 47,
       "target": "src/services/scoring/v6-engine/confidence.ts"
     },
     {
       "source": "docs\\reference\\completeness-profile-batch1.md",
-      "line": 69,
+      "line": 53,
       "target": "src/cockpit/widgets/StockPoolWidget.tsx"
     },
     {
@@ -16305,97 +16305,97 @@
     },
     {
       "source": "docs\\reference\\input-cabin-spec.md",
-      "line": 234,
+      "line": 221,
       "target": "src/apps/input/FetcherConfigPanel.tsx"
     },
     {
       "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
-      "line": 93,
+      "line": 88,
       "target": "src/components/organisms/researchPool/ResearchPoolBoard.tsx"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 89,
+      "target": "src/components/organisms/researchPool/ResearchPoolCard.tsx"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 90,
+      "target": "src/components/organisms/researchPool/ResearchPoolColumn.tsx"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 91,
+      "target": "src/components/organisms/researchPool/ResearchPoolList.tsx"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 92,
+      "target": "src/components/organisms/researchPool/useResearchPoolDataFromStore.ts"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 93,
+      "target": "src/hooks/useResearchPoolBoard.ts"
     },
     {
       "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
       "line": 94,
-      "target": "src/components/organisms/researchPool/ResearchPoolCard.tsx"
+      "target": "src/pages/analysis/ResearchPoolBoardPage.tsx"
     },
     {
       "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
       "line": 95,
-      "target": "src/components/organisms/researchPool/ResearchPoolColumn.tsx"
-    },
-    {
-      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
-      "line": 96,
-      "target": "src/components/organisms/researchPool/ResearchPoolList.tsx"
-    },
-    {
-      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
-      "line": 97,
-      "target": "src/components/organisms/researchPool/useResearchPoolDataFromStore.ts"
-    },
-    {
-      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
-      "line": 98,
-      "target": "src/hooks/useResearchPoolBoard.ts"
-    },
-    {
-      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
-      "line": 99,
-      "target": "src/pages/analysis/ResearchPoolBoardPage.tsx"
-    },
-    {
-      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
-      "line": 100,
       "target": "src/cockpit/widgets/ResearchPoolBoardWidget.tsx"
     },
     {
       "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
-      "line": 281,
+      "line": 276,
       "target": "src/components/organisms/researchPool/ResearchPoolBoard.tsx"
     },
     {
       "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
-      "line": 282,
+      "line": 277,
       "target": "src/components/organisms/researchPool/ResearchPoolCard.tsx"
     },
     {
       "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
-      "line": 283,
+      "line": 278,
       "target": "src/components/organisms/researchPool/ResearchPoolColumn.tsx"
     },
     {
       "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
-      "line": 284,
+      "line": 279,
       "target": "src/components/organisms/researchPool/ResearchPoolList.tsx"
     },
     {
       "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
-      "line": 285,
+      "line": 280,
       "target": "src/components/organisms/researchPool/useResearchPoolDataFromStore.ts"
     },
     {
       "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
-      "line": 286,
+      "line": 281,
       "target": "src/hooks/useResearchPoolBoard.ts"
     },
     {
       "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
-      "line": 287,
+      "line": 282,
       "target": "src/pages/analysis/ResearchPoolBoardPage.tsx"
     },
     {
       "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
-      "line": 288,
+      "line": 283,
       "target": "src/cockpit/widgets/ResearchPoolBoardWidget.tsx"
     },
     {
       "source": "docs\\reference\\rm剩余任务全量盘点与整改方案-2026-07-08.md",
-      "line": 306,
+      "line": 302,
       "target": "src/pages/command/agent/LlmManagementPage.tsx"
     },
     {
       "source": "docs\\reference\\stock-analysis-contract.md",
-      "line": 268,
+      "line": 260,
       "target": "src/config/stock-analysis.config.ts"
     },
     {
@@ -16415,17 +16415,17 @@
     },
     {
       "source": "docs\\reference\\stockpool-contract.md",
-      "line": 170,
+      "line": 162,
       "target": "src/services/stockpool/__tests__/stockpoolService.test.ts"
     },
     {
       "source": "docs\\reference\\test-catalog.md",
-      "line": 137,
+      "line": 124,
       "target": "src/pages/analysis/StockAnalysisPage.test.tsx"
     },
     {
       "source": "docs\\reference\\test-catalog.md",
-      "line": 164,
+      "line": 151,
       "target": "src/store/stockAnalysisStore.test.ts"
     },
     {
@@ -16435,87 +16435,87 @@
     },
     {
       "source": "docs\\reference\\ui设计优化实施计划-详细版.md",
-      "line": 222,
+      "line": 218,
       "target": "src/components/output/ResultCard.tsx"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 330,
+      "line": 318,
       "target": "src/pages/SevenDimCollectPage.tsx"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 330,
+      "line": 318,
       "target": "src/components/collect/CollectParamPanel.tsx"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 331,
+      "line": 319,
       "target": "src/pages/StockPoolPage.tsx"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 331,
+      "line": 319,
       "target": "src/pages/StockPool.tsx"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 332,
+      "line": 320,
       "target": "src/data/rotationData.ts"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 341,
+      "line": 329,
       "target": "src/cockpit/core/bus.ts"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 343,
+      "line": 331,
       "target": "src/components/trading/PortfolioManager.tsx"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 344,
+      "line": 332,
       "target": "src/components/trading/SimulatedTrading.tsx"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 345,
+      "line": 333,
       "target": "src/components/trading/TradeReviewDashboard.tsx"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 347,
+      "line": 335,
       "target": "src/data/knowledgeBase.ts"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 347,
+      "line": 335,
       "target": "src/lib/rag.ts"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 353,
+      "line": 341,
       "target": "src/pages/AgentManagerPage.tsx"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 353,
+      "line": 341,
       "target": "src/components/agents/AgentManagerPanel.tsx"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 354,
+      "line": 342,
       "target": "src/pages/AIAssistant.tsx"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 355,
+      "line": 343,
       "target": "src/pages/DataManagement.tsx"
     },
     {
       "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
-      "line": 355,
+      "line": 343,
       "target": "src/pages/DataHubPage.tsx"
     },
     {
@@ -16525,42 +16525,42 @@
     },
     {
       "source": "docs\\reference\\v9数据架构修订建议.md",
-      "line": 241,
+      "line": 237,
       "target": "src/services/scoring/sectorScoreService.ts"
     },
     {
       "source": "docs\\reference\\v9核心数据字典与类型定义(整合版).md",
-      "line": 2685,
+      "line": 2681,
       "target": "src/types/user.types.ts"
     },
     {
       "source": "docs\\reference\\v9核心数据字典与类型定义(整合版).md",
-      "line": 2706,
+      "line": 2702,
       "target": "src/types/user.types.ts"
     },
     {
       "source": "docs\\reference\\v9核心数据字典与类型定义(整合版).md",
-      "line": 2728,
+      "line": 2724,
       "target": "src/types/config.types.ts"
     },
     {
       "source": "docs\\reference\\v9核心数据字典与类型定义(整合版).md",
-      "line": 2751,
+      "line": 2747,
       "target": "src/types/config.types.ts"
     },
     {
       "source": "docs\\reference\\v9核心数据字典与类型定义(整合版).md",
-      "line": 2882,
+      "line": 2878,
       "target": "src/types/plugin.types.ts"
     },
     {
       "source": "docs\\reference\\v9核心数据字典与类型定义(整合版).md",
-      "line": 2903,
+      "line": 2899,
       "target": "src/types/plugin.types.ts"
     },
     {
       "source": "docs\\reference\\v9核心数据字典与类型定义(整合版).md",
-      "line": 2976,
+      "line": 2972,
       "target": "src/types/research.types.ts"
     },
     {
@@ -16575,12 +16575,12 @@
     },
     {
       "source": "docs\\reference\\功能模块数据契约.md",
-      "line": 885,
+      "line": 861,
       "target": "src/pages/news-v6/components/FilterPanel"
     },
     {
       "source": "docs\\reference\\功能模块数据契约.md",
-      "line": 1536,
+      "line": 1512,
       "target": "src/pages/news-v6/components/FilterPanel"
     },
     {
@@ -17357,42 +17357,42 @@
   "ignored": [
     {
       "source": "docs\\00-meta\\23-core-docs-functional-match-report.md",
-      "line": 228,
+      "line": 223,
       "target": "ai-memory-layer.md"
     },
     {
       "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
-      "line": 18,
+      "line": 13,
       "target": "v9-test-cases.md"
     },
     {
       "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
-      "line": 116,
+      "line": 111,
       "target": "07-operation-strategy.md"
     },
     {
       "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
-      "line": 120,
+      "line": 115,
       "target": "autonomous-workflow-user-guide.md"
     },
     {
       "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
-      "line": 129,
+      "line": 124,
       "target": "migration-news-usestate-to-zustand.md"
     },
     {
       "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
-      "line": 147,
+      "line": 142,
       "target": "v9-test-cases.md"
     },
     {
       "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
-      "line": 162,
+      "line": 157,
       "target": "07-operation-strategy.md"
     },
     {
       "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
-      "line": 164,
+      "line": 159,
       "target": "migration-news-usestate-to-zustand.md"
     },
     {
@@ -17432,37 +17432,37 @@
     },
     {
       "source": "docs\\00-meta\\doc-system-check-v9.md",
-      "line": 129,
+      "line": 124,
       "target": "quality-gates.md"
     },
     {
       "source": "docs\\00-meta\\doc-system-check-v9.md",
-      "line": 143,
+      "line": 138,
       "target": "batchd-fix-plan.md"
     },
     {
       "source": "docs\\00-meta\\doc-system-check-v9.md",
-      "line": 143,
+      "line": 138,
       "target": "batche-fix-plan.md"
     },
     {
       "source": "docs\\00-meta\\doc-system-check-v9.md",
-      "line": 160,
+      "line": 155,
       "target": "component-deprecation-policy.md"
     },
     {
       "source": "docs\\00-meta\\doc-system-check-v9.md",
-      "line": 161,
+      "line": 156,
       "target": "quality-audit-plan.md"
     },
     {
       "source": "docs\\00-meta\\doc-system-check-v9.md",
-      "line": 165,
+      "line": 160,
       "target": "data_link_sequence_diagram.md"
     },
     {
       "source": "docs\\00-meta\\doc-system-check-v9.md",
-      "line": 393,
+      "line": 388,
       "target": "service-subdomain-overview.md"
     },
     {
@@ -17627,37 +17627,37 @@
     },
     {
       "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
-      "line": 161,
+      "line": 156,
       "target": "system-maturity-assessment-2026-07-12.md"
     },
     {
       "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
-      "line": 161,
+      "line": 156,
       "target": "v9-system-check-report-2026-07-12.md"
     },
     {
       "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
-      "line": 164,
+      "line": 159,
       "target": "文件去重与整理治理方案.md"
     },
     {
       "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
-      "line": 164,
+      "line": 159,
       "target": "残留校对更新报告-2026-07-12.md"
     },
     {
       "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
-      "line": 165,
+      "line": 160,
       "target": "改进路线图实施计划.md"
     },
     {
       "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
-      "line": 246,
+      "line": 241,
       "target": "SKILL.md"
     },
     {
       "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-task-list.md",
-      "line": 189,
+      "line": 184,
       "target": "api-doc-draft-2026-07-12t08-33-40-567z.md"
     },
     {
@@ -17817,52 +17817,52 @@
     },
     {
       "source": "docs\\00-meta\\V9-文档治理修复行动计划.md",
-      "line": 74,
+      "line": 70,
       "target": "input-cabin-spec.md"
     },
     {
       "source": "docs\\00-meta\\V9-文档治理修复行动计划.md",
-      "line": 75,
+      "line": 71,
       "target": "how-to-add-page.md"
     },
     {
       "source": "docs\\00-meta\\文档体系体检报告-v9.md",
-      "line": 131,
+      "line": 127,
       "target": "quality-gates.md"
     },
     {
       "source": "docs\\00-meta\\文档体系体检报告-v9.md",
-      "line": 145,
+      "line": 141,
       "target": "batchd-fix-plan.md"
     },
     {
       "source": "docs\\00-meta\\文档体系体检报告-v9.md",
-      "line": 145,
+      "line": 141,
       "target": "batche-fix-plan.md"
     },
     {
       "source": "docs\\00-meta\\文档体系体检报告-v9.md",
-      "line": 162,
+      "line": 158,
       "target": "component-deprecation-policy.md"
     },
     {
       "source": "docs\\00-meta\\文档体系体检报告-v9.md",
-      "line": 163,
+      "line": 159,
       "target": "quality-audit-plan.md"
     },
     {
       "source": "docs\\00-meta\\文档体系体检报告-v9.md",
-      "line": 167,
+      "line": 163,
       "target": "data_link_sequence_diagram.md"
     },
     {
       "source": "docs\\00-meta\\文档体系体检报告-v9.md",
-      "line": 385,
+      "line": 381,
       "target": "-contract.md"
     },
     {
       "source": "docs\\00-meta\\文档体系体检报告-v9.md",
-      "line": 399,
+      "line": 395,
       "target": "service-subdomain-overview.md"
     },
     {
@@ -17877,12 +17877,12 @@
     },
     {
       "source": "docs\\00-meta\\文档自动更新体系-架构梳理与任务清单.md",
-      "line": 58,
+      "line": 54,
       "target": "api-report.md"
     },
     {
       "source": "docs\\00-meta\\文档自动更新体系-架构梳理与任务清单.md",
-      "line": 97,
+      "line": 93,
       "target": "NEWS_data-definition.md"
     },
     {
@@ -18607,52 +18607,52 @@
     },
     {
       "source": "docs\\explanation\\A-H-INDEX.md",
-      "line": 46,
+      "line": 37,
       "target": "03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\A-H-INDEX.md",
-      "line": 46,
+      "line": 37,
       "target": "v9数据宪法.md"
     },
     {
       "source": "docs\\explanation\\b批次高价值孤儿集成状态报告-2026-07-08.md",
-      "line": 17,
+      "line": 13,
       "target": "B批次代码审查与改造报告_2026-07-08.md"
     },
     {
       "source": "docs\\explanation\\b批次高价值孤儿集成状态报告-2026-07-08.md",
-      "line": 77,
+      "line": 73,
       "target": "04-ui-ux-specs.md"
     },
     {
       "source": "docs\\explanation\\cabins-overview.md",
-      "line": 26,
+      "line": 25,
       "target": "input-cabin-spec.md"
     },
     {
       "source": "docs\\explanation\\core-data-strategy-report.md",
-      "line": 810,
+      "line": 805,
       "target": "data-flow-spec.md"
     },
     {
       "source": "docs\\explanation\\core-data-strategy-report.md",
-      "line": 824,
+      "line": 819,
       "target": "data-flow-spec.md"
     },
     {
       "source": "docs\\explanation\\core-data-strategy-report.md",
-      "line": 828,
+      "line": 823,
       "target": "data-flow-spec.md"
     },
     {
       "source": "docs\\explanation\\core-data-strategy-report.md",
-      "line": 863,
+      "line": 858,
       "target": "cockpit-widget-architecture.md"
     },
     {
       "source": "docs\\explanation\\core-data-strategy-report.md",
-      "line": 864,
+      "line": 859,
       "target": "data-flow-spec.md"
     },
     {
@@ -18712,27 +18712,27 @@
     },
     {
       "source": "docs\\explanation\\design\\07-operation-strategy.md",
-      "line": 78,
+      "line": 74,
       "target": "ui-module-alignment.md"
     },
     {
       "source": "docs\\explanation\\design\\doc-sync-execution-plan.md",
-      "line": 64,
+      "line": 52,
       "target": "NewsPage-迁移验收确认书.md"
     },
     {
       "source": "docs\\explanation\\design\\doc-sync-execution-plan.md",
-      "line": 105,
+      "line": 93,
       "target": "doc-sync-gap-list.md"
     },
     {
       "source": "docs\\explanation\\design\\doc-sync-execution-plan.md",
-      "line": 173,
+      "line": 161,
       "target": "v9-issue-resolution-schedule.md"
     },
     {
       "source": "docs\\explanation\\design\\doc-sync-execution-plan.md",
-      "line": 192,
+      "line": 180,
       "target": "v9-issue-resolution-schedule.md"
     },
     {
@@ -18752,22 +18752,22 @@
     },
     {
       "source": "docs\\explanation\\design\\news-data-definition.md",
-      "line": 18,
+      "line": 14,
       "target": "NewsPage-PoC验证报告.md"
     },
     {
       "source": "docs\\explanation\\design\\news-data-definition.md",
-      "line": 18,
+      "line": 14,
       "target": "NewsPage-迁移验收确认书.md"
     },
     {
       "source": "docs\\explanation\\design\\p4-文档去重清单与执行方案.md",
-      "line": 23,
+      "line": 19,
       "target": "基准: v6-v9界面设计优化可行性计划.md"
     },
     {
       "source": "docs\\explanation\\design\\ui改善部分检索报告.md",
-      "line": 65,
+      "line": 61,
       "target": "-p2.md"
     },
     {
@@ -18787,87 +18787,87 @@
     },
     {
       "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
-      "line": 57,
+      "line": 45,
       "target": "01~10.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
-      "line": 65,
+      "line": 53,
       "target": "ui-module-alignment.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-remediation-plan.md",
-      "line": 17,
+      "line": 10,
       "target": "V6Pro_整体架构梳理_v3.md"
     },
     {
       "source": "docs\\explanation\\design\\v9-remediation-plan.md",
-      "line": 17,
+      "line": 10,
       "target": "trade_review_ai_report.md"
     },
     {
       "source": "docs\\explanation\\design\\迁移风险复盘与应对策略文档.md",
-      "line": 18,
+      "line": 14,
       "target": "NewsPage-PoC验证报告.md"
     },
     {
       "source": "docs\\explanation\\design\\迁移风险复盘与应对策略文档.md",
-      "line": 18,
+      "line": 14,
       "target": "V6-V9迁移最佳实践指南.md"
     },
     {
       "source": "docs\\explanation\\design\\迁移风险复盘与应对策略文档.md",
-      "line": 380,
+      "line": 376,
       "target": "NewsPage-PoC验证报告.md"
     },
     {
       "source": "docs\\explanation\\design\\迁移风险复盘与应对策略文档.md",
-      "line": 381,
+      "line": 377,
       "target": "v6-news-page-assets.md"
     },
     {
       "source": "docs\\explanation\\design\\迁移风险复盘与应对策略文档.md",
-      "line": 382,
+      "line": 378,
       "target": "V6-V9迁移最佳实践指南.md"
     },
     {
       "source": "docs\\explanation\\design\\迁移风险复盘与应对策略文档.md",
-      "line": 383,
+      "line": 379,
       "target": "NewsPage-迁移验收确认书.md"
     },
     {
       "source": "docs\\explanation\\news-data-definition.md",
-      "line": 35,
+      "line": 24,
       "target": "NewsPage-PoC验证报告.md"
     },
     {
       "source": "docs\\explanation\\news-data-definition.md",
-      "line": 35,
+      "line": 24,
       "target": "NewsPage-迁移验收确认书.md"
     },
     {
       "source": "docs\\explanation\\v10-architecture-alignment.md",
-      "line": 26,
+      "line": 13,
       "target": "(参考文档)v10-architecture-whitepaper.md"
     },
     {
       "source": "docs\\explanation\\v10-architecture-alignment.md",
-      "line": 52,
+      "line": 39,
       "target": "03-architecture-standards.md"
     },
     {
       "source": "docs\\explanation\\v9-issue-management.md",
-      "line": 24,
+      "line": 11,
       "target": "v9-issue-execution-board.md"
     },
     {
       "source": "docs\\explanation\\v9-issue-management.md",
-      "line": 24,
+      "line": 11,
       "target": "v9-issue-resolution-schedule.md"
     },
     {
       "source": "docs\\explanation\\v9-issue-management.md",
-      "line": 24,
+      "line": 11,
       "target": "v9-parallel-task-schedule.md"
     },
     {
@@ -19552,17 +19552,17 @@
     },
     {
       "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
-      "line": 71,
+      "line": 67,
       "target": "complexity-remediation-plan.md"
     },
     {
       "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
-      "line": 210,
+      "line": 190,
       "target": "docs\\cockpit\\data-definition.md"
     },
     {
       "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
-      "line": 220,
+      "line": 200,
       "target": "docs\\news\\data-definition.md"
     },
     {
@@ -19572,12 +19572,12 @@
     },
     {
       "source": "docs\\reference\\news-data-definition.md",
-      "line": 18,
+      "line": 14,
       "target": "NewsPage-PoC验证报告.md"
     },
     {
       "source": "docs\\reference\\news-data-definition.md",
-      "line": 18,
+      "line": 14,
       "target": "NewsPage-迁移验收确认书.md"
     },
     {
@@ -19587,22 +19587,22 @@
     },
     {
       "source": "docs\\reference\\rm剩余任务全量盘点与整改方案-2026-07-08.md",
-      "line": 201,
+      "line": 197,
       "target": "regression-suite.md"
     },
     {
       "source": "docs\\reference\\rm剩余任务全量盘点与整改方案-2026-07-08.md",
-      "line": 328,
+      "line": 324,
       "target": "task-graph-template.md"
     },
     {
       "source": "docs\\reference\\rm剩余任务全量盘点与整改方案-2026-07-08.md",
-      "line": 329,
+      "line": 325,
       "target": "regression-suite.md"
     },
     {
       "source": "docs\\reference\\v9数据架构修订建议.md",
-      "line": 14,
+      "line": 10,
       "target": "V9核心数据字典与类型定义（整合版）.md"
     },
     {

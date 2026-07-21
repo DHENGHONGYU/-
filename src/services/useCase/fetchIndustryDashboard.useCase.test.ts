@@ -19,12 +19,17 @@ const {
   mockQuery,
   mockRunFullIndustryAnalysisEnhanced,
   mockGenerateRotationSignals,
-  mockGetLogger,
+  mockLogger,
 } = vi.hoisted(() => ({
   mockQuery: vi.fn(),
   mockRunFullIndustryAnalysisEnhanced: vi.fn(),
   mockGenerateRotationSignals: vi.fn(),
-  mockGetLogger: vi.fn(),
+  mockLogger: {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+  },
 }))
 
 vi.mock('@/core/databridge', () => ({
@@ -44,17 +49,8 @@ vi.mock('@/services/analysis/industryV4Analyzer', () => ({
 }))
 
 vi.mock('@/lib/logger', () => ({
-  getLogger: mockGetLogger,
+  getLogger: () => mockLogger,
 }))
-
-// 模拟 logger
-const mockLogger = {
-  info: vi.fn(),
-  warn: vi.fn(),
-  error: vi.fn(),
-  debug: vi.fn(),
-}
-mockGetLogger.mockReturnValue(mockLogger)
 
 // ============================================================
 // 辅助函数
@@ -69,7 +65,7 @@ function createMockStock(symbol: string, name: string, industryCode?: string): S
     pb: 1.8,
     roe: 12.5,
     marketCap: 10000000000,
-    researchStatus: 'researching',
+    researchStatus: 'candidate',
     source: 'manual',
     dataVersion: 1,
     industryCode,
@@ -485,28 +481,35 @@ describe('fetchIndustryDashboardUseCase', () => {
       // 执行
       await fetchIndustryDashboardUseCase()
 
-      // 验证：分析引擎收到的股票数据数量正确
-      expect(mockRunFullIndustryAnalysisEnhanced).toHaveBeenCalledWith(
-        expect.arrayContaining([
-          expect.objectContaining({
-            stock: expect.objectContaining({ symbol: '000001.SZ' }),
-            financials: expect.objectContaining({ revenue: expect.anything() }),
-            quotes: expect.objectContaining({ close: expect.anything() }),
-          }),
-          expect.objectContaining({
-            stock: expect.objectContaining({ symbol: '000002.SZ' }),
-            // 缺失财报，应为默认 null 值
-            financials: expect.objectContaining({
-              revenueGrowth: null,
-              profitGrowth: null,
-              grossMargin: null,
-              netMargin: null,
-              roe: null,
-            }),
-            quotes: expect.objectContaining({ close: expect.anything() }),
-          }),
-        ]),
-      )
+      // 验证：分析引擎被调用，且参数正确
+      expect(mockRunFullIndustryAnalysisEnhanced).toHaveBeenCalledTimes(1)
+      const callArgs = mockRunFullIndustryAnalysisEnhanced.mock.calls[0]!
+      const stockDataList = callArgs[0] as Array<{
+        stock: Stock
+        financials: FinancialData & Record<string, unknown>
+        quotes: QuoteData & Record<string, unknown>
+      }>
+
+      expect(stockDataList).toHaveLength(2)
+
+      // 第一只股票：有财报数据
+      const stock1 = stockDataList.find((s) => s.stock.symbol === '000001.SZ')!
+      expect(stock1).toBeDefined()
+      expect(stock1.financials.revenue).toBe(100)
+      expect(stock1.quotes.close).toBe(10.5)
+
+      // 第二只股票：缺失财报，应为默认 null 值
+      const stock2 = stockDataList.find((s) => s.stock.symbol === '000002.SZ')!
+      expect(stock2).toBeDefined()
+      expect(stock2.financials.revenueGrowth).toBeNull()
+      expect(stock2.financials.profitGrowth).toBeNull()
+      expect(stock2.financials.grossMargin).toBeNull()
+      expect(stock2.financials.netMargin).toBeNull()
+      expect(stock2.financials.roe).toBeNull()
+      expect(stock2.financials.revenue).toBeNull()
+      expect(stock2.financials.profit).toBeNull()
+      // 行情数据仍然存在
+      expect(stock2.quotes.close).toBe(10.5)
     })
 
     it('应当填充默认值：部分股票缺失行情数据', async () => {
@@ -528,30 +531,33 @@ describe('fetchIndustryDashboardUseCase', () => {
       await fetchIndustryDashboardUseCase()
 
       // 验证
-      expect(mockRunFullIndustryAnalysisEnhanced).toHaveBeenCalledWith(
-        expect.arrayContaining([
-          expect.objectContaining({
-            stock: expect.objectContaining({ symbol: '000001.SZ' }),
-            financials: expect.any(Object),
-            quotes: expect.objectContaining({ close: expect.anything() }),
-          }),
-          expect.objectContaining({
-            stock: expect.objectContaining({ symbol: '000002.SZ' }),
-            financials: expect.any(Object),
-            // 缺失行情，应为默认 null 值
-            quotes: expect.objectContaining({
-              close: null,
-              open: null,
-              high: null,
-              low: null,
-              volume: null,
-              turnover: null,
-              change: null,
-              changePercent: null,
-            }),
-          }),
-        ]),
-      )
+      expect(mockRunFullIndustryAnalysisEnhanced).toHaveBeenCalledTimes(1)
+      const callArgs = mockRunFullIndustryAnalysisEnhanced.mock.calls[0]!
+      const stockDataList = callArgs[0] as Array<{
+        stock: Stock
+        financials: FinancialData & Record<string, unknown>
+        quotes: QuoteData & Record<string, unknown>
+      }>
+
+      expect(stockDataList).toHaveLength(2)
+
+      // 第一只股票：有行情数据
+      const stock1 = stockDataList.find((s) => s.stock.symbol === '000001.SZ')!
+      expect(stock1.quotes.close).toBe(10.5)
+      expect(stock1.financials.revenue).toBe(100)
+
+      // 第二只股票：缺失行情，应为默认 null 值
+      const stock2 = stockDataList.find((s) => s.stock.symbol === '000002.SZ')!
+      expect(stock2.quotes.close).toBeNull()
+      expect(stock2.quotes.open).toBeNull()
+      expect(stock2.quotes.high).toBeNull()
+      expect(stock2.quotes.low).toBeNull()
+      expect(stock2.quotes.volume).toBeNull()
+      expect(stock2.quotes.turnover).toBeNull()
+      expect(stock2.quotes.change).toBeNull()
+      expect(stock2.quotes.changePercent).toBeNull()
+      // 财报数据仍然存在
+      expect(stock2.financials.revenue).toBe(100)
     })
 
     it('应当填充默认值：所有股票都缺失财报和行情', async () => {
@@ -565,14 +571,20 @@ describe('fetchIndustryDashboardUseCase', () => {
       await fetchIndustryDashboardUseCase()
 
       // 验证
-      expect(mockRunFullIndustryAnalysisEnhanced).toHaveBeenCalledWith(
-        expect.arrayContaining([
-          expect.objectContaining({
-            financials: expect.objectContaining({ revenueGrowth: null }),
-            quotes: expect.objectContaining({ close: null }),
-          }),
-        ]),
-      )
+      expect(mockRunFullIndustryAnalysisEnhanced).toHaveBeenCalledTimes(1)
+      const callArgs = mockRunFullIndustryAnalysisEnhanced.mock.calls[0]!
+      const stockDataList = callArgs[0] as Array<{
+        stock: Stock
+        financials: FinancialData & Record<string, unknown>
+        quotes: QuoteData & Record<string, unknown>
+      }>
+
+      expect(stockDataList).toHaveLength(1)
+      expect(stockDataList[0]!.financials.revenueGrowth).toBeNull()
+      expect(stockDataList[0]!.financials.profitGrowth).toBeNull()
+      expect(stockDataList[0]!.quotes.close).toBeNull()
+      expect(stockDataList[0]!.quotes.open).toBeNull()
+      expect(stockDataList[0]!.stock.symbol).toBe('000001.SZ')
     })
   })
 

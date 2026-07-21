@@ -140,6 +140,9 @@ export interface ProfileActions {
   // ---- 删除操作 ----
   deleteItem: (itemId: string) => Promise<boolean>
   deleteTag: (tagId: string) => Promise<boolean>
+
+  /** 重置 Store 到初始状态 */
+  reset: () => void
 }
 
 const initialFilter: ProfileFilter = {
@@ -257,7 +260,7 @@ export const useProfileStore = create<ProfileState & ProfileActions>((set, get) 
         if (filter.minQuality && filter.minQuality > 0) {
           items = items.filter((i) => (i.qualityScore ?? 0) >= filter.minQuality!)
         }
-        if (filter.keyword && filter.keyword.trim()) {
+        if (filter.keyword?.trim()) {
           const kw = filter.keyword.toLowerCase()
           items = items.filter(
             (i) =>
@@ -464,6 +467,11 @@ export const useProfileStore = create<ProfileState & ProfileActions>((set, get) 
       return false
     }
   },
+
+  reset: () => {
+    logger.info('[profileStore] reset')
+    set({ ...initialState })
+  },
 }))
 
 // ============================================================
@@ -519,7 +527,7 @@ export function groupEvidenceByLayer(
     if (!grouped[ev.layer]) grouped[ev.layer] = []
     grouped[ev.layer]!.push(ev)
   }
-  return grouped as Record<ScoreLayerId, ScoreEvidence[]>
+  return grouped
 }
 
 /**
