@@ -81,6 +81,30 @@
       "mandatory": false
     },
     {
+      "id": "V9-SKILL-MODULE-SYNC",
+      "name": "module-sync-checklist",
+      "path": ".workbuddy/skills/module-sync-checklist/SKILL.md",
+      "triggers": {
+        "keywords": ["模块同步", "代码校对", "交付前检查", "同步校对", "module-sync", "sync-checklist", "重构", "接口变更", "重命名", "四步集成", "巩固成果", "代码先行", "模块改动"],
+        "files": [
+          "src/services/**",
+          "src/store/**",
+          "src/core/**",
+          "src/pages/**",
+          "src/components/**",
+          ".workbuddy/skills/**"
+        ],
+        "events": ["pre-delivery", "refactor", "rename", "interface-change"]
+      },
+      "gates": [
+        "npx tsc --noEmit",
+        "npm run tsc:prod",
+        "npm run audit:layers",
+        "npm run audit:acl-consistency"
+      ],
+      "mandatory": true
+    },
+    {
       "id": "V9-SKILL-DEVOPS",
       "name": "devops-automation",
       "path": ".workbuddy/skills/devops-automation/SKILL.md",
