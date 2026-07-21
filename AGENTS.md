@@ -37,7 +37,7 @@ code_version: 2.0.0
 >
 > **项目级 SKILL 索引**（按业务域分四类，category 字段见各 SKILL.md frontmatter 与 skill-registry.json）：
 > - **文档治理 doc-governance**：`doc-encoding-remediation`（文档编码乱码诊断与安全转码，GBK 二次损坏前置修复）
-> - **代码质量 code-quality**：`module-sync-checklist`（模块改动十域同步校对，交付闸口）、`bash-conventions`（Bash 执行规范与命令速查）
+> - **代码质量 code-quality**：`module-sync-checklist`（模块改动十域同步校对，交付闸口）、`bash-conventions`（Bash 执行规范与命令速查）、`tsc-gate-scope-audit`（tsc 门禁误锁诊断与修复，类型门禁作用域对齐）
 > - **数据流 data-flow**：`collection-pipeline-testing`（采集链路测试）、`data-flow-integrity-audit`（数据流完整性审计）、`mock-data-diagnosis`（Mock 残留诊断）
 > - **部署运维 devops**：`devops-automation`（备份分支 + 批量部署）
 
@@ -54,6 +54,7 @@ code_version: 2.0.0
 | 执行任何 Bash 命令、路径/解释器/门禁命令选择（全局生效） | `bash-conventions` | advisory | 按该技能 §4「执行后联动义务」表选必跑命令 |
 | 任何代码改动交付前（改动 `src/services|store|core|pages|components/**`）、重构/接口变更/重命名、新增 skill 或注册表变更 | `module-sync-checklist` | mandatory | 十域同步清单 + `npx tsc --noEmit` + `npm run tsc:prod` + `npm run audit:layers` + `npm run audit:acl-consistency` |
 | 发现文档乱码 / 中文变问号、准备执行文档链接修复（fix-doc-refs 等）前、排查 GBK 二次损坏风险 | `doc-encoding-remediation` | advisory | 三维 Grep（fix 脚本无硬编码 utf-8）+ 编码探测报告 + 复测 GBK_TOTAL=0（排除备份目录） |
+| 改动 `tsconfig.json`/`tsconfig.prod.json`/`tsconfig.test.json`、`package.json` 的 tsc 脚本，或 husky `tsc:prod` 门禁报错且错误全在 `*.test.ts`/`*.test-utils.ts` | `tsc-gate-scope-audit` | advisory | 三步诊断（错误分类 + git status 归因）+ 修复后 `tsc:prod` 实测 0 错误 |
 
 > **变更纪律**：新增技能 = ① 新建 `.workbuddy/skills/<name>/SKILL.md`（frontmatter 含 `triggers`/`gates`/`mandatory`）→ ② 同步 `.workbuddy/skills/skill-registry.json`（L1 注册表）→ ③ 更新本索引与路由表 → ④ 跑 `npm run audit:skill-coverage` 校验三方一致。钩子状态：pre-commit 挂 `--remind --log`（提醒模式，命中记录写入 `.workbuddy/skills/usage.log`）；pre-push 挂 `--enforce --since <base>`（强制模式，mandatory 命中未确认即拦截，旁路 `SKILL_GATE_CONFIRM=1 git push`）。`npm run skill:route` 可随时手工查询。
 
