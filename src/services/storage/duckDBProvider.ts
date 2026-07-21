@@ -107,6 +107,59 @@ export class DuckDBProviderImpl implements TimeSeriesProvider {
   }
 
   // ============================================================
+  // SQL 查询（仅允许 SELECT，防注入）
+  // ============================================================
+
+  /**
+   * 执行 SQL 查询（安全受限：仅允许 SELECT，拒绝 INSERT/UPDATE/DELETE/DROP 等写操作）
+   * @returns 成功时 success=true；被拒绝或出错时 success=false 并附带 error
+   */
+  async querySQL(sql: string): Promise<QueryResult<unknown>> {
+    if (!this.initialized) {
+      const ok = await this.init()
+      if (!ok) return { success: false, error: 'DuckDB 未初始化' }
+    }
+
+    const trimmed = (sql ?? '').trim()
+    if (!trimmed) {
+      return { success: false, error: '仅允许 SELECT 查询' }
+    }
+
+    // 安全校验：必须以 SELECT 开头（大小写不敏感），否则拒绝
+    if (!/^SELECT\s/i.test(trimmed)) {
+      return { success: false, error: '仅允许 SELECT 查询，禁止 INSERT/UPDATE/DELETE/DROP 等操作' }
+    }
+
+    try {
+      await this.conn!.query(trimmed)
+      return { success: true }
+    } catch (err) {
+      return { success: false, error: err instanceof Error ? err.message : String(err) }
+    }
+  }
+
+  /**
+   * 关闭 DuckDB 引擎连接，释放资源
+   */
+  async close(): Promise<void> {
+    try {
+      this.conn = null
+      this.db = null
+      this.initialized = false
+      this.tablesCreated.clear()
+    } catch {
+      // 关闭失败不抛出，仅重置状态
+    }
+  }
+
+  /**
+   * 返回已创建的表名列表（去重）
+   */
+  async getAvailableTables(): Promise<string[]> {
+    return Array.from(this.tablesCreated)
+  }
+
+  // ============================================================
   // 表管理
   // ============================================================
 
