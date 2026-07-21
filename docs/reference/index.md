@@ -52,7 +52,7 @@ date: 2026-07-17
 
 **原始 Kimi 安装路径**（system prompt 硬编码，每次对话自动注入）：
 ```
-C:\Users\DELL\AppData\Roaming\kimi-desktop\daimon-share\daimon\runtime\kimi-code\home\plugins\managed\<plugin>\skills\<plugin>\SKILL.md
+C:\Users\huawei\AppData\Roaming\kimi-desktop\daimon-share\daimon\runtime\kimi-code\home\plugins\managed\<plugin>\skills\<plugin>\SKILL.md
 ```
 此路径位于 C 盘，与您的 E 盘工作目录隔离，**无法在工作目录中直接打开**。
 

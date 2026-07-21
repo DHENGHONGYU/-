@@ -3,13 +3,12 @@ title: overview
 code_version: 2.0.0
 
 tier: important
+status: active
+version: v1.0.0
+last_updated: 2026-07-21
+doc_id: V9-DOC-EXP-901
 ---
 
----
-title: docs/explanation/overview.md
-code_version: 2.0.0
-tier: important
----
 
 # 股票池看板迁移 + 采集进度汇报 + 既有债务治理完成
 

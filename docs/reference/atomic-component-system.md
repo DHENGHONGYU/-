@@ -5,11 +5,6 @@ code_version: 2.0.0
 tier: important
 ---
 
----
-title: docs/reference/atomic-component-system.md
-code_version: 2.0.0
-tier: important
----
 
 # V9 原子组件构成体系（Atomic Design System）
 

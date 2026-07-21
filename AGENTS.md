@@ -1593,7 +1593,7 @@ FinSightV9 是**个人本地投研复盘工具**，定位决定了部署架构�
 ### 16.2 Python 环境选择（固化，禁止漂移）
 
 1. 项目 Python 脚本一律通过 `package.json` npm scripts 调用，解释器路径已固化为受管 venv：
-   `C:/Users/DELL/.workbuddy/binaries/python/envs/default/Scripts/python.exe`
+   `C:/Users/huawei/.workbuddy/binaries/python/envs/default/Scripts/python.exe`
    （现有 `build:stock-dict`、`build:sw-industry` 等脚本即此模式）。
 2. 新增 Python 脚本入口必须登记为 npm script 并沿用同一路径，禁止在脚本、文档、提示词中引入第二个 Python 解释器路径。
 3. 禁止向系统 Python 或受管 venv 安装项目依赖；任何 `pip install` 需用户显式确认。

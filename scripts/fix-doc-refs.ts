@@ -12,6 +12,7 @@
  */
 
 import { readFileSync, writeFileSync, existsSync, statSync } from 'node:fs'
+import { readTextAdaptive, writeTextUtf8 } from './lib/encoding'
 import { dirname, join, relative, resolve, basename, extname } from 'node:path'
 import { globSync } from 'glob'
 import { audit, type Reference, type AuditResult } from './audit/audit-doc-code-references.js'
@@ -36,7 +37,7 @@ function loadPathMap(): PathMapConfig | null {
   const mapPath = join(PROJECT_ROOT, 'scripts', 'config', 'doc-ref-path-map.json')
   if (!existsSync(mapPath)) return null
   try {
-    const content = readFileSync(mapPath, 'utf-8')
+    const content = readTextAdaptive(mapPath)
     pathMap = JSON.parse(content)
     return pathMap
   } catch {
@@ -234,8 +235,10 @@ function generateCandidates(result: AuditResult): FixCandidate[] {
 function applyFix(candidate: FixCandidate): void {
   if (!candidate.suggestion) return
   const filePath = resolve(PROJECT_ROOT, candidate.ref.source)
-  const content = readFileSync(filePath, 'utf-8')
-  const lines = content.split('\n')
+  const content = readTextAdaptive(filePath)
+  // 保留原始换行符（CRLF/LF），避免整文件行尾被改写导致 git 误判全量变更
+  const eol = content.includes('\r\n') ? '\r\n' : '\n'
+  const lines = content.split(eol)
   const lineIndex = candidate.ref.line - 1
   if (lineIndex < 0 || lineIndex >= lines.length) return
 
@@ -244,9 +247,11 @@ function applyFix(candidate: FixCandidate): void {
 
   // 使用转义后的目标进行替换，避免特殊字符问题
   const escapedOld = oldTarget.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  lines[lineIndex] = lines[lineIndex].replace(new RegExp(escapedOld, 'g'), newTarget)
+  const updated = lines[lineIndex].replace(new RegExp(escapedOld, 'g'), newTarget)
+  if (updated === lines[lineIndex]) return // 无实际变更则不写回，避免无谓改动
+  lines[lineIndex] = updated
 
-  writeFileSync(filePath, lines.join('\n'), 'utf-8')
+  writeFileSync(filePath, lines.join(eol), 'utf-8')
 }
 
 function main(): void {

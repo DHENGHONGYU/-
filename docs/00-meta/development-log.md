@@ -358,7 +358,7 @@ date: 2026-07-17
 | 时间 | 事件 | 负责人 |
 |------|------|--------|
 | 2026-07-14 14:00 | 启动阶段五 | AI Agent |
-| 2026-07-14 14:05 | 检索桌面 docs 目录（C:\Users\DELL\Desktop\docs） | AI Agent |
+| 2026-07-14 14:05 | 检索桌面 docs 目录（C:\Users\huawei\Desktop\docs） | AI Agent |
 | 2026-07-14 14:10 | 创建 import-external-docs.ts 导入脚本 | AI Agent |
 | 2026-07-14 14:20 | 执行文档导入 | AI Agent |
 | 2026-07-14 14:30 | 运行文档审计验证 | AI Agent |
@@ -368,7 +368,7 @@ date: 2026-07-17
 
 #### 1. 交叉校对范围
 
-- **外部文档来源**：`C:\Users\DELL\Desktop\docs`
+- **外部文档来源**：`C:\Users\huawei\Desktop\docs`
 - **项目文档目标**：`G:\FinSightV9\docs`
 - **扫描文档类型**：`.md` 文件
 - **比对方式**：按文件名比对，区分已存在和缺失文档

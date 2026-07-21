@@ -3,21 +3,12 @@ title: quality-gates-baseline
 code_version: 2.0.0
 
 tier: important
+status: active
+version: v1.0.0
+last_updated: 2026-07-21
+doc_id: V9-DOC-EXP-904
 ---
 
----
-title: 质量门禁实测基线（2026-06-25）
-version: v0.9.0
-last_updated: 2026-06-25
-maintainer: V9 Architecture Team
-status: active
-change_log:
-  - date: 2026-06-25
-    author: Documentation Governor
-    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
-code_version: 2.0.0
-tier: important
----
 > **Status**: Current  
 > **Version**: v0.9.0-migration-implemented  
 > **Last Updated**: 2026-06-25
