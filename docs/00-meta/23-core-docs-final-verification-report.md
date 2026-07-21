@@ -18,173 +18,173 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# V9 ÖÇÄÜÍ¶ÑÐ¸´ÅÌÏµÍ³ ¡ª 23¸öºËÐÄÎÄµµ ¡¤ ×îÖÕ¼ìË÷ºËÊµ±¨¸æ
+# V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” 23ä¸ªæ ¸å¿ƒæ–‡æ¡£ Â· æœ€ç»ˆæ£€ç´¢æ ¸å®žæŠ¥å‘Š
 
-> **Date**£º2026-07-12
-> **¼ìË÷·¶Î§**£º421¸öMarkdownÎÄµµ£¨È«ÏîÄ¿É¨Ãè£©
-> **Æ¥Åä·½·¨**£ºÏµÍ³±êÌâÌáÈ¡ + ¹Ø¼ü´ÊÆ¥Åä + ÈË¹¤¸´ºË
+> **Date**ï¼š2026-07-12
+> **æ£€ç´¢èŒƒå›´**ï¼š421ä¸ªMarkdownæ–‡æ¡£ï¼ˆå…¨é¡¹ç›®æ‰«æï¼‰
+> **åŒ¹é…æ–¹æ³•**ï¼šç³»ç»Ÿæ ‡é¢˜æå– + å…³é”®è¯åŒ¹é… + äººå·¥å¤æ ¸
 
 ---
 
-## Í³¼Æ»ã×Ü
+## ç»Ÿè®¡æ±‡æ€»
 
-| ×´Ì¬ | ÊýÁ¿ | ËµÃ÷ |
+| çŠ¶æ€ | æ•°é‡ | è¯´æ˜Ž |
 |------|------|------|
-| ? ÒÑ´æÔÚ | 4 | ¹¦ÄÜµÈ¼Û£¬½öÄ¿Â¼/ÎÄ¼þÃû²»Í¬ |
-| ?? ²¿·ÖÂú×ã | 5 | Ïà¹ØÎÄµµ´æÔÚµ«¹¦ÄÜÎ´ÍêÈ«¸²¸Ç |
-| ?? È±Ê§ | 14 | ÍêÈ«²»´æÔÚ£¨¶ÀÁ¢ÎÄµµ£© |
-| **ºÏ¼Æ** | **23** | ¡ª |
+| ? å·²å­˜åœ¨ | 4 | åŠŸèƒ½ç­‰ä»·ï¼Œä»…ç›®å½•/æ–‡ä»¶åä¸åŒ |
+| ?? éƒ¨åˆ†æ»¡è¶³ | 5 | ç›¸å…³æ–‡æ¡£å­˜åœ¨ä½†åŠŸèƒ½æœªå®Œå…¨è¦†ç›– |
+| ?? ç¼ºå¤± | 14 | å®Œå…¨ä¸å­˜åœ¨ï¼ˆç‹¬ç«‹æ–‡æ¡£ï¼‰ |
+| **åˆè®¡** | **23** | â€” |
 
-> **×îÖÕ½áÂÛ**£º¾­¹ý421¸öÎÄµµµÄÈ«Á¿É¨ÃèºÍÖðÒ»¸´ºË£¬23¸öºËÐÄÎÄµµÖÐ **14¸öÈ±Ê§**¡¢**5¸ö²¿·ÖÂú×ã**¡¢**4¸öÒÑ´æÔÚ**¡£ÓëÇ°ÆÚÅÐ¶¨£¨14¸öÈ±Ê§/5¸ö²¿·ÖÂú×ã/4¸öÒÑ´æÔÚ£©**ÍêÈ«Ò»ÖÂ**¡£
+> **æœ€ç»ˆç»“è®º**ï¼šç»è¿‡421ä¸ªæ–‡æ¡£çš„å…¨é‡æ‰«æå’Œé€ä¸€å¤æ ¸ï¼Œ23ä¸ªæ ¸å¿ƒæ–‡æ¡£ä¸­ **14ä¸ªç¼ºå¤±**ã€**5ä¸ªéƒ¨åˆ†æ»¡è¶³**ã€**4ä¸ªå·²å­˜åœ¨**ã€‚ä¸Žå‰æœŸåˆ¤å®šï¼ˆ14ä¸ªç¼ºå¤±/5ä¸ªéƒ¨åˆ†æ»¡è¶³/4ä¸ªå·²å­˜åœ¨ï¼‰**å®Œå…¨ä¸€è‡´**ã€‚
 
 ---
 
-## ÏêÏ¸ÅÐ¶¨Çåµ¥
+## è¯¦ç»†åˆ¤å®šæ¸…å•
 
 ### `docs/README.md` ??
 
-- **ÅÐ¶¨ÀíÓÉ**£ºÎÞ `docs/README.md`£»`../reference/README.md` ÊÇ×ÓÄ¿Â¼µ¼º½£¬·Ç¶¥²ã×ÜÈë¿Ú
+- **åˆ¤å®šç†ç”±**ï¼šæ—  `docs/README.md`ï¼›`../reference/README.md` æ˜¯å­ç›®å½•å¯¼èˆªï¼Œéžé¡¶å±‚æ€»å…¥å£
 
 ### `./governance.md` ??
 
-- **ÅÐ¶¨ÀíÓÉ**£ºÎÞ `./governance.md`£»`../explanation/design/implementation-governance.md` ÊÇÊµÊ©ÖÎÀí£¬·ÇÎÄµµÖÎÀí¹«Ô¼
+- **åˆ¤å®šç†ç”±**ï¼šæ—  `./governance.md`ï¼›`../explanation/design/implementation-governance.md` æ˜¯å®žæ–½æ²»ç†ï¼Œéžæ–‡æ¡£æ²»ç†å…¬çº¦
 
 ### `../explanation/overview.md` ?
 
-- **Êµ¼ÊÎÄµµ**£º`../reference/v9-system-blueprint.md`
-- **ÅÐ¶¨ÀíÓÉ**£º444ÐÐ£¬±êÌâ¡ºÕûÌå¼Ü¹¹À¶Í¼¡»£¬º¬Îå²ã¼Ü¹¹¡¢Êý¾Ý¼Ü¹¹¡¢Â·ÓÉÓ³Éä¡¢ADRË÷Òý¡¢ÊµÊ©Â·Ïß
+- **å®žé™…æ–‡æ¡£**ï¼š`../reference/v9-system-blueprint.md`
+- **åˆ¤å®šç†ç”±**ï¼š444è¡Œï¼Œæ ‡é¢˜ã€Žæ•´ä½“æž¶æž„è“å›¾ã€ï¼Œå«äº”å±‚æž¶æž„ã€æ•°æ®æž¶æž„ã€è·¯ç”±æ˜ å°„ã€ADRç´¢å¼•ã€å®žæ–½è·¯çº¿
 
 ### `../explanation/cabins-overview.md` ??
 
-- **ÅÐ¶¨ÀíÓÉ**£ºÎÞ¶ÀÁ¢5²ÕÌåÏµ×ÜÀÀ£»`../explanation/design/v9-current-state-review.md` °´ÊµÊ©½ø¶ÈÃèÊöÎå²Õ£¬·Ç¼Ü¹¹ÊÓ½Ç
+- **åˆ¤å®šç†ç”±**ï¼šæ— ç‹¬ç«‹5èˆ±ä½“ç³»æ€»è§ˆï¼›`../explanation/design/v9-current-state-review.md` æŒ‰å®žæ–½è¿›åº¦æè¿°äº”èˆ±ï¼Œéžæž¶æž„è§†è§’
 
 ### `../reports/release-management/README.md` ??
 
-- **ÅÐ¶¨ÀíÓÉ**£ºÎÞADR¼¯ÖÐË÷Òý£»9·ÝADRÉ¢Âä¸÷×ÓÄ¿Â¼
+- **åˆ¤å®šç†ç”±**ï¼šæ— ADRé›†ä¸­ç´¢å¼•ï¼›9ä»½ADRæ•£è½å„å­ç›®å½•
 
 ### `../reports/release-management/README.md` ??
 
-- **ÅÐ¶¨ÀíÓÉ**£º`01-requirements/adr/` ÏÂÎÞREADME.md
+- **åˆ¤å®šç†ç”±**ï¼š`01-requirements/adr/` ä¸‹æ— README.md
 
 ### `../reference/api-contract.md` ??
 
-- **Êµ¼ÊÎÄµµ**£º`../reference/api-contract.md`
-- **ÅÐ¶¨ÀíÓÉ**£º½ö½»Ò×Ä£¿éAPIÆõÔ¼£¬·ÇÈ«¾ÖDataBridge/ÐÐÇé¶Ëµã/ÊÂ¼þÃûÆõÔ¼
+- **å®žé™…æ–‡æ¡£**ï¼š`../reference/api-contract.md`
+- **åˆ¤å®šç†ç”±**ï¼šä»…äº¤æ˜“æ¨¡å—APIå¥‘çº¦ï¼Œéžå…¨å±€DataBridge/è¡Œæƒ…ç«¯ç‚¹/äº‹ä»¶åå¥‘çº¦
 
 ### `../explanation/data-layer-overview.md` ??
 
-- **Êµ¼ÊÎÄµµ**£º`../reference/v9-indexeddb-store-schema.md`
-- **ÅÐ¶¨ÀíÓÉ**£º1009ÐÐ£¬º¬25¸öStoreÍêÕûSchema/Ë÷Òý/°æ±¾ÀúÊ·£¬µ«È±DataBridge/collection¶Ëµ½¶ËÊý¾ÝµØÍ¼
+- **å®žé™…æ–‡æ¡£**ï¼š`../reference/v9-indexeddb-store-schema.md`
+- **åˆ¤å®šç†ç”±**ï¼š1009è¡Œï¼Œå«25ä¸ªStoreå®Œæ•´Schema/ç´¢å¼•/ç‰ˆæœ¬åŽ†å²ï¼Œä½†ç¼ºDataBridge/collectionç«¯åˆ°ç«¯æ•°æ®åœ°å›¾
 
 ### `../prompts/store-integration-guide.md` ??
 
-- **ÅÐ¶¨ÀíÓÉ**£ºÎÞ¶ÀÁ¢Store¼¯³É¹æ·¶£»½ö`../../prompts/store-prompt-template.md`ÓÐÆ¬¶Î
+- **åˆ¤å®šç†ç”±**ï¼šæ— ç‹¬ç«‹Storeé›†æˆè§„èŒƒï¼›ä»…`../../prompts/store-prompt-template.md`æœ‰ç‰‡æ®µ
 
 ### `../prompts/service-integration-guide.md` ??
 
-- **ÅÐ¶¨ÀíÓÉ**£ºÎÞ¶ÀÁ¢Service¼¯³É¹æ·¶£»½ö`../../prompts/service-prompt-template.md`ÓÐÆ¬¶Î
+- **åˆ¤å®šç†ç”±**ï¼šæ— ç‹¬ç«‹Serviceé›†æˆè§„èŒƒï¼›ä»…`../../prompts/service-prompt-template.md`æœ‰ç‰‡æ®µ
 
 ### `../reference/coding-conventions.md` ?
 
-- **Êµ¼ÊÎÄµµ**£º`../reference/03-architecture-standards.md`
-- **ÅÐ¶¨ÀíÓÉ**£º1199ÐÐ£¬±êÌâ¡º¼Ü¹¹±ê×¼¡»£¬º¬Îå²ã¼Ü¹¹¡¢µ÷ÓÃÌúÂÉ¡¢Êý¾Ý·ÃÎÊ¹æ·¶¡¢ÒýÇæ²ã¹æ·¶¡¢Ó³Éä²ã¹æ·¶
+- **å®žé™…æ–‡æ¡£**ï¼š`../reference/03-architecture-standards.md`
+- **åˆ¤å®šç†ç”±**ï¼š1199è¡Œï¼Œæ ‡é¢˜ã€Žæž¶æž„æ ‡å‡†ã€ï¼Œå«äº”å±‚æž¶æž„ã€è°ƒç”¨é“å¾‹ã€æ•°æ®è®¿é—®è§„èŒƒã€å¼•æ“Žå±‚è§„èŒƒã€æ˜ å°„å±‚è§„èŒƒ
 
 ### `../explanation/song-aesthetics.md` ??
 
-- **Êµ¼ÊÎÄµµ**£º`../reference/design-tokens.md + ../reference/04-ui-ux-specs.md`
-- **ÅÐ¶¨ÀíÓÉ**£ºdesign-tokens 495ÐÐ£¨ÁîÅÆÊ¹ÓÃÖ¸ÄÏ£©£¬ui-design-system 279ÐÐ£¨º¬¡ºËÎ´ÉÂÌ¡»¡º¹ÅÍ­½ð¡»Ìá¼°£©£¬µ«ÎÞ¶ÀÁ¢¡ºËÎÔÏÃÀÑ§¡»×ÜÊöÎÄµµ
+- **å®žé™…æ–‡æ¡£**ï¼š`../reference/design-tokens.md + ../reference/04-ui-ux-specs.md`
+- **åˆ¤å®šç†ç”±**ï¼šdesign-tokens 495è¡Œï¼ˆä»¤ç‰Œä½¿ç”¨æŒ‡å—ï¼‰ï¼Œui-design-system 279è¡Œï¼ˆå«ã€Žå®‹ç“·ç»¿ã€ã€Žå¤é“œé‡‘ã€æåŠï¼‰ï¼Œä½†æ— ç‹¬ç«‹ã€Žå®‹éŸµç¾Žå­¦ã€æ€»è¿°æ–‡æ¡£
 
 ### `../explanation/quality-gates-baseline.md` ?
 
-- **Êµ¼ÊÎÄµµ**£º`../reference/09-quality-gates.md + ../explanation/quality-gates-baseline.md`
-- **ÅÐ¶¨ÀíÓÉ**£ºÁ½·ÝÎÄµµºÏÆðÀ´¸²¸ÇÖÊÁ¿ÃÅ½ûÊýÖµ»ùÏßºÍ²ßÂÔ
+- **å®žé™…æ–‡æ¡£**ï¼š`../reference/09-quality-gates.md + ../explanation/quality-gates-baseline.md`
+- **åˆ¤å®šç†ç”±**ï¼šä¸¤ä»½æ–‡æ¡£åˆèµ·æ¥è¦†ç›–è´¨é‡é—¨ç¦æ•°å€¼åŸºçº¿å’Œç­–ç•¥
 
 ### `../reference/test-catalog.md` ??
 
-- **ÅÐ¶¨ÀíÓÉ**£ºÎÞ¼¯ÖÐ²âÊÔÓÃÀýÄ¿Â¼£»v9-test-cases.mdÆ«Ò»´ÎÐÔÇåµ¥
+- **åˆ¤å®šç†ç”±**ï¼šæ— é›†ä¸­æµ‹è¯•ç”¨ä¾‹ç›®å½•ï¼›v9-test-cases.mdåä¸€æ¬¡æ€§æ¸…å•
 
 ### `../reference/README.md` ??
 
-- **Êµ¼ÊÎÄµµ**£º`../reference/ai-memory-layer.md`
-- **ÅÐ¶¨ÀíÓÉ**£º70ÐÐ£¬º¬AI¼ÇÒä²ãÉè¼Æ¡¢Ë÷Òý¡¢¼ìË÷¡¢ÓëÌáÊ¾´Ê½áºÏ£¬µ«È±prompts/¼ì²é±í/·ÉÂÖµÄ×ÜÀÀ´®Áª
+- **å®žé™…æ–‡æ¡£**ï¼š`../reference/ai-memory-layer.md`
+- **åˆ¤å®šç†ç”±**ï¼š70è¡Œï¼Œå«AIè®°å¿†å±‚è®¾è®¡ã€ç´¢å¼•ã€æ£€ç´¢ã€ä¸Žæç¤ºè¯ç»“åˆï¼Œä½†ç¼ºprompts/æ£€æŸ¥è¡¨/é£žè½®çš„æ€»è§ˆä¸²è”
 
 ### `../reference/security-model.md` ??
 
-- **ÅÐ¶¨ÀíÓÉ**£º½ö`../how-to/mcp-acl-guide.md`£¨MCP ACL£©£¬ÎÞÕûÌå°²È«/È¨ÏÞÄ£ÐÍ
+- **åˆ¤å®šç†ç”±**ï¼šä»…`../how-to/mcp-acl-guide.md`ï¼ˆMCP ACLï¼‰ï¼Œæ— æ•´ä½“å®‰å…¨/æƒé™æ¨¡åž‹
 
 ### `../reference/deployment.md` ??
 
-- **ÅÐ¶¨ÀíÓÉ**£º½ö`05-deployment/ADR-004`£¨HashRouter£©£¬ÎÞ²¿Êð¼Ü¹¹ÎÄµµ
+- **åˆ¤å®šç†ç”±**ï¼šä»…`05-deployment/ADR-004`ï¼ˆHashRouterï¼‰ï¼Œæ— éƒ¨ç½²æž¶æž„æ–‡æ¡£
 
 ### `../explanation/runbook.md` ??
 
-- **ÅÐ¶¨ÀíÓÉ**£ºÎÞÔËÐÐ/¹ÊÕÏÊÖ²á
+- **åˆ¤å®šç†ç”±**ï¼šæ— è¿è¡Œ/æ•…éšœæ‰‹å†Œ
 
 ### `../tutorials/getting-started.md` ??
 
-- **ÅÐ¶¨ÀíÓÉ**£º`../reference/autonomous-workflow-user-guide.md`ÊÇ×ÔÖ÷¹¤×÷Á÷¹¤¾ßÖ¸ÄÏ£¬·ÇÐÂÊÖÈëÃÅ½Ì³Ì
+- **åˆ¤å®šç†ç”±**ï¼š`../reference/autonomous-workflow-user-guide.md`æ˜¯è‡ªä¸»å·¥ä½œæµå·¥å…·æŒ‡å—ï¼Œéžæ–°æ‰‹å…¥é—¨æ•™ç¨‹
 
 ### `../how-to/how-to-add-widget.md` ?
 
-- **Êµ¼ÊÎÄµµ**£º`../reference/widget-development-guide.md`
-- **ÅÐ¶¨ÀíÓÉ**£º481ÐÐ£¬Widget¿ª·¢È«Á÷³ÌÖ¸ÄÏ£¨×¢²á/Ä¿Â¼/¿ª·¢/²âÊÔ/·¢²¼£©
+- **å®žé™…æ–‡æ¡£**ï¼š`../reference/widget-development-guide.md`
+- **åˆ¤å®šç†ç”±**ï¼š481è¡Œï¼ŒWidgetå¼€å‘å…¨æµç¨‹æŒ‡å—ï¼ˆæ³¨å†Œ/ç›®å½•/å¼€å‘/æµ‹è¯•/å‘å¸ƒï¼‰
 
 ### `../how-to/how-to-add-store.md` ??
 
-- **ÅÐ¶¨ÀíÓÉ**£ºÎÞ¡ºÈçºÎÐÂÔöStore¡»²Ù×÷Ö¸ÄÏ£»`../reference/v9-l2×´Ì¬²ã²¹ÆëÂ·ÏßÍ¼.md`ÊÇ²¹Æë¼Æ»®£¬·ÇÐÂÔöÖ¸ÄÏ
+- **åˆ¤å®šç†ç”±**ï¼šæ— ã€Žå¦‚ä½•æ–°å¢žStoreã€æ“ä½œæŒ‡å—ï¼›`../reference/v9-l2çŠ¶æ€å±‚è¡¥é½è·¯çº¿å›¾.md`æ˜¯è¡¥é½è®¡åˆ’ï¼Œéžæ–°å¢žæŒ‡å—
 
 ### `../how-to/how-to-add-service.md` ??
 
-- **ÅÐ¶¨ÀíÓÉ**£ºÎÞ¡ºÈçºÎÐÂÔöService¡»²Ù×÷Ö¸ÄÏ£»AGENTS.mdËÄ²½¼¯³ÉÓÐÃèÊöµ«·ÇÖ¸ÄÏ¸ñÊ½
+- **åˆ¤å®šç†ç”±**ï¼šæ— ã€Žå¦‚ä½•æ–°å¢žServiceã€æ“ä½œæŒ‡å—ï¼›AGENTS.mdå››æ­¥é›†æˆæœ‰æè¿°ä½†éžæŒ‡å—æ ¼å¼
 
 ### `../explanation/a11y-i18n.md` ??
 
-- **Êµ¼ÊÎÄµµ**£º`../explanation/a11y-checklist.md`
-- **ÅÐ¶¨ÀíÓÉ**£º239ÐÐ£¬º¬ÎÞÕÏ°­¼ì²éÇåµ¥£¬µ«ÎÞi18n²ßÂÔ
+- **å®žé™…æ–‡æ¡£**ï¼š`../explanation/a11y-checklist.md`
+- **åˆ¤å®šç†ç”±**ï¼š239è¡Œï¼Œå«æ— éšœç¢æ£€æŸ¥æ¸…å•ï¼Œä½†æ— i18nç­–ç•¥
 
 ---
 
-## ?? ÕæÕýÈ±Ê§ÎÄµµÇåµ¥£¨14¸ö£©
+## ?? çœŸæ­£ç¼ºå¤±æ–‡æ¡£æ¸…å•ï¼ˆ14ä¸ªï¼‰
 
-- `docs/README.md` ¡ª `../reference/README.md` ÊÇ×ÓÄ¿Â¼µ¼º½£¬·Ç¶¥²ã×ÜÈë¿Ú
-- `./governance.md` ¡ª `../explanation/design/implementation-governance.md` ÊÇÊµÊ©ÖÎÀí£¬·ÇÎÄµµÖÎÀí¹«Ô¼
-- `../explanation/cabins-overview.md` ¡ª `../explanation/design/v9-current-state-review.md` °´ÊµÊ©½ø¶ÈÃèÊöÎå²Õ£¬·Ç¼Ü¹¹ÊÓ½Ç
-- `../reports/release-management/README.md` ¡ª 9·ÝADRÉ¢Âä¸÷×ÓÄ¿Â¼
-- `../reports/release-management/README.md` ¡ª `01-requirements/adr/` ÏÂÎÞREADME.md
-- `../prompts/store-integration-guide.md` ¡ª ½ö`../../prompts/store-prompt-template.md`ÓÐÆ¬¶Î
-- `../prompts/service-integration-guide.md` ¡ª ½ö`../../prompts/service-prompt-template.md`ÓÐÆ¬¶Î
-- `../reference/test-catalog.md` ¡ª v9-test-cases.mdÆ«Ò»´ÎÐÔÇåµ¥
-- `../reference/security-model.md` ¡ª ½ö`../how-to/mcp-acl-guide.md`£¨MCP ACL£©£¬ÎÞÕûÌå°²È«/È¨ÏÞÄ£ÐÍ
-- `../reference/deployment.md` ¡ª ½ö`05-deployment/ADR-004`£¨HashRouter£©£¬ÎÞ²¿Êð¼Ü¹¹ÎÄµµ
-- `../explanation/runbook.md` ¡ª ÎÞÔËÐÐ/¹ÊÕÏÊÖ²á
-- `../tutorials/getting-started.md` ¡ª `../reference/autonomous-workflow-user-guide.md`ÊÇ×ÔÖ÷¹¤×÷Á÷¹¤¾ßÖ¸ÄÏ£¬·ÇÐÂÊÖÈëÃÅ½Ì³Ì
-- `../how-to/how-to-add-store.md` ¡ª `../reference/v9-l2×´Ì¬²ã²¹ÆëÂ·ÏßÍ¼.md`ÊÇ²¹Æë¼Æ»®£¬·ÇÐÂÔöÖ¸ÄÏ
-- `../how-to/how-to-add-service.md` ¡ª AGENTS.mdËÄ²½¼¯³ÉÓÐÃèÊöµ«·ÇÖ¸ÄÏ¸ñÊ½
+- `docs/README.md` â€” `../reference/README.md` æ˜¯å­ç›®å½•å¯¼èˆªï¼Œéžé¡¶å±‚æ€»å…¥å£
+- `./governance.md` â€” `../explanation/design/implementation-governance.md` æ˜¯å®žæ–½æ²»ç†ï¼Œéžæ–‡æ¡£æ²»ç†å…¬çº¦
+- `../explanation/cabins-overview.md` â€” `../explanation/design/v9-current-state-review.md` æŒ‰å®žæ–½è¿›åº¦æè¿°äº”èˆ±ï¼Œéžæž¶æž„è§†è§’
+- `../reports/release-management/README.md` â€” 9ä»½ADRæ•£è½å„å­ç›®å½•
+- `../reports/release-management/README.md` â€” `01-requirements/adr/` ä¸‹æ— README.md
+- `../prompts/store-integration-guide.md` â€” ä»…`../../prompts/store-prompt-template.md`æœ‰ç‰‡æ®µ
+- `../prompts/service-integration-guide.md` â€” ä»…`../../prompts/service-prompt-template.md`æœ‰ç‰‡æ®µ
+- `../reference/test-catalog.md` â€” v9-test-cases.mdåä¸€æ¬¡æ€§æ¸…å•
+- `../reference/security-model.md` â€” ä»…`../how-to/mcp-acl-guide.md`ï¼ˆMCP ACLï¼‰ï¼Œæ— æ•´ä½“å®‰å…¨/æƒé™æ¨¡åž‹
+- `../reference/deployment.md` â€” ä»…`05-deployment/ADR-004`ï¼ˆHashRouterï¼‰ï¼Œæ— éƒ¨ç½²æž¶æž„æ–‡æ¡£
+- `../explanation/runbook.md` â€” æ— è¿è¡Œ/æ•…éšœæ‰‹å†Œ
+- `../tutorials/getting-started.md` â€” `../reference/autonomous-workflow-user-guide.md`æ˜¯è‡ªä¸»å·¥ä½œæµå·¥å…·æŒ‡å—ï¼Œéžæ–°æ‰‹å…¥é—¨æ•™ç¨‹
+- `../how-to/how-to-add-store.md` â€” `../reference/v9-l2çŠ¶æ€å±‚è¡¥é½è·¯çº¿å›¾.md`æ˜¯è¡¥é½è®¡åˆ’ï¼Œéžæ–°å¢žæŒ‡å—
+- `../how-to/how-to-add-service.md` â€” AGENTS.mdå››æ­¥é›†æˆæœ‰æè¿°ä½†éžæŒ‡å—æ ¼å¼
 
 ---
 
-## ?? Ä¿Â¼´íÎ»ÐÞÕý½¨Òé
+## ?? ç›®å½•é”™ä½ä¿®æ­£å»ºè®®
 
-ÒÔÏÂ4¸öÎÄµµ¹¦ÄÜÒÑÈ·ÈÏµÈ¼Û£¬µ«´æ·ÅÄ¿Â¼ÓëÌåÏµ½á¹¹Ô¤ÆÚ²»·û£º
+ä»¥ä¸‹4ä¸ªæ–‡æ¡£åŠŸèƒ½å·²ç¡®è®¤ç­‰ä»·ï¼Œä½†å­˜æ”¾ç›®å½•ä¸Žä½“ç³»ç»“æž„é¢„æœŸä¸ç¬¦ï¼š
 
-| ÌåÏµ½á¹¹Ô¤ÆÚÂ·¾¶ | Êµ¼ÊÂ·¾¶ | ½¨Òé²Ù×÷ |
+| ä½“ç³»ç»“æž„é¢„æœŸè·¯å¾„ | å®žé™…è·¯å¾„ | å»ºè®®æ“ä½œ |
 |------------------|----------|----------|
-| `../explanation/overview.md` | `../reference/v9-system-blueprint.md` | ½¨Á¢ÈíÁ´½Ó»òÇ¨ÒÆ |
-| `../reference/coding-conventions.md` | `../reference/03-architecture-standards.md` | ½¨Á¢ÈíÁ´½Ó»òÇ¨ÒÆ |
-| `../explanation/quality-gates-baseline.md` | `../reference/09-quality-gates.md` + `../explanation/quality-gates-baseline.md` | ½¨Á¢ÈíÁ´½Ó»òÕûºÏ |
-| `../how-to/how-to-add-widget.md` | `../reference/widget-development-guide.md` | ½¨Á¢ÈíÁ´½Ó»òÇ¨ÒÆ |
+| `../explanation/overview.md` | `../reference/v9-system-blueprint.md` | å»ºç«‹è½¯é“¾æŽ¥æˆ–è¿ç§» |
+| `../reference/coding-conventions.md` | `../reference/03-architecture-standards.md` | å»ºç«‹è½¯é“¾æŽ¥æˆ–è¿ç§» |
+| `../explanation/quality-gates-baseline.md` | `../reference/09-quality-gates.md` + `../explanation/quality-gates-baseline.md` | å»ºç«‹è½¯é“¾æŽ¥æˆ–æ•´åˆ |
+| `../how-to/how-to-add-widget.md` | `../reference/widget-development-guide.md` | å»ºç«‹è½¯é“¾æŽ¥æˆ–è¿ç§» |
 
 ---
 
-## ¸½Â¼£º¼ìË÷¹ý³ÌËµÃ÷
+## é™„å½•ï¼šæ£€ç´¢è¿‡ç¨‹è¯´æ˜Ž
 
-1. **µÚÒ»ÂÖ¼ìË÷**£ºÎÄ¼þÃûÆ¥Åä£¨Grep/Glob£©£¬³õ²½ÅÐ¶¨18¸öÈ±Ê§¡¢5¸ö¿ÉÄÜÒÑ´æÔÚ
-2. **µÚ¶þÂÖ¼ìË÷**£ºÈË¹¤¶ÁÈ¡10¸ö¹Ø¼üÎÄµµÄÚÈÝ£¬È·ÈÏ `v9-system-blueprint` = `overview`¡¢`03-architecture-standards` = `coding-conventions` µÈ¹¦ÄÜµÈ¼Û¹ØÏµ
-3. **µÚÈýÂÖ¼ìË÷**£ºÀ©Õ¹¹Ø¼ü´Ê£¨ÖÐÓ¢ÎÄ±äÌå£©£¬¶Ô8¸ö¸ß/ÖÐÓÅÏÈ¼¶ÎÄµµ½øÐÐÉî¶ÈËÑË÷
-4. **µÚËÄÂÖ¼ìË÷**£ºPython½Å±¾ÏµÍ³»¯É¨Ãè421¸öÎÄµµ£¬ÌáÈ¡±êÌâ²¢×ö¹Ø¼ü´ÊÆ¥Åä
-5. **×îÖÕ¸´ºË**£ºÖð·Ý¶ÁÈ¡ºòÑ¡ÎÄµµ£¨`../explanation/design/v9-current-state-review.md`¡¢`../README.md`¡¢`../reference/autonomous-workflow-user-guide.md` µÈ£©£¬È·ÈÏÆäÓëÄ¿±êÎÄµµµÄ¹¦ÄÜ²îÒì
+1. **ç¬¬ä¸€è½®æ£€ç´¢**ï¼šæ–‡ä»¶ååŒ¹é…ï¼ˆGrep/Globï¼‰ï¼Œåˆæ­¥åˆ¤å®š18ä¸ªç¼ºå¤±ã€5ä¸ªå¯èƒ½å·²å­˜åœ¨
+2. **ç¬¬äºŒè½®æ£€ç´¢**ï¼šäººå·¥è¯»å–10ä¸ªå…³é”®æ–‡æ¡£å†…å®¹ï¼Œç¡®è®¤ `v9-system-blueprint` = `overview`ã€`03-architecture-standards` = `coding-conventions` ç­‰åŠŸèƒ½ç­‰ä»·å…³ç³»
+3. **ç¬¬ä¸‰è½®æ£€ç´¢**ï¼šæ‰©å±•å…³é”®è¯ï¼ˆä¸­è‹±æ–‡å˜ä½“ï¼‰ï¼Œå¯¹8ä¸ªé«˜/ä¸­ä¼˜å…ˆçº§æ–‡æ¡£è¿›è¡Œæ·±åº¦æœç´¢
+4. **ç¬¬å››è½®æ£€ç´¢**ï¼šPythonè„šæœ¬ç³»ç»ŸåŒ–æ‰«æ421ä¸ªæ–‡æ¡£ï¼Œæå–æ ‡é¢˜å¹¶åšå…³é”®è¯åŒ¹é…
+5. **æœ€ç»ˆå¤æ ¸**ï¼šé€ä»½è¯»å–å€™é€‰æ–‡æ¡£ï¼ˆ`../explanation/design/v9-current-state-review.md`ã€`../README.md`ã€`../reference/autonomous-workflow-user-guide.md` ç­‰ï¼‰ï¼Œç¡®è®¤å…¶ä¸Žç›®æ ‡æ–‡æ¡£çš„åŠŸèƒ½å·®å¼‚
 
-> **¹Ø¼üÇø·ÖÔ­Ôò**£º
-> - **ÒÑ´æÔÚ**£ºÓÐ¶ÀÁ¢ÎÄµµ£¬±êÌâºÍÄÚÈÝÃ÷È·¶ÔÓ¦Ä¿±ê¹¦ÄÜ£¨¼´Ê¹Ä¿Â¼²»Í¬£©
-> - **²¿·ÖÂú×ã**£ºÓÐ¶ÀÁ¢ÎÄµµ¸²¸ÇÄ¿±ê¹¦ÄÜµÄ²¿·ÖÄÚÈÝ£¬µ«Î´ÍêÈ«¸²¸Ç
-> - **È±Ê§**£ºÎÞ¶ÀÁ¢ÎÄµµ³Ðµ£¸Ã¹¦ÄÜ£¨¼´Ê¹¹¦ÄÜ±»·ÖÉ¢ÔÚ¶à¸ö²»Ïà¹ØÎÄµµÖÐ£©
+> **å…³é”®åŒºåˆ†åŽŸåˆ™**ï¼š
+> - **å·²å­˜åœ¨**ï¼šæœ‰ç‹¬ç«‹æ–‡æ¡£ï¼Œæ ‡é¢˜å’Œå†…å®¹æ˜Žç¡®å¯¹åº”ç›®æ ‡åŠŸèƒ½ï¼ˆå³ä½¿ç›®å½•ä¸åŒï¼‰
+> - **éƒ¨åˆ†æ»¡è¶³**ï¼šæœ‰ç‹¬ç«‹æ–‡æ¡£è¦†ç›–ç›®æ ‡åŠŸèƒ½çš„éƒ¨åˆ†å†…å®¹ï¼Œä½†æœªå®Œå…¨è¦†ç›–
+> - **ç¼ºå¤±**ï¼šæ— ç‹¬ç«‹æ–‡æ¡£æ‰¿æ‹…è¯¥åŠŸèƒ½ï¼ˆå³ä½¿åŠŸèƒ½è¢«åˆ†æ•£åœ¨å¤šä¸ªä¸ç›¸å…³æ–‡æ¡£ä¸­ï¼‰
