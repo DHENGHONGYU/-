@@ -197,4 +197,26 @@ describe('multiFactorScreeningStore', () => {
     expect(useMultiFactorScreeningStore.getState().templates).toHaveLength(0)
     vi.restoreAllMocks()
   })
+
+  it('reset 将所有关键状态字段重置为初始值', () => {
+    useMultiFactorScreeningStore.setState({
+      conditionGroups: [
+        { id: 'g1', logic: 'and', criteria: [] },
+        { id: 'g2', logic: 'or', criteria: [] },
+      ],
+      results: [{ symbol: 'A', name: 'A公司', matchedGroups: [], sector: '', pe: 0, pb: 0, roe: 0, marketCap: 0, revenueGrowth: null, profitGrowth: null }] as ScreeningResultItem[],
+      loading: true,
+      error: '某错误',
+      templates: [{ id: 't1', name: '模板1', groups: [], createdAt: Date.now(), updatedAt: Date.now() }],
+    })
+
+    useMultiFactorScreeningStore.getState().reset()
+
+    const state = useMultiFactorScreeningStore.getState()
+    expect(state.conditionGroups).toHaveLength(1)
+    expect(state.results).toHaveLength(0)
+    expect(state.loading).toBe(false)
+    expect(state.error).toBeNull()
+    expect(state.templates).toHaveLength(0)
+  })
 })

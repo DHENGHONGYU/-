@@ -593,4 +593,40 @@ describe('industryScoreStore', () => {
     expect(state.progressMessage).toBe('')
     expect(state.error).toBe('')
   })
+
+  test('reset 将所有关键状态字段重置为初始值', () => {
+    useIndustryScoreStore.setState({
+      selectedCode: 'AI',
+      files: [new File(['test'], 'test.txt', { type: 'text/plain' })],
+      reportText: '行业报告',
+      llmConfig: { baseURL: 'https://api.test.com', apiKey: 'sk-test', model: 'test-model' },
+      showConfig: true,
+      progress: { fetchSectorData: 'done', readSupplementaryFiles: 'done', prepareReportText: 'done', llmAnalysis: 'done', parseScore: 'done', saveResult: 'done' },
+      progressMessage: '完成',
+      result: createMockIndustryScore('AI', 4.5),
+      previousResult: createMockIndustryScore('AI', 4.2),
+      history: [createMockIndustryScore('AI', 4.5)],
+      logs: [{ traceId: '1', timestamp: Date.now(), actor: 'system', action: 'score', targetType: 'industry', targetCode: 'AI' }],
+      error: '某错误',
+      loading: true,
+    })
+
+    const store = useIndustryScoreStore.getState()
+    store.reset()
+
+    const state = useIndustryScoreStore.getState()
+    expect(state.selectedCode).toBe('')
+    expect(state.files).toHaveLength(0)
+    expect(state.reportText).toBe('')
+    expect(state.llmConfig.baseURL).toBe('')
+    expect(state.showConfig).toBe(false)
+    expect(state.progress.fetchSectorData).toBe('pending')
+    expect(state.progressMessage).toBe('')
+    expect(state.result).toBeUndefined()
+    expect(state.previousResult).toBeUndefined()
+    expect(state.history).toHaveLength(0)
+    expect(state.logs).toHaveLength(0)
+    expect(state.error).toBe('')
+    expect(state.loading).toBe(false)
+  })
 })

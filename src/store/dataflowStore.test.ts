@@ -209,6 +209,23 @@ describe('dataflowStore', () => {
     expect(mockGetStats).toHaveBeenCalled()
     expect(state.stats.subscribers).toHaveLength(2)
   })
+
+  // ============================================================
+  // reset
+  // ============================================================
+  it('reset 后 channels 和 cache 被清空', () => {
+    useDataflowStore.getState().updateChannelSubscribers('market:index', 5)
+    useDataflowStore.getState().updateCache('market:index', { price: 3000 })
+    useDataflowStore.getState().setConnected(true)
+
+    useDataflowStore.getState().reset()
+
+    const state = useDataflowStore.getState()
+    expect(state.connected).toBe(false)
+    expect(state.channels.size).toBe(0)
+    expect(state.cache.size).toBe(0)
+    expect(mockGetStats).toHaveBeenCalled()
+  })
 })
 
 // ============================================================

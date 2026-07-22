@@ -551,4 +551,47 @@ describe('intelligentScoreStore', () => {
     expect(state.progressMessage).toBe('')
     expect(state.error).toBe('')
   })
+
+  test('reset 将所有关键状态字段重置为初始值', () => {
+    useIntelligentScoreStore.setState({
+      symbol: '600519',
+      files: [new File(['test'], 'test.txt', { type: 'text/plain' })],
+      reportText: '报告',
+      llmConfig: { baseURL: 'https://api.test.com', apiKey: 'sk-test', model: 'test-model' },
+      showConfig: true,
+      progress: { fetchBasicData: 'done', v6EngineCalculation: 'done', readSupplementaryFiles: 'done', prepareReportText: 'done', llmAnalysis: 'done', parseScore: 'done', saveResult: 'done' },
+      progressMessage: '完成',
+      result: createMockIntelligentScore('600519', 4.5),
+      previousResult: createMockIntelligentScore('600519', 4.2),
+      history: [createMockIntelligentScore('600519', 4.5)],
+      logs: [{ traceId: '1', timestamp: Date.now(), actor: 'system', action: 'score', targetType: 'stock', targetCode: '600519' }],
+      error: '某错误',
+      loading: true,
+      trendData: { symbol: '600519', period: '1M', data: [] },
+      trendLoading: true,
+      trendError: '趋势错误',
+    })
+
+    const store = useIntelligentScoreStore.getState()
+    store.reset()
+
+    const state = useIntelligentScoreStore.getState()
+    expect(state.symbol).toBe('')
+    expect(state.stocks).toHaveLength(0)
+    expect(state.files).toHaveLength(0)
+    expect(state.reportText).toBe('')
+    expect(state.llmConfig.baseURL).toBe('')
+    expect(state.showConfig).toBe(false)
+    expect(state.progress.fetchBasicData).toBe('pending')
+    expect(state.progressMessage).toBe('')
+    expect(state.result).toBeUndefined()
+    expect(state.previousResult).toBeUndefined()
+    expect(state.history).toHaveLength(0)
+    expect(state.logs).toHaveLength(0)
+    expect(state.error).toBe('')
+    expect(state.loading).toBe(false)
+    expect(state.trendData).toBeUndefined()
+    expect(state.trendLoading).toBe(false)
+    expect(state.trendError).toBeNull()
+  })
 })
