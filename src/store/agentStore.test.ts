@@ -88,6 +88,9 @@ beforeEach(() => {
     registeredAgents: [],
     tasks: new Map(),
     stats: mockGetStats(),
+    triggerPayload: null,
+    taskFilter: {},
+    mcpCallHistory: [],
   })
 })
 
@@ -383,5 +386,107 @@ describe('agentStore', () => {
       expect(unsub).toHaveBeenCalledTimes(1)
     })
     expect(mockOn).toHaveBeenCalledTimes(12)
+  })
+
+  // ============================================================
+  // addMCPCallRecord
+  // ============================================================
+
+  it('addMCPCallRecord 添加 MCP 调用记录', () => {
+    const record = {
+      id: 'call-001',
+      taskId: 'task-001',
+      serverName: 'tushare',
+      toolName: 'daily_quote',
+      args: { code: '000001' },
+      startedAt: Date.now(),
+    } as never
+
+    useAgentStore.getState().addMCPCallRecord(record)
+
+    const history = useAgentStore.getState().mcpCallHistory
+    expect(history).toHaveLength(1)
+    expect(history[0]).toMatchObject({ id: 'call-001', serverName: 'tushare' })
+  })
+
+  it('addMCPCallRecord 超过上限时淘汰最早记录', () => {
+    // MCP_CALL_HISTORY_MAX_SIZE = 100
+    for (let i = 0; i < 102; i++) {
+      useAgentStore.getState().addMCPCallRecord({
+        id: `call-${i}`,
+        taskId: 'task-001',
+        serverName: 'test-server',
+        toolName: 'test-tool',
+        args: {},
+        startedAt: Date.now(),
+      } as never)
+    }
+
+    const history = useAgentStore.getState().mcpCallHistory
+    expect(history).toHaveLength(100)
+    // 最早的两条应被淘汰，保留下来的第一条是 call-2
+    expect(history[0]).toMatchObject({ id: 'call-2' })
+    expect(history[99]).toMatchObject({ id: 'call-101' })
+  })
+
+  // ============================================================
+  // clearMCPCallHistory
+  // ============================================================
+
+  it('clearMCPCallHistory 清空所有 MCP 调用记录', () => {
+    useAgentStore.getState().addMCPCallRecord({
+      id: 'call-001',
+      taskId: 'task-001',
+      serverName: 'tushare',
+      toolName: 'daily_quote',
+      args: {},
+      startedAt: Date.now(),
+    } as never)
+    useAgentStore.getState().addMCPCallRecord({
+      id: 'call-002',
+      taskId: 'task-002',
+      serverName: 'tushare',
+      toolName: 'stock_basic',
+      args: {},
+      startedAt: Date.now(),
+    } as never)
+    expect(useAgentStore.getState().mcpCallHistory).toHaveLength(2)
+
+    useAgentStore.getState().clearMCPCallHistory()
+
+    expect(useAgentStore.getState().mcpCallHistory).toEqual([])
+  })
+
+  // ============================================================
+  // setTriggerPayload
+  // ============================================================
+
+  it('setTriggerPayload 设置触发参数', () => {
+    const payload = { agentId: 'strategy-agent', params: { symbol: '000001' } } as never
+
+    useAgentStore.getState().setTriggerPayload(payload)
+
+    expect(useAgentStore.getState().triggerPayload).toEqual(payload)
+  })
+
+  it('setTriggerPayload 设为 null 清除触发参数', () => {
+    useAgentStore.getState().setTriggerPayload({ agentId: 'test' } as never)
+    expect(useAgentStore.getState().triggerPayload).not.toBeNull()
+
+    useAgentStore.getState().setTriggerPayload(null)
+
+    expect(useAgentStore.getState().triggerPayload).toBeNull()
+  })
+
+  // ============================================================
+  // setTaskFilter
+  // ============================================================
+
+  it('setTaskFilter 设置任务筛选器', () => {
+    const filter = { status: 'running', agentId: 'strategy-agent' } as never
+
+    useAgentStore.getState().setTaskFilter(filter)
+
+    expect(useAgentStore.getState().taskFilter).toEqual(filter)
   })
 })

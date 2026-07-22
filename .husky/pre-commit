@@ -28,84 +28,96 @@ echo ""
 echo "🧭 [skill-router] 技能路由匹配（提醒模式）..."
 node scripts/skill-router.cjs --remind --log || true
 
-# 2. lint-staged：仅对暂存区文件运行 ESLint --fix
+# 2. 环境路径守卫：拦截写死 C:/Users/xxx 的提交
 echo ""
-echo "🧹 [1/16] 运行 lint-staged（ESLint --fix）..."
+echo "🛡️  [env-check] 运行环境路径守卫（拦截硬编码用户路径）..."
+npm run env:check
+ENV_CHECK_EXIT=$?
+if [ "$ENV_CHECK_EXIT" -ne 0 ]; then
+  echo ""
+  echo "❌ env-path-guard 拦截：提交中包含写死的 Windows 用户目录绝对路径。"
+  echo "   请先修正后再提交。详情见上方扫描报告。"
+  exit 1
+fi
+
+# 3. lint-staged：仅对暂存区文件运行 ESLint --fix
+echo ""
+echo "🧹 [2/17] 运行 lint-staged（ESLint --fix）..."
 npx lint-staged
 
 # 3. 颜色硬编码门禁
 echo ""
-echo "🎨 [2/16] 运行 lint:colors（颜色硬编码检查）..."
+echo "🎨 [3/17] 运行 lint:colors（颜色硬编码检查）..."
 ESLINT_RUN --config eslint.colors.config.js src/
 
 # 4. 生产类型检查
 echo ""
-echo "🔍 [3/16] 运行 tsc:prod（生产类型检查）..."
+echo "🔍 [4/17] 运行 tsc:prod（生产类型检查）..."
 TSC_RUN -p tsconfig.prod.json --noEmit
 
 # 5. 分层调用审计
 echo ""
-echo "🏗️ [4/16] 运行 audit:layers（禁止跨层调用）..."
+echo "🏗️ [5/17] 运行 audit:layers（禁止跨层调用）..."
 TSX_RUN scripts/audit/audit-layer-calls.ts
 
 # 6. 原子组件层级边界审计
 echo ""
-echo "⚛️ [5/16] 运行 audit:atomic（原子层级边界检查）..."
+echo "⚛️ [6/17] 运行 audit:atomic（原子层级边界检查）..."
 TSX_RUN scripts/audit/audit-atomic.ts
 
 # 7. 数据库定义交叉引用审计
 echo ""
-echo "🗄️ [6/16] 运行 audit:db-references（数据库定义交叉引用审计）..."
+echo "🗄️ [7/17] 运行 audit:db-references（数据库定义交叉引用审计）..."
 TSX_RUN scripts/audit/audit-db-references.ts
 
 # 8. Agent → MCP Server 绑定一致性审计（警告模式：2 个预存 direct-service-import 待修复，非本次引入，不阻断）
 echo ""
-echo "🔗 [7/16] 运行 audit:mcp（Agent→MCP 绑定一致性 / 悬空 Agent 检查）..."
+echo "🔗 [8/17] 运行 audit:mcp（Agent→MCP 绑定一致性 / 悬空 Agent 检查）..."
 TSX_RUN scripts/audit/audit-mcp.ts || true
 
 # 9. 文档规范检查（告警模式：41 个预存白名单违规待修复，含 docs-backup-*/、.gitattributes、tsconfig.prod.json 等）
 echo ""
-echo "📋 [8/16] 运行 file:check（文档规范检查）..."
+echo "📋 [9/17] 运行 file:check（文档规范检查）..."
 NODE_RUN scripts/docs-tool/check-docs.js || true
 
 # 10. 文档门禁
 echo ""
-echo "🔒 [9/16] 运行 doc:gate（文档门禁检查）..."
+echo "🔒 [10/17] 运行 doc:gate（文档门禁检查）..."
 TSX_RUN scripts/doc-gatekeeper.ts
 
 # 11. 文档同步审计（warn 模式）
 echo ""
-echo "📝 [10/16] 运行 audit:docs（文档同步检查）..."
+echo "📝 [11/17] 运行 audit:docs（文档同步检查）..."
 TSX_RUN scripts/audit/audit-doc-sync.ts && TSX_RUN scripts/audit/audit-version-drift.ts || true
 
 # 12. 设计令牌映射校验
 echo ""
-echo "🎨 [11/16] 运行 verify:tokens（设计令牌映射校验）..."
+echo "🎨 [12/17] 运行 verify:tokens（设计令牌映射校验）..."
 TSX_RUN scripts/verify-design-tokens.ts
 
 # 13. 令牌消费审计
 echo ""
-echo "🪙 [12/16] 运行 audit:tokens（令牌消费检查）..."
+echo "🪙 [13/17] 运行 audit:tokens（令牌消费检查）..."
 TSX_RUN scripts/other/token-scan.cjs
 
 # 14. JSDoc 文档门禁（基线采集，当前不阻断）
 echo ""
-echo "📖 [13/16] 运行 audit:jsdoc（JSDoc 覆盖检查）..."
+echo "📖 [14/17] 运行 audit:jsdoc（JSDoc 覆盖检查）..."
 TSX_RUN scripts/audit/audit-jsdoc.ts || true
 
 # 15. 驾驶舱 Widget 三处注册一致性审计（tsx 段错误容错）
 echo ""
-echo "🧩 [14/16] 运行 audit:widget-registry（Widget 三处注册一致性检查）..."
+echo "🧩 [15/17] 运行 audit:widget-registry（Widget 三处注册一致性检查）..."
 TSX_RUN scripts/audit/audit-widget-registry.ts || true
 
 # 16. AI 输出校验门禁（tsx 段错误容错）
 echo ""
-echo "🤖 [15/16] 运行 audit:ai-output（AI 输出三道校验检查）..."
+echo "🤖 [16/17] 运行 audit:ai-output（AI 输出三道校验检查）..."
 TSX_RUN scripts/audit/audit-ai-output.ts || true
 
 # 17. ACL 权限矩阵一致性审计（tsx 段错误容错）
 echo ""
-echo "🔐 [16/16] 运行 audit:acl-consistency（ACL 权限矩阵一致性检查）..."
+echo "🔐 [17/17] 运行 audit:acl-consistency（ACL 权限矩阵一致性检查）..."
 TSX_RUN scripts/audit/audit-acl-consistency.ts || true
 
 # 18. 文档目录-内容匹配（warn 模式）
@@ -133,5 +145,5 @@ fi
 
 echo ""
 echo "================================================"
-echo "✅ V9 预提交门禁全部通过（16/16 阻断项 + 3 warn 项），允许提交。"
+echo "✅ V9 预提交门禁全部通过（17/17 阻断项 + 3 warn 项），允许提交。"
 echo ""

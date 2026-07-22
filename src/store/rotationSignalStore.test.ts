@@ -158,3 +158,28 @@ describe('rotationSignalStore', () => {
     expect(notFound).toBeUndefined()
   })
 })
+
+describe('rotationSignalStore clearSignals', () => {
+  test('clearSignals 清空 signals 并恢复初始状态', () => {
+    // 先填充数据
+    loadTestSignals()
+    const now = Date.now()
+    useRotationSignalStore.setState({ loading: true, error: 'test error', lastUpdated: now })
+
+    // 验证状态已填充
+    const before = useRotationSignalStore.getState()
+    expect(before.signals.length).toBeGreaterThan(0)
+    expect(before.loading).toBe(true)
+    expect(before.error).toBe('test error')
+    expect(before.lastUpdated).toBe(now)
+
+    // 执行 clearSignals
+    useRotationSignalStore.getState().clearSignals()
+
+    const after = useRotationSignalStore.getState()
+    expect(after.signals).toHaveLength(0)
+    expect(after.loading).toBe(false)
+    expect(after.error).toBeNull()
+    expect(after.lastUpdated).toBe(0)
+  })
+})

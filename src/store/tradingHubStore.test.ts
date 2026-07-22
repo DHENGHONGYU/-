@@ -36,4 +36,36 @@ describe('useTradingHubStore', () => {
     expect(state.activeModule).toBe('')
     expect(state.loading).toBe(false)
   })
+
+  // ---------- 初始状态扩展验证 ----------
+
+  it('初始状态验证: activeModule 为空字符串, loading 为 false', () => {
+    const state = useTradingHubStore.getState()
+    expect(state.activeModule).toBe('')
+    expect(state.loading).toBe(false)
+    expect(typeof state.setActiveModule).toBe('function')
+    expect(typeof state.setLoading).toBe('function')
+    expect(typeof state.reset).toBe('function')
+  })
+
+  // ---------- setActiveModule 扩展 ----------
+
+  it('setActiveModule: 连续切换 activeModule 路径', () => {
+    useTradingHubStore.getState().setActiveModule('/trading/signals')
+    expect(useTradingHubStore.getState().activeModule).toBe('/trading/signals')
+
+    useTradingHubStore.getState().setActiveModule('/trading/backtest')
+    expect(useTradingHubStore.getState().activeModule).toBe('/trading/backtest')
+
+    useTradingHubStore.getState().setActiveModule('/trading/portfolio')
+    expect(useTradingHubStore.getState().activeModule).toBe('/trading/portfolio')
+  })
+
+  it('setActiveModule: 设置空字符串回到初始状态', () => {
+    useTradingHubStore.getState().setActiveModule('/trading/signals')
+    expect(useTradingHubStore.getState().activeModule).toBe('/trading/signals')
+
+    useTradingHubStore.getState().setActiveModule('')
+    expect(useTradingHubStore.getState().activeModule).toBe('')
+  })
 })
