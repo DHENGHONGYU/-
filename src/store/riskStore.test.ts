@@ -136,6 +136,29 @@ describe('riskStore', () => {
     expect(useRiskStore.getState().verdicts).toHaveLength(0)
   })
 
+  it('reset 将所有关键状态字段重置为初始值', async () => {
+    mockCheckOrderRisk.mockResolvedValue({ ok: false, warnings: [], blocks: ['测试阻塞'] })
+    await useRiskStore.getState().checkRisk(createMockInput())
+    useRiskStore.getState().setCircuitState('half-open')
+
+    expect(useRiskStore.getState().triState).toBe('blocked')
+    expect(useRiskStore.getState().circuitState).toBe('half-open')
+    expect(useRiskStore.getState().verdicts).toHaveLength(1)
+    expect(useRiskStore.getState().loading).toBe(false)
+    expect(useRiskStore.getState().error).toBeNull()
+    expect(useRiskStore.getState().lastChecked).toBeGreaterThan(0)
+
+    useRiskStore.getState().reset()
+
+    const state = useRiskStore.getState()
+    expect(state.triState).toBe('normal')
+    expect(state.circuitState).toBe('closed')
+    expect(state.verdicts).toEqual([])
+    expect(state.loading).toBe(false)
+    expect(state.error).toBeNull()
+    expect(state.lastChecked).toBe(0)
+  })
+
   it('recentVerdicts 返回最近 N 条', async () => {
     mockCheckOrderRisk.mockResolvedValue({ ok: true, warnings: [], blocks: [] })
     await useRiskStore.getState().checkRisk(createMockInput({ symbol: '000001' }))

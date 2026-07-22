@@ -327,4 +327,35 @@ describe('useStrategySnapshotStore', () => {
     useStrategySnapshotStore.getState().clearError()
     expect(useStrategySnapshotStore.getState().error).toBeNull()
   })
+
+  // ---------- reset ----------
+
+  it('reset: 重置后回到初始状态', () => {
+    useStrategySnapshotStore.setState({
+      activeTab: 'history',
+      stocks: [createMockStock()],
+      v6Scores: [createMockV6Score()],
+      rotationScores: [createMockRotationScore()],
+      items: { core: [createMockGroupItem()], hot: [], value: [] },
+      snapshots: [createMockSnapshot()],
+      selectedSnapshot: createMockSnapshot(),
+      loading: true,
+      saving: true,
+      error: '测试错误',
+    })
+
+    useStrategySnapshotStore.getState().reset()
+
+    const state = useStrategySnapshotStore.getState()
+    expect(state.activeTab).toBe('current')
+    expect(state.stocks).toEqual([])
+    expect(state.v6Scores).toEqual([])
+    expect(state.rotationScores).toEqual([])
+    expect(state.items).toEqual({ core: [], hot: [], value: [] })
+    expect(state.snapshots).toEqual([])
+    expect(state.selectedSnapshot).toBeNull()
+    expect(state.loading).toBe(false)
+    expect(state.saving).toBe(false)
+    expect(state.error).toBeNull()
+  })
 })
