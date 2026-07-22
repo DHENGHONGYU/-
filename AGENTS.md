@@ -37,9 +37,9 @@ code_version: 2.0.0
 >
 > **项目级 SKILL 索引**（按业务域分四类，category 字段见各 SKILL.md frontmatter 与 skill-registry.json）：
 > - **文档治理 doc-governance**：`doc-encoding-remediation`（文档编码乱码诊断与安全转码，GBK 二次损坏前置修复）
-> - **代码质量 code-quality**：`module-sync-checklist`（模块改动十域同步校对，交付闸口）、`bash-conventions`（Bash 执行规范与命令速查）、`tsc-gate-scope-audit`（tsc 门禁误锁诊断与修复，类型门禁作用域对齐）
+> - **代码质量 code-quality**：`module-sync-checklist`（模块改动十域同步校对，交付闸口）、`bash-conventions`（Bash 执行规范与命令速查）、`tsc-gate-scope-audit`（tsc 门禁误锁诊断与修复，类型门禁作用域对齐）、`tsc-test-error-diagnosis`（tsc:test 测试类型错误系统性诊断，契约漂移/严格空检/vi.mock 提升陷阱）
 > - **数据流 data-flow**：`collection-pipeline-testing`（采集链路测试）、`data-flow-integrity-audit`（数据流完整性审计）、`mock-data-diagnosis`（Mock 残留诊断）
-> - **部署运维 devops**：`devops-automation`（备份分支 + 批量部署）
+> - **部署运维 devops**：`devops-automation`（备份分支 + 批量部署）、`windows-env-path-doctor`（Windows 用户目录路径硬编码可移植诊断，DELL↔Huawei 迁移）
 
 ### 技能路由表（任务开始时必须先匹配，v1.5.3 新增）
 
@@ -51,10 +51,16 @@ code_version: 2.0.0
 | 新增 EnvelopeAction / 写入新 store、改动 `src/core/databridge*.ts` 或 `src/config/dbConfig.ts`、排查按钮无响应 / 假绿灯 / 跨板块数据异常 | `data-flow-integrity-audit` | mandatory | 该技能 §三 阶段 1–6 + `npm run audit:acl-consistency` |
 | 排查 Mock 残留 / 假数据 / 信息孤岛、Mock→真实切换、上线前 Mock 清理审计 | `mock-data-diagnosis` | advisory | 三维 Grep 扫描（每项 file:line 证据）+ 诊断报告归档 `outputs/` |
 | 定时备份、批量部署、注册周期任务、排查备份/部署失败 | `devops-automation` | advisory | 脚本零破坏性检查 + 敏感文件排除校验 |
+| 环境迁移 / 换电脑 / 用户目录绝对路径硬编码（C:/Users/<user>/...）、DELL↔Huawei 等多用户机器可移植、路径静默失效排查 | `windows-env-path-doctor` | advisory | `scripts/scan.cjs --verify-current` 输出可移植（crossUser=0 且 sameUserHardcode=0）+ 仅修 src/scripts/configs 真实硬编码，保留 .workbuddy/memory 病史叙述 |
 | 执行任何 Bash 命令、路径/解释器/门禁命令选择（全局生效） | `bash-conventions` | advisory | 按该技能 §4「执行后联动义务」表选必跑命令 |
 | 任何代码改动交付前（改动 `src/services|store|core|pages|components/**`）、重构/接口变更/重命名、新增 skill 或注册表变更 | `module-sync-checklist` | mandatory | 十域同步清单 + `npx tsc --noEmit` + `npm run tsc:prod` + `npm run audit:layers` + `npm run audit:acl-consistency` |
 | 发现文档乱码 / 中文变问号、准备执行文档链接修复（fix-doc-refs 等）前、排查 GBK 二次损坏风险 | `doc-encoding-remediation` | advisory | 三维 Grep（fix 脚本无硬编码 utf-8）+ 编码探测报告 + 复测 GBK_TOTAL=0（排除备份目录） |
+| 文件重命名 / 迁移后残留失效链接（僵尸路径）扫描、move 操作退回检查、doc-refs 修复前置 | `stale-path-reference-audit` | advisory | 九类文件（.ts/.tsx/.md/.json/.mjs/.cjs/.yaml/.yml/.sh）全仓 Grep 残留 + 排除生成物/备份噪声 + 交叉验证目标文件存在性；与 `docs/how-to/FILE-MANAGEMENT-GUIDE.md` §6.3 迁移 SOP 绑定 |
 | 改动 `tsconfig.json`/`tsconfig.prod.json`/`tsconfig.test.json`、`package.json` 的 tsc 脚本，或 husky `tsc:prod` 门禁报错且错误全在 `*.test.ts`/`*.test-utils.ts` | `tsc-gate-scope-audit` | advisory | 三步诊断（错误分类 + git status 归因）+ 修复后 `tsc:prod` 实测 0 错误 |
+| `npm run tsc:test` 退出码非 0、测试文件类型错误爆发（TS2305/TS2322/TS2339/TS2532/TS1011）、契约漂移 / vi.mock 提升陷阱 / 严格空检暴露 | `tsc-test-error-diagnosis` | advisory | 错误按 file:line 归类四大根因 + 修复后 `npm run tsc:test` 实测 0 错误且 `tsc:prod` 保持 0 |
+| 新增/修改 MCP Server 或 Tool、改动 `src/mcp/**`、排查 MCP 零调用残留（当前 6 个零调用 server） | `mcp-server-design-review` | mandatory | 该技能准入清单 + 目录结构合规 + `npm run audit:mcp` + `npm run audit:mcp-usage` + 相关 vitest |
+| 颜色令牌新增/重命名/废弃、令牌硬编码（HEX/裸色类）排查、改动 `src/constants/theme.tokens.ts` 或 `src/config/chartColors.ts` | `v9-color-token-remediation` | advisory | `npm run audit:tokens` + `npm run verify:colorSoT` + `npm run audit:hardcode` |
+| 文档链接修复前置、文档-代码一致性核查、文件迁移后残留扫描、文档计数/路径漂移排查 | `doc-code-dual-proofreading` | advisory | 三维 Grep（路径/状态/触发规则）+ `npm run audit:docs` + 交叉验证目标文件存在性 |
 
 > **变更纪律**：新增技能 = ① 新建 `.workbuddy/skills/<name>/SKILL.md`（frontmatter 含 `triggers`/`gates`/`mandatory`）→ ② 同步 `.workbuddy/skills/skill-registry.json`（L1 注册表）→ ③ 更新本索引与路由表 → ④ 跑 `npm run audit:skill-coverage` 校验三方一致。钩子状态：pre-commit 挂 `--remind --log`（提醒模式，命中记录写入 `.workbuddy/skills/usage.log`）；pre-push 挂 `--enforce --since <base>`（强制模式，mandatory 命中未确认即拦截，旁路 `SKILL_GATE_CONFIRM=1 git push`）。`npm run skill:route` 可随时手工查询。
 
@@ -81,7 +87,7 @@ src/hooks/        ← 自定义 React Hooks（跨组件共享逻辑；含 usePoo
 src/devtools/     ← 开发环境调试工具（DEV 注入）
 src/fixtures/     ← Mock 数据供给（测试数据）
 src/i18n/         ← 国际化配置与翻译资源
-src/mcp/          ← MCP 服务器层（20+ 子服务器：analysis/backstock/data-collector/...）
+src/mcp/          ← MCP 服务器层（15 个子服务器：analysis/backtest/data-collector/...）
 src/schema/       ← Zod/JSON Schema 校验定义（类型守卫扩展）
 src/showcase/     ← 组件展示页（开发环境专用，不进入生产构建）
 src/generated/    ← 代码自动生成产物（令牌/类型/脚本输出）
@@ -372,7 +378,7 @@ useEffect(() => {
 
 > **核心原则**：所有颜色值必须通过令牌系统引用，禁止在 `src/components/`、`src/pages/`、`src/cockpit/`、`src/apps/` 中直接书写 HEX 值或 Tailwind 颜色类名。
 >
-> **速查表**：`docs/design-token-mapping.md` 按业务场景给出 L1–L6 令牌的推荐 Import 与代码示例；`.vscode/token-snippets.code-snippets` 提供常用令牌的 VSCode 代码片段。
+> **速查表**：`docs/reference/design-token-mapping.md` 按业务场景给出 L1–L6 令牌的推荐 Import 与代码示例；`.vscode/token-snippets.code-snippets` 提供常用令牌的 VSCode 代码片段。
 
 #### 3.5.1 令牌层次结构（4 层）
 
@@ -1602,7 +1608,7 @@ FinSightV9 是**个人本地投研复盘工具**，定位决定了部署架构�
 ### 16.2 Python 环境选择（固化，禁止漂移）
 
 1. 项目 Python 脚本一律通过 `package.json` npm scripts 调用，解释器路径已固化为受管 venv：
-   `C:/Users/huawei/.workbuddy/binaries/python/envs/default/Scripts/python.exe`
+   `C:/Users/DELL/.workbuddy/binaries/python/envs/default/Scripts/python.exe`
    （现有 `build:stock-dict`、`build:sw-industry` 等脚本即此模式）。
 2. 新增 Python 脚本入口必须登记为 npm script 并沿用同一路径，禁止在脚本、文档、提示词中引入第二个 Python 解释器路径。
 3. 禁止向系统 Python 或受管 venv 安装项目依赖；任何 `pip install` 需用户显式确认。

@@ -229,8 +229,8 @@ date: 2026-07-17
 |---------|---------|---------|--------|
 | **数据字典** | docs/data-dictionary-index.md | 类型定义变更 | AI自主 |
 | **数据字典** | docs/v9核心数据字典与类型定义(整合版).md | 数据模型变更 | AI自主 |
-| **数据字典** | docs/cockpit/data-definition.md | 驾驶舱数据变更 | AI自主 |
-| **数据字典** | docs/news/data-definition.md | 新闻数据变更 | AI自主 |
+| **数据字典** | docs/reference/cockpit/data-definition.md | 驾驶舱数据变更 | AI自主 |
+| **数据字典** | docs/reference/news/data-definition.md | 新闻数据变更 | AI自主 |
 | **数据字典** | docs/trade/api-contract.md | 交易接口变更 | AI自主 |
 | **数据定义** | docs/02-functional-specs.md | 功能规格变更 | 人工确认 |
 | **数据定义** | docs/05-engine-specs.md | 引擎规格变更 | 人工确认 |
