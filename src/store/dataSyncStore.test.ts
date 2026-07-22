@@ -157,4 +157,119 @@ describe('useDataSyncStore', () => {
     expect(state.totalFileImports).toBe(0)
     expect(state.totalConflicts).toBe(0)
   })
+
+  // --------------------------------------------------------
+  // updateSchedule
+  // --------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-DS-update-01 */
+  it('updateSchedule: 更新已有调度配置', () => {
+    const schedule = createMockSchedule({ scheduleId: 'sched-1', frequency: 'daily', enabled: true })
+    useDataSyncStore.getState().addSchedule(schedule)
+
+    useDataSyncStore.getState().updateSchedule('sched-1', { frequency: 'weekly', enabled: false })
+
+    const state = useDataSyncStore.getState()
+    expect(state.schedules).toHaveLength(1)
+    expect(state.schedules[0]!.frequency).toBe('weekly')
+    expect(state.schedules[0]!.enabled).toBe(false)
+    expect(mockWithBroadcast).toHaveBeenCalledWith('collection-wizard-changed', {
+      action: 'updateSchedule',
+      scheduleId: 'sched-1',
+    })
+  })
+
+  /** @test_id V9-TEST-ST-DS-update-02 */
+  it('updateSchedule: 更新不存在的调度配置（无副作用）', () => {
+    useDataSyncStore.getState().addSchedule(createMockSchedule({ scheduleId: 'sched-1' }))
+
+    useDataSyncStore.getState().updateSchedule('non-existent', { frequency: 'hourly' })
+
+    const state = useDataSyncStore.getState()
+    expect(state.schedules).toHaveLength(1)
+    // 原配置不变
+    expect(state.schedules[0]!.frequency).toBe('daily')
+  })
+
+  // --------------------------------------------------------
+  // removeSchedule
+  // --------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-DS-remove-01 */
+  it('removeSchedule: 删除已有调度配置', () => {
+    useDataSyncStore.getState().addSchedule(createMockSchedule({ scheduleId: 'sched-1' }))
+    useDataSyncStore.getState().addSchedule(createMockSchedule({ scheduleId: 'sched-2' }))
+
+    useDataSyncStore.getState().removeSchedule('sched-1')
+
+    const state = useDataSyncStore.getState()
+    expect(state.schedules).toHaveLength(1)
+    expect(state.schedules[0]!.scheduleId).toBe('sched-2')
+    expect(mockWithBroadcast).toHaveBeenCalledWith('collection-wizard-changed', {
+      action: 'removeSchedule',
+      scheduleId: 'sched-1',
+    })
+  })
+
+  /** @test_id V9-TEST-ST-DS-remove-02 */
+  it('removeSchedule: 删除不存在的调度配置（无副作用）', () => {
+    useDataSyncStore.getState().addSchedule(createMockSchedule({ scheduleId: 'sched-1' }))
+
+    useDataSyncStore.getState().removeSchedule('non-existent')
+
+    expect(useDataSyncStore.getState().schedules).toHaveLength(1)
+  })
+
+  // --------------------------------------------------------
+  // loadHistory 边界场景
+  // --------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-DS-load-01 */
+  it('loadHistory: 支持自定义 limit 参数', async () => {
+    await useDataSyncStore.getState().loadHistory(50)
+
+    expect(mockLogger.info).toHaveBeenCalledWith('[dataSyncStore] 加载历史记录', { limit: 50 })
+  })
+
+  /** @test_id V9-TEST-ST-DS-load-02 */
+  it('loadHistory: try 块异常时进入 catch 并记录错误', async () => {
+    // 让 try 块内的 logger.info 抛出，触发 catch 分支
+    mockLogger.info.mockImplementationOnce(() => {
+      throw new Error('logger boom')
+    })
+
+    await useDataSyncStore.getState().loadHistory(30)
+
+    expect(mockLogger.error).toHaveBeenCalledWith('[dataSyncStore] 加载历史失败', {
+      error: 'Error: logger boom',
+    })
+    expect(useDataSyncStore.getState().historyLoading).toBe(false)
+  })
+
+  // --------------------------------------------------------
+  // addHistoryEntry 边界场景
+  // --------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-DS-hist-01 */
+  it('addHistoryEntry: manual-trigger 通道不增加 auto/file 计数', () => {
+    const entry = createMockHistoryEntry({ id: 'hist-m', channel: 'manual-trigger' })
+    useDataSyncStore.getState().addHistoryEntry(entry)
+
+    const state = useDataSyncStore.getState()
+    expect(state.lastSyncChannel).toBe('manual-trigger')
+    expect(state.totalAutoCollects).toBe(0)
+    expect(state.totalFileImports).toBe(0)
+  })
+
+  /** @test_id V9-TEST-ST-DS-hist-02 */
+  it('addHistoryEntry: 历史记录最多保留 200 条', () => {
+    for (let i = 0; i < 210; i++) {
+      useDataSyncStore.getState().addHistoryEntry(
+        createMockHistoryEntry({ id: `hist-${i}` }),
+      )
+    }
+    expect(useDataSyncStore.getState().history).toHaveLength(200)
+    // 最新的在前
+    expect(useDataSyncStore.getState().history[0]!.id).toBe('hist-209')
+  })
 })

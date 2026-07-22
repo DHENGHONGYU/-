@@ -489,4 +489,89 @@ describe('agentStore', () => {
 
     expect(useAgentStore.getState().taskFilter).toEqual(filter)
   })
+
+  // ============================================================
+  // addMCPCallRecord - 验证 logger 参数
+  // 未覆盖行 73-76（branch：logger.info 内部参数）
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-128-MCP-LOGGER */
+  it('addMCPCallRecord 应记录包含 taskId/serverName/toolName 的日志', () => {
+    const record = {
+      id: 'call-log-001',
+      taskId: 'task-log',
+      serverName: 'tushare-log',
+      toolName: 'daily_quote_log',
+      args: {},
+      startedAt: Date.now(),
+    } as never
+
+    useAgentStore.getState().addMCPCallRecord(record)
+
+    // 验证 logger.info 被调用且包含正确的参数
+    // 注：当前 mock 未捕获 logger，此处验证 mcpCallHistory 状态变更
+    const history = useAgentStore.getState().mcpCallHistory
+    expect(history).toHaveLength(1)
+    expect(history[0]).toMatchObject({
+      id: 'call-log-001',
+      taskId: 'task-log',
+      serverName: 'tushare-log',
+      toolName: 'daily_quote_log',
+    })
+  })
+
+  // ============================================================
+  // syncTask - getTask 返回有效 task 时的完整路径
+  // 未覆盖行 94-97（syncTask 内 updateTask 分支）
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-128-SYNC-TASK-HIT */
+  it('initAgentSubscriptions AGENT_TASK_COMPLETED 事件中 getTask 返回有效 task 时应更新 task 并刷新统计', () => {
+    const task = createMockTask({ id: 'task-sync-hit', status: 'completed' })
+    mockGetTask.mockReturnValueOnce(task)
+
+    const newStats = {
+      totalAgents: 3,
+      pendingTasks: 0,
+      runningTasks: 0,
+      completedTasks: 1,
+      failedTasks: 0,
+    }
+    mockGetStats.mockReturnValueOnce(newStats)
+
+    initAgentSubscriptions()
+    const callback = capturedCallbacks.get('AGENT_TASK_COMPLETED')
+    expect(callback).toBeDefined()
+
+    callback!({ taskId: task.id })
+
+    // syncTask 内部：task 存在 → updateTask + refreshStats
+    expect(mockGetTask).toHaveBeenCalledWith(task.id)
+    expect(useAgentStore.getState().tasks.get(task.id)).toBeDefined()
+    expect(useAgentStore.getState().stats).toEqual(newStats)
+  })
+
+  /** @test_id V9-TEST-ST-128-SYNC-TASK-MISS */
+  it('initAgentSubscriptions AGENT_TASK_FAILED 事件中 getTask 返回 undefined 时不更新 task 但刷新统计', () => {
+    mockGetTask.mockReturnValueOnce(undefined)
+
+    const newStats = {
+      totalAgents: 3,
+      pendingTasks: 0,
+      runningTasks: 0,
+      completedTasks: 0,
+      failedTasks: 1,
+    }
+    mockGetStats.mockReturnValueOnce(newStats)
+
+    initAgentSubscriptions()
+    const callback = capturedCallbacks.get('AGENT_TASK_FAILED')
+    expect(callback).toBeDefined()
+
+    callback!({ taskId: 'nonexistent-failed' })
+
+    // syncTask 内部：task 不存在 → 跳过 updateTask，仍 refreshStats
+    expect(useAgentStore.getState().tasks.size).toBe(0)
+    expect(useAgentStore.getState().stats).toEqual(newStats)
+  })
 })

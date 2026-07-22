@@ -17,18 +17,38 @@
   * @covers_docs [V9-DOC-BACK-020]
 */
 
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
 import {
   useIndustryScoreStore,
   selectConfigReady,
   selectSelectedSector,
+  initIndustryScoreStoreSubscriptions,
+  destroyIndustryScoreStoreSubscriptions,
 } from './industryScoreStore'
 import { runIndustryScore } from '@/services/scoring/industryScoreService'
 import {
   loadIndustryScoreHistory,
   loadResearchLogsForTarget,
 } from '@/services/analysis/scorePageService'
+import { ENVELOPE_ACTION } from '@/config/dbConfig'
 import type { IndustryScore, ResearchLog } from '@/data/types'
+
+// ============================================================
+// Mock: dataBridge —— 用于订阅生命周期测试
+// ============================================================
+
+const { mockDataBridgeSubscribe, mockDataBridgeUnsubscribe } = vi.hoisted(() => ({
+  mockDataBridgeSubscribe: vi.fn(),
+  mockDataBridgeUnsubscribe: vi.fn(),
+}))
+
+vi.mock('@/core/databridge', () => ({
+  dataBridge: {
+    subscribe: mockDataBridgeSubscribe.mockReturnValue(mockDataBridgeUnsubscribe),
+    forward: vi.fn(),
+    query: vi.fn(),
+  },
+}))
 
 vi.mock('@/services/scoring/industryScoreService', () => ({
   runIndustryScore: vi.fn(),
@@ -628,5 +648,218 @@ describe('industryScoreStore', () => {
     expect(state.logs).toHaveLength(0)
     expect(state.error).toBe('')
     expect(state.loading).toBe(false)
+  })
+})
+
+// ============================================================
+// Setter Actions（覆盖 280-297）
+// ============================================================
+
+describe('industryScoreStore - Setter Actions', () => {
+  /**
+   * @test_id V9-TEST-ST-139-SET-01
+   * setResult 设置评分结果
+   * 覆盖行 279-282
+   */
+  test('setResult 设置评分结果', () => {
+    const score = createMockIndustryScore('AI', 4.5)
+    useIndustryScoreStore.getState().setResult(score)
+    expect(useIndustryScoreStore.getState().result).toEqual(score)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-139-SET-02
+   * setResult 设置 undefined 清空结果
+   */
+  test('setResult 设置 undefined 清空结果', () => {
+    useIndustryScoreStore.setState({ result: createMockIndustryScore('AI', 4.5) })
+    useIndustryScoreStore.getState().setResult(undefined)
+    expect(useIndustryScoreStore.getState().result).toBeUndefined()
+  })
+
+  /**
+   * @test_id V9-TEST-ST-139-SET-03
+   * setPreviousResult 设置上一次结果
+   * 覆盖行 284
+   */
+  test('setPreviousResult 设置上一次结果', () => {
+    const score = createMockIndustryScore('AI', 4.2)
+    useIndustryScoreStore.getState().setPreviousResult(score)
+    expect(useIndustryScoreStore.getState().previousResult).toEqual(score)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-139-SET-04
+   * setHistory 设置历史记录
+   * 覆盖行 286-289
+   */
+  test('setHistory 设置历史记录', () => {
+    const history = [createMockIndustryScore('AI', 4.5), createMockIndustryScore('SEMI', 3.8)]
+    useIndustryScoreStore.getState().setHistory(history)
+    expect(useIndustryScoreStore.getState().history).toEqual(history)
+    expect(useIndustryScoreStore.getState().history).toHaveLength(2)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-139-SET-05
+   * setHistory 设置空数组
+   */
+  test('setHistory 设置空数组', () => {
+    useIndustryScoreStore.setState({ history: [createMockIndustryScore('AI', 4.5)] })
+    useIndustryScoreStore.getState().setHistory([])
+    expect(useIndustryScoreStore.getState().history).toHaveLength(0)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-139-SET-06
+   * setLogs 设置日志列表
+   * 覆盖行 291
+   */
+  test('setLogs 设置日志列表', () => {
+    const logs: ResearchLog[] = [
+      { traceId: '1', timestamp: Date.now(), actor: 'system', action: 'score', targetType: 'industry', targetCode: 'AI' },
+    ]
+    useIndustryScoreStore.getState().setLogs(logs)
+    expect(useIndustryScoreStore.getState().logs).toEqual(logs)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-139-SET-07
+   * setError 设置错误信息
+   * 覆盖行 293
+   */
+  test('setError 设置错误信息', () => {
+    useIndustryScoreStore.getState().setError('评分服务不可用')
+    expect(useIndustryScoreStore.getState().error).toBe('评分服务不可用')
+  })
+
+  /**
+   * @test_id V9-TEST-ST-139-SET-08
+   * setLoading 设置加载状态
+   * 覆盖行 295
+   */
+  test('setLoading 设置加载状态', () => {
+    useIndustryScoreStore.getState().setLoading(true)
+    expect(useIndustryScoreStore.getState().loading).toBe(true)
+    useIndustryScoreStore.getState().setLoading(false)
+    expect(useIndustryScoreStore.getState().loading).toBe(false)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-139-SET-09
+   * clearError 清空错误信息
+   * 覆盖行 297
+   */
+  test('clearError 清空错误信息', () => {
+    useIndustryScoreStore.getState().setError('测试错误')
+    useIndustryScoreStore.getState().clearError()
+    expect(useIndustryScoreStore.getState().error).toBe('')
+  })
+})
+
+// ============================================================
+// DataBridge 订阅生命周期（覆盖 438-462）
+// ============================================================
+
+describe('industryScoreStore - DataBridge 订阅生命周期', () => {
+  let subscribeCallback: (envelope: { meta: { action: string; traceId: string } }) => void
+
+  beforeEach(() => {
+    // 清理 mock 调用记录，确保每个测试从干净状态开始
+    mockDataBridgeSubscribe.mockClear()
+    mockDataBridgeUnsubscribe.mockClear()
+    // 初始化订阅并获取回调
+    initIndustryScoreStoreSubscriptions()
+    const calls = mockDataBridgeSubscribe.mock.calls
+    subscribeCallback = calls[calls.length - 1]![1]
+  })
+
+  afterEach(() => {
+    destroyIndustryScoreStoreSubscriptions()
+  })
+
+  /**
+   * @test_id V9-TEST-ST-139-SUB-01
+   * initIndustryScoreStoreSubscriptions 调用 dataBridge.subscribe
+   * 覆盖行 437-452
+   */
+  test('initIndustryScoreStoreSubscriptions 调用 dataBridge.subscribe', () => {
+    // beforeEach 已调用 init，验证 subscribe 被调用
+    expect(mockDataBridgeSubscribe).toHaveBeenCalledWith('industry_scores', expect.any(Function))
+  })
+
+  /**
+   * @test_id V9-TEST-ST-139-SUB-02
+   * 订阅回调收到 saveIndustryScores action 时不抛错
+   * 覆盖行 444-448
+   */
+  test('订阅回调收到 saveIndustryScores action 正常处理', () => {
+    expect(() => {
+      subscribeCallback({ meta: { action: ENVELOPE_ACTION.saveIndustryScores, traceId: 'trace-1' } })
+    }).not.toThrow()
+  })
+
+  /**
+   * @test_id V9-TEST-ST-139-SUB-03
+   * 订阅回调收到其他 action 时不抛错
+   * 覆盖行 444（else 分支不进入 if）
+   */
+  test('订阅回调收到其他 action 不处理', () => {
+    expect(() => {
+      subscribeCallback({ meta: { action: 'OTHER_ACTION', traceId: 'trace-2' } })
+    }).not.toThrow()
+  })
+
+  /**
+   * @test_id V9-TEST-ST-139-SUB-04
+   * destroyIndustryScoreStoreSubscriptions 调用 unsubscribe 函数
+   * 覆盖行 459-463
+   */
+  test('destroyIndustryScoreStoreSubscriptions 调用 unsubscribe', () => {
+    // 此时 _unsubscribeIndustryScores 已由 beforeEach 中的 init 设置
+    // 先销毁
+    destroyIndustryScoreStoreSubscriptions()
+    expect(mockDataBridgeUnsubscribe).toHaveBeenCalledTimes(1)
+    // 再次销毁不应报错（_unsubscribeIndustryScores 已为 undefined）
+    destroyIndustryScoreStoreSubscriptions()
+    expect(mockDataBridgeUnsubscribe).toHaveBeenCalledTimes(1)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-139-SUB-05
+   * 重复调用 initIndustryScoreStoreSubscriptions 先销毁旧订阅
+   * 覆盖行 438（destroyIndustryScoreStoreSubscriptions 调用）
+   */
+  test('重复调用 init 先销毁旧订阅再创建新订阅', () => {
+    // beforeEach 已调用一次 init，subscribe 被调用 1 次
+    const callsBefore = mockDataBridgeSubscribe.mock.calls.length
+    const unsubCallsBefore = mockDataBridgeUnsubscribe.mock.calls.length
+
+    // 再次调用 init —— 应先销毁旧订阅
+    initIndustryScoreStoreSubscriptions()
+
+    // 旧 unsubscribe 被调用
+    expect(mockDataBridgeUnsubscribe.mock.calls.length).toBe(unsubCallsBefore + 1)
+    // 新 subscribe 被调用
+    expect(mockDataBridgeSubscribe.mock.calls.length).toBe(callsBefore + 1)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-139-SUB-06
+   * initIndustryScoreStoreSubscriptions 返回的 cleanup 函数等价于 destroy
+   * 覆盖行 452
+   */
+  test('init 返回的 cleanup 函数调用 destroy', () => {
+    // 先销毁 beforeEach 中的订阅
+    destroyIndustryScoreStoreSubscriptions()
+    const unsubCallsAfterDestroy = mockDataBridgeUnsubscribe.mock.calls.length
+
+    // 重新初始化并获取 cleanup
+    const cleanup = initIndustryScoreStoreSubscriptions()
+    expect(typeof cleanup).toBe('function')
+
+    // 调用 cleanup —— 应触发 unsubscribe
+    cleanup()
+    expect(mockDataBridgeUnsubscribe.mock.calls.length).toBe(unsubCallsAfterDestroy + 1)
   })
 })

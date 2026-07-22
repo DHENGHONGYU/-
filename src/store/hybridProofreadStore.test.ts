@@ -154,4 +154,89 @@ describe('useHybridProofreadStore', () => {
     expect(state.scanProgress).toBe(0)
     expect(state.error).toBe('Scan cancelled')
   })
+
+  // ============================================================
+  // syncRules —— 规则同步
+  // ============================================================
+  describe('syncRules', () => {
+    beforeEach(() => {
+      // clearReport 不重置 isSyncingRules，需显式重置避免并发锁测试污染后续用例
+      useHybridProofreadStore.setState({ isSyncingRules: false })
+    })
+
+    // @test_id 追加：syncRules 成功/并发锁/异常路径
+    it('成功：应更新 rulesVersion 和 rules 并记录日志', async () => {
+      const mockRules = [{ id: 'r1', name: '规则1' }]
+      mockSyncRules.mockResolvedValueOnce({ updated: true, latest_version: '2.0.0' })
+      mockGetRules.mockReturnValue(mockRules)
+
+      await useHybridProofreadStore.getState().syncRules()
+
+      const state = useHybridProofreadStore.getState()
+      expect(state.rulesVersion).toBe('2.0.0')
+      expect(state.rules).toEqual(mockRules)
+      expect(state.isSyncingRules).toBe(false)
+      expect(mockLogger.info).toHaveBeenCalledWith('[HybridProofreadStore] Rules synced', {
+        updated: true,
+        version: '2.0.0',
+        ruleCount: 1,
+      })
+    })
+
+    it('并发锁：isSyncingRules=true 时应跳过并 warn', async () => {
+      useHybridProofreadStore.setState({ isSyncingRules: true })
+
+      await useHybridProofreadStore.getState().syncRules()
+
+      expect(mockSyncRules).not.toHaveBeenCalled()
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        '[HybridProofreadStore] Rules sync already in progress',
+      )
+    })
+
+    it('异常：ruleEngine.syncRules 抛出 Error 时应记录错误并重置 isSyncingRules', async () => {
+      mockSyncRules.mockRejectedValueOnce(new Error('同步失败'))
+
+      await useHybridProofreadStore.getState().syncRules()
+
+      expect(useHybridProofreadStore.getState().isSyncingRules).toBe(false)
+      expect(mockLogger.error).toHaveBeenCalledWith(
+        '[HybridProofreadStore] Rules sync failed',
+        { error: '同步失败' },
+      )
+    })
+
+    it('异常：非 Error 对象应使用 String(error)', async () => {
+      mockSyncRules.mockRejectedValueOnce('字符串错误')
+
+      await useHybridProofreadStore.getState().syncRules()
+
+      expect(mockLogger.error).toHaveBeenCalledWith(
+        '[HybridProofreadStore] Rules sync failed',
+        { error: '字符串错误' },
+      )
+    })
+  })
+
+  // ============================================================
+  // refreshRules —— 规则刷新
+  // ============================================================
+  describe('refreshRules', () => {
+    // @test_id 追加：refreshRules 从 ruleEngine 刷新
+    it('应从 ruleEngine 刷新 rules 和 rulesVersion 并记录日志', () => {
+      const mockRules = [{ id: 'r1' }, { id: 'r2' }]
+      mockGetRules.mockReturnValue(mockRules)
+      mockGetCurrentVersion.mockReturnValue('3.0.0')
+
+      useHybridProofreadStore.getState().refreshRules()
+
+      const state = useHybridProofreadStore.getState()
+      expect(state.rules).toEqual(mockRules)
+      expect(state.rulesVersion).toBe('3.0.0')
+      expect(mockLogger.info).toHaveBeenCalledWith('[HybridProofreadStore] Rules refreshed', {
+        ruleCount: 2,
+        version: '3.0.0',
+      })
+    })
+  })
 })
