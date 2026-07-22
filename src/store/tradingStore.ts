@@ -294,7 +294,7 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
     useWatchlistStore.getState().reset()
     useSignalAdviceStore.getState().reset()
     usePortfolioStore.getState().reset()
-    useOrderStore.getState().reset()
+    // 注意：orderStore 是总账本（持久化订单流水），reset 不调用其 reset，避免清空订单历史
     set({ ...initialState, processingSymbols: new Set<string>() })
   },
 }))

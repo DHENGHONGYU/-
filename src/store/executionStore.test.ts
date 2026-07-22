@@ -723,4 +723,30 @@ describe('useExecutionStore', () => {
       expect(mockCreateSellOrder).not.toHaveBeenCalled()
     })
   })
+
+  // ---- reset ----
+  describe('reset', () => {
+    it('reset 将所有关键状态字段重置为初始值', () => {
+      const plan = createPlan({ id: 'plan-reset', phase: 'plan' })
+      useExecutionStore.setState({
+        plans: [plan],
+        activePlans: [plan],
+        isProcessing: true,
+        error: 'err',
+        isRefreshing: true,
+        lastUpdated: 12345,
+      })
+
+      useExecutionStore.getState().reset()
+
+      const state = useExecutionStore.getState()
+      expect(state.plans).toEqual(initialState.plans)
+      expect(state.activePlans).toEqual(initialState.activePlans)
+      expect(state.isProcessing).toBe(initialState.isProcessing)
+      expect(state.loading).toBe(initialState.loading)
+      expect(state.error).toBe(initialState.error)
+      expect(state.isRefreshing).toBe(initialState.isRefreshing)
+      expect(state.lastUpdated).toBe(initialState.lastUpdated)
+    })
+  })
 })

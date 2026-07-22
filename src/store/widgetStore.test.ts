@@ -407,4 +407,28 @@ describe('widgetStore', () => {
     })
     expect(mockOn).toHaveBeenCalledTimes(8)
   })
+
+  // ============================================================
+  // reset
+  // ============================================================
+
+  it('reset 后所有 Map 被清空', () => {
+    const config = createMockWidgetConfig()
+    useWidgetStore.setState({
+      instances: new Map([[config.instanceId, config]]),
+      runtimeStates: new Map([[config.instanceId, {
+        instanceId: config.instanceId,
+        widgetId: config.widgetId,
+        status: 'ready',
+      }]]),
+      dataHashes: new Map([['marketIndices_1', 'hash-1']]),
+    })
+
+    useWidgetStore.getState().reset()
+
+    const state = useWidgetStore.getState()
+    expect(state.instances.size).toBe(0)
+    expect(state.runtimeStates.size).toBe(0)
+    expect(state.dataHashes.size).toBe(0)
+  })
 })
