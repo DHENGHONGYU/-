@@ -43,6 +43,8 @@ vi.mock('@/store/helpers/withBroadcast', () => ({
 // ============================================================
 
 import { useAnalysisStore } from './analysisStore'
+import { listStocks } from '@/services/analysis/analysisService'
+import { runV6Score } from '@/services/scoring/v6ScoreService'
 
 // ============================================================
 // Setup
@@ -97,5 +99,74 @@ describe('useAnalysisStore', () => {
     expect(state.trendLoading).toBe(false)
     expect(state.trendError).toBeNull()
     expect(state.trendPeriod).toBe('month')
+  })
+
+  // ---------- loadStocks ----------
+
+  it('loadStocks: mock 返回数据后 stocks 填充', async () => {
+    const mockStocks = [
+      { symbol: '600519.SH', name: '贵州茅台' },
+      { symbol: '000858.SZ', name: '五粮液' },
+    ]
+    vi.mocked(listStocks).mockResolvedValue({ success: true, data: mockStocks as any })
+
+    await useAnalysisStore.getState().loadStocks()
+
+    const state = useAnalysisStore.getState()
+    expect(state.stocks).toHaveLength(2)
+    expect(state.stocks[0].symbol).toBe('600519.SH')
+    expect(state.loading).toBe(false)
+    expect(state.error).toBeNull()
+  })
+
+  it('loadStocks: 失败时设置 error', async () => {
+    vi.mocked(listStocks).mockResolvedValue({ success: false, error: '加载失败' })
+
+    await useAnalysisStore.getState().loadStocks()
+
+    const state = useAnalysisStore.getState()
+    expect(state.stocks).toEqual([])
+    expect(state.loading).toBe(false)
+    expect(state.error).toBe('加载失败')
+  })
+
+  // ---------- handleScore ----------
+
+  it('handleScore: mock 返回评分后 scores 填充', async () => {
+    const mockScore = { symbol: '600519.SH', score: 85, l1: 8, l2: 7 }
+    vi.mocked(runV6Score).mockResolvedValue({ success: true, data: mockScore as any })
+
+    await useAnalysisStore.getState().handleScore('600519.SH')
+
+    const state = useAnalysisStore.getState()
+    expect(state.scores).toHaveLength(1)
+    expect(state.scores[0].symbol).toBe('600519.SH')
+    expect(state.loading).toBe(false)
+  })
+
+  it('handleScore: 已有评分时更新而非追加', async () => {
+    useAnalysisStore.setState({
+      scores: [{ symbol: '600519.SH', score: 70 } as any],
+    })
+
+    const updatedScore = { symbol: '600519.SH', score: 90 }
+    vi.mocked(runV6Score).mockResolvedValue({ success: true, data: updatedScore as any })
+
+    await useAnalysisStore.getState().handleScore('600519.SH')
+
+    const state = useAnalysisStore.getState()
+    expect(state.scores).toHaveLength(1)
+    expect(state.scores[0].score).toBe(90)
+  })
+
+  // ---------- clearError ----------
+
+  it('clearError: 设置 error 后 clearError 断言 error=null', () => {
+    useAnalysisStore.setState({ error: '测试错误' })
+    expect(useAnalysisStore.getState().error).toBe('测试错误')
+
+    useAnalysisStore.getState().clearError()
+
+    expect(useAnalysisStore.getState().error).toBeNull()
   })
 })

@@ -14,6 +14,7 @@
 
 import STOCK_DICT, { type StockDictItem } from './stockDictionary'
 import { searchViaSmartbox } from './stockSearchClient'
+import { enrichStockDictItem } from './industryLookup'
 
 export interface MarketStockResult {
   symbol: string
@@ -21,6 +22,12 @@ export interface MarketStockResult {
   market: string
   /** 匹配来源：'dict'（本地字典）| 'smartbox'（API 回退） */
   source: 'dict' | 'smartbox'
+  /** 申万一级行业（仅 A 股字典匹配，smartbox 回退为 undefined） */
+  swL1?: string
+  /** 申万二级行业（仅 A 股字典匹配，smartbox 回退为 undefined） */
+  swL2?: string
+  /** 申万三级行业（仅 A 股字典匹配，smartbox 回退为 undefined） */
+  swL3?: string
 }
 
 /**
@@ -85,13 +92,19 @@ export async function searchFullMarket(
   // ---- Layer 1：本地字典搜索 ----
   const dictResults = searchLocalDict(trimmed)
 
-  // 将本地结果转换为统一格式
-  const localResults: MarketStockResult[] = dictResults.map((s) => ({
-    symbol: s.symbol,
-    name: s.name,
-    market: s.market,
-    source: 'dict' as const,
-  }))
+  // 将本地结果转换为统一格式，并附加申万行业分类
+  const localResults: MarketStockResult[] = dictResults.map((s) => {
+    const enriched = enrichStockDictItem(s)
+    return {
+      symbol: enriched.symbol,
+      name: enriched.name,
+      market: enriched.market,
+      source: 'dict' as const,
+      swL1: enriched.swL1,
+      swL2: enriched.swL2,
+      swL3: enriched.swL3,
+    }
+  })
 
   // 本地结果足够时（>= maxResults * 0.6），不调 API
   if (localResults.length >= Math.ceil(maxResults * 0.6)) {

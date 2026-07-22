@@ -5,7 +5,6 @@ import { useInputHubStore } from '@/store/inputHubStore'
 import type { StockSearchResult } from '@/services/input/inputService'
 import { INPUT_CONFIG } from '@/config/inputConfig'
 import { useToast } from '@/hooks/useToast'
-import { twText } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
 
 export interface StockSearchProps {
@@ -17,8 +16,7 @@ export interface StockSearchProps {
 }
 
 /**
- * 市场标签颜色映射
- * 使用语义化颜色令牌，避免硬编码 Tailwind 颜色类
+ * 市场标签映射
  */
 const MARKET_LABELS: Record<string, { label: string; className: string }> = {
   SH: { label: '沪', className: 'bg-yellow-100 text-yellow-800' },
@@ -28,9 +26,9 @@ const MARKET_LABELS: Record<string, { label: string; className: string }> = {
 }
 
 function getMarketLabel(industry: string | undefined): { label: string; className: string } {
-  if (!industry) return { label: '—', className: `${twText('gray', 500)} bg-gray-100` }
+  if (!industry) return { label: '—', className: 'bg-gray-100 text-gray-500' }
   const key = industry.toUpperCase()
-  return MARKET_LABELS[key] ?? { label: industry, className: `${twText('gray', 600)} bg-gray-100` }
+  return MARKET_LABELS[key] ?? { label: industry, className: 'bg-gray-100 text-gray-600' }
 }
 
 /**
@@ -61,9 +59,13 @@ export function StockSearch({
   const [results, setResults] = useState<StockSearchResult[]>([])
   const [open, setOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
+  // 记录最后交互方式：'mouse' | 'keyboard'，用于 mouseEnter 不覆盖键盘选中（P-mouseEnter 修复）
+  const lastInteractionRef = useRef<'mouse' | 'keyboard'>('mouse')
   const { toast } = useToast()
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
+  // P-blur 修复：保存 blur timeout ref 以便 mousedown 选项时取消
+  const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const clearSearchDebounce = (): void => {
     if (debounceRef.current) {
@@ -85,7 +87,8 @@ export function StockSearch({
     debounceRef.current = setTimeout(async () => {
       const matches = await storeSearchStocks(trimmed)
       setResults(matches)
-      setOpen(matches.length > 0)
+      // A1 修复：始终打开 listbox，由 listbox 内部根据 results.length 决定显示空态或选项
+      setOpen(true)
       setActiveIndex(matches.length > 0 ? 0 : -1)
     }, INPUT_CONFIG.search.debounceMs)
 
@@ -142,6 +145,9 @@ export function StockSearch({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (!open || results.length === 0) return
 
+    // P-mouseEnter 修复：键盘事件触发时标记最后交互为 keyboard
+    lastInteractionRef.current = 'keyboard'
+
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault()
@@ -165,6 +171,23 @@ export function StockSearch({
     }
   }
 
+  // P-blur 修复：点空白延迟关闭下拉（避免点选项时先 blur 关闭）
+  const handleBlur = (): void => {
+    if (blurTimeoutRef.current) clearTimeout(blurTimeoutRef.current)
+    blurTimeoutRef.current = setTimeout(() => {
+      setOpen(false)
+      setActiveIndex(-1)
+    }, 120)
+  }
+
+  // P-blur 修复：mousedown 选项时取消 blur 关闭（让 click 正常触发）
+  const handleOptionMouseDown = (): void => {
+    if (blurTimeoutRef.current) {
+      clearTimeout(blurTimeoutRef.current)
+      blurTimeoutRef.current = null
+    }
+  }
+
   return (
     <div className={cn('relative', className)}>
       <Input
@@ -175,6 +198,7 @@ export function StockSearch({
         onFocus={() => {
           if (results.length > 0) setOpen(true)
         }}
+        onBlur={handleBlur}
         placeholder={placeholder}
         aria-label={placeholder}
         disabled={isAddingStock}
@@ -192,6 +216,10 @@ export function StockSearch({
           role="listbox"
           className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-popover shadow-md"
         >
+          {/* A1 修复：搜索无匹配时显示"无匹配"提示 */}
+          {results.length === 0 && query.trim().length >= INPUT_CONFIG.search.minQueryLength && (
+            <div className="px-3 py-2 text-sm text-muted-foreground">无匹配结果</div>
+          )}
           {results.map((result, index) => {
             const marketInfo = getMarketLabel(result.industry)
             return (
@@ -205,8 +233,17 @@ export function StockSearch({
                   index === activeIndex && 'bg-accent',
                   isAddingStock && 'pointer-events-none opacity-50',
                 )}
+                onMouseDown={handleOptionMouseDown}
                 onClick={() => void handleSelect(result)}
-                onMouseEnter={() => setActiveIndex(index)}
+                onMouseEnter={() => {
+                  // P-mouseEnter 修复：仅当最后交互是鼠标时才覆盖 activeIndex
+                  if (lastInteractionRef.current === 'mouse') {
+                    setActiveIndex(index)
+                  } else {
+                    // 首次 hover 标记为 mouse 模式（之后才能覆盖）
+                    lastInteractionRef.current = 'mouse'
+                  }
+                }}
               >
                   <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -220,6 +257,12 @@ export function StockSearch({
                     <Badge variant="secondary" className="text-[10px]">已导入</Badge>
                   )}
                   </div>
+                  {/* 申万行业面包屑：仅当 swL1 存在时渲染（港股/未覆盖 A 股不显示） */}
+                  {result.swL1 && (
+                    <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                      {[result.swL1, result.swL2, result.swL3].filter(Boolean).join(' / ')}
+                    </div>
+                  )}
               </div>
             )
           })}
