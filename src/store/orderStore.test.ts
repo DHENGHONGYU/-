@@ -2,7 +2,7 @@
  * @test_id V9-TEST-ST-145
  * @covers_docs [V9-DOC-BACK-013, V9-DOC-BACK-005, V9-DOC-BACK-008, V9-DOC-DATA-013, V9-DOC-ARCH-008]
  */
-import { vi, describe, it, expect, beforeEach } from 'vitest'
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import type { Order } from '@/data/types'
 import {
   useOrderStore,
@@ -1039,5 +1039,117 @@ describe('initOrderStoreSubscriptions', () => {
     const cleanup = initOrderStoreSubscriptions()
     expect(typeof cleanup).toBe('function')
     cleanup()
+  })
+})
+
+// ============================================================
+// initOrderStoreSubscriptions - 订阅回调逻辑（覆盖 540-550, 560-561）
+// ============================================================
+
+describe('initOrderStoreSubscriptions - 订阅回调逻辑', () => {
+  let cleanup: () => void
+  let subscribeCallback: (envelope: { meta: { source: string; action: string; traceId: string } }) => void
+  let subscribeMock: ReturnType<typeof vi.fn>
+
+  beforeEach(async () => {
+    vi.useFakeTimers()
+    vi.clearAllMocks()
+    // 设置 mockQuery 默认返回成功，供去抖刷新使用
+    mockQuery.mockResolvedValue({ success: true, data: [] })
+    // 重置 store 状态
+    useOrderStore.getState().reset()
+    // 初始化订阅
+    cleanup = initOrderStoreSubscriptions()
+    // 获取订阅回调函数
+    const { dataBridge } = await import('@/core/databridge')
+    subscribeMock = dataBridge.subscribe as ReturnType<typeof vi.fn>
+    const calls = subscribeMock.mock.calls
+    subscribeCallback = calls[calls.length - 1]![1]
+  })
+
+  afterEach(() => {
+    cleanup()
+    vi.useRealTimers()
+  })
+
+  /**
+   * @test_id V9-TEST-ST-145-SUB-01
+   * source 过滤：当 envelope.meta.source === 'orderstore' 时跳过，不触发刷新
+   * 覆盖行 540-542
+   */
+  it('source 过滤：source === orderstore 时跳过刷新', () => {
+    subscribeCallback({ meta: { source: 'orderstore', action: 'INSERT_ORDER', traceId: 'trace-self' } })
+    // 立即检查 —— 不应有任何 query 调用
+    expect(mockQuery).not.toHaveBeenCalled()
+  })
+
+  /**
+   * @test_id V9-TEST-ST-145-SUB-02
+   * 订单变更 action（INSERT_ORDER）触发去抖刷新
+   * 覆盖行 544-550
+   */
+  it('变更 action 触发去抖刷新', async () => {
+    subscribeCallback({ meta: { source: 'external', action: 'INSERT_ORDER', traceId: 'trace-1' } })
+    // 推进去抖定时器（100ms + 缓冲）
+    await vi.advanceTimersByTimeAsync(200)
+    expect(mockQuery).toHaveBeenCalledTimes(1)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-145-SUB-03
+   * 非订单变更 action 不触发刷新
+   */
+  it('非变更 action 不触发刷新', async () => {
+    subscribeCallback({ meta: { source: 'external', action: 'UNKNOWN_ACTION', traceId: 'trace-2' } })
+    await vi.advanceTimersByTimeAsync(200)
+    expect(mockQuery).not.toHaveBeenCalled()
+  })
+
+  /**
+   * @test_id V9-TEST-ST-145-SUB-04
+   * 多次事件在去抖窗口内合并为一次刷新
+   */
+  it('去抖合并：100ms 内多次事件只刷新一次', async () => {
+    subscribeCallback({ meta: { source: 'external', action: 'INSERT_ORDER', traceId: 'trace-3' } })
+    subscribeCallback({ meta: { source: 'external', action: 'UPDATE_ORDER', traceId: 'trace-4' } })
+    subscribeCallback({ meta: { source: 'external', action: 'DELETE_ORDER', traceId: 'trace-5' } })
+    await vi.advanceTimersByTimeAsync(200)
+    expect(mockQuery).toHaveBeenCalledTimes(1)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-145-SUB-05
+   * cleanup 函数清除去抖定时器，阻止待执行的刷新
+   * 覆盖行 560-561
+   */
+  it('cleanup 清除去抖定时器，阻止待执行刷新', async () => {
+    subscribeCallback({ meta: { source: 'external', action: 'INSERT_ORDER', traceId: 'trace-6' } })
+    // 立即调用 cleanup（定时器尚未触发）
+    cleanup()
+    await vi.advanceTimersByTimeAsync(200)
+    // 定时器已被清除，刷新不应执行
+    expect(mockQuery).not.toHaveBeenCalled()
+  })
+
+  /**
+   * @test_id V9-TEST-ST-145-SUB-06
+   * tradeActionExecuted action 也触发去抖刷新
+   */
+  it('tradeActionExecuted action 触发去抖刷新', async () => {
+    subscribeCallback({ meta: { source: 'external', action: 'TRADE_ACTION_EXECUTED', traceId: 'trace-7' } })
+    await vi.advanceTimersByTimeAsync(200)
+    expect(mockQuery).toHaveBeenCalledTimes(1)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-145-SUB-07
+   * 重复初始化时跳过并返回已有清理函数
+   */
+  it('重复初始化时跳过并返回已有清理函数', () => {
+    const cleanup2 = initOrderStoreSubscriptions()
+    expect(typeof cleanup2).toBe('function')
+    // 不应再次调用 subscribe
+    expect(subscribeMock).toHaveBeenCalledTimes(1)
+    cleanup2()
   })
 })

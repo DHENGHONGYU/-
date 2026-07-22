@@ -13,7 +13,7 @@
   * @covers_docs [V9-DOC-ARCH-007, V9-DOC-BACK-015]
 */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 const { mockDataBridgeQuery } = vi.hoisted(() => {
   const mockDataBridgeQuery = vi.fn()
@@ -36,7 +36,8 @@ vi.mock('@/lib/logger', () => ({
   }),
 }))
 
-import { useSignalQualityStore, reviewsBySymbol, topSignalTypes } from './signalQualityStore'
+import { useSignalQualityStore, reviewsBySymbol, topSignalTypes, initSignalQualityStoreSubscriptions } from './signalQualityStore'
+import { MODULE_ID, ENVELOPE_ACTION } from '@/config/dbConfig'
 import type { Signal } from '@/data/types'
 
 function createMockSignal(overrides: Partial<Signal> = {}): Signal {
@@ -289,5 +290,147 @@ describe('signalQualityStore', () => {
 
     const topTypes = topSignalTypes()
     expect(topTypes).toEqual([])
+  })
+})
+
+// ============================================================
+// loadReviews - 查询失败路径（覆盖 217-219）
+// ============================================================
+
+describe('loadReviews - 查询失败路径', () => {
+  /**
+   * @test_id V9-TEST-ST-155-FAIL-01
+   * result.success === false 且 result.error 有值时，error 被设置
+   * 覆盖行 217-219
+   */
+  it('result.success=false 且 error 有值时设置 error', async () => {
+    mockDataBridgeQuery.mockResolvedValue({ success: false, error: '数据库连接超时' })
+    await useSignalQualityStore.getState().loadReviews()
+    const state = useSignalQualityStore.getState()
+    expect(state.error).toBe('数据库连接超时')
+    expect(state.loading).toBe(false)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-155-FAIL-02
+   * result.success === false 且 result.error 为空时，使用默认错误消息
+   * 覆盖行 217（?? '查询信号列表失败' 分支）
+   */
+  it('result.success=false 且无 error 时使用默认错误消息', async () => {
+    mockDataBridgeQuery.mockResolvedValue({ success: false })
+    await useSignalQualityStore.getState().loadReviews()
+    const state = useSignalQualityStore.getState()
+    expect(state.error).toBe('查询信号列表失败')
+    expect(state.loading).toBe(false)
+  })
+})
+
+// ============================================================
+// initSignalQualityStoreSubscriptions - 订阅生命周期（覆盖 289-318）
+// ============================================================
+
+describe('initSignalQualityStoreSubscriptions - 订阅生命周期', () => {
+  let cleanup: () => void
+  let subscribeCallback: (envelope: { meta: { source: string; action: string; traceId: string } }) => void
+
+  beforeEach(async () => {
+    // 获取订阅回调
+    cleanup = initSignalQualityStoreSubscriptions()
+    const { dataBridge } = await import('@/core/databridge')
+    const subscribeMock = dataBridge.subscribe as ReturnType<typeof vi.fn>
+    const calls = subscribeMock.mock.calls
+    subscribeCallback = calls[calls.length - 1]![1]
+    // 设置 mockQuery 默认返回成功
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: [] })
+  })
+
+  afterEach(() => {
+    cleanup()
+  })
+
+  /**
+   * @test_id V9-TEST-ST-155-SUB-01
+   * 初始化订阅返回清理函数
+   * 覆盖行 288-312
+   */
+  it('初始化订阅返回清理函数', () => {
+    expect(typeof cleanup).toBe('function')
+  })
+
+  /**
+   * @test_id V9-TEST-ST-155-SUB-02
+   * source 过滤：source === trading 时跳过，不触发 loadReviews
+   * 覆盖行 297-299
+   */
+  it('source 过滤：source === trading 时跳过刷新', async () => {
+    subscribeCallback({ meta: { source: MODULE_ID.trading, action: ENVELOPE_ACTION.insertSignal, traceId: 't1' } })
+    // 等待微任务刷新
+    await vi.waitFor(() => expect(mockDataBridgeQuery).not.toHaveBeenCalled())
+  })
+
+  /**
+   * @test_id V9-TEST-ST-155-SUB-03
+   * source 过滤：source === tradinghub 时跳过
+   * 覆盖行 297-299
+   */
+  it('source 过滤：source === tradinghub 时跳过刷新', async () => {
+    subscribeCallback({ meta: { source: MODULE_ID.tradinghub, action: ENVELOPE_ACTION.insertSignal, traceId: 't2' } })
+    await vi.waitFor(() => expect(mockDataBridgeQuery).not.toHaveBeenCalled())
+  })
+
+  /**
+   * @test_id V9-TEST-ST-155-SUB-04
+   * insertSignal action 从外部 source 触发 loadReviews
+   * 覆盖行 300-307
+   */
+  it('insertSignal action 从外部 source 触发 loadReviews', async () => {
+    subscribeCallback({ meta: { source: 'external', action: ENVELOPE_ACTION.insertSignal, traceId: 't3' } })
+    await vi.waitFor(() => expect(mockDataBridgeQuery).toHaveBeenCalledTimes(1))
+  })
+
+  /**
+   * @test_id V9-TEST-ST-155-SUB-05
+   * 非 insertSignal action 不触发 loadReviews
+   */
+  it('非 insertSignal action 不触发 loadReviews', async () => {
+    subscribeCallback({ meta: { source: 'external', action: 'OTHER_ACTION', traceId: 't4' } })
+    // 给微任务时间执行
+    await new Promise(resolve => setTimeout(resolve, 50))
+    expect(mockDataBridgeQuery).not.toHaveBeenCalled()
+  })
+
+  /**
+   * @test_id V9-TEST-ST-155-SUB-06
+   * cleanup 函数销毁订阅
+   * 覆盖行 315-318
+   */
+  it('cleanup 函数销毁订阅', async () => {
+    const { dataBridge } = await import('@/core/databridge')
+    const subscribeMock = dataBridge.subscribe as ReturnType<typeof vi.fn>
+    // 记录当前 subscribe 调用次数
+    const callsBefore = subscribeMock.mock.calls.length
+    // 再次初始化 —— 因为 cleanup 尚未调用，应走 already initialized 分支
+    const cleanup2 = initSignalQualityStoreSubscriptions()
+    // 不应再次 subscribe
+    expect(subscribeMock.mock.calls.length).toBe(callsBefore)
+    // 调用 cleanup 销毁订阅
+    cleanup()
+    // 再次初始化 —— 应该重新 subscribe
+    const cleanup3 = initSignalQualityStoreSubscriptions()
+    expect(subscribeMock.mock.calls.length).toBe(callsBefore + 1)
+    cleanup2()
+    cleanup3()
+  })
+
+  /**
+   * @test_id V9-TEST-ST-155-SUB-07
+   * 重复初始化时走 already initialized 分支
+   * 覆盖行 289-291
+   */
+  it('重复初始化时走 already initialized 分支', () => {
+    const cleanup2 = initSignalQualityStoreSubscriptions()
+    expect(typeof cleanup2).toBe('function')
+    // cleanup2 和 cleanup 指向同一个 destroy 函数
+    cleanup2()
   })
 })

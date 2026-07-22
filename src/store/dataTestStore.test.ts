@@ -253,4 +253,169 @@ describe('useDataTestStore', () => {
       expect(mockWithBroadcast).toHaveBeenCalledWith('data-test:changed', { action: 'reset' })
     })
   })
+
+  // ============================================================
+  // setter 广播事件
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-DATA-TEST-setter-broadcast-01 */
+  it('setSingleResult: 应广播 DATA_TEST_CHANGED 事件', () => {
+    useDataTestStore.getState().setSingleResult('{"data": "test"}')
+    expect(mockWithBroadcast).toHaveBeenCalledWith('data-test:changed', {
+      action: 'setSingleResult',
+    })
+  })
+
+  /** @test_id V9-TEST-ST-DATA-TEST-setter-broadcast-02 */
+  it('setTasks: 应广播 DATA_TEST_CHANGED 事件并携带 count', () => {
+    const tasks = [
+      { symbol: 'A', status: 'pending' as const, message: '' },
+      { symbol: 'B', status: 'success' as const, message: 'ok' },
+    ]
+    useDataTestStore.getState().setTasks(tasks)
+    expect(mockWithBroadcast).toHaveBeenCalledWith('data-test:changed', {
+      action: 'setTasks',
+      count: 2,
+    })
+  })
+
+  /** @test_id V9-TEST-ST-DATA-TEST-setter-broadcast-03 */
+  it('updateTask: 应广播 DATA_TEST_CHANGED 事件并携带 index 和 status', () => {
+    useDataTestStore.setState({
+      tasks: [{ symbol: 'A', status: 'pending' as const, message: '' }],
+    })
+    useDataTestStore.getState().updateTask(0, {
+      symbol: 'A',
+      status: 'success',
+      message: 'done',
+    })
+    expect(mockWithBroadcast).toHaveBeenCalledWith('data-test:changed', {
+      action: 'updateTask',
+      index: 0,
+      status: 'success',
+    })
+    expect(useDataTestStore.getState().tasks[0]!.status).toBe('success')
+  })
+
+  // ============================================================
+  // parseSymbols 各种分隔符（通过 runBatchTrace 间接测试）
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-DATA-TEST-parse-01 */
+  it('runBatchTrace: 支持逗号分隔的 batchText', async () => {
+    const results: TraceResult[] = [buildTraceResult({ symbol: '600519.SH' })]
+    mockRunBatchTrace.mockResolvedValue(results)
+
+    useDataTestStore.setState({ batchText: '600519.SH,000001.SZ' })
+    await useDataTestStore.getState().runBatchTrace(dummyConfig)
+
+    expect(mockRunBatchTrace).toHaveBeenCalledWith(
+      expect.objectContaining({ symbols: ['600519.SH', '000001.SZ'] }),
+    )
+  })
+
+  /** @test_id V9-TEST-ST-DATA-TEST-parse-02 */
+  it('runBatchTrace: 支持分号分隔的 batchText', async () => {
+    const results: TraceResult[] = [
+      buildTraceResult({ symbol: '600519.SH' }),
+      buildTraceResult({ symbol: '000001.SZ' }),
+    ]
+    mockRunBatchTrace.mockResolvedValue(results)
+
+    useDataTestStore.setState({ batchText: '600519.SH;000001.SZ' })
+    await useDataTestStore.getState().runBatchTrace(dummyConfig)
+
+    expect(mockRunBatchTrace).toHaveBeenCalledWith(
+      expect.objectContaining({ symbols: ['600519.SH', '000001.SZ'] }),
+    )
+  })
+
+  /** @test_id V9-TEST-ST-DATA-TEST-parse-03 */
+  it('runBatchTrace: 支持中文顿号分隔的 batchText', async () => {
+    const results: TraceResult[] = [
+      buildTraceResult({ symbol: '600519.SH' }),
+      buildTraceResult({ symbol: '000001.SZ' }),
+    ]
+    mockRunBatchTrace.mockResolvedValue(results)
+
+    useDataTestStore.setState({ batchText: '600519.SH、000001.SZ' })
+    await useDataTestStore.getState().runBatchTrace(dummyConfig)
+
+    expect(mockRunBatchTrace).toHaveBeenCalledWith(
+      expect.objectContaining({ symbols: ['600519.SH', '000001.SZ'] }),
+    )
+  })
+
+  /** @test_id V9-TEST-ST-DATA-TEST-parse-04 */
+  it('runBatchTrace: trim 空白并转大写', async () => {
+    const results: TraceResult[] = [buildTraceResult({ symbol: '600519.SH' })]
+    mockRunBatchTrace.mockResolvedValue(results)
+
+    useDataTestStore.setState({ batchText: '  600519.sh  ' })
+    await useDataTestStore.getState().runBatchTrace(dummyConfig)
+
+    expect(mockRunBatchTrace).toHaveBeenCalledWith(
+      expect.objectContaining({ symbols: ['600519.SH'] }),
+    )
+  })
+
+  // ============================================================
+  // runBatchTrace: 成功但 source 为 undefined 的消息格式
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-DATA-TEST-batch-no-source-01 */
+  it('runBatchTrace: 成功结果 source 为 undefined 时消息不包含括号', async () => {
+    const results: TraceResult[] = [buildTraceResult({ source: undefined })]
+    mockRunBatchTrace.mockResolvedValue(results)
+
+    useDataTestStore.setState({ batchText: '600519.SH' })
+    await useDataTestStore.getState().runBatchTrace(dummyConfig)
+
+    expect(useDataTestStore.getState().tasks[0]!.message).toBe('成功')
+  })
+
+  /** @test_id V9-TEST-ST-DATA-TEST-batch-error-no-msg-01 */
+  it('runBatchTrace: 失败结果 error 为 undefined 时消息为"失败"', async () => {
+    const results: TraceResult[] = [
+      buildTraceResult({ success: false, error: undefined }),
+    ]
+    mockRunBatchTrace.mockResolvedValue(results)
+
+    useDataTestStore.setState({ batchText: '600519.SH' })
+    await useDataTestStore.getState().runBatchTrace(dummyConfig)
+
+    expect(useDataTestStore.getState().tasks[0]!.status).toBe('error')
+    expect(useDataTestStore.getState().tasks[0]!.message).toBe('失败')
+  })
+
+  // ============================================================
+  // checkHealth: 非标准错误类型
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-DATA-TEST-health-string-err-01 */
+  it('checkHealth: 非 Error 类型异常时应设置 health=false', async () => {
+    mockCheckFetcherHealth.mockRejectedValue('连接超时')
+
+    await useDataTestStore.getState().checkHealth()
+
+    expect(useDataTestStore.getState().health).toBe(false)
+    expect(useDataTestStore.getState().checking).toBe(false)
+  })
+
+  // ============================================================
+  // runSingleTrace: 非 Error 类型异常
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-DATA-TEST-single-string-err-01 */
+  it('runSingleTrace: 非 Error 类型异常时 singleResult 应包含错误信息', async () => {
+    mockRunSingleTrace.mockRejectedValue('未知错误')
+
+    useDataTestStore.setState({ singleSymbol: '600519.SH', selectedDimension: '01' })
+
+    await useDataTestStore.getState().runSingleTrace(dummyConfig)
+
+    const state = useDataTestStore.getState()
+    expect(state.singleStatus).toBe('done')
+    expect(state.singleResult).toContain('未知错误')
+  })
 })

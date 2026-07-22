@@ -133,6 +133,7 @@ import {
   getSnapshot,
   shouldSkipSelf,
   initDualStrategyStoreSubscriptions,
+  initDualStrategyStoreGlobalSubscriptions,
   _resetDualStrategyStoreSubscriptionsForTest,
 } from './dualStrategyStore'
 
@@ -807,6 +808,78 @@ describe('initDualStrategyStoreSubscriptions', () => {
     expect(unsubscribes.length).toBe(5)
     unsubscribes.forEach((unsub) => {
       expect(unsub).toHaveBeenCalled()
+    })
+  })
+
+  // ============================================================
+  // stocks 频道 source 过滤
+  // 未覆盖行 638-644
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-134-STOCKS-POOL-FILTER */
+  it('stocks 频道事件 source=pool 时应被过滤，不触发 refresh', async () => {
+    mockQueryByStore()
+
+    initDualStrategyStoreSubscriptions()
+    const stocksCb = capturedCallbacks.get('stocks')
+    expect(stocksCb).toBeDefined()
+
+    // pool source 应被过滤
+    stocksCb!({
+      meta: { source: 'pool', target: 'db', action: 'INSERT_STOCK', traceId: 't-pool', timestamp: Date.now() },
+      payload: {},
+    })
+
+    await new Promise((r) => setTimeout(r, 400))
+
+    // 不应触发 refresh
+    expect(mockDataBridgeQuery).not.toHaveBeenCalled()
+  })
+
+  /** @test_id V9-TEST-ST-134-STOCKS-NON-POOL */
+  it('stocks 频道事件 source 非 pool 时应触发 refresh', async () => {
+    mockQueryByStore()
+
+    initDualStrategyStoreSubscriptions()
+    const stocksCb = capturedCallbacks.get('stocks')
+    expect(stocksCb).toBeDefined()
+
+    // 非 pool source 应触发 debouncedRefresh
+    stocksCb!({
+      meta: { source: 'system', target: 'db', action: 'INSERT_STOCK', traceId: 't-sys', timestamp: Date.now() },
+      payload: {},
+    })
+
+    await new Promise((r) => setTimeout(r, 400))
+
+    // 应触发 refresh（3 个 query）
+    expect(mockDataBridgeQuery).toHaveBeenCalled()
+  })
+
+  // ============================================================
+  // destroyDualStrategyStoreSubscriptions - globalSubscriptionsInitialized
+  // 未覆盖行 651-652
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-134-DESTROY-GUARD */
+  it('全局订阅初始化后 destroyDualStrategyStoreSubscriptions 应跳过（通过 _reset 间接调用）', () => {
+    _resetDualStrategyStoreSubscriptionsForTest()
+    capturedCallbacks.clear()
+    unsubscribes.length = 0
+    mockSubscribe.mockClear()
+
+    // 初始化全局订阅
+    initDualStrategyStoreGlobalSubscriptions()
+
+    expect(mockSubscribe).toHaveBeenCalledTimes(5)
+    const globalUnsubs = [...unsubscribes]
+
+    // 调用 _reset（内部会调用 destroy，global=true 时 destroy 应跳过）
+    _resetDualStrategyStoreSubscriptionsForTest()
+
+    // destroy 在 global=true 时应跳过，不调用 unsubscribe
+    globalUnsubs.forEach((unsub) => {
+      expect(unsub).not.toHaveBeenCalled()
     })
   })
 })

@@ -21,8 +21,9 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-const { mockOn, capturedCallbacks, allUnsubscribers, mockGetStats, mockGetInstance } = vi.hoisted(() => {
+const { mockOn, mockEmit, capturedCallbacks, allUnsubscribers, mockGetStats, mockGetInstance } = vi.hoisted(() => {
   const mockOn = vi.fn()
+  const mockEmit = vi.fn()
   const capturedCallbacks: Map<string, ((payload: unknown) => void)> = new Map()
   const allUnsubscribers: Array<ReturnType<typeof vi.fn>> = []
 
@@ -41,7 +42,7 @@ const { mockOn, capturedCallbacks, allUnsubscribers, mockGetStats, mockGetInstan
 
   const mockGetInstance = vi.fn().mockReturnValue(undefined)
 
-  return { mockOn, capturedCallbacks, allUnsubscribers, mockGetStats, mockGetInstance }
+  return { mockOn, mockEmit, capturedCallbacks, allUnsubscribers, mockGetStats, mockGetInstance }
 })
 
 vi.mock('@/cockpit/core/widgetRegistry', () => ({
@@ -52,7 +53,7 @@ vi.mock('@/cockpit/core/widgetRegistry', () => ({
 }))
 
 vi.mock('@/lib/eventBus', () => ({
-  eventBus: { on: mockOn },
+  eventBus: { on: mockOn, emit: mockEmit },
 }))
 
 import { useWidgetStore, initWidgetSubscriptions, destroyWidgetSubscriptions } from './widgetStore'
@@ -87,6 +88,7 @@ beforeEach(() => {
   useWidgetStore.setState({
     instances: new Map(),
     runtimeStates: new Map(),
+    dataHashes: new Map(),
     stats: mockGetStats(),
   })
 })
@@ -430,5 +432,105 @@ describe('widgetStore', () => {
     expect(state.instances.size).toBe(0)
     expect(state.runtimeStates.size).toBe(0)
     expect(state.dataHashes.size).toBe(0)
+  })
+
+  // ============================================================
+  // refreshInstance - 数据哈希对比与刷新（覆盖 61-86）
+  // ============================================================
+
+  /**
+   * @test_id V9-TEST-ST-163-REFRESH-01
+   * 新数据（无前序 hash）时返回 true，更新 hash 和运行时状态，emit 事件
+   * 覆盖行 60-86
+   */
+  it('refreshInstance 新数据时返回 true 并更新哈希和运行时状态', () => {
+    const result = useWidgetStore.getState().refreshInstance('widget_1', { data: 'test' })
+    expect(result).toBe(true)
+
+    const state = useWidgetStore.getState()
+    // hash 应为 JSON.stringify(newData)
+    expect(state.dataHashes.get('widget_1')).toBe(JSON.stringify({ data: 'test' }))
+
+    const rtState = state.runtimeStates.get('widget_1')!
+    expect(rtState.status).toBe('ready')
+    expect(rtState.lastRefresh).toBeDefined()
+
+    // emit WIDGET_REFRESH_SUCCESS 事件
+    expect(mockEmit).toHaveBeenCalledWith('WIDGET_REFRESH_SUCCESS', { instanceId: 'widget_1' })
+  })
+
+  /**
+   * @test_id V9-TEST-ST-163-REFRESH-02
+   * 相同数据（hash 一致）时返回 false，不更新不 emit
+   * 覆盖行 68-70
+   */
+  it('refreshInstance 相同数据时返回 false 不更新', () => {
+    // 第一次调用设置 hash
+    useWidgetStore.getState().refreshInstance('widget_1', { data: 'test' })
+    mockEmit.mockClear()
+
+    // 第二次调用相同数据 —— hash 一致
+    const result = useWidgetStore.getState().refreshInstance('widget_1', { data: 'test' })
+    expect(result).toBe(false)
+    expect(mockEmit).not.toHaveBeenCalled()
+  })
+
+  /**
+   * @test_id V9-TEST-ST-163-REFRESH-03
+   * newData 为 undefined 时使用 Date.now() 作为 hash
+   * 覆盖行 64-66（Date.now().toString() 分支）
+   */
+  it('refreshInstance 无数据时使用时间戳作为哈希', () => {
+    const result = useWidgetStore.getState().refreshInstance('widget_1')
+    expect(result).toBe(true)
+
+    const state = useWidgetStore.getState()
+    const hash = state.dataHashes.get('widget_1')!
+    // 时间戳应该是可解析为数字的字符串
+    expect(Number.isFinite(Number(hash))).toBe(true)
+
+    expect(mockEmit).toHaveBeenCalledWith('WIDGET_REFRESH_SUCCESS', { instanceId: 'widget_1' })
+  })
+
+  /**
+   * @test_id V9-TEST-ST-163-REFRESH-04
+   * 已有运行时状态时保留原有属性，仅更新 status 和 lastRefresh
+   * 覆盖行 76-81（spread existing）
+   */
+  it('refreshInstance 保留已有运行时状态属性', () => {
+    // 设置已有运行时状态
+    useWidgetStore.setState({
+      runtimeStates: new Map([['widget_1', {
+        instanceId: 'widget_1',
+        widgetId: 'marketIndices',
+        status: 'loading',
+        error: 'old error',
+      } as WidgetRuntimeState]]),
+    })
+
+    useWidgetStore.getState().refreshInstance('widget_1', { data: 'new' })
+
+    const rtState = useWidgetStore.getState().runtimeStates.get('widget_1')!
+    expect(rtState.status).toBe('ready')
+    expect(rtState.lastRefresh).toBeDefined()
+    // 保留已有属性
+    expect(rtState.widgetId).toBe('marketIndices')
+    expect(rtState.instanceId).toBe('widget_1')
+    expect(rtState.error).toBe('old error')
+  })
+
+  /**
+   * @test_id V9-TEST-ST-163-REFRESH-05
+   * 不同实例的 hash 互不影响
+   */
+  it('refreshInstance 不同实例 hash 独立', () => {
+    useWidgetStore.getState().refreshInstance('widget_1', { data: 'a' })
+    useWidgetStore.getState().refreshInstance('widget_2', { data: 'b' })
+
+    const state = useWidgetStore.getState()
+    expect(state.dataHashes.get('widget_1')).toBe(JSON.stringify({ data: 'a' }))
+    expect(state.dataHashes.get('widget_2')).toBe(JSON.stringify({ data: 'b' }))
+    expect(state.dataHashes.size).toBe(2)
+    expect(mockEmit).toHaveBeenCalledTimes(2)
   })
 })

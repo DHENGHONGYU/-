@@ -26,7 +26,7 @@ import type { StandardEnvelope } from '@/core/envelope'
 // vi.hoisted mocks
 // ============================================================
 
-const { mockSubscribe, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
+const { mockSubscribe, mockForward, mockLoggerHoldings, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
   const capturedCallbacks = new Map<string, ((envelope: StandardEnvelope) => void)>()
   const unsubscribes: Array<ReturnType<typeof vi.fn>> = []
   const mockSubscribe = vi.fn((channel: string, callback: (envelope: StandardEnvelope) => void) => {
@@ -35,7 +35,11 @@ const { mockSubscribe, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
     unsubscribes.push(unsub)
     return unsub
   })
-  return { mockSubscribe, capturedCallbacks, unsubscribes }
+  // fetchData / exportCSV 等需要的 dataBridge.forward mock
+  const mockForward = vi.fn()
+  // 暴露 logger 以便断言 warn / info / error 调用
+  const mockLoggerHoldings = { info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }
+  return { mockSubscribe, mockForward, mockLoggerHoldings, capturedCallbacks, unsubscribes }
 })
 
 // ============================================================
@@ -43,11 +47,11 @@ const { mockSubscribe, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
 // ============================================================
 
 vi.mock('@/lib/logger', () => ({
-  getLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }),
+  getLogger: () => mockLoggerHoldings,
 }))
 
 vi.mock('@/core/databridge', () => ({
-  dataBridge: { subscribe: mockSubscribe },
+  dataBridge: { subscribe: mockSubscribe, forward: mockForward },
 }))
 
 vi.mock('@/constants/trade.constants', () => ({
@@ -60,11 +64,13 @@ vi.mock('@/config/dbConfig', () => ({
   ENVELOPE_ACTION: {
     tradeActionExecuted: 'TRADE_ACTION_EXECUTED',
     holdingsDataLoaded: 'HOLDINGS_DATA_LOADED',
+    loadHoldingsData: 'LOAD_HOLDINGS_DATA',
     insertOrder: 'INSERT_ORDER',
     updateOrder: 'UPDATE_ORDER',
     deleteOrder: 'DELETE_ORDER',
   },
-  MODULE_ID: { tradinghub: 'tradinghub' },
+  ENVELOPE_TARGET: { tradinghub: 'tradinghub' },
+  MODULE_ID: { tradinghub: 'tradinghub', holdingsStore: 'holdingsStore' },
   STORE_NAME: { orders: 'orders', stocks: 'stocks' },
 }))
 
@@ -266,6 +272,93 @@ describe('useHoldingsStore', () => {
       keyword: 'tech',
     })
   })
+
+  // ============================================================
+  // fetchData —— 通过 DataBridge 拉取持仓数据
+  // ============================================================
+  describe('fetchData', () => {
+    // @test_id 追加：fetchData 成功/异常路径
+    it('成功：应调用 dataBridge.forward、期间 isListLoading=true、返回 code=200', async () => {
+      mockForward.mockImplementationOnce(async () => {
+        // 验证调用期间 loading 为 true
+        expect(useHoldingsStore.getState().loading.isListLoading).toBe(true)
+      })
+
+      const result = await useHoldingsStore.getState().fetchData({
+        page: 1,
+        pageSize: 20,
+        startDate: '2024-01-01',
+        endDate: '2024-12-31',
+        direction: 'ALL',
+        keyword: '',
+      })
+
+      expect(result.code).toBe(200)
+      expect(result.message).toBe('OK')
+      expect(mockForward).toHaveBeenCalledTimes(1)
+      // finally 应重置 loading
+      expect(useHoldingsStore.getState().loading.isListLoading).toBe(false)
+    })
+
+    it('异常：dataBridge.forward 抛错时应返回 code=500 并记录日志', async () => {
+      mockForward.mockRejectedValueOnce(new Error('网络错误'))
+
+      const result = await useHoldingsStore.getState().fetchData({
+        page: 1,
+        pageSize: 20,
+        startDate: '2024-01-01',
+        endDate: '2024-12-31',
+        direction: 'ALL',
+        keyword: '',
+      })
+
+      expect(result.code).toBe(500)
+      expect(result.message).toContain('网络错误')
+      expect(mockLoggerHoldings.error).toHaveBeenCalledWith(
+        '[holdingsStore] fetchData failed',
+        { error: expect.stringContaining('网络错误') },
+      )
+      // finally 应重置 loading
+      expect(useHoldingsStore.getState().loading.isListLoading).toBe(false)
+    })
+  })
+
+  // ============================================================
+  // executeTrade —— 执行交易（占位实现）
+  // ============================================================
+  describe('executeTrade', () => {
+    // @test_id 追加：executeTrade 返回成功
+    it('应返回 success=true 和成功消息', async () => {
+      const result = await useHoldingsStore.getState().executeTrade({
+        code: '600519.SH',
+        action: 'ADD_POSITION',
+        quantity: 100,
+      })
+
+      expect(result.success).toBe(true)
+      expect(result.message).toBe('Trade executed')
+    })
+  })
+
+  // ============================================================
+  // exportCSV —— 导出 CSV
+  // ============================================================
+  describe('exportCSV', () => {
+    // @test_id 追加：exportCSV 切换 isExporting 状态
+    it('应切换 isExporting 状态并最终重置为 false', async () => {
+      await useHoldingsStore.getState().exportCSV({
+        page: 1,
+        pageSize: 20,
+        startDate: '2024-01-01',
+        endDate: '2024-12-31',
+        direction: 'ALL',
+        keyword: '',
+      })
+
+      // finally 应重置 isExporting
+      expect(useHoldingsStore.getState().loading.isExporting).toBe(false)
+    })
+  })
 })
 
 // ============================================================
@@ -308,5 +401,23 @@ describe('initHoldingsStoreSubscriptions', () => {
     const cleanup2 = initHoldingsStoreSubscriptions()
     expect(typeof cleanup2).toBe('function')
     cleanup2()
+  })
+
+  // @test_id 追加：重复初始化分支（_unsubscribeChannels.length > 0）
+  it('已初始化时再次调用应走重复初始化分支、warn 并返回 cleanup', () => {
+    // beforeEach 已 init+cleanup，此时 _unsubscribeChannels 为空
+    const cleanup1 = initHoldingsStoreSubscriptions()
+    // _unsubscribeChannels.length > 0，再次调用走重复分支
+    const cleanup2 = initHoldingsStoreSubscriptions()
+
+    expect(typeof cleanup2).toBe('function')
+    expect(mockLoggerHoldings.warn).toHaveBeenCalledWith(
+      '[holdingsStore] Subscriptions already initialized, skipping',
+    )
+
+    // cleanup2 应清理订阅（幂等）
+    cleanup2()
+    // cleanup1 仍可调用（数组已空，不抛错）
+    expect(() => cleanup1()).not.toThrow()
   })
 })

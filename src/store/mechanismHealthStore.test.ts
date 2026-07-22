@@ -25,7 +25,15 @@ const mockLogger = vi.hoisted(() => ({
 }))
 vi.mock('@/lib/logger', () => ({ getLogger: () => mockLogger }))
 
-const mockEventBusOn = vi.hoisted(() => vi.fn())
+const { mockEventBusOn, allUnsubscribers } = vi.hoisted(() => {
+  const allUnsubscribers: Array<ReturnType<typeof vi.fn>> = []
+  const mockEventBusOn = vi.fn(() => {
+    const unsubscribe = vi.fn()
+    allUnsubscribers.push(unsubscribe)
+    return unsubscribe
+  })
+  return { mockEventBusOn, allUnsubscribers }
+})
 vi.mock('@/lib/eventBus', () => ({
   eventBus: {
     on: mockEventBusOn,
@@ -50,7 +58,7 @@ vi.mock('@/types/modules/collection.types', () => ({
 // Imports（mock 之后）
 // ============================================================
 
-import { useMechanismHealthStore } from './mechanismHealthStore'
+import { useMechanismHealthStore, initMechanismSubscriptions } from './mechanismHealthStore'
 import type { MechanismHealthSnapshot } from '@/services/system/mechanismMonitorService'
 
 // ============================================================
@@ -87,7 +95,8 @@ beforeEach(() => {
 
   vi.clearAllMocks()
   mockRunMechanismScan.mockReset()
-  mockEventBusOn.mockReset()
+  mockEventBusOn.mockClear()
+  allUnsubscribers.length = 0
   vi.useFakeTimers()
 })
 
@@ -197,6 +206,62 @@ describe('useMechanismHealthStore', () => {
       // 再推进 5 秒
       vi.advanceTimersByTime(5000)
       expect(mockRunMechanismScan).toHaveBeenCalledTimes(3)
+    })
+  })
+
+  // ============================================================
+  // EventBus 订阅（initMechanismSubscriptions）
+  // 未覆盖行 134-135, 140-141
+  // ============================================================
+
+  describe('initMechanismSubscriptions', () => {
+    /** @test_id V9-TEST-ST-MECH-HEALTH-SUB-01 */
+    it('订阅 MECHANISM_ALERT_EVENT 后应更新 lastAlertAt', () => {
+      // 重新初始化订阅（beforeEach 中 clearAllMocks 已清除之前的调用记录）
+      initMechanismSubscriptions()
+
+      const alertCallback = mockEventBusOn.mock.calls.find(
+        (c) => c[0] === 'mechanism:alert',
+      )?.[1] as (() => void) | undefined
+      expect(alertCallback).toBeDefined()
+
+      alertCallback!()
+
+      expect(useMechanismHealthStore.getState().lastAlertAt).toBeGreaterThan(0)
+    })
+
+    /** @test_id V9-TEST-ST-MECH-HEALTH-SUB-02 */
+    it('订阅 COLLECTION_EVENTS.COMPLETE 后应触发 runScan', () => {
+      // 重新初始化订阅
+      initMechanismSubscriptions()
+
+      // 查找 collection:complete 事件回调
+      const completeCallback = mockEventBusOn.mock.calls.find(
+        (c) => c[0] === 'collection:complete',
+      )?.[1] as (() => void) | undefined
+      expect(completeCallback).toBeDefined()
+
+      mockRunMechanismScan.mockReturnValue(buildSnapshot())
+
+      completeCallback!()
+
+      // 应触发 runScan，latest 被更新
+      expect(mockRunMechanismScan).toHaveBeenCalled()
+      expect(useMechanismHealthStore.getState().latest).toBeDefined()
+    })
+
+    /** @test_id V9-TEST-ST-MECH-HEALTH-SUB-03 */
+    it('返回的清理函数应取消所有订阅', () => {
+      const cleanup = initMechanismSubscriptions()
+      expect(typeof cleanup).toBe('function')
+      expect(allUnsubscribers.length).toBeGreaterThanOrEqual(2)
+
+      cleanup()
+
+      // 验证所有 unsubscribe 函数被调用
+      allUnsubscribers.forEach((unsub) => {
+        expect(unsub).toHaveBeenCalledTimes(1)
+      })
     })
   })
 })

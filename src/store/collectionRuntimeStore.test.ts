@@ -7,7 +7,9 @@ import type {
   CollectionTraceSpan,
   CollectionTaskRuntime,
   CollectionLog,
+  CollectionLifecycleEvent,
 } from '@/types/modules/collection.types'
+import { COLLECTION_EVENTS } from '@/types/modules/collection.types'
 import type { QualityMetrics } from '@/services/data-collector/qualityMetricsCollector'
 
 // ============================================================
@@ -134,6 +136,24 @@ function createTaskRuntime(overrides: Partial<CollectionTaskRuntime> = {}): Coll
 // ============================================================
 
 describe('useCollectionRuntimeStore', () => {
+  // --------------------------------------------------------
+  // 在 beforeAll 中捕获 eventBus.on 注册的回调（模块导入时已注册）。
+  // beforeEach 的 vi.clearAllMocks() 会清空 mockOn.mock.calls，
+  // 因此必须在 beforeAll（首个 beforeEach 之前）完成捕获。
+  // --------------------------------------------------------
+  const lifecycleCallbacks: Record<string, (event: unknown) => void> = {}
+  let traceCallback: (span: unknown) => void = () => {}
+
+  beforeAll(() => {
+    for (const call of mockOn.mock.calls as unknown as [string, (event: unknown) => void][]) {
+      if (call[0] === 'collect:trace') {
+        traceCallback = call[1]
+      } else {
+        lifecycleCallbacks[call[0]] = call[1]
+      }
+    }
+  })
+
   beforeEach(() => {
     useCollectionRuntimeStore.getState().reset()
     vi.clearAllMocks()
@@ -760,6 +780,229 @@ describe('useCollectionRuntimeStore', () => {
       expect(state.taskStatuses['t1']!.status).toBe('error')
       expect(state.taskStatuses['t2']!.status).toBe('completed')
       expect(state.taskStatuses['t3']!.status).toBe('running')
+    })
+  })
+
+  // --------------------------------------------------------
+  // 事件订阅与生命周期处理（handleLifecycleEvent / handleTraceSpan）
+  // 覆盖 eventBus.on 注册的回调、mapEventLevel 分支、状态映射、catch 路径
+  // --------------------------------------------------------
+  describe('事件订阅与生命周期处理', () => {
+    /** 构造生命周期事件 */
+    function createLifecycleEvent(
+      overrides: Partial<CollectionLifecycleEvent>,
+    ): CollectionLifecycleEvent {
+      return {
+        type: COLLECTION_EVENTS.TRIGGERED,
+        traceId: 'trace-001',
+        timestamp: 1700000000000,
+        message: '测试事件',
+        ...overrides,
+      } as CollectionLifecycleEvent
+    }
+
+    // ---- handleLifecycleEvent 基础路径 ----
+
+    /** @test_id V9-TEST-ST-151-evt-01 */
+    it('基础事件触发 refreshStats + appendLog', () => {
+      const cb = lifecycleCallbacks[COLLECTION_EVENTS.TRIGGERED]
+      cb(createLifecycleEvent({ message: '采集已触发' }))
+
+      const state = useCollectionRuntimeStore.getState()
+      expect(state.logs).toHaveLength(1)
+      expect(state.logs[0]!.message).toBe('采集已触发')
+      expect(mockGetQualitySnapshot).toHaveBeenCalled()
+    })
+
+    /** @test_id V9-TEST-ST-151-evt-02 */
+    it('mapEventLevel: 各事件类型映射到正确的日志级别', () => {
+      const cases: Array<{
+        type: CollectionLifecycleEvent['type']
+        expected: CollectionLog['level']
+        label: string
+      }> = [
+        { type: COLLECTION_EVENTS.SOURCE_FAIL, expected: 'error', label: 'SOURCE_FAIL' },
+        { type: COLLECTION_EVENTS.WRITE_FAIL, expected: 'error', label: 'WRITE_FAIL' },
+        { type: COLLECTION_EVENTS.FALLBACK, expected: 'warn', label: 'FALLBACK' },
+        { type: COLLECTION_EVENTS.SOURCE_SUCCESS, expected: 'success', label: 'SOURCE_SUCCESS' },
+        { type: COLLECTION_EVENTS.WRITE_SUCCESS, expected: 'success', label: 'WRITE_SUCCESS' },
+        { type: COLLECTION_EVENTS.COMPLETE, expected: 'success', label: 'COMPLETE' },
+        { type: COLLECTION_EVENTS.TRIGGERED, expected: 'info', label: 'TRIGGERED(default)' },
+        { type: COLLECTION_EVENTS.TASK_STATUS, expected: 'info', label: 'TASK_STATUS(default)' },
+      ]
+
+      for (const { type, expected, label } of cases) {
+        useCollectionRuntimeStore.getState().reset()
+        const cb = lifecycleCallbacks[type]
+        cb(createLifecycleEvent({ type, traceId: `trace-${label}` }))
+
+        const log = useCollectionRuntimeStore.getState().logs[0]
+        expect(log, `事件 ${label} 应产生日志`).toBeDefined()
+        expect(log!.level, `事件 ${label} 级别应为 ${expected}`).toBe(expected)
+      }
+    })
+
+    // ---- taskId + payload 状态映射 ----
+
+    /** @test_id V9-TEST-ST-151-evt-03 */
+    it('携带 taskId 的事件根据 payload.status 映射任务状态', () => {
+      const statusCases: Array<{
+        payloadStatus: string
+        expectedStatus: CollectionTaskRuntime['status']
+      }> = [
+        { payloadStatus: 'running', expectedStatus: 'running' },
+        { payloadStatus: 'completed', expectedStatus: 'completed' },
+        { payloadStatus: 'error', expectedStatus: 'error' },
+        { payloadStatus: 'paused', expectedStatus: 'paused' },
+        { payloadStatus: 'unknown', expectedStatus: 'pending' },
+      ]
+
+      for (const { payloadStatus, expectedStatus } of statusCases) {
+        useCollectionRuntimeStore.getState().reset()
+        const cb = lifecycleCallbacks[COLLECTION_EVENTS.SOURCE_START]
+        cb(
+          createLifecycleEvent({
+            type: COLLECTION_EVENTS.SOURCE_START,
+            taskId: `task-${payloadStatus}`,
+            dimensionCode: '01',
+            symbol: 'AAPL',
+            payload: { status: payloadStatus, progress: 42 },
+          }),
+        )
+
+        const task = useCollectionRuntimeStore.getState().taskStatuses[`task-${payloadStatus}`]
+        expect(task, `payload.status=${payloadStatus}`).toBeDefined()
+        expect(task!.status).toBe(expectedStatus)
+        expect(task!.progress).toBe(42)
+      }
+    })
+
+    /** @test_id V9-TEST-ST-151-evt-04 */
+    it('携带 taskId 但无 payload 时任务状态默认为 pending', () => {
+      const cb = lifecycleCallbacks[COLLECTION_EVENTS.TRIGGERED]
+      cb(
+        createLifecycleEvent({
+          type: COLLECTION_EVENTS.TRIGGERED,
+          taskId: 'task-no-payload',
+          dimensionCode: '02',
+          symbol: 'TSLA',
+        }),
+      )
+
+      const task = useCollectionRuntimeStore.getState().taskStatuses['task-no-payload']
+      expect(task).toBeDefined()
+      expect(task!.status).toBe('pending')
+      expect(task!.dimensionCode).toBe('02')
+      expect(task!.symbol).toBe('TSLA')
+    })
+
+    // ---- COMPLETE 事件 + span ----
+
+    /** @test_id V9-TEST-ST-151-evt-05 */
+    it('COMPLETE 事件携带 span 时更新 traceSpans', () => {
+      const span = createSpan({ traceId: 'trace-complete-span' })
+      const cb = lifecycleCallbacks[COLLECTION_EVENTS.COMPLETE]
+      cb(
+        createLifecycleEvent({
+          type: COLLECTION_EVENTS.COMPLETE,
+          payload: { span },
+        }),
+      )
+
+      expect(
+        useCollectionRuntimeStore.getState().traceSpans['trace-complete-span'],
+      ).toBeDefined()
+    })
+
+    /** @test_id V9-TEST-ST-151-evt-06 */
+    it('COMPLETE 事件 payload 无 span 时不更新 traceSpans', () => {
+      const cb = lifecycleCallbacks[COLLECTION_EVENTS.COMPLETE]
+      cb(
+        createLifecycleEvent({
+          type: COLLECTION_EVENTS.COMPLETE,
+          payload: {},
+        }),
+      )
+
+      expect(Object.keys(useCollectionRuntimeStore.getState().traceSpans)).toHaveLength(0)
+    })
+
+    /** @test_id V9-TEST-ST-151-evt-07 */
+    it('COMPLETE 事件无 payload 时不更新 traceSpans', () => {
+      const cb = lifecycleCallbacks[COLLECTION_EVENTS.COMPLETE]
+      cb(
+        createLifecycleEvent({
+          type: COLLECTION_EVENTS.COMPLETE,
+        }),
+      )
+
+      expect(Object.keys(useCollectionRuntimeStore.getState().traceSpans)).toHaveLength(0)
+    })
+
+    // ---- TASK_STATUS 事件 + 全局进度 ----
+
+    /** @test_id V9-TEST-ST-151-evt-08 */
+    it('TASK_STATUS 事件携带 progress 时更新全局进度', () => {
+      const cb = lifecycleCallbacks[COLLECTION_EVENTS.TASK_STATUS]
+      cb(
+        createLifecycleEvent({
+          type: COLLECTION_EVENTS.TASK_STATUS,
+          taskId: 'task-progress',
+          payload: { progress: 77 },
+        }),
+      )
+
+      expect(useCollectionRuntimeStore.getState().overallProgress).toBe(77)
+    })
+
+    /** @test_id V9-TEST-ST-151-evt-09 */
+    it('TASK_STATUS 事件无 progress 时不更新全局进度', () => {
+      useCollectionRuntimeStore.getState().setOverallProgress(42)
+      const cb = lifecycleCallbacks[COLLECTION_EVENTS.TASK_STATUS]
+      cb(
+        createLifecycleEvent({
+          type: COLLECTION_EVENTS.TASK_STATUS,
+          taskId: 'task-no-progress',
+          payload: { status: 'running' },
+        }),
+      )
+
+      expect(useCollectionRuntimeStore.getState().overallProgress).toBe(42)
+    })
+
+    // ---- handleLifecycleEvent 异常路径（catch 分支）----
+
+    /** @test_id V9-TEST-ST-151-evt-10 */
+    it('生命周期事件处理异常时进入 catch 不影响 store', () => {
+      // 让 refreshStats 内部的 getQualitySnapshot 抛出，触发 catch 分支
+      mockGetQualitySnapshot.mockImplementationOnce(() => {
+        throw new Error('stats boom')
+      })
+
+      const cb = lifecycleCallbacks[COLLECTION_EVENTS.TRIGGERED]
+      cb(createLifecycleEvent({ message: '不应记录' }))
+
+      // refreshStats 抛出 → appendLog 未执行
+      expect(useCollectionRuntimeStore.getState().logs).toHaveLength(0)
+    })
+
+    // ---- handleTraceSpan 路径 ----
+
+    /** @test_id V9-TEST-ST-151-evt-11 */
+    it('collect:trace 事件正常处理 span 并更新 traceSpans', () => {
+      traceCallback(createSpan({ traceId: 'trace-from-bus' }))
+
+      expect(
+        useCollectionRuntimeStore.getState().traceSpans['trace-from-bus'],
+      ).toBeDefined()
+    })
+
+    /** @test_id V9-TEST-ST-151-evt-12 */
+    it('collect:trace 事件异常 span 时进入 catch 不影响 store', () => {
+      // null.traceId 会抛出 TypeError，触发 catch 分支
+      traceCallback(null)
+
+      expect(useCollectionRuntimeStore.getState().traceSpans).toEqual({})
     })
   })
 })

@@ -454,6 +454,50 @@ describe('useSearchStore', () => {
       expect(criteria.dateRange).toBeUndefined()
     })
 
+    /** @test_id V9-TEST-ST-SRCH-001-DATE-YESTERDAY */
+    it('datePreset=yesterday 生成正确的 dateRange（昨天 00:00~23:59:59）', () => {
+      useSearchStore.getState().setDatePreset('yesterday')
+      const criteria = useSearchStore.getState().buildCriteria()
+
+      expect(criteria.dateRange).toBeDefined()
+      expect(criteria.dateRange!.preset).toBe('custom')
+
+      const startDate = new Date(criteria.dateRange!.start!)
+      const endDate = new Date(criteria.dateRange!.end!)
+
+      // start 应该是昨天的 00:00:00
+      const yesterday = new Date()
+      yesterday.setDate(yesterday.getDate() - 1)
+      expect(startDate.getFullYear()).toBe(yesterday.getFullYear())
+      expect(startDate.getMonth()).toBe(yesterday.getMonth())
+      expect(startDate.getDate()).toBe(yesterday.getDate())
+      expect(startDate.getHours()).toBe(0)
+      expect(startDate.getMinutes()).toBe(0)
+
+      // end 应该是昨天的 23:59:59
+      expect(endDate.getFullYear()).toBe(yesterday.getFullYear())
+      expect(endDate.getMonth()).toBe(yesterday.getMonth())
+      expect(endDate.getDate()).toBe(yesterday.getDate())
+      expect(endDate.getHours()).toBe(23)
+      expect(endDate.getMinutes()).toBe(59)
+    })
+
+    /** @test_id V9-TEST-ST-SRCH-001-DATE-LAST30 */
+    it('datePreset=last30days 生成正确的 dateRange', () => {
+      useSearchStore.getState().setDatePreset('last30days')
+      const criteria = useSearchStore.getState().buildCriteria()
+
+      expect(criteria.dateRange).toBeDefined()
+      expect(criteria.dateRange!.preset).toBe('last30days')
+      expect(criteria.dateRange!.start).toBeDefined()
+      expect(criteria.dateRange!.end).toBeDefined()
+
+      const startDate = new Date(criteria.dateRange!.start!)
+      const endDate = new Date(criteria.dateRange!.end!)
+      const diffDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+      expect(diffDays).toBeCloseTo(30, 0)
+    })
+
     it('page 和 pageSize 正确传递', () => {
       useSearchStore.getState().setPage(3)
       const criteria = useSearchStore.getState().buildCriteria()
