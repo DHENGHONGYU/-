@@ -6,9 +6,9 @@ code_version: 2.0.0
 # 状态管理规范
 
 > **Status**: Current  
-> **Version**: v1.0.0  
-> **Last Updated**: 2026-07-12  
-> **Related**: `src/store/`、`src/lib/withBroadcast.ts`、`src/store/helpers/`、`docs/02-design/data-flow-spec.md`
+> **Version**: v1.1.0  
+> **Last Updated**: 2026-07-22  
+> **Related**: `src/store/`、`src/lib/withBroadcast.ts`、`src/store/helpers/`、`docs/reference/data-flow-spec.md`
 
 ---
 
@@ -131,6 +131,72 @@ V9 的状态层（`src/store/`）基于 **Zustand**，采用**平铺目录结构
 2. **派生分离**：派生计算放入 `xxxStore.derived.ts`，勿污染主 Store。
 3. **事件清理**：`useEffect` 中订阅 Store/EventBus 必须在 cleanup 显式取消（见 `AGENTS.md` 标准清理模板）。
 4. **日志前缀**：`[Store名] 操作名`，如 `[MarketData] refresh()`。
+5. **reset 命名统一**：所有 Store 的全局重置函数统一命名为 `reset()`。业务级局部清除函数（如 `clearScores`、`clearVerdicts`、`resetResult`）保留原名以区分语义。参见 §6。
+
+---
+
+## 5. Store Reset 规范
+
+### 5.1 术语定义
+
+| 术语 | 定义 | 示例 |
+|------|------|------|
+| **全局 reset** | 将 Store 全部状态回归 `initialState`，用于登出/切换账户/模块卸载 | `portfolioStore.reset()` |
+| **局部清除** | 仅清除特定子集状态（如结果、历史），保留输入态和配置 | `intelligentScoreStore.resetResult()` |
+| **级联 reset** | Facade Store 的 reset 中调用子 Store 的 reset，确保状态一致性 | `tradingStore.reset()` → `orderStore.reset()` |
+
+### 5.2 命名契约
+
+| 操作类型 | 函数名 | 使用场景 |
+|---------|--------|---------|
+| 全局重置 | `reset()` | 登出、切换账户、模块卸载 |
+| 业务级全量操作 | `resetAll()` | 仅限调用服务端重置（如 `commandStore.resetAll()` → `systemService.resetAll()`） |
+| 局部结果清除 | `resetResult()` / `clearResults()` | 重新执行分析前清理旧结果 |
+| 局部数据清除 | `clearScores()` / `clearVerdicts()` / `clearMessages()` | 清空特定累积数据 |
+
+### 5.3 实现模式
+
+```typescript
+// 标准模式：有 initialState 常量的 Store
+const initialState = { /* ... */ }
+
+export const useXxxStore = create<XxxState>()((set, get) => ({
+  ...initialState,
+  reset: () => {
+    logger.info('[XxxStore] reset')
+    set({ ...initialState })
+  },
+}))
+```
+
+### 5.4 级联 reset 规则
+
+- **Facade Store**（如 `tradingStore`）的 `reset()` 必须级联调用所有直接依赖的子 Store `reset()`
+- **级联顺序**：先 reset 子 Store，再 reset 自身（防止中间状态不一致）
+- **禁止循环级联**：A→B→A 的循环 reset 会导致无限递归
+
+当前级联关系：
+```
+tradingStore.reset()
+  ├──▶ watchlistStore.reset()
+  ├──▶ signalAdviceStore.reset()
+  ├──▶ portfolioStore.reset()
+  └──▶ orderStore.reset()
+```
+
+### 5.5 各 Store Reset 状态
+
+| 分类 | Store | Reset 函数 | 备注 |
+|------|-------|-----------|------|
+| 已有完整 reset | portfolioStore, watchlistStore, signalAdviceStore, positionStore, disciplineStore, orderStore, executionStore, tradingStore | `reset()` | |
+| 已有完整 reset（等效函数） | collectionWizardStore, dualStrategyStore, rotationSignalStore, valuePitStore, runtimeTradingConfigStore, hybridProofreadStore, backtestStore, searchStore | `resetWizard/clearScores/clearSignals/resetToDefault/clearReport/clearResults/reset` | 语义等价 |
+| 全局 reset + 局部清除 | hotSectorStore | `reset()` + `clearScores()` | reset 全局重置；clearScores 仅清评分数据 |
+| 完整 reset + 局部清除 | intelligentScoreStore, industryScoreStore, riskStore, multiFactorScreeningStore | `reset()` + `resetResult()/clearVerdicts()` | reset 全局；局部仅清结果 |
+| 已有 reset（配置/导航类） | sevenDimConfigStore, tradingHubStore, analysisHubStore, inputHubStore, engineStore, predictionStore, fileImportStore, registrationContractStore, databridgeStore, dataSyncStore, dataTestStore, collectionRuntimeStore, customAgentStore, loopStatusStore, marketDataStore | `reset()` | |
+| 新增 reset（本次整改） | agentFeedbackStore, widgetStore, analysisStore, strategySnapshotStore, perfMetricsStore, dataflowStore, profileStore, sectorAnalysisStore, scoreDocStore, industryDashboardStore | `reset()` | 2026-07-22 新增 |
+| 业务级操作 | commandStore | `resetAll()` | 调用 systemService.resetAll() |
+| 不需要 reset | themeStore（persist 用户偏好）, workflowStore（单枚举）, outputStore（极简标量）, mcpServerStore（只读视图）, intentionPoolStore / positionPoolStore / researchPoolStore（DB 驱动缓存层）, holdingsStore（覆盖写）, localKnowledgeStore（DB 驱动） | — | 数据由 DB 持久化，Store 是缓存视图 |
+| 部分清理即可 | agentStore（clearMCPCallHistory）, chatStore（clearMessages）, pageStore（resetPageData 部分）, systemMonitorStore（clearMonitorLogs） | 局部清除 | 按需清理特定子集 |
 
 ---
 

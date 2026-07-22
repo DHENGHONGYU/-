@@ -100,6 +100,27 @@ flowchart LR
 
 **核心原则**：统一数据入口（写库必经 DataBridge）；事件驱动刷新（写库后广播 `${store}${CHANGED_SUFFIX}`，订阅 Store 自动更新并触发视图重渲染）。
 
+### 4.4 状态重置流（Reset Flow）
+
+登出/切换账户/模块卸载场景的状态清除遵循**级联 reset 模式**：
+
+```mermaid
+flowchart TD
+    A[用户登出] --> B[commandStore.resetAll]
+    B --> C[systemService.resetAll via DataBridge]
+    C --> D[DB 全量清空]
+    D --> E[DataBridge 广播 store_changed]
+    E --> F[tradingStore.reset 级联]
+    F --> F1[watchlistStore.reset]
+    F --> F2[signalAdviceStore.reset]
+    F --> F3[portfolioStore.reset]
+    F --> F4[orderStore.reset]
+    F --> F5[tradingStore 自身 reset]
+    E --> G[其他 Store 各自 reset]
+```
+
+**级联规则**：Facade Store（`tradingStore`）的 `reset()` 先级联子 Store，再 reset 自身。DB 驱动的池 Store（`intentionPoolStore`/`positionPoolStore`/`researchPoolStore`）不需要 Store 层 reset，由 DataBridge 订阅自动 refresh。详见 `docs/explanation/state-management.md` §5。
+
 ---
 
 ## 5. 五舱与驾驶舱（Cockpit）
