@@ -199,3 +199,69 @@ describe('hotSectorStore', () => {
     expect(notFound).toBeUndefined()
   })
 })
+
+describe('hotSectorStore reset', () => {
+  test('reset 将所有状态恢复到初始值', () => {
+    // 先填充数据
+    const scores = loadTestScores()
+    const now = Date.now()
+    useHotSectorStore.setState({
+      scores,
+      loading: true,
+      error: 'err',
+      isRefreshing: true,
+      lastUpdated: now,
+    })
+
+    // 验证状态已填充
+    const before = useHotSectorStore.getState()
+    expect(before.scores.length).toBeGreaterThan(0)
+    expect(before.loading).toBe(true)
+    expect(before.error).toBe('err')
+    expect(before.isRefreshing).toBe(true)
+    expect(before.lastUpdated).toBe(now)
+
+    // 执行 reset
+    useHotSectorStore.getState().reset()
+
+    const after = useHotSectorStore.getState()
+    expect(after.scores).toHaveLength(0)
+    expect(after.loading).toBe(false)
+    expect(after.error).toBeNull()
+    expect(after.isRefreshing).toBe(false)
+    expect(after.lastUpdated).toBe(0)
+  })
+})
+
+describe('hotSectorStore clearScores', () => {
+  test('clearScores 将所有状态恢复到初始值', () => {
+    // 先填充数据
+    const scores = loadTestScores()
+    const now = Date.now()
+    useHotSectorStore.setState({
+      scores,
+      loading: true,
+      error: 'err',
+      isRefreshing: true,
+      lastUpdated: now,
+    })
+
+    // 验证状态已填充
+    const before = useHotSectorStore.getState()
+    expect(before.scores.length).toBeGreaterThan(0)
+    expect(before.loading).toBe(true)
+    expect(before.error).toBe('err')
+    expect(before.isRefreshing).toBe(true)
+    expect(before.lastUpdated).toBe(now)
+
+    // 执行 clearScores
+    useHotSectorStore.getState().clearScores()
+
+    const after = useHotSectorStore.getState()
+    expect(after.scores).toHaveLength(0)
+    expect(after.loading).toBe(false)
+    expect(after.error).toBeNull()
+    expect(after.isRefreshing).toBe(false)
+    expect(after.lastUpdated).toBe(0)
+  })
+})

@@ -157,3 +157,57 @@ describe('valuePitStore', () => {
     expect(Array.isArray(waiters)).toBe(true)
   })
 })
+
+describe('valuePitStore clearScores', () => {
+  test('clearScores 清空 scores/rotationSignals/combinedResults 并恢复初始状态', () => {
+    // 先填充数据
+    loadTestScores()
+    const now = Date.now()
+    useValuePitStore.setState({
+      rotationSignals: [
+        {
+          sectorId: '测试板块',
+          triggered: true,
+          conditions: { volumeBreakthrough: true, capitalInflow: true, goldenCross: false },
+          strength: 'strong',
+          detectedAt: now,
+        },
+      ],
+      combinedResults: [
+        {
+          score: useValuePitStore.getState().scores[0]!,
+          rotation: {
+            sectorId: '测试板块',
+            triggered: true,
+            conditions: { volumeBreakthrough: true, capitalInflow: true, goldenCross: false },
+            strength: 'strong',
+            detectedAt: now,
+          },
+        },
+      ],
+      loading: true,
+      error: 'test error',
+      lastUpdated: now,
+    })
+
+    // 验证状态已填充
+    const before = useValuePitStore.getState()
+    expect(before.scores.length).toBeGreaterThan(0)
+    expect(before.rotationSignals).toHaveLength(1)
+    expect(before.combinedResults).toHaveLength(1)
+    expect(before.loading).toBe(true)
+    expect(before.error).toBe('test error')
+    expect(before.lastUpdated).toBe(now)
+
+    // 执行 clearScores
+    useValuePitStore.getState().clearScores()
+
+    const after = useValuePitStore.getState()
+    expect(after.scores).toHaveLength(0)
+    expect(after.rotationSignals).toHaveLength(0)
+    expect(after.combinedResults).toHaveLength(0)
+    expect(after.loading).toBe(false)
+    expect(after.error).toBeNull()
+    expect(after.lastUpdated).toBe(0)
+  })
+})

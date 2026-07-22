@@ -19,8 +19,18 @@
  * 14. initSignalStoreSubscriptions: action 过滤（只响应特定 action）
  * 15. initSignalStoreSubscriptions: 去抖 100ms + 并发锁
  * 16. initSignalStoreSubscriptions: 返回 cleanup 函数
-  * @covers_docs [V9-DOC-BACK-013, V9-DOC-ARCH-007, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
-*/
+ * 17. initSignalStoreGlobalSubscriptions: 首次调用注册订阅 + checkDataReady
+ * 18. initSignalStoreGlobalSubscriptions: 重复调用幂等
+ * 19. initSignalStoreGlobalSubscriptions: 已有组件级订阅时标记为全局
+ * 20. destroySignalStoreSubscriptions: 全局保护跳过清理
+ * 21. destroySignalStoreSubscriptions: 组件级正常清理（清除定时器 + unsub）
+ * 22. initSignalStoreSubscriptions: 已有全局订阅时返回 no-op cleanup
+ * 23. refresh: 排队刷新（_pendingRefresh）在完成后触发
+ * 24. checkDataReady: 两个查询都成功 → dataReady=true
+ * 25. checkDataReady: 股票池空 → dataReady=false
+ * 26. checkDataReady: 异常 → dataReady=false
+ * @covers_docs [V9-DOC-BACK-013, V9-DOC-ARCH-007, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+ */
 
 import { vi } from 'vitest'
 import type { Signal, Stock } from '@/data/types'
@@ -69,14 +79,14 @@ vi.mock('@/config/dbConfig', () => ({
     queryList: 'QUERY_LIST',
   },
   MODULE_ID: { trading: 'trading', tradinghub: 'tradinghub' },
-  STORE_NAME: { stocks: 'stocks', signals: 'signals' },
+  STORE_NAME: { stocks: 'stocks', signals: 'signals', v6Scores: 'v6_scores' },
 }))
 
 // ============================================================
 // Imports
 // ============================================================
 
-import { useSignalStore, topSignals, initSignalStoreSubscriptions, _resetSignalStoreSubscriptionsForTest } from './signalStore'
+import { useSignalStore, topSignals, initSignalStoreSubscriptions, initSignalStoreGlobalSubscriptions, _resetSignalStoreSubscriptionsForTest } from './signalStore'
 import {
   generateSignalsForSymbol,
   pickStrongestSignal,
@@ -285,6 +295,34 @@ describe('useSignalStore', () => {
   })
 
   // ============================================================
+  // refresh: 并发锁 + 排队刷新
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-156-refresh-pending-01 */
+  it('refresh: 并发锁，isRefreshing=true 时跳过', async () => {
+    const stocks = [createMockStock('A')]
+    let resolveList!: (value: { success: true; data: Stock[] }) => void
+    const listPromise = new Promise<{ success: true; data: Stock[] }>((r) => { resolveList = r })
+    mockDataBridgeQuery.mockReturnValue(listPromise)
+    ;(generateSignalsForSymbol as ReturnType<typeof vi.fn>).mockResolvedValue([
+      createMockSignal('A', 70),
+    ])
+    ;(pickStrongestSignal as ReturnType<typeof vi.fn>).mockReturnValue(
+      createMockSignal('A', 70),
+    )
+
+    const promise1 = useSignalStore.getState().refresh()
+    // isRefreshing=true → 第二次调用直接跳过
+    await useSignalStore.getState().refresh()
+
+    // dataBridge.query 只应被调用一次
+    expect(mockDataBridgeQuery).toHaveBeenCalledTimes(1)
+
+    resolveList!({ success: true, data: stocks })
+    await promise1
+  })
+
+  // ============================================================
   // topSignals
   // ============================================================
 
@@ -312,6 +350,52 @@ describe('useSignalStore', () => {
     useSignalStore.setState({ signals: [] })
     expect(topSignals()).toEqual([])
     expect(topSignals(5)).toEqual([])
+  })
+
+  // ============================================================
+  // checkDataReady
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-156-check-01 */
+  it('checkDataReady: 两个查询都成功且有数据 → dataReady=true', async () => {
+    mockDataBridgeQuery
+      .mockResolvedValueOnce({ success: true, data: [createMockStock('A')] })
+      .mockResolvedValueOnce({ success: true, data: [{ score: 90 }] })
+
+    await useSignalStore.getState().checkDataReady()
+
+    expect(useSignalStore.getState().dataReady).toBe(true)
+  })
+
+  /** @test_id V9-TEST-ST-156-check-02 */
+  it('checkDataReady: 股票池为空 → dataReady=false', async () => {
+    mockDataBridgeQuery
+      .mockResolvedValueOnce({ success: true, data: [] })
+      .mockResolvedValueOnce({ success: true, data: [{ score: 90 }] })
+
+    await useSignalStore.getState().checkDataReady()
+
+    expect(useSignalStore.getState().dataReady).toBe(false)
+  })
+
+  /** @test_id V9-TEST-ST-156-check-03 */
+  it('checkDataReady: 查询失败 → dataReady=false', async () => {
+    mockDataBridgeQuery
+      .mockResolvedValueOnce({ success: false, error: 'fail' })
+      .mockResolvedValueOnce({ success: true, data: [{ score: 90 }] })
+
+    await useSignalStore.getState().checkDataReady()
+
+    expect(useSignalStore.getState().dataReady).toBe(false)
+  })
+
+  /** @test_id V9-TEST-ST-156-check-04 */
+  it('checkDataReady: 异常 → dataReady=false', async () => {
+    mockDataBridgeQuery.mockRejectedValue(new Error('network'))
+
+    await useSignalStore.getState().checkDataReady()
+
+    expect(useSignalStore.getState().dataReady).toBe(false)
   })
 })
 
@@ -450,5 +534,207 @@ describe('initSignalStoreSubscriptions', () => {
     expect(typeof cleanup2).toBe('function')
 
     cleanup2()
+  })
+
+  // ============================================================
+  // 新增：幂等 + cleanup 路径
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-156-sub-idempotent-01 */
+  it('已有组件级订阅时，返回销毁函数（不重复注册）', () => {
+    initSignalStoreSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(2)
+
+    // 再次调用 → 幂等返回 destroySignalStoreSubscriptions
+    const cleanup = initSignalStoreSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(2) // 不增加
+    expect(typeof cleanup).toBe('function')
+
+    cleanup() // 清理
+  })
+
+  /** @test_id V9-TEST-ST-156-sub-idempotent-02 */
+  it('全局已初始化时，返回 no-op cleanup', () => {
+    // 先全局初始化
+    mockDataBridgeQuery.mockResolvedValue({ success: false, error: 'no data' })
+    initSignalStoreGlobalSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(2)
+
+    // 组件级调用 → 返回 no-op cleanup
+    const cleanup = initSignalStoreSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(2) // 不增加
+    expect(typeof cleanup).toBe('function')
+
+    // cleanup 不应调用 unsub（全局保护）
+    cleanup()
+    unsubscribes.forEach(unsub => expect(unsub).not.toHaveBeenCalled())
+  })
+
+  /** @test_id V9-TEST-ST-156-sub-callback-01 */
+  it('signals 频道回调：tradinghub source 被过滤', async () => {
+    initSignalStoreSubscriptions()
+    const signalsCb = capturedCallbacks.get('signals')!
+
+    signalsCb({
+      meta: { source: 'tradinghub', target: 'db', action: 'INSERT_SIGNAL', traceId: 't1', timestamp: Date.now() },
+      payload: {},
+    })
+
+    await new Promise((r) => setTimeout(r, 400))
+    expect(mockDataBridgeQuery).not.toHaveBeenCalled()
+  })
+})
+
+// ============================================================
+// initSignalStoreGlobalSubscriptions
+// ============================================================
+
+describe('initSignalStoreGlobalSubscriptions', () => {
+  /** @test_id V9-TEST-ST-156-global-01 */
+  it('首次调用 → 注册订阅 + 调用 checkDataReady', async () => {
+    mockDataBridgeQuery
+      .mockResolvedValueOnce({ success: true, data: [createMockStock('A')] })
+      .mockResolvedValueOnce({ success: false, error: 'no scores' })
+
+    initSignalStoreGlobalSubscriptions()
+
+    expect(mockSubscribe).toHaveBeenCalledTimes(2)
+    expect(mockSubscribe).toHaveBeenCalledWith('v6_scores', expect.any(Function))
+    expect(mockSubscribe).toHaveBeenCalledWith('signals', expect.any(Function))
+
+    // 等待 checkDataReady 完成
+    await vi.waitFor(() => expect(mockDataBridgeQuery).toHaveBeenCalled(), { timeout: 1000 })
+    // checkDataReady 调用了 2 次 query（stocks + v6Scores）
+    expect(mockDataBridgeQuery).toHaveBeenCalledTimes(2)
+    expect(useSignalStore.getState().dataReady).toBe(false)
+  })
+
+  /** @test_id V9-TEST-ST-156-global-02 */
+  it('重复调用 → 幂等跳过', () => {
+    mockDataBridgeQuery.mockResolvedValue({ success: false, error: 'no data' })
+
+    initSignalStoreGlobalSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(2)
+
+    initSignalStoreGlobalSubscriptions()
+    // 仍然只注册了 2 次
+    expect(mockSubscribe).toHaveBeenCalledTimes(2)
+  })
+
+  /** @test_id V9-TEST-ST-156-global-03 */
+  it('已有组件级订阅时 → 标记为全局（不重复注册）', () => {
+    mockDataBridgeQuery.mockResolvedValue({ success: false, error: 'no data' })
+
+    // 先组件级初始化
+    initSignalStoreSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(2)
+
+    // 再全局初始化 → 已有订阅，只标记全局
+    initSignalStoreGlobalSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(2) // 不增加
+  })
+
+  /** @test_id V9-TEST-ST-156-global-04 */
+  it('全局初始化后，组件级 cleanup 不销毁订阅', () => {
+    mockDataBridgeQuery.mockResolvedValue({ success: false, error: 'no data' })
+
+    initSignalStoreGlobalSubscriptions()
+    const unsubs = [...unsubscribes]
+
+    // 组件调用 init → 获取 no-op cleanup
+    const cleanup = initSignalStoreSubscriptions()
+    cleanup()
+
+    // 全局保护 → unsub 不应被调用
+    unsubs.forEach(unsub => expect(unsub).not.toHaveBeenCalled())
+  })
+
+  /** @test_id V9-TEST-ST-156-global-05 */
+  it('全局初始化后，回调能正常触发', async () => {
+    const stocks = [createMockStock('A')]
+    mockDataBridgeQuery
+      .mockResolvedValueOnce({ success: false, error: 'no scores' })
+      .mockResolvedValueOnce({ success: false, error: 'no scores' })
+      .mockResolvedValue({ success: true, data: stocks })
+    ;(generateSignalsForSymbol as ReturnType<typeof vi.fn>).mockResolvedValue([
+      createMockSignal('A', 60),
+    ])
+    ;(pickStrongestSignal as ReturnType<typeof vi.fn>).mockReturnValue(
+      createMockSignal('A', 60),
+    )
+
+    initSignalStoreGlobalSubscriptions()
+    // 等待 checkDataReady 完成
+    await vi.waitFor(() => expect(mockDataBridgeQuery).toHaveBeenCalled(), { timeout: 1000 })
+
+    vi.clearAllMocks()
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: stocks })
+
+    // 触发回调
+    const v6Cb = capturedCallbacks.get('v6_scores')!
+    v6Cb({
+      meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't1', timestamp: Date.now() },
+      payload: {},
+    })
+
+    await vi.waitFor(() => expect(mockDataBridgeQuery).toHaveBeenCalled(), { timeout: 1000 })
+    expect(mockDataBridgeQuery).toHaveBeenCalledTimes(1)
+  })
+})
+
+// ============================================================
+// destroySignalStoreSubscriptions
+// ============================================================
+
+describe('destroySignalStoreSubscriptions（通过 cleanup 间接触发）', () => {
+  /** @test_id V9-TEST-ST-156-destroy-01 */
+  it('组件级 cleanup → 取消订阅 + 清除定时器', () => {
+    initSignalStoreSubscriptions()
+    const unsubs = [...unsubscribes]
+    expect(unsubs.length).toBe(2)
+
+    const cleanup = initSignalStoreSubscriptions()
+    cleanup()
+
+    // 两个 unsub 都应被调用
+    unsubs.forEach(unsub => expect(unsub).toHaveBeenCalled())
+  })
+
+  /** @test_id V9-TEST-ST-156-destroy-02 */
+  it('全局初始化后，destroy 跳过（全局保护）', () => {
+    mockDataBridgeQuery.mockResolvedValue({ success: false, error: 'no data' })
+
+    initSignalStoreGlobalSubscriptions()
+    const unsubs = [...unsubscribes]
+
+    // 直接调用 cleanup（全局标记保护）
+    const cleanup = initSignalStoreSubscriptions()
+    cleanup()
+
+    unsubs.forEach(unsub => expect(unsub).not.toHaveBeenCalled())
+  })
+})
+
+// ============================================================
+// _resetSignalStoreSubscriptionsForTest
+// ============================================================
+
+describe('_resetSignalStoreSubscriptionsForTest', () => {
+  /** @test_id V9-TEST-ST-156-reset-01 */
+  it('重置所有订阅状态和 store 状态', () => {
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: [] })
+    initSignalStoreGlobalSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(2)
+
+    _resetSignalStoreSubscriptionsForTest()
+
+    // store 状态应回到初始值
+    const state = useSignalStore.getState()
+    expect(state.signals).toEqual([])
+    expect(state.loading).toBe(false)
+    expect(state.error).toBeNull()
+    expect(state.lastUpdated).toBe(0)
+    expect(state.isRefreshing).toBe(false)
+    expect(state.dataReady).toBe(false)
   })
 })
