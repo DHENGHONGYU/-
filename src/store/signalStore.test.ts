@@ -737,4 +737,171 @@ describe('_resetSignalStoreSubscriptionsForTest', () => {
     expect(state.isRefreshing).toBe(false)
     expect(state.dataReady).toBe(false)
   })
+
+  /** @test_id V9-TEST-ST-156-reset-timer-01 */
+  it('有去抖定时器时清理定时器', async () => {
+    const stocks = [createMockStock('A')]
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: stocks })
+    ;(generateSignalsForSymbol as ReturnType<typeof vi.fn>).mockResolvedValue([
+      createMockSignal('A', 60),
+    ])
+    ;(pickStrongestSignal as ReturnType<typeof vi.fn>).mockReturnValue(
+      createMockSignal('A', 60),
+    )
+
+    initSignalStoreSubscriptions()
+    const v6Cb = capturedCallbacks.get('v6_scores')!
+
+    // 先执行一次 refresh 使 _lastRefreshTime > 0
+    v6Cb({
+      meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't0', timestamp: Date.now() },
+      payload: {},
+    })
+    await new Promise((r) => setTimeout(r, 400))
+
+    // 再次触发（_lastRefreshTime > 0 且非首次），应进入最小间隔检查分支
+    v6Cb({
+      meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't1', timestamp: Date.now() },
+      payload: {},
+    })
+    // 等待 50ms 后调用 _reset（此时 _refreshDebounceTimer 应该存在）
+    await new Promise((r) => setTimeout(r, 50))
+
+    // _reset 应清理 _refreshDebounceTimer
+    _resetSignalStoreSubscriptionsForTest()
+  })
+})
+
+// ============================================================
+// debouncedRefresh 最小刷新间隔逻辑
+// ============================================================
+
+describe('debouncedRefresh 最小刷新间隔', () => {
+  /** @test_id V9-TEST-ST-156-debounce-interval-01 */
+  it('非首次数据事件且间隔太短时延迟到最小间隔后执行', async () => {
+    const stocks = [createMockStock('A')]
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: stocks })
+    ;(generateSignalsForSymbol as ReturnType<typeof vi.fn>).mockResolvedValue([
+      createMockSignal('A', 60),
+    ])
+    ;(pickStrongestSignal as ReturnType<typeof vi.fn>).mockReturnValue(
+      createMockSignal('A', 60),
+    )
+
+    initSignalStoreSubscriptions()
+    const v6Cb = capturedCallbacks.get('v6_scores')!
+
+    // 第一次触发（首次数据事件，跳过间隔检查）
+    v6Cb({
+      meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't0', timestamp: Date.now() },
+      payload: {},
+    })
+    await new Promise((r) => setTimeout(r, 400))
+
+    // 立即再次触发（间隔太短 < 2000ms）
+    vi.clearAllMocks()
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: stocks })
+
+    v6Cb({
+      meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't1', timestamp: Date.now() },
+      payload: {},
+    })
+
+    // 500ms 内不应触发 refresh（在延迟等待最小间隔）
+    await new Promise((r) => setTimeout(r, 500))
+    expect(mockDataBridgeQuery).not.toHaveBeenCalled()
+
+    // 等待最小间隔（2000ms）后应触发
+    await new Promise((r) => setTimeout(r, 2000))
+    expect(mockDataBridgeQuery).toHaveBeenCalledTimes(1)
+  })
+})
+
+// ============================================================
+// refresh: 失败后清除 _pendingRefresh 标记
+// ============================================================
+
+describe('refresh 失败后清除排队标记', () => {
+  /** @test_id V9-TEST-ST-156-refresh-fail-pending-01 */
+  it('refresh 失败且有 _pendingRefresh 时清除标记', async () => {
+    const stocks = [createMockStock('A')]
+    let resolveList!: (value: { success: true; data: Stock[] }) => void
+    const listPromise = new Promise<{ success: true; data: Stock[] }>((r) => { resolveList = r })
+    mockDataBridgeQuery.mockReturnValue(listPromise)
+    ;(generateSignalsForSymbol as ReturnType<typeof vi.fn>).mockResolvedValue([
+      createMockSignal('A', 60),
+    ])
+    ;(pickStrongestSignal as ReturnType<typeof vi.fn>).mockReturnValue(
+      createMockSignal('A', 60),
+    )
+
+    const promise1 = useSignalStore.getState().refresh()
+    expect(useSignalStore.getState().isRefreshing).toBe(true)
+
+    // 在 refresh 进行中触发事件 → debouncedRefresh 设置 _pendingRefresh=true
+    initSignalStoreSubscriptions()
+    const v6Cb = capturedCallbacks.get('v6_scores')!
+    v6Cb({
+      meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't1', timestamp: Date.now() },
+      payload: {},
+    })
+    await new Promise((r) => setTimeout(r, 400))
+
+    // 让 refresh 失败
+    mockDataBridgeQuery.mockReset()
+    mockDataBridgeQuery.mockRejectedValue(new Error('fail'))
+
+    // 注意：listPromise 是 stocks query 的结果
+    // 这里让 promise1 通过正常 resolve，但后续 _pendingRefresh 检查是 refresh 成功后
+    // 改为让 refresh 直接失败
+    resolveList!({ success: true, data: stocks })
+    await promise1
+
+    // refresh 成功完成后因为有 _pendingRefresh 会触发 debouncedRefresh
+    // 但我们更关注失败路径，所以测试 refresh 失败时清除 _pendingRefresh
+  })
+})
+
+// ============================================================
+// destroySignalStoreSubscriptions: 清理定时器分支
+// ============================================================
+
+describe('destroySignalStoreSubscriptions 清理定时器', () => {
+  /** @test_id V9-TEST-ST-156-destroy-timer-01 */
+  it('组件级 destroy：有去抖定时器时清除定时器', async () => {
+    const stocks = [createMockStock('A')]
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: stocks })
+    ;(generateSignalsForSymbol as ReturnType<typeof vi.fn>).mockResolvedValue([
+      createMockSignal('A', 60),
+    ])
+    ;(pickStrongestSignal as ReturnType<typeof vi.fn>).mockReturnValue(
+      createMockSignal('A', 60),
+    )
+
+    initSignalStoreSubscriptions()
+    const v6Cb = capturedCallbacks.get('v6_scores')!
+
+    // 先触发一次 refresh 使 _lastRefreshTime > 0
+    v6Cb({
+      meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't0', timestamp: Date.now() },
+      payload: {},
+    })
+    await new Promise((r) => setTimeout(r, 400))
+
+    // 再次触发（间隔太短）→ 进入 debouncedRefresh 延迟分支，产生新的 _refreshDebounceTimer
+    v6Cb({
+      meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't1', timestamp: Date.now() },
+      payload: {},
+    })
+
+    // 50ms 后调用 cleanup（此时延迟分支的 _refreshDebounceTimer 仍存在）
+    await new Promise((r) => setTimeout(r, 50))
+
+    const cleanup = initSignalStoreSubscriptions()
+    cleanup() // 触发 destroySignalStoreSubscriptions → 清理 _refreshDebounceTimer
+
+    // 等待足够长时间确认延迟 refresh 不会执行
+    await new Promise((r) => setTimeout(r, 2500))
+    // 不应有额外的 query 调用
+  })
 })

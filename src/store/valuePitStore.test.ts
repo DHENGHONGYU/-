@@ -2,7 +2,25 @@
  * @test_id V9-TEST-ST-162
  * @covers_docs [V9-DOC-ARCH-007, V9-DOC-BACK-015]
  */
-import { describe, test, expect, beforeEach } from 'vitest'
+import { describe, test, expect, beforeEach, vi } from 'vitest'
+
+// ============================================================
+// Mock: valuePitAnalyzer —— 默认委托到真实实现，允许单测覆盖为 throw
+// ============================================================
+
+const { mockAnalyze } = vi.hoisted(() => ({
+  mockAnalyze: vi.fn(),
+}))
+
+vi.mock('@/services/scoring/valuePitAnalyzer', async () => {
+  const actual = await vi.importActual<typeof import('@/services/scoring/valuePitAnalyzer')>(
+    '@/services/scoring/valuePitAnalyzer',
+  )
+  // 默认委托到真实 analyze，保证已有测试不受影响
+  mockAnalyze.mockImplementation(actual.analyze)
+  return { ...actual, analyze: mockAnalyze }
+})
+
 import { useValuePitStore, topScores, buildCandidates, waitSignalList } from './valuePitStore'
 
 /** 测试用输入数据（独立于 Mock 数据） */
@@ -209,5 +227,80 @@ describe('valuePitStore clearScores', () => {
     expect(after.loading).toBe(false)
     expect(after.error).toBeNull()
     expect(after.lastUpdated).toBe(0)
+  })
+})
+
+// ============================================================
+// refreshScore - 空输入 & 异常路径（覆盖 133-134, 155-157）
+// ============================================================
+
+describe('valuePitStore refreshScore - 边界与异常路径', () => {
+  beforeEach(() => {
+    useValuePitStore.getState().clearScores()
+  })
+
+  /**
+   * @test_id V9-TEST-ST-162-REFRESH-01
+   * inputs 为 undefined 时直接返回，不执行分析
+   * 覆盖行 132-134
+   */
+  test('refreshScore inputs 为 undefined 时提前返回', () => {
+    loadTestScores()
+    const scoresBefore = useValuePitStore.getState().scores
+
+    // 不传 inputs 参数
+    useValuePitStore.getState().refreshScore('银行')
+
+    // scores 不变
+    expect(useValuePitStore.getState().scores).toEqual(scoresBefore)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-162-REFRESH-02
+   * inputs 为空数组时直接返回，不执行分析
+   * 覆盖行 132-134
+   */
+  test('refreshScore inputs 为空数组时提前返回', () => {
+    loadTestScores()
+    const scoresBefore = useValuePitStore.getState().scores
+
+    useValuePitStore.getState().refreshScore('银行', [])
+
+    // scores 不变
+    expect(useValuePitStore.getState().scores).toEqual(scoresBefore)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-162-REFRESH-03
+   * analyze 抛出 Error 时设置 error 字段
+   * 覆盖行 155-157
+   */
+  test('refreshScore analyze 抛出 Error 时设置 error', () => {
+    loadTestScores()
+    // 单次覆盖为抛出异常
+    mockAnalyze.mockImplementationOnce(() => {
+      throw new Error('分析引擎异常')
+    })
+
+    useValuePitStore.getState().refreshScore('银行', TEST_INPUTS as any)
+
+    expect(useValuePitStore.getState().error).toBe('分析引擎异常')
+  })
+
+  /**
+   * @test_id V9-TEST-ST-162-REFRESH-04
+   * analyze 抛出非 Error 值时，String(err) 转换后设置 error
+   * 覆盖行 155（String(err) 分支）
+   */
+  test('refreshScore analyze 抛出非 Error 值时设置 String(err)', () => {
+    loadTestScores()
+    // 抛出字符串而非 Error 对象
+    mockAnalyze.mockImplementationOnce(() => {
+      throw '字符串错误'
+    })
+
+    useValuePitStore.getState().refreshScore('银行', TEST_INPUTS as any)
+
+    expect(useValuePitStore.getState().error).toBe('字符串错误')
   })
 })

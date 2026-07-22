@@ -174,3 +174,62 @@ describe('setActiveCabin: logger 行为', () => {
     )
   })
 })
+
+// ============================================================
+// inferInitialCabin: 通过动态重载模块覆盖各 hash 分支
+// inferInitialCabin 在模块加载时（create 调用时）执行一次，
+// 因此需要 vi.resetModules() + 动态 import 重新触发。
+// ============================================================
+
+describe('inferInitialCabin: hash 路径推导（动态重载）', () => {
+  /**
+   * 重置模块 registry 并以指定 hash 重新导入 workflowStore，
+   * 触发 inferInitialCabin() 在 create() 时重新执行。
+   */
+  async function reloadWithHash(hash: string): Promise<CabinType> {
+    window.location.hash = hash
+    vi.resetModules()
+    const mod = await import('./workflowStore')
+    return mod.useWorkflowStore.getState().activeCabin
+  }
+
+  /** @test_id V9-TEST-ST-164-infer-input */
+  it('hash #/input → input', async () => {
+    expect(await reloadWithHash('#/input')).toBe('input')
+  })
+
+  /** @test_id V9-TEST-ST-164-infer-analysis */
+  it('hash #/analysis → analysis', async () => {
+    expect(await reloadWithHash('#/analysis')).toBe('analysis')
+  })
+
+  /** @test_id V9-TEST-ST-164-infer-trading */
+  it('hash #/trading/holdings → trading', async () => {
+    expect(await reloadWithHash('#/trading/holdings')).toBe('trading')
+  })
+
+  /** @test_id V9-TEST-ST-164-infer-output */
+  it('hash #/output → output', async () => {
+    expect(await reloadWithHash('#/output')).toBe('output')
+  })
+
+  /** @test_id V9-TEST-ST-164-infer-command */
+  it('hash #/command → command', async () => {
+    expect(await reloadWithHash('#/command')).toBe('command')
+  })
+
+  /** @test_id V9-TEST-ST-164-infer-default */
+  it('hash #/unknown → default input', async () => {
+    expect(await reloadWithHash('#/unknown')).toBe('input')
+  })
+
+  /** @test_id V9-TEST-ST-164-infer-nohash */
+  it('hash 为空 → input', async () => {
+    expect(await reloadWithHash('')).toBe('input')
+  })
+
+  /** @test_id V9-TEST-ST-164-infer-noprefix */
+  it('hash 不带 # 前缀（/trading）→ trading', async () => {
+    expect(await reloadWithHash('/trading')).toBe('trading')
+  })
+})

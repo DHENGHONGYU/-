@@ -20,6 +20,18 @@ const mockClassifyStocks = vi.hoisted(() => vi.fn())
 const mockListSnapshots = vi.hoisted(() => vi.fn())
 const mockSaveStrategySnapshot = vi.hoisted(() => vi.fn())
 
+// DataBridge 订阅 mock
+const mockDataBridgeSubscribe = vi.hoisted(() => vi.fn())
+const mockDataBridgeUnsubscribe = vi.hoisted(() => vi.fn())
+
+vi.mock('@/core/databridge', () => ({
+  dataBridge: { subscribe: mockDataBridgeSubscribe },
+}))
+
+vi.mock('@/config/dbConfig', () => ({
+  ENVELOPE_ACTION: { saveStrategySnapshots: 'SAVE_STRATEGY_SNAPSHOTS' },
+}))
+
 vi.mock('@/services/pool/poolService', () => ({
   listPoolItems: mockListStocks,
 }))
@@ -43,6 +55,7 @@ vi.mock('@/services/trading/strategySnapshotService', () => ({
 // ============================================================
 
 import { useStrategySnapshotStore } from './strategySnapshotStore'
+import { initStrategySnapshotStoreSubscriptions, destroyStrategySnapshotStoreSubscriptions } from './strategySnapshotStore'
 
 // ============================================================
 // Helpers
@@ -357,5 +370,132 @@ describe('useStrategySnapshotStore', () => {
     expect(state.loading).toBe(false)
     expect(state.saving).toBe(false)
     expect(state.error).toBeNull()
+  })
+
+  // ============================================================
+  // saveSnapshot: activeTab=history 时刷新历史列表
+  // 未覆盖行 231-232
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-158-SAVE-HISTORY-TAB */
+  it('saveSnapshot: activeTab=history 时保存成功后应刷新历史列表', async () => {
+    const stocks = [createMockStock()]
+    const v6Scores = [createMockV6Score()]
+    const rotationScores = [createMockRotationScore()]
+    useStrategySnapshotStore.setState({
+      stocks,
+      v6Scores,
+      rotationScores,
+      activeTab: 'history',
+    })
+
+    const snapshots = [createMockSnapshot({ id: 'snap-new' })]
+    mockSaveStrategySnapshot.mockResolvedValue({ success: true, data: createMockSnapshot() })
+    mockListSnapshots.mockResolvedValue({ success: true, data: snapshots })
+
+    await useStrategySnapshotStore.getState().saveSnapshot('manual')
+
+    // activeTab=history，保存成功后应调用 loadHistorySnapshots
+    expect(mockListSnapshots).toHaveBeenCalled()
+    const state = useStrategySnapshotStore.getState()
+    expect(state.snapshots).toEqual(snapshots)
+    expect(state.saving).toBe(false)
+  })
+})
+
+// ============================================================
+// initStrategySnapshotStoreSubscriptions / destroyStrategySnapshotStoreSubscriptions
+// 未覆盖行 273-297
+// ============================================================
+
+describe('initStrategySnapshotStoreSubscriptions', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockDataBridgeSubscribe.mockClear()
+    // 默认 subscribe 返回 unsubscribe 函数
+    const unsub = vi.fn()
+    mockDataBridgeSubscribe.mockReturnValue(unsub)
+  })
+
+  /** @test_id V9-TEST-ST-158-DB-SUB-INIT */
+  it('应订阅 strategy_snapshots 频道', () => {
+    initStrategySnapshotStoreSubscriptions()
+
+    expect(mockDataBridgeSubscribe).toHaveBeenCalledWith(
+      'strategy_snapshots',
+      expect.any(Function),
+    )
+  })
+
+  /** @test_id V9-TEST-ST-158-DB-SUB-EVENT */
+  it('收到 saveStrategySnapshots 事件时应记录日志', () => {
+    initStrategySnapshotStoreSubscriptions()
+
+    const capturedCallback = mockDataBridgeSubscribe.mock.calls[0]?.[1] as ((envelope: unknown) => void) | undefined
+    expect(capturedCallback).toBeDefined()
+
+    capturedCallback!({
+      meta: {
+        action: 'SAVE_STRATEGY_SNAPSHOTS',
+        traceId: 'trace-123',
+        source: 'test',
+        target: 'db',
+        timestamp: Date.now(),
+      },
+      payload: {},
+    })
+
+    // 验证 logger.info 被调用（包含 saveStrategySnapshot 关键字）
+    expect(mockLogger.info).toHaveBeenCalledWith(
+      expect.stringContaining('saveStrategySnapshot'),
+      expect.any(Object),
+    )
+  })
+
+  /** @test_id V9-TEST-ST-158-DB-SUB-CLEANUP */
+  it('返回的清理函数应调用 destroyStrategySnapshotStoreSubscriptions', () => {
+    const unsub = vi.fn()
+    mockDataBridgeSubscribe.mockReturnValue(unsub)
+
+    const cleanup = initStrategySnapshotStoreSubscriptions()
+    expect(typeof cleanup).toBe('function')
+
+    cleanup()
+
+    expect(unsub).toHaveBeenCalledTimes(1)
+  })
+
+  /** @test_id V9-TEST-ST-158-DB-DESTROY */
+  it('destroyStrategySnapshotStoreSubscriptions 无订阅时应安全执行', () => {
+    // 没有初始化过订阅，直接调用 destroy
+    expect(() => destroyStrategySnapshotStoreSubscriptions()).not.toThrow()
+  })
+
+  /** @test_id V9-TEST-ST-158-DB-DESTROY-EXISTING */
+  it('destroyStrategySnapshotStoreSubscriptions 有订阅时应正确清理', () => {
+    const unsub = vi.fn()
+    mockDataBridgeSubscribe.mockReturnValue(unsub)
+
+    initStrategySnapshotStoreSubscriptions()
+    expect(mockDataBridgeSubscribe).toHaveBeenCalledTimes(1)
+
+    destroyStrategySnapshotStoreSubscriptions()
+
+    expect(unsub).toHaveBeenCalledTimes(1)
+  })
+
+  /** @test_id V9-TEST-ST-158-DB-REINIT */
+  it('重复调用 initStrategySnapshotStoreSubscriptions 应先清理旧订阅', () => {
+    const unsub1 = vi.fn()
+    mockDataBridgeSubscribe.mockReturnValueOnce(unsub1)
+    initStrategySnapshotStoreSubscriptions()
+
+    const unsub2 = vi.fn()
+    mockDataBridgeSubscribe.mockReturnValueOnce(unsub2)
+    initStrategySnapshotStoreSubscriptions()
+
+    // 第一次的 unsubscribe 应被调用
+    expect(unsub1).toHaveBeenCalledTimes(1)
+    expect(unsub2).not.toHaveBeenCalled()
   })
 })

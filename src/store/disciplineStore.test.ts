@@ -200,6 +200,14 @@ beforeEach(() => {
   mockForward.mockResolvedValue(undefined)
   mockQuery.mockResolvedValue({ success: true, data: null })
 
+  // 重新设置 mockSubscribe 实现（clearAllMocks 可能清除实现）
+  mockSubscribe.mockImplementation((channel: string, callback: (envelope: StandardEnvelope) => void) => {
+    capturedCallbacks.set(channel, callback)
+    const unsub = vi.fn()
+    unsubscribes.push(unsub)
+    return unsub
+  })
+
   // 清理模块级订阅状态
   const cleanup = initDisciplineStoreSubscriptions()
   cleanup()
@@ -560,5 +568,55 @@ describe('initDisciplineStoreSubscriptions', () => {
     const cleanup2 = initDisciplineStoreSubscriptions()
     expect(typeof cleanup2).toBe('function')
     cleanup2()
+  })
+
+  // ============================================================
+  // 重复初始化：已存在订阅时直接返回旧 cleanup
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-133-sub-dup-01 */
+  it('重复初始化：_unsubscribeOrders 已存在时返回旧 cleanup 并跳过', () => {
+    // beforeEach 已调用过一次 init+cleanup，mockSubscribe 已被调用
+    const subscribeCountBefore = mockSubscribe.mock.calls.length
+
+    // 首次初始化（_unsubscribeOrders 为 null，因为 beforeEach 的 cleanup 清理了）
+    const cleanup1 = initDisciplineStoreSubscriptions()
+    expect(typeof cleanup1).toBe('function')
+    // 新增了 1 次 subscribe 调用
+    expect(mockSubscribe.mock.calls.length).toBe(subscribeCountBefore + 1)
+
+    // 重复初始化 → 应该 warn 并跳过 subscribe
+    const cleanup2 = initDisciplineStoreSubscriptions()
+    expect(typeof cleanup2).toBe('function')
+    expect(mockLogger.warn).toHaveBeenCalledWith(
+      '[disciplineStore] Subscriptions already initialized, skipping',
+    )
+
+    // subscribe 调用次数没有增加（重复初始化被跳过）
+    expect(mockSubscribe.mock.calls.length).toBe(subscribeCountBefore + 1)
+
+    // 清理
+    cleanup1()
+  })
+
+  /** @test_id V9-TEST-ST-133-sub-cleanup-timer-01 */
+  it('cleanup 函数：有去抖定时器时清除定时器', async () => {
+    initDisciplineStoreSubscriptions()
+    const cb = capturedCallbacks.get('orders')!
+
+    // 触发一次有效事件（产生去抖定时器）
+    cb!({
+      meta: { source: 'other' as any, target: 'db' as any, action: 'INSERT_ORDER' as any, traceId: 't1', timestamp: Date.now() },
+      payload: {},
+    } as StandardEnvelope)
+
+    // 在去抖窗口内（50ms）调用 cleanup，此时 _debounceTimer 仍存在
+    await new Promise((r) => setTimeout(r, 50))
+
+    const cleanup = initDisciplineStoreSubscriptions()
+    cleanup()
+
+    // 等待确认定时器被清除（不应有 recalculate 触发）
+    await new Promise((r) => setTimeout(r, 200))
   })
 })

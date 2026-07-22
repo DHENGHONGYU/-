@@ -208,6 +208,50 @@ describe('useSignalAdviceStore', () => {
 
       expect(useSignalAdviceStore.getState().error).toBe('无法生成建议')
     })
+
+    // @test_id 追加：generateAdvice 异常与边界路径
+    it('异常：adviseForStock 抛出 Error 时应捕获并设置 error', async () => {
+      const stock = buildTestStock()
+      mockAdviseForStock.mockRejectedValue(new Error('网络超时'))
+
+      await useSignalAdviceStore.getState().generateAdvice(stock)
+
+      expect(useSignalAdviceStore.getState().error).toBe('网络超时')
+      expect(mockLogger.error).toHaveBeenCalledWith(
+        '[signalAdviceStore] generateAdvice 异常',
+        { symbol: '600519.SH', error: '网络超时' },
+      )
+    })
+
+    it('异常：adviseForStock 抛出非 Error 值时应使用 String(err)', async () => {
+      const stock = buildTestStock()
+      mockAdviseForStock.mockRejectedValue('字符串异常')
+
+      await useSignalAdviceStore.getState().generateAdvice(stock)
+
+      expect(useSignalAdviceStore.getState().error).toBe('字符串异常')
+    })
+
+    it('失败且无 error 字段时应使用默认消息', async () => {
+      const stock = buildTestStock()
+      mockAdviseForStock.mockResolvedValue({ success: false })
+
+      await useSignalAdviceStore.getState().generateAdvice(stock)
+
+      expect(useSignalAdviceStore.getState().error).toBe('生成交易建议失败')
+    })
+
+    it('成功时应广播 SIGNALS_CHANGED 事件', async () => {
+      const stock = buildTestStock()
+      mockAdviseForStock.mockResolvedValue({ success: true, data: buildTestAdvice() })
+
+      await useSignalAdviceStore.getState().generateAdvice(stock)
+
+      expect(mockWithBroadcast).toHaveBeenCalledWith('signals:changed', {
+        action: 'generateAdvice',
+        symbol: '600519.SH',
+      })
+    })
   })
 
   describe('reset', () => {
@@ -231,6 +275,85 @@ describe('useSignalAdviceStore', () => {
       expect(state.error).toBeNull()
       expect(state.lastUpdated).toBe(0)
       expect(mockWithBroadcast).toHaveBeenCalledWith('signals:changed', { action: 'reset' })
+    })
+  })
+
+  // ============================================================
+  // generateAdviceForStocks —— 批量生成建议
+  // ============================================================
+  describe('generateAdviceForStocks', () => {
+    // @test_id 追加：generateAdviceForStocks 成功/部分失败/并发锁/异常/空数组
+    it('成功：应批量生成 adviceMap 并广播事件', async () => {
+      const stock1 = buildTestStock({ symbol: '600519.SH' })
+      const stock2 = buildTestStock({ symbol: '000001.SZ', name: '平安银行' })
+      const advice1 = buildTestAdvice()
+      const advice2 = buildTestAdvice()
+      mockAdviseForStock.mockResolvedValueOnce({ success: true, data: advice1 })
+      mockAdviseForStock.mockResolvedValueOnce({ success: true, data: advice2 })
+
+      await useSignalAdviceStore.getState().generateAdviceForStocks([stock1, stock2])
+
+      const state = useSignalAdviceStore.getState()
+      expect(state.adviceMap['600519.SH']).toEqual(advice1)
+      expect(state.adviceMap['000001.SZ']).toEqual(advice2)
+      expect(state.loading).toBe(false)
+      expect(state.isRefreshing).toBe(false)
+      expect(state.error).toBeNull()
+      expect(state.lastUpdated).toBeGreaterThan(0)
+      expect(mockWithBroadcast).toHaveBeenCalledWith('signals:changed', {
+        action: 'generateAdviceBatch',
+        count: 2,
+      })
+    })
+
+    it('部分失败：应只保留成功的建议', async () => {
+      const stock1 = buildTestStock({ symbol: '600519.SH' })
+      const stock2 = buildTestStock({ symbol: '000001.SZ', name: '平安银行' })
+      mockAdviseForStock.mockResolvedValueOnce({ success: true, data: buildTestAdvice() })
+      mockAdviseForStock.mockResolvedValueOnce({ success: false, error: '不适合' })
+
+      await useSignalAdviceStore.getState().generateAdviceForStocks([stock1, stock2])
+
+      const state = useSignalAdviceStore.getState()
+      expect(Object.keys(state.adviceMap)).toEqual(['600519.SH'])
+      expect(state.error).toBeNull()
+    })
+
+    it('并发锁：isRefreshing=true 时应跳过', async () => {
+      useSignalAdviceStore.setState({ isRefreshing: true })
+      mockAdviseForStock.mockResolvedValue({ success: true, data: buildTestAdvice() })
+
+      await useSignalAdviceStore.getState().generateAdviceForStocks([buildTestStock()])
+
+      expect(mockAdviseForStock).not.toHaveBeenCalled()
+    })
+
+    it('异常：adviseForStock 抛错时应设置 error 并重置状态', async () => {
+      const stock = buildTestStock()
+      mockAdviseForStock.mockRejectedValue(new Error('批量服务异常'))
+
+      await useSignalAdviceStore.getState().generateAdviceForStocks([stock])
+
+      const state = useSignalAdviceStore.getState()
+      expect(state.error).toBe('批量服务异常')
+      expect(state.loading).toBe(false)
+      expect(state.isRefreshing).toBe(false)
+      expect(mockLogger.error).toHaveBeenCalledWith(
+        '[signalAdviceStore] generateAdviceForStocks 异常',
+        { error: '批量服务异常' },
+      )
+    })
+
+    it('空数组：应正常完成并广播 count=0', async () => {
+      await useSignalAdviceStore.getState().generateAdviceForStocks([])
+
+      const state = useSignalAdviceStore.getState()
+      expect(state.adviceMap).toEqual({})
+      expect(state.loading).toBe(false)
+      expect(mockWithBroadcast).toHaveBeenCalledWith('signals:changed', {
+        action: 'generateAdviceBatch',
+        count: 0,
+      })
     })
   })
 })

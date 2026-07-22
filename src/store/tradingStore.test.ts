@@ -22,7 +22,7 @@
   * @covers_docs [V9-DOC-BACK-008, V9-DOC-BACK-005, V9-DOC-ARCH-008, V9-DOC-BACK-010, V9-DOC-BACK-003]
 */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import type { Stock, Order, Portfolio, StrategyResult } from '@/data/types'
 import type { TradingSignal } from '@/services/trading/signalGenerator'
 import type { TradeAdvice } from '@/services/trading/tradingService'
@@ -56,6 +56,26 @@ vi.mock('@/lib/eventBus', () => ({
   },
 }))
 
+// ---- Facade 同步订阅捕获器（用于测试 initTradingStoreFacadeSync 的订阅回调） ----
+const facadeSyncCapture = vi.hoisted(() => {
+  const captured: Record<string, ((state: unknown) => void) | null> = {
+    watchlist: null,
+    signal: null,
+    portfolio: null,
+    order: null,
+  }
+  const unsubSpies = {
+    watchlist: vi.fn(),
+    signal: vi.fn(),
+    portfolio: vi.fn(),
+    order: vi.fn(),
+  }
+  return { captured, unsubSpies }
+})
+
+// portfolioStore.setState mock（loadPortfolio 异常路径需要）
+const mockPortfolioSetState = vi.hoisted(() => vi.fn())
+
 // ---- 子 Store mocks ----
 
 const mockWatchlist = vi.hoisted(() => ({
@@ -66,7 +86,10 @@ const mockWatchlist = vi.hoisted(() => ({
 vi.mock('./watchlistStore', () => ({
   useWatchlistStore: {
     getState: () => mockWatchlist,
-    subscribe: vi.fn(() => () => {}),
+    subscribe: vi.fn((cb: (state: unknown) => void) => {
+      facadeSyncCapture.captured.watchlist = cb
+      return facadeSyncCapture.unsubSpies.watchlist
+    }),
   },
 }))
 
@@ -80,7 +103,10 @@ const mockSignalAdvice = vi.hoisted(() => ({
 vi.mock('./signalAdviceStore', () => ({
   useSignalAdviceStore: {
     getState: () => mockSignalAdvice,
-    subscribe: vi.fn(() => () => {}),
+    subscribe: vi.fn((cb: (state: unknown) => void) => {
+      facadeSyncCapture.captured.signal = cb
+      return facadeSyncCapture.unsubSpies.signal
+    }),
   },
 }))
 
@@ -94,7 +120,11 @@ const mockPortfolio = vi.hoisted(() => ({
 vi.mock('./portfolioStore', () => ({
   usePortfolioStore: {
     getState: () => mockPortfolio,
-    subscribe: vi.fn(() => () => {}),
+    subscribe: vi.fn((cb: (state: unknown) => void) => {
+      facadeSyncCapture.captured.portfolio = cb
+      return facadeSyncCapture.unsubSpies.portfolio
+    }),
+    setState: mockPortfolioSetState,
   },
 }))
 
@@ -106,7 +136,10 @@ const mockOrder = vi.hoisted(() => ({
 vi.mock('./orderStore', () => ({
   useOrderStore: {
     getState: () => mockOrder,
-    subscribe: vi.fn(() => () => {}),
+    subscribe: vi.fn((cb: (state: unknown) => void) => {
+      facadeSyncCapture.captured.order = cb
+      return facadeSyncCapture.unsubSpies.order
+    }),
   },
 }))
 
@@ -120,7 +153,7 @@ vi.mock('@/services/trading/portfolioService', () => ({
 // Imports（mock 之后）
 // ============================================================
 
-import { useTradingStore } from './tradingStore'
+import { useTradingStore, initTradingStoreFacadeSync } from './tradingStore'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { buildOrder, buildPortfolio } from '../../tests/fixtures'
 
@@ -383,6 +416,63 @@ describe('useTradingStore', () => {
         `核心稀缺组合已构建，共 ${portfolio.holdings.length} 只标的`,
       )
     })
+
+    // @test_id 追加：loadPortfolio 异常路径（覆盖 catch 分支 lines 200-203）
+    it('portfolio holdings 为空时 message 应为"核心稀缺组合为空..."', async () => {
+      const emptyPortfolio = { holdings: [] } as Portfolio
+      mockLoadPortfolioInput.mockResolvedValueOnce({ stocks: [], orders: [] })
+      mockPortfolio.buildPortfolio.mockImplementation(async () => {
+        mockPortfolio.portfolio = emptyPortfolio
+        mockPortfolio.strategyResult = emptyStrategyResult()
+      })
+
+      await useTradingStore.getState().loadPortfolio()
+
+      expect(useTradingStore.getState().message).toBe(
+        '核心稀缺组合为空，无匹配标的或评分不足',
+      )
+    })
+
+    it('loadPortfolioInput 抛出 Error 时应捕获错误、记录日志、设置 portfolioStore error 和失败 message', async () => {
+      const error = new Error('数据源不可用')
+      mockLoadPortfolioInput.mockRejectedValueOnce(error)
+
+      await useTradingStore.getState().loadPortfolio()
+
+      const state = useTradingStore.getState()
+      expect(state.portfolioLoading).toBe(false)
+      expect(state.isRefreshing).toBe(false)
+      expect(state.message).toBe('组合加载失败：数据源不可用')
+      expect(mockLogger.error).toHaveBeenCalledWith(
+        '[tradingStore] loadPortfolio 失败',
+        { error: '数据源不可用' },
+      )
+      // usePortfolioStore.setState 应被调用设置 error 和 loading=false
+      expect(mockPortfolioSetState).toHaveBeenCalledWith({
+        error: '数据源不可用',
+        loading: false,
+      })
+    })
+
+    it('loadPortfolioInput 抛出非 Error 值时应使用 String(err) 作为 message', async () => {
+      mockLoadPortfolioInput.mockRejectedValueOnce('字符串错误')
+
+      await useTradingStore.getState().loadPortfolio()
+
+      expect(useTradingStore.getState().message).toBe('组合加载失败：字符串错误')
+    })
+
+    it('buildPortfolio 抛出 Error 时应捕获错误并设置失败 message', async () => {
+      mockLoadPortfolioInput.mockResolvedValueOnce({ stocks: [], orders: [] })
+      mockPortfolio.buildPortfolio.mockRejectedValueOnce(new Error('构建失败'))
+
+      await useTradingStore.getState().loadPortfolio()
+
+      const state = useTradingStore.getState()
+      expect(state.message).toBe('组合加载失败：构建失败')
+      expect(state.portfolioLoading).toBe(false)
+      expect(state.isRefreshing).toBe(false)
+    })
   })
 
   describe('handleBuy', () => {
@@ -548,5 +638,179 @@ describe('useTradingStore', () => {
       // 验证 processingSymbols 仍包含该 symbol（未进入 try-finally 清理）
       expect(useTradingStore.getState().processingSymbols.has(stock.symbol)).toBe(true)
     })
+  })
+})
+
+// ============================================================
+// initTradingStoreFacadeSync —— Facade 订阅同步（覆盖 lines 315-397）
+// ============================================================
+
+describe('initTradingStoreFacadeSync', () => {
+  let activeCleanup: (() => void) | null = null
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    // 重置捕获器
+    facadeSyncCapture.captured.watchlist = null
+    facadeSyncCapture.captured.signal = null
+    facadeSyncCapture.captured.portfolio = null
+    facadeSyncCapture.captured.order = null
+    // 重置 sub-store mock 状态
+    mockWatchlist.stocks = []
+    mockSignalAdvice.signals = []
+    mockSignalAdvice.adviceMap = {}
+    mockPortfolio.portfolio = undefined
+    mockPortfolio.strategyResult = undefined
+    mockPortfolio.loading = false
+    mockOrder.orders = []
+  })
+
+  afterEach(() => {
+    if (activeCleanup) {
+      activeCleanup()
+      activeCleanup = null
+    }
+  })
+
+  // @test_id 追加：初始化 + 初始同步
+  it('初始化时应订阅 4 个子 Store 并做初始同步', () => {
+    const testStocks: Stock[] = [buildTestStock()]
+    const testSignals = [
+      { id: 'sig-1', symbol: '600519.SH', direction: 'buy' },
+    ] as unknown as TradingSignal[]
+    const testAdviceMap: Record<string, TradeAdvice> = {
+      '600519.SH': buildBuyAdvice(100),
+    }
+    const testPortfolio = buildPortfolio()
+    const testStrategyResult = emptyStrategyResult()
+    const testOrders: Order[] = [buildOrder()]
+
+    mockWatchlist.stocks = testStocks
+    mockSignalAdvice.signals = testSignals
+    mockSignalAdvice.adviceMap = testAdviceMap
+    mockPortfolio.portfolio = testPortfolio
+    mockPortfolio.strategyResult = testStrategyResult
+    mockPortfolio.loading = false
+    mockOrder.orders = testOrders
+
+    activeCleanup = initTradingStoreFacadeSync()
+
+    const state = useTradingStore.getState()
+    expect(state.stocks).toBe(testStocks)
+    expect(state.signals).toBe(testSignals)
+    expect(state.adviceMap).toBe(testAdviceMap)
+    expect(state.portfolio).toBe(testPortfolio)
+    expect(state.strategyResult).toBe(testStrategyResult)
+    expect(state.portfolioLoading).toBe(false)
+    expect(state.orders).toBe(testOrders)
+    expect(mockLogger.info).toHaveBeenCalledWith('[tradingStore] Facade sync initialized')
+  })
+
+  it('重复初始化应返回已有 cleanup 并 warn', () => {
+    activeCleanup = initTradingStoreFacadeSync()
+    const secondCleanup = initTradingStoreFacadeSync()
+
+    expect(secondCleanup).toBe(activeCleanup)
+    expect(mockLogger.warn).toHaveBeenCalledWith(
+      '[tradingStore] Facade sync already initialized',
+    )
+  })
+
+  it('cleanup 应调用所有子 Store 的 unsubscribe', () => {
+    activeCleanup = initTradingStoreFacadeSync()
+    activeCleanup()
+    activeCleanup = null
+
+    expect(facadeSyncCapture.unsubSpies.watchlist).toHaveBeenCalledTimes(1)
+    expect(facadeSyncCapture.unsubSpies.signal).toHaveBeenCalledTimes(1)
+    expect(facadeSyncCapture.unsubSpies.portfolio).toHaveBeenCalledTimes(1)
+    expect(facadeSyncCapture.unsubSpies.order).toHaveBeenCalledTimes(1)
+    expect(mockLogger.info).toHaveBeenCalledWith('[tradingStore] Facade sync destroyed')
+  })
+
+  // ---- watchlistStore 订阅回调 ----
+  it('watchlistStore stocks 引用变化时应同步到 Facade', () => {
+    activeCleanup = initTradingStoreFacadeSync()
+    const cb = facadeSyncCapture.captured.watchlist
+    expect(cb).not.toBeNull()
+
+    const newStocks = [buildTestStock({ symbol: '000001.SZ' })]
+    mockWatchlist.stocks = newStocks
+    cb!({ stocks: newStocks })
+
+    expect(useTradingStore.getState().stocks).toBe(newStocks)
+  })
+
+  it('watchlistStore stocks 引用不变时不应同步', () => {
+    activeCleanup = initTradingStoreFacadeSync()
+    const cb = facadeSyncCapture.captured.watchlist
+    const prevStocks = useTradingStore.getState().stocks
+    const sameStocks = mockWatchlist.stocks
+
+    cb!({ stocks: sameStocks })
+
+    expect(useTradingStore.getState().stocks).toBe(prevStocks)
+  })
+
+  // ---- signalAdviceStore 订阅回调 ----
+  it('signalAdviceStore signals 变化时应同步到 Facade', () => {
+    activeCleanup = initTradingStoreFacadeSync()
+    const cb = facadeSyncCapture.captured.signal
+    expect(cb).not.toBeNull()
+
+    const newSignals = [
+      { id: 'sig-2', symbol: '000001.SZ', direction: 'sell' },
+    ] as unknown as TradingSignal[]
+    const newAdviceMap = { '000001.SZ': buildBuyAdvice(50) }
+    mockSignalAdvice.signals = newSignals
+    mockSignalAdvice.adviceMap = newAdviceMap
+    cb!({ signals: newSignals, adviceMap: newAdviceMap })
+
+    const state = useTradingStore.getState()
+    expect(state.signals).toBe(newSignals)
+    expect(state.adviceMap).toBe(newAdviceMap)
+  })
+
+  // ---- portfolioStore 订阅回调 ----
+  it('portfolioStore portfolio 变化时应同步到 Facade', () => {
+    activeCleanup = initTradingStoreFacadeSync()
+    const cb = facadeSyncCapture.captured.portfolio
+    expect(cb).not.toBeNull()
+
+    const newPortfolio = buildPortfolio()
+    const newStrategyResult = emptyStrategyResult()
+    mockPortfolio.portfolio = newPortfolio
+    mockPortfolio.strategyResult = newStrategyResult
+    mockPortfolio.loading = true
+    cb!({ portfolio: newPortfolio, strategyResult: newStrategyResult, loading: true })
+
+    const state = useTradingStore.getState()
+    expect(state.portfolio).toBe(newPortfolio)
+    expect(state.strategyResult).toBe(newStrategyResult)
+    expect(state.portfolioLoading).toBe(true)
+  })
+
+  // ---- orderStore 订阅回调 ----
+  it('orderStore orders 变化时应同步到 Facade', () => {
+    activeCleanup = initTradingStoreFacadeSync()
+    const cb = facadeSyncCapture.captured.order
+    expect(cb).not.toBeNull()
+
+    const newOrders: Order[] = [buildOrder({ symbol: '600519.SH' })]
+    mockOrder.orders = newOrders
+    cb!({ orders: newOrders })
+
+    expect(useTradingStore.getState().orders).toBe(newOrders)
+  })
+
+  it('orderStore orders 引用不变时不应同步', () => {
+    activeCleanup = initTradingStoreFacadeSync()
+    const cb = facadeSyncCapture.captured.order
+    const prevOrders = useTradingStore.getState().orders
+    const sameOrders = mockOrder.orders
+
+    cb!({ orders: sameOrders })
+
+    expect(useTradingStore.getState().orders).toBe(prevOrders)
   })
 })

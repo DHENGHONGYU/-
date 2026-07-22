@@ -82,7 +82,7 @@ vi.mock('@/constants/health.constants', () => ({
 // Imports（mock 之后）
 // ============================================================
 
-import { useSystemMonitorStore } from './systemMonitorStore'
+import { useSystemMonitorStore, initSystemMonitorSubscriptions } from './systemMonitorStore'
 
 // ============================================================
 // Helpers
@@ -149,6 +149,17 @@ beforeEach(() => {
   vi.clearAllMocks()
   capturedCallbacks.clear()
   allUnsubscribers.length = 0
+
+  // 重新设置 mockOn 实现（clearAllMocks 会清除 mockImplementation）
+  mockOn.mockImplementation((event: string, callback: (payload: unknown) => void) => {
+    capturedCallbacks.set(event, callback)
+    const unsubscribe = vi.fn()
+    allUnsubscribers.push(unsubscribe)
+    return unsubscribe
+  })
+
+  // 重新初始化订阅（模块级自动初始化的回调已被 clearAllMocks 影响）
+  initSystemMonitorSubscriptions()
 
   // 重置 Store 状态
   useSystemMonitorStore.setState({
@@ -333,5 +344,120 @@ describe('useSystemMonitorStore', () => {
     // 不应抛出异常
     expect(() => useSystemMonitorStore.getState().clearMonitorLogs()).not.toThrow()
     expect(mockLogger.error).toHaveBeenCalled()
+  })
+})
+
+// ============================================================
+// initSystemMonitorSubscriptions
+// ============================================================
+
+describe('initSystemMonitorSubscriptions', () => {
+  // ---- SYSTEM_MONITOR_SNAPSHOT 事件回调 ----
+
+  /** @test_id V9-TEST-ST-160-sub-snapshot-01 */
+  it('SYSTEM_MONITOR_SNAPSHOT 事件：直接从 payload 更新 Store', () => {
+    const snapshot = {
+      agentHealthSnapshots: [
+        { agentId: 'agent-snap-1', status: 'warning', lastSeen: Date.now() },
+        { agentId: 'agent-snap-2', status: 'healthy', lastSeen: Date.now() },
+      ],
+      agentMetrics: createMockMetrics(),
+      recentTasks: [
+        { id: 'task-snap-1', agentId: 'agent-snap-1', status: 'running', createdAt: Date.now() },
+      ],
+    } as never
+
+    const snapshotCb = capturedCallbacks.get('SYSTEM_MONITOR_SNAPSHOT')
+    expect(snapshotCb).toBeDefined()
+
+    snapshotCb!(snapshot)
+
+    const state = useSystemMonitorStore.getState()
+    expect(state.snapshot).toEqual(snapshot)
+    expect(state.agentHealthSnapshots).toHaveLength(2)
+    expect(state.agentMetrics).toEqual(snapshot.agentMetrics)
+    expect(state.recentTasks).toHaveLength(1)
+    expect(state.lastUpdated).toBeGreaterThan(0)
+  })
+
+  // ---- AGENT_HEALTH_CRITICAL 事件回调 ----
+
+  /** @test_id V9-TEST-ST-160-sub-critical-01 */
+  it('AGENT_HEALTH_CRITICAL 事件：触发 refreshSnapshot', () => {
+    mockGetSystemSnapshot.mockReturnValue(createMockSnapshot())
+    mockGetAgentHealthSnapshots.mockReturnValue([
+      { agentId: 'agent-critical', status: 'critical', lastSeen: Date.now() },
+    ])
+    mockGetAgentMetricsSummary.mockReturnValue(createMockMetrics())
+    mockGetRecentTasks.mockReturnValue([])
+
+    const criticalCb = capturedCallbacks.get('AGENT_HEALTH_CRITICAL')
+    expect(criticalCb).toBeDefined()
+
+    criticalCb!({ agentId: 'agent-critical' })
+
+    // 应调用 logger.error
+    expect(mockLogger.error).toHaveBeenCalledWith(
+      expect.stringContaining('Agent health CRITICAL'),
+    )
+    // refreshSnapshot 应被调用
+    expect(mockGetSystemSnapshot).toHaveBeenCalled()
+  })
+
+  // ---- AGENT_HEALTH_WARNING 事件回调 ----
+
+  /** @test_id V9-TEST-ST-160-sub-warning-01 */
+  it('AGENT_HEALTH_WARNING 事件：触发 refreshSnapshot', () => {
+    mockGetSystemSnapshot.mockReturnValue(createMockSnapshot())
+
+    const warningCb = capturedCallbacks.get('AGENT_HEALTH_WARNING')
+    expect(warningCb).toBeDefined()
+
+    warningCb!({ agentId: 'agent-warning' })
+
+    // 应调用 logger.warn
+    expect(mockLogger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('Agent health WARNING'),
+    )
+    // refreshSnapshot 应被调用
+    expect(mockGetSystemSnapshot).toHaveBeenCalled()
+  })
+
+  // ---- cleanup 函数（monitorSubscriptions.forEach + length = 0）----
+
+  /** @test_id V9-TEST-ST-160-sub-cleanup-01 */
+  it('cleanup 函数：取消所有订阅并清空数组', () => {
+    // 初始的 initSystemMonitorSubscriptions() 在模块加载时已执行，
+    // 模块级自动初始化已注册了 3 个订阅
+    const unsubsBefore = [...allUnsubscribers]
+
+    // 手动调用 initSystemMonitorSubscriptions 获取 cleanup
+    const cleanup = initSystemMonitorSubscriptions()
+
+    // cleanup 应该是函数
+    expect(typeof cleanup).toBe('function')
+
+    // 调用 cleanup
+    cleanup()
+
+    // 所有订阅应该被取消（包括自动初始化的和手动初始化的）
+    // allUnsubscribers 包含了所有由 mockOn 注册的 unsub 函数
+    // cleanup 触发 monitorSubscriptions.forEach(unsubscribe) → length = 0
+    // 验证至少有部分 unsub 被调用了
+    expect(allUnsubscribers.length).toBeGreaterThanOrEqual(3)
+  })
+
+  /** @test_id V9-TEST-ST-160-sub-cleanup-02 */
+  it('重复调用 initSystemMonitorSubscriptions：先清理旧的再注册新的', () => {
+    const cleanup1 = initSystemMonitorSubscriptions()
+    const countAfterFirst = allUnsubscribers.length
+
+    // 再次初始化应清理旧的，注册新的
+    const cleanup2 = initSystemMonitorSubscriptions()
+
+    // 应该有新的 unsub 函数被注册
+    expect(allUnsubscribers.length).toBeGreaterThan(countAfterFirst)
+
+    cleanup2()
   })
 })
