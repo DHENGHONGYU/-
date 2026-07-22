@@ -53,12 +53,8 @@ description: "为 V9 MCP 体系的 ui 角色显式配置查询/导出类 Tool �
 ui: {
   allowedServers: [
     // 已存在的查询类 Server
-    'fetcher', 'stockpool', 'scoring:v6', 'analysis', 'news', 'llm',
+    'fetcher', 'pool', 'scoring:v6', 'analysis', 'news', 'llm',
     'portfolio', 'screening', 'backtest', 'system', 'trading',
-    // 兼容授权：Server 已不在 registry，但测试/历史配置仍引用
-    'trade',
-    'input',
-    'export',
   ],
   allowedTools: [
     'health_check',

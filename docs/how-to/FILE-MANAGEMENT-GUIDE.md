@@ -9,7 +9,7 @@ tier: important
 
 # V9 文件管理规范
 
-> **版本**: v1.4.0 | **日期**: 2026-07-20
+> **版本**: v1.5.0 | **日期**: 2026-07-22
 > **适用范围**: 智能投研复盘系统V9 全体开发者及 AI 辅助工具
 
 ---
@@ -188,6 +188,8 @@ npm run audit:token
 npm run audit:ai-output
 ```
 
+> **验证命令完整覆盖**：AGENTS.md 教训5 规定的 7 项核心验证命令（`tsc`、`lint`、`audit:layers`、`audit:hardcode`、`audit:deadcode`、`audit:docs`、`audit:token`）已在上文清单中全部列出（#1 `tsc`、#2 `lint`、#3 `audit:layers`、#5 `audit:hardcode`、#6 `audit:deadcode`、#7 `audit:docs`、#8 `audit:token`）；其余 `audit:directory` / `audit:ai-output` 为项目扩展项，不与 7 项冲突。
+
 ### 提交规范
 
 - 遵循 Conventional Commits 格式：`<type>[scope]: <description>`
@@ -196,7 +198,16 @@ npm run audit:ai-output
 
 ---
 
-## 六、生命周期管理
+## 六、生命周期管理（入-移-出 全覆盖）
+
+> 覆盖 AGENTS.md 教训5「文件管理规范必须覆盖"入-移-出"全生命周期」：入（创建）= §6.0，移（迁移）= §6.3，出（清理/归档）= §6.1 / §6.2 / §6.4。
+
+### 6.0 入（创建）规则
+
+- **目录命中**：新文件/目录必须能在 §一 目录映射表中找到归属；无匹配项时先增补映射规则再创建，**禁止**在仓库根目录散落（见 §一 禁止事项）。
+- **命名命中**：文件名/目录名必须命中 §二 命名规范（kebab-case / PascalCase / UPPER_SNAKE_CASE）。
+- **集成顺序**：新建源码模块必须遵循「类型 → Store → Service → UI」四步集成契约（AGENTS.md §二），每步可独立回滚。
+- **引用注册**：新文件创建后必须纳入索引并被相关文档反向引用（双向引用，见 §七 7.2），避免信息孤岛。
 
 ### 6.1 AI 生成产物管理
 
@@ -208,7 +219,7 @@ npm run audit:ai-output
 - **迁移规则**：有价值的草稿内容应在 7 天内合并到正式文档（`docs/01-requirements/`、`docs/03-development/` 等），并删除原草稿
 - **命名规范**：AI 生成文件建议带时间戳前缀，如 `doc-update-suggestion-YYYY-MM-DDTHH-mm-ss.md`
 
-### 6.2 临时文件清理策略
+### 6.2 临时文件/目录清理策略
 
 - **存放位置**：`temp/` 已在 `.gitignore` 中忽略，不进入版本控制
 - **当前存量**：83 个文件（agent_fail*.log、backend_verification_report.json、build_output.txt、check-vitest-env.test.ts、clean*.log、cockpit*.log、coverage-run*.log 等）
@@ -224,6 +235,28 @@ npm run audit:ai-output
   # 清理 14 天前的报告
   find temp/ -name "*.json" -o -name "*.txt" | Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-14) } | Remove-Item
   ```
+
+### 6.3 文件迁移 SOP（移）
+
+文件从一个目录迁移到另一个目录的标准作业流程；完成后必须执行 §五 提交前检查清单全绿，其中 `audit:layers` 为强制项（AGENTS.md 教训5 第4条）。
+
+1. **规划影响面**：列出源路径、目标路径，用 Grep 全仓检索旧路径的所有引用（含大小写变体）。
+2. **import 路径更新**：使用 IDE 重构或批量替换更新所有 `import ... from '<old>'` / `require('<old>')`；注意 **Windows 文件系统大小写不敏感但 Git 大小写敏感**，路径大小写必须与目标文件实际大小写一致。
+3. **旧路径清理**：删除源文件/目录，确认无残留空目录；若源为被引用模块，先完成第 2 步再删。
+4. **跨层调用检查（强制）**：迁移后必须执行 `npm run audit:layers` 确认无跨层违规——尤其避免把上层模块（`pages`/`components`）误迁入下层（`core`/`lib`/`config`）。
+5. **全文件类型残留扫描**：参照 AGENTS.md §二「迁移收尾」扫描 `src/`、`scripts/`、`docs/`（排除历史报告）、`prompts/`、`AGENTS.md`、`.husky/` 中的旧路径残留，覆盖 `.ts`/`.tsx`/`.md`/`.json`/`.mjs`/`.cjs`/`.yaml`/`.yml`/`.sh`；**重点检查 `AGENTS.md` 目录描述**——引用旧目录会直接导致 AI 生成错误代码。
+6. **文档同步**：更新 §一 目录映射表、§十 相关文档交叉引用；若迁移涉及目录职责变化，同步 AGENTS.md §一。
+7. **验证收尾**：运行 §五 提交前检查清单（9 项）全部 0 违规，再提交。
+
+### 6.4 废弃目录清理时机（出）
+
+- **标注**：废弃目录必须在 §一 目录映射表注明 `⚠️ 已废弃` 与**保留截止版本**（参照 AGENTS.md 教训6：`src/utils/` 保留至 v1.5.0 迁移期结束）。
+- **清理前置条件**（三者同时满足方可清理）：
+  1. 已达保留截止版本；
+  2. Grep 全仓 0 命中该目录引用；
+  3. `npm run audit:layers` 0 违规。
+- **归档 vs 删除**：历史文档/废弃方案迁入 `docs/07-archive/`；纯一次性生成物（已被 `.gitignore` 覆盖）直接删除，无需归档。
+- **操作**：满足条件后 `git rm -r <dir>` 并提交，补记 §九 变更日志。
 
 ---
 
@@ -299,6 +332,7 @@ git ls-files | ForEach-Object { git check-ignore -q $_ }
 
 | 版本 | 日期 | 变更摘要 |
 |------|------|----------|
+| v1.5.0 | 2026-07-22 | 补全 AGENTS.md 教训5「入-移-出」全生命周期：§六 重构为「入(6.0)/移(6.3 文件迁移 SOP)/出(6.1/6.2/6.4 废弃目录清理)」；6.2 标题对齐「临时文件/目录清理策略」；§五 显式声明 7 项核心验证命令全覆盖 |
 | v1.4.0 | 2026-07-20 | P2 补全：新增 monorepo/多语言目录规范（packages/python/plugins）；新增生命周期管理章节（AI产物管理+temp清理策略）；章节重编号 |
 | v1.3.2 | 2026-07-20 | Phase 5：新增 `src/generated/` 的 `.gitignore` 规则与 `prebuild` 令牌生成步骤；将 `npm run audit:directory` 纳入提交前检查清单；AGENTS.md 补充 `src/agents/` 和 `src/types/` 到 §一目录列表 |
 | v1.3.1 | 2026-07-20 | Phase 4：系统性目录梳理——补全 AGENTS.md 遗漏的 `mcp/`、`schema/`、`showcase/`、`generated/`，新增依赖方向规则，同步 file-management-guide.md 目录映射 |

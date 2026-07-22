@@ -8,9 +8,9 @@ tier: important
 
 # MCP 权限控制开发指南
 
-> **版本**: v1.0.0 | **日期**: 2026-07-08
+> **版本**: v1.1.0 | **日期**: 2026-07-22
 > **适用范围**: 所有通过 MCP 协议调用工具的开发场景
-> **相关规范**: [AGENTS.md §十四 MCP 权限控制规范](../../AGENTS.md#十四mcp-权限控制规范v140-新增)
+> **相关规范**: [AGENTS.md §十四 MCP 权限控制规范](../../AGENTS.md#十四mcp-权限控制规范v140-新增) | [MCP 生命周期管理指南（入-移-出）](./MCP-LIFECYCLE-GUIDE.md)
 
 ---
 
@@ -18,10 +18,10 @@ tier: important
 
 ### 1.1 为什么需要权限控制？
 
-V9 系统通过 MCP（Model Context Protocol）统一管理 16 个 Server 的工具调用。在权限控制上线前，任何调用方都可以通过 `mcpBridge.callTool` 调用所有工具，包括：
+V9 系统通过 MCP（Model Context Protocol）统一管理 15 个子服务器（实际目录见 `src/mcp/servers/`）的工具调用。在权限控制上线前，任何调用方都可以通过 `mcpBridge.callTool` 调用所有工具，包括：
 
 - UI 组件可以调用交易类写操作（`create_buy_order`）
-- CI 流水线可以访问业务数据（`stockpool.list_pool_stocks`）
+- CI 流水线可以访问业务数据（`pool.list_pool_items`）
 - 未知调用方可以执行系统级危险操作（`system.reset_database`）
 
 这在金融级系统中是不可接受的安全风险。
@@ -100,10 +100,12 @@ V9 系统通过 MCP（Model Context Protocol）统一管理 16 个 Server 的工
 
 ### 3.2 权限矩阵速查表
 
+> **与代码对齐声明**（v1.1.0）：本表 Server 列必须与 `src/config/mcpAclMatrix.ts` 的 `MCP_ACL_MATRIX` 及 `src/mcp/servers/*` 的真实注册名逐一一致。历史 Server `stockpool` 已重命名为 `pool`（`src/mcp/servers/pool/poolServer.ts:47`）；`trade`/`input`/`export` 已废弃合并（功能并入 `trading`/`fetcher`，见 `mcpAclMatrix.ts:46` 注释），已从本表移除；新增 `knowledge`（`knowledgeServer.ts:46`）与 `workflow:main`（`workflowServer.ts:40`）。当前共 **15** 个 Server，与 `src/mcp/servers/` 目录数一致。
+
 | Server\角色 | agent | ui | ci | system |
 |-------------|-------|-----|-----|--------|
 | fetcher | ✅ | ✅ | ❌ | ✅ |
-| stockpool | ✅ | ✅ | ❌ | ✅ |
+| pool | ✅ | ✅ | ❌ | ✅ |
 | scoring:v6 | ✅ | ✅ | ❌ | ✅ |
 | analysis | ✅ | ✅ | ❌ | ✅ |
 | news | ✅ | ✅ | ❌ | ✅ |
@@ -113,11 +115,10 @@ V9 系统通过 MCP（Model Context Protocol）统一管理 16 个 Server 的工
 | backtest | ✅ | ✅ | ❌ | ✅ |
 | trading | ✅ | ❌ | ❌ | ✅ |
 | execution | ✅ | ❌ | ❌ | ✅ |
-| trade | ✅ | ❌ | ❌ | ✅ |
-| input | ✅ | ❌ | ❌ | ✅ |
-| export | ✅ | ❌ | ❌ | ✅ |
 | data-collector | ✅ | ❌ | ❌ | ✅ |
 | system | ✅ | ❌ | ✅（仅查询） | ✅ |
+| knowledge | ✅ | ❌ | ❌ | ✅ |
+| workflow:main | ✅ | ❌ | ❌ | ✅ |
 
 ### 3.3 Tool 通配符规则
 
@@ -159,8 +160,8 @@ V9 系统通过 MCP（Model Context Protocol）统一管理 16 个 Server 的工
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'
 
 const result = await mcpBridge.callTool(
-  'stockpool',
-  'list_pool_stocks',
+  'pool',
+  'list_pool_items',
   { group: '默认分组' },
   { caller: 'ui', callerId: 'StockPoolPanel' },
 )
@@ -297,7 +298,7 @@ npx vitest run src/mcp/__tests__/mcpAclInterceptor.test.ts
 ```bash
 # 权限拒绝日志
 [MCP:ACL] server denied: caller="ui", server="trading"
-[MCP:ACL] tool denied: caller="ui", server="stockpool", tool="delete_stock"
+[MCP:ACL] tool denied: caller="ui", server="pool", tool="delete_stock"
 [MCP:ACL] caller role not found: guest
 
 # 权限通过日志
@@ -346,3 +347,11 @@ npx vitest run tests/__tests__/integration/mcp-servers.integration.test.ts
 | [src/mcp/bridge/mcpBridge.ts](../../src/mcp/bridge/mcpBridge.ts) | `MCPBridge` 桥接层（透传 context） |
 | [src/mcp/__tests__/mcpAclInterceptor.test.ts](../../src/mcp/__tests__/mcpAclInterceptor.test.ts) | 72 个单元测试用例 |
 | [AGENTS.md §十四](../../AGENTS.md#十四mcp-权限控制规范v140-新增) | AI 行为约束契约 |
+
+---
+
+## 八、变更记录
+
+| 版本 | 日期 | 变更摘要 |
+|------|------|----------|
+| v1.1.0 | 2026-07-22 | doc-code 漂移修正：§3.2 权限矩阵 Server 列与 `src/config/mcpAclMatrix.ts` 及 `src/mcp/servers/*` 真实注册名对齐——`stockpool`→`pool`、`trade`/`input`/`export` 三行移除（已废弃合并）、新增 `knowledge` 与 `workflow:main` 两行（共 15 Server 与目录数一致）；§4.2 示例 `stockpool`→`pool` 且 `list_pool_stocks`→`list_pool_items`；§6.3 日志示例 `server="stockpool"`→`server="pool"`。ACL 执行代码无需改动（本就是代码正确、文档滞后）。 |
