@@ -10,9 +10,9 @@ tier: important
 
 # V9 数据流规范
 
-> 版本：v0.9.14 P6-DATA
+> 版本：v0.9.15 P6-DATA
 > 状态：生效中
-> 最后更新：2026-06-30
+> 最后更新：2026-07-22
 
 ## 1. 数据流向原则
 
@@ -261,7 +261,65 @@ const state = useScoreStore() // 导致不必要的重渲染
 4. **P3**：Store 跨 Store 直接访问（耦合问题）
 5. **P4**：异步数据缺三态（用户体验问题）
 
-## 7. 相关文档
+## 7. Store Reset 数据流规范
+
+### 7.1 Reset 数据流方向
+
+```
+用户操作（登出/切换账户/模块卸载）
+  │
+  ▼
+Facade Store.reset()        ← tradingStore（级联 4 个子 Store）
+  │
+  ├──▶ 子 Store.reset()     ← watchlistStore / signalAdviceStore / portfolioStore / orderStore
+  │
+  ├──▶ set({ ...initialState })
+  │
+  └──▶ withBroadcast()      ← 可选：通知下游 Store 刷新
+```
+
+### 7.2 Reset 数据流规则
+
+| 规则 | 说明 | 正确示例 |
+|------|------|---------|
+| 先子后己 | Facade 先 reset 子 Store，再 reset 自身 | `tradingStore.reset()` → `watchlistStore.reset()` → `set(initialState)` |
+| 禁止循环 | A→B→A 循环 reset 导致无限递归 | 当前无循环，tradingStore 仅向下级联 |
+| 广播可选 | reset 后可发 `withBroadcast` 通知下游 | `sectorAnalysisStore.reset()` → `withBroadcast(CHANGED, {action:'reset'})` |
+| Map 重建 | 包含 Map/Set 的 Store 必须重建而非引用 | `set({ channels: new Map(), cache: new Map() })` |
+| 持久化同步 | localStorage/templates 需同步清除 | `multiFactorScreeningStore.reset()` → `storage.remove(KEY)` |
+
+### 7.3 Reset 与 DB 驱动 Store 的关系
+
+DB 驱动的 Store（如 `intentionPoolStore`、`positionPoolStore`、`researchPoolStore`）**不需要 Store 层 reset**，因为：
+1. 数据源为 IndexedDB，`refresh()` 即全量覆盖
+2. 登出场景由 `systemService.resetAll()` 清空 DB，触发 DataBridge 订阅自动 refresh
+3. Store 层 reset 只清空内存缓存，不清理 DB，反而造成短暂的数据空窗
+
+### 7.4 Reset 时序图（登出场景）
+
+```
+用户点击"登出"
+  │
+  ▼
+commandStore.resetAll()
+  │
+  ▼
+systemService.resetAll()    ← DataBridge → DB 全量清空
+  │
+  ▼
+DataBridge 广播 "store_changed"
+  │
+  ▼
+各 Store 订阅回调
+  ├──▶ tradingStore.reset()  ← 级联 4 个子 Store
+  ├──▶ portfolioStore.reset()
+  ├──▶ watchlistStore.reset()
+  └──▶ ...其他有订阅的 Store
+```
+
+---
+
+## 8. 相关文档
 
 - [V9 数据宪法](../reference/v9数据宪法.md)
 - [数据流引擎规范](dataflow-engine-spec.md)
