@@ -905,3 +905,206 @@ describe('destroySignalStoreSubscriptions 清理定时器', () => {
     // 不应有额外的 query 调用
   })
 })
+
+// ============================================================
+// 补充覆盖：refresh 失败路径 + signals 频道回调 + destroy 全局保护
+// ============================================================
+
+describe('signalStore 补充覆盖', () => {
+  // ----------------------------------------------------------
+  // refresh: stocksResult.success=false（lines 105-108, branch 106）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-156-refresh-fail-success-01 */
+  it('refresh: stocksResult.success=false 时抛出错误并回滚到旧快照', async () => {
+    useSignalStore.setState({ signals: [createMockSignal('OLD', 50)], lastUpdated: 9999 })
+    mockDataBridgeQuery.mockResolvedValue({ success: false, error: '数据库不可用' })
+
+    await useSignalStore.getState().refresh()
+
+    const state = useSignalStore.getState()
+    expect(state.error).toBe('数据库不可用')
+    expect(state.signals).toHaveLength(1)
+    expect(state.signals[0]!.symbol).toBe('OLD')
+    expect(state.lastUpdated).toBe(9999)
+    expect(state.isRefreshing).toBe(false)
+    expect(state.loading).toBe(false)
+    expect(state.dataReady).toBe(false)
+  })
+
+  /** @test_id V9-TEST-ST-156-refresh-fail-success-02 */
+  it('refresh: stocksResult.success=false 且无 error 时使用默认消息（branch 106）', async () => {
+    mockDataBridgeQuery.mockResolvedValue({ success: false })
+
+    await useSignalStore.getState().refresh()
+
+    expect(useSignalStore.getState().error).toBe('查询股票池失败')
+  })
+
+  // ----------------------------------------------------------
+  // refresh: 非 Error 异常（branch 143）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-156-refresh-fail-nonerror-01 */
+  it('refresh: 非 Error 异常时使用 String(err) 作为消息', async () => {
+    mockDataBridgeQuery.mockRejectedValue('网络故障字符串')
+
+    await useSignalStore.getState().refresh()
+
+    expect(useSignalStore.getState().error).toBe('网络故障字符串')
+  })
+
+  // ----------------------------------------------------------
+  // refresh: stocksResult.data=null → ?? [] 分支（line 111）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-156-refresh-data-null-01 */
+  it('refresh: stocksResult.data 为 null 时使用空数组（branch 111）', async () => {
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: null })
+
+    await useSignalStore.getState().refresh()
+
+    // data 为 null → ?? [] → 空数组 → stocks.length === 0 → signals 为空
+    expect(useSignalStore.getState().signals).toEqual([])
+    expect(useSignalStore.getState().loading).toBe(false)
+    expect(useSignalStore.getState().dataReady).toBe(false)
+  })
+
+  // ----------------------------------------------------------
+  // refresh: _pendingRefresh 失败路径（lines 156-159）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-156-refresh-fail-pending-02 */
+  it('refresh 失败且有 _pendingRefresh 时清除标记（覆盖 lines 156-159）', async () => {
+    let resolveList!: (value: { success: false; error: string }) => void
+    const listPromise = new Promise<{ success: false; error: string }>((r) => { resolveList = r })
+    mockDataBridgeQuery.mockReturnValue(listPromise)
+
+    const promise1 = useSignalStore.getState().refresh()
+    expect(useSignalStore.getState().isRefreshing).toBe(true)
+
+    // 在 refresh 进行中触发事件 → debouncedRefresh 设置 _pendingRefresh=true
+    initSignalStoreSubscriptions()
+    const v6Cb = capturedCallbacks.get('v6_scores')!
+    v6Cb({
+      meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't1', timestamp: Date.now() },
+      payload: {},
+    })
+    // 等待去抖定时器触发（300ms）→ isRefreshing=true → 设置 _pendingRefresh=true
+    await new Promise((r) => setTimeout(r, 400))
+
+    // 让 refresh 失败：stocksResult.success = false
+    resolveList!({ success: false, error: '查询股票池失败' })
+    await promise1
+
+    // 验证 refresh 失败
+    const state = useSignalStore.getState()
+    expect(state.error).toBe('查询股票池失败')
+    expect(state.isRefreshing).toBe(false)
+    expect(state.loading).toBe(false)
+    expect(state.dataReady).toBe(false)
+
+    // 等待足够长时间确保没有额外 refresh 被触发（_pendingRefresh 已清除）
+    await new Promise((r) => setTimeout(r, 500))
+    expect(mockDataBridgeQuery).toHaveBeenCalledTimes(1)
+  })
+
+  // ----------------------------------------------------------
+  // checkDataReady: 非 Error 异常（branch 198）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-156-check-05 */
+  it('checkDataReady: 非 Error 异常 → dataReady=false（branch 198）', async () => {
+    mockDataBridgeQuery.mockRejectedValue('字符串异常')
+
+    await useSignalStore.getState().checkDataReady()
+
+    expect(useSignalStore.getState().dataReady).toBe(false)
+  })
+
+  // ----------------------------------------------------------
+  // 组件级 signals 频道回调：合法路径（lines 337-343）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-156-sub-signals-01 */
+  it('signals 频道回调：合法 source + INSERT_SIGNAL 触发 refresh（覆盖 lines 337-343）', async () => {
+    const stocks = [createMockStock('A')]
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: stocks })
+    ;(generateSignalsForSymbol as ReturnType<typeof vi.fn>).mockResolvedValue([
+      createMockSignal('A', 60),
+    ])
+    ;(pickStrongestSignal as ReturnType<typeof vi.fn>).mockReturnValue(
+      createMockSignal('A', 60),
+    )
+
+    initSignalStoreSubscriptions()
+    const signalsCb = capturedCallbacks.get('signals')!
+
+    signalsCb({
+      meta: { source: 'analyzer', target: 'db', action: 'INSERT_SIGNAL', traceId: 't1', timestamp: Date.now() },
+      payload: createMockSignal('AAPL', 80),
+    })
+
+    await vi.waitFor(() => expect(mockDataBridgeQuery).toHaveBeenCalled(), { timeout: 1000 })
+  })
+
+  // ----------------------------------------------------------
+  // 全局 signals 频道回调：合法路径（lines 394-405）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-156-global-signals-01 */
+  it('全局 signals 频道回调：合法 source + INSERT_SIGNAL 触发 refresh（覆盖 lines 394-405）', async () => {
+    const stocks = [createMockStock('A')]
+    mockDataBridgeQuery
+      .mockResolvedValueOnce({ success: false, error: 'no scores' })
+      .mockResolvedValueOnce({ success: false, error: 'no scores' })
+      .mockResolvedValue({ success: true, data: stocks })
+    ;(generateSignalsForSymbol as ReturnType<typeof vi.fn>).mockResolvedValue([
+      createMockSignal('A', 60),
+    ])
+    ;(pickStrongestSignal as ReturnType<typeof vi.fn>).mockReturnValue(
+      createMockSignal('A', 60),
+    )
+
+    initSignalStoreGlobalSubscriptions()
+    // 等待 checkDataReady 完成
+    await vi.waitFor(() => expect(mockDataBridgeQuery).toHaveBeenCalled(), { timeout: 1000 })
+
+    vi.clearAllMocks()
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: stocks })
+
+    const signalsCb = capturedCallbacks.get('signals')!
+    signalsCb({
+      meta: { source: 'analyzer', target: 'db', action: 'INSERT_SIGNAL', traceId: 't1', timestamp: Date.now() },
+      payload: createMockSignal('AAPL', 80),
+    })
+
+    await vi.waitFor(() => expect(mockDataBridgeQuery).toHaveBeenCalled(), { timeout: 1000 })
+  })
+
+  // ----------------------------------------------------------
+  // destroySignalStoreSubscriptions: 全局保护从组件路径（lines 417-419）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-156-destroy-03 */
+  it('组件级订阅后全局初始化，destroy 跳过全局保护（覆盖 lines 417-419）', () => {
+    mockDataBridgeQuery.mockResolvedValue({ success: false, error: 'no data' })
+
+    // 1. 组件级初始化
+    initSignalStoreSubscriptions()
+    const unsubs = [...unsubscribes]
+    expect(unsubs.length).toBe(2)
+
+    // 2. 获取 cleanup（返回 destroySignalStoreSubscriptions 引用）
+    const cleanup = initSignalStoreSubscriptions()
+
+    // 3. 全局初始化 → 标记为全局（不重复注册）
+    initSignalStoreGlobalSubscriptions()
+
+    // 4. 调用 cleanup → destroySignalStoreSubscriptions → _subscriptionsInitialized=true → 跳过
+    cleanup()
+
+    // 验证 unsub 未被调用（全局保护）
+    unsubs.forEach(unsub => expect(unsub).not.toHaveBeenCalled())
+  })
+})

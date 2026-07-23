@@ -14,10 +14,12 @@ import type { TradeReviewReport, TradeError } from '@/services/trading/tradeRevi
 const mockLogger = vi.hoisted(() => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }))
 vi.mock('@/lib/logger', () => ({ getLogger: () => mockLogger }))
 
+const mockGenerateReview = vi.hoisted(() => vi.fn())
 const mockGenerateReviewAsync = vi.hoisted(() => vi.fn())
 const mockClassifyErrors = vi.hoisted(() => vi.fn())
 
 vi.mock('@/services/trading/tradeReviewAI', () => ({
+  generateReview: mockGenerateReview,
   generateReviewAsync: mockGenerateReviewAsync,
 }))
 
@@ -599,6 +601,35 @@ describe('initDisciplineStoreSubscriptions', () => {
     cleanup1()
   })
 
+  // ============================================================
+  // 补充：source 自激过滤（覆盖分支 458 真分支）
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-133-sub-self-filter */
+  it('source === tradeReviews 时跳过（自激过滤，分支 458）', async () => {
+    const cleanup = initDisciplineStoreSubscriptions()
+    const cb = capturedCallbacks.get('orders')
+
+    // source === DISCIPLINE_STORE_SOURCE('tradeReviews') 应被过滤
+    cb!({
+      meta: {
+        source: 'tradeReviews' as any,
+        target: 'db' as any,
+        action: 'INSERT_ORDER' as any,
+        traceId: 'self-filter-t1',
+        timestamp: Date.now(),
+      },
+      payload: {},
+    } as StandardEnvelope)
+
+    await new Promise((r) => setTimeout(r, 200))
+
+    // 不应触发 recalculate
+    expect(mockGenerateReviewAsync).not.toHaveBeenCalled()
+
+    cleanup()
+  })
+
   /** @test_id V9-TEST-ST-133-sub-cleanup-timer-01 */
   it('cleanup 函数：有去抖定时器时清除定时器', async () => {
     initDisciplineStoreSubscriptions()
@@ -618,5 +649,159 @@ describe('initDisciplineStoreSubscriptions', () => {
 
     // 等待确认定时器被清除（不应有 recalculate 触发）
     await new Promise((r) => setTimeout(r, 200))
+  })
+})
+
+// ============================================================
+// 补充：loadOrders / generateReviewReport / 异常分支覆盖
+// （覆盖行 366-389, 459, 478-479 及分支 225, 250, 306, 343, 373, 386, 458, 477）
+// ============================================================
+
+describe('disciplineStore 补充覆盖', () => {
+  // ----------------------------------------------------------
+  // loadOrders（覆盖行 366-376）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-133-load-01 */
+  it('loadOrders: 成功委托 orderStore.refresh 并返回订单', async () => {
+    const orders = [createMockOrder(), createMockOrder({ id: 'ord-2' })]
+    mockOrderStoreOrders.push(...orders)
+    mockOrderStoreRefresh.mockResolvedValue(undefined)
+
+    const result = await useDisciplineStore.getState().loadOrders()
+
+    expect(mockOrderStoreRefresh).toHaveBeenCalledTimes(1)
+    expect(result).toEqual(orders)
+  })
+
+  /** @test_id V9-TEST-ST-133-load-02 */
+  it('loadOrders: orderStore.refresh 抛出 Error 时 rethrow', async () => {
+    mockOrderStoreRefresh.mockRejectedValueOnce(new Error('刷新失败'))
+
+    await expect(useDisciplineStore.getState().loadOrders()).rejects.toThrow('刷新失败')
+  })
+
+  /** @test_id V9-TEST-ST-133-load-03 */
+  it('loadOrders: orderStore.refresh 抛出非 Error 值时转为字符串并 rethrow（分支 373）', async () => {
+    mockOrderStoreRefresh.mockRejectedValueOnce('字符串错误')
+
+    let caught: unknown
+    try {
+      await useDisciplineStore.getState().loadOrders()
+    } catch (err) {
+      caught = err
+    }
+    expect(caught).toBe('字符串错误')
+  })
+
+  // ----------------------------------------------------------
+  // generateReviewReport（覆盖行 380-389）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-133-gen-01 */
+  it('generateReviewReport: 成功委托 generateReview 并返回报告', () => {
+    const report = createMockReport()
+    mockGenerateReview.mockReturnValue(report)
+
+    const result = useDisciplineStore.getState().generateReviewReport([createMockOrder()])
+
+    expect(mockGenerateReview).toHaveBeenCalledTimes(1)
+    expect(result).toEqual(report)
+  })
+
+  /** @test_id V9-TEST-ST-133-gen-02 */
+  it('generateReviewReport: generateReview 抛出 Error 时 rethrow', () => {
+    mockGenerateReview.mockImplementationOnce(() => {
+      throw new Error('生成报告失败')
+    })
+
+    expect(() =>
+      useDisciplineStore.getState().generateReviewReport([createMockOrder()]),
+    ).toThrow('生成报告失败')
+  })
+
+  /** @test_id V9-TEST-ST-133-gen-03 */
+  it('generateReviewReport: generateReview 抛出非 Error 值时转为字符串并 rethrow（分支 386）', () => {
+    mockGenerateReview.mockImplementationOnce(() => {
+      throw '生成报告字符串错误'
+    })
+
+    let caught: unknown
+    try {
+      useDisciplineStore.getState().generateReviewReport([createMockOrder()])
+    } catch (err) {
+      caught = err
+    }
+    expect(caught).toBe('生成报告字符串错误')
+  })
+
+  // ----------------------------------------------------------
+  // recalculate 非 Error 异常路径（覆盖分支 225, 250）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-133-recalc-persist-nonerr */
+  it('recalculate: 持久化抛出非 Error 值时 warn 且不影响主流程（分支 225）', async () => {
+    mockGenerateReviewAsync.mockResolvedValue(createMockReport())
+    mockClassifyErrors.mockReturnValue(createMockClassification())
+    mockForward.mockRejectedValueOnce('持久化字符串错误')
+
+    await useDisciplineStore.getState().recalculate([createMockOrder()])
+
+    const state = useDisciplineStore.getState()
+    expect(state.latestReport).toBeDefined()
+    expect(state.error).toBeNull()
+    expect(mockLogger.warn).toHaveBeenCalledWith(
+      '[disciplineStore] 复盘摘要持久化失败',
+      { error: '持久化字符串错误' },
+    )
+  })
+
+  /** @test_id V9-TEST-ST-133-recalc-main-nonerr */
+  it('recalculate: generateReviewAsync 抛出非 Error 值时回滚到旧快照（分支 250）', async () => {
+    const oldReport = createMockReport()
+    useDisciplineStore.setState({
+      latestReport: oldReport,
+      disciplineScore: 70,
+    })
+
+    mockGenerateReviewAsync.mockRejectedValueOnce('AI字符串错误')
+
+    await useDisciplineStore.getState().recalculate([createMockOrder()])
+
+    const state = useDisciplineStore.getState()
+    expect(state.latestReport).toEqual(oldReport)
+    expect(state.disciplineScore).toBe(70)
+    expect(state.error).toBe('AI字符串错误')
+  })
+
+  // ----------------------------------------------------------
+  // refresh 默认错误消息 + 非 Error 异常（覆盖分支 306, 343）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-133-refresh-default-err */
+  it('refresh: queryResult.error 为 null 时使用默认错误消息（分支 306）', async () => {
+    mockQuery.mockResolvedValueOnce({ success: false, error: null })
+
+    await useDisciplineStore.getState().refresh()
+
+    expect(useDisciplineStore.getState().error).toBe('读取复盘记录失败')
+  })
+
+  /** @test_id V9-TEST-ST-133-refresh-nonerr */
+  it('refresh: query 抛出非 Error 值时回滚到旧快照（分支 343）', async () => {
+    const oldReport = createMockReport()
+    useDisciplineStore.setState({
+      latestReport: oldReport,
+      disciplineScore: 70,
+    })
+
+    mockQuery.mockRejectedValueOnce('查询字符串错误')
+
+    await useDisciplineStore.getState().refresh()
+
+    const state = useDisciplineStore.getState()
+    expect(state.latestReport).toEqual(oldReport)
+    expect(state.disciplineScore).toBe(70)
+    expect(state.error).toBe('查询字符串错误')
   })
 })

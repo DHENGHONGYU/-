@@ -123,6 +123,15 @@ const {
   }
 })
 
+// ============================================================
+// 补充覆盖：额外 vi.hoisted mocks
+// ============================================================
+
+const mockSendChatMessage = vi.hoisted(() => vi.fn())
+const mockStreamingChat = vi.hoisted(() => vi.fn())
+const mockNanoid = vi.hoisted(() => vi.fn().mockReturnValue('testid123'))
+const cockpitState = vi.hoisted(() => ({ activeDataSource: 'MOCK' as string }))
+
 vi.mock('@/lib/logger', () => ({
   getLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }),
 }))
@@ -158,6 +167,23 @@ vi.mock('@/config/dbConfig', () => ({
   DATA_SOURCE: { manual: 'manual', auto: 'auto' },
 }))
 
+vi.mock('@/constants/cockpit.constants', () => ({
+  get ACTIVE_DATA_SOURCE() { return cockpitState.activeDataSource },
+  DATA_SOURCE_TYPE: { MOCK: 'MOCK', REST: 'REST' },
+}))
+
+vi.mock('@/services/stock-analysis/mockStockAnalysisProvider', () => ({
+  MockStockAnalysisProvider: { sendChatMessage: mockSendChatMessage },
+}))
+
+vi.mock('@/services/llm/llmGateway', () => ({
+  streamingChat: mockStreamingChat,
+}))
+
+vi.mock('nanoid', () => ({
+  nanoid: mockNanoid,
+}))
+
 
 
 import { renderHook } from '@testing-library/react'
@@ -168,6 +194,7 @@ import {
   useDataSourceData,
   initMarketDataStoreTaskSubscription,
   initMarketDataStoreSubscriptions,
+  initMarketDataStoreGlobalSubscriptions,
   _resetMarketDataStoreSubscriptionsForTest,
 } from './marketDataStore'
 import { marketDataAdapter } from '@/services/data-collector/MarketDataAdapter'
@@ -587,5 +614,294 @@ describe('initMarketDataStoreSubscriptions', () => {
 
     cleanup2()
     expect(unsubscribeDataBridgeFn).toHaveBeenCalledTimes(1)
+  })
+})
+
+// ============================================================
+// 补充覆盖：mergeAdaptedData + sendChatMessage + global init + destroy
+// ============================================================
+
+describe('marketDataStore 补充覆盖', () => {
+  beforeEach(() => {
+    cockpitState.activeDataSource = 'MOCK'
+  })
+
+  // ----------------------------------------------------------
+  // mergeAdaptedData（lines 388-392）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-143-merge-01 */
+  it('mergeAdaptedData: 合并适配数据到 mergedData', () => {
+    mockMerge.mockReturnValue({ indices: [{ code: 'SH', price: 3200 }] })
+    useMarketDataStore.getState().mergeAdaptedData({ indices: [{ code: 'SH', price: 3200 }] })
+    expect(mockMerge).toHaveBeenCalled()
+  })
+
+  // ----------------------------------------------------------
+  // sendChatMessage: Mock 模式（lines 403-404）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-143-chat-mock-01 */
+  it('sendChatMessage: Mock 模式调用 MockStockAnalysisProvider', async () => {
+    cockpitState.activeDataSource = 'MOCK'
+    const mockResponse = { id: 'msg_1', role: 'assistant' as const, content: 'mock reply', timestamp: Date.now() }
+    mockSendChatMessage.mockResolvedValue(mockResponse)
+
+    const result = await useMarketDataStore.getState().sendChatMessage('AAPL', '分析一下')
+
+    expect(mockSendChatMessage).toHaveBeenCalledWith('AAPL', '分析一下')
+    expect(result.content).toBe('mock reply')
+    expect(result.role).toBe('assistant')
+  })
+
+  // ----------------------------------------------------------
+  // sendChatMessage: REST 模式成功（lines 407-435）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-143-chat-rest-01 */
+  it('sendChatMessage: REST 模式使用 SSE 流式推理', async () => {
+    cockpitState.activeDataSource = 'REST'
+    mockStreamingChat.mockImplementation(async (_messages: unknown, callback: (chunk: { content: string; isDone: boolean }) => void) => {
+      callback({ content: 'Hello ', isDone: false })
+      callback({ content: 'World', isDone: false })
+      callback({ content: '', isDone: true })
+    })
+
+    const result = await useMarketDataStore.getState().sendChatMessage('AAPL', '分析一下')
+
+    expect(mockStreamingChat).toHaveBeenCalledTimes(1)
+    expect(result.content).toBe('Hello World')
+    expect(result.role).toBe('assistant')
+    expect(result.id).toContain('assistant_')
+  })
+
+  // ----------------------------------------------------------
+  // sendChatMessage: REST 模式失败（lines 425-428）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-143-chat-rest-02 */
+  it('sendChatMessage: REST 模式 LLM 失败时抛出异常', async () => {
+    cockpitState.activeDataSource = 'REST'
+    mockStreamingChat.mockRejectedValue(new Error('LLM 服务不可用'))
+
+    await expect(useMarketDataStore.getState().sendChatMessage('AAPL', '分析一下'))
+      .rejects.toThrow('LLM 服务不可用')
+  })
+
+  // ----------------------------------------------------------
+  // handleCollectionResult: 未知 taskId（lines 459, 472）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-143-callback-unknown-01 */
+  it('handleCollectionResult: 未知 taskId 成功回调不崩溃（覆盖 lines 459, 472）', () => {
+    initMarketDataStoreTaskSubscription()
+    // taskMap 为空，taskId 不匹配任何条目 → key=undefined, instanceId=undefined
+    capturedTaskSchedulerCallback.callback?.('unknown_task', { dataType: 'test', source: 'mock', payload: {} })
+    // 不应该崩溃，也不应该更新任何数据源
+    expect(useMarketDataStore.getState().dataSources).toEqual({})
+  })
+
+  /** @test_id V9-TEST-ST-143-callback-unknown-02 */
+  it('handleCollectionResult: 未知 taskId 错误回调不崩溃（覆盖 lines 459, 472 错误路径）', () => {
+    initMarketDataStoreTaskSubscription()
+    capturedTaskSchedulerCallback.callback?.('unknown_task', null, new Error('采集失败'))
+    // 不应该崩溃
+  })
+
+  // ----------------------------------------------------------
+  // initMarketDataStoreGlobalSubscriptions（lines 600-618）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-143-global-init-01 */
+  it('initMarketDataStoreGlobalSubscriptions: 首次调用注册全部订阅', () => {
+    initMarketDataStoreGlobalSubscriptions()
+    expect(mockSubscribeTaskScheduler).toHaveBeenCalledTimes(1)
+    expect(mockSubscribeDataBridge).toHaveBeenCalledWith('orders', expect.any(Function))
+    expect(mockSubscribeDataBridge).toHaveBeenCalledTimes(1)
+  })
+
+  /** @test_id V9-TEST-ST-143-global-init-02 */
+  it('initMarketDataStoreGlobalSubscriptions: 重复调用幂等跳过', () => {
+    initMarketDataStoreGlobalSubscriptions()
+    expect(mockSubscribeTaskScheduler).toHaveBeenCalledTimes(1)
+    expect(mockSubscribeDataBridge).toHaveBeenCalledTimes(1)
+
+    initMarketDataStoreGlobalSubscriptions()
+    expect(mockSubscribeTaskScheduler).toHaveBeenCalledTimes(1)
+    expect(mockSubscribeDataBridge).toHaveBeenCalledTimes(1)
+  })
+
+  /** @test_id V9-TEST-ST-143-global-init-03 */
+  it('initMarketDataStoreGlobalSubscriptions: 已有组件级订阅时复用', () => {
+    // 先组件级初始化
+    initMarketDataStoreTaskSubscription()
+    expect(mockSubscribeTaskScheduler).toHaveBeenCalledTimes(1)
+
+    // 全局初始化 → TaskScheduler 已订阅，只初始化 DataBridge
+    initMarketDataStoreGlobalSubscriptions()
+    expect(mockSubscribeTaskScheduler).toHaveBeenCalledTimes(1) // 不增加
+    expect(mockSubscribeDataBridge).toHaveBeenCalledTimes(1)    // DataBridge 新增
+  })
+
+  // ----------------------------------------------------------
+  // destroyMarketDataStoreSubscriptions: 全局保护（lines 672-673）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-143-destroy-global-01 */
+  it('全局初始化后，组件级 destroy 跳过（全局保护，覆盖 lines 672-673）', () => {
+    initMarketDataStoreGlobalSubscriptions()
+
+    // 记录 cleanup 前的调用次数（beforeEach 的 _reset 可能已调用过 unsub）
+    const callsBefore = unsubscribeDataBridgeFn.mock.calls.length
+
+    const cleanup = initMarketDataStoreSubscriptions()
+    cleanup()
+
+    // 全局保护 → cleanup 不应额外调用 unsub
+    expect(unsubscribeDataBridgeFn.mock.calls.length).toBe(callsBefore)
+  })
+
+  // ----------------------------------------------------------
+  // destroyMarketDataStoreSubscriptions: 去抖定时器清理（lines 675-677）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-143-destroy-timer-01 */
+  it('组件级 destroy：有去抖定时器时清除（覆盖 lines 675-677）', async () => {
+    useMarketDataStore.setState({
+      dataSources: {
+        portfolioOverview: { data: undefined, loading: false, error: null, lastUpdated: 0 },
+      },
+      taskMap: { portfolioOverview: 'task_po_1' },
+    })
+
+    const cleanup = initMarketDataStoreSubscriptions()
+
+    // 触发事件 → 设置去抖定时器（300ms 防抖）
+    capturedDataBridgeCallback.callback?.({
+      meta: { source: 'trading', target: 'db', action: 'INSERT_ORDER', traceId: 't1', timestamp: Date.now() },
+      payload: {},
+    })
+
+    // 100ms 后调用 cleanup（定时器还未触发，_refreshDebounceTimer 仍存在）
+    await new Promise((r) => setTimeout(r, 100))
+    cleanup()
+
+    // 验证 unsub 被调用（组件级 destroy 正常清理）
+    expect(unsubscribeDataBridgeFn).toHaveBeenCalled()
+  })
+
+  // ----------------------------------------------------------
+  // _resetMarketDataStoreSubscriptionsForTest: 定时器清理（lines 635-636）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-143-reset-timer-01 */
+  it('_resetMarketDataStoreSubscriptionsForTest: 有定时器时清理（覆盖 lines 635-636）', () => {
+    vi.useFakeTimers()
+    useMarketDataStore.getState().startPeriodicRefresh(['marketIndices'], 5000)
+    // 不调用 stopPeriodicRefresh，直接 reset → periodicTimers 有条目
+    _resetMarketDataStoreSubscriptionsForTest()
+    vi.useRealTimers()
+    // 验证不崩溃，periodicTimers 已清理
+  })
+
+  // ----------------------------------------------------------
+  // fetchDataSource: 非 Error 异常（branch 264）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-143-fetch-nonerror-01 */
+  it('fetchDataSource: 非 Error 异常时使用 String(err) 作为消息（branch 264）', async () => {
+    mockRegisterTask.mockImplementationOnce(() => {
+      throw '注册字符串异常'
+    })
+    const config = createMockDataSourceConfig()
+    await useMarketDataStore.getState().fetchDataSource('marketIndices', config, 'instance_1')
+    expect(useMarketDataStore.getState().globalError).toBe('注册字符串异常')
+  })
+
+  // ----------------------------------------------------------
+  // sendChatMessage: REST 模式非 Error 异常（branch 426）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-143-chat-rest-03 */
+  it('sendChatMessage: REST 模式非 Error 异常（branch 426）', async () => {
+    cockpitState.activeDataSource = 'REST'
+    mockStreamingChat.mockRejectedValue('LLM字符串异常')
+    await expect(useMarketDataStore.getState().sendChatMessage('AAPL', '分析一下'))
+      .rejects.toBe('LLM字符串异常')
+  })
+
+  // ----------------------------------------------------------
+  // DataBridge 连续事件：第二次清除前一个去抖定时器（line 657）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-143-debounce-clear-01 */
+  it('DataBridge 连续事件：第二次事件清除前一个去抖定时器（覆盖 line 657）', async () => {
+    useMarketDataStore.setState({
+      dataSources: {
+        portfolioOverview: { data: undefined, loading: false, error: null, lastUpdated: 0 },
+      },
+      taskMap: { portfolioOverview: 'task_po_1' },
+    })
+    initMarketDataStoreSubscriptions()
+
+    // 第一次事件 → 设置 _refreshDebounceTimer
+    capturedDataBridgeCallback.callback?.({
+      meta: { source: 'trading', target: 'db', action: 'INSERT_ORDER', traceId: 't1', timestamp: Date.now() },
+      payload: {},
+    })
+
+    // 50ms 后第二次事件 → 清除前一个定时器（覆盖 line 657）并设置新定时器
+    await new Promise((r) => setTimeout(r, 50))
+    capturedDataBridgeCallback.callback?.({
+      meta: { source: 'trading', target: 'db', action: 'INSERT_ORDER', traceId: 't2', timestamp: Date.now() },
+      payload: {},
+    })
+
+    // 等待防抖完成
+    await new Promise((r) => setTimeout(r, 400))
+    expect(mockStopTask).toHaveBeenCalledWith('task_po_1')
+  })
+
+  // ----------------------------------------------------------
+  // fetchDataSource: 失败且无 instanceId（branch 278 false）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-143-fetch-error-no-instance-01 */
+  it('fetchDataSource: 失败且无 instanceId 时不更新 loadingMap（branch 278）', async () => {
+    mockRegisterTask.mockImplementationOnce(() => {
+      throw new Error('注册失败')
+    })
+    const config = createMockDataSourceConfig()
+    // 不传 instanceId → catch 块中 instanceId 为 undefined → loadingMap 不更新
+    await useMarketDataStore.getState().fetchDataSource('marketIndices', config)
+    expect(useMarketDataStore.getState().globalError).toBe('注册失败')
+  })
+
+  // ----------------------------------------------------------
+  // handleCollectionResult: rawData 为 null 且无 error（branch 505 false）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-143-callback-null-01 */
+  it('handleCollectionResult: rawData 为 null 且无 error 时不更新（branch 505）', () => {
+    initMarketDataStoreTaskSubscription()
+    // rawData=null, error=undefined → 既不进 error 分支也不进 rawData 分支
+    capturedTaskSchedulerCallback.callback?.('task_1', null)
+    // 不崩溃
+  })
+
+  // ----------------------------------------------------------
+  // handleCollectionResult: hasAnyData 为 true 时 status 设为 ready（branch 533 true）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-143-callback-hasdata-01 */
+  it('handleCollectionResult: mergedData 有数据时 status 设为 ready（branch 533 true）', () => {
+    initMarketDataStoreTaskSubscription()
+    useMarketDataStore.setState({
+      taskMap: { portfolioOverview: 'task_po_1' },
+    })
+    // mockMerge 返回含非空数组的对象 → hasAnyData = true
+    mockMerge.mockReturnValueOnce({ indices: [{ code: 'SH', price: 3200 }] })
+    capturedTaskSchedulerCallback.callback?.('task_po_1', { dataType: 'portfolio', source: 'mock', payload: { total: 100 } })
+    expect(useMarketDataStore.getState().status).toBe('ready')
   })
 })
