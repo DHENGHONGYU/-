@@ -418,4 +418,51 @@ describe('useDataTestStore', () => {
     expect(state.singleStatus).toBe('done')
     expect(state.singleResult).toContain('未知错误')
   })
+
+  // ============================================================
+  // 简单 setter 函数（未覆盖函数补充，提升 function 覆盖率）
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-DATA-TEST-setter-01 */
+  it('setSingleSymbol: 更新 singleSymbol', () => {
+    useDataTestStore.getState().setSingleSymbol('600519.SH')
+    expect(useDataTestStore.getState().singleSymbol).toBe('600519.SH')
+  })
+
+  /** @test_id V9-TEST-ST-DATA-TEST-setter-02 */
+  it('setSelectedDimension: 更新 selectedDimension', () => {
+    useDataTestStore.getState().setSelectedDimension('05')
+    expect(useDataTestStore.getState().selectedDimension).toBe('05')
+  })
+
+  /** @test_id V9-TEST-ST-DATA-TEST-setter-03 */
+  it('setSingleStatus: 更新 singleStatus', () => {
+    useDataTestStore.getState().setSingleStatus('running')
+    expect(useDataTestStore.getState().singleStatus).toBe('running')
+  })
+
+  /** @test_id V9-TEST-ST-DATA-TEST-setter-04 */
+  it('setBatchText: 更新 batchText', () => {
+    useDataTestStore.getState().setBatchText('600519.SH,000001.SZ')
+    expect(useDataTestStore.getState().batchText).toBe('600519.SH,000001.SZ')
+  })
+
+  /** @test_id V9-TEST-ST-DATA-TEST-setter-05 */
+  it('setBatchRunning: 更新 batchRunning', () => {
+    useDataTestStore.getState().setBatchRunning(true)
+    expect(useDataTestStore.getState().batchRunning).toBe(true)
+  })
+
+  /** @test_id V9-TEST-ST-DATA-TEST-setter-06 */
+  it('setProgress: 更新 progress', () => {
+    useDataTestStore.getState().setProgress(75)
+    expect(useDataTestStore.getState().progress).toBe(75)
+  })
+
+  /** @test_id V9-TEST-ST-DATA-TEST-setter-07 */
+  it('setTraceResults: 更新 traceResults', () => {
+    const results = [buildTraceResult({ symbol: '600519.SH' })]
+    useDataTestStore.getState().setTraceResults(results)
+    expect(useDataTestStore.getState().traceResults).toEqual(results)
+  })
 })

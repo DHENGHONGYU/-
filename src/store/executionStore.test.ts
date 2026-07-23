@@ -749,4 +749,399 @@ describe('useExecutionStore', () => {
       expect(state.lastUpdated).toBe(initialState.lastUpdated)
     })
   })
+
+  // ============================================================
+  // 补充：未覆盖分支测试（提升 branch 覆盖率至 90%+）
+  // ============================================================
+
+  // ---- refresh: success=false / data=null ----
+
+  /** @test_id V9-TEST-ST-136-REFRESH-SUCCESS-FALSE */
+  it('refresh: result.success=false 时抛出错误并回滚旧快照', async () => {
+    const oldPlans = [createPlan({ id: 'old-plan', phase: 'plan' })]
+    useExecutionStore.setState({
+      plans: oldPlans,
+      activePlans: oldPlans,
+      lastUpdated: 1000,
+      loading: false,
+    })
+    mockQuery.mockResolvedValueOnce({ success: false, error: '查询执行计划列表失败' })
+
+    await useExecutionStore.getState().refresh()
+
+    const state = useExecutionStore.getState()
+    expect(state.plans).toEqual(oldPlans) // 回滚
+    expect(state.error).toBe('查询执行计划列表失败')
+    expect(state.isRefreshing).toBe(false)
+  })
+
+  /** @test_id V9-TEST-ST-136-REFRESH-NULL-DATA */
+  it('refresh: result.data=null 时按空数组处理', async () => {
+    mockQuery.mockResolvedValueOnce({ success: true, data: null })
+
+    await useExecutionStore.getState().refresh()
+
+    const state = useExecutionStore.getState()
+    expect(state.plans).toEqual([])
+    expect(state.activePlans).toEqual([])
+    expect(state.error).toBeNull()
+    expect(state.isRefreshing).toBe(false)
+  })
+
+  // ---- createPlan: success=true 但 plan=null ----
+
+  /** @test_id V9-TEST-ST-136-CREATE-PLAN-NULL */
+  it('createPlan: success=true 但 plan=null 时返回 null 且不设置 error', async () => {
+    const signal = createSignal()
+    mockCreateExecutionPlanUseCase.mockResolvedValueOnce({ success: true, plan: null })
+
+    const result = await useExecutionStore.getState().createPlan(signal)
+
+    expect(result).toBeNull()
+    expect(useExecutionStore.getState().error).toBeNull()
+  })
+
+  // ---- confirmPlan: forward 异常 ----
+
+  /** @test_id V9-TEST-ST-136-CONFIRM-EXCEPTION */
+  it('confirmPlan: forwardUpdateExecutionPlan 异常时设置 error', async () => {
+    const plan = createPlan({ phase: 'plan' })
+    useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+    mockForward.mockRejectedValueOnce(new Error('forward 失败'))
+
+    await useExecutionStore.getState().confirmPlan(plan.id)
+
+    expect(useExecutionStore.getState().error).toBe('forward 失败')
+  })
+
+  // ---- cancelPlan: 终态跳过 / 自定义 reason / 异常 ----
+
+  /** @test_id V9-TEST-ST-136-CANCEL-REVIEWED */
+  it('cancelPlan: phase=reviewed 时跳过且不调用 update 不设置 error', async () => {
+    const plan = createPlan({ id: 'plan-rev', phase: 'reviewed' })
+    useExecutionStore.setState({ plans: [plan] })
+
+    await useExecutionStore.getState().cancelPlan('plan-rev')
+
+    expect(mockForward).not.toHaveBeenCalled()
+    expect(useExecutionStore.getState().error).toBeNull()
+    expect(useExecutionStore.getState().plans[0]!.phase).toBe('reviewed')
+  })
+
+  /** @test_id V9-TEST-ST-136-CANCEL-CANCELLED */
+  it('cancelPlan: phase=cancelled 时跳过且不调用 update', async () => {
+    const plan = createPlan({ id: 'plan-can', phase: 'cancelled' })
+    useExecutionStore.setState({ plans: [plan] })
+
+    await useExecutionStore.getState().cancelPlan('plan-can')
+
+    expect(mockForward).not.toHaveBeenCalled()
+    expect(useExecutionStore.getState().error).toBeNull()
+  })
+
+  /** @test_id V9-TEST-ST-136-CANCEL-CUSTOM-REASON */
+  it('cancelPlan: 传入自定义 reason 时使用自定义原因', async () => {
+    const plan = createPlan({ id: 'plan-cr', phase: 'confirmed' })
+    useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+    mockForward.mockResolvedValueOnce(undefined)
+
+    await useExecutionStore.getState().cancelPlan('plan-cr', '风控触发')
+
+    expect(useExecutionStore.getState().plans[0]!.errorMessage).toBe('风控触发')
+  })
+
+  /** @test_id V9-TEST-ST-136-CANCEL-EXCEPTION */
+  it('cancelPlan: forwardUpdateExecutionPlan 异常时设置 error', async () => {
+    const plan = createPlan({ id: 'plan-ce', phase: 'confirmed' })
+    useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+    mockForward.mockRejectedValueOnce(new Error('cancel forward 失败'))
+
+    await useExecutionStore.getState().cancelPlan('plan-ce')
+
+    expect(useExecutionStore.getState().error).toBe('cancel forward 失败')
+  })
+
+  /** @test_id V9-TEST-ST-136-CANCEL-NOT-FOUND */
+  it('cancelPlan: planId 不存在时设置 error', async () => {
+    await useExecutionStore.getState().cancelPlan('nonexistent-id')
+
+    expect(useExecutionStore.getState().error).toBe('执行计划 nonexistent-id 不存在')
+  })
+
+  // ---- markReviewed: cancelled → reviewed / 异常 ----
+
+  /** @test_id V9-TEST-ST-136-MARK-CANCELLED */
+  it('markReviewed: phase=cancelled 时转为 reviewed', async () => {
+    const plan = createPlan({ id: 'plan-mc', phase: 'cancelled' })
+    useExecutionStore.setState({ plans: [plan] })
+    mockForward.mockResolvedValueOnce(undefined)
+
+    await useExecutionStore.getState().markReviewed('plan-mc')
+
+    expect(useExecutionStore.getState().plans[0]!.phase).toBe('reviewed')
+    expect(useExecutionStore.getState().plans[0]!.reviewedAt).toBeGreaterThan(0)
+    expect(mockForward).toHaveBeenCalledTimes(1)
+  })
+
+  /** @test_id V9-TEST-ST-136-MARK-EXCEPTION */
+  it('markReviewed: forwardUpdateExecutionPlan 异常时设置 error', async () => {
+    const plan = createPlan({ id: 'plan-me', phase: 'executed' })
+    useExecutionStore.setState({ plans: [plan] })
+    mockForward.mockRejectedValueOnce(new Error('mark forward 失败'))
+
+    await useExecutionStore.getState().markReviewed('plan-me')
+
+    expect(useExecutionStore.getState().error).toBe('mark forward 失败')
+  })
+
+  /** @test_id V9-TEST-ST-136-MARK-NOT-FOUND */
+  it('markReviewed: planId 不存在时设置 error', async () => {
+    await useExecutionStore.getState().markReviewed('nonexistent-id')
+
+    expect(useExecutionStore.getState().error).toBe('执行计划 nonexistent-id 不存在')
+  })
+
+  // ---- executePlan: transitionToCancelledOnError 内部 catch（行 230-232）----
+
+  /** @test_id V9-TEST-ST-136-EXECUTE-CANCEL-FAIL */
+  it('executePlan: 异常后 transitionToCancelledOnError 也失败时不抛出未捕获异常', async () => {
+    const plan = createPlan({ id: 'plan-ecf', phase: 'confirmed', direction: 'buy' })
+    useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+    mockWaitFor.mockResolvedValueOnce(undefined)
+    // pending 转换成功，但后续 cancelled 转换全部失败
+    mockForward.mockResolvedValueOnce(undefined) // pending 成功
+    mockForward.mockRejectedValueOnce(new Error('forward 失败')) // cancelled in finalizeExecution
+    mockForward.mockRejectedValueOnce(new Error('forward 也失败')) // cancelled in transitionToCancelledOnError
+    mockQuery.mockResolvedValueOnce({ success: true, data: createStock({ price: 150 }) })
+    mockCreateBuyOrder.mockResolvedValueOnce({ success: false, error: '下单失败' })
+
+    await useExecutionStore.getState().executePlan('plan-ecf')
+
+    // error 应为 finalizeExecution 中 transitionPlanPhase 抛出的 forward 错误
+    expect(useExecutionStore.getState().error).toBe('forward 失败')
+    expect(useExecutionStore.getState().isProcessing).toBe(false)
+  })
+
+  // ---- executePlan: forwardUpdateExecutionPlan 计划不存在（行 591-592）----
+
+  /** @test_id V9-TEST-ST-136-EXECUTE-PLAN-NOT-FOUND */
+  it('executePlan: waitFor 后计划被移除时 forwardUpdateExecutionPlan 抛出错误', async () => {
+    const plan = createPlan({ id: 'plan-race', phase: 'confirmed', direction: 'buy' })
+    useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+
+    // 模拟竞态：waitFor 期间计划被移除
+    mockWaitFor.mockImplementationOnce(async () => {
+      useExecutionStore.setState({ plans: [] })
+    })
+
+    await useExecutionStore.getState().executePlan('plan-race')
+
+    // forwardUpdateExecutionPlan 发现计划不存在 → 抛出错误
+    // catch 块调用 transitionToCancelledOnError，但计划仍不存在 → 内部 catch 记录
+    expect(useExecutionStore.getState().error).toBe('执行计划 plan-race 不存在')
+    expect(useExecutionStore.getState().isProcessing).toBe(false)
+  })
+
+  // ============================================================
+  // 补充：cancelPlan / markReviewed 多计划与非 Error 分支测试
+  // 提升 branch 覆盖率至 90%+
+  // 未覆盖分支：行 488（map ternary false）、499（catch 非 Error）
+  //             行 539（map ternary false）、550（catch 非 Error）
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-136-CANCEL-MULTI-PLAN */
+  it('cancelPlan: 多计划场景下仅取消目标计划，其他计划保持不变', async () => {
+    const plan1 = createPlan({ id: 'plan-multi-1', phase: 'confirmed' })
+    const plan2 = createPlan({ id: 'plan-multi-2', phase: 'plan' })
+    useExecutionStore.setState({ plans: [plan1, plan2], activePlans: [plan1, plan2] })
+    mockForward.mockResolvedValueOnce(undefined)
+
+    await useExecutionStore.getState().cancelPlan('plan-multi-1')
+
+    const state = useExecutionStore.getState()
+    // plan1 被取消
+    expect(state.plans.find((p) => p.id === 'plan-multi-1')!.phase).toBe('cancelled')
+    // plan2 保持不变（覆盖 map ternary false 分支，行 488）
+    expect(state.plans.find((p) => p.id === 'plan-multi-2')!.phase).toBe('plan')
+  })
+
+  /** @test_id V9-TEST-ST-136-CANCEL-NON-ERROR */
+  it('cancelPlan: forward 抛出非 Error 对象时使用 String(err) 作为错误信息', async () => {
+    const plan = createPlan({ id: 'plan-ne1', phase: 'confirmed' })
+    useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+    mockForward.mockRejectedValueOnce('字符串错误信息')
+
+    await useExecutionStore.getState().cancelPlan('plan-ne1')
+
+    // 覆盖 catch 块中 err instanceof Error 的 false 分支（行 499）
+    expect(useExecutionStore.getState().error).toBe('字符串错误信息')
+  })
+
+  /** @test_id V9-TEST-ST-136-MARK-MULTI-PLAN */
+  it('markReviewed: 多计划场景下仅标记目标计划，其他计划保持不变', async () => {
+    const plan1 = createPlan({ id: 'plan-mrk-1', phase: 'executed' })
+    const plan2 = createPlan({ id: 'plan-mrk-2', phase: 'cancelled' })
+    useExecutionStore.setState({ plans: [plan1, plan2] })
+    mockForward.mockResolvedValueOnce(undefined)
+
+    await useExecutionStore.getState().markReviewed('plan-mrk-1')
+
+    const state = useExecutionStore.getState()
+    // plan1 被标记为 reviewed
+    expect(state.plans.find((p) => p.id === 'plan-mrk-1')!.phase).toBe('reviewed')
+    // plan2 保持不变（覆盖 map ternary false 分支，行 539）
+    expect(state.plans.find((p) => p.id === 'plan-mrk-2')!.phase).toBe('cancelled')
+  })
+
+  /** @test_id V9-TEST-ST-136-MARK-NON-ERROR */
+  it('markReviewed: forward 抛出非 Error 对象时使用 String(err) 作为错误信息', async () => {
+    const plan = createPlan({ id: 'plan-ne2', phase: 'executed' })
+    useExecutionStore.setState({ plans: [plan] })
+    mockForward.mockRejectedValueOnce({ code: 500, msg: '对象错误' })
+
+    await useExecutionStore.getState().markReviewed('plan-ne2')
+
+    // 覆盖 catch 块中 err instanceof Error 的 false 分支（行 550）
+    expect(useExecutionStore.getState().error).toBe('[object Object]')
+  })
+
+  // ============================================================
+  // 补充：binary-expr (??) 与 cond-expr (?:) 未覆盖分支
+  // 提升 branch 覆盖率至 90%+
+  // 未覆盖分支：行 133, 150, 186, 214, 277, 296, 348, 387, 398, 445
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-136-REFRESH-NO-ERROR-FIELD */
+  it('refresh: result.success=false 且无 error 字段时使用默认错误信息', async () => {
+    mockQuery.mockResolvedValueOnce({ success: false } as any)
+
+    await useExecutionStore.getState().refresh()
+
+    // 覆盖 result.error ?? '查询执行计划列表失败' 的 ?? fallback（行 277）
+    expect(useExecutionStore.getState().error).toBe('查询执行计划列表失败')
+  })
+
+  /** @test_id V9-TEST-ST-136-REFRESH-NON-ERROR */
+  it('refresh: query 抛出非 Error 对象时使用 String(err) 作为错误信息', async () => {
+    mockQuery.mockRejectedValueOnce('refresh 字符串错误' as any)
+
+    await useExecutionStore.getState().refresh()
+
+    // 覆盖 catch 块中 err instanceof Error 的 false 分支（行 296）
+    expect(useExecutionStore.getState().error).toBe('refresh 字符串错误')
+  })
+
+  /** @test_id V9-TEST-ST-136-CREATE-PLAN-NON-ERROR */
+  it('createPlan: UseCase 抛出非 Error 对象时使用 String(err) 作为错误信息', async () => {
+    const signal = createSignal()
+    mockCreateExecutionPlanUseCase.mockRejectedValueOnce('createPlan 字符串错误' as any)
+
+    const result = await useExecutionStore.getState().createPlan(signal)
+
+    expect(result).toBeNull()
+    // 覆盖 catch 块中 err instanceof Error 的 false 分支（行 348）
+    expect(useExecutionStore.getState().error).toBe('createPlan 字符串错误')
+  })
+
+  /** @test_id V9-TEST-ST-136-CONFIRM-MULTI-PLAN */
+  it('confirmPlan: 多计划场景下仅确认目标计划，其他计划保持不变', async () => {
+    const plan1 = createPlan({ id: 'plan-cfm-1', phase: 'plan' })
+    const plan2 = createPlan({ id: 'plan-cfm-2', phase: 'plan' })
+    useExecutionStore.setState({ plans: [plan1, plan2], activePlans: [plan1, plan2] })
+    mockForward.mockResolvedValueOnce(undefined)
+
+    await useExecutionStore.getState().confirmPlan('plan-cfm-1')
+
+    const state = useExecutionStore.getState()
+    // plan1 被确认
+    expect(state.plans.find((p) => p.id === 'plan-cfm-1')!.phase).toBe('confirmed')
+    // plan2 保持不变（覆盖 map ternary false 分支，行 387）
+    expect(state.plans.find((p) => p.id === 'plan-cfm-2')!.phase).toBe('plan')
+  })
+
+  /** @test_id V9-TEST-ST-136-CONFIRM-NON-ERROR */
+  it('confirmPlan: forward 抛出非 Error 对象时使用 String(err) 作为错误信息', async () => {
+    const plan = createPlan({ phase: 'plan' })
+    useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+    mockForward.mockRejectedValueOnce('confirm 字符串错误' as any)
+
+    await useExecutionStore.getState().confirmPlan(plan.id)
+
+    // 覆盖 catch 块中 err instanceof Error 的 false 分支（行 398）
+    expect(useExecutionStore.getState().error).toBe('confirm 字符串错误')
+  })
+
+  /** @test_id V9-TEST-ST-136-EXECUTE-MULTI-PLAN-NO-SIZING */
+  it('executePlan: 多计划场景下 transitionPlanPhase 仅更新目标计划，且 plan.sizing 缺失时使用默认数量', async () => {
+    // plan1 无 sizing 字段（覆盖 plan.sizing?.quantity ?? 100，行 150）
+    const plan1 = createPlan({ id: 'plan-exec-mp', phase: 'confirmed', direction: 'buy' })
+    delete (plan1 as any).sizing
+    const plan2 = createPlan({ id: 'plan-exec-other', phase: 'plan' })
+    useExecutionStore.setState({ plans: [plan1, plan2], activePlans: [plan1, plan2] })
+    mockWaitFor.mockResolvedValueOnce(undefined)
+    mockQuery.mockResolvedValueOnce({ success: true, data: createStock({ price: 150 }) })
+    mockForward.mockResolvedValue(undefined)
+    mockCreateBuyOrder.mockResolvedValueOnce({
+      success: true,
+      data: createOrder({ id: 'ord-mp' }),
+    })
+
+    await useExecutionStore.getState().executePlan('plan-exec-mp')
+
+    const state = useExecutionStore.getState()
+    // plan1 被执行
+    expect(state.plans.find((p) => p.id === 'plan-exec-mp')!.phase).toBe('executed')
+    // plan2 保持不变（覆盖 transitionPlanPhase map ternary false 分支，行 186）
+    expect(state.plans.find((p) => p.id === 'plan-exec-other')!.phase).toBe('plan')
+    // 验证默认数量 100 被传递给 createBuyOrder（行 150）
+    expect(mockCreateBuyOrder).toHaveBeenCalledWith(expect.anything(), 100)
+  })
+
+  /** @test_id V9-TEST-ST-136-EXECUTE-STOCK-NO-ERROR */
+  it('executePlan: 股票查询 success=false 且无 error 字段时使用默认错误信息', async () => {
+    const plan = createPlan({ id: 'plan-sne', phase: 'confirmed', direction: 'buy' })
+    useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+    mockWaitFor.mockResolvedValueOnce(undefined)
+    mockForward.mockResolvedValue(undefined)
+    // 股票查询返回 success=false 但无 error 字段
+    mockQuery.mockResolvedValueOnce({ success: false } as any)
+
+    await useExecutionStore.getState().executePlan('plan-sne')
+
+    const state = useExecutionStore.getState()
+    // 覆盖 stockResult.error ?? '查询股票 ${symbol} 失败' 的 ?? fallback（行 133）
+    expect(state.plans[0]!.errorMessage).toContain('失败')
+    expect(state.plans[0]!.phase).toBe('cancelled')
+  })
+
+  /** @test_id V9-TEST-ST-136-EXECUTE-ORDER-NO-ERROR */
+  it('executePlan: 下单失败且无 error 字段时使用默认错误信息 "下单失败"', async () => {
+    const plan = createPlan({ id: 'plan-one', phase: 'confirmed', direction: 'buy' })
+    useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+    mockWaitFor.mockResolvedValueOnce(undefined)
+    mockQuery.mockResolvedValueOnce({ success: true, data: createStock({ price: 150 }) })
+    mockForward.mockResolvedValue(undefined)
+    // 下单返回 success=false 但无 error 字段
+    mockCreateBuyOrder.mockResolvedValueOnce({ success: false } as any)
+
+    await useExecutionStore.getState().executePlan('plan-one')
+
+    const state = useExecutionStore.getState()
+    // 覆盖 orderResult.error ?? '下单失败' 的 ?? fallback（行 214）
+    expect(state.plans[0]!.errorMessage).toBe('下单失败')
+    expect(state.plans[0]!.phase).toBe('cancelled')
+  })
+
+  /** @test_id V9-TEST-ST-136-EXECUTE-NON-ERROR */
+  it('executePlan: waitFor 抛出非 Error 对象时使用 String(err) 作为错误信息', async () => {
+    const plan = createPlan({ id: 'plan-ene', phase: 'confirmed', direction: 'buy' })
+    useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+    mockWaitFor.mockRejectedValueOnce('execute 字符串错误' as any)
+    mockForward.mockResolvedValue(undefined)
+
+    await useExecutionStore.getState().executePlan('plan-ene')
+
+    // 覆盖 catch 块中 err instanceof Error 的 false 分支（行 445）
+    expect(useExecutionStore.getState().error).toBe('execute 字符串错误')
+  })
 })
