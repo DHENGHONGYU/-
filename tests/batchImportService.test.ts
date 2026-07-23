@@ -58,8 +58,10 @@ describe('batchImportService', () => {
     const result = await importStocks(rows)
 
     expect(result.data?.success).toBe(1)
-    expect(result.data?.failed).toBe(2)
-    expect(result.data?.errors.some((e) => e.error === '股票已存在')).toBe(true)
+    // 600519 已存在于意向池 → skipped（不计入 failed/errors）
+    expect(result.data?.skipped).toBe(1)
+    // 第二行 600519 为重复代码 → failed（错误类型 '重复的代码'）
+    expect(result.data?.failed).toBe(1)
     expect(result.data?.errors.some((e) => e.error === '重复的代码')).toBe(true)
   })
 

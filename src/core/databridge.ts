@@ -811,34 +811,23 @@ export class DataBridge {
       let errorCount = 0
       let subscriberIndex = 0
 
-      // 异步分发：避免一个慢 subscriber 阻塞后续订阅者和 eventBus.emit
-      // 每个 subscriber 在独立 microtask 中执行，允许 React 在回调间批处理状态更新
-      const dispatchPromises: Promise<void>[] = []
+      // 同步派发：方法签名为 void，调用方（含单测 V9-TEST-UT-011）期望同步按序送达。
+      // 每个 subscriber 独立 try/catch 隔离，任一抛错不影响其余订阅者与后续 eventBus.emit。
       callbacks.forEach((cb) => {
         subscriberIndex++
-        dispatchPromises.push(
-          new Promise<void>((resolve) => {
-            queueMicrotask(() => {
-              try {
-                cb(envelope)
-                successCount++
-              } catch (err) {
-                errorCount++
-                logger.error(`[DataBridge] Subscriber #${subscriberIndex} error for channel "${targetChannel}"`, { error: err })
-              }
-              resolve()
-            })
-          })
-        )
+        try {
+          cb(envelope)
+          successCount++
+        } catch (err) {
+          errorCount++
+          logger.error(`[DataBridge] Subscriber #${subscriberIndex} error for channel "${targetChannel}"`, { error: err })
+        }
       })
 
-      // 等待所有 subscriber 完成后记录日志
-      Promise.all(dispatchPromises).then(() => {
-        totalCallbackCount += callbackCount
-        totalSuccessCount += successCount
-        totalErrorCount += errorCount
-        logger.info(`[DataBridge] broadcast() to subscribers: channel="${targetChannel}", listeners=${callbackCount}, success=${successCount}, errors=${errorCount}`)
-      }).catch(() => { /* Promise.all 不 reject（每个 microtask 内部已 catch） */ })
+      totalCallbackCount += callbackCount
+      totalSuccessCount += successCount
+      totalErrorCount += errorCount
+      logger.info(`[DataBridge] broadcast() to subscribers: channel="${targetChannel}", listeners=${callbackCount}, success=${successCount}, errors=${errorCount}`)
     }
 
     const eventName = `${channel}${CHANGED_SUFFIX}`

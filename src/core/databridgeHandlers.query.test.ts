@@ -13,7 +13,19 @@ import {
 } from './databridgeHandlers'
 import { mockLogger, dbModule, makeEnvelope } from './databridgeHandlers.test-utils'
 
-const logger = mockLogger
+// 将 handler 实际依赖的 @/data/db 重定向到 dbModule mock。
+// 使用 async 工厂避免 vi.mock 提升期引用 import（否则 "Cannot access before initialization"）
+vi.mock('@/data/db', async () => {
+  const { dbModule } = await import('./databridgeHandlers.test-utils')
+  return dbModule
+})
+// handler 通过 getLogger() 获取日志器；重定向到 mockLogger 使 logger.debug/info 可断言
+vi.mock('@/lib/logger', async () => {
+  const { mockLogger } = await import('./databridgeHandlers.test-utils')
+  return { getLogger: () => mockLogger }
+})
+
+const logger = mockLogger! // vi.mock 工厂闭包引用同模块顶层 import，TS 判定可能 undefined（hoisting 陷阱），运行时必定义
 
 function getHandlerFromRegistry(action: string): EnvelopeHandler | undefined {
   const registry = createHandlerRegistry()

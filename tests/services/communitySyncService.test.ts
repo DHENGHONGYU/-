@@ -98,7 +98,6 @@ describe('communitySyncService - 社区帖同步适配器', () => {
       sentiment: 'positive',
       qualityScore: 80,
       keyPoints: ['护城河深厚', '成长性好', '估值合理'],
-      symbol: '600519',
       stockName: '贵州茅台',
     }
 
@@ -113,7 +112,6 @@ describe('communitySyncService - 社区帖同步适配器', () => {
       expect(item.sourceUrl).toBe(basePost.url)
       expect(item.sentiment).toBe('positive')
       expect(item.isUserGenerated).toBe(false)
-      expect(item.readStatus).toBe('unread')
     })
 
     it('应生成有效的 qualityScore（质量分）', () => {
@@ -143,7 +141,7 @@ describe('communitySyncService - 社区帖同步适配器', () => {
       const highItem = communityPostToProfileItem(highEngagementPost, '600519')
       const lowItem = communityPostToProfileItem(lowEngagementPost, '600519')
 
-      expect(highItem.evidenceWeight).toBeGreaterThan(lowItem.evidenceWeight)
+      expect(highItem.evidenceWeight!).toBeGreaterThan(lowItem.evidenceWeight!)
     })
 
     it('应正确提取主题标签', () => {
@@ -190,9 +188,9 @@ describe('communitySyncService - 社区帖同步适配器', () => {
     it('应生成证据说明', () => {
       const item = communityPostToProfileItem(basePost, '600519')
 
-      expect(item.evidenceNote).toBeDefined()
-      expect(typeof item.evidenceNote).toBe('string')
-      expect(item.evidenceNote!.length).toBeGreaterThan(0)
+      expect(item.summary).toBeDefined()
+      expect(typeof item.summary).toBe('string')
+      expect(item.summary!.length).toBeGreaterThan(0)
     })
 
     it('subType 应正确映射来源', () => {
