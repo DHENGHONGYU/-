@@ -14,10 +14,10 @@ import type { DailyQuotes, Order, Signal, Stock, V6Score } from '@/data/types'
  *               修复后请移除 .skip 标记并从 test:clean 的 --exclude 列表中删除
  */
 describe('V9 data relationship blueprint', () => {
-  it('应该有 exactly 36 stores defined in dbConfig', () => {
+  it('应该有 exactly 50 stores defined in dbConfig', () => {
     const stores = Object.values(STORE_NAME)
-    expect(stores).toHaveLength(46)
-    expect(new Set(stores).size).toBe(46)
+    expect(stores).toHaveLength(50)
+    expect(new Set(stores).size).toBe(50)
   })
 
   it('应该map core entities to expected stores', () => {

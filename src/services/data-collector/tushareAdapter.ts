@@ -128,7 +128,7 @@ export function mapAnnouncementToNews(record: Record<string, unknown>): NewsItem
     id: `${toString(record.ts_code)}-${date}-${toString(record.title).slice(0, 16)}`,
     title: toString(record.title),
     content: toString(record.content),
-    source: toString(record.url) || toString(record.src) || 'Tushare公告',
+    source: 'Tushare公告',
     date,
     category: 'announcement',
     url: toString(record.url) || '',
