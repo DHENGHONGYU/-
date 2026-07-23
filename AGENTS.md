@@ -37,7 +37,7 @@ code_version: 2.0.0
 >
 > **项目级 SKILL 索引**（按业务域分四类，category 字段见各 SKILL.md frontmatter 与 skill-registry.json）：
 > - **文档治理 doc-governance**：`doc-encoding-remediation`（文档编码乱码诊断与安全转码，GBK 二次损坏前置修复）
-> - **代码质量 code-quality**：`module-sync-checklist`（模块改动十域同步校对，交付闸口）、`bash-conventions`（Bash 执行规范与命令速查）、`tsc-gate-scope-audit`（tsc 门禁误锁诊断与修复，类型门禁作用域对齐）、`tsc-test-error-diagnosis`（tsc:test 测试类型错误系统性诊断，契约漂移/严格空检/vi.mock 提升陷阱）
+> - **代码质量 code-quality**：`module-sync-checklist`（模块改动十域同步校对，交付闸口）、`bash-conventions`（Bash 执行规范与命令速查）、`tsc-gate-scope-audit`（tsc 门禁误锁诊断与修复，类型门禁作用域对齐）、`tsc-test-error-diagnosis`（tsc:test 测试类型错误系统性诊断，契约漂移/严格空检/vi.mock 提升陷阱）、`finsight-health-audit`（开发进度/健康度复检、行业对标、评分与状态自洽校验，实时工具优先于记忆，含检测方法库与教训库）
 > - **数据流 data-flow**：`collection-pipeline-testing`（采集链路测试）、`data-flow-integrity-audit`（数据流完整性审计）、`mock-data-diagnosis`（Mock 残留诊断）
 > - **部署运维 devops**：`devops-automation`（备份分支 + 批量部署）、`windows-env-path-doctor`（Windows 用户目录路径硬编码可移植诊断，DELL↔Huawei 迁移）
 
@@ -61,6 +61,7 @@ code_version: 2.0.0
 | 新增/修改 MCP Server 或 Tool、改动 `src/mcp/**`、排查 MCP 零调用残留（当前 6 个零调用 server） | `mcp-server-design-review` | mandatory | 该技能准入清单 + 目录结构合规 + `npm run audit:mcp` + `npm run audit:mcp-usage` + 相关 vitest |
 | 颜色令牌新增/重命名/废弃、令牌硬编码（HEX/裸色类）排查、改动 `src/constants/theme.tokens.ts` 或 `src/config/chartColors.ts` | `v9-color-token-remediation` | advisory | `npm run audit:tokens` + `npm run verify:colorSoT` + `npm run audit:hardcode` |
 | 文档链接修复前置、文档-代码一致性核查、文件迁移后残留扫描、文档计数/路径漂移排查 | `doc-code-dual-proofreading` | advisory | 三维 Grep（路径/状态/触发规则）+ `npm run audit:docs` + 交叉验证目标文件存在性 |
+| 二次开发前体检、"再次检查进度/健康度"、门禁回归定位、状态失准/假绿灯排查、文档vs现实矛盾核对 | `finsight-health-audit` | advisory | tsc:prod 真实退出码=0 + audit:layers=0 + automation_update list 真实条数 vs 文档声称交叉核对 + 争议测试文件直跑 + 交付前校准 MEMORY.md/V9-DOC-KB-001 |
 
 > **变更纪律**：新增技能 = ① 新建 `.workbuddy/skills/<name>/SKILL.md`（frontmatter 含 `triggers`/`gates`/`mandatory`）→ ② 同步 `.workbuddy/skills/skill-registry.json`（L1 注册表）→ ③ 更新本索引与路由表 → ④ 跑 `npm run audit:skill-coverage` 校验三方一致。钩子状态：pre-commit 挂 `--remind --log`（提醒模式，命中记录写入 `.workbuddy/skills/usage.log`）；pre-push 挂 `--enforce --since <base>`（强制模式，mandatory 命中未确认即拦截，旁路 `SKILL_GATE_CONFIRM=1 git push`）。`npm run skill:route` 可随时手工查询。
 

@@ -1,0 +1,73 @@
+# .github/workflows/ci.yml
+# 开发分支（feat/**）精益门禁：快反馈，不阻塞主分支全量 CI（quality-check.yml 负责 main/develop）
+# 设计依据：outputs/dev-remediation-roadmap-2026-07-23.md §P1-C（优秀案例基准校对后的修正设计）
+name: CI (dev branches)
+
+on:
+  push:
+    branches: ['feat/**', 'feature/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:                      # 快反馈门禁（typecheck + build）
+    name: Smoke (typecheck + build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # SHA pin 第三方 actions（防供应链攻击，与 quality-check.yml 一致）
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 22
+          cache: 'npm'
+      # build 需要 esbuild 原生二进制，故不使用 --ignore-scripts
+      - run: npm ci
+      - name: Type check (tsc:prod)
+        run: npm run tsc:prod
+      - name: Production build
+        run: npm run build
+
+  test:                       # 测试 + 覆盖率（Phase1：先报告建基线，不硬卡）
+    name: Test + coverage (report-only in Phase1)
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 22
+          cache: 'npm'
+      - run: npm ci
+      # Phase1 覆盖率仅报告，continue-on-error 使基线建立期不阻塞推送；
+      # Phase2 改为 ratchet 下限（建议 line≥80 / branch≥70）后去掉 continue-on-error
+      - name: Unit tests + coverage (Phase1 report-only)
+        run: npm run test:ci
+        continue-on-error: true
+        env:
+          CI: true
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-coverage-report
+          path: coverage/
+          retention-days: 7
+
+  layers:                     # 快边界审计留开发分支 PR/推送
+    name: Layer boundary audit
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 22
+          cache: 'npm'
+      - run: npm ci
+      - name: audit:layers (禁止跨层调用)
+        run: npm run audit:layers
