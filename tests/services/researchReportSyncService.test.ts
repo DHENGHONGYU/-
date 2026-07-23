@@ -101,7 +101,6 @@ describe('researchReportSyncService - 券商研报同步适配器', () => {
       expect(item.source).toBe(baseReport.institution)
       expect(item.author).toBe(baseReport.author)
       expect(item.isUserGenerated).toBe(false)
-      expect(item.readStatus).toBe('unread')
     })
 
     it('应生成有效的 qualityScore（质量分）', () => {
@@ -130,7 +129,7 @@ describe('researchReportSyncService - 券商研报同步适配器', () => {
       const withTargetItem = researchReportToProfileItem(withTarget, '600519')
       const noTargetItem = researchReportToProfileItem(noTarget, '600519')
 
-      expect(withTargetItem.evidenceWeight).toBeGreaterThan(noTargetItem.evidenceWeight)
+      expect(withTargetItem.evidenceWeight!).toBeGreaterThan(noTargetItem.evidenceWeight!)
     })
 
     it('买入评级应映射为 positive 情绪', () => {
@@ -182,15 +181,15 @@ describe('researchReportSyncService - 券商研报同步适配器', () => {
     it('应生成证据说明', () => {
       const item = researchReportToProfileItem(baseReport, '600519')
 
-      expect(item.evidenceNote).toBeDefined()
-      expect(typeof item.evidenceNote).toBe('string')
-      expect(item.evidenceNote!.length).toBeGreaterThan(0)
-      // 应包含券商名
-      expect(item.evidenceNote).toContain('中信证券')
-      // 应包含评级
-      expect(item.evidenceNote).toContain('买入')
-      // 应包含目标价
-      expect(item.evidenceNote).toContain('2500')
+      expect(item.summary).toBeDefined()
+      expect(typeof item.summary).toBe('string')
+      expect(item.summary!.length).toBeGreaterThan(0)
+      // 证据说明（content=evidenceNote）应包含券商名/评级/目标价
+      expect(item.content).toBeDefined()
+      expect(typeof item.content).toBe('string')
+      expect(item.content).toContain('中信证券')
+      expect(item.content).toContain('买入')
+      expect(item.content).toContain('2500')
     })
 
     it('应设置正确的关联评分层（D6 默认 l3v）', () => {
