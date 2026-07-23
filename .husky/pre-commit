@@ -6,7 +6,15 @@ set +e
 # 移除 set -e（与大量 || true 容错模式冲突），各步骤错误由 || true 显式处理
 
 # 系统 Node 24 直驱函数（规避 git-bash 下受管 Node 22 npm 完全不可用的问题）
-NODE24="C:/Program Files/nodejs/node.exe"
+# 优先使用 nvm 安装的系统 Node 24（C:/nvm4w/nodejs/node.exe）；
+# 若该路径不存在则回退到 PATH 上的 node，避免环境变动后门禁静默失效。
+if [ -x "C:/nvm4w/nodejs/node.exe" ]; then
+  NODE24="C:/nvm4w/nodejs/node.exe"
+elif command -v node >/dev/null 2>&1; then
+  NODE24="$(command -v node)"
+else
+  NODE24="node"
+fi
 TSX_RUN()  { "$NODE24" ./node_modules/tsx/dist/cli.mjs "$@"; }
 ESLINT_RUN() { "$NODE24" ./node_modules/eslint/bin/eslint.js "$@"; }
 TSC_RUN()  { "$NODE24" ./node_modules/typescript/bin/tsc "$@"; }
