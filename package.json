@@ -21,6 +21,7 @@
     "test:security": "vitest run tests/security/",
     "test:performance": "vitest run tests/performance/",
     "test:memory": "vitest run tests/memory/",
+    "test:arch-diagram": "node outputs/verify-arch-diagram.test.mjs",
     "test:edge": "vitest run tests/edge-cases/",
     "test:ci": "vitest run --coverage",
     "test:staged": "vitest related --run",
