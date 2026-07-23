@@ -2,9 +2,13 @@ name: Quality Check
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
+  # 每日 03:17 深度审计（避开已有 03:00 A+H 字典刷新 / 03:10 Git 备份）
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
 
 # =============================================================================
 # 安全配置 — 最小权限原则
@@ -40,8 +44,8 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
-      # 仅检查非测试文件的类型错误（阻塞 CI）
-      - run: bash scripts/check-types.sh
+      # 真实 tsc:prod 门禁（原 scripts/check-types.sh 不存在 → 假绿灯，已修复为真实类型检查）
+      - run: npm run tsc:prod
 
   route-verify:
     runs-on: ubuntu-latest
