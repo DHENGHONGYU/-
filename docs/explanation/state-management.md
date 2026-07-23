@@ -200,7 +200,41 @@ tradingStore.reset()
 
 ---
 
-## 5. 变更触发
+## 6. Store 测试覆盖率比率审计
+
+### 6.1 规则
+
+> **策略**：新增 Store action 时必须同步补充测试，防止"功能写完、测试没补"。
+
+| 规则 | 阈值 | 级别 | 说明 |
+|------|------|------|------|
+| 无测试文件 | — | 🔴 P0 严重 | 每个 Store 必须有对应 `.test.ts` |
+| 测试/action 比率 < 0.3 | < 0.3 | ❌ P1 错误 | 严重不足，CI 阻断提交 |
+| 测试/action 比率 < 0.5 | < 0.5 | ⚠️ P2 警告 | 偏低，建议补充 |
+| 测试/action 比率 ≥ 0.5 | ≥ 0.5 | ✅ 通过 | 达标 |
+
+**比率计算**：`it()/test() 数量 / Store action 函数数量`
+
+### 6.2 使用
+
+```bash
+# 开发时检查
+npm run audit:store-coverage
+
+# CI 模式（有 P0/P1 时 exit 1）
+npx tsx scripts/audit/audit-store-coverage.ts --ci
+```
+
+### 6.3 新增 action 时的检查流程
+
+1. 在 Store 源文件中新增 action 函数后
+2. 运行 `npm run audit:store-coverage` 检查比率
+3. 如果比率降至 0.5 以下，补充对应测试
+4. 确保每个新增 action 至少有 1 个测试用例（成功路径 + 异常路径）
+
+---
+
+## 7. 变更触发
 
 > 触发事件 **T5（Store 状态管理变更）** — 匹配 `src/store/**/*.ts`
 
