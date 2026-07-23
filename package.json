@@ -71,6 +71,7 @@
     "audit:complexity": "npm run complexity-scan",
     "audit:widget-registry": "tsx scripts/audit/audit-widget-registry.ts",
     "audit:ai-output": "tsx scripts/audit/audit-ai-output.ts",
+    "audit:store-coverage": "tsx scripts/audit/audit-store-coverage.ts",
     "audit:path-match": "tsx scripts/audit/audit-path-match.ts",
     "scaffold:widget": "tsx scripts/other/scaffold-widget.ts",
     "scaffold:domain": "tsx scripts/other/scaffold-domain.ts",
