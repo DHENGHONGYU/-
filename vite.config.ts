@@ -261,7 +261,10 @@ export default defineConfig({
     // 注意：必须写 **/node_modules/**（前导 globstar），否则无法匹配嵌套的
     // packages/*/node_modules，会导致把 pino/thread-stream/process-warning 等
     // 第三方依赖的测试误收进门禁（TD-013 衍生噪声）。见 test:clean 治理。
-    exclude: ['e2e/**', '**/node_modules/**', 'dist/**', 'temp/**'],
+    // outputs/** 为交付物/临时产物目录（含独立 node 脚本 verify-arch-diagram.test.mjs
+    // 与散落调试产物），非 vitest 单测，必须排除，否则会被误当测试文件收集导致
+    // "(0 test)" 假红（其自定义断言框架 + process.exit 不被 vitest 识别）。
+    exclude: ['e2e/**', '**/node_modules/**', 'dist/**', 'temp/**', 'outputs/**'],
     testTimeout: 30000,
     hookTimeout: 30000,
     retry: 2,
