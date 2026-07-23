@@ -180,6 +180,73 @@
         "git status untracked 审计：扫描未跟踪测试文件（期望 0）及非测试生成物（期望白名单）"
       ],
       "mandatory": false
+    },
+    {
+      "id": "V9-SKILL-TSC-TEST-DIAG",
+      "name": "tsc-test-error-diagnosis",
+      "path": ".workbuddy/skills/tsc-test-error-diagnosis/SKILL.md",
+      "category": "code-quality",
+      "triggers": {
+        "keywords": ["tsc:test 报错", "测试类型错误", "契约漂移", "Contract Drift", "测试与源码类型不一致", "vi.mock 提升陷阱", "noUncheckedIndexedAccess", "strictNullChecks", "TS2305 找不到导出", "TS2322 不可赋值", "TS2339 属性不存在", "TS2532 可能为 undefined", "TS1011 空数组下标", "测试类型债务", "历史测试债", "测试类型体检", "测试文件类型清零", "类型断言漂移"],
+        "files": [
+          "tsconfig.test.json",
+          "tests/**/*.test.ts",
+          "tests/**/*.spec.ts",
+          "src/**/*.test.ts",
+          "src/**/*.test.tsx"
+        ],
+        "events": ["tsc-test-red", "test-type-error", "contract-drift-detected"]
+      },
+      "gates": [
+        "错误按 file:line 归类到四大根因（契约漂移 / 严格空检 / vi.mock提升 / 未使用声明），每类产出证据",
+        "契约漂移类修复必须「先读真实源码类型再改测试」，禁止凭想象补全字段（防二次漂移）",
+        "空检暴露用 `!` / 可选链 / 默认值收敛，禁止用 `any` / `@ts-ignore` 掩盖",
+        "修复后 npm run tsc:test 实测 0 错误，且 tsc:prod 保持 0（生产门禁不被破坏）"
+      ],
+      "mandatory": false
+    },
+    {
+      "id": "V9-SKILL-ENV-PATH",
+      "name": "windows-env-path-doctor",
+      "path": ".workbuddy/skills/windows-env-path-doctor/SKILL.md",
+      "category": "devops",
+      "triggers": {
+        "keywords": ["环境迁移", "机器迁移", "换电脑", "DELL", "Huawei", "路径硬编码", "用户目录写死", "environment migration", "hardcoded user path", "portable path"],
+        "files": [
+          "scripts/**",
+          "src/**",
+          "package.json",
+          "vite.config.ts",
+          "tsconfig*.json",
+          ".trae/**",
+          ".workbuddy/skills/**"
+        ],
+        "events": ["on_env_change"]
+      },
+      "gates": [
+        "node .workbuddy/skills/windows-env-path-doctor/scripts/scan.cjs --verify-current 输出可移植（crossUser=0 且 sameUserHardcode=0）",
+        "修复仅针对 src/scripts/configs 真实硬编码，保留 .workbuddy/memory 病史叙述与 _ref/archive/docs-backup 历史快照"
+      ],
+      "mandatory": false
+    },
+    {
+      "id": "V9-SKILL-HEALTH-AUDIT",
+      "name": "finsight-health-audit",
+      "path": ".workbuddy/skills/finsight-health-audit/SKILL.md",
+      "category": "code-quality",
+      "triggers": {
+        "keywords": ["健康度", "进度检查", "健康度复检", "二次开发", "门禁体检", "状态校验", "文档vs现实", "状态失准", "评分", "行业对标", "health check", "progress review", "benchmark", "state drift", "假绿灯", "假红灯"],
+        "files": ["outputs/dev-health-review-*.md", ".workbuddy/memory/MEMORY.md", "docs/06-project-management/development-lessons-learned.md"],
+        "events": ["health-review", "pre-secondary-dev", "state-drift-check", "gate-regression"]
+      },
+      "gates": [
+        "tsc:prod 真实退出码捕获：C:/nvm4w/nodejs/node.exe ./node_modules/typescript/bin/tsc -p tsconfig.prod.json --noEmit > /tmp/tsc_prod.log 2>&1 ; echo TSC_EXIT=$? 必须 = 0（禁止用 | tail 掩盖退出码）",
+        "audit:layers 实跑：C:/nvm4w/nodejs/node.exe ./node_modules/tsx/dist/cli.mjs scripts/audit/audit-layer-calls.ts 退出码 = 0",
+        "automation_update list 真实条数 vs 治理文档声称条数交叉核对，产出 file:line 矛盾证据",
+        "争议测试文件直接实跑（vitest 指定文件）解析文档互相打架的通过/失败数",
+        "交付前以实时工具为准校准 MEMORY.md / V9-DOC-KB-001 的状态数字"
+      ],
+      "mandatory": false
     }
   ]
 }
