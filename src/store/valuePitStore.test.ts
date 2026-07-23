@@ -5,6 +5,18 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // ============================================================
+// Mock: logger —— 允许单测覆盖 warn/info 使其抛异常以触发 catch
+// ============================================================
+
+const mockVPLogger = vi.hoisted(() => ({
+  info: vi.fn(),
+  error: vi.fn(),
+  warn: vi.fn(),
+  debug: vi.fn(),
+}))
+vi.mock('@/lib/logger', () => ({ getLogger: () => mockVPLogger }))
+
+// ============================================================
 // Mock: valuePitAnalyzer —— 默认委托到真实实现，允许单测覆盖为 throw
 // ============================================================
 
@@ -302,5 +314,91 @@ describe('valuePitStore refreshScore - 边界与异常路径', () => {
     useValuePitStore.getState().refreshScore('银行', TEST_INPUTS as any)
 
     expect(useValuePitStore.getState().error).toBe('字符串错误')
+  })
+})
+
+// ============================================================
+// runAnalysis & fetchScores 异常路径（覆盖行 85-93, 124-126）
+// ============================================================
+
+describe('valuePitStore runAnalysis & fetchScores 异常路径', () => {
+  beforeEach(async () => {
+    useValuePitStore.getState().clearScores()
+    vi.clearAllMocks()
+    // 恢复 mockAnalyze 默认委托到真实实现
+    const actual = await vi.importActual<typeof import('@/services/scoring/valuePitAnalyzer')>(
+      '@/services/scoring/valuePitAnalyzer',
+    )
+    mockAnalyze.mockImplementation(actual.analyze)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-162-RUN-01
+   * runAnalysis 无输入数据时设置 loading=false（覆盖行 85-89）
+   */
+  test('runAnalysis: 无输入数据时设置 loading=false', () => {
+    useValuePitStore.getState().runAnalysis()
+
+    expect(useValuePitStore.getState().loading).toBe(false)
+    expect(useValuePitStore.getState().error).toBeNull()
+  })
+
+  /**
+   * @test_id V9-TEST-ST-162-RUN-02
+   * runAnalysis try 块内 logger.warn 抛出 Error 时进入 catch 设置 error（覆盖行 90-93）
+   */
+  test('runAnalysis: try 块抛出 Error 时设置 error', () => {
+    mockVPLogger.warn.mockImplementationOnce(() => {
+      throw new Error('logger 内部错误')
+    })
+
+    useValuePitStore.getState().runAnalysis()
+
+    expect(useValuePitStore.getState().error).toBe('logger 内部错误')
+    expect(useValuePitStore.getState().loading).toBe(false)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-162-RUN-03
+   * runAnalysis try 块内抛出非 Error 值时 String(err) 转换（覆盖分支 91）
+   */
+  test('runAnalysis: try 块抛出非 Error 值时转为字符串', () => {
+    mockVPLogger.warn.mockImplementationOnce(() => {
+      throw '字符串异常'
+    })
+
+    useValuePitStore.getState().runAnalysis()
+
+    expect(useValuePitStore.getState().error).toBe('字符串异常')
+  })
+
+  /**
+   * @test_id V9-TEST-ST-162-FETCH-ERR-01
+   * fetchScores: analyze 抛出 Error 时设置 error（覆盖行 124-126）
+   */
+  test('fetchScores: analyze 抛出 Error 时设置 error', () => {
+    mockAnalyze.mockImplementationOnce(() => {
+      throw new Error('分析引擎崩溃')
+    })
+
+    useValuePitStore.getState().fetchScores(TEST_INPUTS as any)
+
+    expect(useValuePitStore.getState().error).toBe('分析引擎崩溃')
+    expect(useValuePitStore.getState().loading).toBe(false)
+  })
+
+  /**
+   * @test_id V9-TEST-ST-162-FETCH-ERR-02
+   * fetchScores: analyze 抛出非 Error 值时转为字符串（覆盖分支 124）
+   */
+  test('fetchScores: analyze 抛出非 Error 值时转为字符串', () => {
+    mockAnalyze.mockImplementationOnce(() => {
+      throw '字符串错误'
+    })
+
+    useValuePitStore.getState().fetchScores(TEST_INPUTS as any)
+
+    expect(useValuePitStore.getState().error).toBe('字符串错误')
+    expect(useValuePitStore.getState().loading).toBe(false)
   })
 })

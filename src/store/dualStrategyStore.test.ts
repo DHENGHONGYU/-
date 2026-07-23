@@ -420,6 +420,36 @@ describe('useDualStrategyStore', () => {
     expect(state.valuePitScores[2]!.score).toBe(2.0)
   })
 
+  /** @test_id V9-TEST-ST-134-FETCH-DB-FAIL */
+  it('fetchScores: DataBridge.query 股票池失败时抛出错误并快照回滚', async () => {
+    const existingHot = [createMockHotSectorScore('EXIST', 5.0)]
+    useDualStrategyStore.setState({
+      hotSectorScores: existingHot,
+      lastUpdated: 99999,
+    })
+
+    mockDataBridgeQuery.mockResolvedValue({ success: false, error: 'DB连接失败' })
+
+    await useDualStrategyStore.getState().fetchScores()
+
+    const state = useDualStrategyStore.getState()
+    expect(state.error).toBe('DB连接失败')
+    expect(state.hotSectorScores).toEqual(existingHot) // 快照回滚
+    expect(state.isRefreshing).toBe(false)
+    expect(mockRunDualStrategy).not.toHaveBeenCalled()
+  })
+
+  /** @test_id V9-TEST-ST-134-FETCH-DB-NULL */
+  it('fetchScores: DataBridge.query 返回 data=null 时按空数组处理', async () => {
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: null })
+
+    await useDualStrategyStore.getState().fetchScores()
+
+    // data=null → inputStocks=[] → 不调用 runDualStrategy → 返回空结果
+    expect(mockRunDualStrategy).not.toHaveBeenCalled()
+    expect(useDualStrategyStore.getState().hotSectorScores).toHaveLength(0)
+  })
+
   // ----------------------------------------------------------
   // refresh
   // ----------------------------------------------------------
@@ -475,6 +505,31 @@ describe('useDualStrategyStore', () => {
     expect(state.error).toBe('db error')
     expect(state.loading).toBe(false)
     expect(state.isRefreshing).toBe(false)
+  })
+
+  /** @test_id V9-TEST-ST-134-REFRESH-SUCCESS-FALSE */
+  it('refresh: 某个 query success=false 时抛出错误并设置 error', async () => {
+    mockDataBridgeQuery.mockImplementation((req: { store: string }) => {
+      if (req.store === 'hotSectorScores') {
+        return Promise.resolve({ success: false, error: 'hot查询失败' })
+      }
+      return Promise.resolve({ success: true, data: [] })
+    })
+
+    await useDualStrategyStore.getState().refresh()
+
+    expect(useDualStrategyStore.getState().error).toBe('hot查询失败')
+    expect(useDualStrategyStore.getState().isRefreshing).toBe(false)
+  })
+
+  /** @test_id V9-TEST-ST-134-REFRESH-NON-ERROR */
+  it('refresh: 非 Error 类型异常时设置 error', async () => {
+    mockDataBridgeQuery.mockRejectedValue('网络超时')
+
+    await useDualStrategyStore.getState().refresh()
+
+    expect(useDualStrategyStore.getState().error).toBe('网络超时')
+    expect(useDualStrategyStore.getState().isRefreshing).toBe(false)
   })
 
   // ----------------------------------------------------------
@@ -745,6 +800,36 @@ describe('initDualStrategyStoreSubscriptions', () => {
     expect(mockDataBridgeQuery).toHaveBeenCalled()
   })
 
+  // ============================================================
+  // 所有频道回调均可正常处理事件（未覆盖行 617, 624, 631）
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-134-ALL-CHANNELS */
+  it('valuePitScores / rotationScores / signals 频道回调均可正常处理事件', async () => {
+    mockQueryByStore()
+
+    initDualStrategyStoreSubscriptions()
+
+    const envelope = {
+      meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't-all', timestamp: Date.now() },
+      payload: {},
+    }
+
+    // 触发各频道回调（source 非 analyzer，应调用 debouncedRefresh）
+    const valueCb = capturedCallbacks.get('valuePitScores')!
+    const rotationCb = capturedCallbacks.get('rotationScores')!
+    const signalsCb = capturedCallbacks.get('signals')!
+
+    valueCb(envelope)
+    rotationCb(envelope)
+    signalsCb(envelope)
+
+    // 等待 debounce + refresh
+    await new Promise((r) => setTimeout(r, 500))
+    // 应触发了 refresh（3 个 query 调用）
+    expect(mockDataBridgeQuery).toHaveBeenCalled()
+  })
+
   it('去抖 300ms', async () => {
     mockQueryByStore()
 
@@ -881,5 +966,209 @@ describe('initDualStrategyStoreSubscriptions', () => {
     globalUnsubs.forEach((unsub) => {
       expect(unsub).not.toHaveBeenCalled()
     })
+  })
+
+  // ============================================================
+  // 全局订阅已初始化时组件级 init 返回 no-op（未覆盖行 541-546）
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-134-GLOBAL-NOOP */
+  it('全局订阅已初始化时 initDualStrategyStoreSubscriptions 返回 no-op cleanup', () => {
+    _resetDualStrategyStoreSubscriptionsForTest()
+    capturedCallbacks.clear()
+    unsubscribes.length = 0
+    mockSubscribe.mockClear()
+
+    // 先初始化全局订阅
+    initDualStrategyStoreGlobalSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(5)
+
+    // 组件级 init 应返回 no-op cleanup，不增加订阅
+    const cleanup = initDualStrategyStoreSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(5) // 不增加
+    expect(typeof cleanup).toBe('function')
+
+    // cleanup 是 no-op，不应销毁全局订阅
+    cleanup()
+    // 全局订阅仍应存在（通过再次调用 global init 验证不会重复订阅）
+    initDualStrategyStoreGlobalSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(5)
+  })
+
+  // ============================================================
+  // initDualStrategyStoreGlobalSubscriptions 重复调用（未覆盖行 564-567）
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-134-GLOBAL-DUP */
+  it('initDualStrategyStoreGlobalSubscriptions: 重复调用跳过', () => {
+    _resetDualStrategyStoreSubscriptionsForTest()
+    capturedCallbacks.clear()
+    unsubscribes.length = 0
+    mockSubscribe.mockClear()
+
+    initDualStrategyStoreGlobalSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(5)
+
+    initDualStrategyStoreGlobalSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(5) // 不增加
+  })
+
+  // ============================================================
+  // debouncedRefresh: 最小刷新间隔内事件被跳过（未覆盖行 494-497）
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-134-DEBOUNCE-MIN-INTERVAL */
+  it('debouncedRefresh: 最小刷新间隔内的事件被跳过', async () => {
+    mockQueryByStore()
+    _resetDualStrategyStoreSubscriptionsForTest()
+    capturedCallbacks.clear()
+    unsubscribes.length = 0
+    mockSubscribe.mockClear()
+    mockDataBridgeQuery.mockClear()
+
+    initDualStrategyStoreSubscriptions()
+    const hotCb = capturedCallbacks.get('hotSectorScores')!
+
+    // 第一次事件 → 触发 refresh（首次数据事件跳过最小间隔检查）
+    hotCb({ meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't1', timestamp: Date.now() }, payload: {} })
+    await new Promise((r) => setTimeout(r, 500)) // 等待 debounce (300ms) + refresh
+
+    const queryCountAfterFirst = mockDataBridgeQuery.mock.calls.length
+    expect(queryCountAfterFirst).toBe(3) // hot, value, signals
+
+    // 第二次事件在最小间隔内（<2000ms）→ 应被跳过
+    hotCb({ meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't2', timestamp: Date.now() }, payload: {} })
+    await new Promise((r) => setTimeout(r, 500)) // 等待 debounce
+
+    // 不应增加 query 调用
+    expect(mockDataBridgeQuery.mock.calls.length).toBe(queryCountAfterFirst)
+  })
+
+  // ============================================================
+  // debouncedRefresh: refresh 进行中时新事件标记 _pendingRefresh 排队
+  // 未覆盖行 511-513, 374（成功后触发排队刷新）
+  // 使用 fake timers 精确控制 debounce 和最小刷新间隔
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-134-DEBOUNCE-PENDING */
+  it('debouncedRefresh: refresh 进行中时新事件标记 _pendingRefresh，成功后触发排队刷新', async () => {
+    vi.useFakeTimers()
+    try {
+      _resetDualStrategyStoreSubscriptionsForTest()
+      capturedCallbacks.clear()
+      unsubscribes.length = 0
+      mockSubscribe.mockClear()
+      mockDataBridgeQuery.mockClear()
+
+      // 使用共享 pending promise 延迟所有 query，使 refresh 保持 isRefreshing=true
+      let resolveAllQueries!: (value: any) => void
+      const queryPromise = new Promise((resolve) => { resolveAllQueries = resolve })
+      mockDataBridgeQuery.mockImplementation(() => queryPromise)
+
+      initDualStrategyStoreSubscriptions()
+      const hotCb = capturedCallbacks.get('hotSectorScores')!
+
+      // 第一次事件 → debounce 300ms → refresh 开始（query 被延迟）
+      hotCb({ meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't1', timestamp: Date.now() }, payload: {} })
+      await vi.advanceTimersByTimeAsync(300) // 触发 debounce 回调
+
+      // isRefreshing 应为 true（refresh 正在等待延迟的 query）
+      expect(useDualStrategyStore.getState().isRefreshing).toBe(true)
+
+      // 推进 2000ms 超过最小刷新间隔
+      await vi.advanceTimersByTimeAsync(2000)
+
+      // 第二次事件 → debounce 300ms → isRefreshing=true → 标记 _pendingRefresh（行 511-513）
+      hotCb({ meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't2', timestamp: Date.now() }, payload: {} })
+      await vi.advanceTimersByTimeAsync(300) // 触发第二次 debounce 回调
+
+      // 完成第一个 query → refresh 完成 → _pendingRefresh=true → 调用 debouncedRefresh（行 374）
+      resolveAllQueries({ success: true, data: [] })
+      await vi.advanceTimersByTimeAsync(0) // 刷新微任务
+
+      // refresh 应已完成
+      expect(useDualStrategyStore.getState().isRefreshing).toBe(false)
+    } finally {
+      _resetDualStrategyStoreSubscriptionsForTest()
+      vi.useRealTimers()
+    }
+  })
+
+  // ============================================================
+  // debouncedRefresh: refresh 失败时清除 _pendingRefresh 标记
+  // 未覆盖行 383（失败时清除排队标记）
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-134-DEBOUNCE-PENDING-FAIL */
+  it('debouncedRefresh: refresh 失败时清除 _pendingRefresh 标记', async () => {
+    vi.useFakeTimers()
+    try {
+      _resetDualStrategyStoreSubscriptionsForTest()
+      capturedCallbacks.clear()
+      unsubscribes.length = 0
+      mockSubscribe.mockClear()
+      mockDataBridgeQuery.mockClear()
+
+      // 使用共享 pending promise 延迟所有 query，后续 reject 使 refresh 失败
+      let rejectAllQueries!: (reason: any) => void
+      const queryPromise = new Promise((_, reject) => { rejectAllQueries = reject })
+      mockDataBridgeQuery.mockImplementation(() => queryPromise)
+
+      initDualStrategyStoreSubscriptions()
+      const hotCb = capturedCallbacks.get('hotSectorScores')!
+
+      // 第一次事件 → debounce 300ms → refresh 开始（query 被延迟）
+      hotCb({ meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't1', timestamp: Date.now() }, payload: {} })
+      await vi.advanceTimersByTimeAsync(300) // 触发 debounce 回调
+
+      expect(useDualStrategyStore.getState().isRefreshing).toBe(true)
+
+      // 推进 2000ms 超过最小刷新间隔
+      await vi.advanceTimersByTimeAsync(2000)
+
+      // 第二次事件 → debounce 300ms → isRefreshing=true → 标记 _pendingRefresh（行 511-513）
+      hotCb({ meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't2', timestamp: Date.now() }, payload: {} })
+      await vi.advanceTimersByTimeAsync(300) // 触发第二次 debounce 回调
+
+      // reject query → refresh 失败 → catch 块清除 _pendingRefresh（行 383）
+      rejectAllQueries(new Error('刷新失败'))
+      await vi.advanceTimersByTimeAsync(0) // 刷新微任务
+
+      // refresh 应已失败
+      const state = useDualStrategyStore.getState()
+      expect(state.isRefreshing).toBe(false)
+      expect(state.error).toBe('刷新失败')
+    } finally {
+      _resetDualStrategyStoreSubscriptionsForTest()
+      vi.useRealTimers()
+    }
+  })
+
+  // ============================================================
+  // _resetDualStrategyStoreSubscriptionsForTest: 清除活跃 debounce timer
+  // 未覆盖行 579-580
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-134-RESET-TIMER */
+  it('_resetDualStrategyStoreSubscriptionsForTest: 有活跃 debounce timer 时清除', async () => {
+    mockQueryByStore()
+    _resetDualStrategyStoreSubscriptionsForTest()
+    capturedCallbacks.clear()
+    unsubscribes.length = 0
+    mockSubscribe.mockClear()
+    mockDataBridgeQuery.mockClear()
+
+    initDualStrategyStoreSubscriptions()
+    const hotCb = capturedCallbacks.get('hotSectorScores')!
+
+    // 触发事件，设置 debounce timer（但不等待其触发）
+    hotCb({ meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't1', timestamp: Date.now() }, payload: {} })
+
+    // 立即调用 _reset，应清除 debounce timer
+    _resetDualStrategyStoreSubscriptionsForTest()
+
+    // 等待 debounce 周期，确认 refresh 未被触发（timer 已被清除）
+    await new Promise((r) => setTimeout(r, 500))
+    expect(mockDataBridgeQuery).not.toHaveBeenCalled()
   })
 })

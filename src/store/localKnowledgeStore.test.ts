@@ -2,7 +2,7 @@
  * @test_id V9-TEST-ST-142
  * @covers_docs []
  */
-import { vi, describe, it, expect, beforeEach } from 'vitest'
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import type { LocalDoc } from '@/data/types'
 
 // ============================================================
@@ -17,6 +17,21 @@ const mockSearchLocalDocs = vi.hoisted(() => vi.fn())
 const mockScanFolder = vi.hoisted(() => vi.fn())
 const mockCreateLocalDoc = vi.hoisted(() => vi.fn())
 
+// dataBridge subscribe mock —— 捕获订阅回调用于测试
+const mockSubscribe = vi.hoisted(() => vi.fn())
+const mockUnsubscribe = vi.hoisted(() => vi.fn())
+const capturedCallback = vi.hoisted(() => ({
+  current: null as ((envelope: { meta: { action: string; traceId: string } }) => void) | null,
+}))
+
+vi.mock('@/core/databridge', () => ({
+  dataBridge: { subscribe: mockSubscribe },
+}))
+
+vi.mock('@/config/dbConfig', () => ({
+  ENVELOPE_ACTION: { saveLocalDocs: 'SAVE_LOCAL_DOCS' },
+}))
+
 vi.mock('@/services/system/localDocService', () => ({
   createLocalDoc: mockCreateLocalDoc,
   listLocalDocs: mockListLocalDocs,
@@ -28,7 +43,7 @@ vi.mock('@/services/system/localDocService', () => ({
 // Imports
 // ============================================================
 
-import { useLocalKnowledgeStore } from './localKnowledgeStore'
+import { useLocalKnowledgeStore, initLocalKnowledgeStoreSubscriptions, destroyLocalKnowledgeStoreSubscriptions } from './localKnowledgeStore'
 
 // ============================================================
 // Helpers
@@ -53,8 +68,18 @@ function createMockDoc(overrides: Partial<LocalDoc> = {}): LocalDoc {
 // Setup
 // ============================================================
 
+afterEach(() => {
+  // 清理订阅避免跨测试污染
+  destroyLocalKnowledgeStoreSubscriptions()
+})
+
 beforeEach(() => {
   vi.clearAllMocks()
+  // 设置 subscribe mock：捕获回调并返回 unsubscribe 函数
+  mockSubscribe.mockImplementation((_channel: string, callback: (envelope: any) => void) => {
+    capturedCallback.current = callback
+    return mockUnsubscribe
+  })
   useLocalKnowledgeStore.setState({
     activeTab: 'browse',
     docs: [],
@@ -131,6 +156,16 @@ describe('useLocalKnowledgeStore', () => {
     expect(useLocalKnowledgeStore.getState().loading).toBe(false)
   })
 
+  /** @test_id V9-TEST-ST-142-LOAD-NO-ERR-01 */
+  it('loadDocs: 失败且无 error 字段时使用默认错误消息', async () => {
+    mockListLocalDocs.mockResolvedValue({ success: false })
+
+    await useLocalKnowledgeStore.getState().loadDocs()
+
+    expect(useLocalKnowledgeStore.getState().error).toBe('无法加载本地文档')
+    expect(useLocalKnowledgeStore.getState().loading).toBe(false)
+  })
+
   it('loadDocs: 异常应设置 error', async () => {
     mockListLocalDocs.mockRejectedValue(new Error('Network error'))
 
@@ -161,11 +196,21 @@ describe('useLocalKnowledgeStore', () => {
   })
 
   it('searchDocs: 失败应设置 error', async () => {
-    mockSearchLocalDocs.mockResolvedValue({ success: false, error: '搜索失败' })
+    mockSearchLocalDocs.mockResolvedValue({ success: false, error: 'Search error' })
 
     await useLocalKnowledgeStore.getState().searchDocs('test')
 
-    expect(useLocalKnowledgeStore.getState().error).toBe('搜索失败')
+    expect(useLocalKnowledgeStore.getState().error).toBe('Search error')
+    expect(useLocalKnowledgeStore.getState().loading).toBe(false)
+  })
+
+  /** @test_id V9-TEST-ST-142-SEARCH-NO-ERR-01 */
+  it('searchDocs: 失败且无 error 字段时使用默认错误消息', async () => {
+    mockSearchLocalDocs.mockResolvedValue({ success: false })
+
+    await useLocalKnowledgeStore.getState().searchDocs('test')
+
+    expect(useLocalKnowledgeStore.getState().error).toBe('无法搜索本地文档')
     expect(useLocalKnowledgeStore.getState().loading).toBe(false)
   })
 
@@ -175,6 +220,16 @@ describe('useLocalKnowledgeStore', () => {
     await useLocalKnowledgeStore.getState().searchDocs('test')
 
     expect(useLocalKnowledgeStore.getState().error).toBe('Search error')
+    expect(useLocalKnowledgeStore.getState().loading).toBe(false)
+  })
+
+  /** @test_id V9-TEST-ST-142-SEARCH-NON-ERR-01 */
+  it('searchDocs: 非 Error 异常应使用默认错误消息', async () => {
+    mockSearchLocalDocs.mockRejectedValue('非Error字符串')
+
+    await useLocalKnowledgeStore.getState().searchDocs('test')
+
+    expect(useLocalKnowledgeStore.getState().error).toBe('无法搜索本地文档')
     expect(useLocalKnowledgeStore.getState().loading).toBe(false)
   })
 
@@ -208,6 +263,15 @@ describe('useLocalKnowledgeStore', () => {
     await useLocalKnowledgeStore.getState().scanFolder()
 
     expect(useLocalKnowledgeStore.getState().error).toBe('Scan error')
+  })
+
+  /** @test_id V9-TEST-ST-142-SCAN-NON-ERR-01 */
+  it('scanFolder: 非 Error 异常应使用默认错误消息', async () => {
+    mockScanFolder.mockRejectedValue('非Error字符串')
+
+    await useLocalKnowledgeStore.getState().scanFolder()
+
+    expect(useLocalKnowledgeStore.getState().error).toBe('扫描文件夹失败')
   })
 
   it('scanFolder: 有错误但无文件时应提示扫描完成 0 个文件', async () => {
@@ -250,6 +314,29 @@ describe('useLocalKnowledgeStore', () => {
     await useLocalKnowledgeStore.getState().importSampleDocs()
 
     expect(useLocalKnowledgeStore.getState().error).toBe('Import error')
+    expect(useLocalKnowledgeStore.getState().loading).toBe(false)
+  })
+
+  /** @test_id V9-TEST-ST-142-IMPORT-NO-ERR-MSG-01 */
+  it('importSampleDocs: createLocalDoc 返回 success=false 但无 error 时使用默认消息', async () => {
+    mockCreateLocalDoc.mockResolvedValueOnce({ success: true })
+    mockCreateLocalDoc.mockResolvedValueOnce({ success: false }) // 无 error 字段
+    mockCreateLocalDoc.mockResolvedValueOnce({ success: true })
+    mockListLocalDocs.mockResolvedValue({ success: true, data: [] })
+
+    await useLocalKnowledgeStore.getState().importSampleDocs()
+
+    // lastError 为 undefined → 使用默认消息
+    expect(useLocalKnowledgeStore.getState().error).toBe('1 条示例数据导入失败')
+  })
+
+  /** @test_id V9-TEST-ST-142-IMPORT-NON-ERR-01 */
+  it('importSampleDocs: 非 Error 异常应使用默认错误消息', async () => {
+    mockCreateLocalDoc.mockRejectedValue('非Error字符串')
+
+    await useLocalKnowledgeStore.getState().importSampleDocs()
+
+    expect(useLocalKnowledgeStore.getState().error).toBe('无法导入示例数据')
     expect(useLocalKnowledgeStore.getState().loading).toBe(false)
   })
 
@@ -303,5 +390,78 @@ describe('useLocalKnowledgeStore', () => {
     expect(useLocalKnowledgeStore.getState().message).toBeNull()
 
     vi.useRealTimers()
+  })
+})
+
+// ============================================================
+// initLocalKnowledgeStoreSubscriptions / destroyLocalKnowledgeStoreSubscriptions
+// 未覆盖行 232-256
+// ============================================================
+
+describe('initLocalKnowledgeStoreSubscriptions', () => {
+  /** @test_id V9-TEST-ST-142-SUB-INIT-01 */
+  it('初始化时订阅 local_docs 频道', () => {
+    initLocalKnowledgeStoreSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledWith('local_docs', expect.any(Function))
+  })
+
+  /** @test_id V9-TEST-ST-142-SUB-INIT-02 */
+  it('收到 saveLocalDocs 事件时记录日志', () => {
+    initLocalKnowledgeStoreSubscriptions()
+    const cb = capturedCallback.current!
+    cb({ meta: { action: 'SAVE_LOCAL_DOCS', traceId: 'trace-001' } })
+    expect(mockLogger.info).toHaveBeenCalledWith(
+      '[localKnowledgeStore] DataBridge event received: saveLocalDoc',
+      { traceId: 'trace-001' },
+    )
+  })
+
+  /** @test_id V9-TEST-ST-142-SUB-INIT-03 */
+  it('收到非 saveLocalDocs 事件时不记录事件日志', () => {
+    initLocalKnowledgeStoreSubscriptions()
+    const cb = capturedCallback.current!
+    cb({ meta: { action: 'OTHER_ACTION', traceId: 'trace-002' } })
+    // 不应调用 saveLocalDoc 日志
+    expect(mockLogger.info).not.toHaveBeenCalledWith(
+      '[localKnowledgeStore] DataBridge event received: saveLocalDoc',
+      expect.anything(),
+    )
+  })
+
+  /** @test_id V9-TEST-ST-142-SUB-INIT-04 */
+  it('返回的 cleanup 函数调用 destroyLocalKnowledgeStoreSubscriptions', () => {
+    const cleanup = initLocalKnowledgeStoreSubscriptions()
+    expect(typeof cleanup).toBe('function')
+    cleanup()
+    expect(mockUnsubscribe).toHaveBeenCalled()
+  })
+
+  /** @test_id V9-TEST-ST-142-SUB-DESTROY-01 */
+  it('destroyLocalKnowledgeStoreSubscriptions 调用 unsubscribe 并清空引用', () => {
+    initLocalKnowledgeStoreSubscriptions()
+    destroyLocalKnowledgeStoreSubscriptions()
+    expect(mockUnsubscribe).toHaveBeenCalledTimes(1)
+    // 再次 destroy 不应再调用 unsubscribe（引用已清空）
+    mockUnsubscribe.mockClear()
+    destroyLocalKnowledgeStoreSubscriptions()
+    expect(mockUnsubscribe).not.toHaveBeenCalled()
+  })
+
+  /** @test_id V9-TEST-ST-142-SUB-DESTROY-02 */
+  it('destroyLocalKnowledgeStoreSubscriptions 无订阅时为空操作', () => {
+    // afterEach 已清理，确保无订阅状态
+    destroyLocalKnowledgeStoreSubscriptions()
+    expect(mockUnsubscribe).not.toHaveBeenCalled()
+  })
+
+  /** @test_id V9-TEST-ST-142-SUB-REINIT-01 */
+  it('重复初始化时先销毁旧订阅再创建新订阅', () => {
+    initLocalKnowledgeStoreSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(1)
+
+    initLocalKnowledgeStoreSubscriptions()
+    // init 开头调用 destroy → 第一次的 unsubscribe 被调用
+    expect(mockUnsubscribe).toHaveBeenCalledTimes(1)
+    expect(mockSubscribe).toHaveBeenCalledTimes(2)
   })
 })

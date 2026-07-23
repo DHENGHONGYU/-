@@ -141,4 +141,86 @@ describe('useCustomAgentStore', () => {
     expect(state.loading).toBe(false)
     expect(state.error).toBeNull()
   })
+
+  // ============================================================
+  // 补充：异常路径与默认错误消息（覆盖行 73-76, 94-97 及分支 52, 62, 84, 94）
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-CA-01 */
+  it('saveAgent: service 抛出 Error 异常时返回 false 并设置 error', async () => {
+    mockSaveCustomAgent.mockRejectedValue(new Error('网络超时'))
+
+    const result = await useCustomAgentStore.getState().saveAgent(createMockAgent())
+
+    expect(result).toBe(false)
+    expect(useCustomAgentStore.getState().error).toBe('网络超时')
+    expect(mockLogger.error).toHaveBeenCalledWith(
+      '[useCustomAgentStore] saveAgent 异常',
+      { error: '网络超时' },
+    )
+  })
+
+  /** @test_id V9-TEST-ST-CA-02 */
+  it('saveAgent: service 抛出非 Error 异常时转为字符串', async () => {
+    mockSaveCustomAgent.mockRejectedValue('字符串异常')
+
+    const result = await useCustomAgentStore.getState().saveAgent(createMockAgent())
+
+    expect(result).toBe(false)
+    expect(useCustomAgentStore.getState().error).toBe('字符串异常')
+  })
+
+  /** @test_id V9-TEST-ST-CA-03 */
+  it('saveAgent: result.success=false 且无 error 字段时使用默认错误消息', async () => {
+    mockSaveCustomAgent.mockResolvedValue({ success: false })
+
+    const result = await useCustomAgentStore.getState().saveAgent(createMockAgent())
+
+    expect(result).toBe(false)
+    expect(useCustomAgentStore.getState().error).toBe('保存自定义智能体失败')
+  })
+
+  /** @test_id V9-TEST-ST-CA-04 */
+  it('deleteAgent: service 抛出 Error 异常时返回 false 并设置 error', async () => {
+    mockDeleteCustomAgent.mockRejectedValue(new Error('权限不足'))
+
+    const result = await useCustomAgentStore.getState().deleteAgent('agent-001')
+
+    expect(result).toBe(false)
+    expect(useCustomAgentStore.getState().error).toBe('权限不足')
+    expect(mockLogger.error).toHaveBeenCalledWith(
+      '[useCustomAgentStore] deleteAgent 异常',
+      { id: 'agent-001', error: '权限不足' },
+    )
+  })
+
+  /** @test_id V9-TEST-ST-CA-05 */
+  it('deleteAgent: service 抛出非 Error 异常时转为字符串', async () => {
+    mockDeleteCustomAgent.mockRejectedValue(42)
+
+    const result = await useCustomAgentStore.getState().deleteAgent('agent-001')
+
+    expect(result).toBe(false)
+    expect(useCustomAgentStore.getState().error).toBe('42')
+  })
+
+  /** @test_id V9-TEST-ST-CA-06 */
+  it('deleteAgent: result.success=false 且无 error 字段时使用默认错误消息', async () => {
+    mockDeleteCustomAgent.mockResolvedValue({ success: false })
+
+    const result = await useCustomAgentStore.getState().deleteAgent('agent-001')
+
+    expect(result).toBe(false)
+    expect(useCustomAgentStore.getState().error).toBe('删除自定义智能体失败')
+  })
+
+  /** @test_id V9-TEST-ST-CA-07 */
+  it('loadAll: 非 Error 异常时转为字符串设置 error', async () => {
+    mockLoadCustomAgents.mockRejectedValue('连接失败')
+
+    await useCustomAgentStore.getState().loadAll()
+
+    expect(useCustomAgentStore.getState().error).toBe('连接失败')
+    expect(useCustomAgentStore.getState().loading).toBe(false)
+  })
 })
