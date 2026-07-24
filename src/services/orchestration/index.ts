@@ -52,6 +52,47 @@ export type {
   StrategyReportGeneratorConfig,
 } from './strategyReportGenerator'
 
+export {
+  TimelinessSyncAnalyzer,
+  startTimelinessSyncAnalyzer,
+  getTimelinessSyncAnalyzer,
+} from './timelinessSyncAnalyzer'
+export type {
+  TradeRecord,
+  TimelinessMetrics,
+  TimelinessSyncConfig,
+} from './timelinessSyncAnalyzer'
+
+export {
+  WeeklyReviewScheduler,
+  startWeeklyReviewScheduler,
+  getWeeklyReviewScheduler,
+} from './weeklyReviewScheduler'
+export type {
+  WeeklyReviewConfig,
+  WeeklyReviewResult,
+} from './weeklyReviewScheduler'
+
+export {
+  VolatilityAlertPush,
+  startVolatilityAlertPush,
+  getVolatilityAlertPush,
+} from './volatilityAlert'
+export type {
+  VolatilityAlert,
+  VolatilityConfig,
+} from './volatilityAlert'
+
+export {
+  ChipAnomalyDetector,
+  startChipAnomalyDetector,
+  getChipAnomalyDetector,
+} from './chipAnomalyDetector'
+export type {
+  ChipAnomalyEvent,
+  ChipAnomalyConfig,
+} from './chipAnomalyDetector'
+
 // ---- 统一初始化 ----
 
 import { getRegistrationOrchestrator } from './registrationOrchestrator'
@@ -60,6 +101,10 @@ import { getScoreCalibrator } from './scoreCalibrator'
 import { getCatalystTracker } from './catalystTracker'
 import { getWatchListTrigger } from './watchListTrigger'
 import { getStrategyReportGenerator } from './strategyReportGenerator'
+import { getTimelinessSyncAnalyzer } from './timelinessSyncAnalyzer'
+import { getWeeklyReviewScheduler } from './weeklyReviewScheduler'
+import { getVolatilityAlertPush } from './volatilityAlert'
+import { getChipAnomalyDetector } from './chipAnomalyDetector'
 
 /**
  * 初始化全部编排器 — 在 App 启动时调用一次
@@ -90,6 +135,18 @@ export function initOrchestration(): void {
   const reportGen = getStrategyReportGenerator()
   reportGen.start()
 
+  const timeliness = getTimelinessSyncAnalyzer()
+  timeliness.start()
+
+  const weeklyReview = getWeeklyReviewScheduler()
+  weeklyReview.start()
+
+  const volAlert = getVolatilityAlertPush()
+  volAlert.start()
+
+  const chipDetector = getChipAnomalyDetector()
+  chipDetector.start()
+
   console.log('[Orchestration] 编排器启动完成')
 }
 
@@ -101,5 +158,9 @@ export function stopOrchestration(): void {
   getCatalystTracker().stop()
   getWatchListTrigger().stop()
   getStrategyReportGenerator().stop()
+  getTimelinessSyncAnalyzer().stop()
+  getWeeklyReviewScheduler().stop()
+  getVolatilityAlertPush().stop()
+  getChipAnomalyDetector().stop()
   console.log('[Orchestration] 编排器已停止')
 }
