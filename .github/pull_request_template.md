@@ -74,6 +74,33 @@ Before | After
 - [ ] `npm run audit:docs` - 文档同步检查通过
 - [ ] 文档已同步（触发-动作映射表 `docs/00-meta/doc-trigger-action-map.md` 已对齐，无遗漏/缺失目标文档）；如涉及 `package.json` version bump，已跑 `npm run doc:version-check`
 
+### L2-1: 组件新增专项检查（仅新增组件时勾选）
+> 参考文档：`docs/guides/component-admission-policy.md`
+- [ ] 新组件已在 `componentRegistry` 登记并填写 `consumers` 字段
+- [ ] 新组件至少有一个业务消费方实际引用（非测试/示例代码）
+- [ ] 新组件命名不与现有组件冲突（全局搜索确认无重复）
+- [ ] 符合分层原则（`npm run audit:atomic` 通过，0 violations）
+- [ ] 有单元测试覆盖核心交互
+- [ ] 有 JSDoc 注释和使用示例
+- [ ] 通用组件（atom/molecule）已在对应 barrel `index.ts` 中导出
+
+### L2-2: 模块新增专项检查（仅新增模块时勾选）
+> 参考文档：`docs/guides/module-completion-standard.md`
+- [ ] 新模块已有路由入口（`routes.ts` 中注册）或明确的调用入口
+- [ ] 新模块在 `moduleManifest` 中登记（如适用）
+- [ ] 新模块 6 要素齐全（类型/服务/状态/UI/入口/文档）
+  - [ ] 类型层：类型定义完整，存放在 `types/modules/` 下
+  - [ ] 服务层：业务逻辑封装完整，经 DataBridge 访问数据
+  - [ ] 状态层：Store 实现完整，有初始化/重置/广播
+  - [ ] UI 层：页面或组件实现完整，有三态处理
+  - [ ] 入口层：路由或导航入口已注册
+  - [ ] 文档层：有功能说明文档和使用指南
+
+### L2-3: 死代码自查
+- [ ] 本次变更未引入新的未使用组件（`npm run audit:deadcode -- --staged` 通过）
+- [ ] 无新增的未引用文件/模块
+- [ ] 旧代码删除后无残留的引用或导出
+
 ### L3: 代码质量（P0 问题必须修复）
 - [ ] **类型安全**: 无 `any` 类型、无 `@ts-ignore`
 - [ ] **零硬编码**: 颜色使用令牌、魔法数字已提取
