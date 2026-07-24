@@ -95,4 +95,56 @@ export const EVENT_NAMES = {
   STRATEGY_CLASSIFICATION_ERROR: 'strategy:classification:error',
   /** 分析：行业分析完成 */
   ANALYSIS_INDUSTRY_COMPLETED: 'analysis:industry:completed',
-  /** 分�
+  /** 分析：个股评分完成 */
+  ANALYSIS_SCORE_COMPLETED: 'analysis:score:completed',
+  // ---- P1 编排器扩展事件 ----
+  /** 新闻文章加载完成 */
+  NEWS_ARTICLE_LOADED: 'news:article:loaded',
+  /** 催化事件检测 */
+  CATALYST_DETECTED: 'catalyst:detected',
+  /** 催化事件策略响应 */
+  CATALYST_STRATEGY_RESPONSE: 'catalyst:strategy-response',
+  /** 观察舱重新评估 */
+  WATCHLIST_REEVALUATE: 'watchlist:re-evaluate',
+  /** 观察舱 tier 升级 */
+  WATCHLIST_TIER_UPGRADE: 'watchlist:tier-upgrade',
+  /** 策略报告生成完成 */
+  STRATEGY_REPORT_GENERATED: 'strategy:report:generated',
+} as const
+
+export type EventName = (typeof EVENT_NAMES)[keyof typeof EVENT_NAMES]
+
+/**
+ * 变更后缀，用于 `${channel}:changed` 事件命名
+ */
+export const CHANGED_SUFFIX = ':changed' as const
+
+/**
+ * 模块数据 store 名称（IndexedDB objectStore）
+ * 与 {@link STORE_NAME} 保持一致；此处仅做业务语义注释
+ */
+export const STORE_DISPLAY_NAMES = {
+  stocks: '股票池',
+  v6_scores: 'V6 评分',
+  intelligent_scores: '智能评分',
+  industry_scores: '行业评分',
+  orders: '订单',
+  watchlists: '观察列表',
+  signals: '信号',
+  research_logs: '研究日志',
+  daily_quotes: '日线行情',
+  rotation_scores: '轮动评分',
+  sector_scores: '板块评分',
+  score_docs: '评分文档',
+  strategy_snapshots: '策略快照',
+  local_docs: '本地文档',
+  news: '资讯',
+  news_stock_map: '资讯-股票映射',
+  sentiment_cache: '情感缓存',
+  news_bookmarks: '资讯收藏',
+  hot_sector_scores: '热门板块评分',
+  value_pit_scores: '价值洼地评分',
+  execution_plans: '执行计划',
+  execution_logs: '执行日志',
+  missing_reports: '缺失报告',
+} as const
