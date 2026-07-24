@@ -27,11 +27,39 @@ export {
 } from './scoreCalibrator'
 export type { ScoreCalibratorConfig, CalibrationResult } from './scoreCalibrator'
 
+export {
+  CatalystTracker,
+  startCatalystTracker,
+  getCatalystTracker,
+} from './catalystTracker'
+export type { CatalystType, CatalystImpact, CatalystEvent, CatalystTrackerConfig } from './catalystTracker'
+
+export {
+  WatchListTrigger,
+  startWatchListTrigger,
+  getWatchListTrigger,
+} from './watchListTrigger'
+export type { WatchListTriggerConfig, WatchListTriggerEvent } from './watchListTrigger'
+
+export {
+  StrategyReportGenerator,
+  startStrategyReportGenerator,
+  getStrategyReportGenerator,
+} from './strategyReportGenerator'
+export type {
+  StrategyReportSection,
+  StrategyReport,
+  StrategyReportGeneratorConfig,
+} from './strategyReportGenerator'
+
 // ---- 统一初始化 ----
 
 import { getRegistrationOrchestrator } from './registrationOrchestrator'
 import { getQualityGate } from './qualityGate'
 import { getScoreCalibrator } from './scoreCalibrator'
+import { getCatalystTracker } from './catalystTracker'
+import { getWatchListTrigger } from './watchListTrigger'
+import { getStrategyReportGenerator } from './strategyReportGenerator'
 
 /**
  * 初始化全部编排器 — 在 App 启动时调用一次
@@ -42,7 +70,7 @@ import { getScoreCalibrator } from './scoreCalibrator'
  *   ANALYSIS_SCORE_COMPLETED → ScoreCalibrator → calibrate → triggerStrategy
  */
 export function initOrchestration(): void {
-  console.log('[Orchestration] 初始化三大编排器...')
+  console.log('[Orchestration] 初始化编排器...')
 
   const reg = getRegistrationOrchestrator()
   reg.start()
@@ -53,6 +81,15 @@ export function initOrchestration(): void {
   const cal = getScoreCalibrator()
   cal.start()
 
+  const tracker = getCatalystTracker()
+  tracker.start()
+
+  const watchTrigger = getWatchListTrigger()
+  watchTrigger.start()
+
+  const reportGen = getStrategyReportGenerator()
+  reportGen.start()
+
   console.log('[Orchestration] 编排器启动完成')
 }
 
@@ -61,5 +98,8 @@ export function stopOrchestration(): void {
   getRegistrationOrchestrator().stop()
   getQualityGate().stop()
   getScoreCalibrator().stop()
+  getCatalystTracker().stop()
+  getWatchListTrigger().stop()
+  getStrategyReportGenerator().stop()
   console.log('[Orchestration] 编排器已停止')
 }
