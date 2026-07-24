@@ -15,6 +15,9 @@ import type { CompositeScore, LayerScore } from '@/services/scoring/v6-engine/ty
 import { buildFinancialData } from '@/services/scoring/v6ScoreService'
 import { validateScoreBeforeSave } from '@/services/scoring/aiOutputValidator'
 import { getLogger } from '@/lib/logger'
+import { parseLlmJson } from '@/services/llm/jsonParser'
+import { eventBus } from '@/lib/eventBus'
+import { EVENT_NAMES } from '@/constants/store-channels.constants'
 
 const logger = getLogger()
 
@@ -94,22 +97,12 @@ interface RawScoreOutput {
   missingFields?: string[]
 }
 
-function extractJsonFromMarkdown(content: string): string {
-  const match = content.match(/```(?:json)?\s*([\s\S]*?)\s*```/)
-  if (match?.[1]) {
-    return match[1].trim()
-  }
-  return content.trim()
-}
-
 function parseRawScoreOutput(content: string): RawScoreOutput {
-  const jsonText = extractJsonFromMarkdown(content)
-  try {
-    const parsed = JSON.parse(jsonText) as RawScoreOutput
-    return parsed
-  } catch {
-    throw new LlmApiError('LLM 返回内容不是合法 JSON')
+  const parsed = parseLlmJson<RawScoreOutput>(content, undefined, logger)
+  if (!parsed) {
+    throw new LlmApiError('LLM 返回内容无法解析为 JSON')
   }
+  return parsed
 }
 
 function normalizeDimensionScore(
@@ -451,6 +444,12 @@ export async function runIntelligentScore(
       return { success: false, error: saveResult.error ?? '保存评分结果失败' }
     }
     reportProgress(currentStep, 'done', '评分结果已保存')
+
+    // 通知编排器层：评分完成 → 触发 ScoreCalibrator → 策略分层
+    eventBus.emit(EVENT_NAMES.ANALYSIS_SCORE_COMPLETED, {
+      symbol: input.symbol,
+      score,
+    })
 
     return { success: true, data: score }
   } catch (error) {
