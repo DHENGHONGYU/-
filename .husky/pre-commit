@@ -20,12 +20,38 @@ ESLINT_RUN() { "$NODE24" ./node_modules/eslint/bin/eslint.js "$@"; }
 TSC_RUN()  { "$NODE24" ./node_modules/typescript/bin/tsc "$@"; }
 NODE_RUN() { "$NODE24" "$@"; }
 
+# 阻断助手：任一 P0 门禁失败即拦截提交。
+# 修正 set +e 下的"假绿灯"——脚本结尾 echo 退出码恒为 0，必须有显式失败出口。
+BLOCK() {
+  "$@"
+  local rc=$?
+  if [ $rc -ne 0 ]; then
+    echo ""
+    echo "❌ 门禁失败，提交被拦截：请先修复上述问题再提交。"
+    echo "   （失败命令：$*）"
+    exit 1
+  fi
+  return 0
+}
+
 # 便携垫片：保留以防其他 npx 调用
 command -v npx >/dev/null 2>&1 || npx() { npx.cmd "$@"; }
 
 echo ""
 echo "🚦 V9 预提交门禁启动 ..."
 echo "================================================"
+
+# 0. 提交作用域守卫（Commit Scope Guard）—— 堵上"提交卫生"盲点
+#    本次事故教训（commit 401cd3c，1243 文件误扫入）的直接体系修复。
+#    规则 1：暂存 >50 文件 → WARN（提示复核）
+#    规则 2：src/ + docs/ 大量删除混提交 → BLOCK
+echo ""
+echo "🎯 [0/17] 提交作用域守卫（Commit Scope Guard）..."
+sh scripts/audit/audit-commit-scope.sh
+SCOPE_GUARD_EXIT=$?
+if [ "$SCOPE_GUARD_EXIT" -ne 0 ]; then
+  exit 1
+fi
 
 # 1. 获取当前 AGENTS.md 版本，用于提示
 AGENTS_VERSION=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' "AGENTS.md" | head -n 1 || echo "unknown")
@@ -48,6 +74,11 @@ if [ "$ENV_CHECK_EXIT" -ne 0 ]; then
   exit 1
 fi
 
+# 2.5 密钥/敏感信息扫描（SAST-lite，已本地校验 0 误报，升级为 BLOCK）
+echo ""
+echo "🔑 [secrets] 运行 audit:secrets（密钥/敏感信息扫描，BLOCK）..."
+BLOCK TSX_RUN scripts/audit/audit-secrets.ts
+
 # 3. lint-staged：仅对暂存区文件运行 ESLint --fix
 echo ""
 echo "🧹 [2/17] 运行 lint-staged（ESLint --fix）..."
@@ -61,22 +92,22 @@ ESLINT_RUN --config eslint.colors.config.js src/
 # 4. 生产类型检查
 echo ""
 echo "🔍 [4/17] 运行 tsc:prod（生产类型检查）..."
-TSC_RUN -p tsconfig.prod.json --noEmit
+BLOCK TSC_RUN -p tsconfig.prod.json --noEmit
 
 # 5. 分层调用审计
 echo ""
 echo "🏗️ [5/17] 运行 audit:layers（禁止跨层调用）..."
-TSX_RUN scripts/audit/audit-layer-calls.ts
+BLOCK TSX_RUN scripts/audit/audit-layer-calls.ts
 
 # 6. 原子组件层级边界审计
 echo ""
 echo "⚛️ [6/17] 运行 audit:atomic（原子层级边界检查）..."
-TSX_RUN scripts/audit/audit-atomic.ts
+BLOCK TSX_RUN scripts/audit/audit-atomic.ts
 
 # 7. 数据库定义交叉引用审计
 echo ""
 echo "🗄️ [7/17] 运行 audit:db-references（数据库定义交叉引用审计）..."
-TSX_RUN scripts/audit/audit-db-references.ts
+BLOCK TSX_RUN scripts/audit/audit-db-references.ts
 
 # 8. Agent → MCP Server 绑定一致性审计（警告模式：2 个预存 direct-service-import 待修复，非本次引入，不阻断）
 echo ""
@@ -153,5 +184,5 @@ fi
 
 echo ""
 echo "================================================"
-echo "✅ V9 预提交门禁全部通过（17/17 阻断项 + 3 warn 项），允许提交。"
+echo "✅ V9 预提交门禁通过：核心 P0 门禁（tsc:prod / layers / atomic / db-references / secrets）已真阻断；其余为 warn。允许提交。"
 echo ""

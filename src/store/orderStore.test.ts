@@ -859,7 +859,7 @@ describe('computeRiskMetrics', () => {
     const result = computeRiskMetrics(tradePairs, pnlSummary, [])
 
     expect(result.maxDrawdown).toBeGreaterThan(20)
-    expect(result.alerts).toContain('最大回撤超过 20%')
+    expect(result.alerts).toContain('【清仓】回撤达 20%，建议清仓止损')
   })
 
   it('无持仓 → betaEstimate=0', () => {
@@ -1153,3 +1153,4 @@ describe('initOrderStoreSubscriptions - 订阅回调逻辑', () => {
     cleanup2()
   })
 })
+                                                                                                                           

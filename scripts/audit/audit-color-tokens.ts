@@ -34,6 +34,24 @@ export interface AuditReport {
   totalFiles: number
 }
 
+/**
+ * 判断某颜色匹配位置是否位于模板字面量 ${...} 内（如 rgba(${COLOR_TOKENS.x.rgb}, ...)）。
+ * 这类拼装实际引用的是设计令牌，应豁免硬编码颜色告警（修复 2026-07-24 误报）。
+ */
+function isInsideTemplateToken(line: string, colorIdx: number): boolean {
+  const open = line.lastIndexOf('${', colorIdx)
+  if (open === -1) return false
+  const close = line.indexOf('}', open)
+  if (close === -1) return false
+  return colorIdx > open && colorIdx < close
+}
+
+/** 颜色令牌的权威源文件，其内部颜色定义是单源真相，豁免扫描 */
+const TOKEN_SOURCE_FILES = new Set([
+  'src/constants/theme.tokens.ts',
+  'src/constants/theme.tokens.design.ts',
+])
+
 export async function scan(): Promise<AuditReport> {
   const files = await glob('src/**/*.{tsx,ts}', {
     ignore: ['**/*.test.{tsx,ts}', '**/node_modules/**', '**/dist/**'],
@@ -43,6 +61,8 @@ export async function scan(): Promise<AuditReport> {
   const warnings: string[] = []
 
   for (const file of files) {
+    // 令牌源文件本身是颜色定义的权威来源，豁免扫描
+    if (TOKEN_SOURCE_FILES.has(file)) continue
     try {
       const content = await readFile(resolve(process.cwd(), file), 'utf-8')
       const lines = content.split('\n')
@@ -51,19 +71,26 @@ export async function scan(): Promise<AuditReport> {
         if (line.trim().startsWith('//') || line.trim().startsWith('*')) {
           return
         }
+        // 引用令牌（COLOR_TOKENS / SEMANTIC_COLOR_ROLES / theme.tokens）的行视为已令牌化，豁免
+        if (line.includes('COLOR_TOKENS') || line.includes('SEMANTIC_COLOR_ROLES') || line.includes('theme.tokens')) {
+          return
+        }
 
         HARDCODED_COLOR_PATTERNS.forEach((pattern) => {
           const matches = line.match(pattern)
           if (matches) {
             matches.forEach((color) => {
+              const colorIdx = line.indexOf(color)
+              // 颜色位于模板字面量 ${...} 内（如 rgba(${COLOR_TOKENS.x.rgb}, ...)）视为令牌拼装，豁免
+              if (isInsideTemplateToken(line, colorIdx)) return
               const isInTailwindClass = TAILWIND_COLOR_PATTERNS.some((p) => p.test(line))
               const isVariable = line.includes('const ') || line.includes('let ') || line.includes('var ')
-              
+
               if (!isInTailwindClass && !isVariable) {
                 violations.push({
                   file,
                   line: index + 1,
-                  column: line.indexOf(color) + 1,
+                  column: colorIdx + 1,
                   color,
                   context: line.trim(),
                 })

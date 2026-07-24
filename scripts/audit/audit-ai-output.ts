@@ -15,6 +15,9 @@
  * 退出码：0=通过，1=有阻塞项
  */
 
+import { existsSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+
 const AUDIT_NAME = 'audit:ai-output'
 const SCORE_RANGE: [number, number] = [0, 5]
 const MIN_RATIONALE_LENGTH = 5
@@ -161,16 +164,53 @@ function runValidation(scores: TestScore[]): AuditIssue[] {
 }
 
 // ============================================================
+// 加载真实评分快照（可选）
+// ------------------------------------------------------------
+// 2026-07-24 修正：原 main() 仅校验硬编码 TEST_SCORES（mock），对真实已保存的
+// IntelligentScore 记录零覆盖 —— 实为"空壳门禁"，永远对 mock 通过。
+// 现支持从以下路径之一加载真实评分快照（CI / 本地导出 IntelligentScore 记录后），
+// 对其做与 fixture 完全相同的 V1-V6 金融合规校验；未提供快照时仅校验 fixture 并明确 WARN。
+// ============================================================
+function loadRealScores(): TestScore[] {
+  const candidates = [
+    process.env.AI_SCORES_SNAPSHOT,
+    resolve(process.cwd(), 'outputs/ai-scores-snapshot.json'),
+    resolve(process.cwd(), 'scripts/audit/fixtures/ai-scores-snapshot.json'),
+  ].filter((p): p is string => Boolean(p))
+  for (const p of candidates) {
+    try {
+      if (!existsSync(p)) continue
+      const parsed = JSON.parse(readFileSync(p, 'utf-8'))
+      const arr = Array.isArray(parsed) ? parsed : (parsed as { scores?: unknown }).scores
+      if (Array.isArray(arr) && arr.length > 0) {
+        console.log(`  📂 已加载真实评分快照: ${p} (${arr.length} 条)`)
+        return arr as TestScore[]
+      }
+    } catch {
+      console.warn(`  ⚠️  读取真实评分快照失败: ${p}`)
+    }
+  }
+  return []
+}
+
+// ============================================================
 // 主流程
 // ============================================================
 
 function main(): void {
-  console.log(`\n  [${AUDIT_NAME}] 开始校验 ${TEST_SCORES.length} 条评分记录...\n`)
+  const realScores = loadRealScores()
+  const total = TEST_SCORES.length + realScores.length
+  console.log(`\n  [${AUDIT_NAME}] 开始校验 ${total} 条评分记录（${TEST_SCORES.length} 内置 fixture + ${realScores.length} 真实记录）...\n`)
 
-  const issues = runValidation(TEST_SCORES)
+  const issues = runValidation([...TEST_SCORES, ...realScores])
+
+  if (realScores.length === 0) {
+    console.log(`  ⚠️  [${AUDIT_NAME}] 未找到真实评分快照（默认 outputs/ai-scores-snapshot.json）。`)
+    console.log(`      当前仅校验内置 fixture；如需对真实 AI 输出做金融合规校验，请导出 IntelligentScore 记录到该路径后重跑。`)
+  }
 
   if (issues.length === 0) {
-    console.log(`  ✅ [${AUDIT_NAME}] 全部通过 — 0 issues`)
+    console.log(`  ✅ [${AUDIT_NAME}] 全部通过 — 0 issues${realScores.length === 0 ? '（仅 fixture，未覆盖真实数据）' : ''}`)
     process.exit(0)
   }
 
