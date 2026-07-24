@@ -10,26 +10,15 @@
  */
 
 import { cn } from '@/lib/utils'
-import { COCKPIT_LAYOUT } from '@/constants/cockpit.constants'
+import { COCKPIT_LAYOUT, COCKPIT_CROSS_DOMAINS, COCKPIT_CROSS_PERSPECTIVES } from '@/constants/cockpit.constants'
 import type { WidgetDomain, WidgetPerspective } from '@/types/modules/widget.types'
 
 // ============================================================
 // 常量
 // ============================================================
 
-const DOMAINS: { id: WidgetDomain; label: string; icon: string }[] = [
-  { id: 'research', label: '研究全景', icon: '🔬' },
-  { id: 'market', label: '市场背景', icon: '📈' },
-  { id: 'ai', label: 'AI 决策', icon: '🤖' },
-  { id: 'portfolio', label: '持仓观察', icon: '💼' },
-]
-
-const PERSPECTIVES: { id: WidgetPerspective; label: string }[] = [
-  { id: 'overview', label: '概览' },
-  { id: 'analysis', label: '深度分析' },
-  { id: 'signal', label: '信号验证' },
-  { id: 'risk', label: '风控' },
-]
+// 业务域/视角展示元数据统一从 cockpit.constants.ts 导入（COCKPIT_CROSS_DOMAINS / COCKPIT_CROSS_PERSPECTIVES），
+// 与 CockpitCrossLayout 共用单一真相源，避免双处定义漂移
 
 // ============================================================
 // Props
@@ -92,13 +81,13 @@ export function CrossMatrixOverview({
       <div
         className="grid"
         style={{
-          gridTemplateColumns: `120px repeat(${PERSPECTIVES.length}, 1fr)`,
+          gridTemplateColumns: `120px repeat(${COCKPIT_CROSS_PERSPECTIVES.length}, 1fr)`,
           gap: COCKPIT_LAYOUT.MATRIX_CELL_GAP,
         }}
       >
         {/* 表头行 */}
         <div />
-        {PERSPECTIVES.map((p) => (
+        {COCKPIT_CROSS_PERSPECTIVES.map((p) => (
           <div
             key={p.id}
             className={cn(
@@ -113,7 +102,7 @@ export function CrossMatrixOverview({
         ))}
 
         {/* 数据行 */}
-        {DOMAINS.map((domain) => (
+        {COCKPIT_CROSS_DOMAINS.map((domain) => (
           <FragmentRow
             key={domain.id}
             domain={domain}
@@ -178,7 +167,7 @@ function FragmentRow({
       </div>
 
       {/* 单元格 */}
-      {PERSPECTIVES.map((p) => {
+      {COCKPIT_CROSS_PERSPECTIVES.map((p) => {
         const key = `${domain.id}:${p.id}`
         const count = matrixCounts.get(key) || 0
         const isActiveCell = isActiveRow && activePerspective === p.id
@@ -188,6 +177,7 @@ function FragmentRow({
             key={p.id}
             type="button"
             disabled={count === 0}
+            aria-label={`${domain.label} × ${p.label}：${count} 个 Widget`}
             onClick={() => onCellClick(domain.id, p.id)}
             className={cn(
               'flex flex-col items-center justify-center rounded-md py-4 transition-all',
