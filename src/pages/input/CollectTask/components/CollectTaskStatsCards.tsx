@@ -6,7 +6,7 @@
  * @module CollectTask/components/CollectTaskStatsCards
  */
 
-import { Card, CardContent } from '@/components/atoms'
+import { MetricCard } from '@/components/molecules'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import type { TaskStats } from '../hooks/useCollectionTaskStats'
 
@@ -48,44 +48,25 @@ export function CollectTaskStatsCards({
   return (
     <>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard label="任务总数" value={taskStats.runningCount + taskStats.successCount + taskStats.failedCount} />
-        <StatCard label="采集中" value={taskStats.runningCount} color={COLOR_TOKENS.info.hex} />
-        <StatCard label="已完成" value={taskStats.successCount} color={COLOR_TOKENS.success.hex} />
-        <StatCard label="失败" value={taskStats.failedCount} color={COLOR_TOKENS.danger.hex} />
+        <MetricCard title="任务总数" value={taskStats.runningCount + taskStats.successCount + taskStats.failedCount} />
+        <MetricCard title="采集中" value={taskStats.runningCount} color={COLOR_TOKENS.info.hex} />
+        <MetricCard title="已完成" value={taskStats.successCount} color={COLOR_TOKENS.success.hex} />
+        <MetricCard title="失败" value={taskStats.failedCount} color={COLOR_TOKENS.danger.hex} />
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard label="成功率(含Mock)" value={`${successRate}%`} color={COLOR_TOKENS.success.hex} />
-        <StatCard label="平均延迟" value={`${avgLatency}ms`} color={COLOR_TOKENS.info.hex} />
-        <StatCard label="降级次数" value={fallbackCount} color={COLOR_TOKENS.warning.hex} />
-        <StatCard label="写入成功率" value={`${writeRate}%`} color={COLOR_TOKENS.success.hex} />
+        <MetricCard title="成功率(含Mock)" value={`${successRate}%`} color={COLOR_TOKENS.success.hex} />
+        <MetricCard title="平均延迟" value={`${avgLatency}ms`} color={COLOR_TOKENS.info.hex} />
+        <MetricCard title="降级次数" value={fallbackCount} color={COLOR_TOKENS.warning.hex} />
+        <MetricCard title="写入成功率" value={`${writeRate}%`} color={COLOR_TOKENS.success.hex} />
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <StatCard label="数据新鲜度" value={formatFreshness(lastSuccessAt)} color={COLOR_TOKENS.info.hex} />
-        <StatCard
-          label="真实成功率(不含Mock)"
+        <MetricCard title="数据新鲜度" value={formatFreshness(lastSuccessAt)} color={COLOR_TOKENS.info.hex} />
+        <MetricCard
+          title="真实成功率(不含Mock)"
           value={`${realSuccessRate}%`}
           color={realSuccessRate >= 80 ? COLOR_TOKENS.success.hex : COLOR_TOKENS.danger.hex}
         />
       </div>
     </>
-  )
-}
-
-interface StatCardProps {
-  label: string
-  value: number | string
-  color?: string
-}
-
-function StatCard({ label, value, color }: StatCardProps): React.JSX.Element {
-  return (
-    <Card>
-      <CardContent className="py-4">
-        <p className="text-xs text-muted-foreground">{label}</p>
-        <p className="mt-1 text-2xl font-bold" style={color !== undefined ? { color } : undefined}>
-          {value}
-        </p>
-      </CardContent>
-    </Card>
   )
 }

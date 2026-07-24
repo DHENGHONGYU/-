@@ -15,6 +15,10 @@ export interface MetricCardProps {
   change?: string
   /** 是否加载中 */
   loading?: boolean
+  /** 强调色（hex），作用于数值文字色；与 border 配合时同时作为左边框色 */
+  color?: string
+  /** 是否以左边框强调（需配合 color） */
+  border?: boolean
   /** 容器 className */
   className?: string
 }
@@ -31,6 +35,8 @@ export function MetricCard({
   trend = 'neutral',
   change,
   loading,
+  color,
+  border = false,
   className,
 }: MetricCardProps) {
   const trendColor =
@@ -45,14 +51,22 @@ export function MetricCard({
   const showChange = !isLoading && change != null && change.length > 0
 
   return (
-    <Card className={cn('p-4', className)}>
+    <Card
+      className={cn('p-4', border ? 'border-l-4' : '', className)}
+      style={border && color ? { borderLeftColor: color } : undefined}
+    >
       <CardContent className="p-0">
         <p className="text-sm text-muted-foreground">{title}</p>
         {isLoading ? (
           <div className="mt-1 h-8 w-24 animate-pulse rounded bg-muted" />
         ) : (
           <div className="mt-1 flex items-baseline gap-1">
-            <span className="text-2xl font-semibold tracking-tight">{value}</span>
+            <span
+              className="text-2xl font-semibold tracking-tight"
+              style={color ? { color } : undefined}
+            >
+              {value}
+            </span>
             {showUnit && <span className="text-sm text-muted-foreground">{unit}</span>}
           </div>
         )}
