@@ -88,15 +88,27 @@ function extractDefaultLayoutIds(content: string): string[] {
 }
 
 /**
+ * 转义正则特殊字符（用于把对象名安全地拼进正则）
+ */
+function escapeRegExp(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+/**
  * 从 cockpit.constants.ts 提取指定对象的顶层 key 列表
- * 定位 `objName = {` 后，提取 2 空格缩进的 `key: {` 直到 0 缩进的 `}`
+ *
+ * ⚠️ 兼容性修复（2026-07-24）：旧实现用字面量 `objName = {` 经 `indexOf` 定位对象起点，
+ * 但当声明带 TypeScript 类型注解（如 `export const WIDGET_DEFAULT_DATA_SOURCE: Record<string, DataSourceConfig> = {`）
+ * 时，字面量 `WIDGET_DEFAULT_DATA_SOURCE = {` 在源码中并不存在，`indexOf` 返回 -1，导致解析为空数组，
+ * 进而误报全部 21 个 widget「已注册但 WIDGET_DEFAULT_DATA_SOURCE 中缺少数据源配置」等 P0（共 42 假阳性）。
+ * 现改为正则匹配 `objName` 后接「可选类型注解」再接 `= {`，兼容两种声明形式。
  */
 function extractTopLevelKeys(content: string, objName: string): string[] {
-  const startMarker = `${objName} = {`
-  const startIdx = content.indexOf(startMarker)
-  if (startIdx === -1) return []
+  const startRegex = new RegExp(`${escapeRegExp(objName)}(?:\\s*:\\s*[^=]*?)?\\s*=\\s*\\{`)
+  const startMatch = startRegex.exec(content)
+  if (!startMatch) return []
 
-  const afterMarker = content.slice(startIdx + startMarker.length)
+  const afterMarker = content.slice(startMatch.index + startMatch[0].length)
   const endMatch = afterMarker.match(/\n\}/)
   if (!endMatch || endMatch.index === undefined) return []
 

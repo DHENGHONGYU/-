@@ -151,6 +151,22 @@ function getConditionText(node: ts.IfStatement, sourceFile: ts.SourceFile): stri
   return node.expression.getText(sourceFile).replace(/\s+/g, ' ').trim()
 }
 
+/**
+ * 判断 if 条件是否值得作为"重复复杂度债务"追踪。
+ * 仅复合谓词（含 && / ||）或较长的复杂条件（≥ 30 字符）计入；
+ * 惯用防御性单检查（Array.isArray / .includes / 标志位 / 常量比较 / 单标识符 / 布尔配置项）
+ * 即使在同一函数内重复出现也属正常，不应计为复杂度债务。
+ * 2026-07-24 启发式修正：原实现把所有"同函数内重复的条件文本"都计入，导致 21 处误报
+ * （如 `Array.isArray(parsed)`、`mock`、`mounted`、`_pendingRefresh`、`.includes(word)`、
+ * `config.includeXxx` 等惯用检查），实为噪声。现仅追踪真正冗余的复合/复杂条件。
+ */
+function isMeaningfulDuplicateCondition(cond: string): boolean {
+  const t = cond.trim()
+  if (/[&]{2}|\|{2}/.test(t)) return true
+  if (t.length >= 30) return true
+  return false
+}
+
 function findFunctionName(node: ts.Node, sourceFile: ts.SourceFile): { name: string; line: number } {
   let current: ts.Node | undefined = node
   while (current) {
@@ -242,14 +258,17 @@ function scanFile(filePath: string): { nested: NestedFinding[]; chains: ChainFin
       if (!conditionsByFunction.has(fnKey)) conditionsByFunction.set(fnKey, new Map())
       const condMap = conditionsByFunction.get(fnKey)!
       const condText = getConditionText(node, sourceFile)
-      const loc: Location & { snippet: string } = {
-        file: rel(filePath),
-        function: fn.name,
-        functionLine: fn.line,
-        ...getLineAndColumn(sourceFile, node.getStart(sourceFile)),
-        snippet: getNodeText(node, sourceFile),
+      // 2026-07-24 启发式修正：跳过惯用防御性单检查，避免误报复杂度债务
+      if (isMeaningfulDuplicateCondition(condText)) {
+        const loc: Location & { snippet: string } = {
+          file: rel(filePath),
+          function: fn.name,
+          functionLine: fn.line,
+          ...getLineAndColumn(sourceFile, node.getStart(sourceFile)),
+          snippet: getNodeText(node, sourceFile),
+        }
+        condMap.set(condText, [...(condMap.get(condText) || []), loc])
       }
-      condMap.set(condText, [...(condMap.get(condText) || []), loc])
     }
 
     ts.forEachChild(node, (child) => walk(child, nextDepth))

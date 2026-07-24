@@ -106,14 +106,14 @@ function collectDocs(dir: string, docFiles: Set<string>): void {
 
 function getChangedFiles(): string[] {
   try {
-    // 根因修复（2026-07-21）：原实现 `git diff --name-only HEAD~1 HEAD` 在本仓库的
-    // git-for-windows 环境下会原生段错误（exit 139），导致本函数抛异常并被上层退化为
-    // 全量扫描 878 个 src 文件，进而使预提交钩子挂死。
-    // 改用 `git log -1 --name-only HEAD` 获取最近一次提交改动的文件（语义等价且不触发段错误），
-    // 并以 execFileSync + timeout 兜底，确保任何 git 异常都不会让提交流程挂起。
+    // 2026-07-24 修正：原实现用 `git log -1 --name-only HEAD` 取的是【上一次提交】改动的文件，
+    // 而非本次暂存（staged）的文件，导致若上一次提交未改 src/ 则直接 PASS（假绿），
+    // 文档同步检查形同虚设。
+    // 改为 `git diff --cached --name-only` 读取本次暂存区文件（预提交钩子语义正确），
+    // 已在本环境验证不会触发 git-for-windows 段错误（exit 0）。
     const output = execFileSync(
       'git',
-      ['-c', 'core.quotepath=false', 'log', '-1', '--name-only', '--pretty=format:', '--no-color', 'HEAD'],
+      ['-c', 'core.quotepath=false', 'diff', '--cached', '--name-only', '--no-color'],
       { encoding: 'utf-8', cwd: ROOT, timeout: 15000 },
     )
     return output
@@ -179,6 +179,9 @@ export function scan(): Report {
 
   // 获取待扫描文件（仅本提交改动到的 src 文件）
   const files = getChangedFiles()
+  // 当前设计仅支持 commit-scoped 的 changed 模式（2026-07-21 移除全量扫描以防预提交钩子挂死），
+  // 'all' 模式已不再可达；固定为 'changed' 供报告与早退分支统一使用。
+  const scanMode: 'changed' | 'all' = 'changed'
   // 根因修复（2026-07-21）：若本次提交未改动任何 src 文件，则没有"新增/修改的 src 文件"
   // 需要文档化检查（契合本脚本"扫描 src/ 中新增/修改的文件"的设计意图），直接通过，
   // 避免对全部 src（878 个文件）做全量扫描导致预提交钩子挂死。

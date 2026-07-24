@@ -9,6 +9,7 @@ vi.mock('@/store/agentStore', () => ({
     const state = {
       stats: { totalAgents: 5, pendingTasks: 0, runningTasks: 2, completedTasks: 10, failedTasks: 1 },
       registeredAgents: [],
+      refreshStats: vi.fn(),
     }
     return selector(state)
   }),

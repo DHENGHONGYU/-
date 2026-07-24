@@ -161,7 +161,7 @@ describe('QueryBuilder.queryStock — 各维度独立测试', () => {
   it('includeQuotes: 返回 K 线行情数据', async () => {
     setupMockData({
       get: {
-        'daily_quotes#600000': { symbol: '600000', close: 10.5, volume: 1000000 },
+        'daily_quotes#600000': { symbol: '600000', latest: { close: 10.5, volume: 1000000 }, history: [] },
       },
     })
 
@@ -196,7 +196,7 @@ describe('QueryBuilder.queryStock — 各维度独立测试', () => {
   it('includeV6Score: 返回 V6 评分', async () => {
     setupMockData({
       get: {
-        'v6_scores#600000': { symbol: '600000', totalScore: 75, layers: {} },
+        'v6_scores#600000': { symbol: '600000', score: 75, layers: {} },
       },
     })
 
@@ -232,9 +232,9 @@ describe('QueryBuilder.queryStock — 各维度独立测试', () => {
     setupMockData({
       byIndex: {
         'intelligent_scores@by-symbol#600000': [
-          { symbol: '600000', score: 80, scoredAt: 1000 },
-          { symbol: '600000', score: 85, scoredAt: 2000 },
-          { symbol: '600000', score: 82, scoredAt: 1500 },
+          { symbol: '600000', overallScore: 80, scoredAt: 1000 },
+          { symbol: '600000', overallScore: 85, scoredAt: 2000 },
+          { symbol: '600000', overallScore: 82, scoredAt: 1500 },
         ],
       },
     })
@@ -294,8 +294,8 @@ describe('QueryBuilder.queryStock — 各维度独立测试', () => {
       },
       byIndex: {
         'industry_scores@by-code#I01': [
-          { code: 'I01', score: 70, scoredAt: 1000 },
-          { code: 'I01', score: 75, scoredAt: 2000 },
+          { code: 'I01', overallScore: 70, scoredAt: 1000 },
+          { code: 'I01', overallScore: 75, scoredAt: 2000 },
         ],
       },
     })
