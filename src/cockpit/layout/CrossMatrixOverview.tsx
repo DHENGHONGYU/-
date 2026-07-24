@@ -27,6 +27,8 @@ import type { WidgetDomain, WidgetPerspective } from '@/types/modules/widget.typ
 export interface CrossMatrixOverviewProps {
   /** 域×视角的 Widget 计数，key 格式: "domain:perspective" */
   matrixCounts: Map<string, number>
+  /** 域×视角的 Widget 标题列表，key 格式: "domain:perspective"（用于单元格 tooltip） */
+  matrixTitles: Map<string, string[]>
   /** 当前选中的域 */
   activeDomain: WidgetDomain
   /** 当前选中的视角 */
@@ -58,6 +60,7 @@ function getCellIntensity(count: number): string {
  */
 export function CrossMatrixOverview({
   matrixCounts,
+  matrixTitles,
   activeDomain,
   activePerspective,
   onCellClick,
@@ -107,6 +110,7 @@ export function CrossMatrixOverview({
             key={domain.id}
             domain={domain}
             matrixCounts={matrixCounts}
+            matrixTitles={matrixTitles}
             isActiveRow={activeDomain === domain.id}
             activePerspective={activePerspective}
             onCellClick={onCellClick}
@@ -141,6 +145,7 @@ export function CrossMatrixOverview({
 interface FragmentRowProps {
   domain: { id: WidgetDomain; label: string; icon: string }
   matrixCounts: Map<string, number>
+  matrixTitles: Map<string, string[]>
   isActiveRow: boolean
   activePerspective: WidgetPerspective
   onCellClick: (domain: WidgetDomain, perspective: WidgetPerspective) => void
@@ -149,6 +154,7 @@ interface FragmentRowProps {
 function FragmentRow({
   domain,
   matrixCounts,
+  matrixTitles,
   isActiveRow,
   activePerspective,
   onCellClick,
@@ -170,7 +176,12 @@ function FragmentRow({
       {COCKPIT_CROSS_PERSPECTIVES.map((p) => {
         const key = `${domain.id}:${p.id}`
         const count = matrixCounts.get(key) || 0
+        const titles = matrixTitles.get(key) ?? []
         const isActiveCell = isActiveRow && activePerspective === p.id
+        const tooltip =
+          count > 0
+            ? `${domain.label} × ${p.label}：${count} 个 Widget\n${titles.join('、')}`
+            : `${domain.label} × ${p.label}：暂无 Widget`
 
         return (
           <button
@@ -178,9 +189,11 @@ function FragmentRow({
             type="button"
             disabled={count === 0}
             aria-label={`${domain.label} × ${p.label}：${count} 个 Widget`}
+            title={tooltip}
             onClick={() => onCellClick(domain.id, p.id)}
             className={cn(
               'flex flex-col items-center justify-center rounded-md py-4 transition-all',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
               getCellIntensity(count),
               isActiveCell && 'ring-2 ring-primary ring-offset-1',
               count > 0 && 'cursor-pointer',
