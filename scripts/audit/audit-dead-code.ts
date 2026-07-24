@@ -1,13 +1,24 @@
 #!/usr/bin/env tsx
 /**
  * audit-dead-code.ts
- * 死代码/空壳/路由一致性/未使用组件扫描器 v3.4（白盒/透明管道）
+ * 死代码/空壳/路由一致性/未使用组件扫描器 v4.0（白盒/透明管道）
  *
  * 检查目标：
  * 1. src/ 下是否存在空函数、空组件、仅返回 null 的组件。
  * 2. src/config/routes.ts 中注册的路由是否对应真实存在的页面文件。
  * 3. pages/ 下是否存在未被任何路由或 App 分发器注册的页面文件（仅提示）。
  * 4. src/components/ 下是否存在未被任何文件引用的组件（仅提示，v3.4 新增）。
+ * 5. 组件命名冲突检测：不同目录下是否存在同名导出组件（v4.0 新增）。
+ *
+ * v4.0 改造（2026-07-25）：
+ * - 新增 --staged / --diff 增量零容忍模式：暂存区新组件零引用 → violation(exit 1)
+ * - 新增组件级引用计数：每个未使用组件带 refCount，summary 带 componentRefCounts 映射
+ * - 新增组件命名冲突检测：扫描默认导出/具名导出的重名组件（name-collision warning）
+ * - 死代码审计闭环：增量零容忍 + 存量 warning + 季度清理 SOP
+ *
+ * v3.4 新增：未使用组件扫描
+ * - 扫描 src/components/ 下所有 .tsx 组件文件，检查是否被项目中其他文件引用
+ * - 检测策略：导入路径解析 + JSX 标签名兜底扫描
  *
  * v3.1 改造（2026-07-06）：
  * - 新增动态导入全量扫描：覆盖 React.lazy / lazy() / () => import() / import() 四种模式
@@ -23,9 +34,9 @@
  * - stdout 输出 JSON 数据流（机器可读）
  * - stderr 输出诊断日志 + 人类可读报告
  * - 持久化报告到 docs/reports/audit/audit-dead-code-{timestamp}.json
- * - 支持 CLI 参数：--json / --quiet / --output / --no-persist
+ * - 支持 CLI 参数：--json / --quiet / --output / --no-persist / --staged / --diff
  * - 测试可直接 import scan() 验证 Report 对象，无需解析字符串
- * - 退出码语义：路由文件缺失=violation(exit 1)，空函数/未注册页面=warning(exit 0)
+ * - 退出码语义：路由文件缺失+增量零引用=violation(exit 1)，其他=warning(exit 0)
  *
  * v2.0.0 路由架构说明：
  *   routes.ts → PortalShell → App 分发器（AnalysisApp/TradingApp/...）→ React.lazy(页面)
@@ -40,7 +51,7 @@
  * - stdout：JSON 数据流（AuditReport 结构）
  * - stderr：诊断日志 + 人类可读报告
  * - 文件：docs/reports/audit/audit-dead-code-{timestamp}.json
- * - 退出码：0=无违规, 1=有违规(路由文件缺失), 2=执行错误
+ * - 退出码：0=无违规, 1=有违规(路由文件缺失/增量零引用), 2=执行错误
  */
 
 import * as fs from 'node:fs'
@@ -58,6 +69,10 @@ export interface Issue {
   type: string
   message: string
   context: string
+  /** v4.0 新增：组件引用次数（仅未使用组件 issue 有值） */
+  refCount?: number
+  /** v4.0 新增：命名冲突文件路径列表（仅 name-collision issue 有值） */
+  collisionFiles?: string[]
 }
 
 /** 死代码/路由一致性审计报告 */
@@ -91,6 +106,14 @@ export interface Report extends AuditReport {
     totalComponents: number
     /** v3.4 新增：未使用组件数（无任何引用的组件文件） */
     unusedComponents: number
+    /** v4.0 新增：组件引用次数映射表（组件路径 → 引用次数） */
+    componentRefCounts: Record<string, number>
+    /** v4.0 新增：命名冲突组件组数 */
+    nameCollisions: number
+    /** v4.0 新增：增量零容忍模式下暂存区违规组件数（exit 1 的触发源之一） */
+    stagedUnusedComponents?: number
+    /** v4.0 新增：是否启用 --staged / --diff 增量模式 */
+    diffMode?: boolean
   }
 }
 
@@ -546,6 +569,53 @@ function isExcludedFromPageAudit(relativePath: string): boolean {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// v4.0 新增：扫描选项与 Git 增量模式支持
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/** 扫描选项（v4.0 新增，支持增量模式等高级特性） */
+export interface ScanOptions {
+  /**
+   * --staged / --diff：增量零容忍模式
+   * - true：只检查 git 暂存区中新增/修改的组件文件
+   * - 暂存区中的新组件零引用 → violation（exit 1）
+   * - 存量组件零引用 → 保持 warning 级别
+   */
+  staged?: boolean
+}
+
+/**
+ * 获取 git 暂存区中的文件列表（新增/修改的文件）。
+ * 通过 `git diff --cached --name-only` 实现。
+ * 返回相对于项目根目录的路径（使用 / 分隔符）。
+ */
+function getStagedFiles(): string[] {
+  try {
+    const { execSync } = require('node:child_process') as typeof import('node:child_process')
+    const output = execSync('git diff --cached --name-only', {
+      cwd: ROOT,
+      encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'pipe'],
+    }) as string
+    return output
+      .trim()
+      .split('\n')
+      .map((line) => line.trim().replace(/\\/g, '/'))
+      .filter((line) => line.length > 0)
+  } catch {
+    // git 命令失败（非 git 仓库、无 git 命令等），返回空列表
+    return []
+  }
+}
+
+/**
+ * 判断暂存区中的文件是否为新增组件文件（src/components/ 下的 .tsx 文件）。
+ * 同时包含新增（A）和修改（M）的文件，因为修改也可能引入死代码风险。
+ */
+function isStagedComponentFile(relativePath: string): boolean {
+  return relativePath.startsWith('src/components/') && relativePath.endsWith('.tsx')
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // v3.4 新增：未使用组件扫描
 // 扫描 src/components/ 下所有组件文件，检查是否被项目中其他文件引用
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -724,22 +794,39 @@ function isComponentUsedInJSX(componentName: string, allSourceFiles: string[]): 
 }
 
 /**
- * 扫描未使用的组件。
+ * 未使用组件扫描结果（v4.0 扩展，带引用计数）
+ */
+interface UnusedComponentsScanResult {
+  /** 未使用组件的 issue 列表 */
+  issues: Issue[]
+  /** 组件引用次数映射表（组件路径 → 引用次数），覆盖所有扫描到的组件 */
+  refCounts: Record<string, number>
+}
+
+/**
+ * 扫描未使用的组件（v4.0 增强版，带引用计数和增量模式支持）。
  *
  * 检测策略：
  * 1. 收集 src/components/ 下所有 .tsx 组件文件
  * 2. 遍历全项目所有 .ts/.tsx 文件，提取导入路径
- * 3. 将导入路径解析为组件文件路径，建立"被引用组件"集合
+ * 3. 将导入路径解析为组件文件路径，建立"被引用组件"集合，并统计引用次数
  * 4. 对于未被导入路径直接命中的组件，额外用 JSX 标签名扫描兜底
- * 5. 输出未使用组件列表
+ * 5. 输出未使用组件列表（带 refCount）
+ *
+ * v4.0 新增：
+ * - 组件引用计数统计（refCount）
+ * - --staged 增量模式：暂存区零引用组件升级为 violation
  *
  * 注意：
  * - 这是启发式检测，可能存在误判（如通过字符串动态加载、MCP 服务端渲染等）
- * - 仅作为提示，不作为硬性违规（exit code 不受影响）
+ * - 默认仅作为提示，不作为硬性违规（exit code 不受影响）
+ * - --staged 模式下，暂存区中的零引用新组件会触发 violation
+ *
+ * @param options 扫描选项
  */
-function scanUnusedComponents(): Issue[] {
+function scanUnusedComponents(options: ScanOptions = {}): UnusedComponentsScanResult {
   const components = collectComponentFiles()
-  if (components.length === 0) return []
+  if (components.length === 0) return { issues: [], refCounts: {} }
 
   // 收集所有源文件（用于导入分析和 JSX 扫描）
   const allSourceFiles = collectFiles(SRC).filter(
@@ -750,15 +837,40 @@ function scanUnusedComponents(): Issue[] {
       !f.includes('__tests__/'),
   )
 
-  // 构建"被引用的组件文件"集合（相对 src/ 路径，不含扩展名）
-  const referencedComponents = new Set<string>()
+  // 构建"被引用的组件文件"映射（相对 src/ 路径，不含扩展名 → 引用次数）
+  const refCounts: Record<string, number> = {}
+
+  // 初始化所有组件引用计数为 0
+  for (const comp of components) {
+    refCounts[comp.filePath] = 0
+  }
 
   for (const file of allSourceFiles) {
     const imports = extractImportsFromFile(file)
+    const seenInThisFile = new Set<string>() // 同一文件内同一组件只计一次
     for (const imp of imports) {
       const resolved = resolveComponentImport(imp, file)
       if (resolved && resolved.startsWith('components/')) {
-        referencedComponents.add(resolved)
+        if (!seenInThisFile.has(resolved)) {
+          seenInThisFile.add(resolved)
+          refCounts[resolved] = (refCounts[resolved] ?? 0) + 1
+        }
+      }
+    }
+  }
+
+  // 获取暂存区文件（仅 staged 模式需要）
+  const stagedFiles = options.staged ? new Set(getStagedFiles()) : null
+  const stagedComponentPaths = new Set<string>()
+  if (stagedFiles) {
+    for (const f of stagedFiles) {
+      if (isStagedComponentFile(f)) {
+        // 转换为相对 src/ 且不带扩展名的路径
+        const compPath = f
+          .replace(/^src\//, '')
+          .replace(/\.tsx$/, '')
+          .replace(/\.ts$/, '')
+        stagedComponentPaths.add(compPath)
       }
     }
   }
@@ -767,30 +879,166 @@ function scanUnusedComponents(): Issue[] {
   const issues: Issue[] = []
   for (const comp of components) {
     const compPath = comp.filePath // 如 components/atoms/Button
+    const refCount = refCounts[compPath] ?? 0
 
     // 1. 检查是否被导入路径直接命中
-    if (referencedComponents.has(compPath)) continue
+    if (refCount > 0) continue
 
     // 2. 对于非 index 文件，检查是否通过父目录 index 桶被引用
     if (!comp.isIndex) {
       const parentDir = path.dirname(compPath)
-      if (referencedComponents.has(parentDir)) continue
+      if ((refCounts[parentDir] ?? 0) > 0) continue
       // 也可能是 components/atoms/index 这种桶
       const grandParentDir = path.dirname(parentDir)
-      if (referencedComponents.has(grandParentDir)) continue
+      if ((refCounts[grandParentDir] ?? 0) > 0) continue
     }
 
     // 3. JSX 标签名兜底扫描（防止桶导出漏判）
     if (isComponentUsedInJSX(comp.componentName, allSourceFiles)) continue
 
-    // 未被引用，报告为警告
+    // 未被引用，报告为警告（或 staged 模式下为违规）
+    const isStaged = stagedComponentPaths.has(compPath)
+    const issueType = options.staged && isStaged ? '增量零引用组件' : '未使用组件'
+    const stagedNote = isStaged ? ' [暂存区增量零容忍]' : ''
+
     issues.push({
       file: `src/${compPath}.tsx`,
       line: 1,
-      type: '未使用组件',
-      message: `组件 ${comp.componentName} 未在项目中找到任何引用（导入或 JSX 使用）`,
+      type: issueType,
+      message: `组件 ${comp.componentName} 未在项目中找到任何引用（导入或 JSX 使用）${stagedNote}`,
       context: `src/${compPath}.tsx`,
+      refCount: 0,
     })
+  }
+
+  return { issues, refCounts }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// v4.0 新增：组件命名冲突检测
+// 扫描 src/components/ 下所有 .tsx 组件的默认导出名 / 具名导出组件名
+// 检测是否有重名组件（不同目录下同名）
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * 从组件文件中提取导出的组件名。
+ * 包括：
+ * 1. 默认导出名（export default Xxx / export default function Xxx()）
+ * 2. 具名导出的组件（export function Xxx() / export const Xxx = ）
+ *
+ * 只提取看起来像组件的名称（PascalCase，首字母大写）。
+ */
+function extractExportedComponentNames(filePath: string): string[] {
+  const names: string[] = []
+  try {
+    const content = fs.readFileSync(filePath, 'utf-8')
+    const lines = content.split('\n')
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]!
+      const trimmed = line.trim()
+
+      // 跳过注释行
+      if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) {
+        continue
+      }
+
+      // 默认导出：export default Xxx
+      // 匹配：export default ComponentName
+      const defaultExportMatch = trimmed.match(/^export\s+default\s+function\s+([A-Z]\w*)/)
+      if (defaultExportMatch) {
+        names.push(defaultExportMatch[1]!)
+        continue
+      }
+
+      // 默认导出：export default Xxx（变量/类）
+      const defaultVarMatch = trimmed.match(/^export\s+default\s+([A-Z]\w*)\s*[;=]/)
+      if (defaultVarMatch) {
+        names.push(defaultVarMatch[1]!)
+        continue
+      }
+
+      // 默认导出：export default memo(Xxx) / forwardRef(Xxx) 等
+      const defaultWrappedMatch = trimmed.match(
+        /^export\s+default\s+(?:memo|forwardRef|observer|connect)\s*\(\s*([A-Z]\w*)/,
+      )
+      if (defaultWrappedMatch) {
+        names.push(defaultWrappedMatch[1]!)
+        continue
+      }
+
+      // 具名导出函数组件：export function Xxx()
+      const namedFuncMatch = trimmed.match(/^export\s+function\s+([A-Z]\w*)\s*\(/)
+      if (namedFuncMatch) {
+        names.push(namedFuncMatch[1]!)
+        continue
+      }
+
+      // 具名导出变量组件：export const Xxx =
+      const namedConstMatch = trimmed.match(/^export\s+const\s+([A-Z]\w*)\s*=/)
+      if (namedConstMatch) {
+        names.push(namedConstMatch[1]!)
+        continue
+      }
+    }
+  } catch {
+    // 文件读取失败，跳过
+  }
+  return names
+}
+
+/**
+ * 扫描组件命名冲突。
+ *
+ * 检测策略：
+ * 1. 收集 src/components/ 下所有 .tsx 组件文件
+ * 2. 从每个文件中提取导出的组件名（默认导出 + 具名导出）
+ * 3. 按组件名分组，发现同一组件名出现在不同文件中 → 命名冲突
+ * 4. 同一文件内的重名导出不算冲突（TypeScript 编译器会自己报错）
+ *
+ * @returns 命名冲突 issue 列表（warning 级别）
+ */
+function scanNameCollisions(): Issue[] {
+  const components = collectComponentFiles()
+  if (components.length === 0) return []
+
+  // 组件名 → 文件路径列表的映射
+  const nameToFiles = new Map<string, string[]>()
+
+  for (const comp of components) {
+    const exportedNames = extractExportedComponentNames(comp.absolutePath)
+    // 如果文件没有显式导出的组件名，使用从文件名推导的组件名作为兜底
+    const names = exportedNames.length > 0 ? exportedNames : [comp.componentName]
+
+    for (const name of names) {
+      // 过滤掉非组件名（太短或不是 PascalCase）
+      if (name.length < 3) continue
+      if (name[0]! < 'A' || name[0]! > 'Z') continue
+
+      const relPath = `src/${comp.filePath}.tsx`
+      if (!nameToFiles.has(name)) {
+        nameToFiles.set(name, [])
+      }
+      const files = nameToFiles.get(name)!
+      if (!files.includes(relPath)) {
+        files.push(relPath)
+      }
+    }
+  }
+
+  // 找出重名的组件（出现在 2 个或更多文件中）
+  const issues: Issue[] = []
+  for (const [name, files] of nameToFiles) {
+    if (files.length >= 2) {
+      issues.push({
+        file: files[0]!,
+        line: 1,
+        type: 'name-collision',
+        message: `组件名 "${name}" 在 ${files.length} 个文件中重复定义，可能导致导入混淆`,
+        context: files.join(', '),
+        collisionFiles: files,
+      })
+    }
   }
 
   return issues
@@ -878,8 +1126,11 @@ function scanRouteConsistency(): Issue[] {
   return issues
 }
 
-/** 扫描函数（白盒导出，供测试和外部调用） */
-export function scan(): Report {
+/** 扫描函数（白盒导出，供测试和外部调用）
+ *
+ * v4.0 新增：支持 ScanOptions，可启用 --staged 增量零容忍模式
+ */
+export function scan(options: ScanOptions = {}): Report {
   const files = collectFiles(SRC)
   const issues: Issue[] = []
 
@@ -889,12 +1140,23 @@ export function scan(): Report {
 
   issues.push(...scanRouteConsistency())
 
-  // v3.4 新增：未使用组件扫描
-  issues.push(...scanUnusedComponents())
+  // v3.4 新增：未使用组件扫描（v4.0 增强：带引用计数和增量模式）
+  const unusedResult = scanUnusedComponents(options)
+  issues.push(...unusedResult.issues)
 
-  // 退出码语义：路由文件缺失=violation(exit 1)，其他=warning(exit 0)
-  const violations = issues.filter((i) => i.type === '路由文件缺失')
-  const warnings = issues.filter((i) => i.type !== '路由文件缺失')
+  // v4.0 新增：组件命名冲突检测
+  issues.push(...scanNameCollisions())
+
+  // 退出码语义：
+  // - 路由文件缺失 = violation (exit 1)
+  // - 增量零引用组件（--staged 模式下）= violation (exit 1)
+  // - 其他（空函数、存量未使用组件、命名冲突等）= warning (exit 0)
+  const violations = issues.filter(
+    (i) => i.type === '路由文件缺失' || i.type === '增量零引用组件',
+  )
+  const warnings = issues.filter(
+    (i) => i.type !== '路由文件缺失' && i.type !== '增量零引用组件',
+  )
 
   const routeImports = parseRoutes().length
   const appImports = collectAppDispatcherImports().size
@@ -909,6 +1171,8 @@ export function scan(): Report {
   // v3.4 新增：组件统计
   const componentFiles = collectComponentFiles()
   const unusedComponents = issues.filter((i) => i.type === '未使用组件').length
+  const stagedUnusedComponents = issues.filter((i) => i.type === '增量零引用组件').length
+  const nameCollisions = issues.filter((i) => i.type === 'name-collision').length
 
   return {
     issues,
@@ -919,7 +1183,7 @@ export function scan(): Report {
       totalViolations: violations.length,
       totalWarnings: warnings.length,
       emptyFunctions: issues.filter((i) => i.type === '空函数' || i.type === '空组件').length,
-      missingRouteFiles: violations.length,
+      missingRouteFiles: violations.filter((i) => i.type === '路由文件缺失').length,
       unregisteredPages: issues.filter((i) => i.type === '未注册页面').length,
       routeImports,
       appImports,
@@ -929,6 +1193,10 @@ export function scan(): Report {
       dynamicRegisteredPages,
       totalComponents: componentFiles.length,
       unusedComponents,
+      componentRefCounts: unusedResult.refCounts,
+      nameCollisions,
+      stagedUnusedComponents,
+      diffMode: options.staged ?? false,
     },
   }
 }
@@ -938,9 +1206,16 @@ export function formatReport(report: Report): string {
   const lines: string[] = []
 
   lines.push('╔════════════════════════════════════════════════════════════╗')
-  lines.push('║  死代码/路由一致性/未使用组件审计 — audit-dead-code.ts v3.4 ║')
+  lines.push('║  死代码/路由一致性/未使用组件审计 — audit-dead-code.ts v4.0 ║')
   lines.push('╚════════════════════════════════════════════════════════════╝')
   lines.push('')
+
+  // v4.0 新增：增量模式标识
+  if (report.summary.diffMode) {
+    lines.push(colorize('📌 增量模式（--staged）：暂存区新组件零引用将触发违规', 'yellow'))
+    lines.push(`   暂存区零引用组件数: ${report.summary.stagedUnusedComponents ?? 0}`)
+    lines.push('')
+  }
 
   if (report.issues.length === 0) {
     lines.push(colorize('✅ 未发现空壳函数/组件、路由不一致或未使用组件', 'green'))
@@ -953,9 +1228,23 @@ export function formatReport(report: Report): string {
     )
     lines.push('')
     for (const issue of report.issues) {
-      lines.push(`  ${issue.file}:${issue.line} [${issue.type}]`)
+      const severity = issue.type === '路由文件缺失' || issue.type === '增量零引用组件'
+        ? colorize('VIOLATION', 'red')
+        : colorize('WARNING', 'yellow')
+      lines.push(`  ${issue.file}:${issue.line} [${issue.type}] ${severity}`)
       lines.push(`    ${issue.message}`)
       lines.push(`    ${issue.context}`)
+      // v4.0 新增：引用计数显示
+      if (issue.refCount !== undefined) {
+        lines.push(`    refCount: ${issue.refCount}`)
+      }
+      // v4.0 新增：命名冲突文件列表
+      if (issue.collisionFiles && issue.collisionFiles.length > 0) {
+        lines.push(`    冲突文件:`)
+        for (const f of issue.collisionFiles) {
+          lines.push(`      - ${f}`)
+        }
+      }
       lines.push('')
     }
   }
@@ -968,6 +1257,12 @@ export function formatReport(report: Report): string {
   lines.push(
     `未使用组件: ${report.summary.unusedComponents}/${report.summary.totalComponents}（仅提示，v3.4）`,
   )
+  // v4.0 新增：命名冲突统计
+  lines.push(`命名冲突: ${report.summary.nameCollisions} 组（仅提示，v4.0）`)
+  // v4.0 新增：增量零引用统计
+  if (report.summary.diffMode) {
+    lines.push(`增量零引用: ${report.summary.stagedUnusedComponents ?? 0} 个（违规，触发 exit 1）`)
+  }
   lines.push('────────────────────────────────────────────────────────────')
   lines.push(
     `注册源统计: routes.ts(${report.summary.routeImports}) + apps/(${report.summary.appImports}) + portal/(${report.summary.portalImports})`,
@@ -981,10 +1276,27 @@ export function formatReport(report: Report): string {
   lines.push('────────────────────────────────────────────────────────────')
   lines.push('未使用组件检测策略: 导入路径解析 + JSX 标签名兜底扫描')
   lines.push('注意: 未使用组件为启发式检测，可能存在误判（动态加载/桶导出等）')
+
+  // v4.0 新增：低引用组件 Top 10（濒临僵尸组件预警）
+  const refCounts = report.summary.componentRefCounts
+  if (refCounts && Object.keys(refCounts).length > 0) {
+    const lowRefComps = Object.entries(refCounts)
+      .filter(([, count]) => count > 0 && count <= 2)
+      .sort((a, b) => a[1] - b[1])
+      .slice(0, 10)
+    if (lowRefComps.length > 0) {
+      lines.push('────────────────────────────────────────────────────────────')
+      lines.push('⚠️  低引用组件 Top 10（引用次数 ≤ 2，濒临僵尸预警）:')
+      for (const [compPath, count] of lowRefComps) {
+        lines.push(`   ${count} 引用 → src/${compPath}.tsx`)
+      }
+    }
+  }
+
   lines.push('────────────────────────────────────────────────────────────')
 
-  if (report.summary.missingRouteFiles > 0) {
-    lines.push(colorize('❌ 存在路由文件缺失，请补全组件或清理路由表', 'red'))
+  if (report.violations.length > 0) {
+    lines.push(colorize('❌ 存在违规项，请修复后重试', 'red'))
   } else if (report.issues.length > 0) {
     lines.push(colorize('⚠️  存在警告项，请酌情清理或确认', 'yellow'))
   }
@@ -994,10 +1306,16 @@ export function formatReport(report: Report): string {
 
 /** CLI 入口（编排：scan → stdout JSON → stderr 诊断 → 持久化 → exit） */
 export function main(): void {
+  // 解析脚本专属 CLI 参数（--staged / --diff）
+  const argv = process.argv.slice(2)
+  const scanOptions: ScanOptions = {
+    staged: argv.includes('--staged') || argv.includes('--diff'),
+  }
+
   const result = runAuditPipeline<Report>({
     scriptName: 'audit-dead-code',
-    version: '3.4',
-    scanFn: scan,
+    version: '4.0',
+    scanFn: () => scan(scanOptions),
     formatReportFn: formatReport,
   })
   process.exit(result.exitCode)

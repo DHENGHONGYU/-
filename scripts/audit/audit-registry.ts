@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * audit-registry.ts
- * 四层注册表一致性审计脚本 v1.0
+ * 四层注册表一致性审计脚本 v1.1
  *
  * 检查目标：
  * 1. STORE_REGISTRY 中每个条目的 filePath 对应文件是否存在
@@ -10,8 +10,11 @@
  * 4. 反向检查：src/store/ 下所有 *Store.ts 文件是否都在 STORE_REGISTRY 中注册
  * 5. 反向检查：src/services/ 下所有 *Service.ts 文件是否都在 SERVICE_REGISTRY 中注册
  * 6. 反向检查：src/components/ 下所有业务组件文件是否都在 COMPONENT_REGISTRY 中注册
+ * 7. 组件注册表质量：active 组件必须声明 consumers（warning）
+ * 8. 组件注册表质量：deprecated 组件必须填写 supersededBy 和 removalTarget（warning）
+ * 9. 组件注册表质量：wip 组件统计（信息输出）
  *
- * 输出：违规列表 + 汇总；退出码 0 表示通过，1 表示发现问题。
+ * 输出：违规列表 + 汇总；退出码 0 表示通过，1 表示发现问题（warning 不影响退出码）。
  *
  * 使用示例：
  *   npm run audit:registry
@@ -45,6 +48,21 @@ interface RegistryEntry {
   pathKey: string    // 'filePath' | 'importPath'
 }
 
+interface ComponentEntryRaw {
+  name: string
+  status: string
+  hasConsumers: boolean
+  consumersEmpty: boolean
+  hasSupersededBy: boolean
+  hasRemovalTarget: boolean
+}
+
+interface ComponentAuditResult {
+  missingConsumers: Array<{ name: string }>      // active 组件 consumers 为空
+  incompleteDeprecation: Array<{ name: string; missing: string[] }>  // deprecated 组件缺字段
+  wipComponents: string[]                         // wip 组件列表
+}
+
 interface AuditResult {
   label: string
   registryExists: boolean
@@ -53,6 +71,93 @@ interface AuditResult {
   missingFiles: Array<{ id: string; path: string; pathKey: string }>
   /** 反向检查：磁盘上的文件未在注册表中注册 */
   unregistered: string[]
+  /** 组件注册表专属检查 */
+  componentAudit?: ComponentAuditResult
+}
+
+// ============================================================
+// 组件注册表专属：解析 status / consumers / deprecationMeta
+// ============================================================
+
+/**
+ * 从组件注册表文件中解析每个条目的 status、consumers、deprecationMeta 信息。
+ * 基于正则逐段匹配每个 { name: ..., ... } 对象块。
+ */
+function parseComponentEntries(content: string): ComponentEntryRaw[] {
+  const entries: ComponentEntryRaw[] = []
+
+  // 匹配每个组件对象块：从 { name: 到最近的 },
+  // 使用非贪婪匹配，兼容多行
+  const entryRegex = /\{\s*name:\s*['"]([^'"]+)['"][^}]*\}/g
+  let m: RegExpExecArray | null
+
+  while ((m = entryRegex.exec(content)) !== null) {
+    const block = m[0]
+    const name = m[1]
+
+    // 解析 status
+    const statusMatch = /status:\s*['"]([^'"]+)['"]/.exec(block)
+    const status = statusMatch ? statusMatch[1] : 'active'
+
+    // 解析 consumers：判断字段是否存在，以及数组是否为空
+    const consumersMatch = /consumers:\s*\[([^\]]*)\]/.exec(block)
+    const hasConsumers = consumersMatch !== null
+    const consumersEmpty = consumersMatch ? consumersMatch[1].trim() === '' : true
+
+    // 解析 deprecationMeta 中的 supersededBy 和 removalTarget
+    const deprecationMetaMatch = /deprecationMeta:\s*\{([^}]*)\}/.exec(block)
+    const hasSupersededBy = deprecationMetaMatch ? /supersededBy:/.test(deprecationMetaMatch[1]) : false
+    const hasRemovalTarget = deprecationMetaMatch ? /removalTarget:/.test(deprecationMetaMatch[1]) : false
+
+    entries.push({
+      name,
+      status,
+      hasConsumers,
+      consumersEmpty,
+      hasSupersededBy,
+      hasRemovalTarget,
+    })
+  }
+
+  return entries
+}
+
+/**
+ * 组件注册表质量审计：
+ * 1. active 组件必须有非空 consumers（missing-consumers，warning）
+ * 2. deprecated 组件必须有 supersededBy 和 removalTarget（incomplete-deprecation，warning）
+ * 3. wip 组件统计（信息输出，不违规）
+ */
+function auditComponentRegistryQuality(entries: ComponentEntryRaw[]): ComponentAuditResult {
+  const missingConsumers: Array<{ name: string }> = []
+  const incompleteDeprecation: Array<{ name: string; missing: string[] }> = []
+  const wipComponents: string[] = []
+
+  for (const entry of entries) {
+    // 1. active 组件 consumers 校验
+    if (entry.status === 'active') {
+      if (!entry.hasConsumers || entry.consumersEmpty) {
+        missingConsumers.push({ name: entry.name })
+      }
+    }
+
+    // 2. deprecated 组件完整性校验
+    if (entry.status === 'deprecated') {
+      const missing: string[] = []
+      if (!entry.hasSupersededBy) missing.push('supersededBy')
+      if (!entry.hasRemovalTarget) missing.push('removalTarget')
+      if (missing.length > 0) {
+        incompleteDeprecation.push({ name: entry.name, missing })
+      }
+    }
+
+    // 3. wip 组件统计
+    if (entry.status === 'wip') {
+      wipComponents.push(entry.name)
+    }
+  }
+
+  return { missingConsumers, incompleteDeprecation, wipComponents }
 }
 
 // ============================================================
@@ -297,7 +402,8 @@ function checkUnregisteredComponents(registeredPaths: Set<string>): string[] {
 function auditRegistry(
   registryPath: string,
   label: string,
-  reverseCheck: (ids: Set<string>) => string[]
+  reverseCheck: (ids: Set<string>) => string[],
+  isComponentRegistry: boolean = false
 ): AuditResult {
   if (!fs.existsSync(registryPath)) {
     return {
@@ -338,12 +444,20 @@ function auditRegistry(
     ? checkUnregisteredComponents(registeredPaths)
     : reverseCheck(idSet)
 
+  // 组件注册表专属质量审计
+  let componentAudit: ComponentAuditResult | undefined
+  if (isComponentRegistry) {
+    const componentEntries = parseComponentEntries(content)
+    componentAudit = auditComponentRegistryQuality(componentEntries)
+  }
+
   return {
     label,
     registryExists: true,
     totalEntries: entries.length,
     missingFiles,
     unregistered,
+    componentAudit,
   }
 }
 
@@ -353,7 +467,7 @@ function auditRegistry(
 
 function printReport(results: AuditResult[]): void {
   console.log('\n╔════════════════════════════════════════════════════════════╗')
-  console.log('║  四层注册表一致性审计 — audit-registry.ts v1.0             ║')
+  console.log('║  四层注册表一致性审计 — audit-registry.ts v1.1             ║')
   console.log('╚════════════════════════════════════════════════════════════\n')
 
   let totalIssues = 0
@@ -391,6 +505,41 @@ function printReport(results: AuditResult[]): void {
       totalIssues += result.unregistered.length
     }
 
+    // 组件注册表专属检查
+    if (result.componentAudit) {
+      const ca = result.componentAudit
+
+      // consumers 校验（warning 级别）
+      if (ca.missingConsumers.length === 0) {
+        console.log(`  ✅ consumers 校验通过：所有 active 组件均声明消费方`)
+      } else {
+        console.log(`  ⚠️  [missing-consumers] ${ca.missingConsumers.length} 个 active 组件未声明 consumers`)
+        for (const item of ca.missingConsumers) {
+          console.log(`     - ${item.name}`)
+        }
+      }
+
+      // deprecated 完整性校验（warning 级别）
+      if (ca.incompleteDeprecation.length === 0) {
+        console.log(`  ✅ deprecated 完整性校验通过`)
+      } else {
+        console.log(`  ⚠️  [incomplete-deprecation] ${ca.incompleteDeprecation.length} 个 deprecated 组件缺少必填字段`)
+        for (const item of ca.incompleteDeprecation) {
+          console.log(`     - ${item.name} (缺少: ${item.missing.join(', ')})`)
+        }
+      }
+
+      // wip 组件统计（信息输出）
+      if (ca.wipComponents.length === 0) {
+        console.log(`  ℹ️  wip 组件：0 个`)
+      } else {
+        console.log(`  ℹ️  wip 组件：${ca.wipComponents.length} 个（开发中暂未接入）`)
+        for (const name of ca.wipComponents) {
+          console.log(`     - ${name}`)
+        }
+      }
+    }
+
     console.log()
   }
 
@@ -400,6 +549,12 @@ function printReport(results: AuditResult[]): void {
   const totalEntries = existingRegistries.reduce((sum, r) => sum + r.totalEntries, 0)
   const totalMissingFiles = existingRegistries.reduce((sum, r) => sum + r.missingFiles.length, 0)
   const totalUnregistered = existingRegistries.reduce((sum, r) => sum + r.unregistered.length, 0)
+
+  // 组件注册表专属统计
+  const componentResult = results.find(r => r.componentAudit)
+  const wipComponents = componentResult?.componentAudit?.wipComponents.length ?? 0
+  const missingConsumersCount = componentResult?.componentAudit?.missingConsumers.length ?? 0
+  const incompleteDeprecationCount = componentResult?.componentAudit?.incompleteDeprecation.length ?? 0
 
   console.log('────────────────────────────────────────────────────────────')
   console.log('统计摘要')
@@ -414,6 +569,11 @@ function printReport(results: AuditResult[]): void {
   console.log(`  正向问题（文件缺失）: ${totalMissingFiles}`)
   console.log(`  反向问题（未注册）: ${totalUnregistered}`)
   console.log(`  问题总数: ${totalIssues}`)
+  if (componentResult?.componentAudit) {
+    console.log(`  wip 组件数: ${wipComponents}`)
+    console.log(`  missing-consumers 警告: ${missingConsumersCount}`)
+    console.log(`  incomplete-deprecation 警告: ${incompleteDeprecationCount}`)
+  }
   console.log('────────────────────────────────────────────────────────────\n')
 
   if (totalIssues > 0) {
@@ -444,7 +604,7 @@ function main(): void {
 
   // 3. Component 注册表
   results.push(
-    auditRegistry(COMPONENT_REGISTRY_PATH, 'Component 注册表', () => [])
+    auditRegistry(COMPONENT_REGISTRY_PATH, 'Component 注册表', () => [], true)
   )
 
   // 输出报告
