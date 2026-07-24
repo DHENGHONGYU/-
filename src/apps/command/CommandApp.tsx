@@ -2,22 +2,11 @@ import React, { useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
-import { Badge } from '@/components/atoms/Badge'
-import { Dialog, DialogContent } from '@/components/molecules/Dialog'
-import MigrationPanel from '@/components/organisms/system/MigrationPanel'
-import LogStreamPanel from '@/components/organisms/system/LogStreamPanel'
-import AgentTaskList from '@/components/organisms/system/AgentTaskList'
-import {
-  useCommandStore,
-  selectStats,
-  selectMessage,
-  selectMessageType,
-  selectMigrationOpen,
-  selectIsLoading,
-  selectIsResetting,
-} from '@/store/commandStore'
 import { getLogger } from '@/lib/logger'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import type { WidgetConfig } from '@/types/modules/widget.types'
+import EngineStatusWidget from '@/cockpit/widgets/EngineStatusWidget'
+import SystemArchitectureWidget from '@/cockpit/widgets/SystemArchitectureWidget'
+import AgentPerformanceWidget from '@/cockpit/widgets/AgentPerformanceWidget'
 import {
   Activity,
   ArrowRight,
@@ -30,6 +19,7 @@ import {
 const logger = getLogger()
 
 const ConfigApp = React.lazy(() => import('@/apps/command/ConfigApp'))
+const SystemMonitorPage = React.lazy(() => import('@/pages/command/SystemMonitorPage'))
 const ComponentShowcasePage = React.lazy(() => import('@/pages/command/showcase/ComponentShowcasePage'))
 const HealthDashboardPage = React.lazy(() => import('@/pages/command/health/HealthDashboardPage'))
 const StressOverviewPage = React.lazy(() => import('@/pages/command/test/StressOverviewPage'))
@@ -57,7 +47,7 @@ const StressOverviewPage = React.lazy(() => import('@/pages/command/test/StressO
 const BRANCH_INFO: Record<string, { branch: string; componentName: string }> = {
   '/command/hub': { branch: 'hub', componentName: 'CommandHubPage' },
   '/command/config': { branch: 'config', componentName: 'ConfigApp' },
-  '/command/monitor': { branch: 'monitor', componentName: 'SystemMonitor' },
+  '/command/monitor': { branch: 'monitor', componentName: 'SystemMonitorPage' },
   '/command/showcase': { branch: 'showcase', componentName: 'ComponentShowcasePage' },
   '/command/health': { branch: 'health', componentName: 'HealthDashboardPage' },
   '/command/test': { branch: 'stress', componentName: 'StressOverviewPage' },
@@ -74,7 +64,11 @@ function renderCommandContent(path: string): React.ReactNode {
         </React.Suspense>
       )
     case '/command/monitor':
-      return <SystemMonitor />
+      return (
+        <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载系统监控中...</div>}>
+          <SystemMonitorPage />
+        </React.Suspense>
+      )
     case '/command/showcase':
       return (
         <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载示例库中...</div>}>
@@ -94,7 +88,11 @@ function renderCommandContent(path: string): React.ReactNode {
         </React.Suspense>
       )
     default:
-      return <SystemMonitor />
+      return (
+        <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载系统监控中...</div>}>
+          <SystemMonitorPage />
+        </React.Suspense>
+      )
   }
 }
 
@@ -112,7 +110,7 @@ export default function CommandApp(): React.JSX.Element {
       logger.info('[CommandApp] 路由切换', { from: prevPath, to: path })
     }
 
-    const { branch, componentName } = BRANCH_INFO[path] ?? { branch: 'default', componentName: 'SystemMonitor' }
+    const { branch, componentName } = BRANCH_INFO[path] ?? { branch: 'default', componentName: 'SystemMonitorPage' }
 
     logger.info('[CommandApp] 渲染总控舱', {
       path,
@@ -176,6 +174,19 @@ const HUB_NAV_CARDS: HubNavCard[] = [
   },
 ]
 
+/** 为嵌入 Hub 的 Cockpit 轻量 Widget 构造最小 WidgetConfig（蓝图 Phase 2） */
+function summaryWidgetConfig(widgetId: string, title: string): WidgetConfig {
+  return {
+    instanceId: `hub-${widgetId}`,
+    widgetId,
+    size: { cols: 4, rows: 2 },
+    title,
+    settings: {},
+    visible: true,
+    collapsed: false,
+  }
+}
+
 function CommandHubPage(): React.JSX.Element {
   return (
     <div className="space-y-6">
@@ -209,113 +220,18 @@ function CommandHubPage(): React.JSX.Element {
           )
         })}
       </section>
+
+      {/* 运维摘要：从 Cockpit 移出的轻量版 Widget（蓝图 Phase 2 步骤 2.1） */}
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold tracking-tight">运维摘要</h2>
+        <div className="grid gap-4 lg:grid-cols-3">
+          <EngineStatusWidget config={summaryWidgetConfig('engineStatus', '引擎状态')} />
+          <SystemArchitectureWidget config={summaryWidgetConfig('systemArchitecture', '系统架构')} />
+          <AgentPerformanceWidget config={summaryWidgetConfig('agentPerformance', 'Agent 性能')} />
+        </div>
+      </section>
     </div>
   )
 }
 
-/**
- * 系统监控面板 — 原有的 CommandApp 主体内容
- */
-function SystemMonitor(): React.JSX.Element {
-  const stats = useCommandStore(selectStats)
-  const message = useCommandStore(selectMessage)
-  const messageType = useCommandStore(selectMessageType)
-  const migrationOpen = useCommandStore(selectMigrationOpen)
-  const isLoading = useCommandStore(selectIsLoading)
-  const isResetting = useCommandStore(selectIsResetting)
-  const loadStats = useCommandStore((state) => state.loadStats)
-  const resetAll = useCommandStore((state) => state.resetAll)
-  const setMigrationOpen = useCommandStore((state) => state.setMigrationOpen)
 
-  const handleReset = async (): Promise<void> => {
-    if (!confirm('确定要清空所有数据吗？此操作不可恢复。')) return
-    await resetAll()
-  }
-
-  // 挂载时自动加载统计；loadStats 由 zustand 维持稳定引用，可安全用作依赖
-  useEffect(() => {
-    void loadStats()
-  }, [loadStats])
-
-  const messageClass =
-    messageType === 'error'
-      ? 'text-destructive'
-      : messageType === 'success'
-        ? COLOR_TOKENS.success.tailwind
-        : 'text-muted-foreground'
-
-  if (isLoading && !stats) {
-    return (
-      <div className="space-y-4 p-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>总控舱 · 系统监控</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-32 animate-pulse rounded-md bg-muted" />
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  return (
-    <div className="space-y-4 p-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>总控舱 · 系统监控</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex gap-2">
-            <Button variant="secondary" size="sm" onClick={() => void loadStats()} disabled={isLoading}>
-              {isLoading ? '加载中...' : '刷新统计'}
-            </Button>
-            <Button variant="danger" size="sm" onClick={() => void handleReset()} disabled={isResetting}>
-              {isResetting ? '重置中...' : '重置数据'}
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => setMigrationOpen(true)}>
-              V6 迁移
-            </Button>
-          </div>
-          {message && <p className={`text-sm ${messageClass}`}>{message}</p>}
-          {stats && (
-            <div className="grid gap-2 sm:grid-cols-3">
-              {Object.entries(stats).map(([key, value]) => (
-                <div key={key} className="rounded-md border p-3 text-center">
-                  <p className="text-2xl font-bold">{value}</p>
-                  <Badge variant="outline">{key}</Badge>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* 智能体任务列表 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>智能体任务队列</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <AgentTaskList />
-        </CardContent>
-      </Card>
-
-      {/* 系统日志流 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>系统日志流</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <LogStreamPanel />
-        </CardContent>
-      </Card>
-
-      <Dialog open={migrationOpen} onOpenChange={setMigrationOpen}>
-        <DialogContent showCloseButton={false}>
-          <MigrationPanel />
-        </DialogContent>
-      </Dialog>
-    </div>
-  )
-}
