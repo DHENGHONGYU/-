@@ -110,6 +110,21 @@ export const EVENT_NAMES = {
   WATCHLIST_TIER_UPGRADE: 'watchlist:tier-upgrade',
   /** 策略报告生成完成 */
   STRATEGY_REPORT_GENERATED: 'strategy:report:generated',
+  // ---- P2 编排器扩展事件 ----
+  /** 交易执行完成 */
+  TRADE_ACTION_EXECUTED: 'trade:action:executed',
+  /** 择时分析完成 */
+  TIMELINESS_ANALYSIS_COMPLETED: 'timeliness:analysis:completed',
+  /** 周线复盘完成 */
+  WEEKLY_REVIEW_COMPLETED: 'weekly:review:completed',
+  /** 行情报价更新 */
+  MARKET_QUOTE_UPDATE: 'market:quote:update',
+  /** 波动预警 */
+  VOLATILITY_ALERT: 'volatility:alert',
+  /** 波动严重预警 */
+  VOLATILITY_CRITICAL: 'volatility:critical',
+  /** 筹码异动检测 */
+  CHIP_ANOMALY_DETECTED: 'chip:anomaly:detected',
 } as const
 
 export type EventName = (typeof EVENT_NAMES)[keyof typeof EVENT_NAMES]
