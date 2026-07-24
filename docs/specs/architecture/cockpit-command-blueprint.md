@@ -560,6 +560,19 @@ export const COCKPIT_LAYOUT = {
 
 ---
 
+### 9.4 Phase 3：纵横交叉布局体验打磨
+
+| 步骤 | 操作 | 涉及文件 | 改动类型 | 状态 |
+|------|------|---------|---------|------|
+| 3.1 | 矩阵切换按钮、业务域 Rail 按钮、矩阵单元格按钮补充 `focus-visible:ring` 焦点环 | `CockpitCrossLayout.tsx`、`CrossMatrixOverview.tsx` | a11y 合规 | ✅ 已完成 |
+| 3.2 | 矩阵切换按钮补 `aria-pressed` 状态 | `CockpitCrossLayout.tsx` | a11y | ✅ 已完成 |
+| 3.3 | 矩阵单元格新增原生 `title` tooltip，列出交叉点的 Widget 名称 | `CrossMatrixOverview.tsx` + `CockpitCrossLayout.tsx`（下传 `matrixTitles`） | 体验提升 | ✅ 已完成 |
+| 3.4 | 内容区冗余 inline `gap` 清理（改 `space-y-3`） | `CockpitCrossLayout.tsx` | 清理 | ✅ 已完成 |
+
+**验收**：tsc:prod 0 错误；audit:layers 0 违规；CockpitShell.test.tsx 14/14 通过；eslint 0 error（仅存文件既有 style warning，与全文 `||`/`?.` 风格一致）。提交 `37880ac`。
+
+> **说明（2026-07-24）**：移动端降级（`<768px` 纵向堆叠）已在 Phase 1 步骤 1.4 于 `CockpitShell.tsx` 通过 `useMediaQuery` 落地，非 Phase 3 新增；本次未改动。矩阵空交叉点（`研究全景/市场背景/AI决策 × 风控`）因对应视角 Tab 与矩阵单元格均 `disabled`，不可达，空态兜底保留为安全网。
+
 ## 10. 架构决策记录（ADR-010）
 
 > 本文为 ADR-010 摘要，完整归档见 `docs/specs/architecture/adr-010-cockpit-command-cross-layout.md`（V9-ADR-010）。
