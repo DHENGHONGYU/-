@@ -3,14 +3,13 @@
  */
 import {
   API_SYSTEM_AGENT_HEALTH,
-  API_SYSTEM_ENGINE_STATUS,
-  API_SYSTEM_ARCHITECTURE,
   API_SYSTEM_RISK_MONITOR,
   API_TRADE_PNL_ANALYSIS,
   API_TRADE_POSITIONS,
   API_TRADE_SIGNALS,
 } from '@/config/apiPaths'
 import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
+import { DataSourceConfig, DataSourceType, WidgetDomain, WidgetPerspective } from '@/types/modules/widget.types'
 
 /**
  * AI 生成内容免责声明（合规：C07）。
@@ -24,6 +23,20 @@ export const GRID_COLUMNS = 4
 export const GRID_ROW_HEIGHT = 120
 
 export const GRID_GAP = 16
+
+/** Cockpit 布局间距令牌（8px 栅格体系，Phase 1 纵横交叉布局使用） */
+export const COCKPIT_LAYOUT = {
+  /** 业务域分区之间 */
+  SECTION_GAP: 24,
+  /** 域标题与 Widget 网格之间 */
+  SECTION_HEADER_GAP: 12,
+  /** Widget 之间（复用 GRID_GAP） */
+  WIDGET_GAP: 16,
+  /** 左轨与内容区之间 */
+  ZONE_PADDING: 16,
+  /** 矩阵总览单元格间距 */
+  MATRIX_CELL_GAP: 4,
+} as const
 
 export const PRELOAD_WIDGETS = [
   'marketIndices',
@@ -262,192 +275,156 @@ export const ACTIVE_DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE_TYPE || DATA_
 /** 各 Widget 默认数据源配置
  * @remarks 新增 5 个金融业务 Widget 的数据源配置
  */
-export const WIDGET_DEFAULT_DATA_SOURCE = {
+const activeDs: DataSourceType = ACTIVE_DATA_SOURCE as DataSourceType
+
+export const WIDGET_DEFAULT_DATA_SOURCE: Record<string, DataSourceConfig> = {
   marketIndices: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
     endpoint: '/market/indices',
     enabled: true,
   },
   sectorHeatmap: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
     endpoint: '/market/sectors',
     enabled: true,
   },
   fundFlow: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
     endpoint: '/market/fund-flow',
     enabled: true,
   },
   marketSentiment: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
     endpoint: '/market/sentiment',
     enabled: true,
   },
   watchlist: {
-    type: ACTIVE_DATA_SOURCE,
-    mode: COLLECTION_MODE.POLLING,
-    interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
-    endpoint: '/user/watchlist',
-    enabled: true,
-  },
-  watchlistMovers: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
     endpoint: '/user/watchlist',
     enabled: true,
   },
   portfolioOverview: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
     endpoint: '/user/portfolio',
     enabled: true,
   },
   aiTradeReview: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.ONCE,
     interval: 0,
     endpoint: '/ai/trade-review',
     enabled: true,
   },
   // ============================================================
-  // 系统机制健康监控 Widget 数据源（数据来自 mechanismHealthStore，非真实端点）
-  // ============================================================
-  mechanismHealth: {
-    type: ACTIVE_DATA_SOURCE,
-    mode: COLLECTION_MODE.ONCE,
-    interval: 0,
-    endpoint: '/system/mechanism-health',
-    enabled: false,
-  },
-  // ============================================================
-  // 新增金融业务 Widget 数据源
+  // 系统机制健康监控已移至 Command，不再在 Cockpit 注册
   // ============================================================
   investmentProfile: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
     endpoint: '/stock-analysis/profile',
     enabled: true,
   },
-  researchPoolBoard: {
-    type: ACTIVE_DATA_SOURCE,
-    mode: COLLECTION_MODE.POLLING,
-    interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
-    endpoint: '/stock-analysis/pool',
-    enabled: true,
-  },
   poolBoard: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
     endpoint: '/stock-analysis/pool',
     enabled: true,
   },
   kaiScore: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
     endpoint: '/stock-analysis/kai',
     enabled: true,
   },
   modelCompare: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
     endpoint: '/stock-analysis/compare',
     enabled: true,
   },
   stockChat: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.ONCE,
     interval: 0,
     endpoint: '/stock-analysis/chat',
     enabled: true,
   },
   hotSector: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
     endpoint: '/strategy/hot-sectors',
     enabled: true,
   },
   valuePit: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
     endpoint: '/strategy/value-pit',
     enabled: true,
   },
   signalQuality: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.ONCE,
     interval: 0,
     endpoint: '/strategy/signal-quality',
     enabled: true,
   },
-  // 系统监控与高级分析 Widget 数据源
+  // 系统监控 Widget 数据源（engineStatus/systemArchitecture/mechanismHealth 已移至 Command）
   // ============================================================
   agentPerformance: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: 30000,
     endpoint: API_SYSTEM_AGENT_HEALTH,
     enabled: true,
   },
-  engineStatus: {
-    type: ACTIVE_DATA_SOURCE,
-    mode: COLLECTION_MODE.POLLING,
-    interval: 10000,
-    endpoint: API_SYSTEM_ENGINE_STATUS,
-    enabled: true,
-  },
-  systemArchitecture: {
-    type: ACTIVE_DATA_SOURCE,
-    mode: COLLECTION_MODE.POLLING,
-    interval: 60000,
-    endpoint: API_SYSTEM_ARCHITECTURE,
-    enabled: true,
-  },
   pnlAnalysis: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: 60000,
     endpoint: API_TRADE_PNL_ANALYSIS,
     enabled: true,
   },
   positionControl: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: 15000,
     endpoint: API_TRADE_POSITIONS,
     enabled: true,
   },
   riskMonitor: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: 30000,
     endpoint: API_SYSTEM_RISK_MONITOR,
     enabled: true,
   },
   signalMonitor: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.POLLING,
     interval: 60000,
     endpoint: API_TRADE_SIGNALS,
     enabled: true,
   },
   industryChain: {
-    type: ACTIVE_DATA_SOURCE,
+    type: activeDs,
     mode: COLLECTION_MODE.ONCE,
     interval: 0,
     endpoint: '/industry/chain',
@@ -481,11 +458,6 @@ export const DEFAULT_WIDGET_CONFIG = {
     size: WIDGET_SIZE.FULL_WIDTH,
     category: 'portfolio',
   },
-  watchlistMovers: {
-    title: '自选股异动',
-    size: WIDGET_SIZE.FULL_WIDTH,
-    category: 'portfolio',
-  },
   portfolioOverview: {
     title: '持仓概览',
     size: WIDGET_SIZE.FULL_WIDTH,
@@ -497,27 +469,22 @@ export const DEFAULT_WIDGET_CONFIG = {
     category: 'ai',
   },
   // ============================================================
-  // 新增金融业务 Widget 默认配置
+  // 金融业务 Widget 默认配置
   // ============================================================
   investmentProfile: {
     title: '投资画像/分析中心',
     size: WIDGET_SIZE.FULL_WIDTH,
-    category: 'analysis',
-  },
-  researchPoolBoard: {
-    title: '股票池管理与监控',
-    size: WIDGET_SIZE.FULL_WIDTH,
-    category: 'analysis',
+    category: 'market',
   },
   poolBoard: {
     title: '股票池看板',
     size: WIDGET_SIZE.FULL_WIDTH,
-    category: 'analysis',
+    category: 'market',
   },
   kaiScore: {
     title: 'KAI 选股综合评分',
     size: WIDGET_SIZE.LARGE_HEIGHT,
-    category: 'analysis',
+    category: 'market',
   },
   modelCompare: {
     title: 'AI 大模型智能对比',
@@ -545,26 +512,17 @@ export const DEFAULT_WIDGET_CONFIG = {
     category: 'strategy',
   },
   // ============================================================
-  // 系统监控与高级分析 Widget
+  // 系统监控 Widget（engineStatus/systemArchitecture/mechanismHealth 已移至 Command）
+  // agentPerformance 归入 AI 决策域（category: 'ai'）
   // ============================================================
   agentPerformance: {
     title: '智能体性能追踪',
-    category: 'system',
-    size: WIDGET_SIZE.HALF_WIDTH,
-  },
-  engineStatus: {
-    title: '引擎状态监控',
-    category: 'system',
-    size: { cols: 1, rows: 1 },
-  },
-  systemArchitecture: {
-    title: '系统架构视图',
-    category: 'system',
+    category: 'ai',
     size: WIDGET_SIZE.HALF_WIDTH,
   },
   pnlAnalysis: {
     title: '盈亏分析',
-    category: 'trading',
+    category: 'portfolio',
     size: WIDGET_SIZE.HALF_WIDTH,
   },
   positionControl: {
@@ -574,22 +532,69 @@ export const DEFAULT_WIDGET_CONFIG = {
   },
   riskMonitor: {
     title: '风险监控',
-    category: 'system',
+    category: 'portfolio',
     size: WIDGET_SIZE.HALF_WIDTH,
   },
   signalMonitor: {
     title: '信号监控',
-    category: 'trading',
+    category: 'strategy',
     size: WIDGET_SIZE.THIRD_WIDTH,
   },
   industryChain: {
     title: '产业链图谱',
-    category: 'sector',
-    size: WIDGET_SIZE.HALF_WIDTH,
-  },
-  mechanismHealth: {
-    title: '机制健康监控',
-    category: 'system',
+    category: 'market',
     size: WIDGET_SIZE.HALF_WIDTH,
   },
 }
+
+/**
+ * Widget 纵横交叉布局元数据（Phase 1）
+ *
+ * domain（纵轴·业务域）：research | market | ai | portfolio
+ * perspective（横轴·视角）：overview | analysis | signal | risk
+ *
+ * 交叉矩阵参见 docs/specs/architecture/cockpit-command-blueprint.md §4.6
+ */
+export const WIDGET_CROSS_LAYOUT: Record<string, { domain: WidgetDomain; perspective: WidgetPerspective }> = {
+  // 研究全景域
+  kaiScore:           { domain: 'research',  perspective: 'overview' },
+  investmentProfile:  { domain: 'research',  perspective: 'overview' },
+  poolBoard:          { domain: 'research',  perspective: 'analysis' },
+  valuePit:           { domain: 'research',  perspective: 'signal' },
+
+  // 市场背景域
+  marketIndices:      { domain: 'market',    perspective: 'overview' },
+  sectorHeatmap:      { domain: 'market',    perspective: 'overview' },
+  fundFlow:           { domain: 'market',    perspective: 'analysis' },
+  marketSentiment:    { domain: 'market',    perspective: 'analysis' },
+  industryChain:      { domain: 'market',    perspective: 'analysis' },
+  hotSector:          { domain: 'market',    perspective: 'signal' },
+
+  // AI 决策域
+  aiTradeReview:      { domain: 'ai',        perspective: 'overview' },
+  agentPerformance:   { domain: 'ai',        perspective: 'overview' },
+  modelCompare:       { domain: 'ai',        perspective: 'analysis' },
+  stockChat:          { domain: 'ai',        perspective: 'analysis' },
+  signalQuality:      { domain: 'ai',        perspective: 'signal' },
+
+  // 持仓观察域
+  portfolioOverview:  { domain: 'portfolio', perspective: 'overview' },
+  watchlist:          { domain: 'portfolio', perspective: 'overview' },
+  pnlAnalysis:        { domain: 'portfolio', perspective: 'analysis' },
+  signalMonitor:      { domain: 'portfolio', perspective: 'signal' },
+  positionControl:    { domain: 'portfolio', perspective: 'risk' },
+  riskMonitor:        { domain: 'portfolio', perspective: 'risk' },
+}
+
+/**
+ * 重型 Widget 收为 Sheet 抽屉触发（Phase 1 步骤 1.5）
+ *
+ * 这些 Widget 交互复杂或面积较大，在交叉网格中以触发卡片形式呈现，
+ * 点击后通过 Sheet 抽屉展开完整内容，避免挤占网格空间。
+ *
+ * 参见 docs/specs/architecture/cockpit-command-blueprint.md §4.3
+ */
+export const DRAWER_WIDGETS: ReadonlySet<string> = new Set([
+  'stockChat',
+  'industryChain',
+])

@@ -3,7 +3,7 @@
  */
 import { getLogger } from '@/lib/logger'
 import type { WidgetMeta, WidgetConfig, WidgetRuntimeState, MarketData } from '@/types/modules/widget.types'
-import { DEFAULT_WIDGET_CONFIG, WIDGET_DEFAULT_DATA_SOURCE } from '@/constants/cockpit.constants'
+import { DEFAULT_WIDGET_CONFIG, WIDGET_DEFAULT_DATA_SOURCE, WIDGET_CROSS_LAYOUT } from '@/constants/cockpit.constants'
 
 const logger = getLogger()
 
@@ -90,17 +90,6 @@ export class WidgetRegistry {
       },
       {
         meta: {
-          id: 'watchlistMovers',
-          name: DEFAULT_WIDGET_CONFIG.watchlistMovers.title,
-          category: DEFAULT_WIDGET_CONFIG.watchlistMovers.category,
-          description: '展示自选股涨幅榜、跌幅榜与振幅榜',
-          defaultSize: DEFAULT_WIDGET_CONFIG.watchlistMovers.size,
-          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.watchlistMovers,
-        },
-        component: () => import('@/cockpit/widgets/WatchlistMoversWidget'),
-      },
-      {
-        meta: {
           id: 'portfolioOverview',
           name: DEFAULT_WIDGET_CONFIG.portfolioOverview.title,
           category: DEFAULT_WIDGET_CONFIG.portfolioOverview.category,
@@ -143,17 +132,6 @@ export class WidgetRegistry {
           description: '股票池看板（分页/添加/监控）',
           defaultSize: DEFAULT_WIDGET_CONFIG.poolBoard.size,
           defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.poolBoard,
-        },
-        component: () => import('@/cockpit/widgets/PoolBoardWidget'),
-      },
-      {
-        meta: {
-          id: 'researchPoolBoard',
-          name: DEFAULT_WIDGET_CONFIG.researchPoolBoard.title,
-          category: DEFAULT_WIDGET_CONFIG.researchPoolBoard.category,
-          description: '研究股票池管理与监控列表',
-          defaultSize: DEFAULT_WIDGET_CONFIG.researchPoolBoard.size,
-          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.researchPoolBoard,
         },
         component: () => import('@/cockpit/widgets/PoolBoardWidget'),
       },
@@ -239,28 +217,6 @@ export class WidgetRegistry {
       },
       {
         meta: {
-          id: 'engineStatus',
-          name: DEFAULT_WIDGET_CONFIG.engineStatus.title,
-          category: DEFAULT_WIDGET_CONFIG.engineStatus.category,
-          description: '评分引擎运行状态与性能指标',
-          defaultSize: DEFAULT_WIDGET_CONFIG.engineStatus.size,
-          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.engineStatus,
-        },
-        component: () => import('@/cockpit/widgets/EngineStatusWidget'),
-      },
-      {
-        meta: {
-          id: 'systemArchitecture',
-          name: DEFAULT_WIDGET_CONFIG.systemArchitecture.title,
-          category: DEFAULT_WIDGET_CONFIG.systemArchitecture.category,
-          description: '系统分层架构与模块依赖可视化',
-          defaultSize: DEFAULT_WIDGET_CONFIG.systemArchitecture.size,
-          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.systemArchitecture,
-        },
-        component: () => import('@/cockpit/widgets/SystemArchitectureWidget'),
-      },
-      {
-        meta: {
           id: 'pnlAnalysis',
           name: DEFAULT_WIDGET_CONFIG.pnlAnalysis.title,
           category: DEFAULT_WIDGET_CONFIG.pnlAnalysis.category,
@@ -305,17 +261,6 @@ export class WidgetRegistry {
       },
       {
         meta: {
-          id: 'mechanismHealth',
-          name: DEFAULT_WIDGET_CONFIG.mechanismHealth.title,
-          category: DEFAULT_WIDGET_CONFIG.mechanismHealth.category,
-          description: 'SOP 触发 / 文档自动更新 / 日志自动更新 三类机制自扫描监控',
-          defaultSize: DEFAULT_WIDGET_CONFIG.mechanismHealth.size,
-          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.mechanismHealth,
-        },
-        component: () => import('@/cockpit/widgets/MechanismHealthWidget'),
-      },
-      {
-        meta: {
           id: 'industryChain',
           name: DEFAULT_WIDGET_CONFIG.industryChain.title,
           category: DEFAULT_WIDGET_CONFIG.industryChain.category,
@@ -326,6 +271,15 @@ export class WidgetRegistry {
         component: () => import('@/cockpit/widgets/IndustryChainWidget'),
       },
     ]
+
+    // 注入纵横交叉布局元数据（domain + perspective）
+    widgets.forEach((widget) => {
+      const crossLayout = WIDGET_CROSS_LAYOUT[widget.meta.id]
+      if (crossLayout) {
+        widget.meta.domain = crossLayout.domain
+        widget.meta.perspective = crossLayout.perspective
+      }
+    })
 
     widgets.forEach((widget) => this.register(widget))
     this.createDefaultInstances()
@@ -345,9 +299,8 @@ export class WidgetRegistry {
       // ============================================================
       { widgetId: 'modelCompare',      position: { x: 0, y: 7 } },   // AI大模型智能对比
       { widgetId: 'aiTradeReview',     position: { x: 0, y: 10 } },  // AI交易复盘
-      { widgetId: 'researchPoolBoard', position: { x: 0, y: 13 } },  // 股票池管理与监控
-      { widgetId: 'hotSector',         position: { x: 0, y: 15 } },  // 热门板块策略
-      { widgetId: 'valuePit',          position: { x: 0, y: 17 } },  // 价值洼地策略
+      { widgetId: 'hotSector',         position: { x: 0, y: 13 } },  // 热门板块策略
+      { widgetId: 'valuePit',          position: { x: 0, y: 15 } },  // 价值洼地策略
 
       // ============================================================
       // L3: 市场背景 + 信号验证 — "大环境如何？信号可信度？"
@@ -366,18 +319,14 @@ export class WidgetRegistry {
       { widgetId: 'portfolioOverview', position: { x: 0, y: 33 } },  // 持仓概览（FULL_WIDTH）
       { widgetId: 'pnlAnalysis',       position: { x: 0, y: 35 } },  // 盈亏分析
       { widgetId: 'watchlist',         position: { x: 0, y: 37 } },  // 自选股
-      { widgetId: 'watchlistMovers',   position: { x: 0, y: 39 } },  // 自选股异动
 
       // ============================================================
-      // L5: 系统运维 — 默认折叠
+      // L5: 系统运维 — 仅保留信号/仓位/风险/Agent，engineStatus/systemArchitecture/mechanismHealth 已移至 Command
       // ============================================================
-      { widgetId: 'engineStatus',      position: { x: 0, y: 41 } },
-      { widgetId: 'signalMonitor',     position: { x: 1, y: 41 } },
-      { widgetId: 'positionControl',   position: { x: 2, y: 41 } },
-      { widgetId: 'riskMonitor',       position: { x: 0, y: 43 } },
-      { widgetId: 'agentPerformance',  position: { x: 2, y: 43 } },
-      { widgetId: 'systemArchitecture',position: { x: 0, y: 45 } },
-      { widgetId: 'mechanismHealth',   position: { x: 2, y: 45 } },
+      { widgetId: 'signalMonitor',     position: { x: 0, y: 39 } },
+      { widgetId: 'positionControl',   position: { x: 1, y: 39 } },
+      { widgetId: 'riskMonitor',       position: { x: 2, y: 39 } },
+      { widgetId: 'agentPerformance',  position: { x: 0, y: 41 } },
     ]
 
     defaultLayout.forEach((item) => {
