@@ -1,5 +1,14 @@
 import { fallback } from '@/lib/safeCoerce'
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router'
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from '@/components/atoms/Breadcrumb'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
@@ -9,6 +18,7 @@ import { PageContainer, PageHeader } from '@/components/templates'
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'
 import type { HealthMetric, HealthReport } from '@/types/modules/health.types'
 import MechanismHealthPanel from './components/MechanismHealthPanel'
+import SystemArchitectureWidget from '@/cockpit/widgets/SystemArchitectureWidget'
 import { Activity, AlertCircle, CheckCircle2, RefreshCw, ShieldAlert, XCircle } from 'lucide-react'
 
 function statusIcon(status: HealthMetric['status']) {
@@ -125,6 +135,21 @@ export default function HealthDashboardPage(): React.JSX.Element {
 
   return (
     <PageContainer className="space-y-6">
+      <Breadcrumb aria-label="breadcrumb">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild><Link to="/">首页</Link></BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild><Link to="/command">总控舱</Link></BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>健康面板</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <PageHeader
         title="架构健康度仪表盘"
         description={`AGENTS.md ${report.agentsVersion} · 生成于 ${generated}`}
@@ -190,6 +215,11 @@ export default function HealthDashboardPage(): React.JSX.Element {
           </Card>
         ))}
       </div>
+
+      {/* 系统架构（从 Cockpit 移入，蓝图 Phase 2 步骤 2.3） */}
+      <SystemArchitectureWidget
+        config={{ instanceId: 'health-systemArchitecture', widgetId: 'systemArchitecture', size: { cols: 4, rows: 2 }, title: '系统架构', settings: {}, visible: true, collapsed: false }}
+      />
 
       {/* 自动化机制健康下钻面板 */}
       <MechanismHealthPanel />
