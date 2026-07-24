@@ -23,6 +23,7 @@
 
 import { nanoid } from 'nanoid'
 import { getLogger } from '@/lib/logger'
+import { getScoreColorClass } from '@/lib/utils/score'
 import { stockStore, financialReportStore } from '@/data/dataLayerStockStores'
 import { v6ScoreStore, hotSectorScoreStore, valuePitScoreStore } from '@/data/dataLayerScoreStores'
 import type { FinancialReport } from '@/data/types'
@@ -199,7 +200,7 @@ export class MockStockAnalysisScoringStrategy implements StockAnalysisScoringStr
         score,
         weight: Number((1 / 6).toFixed(2)),
         status: this.getScoreLabel(score),
-        color: this.getScoreColor(score),
+        color: getScoreColorClass(score),
       }
     })
 
@@ -212,7 +213,7 @@ export class MockStockAnalysisScoringStrategy implements StockAnalysisScoringStr
           itemName,
           score,
           weight: Number((dim.weight / items.length).toFixed(3)),
-          color: this.getScoreColor(score),
+          color: getScoreColorClass(score),
         }
       })
     })
@@ -367,13 +368,6 @@ export class MockStockAnalysisScoringStrategy implements StockAnalysisScoringStr
     if (score >= 60) return '良好'
     if (score >= 40) return '一般'
     return '偏弱'
-  }
-
-  private getScoreColor(score: number): string {
-    if (score >= 80) return 'bg-green-500'
-    if (score >= 60) return 'bg-blue-500'
-    if (score >= 40) return 'bg-amber-500'
-    return 'bg-red-500'
   }
 
   private shuffleArray<T>(array: T[]): T[] {

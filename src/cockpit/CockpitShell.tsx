@@ -1,28 +1,27 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router'
-import { Settings, Plus, Target, ChevronRight } from 'lucide-react'
+import { Settings, Plus, Target } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
-import { Badge } from '@/components/atoms/Badge'
 import { WidgetErrorBoundary } from '@/components/organisms/shared/WidgetErrorBoundary'
-import ReactGridLayout, { type Layout } from 'react-grid-layout'
-import 'react-grid-layout/css/styles.css'
-import 'react-resizable/css/styles.css'
 import { widgetRegistry } from '@/cockpit/core/widgetRegistry'
 import { widgetEngine } from '@/cockpit/core/widgetEngine'
 import { MarketDataProvider, useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import { GRID_COLUMNS, GRID_ROW_HEIGHT, GRID_GAP } from '@/constants/cockpit.constants'
+import { CockpitCrossLayout } from '@/cockpit/layout/CockpitCrossLayout'
 import { getLogger } from '@/lib/logger'
 import { useIntentionPoolStore } from '@/store/intentionPoolStore'
 import { useTradingStore } from '@/store/tradingStore'
 import { Loading, Empty, ErrorState } from '@/components/molecules/states'
 import { Alert } from '@/components/molecules/Alert'
 import { ComplianceDisclaimer } from '@/components/atoms/ComplianceDisclaimer'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import { ConfirmDialog } from '@/components/molecules/ConfirmDialog'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import type { WidgetConfig, MarketData } from '@/types/modules/widget.types'
 
 const logger = getLogger()
 const LAYOUT_STORAGE_KEY = 'v9_cockpit_layout'
-const LAYOUT_VERSION = 2
+const LAYOUT_VERSION = 3
 
 interface LayoutStorageData {
   version: number
@@ -61,7 +60,7 @@ function getLastMigrationLog(): LayoutMigrationLog | null {
   }
 }
 
-/** 从 localStorage 恢复布局，带版本校验 */
+/** 从 localStorage 恢复布局，带版本校验（Phase 1 纵横交叉布局后仅用于 resetLayout） */
 function loadLayout(): Record<string, { x: number; y: number }> | null {
   try {
     const raw = localStorage.getItem(LAYOUT_STORAGE_KEY)
@@ -105,8 +104,10 @@ function loadLayout(): Record<string, { x: number; y: number }> | null {
   }
 }
 
-/** 持久化布局到 localStorage，带版本号 */
-function saveLayout(layout: { i: string; x: number; y: number; w: number; h: number }[]): void {
+void loadLayout // Phase 1: 函数保留用于未来布局恢复，当前通过 void 消除 unused 警告
+
+/** 持久化布局到 localStorage，带版本号（Phase 1 纵横交叉布局后保留用于未来恢复） */
+export function saveLayout(layout: { i: string; x: number; y: number; w: number; h: number }[]): void {
   try {
     const positions: Record<string, { x: number; y: number }> = {}
     layout.forEach((item) => {
@@ -121,6 +122,7 @@ function saveLayout(layout: { i: string; x: number; y: number; w: number; h: num
     logger.warn('[CockpitShell] Failed to save layout')
   }
 }
+
 
 /** 重置布局为默认 */
 function resetLayout(): void {
@@ -137,7 +139,7 @@ function resetLayout(): void {
  * 清理布局中的失效引用（已不存在的 instanceId）。
  * 如果清理了失效项，将清理后的布局重新保存到 localStorage。
  */
-function sanitizeLayout(
+export function sanitizeLayout(
   positions: Record<string, { x: number; y: number }>,
   validInstanceIds: Set<string>,
 ): Record<string, { x: number; y: number }> {
@@ -179,6 +181,7 @@ function sanitizeLayout(
   return valid
 }
 
+
 interface WidgetWrapperProps {
   config: WidgetConfig
   data: MarketData
@@ -190,6 +193,7 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
   const config = props?.config ?? null
   const data = props?.data
 
+  const { confirm, dialogProps: wrapperDialogProps } = useConfirmDialog()
   const [Component, setComponent] = useState<React.ComponentType<{ config: unknown; data?: MarketData }> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -197,38 +201,26 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
   const instanceId = config?.instanceId
   const widgetId = config?.widgetId
 
-  // eslint-disable-next-line no-console
-  console.log('[WidgetWrapper] render', { widgetId, loading, error, hasComponent: !!Component })
-
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('[WidgetWrapper] useEffect mount', { widgetId, instanceId })
     if (instanceId == null || widgetId == null) {
       setLoading(false)
       return
     }
     let mounted = true
     const mount = async () => {
-      // eslint-disable-next-line no-console
-      console.log('[WidgetWrapper] mount start', { widgetId })
       try {
         const success = await widgetEngine.mountInstance(instanceId)
-        // eslint-disable-next-line no-console
-        console.log('[WidgetWrapper] mountInstance done', { widgetId, success })
         if (!mounted) return
         if (!success) {
           setError('挂载失败')
           return
         }
         const component = await widgetEngine.loadComponent(widgetId)
-        // eslint-disable-next-line no-console
-        console.log('[WidgetWrapper] loadComponent done', { widgetId, hasComponent: !!component })
         if (mounted) {
           setComponent(() => component)
         }
       } catch (err) {
-         
-        console.error('[WidgetWrapper] mount error', { widgetId, error: err })
+        logger.error('[WidgetWrapper] mount error', { widgetId, error: err })
         if (mounted) {
           setError(err instanceof Error ? err.message : '加载失败')
         }
@@ -241,8 +233,6 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
     void mount()
 
     return () => {
-      // eslint-disable-next-line no-console
-      console.log('[WidgetWrapper] cleanup', { widgetId })
       mounted = false
       if (instanceId != null) {
         widgetEngine.unmountInstance(instanceId)
@@ -322,30 +312,37 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
 
   if (!SafeComponent) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">{config.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="p-6">
-          <Empty
-            title="组件未找到"
-            description={`widgetId: ${widgetId} | loading: ${loading} | error: ${error} | hasComponent: ${!!Component}`}
-          />
-          <div className="mt-4 flex justify-center">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                if (confirm('确定要重置驾驶舱布局为默认吗？')) {
-                  resetLayout()
-                }
-              }}
-            >
-              重置布局
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">{config.title}</CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <Empty
+              title="组件未找到"
+              description={`widgetId: ${widgetId} | loading: ${loading} | error: ${error} | hasComponent: ${!!Component}`}
+            />
+            <div className="mt-4 flex justify-center">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  const ok = await confirm({
+                    title: '重置驾驶舱布局',
+                    description: '确定要重置驾驶舱布局为默认吗？此操作将清除所有自定义布局。',
+                    variant: 'danger',
+                    confirmLabel: '重置',
+                  })
+                  if (ok) resetLayout()
+                }}
+              >
+                重置布局
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+        <ConfirmDialog {...wrapperDialogProps} />
+      </>
     )
   }
 
@@ -365,11 +362,11 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
 
 function CockpitContent(): React.JSX.Element {
   const [instances, setInstances] = useState<WidgetConfig[]>([])
-  const [activeTab, setActiveTab] = useState<string>('all')
-  const [showSystemZone, setShowSystemZone] = useState<boolean>(() => {
-    const saved = localStorage.getItem('v9_cockpit_show_system')
-    return saved === null ? false : saved === 'true'
-  })
+  // 移动端降级：禁用纵横布局，改为简单纵向堆叠
+  const isMobile = useMediaQuery('(max-width: 767px)')
+
+  const { confirm, dialogProps: confirmDialogProps } = useConfirmDialog()
+
   const [migrationLog, setMigrationLog] = useState<LayoutMigrationLog | null>(null)
   const { data, getTaskStats } = useMarketData()
   const poolItems = useIntentionPoolStore((s) => s.items)
@@ -378,67 +375,26 @@ function CockpitContent(): React.JSX.Element {
   useEffect(() => {
     setInstances(widgetRegistry.getAllInstances())
     setMigrationLog(getLastMigrationLog())
-    
+
     const unsubscribe = widgetRegistry.subscribe(() => {
       setInstances(widgetRegistry.getAllInstances())
     })
     return unsubscribe
   }, [])
 
-  const handleLayoutChange = (newLayout: Layout): void => {
-    saveLayout([...newLayout])
-    logger.info('[CockpitShell] Layout saved', { items: newLayout.length })
+  const handleResetLayout = (): void => {
+    resetLayout()
   }
-
-  const categories = useMemo(() => {
-    const cats = new Map<string, number>()
-    cats.set('all', instances.length)
-    instances.forEach((inst) => {
-      const cat = inst.category || 'other'
-      cats.set(cat, (cats.get(cat) || 0) + 1)
-    })
-    return Array.from(cats.entries()).map(([id, count]) => ({
-      id,
-      label: id === 'all' ? '全部' : 
-             id === 'market' ? '市场行情' :
-             id === 'portfolio' ? '投资组合' :
-             id === 'ai' ? 'AI分析' :
-             id === 'analysis' ? '深度分析' :
-             id === 'strategy' ? '策略执行' :
-             id === 'system' ? '系统监控' : id,
-      count,
-    }))
-  }, [instances])
-
-  const filteredInstances = useMemo(() => {
-    if (activeTab === 'all') return showSystemZone ? instances : instances.filter((inst) => inst.category !== 'system')
-    return instances.filter((inst) => inst.category === activeTab)
-  }, [instances, activeTab, showSystemZone])
-
-  const layout: Layout = (() => {
-    const persisted = loadLayout()
-    const validInstanceIds = new Set(filteredInstances.map((i) => i.instanceId))
-
-    const sanitized = persisted ? sanitizeLayout(persisted, validInstanceIds) : null
-
-    return filteredInstances.map((instance) => {
-      const saved = sanitized?.[instance.instanceId]
-      return {
-        i: instance.instanceId,
-        x: saved?.x ?? instance.position?.x ?? 0,
-        y: saved?.y ?? instance.position?.y ?? 0,
-        w: instance.size.cols,
-        h: instance.size.rows,
-        minW: 1,
-        minH: 1,
-      }
-    })
-  })()
 
   const stats = getTaskStats()
 
+  /** Widget 渲染回调 — 传给 CockpitCrossLayout */
+  const renderWidget = (instance: WidgetConfig): React.ReactNode => (
+    <WidgetWrapper config={instance} data={data} />
+  )
+
   return (
-    <div className="dark min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-10 border-b bg-background/95 px-4 py-3 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <div className="flex items-center gap-3">
@@ -446,7 +402,7 @@ function CockpitContent(): React.JSX.Element {
               <Target className="h-4 w-4" />
             </div>
             <h1 className="text-lg font-bold">驾驶舱</h1>
-            <div className="flex items-center gap-1 ml-2 text-xs text-muted-foreground">
+            <div className="hidden items-center gap-1 ml-2 text-xs text-muted-foreground sm:flex">
               <span className="inline-flex items-center gap-1 rounded border px-1.5 py-0.5 border-muted-foreground/20">
                 <span className="font-medium text-foreground">{poolItems.length}</span> 跟踪标的
               </span>
@@ -457,7 +413,7 @@ function CockpitContent(): React.JSX.Element {
                 <span className="font-medium text-foreground">{stats.running}/{stats.total}</span> 采集任务
               </span>
               <span className="inline-flex items-center gap-1 rounded border px-1.5 py-0.5 border-muted-foreground/20">
-                <span className="font-medium text-foreground">{filteredInstances.length}</span> Widget
+                <span className="font-medium text-foreground">{instances.length}</span> Widget
               </span>
             </div>
           </div>
@@ -469,10 +425,14 @@ function CockpitContent(): React.JSX.Element {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => {
-                if (confirm('确定要重置驾驶舱布局为默认吗？')) {
-                  resetLayout()
-                }
+              onClick={async () => {
+                const ok = await confirm({
+                  title: '重置驾驶舱布局',
+                  description: '确定要重置驾驶舱布局为默认吗？此操作将清除所有自定义布局。',
+                  variant: 'danger',
+                  confirmLabel: '重置',
+                })
+                if (ok) handleResetLayout()
               }}
             >
               <Settings className="h-4 w-4 mr-1" />
@@ -484,24 +444,6 @@ function CockpitContent(): React.JSX.Element {
           </div>
         </div>
       </header>
-
-      <div className="sticky top-[65px] z-10 border-b bg-background/95 px-4 py-2 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center gap-1">
-          {categories.map((cat) => (
-            <Button
-              key={cat.id}
-              variant={activeTab === cat.id ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setActiveTab(cat.id)}
-            >
-              {cat.label}
-              <Badge variant="outline" className="ml-1">
-                {cat.count}
-              </Badge>
-            </Button>
-          ))}
-        </div>
-      </div>
 
       {migrationLog && (
         <div className="border-b bg-background/95 px-4 py-2">
@@ -521,51 +463,33 @@ function CockpitContent(): React.JSX.Element {
         </div>
       )}
 
-      {activeTab === 'all' && (
-        <div className="border-b bg-background/95 px-4 py-1">
-          <div className="mx-auto flex max-w-7xl items-center">
-            <button
-              className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-              onClick={() => {
-                const next = !showSystemZone
-                setShowSystemZone(next)
-                localStorage.setItem('v9_cockpit_show_system', String(next))
-              }}
-            >
-              <ChevronRight className={`h-3 w-3 transition-transform ${showSystemZone ? 'rotate-90' : ''}`} />
-              系统运维 {showSystemZone ? '(收起)' : `(${instances.filter(i => i.category === 'system').length} 个)`}
-            </button>
-          </div>
-        </div>
-      )}
-
       <main className="mx-auto max-w-7xl p-4">
-        <ReactGridLayout
-          className="bg-background"
-          layout={layout}
-          width={1100}
-          gridConfig={{
-            cols: GRID_COLUMNS,
-            rowHeight: GRID_ROW_HEIGHT,
-            margin: [GRID_GAP, GRID_GAP],
-            containerPadding: [GRID_GAP, GRID_GAP],
-          }}
-          dragConfig={{ enabled: true }}
-          resizeConfig={{ enabled: true }}
-          onLayoutChange={handleLayoutChange}
-        >
-          {filteredInstances.map((instance) => (
-            <div key={instance.instanceId}>
-              <WidgetWrapper config={instance} data={data} />
-            </div>
-          ))}
-        </ReactGridLayout>
+        {isMobile ? (
+          /* 移动端降级：简单纵向堆叠 */
+          <div className="flex flex-col gap-4">
+            {instances.map((instance) => (
+              <div key={instance.instanceId}>
+                <WidgetWrapper config={instance} data={data} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          /* 桌面端：纵横交叉布局 */
+          <CockpitCrossLayout
+            instances={instances}
+            renderWidget={renderWidget}
+            showMatrixOverview={true}
+          />
+        )}
       </main>
 
       {/* 合规层 — 免责声明 */}
       <footer className="mx-auto max-w-7xl px-4 pb-4">
         <ComplianceDisclaimer variant="compact" />
       </footer>
+
+      {/* 确认对话框（替代原生 confirm） */}
+      <ConfirmDialog {...confirmDialogProps} />
     </div>
   )
 }
