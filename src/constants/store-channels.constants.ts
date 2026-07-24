@@ -69,41 +69,30 @@ export const EVENT_NAMES = {
   // ---- 投研闭环状态事件 ----
   /** 闭环阶段状态变更（loopStatusStore 写操作触发） */
   LOOP_STATUS_CHANGED: 'loop_status:changed',
-} as const
-
-export type EventName = (typeof EVENT_NAMES)[keyof typeof EVENT_NAMES]
-
-/**
- * 变更后缀，用于 `${channel}:changed` 事件命名
- */
-export const CHANGED_SUFFIX = ':changed' as const
-
-/**
- * 模块数据 store 名称（IndexedDB objectStore）
- * 与 {@link STORE_NAME} 保持一致；此处仅做业务语义注释
- */
-export const STORE_DISPLAY_NAMES = {
-  stocks: '股票池',
-  v6_scores: 'V6 评分',
-  intelligent_scores: '智能评分',
-  industry_scores: '行业评分',
-  orders: '订单',
-  watchlists: '观察列表',
-  signals: '信号',
-  research_logs: '研究日志',
-  daily_quotes: '日线行情',
-  rotation_scores: '轮动评分',
-  sector_scores: '板块评分',
-  score_docs: '评分文档',
-  strategy_snapshots: '策略快照',
-  local_docs: '本地文档',
-  news: '资讯',
-  news_stock_map: '资讯-股票映射',
-  sentiment_cache: '情感缓存',
-  news_bookmarks: '资讯收藏',
-  hot_sector_scores: '热门板块评分',
-  value_pit_scores: '价值洼地评分',
-  execution_plans: '执行计划',
-  execution_logs: '执行日志',
-  missing_reports: '缺失报告',
-} as const
+  // ---- 批量导入事件 ----
+  /** 批量导入状态变更（bulkImportStore 写操作触发） */
+  BULK_IMPORT_CHANGED: 'bulk_import:changed',
+  // ---- 编排器事件（Orchestration Layer） ----
+  /** 注册编排器：采集启动 */
+  REGISTRATION_COLLECT_START: 'registration:collect:start',
+  /** 注册编排器：采集完成 */
+  REGISTRATION_COLLECT_COMPLETE: 'registration:collect:complete',
+  /** 质量门禁：检查通过 */
+  QUALITY_GATE_PASSED: 'quality:gate:passed',
+  /** 质量门禁：检查失败 */
+  QUALITY_GATE_FAILED: 'quality:gate:failed',
+  /** 质量门禁：检查结果（通过/失败均发射） */
+  QUALITY_GATE_CHECKED: 'quality:gate:checked',
+  /** 评分校对器：单只完成 */
+  SCORE_CALIBRATOR_ITEM: 'score:calibrator:item',
+  /** 评分校对器：全部完成 */
+  SCORE_CALIBRATOR_COMPLETED: 'score:calibrator:completed',
+  /** 策略分层：开始 */
+  STRATEGY_CLASSIFICATION_START: 'strategy:classification:start',
+  /** 策略分层：完成 */
+  STRATEGY_CLASSIFICATION_DONE: 'strategy:classification:done',
+  /** 策略分层：错误 */
+  STRATEGY_CLASSIFICATION_ERROR: 'strategy:classification:error',
+  /** 分析：行业分析完成 */
+  ANALYSIS_INDUSTRY_COMPLETED: 'analysis:industry:completed',
+  /** 分�
