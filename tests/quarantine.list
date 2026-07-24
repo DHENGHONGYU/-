@@ -1,0 +1,12 @@
+# Known flaky / load-sensitive test files (one glob per line, # = comment).
+#
+# Population procedure (requires a working shell):
+#   for i in $(seq 1 20); do npx vitest run <file> || echo "FLAKE at $i"; done
+# If a file passes in isolation but fails under full-suite load, add its glob here.
+#
+# Discipline: this list MUST shrink over time. When a quarantined test becomes
+# deterministic again, DELETE its line so it rejoins `test:clean`. Never let the
+# list grow unbounded — that defeats the purpose of isolation.
+#
+# Run:  npm run test:stable      (full suite minus these — the trust signal)
+#       npm run test:quarantine  (only these — re-verify / fix without blocking CI)

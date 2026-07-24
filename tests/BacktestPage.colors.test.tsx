@@ -8,6 +8,7 @@
  */
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { MemoryRouter } from 'react-router'
 import type { BacktestConfig, BacktestResult, BacktestTrade } from '@/store/backtestStore'
 import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
 import { COLOR_TOKENS, CHART_PALETTE, STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
@@ -131,7 +132,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
         results: buildResult({ totalReturn: 10.5, annualizedReturn: 22.0 }),
       })
 
-      render(<BacktestPage />)
+      render(<MemoryRouter><BacktestPage /></MemoryRouter>)
 
       const totalReturn = screen.getByText(UI_TEXT.errors.totalReturn)
       const metricCard = totalReturn.closest('div')?.parentElement
@@ -146,7 +147,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
         results: buildResult({ totalReturn: -8.3, annualizedReturn: -16.0 }),
       })
 
-      render(<BacktestPage />)
+      render(<MemoryRouter><BacktestPage /></MemoryRouter>)
 
       const totalReturn = screen.getByText(UI_TEXT.errors.totalReturn)
       const metricCard = totalReturn.closest('div')?.parentElement
@@ -161,7 +162,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
         results: buildResult({ totalReturn: 5.0, annualizedReturn: 15.0 }),
       })
 
-      render(<BacktestPage />)
+      render(<MemoryRouter><BacktestPage /></MemoryRouter>)
 
       const annualizedReturn = screen.getByText(UI_TEXT.errors.annualizedReturn)
       const metricCard = annualizedReturn.closest('div')?.parentElement
@@ -175,7 +176,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
         results: buildResult({ totalReturn: -3.0, annualizedReturn: -12.0 }),
       })
 
-      render(<BacktestPage />)
+      render(<MemoryRouter><BacktestPage /></MemoryRouter>)
 
       const annualizedReturn = screen.getByText(UI_TEXT.errors.annualizedReturn)
       const metricCard = annualizedReturn.closest('div')?.parentElement
@@ -189,7 +190,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
         results: buildResult({ totalReturn: 0, annualizedReturn: 0 }),
       })
 
-      render(<BacktestPage />)
+      render(<MemoryRouter><BacktestPage /></MemoryRouter>)
 
       const totalReturn = screen.getByText(UI_TEXT.errors.totalReturn)
       const metricCard = totalReturn.closest('div')?.parentElement
@@ -211,7 +212,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
         results: buildResult({ trades: [buyTrade] }),
       })
 
-      render(<BacktestPage />)
+      render(<MemoryRouter><BacktestPage /></MemoryRouter>)
       switchToTradesTab()
 
       const buyBadge = screen.getByText(UI_TEXT.errors.buy)
@@ -225,7 +226,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
         results: buildResult({ trades: [sellTrade] }),
       })
 
-      render(<BacktestPage />)
+      render(<MemoryRouter><BacktestPage /></MemoryRouter>)
       switchToTradesTab()
 
       const sellBadge = screen.getByText(UI_TEXT.errors.sell)
@@ -239,7 +240,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
         results: buildResult({ trades: [buyTrade] }),
       })
 
-      render(<BacktestPage />)
+      render(<MemoryRouter><BacktestPage /></MemoryRouter>)
       switchToTradesTab()
 
       const buyBadge = screen.getByText(UI_TEXT.errors.buy)
@@ -253,7 +254,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
         results: buildResult({ trades: [sellTrade] }),
       })
 
-      render(<BacktestPage />)
+      render(<MemoryRouter><BacktestPage /></MemoryRouter>)
       switchToTradesTab()
 
       const sellBadge = screen.getByText(UI_TEXT.errors.sell)
@@ -270,7 +271,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
         results: buildResult({ trades }),
       })
 
-      render(<BacktestPage />)
+      render(<MemoryRouter><BacktestPage /></MemoryRouter>)
       switchToTradesTab()
 
       const buyBadge = screen.getByText(UI_TEXT.errors.buy)
@@ -292,7 +293,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
         results: buildResult({ trades: [trade] }),
       })
 
-      render(<BacktestPage />)
+      render(<MemoryRouter><BacktestPage /></MemoryRouter>)
       switchToTradesTab()
 
       // 盈亏表格单元格应使用 STOCK_COLOR_MAPPING.UP_CLASS
@@ -307,7 +308,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
         results: buildResult({ trades: [trade] }),
       })
 
-      render(<BacktestPage />)
+      render(<MemoryRouter><BacktestPage /></MemoryRouter>)
       switchToTradesTab()
 
       const cells = screen.getAllByText(/150/)
@@ -336,7 +337,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
         results: buildResult({ pnlCurve: [1.0, 1.05, 1.1, 1.08] }),
       })
 
-      const { container } = render(<BacktestPage />)
+      const { container } = render(<MemoryRouter><BacktestPage /></MemoryRouter>)
 
       // 通过 className="w-full h-full" 精确定位 PNL 曲线 SVG
       const pnlSvg = container.querySelector('svg.h-full')
@@ -350,7 +351,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
         results: buildResult({ pnlCurve: [1.0, 1.05, 1.1, 1.08] }),
       })
 
-      const { container } = render(<BacktestPage />)
+      const { container } = render(<MemoryRouter><BacktestPage /></MemoryRouter>)
 
       const pnlSvg = container.querySelector('svg.h-full')
       expect(pnlSvg).not.toBeNull()
@@ -365,7 +366,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
         results: buildResult({ pnlCurve: [1.0, 1.05, 1.1, 1.08] }),
       })
 
-      const { container } = render(<BacktestPage />)
+      const { container } = render(<MemoryRouter><BacktestPage /></MemoryRouter>)
 
       const pnlSvg = container.querySelector('svg.h-full')
       expect(pnlSvg).not.toBeNull()

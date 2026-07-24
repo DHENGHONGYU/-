@@ -69,7 +69,8 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
-      # 使用 test:clean 跳过 7 个已知失败测试（详见 package.json test:known 脚本）
+      # test:clean = 全量 vitest run（不跳过任何测试，失败即 CI 红）
+      # 已知不稳定用例见 package.json test:known（单独运行观察，不在此排除）
       - run: npm run test:clean
 
   coverage:
@@ -82,7 +83,7 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
-      # 运行测试并生成覆盖率报告（跳过已知失败测试）
+      # 运行测试并生成覆盖率报告（全量，不跳过任何测试）
       # 覆盖率阈值定义在 vite.config.ts 的 test.coverage.thresholds
       - run: npm run test:ci
         env:
@@ -105,10 +106,18 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
+      # Python 环境（doc-tier-validate.py 需要）
+      - uses: actions/setup-python@0b93647e04c5672476a5b030e1f4e16f85c6f85f # v5.3.0
+        with:
+          python-version: '3.13'
       - run: npm ci --ignore-scripts --no-audit
       # P0 阻塞性检查（必须通过）
       - run: npm run audit:layers
       - run: npm run audit:hardcode
+      # 文档门禁检查（P0 阻塞）— 8 项检查：frontmatter/tier/status/type/交叉引用/目录结构/编制规则/风格
+      - name: Document gate (P0 blocking — 8 checks)
+        run: npm run doc:gate
+        continue-on-error: false
       # 文档同步审计 — 阻断性门禁（exit code 非零则 CI 失败）
       - name: Documentation sync audit (P0 blocking gate)
         run: npm run audit:docs
@@ -171,6 +180,10 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
+      # 统一量化质量门禁聚合（SonarQube 式加权质量分 + 趋势基线，非阻塞报告）
+      - name: Unified quality gate aggregate (non-blocking report)
+        continue-on-error: true
+        run: npm run gate:aggregate -- --json
       - name: Generate quality gate summary
         run: |
           echo "=== 质量门禁检查汇总 ==="

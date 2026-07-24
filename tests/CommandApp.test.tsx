@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, useNavigate } from 'react-router'
 import { useEffect } from 'react'
@@ -94,13 +94,17 @@ describe('CommandApp', () => {
   })
 
   it('calls resetAll and refreshes stats when confirming reset', async () => {
-    vi.stubGlobal('confirm', vi.fn(() => true))
-
     renderWithRouter(<CommandApp />)
     await userEvent.click(await screen.findByRole('button', { name: /刷新统计/i }))
     await waitFor(() => screen.getByText('12'))
 
     await userEvent.click(await screen.findByRole('button', { name: /重置数据/i }))
+
+    // 组件使用自定义 ConfirmDialog（非 window.confirm）；jsdom 下关闭的 <dialog> 仍挂载，
+    // 需定位确认对话框（标题“清空所有数据”）内的确认按钮，避免与迁移对话框的“清空”按钮歧义
+    const confirmDialog = (await screen.findByText('清空所有数据')).closest('dialog') as HTMLElement
+    const confirmBtn = within(confirmDialog).getByRole('button', { name: '清空' })
+    await userEvent.click(confirmBtn)
 
     await waitFor(() => {
       expect(vi.mocked(systemService.resetAll)).toHaveBeenCalled()
@@ -108,8 +112,6 @@ describe('CommandApp', () => {
       // 这里只断言"被调用过",不锁定具体次数,避免 R5 自动加载逻辑变化时 brittle
       expect(vi.mocked(systemService.loadSystemStats)).toHaveBeenCalled()
     })
-
-    vi.unstubAllGlobals()
   })
 
   it('does not reset when user cancels', async () => {
@@ -240,13 +242,17 @@ describe('CommandApp', () => {
   // ══════════════════════════════════════════════════════════════
 
   it('displays success message with token class after successful reset', async () => {
-    vi.stubGlobal('confirm', vi.fn(() => true))
-
     renderWithRouter(<CommandApp />)
     await userEvent.click(await screen.findByRole('button', { name: /刷新统计/i }))
     await waitFor(() => screen.getByText('12'))
 
     await userEvent.click(screen.getByRole('button', { name: /重置数据/i }))
+
+    // 组件使用自定义 ConfirmDialog（非 window.confirm）；jsdom 下关闭的 <dialog> 仍挂载，
+    // 需定位确认对话框（标题“清空所有数据”）内的确认按钮，避免与迁移对话框的“清空”按钮歧义
+    const confirmDialog = (await screen.findByText('清空所有数据')).closest('dialog') as HTMLElement
+    const confirmBtn = within(confirmDialog).getByRole('button', { name: '清空' })
+    await userEvent.click(confirmBtn)
 
     await waitFor(() => {
       const successMessage = screen.getByText('已重置所有数据')
@@ -254,7 +260,5 @@ describe('CommandApp', () => {
       // 断言令牌引用,不直接硬编码颜色(遵守 AGENTS.md §3.5.5)
       expect(successMessage).toHaveClass(COLOR_TOKENS.success.tailwind)
     })
-
-    vi.unstubAllGlobals()
   })
 })

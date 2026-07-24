@@ -36,28 +36,34 @@ vi.mock('nanoid', () => ({
   nanoid: () => 'mock-id-12345',
 }))
 
-vi.mock('@/store/helpers/withBroadcast', () => ({
+vi.mock('@/lib/withBroadcast', () => ({
   withBroadcast: vi.fn(),
 }))
 
 // mock poolTransitionEngine - 默认返回 true，测试中可单独覆盖
-const mockIsValidTransition = vi.fn(() => true)
+// 使用 vi.hoisted 包裹，避免 vi.mock 工厂被提升导致的 "Cannot access 'mockIsValidTransition' before initialization"
+const { mockIsValidTransition } = vi.hoisted(() => ({
+  mockIsValidTransition: vi.fn(() => true),
+}))
+
 vi.mock('@/core/poolTransitionEngine', () => ({
-  isValidTransition: (...args: unknown[]) => mockIsValidTransition(...args),
+  isValidTransition: mockIsValidTransition,
   getPoolTransitionOptions: vi.fn(() => []),
   getPoolLabel: vi.fn((_pool: string, status: string) => status),
 }))
 
 // mock dataBridge
-const mockQuery = vi.fn()
-const mockForward = vi.fn()
-const mockSubscribe = vi.fn(() => vi.fn())
+const { mockQuery, mockForward, mockSubscribe } = vi.hoisted(() => ({
+  mockQuery: vi.fn(),
+  mockForward: vi.fn(),
+  mockSubscribe: vi.fn(() => vi.fn()),
+}))
 
 vi.mock('@/core/databridge', () => ({
   dataBridge: {
-    query: (...args: unknown[]) => mockQuery(...args),
-    forward: (...args: unknown[]) => mockForward(...args),
-    subscribe: (...args: unknown[]) => mockSubscribe(...args),
+    query: mockQuery,
+    forward: mockForward,
+    subscribe: mockSubscribe,
     invalidateAll: vi.fn(),
   },
 }))
@@ -105,7 +111,7 @@ import {
   initResearchPoolStoreSubscriptions,
   _resetResearchPoolStoreSubscriptionsForTest,
 } from './researchPoolStore'
-import { withBroadcast } from '@/store/helpers/withBroadcast'
+import { withBroadcast } from '@/lib/withBroadcast'
 import { EnvelopeFactory } from '@/core/envelope'
 import { ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/config/dbConfig'
 
@@ -113,15 +119,14 @@ import { ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/config/dbConfig'
 
 function makeStock(overrides: Partial<Stock> & { symbol: string }): Stock {
   return {
-    symbol: overrides.symbol,
-    name: overrides.name ?? `股票${overrides.symbol}`,
-    pool: overrides.pool ?? 'research',
-    researchStatus: overrides.researchStatus ?? 'candidate',
-    source: overrides.source ?? 'manual',
-    dataVersion: overrides.dataVersion ?? 1,
-    ingestedAt: overrides.ingestedAt ?? Date.now(),
-    updatedAt: overrides.updatedAt ?? Date.now(),
-    group: overrides.group ?? '默认分组',
+    name: `股票${overrides.symbol}`,
+    pool: 'research',
+    researchStatus: 'candidate',
+    source: 'manual',
+    dataVersion: 1,
+    ingestedAt: Date.now(),
+    updatedAt: Date.now(),
+    group: '默认分组',
     ...overrides,
   } as Stock
 }
@@ -143,7 +148,7 @@ function mockQueryGetNotFound() {
   })
 }
 
-function seedItems(symbols: string[], overrides: Partial<Stock> = {}): void {
+function seedItems(symbols: string[], overrides: Record<string, any> = {}): void {
   useResearchPoolStore.setState({
     items: symbols.map((symbol) => ({
       symbol,
@@ -291,6 +296,7 @@ describe('researchPoolStore 单元测试', () => {
       const result = await useResearchPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       expect(result).toBe(true)
@@ -321,6 +327,7 @@ describe('researchPoolStore 单元测试', () => {
       const result = await useResearchPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       expect(result).toBe(false)
@@ -334,11 +341,12 @@ describe('researchPoolStore 单元测试', () => {
       await useResearchPoolStore.getState().addItem({
         symbol: '  000001.sh  ',
         name: '平安银行',
+        source: 'manual',
       })
 
       const calls = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls
       const insertCall = calls.find(
-        (c: [{ action?: string }]) => c[0]?.action === ENVELOPE_ACTION.insertStock,
+        (c: any) => c[0]?.action === ENVELOPE_ACTION.insertStock,
       )
       expect(insertCall).toBeDefined()
       expect(insertCall![1].symbol).toBe('000001.SH')
@@ -350,11 +358,12 @@ describe('researchPoolStore 单元测试', () => {
       await useResearchPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       const calls = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls
       const insertCall = calls.find(
-        (c: [{ action?: string }]) => c[0]?.action === ENVELOPE_ACTION.insertStock,
+        (c: any) => c[0]?.action === ENVELOPE_ACTION.insertStock,
       )
       const stockData = insertCall![1]
       expect(stockData.pool).toBe('research')
@@ -367,11 +376,12 @@ describe('researchPoolStore 单元测试', () => {
       await useResearchPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       const calls = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls
       const insertCall = calls.find(
-        (c: [{ action?: string }]) => c[0]?.action === ENVELOPE_ACTION.insertStock,
+        (c: any) => c[0]?.action === ENVELOPE_ACTION.insertStock,
       )
       const stockData = insertCall![1]
       expect(stockData.source).toBe('manual')
@@ -387,13 +397,14 @@ describe('researchPoolStore 单元测试', () => {
       await useResearchPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       // 研究池 addItem 只应该有一次 forward 调用（插入）
       // 不像意向池有自动流转
       const calls = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls
       const insertCalls = calls.filter(
-        (c: [{ action?: string }]) => c[0]?.action === ENVELOPE_ACTION.insertStock,
+        (c: any) => c[0]?.action === ENVELOPE_ACTION.insertStock,
       )
       expect(insertCalls.length).toBe(1)
     })
@@ -405,6 +416,7 @@ describe('researchPoolStore 单元测试', () => {
       const result = await useResearchPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       expect(result).toBe(false)
@@ -807,11 +819,12 @@ describe('researchPoolStore 单元测试', () => {
       await useResearchPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       const calls = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls
       const insertCall = calls.find(
-        (c: [{ action?: string }]) => c[0]?.action === ENVELOPE_ACTION.insertStock,
+        (c: any) => c[0]?.action === ENVELOPE_ACTION.insertStock,
       )
       expect(insertCall![1].dataVersion).toBe(1)
     })
@@ -832,11 +845,12 @@ describe('researchPoolStore 单元测试', () => {
       await useResearchPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       const calls = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls
       const insertCall = calls.find(
-        (c: [{ action?: string }]) => c[0]?.action === ENVELOPE_ACTION.insertStock,
+        (c: any) => c[0]?.action === ENVELOPE_ACTION.insertStock,
       )
       expect(insertCall![1].pool).toBe('research')
     })
@@ -885,6 +899,7 @@ describe('researchPoolStore 单元测试', () => {
       await useResearchPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       // 如果成功，error 应该是 null

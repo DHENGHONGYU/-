@@ -26,6 +26,11 @@ node scripts/skill-router.cjs --enforce --since "$PUSH_BASE" --log || {
   exit 1
 }
 
+# 0.5 密钥/敏感信息扫描（SAST-lite，WARN 待本地校验无误后升级为 BLOCK）
+echo ""
+echo "🔑 [0.5/6] 运行 audit:secrets（密钥/敏感信息扫描）..."
+npm run audit:secrets || echo "⚠️  密钥扫描为 WARN 模式（首次本地校验无误后升级为 BLOCK）。"
+
 # 1. 快速门禁（分层 + Mock 安全 + ACL + 原子组件 + 文档 + DB 引用）
 echo ""
 echo "🛡️  [1/5] 运行 gate:quick（分层/Mock/ACL/原子/文档/DB引用）..."
@@ -35,6 +40,11 @@ npm run gate:quick
 echo ""
 echo "🧩 [2/5] 运行 audit:widget-registry（Widget 注册完整性）..."
 npm run audit:widget-registry
+
+# 2.5 AI 输出合规校验（金融合规红线，WARN 待本地校验无误后升级为 BLOCK）
+echo ""
+echo "🤖 [2.5/6] 运行 audit:ai-output（AI 输出三道校验）..."
+npm run audit:ai-output || echo "⚠️  AI 输出合为 WARN 模式（首次本地校验无误后升级为 BLOCK）。"
 
 # 3. 复杂度扫描
 echo ""
@@ -50,6 +60,11 @@ npm run test:clean
 echo ""
 echo "BUILD [5/5] 运行生产构建验证（npm run build）..."
 npm run build
+
+# 6. 统一量化质量门禁聚合（SonarQube 式汇总报告，非阻塞 — 提供加权质量分 + 趋势基线）
+echo ""
+echo "📈 [6/6] 运行 gate:aggregate（统一量化质量门禁聚合报告，非阻塞）..."
+npm run gate:aggregate || echo "⚠️  gate:aggregate 报告生成失败或存在阻断项（非阻塞，详见上方各门禁输出）。"
 
 echo ""
 echo "================================================"
