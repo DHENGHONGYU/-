@@ -15,8 +15,8 @@ const path = require('path');
 const os = require('os');
 const { execSync } = require('child_process');
 
-const ROOT = process.argv[2] || process.cwd();
 const args = process.argv.slice(2);
+const ROOT = args.find(a => !a.startsWith('-')) || process.cwd();
 const VERIFY = args.includes('--verify-current');
 const JSON_OUT = args.includes('--json');
 const VERBOSE = args.includes('--verbose');
