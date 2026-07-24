@@ -33,6 +33,7 @@ Thumbs.db
 
 # Testing
 coverage
+/coverage-lib.txt
 /test-results/
 /playwright-report/
 /playwright/.cache/
