@@ -92,6 +92,21 @@ export function CockpitCrossLayout({
     return counts
   }, [instances, instanceMetaMap])
 
+  /** 按域×视角分组的实例标题（用于矩阵单元格 tooltip 一眼洞悉） */
+  const matrixTitles = useMemo(() => {
+    const titles = new Map<string, string[]>()
+    for (const inst of instances) {
+      const meta = instanceMetaMap.get(inst.instanceId)
+      if (meta?.domain && meta?.perspective) {
+        const key = `${meta.domain}:${meta.perspective}`
+        const arr = titles.get(key) ?? []
+        arr.push(inst.title)
+        titles.set(key, arr)
+      }
+    }
+    return titles
+  }, [instances, instanceMetaMap])
+
   /** 各业务域 Widget 计数（左轨徽标，预计算避免每次 render 重算） */
   const domainCounts = useMemo(() => {
     const counts = new Map<WidgetDomain, number>()
@@ -140,9 +155,11 @@ export function CockpitCrossLayout({
         {/* 矩阵总览切换 */}
         <button
           type="button"
+          aria-pressed={matrixVisible}
           onClick={() => setMatrixVisible((v) => !v)}
           className={cn(
             'mx-3 mb-3 rounded-md px-3 py-2 text-left text-xs font-medium transition-colors',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
             matrixVisible
               ? 'bg-primary/10 text-primary'
               : 'text-muted-foreground hover:bg-muted',
@@ -165,6 +182,7 @@ export function CockpitCrossLayout({
                 onClick={() => setActiveDomain(domain.id)}
                 className={cn(
                   'flex items-center justify-between rounded-md px-3 py-2.5 text-left text-sm transition-all',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                   isActive
                     ? 'bg-primary text-primary-foreground shadow-sm'
                     : 'text-foreground hover:bg-muted',
@@ -237,6 +255,7 @@ export function CockpitCrossLayout({
           {matrixVisible ? (
             <CrossMatrixOverview
               matrixCounts={matrixCounts}
+              matrixTitles={matrixTitles}
               activeDomain={activeDomain}
               activePerspective={activePerspective}
               onCellClick={handleMatrixClick}
@@ -259,7 +278,7 @@ export function CockpitCrossLayout({
               </div>
             </div>
           ) : (
-            <div className="space-y-4" style={{ gap: COCKPIT_LAYOUT.SECTION_HEADER_GAP }}>
+            <div className="space-y-3">
               {/* 网格型 Widget */}
               {gridInstances.length > 0 && (
                 <div
