@@ -587,6 +587,31 @@ export const WIDGET_CROSS_LAYOUT: Record<string, { domain: WidgetDomain; perspec
 }
 
 /**
+ * 纵横交叉布局：业务域（纵轴）展示元数据（Phase 1 步骤 1.1）
+ *
+ * 与 WIDGET_CROSS_LAYOUT 的 domain 枚举一一对应，是 UI 分组的单一真相源。
+ * CockpitCrossLayout 与 CrossMatrixOverview 均从此处导入，避免两处漂移。
+ */
+export const COCKPIT_CROSS_DOMAINS: readonly { id: WidgetDomain; label: string; icon: string }[] = [
+  { id: 'research', label: '研究全景', icon: '🔬' },
+  { id: 'market', label: '市场背景', icon: '📈' },
+  { id: 'ai', label: 'AI 决策', icon: '🤖' },
+  { id: 'portfolio', label: '持仓观察', icon: '💼' },
+]
+
+/**
+ * 纵横交叉布局：视角（横轴）展示元数据（Phase 1 步骤 1.1）
+ *
+ * 与 WIDGET_CROSS_LAYOUT 的 perspective 枚举一一对应。
+ */
+export const COCKPIT_CROSS_PERSPECTIVES: readonly { id: WidgetPerspective; label: string }[] = [
+  { id: 'overview', label: '概览' },
+  { id: 'analysis', label: '深度分析' },
+  { id: 'signal', label: '信号验证' },
+  { id: 'risk', label: '风控' },
+]
+
+/**
  * 重型 Widget 收为 Sheet 抽屉触发（Phase 1 步骤 1.5）
  *
  * 这些 Widget 交互复杂或面积较大，在交叉网格中以触发卡片形式呈现，

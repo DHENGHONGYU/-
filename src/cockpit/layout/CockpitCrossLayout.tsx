@@ -16,7 +16,7 @@
 import { useMemo, useState, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { Tabs, TabsList, TabsTrigger } from '@/components/molecules/Tabs'
-import { COCKPIT_LAYOUT, DRAWER_WIDGETS } from '@/constants/cockpit.constants'
+import { COCKPIT_LAYOUT, COCKPIT_CROSS_DOMAINS, COCKPIT_CROSS_PERSPECTIVES, DRAWER_WIDGETS } from '@/constants/cockpit.constants'
 import type { WidgetConfig, WidgetDomain, WidgetPerspective } from '@/types/modules/widget.types'
 import { widgetRegistry } from '@/cockpit/core/widgetRegistry'
 import { CrossMatrixOverview } from './CrossMatrixOverview'
@@ -26,30 +26,8 @@ import { WidgetSheetDrawer } from './WidgetSheetDrawer'
 // 常量定义
 // ============================================================
 
-interface DomainMeta {
-  id: WidgetDomain
-  label: string
-  icon: string
-}
-
-interface PerspectiveMeta {
-  id: WidgetPerspective
-  label: string
-}
-
-const DOMAINS: DomainMeta[] = [
-  { id: 'research', label: '研究全景', icon: '🔬' },
-  { id: 'market', label: '市场背景', icon: '📈' },
-  { id: 'ai', label: 'AI 决策', icon: '🤖' },
-  { id: 'portfolio', label: '持仓观察', icon: '💼' },
-]
-
-const PERSPECTIVES: PerspectiveMeta[] = [
-  { id: 'overview', label: '概览' },
-  { id: 'analysis', label: '深度分析' },
-  { id: 'signal', label: '信号验证' },
-  { id: 'risk', label: '风控' },
-]
+// 业务域/视角展示元数据统一从 cockpit.constants.ts 导入（COCKPIT_CROSS_DOMAINS / COCKPIT_CROSS_PERSPECTIVES），
+// 避免与 CrossMatrixOverview 双处定义漂移
 
 // ============================================================
 // 组件 Props
@@ -114,6 +92,18 @@ export function CockpitCrossLayout({
     return counts
   }, [instances, instanceMetaMap])
 
+  /** 各业务域 Widget 计数（左轨徽标，预计算避免每次 render 重算） */
+  const domainCounts = useMemo(() => {
+    const counts = new Map<WidgetDomain, number>()
+    for (const inst of instances) {
+      const meta = instanceMetaMap.get(inst.instanceId)
+      if (meta?.domain) {
+        counts.set(meta.domain, (counts.get(meta.domain) || 0) + 1)
+      }
+    }
+    return counts
+  }, [instances, instanceMetaMap])
+
   /** 当前交叉点的 Widget 实例 */
   const crossInstances = useMemo(() => {
     return instances.filter((inst) => {
@@ -163,17 +153,15 @@ export function CockpitCrossLayout({
 
         {/* 域列表 */}
         <nav className="flex flex-col gap-1 px-3">
-          {DOMAINS.map((domain) => {
+          {COCKPIT_CROSS_DOMAINS.map((domain) => {
             const isActive = activeDomain === domain.id
-            const domainCount = instances.filter((inst) => {
-              const meta = instanceMetaMap.get(inst.instanceId)
-              return meta?.domain === domain.id
-            }).length
+            const domainCount = domainCounts.get(domain.id) || 0
 
             return (
               <button
                 key={domain.id}
                 type="button"
+                aria-pressed={isActive}
                 onClick={() => setActiveDomain(domain.id)}
                 className={cn(
                   'flex items-center justify-between rounded-md px-3 py-2.5 text-left text-sm transition-all',
@@ -219,7 +207,7 @@ export function CockpitCrossLayout({
           className="shrink-0"
         >
           <TabsList className="h-9">
-            {PERSPECTIVES.map((p) => {
+            {COCKPIT_CROSS_PERSPECTIVES.map((p) => {
               const key = `${activeDomain}:${p.id}`
               const count = matrixCounts.get(key) || 0
               return (
@@ -258,8 +246,8 @@ export function CockpitCrossLayout({
               <div className="text-center">
                 <p className="text-lg font-medium">当前交叉点无 Widget</p>
                 <p className="mt-1 text-sm">
-                  {DOMAINS.find((d) => d.id === activeDomain)?.label} ×{' '}
-                  {PERSPECTIVES.find((p) => p.id === activePerspective)?.label}
+                  {COCKPIT_CROSS_DOMAINS.find((d) => d.id === activeDomain)?.label} ×{' '}
+                  {COCKPIT_CROSS_PERSPECTIVES.find((p) => p.id === activePerspective)?.label}
                 </p>
                 <button
                   type="button"
