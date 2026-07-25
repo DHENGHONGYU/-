@@ -483,7 +483,10 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
   },
   [MODULE_ID.trading]: {
-    read: [STORE_NAME.stocks, STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.strategySnapshots, STORE_NAME.dailyQuotes],
+    // 2026-07-25 修复：新增 STORE_NAME.v6Scores 至 read。
+    // 交易舱展示持仓评分与风险指标时需读取 v6_scores，原配置缺失导致
+    // ACL_PERMISSION_DENIED（"Module trading cannot SELECT on store v6_scores"）。
+    read: [STORE_NAME.stocks, STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.strategySnapshots, STORE_NAME.dailyQuotes, STORE_NAME.v6Scores],
     write: [STORE_NAME.orders, STORE_NAME.signals],
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update],
   },
@@ -524,7 +527,7 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
   [MODULE_ID.executionPlans]: {
     read: [STORE_NAME.executionPlans],
     write: [STORE_NAME.executionPlans],
-    actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
+    actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
   },
   [MODULE_ID.executionLogs]: {
     read: [STORE_NAME.executionLogs],
@@ -581,4 +584,8 @@ export interface EnvelopeMeta {
   action: EnvelopeAction
   traceId: string
   timestamp: number
+  /** 通信协议版本（SemVer），旧模块发 "1.0"，新模块发 "2.0"；缺省视为 "1.0" */
+  apiVersion?: string
+  /** 数据契约版本（SemVer），与 payload schema 绑定 */
+  schemaVersion?: string
 }

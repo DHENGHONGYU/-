@@ -1,8 +1,7 @@
 /**
  * @module executionPlanService
- * @note P1-12（已确认合规）：dataLayer store 内部通过 sendWriteEnvelope() → DataBridge 写入，
- *   queryList/queryGet 走 DataBridge 查询，是 DataBridge 的类型安全包装层。
- *   符合 services → data 分层规则（AGENTS.md §一），无需迁移。
+ * @note 已迁移至 DataBridge 架构：所有数据访问通过 dataBridge.query() / dataBridge.forward()，
+ *   不再直接依赖 dataLayer store。ACL 审计由 DataBridge 统一管控。
  * @description 执行计划服务：基于交易信号创建执行计划，管理阶段流转与取消。
  *
  * 职责：
@@ -11,16 +10,20 @@
  *   - updatePhase(planId, nextPhase): 按状态机推进阶段
  *   - cancelPlan(planId): 取消执行计划
  *
- * 依赖：dataLayer.executionPlans / dataLayer.executionLogs / dataFreshnessGuard
+ * 依赖：DataBridge (query/forward) / executionLogService / freshnessGuard
  *
- * @convergence DataBridge 迁移（Phase 2）：当前直接 import executionPlanStore，
- *   绕过 DataBridge ACL/审计。计划写入改为 DataBridge.forward(envelope)，
- *   读取改为 DataBridge.query()。
-  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+ * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
 */
 
 import { getLogger } from '@/lib/logger'
-import { executionPlanStore } from '@/data/dataLayerTradingStores'
+import { dataBridge } from '@/core/databridge'
+import { EnvelopeFactory } from '@/core/envelope'
+import {
+  ENVELOPE_ACTION,
+  ENVELOPE_TARGET,
+  MODULE_ID,
+  STORE_NAME,
+} from '@/config/dbConfig'
 import type { ExecutionPlan, Signal } from '@/data/types'
 import {
   EXECUTION_PHASE,
@@ -32,8 +35,44 @@ import {
 } from '@/constants/execution.constants'
 import { checkExecutionPlanFreshness } from '@/core/freshnessGuard'
 import { executionLogService } from './executionLogService'
+import { nanoid } from 'nanoid'
 
 const logger = getLogger()
+
+const SOURCE = MODULE_ID.executionPlans
+const STORE = STORE_NAME.executionPlans
+
+async function savePlanViaBridge(plan: ExecutionPlan): Promise<void> {
+  const envelope = EnvelopeFactory.create(
+    {
+      source: SOURCE,
+      target: ENVELOPE_TARGET.db,
+      action: ENVELOPE_ACTION.saveExecutionPlan,
+      traceId: `plan-${nanoid(8)}`,
+    },
+    plan,
+  )
+  await dataBridge.forward(envelope)
+}
+
+async function queryAllPlansViaBridge(): Promise<ExecutionPlan[]> {
+  const result = await dataBridge.query<ExecutionPlan[]>({
+    action: ENVELOPE_ACTION.queryList,
+    store: STORE,
+    source: SOURCE,
+  })
+  return result.success ? (result.data ?? []) : []
+}
+
+async function queryPlanByIdViaBridge(planId: string): Promise<ExecutionPlan | undefined> {
+  const result = await dataBridge.query<ExecutionPlan>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE,
+    key: planId,
+    source: SOURCE,
+  })
+  return result.success ? result.data : undefined
+}
 
 export interface CreatePlanOptions {
   now?: number
@@ -103,9 +142,11 @@ export async function createPlan(signal: Signal, options: CreatePlanOptions = {}
     // Freshness 校验：执行计划创建时间必须晚于信号创建时间
     checkExecutionPlanFreshness(plan.createdAt, signal.createdAt, plan.id)
 
-    const result = await executionPlanStore.save(plan)
-    if (!result.success) {
-      logger.error(`[executionPlanService] createPlan save failed: ${result.error}`, { signalId: signal.id })
+    try {
+      await savePlanViaBridge(plan)
+    } catch (saveErr) {
+      const saveMsg = saveErr instanceof Error ? saveErr.message : String(saveErr)
+      logger.error(`[executionPlanService] createPlan save failed: ${saveMsg}`, { signalId: signal.id })
       return undefined
     }
 
@@ -131,7 +172,7 @@ export async function createPlan(signal: Signal, options: CreatePlanOptions = {}
  */
 export async function listPlans(symbol?: string): Promise<ExecutionPlan[]> {
   try {
-    const all = await executionPlanStore.getAll()
+    const all = await queryAllPlansViaBridge()
     if (!symbol) {
       return all
     }
@@ -166,7 +207,7 @@ export async function updatePhase(
   const actor = options.actor ?? 'system'
 
   try {
-    const plan = await executionPlanStore.get(planId)
+    const plan = await queryPlanByIdViaBridge(planId)
     if (!plan) {
       logger.warn(`[executionPlanService] updatePhase plan not found: planId="${planId}"`)
       return undefined
@@ -183,9 +224,11 @@ export async function updatePhase(
     const timestampUpdate = applyPhaseTimestamp(nextPhase, now)
     const updated: ExecutionPlan = { ...plan, phase: nextPhase, ...timestampUpdate }
 
-    const result = await executionPlanStore.save(updated)
-    if (!result.success) {
-      logger.error(`[executionPlanService] updatePhase save failed: ${result.error}`, { planId })
+    try {
+      await savePlanViaBridge(updated)
+    } catch (saveErr) {
+      const saveMsg = saveErr instanceof Error ? saveErr.message : String(saveErr)
+      logger.error(`[executionPlanService] updatePhase save failed: ${saveMsg}`, { planId })
       return undefined
     }
 
@@ -211,7 +254,7 @@ export async function cancelPlan(planId: string, options: UpdatePhaseOptions = {
   const actor = options.actor ?? 'system'
 
   try {
-    const plan = await executionPlanStore.get(planId)
+    const plan = await queryPlanByIdViaBridge(planId)
     if (!plan) {
       logger.warn(`[executionPlanService] cancelPlan plan not found: planId="${planId}"`)
       return undefined
@@ -226,9 +269,12 @@ export async function cancelPlan(planId: string, options: UpdatePhaseOptions = {
     }
 
     const updated: ExecutionPlan = { ...plan, phase: EXECUTION_PHASE.CANCELLED }
-    const result = await executionPlanStore.save(updated)
-    if (!result.success) {
-      logger.error(`[executionPlanService] cancelPlan save failed: ${result.error}`, { planId })
+
+    try {
+      await savePlanViaBridge(updated)
+    } catch (saveErr) {
+      const saveMsg = saveErr instanceof Error ? saveErr.message : String(saveErr)
+      logger.error(`[executionPlanService] cancelPlan save failed: ${saveMsg}`, { planId })
       return undefined
     }
 
@@ -248,8 +294,7 @@ export async function cancelPlan(planId: string, options: UpdatePhaseOptions = {
  */
 export async function getOrphanPlans(): Promise<ExecutionPlan[]> {
   try {
-    const all = await executionPlanStore.getAll()
-    // 信号存在性由调用方检查，这里仅返回非终态的计划
+    const all = await queryAllPlansViaBridge()
     const terminalPhases: ExecutionPlan['phase'][] = [EXECUTION_PHASE.EXECUTED, EXECUTION_PHASE.CANCELLED, EXECUTION_PHASE.REVIEWED]
     return all.filter((p) => !terminalPhases.includes(p.phase))
   } catch (err) {
