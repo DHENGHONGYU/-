@@ -21,7 +21,7 @@
 
 import { getLogger } from '@/lib/logger'
 import type { CommunityPost } from '@/services/data-collector/dimensionDataTypes'
-import type { ProfileItem, ProfileDomain, ScoreLayerId, SentimentLabel } from '@/data/types/types.profile'
+import type { ProfileItem, ProfileDomain, ScoreLayerId } from '@/data/types/types.profile'
 import { STORE_NAME } from '@/config/dbConfig'
 import { autoTagItem } from './tagService'
 import { bulkSaveProfileItems } from './profileService'
@@ -176,29 +176,35 @@ function calcQualityScore(post: CommunityPost): number {
 
   // 来源加权
   const weight = SOURCE_QUALITY_WEIGHT[post.source]
-  const sourceWeight: number = weight ?? 0.9
-  let score = baseScore * sourceWeight
+  let sourceWeight: number
+  if (weight !== undefined) {
+    sourceWeight = weight
+  } else {
+    sourceWeight = 0.9
+    logger.warn(`[communitySyncService] 未知来源 "${post.source}"，使用默认权重 0.9`)
+  }
+  const weightedScore = baseScore * sourceWeight
 
   // 互动热度加分（高质量内容通常互动多，但要防止水军刷量）
   const views = post.views ?? 0
   const comments = post.comments ?? 0
   const likes = post.likes ?? 0
 
-  const engagementBonus = Math.min(
-    15, // 上限 15 分
-    views * ENGAGEMENT_WEIGHT.viewsPer +
-      comments * ENGAGEMENT_WEIGHT.commentsPer +
-      likes * ENGAGEMENT_WEIGHT.likesPer,
-  )
-  score += engagementBonus
+  const engagementRaw = views * ENGAGEMENT_WEIGHT.viewsPer +
+    comments * ENGAGEMENT_WEIGHT.commentsPer +
+    likes * ENGAGEMENT_WEIGHT.likesPer
+  const engagementBonus = Math.min(15, engagementRaw)
+  const hasKeyPoints = post.keyPoints && post.keyPoints.length >= 3
+  const keyPointsBonus = hasKeyPoints ? 5 : 0
 
-  // 有核心观点的加分（LLM 提取了 keyPoints）
-  if (post.keyPoints && post.keyPoints.length >= 3) {
-    score += 5
-  }
+  let score = weightedScore + engagementBonus + keyPointsBonus
 
   // 裁剪到 [10, 100]
-  return Math.max(10, Math.min(100, Math.round(score)))
+  const finalScore = Math.max(10, Math.min(100, Math.round(score)))
+
+  logger.debug(`[communitySyncService] calcQualityScore: source=${post.source}, base=${baseScore}, weight=${sourceWeight}, weighted=${weightedScore.toFixed(1)}, engagement=${engagementBonus.toFixed(1)}(${engagementRaw.toFixed(1)} raw), keyPoints=${post.keyPoints?.length ?? 0}(+${keyPointsBonus}), final=${finalScore}`)
+
+  return finalScore
 }
 
 /**

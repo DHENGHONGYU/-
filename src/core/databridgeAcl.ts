@@ -20,10 +20,11 @@ const logger = getLogger()
 /**
  * 执行 query 的 ACL 校验，校验失败抛出原错误。
  */
-export function assertQueryAcl(source: ModuleId, store: StoreName): void {
+export function assertQueryAcl(source: ModuleId, store: StoreName, apiVersion?: string): void {
   try {
-    logger.debug(`[databridgeAcl] query() ACL check: module="${source}", store="${store}", operation="SELECT"`)
-    aclEngine.assert({ module: source, store, operation: 'SELECT' })
+    const versionLabel = apiVersion !== undefined ? apiVersion : 'unspecified'
+    logger.debug(`[databridgeAcl] query() ACL check: module="${source}", store="${store}", operation="SELECT", apiVersion="${versionLabel}"`)
+    aclEngine.assert({ module: source, store, operation: 'SELECT', apiVersion })
     logger.info(`[databridgeAcl] query() ACL PASS: module="${source}", store="${store}"`)
   } catch (aclErr) {
     throw aclErr
@@ -62,7 +63,7 @@ export async function assertAclWithFallback(
   const source = meta.source as ModuleId
 
   try {
-    aclEngine.assert({ module: source, store: targetStore, operation })
+    aclEngine.assert({ module: source, store: targetStore, operation, apiVersion: meta.apiVersion })
     return true
   } catch (aclErr) {
     // 市场类请求 ACL 拒绝时先放重试队列（限市场类，不阻塞通用流程）
