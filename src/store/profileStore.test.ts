@@ -114,7 +114,7 @@ import {
   accumulativeFilterSteps,
   toProfileItem,
   type MinQualityTestScenario,
-} from './__tests__/profileStore.minQuality.test-data'
+} from '../../tests/fixtures/profile'
 
 // ============================================================
 // Helpers
