@@ -9,6 +9,15 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
+import { Link } from 'react-router'
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from '@/components/atoms/Breadcrumb'
 import {
   BookOpen,
   Search,
@@ -34,7 +43,7 @@ import {
   AlertCircle,
   type LucideIcon,
 } from 'lucide-react'
-import { twText } from '@/constants/theme.tokens'
+import { twText, twBg } from '@/constants/theme.tokens'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { PageContainer } from '@/components/templates/PageContainer'
 import { PageHeader } from '@/components/templates/PageHeader'
@@ -291,7 +300,7 @@ function FilterBar(): React.JSX.Element {
   const hasActiveFilter =
     filter.itemType ||
     filter.sentiment ||
-    (filter.minQuality ?? 0) > 0 ||
+    filter.minQuality !== undefined ||
     (filter.keyword ?? '').trim() ||
     filter.source
 
@@ -436,7 +445,7 @@ function ItemCard({ item }: { item: ProfileItem }): React.JSX.Element {
           </Badge>
         )}
         {item.isBookmarked && (
-          <Star className={`h-3 w-3 fill-amber-400 ${twText('amber', 400)}`} />
+          <Star className={`h-3 w-3 ${twBg('amber', 400).replace('bg-', 'fill-')} ${twText('amber', 400)}`} />
         )}
         <span className="ml-auto flex items-center gap-1 text-[10px] text-muted-foreground">
           <Clock className="h-3 w-3" />
@@ -906,9 +915,9 @@ function EvidenceOverview(): React.JSX.Element {
                     <div
                       className={`h-6 flex-1 rounded-sm ${
                         signedContribution(ev) > 0
-                          ? 'bg-emerald-500/60'
+                          ? `${twBg('emerald', 500)}/60`
                           : signedContribution(ev) < 0
-                          ? 'bg-rose-500/60'
+                          ? `${twBg('rose', 500)}/60`
                           : 'bg-muted'
                       }`}
                       style={{ opacity: 0.4 + Math.abs(signedContribution(ev)) * 0.6 }}
@@ -934,6 +943,21 @@ export default function ProfileBrowsePage(): React.JSX.Element {
   return (
     <ErrorBoundary>
       <PageContainer centered={false} className="px-4 py-4">
+        <Breadcrumb aria-label="breadcrumb">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild><Link to="/">首页</Link></BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild><Link to="/output">输出舱</Link></BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>资料浏览</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <PageHeader
           title={
             <div className="flex items-center gap-2">

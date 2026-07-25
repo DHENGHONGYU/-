@@ -56,7 +56,13 @@ export interface ProfileFilter {
   itemType?: ProfileItemType
   /** 情绪筛选 */
   sentiment?: SentimentLabel
-  /** 最低质量分 */
+  /** 最低质量分筛选阈值
+   * - undefined: 不启用筛选，保留所有条目
+   * - 0: 排除负分条目，保留 qualityScore >= 0 的条目
+   * - 正数: 保留 qualityScore >= minQuality 的条目
+   * - 负数: 保留 qualityScore >= minQuality 的条目
+   * - null/undefined qualityScore 的条目以默认值 50 参与筛选
+   */
   minQuality?: number
   /** 搜索关键词 */
   keyword?: string
@@ -148,7 +154,7 @@ export interface ProfileActions {
 const initialFilter: ProfileFilter = {
   itemType: undefined,
   sentiment: undefined,
-  minQuality: 0,
+  minQuality: undefined,
   keyword: '',
   source: undefined,
 }
@@ -210,7 +216,8 @@ export const useProfileStore = create<ProfileState & ProfileActions>((set, get) 
   // ============================================================
 
   setActiveDomain: (domain: ProfileDomain | null) => {
-    logger.info(`[profileStore] setActiveDomain: ${domain ?? 'all'}`)
+    const domainLabel = domain !== null ? domain : 'all'
+    logger.info(`[profileStore] setActiveDomain: ${domainLabel}`)
     set({ activeDomain: domain, selectedItemId: null })
     void get().loadItems()
   },
@@ -249,41 +256,65 @@ export const useProfileStore = create<ProfileState & ProfileActions>((set, get) 
 
       if (result.success && result.data) {
         let items = result.data
+        const initialCount = items.length
+        logger.info(`[profileStore] loadItems: 数据加载成功, 初始 ${initialCount} 条`)
 
         // 客户端筛选
         if (filter.itemType) {
+          const beforeCount = items.length
           items = items.filter((i) => i.itemType === filter.itemType)
+          logger.debug(`[profileStore] loadItems: itemType 筛选 ${beforeCount}→${items.length} 条`)
         }
         if (filter.sentiment) {
+          const beforeCount = items.length
           items = items.filter((i) => i.sentiment === filter.sentiment)
+          logger.debug(`[profileStore] loadItems: sentiment 筛选 ${beforeCount}→${items.length} 条`)
         }
-        if (filter.minQuality && filter.minQuality > 0) {
-          items = items.filter((i) => (i.qualityScore ?? 0) >= filter.minQuality!)
+        if (filter.minQuality !== undefined) {
+          const totalBefore = items.length
+          const missingScoreCount = items.filter((i) => i.qualityScore == null).length
+          if (missingScoreCount > 0) {
+            logger.debug(`[profileStore] loadItems: ${missingScoreCount}/${totalBefore} 条资料缺失 qualityScore，以默认值 50 参与 minQuality=${filter.minQuality} 筛选`)
+          }
+          const zeroScoreCount = items.filter((i) => i.qualityScore === 0).length
+          if (zeroScoreCount > 0) {
+            logger.debug(`[profileStore] loadItems: ${zeroScoreCount}/${totalBefore} 条资料 qualityScore 为显式 0，将参与 minQuality=${filter.minQuality} 筛选`)
+          }
+          items = items.filter((i) => (i.qualityScore ?? 50) >= filter.minQuality!)
+          logger.debug(`[profileStore] loadItems: minQuality(${filter.minQuality}) 筛选 ${totalBefore}→${items.length} 条`)
         }
         if (filter.keyword?.trim()) {
           const kw = filter.keyword.toLowerCase()
+          const beforeCount = items.length
           items = items.filter(
             (i) =>
               i.title.toLowerCase().includes(kw) ||
               i.summary.toLowerCase().includes(kw) ||
               i.topicTags?.some((t) => t.toLowerCase().includes(kw)),
           )
+          logger.debug(`[profileStore] loadItems: keyword("${kw}") 筛选 ${beforeCount}→${items.length} 条`)
         }
         if (filter.source) {
+          const beforeCount = items.length
           items = items.filter((i) => i.source === filter.source)
+          logger.debug(`[profileStore] loadItems: source("${filter.source}") 筛选 ${beforeCount}→${items.length} 条`)
         }
 
         // 按质量分 × 证据权重排序
+        const sortStart = performance.now()
         items.sort((a, b) => {
           const scoreA = (a.qualityScore ?? 50) * (a.evidenceWeight ?? 0.5)
           const scoreB = (b.qualityScore ?? 50) * (b.evidenceWeight ?? 0.5)
           return scoreB - scoreA
         })
+        const sortDuration = (performance.now() - sortStart).toFixed(2)
 
         set({ items, itemsLoading: false })
-        logger.info(`[profileStore] loadItems: ${items.length} 条资料 (${activeDomain ?? '全部域'})`)
+        const domainLabel = activeDomain !== null ? activeDomain : '全部域'
+        logger.info(`[profileStore] loadItems: ${initialCount}→${items.length} 条资料 (${domainLabel}), 排序耗时 ${sortDuration}ms`)
       } else {
-        set({ items: [], itemsLoading: false, itemsError: result.error ?? '查询失败' })
+        const errorMsg = result.error !== undefined ? result.error : '查询失败'
+        set({ items: [], itemsLoading: false, itemsError: errorMsg })
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)

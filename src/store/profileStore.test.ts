@@ -20,6 +20,19 @@
  * 15. selectSelectedItem: 纯函数
  * 16. groupEvidenceByLayer: 纯函数
  * 17. selectAvailableSources: 纯函数
+ *
+ * minQuality 筛选边界测试:
+ * - minQuality=undefined 时不执行筛选
+ * - minQuality=0 时排除负分条目
+ * - minQuality>0 时正常筛选
+ * - qualityScore=null/undefined 以默认值 50 参与筛选
+ * - qualityScore=0 显式 0 分参与筛选
+ * - 超大分值(200+)正确参与筛选和排序
+ * - 边界等值(qualityScore === minQuality)正确保留
+ * - 负分 minQuality 正确处理
+ * - evidenceWeight=null/undefined 以默认值 0.5 参与排序
+ * - 混合筛选条件组合测试
+ * - 多次 setFilter 累积效果测试
  */
 
 import { vi, describe, it, expect, beforeEach } from 'vitest'
@@ -34,9 +47,10 @@ const mockForward = vi.hoisted(() => vi.fn())
 const mockListPoolItems = vi.hoisted(() => vi.fn())
 const mockEnvelopeCreate = vi.hoisted(() => vi.fn())
 const mockNanoid = vi.hoisted(() => vi.fn())
+const mockDebug = vi.hoisted(() => vi.fn())
 
 vi.mock('@/lib/logger', () => ({
-  getLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }),
+  getLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: mockDebug }),
 }))
 
 vi.mock('@/core/databridge', () => ({
@@ -89,6 +103,18 @@ import {
   selectAvailableSources,
   type ProfileFilter,
 } from './profileStore'
+import {
+  superHighScoreFilterScenario,
+  superHighScoreSortScenario,
+  exactMatchScenario,
+  negativeMinQualityScenario,
+  nullEvidenceWeightSortScenario,
+  itemTypeAndMinQualityScenario,
+  sentimentMinQualityKeywordScenario,
+  accumulativeFilterSteps,
+  toProfileItem,
+  type MinQualityTestScenario,
+} from './__tests__/profileStore.minQuality.test-data'
 
 // ============================================================
 // Helpers
@@ -180,7 +206,7 @@ describe('useProfileStore', () => {
       expect(state.filter).toEqual({
         itemType: undefined,
         sentiment: undefined,
-        minQuality: 0,
+        minQuality: undefined,
         keyword: '',
         source: undefined,
       })
@@ -421,6 +447,127 @@ describe('useProfileStore', () => {
       expect(useProfileStore.getState().items[0]!.id).toBe('high')
     })
 
+    it('按 minQuality 筛选：缺失 qualityScore 的条目应被排除 + 日志', async () => {
+      mockDebug.mockClear()
+      const items = [
+        createMockItem({ id: 'has-score', qualityScore: 80, evidenceWeight: 0.6 }),
+        createMockItem({ id: 'no-score', qualityScore: undefined, evidenceWeight: 0.6 }),
+        createMockItem({ id: 'also-no-score', qualityScore: null as unknown as undefined, evidenceWeight: 0.6 }),
+      ]
+      mockQuery.mockResolvedValue({ success: true, data: items })
+
+      useProfileStore.setState({
+        symbol: 'AAPL',
+        filter: { itemType: undefined, sentiment: undefined, minQuality: 60, keyword: '', source: undefined },
+      })
+      await useProfileStore.getState().loadItems()
+
+      const state = useProfileStore.getState()
+      expect(state.items).toHaveLength(1)
+      expect(state.items[0]!.id).toBe('has-score')
+      expect(mockDebug).toHaveBeenCalledWith(
+        expect.stringContaining('缺失 qualityScore')
+      )
+      expect(mockDebug).toHaveBeenCalledWith(
+        expect.stringContaining('2/3')
+      )
+    })
+
+    it('按 minQuality 筛选：显式 0 分条目参与筛选 + 零值日志', async () => {
+      mockDebug.mockClear()
+      const items = [
+        createMockItem({ id: 'zero-score', qualityScore: 0, evidenceWeight: 0.6 }),
+        createMockItem({ id: 'high-score', qualityScore: 80, evidenceWeight: 0.6 }),
+      ]
+      mockQuery.mockResolvedValue({ success: true, data: items })
+
+      useProfileStore.setState({
+        symbol: 'AAPL',
+        filter: { itemType: undefined, sentiment: undefined, minQuality: 60, keyword: '', source: undefined },
+      })
+      await useProfileStore.getState().loadItems()
+
+      const state = useProfileStore.getState()
+      expect(state.items).toHaveLength(1)
+      expect(state.items[0]!.id).toBe('high-score')
+      expect(mockDebug).toHaveBeenCalledWith(
+        expect.stringContaining('显式 0')
+      )
+      expect(mockDebug).toHaveBeenCalledWith(
+        expect.stringContaining('qualityScore 为显式 0')
+      )
+    })
+
+    it('按 minQuality 筛选：显式 0 分在阈值=0 时应保留', async () => {
+      mockDebug.mockClear()
+      const items = [
+        createMockItem({ id: 'zero-score', qualityScore: 0, evidenceWeight: 0.6 }),
+        createMockItem({ id: 'high-score', qualityScore: 80, evidenceWeight: 0.6 }),
+      ]
+      mockQuery.mockResolvedValue({ success: true, data: items })
+
+      useProfileStore.setState({
+        symbol: 'AAPL',
+        filter: { itemType: undefined, sentiment: undefined, minQuality: 0, keyword: '', source: undefined },
+      })
+      await useProfileStore.getState().loadItems()
+
+      expect(useProfileStore.getState().items).toHaveLength(2)
+    })
+
+    // 逆向验证
+    it('逆向：筛选后条目数减少 → 缺失评分被排除或评分低于阈值', async () => {
+      mockDebug.mockClear()
+      const items = [
+        createMockItem({ id: 'a', qualityScore: 90, evidenceWeight: 0.6 }),
+        createMockItem({ id: 'b', qualityScore: undefined, evidenceWeight: 0.6 }),
+        createMockItem({ id: 'c', qualityScore: 30, evidenceWeight: 0.6 }),
+      ]
+      mockQuery.mockResolvedValue({ success: true, data: items })
+
+      useProfileStore.setState({
+        symbol: 'AAPL',
+        filter: { itemType: undefined, sentiment: undefined, minQuality: 60, keyword: '', source: undefined },
+      })
+      await useProfileStore.getState().loadItems()
+
+      const state = useProfileStore.getState()
+      expect(state.items).toHaveLength(1)
+      expect(state.items[0]!.id).toBe('a')
+
+      expect(mockDebug).toHaveBeenCalledWith(
+        expect.stringContaining('缺失 qualityScore')
+      )
+      const missingLogCalls = mockDebug.mock.calls.filter((c: any[]) =>
+        c[0]?.includes('缺失 qualityScore')
+      )
+      expect(missingLogCalls.length).toBe(1)
+    })
+
+    it('逆向：0 分条目被排除 → 日志应记录显式 0', async () => {
+      mockDebug.mockClear()
+      const items = [
+        createMockItem({ id: 'a', qualityScore: 0, evidenceWeight: 0.6 }),
+        createMockItem({ id: 'b', qualityScore: 80, evidenceWeight: 0.6 }),
+      ]
+      mockQuery.mockResolvedValue({ success: true, data: items })
+
+      useProfileStore.setState({
+        symbol: 'AAPL',
+        filter: { itemType: undefined, sentiment: undefined, minQuality: 60, keyword: '', source: undefined },
+      })
+      await useProfileStore.getState().loadItems()
+
+      const state = useProfileStore.getState()
+      expect(state.items).toHaveLength(1)
+      expect(state.items[0]!.id).toBe('b')
+
+      const zeroCalls = mockDebug.mock.calls.filter((c: any[]) =>
+        c[0]?.includes('显式 0')
+      )
+      expect(zeroCalls.length).toBe(1)
+    })
+
     it('按 keyword 筛选（标题/摘要/标签）', async () => {
       const items = [
         createMockItem({ id: 'match-title', title: 'AI 大模型突破', qualityScore: 80, evidenceWeight: 0.6 }),
@@ -515,7 +662,7 @@ describe('useProfileStore', () => {
       const filter = useProfileStore.getState().filter
       expect(filter.itemType).toBeUndefined()
       expect(filter.sentiment).toBeUndefined()
-      expect(filter.minQuality).toBe(0)
+      expect(filter.minQuality).toBeUndefined()
       expect(filter.keyword).toBe('')
       expect(filter.source).toBeUndefined()
     })
@@ -771,7 +918,7 @@ describe('useProfileStore', () => {
       expect(state.filter).toEqual({
         itemType: undefined,
         sentiment: undefined,
-        minQuality: 0,
+        minQuality: undefined,
         keyword: '',
         source: undefined,
       })
@@ -877,5 +1024,348 @@ describe('selectAvailableSources', () => {
     expect(sources).toContain('雪球')
     // 验证去重
     expect(new Set(sources).size).toBe(3)
+  })
+})
+
+// ============================================================
+// 深度验证 — profileStore 数据流完整性
+// ============================================================
+describe('profileStore - 深度验证', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    useProfileStore.setState({ symbol: 'AAPL', items: [], itemsLoading: false })
+  })
+
+  it('完整流程: DB 返回混合数据 → 筛选 → 排序', async () => {
+    mockDebug.mockClear()
+    const items = [
+      createMockItem({ id: 'good', qualityScore: 90, evidenceWeight: 0.9, itemType: 'news' }),
+      createMockItem({ id: 'zero', qualityScore: 0, evidenceWeight: 0.3, itemType: 'news' }),
+      createMockItem({ id: 'missing', qualityScore: undefined, evidenceWeight: 0.7, itemType: 'news' }),
+      createMockItem({ id: 'low', qualityScore: 30, evidenceWeight: 0.8, itemType: 'news' }),
+    ]
+    mockQuery.mockResolvedValue({ success: true, data: items })
+
+    const filter: Partial<ProfileFilter> = { itemType: undefined, sentiment: undefined, minQuality: 50, keyword: '', source: undefined }
+    useProfileStore.setState({
+      filter: filter as ProfileFilter,
+    })
+    await useProfileStore.getState().loadItems()
+
+    const state = useProfileStore.getState()
+    const resultIds = state.items.map((i) => i.id)
+    // good(90>=50) passes, zero(0<50) excluded, missing(undefined??50=50>=50) passes, low(30<50) excluded
+    expect(state.items.length).toBeGreaterThanOrEqual(1)
+    expect(resultIds).toContain('good')
+    expect(resultIds).not.toContain('zero')
+    expect(resultIds).not.toContain('low')
+
+    const zeroCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('显式 0')
+    )
+    const missingCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('缺失 qualityScore')
+    )
+    expect(zeroCalls.length).toBeGreaterThanOrEqual(1)
+    expect(missingCalls.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('qualityScore 边界: 0 分在 minQuality=0 时保留，负分被排除', async () => {
+    mockDebug.mockClear()
+    const items = [
+      createMockItem({ id: 'zero', qualityScore: 0, evidenceWeight: 0.5 }),
+      createMockItem({ id: 'neg', qualityScore: -10, evidenceWeight: 0.5 }),
+    ]
+    mockQuery.mockResolvedValue({ success: true, data: items })
+
+    useProfileStore.setState({
+      filter: { itemType: undefined, sentiment: undefined, minQuality: 0, keyword: '', source: undefined },
+    })
+    await useProfileStore.getState().loadItems()
+
+    const state = useProfileStore.getState()
+    // minQuality=0: filter activated, qualityScore>=0 preserved, negative excluded
+    expect(state.items).toHaveLength(1)
+    expect(state.items[0]!.id).toBe('zero')
+  })
+
+  it('qualityScore 边界: null/undefined 在 minQuality>0 时以 50 分参与筛选', async () => {
+    mockDebug.mockClear()
+    const items = [
+      createMockItem({ id: 'null-score', qualityScore: null as unknown as undefined, evidenceWeight: 0.9 }),
+      createMockItem({ id: 'real', qualityScore: 80, evidenceWeight: 0.9 }),
+    ]
+    mockQuery.mockResolvedValue({ success: true, data: items })
+
+    useProfileStore.setState({
+      filter: { itemType: undefined, sentiment: undefined, minQuality: 60, keyword: '', source: undefined },
+    })
+    await useProfileStore.getState().loadItems()
+
+    const state = useProfileStore.getState()
+    // null-score: (null ?? 50) = 50 < 60 → excluded
+    expect(state.items).toHaveLength(1)
+    expect(state.items[0]!.id).toBe('real')
+
+    const missingCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('缺失 qualityScore')
+    )
+    expect(missingCalls.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('日志触发: minQuality>0 且存在显式 0 分条目时输出日志', async () => {
+    mockDebug.mockClear()
+    const items = [
+      createMockItem({ id: 'zero', qualityScore: 0, evidenceWeight: 0.5 }),
+    ]
+    mockQuery.mockResolvedValue({ success: true, data: items })
+
+    useProfileStore.setState({
+      filter: { itemType: undefined, sentiment: undefined, minQuality: 1, keyword: '', source: undefined },
+    })
+    await useProfileStore.getState().loadItems()
+
+    const zeroCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('显式 0')
+    )
+    expect(zeroCalls.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('空数据: 无 qualityScore 异常时无日志输出', async () => {
+    mockDebug.mockClear()
+    const items = [
+      createMockItem({ id: 'a', qualityScore: 80, evidenceWeight: 0.5 }),
+      createMockItem({ id: 'b', qualityScore: 70, evidenceWeight: 0.5 }),
+    ]
+    mockQuery.mockResolvedValue({ success: true, data: items })
+
+    useProfileStore.setState({ symbol: 'AAPL' })
+    await useProfileStore.getState().loadItems()
+
+    const zeroCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('显式 0')
+    )
+    const missingCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('缺失 qualityScore')
+    )
+    expect(zeroCalls.length).toBe(0)
+    expect(missingCalls.length).toBe(0)
+  })
+
+  // ============================================================
+  // minQuality 筛选边界情况专项测试
+  // ============================================================
+
+  it('minQuality=undefined 时不执行筛选，所有条目保留', async () => {
+    mockDebug.mockClear()
+    const items = [
+      createMockItem({ id: 'high', qualityScore: 90, evidenceWeight: 0.9 }),
+      createMockItem({ id: 'zero', qualityScore: 0, evidenceWeight: 0.5 }),
+      createMockItem({ id: 'neg', qualityScore: -10, evidenceWeight: 0.3 }),
+      createMockItem({ id: 'null-score', qualityScore: null as unknown as undefined, evidenceWeight: 0.7 }),
+    ]
+    mockQuery.mockResolvedValue({ success: true, data: items })
+
+    useProfileStore.setState({
+      filter: { itemType: undefined, sentiment: undefined, minQuality: undefined, keyword: '', source: undefined },
+    })
+    await useProfileStore.getState().loadItems()
+
+    const state = useProfileStore.getState()
+    expect(state.items).toHaveLength(4)
+  })
+
+  it('minQuality=0 时排除负分条目，保留 0 分及以上', async () => {
+    mockDebug.mockClear()
+    const items = [
+      createMockItem({ id: 'high', qualityScore: 90, evidenceWeight: 0.9 }),
+      createMockItem({ id: 'zero', qualityScore: 0, evidenceWeight: 0.5 }),
+      createMockItem({ id: 'neg', qualityScore: -10, evidenceWeight: 0.3 }),
+    ]
+    mockQuery.mockResolvedValue({ success: true, data: items })
+
+    useProfileStore.setState({
+      filter: { itemType: undefined, sentiment: undefined, minQuality: 0, keyword: '', source: undefined },
+    })
+    await useProfileStore.getState().loadItems()
+
+    const state = useProfileStore.getState()
+    expect(state.items).toHaveLength(2)
+    expect(state.items.map(i => i.id)).toContain('high')
+    expect(state.items.map(i => i.id)).toContain('zero')
+    expect(state.items.map(i => i.id)).not.toContain('neg')
+  })
+
+  it('qualityScore=null 以默认值 50 参与 minQuality=60 筛选时被排除', async () => {
+    mockDebug.mockClear()
+    const items = [
+      createMockItem({ id: 'null-score', qualityScore: null as unknown as undefined, evidenceWeight: 0.9 }),
+      createMockItem({ id: 'real', qualityScore: 80, evidenceWeight: 0.9 }),
+    ]
+    mockQuery.mockResolvedValue({ success: true, data: items })
+
+    useProfileStore.setState({
+      filter: { itemType: undefined, sentiment: undefined, minQuality: 60, keyword: '', source: undefined },
+    })
+    await useProfileStore.getState().loadItems()
+
+    const state = useProfileStore.getState()
+    // null qualityScore uses 50 as default, 50 < 60 so excluded
+    expect(state.items).toHaveLength(1)
+    expect(state.items[0]!.id).toBe('real')
+  })
+
+  it('qualityScore=undefined 以默认值 50 参与 minQuality=40 筛选时被保留', async () => {
+    mockDebug.mockClear()
+    const items = [
+      createMockItem({ id: 'undefined-score', qualityScore: undefined, evidenceWeight: 0.9 }),
+      createMockItem({ id: 'low', qualityScore: 30, evidenceWeight: 0.9 }),
+    ]
+    mockQuery.mockResolvedValue({ success: true, data: items })
+
+    useProfileStore.setState({
+      filter: { itemType: undefined, sentiment: undefined, minQuality: 40, keyword: '', source: undefined },
+    })
+    await useProfileStore.getState().loadItems()
+
+    const state = useProfileStore.getState()
+    // undefined qualityScore uses 50 as default, 50 >= 40 so preserved
+    expect(state.items).toHaveLength(1)
+    expect(state.items[0]!.id).toBe('undefined-score')
+  })
+
+  it('排序中 null/undefined qualityScore 使用 50 默认值参与排序', async () => {
+    mockDebug.mockClear()
+    const items = [
+      createMockItem({ id: 'null-score', qualityScore: null as unknown as undefined, evidenceWeight: 0.8 }),
+      createMockItem({ id: 'real-high', qualityScore: 90, evidenceWeight: 0.7 }),
+      createMockItem({ id: 'real-low', qualityScore: 30, evidenceWeight: 0.9 }),
+    ]
+    mockQuery.mockResolvedValue({ success: true, data: items })
+
+    useProfileStore.setState({
+      filter: { itemType: undefined, sentiment: undefined, minQuality: undefined, keyword: '', source: undefined },
+    })
+    await useProfileStore.getState().loadItems()
+
+    const state = useProfileStore.getState()
+    // Sort scores:
+    // - null-score: (50 ?? 50) * 0.8 = 40 (wait, it uses ?? 50 so 50 * 0.8 = 40)
+    // - real-high: 90 * 0.7 = 63
+    // - real-low: 30 * 0.9 = 27
+    // Expected order: real-high(63) > null-score(40) > real-low(27)
+    expect(state.items[0]!.id).toBe('real-high')
+    expect(state.items[1]!.id).toBe('null-score')
+    expect(state.items[2]!.id).toBe('real-low')
+  })
+
+  it('minQuality=100 时仅保留满分条目', async () => {
+    mockDebug.mockClear()
+    const items = [
+      createMockItem({ id: 'perfect', qualityScore: 100, evidenceWeight: 0.9 }),
+      createMockItem({ id: 'high', qualityScore: 90, evidenceWeight: 0.9 }),
+      createMockItem({ id: 'zero', qualityScore: 0, evidenceWeight: 0.5 }),
+    ]
+    mockQuery.mockResolvedValue({ success: true, data: items })
+
+    useProfileStore.setState({
+      filter: { itemType: undefined, sentiment: undefined, minQuality: 100, keyword: '', source: undefined },
+    })
+    await useProfileStore.getState().loadItems()
+
+    const state = useProfileStore.getState()
+    expect(state.items).toHaveLength(1)
+    expect(state.items[0]!.id).toBe('perfect')
+  })
+
+  // ============================================================
+  // 数据驱动测试：使用独立测试数据文件
+  // ============================================================
+
+  async function runScenario(scenario: MinQualityTestScenario): Promise<void> {
+    mockDebug.mockClear()
+    const items = scenario.items.map(toProfileItem)
+    mockQuery.mockResolvedValue({ success: true, data: items })
+
+    useProfileStore.setState({
+      filter: {
+        itemType: scenario.filter.itemType as ProfileFilter['itemType'] ?? undefined,
+        sentiment: scenario.filter.sentiment as ProfileFilter['sentiment'] ?? undefined,
+        minQuality: scenario.filter.minQuality,
+        keyword: scenario.filter.keyword ?? '',
+        source: scenario.filter.source ?? undefined,
+      },
+    })
+    await useProfileStore.getState().loadItems()
+
+    const state = useProfileStore.getState()
+    const actualIds = state.items.map((i) => i.id)
+
+    expect(actualIds.sort()).toEqual(scenario.expectedIds.sort())
+
+    if (scenario.expectedOrder) {
+      const orderedIds = state.items.map((i) => i.id)
+      expect(orderedIds).toEqual(scenario.expectedOrder)
+    }
+  }
+
+  it(`[data-driven] ${superHighScoreFilterScenario.description}`, async () => {
+    await runScenario(superHighScoreFilterScenario)
+  })
+
+  it(`[data-driven] ${superHighScoreSortScenario.description}`, async () => {
+    await runScenario(superHighScoreSortScenario)
+  })
+
+  it(`[data-driven] ${exactMatchScenario.description}`, async () => {
+    await runScenario(exactMatchScenario)
+  })
+
+  it(`[data-driven] ${negativeMinQualityScenario.description}`, async () => {
+    await runScenario(negativeMinQualityScenario)
+  })
+
+  it(`[data-driven] ${nullEvidenceWeightSortScenario.description}`, async () => {
+    await runScenario(nullEvidenceWeightSortScenario)
+  })
+
+  it(`[data-driven] ${itemTypeAndMinQualityScenario.description}`, async () => {
+    await runScenario(itemTypeAndMinQualityScenario)
+  })
+
+  it(`[data-driven] ${sentimentMinQualityKeywordScenario.description}`, async () => {
+    await runScenario(sentimentMinQualityKeywordScenario)
+  })
+
+  it('[data-driven] 多次 setFilter 的累积效果验证', async () => {
+    mockDebug.mockClear()
+    const items = [
+      createMockItem({ id: 'a', qualityScore: 90, itemType: 'news', sentiment: 'positive', evidenceWeight: 0.9 }),
+      createMockItem({ id: 'b', qualityScore: 30, itemType: 'research_report', sentiment: 'negative', evidenceWeight: 0.5 }),
+    ]
+    mockQuery.mockResolvedValue({ success: true, data: items })
+
+    let state: ReturnType<typeof useProfileStore.getState>
+
+    for (const step of accumulativeFilterSteps) {
+      if (step.step === 1) {
+        useProfileStore.setState({ filter: step.filterUpdate as Partial<ProfileFilter> })
+      } else {
+        useProfileStore.getState().setFilter(step.filterUpdate as Partial<ProfileFilter>)
+      }
+      state = useProfileStore.getState()
+
+      if (step.expectedMinQuality !== undefined) {
+        expect(state.filter.minQuality).toBe(step.expectedMinQuality)
+      }
+      if (step.expectedItemType !== undefined) {
+        expect(state.filter.itemType).toBe(step.expectedItemType)
+      } else {
+        expect(state.filter.itemType).toBeUndefined()
+      }
+      if (step.expectedSentiment !== undefined) {
+        expect(state.filter.sentiment).toBe(step.expectedSentiment)
+      }
+    }
   })
 })

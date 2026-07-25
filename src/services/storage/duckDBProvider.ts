@@ -116,25 +116,33 @@ export class DuckDBProviderImpl implements TimeSeriesProvider {
    */
   async querySQL(sql: string): Promise<QueryResult<unknown>> {
     if (!this.initialized) {
-      const ok = await this.init()
-      if (!ok) return { success: false, error: 'DuckDB 未初始化' }
+      logger.warn('[duckDB] querySQL: DuckDB 未初始化')
+      return { success: false, error: 'DuckDB 未初始化' }
     }
 
-    const trimmed = (sql ?? '').trim()
+    const trimmed = sql ? sql.trim() : ''
     if (!trimmed) {
+      logger.debug('[duckDB] querySQL: 空 SQL 被拒绝')
       return { success: false, error: '仅允许 SELECT 查询' }
     }
 
     // 安全校验：必须以 SELECT 开头（大小写不敏感），否则拒绝
     if (!/^SELECT\s/i.test(trimmed)) {
+      logger.warn(`[duckDB] querySQL: 非 SELECT 查询被拒绝, sql="${trimmed.substring(0, 50)}..."`)
       return { success: false, error: '仅允许 SELECT 查询，禁止 INSERT/UPDATE/DELETE/DROP 等操作' }
     }
 
+    const queryStart = performance.now()
     try {
-      await this.conn!.query(trimmed)
+      const result = await this.conn!.query(trimmed)
+      const duration = (performance.now() - queryStart).toFixed(2)
+      logger.info(`[duckDB] querySQL: 执行成功, 耗时 ${duration}ms, 结果行数=${(result as any)?.rowCount ?? 'unknown'}`)
       return { success: true }
     } catch (err) {
-      return { success: false, error: err instanceof Error ? err.message : String(err) }
+      const duration = (performance.now() - queryStart).toFixed(2)
+      const errorMsg = err instanceof Error ? err.message : String(err)
+      logger.error(`[duckDB] querySQL: 执行失败, 耗时 ${duration}ms, error="${errorMsg}"`)
+      return { success: false, error: errorMsg }
     }
   }
 
