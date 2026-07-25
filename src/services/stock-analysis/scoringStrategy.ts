@@ -71,7 +71,12 @@ const PROFILE_TAGS = ['老股民', '择时', '价值投资者', '成长风格', 
 const MOCK_DELAY_MS = {
   poolBoard: 450,
   chatMessage: 1200,
-}
+  analysisScores: 500,
+  modelComparison: 600,
+  chatHistory: 700,
+  hotSectors: 500,
+  valuePit: 500,
+} as const
 
 /** KAI 评分细项池 */
 const KAI_DETAIL_ITEMS: Record<string, string[]> = {
@@ -131,12 +136,12 @@ export interface StockAnalysisScoringStrategy {
  */
 export class MockStockAnalysisScoringStrategy implements StockAnalysisScoringStrategy {
   async getAnalysisScores(): Promise<AnalysisScores> {
-    await this.delay(500)
+    await this.delay(MOCK_DELAY_MS.analysisScores)
     return this.generateAnalysisScores()
   }
 
   async getModelComparison(): Promise<ModelComparison> {
-    await this.delay(600)
+    await this.delay(MOCK_DELAY_MS.modelComparison)
     return this.generateModelComparison()
   }
 
@@ -146,17 +151,17 @@ export class MockStockAnalysisScoringStrategy implements StockAnalysisScoringStr
   }
 
   async getChatHistory(target = '000858'): Promise<ChatHistory> {
-    await this.delay(700)
+    await this.delay(MOCK_DELAY_MS.chatHistory)
     return this.generateChatHistory(target)
   }
 
   async getHotSectors(): Promise<HotSectorData[]> {
-    await this.delay(500)
+    await this.delay(MOCK_DELAY_MS.hotSectors)
     return this.generateHotSectors()
   }
 
   async getValuePit(): Promise<ValuePitData[]> {
-    await this.delay(500)
+    await this.delay(MOCK_DELAY_MS.valuePit)
     return this.generateValuePit()
   }
 
