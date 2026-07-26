@@ -106,61 +106,116 @@ import { getWeeklyReviewScheduler } from './weeklyReviewScheduler'
 import { getVolatilityAlertPush } from './volatilityAlert'
 import { getChipAnomalyDetector } from './chipAnomalyDetector'
 
-/**
- * 初始化全部编排器 — 在 App 启动时调用一次
- *
- * 事件链路：
- *   BATCH_IMPORT_COMPLETED → RegistrationOrchestrator → runBatchTrace
- *   REGISTRATION_COLLECT_COMPLETE → QualityGate → checkQuality → triggerAnalysis
- *   ANALYSIS_SCORE_COMPLETED → ScoreCalibrator → calibrate → triggerStrategy
- */
+export type OrchestratorStatus = 'idle' | 'starting' | 'running' | 'failed'
+
+export interface OrchestratorHealth {
+  name: string
+  status: OrchestratorStatus
+  lastStartTime: number | null
+  errorMessage: string | null
+}
+
+const orchestratorStates = new Map<string, OrchestratorHealth>()
+
+interface OrchestratorEntry {
+  name: string
+  fn: () => void
+}
+
+function buildOrchestratorList(): OrchestratorEntry[] {
+  return [
+    { name: 'RegistrationOrchestrator', fn: () => getRegistrationOrchestrator().start() },
+    { name: 'QualityGate', fn: () => getQualityGate().start() },
+    { name: 'ScoreCalibrator', fn: () => getScoreCalibrator().start() },
+    { name: 'CatalystTracker', fn: () => getCatalystTracker().start() },
+    { name: 'WatchListTrigger', fn: () => getWatchListTrigger().start() },
+    { name: 'StrategyReportGenerator', fn: () => getStrategyReportGenerator().start() },
+    { name: 'TimelinessSyncAnalyzer', fn: () => getTimelinessSyncAnalyzer().start() },
+    { name: 'WeeklyReviewScheduler', fn: () => getWeeklyReviewScheduler().start() },
+    { name: 'VolatilityAlertPush', fn: () => getVolatilityAlertPush().start() },
+    { name: 'ChipAnomalyDetector', fn: () => getChipAnomalyDetector().start() },
+  ]
+}
+
 export function initOrchestration(): void {
   console.log('[Orchestration] 初始化编排器...')
 
-  const reg = getRegistrationOrchestrator()
-  reg.start()
+  const orchestrators = buildOrchestratorList()
+  let successCount = 0
+  let failCount = 0
 
-  const gate = getQualityGate()
-  gate.start()
+  for (const { name, fn } of orchestrators) {
+    try {
+      orchestratorStates.set(name, { name, status: 'starting', lastStartTime: null, errorMessage: null })
+      fn()
+      orchestratorStates.set(name, {
+        name,
+        status: 'running',
+        lastStartTime: Date.now(),
+        errorMessage: null,
+      })
+      successCount++
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err)
+      orchestratorStates.set(name, {
+        name,
+        status: 'failed',
+        lastStartTime: null,
+        errorMessage,
+      })
+      console.error(`[Orchestration] ${name} 启动失败:`, errorMessage)
+      failCount++
+    }
+  }
 
-  const cal = getScoreCalibrator()
-  cal.start()
+  console.log(`[Orchestration] 编排器启动完成: ${successCount} 成功, ${failCount} 失败`)
 
-  const tracker = getCatalystTracker()
-  tracker.start()
+  if (failCount > 0) {
+    const failedNames = orchestrators
+      .filter((o) => orchestratorStates.get(o.name)?.status === 'failed')
+      .map((o) => o.name)
+    console.warn(`[Orchestration] 编排器部分启动失败: ${failedNames.join(', ')}`)
+  }
+}
 
-  const watchTrigger = getWatchListTrigger()
-  watchTrigger.start()
+export function getOrchestratorHealth(): OrchestratorHealth[] {
+  return Array.from(orchestratorStates.values())
+}
 
-  const reportGen = getStrategyReportGenerator()
-  reportGen.start()
+export function getRunningOrchestrators(): string[] {
+  return Array.from(orchestratorStates.entries())
+    .filter(([, state]) => state.status === 'running')
+    .map(([name]) => name)
+}
 
-  const timeliness = getTimelinessSyncAnalyzer()
-  timeliness.start()
-
-  const weeklyReview = getWeeklyReviewScheduler()
-  weeklyReview.start()
-
-  const volAlert = getVolatilityAlertPush()
-  volAlert.start()
-
-  const chipDetector = getChipAnomalyDetector()
-  chipDetector.start()
-
-  console.log('[Orchestration] 编排器启动完成')
+export function isCriticalOrchestratorAvailable(name: string): boolean {
+  return orchestratorStates.get(name)?.status === 'running'
 }
 
 /** 停止全部编排器 */
 export function stopOrchestration(): void {
-  getRegistrationOrchestrator().stop()
-  getQualityGate().stop()
-  getScoreCalibrator().stop()
-  getCatalystTracker().stop()
-  getWatchListTrigger().stop()
-  getStrategyReportGenerator().stop()
-  getTimelinessSyncAnalyzer().stop()
-  getWeeklyReviewScheduler().stop()
-  getVolatilityAlertPush().stop()
-  getChipAnomalyDetector().stop()
+  const stopEntries = [
+    { name: 'RegistrationOrchestrator', fn: () => getRegistrationOrchestrator().stop() },
+    { name: 'QualityGate', fn: () => getQualityGate().stop() },
+    { name: 'ScoreCalibrator', fn: () => getScoreCalibrator().stop() },
+    { name: 'CatalystTracker', fn: () => getCatalystTracker().stop() },
+    { name: 'WatchListTrigger', fn: () => getWatchListTrigger().stop() },
+    { name: 'StrategyReportGenerator', fn: () => getStrategyReportGenerator().stop() },
+    { name: 'TimelinessSyncAnalyzer', fn: () => getTimelinessSyncAnalyzer().stop() },
+    { name: 'WeeklyReviewScheduler', fn: () => getWeeklyReviewScheduler().stop() },
+    { name: 'VolatilityAlertPush', fn: () => getVolatilityAlertPush().stop() },
+    { name: 'ChipAnomalyDetector', fn: () => getChipAnomalyDetector().stop() },
+  ]
+
+  for (const { name, fn } of stopEntries) {
+    try {
+      fn()
+      orchestratorStates.set(name, { name, status: 'idle', lastStartTime: null, errorMessage: null })
+    } catch {
+      // 停止阶段的异常仅记录日志，不影响其他编排器停止
+      orchestratorStates.set(name, { name, status: 'idle', lastStartTime: null, errorMessage: null })
+    }
+  }
+
   console.log('[Orchestration] 编排器已停止')
 }
