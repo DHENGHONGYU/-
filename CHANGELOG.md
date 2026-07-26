@@ -7,11 +7,63 @@
 
 ---
 
+## [2.6.0] - 2026-07-26
+
+### Added
+
+- **零值兜底整改 — NaN 显式空值标记与双向验证**：
+  - `src/data/sectorDefinitions.test.ts` 新增 22 个测试用例，覆盖 v6Composite 缺失/零值/边界场景
+  - `src/store/positionPoolStore.test.ts` 新增 531 行测试，含 12 组双向验证（6 正向 + 6 逆向）
+  - `src/store/profileStore.test.ts` 新增 19 组数据流集成测试
+  - `docs/reports/zero-fallback-remediation-acceptance-report-2026-07-26.md` 新增验收报告
+  - `docs/reports/release-management/v2.6.0-release-report.md` 新增 v2.6.0 发布报告
+  - `docs/reports/release-management/code-review-checklist-v2.6.0.md` 新增代码审查自查清单
+  - `docs/reports/release-management/v2.6.0-changelog-draft.md` 新增发布变更日志草稿
+
+- **自动推送工具链 — GitAutoPush 模块与 CI/CD 集成**：
+  - `.workbuddy/scripts/GitAutoPush.psm1` 新增可复用 PowerShell 模块（8 个导出函数）
+  - `.workbuddy/scripts/auto-push-on-network.ps1` 新增单次执行脚本
+  - `.workbuddy/scripts/schedule-auto-push.ps1` 新增 5 分钟间隔定时任务脚本
+  - `.workbuddy/tests/GitAutoPush.Tests.ps1` 新增 Pester 单元测试（6 场景 20+ 用例）
+  - `.github/workflows/git-auto-push.yml` 新增 CI/CD 自动推送工作流
+  - `.github/workflows/ci.yml` 新增 `git-autopush-test` Job
+  - `docs/reports/release-management/git-auto-push-operation-guide.md` 新增操作文档
+
+### Changed
+
+- **`?? 0` → `Number.NaN` 隐式兜底消除**：
+  - `src/store/positionPoolStore.ts`: `quantity`/`avgCost`/`currentPrice` 兜底从 `?? 0` 改为 `?? Number.NaN`
+  - `src/data/sectorDefinitions.ts`: `v6Composite` 兜底从 `?? 0` 改为 `?? Number.NaN`
+  - `src/store/profileStore.ts`: `qualityScore` 兜底从 `?? 0` 改为 `?? 50`（中值兜底）；`minQuality > 0` 改为 `minQuality !== undefined`
+  - 3 个模块关键入口新增 `logger.debug` 日志，区分缺失值与显式零值
+
+### Fixed
+
+- **数据准确性修复 — 隐式零值兜底消除**：
+  - 修复 `positionPoolStore.toPoolItem()` 中 `quantity`/`avgCost`/`currentPrice` 缺失时被静默替换为 0 的问题
+  - 修复 `sectorDefinitions.getSectorPoolStocks()` 中 `v6Composite` 缺失时被静默替换为 0 的问题
+  - 修复 `profileStore.loadItems()` 中 `qualityScore` 缺失时被静默替换为 0 的问题
+  - 修复 `profileStore` 筛选逻辑 `minQuality > 0` 无法支持 0 阈值的问题
+
+### Metrics
+
+| 指标 | 数值 |
+|------|------|
+| 修复文件数 | 3 |
+| 新增测试行数 | 531+ |
+| 新增测试用例 | 22+ |
+| 双向验证组 | 19 |
+| 新增 PowerShell 模块函数 | 8 |
+| 新增 CI/CD 工作流 | 2 |
+| Pester 测试覆盖场景 | 6 |
+
+---
+
 ## [Unreleased]
 
 ### Added
 
-- **v2.6.0 零值兜底整改 — NaN 显式空值标记与双向验证（2026-07-26）**：
+- **Cockpit 纵横交叉布局治理 Phase 1：纵横交叉骨架（2026-07-25）**：
   - `src/data/sectorDefinitions.test.ts` 新增 22 个测试用例，覆盖 v6Composite 缺失/零值/边界场景
   - `src/store/positionPoolStore.test.ts` 新增 531 行测试，含 12 组双向验证（6 正向 + 6 逆向）
   - `src/store/profileStore.test.ts` 新增 19 组数据流集成测试
