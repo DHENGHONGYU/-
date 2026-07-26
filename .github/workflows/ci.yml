@@ -57,6 +57,35 @@ jobs:
           path: coverage/
           retention-days: 7
 
+  chart-industry-tests:       # 5 件套图表组件测试（feat 分支早反馈，强制阻塞）
+    name: Chart industry tests (5-piece, P0 blocking)
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 22
+          cache: 'npm'
+      - run: npm ci
+      - name: Run chart industry tests (106 cases)
+        run: npm run test:chart:industry
+        env:
+          CI: true
+      - name: Generate HTML report
+        if: always()
+        run: npm run report:chart
+      - name: Upload chart test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-chart-industry-test-report
+          path: |
+            outputs/test-results/chart-tests.json
+            outputs/test-results/chart-report.html
+          retention-days: 7
+
   layers:                     # 快边界审计留开发分支 PR/推送
     name: Layer boundary audit
     needs: smoke
@@ -89,3 +118,37 @@ jobs:
         run: npm run test:databridge:gate
         env:
           CI: true
+
+  git-autopush-test:          # GitAutoPush 模块 Pester 测试（开发分支门禁，不阻塞）
+    name: GitAutoPush module tests
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      - name: Setup PowerShell
+        shell: pwsh
+        run: |
+          Write-Host "PowerShell version: $($PSVersionTable.PSVersion)"
+          Install-Module -Name Pester -Force -SkipPublisherCheck -Scope CurrentUser
+      - name: Run GitAutoPush Pester tests
+        shell: pwsh
+        run: |
+          $config = New-PesterConfiguration
+          $config.Run.Path = ".workbuddy\tests\GitAutoPush.Tests.ps1"
+          $config.Output.Verbosity = "Detailed"
+          $config.TestResult.Enabled = $true
+          $config.TestResult.OutputPath = ".workbuddy\tests\testResults.xml"
+          $config.TestResult.OutputFormat = "NUnitXml"
+          Invoke-Pester -Configuration $config
+      - name: Upload GitAutoPush test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-git-autopush-test-results
+          path: |
+            .workbuddy/tests/testResults.xml
+          retention-days: 7
