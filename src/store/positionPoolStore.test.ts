@@ -18,18 +18,14 @@
 
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import type { Stock } from '@/data/types'
-import { POSITION_STATUS } from '@/constants/pool.constants'
-
-// ============================================================
-// Mocks
-// ============================================================
 
 const mockQuery = vi.hoisted(() => vi.fn())
 const mockForward = vi.hoisted(() => vi.fn())
 const mockSubscribe = vi.hoisted(() => vi.fn().mockReturnValue(vi.fn()))
+const mockDebug = vi.hoisted(() => vi.fn())
 
 vi.mock('@/lib/logger', () => ({
-  getLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }),
+  getLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: mockDebug }),
 }))
 
 vi.mock('@/core/databridge', () => ({
@@ -66,7 +62,7 @@ vi.mock('@/constants/store-channels.constants', () => ({
   },
 }))
 
-vi.mock('@/store/helpers/withBroadcast', () => ({
+vi.mock('@/lib/withBroadcast', () => ({
   withBroadcast: vi.fn(),
 }))
 
@@ -98,7 +94,9 @@ import {
   getPositionPoolItemBySymbol,
   getPositionPoolGroups,
   initPositionPoolStoreSubscriptions,
+  toPoolItem,
 } from './positionPoolStore'
+import type { PositionPoolItem } from '@/types/modules/pool.types'
 
 // ============================================================
 // Helpers
@@ -125,14 +123,18 @@ function createMockStock(overrides: Partial<Stock> & { symbol: string; name: str
   } as Stock
 }
 
-function createPositionInput(overrides: Partial<{ symbol: string; name: string; quantity: number; avgCost: number; currentPrice: number }> = {}) {
+function toPositionItem(stock: Stock): PositionPoolItem {
+  return toPoolItem(stock) as unknown as PositionPoolItem
+}
+
+function createPositionInput(overrides: Partial<{ symbol: string; name: string; source: 'manual' | 'import' | 'akshare'; quantity: number; avgCost: number; currentPrice: number }> = {}) {
   return {
     symbol: '600519',
     name: '贵州茅台',
+    source: 'manual' as const,
     quantity: 1000,
     avgCost: 1800,
     currentPrice: 2000,
-    price: 2000,
     ...overrides,
   }
 }
@@ -327,7 +329,7 @@ describe('positionPoolStore - addItem 添加持仓', () => {
     await usePositionPoolStore.getState().addItem(createPositionInput())
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     const stockData = call[1]
     expect(stockData.researchStatus).toBe('holding')
   })
@@ -339,7 +341,7 @@ describe('positionPoolStore - addItem 添加持仓', () => {
     await usePositionPoolStore.getState().addItem(createPositionInput())
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call[1].pool).toBe('position')
   })
 
@@ -350,7 +352,7 @@ describe('positionPoolStore - addItem 添加持仓', () => {
     await usePositionPoolStore.getState().addItem(createPositionInput())
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call[1].dataVersion).toBe(1)
   })
 
@@ -371,7 +373,7 @@ describe('positionPoolStore - addItem 添加持仓', () => {
     await usePositionPoolStore.getState().addItem(createPositionInput())
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call[1].group).toBe('默认分组')
   })
 })
@@ -452,7 +454,7 @@ describe('positionPoolStore - updateItem 更新持仓', () => {
     await usePositionPoolStore.getState().updateItem('600519', { quantity: 2000 })
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call[1].updatedAt).toBeDefined()
     expect(typeof call[1].updatedAt).toBe('number')
   })
@@ -500,7 +502,7 @@ describe('positionPoolStore - deleteItem 删除持仓', () => {
     await usePositionPoolStore.getState().deleteItem('sh600519')
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call[1].symbol).toBe('SH600519')
   })
 
@@ -594,7 +596,7 @@ describe('positionPoolStore - updateStatus 状态管理', () => {
     await usePositionPoolStore.getState().updateStatus('600519', 'partial')
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call[1].researchStatus).toBe('partial')
   })
 })
@@ -761,27 +763,27 @@ describe('positionPoolStore - 盈亏计算验证', () => {
   })
 
   it('持仓条目应包含 quantity、avgCost、currentPrice 字段', () => {
-    const item = getPositionPoolItemBySymbol('600519')
+    const item = getPositionPoolItemBySymbol('600519') as any
     expect(item).toBeDefined()
-    expect(item!.quantity).toBe(1000)
-    expect(item!.avgCost).toBe(1800)
-    expect(item!.currentPrice).toBe(2000)
+    expect(item.quantity).toBe(1000)
+    expect(item.avgCost).toBe(1800)
+    expect(item.currentPrice).toBe(2000)
   })
 
   it('浮动盈亏 = (currentPrice - avgCost) * quantity', () => {
-    const item = getPositionPoolItemBySymbol('600519')!
+    const item = getPositionPoolItemBySymbol('600519') as any
     const pnl = (item.currentPrice - item.avgCost) * item.quantity
     expect(pnl).toBe(200_000)
   })
 
   it('收益率 = (currentPrice - avgCost) / avgCost', () => {
-    const item = getPositionPoolItemBySymbol('600519')!
+    const item = getPositionPoolItemBySymbol('600519') as any
     const returnRate = (item.currentPrice - item.avgCost) / item.avgCost
     expect(returnRate).toBeCloseTo(0.1111, 3)
   })
 
   it('市值 = currentPrice * quantity', () => {
-    const item = getPositionPoolItemBySymbol('600519')!
+    const item = getPositionPoolItemBySymbol('600519') as any
     const marketValue = item.currentPrice * item.quantity
     expect(marketValue).toBe(2_000_000)
   })
@@ -800,7 +802,7 @@ describe('positionPoolStore - 盈亏计算验证', () => {
         } as any,
       ],
     })
-    const item = getPositionPoolItemBySymbol('000001')!
+    const item = getPositionPoolItemBySymbol('000001') as any
     const pnl = (item.currentPrice - item.avgCost) * item.quantity
     expect(pnl).toBeLessThan(0)
     expect(pnl).toBe(-3000)
@@ -842,7 +844,7 @@ describe('positionPoolStore - 数据版本管理', () => {
     await usePositionPoolStore.getState().addItem(createPositionInput({ symbol: '000858', name: '五粮液' }))
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call[1].dataVersion).toBe(1)
   })
 
@@ -1004,5 +1006,484 @@ describe('positionPoolStore - 去重逻辑', () => {
     )
 
     expect(mockForward).not.toHaveBeenCalled()
+  })
+})
+
+// ============================================================
+// NaN 兜底行为测试 — 验证 ?? 0 → NaN 重构
+// ============================================================
+describe('positionPoolStore - toPoolItem NaN 兜底', () => {
+  it('字段完整时应使用实际数值，非 NaN', () => {
+    const stock = createMockStock({ symbol: '600519', name: '贵州茅台' })
+    const item = toPositionItem(stock)
+
+    expect(Number.isFinite(item.quantity)).toBe(true)
+    expect(Number.isFinite(item.avgCost)).toBe(true)
+    expect(Number.isFinite(item.currentPrice)).toBe(true)
+    expect(item.quantity).toBe(1000)
+    expect(item.avgCost).toBe(90)
+    expect(item.currentPrice).toBe(100)
+  })
+
+  it('quantity 缺失时应标记为 NaN 而非 0', () => {
+    const stock = createMockStock({ symbol: '600519', name: '贵州茅台' })
+    delete (stock as any).quantity
+    const item = toPositionItem(stock)
+
+    expect(Number.isNaN(item.quantity)).toBe(true)
+    expect(item.quantity).not.toBe(0)
+    expect(Number.isFinite(item.avgCost)).toBe(true)
+    expect(Number.isFinite(item.currentPrice)).toBe(true)
+  })
+
+  it('avgCost 缺失时应标记为 NaN 而非 0', () => {
+    const stock = createMockStock({ symbol: '600519', name: '贵州茅台' })
+    delete (stock as any).avgCost
+    const item = toPositionItem(stock)
+
+    expect(Number.isNaN(item.avgCost)).toBe(true)
+    expect(item.avgCost).not.toBe(0)
+    expect(Number.isFinite(item.quantity)).toBe(true)
+    expect(Number.isFinite(item.currentPrice)).toBe(true)
+  })
+
+  it('currentPrice 和 price 均缺失时应标记为 NaN', () => {
+    const stock = createMockStock({ symbol: '600519', name: '贵州茅台' })
+    delete (stock as any).currentPrice
+    delete (stock as any).price
+    const item = toPositionItem(stock)
+
+    expect(Number.isNaN(item.currentPrice)).toBe(true)
+    expect(item.currentPrice).not.toBe(0)
+  })
+
+  it('仅 currentPrice 缺失时应回退到 price', () => {
+    const stock = createMockStock({ symbol: '600519', name: '贵州茅台', price: 55 })
+    delete (stock as any).currentPrice
+    const item = toPositionItem(stock)
+
+    expect(item.currentPrice).toBe(55)
+    expect(Number.isFinite(item.currentPrice)).toBe(true)
+  })
+
+  it('全部三个关键字段缺失时均应为 NaN', () => {
+    const stock = createMockStock({ symbol: '600519', name: '贵州茅台' })
+    delete (stock as any).quantity
+    delete (stock as any).avgCost
+    delete (stock as any).currentPrice
+    delete (stock as any).price
+    const item = toPositionItem(stock)
+
+    expect(Number.isNaN(item.quantity)).toBe(true)
+    expect(Number.isNaN(item.avgCost)).toBe(true)
+    expect(Number.isNaN(item.currentPrice)).toBe(true)
+  })
+
+  it('NaN 场景下盈亏计算应产生 NaN 而非误导性 0 值', () => {
+    const stock = createMockStock({ symbol: '600519', name: '贵州茅台' })
+    delete (stock as any).currentPrice
+    delete (stock as any).price
+    const item = toPositionItem(stock)
+
+    const pnl = (item.currentPrice - item.avgCost) * item.quantity
+    const returnRate = (item.currentPrice - item.avgCost) / item.avgCost
+    const marketValue = item.currentPrice * item.quantity
+
+    expect(Number.isNaN(pnl)).toBe(true)
+    expect(Number.isNaN(returnRate)).toBe(true)
+    expect(Number.isNaN(marketValue)).toBe(true)
+  })
+})
+
+// ============================================================
+// 双向验证 — 显式零值 vs 缺失值
+// ============================================================
+describe('positionPoolStore - toPoolItem 双向验证（零值 vs 缺失）', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    usePositionPoolStore.setState({
+      items: [],
+      loading: false,
+      error: null,
+      isRefreshing: false,
+      lastUpdated: 0,
+    })
+  })
+
+  // 正向测试：给定输入 → 验证输出 + 日志
+  describe('正向：输入 → 输出 + 日志', () => {
+    it('全部字段为显式 0 → 输出为 0（非 NaN）+ 零值日志', () => {
+      const stock = createMockStock({
+        symbol: '600519',
+        name: '贵州茅台',
+        quantity: 0,
+        avgCost: 0,
+        currentPrice: 0,
+      })
+      const item = toPositionItem(stock)
+
+      expect(item.quantity).toBe(0)
+      expect(Number.isFinite(item.quantity)).toBe(true)
+      expect(item.avgCost).toBe(0)
+      expect(item.currentPrice).toBe(0)
+      expect(mockDebug).toHaveBeenCalledWith(
+        expect.stringContaining('显式零值字段')
+      )
+      expect(mockDebug).toHaveBeenCalledWith(
+        expect.stringContaining('原始数据源返回 0')
+      )
+      expect(mockDebug).not.toHaveBeenCalledWith(
+        expect.stringContaining('缺失字段')
+      )
+    })
+
+    it('quantity 为显式 0 → 输出为 0 + 零值日志', () => {
+      const stock = createMockStock({ symbol: '600519', name: '贵州茅台', quantity: 0 })
+      const item = toPositionItem(stock)
+
+      expect(item.quantity).toBe(0)
+      expect(Number.isFinite(item.quantity)).toBe(true)
+      expect(mockDebug).toHaveBeenCalledWith(
+        expect.stringContaining('quantity')
+      )
+      expect(mockDebug).toHaveBeenCalledWith(
+        expect.stringContaining('显式零值字段')
+      )
+    })
+
+    it('字段为 null/undefined → 输出为 NaN + 缺失日志', () => {
+      const stock = createMockStock({ symbol: '600519', name: '贵州茅台' })
+      delete (stock as any).quantity
+      delete (stock as any).avgCost
+      const item = toPositionItem(stock)
+
+      expect(Number.isNaN(item.quantity)).toBe(true)
+      expect(Number.isNaN(item.avgCost)).toBe(true)
+      expect(mockDebug).toHaveBeenCalledWith(
+        expect.stringContaining('缺失字段')
+      )
+      expect(mockDebug).toHaveBeenCalledWith(
+        expect.stringContaining('NaN')
+      )
+    })
+
+    it('字段为正常值 → 输出正常值 + 无日志', () => {
+      const stock = createMockStock({ symbol: '600519', name: '贵州茅台' })
+      const item = toPositionItem(stock)
+
+      expect(item.quantity).toBe(1000)
+      expect(item.avgCost).toBe(90)
+      expect(item.currentPrice).toBe(100)
+      expect(mockDebug).not.toHaveBeenCalled()
+    })
+
+    it('混合场景：quantity=0, avgCost=null, price=50', () => {
+      const stock = createMockStock({
+        symbol: '600519',
+        name: '贵州茅台',
+        quantity: 0,
+        price: 50,
+      })
+      delete (stock as any).avgCost
+      delete (stock as any).currentPrice
+      const item = toPositionItem(stock)
+
+      expect(item.quantity).toBe(0)
+      expect(Number.isFinite(item.quantity)).toBe(true)
+      expect(Number.isNaN(item.avgCost)).toBe(true)
+      expect(item.currentPrice).toBe(50)
+      expect(mockDebug).toHaveBeenCalledWith(
+        expect.stringContaining('显式零值字段')
+      )
+      expect(mockDebug).toHaveBeenCalledWith(
+        expect.stringContaining('缺失字段')
+      )
+    })
+  })
+
+  // 逆向测试：给定输出 → 反推输入
+  describe('逆向：输出特征 → 反推输入', () => {
+    it('输出 quantity 为 0 → 输入必为显式 0（非 null）', () => {
+      const stock = createMockStock({ symbol: '600519', name: '贵州茅台', quantity: 0 })
+      const item = toPositionItem(stock)
+
+      expect(item.quantity).toBe(0)
+      expect(item.quantity).not.toBeNaN()
+      expect(Number.isFinite(item.quantity)).toBe(true)
+      expect(mockDebug).toHaveBeenCalledWith(
+        expect.stringContaining('显式零值字段')
+      )
+    })
+
+    it('输出 quantity 为 NaN → 输入必为 null/undefined', () => {
+      const stock = createMockStock({ symbol: '600519', name: '贵州茅台' })
+      delete (stock as any).quantity
+      const item = toPositionItem(stock)
+
+      expect(Number.isNaN(item.quantity)).toBe(true)
+      expect(item.quantity).not.toBe(0)
+      expect(mockDebug).toHaveBeenCalledWith(
+        expect.stringContaining('缺失字段')
+      )
+      expect(mockDebug).not.toHaveBeenCalledWith(
+        expect.stringContaining('显式零值字段')
+      )
+    })
+
+    it('输出 avgCost 为 0 + quantity 为 NaN → 混合场景可区分', () => {
+      const stock = createMockStock({
+        symbol: '600519',
+        name: '贵州茅台',
+        avgCost: 0,
+      })
+      delete (stock as any).quantity
+      const item = toPositionItem(stock)
+
+      expect(Number.isNaN(item.quantity)).toBe(true)
+      expect(item.avgCost).toBe(0)
+      expect(Number.isFinite(item.avgCost)).toBe(true)
+
+      const zeroCalls = mockDebug.mock.calls.filter((c: any[]) =>
+        c[0]?.includes('显式零值字段')
+      )
+      const missingCalls = mockDebug.mock.calls.filter((c: any[]) =>
+        c[0]?.includes('缺失字段')
+      )
+      expect(zeroCalls.length).toBe(1)
+      expect(missingCalls.length).toBe(1)
+    })
+
+    it('全部日志只触发一次，无重复告警', () => {
+      const stock = createMockStock({
+        symbol: '600519',
+        name: '贵州茅台',
+        quantity: 0,
+      })
+      delete (stock as any).avgCost
+      const item = toPositionItem(stock)
+      void item
+
+      const zeroCalls = mockDebug.mock.calls.filter((c: any[]) =>
+        c[0]?.includes('显式零值字段')
+      )
+      const missingCalls = mockDebug.mock.calls.filter((c: any[]) =>
+        c[0]?.includes('缺失字段')
+      )
+      expect(zeroCalls.length).toBe(1)
+      expect(missingCalls.length).toBe(1)
+    })
+  })
+})
+
+// ============================================================
+// 深度验证 — Store 层集成测试（真实数据流）
+// ============================================================
+describe('positionPoolStore - Store 层深度验证', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    usePositionPoolStore.setState({
+      items: [],
+      loading: false,
+      error: null,
+      isRefreshing: false,
+      lastUpdated: 0,
+    })
+  })
+
+  it('refresh: 当 DB 返回含显式 0 的股票时，Store items 保留 0 并记录日志', async () => {
+    const stocks = [
+      createMockStock({ symbol: '600519', name: '贵州茅台', quantity: 0, avgCost: 0, currentPrice: 0 }),
+      createMockStock({ symbol: '000001', name: '平安银行' }),
+    ]
+    mockQuery.mockResolvedValue({ success: true, data: stocks })
+
+    await usePositionPoolStore.getState().refresh()
+
+    const state = usePositionPoolStore.getState()
+    expect(state.items).toHaveLength(2)
+
+    const mt = state.items.find((i) => i.symbol === '600519') as PositionPoolItem | undefined
+    expect(mt).toBeDefined()
+    expect(mt!.quantity).toBe(0)
+    expect(Number.isFinite(mt!.quantity!)).toBe(true)
+    expect(mt!.avgCost).toBe(0)
+    expect(mt!.currentPrice).toBe(0)
+
+    const zeroLogCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('显式零值字段')
+    )
+    expect(zeroLogCalls.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('refresh: 当 DB 返回缺失字段的股票时，Store items 使用 NaN 并记录日志', async () => {
+    const stock = createMockStock({ symbol: '600519', name: '贵州茅台' })
+    delete (stock as any).quantity
+    delete (stock as any).currentPrice
+    delete (stock as any).price
+    mockQuery.mockResolvedValue({ success: true, data: [stock] })
+
+    await usePositionPoolStore.getState().refresh()
+
+    const state = usePositionPoolStore.getState()
+    expect(state.items).toHaveLength(1)
+
+    const item = state.items[0]! as PositionPoolItem
+    expect(Number.isNaN(item.quantity!)).toBe(true)
+    expect(Number.isNaN(item.currentPrice!)).toBe(true)
+    expect(Number.isNaN(item.avgCost!)).toBe(false)
+
+    const missingLogCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('缺失字段')
+    )
+    expect(missingLogCalls.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('addItem+refresh: 含显式 0 的持仓经 refresh 转换后日志正确', async () => {
+    mockForward.mockResolvedValue({ success: true })
+
+    await usePositionPoolStore.getState().addItem({
+      symbol: '600519',
+      name: '贵州茅台',
+      pool: 'position',
+      status: 'active',
+      source: 'manual',
+      quantity: 0,
+      avgCost: 0,
+      price: 0,
+      pe: 20,
+      pb: 2,
+      roe: 15,
+      marketCap: 100_000_000_000,
+    } as any)
+
+    const stock = createMockStock({ symbol: '600519', name: '贵州茅台', quantity: 0, avgCost: 0, currentPrice: 0 })
+    mockQuery.mockResolvedValue({ success: true, data: [stock] })
+
+    await usePositionPoolStore.getState().refresh()
+
+    const zeroLogCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('显式零值字段')
+    )
+    expect(zeroLogCalls.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('边界: 负值不应触发零值告警', () => {
+    const stock = createMockStock({
+      symbol: '600519',
+      name: '贵州茅台',
+      quantity: -100,
+      avgCost: -50,
+    })
+    const item = toPositionItem(stock)
+
+    expect(item.quantity).toBe(-100)
+    expect(item.avgCost).toBe(-50)
+
+    const zeroCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('显式零值字段')
+    )
+    const missingCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('缺失字段')
+    )
+    expect(zeroCalls.length).toBe(0)
+    expect(missingCalls.length).toBe(0)
+  })
+
+  it('边界: Infinity 不应触发零值告警', () => {
+    const stock = createMockStock({
+      symbol: '600519',
+      name: '贵州茅台',
+      quantity: Number.POSITIVE_INFINITY,
+    })
+    const item = toPositionItem(stock)
+
+    expect(item.quantity).toBe(Number.POSITIVE_INFINITY)
+    expect(Number.isFinite(item.quantity!)).toBe(false)
+    expect(Number.isNaN(item.quantity!)).toBe(false)
+
+    const zeroCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('显式零值字段')
+    )
+    expect(zeroCalls.length).toBe(0)
+  })
+
+  it('NaN 值透传: 显式传入 NaN 应被透传为 NaN（非 null 非 0）', () => {
+    const stock = createMockStock({
+      symbol: '600519',
+      name: '贵州茅台',
+      quantity: Number.NaN,
+    })
+    const item = toPositionItem(stock)
+
+    expect(Number.isNaN(item.quantity!)).toBe(true)
+
+    const missingCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('缺失字段')
+    )
+    const zeroCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('显式零值字段')
+    )
+    expect(missingCalls.length).toBe(0)
+    expect(zeroCalls.length).toBe(0)
+  })
+
+  it('refresh: 混合场景（正常+零值+缺失）批量处理', async () => {
+    const normalStock = createMockStock({ symbol: '600519', name: '贵州茅台' })
+    const zeroStock = createMockStock({ symbol: '000001', name: '平安银行', quantity: 0 })
+    const missingStock = createMockStock({ symbol: '601318', name: '中国平安' })
+    delete (missingStock as any).avgCost
+
+    mockQuery.mockResolvedValue({
+      success: true,
+      data: [normalStock, zeroStock, missingStock],
+    })
+
+    await usePositionPoolStore.getState().refresh()
+
+    const state = usePositionPoolStore.getState()
+    expect(state.items).toHaveLength(3)
+
+    const zeroItem = state.items.find((i) => i.symbol === '000001') as PositionPoolItem | undefined
+    expect(zeroItem!.quantity).toBe(0)
+    expect(Number.isFinite(zeroItem!.quantity!)).toBe(true)
+
+    const missingItem = state.items.find((i) => i.symbol === '601318') as PositionPoolItem | undefined
+    expect(Number.isNaN(missingItem!.avgCost!)).toBe(true)
+
+    const zeroLogCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('显式零值字段')
+    )
+    const missingLogCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('缺失字段')
+    )
+    expect(zeroLogCalls.length).toBeGreaterThanOrEqual(1)
+    expect(missingLogCalls.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('日志不重复: 同一只股票多次转换只触发一次日志', () => {
+    const stock = createMockStock({ symbol: '600519', name: '贵州茅台', quantity: 0 })
+    toPositionItem(stock)
+    toPositionItem(stock)
+    toPositionItem(stock)
+
+    const zeroCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('显式零值字段')
+    )
+    expect(zeroCalls.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('空数据: 空数组应无日志输出', async () => {
+    mockQuery.mockResolvedValue({ success: true, data: [] })
+
+    await usePositionPoolStore.getState().refresh()
+
+    const zeroCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('显式零值字段')
+    )
+    const missingCalls = mockDebug.mock.calls.filter((c: any[]) =>
+      c[0]?.includes('缺失字段')
+    )
+    expect(zeroCalls.length).toBe(0)
+    expect(missingCalls.length).toBe(0)
   })
 })

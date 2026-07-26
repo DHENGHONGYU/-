@@ -8,6 +8,9 @@
 // ============================================================
 
 import type { SectorDefinition, SectorStockMapping } from '@/data/types'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 /** 维度权重配置 */
 export const SECTOR_WEIGHTS = {
@@ -580,11 +583,21 @@ export function getSectorPoolStocks(
   const sector = SECTOR_MAP[sectorCode];
   if (!sector) return [];
 
-  return poolStocks
-    .filter((s) =>
-      sector.keyStocks.some((ks) => ks.symbol === s.symbol)
-    )
-    .map((s) => ({ ...s, v6Composite: s.v6Composite ?? 0 }));
+  const matched = poolStocks.filter((s) =>
+    sector.keyStocks.some((ks) => ks.symbol === s.symbol)
+  );
+
+  const missingCount = matched.filter((s) => s.v6Composite == null).length;
+  if (missingCount > 0) {
+    logger.debug(`[sectorDefinitions] getSectorPoolStocks: sector=${sectorCode} 有 ${missingCount}/${matched.length} 只股票缺失 v6Composite，用 NaN 替代 0`);
+  }
+
+  const zeroScoreCount = matched.filter((s) => s.v6Composite === 0).length;
+  if (zeroScoreCount > 0) {
+    logger.debug(`[sectorDefinitions] getSectorPoolStocks: sector=${sectorCode} 有 ${zeroScoreCount}/${matched.length} 只股票 v6Composite 为显式 0，请确认是否为业务有效评分`);
+  }
+
+  return matched.map((s) => ({ ...s, v6Composite: s.v6Composite ?? Number.NaN }));
 }
 
 /** 三维度评分说明 */

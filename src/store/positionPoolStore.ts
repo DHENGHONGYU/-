@@ -27,9 +27,10 @@ import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { isValidTransition } from '@/core/poolTransitionEngine'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
-import { withBroadcast } from '@/store/helpers/withBroadcast'
+import { withBroadcast } from '@/lib/withBroadcast'
 import type { PoolItem, PositionPoolItem } from '@/types/modules/pool.types'
 import type { Stock } from '@/data/types'
+import { DEBOUNCE_MS } from '@/constants/timing.constants'
 
 import { nanoid } from 'nanoid'
 
@@ -63,7 +64,35 @@ const initialState = {
   lastUpdated: 0,
 }
 
-function toPoolItem(stock: Stock): PoolItem {
+export function toPoolItem(stock: Stock): PoolItem {
+  const missingFields: string[] = []
+  const zeroFields: string[] = []
+
+  if (stock.quantity == null) {
+    missingFields.push('quantity')
+  } else if (stock.quantity === 0) {
+    zeroFields.push('quantity')
+  }
+  if (stock.avgCost == null) {
+    missingFields.push('avgCost')
+  } else if (stock.avgCost === 0) {
+    zeroFields.push('avgCost')
+  }
+
+  const hasPrice = stock.currentPrice != null || stock.price != null
+  if (!hasPrice) {
+    missingFields.push('currentPrice(含price)')
+  } else if (stock.currentPrice === 0 || stock.price === 0) {
+    zeroFields.push('currentPrice(含price)')
+  }
+
+  if (missingFields.length > 0) {
+    logger.debug(`[positionPoolStore] toPoolItem: ${stock.symbol}(${stock.name}) 缺失字段 → [${missingFields.join(', ')}] 用 NaN 替代 0 作为显式空值标记`)
+  }
+  if (zeroFields.length > 0) {
+    logger.debug(`[positionPoolStore] toPoolItem: ${stock.symbol}(${stock.name}) 显式零值字段 → [${zeroFields.join(', ')}] 原始数据源返回 0，请确认是否为业务有效值`)
+  }
+
   return {
     symbol: stock.symbol,
     name: stock.name,
@@ -83,9 +112,9 @@ function toPoolItem(stock: Stock): PoolItem {
     theme: stock.theme,
     sector: stock.sector,
     group: stock.group,
-    quantity: stock.quantity ?? 0,
-    avgCost: stock.avgCost ?? 0,
-    currentPrice: stock.currentPrice ?? stock.price ?? 0,
+    quantity: stock.quantity ?? Number.NaN,
+    avgCost: stock.avgCost ?? Number.NaN,
+    currentPrice: stock.currentPrice ?? stock.price ?? Number.NaN,
   } as PoolItem
 }
 
@@ -357,7 +386,6 @@ export function getPositionPoolGroups(): string[] {
 
 let _unsubscribe: (() => void) | null = null
 let _debounceTimer: ReturnType<typeof setTimeout> | null = null
-const DEBOUNCE_MS = 100
 
 function debouncedRefresh(): void {
   if (_debounceTimer) clearTimeout(_debounceTimer)
