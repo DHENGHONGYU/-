@@ -11,6 +11,70 @@
 
 ### Added
 
+- **v2.6.0 零值兜底整改 — NaN 显式空值标记与双向验证（2026-07-26）**：
+  - `src/data/sectorDefinitions.test.ts` 新增 22 个测试用例，覆盖 v6Composite 缺失/零值/边界场景
+  - `src/store/positionPoolStore.test.ts` 新增 531 行测试，含 12 组双向验证（6 正向 + 6 逆向）
+  - `src/store/profileStore.test.ts` 新增 19 组数据流集成测试
+  - `docs/reports/zero-fallback-remediation-acceptance-report-2026-07-26.md` 新增验收报告
+  - `docs/reports/release-management/v2.6.0-release-report.md` 新增 v2.6.0 发布报告
+  - `docs/reports/release-management/code-review-checklist-v2.6.0.md` 新增代码审查自查清单
+
+- **Cockpit 纵横交叉布局治理 Phase 1：纵横交叉骨架（2026-07-25）**：
+  - 新增 `CockpitCrossLayout` 纵横交叉布局骨架组件，以「域 × 视角」矩阵组织 Widget 面板
+  - 新增 `CrossMatrixOverview` 交叉矩阵总览组件，支持域/视角双向筛选与单元格快速导航
+  - 新增 `WidgetSheetDrawer` Widget 详情抽屉组件，承载原独立 Widget 的详情展开交互
+  - `WatchlistWidget` 新增子 Tab（自选行情 / 异动榜），整合 `WatchlistMoversWidget`
+
+- **Command Hub 增强 Phase 2：摘要区与架构可视化（2026-07-25）**：
+  - Command Hub 运维摘要区嵌入 `EngineStatusCard` 引擎状态摘要卡片
+  - Command Hub 运维摘要区嵌入 `SystemArchitectureDiagram` 系统架构摘要卡片
+  - `SystemMonitorPage` 引入 `EngineStatusCard` 引擎状态详情面板
+  - `HealthDashboardPage` 引入 `SystemArchitectureDiagram` 架构可视化面板
+
+- **组合层检查清单（2026-07-25）**：
+  - 新增 `docs/audit/checklists/assembly-layer-checklist.md`，覆盖组合层架构验收检查项
+
+- **ADR-010 决策记录（2026-07-25）**：
+  - 新增 ADR-010：Cockpit/Command 职责边界与纵横交叉布局决策记录
+  - 归档至 `docs/specs/architecture/adr/` 目录
+
+### Changed
+
+- **v2.6.0 零值兜底整改 — `?? 0` → `Number.NaN` 替换（2026-07-26）**：
+  - `src/store/positionPoolStore.ts`: `quantity`/`avgCost`/`currentPrice` 兜底从 `?? 0` 改为 `?? Number.NaN`
+  - `src/data/sectorDefinitions.ts`: `v6Composite` 兜底从 `?? 0` 改为 `?? Number.NaN`
+  - `src/store/profileStore.ts`: `qualityScore` 兜底从 `?? 0` 改为 `?? 50`（中值兜底）；`minQuality > 0` 改为 `minQuality !== undefined`
+  - 3 个模块关键入口新增 `logger.debug` 日志，区分缺失值与显式零值
+
+- **Cockpit Shell 重构为纵横交叉矩阵布局（Phase 1，2026-07-25）**：
+  - Cockpit Shell 从平铺 Widget 墙改为纵横交叉矩阵布局（域 × 视角）
+  - Widget 元数据新增 `domain` / `perspective` 字段，支持交叉筛选与矩阵定位
+  - `WatchlistWidget` 新增子 Tab（自选行情 / 异动榜），整合 WatchlistMovers 功能
+
+- **Command Hub 页面增强（Phase 2，2026-07-25）**：
+  - `SystemMonitorPage` 引入 `EngineStatusCard` 引擎状态详情
+  - `HealthDashboardPage` 引入 `SystemArchitectureDiagram` 架构可视化
+
+- **ADR-010 归档（2026-07-25）**：
+  - ADR-010 归档至 `docs/specs/architecture/adr/` 目录
+
+### Removed
+
+- **Cockpit Widget 精简与 zone 收敛（Phase 1，2026-07-25）**：
+  - Cockpit 取消注册 5 个 Widget：`researchPoolBoard`、`watchlistMovers`、`engineStatus`、`systemArchitecture`、`mechanismHealth`
+  - Cockpit 移除 `system` zone 逻辑，category 统一为 market/portfolio/ai/strategy 四类
+
+### Fixed
+
+- **v2.6.0 数据准确性修复 — 隐式零值兜底消除（2026-07-26）**：
+  - 修复 `positionPoolStore.toPoolItem()` 中 `quantity`/`avgCost`/`currentPrice` 缺失时被静默替换为 0 的问题，改为 `Number.NaN` 显式标记
+  - 修复 `sectorDefinitions.getSectorPoolStocks()` 中 `v6Composite` 缺失时被静默替换为 0 的问题，改为 `Number.NaN` 显式标记
+  - 修复 `profileStore.loadItems()` 中 `qualityScore` 缺失时被静默替换为 0 的问题，改为 `?? 50`（评分中值）
+  - 修复 `profileStore` 筛选逻辑 `minQuality > 0` 无法支持 0 阈值的问题，改为 `minQuality !== undefined`
+  - 上述修复确保缺失值与业务零值在数据链路中可区分，避免盈亏计算、排名、评分产生误导性结果
+
+### Added
+
 - **投研闭环状态体系（Loop Status，2026-07-21）**：
   - `src/store/loopStatusStore.ts`：闭环五阶段（采集/评分/信号/交易/复盘）状态全局 Store，提供 markStageEvent / refresh / reset，派生函数均为纯函数（AGENTS.md §二 类型 B）
   - `src/store/loopStatusSubscriptions.ts`：EventBus → 闭环阶段订阅管理模块，幂等初始化、完整 cleanup；遵例落位 store 层（audit:layers 规则 5）
@@ -512,6 +576,63 @@
 - `docs/09-quality-gates.md`：更新扫描脚本状态与当前基线数据。
 - `docs/02-functional-specs.md`：补充 P1/P2 功能规格、异常边界、导入导出格式。
 - `README.md`：修正单元测试覆盖范围描述。
+
+---
+
+## [2.6.0] - 2026-07-26
+
+### Added
+
+- **零值兜底整改 — 代码审查自查清单**：
+  - 新增 `docs/reports/release-management/code-review-checklist-v2.6.0.md`，包含 3 个核心逻辑点检查项（NaN 标记、日志检测、筛选阈值）
+- **零值兜底整改 — 验收报告与发布报告**：
+  - 新增 `docs/reports/zero-fallback-remediation-acceptance-report-2026-07-26.md`
+  - 新增 `docs/reports/release-management/v2.6.0-release-report.md`
+- **零值兜底整改 — 新增测试文件**：
+  - 新增 `src/data/sectorDefinitions.test.ts`（22 用例，416 行）
+
+### Changed
+
+- **`?? 0` → `Number.NaN` 隐式兜底消除**：
+  - `src/store/positionPoolStore.ts`: `quantity`/`avgCost`/`currentPrice` 兜底从 `?? 0` 改为 `?? Number.NaN`
+  - `src/data/sectorDefinitions.ts`: `v6Composite` 兜底从 `?? 0` 改为 `?? Number.NaN`
+  - `src/store/profileStore.ts`: `qualityScore` 兜底从 `?? 0` 改为 `?? 50`（评分中值兜底）
+  - `src/store/profileStore.ts`: 筛选条件 `minQuality > 0` 改为 `minQuality !== undefined`，支持 0 阈值
+  - `src/store/profileStore.ts`: L531 计数器 `?? 0` 添加注释说明合法合理性
+
+- **`logger.debug` 日志新增**：
+  - positionPoolStore: 缺失字段检测 + 显式零值检测日志
+  - sectorDefinitions: 缺失 v6Composite + 显式零值 v6Composite 日志
+  - profileStore: 缺失 qualityScore + 显式零值 qualityScore 日志 + 筛选结果日志
+
+### Fixed
+
+- 修复 `positionPoolStore.toPoolItem()` 中数值字段缺失时被静默替换为 0 的误导性问题
+- 修复 `sectorDefinitions.getSectorPoolStocks()` 中 v6Composite 缺失时排名末尾误判问题
+- 修复 `profileStore.loadItems()` 中 qualityScore 缺失导致筛选偏差问题
+- 修复 profileStore 筛选逻辑无法使用 0 作为有效阈值的问题
+
+### Quality Metrics
+
+| 指标 | 数值 |
+|------|------|
+| 测试文件数 | 3 |
+| 测试用例数 | 183 |
+| 测试通过率 | 100% (183/183) |
+| 双向验证组 | 19 |
+| 日志断言组 | 10 |
+| `?? 0` 残留（positionPoolStore） | 0 处 |
+| `?? 0` 残留（sectorDefinitions） | 0 处 |
+| `?? 0` 残留（profileStore） | 1 处（合法计数器初始化） |
+| TypeScript 新增错误 | 0 |
+
+### Notes
+
+- **关联 Commit**: `b625a10` (fix) + `88ebedb` (docs)
+- **关联 Tag**: `v2.6.0`
+- **分支**: `feat/cross-index-20260719`
+- **影响模块**: `positionPoolStore`, `profileStore`, `sectorDefinitions`
+- **破坏性变更**: 无 — NaN 在 `Number.isNaN()` 检查和 `??` 链中行为一致
 
 ---
 
