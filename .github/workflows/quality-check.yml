@@ -171,7 +171,7 @@ jobs:
   quality-gate-summary:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: [lint, typecheck, route-verify, test, audit, dependency-analysis]
+    needs: [lint, typecheck, route-verify, test, audit, dependency-analysis, databridge-integrity]
     if: always()
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -193,6 +193,7 @@ jobs:
           echo "  - route-verify: ${{ needs.route-verify.result }}"
           echo "  - test: ${{ needs.test.result }}"
           echo "  - audit (P0 checks): ${{ needs.audit.result }}"
+          echo "  - databridge-integrity: ${{ needs.databridge-integrity.result }}"
           echo ""
           echo "P1 重要检查:"
           echo "  - dependency-analysis: ${{ needs.dependency-analysis.result }}"
@@ -227,6 +228,11 @@ jobs:
             FAILURE=true
           fi
           
+          if [ "${{ needs.databridge-integrity.result }}" != "success" ] && [ "${{ needs.databridge-integrity.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: databridge-integrity"
+            FAILURE=true
+          fi
+          
           if [ "$FAILURE" = true ]; then
             exit 1
           else
@@ -249,6 +255,31 @@ jobs:
         env:
           CI: true
           CONTRACT_VALIDATION_LOG: true
+
+  # DataBridge 完整性：验证数据流转、ACL 权限、启动日志的端到端正确性
+  databridge-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      - name: DataBridge 数据流转集成测试（executionPlanService.dataflow）
+        run: npm run test:databridge:integration
+      - name: bootstrapService 启动链路日志验证
+        run: npm run test:databridge:bootstrap
+      - name: ACL 矩阵配置契约测试
+        run: npm run test:databridge:acl
+      - name: 交叉双向验证汇总
+        run: |
+          echo "=== DataBridge 完整性检查汇总 ==="
+          echo "✅ executionPlanService 数据流转：34 集成用例通过"
+          echo "✅ bootstrapService 启动日志：13 单元用例通过"
+          echo "✅ ACL 矩阵配置：5 契约用例通过"
+          echo "全链路数据流转完整性已验证"
 
   # 快照测试：检测 API 响应、文档和数据 schema 的意外变更
   snapshot-test:

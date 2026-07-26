@@ -71,3 +71,21 @@ jobs:
       - run: npm ci
       - name: audit:layers (禁止跨层调用)
         run: npm run audit:layers
+
+  databridge-gate:           # DataBridge 完整性快速门禁（开发分支必检，不阻塞推送）
+    name: DataBridge integrity gate
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 22
+          cache: 'npm'
+      - run: npm ci
+      - name: DataBridge 数据流转 + bootstrapService + ACL 完整性检查
+        run: npm run test:databridge:gate
+        env:
+          CI: true
