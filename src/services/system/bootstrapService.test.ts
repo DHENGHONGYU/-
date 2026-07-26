@@ -1,13 +1,14 @@
 /**
  * @test_id V9-TEST-ST-117
- * @covers_docs []
+ * @covers_docs [V9-DOC-FIX-P0-001]
  */
-const { mockDataBridgeInit, mockInitPWA, mockDataBridgeSubscribe, mockInitOrchestration, mockStopOrchestration, mockPermissionRevocationStart, mockPermissionRevocationStop, mockLogger } = vi.hoisted(() => ({
+const { mockDataBridgeInit, mockInitPWA, mockDataBridgeSubscribe, mockInitOrchestration, mockStopOrchestration, mockGetOrchestratorHealth, mockPermissionRevocationStart, mockPermissionRevocationStop, mockLogger, mockSeedDefaultStocks } = vi.hoisted(() => ({
   mockDataBridgeInit: vi.fn().mockResolvedValue(undefined),
   mockInitPWA: vi.fn(),
   mockDataBridgeSubscribe: vi.fn().mockReturnValue(() => {}),
   mockInitOrchestration: vi.fn(),
   mockStopOrchestration: vi.fn(),
+  mockGetOrchestratorHealth: vi.fn().mockReturnValue([]),
   mockPermissionRevocationStart: vi.fn(),
   mockPermissionRevocationStop: vi.fn(),
   mockLogger: {
@@ -16,6 +17,7 @@ const { mockDataBridgeInit, mockInitPWA, mockDataBridgeSubscribe, mockInitOrches
     error: vi.fn(),
     debug: vi.fn(),
   },
+  mockSeedDefaultStocks: vi.fn().mockResolvedValue(undefined),
 }))
 
 vi.mock('@/core/databridge', () => ({
@@ -28,6 +30,7 @@ vi.mock('@/services/pwa/registerServiceWorker', () => ({ initPWA: mockInitPWA })
 vi.mock('@/services/orchestration', () => ({
   initOrchestration: mockInitOrchestration,
   stopOrchestration: mockStopOrchestration,
+  getOrchestratorHealth: mockGetOrchestratorHealth,
 }))
 vi.mock('@/services/rbac/permissionRevocationService', () => ({
   permissionRevocationService: {
@@ -47,7 +50,7 @@ vi.mock('@/config/llmConfig', () => ({
   isLlmApiKeyConfigured: vi.fn(() => false),
 }))
 vi.mock('@/services/system/seedService', () => ({
-  seedDefaultStocks: vi.fn().mockResolvedValue(undefined),
+  seedDefaultStocks: mockSeedDefaultStocks,
 }))
 vi.mock('@/lib/logger', () => ({
   getLogger: () => mockLogger,
@@ -59,6 +62,7 @@ describe('bootstrapService', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockInitOrchestration.mockImplementation(() => {})
+    mockSeedDefaultStocks.mockResolvedValue(undefined)
   })
 
   it('initializeApp: 调用 dataBridge.init', async () => {
@@ -168,5 +172,125 @@ describe('bootstrapService', () => {
     expect(mockLogger.info).toHaveBeenCalledWith(
       expect.stringContaining('RBAC permission revocation service stopped'),
     )
+  })
+
+  describe('P0-1: 种子数据失败 UI 降级', () => {
+    it('种子数据持续失败耗尽重试后调用 onSeedFailure 回调', async () => {
+      const onSeedFailure = vi.fn()
+      mockSeedDefaultStocks.mockRejectedValue(new Error('IndexedDB 写入失败'))
+
+      await initializeApp({ hooks: { onSeedFailure } })
+
+      await vi.waitFor(() => {
+        expect(onSeedFailure).toHaveBeenCalledOnce()
+        expect(onSeedFailure).toHaveBeenCalledWith(
+          'IndexedDB 写入失败',
+          expect.any(Number),
+        )
+      }, { timeout: 5000 })
+    })
+
+    it('种子数据重试成功后不调用 onSeedFailure', async () => {
+      const onSeedFailure = vi.fn()
+      let callCount = 0
+      mockSeedDefaultStocks.mockImplementation(async () => {
+        callCount++
+        if (callCount < 3) throw new Error('临时失败')
+        return Promise.resolve()
+      })
+
+      await initializeApp({ hooks: { onSeedFailure } })
+
+      await vi.waitFor(() => {
+        expect(onSeedFailure).not.toHaveBeenCalled()
+      }, { timeout: 5000 })
+    })
+
+    it('重试耗尽后 onSeedFailure 被调用且重试次数正确', async () => {
+      const onSeedFailure = vi.fn()
+      mockSeedDefaultStocks.mockRejectedValue(new Error('持续失败'))
+
+      await initializeApp({ hooks: { onSeedFailure } })
+
+      await vi.waitFor(() => {
+        expect(onSeedFailure).toHaveBeenCalledWith(
+          expect.stringContaining('持续失败'),
+          2, // MAX_SEED_RETRIES = 2
+        )
+      }, { timeout: 5000 })
+    })
+  })
+
+  describe('P0-2: 编排器失败回调', () => {
+    it('编排器启动失败时调用 onOrchestrationFailure 回调', async () => {
+      const onOrchestrationFailure = vi.fn()
+      mockInitOrchestration.mockImplementation(() => {
+        throw new Error('编排器崩溃')
+      })
+
+      await initializeApp({ hooks: { onOrchestrationFailure } })
+
+      expect(onOrchestrationFailure).toHaveBeenCalledWith('编排器崩溃')
+    })
+
+    it('编排器启动成功时不调用 onOrchestrationFailure', async () => {
+      const onOrchestrationFailure = vi.fn()
+
+      await initializeApp({ hooks: { onOrchestrationFailure } })
+
+      expect(onOrchestrationFailure).not.toHaveBeenCalled()
+    })
+
+    it('编排器部分失败通过健康检查触发 onOrchestrationFailure', async () => {
+      const onOrchestrationFailure = vi.fn()
+      mockGetOrchestratorHealth.mockReturnValueOnce([
+        { name: 'CatalystTracker', status: 'failed', lastStartTime: null, errorMessage: '初始化超时' },
+      ])
+
+      await initializeApp({ hooks: { onOrchestrationFailure } })
+
+      expect(onOrchestrationFailure).toHaveBeenCalledWith(
+        expect.stringContaining('CatalystTracker'),
+      )
+      expect(onOrchestrationFailure).toHaveBeenCalledWith(
+        expect.stringContaining('初始化超时'),
+      )
+    })
+  })
+
+  describe('P0-3: 内存降级模式', () => {
+    it('useMemoryFallback=true 时跳过 dataBridge.init 调用', async () => {
+      await initializeApp({ useMemoryFallback: true })
+
+      expect(mockDataBridgeInit).not.toHaveBeenCalled()
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('使用内存降级模式'),
+      )
+    })
+
+    it('useMemoryFallback=false 时正常调用 dataBridge.init', async () => {
+      await initializeApp({ useMemoryFallback: false })
+
+      expect(mockDataBridgeInit).toHaveBeenCalledTimes(1)
+    })
+
+    it('dataBridge.init 失败时调用 onDataBridgeInitFailure 回调', async () => {
+      const onDataBridgeInitFailure = vi.fn()
+      mockDataBridgeInit.mockRejectedValueOnce(new Error('IDB 不可用'))
+
+      await expect(
+        initializeApp({ hooks: { onDataBridgeInitFailure } }),
+      ).rejects.toThrow('IDB 不可用')
+
+      expect(onDataBridgeInitFailure).toHaveBeenCalledWith('IDB 不可用')
+    })
+
+    it('dataBridge.init 成功时不调用 onDataBridgeInitFailure', async () => {
+      const onDataBridgeInitFailure = vi.fn()
+
+      await initializeApp({ hooks: { onDataBridgeInitFailure } })
+
+      expect(onDataBridgeInitFailure).not.toHaveBeenCalled()
+    })
   })
 })
