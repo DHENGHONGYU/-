@@ -55,6 +55,9 @@ npm run complexity-scan
 echo ""
 echo "🧪 [4/5] 运行全量单元测试（npm run test:clean）..."
 npm run test:clean
+# ℹ️ 5 件套图表组件测试（106 项用例）已包含在 test:clean 中
+#    单独运行可执行：npm run test:chart:industry && npm run report:chart
+#    CI/CD 中作为独立 P0 门禁：chart-industry-tests job（见 .github/workflows/quality-check.yml）
 
 # 5. 生产构建验证
 echo ""
