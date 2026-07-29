@@ -1,7 +1,7 @@
 name: Document Freshness Dashboard
 
 # 文档保鲜度 Dashboard（P2-10）— 每月 1 日定时运行
-# 关联：docs/02-design/freshness-alerts.md（告警规则）、scripts/doc-freshness-score.ts / doc-freshness-alert.ts
+# 关联：docs/02-design/freshness-alerts.md（告警规则）、scripts/docs-tool/doc-freshness-score.ts / doc-freshness-alert.ts
 
 on:
   schedule:
@@ -28,12 +28,12 @@ jobs:
 
       # 1. 文档保鲜度评分（四维度：完整性/时效性/准确性/一致性）
       - name: Run doc freshness score
-        run: npx tsx scripts/doc-freshness-score.ts
+        run: npx tsx scripts/docs-tool/doc-freshness-score.ts
         continue-on-error: true
 
       # 2. 保鲜度告警评估（ALERT-01~05）
       - name: Run doc freshness alert
-        run: npx tsx scripts/doc-freshness-alert.ts --silent
+        run: npx tsx scripts/docs-tool/doc-freshness-alert.ts --silent
         continue-on-error: true
 
       # 3. 生成月度 Markdown 报告
