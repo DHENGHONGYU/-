@@ -1,7 +1,7 @@
 name: Doc Automation
 
 # 文档自动更新流水线（T7b）— push/PR 触发，按映射表检测文档同步状态
-# 关联：docs/00-meta/doc-trigger-action-map.md（触发-动作映射）、scripts/doc-update-trigger.ts
+# 关联：docs/00-meta/doc-trigger-action-map.md（触发-动作映射）、scripts/docs-tool/doc-update-trigger.ts
 
 on:
   push:
@@ -33,13 +33,13 @@ jobs:
       # 1. 检测代码变更触发的文档更新规则（信息性，非阻塞）
       #    输出哪些触发事件命中、对应需更新的文档清单
       - name: Detect doc update triggers
-        run: npx tsx scripts/doc-update-trigger.ts --check
+        run: npx tsx scripts/docs-tool/doc-update-trigger.ts --check
         continue-on-error: true
 
       # 2. dry-run 验证文档同步（非阻塞，生成报告供审阅）
       #    --skip-crossref/--skip-version-history：CI 仅做差异检测，不写文档
       - name: Doc auto-update dry-run
-        run: npx tsx scripts/doc-auto-updater.ts --dry-run --skip-crossref --skip-version-history
+        run: npx tsx scripts/docs-tool/doc-auto-updater.ts --dry-run --skip-crossref --skip-version-history
         continue-on-error: true
 
       # 3. 文档同步审计（P0 阻塞门禁 — exit code 非零则 CI 失败）
