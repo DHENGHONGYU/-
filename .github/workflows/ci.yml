@@ -5,7 +5,7 @@ name: CI (dev branches)
 
 on:
   push:
-    branches: ['feat/**', 'feature/**']
+    branches: ['feat/**', 'feature/**', 'fix/**']
   workflow_dispatch:
 
 permissions:
@@ -84,6 +84,31 @@ jobs:
           path: |
             outputs/test-results/chart-tests.json
             outputs/test-results/chart-report.html
+          retention-days: 7
+
+  bootstrap-p0-gate:          # P0 强制门禁：种子数据重试 + 内存降级（开发分支必检，阻塞）
+    name: Bootstrap P0 gate (seed retry + memory fallback)
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 22
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      - name: P0-1 种子数据重试 + P0-2 内存降级模式
+        run: npm run test:bootstrap:p0
+        env:
+          CI: true
+      - name: Upload bootstrap P0 test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-bootstrap-p0-test-report
+          path: |
+            src/services/system/bootstrapService.test.ts
           retention-days: 7
 
   layers:                     # 快边界审计留开发分支 PR/推送
