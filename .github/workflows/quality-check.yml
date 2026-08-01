@@ -278,7 +278,7 @@ jobs:
           fi
           
           if [ "${{ needs.bootstrap-p0-gate.result }}" != "success" ] && [ "${{ needs.bootstrap-p0-gate.result }}" != "skipped" ]; then
-            echo "❌ P0 检查失败: bootstrap-p0-gate (种子数据重试 + 内存降级模式)"
+            echo "❌ P0 检查失败: bootstrap-p0-gate (种子数据初始化+重试 / 编排容错 / 内存降级模式)"
             FAILURE=true
           fi
           
@@ -350,7 +350,7 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
-      - name: P0-1 种子数据重试 + P0-2 内存降级模式（bootstrapService 20 项用例）
+      - name: P0-1 种子数据初始化/重试 + P0-2 编排容错 + P0-3 内存降级（bootstrapService 23 + seedService 9 = 32 项用例）
         run: npm run test:bootstrap:p0
         env:
           CI: true
@@ -361,6 +361,7 @@ jobs:
           name: bootstrap-p0-test-report
           path: |
             src/services/system/bootstrapService.test.ts
+            src/services/system/seedService.test.ts
           retention-days: 7
 
   # 快照测试：检测 API 响应、文档和数据 schema 的意外变更
