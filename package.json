@@ -34,7 +34,7 @@
     "test:databridge:bootstrap": "vitest run src/services/system/bootstrapService.test.ts --no-coverage",
     "test:bootstrap:p0": "vitest run src/services/system/bootstrapService.test.ts --no-coverage --reporter=verbose",
     "test:databridge:acl": "vitest run src/config/dbConfig.test.ts --no-coverage",
-    "test:databridge:gate": "vitest run src/services/execution/executionPlanService.dataflow.test.ts src/services/system/bootstrapService.test.ts src/config/dbConfig.test.ts --no-coverage",
+    "test:databridge:gate": "vitest run src/services/execution/executionPlanService.dataflow.test.ts src/services/system/bootstrapService.test.ts src/config/dbConfig.test.ts src/services/system/seedService.test.ts --no-coverage",
     "test:databridge:performance": "vitest run tests/performance/databridge.benchmark.test.ts tests/memory/databridge-leak.test.ts --no-coverage",
     "test:databridge": "node scripts/test-databridge.mjs",
     "test:stable": "node scripts/test-quarantine.mjs stable",

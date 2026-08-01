@@ -257,7 +257,7 @@ export function communityPostToProfileItem(
     : content
 
   // 情绪标签
-  const sentiment = (post.sentiment as SentimentLabel | undefined) ?? 'neutral'
+  const sentiment = post.sentiment ?? 'neutral'
 
   // 关联评分层
   const relatedLayers = domain === DEFAULT_DOMAIN
