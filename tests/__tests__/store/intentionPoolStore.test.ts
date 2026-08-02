@@ -44,15 +44,21 @@ vi.mock('@/core/poolTransitionEngine', () => ({
 }))
 
 // mock dataBridge
-const mockQuery = vi.fn()
-const mockForward = vi.fn()
-const mockSubscribe = vi.fn(() => vi.fn())
+const {
+  mockQuery,
+  mockForward,
+  mockSubscribe,
+} = vi.hoisted(() => ({
+  mockQuery: vi.fn(),
+  mockForward: vi.fn(),
+  mockSubscribe: vi.fn(() => vi.fn()),
+}))
 
 vi.mock('@/core/databridge', () => ({
   dataBridge: {
-    query: (...args: unknown[]) => mockQuery(...args),
-    forward: (...args: unknown[]) => mockForward(...args),
-    subscribe: (...args: unknown[]) => mockSubscribe(...args),
+    query: mockQuery,
+    forward: mockForward,
+    subscribe: mockSubscribe,
     invalidateAll: vi.fn(),
   },
   ENVELOPE_ACTION: {
@@ -87,6 +93,7 @@ import { useIntentionPoolStore } from '@/store/intentionPoolStore'
 /** 构造 mock Stock 数据 */
 function makeStock(overrides: Partial<Stock> & { symbol: string }): Stock {
   return {
+    ...overrides,
     symbol: overrides.symbol,
     name: overrides.name ?? `股票${overrides.symbol}`,
     pool: overrides.pool ?? 'intention',
@@ -95,7 +102,6 @@ function makeStock(overrides: Partial<Stock> & { symbol: string }): Stock {
     dataVersion: overrides.dataVersion ?? 1,
     ingestedAt: overrides.ingestedAt ?? Date.now(),
     updatedAt: overrides.updatedAt ?? Date.now(),
-    ...overrides,
   } as Stock
 }
 

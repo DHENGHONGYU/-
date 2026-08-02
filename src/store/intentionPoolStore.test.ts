@@ -41,23 +41,30 @@ vi.mock('@/store/helpers/withBroadcast', () => ({
 }))
 
 // mock poolTransitionEngine - 默认返回 true，测试中可单独覆盖
-const mockIsValidTransition = vi.fn(() => true)
 vi.mock('@/core/poolTransitionEngine', () => ({
-  isValidTransition: (...args: unknown[]) => mockIsValidTransition(...args),
+  isValidTransition: mockIsValidTransition,
   getPoolTransitionOptions: vi.fn(() => []),
   getPoolLabel: vi.fn((_pool: string, status: string) => status),
 }))
 
 // mock dataBridge
-const mockQuery = vi.fn()
-const mockForward = vi.fn()
-const mockSubscribe = vi.fn(() => vi.fn())
+const {
+  mockQuery,
+  mockForward,
+  mockSubscribe,
+  mockIsValidTransition,
+} = vi.hoisted(() => ({
+  mockQuery: vi.fn(),
+  mockForward: vi.fn(),
+  mockSubscribe: vi.fn(() => vi.fn()),
+  mockIsValidTransition: vi.fn(() => true),
+}))
 
 vi.mock('@/core/databridge', () => ({
   dataBridge: {
-    query: (...args: unknown[]) => mockQuery(...args),
-    forward: (...args: unknown[]) => mockForward(...args),
-    subscribe: (...args: unknown[]) => mockSubscribe(...args),
+    query: mockQuery,
+    forward: mockForward,
+    subscribe: mockSubscribe,
     invalidateAll: vi.fn(),
   },
 }))
@@ -106,7 +113,6 @@ import {
   _resetIntentionPoolStoreSubscriptionsForTest,
 } from './intentionPoolStore'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
-import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/config/dbConfig'
 
@@ -114,6 +120,7 @@ import { ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/config/dbConfig'
 
 function makeStock(overrides: Partial<Stock> & { symbol: string }): Stock {
   return {
+    ...overrides,
     symbol: overrides.symbol,
     name: overrides.name ?? `股票${overrides.symbol}`,
     pool: overrides.pool ?? 'intention',
@@ -123,7 +130,6 @@ function makeStock(overrides: Partial<Stock> & { symbol: string }): Stock {
     ingestedAt: overrides.ingestedAt ?? Date.now(),
     updatedAt: overrides.updatedAt ?? Date.now(),
     group: overrides.group ?? '默认分组',
-    ...overrides,
   } as Stock
 }
 
@@ -144,7 +150,7 @@ function mockQueryGetNotFound() {
   })
 }
 
-function seedItems(symbols: string[], overrides: Partial<Stock> = {}): void {
+function seedItems(symbols: string[], overrides: Partial<Stock> & { status?: string } = {}): void {
   useIntentionPoolStore.setState({
     items: symbols.map((symbol) => ({
       symbol,
@@ -296,6 +302,7 @@ describe('intentionPoolStore 单元测试', () => {
       const result = await useIntentionPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       expect(result).toBe(true)
@@ -327,6 +334,7 @@ describe('intentionPoolStore 单元测试', () => {
       const result = await useIntentionPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       expect(result).toBe(false)
@@ -341,12 +349,13 @@ describe('intentionPoolStore 单元测试', () => {
       await useIntentionPoolStore.getState().addItem({
         symbol: '  000001.sh  ',
         name: '平安银行',
+        source: 'manual',
       })
 
       // EnvelopeFactory.create 的调用参数中 symbol 应为归一化后的值
       const calls = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls
       const insertCall = calls.find(
-        (c: [{ action?: string }]) => c[0]?.action === ENVELOPE_ACTION.insertStock,
+        (c: { action?: string }[]) => c[0]?.action === ENVELOPE_ACTION.insertStock,
       )
       expect(insertCall).toBeDefined()
       expect(insertCall![1].symbol).toBe('000001.SH')
@@ -358,11 +367,12 @@ describe('intentionPoolStore 单元测试', () => {
       await useIntentionPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       const calls = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls
       const insertCall = calls.find(
-        (c: [{ action?: string }]) => c[0]?.action === ENVELOPE_ACTION.insertStock,
+        (c: { action?: string }[]) => c[0]?.action === ENVELOPE_ACTION.insertStock,
       )
       const stockData = insertCall![1]
       expect(stockData.pool).toBe('intention')
@@ -380,11 +390,12 @@ describe('intentionPoolStore 单元测试', () => {
       await useIntentionPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       const calls = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls
       const transitionCall = calls.find(
-        (c: [{ action?: string; traceId?: string }]) =>
+        (c: { action?: string; traceId?: string }[]) =>
           c[0]?.traceId?.includes('intention-to-research'),
       )
       expect(transitionCall).toBeDefined()
@@ -411,6 +422,7 @@ describe('intentionPoolStore 单元测试', () => {
       const result = await useIntentionPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       // 意向池添加仍应成功
@@ -424,6 +436,7 @@ describe('intentionPoolStore 单元测试', () => {
       const result = await useIntentionPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       expect(result).toBe(false)
@@ -825,11 +838,12 @@ describe('intentionPoolStore 单元测试', () => {
       await useIntentionPoolStore.getState().addItem({
         symbol: '000001',
         name: '平安银行',
+        source: 'manual',
       })
 
       const calls = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls
       const insertCall = calls.find(
-        (c: [{ action?: string }]) => c[0]?.action === ENVELOPE_ACTION.insertStock,
+        (c: { action?: string }[]) => c[0]?.action === ENVELOPE_ACTION.insertStock,
       )
       expect(insertCall![1].dataVersion).toBe(1)
     })
