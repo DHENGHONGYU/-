@@ -16,8 +16,9 @@
 
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import type { ReactNode } from 'react'
+import type { ReactNode, ComponentType } from 'react'
 import CockpitShell from '@/cockpit/CockpitShell'
+import type { WidgetTemplate } from '@/cockpit/core/widgetRegistry'
 import type { WidgetConfig, MarketData } from '@/types/modules/widget.types'
 
 // ============================================================
@@ -50,14 +51,21 @@ vi.mock('react-router', async (importOriginal) => {
 // ============================================================
 // Mock 3: lucide-react icons（渲染占位 SVG）
 // ============================================================
-vi.mock('lucide-react', () => ({
-  Settings: () => <svg data-testid="icon-settings" />,
-  RefreshCw: () => <svg data-testid="icon-refresh" />,
-  Plus: () => <svg data-testid="icon-plus" />,
-  Target: () => <svg data-testid="icon-target" />,
-  AlertTriangle: () => <svg data-testid="icon-alert-triangle" />,
-  ChevronRight: () => <svg data-testid="icon-chevron-right" />,
-}))
+vi.mock('lucide-react', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('lucide-react')>()
+  // 部分 mock：展开全部真实导出，仅对 6 个图标保留 data-testid 占位，
+  // 避免新增图标（MessageSquare/GitBranch/RotateCcw 等）击穿 mock。
+  const Icon = (testid: string) => () => <svg data-testid={testid} />
+  return {
+    ...actual,
+    Settings: Icon('icon-settings'),
+    RefreshCw: Icon('icon-refresh'),
+    Plus: Icon('icon-plus'),
+    Target: Icon('icon-target'),
+    AlertTriangle: Icon('icon-alert-triangle'),
+    ChevronRight: Icon('icon-chevron-right'),
+  }
+})
 
 // ============================================================
 // Mock 4: react-grid-layout（直接渲染 children，避免 jsdom 布局问题）
@@ -86,13 +94,31 @@ vi.mock('@/components/organisms/shared/WidgetErrorBoundary', () => ({
 const mockUnsubscribe = vi.hoisted(() => vi.fn())
 const mockGetAllInstances = vi.hoisted(() => vi.fn())
 const mockSubscribe = vi.hoisted(() => vi.fn())
+const mockGetTemplate = vi.hoisted(() => vi.fn())
 
 vi.mock('@/cockpit/core/widgetRegistry', () => ({
   widgetRegistry: {
     getAllInstances: mockGetAllInstances,
     subscribe: mockSubscribe,
+    getTemplate: mockGetTemplate,
   },
 }))
+
+// CockpitCrossLayout 按 getTemplate().meta.domain/perspective 过滤交叉点实例。
+// 默认交叉点 domain='market' / perspective='overview'，返回匹配模板使测试实例可被渲染。
+const mockTemplate: WidgetTemplate = {
+  meta: {
+    id: 'marketIndices',
+    name: '大盘指数',
+    category: 'market',
+    description: 'test template',
+    defaultSize: { cols: 4, rows: 2 },
+    domain: 'market',
+    perspective: 'overview',
+  },
+  component: async () =>
+    ({ default: (() => null) as unknown as ComponentType<{ config: WidgetConfig; data?: MarketData }> }),
+}
 
 // ============================================================
 // Mock 7: widgetEngine（控制 mount/loadComponent/unmount/getStats）
@@ -161,6 +187,7 @@ describe('CockpitShell', () => {
     mockGetAllInstances.mockReturnValue([])
     mockGetStats.mockReturnValue({ cachedComponents: 0 })
     mockSubscribe.mockReturnValue(mockUnsubscribe)
+    mockGetTemplate.mockReturnValue(mockTemplate)
     setupMarketDataHook()
   })
 
@@ -168,11 +195,17 @@ describe('CockpitShell', () => {
     vi.restoreAllMocks()
   })
 
+  /** 关闭矩阵总览视图，使交叉点 Widget 实例进入渲染（CockpitCrossLayout 默认显示总览） */
+  function dismissMatrixOverview(): void {
+    fireEvent.click(screen.getByRole('button', { name: /矩阵总览/ }))
+  }
+
   it('渲染不崩溃，且包裹 MarketDataProvider', () => {
     render(<CockpitShell />)
 
     expect(screen.getByTestId('market-provider')).toBeInTheDocument()
-    expect(screen.getByTestId('grid-layout')).toBeInTheDocument()
+    // CockpitCrossLayout 现用原生 CSS Grid，不再依赖 react-grid-layout
+    expect(screen.getByText('驾驶舱')).toBeInTheDocument()
   })
 
   it('渲染 header 标题 "驾驶舱"', () => {
@@ -188,18 +221,13 @@ describe('CockpitShell', () => {
     expect(screen.getByText('返回首页')).toBeInTheDocument()
   })
 
-  it('空实例时渲染 Widget 数量 Badge 显示 "0 个 Widget"', () => {
+  it('空实例时渲染 Widget 数量 Badge 显示 "0 Widget"', () => {
     render(<CockpitShell />)
 
-    expect(screen.getByText('0 个 Widget')).toBeInTheDocument()
-  })
-
-  it('渲染缓存统计 Badge（显示 cachedComponents 数值）', () => {
-    mockGetStats.mockReturnValue({ cachedComponents: 5 })
-
-    render(<CockpitShell />)
-
-    expect(screen.getByText('缓存: 5')).toBeInTheDocument()
+    // 徽标结构：<span>{n}</span> Widget —— 用 textContent 精确匹配外层徽标
+    expect(
+      screen.getByText((_, node) => node?.textContent === '0 Widget'),
+    ).toBeInTheDocument()
   })
 
   it('渲染采集任务统计 Badge（显示 running/total）', () => {
@@ -207,7 +235,9 @@ describe('CockpitShell', () => {
 
     render(<CockpitShell />)
 
-    expect(screen.getByText('采集任务: 3/10')).toBeInTheDocument()
+    expect(
+      screen.getByText((_, node) => node?.textContent === '3/10 采集任务'),
+    ).toBeInTheDocument()
   })
 
   it('挂载时调用 widgetRegistry.getAllInstances 获取实例列表', () => {
@@ -265,7 +295,9 @@ describe('CockpitShell', () => {
 
     render(<CockpitShell />)
 
-    expect(screen.getByText('2 个 Widget')).toBeInTheDocument()
+    expect(
+      screen.getByText((_, node) => node?.textContent === '2 Widget'),
+    ).toBeInTheDocument()
   })
 
   // ============================================================
@@ -303,6 +335,9 @@ describe('CockpitShell', () => {
 
     const { unmount } = render(<CockpitShell />)
 
+    // 关闭矩阵总览，使 WidgetWrapper 实例渲染进入错误态
+    dismissMatrixOverview()
+
     // 验证错误显示
     expect(await screen.findByText('挂载失败')).toBeInTheDocument()
 
@@ -325,12 +360,15 @@ describe('CockpitShell', () => {
         collapsed: false,
       },
     ])
-    mockMountInstance.mockRejectedValueOnce(new Error('网络异常'))
+    mockMountInstance.mockRejectedValueOnce(new Error('组件挂载异常'))
 
     render(<CockpitShell />)
 
-    // 验证错误消息显示
-    expect(await screen.findByText('网络异常')).toBeInTheDocument()
+    // 关闭矩阵总览，使 WidgetWrapper 实例渲染进入错误态
+    dismissMatrixOverview()
+
+    // 验证错误消息显示（ErrorState 以 business 类型回显真实错误信息）
+    expect(await screen.findByText('组件挂载异常')).toBeInTheDocument()
   })
 
   it('WidgetWrapper: error 状态下点击 "重试" 按钮应调用 refreshInstance + loadComponent', async () => {
@@ -357,6 +395,9 @@ describe('CockpitShell', () => {
     mockLoadComponent.mockResolvedValueOnce(() => null)
 
     render(<CockpitShell />)
+
+    // 关闭矩阵总览，使 WidgetWrapper 实例渲染进入错误态
+    dismissMatrixOverview()
 
     // 等待错误出现
     expect(await screen.findByText('挂载失败')).toBeInTheDocument()
@@ -392,6 +433,9 @@ describe('CockpitShell', () => {
     mockLoadComponent.mockResolvedValueOnce(null)
 
     render(<CockpitShell />)
+
+    // 关闭矩阵总览，使 WidgetWrapper 实例渲染进入未找到态
+    dismissMatrixOverview()
 
     // 验证 "组件未找到" 出现
     expect(await screen.findByText('组件未找到')).toBeInTheDocument()

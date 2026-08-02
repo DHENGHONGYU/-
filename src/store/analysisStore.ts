@@ -25,6 +25,10 @@ import {
 } from '@/services/analysis/scoreTrendService'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
+import { dataBridge } from '@/core/databridge'
+import { EnvelopeFactory } from '@/core/envelope'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
+import { createTraceId } from '@/lib/utils'
 
 const logger = getLogger()
 
@@ -133,6 +137,25 @@ export const useAnalysisStore = create<AnalysisState>((set, get) => ({
         logger.info(`[analysisStore] handleScore 完成: ${symbol}`)
         // D-3: 广播评分变更事件
         withBroadcast(EVENT_NAMES.SCORES_CHANGED, { action: 'score', symbol })
+        // B6 修复：评分计算完成后通过 DataBridge 信封协议持久化到 v6Scores（刷新后不丢失）
+        try {
+          await dataBridge.forward(
+            EnvelopeFactory.create(
+              {
+                source: MODULE_ID.analyzer,
+                target: ENVELOPE_TARGET.db,
+                action: ENVELOPE_ACTION.saveScores,
+                traceId: createTraceId('analysis-score'),
+              },
+              result.data,
+            ),
+          )
+          logger.info(`[analysisStore] handleScore 已持久化: ${symbol}`)
+        } catch (persistErr) {
+          logger.warn(`[analysisStore] handleScore 持久化失败（不影响内存评分）: ${symbol}`, {
+            error: persistErr,
+          })
+        }
       } else {
         const message = result.error ?? `无法对 ${symbol} 运行评分`
         logger.error(`[analysisStore] handleScore 失败: ${message}`)

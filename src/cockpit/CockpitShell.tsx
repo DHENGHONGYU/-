@@ -386,6 +386,29 @@ function CockpitContent(): React.JSX.Element {
     resetLayout()
   }
 
+  // 补齐尚未添加的优先 Widget（按 cockpit.constants 优先级），为顶部添加面板提供真实接线
+  const handleAddWidget = (): void => {
+    const priority = [
+      'kaiScore', 'poolBoard', 'aiTradeReview', 'hotSector',
+      'valuePit', 'signalQuality', 'pnlAnalysis', 'riskMonitor',
+    ]
+    const existing = new Set(instances.map((i) => i.widgetId))
+    const next = priority.find((id) => !existing.has(id))
+    if (!next) {
+      logger.info('[CockpitShell] handleAddWidget: 无更多可添加的优先 Widget')
+      return
+    }
+    try {
+      const created = widgetRegistry.createInstance(next)
+      if (created) {
+        setInstances([...instances, created])
+        logger.info(`[CockpitShell] handleAddWidget: 已添加 ${next}`)
+      }
+    } catch (err) {
+      logger.warn(`[CockpitShell] handleAddWidget 失败: ${next}`, { error: err })
+    }
+  }
+
   const stats = getTaskStats()
 
   /** Widget 渲染回调 — 传给 CockpitCrossLayout */
@@ -418,7 +441,7 @@ function CockpitContent(): React.JSX.Element {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" onClick={handleAddWidget}>
               <Plus className="h-4 w-4 mr-1" />
               添加 Widget
             </Button>

@@ -195,6 +195,12 @@ export interface PortfolioData {
   holdingsList: HoldingItem[]
   /** 再平衡计划（空数组表示组合已平衡） */
   rebalancePlan: RebalancePlanItem[]
+  /**
+   * 组合权益曲线（累计净值序列，用于计算最大回撤 / 夏普比率等风险指标）。
+   * 为空或长度 < 2 时视为数据不足，前端显式标注「数据不足」而非静默显示 0。
+   * 字段来源：MarketDataAdapter 适配（支持 equityCurve / equity_curve 别名）。
+   */
+  equityCurve?: number[]
   /** 最大回撤（百分比，5.5 表示 5.5%；真实数据缺失时为 0） */
   maxDrawdown: number
   /** 夏普比率（真实数据缺失时为 0） */
