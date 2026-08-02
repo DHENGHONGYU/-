@@ -12,13 +12,15 @@
 
 import { existsSync, readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } from 'node:fs'
 import { dirname, extname, join, relative, resolve } from 'node:path'
+import os from 'node:os'
 import { pathToFileURL } from 'node:url'
 
 const __filename = new URL(import.meta.url).pathname
 const __dirname = dirname(__filename).replace(/^\/([A-Z]:)/, '$1')
 const PROJECT_ROOT = resolve(__dirname, '..', '..')
 const PROJECT_DOCS_DIR = join(PROJECT_ROOT, 'docs')
-const EXTERNAL_DOCS_DIR = 'C:/Users/huawei/Desktop/docs'
+// 外部文档目录默认当前用户桌面 docs；可用 EXTERNAL_DOCS_DIR 覆盖（不再硬编码用户目录）
+const EXTERNAL_DOCS_DIR = process.env.EXTERNAL_DOCS_DIR || path.join(os.homedir(), 'Desktop', 'docs')
 
 interface DocMapping {
   externalPattern: string[]

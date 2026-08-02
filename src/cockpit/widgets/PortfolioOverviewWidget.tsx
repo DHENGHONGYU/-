@@ -188,14 +188,14 @@ export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWid
               <AlertTriangle className={cn('h-4 w-4', twText('red', 400))} />
               <span className={cn('text-xs', COLOR_SHADES.gray[400])}>最大回撤</span>
             </div>
-            <span className="text-lg font-medium" style={{ color: COLORS.DOWN }}>0%</span>
+            <span className="text-lg font-medium" style={{ color: COLORS.DOWN }}>{portfolio.maxDrawdown}%</span>
           </div>
           <div>
             <div className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4" style={{ color: COLORS.UP }} />
               <span className={cn('text-xs', COLOR_SHADES.gray[400])}>夏普比率</span>
             </div>
-            <span className="text-lg font-medium" style={{ color: COLORS.UP }}>0.0</span>
+            <span className="text-lg font-medium" style={{ color: COLORS.UP }}>{portfolio.sharpeRatio.toFixed(2)}</span>
           </div>
         </div>
 

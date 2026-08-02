@@ -1,7 +1,7 @@
-param(
-    [string]$DocsPath = "g:\FinSightV9\docs",
+﻿param(
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs'),
     [switch]$Apply = $false,
-    [string]$RegistryOut = "g:\FinSightV9\docs\00-meta\doc-id-registry.md"
+    [string]$RegistryOut = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs', '00-meta', 'doc-id-registry.md')
 )
 
 $ErrorActionPreference = "Stop"
@@ -133,3 +133,4 @@ if ($Apply) {
     Write-Host "Preview (first 20 to assign):"
     $toAssign | Select-Object -First 20 | ForEach-Object { Write-Host "  $($_.NewId)  $($_.RelPath)" }
 }
+

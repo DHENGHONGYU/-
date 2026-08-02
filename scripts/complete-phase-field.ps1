@@ -1,5 +1,5 @@
-param(
-    [string]$DocsPath = "g:\FinSightV9\docs",
+﻿param(
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs'),
     [switch]$Apply = $false
 )
 
@@ -81,3 +81,4 @@ if ($noInferList.Count -gt 0 -and $noInferList.Count -le 50) {
     Write-Host "Need manual phase assignment:" -ForegroundColor Yellow
     $noInferList | ForEach-Object { Write-Host "  $_" }
 }
+

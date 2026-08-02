@@ -242,7 +242,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           'vendor': ['react', 'react-dom', 'react-router', 'zustand'],
-          'ui': ['lucide-react', 'clsx', 'tailwind-merge', '@heroicons/react'],
+          'ui': ['lucide-react', 'clsx', 'tailwind-merge'],
           'charts': ['recharts', 'lightweight-charts'],
           'pdf': ['jspdf', 'jspdf-autotable'],
           'excel': ['xlsx'],

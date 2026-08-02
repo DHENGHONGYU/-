@@ -1,5 +1,5 @@
 ﻿param(
-    [string]$DocsPath = "g:\FinSightV9\docs",
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs'),
     [int]$PerStratum = 2
 )
 
@@ -70,12 +70,12 @@ foreach ($d in $domains) {
 
 Write-Host "Sample size: $($sample.Count)"
 
-$outCsv = "g:\FinSightV9\docs\00-meta\type-domain-audit-sample.csv"
+$outCsv = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs', '00-meta', 'type-domain-audit-sample.csv')
 $sample | Export-Csv -Path $outCsv -NoTypeInformation -Encoding UTF8
 Write-Host "Sample CSV: $outCsv"
 
 # also generate a markdown audit worksheet
-$outMd = "g:\FinSightV9\docs\00-meta\type-domain-audit-worksheet.md"
+$outMd = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs', '00-meta', 'type-domain-audit-worksheet.md')
 $md = @()
 $md += "---"
 $md += "title: Type/Domain 抽样审计工作表"
@@ -123,3 +123,4 @@ foreach ($d in $domains) {
 
 $md -join "`n" | Set-Content $outMd -Encoding UTF8
 Write-Host "Audit worksheet: $outMd"
+

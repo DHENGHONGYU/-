@@ -1,6 +1,6 @@
-$ErrorActionPreference = "Stop"
+﻿$ErrorActionPreference = "Stop"
 
-$docs = Get-ChildItem -Path "g:\FinSightV9\docs" -Recurse -Include "*.md" -File | 
+$docs = Get-ChildItem -Path (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs') -Recurse -Include "*.md" -File | 
     Where-Object { $_.FullName -notmatch "\\archive\\" -and $_.FullName -notmatch "\\node_modules\\" -and $_.FullName -notmatch "\\.git\\" -and $_.FullName -notmatch "\\ai-index\\" }
 
 $total = $docs.Count
@@ -25,7 +25,7 @@ $deprecatedByCount = 0
 $noFMDocs = @()
 
 foreach ($doc in $docs) {
-    $relPath = $doc.FullName.Substring("g:\FinSightV9\docs\".Length).Replace("\", "/")
+    $relPath = $doc.FullName.Substring(((Join-Path (Split-Path $PSScriptRoot -Parent) 'docs').Length + 1)).Replace("\", "/")
     try {
         $content = Get-Content $doc.FullName -Raw -Encoding UTF8
         if ($content -match '^---\s*\n([\s\S]*?)\n---') {
@@ -92,3 +92,4 @@ Write-Host "===== 无 Frontmatter 的文档（前 20 个）====="
 $noFMDocs | Select-Object -First 20 | ForEach-Object { Write-Host "  $_" }
 Write-Host "..."
 Write-Host "共 $($noFMDocs.Count) 份文档无 Frontmatter"
+

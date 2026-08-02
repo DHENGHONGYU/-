@@ -1,6 +1,6 @@
-$ErrorActionPreference = "Stop"
+﻿$ErrorActionPreference = "Stop"
 
-$docs = Get-ChildItem -Path "g:\FinSightV9\docs" -Recurse -Include "*.md" -File | 
+$docs = Get-ChildItem -Path (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs') -Recurse -Include "*.md" -File | 
     Where-Object { $_.FullName -notmatch "\\archive\\" -and $_.FullName -notmatch "\\node_modules\\" -and $_.FullName -notmatch "\\.git\\" }
 
 function Get-DocType($path) {
@@ -64,7 +64,7 @@ $results = @()
 $index = 0
 
 foreach ($doc in $docs) {
-    $relPath = $doc.FullName.Substring("g:\FinSightV9\docs\".Length).Replace("\", "/")
+    $relPath = $doc.FullName.Substring(((Join-Path (Split-Path $PSScriptRoot -Parent) 'docs').Length + 1)).Replace("\", "/")
     $title = Get-Title $doc
     $type = Get-DocType $relPath
     $domain = Get-Domain $doc.Name $relPath
@@ -88,7 +88,7 @@ foreach ($doc in $docs) {
     }
 }
 
-$results | Export-Csv -Path "g:\FinSightV9\docs\00-meta\document-inventory.csv" -Encoding UTF8 -NoTypeInformation
+$results | Export-Csv -Path (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs', '00-meta', 'document-inventory.csv') -Encoding UTF8 -NoTypeInformation
 
 Write-Host "Total docs: $($results.Count)"
 Write-Host "Saved to: docs/00-meta/document-inventory.csv"
@@ -101,3 +101,4 @@ $results | Group-Object domain | Sort-Object Count -Descending | ForEach-Object 
 Write-Host ""
 Write-Host "By phase:"
 $results | Group-Object phase | Sort-Object Count -Descending | ForEach-Object { Write-Host "  $($_.Name): $($_.Count)" }
+

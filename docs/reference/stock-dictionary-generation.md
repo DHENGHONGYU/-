@@ -70,27 +70,27 @@ change_log:
 
 ## 3. 运行环境
 
-生成器 / 校验器均运行于受管（managed）的 Windows venv Python，绝对路径为：
+生成器 / 校验器均运行于受管（managed）的 Windows venv Python。其路径由 `scripts/run-venv-python.cjs` 基于 `USERPROFILE` 环境变量**动态解析**（不再硬编码绝对路径），跨用户 / 跨盘符均可移植：
 
-```
-C:/Users/huawei/.workbuddy/binaries/python/envs/default/Scripts/python.exe
+```bash
+node scripts/run-venv-python.cjs default --version
 ```
 
-> **关键点**：Windows 下 venv 的可执行 Python 位于 `Scripts\` 子目录（即 `Scripts\python.exe`），**不是** `bin/python`。包脚本已硬编码该绝对路径，直接 `npm run` 即可，无需手动激活 venv。
+> **关键点**：Windows 下 venv 的可执行 Python 位于 `Scripts\` 子目录（即 `Scripts\python.exe`），**不是** `bin/python`。包脚本通过 `scripts/run-venv-python.cjs` 动态定位该 venv，**不再硬编码绝对路径**，直接 `npm run` 即可，无需手动激活 venv。
 
 ### （重新）安装 akshare
 
 若 venv 中缺少 akshare，使用该 venv 的 pip 安装（务必用 venv 内的 python 调用 `-m pip`，避免装到系统环境）：
 
 ```bash
-C:/Users/huawei/.workbuddy/binaries/python/envs/default/Scripts/python.exe -m pip install akshare
+node scripts/run-venv-python.cjs default -m pip install akshare
 ```
 
 ---
 
 ## 4. 用法
 
-`package.json` 已注册两个脚本（已硬编码上述 venv python 绝对路径）：
+`package.json` 已注册两个脚本（通过 `run-venv-python.cjs` 动态解析 venv python，不硬编码绝对路径）：
 
 | 命令 | 脚本定义 | 作用 |
 | --- | --- | --- |

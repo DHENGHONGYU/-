@@ -1,5 +1,5 @@
 ﻿param(
-    [string]$DocsPath = "g:\FinSightV9\docs",
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs'),
     [switch]$Apply = $false
 )
 
@@ -132,3 +132,4 @@ if ($Apply) { Write-Host "Applied: $applied" -ForegroundColor Green }
 Write-Host ""
 Write-Host "=== Samples ===" -ForegroundColor Yellow
 $samples | ForEach-Object { Write-Host "  [$($_.Source)] $($_.Path)"; Write-Host "     -> $($_.Summary)" }
+

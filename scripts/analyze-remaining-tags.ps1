@@ -1,5 +1,5 @@
 ﻿param(
-    [string]$DocsPath = "g:\FinSightV9\docs"
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs')
 )
 $ErrorActionPreference = "Stop"
 
@@ -45,3 +45,4 @@ Write-Host "=== Two-tag pair distribution (remaining) ===" -ForegroundColor Yell
 $twoTag | Group-Object Tags | Sort-Object Count -Descending | Select-Object -First 20 | ForEach-Object {
     "{0,-35} {1}" -f $_.Name, $_.Count
 }
+

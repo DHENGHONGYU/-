@@ -1,5 +1,5 @@
-param(
-    [string]$DocsPath = "g:\FinSightV9\docs",
+﻿param(
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs'),
     [switch]$Apply = $false
 )
 
@@ -112,3 +112,4 @@ if (-not $Apply) {
     Write-Host "=== Ambiguous (first 30) ===" -ForegroundColor Yellow
     $ambiguous | Select-Object -First 30 | ForEach-Object { "  $($_.Path)  ->  $($_.Candidates)" }
 }
+

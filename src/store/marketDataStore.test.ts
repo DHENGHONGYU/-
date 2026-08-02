@@ -96,6 +96,8 @@ const {
         holdings: 0,
         holdingsList: [],
         rebalancePlan: [],
+        maxDrawdown: 0,
+        sharpeRatio: 0,
       },
       tradeReview: {
         totalTrades: 0,
@@ -507,10 +509,10 @@ describe('initMarketDataStoreTaskSubscription', () => {
       mergedData: marketDataAdapter.merge(),
     })
 
-    mockAdapt.mockReturnValueOnce({ portfolio: { totalAssets: '10000' } })
+    mockAdapt.mockReturnValueOnce({ portfolio: { totalAssets: '10000', maxDrawdown: 0, sharpeRatio: 0 } })
     mockMerge.mockReturnValueOnce({
       ...marketDataAdapter.merge(),
-      portfolio: { totalAssets: '10000' },
+      portfolio: { totalAssets: '10000', maxDrawdown: 0, sharpeRatio: 0 },
     })
 
     capturedTaskSchedulerCallback.callback?.('task_po_1', {

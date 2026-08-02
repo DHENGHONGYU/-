@@ -1,5 +1,5 @@
-param(
-    [string]$DocsPath = "g:\FinSightV9\docs",
+﻿param(
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs'),
     [switch]$Apply = $false
 )
 
@@ -221,3 +221,4 @@ if ($Apply) {
 }
 Write-Host ""
 Write-Host "Done." -ForegroundColor Cyan
+

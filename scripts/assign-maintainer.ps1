@@ -1,5 +1,5 @@
-param(
-    [string]$DocsPath = "g:\FinSightV9\docs",
+﻿param(
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs'),
     [string]$DefaultMaintainer = "V9 Architecture Team",
     [switch]$Apply = $false
 )
@@ -38,3 +38,4 @@ foreach ($doc in $docs) {
 Write-Host "===== Maintainer Assignment =====" -ForegroundColor Yellow
 Write-Host "Missing maintainer: $missing"
 if ($Apply) { Write-Host "Applied: $applied" -ForegroundColor Green }
+

@@ -1,5 +1,5 @@
-param(
-    [string]$DocsPath = "g:\FinSightV9\docs",
+﻿param(
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs'),
     [switch]$Apply = $false
 )
 
@@ -67,3 +67,4 @@ if ($manualList.Count -le 60) {
     Write-Host "Remaining manual:" -ForegroundColor Yellow
     $manualList | ForEach-Object { Write-Host "  $_" }
 }
+

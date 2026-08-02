@@ -103,6 +103,8 @@ function buildPortfolioData(overrides: Partial<PortfolioData> = {}): PortfolioDa
     holdings: 5,
     holdingsList: [],
     rebalancePlan: [],
+    maxDrawdown: 5.5,
+    sharpeRatio: 0.56,
     ...overrides,
   }
 }
@@ -267,14 +269,14 @@ describe('PortfolioOverviewWidget', () => {
     expect(totalPnLText).toHaveClass(COLOR_TOKENS.info.tailwind)
   })
 
-  it('渲染最大回撤和夏普比率（当前固定占位 0% / 0.0）', () => {
-    setupMarketData({ portfolio: buildPortfolioData() })
+  it('渲染最大回撤和夏普比率（读取真实 portfolio 数据，非硬编码占位）', () => {
+    setupMarketData({ portfolio: buildPortfolioData({ maxDrawdown: 5.5, sharpeRatio: 0.56 }) })
     render(<PortfolioOverviewWidget config={buildConfig()} />)
 
     expect(screen.getByText('最大回撤')).toBeInTheDocument()
     expect(screen.getByText('夏普比率')).toBeInTheDocument()
-    expect(screen.getByText('0%')).toBeInTheDocument()
-    expect(screen.getByText('0.0')).toBeInTheDocument()
+    expect(screen.getByText('5.5%')).toBeInTheDocument()
+    expect(screen.getByText('0.56')).toBeInTheDocument()
   })
 
   it('边界 - totalAssets 为 "0" 且 holdings 为 0 时正常渲染', () => {

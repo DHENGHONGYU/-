@@ -1,5 +1,5 @@
-param(
-    [string]$DocsPath = "g:\FinSightV9\docs"
+﻿param(
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs')
 )
 
 $ErrorActionPreference = "Stop"
@@ -31,3 +31,4 @@ $projectDocs | ForEach-Object {
     $parts = $_ -split '/'
     if ($parts.Count -ge 2) { "$($parts[0])/$($parts[1])" } else { $parts[0] }
 } | Group-Object | Sort-Object Count -Descending | Select-Object -First 25 | ForEach-Object { "{0,-40} {1}" -f $_.Name, $_.Count }
+

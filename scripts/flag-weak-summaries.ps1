@@ -1,5 +1,5 @@
 ﻿param(
-    [string]$DocsPath = "g:\FinSightV9\docs"
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs')
 )
 
 $ErrorActionPreference = "Stop"
@@ -85,7 +85,7 @@ Write-Host ""
 Write-Host "=== Weak summaries ===" -ForegroundColor Yellow
 $weak | ForEach-Object { Write-Host "[$($_.Flags)] $($_.Path)"; Write-Host "   -> $($_.Summary)" }
 
-$out = "g:\FinSightV9\scripts\weak-summaries.txt"
+$out = Join-Path $PSScriptRoot 'weak-summaries.txt'
 $weak | ForEach-Object { "[$($_.Flags)] $($_.Path) || $($_.Summary)" } | Set-Content $out -Encoding UTF8
 Write-Host ""
 Write-Host "Weak list saved: $out"

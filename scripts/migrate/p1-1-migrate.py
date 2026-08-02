@@ -1,7 +1,10 @@
 import os
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent.parent
 
 def main(ctx):
-    base = "D:/FinSightV9"
+    base = str(ROOT)
     
     # 1. 给 02-design/ 原文件顶部添加 DEPRECATED 迁移标记
     mappings = {

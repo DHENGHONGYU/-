@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """从 doc-manifest.csv 重建 registry-index.md（可点击链接 + 类目 + 关注点 + 交叉引用）"""
 import csv, os
+from pathlib import Path
 
-ROOT = "G:/FinSightV9"
+ROOT = str(Path(__file__).resolve().parent.parent)
 csv_path = os.path.join(ROOT, "docs/00-meta/doc-manifest.csv")
 out_path = os.path.join(ROOT, "docs/00-meta/registry-index.md")
 

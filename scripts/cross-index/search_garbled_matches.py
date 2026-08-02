@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
 
-docs_dir = Path('G:/FinSightV9/docs')
+BASE_DIR = Path(__file__).parent.parent.parent
+docs_dir = BASE_DIR / "docs"
 
 patterns_to_search = [
     'V9-体系化上线测试',
@@ -18,7 +19,7 @@ for pattern in patterns_to_search:
     found = []
     for md_file in docs_dir.rglob('*.md'):
         if pattern in md_file.name:
-            rel_path = str(md_file.relative_to('G:/FinSightV9/docs')).replace('\\', '/')
+            rel_path = str(md_file.relative_to(docs_dir)).replace('\\', '/')
             found.append(rel_path)
     print(f'Pattern "{pattern}":')
     if found:
