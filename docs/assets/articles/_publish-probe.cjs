@@ -2,7 +2,7 @@
 const { chromium } = require('playwright');
 const fs = require('fs');
 
-const PROJECT = 'C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9';
+const PROJECT = process.env.KIMI_WORKSPACE || require('path').join(require('os').homedir(), 'Documents', 'kimi', 'Workspaces', '智能投研复盘系统V9');
 const LOG = PROJECT + '/articles/_publish_log.txt';
 
 function log(msg) {
