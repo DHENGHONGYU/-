@@ -139,7 +139,7 @@ describe('ScoreCalibrator', () => {
         score: makeScore({ overallScore: llmScore, v6Score }),
       })
 
-      const result = calibrator.getAllCalibrations()[0]
+      const result = calibrator.getAllCalibrations()[0]!
       expect(result.v6Score).toBe(v6Score)
       expect(result.llmScore).toBe(llmScore)
       expect(result.deviation).toBe(expectedDeviation)
@@ -157,7 +157,7 @@ describe('ScoreCalibrator', () => {
         score: makeScore({ overallScore: null, v6Score: 3.5 }),
       })
 
-      const result = calibrator.getAllCalibrations()[0]
+      const result = calibrator.getAllCalibrations()[0]!
       expect(result.v6Score).toBe(3.5)
       expect(result.llmScore).toBeNull()
       expect(result.finalScore).toBe(3.5)
@@ -172,7 +172,7 @@ describe('ScoreCalibrator', () => {
         score: makeScore({ overallScore: 3.8, v6Score: undefined }),
       })
 
-      const result = calibrator.getAllCalibrations()[0]
+      const result = calibrator.getAllCalibrations()[0]!
       expect(result.v6Score).toBeNull()
       expect(result.llmScore).toBe(3.8)
       expect(result.finalScore).toBe(3.8)
@@ -186,7 +186,7 @@ describe('ScoreCalibrator', () => {
         score: makeScore({ overallScore: null, v6Score: undefined }),
       })
 
-      const result = calibrator.getAllCalibrations()[0]
+      const result = calibrator.getAllCalibrations()[0]!
       expect(result.v6Score).toBeNull()
       expect(result.llmScore).toBeNull()
       expect(result.finalScore).toBe(0)
@@ -202,7 +202,7 @@ describe('ScoreCalibrator', () => {
         score: makeScore({ overallScore: 4.5, v6Score: 4.0 }),
       })
 
-      const result = calibrator.getAllCalibrations()[0]
+      const result = calibrator.getAllCalibrations()[0]!
       // v6Weight=0.6: 4.0*0.6 + 4.5*0.4 = 2.4 + 1.8 = 4.2
       expect(result.finalScore).toBeCloseTo(4.2, 2)
       expect(result.rating).toBe('strong_buy')
@@ -217,7 +217,7 @@ describe('ScoreCalibrator', () => {
         score: makeScore({ overallScore: 3.8, v6Score: 3.6 }),
       })
 
-      const result = calibrator.getAllCalibrations()[0]
+      const result = calibrator.getAllCalibrations()[0]!
       // 3.6*0.6 + 3.8*0.4 = 2.16 + 1.52 = 3.68
       expect(result.finalScore).toBeCloseTo(3.68, 2)
       expect(result.rating).toBe('buy')
@@ -232,7 +232,7 @@ describe('ScoreCalibrator', () => {
         score: makeScore({ overallScore: 3.3, v6Score: 3.4 }),
       })
 
-      const result = calibrator.getAllCalibrations()[0]
+      const result = calibrator.getAllCalibrations()[0]!
       // 3.4*0.6 + 3.3*0.4 = 2.04 + 1.32 = 3.36
       expect(result.finalScore).toBeCloseTo(3.36, 2)
       expect(result.rating).toBe('hold')
@@ -247,7 +247,7 @@ describe('ScoreCalibrator', () => {
         score: makeScore({ overallScore: 2.5, v6Score: 2.8 }),
       })
 
-      const result = calibrator.getAllCalibrations()[0]
+      const result = calibrator.getAllCalibrations()[0]!
       // 2.8*0.6 + 2.5*0.4 = 1.68 + 1.0 = 2.68
       expect(result.finalScore).toBeCloseTo(2.68, 2)
       expect(result.rating).toBe('sell')

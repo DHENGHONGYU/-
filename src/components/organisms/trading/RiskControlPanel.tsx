@@ -29,12 +29,16 @@ interface RiskControlPanelProps {
  * RiskControlPanel
  */
 export function RiskControlPanel({
-  riskMetrics = { var: 0, maxDrawdown: 0, sharpeRatio: 0 },
+  riskMetrics,
   riskAlerts = [],
   onUpdateRules
 }: RiskControlPanelProps): React.JSX.Element {
   const [stopLossPercent, setStopLossPercent] = useState(10)
   const [takeProfitPercent, setTakeProfitPercent] = useState(20)
+
+  // 无真实风险数据（如生产构建未接入实时风控源）时显式标注「数据不足」，
+  // 避免以 0 值或历史硬编码值伪装成真实 KPI（与 PortfolioOverviewWidget 约定一致）。
+  const noRiskData = riskMetrics === undefined
 
   const handleUpdateRules = (): void => {
     logger.info('[RiskControlPanel] 更新风控规则', { stopLossPercent, takeProfitPercent })
@@ -52,19 +56,31 @@ export function RiskControlPanel({
           <Card>
             <CardContent className="p-4">
               <p className="text-xs text-muted-foreground">VaR (95%)</p>
-              <p className="text-2xl font-bold text-primary">{riskMetrics.var.toFixed(2)}%</p>
+              {noRiskData ? (
+                <p className="text-2xl font-bold text-muted-foreground">数据不足</p>
+              ) : (
+                <p className="text-2xl font-bold text-primary">{riskMetrics.var.toFixed(2)}%</p>
+              )}
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
               <p className="text-xs text-muted-foreground">最大回撤</p>
-              <p className="text-2xl font-bold text-primary">{riskMetrics.maxDrawdown.toFixed(2)}%</p>
+              {noRiskData ? (
+                <p className="text-2xl font-bold text-muted-foreground">数据不足</p>
+              ) : (
+                <p className="text-2xl font-bold text-primary">{riskMetrics.maxDrawdown.toFixed(2)}%</p>
+              )}
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
               <p className="text-xs text-muted-foreground">夏普比率</p>
-              <p className="text-2xl font-bold text-primary">{riskMetrics.sharpeRatio.toFixed(2)}</p>
+              {noRiskData ? (
+                <p className="text-2xl font-bold text-muted-foreground">数据不足</p>
+              ) : (
+                <p className="text-2xl font-bold text-primary">{riskMetrics.sharpeRatio.toFixed(2)}</p>
+              )}
             </CardContent>
           </Card>
         </div>

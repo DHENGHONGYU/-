@@ -32,6 +32,16 @@ import { usePortfolioStore } from '@/store/portfolioStore'
 import { useOrderStore } from '@/store/orderStore'
 import { useTradingStore } from '@/store/tradingStore'
 
+// 合并自 src/apps/trading/TradingApp.test.tsx：保留路由分发用例（ExecutionPlanPanel 渲染断言）。
+// 仅 mock 面板组件本身，不影响下方 15 个功能用例所依赖的 executionStore 真实模块。
+const executionPlanPanelRendered = vi.fn()
+vi.mock('@/apps/trading/panels/ExecutionPlanPanel', () => ({
+  ExecutionPlanPanel: function MockExecutionPlanPanel() {
+    executionPlanPanelRendered()
+    return <div data-testid="execution-plan-panel">ExecutionPlanPanel</div>
+  },
+}))
+
 const mockStock: Stock = {
   symbol: '000001.SZ',
   name: '平安银行',
@@ -615,5 +625,37 @@ describe('TradingApp', () => {
       expect(screen.getByText('买入 400')).toBeInTheDocument()
       expect(screen.getByText('20进13入选')).toBeInTheDocument()
     })
+  })
+})
+
+// ⬇️ 合并自 src/apps/trading/TradingApp.test.tsx（双副本收敛，保留路由分发覆盖）
+describe('TradingApp 路由分发', () => {
+  beforeEach(() => {
+    executionPlanPanelRendered.mockClear()
+  })
+
+  it('访问 /trading/execution-plans 时应渲染 ExecutionPlanPanel', async () => {
+    render(
+      <MemoryRouter initialEntries={['/trading/execution-plans']}>
+        <TradingApp />
+      </MemoryRouter>,
+    )
+
+    await waitFor(() => {
+      expect(executionPlanPanelRendered).toHaveBeenCalledTimes(1)
+      expect(screen.getByTestId('execution-plan-panel')).toBeInTheDocument()
+      expect(screen.getByText('ExecutionPlanPanel')).toBeInTheDocument()
+    })
+  })
+
+  it('访问 /trading 默认路径时不应渲染 ExecutionPlanPanel', async () => {
+    render(
+      <MemoryRouter initialEntries={['/trading']}>
+        <TradingApp />
+      </MemoryRouter>,
+    )
+
+    expect(executionPlanPanelRendered).not.toHaveBeenCalled()
+    expect(screen.getByText('交易舱 · 模拟盘')).toBeInTheDocument()
   })
 })

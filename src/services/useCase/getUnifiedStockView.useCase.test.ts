@@ -946,7 +946,7 @@ describe('getUnifiedStockViewsByStatusUseCase（按状态批量）', () => {
       return Promise.resolve(stocks[1])
     })
 
-    const result = await getUnifiedStockViewsByStatusUseCase('research')
+    const result = await getUnifiedStockViewsByStatusUseCase('candidate')
 
     expect(result.success).toBe(true)
     expect(result.data).toHaveLength(2)

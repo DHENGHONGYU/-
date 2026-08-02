@@ -367,6 +367,22 @@ for (const h of sharpeHits) {
   const ctx = c.split('\n').slice(h.line - 1, h.line + 3).join('\n')
   if (/0\.0/.test(ctx)) fakeKpi.push(`${h.file}:${h.line} 夏普 附近出现字面量 0.0`)
 }
+// 扩展：交易/风控面板硬编码兜底 KPI（如 maxDrawdown: 15.3 / sharpeRatio: 1.2）
+// 这类字面量在无真实数据时伪装成真实风控指标，与 PortfolioOverviewWidget 原缺陷同类。
+// 仅扫生产呈现文件（排除测试与 mock 数据源），真值应来自实时计算或显式「数据不足」。
+const tradingRiskFiles = listTs(SRC).filter(
+  (f) =>
+    (f.includes('trading') || f.includes('RiskControl')) &&
+    !/\.test\.(ts|tsx)$/.test(f) &&
+    !/mock/i.test(f),
+)
+const hardcodeRe = /(maxDrawdown|maxDrawDown|sharpeRatio|sharpe)\s*:\s*[-+]?\d+(\.\d+)?/i
+const hardcodeHits = grepInFiles(tradingRiskFiles, hardcodeRe)
+for (const h of hardcodeHits) {
+  fakeKpi.push(
+    `${h.file}:${h.line} 交易/风控面板硬编码兜底 KPI 字面量（应接入真实数据或显式「数据不足」）`,
+  )
+}
 findings.push({
   id: 'B1',
   group: 'UI 按钮数据联动',
