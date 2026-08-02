@@ -431,7 +431,7 @@ describe('useBacktestStore', () => {
 
     // 非 Error 类型：message = '导出失败'（源码中硬编码的默认值）
     await expect(
-      useBacktestStore.getState().exportReportById(record.id, { format: 'csv' }),
+      useBacktestStore.getState().exportReportById(record.id, { format: 'excel' }),
     ).rejects.toThrow('unknown-error-string')
 
     expect(mockLogger.error).toHaveBeenCalledWith(

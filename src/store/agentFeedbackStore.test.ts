@@ -55,8 +55,9 @@ describe('useAgentFeedbackStore', () => {
       taskId: 'task-1',
       rating: 5,
       category: 'accuracy',
+      comment: '测试反馈',
       resolved: false,
-      timestamp: Date.now(),
+      createdAt: Date.now(),
     }
 
     useAgentFeedbackStore.getState().addFeedback(feedback)
@@ -82,8 +83,9 @@ describe('useAgentFeedbackStore', () => {
       taskId: 'task-1',
       rating: 5,
       category: 'accuracy',
+      comment: '测试反馈',
       resolved: false,
-      timestamp: Date.now(),
+      createdAt: Date.now(),
     }
 
     useAgentFeedbackStore.getState().addFeedback(feedback)
@@ -102,8 +104,9 @@ describe('useAgentFeedbackStore', () => {
       taskId: 'task-1',
       rating: 4,
       category: 'accuracy',
+      comment: '测试反馈',
       resolved: false,
-      timestamp: Date.now(),
+      createdAt: Date.now(),
     }
     const feedback2: AgentFeedback = {
       id: 'fb-2',
@@ -111,8 +114,9 @@ describe('useAgentFeedbackStore', () => {
       taskId: 'task-2',
       rating: 5,
       category: 'speed',
+      comment: '测试反馈',
       resolved: false,
-      timestamp: Date.now(),
+      createdAt: Date.now(),
     }
     const feedback3: AgentFeedback = {
       id: 'fb-3',
@@ -120,8 +124,9 @@ describe('useAgentFeedbackStore', () => {
       taskId: 'task-3',
       rating: 3,
       category: 'accuracy',
+      comment: '测试反馈',
       resolved: false,
-      timestamp: Date.now(),
+      createdAt: Date.now(),
     }
 
     useAgentFeedbackStore.getState().addFeedback(feedback1)
@@ -147,8 +152,9 @@ describe('useAgentFeedbackStore', () => {
       taskId: 'task-1',
       rating: 5,
       category: 'accuracy',
+      comment: '测试反馈',
       resolved: false,
-      timestamp: Date.now(),
+      createdAt: Date.now(),
     }
 
     useAgentFeedbackStore.getState().addFeedback(feedback)
@@ -165,8 +171,9 @@ describe('useAgentFeedbackStore', () => {
       taskId: 'task-1',
       rating: 5,
       category: 'accuracy',
+      comment: '测试反馈',
       resolved: false,
-      timestamp: Date.now(),
+      createdAt: Date.now(),
     }
 
     useAgentFeedbackStore.getState().addFeedback(feedback)
@@ -185,8 +192,9 @@ describe('useAgentFeedbackStore', () => {
       taskId: 'task-1',
       rating: 4,
       category: 'accuracy',
+      comment: '测试反馈',
       resolved: false,
-      timestamp: Date.now(),
+      createdAt: Date.now(),
     }
     const feedback2: AgentFeedback = {
       id: 'fb-2',
@@ -194,8 +202,9 @@ describe('useAgentFeedbackStore', () => {
       taskId: 'task-2',
       rating: 5,
       category: 'speed',
+      comment: '测试反馈',
       resolved: false,
-      timestamp: Date.now(),
+      createdAt: Date.now(),
     }
     const feedback3: AgentFeedback = {
       id: 'fb-3',
@@ -203,8 +212,9 @@ describe('useAgentFeedbackStore', () => {
       taskId: 'task-3',
       rating: 3,
       category: 'accuracy',
+      comment: '测试反馈',
       resolved: false,
-      timestamp: Date.now(),
+      createdAt: Date.now(),
     }
 
     useAgentFeedbackStore.getState().addFeedback(feedback1)

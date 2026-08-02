@@ -813,7 +813,7 @@ describe('initDualStrategyStoreSubscriptions', () => {
     const envelope = {
       meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't-all', timestamp: Date.now() },
       payload: {},
-    }
+    } as const
 
     // 触发各频道回调（source 非 analyzer，应调用 debouncedRefresh）
     const valueCb = capturedCallbacks.get('valuePitScores')!

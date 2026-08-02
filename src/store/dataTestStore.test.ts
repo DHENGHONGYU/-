@@ -69,8 +69,6 @@ function buildTraceResult(overrides: Partial<TraceResult> = {}): TraceResult {
 
 const dummyConfig: CollectionConfig = {
   dimensions: [],
-  globalTimeout: 10000,
-  retries: 1,
 }
 
 // ============================================================

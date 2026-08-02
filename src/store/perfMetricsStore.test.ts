@@ -59,10 +59,11 @@ describe('usePerfMetricsStore', () => {
 
   it('addMetric 后 reset() 回到初始值', () => {
     const metric: PerfMetric = {
-      name: 'cpu',
-      value: 80,
-      unit: '%',
-      timestamp: Date.now(),
+      taskName: 'cpu',
+      symbol: 'TEST',
+      durationMs: 80,
+      startedAt: Date.now(),
+      success: true,
     }
 
     usePerfMetricsStore.getState().addMetric(metric)
@@ -84,10 +85,11 @@ describe('usePerfMetricsStore', () => {
 
   it('saveResult: addMetric 后 saveResult 断言 results 增加且 lastRunId 非空', () => {
     const metric: PerfMetric = {
-      name: 'cpu',
-      value: 80,
-      unit: '%',
-      timestamp: Date.now(),
+      taskName: 'cpu',
+      symbol: 'TEST',
+      durationMs: 80,
+      startedAt: Date.now(),
+      success: true,
     }
 
     usePerfMetricsStore.getState().addMetric(metric)
