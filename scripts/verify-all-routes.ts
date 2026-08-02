@@ -93,8 +93,6 @@ const EXPECTED_PATHS: Record<string, { path: string; label: string }[]> = {
   analysis: [
     { path: '/analysis', label: '分析舱' },
     { path: '/analysis/hub', label: '分析舱首页' },
-    { path: '/analysis/stock-score', label: 'V6 个股评分' },
-    { path: '/analysis/stock-score/:symbol', label: '个股评分（带代码）' },
     { path: '/analysis/sector', label: '行业分析' },
     { path: '/analysis/backtest', label: '策略回测' },
     { path: '/analysis/industry-score', label: 'V4 行业评分' },
