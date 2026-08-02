@@ -115,49 +115,59 @@ export class AclEngine {
   /**
    * 检查权限（非抛出）；v6 参考对齐
    * 输出: { allowed, reason }
+   * 防御性保证（fail-closed）：ACL_MATRIX 访问异常、actions/read/write 为 undefined 时
+   * 一律返回 allowed=false，绝不因数据异常放行写操作。
    */
   check({ module, store, operation, apiVersion }: AclCheckInput): AclCheckResult {
-    const permission = ACL_MATRIX[module]
+    try {
+      const permission = ACL_MATRIX[module]
 
-    if (!permission) {
-      return { allowed: false, reason: `Module ${module} is not registered in ACL` }
-    }
+      if (!permission) {
+        return { allowed: false, reason: `Module ${module} is not registered in ACL` }
+      }
 
-    // ── 版本控制覆盖 ──
-    if (apiVersion) {
-      const overrideKey = `${module}:${apiVersion}`
-      const override = this.versionedOverrides.get(overrideKey)
-      if (override) {
-        if (override.level === 'deny') {
-          return { allowed: false, reason: `Module ${module} v${apiVersion} is denied by versioned override` }
-        }
-        if (override.level === 'readonly' && operation !== DB_OPERATION.select) {
-          return { allowed: false, reason: `Module ${module} v${apiVersion} is read-only (operation ${operation} denied)` }
-        }
-        // 如果有 storeOverrides，用 override 中的 store 列表替代 ACL_MATRIX
-        if (override.storeOverrides) {
-          const allowedStores =
-            operation === DB_OPERATION.select ? override.storeOverrides.read : override.storeOverrides.write
-          if (!allowedStores || !allowedStores.includes(store)) {
-            return { allowed: false, reason: `Module ${module} v${apiVersion} cannot ${operation} on store ${store} (versioned override)` }
+      // ── 版本控制覆盖 ──
+      if (apiVersion) {
+        const overrideKey = `${module}:${apiVersion}`
+        const override = this.versionedOverrides.get(overrideKey)
+        if (override) {
+          if (override.level === 'deny') {
+            return { allowed: false, reason: `Module ${module} v${apiVersion} is denied by versioned override` }
           }
-          return { allowed: true, reason: 'Permission granted (versioned override)' }
+          if (override.level === 'readonly' && operation !== DB_OPERATION.select) {
+            return { allowed: false, reason: `Module ${module} v${apiVersion} is read-only (operation ${operation} denied)` }
+          }
+          // 如果有 storeOverrides，用 override 中的 store 列表替代 ACL_MATRIX
+          if (override.storeOverrides) {
+            const allowedStores =
+              operation === DB_OPERATION.select ? override.storeOverrides.read : override.storeOverrides.write
+            if (!allowedStores || !allowedStores.includes(store)) {
+              return { allowed: false, reason: `Module ${module} v${apiVersion} cannot ${operation} on store ${store} (versioned override)` }
+            }
+            return { allowed: true, reason: 'Permission granted (versioned override)' }
+          }
         }
       }
+
+      if (!(permission.actions ?? []).includes(operation)) {
+        return { allowed: false, reason: `Module ${module} is not allowed to perform ${operation}` }
+      }
+
+      const allowedStores =
+        operation === DB_OPERATION.select ? permission.read : permission.write
+
+      if (!(allowedStores ?? []).includes(store)) {
+        return { allowed: false, reason: `Module ${module} cannot ${operation} on store ${store}` }
+      }
+
+      return { allowed: true, reason: 'Permission granted' }
+    } catch (err) {
+      logger.error(`[ACL] check error (fail-closed): ${err instanceof Error ? err.message : String(err)}`)
+      return {
+        allowed: false,
+        reason: `ACL check error: ${err instanceof Error ? err.message : String(err)}`,
+      }
     }
-
-    if (!permission.actions.includes(operation)) {
-      return { allowed: false, reason: `Module ${module} is not allowed to perform ${operation}` }
-    }
-
-    const allowedStores =
-      operation === DB_OPERATION.select ? permission.read : permission.write
-
-    if (!allowedStores.includes(store)) {
-      return { allowed: false, reason: `Module ${module} cannot ${operation} on store ${store}` }
-    }
-
-    return { allowed: true, reason: 'Permission granted' }
   }
 
   /**
