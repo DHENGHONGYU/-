@@ -619,8 +619,7 @@ export class DataBridge {
     if (
       meta.action === ENVELOPE_ACTION.resetAll ||
       meta.action === ENVELOPE_ACTION.importAll ||
-      meta.action === ENVELOPE_ACTION.exportAll ||
-      meta.action === ENVELOPE_ACTION.deleteRecord
+      meta.action === ENVELOPE_ACTION.exportAll
     ) {
       logger.info(`[DataBridge] Routing to manager: action="${meta.action}"`)
       await this.routeToManager(envelope)

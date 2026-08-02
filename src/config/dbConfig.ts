@@ -257,8 +257,6 @@ export const ENVELOPE_ACTION = {
   queryByIndex: 'QUERY_BY_INDEX',
   /** 保存分析结果（v30 新增） */
   saveAnalysisResult: 'SAVE_ANALYSIS_RESULT',
-  /** 删除记录（通用，lifecycle 使用） */
-  deleteRecord: 'DELETE_RECORD',
 } as const
 
 export type EnvelopeAction =
