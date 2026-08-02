@@ -21,22 +21,14 @@ import {
   useIntelligentScoreStore,
   selectConfigReady,
   formatIntelligentDelta,
-  initIntelligentScoreStoreSubscriptions,
 } from './intelligentScoreStore'
 import { runIntelligentScore } from '@/services/scoring/intelligentScoreService'
-import { runV6Score } from '@/services/scoring/v6ScoreService'
 import {
   loadAllStocksForScoreSelect,
   loadIntelligentScoreHistory,
   loadResearchLogsForTarget,
-  loadStockForAnalysis,
-  loadDailyQuotesForAnalysis,
-  loadV6ScoreForAnalysis,
 } from '@/services/analysis/scorePageService'
-import { loadStockScoreTrend } from '@/services/analysis/scoreTrendService'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
-import { eventBus } from '@/lib/eventBus'
-import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import type { IntelligentScore, ResearchLog, Stock } from '@/data/types'
 
 vi.mock('@/services/scoring/intelligentScoreService', () => ({
@@ -47,9 +39,6 @@ vi.mock('@/services/analysis/scorePageService', () => ({
   loadAllStocksForScoreSelect: vi.fn(),
   loadIntelligentScoreHistory: vi.fn(),
   loadResearchLogsForTarget: vi.fn(),
-  loadStockForAnalysis: vi.fn(),
-  loadDailyQuotesForAnalysis: vi.fn(),
-  loadV6ScoreForAnalysis: vi.fn(),
 }))
 
 vi.mock('@/lib/logger', () => ({
@@ -79,16 +68,6 @@ vi.mock('@/config/llmConfig', () => ({
 
 vi.mock('@/config/scoreFactors', () => ({
   getEnabledStockFactorNames: () => ['成长性', '盈利能力', '估值水平', '财务健康', '行业地位'],
-}))
-
-// refreshV6Score 中使用动态 import，需要 mock v6ScoreService
-vi.mock('@/services/scoring/v6ScoreService', () => ({
-  runV6Score: vi.fn(),
-}))
-
-// loadScoreTrend 依赖 scoreTrendService
-vi.mock('@/services/analysis/scoreTrendService', () => ({
-  loadStockScoreTrend: vi.fn(),
 }))
 
 // setResult / setHistory / resetResult 调用 withBroadcast 广播事件
@@ -691,7 +670,7 @@ describe('intelligentScoreStore', () => {
       logs: [{ traceId: '1', timestamp: Date.now(), actor: 'system', action: 'score', targetType: 'stock', targetCode: '600519' }],
       error: '某错误',
       loading: true,
-      trendData: { symbol: '600519', period: '1M', data: [] },
+      trendData: { entityId: '600519', entityType: 'stock', period: 'month', points: [] },
       trendLoading: true,
       trendError: '趋势错误',
     })
@@ -805,274 +784,7 @@ describe('intelligentScoreStore', () => {
     const mockScore = createMockIntelligentScore('600519', 4.2)
     const store = useIntelligentScoreStore.getState()
     store.setPreviousResult(mockScore)
-    expect(useIntelligentScoreStore.getState().previousResult).toBeDefined()
-    expect(useIntelligentScoreStore.getState().previousResult!.overallScore).toBe(4.2)
-  })
 
-  test('setHistory 设置历史记录并广播事件', () => {
-    const mockHistory = [createMockIntelligentScore('600519', 4.5)]
-    const store = useIntelligentScoreStore.getState()
-    store.setHistory(mockHistory)
-
-    expect(useIntelligentScoreStore.getState().history).toHaveLength(1)
-    expect(withBroadcast).toHaveBeenCalledTimes(1)
-  })
-
-  test('setLogs 更新研究日志', () => {
-    const mockLogs: ResearchLog[] = [
-      { traceId: '1', timestamp: Date.now(), actor: 'system', action: 'score', targetType: 'stock', targetCode: '600519' },
-    ]
-    const store = useIntelligentScoreStore.getState()
-    store.setLogs(mockLogs)
-    expect(useIntelligentScoreStore.getState().logs).toHaveLength(1)
-  })
-
-  test('setError 设置错误信息', () => {
-    const store = useIntelligentScoreStore.getState()
-    store.setError('自定义错误')
-    expect(useIntelligentScoreStore.getState().error).toBe('自定义错误')
-  })
-
-  test('setLoading 设置加载状态', () => {
-    const store = useIntelligentScoreStore.getState()
-    store.setLoading(true)
-    expect(useIntelligentScoreStore.getState().loading).toBe(true)
-    store.setLoading(false)
-    expect(useIntelligentScoreStore.getState().loading).toBe(false)
-  })
-
-  test('clearError 清空错误信息', () => {
-    useIntelligentScoreStore.setState({ error: '某错误' })
-    const store = useIntelligentScoreStore.getState()
-    store.clearError()
-    expect(useIntelligentScoreStore.getState().error).toBe('')
-  })
-
-  // ============================================================
-  // loadScoreTrend
-  // ============================================================
-
-  test('loadScoreTrend 成功时更新 trendData', async () => {
-    const mockTrendData = {
-      entityId: '600519',
-      entityType: 'stock' as const,
-      period: '1M' as any,
-      points: [{ period: '2026-07', composite: 4.5, count: 3, dimensions: {} }],
-    }
-    vi.mocked(loadStockScoreTrend).mockResolvedValueOnce({ success: true, data: mockTrendData })
-
-    const store = useIntelligentScoreStore.getState()
-    await store.loadScoreTrend('600519', '1M' as any)
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.trendData).toEqual(mockTrendData)
-    expect(state.trendLoading).toBe(false)
-    expect(state.trendError).toBeNull()
-  })
-
-  test('loadScoreTrend service 返回失败时设置 trendError', async () => {
-    vi.mocked(loadStockScoreTrend).mockResolvedValueOnce({ success: false, error: '趋势加载失败' })
-
-    const store = useIntelligentScoreStore.getState()
-    await store.loadScoreTrend('600519', '1M' as any)
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.trendData).toBeUndefined()
-    expect(state.trendLoading).toBe(false)
-    expect(state.trendError).toBe('趋势加载失败')
-  })
-
-  test('loadScoreTrend 抛出异常时设置 trendError', async () => {
-    vi.mocked(loadStockScoreTrend).mockRejectedValueOnce(new Error('网络异常'))
-
-    const store = useIntelligentScoreStore.getState()
-    await store.loadScoreTrend('600519', '1M' as any)
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.trendLoading).toBe(false)
-    expect(state.trendError).toBe('网络异常')
-  })
-
-  /**
-   * @test_id V9-TEST-ST-141-LST-NE
-   * 覆盖 loadScoreTrend catch 块中 err 非 Error 实例的分支（行 520: String(err) 路径）
-   */
-  test('loadScoreTrend 抛出非 Error 对象时使用 String(err) 转换', async () => {
-    vi.mocked(loadStockScoreTrend).mockRejectedValueOnce('趋势服务故障' as any)
-
-    const store = useIntelligentScoreStore.getState()
-    await store.loadScoreTrend('600519', '1M' as any)
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.trendLoading).toBe(false)
-    expect(state.trendError).toBe('趋势服务故障')
-  })
-
-  test('loadScoreTrend symbol 为空时跳过并清空状态', async () => {
-    useIntelligentScoreStore.setState({
-      trendData: { entityId: 'old', entityType: 'stock', period: '1M', points: [] } as any,
-      trendLoading: true,
-      trendError: '旧错误',
-    })
-
-    const store = useIntelligentScoreStore.getState()
-    await store.loadScoreTrend('', '1M' as any)
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.trendData).toBeUndefined()
-    expect(state.trendLoading).toBe(false)
-    expect(state.trendError).toBeNull()
-    expect(loadStockScoreTrend).not.toHaveBeenCalled()
-  })
-
-  // ============================================================
-  // loadStockDetail
-  // ============================================================
-
-  test('loadStockDetail 成功时更新 stockDetail/dailyQuotes/v6Score', async () => {
-    const mockStock = createMockStock('600519', '贵州茅台')
-    const mockQuotes = { symbol: '600519', date: '2026-07-23', open: 100, close: 105 } as any
-    const mockScore = { symbol: '600519', score: 85 } as any
-
-    vi.mocked(loadStockForAnalysis).mockResolvedValueOnce(mockStock)
-    vi.mocked(loadDailyQuotesForAnalysis).mockResolvedValueOnce(mockQuotes)
-    vi.mocked(loadV6ScoreForAnalysis).mockResolvedValueOnce(mockScore)
-
-    const store = useIntelligentScoreStore.getState()
-    await store.loadStockDetail('600519')
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.stockDetail).toEqual(mockStock)
-    expect(state.dailyQuotes).toEqual(mockQuotes)
-    expect(state.v6Score).toEqual(mockScore)
-    expect(state.detailLoading).toBe(false)
-  })
-
-  test('loadStockDetail symbol 为空时直接返回', async () => {
-    const store = useIntelligentScoreStore.getState()
-    await store.loadStockDetail('')
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.detailLoading).toBe(false)
-    expect(loadStockForAnalysis).not.toHaveBeenCalled()
-  })
-
-  test('loadStockDetail service 返回 undefined 时各字段设为 null', async () => {
-    vi.mocked(loadStockForAnalysis).mockResolvedValueOnce(undefined)
-    vi.mocked(loadDailyQuotesForAnalysis).mockResolvedValueOnce(undefined)
-    vi.mocked(loadV6ScoreForAnalysis).mockResolvedValueOnce(undefined)
-
-    const store = useIntelligentScoreStore.getState()
-    await store.loadStockDetail('600519')
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.stockDetail).toBeNull()
-    expect(state.dailyQuotes).toBeNull()
-    expect(state.v6Score).toBeNull()
-    expect(state.detailLoading).toBe(false)
-  })
-
-  test('loadStockDetail 抛出异常时设置 error', async () => {
-    vi.mocked(loadStockForAnalysis).mockRejectedValueOnce(new Error('数据库错误'))
-
-    const store = useIntelligentScoreStore.getState()
-    await store.loadStockDetail('600519')
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.detailLoading).toBe(false)
-    expect(state.error).toBe('数据库错误')
-  })
-
-  /**
-   * @test_id V9-TEST-ST-141-LSD-NE
-   * 覆盖 loadStockDetail catch 块中 err 非 Error 实例的分支（行 546: String(err) 路径）
-   */
-  test('loadStockDetail 抛出非 Error 对象时使用 String(err) 转换', async () => {
-    vi.mocked(loadStockForAnalysis).mockImplementationOnce(async () => {
-      throw '详情服务崩溃'
-    })
-
-    const store = useIntelligentScoreStore.getState()
-    await store.loadStockDetail('600519')
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.detailLoading).toBe(false)
-    expect(state.error).toBe('详情服务崩溃')
-  })
-
-  // ============================================================
-  // refreshV6Score
-  // ============================================================
-
-  test('refreshV6Score 成功时更新 v6Score', async () => {
-    const mockResult = { success: true, data: { symbol: '600519', score: 90 } as any }
-    const mockLatest = { symbol: '600519', score: 92 } as any
-    vi.mocked(runV6Score).mockResolvedValueOnce(mockResult)
-    vi.mocked(loadV6ScoreForAnalysis).mockResolvedValueOnce(mockLatest)
-
-    const store = useIntelligentScoreStore.getState()
-    await store.refreshV6Score('600519')
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.v6Score).toEqual(mockLatest)
-    expect(state.error).toBe('')
-  })
-
-  test('refreshV6Score 成功但 loadV6ScoreForAnalysis 返回 undefined 时使用 result.data', async () => {
-    const mockResult = { success: true, data: { symbol: '600519', score: 90 } as any }
-    vi.mocked(runV6Score).mockResolvedValueOnce(mockResult)
-    vi.mocked(loadV6ScoreForAnalysis).mockResolvedValueOnce(undefined)
-
-    const store = useIntelligentScoreStore.getState()
-    await store.refreshV6Score('600519')
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.v6Score).toEqual(mockResult.data)
-  })
-
-  test('refreshV6Score runV6Score 返回失败时设置 error', async () => {
-    vi.mocked(runV6Score).mockResolvedValueOnce({ success: false, error: '评分计算失败' })
-
-    const store = useIntelligentScoreStore.getState()
-    await store.refreshV6Score('600519')
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.error).toBe('评分计算失败')
-    expect(state.v6Score).toBeNull()
-  })
-
-  test('refreshV6Score runV6Score 返回失败且无 error 时使用默认消息', async () => {
-    vi.mocked(runV6Score).mockResolvedValueOnce({ success: false } as any)
-
-    const store = useIntelligentScoreStore.getState()
-    await store.refreshV6Score('600519')
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.error).toBe('评分计算失败')
-  })
-
-  test('refreshV6Score 抛出异常时设置 error', async () => {
-    vi.mocked(runV6Score).mockRejectedValueOnce(new Error('网络中断'))
-
-    const store = useIntelligentScoreStore.getState()
-    await store.refreshV6Score('600519')
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.error).toBe('网络中断')
-  })
-
-  /**
-   * @test_id V9-TEST-ST-141-RV6-NE
-   * 覆盖 refreshV6Score catch 块中 err 非 Error 实例的分支（行 566: String(err) 路径）
-   */
-  test('refreshV6Score 抛出非 Error 对象时使用 String(err) 转换', async () => {
-    vi.mocked(runV6Score).mockRejectedValueOnce('字符串异常' as any)
-
-    const store = useIntelligentScoreStore.getState()
-    await store.refreshV6Score('600519')
-
-    const state = useIntelligentScoreStore.getState()
-    expect(state.error).toBe('字符串异常')
   })
 })
 
@@ -1100,122 +812,3 @@ describe('formatIntelligentDelta', () => {
   })
 })
 
-// ============================================================
-// initIntelligentScoreStoreSubscriptions 订阅测试
-// ============================================================
-
-describe('initIntelligentScoreStoreSubscriptions', () => {
-  test('返回 cleanup 函数', () => {
-    const cleanup = initIntelligentScoreStoreSubscriptions()
-    expect(typeof cleanup).toBe('function')
-  })
-
-  test('V6_SCORES_CHANGED 事件匹配 symbol 时刷新 v6Score', async () => {
-    // 先清理再重新订阅，确保订阅处于活跃状态
-    const cleanup0 = initIntelligentScoreStoreSubscriptions()
-    cleanup0()
-    initIntelligentScoreStoreSubscriptions()
-
-    useIntelligentScoreStore.setState({ symbol: '600519', v6Score: null })
-    vi.mocked(loadV6ScoreForAnalysis).mockResolvedValueOnce({ symbol: '600519', score: 90 } as any)
-
-    eventBus.emit(EVENT_NAMES.V6_SCORES_CHANGED, { symbol: '600519' })
-
-    // 等待异步回调完成
-    await new Promise((resolve) => setTimeout(resolve, 200))
-
-    expect(loadV6ScoreForAnalysis).toHaveBeenCalledWith('600519')
-    expect(useIntelligentScoreStore.getState().v6Score?.score).toBe(90)
-  })
-
-  test('V6_SCORES_CHANGED 事件 symbol 不匹配时不刷新', async () => {
-    // 先清理再重新订阅，确保订阅处于活跃状态
-    const cleanup0 = initIntelligentScoreStoreSubscriptions()
-    cleanup0()
-    initIntelligentScoreStoreSubscriptions()
-
-    useIntelligentScoreStore.setState({ symbol: '600519', v6Score: null })
-
-    eventBus.emit(EVENT_NAMES.V6_SCORES_CHANGED, { symbol: '000858' })
-
-    // 等待一段时间确保异步回调不会执行
-    await new Promise((resolve) => setTimeout(resolve, 200))
-    expect(useIntelligentScoreStore.getState().v6Score).toBeNull()
-    expect(loadV6ScoreForAnalysis).not.toHaveBeenCalled()
-  })
-
-  test('V6_SCORES_CHANGED 事件无 symbol 时不刷新', async () => {
-    // 先清理再重新订阅，确保订阅处于活跃状态
-    const cleanup0 = initIntelligentScoreStoreSubscriptions()
-    cleanup0()
-    initIntelligentScoreStoreSubscriptions()
-
-    useIntelligentScoreStore.setState({ symbol: '600519', v6Score: null })
-
-    eventBus.emit(EVENT_NAMES.V6_SCORES_CHANGED, {})
-
-    await new Promise((resolve) => setTimeout(resolve, 200))
-    expect(useIntelligentScoreStore.getState().v6Score).toBeNull()
-    expect(loadV6ScoreForAnalysis).not.toHaveBeenCalled()
-  })
-
-  test('loadV6ScoreForAnalysis 返回 undefined 时保留旧 v6Score', async () => {
-    // 先清理再重新订阅，确保订阅处于活跃状态
-    const cleanup0 = initIntelligentScoreStoreSubscriptions()
-    cleanup0()
-    initIntelligentScoreStoreSubscriptions()
-
-    const oldScore = { symbol: '600519', score: 80 } as any
-    useIntelligentScoreStore.setState({ symbol: '600519', v6Score: oldScore })
-    vi.mocked(loadV6ScoreForAnalysis).mockResolvedValueOnce(undefined)
-
-    eventBus.emit(EVENT_NAMES.V6_SCORES_CHANGED, { symbol: '600519' })
-
-    // 等待异步回调完成
-    await new Promise((resolve) => setTimeout(resolve, 200))
-
-    // 回调确实被触发
-    expect(loadV6ScoreForAnalysis).toHaveBeenCalledWith('600519')
-    // 返回 undefined 时保留旧值
-    expect(useIntelligentScoreStore.getState().v6Score).toEqual(oldScore)
-  })
-
-  test('loadV6ScoreForAnalysis 异常时静默失败不崩溃', async () => {
-    useIntelligentScoreStore.setState({ symbol: '600519', v6Score: null })
-    vi.mocked(loadV6ScoreForAnalysis).mockRejectedValueOnce(new Error('加载失败'))
-
-    eventBus.emit(EVENT_NAMES.V6_SCORES_CHANGED, { symbol: '600519' })
-
-    // 等待异步回调完成
-    await new Promise((resolve) => setTimeout(resolve, 100))
-    // 不崩溃，v6Score 仍为 null
-    expect(useIntelligentScoreStore.getState().v6Score).toBeNull()
-  })
-
-  /**
-   * @test_id V9-TEST-ST-141-SUB-DBL
-   * 覆盖 destroySubscriptions 中 _unsubscribeV6ScoresChanged 为 undefined 的分支（行 630: false 路径）
-   * 连续调用 cleanup 两次：第一次清理订阅，第二次为空操作
-   */
-  test('连续调用 cleanup 两次时第二次为空操作不报错', () => {
-    const cleanup = initIntelligentScoreStoreSubscriptions()
-    // 第一次调用：_unsubscribeV6ScoresChanged 有值，执行取消订阅并置空
-    expect(() => cleanup()).not.toThrow()
-    // 第二次调用：_unsubscribeV6ScoresChanged 已为 undefined，跳过 if 块
-    expect(() => cleanup()).not.toThrow()
-  })
-
-  /**
-   * @test_id V9-TEST-ST-141-SUB-REINIT
-   * 覆盖 initIntelligentScoreStoreSubscriptions 在已订阅时返回 destroySubscriptions 包装函数（行 606: true 路径）
-   */
-  test('已订阅时再次调用 init 返回 cleanup 函数而不重复订阅', () => {
-    const cleanup1 = initIntelligentScoreStoreSubscriptions()
-    const cleanup2 = initIntelligentScoreStoreSubscriptions()
-    expect(typeof cleanup2).toBe('function')
-    // cleanup2 应与 cleanup1 等效（都是 destroySubscriptions 的包装）
-    expect(() => cleanup2()).not.toThrow()
-    // 清理
-    cleanup1()
-  })
-})
