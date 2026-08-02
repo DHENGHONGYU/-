@@ -213,7 +213,7 @@ describe('addStockFromSearch', () => {
     })
 
     const searchResult = { symbol: '000001', name: '平安银行', industry: 'SZ' }
-    const options = { poolGroup: 'default' }
+    const options = { group: 'default' }
     const result = await useInputHubStore.getState().addStockFromSearch(searchResult, options)
 
     expect(result.success).toBe(true)

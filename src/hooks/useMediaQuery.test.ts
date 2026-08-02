@@ -32,7 +32,7 @@ import {
 /* ------------------------------------------------------------
  * mock：可调度 matchMedia（支持 addEventListener/removeEventListener，也支持手动触发 change）
  * ---------------------------------------------------------- */
-interface MockMediaQueryList extends Partial<MediaQueryList> {
+interface MockMediaQueryList {
   matches: boolean
   media: string
   addEventListener: MockInstance
@@ -40,6 +40,7 @@ interface MockMediaQueryList extends Partial<MediaQueryList> {
   addListener: MockInstance
   removeListener: MockInstance
   _dispatchChange: (nextMatches: boolean) => void
+  onchange?: ((this: MediaQueryList, ev: MediaQueryListEvent) => unknown) | null
 }
 
 function makeMockMql(media: string, initialMatches = false): MockMediaQueryList {
@@ -93,10 +94,10 @@ beforeEach(() => {
     if (useAddListenerFallback) {
       // 模拟旧浏览器：addEventListener/removeEventListener 不存在
       return {
-        ...mql,
+        ...(mql as unknown as Record<string, unknown>),
         addEventListener: undefined as unknown as MediaQueryList['addEventListener'],
         removeEventListener: undefined as unknown as MediaQueryList['removeEventListener'],
-      }
+      } as unknown as MediaQueryList
     }
     return mql as unknown as MediaQueryList
   })
