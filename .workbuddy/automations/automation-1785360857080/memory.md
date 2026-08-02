@@ -17,4 +17,4 @@
 - 用户确认提交路径根治批次；经核查该批修复已于 `b12bbfef`（"路径根治收尾"，含 `ed81ac6b` 的可移植化）入库，`git diff HEAD --stat` 为空，无未提交改动，未产生新提交。
 - 全量活跃代码复扫（`src/`、`scripts/` 排除 reports、`e2e/` 源码、根配置）：用户目录 `C:/Users/{DELL,huawei}` 与盘符 `[gdl]:/FinSightV9` 硬编码 **0 命中**。
 - 唯一残余命中在 `e2e` 测试运行产物（`run-output.log`、`test-artifacts-temp/*.json`）——生成物，按 `windows-env-path-doctor` 规则刻意保留。
-- A+H 字典仍维持 8341 条（提交 `040ca668`），当前为最新；本次未触发新刷新（非用户本次诉求，且字典未过期）。
+- A+H 字典仍维持 8341 条（提交 `040ca668`），当前为最新；用户于 18:20 确认"可以提交"，遂执行本次刷新：`build:stock-dict` 成功（A股 5534 / 港股 2807，总 8341），`build:stock-dict:verify` 全绿（四交易所分布正确、唯一性 True、0 重复）。但 `git diff stockDictionary.ts` = 0 行 → 再生内容字节级等同已提交版，**无实质变更，未产生新提交**（符合"有变更才提交"约定）。
