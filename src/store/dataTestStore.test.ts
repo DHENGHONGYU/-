@@ -48,7 +48,7 @@ vi.mock('@/services/data-collector/collectionPipeline', () => ({
 // ============================================================
 
 import { useDataTestStore } from './dataTestStore'
-import type { CollectionConfig } from '@/types/modules/collection.types'
+import type { CollectionConfig, GlobalCollectPolicy } from '@/types/modules/collection.types'
 import type { TraceResult } from '@/services/data-collector/collectionPipeline'
 
 // ============================================================
@@ -68,7 +68,13 @@ function buildTraceResult(overrides: Partial<TraceResult> = {}): TraceResult {
 }
 
 const dummyConfig: CollectionConfig = {
+  version: '1',
+  activeTemplate: 'full',
   dimensions: [],
+  global: {} as GlobalCollectPolicy,
+  symbolCount: 0,
+  historyDays: 0,
+  updatedAt: Date.now(),
 }
 
 // ============================================================

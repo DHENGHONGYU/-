@@ -419,7 +419,7 @@ describe('useTradingStore', () => {
 
     // @test_id 追加：loadPortfolio 异常路径（覆盖 catch 分支 lines 200-203）
     it('portfolio holdings 为空时 message 应为"核心稀缺组合为空..."', async () => {
-      const emptyPortfolio = { holdings: [] } as Portfolio
+      const emptyPortfolio = { holdings: [] } as unknown as Portfolio
       mockLoadPortfolioInput.mockResolvedValueOnce({ stocks: [], orders: [] })
       mockPortfolio.buildPortfolio.mockImplementation(async () => {
         mockPortfolio.portfolio = emptyPortfolio

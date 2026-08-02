@@ -365,7 +365,7 @@ describe('initSystemMonitorSubscriptions', () => {
       recentTasks: [
         { id: 'task-snap-1', agentId: 'agent-snap-1', status: 'running', createdAt: Date.now() },
       ],
-    } as never
+    } as any
 
     const snapshotCb = capturedCallbacks.get('SYSTEM_MONITOR_SNAPSHOT')
     expect(snapshotCb).toBeDefined()

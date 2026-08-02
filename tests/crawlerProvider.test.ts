@@ -20,7 +20,7 @@ vi.mock('@/lib/logger', () => ({
   }),
 }))
 
-const globalFetch = vi.fn<Parameters<typeof fetch>, ReturnType<typeof fetch>>()
+const globalFetch = vi.fn<typeof fetch>()
 
 beforeEach(() => {
   vi.stubGlobal('fetch', globalFetch)
