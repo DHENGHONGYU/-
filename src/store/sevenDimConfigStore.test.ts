@@ -57,7 +57,7 @@ vi.mock('@/services/data-collector/collectionPipeline', () => ({
       fallbackPolicy: d.fallbackPolicy ?? { allowFallback: true, allowMockFallback: false, alertFailureRate: 80 },
     })),
   ),
-  runBatchTrace: vi.fn().mockResolvedValue([{ success: true }]),
+  runBatchTrace: vi.fn().mockResolvedValue([{ success: true, symbol: 'S', dimensionCode: 'D', latency: 0, fallbackCount: 0 }]),
 }))
 
 // Mock collectionRuntimeStore
@@ -343,7 +343,7 @@ describe('useSevenDimConfigStore', () => {
       const code = getFirstDimensionCode()
       const priority = [
         { id: 'akshare' as const, priority: 1, enabled: true },
-        { id: 'ifind' as const, priority: 2, enabled: true },
+        { id: 'tushare' as const, priority: 2, enabled: true },
       ]
       useSevenDimConfigStore.getState().setDimensionSourcePriority(code, priority)
       const dim = useSevenDimConfigStore.getState().dimensions.find((d) => d.code === code)
@@ -607,7 +607,7 @@ describe('useSevenDimConfigStore', () => {
 
     it('runCollection: 成功采集完成', async () => {
       const { runBatchTrace } = await import('@/services/data-collector/collectionPipeline')
-      vi.mocked(runBatchTrace).mockResolvedValue([{ success: true }])
+      vi.mocked(runBatchTrace).mockResolvedValue([{ success: true, symbol: 'S', dimensionCode: 'D', latency: 0, fallbackCount: 0 }])
 
       await useSevenDimConfigStore.getState().runCollection()
 
@@ -620,7 +620,7 @@ describe('useSevenDimConfigStore', () => {
 
     it('runCollection: 调用 runBatchTrace 次数等于启用维度数', async () => {
       const { runBatchTrace } = await import('@/services/data-collector/collectionPipeline')
-      vi.mocked(runBatchTrace).mockResolvedValue([{ success: true }])
+      vi.mocked(runBatchTrace).mockResolvedValue([{ success: true, symbol: 'S', dimensionCode: 'D', latency: 0, fallbackCount: 0 }])
 
       await useSevenDimConfigStore.getState().runCollection()
 
@@ -631,14 +631,14 @@ describe('useSevenDimConfigStore', () => {
     it('runCollection: 部分维度失败时设置错误信息', async () => {
       const { runBatchTrace } = await import('@/services/data-collector/collectionPipeline')
       vi.mocked(runBatchTrace)
-        .mockResolvedValueOnce([{ success: true }])
-        .mockResolvedValueOnce([{ success: true }])
+        .mockResolvedValueOnce([{ success: true, symbol: 'S', dimensionCode: 'D', latency: 0, fallbackCount: 0 }])
+        .mockResolvedValueOnce([{ success: true, symbol: 'S', dimensionCode: 'D', latency: 0, fallbackCount: 0 }])
         .mockRejectedValueOnce(new Error('维度3失败'))
-        .mockResolvedValueOnce([{ success: true }])
-        .mockResolvedValueOnce([{ success: true }])
-        .mockResolvedValueOnce([{ success: true }])
-        .mockResolvedValueOnce([{ success: true }])
-        .mockResolvedValueOnce([{ success: true }])
+        .mockResolvedValueOnce([{ success: true, symbol: 'S', dimensionCode: 'D', latency: 0, fallbackCount: 0 }])
+        .mockResolvedValueOnce([{ success: true, symbol: 'S', dimensionCode: 'D', latency: 0, fallbackCount: 0 }])
+        .mockResolvedValueOnce([{ success: true, symbol: 'S', dimensionCode: 'D', latency: 0, fallbackCount: 0 }])
+        .mockResolvedValueOnce([{ success: true, symbol: 'S', dimensionCode: 'D', latency: 0, fallbackCount: 0 }])
+        .mockResolvedValueOnce([{ success: true, symbol: 'S', dimensionCode: 'D', latency: 0, fallbackCount: 0 }])
 
       await useSevenDimConfigStore.getState().runCollection()
 
@@ -685,7 +685,7 @@ describe('useSevenDimConfigStore', () => {
       // 第二次调用
       const promise2 = useSevenDimConfigStore.getState().runCollection()
 
-      resolveBatch!([{ success: true }])
+      resolveBatch!([{ success: true, symbol: 'S', dimensionCode: 'D', latency: 0, fallbackCount: 0 }])
       await promise1
       await promise2
 
@@ -710,7 +710,7 @@ describe('useSevenDimConfigStore', () => {
 
     it('runCollection: 调用 runtime.setRunning', async () => {
       const { runBatchTrace } = await import('@/services/data-collector/collectionPipeline')
-      vi.mocked(runBatchTrace).mockResolvedValue([{ success: true }])
+      vi.mocked(runBatchTrace).mockResolvedValue([{ success: true, symbol: 'S', dimensionCode: 'D', latency: 0, fallbackCount: 0 }])
 
       await useSevenDimConfigStore.getState().runCollection()
 
@@ -719,7 +719,7 @@ describe('useSevenDimConfigStore', () => {
 
     it('runCollection: 采集完成后调用 refreshStats', async () => {
       const { runBatchTrace } = await import('@/services/data-collector/collectionPipeline')
-      vi.mocked(runBatchTrace).mockResolvedValue([{ success: true }])
+      vi.mocked(runBatchTrace).mockResolvedValue([{ success: true, symbol: 'S', dimensionCode: 'D', latency: 0, fallbackCount: 0 }])
 
       await useSevenDimConfigStore.getState().runCollection()
 

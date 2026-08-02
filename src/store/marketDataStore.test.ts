@@ -634,8 +634,8 @@ describe('marketDataStore 补充覆盖', () => {
 
   /** @test_id V9-TEST-ST-143-merge-01 */
   it('mergeAdaptedData: 合并适配数据到 mergedData', () => {
-    mockMerge.mockReturnValue({ indices: [{ code: 'SH', price: 3200 }] })
-    useMarketDataStore.getState().mergeAdaptedData({ indices: [{ code: 'SH', price: 3200 }] })
+    mockMerge.mockReturnValue({ indices: [{ code: 'SH', name: '上证指数', price: 3200, change: 0, changePercent: 0 }] })
+    useMarketDataStore.getState().mergeAdaptedData({ indices: [{ code: 'SH', name: '上证指数', price: 3200, change: 0, changePercent: 0 }] })
     expect(mockMerge).toHaveBeenCalled()
   })
 
@@ -902,7 +902,7 @@ describe('marketDataStore 补充覆盖', () => {
       taskMap: { portfolioOverview: 'task_po_1' },
     })
     // mockMerge 返回含非空数组的对象 → hasAnyData = true
-    mockMerge.mockReturnValueOnce({ indices: [{ code: 'SH', price: 3200 }] })
+    mockMerge.mockReturnValueOnce({ indices: [{ code: 'SH', name: '上证指数', price: 3200, change: 0, changePercent: 0 }] })
     capturedTaskSchedulerCallback.callback?.('task_po_1', { dataType: 'portfolio', source: 'mock', payload: { total: 100 } })
     expect(useMarketDataStore.getState().status).toBe('ready')
   })

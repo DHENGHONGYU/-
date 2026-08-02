@@ -221,7 +221,7 @@ describe('useMechanismHealthStore', () => {
       initMechanismSubscriptions()
 
       const alertCallback = mockEventBusOn.mock.calls.find(
-        (c) => c[0] === 'mechanism:alert',
+        (c: unknown[]) => c[0] === 'mechanism:alert',
       )?.[1] as (() => void) | undefined
       expect(alertCallback).toBeDefined()
 
@@ -237,7 +237,7 @@ describe('useMechanismHealthStore', () => {
 
       // 查找 collection:complete 事件回调
       const completeCallback = mockEventBusOn.mock.calls.find(
-        (c) => c[0] === 'collection:complete',
+        (c: unknown[]) => c[0] === 'collection:complete',
       )?.[1] as (() => void) | undefined
       expect(completeCallback).toBeDefined()
 

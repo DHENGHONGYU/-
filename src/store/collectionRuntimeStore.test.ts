@@ -795,7 +795,7 @@ describe('useCollectionRuntimeStore', () => {
     /** @test_id V9-TEST-ST-151-evt-01 */
     it('基础事件触发 refreshStats + appendLog', () => {
       const cb = lifecycleCallbacks[COLLECTION_EVENTS.TRIGGERED]
-      cb(createLifecycleEvent({ message: '采集已触发' }))
+      cb?.(createLifecycleEvent({ message: '采集已触发' }))
 
       const state = useCollectionRuntimeStore.getState()
       expect(state.logs).toHaveLength(1)
@@ -823,7 +823,7 @@ describe('useCollectionRuntimeStore', () => {
       for (const { type, expected, label } of cases) {
         useCollectionRuntimeStore.getState().reset()
         const cb = lifecycleCallbacks[type]
-        cb(createLifecycleEvent({ type, traceId: `trace-${label}` }))
+        cb?.(createLifecycleEvent({ type, traceId: `trace-${label}` }))
 
         const log = useCollectionRuntimeStore.getState().logs[0]
         expect(log, `事件 ${label} 应产生日志`).toBeDefined()
@@ -849,7 +849,7 @@ describe('useCollectionRuntimeStore', () => {
       for (const { payloadStatus, expectedStatus } of statusCases) {
         useCollectionRuntimeStore.getState().reset()
         const cb = lifecycleCallbacks[COLLECTION_EVENTS.SOURCE_START]
-        cb(
+        cb?.(
           createLifecycleEvent({
             type: COLLECTION_EVENTS.SOURCE_START,
             taskId: `task-${payloadStatus}`,
@@ -869,7 +869,7 @@ describe('useCollectionRuntimeStore', () => {
     /** @test_id V9-TEST-ST-151-evt-04 */
     it('携带 taskId 但无 payload 时任务状态默认为 pending', () => {
       const cb = lifecycleCallbacks[COLLECTION_EVENTS.TRIGGERED]
-      cb(
+      cb?.(
         createLifecycleEvent({
           type: COLLECTION_EVENTS.TRIGGERED,
           taskId: 'task-no-payload',
@@ -891,7 +891,7 @@ describe('useCollectionRuntimeStore', () => {
     it('COMPLETE 事件携带 span 时更新 traceSpans', () => {
       const span = createSpan({ traceId: 'trace-complete-span' })
       const cb = lifecycleCallbacks[COLLECTION_EVENTS.COMPLETE]
-      cb(
+      cb?.(
         createLifecycleEvent({
           type: COLLECTION_EVENTS.COMPLETE,
           payload: { span },
@@ -906,7 +906,7 @@ describe('useCollectionRuntimeStore', () => {
     /** @test_id V9-TEST-ST-151-evt-06 */
     it('COMPLETE 事件 payload 无 span 时不更新 traceSpans', () => {
       const cb = lifecycleCallbacks[COLLECTION_EVENTS.COMPLETE]
-      cb(
+      cb?.(
         createLifecycleEvent({
           type: COLLECTION_EVENTS.COMPLETE,
           payload: {},
@@ -919,7 +919,7 @@ describe('useCollectionRuntimeStore', () => {
     /** @test_id V9-TEST-ST-151-evt-07 */
     it('COMPLETE 事件无 payload 时不更新 traceSpans', () => {
       const cb = lifecycleCallbacks[COLLECTION_EVENTS.COMPLETE]
-      cb(
+      cb?.(
         createLifecycleEvent({
           type: COLLECTION_EVENTS.COMPLETE,
         }),
@@ -933,7 +933,7 @@ describe('useCollectionRuntimeStore', () => {
     /** @test_id V9-TEST-ST-151-evt-08 */
     it('TASK_STATUS 事件携带 progress 时更新全局进度', () => {
       const cb = lifecycleCallbacks[COLLECTION_EVENTS.TASK_STATUS]
-      cb(
+      cb?.(
         createLifecycleEvent({
           type: COLLECTION_EVENTS.TASK_STATUS,
           taskId: 'task-progress',
@@ -948,7 +948,7 @@ describe('useCollectionRuntimeStore', () => {
     it('TASK_STATUS 事件无 progress 时不更新全局进度', () => {
       useCollectionRuntimeStore.getState().setOverallProgress(42)
       const cb = lifecycleCallbacks[COLLECTION_EVENTS.TASK_STATUS]
-      cb(
+      cb?.(
         createLifecycleEvent({
           type: COLLECTION_EVENTS.TASK_STATUS,
           taskId: 'task-no-progress',
@@ -969,7 +969,7 @@ describe('useCollectionRuntimeStore', () => {
       })
 
       const cb = lifecycleCallbacks[COLLECTION_EVENTS.TRIGGERED]
-      cb(createLifecycleEvent({ message: '不应记录' }))
+      cb?.(createLifecycleEvent({ message: '不应记录' }))
 
       // refreshStats 抛出 → appendLog 未执行
       expect(useCollectionRuntimeStore.getState().logs).toHaveLength(0)

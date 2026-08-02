@@ -38,7 +38,7 @@ function createMockHistoryEntry(overrides: Partial<CollectionHistoryEntry> = {})
     timestamp: '2026-07-22T10:00:00Z',
     date: '2026-07-22',
     channel: 'auto-collect',
-    collectionInfo: { symbols: ['AAPL'], dimensions: ['price'], dataSource: 'eastmoney' },
+    collectionInfo: { symbols: ['AAPL'], dimensions: ['price'], dataSource: 'akshare' },
     updateInfo: {
       mode: 'batch',
       recordsAdded: 10,
@@ -60,7 +60,7 @@ function createMockSchedule(overrides: Partial<GlobalScheduleConfig> = {}): Glob
     symbols: ['AAPL', 'GOOGL'],
     dimensions: ['price', 'volume'],
     frequency: 'daily',
-    sourceScope: { enabled: ['eastmoney'], fallbackChain: ['eastmoney'], allowMockFallback: false },
+    sourceScope: { enabled: ['akshare'], fallbackChain: ['akshare'], allowMockFallback: false },
     conflictPolicy: 'last-write-wins',
     updateMode: 'incremental',
     enabled: true,
@@ -183,7 +183,7 @@ describe('useDataSyncStore', () => {
   it('updateSchedule: 更新不存在的调度配置（无副作用）', () => {
     useDataSyncStore.getState().addSchedule(createMockSchedule({ scheduleId: 'sched-1' }))
 
-    useDataSyncStore.getState().updateSchedule('non-existent', { frequency: 'hourly' })
+    useDataSyncStore.getState().updateSchedule('non-existent', { frequency: '1h' })
 
     const state = useDataSyncStore.getState()
     expect(state.schedules).toHaveLength(1)

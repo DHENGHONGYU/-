@@ -796,7 +796,7 @@ describe('scoreDocStore loadStockSymbols', () => {
     const mockStocks: Stock[] = [
       { symbol: '600519', name: '茅台', pool: 'research', researchStatus: 'watching', source: 'manual', dataVersion: 1 },
       { symbol: '000858', name: '五粮液', pool: 'research', researchStatus: 'watching', source: 'manual', dataVersion: 1 },
-      { symbol: '600519', name: '茅台', pool: 'research', researchStatus: 'deepDive', source: 'auto', dataVersion: 2 },
+      { symbol: '600519', name: '茅台', pool: 'research', researchStatus: 'deepDive', source: 'akshare', dataVersion: 2 },
     ]
 
     mockDataBridgeQuery.mockResolvedValueOnce({ success: true, data: mockStocks })

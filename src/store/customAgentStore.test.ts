@@ -36,7 +36,7 @@ function createMockAgent(overrides: Partial<CustomAgent> = {}): CustomAgent {
     id: 'agent-001',
     name: '测试智能体',
     description: '测试用途',
-    type: 'general',
+    type: 'custom',
     model: 'gpt-4',
     systemPrompt: '你是测试助手',
     temperature: 0.7,

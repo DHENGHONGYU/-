@@ -36,7 +36,7 @@ vi.mock('@/services/data-collector/collectionPipeline', async () => {
   const actual = await vi.importActual<typeof import('@/services/data-collector/collectionPipeline')>(
     '@/services/data-collector/collectionPipeline',
   )
-  return { ...actual, runBatchTrace: vi.fn().mockResolvedValue(undefined) }
+  return { ...actual, runBatchTrace: vi.fn().mockResolvedValue([]) }
 })
 
 // ============================================================
@@ -59,7 +59,7 @@ describe('采集链路完整性集成测试 (S2)', () => {
     // 重置 mock 避免跨测试污染
     const mockFn = await getMockedRunBatchTrace()
     mockFn.mockReset()
-    mockFn.mockResolvedValue(undefined)
+    mockFn.mockResolvedValue([])
 
     // 种子化意向池：2 只股票
     seedDefaultPool()
@@ -117,14 +117,14 @@ describe('采集链路完整性集成测试 (S2)', () => {
     const mockFn = await getMockedRunBatchTrace()
     // 8 个维度：1 个失败（02=K线），其余成功
     mockFn
-      .mockResolvedValueOnce(undefined)
+      .mockResolvedValueOnce([])
       .mockRejectedValueOnce(new Error('K线采集超时'))
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
 
     await useSevenDimConfigStore.getState().runCollection()
 

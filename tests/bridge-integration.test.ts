@@ -509,7 +509,7 @@ describe('Phase 1 桥接集成测试：Context ↔ Store 数据一致性', () =>
     }> = []
 
     for (let i = 0; i < sequence.length; i++) {
-      const { name, data, expectedFields } = sequence[i]
+      const { name, data, expectedFields } = sequence[i]!
 
       // Step A: Context 路径 — adapter.adapt + adapter.merge
       const adapted = marketDataAdapter.adapt(data)
@@ -674,7 +674,7 @@ describe('Phase 1 桥接集成测试：Context ↔ Store 数据一致性', () =>
     const diffLog: string[] = []
 
     for (let i = 0; i < sequence.length; i++) {
-      const { data, name } = sequence[i]
+      const { data, name } = sequence[i]!
       const adapted = marketDataAdapter.adapt(data)
 
       // Context 更新
