@@ -1,0 +1,1 @@
+import{r as e}from"./vendor-v6JyBerV.js";import{R as c}from"./index-BkmMWRQo.js";function a(o,t){const r=e.useRef(0);r.current=performance.now(),e.useLayoutEffect(()=>{const n=performance.now()-r.current;c(`render:${o}`,n,!0,t)})}export{a as u};
