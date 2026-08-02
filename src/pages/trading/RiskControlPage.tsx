@@ -6,11 +6,7 @@ import {
   useRiskLevelText,
   useIsCircuitOpen,
   usePendingBlocks,
-  blockedCount,
-  warningCount,
-  normalCount,
-  blockedRate,
-  verdictsCount,
+  verdictStats,
 } from '@/store/riskStore.derived'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
@@ -33,6 +29,9 @@ const RiskControlPage = memo(() => {
   const triState = useRiskStore((s) => s.triState)
   const circuitState = useRiskStore((s) => s.circuitState)
   const verdicts = useRiskStore((s) => s.verdicts)
+  // A4 状态派生合规：渲染期不得调用 getState 派生函数（脱离响应式）。
+  // 基于已订阅的 verdicts 复用 verdictStats 纯聚合（memoizeByRef 缓存，与 derived 同源）。
+  const stats = verdictStats(verdicts)
   const loading = useRiskStore((s) => s.loading)
   const error = useRiskStore((s) => s.error)
   const loadRiskVerdicts = useRiskStore((s) => s.loadRiskVerdicts)
@@ -148,30 +147,30 @@ const RiskControlPage = memo(() => {
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>
                   <span className="text-muted-foreground">总数：</span>
-                  <span className="font-medium">{verdictsCount()}</span>
+                  <span className="font-medium">{stats.total}</span>
                 </div>
                 <div>
                   <span className="text-muted-foreground">阻断率：</span>
                   <span className={`font-medium ${COLOR_TOKENS.danger.tailwind}`}>
-                    {(blockedRate() * 100).toFixed(1)}%
+                    {stats.total === 0 ? 0 : ((stats.blockedCount / stats.total) * 100).toFixed(1)}%
                   </span>
                 </div>
                 <div>
                   <span className="text-muted-foreground">阻断：</span>
                   <span className={`font-medium ${COLOR_TOKENS.danger.tailwind}`}>
-                    {blockedCount()}
+                    {stats.blockedCount}
                   </span>
                 </div>
                 <div>
                   <span className="text-muted-foreground">警告：</span>
                   <span className={`font-medium ${COLOR_TOKENS.warning.tailwind}`}>
-                    {warningCount()}
+                    {stats.warningCount}
                   </span>
                 </div>
                 <div>
                   <span className="text-muted-foreground">正常：</span>
                   <span className={`font-medium ${COLOR_TOKENS.success.tailwind}`}>
-                    {normalCount()}
+                    {stats.normalCount}
                   </span>
                 </div>
               </div>
