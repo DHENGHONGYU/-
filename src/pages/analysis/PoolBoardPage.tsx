@@ -21,9 +21,15 @@ import { PageContainer, PageHeader } from '@/components/templates'
 import { CollectionProgress } from '@/components/organisms/pool/CollectionProgress'
 import { StockNewsStats } from '@/components/organisms/pool/StockNewsStats'
 import { useResearchPoolStore } from '@/store/researchPoolStore'
+import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { COLOR_TOKENS, twText, twBg, twBorder, DARK } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
+import { eventBus } from '@/lib/eventBus'
+import { EVENT_NAMES } from '@/constants/store-channels.constants'
+import { getBatchCollectionProgress, type CollectionProgress as ProgressType } from '@/services/pool/collectionProgressService'
+import { collectPoolSymbols } from '@/services/pool/collectionService'
 import type { PoolItem } from '@/types/modules/pool.types'
+import type { CollectionConfig } from '@/types/modules/collection.types'
 
 // ============================================================
 // 辅助函数
@@ -135,6 +141,38 @@ function StockOverviewCard({ item }: { item: PoolItem }): React.JSX.Element {
 }
 
 // ============================================================
+// 采集概览汇总
+// ============================================================
+
+interface PoolCollectionSummary {
+  avgPercent: number
+  collectedCount: number
+  ratingCounts: Record<string, number>
+}
+
+function buildSummary(progressMap: Map<string, ProgressType>): PoolCollectionSummary {
+  const valid = Array.from(progressMap.values())
+  const ratingCounts: Record<string, number> = {}
+  let percentSum = 0
+  for (const p of valid) {
+    percentSum += p.completionPercent
+    ratingCounts[p.qualityRating] = (ratingCounts[p.qualityRating] ?? 0) + 1
+  }
+  return {
+    avgPercent: valid.length > 0 ? Math.round(percentSum / valid.length) : 0,
+    collectedCount: valid.length,
+    ratingCounts,
+  }
+}
+
+const RATING_LABELS: Record<string, string> = {
+  excellent: '优秀',
+  good: '良好',
+  fair: '一般',
+  poor: '较差',
+}
+
+// ============================================================
 // 主页面
 // ============================================================
 
@@ -142,6 +180,35 @@ export default function PoolBoardPage(): React.JSX.Element {
   const items = useResearchPoolStore((s) => s.items)
   const loading = useResearchPoolStore((s) => s.loading)
   const refresh = useResearchPoolStore((s) => s.refresh)
+  const [summary, setSummary] = React.useState<PoolCollectionSummary | null>(null)
+  const [collecting, setCollecting] = React.useState(false)
+  const [collectError, setCollectError] = React.useState<string | null>(null)
+
+  const handleCollect = React.useCallback(async (): Promise<void> => {
+    if (collecting || items.length === 0) return
+    setCollecting(true)
+    setCollectError(null)
+    try {
+      const cfgState = useSevenDimConfigStore.getState()
+      const config: CollectionConfig = {
+        version: '1.0.0',
+        activeTemplate: cfgState.activeTemplate,
+        dimensions: cfgState.dimensions,
+        global: cfgState.global,
+        symbolCount: items.length,
+        historyDays: cfgState.historyDays,
+        updatedAt: Date.now(),
+      }
+      await collectPoolSymbols(items.map((i) => i.symbol), config)
+      await refresh()
+      const progressMap = await getBatchCollectionProgress(items.map((i) => i.symbol))
+      setSummary(buildSummary(progressMap))
+    } catch (err) {
+      setCollectError(err instanceof Error ? err.message : String(err))
+    } finally {
+      setCollecting(false)
+    }
+  }, [collecting, items, refresh])
 
   const stats = React.useMemo(() => {
     const total = items.length
@@ -151,6 +218,33 @@ export default function PoolBoardPage(): React.JSX.Element {
       statusCounts[s] = (statusCounts[s] ?? 0) + 1
     }
     return { total, statusCounts }
+  }, [items])
+
+  // 挂载即加载研究池数据；订阅录入/导入事件自动刷新
+  React.useEffect(() => {
+    void refresh()
+
+    const onChanged = (): void => { void refresh() }
+    const offPool = eventBus.on(EVENT_NAMES.POOL_CHANGED, onChanged)
+    const offBatch = eventBus.on('BATCH_IMPORT_COMPLETED', onChanged)
+    return () => {
+      offPool()
+      offBatch()
+    }
+  }, [refresh])
+
+  // 加载全池采集概览
+  React.useEffect(() => {
+    if (items.length === 0) {
+      setSummary(null)
+      return
+    }
+    let cancelled = false
+    void (async () => {
+      const progressMap = await getBatchCollectionProgress(items.map((i) => i.symbol))
+      if (!cancelled) setSummary(buildSummary(progressMap))
+    })()
+    return () => { cancelled = true }
   }, [items])
 
   return (
@@ -173,14 +267,21 @@ export default function PoolBoardPage(): React.JSX.Element {
       />
 
       {/* ── 工具栏 ── */}
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <Button
           variant="secondary"
           size="sm"
           onClick={() => void refresh()}
-          disabled={loading}
+          disabled={loading || collecting}
         >
           {loading ? '刷新中...' : '刷新数据'}
+        </Button>
+        <Button
+          size="sm"
+          onClick={() => void handleCollect()}
+          disabled={collecting || items.length === 0}
+        >
+          {collecting ? '采集中...' : '批量采集'}
         </Button>
         <span className={cn('text-xs', twText('stone', 400))}>
           状态管理（流转/分组/批量操作）请在
@@ -190,6 +291,11 @@ export default function PoolBoardPage(): React.JSX.Element {
           中操作
         </span>
       </div>
+      {collectError && (
+        <div className={cn('rounded-md border px-4 py-2 text-xs', twBorder('red', 200), twBg('red', 50), twText('red', 700))}>
+          {collectError}
+        </div>
+      )}
 
       {/* ── 说明 ── */}
       <div className={cn('rounded-md border px-4 py-3 text-xs', twBorder('stone', 100), twBg('stone', 50) + '/50', DARK.borderNeutral800, DARK.bgNeutral900)}>
@@ -202,6 +308,31 @@ export default function PoolBoardPage(): React.JSX.Element {
           <li>资讯双维度：时效性（近1周/1月/3月/全部）× 高质量（sentimentConfidence ≥ 0.7）</li>
         </ul>
       </div>
+
+      {/* ── 全池采集概览 ── */}
+      {summary && (
+        <div className={cn('rounded-md border px-4 py-3', twBorder('stone', 100), twBg('stone', 50) + '/50', DARK.borderNeutral800, DARK.bgNeutral900)}>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs">
+            <span className={cn('font-medium', twText('stone', 600), DARK.textNeutral300)}>
+              采集概览
+            </span>
+            <span>
+              <span className={twText('stone', 400)}>平均完成度 </span>
+              <span className={cn('font-semibold', COLOR_TOKENS.info.tailwind)}>{summary.avgPercent}%</span>
+            </span>
+            <span>
+              <span className={twText('stone', 400)}>已采集标的 </span>
+              <span className={cn('font-semibold', twText('stone', 700), DARK.textNeutral200)}>{summary.collectedCount}/{items.length}</span>
+            </span>
+            {Object.entries(summary.ratingCounts).map(([rating, count]) => (
+              <span key={rating}>
+                <span className={twText('stone', 400)}>{RATING_LABELS[rating] ?? rating} </span>
+                <span className={cn('font-semibold', twText('stone', 700), DARK.textNeutral200)}>{count}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── 股票卡片网格 ── */}
       {items.length === 0 ? (
