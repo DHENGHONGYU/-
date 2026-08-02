@@ -405,10 +405,11 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete, DB_OPERATION.select],
   },
   [MODULE_ID.pool]: {
-    read: [STORE_NAME.stocks, STORE_NAME.v6Scores],
+    read: [STORE_NAME.stocks, STORE_NAME.v6Scores, STORE_NAME.traceRecords],
     write: [STORE_NAME.stocks],
     // 修复 2026-07-08: 添加 DB_OPERATION.select，允许 poolStore 通过 DataBridge 查询 stocks/v6Scores
     // 原配置仅允许 insert/update/delete，导致 poolStore.refresh() 触发 ACL_PERMISSION_DENIED
+    // 修复 2026-08-02: read 增加 trace_records，允许研究候选池展示七维采集进度（collectionProgressService 以 pool 模块读取 trace_records）
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
   },
   [MODULE_ID.analyzer]: {

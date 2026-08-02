@@ -15,6 +15,8 @@ import {
 } from '@/services/pool/collectionProgressService'
 import { twText, twBg, twBorder, DARK } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
+import { eventBus } from '@/lib/eventBus'
+import { COLLECTION_EVENTS } from '@/types/modules/collection.types'
 
 export interface CollectionProgressProps {
   symbol: string
@@ -77,15 +79,28 @@ export function CollectionProgress({
 
   useEffect(() => {
     let cancelled = false
-    setLoading(true)
-    void (async () => {
+    const load = async (): Promise<void> => {
+      setLoading(true)
       const result = await getCollectionProgress(symbol)
       if (!cancelled) {
         setProgress(result)
         setLoading(false)
       }
-    })()
-    return () => { cancelled = true }
+    }
+
+    void load()
+
+    const off = eventBus.on(COLLECTION_EVENTS.COMPLETE, (event: unknown) => {
+      const payload = event as { symbol?: string } | undefined
+      if (payload?.symbol === symbol) {
+        void load()
+      }
+    })
+
+    return () => {
+      cancelled = true
+      off()
+    }
   }, [symbol])
 
   if (loading) {
