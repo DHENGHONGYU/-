@@ -226,6 +226,9 @@ export default defineConfig({
   build: {
     target: 'es2022',
     outDir: 'dist',
+    // 单一构建标准（Plan A）：vite 不隐式清空 outDir，清空由显式步骤（npm run clean:dist）执行。
+    // 防止并行构建方案（TRAE/WorkBuddy）互相删除对方产物，保证 build 语义唯一、可复现。
+    emptyOutDir: false,
     sourcemap: false,
     chunkSizeWarningLimit: 800,
     modulePreload: {

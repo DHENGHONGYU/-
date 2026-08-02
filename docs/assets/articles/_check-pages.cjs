@@ -1,6 +1,6 @@
 const { chromium } = require('playwright');
 const fs = require('fs');
-const PROJECT = 'C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9';
+const PROJECT = process.env.KIMI_WORKSPACE || require('path').join(require('os').homedir(), 'Documents', 'kimi', 'Workspaces', '智能投研复盘系统V9');
 
 (async () => {
   const browser = await chromium.connectOverCDP('http://localhost:9222');
