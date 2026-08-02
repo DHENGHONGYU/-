@@ -163,11 +163,10 @@ describe('verify-all-routes.ts v3.0（白盒测试）', () => {
         '/input/data-test', '/input/local-knowledge', '/input/collect-tasks',
         '/input/seven-dim', '/input/fetcher-config', '/input/pool-board',
         // analysis
-        '/analysis', '/analysis/hub', '/analysis/stock-score',
-        '/analysis/stock-score/:symbol', '/analysis/sector', '/analysis/backtest',
+        '/analysis', '/analysis/hub', '/analysis/sector', '/analysis/backtest',
         '/analysis/industry-score', '/analysis/intelligent-score', '/analysis/score-docs',
         '/analysis/news', '/analysis/hot-sector', '/analysis/value-pit',
-        '/analysis/score-comparison', '/analysis/multi-factor',
+        '/analysis/score-comparison', '/analysis/multi-factor', '/analysis/industry-dashboard',
         // trading
         '/trading', '/trading/strategy-snapshots', '/trading/holdings',
         '/trading/flow', '/trading/execution-plans', '/trading/execution',
