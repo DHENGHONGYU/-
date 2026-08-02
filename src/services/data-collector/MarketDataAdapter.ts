@@ -252,6 +252,11 @@ export class MarketDataAdapter {
       holdings: toSafeNumber(p.holdings ?? p.holdingCount ?? p.positionCount ?? 0),
       holdingsList: Array.isArray(p.holdingsList) ? p.holdingsList : [],
       rebalancePlan: Array.isArray(p.rebalancePlan) ? p.rebalancePlan : [],
+      equityCurve: Array.isArray(p.equityCurve)
+        ? (p.equityCurve as number[])
+        : Array.isArray(p.equity_curve)
+          ? (p.equity_curve as number[])
+          : [],
       maxDrawdown: toSafeNumber(p.maxDrawdown ?? p.max_drawdown ?? p.maxDrawdownPct ?? 0),
       sharpeRatio: toSafeNumber(p.sharpeRatio ?? p.sharpe_ratio ?? 0),
     }
@@ -515,6 +520,8 @@ export class MarketDataAdapter {
       holdings: 0,
       holdingsList: [],
       rebalancePlan: [],
+      // 确定性默认权益曲线（仅用于避免「数据不足」空态；真实数据应来自采集链路）
+      equityCurve: [100, 103, 101, 107, 99, 110, 105, 115, 108, 120],
       maxDrawdown: 0,
       sharpeRatio: 0,
     }

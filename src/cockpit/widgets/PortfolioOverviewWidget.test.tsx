@@ -269,14 +269,29 @@ describe('PortfolioOverviewWidget', () => {
     expect(totalPnLText).toHaveClass(COLOR_TOKENS.info.tailwind)
   })
 
-  it('渲染最大回撤和夏普比率（读取真实 portfolio 数据，非硬编码占位）', () => {
-    setupMarketData({ portfolio: buildPortfolioData({ maxDrawdown: 5.5, sharpeRatio: 0.56 }) })
+  it('最大回撤/夏普比率：有权益曲线时从真实数据计算（非硬编码 0）', () => {
+    setupMarketData({
+      portfolio: buildPortfolioData({
+        equityCurve: [100, 103, 101, 107, 99, 110, 105, 115, 108, 120],
+      }),
+    })
     render(<PortfolioOverviewWidget config={buildConfig()} />)
 
     expect(screen.getByText('最大回撤')).toBeInTheDocument()
     expect(screen.getByText('夏普比率')).toBeInTheDocument()
-    expect(screen.getByText('5.5%')).toBeInTheDocument()
-    expect(screen.getByText('0.56')).toBeInTheDocument()
+    // 正向：渲染从权益曲线真实计算的回撤/夏普（equityCurve=[100,103,...,120] → 7.5% / 0.32），绝不出现硬编码 0%
+    expect(screen.queryByText('0%')).toBeNull()
+    expect(screen.getByText('7.5%')).toBeInTheDocument()
+    expect(screen.getByText('0.32')).toBeInTheDocument()
+  })
+
+  it('最大回撤/夏普比率：无权益曲线时显式标注「数据不足」（非静默显示 0）', () => {
+    // 不提供 equityCurve（默认 buildPortfolioData 无该字段）
+    setupMarketData({ portfolio: buildPortfolioData({}) })
+    render(<PortfolioOverviewWidget config={buildConfig()} />)
+
+    // 逆向：缺失数据时显式告知，而非静默渲染 0（最大回撤与夏普比率各一处）
+    expect(screen.getAllByText('数据不足')).toHaveLength(2)
   })
 
   it('边界 - totalAssets 为 "0" 且 holdings 为 0 时正常渲染', () => {

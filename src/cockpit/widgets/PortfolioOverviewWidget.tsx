@@ -1,6 +1,7 @@
 import React from 'react'
 import { TrendingUp, Wallet, Target, AlertTriangle, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { computeMaxDrawdown, computeSharpeRatio } from '@/lib/utils/portfolioMetrics'
 import { WidgetStateShell } from './components/WidgetStateShell'
 import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig, HoldingItem, RebalancePlanItem } from '@/types/modules/widget.types'
@@ -111,6 +112,12 @@ export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWid
   const loading = loadingMap?.[config.instanceId] ?? true
   const error = errorMap?.[config.instanceId]
 
+  // B1 修复：从真实权益曲线（equityCurve）计算风险指标，缺失时显式标注「数据不足」
+  const equityCurve = portfolio?.equityCurve ?? []
+  const hasEquityCurve = equityCurve.length >= 2
+  const maxDrawdown = hasEquityCurve ? computeMaxDrawdown(equityCurve) : NaN
+  const sharpe = hasEquityCurve ? computeSharpeRatio(equityCurve) : NaN
+
   let visualState: 'ready' | 'loading' | 'empty' | 'error' = 'ready'
   if (error) {
     visualState = 'error'
@@ -188,14 +195,22 @@ export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWid
               <AlertTriangle className={cn('h-4 w-4', twText('red', 400))} />
               <span className={cn('text-xs', COLOR_SHADES.gray[400])}>最大回撤</span>
             </div>
-            <span className="text-lg font-medium" style={{ color: COLORS.DOWN }}>{portfolio.maxDrawdown}%</span>
+            {hasEquityCurve ? (
+              <span className="text-lg font-medium" style={{ color: COLORS.DOWN }}>{maxDrawdown.toFixed(1)}%</span>
+            ) : (
+              <span className={cn('text-sm', COLOR_SHADES.gray[400])}>数据不足</span>
+            )}
           </div>
           <div>
             <div className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4" style={{ color: COLORS.UP }} />
               <span className={cn('text-xs', COLOR_SHADES.gray[400])}>夏普比率</span>
             </div>
-            <span className="text-lg font-medium" style={{ color: COLORS.UP }}>{portfolio.sharpeRatio.toFixed(2)}</span>
+            {hasEquityCurve ? (
+              <span className="text-lg font-medium" style={{ color: COLORS.UP }}>{sharpe.toFixed(2)}</span>
+            ) : (
+              <span className={cn('text-sm', COLOR_SHADES.gray[400])}>数据不足</span>
+            )}
           </div>
         </div>
 
