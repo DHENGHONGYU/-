@@ -27,6 +27,10 @@ export interface StockSearchResult {
   name: string
   /** 行业标签（取自 Stock.industryText 或 industryCode） */
   industry: string
+  /** 申万一级/二级/三级行业（缺失表示港股或未覆盖 A 股） */
+  swL1?: string
+  swL2?: string
+  swL3?: string
 }
 
 export interface PoolExportPayload {

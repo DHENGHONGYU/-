@@ -10,6 +10,9 @@ export interface MockStock {
   pe?: number
   pb?: number
   marketCap?: number
+  swL1?: string
+  swL2?: string
+  swL3?: string
 }
 
 /** 股票搜索结果 */

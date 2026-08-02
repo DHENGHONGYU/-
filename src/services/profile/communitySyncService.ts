@@ -21,7 +21,7 @@
 
 import { getLogger } from '@/lib/logger'
 import type { CommunityPost } from '@/services/data-collector/dimensionDataTypes'
-import type { ProfileItem, ProfileDomain, ScoreLayerId } from '@/data/types/types.profile'
+import type { ProfileItem, ProfileDomain, ScoreLayerId, SentimentLabel } from '@/data/types/types.profile'
 import { STORE_NAME } from '@/config/dbConfig'
 import { autoTagItem } from './tagService'
 import { bulkSaveProfileItems } from './profileService'
