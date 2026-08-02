@@ -41,6 +41,7 @@ interface MockMediaQueryList {
   removeListener: MockInstance
   _dispatchChange: (nextMatches: boolean) => void
   onchange?: ((this: MediaQueryList, ev: MediaQueryListEvent) => unknown) | null
+  dispatchEvent?(event: Event): boolean
 }
 
 function makeMockMql(media: string, initialMatches = false): MockMediaQueryList {
