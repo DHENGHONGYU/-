@@ -41,6 +41,8 @@ function mockMarketData(partial: Partial<MarketData> = {}, loading = false, erro
       holdings: 0,
       holdingsList: [],
       rebalancePlan: [],
+      maxDrawdown: 0,
+      sharpeRatio: 0,
     },
     tradeReview: {
       totalTrades: 0,
