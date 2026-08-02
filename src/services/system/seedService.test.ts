@@ -18,6 +18,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, MODULE_ID } from '@/config/dbConfig'
 import { seedDefaultStocks } from './seedService'
+import type { StandardEnvelope } from '@/core/envelope'
 
 vi.mock('@/core/databridge', () => ({
   dataBridge: {
@@ -125,14 +126,14 @@ describe('seedService — P0 修复验证 (seedService.ts)', () => {
       expect(mockedForward).toHaveBeenCalledTimes(EXPECTED_STOCKS)
 
       // 验证第 1 只 (贵州茅台 600519.SH) Envelope 完整
-      const env = mockedForward.mock.calls[0]?.[0]
+      const env = mockedForward.mock.calls[0]?.[0] as StandardEnvelope | undefined
       expect(env).toBeDefined()
       expect(env?.meta?.action).toBe(ENVELOPE_ACTION.insertStock)
       expect(env?.meta?.source).toBe(MODULE_ID.system)
       expect(typeof env?.meta?.traceId).toBe('string')
       expect(env?.meta?.traceId).toMatch(/^seed-/)
 
-      const payload = env?.payload
+      const payload = env!.payload as Record<string, unknown>
       expect(payload.symbol).toBe('600519.SH')
       expect(payload.name).toBe('贵州茅台')
       expect(payload.pool).toBeDefined()

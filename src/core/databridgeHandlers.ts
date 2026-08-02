@@ -361,26 +361,6 @@ class DeleteStockHandler implements EnvelopeHandler {
 }
 
 /**
- * 通知类 action 处理器（仅记录日志，不持久化）
- */
-class NotificationHandler implements EnvelopeHandler {
-  private readonly actions: string[]
-
-  constructor(actions: string[]) {
-    this.actions = actions
-  }
-
-  canHandle(action: string): boolean {
-    return this.actions.includes(action)
-  }
-
-  async handle(envelope: StandardEnvelope, _store: StoreName): Promise<void> {
-    const { meta } = envelope
-    logger.info(`[DataBridge] Notification-only action, skip DB put: action="${meta.action}"`)
-  }
-}
-
-/**
  * 批量操作处理器
  * 使用 IndexedDB 事务进行批量写入，提升性能
  */
@@ -448,28 +428,6 @@ class BulkHandler implements EnvelopeHandler {
 }
 
 /**
- * 持仓数据查询处理器（P0-3 修复）
- * loadHoldingsData 的 payload 是 HoldingsQueryParams（分页/日期/关键词），
- * 不是 Stock 数据，不能写入 stocks store（keyPath='symbol'）。
- * holdingsStore 的 ACL write=[] 也证实它不应执行 DB 写操作。
- * 此处理器仅记录查询日志，不执行 DB 写入。
- */
-class LoadHoldingsDataHandler implements EnvelopeHandler {
-  canHandle(action: string): boolean {
-    return action === ENVELOPE_ACTION.loadHoldingsData
-  }
-
-  async handle(envelope: StandardEnvelope, _store: StoreName): Promise<void> {
-    const { meta, payload } = envelope
-    logger.info('[DataBridge] loadHoldingsData: query-only action, skip DB put', {
-      traceId: meta.traceId,
-      source: meta.source,
-      payloadKeys: payload != null ? Object.keys(payload) : [],
-    })
-  }
-}
-
-/**
  * 信封处理器注册表
  * 按优先级顺序管理所有 Handler
  */
@@ -499,19 +457,6 @@ export function createHandlerRegistry(): HandlerRegistry {
   // 1.5 股票状态/分组更新处理器
   registry.register(new UpdateStockStatusHandler())
   registry.register(new UpdateStockGroupHandler())
-
-  // 2. 通知类处理器
-  registry.register(
-    new NotificationHandler([
-      ENVELOPE_ACTION.newsArticleLoaded,
-      ENVELOPE_ACTION.holdingsDataLoaded,
-      ENVELOPE_ACTION.tradeActionExecuted,
-    ])
-  )
-
-  // 2.5 持仓查询处理器（P0-3 修复：loadHoldingsData 的 payload 是 HoldingsQueryParams，
-  // 不是 Stock 数据，不应写入 stocks store。holdingsStore 的 ACL write=[] 也证实了这一点）
-  registry.register(new LoadHoldingsDataHandler())
 
   // 2.6 批量操作处理器
   registry.register(

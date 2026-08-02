@@ -1,10 +1,9 @@
-/** @unused — 已实现但当前无 UI 层消费者，待后续产品规划接入。  * @doc [V9-DOC-ARCH-007, V9-DOC-PROJ-118, V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-BACK-015]
-*/
 /**
  * @module signalAdviceStore
  * @lifecycle @Global
  * @description 信号建议 Store —— 交易建议与信号扫描的唯一可信源。
  * 从 tradingStore 拆分出来，专注于交易建议映射和信号扫描。
+ * 被 tradingStore 委托调用（scanSignals / generateAdviceForStocks / signals / adviceMap / reset）。
  *
  * @compliance
  * - 所有写操作通过 dataBridge.forward() 走信封协议

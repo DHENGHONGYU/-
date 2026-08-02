@@ -18,8 +18,8 @@ export interface StoreRegistryEntry {
   id: string
   /** 相对 src 的路径（不含扩展名，供 resolveRegistryPath 解析） */
   filePath: string
-  /** 状态（默认 active） */
-  status: 'active'
+  /** 状态：active=有生产消费者；unused=已实现但无 UI/store 消费者（@unused 标注） */
+  status: 'active' | 'unused'
 }
 
 /**
@@ -28,9 +28,9 @@ export interface StoreRegistryEntry {
 export const STORE_REGISTRY: ReadonlyArray<StoreRegistryEntry> = [
   { id: 'AgentFeedbackStore', filePath: 'src/store/agentFeedbackStore', status: 'active' },
   { id: 'AgentStore', filePath: 'src/store/agentStore', status: 'active' },
-  { id: 'AnalysisHubStore', filePath: 'src/store/analysisHubStore', status: 'active' },
+  { id: 'AnalysisHubStore', filePath: 'src/store/analysisHubStore', status: 'unused' },
   { id: 'AnalysisNewsStore', filePath: 'src/store/analysisNewsStore', status: 'active' },
-  { id: 'AnalysisOrchestratorStore', filePath: 'src/store/analysisOrchestratorStore', status: 'active' },
+  { id: 'AnalysisOrchestratorStore', filePath: 'src/store/analysisOrchestratorStore', status: 'unused' },
   { id: 'AnalysisStore', filePath: 'src/store/analysisStore', status: 'active' },
   { id: 'BacktestStore', filePath: 'src/store/backtestStore', status: 'active' },
   { id: 'ChatStore', filePath: 'src/store/chatStore', status: 'active' },
@@ -38,18 +38,18 @@ export const STORE_REGISTRY: ReadonlyArray<StoreRegistryEntry> = [
   { id: 'CollectionWizardStore', filePath: 'src/store/collectionWizardStore', status: 'active' },
   { id: 'CommandStore', filePath: 'src/store/commandStore', status: 'active' },
   { id: 'CustomAgentStore', filePath: 'src/store/customAgentStore', status: 'active' },
-  { id: 'DatabridgeStore', filePath: 'src/store/databridgeStore', status: 'active' },
-  { id: 'DataflowStore', filePath: 'src/store/dataflowStore', status: 'active' },
-  { id: 'DataSyncStore', filePath: 'src/store/dataSyncStore', status: 'active' },
+  { id: 'DatabridgeStore', filePath: 'src/store/databridgeStore', status: 'unused' },
+  { id: 'DataflowStore', filePath: 'src/store/dataflowStore', status: 'unused' },
+  { id: 'DataSyncStore', filePath: 'src/store/dataSyncStore', status: 'unused' },
   { id: 'DataTestStore', filePath: 'src/store/dataTestStore', status: 'active' },
   { id: 'DisciplineStore', filePath: 'src/store/disciplineStore', status: 'active' },
   { id: 'DualStrategyStore', filePath: 'src/store/dualStrategyStore', status: 'active' },
   { id: 'EngineStore', filePath: 'src/store/engineStore', status: 'active' },
   { id: 'ExecutionStore', filePath: 'src/store/executionStore', status: 'active' },
-  { id: 'FileImportStore', filePath: 'src/store/fileImportStore', status: 'active' },
+  { id: 'FileImportStore', filePath: 'src/store/fileImportStore', status: 'unused' },
   { id: 'HoldingsStore', filePath: 'src/store/holdingsStore', status: 'active' },
   { id: 'HotSectorStore', filePath: 'src/store/hotSectorStore', status: 'active' },
-  { id: 'HybridProofreadStore', filePath: 'src/store/hybridProofreadStore', status: 'active' },
+  { id: 'HybridProofreadStore', filePath: 'src/store/hybridProofreadStore', status: 'unused' },
   { id: 'IndustryScoreStore', filePath: 'src/store/industryScoreStore', status: 'active' },
   { id: 'InputHubStore', filePath: 'src/store/inputHubStore', status: 'active' },
   { id: 'IntelligentScoreStore', filePath: 'src/store/intelligentScoreStore', status: 'active' },
@@ -64,7 +64,7 @@ export const STORE_REGISTRY: ReadonlyArray<StoreRegistryEntry> = [
   { id: 'PageStore', filePath: 'src/store/pageStore', status: 'active' },
   { id: 'PerfMetricsStore', filePath: 'src/store/perfMetricsStore', status: 'active' },
   { id: 'PortfolioStore', filePath: 'src/store/portfolioStore', status: 'active' },
-  { id: 'PositionPoolStore', filePath: 'src/store/positionPoolStore', status: 'active' },
+  { id: 'PositionPoolStore', filePath: 'src/store/positionPoolStore', status: 'unused' },
   { id: 'PositionStore', filePath: 'src/store/positionStore', status: 'active' },
   { id: 'PredictionStore', filePath: 'src/store/predictionStore', status: 'active' },
   { id: 'ResearchPoolStore', filePath: 'src/store/researchPoolStore', status: 'active' },
@@ -81,11 +81,11 @@ export const STORE_REGISTRY: ReadonlyArray<StoreRegistryEntry> = [
   { id: 'StrategySnapshotStore', filePath: 'src/store/strategySnapshotStore', status: 'active' },
   { id: 'SystemMonitorStore', filePath: 'src/store/systemMonitorStore', status: 'active' },
   { id: 'ThemeStore', filePath: 'src/store/themeStore', status: 'active' },
-  { id: 'TradingHubStore', filePath: 'src/store/tradingHubStore', status: 'active' },
+  { id: 'TradingHubStore', filePath: 'src/store/tradingHubStore', status: 'unused' },
   { id: 'TradingStore', filePath: 'src/store/tradingStore', status: 'active' },
   { id: 'ValuePitStore', filePath: 'src/store/valuePitStore', status: 'active' },
   { id: 'RegistrationContractStore', filePath: 'src/store/registrationContractStore', status: 'active' },
   { id: 'WatchlistStore', filePath: 'src/store/watchlistStore', status: 'active' },
-  { id: 'WidgetStore', filePath: 'src/store/widgetStore', status: 'active' },
+  { id: 'WidgetStore', filePath: 'src/store/widgetStore', status: 'unused' },
   { id: 'WorkflowStore', filePath: 'src/store/workflowStore', status: 'active' },
 ]
