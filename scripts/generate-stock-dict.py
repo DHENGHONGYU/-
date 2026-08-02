@@ -134,6 +134,10 @@ def render(merged):
     lines.append("  symbol: string")
     lines.append("  name: string")
     lines.append("  market: 'SH' | 'SZ' | 'BJ' | 'HK'")
+    # swL1/swL2/swL3 = 申万一级/二级/三级行业（可选，由行业映射模块填充，不参与字典生成）
+    lines.append("  swL1?: string")
+    lines.append("  swL2?: string")
+    lines.append("  swL3?: string")
     lines.append("}")
     lines.append("")
     lines.append("/**")
