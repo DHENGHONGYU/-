@@ -98,16 +98,20 @@ function parseAclMatrix(): AclEntry[] {
   const entries: AclEntry[] = []
 
   // 匹配 [MODULE_ID.xxx]: { ... write: [ STORE_NAME.aaa, STORE_NAME.bbb, ... ] ... }
+  // 或 write: Object.values(STORE_NAME)（全 store 授权，如 system 模块）
   // v1.1 修复：使用 [^}]*? 限制在同一个配置块内，避免 [\s\S]*? 跨越模块边界
   // （原正则会导致 write: Object.values(STORE_NAME) 的模块跳过，把下一个模块的 write 列表归到前一个模块名下）
-  const moduleRegex = /\[MODULE_ID\.(\w+)\]:\s*\{[^}]*?write:\s*\[([^\]]*)\]/g
+  // v1.2 修复：正则增加 Object.values(...) 分支，匹配动态全权限写法，杜绝 MODULE_NOT_IN_ACL 误报
+  const moduleRegex = /\[MODULE_ID\.(\w+)\]:\s*\{[^}]*?write:\s*(?:\[([^\]]*)\]|Object\.values\(\w+\))/g
   let match: RegExpExecArray | null
   while ((match = moduleRegex.exec(content)) !== null) {
     const module = match[1]
-    const writeBlock = match[2]
+    // match[2] 命中 = 数组字面量；未命中 = Object.values(...) 全权限写法（用 '*' 通配标记）
+    const isAllStores = match[2] === undefined
     const line = content.slice(0, match.index).split('\n').length
-    // 提取 STORE_NAME.xxx
-    const stores = [...writeBlock.matchAll(/STORE_NAME\.(\w+)/g)].map(m => m[1])
+    const stores = isAllStores
+      ? ['*']
+      : [...match[2].matchAll(/STORE_NAME\.(\w+)/g)].map(m => m[1])
     entries.push({ module, writeStores: stores, line })
   }
   return entries
@@ -260,7 +264,7 @@ function main(): void {
       check1Count++
       continue
     }
-    if (!writeStores.has(targetStore)) {
+    if (!writeStores.has(targetStore) && !writeStores.has('*')) {
       violations.push({
         type: 'STORE_NOT_IN_WRITE_LIST',
         severity: 'ERROR',
