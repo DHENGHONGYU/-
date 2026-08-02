@@ -29,7 +29,7 @@ const mockSubscribe = vi.fn(() => () => {})
 vi.mock('@/cockpit/core/widgetRegistry', () => ({
   widgetRegistry: {
     getAllInstances: () => mockGetAllInstances(),
-    subscribe: (cb: () => void) => mockSubscribe(),
+    subscribe: (_cb: () => void) => mockSubscribe(),
   },
 }))
 

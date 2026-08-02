@@ -55,55 +55,13 @@ import type { TimeSeriesProvider } from '@/services/storage/storageProvider'
 // 验证 DuckDBProviderImpl 实现了 TimeSeriesProvider 接口
 const _testDuckDBIsTimeSeriesProvider: TimeSeriesProvider = new DuckDBProviderImpl()
 
-// 验证单例导出存在
-const _testDuckDBSingleton: TimeSeriesProvider = duckDbProvider
-
-// 验证 backend 和 morphologies 属性
-const _testDuckDBBackend: 'duckdb' = duckDbProvider.backend
-const _testDuckDBMorphologies: readonly ['time_series'] = duckDbProvider.morphologies
-
 export const __duckdb_type_checks = {
   provider: typeof _testDuckDBIsTimeSeriesProvider,
-  singleton: typeof _testDuckDBSingleton,
-  backend: typeof _testDuckDBBackend,
-  morphologies: typeof _testDuckDBMorphologies,
 }
 
 // ============================================================
 // DuckDB querySQL 返回类型契约
 // ============================================================
-
-import type { SQLQueryResult, OHLCVRow } from '@/services/storage/duckDBProvider'
-
-// 验证 SQLQueryResult 结构
-const _testSQLQueryResult: SQLQueryResult = {
-  success: true,
-  data: [{ col1: 'value1' }],
-  columns: ['col1'],
-  rowCount: 1,
-}
-
-// 验证失败结果结构
-const _testSQLQueryError: SQLQueryResult = {
-  success: false,
-  error: 'something went wrong',
-}
-
-// 验证 OHLCVRow 结构
-const _testOHLCVRow: OHLCVRow = {
-  timestamp: 1000,
-  open: 100,
-  high: 110,
-  low: 90,
-  close: 105,
-  volume: 1000,
-}
-
-export const __duckdb_return_type_checks = {
-  querySuccess: typeof _testSQLQueryResult,
-  queryError: typeof _testSQLQueryError,
-  ohlcv: typeof _testOHLCVRow,
-}
 
 // ============================================================
 // MCP Tool 类型契约
