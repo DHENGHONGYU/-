@@ -116,8 +116,8 @@ describe('audit-layer-calls.ts v3.0（白盒测试）', () => {
   }
 
   /** 动态导入 scan 函数（确保 vi.resetModules 后获取新实例） */
-  async function importScan(): Promise<typeof import('../../../scripts/audit-layer-calls')> {
-    return await import('../../../scripts/audit-layer-calls')
+  async function importScan(): Promise<typeof import('../../../scripts/audit/audit-layer-calls')> {
+    return await import('../../../scripts/audit/audit-layer-calls')
   }
 
   // ============================================================

@@ -120,7 +120,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
 
   describe('关键函数单元测试', () => {
     it('extractStoreHookName 应正确解析 export const useXxxStore = create 模式', async () => {
-      const { extractStoreHookName } = await import('../../../scripts/audit-mapping-integrity')
+      const { extractStoreHookName } = await import('../../../scripts/audit/audit-mapping-integrity')
       const srcDir = path.resolve(__dirname, '../../../src').replace(/\\/g, '/')
       const fakePath = path.join(srcDir, 'store', 'mockStore.ts').replace(/\\/g, '/')
 
@@ -133,7 +133,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
     })
 
     it('extractStoreHookName 应支持 export function useXxxStore 兜底匹配', async () => {
-      const { extractStoreHookName } = await import('../../../scripts/audit-mapping-integrity')
+      const { extractStoreHookName } = await import('../../../scripts/audit/audit-mapping-integrity')
       const srcDir = path.resolve(__dirname, '../../../src').replace(/\\/g, '/')
       const fakePath = path.join(srcDir, 'store', 'functionStore.ts').replace(/\\/g, '/')
 
@@ -146,7 +146,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
     })
 
     it('extractStoreImports 应同时解析相对路径和绝对路径导入', async () => {
-      const { extractStoreImports } = await import('../../../scripts/audit-mapping-integrity')
+      const { extractStoreImports } = await import('../../../scripts/audit/audit-mapping-integrity')
       const srcDir = path.resolve(__dirname, '../../../src').replace(/\\/g, '/')
       const fakePath = path.join(srcDir, 'store', 'facadeStore.ts').replace(/\\/g, '/')
 
@@ -168,7 +168,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
     })
 
     it('extractStoreImports 应过滤注释行（// 和 * 开头）', async () => {
-      const { extractStoreImports } = await import('../../../scripts/audit-mapping-integrity')
+      const { extractStoreImports } = await import('../../../scripts/audit/audit-mapping-integrity')
       const srcDir = path.resolve(__dirname, '../../../src').replace(/\\/g, '/')
       const fakePath = path.join(srcDir, 'store', 'commentTestStore.ts').replace(/\\/g, '/')
 
@@ -187,7 +187,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
     })
 
     it('isTestFile 应正确识别 .test.ts/.test.tsx 和 __tests__ 目录', async () => {
-      const { isTestFile } = await import('../../../scripts/audit-mapping-integrity')
+      const { isTestFile } = await import('../../../scripts/audit/audit-mapping-integrity')
 
       expect(isTestFile('src/store/fooStore.test.ts')).toBe(true)
       expect(isTestFile('src/store/fooStore.test.tsx')).toBe(true)
@@ -197,7 +197,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
     })
 
     it('isStoreDeprecated 应检测 @deprecated 标记', async () => {
-      const { isStoreDeprecated } = await import('../../../scripts/audit-mapping-integrity')
+      const { isStoreDeprecated } = await import('../../../scripts/audit/audit-mapping-integrity')
       const srcDir = path.resolve(__dirname, '../../../src').replace(/\\/g, '/')
       const deprecatedPath = path.join(srcDir, 'store', 'oldStore.ts').replace(/\\/g, '/')
       const normalPath = path.join(srcDir, 'store', 'newStore.ts').replace(/\\/g, '/')
@@ -249,7 +249,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
 
     it('应正确识别 5 个未使用 Store', async () => {
       const { collectStoreMetas, buildStoreDependencyGraph, markFacadeStores, findStoreConsumers, computeTransitiveReachability } =
-        await import('../../../scripts/audit-mapping-integrity')
+        await import('../../../scripts/audit/audit-mapping-integrity')
 
       setupRealisticRepo()
 
@@ -288,7 +288,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
 
     it('应正确识别 Facade Store (tradingStore 聚合 watchlistStore + orderStore)', async () => {
       const { collectStoreMetas, buildStoreDependencyGraph, markFacadeStores } =
-        await import('../../../scripts/audit-mapping-integrity')
+        await import('../../../scripts/audit/audit-mapping-integrity')
 
       setupRealisticRepo()
 
@@ -305,7 +305,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
 
     it('应通过传递可达性正确标记 Facade 子Store 为 used', async () => {
       const { collectStoreMetas, buildStoreDependencyGraph, markFacadeStores, findStoreConsumers, computeTransitiveReachability } =
-        await import('../../../scripts/audit-mapping-integrity')
+        await import('../../../scripts/audit/audit-mapping-integrity')
 
       setupRealisticRepo()
 
@@ -337,7 +337,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
     })
 
     it('应准确识别未使用 Store 的消费者来源（注释引用 vs 真实导入）', async () => {
-      const { collectStoreMetas, findStoreConsumers } = await import('../../../scripts/audit-mapping-integrity')
+      const { collectStoreMetas, findStoreConsumers } = await import('../../../scripts/audit/audit-mapping-integrity')
 
       // riskStore 仅在 constants 注释中引用
       setupVirtualFS({
@@ -450,7 +450,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
     }
 
     it('场景1：analysisStore 被绝对路径错误导入到 pages/，应被识别为 used', async () => {
-      const { collectStoreMetas, findStoreConsumers } = await import('../../../scripts/audit-mapping-integrity')
+      const { collectStoreMetas, findStoreConsumers } = await import('../../../scripts/audit/audit-mapping-integrity')
 
       setupRepoWithBadImports()
 
@@ -471,7 +471,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
     })
 
     it('场景2：chatStore 被相对路径错误导入到 store/，应被识别但标记为 storeDir', async () => {
-      const { collectStoreMetas, findStoreConsumers } = await import('../../../scripts/audit-mapping-integrity')
+      const { collectStoreMetas, findStoreConsumers } = await import('../../../scripts/audit/audit-mapping-integrity')
 
       setupRepoWithBadImports()
 
@@ -496,7 +496,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
     })
 
     it('场景3：riskStore 仅在注释中被 hook 名引用，应被识别为无消费者', async () => {
-      const { collectStoreMetas, findStoreConsumers } = await import('../../../scripts/audit-mapping-integrity')
+      const { collectStoreMetas, findStoreConsumers } = await import('../../../scripts/audit/audit-mapping-integrity')
 
       setupRepoWithBadImports()
 
@@ -519,7 +519,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
     })
 
     it('场景4：rotationSignalStore 被绝对路径导入到 services/，应被识别为 used', async () => {
-      const { collectStoreMetas, findStoreConsumers } = await import('../../../scripts/audit-mapping-integrity')
+      const { collectStoreMetas, findStoreConsumers } = await import('../../../scripts/audit/audit-mapping-integrity')
 
       setupRepoWithBadImports()
 
@@ -539,7 +539,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
     })
 
     it('场景5：signalQualityStore 被绝对路径导入到 components/，应被识别为 used', async () => {
-      const { collectStoreMetas, findStoreConsumers } = await import('../../../scripts/audit-mapping-integrity')
+      const { collectStoreMetas, findStoreConsumers } = await import('../../../scripts/audit/audit-mapping-integrity')
 
       setupRepoWithBadImports()
 
@@ -560,7 +560,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
 
     it('综合场景：5 个 Store 被错误导入后，应全部被判定为 used', async () => {
       const { collectStoreMetas, buildStoreDependencyGraph, markFacadeStores, findStoreConsumers, computeTransitiveReachability } =
-        await import('../../../scripts/audit-mapping-integrity')
+        await import('../../../scripts/audit/audit-mapping-integrity')
 
       setupRepoWithBadImports()
 
@@ -600,7 +600,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
     })
 
     it('错误导入检测：注释中的 hook 名引用不应被误判为消费者', async () => {
-      const { collectStoreMetas, findStoreConsumers } = await import('../../../scripts/audit-mapping-integrity')
+      const { collectStoreMetas, findStoreConsumers } = await import('../../../scripts/audit/audit-mapping-integrity')
 
       // 构造场景：5 个 Store 全部仅在注释中引用 hook 名
       setupVirtualFS({
@@ -639,7 +639,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
   describe('BFS 传递可达性算法验证', () => {
     it('BFS 不应将 Store-to-Store 导入作为起点（v2.1 修复 bug 验证）', async () => {
       const { collectStoreMetas, buildStoreDependencyGraph, markFacadeStores, findStoreConsumers, computeTransitiveReachability } =
-        await import('../../../scripts/audit-mapping-integrity')
+        await import('../../../scripts/audit/audit-mapping-integrity')
 
       // 构造场景：A 导入 B，但 A 本身未被 UI 使用（不应触发 BFS）
       setupVirtualFS({
@@ -678,7 +678,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
 
     it('BFS 应正确沿正向图遍历：facadeAStore(UI) → subBStore → subCStore', async () => {
       const { collectStoreMetas, buildStoreDependencyGraph, markFacadeStores, findStoreConsumers, computeTransitiveReachability } =
-        await import('../../../scripts/audit-mapping-integrity')
+        await import('../../../scripts/audit/audit-mapping-integrity')
 
       // 构造场景：三层传递依赖
       //   UI 使用 facadeAStore
@@ -755,7 +755,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
      */
     it('极端场景1：钻石依赖应正确去重，leafStore 只入队一次', async () => {
       const { collectStoreMetas, buildStoreDependencyGraph, markFacadeStores, findStoreConsumers, computeTransitiveReachability } =
-        await import('../../../scripts/audit-mapping-integrity')
+        await import('../../../scripts/audit/audit-mapping-integrity')
 
       setupVirtualFS({
         'store/facadeStore.ts': [
@@ -822,7 +822,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
      */
     it('极端场景2：自环依赖应正确终止，BFS 不陷入死循环', async () => {
       const { collectStoreMetas, buildStoreDependencyGraph, markFacadeStores, findStoreConsumers, computeTransitiveReachability } =
-        await import('../../../scripts/audit-mapping-integrity')
+        await import('../../../scripts/audit/audit-mapping-integrity')
 
       setupVirtualFS({
         'store/selfLoopStore.ts': [
@@ -874,7 +874,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
      */
     it('极端场景3：双向循环依赖应正确终止，两个 Store 都可达', async () => {
       const { collectStoreMetas, buildStoreDependencyGraph, markFacadeStores, findStoreConsumers, computeTransitiveReachability } =
-        await import('../../../scripts/audit-mapping-integrity')
+        await import('../../../scripts/audit/audit-mapping-integrity')
 
       setupVirtualFS({
         'store/cycleAStore.ts': [
@@ -927,7 +927,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
      */
     it('极端场景4：多 Facade 聚合同一子Store，sharedSubStore 只入队一次', async () => {
       const { collectStoreMetas, buildStoreDependencyGraph, markFacadeStores, findStoreConsumers, computeTransitiveReachability } =
-        await import('../../../scripts/audit-mapping-integrity')
+        await import('../../../scripts/audit/audit-mapping-integrity')
 
       setupVirtualFS({
         'store/facadeXStore.ts': [
@@ -991,7 +991,7 @@ describe('audit-mapping-integrity.ts v2.2（白盒测试）', () => {
      */
     it('极端场景5：5 层深度传递依赖链应全部可达', async () => {
       const { collectStoreMetas, buildStoreDependencyGraph, markFacadeStores, findStoreConsumers, computeTransitiveReachability } =
-        await import('../../../scripts/audit-mapping-integrity')
+        await import('../../../scripts/audit/audit-mapping-integrity')
 
       setupVirtualFS({
         'store/level1Store.ts': [

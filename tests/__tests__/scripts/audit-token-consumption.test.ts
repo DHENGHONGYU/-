@@ -76,8 +76,8 @@ describe('audit-token-consumption.ts v3.0（白盒测试）', () => {
   }
 
   /** 动态导入 scan 函数 */
-  async function importScan(): Promise<typeof import('../../../scripts/audit-token-consumption')> {
-    return await import('../../../scripts/audit-token-consumption')
+  async function importScan(): Promise<typeof import('../../../scripts/audit/audit-token-consumption')> {
+    return await import('../../../scripts/audit/audit-token-consumption')
   }
 
   // ============================================================

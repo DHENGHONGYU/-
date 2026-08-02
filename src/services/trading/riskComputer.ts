@@ -124,7 +124,7 @@ export function computeRiskMetrics(
     alerts.push('VaR(95%) 处于高风险区间')
   }
   if (maxDrawdown > RISK_THRESHOLDS.MAX_DRAWDOWN_HIGH_THRESHOLD) {
-    alerts.push(`最大回撤超过 ${RISK_THRESHOLDS.MAX_DRAWDOWN_HIGH_THRESHOLD}%`)
+    alerts.push(`【清仓】回撤达 ${RISK_THRESHOLDS.MAX_DRAWDOWN_HIGH_THRESHOLD}%，建议清仓止损`)
   }
 
   return {
