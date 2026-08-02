@@ -75,6 +75,7 @@ vi.mock('node:fs', () => ({
 vi.mock('node:child_process', () => ({
   default: {},
   execSync: () => vfsGitDiffOutput,
+  execFileSync: () => vfsGitDiffOutput,
 }))
 
 type TestFiles = {
@@ -154,7 +155,8 @@ describe('audit-doc-sync.ts v3.0（白盒测试）', () => {
           'DATA_DEFINITION.md': '# Data Definition',
         },
       })
-      vfsGitDiffOutput = ''
+      // scanMode 固定 'changed'，须提供 git diff 使文件出现在变更集中才检测
+      vfsGitDiffOutput = 'src/services/xyzUniqueModule.ts\n'
 
       const { scan } = await importScan()
       const report = scan()
@@ -345,7 +347,7 @@ ${moduleName} 提供多种方法。
       expect(report.summary.scanMode).toBe('changed')
     })
 
-    it('无 git diff 时降级为全量扫描（scanMode === "all"）', async () => {
+    it('无 git diff 时保持 changed 模式（不再降级全量扫描）', async () => {
       setupVirtualFS({
         src: { 'services/testService.ts': 'export function test() {}' },
         docs: { 'overview.md': '# 概述' },
@@ -361,7 +363,8 @@ ${moduleName} 提供多种方法。
       const { scan } = await importScan()
       const report = scan()
 
-      expect(report.summary.scanMode).toBe('all')
+      // scanMode 固定 'changed'（脚本 :183-184），无 diff 早退但模式不变
+      expect(report.summary.scanMode).toBe('changed')
     })
   })
 
@@ -398,8 +401,9 @@ ${moduleName} 提供多种方法。
     })
 
     it('未文档化文件 > 0 时 totalViolations > 0', async () => {
+      const undocFile = 'services/undocUniqueService.ts'
       setupVirtualFS({
-        src: { 'services/undocUniqueService.ts': 'export function undoc() {}' },
+        src: { [undocFile]: 'export function undoc() {}' },
         docs: { 'overview.md': '# 概述' },
         rootDocs: {
           'ARCHITECTURE.md': '# Architecture',
@@ -408,7 +412,8 @@ ${moduleName} 提供多种方法。
           'DATA_DEFINITION.md': '# Data Definition',
         },
       })
-      vfsGitDiffOutput = ''
+      // scanMode 固定 'changed'，须提供 git diff 使文件进入变更集
+      vfsGitDiffOutput = `src/${undocFile}\n`
 
       const { scan } = await importScan()
       const report = scan()

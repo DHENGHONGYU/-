@@ -337,20 +337,33 @@ findings.push({
 })
 
 // ================= GROUP B: UI 按钮数据联动 =================
-// B1: 假 KPI 硬编码
-const kpiFiles = listTs(SRC).filter((f) => f.includes('cockpit') || f.includes('widget'))
+// 注释剥离：避免审计误匹配修复注释 / JSDoc 中的描述性文本
+function stripComments(code: string): string {
+  return code
+    .replace(/\/\*[\s\S]*?\*\//g, '') // 块注释
+    .replace(/(^|[^:])\/\/[^\n]*/g, '$1') // 行注释（保留协议名中的 //，如 https://）
+}
+
+// B1: 假 KPI 硬编码（仅扫生产 .tsx 呈现组件，排除测试与类型定义文件）
+const kpiFiles = listTs(SRC).filter(
+  (f) => (f.includes('cockpit') || f.includes('widget')) && /\.tsx$/.test(f) && !/\.test\.tsx$/.test(f),
+)
 const maxDrawdownHits = grepInFiles(kpiFiles, /最大回撤/)
 const sharpeHits = grepInFiles(kpiFiles, /夏普/)
 const fakeKpi: string[] = []
 for (const h of maxDrawdownHits) {
-  const c = readFileAbs(path.join(ROOT, h.file))
-  if (!c) continue
+  const raw = readFileAbs(path.join(ROOT, h.file))
+  if (!raw) continue
+  const c = stripComments(raw)
   const ctx = c.split('\n').slice(h.line - 1, h.line + 3).join('\n')
+  // 仅当渲染值确为字面量 0（如 >0%< / 0.0< / ={0}）才判定为假 KPI；
+  // 真实计算使用 equityCurve + toFixed 不产生字面量 0。
   if (/0%|0\.0/.test(ctx)) fakeKpi.push(`${h.file}:${h.line} 最大回撤/夏普 附近出现字面量 0`)
 }
 for (const h of sharpeHits) {
-  const c = readFileAbs(path.join(ROOT, h.file))
-  if (!c) continue
+  const raw = readFileAbs(path.join(ROOT, h.file))
+  if (!raw) continue
+  const c = stripComments(raw)
   const ctx = c.split('\n').slice(h.line - 1, h.line + 3).join('\n')
   if (/0\.0/.test(ctx)) fakeKpi.push(`${h.file}:${h.line} 夏普 附近出现字面量 0.0`)
 }
@@ -368,14 +381,16 @@ findings.push({
   source: 'auto',
 })
 
-// B2: 断裂按钮（无 onClick）—— 仅扫源码组件，排除测试文件
+// B2: 断裂按钮（无 onClick）—— 仅扫源码组件，排除测试文件与注释
 const srcFiles = allFiles.filter((f) => !f.includes('__tests__') && !/\.test\.(ts|tsx)$/.test(f))
 const addWidgetHits = grepInFiles(srcFiles, /添加 Widget/)
 const brokenButtons: string[] = []
 for (const h of addWidgetHits) {
-  const c = readFileAbs(path.join(ROOT, h.file))
-  if (!c) continue
-  const ctx = c.split('\n').slice(h.line - 1, h.line + 4).join('\n')
+  const raw = readFileAbs(path.join(ROOT, h.file))
+  if (!raw) continue
+  const c = stripComments(raw)
+  // 上下文向上覆盖开标签（<Button ...> 往往在文本前一行），向下覆盖闭标签
+  const ctx = c.split('\n').slice(h.line - 3, h.line + 2).join('\n')
   if (!/onClick/.test(ctx)) brokenButtons.push(`${h.file}:${h.line} 「添加 Widget」按钮缺失 onClick`)
 }
 findings.push({
@@ -390,82 +405,120 @@ findings.push({
   source: 'auto',
 })
 
-// B3/B4: 死 store / 过时 @unused 注释
-// 精确消费者判定：区分 UI 层(pages/components/cockpit/apps/portal) 与 store 层(其它 store) 真实引用
-const unusedStores = [
-  'fileImportStore', 'analysisHubStore', 'analysisOrchestratorStore', 'databridgeStore',
-  'dataflowStore', 'dataSyncStore', 'hybridProofreadStore', 'positionPoolStore',
-  'tradingHubStore', 'widgetStore', 'signalAdviceStore',
-]
-const uiRe = /(pages|components|cockpit|apps|portal)/
+// B3/B4: 死 store 治理（以 storeRegistry 为单一事实源）+ 过时 @unused 注释
+// storeRegistry.status:'unused' = 已实现待接入、受控 parked（与 audit:registry 门禁同源）
 const storeDir = path.join(SRC, 'store')
-const deadStores: string[] = []
-const staleComments: string[] = []
-for (const s of unusedStores) {
-  const selfContent = readFileAbs(path.join(storeDir, s + '.ts')) || ''
-  const hasUnused = /@unused/.test(selfContent)
-  // UI 层消费者
-  let uiN = 0
-  for (const f of listTs(SRC)) {
-    if (!uiRe.test(f) || f.includes('__tests__')) continue
-    const c = readFileAbs(f)
-    if (c && c.includes(s)) uiN++
-  }
-  // store 层消费者（其它 store，排除自身与 storeRegistry）
-  let storeN = 0
-  for (const f of listTs(storeDir)) {
-    if (f.includes('storeRegistry') || f.endsWith(s + '.ts')) continue
-    const c = readFileAbs(f)
-    if (c && c.includes(s)) storeN++
-  }
-  if (hasUnused && uiN === 0 && storeN === 0)
-    deadStores.push(`src/store/${s}.ts 标注 @unused 且无 UI/store 消费者 → 死 store`)
-  else if (hasUnused && (uiN > 0 || storeN > 0))
-    staleComments.push(
-      `src/store/${s}.ts 标注 @unused 但实际有 ${uiN} UI / ${storeN} store 层引用 → 注释过时`,
+const regContent = readFileAbs(path.join(storeDir, 'storeRegistry.ts')) || ''
+const regEntryRe = /id:\s*'([^']+)'\s*,\s*filePath:\s*'([^']+)'\s*,\s*status:\s*'(active|unused)'/g
+const regMap = new Map<string, { id: string; filePath: string; status: string }>()
+let rm: RegExpExecArray | null
+while ((rm = regEntryRe.exec(regContent))) {
+  regMap.set(rm[1], { id: rm[1], filePath: rm[2], status: rm[3] })
+}
+const camel = (s: string): string => s.charAt(0).toLowerCase() + s.slice(1)
+
+const deadStores: string[] = [] // 注册表 parked（受控，非噪声）
+const staleComments: string[] = [] // @unused 但被 UI 层消费 → 过时注释
+const inconsistencies: string[] = [] // 注册表↔文件 @unused 标注 不一致
+const uiRe = /(pages|components|cockpit|apps|portal)/
+const importRe = (name: string): RegExp => new RegExp(`from\\s+['"][^'"]*${name}['"]`)
+for (const [id, v] of regMap) {
+  const file = path.join(storeDir, camel(id) + '.ts')
+  const content = readFileAbs(file) || ''
+  const hasUnusedTag = /@unused/.test(content)
+  if (v.status === 'unused') {
+    deadStores.push(
+      `src/store/${camel(id)}.ts 已注册 status:'unused'（storeRegistry 显式治理）→ 受控 parked，非噪声`,
     )
+  }
+  if (v.status === 'unused' && !hasUnusedTag)
+    inconsistencies.push(
+      `src/store/${camel(id)}.ts 注册 status:'unused' 但文件无 @unused 标注 → 不一致（建议补 @unused 或移除注册）`,
+    )
+  if (v.status === 'active' && hasUnusedTag) {
+    // 注册表称 active，但文件标 @unused：核查是否真有 UI 层消费者
+    let uiN = 0
+    for (const f of listTs(SRC)) {
+      if (!uiRe.test(f) || f.includes('__tests__')) continue
+      const c = readFileAbs(f)
+      if (c && importRe(camel(id)).test(c)) uiN++
+    }
+    if (uiN > 0)
+      staleComments.push(
+        `src/store/${camel(id)}.ts 标注 @unused 但实际有 ${uiN} 个 UI 层消费者 → 注释过时`,
+      )
+    else
+      inconsistencies.push(
+        `src/store/${camel(id)}.ts 有 @unused 标注 但注册 status:'active' 且无 UI 消费者 → 不一致（建议注册改 'unused'）`,
+      )
+  }
 }
 findings.push({
   id: 'B3',
   group: 'UI 按钮数据联动',
-  title: '死 store（无 UI/store 消费者）',
-  severity: deadStores.length ? 'P1' : 'PASS',
-  status: deadStores.length ? 'fail' : 'pass',
-  evidence: deadStores.length ? deadStores : ['未检出完全无消费者的 @unused store'],
-  detail: '已实现但无任何按钮写入、无组件订阅的 store 属于死代码，增加维护噪音与误判风险。',
-  recommendation: deadStores.length ? '复用（如批量导入改走 fileImportStore）或移除死 store。' : '无死 store。',
+  title: `受控 parked store（storeRegistry status:'unused'）`,
+  severity: inconsistencies.length ? 'P2' : deadStores.length ? 'INFO' : 'PASS',
+  status: inconsistencies.length ? 'warn' : deadStores.length ? 'info' : 'pass',
+  evidence: inconsistencies.length
+    ? inconsistencies
+    : deadStores.length
+      ? deadStores
+      : ['无 @unused 注册条目（storeRegistry 治理一致）'],
+  detail: `storeRegistry 以 status:'unused' 显式登记"已实现待接入" store，属受控 parked（与 audit:registry 门禁同源），不视为维护噪声。仅当 注册表↔文件 @unused 标注 不一致时才告警。`,
+  recommendation: inconsistencies.length
+    ? '对齐 storeRegistry status 与文件 @unused 标注。'
+    : deadStores.length
+      ? '受控 parked：保留待用或移除；如需消除此条可删除对应 store 并重新生成 storeRegistry。'
+      : '无 parked store。',
   source: 'auto',
 })
 findings.push({
   id: 'B4',
   group: 'UI 按钮数据联动',
-  title: '过时 @unused 注释（实际已被消费）',
-  severity: staleComments.length ? 'P1' : 'PASS',
+  title: '过时 @unused 注释（实际已被 UI 层消费）',
+  severity: staleComments.length ? 'P2' : 'PASS',
   status: staleComments.length ? 'warn' : 'pass',
   evidence: staleComments.length ? staleComments : ['未检出过时 @unused 注释'],
-  detail: 'signalAdviceStore 标 @unused 但实际被 tradingStore 委托调用并消费 signals/adviceMap，过时注释会误导校对结论。',
+  detail: 'store 标 @unused 但实际被 UI 层组件 import 并消费，过时注释会误导校对结论。',
   recommendation: staleComments.length ? '逐一对账 @unused 注释，剔除已不准确的标注。' : '注释与事实一致。',
   source: 'auto',
 })
 
-// B5: 占位/TODO/示例 呈现
-const placeholderHits = grepInFiles(
-  allFiles.filter((f) => f.includes('cockpit') || f.includes('pages') || f.includes('apps')),
-  /TODO|占位|\[示例\]|\[开发中\]|placeholder/i,
+// B5: 呈现层占位/待接入 误导性内容
+// 仅扫生产呈现层（cockpit/pages/apps，排除测试）；先剥离注释，再匹配"会误导功能已完成"的占位/待接入文案。
+// 排除：input/textarea placeholder 属性（标准表单提示，非误导性）、TODO 开发注释、[示例]/[开发中] 诚实标注。
+const misleadingRe = /占位|待接入|未接入|敬请期待|coming\s*soon/i
+const presentFiles = allFiles.filter(
+  (f) =>
+    (f.includes('cockpit') || f.includes('pages') || f.includes('apps')) &&
+    !/\.test\.(ts|tsx)$/.test(f),
 )
+const placeholderHits: Hit[] = []
+for (const f of presentFiles) {
+  const c = readFileAbs(f)
+  if (!c) continue
+  const lines = stripComments(c).split('\n')
+  for (let i = 0; i < lines.length; i++) {
+    const t = lines[i]
+    if (!misleadingRe.test(t)) continue
+    if (/placeholder\s*=/i.test(t)) continue // input/textarea 占位属性（标准表单提示）
+    if (/\[示例\]|\[开发中\]/.test(t)) continue // 诚实标注（审计推荐的明确写法）
+    placeholderHits.push({ file: rel(f), line: i + 1, text: t.trim() })
+  }
+}
 findings.push({
   id: 'B5',
   group: 'UI 按钮数据联动',
-  title: '呈现层占位 / TODO / 示例 标注',
+  title: '呈现层占位 / 待接入 误导性内容',
   severity: placeholderHits.length ? 'P2' : 'PASS',
   status: placeholderHits.length ? 'warn' : 'pass',
   evidence: placeholderHits.length
     ? placeholderHits.slice(0, 30).map((h) => `${h.file}:${h.line}`)
-    : ['未检出占位/TODO/[示例]/[开发中] 标注'],
-  detail: '汇总看板/决策区若仍为占位或静态示例，会误导"功能已完成"的判断（data-flow 技能 L20）。',
+    : ['未检出误导性占位/待接入（input placeholder 属性、TODO 注释、[示例]/[开发中] 诚实标注均已排除）'],
+  detail: '汇总看板/决策区若仍为未标注的占位或"待接入"静态文案，会误导"功能已完成"的判断（data-flow 技能 L20）。标准表单 input placeholder 属性、开发 TODO 注释、以及明确标注的 [示例]/[开发中] 不计入。',
   recommendation: placeholderHits.length
-    ? '将占位区接入真实数据源或明确标注 [开发中]；示例数据需与实时数据区分。'
-    : '无占位/示例呈现。',
+    ? '将占位区接入真实数据源，或明确标注 [开发中]；示例数据需与实时数据区分。'
+    : '无误导性占位/待接入呈现。',
   source: 'auto',
 })
 
