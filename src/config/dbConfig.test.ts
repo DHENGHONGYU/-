@@ -116,4 +116,18 @@ describe('dbConfig', () => {
     expect(ENVELOPE_TARGET).toHaveProperty('strategy:valuePit')
     expect(ENVELOPE_TARGET).toHaveProperty('strategy:rotationSignal')
   })
+
+  // ================================================================
+  // 6. 关键 ACL 回归护栏（2026-08-02 对齐双向回归测试）
+  // pool 模块必须可读 trace_records，否则研究候选池卡片进度恒 0%
+  // （见 collectionProgressService.test 逆向测试：被拒→catch fallback）。
+  // ================================================================
+  it('pool 模块可 SELECT trace_records（防止 ACL 退化→卡片进度恒 0%）', () => {
+    const poolAcl = ACL_MATRIX[MODULE_ID.pool]
+    expect(poolAcl).toBeDefined()
+    // 关键保留：traceRecords 必须在 pool.read 中
+    expect(poolAcl.read).toContain(STORE_NAME.traceRecords)
+    // pool 必须有 SELECT 操作
+    expect(poolAcl.actions).toContain(DB_OPERATION.select)
+  })
 })
