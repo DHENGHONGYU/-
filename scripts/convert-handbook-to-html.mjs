@@ -7,16 +7,19 @@
  * 用法：node scripts/convert-handbook-to-html.mjs
  */
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
 import fs from 'node:fs';
 import path from 'node:path';
 
 const require = createRequire(import.meta.url);
-const MD = require('G:/FinSightV9/node_modules/protobufjs/cli/node_modules/markdown-it');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(__dirname, '..'); // 仓库根目录（scripts/ 的上一级），不硬编码盘符/用户名
+const MD = require(path.join(ROOT, 'node_modules/protobufjs/cli/node_modules/markdown-it'));
 
-const SRC = 'G:/FinSightV9/docs/team-handbook';
-const OUT = 'G:/FinSightV9/docs/team-handbook-html';
+const SRC = path.join(ROOT, 'docs/team-handbook');
+const OUT = path.join(ROOT, 'docs/team-handbook-html');
 const SUPP = path.join(OUT, 'supplementary');
-const BASE = 'G:/FinSightV9/outputs/pre-launch-review/redundant-files/docs-reports-archive';
+const BASE = path.join(ROOT, 'outputs/pre-launch-review/redundant-files/docs-reports-archive');
 
 // 手册元数据：文件名(无后缀) -> { title, dim }
 const HANDBOOKS = [
@@ -39,19 +42,19 @@ const SUPPLEMENTS = [
   { src: path.join(BASE, 'design/v9-interaction-flows.html'),
     name: 'V9_各功能板块人机交互时序.html', dim: '③ UI 组件',
     note: '各功能板块人机交互时序图，对应维度 ③' },
-  { src: 'G:/FinSightV9/docs/explanation/v9-mcp-analysis.html',
+  { src: path.join(ROOT, 'docs/explanation/v9-mcp-analysis.html'),
     name: 'V9_MCP架构解耦分析.html', dim: '④ 模型运行',
     note: 'Agent / LLM / 15 个 MCP Server 生态专项分析，对应维度 ④' },
   { src: path.join(BASE, 'html/mcp-agent-gap-analysis/mcp-agent-gap-analysis.html'),
     name: 'V9_MCP_Server与Agent功能遗漏诊断.html', dim: '④ 模型运行',
     note: 'MCP Server & Agent 管理群功能遗漏诊断，对应维度 ④' },
-  { src: 'G:/FinSightV9/docs/06-project-management/plans/UI设计原则基线与创新水准_V9.html',
+  { src: path.join(ROOT, 'docs/06-project-management/plans/UI设计原则基线与创新水准_V9.html'),
     name: 'UI设计原则基线与创新水准_V9.html', dim: '① 设计与原创 / ③ UI',
     note: '宋韵美学、设计令牌与创新水准基线，对应维度 ①/③' },
-  { src: 'G:/FinSightV9/docs/06-project-management/plans/UI设计优化实操方案_V6×V9×WorkBuddy.html',
+  { src: path.join(ROOT, 'docs/06-project-management/plans/UI设计优化实操方案_V6×V9×WorkBuddy.html'),
     name: 'UI设计优化实操方案_V6×V9×WorkBuddy.html', dim: '③ UI 组件',
     note: 'UI 优化落地方案，对应维度 ③' },
-  { src: 'G:/FinSightV9/docs/06-project-management/plans/UI设计对照与成熟度评估_V6vsV9.html',
+  { src: path.join(ROOT, 'docs/06-project-management/plans/UI设计对照与成熟度评估_V6vsV9.html'),
     name: 'UI设计对照与成熟度评估_V6vsV9.html', dim: '③ UI / ⑤ 竞品',
     note: 'V6 与 V9 的 UI 对照与成熟度评估（内部竞品），对应维度 ③/⑤' },
   { src: path.join(BASE, 'html/v9-audit-report/v9-audit-report.html'),

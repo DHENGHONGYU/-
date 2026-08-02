@@ -1,7 +1,7 @@
 /**
  * @fileoverview 50 只 A 股压力集中度测试脚本（方案 B 数据源）
  *
- * 本脚本读取 C:/Users/huawei/Desktop/股票清单/hot_stocks_50.csv，在以下数据源间自动降级：
+ * 本脚本读取用户提供的样本 CSV（默认当前用户桌面 股票清单/hot_stocks_50.csv，可用 STOCK_CSV_PATH 覆盖），在以下数据源间自动降级：
  * 1. 项目方案 B 多源采集器（multiSourceFetcher / crawlerProvider）
  * 2. CSV 内建字段（主数据源，无 Token/无网络时完整可用）
  *
@@ -11,6 +11,7 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
+import os from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { setLogLevel } from '@/lib/logger'
 import {
@@ -26,7 +27,7 @@ setLogLevel('error')
 const __filename = fileURLToPath(import.meta.url)
 const PROJECT_ROOT = path.resolve(__filename, '../..')
 
-const CSV_PATH = 'C:/Users/huawei/Desktop/股票清单/hot_stocks_50.csv'
+const CSV_PATH = process.env.STOCK_CSV_PATH || path.join(os.homedir(), 'Desktop', '股票清单', 'hot_stocks_50.csv')
 const REPORT_PATH = path.join(PROJECT_ROOT, 'deliverables/software-company/concentration-test-report-2026-07-19-tushare.md')
 const ANALYSIS_DATE = '2026-07-19'
 

@@ -3,7 +3,7 @@
  * @description LLM 搜索结果的简单 JSON 文件缓存。
  *
  * 缓存结构：{ key, data, cachedAt, ttlHours }
- * 缓存目录：G:/FinSightV9/cache/llm-search/
+ * 缓存目录：<项目根>/cache/llm-search/（可用 LLM_SEARCH_CACHE_DIR 环境变量覆盖）
  * 缓存键：{symbol}_{dimension}_{YYYY-MM}.json
   * @doc [V9-DOC-BACK-012, V9-DOC-BACK-027, V9-DOC-BACK-023, V9-DOC-BACK-021, V9-DOC-BACK-033]
 */
@@ -11,7 +11,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-const CACHE_DIR = 'G:/FinSightV9/cache/llm-search'
+const CACHE_DIR = process.env.LLM_SEARCH_CACHE_DIR || path.join(process.cwd(), 'cache', 'llm-search')
 
 /** 缓存条目结构 */
 interface CacheEntry<T> {

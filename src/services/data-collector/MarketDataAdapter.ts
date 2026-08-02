@@ -252,6 +252,8 @@ export class MarketDataAdapter {
       holdings: toSafeNumber(p.holdings ?? p.holdingCount ?? p.positionCount ?? 0),
       holdingsList: Array.isArray(p.holdingsList) ? p.holdingsList : [],
       rebalancePlan: Array.isArray(p.rebalancePlan) ? p.rebalancePlan : [],
+      maxDrawdown: toSafeNumber(p.maxDrawdown ?? p.max_drawdown ?? p.maxDrawdownPct ?? 0),
+      sharpeRatio: toSafeNumber(p.sharpeRatio ?? p.sharpe_ratio ?? 0),
     }
   }
 
@@ -513,6 +515,8 @@ export class MarketDataAdapter {
       holdings: 0,
       holdingsList: [],
       rebalancePlan: [],
+      maxDrawdown: 0,
+      sharpeRatio: 0,
     }
   }
 

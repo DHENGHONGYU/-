@@ -9,7 +9,7 @@
  * 维度 D · 批量加载性能与响应式稳定性：记录导入耗时、详情页导航耗时，并在 375/768/1280 视口做溢出抽检。
  *
  * 运行：npx playwright test e2e/stock-page/stock-page-functional.spec.ts --reporter=line
- * 报告：G:/FinSightV9/deliverables/software-company/stock-page-test-report-2026-07-16.{html,json}
+ * 报告：<项目根>/deliverables/software-company/stock-page-test-report-2026-07-16.{html,json}（运行时按 cwd 解析，不再硬编码盘符）
  *
  * 注意：本套件只新增测试与报告，不修改任何 src 源码。
   * @covers_docs []
@@ -20,8 +20,9 @@ import { readFileSync, writeFileSync, mkdirSync } from 'fs'
 import { join } from 'path'
 
 // ───────────────────────── 配置 ─────────────────────────
-const CSV_PATH = 'C:/Users/DELL/Desktop/股票清单/hot_stocks_50.csv'
-const REPORT_DIR = 'G:/FinSightV9/deliverables/software-company'
+// CSV 为用户提供的样本文件，默认位于当前用户桌面；可用环境变量 STOCK_CSV_PATH 覆盖（不再硬编码任何用户目录/盘符）
+const CSV_PATH = process.env.STOCK_CSV_PATH || path.join(process.env.USERPROFILE ?? process.cwd(), 'Desktop', '股票清单', 'hot_stocks_50.csv')
+const REPORT_DIR = path.join(process.cwd(), 'deliverables', 'software-company')
 const REPORT_BASE = join(REPORT_DIR, 'stock-page-test-report-2026-07-16')
 const LOG_PATH = join(REPORT_DIR, 'stock-page-test-log-2026-07-16.txt')
 

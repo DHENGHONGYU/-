@@ -195,6 +195,10 @@ export interface PortfolioData {
   holdingsList: HoldingItem[]
   /** 再平衡计划（空数组表示组合已平衡） */
   rebalancePlan: RebalancePlanItem[]
+  /** 最大回撤（百分比，5.5 表示 5.5%；真实数据缺失时为 0） */
+  maxDrawdown: number
+  /** 夏普比率（真实数据缺失时为 0） */
+  sharpeRatio: number
 }
 
 export interface TradeReviewData {

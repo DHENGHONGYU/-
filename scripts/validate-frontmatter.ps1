@@ -1,5 +1,5 @@
-param(
-    [string]$DocsPath = "g:\FinSightV9\docs",
+﻿param(
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs'),
     [string]$OutputCsv = "",
     [switch]$Fix = $false
 )

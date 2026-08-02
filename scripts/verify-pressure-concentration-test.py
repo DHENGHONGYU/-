@@ -7,10 +7,12 @@ import csv
 import math
 import re
 from collections import Counter
+import os
 from pathlib import Path
 
-CSV_PATH = Path(r"C:/Users/DELL/Desktop/股票清单/hot_stocks_50.csv")
-REPORT_PATH = Path(r"G:/FinSightV9/deliverables/software-company/concentration-test-report-2026-07-19.md")
+# 不硬编码任何用户目录或盘符：CSV 走 STOCK_CSV_PATH 环境变量，否则 ~/Desktop；报告走仓库相对路径
+CSV_PATH = Path(os.environ.get("STOCK_CSV_PATH", os.path.expanduser("~/Desktop/股票清单/hot_stocks_50.csv")))
+REPORT_PATH = Path(__file__).resolve().parent.parent / "deliverables" / "software-company" / "concentration-test-report-2026-07-19.md"
 
 
 def parse_csv(path):

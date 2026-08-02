@@ -1,5 +1,5 @@
-param(
-    [string]$DocsPath = "g:\FinSightV9\docs",
+﻿param(
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs'),
     [int]$MinFreq = 5
 )
 
@@ -51,3 +51,4 @@ Write-Host ""
 Write-Host "===== Directory tokens =====" -ForegroundColor Yellow
 $pathWords.GetEnumerator() | Sort-Object Value -Descending |
     ForEach-Object { "{0,-25} {1}" -f $_.Key, $_.Value }
+

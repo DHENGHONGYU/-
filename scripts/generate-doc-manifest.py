@@ -2,8 +2,9 @@
 """生成富化 doc-manifest.csv（含类目/关注点/交叉引用/反向引用）"""
 import os, re, csv
 from collections import Counter
+from pathlib import Path
 
-ROOT = "G:/FinSightV9"
+ROOT = str(Path(__file__).resolve().parent.parent)
 
 # 1. 收集所有 MD 元数据
 docs = {}

@@ -1,10 +1,13 @@
 import os
 import re
 import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent.parent
 
 def main():
-    servers_dir = r'D:\FinSightV9\src\mcp\servers'
-    src_dir = r'D:\FinSightV9\src'
+    servers_dir = ROOT / 'src' / 'mcp' / 'servers'
+    src_dir = ROOT / 'src'
 
     # ── 1. 精确提取每个 Server 的 Tool 名称 ──
     # 只匹配 getTools() 返回数组中的 name: 'xxx'

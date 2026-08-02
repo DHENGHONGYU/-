@@ -223,3 +223,9 @@ docs-backup-*/
 e2e/**/_tmp*/
 e2e/**/test-results-*/
 e2e/**/test-artifacts-temp/
+
+# --- 2026-08-02 备份与恢复证据治理 ---
+# Git 修复/恢复证据（不入 VCS，保留在文件系统供追溯）
+_backups/
+# 构建部署产物（不入 VCS）
+dist-deploy-check/

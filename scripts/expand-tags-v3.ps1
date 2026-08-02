@@ -1,5 +1,5 @@
 ﻿param(
-    [string]$DocsPath = "g:\FinSightV9\docs",
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs'),
     [switch]$Apply = $false
 )
 
@@ -187,3 +187,4 @@ $samples | ForEach-Object {
     Write-Host "     OLD: $($_.Old)"
     Write-Host "     NEW: $($_.New)"
 }
+

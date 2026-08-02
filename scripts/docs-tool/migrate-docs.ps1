@@ -1,4 +1,4 @@
-$docsRoot = "D:\FinSightV9\docs"
+$docsRoot = Join-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) 'docs'
 
 $migrations = @(
     @{ Source = "$docsRoot\00-meta\DIRECTORY_STRUCTURE_GUIDE.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\DIRECTORY_STRUCTURE_GUIDE.md" }

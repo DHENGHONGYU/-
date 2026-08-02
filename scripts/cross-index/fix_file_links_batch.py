@@ -33,10 +33,6 @@ def fix_file_urls_in_file(filepath):
             rel_path = full_path[len('FinSightV9/docs/'):]
         elif full_path.startswith('FinSightV9/'):
             rel_path = full_path[len('FinSightV9/'):]
-        elif full_path.startswith('g:/FinSightV9/docs/'):
-            rel_path = full_path[len('g:/FinSightV9/docs/'):]
-        elif full_path.startswith('g:/FinSightV9/'):
-            rel_path = full_path[len('g:/FinSightV9/'):]
         elif full_path.startswith('docs/'):
             rel_path = full_path
         

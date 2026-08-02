@@ -1,5 +1,5 @@
-param(
-    [string]$DocsPath = "g:\FinSightV9\docs",
+﻿param(
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs'),
     [switch]$Apply = $false
 )
 
@@ -67,3 +67,4 @@ foreach ($doc in $docs) {
 
 Write-Host ""
 Write-Host "Fixed: $fixed"
+

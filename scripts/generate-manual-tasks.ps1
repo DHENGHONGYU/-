@@ -1,6 +1,6 @@
 ﻿param(
-    [string]$DocsPath = "g:\FinSightV9\docs",
-    [string]$OutPath = "g:\FinSightV9\docs\00-meta\phase2-manual-task-list.md"
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs'),
+    [string]$OutPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs', '00-meta', 'phase2-manual-task-list.md')
 )
 
 $ErrorActionPreference = "Stop"
@@ -116,3 +116,4 @@ Write-Host "  A. Docs to review (type/domain): $($docs.Count)"
 Write-Host "  B. Missing phase (manual): $($noPhase.Count)"
 Write-Host "  C. Need maintainer: $($needMaintainer.Count)"
 Write-Host "  D. Need summary (important): $($needSummary.Count)"
+

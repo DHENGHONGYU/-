@@ -1,6 +1,6 @@
 ﻿param(
-    [string]$DocsPath = "g:\FinSightV9\docs",
-    [string]$Worksheet = "g:\FinSightV9\docs\00-meta\type-domain-audit-worksheet.md"
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs'),
+    [string]$Worksheet = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs', '00-meta', 'type-domain-audit-worksheet.md')
 )
 
 $ErrorActionPreference = "Stop"
@@ -126,3 +126,4 @@ Write-Host "=== Domain Mismatches ===" -ForegroundColor Yellow
 $results | Where-Object { $_.Domain_Check -match 'WRONG' } | ForEach-Object {
     "  [$($_.Domain) -> $($_.Domain_Check.Replace('WRONG:',''))] $($_.Path)"
 }
+

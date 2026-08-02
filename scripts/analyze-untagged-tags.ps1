@@ -1,5 +1,5 @@
-param(
-    [string]$DocsPath = "g:\FinSightV9\docs",
+﻿param(
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs'),
     [int]$TopN = 50
 )
 
@@ -59,3 +59,4 @@ Write-Host "=== Untagged by top directory ===" -ForegroundColor Yellow
 $untagged | ForEach-Object { ($_.Path -split '/')[0] } | Group-Object | Sort-Object Count -Descending | ForEach-Object {
     "{0,-25} {1}" -f $_.Name, $_.Count
 }
+

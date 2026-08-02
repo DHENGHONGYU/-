@@ -1,5 +1,5 @@
 ﻿param(
-    [string]$DocsPath = "g:\FinSightV9\docs"
+    [string]$DocsPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'docs')
 )
 $ErrorActionPreference = "Stop"
 
@@ -41,3 +41,4 @@ foreach ($t in $twoTag) {
 $tokens.GetEnumerator() | Sort-Object Value -Descending | Select-Object -First 40 | ForEach-Object {
     "{0,-25} {1}" -f $_.Key, $_.Value
 }
+
