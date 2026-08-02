@@ -472,18 +472,16 @@ export default function TradingFlowPage(): React.JSX.Element {
         }>)
         .filter((p) => p.quantity > 0)
 
-  // 风控指标
-  const riskMetrics = USE_MOCK_DATA && mockData
-    ? {
-        var: mockData.riskMetrics.var95,
-        maxDrawdown: mockData.riskMetrics.maxDrawdown,
-        sharpeRatio: mockData.riskMetrics.sharpeRatio,
-      }
-    : {
-        var: 2.5,
-        maxDrawdown: 15.3,
-        sharpeRatio: 1.2,
-      }
+  // 风控指标：仅 mock 模式提供演示数据；生产构建未接入实时风控源时传 undefined，
+  // 由 RiskControlPanel 显式展示「数据不足」，避免以硬编码值伪装真实 KPI。
+  const riskMetrics =
+    USE_MOCK_DATA && mockData
+      ? {
+          var: mockData.riskMetrics.var95,
+          maxDrawdown: mockData.riskMetrics.maxDrawdown,
+          sharpeRatio: mockData.riskMetrics.sharpeRatio,
+        }
+      : undefined
 
   return (
     <PageContainer className="space-y-6">

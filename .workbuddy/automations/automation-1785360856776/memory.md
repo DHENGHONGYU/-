@@ -29,3 +29,9 @@
 
 ## 备注
 - 提醒 id 在运行上下文中显示为 `1785360857080`，实际目录为 `automation-1785360856776`（首次运行 23:59 创建），以文件系统为准。
+
+## 2026-08-02 23:56 Git 自动备份快照（每日备份任务）
+- 运行 `backup-branch.ts`：工作区 2 项改动（`.workbuddy/memory/2026-08-02.md`、`src/services/useCase/getUnifiedStockView.useCase.test.ts`）。
+- **本地快照成功**：`backup/auto` 推进至 `3dbf7ee0`，父 `cd300c7a`（链路连续，write-tree→commit-tree→branch -f  plumbing，当前分支 `release/v2.1.0-prerelease` @ `3c337bde` 未受影响）。fsck 仅 dangling blob，无 broken link。
+- **推送受阻（保留本地快照）**：`git push --force-with-lease origin backup/auto` 被 pre-push `skill-router --enforce` 拦截（命中 3 个 mandatory 未确认）；且沙箱网络不通 GitHub(:443)。按脚本设计本地快照保留，退出码 0。
+- **结论**：自动备份本地快照已完成；推送需在能连通 GitHub 的本地终端执行（并确认 skill-router gate 或设 `SKILL_GATE_CONFIRM=1`）。敏感文件排除逻辑未触发（本次无 .env/密钥改动）。

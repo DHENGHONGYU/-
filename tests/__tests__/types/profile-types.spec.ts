@@ -30,9 +30,6 @@ import type {
   ScoreEvidence,
   StockProfile,
   ProfileTag,
-  DomainStats,
-  ContentRef,
-  CrossRef,
 } from '@/data/types/types.profile'
 import type {
   Equals,
@@ -49,8 +46,7 @@ import { assertNever } from './typeTestHelpers'
 
 /** ProfileDomain 必须恰好包含 8 个域 */
 export const _profileDomainCount: Expect<
-  Equals<ProfileDomain, 'D1' | 'D2' | 'D3' | 'D4' | 'D5' | 'D6' | 'D7' | 'D8'>,
-  true
+  Equals<ProfileDomain, 'D1' | 'D2' | 'D3' | 'D4' | 'D5' | 'D6' | 'D7' | 'D8'>
 > = true
 
 /** ScoreLayerId 必须包含 11 个层（L-1 到 L8） */
@@ -58,38 +54,32 @@ export const _scoreLayerIdCount: Expect<
   Equals<
     ScoreLayerId,
     'lMinus1' | 'l0' | 'l1' | 'l2' | 'l3f' | 'l3v' | 'l4' | 'l5' | 'l6' | 'l7' | 'l8'
-  >,
-  true
+  >
 > = true
 
 /** ProfileItemType 必须包含 community 类型 */
 export const _profileItemTypeHasCommunity: Expect<
-  'community' extends ProfileItemType ? true : false,
-  true
+  'community' extends ProfileItemType ? true : false
 > = true
 
 /** ProfileItemType 必须包含 news 类型 */
 export const _profileItemTypeHasNews: Expect<
-  'news' extends ProfileItemType ? true : false,
-  true
+  'news' extends ProfileItemType ? true : false
 > = true
 
-/** ProfileItemType 必须包含 report 类型 */
+/** ProfileItemType 必须包含 research_report 类型（替代旧 report） */
 export const _profileItemTypeHasReport: Expect<
-  'report' extends ProfileItemType ? true : false,
-  true
+  'research_report' extends ProfileItemType ? true : false
 > = true
 
-/** SentimentLabel 必须包含 4 种情绪 */
+/** SentimentLabel 必须包含 3 种情绪（无 mixed） */
 export const _sentimentLabelCount: Expect<
-  Equals<SentimentLabel, 'positive' | 'negative' | 'neutral' | 'mixed'>,
-  true
+  Equals<SentimentLabel, 'positive' | 'negative' | 'neutral'>
 > = true
 
-/** EvidenceType 必须包含 3 种类型 */
+/** EvidenceType 必须包含 3 种类型（无 data_field） */
 export const _evidenceTypeCount: Expect<
-  Equals<EvidenceType, 'data_field' | 'profile_item' | 'derived_metric'>,
-  true
+  Equals<EvidenceType, 'profile_item' | 'derived_metric' | 'expert_judgment'>
 > = true
 
 // ============================================================
@@ -111,15 +101,13 @@ export const _profileItemNoNullFields: Expect<
         | 'source'
         | 'publishedAt'
         | 'collectedAt'
-        | 'isUserGenerated'
+        | 'sentiment'
+        | 'relatedLayers'
         | 'dataHash'
-        | 'schemaVersion'
-        | 'version'
       >
     >,
     never
-  >,
-  true
+  >
 > = true
 
 /** ProfileItem 必填字段不得为 undefined */
@@ -137,15 +125,13 @@ export const _profileItemNoUndefinedFields: Expect<
         | 'source'
         | 'publishedAt'
         | 'collectedAt'
-        | 'isUserGenerated'
+        | 'sentiment'
+        | 'relatedLayers'
         | 'dataHash'
-        | 'schemaVersion'
-        | 'version'
       >
     >,
     never
-  >,
-  true
+  >
 > = true
 
 /** ProfileItem.id 不得为 any */
@@ -186,18 +172,19 @@ export const _scoreEvidenceNoNullFields: Expect<
         ScoreEvidence,
         | 'id'
         | 'symbol'
-        | 'layerId'
+        | 'layer'
         | 'evidenceType'
-        | 'weight'
-        | 'contribution'
+        | 'title'
         | 'description'
-        | 'calculatedAt'
-        | 'schemaVersion'
+        | 'weight'
+        | 'confidence'
+        | 'sentiment'
+        | 'source'
+        | 'createdAt'
       >
     >,
     never
-  >,
-  true
+  >
 > = true
 
 /** ScoreEvidence 必填字段不得为 undefined */
@@ -208,33 +195,29 @@ export const _scoreEvidenceNoUndefinedFields: Expect<
         ScoreEvidence,
         | 'id'
         | 'symbol'
-        | 'layerId'
+        | 'layer'
         | 'evidenceType'
-        | 'weight'
-        | 'contribution'
+        | 'title'
         | 'description'
-        | 'calculatedAt'
-        | 'schemaVersion'
+        | 'weight'
+        | 'confidence'
+        | 'sentiment'
+        | 'source'
+        | 'createdAt'
       >
     >,
     never
-  >,
-  true
+  >
 > = true
 
-/** ScoreEvidence.layerId 必须是 ScoreLayerId 类型 */
+/** ScoreEvidence.layer 必须是 ScoreLayerId 类型 */
 export const _scoreEvidenceLayerIdType: Expect<
-  Equals<ScoreEvidence['layerId'], ScoreLayerId>
+  Equals<ScoreEvidence['layer'], ScoreLayerId>
 > = true
 
 /** ScoreEvidence.weight 不得为 any */
 export const _scoreEvidenceWeightNotAny: Expect<
   Equals<IsAny<ScoreEvidence['weight']>, false>
-> = true
-
-/** ScoreEvidence.contribution 不得为 any */
-export const _scoreEvidenceContributionNotAny: Expect<
-  Equals<IsAny<ScoreEvidence['contribution']>, false>
 > = true
 
 // ============================================================
@@ -248,20 +231,19 @@ export const _stockProfileNoNullFields: Expect<
       Pick<
         StockProfile,
         | 'symbol'
-        | 'name'
-        | 'domainStats'
-        | 'completenessScore'
-        | 'qualityScore'
+        | 'stockName'
+        | 'totalItems'
+        | 'domainCounts'
+        | 'typeCounts'
+        | 'totalEvidence'
+        | 'layerEvidenceCounts'
         | 'evidenceCoverage'
-        | 'version'
-        | 'createdAt'
-        | 'updatedAt'
-        | 'schemaVersion'
+        | 'lastUpdatedAt'
+        | 'lastSyncSources'
       >
     >,
     never
-  >,
-  true
+  >
 > = true
 
 /** StockProfile 必填字段不得为 undefined */
@@ -271,30 +253,29 @@ export const _stockProfileNoUndefinedFields: Expect<
       Pick<
         StockProfile,
         | 'symbol'
-        | 'name'
-        | 'domainStats'
-        | 'completenessScore'
-        | 'qualityScore'
+        | 'stockName'
+        | 'totalItems'
+        | 'domainCounts'
+        | 'typeCounts'
+        | 'totalEvidence'
+        | 'layerEvidenceCounts'
         | 'evidenceCoverage'
-        | 'version'
-        | 'createdAt'
-        | 'updatedAt'
-        | 'schemaVersion'
+        | 'lastUpdatedAt'
+        | 'lastSyncSources'
       >
     >,
     never
-  >,
-  true
+  >
 > = true
 
-/** StockProfile.domainStats 必须以 ProfileDomain 为 key */
-export const _stockProfileDomainStatsKey: Expect<
-  Equals<keyof StockProfile['domainStats'], ProfileDomain>
+/** StockProfile.domainCounts 必须以 ProfileDomain 为 key */
+export const _stockProfileDomainCountsKey: Expect<
+  Equals<keyof StockProfile['domainCounts'], ProfileDomain>
 > = true
 
-/** StockProfile.completenessScore 不得为 any */
-export const _stockProfileCompletenessNotAny: Expect<
-  Equals<IsAny<StockProfile['completenessScore']>, false>
+/** StockProfile.evidenceCoverage 不得为 any */
+export const _stockProfileEvidenceCoverageNotAny: Expect<
+  Equals<IsAny<StockProfile['evidenceCoverage']>, false>
 > = true
 
 // ============================================================
@@ -311,14 +292,12 @@ export const _profileTagNoNullFields: Expect<
         | 'name'
         | 'category'
         | 'usageCount'
+        | 'isSystem'
         | 'createdAt'
-        | 'updatedAt'
-        | 'schemaVersion'
       >
     >,
     never
-  >,
-  true
+  >
 > = true
 
 /** ProfileTag 必填字段不得为 undefined */
@@ -331,47 +310,17 @@ export const _profileTagNoUndefinedFields: Expect<
         | 'name'
         | 'category'
         | 'usageCount'
+        | 'isSystem'
         | 'createdAt'
-        | 'updatedAt'
-        | 'schemaVersion'
       >
     >,
     never
-  >,
-  true
+  >
 > = true
 
 /** ProfileTag.category 必须是 TagCategory 类型 */
 export const _profileTagCategoryType: Expect<
   Equals<ProfileTag['category'], TagCategory>
-> = true
-
-// ============================================================
-// DomainStats 必填字段断言
-// ============================================================
-
-/** DomainStats 必填字段不得为 null */
-export const _domainStatsNoNullFields: Expect<
-  Equals<NullKeys<Pick<DomainStats, 'count' | 'sources'>>, never>
-> = true
-
-/** DomainStats 必填字段不得为 undefined */
-export const _domainStatsNoUndefinedFields: Expect<
-  Equals<UndefinedKeys<Pick<DomainStats, 'count' | 'sources'>>, never>
-> = true
-
-// ============================================================
-// ContentRef / CrossRef 必填字段断言
-// ============================================================
-
-/** ContentRef.refType 必填 */
-export const _contentRefRefTypeRequired: Expect<
-  Equals<NullKeys<Pick<ContentRef, 'refType'>>, never>
-> = true
-
-/** CrossRef 必填字段不得为 null */
-export const _crossRefNoNullFields: Expect<
-  Equals<NullKeys<Pick<CrossRef, 'itemId' | 'refType'>>, never>
 > = true
 
 // ============================================================
