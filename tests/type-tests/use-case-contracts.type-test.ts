@@ -49,7 +49,7 @@ export const __use_case_contract_checks = {
 // ============================================================
 // 确保 DuckDBProvider 的公开接口类型稳定
 
-import { DuckDBProviderImpl, duckDbProvider } from '@/services/storage/duckDBProvider'
+import { DuckDBProviderImpl } from '@/services/storage/duckDBProvider'
 import type { TimeSeriesProvider } from '@/services/storage/storageProvider'
 
 // 验证 DuckDBProviderImpl 实现了 TimeSeriesProvider 接口

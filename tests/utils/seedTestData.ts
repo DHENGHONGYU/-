@@ -96,8 +96,8 @@ export function seedIntentionPool(
 
   useIntentionPoolStore.setState({
     items: preserveExisting
-      ? [...useIntentionPoolStore.getState().items, ...items]
-      : items,
+      ? [...useIntentionPoolStore.getState().items, ...(items as unknown as PoolItem[])]
+      : (items as unknown as PoolItem[]),
   })
 }
 
