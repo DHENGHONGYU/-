@@ -29,7 +29,7 @@ import {
   checkDuplicateFunctions,
   type SplitQualityFinding,
   type ModuleAnalysis,
-} from '../../../scripts/audit-split-quality'
+} from '../../../scripts/audit/audit-split-quality'
 
 /** 创建模拟的模块分析对象 */
 function createMockModule(overrides: Partial<ModuleAnalysis> = {}): ModuleAnalysis {

@@ -23,7 +23,7 @@ describe('颜色与设计令牌审计域', () => {
     it('应导出 scan 函数', async () => {
       logger.testStart('验证导出 scan 函数')
       logger.step('动态导入脚本...')
-      const { scan } = await import('../../../scripts/audit-color-tokens')
+      const { scan } = await import('../../../scripts/audit/audit-color-tokens')
       logger.step('脚本导入完成')
       logger.assertStart('scan 函数存在')
       expect(typeof scan).toBe('function')
@@ -34,7 +34,7 @@ describe('颜色与设计令牌审计域', () => {
     it('应返回包含 violations 数组的报告', async () => {
       logger.testStart('验证返回报告结构')
       logger.step('动态导入脚本...')
-      const { scan } = await import('../../../scripts/audit-color-tokens')
+      const { scan } = await import('../../../scripts/audit/audit-color-tokens')
       logger.step('脚本导入完成')
       logger.step('执行 scan() 函数...')
       const report = await scan()
@@ -58,7 +58,7 @@ describe('颜色与设计令牌审计域', () => {
     it('应导出 scan 函数', async () => {
       logger.testStart('验证导出 scan 函数')
       logger.step('动态导入脚本...')
-      const { scan } = await import('../../../scripts/audit-inline-colors')
+      const { scan } = await import('../../../scripts/audit/audit-inline-colors')
       logger.step('脚本导入完成')
       logger.assertStart('scan 函数存在')
       expect(typeof scan).toBe('function')
@@ -69,7 +69,7 @@ describe('颜色与设计令牌审计域', () => {
     it('应返回包含 totals 的报告', async () => {
       logger.testStart('验证返回报告结构')
       logger.step('动态导入脚本...')
-      const { scan } = await import('../../../scripts/audit-inline-colors')
+      const { scan } = await import('../../../scripts/audit/audit-inline-colors')
       logger.step('脚本导入完成')
       logger.step('执行 scan() 函数...')
       const report = scan()
@@ -96,7 +96,7 @@ describe('颜色与设计令牌审计域', () => {
     it('应导出 scan 函数', async () => {
       logger.testStart('验证导出 scan 函数')
       logger.step('动态导入脚本...')
-      const { scan } = await import('../../../scripts/audit-typography')
+      const { scan } = await import('../../../scripts/audit/audit-typography')
       logger.step('脚本导入完成')
       logger.assertStart('scan 函数存在')
       expect(typeof scan).toBe('function')
@@ -107,7 +107,7 @@ describe('颜色与设计令牌审计域', () => {
     it('应返回包含 violations 数组的报告', async () => {
       logger.testStart('验证返回报告结构')
       logger.step('动态导入脚本...')
-      const { scan } = await import('../../../scripts/audit-typography')
+      const { scan } = await import('../../../scripts/audit/audit-typography')
       logger.step('脚本导入完成')
       logger.step('执行 scan() 函数...')
       const report = await scan()
@@ -131,7 +131,7 @@ describe('颜色与设计令牌审计域', () => {
     it('应导出 scan 函数', async () => {
       logger.testStart('验证导出 scan 函数')
       logger.step('动态导入脚本...')
-      const { scan } = await import('../../../scripts/audit-spacing')
+      const { scan } = await import('../../../scripts/audit/audit-spacing')
       logger.step('脚本导入完成')
       logger.assertStart('scan 函数存在')
       expect(typeof scan).toBe('function')
@@ -142,7 +142,7 @@ describe('颜色与设计令牌审计域', () => {
     it('应返回包含 violations 数组的报告', async () => {
       logger.testStart('验证返回报告结构')
       logger.step('动态导入脚本...')
-      const { scan } = await import('../../../scripts/audit-spacing')
+      const { scan } = await import('../../../scripts/audit/audit-spacing')
       logger.step('脚本导入完成')
       logger.step('执行 scan() 函数...')
       const report = await scan()

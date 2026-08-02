@@ -134,8 +134,8 @@ describe('audit-doc-sync.ts v3.0（白盒测试）', () => {
   }
 
   /** 动态导入 scan 函数（确保 vi.resetModules 后获取新实例） */
-  async function importScan(): Promise<typeof import('../../../scripts/audit-doc-sync')> {
-    return await import('../../../scripts/audit-doc-sync')
+  async function importScan(): Promise<typeof import('../../../scripts/audit/audit-doc-sync')> {
+    return await import('../../../scripts/audit/audit-doc-sync')
   }
 
   // ============================================================
