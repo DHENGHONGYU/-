@@ -196,7 +196,8 @@ function writeReport(report: DependencyReport): void {
   console.log(`\n📝 报告已写入: ${reportPath}`)
 
   const mdReport = generateMarkdownReport(report)
-  const mdPath = path.join(OUTPUT_DIR, 'docs/reports/retrospectives/dependency-analysis.md')
+  // OUTPUT_DIR 已为 <root>/docs/reports，避免 docs/reports 双重拼接（P2 修复）
+  const mdPath = path.join(OUTPUT_DIR, 'retrospectives', 'dependency-analysis.md')
   fs.writeFileSync(mdPath, mdReport)
   console.log(`📝 Markdown 报告已写入: ${mdPath}`)
 }

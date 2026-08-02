@@ -53,13 +53,17 @@ vi.mock('@/core/databridge', () => ({
   MODULE_ID: { pool: 'pool' },
 }))
 
-// mock EnvelopeFactory
-vi.mock('@/core/envelope', () => ({
-  EnvelopeFactory: {
-    create: vi.fn((_meta: unknown, data: unknown) => ({ meta: _meta, data })),
-  },
-  ENVELOPE_TARGET: { db: 'db' },
-}))
+// mock EnvelopeFactory（importActual + 局部覆盖：保留真实导出防假阳性，仅替换 create 控制返回值）
+vi.mock('@/core/envelope', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/core/envelope')>()
+  return {
+    ...actual,
+    EnvelopeFactory: {
+      ...actual.EnvelopeFactory,
+      create: vi.fn((_meta: unknown, data: unknown) => ({ meta: _meta, data })),
+    },
+  }
+})
 
 // ─── 导入被测模块 ────────────────────────────────────────────
 
