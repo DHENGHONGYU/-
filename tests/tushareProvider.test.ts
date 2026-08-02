@@ -116,7 +116,7 @@ describe('tushareAdapter', () => {
     ]
     const klines = mapDailyToKlines(records)
     expect(klines).toHaveLength(1)
-    expect(klines[0].date).toBe('2026-01-01')
+    expect(klines[0]!.date).toBe('2026-01-01')
   })
 
   it('mapHolderNumberToChip 应转换股东户数', () => {

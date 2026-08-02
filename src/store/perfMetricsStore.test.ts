@@ -118,7 +118,7 @@ describe('usePerfMetricsStore', () => {
 
     const state = usePerfMetricsStore.getState()
     expect(state.results).toHaveLength(1)
-    expect(state.results[0].runId).toBe('run-001')
+    expect(state.results[0]!.runId).toBe('run-001')
     expect(state.lastRunId).toBe('run-001')
     expect(state.running).toBe(false)
   })
@@ -151,8 +151,8 @@ describe('usePerfMetricsStore', () => {
 
     const state = usePerfMetricsStore.getState()
     expect(state.results).toHaveLength(20)
-    expect(state.results[0].runId).toBe('run-006') // 最早的被裁掉
-    expect(state.results[19].runId).toBe('run-025') // 最新保留
+    expect(state.results[0]!.runId).toBe('run-006') // 最早的被裁掉
+    expect(state.results[19]!.runId).toBe('run-025') // 最新保留
   })
 
   // ---------- setRunning ----------

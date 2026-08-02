@@ -89,7 +89,7 @@ beforeEach(() => {
   origMatchMedia = window.matchMedia
   window.matchMedia = vi.fn((query: string): MediaQueryList => {
     if (!mockMqlStore[query]) mockMqlStore[query] = makeMockMql(query, false)
-    const mql = mockMqlStore[query]
+    const mql = mockMqlStore[query]!
     if (useAddListenerFallback) {
       // 模拟旧浏览器：addEventListener/removeEventListener 不存在
       return {
@@ -157,7 +157,7 @@ describe('TC-HOOK-2 createMediaQuerySubscriber (浏览器环境)', () => {
     })
     expect(typeof unsub).toBe('function')
 
-    const mql = mockMqlStore[BREAKPOINT_MOBILE]
+    const mql = mockMqlStore[BREAKPOINT_MOBILE]!
     act(() => mql._dispatchChange(true))
     expect(cbCalled).toBe(1)
     expect(sub.getSnapshot()).toBe(true)
@@ -170,7 +170,7 @@ describe('TC-HOOK-2 createMediaQuerySubscriber (浏览器环境)', () => {
       cbCalled++
     })
     unsub()
-    const mql = mockMqlStore[BREAKPOINT_MOBILE]
+    const mql = mockMqlStore[BREAKPOINT_MOBILE]!
     act(() => mql._dispatchChange(true))
     act(() => mql._dispatchChange(false))
     expect(cbCalled).toBe(0)
@@ -181,7 +181,7 @@ describe('TC-HOOK-2 createMediaQuerySubscriber (浏览器环境)', () => {
     const sub = createMediaQuerySubscriber(BREAKPOINT_WIDE)
     const unsub = sub.subscribe(() => {})
     expect(typeof unsub).toBe('function')
-    const mql = mockMqlStore[BREAKPOINT_WIDE]
+    const mql = mockMqlStore[BREAKPOINT_WIDE]!
     expect(mql.addListener).toHaveBeenCalledTimes(1)
     // 未调用 addEventListener（因为它被设置为 undefined）
     expect(mql.addEventListener).toHaveBeenCalledTimes(0)
@@ -207,7 +207,7 @@ describe('TC-HOOK-2 createMediaQuerySubscriber (浏览器环境)', () => {
     subB.subscribe(() => {
       callsB++
     })
-    const mql = mockMqlStore[BREAKPOINT_DESKTOP]
+    const mql = mockMqlStore[BREAKPOINT_DESKTOP]!
     act(() => mql._dispatchChange(true))
     expect(callsA).toBe(1)
     expect(callsB).toBe(1)
@@ -276,7 +276,7 @@ describe('TC-HOOK-4 useMediaQuery Hook', () => {
   it('TC-HOOK-4.2 变化触发 → re-render 更新值', () => {
     const { result } = renderHook(() => useMediaQuery(BREAKPOINT_MOBILE))
     expect(result.current).toBe(false)
-    const mql = mockMqlStore[BREAKPOINT_MOBILE]
+    const mql = mockMqlStore[BREAKPOINT_MOBILE]!
     act(() => mql._dispatchChange(true))
     expect(result.current).toBe(true)
     act(() => mql._dispatchChange(false))
@@ -285,7 +285,7 @@ describe('TC-HOOK-4 useMediaQuery Hook', () => {
 
   it('TC-HOOK-4.3 卸载后 → 取消订阅（内存泄漏检查）', () => {
     const { unmount } = renderHook(() => useMediaQuery(BREAKPOINT_WIDE))
-    const mql = mockMqlStore[BREAKPOINT_WIDE]
+    const mql = mockMqlStore[BREAKPOINT_WIDE]!
     expect(mql.removeEventListener).toHaveBeenCalledTimes(0)
     unmount()
     expect(mql.removeEventListener).toHaveBeenCalledTimes(1)

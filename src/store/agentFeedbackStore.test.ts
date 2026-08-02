@@ -90,9 +90,9 @@ describe('useAgentFeedbackStore', () => {
 
     const state = useAgentFeedbackStore.getState()
     expect(state.feedbacks).toHaveLength(1)
-    expect(state.feedbacks[0].id).toBe('fb-1')
-    expect(state.feedbacks[0].agentId).toBe('agent-1')
-    expect(state.feedbacks[0].rating).toBe(5)
+    expect(state.feedbacks[0]!.id).toBe('fb-1')
+    expect(state.feedbacks[0]!.agentId).toBe('agent-1')
+    expect(state.feedbacks[0]!.rating).toBe(5)
   })
 
   it('addFeedback: 连续添加多条反馈后 refreshSummaries 更新 summaries', () => {
@@ -152,10 +152,10 @@ describe('useAgentFeedbackStore', () => {
     }
 
     useAgentFeedbackStore.getState().addFeedback(feedback)
-    expect(useAgentFeedbackStore.getState().feedbacks[0].resolved).toBe(false)
+    expect(useAgentFeedbackStore.getState().feedbacks[0]!.resolved).toBe(false)
 
     useAgentFeedbackStore.getState().resolveFeedback('fb-1')
-    expect(useAgentFeedbackStore.getState().feedbacks[0].resolved).toBe(true)
+    expect(useAgentFeedbackStore.getState().feedbacks[0]!.resolved).toBe(true)
   })
 
   it('resolveFeedback: 不存在的 id 不影响其他反馈', () => {
@@ -173,7 +173,7 @@ describe('useAgentFeedbackStore', () => {
     useAgentFeedbackStore.getState().resolveFeedback('non-existent-id')
 
     expect(useAgentFeedbackStore.getState().feedbacks).toHaveLength(1)
-    expect(useAgentFeedbackStore.getState().feedbacks[0].resolved).toBe(false)
+    expect(useAgentFeedbackStore.getState().feedbacks[0]!.resolved).toBe(false)
   })
 
   // ---------- getSummary ----------

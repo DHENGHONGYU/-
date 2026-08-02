@@ -131,7 +131,7 @@ describe('usePredictionStore', () => {
 
       const state = usePredictionStore.getState()
       expect(state.predictions).toHaveLength(1)
-      expect(state.predictions[0].predictionId).toBe('pred-001')
+      expect(state.predictions[0]!.predictionId).toBe('pred-001')
       expect(mockWithBroadcast).toHaveBeenCalledWith('data-test:changed', {
         action: 'addPrediction',
         predictionId: 'pred-001',
@@ -147,7 +147,7 @@ describe('usePredictionStore', () => {
 
       expect(usePredictionStore.getState().predictions).toHaveLength(500)
       // 最新的在前面，最旧的应被截断
-      expect(usePredictionStore.getState().predictions[499].predictionId).toBe('pred-0001')
+      expect(usePredictionStore.getState().predictions[499]!.predictionId).toBe('pred-0001')
     })
   })
 
@@ -270,9 +270,9 @@ describe('usePredictionStore', () => {
       store.verifyPrediction('p-verified', 5)
 
       expect(usePredictionStore.getState().getPendingPredictions()).toHaveLength(1)
-      expect(usePredictionStore.getState().getPendingPredictions()[0].predictionId).toBe('p-pending')
+      expect(usePredictionStore.getState().getPendingPredictions()[0]!.predictionId).toBe('p-pending')
       expect(usePredictionStore.getState().getVerifiedPredictions()).toHaveLength(1)
-      expect(usePredictionStore.getState().getVerifiedPredictions()[0].predictionId).toBe('p-verified')
+      expect(usePredictionStore.getState().getVerifiedPredictions()[0]!.predictionId).toBe('p-verified')
     })
   })
 

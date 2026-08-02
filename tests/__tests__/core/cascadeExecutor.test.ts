@@ -78,9 +78,9 @@ describe('cascadeExecutor', () => {
       const result = await cascadeExecutor.execute('execution_plans', 'plan-1')
 
       expect(result.targets.length).toBe(1)
-      expect(result.targets[0].store).toBe('execution_logs')
-      expect(result.targets[0].strategy).toBe('CASCADE')
-      expect(result.targets[0].affectedCount).toBe(3)
+      expect(result.targets[0]!.store).toBe('execution_logs')
+      expect(result.targets[0]!.strategy).toBe('CASCADE')
+      expect(result.targets[0]!.affectedCount).toBe(3)
       expect(mockDeleteByIndex).toHaveBeenCalledWith(
         'execution_logs',
         'by-plan',
@@ -98,9 +98,9 @@ describe('cascadeExecutor', () => {
       const result = await cascadeExecutor.execute('profile_items', 'item-1')
 
       expect(result.targets.length).toBe(1)
-      expect(result.targets[0].store).toBe('score_evidence')
-      expect(result.targets[0].strategy).toBe('CASCADE')
-      expect(result.targets[0].affectedCount).toBe(2)
+      expect(result.targets[0]!.store).toBe('score_evidence')
+      expect(result.targets[0]!.strategy).toBe('CASCADE')
+      expect(result.targets[0]!.affectedCount).toBe(2)
     })
 
     it('news 删除时级联删除 newsStockMap', async () => {
@@ -113,8 +113,8 @@ describe('cascadeExecutor', () => {
       const result = await cascadeExecutor.execute('news', 'news-1')
 
       expect(result.targets.length).toBe(1)
-      expect(result.targets[0].store).toBe('news_stock_map')
-      expect(result.targets[0].strategy).toBe('CASCADE')
+      expect(result.targets[0]!.store).toBe('news_stock_map')
+      expect(result.targets[0]!.strategy).toBe('CASCADE')
     })
   })
 
@@ -159,9 +159,9 @@ describe('cascadeExecutor', () => {
       const result = await cascadeExecutor.execute('rbac_users', 'user-1')
 
       expect(result.targets.length).toBe(1)
-      expect(result.targets[0].store).toBe('rbac_user_roles')
-      expect(result.targets[0].strategy).toBe('CASCADE')
-      expect(result.targets[0].affectedCount).toBe(2)
+      expect(result.targets[0]!.store).toBe('rbac_user_roles')
+      expect(result.targets[0]!.strategy).toBe('CASCADE')
+      expect(result.targets[0]!.affectedCount).toBe(2)
     })
 
     it('删除角色时级联清理用户分配和权限分配', async () => {
@@ -180,10 +180,10 @@ describe('cascadeExecutor', () => {
       const result = await cascadeExecutor.execute('rbac_roles', 'role-1')
 
       expect(result.targets.length).toBe(2)
-      expect(result.targets[0].store).toBe('rbac_user_roles')
-      expect(result.targets[0].affectedCount).toBe(1)
-      expect(result.targets[1].store).toBe('rbac_role_permissions')
-      expect(result.targets[1].affectedCount).toBe(2)
+      expect(result.targets[0]!.store).toBe('rbac_user_roles')
+      expect(result.targets[0]!.affectedCount).toBe(1)
+      expect(result.targets[1]!.store).toBe('rbac_role_permissions')
+      expect(result.targets[1]!.affectedCount).toBe(2)
     })
   })
 

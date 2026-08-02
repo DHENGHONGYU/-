@@ -157,7 +157,7 @@ describe('useMechanismHealthStore', () => {
       // history 最多保留 20 条
       expect(useMechanismHealthStore.getState().history).toHaveLength(20)
       // 最后一条应是 timestamp=24 的快照
-      expect(useMechanismHealthStore.getState().history[19].timestamp).toBe(24)
+      expect(useMechanismHealthStore.getState().history[19]!.timestamp).toBe(24)
     })
   })
 

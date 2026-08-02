@@ -38,6 +38,25 @@ vi.mock('@/store/helpers/withBroadcast', () => ({
   withBroadcast: vi.fn(),
 }))
 
+// B6 持久化 mock：DataBridge.forward / EnvelopeFactory.create / dbConfig / createTraceId
+const mockDataBridgeForward = vi.hoisted(() => vi.fn())
+const mockEnvelopeCreate = vi.hoisted(() => vi.fn())
+const mockCreateTraceId = vi.hoisted(() => vi.fn())
+vi.mock('@/core/databridge', () => ({
+  dataBridge: { forward: mockDataBridgeForward },
+}))
+vi.mock('@/core/envelope', () => ({
+  EnvelopeFactory: { create: mockEnvelopeCreate },
+}))
+vi.mock('@/config/dbConfig', () => ({
+  ENVELOPE_ACTION: { saveScores: 'SAVE_SCORES' },
+  ENVELOPE_TARGET: { db: 'db' },
+  MODULE_ID: { analyzer: 'analyzer' },
+}))
+vi.mock('@/lib/utils', () => ({
+  createTraceId: mockCreateTraceId,
+}))
+
 // ============================================================
 // Imports
 // ============================================================
@@ -122,7 +141,7 @@ describe('useAnalysisStore', () => {
 
     const state = useAnalysisStore.getState()
     expect(state.stocks).toHaveLength(2)
-    expect(state.stocks[0].symbol).toBe('600519.SH')
+    expect(state.stocks[0]!.symbol).toBe('600519.SH')
     expect(state.loading).toBe(false)
     expect(state.error).toBeNull()
   })
@@ -148,7 +167,7 @@ describe('useAnalysisStore', () => {
 
     const state = useAnalysisStore.getState()
     expect(state.scores).toHaveLength(1)
-    expect(state.scores[0].symbol).toBe('600519.SH')
+    expect(state.scores[0]!.symbol).toBe('600519.SH')
     expect(state.loading).toBe(false)
   })
 
@@ -164,7 +183,7 @@ describe('useAnalysisStore', () => {
 
     const state = useAnalysisStore.getState()
     expect(state.scores).toHaveLength(1)
-    expect(state.scores[0].score).toBe(90)
+    expect(state.scores[0]!.score).toBe(90)
   })
 
   // ---------- clearError ----------
@@ -287,6 +306,29 @@ describe('useAnalysisStore', () => {
     expect(withBroadcast).toHaveBeenCalledTimes(1)
   })
 
+  // ---------- B6：评分持久化到 DataBridge（双向验证） ----------
+  it('handleScore: 评分完成后通过 DataBridge 持久化到 v6Scores（B6 双向验证）', async () => {
+    const mockScore = { symbol: '600519.SH', score: 88 }
+    vi.mocked(runV6Score).mockResolvedValue({ success: true, data: mockScore as any })
+    mockEnvelopeCreate.mockImplementation((meta: any, payload: any) => ({ meta, payload } as any))
+    mockDataBridgeForward.mockResolvedValue(undefined as any)
+    mockCreateTraceId.mockReturnValue('trace-x' as any)
+
+    await useAnalysisStore.getState().handleScore('600519.SH')
+
+    // 正向：forward 被调用 1 次，且信封 meta 正确（source/target/action/traceId）
+    expect(mockDataBridgeForward).toHaveBeenCalledTimes(1)
+    const [envelope] = mockDataBridgeForward.mock.calls[0]!
+    expect(envelope.meta.action).toBe('SAVE_SCORES')
+    expect(envelope.meta.source).toBe('analyzer')
+    expect(envelope.meta.target).toBe('db')
+    expect(envelope.meta.traceId).toBe('trace-x')
+    // 逆向：payload 即评分数据本身（非包装），证明是真实持久化而非空操作
+    expect(envelope.payload).toBe(mockScore)
+    // 内存 scores 同步更新
+    expect(useAnalysisStore.getState().scores.find((s) => s.symbol === '600519.SH')?.score).toBe(88)
+  })
+
   // ---------- loadScores ----------
 
   it('loadScores: 成功时更新 scores 并广播事件', async () => {
@@ -300,7 +342,7 @@ describe('useAnalysisStore', () => {
 
     const state = useAnalysisStore.getState()
     expect(state.scores).toHaveLength(2)
-    expect(state.scores[0].symbol).toBe('600519.SH')
+    expect(state.scores[0]!.symbol).toBe('600519.SH')
     expect(withBroadcast).toHaveBeenCalledTimes(1)
   })
 

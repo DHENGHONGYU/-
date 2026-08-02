@@ -311,7 +311,7 @@ function generatePoolBoardSample(count: number): RawMarketData {
  * 生成聊天历史数据
  */
 function generateChatHistorySample(): RawMarketData {
-  const stock = STOCKS[randInt(0, STOCKS.length - 1)]
+  const stock = STOCKS[randInt(0, STOCKS.length - 1)]!
   return {
     timestamp: Date.now(),
     dataType: 'chatHistory',
@@ -744,7 +744,7 @@ describe('Phase 1 桥接集成测试：Context ↔ Store 数据一致性', () =>
     ]
 
     for (let i = 0; i < 100; i++) {
-      const generator = types[randInt(0, types.length - 1)]
+      const generator = types[randInt(0, types.length - 1)]!
       const rawData = generator()
       const adapted = marketDataAdapter.adapt(rawData)
       useMarketDataStore.getState().mergeAdaptedData(adapted)
