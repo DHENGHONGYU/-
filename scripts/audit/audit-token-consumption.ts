@@ -221,7 +221,7 @@ function checkTokenBudgetDocumentation(): Finding[] {
 
 function checkTokenOptimizationDocs(): Finding[] {
   const findings: Finding[] = []
-  const docsPath = path.join(ROOT, 'docs', 'reports', 'lessons-learned', 'docs/reports/lessons-learned/token-optimization-best-practices.md')
+  const docsPath = path.join(ROOT, 'docs', 'reports', 'lessons-learned', 'token-optimization-best-practices.md')
 
   if (!fs.existsSync(docsPath)) {
     findings.push({

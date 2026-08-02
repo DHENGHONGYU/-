@@ -88,7 +88,7 @@ describe('audit-token-consumption.ts v3.0（白盒测试）', () => {
     it('检测知识图谱脚本缺少增量更新（基于文件修改时间）', async () => {
       // 注意：脚本通过 content.includes('mtime') 检测，注释中不能出现该关键字
       setupFS({
-        'scripts/extract-code-graph.ts': `
+        'scripts/other/extract-code-graph.ts': `
 // 知识图谱脚本（全量解析，无增量机制）
 export function extract() {
   return parseAllFiles()
@@ -130,7 +130,7 @@ query-top-imported
     it('检测知识图谱脚本缺少缓存机制', async () => {
       // 注意：脚本通过 content.includes('cache') 检测，注释中不能出现该关键字
       setupFS({
-        'scripts/extract-code-graph.ts': `
+        'scripts/other/extract-code-graph.ts': `
 // 有文件修改时间检查但无结果暂存机制
 export function extract() {
   const fileModifiedTime = getFileMtime()
@@ -165,14 +165,14 @@ export function extract() {
       expect(report.violations).toContainEqual(
         expect.objectContaining({
           type: '缺失文件',
-          file: 'scripts/extract-code-graph.ts',
+          file: 'scripts/other/extract-code-graph.ts',
         }),
       )
     })
 
     it('检测快速查询模板缺失', async () => {
       setupFS({
-        'scripts/extract-code-graph.ts': `mtime\ncache`,
+        'scripts/other/extract-code-graph.ts': `mtime\ncache`,
         'AGENTS.md': `Token 预算\n知识图谱优先`,
         'docs/reports/lessons-learned/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
       })
@@ -189,7 +189,7 @@ export function extract() {
 
     it('检测快速查询模板缺少必要查询', async () => {
       setupFS({
-        'scripts/extract-code-graph.ts': `mtime\ncache`,
+        'scripts/other/extract-code-graph.ts': `mtime\ncache`,
         'scripts/quick-query.sh': `
 query-store-deps
 query-cross-layer-violations
@@ -210,7 +210,7 @@ query-cross-layer-violations
 
     it('检测 AGENTS.md 缺少 Token 预算规则', async () => {
       setupFS({
-        'scripts/extract-code-graph.ts': `mtime\ncache`,
+        'scripts/other/extract-code-graph.ts': `mtime\ncache`,
         'scripts/quick-query.sh': `query-store-deps\nquery-cross-layer-violations\nquery-largest-files\nquery-top-imported`,
         'AGENTS.md': `知识图谱优先`,  // 缺少 Token 预算
         'docs/reports/lessons-learned/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
@@ -228,7 +228,7 @@ query-cross-layer-violations
 
     it('检测 AGENTS.md 缺少知识图谱优先规则', async () => {
       setupFS({
-        'scripts/extract-code-graph.ts': `mtime\ncache`,
+        'scripts/other/extract-code-graph.ts': `mtime\ncache`,
         'scripts/quick-query.sh': `query-store-deps\nquery-cross-layer-violations\nquery-largest-files\nquery-top-imported`,
         'AGENTS.md': `Token 预算`,  // 缺少知识图谱优先
         'docs/reports/lessons-learned/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
@@ -246,7 +246,7 @@ query-cross-layer-violations
 
     it('检测 Token 优化文档缺少章节', async () => {
       setupFS({
-        'scripts/extract-code-graph.ts': `mtime\ncache`,
+        'scripts/other/extract-code-graph.ts': `mtime\ncache`,
         'scripts/quick-query.sh': `query-store-deps\nquery-cross-layer-violations\nquery-largest-files\nquery-top-imported`,
         'AGENTS.md': `Token 预算\n知识图谱优先`,
         'docs/reports/lessons-learned/token-optimization-best-practices.md': `
@@ -274,7 +274,7 @@ query-cross-layer-violations
   describe('scan() 完整合规场景', () => {
     it('所有文件合规时无违规', async () => {
       setupFS({
-        'scripts/extract-code-graph.ts': `
+        'scripts/other/extract-code-graph.ts': `
 // 完整合规：包含 mtime 检查和 cache 机制
 export function extract() {
   const mtime = getMtime(file)
@@ -319,7 +319,7 @@ query-top-imported
   describe('scan() 报告结构', () => {
     it('返回完整 Report 对象，包含 violations/warnings/summary', async () => {
       setupFS({
-        'scripts/extract-code-graph.ts': `mtime\ncache`,
+        'scripts/other/extract-code-graph.ts': `mtime\ncache`,
         'scripts/quick-query.sh': `query-store-deps\nquery-cross-layer-violations\nquery-largest-files\nquery-top-imported`,
         'AGENTS.md': `Token 预算\n知识图谱优先`,
         'docs/reports/lessons-learned/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
@@ -343,7 +343,7 @@ query-top-imported
 
     it('summary.totalChecks === 4（4 个检查项）', async () => {
       setupFS({
-        'scripts/extract-code-graph.ts': `mtime\ncache`,
+        'scripts/other/extract-code-graph.ts': `mtime\ncache`,
         'scripts/quick-query.sh': `query-store-deps\nquery-cross-layer-violations\nquery-largest-files\nquery-top-imported`,
         'AGENTS.md': `Token 预算\n知识图谱优先`,
         'docs/reports/lessons-learned/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
@@ -425,7 +425,7 @@ query-top-imported
       const report = {
         violations: [
           {
-            file: 'scripts/extract-code-graph.ts',
+            file: 'scripts/other/extract-code-graph.ts',
             line: 1,
             type: '缺少增量更新',
             message: '知识图谱生成脚本未支持增量更新（基于文件 mtime）',
@@ -444,7 +444,7 @@ query-top-imported
       const output = formatReport(report as never)
 
       expect(output).toContain('发现 1 处 Token 浪费问题')
-      expect(output).toContain('scripts/extract-code-graph.ts:1')
+      expect(output).toContain('scripts/other/extract-code-graph.ts:1')
       expect(output).toContain('[缺少增量更新]')
       expect(output).toContain('添加文件 mtime 检查逻辑')
       expect(output).toContain('预计月度 Token 节省: 7.50M tokens')

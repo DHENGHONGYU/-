@@ -11,10 +11,11 @@
 # Run:  npm run test:stable      (full suite minus these — the trust signal)
 #       npm run test:quarantine  (only these — re-verify / fix without blocking CI)
 #
-# ---- 2026-08-02 隔离项（待修复，列表须收缩）----
-# 以下 3 个为审计工具（quality gate）自身的白盒自测套件，非产品运行时代码。
-# 失败根因：测试桩基础设施陈旧（vitest 下 fs mock 未拦截脚本真实 fs 调用 / 脚本路径解析错位 / 算法演进后硬编码期望未同步），属预存在的问题——路径修复前因 import 错误(`scripts/audit-X`)无法导入，为「隐藏红」，本次修复 import 后显形。
-# 分类：确定性 stale/broken（非 flaky）。隔离仅为解锁 pre-push，须后续 proper 修复后删除本段（见 outputs/bidirectional-verification-2-2026-08-02.md 整改清单）。
-tests/__tests__/scripts/audit-doc-sync.test.ts
-tests/__tests__/scripts/audit-token-consumption.test.ts
-tests/__tests__/scripts/audit-mapping-integrity.test.ts
+# ---- 已修复并移出隔离（2026-08-02）----
+# 以下 3 个审计白盒套件曾因路径解析错位（audit-mapping-integrity ROOT 缺一级 /
+# audit-token-consumption 重复路径段）与测试桩路径未对齐而 stale/broken。
+# 已随源码修复（ROOT/docsPath 修正 + 测试路径对齐 scripts/other/extract-code-graph.ts）
+# 重新变绿（test:quarantine 56/56 通过），现已 rejoined test:clean，本段仅留痕。
+# tests/__tests__/scripts/audit-doc-sync.test.ts
+# tests/__tests__/scripts/audit-token-consumption.test.ts
+# tests/__tests__/scripts/audit-mapping-integrity.test.ts
