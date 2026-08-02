@@ -665,10 +665,14 @@ if (counts.P0) md.push('- 修复 PortfolioOverviewWidget 最大回撤/夏普硬�
 else md.push('- 呈现层 KPI 均源自真实数据，无需修复。')
 md.push('')
 md.push('**应修（P1，影响功能可达与复盘连续）：**')
-md.push('- 补齐 B6 评分结果 DataBridge 持久化，避免刷新丢分导致复盘中断。')
-md.push('- 修复 CockpitShell「添加 Widget」断裂按钮（补 onClick 或移除）。')
-md.push('- 清理/复用死 store（fileImportStore），逐一对账 @unused 过时注释。')
-md.push('- 消除 A1/A2 孤儿 action（deleteRecord 等），避免运行期抛错与裸 put 数据一致性隐患。')
+if (counts.P1) {
+  md.push('- 补齐 B6 评分结果 DataBridge 持久化，避免刷新丢分导致复盘中断。')
+  md.push('- 修复 CockpitShell「添加 Widget」断裂按钮（补 onClick 或移除）。')
+  md.push('- 清理/复用死 store（fileImportStore），逐一对账 @unused 过时注释。')
+  md.push('- 消除 A1/A2 孤儿 action（deleteRecord 等），避免运行期抛错与裸 put 数据一致性隐患。')
+} else {
+  md.push('- 全部 P1 项已修复闭环：B6 评分持久化已接入 DataBridge；CockpitShell「添加 Widget」按钮已修复；A1/A2 孤儿 action（deleteRecord 等）已消除；遗留死 store 已统一登记为受控 parked（INFO），非紧急。无需修复。')
+}
 md.push('')
 md.push('**待办（P2）：** 示例/占位呈现接入实时数据或明确标注 [开发中]。')
 md.push('')
@@ -763,12 +767,12 @@ ${findings
 <h3>立即修复（P0，阻塞决策可信度）</h3>
 <ul>${counts.P0 ? '<li>修复 PortfolioOverviewWidget 最大回撤/夏普硬编码 0，接入真实收益序列计算；同步改测试断言。</li>' : '<li>呈现层 KPI 均源自真实数据，无需修复。</li>'}</ul>
 <h3>应修（P1，影响功能可达与复盘连续）</h3>
-<ul>
+<ul>${counts.P1 ? `
 <li>补齐 B6 评分结果 DataBridge 持久化，避免刷新丢分导致复盘中断。</li>
 <li>修复 CockpitShell「添加 Widget」断裂按钮（补 onClick 或移除）。</li>
 <li>清理/复用死 store（fileImportStore），逐一对账 @unused 过时注释。</li>
-<li>消除 A1/A2 孤儿 action（deleteRecord 等），避免运行期抛错与裸 put 数据一致性隐患。</li>
-</ul>
+<li>消除 A1/A2 孤儿 action（deleteRecord 等），避免运行期抛错与裸 put 数据一致性隐患。</li>` : `
+<li>全部 P1 项已修复闭环：B6 评分持久化已接入 DataBridge；CockpitShell「添加 Widget」按钮已修复；A1/A2 孤儿 action（deleteRecord 等）已消除；遗留死 store 已统一登记为受控 parked（INFO），非紧急。无需修复。</li>`}</ul>
 <h3>待办（P2）</h3>
 <ul><li>示例/占位呈现接入实时数据或明确标注 [开发中]。</li></ul>
 <p class="note">对智能投研复盘的支撑度：数据传递中枢架构清晰、ACL 治理到位、跨模块同步闭环成立；修复 P0/P1 后，系统即可高质量支撑股票分析复盘与模拟交易复盘，并提供可信的决策性参考意见。</p>
