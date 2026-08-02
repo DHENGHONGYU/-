@@ -22,7 +22,6 @@ const mockSaveStrategySnapshot = vi.hoisted(() => vi.fn())
 
 // DataBridge 订阅 mock
 const mockDataBridgeSubscribe = vi.hoisted(() => vi.fn())
-const mockDataBridgeUnsubscribe = vi.hoisted(() => vi.fn())
 
 vi.mock('@/core/databridge', () => ({
   dataBridge: { subscribe: mockDataBridgeSubscribe },

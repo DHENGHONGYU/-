@@ -5,7 +5,7 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { useSevenDimConfigStore } from './sevenDimConfigStore'
 import { useIntentionPoolStore } from '@/store/intentionPoolStore'
-import { STRATEGY_TEMPLATES, GLOBAL_LIMITS } from '@/config/collectConfig'
+import { GLOBAL_LIMITS } from '@/config/collectConfig'
 
 // ============================================================
 // Mocks

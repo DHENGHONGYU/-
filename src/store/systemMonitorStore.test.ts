@@ -429,7 +429,7 @@ describe('initSystemMonitorSubscriptions', () => {
   it('cleanup 函数：取消所有订阅并清空数组', () => {
     // 初始的 initSystemMonitorSubscriptions() 在模块加载时已执行，
     // 模块级自动初始化已注册了 3 个订阅
-    const unsubsBefore = [...allUnsubscribers]
+    [...allUnsubscribers]
 
     // 手动调用 initSystemMonitorSubscriptions 获取 cleanup
     const cleanup = initSystemMonitorSubscriptions()
@@ -449,7 +449,7 @@ describe('initSystemMonitorSubscriptions', () => {
 
   /** @test_id V9-TEST-ST-160-sub-cleanup-02 */
   it('重复调用 initSystemMonitorSubscriptions：先清理旧的再注册新的', () => {
-    const cleanup1 = initSystemMonitorSubscriptions()
+    initSystemMonitorSubscriptions()
     const countAfterFirst = allUnsubscribers.length
 
     // 再次初始化应清理旧的，注册新的
