@@ -20,7 +20,7 @@
  */
 
 import { useIntentionPoolStore } from '@/store/intentionPoolStore'
-import type { IntentionPoolItem } from '@/types/modules/pool.types'
+import type { IntentionPoolItem, PoolItem } from '@/types/modules/pool.types'
 
 // ============================================================
 // 常量
