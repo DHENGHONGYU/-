@@ -4,7 +4,7 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { cascadeExecutor } from '@/core/cascadeExecutor'
-import { CASCADE_CONFIG, getCascadeDependencies } from '@/config/cascadeConfig'
+import { CASCADE_CONFIG } from '@/config/cascadeConfig'
 import { CascadeError } from '@/types/modules/cascade.types'
 
 // ─── Mock 依赖 ───────────────────────────────────────────────

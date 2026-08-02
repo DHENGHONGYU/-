@@ -42,8 +42,6 @@ import { usePredictionStore } from './predictionStore'
 import type {
   FactorPrediction,
   CycleRetrospectiveReport,
-  FactorDashboardData,
-  MarketCycle,
 } from '@/types/modules/prediction.types'
 
 // ============================================================

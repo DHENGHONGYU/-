@@ -18,7 +18,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { marketDataAdapter } from '@/services/data-collector/MarketDataAdapter'
 import { useMarketDataStore, _resetMarketDataStoreSubscriptionsForTest } from '@/store/marketDataStore'
-import type { RawMarketData, MarketData, MarketIndexData, SectorHeatmapData } from '@/types/modules/widget.types'
+import type { RawMarketData, MarketData } from '@/types/modules/widget.types'
 
 // ============================================================
 // 辅助函数：生成 20 只随机股票样本
@@ -185,7 +185,7 @@ function generatePortfolioSample(): RawMarketData {
       totalPnL: String(randFloat(-50000, 50000)),
       totalPnLPercent: randFloat(-10, 10),
       holdings: randInt(3, 12),
-      holdingsList: STOCKS.slice(0, randInt(3, 8)).map((s, i) => ({
+      holdingsList: STOCKS.slice(0, randInt(3, 8)).map((s) => ({
         symbol: s.code,
         name: s.name,
         shares: randInt(100, 10000),
@@ -396,7 +396,6 @@ function generateSampleSequence(): Array<{
   data: RawMarketData
   expectedFields: string[]
 }> {
-  const FIXED_SEED = 42
   // 使用固定种子确保结果可重现（但实际上随机值用来做字段存在性/非空验证足够了）
   // 注意：这里不控制 Math.random，只是用确定性的数组来覆盖各类场景
 

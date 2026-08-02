@@ -121,7 +121,6 @@ vi.mock('@/constants/pool.constants', () => ({
 
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
 import { useScoreDocStore, destroyScoreDocStoreSubscriptions, initScoreDocStoreSubscriptions } from './scoreDocStore'
-import { getRecentVersions } from '@/services/analysis/scoreDocService'
 import type { ScoreDocVersion, Stock } from '@/data/types'
 import { DATA_SOURCE } from '@/config/dbConfig'
 import { RESEARCH_STATUS } from '@/constants/pool.constants'

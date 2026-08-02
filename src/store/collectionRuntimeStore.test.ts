@@ -120,17 +120,6 @@ function createSpan(overrides: Partial<CollectionTraceSpan> = {}): CollectionTra
   } as CollectionTraceSpan
 }
 
-function createTaskRuntime(overrides: Partial<CollectionTaskRuntime> = {}): CollectionTaskRuntime {
-  return {
-    taskId: 'task-001',
-    dimensionCode: '01',
-    symbol: 'AAPL',
-    status: 'pending',
-    progress: 0,
-    ...overrides,
-  } as CollectionTaskRuntime
-}
-
 // ============================================================
 // Tests
 // ============================================================

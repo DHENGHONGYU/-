@@ -242,31 +242,9 @@ describe('saveProfileItem - 保存单条资料条目', () => {
   })
 
   it('相同标题和摘要应生成相同的 dataHash（去重基础）', () => {
-    const item1 = {
-      symbol: '600519',
-      domain: 'D3' as ProfileDomain,
-      itemType: 'news' as const,
-      title: '相同标题',
-      summary: '相同摘要',
-      source: '来源A',
-      publishedAt: Date.now(),
-      isUserGenerated: false,
-    }
-    const item2 = {
-      symbol: '000001',
-      domain: 'D5' as ProfileDomain,
-      itemType: 'report' as const,
-      title: '相同标题',
-      summary: '相同摘要',
-      source: '来源B',
-      publishedAt: Date.now() + 1000,
-      isUserGenerated: true,
-    }
 
     // 注意：saveProfileItem 是 async，但我们只需要 dataHash
     // 直接调用两次，比较 dataHash
-    let hash1 = ''
-    let hash2 = ''
 
     vi.mocked(dataBridge.forward).mockImplementation(async () => {
       return undefined

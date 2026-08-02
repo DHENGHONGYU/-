@@ -410,7 +410,7 @@ describe('initRiskStoreSubscriptions', () => {
 
   /** @test_id V9-TEST-ST-151-sub-02 */
   it('重复调用 → 幂等，返回 cleanup 函数', () => {
-    const cleanup1 = initRiskStoreSubscriptions()
+    initRiskStoreSubscriptions()
     const cleanup2 = initRiskStoreSubscriptions()
 
     // 只注册一次

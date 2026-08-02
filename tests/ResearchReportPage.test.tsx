@@ -33,7 +33,7 @@ vi.mock('@/hooks/usePageGuard', () => ({
 }))
 
 // Mock scoreDocStore - 使用 vi.hoisted 避免工厂中引用未初始化变量
-const { mockUseScoreDocStore, storeState } = vi.hoisted(() => {
+const { mockUseScoreDocStore } = vi.hoisted(() => {
   const state = {
     versions: [] as any[],
     symbol: '',
