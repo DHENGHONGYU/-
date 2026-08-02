@@ -507,6 +507,16 @@ export interface WidgetConfig {
   dataSource?: DataSourceConfig
 }
 
+// ============================================================
+// 纵横交叉布局类型（Phase 1）
+// ============================================================
+
+/** 业务域（纵轴）— 投资者决策路径 */
+export type WidgetDomain = 'research' | 'market' | 'ai' | 'portfolio'
+
+/** 视角（横轴）— 消费者意图 */
+export type WidgetPerspective = 'overview' | 'analysis' | 'signal' | 'risk'
+
 export interface WidgetMeta {
   id: string
   name: string
@@ -516,6 +526,10 @@ export interface WidgetMeta {
   defaultConfig?: Record<string, unknown>
   /** 默认数据源配置（新增） */
   defaultDataSource?: DataSourceConfig
+  /** 业务域（纵轴）— Phase 1 纵横交叉布局使用 */
+  domain?: WidgetDomain
+  /** 视角（横轴）— Phase 1 纵横交叉布局使用 */
+  perspective?: WidgetPerspective
 }
 
 export interface WidgetRuntimeState {
