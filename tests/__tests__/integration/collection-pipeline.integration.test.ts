@@ -76,12 +76,12 @@ describe('采集链路完整性集成测试 (S2)', () => {
     expect(mockFn).toHaveBeenCalledTimes(8)
 
     // 每次调用的 symbols 应包含全部 2 只股票
-    const firstCall = mockFn.mock.calls[0][0]
+    const firstCall = mockFn.mock.calls[0]![0]
     expect(firstCall.symbols).toEqual(['000001', '600519'])
     expect(firstCall.dimensionCode).toBeTruthy()
 
     // 8 次调用覆盖 8 个不同维度码
-    const dimCodes = mockFn.mock.calls.map((c) => c[0].dimensionCode).sort()
+    const dimCodes = mockFn.mock.calls.map((c) => c[0]!.dimensionCode).sort()
     expect(dimCodes).toEqual(['01', '02', '03', '04', '05', '06', '07', '08'])
   })
 
@@ -91,7 +91,7 @@ describe('采集链路完整性集成测试 (S2)', () => {
     await useSevenDimConfigStore.getState().runCollection()
 
     const mockFn = await getMockedRunBatchTrace()
-    const parentTaskIds = mockFn.mock.calls.map((c) => c[0].parentTaskId)
+    const parentTaskIds = mockFn.mock.calls.map((c) => c[0]!.parentTaskId)
 
     // 所有维度共享同一个 parentTaskId
     expect(new Set(parentTaskIds).size).toBe(1)
@@ -166,7 +166,7 @@ describe('采集链路完整性集成测试 (S2)', () => {
 
     // 两次采集的 parentTaskId 应不同（独立采集）
     const firstRunTaskIds = new Set(
-      mockFn.mock.calls.map((c) => c[0].parentTaskId),
+      mockFn.mock.calls.map((c) => c[0]!.parentTaskId),
     )
     expect(firstRunTaskIds.size).toBe(1) // 第二次内部一致
   })
@@ -192,7 +192,7 @@ describe('采集链路完整性集成测试 (S2)', () => {
     await useSevenDimConfigStore.getState().runCollection()
 
     const mockFn = await getMockedRunBatchTrace()
-    const firstCall = mockFn.mock.calls[0][0]
+    const firstCall = mockFn.mock.calls[0]![0]
     expect(firstCall.symbols).toEqual(['300750'])
   })
 })

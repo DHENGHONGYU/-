@@ -76,8 +76,8 @@ describe('crawlerProvider', () => {
 
     const news = await fetchEastMoneyAnnouncements('600519.SH')
     expect(news).toHaveLength(1)
-    expect(news[0].title).toBe('年报公告')
-    expect(news[0].category).toBe('announcement')
+    expect(news[0]!.title).toBe('年报公告')
+    expect(news[0]!.category).toBe('announcement')
   })
 
   it('fetchEastMoneyIndustry 端点禁用（反爬）时应返回空数组', async () => {

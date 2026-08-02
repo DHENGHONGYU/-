@@ -206,8 +206,8 @@ describe('useDataTestStore', () => {
       expect(state.progress).toBe(100)
       expect(state.traceResults).toHaveLength(2)
       expect(state.tasks).toHaveLength(2)
-      expect(state.tasks[0].status).toBe('success')
-      expect(state.tasks[1].status).toBe('error')
+      expect(state.tasks[0]!.status).toBe('success')
+      expect(state.tasks[1]!.status).toBe('error')
     })
 
     it('batchText 为空时应跳过执行', async () => {
