@@ -42,8 +42,8 @@ const originalHash = window.location.hash
 beforeEach(() => {
   vi.clearAllMocks()
   // 重置 hash 为空
-  delete (window as Record<string, unknown>).location
-  window.location = { ...window.location, hash: '' } as Location
+  delete (window as unknown as Record<string, unknown>).location
+  window.location = { ...window.location, hash: '' } as unknown as string & Location
   useWorkflowStore.setState({ activeCabin: 'input' })
 })
 

@@ -98,7 +98,6 @@ describe('communitySyncService - 社区帖同步适配器', () => {
       sentiment: 'positive',
       qualityScore: 80,
       keyPoints: ['护城河深厚', '成长性好', '估值合理'],
-      stockName: '贵州茅台',
     }
 
     it('应正确转换为 ProfileItem 结构', () => {

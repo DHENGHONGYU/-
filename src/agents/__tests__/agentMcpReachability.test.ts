@@ -17,7 +17,7 @@ import '@/mcp/register'
  *
  * 注意：为避免触发 `src/agents/index.ts` 模块底部的 `initAgentSystem()` 副作用
  * （自动初始化 + Store 订阅），此处 8 条绑定关系镜像自 DEFAULT_AGENTS，
- * 不作为单一事实源——单一事实源由 `scripts/audit-mcp.ts` 的静态 dangling-agent
+ * 不作为单一事实源——单一事实源由 `scripts/audit/audit-mcp.ts` 的静态 dangling-agent
  * 检测（checkAgentServerBindings）保证。本测试提供运行时可达性的实证。
  */
 const AGENT_SERVER_BINDINGS: ReadonlyArray<{ id: string; mcpServerName: string }> = [

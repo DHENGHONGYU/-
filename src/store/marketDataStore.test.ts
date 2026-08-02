@@ -706,7 +706,7 @@ describe('marketDataStore 补充覆盖', () => {
   /** @test_id V9-TEST-ST-143-callback-unknown-02 */
   it('handleCollectionResult: 未知 taskId 错误回调不崩溃（覆盖 lines 459, 472 错误路径）', () => {
     initMarketDataStoreTaskSubscription()
-    capturedTaskSchedulerCallback.callback?.('unknown_task', null, new Error('采集失败'))
+    capturedTaskSchedulerCallback.callback?.('unknown_task', null as unknown as Record<string, unknown>, new Error('采集失败'))
     // 不应该崩溃
   })
 
@@ -887,7 +887,7 @@ describe('marketDataStore 补充覆盖', () => {
   it('handleCollectionResult: rawData 为 null 且无 error 时不更新（branch 505）', () => {
     initMarketDataStoreTaskSubscription()
     // rawData=null, error=undefined → 既不进 error 分支也不进 rawData 分支
-    capturedTaskSchedulerCallback.callback?.('task_1', null)
+    capturedTaskSchedulerCallback.callback?.('task_1', null as unknown as Record<string, unknown>)
     // 不崩溃
   })
 

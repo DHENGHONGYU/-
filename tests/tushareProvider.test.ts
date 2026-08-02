@@ -29,7 +29,7 @@ vi.mock('@/lib/logger', () => ({
 
 // Mock fetch
 type FetchMock = (input: string, init?: RequestInit) => Promise<Response>
-const globalFetch = vi.fn<Parameters<FetchMock>, ReturnType<FetchMock>>()
+const globalFetch = vi.fn<FetchMock>()
 
 beforeEach(() => {
   vi.stubGlobal('fetch', globalFetch)

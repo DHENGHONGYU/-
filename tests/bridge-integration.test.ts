@@ -769,7 +769,7 @@ describe('Phase 1 桥接协议：Provider 侧模拟测试', () => {
     let contextData: MarketData = marketDataAdapter.merge()
 
     for (let i = 0; i < sequence.length; i++) {
-      const { data } = sequence[i]
+      const { data } = sequence[i]!
       const rawData = data
 
       // === 模拟 handleCollectionResult 逻辑 ===

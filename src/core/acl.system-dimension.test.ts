@@ -20,6 +20,7 @@ import {
   registerBuiltinVersionedOverrides,
 } from '@/core/acl'
 import { MODULE_ID, STORE_NAME, DB_OPERATION } from '@/config/dbConfig'
+import type { ModuleId, StoreName } from '@/config/dbConfig'
 
 const SYSTEM = MODULE_ID.system as ModuleId
 const STOCK_STORE = STORE_NAME.stocks as StoreName

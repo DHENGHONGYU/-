@@ -220,9 +220,10 @@ describe('useMechanismHealthStore', () => {
       // 重新初始化订阅（beforeEach 中 clearAllMocks 已清除之前的调用记录）
       initMechanismSubscriptions()
 
-      const alertCallback = mockEventBusOn.mock.calls.find(
-        (c: unknown[]) => c[0] === 'mechanism:alert',
-      )?.[1] as (() => void) | undefined
+      const call = (mockEventBusOn.mock.calls as unknown as [string, ...unknown[]][]).find(
+        (c) => c[0] === 'mechanism:alert',
+      )
+      const alertCallback = call?.[1] as (() => void) | undefined
       expect(alertCallback).toBeDefined()
 
       alertCallback!()
@@ -236,9 +237,10 @@ describe('useMechanismHealthStore', () => {
       initMechanismSubscriptions()
 
       // 查找 collection:complete 事件回调
-      const completeCallback = mockEventBusOn.mock.calls.find(
-        (c: unknown[]) => c[0] === 'collection:complete',
-      )?.[1] as (() => void) | undefined
+      const call = (mockEventBusOn.mock.calls as unknown as [string, ...unknown[]][]).find(
+        (c) => c[0] === 'collection:complete',
+      )
+      const completeCallback = call?.[1] as (() => void) | undefined
       expect(completeCallback).toBeDefined()
 
       mockRunMechanismScan.mockReturnValue(buildSnapshot())

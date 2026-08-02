@@ -55,7 +55,7 @@ export function createPoolItem(
     symbol: symbol.trim().toUpperCase(),
     name: name ?? `测试股票${symbol}`,
     pool: 'intention' as const,
-    status: 'watching' as const,
+    status: 'watchlist' as const,
     source: 'manual' as const,
     dataVersion: 1,
   }
