@@ -18,7 +18,7 @@
 
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import type { Stock } from '@/data/types'
-import { POSITION_STATUS } from '@/constants/pool.constants'
+import type { PositionPoolItem } from '@/types/modules/pool.types'
 
 // ============================================================
 // Mocks
@@ -133,6 +133,7 @@ function createPositionInput(overrides: Partial<{ symbol: string; name: string; 
     avgCost: 1800,
     currentPrice: 2000,
     price: 2000,
+    source: 'manual' as const,
     ...overrides,
   }
 }
@@ -327,7 +328,7 @@ describe('positionPoolStore - addItem 添加持仓', () => {
     await usePositionPoolStore.getState().addItem(createPositionInput())
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     const stockData = call[1]
     expect(stockData.researchStatus).toBe('holding')
   })
@@ -339,7 +340,7 @@ describe('positionPoolStore - addItem 添加持仓', () => {
     await usePositionPoolStore.getState().addItem(createPositionInput())
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call[1].pool).toBe('position')
   })
 
@@ -350,7 +351,7 @@ describe('positionPoolStore - addItem 添加持仓', () => {
     await usePositionPoolStore.getState().addItem(createPositionInput())
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call[1].dataVersion).toBe(1)
   })
 
@@ -371,7 +372,7 @@ describe('positionPoolStore - addItem 添加持仓', () => {
     await usePositionPoolStore.getState().addItem(createPositionInput())
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call[1].group).toBe('默认分组')
   })
 })
@@ -452,7 +453,7 @@ describe('positionPoolStore - updateItem 更新持仓', () => {
     await usePositionPoolStore.getState().updateItem('600519', { quantity: 2000 })
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call[1].updatedAt).toBeDefined()
     expect(typeof call[1].updatedAt).toBe('number')
   })
@@ -500,7 +501,7 @@ describe('positionPoolStore - deleteItem 删除持仓', () => {
     await usePositionPoolStore.getState().deleteItem('sh600519')
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call[1].symbol).toBe('SH600519')
   })
 
@@ -594,7 +595,7 @@ describe('positionPoolStore - updateStatus 状态管理', () => {
     await usePositionPoolStore.getState().updateStatus('600519', 'partial')
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call[1].researchStatus).toBe('partial')
   })
 })
@@ -763,25 +764,25 @@ describe('positionPoolStore - 盈亏计算验证', () => {
   it('持仓条目应包含 quantity、avgCost、currentPrice 字段', () => {
     const item = getPositionPoolItemBySymbol('600519')
     expect(item).toBeDefined()
-    expect(item!.quantity).toBe(1000)
-    expect(item!.avgCost).toBe(1800)
-    expect(item!.currentPrice).toBe(2000)
+    expect((item as PositionPoolItem).quantity).toBe(1000)
+    expect((item as PositionPoolItem).avgCost).toBe(1800)
+    expect((item as PositionPoolItem).currentPrice).toBe(2000)
   })
 
   it('浮动盈亏 = (currentPrice - avgCost) * quantity', () => {
-    const item = getPositionPoolItemBySymbol('600519')!
+    const item = getPositionPoolItemBySymbol('600519')! as PositionPoolItem
     const pnl = (item.currentPrice - item.avgCost) * item.quantity
     expect(pnl).toBe(200_000)
   })
 
   it('收益率 = (currentPrice - avgCost) / avgCost', () => {
-    const item = getPositionPoolItemBySymbol('600519')!
+    const item = getPositionPoolItemBySymbol('600519')! as PositionPoolItem
     const returnRate = (item.currentPrice - item.avgCost) / item.avgCost
     expect(returnRate).toBeCloseTo(0.1111, 3)
   })
 
   it('市值 = currentPrice * quantity', () => {
-    const item = getPositionPoolItemBySymbol('600519')!
+    const item = getPositionPoolItemBySymbol('600519')! as PositionPoolItem
     const marketValue = item.currentPrice * item.quantity
     expect(marketValue).toBe(2_000_000)
   })
@@ -800,7 +801,7 @@ describe('positionPoolStore - 盈亏计算验证', () => {
         } as any,
       ],
     })
-    const item = getPositionPoolItemBySymbol('000001')!
+    const item = getPositionPoolItemBySymbol('000001')! as PositionPoolItem
     const pnl = (item.currentPrice - item.avgCost) * item.quantity
     expect(pnl).toBeLessThan(0)
     expect(pnl).toBe(-3000)
@@ -842,7 +843,7 @@ describe('positionPoolStore - 数据版本管理', () => {
     await usePositionPoolStore.getState().addItem(createPositionInput({ symbol: '000858', name: '五粮液' }))
 
     const { EnvelopeFactory } = await import('@/core/envelope')
-    const call = (EnvelopeFactory.create as vi.Mock).mock.calls[0]
+    const call = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call[1].dataVersion).toBe(1)
   })
 
@@ -907,7 +908,7 @@ describe('positionPoolStore - 订阅管理', () => {
     cleanup = initPositionPoolStoreSubscriptions()
 
     // 获取订阅回调
-    const subscribeCall = mockSubscribe.mock.calls[0]
+    const subscribeCall = mockSubscribe.mock.calls[0]!
     const callback = subscribeCall![1] as (envelope: any) => void
 
     // 模拟 3 次快速变更
@@ -929,7 +930,7 @@ describe('positionPoolStore - 订阅管理', () => {
   it('来自 pool 模块自身的变更不应触发 refresh', () => {
     cleanup = initPositionPoolStoreSubscriptions()
 
-    const subscribeCall = mockSubscribe.mock.calls[0]
+    const subscribeCall = mockSubscribe.mock.calls[0]!
     const callback = subscribeCall![1] as (envelope: any) => void
 
     callback({ meta: { source: 'pool' } })
