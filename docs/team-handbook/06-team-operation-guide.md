@@ -77,7 +77,7 @@ change_log:
 
 | 阶段 | 时间 | 阅读内容 | 目标 |
 |------|------|----------|------|
-| **第 1 步** | 5 min | [team-handbook/README.md](file:///g:/FinSightV9/docs/team-handbook/README.md) | 了解手册结构、核心术语 |
+| **第 1 步** | 5 min | [team-handbook/README.md](./README.md) | 了解手册结构、核心术语 |
 | **第 2 步** | 5 min | [team-handbook/01-design-philosophy.md](./01-design-philosophy.md) | 理解设计哲学和宋韵美学 |
 | **第 3 步** | 10 min | [team-handbook/02-architecture.md](./02-architecture.md) | 掌握六层架构和数据流 |
 | **第 4 步** | 5 min | 前端看 [03-ui-components.md](./03-ui-components.md) / 算法看 [04-model-runtime.md](./04-model-runtime.md) | 深入各自领域 |
@@ -394,9 +394,9 @@ export function MyModuleList() {
 **验证**：集成测试通过 + 手动验证
 
 > **详细指南**：
-> - [how-to-add-store.md](file:///g:/FinSightV9/docs/how-to/how-to-add-store.md)
-> - [how-to-add-service.md](file:///g:/FinSightV9/docs/how-to/how-to-add-service.md)
-> - [how-to-add-widget.md](file:///g:/FinSightV9/docs/how-to/how-to-add-widget.md)
+> - [how-to-add-store.md](../how-to/how-to-add-store.md)
+> - [how-to-add-service.md](../how-to/how-to-add-service.md)
+> - [how-to-add-widget.md](../how-to/how-to-add-widget.md)
 
 ---
 
@@ -582,7 +582,7 @@ useEffect(() => {
 }, []);
 ```
 
-> **详细规范**：[coding-conventions.md](file:///g:/FinSightV9/docs/reference/coding-conventions.md)
+> **详细规范**：[coding-conventions.md](../reference/coding-conventions.md)
 
 ---
 
@@ -710,7 +710,7 @@ npm run audit:hardcode
 npm run build
 ```
 
-> **详细说明**：[09-quality-gates.md](file:///g:/FinSightV9/docs/reference/09-quality-gates.md)
+> **详细说明**：[09-quality-gates.md](../reference/09-quality-gates.md)
 
 ---
 
@@ -744,7 +744,7 @@ npm run build
 4. **描述清晰**：test 描述说明"测什么、期望什么"
 5. **边界覆盖**：正常值 + 边界值 + 异常值
 
-> **详细指南**：[testing-strategy.md](file:///g:/FinSightV9/docs/how-to/testing/testing-strategy.md)
+> **详细指南**：[testing-strategy.md](../how-to/testing/testing-strategy.md)
 
 ---
 
@@ -852,7 +852,7 @@ L1 基础设施层：lib/、config/、constants/、types/
 
 **验证**：`npm run audit:layers`
 
-> **详细架构**：[team-handbook/02-architecture.md](./02-architecture.md)、[AGENTS.md](file:///g:/FinSightV9/AGENTS.md)
+> **详细架构**：[team-handbook/02-architecture.md](./02-architecture.md)、[AGENTS.md](../../AGENTS.md)
 
 ---
 
@@ -992,7 +992,7 @@ export const useXxxStore = create<XxxState>()(
 );
 ```
 
-> **详细指南**：[how-to-add-store.md](file:///g:/FinSightV9/docs/how-to/how-to-add-store.md)、[store-integration-guide.md](file:///g:/FinSightV9/docs/prompts/store-integration-guide.md)
+> **详细指南**：[how-to-add-store.md](../how-to/how-to-add-store.md)、[store-integration-guide.md](../prompts/store-integration-guide.md)
 
 ---
 
@@ -1046,7 +1046,7 @@ export const xxxService = {
 };
 ```
 
-> **详细指南**：[how-to-add-service.md](file:///g:/FinSightV9/docs/how-to/how-to-add-service.md)、[service-integration-guide.md](file:///g:/FinSightV9/docs/prompts/service-integration-guide.md)
+> **详细指南**：[how-to-add-service.md](../how-to/how-to-add-service.md)、[service-integration-guide.md](../prompts/service-integration-guide.md)
 
 ---
 
@@ -1072,7 +1072,7 @@ export const xxxService = {
 4. 在三处注册
 5. 验证 `audit:widget-registry` 通过
 
-> **详细指南**：[how-to-add-widget.md](file:///g:/FinSightV9/docs/how-to/how-to-add-widget.md)、[widget-development-guide.md](file:///g:/FinSightV9/docs/how-to/widget-development-guide.md)
+> **详细指南**：[how-to-add-widget.md](../how-to/how-to-add-widget.md)、[widget-development-guide.md](../how-to/widget-development-guide.md)
 
 ---
 
@@ -1307,7 +1307,7 @@ change_log:
 - 新增页面 → 更新路由文档
 - 架构变更 → 更新 ADR 或架构文档
 
-> **详细规范**：[doc-style-standard.md](../00-meta/doc-style-standard.md)、[jsdoc-convention.md](file:///g:/FinSightV9/docs/reference/jsdoc-convention.md)
+> **详细规范**：[doc-style-standard.md](../00-meta/doc-style-standard.md)、[jsdoc-convention.md](../reference/jsdoc-convention.md)
 
 ---
 
@@ -1360,17 +1360,17 @@ change_log:
 
 | 类别 | 文档 | 路径 |
 |------|------|------|
-| **入门** | 团队手册 README | [team-handbook/README.md](file:///g:/FinSightV9/docs/team-handbook/README.md) |
+| **入门** | 团队手册 README | [team-handbook/README.md](./README.md) |
 | | 设计哲学 | [01-design-philosophy.md](./01-design-philosophy.md) |
 | | 架构总览 | [02-architecture.md](./02-architecture.md) |
-| **架构契约** | AGENTS.md | [AGENTS.md](file:///g:/FinSightV9/AGENTS.md) |
+| **架构契约** | AGENTS.md | [AGENTS.md](../../AGENTS.md) |
 | | 架构标准 | [03-architecture-standards.md](../03-architecture-standards.md) |
 | **开发流程** | 开发工作流 SOP | [development-workflow-sop.md](../reference/development-workflow-sop.md) |
-| | 编码规范 | [coding-conventions.md](file:///g:/FinSightV9/docs/reference/coding-conventions.md) |
+| | 编码规范 | [coding-conventions.md](../reference/coding-conventions.md) |
 | | 质量门禁 | [09-quality-gates.md](../09-quality-gates.md) |
-| **专项指南** | 新增 Store | [how-to-add-store.md](file:///g:/FinSightV9/docs/how-to/how-to-add-store.md) |
-| | 新增 Service | [how-to-add-service.md](file:///g:/FinSightV9/docs/how-to/how-to-add-service.md) |
-| | 新增 Widget | [how-to-add-widget.md](file:///g:/FinSightV9/docs/how-to/how-to-add-widget.md) |
+| **专项指南** | 新增 Store | [how-to-add-store.md](../how-to/how-to-add-store.md) |
+| | 新增 Service | [how-to-add-service.md](../how-to/how-to-add-service.md) |
+| | 新增 Widget | [how-to-add-widget.md](../how-to/how-to-add-widget.md) |
 | | 代码评审 | [code-review-guide.md](../how-to/code-review-guide.md) |
 | **经验教训** | 完整教训库 | [lessons-learned.md](../reports/retrospectives/lessons-learned.md) |
 | | 教训摘要 | [lessons-learned-summary.md](../reports/retrospectives/lessons-learned-summary.md) |

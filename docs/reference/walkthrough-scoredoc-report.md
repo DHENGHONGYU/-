@@ -85,7 +85,7 @@ date: 2026-07-17
 
 ### 2.1 Դ
 
- [walkthroughTest.sampled.test.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/ͶиϵͳV9/tests/__tests__/integration/walkthroughTest.sampled.test.ts) һ, PowerShell `Get-Random -Count 5` ޷Ż, 2026-07-03
+ [walkthroughTest.sampled.test.ts](../../tests/__tests__/integration/walkthroughTest.sampled.test.ts) һ, PowerShell `Get-Random -Count 5` ޷Ż, 2026-07-03
 
 ### 2.2 
 
@@ -440,7 +440,7 @@ const coreStocks = all.filter((d) => d.composite >= DEFAULT_THRESHOLDS.rating.st
 
 ### 8.1 
 
-βԷ [ScoreHistoryPanel.tsx](../../src/components/organisms/analysis/score/ScoreHistoryPanel.tsx)  [src/services/analysis/__tests__/scoreDocService.test.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/ͶиϵͳV9/src/services/analysis/__tests__/scoreDocService.test.ts) ˲ڵ `buildScoreDocDiff`  `ScoreDocDiff` ,±
+βԷ [ScoreHistoryPanel.tsx](../../src/components/organisms/analysis/score/ScoreHistoryPanel.tsx)  [src/services/analysis/__tests__/scoreDocService.test.ts](../../src/services/analysis/__tests__/scoreDocService.test.ts) ˲ڵ `buildScoreDocDiff`  `ScoreDocDiff` ,±
 
 ### 8.2 ޸
 
@@ -662,9 +662,9 @@ npx vitest run walkthroughScoreDoc --reporter=default
 | [tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts](../../tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts) | δвļ | ? Ѵͨ |
 | [src/services/analysis/scoreDocService.ts](../../src/services/analysis/scoreDocService.ts) | ķ | ? ޸(P1 + buildScoreDocDiff) |
 | [src/services/scoring/v6-engine/config.ts](../../src/services/scoring/v6-engine/config.ts) | жϱ׼ | δ޸ |
-| [src/data/types.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/ͶиϵͳV9/src/data/types.ts) | ScoreDocVersion Ͷ | δ޸ |
+| [src/data/types.ts](../../src/data/types.ts) | ScoreDocVersion Ͷ | δ޸ |
 | [src/components/analysis/score/ScoreHistoryPanel.tsx](../../src/components/organisms/analysis/score/ScoreHistoryPanel.tsx) | ʷ | ? ô(޸) |
-| [src/services/analysis/__tests__/scoreDocService.test.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/ͶиϵͳV9/src/services/analysis/__tests__/scoreDocService.test.ts) | buildScoreDocDiff Ԫ | ? 4/4 ͨ |
+| [src/services/analysis/__tests__/scoreDocService.test.ts](../../src/services/analysis/__tests__/scoreDocService.test.ts) | buildScoreDocDiff Ԫ | ? 4/4 ͨ |
 
 ## ¼ C:AGENTS.md ϹԼ
 
