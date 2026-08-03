@@ -505,7 +505,7 @@ export async function runSingleTrace(
     span.totalDurationMs = Date.now() - start
     span.completedAt = Date.now()
     emitTrace(span)
-    getQualityMetrics().recordCollect(false, 'mock' as QuoteDataSourceId, span.totalDurationMs, [])
+    getQualityMetrics().recordCollect(false, 'mock', span.totalDurationMs, [])
     return {
       success: false,
       symbol: normalizedSymbol,
@@ -581,7 +581,7 @@ export async function runSingleTrace(
       addStage('write:start', '准备写入 stocks', result.source)
 
       try {
-        await writeQuoteToStock(normalizedSymbol, result.data!, result.source)
+        await writeQuoteToStock(normalizedSymbol, result.data, result.source)
         getQualityMetrics().recordWrite(true)
       } catch (writeErr) {
         getQualityMetrics().recordWrite(false)
@@ -693,7 +693,7 @@ export async function runSingleTrace(
       addStage('write:start', '准备写入 daily_quotes', result.source)
 
       try {
-        await writeKlineToDailyQuotes(normalizedSymbol, result.data!, result.source)
+        await writeKlineToDailyQuotes(normalizedSymbol, result.data, result.source)
         getQualityMetrics().recordWrite(true)
       } catch (writeErr) {
         getQualityMetrics().recordWrite(false)
@@ -780,7 +780,7 @@ export async function runSingleTrace(
           })
           addStage('complete', `采集失败: ${failReason}`, undefined, failReason)
           emitTrace(span)
-          getQualityMetrics().recordCollect(false, 'mock' as QuoteDataSourceId, span.totalDurationMs, [])
+          getQualityMetrics().recordCollect(false, 'mock', span.totalDurationMs, [])
           return { success: false, symbol: normalizedSymbol, dimensionCode, latency: span.totalDurationMs, fallbackCount: 0, error: failReason }
         }
 
@@ -846,7 +846,7 @@ export async function runSingleTrace(
         span.totalDurationMs = Date.now() - start
         span.completedAt = Date.now()
         emitTrace(span)
-        getQualityMetrics().recordCollect(false, 'mock' as QuoteDataSourceId, span.totalDurationMs, [])
+        getQualityMetrics().recordCollect(false, 'mock', span.totalDurationMs, [])
         return { success: false, symbol: normalizedSymbol, dimensionCode, latency: span.totalDurationMs, fallbackCount: 0, error: msg }
       }
     }
@@ -888,7 +888,7 @@ export async function runSingleTrace(
     })
     emitTrace(span)
 
-    getQualityMetrics().recordCollect(false, 'mock' as QuoteDataSourceId, span.totalDurationMs, [])
+    getQualityMetrics().recordCollect(false, 'mock', span.totalDurationMs, [])
 
     // 自动登记缺失报告（方便事后追溯采集失败原因）
     try {
