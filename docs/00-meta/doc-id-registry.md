@@ -93,7 +93,6 @@ date: 2026-07-17
 | V9-DOC-FRONT-001 | frontend | ADR-006: 输入舱拆分为四子页面 | reference/adr-006-input-cabin-subpages.md |
 | V9-DOC-FRONT-009 | frontend | V9 图表组件集成规格 | reference/chart-integration.md |
 | V9-DOC-FRONT-010 | frontend | Cockpit + News 模块文档修正方案 | reference/cockpit-news-doc-fix-plan.md |
-| V9-DOC-FRONT-011 | frontend | deprecated-ui-module-alignment | reference/deprecated-ui-module-alignment.md |
 | V9-DOC-FRONT-012 | frontend | v6-cockpit-ui-reference | reference/v6-cockpit-ui-reference.md |
 | V9-DOC-PROD-001 | product | competitive-analysis | 01-product/competitive-analysis.md |
 | V9-DOC-PROD-002 | product | user-personas-and-scenarios | 01-product/user-personas-and-scenarios.md |
@@ -129,7 +128,6 @@ date: 2026-07-17
 | V9-DOC-PROJ-035 | project | b批次高价值孤儿集成状态报告-2026-07-08 | explanation/b批次高价值孤儿集成状态报告-2026-07-08.md |
 | V9-DOC-PROJ-036 | project | cabins-overview | explanation/cabins-overview.md |
 | V9-DOC-PROJ-037 | project | V9 模块完成度剖面图 — 批次 D（交易舱） | explanation/completeness-profile-batch4.md |
-| V9-DOC-PROJ-038 | project | deprecated-v9-issue-resolution-schedule | explanation/deprecated-v9-issue-resolution-schedule.md |
 | V9-DOC-PROJ-043 | project | V9 模块完成度剖面图 — 批次 D（交易舱） | explanation/design/completeness-profile-batch4.md |
 | V9-DOC-PROJ-044 | project | deprecated-doc-sync-gap-list | explanation/design/deprecated-doc-sync-gap-list.md |
 | V9-DOC-PROJ-045 | project | 代码-文档同步整体方案与执行计划 | explanation/design/doc-sync-execution-plan.md |
@@ -138,7 +136,7 @@ date: 2026-07-17
 | V9-DOC-PROJ-048 | project | pending-items-backlog-20260704 | explanation/design/pending-items-backlog-20260704.md |
 | V9-DOC-PROJ-049 | project | tech-debt | explanation/design/tech-debt.md |
 | V9-DOC-PROJ-052 | project | ui改善部分检索报告 | explanation/design/ui改善部分检索报告.md |
-| V9-DOC-PROJ-053 | project | V6 Pro → V9 架构差异分析报告（最终版） | explanation/design/v6pro-v9-gap-analysis-final.md |
+| V9-DOC-PROJ-053 | project | V6 Pro → V9 架构差异分析报告（最终版） | 00-meta/audit-reports/v6pro-v9-gap-analysis-final.md |
 | V9-DOC-PROJ-054 | project | v6-v9界面设计优化可行性计划 | explanation/design/v6-v9界面设计优化可行性计划.md |
 | V9-DOC-PROJ-055 | project | v9现有数据资产清单 | explanation/design/v9现有数据资产清单.md |
 | V9-DOC-PROJ-056 | project | 踩坑规则门禁指南 | explanation/design/踩坑规则门禁指南.md |

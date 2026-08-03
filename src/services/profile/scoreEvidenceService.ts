@@ -340,7 +340,7 @@ export async function autoBuildAllEvidence(symbol: string): Promise<Record<strin
   const updated: StockProfile = {
     ...profile,
     totalEvidence: overview.total,
-    layerEvidenceCounts: overview.byLayer as any,
+    layerEvidenceCounts: overview.byLayer as unknown as Record<ScoreLayerId, number>,
     evidenceCoverage: overview.coverage,
     lastUpdatedAt: Date.now(),
   }

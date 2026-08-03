@@ -49,7 +49,7 @@ const COLOR_BANDS = {
 
 function getColor(value: number, max: number, mode: 'score' | 'progress' | 'risk'): string {
   const pct = (value / max) * 100
-  const bands = COLOR_BANDS[mode]
+  const bands = COLOR_BANDS[mode] ?? COLOR_BANDS.progress
   for (let i = bands.length - 1; i >= 0; i--) {
     const band = bands[i]!
     if (pct >= band.pct) return band.color

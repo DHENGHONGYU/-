@@ -144,10 +144,6 @@
 
 - [2026-07-05-module-registry-and-integration](../reports/changelogs/2026-07-05-module-registry-and-integration.md)
 
-### 2026-07-05-p0-5-and-legacy-bugs-jira-tickets.md
-
-- [2026-07-05-p0-5-and-legacy-bugs-jira-tickets](../reports/changelogs/2026-07-05-p0-5-and-legacy-bugs-jira-tickets.md)
-
 ### 2026-07-05-p2-completion-and-backlog.md
 
 - [2026-07-05-p2-completion-and-backlog](../reports/changelogs/2026-07-05-p2-completion-and-backlog.md)
@@ -190,7 +186,7 @@
 
 ### AGENT_AUDIT_REPORT.md
 
-- [AGENT_AUDIT_REPORT](../reports/audit/AGENT_AUDIT_REPORT.md)
+- [AGENT_AUDIT_REPORT](audit-reports/agent-audit-report.md)
 
 ### AI_CENTER_VUE3_EXAMPLES.md
 
@@ -438,7 +434,7 @@
 
 ### WEEKLY-TASKS-2026-07-05.md
 
-- [WEEKLY-TASKS-2026-07-05](../WEEKLY-TASKS-2026-07-05.md)
+- [WEEKLY-TASKS-2026-07-05](../06-project-management/archive/weekly-tasks-2026-07-05.md)
 
 ### a11y-checklist.md
 
@@ -767,10 +763,6 @@
 ### deletion-log.md
 
 - [deletion-log](../archive/deletion-log.md)
-
-### deployment-v1.0.0.md
-
-- [deployment-v1.0.0](./deprecated-docs/old-versions/deployment-v1.0.0.md)
 
 ### deployment.md
 
@@ -1120,10 +1112,6 @@
 
 - [refactor-research-pool-rename-plan](../reference/refactor-research-pool-rename-plan.md)
 
-### regression-suite-v1.0.0.md
-
-- [regression-suite-v1.0.0](./deprecated-docs/old-versions/regression-suite-v1.0.0.md)
-
 ### regression-suite.md
 
 - [regression-suite](../explanation/regression-suite.md)
@@ -1350,7 +1338,7 @@
 
 ### v6pro-v9-gap-analysis-final.md
 
-- [v6pro-v9-gap-analysis-final](../explanation/v6pro-v9-gap-analysis-final.md)
+- [v6pro-v9-gap-analysis-final](audit-reports/v6pro-v9-gap-analysis-final.md)
 
 ### v9-acceptance-report.md
 
@@ -1422,7 +1410,7 @@
 
 ### v9-post-dev-review.md
 
-- [v9-post-dev-review](../reports/retrospectives/v9-post-dev-review.md)
+- [v9-post-dev-review](../06-project-management/v9-post-dev-review.md)
 
 ### v9-rectification-tasks-v15-v16.md
 

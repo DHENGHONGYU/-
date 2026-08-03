@@ -1,3 +1,24 @@
+---
+title: 05. 引擎规格
+type: reference
+domain: backend
+phase: design
+tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "本文档定义 V9 的分析引擎、交易引擎、评分模型与跨模块通信协议（DataBridge / Envelope）。 目标读者：前端/全栈开发者、算法研究员、测试工程师。 与规划基线的差异见..."
+tags: [backend, spec, reference, service, api]
+version: v1.0.0
+last_updated: 2026-07-17
+code_version: 2.0.0
+doc_id: V9-DOC-BACK-001
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-ARCH-026, V9-DOC-BACK-038, V9-DOC-PROJ-176, V9-DOC-ARCH-030, V9-DOC-PROJ-182, V9-DOC-BACK-040, V9-DOC-DATA-003, V9-DOC-BACK-028, V9-DOC-PROJ-218, V9-DOC-BACK-035, V9-DOC-PROJ-149, V9-DOC-BACK-030]
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
+---
+
 # 05. 引擎规格
 
 > **Status**: Current  
@@ -6,7 +27,7 @@
 >
 > 本文档定义 V9 的分析引擎、交易引擎、评分模型与跨模块通信协议（DataBridge / Envelope）。  
 > 目标读者：前端/全栈开发者、算法研究员、测试工程师。  
-> 与规划基线的差异见 `docs/implementation/architecture-version-comparison.md`。
+> 与规划基线的差异见 `./architecture-version-comparison.md`。
 
 ---
 
@@ -16,11 +37,11 @@
 
 | 职责 | 属于引擎层 | 不属于引擎层 |
 |------|-----------|-------------|
-| 评分计算、信号生成、风控判断、池间流转校验、数据采集适配 | ✅ | |
-| 直接操作 IndexedDB 原生 API | | ✅，由 L2 `src/data/db.ts` 统一封装 |
-| 跨模块写操作 | | ✅，通过 `DataBridge.forward()` 委托 |
-| UI 渲染、路由跳转、DOM 操作 | | ✅，由 L5/L4 负责 |
-| 读取业务数据 | ✅（经 `dataLayer` 或 Service） | |
+| 评分计算、信号生成、风控判断、池间流转校验、数据采集适配 | ? | |
+| 直接操作 IndexedDB 原生 API | | ?，由 L2 `src/data/db.ts` 统一封装 |
+| 跨模块写操作 | | ?，通过 `DataBridge.forward()` 委托 |
+| UI 渲染、路由跳转、DOM 操作 | | ?，由 L5/L4 负责 |
+| 读取业务数据 | ?（经 `dataLayer` 或 Service） | |
 
 ### 1.1 数据采集引擎（Fetcher）
 
@@ -89,7 +110,7 @@ getUnifiedStockData(symbol)
   → 返回（可选缓存）
 ```
 
-**当前状态**：✅ 已实现。`UnifiedStockData` 类型定义于 `src/data/types.ts`，`getUnifiedStockView.useCase.ts` 已实现跨源融合查询。
+**当前状态**：? 已实现。`UnifiedStockData` 类型定义于 `src/data/types.ts`，`getUnifiedStockView.useCase.ts` 已实现跨源融合查询。
 
 ### 1.3 数据流引擎（DataFlow Engine）
 
@@ -112,15 +133,86 @@ src/store/
 └── dataflowStore.ts       # 状态管理
 ```
 
-**当前状态**：🟡 部分实现。已支持 SSE/轮询、内存缓存、定时刷新、慢订阅者检测、通道 priority 字段；TTL/容量上限/按优先级排序分发待完善。详细字段与 API 见 `docs/DATAFLOW_DATA_DEFINITION.md`。
+**当前状态**：?? 部分实现。已支持 SSE/轮询、内存缓存、定时刷新、慢订阅者检测、通道 priority 字段；TTL/容量上限/按优先级排序分发待完善。详细字段与 API 见 `./dataflow-data-definition.md`。
 
-### 1.4 未来可扩展
+### 1.4 Hybrid Proofread 混合校对引擎（v2.6.0 新增）
+
+混合校对引擎负责代码安全与合规性检查，通过本地规则引擎与云端风险数据库的协同，实现全面的项目安全扫描。
+
+#### 设计目标
+
+- **本地规则引擎**：基于正则匹配的安全规则检查（硬编码密钥、不安全依赖、敏感文件等）
+- **云端风险验证**：文件哈希比对云端风险数据库，识别已知漏洞
+- **报告生成**：结构化安全报告，支持多格式导出（Markdown/HTML/JSON）
+- **详细日志**：全链路日志记录与耗时统计，便于问题排查
+
+#### 核心模块
+
+| 模块 | 文件 | 职责 |
+|------|------|------|
+| HashService | `hashService.ts` | 文件哈希计算（SHA-256），支持批处理 |
+| LocalCollector | `localCollector.ts` | 本地文件遍历、过滤、哈希收集 |
+| RuleEngine | `ruleEngine.ts` | 规则加载、同步、评估（正则匹配） |
+| CloudSyncClient | `cloudSyncClient.ts` | 云端 API 调用（哈希验证、风险详情、规则同步） |
+| ReportGenerator | `reportGenerator.ts` | 报告生成与多格式导出 |
+
+#### 默认规则集（8 条）
+
+| 规则 ID | 名称 | 严重级别 | 类别 | 检测内容 |
+|---------|------|---------|------|---------|
+| R001 | Hardcoded API Key | critical | hardcoded_secret | 检测硬编码的 API Key |
+| R002 | Hardcoded Password | critical | hardcoded_secret | 检测硬编码的密码 |
+| R003 | Sensitive File Exposed | high | sensitive_data | 检测敏感配置文件（.env/.pem/.key） |
+| R004 | Insecure Dependency | high | dependency_vulnerability | 检测已知不安全的依赖版本（lodash@1/2、moment@1/2） |
+| R005 | Missing License File | info | security_best_practice | 检测项目是否缺少 LICENSE 文件 |
+| R006 | Console Log Security Risk | medium | code_quality | 检测可能泄露敏感信息的 console.log |
+| R007 | HTTP URL Usage | medium | security_best_practice | 检测使用 HTTP 而非 HTTPS 的 URL |
+| R008 | SQL Injection Risk | critical | sensitive_data | 检测可能导致 SQL 注入的字符串拼接 |
+
+#### 核心流程
+
+```
+runFullProofread(projectId, projectName, projectPath)
+  ├── Step 1: 同步规则（云端版本检查 + 规则下载）
+  ├── Step 2: 本地扫描（文件遍历 + 哈希计算）
+  ├── Step 3: 规则评估（正则匹配 + 严重级别统计）
+  ├── Step 4: 云端风险检查（哈希批量验证 + 风险详情获取）
+  └── Step 5: 生成报告（结构化输出 + 多格式导出）
+```
+
+#### 接口签名
+
+```ts
+// src/services/hybrid-proofread/index.ts
+export async function runFullProofread(
+  projectId: string,
+  projectName: string,
+  projectPath: string
+): Promise<{ success: boolean; report?: ProofreadReport; error?: string }>
+```
+
+#### 日志与监控
+
+所有核心方法均包含详细日志记录与耗时统计：
+
+| 模块 | 日志内容 |
+|------|---------|
+| CloudSyncClient | 请求参数、响应状态、风险等级、CVE 信息、耗时统计 |
+| RuleEngine | 规则加载状态、匹配详情、跳过规则数、耗时统计 |
+| runFullProofread | 四步流程日志、各阶段耗时拆解、最终结果汇总 |
+
+#### 当前状态
+
+? 已实现。所有核心模块已完成，包含详细日志记录与耗时统计，测试脚本覆盖 9 个测试用例。
+
+### 1.5 未来可扩展
 
 | 扩展方向 | 说明 | 优先级 |
 |----------|------|--------|
 | Agent 调度层 | V10 的 `src/agents/` 用于多 Agent 协同；V9 当前以函数式服务层为主 | P2/P3 |
 | Trading Gateway 抽象 | 将 `src/services/trading/` 抽象为 `ITradingGateway`，支持模拟/真实券商切换 | P3 |
 | Sector Factor Updater | 定时轮询 `sector_scores`，输出板块轮动信号 | P2 |
+| Hybrid Proofread 规则市场 | 支持自定义规则上传与共享 | P2 |
 
 ---
 
@@ -310,9 +402,9 @@ runSectorRotation()
 
 | 状态 | 说明 |
 |------|------|
-| 🟡 五因子十六指标模型 | 已实现，上层展示待完善 |
-| 🟡 行业评分 | V4行业评分已定义，部分可用 |
-| 🟡 轮动信号 | 基础评分已实现，上层展示待完善 |
+| ?? 五因子十六指标模型 | 已实现，上层展示待完善 |
+| ?? 行业评分 | V4行业评分已定义，部分可用 |
+| ?? 轮动信号 | 基础评分已实现，上层展示待完善 |
 
 ---
 
@@ -366,11 +458,11 @@ runSectorRotation()
 
 | 状态 | 说明 |
 |------|------|
-| 🔴 双策略评分类型 | `HotSectorScore` / `ValuePitScore` 类型与 Store 待新增 |
-| 🔴 热门板块分析器 | `hotSectorAnalyzer.ts` 待实现 |
-| 🔴 价值洼地分析器 | `valuePitAnalyzer.ts` 待实现 |
-| 🔴 轮动信号检测 | `rotationSignalDetector.ts` 待实现 |
-| 🔴 驾驶舱 Widget | `HotSectorWidget` / `ValuePitWidget` 待实现 |
+| ?? 双策略评分类型 | `HotSectorScore` / `ValuePitScore` 类型与 Store 待新增 |
+| ?? 热门板块分析器 | `hotSectorAnalyzer.ts` 待实现 |
+| ?? 价值洼地分析器 | `valuePitAnalyzer.ts` 待实现 |
+| ?? 轮动信号检测 | `rotationSignalDetector.ts` 待实现 |
+| ?? 驾驶舱 Widget | `HotSectorWidget` / `ValuePitWidget` 待实现 |
 
 ---
 
@@ -730,7 +822,7 @@ candidate → screened → deepDive → watching → archived
 1. **禁止引擎层直接写 DB**：所有写操作必须使用 `DataBridge.forward()`。
 2. **禁止引擎层硬编码阈值**：评分阈值、风控参数来自 `src/config/`。
 3. **禁止静默容错**：`?? []` / `|| 0` 等隐式兜底在引擎层被禁止；缺失数据应显式返回 `null` 或错误。
-4. **复杂度标注**：任何 O(n²) 以上算法必须加注释说明并给出优化路径。
+4. **复杂度标注**：任何 O(n2) 以上算法必须加注释说明并给出优化路径。
 5. **测试要求**：引擎函数必须附带单元测试，覆盖成功路径与主要异常路径。
 
 ---
@@ -742,7 +834,7 @@ candidate → screened → deepDive → watching → archived
 | V6 自动评分仍部分依赖随机数/模拟数据 | 评分质量取决于真实数据完整度 | Phase 2 持续接入 AKShare/真实数据 |
 | LLM 评分依赖外部网络 | 离线不可用 | 已设计回退到自动评分，需在 UI 层显式提示 |
 | 信号系统未与评分引擎联动 | 交易信号主要基于技术指标，未充分融合 V6 评分 | Phase 2 将 V6 评分作为信号因子输入 |
-| 🟢 已修复：输入舱 `inputConfig.ts` 已落地 | 搜索/导入/质量规则已集中配置 | 持续补充高级筛选与批量规则 |
+| ?? 已修复：输入舱 `inputConfig.ts` 已落地 | 搜索/导入/质量规则已集中配置 | 持续补充高级筛选与批量规则 |
 
 ---
 
@@ -750,7 +842,7 @@ candidate → screened → deepDive → watching → archived
 
 本文档当前版本为 `v0.9.0-docs-review`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
-- `docs/implementation/architecture-version-comparison.md`
+- `./architecture-version-comparison.md`
 
 主要变化：
 

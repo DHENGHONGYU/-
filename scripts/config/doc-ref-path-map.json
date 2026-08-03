@@ -414,7 +414,6 @@
     "regression-suite.md": "docs/reference/templates/regression-suite.md",
     "autonomous-workflow-user-guide.md": "docs/reference/autonomous-workflow-user-guide.md",
     "batch1-merge-report.md": "docs/explanation/design/deprecated-batch1-merge-report.md",
-    "v9-issue-resolution-schedule.md": "docs/explanation/deprecated-v9-issue-resolution-schedule.md",
     "docs/explanation/doc-sync-gap-list.md": "docs/explanation/design/deprecated-doc-sync-gap-list.md",
     "completeness-profile.md": "docs/reference/completeness-profile.md",
     "trading-core-factors.md": "docs/explanation/trading-core-factors.md",

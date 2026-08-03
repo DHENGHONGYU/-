@@ -4,11 +4,9 @@
   "lastUpdated": "2026-07-16",
   "phantomDocs": {
     "batch1-merge-report.md": "docs/explanation/design/deprecated-batch1-merge-report.md",
-    "batch2-merge-report.md": "docs/explanation/design/deprecated-batch2-merge-report.md",
     "batch3-merge-report.md": "docs/explanation/design/deprecated-batch3-merge-report.md",
     "completeness-profile.md": "docs/reference/completeness-profile.md",
     "doc-sync-gap-list.md": "docs/explanation/design/deprecated-doc-sync-gap-list.md",
-    "v9-issue-resolution-schedule.md": "docs/explanation/deprecated-v9-issue-resolution-schedule.md",
     "v9-issue-execution-board.md": "docs/explanation/v9-current-state-review.md",
     "trading-core-factors.md": "docs/explanation/trading-core-factors.md",
     "type-safety-prompt-snippet.md": "prompts/system-prompt-template.md",

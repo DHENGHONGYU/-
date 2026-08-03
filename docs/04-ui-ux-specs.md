@@ -1,3 +1,24 @@
+---
+title: 04. UI/UX 规范
+type: explanation
+domain: frontend
+phase: design
+tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "设计参考：https://hslqownhhwaig.ok.kimi.link/ 设计特征：PWA 移动端优先、shadcn/ui 组件体系、HSL CSS 变量主题、widget..."
+tags: [frontend, spec, plan, architecture, component, explanation]
+version: v1.0.0
+last_updated: 2026-07-17
+code_version: 2.0.0
+doc_id: V9-DOC-FRONT-003
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-149]
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
+---
+
 # 04. UI/UX 规范
 
 > **Status**: Current  
@@ -10,10 +31,10 @@
 ## 4.1 设计原则
 
 1. **移动端优先**：主要使用场景为平板/桌面研究，但需适配移动端浏览。
-2. **PWA 体验**：可安装、离线可用、主题色 `#10b981`（翡翠绿）。
+2. **PWA 体验**：可安装、离线可用、主题色 `#0D9165`（翡翠绿）。
 3. **Widget 化**：驾驶舱由可配置 Widget 网格组成。
 4. **五舱工作流**：输入 → 分析 → 交易 → 输出 → 总控，不切屏。
-5. **宋瓷美学 + 现代极简**：以象牙白/暖灰为底，翡翠绿为行动色，朱砂红为警示色。
+5. **宋瓷美学 + 现代极简**：以象牙白/暖灰为底，翡翠绿为行动色。功能性**警示色为琥珀（amber，`--warning: 38 92% 50%`）**——避免与错误色（`--destructive` 红）及 A 股「红涨」语义撞色；**朱砂红（`--cinnabar`）为文化强调/装饰色**，用于点缀而非功能状态。
 
 ## 4.2 主题系统
 
@@ -27,7 +48,7 @@
   --card-foreground: 240 10% 3.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
-  --primary: 160 84% 39%;        /* 翡翠绿 #10b981 */
+  --primary: 160 84% 31%;        /* 翡翠绿 #0D9165 */
   --primary-foreground: 0 0% 100%;
   --secondary: 240 4.8% 95.9%;
   --secondary-foreground: 240 5.9% 10%;
@@ -39,7 +60,7 @@
   --destructive-foreground: 0 0% 98%;
   --border: 240 5.9% 90%;
   --input: 240 5.9% 90%;
-  --ring: 160 84% 39%;
+  --ring: 160 84% 31%;
   --radius: 0.625rem;
 }
 ```
@@ -169,7 +190,7 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 - 事件名格式：`widget:{widgetId}:{event}`
 - 支持数据同步与状态同步
 
-**当前状态**：🔴 `CockpitShell.tsx` 为静态页面，缺少 Widget 框架。
+**当前状态**：?? `CockpitShell.tsx` 为静态页面，缺少 Widget 框架。
 
 ### 图表组件规范
 
@@ -196,7 +217,7 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 - 支持时间范围选择
 - 支持数据导出
 
-**当前状态**：🔴 未实现。缺少图表组件。
+**当前状态**：?? 未实现。缺少图表组件。
 
 ## 4.4 股票池 UI 规范
 
@@ -225,7 +246,7 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 ┌─────────────────────┐
 │  600519.SH          │
 │  贵州茅台            │
-│  价格: ¥1688.00     │
+│  价格: ￥1688.00     │
 │  分组: [核心持仓]   │
 │  V6: 4.2 / 5.0      │
 │  [推送到观察池]      │
@@ -239,7 +260,7 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 
 分组是用户自定义的展示/筛选维度，与 `researchStatus` 五态流转解耦：
 
-- **分组筛选器**：位于 `InputDashboard` 股票池看板工具栏，选项包含「全部组」及所有已存在的分组。
+- **分组筛选器**：位于 `StockPoolBoardPage` 股票池看板工具栏（原 `InputDashboard` 看板已迁移至分析舱），选项包含「全部组」及所有已存在的分组。
 - **新建分组**：通过工具栏「新建分组」按钮打开弹窗输入分组名称，创建后自动选中并可用于后续录入。
 - **录入时指定分组**：单条录入、批量导入、热门板块加池均支持选择目标分组，未选择时使用默认分组。
 - **批量移入分组**：选中多个标的后，可通过「批量移入分组」下拉将标的统一移动到目标分组。
@@ -247,27 +268,59 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 
 ## 4.5 组件库清单
 
-### 基础 UI 组件
+> **v2.1.0 变更**：组件库按原子设计（Atomic Design）分层，分为 `atoms`、`molecules`、`organisms`、`templates` 四级。
+> 详见 `../../reference/atomic-component-system.md` 与 `src/components/componentRegistry.ts`。
+> 过渡期内 `src/components/ui/` 仍保留兼容 shim，但新增组件须按原子层级放置。
+
+### 原子组件（Atoms）
 
 | 组件 | 路径 | 说明 |
 |------|------|------|
-| Button | `src/components/atoms/Button.tsx` | 主/次/危险/幽灵按钮 |
+| Button | `src/components/atoms/Button.tsx`（shim: `src/components/atoms/Button.tsx`） | 主/次/危险/幽灵按钮 |
 | Card | `src/components/atoms/Card.tsx` | 卡片容器 |
 | Input | `src/components/atoms/Input.tsx` | 文本输入 |
+| Badge | `src/components/atoms/Badge.tsx` | 状态徽章 |
+| Progress | `src/components/atoms/Progress.tsx` | 进度条 |
+| Skeleton | `src/components/atoms/Skeleton.tsx` | 加载骨架 |
+| Checkbox | `src/components/atoms/Checkbox.tsx` | 复选框 |
+| Textarea | `src/components/atoms/Textarea.tsx` | 多行文本输入 |
+| Select | `src/components/atoms/Select.tsx` | 选择器 |
+| Radio | `src/components/atoms/Radio.tsx` | 单选 |
+| Switch | `src/components/atoms/Switch.tsx` | 开关 |
+| Slider | `src/components/atoms/Slider.tsx` | 滑块 |
+| Toggle | `src/components/atoms/Toggle.tsx` | 切换 |
+| Tooltip | `src/components/atoms/Tooltip.tsx` | 工具提示 |
+| Popover | `src/components/atoms/Popover.tsx` | 气泡卡片 |
+| Sheet | `src/components/atoms/Sheet.tsx` | 抽屉 |
+| Toast | `src/components/atoms/Toast.tsx` | 轻提示 |
+| Menu | `src/components/atoms/Menu.tsx` | 菜单 |
+| Pagination | `src/components/atoms/Pagination.tsx` | 分页 |
+| Breadcrumb | `src/components/atoms/Breadcrumb.tsx` | 面包屑 |
+| Result | `src/components/atoms/Result.tsx` | 结果展示 |
+| List | `src/components/atoms/List.tsx` | 列表 |
+| Grid | `src/components/atoms/Grid.tsx` | 栅格 |
+| Table | `src/components/atoms/Table.tsx` | 表格 |
+| DatePicker | `src/components/atoms/DatePicker.tsx` | 日期选择 |
+| StockPriceChange | `src/components/atoms/StockPriceChange.tsx` | 股价变化 |
+
+### 分子组件（Molecules）
+
+| 组件 | 路径 | 说明 |
+|------|------|------|
 | Dialog | `src/components/molecules/Dialog.tsx` | 模态对话框 |
 | Tabs | `src/components/molecules/Tabs.tsx` | 标签页 |
-| Table | `src/components/atoms/Table.tsx` | 表格 |
-| Badge | `src/components/atoms/Badge.tsx` | 状态徽章 |
-| Skeleton | `src/components/ui/Skeleton.tsx` | 加载骨架 |
-| Toast | `src/components/atoms/Toast.tsx` | 轻提示 |
-| Checkbox | `src/components/atoms/Checkbox.tsx` | 复选框 |
-| Progress | `src/components/atoms/Progress.tsx` | 进度条 |
-| Textarea | `src/components/atoms/Textarea.tsx` | 多行文本输入 |
-| Dropdown | `src/components/ui/Dropdown.tsx` | 下拉菜单 |
-| Command | `src/components/ui/Command.tsx` | 命令面板 |
-| ScrollArea | `src/components/ui/ScrollArea.tsx` | 自定义滚动区域 |
+| Alert | `src/components/molecules/Alert.tsx` | 警告提示 |
+| DataState | `src/components/molecules/DataState.tsx` | 加载/空/错误状态 |
+| ErrorState | `src/components/molecules/ErrorState.tsx` | 错误状态 |
+| EmptyState | `src/components/molecules/EmptyState.tsx` | 空状态 |
+| LoadingState | `src/components/molecules/LoadingState.tsx` | 加载状态 |
+| PageHeader | `src/components/templates/PageHeader.tsx` | 页面标题 + 操作区 |
+| FormField | `src/components/molecules/FormField.tsx` | 表单字段（Label + 控件 + 错误） |
+| MetricCard | `src/components/molecules/MetricCard.tsx` | 指标卡（标题 + 数值 + 趋势） |
+| SearchBar | `src/components/molecules/SearchBar.tsx` | 搜索栏 |
+| FilterChip | `src/components/molecules/FilterChip.tsx` | 可关闭筛选标签 |
 
-### 业务组件
+### 有机体组件（Organisms）
 
 | 组件 | 路径 | 说明 |
 |------|------|------|
@@ -276,11 +329,13 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 | PoolBoard | `src/components/organisms/pool/PoolBoard.tsx` | 股票池看板 |
 | PoolCard | `src/components/organisms/pool/PoolCard.tsx` | 股票卡片 |
 | PoolList | `src/components/organisms/pool/PoolList.tsx` | 股票列表视图 |
+| CollectionProgressPanel | `src/components/organisms/collection/CollectionProgressPanel.tsx` | 采集进度面板 |
+| CollectionReportPanel | `src/components/organisms/collection/CollectionReportPanel.tsx` | 采集汇报面板 |
 | ScoreFactorDeltaPanel | `src/components/organisms/shared/ScoreFactorDeltaPanel.tsx` | 评分因子变化面板 |
 | ScoreUpdateAlert | `src/components/organisms/shared/ScoreUpdateAlert.tsx` | 评分更新提醒 |
 | ErrorBoundary | `src/components/organisms/shared/ErrorBoundary.tsx` | 错误边界组件 |
 
-### 图表组件（待建）
+### 图表组件
 
 | 组件 | 路径 | 说明 |
 |------|------|------|
@@ -290,6 +345,15 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 | AreaChart | `src/components/chart/AreaChart.tsx` | 面积图 |
 | ScoreRadar | `src/components/chart/ScoreRadar.tsx` | 评分雷达图 |
 | FactorHeatmap | `src/components/chart/FactorHeatmap.tsx` | 因子热力图 |
+
+### 模板组件（Templates）
+
+| 组件 | 路径 | 说明 |
+|------|------|------|
+| PageContainer | `src/components/templates/PageContainer.tsx` | 页面内容容器 |
+| DashboardLayout | `src/components/templates/DashboardLayout.tsx` | 仪表盘布局 |
+| SidebarLayout | `src/components/templates/SidebarLayout.tsx` | 侧边栏布局 |
+| CockpitLayout | `src/components/templates/CockpitLayout.tsx` | 驾驶舱布局 |
 
 ## 4.6 响应式断点
 
@@ -328,7 +392,7 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 
 本文档当前版本为 `v0.9.0-docs-review`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
-- `docs/implementation/architecture-version-comparison.md`
+- `../../reference/architecture-version-comparison.md`
 
 主要变化：
 

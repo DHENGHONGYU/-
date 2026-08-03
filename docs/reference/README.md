@@ -39,7 +39,7 @@ date: 2026-07-17
 | **D** | 技术规范 | 分层、门禁、令牌、复杂度、API 契约、开发工作流、迁移规范 | `../../AGENTS.md`(根)、`./coding-conventions.md`(P0?)、`./complexity-governance.md`、`./jsdoc-convention.md`、`./development-workflow-sop.md`、`./design-tokens.md`、`./design-token-mapping.md`、`./v6-to-v9-migration-spec.md` | ? |
 | **E** | 测试策略 | 单元/e2e/覆盖率、测试用例、门禁 | `./testing-strategy.md`(P1?)、`./test-catalog.md`、`../explanation/production-release-checklist-skill.md` | ? |
 | **F** | AI 辅助工程治理 | 提示词模板、记忆层、飞轮、AI 工程入口、检查表 | `./README.md`(P1?)、`../prompts/store-integration-guide.md`、`../prompts/service-integration-guide.md`、`./ai-memory-layer.md`、`./ai-generate-audit-fix-loop.md`、`./ui-migration-checklist.md`、`./widget-integration-checklist.md` | ? |
-| **G** | 过程与质量产物 | 报告、审计、changelog、草稿、发布管理 | `docs/reports/audit/`（自动产物）、`docs/reports/changelogs/`、`CHANGELOG.md`(根)、`../00-meta/../00-meta/../00-meta/cleanup-schedule.md`(P1?)、`../explanation/design/v9-post-dev-review.md`、`../explanation/design/发布计划与评审-r01.md` | ? |
+| **G** | 过程与质量产物 | 报告、审计、changelog、草稿、发布管理 | `docs/reports/audit/`（自动产物）、`docs/reports/changelogs/`、`CHANGELOG.md`(根)、`../00-meta/../00-meta/../00-meta/cleanup-schedule.md`(P1?)、`../06-project-management/v9-post-dev-review.md`、`../explanation/design/发布计划与评审-r01.md` | ? |
 | **H** | 跨域补充 | 入门、How-to、安全、部署、i18n | `../tutorials/getting-started.md`(P1?)、`../how-to/how-to-add-widget.md`(P1?)、`../how-to/how-to-add-store.md`(P1?)、`../how-to/how-to-add-service.md`(P1?)、`../how-to/mcp-acl-guide.md`、`../explanation/runbook.md`(P2?)、`../explanation/a11y-i18n.md`(P2) | ? |
 
 ---

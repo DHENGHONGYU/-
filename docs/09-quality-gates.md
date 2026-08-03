@@ -1,3 +1,24 @@
+---
+title: 09. 质量门禁
+type: reference
+domain: qa
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "本文档定义 V9 的上线前质量门禁、CI 流水线、测试策略与扫描脚本。 目标读者：开发者、QA、发布负责人。"
+tags: [qa, quality, reference]
+version: v1.0.0
+last_updated: 2026-07-17
+code_version: 2.0.0
+doc_id: V9-DOC-QA-065
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-QA-108]
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
+---
+
 # 09. 质量门禁
 
 > **Status**: Current  
@@ -15,19 +36,19 @@
 
 | # | 门禁项 | 当前状态 | 目标 | 命令/脚本 |
 |---|--------|----------|------|-----------|
-| 1 | TypeScript 类型检查 | ✅ 通过 | 0 errors | `tsc --noEmit` |
-| 2 | ESLint 代码规范 | ✅ 通过 | 0 warnings/errors | `npm run lint` |
-| 3 | 单元测试 | 🟡 部分通过 | 198/236 passed（38 failed） | `npm run test` |
-| 4 | 生产构建 | ✅ 通过 | 产物生成成功 | `npm run build` |
-| 5 | 跨层调用审计 | ✅ 已建立，当前 0 违规 / 0 警告 | 0 违规 | `npm run audit:layers` |
-| 6 | 硬编码审计 | 🟡 已建立，基线 749 处问题（Critical 398 / Major 351） | 0 硬编码阈值/颜色 | `npm run audit:hardcode` |
-| 7 | 空壳文件/未使用导出审计 | 🟡 已建立，基线 0 空壳 / 0 路由漂移 / 16 未注册页面提示 | 0 空壳 / 0 路由漂移 | `npm run audit:deadcode` |
-| 8 | 测试覆盖率 | 🟡 阈值已配置，当前实测覆盖率尚未达标 | core/data/lib ≥85%，services ≥70% | `npm run coverage` |
-| 9 | E2E 冒烟测试 | ✅ 已建立 | 0 失败（5/5 passed） | `npm run test:e2e` |
-| 10 | 路由一致性审计 | 🟡 已建立，基线 0 处漂移 | 0 漂移 | `npm run audit:deadcode` |
-| 11 | PWA 离线验证 | 🔴 未建立 | service worker 注册成功 | 手动/Playwright（待建） |
-| 12 | 数据蓝图一致性 | ✅ 已建立 | Store/类型/文档一致 | `npm run validate:blueprint && npx vitest run src/blueprints/__tests__/dataRelationship.test.ts` |
-| 13 | 踩坑规则门禁 | ✅ 已建立 | 0 ERROR（规则 #11-#14） | `python scripts/pitfall_check.py` — 详见 [踩坑规则门禁指南](踩坑规则门禁指南.md) |
+| 1 | TypeScript 类型检查 | ? 通过 | 0 errors | `tsc --noEmit` |
+| 2 | ESLint 代码规范 | ? 通过 | 0 warnings/errors | `npm run lint` |
+| 3 | 单元测试 | ?? 部分通过 | 198/236 passed（38 failed） | `npm run test` |
+| 4 | 生产构建 | ? 通过 | 产物生成成功 | `npm run build` |
+| 5 | 跨层调用审计 | ? 已建立，当前 0 违规 / 0 警告 | 0 违规 | `npm run audit:layers` |
+| 6 | 硬编码审计 | ?? 已建立，基线 749 处问题（Critical 398 / Major 351） | 0 硬编码阈值/颜色 | `npm run audit:hardcode` |
+| 7 | 空壳文件/未使用导出审计 | ?? 已建立，基线 0 空壳 / 0 路由漂移 / 16 未注册页面提示 | 0 空壳 / 0 路由漂移 | `npm run audit:deadcode` |
+| 8 | 测试覆盖率 | ?? 阈值已配置，当前实测覆盖率尚未达标 | core/data/lib ≥85%，services ≥70% | `npm run coverage` |
+| 9 | E2E 冒烟测试 | ? 已建立 | 0 失败（5/5 passed） | `npm run test:e2e` |
+| 10 | 路由一致性审计 | ?? 已建立，基线 0 处漂移 | 0 漂移 | `npm run audit:deadcode` |
+| 11 | PWA 离线验证 | ?? 未建立 | service worker 注册成功 | 手动/Playwright（待建） |
+| 12 | 数据蓝图一致性 | ? 已建立 | Store/类型/文档一致 | `npm run validate:blueprint && npx vitest run src/blueprints/__tests__/dataRelationship.test.ts` |
+| 13 | 踩坑规则门禁 | ? 已建立 | 0 ERROR（规则 #11-#14） | `python scripts/pitfall_check.py` — 详见 [踩坑规则门禁指南](踩坑规则门禁指南.md) |
 
 `.nvmrc` 已创建（Node 22），CI/团队成员可通过 `nvm use` 读取。
 
@@ -100,12 +121,12 @@
 
 | 目录 | 目标覆盖率 | 当前状态 |
 |------|-----------|----------|
-| `src/core/` | ≥ 85% | 🟡 待统计 |
-| `src/data/` | ≥ 85% | 🟡 待统计 |
-| `src/utils/`（如存在） | ≥ 85% | 🟡 待统计 |
-| `src/services/` | ≥ 70% | 🟡 待统计 |
-| `src/pages/` | ≥ 40% | 🔴 待建立 |
-| `src/components/` | ≥ 40% | 🔴 待建立 |
+| `src/core/` | ≥ 85% | ?? 待统计 |
+| `src/data/` | ≥ 85% | ?? 待统计 |
+| `src/lib/`（如存在） | ≥ 85% | ?? 待统计 |
+| `src/services/` | ≥ 70% | ?? 待统计 |
+| `src/pages/` | ≥ 40% | ?? 待建立 |
+| `src/components/` | ≥ 40% | ?? 待建立 |
 
 ### 4.2 集成测试
 
@@ -261,13 +282,13 @@ jobs:
 
 | # | 偏差 | 当前数量 | 责任 Phase | 收敛方式 |
 |---|------|----------|------------|----------|
-| 1 | L5/L4 直接导入 dataLayer | 0 | Phase 2 | ✅ 已完成；所有 L5/L4 读操作经 Service |
-| 2 | L5/L4 直接写数据层 | 0 | Phase 2 | ✅ 已完成；所有写操作经 DataBridge |
-| 3 | config 依赖 services 类型 | 0 | Phase 2 | ✅ 已完成；类型已下沉到 `src/config/llmConfig.ts` |
+| 1 | L5/L4 直接导入 dataLayer | 0 | Phase 2 | ? 已完成；所有 L5/L4 读操作经 Service |
+| 2 | L5/L4 直接写数据层 | 0 | Phase 2 | ? 已完成；所有写操作经 DataBridge |
+| 3 | config 依赖 services 类型 | 0 | Phase 2 | ? 已完成；类型已下沉到 `src/config/llmConfig.ts` |
 | 4 | UI 层硬编码 Tailwind 颜色 | 8 | Phase 2/3 | 替换为 `theme.config.ts` 语义化 class/token |
 | 5 | 引擎层静默回退 | 20+ | Phase 2/3 | 显式返回错误对象，由调用方决定兜底文案 |
 | 6 | 魔法数字 | 4 | Phase 2 | 将阈值抽取到 `src/config/thresholds.ts` |
-| 7 | 🟢 已修复：`inputConfig.ts` 已创建 | 0 | Phase 2 | 持续补充高级筛选与批量规则 |
+| 7 | ?? 已修复：`inputConfig.ts` 已创建 | 0 | Phase 2 | 持续补充高级筛选与批量规则 |
 | 8 | 路由-文件一致性审计待增强 | 0 | Phase 2 | 增强 `audit-dead-code.ts` 路由-文件校验 |
 
 ---
@@ -295,7 +316,7 @@ jobs:
 
 | 偏差 | 影响 | 计划 |
 |------|------|------|
-| 跨层调用基线已清零 | ✅ 架构违规已收敛 | 持续运行 `audit:layers` 守护 |
+| 跨层调用基线已清零 | ? 架构违规已收敛 | 持续运行 `audit:layers` 守护 |
 | 硬编码基线 749 处未清零（新增主要来自 NewsPage V6 组件与 AI Center Mock 数据） | 阈值/颜色/错误兜底可能重新泄漏 | Phase 2/3 将阈值/颜色集中到 config/theme；错误兜底显式化；新增模块须先定义常量再写组件 |
 | 覆盖率阈值已配置，当前未达标 | 无法量化测试质量 | 待补充测试收敛，目标 core/data/lib ≥85%、services ≥70% |
 | E2E 已建立 | 核心链路回归风险已收敛 | 当前 5/5 通过，持续维护 |
@@ -308,7 +329,7 @@ jobs:
 
 本文档当前版本为 `v0.9.0-doc-sync-plan`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
-- `docs/implementation/architecture-version-comparison.md`
+- `./architecture-version-comparison.md`
 
 主要变化：
 
