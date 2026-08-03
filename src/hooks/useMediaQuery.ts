@@ -49,7 +49,7 @@ export interface UseMediaQueryOptions {
    *  注意：只有 options 里显式出现 `window` 属性时才使用注入值；
    *       空 options 或不含该属性则走全局 window（兼容历史用法）。
    */
-  window?: typeof globalThis.window
+  window?: Window
 }
 
 /** createMediaQuerySubscriber 返回的订阅器接口 —— 与 useSyncExternalStore 签名对齐 */
@@ -63,6 +63,21 @@ export interface MediaQuerySubscriber {
   getSnapshot(): boolean
   /** 同步 SSR 快照（用于服务端渲染路径，不访问 DOM） */
   getServerSnapshot(fallback?: boolean): boolean
+}
+
+/** 旧版 MediaQueryList API（已弃用但 pre-2020 浏览器仍可用） */
+interface LegacyMediaQueryList {
+  addListener(cb: (e: MediaQueryListEvent) => void): void
+  removeListener(cb: (e: MediaQueryListEvent) => void): void
+}
+
+/** 运行时探测用的 MQL 类型 —— 所有监听方法可选，确保 typeof 守卫不被 TS 视为冗余 */
+interface RuntimeMediaQueryList {
+  matches: boolean
+  addEventListener?(type: 'change', listener: (e: MediaQueryListEvent) => void): void
+  removeEventListener?(type: 'change', listener: (e: MediaQueryListEvent) => void): void
+  addListener?(cb: (e: MediaQueryListEvent) => void): void
+  removeListener?(cb: (e: MediaQueryListEvent) => void): void
 }
 
 /* ============================================================
@@ -79,14 +94,12 @@ export interface MediaQuerySubscriber {
  * ========================================================== */
 export function createMediaQuerySubscriber(
   query: string,
-  options: { window?: typeof globalThis.window } = {},
+  options: { window?: Window } = {},
 ): MediaQuerySubscriber {
   // 只有 options 显式含 window key（值可以是 undefined 表示 SSR）才用注入值
-  const win: typeof globalThis.window | undefined = 'window' in options ? options.window : (globalThis as any).window
-  const hasWin = typeof win !== 'undefined' && win !== null
-  const hasMatchMedia = hasWin && typeof (win as any).matchMedia === 'function'
+  const win: Window | undefined = 'window' in options ? options.window : (globalThis as { window?: Window }).window
 
-  if (!hasWin || !hasMatchMedia) {
+  if (win === undefined || typeof win.matchMedia !== 'function') {
     // --- SSR / 极端环境：只读订阅器 -------------------------------------
     return {
       subscribe() {
@@ -102,7 +115,8 @@ export function createMediaQuerySubscriber(
   }
 
   // --- 浏览器环境 -------------------------------------------------------
-  const mql = (win as Window).matchMedia(query)
+  // win 已通过上方守卫收窄为 Window；转 RuntimeMediaQueryList 以运行时探测监听 API
+  const mql = win.matchMedia(query) as unknown as RuntimeMediaQueryList
   let snapshot = mql.matches
   const listeners = new Set<() => void>()
 
@@ -116,32 +130,26 @@ export function createMediaQuerySubscriber(
     })
   }
 
-  // 两种注册方式，均带 @ts-expect-error 兼容老 Safari 的 addListener（声明已弃用但仍可用）
+  // 两种注册方式：优先 addEventListener，回退 deprecated addListener（老 Safari 2019 前）
   let attached = false
   const ensureListening = (): void => {
     if (attached) return
     attached = true
-    if (typeof (mql as any).addEventListener === 'function') {
-      ;(mql as any).addEventListener('change', onChange)
+    if (typeof mql.addEventListener === 'function') {
+      mql.addEventListener('change', onChange)
     } else {
       // deprecated addListener fallback for pre-2020 browsers
-      const legacy = mql as any as {
-        addListener(cb: (e: MediaQueryListEvent) => void): void
-        removeListener(cb: (e: MediaQueryListEvent) => void): void
-      }
+      const legacy = mql as unknown as LegacyMediaQueryList
       legacy.addListener(onChange)
     }
   }
   const ensureStopped = (): void => {
     if (!attached) return
     attached = false
-    if (typeof (mql as any).removeEventListener === 'function') {
-      ;(mql as any).removeEventListener('change', onChange)
+    if (typeof mql.removeEventListener === 'function') {
+      mql.removeEventListener('change', onChange)
     } else {
-      const legacy = mql as any as {
-        addListener(cb: (e: MediaQueryListEvent) => void): void
-        removeListener(cb: (e: MediaQueryListEvent) => void): void
-      }
+      const legacy = mql as unknown as LegacyMediaQueryList
       legacy.removeListener(onChange)
     }
   }
@@ -188,12 +196,12 @@ export function createMediaQuerySubscriber(
  * ========================================================== */
 export function useMediaQuery(query: string, options: UseMediaQueryOptions = {}): boolean {
   const { defaultValue = false, window: winInject } = options
-  const subscriberOptions: { window?: typeof globalThis.window } | undefined =
+  const subscriberOptions: { window?: Window } | undefined =
     'window' in options ? { window: winInject } : undefined
   const subscriber = createMediaQuerySubscriber(query, subscriberOptions)
   const matched = useSyncExternalStore(
-    subscriber.subscribe,
-    subscriber.getSnapshot,
+    subscriber.subscribe.bind(subscriber),
+    subscriber.getSnapshot.bind(subscriber),
     () => subscriber.getServerSnapshot(defaultValue),
   )
   return matched

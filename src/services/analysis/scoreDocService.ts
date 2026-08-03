@@ -221,8 +221,8 @@ export function buildScoreDocDiff(
     })
   }
 
-  const oldRating = older.recommendation?.label ?? ''
-  const newRating = newer.recommendation?.label ?? ''
+  const oldRating = older.recommendation.label
+  const newRating = newer.recommendation.label
 
   return {
     newerVersion: newer.version,
@@ -481,8 +481,8 @@ export function buildScoreComparison(
   const topRisingDimensions = sortedByDeltaAbs.filter((d) => d.delta > 0).slice(0, 5)
   const topFallingDimensions = sortedByDeltaAbs.filter((d) => d.delta < 0).slice(0, 5)
 
-  const oldRating = leftDoc.recommendation?.label ?? ''
-  const newRating = rightDoc.recommendation?.label ?? ''
+  const oldRating = leftDoc.recommendation.label
+  const newRating = rightDoc.recommendation.label
 
   return {
     mode,

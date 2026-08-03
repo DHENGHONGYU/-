@@ -60,8 +60,8 @@ export function Toaster({ className }: ToasterProps): ReactNode {
             </span>
           )}
           <div className="flex-1">
-            {!!t.title && <p className="font-medium text-sm">{t.title}</p>}
-            {!!t.description && (
+            {t.title != null && t.title !== '' && <p className="font-medium text-sm">{t.title}</p>}
+            {t.description != null && t.description !== '' && (
               <p className="mt-1 text-sm opacity-90">{t.description}</p>
             )}
           </div>

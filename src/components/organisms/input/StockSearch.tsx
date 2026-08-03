@@ -259,7 +259,7 @@ export function StockSearch({
                   </div>
                   {/* 申万行业面包屑：仅当 swL1 存在时渲染（港股/未覆盖 A 股不显示） */}
                   {result.swL1 && (
-                    <div className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                    <div className="mt-0.5 text-xs text-muted-foreground">
                       {[result.swL1, result.swL2, result.swL3].filter(Boolean).join(' / ')}
                     </div>
                   )}
