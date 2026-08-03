@@ -123,22 +123,38 @@ function scanContent(full, rel, content) {
 }
 
 /* ---------- 暂存区模式：只扫描 git staged 文件 ---------- */
+// 修复：原 --diff-filter=ACM 漏掉 D（删除）类型，导致纯删除提交时 stagedFiles 为空，
+// 回退到全仓库扫描，产生历史文档误报。删除/重命名不会引入新写死路径，应直接 pass。
+// 详见 project_memory.md 硬约束：Staged file checks must respect --staged semantics。
 let stagedFiles = [];
+let stagedAllCount = 0;  // 暂存区总变更数（含 D/R/C）
 if (STAGED) {
   try {
+    // 先获取暂存区所有变更（含 D/R/C），用于判断是否纯删除提交
+    const allStdout = execSync('git diff --cached --name-only', {
+      encoding: 'utf8',
+      cwd: ROOT,
+      maxBuffer: 10 * 1024 * 1024,
+    });
+    const allLines = allStdout.split('\n').map(s => s.trim()).filter(Boolean);
+    stagedAllCount = allLines.length;
+
+    // 再获取需扫描内容的变更（仅 ACM，D 类型文件已不存在无法扫描）
     const stdout = execSync('git diff --cached --name-only --diff-filter=ACM', {
       encoding: 'utf8',
       cwd: ROOT,
       maxBuffer: 10 * 1024 * 1024,
     });
     stagedFiles = stdout.split('\n').map(s => s.trim()).filter(Boolean);
-    if (VERBOSE) console.log(`[env-path-guard] 暂存区文件数: ${stagedFiles.length}`);
+    if (VERBOSE) console.log(`[env-path-guard] 暂存区变更数: ${stagedAllCount}, 可扫描文件数: ${stagedFiles.length}`);
   } catch (e) {
     console.warn('[env-path-guard] 无法获取暂存区文件列表，回退到全目录扫描');
   }
 }
 
-if (STAGED && stagedFiles.length > 0) {
+// --staged 语义：暂存区非空时只扫描暂存区文件，绝不回退到全仓库扫描。
+// 纯删除/重命名提交（stagedAllCount>0 但 stagedFiles.length===0）直接 pass。
+if (STAGED && stagedAllCount > 0) {
   for (const rel of stagedFiles) {
     if (fileCount > MAX_FILES) break;
     const full = path.join(ROOT, rel);
@@ -151,6 +167,10 @@ if (STAGED && stagedFiles.length > 0) {
     if (shouldSkipFile) continue;
     if (scanFile(full, rel)) fileCount++;
   }
+} else if (STAGED && stagedAllCount === 0) {
+  // 暂存区为空（非 STAGED 模式才会走到这里，实际 STAGED 模式下不会触发）
+  // 为安全起见，仍然不扫描全仓库
+  if (VERBOSE) console.log('[env-path-guard] 暂存区为空，跳过扫描');
 } else {
   walk(ROOT, []);
 }
