@@ -462,13 +462,15 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
   //   description: 'V9 模块 Mock 验证页（Slider/Sheet/Toggle/Engine）',
   // },
 
-  // 开发演示：StockQuoteDashboard 价格守卫验证页（仅 DEV 模式生效）
-  {
-    path: '/dev/quote-dashboard',
-    component: React.lazy(() => import('@/pages/StockQuoteDashboardDemoPage')),
-    category: 'other',
-    description: 'StockQuoteDashboard 价格守卫演示（开发验证用）',
-  },
+  // // [DEPRECATED 2026-08-04] StockQuoteDashboardDemoPage 已从路由解耦，待删除
+  // // 原因：开发期价格守卫演示页，不应进入生产路由注册表。
+  // // 文件 src/pages/StockQuoteDashboardDemoPage.tsx 已物理删除。
+  // {
+  //   path: '/dev/quote-dashboard',
+  //   component: React.lazy(() => import('@/pages/StockQuoteDashboardDemoPage')),
+  //   category: 'other',
+  //   description: 'StockQuoteDashboard 价格守卫演示（开发验证用）',
+  // },
 ]
 
 /**
