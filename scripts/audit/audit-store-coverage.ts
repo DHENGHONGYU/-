@@ -76,7 +76,14 @@ function extractActionCount(content: string): number {
 
   // 模式 1: `functionName: () =>` 或 `functionName: async () =>`
   // 排除注释行
-  const arrowPattern = /^\s*(\w+)\s*:\s*(?:async\s*)?\(?[^)]*\)?\s*=>/gm
+  // 注意 1：字符类必须用 [^\n)]* 而非 [^)]*——后者会跨行贪婪匹配，
+  //         把后续多行的 `name: ... =>` 一并吞掉（chatStore 的 sendMessage
+  //         即被 `messages: []` 的贪婪匹配吞没，导致漏报 + 误报）。
+  // 注意 2：`(` 必选（非 `\(?\`）——排除 `set()` 调用内部的嵌套键误报，
+  //         例如 `messages: state.messages.map((msg) =>` 会被误判为名为
+  //         `messages` 的 action。已全仓 Grep 确认无 `name: x =>` 无括号单参箭头，
+  //         故要求 `(` 不会漏报任何真实 action。
+  const arrowPattern = /^\s*(\w+)\s*:\s*(?:async\s*)?\([^\n)]*\)?\s*=>/gm
   let match: RegExpExecArray | null
   while ((match = arrowPattern.exec(content)) !== null) {
     const name = match[1]
@@ -87,10 +94,12 @@ function extractActionCount(content: string): number {
   }
 
   // 模式 2: `functionName(param) {`（方法简写）
-  const methodPattern = /^\s*(\w+)\s*\([^)]*\)\s*\{/gm
+  // 同样用 [^\n)]* 限制单行；并排除 JS 控制流关键字（if/for/while/...）
+  // 它们也符合 `name(...) {` 形态，会被误识别为 action。
+  const methodPattern = /^\s*(\w+)\s*\([^\n)]*\)\s*\{/gm
   while ((match = methodPattern.exec(content)) !== null) {
     const name = match[1]
-    if (!isInternalField(name)) {
+    if (!isInternalField(name) && !isControlKeyword(name)) {
       actions.add(name)
     }
   }
@@ -126,8 +135,23 @@ function isInternalField(name: string): boolean {
     '_pendingRefresh', '_refreshDebounceTimer',
     'processingSymbols', 'portfolioInput', 'buildPortfolio',
     'loadPortfolioInput', 'intentionPool', 'positionPool', 'researchPool',
+    // Zustand persist 中间件配置回调（非 action，但符合 `name: (...) =>` 形态）
+    // 系统性校验 themeStore 时发现：partialize/onRehydrateStorage/getItem/setItem/removeItem
+    // 是 persist 配置项（含自定义 storage 对象方法），会被误判为 action。
+    'partialize', 'onRehydrateStorage', 'onRehydrate', 'migrate',
+    'getItem', 'setItem', 'removeItem',
   ]
   return internalFields.includes(name)
+}
+
+/**
+ * 判断是否为 JS 控制流关键字
+ * 这些关键字符合 `keyword(...) {` 形态，会被方法简写模式误识别为 action
+ * （例如 chatStore 中 `if (!chunk.isDone) {` 被误判为名为 `if` 的 action）
+ */
+function isControlKeyword(name: string): boolean {
+  const controlKeywords = ['if', 'for', 'while', 'switch', 'catch', 'with']
+  return controlKeywords.includes(name)
 }
 
 /**
