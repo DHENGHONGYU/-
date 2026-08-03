@@ -273,36 +273,6 @@
       "status": "skipped"
     },
     {
-      "old_path": "00-meta/deprecated-docs/old-versions/DATA_DEFINITION-v1.0.0-cockpit.md",
-      "new_path": "docs/00-meta/DATA_DEFINITION-v1.0.0-cockpit.md",
-      "diataxis_category": "reference",
-      "status": "skipped"
-    },
-    {
-      "old_path": "00-meta/deprecated-docs/old-versions/DATA_DICTIONARY_INDEX-v1.6.0.md",
-      "new_path": "docs/00-meta/DATA_DICTIONARY_INDEX-v1.6.0.md",
-      "diataxis_category": "reference",
-      "status": "skipped"
-    },
-    {
-      "old_path": "00-meta/deprecated-docs/old-versions/deployment-v1.0.0.md",
-      "new_path": "docs/00-meta/deployment-v1.0.0.md",
-      "diataxis_category": "reference",
-      "status": "skipped"
-    },
-    {
-      "old_path": "00-meta/deprecated-docs/old-versions/REGISTRY_INDEX-v1.0.0-02-design.md",
-      "new_path": "docs/00-meta/REGISTRY_INDEX-v1.0.0-02-design.md",
-      "diataxis_category": "explanation",
-      "status": "skipped"
-    },
-    {
-      "old_path": "00-meta/deprecated-docs/old-versions/regression-suite-v1.0.0.md",
-      "new_path": "docs/00-meta/regression-suite-v1.0.0.md",
-      "diataxis_category": "explanation",
-      "status": "skipped"
-    },
-    {
       "old_path": "01-requirements/01-vision-and-goals.md",
       "new_path": "docs/explanation/01-vision-and-goals.md",
       "diataxis_category": "explanation",
@@ -2169,12 +2139,6 @@
       "status": "pending"
     },
     {
-      "old_path": "reports/changelogs/2026-07-05-p0-5-and-legacy-bugs-jira-tickets.md",
-      "new_path": "docs/reports/changelogs/2026-07-05-p0-5-and-legacy-bugs-jira-tickets.md",
-      "diataxis_category": "explanation",
-      "status": "pending"
-    },
-    {
       "old_path": "reports/changelogs/2026-07-05-p2-completion-and-backlog.md",
       "new_path": "docs/reports/changelogs/2026-07-05-p2-completion-and-backlog.md",
       "diataxis_category": "reference",
@@ -2473,6 +2437,54 @@
       "new_path": "docs/reports/retrospectives/《DataBridge端点与数据映射清单》.md",
       "diataxis_category": "explanation",
       "status": "pending"
+    },
+    {
+      "old_path": "docs/WEEKLY-TASKS-2026-07-05.md",
+      "new_path": "docs/06-project-management/archive/weekly-tasks-2026-07-05.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/AGENT_AUDIT_REPORT.md",
+      "new_path": "docs/00-meta/audit-reports/agent-audit-report.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/v6pro-v9-gap-analysis-final.md",
+      "new_path": "docs/00-meta/audit-reports/v6pro-v9-gap-analysis-final.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/v9-post-dev-review.md",
+      "new_path": "docs/06-project-management/v9-post-dev-review.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/system_design.md",
+      "new_path": "docs/02-design/system-design.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/SOLO-REVIEW.md",
+      "new_path": "docs/03-development/code-review/solo-review.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/CODE-REVIEW-CHEATSHEET.md",
+      "new_path": "docs/03-development/code-review/code-review-cheatsheet.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/CODE-REVIEW-TRAINING.md",
+      "new_path": "docs/03-development/code-review/code-review-training.md",
+      "diataxis_category": "reference",
+      "status": "completed"
     }
   ],
   "preserved_directories": [

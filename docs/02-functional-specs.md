@@ -1,3 +1,24 @@
+---
+title: 02. 功能规格
+type: reference
+domain: project
+phase: design
+tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "用户故事：作为投资者，我想查看行业评分与板块轮动信号，以便识别景气赛道。"
+tags: [project, spec, reference, governance, documentation]
+version: v1.0.0
+last_updated: 2026-07-17
+code_version: 2.0.0
+doc_id: V9-DOC-PROJ-073
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROD-004, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
+---
+
 # 02. 功能规格
 
 > **Status**: Current  
@@ -9,55 +30,55 @@
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  数据采集层                                                   │
-│  • 手动录入股票                                              │
-│  • CSV/JSON 导入                                             │
-│  • AKShare Python 服务接入（可选）                            │
+│  ? 手动录入股票                                              │
+│  ? CSV/JSON 导入                                             │
+│  ? AKShare Python 服务接入（可选）                            │
 ├─────────────────────────────────────────────────────────────┤
 │  新闻资讯（News Module）                                      │
-│  • 资讯采集与去重（newsService）                              │
-│  • 情感分析（sentimentAnalyzer：规则引擎 + 情感词典）          │
-│  • 股票关联（stockLinker：代码/名称/行业匹配）                 │
-│  • 新闻列表页（NewsPage + NewsCard + NewsFeed + FilterPanel） │
+│  ? 资讯采集与去重（newsService）                              │
+│  ? 情感分析（sentimentAnalyzer：规则引擎 + 情感词典）          │
+│  ? 股票关联（stockLinker：代码/名称/行业匹配）                 │
+│  ? 新闻列表页（NewsPage + NewsCard + NewsFeed + FilterPanel） │
 ├─────────────────────────────────────────────────────────────┤
 │  股票池管理（输入舱）                                          │
-│  • 意向候选池 → 研究精选池 → 深度研究池 → 观察池 → 归档池     │
-│  • 池间流转与晋升规则                                         │
+│  ? 意向候选池 → 研究精选池 → 深度研究池 → 观察池 → 归档池     │
+│  ? 池间流转与晋升规则                                         │
 ├─────────────────────────────────────────────────────────────┤
 │  分析引擎（分析舱）                                            │
-│  • V6 九维评分                                               │
-│  • 个股分析 / 行业分析 / 板块轮动                              │
-│  • K 线 / 筹码 / 因子 / 风险                                  │
-│  • 策略回测 / 信号监控                                        │
+│  ? V6 九维评分                                               │
+│  ? 个股分析 / 行业分析 / 板块轮动                              │
+│  ? K 线 / 筹码 / 因子 / 风险                                  │
+│  ? 策略回测 / 信号监控                                        │
 ├─────────────────────────────────────────────────────────────┤
 │  交易模拟（交易舱）                                            │
-│  • 买卖信号生成                                              │
-│  • 模拟盘下单 / 持仓 / 盈亏                                   │
-│  • 风控检查（仓位、集中度、止损）                              │
+│  ? 买卖信号生成                                              │
+│  ? 模拟盘下单 / 持仓 / 盈亏                                   │
+│  ? 风控检查（仓位、集中度、止损）                              │
 ├─────────────────────────────────────────────────────────────┤
 │  交易持仓管理（Trading Holdings）                              │
-│  • 持仓列表查询、筛选、分页（HoldingsPage）                    │
-│  • 补仓/平仓操作（TradeModal）                                │
-│  • 持仓数据导出（CSV）                                        │
-│  • 策略引擎（strategyEngine：20进13筛选）                      │
-│  • 组合构建器（portfolioBuilder：主题等权分配）                 │
-│  • 仓位计算器（positionSizer：Kelly公式）                      │
-│  • 风控引擎（riskEngine：冷却期/仓位上限/行情新鲜度）           │
+│  ? 持仓列表查询、筛选、分页（HoldingsPage）                    │
+│  ? 补仓/平仓操作（TradeModal）                                │
+│  ? 持仓数据导出（CSV）                                        │
+│  ? 策略引擎（strategyEngine：20进13筛选）                      │
+│  ? 组合构建器（portfolioBuilder：主题等权分配）                 │
+│  ? 仓位计算器（positionSizer：Kelly公式）                      │
+│  ? 风控引擎（riskEngine：冷却期/仓位上限/行情新鲜度）           │
 ├─────────────────────────────────────────────────────────────┤
 │  AI 智能体中心（AI Center）                                    │
-│  • Agent 调度与状态监控（AgentList）                           │
-│  • 系统健康监控（HealthMetrics）                               │
-│  • 诊断分析（DiagnosticReports）                              │
-│  • 知识库管理与 LLM 集成                                      │
+│  ? Agent 调度与状态监控（AgentList）                           │
+│  ? 系统健康监控（HealthMetrics）                               │
+│  ? 诊断分析（DiagnosticReports）                              │
+│  ? 知识库管理与 LLM 集成                                      │
 ├─────────────────────────────────────────────────────────────┤
 │  输出与复盘（输出舱）                                          │
-│  • 研究报告导出                                              │
-│  • 交易复盘笔记                                              │
-│  • 知识库关联                                                │
+│  ? 研究报告导出                                              │
+│  ? 交易复盘笔记                                              │
+│  ? 知识库关联                                                │
 ├─────────────────────────────────────────────────────────────┤
 │  系统监控（总控舱 + 驾驶舱）                                    │
-│  • 数据流监控                                                │
-│  • 系统健康度                                                │
-│  • 配置管理                                                  │
+│  ? 数据流监控                                                │
+│  ? 系统健康度                                                │
+│  ? 配置管理                                                  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -87,10 +108,10 @@
 > 作为投资者，我想将研究完成的股票从研究精选池推送到观察池，以便跟踪。
 
 **验收标准**：
-- ✅ 支持 candidate → screened → deepDive → watching → archived 流转
-- ✅ 流转通过 DataBridge 信封化
-- ✅ UI 实时反映状态变化
-- ✅ 输入舱提供看板式股票池，每张卡片展示可流转操作
+- ? 支持 candidate → screened → deepDive → watching → archived 流转
+- ? 流转通过 DataBridge 信封化
+- ? UI 实时反映状态变化
+- ? 输入舱提供看板式股票池，每张卡片展示可流转操作
 
 ### US-004：模拟交易
 
@@ -412,7 +433,7 @@ symbol,name,source
 
 本文档当前版本为 `v0.9.0-docs-review`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
-- `docs/implementation/architecture-version-comparison.md`
+- `./architecture-version-comparison.md`
 
 主要变化：
 

@@ -1,3 +1,24 @@
+---
+title: 01. 愿景与目标
+type: explanation
+domain: product
+phase: planning
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "成为中国 A 股个人投资者的研究基础设施 — 不替代券商交易软件，而是成为研究、分析、决策、复盘的独立工具。"
+tags: [product, plan, vision]
+version: v1.0.0
+last_updated: 2026-07-17
+code_version: 2.0.0
+doc_id: V9-DOC-PROD-010
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-149]
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
+---
+
 # 01. 愿景与目标
 
 > **Status**: Current  

@@ -1652,28 +1652,6 @@
                                               "last_updated":  "2026-07-17",
                                               "doc_id":  "V9-DOC-PROJ-206"
                                           },
-                      "V9-DOC-PROJ-CROSSINDEX-001":  {
-                                                         "title":  "?????????????????????????????????????????????????????????",
-                                                         "path":  "docs/00-meta/cross-index-comprehensive-solution.md",
-                                                         "type":  "meta",
-                                                         "domain":  "project",
-                                                         "phase":  "planning",
-                                                         "tier":  "important",
-                                                         "status":  "draft",
-                                                         "maintainer":  "current developer",
-                                                         "summary":  "?????? 799 ???????????????????????????????????????/??????/??????/SKILL ????????????????????????????????????????????????????????????????????????",
-                                                         "tags":  [
-                                                                      "project",
-                                                                      "documentation",
-                                                                      "meta",
-                                                                      "governance",
-                                                                      "cross-index",
-                                                                      "lifecycle"
-                                                                  ],
-                                                         "version":  "v1.0.0",
-                                                         "last_updated":  "2026-07-19",
-                                                         "doc_id":  "V9-DOC-PROJ-CROSSINDEX-001"
-                                                     },
                       "V9-DOC-PROJ-001":  {
                                               "title":  "????????????????????????????",
                                               "path":  "docs/00-meta/tag-taxonomy.md",
@@ -2705,26 +2683,6 @@
                                               "version":  "v1.0.0",
                                               "last_updated":  "2026-07-17",
                                               "doc_id":  "V9-DOC-PROJ-165"
-                                          },
-                      "V9-DOC-PROJ-197":  {
-                                              "title":  "Jira ??????????:P0-5 ???? + 6 ?????? Bug ????",
-                                              "path":  "docs/reference/changelogs/2026-07/2026-07-05-p0-5-and-legacy-bugs-jira-tickets.md",
-                                              "type":  "reference",
-                                              "domain":  "project",
-                                              "phase":  "retrospective",
-                                              "tier":  "standard",
-                                              "status":  "deprecated",
-                                              "maintainer":  "V9 Architecture Team",
-                                              "summary":  "????????: 2026-07-05 ??????????: 7(1 ?? P0 + 6 ?????? Bug) ??????????: AI Agent ????(4 ?????? subagent) ????????:...",
-                                              "tags":  [
-                                                           "project",
-                                                           "changelog",
-                                                           "fix",
-                                                           "log"
-                                                       ],
-                                              "version":  "v1.0.0",
-                                              "last_updated":  "2026-07-17",
-                                              "doc_id":  "V9-DOC-PROJ-197"
                                           },
                       "V9-DOC-PROJ-002":  {
                                               "title":  "23-core-docs-functional-match-report",
@@ -5081,27 +5039,6 @@
                                               "last_updated":  "2026-06-27",
                                               "doc_id":  "V9-DOC-PROJ-082"
                                           },
-                      "V9-DOC-FRONT-011":  {
-                                               "title":  "deprecated-ui-module-alignment",
-                                               "path":  "docs/reference/deprecated-ui-module-alignment.md",
-                                               "type":  "reference",
-                                               "domain":  "frontend",
-                                               "phase":  "design",
-                                               "tier":  "important",
-                                               "status":  "deprecated",
-                                               "maintainer":  "V9 Architecture Team",
-                                               "summary":  "V6 Pro UI ?????? V9 ??????????????????????????????????????",
-                                               "tags":  [
-                                                            "frontend",
-                                                            "deprecated",
-                                                            "reference",
-                                                            "component",
-                                                            "ui"
-                                                        ],
-                                               "version":  "v1.0.0",
-                                               "last_updated":  "2026-07-17",
-                                               "doc_id":  "V9-DOC-FRONT-011"
-                                           },
                       "V9-DOC-DATA-035":  {
                                               "title":  "ADR-002: IndexedDB ???? localStorage",
                                               "path":  "docs/reference/adr-002-indexeddb-over-localstorage.md",
@@ -5892,29 +5829,6 @@
                                                                                         "version":  "2.0.0",
                                                                                         "last_updated":  null
                                                                                     },
-                      "V9-DOC-PROJ-038":  {
-                                              "title":  "deprecated-v9-issue-resolution-schedule",
-                                              "path":  "docs/explanation/deprecated-v9-issue-resolution-schedule.md",
-                                              "type":  "explanation",
-                                              "domain":  "project",
-                                              "phase":  "planning",
-                                              "tier":  "important",
-                                              "status":  "deprecated",
-                                              "maintainer":  "V9 Architecture Team",
-                                              "summary":  "???????????????????????? git checkout ???????????????????? Agent ????????",
-                                              "tags":  [
-                                                           "project",
-                                                           "plan",
-                                                           "deprecated",
-                                                           "explanation",
-                                                           "governance",
-                                                           "documentation",
-                                                           "strategy"
-                                                       ],
-                                              "version":  "v1.0.0",
-                                              "last_updated":  "2026-07-17",
-                                              "doc_id":  "V9-DOC-PROJ-038"
-                                          },
                       "V9-DOC-QA-011":  {
                                             "title":  "a11y-checklist",
                                             "path":  "docs/explanation/a11y-checklist.md",
@@ -6282,26 +6196,6 @@
                                                "last_updated":  "2026-06-24",
                                                "doc_id":  "V9-DOC-FRONT-012"
                                            },
-                      "docs/00-meta/deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md":  {
-                                                                                                        "title":  "docs/00-meta/deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md",
-                                                                                                        "path":  "docs/00-meta/deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md",
-                                                                                                        "type":  "meta",
-                                                                                                        "domain":  "data",
-                                                                                                        "phase":  "design",
-                                                                                                        "tier":  "reference",
-                                                                                                        "status":  "deprecated",
-                                                                                                        "maintainer":  "V9 Architecture Team",
-                                                                                                        "summary":  "docs/00-meta/deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md",
-                                                                                                        "tags":  [
-                                                                                                                     "data",
-                                                                                                                     "data-definition",
-                                                                                                                     "registry",
-                                                                                                                     "documentation",
-                                                                                                                     "deprecated"
-                                                                                                                 ],
-                                                                                                        "version":  "v1.0.0",
-                                                                                                        "last_updated":  "2026-07-17"
-                                                                                                    },
                       "V9-DOC-QA-032":  {
                                             "title":  "V9 ???????????????????????? - ??????????????????",
                                             "path":  "docs/reference/V9-TEST-CASES.md",
@@ -9712,25 +9606,6 @@
                                               "last_updated":  "2026-07-17",
                                               "doc_id":  "V9-DOC-PROJ-238"
                                           },
-                      "docs/00-meta/deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md":  {
-                                                                                                          "title":  "?????? Widget ????????",
-                                                                                                          "path":  "docs/00-meta/deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md",
-                                                                                                          "type":  "meta",
-                                                                                                          "domain":  "data",
-                                                                                                          "phase":  "design",
-                                                                                                          "tier":  "standard",
-                                                                                                          "status":  "deprecated",
-                                                                                                          "maintainer":  "V9 Architecture Team",
-                                                                                                          "summary":  "## 1. ???? ????????command cabin?????? WidgetRegistry ???????????????? Widget?????????? Widget ?????????????????????? API ??????????????",
-                                                                                                          "tags":  [
-                                                                                                                       "data",
-                                                                                                                       "data-definition",
-                                                                                                                       "cockpit",
-                                                                                                                       "widget"
-                                                                                                                   ],
-                                                                                                          "version":  "v1.0.0",
-                                                                                                          "last_updated":  "2026-07-17"
-                                                                                                      },
                       "V9-DOC-BACK-013":  {
                                               "title":  "Trading ????????trading-cabin-spec??",
                                               "path":  "docs/reference/trading-cabin-spec.md",
@@ -10504,24 +10379,6 @@
                                               "last_updated":  "2026-07-17",
                                               "doc_id":  "V9-DOC-PROJ-171"
                                           },
-                      "docs/00-meta/deprecated-docs/old-versions/regression-suite-v1.0.0.md":  {
-                                                                                                   "title":  "????????????????",
-                                                                                                   "path":  "docs/00-meta/deprecated-docs/old-versions/regression-suite-v1.0.0.md",
-                                                                                                   "type":  "meta",
-                                                                                                   "domain":  "project",
-                                                                                                   "phase":  "testing",
-                                                                                                   "tier":  "standard",
-                                                                                                   "status":  "deprecated",
-                                                                                                   "maintainer":  "V9 Architecture Team",
-                                                                                                   "summary":  "?????????? AGENTS.md ??12.4 ?????????????????? ????\\\"????????????????\\\"???????????? phase ??????????????????????????????????",
-                                                                                                   "tags":  [
-                                                                                                                "project",
-                                                                                                                "test",
-                                                                                                                "qa"
-                                                                                                            ],
-                                                                                                   "version":  "v1.0.0",
-                                                                                                   "last_updated":  "2026-07-17"
-                                                                                               },
                       "V9-DOC-DEV-001":  {
                                              "title":  "???????????????????????????",
                                              "path":  "docs/reference/stock-dictionary-generation.md",
@@ -11474,27 +11331,6 @@
                                             "last_updated":  "2026-07-17",
                                             "doc_id":  "V9-DOC-AI-032"
                                         },
-                      "V9-DOC-PROJ-153":  {
-                                              "title":  "deprecated-batch2-merge-report",
-                                              "path":  "docs/explanation/deprecated-batch2-merge-report.md",
-                                              "type":  "explanation",
-                                              "domain":  "project",
-                                              "phase":  "planning",
-                                              "tier":  "reference",
-                                              "status":  "deprecated",
-                                              "maintainer":  "V9 Architecture Team",
-                                              "summary":  "Date??2026-06-25 ????????Agent Orchestrator ????????????Code-Reviewer Agent ?? 3??Doc-Sync Agent ?? 2",
-                                              "tags":  [
-                                                           "project",
-                                                           "batch",
-                                                           "report",
-                                                           "plan",
-                                                           "deprecated"
-                                                       ],
-                                              "version":  "v1.0.0",
-                                              "last_updated":  "2026-07-17",
-                                              "doc_id":  "V9-DOC-PROJ-153"
-                                          },
                       "docs/archive/00-meta-historical/doc-auto-update-kanban.md":  {
                                                                                         "title":  "doc-auto-update-kanban",
                                                                                         "path":  "docs/archive/00-meta-historical/doc-auto-update-kanban.md",
@@ -12022,24 +11858,6 @@
                                               "last_updated":  "2026-07-17",
                                               "doc_id":  "V9-DOC-BACK-027"
                                           },
-                      "docs/00-meta/deprecated-docs/old-versions/deployment-v1.0.0.md":  {
-                                                                                             "title":  "Deployment Guide ?? V9 ????????????????????????",
-                                                                                             "path":  "docs/00-meta/deprecated-docs/old-versions/deployment-v1.0.0.md",
-                                                                                             "type":  "meta",
-                                                                                             "domain":  "project",
-                                                                                             "phase":  "deployment",
-                                                                                             "tier":  "standard",
-                                                                                             "status":  "deprecated",
-                                                                                             "maintainer":  "V9 Architecture Team",
-                                                                                             "summary":  "????: v1.0.0 | ????: 2026-07-10 ????????: V9 ?????????????? ????????: ???????? SPA????????????+ IndexedDB ????????",
-                                                                                             "tags":  [
-                                                                                                          "project",
-                                                                                                          "guide",
-                                                                                                          "deprecated"
-                                                                                                      ],
-                                                                                             "version":  "v1.0.0",
-                                                                                             "last_updated":  "2026-07-17"
-                                                                                         },
                       "V9-DOC-ARCH-004":  {
                                               "title":  "03-architecture-standards",
                                               "path":  "docs/reference/03-architecture-standards.md",
@@ -14479,27 +14297,6 @@
                                               "last_updated":  "2026-07-17",
                                               "doc_id":  "V9-DOC-PROJ-303"
                                           },
-                      "docs/00-meta/deprecated-docs/old-versions/registry-index-v1.0.0-02-design.md":  {
-                                                                                                           "title":  "??",
-                                                                                                           "path":  "docs/00-meta/deprecated-docs/old-versions/registry-index-v1.0.0-02-design.md",
-                                                                                                           "type":  "meta",
-                                                                                                           "domain":  "project",
-                                                                                                           "phase":  "design",
-                                                                                                           "tier":  "reference",
-                                                                                                           "status":  "deprecated",
-                                                                                                           "maintainer":  "V9 Architecture Team",
-                                                                                                           "summary":  "Document category index registry with domain and type-based library navigation",
-                                                                                                           "tags":  [
-                                                                                                                        "project",
-                                                                                                                        "registry",
-                                                                                                                        "design",
-                                                                                                                        "architecture",
-                                                                                                                        "documentation",
-                                                                                                                        "deprecated"
-                                                                                                                    ],
-                                                                                                           "version":  "v1.0.0",
-                                                                                                           "last_updated":  "2026-07-17"
-                                                                                                       },
                       "V9-DOC-PROJ-240":  {
                                               "title":  "V6-V9 ??????????????????HTML ????????????",
                                               "path":  "docs/explanation/design/v6-v9界面设计html精读报告.md",

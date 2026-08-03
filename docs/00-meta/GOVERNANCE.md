@@ -294,7 +294,6 @@ draft → review → active → deprecated → archived → purged
 | 文档 | 路径 | 内容 |
 |------|------|------|
 | 文档主控索引 | `docs/README.md` | 六类导航、快速入门 |
-| 交叉索引综合解决方案 | `docs/00-meta/cross-index-comprehensive-solution.md` | 四大交叉索引子系统设计 |
 | 文档元数据标准 | `docs/00-meta/document-metadata-standard.md` | frontmatter 字段规范 |
 | doc_id 注册表 | `docs/00-meta/doc-id-registry.md` | 所有 doc_id 登记 |
 | 标签分类体系 | `docs/00-meta/tag-taxonomy.md` | tags 字段受控词表 |

@@ -65,7 +65,7 @@ export default function InputDashboard(): React.JSX.Element {
   }, [refresh])
 
   const allGroups = useMemo(() => getIntentionPoolGroups(), [])
-  const allStocks = items
+  const allStocks = items ?? []
 
   // 全选框的半选（indeterminate）状态
   useEffect(() => {

@@ -167,7 +167,7 @@ export async function noticeToProfileItem(
   }
 
   // 自动打标
-  return autoTagItem(item as unknown as ProfileItem) as any
+  return autoTagItem(item as unknown as ProfileItem)
 }
 
 // ============================================================
@@ -203,7 +203,7 @@ export async function syncNoticesToProfile(
     }
   }
 
-  const result = await bulkSaveProfileItems(items as any[], {
+  const result = await bulkSaveProfileItems(items as unknown as Parameters<typeof bulkSaveProfileItems>[0], {
     skipDuplicates,
     minQuality,
     autoTag: false, // 已在转换时打标
@@ -232,5 +232,5 @@ export async function saveNoticeAsProfileItem(
 ): Promise<ProfileItem> {
   const item = await noticeToProfileItem(notice, symbol)
   const { saveProfileItem } = await import('./profileService')
-  return saveProfileItem(item as any)
+  return saveProfileItem(item as unknown as ProfileItem)
 }

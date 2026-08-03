@@ -29,6 +29,7 @@
 import type { ScoreDocVersion, V6LayerScore } from '@/data/types/types.scoreDoc'
 import type {
   ProfileDomain,
+  ProfileItem,
   ScoreLayerId,
 } from '@/data/types/types.profile'
 import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
@@ -84,24 +85,24 @@ export async function scoreDocToProfileItems(
   import('@/data/types/types.profile').ProfileItem,
   'id' | 'collectedAt' | 'schemaVersion' | 'version' | 'dataHash'
 >>> {
-  const items: Array<Omit<any, 'id' | 'collectedAt' | 'schemaVersion' | 'version' | 'dataHash'>> = []
+  const items: Array<Omit<ProfileItem, 'id' | 'collectedAt' | 'schemaVersion' | 'version' | 'dataHash'>> = []
 
   // 1. 综合评分报告
-  items.push(buildCompositeReportItem(doc))
+  items.push(buildCompositeReportItem(doc) as unknown as Omit<ProfileItem, 'id' | 'collectedAt' | 'schemaVersion' | 'version' | 'dataHash'>)
 
   // 2. 各层评分详情
   for (const [layerId, layerScore] of Object.entries(doc.layers)) {
-    items.push(buildLayerScoreItem(doc, layerId, layerScore as V6LayerScore))
+    items.push(buildLayerScoreItem(doc, layerId, layerScore as V6LayerScore) as unknown as Omit<ProfileItem, 'id' | 'collectedAt' | 'schemaVersion' | 'version' | 'dataHash'>)
   }
 
   // 3. 版本差异（如果有）
   if (doc.changeFromPrev) {
-    items.push(buildVersionDiffItem(doc))
+    items.push(buildVersionDiffItem(doc) as unknown as Omit<ProfileItem, 'id' | 'collectedAt' | 'schemaVersion' | 'version' | 'dataHash'>)
   }
 
   // 自动打标
   for (const item of items) {
-    const tagged = await autoTagItem(item as any)
+    const tagged = await autoTagItem(item as unknown as ProfileItem)
     item.topicTags = Array.from(new Set([...(item.topicTags || []), ...(tagged.topicTags || [])]))
     item.relatedLayers = Array.from(new Set([...(item.relatedLayers || []), ...(tagged.relatedLayers || [])]))
   }
@@ -313,7 +314,7 @@ export async function archiveScoreDocsToProfile(
     }
 
     // 3. 转换为资料条目
-    const allItems: any[] = []
+    const allItems: Array<Omit<ProfileItem, 'id' | 'collectedAt' | 'schemaVersion' | 'version' | 'dataHash'>> = []
     for (const doc of docs) {
       const items = await scoreDocToProfileItems(doc)
       allItems.push(...items)
@@ -358,7 +359,7 @@ export async function archiveSingleScoreDoc(docId: string): Promise<number> {
 
     const items = await scoreDocToProfileItems(result.data)
     const { bulkSaveProfileItems } = await import('./profileService')
-    await bulkSaveProfileItems(items as any[])
+    await bulkSaveProfileItems(items as unknown as Parameters<typeof bulkSaveProfileItems>[0])
 
     logger.info(`[scoreDocArchive] 单份报告归档完成`, { docId, itemCount: items.length })
     return items.length
@@ -380,7 +381,7 @@ export async function onScoreDocGenerated(doc: ScoreDocVersion): Promise<void> {
   try {
     const items = await scoreDocToProfileItems(doc)
     const { bulkSaveProfileItems } = await import('./profileService')
-    await bulkSaveProfileItems(items as any[])
+    await bulkSaveProfileItems(items as unknown as Parameters<typeof bulkSaveProfileItems>[0])
 
     logger.info(`[scoreDocArchive] 新报告自动归档完成`, {
       docId: doc.docId,
