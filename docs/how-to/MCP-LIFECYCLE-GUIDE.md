@@ -11,7 +11,7 @@ tier: important
 > **关联规范**:
 > - [AGENTS.md §十四 MCP 权限控制规范](../../AGENTS.md)（契约真相源）
 > - [MCP 权限控制开发指南 mcp-acl-guide.md](./mcp-acl-guide.md)（ACL 配置权威）
-> - [MCP Server 设计评审 mcp-server-design-review 技能](../../.workbuddy/skills/mcp-server-design-review/SKILL.md)（交付前必跑）
+> - [v9-code-quality-audit 技能](../../.trae/skills/v9-code-quality-audit/SKILL.md)（交付前必跑；mcp-server-design-review 已并入此技能）
 > **事实基线**: `src/mcp/servers/` 实测 **15** 个子服务器（analysis/backtest/data-collector/execution/fetcher/knowledge/llm/news/pool/portfolio/scoring/screening/system/trading/workflow）；其中 `audit:mcp-usage` 识别 **6 个零调用 server**，属"出"阶段清理对象。
 
 ---
@@ -33,7 +33,7 @@ tier: important
    npm run tsc:prod
    ```
 
-> ⚠️ 触发 `mcp-server-design-review` 技能（AGENTS.md 路由表 mandatory）：其「交付前必跑」未全绿不得声明完成。
+> ⚠️ 触发 `v9-code-quality-audit` 技能（AGENTS.md 路由表 mandatory）：其「交付前必跑」未全绿不得声明完成。
 
 ---
 
@@ -90,4 +90,4 @@ Server 或 Tool 重命名、目录迁移的标准作业流程（对标 [FILE-MAN
 
 | 版本 | 日期 | 变更摘要 |
 |------|------|----------|
-| v1.0.0 | 2026-07-22 | 新建 MCP 入-移-出全生命周期指南；对齐 FILE-MANAGEMENT-GUIDE §6.3 迁移 SOP；事实基线计数修正为 15 server；绑定 `mcp-server-design-review`(mandatory) 与 `audit:mcp-usage` 零调用清理 |
+| v1.0.0 | 2026-07-22 | 新建 MCP 入-移-出全生命周期指南；对齐 FILE-MANAGEMENT-GUIDE §6.3 迁移 SOP；事实基线计数修正为 15 server；绑定 `v9-code-quality-audit`(mandatory) 与 `audit:mcp-usage` 零调用清理（mcp-server-design-review 已并入） |

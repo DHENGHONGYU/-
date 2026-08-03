@@ -22,8 +22,8 @@
 
 ### 1.2 当前备份机制分析
 
-**backup-branch.ts**（`.workbuddy/skills/devops-automation/scripts/backup-branch.ts`）：
-- 使用 git plumbing（write-tree → commit-tree → branch -f）创建快照
+**backup-branch.ts**（已随 v9-devops-automation 技能一同删除，自动备份功能已下线）：
+- ~~使用 git plumbing（write-tree → commit-tree → branch -f）创建快照~~
 - 不污染当前分支，排除敏感文件（17 种模式）
 - 支持 `--no-push` 纯本地模式
 - **设计评价**: 脚本本身设计合理（零破坏 + 防泄露），问题在于触发频率和分支管理策略
@@ -467,13 +467,15 @@ git push origin v2.0.1
 
 ### Phase 4：人工备份体系建立（1 周内）
 
-| 序号 | 任务 | 优先级 |
-|------|------|--------|
-| 4.1 | 在 package.json 添加 backup:snapshot / backup:bundle / backup:mirror 脚本 | P2 |
-| 4.2 | 创建 Gitee 镜像仓库（手动镜像目标） | P2 |
-| 4.3 | 创建 mirror-backup.yml（仅 workflow_dispatch，无 cron） | P2 |
-| 4.4 | 改造 backup-branch.ts 默认 --no-push，完全脱离 CI 自动化 | P2 |
-| 4.5 | 创建 backup-reminder.yml 定时提醒（每周 2 次，仅通知不执行） | P2 |
+> **⚠️ 已废止（2026-08-03 上线前最小口径清理）**：本 Phase 4 中 4.1（backup:snapshot/backup:mirror）、4.4（改造 backup-branch.ts）已随自动备案功能取消而废止。仅保留 4.2（Gitee 镜像）、4.3（mirror-backup.yml）、4.5（提醒）作为可选人工备份参考。当前人工备份仅保留 `npm run backup:bundle`（git-bundle.cjs），见 §3.5。
+
+| 序号 | 任务 | 优先级 | 状态 |
+|------|------|--------|------|
+| 4.1 | ~~在 package.json 添加 backup:snapshot / backup:bundle / backup:mirror 脚本~~ | P2 | 废止（仅保留 backup:bundle） |
+| 4.2 | 创建 Gitee 镜像仓库（手动镜像目标） | P2 | 可选 |
+| 4.3 | 创建 mirror-backup.yml（仅 workflow_dispatch，无 cron） | P2 | 可选 |
+| 4.4 | ~~改造 backup-branch.ts 默认 --no-push，完全脱离 CI 自动化~~ | P2 | 废止（脚本已删除） |
+| 4.5 | 创建 backup-reminder.yml 定时提醒（每周 2 次，仅通知不执行） | P2 | 可选 |
 
 ### Phase 5：上线前准备（上线前 2 周）
 

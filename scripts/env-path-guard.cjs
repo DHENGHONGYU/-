@@ -40,7 +40,7 @@ const currentUser = detectCurrentUser();
 /* ---------- 扫描范围 ---------- */
 const SKIP_DIRS = new Set([
   'node_modules', 'dist', 'coverage', 'archive', 'cache', 'outputs',
-  'releases', 'e2e', '.git', '__pycache__', '.workbuddy-backup',
+  'releases', 'e2e', '.git', '__pycache__',
   'node_modules.bin', '.venv', 'venv', '.tox',
   // 本地运行时 / 工具目录（写死路径常见，但不在 VCS 内或属生成物）
   '.trae', '.trae-cn', '.workbuddy', '.playwright-mcp',
@@ -113,10 +113,9 @@ function scanContent(full, rel, content) {
       const user = m[2];
       const raw = m[0];
       const isWbRuntime = /[\\/]\.workbuddy[\\/]/.test(line) || /binaries/.test(line);
-      const inMemory = rel.includes('.workbuddy/memory');
       findings.push({
         file: rel, abs: full, line: i + 1, raw, user, drive,
-        isWbRuntime, inMemory,
+        isWbRuntime,
         isCurrentUser: user.toLowerCase() === currentUser.toLowerCase(),
       });
     }
@@ -158,9 +157,8 @@ if (STAGED && stagedFiles.length > 0) {
 
 /* ---------- 分类 ---------- */
 const legitRuntime = findings.filter(f => f.isWbRuntime && f.isCurrentUser);
-const crossUser = findings.filter(f => !f.inMemory && !f.isCurrentUser);
-const sameUserHardcode = findings.filter(f => !f.inMemory && f.isCurrentUser && !f.isWbRuntime);
-const memoryNarrative = findings.filter(f => f.inMemory);
+const crossUser = findings.filter(f => !f.isCurrentUser);
+const sameUserHardcode = findings.filter(f => f.isCurrentUser && !f.isWbRuntime);
 
 /* ---------- --verify-current ---------- */
 let verify = null;
@@ -189,10 +187,9 @@ const report = {
   skippedDirs: skipCount,
   stagedOnly: STAGED,
   summary: {
-    crossUserStale: crossUser.length,        // P0：指向不存在用户
+    crossUserStale: crossUser.length,          // P0：指向不存在用户
     sameUserHardcode: sameUserHardcode.length, // P1：本机可跑换机即断
-    workbuddyRuntime: legitRuntime.length,     // 合法：harness 解析（仅当前用户）
-    memoryNarrative: memoryNarrative.length,  // 病史叙述：忽略
+    workbuddyRuntime: legitRuntime.length,     // 合法：用户级 ~/.workbuddy/binaries 运行时（仅当前用户）
   },
   portable: crossUser.length === 0 && sameUserHardcode.length === 0,
   verify,
@@ -212,8 +209,7 @@ if (JSON_OUT) {
   crossUser.slice(0, 30).forEach(f => console.log(`  - ${f.file}:${f.line}  ${f.raw}`));
   console.log(`【P1 本机可跑/换机即断(写死当前用户目录)】: ${sameUserHardcode.length} 处`);
   sameUserHardcode.slice(0, 30).forEach(f => console.log(`  - ${f.file}:${f.line}  ${f.raw}`));
-  console.log(`【合法:WorkBuddy 运行时路径(仅当前用户,跳过)】: ${legitRuntime.length} 处`);
-  console.log(`【忽略:记忆文件病史叙述】: ${memoryNarrative.length} 处`);
+  console.log(`【合法:用户级运行时路径(仅当前用户,跳过)】: ${legitRuntime.length} 处`);
   console.log('');
   if (report.portable) {
     console.log('✅ 结论: 项目源码已环境可移植（无跨用户残留、无写死当前用户目录）。');
