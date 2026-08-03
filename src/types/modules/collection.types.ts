@@ -1,6 +1,42 @@
 /**
  * @module collection.types
  * @description 数据采集模块核心类型定义（零依赖，可被 config/services/store 各层引用）。
+ *
+ * @architecture 采集任务数据流
+ *
+ * ┌─────────────────────────────────────────────────────────┐
+ * │  执行层（Service）                                        │
+ *  │  - collectionPipeline.ts    → 执行采集流水线             │
+ *  │  - fetcherService.ts        → 采集器健康检查/请求        │
+ *  │  - qualityMetricsCollector  → 质量指标采集               │
+ *  │  - tracePersistenceService  → Trace 持久化/查询          │
+ *  │  - collectionReportService  → 采集报告生成               │
+ *  │  执行产物 → eventBus.emit(COLLECTION_EVENTS.*)           │
+ *  └──────────────────────┬──────────────────────────────────┘
+ *                         │ 事件流
+ *  ┌──────────────────────▼──────────────────────────────────┐
+ *  │  状态层（Store）                                          │
+ *  │  - collectionRuntimeStore   → 订阅事件，维护运行时状态    │
+ *  │    .traceSpans   (Record<traceId, CollectionTraceSpan>)  │
+ *  │    .logs         (CollectionLog[])                       │
+ *  │    .taskStatuses (Record<taskId, CollectionTaskRuntime>) │
+ *  │    .stats        (QualityMetrics)                        │
+ *  │  - dataTestStore            → 单链路/批量测试状态         │
+ *  │  - sevenDimConfigStore      → 七维维度配置               │
+ *  └──────────────────────┬──────────────────────────────────┘
+ *                         │ Store 消费
+ *  ┌──────────────────────▼──────────────────────────────────┐
+ *  │  展示层（Component）                                      │
+ *  │  - CollectTask/index.tsx    → 采集任务监控页（9 Tab）     │
+ *  │  - DataTestPanel.tsx        → 数据采集测试面板            │
+ *  │  - FetcherConfigPage.tsx    → 抓取引擎配置页              │
+ *  │  - HomePage.tsx             → 首页状态摘要                │
+ *  │  子组件：                                                 │
+ *  │  - TaskListTab / ScoreAnalysisTab / DimHealthTab         │
+ *  │  - LiveLogStream / CollectionTimeline / Swimlane         │
+ *  │  - CollectionProgressPanel / CollectionReportPanel       │
+ *  └─────────────────────────────────────────────────────────┘
+ *
   * @doc [V9-DOC-QA-066]
 */
 

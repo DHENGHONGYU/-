@@ -4,6 +4,12 @@
  *
  * 订阅 `COLLECTION_EVENTS` 生命周期事件，维护链路追踪、实时日志、
  * 任务进度和质量指标快照，供可视化组件消费。
+ *
+ * @dataflow
+ * - 执行者：collectionPipeline / fetcherService → eventBus.emit(COLLECTION_EVENTS.*)
+ * - 本 Store：订阅事件 → 更新 traceSpans / logs / taskStatuses / stats
+ * - 展示者：CollectTask/index.tsx / DataTestPanel.tsx / FetcherConfigPage.tsx / HomePage.tsx
+ *
   * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
 */
 
