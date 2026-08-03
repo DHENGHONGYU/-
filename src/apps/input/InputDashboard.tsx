@@ -82,28 +82,33 @@ export default function InputDashboard(): React.JSX.Element {
     }
 
     setSubmitting(true)
-    const result = await addStock(
-      { symbol, name },
-      {
-        fetchBasicAfterAdd: fetchBasic,
-        fetchKlineAfterAdd: fetchKline,
-        group: group || undefined,
-      },
-    )
-    setSubmitting(false)
-
-    if (result.success) {
-      setMessage(
-        result.error
-          ? `已添加 ${result.data?.symbol}，${result.error}`
-          : `已添加 ${result.data?.symbol}`,
+    try {
+      const result = await addStock(
+        { symbol, name },
+        {
+          fetchBasicAfterAdd: fetchBasic,
+          fetchKlineAfterAdd: fetchKline,
+          group: group || undefined,
+        },
       )
-      setSymbol('')
-      setName('')
-      setGroup('')
-      await refresh()
-    } else {
-      setMessage(result.error ?? '添加失败')
+
+      if (result.success) {
+        setMessage(
+          result.error
+            ? `已添加 ${result.data?.symbol}，${result.error}`
+            : `已添加 ${result.data?.symbol}`,
+        )
+        setSymbol('')
+        setName('')
+        setGroup('')
+        await refresh()
+      } else {
+        setMessage(result.error ?? '添加失败')
+      }
+    } catch (err) {
+      setMessage(`添加异常：${err instanceof Error ? err.message : String(err)}`)
+    } finally {
+      setSubmitting(false)
     }
   }
 
