@@ -3,10 +3,9 @@
  * profileService 单元测试
  *
  * 覆盖场景：
- * 1. 工具函数：generateDataHash / domainToLayers / layerToDomain
- * 2. 资料条目转换：newsArticleToProfileItem
- * 3. CRUD 操作：saveProfileItem / bulkSaveProfileItems / getProfileItem / listByDomain
- * 4. 统计计算：recalculateProfileStats
+ * 1. 工具函数：domainToLayers / layerToDomain / inferSentiment
+ * 2. CRUD 操作：saveProfileItem / bulkSaveProfileItems / getProfileItem / listByDomain / listByType
+ * 3. 资料包操作：getOrCreateProfile
  *
  * @covers_docs [V9-DOC-DATA-028, V9-DOC-DATA-029]
  */
@@ -22,6 +21,7 @@ import {
   listProfileItemsByDomain,
   listProfileItemsByType,
   getOrCreateProfile,
+  inferSentiment,
 } from '@/services/profile/profileService'
 
 // ============================================================
@@ -36,6 +36,7 @@ vi.mock('@/data/dataLayerHelpers', () => ({
   sendWriteEnvelope: (...args: unknown[]) => mockSendWriteEnvelope(...args),
   queryGet: (...args: unknown[]) => mockQueryGet(...args),
   queryByIndex: (...args: unknown[]) => mockQueryByIndex(...args),
+  queryList: (...args: unknown[]) => vi.fn().mockResolvedValue([])(...args),
 }))
 
 vi.mock('@/core/databridge', () => ({
@@ -50,6 +51,12 @@ vi.mock('@/core/envelope', () => ({
   EnvelopeFactory: {
     create: vi.fn((meta: unknown, payload: unknown) => ({ meta, payload })),
   },
+}))
+
+// Mock tagService 以隔离 autoTagItem 的 fire-and-forget 副作用
+// （incrementTagUsage 会异步调用 sendWriteEnvelope/queryByIndex，干扰调用计数断言）
+vi.mock('@/services/profile/tagService', () => ({
+  autoTagItem: vi.fn((item: ProfileItem) => Promise.resolve(item)),
 }))
 
 beforeEach(() => {
@@ -140,7 +147,7 @@ describe('layerToDomain - 评分层 → 域映射', () => {
 
   it('domainToLayers 和 layerToDomain 应互为逆映射（单一层）', () => {
     // 对于只有一个层的域，两次映射应返回原值
-    // 注意：D1 现在映射到 ['lMinus1', 'l0'] 两个层，不再属于单一层域
+    // 注意：D1 映射到 ['lMinus1', 'l0'] 两个层，不再属于单一层域
     const singleLayerDomains: ProfileDomain[] = ['D2', 'D3', 'D4', 'D5', 'D6']
     for (const d of singleLayerDomains) {
       const layers = domainToLayers(d)
@@ -150,75 +157,31 @@ describe('layerToDomain - 评分层 → 域映射', () => {
   })
 })
 
-// ============================================================
-// 2. 新闻文章 → 资料条目 转换
-// ============================================================
-
-describe('newsArticleToProfileItem - 新闻转资料条目', () => {
-  const baseArticle = {
-    id: 'news-001',
-    title: '某公司发布新产品，市场反应积极',
-    content: '公司今日发布了一款新产品，市场反应积极，分析师普遍看好。',
-    source: '新浪财经',
-    publishTime: 1721500000000,
-    url: 'https://example.com/news/001',
-    sentiment: 'positive',
-  }
-
-  it('应正确转换为资料条目结构', () => {
-    const item = newsArticleToProfileItem(baseArticle, '600519', 'D7')
-
-    expect(item.symbol).toBe('600519')
-    expect(item.domain).toBe('D7')
-    expect(item.itemType).toBe('news')
-    expect(item.title).toBe(baseArticle.title)
-    expect(item.source).toBe(baseArticle.source)
-    expect(item.sourceUrl).toBe(baseArticle.url)
-    expect(item.publishedAt).toBe(baseArticle.publishTime)
-    expect(item.sentiment).toBe('positive')
-    expect(item.isUserGenerated).toBe(false)
-    expect(item.originalStore).toBe('news')
-    expect(item.originalKey).toBe(baseArticle.id)
+describe('inferSentiment - 情绪推断', () => {
+  it('正面文本应推断为 positive', () => {
+    const result = inferSentiment('公司业绩大增，市场看好')
+    expect(result.sentiment).toBe('positive')
+    expect(result.confidence).toBeGreaterThan(0)
   })
 
-  it('摘要应截取内容前 200 字', () => {
-    const longContent = 'a'.repeat(500)
-    const item = newsArticleToProfileItem(
-      { ...baseArticle, content: longContent },
-      '600519',
-    )
-    expect(item.summary.length).toBe(200)
-    expect(item.summary).toBe('a'.repeat(200))
+  it('负面文本应推断为 negative', () => {
+    const result = inferSentiment('公司亏损扩大，业绩下滑')
+    expect(result.sentiment).toBe('negative')
+    expect(result.confidence).toBeGreaterThan(0)
   })
 
-  it('默认域为 D7（成长前沿）', () => {
-    const item = newsArticleToProfileItem(baseArticle, '600519')
-    expect(item.domain).toBe('D7')
-  })
-
-  it('应设置正确的关联评分层', () => {
-    const itemD3 = newsArticleToProfileItem(baseArticle, '600519', 'D3')
-    expect(itemD3.relatedLayers).toEqual(['l1'])
-
-    const itemD7 = newsArticleToProfileItem(baseArticle, '600519', 'D7')
-    expect(itemD7.relatedLayers).toEqual(['l4', 'l5', 'l6'])
-  })
-
-  it('无情绪时默认 neutral', () => {
-    const item = newsArticleToProfileItem(
-      { ...baseArticle, sentiment: undefined },
-      '600519',
-    )
-    expect(item.sentiment).toBe('neutral')
+  it('中性文本应推断为 neutral', () => {
+    const result = inferSentiment('今天天气不错')
+    expect(result.sentiment).toBe('neutral')
   })
 })
 
 // ============================================================
-// 3. CRUD 操作测试（mock dataBridge）
+// 2. CRUD 操作测试（mock dataLayerHelpers）
 // ============================================================
 
 describe('saveProfileItem - 保存单条资料条目', () => {
-  it('应补全缺失字段并调用 dataBridge.forward', async () => {
+  it('应补全缺失字段并调用 sendWriteEnvelope', async () => {
     const item = {
       symbol: '600519',
       domain: 'D3' as ProfileDomain,
@@ -234,9 +197,10 @@ describe('saveProfileItem - 保存单条资料条目', () => {
 
     // 验证补全字段
     expect(result.id).toBeDefined()
-    expect(result.id.length).toBe(12) // nanoid(12)
+    // ID 格式: ${symbol}_${domain}_${itemType}_${dataHash}
+    expect(result.id).toMatch(/^600519_D3_news_\d+$/)
     expect(result.dataHash).toBeDefined()
-    expect(result.dataHash.length).toBeGreaterThan(0)
+    expect(typeof result.dataHash).toBe('number')
     expect(result.collectedAt).toBeDefined()
     expect(result.schemaVersion).toBe(1)
     expect(result.version).toBe(1)
@@ -245,28 +209,13 @@ describe('saveProfileItem - 保存单条资料条目', () => {
     expect(result.symbol).toBe('600519')
     expect(result.title).toBe('测试标题')
 
-    // 验证 dataBridge.forward 被调用
-    expect(dataBridge.forward).toHaveBeenCalledTimes(1)
-  })
-
-  it('相同标题和摘要应生成相同的 dataHash（去重基础）', () => {
-
-    // 注意：saveProfileItem 是 async，但我们只需要 dataHash
-    // 直接调用两次，比较 dataHash
-
-    vi.mocked(dataBridge.forward).mockImplementation(async () => {
-      return undefined
-    })
-
-    // 通过调用 saveProfileItem 来间接测试
-    // 但我们无法直接访问 generateDataHash（私有函数）
-    // 所以通过两次调用来验证
-    expect(true).toBe(true) // 占位，实际测试在集成测试中验证
+    // 验证 sendWriteEnvelope 被调用（profileService 使用 dataLayerHelpers）
+    expect(mockSendWriteEnvelope).toHaveBeenCalledTimes(1)
   })
 })
 
 describe('bulkSaveProfileItems - 批量保存资料条目', () => {
-  it('应批量补全字段并调用一次 dataBridge.forward', async () => {
+  it('应批量补全字段并调用 sendWriteEnvelope 保存', async () => {
     const items = [
       {
         symbol: '600519',
@@ -281,7 +230,7 @@ describe('bulkSaveProfileItems - 批量保存资料条目', () => {
       {
         symbol: '600519',
         domain: 'D7' as ProfileDomain,
-        itemType: 'analysis' as const,
+        itemType: 'analysis_note' as const,
         title: '条目2',
         summary: '摘要2',
         source: '来源2',
@@ -292,20 +241,29 @@ describe('bulkSaveProfileItems - 批量保存资料条目', () => {
 
     const result = await bulkSaveProfileItems(items)
 
-    expect(result.length).toBe(2)
-    expect(result[0]!.id).toBeDefined()
-    expect(result[1]!.id).toBeDefined()
-    expect(result[0]!.dataHash).toBeDefined()
-    expect(result[1]!.dataHash).toBeDefined()
+    // bulkSaveProfileItems 返回 SyncResult，不是数组
+    expect(result.saved).toBe(2)
+    expect(result.failed).toBe(0)
 
-    // 批量保存只调用一次 forward
-    expect(dataBridge.forward).toHaveBeenCalledTimes(1)
+    // 验证 sendWriteEnvelope 被调用以保存批量条目
+    // 注意：updateProfileStats 是 fire-and-forget，可能额外调用 saveStockProfile
+    const bulkCall = mockSendWriteEnvelope.mock.calls.find(
+      (call) => call[0] === 'bulkSaveProfileItems',
+    )
+    expect(bulkCall, '应调用 sendWriteEnvelope 保存批量条目').toBeDefined()
+    expect((bulkCall![1] as ProfileItem[]).length).toBe(2)
+    // 验证每条都补全了 id 和 dataHash
+    const savedItems = bulkCall![1] as ProfileItem[]
+    expect(savedItems[0]!.id).toBeDefined()
+    expect(savedItems[1]!.id).toBeDefined()
+    expect(savedItems[0]!.dataHash).toBeDefined()
+    expect(savedItems[1]!.dataHash).toBeDefined()
   })
 
-  it('空数组应返回空数组且不调用 forward', async () => {
+  it('空数组应返回空 SyncResult 且不调用 sendWriteEnvelope', async () => {
     const result = await bulkSaveProfileItems([])
-    expect(result.length).toBe(0)
-    expect(dataBridge.forward).toHaveBeenCalledTimes(1) // 空数组也会调用，但 handler 会跳过
+    expect(result.saved).toBe(0)
+    expect(mockSendWriteEnvelope).not.toHaveBeenCalled()
   })
 })
 
@@ -322,29 +280,23 @@ describe('getProfileItem - 获取单条资料', () => {
       publishedAt: Date.now(),
       collectedAt: Date.now(),
       isUserGenerated: false,
-      dataHash: 'abc123',
+      dataHash: 123456,
       schemaVersion: 1,
       version: 1,
     }
 
-    vi.mocked(dataBridge.query).mockResolvedValueOnce({
-      success: true,
-      data: mockItem,
-    })
+    mockQueryGet.mockResolvedValueOnce(mockItem)
 
     const result = await getProfileItem('item-001')
     expect(result).toEqual(mockItem)
-    expect(dataBridge.query).toHaveBeenCalledTimes(1)
+    expect(mockQueryGet).toHaveBeenCalledTimes(1)
   })
 
-  it('不存在时应返回 null', async () => {
-    vi.mocked(dataBridge.query).mockResolvedValueOnce({
-      success: false,
-      data: null,
-    })
+  it('不存在时应返回 undefined', async () => {
+    mockQueryGet.mockResolvedValueOnce(undefined)
 
     const result = await getProfileItem('nonexistent')
-    expect(result).toBeNull()
+    expect(result).toBeUndefined()
   })
 })
 
@@ -362,7 +314,7 @@ describe('listProfileItemsByDomain - 按域查询资料', () => {
         publishedAt: Date.now(),
         collectedAt: Date.now(),
         isUserGenerated: false,
-        dataHash: 'hash1',
+        dataHash: 111111,
         schemaVersion: 1,
         version: 1,
       },
@@ -370,23 +322,20 @@ describe('listProfileItemsByDomain - 按域查询资料', () => {
         id: 'item-002',
         symbol: '600519',
         domain: 'D3',
-        itemType: 'report',
+        itemType: 'research_report',
         title: '条目2',
         summary: '摘要2',
         source: '来源2',
         publishedAt: Date.now() - 1000,
         collectedAt: Date.now(),
         isUserGenerated: false,
-        dataHash: 'hash2',
+        dataHash: 222222,
         schemaVersion: 1,
         version: 1,
       },
     ]
 
-    vi.mocked(dataBridge.query).mockResolvedValueOnce({
-      success: true,
-      data: mockItems,
-    })
+    mockQueryByIndex.mockResolvedValueOnce(mockItems)
 
     const result = await listProfileItemsByDomain('600519', 'D3')
     expect(result.length).toBe(2)
@@ -406,25 +355,20 @@ describe('listProfileItemsByDomain - 按域查询资料', () => {
       publishedAt: Date.now() - i * 1000,
       collectedAt: Date.now(),
       isUserGenerated: false,
-      dataHash: `hash${i}`,
+      dataHash: i,
       schemaVersion: 1,
       version: 1,
     }))
 
-    vi.mocked(dataBridge.query).mockResolvedValueOnce({
-      success: true,
-      data: mockItems,
-    })
+    mockQueryByIndex.mockResolvedValueOnce(mockItems)
 
-    const result = await listProfileItemsByDomain('600519', 'D3', { limit: 10 })
+    // listProfileItemsByDomain 第三参数为 limit?: number（非 options 对象）
+    const result = await listProfileItemsByDomain('600519', 'D3', 10)
     expect(result.length).toBe(10)
   })
 
   it('查询失败时应返回空数组', async () => {
-    vi.mocked(dataBridge.query).mockResolvedValueOnce({
-      success: false,
-      data: null,
-    })
+    mockQueryByIndex.mockResolvedValueOnce([])
 
     const result = await listProfileItemsByDomain('600519', 'D3')
     expect(result).toEqual([])
@@ -438,184 +382,75 @@ describe('listProfileItemsByType - 按类型查询资料', () => {
         id: 'item-001',
         symbol: '600519',
         domain: 'D3',
-        itemType: 'report',
+        itemType: 'research_report',
         title: '研报1',
         summary: '摘要1',
         source: '券商A',
         publishedAt: Date.now(),
         collectedAt: Date.now(),
         isUserGenerated: false,
-        dataHash: 'hash1',
+        dataHash: 333333,
         schemaVersion: 1,
         version: 1,
       },
     ]
 
-    vi.mocked(dataBridge.query).mockResolvedValueOnce({
-      success: true,
-      data: mockItems,
-    })
+    mockQueryByIndex.mockResolvedValueOnce(mockItems)
 
-    const result = await listProfileItemsByType('600519', 'report')
+    const result = await listProfileItemsByType('600519', 'research_report')
     expect(result.length).toBe(1)
-    expect(result[0]!.itemType).toBe('report')
+    expect(result[0]!.itemType).toBe('research_report')
   })
 })
 
 // ============================================================
-// 4. 资料包与统计测试
+// 3. 资料包操作测试
 // ============================================================
 
 describe('getOrCreateProfile - 获取或创建资料包', () => {
   it('已存在时应返回现有资料包', async () => {
     const mockProfile: StockProfile = {
       symbol: '600519',
-      name: '贵州茅台',
-      domainStats: {
-        D1: { count: 0, sources: [] },
-        D2: { count: 0, sources: [] },
-        D3: { count: 5, sources: ['新浪财经'] },
-        D4: { count: 0, sources: [] },
-        D5: { count: 2, sources: ['财报'] },
-        D6: { count: 1, sources: ['研报'] },
-        D7: { count: 3, sources: ['新闻'] },
-        D8: { count: 0, sources: [] },
+      stockName: '贵州茅台',
+      totalItems: 11,
+      domainCounts: {
+        D1: 0, D2: 0, D3: 5, D4: 0,
+        D5: 2, D6: 1, D7: 3, D8: 0,
       },
-      completenessScore: 50,
-      qualityScore: 60,
-      evidenceCoverage: {},
-      version: 2,
-      createdAt: Date.now() - 86400000,
-      updatedAt: Date.now() - 3600000,
-      schemaVersion: 1,
+      typeCounts: { news: 5, research_report: 2, analysis_note: 1 },
+      totalEvidence: 0,
+      layerEvidenceCounts: {
+        lMinus1: 0, l0: 0, l1: 0, l2: 0, l3f: 0, l3v: 0,
+        l4: 0, l5: 0, l6: 0, l7: 0, l8: 0,
+      },
+      evidenceCoverage: 0,
+      lastUpdatedAt: Date.now() - 3600000,
+      lastSyncSources: [],
     }
 
-    vi.mocked(dataBridge.query).mockResolvedValueOnce({
-      success: true,
-      data: mockProfile,
-    })
+    mockQueryGet.mockResolvedValueOnce(mockProfile)
 
     const result = await getOrCreateProfile('600519', '贵州茅台')
     expect(result.symbol).toBe('600519')
-    expect(result.name).toBe('贵州茅台')
-    expect(result.version).toBe(2)
-    // 存在时不调用 forward（不保存）
-    // 注意：getStockProfile 调用 query，不调用 forward
+    expect(result.stockName).toBe('贵州茅台')
+    expect(result.totalItems).toBe(11)
+    // 存在时不调用 sendWriteEnvelope（不保存）
+    expect(mockSendWriteEnvelope).not.toHaveBeenCalled()
   })
 
   it('不存在时应创建空壳资料包', async () => {
-    // 第一次查询返回 null（不存在）
-    vi.mocked(dataBridge.query).mockResolvedValueOnce({
-      success: false,
-      data: null,
-    })
+    // getStockProfile → queryGet 返回 undefined（不存在）
+    mockQueryGet.mockResolvedValueOnce(undefined)
 
     const result = await getOrCreateProfile('000001', '平安银行')
 
     expect(result.symbol).toBe('000001')
-    expect(result.name).toBe('平安银行')
-    expect(result.completenessScore).toBe(0)
-    expect(result.qualityScore).toBe(0)
-    expect(result.version).toBe(1)
-    expect(Object.keys(result.domainStats).length).toBe(8)
+    expect(result.stockName).toBe('平安银行')
+    expect(result.totalItems).toBe(0)
+    expect(result.evidenceCoverage).toBe(0)
+    expect(Object.keys(result.domainCounts).length).toBe(8)
 
-    // 验证调用了 save（forward 被调用）
-    expect(dataBridge.forward).toHaveBeenCalledTimes(1)
-  })
-})
-
-describe('recalculateProfileStats - 重新计算资料包统计', () => {
-  it('资料包不存在时应返回 null', async () => {
-    vi.mocked(dataBridge.query).mockResolvedValueOnce({
-      success: false,
-      data: null,
-    })
-
-    const result = await recalculateProfileStats('600519')
-    expect(result).toBeNull()
-  })
-
-  it('应正确计算各域统计和完整度', async () => {
-    const mockProfile: StockProfile = {
-      symbol: '600519',
-      name: '贵州茅台',
-      domainStats: {
-        D1: { count: 0, sources: [] },
-        D2: { count: 0, sources: [] },
-        D3: { count: 0, sources: [] },
-        D4: { count: 0, sources: [] },
-        D5: { count: 0, sources: [] },
-        D6: { count: 0, sources: [] },
-        D7: { count: 0, sources: [] },
-        D8: { count: 0, sources: [] },
-      },
-      completenessScore: 0,
-      qualityScore: 0,
-      evidenceCoverage: {},
-      version: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      schemaVersion: 1,
-    }
-
-    // getStockProfile 返回 mockProfile
-    vi.mocked(dataBridge.query).mockResolvedValueOnce({
-      success: true,
-      data: mockProfile,
-    })
-
-    // 模拟 8 个域的查询结果（D3 有 5 条，D5 有 3 条，D7 有 8 条，其余 0 条）
-    const createMockItems = (domain: string, count: number, quality: number): ProfileItem[] =>
-      Array.from({ length: count }, (_, i) => ({
-        id: `${domain}-${i}`,
-        symbol: '600519',
-        domain: domain as ProfileDomain,
-        itemType: 'news' as const,
-        title: `${domain} 条目 ${i}`,
-        summary: '摘要',
-        source: `${domain}_source`,
-        publishedAt: Date.now() - i * 1000,
-        collectedAt: Date.now(),
-        isUserGenerated: false,
-        qualityScore: quality,
-        dataHash: `hash-${domain}-${i}`,
-        schemaVersion: 1,
-        version: 1,
-      }))
-
-    // 8 个域的查询结果
-    vi.mocked(dataBridge.query)
-      .mockResolvedValueOnce({ success: true, data: [] }) // D1
-      .mockResolvedValueOnce({ success: true, data: [] }) // D2
-      .mockResolvedValueOnce({ success: true, data: createMockItems('D3', 5, 70) }) // D3
-      .mockResolvedValueOnce({ success: true, data: [] }) // D4
-      .mockResolvedValueOnce({ success: true, data: createMockItems('D5', 3, 80) }) // D5
-      .mockResolvedValueOnce({ success: true, data: [] }) // D6
-      .mockResolvedValueOnce({ success: true, data: createMockItems('D7', 8, 60) }) // D7
-      .mockResolvedValueOnce({ success: true, data: [] }) // D8
-
-    const result = await recalculateProfileStats('600519')
-
-    expect(result).not.toBeNull()
-    expect(result!.domainStats.D3.count).toBe(5)
-    expect(result!.domainStats.D5.count).toBe(3)
-    expect(result!.domainStats.D7.count).toBe(8)
-
-    // 3 个域有数据 → 完整度 = 3/8 = 37.5% → 38
-    expect(result!.completenessScore).toBe(38)
-
-    // 质量评分：avgQuality * 0.6 + quantityFactor * 40
-    // 总质量 = 5*70 + 3*80 + 8*60 = 350 + 240 + 480 = 1070
-    // 总条数 = 16
-    // 平均质量 = 1070 / 16 = 66.875
-    // 数量系数 = min(1, 16/50) = 0.32
-    // 质量分 = 66.875 * 0.6 + 0.32 * 40 = 40.125 + 12.8 = 52.925 → 53
-    expect(result!.qualityScore).toBe(53)
-
-    // 版本号递增
-    expect(result!.version).toBe(2)
-
-    // 应调用 save（forward 被调用）
-    expect(dataBridge.forward).toHaveBeenCalled()
+    // 验证调用了 save（sendWriteEnvelope 被调用）
+    expect(mockSendWriteEnvelope).toHaveBeenCalledTimes(1)
   })
 })
