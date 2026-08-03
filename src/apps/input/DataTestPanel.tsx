@@ -6,6 +6,17 @@
  * - 采集链路时间线
  * - 实时日志流
  * - 质量指标统计
+ *
+ * @dataflow
+ * - 执行者：本面板通过 dataTestStore.checkHealth / runSingleTrace / runBatchTrace 触发采集
+ * - 数据来源：useCollectionRuntimeStore（traceSpans / logs / stats）
+ * - 展示职责：
+ *   - 服务健康状态 Badge（store.health）
+ *   - 质量指标 StatCard × 4（runtime.stats）
+ *   - 单链路测试结果（store.singleResult）
+ *   - 批量采集任务表格（store.tasks）
+ *   - 链路时间线 CollectionTimeline（runtime.traceSpans）
+ *   - 实时日志 LiveLogStream（runtime.logs）
  */
 
 import { useMemo } from 'react'
@@ -46,13 +57,17 @@ export default function DataTestPanel(): React.JSX.Element {
 
   const config = useMemo(() => configStore.getCollectionConfig(), [configStore])
   const traceSpans = useMemo(
-    () => Object.values(runtime.traceSpans),
+    () => Object.values(runtime.traceSpans ?? {}),
     [runtime.traceSpans],
   )
 
   const handleCheckHealth = async (): Promise<void> => {
     logger.info('[DataTestPanel] 检查采集服务健康状态')
-    await store.checkHealth()
+    try {
+      await store.checkHealth()
+    } catch (err) {
+      logger.error('[DataTestPanel] 健康检查异常', { error: err })
+    }
   }
 
   const handleRunSingleTrace = async (): Promise<void> => {
@@ -60,14 +75,22 @@ export default function DataTestPanel(): React.JSX.Element {
       dimension: store.selectedDimension,
       symbol: store.singleSymbol,
     })
-    await store.runSingleTrace(config)
+    try {
+      await store.runSingleTrace(config)
+    } catch (err) {
+      logger.error('[DataTestPanel] 单链路测试异常', { error: err })
+    }
   }
 
   const handleRunBatchTrace = async (): Promise<void> => {
     logger.info('[DataTestPanel] 运行批量链路测试', {
       symbolCount: parseSymbols(store.batchText).length,
     })
-    await store.runBatchTrace(config)
+    try {
+      await store.runBatchTrace(config)
+    } catch (err) {
+      logger.error('[DataTestPanel] 批量链路测试异常', { error: err })
+    }
   }
 
   return (
@@ -169,7 +192,7 @@ export default function DataTestPanel(): React.JSX.Element {
             </div>
           )}
 
-          {store.tasks.length > 0 && (
+          {(store.tasks ?? []).length > 0 && (
             <div className="max-h-60 overflow-auto rounded-md border">
               <table className="w-full text-sm">
                 <thead className="bg-muted">
@@ -180,7 +203,7 @@ export default function DataTestPanel(): React.JSX.Element {
                   </tr>
                 </thead>
                 <tbody>
-                  {store.tasks.map((task) => (
+                  {(store.tasks ?? []).map((task) => (
                     <tr key={task.symbol} className="border-t">
                       <td className="px-3 py-1">{task.symbol}</td>
                       <td className="px-3 py-1">

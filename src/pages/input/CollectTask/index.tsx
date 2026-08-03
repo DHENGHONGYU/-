@@ -2,16 +2,22 @@
  * 采集任务监控页（D-1 框架）
  *
  * 容器组件：仅做 Tab 编排与状态路由
- * - 子模块：
- *   - `useCollectionTaskStats` 状态聚合
- *   - `CollectTaskStatsCards` 顶部 KPI
- *   - `TaskListTab` 任务列表
- *   - `ScoreAnalysisTab` 评分分析（含 4 子组件）
- *   - `DimHealthTab` 维度健康
- *   - `LiveLogStream` 实时日志
- *   - `CollectionTimeline` 链路时间线
- *   - `CollectionSwimlane` 泳道图
- *   - `TraceReplayPanel` 链路回放
+ *
+ * @dataflow
+ * - 数据来源：useCollectionRuntimeStore（traceSpans / logs / taskStatuses / stats）
+ * - 状态聚合：useCollectionTaskStats Hook（任务列表/维度健康/评分统计/采集报告）
+ * - 展示职责：
+ *   - `CollectTaskStatsCards` → 顶部 KPI（任务统计 + 质量指标）
+ *   - `TaskListTab` → 任务列表（taskStatuses → tasks）
+ *   - `ScoreAnalysisTab` → 评分分析（含 4 子组件）
+ *   - `DimHealthTab` → 维度健康（spans 按 dimensionCode 聚合）
+ *   - `LiveLogStream` → 实时日志（logs）
+ *   - `CollectionTimeline` → 链路时间线（traceSpans → spans）
+ *   - `CollectionSwimlane` → 泳道图（spans）
+ *   - `TraceReplayPanel` → 链路回放（selectedTraces）
+ *   - `CollectionProgressPanel` → 进度汇报（collectionReport）
+ *   - `CollectionReportPanel` → 采集报告（collectionReport）
+ *   - `DataQualityTab` → 数据质量（stats + dimHealth + scoreStats）
  *
  * @module pages/input/CollectTask
  */
