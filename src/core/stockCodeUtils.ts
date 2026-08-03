@@ -12,13 +12,17 @@
 
 /**
  * 将 6 位代码转换为腾讯格式（sh/sz/bj 前缀）
+ * 自动剥离 .SH/.SZ/.BJ 后缀（兼容带后缀的输入）。
  * @example toTencentCode('600519') → 'sh600519'
+ * @example toTencentCode('600519.SH') → 'sh600519'
  */
 export function toTencentCode(code: string): string {
-  if (code.startsWith('6')) return `sh${code}`
-  if (code.startsWith('0') || code.startsWith('3')) return `sz${code}`
-  if (code.startsWith('8') || code.startsWith('4')) return `bj${code}`
-  return `sh${code}`
+  // 剥离 .SH/.SZ/.BJ 后缀（大小写不敏感）
+  const bare = code.replace(/\.(SH|SZ|BJ)$/i, '')
+  if (bare.startsWith('6')) return `sh${bare}`
+  if (bare.startsWith('0') || bare.startsWith('3')) return `sz${bare}`
+  if (bare.startsWith('8') || bare.startsWith('4')) return `bj${bare}`
+  return `sh${bare}`
 }
 
 /**
