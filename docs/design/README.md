@@ -30,8 +30,8 @@ date: 2026-07-17
 
 | 旧路径 | 新路径 |
 |--------|--------|
-| `design/a11y-i18n.md` | [../reference/04-ui-ux-specs.md](../reference/04-ui-ux-specs.md) |
-| `design/song-aesthetics.md` | [../reference/design-tokens.md](../reference/design-tokens.md) |
+| `design/a11y-i18n.md` | [../04-ui-ux-specs.md](../04-ui-ux-specs.md) |
+| `design/song-aesthetics.md` | [../design-tokens.md](../design-tokens.md) |
 
 ## 说明
 
