@@ -12,24 +12,31 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { dataBridge } from '@/core/databridge'
 import type { ProfileItem, ProfileDomain, StockProfile } from '@/data/types'
 import {
   domainToLayers,
   layerToDomain,
-  newsArticleToProfileItem,
   saveProfileItem,
   bulkSaveProfileItems,
   getProfileItem,
   listProfileItemsByDomain,
   listProfileItemsByType,
   getOrCreateProfile,
-  recalculateProfileStats,
 } from '@/services/profile/profileService'
 
 // ============================================================
 // Mock 设置
 // ============================================================
+
+// Mock dataLayerHelpers（profileService 实际调用的模块）
+const mockQueryGet = vi.fn().mockResolvedValue(undefined)
+const mockQueryByIndex = vi.fn().mockResolvedValue([])
+const mockSendWriteEnvelope = vi.fn().mockResolvedValue(undefined)
+vi.mock('@/data/dataLayerHelpers', () => ({
+  sendWriteEnvelope: (...args: unknown[]) => mockSendWriteEnvelope(...args),
+  queryGet: (...args: unknown[]) => mockQueryGet(...args),
+  queryByIndex: (...args: unknown[]) => mockQueryByIndex(...args),
+}))
 
 vi.mock('@/core/databridge', () => ({
   dataBridge: {
@@ -54,8 +61,8 @@ beforeEach(() => {
 // ============================================================
 
 describe('domainToLayers - 域 → 评分层映射', () => {
-  it('D1 应映射到 lMinus1', () => {
-    expect(domainToLayers('D1')).toEqual(['lMinus1'])
+  it('D1 应映射到 lMinus1 和 l0（行业产业 → 行业评分 + 宏观环境）', () => {
+    expect(domainToLayers('D1')).toEqual(['lMinus1', 'l0'])
   })
 
   it('D2 应映射到 l0', () => {
@@ -133,7 +140,8 @@ describe('layerToDomain - 评分层 → 域映射', () => {
 
   it('domainToLayers 和 layerToDomain 应互为逆映射（单一层）', () => {
     // 对于只有一个层的域，两次映射应返回原值
-    const singleLayerDomains: ProfileDomain[] = ['D1', 'D2', 'D3', 'D4', 'D5', 'D6']
+    // 注意：D1 现在映射到 ['lMinus1', 'l0'] 两个层，不再属于单一层域
+    const singleLayerDomains: ProfileDomain[] = ['D2', 'D3', 'D4', 'D5', 'D6']
     for (const d of singleLayerDomains) {
       const layers = domainToLayers(d)
       expect(layers.length).toBe(1)

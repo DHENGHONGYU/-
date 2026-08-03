@@ -55,11 +55,6 @@ describe('路由注册完整性（防回归：路由404）', () => {
     expect(route, '路由 /command/hub 未在 ROUTE_REGISTRY 中注册').toBeDefined()
   })
 
-  it('V6 个股评分页面路由 /analysis/stock-score 应已注册', () => {
-    const route = findRoute('/analysis/stock-score')
-    expect(route, '路由 /analysis/stock-score 未在 ROUTE_REGISTRY 中注册').toBeDefined()
-  })
-
   it('V6 智能评分页面路由 /analysis/intelligent-score 应已注册', () => {
     const route = findRoute('/analysis/intelligent-score')
     expect(route, '路由 /analysis/intelligent-score 未在 ROUTE_REGISTRY 中注册').toBeDefined()
@@ -103,7 +98,6 @@ const KNOWN_SIDEBAR_ITEMS: Array<{ key: string; label: string; path: string; cab
   { key: 'local-knowledge', label: '本地知识库', path: '/input/local-knowledge', cabin: 'input' },
   // 分析舱
   { key: 'industry-score', label: 'V4 行业评分', path: '/analysis/industry-score', cabin: 'analysis' },
-  { key: 'stock-score', label: 'V6 个股评分', path: '/analysis/stock-score', cabin: 'analysis' },
   { key: 'intelligent-score', label: 'V6 智能评分', path: '/analysis/intelligent-score', cabin: 'analysis' },
   { key: 'sector', label: '行业分析', path: '/analysis/sector', cabin: 'analysis' },
   { key: 'backtest', label: '策略回测', path: '/analysis/backtest', cabin: 'analysis' },
@@ -141,12 +135,6 @@ describe('侧边栏已知按钮标签验证（防回归：按钮文本不匹配�
   it('输出舱侧边栏应仅包含 2 个按钮', () => {
     const outputItems = KNOWN_SIDEBAR_ITEMS.filter((item) => item.cabin === 'output')
     expect(outputItems.length, '输出舱侧边栏按钮数量变更，请确认是否预期并更新测试').toBe(2)
-  })
-
-  it('分析舱侧边栏应包含"V6 个股评分"按钮', () => {
-    const analysisItems = KNOWN_SIDEBAR_ITEMS.filter((item) => item.cabin === 'analysis')
-    const stockScoreItem = analysisItems.find((item) => item.label === 'V6 个股评分')
-    expect(stockScoreItem, '分析舱侧边栏已知配置中未找到"V6 个股评分"按钮').toBeDefined()
   })
 
   it('分析舱侧边栏应包含"V6 智能评分"按钮（非"V6 个股智能评分"）', () => {
@@ -255,13 +243,13 @@ describe('isActivePath 路径匹配逻辑（防回归：侧边栏高亮错误）
 
   it('精确匹配应返回 true', () => {
     expect(isActivePath('/input', '/input')).toBe(true)
-    expect(isActivePath('/analysis/stock-score', '/analysis/stock-score')).toBe(true)
+    expect(isActivePath('/analysis/intelligent-score', '/analysis/intelligent-score')).toBe(true)
     expect(isActivePath('/output/research', '/output/research')).toBe(true)
   })
 
   it('子路径应匹配父路径', () => {
     expect(isActivePath('/input/bulk-import', '/input')).toBe(true)
-    expect(isActivePath('/analysis/stock-score/600519.SH', '/analysis/stock-score')).toBe(true)
+    expect(isActivePath('/analysis/intelligent-score/600519.SH', '/analysis/intelligent-score')).toBe(true)
     expect(isActivePath('/output/research', '/output')).toBe(true)
   })
 
@@ -326,7 +314,6 @@ describe('侧边栏 PANEL_ITEMS 结构完整性（防回归：按钮配置错误
   it('分析舱侧边栏按钮标签应为已知值', () => {
     const analysisItems = KNOWN_SIDEBAR_ITEMS.filter((item) => item.cabin === 'analysis')
     const labels = analysisItems.map((item) => item.label)
-    expect(labels).toContain('V6 个股评分')
     expect(labels).toContain('V6 智能评分')
     expect(labels).toContain('V4 行业评分')
     // 不应包含已被废弃的标签
@@ -454,7 +441,6 @@ describe('路由到舱室映射逻辑（防回归：路由归类错误）', () =
   })
 
   it('关键分析页面路由可正确映射到分析舱', () => {
-    expect(getCabinFromPath('/analysis/stock-score')).toBe('analysis')
     expect(getCabinFromPath('/analysis/intelligent-score')).toBe('analysis')
     expect(getCabinFromPath('/analysis/hub')).toBe('analysis')
   })

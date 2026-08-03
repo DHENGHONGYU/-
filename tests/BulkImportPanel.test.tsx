@@ -1,6 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { MemoryRouter } from 'react-router'
 
 // ============================================================
 // Mock: batchImportService
@@ -69,7 +70,7 @@ describe('BulkImportPanel', () => {
   // 初始化逻辑
   // ----------------------------------------------------------
   it('calls refresh on mount to load pool data', async () => {
-    render(<BulkImportPanel />)
+    render(<MemoryRouter><BulkImportPanel /></MemoryRouter>)
 
     await waitFor(() => {
       expect(intentionPoolState.refresh).toHaveBeenCalledTimes(1)
@@ -80,14 +81,14 @@ describe('BulkImportPanel', () => {
   // 基本渲染
   // ----------------------------------------------------------
   it('renders panel title and import textarea', async () => {
-    render(<BulkImportPanel />)
+    render(<MemoryRouter><BulkImportPanel /></MemoryRouter>)
 
     expect(screen.getByText('批量导入候选股票')).toBeInTheDocument()
     expect(screen.getByPlaceholderText(/600519\.SH,贵州茅台/)).toBeInTheDocument()
   })
 
   it('renders target group select with allGroups options', async () => {
-    render(<BulkImportPanel />)
+    render(<MemoryRouter><BulkImportPanel /></MemoryRouter>)
 
     expect(screen.getByLabelText('批量导入目标分组')).toBeInTheDocument()
     expect(screen.getByText('默认分组')).toBeInTheDocument()
@@ -103,7 +104,7 @@ describe('BulkImportPanel', () => {
       { code: '600519', name: '贵州茅台', symbol: '600519.SH' },
     ])
 
-    render(<BulkImportPanel />)
+    render(<MemoryRouter><BulkImportPanel /></MemoryRouter>)
 
     const textarea = screen.getByPlaceholderText(/600519\.SH,贵州茅台/)
     await user.type(textarea, '600519,贵州茅台')
@@ -118,7 +119,7 @@ describe('BulkImportPanel', () => {
       { code: '000001', name: '平安银行', symbol: '000001.SZ' },
     ])
 
-    render(<BulkImportPanel />)
+    render(<MemoryRouter><BulkImportPanel /></MemoryRouter>)
 
     const textarea = screen.getByPlaceholderText(/600519\.SH,贵州茅台/)
     await user.type(textarea, '600519,贵州茅台\n000001,平安银行')
@@ -142,7 +143,7 @@ describe('BulkImportPanel', () => {
       data: { success: 1, failed: 0, errors: [] },
     })
 
-    render(<BulkImportPanel />)
+    render(<MemoryRouter><BulkImportPanel /></MemoryRouter>)
 
     const textarea = screen.getByPlaceholderText(/600519\.SH,贵州茅台/)
     await user.type(textarea, '600519,贵州茅台')
@@ -171,7 +172,7 @@ describe('BulkImportPanel', () => {
       data: { success: 1, failed: 0, errors: [] },
     })
 
-    render(<BulkImportPanel />)
+    render(<MemoryRouter><BulkImportPanel /></MemoryRouter>)
 
     const textarea = screen.getByPlaceholderText(/600519\.SH,贵州茅台/)
     await user.type(textarea, '600519,贵州茅台')
@@ -195,7 +196,7 @@ describe('BulkImportPanel', () => {
       data: { success: 1, failed: 0, errors: [] },
     })
 
-    render(<BulkImportPanel />)
+    render(<MemoryRouter><BulkImportPanel /></MemoryRouter>)
 
     const textarea = screen.getByPlaceholderText(/600519\.SH,贵州茅台/)
     await user.type(textarea, '600519,贵州茅台')
@@ -222,7 +223,7 @@ describe('BulkImportPanel', () => {
       error: '数据库写入失败',
     })
 
-    render(<BulkImportPanel />)
+    render(<MemoryRouter><BulkImportPanel /></MemoryRouter>)
 
     const textarea = screen.getByPlaceholderText(/600519\.SH,贵州茅台/)
     await user.type(textarea, '600519,贵州茅台')
@@ -239,7 +240,7 @@ describe('BulkImportPanel', () => {
     const user = userEvent.setup()
     mockParseBulkInput.mockReturnValue([])
 
-    render(<BulkImportPanel />)
+    render(<MemoryRouter><BulkImportPanel /></MemoryRouter>)
 
     const textarea = screen.getByPlaceholderText(/600519\.SH,贵州茅台/)
     await user.type(textarea, 'invalid text')

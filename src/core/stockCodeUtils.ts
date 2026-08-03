@@ -17,9 +17,21 @@
  * @example toTencentCode('600519.SH') → 'sh600519'
  */
 export function toTencentCode(code: string): string {
-  // 剥离 .SH/.SZ/.BJ 后缀（大小写不敏感）
-  const bare = code.replace(/\.(SH|SZ|BJ)$/i, '')
-  if (bare.startsWith('6')) return `sh${bare}`
+  // 优先按后缀判断交易所（.SH/.SZ/.BJ 后缀大小写不敏感）
+  // 必须在数字前缀判断之前：指数代码 000300.SH 以 0 开头但属于上交所
+  const upper = code.toUpperCase()
+  if (upper.endsWith('.SH')) {
+    return `sh${code.replace(/\.(SH|SZ|BJ)$/i, '')}`
+  }
+  if (upper.endsWith('.SZ')) {
+    return `sz${code.replace(/\.(SH|SZ|BJ)$/i, '')}`
+  }
+  if (upper.endsWith('.BJ')) {
+    return `bj${code.replace(/\.(SH|SZ|BJ)$/i, '')}`
+  }
+  // 无后缀：按数字前缀判断
+  const bare = code
+  if (bare.startsWith('6') || bare.startsWith('9')) return `sh${bare}`
   if (bare.startsWith('0') || bare.startsWith('3')) return `sz${bare}`
   if (bare.startsWith('8') || bare.startsWith('4')) return `bj${bare}`
   return `sh${bare}`
@@ -38,6 +50,15 @@ export function toSinaCode(code: string): string {
  * @example toNeteaseCode('600519') → '0600519'
  */
 export function toNeteaseCode(code: string): string {
+  // 优先按后缀判断（与 toTencentCode 保持一致）
+  const upper = code.toUpperCase()
+  if (upper.endsWith('.SH')) {
+    return `0${code.replace(/\.(SH|SZ|BJ)$/i, '')}`
+  }
+  if (upper.endsWith('.SZ') || upper.endsWith('.BJ')) {
+    return `1${code.replace(/\.(SH|SZ|BJ)$/i, '')}`
+  }
+  // 无后缀：按数字前缀判断
   if (code.startsWith('6')) return `0${code}`
   return `1${code}`
 }
