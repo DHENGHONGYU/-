@@ -528,6 +528,8 @@ export const selectProfile = (state: ProfileState): StockProfile | null => state
 export function selectDomainCounts(state: ProfileState): Record<ProfileDomain, number> {
   const counts: Record<string, number> = {}
   for (const item of state.items) {
+    // NOTE: ?? 0 在此处合法 —— Record<string, number> 计数器初始化场景，
+    // 新 key 首次访问时必须从 0 开始累加，这是 JS 标准写法，与数值兜底的 ?? 0 有本质区别
     counts[item.domain] = (counts[item.domain] ?? 0) + 1
   }
   // 确保所有 8 个域都有值
