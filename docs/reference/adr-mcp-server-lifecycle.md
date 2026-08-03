@@ -84,7 +84,7 @@ V9 项目 MCP 层经历了从 18 个 Server 到 13 个 Server 的治理过程。
 - [ ] **类型清理**：移除 `src/types/modules/` 中零引用的类型定义
 - [ ] **tsc 验证**：运行 `npx tsc --noEmit` 确认无类型错误
 - [ ] **audit:layers 验证**：运行 `npm run audit:layers` 确认无跨层违规
-- [ ] **文档更新**：在 `docs/02-design/ADR/` 中新增或更新 ADR，记录决策原因和恢复条件
+- [ ] **文档更新**：在 `docs/specs/design/ADR/` 中新增或更新 ADR，记录决策原因和恢复条件
 - [ ] **CHANGELOG 记录**：在 `CHANGELOG.md` 中记录变更
 
 ---

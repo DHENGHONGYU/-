@@ -10,7 +10,7 @@ summary: "V9 系统架构的唯一真相源，定义五层架构、调用规则�
 tags: [architecture, standards, spec, design, explanation]
 version: v2.5.0
 last_updated: 2026-07-05
-code_version: 2.5.0
+code_version: 2.0.0
 doc_id: V9-DOC-ARCH-004
 change_log:
   - version: v2.5.0
@@ -26,7 +26,7 @@ date: 2026-08-03
 >
 > 本文档是 V9 系统架构的唯一真相源，定义五层架构、调用规则、数据架构、技术选型理由与当前代码偏差。  
 > 目标读者：前端/全栈开发者、架构师、新加入成员。  
-> 与规划基线的差异见 `docs/implementation/architecture-version-comparison.md`。
+> 与规划基线的差异见 `docs/explanation/implementation/architecture-version-comparison.md`。
 
 ---
 
@@ -811,7 +811,7 @@ V10 的 `StateBoard` 要求跨模块共享状态必须通过统一字段契约�
 | **D17** | **`rotationScoreService.ts` 已实现五因子十六指标模型，上层 `SectorAnalysisPage` 待充分接入** | `src/services/analysis/rotationScoreService.ts` | 板块轮动评分已可计算，上层展示与调用待完善 | Phase 2 在 `SectorAnalysisPage` 接入轮动评分 |
 | **D18** | **缺少操作反馈闭环** | `src/components/atoms/Toast.tsx` | 仅基础 Toast，缺少操作状态实时更新、数据质量反馈、评分理由 | Phase 2 完善反馈机制 |
 | **D19** | 🟢 已修复：`WidgetErrorBoundary` 已接入 `CockpitShell` Widget 渲染管线 | `src/cockpit/CockpitShell.tsx` | Widget 级错误隔离已落地，每个 Widget 独立捕获渲染错误 | 保持，持续完善错误恢复策略 |
-| **D20** | **缺少热门板块与价值洼地双策略体系** | `src/services/trading/`、`src/cockpit/widgets/` | 策略引擎仅有主题/价值/热门动量三分类，缺少用户规格中的 HotSectorScore / ValuePitScore 双评分输出与轮动信号检测 | Phase 2 新增独立 Store、Analyzer、Detector、Widget；详见 `docs/implementation/adr/2026-06-27-dual-strategy-system.md` |
+| **D20** | **缺少热门板块与价值洼地双策略体系** | `src/services/trading/`、`src/cockpit/widgets/` | 策略引擎仅有主题/价值/热门动量三分类，缺少用户规格中的 HotSectorScore / ValuePitScore 双评分输出与轮动信号检测 | Phase 2 新增独立 Store、Analyzer、Detector、Widget；详见 `docs/explanation/implementation/adr/2026-06-27-dual-strategy-system.md` |
 
 ---
 
@@ -958,7 +958,7 @@ useEffect(() => {
 
 本文档当前版本为 `v0.9.0-migration-implemented`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
-- `docs/implementation/architecture-version-comparison.md`
+- `docs/explanation/implementation/architecture-version-comparison.md`
 
 主要变化：
 

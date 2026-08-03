@@ -39,8 +39,8 @@ date: 2026-07-17
 | 2026-07-12T00:44:24Z | AGENTS.md | 修改 | doc | 50678 |
 | 2026-07-12T00:44:24Z | complexity-remediation-plan.md | 修改 | doc | 8878 |
 | 2026-07-12T00:44:24Z | docs/atomic-component-system.md | 修改 | doc | 21308 |
-| 2026-07-12T00:44:24Z | docs/implementation/ui-design-system.md | 修改 | doc | 8500 |
-| 2026-07-12T00:44:24Z | docs/implementation/widget-error-handling.md | 修改 | doc | 6908 |
+| 2026-07-12T00:44:24Z | docs/explanation/implementation/ui-design-system.md | 修改 | doc | 8500 |
+| 2026-07-12T00:44:24Z | docs/explanation/implementation/widget-error-handling.md | 修改 | doc | 6908 |
 | 2026-07-12T00:44:24Z | docs/reports/audit/audit-atomic-2026-07-11T06-34-24-280Z.json | 修改 | doc | 63156 |
 | 2026-07-12T00:44:24Z | docs/reports/audit/audit-atomic-2026-07-11T06-38-27-946Z.json | 修改 | doc | 63155 |
 | 2026-07-12T00:44:24Z | docs/reports/audit/audit-atomic-2026-07-11T06-39-10-819Z.json | 修改 | doc | 60727 |

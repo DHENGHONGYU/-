@@ -40,7 +40,7 @@ change_log:
 
 ### 2.2 ADR 模板
 
-每个 ADR 存放于 `docs/implementation/adr/YYYY-MM-DD-title.md`：
+每个 ADR 存放于 `docs/explanation/implementation/adr/YYYY-MM-DD-title.md`：
 
 ```markdown
 # ADR-XXX: 标题
@@ -107,7 +107,7 @@ change_log:
 
 ### 3.2 版本比对文档
 
-- 全局比对：`docs/implementation/architecture-version-comparison.md`
+- 全局比对：`docs/explanation/implementation/architecture-version-comparison.md`
 - 单项文档末尾应包含「版本比对」小节，引用全局比对文档并列出本文件主要变化。
 
 ### 3.3 比对内容
@@ -171,7 +171,7 @@ change_log:
 
 | 治理项 | 状态 | 备注 |
 |--------|------|------|
-| ADR 目录 | ✅ | 已建立 `docs/implementation/adr/`，共 8 个 ADR |
+| ADR 目录 | ✅ | 已建立 `docs/explanation/implementation/adr/`，共 8 个 ADR |
 | 文档版本比对 | ✅ | 已建立 `architecture-version-comparison.md` |
 | 质量审计基线 | ✅ | 当前 0 跨层违规，硬编码/死代码基线已记录 |
 | 代码-文档同步规则 | ✅ | 已写入本文档 |

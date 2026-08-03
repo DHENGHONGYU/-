@@ -166,5 +166,5 @@ flowchart TD
 ---
 
 ## 附：架构图可视化
-- 源文件：`docs/architecture/architecture-diagrams.html`（分层图/数据流图/舱室地图）。
+- 源文件：`docs/explanation/architecture/architecture-diagrams.html`（分层图/数据流图/舱室地图）。
 - 本文 Mermaid 图需在支持 Mermaid 的查看器（GitHub、VS Code Mermaid 插件、Typora）中渲染。

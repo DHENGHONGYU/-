@@ -211,10 +211,10 @@ npm run build
 
 | 我想了解... | 阅读文档 | 路径 |
 |-------------|----------|------|
-| 全局架构 | architecture/overview.md | `docs/architecture/overview.md` |
-| 舱室详情 | cabins-overview.md | `docs/architecture/cabins-overview.md` |
+| 全局架构 | architecture/overview.md | `docs/explanation/architecture/overview.md` |
+| 舱室详情 | cabins-overview.md | `docs/explanation/architecture/cabins-overview.md` |
 | 服务子域 | services-catalog.md | `../reference/services-catalog.md` |
-| 数据定义 | DATA_DICTIONARY_INDEX.md | `docs/standards/DATA_DICTIONARY_INDEX.md` |
+| 数据定义 | DATA_DICTIONARY_INDEX.md | `docs/guides/standards/DATA_DICTIONARY_INDEX.md` |
 | 编码规范 | AGENTS.md | `AGENTS.md` |
 | 颜色令牌 | design-token-mapping.md | `../reference/design-token-mapping.md` |
 | 如何新增 Store | how-to-add-store.md | `docs/guides/how-to-add-store.md` |

@@ -193,9 +193,9 @@ V9 当前已通过 ADR-008 引入「第四次工业革命稀缺核心资源」�
 
 ## 相关文档
 
-- `docs/implementation/dual-strategy-dataflow-spec.md`
-- `docs/implementation/dual-strategy-gap-analysis.md`
-- `docs/implementation/adr/2026-06-24-adopt-v6-core-resource-trading-strategy.md`
+- `docs/explanation/implementation/dual-strategy-dataflow-spec.md`
+- `docs/explanation/implementation/dual-strategy-gap-analysis.md`
+- `docs/explanation/implementation/adr/2026-06-24-adopt-v6-core-resource-trading-strategy.md`
 - `docs/03-architecture-standards.md`
 - `docs/05-engine-specs.md`
 - `docs/10-glossary.md`

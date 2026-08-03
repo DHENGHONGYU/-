@@ -59,7 +59,7 @@ code_version: 2.0.0
 
 | 字段 | 必填 | 取值 | 说明 |
 |------|------|------|------|
-| `title` | ✅ | 短名 slug（如 `doc-style-standard`） | **禁止**全路径名（如 `docs/00-meta/doc-style-standard.md`） |
+| `title` | ✅ | 短名 slug（如 `doc-style-standard`） | **禁止**全路径名（如 `docs/meta/doc-style-standard.md`） |
 | `code_version` | ✅ | 语义版本 `x.y.z` | 缺则补 `1.0.0` |
 | `tier` | ✅ | `core` \| `important` \| `reference` \| `archive` | 前三者与 `markdown-reorg-framework.md` 三级分类一致；`archive` 为归档文档既有约定（52 份使用，生成器已支持前缀 `A-`） |
 | `status` | 选 | `draft` \| `active` \| `deprecated` | archive/deprecated 副本用 |
@@ -110,7 +110,7 @@ code_version: 2.0.0
 tier: core
 ---
 ---                                    ← 块2（重复，禁止）
-title: docs/00-meta/doc-style-standard.md
+title: docs/meta/doc-style-standard.md
 tier: reference                        ← 与块1 冲突
 ---
 ```
@@ -183,7 +183,7 @@ tier: reference                        ← 与块1 冲突
 ## 8. 链接与引用
 
 - 文档间引用用 **slug（文件名）**，不用 `C-/I-/R-` 编号（编号可因重排改变）。
-- 用**相对路径**，禁止绝对路径（如 `C:\Users\...\xxx.md`）与越界 `../..`。
+- 用**相对路径**，禁止绝对路径（如 `C:\Users\<user>\xxx.md`）与越界 `../..`。
 ---
 
 ## 9. 校验与门禁（补充更新和检查）

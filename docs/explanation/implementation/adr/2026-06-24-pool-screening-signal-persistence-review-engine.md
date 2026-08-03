@@ -68,6 +68,6 @@ V9 已跑通“录入 → 评分 → 信号/下单 → 导出”的主链路，�
 
 ## 相关文档
 
-- `docs/implementation/investment-pipeline-stage-analysis.md`
+- `docs/explanation/implementation/investment-pipeline-stage-analysis.md`
 - `docs/10-glossary.md`
 - `docs/02-functional-specs.md`

@@ -46,7 +46,7 @@
 | DOC-002 | Doc-Sync-Fix | Doc-Sync-Fix | `docs/05-engine-specs.md` | ✅ 已完成 |
 | DOC-003 | Doc-Sync-Fix | Doc-Sync-Fix | `docs/05-engine-specs.md` | ✅ 已完成 |
 | DOC-004 | Doc-Sync-Fix | Doc-Sync-Fix | `docs/05-engine-specs.md` | ✅ 已完成 |
-| DOC-005 | Doc-Sync-Fix | Doc-Sync-Fix | `docs/01-vision-and-goals.md`, `docs/02-functional-specs.md`, `docs/04-ui-ux-specs.md`, `docs/05-engine-specs.md`, `docs/07-operation-strategy.md`, `docs/10-glossary.md`, `docs/implementation/data-interaction-protocols.md`, `docs/implementation/v9-current-state-review.md`, `docs/implementation/architecture-version-comparison.md` | ✅ 已完成 |
+| DOC-005 | Doc-Sync-Fix | Doc-Sync-Fix | `docs/01-vision-and-goals.md`, `docs/02-functional-specs.md`, `docs/04-ui-ux-specs.md`, `docs/05-engine-specs.md`, `docs/07-operation-strategy.md`, `docs/10-glossary.md`, `docs/explanation/implementation/data-interaction-protocols.md`, `docs/explanation/implementation/v9-current-state-review.md`, `docs/explanation/implementation/architecture-version-comparison.md` | ✅ 已完成 |
 | DOC-006 | Doc-Sync-Fix | Doc-Sync-Fix | `docs/09-quality-gates.md` | ✅ 已完成 |
 | DOC-007 | Doc-Sync-Fix | Doc-Sync-Fix | `docs/06-routing-specs.md` | ✅ 已完成 |
 

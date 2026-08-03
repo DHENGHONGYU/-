@@ -213,17 +213,17 @@ FinSightV9/
 | 文件 | 断链类型 | 修复数量 | 修复方式 |
 |------|----------|----------|----------|
 | `docs/V9数据宪法.md` | file:/// 跨用户绝对路径 | 37 | 替换为 ./ 相对路径 |
-| `docs/team-handbook/06-team-operation-guide.md` | file:/// 跨盘符绝对路径 | 21 | 替换为 ./ 相对路径 |
+| `docs/guides/team-handbook/06-team-operation-guide.md` | file:/// 跨盘符绝对路径 | 21 | 替换为 ./ 相对路径 |
 | `docs/踩坑规则门禁指南.md` | file:/// 跨用户绝对路径 | 12 | 替换为 ./ 相对路径 |
 | `docs/explanation/design/踩坑规则门禁指南.md` | file:/// 跨用户绝对路径 | 5 | 替换为 ./ 相对路径 |
 | `docs/数据治理路线图.md` | file:/// 跨用户绝对路径 | 5 | 替换为 ./ 相对路径 |
 | `docs/audit/code-quality-audit-report.md` | computer:// 错误协议 | 4 | 改为说明性文字（标注历史归档） |
 | `docs/reference/walkthrough-scoredoc-report.md` | file:/// 跨用户绝对路径（含乱码） | 4 | 替换为 ./ 相对路径 |
-| `docs/01-product/data-security-and-privacy.md` | file:/// 跨盘符绝对路径 | 4 | 替换为 ../../src/ 相对路径 |
-| `docs/04-testing/security-test-plan.md` | file:/// 跨盘符绝对路径 | 1 | 替换为 ./ 相对路径 |
+| `docs/specs/product/data-security-and-privacy.md` | file:/// 跨盘符绝对路径 | 4 | 替换为 ../../src/ 相对路径 |
+| `docs/reports/testing/security-test-plan.md` | file:/// 跨盘符绝对路径 | 1 | 替换为 ./ 相对路径 |
 | `docs/reference/data-collection-route-ui-audit.md` | file:////src/ 错误格式 | 1 | 替换为 ./src/ 相对路径 |
 | `docs/design-tokens.md` | ../explanation/architecture.md 错误路径 | 1 | 替换为 ./03-architecture-standards.md |
-| `docs/00-meta/type-domain-audit-worksheet.md` | explanation/01-vision-and-goals.md 旧路径 | 1 | 替换为 ../01-vision-and-goals.md |
+| `docs/meta/type-domain-audit-worksheet.md` | explanation/01-vision-and-goals.md 旧路径 | 1 | 替换为 ../01-vision-and-goals.md |
 | `docs/explanation/design/autonomous-workflow-optimization.md` | CHANGELOG.md/09-quality-gates.md 路径 | 2 | 替换为正确相对路径 |
 | `docs/explanation/design/stock-selection-strategy.md` | 05-engine-specs.md/03-architecture-standards.md 路径 | 2 | 替换为正确相对路径 |
 | `docs/explanation/design/v9-strategy-architecture.md` | 03-architecture-standards.md/05-engine-specs.md 路径 | 2 | 替换为正确相对路径 |
@@ -244,8 +244,8 @@ FinSightV9/
 | `CHANGELOG.md` | docs/reference/（v2.6.0） | docs/（根目录） |
 | `CODE-REVIEW.md` | docs/reference/ | docs/（根目录） |
 | `design-tokens.md` | docs/reference/ | docs/（根目录） |
-| `testing-strategy.md` | docs/how-to/ | docs/（根目录，保留版本） |
-| `widget-development-guide.md` | docs/how-to/ | docs/（根目录，保留版本） |
+| `testing-strategy.md` | docs/guides/how-to/ | docs/（根目录，保留版本） |
+| `widget-development-guide.md` | docs/guides/how-to/ | docs/（根目录，保留版本） |
 | ... | 共 16 个文档完成权威版本合并 | |
 
 ### 4.4 重定向映射更新
@@ -258,17 +258,17 @@ FinSightV9/
 
 | 文件 | 说明 |
 |------|------|
-| `docs/governance/breaking-changes-report-2026-08-03.md` | 破坏性变更报告 — 上线前工具配置整合与废弃文件清理 |
-| `docs/ops/data-source-config.md` | 数据源配置总结（含 /api/akshare 代理链路验证） |
-| `docs/ops/production-deployment-guide.md` | 生产环境部署指南（Nginx/环境变量/AkShare 服务） |
+| `docs/reports/governance/breaking-changes-report-2026-08-03.md` | 破坏性变更报告 — 上线前工具配置整合与废弃文件清理 |
+| `docs/reports/ops/data-source-config.md` | 数据源配置总结（含 /api/akshare 代理链路验证） |
+| `docs/reports/ops/production-deployment-guide.md` | 生产环境部署指南（Nginx/环境变量/AkShare 服务） |
 
 ### 4.6 文档治理索引更新
 
 | 文件 | 说明 |
 |------|------|
-| `docs/how-to/FILE-MANAGEMENT-GUIDE.md` | 新增 "docs/ 根目录允许文件清单" 表格 |
+| `docs/guides/how-to/FILE-MANAGEMENT-GUIDE.md` | 新增 "docs/ 根目录允许文件清单" 表格 |
 | `docs/REGISTRY_INDEX.md` | 自动生成，同步最新文档注册信息 |
-| `docs/00-meta/type-domain-audit-worksheet.md` | 修正 01-vision-and-goals.md 路径引用 |
+| `docs/meta/type-domain-audit-worksheet.md` | 修正 01-vision-and-goals.md 路径引用 |
 
 ---
 
@@ -318,4 +318,4 @@ FinSightV9/
 
 **报告生成人**: V9 Dev Team  
 **报告版本**: v1.0.0  
-**归档位置**: `docs/06-project-management/docs-governance-file-structure-report-2026-08-03.md`
+**归档位置**: `docs/reports/project-management/docs-governance-file-structure-report-2026-08-03.md`

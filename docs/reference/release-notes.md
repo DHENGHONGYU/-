@@ -127,7 +127,7 @@ date: 2026-07-17
 
 #### 3. 已废弃文档清理
 
-- `docs/implementation/deprecated/` 目录 9 个文件全部删除（已被替代文档覆盖）
+- `docs/explanation/implementation/deprecated/` 目录 9 个文件全部删除（已被替代文档覆盖）
 - 13 份旧版/重复文档（数据字典 v1.0、数据资产清单 v1.0.1、架构缺陷清单、docs/release-notes.md 等）
 
 #### 4. 过程性审计报告清理

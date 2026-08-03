@@ -38,7 +38,7 @@ change_log:
 - `docs/README.md` 是文档体系的**唯一顶层入口**，任何新成员或 AI Agent 应从这里 1 步定位核心文档
 - 禁止在 `docs/` 根目录下散落独立文档；所有新增文档必须落入对应分类子目录
 - 同一主题**禁止**出现多份独立文档；如有重复，必须合并或归档到 `docs/archive/`
-- `docs/00-meta/master-index.json`（待建）是文档元数据的**唯一机械真相源**，所有派生索引必须从其生成
+- `docs/meta/master-index.json`（待建）是文档元数据的**唯一机械真相源**，所有派生索引必须从其生成
 
 ### 1.2 双向一致性（Bidirectional Consistency）
 
@@ -64,24 +64,24 @@ change_log:
 
 | type | 数量 | 占比 | 对应目录 | 文档示例 | 准入规则 |
 |------|------|------|----------|----------|----------|
-| **tutorials** | 2 | 0.3% | `docs/tutorials/` | getting-started.md | 学习导向，循序渐进 |
-| **how-to** | 14 | 2% | `docs/how-to/`, `docs/guides/` | how-to-add-widget.md, FILE-MANAGEMENT-GUIDE.md | 任务导向，解决具体问题 |
-| **reference** | 244 | 36% | `docs/reference/`, `docs/01-requirements/` | api-contract.md, data-definition.md, ADR | 信息导向，机械参考 |
-| **explanation** | 214 | 32% | `docs/explanation/`, `docs/architecture/`, `docs/design/` | overview.md, design-tokens.md | 理解导向，背景阐释 |
-| **reports** | 119 | 18% | `docs/reports/`, `docs/06-project-management/` | audit-*.md, CHANGELOG.md | 过程产物，自动或半自动生成 |
-| **meta** | 75 | 11% | `docs/00-meta/` | GOVERNANCE.md, doc-id-registry.md, tag-taxonomy.md | 治理文档，元数据规范 |
+| **tutorials** | 2 | 0.3% | `docs/guides/tutorials/` | getting-started.md | 学习导向，循序渐进 |
+| **how-to** | 14 | 2% | `docs/guides/how-to/`, `docs/guides/` | how-to-add-widget.md, FILE-MANAGEMENT-GUIDE.md | 任务导向，解决具体问题 |
+| **reference** | 244 | 36% | `docs/reference/`, `docs/specs/requirements/` | api-contract.md, data-definition.md, ADR | 信息导向，机械参考 |
+| **explanation** | 214 | 32% | `docs/explanation/`, `docs/explanation/architecture/`, `docs/explanation/design/` | overview.md, design-tokens.md | 理解导向，背景阐释 |
+| **reports** | 119 | 18% | `docs/reports/`, `docs/reports/project-management/` | audit-*.md, CHANGELOG.md | 过程产物，自动或半自动生成 |
+| **meta** | 75 | 11% | `docs/meta/` | GOVERNANCE.md, doc-id-registry.md, tag-taxonomy.md | 治理文档，元数据规范 |
 
 ### 2.2 数字前缀目录约定
 
 | 前缀 | 用途 | 示例目录 |
 |------|------|----------|
-| `00-` | 元数据与治理 | `docs/00-meta/` |
-| `01-` | 需求与产品 | `docs/01-product/`, `docs/01-requirements/` |
-| `02-` | 设计与架构 | `docs/02-design/`（已拆分为 architecture/ + design/ + explanation/design/） |
-| `03-` | 开发规范 | `docs/03-development/` |
-| `04-` | 测试策略 | `docs/04-testing/` |
+| `00-` | 元数据与治理 | `docs/meta/` |
+| `01-` | 需求与产品 | `docs/specs/product/`, `docs/specs/requirements/` |
+| `02-` | 设计与架构 | `docs/specs/design/`（已拆分为 architecture/ + design/ + explanation/design/） |
+| `03-` | 开发规范 | `docs/guides/development/` |
+| `04-` | 测试策略 | `docs/reports/testing/` |
 | `05-` | 部署运维 | `docs/05-deployment/`（已拆分为 ops/） |
-| `06-` | 项目管理 | `docs/06-project-management/` |
+| `06-` | 项目管理 | `docs/reports/project-management/` |
 | `07-` | 归档（已废弃，改用 `archive/`） | `docs/archive/`（无前缀） |
 
 ### 2.3 实际一级目录清单（2026-07-19 实测）
@@ -120,7 +120,7 @@ docs/
 - **禁止**在 `docs/` 根目录新建独立 `.md` 文件（`README.md`、`GOVERNANCE.md` 除外）
 - **禁止**在 `docs/` 根目录新建 `.txt`、`.json` 等产物文件（`_redirect-map.json` 除外）
 - **自动产物**必须写入 `docs/reports/` 或 `docs/archive/`
-- **临时草稿**必须放入 `docs/drafts/`，并在定稿后迁移到对应类目或删除
+- **临时草稿**必须放入 `docs/archive/drafts/`，并在定稿后迁移到对应类目或删除
 
 ---
 
@@ -132,12 +132,12 @@ docs/
 1. 确定分类 → 从六类 type 中选择对应（tutorials/how-to/reference/explanation/reports/meta）
 2. 选择目录 → 落入该 type 对应的子目录（参考 2.1 表格）
 3. 编写 frontmatter → 遵循 document-metadata-standard.md 规范
-4. 回链索引 → 更新 docs/README.md 对应分类 + docs/00-meta/doc-id-registry.md
+4. 回链索引 → 更新 docs/README.md 对应分类 + docs/meta/doc-id-registry.md
 ```
 
 ### 3.2 frontmatter 头部规范
 
-所有文档必须包含以下 frontmatter 字段（基于 `docs/00-meta/document-metadata-standard.md`）：
+所有文档必须包含以下 frontmatter 字段（基于 `docs/meta/document-metadata-standard.md`）：
 
 ```yaml
 ---
@@ -294,15 +294,15 @@ draft → review → active → deprecated → archived → purged
 | 文档 | 路径 | 内容 |
 |------|------|------|
 | 文档主控索引 | `docs/README.md` | 六类导航、快速入门 |
-| 文档元数据标准 | `docs/00-meta/document-metadata-standard.md` | frontmatter 字段规范 |
-| doc_id 注册表 | `docs/00-meta/doc-id-registry.md` | 所有 doc_id 登记 |
-| 标签分类体系 | `docs/00-meta/tag-taxonomy.md` | tags 字段受控词表 |
-| 清理周期表 | `docs/00-meta/cleanup-schedule.md` | 自动产物保留期与清理脚本 |
-| 文档体系体检 | `docs/00-meta/文档体系体检报告-v9.md` | 文档体系健康度评估 |
+| 文档元数据标准 | `docs/meta/document-metadata-standard.md` | frontmatter 字段规范 |
+| doc_id 注册表 | `docs/meta/doc-id-registry.md` | 所有 doc_id 登记 |
+| 标签分类体系 | `docs/meta/tag-taxonomy.md` | tags 字段受控词表 |
+| 清理周期表 | `docs/meta/cleanup-schedule.md` | 自动产物保留期与清理脚本 |
+| 文档体系体检 | `docs/meta/文档体系体检报告-v9.md` | 文档体系健康度评估 |
 | 变更日志 | `CHANGELOG.md`（根级） | 版本变更、质量指标 |
-| 代码审查标准 | `docs/how-to/code-review-guide.md` | PR 审查清单 |
+| 代码审查标准 | `docs/guides/how-to/code-review-guide.md` | PR 审查清单 |
 | 技术债管理 | `docs/explanation/design/tech-debt.md` | 技术债登记与清理计划 |
-| 文件管理指南 | `docs/how-to/FILE-MANAGEMENT-GUIDE.md` | 文件生命周期 SOP |
+| 文件管理指南 | `docs/guides/how-to/FILE-MANAGEMENT-GUIDE.md` | 文件生命周期 SOP |
 
 ---
 

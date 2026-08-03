@@ -45,10 +45,10 @@ related_docs: [V9-DOC-GOV-002]
 |---|------|------|--------|----------|
 | 1 | `.workbuddy/` | WorkBuddy 工具配置（automations/bin/memory） | 38 | 已迁移至 `.trae/`，消除双体系 |
 | 2 | `docs/_pending-deletion/` | 一次性治理报告、破损文件名、重复 HTML | 414 | 上线前待清理 |
-| 3 | `docs/00-meta/deprecated-docs/` | 旧版文档（v1.0.0/v1.6.0）+ 临时文件 | 7 | 已被新版本替代 |
+| 3 | `docs/meta/deprecated-docs/` | 旧版文档（v1.0.0/v1.6.0）+ 临时文件 | 7 | 已被新版本替代 |
 | 4 | `docs/reference/meta/deprecated-docs/` | 重复的临时文件 | 2 | 重复目录 |
-| 5 | `docs/implementation/deprecated/` | DEPRECATED_ 前缀文档（9 份） | 9 | 内容已合并至活跃文档 |
-| 6 | `docs/00-meta/cross-index-comprehensive-solution.md` | 交叉索引规划文档 | 1 | status: deprecated |
+| 5 | `docs/explanation/implementation/deprecated/` | DEPRECATED_ 前缀文档（9 份） | 9 | 内容已合并至活跃文档 |
+| 6 | `docs/meta/cross-index-comprehensive-solution.md` | 交叉索引规划文档 | 1 | status: deprecated |
 | 7 | `docs/explanation/deprecated-*.md` | 合并报告 + 问题解决计划 | 2 | status: deprecated |
 | 8 | `docs/reference/deprecated-ui-module-alignment.md` | UI 模块对齐文档 | 1 | status: deprecated |
 | 9 | `docs/reference/changelogs/2026-07/...jira-tickets.md` | JIRA 票据日志 | 1 | status: deprecated |
@@ -61,19 +61,19 @@ related_docs: [V9-DOC-GOV-002]
 |---|------|----------|
 | 1 | `AGENTS.md` | changelog 中 `.workbuddy/skills/` → `.trae/skills/` |
 | 2 | `scripts/skill-router.cjs` | 注释路径修正 |
-| 3 | `docs/00-meta/ai-index/skill-doc-index.json` | 3 个 SKILL 路径修正 |
-| 4 | `docs/03-development/mock-data-cleanup-lessons.md` | 2 处路径修正 |
-| 5 | `docs/03-development/mcp-cli-skill-strategy.md` | 1 处路径修正 |
-| 6 | `docs/how-to/COLOR-TOKEN-GUIDE.md` | 路径修正 |
-| 7 | `docs/how-to/MCP-LIFECYCLE-GUIDE.md` | 路径修正 |
-| 8 | `docs/ops/backup-governance.md` | 标记已删除脚本 |
+| 3 | `docs/meta/ai-index/skill-doc-index.json` | 3 个 SKILL 路径修正 |
+| 4 | `docs/guides/development/mock-data-cleanup-lessons.md` | 2 处路径修正 |
+| 5 | `docs/guides/development/mcp-cli-skill-strategy.md` | 1 处路径修正 |
+| 6 | `docs/guides/how-to/COLOR-TOKEN-GUIDE.md` | 路径修正 |
+| 7 | `docs/guides/how-to/MCP-LIFECYCLE-GUIDE.md` | 路径修正 |
+| 8 | `docs/reports/ops/backup-governance.md` | 标记已删除脚本 |
 | 9 | `scripts/docs-tool/migrate-doc-categories.ts` | 日志路径 + skipPatterns 修正 |
 | 10 | `scripts/env-path-guard.cjs` | 移除 inMemory 死代码 + .workbuddy-backup SKIP_DIRS |
-| 11 | `docs/00-meta/ai-index/relation-index.json` | 移除 6 处失效引用 |
-| 12 | `docs/00-meta/ai-index/master-index.json` | 移除 5 处失效引用 |
-| 13 | `docs/00-meta/GOVERNANCE.md` | 移除失效表格行 |
-| 14 | `docs/00-meta/REGISTRY_INDEX.md` | 移除 3 个失效归档链接 |
-| 15 | `docs/00-meta/type-domain-audit-worksheet.md` | 移除 3 行失效链接 |
+| 11 | `docs/meta/ai-index/relation-index.json` | 移除 6 处失效引用 |
+| 12 | `docs/meta/ai-index/master-index.json` | 移除 5 处失效引用 |
+| 13 | `docs/meta/GOVERNANCE.md` | 移除失效表格行 |
+| 14 | `docs/meta/REGISTRY_INDEX.md` | 移除 3 个失效归档链接 |
+| 15 | `docs/meta/type-domain-audit-worksheet.md` | 移除 3 行失效链接 |
 | 16 | `docs/explanation/design/00-readme.md` | 废弃文档表改为删除记录 |
 | 17 | `docs/reference/v9-system-blueprint.md` | referenced_by 移除失效条目 |
 | 18 | `docs/reference/data_link_sequence_diagram.md` | referenced_by 移除失效条目 |

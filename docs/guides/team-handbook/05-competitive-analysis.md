@@ -6,7 +6,7 @@ phase: requirements
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "本文回答\"我们凭什么差异化\"。基线参考：`docs/01-product/competitive-analysis.md`（分析 5 大类 12 款工具）。 ??..."
+summary: "本文回答\"我们凭什么差异化\"。基线参考：`docs/specs/product/competitive-analysis.md`（分析 5 大类 12 款工具）。 ??..."
 tags: [product, guide, research]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -21,7 +21,7 @@ date: 2026-07-17
 
 # 05 · 竞品对比分析（Competitive Analysis）
 
-> 本文回答"**我们凭什么差异化**"。基线参考：`docs/01-product/competitive-analysis.md`（分析 5 大类 12 款工具）。
+> 本文回答"**我们凭什么差异化**"。基线参考：`docs/specs/product/competitive-analysis.md`（分析 5 大类 12 款工具）。
 > ?? 说明：竞品的功能/架构描述基于公开认知与一般行业常识；**性能维度多为定性推断，非基准测试**。涉及具体数字请以各产品官方披露为准。本分析用于团队内部战略对齐，不构成第三方评价结论。
 
 ---

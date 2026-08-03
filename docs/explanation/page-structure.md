@@ -30,7 +30,7 @@ date: 2026-07-17
 
 ## 1. 定位
 
-V9 前端采用**五舱（cabin）架构**，页面统一置于 `src/pages/<cabin>/`，路由定义集中于 `src/config/routes.ts`（详见 `../reference/06-routing-specs.md`）。各舱室规格见 `docs/02-design/*-cabin-spec.md`。
+V9 前端采用**五舱（cabin）架构**，页面统一置于 `src/pages/<cabin>/`，路由定义集中于 `src/config/routes.ts`（详见 `../reference/06-routing-specs.md`）。各舱室规格见 `docs/specs/design/*-cabin-spec.md`。
 
 ---
 
@@ -118,4 +118,4 @@ V9 前端采用**五舱（cabin）架构**，页面统一置于 `src/pages/<cabi
 | 补充文档 | `../reference/06-routing-specs.md` |
 | 写后校验 | `npm run audit:docs`（是） |
 
-详见 `docs/00-meta/doc-trigger-action-map.md` §二 T8 行。
+详见 `docs/meta/doc-trigger-action-map.md` §二 T8 行。

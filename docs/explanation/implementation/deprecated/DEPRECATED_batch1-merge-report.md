@@ -17,9 +17,9 @@
 | `docs/10-glossary.md` | 修改 | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
 | `README.md` | 修改 | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
 | `docs/README.md` | 修改 | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
-| `docs/implementation/implementation-governance.md` | 修改 | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
-| `docs/implementation/v9-system-blueprint.md` | 修改 | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
-| `docs/implementation/input-cabin-spec.md` | 修改 | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
+| `docs/explanation/implementation/implementation-governance.md` | 修改 | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
+| `docs/explanation/implementation/v9-system-blueprint.md` | 修改 | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
+| `docs/explanation/implementation/input-cabin-spec.md` | 修改 | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
 | `.nvmrc` | 新增 | Refactor-Agent | ✅ 已完成 | lint ✅ / build ✅ / test ✅ |
 | `vite.config.ts` | 修改 | Refactor-Agent | ✅ 已完成 | lint ✅ / build ✅ / test ✅ |
 | `package.json` | 修改（安装 `@vitest/coverage-v8@^2.1.0`） | Refactor-Agent | ✅ 已完成 | lint ✅ / build ✅ / test ✅ |

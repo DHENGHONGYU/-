@@ -240,8 +240,8 @@ npx tsx scripts/audit/audit-store-coverage.ts --ci
 
 | 动作 | 文档 |
 |------|------|
-| 主更新动作 | 本文档（`docs/02-design/STATE_MANAGEMENT.md`） |
-| 补充文档 | `docs/02-design/data-flow-spec.md` |
+| 主更新动作 | 本文档（`docs/specs/design/STATE_MANAGEMENT.md`） |
+| 补充文档 | `docs/specs/design/data-flow-spec.md` |
 | 写后校验 | `npm run audit:docs`（是） |
 
-详见 `docs/00-meta/doc-trigger-action-map.md` §二 T5 行。
+详见 `docs/meta/doc-trigger-action-map.md` §二 T5 行。

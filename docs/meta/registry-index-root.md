@@ -32,4 +32,4 @@ date: 2026-07-17
 ## 修复记录
 
 - 2026-07-17：修复 `doc-cross-ref-sync.ts` 输出路径bug（原错误输出到docs根目录），统一指向00-meta/
-- `doc-ref-path-map.json` 已配置重定向规则：`docs/registry-index.md` → `docs/00-meta/registry-index.md`
+- `doc-ref-path-map.json` 已配置重定向规则：`docs/registry-index.md` → `docs/meta/registry-index.md`

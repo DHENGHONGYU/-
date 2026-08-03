@@ -11,8 +11,8 @@ change_log:
 
 # V9 操作反馈闭环规格
 
-> **对应蓝图**：`docs/implementation/v9-system-blueprint.md` §5.3 事件总线规范、§7.2 UI/UX 反馈规范、§10 偏差项 D18「缺少操作反馈闭环」。
-> **依赖文档**：`docs/04-ui-ux-specs.md`（Toast 组件规范）、`docs/implementation/widget-error-handling.md`（错误状态的上报与降级展示）。
+> **对应蓝图**：`docs/explanation/implementation/v9-system-blueprint.md` §5.3 事件总线规范、§7.2 UI/UX 反馈规范、§10 偏差项 D18「缺少操作反馈闭环」。
+> **依赖文档**：`docs/04-ui-ux-specs.md`（Toast 组件规范）、`docs/explanation/implementation/widget-error-handling.md`（错误状态的上报与降级展示）。
 
 ---
 
@@ -206,7 +206,7 @@ useEffect(() => {
 
 ## 6. 与错误边界的协作
 
-Widget 或页面级错误边界捕获异常后，不应直接渲染 Toast，而是通过 `feedbackService.notify()` 发送 `error` 反馈，由 `ToastProvider` 统一展示。详见 `docs/implementation/widget-error-handling.md` §4.2。
+Widget 或页面级错误边界捕获异常后，不应直接渲染 Toast，而是通过 `feedbackService.notify()` 发送 `error` 反馈，由 `ToastProvider` 统一展示。详见 `docs/explanation/implementation/widget-error-handling.md` §4.2。
 
 ---
 
@@ -221,7 +221,7 @@ Widget 或页面级错误边界捕获异常后，不应直接渲染 Toast，而�
 
 ## 8. 相关链接
 
-- `docs/implementation/v9-system-blueprint.md` §5.3、§7.2、D18
+- `docs/explanation/implementation/v9-system-blueprint.md` §5.3、§7.2、D18
 - `docs/04-ui-ux-specs.md` §4.6 交互反馈
-- `docs/implementation/chart-integration.md` §5.2（图表数据刷新反馈）
-- `docs/implementation/widget-error-handling.md` §4.2（错误边界→反馈服务）
+- `docs/explanation/implementation/chart-integration.md` §5.2（图表数据刷新反馈）
+- `docs/explanation/implementation/widget-error-handling.md` §4.2（错误边界→反馈服务）

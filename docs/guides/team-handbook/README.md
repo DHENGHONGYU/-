@@ -55,14 +55,14 @@ FinSightV9 是一个**纯前端、本地优先的个人 A 股投研复盘系统*
 2. **四步集成顺序不可乱**：类型 → Store → Service/Builder → UI；每步可独立回滚。
 3. **颜色与令牌**：任何 UI 颜色必须走令牌；A 股**红涨绿跌**固定，不随主题变化。
 4. **门禁是底线**：提交前 `lint:colors` / `audit:atomic` / `audit:layers` / `audit:tokens` / `audit:jsdoc` / `audit:complexity` 不得新增违规。
-5. **文档同步**：新增/迁移模块后，按 `docs/00-meta/doc-trigger-action-map.md` 同步触发文档（路径移动必须同步 3 处：映射表、TRIGGER_RULES、README）。
+5. **文档同步**：新增/迁移模块后，按 `docs/meta/doc-trigger-action-map.md` 同步触发文档（路径移动必须同步 3 处：映射表、TRIGGER_RULES、README）。
 
 ---
 
 ## 五、如何扩展这份手册
 
 - 本目录是**手工萃取的精华**，不应被自动生成脚本覆盖；如需纳入新维度，新增 `0X-*.md` 并在本表登记。
-- 底层细节仍指向 `docs/explanation/`（架构类）、`docs/reference/`（规范类）、`docs/how-to/`（实操类）、`prompts/`（AI 提示词模板）。
-- 架构图可视化源文件见 `docs/architecture/architecture-diagrams.html`。
+- 底层细节仍指向 `docs/explanation/`（架构类）、`docs/reference/`（规范类）、`docs/guides/how-to/`（实操类）、`prompts/`（AI 提示词模板）。
+- 架构图可视化源文件见 `docs/explanation/architecture/architecture-diagrams.html`。
 
 > 本手册为团队内部资料，所有 AI 输出均标注"仅供参考，非投资建议"。

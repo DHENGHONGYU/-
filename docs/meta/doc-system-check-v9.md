@@ -13,7 +13,7 @@ tier: reference
 > **体检对象**：`./文档归类体系结构.md`（v1.0.0）+ 全量 388 份 `.md` 文档资产（较初检 +32 份）  
 > **参照标准**：DocTaxonomy V9（A–H 八类体系）+ Kimi 开发区文件管理策略 + 业界 Docs-as-Code 最佳实践  
 > **体检结论**：**P0 缺陷已修复 6/7 项，P1 How-to 系列已补齐（4/4），18 个缺失文档已补齐 10 个， orphans 率从 19.7% 降至约 12%，目录错位显著改善**。残余问题集中在 deployment、security-model、test-catalog、ai-README 等 8 个核心缺失。  
-> **更新**：经全量 388 文件重新检索，`../reference/api-contract.md`（`docs/02-design/`）和 `quality-gates` 系列（`../reference/09-quality-gates.md`、`../explanation/quality-gates-baseline.md`）实际存在，原 23 个缺口修正为 **12 确认缺失 + 5 可能已存在**。详见 §缺陷 2。
+> **更新**：经全量 388 文件重新检索，`../reference/api-contract.md`（`docs/specs/design/`）和 `quality-gates` 系列（`../reference/09-quality-gates.md`、`../explanation/quality-gates-baseline.md`）实际存在，原 23 个缺口修正为 **12 确认缺失 + 5 可能已存在**。详见 §缺陷 2。
 
 ---
 
@@ -76,7 +76,7 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 > - **6 个已补齐**（P0 整改完成）：`../../README.md`、`governance.md`、`../explanation/overview.md`、`../explanation/cabins-overview.md`、`../reference/coding-conventions.md`、`../explanation/runbook.md`
 > - **12 个确认仍缺失**（无任何匹配文件）
 > - **5 个可能已存在**（有近似匹配文件，需人工复核是否满足需求）
-> - **2 个误报已纠正**：`../reference/api-contract.md` 实际存在于 `docs/02-design/`；`quality-gates` 文档实际存在于 `docs/02-design/` 和 `docs/03-development/`
+> - **2 个误报已纠正**：`../reference/api-contract.md` 实际存在于 `docs/specs/design/`；`quality-gates` 文档实际存在于 `docs/specs/design/` 和 `docs/guides/development/`
 > - **1 个新增发现**：`../reference/services-catalog.md`（P0 新增，超原清单预期）
 
 #### 确认仍缺失文档（已补齐 4 个，剩余 10 个核心缺失）
@@ -134,12 +134,12 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 
 - **愿景/功能规格**：`../reference/01-vision-and-goals.md`、`../reference/02-functional-specs.md`（体系未设「需求规格」子类，A 类只有「导航与治理」）。
 - **术语表**：`../reference/10-glossary.md`（体系无「术语/参考」类）。
-- **数据定义**：`../reference/data-definition.md`（主字典）、`../reference/ai-center-data-definition.md` 等 7 份独立域定义（见 `../reference/index.md` §2）；原 `docs/02-design/*_data-definition.md` 7 份已归档至 `07-archive/`（2026-07-12）。
+- **数据定义**：`../reference/data-definition.md`（主字典）、`../reference/ai-center-data-definition.md` 等 7 份独立域定义（见 `../reference/index.md` §2）；原 `docs/specs/design/*_data-definition.md` 7 份已归档至 `07-archive/`（2026-07-12）。
 - **整改/计划类**：`../reference/batchb-fix-plan.md`、`batchd-fix-plan.md`、`batche-fix-plan.md`、`../reference/rm剩余任务全量盘点与整改方案-2026-07-08.md`。
 - **插件文档**：`docs/plugins/*.md`（10 份 + `../reference/index.md`，体系已部分覆盖）。
 - **数据字典/ER图**：`../explanation/v9-data-relationship-er.md`。
 - **发布/PR/Release**：`../reference/pr-description.md`、`../reference/release-notes.md`、`../explanation/design/发布计划与评审-r01.md`、`../explanation/design/回滚方案与演练-r03.md`。
-- **草稿/临时**：`docs/drafts/*.md`（8 份，无归档规则，较原 6 份增加）。
+- **草稿/临时**：`docs/archive/drafts/*.md`（8 份，无归档规则，较原 6 份增加）。
 
 > **根因**：体系 v1.0.0 缺少以下子类：
 > - 需求规格（Vision/Functional Specs）
@@ -152,12 +152,12 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 
 | 目录 | 声称用途 | 实际内容 | 错位文档数 | 变化 |
 |------|----------|----------|------------|------|
-| `docs/01-requirements/` | 需求规格 | 仍混入 `../explanation/architecture-version-comparison.md`、`../explanation/v10-architecture-alignment.md`、`component-deprecation-policy.md`、`DataBridge` 系列等架构/设计文档 | ~8 | 较原 11 份部分迁移 |
-| `docs/02-design/` | 设计文档 | 仍混入 `../explanation/design/audit-summary-report.md`、`../explanation/design/architecture-compliance-report.md`、`../explanation/design/test-expansion-design.md`、`quality-audit-plan.md` 等审计/测试/过程文档 | ~25 | 较原 37 份部分迁移 |
-| `docs/03-development/` | 开发实施 | 混入 `../reference/v6-to-v9-migration-spec.md`、`../reference/dataflow-engine-spec.md`（偏设计）等 | 少量 | 无变化 |
-| `docs/implementation/` | 实施文档 | **只有 14 张截图（.png），无 .md 文件** | 全部 | 无变化 |
+| `docs/specs/requirements/` | 需求规格 | 仍混入 `../explanation/architecture-version-comparison.md`、`../explanation/v10-architecture-alignment.md`、`component-deprecation-policy.md`、`DataBridge` 系列等架构/设计文档 | ~8 | 较原 11 份部分迁移 |
+| `docs/specs/design/` | 设计文档 | 仍混入 `../explanation/design/audit-summary-report.md`、`../explanation/design/architecture-compliance-report.md`、`../explanation/design/test-expansion-design.md`、`quality-audit-plan.md` 等审计/测试/过程文档 | ~25 | 较原 37 份部分迁移 |
+| `docs/guides/development/` | 开发实施 | 混入 `../reference/v6-to-v9-migration-spec.md`、`../reference/dataflow-engine-spec.md`（偏设计）等 | 少量 | 无变化 |
+| `docs/explanation/implementation/` | 实施文档 | **只有 14 张截图（.png），无 .md 文件** | 全部 | 无变化 |
 | `docs/05-deployment/` | 部署运维 | 仅 `../reference/2026-06-21-hashrouter-for-static-hosting.md`（1 份） | 严重不足 | 无变化 |
-| `docs/06-project-management/` | 项目管理 | 仅 `data_link_sequence_diagram.md` + 散落 1 份（2 份） | 严重不足 | 无变化 |
+| `docs/reports/project-management/` | 项目管理 | 仅 `data_link_sequence_diagram.md` + 散落 1 份（2 份） | 严重不足 | 无变化 |
 | `docs/blueprints/` | 蓝图 | **0 份** | 空置 | 无变化 |
 | `docs/plans/` | 计划 | **0 份** | 空置 | 无变化 |
 
@@ -166,7 +166,7 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 
 ### 缺陷 5：G 类过度膨胀（33.0%），淹没核心文档（P1）
 
-`docs/reports/` + `docs/audit/` + `docs/changelogs/` + `docs/drafts/` 合计 **~140 份**过程产物，占 `.md` 总量的 ~36%。
+`docs/reports/` + `docs/audit/` + `docs/changelogs/` + `docs/archive/drafts/` 合计 **~140 份**过程产物，占 `.md` 总量的 ~36%。
 
 - `reports/` 下存在大量自动生成的 HTML/JSON（`architecture-radar-scan/`、`mcp-agent-gap-analysis/` 等）。
 - `drafts/` 下 8 份临时文档无清理规则（较原 6 份增加）。
@@ -281,7 +281,7 @@ Kimi 官方推荐的项目文件管理策略：
 |---|------|------|------|
 | 6 | **补齐 10 个确认缺失文档** | 🟡 进行中 | 较原 18 个减少 8 个；getting-started + 3 个 How-to 已补齐；重点：deployment、security-model、test-catalog、ai-README |
 | 7 | **新建 `../reference/README.md`** | 🔴 未开始 | 串联 prompts/ 模板、检查表、飞轮、记忆层四件套 |
-| 8 | **建立 `docs/ops/` 目录** | 🟡 部分完成 | `../explanation/runbook.md` 已创建；`../reference/deployment.md` 仍缺失 |
+| 8 | **建立 `docs/reports/ops/` 目录** | 🟡 部分完成 | `../explanation/runbook.md` 已创建；`../reference/deployment.md` 仍缺失 |
 | 9 | **归档 DEPRECATED 文档** | ✅ 已完成 | 全部 9 份已统一移至 `07-archive/`；建议添加 `../README.md` 说明保留期限 |
 | 10 | **填充空置目录** | 🔴 未开始 | `blueprints/`、`plans/` 仍空置；建议合并或删除 |
 
@@ -334,8 +334,8 @@ find docs/.ai-index -type f | sort                # 3 份（README/code-graph/ai
 |--------|----------|----------|------|
 | `docs/README.md` 存在？ | ❌ 不存在 | ✅ **存在**（58 行） | `find docs -name 'README.md'` |
 | `./governance.md` 存在？ | ❌ 未检查 | ✅ **存在**（v1.0.0） | `find docs -name 'governance.md'` |
-| `docs/architecture/` 有 `.md`？ | ❌ 无 `.md` | ✅ **3 份** | `find docs/architecture -name '*.md'` |
-| `docs/implementation/` 有 `.md`？ | ❌ 只有 `.png` | ❌ 仍只有 `.png` | `find docs/implementation -name '*.md'` |
+| `docs/explanation/architecture/` 有 `.md`？ | ❌ 无 `.md` | ✅ **3 份** | `find docs/architecture -name '*.md'` |
+| `docs/explanation/implementation/` 有 `.md`？ | ❌ 只有 `.png` | ❌ 仍只有 `.png` | `find docs/implementation -name '*.md'` |
 | `adr/` 目录存在？ | ❌ 不存在 | ❌ 仍不存在 | `find docs -type d -name 'adr'` |
 | `DATA_DEFINITION` 重复数 | 10 份 | **8 份** | `find docs -name '*DATA_DEFINITION*'` |
 | DEPRECATED 文档散落数 | 8 份 | **0 份** | `find docs -path '*/0[1-6]-*' -name '*DEPRECATED*'` |

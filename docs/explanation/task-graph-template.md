@@ -77,7 +77,7 @@ date: 2026-07-17
 - [ ] 无新增跨层调用违规
 
 
-<!-- merge-source: docs/how-to/testing/task-graph-template.md (2026-07-14 内容融合，避免去重丢失有效信息) -->
+<!-- merge-source: docs/guides/how-to/testing/task-graph-template.md (2026-07-14 内容融合，避免去重丢失有效信息) -->
 ## 补充内容（合并自 `../reference/templates/task-graph-template.md`）
 
 > 本模板参照 AGENTS.md §12.3 任务图核心结构。

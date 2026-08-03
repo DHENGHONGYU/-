@@ -9,7 +9,7 @@
 ## 前置检查
 
 - [ ] 已阅读 `docs/guides/getting-started.md`（了解四步集成契约）
-- [ ] 已阅读 `docs/02-design/widget-integration-checklist.md`（Widget 集成检查清单）
+- [ ] 已阅读 `docs/specs/design/widget-integration-checklist.md`（Widget 集成检查清单）
 - [ ] 已阅读 `../reference/atomic-component-system.md`（原子组件系统）
 - [ ] 已确定 Widget 的数据来源（Store 或 Service）
 - [ ] 已确认 Widget 的宿主位置（驾驶舱 `/cockpit` 或页面内嵌）
@@ -415,8 +415,8 @@ import { FixedSizeGrid } from 'react-window'
 |------|------|------|
 | 新增 Store | `docs/guides/how-to-add-store.md` | Widget 的数据来源 |
 | 新增 Service | `docs/guides/how-to-add-service.md` | Store 的下游依赖 |
-| Widget 集成检查清单 | `docs/02-design/widget-integration-checklist.md` | 逐项核对 |
-| Widget 错误处理 | `docs/02-design/widget-error-handling.md` | 错误边界与降级 |
+| Widget 集成检查清单 | `docs/specs/design/widget-integration-checklist.md` | 逐项核对 |
+| Widget 错误处理 | `docs/specs/design/widget-error-handling.md` | 错误边界与降级 |
 | 原子组件系统 | `../reference/atomic-component-system.md` | 组件分层 |
 | WidgetShell 源码 | `src/components/widgets/WidgetShell.tsx` | 外壳实现 |
 

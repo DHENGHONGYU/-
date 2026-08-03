@@ -7,7 +7,7 @@ updated: 2026-07-12
 
 # V9 架构决策记录（ADR）主索引
 
-> **定位**：本文是 `docs/architecture/adr/` 的顶层入口，统管 V9 全生命周期架构决策。任何影响分层边界、数据流方向、技术选型或模块职责的决策，必须在此登记。
+> **定位**：本文是 `docs/explanation/architecture/adr/` 的顶层入口，统管 V9 全生命周期架构决策。任何影响分层边界、数据流方向、技术选型或模块职责的决策，必须在此登记。
 > **权威契约**：`AGENTS.md`（工程分层 + 四步集成） + `../../00-meta/GOVERNANCE.md`（文档生命周期）。
 > **关联文档**：`../architecture/overview.md`（全局架构）、`../../02-design/05-engine-specs.md`（引擎规格）、`../../02-design/06-routing-specs.md`（路由规格）。
 
@@ -120,29 +120,29 @@ superseded_by: ADR-ZZZ  # 仅当状态为 superseded 时填写
 
 ## 4. 已有 ADR 清单
 
-> **来源**：以下 ADR 从仓库已有文档中推断（原文件散落在 `docs/01-requirements/`、`docs/03-development/`、`docs/05-deployment/`、`docs/06-project-management/` 等目录，由架构组评估后统一迁移或引用到 `docs/architecture/adr/`）。
-> **TODO[架构组]**：P1 阶段完成 ADR 文件的物理归集，将散落文件统一迁移到 `docs/architecture/adr/`，并更新原位置的软链接/重定向说明。
+> **来源**：以下 ADR 从仓库已有文档中推断（原文件散落在 `docs/specs/requirements/`、`docs/guides/development/`、`docs/05-deployment/`、`docs/reports/project-management/` 等目录，由架构组评估后统一迁移或引用到 `docs/explanation/architecture/adr/`）。
+> **TODO[架构组]**：P1 阶段完成 ADR 文件的物理归集，将散落文件统一迁移到 `docs/explanation/architecture/adr/`，并更新原位置的软链接/重定向说明。
 
 ### 4.1 已接受（Accepted）
 
 | 编号 | 标题 | 决策日期 | 状态 | 原始文件位置 | 影响范围 | 关联文档 |
 |:---:|------|:---|:---|:---|:---|:---|
-| **ADR-001** | 纯前端无后端架构 | 2026-06-20 | accepted | `docs/01-requirements/2026-06-20-pure-frontend-architecture.md` | 全系统 | `overview.md` §1、`AGENTS.md` §一 |
-| **ADR-002** | IndexedDB 替代 localStorage | 2026-06-20 | accepted | `docs/01-requirements/2026-06-20-indexeddb-over-localstorage.md` | 数据持久层 | `AGENTS.md` §八、`05-engine-specs.md` §1.1 |
-| **ADR-003** | DataBridge 替代直接 dataLayer 写入 | 2026-06-21 | accepted | `docs/06-project-management/2026-06-21-databridge-over-direct-datalayer.md` | 核心数据流 | `overview.md` §4、`05-engine-specs.md` §4 |
+| **ADR-001** | 纯前端无后端架构 | 2026-06-20 | accepted | `docs/specs/requirements/2026-06-20-pure-frontend-architecture.md` | 全系统 | `overview.md` §1、`AGENTS.md` §一 |
+| **ADR-002** | IndexedDB 替代 localStorage | 2026-06-20 | accepted | `docs/specs/requirements/2026-06-20-indexeddb-over-localstorage.md` | 数据持久层 | `AGENTS.md` §八、`05-engine-specs.md` §1.1 |
+| **ADR-003** | DataBridge 替代直接 dataLayer 写入 | 2026-06-21 | accepted | `docs/reports/project-management/2026-06-21-databridge-over-direct-datalayer.md` | 核心数据流 | `overview.md` §4、`05-engine-specs.md` §4 |
 | **ADR-004** | HashRouter 静态托管方案 | 2026-06-21 | accepted | `docs/05-deployment/2026-06-21-hashrouter-for-static-hosting.md` | 路由/部署 | `06-routing-specs.md` §1 |
-| **ADR-005** | PortalShell 深色 Kimi 经典布局 | 2026-06-23 | accepted | `docs/03-development/2026-06-23-portalshell-dark-kimi-layout.md` | UI 架构 | `AGENTS.md` §3.5、令牌体系 |
-| **ADR-006** | 输入舱拆分为四子页面 | 2026-06-24 | accepted | `docs/03-development/2026-06-24-input-cabin-subpages.md` | input 舱 | `06-routing-specs.md` §3.2、`cabins-overview.md` §1 |
-| **ADR-007** | 补齐筛选引擎、信号持久化与复盘引擎 | 2026-06-24 | accepted（部分 superseded） | `docs/03-development/2026-06-24-pool-screening-signal-persistence-review-engine.md` | analysis/trading/output | `05-engine-specs.md` §3.7-3.8；部分条款被 ADR-009 取代 |
-| **ADR-008** | 采用 V6 "第四次工业革命稀缺核心资源" 交易策略 | 2026-06-24 | accepted | `docs/01-requirements/2026-06-24-adopt-v6-core-resource-trading-strategy.md` | trading 舱 | `fourth-industrial-revolution-core-resource-strategy.md`、`05-engine-specs.md` §3.3 |
-| **ADR-009** | 引入热门板块与价值洼地双策略体系 | 2026-06-27 | accepted | [TODO] 推断文件：`docs/02-design/2026-06-27-dual-strategy-system.md` | analysis/trading | `05-engine-specs.md` §2.5、`cabins-overview.md` §4 |
+| **ADR-005** | PortalShell 深色 Kimi 经典布局 | 2026-06-23 | accepted | `docs/guides/development/2026-06-23-portalshell-dark-kimi-layout.md` | UI 架构 | `AGENTS.md` §3.5、令牌体系 |
+| **ADR-006** | 输入舱拆分为四子页面 | 2026-06-24 | accepted | `docs/guides/development/2026-06-24-input-cabin-subpages.md` | input 舱 | `06-routing-specs.md` §3.2、`cabins-overview.md` §1 |
+| **ADR-007** | 补齐筛选引擎、信号持久化与复盘引擎 | 2026-06-24 | accepted（部分 superseded） | `docs/guides/development/2026-06-24-pool-screening-signal-persistence-review-engine.md` | analysis/trading/output | `05-engine-specs.md` §3.7-3.8；部分条款被 ADR-009 取代 |
+| **ADR-008** | 采用 V6 "第四次工业革命稀缺核心资源" 交易策略 | 2026-06-24 | accepted | `docs/specs/requirements/2026-06-24-adopt-v6-core-resource-trading-strategy.md` | trading 舱 | `fourth-industrial-revolution-core-resource-strategy.md`、`05-engine-specs.md` §3.3 |
+| **ADR-009** | 引入热门板块与价值洼地双策略体系 | 2026-06-27 | accepted | [TODO] 推断文件：`docs/specs/design/2026-06-27-dual-strategy-system.md` | analysis/trading | `05-engine-specs.md` §2.5、`cabins-overview.md` §4 |
 
 ### 4.2 关键架构决策摘要
 
 #### ADR-001 纯前端架构
 - **核心决策**：V9 作为纯前端 PWA 运行，无后端服务，数据自管于本地 IndexedDB。
 - **关键约束**：所有外部 API 调用须经 `fetcher` 服务，禁止浏览器直连第三方敏感接口。
-- **引用**：`docs/01-requirements/v9-system-blueprint.md` §2.1
+- **引用**：`docs/specs/requirements/v9-system-blueprint.md` §2.1
 
 #### ADR-002 IndexedDB 替代 localStorage
 - **核心决策**：放弃 localStorage（容量/性能限制），采用 IndexedDB 作为唯一本地持久化方案。
@@ -198,7 +198,7 @@ Step 1: 识别架构决策需求
 Step 2: 在 ADR 主索引（本文件）预留编号
     ↓ 向架构组申请编号；禁止自行分配
 Step 3: 使用 §2 模板创建 `adr-XXX-{title}.md`
-    ↓ 放置于 `docs/architecture/adr/`
+    ↓ 放置于 `docs/explanation/architecture/adr/`
 Step 4: 填写七节内容，确保关联文档引用准确
     ↓ 运行 `npm run audit:docs` 检查文档-代码同步
 Step 5: 提交 async RFC 或架构评审会议
@@ -243,7 +243,7 @@ Step 8: 如引入技术债，同步登记到 `../../TECH-DEBT.md`
 
 ### 6.1 职责边界
 
-| 维度 | `docs/architecture/adr/` | `docs/02-design/` |
+| 维度 | `docs/explanation/architecture/adr/` | `docs/specs/design/` |
 |------|------------------------|-------------------|
 | **定位** | **Why** — 为什么做这个架构决策 | **How** — 如何具体实现 |
 | **粒度** | 高（模块/分层/技术选型） | 中低（接口/算法/UI/数据流） |
@@ -265,13 +265,13 @@ ADR（决策） → 引用 → 02-design 设计文档（实现规格）
 
 ### 6.3 与 `../../implementation/00-README.md` 的索引衔接
 
-`../../implementation/00-README.md` 在其 §1.8「架构决策记录」中列出了 ADR-001~ADR-009 的原始文件路径。当 ADR 文件归集到 `docs/architecture/adr/` 后：
+`../../implementation/00-README.md` 在其 §1.8「架构决策记录」中列出了 ADR-001~ADR-009 的原始文件路径。当 ADR 文件归集到 `docs/explanation/architecture/adr/` 后：
 
 1. 本文件（`adr/README.md`）成为 ADR 的**唯一主索引**。
 2. `../../implementation/00-README.md` 的 §1.8 应改为**引用**本文件（而非重复列出 ADR 清单），避免信息副本。
 3. `../../implementation/00-README.md` 保留 ADR 的「关联代码目录映射」和「文档分类索引」职责，不重复维护 ADR 状态。
 
-> **TODO[docs 治理组]**：P1 阶段更新 `../../implementation/00-README.md` §1.8，将 ADR 清单改为引用 `docs/architecture/adr/README.md`，并删除重复列出的 ADR 文件路径表。
+> **TODO[docs 治理组]**：P1 阶段更新 `../../implementation/00-README.md` §1.8，将 ADR 清单改为引用 `docs/explanation/architecture/adr/README.md`，并删除重复列出的 ADR 文件路径表。
 
 ---
 

@@ -11,10 +11,10 @@
 
 | 模块 | 数据字典 | 源码入口 | 覆盖范围 |
 |------|----------|----------|----------|
-| 交易持仓管理 | `DATA_DEFINITION.md`（根目录）、`docs/trade/API_CONTRACT.md` | `src/pages/trading/`、`src/types/modules/trade.types.ts`、`src/constants/trade.constants.ts`、`src/store/holdingsStore.ts` | 持仓明细、查询参数、交易操作、分页/筛选状态、Store 状态管理（Zustand） |
-| 智能资讯中心（NewsPage） | `docs/NEWS_DATA_DEFINITION.md`、`docs/news/DATA_DEFINITION.md` | `src/pages/news-v6/`、`src/services/news/`、`src/data/types.ts`、`src/store/newsStore.ts` | `NewsArticle`、`NewsStockMap`、`SentimentCache`、V6/V9 适配、路由、Store 状态管理（Zustand） |
+| 交易持仓管理 | `DATA_DEFINITION.md`（根目录）、`docs/reference/trade/API_CONTRACT.md` | `src/pages/trading/`、`src/types/modules/trade.types.ts`、`src/constants/trade.constants.ts`、`src/store/holdingsStore.ts` | 持仓明细、查询参数、交易操作、分页/筛选状态、Store 状态管理（Zustand） |
+| 智能资讯中心（NewsPage） | `docs/NEWS_DATA_DEFINITION.md`、`docs/reference/news/DATA_DEFINITION.md` | `src/pages/news-v6/`、`src/services/news/`、`src/data/types.ts`、`src/store/newsStore.ts` | `NewsArticle`、`NewsStockMap`、`SentimentCache`、V6/V9 适配、路由、Store 状态管理（Zustand） |
 | AI 智能体调度中心 / 健康监控 / 诊断分析 | `docs/AI_CENTER_DATA_DEFINITION.md` | `src/constants/ai-center.constants.ts`、`src/constants/health.constants.ts`、`src/types/modules/ai-center.types.ts`、`src/services/ai-center/` | Agent、健康指标、诊断报告、统一 `AICenterData` |
-| 金融业务驾驶舱 Widget | `DATA_DEFINITION.md`（根目录，§2~§5）、`docs/cockpit/DATA_DEFINITION.md` | `src/cockpit/widgets/`、`src/services/stock-analysis/`、`src/services/data-collector/`、`src/types/modules/widget.types.ts`、`src/store/widgetStore.ts` | 投资画像、股票池、KAI 评分、模型对比、聊天界面、Widget 实例管理 |
+| 金融业务驾驶舱 Widget | `DATA_DEFINITION.md`（根目录，§2~§5）、`docs/reference/cockpit/DATA_DEFINITION.md` | `src/cockpit/widgets/`、`src/services/stock-analysis/`、`src/services/data-collector/`、`src/types/modules/widget.types.ts`、`src/store/widgetStore.ts` | 投资画像、股票池、KAI 评分、模型对比、聊天界面、Widget 实例管理 |
 | 三层模块注册体系 | `docs/REGISTRY_INDEX.md` | ~~`src/store/storeRegistry.ts`~~（已删除，待重建）、`src/components/componentRegistry.ts`、`src/cockpit/core/widgetRegistry.ts` | ~~Store 注册表（29 条目）~~（已删除，待重建）、Component 注册表（10+ 条目）、Widget 注册表（21 条目），按域/状态查询，统计函数 |
 | UseCase 用例层 | 内联类型定义 | `src/services/useCase/createExecutionPlan.useCase.ts`、`src/services/useCase/executePlan.useCase.ts`、`src/services/useCase/fetchSectorAnalysis.useCase.ts`、`src/services/useCase/fetcherOrchestrator.useCase.ts`、`src/services/useCase/generateTradeReview.useCase.ts`、`src/services/useCase/getUnifiedStockView.useCase.ts`、`src/services/useCase/hotSectorQuery.useCase.ts`、`src/services/useCase/rebalancePortfolio.useCase.ts`、`src/services/useCase/runDualStrategy.useCase.ts`、`src/services/useCase/strategySnapshotSave.useCase.ts`、`src/services/useCase/submitOrder.useCase.ts` | `CreateExecutionPlanInput`/`CreateExecutionPlanResult`、`ExecutePlanContext`/`ExecutePlanResult`、`FetchSectorAnalysisInput`/`FetchSectorAnalysisResult`、`FetchBasicDataInput`/`FetchKlineDataInput`、`TradeReviewReport`（引用自 `tradeReviewAI.types.ts`）、`UnifiedStockView`/`FusionOptions`、`HotSectorQueryInput`/`HotSectorQueryResult`、`RebalanceOptions`、`RunDualStrategyInput`、`SaveStrategySnapshotInput`/`SaveStrategySnapshotResult`、`SubmitOrderInput`/`SubmitOrderResult` |
 | 交易计算纯函数 | 内联类型定义 | `src/services/trading/positionComputer.ts`、`src/services/trading/pnlComputer.ts`、`src/services/trading/riskComputer.ts` | `MatchedTradePair`、`TradePair`、`PositionItem`、`PnLSummary`、`RiskMetrics` |
@@ -72,7 +72,7 @@
 
 ## 相关文档
 
-- `docs/implementation/doc-sync-execution-plan.md`：代码-文档同步整体方案
-- `docs/implementation/doc-sync-gap-list.md`：差异清单与闭环追踪
+- `docs/explanation/implementation/doc-sync-execution-plan.md`：代码-文档同步整体方案
+- `docs/explanation/implementation/doc-sync-gap-list.md`：差异清单与闭环追踪
 - `docs/03-architecture-standards.md`：架构标准与分层约定
 - `docs/09-quality-gates.md`：质量门禁与审计基线

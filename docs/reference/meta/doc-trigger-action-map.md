@@ -50,7 +50,7 @@ date: 2026-07-17
 - **是否触发 audit:docs**：写完后是否运行 `npm run audit:docs` 做引用同步校验。
 - **补充文档**：与主动作并列、需同步维护的其它文档（非越界，仍属本触发事件的明示范围）。
 
-> **路径基准（N2 修订后）**：下表所有目标文档路径均已对齐磁盘真实文件——9 个原指向 `docs/` 根的文档修订为真实路径（`docs/01-requirements/`、`docs/02-design/`）；4 个原本确实缺失的文档（`../data-definition.md`、`../../explanation/state-management.md`、`../../how-to/hooks-guide.md`、`../../explanation/page-structure.md`）已新建。故 `--auto-update` 不再因 `FILE_NOT_FOUND` 全失败。
+> **路径基准（N2 修订后）**：下表所有目标文档路径均已对齐磁盘真实文件——9 个原指向 `docs/` 根的文档修订为真实路径（`docs/specs/requirements/`、`docs/specs/design/`）；4 个原本确实缺失的文档（`../data-definition.md`、`../../explanation/state-management.md`、`../../how-to/hooks-guide.md`、`../../explanation/page-structure.md`）已新建。故 `--auto-update` 不再因 `FILE_NOT_FOUND` 全失败。
 
 | 触发事件 | 匹配模式 (glob) | 对应更新动作（唯一主文档） | 是否触发 audit:docs | 备注 |
 |---|---|---|---|---|

@@ -925,9 +925,9 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 | “src/core/acl.ts” | “src/core/acl.ts” | 文件重命名+迁移 |
 | “src/store/analysisNewsStore.ts” | “src/store/analysisNewsStore.ts” | 文件重命名 |
 | “src/engine/” | “src/showcase/” | 目录重命名 |
-| “docs/architecture/” | “docs/explanation/” | 目录迁移 |
-| “docs/guides/” | “docs/how-to/” | 目录迁移 |
-| “docs/implementation/” | “docs/explanation/” | 目录迁移 |
+| “docs/explanation/architecture/” | “docs/explanation/” | 目录迁移 |
+| “docs/guides/” | “docs/guides/how-to/” | 目录迁移 |
+| “docs/explanation/implementation/” | “docs/explanation/” | 目录迁移 |
 
 #### 3. 显式路径映射表设计
 
@@ -964,9 +964,9 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 ### 遇到的问题及解决方案
 
 #### 问题 1：目录映射指向目录而非具体文件
-- **现象**：“docs/architecture/api-contracts.md → ../reference” 指向目录
+- **现象**：“docs/explanation/architecture/api-contracts.md → ../reference” 指向目录
 - **原因**：映射表中文件映射误配置为目录映射
-- **解决方案**：修正映射表，精确文件映射指向具体文件（“docs/trade/API_CONTRACT.md”）
+- **解决方案**：修正映射表，精确文件映射指向具体文件（“docs/reference/trade/API_CONTRACT.md”）
 
 #### 问题 2：377 处修复仅减少 217 个断裂引用
 - **现象**：唯一匹配修复数多于断裂引用减少数
@@ -1227,7 +1227,7 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 
 | basename | 映射目标 |
 |----------|---------|
-| “../how-to/file-management-guide.md” | “docs/how-to/../how-to/file-management-guide.md” |
+| “../how-to/file-management-guide.md” | “docs/guides/how-to/../how-to/file-management-guide.md” |
 | “../reference/data-definition.md” | “docs/reference/../reference/data-definition.md” |
 | “../explanation/a-h-index.md” | “docs/explanation/../explanation/a-h-index.md” |
 | “../explanation/10-glossary_explanation.md” | “docs/explanation/../explanation/10-glossary_explanation.md” |
@@ -1667,9 +1667,9 @@ Top 10 高频断裂目标：
 | docs/audit/report-3-data-type-consistency.md | docs/archive/report-3-data-type-consistency.md |
 | docs/audit/report-4-test-quality-gates.md | docs/archive/report-4-test-quality-gates.md |
 | docs/audit/report-5-documentation-completeness.md | docs/archive/report-5-documentation-completeness.md |
-| docs/how-to/how-to-add-page.md | docs/archive/how-to-add-page.md |
-| docs/standards/type-evolution-guide.md | docs/archive/type-evolution-guide.md |
-| docs/standards/react-lifecycle-patterns.md | docs/archive/react-lifecycle-patterns.md |
+| docs/guides/how-to/how-to-add-page.md | docs/archive/how-to-add-page.md |
+| docs/guides/standards/type-evolution-guide.md | docs/archive/type-evolution-guide.md |
+| docs/guides/standards/react-lifecycle-patterns.md | docs/archive/react-lifecycle-patterns.md |
 | docs/explanation/design/ui-optimization-plan.md | docs/archive/ui-optimization-plan.md |
 
 #### 4. 归档 Stub 创建
@@ -1827,7 +1827,7 @@ Top 10 高频断裂目标：
 
 | 源文件 | 修正内容 |
 |--------|----------|
-| docs/how-to/FILE-MANAGEMENT-GUIDE.md | prompts/docs-as-mirror-quickref.md → ../../prompts/docs-as-mirror-quickref.md |
+| docs/guides/how-to/FILE-MANAGEMENT-GUIDE.md | prompts/docs-as-mirror-quickref.md → ../../prompts/docs-as-mirror-quickref.md |
 | docs/meta/FILE-MANAGEMENT-GUIDE-file-wandering-report.md | 去掉 src/core/、src/lib/ 目录描述的反引号 |
 | docs/meta/执行校验报告.md | 去掉 JSX 标签未闭合问题描述的反引号 |
 | docs/explanation/deprecated-v9-issue-resolution-schedule.md | 去掉 src/App.tsx:9,12-16 代码片段的反引号 |

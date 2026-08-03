@@ -152,7 +152,7 @@ date: 2026-07-21
 | 文档路径 | 重要性 | 状态 |
 |----------|--------|------|
 | `docs/reference/standards/coding-conventions_standards.md` | P0 | 待修复 |
-| `docs/standards/quality-gates.md` | P0 | 待修复 |
+| `docs/guides/standards/quality-gates.md` | P0 | 待修复 |
 | `docs/meta/document-metadata-standard.md` | P0 | 待修复 |
 | `docs/meta/directory-structure-guide.md` | P0 | 待修复 |
 
@@ -161,8 +161,8 @@ date: 2026-07-21
 | 文档路径 | 重要性 | 状态 |
 |----------|--------|------|
 | `docs/reference/guides/getting-started_guides.md` | P0 | 待修复 |
-| `docs/how-to/README_how-to.md` | P0 | 待修复 |
-| `docs/tutorials/getting-started_tutorials.md` | P0 | 待修复 |
+| `docs/guides/how-to/README_how-to.md` | P0 | 待修复 |
+| `docs/guides/tutorials/getting-started_tutorials.md` | P0 | 待修复 |
 | `docs/explanation/team-handbook/01-design-philosophy_team-handbook.md` | P0 | 待修复 |
 
 ---
@@ -316,8 +316,8 @@ jobs:
 - `docs/01-p1-debt-cleanup-todo_root.md`
 - `docs/explanation/team-handbook/02-architecture_team-handbook.md`
 - `docs/explanation/10-glossary_explanation.md`
-- `docs/tutorials/getting-started_tutorials.md`
-- `docs/prompts/README_prompts.md`
+- `docs/guides/tutorials/getting-started_tutorials.md`
+- `docs/reference/prompts/README_prompts.md`
 
 ---
 

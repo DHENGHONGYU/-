@@ -29,7 +29,7 @@ date: 2026-07-17
 
 ## 使用约定
 
-- 本目录是 24 子域的**唯一索引**；各子域详细契约文档命名 `{subdomain}-contract.md`，置于 `docs/architecture/services/`。
+- 本目录是 24 子域的**唯一索引**；各子域详细契约文档命名 `{subdomain}-contract.md`，置于 `docs/explanation/architecture/services/`。
 - 所有子域须遵守 `../../AGENTS.md` 分层：`services → core/data/lib(白名单)`，禁直写 db（经 `DataBridge`）。
 
 ---

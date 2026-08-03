@@ -22,7 +22,7 @@ date: 2026-07-17
 # V9 双策略体系 — 更新日志与一致性检查
 
 > **问题来源**：用户提出「整体交易策略进行结构性调整，将原先单行的股票选择和交易策略调整为双策略交易策略」，需确认相关文件是否已更新并提供更新日志。  
-> **检查范围**：DOC 核心文档（`docs/01~10`、`docs/implementation/*`）、源码实现（`src/services/*`、`src/store/*`、`src/cockpit/*`、`src/pages/*`）、数据层（`src/data/*`）、测试（`tests/*`）。  
+> **检查范围**：DOC 核心文档（`docs/01~10`、`docs/explanation/implementation/*`）、源码实现（`src/services/*`、`src/store/*`、`src/cockpit/*`、`src/pages/*`）、数据层（`src/data/*`）、测试（`tests/*`）。  
 > **检查日期**：2026-06-27
 
 ---

@@ -43,4 +43,4 @@ change_log:
 ## 相关文档
 
 - `docs/06-routing-specs.md`
-- `docs/implementation/input-cabin-spec.md`
+- `docs/explanation/implementation/input-cabin-spec.md`

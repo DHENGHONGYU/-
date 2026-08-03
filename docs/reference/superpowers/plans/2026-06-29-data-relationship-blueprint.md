@@ -14,7 +14,7 @@
 
 | 文件 | 类型 | 职责 |
 |------|------|------|
-| `docs/superpowers/plans/2026-06-29-data-relationship-blueprint.md` | 计划主文档 | 定义任务、关系表、时序、验证方法 |
+| `docs/reference/superpowers/plans/2026-06-29-data-relationship-blueprint.md` | 计划主文档 | 定义任务、关系表、时序、验证方法 |
 | `docs/blueprints/v9-data-relationship-er.md` | 创建 | 20 个 Store 的实体关系图与字段说明 |
 | `docs/blueprints/v9-data-timeline.md` | 创建 | 数据产生、刷新、消费的时序与生命周期 |
 | `docs/blueprints/v9-pipeline-sequence.mmd` | 创建 | 核心管线 Mermaid 序列图 |
@@ -576,7 +576,7 @@ git commit -m "docs(blueprint): integrate blueprint into dev workflow and CI"
 
 ## Execution Handoff
 
-**Plan complete and saved to `docs/superpowers/plans/2026-06-29-data-relationship-blueprint.md`. Two execution options:**
+**Plan complete and saved to `docs/reference/superpowers/plans/2026-06-29-data-relationship-blueprint.md`. Two execution options:**
 
 **1. Subagent-Driven (recommended)** - I dispatch a fresh subagent per task, review between tasks, fast iteration
 

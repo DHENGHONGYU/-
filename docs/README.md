@@ -80,6 +80,6 @@ code_version: 2.0.0
 
 ## 文档维护规范
 
-- 新增文档请按编号顺序放入 `docs/` 根目录；专项实施文档放入 `docs/implementation/`。
+- 新增文档请按编号顺序放入 `docs/` 根目录；专项实施文档放入 `docs/explanation/implementation/`。
 - 每次发布版本必须同步更新本页「文档版本」与根目录 `CHANGELOG.md`。
 - 文档中涉及的文件路径、函数名、接口字段必须与代码保持一致；重构后须先更新文档再合并。

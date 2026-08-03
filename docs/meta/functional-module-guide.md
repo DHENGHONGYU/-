@@ -189,4 +189,4 @@ config/  →  core/  →  data/  →  services/  →  store/  →  pages/ + comp
 | **架构治理** | governance.md + directory-structure-guide.md | doc-trigger-action-map.md + AGENTS.md |
 | **QA** | testing-strategy.md + 09-quality-gates.md | regression-suite.md + completeness-profile.md |
 
-> 编号查阅：`docs/00-meta/doc-manifest.csv`（可 Excel 打开，按 tier 分区 C/I/R）
+> 编号查阅：`docs/meta/doc-manifest.csv`（可 Excel 打开，按 tier 分区 C/I/R）

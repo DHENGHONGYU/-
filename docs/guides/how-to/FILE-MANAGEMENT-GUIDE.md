@@ -76,13 +76,13 @@ tier: important
 
 | 子目录 | 用途 | 存放内容 |
 |--------|------|----------|
-| `docs/00-meta/` | 元数据与运维 | 文档索引、审计报告、任务清单、RCA 报告 |
-| `docs/01-requirements/` | 需求与规范 | 需求文档、管理规范、质量标准、设计约束 |
-| `docs/02-design/` | 设计文档 | 架构设计、数据流、策略文档、接口契约 |
-| `docs/03-development/` | 开发指南 | 编码规范、迁移检查清单、开发手册、构建说明 |
-| `docs/04-testing/` | 测试文档 | 测试计划、测试报告、修复方案、覆盖率分析 |
+| `docs/meta/` | 元数据与运维 | 文档索引、审计报告、任务清单、RCA 报告 |
+| `docs/specs/requirements/` | 需求与规范 | 需求文档、管理规范、质量标准、设计约束 |
+| `docs/specs/design/` | 设计文档 | 架构设计、数据流、策略文档、接口契约 |
+| `docs/guides/development/` | 开发指南 | 编码规范、迁移检查清单、开发手册、构建说明 |
+| `docs/reports/testing/` | 测试文档 | 测试计划、测试报告、修复方案、覆盖率分析 |
 | `docs/05-deployment/` | 部署文档 | 部署手册、运维 runbook、环境配置指南 |
-| `docs/06-project-management/` | 项目管理 | 版本计划、进度报告、里程碑记录、任务分配 |
+| `docs/reports/project-management/` | 项目管理 | 版本计划、进度报告、里程碑记录、任务分配 |
 | `docs/07-archive/` | 归档 | 历史文档、废弃方案、已替代决策记录 |
 
 > 详细分层规则参见 [AGENTS.md](../../AGENTS.md) 第一节
@@ -225,12 +225,12 @@ npm run audit:ai-output
 
 ### 6.1 AI 生成产物管理
 
-- **存放位置**：`docs/drafts/` 为 AI 辅助生成的草稿/建议文件专用目录
+- **存放位置**：`docs/archive/drafts/` 为 AI 辅助生成的草稿/建议文件专用目录
 - **当前存量**：9 个文件（api-doc-draft-*.md 2个、complete-api-doc.md 1个、doc-update-list-*.md 2个、doc-update-suggestion-*.md 3个、script-output-*.log 1个）
 - **保留期限**：
   - `.md` 草稿文件：生成后 7 天内若未采纳/迁移，应归档至 `docs/07-archive/drafts/` 或删除
   - `.log` 输出文件：生成后 3 天内保留，过期删除
-- **迁移规则**：有价值的草稿内容应在 7 天内合并到正式文档（`docs/01-requirements/`、`docs/03-development/` 等），并删除原草稿
+- **迁移规则**：有价值的草稿内容应在 7 天内合并到正式文档（`docs/specs/requirements/`、`docs/guides/development/` 等），并删除原草稿
 - **命名规范**：AI 生成文件建议带时间戳前缀，如 `doc-update-suggestion-YYYY-MM-DDTHH-mm-ss.md`
 
 ### 6.2 临时文件/目录清理策略
@@ -361,7 +361,7 @@ git ls-files | ForEach-Object { git check-ignore -q $_ }
 
 - **[AGENTS.md](../../AGENTS.md)**：V9 架构契约、分层规则、命名约定、验证命令、数据库版本管理
 - **[trae-file-management-review.md](../00-meta/trae-file-management-review.md)**：更详细的文件管理审查报告（Trae IDE 生成）
-- **[README.md](../README.md)**：文档体系主索引（`docs/01-requirements/` 目录说明）
+- **[README.md](../README.md)**：文档体系主索引（`docs/specs/requirements/` 目录说明）
 
 
 <!-- merge-source: docs/reference/file-management-guide.md (2026-07-14 内容融合，避免去重丢失有效信息) -->

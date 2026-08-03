@@ -375,4 +375,4 @@ SPACING_TOKENS.widgetGap       // '16px'
 | `src/constants/theme.tokens.ts` | 设计令牌（颜色/间距/圆角等） |
 | `src/index.css` | 全局样式与 CSS 变量 |
 | `tailwind.config.js` | Tailwind 配置 |
-| `docs/implementation/a11y-checklist.md` | 无障碍检查清单 |
+| `docs/explanation/implementation/a11y-checklist.md` | 无障碍检查清单 |

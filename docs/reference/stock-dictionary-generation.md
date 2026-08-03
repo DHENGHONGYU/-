@@ -145,4 +145,4 @@ npm run build:stock-dict:verify
 
 本文档是 **`scripts/docs-tool/doc-update-trigger.ts` 中 `T14` 规则**（股票字典生成/校验）的 `docsToUpdate` 落点。当 `scripts/generate-stock-dict.py`、`scripts/verify-stock-dict.py` 或 `src/services/stock/stockDictionary.ts` 发生变更时，文档同步调度器会依据该规则提示将本文档纳入更新范围（提及即可，规则的具体 patterns / 落地由对应改造统一维护）。
 
-> 与该触发机制配套的映射表为 `docs/00-meta/doc-trigger-action-map.md`；新增 / 改动须同步该映射表，本文档归属 Diátaxis 的 `reference` 类（落于 `docs/reference/`）。
+> 与该触发机制配套的映射表为 `docs/meta/doc-trigger-action-map.md`；新增 / 改动须同步该映射表，本文档归属 Diátaxis 的 `reference` 类（落于 `docs/reference/`）。

@@ -54,15 +54,15 @@ date: 2026-07-17
 
 | 触发事件 | 匹配模式 (glob) | 对应更新动作（唯一主文档） | 是否触发 audit:docs | 备注 |
 |---|---|---|---|---|
-| **T1 类型定义变更** | `src/data/types.ts`、`src/types/modules/*.ts`、`src/services/scoring/v6-engine/types.ts`、`../../src/showcase/types.ts` | 更新 `docs/reference/data-dictionary-index.md` | 是 | 补充：`docs/reference/v9核心数据字典与类型定义(整合版).md`、`docs/reference/cockpit/data-definition.md`、`docs/explanation/news-data-definition.md`、团队手册 `docs/team-handbook/04-model-runtime.md`。仅改命中文件对应的条目，禁止全量重写。 |
-| **T2 接口变更** | `src/services/**/index.ts`、`src/core/databridge.ts`、`src/data/dataLayer.ts`、`src/services/fetcher`、`src/services/analysis` | 更新 `docs/reference/api-contract.md` | 是 | 补充：`docs/reference/databridge端点与数据映射清单.md`、`docs/reference/功能模块数据契约.md`、团队手册 `docs/team-handbook/02-architecture.md` 与 `docs/team-handbook/04-model-runtime.md`。按变更接口精确改写签名/端点段。 |
-| **T3 架构调整** | `src/config/routes.ts`、`src/config/dbConfig.ts`、`../../AGENTS.md`、`src/config/thresholds.ts` | 更新 `docs/reference/03-architecture-standards.md` | 是 | 补充：`docs/reference/06-routing-specs.md`、`docs/explanation/architecture.md`、团队手册 `docs/team-handbook/02-architecture.md`。注意 `src/config/thresholds.ts` 同属 T4，命中时 T3/T4 均触发，各自只改本职文档。 |
-| **T4 配置参数变更** | `src/constants/*.ts`、`src/config/thresholds.ts`、`src/services/scoring/v6-engine/config.ts` | 更新 `docs/reference/05-engine-specs.md` | 是 | 补充：`docs/reference/09-quality-gates.md`、团队手册 `docs/team-handbook/04-model-runtime.md`。 |
-| **T5 Store 状态管理变更** | `src/store/**/*.ts` | 更新 `docs/explanation/state-management.md` | 是 | 补充：`docs/reference/data-flow-spec.md`、团队手册 `docs/team-handbook/02-architecture.md`。 |
-| **T6 UI 组件变更** | `src/components/**/*.tsx`、`src/components/**/*.ts` | 更新 `docs/explanation/design/component-library-guide.md` | 是 | 补充：`docs/design/component-specs.md`（基础组件规范唯一事实源）、`docs/explanation/design/ui-design-system.md`、团队手册 `docs/team-handbook/03-ui-components.md`。 |
-| **T7 Hook 自定义变更** | `src/hooks/**/*.ts`、`src/hooks/**/*.tsx` | 更新 `docs/how-to/hooks-guide.md` | 是 | 补充：`docs/reference/data-flow-spec.md`、团队手册 `docs/team-handbook/03-ui-components.md`。 |
-| **T8 页面组件变更** | `src/pages/**/*.tsx`、`src/pages/**/*.ts` | 更新 `docs/reference/06-routing-specs.md` | 是 | 补充：`docs/explanation/page-structure.md`、团队手册 `docs/team-handbook/02-architecture.md`。 |
-| **T9 Widget 注册表变更** | `src/cockpit/core/widgetRegistry.ts` | 重写 `docs/reference/cockpit/data-definition.md` | 是 | 补充：增量维护 `docs/00-meta/registry-index.md`（非全量重写，见任务 A1）、团队手册 `docs/team-handbook/03-ui-components.md` + 跑 `audit:docs` 和 `audit:widget-registry`。变更 defaultLayout 时必须同步更新 `AGENTS.md` §7.2 布局原则。 |
+| **T1 类型定义变更** | `src/data/types.ts`、`src/types/modules/*.ts`、`src/services/scoring/v6-engine/types.ts`、`../../src/showcase/types.ts` | 更新 `docs/reference/data-dictionary-index.md` | 是 | 补充：`docs/reference/v9核心数据字典与类型定义(整合版).md`、`docs/reference/cockpit/data-definition.md`、`docs/explanation/news-data-definition.md`、团队手册 `docs/guides/team-handbook/04-model-runtime.md`。仅改命中文件对应的条目，禁止全量重写。 |
+| **T2 接口变更** | `src/services/**/index.ts`、`src/core/databridge.ts`、`src/data/dataLayer.ts`、`src/services/fetcher`、`src/services/analysis` | 更新 `docs/reference/api-contract.md` | 是 | 补充：`docs/reference/databridge端点与数据映射清单.md`、`docs/reference/功能模块数据契约.md`、团队手册 `docs/guides/team-handbook/02-architecture.md` 与 `docs/guides/team-handbook/04-model-runtime.md`。按变更接口精确改写签名/端点段。 |
+| **T3 架构调整** | `src/config/routes.ts`、`src/config/dbConfig.ts`、`../../AGENTS.md`、`src/config/thresholds.ts` | 更新 `docs/reference/03-architecture-standards.md` | 是 | 补充：`docs/reference/06-routing-specs.md`、`docs/explanation/architecture.md`、团队手册 `docs/guides/team-handbook/02-architecture.md`。注意 `src/config/thresholds.ts` 同属 T4，命中时 T3/T4 均触发，各自只改本职文档。 |
+| **T4 配置参数变更** | `src/constants/*.ts`、`src/config/thresholds.ts`、`src/services/scoring/v6-engine/config.ts` | 更新 `docs/reference/05-engine-specs.md` | 是 | 补充：`docs/reference/09-quality-gates.md`、团队手册 `docs/guides/team-handbook/04-model-runtime.md`。 |
+| **T5 Store 状态管理变更** | `src/store/**/*.ts` | 更新 `docs/explanation/state-management.md` | 是 | 补充：`docs/reference/data-flow-spec.md`、团队手册 `docs/guides/team-handbook/02-architecture.md`。 |
+| **T6 UI 组件变更** | `src/components/**/*.tsx`、`src/components/**/*.ts` | 更新 `docs/explanation/design/component-library-guide.md` | 是 | 补充：`docs/explanation/design/component-specs.md`（基础组件规范唯一事实源）、`docs/explanation/design/ui-design-system.md`、团队手册 `docs/guides/team-handbook/03-ui-components.md`。 |
+| **T7 Hook 自定义变更** | `src/hooks/**/*.ts`、`src/hooks/**/*.tsx` | 更新 `docs/guides/how-to/hooks-guide.md` | 是 | 补充：`docs/reference/data-flow-spec.md`、团队手册 `docs/guides/team-handbook/03-ui-components.md`。 |
+| **T8 页面组件变更** | `src/pages/**/*.tsx`、`src/pages/**/*.ts` | 更新 `docs/reference/06-routing-specs.md` | 是 | 补充：`docs/explanation/page-structure.md`、团队手册 `docs/guides/team-handbook/02-architecture.md`。 |
+| **T9 Widget 注册表变更** | `src/cockpit/core/widgetRegistry.ts` | 重写 `docs/reference/cockpit/data-definition.md` | 是 | 补充：增量维护 `docs/meta/registry-index.md`（非全量重写，见任务 A1）、团队手册 `docs/guides/team-handbook/03-ui-components.md` + 跑 `audit:docs` 和 `audit:widget-registry`。变更 defaultLayout 时必须同步更新 `AGENTS.md` §7.2 布局原则。 |
 | **T10 版本发布（package.json version bump）** | `package.json`（仅 `version` 字段变更） | 全仓 `docs/**/*.md` frontmatter `code_version` 同步 | 否（由 `doc:version-check` 覆盖） | 补充：将 `CHANGELOG` 的 `[Unreleased]` 段提升为对应版本段（对应计划 T4/T5/T6）。此事件为**跨仓库元数据同步**，不触达正文，故不跑 `audit:docs`；`--auto-update` 对 T10 对接 `npm run doc:version-check`。 |
 | **T11 Mock 模块安全** | `scripts/audit/audit-mock-modules.ts`、`tests/**/*.test.ts`（新增全量 mock 时） | 更新本表（当前文件）+ `AGENTS.md` §7.3 | 否 | 新增 SAFE_FULL_MOCKS allowlist 条目必须附带 `reason` 注释。audit:mock-modules exit 0 即无新增违规。 |
 | **T12 ESLint/门禁变更** | `eslint.config.js`、`eslint-rules/*.js`、`scripts/quality/*.js`、`package.json`（scripts 段） | 更新 `AGENTS.md` §三 类型安全 + §七 验证命令 | 否 | 新增规则需在 AGENTS.md 登记规则用途和背景教训编号（如 P3 → no-record-string-to-branded）。 |
@@ -71,7 +71,7 @@ date: 2026-07-17
 
 > **关于 1:1 的说明**：上表每个触发事件只有一个「主文档」作为唯一主动作；「补充文档」是该触发事件**明示附带**的同步范围，仍属本事件，不属于越界。任何未出现在本表的文档都不在自动改写范围内。
 
-> **团队手册接入（2026-07-15）**：团队体系手册 `docs/team-handbook/`（01 设计原创 / 02 整体架构 / 03 UI 组件 / 04 模型运行 / 05 竞品对比）已注册为上述 T1–T9 的补充文档，按维度映射：02 整体架构 ← T2/T3/T5/T8；03 UI 组件 ← T6/T7/T9；04 模型运行 ← T1/T2/T4。触发对应规则时，`--auto-update` 会刷新手册 `.md` 末尾的 `<!-- auto-update -->` 校验标记并提示人工复核（手册为人工策展文档，生成器仅刷新标记，不重写正文）。手册的 HTML 版（`docs/team-handbook-html/`）由 `node scripts/convert-handbook-to-html.mjs` 从 `.md` 派生，**`.md` 更新后须重跑该脚本重新生成 HTML**；HTML 不纳入自动改写范围，避免覆盖派生产物。
+> **团队手册接入（2026-07-15）**：团队体系手册 `docs/guides/team-handbook/`（01 设计原创 / 02 整体架构 / 03 UI 组件 / 04 模型运行 / 05 竞品对比）已注册为上述 T1–T9 的补充文档，按维度映射：02 整体架构 ← T2/T3/T5/T8；03 UI 组件 ← T6/T7/T9；04 模型运行 ← T1/T2/T4。触发对应规则时，`--auto-update` 会刷新手册 `.md` 末尾的 `<!-- auto-update -->` 校验标记并提示人工复核（手册为人工策展文档，生成器仅刷新标记，不重写正文）。手册的 HTML 版（`docs/assets/team-handbook-html/`）由 `node scripts/convert-handbook-to-html.mjs` 从 `.md` 派生，**`.md` 更新后须重跑该脚本重新生成 HTML**；HTML 不纳入自动改写范围，避免覆盖派生产物。
 
 ---
 
@@ -114,10 +114,10 @@ date: 2026-07-17
 > 维护者：架构治理（里程碑 M1 / T1 产出；N2/N3 收尾）
 > 关联文档：`./文档自动更新体系-架构梳理与任务清单.md` §三 约束1、`scripts/docs-tool/doc-update-trigger.ts` 的 `TRIGGER_RULES`
 3. **与代码同步**：本表的 **T1–T14** 必须与 `scripts/docs-tool/doc-update-trigger.ts` 的 `TRIGGER_RULES` 保持同步。代码改动 `TRIGGER_RULES` 时，本表须同步修订（反之亦然）。
-> **路径基准（N2 修订后）**：下表所有目标文档路径均已对齐磁盘真实文件——9 个原指向 `docs/` 根的文档修订为真实路径（`docs/01-requirements/`、`docs/02-design/`）；4 个原本确实缺失的文档（`../reference/data-definition.md`、`../explanation/state-management.md`、`../how-to/hooks-guide.md`、`../explanation/page-structure.md`）已新建。故 `--auto-update` 不再因 `FILE_NOT_FOUND` 全失败。
+> **路径基准（N2 修订后）**：下表所有目标文档路径均已对齐磁盘真实文件——9 个原指向 `docs/` 根的文档修订为真实路径（`docs/specs/requirements/`、`docs/specs/design/`）；4 个原本确实缺失的文档（`../reference/data-definition.md`、`../explanation/state-management.md`、`../how-to/hooks-guide.md`、`../explanation/page-structure.md`）已新建。故 `--auto-update` 不再因 `FILE_NOT_FOUND` 全失败。
 
 > **一致性治理说明（2026-07-21）**：上方 §二 主矩阵已采用 pr-6 重组后的真实权威路径
-> （`docs/reference/...`、`docs/explanation/...`、`docs/how-to/...` 等），并由 N2 对齐磁盘。
+> （`docs/reference/...`、`docs/explanation/...`、`docs/guides/how-to/...` 等），并由 N2 对齐磁盘。
 > 本段早期合并自 `docs/reference/meta/doc-trigger-action-map.md` 的 `../reference/...` 旧路径矩阵
 > 已被 §二 取代，特此删除以消除路径冲突（避免 FILE_NOT_FOUND）。映射表与
 > `scripts/docs-tool/doc-update-trigger.ts` 的 `TRIGGER_RULES` 以 §二 为单一事实源。

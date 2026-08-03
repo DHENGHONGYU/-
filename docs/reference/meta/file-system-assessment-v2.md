@@ -158,7 +158,7 @@ src/                          docs/                          scripts/
    - `other/` 目录包含41个文件，分类模糊
 
 3. **空目录存在**
-   - `docs/02-design/` 仅有1个文件在深层子目录
+   - `docs/specs/design/` 仅有1个文件在深层子目录
    - `src/components/organisms/analysis/` 为空目录
 
 ---

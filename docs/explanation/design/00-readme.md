@@ -21,7 +21,7 @@ change_log:
 
 # V9 技术实施文档索引
 
-> **目录**: `docs/implementation/`  
+> **目录**: `docs/explanation/implementation/`  
 > **文件总数**: 44 份 .md 文档（31 份业务文档 + 9 份 ADR + 4 份治理文档）  
 > **子目录**: `adr/`（9 份架构决策记录）、`deprecated/`（9 份废弃文档）  
 > **最后更新**: 2026-06-27

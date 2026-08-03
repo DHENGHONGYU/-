@@ -61,21 +61,25 @@ function runScript(label: string, args: string[], timeoutMs = 90_000): CheckResu
   }
 }
 
-/** Diátaxis 目录结构合规性检查 */
+/** 十目录架构合规性检查（E阶段重构后） */
 function checkDirStructure(): CheckResult {
   const required = [
-    'docs/00-meta',
-    'docs/explanation',
+    'docs/meta',
+    'docs/specs',
+    'docs/guides',
     'docs/reference',
-    'docs/how-to',
-    'docs/tutorials',
+    'docs/explanation',
     'docs/reports',
+    'docs/archive',
+    'docs/assets',
+    'docs/audit',
+    'docs/lessons',
   ]
   const missing = required.filter((d) => !existsSync(join(ROOT, d)))
   if (missing.length > 0) {
     return { name: '目录结构', passed: false, detail: `缺失: ${missing.join(', ')}` }
   }
-  return { name: '目录结构', passed: true, detail: '6 个关键目录齐全' }
+  return { name: '目录结构', passed: true, detail: '10 个核心目录齐全' }
 }
 
 function main(): void {

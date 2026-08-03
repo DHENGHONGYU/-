@@ -29,7 +29,7 @@ tier: reference
 
 | 分类 | 典型路径 | 说明 |
 |:---|:---|:---|
-| 旧版架构文档 | `../reference/03-architecture-standards.md` | 已迁移到 `docs/02-design/architecture/` |
+| 旧版架构文档 | `../reference/03-architecture-standards.md` | 已迁移到 `docs/specs/design/architecture/` |
 | 代码审查文档 | `../reference/code-review.md` | 已迁移到 `../how-to/code-review-guide.md` |
 | 数据定义文档 | `docs/RISK_DERIVED_data-definition.md` | 已归档到 `archive/docs/07-archive/` |
 | UI 组件 | `src/components/templates/PageContainer.tsx` | 组件结构变更 |
@@ -46,7 +46,7 @@ tier: reference
 | 策略 | 适用情况 | 操作 |
 |:---|:---|:---|
 | **保留历史引用** | 旧版路径引用（历史记录） | 在 CHANGELOG.md 顶部添加声明 |
-| **添加别名重定向** | 重要文档迁移 | 在 `docs/00-meta/` 创建索引映射 |
+| **添加别名重定向** | 重要文档迁移 | 在 `docs/meta/` 创建索引映射 |
 | **修复实际缺失** | 真正缺失的文件 | 创建占位文件或修复路径 |
 
 ### 2.2 已实施：历史引用声明
@@ -54,7 +54,7 @@ tier: reference
 CHANGELOG.md 第 6 行已添加声明：
 
 ```markdown
-⚠️ **历史引用声明**：本日志中 v2.4.0 之前的条目引用的部分文档路径（如 `../reference/03-architecture-standards.md`、`../reference/code-review.md`、`docs/reports/code-graph.json` 等）可能因文档体系重构（SDLC 目录重组）已发生变更。如需最新路径，请查询 `docs/README.md` 或 `docs/00-meta/` 索引。
+⚠️ **历史引用声明**：本日志中 v2.4.0 之前的条目引用的部分文档路径（如 `../reference/03-architecture-standards.md`、`../reference/code-review.md`、`docs/reports/code-graph.json` 等）可能因文档体系重构（SDLC 目录重组）已发生变更。如需最新路径，请查询 `docs/README.md` 或 `docs/meta/` 索引。
 ```
 
 ### 2.3 路径别名映射
@@ -123,4 +123,4 @@ if (filePath.includes('CHANGELOG.md')) {
 > 3. ✅ 已在审计脚本中设置非阻断规则
 > 4. ✅ 已制定后续维护规范
 
-> **建议**：不建议修改 CHANGELOG.md 的历史内容。如需引用历史文档，查询 `docs/00-meta/` 索引或 `archive/ARCHIVE_INDEX.md`。
+> **建议**：不建议修改 CHANGELOG.md 的历史内容。如需引用历史文档，查询 `docs/meta/` 索引或 `archive/ARCHIVE_INDEX.md`。
