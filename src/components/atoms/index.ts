@@ -76,7 +76,7 @@ export type { ResultProps, ResultStatus } from './Result'
 
 export { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './Table'
 
-export { StockPriceChange } from './StockPriceChange'
+export { StockPriceChangeBadge } from './StockPriceChange'
 
 export {
   DEFAULT_BADGE,

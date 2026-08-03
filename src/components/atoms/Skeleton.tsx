@@ -1,21 +1,31 @@
-import * as React from 'react'
+import { type HTMLAttributes, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 
-export type SkeletonProps = React.HTMLAttributes<HTMLDivElement>
+export type SkeletonVariant = 'text' | 'rect' | 'circle'
+
+export interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
+  variant?: SkeletonVariant
+}
 
 /**
- * Skeleton
+ * Skeleton — 骨架屏占位
  */
-export const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
-  ({ className, ...props }, ref) => {
+export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
+  ({ className, variant = 'rect', ...props }, ref) => {
+    const variantClasses: Record<SkeletonVariant, string> = {
+      text: 'h-4 w-full rounded',
+      rect: 'rounded-md',
+      circle: 'rounded-full',
+    }
+
     return (
       <div
         ref={ref}
-        className={cn('animate-pulse rounded-md bg-muted', className)}
+        className={cn('animate-pulse bg-muted', variantClasses[variant], className)}
         {...props}
       />
     )
-  }
+  },
 )
 
 Skeleton.displayName = 'Skeleton'

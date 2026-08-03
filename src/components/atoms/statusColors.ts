@@ -1,51 +1,54 @@
 /**
- * 状态 / 优先级 / 类型 → 语义色徽章类
- * @description
- * 统一全站「状态色」表达，消除各页面重复的硬编码映射
- * （如 text-red-400 bg-red-900/30）。全部基于统一设计系统的语义令牌，
- * 主题自适应（亮 / 暗模式均可用）。
+ * statusColors — 状态徽章颜色映射常量
  *
- * 用法：
- *   const { badge, label } = PRIORITY_BADGE[priority] ?? FALLBACK
- *   <span className={`rounded px-2 py-1 text-xs font-medium ${badge}`}>{label}</span>
-  * @doc [V9-DOC-FRONT-046]
-*/
+ * 用于 OptimizationSuggestionsPage / ChangelogPage 等的状态徽章配色。
+ * BadgeStyle.badge 为 CSS 类名字符串，BadgeStyle.label 为显示文本。
+ */
+
 export interface BadgeStyle {
-  /** Tailwind 徽章容器类（背景 + 文字色） */
+  /** CSS 类名（用于 Badge className） */
   badge: string
-  /** 中文标签 */
+  /** 显示文本 */
   label: string
 }
 
-/** 未知键兜底（避免 noUncheckedIndexedAccess 下的 undefined） */
-export const DEFAULT_BADGE: BadgeStyle = { badge: 'bg-muted text-tertiary', label: '—' }
+/** 默认徽章样式（兜底） */
+export const DEFAULT_BADGE: BadgeStyle = {
+  badge: 'bg-secondary text-secondary-foreground',
+  label: '默认',
+}
 
-/** 优化建议优先级 */
+/** 优先级徽章映射 */
 export const PRIORITY_BADGE: Record<string, BadgeStyle> = {
-  high: { badge: 'bg-destructive/15 text-destructive', label: '高' },
-  medium: { badge: 'bg-warning/15 text-warning', label: '中' },
-  low: { badge: 'bg-info/15 text-info', label: '低' },
+  high: { badge: 'bg-destructive text-destructive-foreground', label: '高' },
+  medium: { badge: 'bg-warning text-warning-foreground', label: '中' },
+  low: { badge: 'bg-secondary text-secondary-foreground', label: '低' },
 }
 
-/** 优化建议处理状态 */
+/** 建议状态徽章映射 */
 export const SUGGESTION_STATUS_BADGE: Record<string, BadgeStyle> = {
-  open: { badge: 'bg-info/15 text-info', label: '待处理' },
-  'in-progress': { badge: 'bg-warning/15 text-warning', label: '进行中' },
-  completed: { badge: 'bg-success/15 text-success', label: '已完成' },
-  dismissed: { badge: 'bg-muted text-tertiary', label: '已忽略' },
+  pending: { badge: 'bg-secondary text-secondary-foreground', label: '待处理' },
+  in_progress: { badge: 'bg-warning text-warning-foreground', label: '进行中' },
+  done: { badge: 'bg-success text-success-foreground', label: '已完成' },
+  rejected: { badge: 'bg-muted text-muted-foreground', label: '已拒绝' },
 }
 
-/** 优化建议分类 → 图标语义色 */
+/** 分类图标颜色映射 */
 export const CATEGORY_ICON_COLOR: Record<string, string> = {
   performance: 'text-warning',
-  quality: 'text-info',
   security: 'text-destructive',
-  architecture: 'text-success',
+  architecture: 'text-primary',
+  testing: 'text-success',
+  docs: 'text-muted-foreground',
+  refactor: 'text-secondary-foreground',
 }
 
-/** 更新日志版本类型 */
+/** 变更日志类型徽章映射 */
 export const CHANGELOG_TYPE_BADGE: Record<string, BadgeStyle> = {
-  major: { badge: 'bg-destructive/15 text-destructive', label: '重大更新' },
-  minor: { badge: 'bg-info/15 text-info', label: '功能更新' },
-  patch: { badge: 'bg-success/15 text-success', label: '问题修复' },
+  feature: { badge: 'bg-success text-success-foreground', label: '新功能' },
+  fix: { badge: 'bg-warning text-warning-foreground', label: '修复' },
+  breaking: { badge: 'bg-destructive text-destructive-foreground', label: '破坏性变更' },
+  refactor: { badge: 'bg-secondary text-secondary-foreground', label: '重构' },
+  docs: { badge: 'bg-muted text-muted-foreground', label: '文档' },
+  chore: { badge: 'bg-muted text-muted-foreground', label: '杂项' },
 }

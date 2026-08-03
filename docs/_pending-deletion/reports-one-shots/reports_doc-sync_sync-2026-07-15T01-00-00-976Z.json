@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-07-15T01:00:00.976Z",
+  "since": "HEAD",
+  "codeChanges": [],
+  "docChanges": {
+    "added": [],
+    "modified": [],
+    "deleted": []
+  },
+  "triggerHits": [],
+  "ruleViolations": 0,
+  "crossRefBroken": 1,
+  "gatePassed": false,
+  "autoFixed": 0,
+  "summary": "code:0 doc:+0/~0/-0 trigger:0 violations:0 gate:FAIL"
+}

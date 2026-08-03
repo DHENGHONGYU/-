@@ -42,18 +42,6 @@
                                                                         "V9-DOC-DATA-002"
                                                                     ]
                                                 },
-                          "V9-SKILL-DEVOPS":  {
-                                                  "skill_id":  "V9-SKILL-DEVOPS",
-                                                  "path":  ".workbuddy/skills/devops-automation/SKILL.md",
-                                                  "name":  "devops-automation",
-                                                  "doc_count":  4,
-                                                  "covers_docs":  [
-                                                                      "V9-DOC-PROJ-232",
-                                                                      "V9-DOC-PROJ-218",
-                                                                      "V9-DOC-QA-091",
-                                                                      "V9-DOC-QA-050"
-                                                                  ]
-                                              },
                           "V9-SKILL-COLLECTION":  {
                                                       "skill_id":  "V9-SKILL-COLLECTION",
                                                       "path":  ".workbuddy/skills/collection-pipeline-testing/SKILL.md",
