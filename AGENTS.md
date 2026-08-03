@@ -80,7 +80,7 @@ src/config/       ← 配置层（零硬编码锚点）
 src/core/         ← 核心工具与类型守卫（DataBridge/databridgeAcl/databridgeHandlers/databridgeRouter/databridgeStrategyRouter/ACL/Envelope/MemoryCache/workerPool/stockCodeUtils）
 src/agents/       ← AI 行为扩展（运行时模块，core 层扩展）
 src/data/         ← 数据层（IndexedDB/dataLayer/queryBuilder/types/gateway）
-src/lib/          ← 库函数（logger/format/errors/utils/localStorageManager）
+src/lib/          ← 库函数（logger/logHelpers/format/errors/utils/localStorageManager）
 src/services/      ← 服务层（30+子域：analysis/scoring/fetcher/news/llm/trading/execution/...）
 src/store/        ← 状态层（63个Zustand Store + helpers/withBroadcast；含 intentionPoolStore.ts / researchPoolStore.ts / positionPoolStore.ts / registrationContractStore.ts）
 src/pages/        ← 页面层（5舱：input/analysis/trading/output/command）
@@ -106,7 +106,7 @@ src/services/workers/  ← Web Worker 脚本（纯计算逻辑，禁止引 store
 - `pages/` 和 `components/` → 只能依赖 `store/` 和 `services/`，禁止直接调用 `dataLayer` 或 `db`
 - `store/` → 只能依赖 `services/` 和 `core/`
 - `services/` → 只能依赖 `core/`、`data/` 和 `lib/`（仅限基础设施），禁止直接写 `db`；所有写入必须封装为 `StandardEnvelope` 并通过 `DataBridge.forward()` 发起，最终由 `data/gateway/` 执行
-  - **lib 基础设施白名单**：`logger`、`withBroadcast`、`eventBus`、`format`、`errors`、`utils`、`localStorageManager`、`safeCoerce`、`perf`、`precision`、`validation`、`safeRegex`
+  - **lib 基础设施白名单**：`logger`、`logHelpers`、`withBroadcast`、`eventBus`、`format`、`errors`、`utils`、`localStorageManager`、`safeCoerce`、`perf`、`precision`、`validation`、`safeRegex`
   - 禁止依赖 `lib/` 中的业务模块
 - `data/` → `data/gateway/` 是唯一允许直接操作 `dataLayer` 与 `db` 的入口；`dataLayer` 子模块仅被 `data/gateway/` 与同级 `data/` 基础设施依赖
 - `lib/` → 仅可依赖 `core/` 和 `config/`，禁止依赖 `services/`、`store/`、`pages/`、`components/`、`apps/`
