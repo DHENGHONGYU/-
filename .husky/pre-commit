@@ -162,7 +162,7 @@ TSX_RUN scripts/audit/audit-acl-consistency.ts || true
 # 18. 文档目录-内容匹配（warn 模式）
 echo ""
 echo "📂 [warn] 运行 audit:path-match（文档目录-内容匹配检查，warn 模式）..."
-TSX_RUN scripts/audit-path-match.ts || true
+TSX_RUN scripts/audit/audit-path-match.ts || true
 
 # 19. 文档-代码双向完整性（warn 模式）
 echo ""
