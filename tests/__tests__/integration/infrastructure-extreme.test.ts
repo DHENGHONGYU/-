@@ -659,7 +659,7 @@ describe('P1 · N2: 网络抖动 / 重试 maxRetries 次', () => {
       'fetch',
       vi.fn(async () => {
         callCount++
-        throw new TypeError(`fetch #${callCount} ENOTFOUND（DNS解析失败）
+        throw new TypeError(`fetch #${callCount} ENOTFOUND（DNS解析失败）`)
       }),
     )
     try {
