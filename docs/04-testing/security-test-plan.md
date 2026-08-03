@@ -239,7 +239,7 @@ Content-Security-Policy:
 - `object-src 'none'` + `frame-ancestors 'none'` 减少攻击面
 
 **验证位置**：
-- 配置：[vite.config.ts](file:///g:/FinSightV9/vite.config.ts#L8-L40)
+- 配置：[vite.config.ts](../../vite.config.ts#L8-L40)
 - 测试：`e2e/security-xss.spec.ts` → CSP 策略验证
 
 ---
