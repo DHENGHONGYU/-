@@ -359,7 +359,7 @@ export async function runIntelligentScore(
           for (const rawDim of (rawOutput.dimensions ?? [])) {
             if (rawDim.name && rawDim.rationale && rawDim.rationale !== '未提供评分依据') {
               const matched = dimensions.find((d) => d.name.includes(rawDim.name!) || rawDim.name!.includes(d.name))
-              if (matched && matched.rationale.length < (rawDim.rationale?.length ?? 0)) {
+              if (matched && matched.rationale.length < rawDim.rationale.length) {
                 matched.rationale = rawDim.rationale!
               }
             }

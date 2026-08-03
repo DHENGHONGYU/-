@@ -189,8 +189,16 @@ docs/reports/automation-pipeline/*.json
 # Generated reports in scripts/docs/reports/ (中间产物，可重建，不入 VCS)
 /scripts/docs/reports/
 
-# 临时/调试脚本（不上线）
-scripts/**/_debug/
+# 临时/调试脚本（不上线，保留 audit/_debug、_debug、verify/_debug 因被生产代码引用）
+scripts/build/_debug/
+scripts/docs-tool/_debug/
+scripts/fix/_debug/
+scripts/generate/_debug/
+scripts/migrate/_debug/
+scripts/monitor/_debug/
+scripts/quality/_debug/
+scripts/security/_debug/
+scripts/test-tool/_debug/
 scripts/tmp-*.ts
 scripts/_temp_*.ts
 

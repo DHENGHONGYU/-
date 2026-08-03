@@ -244,10 +244,10 @@ export function buildDefaultSourcePriority(
  * @returns QuoteDataSourceId[]
  */
 export function resolveQuoteChain(dimension: DimensionPipelineConfig): QuoteDataSourceId[] {
-  const chain = dimension.sourcePriority && dimension.sourcePriority.length > 0
+  const chain = dimension.sourcePriority.length > 0
     ? dimension.sourcePriority
     : buildDefaultSourcePriority(dimension)
-  const allowMock = dimension.fallbackPolicy?.allowMockFallback ?? true
+  const allowMock = dimension.fallbackPolicy.allowMockFallback
   return chain
     .filter((item) => item.enabled)
     .filter((item) => allowMock || item.id !== 'mock')
@@ -264,7 +264,7 @@ export function resolveQuoteChain(dimension: DimensionPipelineConfig): QuoteData
  */
 export function resolveKlineChain(dimension: DimensionPipelineConfig): QuoteDataSourceId[] {
   const quoteChain = resolveQuoteChain(dimension)
-  const allowMock = dimension.fallbackPolicy?.allowMockFallback ?? true
+  const allowMock = dimension.fallbackPolicy.allowMockFallback
   // 腾讯同时支持行情+K线，优先使用
   const klineSources = quoteChain.filter((id) => id !== 'mock')
   if (klineSources.length > 0) return allowMock ? [...klineSources, 'mock'] : klineSources
@@ -522,7 +522,7 @@ export async function runSingleTrace(
         traceId,
         taskId,
         dimensionCode,
-        allowMockFallback: dimension.fallbackPolicy?.allowMockFallback ?? true,
+        allowMockFallback: dimension.fallbackPolicy.allowMockFallback,
       })
 
       // Mock 禁用 + 全源失败：不写入、不计成功（假绿灯修复）
@@ -634,7 +634,7 @@ export async function runSingleTrace(
         traceId,
         taskId,
         dimensionCode,
-        allowMockFallback: dimension.fallbackPolicy?.allowMockFallback ?? true,
+        allowMockFallback: dimension.fallbackPolicy.allowMockFallback,
       })
 
       // Mock 禁用 + 全源失败：不写入、不计成功（假绿灯修复）
@@ -754,7 +754,7 @@ export async function runSingleTrace(
 
       try {
         const dimData = await generateDataForDimension(normalizedSymbol, dimensionCode)
-        const modeLabel = { news: '资讯', research: '研报', competitor: '竞品', index: '关联指数', chip: '筹码' }[mode] ?? mode
+        const modeLabel = { news: '资讯', research: '研报', competitor: '竞品', index: '关联指数', chip: '筹码' }[mode]
 
         // MOCK 禁用：真实源失败 → 维度失败，不写入假数据
         if (dimData._source === 'mock' || dimData._mock === true) {
@@ -988,17 +988,16 @@ export function upgradeDimensionsToPipeline(
 ): DimensionPipelineConfig[] {
   return dimensions.map((dim) => {
     // 先解析 fallbackPolicy，再用其 allowMockFallback 决定默认链是否注入 mock（假绿灯修复）
-    const fallbackPolicy =
-      dim.fallbackPolicy ?? { allowFallback: true, allowMockFallback: !import.meta.env.PROD, alertFailureRate: 80 }
+    const fallbackPolicy = dim.fallbackPolicy
     return {
       ...dim,
       sourcePriority:
-        dim.sourcePriority && dim.sourcePriority.length > 0
+        dim.sourcePriority.length > 0
           ? dim.sourcePriority
           : buildDefaultSourcePriority(dim, fallbackPolicy.allowMockFallback),
-      concurrency: dim.concurrency ?? 1,
-      retryPolicy: dim.retryPolicy ?? { maxRetries: 2, backoffMultiplier: 2, initialDelayMs: 500 },
-      timeoutPolicy: dim.timeoutPolicy ?? { requestTimeoutMs: 5000, dimensionTimeoutMs: 30000 },
+      concurrency: dim.concurrency,
+      retryPolicy: dim.retryPolicy,
+      timeoutPolicy: dim.timeoutPolicy,
       fallbackPolicy,
     }
   })
