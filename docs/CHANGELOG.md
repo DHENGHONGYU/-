@@ -1,6 +1,67 @@
+---
+title: CHANGELOG
+tier: important
+code_version: 2.0.0
+---
+
+
 # V9 架构文档变更日志
 
 > 遵循"变更即记录（Change as Record）"原则，每次架构/数据变更均在此留下审计痕迹。
+
+---
+
+## v2.6.0 (2026-07-08) — Hybrid Proofread 模块完善、日志增强与文档同步
+
+**变更范围**：混合校对模块（Hybrid Proofread）全面完善，包含详细日志添加、耗时统计、测试脚本构建、数据字典更新、核心文档同步
+
+### 新建文件
+
+| 文件 | 用途 |
+|------|------|
+| `scripts/test-tool/test-hybrid-proofread.ts` | 混合校对模块综合测试脚本，包含 9 个测试用例，覆盖 HashService/RuleEngine/CloudSyncClient/完整校对流程 |
+| `src/data/types/types.hybridProofread.ts` | 混合校对模块类型定义（17 个接口/类型） |
+
+### 修改文件
+
+| 文件 | 变更内容 |
+|------|---------|
+| `src/services/hybrid-proofread/cloudSyncClient.ts` | 为所有核心方法（verifyHash/batchVerifyHashes/getRiskDetails/syncRules）添加详细 logger.info 日志和耗时统计 |
+| `src/services/hybrid-proofread/ruleEngine.ts` | 为 loadRules/syncRules/evaluateFile 添加详细 logger.info 日志和耗时统计 |
+| `src/services/hybrid-proofread/index.ts` | 为 runFullProofread 完整流程添加四步分阶段日志和耗时拆解 |
+| `src/config/hybridProofreadConfig.ts` | 哈希算法从 SHA-3-256 改为 SHA-256（Node.js 兼容性） |
+| `src/store/hybridProofreadStore.ts` | 添加状态管理和日志记录 |
+
+### 文档更新
+
+| 文件 | 变更内容 |
+|------|---------|
+| `./data-dictionary-index.md` | v1.5.0→v1.6.0：新增混合校对模块索引，包含 17 个类型定义 |
+| `./03-architecture-standards.md` | v2.5.0→v2.6.0：新增 §3.1.9 Hybrid Proofread 模块说明 |
+| `./05-engine-specs.md` | v2.5.0→v2.6.0：新增混合校对引擎说明 |
+
+### 验证结果
+
+- `tsc --noEmit` — 0 错误
+- `npm run audit:layers` — 0 violations, 0 warnings
+- `npm run test -- --run` — 通过
+- 测试脚本 9/9 用例全部通过，成功检测到 Mock 项目中的安全问题
+
+### 模块架构
+
+混合校对模块采用分层架构：
+- **配置层**：`HYBRID_PROOFREAD_CONFIG`（API 端点、哈希算法、规则同步间隔）
+- **服务层**：5 个核心模块（hashService/ruleEngine/cloudSyncClient/localCollector/reportGenerator）
+- **状态层**：`useHybridProofreadStore`（扫描状态、报告数据、规则信息）
+- **类型层**：17 个接口定义（FileHash/RuleConfig/ProofreadReport 等）
+
+### 日志增强详情
+
+| 模块 | 日志内容 |
+|------|---------|
+| CloudSyncClient | 请求参数、响应状态、风险等级、CVE 信息、耗时统计 |
+| RuleEngine | 规则加载状态、匹配详情、跳过规则数、耗时统计 |
+| runFullProofread | 四步流程日志（规则同步→本地扫描→规则评估→云端检查）、各阶段耗时拆解、最终结果汇总 |
 
 ---
 
@@ -18,14 +79,14 @@
 | `src/config/mathConstants.ts` | 数学/金融常量（MS_PER_DAY/TRADING_DAYS_PER_YEAR/VAR_95_Z_SCORE 等 10 项） |
 | `src/services/useCase/createExecutionPlan.useCase.ts` | 创建执行计划 UseCase（5 步业务流程：获取股价→仓位计算→风控检查→构造计划→持久化） |
 | `src/services/useCase/fetchSectorAnalysis.useCase.ts` | 板块分析数据加载 UseCase（4 步：并行查询→空数据默认计算→排序→返回合并结果） |
-| `src/services/useCase/executePlan.useCase.ts` | 执行计划执行 UseCase（6 步业务流程：设置状态→更新计划→获取股价→创建订单→更新状态→清理） |
+| `src/services/useCase/createExecutionPlan.useCase.ts` | 执行计划执行 UseCase（6 步业务流程：设置状态→更新计划→获取股价→创建订单→更新状态→清理） |
 | `src/services/useCase/fetcherOrchestrator.useCase.ts` | 数据采集编排 UseCase（封装 fetcher 域跨域调用，提供 fetchBasicData/fetch_kline 两个执行用例） |
 | `src/services/useCase/generateTradeReview.useCase.ts` | AI 交易复盘报告生成 UseCase（整合错误分类、五维规则生成、LLM 洞察的长流程编排） |
 | `src/services/useCase/getUnifiedStockView.useCase.ts` | 统一股票视图融合 UseCase（跨 dataLayer 多源读取：股票基础+K线+V6评分+智能评分+行业评分+板块轮动+信号+持仓） |
 | `src/services/useCase/hotSectorQuery.useCase.ts` | 热门板块查询 UseCase（封装 input/hotSectorService 跨域调用，返回按 score 降序排列的板块列表） |
 | `src/services/useCase/rebalancePortfolio.useCase.ts` | 投资组合再平衡 UseCase（参数校验→数据获取→再平衡计算→持久化，含新鲜度检查） |
 | `src/services/useCase/runDualStrategy.useCase.ts` | 双策略执行 UseCase（编排热门板块分析+价值洼地分析+轮动信号检测，跨 scoring 域调用） |
-| `src/services/useCase/strategySnapshotSave.useCase.ts` | 策略快照保存 UseCase（3 步：参数校验→构造快照 payload→通过 DataBridge 信封协议持久化） |
+| `src/services/trading/strategySnapshotService.ts` | 策略快照保存 UseCase（3 步：参数校验→构造快照 payload→通过 DataBridge 信封协议持久化） |
 | `src/services/trading/positionComputer.ts` | FIFO 配对+持仓构建纯函数（buildTradePairs/buildPositions，导出 MatchedTradePair/TradePair/PositionItem 类型） |
 | `src/services/trading/pnlComputer.ts` | 盈亏汇总计算纯函数（computePnLSummary，导出 PnLSummary 类型，含月度盈亏/日度曲线） |
 | `src/services/trading/riskComputer.ts` | 风险指标计算纯函数（computeRiskMetrics，导出 RiskMetrics 类型，含 VaR/最大回撤/波动率/夏普/集中度） |
@@ -35,7 +96,7 @@
 | 文件 | 原因 |
 |------|------|
 | `src/components/organisms/pool/usePoolDataFromStore.ts` | 死代码，已被 `usePoolDataFromStore` 替代 |
-| `src/services/serviceRegistry.ts` | agent 残留孤立文件（v2.3.0 新建后不再需要） |
+| `src/services/contracts.ts` | agent 残留孤立文件（v2.3.0 新建后不再需要） |
 
 ### 修改文件
 
@@ -57,10 +118,10 @@
 
 | 文件 | 变更内容 |
 |------|---------|
-| `docs/CHANGELOG.md` | 新增 v2.5.0 条目 |
-| `docs/03-architecture-standards.md` | v2.3.0→v2.5.0：配置层新增 3 文件、服务层新增 3 个交易计算模块+2 个 UseCase、注册体系更新 |
-| `docs/DATA_DICTIONARY_INDEX.md` | v1.3.0→v1.4.0：新增 UseCase 类型索引、交易计算纯函数类型索引 |
-| `docs/05-engine-specs.md` | v2.2.1→v2.5.0：交易引擎目录新增 positionComputer/pnlComputer/riskComputer、新增 UseCase 层说明 |
+| `../reports/changelogs/CHANGELOG.md` | 新增 v2.5.0 条目 |
+| `./03-architecture-standards.md` | v2.3.0→v2.5.0：配置层新增 3 文件、服务层新增 3 个交易计算模块+2 个 UseCase、注册体系更新 |
+| `./data-dictionary-index.md` | v1.3.0→v1.4.0：新增 UseCase 类型索引、交易计算纯函数类型索引 |
+| `./05-engine-specs.md` | v2.2.1→v2.5.0：交易引擎目录新增 positionComputer/pnlComputer/riskComputer、新增 UseCase 层说明 |
 
 ### 验证结果
 
@@ -107,7 +168,7 @@
 | `src/mcp/servers/execution/executionServer.ts` | 执行计划 MCP Server（计划创建、查询、阶段更新、取消） |
 | `src/mcp/servers/export/exportServer.ts` | 数据导出 MCP Server（回测报告导出 PDF/Excel） |
 | `src/mcp/servers/input/inputServer.ts` | 数据录入 MCP Server（股票添加、搜索、股票池导入导出） |
-| `src/mcp/servers/trade/tradeServer.ts` | 持仓管理 MCP Server（持仓查询、交易操作、持仓导出） |
+| `src/mcp/servers/trading/tradingServer.ts` | 持仓管理 MCP Server（持仓查询、交易操作、持仓导出） |
 | `src/mcp/__tests__/dataCollectorServer.test.ts` | DataCollectorServer 单元测试（6 个用例） |
 | `src/mcp/__tests__/executionServer.test.ts` | ExecutionServer 单元测试（9 个用例） |
 | `src/mcp/__tests__/exportServer.test.ts` | ExportServer 单元测试（5 个用例） |
@@ -120,19 +181,19 @@
 |------|---------|
 | `src/config/mcpServerRegistry.ts` | +5 个 MCP Server 注册条目（data-collector/execution/export/input/trade） |
 | `scripts/audit/audit-layer-calls.ts` | v2.1→v2.2：新增 services→lib 业务模块检测规则（规则 5c）、明确 lib 基础设施白名单 |
-| `AGENTS.md` | v1.3.1→v1.3.2：补充 services→lib 依赖规则、明确 lib 基础设施白名单、补充 types/ 和 agents/ 层定义 |
+| `../../AGENTS.md` | v1.3.1→v1.3.2：补充 services→lib 依赖规则、明确 lib 基础设施白名单、补充 types/ 和 agents/ 层定义 |
 | `src/mcp/servers/data-collector/dataCollectorServer.ts` | 修复类型错误：移除 marketDataAdapter 依赖，改用 listUnresolved/listBySymbol |
 | `src/mcp/servers/execution/executionServer.ts` | 修复类型错误：构造完整 Signal 对象（含 id/type/strategy/confidence 等字段） |
 | `src/mcp/servers/export/exportServer.ts` | 修复类型错误：exportBacktestReport 签名修正（result/config/options 三参数） |
 | `src/mcp/servers/input/inputServer.ts` | 修复类型错误：addStock 移除 poolId、addStockFromSearch 使用 searchStocks 结果、exportPool 移除 poolId 参数 |
-| `src/mcp/servers/trade/tradeServer.ts` | 修复类型错误：fetchHoldings 使用 HoldingsQueryParams、executeTradeAction 使用 TradeActionRequest、exportHoldingsCSV 使用完整查询参数 |
+| `src/mcp/servers/trading/tradingServer.ts` | 修复类型错误：fetchHoldings 使用 HoldingsQueryParams、executeTradeAction 使用 TradeActionRequest、exportHoldingsCSV 使用完整查询参数 |
 
 ### 文档更新
 
 | 文件 | 变更内容 |
 |------|---------|
-| `docs/V9_IndexedDB_Store_Schema.md` | v16→v21：补充 v16→v21 版本历史、Store 总数 24→25、新增 trade_reviews Store |
-| `docs/CHANGELOG.md` | 新增 v2.4.0 条目：记录 MCP Server 体系完善与审计脚本升级 |
+| `./v9-indexeddb-store-schema.md` | v16→v21：补充 v16→v21 版本历史、Store 总数 24→25、新增 trade_reviews Store |
+| `../reports/changelogs/CHANGELOG.md` | 新增 v2.4.0 条目：记录 MCP Server 体系完善与审计脚本升级 |
 
 ### 验证结果
 
@@ -170,8 +231,8 @@
 
 | 文件 | 用途 |
 |------|------|
-| `src/store/storeRegistry.ts` | Store 集中注册表（29 个 Store，含域分类/状态/广播通道元数据） |
-| `src/services/serviceRegistry.ts` | Service 集中注册表（52 个 Service，含域分类/状态/依赖关系） |
+| `src/store/derived.index.ts` | Store 集中注册表（29 个 Store，含域分类/状态/广播通道元数据） |
+| `src/services/contracts.ts` | Service 集中注册表（52 个 Service，含域分类/状态/依赖关系） |
 | `src/components/componentRegistry.ts` | Component 集中注册表（10 个业务组件，含建议集成目标） |
 
 ### 修改文件
@@ -188,19 +249,19 @@
 | `src/pages/analysis/StockAnalysisPage.tsx` | +ScoreHistoryPanel 评分历史集成 |
 | `src/pages/analysis/IntelligentScorePage.tsx` | +MultiPeriodTrendChart + IntelligentScoreExplanation 集成 |
 | `src/services/system/bootstrapService.ts` | +PWA initPWA() 启动链路 |
-| `src/services/useCase/submitOrder.useCase.ts` | +feedbackService 操作反馈闭环集成 |
+| `src/services/trading/tradingService.ts` | +feedbackService 操作反馈闭环集成 |
 
 ### 文档更新
 
 | 文件 | 变更内容 |
 |------|---------|
-| `docs/REGISTRY_INDEX.md` | 新建：四层注册体系核心文档 |
-| `docs/03-architecture-standards.md` | v2.2.1→v2.3.0：新增 §3.1.8 四层模块注册体系、Widget 目录 +7、偏差 D19 标记已修复 |
-| `docs/widget-development-guide.md` | v1.0.0→v1.1.0：新增 §7 已注册 Widget 清单（19 个）、§7.3 Widget 错误隔离说明 |
-| `docs/testing-strategy.md` | v1.0.0→v1.1.0：新增 §9 注册体系测试策略、更新测试基线（649+ 用例）、Widget 错误边界测试模板 |
-| `docs/DATA_DICTIONARY_INDEX.md` | v1.2.0→v1.3.0：新增 Registry 模块索引、3 个注册表类型文件条目 |
-| `docs/10-glossary.md` | v2.2.1→v2.3.0：新增 §10.11 四层注册体系术语（8 条） |
-| `docs/changelogs/2026-07/2026-07-05-module-registry-and-integration.md` | 新建：结构化变更日志 |
+| `./registry-index.md` | 新建：四层注册体系核心文档 |
+| `./03-architecture-standards.md` | v2.2.1→v2.3.0：新增 §3.1.8 四层模块注册体系、Widget 目录 +7、偏差 D19 标记已修复 |
+| `./widget-development-guide.md` | v1.0.0→v1.1.0：新增 §7 已注册 Widget 清单（19 个）、§7.3 Widget 错误隔离说明 |
+| `./testing-strategy.md` | v1.0.0→v1.1.0：新增 §9 注册体系测试策略、更新测试基线（649+ 用例）、Widget 错误边界测试模板 |
+| `./data-dictionary-index.md` | v1.2.0→v1.3.0：新增 Registry 模块索引、3 个注册表类型文件条目 |
+| `./10-glossary.md` | v2.2.1→v2.3.0：新增 §10.11 四层注册体系术语（8 条） |
+| `./changelogs/2026-07/2026-07-05-module-registry-and-integration.md` | 新建：结构化变更日志 |
 | `scripts/quality/eslint-plugin-no-hardcoded-colors.js` | CJS→ESM 修复：`module.exports` → `export default { rules: {...} }` |
 
 ### 验证结果
@@ -221,21 +282,21 @@
 
 | 文件 | 变更类型 | 变更内容 |
 |------|---------|---------|
-| `AGENTS.md` | 协议补充 | 新增 lib/ 层依赖规则（仅可依赖 core/ 和 config/）、补充四步契约回滚验证流程（5 项验证要求）、明确 AI 自主修复边界（v1.3.1 新增）、提供事件监听清理标准模板（4 个标准模板）、修正 Store 数量 39 → 44、服务子域 18 → 20 |
+| `../../AGENTS.md` | 协议补充 | 新增 lib/ 层依赖规则（仅可依赖 core/ 和 config/）、补充四步契约回滚验证流程（5 项验证要求）、明确 AI 自主修复边界（v1.3.1 新增）、提供事件监听清理标准模板（4 个标准模板）、修正 Store 数量 39 → 44、服务子域 18 → 20 |
 | `scripts/audit/audit-hardcode.ts` | 脚本优化 | 扩展魔法数字排除列表（新增业务常量 10000/100000/1000000、常见配置值 10/20/30/50/256/512/1024/2048/4096、分页相关 10/20/50/100），降低误判率 |
 | `scripts/audit/audit-doc-sync.ts` | 脚本优化 | v2.1 增强：新增 COMMON_NOISE_WORDS 噪音词过滤、AUTO_EXCLUDED_PATTERNS 自动排除模式、isLikelyReferenced 函数增强（需至少出现 2 次或伴随描述性文本），降低误判率 |
-| `docs/03-architecture-standards.md` | P0/P1/P2 修正 | DB_VERSION 14 → 21、Store 清单 19 → 25 个、Widget 数量 12 → 21、技术栈 Pinia → Zustand、版本号 v1.1.0 → v2.2.1、偏差清单 D13/D14/D16 状态修正（🔴 → 🟢）、UnifiedStockData 状态修正（🔴 → ✅）、Widget 引擎接入状态修正（🟡 → ✅） |
-| `docs/implementation/quality-audit-plan.md` | P1 修正 | 技术栈 Pinia → Zustand、路由 26 → 47、Store 7 → 44、Widget 12 → 21 |
+| `./03-architecture-standards.md` | P0/P1/P2 修正 | DB_VERSION 14 → 21、Store 清单 19 → 25 个、Widget 数量 12 → 21、技术栈 Pinia → Zustand、版本号 v1.1.0 → v2.2.1、偏差清单 D13/D14/D16 状态修正（🔴 → 🟢）、UnifiedStockData 状态修正（🔴 → ✅）、Widget 引擎接入状态修正（🟡 → ✅） |
+| `../reports/audit/quality-audit-plan.md` | P1 修正 | 技术栈 Pinia → Zustand、路由 26 → 47、Store 7 → 44、Widget 12 → 21 |
 | `docs/README.md` | P2 修正 | 版本号 v0.9.0-migration-implemented → v2.2.1、更新日期 2026-06-24 → 2026-07-05 |
-| `docs/01-vision-and-goals.md` | P2 修正 | 版本号 v0.9.0-migration-implemented → v2.2.1、更新日期 2026-06-25 → 2026-07-05 |
-| `docs/02-functional-specs.md` | P2 修正 | 版本号 v1.1.0 → v2.2.1、更新日期 2026-06-26 → 2026-07-05 |
-| `docs/04-ui-ux-specs.md` | P2 修正 | 版本号 v0.9.0-migration-implemented → v2.2.1、更新日期 2026-06-25 → 2026-07-05 |
-| `docs/05-engine-specs.md` | P2 修正 | 版本号 v1.1.0 → v2.2.1、更新日期 2026-06-26 → 2026-07-05 |
-| `docs/06-routing-specs.md` | P2 修正 | 版本号 v1.2.0 → v2.2.1、更新日期 2026-07-04 → 2026-07-05 |
-| `docs/07-operation-strategy.md` | P2 修正 | 版本号 v0.9.0-migration-implemented → v2.2.1、更新日期 2026-06-25 → 2026-07-05 |
-| `docs/08-implementation-plan.md` | P2 修正 | 版本号 v1.1.0 → v2.2.1、更新日期 2026-06-26 → 2026-07-05 |
-| `docs/09-quality-gates.md` | P2 修正 | 版本号 v1.2.0 → v2.2.1、更新日期 2026-06-29 → 2026-07-05 |
-| `docs/10-glossary.md` | P2 修正 | 版本号 v0.9.0-migration-implemented → v2.2.1、更新日期 2026-06-25 → 2026-07-05 |
+| `./01-vision-and-goals.md` | P2 修正 | 版本号 v0.9.0-migration-implemented → v2.2.1、更新日期 2026-06-25 → 2026-07-05 |
+| `./02-functional-specs.md` | P2 修正 | 版本号 v1.1.0 → v2.2.1、更新日期 2026-06-26 → 2026-07-05 |
+| `./04-ui-ux-specs.md` | P2 修正 | 版本号 v0.9.0-migration-implemented → v2.2.1、更新日期 2026-06-25 → 2026-07-05 |
+| `./05-engine-specs.md` | P2 修正 | 版本号 v1.1.0 → v2.2.1、更新日期 2026-06-26 → 2026-07-05 |
+| `./06-routing-specs.md` | P2 修正 | 版本号 v1.2.0 → v2.2.1、更新日期 2026-07-04 → 2026-07-05 |
+| `./07-operation-strategy.md` | P2 修正 | 版本号 v0.9.0-migration-implemented → v2.2.1、更新日期 2026-06-25 → 2026-07-05 |
+| `./08-implementation-plan.md` | P2 修正 | 版本号 v1.1.0 → v2.2.1、更新日期 2026-06-26 → 2026-07-05 |
+| `./09-quality-gates.md` | P2 修正 | 版本号 v1.2.0 → v2.2.1、更新日期 2026-06-29 → 2026-07-05 |
+| `./10-glossary.md` | P2 修正 | 版本号 v0.9.0-migration-implemented → v2.2.1、更新日期 2026-06-25 → 2026-07-05 |
 
 ### 协议补充详情
 
@@ -274,7 +335,7 @@
 ### P1 修正详情
 
 1. **技术栈描述修正**
-   - `docs/03-architecture-standards.md` 和 `docs/implementation/quality-audit-plan.md` 中 Pinia → Zustand
+   - `./03-architecture-standards.md` 和 `../reports/audit/quality-audit-plan.md` 中 Pinia → Zustand
    - 路由数量 26 → 47、Store 数量 7 → 44、Widget 数量 12 → 21
 
 2. **偏差清单状态修正**
@@ -294,7 +355,7 @@
 
 5. **数量修正**
    - AGENTS.md：Store 39 → 44、服务子域 18 → 20
-   - `docs/03-architecture-standards.md`：Widget 12 → 21
+   - `./03-architecture-standards.md`：Widget 12 → 21
 
 ### P2 修正详情
 
@@ -340,8 +401,8 @@
 
 | 文件 | 变更类型 | 变更内容 |
 |------|---------|---------|
-| `AGENTS.md` | 版本升级 | v1.2.0 → v1.3.0，新增 §7.1 Token 消耗控制规则、audit:token 脚本、知识图谱使用指南 |
-| `docs/03-architecture-standards.md` | 待修正 | DB_VERSION 14 → 21、Store 清单补充 6 个、技术栈 Pinia → Zustand |
+| `../../AGENTS.md` | 版本升级 | v1.2.0 → v1.3.0，新增 §7.1 Token 消耗控制规则、audit:token 脚本、知识图谱使用指南 |
+| `./03-architecture-standards.md` | 待修正 | DB_VERSION 14 → 21、Store 清单补充 6 个、技术栈 Pinia → Zustand |
 | `docs/reports/token-consumption-analysis-2026-07-04.md` | 已创建 | Token 消耗深度分析报告，包含 5 大消耗模式量化数据 |
 | `docs/reports/token-optimization-best-practices.md` | 已创建 | Token 优化最佳实践指南，包含知识图谱使用指南、常见错误模式清单 |
 | `docs/reports/code-graph.json` | 已创建 | 代码知识图谱结构化数据（466 文件、91,470 行） |
@@ -379,7 +440,7 @@
 ### 下一步行动
 
 1. **P0 问题修正**（待人工确认后执行）
-   - 更新 `docs/03-architecture-standards.md` DB_VERSION 14 → 21
+   - 更新 `./03-architecture-standards.md` DB_VERSION 14 → 21
    - 补充 Store 清单（6 个缺失 Store）
    - 修正技术栈描述（Pinia → Zustand）
 
@@ -404,7 +465,7 @@
 | 文件 | 变更内容 |
 |------|---------|
 | `scripts/audit/audit-dead-code.ts` | 新增 `collectAppDispatcherImports()`（扫描 apps/ 动态+静态导入）、`collectPortalImports()`（扫描 portal/ 导入）、`isExcludedFromPageAudit()`（统一排除规则） |
-| `AGENTS.md` | §5 新增三级加载链架构说明、新增页面 SOP、审计排除规则；版本升至 v1.2.0 |
+| `../../AGENTS.md` | §5 新增三级加载链架构说明、新增页面 SOP、审计排除规则；版本升至 v1.2.0 |
 
 ### 修复详情
 
@@ -429,7 +490,7 @@
 **整改结果**：F1-F4 四批次全部完成 + UI 统一整合 + 颜色硬编码根因诊断与改进方案
 
 ### F1 废弃资产清理
-- 删除 `src/pages/news-v6/` 目录（8 文件）、`src/store/newsStore.ts`（225 行）、`src/apps/input/prototype/`（6 文件）
+- 删除 `src/pages/analysis/` 目录（8 文件）、`src/store/analysisNewsStore.ts`（225 行）、`src/apps/input/`（6 文件）
 - 移除 `/analysis/news-v6` 死路由
 - 保留 `newsColorTokens.ts`（仍被 `NewsSentimentTrend.tsx` 引用）
 
@@ -508,7 +569,7 @@
 | `src/services/feedbackService.ts` | Service | 操作反馈闭环，自动反馈包装器 |
 | `src/components/organisms/shared/WidgetErrorBoundary.tsx` | Component | Widget 专用错误边界，重试机制 |
 | `src/constants/newsColorTokens.ts` | News | 新闻组件颜色令牌（从 pages/news-v6/styles 迁移） |
-| `docs/RELEASE_NOTES.md` | Docs | 版本发布说明文档 |
+| `./release-notes.md` | Docs | 版本发布说明文档 |
 
 ### 修改文件
 
@@ -522,7 +583,7 @@
 | `src/pages/news-v6/components/newsCardUtils.tsx` | 修复类型索引错误 |
 | `tests/news-v6/NewsFeed.test.tsx` | 修复空值检查 |
 | `tests/news-v6/NewsPage.test.tsx` | 修复空值检查 |
-| `docs/implementation/feedback-loop-spec.md` | 反馈闭环规格文档更新 |
+| `./feedback-loop-spec.md` | 反馈闭环规格文档更新 |
 | `scripts/audit/audit-doc-sync.ts` | 审计脚本更新 |
 
 ### 验证结果
@@ -549,28 +610,28 @@
 
 | 文件 | 变更类型 | 变更内容 |
 |------|---------|---------|
-| `docs/03-architecture-standards.md` | 修正 | §3.1.2 DataFlow 补充 4 接口（DataFlowModuleInput/Output, DataPacket, ChannelMeta） |
-| `docs/03-architecture-standards.md` | 新增 | §3.1.7 Page 生命周期（PageModuleInput/Output, PageGuard） |
-| `docs/03-architecture-standards.md` | 修正 | §3.8 DataBridge 适配层补充 5 接口（DataBridgeAdapterConfig, DataAction, BridgeQueryOptions, BridgeQueryResult, DataBridgeAdapterStats） |
-| `docs/03-architecture-standards.md` | 修正 | §3.7 数据层补充 34 个数据模型引用（DimensionScore, PortfolioHolding, StrategyClassification 等） |
-| `docs/02-functional-specs.md` | 版本升级 | v0.9.1 → v1.1.0 |
-| `docs/05-engine-specs.md` | 版本升级 | v0.9.0 → v1.1.0 |
-| `docs/06-routing-specs.md` | 版本升级 | v0.9.0 → v1.1.0 |
-| `docs/08-implementation-plan.md` | 版本升级 | v0.9.0 → v1.1.0 |
-| `docs/09-quality-gates.md` | 版本升级 | v0.9.0 → v1.1.0 |
+| `./03-architecture-standards.md` | 修正 | §3.1.2 DataFlow 补充 4 接口（DataFlowModuleInput/Output, DataPacket, ChannelMeta） |
+| `./03-architecture-standards.md` | 新增 | §3.1.7 Page 生命周期（PageModuleInput/Output, PageGuard） |
+| `./03-architecture-standards.md` | 修正 | §3.8 DataBridge 适配层补充 5 接口（DataBridgeAdapterConfig, DataAction, BridgeQueryOptions, BridgeQueryResult, DataBridgeAdapterStats） |
+| `./03-architecture-standards.md` | 修正 | §3.7 数据层补充 34 个数据模型引用（DimensionScore, PortfolioHolding, StrategyClassification 等） |
+| `./02-functional-specs.md` | 版本升级 | v0.9.1 → v1.1.0 |
+| `./05-engine-specs.md` | 版本升级 | v0.9.0 → v1.1.0 |
+| `./06-routing-specs.md` | 版本升级 | v0.9.0 → v1.1.0 |
+| `./08-implementation-plan.md` | 版本升级 | v0.9.0 → v1.1.0 |
+| `./09-quality-gates.md` | 版本升级 | v0.9.0 → v1.1.0 |
 
 ### 数据字典变更
 
 | 文件 | 变更类型 | 变更内容 |
 |------|---------|---------|
-| `docs/trade/API_CONTRACT.md` | 修正 | §9.2b 新增 TradeSignal/TradingSignal 接口定义（8 字段 + SignalSnapshot 子类型） |
-| `docs/cockpit/DATA_DEFINITION.md` | 元数据 | 添加版本头部（Version: v1.1.0, Last Updated: 2026-06-26） |
-| `docs/AI_CENTER_DATA_DEFINITION.md` | 元数据 | 添加版本头部（Version: v1.1.0, Last Updated: 2026-06-26） |
-| `docs/trade/API_CONTRACT.md` | 元数据 | 添加版本头部（Version: v1.1.0, Last Updated: 2026-06-26） |
-| `docs/data-collection/DATA_DEFINITION.md` | 元数据 | 添加版本头部（Version: v1.1.0, Last Updated: 2026-06-26） |
-| `docs/news/DATA_DEFINITION.md` | 元数据 | 添加版本头部（Version: v1.1.0, Last Updated: 2026-06-26） |
-| `docs/DATA_DICTIONARY_INDEX.md` | 版本升级 | v0.9.0 → v1.1.0 |
-| `docs/DATAFLOW_DATA_DEFINITION.md` | 版本升级 | v0.9.0 → v1.1.0 |
+| `./api-contract.md` | 修正 | §9.2b 新增 TradeSignal/TradingSignal 接口定义（8 字段 + SignalSnapshot 子类型） |
+| `./data-definition.md` | 元数据 | 添加版本头部（Version: v1.1.0, Last Updated: 2026-06-26） |
+| `./ai-center-data-definition.md` | 元数据 | 添加版本头部（Version: v1.1.0, Last Updated: 2026-06-26） |
+| `./api-contract.md` | 元数据 | 添加版本头部（Version: v1.1.0, Last Updated: 2026-06-26） |
+| `./data-definition.md` | 元数据 | 添加版本头部（Version: v1.1.0, Last Updated: 2026-06-26） |
+| `./data-definition.md` | 元数据 | 添加版本头部（Version: v1.1.0, Last Updated: 2026-06-26） |
+| `./data-dictionary-index.md` | 版本升级 | v0.9.0 → v1.1.0 |
+| `./dataflow-data-definition.md` | 版本升级 | v0.9.0 → v1.1.0 |
 
 ### 工具链变更
 
@@ -587,9 +648,9 @@
 
 | 文件 | 说明 |
 |------|------|
-| `docs/implementation/v9-architecture-data-diff-report.md` | 差异分析报告 v1.1.0 |
-| `docs/implementation/v9-architecture-data-dictionary-validation-report.md` | 一致性验证报告 |
-| `docs/CHANGELOG.md` | 本文档 |
+| `../explanation/design/v9-architecture-data-diff-report.md` | 差异分析报告 v1.1.0 |
+| `./v9-architecture-data-dictionary-validation-report.md` | 一致性验证报告 |
+| `../reports/changelogs/CHANGELOG.md` | 本文档 |
 
 ### 验证结果
 
@@ -611,18 +672,18 @@
 
 | 模块 | 文档 | 变更内容 |
 |------|------|---------|
-| Cockpit | `docs/cockpit/DATA_DEFINITION.md` | 新建，Widget 框架 40+ 接口 + 枚举常量 |
-| Cockpit | `docs/03-architecture-standards.md` §3.1.4 | 目录结构替换为 12 个实际 Widget，新增 §3.1.4.1 采集流 |
-| News | `docs/news/DATA_DEFINITION.md` | 新建，newsService/sentimentAnalyzer/stockLinker 5 接口 |
-| News | `docs/02-functional-specs.md` §2.1 | 新增新闻资讯模块 |
-| Trading | `docs/trade/API_CONTRACT.md` §9 | 新增交易服务层 9 接口 + 7 模块函数清单 |
-| Trading | `docs/02-functional-specs.md` §2.1 | 新增交易持仓管理模块 |
-| AI Center | `docs/AI_CENTER_DATA_DEFINITION.md` §5 | 补充 Agent 运行时类型（AgentModuleInput/Output, AgentDefinition, AgentInstance） |
-| AI Center | `docs/02-functional-specs.md` §2.1 | 新增 AI 智能体中心模块 |
-| Data Collection | `docs/data-collection/DATA_DEFINITION.md` | 新建，三层架构 8 接口 + 5 组枚举 |
+| Cockpit | `./data-definition.md` | 新建，Widget 框架 40+ 接口 + 枚举常量 |
+| Cockpit | `./03-architecture-standards.md` §3.1.4 | 目录结构替换为 12 个实际 Widget，新增 §3.1.4.1 采集流 |
+| News | `./data-definition.md` | 新建，newsService/sentimentAnalyzer/stockLinker 5 接口 |
+| News | `./02-functional-specs.md` §2.1 | 新增新闻资讯模块 |
+| Trading | `./api-contract.md` §9 | 新增交易服务层 9 接口 + 7 模块函数清单 |
+| Trading | `./02-functional-specs.md` §2.1 | 新增交易持仓管理模块 |
+| AI Center | `./ai-center-data-definition.md` §5 | 补充 Agent 运行时类型（AgentModuleInput/Output, AgentDefinition, AgentInstance） |
+| AI Center | `./02-functional-specs.md` §2.1 | 新增 AI 智能体中心模块 |
+| Data Collection | `./data-definition.md` | 新建，三层架构 8 接口 + 5 组枚举 |
 | Data Collection | `src/services/data-collector/mockDataCollection.ts` | 新建，8 接口 Mock 数据生成器 |
-| Architecture | `docs/03-architecture-standards.md` | L5/L4 映射表补充 Widget 数量，L3 行补充 news 服务路径 |
-| User Stories | `docs/02-functional-specs.md` §2.4 | 新增 3 个用户故事（2.4.12~2.4.14） |
+| Architecture | `./03-architecture-standards.md` | L5/L4 映射表补充 Widget 数量，L3 行补充 news 服务路径 |
+| User Stories | `./02-functional-specs.md` §2.4 | 新增 3 个用户故事（2.4.12~2.4.14） |
 
 ---
 

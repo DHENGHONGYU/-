@@ -1,6 +1,27 @@
-# CODE-REVIEW.md — V9 代码审查标准与流程
+---
+title: code-review
+type: reference
+domain: project
+phase: development
+tier: reference
+status: active
+maintainer: V9 Architecture Team
+summary: "code-review - reference documentation (project)"
+tags: [project, review, reference, governance, documentation, audit]
+version: v1.0.0
+last_updated: 2026-07-17
+code_version: 2.0.0
+doc_id: V9-DOC-PROJ-181
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
+---
 
-> **版本**: v1.0.0 | **日期**: 2026-07-05
+# code-review.md — V9 代码审查标准与流程
+
+> **Version**: v1.0.0 | **日期**: 2026-07-05
 > **适用范围**: 所有人工代码审查（PR Review、Pair Review、Architecture Review）
 > **强制等级**: P0 问题必须修复后才能合并
 
@@ -51,27 +72,27 @@
 
 ### 2.1 强制检查项（P0 - 必须修复）
 
-#### ✅ 架构合规性
+#### ? 架构合规性
 
 - [ ] **分层规则**: 无跨层调用违规（通过 `npm run audit:layers`）
 - [ ] **依赖方向**: import 路径符合 AGENTS.md §1 依赖方向规则
 - [ ] **四步集成**: 新模块按类型定义 → Store → Service → UI 顺序集成
-- [ ] **路由注册**: 新增页面在 `routes.ts` + App 分发器 + `docs/06-routing-specs.md` 三处同步更新
+- [ ] **路由注册**: 新增页面在 `routes.ts` + App 分发器 + `./06-routing-specs.md` 三处同步更新
 
-#### ✅ 类型安全
+#### ? 类型安全
 
 - [ ] **无 any 类型**: 未使用 `any`（ESLint `@typescript-eslint/no-explicit-any: error`）
 - [ ] **无 ts-ignore**: 未使用 `@ts-ignore`（使用 `@ts-expect-error` + 注释）
 - [ ] **Interface 定义**: 所有数据结构有 TypeScript Interface
 - [ ] **类型测试**: 复杂泛型有 `Expect<Equals>` 测试（位于 `tests/__tests__/types/`）
 
-#### ✅ 零硬编码
+#### ? 零硬编码
 
 - [ ] **颜色令牌**: 未直接使用 HEX 或 Tailwind 颜色类（通过 `npm run audit:hardcode`）
 - [ ] **魔法数字**: 3位以上数字已提取为 const 或 config
 - [ ] **配置注入**: 引擎层阈值/权重/公式参数从 `config.ts` 注入
 
-#### ✅ 功能正确性
+#### ? 功能正确性
 
 - [ ] **单元测试**: 新增代码有对应单元测试（覆盖率 > 80%）
 - [ ] **边界处理**: 处理了 null/undefined/empty 等边界情况
@@ -80,7 +101,7 @@
 
 ### 2.2 推荐检查项（P1 - 强烈建议）
 
-#### 🔍 代码质量
+#### ?? 代码质量
 
 - [ ] **命名规范**: 变量/函数/组件命名清晰、符合约定（AGENTS.md §4）
 - [ ] **函数长度**: 单个函数 < 50 行（超过需拆分）
@@ -88,29 +109,29 @@
 - [ ] **复杂度**: 圈复杂度 < 10（通过 ESLint `complexity` 规则）
 - [ ] **重复代码**: 无复制粘贴代码（提取为公共函数）
 
-#### 🔍 性能优化
+#### ?? 性能优化
 
 - [ ] **避免不必要的重渲染**: React 组件使用 `React.memo` / `useMemo` / `useCallback`
 - [ ] **懒加载**: 大型组件使用 `React.lazy()` 或动态 import
 - [ ] **防抖节流**: 搜索/滚动等高频操作有防抖/节流
 - [ ] **内存泄漏**: 定时器/订阅在组件卸载时清理
 
-#### 🔍 可维护性
+#### ?? 可维护性
 
 - [ ] **注释清晰**: 复杂逻辑有 JSDoc 注释
 - [ ] **日志规范**: 核心分支有 `logger.info` 打印（格式：`[模块名] 操作名`）
-- [ ] **文档同步**: 类型定义变更同步更新 `docs/06-routing-specs.md` 或数据字典
+- [ ] **文档同步**: 类型定义变更同步更新 `./06-routing-specs.md` 或数据字典
 - [ ] **TODO/FIXME**: 临时方案有 JSDoc 注释说明原因和后续计划
 
 ### 2.3 可选检查项（P2 - 建议改进）
 
-#### 💡 代码风格
+#### 代码风格
 
 - [ ] **一致性**: 代码风格与项目现有代码一致
 - [ ] **简化代码**: 可以用更简洁方式实现（如数组方法替代循环）
 - [ ] **类型推导**: 可以利用 TypeScript 类型推导减少冗余类型注解
 
-#### 💡 最佳实践
+#### 最佳实践
 
 - [ ] **React 最佳实践**: 避免内联对象/函数定义（导致不必要的重渲染）
 - [ ] **Zustand 最佳实践**: 使用 shallow 比较避免不必要的订阅触发
@@ -198,7 +219,7 @@ npm run test:e2e
 ### 4.1 PR 描述模板
 
 ```markdown
-## 📝 变更摘要
+## 变更摘要
 
 **变更类型**: [ ] 新功能 [ ] Bug 修复 [ ] 重构 [ ] 文档 [ ] 性能优化
 
@@ -208,11 +229,11 @@ npm run test:e2e
 - [ ] 数据库 Schema 变更
 - [ ] 接口签名变更
 
-## 🎯 变更目的
+## 变更目的
 
 <!-- 描述为什么需要这个变更 -->
 
-## 📦 变更内容
+## ?? 变更内容
 
 <!-- 列出主要变更点 -->
 
@@ -220,7 +241,7 @@ npm run test:e2e
 - 
 - 
 
-## ✅ 自检清单
+## ? 自检清单
 
 - [ ] 通过本地验证命令（§3.3）
 - [ ] 通过架构审计（audit:layers/hardcode/deadcode）
@@ -229,11 +250,11 @@ npm run test:e2e
 - [ ] 无 TypeScript 类型错误
 - [ ] 无 ESLint 错误/警告
 
-## 📸 截图/录屏（可选）
+## ?? 截图/录屏（可选）
 
 <!-- 如涉及 UI 变更，附上前后对比图 -->
 
-## 🔗 相关链接
+## ?? 相关链接
 
 <!-- 关联 Issue、TAPD 需求等 -->
 
@@ -243,22 +264,22 @@ npm run test:e2e
 
 ### 4.2 审查意见模板
 
-#### ✅ 批准（Approve）
+#### ? 批准（Approve）
 
 ```markdown
-✅ **LGTM** (Looks Good To Me)
+? **LGTM** (Looks Good To Me)
 
 所有 P0 检查项通过，代码质量符合要求。可以合并。
 ```
 
-#### ⚠️ 请求修改（Request Changes）
+#### ?? 请求修改（Request Changes）
 
 ```markdown
-❌ **需要修改** (P0 问题)
+? **需要修改** (P0 问题)
 
 ### P0 问题（必须修复）
 
-1. **[架构违规]** `src/services/xxx.ts` 直接调用了 `db`，应通过 `DataBridge.forward()`
+1. **[架构违规]** `src/services/contracts.ts` 直接调用了 `db`，应通过 `DataBridge.forward()`
    - 位置: `src/services/xxx.ts:45`
    - 修复建议: 改用 `DataBridge.forward(ENVELOPE_ACTION.XXX, data)`
 
@@ -267,7 +288,7 @@ npm run test:e2e
 
 ### P1 问题（强烈建议）
 
-3. **[代码质量]** `src/services/xxx.ts:120-180` 函数过长（60 行）
+3. **[代码质量]** `src/services/contracts.ts` 函数过长（60 行）
    - 修复建议: 拆分为 `validateInput()` + `processData()` + `formatOutput()`
 
 ### P2 问题（可选改进）
@@ -280,10 +301,10 @@ npm run test:e2e
 请修复 P0 问题后重新提交审查。
 ```
 
-#### 💬 讨论（Comment）
+#### 讨论（Comment）
 
 ```markdown
-💬 **问题/建议**
+?? **问题/建议**
 
 在 `src/services/xxx.ts:45`，为什么要使用 `any` 类型？是否可以用泛型替代？
 
@@ -314,20 +335,20 @@ npm run test:e2e
 
 #### 核心模块（`src/core/`, `src/services/`, `src/store/`）
 
-- ✅ **必须 2 人审查**
-- ✅ **重点检查**: 架构合规性、类型安全、性能、错误处理
-- ✅ **必须**: 单元测试（覆盖率 > 90%）
+- ? **必须 2 人审查**
+- ? **重点检查**: 架构合规性、类型安全、性能、错误处理
+- ? **必须**: 单元测试（覆盖率 > 90%）
 
 #### UI 组件（`src/components/`, `src/pages/`）
 
-- ✅ **必须 1 人审查**
-- ✅ **重点检查**: 颜色令牌、事件清理、性能优化（重渲染）
-- ✅ **推荐**: E2E 测试（涉及关键流程）
+- ? **必须 1 人审查**
+- ? **重点检查**: 颜色令牌、事件清理、性能优化（重渲染）
+- ? **推荐**: E2E 测试（涉及关键流程）
 
 #### 配置文件（`src/config/`, `src/constants/`）
 
-- ✅ **必须 1 人审查**（最好是架构师）
-- ✅ **重点检查**: 命名规范、注释清晰、无硬编码
+- ? **必须 1 人审查**（最好是架构师）
+- ? **重点检查**: 命名规范、注释清晰、无硬编码
 
 ---
 
