@@ -23,7 +23,7 @@ vi.mock('@/hooks/usePerfTrace', () => ({
   usePerfTrace: vi.fn(),
 }))
 
-let captured: { lines?: unknown[]; referenceLines?: unknown[]; [k: string]: unknown } = {}
+let captured: Record<string, unknown> = {}
 
 vi.mock('recharts', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports

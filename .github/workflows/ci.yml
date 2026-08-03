@@ -5,7 +5,7 @@ name: CI (dev branches)
 
 on:
   push:
-    branches: ['feat/**', 'feature/**']
+    branches: ['feat/**', 'feature/**', 'fix/**']
   workflow_dispatch:
 
 permissions:
@@ -57,6 +57,60 @@ jobs:
           path: coverage/
           retention-days: 7
 
+  chart-industry-tests:       # 5 件套图表组件测试（feat 分支早反馈，强制阻塞）
+    name: Chart industry tests (5-piece, P0 blocking)
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 22
+          cache: 'npm'
+      - run: npm ci
+      - name: Run chart industry tests (106 cases)
+        run: npm run test:chart:industry
+        env:
+          CI: true
+      - name: Generate HTML report
+        if: always()
+        run: npm run report:chart
+      - name: Upload chart test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-chart-industry-test-report
+          path: |
+            outputs/test-results/chart-tests.json
+            outputs/test-results/chart-report.html
+          retention-days: 7
+
+  bootstrap-p0-gate:          # P0 强制门禁：种子数据重试 + 内存降级（开发分支必检，阻塞）
+    name: Bootstrap P0 gate (seed retry + memory fallback)
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 22
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      - name: P0-1 种子数据重试 + P0-2 内存降级模式
+        run: npm run test:bootstrap:p0
+        env:
+          CI: true
+      - name: Upload bootstrap P0 test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-bootstrap-p0-test-report
+          path: |
+            src/services/system/bootstrapService.test.ts
+          retention-days: 7
+
   layers:                     # 快边界审计留开发分支 PR/推送
     name: Layer boundary audit
     needs: smoke
@@ -71,3 +125,55 @@ jobs:
       - run: npm ci
       - name: audit:layers (禁止跨层调用)
         run: npm run audit:layers
+
+  databridge-gate:           # DataBridge 完整性快速门禁（开发分支必检，不阻塞推送）
+    name: DataBridge integrity gate
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 22
+          cache: 'npm'
+      - run: npm ci
+      - name: DataBridge 数据流转 + bootstrapService + ACL 完整性检查
+        run: npm run test:databridge:gate
+        env:
+          CI: true
+
+  git-autopush-test:          # GitAutoPush 模块 Pester 测试（开发分支门禁，不阻塞）
+    name: GitAutoPush module tests
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      - name: Setup PowerShell
+        shell: pwsh
+        run: |
+          Write-Host "PowerShell version: $($PSVersionTable.PSVersion)"
+          Install-Module -Name Pester -Force -SkipPublisherCheck -Scope CurrentUser
+      - name: Run GitAutoPush Pester tests
+        shell: pwsh
+        run: |
+          $config = New-PesterConfiguration
+          $config.Run.Path = ".workbuddy\tests\GitAutoPush.Tests.ps1"
+          $config.Output.Verbosity = "Detailed"
+          $config.TestResult.Enabled = $true
+          $config.TestResult.OutputPath = ".workbuddy\tests\testResults.xml"
+          $config.TestResult.OutputFormat = "NUnitXml"
+          Invoke-Pester -Configuration $config
+      - name: Upload GitAutoPush test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-git-autopush-test-results
+          path: |
+            .workbuddy/tests/testResults.xml
+          retention-days: 7

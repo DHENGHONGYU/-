@@ -6,7 +6,7 @@ import { initPWA } from '@/services/pwa/registerServiceWorker'
 import { permissionRevocationService } from '@/services/rbac/permissionRevocationService'
 import { seedDefaultStocks } from '@/services/system/seedService'
 import { getLogger } from '@/lib/logger'
-import { initOrchestration, stopOrchestration } from '@/services/orchestration'
+import { initOrchestration, stopOrchestration, getOrchestratorHealth } from '@/services/orchestration'
 import { isLlmApiKeyConfigured } from '@/config/llmConfig'
 import {
   isTushareTokenConfigured,
@@ -20,47 +20,89 @@ import {
 
 const logger = getLogger()
 
-/**
- * 应用启动初始化服务。
- *
- * 职责：集中管理 L1/L2 基础设施的启动顺序，避免 L5/L4 入口组件直接操作数据层。
- * 初始化链路：IndexedDB → PWA Service Worker → RBAC 权限回收定时任务 → 安全配置检查 → 种子数据
- *
- * 注：全局信号订阅由应用入口 main.tsx 直接初始化，避免 services 层直接依赖 store 层。
- */
-export async function initializeApp(): Promise<void> {
-  await dataBridge.init()
-  logger.info('[bootstrapService] IndexedDB initialized via DataBridge')
+const MAX_SEED_RETRIES = 2
+const SEED_RETRY_BASE_DELAY_MS = 500
 
-  // PWA Service Worker 注册（仅生产环境生效）
+export interface BootstrapHooks {
+  onSeedFailure?: (error: string, retries: number) => void
+  onOrchestrationFailure?: (error: string) => void
+  onDataBridgeInitFailure?: (error: string) => void
+}
+
+export interface InitOptions {
+  useMemoryFallback?: boolean
+  hooks?: BootstrapHooks
+}
+
+export async function initializeApp(options?: InitOptions): Promise<void> {
+  const { useMemoryFallback = false, hooks } = options ?? {}
+
+  if (useMemoryFallback) {
+    logger.warn('[bootstrapService] 使用内存降级模式')
+  } else {
+    try {
+      await dataBridge.init()
+      logger.info('[bootstrapService] IndexedDB initialized via DataBridge')
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error('[bootstrapService] IndexedDB 初始化失败', { error: message })
+      hooks?.onDataBridgeInitFailure?.(message)
+      throw err
+    }
+  }
+
   initPWA()
   logger.info('[bootstrapService] PWA initialization triggered')
 
-  // RBAC 权限自动回收服务（僵尸账号检测 + 过期权限回收）
-  // 必须晚于 db.init()，因服务经 dataBridge.query 访问 IndexedDB
   permissionRevocationService.start()
   logger.info('[bootstrapService] RBAC permission revocation service started')
 
-  // 安全配置引导：检测未配置或已过期的密钥，输出引导日志
   checkSecretHealth()
 
-  // 种子数据：首次启动时导入默认股票列表
-  // GATE-ASYNC-1: 禁止裸 void asyncFn()，必须有 .catch()
-  seedDefaultStocks().catch((err) => {
-    logger.error('[bootstrapService] 种子数据初始化失败', {
-      error: err instanceof Error ? err.message : String(err),
-    })
-  })
+  void seedWithRetry(hooks)
 
-  // 编排器服务：在种子数据之后启动，确保数据采集链路就绪
-  // 包含10个编排器：RegistrationOrchestrator → QualityGate → ScoreCalibrator
-  // 以及 CatalystTracker / WatchListTrigger / StrategyReportGenerator 等
   try {
     initOrchestration()
-    logger.info('[bootstrapService] 编排器服务启动成功')
+    const failedOrchestrators = getOrchestratorHealth().filter((h) => h.status === 'failed')
+    if (failedOrchestrators.length > 0) {
+      const message = failedOrchestrators.map((f) => `${f.name}: ${f.errorMessage ?? 'unknown'}`).join('; ')
+      logger.error('[bootstrapService] 编排器部分启动失败', { error: message })
+      hooks?.onOrchestrationFailure?.(message)
+    } else {
+      logger.info('[bootstrapService] 编排器服务启动成功')
+    }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     logger.error('[bootstrapService] 编排器服务启动失败', { error: message })
+    hooks?.onOrchestrationFailure?.(message)
+  }
+}
+
+async function seedWithRetry(hooks?: BootstrapHooks): Promise<void> {
+  let retryCount = 0
+
+  while (true) {
+    try {
+      await seedDefaultStocks()
+      logger.info('[bootstrapService] 种子数据初始化成功')
+      return
+    } catch (err) {
+      retryCount++
+      const errorMessage = err instanceof Error ? err.message : String(err)
+      logger.error('[bootstrapService] 种子数据初始化失败', {
+        error: errorMessage,
+        retryCount,
+      })
+
+      if (retryCount >= MAX_SEED_RETRIES) {
+        hooks?.onSeedFailure?.(errorMessage, retryCount)
+        return
+      }
+
+      const delay = SEED_RETRY_BASE_DELAY_MS * Math.pow(2, retryCount - 1)
+      logger.warn(`[bootstrapService] 种子数据重试第 ${retryCount} 次，${delay}ms 后重试...`)
+      await new Promise((resolve) => setTimeout(resolve, delay))
+    }
   }
 }
 

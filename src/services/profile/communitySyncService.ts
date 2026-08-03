@@ -21,7 +21,7 @@
 
 import { getLogger } from '@/lib/logger'
 import type { CommunityPost } from '@/services/data-collector/dimensionDataTypes'
-import type { ProfileItem, ProfileDomain, ScoreLayerId, SentimentLabel } from '@/data/types/types.profile'
+import type { ProfileItem, ProfileDomain, ScoreLayerId } from '@/data/types/types.profile'
 import { STORE_NAME } from '@/config/dbConfig'
 import { autoTagItem } from './tagService'
 import { bulkSaveProfileItems } from './profileService'
@@ -257,7 +257,7 @@ export function communityPostToProfileItem(
     : content
 
   // 情绪标签
-  const sentiment = (post.sentiment as SentimentLabel | undefined) ?? 'neutral'
+  const sentiment = post.sentiment ?? 'neutral'
 
   // 关联评分层
   const relatedLayers = domain === DEFAULT_DOMAIN
