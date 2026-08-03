@@ -455,8 +455,8 @@ IndexedDB **不支持直接回滚版本**。若 Schema 升级导致数据损坏�
 | 运维手册 | [runbook.md](../explanation/runbook.md) | 日常运维、故障处置、健康监控 |
 | 全局架构 | [architecture/overview.md](../explanation/overview.md) | 分层架构、数据流、三级加载链 |
 | 文档治理 | [governance.md](../00-meta/governance.md) | 文档生命周期、保鲜规则、DoD |
-| 路由规格 | [02-design/06-routing-specs.md](../explanation/design/06-routing-specs.md) | 路由注册、三级加载链详细规格 |
-| 引擎规格 | [02-design/05-engine-specs.md](05-engine-specs.md) | L0-L8 引擎分层、确定性层定义 |
+| 路由规格 | [06-routing-specs.md](../06-routing-specs.md) | 路由注册、三级加载链详细规格 |
+| 引擎规格 | [05-engine-specs.md](../05-engine-specs.md) | L0-L8 引擎分层、确定性层定义 |
 
 ---
 

@@ -25,6 +25,6 @@ date: 2026-07-17
 
 ## 入口
 
-- [../reference/design-tokens.md](../reference/design-tokens.md)
+- [../design-tokens.md](../design-tokens.md)
 - [../reference/design-token-mapping.md](../reference/design-token-mapping.md)
-- [../reference/04-ui-ux-specs.md](../reference/04-ui-ux-specs.md)
+- [../04-ui-ux-specs.md](../04-ui-ux-specs.md)

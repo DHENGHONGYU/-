@@ -187,5 +187,5 @@ V9 策略体系采用三梯队优先级结构，决定标的在交易执行与�
 - [架构文档](v9-strategy-architecture.md)
 - [ADR-008: 第四次工业革命稀缺核心资源策略](../reference/2026-06-24-adopt-v6-core-resource-trading-strategy.md)
 - [ADR-009: 双策略体系](2026-06-27-dual-strategy-system.md)
-- [引擎规格](../reference/05-engine-specs.md)
-- [架构标准](../explanation/03-architecture-standards.md)
+- [引擎规格](../05-engine-specs.md)
+- [架构标准](../03-architecture-standards.md)

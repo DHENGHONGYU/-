@@ -55,7 +55,7 @@ date: 2026-07-18
 | 2 | [explanation/adr-004-hashrouter-static-hosting.md](../explanation/adr-004-hashrouter-static-hosting.md) | explanation | architecture | | | | |
 | 3 | [00-meta/markdown-reorg-framework.md](markdown-reorg-framework.md) | meta | architecture | | | | |
 | 4 | [00-meta/lessons-architecture-review-2026-07-16.md](lessons-architecture-review-2026-07-16.md) | meta | architecture | | | | |
-| 5 | [reference/03-architecture-standards.md](../reference/03-architecture-standards.md) | reference | architecture | | | | |
+| 5 | [03-architecture-standards.md](../03-architecture-standards.md) | reference | architecture | | | | |
 | 6 | [reference/v9-architecture-data-dictionary-validation-report.md](../reference/v9-architecture-data-dictionary-validation-report.md) | reference | architecture | | | | |
 | 7 | [reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md](../reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md) | reports | architecture | | | | |
 | 8 | [reports/retrospectives/complexity-optimization-plan.md](../reports/retrospectives/complexity-optimization-plan.md) | reports | architecture | | | | |
