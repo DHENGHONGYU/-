@@ -12,12 +12,12 @@
 
 | 文件路径 | 执行 Agent | 状态 | 验证结果 |
 |----------|------------|------|----------|
-| `docs/implementation/dataflow-engine-spec.md` | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
-| `docs/implementation/agent-runtime-spec.md` | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
-| `docs/implementation/rotation-score-spec.md` | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
-| `docs/implementation/db-migration-v4-to-v6.md` | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
-| `docs/implementation/quality-gates-baseline.md` | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
-| `docs/implementation/adr/2026-06-25-v6-migration.md` | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
+| `docs/explanation/implementation/dataflow-engine-spec.md` | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
+| `docs/explanation/implementation/agent-runtime-spec.md` | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
+| `docs/explanation/implementation/rotation-score-spec.md` | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
+| `docs/explanation/implementation/db-migration-v4-to-v6.md` | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
+| `docs/explanation/implementation/quality-gates-baseline.md` | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
+| `docs/explanation/implementation/adr/2026-06-25-v6-migration.md` | Doc-Sync | ✅ 已完成 | lint ✅ / build ✅ |
 
 ### 审查报告
 
@@ -30,9 +30,9 @@
 | `docs/10-glossary.md` | Code-Reviewer | APPROVE | 无严重问题 |
 | `README.md` | Code-Reviewer | COMMENT | 版本标识不统一、L3 描述滞后 |
 | `docs/README.md` | Code-Reviewer | COMMENT | 版本标识不统一、表格列冗余 |
-| `docs/implementation/implementation-governance.md` | Code-Reviewer | APPROVE | ADR 日期字段含义待说明 |
-| `docs/implementation/v9-system-blueprint.md` | Code-Reviewer | REQUEST_CHANGES | store 数量错误、E2E/死代码基线错误、偏差清单与 03 不一致 |
-| `docs/implementation/input-cabin-spec.md` | Code-Reviewer | COMMENT | 路由组件映射未反映 PortalShell + /input/hub |
+| `docs/explanation/implementation/implementation-governance.md` | Code-Reviewer | APPROVE | ADR 日期字段含义待说明 |
+| `docs/explanation/implementation/v9-system-blueprint.md` | Code-Reviewer | REQUEST_CHANGES | store 数量错误、E2E/死代码基线错误、偏差清单与 03 不一致 |
+| `docs/explanation/implementation/input-cabin-spec.md` | Code-Reviewer | COMMENT | 路由组件映射未反映 PortalShell + /input/hub |
 
 ---
 

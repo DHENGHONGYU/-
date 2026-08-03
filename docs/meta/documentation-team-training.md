@@ -94,10 +94,10 @@ date: 2026-07-17
 |-----------|---------|------|
 | 技术规范、API、标准 | `docs/reference/` | 编码规范、接口契约 |
 | 设计思路、原理解释 | `docs/explanation/` | 架构设计、ADR 决策 |
-| 操作指南、步骤教程 | `docs/how-to/` | 新增 Store、部署指南 |
-| 入门教程、学习路径 | `docs/tutorials/` | 快速上手指南 |
+| 操作指南、步骤教程 | `docs/guides/how-to/` | 新增 Store、部署指南 |
+| 入门教程、学习路径 | `docs/guides/tutorials/` | 快速上手指南 |
 | 报告、复盘、总结 | `docs/reports/` | 审计报告、经验教训 |
-| 文档本身的规范 | `docs/00-meta/` | 分类体系、命名规范 |
+| 文档本身的规范 | `docs/meta/` | 分类体系、命名规范 |
 
 **简单判断方法**：
 - 回答"**是什么**" → reference

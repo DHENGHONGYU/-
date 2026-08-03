@@ -23,7 +23,7 @@ date: 2026-07-17
 
 > **版本**: v1.0 | **日期**: 2026-07-17
 > **范围**: V9 设计系统颜色令牌多源分裂的根治方案（可行性评估 + 本轮执行）
-> **前置文档**: `docs/design/design-system-audit-report.md`（四维评分与差异总表）、`docs/design/component-specs.md`
+> **前置文档**: `docs/explanation/design/design-system-audit-report.md`（四维评分与差异总表）、`docs/explanation/design/component-specs.md`
 
 ---
 

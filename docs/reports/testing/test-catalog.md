@@ -403,7 +403,7 @@ npx tsc --noEmit
 npm run audit:docs
 
 # 3. 接口签名一致性（若涉及路由或数据字典变更）
-# 手动更新 docs/02-design/06-routing-specs.md 或 DATA_DICTIONARY_INDEX.md
+# 手动更新 docs/specs/design/06-routing-specs.md 或 DATA_DICTIONARY_INDEX.md
 
 # 4. 架构合规
 npm run audit:layers

@@ -68,7 +68,7 @@ date: 2026-07-17
 ## 5. 验收
 
 - ? 唯一索引已建立，所有 `DATA_DEFINITION*` 均被引用。
-- ? **同名 3 份已合并为 1 份主字典**（目标达成：裸名 `data-definition.md` 仅 `docs/standards/` 一处）。
+- ? **同名 3 份已合并为 1 份主字典**（目标达成：裸名 `data-definition.md` 仅 `docs/guides/standards/` 一处）。
 - ? 整合主字典已纳入 `docs/README.md` D 类 / `../00-meta/GOVERNANCE.md` 引用。
 - ? 新增按域拆分数据字典仍须带域前缀命名并登记于此索引（见 §4）。
 

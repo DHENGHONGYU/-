@@ -20,7 +20,7 @@ tier: important
 > - "Pre-commit hook 失效" → 已修复（Husky 12 道门禁全绿）；
 > - "git config 未设置" → 需另行核实。
 >
-> 当前基准请查 `docs/00-meta/doc-auto-update-kanban.md` + `./design/tech-debt.md`。本文件因被 REGISTRY_INDEX 引用故保留，不再作为待办依据。
+> 当前基准请查 `docs/meta/doc-auto-update-kanban.md` + `./design/tech-debt.md`。本文件因被 REGISTRY_INDEX 引用故保留，不再作为待办依据。
 
 ---
 

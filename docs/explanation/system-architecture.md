@@ -9,7 +9,7 @@ code_version: 2.0.0
 
 > **版本**：v1.0 · **日期**：2026-07-12
 > **范围**：全系统分层架构、核心模块职责、数据流、设计令牌与质量门禁
-> **配套可视化**：`docs/architecture/architecture-diagrams.html`（浏览器打开，含分层图 / 数据流图 / 舱室地图）
+> **配套可视化**：`docs/explanation/architecture/architecture-diagrams.html`（浏览器打开，含分层图 / 数据流图 / 舱室地图）
 
 ---
 
@@ -302,4 +302,4 @@ src/
 
 ---
 
-> **附录**：本文件与 `architecture.md`（驾驶舱 Widget 专项）、`../../AGENTS.md`（AI 行为契约）、`../reference/design-token-mapping.md`（令牌映射）互为补充。架构图可见 `docs/architecture/architecture-diagrams.html`。
+> **附录**：本文件与 `architecture.md`（驾驶舱 Widget 专项）、`../../AGENTS.md`（AI 行为契约）、`../reference/design-token-mapping.md`（令牌映射）互为补充。架构图可见 `docs/explanation/architecture/architecture-diagrams.html`。

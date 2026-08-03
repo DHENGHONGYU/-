@@ -36,10 +36,10 @@
 | 源文件 | 模块 | 原 mtime | 原大小 | 并入章节 | 处理方式 |
 |--------|------|-----------|---------|----------|----------|
 | `./DATA_DEFINITION.md`（根） | A 交易持仓管理 | 2026-07-08 14:22 | 13,337 B | §A（全文） | 合并后由 `git rm` 移除 |
-| `docs/01-requirements/DATA_DEFINITION.md` | B 数据采集 | 2026-07-08 14:22 | 13,827 B | §B（全文） | 合并后移除（untracked） |
-| `docs/02-design/DATA_DEFINITION.md` | C Cockpit Widget 框架 | 2026-07-06 07:06 | 26,654 B | §C（全文，共享类型改引用 §B） | 合并后移除（untracked） |
+| `docs/specs/requirements/DATA_DEFINITION.md` | B 数据采集 | 2026-07-08 14:22 | 13,827 B | §B（全文） | 合并后移除（untracked） |
+| `docs/specs/design/DATA_DEFINITION.md` | C Cockpit Widget 框架 | 2026-07-06 07:06 | 26,654 B | §C（全文，共享类型改引用 §B） | 合并后移除（untracked） |
 
-> 其余 7 份**按域拆分**的数据字典（`AI_CENTER_` / `BACKTEST_` / `DATAFLOW_` / `MULTI_FACTOR_SCREENING_` / `NEWS_` / `RISK_DERIVED_` / `SEVEN_DIM_CONFIG_DATA_DEFINITION.md`）保持独立，由 `docs/standards/DATA_DICTIONARY_INDEX.md` 索引，不在本文件重复。
+> 其余 7 份**按域拆分**的数据字典（`AI_CENTER_` / `BACKTEST_` / `DATAFLOW_` / `MULTI_FACTOR_SCREENING_` / `NEWS_` / `RISK_DERIVED_` / `SEVEN_DIM_CONFIG_DATA_DEFINITION.md`）保持独立，由 `docs/guides/standards/DATA_DICTIONARY_INDEX.md` 索引，不在本文件重复。
 
 ---
 
@@ -1212,5 +1212,5 @@ PaginationState ─────────────────────�
 
 > **维护约定**：
 > - 本文件为数据字典唯一权威（SSOT）。禁止再创建裸名 `DATA_DEFINITION.md`。
-> - 新增按域拆分的数据结构请使用带域前缀的命名（如 `AI_CENTER_DATA_DEFINITION.md`），并在 `docs/standards/DATA_DICTIONARY_INDEX.md` 登记。
+> - 新增按域拆分的数据结构请使用带域前缀的命名（如 `AI_CENTER_DATA_DEFINITION.md`），并在 `docs/guides/standards/DATA_DICTIONARY_INDEX.md` 登记。
 > - 修改采集相关类型请同步 §B；修改 Widget 框架类型请同步 §C；两模块共享类型以 §B 为准。

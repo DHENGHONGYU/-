@@ -3,7 +3,7 @@
 > **Status**: Draft  
 > **Version**: v0.9.1-correction-plan  
 > **Last Updated**: 2026-06-26  
-> **关联差异报告**: `docs/implementation/v9-architecture-data-diff-report.md`  
+> **关联差异报告**: `docs/explanation/implementation/v9-architecture-data-diff-report.md`  
 > **覆盖差异**: DIFF-001, DIFF-004, DIFF-006, DIFF-007, DIFF-008, DIFF-014, DIFF-019, DIFF-022
 
 ---
@@ -12,8 +12,8 @@
 
 | 序号 | 操作 | 文件路径 | 对应差异ID | 优先级 |
 |------|------|----------|-----------|--------|
-| 1 | 新建 | `docs/cockpit/DATA_DEFINITION.md` | DIFF-007, DIFF-008 | 🔴 P0 |
-| 2 | 新建 | `docs/news/DATA_DEFINITION.md` | DIFF-014 | 🔴 P0 |
+| 1 | 新建 | `docs/reference/cockpit/DATA_DEFINITION.md` | DIFF-007, DIFF-008 | 🔴 P0 |
+| 2 | 新建 | `docs/reference/news/DATA_DEFINITION.md` | DIFF-014 | 🔴 P0 |
 | 3 | 修改 | `docs/03-architecture-standards.md` | DIFF-001, DIFF-004 | 🔴 P0 |
 | 4 | 修改 | `docs/02-functional-specs.md` | DIFF-004 | 🔴 P0 |
 | 5 | 修改 | `docs/README.md` | DIFF-006 | 🔴 P0 |
@@ -23,7 +23,7 @@
 
 ## 二、新建文件修正内容
 
-### 2.1 `docs/cockpit/DATA_DEFINITION.md`（新建）
+### 2.1 `docs/reference/cockpit/DATA_DEFINITION.md`（新建）
 
 **来源**: DIFF-007（Widget 框架核心类型未定义）、DIFF-008（Cockpit 常量枚举未定义）
 

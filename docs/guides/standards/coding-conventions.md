@@ -61,8 +61,8 @@ useEffect(() => {
 
 ## 6. 文档与 JSDoc
 
-- 新增公共函数/组件/Hook/Store 必须补 JSDoc（见 `docs/03-development/jsdoc-convention.md`）。
-- 避免深层嵌套、长链式条件、过长函数（见 `docs/03-development/complexity-governance.md`）。
+- 新增公共函数/组件/Hook/Store 必须补 JSDoc（见 `docs/guides/development/jsdoc-convention.md`）。
+- 避免深层嵌套、长链式条件、过长函数（见 `docs/guides/development/complexity-governance.md`）。
 
 ---
 

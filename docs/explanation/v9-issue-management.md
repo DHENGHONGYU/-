@@ -133,8 +133,8 @@ git checkout src/apps/trading/TradingApp.tsx src/apps/input/HotSectorPanel.tsx \
 git checkout src/vite-env.d.ts .env.example docs/05-engine-specs.md \
   docs/06-routing-specs.md docs/09-quality-gates.md docs/01-vision-and-goals.md \
   docs/02-functional-specs.md docs/04-ui-ux-specs.md docs/07-operation-strategy.md \
-  docs/10-glossary.md docs/implementation/data-interaction-protocols.md \
-  docs/implementation/v9-current-state-review.md docs/implementation/architecture-version-comparison.md
+  docs/10-glossary.md docs/explanation/implementation/data-interaction-protocols.md \
+  docs/explanation/implementation/v9-current-state-review.md docs/explanation/implementation/architecture-version-comparison.md
 ```
 
 ---

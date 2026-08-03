@@ -91,12 +91,12 @@ date: 2026-07-17
 - `./complexity-governance.md` — 代码复杂度治理规范
 - `./templates/task-graph-template.md` — 任务图模板
 - `./templates/regression-suite.md` — 回归测试套件模板
-- `docs/00-meta/directory-structure-guide.md` — 项目目录结构规范与使用指南（对齐 AGENTS.md v1.4.6）
-- `docs/00-meta/directory-audit-feasibility-plan.md` — 目录结构审计可行性复核方案
-- `docs/00-meta/directory-audit-todo.md` — 目录结构审计整改 TODO
-- `docs/00-meta/directory-structure-audit-report.md` — 目录结构文档审计报告（已归档）
-- `docs/00-meta/v9-pre-launch-audit-report-20260713.md` — V9 上线前系统性梳理报告
-- `docs/00-meta/changelog-warnings-handling-strategy.md` — CHANGELOG 警告项处理策略
+- `docs/meta/directory-structure-guide.md` — 项目目录结构规范与使用指南（对齐 AGENTS.md v1.4.6）
+- `docs/meta/directory-audit-feasibility-plan.md` — 目录结构审计可行性复核方案
+- `docs/meta/directory-audit-todo.md` — 目录结构审计整改 TODO
+- `docs/meta/directory-structure-audit-report.md` — 目录结构文档审计报告（已归档）
+- `docs/meta/v9-pre-launch-audit-report-20260713.md` — V9 上线前系统性梳理报告
+- `docs/meta/changelog-warnings-handling-strategy.md` — CHANGELOG 警告项处理策略
 - `../explanation/v9-code-quality-audit-report-20260713.md` — V9 代码质量量化审计报告
 - `archive/ARCHIVE_INDEX.md` — 归档目录索引
 

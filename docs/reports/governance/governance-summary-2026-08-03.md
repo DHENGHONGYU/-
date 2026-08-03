@@ -58,9 +58,9 @@ V9 项目在长期迭代过程中积累了多套开发工具配置体系（WorkB
 | 目录/文件 | 文件数 | 删除原因 |
 |-----------|--------|----------|
 | `docs/_pending-deletion/` | 414 | 上线前待清理（一次性治理报告、破损文件名、重复 HTML） |
-| `docs/00-meta/deprecated-docs/` | 7 | 旧版文档（v1.0.0/v1.6.0），已被新版本替代 |
+| `docs/meta/deprecated-docs/` | 7 | 旧版文档（v1.0.0/v1.6.0），已被新版本替代 |
 | `docs/reference/meta/deprecated-docs/` | 2 | 重复的临时文件 |
-| `docs/implementation/deprecated/` | 9 | DEPRECATED_ 前缀文档，内容已合并至活跃文档 |
+| `docs/explanation/implementation/deprecated/` | 9 | DEPRECATED_ 前缀文档，内容已合并至活跃文档 |
 | 其他 deprecated 文件 | 4 | status: deprecated 的散落文档 |
 | 一次性脚本 | 2 | 引用已删除目录的 `fix-cross-references.ts`、`rename-ah-index-files.ts` |
 | `.workbuddy/` | 38 | 已迁移至 `.trae/` |
@@ -81,7 +81,7 @@ V9 项目在长期迭代过程中积累了多套开发工具配置体系（WorkB
 
 ### 2.4 破坏性变更报告生成
 
-- 产出文档: `docs/governance/breaking-changes-report-2026-08-03.md`
+- 产出文档: `docs/reports/governance/breaking-changes-report-2026-08-03.md`
 - 覆盖内容: 变更类型矩阵、受影响组件清单、变更前后对比、迁移指南、风险评估、回滚方案
 
 ---
@@ -108,7 +108,7 @@ V9 项目在长期迭代过程中积累了多套开发工具配置体系（WorkB
 |------|--------|------|
 | 活跃指南（需修复） | 2 | ✅ 已修复（`FILE-MANAGEMENT-GUIDE.md`、`directory-structure-guide.md`） |
 | 历史归档文档（合法记录） | 8 | 保留（`docs/archive/` 下的历史文档，记录当时状态） |
-| 自动生成索引（过期快照） | 2 | 待重新生成（`docs/00-meta/ai-index/.ai-index/category-index.json` 等，2026-07-13 快照） |
+| 自动生成索引（过期快照） | 2 | 待重新生成（`docs/meta/ai-index/.ai-index/category-index.json` 等，2026-07-13 快照） |
 | 历史迁移清单（合法记录） | 1 | 保留（`_migration-inventory.csv`） |
 | 破坏性变更报告（自引用） | 1 | 保留（合法引用已删除路径描述变更） |
 | 历史审计报告 | 2 | 保留（`databridge-stability-assessment` 等历史报告） |
@@ -171,7 +171,7 @@ V9 项目在长期迭代过程中积累了多套开发工具配置体系（WorkB
 ### 6.1 立即跟进（P0-P1）
 
 1. **手动更新 `.trae/mcp.json`**: 将硬编码 API Key 替换为 `${ARK_API_KEY}`，路径替换为 `${workspaceFolder}`（参考 `.trae/mcp.json.example`）
-2. **重新生成 AI 索引**: 运行文档索引生成脚本，刷新 `docs/00-meta/ai-index/.ai-index/category-index.json` 等过期快照
+2. **重新生成 AI 索引**: 运行文档索引生成脚本，刷新 `docs/meta/ai-index/.ai-index/category-index.json` 等过期快照
 3. **修复预存测试失败**: 更新 `llmClient.multimodel.test.ts` 期望值从 `deepseek-v4-flash` 改为 `deepseek-chat`
 
 ### 6.2 短期治理（P2）

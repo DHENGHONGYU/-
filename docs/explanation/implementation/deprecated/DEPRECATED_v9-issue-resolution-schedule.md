@@ -2,7 +2,7 @@
 
 > 生成时间：2026-06-25  
 > 调度官：Issue Resolution Orchestrator  
-> 输入材料：`docs/implementation/v9-documentation-audit-report.md` + `src/` 代码扫描  
+> 输入材料：`docs/explanation/implementation/v9-documentation-audit-report.md` + `src/` 代码扫描  
 > 规则：同一物理文件被多个 Agent 命中时，合并为联合修复任务，由 **Architecture-Fix Agent** 牵头
 
 ---
@@ -38,7 +38,7 @@
 | **DOC-004** | Doc-Sync-Fix | Doc-Sync-Fix | `docs/05-engine-specs.md` 把 `fetcherConfig.ts` 放在错误目录。 | `docs/05-engine-specs.md:30-37,330-335`：路径改为 `src/config/fetcherConfig.ts`。 | `ls src/services/fetcher/` 无 `fetcherConfig.ts`。 | 待执行 |
 | **DOC-005** | Doc-Sync-Fix | Doc-Sync-Fix | 核心/实施文档 frontmatter 版本号未统一。 | 批量更新 8 个文档的 `> **Version**: ...` 为 `v0.9.0-migration-implemented`。 | `grep -R '^> \*\*Version' docs/` 仅 Deferred 文档保留旧版本。 | 待执行 |
 | **DOC-006** | Doc-Sync-Fix | Doc-Sync-Fix | `docs/09-quality-gates.md` E2E 状态前后矛盾。 | `docs/09-quality-gates.md:275-276` 及 4.3 节：更新为 E2E 已建立 5/5 通过。 | `npm run test:e2e` 通过；文档无“E2E 测试缺失”字样。 | 待执行 |
-| **DOC-007** | Doc-Sync-Fix | Doc-Sync-Fix | `docs/06-routing-specs.md` 第 8 节映射表遗漏已注册路由。 | `docs/06-routing-specs.md:221-242`：追加 score-docs/news/strategy-snapshots/local-knowledge。 | 将 `getAllPaths()` 输出与表格逐行比对无遗漏。 | 待执行 |
+| **DOC-007** | Doc-Sync-Fix | Doc-Sync-Fix | `docs/06-routing-specs.md` 第 8 节映射表遗漏已注册路由。 | `docs/06-routing-specs.md:221-242`：追加 score-docs/reference/news/strategy-snapshots/local-knowledge。 | 将 `getAllPaths()` 输出与表格逐行比对无遗漏。 | 待执行 |
 
 ---
 
@@ -114,9 +114,9 @@ git checkout src/vite-env.d.ts \
   docs/04-ui-ux-specs.md \
   docs/07-operation-strategy.md \
   docs/10-glossary.md \
-  docs/implementation/data-interaction-protocols.md \
-  docs/implementation/v9-current-state-review.md \
-  docs/implementation/architecture-version-comparison.md
+  docs/explanation/implementation/data-interaction-protocols.md \
+  docs/explanation/implementation/v9-current-state-review.md \
+  docs/explanation/implementation/architecture-version-comparison.md
 ```
 
 > 提示：若已新增文件（如 `src/services/system/bootstrapService.ts`、`src/config/symbols.ts`、`src/core/fallbackQueue.ts`、`src/hooks/cabin/`、`src/services/system/migration/`），`git checkout` 无法直接删除新增文件，需使用 `git clean -fd` 或 `git reset --hard` 谨慎清理。

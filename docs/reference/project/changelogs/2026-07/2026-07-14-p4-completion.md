@@ -33,7 +33,7 @@ P4 阶段（文档体系治理验证）已完成，主要包含以下成果：
 - 采用只读索引方式，不移动原文件，避免破坏引用链
 
 ### T7 — cleanup-schedule.md
-- `docs/00-meta/cleanup-schedule.md` 已存在
+- `docs/meta/cleanup-schedule.md` 已存在
 - 定义 drafts/（7天）、reports/_generated/（30天）、changelogs/（永久）清理周期
 
 ### T8 — 八类体系二级子类扩展

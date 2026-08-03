@@ -11,7 +11,7 @@ change_log:
 
 # V9 PWA 离线化实施指南
 
-> **对应蓝图**：`docs/implementation/v9-system-blueprint.md` §1 系统定位（离线需求）、§8 Phase 3（PWA manifest + service worker）、§9 质量门禁 11（PWA 离线验证）、§10 偏差 D18/D19 相关质量加固。
+> **对应蓝图**：`docs/explanation/implementation/v9-system-blueprint.md` §1 系统定位（离线需求）、§8 Phase 3（PWA manifest + service worker）、§9 质量门禁 11（PWA 离线验证）、§10 偏差 D18/D19 相关质量加固。
 > **依赖文档**：`docs/03-architecture-standards.md` §3.10.1（离线目标）、`docs/06-routing-specs.md`（HashRouter 与静态托管）。
 
 ---
@@ -71,7 +71,7 @@ eventBus.on('pwa:update-available', () => {
 })
 ```
 
-> `feedbackService` 规范见 `docs/implementation/feedback-loop-spec.md` §3。
+> `feedbackService` 规范见 `docs/explanation/implementation/feedback-loop-spec.md` §3。
 
 ---
 
@@ -220,7 +220,7 @@ test('离线后可进入首页与驾驶舱', async ({ page, context }) => {
 
 ## 7. 相关链接
 
-- `docs/implementation/v9-system-blueprint.md` §1、§8 Phase 3、§9、D18/D19
+- `docs/explanation/implementation/v9-system-blueprint.md` §1、§8 Phase 3、§9、D18/D19
 - `docs/03-architecture-standards.md` §3.10.1
 - `docs/06-routing-specs.md` §1（HashRouter 说明）
-- `docs/implementation/feedback-loop-spec.md` §5.3（pwa:* 事件通过 EventBus 触发 Toast）
+- `docs/explanation/implementation/feedback-loop-spec.md` §5.3（pwa:* 事件通过 EventBus 触发 Toast）

@@ -85,7 +85,7 @@ npm run build
 
 > **目的**：防止 V10 / v6-pro-cockpit 等外部参考文档被误读为 V9 当前必须遵循的规则。
 
-`docs/implementation/` 中部分文档（如 `v10-architecture-alignment.md`、`../archive/ui-module-alignment.md`、`v6-cockpit-ui-reference.md`、`../explanation/trading-core-factors.md`）属于**外部参考蓝图**，其状态统一标记为：
+`docs/explanation/implementation/` 中部分文档（如 `v10-architecture-alignment.md`、`../archive/ui-module-alignment.md`、`v6-cockpit-ui-reference.md`、`../explanation/trading-core-factors.md`）属于**外部参考蓝图**，其状态统一标记为：
 
 ```
 Status: Future Reference / Deferred

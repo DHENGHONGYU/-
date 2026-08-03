@@ -31,7 +31,7 @@ tags: [frontend, component, design, standards]
 
 # 基础组件规范（V9 设计基座�?
 > 唯一事实源（single source of truth）：本文件是 V9 设计系统基础组件的状态化规范基线�?> 评审日期�?026-07-17 �?事实来源：`src/components/atoms/*`、`src/index.css`、`tailwind.config.js`、`src/constants/theme/theme.tokens.*.ts`
-> 关联文档：差异核查见 `docs/design/design-system-audit-report.md`；触发治理见 `docs/00-meta/doc-trigger-action-map.md` T6�?
+> 关联文档：差异核查见 `docs/explanation/design/design-system-audit-report.md`；触发治理见 `docs/meta/doc-trigger-action-map.md` T6�?
 ## 0. 规范约定
 
 - **令牌引用基线**：所有组件颜色必须走语义令牌（`bg-primary` / `text-foreground` / `border-input` / `bg-destructive` / `bg-success` 等），禁�?`bg-red-500` / `bg-green-700` �?Tailwind 调色板裸类（非主题感知，明暗不一致）�?- **五态覆�?*：每个组件规范含 默认 / 悬停 / 聚焦 / 禁用 / 加载 五态�?- **字体层级**：引�?`tailwind.config.js` 的排版阶梯（`text-h1`~`text-h4` / `text-body` / `text-body-sm` / `text-caption` / `text-overline`），禁止硬编码字号�?- **间距栅格**：基�?8px 基准（`4/8/16/24/32/48/64`），组件�?间距须落在基准倍数，禁�?12px/20px 等非基准值�?- **明暗适配**：所有颜色经 `index.css` �?HSL 变量自动适配�?暗模式，组件不得写死明暗分支�?- **一致性严重度**：�?合规 �?🟡 待微�?�?🔴 阻断（需整改）�?

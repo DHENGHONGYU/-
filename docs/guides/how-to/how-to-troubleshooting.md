@@ -409,7 +409,7 @@ npm run audit:hardcode > hardcode-audit.txt
 
 审计报告的归档位置约定：
 - JSON 报告归档至 `docs/reports/audit/`
-- 测试审计报告归档至 `docs/how-to/testing/audit-reports/audit/`
+- 测试审计报告归档至 `docs/guides/how-to/testing/audit-reports/audit/`
 
 ### 方法 3：导出数据快照
 

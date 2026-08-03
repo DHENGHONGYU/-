@@ -339,7 +339,7 @@ AGENTS.md §七.1 强制规则：
 
 | 规则 | 实现 |
 |------|------|
-| 知识图谱优先 | 理解代码先查 `docs/00-meta/ai-index/.ai-index/code-graph.json`，禁止重复 grep/search |
+| 知识图谱优先 | 理解代码先查 `docs/meta/ai-index/.ai-index/code-graph.json`，禁止重复 grep/search |
 | 增量解析 | `extract-code-graph.ts` 基于 mtime 增量更新 |
 | 缓存查询 | `scripts/other/quick-query.sh` 模板化常用查询 |
 | 单次预算 | 单次 AI 会话 ≤ 50,000 tokens |

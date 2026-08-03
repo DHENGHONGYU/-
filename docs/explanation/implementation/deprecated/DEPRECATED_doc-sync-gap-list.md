@@ -12,8 +12,8 @@
 | 项目 | 内容 |
 |------|------|
 | 扫描日期 | 2026-06-26 |
-| 扫描范围 | `src/` 新增/修改文件；`docs/implementation/v9-issue-resolution-schedule.md` 待执行项 |
-| 扫描依据 | `docs/implementation/doc-sync-execution-plan.md` |
+| 扫描范围 | `src/` 新增/修改文件；`docs/explanation/implementation/v9-issue-resolution-schedule.md` 待执行项 |
+| 扫描依据 | `docs/explanation/implementation/doc-sync-execution-plan.md` |
 | 扫描责任人 | Doc-Sync Agent |
 
 ---
@@ -27,7 +27,7 @@
 | 金融业务 Widget | `src/cockpit/widgets/*`、`src/services/stock-analysis/*`、`src/services/data-collector/*` | `ARCHITECTURE.md`、`DATA_DEFINITION.md` | 2026-06-26 | tsc/lint/test/build 通过 |
 | AI 中心板块 | `src/constants/ai-center.constants.ts`、`src/constants/health.constants.ts`、`src/types/modules/ai-center.types.ts`、`src/services/ai-center/*` | `docs/AI_CENTER_DATA_DEFINITION.md`、`docs/AI_CENTER_VUE3_EXAMPLES.md` | 2026-06-26 | tsc/lint 通过 |
 | NewsPage PoC | `src/pages/news-v6/*`、`src/services/news/newsService.ts` | `docs/NEWS_DATA_DEFINITION.md` | 2026-06-26 | tsc/lint 通过 |
-| 代码-文档同步机制 | `docs/implementation/doc-sync-execution-plan.md` | `docs/08-implementation-plan.md`、`CHANGELOG.md` | 2026-06-26 | tsc/lint 通过 |
+| 代码-文档同步机制 | `docs/explanation/implementation/doc-sync-execution-plan.md` | `docs/08-implementation-plan.md`、`CHANGELOG.md` | 2026-06-26 | tsc/lint 通过 |
 
 ---
 
@@ -42,7 +42,7 @@
 | GAP-003 | 数据融合引擎 | `src/services/unifiedStockService.ts` | 架构说明/数据字典 | 2.1.9 数据融合引擎未实现或缺少文档化说明 | P1 | Architecture-Fix | 待执行 |
 | ~~GAP-004~~ | ~~路由规格同步~~ | ~~`src/config/routes.ts`~~ | ~~路由规格~~ | ~~DOC-007：已更新 `docs/06-routing-specs.md` 第 8 节，补全 `/analysis/news-v6`、`/trading/holdings`、`/mock-test` 等路由~~ | ~~P1~~ | ~~Doc-Sync-Fix~~ | ~~已闭环 2026-06-26~~ |
 | ~~GAP-005~~ | ~~质量门禁基线~~ | ~~`docs/09-quality-gates.md`~~ | ~~质量门禁~~ | ~~DOC-006：已更新 E2E 状态、硬编码基线（749）、死代码基线（0/0/16）；跨层调用基线修正为 0/0~~ | ~~P1~~ | ~~Doc-Sync-Fix~~ | ~~已闭环 2026-06-26~~ |
-| GAP-006 | 文档版本号统一 | `docs/01~10`、`docs/implementation/*` | frontmatter | DOC-005：核心/实施文档 `Version` frontmatter 未全部统一为 `v0.9.0-doc-sync-plan`；需批量扫描更新 | P1 | Doc-Sync-Fix | 部分闭环 |
+| GAP-006 | 文档版本号统一 | `docs/01~10`、`docs/explanation/implementation/*` | frontmatter | DOC-005：核心/实施文档 `Version` frontmatter 未全部统一为 `v0.9.0-doc-sync-plan`；需批量扫描更新 | P1 | Doc-Sync-Fix | 部分闭环 |
 | GAP-007 | 评分报告生成 | `src/services/analysis/*`（待实现） | 架构说明/数据字典 | 2.2.1 评分报告生成尚未落地，文档与实际代码存在偏差 | P1 | TBD | 待规划 |
 | GAP-008 | 板块轮动评分引擎接入 | `src/services/analysis/rotationScoreService.ts` | 架构说明 | 2.4.1 引擎代码已存在，但 `SectorAnalysisPage` 接入状态与文档需同步 | P1 | TBD | 待执行 |
 

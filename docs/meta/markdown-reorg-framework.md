@@ -65,10 +65,10 @@ code_version: 2.0.0
 | 子类 | 内容 | 代表文件 |
 |------|------|----------|
 | 行为契约 | AI/分层/四步集成强制约束 | `AGENTS.md`（项目根，P0 事实标准） |
-| 编码规范 | 类型安全、复杂度治理、lint 规则 | `docs/standards/coding-conventions.md`、`docs/explanation/complexity-redlines.md` |
-| 质量门禁 | 12 道门禁定义与基线 | `docs/standards/quality-gates.md`、`docs/reference/09-quality-gates.md`、`docs/explanation/踩坑规则门禁指南.md` |
-| 测试规范 | 单测/集成/E2E 基线 | `docs/04-testing/*`、`docs/testing/test-catalog.md` |
-| 校对契约 | 文档-代码双向校对规则 | `docs/reference/hybrid-proofread-contract.md`、`docs/00-meta/doc-proofreading-strategy.md` |
+| 编码规范 | 类型安全、复杂度治理、lint 规则 | `docs/guides/standards/coding-conventions.md`、`docs/explanation/complexity-redlines.md` |
+| 质量门禁 | 12 道门禁定义与基线 | `docs/guides/standards/quality-gates.md`、`docs/reference/09-quality-gates.md`、`docs/explanation/踩坑规则门禁指南.md` |
+| 测试规范 | 单测/集成/E2E 基线 | `docs/reports/testing/*`、`docs/reports/testing/test-catalog.md` |
+| 校对契约 | 文档-代码双向校对规则 | `docs/reference/hybrid-proofread-contract.md`、`docs/meta/doc-proofreading-strategy.md` |
 | 开发 SOP | 工作流、工具链地图 | `docs/reference/development-workflow-sop.md`（P0） |
 
 ### 🔵 B 类 · 系统初始文档（定义与边界）
@@ -79,11 +79,11 @@ code_version: 2.0.0
 | 子类 | 内容 | 代表文件 |
 |------|------|----------|
 | 系统入口 | 项目/文档总 README | 根 `README.md`、`docs/README.md` |
-| 架构总览 | 分层、舱室、PortalShell | `docs/architecture/overview.md`、`docs/explanation/ARCHITECTURE.md` |
+| 架构总览 | 分层、舱室、PortalShell | `docs/explanation/architecture/overview.md`、`docs/explanation/ARCHITECTURE.md` |
 | 数据宪法/字典 | 数据定义规范、主数据字典 | `docs/reference/v9数据宪法.md`（P0）、`docs/reference/data-definition.md`、`ai-center-data-definition.md` |
-| API 契约 | 27 个 service 契约 | `docs/reference/*-contract.md`、`docs/architecture/api-contracts.md` |
+| API 契约 | 27 个 service 契约 | `docs/reference/*-contract.md`、`docs/explanation/architecture/api-contracts.md` |
 | ADR 决策 | 架构决策记录 | `docs/reference/adr-*.md`、`docs/explanation/adr-*.md` |
-| 板块说明 | 各舱/模块/子系统说明 | `docs/modules/*`、`docs/architecture/cabins-overview.md`、`team-handbook/*` |
+| 板块说明 | 各舱/模块/子系统说明 | `docs/reference/modules/*`、`docs/explanation/architecture/cabins-overview.md`、`team-handbook/*` |
 
 ### 🟡 C 类 · 解释性 / 验证性过程文件（过程产物）
 > **定义**：带日期、报告、复盘、诊断、计划、看板，记录"我们做过什么、发现什么、怎么改"。**有时效性，需生命周期管理**。
@@ -95,7 +95,7 @@ code_version: 2.0.0
 | 审计/检视报告 | 架构/安全/智能体审计 | `docs/reports/audit/*`、`agent-audit-report.md` |
 | 定期更新报告 | 文档治理/同步报告 | `../reports/changelogs/2026-07-08-documentation-summary-report.md` |
 | 复盘/诊断 | 故障 RCA、功能遗漏诊断 | `docs/archive/2026-07-12-security-audit.md`、`V9_MCP_Server与Agent功能遗漏诊断.html` |
-| 计划/看板 | 整改计划、执行看板 | `docs/00-meta/doc-auto-update-kanban.md`、`prompt-execute-remediation.md` |
+| 计划/看板 | 整改计划、执行看板 | `docs/meta/doc-auto-update-kanban.md`、`prompt-execute-remediation.md` |
 | 验证基线 | 集成基线比对、完成度校验 | `../reports/audit/report-12-integration-baseline-comparison.md`、`quality-audit-plan.md` |
 
 ---
@@ -151,7 +151,7 @@ code_version: 2.0.0
 | **P0** | 重建 manifest 消除 98 缺口 | `npm run doc:manifest` | 低（自动生成） |
 | **P1** | C 类过程文件按 `YYYY-MM-DD-*` 重命名归位 `reports/` | 345 份中带日期者 | 中（需改引用链接） |
 | **P1** | 类目收敛：MISC 拆 RPT/RETRO/MIGR/LOG | manifest.csv + registry-index | 低 |
-| **P2** | `docs/ai/` 标 deprecated 并重定向 | 3 份 | 低 |
+| **P2** | `docs/reference/ai/` 标 deprecated 并重定向 | 3 份 | 低 |
 | **P2** | `drafts/`、`archive/` 季度清理 | 58 份 | 中（需确认无引用） |
 | **P3** | 建立统一"Agent 文档专区"（scene#17 遗留项） | 整合散落核心文档 | 低 |
 
@@ -196,8 +196,8 @@ code_version: 2.0.0
 ---
 
 ## 八、配套产出
-- [x] `docs/00-meta/agent-app-docs-classification.md`（scene#17 Agent 19 份归类，已完成）
-- [x] `docs/00-meta/markdown-reorg-framework.md`（本文，分类标准 + 重梳规则 + 经验）
+- [x] `docs/meta/agent-app-docs-classification.md`（scene#17 Agent 19 份归类，已完成）
+- [x] `docs/meta/markdown-reorg-framework.md`（本文，分类标准 + 重梳规则 + 经验）
 - [ ] 执行 P0 合并与 manifest 重建（待确认启动）
 - [ ] 生成 C 类过程文件重命名脚本（待确认）
 

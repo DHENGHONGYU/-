@@ -72,12 +72,12 @@ summary: "<一句话摘要>"                # 50 字以内
 | 文档类型 | 存放位置 | 说明 |
 |----------|----------|------|
 | 核心概述文档 | docs/ 根目录 | 项目愿景、功能规格、架构标准等 01-10 系列 |
-| 操作指南 | docs/how-to/ | 如何做类文档 |
+| 操作指南 | docs/guides/how-to/ | 如何做类文档 |
 | 参考文档 | docs/reference/ | API 参考、数据字典 |
-| 教程文档 | docs/tutorials/ | 入门教程 |
+| 教程文档 | docs/guides/tutorials/ | 入门教程 |
 | 解释性文档 | docs/explanation/ | 设计决策解释 |
-| 治理文档 | docs/governance/ | 治理报告、维护规范 |
-| 运维文档 | docs/ops/ | 部署、配置、监控 |
+| 治理文档 | docs/reports/governance/ | 治理报告、维护规范 |
+| 运维文档 | docs/reports/ops/ | 部署、配置、监控 |
 | 归档文档 | docs/archive/ | 历史归档，不再更新 |
 
 ---
@@ -105,7 +105,7 @@ summary: "<一句话摘要>"                # 50 字以内
 
 ```markdown
 <!-- ❌ file:/// 绝对路径（跨用户断链） -->
-[文档](file:///c:/Users/xxx/Documents/.../docs/doc.md)
+[文档](file:///c:/Users/<user>/Documents/.../docs/doc.md)
 [文档](file:///g:/FinSightV9/docs/doc.md)
 
 <!-- ❌ file://// 格式 -->
@@ -115,7 +115,7 @@ summary: "<一句话摘要>"                # 50 字以内
 [文件](computer://xxx)
 
 <!-- ❌ 带盘符的绝对路径 -->
-[文档](C:/Users/xxx/docs/doc.md)
+[文档](C:/Users/<user>/docs/doc.md)
 [文档](G:/FinSightV9/src/lib/logger.ts)
 ```
 
@@ -460,7 +460,7 @@ Plan（计划）→ Do（执行）→ Check（检查）→ Act（行动）
 1. **月度审计报告**: 每月生成文档审计报告，包含指标趋势
 2. **季度回顾会议**: 季度文档治理回顾，评估规范有效性
 3. **规范版本更新**: 根据实践反馈每季度更新本规范
-4. **知识沉淀**: 将常见问题与解决方案沉淀到 `docs/how-to/` 目录
+4. **知识沉淀**: 将常见问题与解决方案沉淀到 `docs/guides/how-to/` 目录
 
 ### 9.4 自动化目标
 
@@ -482,7 +482,7 @@ Plan（计划）→ Do（执行）→ Check（检查）→ Act（行动）
 
 **Q: 发现 file:/// 断链如何修复？**
 
-A: 将 `file:///c:/Users/xxx/.../项目根目录/` 替换为相对路径。计算规则见 §2.2。运行 `grep -rn "file:///[a-z]:/" docs/` 确认修复完成。
+A: 将 `file:///c:/Users/<user>/.../项目根目录/` 替换为相对路径。计算规则见 §2.2。运行 `grep -rn "file:///[a-z]:/" docs/` 确认修复完成。
 
 **Q: 文档移动后如何更新引用？**
 

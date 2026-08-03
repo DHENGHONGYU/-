@@ -281,7 +281,7 @@ useEffect(() => {
 ### 4.3 文档同步 [P1 需改]
 
 - [ ] **架构变更同步** — 修改 `../../AGENTS.md` 后同步相关文档
-- [ ] **触发→动作映射** — 新增模块时检查 `docs/00-meta/doc-trigger-action-map.md`
+- [ ] **触发→动作映射** — 新增模块时检查 `docs/meta/doc-trigger-action-map.md`
 - [ ] **API 路径变更** — 更新 `../reference/06-routing-specs.md` 或相关数据字典
 - [ ] **目录结构变更** — 更新 `../../AGENTS.md` §一目录定义
 

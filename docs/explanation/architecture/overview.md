@@ -6,7 +6,7 @@ phase: design
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: "该文档是旧路径 `docs/architecture/overview.md` 的兼容入口，当前内容转向 V9 的新结构化文档。"
+summary: "该文档是旧路径 `docs/explanation/architecture/overview.md` 的兼容入口，当前内容转向 V9 的新结构化文档。"
 tags: [architecture, plan, explanation]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -22,7 +22,7 @@ date: 2026-07-17
 
 # 架构总览
 
-> 该文档是旧路径 `docs/architecture/overview.md` 的兼容入口，当前内容转向 V9 的新结构化文档。
+> 该文档是旧路径 `docs/explanation/architecture/overview.md` 的兼容入口，当前内容转向 V9 的新结构化文档。
 
 ## 主要入口
 

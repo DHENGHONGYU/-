@@ -284,7 +284,7 @@ archive/
 ### 5.3 归档操作流程
 
 1. **评估**：确认文件不再被项目引用
-2. **记录**：在 `docs/00-meta/registry-index.md` 中记录归档信息
+2. **记录**：在 `docs/meta/registry-index.md` 中记录归档信息
 3. **迁移**：移动文件到 `archive/` 对应子目录
 4. **验证**：运行 `npm run audit:doc-integrity` 确认无引用断裂
 
@@ -417,10 +417,10 @@ archive/
 find docs/ -name "*.md" | xargs grep -l "\[CORE\]"
 
 # 检索 SOP 引用的脚本
-grep -r "npm run" docs/02-design/standards/development-workflow-sop.md | awk '{print $3}' | sort -u
+grep -r "npm run" docs/specs/design/standards/development-workflow-sop.md | awk '{print $3}' | sort -u
 
 # 检查所有门禁脚本是否存在
-for script in $(grep -r "scripts/" docs/02-design/standards/development-workflow-sop.md | awk -F'"' '{print $2}'); do
+for script in $(grep -r "scripts/" docs/specs/design/standards/development-workflow-sop.md | awk -F'"' '{print $2}'); do
   if [ -f "$script" ]; then echo "? $script"; else echo "? $script"; fi
 done
 

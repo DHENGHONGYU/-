@@ -1285,8 +1285,8 @@ change_log:
 
 | 类型 | 用途 | 位置 |
 |------|------|------|
-| **Tutorials（教程）** | 入门学习，step-by-step | `docs/tutorials/` |
-| **How-to（指南）** | 面向目标的操作步骤 | `docs/how-to/` |
+| **Tutorials（教程）** | 入门学习，step-by-step | `docs/guides/tutorials/` |
+| **How-to（指南）** | 面向目标的操作步骤 | `docs/guides/how-to/` |
 | **Reference（参考）** | 技术规范、API、配置 | `docs/reference/` |
 | **Explanation（解释）** | 设计思路、深度解析 | `docs/explanation/` |
 
@@ -1299,7 +1299,7 @@ change_log:
 
 #### 23.4 文档更新触发
 
-新增/修改模块后，按 `docs/00-meta/doc-trigger-action-map.md` 同步更新相关文档。
+新增/修改模块后，按 `docs/meta/doc-trigger-action-map.md` 同步更新相关文档。
 
 **最低要求**：
 - 新增功能 → 至少更新一份 reference 文档

@@ -129,7 +129,7 @@ V6 Pro 在浏览器端积累了大量用户数据，包括自选股、评分、�
 - 新增 `MigrationPanel.tsx`，集成到设置/系统迁移页面。
 - 新增 12 个转换函数，每个函数对应一个 V6 → V9 store 映射。
 - 新增 19 个单元测试，覆盖转换函数、去重策略、错误处理。
-- V9 IndexedDB 版本从 v5 升级到 v6，新增 8 个迁移相关 Store（见 `docs/implementation/db-migration-v4-to-v6.md`）。
+- V9 IndexedDB 版本从 v5 升级到 v6，新增 8 个迁移相关 Store（见 `docs/explanation/implementation/db-migration-v4-to-v6.md`）。
 
 ---
 
@@ -154,5 +154,5 @@ V6 Pro 在浏览器端积累了大量用户数据，包括自选股、评分、�
 
 ## 相关文档
 
-- `docs/implementation/v6-to-v9-migration-spec.md`：详细转换规范。
-- `docs/implementation/db-migration-v4-to-v6.md`：IndexedDB 升级规范。
+- `docs/explanation/implementation/v6-to-v9-migration-spec.md`：详细转换规范。
+- `docs/explanation/implementation/db-migration-v4-to-v6.md`：IndexedDB 升级规范。

@@ -187,9 +187,9 @@ change_log:
 
 | 序号 | 交付物 | 路径 | 说明 |
 |:---|:---|:---|:---|
-| 1 | 执行计划 | `docs/implementation/quality-audit-plan.md` | 本文档 |
-| 2 | 完成度剖面图 | `docs/implementation/completeness-profile.md` | 所有模块的五层剖面图汇总 |
-| 3 | 修复行动清单 | `docs/implementation/action-list.md` | 按 P0/P1/P2 排序的修复建议 |
+| 1 | 执行计划 | `docs/explanation/implementation/quality-audit-plan.md` | 本文档 |
+| 2 | 完成度剖面图 | `docs/explanation/implementation/completeness-profile.md` | 所有模块的五层剖面图汇总 |
+| 3 | 修复行动清单 | `docs/explanation/implementation/action-list.md` | 按 P0/P1/P2 排序的修复建议 |
 
 ---
 

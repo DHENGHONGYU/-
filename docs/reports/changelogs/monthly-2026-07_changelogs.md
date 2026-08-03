@@ -80,7 +80,7 @@ doc_id: V9-DOC-AUTO-E0D2AF
 
 *新增 (3):*
 
-- `+` docs/implementation/autonomous-workflow-optimization_implementation.md (509行)
+- `+` docs/explanation/implementation/autonomous-workflow-optimization_implementation.md (509行)
   - 新增自主工作流优化策略文档，包含三级决策矩阵、文档更新触发器、更新日志系统、质量控制机制
 - `+` docs/reports/changelogs/index.json (15行)
   - 新增日志索引文件，支持按日期/类型/状态检索

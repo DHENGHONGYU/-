@@ -1,7 +1,7 @@
 # 01 · 设计与原创思路（Design & Original Thinking）
 
 > 本文回答"**我们为什么这样设计**"。理解设计意图，团队才能在接手模块时做出符合初心的决策，而不是被历史代码牵着走。
-> 权威基线：`docs/explanation/01-vision-and-goals.md`、`docs/explanation/song-aesthetics.md`、`docs/explanation/design-tokens.md`、`docs/01-product/competitive-analysis.md`。
+> 权威基线：`docs/explanation/01-vision-and-goals.md`、`docs/explanation/song-aesthetics.md`、`docs/explanation/design-tokens.md`、`docs/specs/product/competitive-analysis.md`。
 
 ---
 

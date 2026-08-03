@@ -28,28 +28,28 @@
 | Batch-1 | 修改 `docs/10-glossary.md`：模块 ID、group 字段、watchlists、V6 迁移术语 | Doc-Sync Agent | ✅ 已完成 |
 | Batch-1 | 修改 `README.md`：版本标识、待实现列表、L3 描述 | Doc-Sync Agent | ✅ 已完成 |
 | Batch-1 | 修改 `docs/README.md`：版本统一、文档性质标注 | Doc-Sync Agent | ✅ 已完成 |
-| Batch-1 | 修改 `docs/implementation/implementation-governance.md`：ADR 数量、编号↔文件名对照表 | Doc-Sync Agent | ✅ 已完成 |
-| Batch-1 | 修改 `docs/implementation/v9-system-blueprint.md`：store 数量、质量基线、偏差清单、ADR 列表 | Doc-Sync Agent | ✅ 已完成 |
-| Batch-1 | 修改 `docs/implementation/input-cabin-spec.md`：inputConfig 状态、/input/local-knowledge | Doc-Sync Agent | ✅ 已完成 |
+| Batch-1 | 修改 `docs/explanation/implementation/implementation-governance.md`：ADR 数量、编号↔文件名对照表 | Doc-Sync Agent | ✅ 已完成 |
+| Batch-1 | 修改 `docs/explanation/implementation/v9-system-blueprint.md`：store 数量、质量基线、偏差清单、ADR 列表 | Doc-Sync Agent | ✅ 已完成 |
+| Batch-1 | 修改 `docs/explanation/implementation/input-cabin-spec.md`：inputConfig 状态、/input/local-knowledge | Doc-Sync Agent | ✅ 已完成 |
 | Batch-1 | 创建 `.nvmrc` + 配置 `vite.config.ts` coverage 阈值 + 安装 `@vitest/coverage-v8@^2.1.0` | Refactor-Agent | ✅ 已完成 |
 | Batch-1 | 更新 `package.json` / `package-lock.json`：新增 `tsc` 与 `regression` 脚本、记录 coverage 依赖 | Refactor-Agent | ✅ 已完成 |
 | Batch-2 | 审查 `docs/03-architecture-standards.md` | Code-Reviewer Agent | ✅ 已完成 |
 | Batch-2 | 审查 `docs/06-routing-specs.md`、`docs/08-implementation-plan.md`、`docs/09-quality-gates.md`、`docs/10-glossary.md` | Code-Reviewer Agent | ✅ 已完成 |
-| Batch-2 | 审查 `README.md`、`docs/README.md`、`docs/implementation/` 下 governance / v9-system-blueprint / input-cabin-spec | Code-Reviewer Agent | ✅ 已完成 |
-| Batch-2 | 新增 `docs/implementation/dataflow-engine-spec.md` | Doc-Sync Agent | ✅ 已完成 |
-| Batch-2 | 新增 `docs/implementation/agent-runtime-spec.md` | Doc-Sync Agent | ✅ 已完成 |
-| Batch-2 | 新增 `docs/implementation/rotation-score-spec.md` | Doc-Sync Agent | ✅ 已完成 |
-| Batch-2 | 新增 `docs/implementation/db-migration-v4-to-v6.md` | Doc-Sync Agent | ✅ 已完成 |
-| Batch-2 | 新增 `docs/implementation/quality-gates-baseline.md` | Doc-Sync Agent | ✅ 已完成 |
-| Batch-2 | 新增 `docs/implementation/adr/2026-06-25-v6-migration.md`（ADR-009） | Doc-Sync Agent | ✅ 已完成 |
+| Batch-2 | 审查 `README.md`、`docs/README.md`、`docs/explanation/implementation/` 下 governance / v9-system-blueprint / input-cabin-spec | Code-Reviewer Agent | ✅ 已完成 |
+| Batch-2 | 新增 `docs/explanation/implementation/dataflow-engine-spec.md` | Doc-Sync Agent | ✅ 已完成 |
+| Batch-2 | 新增 `docs/explanation/implementation/agent-runtime-spec.md` | Doc-Sync Agent | ✅ 已完成 |
+| Batch-2 | 新增 `docs/explanation/implementation/rotation-score-spec.md` | Doc-Sync Agent | ✅ 已完成 |
+| Batch-2 | 新增 `docs/explanation/implementation/db-migration-v4-to-v6.md` | Doc-Sync Agent | ✅ 已完成 |
+| Batch-2 | 新增 `docs/explanation/implementation/quality-gates-baseline.md` | Doc-Sync Agent | ✅ 已完成 |
+| Batch-2 | 新增 `docs/explanation/implementation/adr/2026-06-25-v6-migration.md`（ADR-009） | Doc-Sync Agent | ✅ 已完成 |
 | Batch-2.5 | 修复 `docs/03-architecture-standards.md`：DataFlow 实现细节、Widget 子目录、CockpitShell 描述、版本号统一 | Doc-Sync Agent | ✅ 已完成 |
 | Batch-2.5 | 修复 `docs/06-routing-specs.md`：HubPage 统称、子页面描述、第 8 节映射、版本号统一 | Doc-Sync Agent | ✅ 已完成 |
 | Batch-2.5 | 修复 `docs/08-implementation-plan.md`：章节编号顺序、测试超时说明 | Doc-Sync Agent | ✅ 已完成 |
 | Batch-2.5 | 修复 `docs/09-quality-gates.md`：.nvmrc 已创建、coverage 阈值已配置 | Doc-Sync Agent | ✅ 已完成 |
 | Batch-2.5 | 修复 `README.md`：L3 描述 | Doc-Sync Agent | ✅ 已完成 |
 | Batch-2.5 | 修复 `docs/README.md`：版本说明、表格列冗余 | Doc-Sync Agent | ✅ 已完成 |
-| Batch-2.5 | 修复 `docs/implementation/v9-system-blueprint.md`：store 数量、E2E/死代码基线、偏差清单同步 | Doc-Sync Agent | ✅ 已完成 |
-| Batch-2.5 | 修复 `docs/implementation/input-cabin-spec.md` 与 `docs/implementation/implementation-governance.md`：路由映射、ADR 日期说明 | Doc-Sync Agent | ✅ 已完成 |
+| Batch-2.5 | 修复 `docs/explanation/implementation/v9-system-blueprint.md`：store 数量、E2E/死代码基线、偏差清单同步 | Doc-Sync Agent | ✅ 已完成 |
+| Batch-2.5 | 修复 `docs/explanation/implementation/input-cabin-spec.md` 与 `docs/explanation/implementation/implementation-governance.md`：路由映射、ADR 日期说明 | Doc-Sync Agent | ✅ 已完成 |
 | Batch-3 | 全量回归测试：并发跑 lint/test/audit、串行 build + e2e；调整 `vite.config.ts` testTimeout 为 15000ms | Refactor-Agent + Test-Generator Agent | ✅ 已完成 |
 
 ---

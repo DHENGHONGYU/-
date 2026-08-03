@@ -169,7 +169,7 @@ npm run regression
 |----------|------|------|
 | 控制台输出 | 文本 | 实时查看，失败时定位第一现场 |
 | `docs/reports/audit/` | JSON | 机器可读的审计结果，供趋势分析 |
-| `docs/how-to/testing/audit-reports/audit/` | HTML/PNG | 可视化报告，供评审与归档查阅 |
+| `docs/guides/how-to/testing/audit-reports/audit/` | HTML/PNG | 可视化报告，供评审与归档查阅 |
 
 ---
 
