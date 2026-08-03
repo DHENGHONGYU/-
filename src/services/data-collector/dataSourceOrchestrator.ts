@@ -12,6 +12,7 @@
 */
 
 import { getLogger } from '@/lib/logger'
+import { withLogging } from '@/lib/logHelpers'
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, MODULE_ID, ENVELOPE_TARGET } from '@/config/dbConfig'
 import type { DailyQuotes } from '@/data/types'
@@ -383,8 +384,10 @@ async function attemptKlineSource(
  * Mock 假绿灯防护：config.allowMockFallback === false 时，全源失败返回
  * success:false（附错误原因），不生成 mock 数据、不计采集成功；
  * 允许 mock 时返回的 result.source 恒为 'mock'，保证 dataProvenance 血缘标记正确。
+ *
+ * 内部实现（由 withLogging 包装后导出为 getQuoteWithConfig）。
  */
-export async function getQuoteWithConfig(
+async function getQuoteWithConfigImpl(
   code: string,
   config: QuoteFetchConfig = {},
 ): Promise<CollectionResult<RealtimeQuote>> {
@@ -493,6 +496,16 @@ export async function getQuoteWithConfig(
 }
 
 /**
+ * getQuoteWithConfig — withLogging 包装版本（自动记录入口参数/耗时/返回结果/异常）。
+ */
+export const getQuoteWithConfig = withLogging(
+  'orchestrator',
+  'getQuoteWithConfig',
+  getQuoteWithConfigImpl,
+  { resultKeys: ['success', 'source', 'latency', 'fallbackChain', 'error'] },
+)
+
+/**
  * 获取实时行情（兼容旧入口，使用默认优先级链）
  */
 export async function getQuote(code: string): Promise<CollectionResult<RealtimeQuote>> {
@@ -595,8 +608,10 @@ async function tryKlineSource(code: string, days: number, source: DataSource): P
  *
  * Mock 假绿灯防护同 getQuoteWithConfig：allowMockFallback === false 时全源失败
  * 返回 success:false；允许 mock 时 result.source 恒为 'mock'。
+ *
+ * 内部实现（由 withLogging 包装后导出为 getKlineWithConfig）。
  */
-export async function getKlineWithConfig(
+async function getKlineWithConfigImpl(
   code: string,
   days: number,
   config: KlineFetchConfig = {},
@@ -704,6 +719,16 @@ export async function getKlineWithConfig(
 
   return finalResult
 }
+
+/**
+ * getKlineWithConfig — withLogging 包装版本（自动记录入口参数/耗时/返回结果/异常）。
+ */
+export const getKlineWithConfig = withLogging(
+  'orchestrator',
+  'getKlineWithConfig',
+  getKlineWithConfigImpl,
+  { resultKeys: ['success', 'source', 'latency', 'fallbackChain', 'error'] },
+)
 
 /**
  * 获取历史 K 线（兼容旧入口）
