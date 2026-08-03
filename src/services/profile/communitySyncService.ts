@@ -197,7 +197,7 @@ function calcQualityScore(post: CommunityPost): number {
   const hasKeyPoints = post.keyPoints && post.keyPoints.length >= 3
   const keyPointsBonus = hasKeyPoints ? 5 : 0
 
-  let score = weightedScore + engagementBonus + keyPointsBonus
+  const score = weightedScore + engagementBonus + keyPointsBonus
 
   // 裁剪到 [10, 100]
   const finalScore = Math.max(10, Math.min(100, Math.round(score)))

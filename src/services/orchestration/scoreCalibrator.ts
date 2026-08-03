@@ -156,7 +156,7 @@ export class ScoreCalibrator {
         return
       }
 
-      const result = await runDualStrategyUseCase({ stocks })
+      const result = await runDualStrategyUseCase({ stocks: stocks as unknown as Parameters<typeof runDualStrategyUseCase>[0]['stocks'] })
 
       eventBus.emit(EVENT_NAMES.STRATEGY_CLASSIFICATION_DONE, {
         calibrations: allResults,
@@ -201,16 +201,16 @@ export class ScoreCalibrator {
     this.pendingSymbols.clear()
   }
 
-  private async loadStocksFromDB(symbols: string[]): Promise<any[]> {
-    const results: any[] = []
+  private async loadStocksFromDB(symbols: string[]): Promise<unknown[]> {
+    const results: unknown[] = []
     for (const symbol of symbols) {
       try {
         const res = await dataBridge.query({
           action: ENVELOPE_ACTION.queryList,
           store: STORE_NAME.stocks,
         })
-        const list = (res.data ?? []) as any[]
-        const match = list.find((s: any) => s.symbol === symbol)
+        const list = (res.data ?? []) as unknown[]
+        const match = list.find((s) => (s as { symbol?: string } | null)?.symbol === symbol)
         if (match) results.push(match)
       } catch {
         /* skip */

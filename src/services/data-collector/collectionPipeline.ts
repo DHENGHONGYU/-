@@ -758,7 +758,8 @@ export async function runSingleTrace(
 
         // MOCK 禁用：真实源失败 → 维度失败，不写入假数据
         if (dimData._source === 'mock' || dimData._mock === true) {
-          const failReason = String(dimData._fallbackReason || '所有真实数据源均不可用')
+          const rawReason = dimData._fallbackReason
+          const failReason = typeof rawReason === 'string' ? rawReason : '所有真实数据源均不可用'
           logger.warn(`[collectionPipeline] 维度 ${dimensionCode} 真实源失败，禁用 mock，上报失败: ${normalizedSymbol}`, { reason: failReason })
           emit(COLLECTION_EVENTS.SOURCE_FAIL, {
             traceId, taskId, dimensionCode, symbol: normalizedSymbol,

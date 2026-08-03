@@ -125,14 +125,14 @@ function checkCitationIntegrity(score: IntelligentScore): ValidationIssue[] {
         check: 'citation',
         severity: 'warn',
         field: `dimensionScores.${dim.name}.rationale`,
-        message: `维度 "${dim.name}" 评分依据过短（${(dim.rationale?.length ?? 0)} 字 < ${MIN_RATIONALE_LENGTH} 字）`,
+        message: `维度 "${dim.name}" 评分依据过短（${(dim.rationale.length)} 字 < ${MIN_RATIONALE_LENGTH} 字）`,
         expected: `≥ ${MIN_RATIONALE_LENGTH} 字`,
-        actual: dim.rationale?.length ?? 0,
+        actual: dim.rationale.length,
       })
     }
 
     // 2b. 证据列表为空时告警（v6 因子应有 evidence）
-    if (!dim.usedLlm && (!dim.evidence || dim.evidence.length === 0)) {
+    if (!dim.usedLlm && dim.evidence.length === 0) {
       issues.push({
         check: 'citation',
         severity: 'info',
@@ -148,9 +148,9 @@ function checkCitationIntegrity(score: IntelligentScore): ValidationIssue[] {
       check: 'citation',
       severity: 'warn',
       field: 'summary',
-      message: `AI 总结过短（${(score.summary?.length ?? 0)} 字）或无内容`,
+      message: `AI 总结过短（${(score.summary.length)} 字）或无内容`,
       expected: `≥ ${MIN_RATIONALE_LENGTH} 字`,
-      actual: score.summary?.length ?? 0,
+      actual: score.summary.length,
     })
   }
 
@@ -162,7 +162,7 @@ function checkCitationIntegrity(score: IntelligentScore): ValidationIssue[] {
       field: 'basis',
       message: `评分依据描述过短或无内容`,
       expected: `≥ ${MIN_RATIONALE_LENGTH} 字`,
-      actual: score.basis?.length ?? 0,
+      actual: score.basis.length,
     })
   }
 

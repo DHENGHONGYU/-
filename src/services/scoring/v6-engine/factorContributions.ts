@@ -38,7 +38,7 @@ export function buildFactorContributions(trail: ScoreAuditTrail): FactorContribu
   const missingWeights: string[] = []
   for (const id of ALL_LAYER_IDS) {
     const lid = id
-    if (layerScores[lid] == null) missingFactors.push(LAYER_LABELS[lid] ?? lid)
+    if (layerScores[lid] == null) missingFactors.push(LAYER_LABELS[lid])
     if (weights[lid] == null) missingWeights.push(lid)
   }
   if (missingFactors.length > 0) {
@@ -51,14 +51,14 @@ export function buildFactorContributions(trail: ScoreAuditTrail): FactorContribu
   const activeLayers = ALL_LAYER_IDS.filter((id) => {
     const rawScore = layerScores[id]
     const rawWeight = weights[id]
-    const score = rawScore ?? Number.NaN
-    const weight = rawWeight ?? Number.NaN
+    const score = rawScore
+    const weight = rawWeight
     return score > 0 && weight > 0
   })
 
   const totalWeight = activeLayers.reduce((sum, id) => {
     const rawW = weights[id]
-    const w = rawW ?? Number.NaN
+    const w = rawW
     return sum + w
   }, 0)
 
@@ -68,15 +68,15 @@ export function buildFactorContributions(trail: ScoreAuditTrail): FactorContribu
 
   const weightedAverage =
     activeLayers.reduce((sum, id) => {
-      const score = layerScores[id] ?? 0
-      const weight = weights[id] ?? 0
+      const score = layerScores[id]
+      const weight = weights[id]
       return sum + score * weight
     }, 0) / totalWeight
   const finalScaled = weightedAverage * scale
 
   return activeLayers.map((id) => {
-    const score = layerScores[id] ?? 0
-    const weight = weights[id] ?? 0
+    const score = layerScores[id]
+    const weight = weights[id]
     const normalizedWeight = weight / totalWeight
     const contribution = score * normalizedWeight * scale
     const signedContribution = (score - baseline) * normalizedWeight * scale
@@ -84,7 +84,7 @@ export function buildFactorContributions(trail: ScoreAuditTrail): FactorContribu
 
     return {
       factorId: id,
-      label: LAYER_LABELS[id] ?? id,
+      label: LAYER_LABELS[id],
       weight,
       normalizedWeight,
       score,
