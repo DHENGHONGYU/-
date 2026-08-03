@@ -44,7 +44,7 @@ const STEP_IDLE_BG = cn(twBg('stone', 100), twText('stone', 400), DARK.bgNeutral
 
 export default function BulkImportPanel(): React.JSX.Element {
   const refresh = useIntentionPoolStore((s) => s.refresh)
-  const items = useIntentionPoolStore((s) => s.items) ?? []
+  const items = useIntentionPoolStore((s) => s.items)
   const allGroups = useMemo(() => getIntentionPoolGroups(), [])
 
   /** 意向池数据是否已加载完成（防止 refresh 未完成时误判重复） */
@@ -97,8 +97,7 @@ export default function BulkImportPanel(): React.JSX.Element {
   const handleFile = useCallback(async (file: File): Promise<void> => {
     setParsing(true)
     setMessage('')
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    setFileInfo({ name: file.name, size: file.size, type: file.type || file.name.split('.').pop() || 'unknown' })
+    setFileInfo({ name: file.name, size: file.size, type: file.type !== '' ? file.type : (file.name.split('.').pop() ?? 'unknown') })
     try {
       const rows = await parseFile(file)
       const existingSymbols = new Set(items.map(s => s.symbol))
@@ -445,7 +444,7 @@ export default function BulkImportPanel(): React.JSX.Element {
                       <td className="px-3 py-2">
                         <div className="flex items-center gap-1.5">
                           {statusBadge(row.status)}
-                          {row.statusReason && (
+                          {(row.statusReason ?? '') !== '' && (
                             <span className={cn('max-w-[120px] truncate text-xs', twText('stone', 400))} title={row.statusReason}>
                               {row.statusReason}
                             </span>
@@ -506,13 +505,13 @@ export default function BulkImportPanel(): React.JSX.Element {
                       <>，失败 <strong className={cn(twText('red', 600), DARK.textRed400)}>{importResult.failed}</strong> 条</>
                     )}
                   </p>
-                  {(importResult.errors ?? []).length > 0 && (
+                  {importResult.errors.length > 0 && (
                     <details className="mt-2">
                       <summary className={cn('cursor-pointer text-xs', twText('stone', 500), HOVER.textStone700, DARK.textNeutral400, DARK.hoverTextNeutral200)}>
-                        查看 {(importResult.errors ?? []).length} 条失败明细
+                        查看 {importResult.errors.length} 条失败明细
                       </summary>
                       <ul className={cn('mt-2 space-y-0.5 text-xs', twText('stone', 500), DARK.textNeutral400)}>
-                        {(importResult.errors ?? []).map((e, idx) => (
+                        {importResult.errors.map((e, idx) => (
                           <li key={idx} className="pl-2">· 第 {e.row} 行 {e.raw}：{e.error}</li>
                         ))}
                       </ul>

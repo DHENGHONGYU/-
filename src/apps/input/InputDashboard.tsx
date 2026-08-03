@@ -65,7 +65,7 @@ export default function InputDashboard(): React.JSX.Element {
   }, [refresh])
 
   const allGroups = useMemo(() => getIntentionPoolGroups(), [])
-  const allStocks = items ?? []
+  const allStocks = items
 
   // 全选框的半选（indeterminate）状态
   useEffect(() => {
@@ -94,7 +94,7 @@ export default function InputDashboard(): React.JSX.Element {
 
       if (result.success) {
         setMessage(
-          result.error
+          result.error != null
             ? `已添加 ${result.data?.symbol}，${result.error}`
             : `已添加 ${result.data?.symbol}`,
         )
@@ -335,9 +335,9 @@ export default function InputDashboard(): React.JSX.Element {
               setName(result.name)
               setMessage(`已选择 ${result.symbol} ${result.name}，请选择录入方式`)
             }}
-            onAdded={async (): Promise<void> => {
+            onAdded={(): void => {
               setMessage('搜索标的已录入意向候选池')
-              await refresh()
+              void refresh()
             }}
           />
           <div className="flex flex-wrap gap-2">
@@ -368,13 +368,13 @@ export default function InputDashboard(): React.JSX.Element {
                 </SelectItem>
               ))}
             </Select>
-            <Button onClick={() => handleAdd(false, false)} disabled={submitting}>
+            <Button onClick={() => void handleAdd(false, false)} disabled={submitting}>
               {submitting ? '处理中...' : '仅录入'}
             </Button>
-            <Button variant="secondary" onClick={() => handleAdd(true, false)} disabled={submitting}>
+            <Button variant="secondary" onClick={() => void handleAdd(true, false)} disabled={submitting}>
               {submitting ? '处理中...' : '录入并拉基础'}
             </Button>
-            <Button variant="secondary" onClick={() => handleAdd(true, true)} disabled={submitting}>
+            <Button variant="secondary" onClick={() => void handleAdd(true, true)} disabled={submitting}>
               {submitting ? '处理中...' : '录入并拉全部'}
             </Button>
           </div>
@@ -391,8 +391,8 @@ export default function InputDashboard(): React.JSX.Element {
               {fetcherOk === null ? '检查中...' : '刷新'}
             </Button>
           </div>
-          {(message || error) && (
-            <p className="text-sm text-muted-foreground">{message || error}</p>
+          {(message !== '' || (error ?? '') !== '') && (
+            <p className="text-sm text-muted-foreground">{message !== '' ? message : (error ?? '')}</p>
           )}
         </CardContent>
       </Card>
@@ -482,10 +482,10 @@ export default function InputDashboard(): React.JSX.Element {
                           {item.name}
                         </td>
                         <td className="whitespace-nowrap px-3 py-2 text-xs text-muted-foreground">
-                          {item.sector || (dictItem ? getMarketLabel(dictItem.market) : '-')}
+                          {item.sector ?? (dictItem ? getMarketLabel(dictItem.market) : '-')}
                         </td>
                         <td className="whitespace-nowrap px-3 py-2 text-xs text-muted-foreground">
-                          {item.industryCode || '-'}
+                          {item.industryCode ?? '-'}
                         </td>
                         <td className="whitespace-nowrap px-3 py-2 text-right font-mono text-xs">
                           {item.price !== undefined ? formatPrice(item.price) : (
