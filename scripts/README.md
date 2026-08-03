@@ -78,27 +78,26 @@
 
 | 脚本 | 用途 | 调用方式 |
 |------|------|---------|
-| `verify-all-routes.ts` | 全路由验证 | `npm run audit:routes` / `npm run verify:allRoutes` |
-| `validate-data-blueprint.ts` | 数据蓝图验证 | `npm run validate:blueprint` / `npm run validate:dataBlueprint` |
+| `verify-all-routes.ts` | 全路由验证 | `npm run audit:routes` |
+| `validate-data-blueprint.ts` | 数据蓝图验证 | `npm run validate:blueprint` |
 | `validate-data-consistency.ts` | 数据一致性验证 | `npm run validate:dataConsistency` |
 | `validate-json.ts` | JSON Schema 验证 | `npm run validate:json` |
 | `validate-acl-impact.ts` | ACL 影响验证 | `npm run validate:aclImpact` |
-| `verify-no-dead-refs.mjs` | 死引用验证 | `npm run verify:no-dead-refs` |
 | `verify-pipeline-output.ts` | 流水线输出验证 | `npm run verify:pipelineOutput` |
-| `verify-design-tokens.ts` | 设计令牌验证 | `npm run verify:tokens` / `npm run verify:designTokens` |
+| `verify-design-tokens.ts` | 设计令牌验证 | `npm run verify:tokens` |
 
 ### 构建与生成
 
 | 脚本 | 用途 | 调用方式 |
 |------|------|---------|
-| `generate-tokens.ts` | 生成设计令牌 CSS | `npm run generate:tokens` / `npm run tokens` |
-| `build-ai-memory-index.ts` | 构建 AI 记忆索引 | `npm run build:ai-memory` / `npm run build:aiMemoryIndex` |
-| `query-ai-memory.ts` | 查询 AI 记忆索引 | `npm run query:ai-memory` / `npm run query:aiMemory` |
+| `generate-tokens.ts` | 生成设计令牌 CSS | `npm run generate:tokens` |
+| `build-ai-memory-index.ts` | 构建 AI 记忆索引 | `npm run build:ai-memory` |
+| `query-ai-memory.ts` | 查询 AI 记忆索引 | `npm run query:ai-memory` |
 | `generate-store-graph.ts` | 生成 Store 依赖图 | `npm run generate:storeGraph` |
 | `generate-tech-debt-report.ts` | 生成技术债务报告 | `npm run generate:techDebtReport` |
 | `generate-pdf-report.ts` | 生成 PDF 报告 | `npm run generate:pdfReport` |
 | `scaffold-widget.ts` | Widget 脚手架生成 | `npm run scaffold:widget` |
-| `create-mcp-server.ts` | MCP 服务器创建 | `npm run create:mcp-server` / `npm run create:mcpServer` |
+| `create-mcp-server.ts` | MCP 服务器创建 | `npm run create:mcp-server` |
 
 ### 修复与补丁
 
@@ -120,7 +119,7 @@
 | `release-changelog-bump.ts` | 发布日志版本提升 | `npm run release:changelog-bump` / `postversion` |
 | `changelog-query.ts` | 变更日志查询 | `npm run changelog:query` / `changelog:summary` |
 | `lessons-learned.ts` | 经验教训总结 | `npm run lessons:learned` |
-| `pre-review-check.ts` | 预审查检查 | `npm run pre-review` / `npm run pre-reviewCheck` |
+| `pre-review-check.ts` | 预审查检查 | `npm run pre-review` |
 | `inject-frontmatter.ts` | Markdown 前置元数据注入 | `npm run inject:frontmatter` |
 | `translate-test-descriptions.ts` | 测试描述翻译 | `npm run translate:testDescriptions` |
 | `split-constants.ts` | 常量拆分 | `npm run split:constants` |
@@ -140,7 +139,7 @@
 
 | 脚本 | 用途 | 调用方式 |
 |------|------|---------|
-| `token-scan.cjs` | 令牌扫描 | `npm run token:scan` / `npm run audit:tokens` |
+| `token-scan.cjs` | 令牌扫描 | `npm run audit:tokens` |
 | `token-debug.cjs` | 令牌调试 | `npm run token:debug` |
 | `token-debug-size.cjs` | 令牌尺寸调试 | `npm run token:debugSize` |
 | `token-debug-hex.cjs` | 令牌 HEX 调试 | `npm run token:debugHex` |

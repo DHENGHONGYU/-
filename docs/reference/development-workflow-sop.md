@@ -467,7 +467,7 @@ git commit --no-verify -m "hotfix(scope): 紧急修复描述"
   └── 路径: npx tsx scripts/audit-path-match.ts
 
 AI 辅助
-  ├── 记忆: npm run query:aiMemory
+  ├── 记忆: npm run query:ai-memory
   ├── 脚手架: npm run scaffold:widget
   └── 异常: npm run anomaly:detect
 ```
