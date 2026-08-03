@@ -13,6 +13,7 @@
 */
 
 import { getLogger } from '@/lib/logger'
+import { withLogging } from '@/lib/logHelpers'
 import { eventBus } from '@/lib/eventBus'
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, MODULE_ID, ENVELOPE_TARGET } from '@/config/dbConfig'
@@ -423,9 +424,9 @@ async function writeKlineToDailyQuotes(symbol: string, klines: KlineBar[], sourc
 // ── 单次链路 ──
 
 /**
- * runSingleTrace
+ * runSingleTrace — 内部实现（不直接导出，由 withLogging 包装后导出）
  */
-export async function runSingleTrace(
+async function runSingleTraceImpl(
   options: RunSingleTraceOptions,
 ): Promise<TraceResult> {
   const { symbol, dimensionCode, config, parentTaskId } = options
@@ -474,7 +475,8 @@ export async function runSingleTrace(
     })
   }
 
-  logger.info('[collectionPipeline] 单次链路开始', {
+  // 入口日志由 withLogging 统一记录，此处仅保留 traceId 关联的 debug 日志
+  logger.debug('[collectionPipeline] 单次链路开始', {
     symbol: normalizedSymbol,
     dimensionCode,
     mode,
@@ -913,8 +915,10 @@ export async function runSingleTrace(
  *
  * 每批最多 CONCURRENCY 只股票并发采集，批间串行保证进度上报有序。
  * 单只 2s × 40 只 = 原串行 80s → 并发 5 只/批 ≈ 16s（约 5× 提速）。
+ *
+ * 内部实现（不直接导出，由 withLogging 包装后导出）。
  */
-export async function runBatchTrace(
+async function runBatchTraceImpl(
   options: RunBatchTraceOptions,
 ): Promise<TraceResult[]> {
   const { symbols, dimensionCode, config, parentTaskId } = options
@@ -962,6 +966,26 @@ export async function runBatchTrace(
 
   return results
 }
+
+/**
+ * runSingleTrace — withLogging 包装版本（自动记录入口参数/耗时/返回结果/异常）。
+ */
+export const runSingleTrace = withLogging(
+  'collectionPipeline',
+  'runSingleTrace',
+  runSingleTraceImpl,
+  { resultKeys: ['success', 'symbol', 'source', 'latency', 'fallbackCount', 'error'] },
+)
+
+/**
+ * runBatchTrace — withLogging 包装版本（自动记录入口参数/耗时/返回结果/异常）。
+ */
+export const runBatchTrace = withLogging(
+  'collectionPipeline',
+  'runBatchTrace',
+  runBatchTraceImpl,
+  { level: 'info' },
+)
 
 // ── Trace 广播 ──
 
