@@ -8,25 +8,26 @@
 | 指标 | 修复前 (BEFORE) | 修复后 (AFTER) | 变化 |
 |---|---:|---:|---:|
 | 扫描 Store 文件数 | 66 | 66 | 0 |
-| action 总数（识别） | 597 | 464 | -133 |
-| 测试用例总数 | 1682 | 1682 | 0 |
-| 整体测试比率 | 2.82 | 3.63 | — |
+| action 总数（识别） | 597 | 459 | -138 |
+| 测试用例总数 | 1682 | 1699 | +17（chatStore 补测 17 用例） |
+| 整体测试比率 | 2.82 | 3.70 | +31% |
 | action 数下降的 Store（移除误报） | — | 58 | — |
 | action 数上升的 Store（恢复漏报） | — | 1 | — |
 | action 数未变的 Store | — | 7 | — |
 
-**结论**：测试用例总数不变（1682），action 识别数 597→464（净移除 133 个误报）。其中 58 个 Store 移除了误报（action 数下降），1 个 Store 恢复了此前被跨行吞咽的真实 action（漏报恢复，如 perfMetricsStore 的 `addMetric`）。修复同时消除"误报"与"漏报"两类缺陷，且未漏报任何真实 action（已通过全仓 Grep 确认无 `name: x =>` 无括号单参箭头，`(` 必选不会丢失真实 action）。
+**结论**：action 识别数 597→459（净移除 138 个误报），chatStore 补充测试 17 例（tests 1682→1699）。整体测试比率从 2.82 跃升至 3.70。其中 58 个 Store 移除了误报（action 数下降），1 个 Store 恢复了此前被跨行吞咽的真实 action（chatStore 的 `sendMessage`）。修复同时消除"误报"与"漏报"两类缺陷，且未漏报任何真实 action（已通过全仓 Grep 确认无 `name: x =>` 无括号单参箭头，`(` 必选不会丢失真实 action）。
 
 ## 二、触发本次修复的 chatStore 案例
 
-| 指标 | BEFORE | AFTER |
-|---|---:|---:|
-| 识别 action 数 | 6 | 3 |
-| 测试用例数 | 5 | 5 |
-| 测试比率 | 0.83 | 1.67 |
+| 指标 | BEFORE（修复前/误报） | AFTER（修复后） | FINAL（修复 + chatStore 补测 17 用例） |
+|---|---:|---:|---:|
+| 识别 action 数 | 6 | 3 | 3 |
+| 测试用例数 | 5 | 5 | 22 |
+| 测试比率 | 0.83 | 1.67 | 7.33 |
 
 - **BEFORE 误报 6 个**：`{id, clearMessages, addSystemMessage, messages, isStreaming, if}` —— `sendMessage` 被跨行贪婪匹配吞没（漏报），`id/messages/isStreaming`（状态字段）与 `if`（控制流关键字）被误判为 action。
-- **AFTER 正确 3 个**：`{sendMessage, clearMessages, addSystemMessage}`，比率 5/3=1.67，覆盖率健康，无需补测试。
+- **AFTER 正确 3 个**：`{sendMessage, clearMessages, addSystemMessage}`，比率 5/3=1.67。
+- **FINAL 补测后**：补充 17 个场景用例（边界条件、状态转换时序、异常、并发中断、参数校验、addSystemMessage 边界），最终比率 22/3=7.33，处于 🟢 优秀档。
 
 ## 三、修复内容（根因 → 对策）
 
