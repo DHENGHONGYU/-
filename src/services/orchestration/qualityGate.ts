@@ -192,7 +192,7 @@ export class QualityGate {
 
     try {
       const analysisResult = await runFullIndustryAnalysis(
-        stocks.map((s: any) => ({ stock: s, financials: {} as any, quotes: {} as any })),
+        stocks.map((s) => ({ stock: s, financials: {}, quotes: {} })) as unknown as Parameters<typeof runFullIndustryAnalysis>[0],
       )
       eventBus.emit(EVENT_NAMES.ANALYSIS_INDUSTRY_COMPLETED, analysisResult)
       logger.info('[QualityGate] 行业分析完成')
@@ -201,16 +201,16 @@ export class QualityGate {
     }
   }
 
-  private async loadStocksFromDB(symbols: string[]): Promise<any[]> {
-    const results: any[] = []
+  private async loadStocksFromDB(symbols: string[]): Promise<unknown[]> {
+    const results: unknown[] = []
     for (const symbol of symbols) {
       try {
         const res = await dataBridge.query({
           action: ENVELOPE_ACTION.queryList,
           store: STORE_NAME.stocks,
         })
-        const list = (res.data ?? []) as any[]
-        const match = list.find((s: any) => s.symbol === symbol)
+        const list = (res.data ?? []) as unknown[]
+        const match = list.find((s) => (s as { symbol?: string } | null)?.symbol === symbol)
         if (match) results.push(match)
       } catch {
         /* skip */

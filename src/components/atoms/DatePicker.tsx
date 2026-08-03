@@ -29,7 +29,7 @@ export interface DatePickerProps extends Omit<InputHTMLAttributes<HTMLInputEleme
  */
 export function DatePicker({
   value, defaultValue, minDate, maxDate, onChange,
-  className = '', range, ...rest
+  className = '', range: _range, ...rest
 }: DatePickerProps) {
   return (
     <input

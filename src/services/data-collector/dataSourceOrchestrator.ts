@@ -128,7 +128,8 @@ async function tushareQuote(code: string): Promise<RealtimeQuote | null> {
     // 补充名称：若 daily 无名称，尝试 stock_basic
     const basic = await tushareStockBasic(code)
     if (basic.length > 0) {
-      quote.name = fromTushareCode(String(basic[0]?.name ?? quote.name))
+      const rawName = basic[0]?.name
+      quote.name = fromTushareCode(typeof rawName === 'string' ? rawName : quote.name)
     }
     return quote
   } catch (err) {

@@ -95,6 +95,18 @@ export const PieChart = memo(
 
       const palette = colors ?? PIE_CHART_PALETTE
 
+      const handleClick = useCallback(
+        (_: unknown, index: number) => {
+          if (onPieClick && safeData[index]) {
+            onPieClick(
+              { name: safeData[index]!.name, value: safeData[index]!.value },
+              index,
+            )
+          }
+        },
+        [onPieClick, safeData],
+      )
+
       // 加载状态骨架屏
       if (loading) {
         return (
@@ -116,18 +128,6 @@ export const PieChart = memo(
           </div>
         )
       }
-
-      const handleClick = useCallback(
-        (_: unknown, index: number) => {
-          if (onPieClick && safeData[index]) {
-            onPieClick(
-              { name: safeData[index]!.name, value: safeData[index]!.value },
-              index,
-            )
-          }
-        },
-        [onPieClick, safeData],
-      )
 
       return (
         <div ref={ref} className={cn('w-full', className)}>

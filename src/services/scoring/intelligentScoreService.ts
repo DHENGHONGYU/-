@@ -201,53 +201,53 @@ function v6CompositeToDimensionScores(
     switch (name) {
       case '估值':
         score = scoreFromLayer(layers.l3v)
-        rationale = layers.l3v?.summary ?? 'v6 估值层评分'
-        evidence = layers.l3v?.evidence ?? []
+        rationale = layers.l3v.summary
+        evidence = layers.l3v.evidence
         break
       case '成长':
         score = averageFromLayers(layers.l7, layers.l5)
-        rationale = [layers.l7?.summary, layers.l5?.summary].filter(Boolean).join('; ')
-        evidence = [...(layers.l7?.evidence ?? []), ...(layers.l5?.evidence ?? [])]
+        rationale = [layers.l7.summary, layers.l5.summary].filter(Boolean).join('; ')
+        evidence = [...layers.l7.evidence, ...layers.l5.evidence]
         break
       case '盈利':
         score = scoreFromLayer(layers.l3f)
-        rationale = layers.l3f?.summary ?? 'v6 财务健康层评分'
-        evidence = layers.l3f?.evidence ?? []
+        rationale = layers.l3f.summary
+        evidence = layers.l3f.evidence
         break
       case '质量':
         score = averageFromLayers(layers.l1, layers.l3f)
-        rationale = [layers.l1?.summary, layers.l3f?.summary].filter(Boolean).join('; ')
-        evidence = [...(layers.l1?.evidence ?? []), ...(layers.l3f?.evidence ?? [])]
+        rationale = [layers.l1.summary, layers.l3f.summary].filter(Boolean).join('; ')
+        evidence = [...layers.l1.evidence, ...layers.l3f.evidence]
         break
       case '动量':
         score = scoreFromLayer(layers.l8)
-        rationale = layers.l8?.summary ?? 'v6 技术筹码层评分'
-        evidence = layers.l8?.evidence ?? []
+        rationale = layers.l8.summary
+        evidence = layers.l8.evidence
         break
       case '波动':
         score = scoreFromLayer(layers.l8)
         rationale = '波动率来自 v6 L8 技术筹码层'
-        evidence = layers.l8?.evidence ?? []
+        evidence = layers.l8.evidence
         break
       case '流动性':
         score = scoreFromLayer(layers.l8)
         rationale = '流动性来自 v6 L8 技术筹码层'
-        evidence = layers.l8?.evidence ?? []
+        evidence = layers.l8.evidence
         break
       case '行业':
         score = averageFromLayers(layers.lMinus1, layers.l0, layers.l2)
-        rationale = [layers.lMinus1?.summary, layers.l0?.summary, layers.l2?.summary]
+        rationale = [layers.lMinus1.summary, layers.l0.summary, layers.l2.summary]
           .filter(Boolean).join('; ')
         evidence = [
-          ...(layers.lMinus1?.evidence ?? []),
-          ...(layers.l0?.evidence ?? []),
-          ...(layers.l2?.evidence ?? []),
+          ...layers.lMinus1.evidence,
+          ...layers.l0.evidence,
+          ...layers.l2.evidence,
         ]
         break
       case '情绪':
         score = averageFromLayers(layers.l6, layers.l4)
-        rationale = [layers.l6?.summary, layers.l4?.summary].filter(Boolean).join('; ')
-        evidence = [...(layers.l6?.evidence ?? []), ...(layers.l4?.evidence ?? [])]
+        rationale = [layers.l6.summary, layers.l4.summary].filter(Boolean).join('; ')
+        evidence = [...layers.l6.evidence, ...layers.l4.evidence]
         break
       default:
         score = null

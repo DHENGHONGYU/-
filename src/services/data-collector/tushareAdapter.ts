@@ -32,7 +32,9 @@ function toNumber(value: unknown): number | undefined {
 /** 安全取字符串 */
 function toString(value: unknown): string {
   if (value === null || value === undefined) return ''
-  return String(value)
+  if (typeof value === 'string') return value
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value)
+  return JSON.stringify(value)
 }
 
 // ── 01 基本信息 ──

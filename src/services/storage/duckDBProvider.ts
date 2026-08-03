@@ -136,7 +136,7 @@ export class DuckDBProviderImpl implements TimeSeriesProvider {
     try {
       const result = await this.conn!.query(trimmed)
       const duration = (performance.now() - queryStart).toFixed(2)
-      logger.info(`[duckDB] querySQL: 执行成功, 耗时 ${duration}ms, 结果行数=${(result as any)?.rowCount ?? 'unknown'}`)
+      logger.info(`[duckDB] querySQL: 执行成功, 耗时 ${duration}ms, 结果行数=${(result as unknown as { rowCount?: number })?.rowCount ?? 'unknown'}`)
       return { success: true }
     } catch (err) {
       const duration = (performance.now() - queryStart).toFixed(2)
