@@ -96,6 +96,9 @@ __pycache__/
 /test_output.txt
 /full_test_output.txt
 /test_results.json
+/test-results.json
+/test-coverage-report.html
+/architecture-radar-scan-report.html
 /regression-report.json
 /typescript_analysis_results.json
 /*_report.json
