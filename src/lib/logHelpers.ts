@@ -93,19 +93,22 @@ function safeStringify(value: unknown): string {
     const seen = new WeakSet()
     const json = JSON.stringify(value, (_key, val) => {
       if (val != null && typeof val === 'object') {
-        if (seen.has(val)) return '[Circular]'
-        seen.add(val)
+        const obj = val as object
+        if (seen.has(obj)) return '[Circular]'
+        seen.add(obj)
       }
       // 函数/Symbol 等不可序列化值
       if (typeof val === 'function') return '[Function]'
       if (typeof val === 'symbol') return val.toString()
       if (val instanceof Error) return { name: val.name, message: val.message }
-      return val
+      return val as unknown
     }, 0)
-    if (json == null) return String(value)
-    return json.length > 500 ? `${json.slice(0, 500)}…(${json.length}B)` : json
+    // JSON.stringify 运行时对 function/symbol 入参可能返回 undefined（TS 类型标注为 string，需放宽）
+    const jsonSafe = json as string | undefined
+    if (jsonSafe == null) return '[Unserializable]'
+    return jsonSafe.length > 500 ? `${jsonSafe.slice(0, 500)}…(${jsonSafe.length}B)` : jsonSafe
   } catch {
-    return String(value)
+    return '[Unserializable]'
   }
 }
 
@@ -262,7 +265,7 @@ export function logException(ctx: LogScopeContext, err: unknown): void {
     error: err instanceof Error ? err.message : String(err),
     errorName: err instanceof Error ? err.name : typeof err,
   }
-  if (err instanceof Error && err.stack) {
+  if (err instanceof Error && err.stack != null) {
     errorContext.stack = err.stack
   }
 
