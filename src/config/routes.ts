@@ -452,13 +452,15 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '研究候选池总览（基本信息 + 采集进度）',
   },
 
-  // Mock 测试页
-  {
-    path: '/mock-test',
-    component: React.lazy(() => import('@/pages/MockTestPage')),
-    category: 'other',
-    description: 'V9 模块 Mock 验证页（Slider/Sheet/Toggle/Engine）',
-  },
+  // // [DEPRECATED 2026-08-04] MockTestPage 已从路由解耦，待删除
+  // // 原因：开发期 Mock 验证页，不应进入生产路由注册表。
+  // // 文件 src/pages/MockTestPage.tsx 标记为待删除，可在确认无引用后移除。
+  // {
+  //   path: '/mock-test',
+  //   component: React.lazy(() => import('@/pages/MockTestPage')),
+  //   category: 'other',
+  //   description: 'V9 模块 Mock 验证页（Slider/Sheet/Toggle/Engine）',
+  // },
 ]
 
 /**

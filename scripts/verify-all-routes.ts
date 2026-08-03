@@ -156,7 +156,8 @@ const EXPECTED_PATHS: Record<string, { path: string; label: string }[]> = {
   portal: [
     { path: '/', label: '首页' },
     { path: '/cockpit', label: '驾驶舱' },
-    { path: '/mock-test', label: 'Mock 验证页' },
+    // [DEPRECATED 2026-08-04] /mock-test 已从路由解耦，不再属于预期路径
+    // { path: '/mock-test', label: 'Mock 验证页' },
   ],
 }
 

@@ -23,9 +23,12 @@ import '@/agents'
 // （src/mcp/register.ts 在模块加载时通过 import.meta.glob eager 加载并注册所有 MCP Server）
 import '@/mcp/register'
 
-if (import.meta.env.DEV) {
-  void import('@/devtools/testDataFlow')
-}
+// [DEPRECATED 2026-08-04] testDataFlow devtools 已从 App 解耦，待删除
+// 原因：开发期调试入口，不应在应用启动时自动导入。
+// 文件 src/devtools/testDataFlow.ts 标记为待删除，可在确认无引用后移除。
+// if (import.meta.env.DEV) {
+//   void import('@/devtools/testDataFlow')
+// }
 
 const logger = getLogger()
 

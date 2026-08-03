@@ -1,7 +1,15 @@
 /**
- * V9 模块 Mock 验证页面
- * 路径: /mock-test
+ * @deprecated 2026-08-04 待删除 — 已从路由解耦
+ *
+ * V9 模块 Mock 验证页面（原路径: /mock-test）
  * 用途: 手动/自动化验证 Slider、Sheet、Toggle、Engine 的实际渲染与交互效果
+ *
+ * 解耦原因：开发期 Mock 验证页，不应进入生产路由注册表。
+ * 同步变更：
+ *   - src/config/routes.ts 已移除 /mock-test 路由
+ *   - scripts/verify-all-routes.ts EXPECTED_PATHS 已移除 /mock-test
+ *   - tests/__tests__/scripts/verify-all-routes.test.ts 预期路径已同步
+ * 删除条件：确认无其他引用后可物理删除本文件。
  */
 import { useState } from 'react'
 import { Slider } from '@/components/atoms/Slider'

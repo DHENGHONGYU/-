@@ -1,4 +1,13 @@
 /**
+ * @deprecated 2026-08-04 待删除 — 已从 App.tsx 解耦
+ *
+ * 原用途：DEV 环境下通过 `if (import.meta.env.DEV) { void import('@/devtools/testDataFlow') }`
+ * 在应用启动时自动导入，提供 __DEV__.* 调试命令。
+ *
+ * 解耦原因：开发期调试入口，不应在应用启动时自动导入。
+ * 同步变更：src/App.tsx 已移除 DEV 自动导入代码块。
+ * 删除条件：确认无其他引用后可物理删除本文件。
+ *
  * @doc [V9-DOC-DATA-018, V9-DOC-DATA-002, V9-DOC-DATA-021, V9-DOC-DATA-008, V9-DOC-DATA-006]
  */
 import { getLogger, setLogLevel, type LogLevel } from '@/lib/logger'

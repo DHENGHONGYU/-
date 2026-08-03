@@ -176,27 +176,9 @@ test('F3 驾驶舱 Widget 引擎渲染', async ({ page }) => {
   })
 })
 
-test('F4 Mock 验证页 /mock-test', async ({ page }) => {
-  const errors: string[] = []
-  page.on('pageerror', (e) => errors.push(String(e).slice(0, 200)))
-  await page.goto('/#/mock-test', { waitUntil: 'domcontentloaded', timeout: 60_000 })
-  const rendered = await page
-    .waitForFunction(
-      () => {
-        const root = document.getElementById('root')
-        return !!root && root.childElementCount > 0 && (root.textContent ?? '').trim().length > 0
-      },
-      { timeout: 60_000 },
-    )
-    .then(() => true)
-    .catch(() => false)
-  await page.screenshot({ path: path.join(OUT_DIR, 'screenshots', 'feature-mock-test.png') })
-  results.push({
-    id: 'F4',
-    name: 'Mock 验证页 /mock-test',
-    status: rendered && errors.length === 0 ? 'pass' : 'fail',
-    detail: { rendered, pageErrors: errors },
-  })
+// [DEPRECATED 2026-08-04] F4 Mock 验证页 /mock-test 已从路由解耦，跳过该 e2e 用例
+test.skip('F4 Mock 验证页 /mock-test', async () => {
+  // 路由 /mock-test 已移除，本用例不再执行；保留结构便于未来恢复或彻底删除。
 })
 
 test.afterAll(() => {

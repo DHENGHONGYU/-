@@ -186,7 +186,9 @@ describe('verify-all-routes.ts v3.0（白盒测试）', () => {
         '/command/agents/changelog', '/command/mcp-servers', '/command/monitor',
         '/command/config', '/command/showcase', '/command/health', '/command/test',
         // portal
-        '/', '/cockpit', '/mock-test',
+        '/', '/cockpit',
+        // [DEPRECATED 2026-08-04] /mock-test 已从路由解耦
+        // '/', '/cockpit', '/mock-test',
       ]
       const hasRouteMap: Record<string, boolean> = {}
       for (const p of allExpectedPaths) {
