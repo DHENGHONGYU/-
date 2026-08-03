@@ -522,5 +522,5 @@ git push origin v2.0.1
 - [deployment.md](./deployment.md) — 部署流程
 - [runbook.md](./runbook.md) — 运维手册
 - [../../AGENTS.md](../../AGENTS.md) — AI 协作规范
-- [../reference/CODE-REVIEW.md](../reference/CODE-REVIEW.md) — 代码审查规范
+- [../CODE-REVIEW.md](../CODE-REVIEW.md) — 代码审查规范
 - [../../CHANGELOG.md](../../CHANGELOG.md) — 变更日志
