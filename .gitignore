@@ -150,8 +150,12 @@ _backfill_plan.py
 checklist_record.json
 
 # --- 2026-07-12 文档治理整改（P1）补充 ---
-# 自动产物（报告/审计 HTML，由 npm run audit:* / build:health 生成，不入 VCS）
-docs/reports/
+# 自动产物（报告/审计 JSON/HTML，由 npm run audit:* / build:health 生成，不入 VCS）
+# 注：docs/reports/ 作为十目录架构之一，其下的手写 .md 文档需要入 VCS
+docs/reports/audit/*.json
+docs/reports/_generated/
+docs/reports/**/*.html
+docs/reports/automation-pipeline/*.json
 
 # 发布包 / 压缩归档（根级散落已迁 releases/）
 releases/
