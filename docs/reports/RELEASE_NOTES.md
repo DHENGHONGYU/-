@@ -1,58 +1,8 @@
----
-title: RELEASE_NOTES
-type: reference
-domain: project
-phase: maintenance
-status: active
-maintainer: V9 Architecture Team
-summary: "> ：Feature Release + Architecture Refactor"
-tags: [report]
-version: v1.0.0
-last_updated: 2026-07-23
-code_version: 2.0.0
-doc_id: V9-DOC-AUTO-F54E6B
-tier: T1
----
-
 # V9 智能投研复盘系统 — Release Note
 
-## v2.6.0 (2026-07-26) — 零值兜底整改与数据准确性加固
+## v2.5.0 (2026-07-05) — UseCase 抽取、交易计算纯函数化与配置层补全
 
-> **版本类型**：Bug Fix + Data Quality  
-> **Commit**: `b625a10`  
-> **变更人**：V9 质量审计官  
-> **关联任务**：`?? 0` 隐式兜底消除、NaN 显式空值标记、双向验证测试
-
----
-
-### 核心变更
-
-1. **3 个高风险文件的 `?? 0` 隐式兜底消除** — positionPoolStore(quantity/avgCost/currentPrice)、sectorDefinitions(v6Composite)、profileStore(qualityScore) 全部改为 `Number.NaN` 或中值 `50` 兜底
-2. **NaN 显式空值标记** — 使用 `Number.NaN` 替代 `?? 0`，NaN 在数值计算中天然传播，不会产生假数值误导盈亏/排名/评分计算
-3. **双向数据验证** — 新增 19 组双向测试（正向 input→output+logs、逆向 output→input 推断），确保缺失值与业务零值严格区分
-4. **调试日志检测** — 3 个模块的关键入口新增 `logger.debug` 日志，区分「上游缺失」与「上游显式返回 0」，共 10 组日志断言覆盖
-5. **筛选逻辑修正** — profileStore `minQuality > 0` → `minQuality !== undefined`，支持 0 作为有效筛选阈值
-
-### 测试统计
-
-| 测试文件 | 行数 | 用例数 | 状态 |
-|----------|:----:|:------:|:----:|
-| positionPoolStore.test.ts | 1489 | 85 | ✅ 全绿 |
-| profileStore.test.ts | 1255 | 76 | ✅ 全绿 |
-| sectorDefinitions.test.ts | 416 | 22 | ✅ 全绿 |
-| **合计** | **3160** | **183** | **✅ 全绿** |
-
-### 保留项说明
-
-profileStore L531 `counts[item.domain] ?? 0` 为 `Record<string, number>` 计数器初始化，属合法业务场景，无需排查。
-
-### 详细文档
-
-- 验收报告: [zero-fallback-remediation-acceptance-report-2026-07-26.md](./zero-fallback-remediation-acceptance-report-2026-07-26.md)
-
----
-
-## v2.5.0 (2026-07-05) — UseCase 抽取、交易计算纯函数化与配置层补全  
+> **版本类型**：Feature Release + Architecture Refactor  
 > **变更人**：V9 质量审计官  
 > **关联任务**：UseCase 模式引入、交易计算纯函数提取、配置层零硬编码补全
 
@@ -184,7 +134,7 @@ profileStore L531 `counts[item.domain] ?? 0` 为 `Record<string, number>` 计数
 
 ---
 
-## 变更摘要
+## 📋 变更摘要
 
 本次发布完成了 V9 架构审计发现的 **10 项待办任务** 的修复与实现，涵盖 Agent 系统、Widget 引擎、评分算法、数据融合等核心模块。
 
@@ -302,7 +252,7 @@ profileStore L531 `counts[item.domain] ?? 0` 为 `Record<string, number>` 计数
 
 ---
 
-## 技术统计
+## 📊 技术统计
 
 ### 文件变更
 
@@ -358,7 +308,7 @@ profileStore L531 `counts[item.domain] ?? 0` 为 `Record<string, number>` 计数
 
 ---
 
-## 版本历史
+## 📝 版本历史
 
 | 版本 | 日期 | 类型 | 说明 |
 |------|------|------|------|
