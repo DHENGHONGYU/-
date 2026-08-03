@@ -92,7 +92,8 @@ const DYNAMIC_IMPORT_STORE_PATTERN = /import\s*\(\s*['"](?:\.\.\/store\/|@\/stor
 // 注：precision 为金融数值精度/数组安全工具（safeArrayGet/safeFirst/safeLast/formatPrice），validation 为数据校验/XSS/脱敏工具（validateConfigName/isValidLlmBaseURL 等），二者均为无业务依赖的纯函数基础设施
 // 注：perf 为性能监控基础设施（measureAsync/measureSync/getPerfStats），与 logger 同属 lib 基础设施
 // 注：safeRegex 为安全正则构造器（限制模式长度防 ReDoS），纯函数无业务依赖，同属 lib 基础设施
-const SERVICES_IMPORT_LIB_BUSINESS = /from\s+['"](?:\.\.\/lib\/|@\/lib\/)(?!logger|withBroadcast|eventBus|format|errors|utils|localStorageManager|safeCoerce|perf|precision|validation|safeRegex)[^'"]+['"]/
+// 注：logHelpers 为纯日志基础设施（withLogging 日志包装器，仅依赖 logger），同属 lib 基础设施
+const SERVICES_IMPORT_LIB_BUSINESS = /from\s+['"](?:\.\.\/lib\/|@\/lib\/)(?!logger|withBroadcast|eventBus|format|errors|utils|localStorageManager|safeCoerce|perf|precision|validation|safeRegex|logHelpers)[^'"]+['"]/
 
 // v2.1 修复：检测 lib 层依赖上层（排除 types 层）
 const LIB_IMPORT_UPPER_LAYER = /from\s+['"](?:\.\.\/(services|store|pages|components|apps|portal|cockpit)\/(?!types\/)|@\/(services|store|pages|components|apps|portal|cockpit)\/(?!types\/))[^'"]+['"]/
@@ -258,7 +259,7 @@ function isCompliantStoreModule(importPath: string, fromFile: string): boolean {
 // lib 基础设施白名单（core/config/services 三层可依赖的横切基础设施）
 // v3.2: 补入 safeRegex（安全正则构造器，纯函数无业务依赖）
 const LIB_INFRA_WHITELIST =
-  'logger|withBroadcast|eventBus|format|errors|utils|localStorageManager|safeCoerce|perf|precision|validation|safeRegex'
+  'logger|withBroadcast|eventBus|format|errors|utils|localStorageManager|safeCoerce|perf|precision|validation|safeRegex|logHelpers'
 // core/config 依赖 lib 中的业务模块（白名单外）——违规；白名单内基础设施放行
 const CORE_CONFIG_IMPORT_LIB_BUSINESS = new RegExp(
   `from\\s+['"](?:\\.\\.\\/lib\\/|@\\/lib\\/)(?!${LIB_INFRA_WHITELIST})[^'"]+['"]`,
@@ -527,7 +528,7 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           line: i + 1,
           column: (libBusinessMatch.index ?? 0) + 1,
           type: 'services 依赖 lib 业务模块',
-          message: '引擎层仅可依赖 lib 中的基础设施（logger/withBroadcast/eventBus/format/errors/utils/localStorageManager/safeCoerce/perf/precision/validation/safeRegex）',
+          message: '引擎层仅可依赖 lib 中的基础设施（logger/withBroadcast/eventBus/format/errors/utils/localStorageManager/safeCoerce/perf/precision/validation/safeRegex/logHelpers）',
           context: trimmed!.slice(0, 80),
         })
       }
