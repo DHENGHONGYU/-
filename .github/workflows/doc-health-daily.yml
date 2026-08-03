@@ -1,0 +1,93 @@
+name: Doc Health Daily
+
+# 文档健康度每日定时检查 — 自动修复 file:/// 断链并提交
+# 关联：.github/doc-ci-ruleset.yml（规则集）、scripts/docs-tool/link-health-checker.ts、link-health-scheduler.ts
+
+on:
+  schedule:
+    - cron: '20 3 * * *'  # 每天 UTC 03:20（北京时间 11:20）执行
+  workflow_dispatch:       # 允许手动触发
+
+permissions:
+  contents: write          # 需要写权限以提交自动修复的文件
+
+jobs:
+  doc-health:
+    name: Document link health check & auto-fix
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # 1. 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      # 2. 配置 Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --no-audit
+
+      # 4. 运行文档链接调度器（扫描 + 自动修复）
+      - name: Run link health scheduler (scan & auto-fix)
+        run: npm run doc:link:schedule
+        continue-on-error: true
+
+      # 5. 运行 CI 检查（验证 P0=0）
+      - name: Run link health scheduler CI check
+        id: ci-check
+        run: npm run doc:link:schedule:ci
+        continue-on-error: true
+
+      # 6. 提交自动修复的文件
+      - name: Commit auto-fixed files
+        if: steps.ci-check.outcome == 'success'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/ scripts/docs-tool/ .github/ package.json
+          if ! git diff --cached --quiet; then
+            git commit -m "docs(auto): 文档链接健康度每日自动修复 — $(date -u +%Y-%m-%d)"
+            git push
+            echo "✅ 自动修复已提交"
+          else
+            echo "ℹ️ 无需修复，工作区干净"
+          fi
+
+      # 7. 上传产物
+      - name: Upload link health artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: doc-link-health-${{ github.run_id }}
+          path: |
+            docs/reports/audit/link-health-*.json
+            docs/reports/audit/link-health-history.json
+          retention-days: 30
+
+      # 8. 输出摘要
+      - name: Generate summary
+        if: always()
+        run: |
+          echo "## 📄 文档链接健康度每日检查报告" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "执行时间: $(date -u -Iseconds)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.ci-check.outcome }}" == "success" ]; then
+            echo "✅ **CI 检查通过**: P0 断链数为 0" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **CI 检查失败**: 仍存在 P0 级别断链" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 最近执行摘要" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          npx tsx scripts/docs-tool/link-health-scheduler.ts --summary 5 || true
+          echo '```' >> $GITHUB_STEP_SUMMARY

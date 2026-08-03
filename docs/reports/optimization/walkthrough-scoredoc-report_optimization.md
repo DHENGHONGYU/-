@@ -17,7 +17,7 @@ phase: maintenance
 > **Version**: v1.1 | **日期**: 2026-07-04
 > **测试对象**: 评分拍照比对功能模块(`src/services/analysis/scoreDocService.ts`)
 > **测试样本**: 5 只随机抽样股票(300227.SZ / 300518.SZ / 300712.SZ / 300926.SZ / 688615.SH)
-> **测试文件**: [tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts](file:///%USERPROFILE%/Documents/kimi/Workspaces/智能投研复盘系统V9/tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts)
+> **测试文件**: [tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts](../../../tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts)
 > **测试结果**: ✅ **43/43 全部通过**(总耗时 2.49s)
 > **穿行步骤**: 5 只股票 × 16 步骤 = **80 步骤全部通过**
 
@@ -78,7 +78,7 @@ phase: maintenance
 
 ### 2.1 测试样本来源
 
-样本与 [walkthroughTest.sampled.test.ts](file:///%USERPROFILE%/Documents/kimi/Workspaces/智能投研复盘系统V9/tests/__tests__/integration/walkthroughTest.sampled.test.ts) 一致,采用 PowerShell `Get-Random -Count 5` 无放回随机抽样,抽样日期 2026-07-03。
+样本与 [walkthroughTest.sampled.test.ts](../../../tests/__tests__/integration/walkthroughTest.sampled.test.ts) 一致,采用 PowerShell `Get-Random -Count 5` 无放回随机抽样,抽样日期 2026-07-03。
 
 ### 2.2 样本数据设计
 
@@ -238,7 +238,7 @@ function getRating(composite: number): string {
 
 #### 5.4.1 计算公式
 
-依据 [scoreDocService.ts](file:///%USERPROFILE%/Documents/kimi/Workspaces/智能投研复盘系统V9/src/services/analysis/scoreDocService.ts) 中的 `buildChangeFromPrev` 纯函数:
+依据 [scoreDocService.ts](../../../src/services/analysis/scoreDocService.ts) 中的 `buildChangeFromPrev` 纯函数:
 
 ```typescript
 compositeDelta = Number((newDoc.composite - prevDoc.composite).toFixed(2))
@@ -433,11 +433,11 @@ const coreStocks = all.filter((d) => d.composite >= DEFAULT_THRESHOLDS.rating.st
 
 ### 8.1 新增背景
 
-本次测试发现 [ScoreHistoryPanel.tsx](file:///%USERPROFILE%/Documents/kimi/Workspaces/智能投研复盘系统V9/src/components/analysis/score/ScoreHistoryPanel.tsx) 与 [src/services/analysis/__tests__/scoreDocService.test.ts](file:///%USERPROFILE%/Documents/kimi/Workspaces/智能投研复盘系统V9/src/services/analysis/__tests__/scoreDocService.test.ts) 引用了不存在的 `buildScoreDocDiff` 函数与 `ScoreDocDiff` 类型,导致编译错误。
+本次测试发现 [ScoreHistoryPanel.tsx](../../../src/components/analysis/score/ScoreHistoryPanel.tsx) 与 [src/services/analysis/__tests__/scoreDocService.test.ts](../../../src/services/analysis/__tests__/scoreDocService.test.ts) 引用了不存在的 `buildScoreDocDiff` 函数与 `ScoreDocDiff` 类型,导致编译错误。
 
 ### 8.2 修复方案
 
-在 [scoreDocService.ts](file:///%USERPROFILE%/Documents/kimi/Workspaces/智能投研复盘系统V9/src/services/analysis/scoreDocService.ts) 中新增 `ScoreDocDiff` 接口与 `buildScoreDocDiff` 函数,与现有 `buildChangeFromPrev` 的区别:本函数额外提供新增/删除维度、评级变化信息。
+在 [scoreDocService.ts](../../../src/services/analysis/scoreDocService.ts) 中新增 `ScoreDocDiff` 接口与 `buildScoreDocDiff` 函数,与现有 `buildChangeFromPrev` 的区别:本函数额外提供新增/删除维度、评级变化信息。
 
 ### 8.3 函数签名
 
@@ -563,8 +563,8 @@ export function buildScoreDocDiff(newer: ScoreDocVersion, older: ScoreDocVersion
 
 | # | 问题 | 位置 | 严重度 | 状态 | 修复内容 |
 |---|------|------|--------|------|----------|
-| 1 | `getFileLibraryStats` 中 `composite >= 4.0` 硬编码 | [scoreDocService.ts](file:///%USERPROFILE%/Documents/kimi/Workspaces/智能投研复盘系统V9/src/services/analysis/scoreDocService.ts) | 中 | ✅ **已修复** | 改为引用 `DEFAULT_THRESHOLDS.rating.strongBuy` |
-| 2 | `buildScoreDocDiff` 函数与 `ScoreDocDiff` 类型缺失 | [scoreDocService.ts](file:///%USERPROFILE%/Documents/kimi/Workspaces/智能投研复盘系统V9/src/services/analysis/scoreDocService.ts) | 高 | ✅ **已修复** | 新增函数与类型,修复 ScoreHistoryPanel.tsx 与测试的引用错误 |
+| 1 | `getFileLibraryStats` 中 `composite >= 4.0` 硬编码 | [scoreDocService.ts](../../../src/services/analysis/scoreDocService.ts) | 中 | ✅ **已修复** | 改为引用 `DEFAULT_THRESHOLDS.rating.strongBuy` |
+| 2 | `buildScoreDocDiff` 函数与 `ScoreDocDiff` 类型缺失 | [scoreDocService.ts](../../../src/services/analysis/scoreDocService.ts) | 高 | ✅ **已修复** | 新增函数与类型,修复 ScoreHistoryPanel.tsx 与测试的引用错误 |
 | 3 | `DEFAULT_THRESHOLDS.rating` 未定义 `strongSell` 字段 | config.ts | 低 | ⏳ 待办 | 建议后续重构 |
 | 4 | 评级档位间距均匀(均为 1.0),未基于历史评分分布做分位数划分 | config.ts | 低 | ⏳ 待办 | 建议长期优化 |
 | 5 | 行业基准库仅覆盖 8 个行业,未涵盖申万一级全部行业 | config.ts | 低 | ⏳ 待办 | 建议按需扩展 |
@@ -652,12 +652,12 @@ npx vitest run walkthroughScoreDoc --reporter=default
 
 | 文件 | 用途 | 状态 |
 |------|------|------|
-| [tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts](file:///%USERPROFILE%/Documents/kimi/Workspaces/智能投研复盘系统V9/tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts) | 本次穿行测试文件 | ✅ 已创建并通过 |
-| [src/services/analysis/scoreDocService.ts](file:///%USERPROFILE%/Documents/kimi/Workspaces/智能投研复盘系统V9/src/services/analysis/scoreDocService.ts) | 被测核心服务 | ✅ 已修复(P1 + buildScoreDocDiff) |
-| [src/services/scoring/v6-engine/config.ts](file:///%USERPROFILE%/Documents/kimi/Workspaces/智能投研复盘系统V9/src/services/scoring/v6-engine/config.ts) | 评分判断标准配置 | 未修改 |
-| [src/data/types.ts](file:///%USERPROFILE%/Documents/kimi/Workspaces/智能投研复盘系统V9/src/data/types.ts) | ScoreDocVersion 等类型定义 | 未修改 |
-| [src/components/analysis/score/ScoreHistoryPanel.tsx](file:///%USERPROFILE%/Documents/kimi/Workspaces/智能投研复盘系统V9/src/components/analysis/score/ScoreHistoryPanel.tsx) | 历史面板组件 | ✅ 引用错误已消除(无需修改) |
-| [src/services/analysis/__tests__/scoreDocService.test.ts](file:///%USERPROFILE%/Documents/kimi/Workspaces/智能投研复盘系统V9/src/services/analysis/__tests__/scoreDocService.test.ts) | buildScoreDocDiff 单元测试 | ✅ 4/4 通过 |
+| [tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts](../../../tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts) | 本次穿行测试文件 | ✅ 已创建并通过 |
+| [src/services/analysis/scoreDocService.ts](../../../src/services/analysis/scoreDocService.ts) | 被测核心服务 | ✅ 已修复(P1 + buildScoreDocDiff) |
+| [src/services/scoring/v6-engine/config.ts](../../../src/services/scoring/v6-engine/config.ts) | 评分判断标准配置 | 未修改 |
+| [src/data/types.ts](../../../src/data/types.ts) | ScoreDocVersion 等类型定义 | 未修改 |
+| [src/components/analysis/score/ScoreHistoryPanel.tsx](../../../src/components/analysis/score/ScoreHistoryPanel.tsx) | 历史面板组件 | ✅ 引用错误已消除(无需修改) |
+| [src/services/analysis/__tests__/scoreDocService.test.ts](../../../src/services/analysis/__tests__/scoreDocService.test.ts) | buildScoreDocDiff 单元测试 | ✅ 4/4 通过 |
 
 ## 附录 C:AGENTS.md 合规性检查
 

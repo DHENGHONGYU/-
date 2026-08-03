@@ -931,7 +931,7 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 
 #### 3. 显式路径映射表设计
 
-创建 [doc-ref-path-map.json](file:///G:/FinSightV9/scripts/config/doc-ref-path-map.json)，包含两类映射：
+创建 [doc-ref-path-map.json](../../../scripts/config/doc-ref-path-map.json)，包含两类映射：
 
 - **codePathMap**：39 条代码路径映射（doc-to-code 引用修复）
 - **docPathMap**：54 条文档路径映射（doc-to-doc 引用修复）
@@ -943,7 +943,7 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 
 #### 4. 修复脚本增强
 
-增强 [fix-doc-refs.ts](file:///G:/FinSightV9/scripts/fix-doc-refs.ts) v1.2：
+增强 [fix-doc-refs.ts](../../../scripts/fix-doc-refs.ts) v1.2：
 
 - 新增 `--use-path-map` 参数启用显式映射表
 - 映射表查找优先级高于模糊搜索
@@ -1018,7 +1018,7 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 
 #### 1. 多匹配引用自动应用
 
-创建 [apply-multi-match-fixes.ts](file:///G:/FinSightV9/scripts/fix/apply-multi-match-fixes.ts) 脚本，自动应用 `doc-refs-manual-review.json` 中多匹配引用的最佳建议：
+创建 [apply-multi-match-fixes.ts](../../../scripts/fix/apply-multi-match-fixes.ts) 脚本，自动应用 `doc-refs-manual-review.json` 中多匹配引用的最佳建议：
 
 - 读取复核清单中的 88 条多匹配引用
 - 校验每个建议目标的存在性
@@ -1044,7 +1044,7 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 | “src/pages/input/CollectTask/index.tsx” | 10 | 页面已删除 |
 | “src/services/trading/tradingService.ts” | 9 | useCase 层已重构 |
 
-向 [doc-ref-path-map.json](file:///G:/FinSightV9/scripts/config/doc-ref-path-map.json) 补充了可确认映射：
+向 [doc-ref-path-map.json](../../../scripts/config/doc-ref-path-map.json) 补充了可确认映射：
 
 - “src/core/types.ts → src/showcase/types.ts”
 - “src/config/apiPaths.ts”
@@ -1215,7 +1215,7 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 
 #### 2. 修复脚本增强
 
-增强 [fix-doc-refs.ts](file:///G:/FinSightV9/scripts/fix-doc-refs.ts) v1.3：
+增强 [fix-doc-refs.ts](../../../scripts/fix-doc-refs.ts) v1.3：
 
 - 原逻辑对纯 basename 引用直接忽略（无法确定相对路径）
 - 新逻辑：先查询显式路径映射表，若 basename 有精确映射则自动修复
@@ -1223,7 +1223,7 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 
 #### 3. 映射表扩充
 
-向 [doc-ref-path-map.json](file:///G:/FinSightV9/scripts/config/doc-ref-path-map.json) 新增 11 条 basename 映射：
+向 [doc-ref-path-map.json](../../../scripts/config/doc-ref-path-map.json) 新增 11 条 basename 映射：
 
 | basename | 映射目标 |
 |----------|---------|
@@ -1310,7 +1310,7 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 
 #### 2. 路径映射表
 
-创建 [fix-code-to-doc-refs.ts](file:///G:/FinSightV9/scripts/fix/fix-code-to-doc-refs.ts) 脚本，定义 6 条路径映射：
+创建 [fix-code-to-doc-refs.ts](../../../scripts/fix/fix-code-to-doc-refs.ts) 脚本，定义 6 条路径映射：
 
 | 旧引用 | 新引用 | 命中数 |
 |--------|--------|--------|

@@ -1,0 +1,58 @@
+# 文档 CI 检查规则集
+# 定义文档链接健康度相关的 CI 检查规则
+# 关联：scripts/docs-tool/link-health-checker.ts、scripts/docs-tool/link-health-scheduler.ts
+
+version: "1.0"
+
+# 规则集描述
+description: "文档链接健康度 CI 检查规则集 — 确保 docs/ 下的链接始终有效"
+
+# 规则列表
+rules:
+  # 规则 DOC-CI-2.1-001：文档链接健康度 CI 检查
+  - id: DOC-CI-2.1-001
+    name: "文档链接健康度 CI 检查"
+    severity: P0
+    description: "检查 docs/ 目录下是否存在 file:/// 绝对路径断链（P0 级别）"
+    command: "npm run doc:link-check:ci"
+    expectedExitCode: 0
+    triggers:
+      - pull_request
+      - push
+    paths:
+      - "docs/**"
+      - "scripts/docs-tool/**"
+    failureMessage: "检测到 file:/// 绝对路径断链，请运行 npm run doc:link-check:fix 修复"
+    successMessage: "文档链接健康度检查通过，P0 断链数为 0"
+
+  # 规则 DOC-CI-3.1-005：文档链接调度器 CI 检查
+  - id: DOC-CI-3.1-005
+    name: "文档链接调度器 CI 检查"
+    severity: P0
+    description: "通过调度器运行文档链接健康度检查，确保 P0 断链全部修复"
+    command: "npm run doc:link:schedule:ci"
+    expectedExitCode: 0
+    triggers:
+      - schedule
+      - workflow_dispatch
+      - pull_request
+    paths:
+      - "docs/**"
+      - "scripts/docs-tool/**"
+      - ".github/workflows/doc-health-daily.yml"
+    failureMessage: "文档链接调度器检测到 P0 残留，请运行 npm run doc:link:schedule 修复"
+    successMessage: "文档链接调度器检查通过，P0 残留为 0"
+
+# 修复指引
+remediation:
+  autoFixCommand: "npm run doc:link-check:fix"
+  schedulerCommand: "npm run doc:link:schedule"
+  dryRunCommand: "npm run doc:link:schedule:dry-run"
+  summaryCommand: "npm run doc:link:summary"
+
+# 报告位置
+reports:
+  directory: "docs/reports/audit/"
+  pattern: "link-health-{timestamp}.json"
+  history: "docs/reports/audit/link-health-history.json"
+  maxHistoryEntries: 100

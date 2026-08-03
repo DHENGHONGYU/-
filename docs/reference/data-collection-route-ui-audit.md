@@ -88,7 +88,7 @@ V6ݹ `/data-hub` 4TabV9Ǩ
 
 |  | ļ | ErrorBoundary | ĲԼ | //̬ | ۺ |
 |:---|:---|:---:|:---:|:---:|:---:|
-| `InputHubPage` | [InputHubPage.tsx](file:////src/pages/input/InputHubPage.tsx) | ? |  | ޣ̬ҳ | ??  |
+| `InputHubPage` | [InputHubPage.tsx](../../src/pages/input/InputHubPage.tsx) | ? |  | ޣ̬ҳ | ??  |
 | `SevenDimConfigPage` | [SevenDimConfigPage.tsx](../../src/pages/input/SevenDimConfigPage.tsx) | ? |  | ȫ | ??  |
 | `LocalKnowledgePage` | [LocalKnowledgePage.tsx](../../src/pages/input/LocalKnowledgePage.tsx) | ? |  | ȫ | ?? 貹EB |
 | `InputDashboard` | [InputDashboard.tsx](../../src/apps/input/InputDashboard.tsx) | ? | **Υ** | м/ | ?? DF-002 |
