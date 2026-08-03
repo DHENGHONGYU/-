@@ -1,6 +1,6 @@
 # 04 · 模型运行思路（Model Runtime & Data Flow）
 
-> 本文回答"**模型怎么跑、数据怎么流**"。权威基线：`src/services/scoring/`、`src/services/data-collector/`、`src/core/`、`src/data/`、`src/agents/`、`src/services/llm/`、`src/mcp/`、`docs/reference/05-engine-specs.md`、`docs/reference/ai-memory-layer.md`、`docs/reference/ai-generate-audit-fix-loop.md`。
+> 本文回答"**模型怎么跑、数据怎么流**"。权威基线：`src/services/scoring/`、`src/services/data-collector/`、`src/core/`、`src/data/`、`src/agents/`、`src/services/llm/`、`src/mcp/`、`docs/05-engine-specs.md`、`docs/reference/ai-memory-layer.md`、`docs/reference/ai-generate-audit-fix-loop.md`。
 > ⚠️ 概念澄清：**五因子（板块轮动，合成种子）≠ V6 十一层引擎 ≠ 九维智能评分**，三者独立。
 
 ---

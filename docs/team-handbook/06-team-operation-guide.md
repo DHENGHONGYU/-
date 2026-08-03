@@ -505,7 +505,7 @@ export function MyModuleList() {
 - 注释说明"为什么"而非"做什么"
 - 可测试性好，依赖注入清晰
 
-> **详细指南**：[code-review-guide.md](../how-to/code-review-guide.md)、[CODE-REVIEW.md](file:///g:/FinSightV9/docs/reference/CODE-REVIEW.md)
+> **详细指南**：[code-review-guide.md](../how-to/code-review-guide.md)、[CODE-REVIEW.md](../CODE-REVIEW.md)
 
 ---
 
@@ -1364,10 +1364,10 @@ change_log:
 | | 设计哲学 | [01-design-philosophy.md](./01-design-philosophy.md) |
 | | 架构总览 | [02-architecture.md](./02-architecture.md) |
 | **架构契约** | AGENTS.md | [AGENTS.md](file:///g:/FinSightV9/AGENTS.md) |
-| | 架构标准 | [03-architecture-standards.md](file:///g:/FinSightV9/docs/reference/03-architecture-standards.md) |
+| | 架构标准 | [03-architecture-standards.md](../03-architecture-standards.md) |
 | **开发流程** | 开发工作流 SOP | [development-workflow-sop.md](../reference/development-workflow-sop.md) |
 | | 编码规范 | [coding-conventions.md](file:///g:/FinSightV9/docs/reference/coding-conventions.md) |
-| | 质量门禁 | [09-quality-gates.md](file:///g:/FinSightV9/docs/reference/09-quality-gates.md) |
+| | 质量门禁 | [09-quality-gates.md](../09-quality-gates.md) |
 | **专项指南** | 新增 Store | [how-to-add-store.md](file:///g:/FinSightV9/docs/how-to/how-to-add-store.md) |
 | | 新增 Service | [how-to-add-service.md](file:///g:/FinSightV9/docs/how-to/how-to-add-service.md) |
 | | 新增 Widget | [how-to-add-widget.md](file:///g:/FinSightV9/docs/how-to/how-to-add-widget.md) |

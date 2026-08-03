@@ -167,13 +167,17 @@ export default function InputDashboard(): React.JSX.Element {
 
   const handleDeleteStock = async (symbol: string): Promise<void> => {
     const store = useIntentionPoolStore.getState()
-    const deleted = await store.deleteItem(symbol)
-    if (deleted) {
-      setMessage(`已移除 ${symbol}`)
-      setSelectedSymbols((prev) => prev.filter((s) => s !== symbol))
-      await refresh()
-    } else {
-      setMessage(`移除 ${symbol} 失败`)
+    try {
+      const deleted = await store.deleteItem(symbol)
+      if (deleted) {
+        setMessage(`已移除 ${symbol}`)
+        setSelectedSymbols((prev) => prev.filter((s) => s !== symbol))
+        await refresh()
+      } else {
+        setMessage(`移除 ${symbol} 失败`)
+      }
+    } catch (err) {
+      setMessage(`移除异常：${err instanceof Error ? err.message : String(err)}`)
     }
   }
 
@@ -191,21 +195,30 @@ export default function InputDashboard(): React.JSX.Element {
   const handleBatchDelete = async (): Promise<void> => {
     if (selectedSymbols.length === 0) return
     const store = useIntentionPoolStore.getState()
-    const count = await store.deleteItems(selectedSymbols)
-    setSelectedSymbols([])
-    if (count > 0) {
-      setMessage(`已批量删除 ${count} 条标的`)
-    } else {
-      setMessage('批量删除失败')
+    try {
+      const count = await store.deleteItems(selectedSymbols)
+      setSelectedSymbols([])
+      if (count > 0) {
+        setMessage(`已批量删除 ${count} 条标的`)
+      } else {
+        setMessage('批量删除失败')
+      }
+    } catch (err) {
+      setMessage(`批量删除异常：${err instanceof Error ? err.message : String(err)}`)
     }
   }
 
   const handleRefreshHealth = async (): Promise<void> => {
     setFetcherOk(null)
-    const result = await checkFetcherHealth()
-    setFetcherOk(result.ok)
-    if (!result.ok) {
-      setMessage(result.error ?? '数据采集服务异常')
+    try {
+      const result = await checkFetcherHealth()
+      setFetcherOk(result.ok)
+      if (!result.ok) {
+        setMessage(result.error ?? '数据采集服务异常')
+      }
+    } catch (err) {
+      setFetcherOk(false)
+      setMessage(`采集服务检查异常：${err instanceof Error ? err.message : String(err)}`)
     }
   }
 
@@ -374,8 +387,8 @@ export default function InputDashboard(): React.JSX.Element {
             ) : (
               <Badge variant="destructive">未连接</Badge>
             )}
-            <Button variant="ghost" size="sm" onClick={() => void handleRefreshHealth()}>
-              刷新
+            <Button variant="ghost" size="sm" onClick={() => void handleRefreshHealth()} disabled={fetcherOk === null}>
+              {fetcherOk === null ? '检查中...' : '刷新'}
             </Button>
           </div>
           {(message || error) && (

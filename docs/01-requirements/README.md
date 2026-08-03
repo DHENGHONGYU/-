@@ -34,7 +34,7 @@ date: 2026-07-17
 ## 与技术文档体系的关系
 
 大部分需求规格已迁移至技术文档体系：
-- 功能规格 → [../reference/02-functional-specs.md](../reference/02-functional-specs.md)
+- 功能规格 → [../02-functional-specs.md](../02-functional-specs.md)
 - 各舱室规格 → `../reference/*-cabin-spec.md`
 - 核心 ADR → `../reference/adr-*.md`
 

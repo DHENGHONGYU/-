@@ -31,5 +31,5 @@ date: 2026-07-17
 
 ## 相关文档
 
-- 测试策略：[../reference/testing-strategy.md](../reference/testing-strategy.md)
+- 测试策略：[../testing-strategy.md](../testing-strategy.md)
 - 端到端用例：[../../e2e/](../../e2e/)

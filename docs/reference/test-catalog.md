@@ -17,7 +17,7 @@ doc_id: V9-DOC-REF-901
 > **文档定位**：本文档是 V9 智能投研复盘系统全部测试资产的**单一真相源**（Single Source of Truth）。
 > **适用范围**：所有新增模块的测试义务、CI 门禁配置、故障排查时的测试定位入口。
 > **关联文档**：
-> - [测试策略总览](../reference/testing-strategy.md) — 三层测试策略与改进路线
+> - [测试策略总览](../testing-strategy.md) — 三层测试策略与改进路线
 > - [AGENTS.md](../../AGENTS.md) — 四步集成回滚验证、事件监听清理模板
 > - [运维基线](../explanation/runbook.md) — CI/CD 流水线配置
 > - [编码规范](coding-conventions.md) — 测试命名与目录约定
@@ -487,7 +487,7 @@ npm run audit:tests       # 测试文件合规性扫描
 
 ### B. 相关文档索引
 
-- [三层测试策略](../reference/testing-strategy.md)
+- [三层测试策略](../testing-strategy.md)
 - [AGENTS.md §二 — 四步集成与回滚验证](../../AGENTS.md)
 - [AGENTS.md §三 — 事件监听清理模板](../../AGENTS.md)
 - [AGENTS.md §七 — 验证命令速查](../../AGENTS.md)
