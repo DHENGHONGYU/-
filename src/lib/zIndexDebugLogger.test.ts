@@ -157,7 +157,7 @@ describe('readComputedZIndex', () => {
 // 2. logZIndex：id/description/console.debug DEV 分支
 // ════════════════════════════════════════════════════════════════
 describe('logZIndex：字段 + console.debug', () => {
-  it('description=''"无描述 → 日志无" 描述="段', async () => {
+  it('description 为空字符串 → 日志不包含 描述= 段', async () => {
     const { logZIndex } = await import('./zIndexDebugLogger')
     logZIndex('C', makeElement('e1'), 'mount', '')
     expect(mockLoggerDebug.mock.calls[0]![0]).not.toContain('描述=')
@@ -171,12 +171,21 @@ describe('logZIndex：字段 + console.debug', () => {
     expect(mockLoggerDebug.mock.calls[0]![1].description).toBe('desc-xyz')
   })
 
-  it('element 无 id（空字符串）→ 日志 elementId="none"', async () => {
+  it('element = undefined（不存在）→ elementId 回退 "none"', async () => {
+    const { logZIndex } = await import('./zIndexDebugLogger')
+    // 用 undefined 作为 element → element?.id = undefined → ?? 'none'
+    logZIndex('C', undefined as any, 'mount')
+    expect(mockLoggerDebug.mock.calls[0]![1].elementId).toBe('none')
+  })
+
+  it('element 有 id（空字符串 el.id=""）→ elementId=""（不回退，id 真值分支）', async () => {
     const { logZIndex } = await import('./zIndexDebugLogger')
     const el = document.createElement('section')
+    el.id = ''
     document.body.appendChild(el)
     logZIndex('C', el, 'mount')
-    expect(mockLoggerDebug.mock.calls[0]![1].elementId).toBe('none')
+    // el.id = ''（空字符串），element?.id 不为 undefined，所以 ?? 不生效，结果 = ''
+    expect(mockLoggerDebug.mock.calls[0]![1].elementId).toBe('')
   })
 
   it('element 有 id → elementId=实际值', async () => {

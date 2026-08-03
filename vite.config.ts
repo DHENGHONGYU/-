@@ -142,6 +142,14 @@ export default defineConfig({
         target: 'http://localhost:8000',
         changeOrigin: true,
       },
+      // AkShare 统一入口代理（默认 baseURL 为 /api/akshare，重写后去掉前缀再转发到 Python 服务）
+      //   前端: POST /api/akshare/api/collect/basic  →  后端: POST http://localhost:8000/api/collect/basic
+      //   前端: POST /api/akshare/api/collect/kline  →  后端: POST http://localhost:8000/api/collect/kline
+      '/api/akshare': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/akshare/, ''),
+      },
       // 腾讯行情 API 代理（解决浏览器 CORS）
       '/api/proxy/tencent': {
         target: 'https://qt.gtimg.cn',

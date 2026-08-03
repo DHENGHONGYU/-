@@ -263,20 +263,24 @@ export class LLMScoreEnhancer {
     try {
       const jsonMatch = content.match(/```(?:json)?\s*\n?([\s\S]*?)```/)
       const jsonStr = jsonMatch?.[1] ?? content
-      const parsed = JSON.parse(jsonStr.trim())
+      const parsed = JSON.parse(jsonStr.trim()) as Record<string, unknown>
       const parsedScore = parsed.score
-      const rawCitations = Array.isArray(parsed.citations) ? parsed.citations : []
+      const rawCitations: unknown[] = Array.isArray(parsed.citations) ? parsed.citations as unknown[] : []
+      const parsedRisks: unknown[] | undefined = Array.isArray(parsed.risks) ? parsed.risks as unknown[] : undefined
       return {
         score: typeof parsedScore === 'number' ? Math.max(0, Math.min(5, parsedScore)) : undefined,
         summary: typeof parsed.summary === 'string' ? parsed.summary : undefined,
         rationale: typeof parsed.rationale === 'string' ? parsed.rationale : undefined,
-        risks: Array.isArray(parsed.risks) ? parsed.risks.map(String) : undefined,
-        citations: rawCitations.map((c: Record<string, unknown>) => ({
-          source: typeof c.source === 'string' ? c.source : '未知来源',
-          content: typeof c.content === 'string' ? c.content : '无内容',
-          url: typeof c.url === 'string' ? c.url : undefined,
-          date: typeof c.date === 'string' ? c.date : undefined,
-        })),
+        risks: parsedRisks ? parsedRisks.map(String) : undefined,
+        citations: rawCitations.map((rawCitation) => {
+          const c = rawCitation as Record<string, unknown>
+          return {
+            source: typeof c.source === 'string' ? c.source : '未知来源',
+            content: typeof c.content === 'string' ? c.content : '无内容',
+            url: typeof c.url === 'string' ? c.url : undefined,
+            date: typeof c.date === 'string' ? c.date : undefined,
+          }
+        }),
       }
     } catch {
       logger.warn('[LLMScoreEnhancer] LLM 返回内容无法解析', { snippet: content.slice(0, LOG_SNIPPET_MAX_CHARS) })
