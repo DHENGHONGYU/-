@@ -61,5 +61,5 @@ date: 2026-07-17
 
 ---
 
-**历史归档** → [../archive/00-meta-historical/](../archive/00-meta-historical/)
+**历史归档** → [../archive/](../archive/)（历史治理文档已于 2026-08-03 清理，见 archive/README.md）
 **返回根目录** → [../README.md](../README.md)

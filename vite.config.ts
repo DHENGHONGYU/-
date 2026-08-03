@@ -132,6 +132,16 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
+      // Python 数据采集服务代理（AkShare 采集后端，端口 8000）
+      // VITE_DATA_SOURCE_TYPE=real 时，前端 /health 与 /api/collect/* 需转发至 Python 服务
+      '/health': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+      '/api/collect': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
       // 腾讯行情 API 代理（解决浏览器 CORS）
       '/api/proxy/tencent': {
         target: 'https://qt.gtimg.cn',
