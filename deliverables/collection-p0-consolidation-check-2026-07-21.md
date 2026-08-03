@@ -1,7 +1,7 @@
 # 采集域 P0 改造成果校对检查报告
 
 > **日期**: 2026-07-21 | **性质**: 巩固性校对（post-change verification）
-> **说明**: 用户指定的 `module-sync-checklist v1.2.0` skill 在工作区与全局索引中均不存在（已检索 `.workbuddy/skills/`、`.agents/skills/`、`skill-registry.json`、全库 grep）。本报告改按项目注册表中两个 **mandatory** skill 执行——其触发条件精确覆盖本次改动文件：
+> **说明**: 用户指定的 `module-sync-checklist v1.2.0` skill 在工作区与全局索引中均不存在（已检索 `.trae/skills/`、`.agents/skills/`、`skill-registry.json`、全库 grep）。本报告改按项目注册表中两个 **mandatory** skill 执行——其触发条件精确覆盖本次改动文件：
 > - `collection-pipeline-testing`（触发: `src/services/data-collector/**`）
 > - `data-flow-integrity-audit`（触发: `src/services/data-collector/**` + 假绿灯）
 

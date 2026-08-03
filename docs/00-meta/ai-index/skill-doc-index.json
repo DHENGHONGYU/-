@@ -31,7 +31,7 @@
                                                  },
                           "V9-SKILL-DATAFLOW":  {
                                                     "skill_id":  "V9-SKILL-DATAFLOW",
-                                                    "path":  ".workbuddy/skills/data-flow-integrity-audit/SKILL.md",
+                                                    "path":  ".trae/skills/v9-data-flow-integrity-audit/SKILL.md",
                                                     "name":  "data-flow-integrity-audit",
                                                     "doc_count":  5,
                                                     "covers_docs":  [
@@ -44,7 +44,7 @@
                                                 },
                           "V9-SKILL-COLLECTION":  {
                                                       "skill_id":  "V9-SKILL-COLLECTION",
-                                                      "path":  ".workbuddy/skills/collection-pipeline-testing/SKILL.md",
+                                                      "path":  ".trae/skills/v9-collection-pipeline-testing/SKILL.md",
                                                       "name":  "collection-pipeline-testing",
                                                       "doc_count":  4,
                                                       "covers_docs":  [
@@ -56,7 +56,7 @@
                                                   },
                           "V9-SKILL-MOCK-DIAG":  {
                                                      "skill_id":  "V9-SKILL-MOCK-DIAG",
-                                                     "path":  ".workbuddy/skills/mock-data-diagnosis/SKILL.md",
+                                                     "path":  ".trae/skills/v9-mock-data-diagnosis/SKILL.md",
                                                      "name":  "mock-data-diagnosis",
                                                      "doc_count":  4,
                                                      "covers_docs":  [

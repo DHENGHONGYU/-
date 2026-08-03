@@ -15,9 +15,9 @@ code_version: 2.0.0
 >
 > **v1.5.5 变更**：落地技能触发机制迭代 3——pre-push 挂 `skill-router --enforce --since <base>` 强制模式（mandatory 命中未确认即拦截，旁路 `SKILL_GATE_CONFIRM=1 git push`）；`skill-router.cjs` 新增 `--since`（推送范围三点 diff）与环境变量旁路；`.trae/rules` 追加技能路由规则段（与 registry/AGENTS.md 三方同步）；注册 2 个定时任务（L5 调度层）：「Mock 残留周检」`40 3 * * 1`、「技能健康度月检」`17 8 1 * *`（Asia/Shanghai）
 >
-> **v1.5.4 变更**：落地技能触发机制迭代 2——新增 L1 注册表 `.workbuddy/skills/skill-registry.json`、L4 路由器 `scripts/skill-router.cjs`（已挂 pre-commit 提醒模式，命中日志写入 `.workbuddy/skills/usage.log`，`--enforce` 预留给 pre-push）、L6 防漂移审计 `scripts/audit/audit-skill-coverage.cjs`（frontmatter ↔ registry ↔ AGENTS.md 三方一致性）；package.json 新增 `skill:route` / `audit:skill-coverage`
+> **v1.5.4 变更**：落地技能触发机制迭代 2——新增 L1 注册表 `.trae/skills/skill-registry.json`、L4 路由器 `scripts/skill-router.cjs`（已挂 pre-commit 提醒模式，命中日志写入 `.trae/skills/usage.log`，`--enforce` 预留给 pre-push）、L6 防漂移审计 `scripts/audit/audit-skill-coverage.cjs`（frontmatter ↔ registry ↔ AGENTS.md 三方一致性）；package.json 新增 `skill:route` / `audit:skill-coverage`
 >
-> **v1.5.3 变更**：新增「技能路由表」（SKILL 索引升级为 IF-THEN 路由规则：文件信号/关键词信号 × mandatory 门禁，未全绿不得声明完成）；统一 `.workbuddy/skills/` 5 个技能的 frontmatter schema（`triggers.keywords/files/events` + `gates` + `mandatory` 机器可读字段）并修复 4 个损坏的 YAML 头；归因于 2026-07-21 确认技能自动触发机制缺失，落地五层触发体系的 L0 修复层与 L2 路由层（后续迭代：L1 registry、L4 skill-router 钩子、L5 周期任务）
+> **v1.5.3 变更**：新增「技能路由表」（SKILL 索引升级为 IF-THEN 路由规则：文件信号/关键词信号 × mandatory 门禁，未全绿不得声明完成）；统一 `.trae/skills/` 5 个技能的 frontmatter schema（`triggers.keywords/files/events` + `gates` + `mandatory` 机器可读字段）并修复 4 个损坏的 YAML 头；归因于 2026-07-21 确认技能自动触发机制缺失，落地五层触发体系的 L0 修复层与 L2 路由层（后续迭代：L1 registry、L4 skill-router 钩子、L5 周期任务）
 >
 > **v1.5.2 变更**：新增 §十六 Bash 使用约定（Git Bash 路径规范 + 受管 venv Python 固化 + 命令入口统一 + 禁止命令清单 + 执行后联动义务）；归因于 2026-07-20 确认 AI 工具默认开放 Bash 调用，需统一 Shell 行为防路径漂移
 >
@@ -35,11 +35,12 @@ code_version: 2.0.0
 >
 > **文档与复杂度规范**：为提升代码可维护性，新增公共函数、组件、Hook、Store 必须补充 JSDoc（见 `docs/03-development/jsdoc-convention.md`）；新增代码应避免深层嵌套、长链式条件与过长函数（见 `docs/03-development/complexity-governance.md`）。
 >
-> **项目级 SKILL 索引**（按业务域分四类，category 字段见各 SKILL.md frontmatter 与 skill-registry.json）：
-> - **文档治理 doc-governance**：`doc-encoding-remediation`（文档编码乱码诊断与安全转码，GBK 二次损坏前置修复）
-> - **代码质量 code-quality**：`module-sync-checklist`（模块改动十域同步校对，交付闸口）、`bash-conventions`（Bash 执行规范与命令速查）、`tsc-gate-scope-audit`（tsc 门禁误锁诊断与修复，类型门禁作用域对齐）、`tsc-test-error-diagnosis`（tsc:test 测试类型错误系统性诊断，契约漂移/严格空检/vi.mock 提升陷阱）、`finsight-health-audit`（开发进度/健康度复检、行业对标、评分与状态自洽校验，实时工具优先于记忆，含检测方法库与教训库）
-> - **数据流 data-flow**：`collection-pipeline-testing`（采集链路测试）、`data-flow-integrity-audit`（数据流完整性审计）、`mock-data-diagnosis`（Mock 残留诊断）
-> - **部署运维 devops**：`devops-automation`（备份分支 + 批量部署）、`windows-env-path-doctor`（Windows 用户目录路径硬编码可移植诊断，DELL↔Huawei 迁移）
+> **项目级 SKILL 索引**（按业务域分五类，category 字段见各 SKILL.md frontmatter 与 skill-registry.json，共 20 项；MAND=mandatory 强制，adv=advisory 建议）：
+> - **文档治理 doc-governance（4）**：`v9-doc-encoding-remediation`（adv，文档编码乱码诊断与安全转码，GBK 二次损坏前置修复）、`stale-path-reference-audit`（adv，僵尸路径/失效链接扫描，迁移后残留检测）、`cross-index-governance`（MAND，文档↔代码↔测试↔SKILL 四向交叉索引治理，frontmatter 批量补全）、`doc-management-principles`（adv，文档录入与管理整体原则：十目录架构/Frontmatter标准/命名规范/三环闭环治理）
+> - **代码质量 code-quality（8）**：`v9-module-sync-checklist`（MAND，模块改动十域同步校对，交付闸口）、`v9-bash-conventions`（adv，Bash 执行规范与命令速查）、`v9-tsc-gate-scope-audit`（adv，tsc 门禁误锁诊断与修复，类型门禁作用域对齐）、`v9-tsc-test-error-diagnosis`（adv，tsc:test 测试类型错误系统性诊断，契约漂移/严格空检/vi.mock 提升陷阱）、`v9-health-audit`（adv，开发进度/健康度复检、行业对标、评分与状态自洽校验，实时工具优先于记忆，含检测方法库与教训库）、`v9-code-quality-audit`（MAND，代码质量合规审查：分层/DataBridge/ACL/类型安全/零硬编码/事件清理/日志规范）、`v9-dev-checklist`（adv，新组件/新模块/PR Review 三场景快速检查清单）、`v9-color-token-remediation`（adv，颜色令牌新增/重命名/废弃管理与硬编码排查）
+> - **数据流 data-flow（3）**：`v9-collection-pipeline-testing`（MAND，采集链路 sevenDimConfigStore+collectionPipeline 标准化测试与修复流程）、`v9-data-flow-integrity-audit`（MAND，按钮-数据联动/跨板块数据传递/数据呈现全链路完整性审计）、`v9-mock-data-diagnosis`（adv，Mock 残留诊断、信息孤岛识别、Mock→真实切换就绪度评估）
+> - **部署运维 devops（1）**：`v9-windows-env-path-doctor`（adv，Windows 用户目录路径硬编码可移植诊断，DELL↔Huawei 迁移）
+> - **架构治理 architecture（4）**：`v9-databridge-migration`（MAND，将直接操作 dataLayer 的代码迁移到 DataBridge 信封协议）、`architecture-debt-remediation`（MAND，V9 架构债务系统性修复：层违规/死组件/大组件重构/lint 清理）、`component-health-check`（adv，组件健康度审计与治理：僵尸组件/命名冲突/注册一致性）、`v9-constant-migration`（MAND，跨层重复业务常量迁移到 src/constants/，消除 config 与 constants 双份定义）
 
 ### 技能路由表（任务开始时必须先匹配，v1.5.3 新增）
 
@@ -47,23 +48,28 @@ code_version: 2.0.0
 
 | 信号（满足任一即触发） | 必加载技能 | 类型 | 交付前必跑 |
 |---|---|---|---|
-| 改动 `src/services/data-collector/**`、`src/store/sevenDimConfigStore.ts`、`src/types/modules/collection.types.ts`，或相关 vitest 失败 | `collection-pipeline-testing` | mandatory | `npx tsc --noEmit` + `npm run tsc:prod` + `npm run audit:layers` + 相关 vitest |
-| 新增 EnvelopeAction / 写入新 store、改动 `src/core/databridge*.ts` 或 `src/config/dbConfig.ts`、排查按钮无响应 / 假绿灯 / 跨板块数据异常 | `data-flow-integrity-audit` | mandatory | 该技能 §三 阶段 1–6 + `npm run audit:acl-consistency` |
-| 排查 Mock 残留 / 假数据 / 信息孤岛、Mock→真实切换、上线前 Mock 清理审计 | `mock-data-diagnosis` | advisory | 三维 Grep 扫描（每项 file:line 证据）+ 诊断报告归档 `outputs/` |
-| 定时备份、批量部署、注册周期任务、排查备份/部署失败 | `devops-automation` | advisory | 脚本零破坏性检查 + 敏感文件排除校验 |
-| 环境迁移 / 换电脑 / 用户目录绝对路径硬编码（C:/Users/<user>/...）、DELL↔Huawei 等多用户机器可移植、路径静默失效排查 | `windows-env-path-doctor` | advisory | `scripts/scan.cjs --verify-current` 输出可移植（crossUser=0 且 sameUserHardcode=0）+ 仅修 src/scripts/configs 真实硬编码，保留 .workbuddy/memory 病史叙述 |
-| 执行任何 Bash 命令、路径/解释器/门禁命令选择（全局生效） | `bash-conventions` | advisory | 按该技能 §4「执行后联动义务」表选必跑命令 |
-| 任何代码改动交付前（改动 `src/services|store|core|pages|components/**`）、重构/接口变更/重命名、新增 skill 或注册表变更 | `module-sync-checklist` | mandatory | 十域同步清单 + `npx tsc --noEmit` + `npm run tsc:prod` + `npm run audit:layers` + `npm run audit:acl-consistency` |
-| 发现文档乱码 / 中文变问号、准备执行文档链接修复（fix-doc-refs 等）前、排查 GBK 二次损坏风险 | `doc-encoding-remediation` | advisory | 三维 Grep（fix 脚本无硬编码 utf-8）+ 编码探测报告 + 复测 GBK_TOTAL=0（排除备份目录） |
-| 文件重命名 / 迁移后残留失效链接（僵尸路径）扫描、move 操作退回检查、doc-refs 修复前置 | `stale-path-reference-audit` | advisory | 九类文件（.ts/.tsx/.md/.json/.mjs/.cjs/.yaml/.yml/.sh）全仓 Grep 残留 + 排除生成物/备份噪声 + 交叉验证目标文件存在性；与 `docs/how-to/FILE-MANAGEMENT-GUIDE.md` §6.3 迁移 SOP 绑定 |
-| 改动 `tsconfig.json`/`tsconfig.prod.json`/`tsconfig.test.json`、`package.json` 的 tsc 脚本，或 husky `tsc:prod` 门禁报错且错误全在 `*.test.ts`/`*.test-utils.ts` | `tsc-gate-scope-audit` | advisory | 三步诊断（错误分类 + git status 归因）+ 修复后 `tsc:prod` 实测 0 错误 |
-| `npm run tsc:test` 退出码非 0、测试文件类型错误爆发（TS2305/TS2322/TS2339/TS2532/TS1011）、契约漂移 / vi.mock 提升陷阱 / 严格空检暴露 | `tsc-test-error-diagnosis` | advisory | 错误按 file:line 归类四大根因 + 修复后 `npm run tsc:test` 实测 0 错误且 `tsc:prod` 保持 0 |
-| 新增/修改 MCP Server 或 Tool、改动 `src/mcp/**`、排查 MCP 零调用残留（当前 6 个零调用 server） | `mcp-server-design-review` | mandatory | 该技能准入清单 + 目录结构合规 + `npm run audit:mcp` + `npm run audit:mcp-usage` + 相关 vitest |
+| 改动 `src/services/data-collector/**`、`src/store/sevenDimConfigStore.ts`、`src/types/modules/collection.types.ts`，或相关 vitest 失败 | `v9-collection-pipeline-testing` | mandatory | `npx tsc --noEmit` + `npm run tsc:prod` + `npm run audit:layers` + 相关 vitest |
+| 新增 EnvelopeAction / 写入新 store、改动 `src/core/databridge*.ts` 或 `src/config/dbConfig.ts`、排查按钮无响应 / 假绿灯 / 跨板块数据异常 | `v9-data-flow-integrity-audit` | mandatory | 该技能 §三 阶段 1–6 + `npm run audit:acl-consistency` |
+| 排查 Mock 残留 / 假数据 / 信息孤岛、Mock→真实切换、上线前 Mock 清理审计 | `v9-mock-data-diagnosis` | advisory | 三维 Grep 扫描（每项 file:line 证据）+ 诊断报告归档 `outputs/` |
+| 环境迁移 / 换电脑 / 用户目录绝对路径硬编码（C:/Users/<user>/...）、DELL↔Huawei 等多用户机器可移植、路径静默失效排查 | `v9-windows-env-path-doctor` | advisory | `scripts/scan.cjs --verify-current` 输出可移植（crossUser=0 且 sameUserHardcode=0）+ 仅修 src/scripts/configs 真实硬编码 |
+| 执行任何 Bash 命令、路径/解释器/门禁命令选择（全局生效） | `v9-bash-conventions` | advisory | 按该技能 §4「执行后联动义务」表选必跑命令 |
+| 任何代码改动交付前（改动 `src/services\|store\|core\|pages\|components/**`）、重构/接口变更/重命名、新增 skill 或注册表变更 | `v9-module-sync-checklist` | mandatory | 十域同步清单 + `npx tsc --noEmit` + `npm run tsc:prod` + `npm run audit:layers` + `npm run audit:acl-consistency` |
+| 发现文档乱码 / 中文变问号、准备执行文档链接修复（fix-doc-refs 等）前、排查 GBK 二次损坏风险 | `v9-doc-encoding-remediation` | advisory | 三维 Grep（fix 脚本无硬编码 utf-8）+ 编码探测报告 + 复测 GBK_TOTAL=0（排除备份目录） |
+| 文件重命名 / 迁移后残留失效链接（僵尸路径）扫描、move 操作退回检查、doc-refs 修复前置 | `stale-path-reference-audit` | advisory | 九类文件全仓 Grep 残留 + 排除生成物/备份噪声 + 交叉验证目标文件存在性 |
+| 改动 `tsconfig.json`/`tsconfig.prod.json`/`tsconfig.test.json`、`package.json` 的 tsc 脚本，或 husky `tsc:prod` 门禁报错且错误全在 `*.test.ts`/`*.test-utils.ts` | `v9-tsc-gate-scope-audit` | advisory | 三步诊断（错误分类 + git status 归因）+ 修复后 `tsc:prod` 实测 0 错误 |
+| `npm run tsc:test` 退出码非 0、测试文件类型错误爆发（TS2305/TS2322/TS2339/TS2532/TS1011）、契约漂移 / vi.mock 提升陷阱 / 严格空检暴露 | `v9-tsc-test-error-diagnosis` | advisory | 错误按 file:line 归类四大根因 + 修复后 `npm run tsc:test` 实测 0 错误且 `tsc:prod` 保持 0 |
 | 颜色令牌新增/重命名/废弃、令牌硬编码（HEX/裸色类）排查、改动 `src/constants/theme.tokens.ts` 或 `src/config/chartColors.ts` | `v9-color-token-remediation` | advisory | `npm run audit:tokens` + `npm run verify:colorSoT` + `npm run audit:hardcode` |
-| 文档链接修复前置、文档-代码一致性核查、文件迁移后残留扫描、文档计数/路径漂移排查 | `doc-code-dual-proofreading` | advisory | 三维 Grep（路径/状态/触发规则）+ `npm run audit:docs` + 交叉验证目标文件存在性 |
-| 二次开发前体检、"再次检查进度/健康度"、门禁回归定位、状态失准/假绿灯排查、文档vs现实矛盾核对 | `finsight-health-audit` | advisory | tsc:prod 真实退出码=0 + audit:layers=0 + automation_update list 真实条数 vs 文档声称交叉核对 + 争议测试文件直跑 + 交付前校准 MEMORY.md/V9-DOC-KB-001 |
+| 二次开发前体检、"再次检查进度/健康度"、门禁回归定位、状态失准/假绿灯排查、文档vs现实矛盾核对 | `v9-health-audit` | advisory | tsc:prod 真实退出码=0 + audit:layers=0 + automation_update list 真实条数 vs 文档声称交叉核对 + 争议测试文件直跑 |
+| 新模块集成/PR 提交前代码合规审查、类型安全/零硬编码/事件监听清理/日志规范核查、`audit:layers`/`audit:acl-consistency` 报违规 | `v9-code-quality-audit` | mandatory | 该技能质量维度清单 + `npx tsc --noEmit` + `npm run audit:layers` + `npm run audit:acl-consistency` + `npm run audit:hardcode` |
+| 新增组件/新模块/PR Review 三场景、交付前正向+逆向双向校验 | `v9-dev-checklist` | advisory | 该技能三场景清单逐项核对 + `npx tsc --noEmit` |
+| audit:layers 报出 core/services 越权读写 dataLayer、将直接操作 dataLayer.stocks/v6Scores 等的代码迁移到 DataBridge 信封协议 | `v9-databridge-migration` | mandatory | 迁移后 `npm run audit:layers` = 0 违规 + `npm run audit:acl-consistency` 全绿 + 相关 vitest 通过 |
+| V9 架构债务清理、层违规修复、死组件删除、大组件重构、lint 警告清理、审计脚本报层调用违规 | `architecture-debt-remediation` | mandatory | 该技能六步修复流程 + `npm run audit:layers` = 0 + `npx tsc --noEmit` 0 错误 |
+| 新增组件/模块重构/季度清理、僵尸组件/命名冲突/注册一致性/消费方验证 | `component-health-check` | advisory | 该技能审计脚本 + 注册表一致性校验 + 消费方引用验证 |
+| 批量补全 doc_id/related_docs/covers_code/covers_docs 字段、建立文档↔代码↔测试↔SKILL 四向交叉索引、doc 生命周期治理 | `cross-index-governance` | mandatory | 该技能批量更新脚本 + frontmatter 完整性校验 + `npm run audit:docs` |
+| 创建/编辑/移动 `docs/` 目录任意文档、文档录入与管理整体原则、十目录架构/Frontmatter标准/命名规范 | `doc-management-principles` | advisory | 该技能三环闭环治理清单 + frontmatter 必备字段校验 |
+| audit:layers 报出 config 层与 constants 层同一业务常量双份定义、Grep 硬编码报出 `/src/config.*RESEARCH_STATUS/` 等业务常量泄漏、跨层重复常量迁移 | `v9-constant-migration` | mandatory | 迁移后 `npm run audit:layers` = 0 + `npx tsc --noEmit` 0 错误 + 测试 mock 路径更新校验 |
 
-> **变更纪律**：新增技能 = ① 新建 `.workbuddy/skills/<name>/SKILL.md`（frontmatter 含 `triggers`/`gates`/`mandatory`）→ ② 同步 `.workbuddy/skills/skill-registry.json`（L1 注册表）→ ③ 更新本索引与路由表 → ④ 跑 `npm run audit:skill-coverage` 校验三方一致。钩子状态：pre-commit 挂 `--remind --log`（提醒模式，命中记录写入 `.workbuddy/skills/usage.log`）；pre-push 挂 `--enforce --since <base>`（强制模式，mandatory 命中未确认即拦截，旁路 `SKILL_GATE_CONFIRM=1 git push`）。`npm run skill:route` 可随时手工查询。
+> **变更纪律**：新增技能 = ① 新建 `.trae/skills/<name>/SKILL.md`（frontmatter 含 `triggers`/`gates`/`mandatory`）→ ② 同步 `.trae/skills/skill-registry.json`（L1 注册表）→ ③ 更新本索引与路由表 → ④ 跑 `npm run audit:skill-coverage` 校验三方一致。钩子状态：pre-commit 挂 `--remind --log`（提醒模式，命中记录写入 `.trae/skills/usage.log`）；pre-push 挂 `--enforce --since <base>`（强制模式，mandatory 命中未确认即拦截，旁路 `SKILL_GATE_CONFIRM=1 git push`）。`npm run skill:route` 可随时手工查询。
 
 ---
 

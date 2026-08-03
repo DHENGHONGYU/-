@@ -70,7 +70,7 @@ CLI 不应绕过 MCP 协议直接调用内部 Store/服务；所有对外能力�
 变更 `register.ts` 或新增子服务器时，须同步：
 
 1. `scripts/skill-router.cjs` 路由规则（L4）；
-2. `.workbuddy/skills/skill-registry.json`（L1）；
+2. `.trae/skills/skill-registry.json`（L1）；
 3. `AGENTS.md` 技能路由表（L2）；
 4. 跑 `npm run audit:skill-coverage` 校验三方一致。
 

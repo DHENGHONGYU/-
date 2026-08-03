@@ -1,7 +1,7 @@
 # Mock 数据清理全流程：经验教训与开发规范
 
 > **日期**: 2026-07-18 | **范围**: FinSightV9 全项目 | **涉众**: 全体开发团队
-> **关联**: `outputs/mock-diagnosis-report-2026-07-18.html`（诊断报告）、`.workbuddy/skills/mock-data-diagnosis/SKILL.md`（诊断 Skill）
+> **关联**: `outputs/mock-diagnosis-report-2026-07-18.html`（诊断报告）、`.trae/skills/v9-mock-data-diagnosis/SKILL.md`（诊断 Skill）
 
 ---
 
@@ -173,7 +173,7 @@ generateMockArticles: async () => {
 "数据流健康度检查"
 ```
 
-具体检查项和 Grep 命令详见 `.workbuddy/skills/mock-data-diagnosis/SKILL.md`。
+具体检查项和 Grep 命令详见 `.trae/skills/v9-mock-data-diagnosis/SKILL.md`。
 
 ---
 
