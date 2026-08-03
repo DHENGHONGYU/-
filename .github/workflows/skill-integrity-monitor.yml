@@ -1,7 +1,5 @@
-name: SKILL 完整性每日巡检 / PR 门禁（B-02 2026-08-01 升级）
+name: SKILL 完整性 PR 门禁（B-02 2026-08-01 升级，2026-08-03 移除每日 schedule 与 auto-PR）
 on:
-  schedule:
-    - cron: '0 18 * * *'   # 每天 UTC 18:00 = 北京时间 次日 02:00
   workflow_dispatch:      # 允许手动触发
   push:
     branches: [feat/cross-index-20260719, main, feat/**]
@@ -83,29 +81,9 @@ jobs:
           set -e
         continue-on-error: true
 
-      - name: Try auto-fix (if errors exist and on schedule / PR sync)
-        if: steps.integrity_check.outputs.exit_code != '0' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
-        run: npm run audit:skill-integrity:fix
-
-      - name: Create Pull Request for auto-fix results
-        if: steps.integrity_check.outputs.exit_code != '0' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "fix(skill): auto-fix covers_docs invalid refs / dangling refs"
-          title: "fix(skill): auto-fix SKILL integrity (daily run ${{ github.run_id }})"
-          body: |
-            Auto-generated fix PR by skill-integrity-monitor workflow
-            - covers_docs invalid refs auto-mapped or removed
-            - dangling refs / code-first leftovers flagged for review
-            - review & merge if CI passes
-          labels: skill, auto-fix
-          branch-suffix: timestamp
-
-      - name: Report to GitHub Issues (schedule only)
-        if: steps.integrity_check.outputs.exit_code != '0' && github.event_name == 'schedule'
-        run: |
-          echo "::warning::SKILL integrity issues found. Exit=${{ steps.integrity_check.outputs.exit_code }} — check PR if auto-created"
+      # 注：2026-08-03 移除 auto-fix / auto-PR / Report-to-Issues 三步骤
+      # 原因：取消自动 git 备案；schedule 触发器已删除，auto-PR 属于自动备案变体。
+      # 检查仍保留（manual workflow_dispatch / push / PR 触发），修复由开发者本地执行 npm run audit:skill-integrity:fix。
 
       # =====================================================================
       # GREEN-STATE FINAL BLOCKING GATE (5/5 must pass to unblock PR merge)

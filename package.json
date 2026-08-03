@@ -243,7 +243,8 @@
     "sync:doc:fix": "tsx scripts/sync/doc-sync.ts --fix",
     "sync:doc:watch:fix": "tsx scripts/sync/doc-sync.ts --watch --fix",
     "sync:all": "npm run sync:test && npm run sync:doc",
-    "sync:all:fix": "npm run sync:test:fix && npm run sync:doc:fix"
+    "sync:all:fix": "npm run sync:test:fix && npm run sync:doc:fix",
+    "backup:bundle": "node scripts/backup/git-bundle.cjs"
   },
   "dependencies": {
     "@duckdb/duckdb-wasm": "1.33.1-dev57.0",
