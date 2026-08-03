@@ -3,7 +3,7 @@
  * audit-skill-coverage.cjs — 技能触发机制健康度审计（五层触发体系 L6 反馈层，零依赖）
  *
  * 校验三方一致性，任一失败即 exit 1：
- *   ① 每个 .workbuddy/skills/<name>/SKILL.md 的 frontmatter 结构完整
+ *   ① 每个 .trae/skills/<name>/SKILL.md 的 frontmatter 结构完整
  *     （单一 YAML 块 + 必备字段 skill_id/name/description/triggers/gates/mandatory）
  *   ② skill-registry.json ↔ SKILL.md 目录 一一对应（name/path 无缺失无多余）
  *   ③ registry 与 frontmatter 内容一致（mandatory / triggers.files / gates 集合相等）
@@ -19,7 +19,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const SKILLS_DIR = path.join(ROOT, '.workbuddy', 'skills');
+const SKILLS_DIR = path.join(ROOT, '.trae', 'skills');
 const REGISTRY_PATH = path.join(SKILLS_DIR, 'skill-registry.json');
 const AGENTS_PATH = path.join(ROOT, 'AGENTS.md');
 
@@ -39,12 +39,21 @@ function parseFrontmatter(filePath) {
 
   const fm = { triggers: { keywords: [], files: [], events: [] }, gates: [] };
   let currentList = null; // 'triggers.keywords' | 'triggers.files' | 'triggers.events' | 'gates'
+  // 解析单行内联数组 `[a, "b", c]`；支持元素含逗号的引号字符串。
   const parseInline = (raw) => {
     const m = raw.match(/^\[(.*)\]$/);
     if (!m) return null;
     const inner = m[1].trim();
     if (!inner) return [];
-    return inner.split(',').map(s => s.trim().replace(/^["']|["']$/g, '')).filter(Boolean);
+    // 优先按引号字符串切分，否则按逗号切分
+    const items = [];
+    const re = /"([^"]*)"|'([^']*)'|([^,]+)/g;
+    let mm;
+    while ((mm = re.exec(inner)) !== null) {
+      const v = (mm[1] ?? mm[2] ?? mm[3] ?? '').trim();
+      if (v) items.push(v);
+    }
+    return items;
   };
 
   for (const raw of lines.slice(1, closeIdx)) {
@@ -56,7 +65,13 @@ function parseFrontmatter(filePath) {
       const [, key, val] = top;
       currentList = null;
       if (key === 'triggers') continue;
-      if (key === 'gates') { currentList = 'gates'; continue; }
+      if (key === 'gates') {
+        // 支持单行内联 gates: [a, b, c] 与多行列表两种格式
+        const inline = parseInline(val.trim());
+        if (inline) fm.gates = inline;
+        else currentList = 'gates';
+        continue;
+      }
       if (key === 'mandatory') { fm.mandatory = val.trim() === 'true'; continue; }
       fm[key] = val.trim().replace(/^["']|["']$/g, '');
       continue;
@@ -112,7 +127,7 @@ function main() {
   }
   for (const s of registry.skills) {
     if (!skillDirs.includes(s.name)) v(`registry 登记了不存在/缺 SKILL.md 的技能: ${s.name}`);
-    if (s.path !== `.workbuddy/skills/${s.name}/SKILL.md`) {
+    if (s.path !== `.trae/skills/${s.name}/SKILL.md`) {
       v(`registry path 与目录不一致: ${s.name} → ${s.path}`);
     }
   }
@@ -138,7 +153,9 @@ function main() {
   }
 
   // ③ registry ↔ frontmatter 内容一致
-  const sameSet = (a, b) => JSON.stringify([...a].sort()) === JSON.stringify([...b].sort());
+  // normalize：strip 元素外层引号字符（处理 registry 历史数据中残留的 "\"...\"" 包裹）
+  const normalize = (arr) => (arr || []).map(s => String(s).replace(/^["']+|["']+$/g, ''));
+  const sameSet = (a, b) => JSON.stringify([...normalize(a)].sort()) === JSON.stringify([...normalize(b)].sort());
   for (const [name, s] of regByName) {
     const fm = fmByName.get(name);
     if (!fm) continue;

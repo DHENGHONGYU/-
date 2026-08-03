@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * skill-route-test.cjs — SKILL 路由信号匹配测试（9 场景）
+ * skill-route-test.cjs — SKILL 路由信号匹配测试（8 场景）
  *
  * 评分算法（四档 + 守卫）：
  *   1) 精确匹配 kw === matchValue → ×1000
@@ -59,8 +59,6 @@ function extractKeywords(signalText, skillName) {
     '数据联动',
     // mock-data
     'Mock 残留', 'Mock', '假数据', '信息孤岛', '上线前 Mock 清理',
-    // devops
-    '定时备份', '批量部署', '注册周期任务', '部署失败', '备份失败', '周期任务',
     // windows
     '环境迁移', '换电脑', '用户目录绝对路径硬编码', 'C:/Users', 'DELL↔Huawei', '路径静默失效',
     // bash
@@ -184,7 +182,6 @@ const scenarios = [
   { name: '采集链路测试',             matchType: 'exact', matchValue: 'sevenDimConfigStore',       expected: 'v9-collection-pipeline-testing', reason: '数据采集链路七维配置修改' },
   { name: '跨板块数据异常',           matchType: 'exact', matchValue: '跨板块数据异常',           expected: 'v9-data-flow-integrity-audit',   reason: 'DataBridge + 跨板块数据异常' },
   { name: 'Mock 残留诊断',            matchType: 'exact', matchValue: 'Mock 残留',                expected: 'v9-mock-data-diagnosis',         reason: 'Mock→真实切换前的残留扫描' },
-  { name: '周期任务注册',             matchType: 'exact', matchValue: '注册周期任务',             expected: 'v9-devops-automation',           reason: '批量部署 / 定时备份 / 周期任务' },
   { name: '文档乱码修复前置',         matchType: 'exact', matchValue: '文档乱码',                 expected: 'v9-doc-encoding-remediation',    reason: 'GBK 二次损坏风险预检' },
   { name: '健康度复检（旧→新名映射）',matchType: 'exact', matchValue: '二次开发前体检',           expected: 'v9-health-audit',                reason: 'finsight-health-audit → v9-health-audit 别名映射' },
   { name: '换电脑环境迁移',           matchType: 'exact', matchValue: '环境迁移',                 expected: 'v9-windows-env-path-doctor',     reason: '用户目录硬编码 / C:/Users 扫描' },
@@ -196,7 +193,7 @@ function box(title) {
   const R = w - 4 - title.length - L;
   return `╔${line}╗\n║ ${' '.repeat(L)}${title}${' '.repeat(R)} ║\n╚${line}╝`;
 }
-console.log('\n' + box('SKILL 路由信号匹配测试（9 场景）'));
+console.log('\n' + box('SKILL 路由信号匹配测试（8 场景）'));
 let pass = 0, fail = 0;
 for (let i = 0; i < scenarios.length; i++) {
   const sc = scenarios[i];

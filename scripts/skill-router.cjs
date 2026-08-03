@@ -2,7 +2,7 @@
 /**
  * skill-router.cjs — 技能路由器（五层触发体系 L4 强制层，零依赖）
  *
- * 职责：把「信号」（改动文件 / 用户提示词）匹配到 `.workbuddy/skills/skill-registry.json`
+ * 职责：把「信号」（改动文件 / 用户提示词）匹配到 `.trae/skills/skill-registry.json`
  * 中的技能，输出命中清单与该技能的交付前必跑门禁（gates）。
  *
  * 用法：
@@ -24,8 +24,8 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const REGISTRY_PATH = path.join(ROOT, '.workbuddy', 'skills', 'skill-registry.json');
-const USAGE_LOG = path.join(ROOT, '.workbuddy', 'skills', 'usage.log');
+const REGISTRY_PATH = path.join(ROOT, '.trae', 'skills', 'skill-registry.json');
+const USAGE_LOG = path.join(ROOT, '.trae', 'skills', 'usage.log');
 
 // ---------- 参数解析 ----------
 function parseArgs(argv) {
