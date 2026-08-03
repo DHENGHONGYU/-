@@ -63,6 +63,16 @@
 
 ### Added
 
+- **文档链接健康度自动化体系（2026-08-03）**：
+  - `scripts/docs-tool/link-health-checker.ts` 新增文档链接健康度检查器（扫描/分类/验证/自动修复/报告生成），支持 `--fix`/`--ci`/`--staged`/`--json` 四种模式
+  - `scripts/docs-tool/link-health-scheduler.ts` 新增定期调度器（封装检查器 + 历史追踪 + 摘要报告），支持 `--dry-run`/`--ci`/`--summary` 三种模式
+  - `.github/doc-ci-ruleset.yml` 新增 CI 检查规则集（DOC-CI-2.1-001 P0 阻塞 + DOC-CI-3.1-005 每日定时）
+  - `.github/workflows/doc-health-daily.yml` 新增每日定时工作流（03:20 UTC 自动扫描 + P0 修复 + 自动提交）
+  - `package.json` 新增 8 个 npm scripts（`doc:link-check` / `doc:link-check:ci` / `doc:link-check:fix` / `doc:link-check:staged` / `doc:link:schedule` / `doc:link:schedule:dry-run` / `doc:link:schedule:ci` / `doc:link:summary`）
+  - `cspell.json` 新增 12 个项目术语（sina/netease/klines/Klines/ifind/autopush/AUTOPUSH/horz/metas/delisted/pycache/venv），消除 6 个文件的拼写检查误报
+  - 自动修复 22 处 `file:///` 绝对路径断链为相对路径（P0 断链清零）
+  - 验证结果：`tsc:prod` 编译通过（退出码 0），`doc:link-check:ci` P0=0（退出码 0），IDE 诊断全部清零
+
 - **Cockpit 纵横交叉布局治理 Phase 1：纵横交叉骨架（2026-07-25）**：
   - `src/data/sectorDefinitions.test.ts` 新增 22 个测试用例，覆盖 v6Composite 缺失/零值/边界场景
   - `src/store/positionPoolStore.test.ts` 新增 531 行测试，含 12 组双向验证（6 正向 + 6 逆向）
