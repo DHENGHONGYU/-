@@ -1571,17 +1571,6 @@
         "V9-DOC-PROJ-149"
       ]
     },
-    "V9-DOC-PROJ-CROSSINDEX-001": {
-      "path": "docs/00-meta/cross-index-comprehensive-solution.md",
-      "outgoing": [
-        "V9-DOC-PROJ-016",
-        "V9-DOC-PROJ-186",
-        "V9-DOC-PROJ-321",
-        "V9-DOC-PROJ-001",
-        "V9-DOC-PROJ-017"
-      ],
-      "incoming": null
-    },
     "V9-DOC-PROJ-001": {
       "path": "docs/00-meta/tag-taxonomy.md",
       "outgoing": null,
@@ -2100,17 +2089,6 @@
       "incoming": [
         "V9-DOC-META-000",
         "V9-DOC-PROJ-176"
-      ]
-    },
-    "V9-DOC-PROJ-197": {
-      "path": "docs/reference/changelogs/2026-07/2026-07-05-p0-5-and-legacy-bugs-jira-tickets.md",
-      "outgoing": null,
-      "incoming": [
-        "V9-DOC-PROJ-174",
-        "V9-DOC-META-000",
-        "V9-DOC-PROJ-176",
-        "V9-DOC-PROJ-182",
-        "V9-DOC-PROJ-149"
       ]
     },
     "V9-DOC-PROJ-002": {
@@ -3200,17 +3178,6 @@
         "V9-DOC-PROJ-149"
       ]
     },
-    "V9-DOC-FRONT-011": {
-      "path": "docs/reference/deprecated-ui-module-alignment.md",
-      "outgoing": null,
-      "incoming": [
-        "V9-DOC-PROJ-174",
-        "V9-DOC-META-000",
-        "V9-DOC-PROJ-164",
-        "V9-DOC-PROJ-176",
-        "V9-DOC-PROJ-182"
-      ]
-    },
     "docs/00-meta/月度文档体检检查清单.md": {
       "path": "docs/00-meta/月度文档体检检查清单.md",
       "outgoing": null,
@@ -3605,17 +3572,6 @@
       "path": "docs/archive/reference-historical/automation-test-plan.md",
       "outgoing": "V9-DOC-QA-091",
       "incoming": "V9-DOC-PROJ-176"
-    },
-    "V9-DOC-PROJ-038": {
-      "path": "docs/explanation/deprecated-v9-issue-resolution-schedule.md",
-      "outgoing": null,
-      "incoming": [
-        "V9-DOC-PROJ-174",
-        "V9-DOC-META-000",
-        "V9-DOC-PROJ-164",
-        "V9-DOC-PROJ-176",
-        "V9-DOC-PROJ-182"
-      ]
     },
     "V9-DOC-QA-011": {
       "path": "docs/explanation/a11y-checklist.md",
@@ -7373,17 +7329,6 @@
         "V9-DOC-PROJ-149"
       ]
     },
-    "V9-DOC-PROJ-153": {
-      "path": "docs/explanation/deprecated-batch2-merge-report.md",
-      "outgoing": null,
-      "incoming": [
-        "V9-DOC-PROJ-174",
-        "V9-DOC-META-000",
-        "V9-DOC-PROJ-164",
-        "V9-DOC-PROJ-176",
-        "V9-DOC-PROJ-182"
-      ]
-    },
     "docs/reference/cockpit/cockpit-refactor-plan.md": {
       "path": "docs/reference/cockpit/cockpit-refactor-plan.md",
       "outgoing": null,
@@ -9916,11 +9861,6 @@
       "doc_id": "V9-DOC-PROJ-058",
       "path": "docs/explanation/design/数据治理路线图.md",
       "outgoing_count": 3
-    },
-    {
-      "doc_id": "V9-DOC-PROJ-CROSSINDEX-001",
-      "path": "docs/00-meta/cross-index-comprehensive-solution.md",
-      "outgoing_count": 5
     },
     {
       "doc_id": "docs/archive/NewsPage-迁移验收确认书.md",
