@@ -53,8 +53,22 @@ tier: important
 
 以下文件不受根目录禁止规则限制：
 - 标准项目配置文件：`package.json`、`tsconfig.*.json`、`*.config.ts`、`vite.config.ts` 等
-- 项目根级文档：`../../README.md`、`../../AGENTS.md`、`../../CHANGELOG.md`、`../explanation/03-architecture-standards.md` 等
+- 项目根级文档：`../../README.md`、`../../AGENTS.md`、`../../CHANGELOG.md` 等
 - CI/CD 配置文件：`.github/workflows/*.yml`、`.husky/*` 等
+
+#### docs/ 根目录允许文件清单（2026-08-03 更新）
+
+`docs/` 根目录仅保留以下核心概览文档与索引文件，其余文档必须归入 `NN-语义/` 子目录：
+
+| 类别 | 允许文件 | 说明 |
+|------|----------|------|
+| 编号核心文档 | `01-vision-and-goals.md` ~ `10-glossary.md` | 01-10 编号系列，已合并权威版本 |
+| 变更与发布 | `CHANGELOG.md`、`RELEASE_NOTES.md` | 变更日志与发布说明 |
+| 审查与规范 | `CODE-REVIEW.md`、`design-tokens.md`、`testing-strategy.md`、`widget-development-guide.md` | 代码审查、设计令牌、测试策略、Widget 开发指南 |
+| 索引与导航 | `README.md`、`registry-index.md`（重定向页）、`REGISTRY_INDEX.md` | 文档导航与模块注册索引 |
+| 技术债务 | `TECH-DEBT.md` | 技术债务追踪 |
+| 数据定义 | `AI_CENTER_DATA_DEFINITION.md`、`BACKTEST_DATA_DEFINITION.md`、`DATAFLOW_DATA_DEFINITION.md`、`DATA_DICTIONARY_INDEX.md`、`MULTI_FACTOR_SCREENING_DATA_DEFINITION.md`、`NEWS_DATA_DEFINITION.md`、`SEVEN_DIM_CONFIG_DATA_DEFINITION.md`、`V9_IndexedDB_Store_Schema.md` | 数据字典（被多处引用，待后续迁移至 `reference/`） |
+| 配置文件 | `_redirect-map.json`、`class-diagram.mermaid` | 文档重定向映射与类图 |
 
 ### docs/ 子目录分层
 

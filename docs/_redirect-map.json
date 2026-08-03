@@ -2483,6 +2483,186 @@
     {
       "old_path": "docs/CODE-REVIEW-TRAINING.md",
       "new_path": "docs/03-development/code-review/code-review-training.md",
+      "diataxi_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/01-vision-and-goals.md",
+      "new_path": "docs/01-vision-and-goals.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/01-vision-and-goals.md",
+      "new_path": "docs/01-vision-and-goals.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/registry-index.md",
+      "new_path": "docs/registry-index.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/meta/registry-index.md",
+      "new_path": "docs/00-meta/registry-index.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/10-glossary.md",
+      "new_path": "docs/10-glossary.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/10-glossary.md",
+      "new_path": "docs/10-glossary.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/02-functional-specs.md",
+      "new_path": "docs/02-functional-specs.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/03-architecture-standards.md",
+      "new_path": "docs/03-architecture-standards.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/design/04-ui-ux-specs.md",
+      "new_path": "docs/04-ui-ux-specs.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/04-ui-ux-specs.md",
+      "new_path": "docs/04-ui-ux-specs.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/05-engine-specs.md",
+      "new_path": "docs/05-engine-specs.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/design/06-routing-specs.md",
+      "new_path": "docs/06-routing-specs.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/06-routing-specs.md",
+      "new_path": "docs/06-routing-specs.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/07-operation-strategy.md",
+      "new_path": "docs/07-operation-strategy.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/design/07-operation-strategy.md",
+      "new_path": "docs/07-operation-strategy.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/design/08-implementation-plan.md",
+      "new_path": "docs/08-implementation-plan.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/08-implementation-plan.md",
+      "new_path": "docs/08-implementation-plan.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/09-quality-gates.md",
+      "new_path": "docs/09-quality-gates.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/design/09-quality-gates.md",
+      "new_path": "docs/09-quality-gates.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/CHANGELOG.md",
+      "new_path": "docs/CHANGELOG.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reports/CHANGELOG.md",
+      "new_path": "docs/CHANGELOG.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/CODE-REVIEW.md",
+      "new_path": "docs/CODE-REVIEW.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/design-tokens.md",
+      "new_path": "docs/design-tokens.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/design-tokens.md",
+      "new_path": "docs/design-tokens.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/design/design-tokens.md",
+      "new_path": "docs/design-tokens.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/how-to/testing/testing-strategy.md",
+      "new_path": "docs/testing-strategy.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/testing-strategy.md",
+      "new_path": "docs/testing-strategy.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/how-to/widget-development-guide.md",
+      "new_path": "docs/widget-development-guide.md",
+      "diataxis_category": "how-to",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/widget-development-guide.md",
+      "new_path": "docs/widget-development-guide.md",
+      "diataxis_category": "how-to",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/01-p1-debt-cleanup-todo.md",
+      "new_path": "docs/06-project-management/01-p1-debt-cleanup-todo.md",
       "diataxis_category": "reference",
       "status": "completed"
     }
