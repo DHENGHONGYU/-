@@ -461,6 +461,14 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
   //   category: 'other',
   //   description: 'V9 模块 Mock 验证页（Slider/Sheet/Toggle/Engine）',
   // },
+
+  // 开发演示：StockQuoteDashboard 价格守卫验证页（仅 DEV 模式生效）
+  {
+    path: '/dev/quote-dashboard',
+    component: React.lazy(() => import('@/pages/StockQuoteDashboardDemoPage')),
+    category: 'other',
+    description: 'StockQuoteDashboard 价格守卫演示（开发验证用）',
+  },
 ]
 
 /**
