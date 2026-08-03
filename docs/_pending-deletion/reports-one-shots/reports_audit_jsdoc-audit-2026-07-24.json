@@ -1,0 +1,431 @@
+{
+  "count": 71,
+  "entries": [
+    {
+      "file": "src\\services\\trading\\tradingService.ts",
+      "line": 181,
+      "name": "createOrderWithRiskCheck",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\stock\\swIndustryMap.ts",
+      "line": 22,
+      "name": "SW_INDUSTRY_MAP",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\stock\\hkIndustryMap.ts",
+      "line": 22,
+      "name": "HK_INDUSTRY_MAP",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\pool\\collectionProgressService.ts",
+      "line": 62,
+      "name": "getCollectionProgress",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\pool\\collectionProgressService.ts",
+      "line": 124,
+      "name": "getBatchCollectionProgress",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\weeklyReviewScheduler.ts",
+      "line": 67,
+      "name": "WeeklyReviewScheduler",
+      "type": "class"
+    },
+    {
+      "file": "src\\services\\orchestration\\weeklyReviewScheduler.ts",
+      "line": 479,
+      "name": "getWeeklyReviewScheduler",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\weeklyReviewScheduler.ts",
+      "line": 484,
+      "name": "startWeeklyReviewScheduler",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\watchListTrigger.ts",
+      "line": 53,
+      "name": "WatchListTrigger",
+      "type": "class"
+    },
+    {
+      "file": "src\\services\\orchestration\\watchListTrigger.ts",
+      "line": 210,
+      "name": "getWatchListTrigger",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\watchListTrigger.ts",
+      "line": 215,
+      "name": "startWatchListTrigger",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\volatilityAlert.ts",
+      "line": 72,
+      "name": "VolatilityAlertPush",
+      "type": "class"
+    },
+    {
+      "file": "src\\services\\orchestration\\volatilityAlert.ts",
+      "line": 370,
+      "name": "getVolatilityAlertPush",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\volatilityAlert.ts",
+      "line": 375,
+      "name": "startVolatilityAlertPush",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\timelinessSyncAnalyzer.ts",
+      "line": 77,
+      "name": "TimelinessSyncAnalyzer",
+      "type": "class"
+    },
+    {
+      "file": "src\\services\\orchestration\\timelinessSyncAnalyzer.ts",
+      "line": 479,
+      "name": "getTimelinessSyncAnalyzer",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\timelinessSyncAnalyzer.ts",
+      "line": 484,
+      "name": "startTimelinessSyncAnalyzer",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\strategyReportGenerator.ts",
+      "line": 81,
+      "name": "StrategyReportGenerator",
+      "type": "class"
+    },
+    {
+      "file": "src\\services\\orchestration\\strategyReportGenerator.ts",
+      "line": 442,
+      "name": "getStrategyReportGenerator",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\strategyReportGenerator.ts",
+      "line": 447,
+      "name": "startStrategyReportGenerator",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\scoreCalibrator.ts",
+      "line": 42,
+      "name": "ScoreCalibrator",
+      "type": "class"
+    },
+    {
+      "file": "src\\services\\orchestration\\scoreCalibrator.ts",
+      "line": 225,
+      "name": "getScoreCalibrator",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\scoreCalibrator.ts",
+      "line": 230,
+      "name": "startScoreCalibrator",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\registrationOrchestrator.ts",
+      "line": 158,
+      "name": "getRegistrationOrchestrator",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\registrationOrchestrator.ts",
+      "line": 165,
+      "name": "startRegistrationOrchestrator",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\qualityGate.ts",
+      "line": 53,
+      "name": "QualityGate",
+      "type": "class"
+    },
+    {
+      "file": "src\\services\\orchestration\\qualityGate.ts",
+      "line": 225,
+      "name": "getQualityGate",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\qualityGate.ts",
+      "line": 230,
+      "name": "startQualityGate",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\chipAnomalyDetector.ts",
+      "line": 76,
+      "name": "ChipAnomalyDetector",
+      "type": "class"
+    },
+    {
+      "file": "src\\services\\orchestration\\chipAnomalyDetector.ts",
+      "line": 406,
+      "name": "getChipAnomalyDetector",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\chipAnomalyDetector.ts",
+      "line": 411,
+      "name": "startChipAnomalyDetector",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\catalystTracker.ts",
+      "line": 73,
+      "name": "CatalystTracker",
+      "type": "class"
+    },
+    {
+      "file": "src\\services\\orchestration\\catalystTracker.ts",
+      "line": 290,
+      "name": "getCatalystTracker",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\orchestration\\catalystTracker.ts",
+      "line": 295,
+      "name": "startCatalystTracker",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\llm\\jsonParser.ts",
+      "line": 29,
+      "name": "parseLlmJson",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\llm\\jsonParser.ts",
+      "line": 30,
+      "name": "parseLlmJson",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\data-collector\\tushareProvider.ts",
+      "line": 49,
+      "name": "TushareProviderError",
+      "type": "class"
+    },
+    {
+      "file": "src\\services\\data-collector\\crawlerProvider.ts",
+      "line": 288,
+      "name": "fetchBaostockKline",
+      "type": "function"
+    },
+    {
+      "file": "src\\store\\profileStore.ts",
+      "line": 173,
+      "name": "useProfileStore",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\profileStore.ts",
+      "line": 481,
+      "name": "selectSymbol",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\profileStore.ts",
+      "line": 482,
+      "name": "selectStocks",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\profileStore.ts",
+      "line": 483,
+      "name": "selectActiveDomain",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\profileStore.ts",
+      "line": 484,
+      "name": "selectItems",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\profileStore.ts",
+      "line": 485,
+      "name": "selectItemsLoading",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\profileStore.ts",
+      "line": 486,
+      "name": "selectFilter",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\profileStore.ts",
+      "line": 487,
+      "name": "selectSelectedItemId",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\profileStore.ts",
+      "line": 488,
+      "name": "selectEvidence",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\profileStore.ts",
+      "line": 489,
+      "name": "selectProfile",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\intelligentScoreStore.ts",
+      "line": 605,
+      "name": "initIntelligentScoreStoreSubscriptions",
+      "type": "function"
+    },
+    {
+      "file": "src\\store\\bulkImportStore.ts",
+      "line": 65,
+      "name": "useBulkImportStore",
+      "type": "constant"
+    },
+    {
+      "file": "src\\hooks\\useGlobalShortcuts.ts",
+      "line": 46,
+      "name": "useGlobalShortcuts",
+      "type": "function"
+    },
+    {
+      "file": "src\\components\\organisms\\pool\\StockNewsStats.tsx",
+      "line": 46,
+      "name": "StockNewsStats",
+      "type": "function"
+    },
+    {
+      "file": "src\\components\\organisms\\pool\\CollectionProgress.tsx",
+      "line": 71,
+      "name": "CollectionProgress",
+      "type": "function"
+    },
+    {
+      "file": "src\\components\\molecules\\ShortcutsHelpPanel.tsx",
+      "line": 64,
+      "name": "ShortcutsHelpPanel",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\output\\ProfileBrowsePage.tsx",
+      "line": 942,
+      "name": "ProfileBrowsePage",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\analysis\\PoolBoardPage.tsx",
+      "line": 150,
+      "name": "PoolBoardPage",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\analysis\\score\\TrendAndExplanation.tsx",
+      "line": 20,
+      "name": "TrendAndExplanation",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\analysis\\score\\StockInfoCard.tsx",
+      "line": 21,
+      "name": "StockInfoCard",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\analysis\\score\\ScoreResultCard.tsx",
+      "line": 26,
+      "name": "ScoreResultCard",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\analysis\\score\\ScoreProgressPanel.tsx",
+      "line": 11,
+      "name": "ScoreProgressPanel",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\analysis\\score\\ScoreConfigPanel.tsx",
+      "line": 22,
+      "name": "ScoreConfigPanel",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\analysis\\score\\exportUtils.ts",
+      "line": 13,
+      "name": "exportToJSON",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\analysis\\score\\exportUtils.ts",
+      "line": 35,
+      "name": "exportToMarkdown",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\analysis\\score\\exportUtils.ts",
+      "line": 73,
+      "name": "exportToPDF",
+      "type": "function"
+    },
+    {
+      "file": "src\\core\\shadowHarness.ts",
+      "line": 104,
+      "name": "SHADOW_EVENTS",
+      "type": "constant"
+    },
+    {
+      "file": "src\\core\\shadowHarness.ts",
+      "line": 433,
+      "name": "compareEngine",
+      "type": "constant"
+    },
+    {
+      "file": "src\\core\\moduleSwitch.ts",
+      "line": 109,
+      "name": "SWITCH_EVENTS",
+      "type": "constant"
+    },
+    {
+      "file": "src\\core\\databridgeHandlers.test-utils.ts",
+      "line": 15,
+      "name": "mockLogger",
+      "type": "constant"
+    },
+    {
+      "file": "src\\core\\databridgeHandlers.test-utils.ts",
+      "line": 22,
+      "name": "dbModule",
+      "type": "constant"
+    },
+    {
+      "file": "src\\core\\databridgeHandlers.test-utils.ts",
+      "line": 37,
+      "name": "makeEnvelope",
+      "type": "function"
+    },
+    {
+      "file": "src\\core\\cascadeExecutor.ts",
+      "line": 220,
+      "name": "cascadeExecutor",
+      "type": "constant"
+    }
+  ]
+}

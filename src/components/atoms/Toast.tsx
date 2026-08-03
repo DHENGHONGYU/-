@@ -1,62 +1,79 @@
-import { useContext } from 'react'
+import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
-import { X } from 'lucide-react'
-import { ToastContext, type Toast, type ToastVariant } from '@/hooks/useToast'
-import { twText, twBg, twBorder, DARK } from '@/constants/theme.tokens'
+import { useToast } from '@/hooks/useToast'
+import type { Toast as ToastType, ToastVariant } from '@/hooks/useToast'
 
-export type { Toast, ToastVariant }
+export type Toast = ToastType
 
-/**
- * ToastItem
- * @param onDismiss }
- */
-export function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string) => void }) {
-  const variantClasses: Record<ToastVariant, string> = {
-    default: 'border bg-background text-foreground',
-    success: `${twBorder('green', 200)} ${twBg('green', 50)} ${twText('green', 900)} ${DARK.borderGreen900} ${DARK.bgGreen950} ${DARK.textGreen100}`,
-    error: `${twBorder('red', 200)} ${twBg('red', 50)} ${twText('red', 900)} ${DARK.borderRed900} ${DARK.bgRed950} ${DARK.textRed200}`,
-    warning: `${twBorder('yellow', 200)} ${twBg('yellow', 50)} ${twText('yellow', 900)} ${DARK.borderYellow900} ${DARK.bgYellow950} ${DARK.textYellow100}`,
-    info: `${twBorder('blue', 200)} ${twBg('blue', 50)} ${twText('blue', 900)} ${DARK.borderBlue900} ${DARK.bgBlue950} ${DARK.textBlue100}`,
-  }
+const variantStyles: Record<ToastVariant, string> = {
+  default: 'bg-background border-border text-foreground',
+  success: 'bg-success/10 border-success/30 text-success-foreground',
+  error: 'bg-destructive/10 border-destructive/30 text-destructive-foreground',
+  warning: 'bg-warning/10 border-warning/30 text-warning-foreground',
+  info: 'bg-primary/10 border-primary/30 text-primary-foreground',
+}
 
-  return (
-    <div
-      className={cn(
-        'pointer-events-auto relative flex w-full max-w-sm items-start justify-between gap-3 rounded-lg border p-4 shadow-lg',
-        'animate-in fade-in slide-in-from-bottom-5',
-        variantClasses[toast.variant ?? 'default'],
-      )}
-    >
-      <div className="flex-1 space-y-1">
-        {toast.title && <div className="text-sm font-semibold">{toast.title}</div>}
-        {toast.description && <div className="text-sm opacity-90">{toast.description}</div>}
-      </div>
-      <button
-        onClick={() => onDismiss(toast.id)}
-        className="rounded-md p-1 opacity-70 transition-opacity hover:opacity-100"
-      >
-        <X className="h-4 w-4" />
-      </button>
-    </div>
-  )
+const variantIcon: Record<ToastVariant, string> = {
+  default: '',
+  success: '\u2713',
+  error: '\u2717',
+  warning: '\u26A0',
+  info: '\u24D8',
+}
+
+export interface ToasterProps {
+  className?: string
 }
 
 /**
- * Toaster
+ * Toaster - 渲染所有活跃的 Toast 通知
+ *
+ * 配合 ToastProvider + useToast 使用，固定定位在视口右下角。
  */
-export function Toaster({ className }: { className?: string }) {
-  const ctx = useContext(ToastContext)
-  if (!ctx) return <></>
+export function Toaster({ className }: ToasterProps): ReactNode {
+  const { toasts, dismiss } = useToast()
+
+  if (toasts.length === 0) return null
 
   return (
     <div
       className={cn(
-        'fixed bottom-4 right-4 z-50 flex flex-col gap-2',
+        'pointer-events-none fixed bottom-4 right-4 z-[9999] flex flex-col gap-2',
         className,
       )}
+      role="region"
+      aria-label="通知"
     >
-      {ctx.toasts.map((t) => (
-        <ToastItem key={t.id} toast={t} onDismiss={ctx.dismiss} />
+      {toasts.map((t) => (
+        <div
+          key={t.id}
+          className={cn(
+            'pointer-events-auto flex items-start gap-3 rounded-lg border p-4 shadow-lg transition-all',
+            'min-w-[320px] max-w-[480px] animate-in slide-in-from-right',
+            variantStyles[t.variant ?? 'default'],
+          )}
+          role="alert"
+        >
+          {variantIcon[t.variant ?? 'default'] && (
+            <span className="text-lg leading-none" aria-hidden="true">
+              {variantIcon[t.variant ?? 'default']}
+            </span>
+          )}
+          <div className="flex-1">
+            {!!t.title && <p className="font-medium text-sm">{t.title}</p>}
+            {!!t.description && (
+              <p className="mt-1 text-sm opacity-90">{t.description}</p>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() => dismiss(t.id)}
+            className="shrink-0 text-current opacity-60 transition-opacity hover:opacity-100"
+            aria-label="关闭通知"
+          >
+            {'\u2715'}
+          </button>
+        </div>
       ))}
     </div>
   )

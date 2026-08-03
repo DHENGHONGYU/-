@@ -65,7 +65,7 @@ node scripts/skill-router.cjs --remind --log || true
 # 2. 环境路径守卫：拦截写死 C:/Users/xxx 的提交
 echo ""
 echo "🛡️  [env-check] 运行环境路径守卫（拦截硬编码用户路径）..."
-npm run env:check
+NODE_RUN scripts/env-path-guard.cjs --ci --staged
 ENV_CHECK_EXIT=$?
 if [ "$ENV_CHECK_EXIT" -ne 0 ]; then
   echo ""

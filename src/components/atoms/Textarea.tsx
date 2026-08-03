@@ -1,17 +1,25 @@
 import { type TextareaHTMLAttributes, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
+import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
 
 /**
- * Textarea
+ * Textarea — 多行文本输入
  */
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<HTMLTextAreaElement>>(
   ({ className, ...props }, ref) => (
     <textarea
       ref={ref}
       className={cn(
-        'flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm',
-        'ring-offset-background placeholder:text-muted-foreground',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+        'flex w-full border border-input bg-background',
+        THEME_TOKENS.controlSizes.md,
+        THEME_TOKENS.radius.md,
+        THEME_TOKENS.spacing.pxMd,
+        THEME_TOKENS.spacing.pyMd,
+        THEME_TOKENS.typography.fontSize.sm,
+        `placeholder:${COLOR_TOKENS.textMuted.tailwind}`,
+        'focus-visible:outline-none',
+        `focus-visible:${THEME_TOKENS.focusVisible.ringWidth}`,
+        `focus-visible:${THEME_TOKENS.focusVisible.ringColor}`,
         'disabled:cursor-not-allowed disabled:opacity-50',
         className,
       )}
