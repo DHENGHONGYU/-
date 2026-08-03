@@ -27,10 +27,10 @@ const violations = [];
 
 // 根目录白名单（允许存在的文件）
 const ROOT_WHITELIST = new Set([
-  'docs/explanation/README.md', 'AGENTS.md', 'CHANGELOG.md', '.gitignore',
+  'docs/explanation/README.md', 'AGENTS.md', 'CHANGELOG.md', 'README.md', '.gitignore', '.gitattributes',
   'package.json', 'package-lock.json', 'index.html',
-  'tsconfig.json', 'tsconfig.api.json', 'tsconfig.scripts.json', 'tsconfig.test.json',
-  'vite.config.ts', 'playwright.config.ts',
+  'tsconfig.json', 'tsconfig.api.json', 'tsconfig.scripts.json', 'tsconfig.test.json', 'tsconfig.prod.json',
+  'vite.config.ts', 'playwright.config.ts', 'playwright.config.manual.ts', 'playwright.blueprint.config.ts',
   'eslint.config.js', 'eslint.colors.config.js',
   'postcss.config.js', 'tailwind.config.js',
   'api-extractor.json', 'cspell.json',
@@ -38,7 +38,6 @@ const ROOT_WHITELIST = new Set([
   '.env.local', '.env.local.example', '.env.development.local',
   '.cursorrules', '.complexity-baseline.json', '.token-baseline.json',
   '.dependency-cruiser.js',
-  'test-results.json',
 ]);
 
 // 根目录白名单目录（允许存在的目录）

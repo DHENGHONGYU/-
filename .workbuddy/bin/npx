@@ -1,3 +1,0 @@
-#!/bin/sh
-# Kimi Work 会话临时 shim：Git Bash 钩子环境不解析 .cmd，直接以 node 调起 npx CLI
-exec "/c/Users/DELL/AppData/Local/Programs/kimi-desktop/resources/resources/runtime/node.exe" "/c/Users/DELL/AppData/Local/Programs/kimi-desktop/resources/resources/runtime/node_modules/npm/bin/npx-cli.js" "$@"
