@@ -94,8 +94,8 @@ V9 智能投研复盘系统是一款**纯前端本地应用**，采用"**数据�
 - **认证标签**: GCM 模式自带完整性校验，防止篡改
 
 **核心模块**：
-- [localStorageCrypto.ts](file:///g:/FinSightV9/src/lib/localStorageCrypto.ts) — 加密工具函数
-- [localStorageManager.ts](file:///g:/FinSightV9/src/lib/localStorageManager.ts) — 存储管理器
+- [localStorageCrypto.ts](../../src/lib/localStorageCrypto.ts) — 加密工具函数
+- [localStorageManager.ts](../../src/lib/localStorageManager.ts) — 存储管理器
 
 **加密数据结构**：
 ```typescript
@@ -224,7 +224,7 @@ V9 采用纯前端架构，**没有自己的后端服务器**，因此：
 | :--- | :--- |
 | 生产环境不暴露堆栈 | 生产构建 SourceMap 关闭 |
 | 错误信息脱敏 | 错误消息不含密钥、路径、堆栈 |
-| 统一错误类型 | [V9Error](file:///g:/FinSightV9/src/lib/errors.ts) 体系，分类分级 |
+| 统一错误类型 | [V9Error](../../src/lib/errors.ts) 体系，分类分级 |
 | 错误上报可控 | 无默认错误上报，用户可选择开启 |
 
 ### 5.4 认证与授权
@@ -410,7 +410,7 @@ V9 采用纯前端架构，**没有自己的后端服务器**，因此：
 ### 10.2 相关文档
 
 - [system-architecture.md](../explanation/system-architecture.md) — 系统架构文档
-- [testing-strategy.md](file:///g:/FinSightV9/docs/reference/testing-strategy.md) — 测试策略文档
+- [testing-strategy.md](../reference/testing-strategy.md) — 测试策略文档
 - [v9-system-blueprint.md](../reference/v9-system-blueprint.md) — 系统蓝图
 
 ---
