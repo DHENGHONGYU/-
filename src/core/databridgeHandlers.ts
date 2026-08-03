@@ -555,6 +555,11 @@ export function createHandlerRegistry(): HandlerRegistry {
       ENVELOPE_ACTION.saveScoreEvidence,
       ENVELOPE_ACTION.saveStockProfile,
       ENVELOPE_ACTION.saveProfileTag,
+      // Notification 类 action：数据加载/事件触发时缓存到对应 store
+      ENVELOPE_ACTION.newsArticleLoaded,
+      ENVELOPE_ACTION.holdingsDataLoaded,
+      ENVELOPE_ACTION.tradeActionExecuted,
+      ENVELOPE_ACTION.loadHoldingsData,
     ])
   )
 

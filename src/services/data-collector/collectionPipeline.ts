@@ -244,10 +244,11 @@ export function buildDefaultSourcePriority(
  * @returns QuoteDataSourceId[]
  */
 export function resolveQuoteChain(dimension: DimensionPipelineConfig): QuoteDataSourceId[] {
-  const chain = dimension.sourcePriority.length > 0
+  const chain = (dimension.sourcePriority?.length ?? 0) > 0
     ? dimension.sourcePriority
     : buildDefaultSourcePriority(dimension)
-  const allowMock = dimension.fallbackPolicy.allowMockFallback
+  // 未配置 fallbackPolicy 时默认允许 mock（保持旧行为，见函数注释）
+  const allowMock = dimension.fallbackPolicy?.allowMockFallback ?? true
   return chain
     .filter((item) => item.enabled)
     .filter((item) => allowMock || item.id !== 'mock')
@@ -264,7 +265,8 @@ export function resolveQuoteChain(dimension: DimensionPipelineConfig): QuoteData
  */
 export function resolveKlineChain(dimension: DimensionPipelineConfig): QuoteDataSourceId[] {
   const quoteChain = resolveQuoteChain(dimension)
-  const allowMock = dimension.fallbackPolicy.allowMockFallback
+  // 未配置 fallbackPolicy 时默认允许 mock（保持旧行为）
+  const allowMock = dimension.fallbackPolicy?.allowMockFallback ?? true
   // 腾讯同时支持行情+K线，优先使用
   const klineSources = quoteChain.filter((id) => id !== 'mock')
   if (klineSources.length > 0) return allowMock ? [...klineSources, 'mock'] : klineSources
@@ -989,13 +991,15 @@ export function upgradeDimensionsToPipeline(
 ): DimensionPipelineConfig[] {
   return dimensions.map((dim) => {
     // 先解析 fallbackPolicy，再用其 allowMockFallback 决定默认链是否注入 mock（假绿灯修复）
+    // 未配置 fallbackPolicy 时默认允许 mock（保持旧行为）
     const fallbackPolicy = dim.fallbackPolicy
+    const allowMock = fallbackPolicy?.allowMockFallback ?? true
     return {
       ...dim,
       sourcePriority:
-        dim.sourcePriority.length > 0
+        (dim.sourcePriority?.length ?? 0) > 0
           ? dim.sourcePriority
-          : buildDefaultSourcePriority(dim, fallbackPolicy.allowMockFallback),
+          : buildDefaultSourcePriority(dim, allowMock),
       concurrency: dim.concurrency,
       retryPolicy: dim.retryPolicy,
       timeoutPolicy: dim.timeoutPolicy,

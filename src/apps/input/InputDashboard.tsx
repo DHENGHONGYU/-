@@ -31,6 +31,7 @@ function getMarketLabel(market: string): string {
 export default function InputDashboard(): React.JSX.Element {
   // 从 intentionPoolStore 获取状态
   const items = useIntentionPoolStore((s) => s.items)
+  console.log('[InputDashboard] items:', items, 'type:', typeof items)
   const loading = useIntentionPoolStore((s) => s.loading)
   const error = useIntentionPoolStore((s) => s.error)
   const refresh = useIntentionPoolStore((s) => s.refresh)
