@@ -1,0 +1,255 @@
+{
+  "version": "2.0.0",
+  "description": "V9 变更日志完整索引",
+  "lastUpdated": "2026-07-24",
+  "totalFiles": 36,
+  "categories": {
+    "daily": 30,
+    "pr-report": 4,
+    "general": 2
+  },
+  "entries": [
+    {
+      "file": "2026-07/changelog-2026-07-04t06-45-59.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "V9 更新日志报告",
+      "date": "2026-07"
+    },
+    {
+      "file": "2026-07/daily-doc-validation-2026-07-12.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "每日文档变更历史 — 2026-07-12",
+      "date": "2026-07"
+    },
+    {
+      "file": "monthly-2026-07_changelogs.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "V9 更新日志报告",
+      "date": "2026-07"
+    },
+    {
+      "file": "2026-07/2026-07-04-task-001.json",
+      "category": "daily",
+      "type": "json",
+      "title": "2026 07 04 Task 001.Json",
+      "date": "2026-07-04"
+    },
+    {
+      "file": "2026-07/2026-07-05-audit-false-positive-analysis.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026-07-05-audit-false-positive-analysis",
+      "date": "2026-07-05"
+    },
+    {
+      "file": "2026-07/2026-07-05-color-refactor-p1.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026-07-05-color-refactor-p1",
+      "date": "2026-07-05"
+    },
+    {
+      "file": "2026-07/2026-07-05-color-refactor-p2.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026-07-05-color-refactor-p2",
+      "date": "2026-07-05"
+    },
+    {
+      "file": "2026-07/2026-07-05-color-token-refactor.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026-07-05-color-token-refactor",
+      "date": "2026-07-05"
+    },
+    {
+      "file": "2026-07/2026-07-05-comprehensive-audit-and-remediation.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026-07-05-comprehensive-audit-and-remediation",
+      "date": "2026-07-05"
+    },
+    {
+      "file": "2026-07/2026-07-05-databridge-query-implementation.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026-07-05-databridge-query-implementation",
+      "date": "2026-07-05"
+    },
+    {
+      "file": "2026-07/2026-07-05-module-registry-and-integration.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026-07-05-module-registry-and-integration",
+      "date": "2026-07-05"
+    },
+    {
+      "file": "2026-07/2026-07-05-p0-5-and-legacy-bugs-jira-tickets.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026-07-05-p0-5-and-legacy-bugs-jira-tickets",
+      "date": "2026-07-05"
+    },
+    {
+      "file": "2026-07/2026-07-05-p2-completion-and-backlog.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026-07-05-p2-completion-and-backlog",
+      "date": "2026-07-05"
+    },
+    {
+      "file": "2026-07/2026-07-05-post-dev-review-actions.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026-07-05-post-dev-review-actions",
+      "date": "2026-07-05"
+    },
+    {
+      "file": "2026-07/2026-07-05-post-dev-review.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026-07-05-post-dev-review",
+      "date": "2026-07-05"
+    },
+    {
+      "file": "2026-07/2026-07-05-systematic-doc-update.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026-07-05-systematic-doc-update",
+      "date": "2026-07-05"
+    },
+    {
+      "file": "2026-07/2026-07-05-task-001.json",
+      "category": "daily",
+      "type": "json",
+      "title": "2026 07 05 Task 001.Json",
+      "date": "2026-07-05"
+    },
+    {
+      "file": "2026-07/2026-07-05-ui-testing-optimization.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026-07-05-ui-testing-optimization",
+      "date": "2026-07-05"
+    },
+    {
+      "file": "2026-07/2026-07-08-document-update-report.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "V9 文档更新报告 — 2026-07-08",
+      "date": "2026-07-08"
+    },
+    {
+      "file": "2026-07/2026-07-08-documentation-summary-report.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "V9 项目文档化工作最终总结报告",
+      "date": "2026-07-08"
+    },
+    {
+      "file": "2026-07/2026-07-09-update-log.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026 07 09 Update Log",
+      "date": "2026-07-09"
+    },
+    {
+      "file": "2026-07/jsdoc-combined-report-20260712.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "Jsdoc Combined Report 20260712",
+      "date": "2026-07-12"
+    },
+    {
+      "file": "2026-07/jsdoc-update-summary-20260712.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "jsdoc-update-summary-20260712",
+      "date": "2026-07-12"
+    },
+    {
+      "file": "2026-07/jsdoc-update-summary-data-collector-20260712.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "Jsdoc Update Summary Data Collector 20260712",
+      "date": "2026-07-12"
+    },
+    {
+      "file": "2026-07/2026-07-14-architecture-governance.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026-07-14-architecture-governance",
+      "date": "2026-07-14"
+    },
+    {
+      "file": "2026-07/2026-07-14-p4-completion.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "2026 07 14 P4 Completion",
+      "date": "2026-07-14"
+    },
+    {
+      "file": "2026-07/0001-refactor-lib-PR-8-toSafeBoolean-bug.patch",
+      "category": "daily",
+      "type": "patch",
+      "title": "0001 Refactor Lib Pr 8 Tosafeboolean Bug.Patch"
+    },
+    {
+      "file": "2026-07/action-list-p1.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "action-list-p1"
+    },
+    {
+      "file": "2026-07/completeness-profile-p1.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "completeness-profile-p1"
+    },
+    {
+      "file": "2026-07/test-cache-fix-summary.md",
+      "category": "daily",
+      "type": "markdown",
+      "title": "test-cache-fix-summary"
+    },
+    {
+      "file": "CHANGELOG_changelogs.md",
+      "category": "general",
+      "type": "markdown",
+      "title": "Changelog Changelogs"
+    },
+    {
+      "file": "development-log.md",
+      "category": "general",
+      "type": "markdown",
+      "title": "Development Log"
+    },
+    {
+      "file": "pr-reports/pr-5-build-optimization.md",
+      "category": "pr-report",
+      "type": "markdown",
+      "title": "Pr 5 Build Optimization"
+    },
+    {
+      "file": "pr-reports/pr-7-trade-error-classifier-split-plan.md",
+      "category": "pr-report",
+      "type": "markdown",
+      "title": "Pr 7 Trade Error Classifier Split Plan"
+    },
+    {
+      "file": "pr-reports/pr-8-dedup-audit-report.md",
+      "category": "pr-report",
+      "type": "markdown",
+      "title": "Pr 8 Dedup Audit Report"
+    },
+    {
+      "file": "pr-reports/pr-8-dedup-plan.md",
+      "category": "pr-report",
+      "type": "markdown",
+      "title": "Pr 8 Dedup Plan"
+    }
+  ]
+}

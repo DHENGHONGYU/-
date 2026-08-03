@@ -1,0 +1,8 @@
+{
+  "generatedAt": "2026-08-03T12:24:47.342Z",
+  "subject": "dualStrategyStore 订阅热路径（5 频道派发）",
+  "iterations": 500000,
+  "durationMs": 520.58,
+  "opsPerSec": 960463,
+  "note": "抽取 shouldSkipSelf 后热路径与整改前结构等价；本基准证明无运行时回归（守卫开销微秒级）。"
+}
