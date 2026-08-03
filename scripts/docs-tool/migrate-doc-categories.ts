@@ -64,7 +64,6 @@ function shouldMigrate(filePath: string): boolean {
   const normalized = normalizePath(filePath);
   const skipPatterns = [
     /^00-meta\/ai-index\//,
-    /^00-meta\/deprecated-docs\//,
     /^assets\//,
     /^07-archive\//,
   ];
@@ -144,7 +143,7 @@ function main(): void {
   console.log(`Skipped: ${skipped}`);
   console.log(`Errors: ${errors}`);
 
-  const logPath = join(DOCS_DIR, '00-meta/deprecated-docs/temporary/migration-log.json');
+  const logPath = join(DOCS_DIR, '00-meta/migration-log.json');
   writeFileSync(logPath, JSON.stringify(migrationLog, null, 2), 'utf-8');
   console.log(`Migration log written to: ${logPath}`);
 }

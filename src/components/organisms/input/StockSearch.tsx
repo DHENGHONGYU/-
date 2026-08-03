@@ -6,6 +6,7 @@ import type { StockSearchResult } from '@/services/input/inputService'
 import { INPUT_CONFIG } from '@/config/inputConfig'
 import { useToast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'
+import { twBg, twText } from '@/constants/theme.tokens'
 
 export interface StockSearchProps {
   onSelect?: (result: StockSearchResult) => void
@@ -19,16 +20,16 @@ export interface StockSearchProps {
  * 市场标签映射
  */
 const MARKET_LABELS: Record<string, { label: string; className: string }> = {
-  SH: { label: '沪', className: 'bg-yellow-100 text-yellow-800' },
-  SZ: { label: '深', className: 'bg-green-100 text-green-800' },
-  HK: { label: 'HK', className: 'bg-blue-100 text-blue-800' },
-  BJ: { label: '京', className: 'bg-purple-100 text-purple-800' },
+  SH: { label: '沪', className: cn(twBg('yellow', 100), twText('yellow', 800)) },
+  SZ: { label: '深', className: cn(twBg('green', 100), twText('green', 800)) },
+  HK: { label: 'HK', className: cn(twBg('blue', 100), twText('blue', 800)) },
+  BJ: { label: '京', className: cn(twBg('purple', 100), twText('purple', 800)) },
 }
 
 function getMarketLabel(industry: string | undefined): { label: string; className: string } {
-  if (!industry) return { label: '—', className: 'bg-gray-100 text-gray-500' }
+  if (!industry) return { label: '—', className: cn(twBg('gray', 100), twText('gray', 500)) }
   const key = industry.toUpperCase()
-  return MARKET_LABELS[key] ?? { label: industry, className: 'bg-gray-100 text-gray-600' }
+  return MARKET_LABELS[key] ?? { label: industry, className: cn(twBg('gray', 100), twText('gray', 600)) }
 }
 
 /**

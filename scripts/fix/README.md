@@ -12,7 +12,6 @@
 
 ### 文档修复
 - `fix-doc-refs.ts` — 文档引用修复
-- `fix-cross-references.ts` — 交叉引用修复
 
 ### 代码质量修复
 - `fix-typography-violations.ts` — 排版违规自动修复

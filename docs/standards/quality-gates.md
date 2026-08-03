@@ -26,5 +26,5 @@ date: 2026-07-17
 
 ## 入口
 
-- 质量门禁参考：[../reference/09-quality-gates.md](../reference/09-quality-gates.md)
-- 测试策略：[../reference/testing-strategy.md](../reference/testing-strategy.md)
+- 质量门禁参考：[../09-quality-gates.md](../09-quality-gates.md)
+- 测试策略：[../testing-strategy.md](../testing-strategy.md)
