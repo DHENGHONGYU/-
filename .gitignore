@@ -186,10 +186,13 @@ docs/reports/_generated/
 docs/reports/**/*.html
 docs/reports/automation-pipeline/*.json
 
-# Generated audit/proofread/style-lint reports in scripts/docs/reports/
-/scripts/docs/reports/audit/*.json
-/scripts/docs/reports/proofread/*.json
-/scripts/docs/reports/style-lint/*.json
+# Generated reports in scripts/docs/reports/ (中间产物，可重建，不入 VCS)
+/scripts/docs/reports/
+
+# 临时/调试脚本（不上线）
+scripts/**/_debug/
+scripts/tmp-*.ts
+scripts/_temp_*.ts
 
 # 测试运行产物（一次性，可重建，不入 VCS）
 /test-results-tmp/
