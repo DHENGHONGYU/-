@@ -1,3 +1,10 @@
+---
+title: design-tokens
+tier: important
+code_version: 2.0.0
+---
+
+
 # Design Tokens 系统使用指南
 
 ## 概述
@@ -47,21 +54,19 @@ import { COLOR_TOKENS, COLOR_SHADES, twText, twBg } from '@/constants/theme.toke
 ### 2. 主题切换
 
 ```tsx
-import { useTheme, ThemeToggle } from '@/core/ThemeProvider'
+import { useThemeStore } from '@/store/themeStore'
 
 function MyComponent() {
-  const { mode, resolvedMode, setMode, toggleTheme } = useTheme()
-  
+  const { mode, resolvedMode, setMode, toggleTheme, cycleMode } = useThemeStore()
+
   return (
     <div>
       <p>当前主题: {resolvedMode}</p>
-      <button onClick={toggleTheme}>切换主题</button>
+      <button onClick={toggleTheme}>切换 light/dark</button>
+      <button onClick={cycleMode}>循环 light → dark → system</button>
       <button onClick={() => setMode('light')}>亮色模式</button>
       <button onClick={() => setMode('dark')}>暗色模式</button>
       <button onClick={() => setMode('system')}>跟随系统</button>
-      
-      {/* 或使用内置的主题切换按钮 */}
-      <ThemeToggle />
     </div>
   )
 }
@@ -459,11 +464,15 @@ A: 按照以下决策树选择放置位置：
 
 ### Q: 如何在组件中切换主题？
 
-A: 使用 `useTheme` Hook：
+A: 使用 `useThemeStore`：
 
 ```tsx
-const { setMode } = useTheme()
-setMode('dark')  // 切换到暗色模式
+import { useThemeStore } from '@/store/themeStore'
+
+const { setMode, toggleTheme, cycleMode } = useThemeStore()
+setMode('dark')      // 切换到暗色模式
+toggleTheme()        // 在 light/dark 之间切换
+cycleMode()          // 按 light → dark → system 循环
 ```
 
 ### Q: 生成的 CSS 变量如何使用？
@@ -488,8 +497,85 @@ A: 在浏览器开发者工具中：
 
 - [Design Tokens 规范](https://design-tokens.github.io/community-group/format/)
 - [Tailwind CSS 文档](https://tailwindcss.com/docs)
-- [V9 架构指南](./architecture.md)
+- [V9 架构指南](../explanation/architecture.md)
+
+### 7. 门户布局令牌 (PORTAL_TOKENS)
+
+`PORTAL_TOKENS` 是 L6 设计系统层的扩展，专为 `PortalShell` 提供布局、导航、舱室切换、移动端导航、状态指示等样式令牌，消除组件层硬编码颜色类。
+
+```tsx
+import { PORTAL_TOKENS } from '@/constants/theme.tokens'
+
+const { layout, cabin, nav, mobile, status, brand } = PORTAL_TOKENS
+
+// 布局
+layout.shellBg     // bg-background
+layout.headerBg    // bg-background/90 backdrop-blur-md
+layout.sidebarBg   // bg-muted/70
+layout.mainBg      // bg-card
+
+// 舱室切换器
+cabin.active       // bg-card text-foreground shadow-sm
+cabin.inactive     // text-muted-foreground hover:text-foreground hover:bg-muted/80
+
+// 侧边栏导航
+nav.active         // bg-card text-foreground shadow-sm
+nav.activeIndicator // before:bg-primary
+nav.inactive       // text-muted-foreground hover:bg-muted hover:text-foreground
+
+// 移动端
+mobile.hamburger        // text-muted-foreground hover:bg-muted
+mobile.bottomNavBg      // bg-background/95 backdrop-blur-md border-t border-border
+mobile.bottomNavActive  // text-primary
+mobile.bottomNavInactive // text-muted-foreground
+
+// 状态指示
+status.checking     // bg-amber-400/80 ring-1 ring-amber-400/40 animate-pulse
+status.connected    // bg-emerald-500/80 ring-1 ring-emerald-500/40
+status.disconnected // bg-destructive/80 ring-1 ring-destructive/40
+
+// 品牌
+brand.logoGradient // from-primary to-emerald-600
+brand.logoText     // text-white
+brand.logoShadow   // shadow-primary/20
+```
+
+## 主题切换
+
+### 使用 themeStore
+
+V9 使用基于 Zustand 的 `themeStore` 管理主题模式（`light` / `dark` / `system`），并持久化到 `localStorage`。
+
+```tsx
+import { useThemeStore } from '@/store/themeStore'
+
+function MyComponent() {
+  const { mode, resolvedMode, setMode, toggleTheme, cycleMode } = useThemeStore()
+
+  return (
+    <div>
+      <p>当前模式: {mode}（实际: {resolvedMode}）</p>
+      <button onClick={toggleTheme}>切换 light/dark</button>
+      <button onClick={cycleMode}>循环 light → dark → system</button>
+      <button onClick={() => setMode('system')}>跟随系统</button>
+    </div>
+  )
+}
+```
+
+- `mode`: 用户选择的模式（`light` | `dark` | `system`）
+- `resolvedMode`: 解析后的实际主题（`light` | `dark`）
+- `setMode(mode)`: 设置指定模式
+- `toggleTheme()`: 在 `light` / `dark` 之间切换
+- `cycleMode()`: 按 `light → dark → system → light` 循环
+
+主题状态会在应用启动时从 `localStorage` 恢复，并在 `system` 模式下自动响应系统主题变化。
+
+### 与 ThemeProvider 的关系
+
+`themeStore` 已取代 `src/core/ThemeProvider.tsx` 成为主题唯一真相源。`ThemeProvider` 已退役并从 `App.tsx` 中移除，新代码应统一使用 `useThemeStore`。
 
 ## 更新日志
 
+- **2026-07-15**: 新增 `PORTAL_TOKENS`（L6 门户布局令牌扩展）；新增 `themeStore` 统一管理 light/dark/system 主题切换；`PortalShell.tsx` 全面改用 PORTAL_TOKENS 并集成 themeStore。
 - **2026-07-05**: 初始版本，建立 Design Tokens 系统和主题切换机制
