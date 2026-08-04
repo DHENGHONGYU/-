@@ -114,11 +114,17 @@ function setupDefaultMocks() {
   })
 
   mockGenerateTradeSummary.mockReturnValue({
-    totalOrders: 10,
+    totalTrades: 10,
+    profitableTrades: 6,
+    losingTrades: 4,
     winRate: 60,
     profitLossRatio: 1.5,
+    avgProfit: 5,
+    avgLoss: -3,
+    totalPnL: 1500,
+    totalPnLPercent: 15,
     disciplineScore: 85,
-    totalPnl: 1500,
+    totalErrors: 0,
   })
 
   mockGenerateErrorAnalysis.mockReturnValue({
@@ -747,7 +753,19 @@ describe('generateTradeReviewAsyncUseCase（异步版）', () => {
         if (callCount === 2) {
           throw new Error('第二次调用失败')
         }
-        return { totalOrders: 1 }
+        return {
+          totalTrades: 1,
+          profitableTrades: 1,
+          losingTrades: 0,
+          winRate: 100,
+          profitLossRatio: 1,
+          avgProfit: 0,
+          avgLoss: 0,
+          totalPnL: 0,
+          totalPnLPercent: 0,
+          disciplineScore: 80,
+          totalErrors: 0,
+        }
       })
 
       const [promiseA, promiseB] = [
