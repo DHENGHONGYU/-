@@ -62,6 +62,10 @@ export interface SevenDimConfigState {
   collectingDimensions: string[]
   collectProgress: number
   error: string | null
+  /** 是否正在自动恢复中 */
+  isRecovering: boolean
+  /** 是否已尝试过恢复（恢复失败后阻止再次重试） */
+  recoveryAttempted: boolean
 
   // --- 派生计算 ---
   enabledCount: () => number
@@ -89,6 +93,8 @@ export interface SevenDimConfigState {
   loadConfig: () => Promise<void>
   runCollection: () => Promise<void>
   clearError: () => void
+  /** 取消待执行的自动恢复并重置恢复状态 */
+  cancelRecovery: () => void
 }
 
 // ============================================================
@@ -160,6 +166,9 @@ function resolveDefaultSymbols(_count: number): string[] {
 // Store 实现
 // ============================================================
 
+/** 自动恢复定时器引用（模块级，跨 store 实例共享） */
+let recoveryTimer: ReturnType<typeof setTimeout> | null = null
+
 const initialState: Omit<
   SevenDimConfigState,
   | 'enabledCount'
@@ -182,6 +191,7 @@ const initialState: Omit<
   | 'loadConfig'
   | 'runCollection'
   | 'clearError'
+  | 'cancelRecovery'
 > = {
   activeTemplate: 'full',
   dimensions: generateDimensionsFromTemplate('full'),
@@ -194,6 +204,8 @@ const initialState: Omit<
   collectingDimensions: [],
   collectProgress: 0,
   error: null,
+  isRecovering: false,
+  recoveryAttempted: false,
 }
 
 /**
@@ -356,6 +368,10 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
 
   reset: () => {
     logger.info('[SevenDimConfigStore] 重置为默认配置')
+    if (recoveryTimer) {
+      clearTimeout(recoveryTimer)
+      recoveryTimer = null
+    }
     set({
       ...initialState,
       dimensions: generateDimensionsFromTemplate('full'),
@@ -365,6 +381,8 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
       isCollecting: false,
       collectProgress: 0,
       error: null,
+      isRecovering: false,
+      recoveryAttempted: false,
     })
     withBroadcast(EVENT_NAMES.DATA_TEST_CHANGED, { action: 'reset' })
   },
@@ -459,6 +477,13 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
     const state = get()
     if (state.collectingDimensions.length > 0) return
 
+    // 取消待执行的自动恢复（用户手动触发采集优先）
+    if (recoveryTimer) {
+      clearTimeout(recoveryTimer)
+      recoveryTimer = null
+      set({ isRecovering: false, recoveryAttempted: false })
+    }
+
     const enabledDims = state.dimensions.filter((d) => d.enabled)
     const symbols = resolveDefaultSymbols(state.symbolCount)
     if (enabledDims.length === 0 || symbols.length === 0) {
@@ -505,22 +530,49 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
       )
 
       const failures = results.filter((r) => r.status === 'rejected')
+      const hasFailures = failures.length > 0
+
       set({
         isCollecting: false,
         collectingDimensions: [],
         collectProgress: 100,
-        error: failures.length > 0
+        error: hasFailures
           ? `${failures.length} 个维度采集失败`
           : null,
       })
       runtime.setRunning(false)
       runtime.refreshStats()
 
-      if (failures.length > 0) {
+      if (hasFailures) {
         const errMsg = failures
-          .map((f) => (f as PromiseRejectedResult).reason)
+          .map((f) => (f).reason)
           .join('; ')
         logger.error('[SevenDimConfigStore] 并发采集部分失败', { failures: failures.length, errors: errMsg })
+
+        // 自动恢复逻辑：失败后 30s 尝试一次恢复
+        if (!get().recoveryAttempted) {
+          set({ isRecovering: true, recoveryAttempted: true })
+          logger.info('[SevenDimConfigStore] 将在 30s 后尝试自动恢复')
+
+          recoveryTimer = setTimeout(async () => {
+            recoveryTimer = null
+            try {
+              logger.info('[SevenDimConfigStore] 开始自动恢复采集')
+              await useSevenDimConfigStore.getState().runCollection()
+              const afterState = useSevenDimConfigStore.getState()
+              if (!afterState.error) {
+                logger.info('[SevenDimConfigStore] 自动恢复成功')
+                set({ isRecovering: false, recoveryAttempted: false })
+              } else {
+                logger.warn('[SevenDimConfigStore] 自动恢复仍失败，不再重试')
+                set({ isRecovering: false })
+              }
+            } catch (err) {
+              logger.error('[SevenDimConfigStore] 自动恢复异常', { error: err })
+              set({ isRecovering: false })
+            }
+          }, 30_000)
+        }
       } else {
         logger.info('[SevenDimConfigStore] 并发采集完成')
       }
@@ -529,8 +581,36 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
       logger.error('[SevenDimConfigStore] 采集失败', { error: message })
       runtime.setRunning(false)
       set({ isCollecting: false, collectingDimensions: [], error: message })
+
+      // 全量异常也触发恢复
+      if (!get().recoveryAttempted) {
+        set({ isRecovering: true, recoveryAttempted: true })
+        recoveryTimer = setTimeout(async () => {
+          recoveryTimer = null
+          try {
+            await useSevenDimConfigStore.getState().runCollection()
+            const afterState = useSevenDimConfigStore.getState()
+            if (!afterState.error) {
+              set({ isRecovering: false, recoveryAttempted: false })
+            } else {
+              set({ isRecovering: false })
+            }
+          } catch {
+            set({ isRecovering: false })
+          }
+        }, 30_000)
+      }
     }
   },
 
   clearError: () => set({ error: null }),
+
+  cancelRecovery: () => {
+    if (recoveryTimer) {
+      clearTimeout(recoveryTimer)
+      recoveryTimer = null
+    }
+    set({ isRecovering: false, recoveryAttempted: false })
+    logger.info('[SevenDimConfigStore] 已取消待执行的自动恢复')
+  },
 }))

@@ -19,15 +19,7 @@ import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { runBatchTrace } from '@/services/data-collector/collectionPipeline'
 import { seedIntentionPool, clearIntentionPool } from '../../utils/seedTestData'
 
-// 测试期类型声明合并：autoRecovery 字段在当前 store 实现中已移除，
-// 通过声明合并保留测试对历史契约的覆盖，待 store 恢复实现后移除
-declare module '@/store/sevenDimConfigStore' {
-  interface SevenDimConfigState {
-    isRecovering?: boolean
-    recoveryAttempted?: boolean
-    cancelRecovery?: () => void
-  }
-}
+// autoRecovery 字段已在 sevenDimConfigStore 中实现
 
 // ============================================================
 // Mock 依赖
@@ -75,7 +67,7 @@ afterEach(() => {
   clearIntentionPool()
 })
 
-describe.skip('R1 组：sevenDimConfigStore 自动恢复逻辑（autoRecover）', () => {
+describe('R1 组：sevenDimConfigStore 自动恢复逻辑（autoRecover）', () => {
   it('R1-1 全量失败后 30s 自动恢复，恢复成功 → error 清空，isRecovering=false', async () => {
     const store = useSevenDimConfigStore.getState()
 
@@ -229,7 +221,7 @@ describe.skip('R1 组：sevenDimConfigStore 自动恢复逻辑（autoRecover）'
 // P1 补充：runCollection 前置守卫与部分失败场景
 // ============================================================
 
-describe.skip('P1 补充：runCollection 前置守卫', () => {
+describe('P1 补充：runCollection 前置守卫', () => {
   it('R2 采集进行中再次调用 runCollection → 直接返回（防重入）', async () => {
     // 手动设置采集进行中状态
     useSevenDimConfigStore.setState({ collectingDimensions: ['01'] })
@@ -265,7 +257,7 @@ describe.skip('P1 补充：runCollection 前置守卫', () => {
   })
 })
 
-describe.skip('P1 补充：部分维度失败', () => {
+describe('P1 补充：部分维度失败', () => {
   it('R5 部分维度失败（非全量）→ 仍触发自动恢复', async () => {
     const store = useSevenDimConfigStore.getState()
 
