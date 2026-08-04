@@ -33,21 +33,25 @@ export function computeWatchlistMovers(
   watchlist: WatchlistData[],
   topN = DEFAULT_TOP_N,
 ): WatchlistMoversResult {
-  const valid = watchlist.filter((s) => typeof s.price === 'number' && !Number.isNaN(s.price))
+  const valid = watchlist.filter(
+    (s): s is WatchlistData & { price: number; changePercent: number } =>
+      typeof s.price === 'number' && !Number.isNaN(s.price)
+      && typeof s.changePercent === 'number' && !Number.isNaN(s.changePercent),
+  )
 
-  const sortedByChange = [...valid].sort((a, b) => b.changePercent - a.changePercent)
+  const sortedByChange = [...valid].sort((a, b) => (b.changePercent ?? 0) - (a.changePercent ?? 0))
   const gainers = sortedByChange
-    .filter((s) => s.changePercent > 0)
+    .filter((s) => (s.changePercent ?? 0) > 0)
     .slice(0, topN)
     .map(toMover)
   const losers = sortedByChange
-    .filter((s) => s.changePercent < 0)
+    .filter((s) => (s.changePercent ?? 0) < 0)
     .slice(-topN)
     .reverse()
     .map(toMover)
 
   const sortedByAbsChange = [...valid].sort(
-    (a, b) => Math.abs(b.changePercent) - Math.abs(a.changePercent),
+    (a, b) => Math.abs(b.changePercent ?? 0) - Math.abs(a.changePercent ?? 0),
   )
   const mostActive = sortedByAbsChange.slice(0, topN).map(toMover)
 
@@ -58,7 +62,7 @@ function toMover(stock: WatchlistData): WatchlistMover {
   return {
     name: stock.name,
     code: stock.code,
-    price: stock.price,
-    changePercent: stock.changePercent,
+    price: (stock.price ?? 0),
+    changePercent: (stock.changePercent ?? 0),
   }
 }

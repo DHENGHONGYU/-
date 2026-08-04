@@ -11,6 +11,7 @@ import {
   getStockColorClass,
   getStockColorHex,
 } from '@/constants/theme.tokens'
+import { safeFormatNumber, safeFormatPercent } from '@/lib/format'
 
 interface MarketIndicesWidgetProps {
   config: WidgetConfig
@@ -71,22 +72,26 @@ export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): Re
       }
     >
       <div className="grid grid-cols-2 gap-4">
-        {indices.map((index: MarketIndexData) => (
-          <div key={index.code} className="space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">{index.name}</span>
-              {getChangeIcon(index.change)}
+        {indices.map((index: MarketIndexData) => {
+          const change = index.change ?? 0
+          const changePercent = index.changePercent ?? 0
+          return (
+            <div key={index.code} className="space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">{index.name}</span>
+                {getChangeIcon(change)}
+              </div>
+              <div className="text-lg font-bold">{safeFormatNumber(index.price ?? 0, 2)}</div>
+              <div className="text-sm" style={{ color: getChangeColor(changePercent) }}>
+                {safeFormatPercent(index.changePercent ?? 0, 2)}
+              </div>
+              <div className={cn('text-xs', twText('gray', 400))}>
+                最高:{safeFormatNumber(index.high ?? 0, 0)} 最低:{safeFormatNumber(index.low ?? 0, 0)}
+              </div>
+              <div className={cn('text-xs', twText('gray', 400))}>成交:{index.volume ?? '--'}</div>
             </div>
-            <div className="text-lg font-bold">{index.price.toFixed(2)}</div>
-            <div className="text-sm" style={{ color: getChangeColor(index.changePercent) }}>
-              {index.changePercent > 0 ? '+' : ''}{index.changePercent.toFixed(2)}%
-            </div>
-            <div className={cn('text-xs', twText('gray', 400))}>
-              最高:{index.high?.toFixed(0)} 最低:{index.low?.toFixed(0)}
-            </div>
-            <div className={cn('text-xs', twText('gray', 400))}>成交:{index.volume}</div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </WidgetStateShell>
   )

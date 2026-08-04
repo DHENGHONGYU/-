@@ -14,41 +14,9 @@ export function formatFieldValue(value: unknown): string {
 }
 
 // ── 安全数值格式化（防御 undefined/NaN/Infinity） ────────────────────
-export function safeFormatNumber(
-  value: number | undefined | null,
-  decimals: number,
-  fallback: string = '--',
-): string {
-  if (value === undefined || value === null || !Number.isFinite(value)) {
-    return fallback
-  }
-  return value.toFixed(decimals)
-}
-
-export function safeFormatPercent(
-  value: number | undefined | null,
-  decimals: number = 2,
-  fallback: string = '--',
-): string {
-  if (value === undefined || value === null || !Number.isFinite(value)) {
-    return fallback
-  }
-  const sign = value > 0 ? '+' : ''
-  return `${sign}${value.toFixed(decimals)}%`
-}
-
-export function safeFormatInt(
-  value: number | undefined | null,
-  fallback: string = '--',
-): string {
-  return safeFormatNumber(value, 0, fallback)
-}
-
-export function isValidNumber(
-  v: number | undefined | null,
-): v is number {
-  return v !== undefined && v !== null && Number.isFinite(v)
-}
+// 实现已迁移至独立模块 src/lib/safeFormat.ts，此处重新导出以保持向后兼容。
+// 新代码请直接从 '@/lib/safeFormat' 导入。
+export { safeFormatNumber, safeFormatPercent, safeFormatInt, isValidNumber } from './safeFormat'
 
 /**
  * 将时间戳格式化为相对时间（如 "5分钟前"、"3小时前"）

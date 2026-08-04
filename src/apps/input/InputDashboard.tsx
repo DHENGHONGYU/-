@@ -55,6 +55,11 @@ export default function InputDashboard(): React.JSX.Element {
     void refresh()
   }, [refresh])
 
+  // 初始化采集服务健康检查
+  useEffect(() => {
+    void handleRefreshHealth()
+  }, [])
+
   // 批量导入完成后自动刷新清单，确保页面完整覆盖所有已输入数据
   useEffect(() => {
     const off = eventBus.on('BATCH_IMPORT_COMPLETED', () => {

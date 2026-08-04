@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig, WatchlistData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import { getStockColorHex, twText, twBg } from '@/constants/theme.tokens'
+import { safeFormatNumber, safeFormatPercent } from '@/lib/format'
 
 interface WatchlistWidgetProps {
   config: WidgetConfig
@@ -65,7 +66,6 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
     >
       <div className="grid grid-cols-4 gap-4">
         {watchlist.map((stock: WatchlistData) => {
-          const price = stock.price ?? 0
           const changePercent = stock.changePercent ?? 0
           return (
             <div key={stock.code} className="space-y-1">
@@ -74,9 +74,9 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
                 {getChangeIcon(changePercent)}
               </div>
               <div className={twText('gray', 400)}>{stock.code}</div>
-              <div className="text-lg font-bold">{price.toFixed(2)}</div>
+              <div className="text-lg font-bold">{safeFormatNumber(stock.price ?? 0, 2)}</div>
               <div className="text-sm font-medium" style={{ color: getChangeColor(changePercent) }}>
-                {changePercent > 0 ? '+' : ''}{changePercent.toFixed(2)}%
+                {safeFormatPercent(stock.changePercent ?? 0, 2)}
               </div>
             </div>
           )

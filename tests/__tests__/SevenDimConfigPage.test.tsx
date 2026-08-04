@@ -237,8 +237,8 @@ describe('SevenDimConfigPage - 维度开关交互', () => {
     fireEvent.click(screen.getByText('价值投资'))
     expect(screen.getByText('4 / 8')).toBeInTheDocument()
 
-    // 找到第一个 checkbox（维度 01 的 Switch）
-    const switches = screen.getAllByRole('checkbox')
+    // 找到第一个 switch（维度 01 的 Switch）
+    const switches = screen.getAllByRole('switch')
     expect(switches.length).toBeGreaterThanOrEqual(8)
 
     // 点击禁用维度 01（从启用→禁用）
@@ -250,7 +250,7 @@ describe('SevenDimConfigPage - 维度开关交互', () => {
     renderPage()
     // 先切换到 value 模板，其中 05 默认未启用
     fireEvent.click(screen.getByText('价值投资'))
-    const switches = screen.getAllByRole('checkbox')
+    const switches = screen.getAllByRole('switch')
 
     // 维度 05 在 value 模板下未启用，索引为 4
     fireEvent.click(switches[4]!)
@@ -262,7 +262,7 @@ describe('SevenDimConfigPage - 维度开关交互', () => {
     // 先切换到 value 模板
     fireEvent.click(screen.getByText('价值投资'))
     expect(screen.getByText('4 / 8')).toBeInTheDocument()
-    const switches = screen.getAllByRole('checkbox')
+    const switches = screen.getAllByRole('switch')
     fireEvent.click(switches[0]!)
     expect(screen.getByText('3 / 8')).toBeInTheDocument()
     fireEvent.click(switches[0]!)
@@ -382,7 +382,7 @@ describe('SevenDimConfigPage - 边界测试', () => {
   it('全部维度禁用时 "开始采集" 按钮禁用', () => {
     renderPage()
     // 禁用全部 8 个维度（full 模板默认全部启用）
-    const switches = screen.getAllByRole('checkbox')
+    const switches = screen.getAllByRole('switch')
     for (let i = 0; i < 8; i++) {
       fireEvent.click(switches[i]!)
     }

@@ -358,7 +358,7 @@ describe('P0 · D1: 数据源层全失败', () => {
     })
     const result = (await runSingleTrace({
       symbol: '601318.SH', dimensionCode: '03', config: createMinimalConfig(),
-    })) as Record<string, unknown>
+    })) as unknown as Record<string, unknown>
     expect(result).toHaveProperty('fallbackCount')
     expect(result).toHaveProperty('latencyMs')
     expect(result).toHaveProperty('source')
@@ -419,7 +419,9 @@ describe('P0 · N1: 请求超时触发 AbortController', () => {
     }
     expect(caughtErr).toBeDefined()
     const msg = (caughtErr as Error).message.toLowerCase()
-    expect(msg.includes('abort') || msg.includes('aborted')).toBe(true)
+    // FetcherError 会将 AbortError 包装为中文提示消息
+    // 验证要点：超时/abort 异常确实被捕获，且属于超时类别
+    expect(msg.includes('超时') || msg.includes('abort') || msg.includes('aborted') || msg.includes('timeout')).toBe(true)
   })
 
   it('N1-2 超时中断时 logger.error 已记录错误，携带 symbol + durationMs 字段', async () => {
@@ -498,13 +500,13 @@ describe('P0 · N3: 服务不可达（TypeError）', () => {
 describe('P0 · S1: IndexedDB 写入失败（QuotaExceeded / 非 Error）', () => {
   it('S1-1 dataBridge.forward 正常时 addStock 返回 success=true + Stock 数据', async () => {
     mockForward.mockResolvedValue({ success: true, data: { symbol: '600519.SH', name: '贵州茅台' } })
-    const result = await addStock({ symbol: '600519.SH', name: '贵州茅台', pool: 'intention', researchStatus: 'screening', source: 'manual', dataVersion: 1 })
+    const result = await addStock({ symbol: '600519.SH', name: '贵州茅台' })
     expect(result.success).toBe(true)
   })
 
   it('S1-2 QuotaExceeded 场景下返回 success=false，错误含原始原因', async () => {
     mockForward.mockRejectedValue(new DOMException('QuotaExceededError: User denied space quota', 'QuotaExceededError'))
-    const result = await addStock({ symbol: '600001.SH', name: '邯郸钢铁', pool: 'intention', researchStatus: 'archived', source: 'manual', dataVersion: 1 })
+    const result = await addStock({ symbol: '600001.SH', name: '邯郸钢铁' })
     expect(result.success).toBe(false)
     expect(result.error).toContain('QuotaExceeded')
   })
@@ -513,15 +515,15 @@ describe('P0 · S1: IndexedDB 写入失败（QuotaExceeded / 非 Error）', () =
     mockForward
       .mockRejectedValueOnce(new DOMException('QuotaExceededError: 首次磁盘满', 'QuotaExceededError'))
       .mockResolvedValueOnce({ success: true, data: { symbol: '601318.SH', name: '中国平安' } })
-    const r1 = await addStock({ symbol: '601318.SH', name: '中国平安', pool: 'intention', researchStatus: 'screening', source: 'manual', dataVersion: 1 })
-    const r2 = await addStock({ symbol: '601318.SH', name: '中国平安', pool: 'intention', researchStatus: 'screening', source: 'manual', dataVersion: 1 })
+    const r1 = await addStock({ symbol: '601318.SH', name: '中国平安' })
+    const r2 = await addStock({ symbol: '601318.SH', name: '中国平安' })
     expect(r1.success).toBe(false)
     expect(r2.success).toBe(true)
   })
 
   it('S1-4 抛出字符串/非 Error 类型异常时兜底返回失败不崩溃', async () => {
     mockForward.mockRejectedValue('纯字符串异常：IDB 崩了（legacy code）')
-    const result = await addStock({ symbol: '000002.SZ', name: '万科A', pool: 'intention', researchStatus: 'watchlist', source: 'manual', dataVersion: 1 })
+    const result = await addStock({ symbol: '000002.SZ', name: '万科A' })
     expect(result.success).toBe(false)
     expect(typeof result.error).toBe('string')
   })
@@ -620,7 +622,7 @@ describe('P1 · D2: 部分源降级（7 维中 3 维失败）', () => {
     )
     expect(partials.length).toBeGreaterThanOrEqual(1)
     // failures 字段要么数字要么字符串，比较数值
-    const firstMatch = partials[0][1]
+    const firstMatch = partials[0]![1]
     const failuresCount =
       typeof firstMatch.failures === 'number' ? firstMatch.failures : Number(String(firstMatch.failures ?? 0))
     expect(failuresCount).toBe(3)
@@ -812,12 +814,12 @@ describe('P1 · C2: 部分维度失败（颗粒度校验）', () => {
 // P1 本次新增 — C3: 重入守卫（采集中再次调用 runCollection）（2 用例）
 // ===============================================================
 describe('P1 · C3: 重入守卫（防止并发多次采集）', () => {
-  it('C3-1 采集中同步发起第 2 次 runCollection → 第 2 次返回 undefined，runBatchTrace 仅调用 7 次', async () => {
+  it('C3-1 采集中同步发起第 2 次 runCollection → 第 2 次返回 Promise<void>，runBatchTrace 仅调用 8 次', async () => {
     seedIntentionPool(['600519.SH'])
     const store = useSevenDimConfigStore.getState()
     store.setSymbolCount?.(1)
 
-    // 挂起 Promise：模拟 7 个维度都在 fetch 中
+    // 挂起 Promise：模拟 8 个维度都在 fetch 中
     let releaseCollecting!: () => void
     const pending = new Promise<never>(() => {
       // 永不 resolve，直到测试断言完
@@ -828,16 +830,18 @@ describe('P1 · C3: 重入守卫（防止并发多次采集）', () => {
       return pending
     })
 
-    const firstCall = store.runCollection()
+    void store.runCollection()
     await collectingLatch          // 等待 set isCollecting=true 生效（至少一次微队列循环 + setImmediate）
     await Promise.resolve()
     await new Promise((r) => setTimeout(r, 0))
 
     const secondResult = store.runCollection()
-    // 第 2 次应当立即 return undefined（L460：if collectingDimensions.length>0 return）
-    expect(secondResult).toBeUndefined()
-    // 7 个维度 + 可能重试？至少应是 enabledDims 数量而不是 2 倍
-    expect(mockRunBatchTrace).toHaveBeenCalledTimes(7)
+    // 第 2 次应当立即返回 void Promise（re-entry guard: L460 if collectingDimensions.length>0 return）
+    // 由于 runCollection 是 async 函数，返回的是 Promise.resolve(undefined)
+    expect(secondResult).toBeInstanceOf(Promise)
+    await expect(secondResult).resolves.toBeUndefined()
+    // 8 个维度（full 模板：01-08）各自调用一次，不应重复
+    expect(mockRunBatchTrace).toHaveBeenCalledTimes(8)
     // 清理：pending 永不 resolve，用 setTimeout 让它不阻塞 vitest 退出（finally）
     setTimeout(() => { /* 不需要清理：vitest 会在文件结束时清理 pending promise */ }, 10)
   }, 8000)
@@ -853,7 +857,7 @@ describe('P1 · C3: 重入守卫（防止并发多次采集）', () => {
       // 微队列：先等待 set isCollecting=true
       setTimeout(() => resolve(), 30)
     })
-    const _p = store.runCollection()
+    void store.runCollection()
     await latch
 
     const state = useSevenDimConfigStore.getState()
