@@ -6,12 +6,15 @@ phase: development
 tier: reference
 status: active
 maintainer: current developer
-summary: "V9 项目所有 SKILL 的统一索引，基于 .trae/skills/ 目录下 20 个 SKILL.md 和 skill-registry.json 自动生成"
+summary: "V9 项目所有 SKILL 的统一索引，基于 .trae/skills/ 目录下 22 个 SKILL.md 和 skill-registry.json 自动生成"
 tags: [project, skill, meta, governance, index]
-version: v2.0.0
+version: v2.1.0
 last_updated: 2026-08-04
 doc_id: V9-DOC-PROJ-SKILLINDEX-001
 change_log:
+  - version: v2.1.0
+    changes: 新增 v9-security-review、v9-performance-audit；同步 v9-doc-encoding-remediation triggers.files 与 component-health-check gates 的 P0 修复
+    date: 2026-08-04
   - version: v2.0.0
     changes: 基于 skill-registry.json 全量重写，删除 2 个不存在 SKILL，修正 4 个错误路径，补全 15 个缺失条目
     date: 2026-08-04
@@ -49,7 +52,7 @@ change_log:
 | V9-SKILL-DATABRIDGE-MIGRATION | v9-databridge-migration | V9-DOC-ARCH-001, V9-DOC-DATA-050, V9-DOC-LESSONS-001 | DataBridge 迁移 / 信封协议 / dataLayer 违规 | ✅ | v1.0.0 |
 | V9-SKILL-CONSTANT-MIGRATION | v9-constant-migration | V9-DOC-ARCH-001, V9-DOC-LESSONS-001, V9-DOC-META-STRATEGY-001 | 业务常量 / 常量迁移 / config 重复 | ✅ | v1.0.0 |
 
-## 二、代码质量与交付闸口（code-quality，7 个）
+## 二、代码质量与交付闸口（code-quality，9 个）
 
 | skill_id | 名称 | covers_docs | 触发条件 | mandatory | 版本 |
 |---|---|---|---|---|---|
@@ -60,6 +63,8 @@ change_log:
 | V9-SKILL-TSC-GATE-SCOPE | v9-tsc-gate-scope-audit | AGENTS.md, outputs/tsc-prod-attribution-report.md, outputs/tsc-prod-remediation-plan.md | tsc:prod 报错 / husky 阻塞 / 类型门禁误报 | ❌ | v1.0.0 |
 | V9-SKILL-TSC-TEST-DIAG | v9-tsc-test-error-diagnosis | outputs/tsc-test-top5-repair-schedule.md | tsc:test 报错 / 契约漂移 / 测试类型错误 | ❌ | v1.0.0 |
 | V9-SKILL-CODE-QUALITY | v9-code-quality-audit | AGENTS.md, V9-DOC-QA-046 | 代码质量 / 合规审查 / DataBridge | ✅ | v1.0.0 |
+| V9-SKILL-SECURITY-REVIEW | v9-security-review | AGENTS.md, V9-DOC-QA-046, src/lib/xssSanitizer.ts, src/lib/validation.ts | 安全审查 / XSS / 密钥泄露 / ACL / 输入验证 | ✅ | v1.0.0 |
+| V9-SKILL-PERFORMANCE-AUDIT | v9-performance-audit | AGENTS.md, docs/guides/standards/, vite.config.ts | 性能审计 / bundle 体积 / 渲染卡顿 / 内存泄漏 | ❌ | v1.0.0 |
 
 ## 三、文档治理（doc-governance，4 个）
 
@@ -95,13 +100,13 @@ change_log:
 | 分类 | 数量 |
 |------|------|
 | architecture | 4 |
-| code-quality | 7 |
+| code-quality | 9 |
 | doc-governance | 4 |
 | data-flow | 2 |
 | devops | 1 |
 | 其他（dev-checklist + color-token） | 2 |
-| **总计** | **20** |
-| **mandatory SKILL** | **8** |
+| **总计** | **22** |
+| **mandatory SKILL** | **9** |
 
 ## 八、SKILL 体系架构
 
@@ -120,6 +125,7 @@ skill-registry.json (单一真相源)
 
 | 版本 | 日期 | 变更说明 |
 |------|------|---------|
+| v2.1.0 | 2026-08-04 | 新增 v9-security-review、v9-performance-audit；同步 v9-doc-encoding-remediation triggers.files 与 component-health-check gates 的 P0 修复，共 22 SKILL |
 | v2.0.0 | 2026-08-04 | 全量重写：删除 v9-gatekeeper/fix-verification-governance 不存在条目，修正 4 个 .workbuddy/skills/ 错误路径，补全 15 个缺失 SKILL，基于 skill-registry.json 生成 |
 | v1.5.0 | 2026-07-25 | 新增 dev-checklist，共 19 SKILL |
 | v1.4.0 | 2026-07-25 | 新增 component-health-check，共 18 SKILL |

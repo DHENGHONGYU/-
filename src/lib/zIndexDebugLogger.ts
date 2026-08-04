@@ -26,6 +26,14 @@ import { getLogger } from './logger'
 
 const logger = getLogger()
 
+/** @internal 测试专用：覆盖 DEV 环境检测，null 表示使用真实 import.meta.env.DEV */
+let _devModeOverride: boolean | null = null
+
+/** @internal 测试专用：设置 DEV 模式覆盖 */
+export function _setDevModeOverride(val: boolean | null): void {
+  _devModeOverride = val
+}
+
 export type ZIndexLogPhase =
   | 'mount'
   | 'unmount'
@@ -49,6 +57,8 @@ const STACKING_TRIGGERS: ReadonlyArray<string> = [
   'contain',
   'will-change',
   'backdrop-filter',
+  'mix-blend-mode',
+  'overflow-scrolling',
 ]
 
 /* ============================================================
@@ -130,9 +140,10 @@ export function installZIndexDebugAppender(
   if (!root) return () => {}
   if (typeof window === 'undefined') return () => {}
   if (typeof MutationObserver !== 'function') return () => {}
-  const isDev =
+  const isDev = _devModeOverride ?? (
     typeof import.meta !== 'undefined' &&
     !!(import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV
+  )
   if (!isDev) return () => {}
 
   const seen = new WeakSet<Node>()
@@ -146,13 +157,28 @@ export function installZIndexDebugAppender(
       const cs = window.getComputedStyle(node)
       const position = cs.position || 'static'
       const zIndex = cs.zIndex || 'auto'
+      // 5 条扩展 stacking 条件（CSS Stacking Context 规范补全）
+      const contain = (cs as unknown as Record<string, string>).contain || 'none'
+      const willChange = (cs as unknown as Record<string, string>).willChange || 'auto'
+      const backdropFilter =
+        (cs as unknown as Record<string, string>).backdropFilter || 'none'
+      const mixBlendMode =
+        (cs as unknown as Record<string, string>).mixBlendMode || 'normal'
+      const webkitOverflowScrolling =
+        cs.getPropertyValue('-webkit-overflow-scrolling') || 'auto'
       const mayAffectStacking =
         zIndex !== 'auto' ||
         position !== 'static' ||
         (cs.transform && cs.transform !== 'none') ||
         (cs.opacity && cs.opacity !== '1') ||
         (cs.filter && cs.filter !== 'none') ||
-        cs.isolation === 'isolate'
+        cs.isolation === 'isolate' ||
+        // 扩展条件 1-5
+        /layout|paint|strict|content/.test(contain) ||
+        willChange !== 'auto' ||
+        backdropFilter !== 'none' ||
+        mixBlendMode !== 'normal' ||
+        webkitOverflowScrolling === 'touch'
       if (!mayAffectStacking) return
       const id = node.id || node.tagName.toLowerCase()
       const line = `[${new Date().toISOString()}] [Z-INDEX] 组件=${componentPrefix}.Auto 元素ID=${id} zIndex=${zIndex} 阶段=auto-change 描述=MutationObserver 检测到 stacking 相关属性变化`
@@ -162,7 +188,7 @@ export function installZIndexDebugAppender(
         component: `${componentPrefix}.Auto`,
         elementId: id,
         zIndex,
-        phase: 'auto-change' as ZIndexLogPhase,
+        phase: 'auto-change',
         position,
         transform: cs.transform,
         opacity: cs.opacity,

@@ -20,9 +20,6 @@ import { safeRegex } from './safeRegex'
 /** 配置名称最大长度 */
 const CONFIG_NAME_MAX_LENGTH = 50
 
-/** 配置名称最小长度 */
-const CONFIG_NAME_MIN_LENGTH = 1
-
 /** 配置名称禁止的字符（文件系统敏感字符 + XSS 相关字符） */
 const CONFIG_NAME_FORBIDDEN_CHARS = /[<>{}[\]|\\:*?"`]/
 
@@ -67,30 +64,26 @@ export function validateConfigName(name: string): ConfigNameValidationResult {
     return { valid: false, error: '名称不能为空' }
   }
 
-  if (trimmed.length < CONFIG_NAME_MIN_LENGTH) {
-    return { valid: false, error: `名称长度不能少于 ${CONFIG_NAME_MIN_LENGTH} 个字符` }
-  }
-
   if (trimmed.length > CONFIG_NAME_MAX_LENGTH) {
     return { valid: false, error: `名称长度不能超过 ${CONFIG_NAME_MAX_LENGTH} 个字符` }
-  }
-
-  if (CONFIG_NAME_FORBIDDEN_CHARS.test(trimmed)) {
-    return { valid: false, error: '名称不能包含特殊字符（<>{}[]|\\:*?"`）' }
   }
 
   if (containsControlChars(trimmed)) {
     return { valid: false, error: '名称不能包含控制字符' }
   }
 
-  // XSS 防护：检测 HTML 标签
+  // XSS 防护：检测危险协议（在 forbidden chars 之前，避免 : 被先拦截）
+  if (/^(javascript|vbscript|data|file):/i.test(trimmed)) {
+    return { valid: false, error: '名称不能以危险协议开头' }
+  }
+
+  // XSS 防护：检测 HTML 标签（在 forbidden chars 之前，避免 < > 被先拦截）
   if (/<[a-zA-Z][^>]*>/.test(trimmed)) {
     return { valid: false, error: '名称不能包含 HTML 标签' }
   }
 
-  // XSS 防护：检测危险协议
-  if (/^(javascript|vbscript|data|file):/i.test(trimmed)) {
-    return { valid: false, error: '名称不能以危险协议开头' }
+  if (CONFIG_NAME_FORBIDDEN_CHARS.test(trimmed)) {
+    return { valid: false, error: '名称不能包含特殊字符（<>{}[]|\\:*?"`）' }
   }
 
   return { valid: true }

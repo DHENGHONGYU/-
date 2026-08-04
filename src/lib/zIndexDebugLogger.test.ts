@@ -312,17 +312,16 @@ describe('installZIndexDebugAppender：守卫（root/window/MO/isDev）', () => 
     }
   })
 
-  it('isDev=false（通过重写 import.meta getter 模拟）→ 返回空函数，不创建 MO', async () => {
-    // 策略：临时在模块作用域把 import.meta.env.DEV 判假——
-    // 实际做法：在 import('./zIndexDebugLogger') 之前，用 Object.defineProperty 覆盖
-    // globalThis 上的 import.meta（ES Module 语义下不可，但 Vite 实现时把 import.meta.env
-    // 转成全局可替换的 define，因此无法单测内切换）。
-    // 替代方案：因为 isDev=false 的行为与 root=undefined/MO undefined 等完全相同（返回空函数），
-    // 该分支被「代码语句意义等价覆盖」——我们通过一个不抛错的测试用例验证模块仍然可以正常加载。
-    const { installZIndexDebugAppender } = await import('./zIndexDebugLogger')
-    expect(typeof installZIndexDebugAppender).toBe('function')
-    // 同时验证 logZIndex 中 DEV=false 时即使 console 不调用的安全代码路径无错误：
-    // 通过 console.debug spy 确认有调用（DEV=true 默认），说明分支已命中。
+  it('isDev=false（通过 _setDevModeOverride 覆盖 L147）→ 返回空函数，不创建 MO', async () => {
+    const { installZIndexDebugAppender, _setDevModeOverride } = await import('./zIndexDebugLogger')
+    _setDevModeOverride(false)
+    const root = makeElement('dev-false-root')
+    const un = installZIndexDebugAppender(root, 'DevFalse')
+    expect(typeof un).toBe('function')
+    un()
+    // isDev=false 时不创建 observer，不打日志
+    expect(mockConsoleDebug).not.toHaveBeenCalled()
+    _setDevModeOverride(null)
   })
 })
 
@@ -368,26 +367,53 @@ describe('scanNode（DEV=true 正常场景）', () => {
     expect(meta).toHaveProperty('opacity')
   })
 
-  it('6 种 stacking 条件（zIndex/position/transform/opacity/filter/isolation）逐一命中', async () => {
+  it('11 种 stacking 条件（6 原始 + 5 扩展）逐一命中', async () => {
     const { installZIndexDebugAppender } = await import('./zIndexDebugLogger')
     const root = makeElement('root-t')
+    // 基础无 stacking 的样式模板
+    const base: Partial<CSSStyleDeclaration> = {
+      zIndex: 'auto' as any,
+      position: 'static' as any,
+      transform: 'none' as any,
+      opacity: '1' as any,
+      filter: 'none' as any,
+      isolation: 'auto' as any,
+    }
     const cases: { id: string; override: Partial<CSSStyleDeclaration> }[] = [
-      { id: 'k-zindex', override: { zIndex: '1' as any, position: 'static' as any, transform: 'none' as any, opacity: '1' as any, filter: 'none' as any, isolation: 'auto' as any } },
-      { id: 'k-pos', override: { zIndex: 'auto' as any, position: 'sticky' as any, transform: 'none' as any, opacity: '1' as any, filter: 'none' as any, isolation: 'auto' as any } },
-      { id: 'k-tx', override: { zIndex: 'auto' as any, position: 'static' as any, transform: 'scale(1)' as any, opacity: '1' as any, filter: 'none' as any, isolation: 'auto' as any } },
-      { id: 'k-op', override: { zIndex: 'auto' as any, position: 'static' as any, transform: 'none' as any, opacity: '0.99' as any, filter: 'none' as any, isolation: 'auto' as any } },
-      { id: 'k-flt', override: { zIndex: 'auto' as any, position: 'static' as any, transform: 'none' as any, opacity: '1' as any, filter: 'blur(1px)' as any, isolation: 'auto' as any } },
-      { id: 'k-iso', override: { zIndex: 'auto' as any, position: 'static' as any, transform: 'none' as any, opacity: '1' as any, filter: 'none' as any, isolation: 'isolate' as any } },
+      { id: 'k-zindex', override: { ...base, zIndex: '1' as any } },
+      { id: 'k-pos', override: { ...base, position: 'sticky' as any } },
+      { id: 'k-tx', override: { ...base, transform: 'scale(1)' as any } },
+      { id: 'k-op', override: { ...base, opacity: '0.99' as any } },
+      { id: 'k-flt', override: { ...base, filter: 'blur(1px)' as any } },
+      { id: 'k-iso', override: { ...base, isolation: 'isolate' as any } },
+      // 5 条扩展条件
+      { id: 'k-contain', override: { ...base, contain: 'layout' as any } },
+      { id: 'k-willchange', override: { ...base, willChange: 'transform' as any } },
+      { id: 'k-backdrop', override: { ...base, backdropFilter: 'blur(2px)' as any } },
+      { id: 'k-mixblend', override: { ...base, mixBlendMode: 'multiply' as any } },
     ]
     for (const c of cases) {
       const el = makeElement(c.id, 'div', c.override)
       root.appendChild(el)
     }
+    // overflow-scrolling 需通过 getPropertyValue 读取，单独构造
+    const scrollEl = makeElement('k-overscroll', 'div', base)
+    const origGCS = window.getComputedStyle.bind(window)
+    ;(window as any).getComputedStyle = (el: Element, pseudo?: string | null) => {
+      const cs = origGCS(el, pseudo) as CSSStyleDeclaration & Record<string, any>
+      if (el === scrollEl) {
+        cs.getPropertyValue = (prop: string) =>
+          prop === '-webkit-overflow-scrolling' ? 'touch' : ''
+      }
+      return cs
+    }
+    root.appendChild(scrollEl)
     installZIndexDebugAppender(root, 'K')
     const idsInLogs = mockConsoleDebug.mock.calls.map((c) => c[0] as string)
     for (const c of cases) {
       expect(idsInLogs.some((l) => l.includes(`元素ID=${c.id}`))).toBe(true)
     }
+    expect(idsInLogs.some((l) => l.includes('元素ID=k-overscroll'))).toBe(true)
   })
 
   it('元素无 stacking → mayAffectStacking=false，early return 不打日志', async () => {
@@ -400,6 +426,10 @@ describe('scanNode（DEV=true 正常场景）', () => {
       opacity: '1' as any,
       filter: 'none' as any,
       isolation: 'auto' as any,
+      contain: 'none' as any,
+      willChange: 'auto' as any,
+      backdropFilter: 'none' as any,
+      mixBlendMode: 'normal' as any,
     })
     root.appendChild(plain)
     installZIndexDebugAppender(root, 'N')
@@ -513,11 +543,15 @@ describe('scanNode（DEV=true 正常场景）', () => {
 // 6. MutationObserver：attributes（style/class/id/STACKING_TRIGGERS）+ childList
 // ════════════════════════════════════════════════════════════════
 describe('MutationObserver 双触发分支', () => {
-  it('attributes：style 变化触发 scanNode 分支', async () => {
+  it('attributes：style 变化 → scanNode 因 seen 去重不再打日志（覆盖 L180-191 + seen 分支）', async () => {
     const { installZIndexDebugAppender } = await import('./zIndexDebugLogger')
     const root = makeElement('ar')
+    // root 无子元素，install 后初始扫描无日志
+    const un = installZIndexDebugAppender(root, 'A')
+    await new Promise((r) => setTimeout(r, 20))
+    // 新增带 stacking 的子元素（触发 childList → scanNode → log + seen.add）
     const child = makeElement('ac', 'div', {
-      zIndex: 'auto' as any,
+      zIndex: '5' as any,
       position: 'static' as any,
       transform: 'none' as any,
       opacity: '1' as any,
@@ -525,40 +559,155 @@ describe('MutationObserver 双触发分支', () => {
       isolation: 'auto' as any,
     })
     root.appendChild(child)
-    const un = installZIndexDebugAppender(root, 'A')
-    expect(() => child.setAttribute('style', 'display:block')).not.toThrow()
+    await new Promise((r) => setTimeout(r, 50))
+    // 初始 childList 扫描应产生日志
+    expect(mockConsoleDebug.mock.calls.length).toBeGreaterThan(0)
+    // 清空日志
+    mockConsoleDebug.mockClear()
+    // 修改 style 属性（触发 attributes MO → scanNode → seen 去重 → 不打日志）
+    child.setAttribute('style', 'display:none')
+    await new Promise((r) => setTimeout(r, 50))
+    // attributes 分支代码已执行（L180-191），但 seen 去重导致无新日志
+    expect(mockConsoleDebug.mock.calls.length).toBe(0)
     un()
   })
 
-  it('attributes：class 变化触发', async () => {
+  it('attributes：class 变化 → seen 去重（覆盖 L184）', async () => {
     const { installZIndexDebugAppender } = await import('./zIndexDebugLogger')
     const root = makeElement('ar2')
-    const child = makeElement('ac2')
-    root.appendChild(child)
     const un = installZIndexDebugAppender(root, 'A')
-    expect(() => child.setAttribute('class', 'new-cls')).not.toThrow()
+    await new Promise((r) => setTimeout(r, 20))
+    const child = makeElement('ac2', 'div', {
+      zIndex: '1' as any,
+      position: 'static' as any,
+      transform: 'none' as any,
+      opacity: '1' as any,
+      filter: 'none' as any,
+      isolation: 'auto' as any,
+    })
+    root.appendChild(child)
+    await new Promise((r) => setTimeout(r, 50))
+    mockConsoleDebug.mockClear()
+    child.setAttribute('class', 'new-cls')
+    await new Promise((r) => setTimeout(r, 50))
+    // seen 去重：无新日志（attributes 分支代码已执行）
+    expect(mockConsoleDebug.mock.calls.length).toBe(0)
     un()
   })
 
-  it('attributes：id 变化触发', async () => {
+  it('attributes：id 变化 → seen 去重（覆盖 L185）', async () => {
     const { installZIndexDebugAppender } = await import('./zIndexDebugLogger')
     const root = makeElement('ar3')
-    const child = makeElement('ac3')
-    root.appendChild(child)
     const un = installZIndexDebugAppender(root, 'A')
-    expect(() => child.setAttribute('id', 'new-id')).not.toThrow()
+    await new Promise((r) => setTimeout(r, 20))
+    const child = makeElement('ac3', 'div', {
+      zIndex: '1' as any,
+      position: 'static' as any,
+      transform: 'none' as any,
+      opacity: '1' as any,
+      filter: 'none' as any,
+      isolation: 'auto' as any,
+    })
+    root.appendChild(child)
+    await new Promise((r) => setTimeout(r, 50))
+    mockConsoleDebug.mockClear()
+    child.setAttribute('id', 'new-id')
+    await new Promise((r) => setTimeout(r, 50))
+    // seen 去重：无新日志（attributes 分支代码已执行）
+    expect(mockConsoleDebug.mock.calls.length).toBe(0)
     un()
   })
 
-  it('attributes：非 style/class/id（data-foo）→ attributeFilter 不观察，MO 不触发，控制台日志不变', async () => {
+  it('attributes：非 style/class/id（data-foo）→ attributeFilter 不观察，MO 不触发', async () => {
     const { installZIndexDebugAppender } = await import('./zIndexDebugLogger')
     const root = makeElement('ar4')
-    const child = makeElement('ac4')
-    root.appendChild(child)
     const un = installZIndexDebugAppender(root, 'A')
+    await new Promise((r) => setTimeout(r, 20))
+    const child = makeElement('ac4', 'div', {
+      zIndex: '1' as any,
+      position: 'static' as any,
+      transform: 'none' as any,
+      opacity: '1' as any,
+      filter: 'none' as any,
+      isolation: 'auto' as any,
+    })
+    root.appendChild(child)
+    await new Promise((r) => setTimeout(r, 50))
     const before = mockConsoleDebug.mock.calls.length
     child.setAttribute('data-foo', 'bar')
+    await new Promise((r) => setTimeout(r, 50))
     expect(mockConsoleDebug.mock.calls.length).toBe(before)
+    un()
+  })
+
+  it('attributes：STACKING_TRIGGERS.some() true 分支（FakeMO 手动触发 attributeName=z-index，覆盖 L187）', async () => {
+    // 通过 FakeMO 模拟 attributeName='z-index'（非 style/class/id）
+    // → STACKING_TRIGGERS.some(t => 'zindex'.includes(t.replace('-',''))) = true
+    const origMO = globalThis.MutationObserver
+    try {
+      let capturedCb: MutationCallback | null = null
+      class FakeMO extends origMO {
+        constructor(cb: MutationCallback) {
+          super(cb)
+          capturedCb = cb
+        }
+        override observe() {
+          // 不真正观察，由测试手动触发回调
+        }
+      }
+      Object.defineProperty(globalThis, 'MutationObserver', { value: FakeMO, configurable: true })
+      const { installZIndexDebugAppender } = await import('./zIndexDebugLogger')
+      const root = makeElement('trigger-root')
+      mockConsoleDebug.mockClear()
+      installZIndexDebugAppender(root, 'TR')
+      // root 无子元素，初始扫描无日志；FakeMO 不观察，childList 不触发
+      // 手动 append child（FakeMO 不观察 → child 不进入 seen）
+      const child = makeElement('trigger-child', 'div', {
+        zIndex: '5' as any,
+        position: 'static' as any,
+        transform: 'none' as any,
+        opacity: '1' as any,
+        filter: 'none' as any,
+        isolation: 'auto' as any,
+      })
+      root.appendChild(child)
+      expect(capturedCb).not.toBeNull()
+      // 手动触发 attributes 回调，attributeName='data-zindex'
+      // → lower='data-zindex'，非 style/class/id
+      // → STACKING_TRIGGERS.some(t => 'data-zindex'.includes(t.replace('-','')))
+      //   t='z-index' → 'zindex' → 'data-zindex'.includes('zindex') = true
+      capturedCb!(
+        [
+          {
+            type: 'attributes',
+            target: child,
+            attributeName: 'data-zindex',
+            oldValue: null,
+            addedNodes: { length: 0, item: () => null, [Symbol.iterator]: function* () {} } as any,
+            removedNodes: { length: 0, item: () => null, [Symbol.iterator]: function* () {} } as any,
+            nextSibling: null,
+            previousSibling: null,
+          } as MutationRecord,
+        ],
+        {} as MutationObserver,
+      )
+      // child 不在 seen 中 → scanNode 执行 → mayAffectStacking=true → 打日志
+      expect(mockConsoleDebug.mock.calls.some((c) => (c[0] as string).includes('元素ID=trigger-child'))).toBe(true)
+    } finally {
+      Object.defineProperty(globalThis, 'MutationObserver', { value: origMO, configurable: true })
+    }
+  })
+
+  it('childList：新增 Text 节点 → scanNode return（覆盖 L142）', async () => {
+    const { installZIndexDebugAppender } = await import('./zIndexDebugLogger')
+    const root = makeElement('cr-text')
+    const un = installZIndexDebugAppender(root, 'CT')
+    await new Promise((r) => setTimeout(r, 20))
+    mockConsoleDebug.mockClear()
+    const text = document.createTextNode('text-content')
+    root.appendChild(text)
+    await new Promise((r) => setTimeout(r, 50))
+    expect(mockConsoleDebug.mock.calls.every((c) => !c[0].includes('text-content'))).toBe(true)
     un()
   })
 
@@ -584,16 +733,5 @@ describe('MutationObserver 双触发分支', () => {
     const lines = mockConsoleDebug.mock.calls.slice(beforeAdd).map((c) => c[0] as string)
     expect(lines.some((l) => l.includes('元素ID=inner'))).toBe(true)
     un()
-  })
-
-  it('STACKING_TRIGGERS 兜底分支（attributeFilter 扩展场景）：代码存在 9 键 STACKING_TRIGGERS 数组', async () => {
-    // 通过直接 import 模块，验证代码中使用的 STACKING_TRIGGERS 常量被正确识别（不抛错）
-    // 此处通过 attributes 类型变化触发 STACKING_TRIGGERS.some 分支的条件
-    // 实际 attributeFilter=['style','class','id'] 时无法观察到自定义属性，因此该分支
-    // 依赖未来扩展 attributeFilter，这里以不抛错形式验证：
-    const mod = await import('./zIndexDebugLogger')
-    expect(typeof mod.installZIndexDebugAppender).toBe('function')
-    expect(typeof mod.logZIndex).toBe('function')
-    expect(typeof mod.logZIndexChange).toBe('function')
   })
 })

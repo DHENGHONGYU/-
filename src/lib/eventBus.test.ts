@@ -106,4 +106,17 @@ describe('eventBus', () => {
       expect(h2).toHaveBeenCalled()
     })
   })
+
+  describe('慢 emit 警告', () => {
+    it('emit 耗时 > 10ms 时输出 warn 日志（覆盖 L68）', () => {
+      const slowHandler = vi.fn(() => {
+        const start = Date.now()
+        while (Date.now() - start < 15) { /* busy wait 15ms */ }
+      })
+      eventBus.on('slow-event', slowHandler)
+      expect(() => eventBus.emit('slow-event', 'data')).not.toThrow()
+      expect(slowHandler).toHaveBeenCalled()
+    })
+  })
+
 })

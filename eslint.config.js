@@ -7,7 +7,7 @@ import noHardcodedColors from './scripts/quality/eslint-plugin-no-hardcoded-colo
 import noRecordStringString from './scripts/quality/eslint-plugin-no-record-string-string.js'
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules'] },
+  { ignores: ['dist', 'node_modules', '.venv', 'stock-profile-layered-architecture'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['src/**/*.{ts,tsx}', 'tests/**/*.{ts,tsx}'],

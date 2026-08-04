@@ -176,4 +176,64 @@ describe('derivedCache', () => {
       expect(average([42])).toBe(42)
     })
   })
+
+
+  describe('VERBOSE 日志', () => {
+    it('VERBOSE=true 时输出 console.log（覆盖 L81）', async () => {
+      const origDebug = (globalThis as { __DEBUG_DERIVED__?: boolean }).__DEBUG_DERIVED__
+      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+      try {
+        ;(globalThis as { __DEBUG_DERIVED__?: boolean }).__DEBUG_DERIVED__ = true
+        vi.resetModules()
+        const { memoizeByRef, resetCacheStats, resetAllMemoCaches } = await import('./derivedCache')
+        resetCacheStats()
+        resetAllMemoCaches()
+        const fn = (x: number) => x * 2
+        const memoized = memoizeByRef(fn, 'verboseTest')
+        memoized(1)
+        expect(consoleSpy).toHaveBeenCalled()
+      } finally {
+        ;(globalThis as { __DEBUG_DERIVED__?: boolean }).__DEBUG_DERIVED__ = origDebug
+        consoleSpy.mockRestore()
+        vi.resetModules()
+      }
+    })
+
+    it('VERBOSE=true + null 输入（覆盖 L63）', async () => {
+      const origDebug = (globalThis as { __DEBUG_DERIVED__?: boolean }).__DEBUG_DERIVED__
+      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+      try {
+        ;(globalThis as { __DEBUG_DERIVED__?: boolean }).__DEBUG_DERIVED__ = true
+        vi.resetModules()
+        const { memoizeByRef, resetCacheStats, resetAllMemoCaches } = await import('./derivedCache')
+        resetCacheStats()
+        resetAllMemoCaches()
+        const fn = (x: number | null) => (x === null ? 0 : x * 2)
+        const memoized = memoizeByRef(fn, 'nullInputTest')
+        memoized(null)
+        expect(consoleSpy).toHaveBeenCalled()
+      } finally {
+        ;(globalThis as { __DEBUG_DERIVED__?: boolean }).__DEBUG_DERIVED__ = origDebug
+        consoleSpy.mockRestore()
+        vi.resetModules()
+      }
+    })
+  })
+
+  describe('fnName 默认值', () => {
+    it('memoizeByRef 不传 name（覆盖 L144）', () => {
+      const fn = (x: number) => x * 2
+      const memoized = memoizeByRef(fn)
+      expect(memoized(5)).toBe(10)
+      expect(memoized(5)).toBe(10)
+    })
+
+    it('memoizeByKey 不传 name（覆盖 L201）', () => {
+      const fn = (x: number) => x * 3
+      const memoized = memoizeByKey(fn)
+      expect(memoized(5)).toBe(15)
+      expect(memoized(10)).toBe(30)
+    })
+  })
+
 })

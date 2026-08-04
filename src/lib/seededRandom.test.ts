@@ -108,4 +108,25 @@ describe('seededRandom', () => {
       expect(picked).toHaveLength(3)
     })
   })
+
+
+  describe('shuffle() 含 null/undefined 元素', () => {
+    it('跳过 null/undefined 元素的交换（覆盖 L32 continue）', () => {
+      const arr = [null, undefined, 1, 2, 3]
+      const result = shuffle(arr, createSeededRandom(42))
+      expect(result).toHaveLength(5)
+      expect(result).toContain(null)
+      expect(result).toContain(undefined)
+      expect(result).toContain(1)
+      expect(result).toContain(2)
+      expect(result).toContain(3)
+    })
+
+    it('全 null/undefined 数组不抛错', () => {
+      const arr = [null, undefined, null]
+      const result = shuffle(arr, createSeededRandom(7))
+      expect(result).toHaveLength(3)
+    })
+  })
+
 })

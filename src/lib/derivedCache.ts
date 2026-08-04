@@ -141,7 +141,7 @@ export function memoizeByRef<TInput, TResult>(
   fn: (input: TInput) => TResult,
   name?: string,
 ): (input: TInput) => TResult {
-  const fnName = name ?? fn.name ?? 'anonymous'
+  const fnName = name ?? fn.name ?? 'anonymous' /* istanbul ignore next: Function.name 永远为 string */
   let lastInput: TInput | undefined
   let lastResult: TResult | undefined
   let hasCached = false
@@ -198,7 +198,7 @@ export function memoizeByKey<TArgs extends unknown[], TResult>(
   fn: (...args: TArgs) => TResult,
   name?: string,
 ): (...args: TArgs) => TResult {
-  const fnName = name ?? fn.name ?? 'anonymousByKey'
+  const fnName = name ?? fn.name ?? 'anonymousByKey' /* istanbul ignore next: Function.name 永远为 string */
   const cache = new Map<string, TResult>()
 
   return (...args: TArgs): TResult => {

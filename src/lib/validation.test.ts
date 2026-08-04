@@ -68,6 +68,12 @@ describe('股票代码验证', () => {
     expect(formatStockCode(519)).toBe('000519')
     expect(formatStockCode('1')).toBe('000001')
   })
+
+  it('formatStockCode: 非纯数字字符串原样返回（覆盖 L121）', () => {
+    expect(formatStockCode('AAPL')).toBe('AAPL')
+    expect(formatStockCode('00700.HK')).toBe('00700.HK')
+    expect(formatStockCode('600519.SH')).toBe('600519.SH')
+  })
 })
 
 describe('数值范围验证', () => {
@@ -79,11 +85,25 @@ describe('数值范围验证', () => {
     expect(isValidPercent(101)).toBe(false)
   })
 
+  it('isValidPercent: 非数字/NaN → false（覆盖 L167）', () => {
+    expect(isValidPercent('50' as unknown as number)).toBe(false)
+    expect(isValidPercent(NaN)).toBe(false)
+    expect(isValidPercent(null as unknown as number)).toBe(false)
+    expect(isValidPercent(undefined as unknown as number)).toBe(false)
+  })
+
   it('isValidScore: 0-100 范围', () => {
     expect(isValidScore(0)).toBe(true)
     expect(isValidScore(100)).toBe(true)
     expect(isValidScore(-0.1)).toBe(false)
     expect(isValidScore(100.1)).toBe(false)
+  })
+
+  it('isValidScore: 非数字/NaN → false（覆盖 L173）', () => {
+    expect(isValidScore('50' as unknown as number)).toBe(false)
+    expect(isValidScore(NaN)).toBe(false)
+    expect(isValidScore(null as unknown as number)).toBe(false)
+    expect(isValidScore(undefined as unknown as number)).toBe(false)
   })
 
   it('isValidPrice: 必须为正数且有限', () => {
@@ -185,6 +205,13 @@ describe('敏感信息脱敏', () => {
     expect(isSensitiveField('sessionId')).toBe(true)
     expect(isSensitiveField('username')).toBe(false)
     expect(isSensitiveField('')).toBe(false)
+  })
+
+  it('isSensitiveField: 非字符串输入 → false（覆盖 L357）', () => {
+    expect(isSensitiveField(undefined as unknown as string)).toBe(false)
+    expect(isSensitiveField(null as unknown as string)).toBe(false)
+    expect(isSensitiveField(123 as unknown as string)).toBe(false)
+    expect(isSensitiveField({} as unknown as string)).toBe(false)
   })
 
   it('sanitizeObject: 递归脱敏对象中的敏感字符串字段', () => {
@@ -308,12 +335,48 @@ describe('配置名称校验 validateConfigName', () => {
     const longResult = validateConfigName('a'.repeat(51))
     expect(longResult.error).toContain('50')
 
-    // < 和 > 属于禁止字符，优先于 HTML 标签检测
+    // 重排后：HTML 标签检测优先于 forbidden chars
     const xssResult = validateConfigName('<script>alert(1)</script>')
-    expect(xssResult.error).toContain('特殊字符')
+    expect(xssResult.error).toContain('HTML 标签')
 
-    // javascript: 含 : 属于禁止字符，也会先被特殊字符检测拦截
+    // 重排后：危险协议检测优先于 forbidden chars
     const protocolResult = validateConfigName('javascript:alert(1)')
-    expect(protocolResult.error).toContain('特殊字符')
+    expect(protocolResult.error).toContain('危险协议')
   })
+
+
+  describe('validateConfigName 防御性分支补全', () => {
+    it('非字符串输入 → 名称必须为字符串（覆盖 L61）', () => {
+      expect(validateConfigName(undefined as unknown as string).valid).toBe(false)
+      expect(validateConfigName(null as unknown as string).valid).toBe(false)
+      expect(validateConfigName(123 as unknown as string).valid).toBe(false)
+      expect(validateConfigName({} as unknown as string).valid).toBe(false)
+    })
+
+    it('空字符串和纯空格 → 长度不足（覆盖 L71）', () => {
+      expect(validateConfigName('').valid).toBe(false)
+      expect(validateConfigName('   ').valid).toBe(false)
+      expect(validateConfigName('\t\n').valid).toBe(false)
+    })
+
+    it('HTML 标签检测（覆盖 L88）', () => {
+      expect(validateConfigName('<script>alert(1)</script>').valid).toBe(false)
+      expect(validateConfigName('<img src=x>').valid).toBe(false)
+    })
+
+    it('危险协议检测（覆盖 L93）', () => {
+      expect(validateConfigName('javascript:alert(1)').valid).toBe(false)
+      expect(validateConfigName('data:text/html,<script>').valid).toBe(false)
+      expect(validateConfigName('file:///etc/passwd').valid).toBe(false)
+    })
+  })
+
+  describe('isValidLlmBaseURL 非白名单协议', () => {
+    it('ftp/mailto 协议 → false（覆盖 L244）', () => {
+      expect(isValidLlmBaseURL('ftp://example.com')).toBe(false)
+      expect(isValidLlmBaseURL('mailto:test@example.com')).toBe(false)
+      expect(isValidLlmBaseURL('ws://localhost:8080')).toBe(false)
+    })
+  })
+
 })

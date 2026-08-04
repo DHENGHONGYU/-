@@ -1,7 +1,7 @@
 {
-  "version": "2.0.0",
-  "updated": "2026-08-03",
-  "note": "L1 注册层单一真相源。与各 SKILL.md frontmatter 保持一致；漂移由 npm run audit:skill-coverage 拦截。v2.0.0 新增检索线管要求字段（related_skills/freshness_policy/search_keywords）、标准化 tags 索引、多维分类维度。",
+  "version": "2.1.0",
+  "updated": "2026-08-04",
+  "note": "L1 注册层单一真相源。与各 SKILL.md frontmatter 保持一致；漂移由 npm run audit:skill-coverage 拦截。v2.0.0 新增检索线管要求字段（related_skills/freshness_policy/search_keywords）、标准化 tags 索引、多维分类维度。v2.1.0 修复 v9-doc-encoding-remediation triggers.files 错误路径与 component-health-check gates 命令大小写；新增 v9-security-review、v9-performance-audit。",
   "categories": {
     "doc-governance": "文档治理：编码修复、链接修复、迁移扫描等文档资产维护",
     "code-quality": "代码质量与交付闸口：门禁、模块同步、执行规范",
@@ -238,12 +238,12 @@
       "path": ".trae/skills/v9-doc-encoding-remediation/SKILL.md",
       "category": "doc-governance",
       "tags": [
-        "charset",
-        "doc-repair",
         "encoding",
         "gbk",
-        "i18n",
-        "text-processing"
+        "utf-8",
+        "doc-governance",
+        "fix-doc-refs",
+        "project:finsightv9"
       ],
       "triggers": {
         "keywords": [
@@ -259,9 +259,10 @@
           "编码探测"
         ],
         "files": [
-          "scripts/fix-doc-refs.ts",
+          "scripts/lib/encoding.ts",
           "scripts/fix/*.ts",
-          "scripts/lib/encoding.ts"
+          "docs/**/*.md",
+          "src/**/*.ts"
         ],
         "events": [
           "doc-encoding-risk",
@@ -280,24 +281,25 @@
         "scripts/lib/encoding.ts"
       ],
       "related_skills": [
-        "v9-bash-conventions",
         "v9-module-sync-checklist"
       ],
       "freshness_policy": {
         "review_cycle": "quarterly",
         "trigger_events": [
-          "doc-update",
-          "encoding-incident"
+          "doc-link-fix",
+          "encoding-error",
+          "gbk-detected"
         ]
       },
       "search_priority": "high",
       "search_keywords": [
-        "garbled",
-        "乱码",
-        "mojibake",
-        "encoding",
-        "charset",
-        "code-page"
+        "文档乱码",
+        "GBK编码",
+        "编码修复",
+        "UTF-8",
+        "fix-doc-refs",
+        "中文乱码",
+        "二次损坏"
       ]
     },
     {
@@ -1070,7 +1072,7 @@
       "gates": [
         "全量扫描组件注册表，建立僵尸清单",
         "命名冲突双检：目录名 + 组件名唯一",
-        "修复后 audit:component-usage 全绿"
+        "修复后 npm run audit:componentUsage 全绿"
       ],
       "mandatory": false,
       "covers_docs": [
@@ -1436,6 +1438,179 @@
         "设计系统",
         "color-soT",
         "hardcode"
+      ]
+    },
+    {
+      "id": "V9-SKILL-SECURITY-REVIEW",
+      "name": "v9-security-review",
+      "path": ".trae/skills/v9-security-review/SKILL.md",
+      "category": "code-quality",
+      "tags": [
+        "security",
+        "xss",
+        "secrets",
+        "acl",
+        "input-validation",
+        "financial-app",
+        "project:finsightv9"
+      ],
+      "triggers": {
+        "keywords": [
+          "安全审查",
+          "安全漏洞",
+          "XSS",
+          "敏感信息泄露",
+          "密钥泄露",
+          "输入验证",
+          "权限检查",
+          "ACL",
+          "安全合规",
+          "security review",
+          "vulnerability scan",
+          "secret leak",
+          "input validation",
+          "security audit"
+        ],
+        "files": [
+          "src/lib/xssSanitizer.ts",
+          "src/lib/validation.ts",
+          "src/core/acl*.ts",
+          "src/core/databridge*.ts",
+          "src/config/dbConfig.ts",
+          "src/services/**",
+          "src/pages/**"
+        ],
+        "events": [
+          "pr-review",
+          "pre-release",
+          "security-incident",
+          "quarterly-audit"
+        ]
+      },
+      "gates": [
+        "npm run audit:secrets — 密钥/凭证泄露扫描，退出码 = 0",
+        "npm run audit:hardcode — 硬编码扫描（含 API Key、密码、URL），问题数 ≤ 基线",
+        "npm run audit:acl-consistency — ACL 权限矩阵一致性校验，0 ERROR",
+        "XSS 防护审查：Grep dangerouslySetInnerHTML / innerHTML 使用，每处需有 xssSanitizer 保护",
+        "输入验证审查：所有外部输入（URL params、API response、用户输入）需经 validation.ts 校验"
+      ],
+      "mandatory": true,
+      "covers_docs": [
+        "AGENTS.md",
+        "V9-DOC-QA-046",
+        "src/lib/xssSanitizer.ts",
+        "src/lib/validation.ts"
+      ],
+      "related_skills": [
+        "v9-code-quality-audit",
+        "v9-data-flow-integrity-audit",
+        "architecture-debt-remediation"
+      ],
+      "freshness_policy": {
+        "review_cycle": "monthly",
+        "trigger_events": [
+          "pr-review",
+          "pre-release",
+          "security-incident",
+          "dependency-update"
+        ]
+      },
+      "search_priority": "high",
+      "search_keywords": [
+        "security",
+        "安全",
+        "xss",
+        "secret",
+        "密钥",
+        "acl",
+        "权限",
+        "vulnerability",
+        "漏洞",
+        "validation",
+        "输入验证"
+      ]
+    },
+    {
+      "id": "V9-SKILL-PERFORMANCE-AUDIT",
+      "name": "v9-performance-audit",
+      "path": ".trae/skills/v9-performance-audit/SKILL.md",
+      "category": "code-quality",
+      "tags": [
+        "performance",
+        "bundle-size",
+        "render",
+        "memory",
+        "optimization",
+        "project:finsightv9"
+      ],
+      "triggers": {
+        "keywords": [
+          "性能优化",
+          "性能审计",
+          "首屏加载",
+          "渲染卡顿",
+          "bundle 体积",
+          "内存泄漏",
+          "性能瓶颈",
+          "performance audit",
+          "render performance",
+          "bundle size",
+          "memory leak",
+          "optimization"
+        ],
+        "files": [
+          "src/components/**",
+          "src/pages/**",
+          "src/cockpit/**",
+          "vite.config.ts",
+          "package.json",
+          "tsconfig.json"
+        ],
+        "events": [
+          "performance-regression",
+          "pre-release",
+          "quarterly-audit",
+          "user-complaint-slow"
+        ]
+      },
+      "gates": [
+        "npm run build — 构建成功且无性能警告",
+        "Bundle 体积检查：主 chunk ≤ 500KB，总体积 ≤ 2MB（gzip 后）",
+        "React 渲染审计：useEffect 无无限循环、useMemo/useCallback 覆盖昂贵计算",
+        "内存泄漏检查：useEffect 事件监听器 100% 配对 cleanup（quality-gate-check.cjs 检出 = 0）"
+      ],
+      "mandatory": false,
+      "covers_docs": [
+        "AGENTS.md",
+        "docs/guides/standards/",
+        "vite.config.ts"
+      ],
+      "related_skills": [
+        "v9-code-quality-audit",
+        "v9-bash-conventions",
+        "architecture-debt-remediation"
+      ],
+      "freshness_policy": {
+        "review_cycle": "quarterly",
+        "trigger_events": [
+          "performance-regression",
+          "pre-release",
+          "major-feature-complete"
+        ]
+      },
+      "search_priority": "medium",
+      "search_keywords": [
+        "performance",
+        "性能",
+        "bundle",
+        "渲染",
+        "render",
+        "memory",
+        "内存",
+        "optimization",
+        "优化",
+        "lazy",
+        "memo"
       ]
     }
   ]

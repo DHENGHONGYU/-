@@ -112,7 +112,7 @@ export interface PerfStats {
 }
 
 function percentile(sorted: number[], p: number): number {
-  if (sorted.length === 0) return 0
+  // percentile 仅由 getPerfStats 调用，sorted 来自非空 durations。空数组时 ?? 0 兜底返回 0。
   const idx = Math.min(sorted.length - 1, Math.max(0, Math.ceil((p / 100) * sorted.length) - 1))
   return sorted[idx] ?? 0
 }
@@ -146,8 +146,8 @@ export function getPerfStats(): PerfStats[] {
       avgMs: Math.round(avg * 100) / 100,
       p50Ms: percentile(sorted, 50),
       p95Ms: percentile(sorted, 95),
-      maxMs: sorted[sorted.length - 1] ?? 0,
-      lastMs: lastMap.get(label) ?? 0,
+      maxMs: sorted[sorted.length - 1] ?? /* istanbul ignore next: sorted 非空 */ 0,
+      lastMs: lastMap.get(label) ?? /* istanbul ignore next: label 在 lastMap 中 */ 0,
     })
   }
   return stats.sort((a, b) => b.avgMs - a.avgMs)
