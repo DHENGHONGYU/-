@@ -111,18 +111,18 @@ function updateHoldingForOrder(
         }
 
         // 6. 重新计算市值与权重
-        const totalValue = updatedHoldings.reduce((sum, h) => sum + h.marketValue, 0)
+        const totalValue = updatedHoldings.reduce((sum, h) => sum + (h.marketValue ?? 0), 0)
         const cashReserve = totalValue * cashReservePct
         const investable = totalValue - cashReserve
 
         // 7. 生成再平衡计划
         const rebalancePlan: Portfolio['rebalancePlan'] = []
         for (const holding of updatedHoldings) {
-          const currentWeight = totalValue > 0 ? holding.marketValue / totalValue : 0
+          const currentWeight = totalValue > 0 ? (holding.marketValue ?? 0) / totalValue : 0
           const deviation = Math.abs(currentWeight - holding.targetWeight)
 
           // 权重偏差超过阈值时触发调整
-          if (deviation > rebalanceThreshold) {
+          if (deviation > rebalanceThreshold && holding.price) {
             const targetShares = Math.floor((investable * holding.targetWeight) / holding.price)
             const delta = targetShares - holding.currentShares
             rebalancePlan.push({

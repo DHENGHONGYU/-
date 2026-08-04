@@ -13,6 +13,43 @@ export function formatFieldValue(value: unknown): string {
   return String(value)
 }
 
+// ── 安全数值格式化（防御 undefined/NaN/Infinity） ────────────────────
+export function safeFormatNumber(
+  value: number | undefined | null,
+  decimals: number,
+  fallback: string = '--',
+): string {
+  if (value === undefined || value === null || !Number.isFinite(value)) {
+    return fallback
+  }
+  return value.toFixed(decimals)
+}
+
+export function safeFormatPercent(
+  value: number | undefined | null,
+  decimals: number = 2,
+  fallback: string = '--',
+): string {
+  if (value === undefined || value === null || !Number.isFinite(value)) {
+    return fallback
+  }
+  const sign = value > 0 ? '+' : ''
+  return `${sign}${value.toFixed(decimals)}%`
+}
+
+export function safeFormatInt(
+  value: number | undefined | null,
+  fallback: string = '--',
+): string {
+  return safeFormatNumber(value, 0, fallback)
+}
+
+export function isValidNumber(
+  v: number | undefined | null,
+): v is number {
+  return v !== undefined && v !== null && Number.isFinite(v)
+}
+
 /**
  * 将时间戳格式化为相对时间（如 "5分钟前"、"3小时前"）
  *
@@ -21,6 +58,8 @@ export function formatFieldValue(value: unknown): string {
  */
 export function formatRelativeTime(timestamp: number): string {
   const diff = Date.now() - timestamp
+  // 未来时间戳：clock skew 或计划任务，返回"未来"避免被误判为"刚刚"
+  if (diff < 0) return '未来'
   const seconds = Math.floor(diff / 1000)
   const minutes = Math.floor(seconds / 60)
   const hours = Math.floor(minutes / 60)

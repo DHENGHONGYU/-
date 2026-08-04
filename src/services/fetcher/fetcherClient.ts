@@ -22,6 +22,8 @@ class FetcherError extends Error {
   constructor(
     message: string,
     public readonly cause?: unknown,
+    public readonly statusCode?: number,
+    public readonly retriable: boolean = true,
   ) {
     super(message)
     this.name = 'FetcherError'
@@ -45,7 +47,13 @@ async function fetchWithTimeout(
   timeoutMs: number,
 ): Promise<Response> {
   const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+  const timeoutId = setTimeout(() => {
+    logger.warn('[fetcherClient] 请求超时，AbortController 触发 abort', {
+      url,
+      timeoutMs,
+    })
+    controller.abort()
+  }, timeoutMs)
   try {
     const response = await fetch(url, { ...options, signal: controller.signal })
     return response
@@ -68,12 +76,48 @@ async function tryRequest<T>(
     }, timeoutMs)
 
     if (!response.ok) {
-      return { ok: false, error: new FetcherError(`HTTP ${response.status}: ${response.statusText}`) }
+      const isClientError = response.status >= 400 && response.status < 500
+      return {
+        ok: false,
+        error: new FetcherError(
+          `HTTP ${response.status}: ${response.statusText}`,
+          undefined,
+          response.status,
+          !isClientError,
+        ),
+      }
     }
 
     const data = (await response.json()) as T
+
+    if (data === null || data === undefined) {
+      logger.warn('[fetcherClient] response.json() 返回 null/undefined', {
+        path,
+        status: response.status,
+        contentType: response.headers.get('content-type'),
+      })
+    }
+
     return { ok: true, data }
   } catch (err) {
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      logger.warn('[fetcherClient] 请求被 abort（超时或手动取消）', {
+        path,
+        errorName: err.name,
+        errorMessage: err.message,
+      })
+    } else if (err instanceof TypeError) {
+      logger.warn('[fetcherClient] 网络错误（服务未启动或 DNS 解析失败）', {
+        path,
+        errorMessage: err.message,
+      })
+    } else {
+      logger.warn('[fetcherClient] 请求异常（非网络错误）', {
+        path,
+        errorType: err instanceof Error ? err.constructor.name : typeof err,
+        errorMessage: err instanceof Error ? err.message : String(err),
+      })
+    }
     return { ok: false, error: err }
   }
 }
@@ -98,9 +142,11 @@ async function request<T>(
         }
 
         lastError = result.error
-        const isNetworkError =
-          result.error instanceof TypeError || result.error instanceof FetcherError
-        if (!isNetworkError || attempt === maxRetries) {
+        const isRetriable =
+          result.error instanceof TypeError ||
+          (result.error instanceof FetcherError && result.error.retriable) ||
+          (result.error instanceof DOMException && result.error.name === 'AbortError')
+        if (!isRetriable || attempt === maxRetries) {
           break
         }
         logger.warn(`[fetcherClient] 请求失败，第 ${attempt + 1} 次重试`, {
@@ -113,6 +159,14 @@ async function request<T>(
         throw new FetcherError(
           '数据采集服务未启动或无法连接，请检查 Python 服务是否运行',
           lastError,
+        )
+      }
+      if (lastError instanceof DOMException && lastError.name === 'AbortError') {
+        throw new FetcherError(
+          '请求超时，请检查网络连接或服务响应速度',
+          lastError,
+          undefined,
+          true,
         )
       }
       throw lastError instanceof Error
@@ -158,13 +212,23 @@ export async function collectBasic(
       body: JSON.stringify({ symbol } satisfies CollectBasicRequest),
     })
     const durationMs = Date.now() - startTs
-    logger.info('[fetcherClient] collectBasic 请求成功', {
-      symbol,
-      success: result.success,
-      durationMs,
-      stockName: result.data?.name,
-      price: result.data?.price,
-    })
+
+    if (!result.success) {
+      logger.warn('[fetcherClient] collectBasic 业务级失败（HTTP 200, success=false）', {
+        symbol,
+        durationMs,
+        error: result.error,
+        dataNull: result.data === null || result.data === undefined,
+      })
+    } else {
+      logger.info('[fetcherClient] collectBasic 请求成功', {
+        symbol,
+        success: result.success,
+        durationMs,
+        stockName: result.data?.name,
+        price: result.data?.price,
+      })
+    }
     return result
   } catch (err) {
     const durationMs = Date.now() - startTs
@@ -196,12 +260,22 @@ export async function collectKline(
       body: JSON.stringify(params),
     })
     const durationMs = Date.now() - startTs
-    logger.info('[fetcherClient] collectKline 请求成功', {
-      symbol: params.symbol,
-      success: result.success,
-      durationMs,
-      historyCount: result.data?.history?.length ?? 0,
-    })
+
+    if (!result.success) {
+      logger.warn('[fetcherClient] collectKline 业务级失败（HTTP 200, success=false）', {
+        symbol: params.symbol,
+        durationMs,
+        error: result.error,
+        dataNull: result.data === null || result.data === undefined,
+      })
+    } else {
+      logger.info('[fetcherClient] collectKline 请求成功', {
+        symbol: params.symbol,
+        success: result.success,
+        durationMs,
+        historyCount: result.data?.history?.length ?? 0,
+      })
+    }
     return result
   } catch (err) {
     const durationMs = Date.now() - startTs
@@ -228,14 +302,24 @@ export async function collectFinancial(
       body: JSON.stringify({ symbol } satisfies CollectFinancialRequest),
     })
     const durationMs = Date.now() - startTs
-    logger.info('[fetcherClient] collectFinancial 请求成功', {
-      symbol,
-      success: result.success,
-      durationMs,
-      reportDate: result.data?.report_date,
-      revenue: result.data?.revenue,
-      netProfit: result.data?.net_profit,
-    })
+
+    if (!result.success) {
+      logger.warn('[fetcherClient] collectFinancial 业务级失败（HTTP 200, success=false）', {
+        symbol,
+        durationMs,
+        error: result.error,
+        dataNull: result.data === null || result.data === undefined,
+      })
+    } else {
+      logger.info('[fetcherClient] collectFinancial 请求成功', {
+        symbol,
+        success: result.success,
+        durationMs,
+        reportDate: result.data?.report_date,
+        revenue: result.data?.revenue,
+        netProfit: result.data?.net_profit,
+      })
+    }
     return result
   } catch (err) {
     const durationMs = Date.now() - startTs

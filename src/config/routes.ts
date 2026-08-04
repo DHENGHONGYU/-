@@ -489,13 +489,13 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
   //   category: 'other',
   //   description: 'StockQuoteDashboard 价格守卫演示（开发验证用）',
   // },
-  // [DEV-ONLY 2026-08-04] safeFormatNumber 迁移验证页
-  {
-    path: '/dev/widget-price-guard',
-    component: React.lazy(() => import('@/pages/WidgetPriceGuardVerifyPage')),
-    category: 'other',
-    description: 'safeFormatNumber 迁移验证页（开发期临时验证用）',
-  },
+  // [DEV-ONLY 2026-08-04] safeFormatNumber 迁移验证页（已删除 WidgetPriceGuardVerifyPage.tsx）
+  // {
+  //   path: '/dev/widget-price-guard',
+  //   component: React.lazy(() => import('@/pages/WidgetPriceGuardVerifyPage')),
+  //   category: 'other',
+  //   description: 'safeFormatNumber 迁移验证页（开发期临时验证用）',
+  // },
 
 ]
 

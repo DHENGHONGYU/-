@@ -113,7 +113,7 @@ export async function buildThemePortfolio(
 
   // 6. 重新计算当前权重（基于当前持仓）
   holdings.forEach((h) => {
-    const currentMarketValue = h.currentShares * h.price
+    const currentMarketValue = h.currentShares * (h.price ?? 0)
     h.currentWeight = totalValue > 0 ? currentMarketValue / totalValue : 0
   })
 

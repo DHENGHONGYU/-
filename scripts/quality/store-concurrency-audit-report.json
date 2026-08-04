@@ -1,0 +1,130 @@
+{
+  "timestamp": "2026-08-04T03:21:42.872Z",
+  "summary": {
+    "totalFiles": 143,
+    "filesWithAsyncMethods": 10,
+    "totalAsyncMethods": 10,
+    "protectedMethods": 5,
+    "unprotectedMethods": 5,
+    "coverageRate": 50
+  },
+  "needsFix": [
+    {
+      "file": "../../src/store/disciplineStore.ts",
+      "hasIsRefreshingState": true,
+      "methods": [
+        {
+          "name": "refresh",
+          "line": 273,
+          "hasProtection": false,
+          "protectionType": "NONE"
+        }
+      ]
+    },
+    {
+      "file": "../../src/store/dualStrategyStore.ts",
+      "hasIsRefreshingState": true,
+      "methods": [
+        {
+          "name": "refresh",
+          "line": 308,
+          "hasProtection": false,
+          "protectionType": "NONE"
+        }
+      ]
+    },
+    {
+      "file": "../../src/store/executionStore.ts",
+      "hasIsRefreshingState": true,
+      "methods": [
+        {
+          "name": "refresh",
+          "line": 249,
+          "hasProtection": false,
+          "protectionType": "NONE"
+        }
+      ]
+    },
+    {
+      "file": "../../src/store/scoreDocStore.ts",
+      "hasIsRefreshingState": false,
+      "methods": [
+        {
+          "name": "refresh",
+          "line": 209,
+          "hasProtection": false,
+          "protectionType": "NONE"
+        }
+      ]
+    },
+    {
+      "file": "../../src/store/signalStore.ts",
+      "hasIsRefreshingState": true,
+      "methods": [
+        {
+          "name": "refresh",
+          "line": 80,
+          "hasProtection": false,
+          "protectionType": "NONE"
+        }
+      ]
+    }
+  ],
+  "compliant": [
+    {
+      "file": "../../src/store/intentionPoolStore.ts",
+      "methods": [
+        {
+          "name": "refresh",
+          "line": 96,
+          "protectionType": "A",
+          "protectionPattern": "isRefreshing 锁"
+        }
+      ]
+    },
+    {
+      "file": "../../src/store/orderStore.ts",
+      "methods": [
+        {
+          "name": "refresh",
+          "line": 220,
+          "protectionType": "B",
+          "protectionPattern": "RefreshCoordinator 协调"
+        }
+      ]
+    },
+    {
+      "file": "../../src/store/positionPoolStore.ts",
+      "methods": [
+        {
+          "name": "refresh",
+          "line": 127,
+          "protectionType": "A",
+          "protectionPattern": "isRefreshing 锁"
+        }
+      ]
+    },
+    {
+      "file": "../../src/store/positionStore.ts",
+      "methods": [
+        {
+          "name": "refresh",
+          "line": 160,
+          "protectionType": "A",
+          "protectionPattern": "isRefreshing 锁"
+        }
+      ]
+    },
+    {
+      "file": "../../src/store/researchPoolStore.ts",
+      "methods": [
+        {
+          "name": "refresh",
+          "line": 95,
+          "protectionType": "A",
+          "protectionPattern": "isRefreshing 锁"
+        }
+      ]
+    }
+  ]
+}

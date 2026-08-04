@@ -258,8 +258,21 @@ import { EXTREME_SCENARIO_STOCKS } from '../../fixtures/sampled-10-stocks'
 // ─── 测试辅助函数 ────────────────────────────────────────────────
 const originalFetch = (globalThis as typeof globalThis & { fetch: typeof fetch }).fetch
 
-function createMinimalConfig(): Record<string, unknown> {
-  return { sources: ['mock'], fields: ['price', 'pe', 'pb'], frequency: 'daily' }
+function createMinimalConfig(): import('@/types/modules/collection.types').CollectionConfig {
+  return {
+    version: '1.0.0',
+    activeTemplate: 'balanced',
+    dimensions: [],
+    global: {
+      notifyOnComplete: false,
+      notifyOnError: false,
+      defaultTimeoutMs: 5000,
+      defaultRetries: 0,
+    },
+    symbolCount: 10,
+    historyDays: 30,
+    updatedAt: Date.now(),
+  }
 }
 
 /**

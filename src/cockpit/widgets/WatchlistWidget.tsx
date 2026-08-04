@@ -64,19 +64,23 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
       }
     >
       <div className="grid grid-cols-4 gap-4">
-        {watchlist.map((stock: WatchlistData) => (
-          <div key={stock.code} className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium truncate">{stock.name}</span>
-              {getChangeIcon(stock.changePercent)}
+        {watchlist.map((stock: WatchlistData) => {
+          const price = stock.price ?? 0
+          const changePercent = stock.changePercent ?? 0
+          return (
+            <div key={stock.code} className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium truncate">{stock.name}</span>
+                {getChangeIcon(changePercent)}
+              </div>
+              <div className={twText('gray', 400)}>{stock.code}</div>
+              <div className="text-lg font-bold">{price.toFixed(2)}</div>
+              <div className="text-sm font-medium" style={{ color: getChangeColor(changePercent) }}>
+                {changePercent > 0 ? '+' : ''}{changePercent.toFixed(2)}%
+              </div>
             </div>
-            <div className={twText('gray', 400)}>{stock.code}</div>
-            <div className="text-lg font-bold">{stock.price.toFixed(2)}</div>
-            <div className="text-sm font-medium" style={{ color: getChangeColor(stock.changePercent) }}>
-              {stock.changePercent > 0 ? '+' : ''}{stock.changePercent.toFixed(2)}%
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </WidgetStateShell>
   )

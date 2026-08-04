@@ -66,7 +66,7 @@ export async function addHolding(portfolioId: string, holding: PortfolioHolding)
     const updated: Portfolio = {
       ...portfolio,
       holdings: [...portfolio.holdings, holding],
-      totalValue: portfolio.totalValue + holding.marketValue,
+      totalValue: portfolio.totalValue + (holding.marketValue ?? 0),
       updatedAt: Date.now(),
     }
 
@@ -105,7 +105,7 @@ export async function removeHolding(portfolioId: string, symbol: string): Promis
     const updated: Portfolio = {
       ...portfolio,
       holdings: portfolio.holdings.filter((h) => h.symbol !== symbol),
-      totalValue: portfolio.totalValue - holding.marketValue,
+      totalValue: portfolio.totalValue - (holding.marketValue ?? 0),
       updatedAt: Date.now(),
     }
 

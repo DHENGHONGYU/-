@@ -158,6 +158,9 @@ describe('InputApp', () => {
     renderApp()
     await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.enterCandidateStock))
 
+    // 等待初始健康检查完成，按钮文案从"检查中..."变为"刷新"
+    await waitFor(() => screen.getByRole('button', { name: new RegExp('^' + UI_TEXT.common.refresh + '$') }))
+
     await userEvent.click(screen.getByRole('button', { name: new RegExp('^' + UI_TEXT.common.refresh + '$') }))
 
     await waitFor(() => {
