@@ -11,7 +11,7 @@ import {
   getStockColorClass,
   getStockColorHex,
 } from '@/constants/theme.tokens'
-import { safeFormatNumber, safeFormatPercent } from '@/lib/format'
+import { safeFormatNumber, safeFormatPercent, isValidNumber } from '@/lib/format'
 
 interface MarketIndicesWidgetProps {
   config: WidgetConfig
@@ -30,14 +30,16 @@ export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): Re
   const loading = loadingMap[config.instanceId] ?? true
   const error = errorMap[config.instanceId]
 
-  const getChangeIcon = (change: number) => {
+  const getChangeIcon = (change: number | undefined) => {
+    if (!isValidNumber(change)) return <Minus className={cn('h-4 w-4', twText('gray', 400))} />
     const iconColorClass = getStockColorClass(change)
     if (change > 0) return <TrendingUp className={cn('h-4 w-4', iconColorClass)} />
     if (change < 0) return <TrendingDown className={cn('h-4 w-4', iconColorClass)} />
-    return <Minus className={cn('h-4 w-4', twText('gray', 400))} />
+    return <Minus className={cn('h-4 w-4', iconColorClass)} />
   }
 
-  const getChangeColor = (change: number) => {
+  const getChangeColor = (change: number | undefined) => {
+    if (!isValidNumber(change)) return twText('gray', 400)
     return getStockColorHex(change)
   }
 
@@ -72,26 +74,22 @@ export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): Re
       }
     >
       <div className="grid grid-cols-2 gap-4">
-        {indices.map((index: MarketIndexData) => {
-          const change = index.change ?? 0
-          const changePercent = index.changePercent ?? 0
-          return (
+        {indices.map((index: MarketIndexData) => (
             <div key={index.code} className="space-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{index.name}</span>
-                {getChangeIcon(change)}
+                {getChangeIcon(index.change)}
               </div>
-              <div className="text-lg font-bold">{safeFormatNumber(index.price ?? 0, 2)}</div>
-              <div className="text-sm" style={{ color: getChangeColor(changePercent) }}>
-                {safeFormatPercent(index.changePercent ?? 0, 2)}
+              <div className="text-lg font-bold">{safeFormatNumber(index.price, 2)}</div>
+              <div className="text-sm" style={{ color: getChangeColor(index.changePercent) }}>
+                {safeFormatPercent(index.changePercent, 2)}
               </div>
               <div className={cn('text-xs', twText('gray', 400))}>
-                最高:{safeFormatNumber(index.high ?? 0, 0)} 最低:{safeFormatNumber(index.low ?? 0, 0)}
+                最高:{safeFormatNumber(index.high, 0)} 最低:{safeFormatNumber(index.low, 0)}
               </div>
               <div className={cn('text-xs', twText('gray', 400))}>成交:{index.volume ?? '--'}</div>
             </div>
-          )
-        })}
+        ))}
       </div>
     </WidgetStateShell>
   )

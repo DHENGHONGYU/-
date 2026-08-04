@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig, WatchlistData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import { getStockColorHex, twText, twBg } from '@/constants/theme.tokens'
-import { safeFormatNumber, safeFormatPercent } from '@/lib/format'
+import { safeFormatNumber, safeFormatPercent, isValidNumber } from '@/lib/format'
 
 interface WatchlistWidgetProps {
   config: WidgetConfig
@@ -20,14 +20,16 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
   const loading = loadingMap[config.instanceId] ?? true
   const error = errorMap[config.instanceId]
 
-  const getChangeIcon = (change: number) => {
+  const getChangeIcon = (change: number | undefined) => {
+    if (!isValidNumber(change)) return <Minus className="h-4 w-4" style={{ color: twText('gray', 400) }} />
     const color = getStockColorHex(change)
     if (change > 0) return <TrendingUp className="h-4 w-4" style={{ color }} />
     if (change < 0) return <TrendingDown className="h-4 w-4" style={{ color }} />
     return <Minus className="h-4 w-4" style={{ color }} />
   }
 
-  const getChangeColor = (change: number) => {
+  const getChangeColor = (change: number | undefined) => {
+    if (!isValidNumber(change)) return twText('gray', 400)
     return getStockColorHex(change)
   }
 
@@ -65,22 +67,19 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
       }
     >
       <div className="grid grid-cols-4 gap-4">
-        {watchlist.map((stock: WatchlistData) => {
-          const changePercent = stock.changePercent ?? 0
-          return (
+        {watchlist.map((stock: WatchlistData) => (
             <div key={stock.code} className="space-y-1">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium truncate">{stock.name}</span>
-                {getChangeIcon(changePercent)}
+                {getChangeIcon(stock.changePercent)}
               </div>
               <div className={twText('gray', 400)}>{stock.code}</div>
-              <div className="text-lg font-bold">{safeFormatNumber(stock.price ?? 0, 2)}</div>
-              <div className="text-sm font-medium" style={{ color: getChangeColor(changePercent) }}>
-                {safeFormatPercent(stock.changePercent ?? 0, 2)}
+              <div className="text-lg font-bold">{safeFormatNumber(stock.price, 2)}</div>
+              <div className="text-sm font-medium" style={{ color: getChangeColor(stock.changePercent) }}>
+                {safeFormatPercent(stock.changePercent, 2)}
               </div>
             </div>
-          )
-        })}
+        ))}
       </div>
     </WidgetStateShell>
   )
