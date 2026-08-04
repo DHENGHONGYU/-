@@ -142,3 +142,47 @@
 | 交易舱 | `/trading` | CoreResourcePanel 真实数据渲染 | ✅ 主题仓位、评分、价格、市值均正确显示 |
 
 控制台错误检查：扫描 `TypeError: Cannot read properties of undefined (reading 'toFixed')` → **0 处命中**。
+
+### Widget 占位符行为修复变更对比
+
+本次修复消除了 WatchlistWidget 和 MarketIndicesWidget 中 `?? 0` 预处理导致的占位符行为不一致问题，使 undefined 字段直接传入 `safeFormatNumber`/`safeFormatPercent`，统一显示 `--` 占位符。
+
+#### 函数签名变更
+
+| 文件 | 函数 | 修改前签名 | 修改后签名 | 新增守卫 |
+|------|------|-----------|-----------|---------|
+| `WatchlistWidget.tsx` | `getChangeIcon` | `(change: number)` | `(change: number \| undefined)` | `isValidNumber` → 灰色 Minus 图标 |
+| `WatchlistWidget.tsx` | `getChangeColor` | `(change: number)` | `(change: number \| undefined)` | `isValidNumber` → 灰色文本 |
+| `MarketIndicesWidget.tsx` | `getChangeIcon` | `(change: number)` | `(change: number \| undefined)` | `isValidNumber` → 灰色 Minus 图标 |
+| `MarketIndicesWidget.tsx` | `getChangeColor` | `(change: number)` | `(change: number \| undefined)` | `isValidNumber` → 灰色文本 |
+
+#### 渲染行为变更
+
+| 组件 | 字段 | 修改前（`?? 0` 预处理） | 修改后（直接传 undefined） | 行为差异 |
+|------|------|----------------------|--------------------------|---------|
+| WatchlistWidget | `price` | `safeFormatNumber(stock.price ?? 0, 2)` → `0.00` | `safeFormatNumber(stock.price, 2)` → `--` | 空值显示 `--` 而非 `0.00` |
+| WatchlistWidget | `changePercent` | `safeFormatPercent(stock.changePercent ?? 0, 2)` → `0.00%` | `safeFormatPercent(stock.changePercent, 2)` → `--` | 空值显示 `--` 而非 `0.00%` |
+| WatchlistWidget | 涨跌图标 | `getChangeIcon(changePercent ?? 0)` → 灰色 Minus（0 值） | `getChangeIcon(stock.changePercent)` → 灰色 Minus（undefined 守卫） | 图标视觉一致，但触发路径不同 |
+| MarketIndicesWidget | `price` | `safeFormatNumber(index.price ?? 0, 2)` → `0.00` | `safeFormatNumber(index.price, 2)` → `--` | 同上 |
+| MarketIndicesWidget | `change` | `getChangeIcon(index.change ?? 0)` | `getChangeIcon(index.change)` | 守卫拦截 undefined |
+| MarketIndicesWidget | `changePercent` | `safeFormatPercent(index.changePercent ?? 0, 2)` → `0.00%` | `safeFormatPercent(index.changePercent, 2)` → `--` | 同上 |
+| MarketIndicesWidget | `high` | `safeFormatNumber(index.high ?? 0, 0)` → `0` | `safeFormatNumber(index.high, 0)` → `--` | 空值显示 `--` 而非 `0` |
+| MarketIndicesWidget | `low` | `safeFormatNumber(index.low ?? 0, 0)` → `0` | `safeFormatNumber(index.low, 0)` → `--` | 同上 |
+
+#### import 变更
+
+| 文件 | 修改前 import | 修改后 import |
+|------|-------------|-------------|
+| `WatchlistWidget.tsx` | `safeFormatNumber, safeFormatPercent` | `safeFormatNumber, safeFormatPercent, isValidNumber` |
+| `MarketIndicesWidget.tsx` | `safeFormatNumber, safeFormatPercent` | `safeFormatNumber, safeFormatPercent, isValidNumber` |
+
+### 风险评估
+
+| 风险项 | 风险等级 | 影响范围 | 发生概率 | 缓解措施 | 验证状态 |
+|--------|---------|---------|---------|---------|---------|
+| `isValidNumber` 守卫遗漏导致 `getStockColorHex` 收到 undefined | 中 | WatchlistWidget / MarketIndicesWidget 的图标和颜色渲染 | 极低（守卫已覆盖所有调用路径） | `isValidNumber` 在 `getChangeIcon`/`getChangeColor` 入口处拦截，未通过则返回灰色默认值 | ✅ tsc 编译通过 |
+| `getStockColorHex` / `getStockColorClass` 参数类型不兼容 | 低 | 两个 Widget 组件 | 已消除 | 守卫通过后 `change` 已收窄为 `number`，类型安全 | ✅ 编译通过 |
+| 空值时显示 `--` 与原有 `0.00` 风格差异 | 低 | 用户感知 | 中（数据缺失时） | `--` 为金融领域标准占位符，UX 团队已确认 | ✅ 浏览器验证通过 |
+| `map` 回调从 `{} => ()` 改为 `() => ()` 导致 JSX 解析差异 | 极低 | 渲染逻辑 | 已消除 | 移除了不必要的 `return` 和中间变量，JSX 输出一致 | ✅ 浏览器验证通过 |
+| `high`/`low` 为 undefined 时显示 `--` 而非 `0` | 低 | MarketIndicesWidget 最高/最低价 | 中（非交易时段） | `--` 比误导性的 `0` 更准确 | ✅ 逻辑正确 |
+| 单元测试回归 | 低 | format.test.ts | 极低 | 55 项测试全部通过 | ✅ 无回归 |
