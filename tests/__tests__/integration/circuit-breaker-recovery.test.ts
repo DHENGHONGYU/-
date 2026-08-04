@@ -44,7 +44,7 @@ vi.mock('@/lib/eventBus', () => ({
 // ===============================================================
 describe('P1 · R2: 熔断器状态机（createCircuitBreaker）', () => {
   it('R2-1 连续 5 次失败 → closed 变为 open，第 6 次调用立即 reject CircuitOpenError', async () => {
-    let mockNow = 0
+    const mockNow = 0
     const breaker: ICircuitBreaker = createCircuitBreaker({
       failureThreshold: 5,
       resetTimeoutMs: 30_000,
@@ -165,7 +165,7 @@ describe('P1 · R2: 熔断器状态机（createCircuitBreaker）', () => {
 // ===============================================================
 describe('P1 · R2 恢复探测：熔断器 open 时零 fetch + half-open 探测经重试', () => {
   it('R2-5 熔断器 open 时调用 execute → 零次 fn 调用，直接 reject CircuitOpenError', async () => {
-    let mockNow = 0
+    const mockNow = 0
     const breaker: ICircuitBreaker = createCircuitBreaker({
       failureThreshold: 1,
       resetTimeoutMs: 60_000,
