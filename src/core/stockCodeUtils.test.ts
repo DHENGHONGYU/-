@@ -43,9 +43,23 @@ describe('stockCodeUtils', () => {
       expect(toTencentCode('835185.BJ')).toBe('bj835185')
     })
 
-    it('指数代码 .SH → sh 前缀', () => {
+    it('指数代码 .SH → sh 前缀（0 开头但属于上交所）', () => {
+      // 沪深300指数：000300.SH 以 0 开头，但后缀 .SH 表明属于上交所
+      // 修复前：0 开头被误判为深交所 → sz000300（错误）
+      // 修复后：后缀优先判断 → sh000300（正确）
       expect(toTencentCode('000300.SH')).toBe('sh000300')
       expect(toTencentCode('000001.SH')).toBe('sh000001')
+      // 上证50指数
+      expect(toTencentCode('000016.SH')).toBe('sh000016')
+      // 中证500指数
+      expect(toTencentCode('000905.SH')).toBe('sh000905')
+    })
+
+    it('指数代码 .SZ → sz 前缀（3 开头但属于深交所）', () => {
+      // 深证成指：399001.SZ 以 3 开头，创业板前缀但属于指数
+      expect(toTencentCode('399001.SZ')).toBe('sz399001')
+      // 创业板指
+      expect(toTencentCode('399006.SZ')).toBe('sz399006')
     })
 
     it('未知格式默认 sh 前缀', () => {
@@ -79,6 +93,14 @@ describe('stockCodeUtils', () => {
 
     it('北交所 8 开头 → 1 前缀', () => {
       expect(toNeteaseCode('835185')).toBe('1835185')
+    })
+
+    it('指数代码 .SH → 0 前缀（0 开头但属于上交所）', () => {
+      // 沪深300指数：000300.SH 以 0 开头，但后缀 .SH 表明属于上交所 → 0 前缀
+      // 修复前：0 开头走默认深市逻辑 → 1000300（错误）
+      // 修复后：后缀优先判断 → 0000300（正确）
+      expect(toNeteaseCode('000300.SH')).toBe('0000300')
+      expect(toNeteaseCode('000016.SH')).toBe('0000016')
     })
   })
 })

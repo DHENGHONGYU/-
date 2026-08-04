@@ -167,6 +167,8 @@ describe('verify-all-routes.ts v3.0（白盒测试）', () => {
         '/analysis/industry-score', '/analysis/intelligent-score', '/analysis/score-docs',
         '/analysis/news', '/analysis/hot-sector', '/analysis/value-pit',
         '/analysis/score-comparison', '/analysis/multi-factor', '/analysis/industry-dashboard',
+        // [COMPAT 2026-08-04] 旧路径兼容重定向
+        '/analysis/stock-score', '/analysis/stock-score/:symbol',
         // trading
         '/trading', '/trading/strategy-snapshots', '/trading/holdings',
         '/trading/flow', '/trading/execution-plans', '/trading/execution',

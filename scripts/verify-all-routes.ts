@@ -97,6 +97,9 @@ const EXPECTED_PATHS: Record<string, { path: string; label: string }[]> = {
     { path: '/analysis/backtest', label: '策略回测' },
     { path: '/analysis/industry-score', label: 'V4 行业评分' },
     { path: '/analysis/intelligent-score', label: 'V6 个股智能评分' },
+    // [COMPAT 2026-08-04] 旧路径兼容重定向，已注册 redirect → /analysis/intelligent-score
+    { path: '/analysis/stock-score', label: 'V6 个股智能评分（旧路径兼容）' },
+    { path: '/analysis/stock-score/:symbol', label: 'V6 个股智能评分（旧路径兼容，带代码）' },
     { path: '/analysis/score-docs', label: '评分文档' },
     { path: '/analysis/news', label: '智能资讯' },
     { path: '/analysis/hot-sector', label: '热门板块策略' },

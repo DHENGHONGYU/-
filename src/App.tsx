@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect, useState } from 'react'
-import { HashRouter, Route, Routes } from 'react-router'
+import { HashRouter, Navigate, Route, Routes, useParams } from 'react-router'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { PageSkeleton } from '@/components/organisms/shared/PageSkeleton'
 import { MemoryModeBanner } from '@/components/organisms/shared/MemoryModeBanner'
@@ -31,6 +31,16 @@ import '@/mcp/register'
 // }
 
 const logger = getLogger()
+
+/**
+ * 兼容重定向组件 —— 将旧路径重定向到新路径，支持 :param 占位符替换。
+ * 用于 /analysis/stock-score → /analysis/intelligent-score 等历史路径兼容。
+ */
+function CompatRedirect({ to }: { to: string }): React.JSX.Element {
+  const params = useParams()
+  const target = to.replace(/:(\w+)/g, (_, key: string) => params[key] ?? '')
+  return <Navigate to={target} replace />
+}
 
 function AppContent(): React.JSX.Element {
   const { toast } = useToast()
@@ -184,17 +194,29 @@ function AppContent(): React.JSX.Element {
   return (
     <Suspense fallback={<PageSkeleton />}>
       <Routes>
-        {ROUTE_REGISTRY.map((route) => (
-          <Route
-            key={route.path}
-            path={route.path}
-            element={
-              <RouteGuard module={route.category}>
-                <route.component />
-              </RouteGuard>
-            }
-          />
-        ))}
+        {ROUTE_REGISTRY.map((route) => {
+          // 兼容重定向路由：访问旧路径时自动跳转到新路径
+          if (route.redirect) {
+            return (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={<CompatRedirect to={route.redirect} />}
+              />
+            )
+          }
+          return (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={
+                <RouteGuard module={route.category}>
+                  <route.component />
+                </RouteGuard>
+              }
+            />
+          )
+        })}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       {isMemoryMode && <MemoryModeBanner />}

@@ -184,23 +184,23 @@ describe('Toggle', () => {
   const user = userEvent.setup()
 
   it('应该渲染 children', () => {
-    render(<Toggle>开关</Toggle>)
+    render(<Toggle pressed={false}>开关</Toggle>)
     expect(screen.getByRole('button', { name: '开关' })).toBeInTheDocument()
   })
 
   it('应该有 aria-pressed=false by default', () => {
-    render(<Toggle>开关</Toggle>)
+    render(<Toggle pressed={false}>开关</Toggle>)
     expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false')
   })
 
   it('应该有 aria-pressed=true when defaultPressed=true', () => {
-    render(<Toggle defaultPressed={true}>开关</Toggle>)
+    render(<Toggle pressed={true}>开关</Toggle>)
     expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true')
   })
 
   it('应该调用 onPressedChange when clicked', async () => {
     const handleChange = vi.fn()
-    render(<Toggle onPressedChange={handleChange}>开关</Toggle>)
+    render(<Toggle pressed={false} onPressedChange={handleChange}>开关</Toggle>)
 
     await user.click(screen.getByRole('button'))
     expect(handleChange).toHaveBeenCalledWith(true)
@@ -223,32 +223,32 @@ describe('Toggle', () => {
   })
 
   it('应该apply variant styles correctly', () => {
-    const { rerender } = render(<Toggle variant="default">默认</Toggle>)
+    const { rerender } = render(<Toggle pressed={false} variant="default">默认</Toggle>)
     expect(screen.getByRole('button')).toHaveClass('bg-transparent')
 
-    rerender(<Toggle variant="outline">轮廓</Toggle>)
+    rerender(<Toggle pressed={false} variant="outline">轮廓</Toggle>)
     expect(screen.getByRole('button')).toHaveClass('border')
   })
 
   it('应该apply size styles correctly', () => {
-    const { rerender } = render(<Toggle size="sm">小</Toggle>)
+    const { rerender } = render(<Toggle pressed={false}>小</Toggle>)
     expect(screen.getByRole('button')).toHaveClass('h-8')
 
-    rerender(<Toggle size="md">中</Toggle>)
+    rerender(<Toggle pressed={false}>中</Toggle>)
     expect(screen.getByRole('button')).toHaveClass('h-10')
 
-    rerender(<Toggle size="lg">大</Toggle>)
+    rerender(<Toggle pressed={false}>大</Toggle>)
     expect(screen.getByRole('button')).toHaveClass('h-12')
   })
 
   it('应该是 disabled when disabled prop is true', () => {
-    render(<Toggle disabled>禁用</Toggle>)
+    render(<Toggle pressed={false} disabled>禁用</Toggle>)
     expect(screen.getByRole('button')).toBeDisabled()
   })
 
   it('应该forward onClick handler', async () => {
     const handleClick = vi.fn()
-    render(<Toggle onClick={handleClick}>点击</Toggle>)
+    render(<Toggle pressed={false} onClick={handleClick}>点击</Toggle>)
 
     await user.click(screen.getByRole('button'))
     expect(handleClick).toHaveBeenCalled()

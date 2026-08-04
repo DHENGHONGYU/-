@@ -18,6 +18,8 @@ export interface RouteConfig {
   component: LazyExoticComponent<ComponentType<unknown>>
   category: RouteCategory
   description: string
+  /** 兼容重定向目标路径（设此后访问 path 将自动 redirect 到此目标，支持 :param 占位符） */
+  redirect?: string
 }
 
 /**
@@ -349,6 +351,22 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     category: 'analysis',
     description: '个股智能分析（带代码）',
   },
+  // [COMPAT 2026-08-04] /analysis/stock-score 旧路径兼容重定向
+  // 原因：路由从 stock-score 重命名为 intelligent-score，旧书签/外链需要兼容
+  {
+    path: '/analysis/stock-score',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'analysis',
+    description: '个股智能分析（旧路径兼容重定向）',
+    redirect: '/analysis/intelligent-score',
+  },
+  {
+    path: '/analysis/stock-score/:symbol',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'analysis',
+    description: '个股智能分析（旧路径兼容重定向，带代码）',
+    redirect: '/analysis/intelligent-score/:symbol',
+  },
   {
     path: '/analysis/score-docs',
     component: React.lazy(() => import('@/portal/PortalShell')),
@@ -471,6 +489,14 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
   //   category: 'other',
   //   description: 'StockQuoteDashboard 价格守卫演示（开发验证用）',
   // },
+  // [DEV-ONLY 2026-08-04] safeFormatNumber 迁移验证页
+  {
+    path: '/dev/widget-price-guard',
+    component: React.lazy(() => import('@/pages/WidgetPriceGuardVerifyPage')),
+    category: 'other',
+    description: 'safeFormatNumber 迁移验证页（开发期临时验证用）',
+  },
+
 ]
 
 /**
