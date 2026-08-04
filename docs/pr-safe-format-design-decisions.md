@@ -89,17 +89,34 @@
 | 低风险（low）调用数 | 153 |
 | 受影响文件数 | 30 |
 | 自动添加 import 的文件数 | 30 |
+| 已应用补丁 | ✅ 是（`--apply` 模式批量写入源文件） |
+| TypeScript 类型检查 | ✅ 通过（`tsc -p tsconfig.prod.json --noEmit` 退出码 0） |
+| 浏览器渲染验证 | ✅ 通过（5 种边界场景无 TypeError，空值显示 `--`） |
 
 #### 受影响文件分布
 
 | 层级 | 文件数 | 替换次数 | 代表文件 |
 |------|--------|---------|---------|
-| `src/components` | 13 | 22 | StockPriceChange, ScoreItem, ScoreFactorWaterfall, PoolCard |
-| `src/pages` | 8 | 17 | BacktestPage(5), TradeModal(4), TradingFlowPage(2) |
-| `src/cockpit/widgets` | 6 | 10 | PortfolioOverviewWidget(2), SectorHeatmapWidget(3) |
+| `src/components` | 12 | 18 | StockPriceChange, ScoreItem, ScoreFactorWaterfall(3), PoolCard, PoolList, ScoreDocVersionTable, IndustryV4Panel, IntelligentScoreBasisCard, IntelligentScoreExplanation, CycleRetrospectivePanel, FactorDashboardPanel(2), reviewArtifact(2) |
+| `src/pages` | 8 | 17 | BacktestPage(5), TradeModal(4), TradingFlowPage(2), ValuePitPage(2), IndustryScorePage, IntelligentScorePage, PoolBoardPage, ScoreTrend |
+| `src/cockpit/widgets` | 6 | 10 | PortfolioOverviewWidget(2), SectorHeatmapWidget(3), SignalQualityDashboardWidget, ValuePitWidget, WatchlistMoversWidget(2) |
 | `src/store` | 2 | 2 | hotSectorStore, valuePitStore |
 | `src/apps` | 1 | 1 | AnalysisApp |
-| `src/showcase` | 2 | 4 | ColorTokenShowcase, StockDataShowcase |
+| `src/showcase` | 2 | 4 | ColorTokenShowcase(2), StockDataShowcase(2) |
+| **合计** | **30** | **49** | — |
+
+#### 中风险调用接收者分布（按字段名）
+
+| 接收者字段 | 出现次数 | 风险来源说明 |
+|-----------|---------|-------------|
+| `price` | 8 | 行情数据可空字段（停牌 / 采集失败） |
+| `score` | 9 | 评分数据可空字段（未评分 / 计算失败） |
+| `weight` / `currentWeight` / `targetWeight` | 6 | 持仓权重计算可空字段 |
+| `pnl` / `pnlPercent` / `floatingPnl` / `floatingPnlPercent` | 7 | 持仓盈亏计算可空字段 |
+| `changePercent` | 6 | 行情涨跌幅可空字段 |
+| `marketValue` / `avgCost` / `currentPrice` | 6 | 持仓计算可空字段 |
+| `currentWeight` / `suggestedWeight`（FactorDashboardPanel） | 2 | 因子权重可空字段 |
+| 其他（score.score / layer.score / dim.score / f.score / f.weight） | 5 | 子对象字段访问 |
 
 #### 补丁应用流程
 
@@ -115,3 +132,13 @@
 - 脚本使用正则匹配接收者表达式，无法处理括号包裹的复杂表达式（如 `(a + b).toFixed(2)`），此类调用需手动替换
 - 多行 import 语句中插入新 import 可能导致语法错误（已手动修复 AnalysisApp.tsx 和 PortfolioOverviewWidget.tsx）
 - 风险分级基于字段名匹配，无法进行数据流分析（如 `const p = data.price; p.toFixed(2)` 中的 `p` 会被判为低风险）
+
+#### 浏览器渲染验证证据
+
+| 验证页面 | URL | 验证场景 | 结果 |
+|---------|-----|---------|------|
+| safeFormatNumber 验证页 | `/dev/widget-price-guard` | 5 种 price 边界场景（正常 / 0 / undefined / 部分空 / 全空） | ✅ 全部渲染 `--` 占位符，无 TypeError |
+| 驾驶舱 | `/cockpit` | WatchlistWidget 真实数据渲染 | ✅ 正常渲染，点击持仓观察单元格无崩溃 |
+| 交易舱 | `/trading` | CoreResourcePanel 真实数据渲染 | ✅ 主题仓位、评分、价格、市值均正确显示 |
+
+控制台错误检查：扫描 `TypeError: Cannot read properties of undefined (reading 'toFixed')` → **0 处命中**。
