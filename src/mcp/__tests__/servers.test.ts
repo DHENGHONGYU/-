@@ -106,15 +106,16 @@ describe('DataFetcherServer', () => {
   })
 
   describe('listTools', () => {
-    it('应返回 5 个 Tool', () => {
+    it('应返回 6 个 Tool（含新增 check_health）', () => {
       const tools = server.listTools()
-      expect(tools).toHaveLength(5)
+      expect(tools).toHaveLength(6)
       const names = tools.map((t) => t.name)
       expect(names).toContain('fetch_stock_basic')
       expect(names).toContain('fetch_stocks_basic')
       expect(names).toContain('fetch_kline')
       expect(names).toContain('refresh_symbol')
       expect(names).toContain('test_source_connectivity')
+      expect(names).toContain('check_health')
     })
   })
 

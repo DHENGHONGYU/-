@@ -153,7 +153,8 @@ describe('checkFetcherHealth', () => {
 
     const result = await checkFetcherHealth()
     expect(result.ok).toBe(false)
-    expect(result.error).toBe(String(timeoutError))
+    // AbortError 被 request() 包装为用户友好提示，不再直接暴露原始异常字符串
+    expect(result.error).toBe('请求超时，请检查网络连接或服务响应速度')
   })
 })
 

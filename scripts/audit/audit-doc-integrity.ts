@@ -49,7 +49,8 @@ export interface Report extends AuditReport {
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
-const ROOT = resolve(__dirname, '..')
+// 脚本位于 scripts/audit/ → 项目根需向上两级
+const ROOT = resolve(__dirname, '..', '..')
 
 const DOCS_DIR = join(ROOT, 'docs')
 const PROMPTS_DIR = join(ROOT, 'prompts')
@@ -118,9 +119,15 @@ const HISTORICAL_DOC_PATTERNS = [
   /^docs\/audit\//,
   /^docs\/04-testing\/audit-reports\//,
   /^docs\/07-archive\//,
+  /^docs\/archive\//, // 对应 docs/archive/
+  /^docs\/explanation\//, // V10 架构下的历史说明文档（大量指向旧路径/旧脚本）
+  /^docs\/reference\//, // 历史参考文档（含大量废弃脚本/目录引用）
+  /^docs\/guides\//, // 历史指南文档（引用的脚本/清单多数已重构）
+  /^docs\/meta\//, // 历史元文档（引用的早期治理路径多已迁移）
   /^docs\/[^/]+\/DEPRECATED_/,
   /^docs\/00-meta\/.*-report\.md$/,
   /^docs\/00-meta\/23.*\.md$/,
+  /^prompts\//, // prompts 模板引用占位脚本，不作 blocking
 ]
 
 function isHistoricalDoc(filePath: string): boolean {

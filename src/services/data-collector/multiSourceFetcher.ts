@@ -91,8 +91,10 @@ async function fetchFromMockServer(symbol: string, dimensionCode: string): Promi
   const resp = await safeFetch(`${MOCK_BASE}${path}&symbol=${symbol}`.replace('&', '?'))
   if (!resp) return null
   try {
-    const json = await resp.json()
-    return json?.data || json
+    const json = (await resp.json()) as Record<string, unknown> | null
+    return (json && typeof json === 'object' && 'data' in json)
+      ? (json.data as Record<string, unknown> | null) ?? null
+      : json
   } catch { return null }
 }
 
@@ -104,7 +106,7 @@ async function fetchTencentQuote(symbol: string): Promise<Record<string, string>
   const text = await resp.text()
   // Tencent returns: v_{code}="{fields}"
   const match = text.match(/v_[^=]+="([^"]+)"/)
-  if (!match || !match[1]) return null
+  if (!match?.[1]) return null
   const parts = match[1].split('~')
   return {
     name: parts[1] || '',
@@ -157,14 +159,14 @@ export async function fetchChipData(symbol: string): Promise<ChipData | null> {
     const url = `${SINA_FINANCE_API_BASE}corp/go.php/vCI_CorpHolder/stockid/${symbol.replace(/\.(SH|SZ)$/i, '')}.phtml`
     const resp = await safeFetch(url)
     if (resp) {
-      const data = await resp.json()
+      const data = (await resp.json()) as Record<string, unknown> | null
       return {
-        shareholderCount: data?.holderNum,
-        concentration: data?.concentration,
-        trend: data?.trend || 'stable',
+        shareholderCount: data?.holderNum as ChipData['shareholderCount'],
+        concentration: data?.concentration as ChipData['concentration'],
+        trend: (typeof data?.trend === 'string' ? data.trend : 'stable') as ChipData['trend'],
         date: new Date().toISOString().slice(0, 10),
         _source: 'sina',
-      } as unknown as ChipData
+      }
     }
   } catch (err) {
     logger.warn(`[multiSourceFetcher] fetchChipData 失败: ${symbol}`, {

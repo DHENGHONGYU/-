@@ -420,7 +420,13 @@ describe('generateTradeReviewUseCase（同步版）', () => {
 
       let callCount = 0
       mockGenerateTradeSummary.mockImplementation((ords) => ({
-        totalOrders: ords.length,
+        // 字段名对齐 TradeSummary 接口定义（totalTrades 而非 totalOrders）
+        totalTrades: ords.length,
+        profitableTrades: ords.length,
+        losingTrades: 0,
+        winRate: 100,
+        profitLossRatio: 1,
+        disciplineScore: 80,
         callIndex: ++callCount,
       }))
 
