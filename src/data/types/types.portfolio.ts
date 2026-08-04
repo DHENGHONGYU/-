@@ -5,11 +5,13 @@
  *
  * @module data/types/types.portfolio
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
+ */
+
 /**
  * 组合持仓明细（目标 vs 当前）。
  * 用于主题投资组合的构建、展示与再平衡。
-  * @doc [V9-DOC-PROJ-229, V9-DOC-QA-066]
-*/
+ * @doc [V9-DOC-PROJ-229, V9-DOC-QA-066]
+ */
 export interface PortfolioHolding {
   symbol: string
   name: string
@@ -17,9 +19,9 @@ export interface PortfolioHolding {
   currentWeight: number
   targetWeight: number
   targetShares: number
-  price: number
-  marketValue: number
-  score: number
+  price?: number
+  marketValue?: number
+  score?: number
   rationale: string
 }
 

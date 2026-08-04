@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Car
 import { Badge } from '@/components/atoms/Badge'
 import type { Portfolio, StrategyClassification, StrategyResult } from '@/data/types'
 import { twBg, twText } from '@/constants/theme.tokens'
+import { safeFormatNumber } from '@/lib/format'
 
 export interface CoreResourcePanelProps {
   portfolio?: Portfolio
@@ -109,9 +110,9 @@ export function CoreResourcePanel({
                         </td>
                       )}
                       <td className="py-2 pr-2 text-right">
-                        <Badge variant="outline">{holding.score.toFixed(2)}</Badge>
+                        <Badge variant="outline">{safeFormatNumber(holding.score, 2)}</Badge>
                       </td>
-                      <td className="py-2 pr-2 text-right">{holding.price.toFixed(2)}</td>
+                      <td className="py-2 pr-2 text-right">{safeFormatNumber(holding.price, 2)}</td>
                       <td className="py-2 pr-2 text-right">
                         {holding.currentShares} / {holding.targetShares}
                       </td>
@@ -203,6 +204,7 @@ function MetricItem({ label, value }: { label: string; value: string }): React.J
   )
 }
 
-function formatNumber(value: number): string {
+function formatNumber(value: number | undefined): string {
+  if (value === undefined || !Number.isFinite(value)) return '--'
   return new Intl.NumberFormat('zh-CN').format(Math.round(value))
 }
