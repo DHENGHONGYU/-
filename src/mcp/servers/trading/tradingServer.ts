@@ -310,7 +310,13 @@ export class TradingServer extends MCPServerBase {
           { name: 'orderHistory', description: '交易历史 JSON', required: false },
         ],
         generator: async (args) => {
-          const report = JSON.parse(args.tradeReviewReport ?? '{}')
+          const report = JSON.parse(args.tradeReviewReport ?? '{}') as Record<string, unknown>
+          const summary = report.summary as Record<string, unknown> | undefined
+          const discipline = report.disciplineAnalysis as Record<string, unknown> | undefined
+          const errorAnalysis = report.errorAnalysis as Record<string, unknown> | undefined
+          const winRate = summary?.winRate
+          const profitLossRatio = summary?.profitLossRatio
+          const overallScore = discipline?.overallScore
           return [
             {
               role: 'system',
@@ -325,11 +331,11 @@ export class TradingServer extends MCPServerBase {
                 type: 'text',
                 text: [
                   '请基于以下交易复盘报告进行深度分析：',
-                  `胜率: ${report.summary?.winRate ?? 'N/A'}`,
-                  `盈亏比: ${report.summary?.profitLossRatio ?? 'N/A'}`,
-                  `纪律评分: ${report.disciplineAnalysis?.overallScore ?? 'N/A'}`,
-                  `主要错误: ${JSON.stringify(report.errorAnalysis?.topErrors ?? [])}`,
-                  `改进方向: ${JSON.stringify(report.disciplineAnalysis?.improvements ?? [])}`,
+                  `胜率: ${typeof winRate === 'number' ? winRate : 'N/A'}`,
+                  `盈亏比: ${typeof profitLossRatio === 'number' ? profitLossRatio : 'N/A'}`,
+                  `纪律评分: ${typeof overallScore === 'number' ? overallScore : 'N/A'}`,
+                  `主要错误: ${JSON.stringify(errorAnalysis?.topErrors ?? [])}`,
+                  `改进方向: ${JSON.stringify(discipline?.improvements ?? [])}`,
                   '请给出具体的改进建议和行动计划。',
                 ].join('\n'),
               },

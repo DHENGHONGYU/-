@@ -9,9 +9,9 @@ import { CascadeError } from '@/types/modules/cascade.types'
 
 // ─── Mock 依赖 ───────────────────────────────────────────────
 
-let mockGetAllByIndex = vi.fn()
-let mockDeleteByIndex = vi.fn()
-let mockPut = vi.fn()
+const mockGetAllByIndex = vi.fn()
+const mockDeleteByIndex = vi.fn()
+const mockPut = vi.fn()
 
 vi.mock('@/data/db', () => ({
   db: {

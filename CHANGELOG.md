@@ -63,6 +63,13 @@
 
 ### Added
 
+- **SKILL 体系扩展：安全审查与性能审计能力建设（2026-08-04）**：
+  - `.trae/skills/v9-security-review/SKILL.md` 新增安全审查 SKILL（V9-SKILL-SECURITY-REVIEW，mandatory=true），覆盖五大维度：密钥与凭证泄露扫描（`npm run audit:secrets`）、XSS 防护审查（`dangerouslySetInnerHTML`/`innerHTML` Grep + `xssSanitizer` 保护校验）、输入验证审计（URL params/API response/用户输入经 `validation.ts` 校验）、ACL 权限矩阵校验（`npm run audit:acl-consistency`）、依赖安全扫描（`npm audit --audit-level=moderate`）
+  - `.trae/skills/v9-performance-audit/SKILL.md` 新增性能审计 SKILL（V9-SKILL-PERFORMANCE-AUDIT），覆盖四大维度：Bundle 体积审计（主 chunk ≤500KB、总体积 ≤2MB gzip）、渲染性能审计（React.memo/useMemo/useCallback 覆盖率、useEffect 依赖与竞态防护、虚拟列表）、数据流效率审计（Store selector 粒度、请求去重、防抖节流）、内存泄漏检测（`quality-gate-check.cjs` 检出事件监听器 cleanup 配对率）
+  - `.trae/skills/skill-registry.json`（v2.0.0 → v2.1.0）：注册 2 个新 SKILL，skills 数量 20 → 22，mandatory 数量 8 → 9；同步修复 v9-doc-encoding-remediation 与 component-health-check 的 frontmatter 漂移
+  - `.trae/skills/INDEX.md`（v2.0.0 → v2.1.0）：code-quality 分类 7 → 9，总计 20 → 22，mandatory 8 → 9；更新统计表与变更历史
+  - **交叉检索报告归档**：本次 SKILL 体系交叉检索（对标业界七阶段生命周期 + 六治理组件框架）识别出安全审查、性能优化两类重大缺口，已通过新增上述 2 个 SKILL 补齐；详细报告见 `docs/reports/changelogs/2026-08/2026-08-04-skill-system-optimization-roadmap.md`
+
 - **文档链接健康度自动化体系（2026-08-03）**：
   - `scripts/docs-tool/link-health-checker.ts` 新增文档链接健康度检查器（扫描/分类/验证/自动修复/报告生成），支持 `--fix`/`--ci`/`--staged`/`--json` 四种模式
   - `scripts/docs-tool/link-health-scheduler.ts` 新增定期调度器（封装检查器 + 历史追踪 + 摘要报告），支持 `--dry-run`/`--ci`/`--summary` 三种模式
@@ -127,6 +134,12 @@
   - Cockpit 移除 `system` zone 逻辑，category 统一为 market/portfolio/ai/strategy 四类
 
 ### Fixed
+
+- **SKILL 体系 P0 配置修复与注册表同步（2026-08-04）**：
+  - 修复 `v9-doc-encoding-remediation` triggers.files 引用不存在的 `scripts/fix-doc-refs.ts`（历史脚本已迁移），改为 `scripts/lib/encoding.ts` + `scripts/fix/*.ts` + `docs/**/*.md` + `src/**/*.ts`，覆盖实际编码处理文件与受影响文本文件
+  - 修复 `component-health-check` gates 命令大小写错误：`audit:component-usage` → `npm run audit:componentUsage`，与 `package.json` 实际脚本名对齐，恢复健康检查门禁可执行性
+  - 同步 `skill-registry.json` 与 SKILL.md frontmatter 漂移：v9-doc-encoding-remediation 的 tags/triggers.files/related_skills/freshness_policy/search_keywords 全量对齐
+  - 验证：`node -e "require('./.trae/skills/skill-registry.json')"` JSON 合法性通过，22 个 SKILL 全部可解析
 
 - **v2.6.0 数据准确性修复 — 隐式零值兜底消除（2026-07-26）**：
   - 修复 `positionPoolStore.toPoolItem()` 中 `quantity`/`avgCost`/`currentPrice` 缺失时被静默替换为 0 的问题，改为 `Number.NaN` 显式标记

@@ -1,8 +1,9 @@
 /**
  * @test_id V9-TEST-UT-R1
- * @status known-failing
- * @reason autoRecovery 功能已从 sevenDimConfigStore 中移除，属性 isRecovering/recoveryAttempted/cancelRecovery 不再存在。
- *               若未来需要自动恢复功能，应重新设计并更新此测试。
+ * @status passing
+ * @reason autoRecovery 功能已在 sevenDimConfigStore 中实现（isRecovering/recoveryAttempted/cancelRecovery），
+ *               9 个用例（R1-1~R1-5、R2~R5）全部通过，覆盖全量失败恢复、恢复失败不重试、手动取消、防重入、
+ *               意向池空、维度就绪度检查、部分失败等场景。
  *
  * sevenDimConfigStore 自动恢复逻辑（autoRecover）单元测试
  *

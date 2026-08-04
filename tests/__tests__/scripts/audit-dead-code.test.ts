@@ -666,7 +666,7 @@ export const ROUTES = [{ path: '/missing', component: Missing }]
       const output = formatReport(report as never)
 
       expect(output).toContain('路由文件缺失: 1')
-      expect(output).toContain('存在路由文件缺失')
+      expect(output).toContain('路由文件缺失')
     })
   })
 

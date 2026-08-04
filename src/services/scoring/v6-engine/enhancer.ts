@@ -137,7 +137,7 @@ export class LLMScoreEnhancer {
             // 引证闸激活：LLM 调整了评分但未提供引用来源 → 拒绝评分变更，回退到规则引擎结果
             logger.warn(
               `[LLMScoreEnhancer] 层 ${calculator.layerId} 引证闸激活：` +
-                `LLM 建议评分 ${enhanced.score!.toFixed(2)} 但未提供引用来源，已回退到规则评分 ${baseResult.score.toFixed(2)}`,
+                `LLM 建议评分 ${(typeof enhanced.score === 'number' ? enhanced.score : baseResult.score).toFixed(2)} 但未提供引用来源，已回退到规则评分 ${baseResult.score.toFixed(2)}`,
             )
             const fallbackEvidence = enhanced.rationale
               ? [...baseResult.evidence, `[LLM增强-无引用(已拒绝)] ${enhanced.rationale}`]
@@ -253,7 +253,12 @@ export class LLMScoreEnhancer {
       { role: 'user', content: userPrompt },
     ]
 
-    const response = await chat(messages, this.llmConfig!)
+    if (!this.llmConfig) {
+      // 理论不可达：isEnabled() 已检查；保留回退保证 TS 路径完备
+      return { citations: [], rationale: 'LLM 配置缺失', summary: '', score: undefined, risks: [] }
+    }
+    const llmConfig = this.llmConfig
+    const response = await chat(messages, llmConfig)
     logger.info(`[LLMScoreEnhancer] ${layerId} LLM 返回: ${response.content.slice(0, LOG_SNIPPET_MAX_CHARS)}`)
 
     return this.parseResponse(response.content)

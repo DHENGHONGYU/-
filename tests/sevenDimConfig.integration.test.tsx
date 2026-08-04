@@ -78,7 +78,7 @@ describe('Flux 集成测试 — 维度开关 → Store → UI', () => {
     fireEvent.click(screen.getByText('价值投资'))
     expect(screen.getByText('4 / 8')).toBeInTheDocument()
 
-    const switches = screen.getAllByRole('checkbox')
+    const switches = screen.getAllByRole('switch')
     fireEvent.click(switches[0]!) // 禁用第一个维度
 
     // Store 验证
