@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Link } from 'react-router'
 import {
   Database,
@@ -19,6 +19,7 @@ import { useIntentionPoolStore } from '@/store/intentionPoolStore'
 import { useTradingStore } from '@/store/tradingStore'
 import { useCollectionRuntimeStore } from '@/store/collectionRuntimeStore'
 import { mcpBridge } from '@/mcp'
+import { StockQuoteDashboard } from '@/components/organisms/market/StockQuoteDashboard'
 
 interface FeatureCardProps {
   icon: React.ElementType
@@ -157,6 +158,10 @@ export default function HomePage(): React.JSX.Element {
       />
 
       <SystemStatusOverview />
+
+      <section className="mt-6">
+        <StockQuoteDashboard symbol="600519" />
+      </section>
 
       <section className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {FEATURES.map((feature) => {
