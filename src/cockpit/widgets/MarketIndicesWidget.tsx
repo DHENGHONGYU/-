@@ -2,6 +2,7 @@ import React from 'react'
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { WidgetStateShell } from './components/WidgetStateShell'
+import { useWidgetErrorState } from '@/cockpit/hooks/useWidgetErrorState'
 import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig, MarketIndexData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
@@ -43,20 +44,18 @@ export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): Re
     return getStockColorHex(change)
   }
 
-  let visualState: 'ready' | 'loading' | 'empty' | 'error' = 'ready'
-  if (error) {
-    visualState = 'error'
-  } else if (loading) {
-    visualState = 'loading'
-  } else if (indices.length === 0) {
-    visualState = 'empty'
-  }
+  const { visualState, displayError } = useWidgetErrorState({
+    loading,
+    error,
+    hasData: indices.length > 0,
+    fallbackErrorMessage: '大盘行情数据暂不可用，请检查后端服务或稍后重试',
+  })
 
   return (
     <WidgetStateShell
       title={config.title}
       visualState={visualState}
-      error={error}
+      error={displayError}
       onRetry={() => refreshWidget(config.instanceId)}
       loadingLabel="加载大盘行情中…"
       emptyTitle="暂无大盘行情"

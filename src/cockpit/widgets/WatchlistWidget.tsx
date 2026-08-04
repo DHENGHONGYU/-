@@ -1,6 +1,7 @@
 import React from 'react'
 import { TrendingUp, TrendingDown, Minus, Eye } from 'lucide-react'
 import { WidgetStateShell } from './components/WidgetStateShell'
+import { useWidgetErrorState } from '@/cockpit/hooks/useWidgetErrorState'
 import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig, WatchlistData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
@@ -33,21 +34,19 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
     return getStockColorHex(change)
   }
 
-  let visualState: 'ready' | 'loading' | 'empty' | 'error' = 'ready'
-  if (error) {
-    visualState = 'error'
-  } else if (loading) {
-    visualState = 'loading'
-  } else if (watchlist.length === 0) {
-    visualState = 'empty'
-  }
+  const { visualState, displayError } = useWidgetErrorState({
+    loading,
+    error,
+    hasData: watchlist.length > 0,
+    fallbackErrorMessage: '自选行情数据暂不可用，请检查后端服务或稍后重试',
+  })
 
   return (
     <WidgetStateShell
       title={config.title}
       titleIcon={<Eye className={twText('emerald', 500)} />}
       visualState={visualState}
-      error={error}
+      error={displayError}
       onRetry={() => refreshWidget(config.instanceId)}
       loadingLabel="加载自选行情…"
       emptyTitle="暂无自选标的"

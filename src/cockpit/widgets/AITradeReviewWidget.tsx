@@ -3,6 +3,7 @@ import { TrendingUp, Target, Award, AlertCircle } from 'lucide-react'
 import { Badge } from '@/components/atoms/Badge'
 import { Skeleton } from '@/components/molecules/states'
 import { WidgetStateShell } from './components/WidgetStateShell'
+import { useWidgetErrorState } from '@/cockpit/hooks/useWidgetErrorState'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import { STOCK_COLOR_TOKENS, COLOR_TOKENS, COLOR_SHADES, twText } from '@/constants/theme.tokens'
@@ -20,13 +21,12 @@ export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps
   const loading = loadingMap[config.instanceId] ?? true
   const error = errorMap[config.instanceId]
 
-  const visualState = error
-    ? 'error'
-    : loading
-      ? 'loading'
-      : !tradeReview
-        ? 'empty'
-        : 'ready'
+  const { visualState, displayError } = useWidgetErrorState({
+    loading,
+    error,
+    hasData: !!tradeReview,
+    fallbackErrorMessage: 'AI交易复盘数据暂不可用，请检查后端服务或稍后重试',
+  })
 
   const content = (() => {
     if (!tradeReview) return null
@@ -112,7 +112,7 @@ export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps
     <WidgetStateShell
       title={config.title}
       visualState={visualState}
-      error={error}
+      error={displayError}
       onRetry={() => refreshWidget(config.instanceId)}
       titleAction={
         <Badge variant="outline" className="mt-1">

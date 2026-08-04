@@ -6,6 +6,7 @@ import { WidgetStateShell } from './components/WidgetStateShell'
 import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig, HoldingItem, RebalancePlanItem } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
+import { useWidgetErrorState } from '@/cockpit/hooks/useWidgetErrorState'
 import { COLORS } from '@/constants/cockpit.constants'
 import {
   STOCK_COLOR_TOKENS,
@@ -118,18 +119,18 @@ export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWid
   const maxDrawdown = hasEquityCurve ? computeMaxDrawdown(equityCurve) : NaN
   const sharpe = hasEquityCurve ? computeSharpeRatio(equityCurve) : NaN
 
-  let visualState: 'ready' | 'loading' | 'empty' | 'error' = 'ready'
-  if (error) {
-    visualState = 'error'
-  } else if (loading || !portfolio) {
-    visualState = 'loading'
-  }
+  const { visualState, displayError } = useWidgetErrorState({
+    loading,
+    error,
+    hasData: !!portfolio,
+    fallbackErrorMessage: '持仓数据暂不可用，请检查后端服务或稍后重试',
+  })
 
   return (
     <WidgetStateShell
       title={config.title}
       visualState={visualState}
-      error={error}
+      error={displayError}
       onRetry={() => refreshWidget(config.instanceId)}
       loadingLabel="加载持仓数据中…"
       skeleton={

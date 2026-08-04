@@ -168,13 +168,14 @@ describe('PortfolioOverviewWidget', () => {
     expect(screen.queryByText('总资产')).not.toBeInTheDocument()
   })
 
-  it('portfolio 为 null 时显示骨架屏（即使 loading=false）', () => {
+  it('portfolio 为 null 且 loading=false 时显示友好错误提示（非骨架屏）', () => {
     setupMarketData({ portfolio: null, loading: false })
     render(<PortfolioOverviewWidget config={buildConfig()} />)
 
-    expect(screen.queryByText('总资产')).not.toBeInTheDocument()
     const skeletons = document.querySelectorAll('.bg-gray-200')
-    expect(skeletons.length).toBeGreaterThan(0)
+    expect(skeletons.length).toBe(0)
+    expect(screen.getByText('持仓数据暂不可用，请检查后端服务或稍后重试')).toBeInTheDocument()
+    expect(screen.getByText('重试')).toBeInTheDocument()
   })
 
   it('错误状态显示错误消息文本', () => {

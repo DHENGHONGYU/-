@@ -3,6 +3,7 @@ import { TrendingUp, TrendingDown } from 'lucide-react'
 import { Progress } from '@/components/atoms/Progress'
 import { Skeleton } from '@/components/molecules/states'
 import { WidgetStateShell } from './components/WidgetStateShell'
+import { useWidgetErrorState } from '@/cockpit/hooks/useWidgetErrorState'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import { STOCK_COLOR_TOKENS, COLOR_SHADES, twText, twBg } from '@/constants/theme.tokens'
@@ -20,13 +21,12 @@ export default function MarketSentimentWidget({ config }: MarketSentimentWidgetP
   const loading = loadingMap[config.instanceId] ?? true
   const error = errorMap[config.instanceId]
 
-  const visualState = error
-    ? 'error'
-    : loading
-      ? 'loading'
-      : !sentiment
-        ? 'empty'
-        : 'ready'
+  const { visualState, displayError } = useWidgetErrorState({
+    loading,
+    error,
+    hasData: !!sentiment,
+    fallbackErrorMessage: '市场情绪数据暂不可用，请检查后端服务或稍后重试',
+  })
 
   const content = (() => {
     if (!sentiment) return null
@@ -99,7 +99,7 @@ export default function MarketSentimentWidget({ config }: MarketSentimentWidgetP
     <WidgetStateShell
       title={config.title}
       visualState={visualState}
-      error={error}
+      error={displayError}
       onRetry={() => refreshWidget(config.instanceId)}
       skeleton={
         <div className="space-y-4">

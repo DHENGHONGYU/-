@@ -1,6 +1,7 @@
 import React from 'react'
 import { Skeleton } from '@/components/molecules/states'
 import { WidgetStateShell } from './components/WidgetStateShell'
+import { useWidgetErrorState } from '@/cockpit/hooks/useWidgetErrorState'
 import type { WidgetConfig, SectorHeatmapData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
@@ -39,19 +40,18 @@ export default function SectorHeatmapWidget({ config }: SectorHeatmapWidgetProps
   const topGainers = [...sectors].sort((a, b) => b.changePercent - a.changePercent).slice(0, 5)
   const topLosers = [...sectors].sort((a, b) => a.changePercent - b.changePercent).slice(0, 5)
 
-  const visualState = error
-    ? 'error'
-    : loading
-      ? 'loading'
-      : sectors.length === 0
-        ? 'empty'
-        : 'ready'
+  const { visualState, displayError } = useWidgetErrorState({
+    loading,
+    error,
+    hasData: sectors.length > 0,
+    fallbackErrorMessage: '板块热力图数据暂不可用，请检查后端服务或稍后重试',
+  })
 
   return (
     <WidgetStateShell
       title={config.title}
       visualState={visualState}
-      error={error}
+      error={displayError}
       onRetry={() => refreshWidget(config.instanceId)}
       skeleton={
         <div className="space-y-4">

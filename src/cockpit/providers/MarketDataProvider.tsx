@@ -56,6 +56,11 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
     if (!instanceId) return
     setErrorMap((prev) => ({ ...prev, [instanceId]: error }))
     setLoadingMap((prev) => ({ ...prev, [instanceId]: false }))
+    // 同步到 marketDataStore（Phase 2 桥接：useMarketData 从 Store 读取）
+    useMarketDataStore.setState((s) => ({
+      loadingMap: { ...s.loadingMap, [instanceId]: false },
+      errorMap: { ...s.errorMap, [instanceId]: error },
+    }))
   }, [])
 
   const handleCollectionResult: CollectionResultCallback = useCallback((taskId, rawData, error) => {
@@ -104,6 +109,14 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
 
       const taskId = taskScheduler.registerTask(widgetId, instanceId, dataSource)
       taskMapRef.current[instanceId] = taskId
+
+      // 同步到 marketDataStore（Phase 2 桥接：useMarketData 从 Store 读取）
+      useMarketDataStore.setState((s) => ({
+        loadingMap: { ...s.loadingMap, [instanceId]: true },
+        errorMap: { ...s.errorMap, [instanceId]: null },
+        taskMap: { ...s.taskMap, [instanceId]: taskId },
+      }))
+
       void taskScheduler.startTask(taskId)
     })
 
@@ -132,6 +145,11 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
 
     setLoadingMap((prev) => ({ ...prev, [instanceId]: true }))
     setErrorMap((prev) => ({ ...prev, [instanceId]: null }))
+    // 同步到 marketDataStore
+    useMarketDataStore.setState((s) => ({
+      loadingMap: { ...s.loadingMap, [instanceId]: true },
+      errorMap: { ...s.errorMap, [instanceId]: null },
+    }))
 
     void taskScheduler.stopTask(taskId)
     void taskScheduler.startTask(taskId)

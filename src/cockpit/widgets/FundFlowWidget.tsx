@@ -2,6 +2,7 @@ import React from 'react'
 import { ArrowUpCircle, ArrowDownCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { WidgetStateShell } from './components/WidgetStateShell'
+import { useWidgetErrorState } from '@/cockpit/hooks/useWidgetErrorState'
 import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig, FundFlowData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
@@ -52,20 +53,18 @@ export default function FundFlowWidget(props: FundFlowWidgetProps): React.JSX.El
     return value >= 0 ? STOCK_COLOR_TOKENS.up.tailwind : STOCK_COLOR_TOKENS.down.tailwind
   }
 
-  let visualState: 'ready' | 'loading' | 'empty' | 'error' = 'ready'
-  if (error) {
-    visualState = 'error'
-  } else if (loading) {
-    visualState = 'loading'
-  } else if (flows.length === 0) {
-    visualState = 'empty'
-  }
+  const { visualState, displayError } = useWidgetErrorState({
+    loading,
+    error,
+    hasData: flows.length > 0,
+    fallbackErrorMessage: '资金流向数据暂不可用，请检查后端服务或稍后重试',
+  })
 
   return (
     <WidgetStateShell
       title={config.title}
       visualState={visualState}
-      error={error}
+      error={displayError}
       onRetry={() => refreshWidget(config.instanceId)}
       loadingLabel="加载资金流向…"
       emptyTitle="暂无资金流向数据"
