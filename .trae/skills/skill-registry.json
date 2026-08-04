@@ -1,0 +1,1442 @@
+{
+  "version": "2.0.0",
+  "updated": "2026-08-03",
+  "note": "L1 注册层单一真相源。与各 SKILL.md frontmatter 保持一致；漂移由 npm run audit:skill-coverage 拦截。v2.0.0 新增检索线管要求字段（related_skills/freshness_policy/search_keywords）、标准化 tags 索引、多维分类维度。",
+  "categories": {
+    "doc-governance": "文档治理：编码修复、链接修复、迁移扫描等文档资产维护",
+    "code-quality": "代码质量与交付闸口：门禁、模块同步、执行规范",
+    "data-flow": "数据流与采集：采集链路测试、数据流完整性、Mock 诊断",
+    "devops": "部署运维：备份、部署、定时任务、环境迁移",
+    "architecture": "架构治理：架构债务、组件健康度、分层合规"
+  },
+  "search_dimensions": {
+    "trigger": "通过用户意图关键词、修改文件路径、触发事件匹配 SKILL",
+    "domain": "按技术领域分类检索（doc-governance/code-quality/data-flow/devops/architecture）",
+    "priority": "按 mandatory 强制等级和 search_priority 优先级排序",
+    "freshness": "按 review_cycle 定期评估 SKILL 新鲜度",
+    "relation": "通过 related_skills 建立 SKILL 间关联路径"
+  },
+  "skills": [
+    {
+      "id": "V9-SKILL-BASH",
+      "name": "v9-bash-conventions",
+      "path": ".trae/skills/v9-bash-conventions/SKILL.md",
+      "category": "code-quality",
+      "tags": [
+        "bash",
+        "cheatsheet",
+        "conventions",
+        "project:finsightv9",
+        "shell"
+      ],
+      "triggers": {
+        "keywords": [
+          "跑命令",
+          "执行脚本",
+          "npm run",
+          "Git Bash",
+          "路径转换",
+          "终端操作",
+          "构建",
+          "跑测试",
+          "审计脚本",
+          "Python 脚本",
+          "pip",
+          "vitest",
+          "tsc",
+          "门禁"
+        ],
+        "files": [],
+        "events": [
+          "bash-invoke",
+          "command-failure",
+          "path-error"
+        ]
+      },
+      "gates": [
+        "按正文 §4「执行后联动义务」表选择必跑命令（改什么跑什么）"
+      ],
+      "mandatory": false,
+      "covers_docs": [
+        "AGENTS.md §十六"
+      ],
+      "related_skills": [
+        "v9-collection-pipeline-testing",
+        "v9-module-sync-checklist",
+        "v9-tsc-gate-scope-audit"
+      ],
+      "freshness_policy": {
+        "review_cycle": "monthly",
+        "trigger_events": [
+          "new-script",
+          "new-audit",
+          "package-update"
+        ]
+      },
+      "search_priority": "high",
+      "search_keywords": [
+        "command",
+        "命令",
+        "shell",
+        "terminal",
+        "npm",
+        "audit",
+        "lint",
+        "test"
+      ]
+    },
+    {
+      "id": "V9-SKILL-COLLECTION",
+      "name": "v9-collection-pipeline-testing",
+      "path": ".trae/skills/v9-collection-pipeline-testing/SKILL.md",
+      "category": "code-quality",
+      "tags": [
+        "collection",
+        "data-collection",
+        "pipeline",
+        "seven-dim",
+        "testing"
+      ],
+      "triggers": {
+        "keywords": [
+          "采集链路",
+          "七维",
+          "collectionPipeline",
+          "sevenDimConfigStore",
+          "采集维度",
+          "采集测试",
+          "联动测试"
+        ],
+        "files": [
+          "src/store/sevenDimConfigStore.ts",
+          "src/services/data-collector/**",
+          "src/types/modules/collection.types.ts",
+          "tests/__tests__/sevenDimConfigStore.test.ts",
+          "tests/unit/sevenDimEstimate.test.ts"
+        ],
+        "events": [
+          "test-failure"
+        ]
+      },
+      "gates": [
+        "npx tsc --noEmit",
+        "npm run tsc:prod",
+        "npm run audit:layers",
+        "node ./node_modules/vitest/vitest.mjs run tests/__tests__/sevenDimConfigStore.test.ts"
+      ],
+      "mandatory": true,
+      "covers_docs": [
+        "V9-DOC-DATA-036",
+        "V9-DOC-DATA-054",
+        "V9-DOC-QA-046"
+      ],
+      "related_skills": [
+        "v9-data-flow-integrity-audit",
+        "v9-mock-data-diagnosis",
+        "v9-module-sync-checklist"
+      ],
+      "freshness_policy": {
+        "review_cycle": "monthly",
+        "trigger_events": [
+          "collection-change",
+          "seven-dim-update",
+          "pipeline-refactor"
+        ]
+      },
+      "search_priority": "high",
+      "search_keywords": [
+        "collection",
+        "采集",
+        "seven-dim",
+        "七维",
+        "pipeline",
+        "store"
+      ]
+    },
+    {
+      "id": "V9-SKILL-DATAFLOW",
+      "name": "v9-data-flow-integrity-audit",
+      "path": ".trae/skills/v9-data-flow-integrity-audit/SKILL.md",
+      "category": "data-flow",
+      "tags": [
+        "acl",
+        "audit",
+        "data-flow",
+        "databridge",
+        "envelope",
+        "integrity"
+      ],
+      "triggers": {
+        "keywords": [
+          "按钮点击无响应",
+          "功能键不可点击",
+          "数据采集链路断裂",
+          "板块间数据传递异常",
+          "假绿灯",
+          "KPI 看板数据与实际不一致",
+          "数据流完整性审计",
+          "采集维度覆盖度验证",
+          "Vite 缓存",
+          "EnvelopeAction",
+          "ACL_MATRIX"
+        ],
+        "files": [
+          "src/core/databridge*.ts",
+          "src/config/dbConfig.ts",
+          "src/services/data-collector/**",
+          "src/store/sevenDimConfigStore.ts"
+        ],
+        "events": [
+          "new-envelope-action",
+          "acl-matrix-change",
+          "mock-switch",
+          "kpi-inconsistent"
+        ]
+      },
+      "gates": [
+        "npx tsc --noEmit",
+        "npm run tsc:prod",
+        "npm run audit:layers",
+        "npm run audit:acl-consistency"
+      ],
+      "mandatory": true,
+      "covers_docs": [
+        "V9-DOC-BACK-002",
+        "V9-DOC-DATA-002",
+        "V9-DOC-DATA-006",
+        "V9-DOC-DATA-008",
+        "V9-DOC-DATA-018"
+      ],
+      "related_skills": [
+        "v9-collection-pipeline-testing",
+        "v9-mock-data-diagnosis",
+        "v9-module-sync-checklist"
+      ],
+      "freshness_policy": {
+        "review_cycle": "monthly",
+        "trigger_events": [
+          "envelope-action-add",
+          "acl-update",
+          "data-bridge-change"
+        ]
+      },
+      "search_priority": "high",
+      "search_keywords": [
+        "data-flow",
+        "数据流",
+        "integrity",
+        "完整性",
+        "audit",
+        "审计",
+        "envelope",
+        "acl"
+      ]
+    },
+    {
+      "id": "V9-SKILL-DOC-ENCODING",
+      "name": "v9-doc-encoding-remediation",
+      "path": ".trae/skills/v9-doc-encoding-remediation/SKILL.md",
+      "category": "doc-governance",
+      "tags": [
+        "charset",
+        "doc-repair",
+        "encoding",
+        "gbk",
+        "i18n",
+        "text-processing"
+      ],
+      "triggers": {
+        "keywords": [
+          "文档乱码",
+          "GBK",
+          "编码修复",
+          "链接修复前置",
+          "二次损坏",
+          "fix-doc-refs",
+          "utf-8 硬编码",
+          "中文变问号",
+          "U+FFFD",
+          "编码探测"
+        ],
+        "files": [
+          "scripts/fix-doc-refs.ts",
+          "scripts/fix/*.ts",
+          "scripts/lib/encoding.ts"
+        ],
+        "events": [
+          "doc-encoding-risk",
+          "pre-link-fix",
+          "gbk-detected"
+        ]
+      },
+      "gates": [
+        "三维 Grep 确认 fix 脚本族无残留硬编码 writeFileSync(...,'utf-8')（已统一走 encoding.ts）",
+        "编码探测产出报告：严格 UTF-8 失败且 gb18030 成功 = GBK，禁止用 charset_normalizer",
+        "转码后复测：全仓 GBK_TOTAL=0（排除 cache/gbk-backup/ 后）"
+      ],
+      "mandatory": false,
+      "covers_docs": [
+        "outputs/gbk-encoding-remediation-report.md",
+        "scripts/lib/encoding.ts"
+      ],
+      "related_skills": [
+        "v9-bash-conventions",
+        "v9-module-sync-checklist"
+      ],
+      "freshness_policy": {
+        "review_cycle": "quarterly",
+        "trigger_events": [
+          "doc-update",
+          "encoding-incident"
+        ]
+      },
+      "search_priority": "high",
+      "search_keywords": [
+        "garbled",
+        "乱码",
+        "mojibake",
+        "encoding",
+        "charset",
+        "code-page"
+      ]
+    },
+    {
+      "id": "V9-SKILL-HEALTH-AUDIT",
+      "name": "v9-health-audit",
+      "path": ".trae/skills/v9-health-audit/SKILL.md",
+      "category": "code-quality",
+      "tags": [
+        "benchmark",
+        "devops",
+        "health-audit",
+        "progress-review",
+        "state-drift"
+      ],
+      "triggers": {
+        "keywords": [
+          "健康度",
+          "进度检查",
+          "健康度复检",
+          "二次开发",
+          "门禁体检",
+          "状态校验",
+          "文档vs现实",
+          "状态失准",
+          "评分",
+          "行业对标",
+          "health check",
+          "progress review",
+          "benchmark",
+          "state drift",
+          "假绿灯",
+          "假红灯"
+        ],
+        "files": [
+          "outputs/dev-health-review-*.md",
+          "docs/reports/project-management/development-lessons-learned.md"
+        ],
+        "events": [
+          "health-review",
+          "pre-secondary-dev",
+          "state-drift-check",
+          "gate-regression"
+        ]
+      },
+      "gates": [
+        "tsc:prod 真实退出码捕获：禁止用 | tail 掩盖退出码",
+        "audit:layers 实跑退出码 = 0",
+        "automation_update list 真实条数 vs 治理文档声称条数交叉核对"
+      ],
+      "mandatory": false,
+      "covers_docs": [
+        ".trae/skills/v9-health-audit/SKILL.md",
+        "AGENTS.md"
+      ],
+      "related_skills": [
+        "v9-bash-conventions",
+        "v9-tsc-gate-scope-audit"
+      ],
+      "freshness_policy": {
+        "review_cycle": "monthly",
+        "trigger_events": [
+          "pre-development",
+          "health-check",
+          "state-review"
+        ]
+      },
+      "search_priority": "high",
+      "search_keywords": [
+        "health",
+        "健康",
+        "audit",
+        "review",
+        "progress",
+        "进度",
+        "benchmark",
+        "state-drift"
+      ]
+    },
+    {
+      "id": "V9-SKILL-MOCK-DIAG",
+      "name": "v9-mock-data-diagnosis",
+      "path": ".trae/skills/v9-mock-data-diagnosis/SKILL.md",
+      "category": "data-flow",
+      "tags": [
+        "data-island",
+        "diagnosis",
+        "fixture",
+        "mock",
+        "stub"
+      ],
+      "triggers": {
+        "keywords": [
+          "排查Mock数据残留",
+          "Mock到真实数据过渡",
+          "数据链路Mock残留",
+          "信息孤岛诊断",
+          "Mock与真实数据兼容性",
+          "数据检查与校对",
+          "mock data diagnosis",
+          "mock audit",
+          "数据流健康度",
+          "Mock→真实切换",
+          "假数据",
+          "Mock残留"
+        ],
+        "files": [
+          "src/fixtures/**",
+          "src/**/*.mock.ts",
+          "src/**/mockData*.ts",
+          "src/**/__mocks__/**"
+        ],
+        "events": [
+          "mock-switch",
+          "pre-release-audit"
+        ]
+      },
+      "gates": [
+        "三维 Grep 扫描全部完成且每项产出 file:line 证据",
+        "产出 outputs/mock-diagnosis-report-YYYY-MM-DD.html 诊断报告"
+      ],
+      "mandatory": false,
+      "covers_docs": [
+        "V9-DOC-DATA-038",
+        "V9-DOC-DATA-048",
+        "V9-DOC-QA-053",
+        "V9-DOC-QA-069"
+      ],
+      "related_skills": [
+        "v9-collection-pipeline-testing",
+        "v9-data-flow-integrity-audit"
+      ],
+      "freshness_policy": {
+        "review_cycle": "quarterly",
+        "trigger_events": [
+          "release-prep",
+          "mock-switch"
+        ]
+      },
+      "search_priority": "medium",
+      "search_keywords": [
+        "mock",
+        "stub",
+        "fixture",
+        "dummy",
+        "fake-data",
+        "mock残留",
+        "假数据"
+      ]
+    },
+    {
+      "id": "V9-SKILL-MODULE-SYNC",
+      "name": "v9-module-sync-checklist",
+      "path": ".trae/skills/v9-module-sync-checklist/SKILL.md",
+      "category": "code-quality",
+      "tags": [
+        "checklist",
+        "code-sync",
+        "delivery",
+        "refactor",
+        "sync"
+      ],
+      "triggers": {
+        "keywords": [
+          "模块同步",
+          "代码校对",
+          "交付前检查",
+          "同步校对",
+          "module-sync",
+          "sync-checklist",
+          "重构",
+          "接口变更",
+          "重命名",
+          "四步集成",
+          "巩固成果",
+          "代码先行",
+          "模块改动"
+        ],
+        "files": [
+          "src/services/**",
+          "src/store/**",
+          "src/core/**",
+          "src/pages/**",
+          "src/components/**",
+          ".trae/skills/**"
+        ],
+        "events": [
+          "pre-delivery",
+          "refactor",
+          "rename",
+          "interface-change"
+        ]
+      },
+      "gates": [
+        "npx tsc --noEmit",
+        "npm run tsc:prod",
+        "npm run audit:layers",
+        "npm run audit:acl-consistency"
+      ],
+      "mandatory": true,
+      "covers_docs": [
+        "AGENTS.md",
+        "V9-DOC-DATA-050",
+        "V9-DOC-QA-046"
+      ],
+      "related_skills": [
+        "v9-bash-conventions",
+        "v9-collection-pipeline-testing",
+        "v9-data-flow-integrity-audit",
+        "v9-doc-encoding-remediation"
+      ],
+      "freshness_policy": {
+        "review_cycle": "monthly",
+        "trigger_events": [
+          "code-change",
+          "refactor",
+          "delivery"
+        ]
+      },
+      "search_priority": "high",
+      "search_keywords": [
+        "sync",
+        "同步",
+        "checklist",
+        "清单",
+        "delivery",
+        "交付",
+        "refactor",
+        "重构"
+      ]
+    },
+    {
+      "id": "V9-SKILL-TSC-GATE-SCOPE",
+      "name": "v9-tsc-gate-scope-audit",
+      "path": ".trae/skills/v9-tsc-gate-scope-audit/SKILL.md",
+      "category": "code-quality",
+      "tags": [
+        "gate",
+        "pre-commit",
+        "scope",
+        "tsc",
+        "tsconfig",
+        "typescript"
+      ],
+      "triggers": {
+        "keywords": [
+          "tsc:prod 报错",
+          "tsc 门禁误锁",
+          "pre-commit tsc 失败",
+          "类型检查全在测试文件",
+          "husky tsc 阻塞",
+          "tsconfig 范围过大",
+          "production 类型检查包含测试",
+          "build 被类型错误阻塞",
+          "测试类型错误阻塞提交",
+          "gate 假红",
+          "类型门禁误报",
+          "tsc 红灯",
+          "未跟踪文件堆积",
+          "工作树脏数据",
+          "测试类型债务",
+          "测试文件遗留债",
+          "门禁作用域检查"
+        ],
+        "files": [
+          "tsconfig.json",
+          "tsconfig.prod.json",
+          "tsconfig.test.json",
+          "package.json",
+          ".gitignore",
+          ".husky/pre-commit"
+        ],
+        "events": [
+          "tsc-gate-red",
+          "pre-commit-blocked",
+          "build-type-error"
+        ]
+      },
+      "gates": [
+        "运行 tsc:prod 将原错误按 测试文件 / 非测试源码 分类，产出 file:line 证据",
+        "对每个错误文件 git status --short 区分 untracked / modified / clean@HEAD 三种来源",
+        "修复后 npm run tsc:prod（指向 tsconfig.prod.json）实测 0 错误并确认 vite build 不再被类型检查阻塞",
+        "git status untracked 审计：扫描未跟踪测试文件（期望 0）及非测试生成物（期望白名单）"
+      ],
+      "mandatory": false,
+      "covers_docs": [
+        "AGENTS.md",
+        "outputs/tsc-prod-attribution-report.md",
+        "outputs/tsc-prod-remediation-plan.md"
+      ],
+      "related_skills": [
+        "v9-bash-conventions",
+        "v9-tsc-test-error-diagnosis"
+      ],
+      "freshness_policy": {
+        "review_cycle": "quarterly",
+        "trigger_events": [
+          "tsconfig-change",
+          "gate-change"
+        ]
+      },
+      "search_priority": "high",
+      "search_keywords": [
+        "tsc",
+        "typescript",
+        "gate",
+        "pre-commit",
+        "husky",
+        "scope",
+        "tsconfig",
+        "门禁"
+      ]
+    },
+    {
+      "id": "V9-SKILL-TSC-TEST-DIAG",
+      "name": "v9-tsc-test-error-diagnosis",
+      "path": ".trae/skills/v9-tsc-test-error-diagnosis/SKILL.md",
+      "category": "code-quality",
+      "tags": [
+        "contract-drift",
+        "strict-null-checks",
+        "test",
+        "tsc",
+        "typescript",
+        "vitest"
+      ],
+      "triggers": {
+        "keywords": [
+          "tsc:test 报错",
+          "测试类型错误",
+          "契约漂移",
+          "Contract Drift",
+          "测试与源码类型不一致",
+          "vi.mock 提升陷阱",
+          "noUncheckedIndexedAccess",
+          "strictNullChecks",
+          "TS2305 找不到导出",
+          "TS2322 不可赋值",
+          "TS2339 属性不存在",
+          "TS2532 可能为 undefined",
+          "TS1011 空数组下标",
+          "测试类型债务",
+          "历史测试债",
+          "测试类型体检",
+          "测试文件类型清零",
+          "类型断言漂移"
+        ],
+        "files": [
+          "tsconfig.test.json",
+          "tests/**/*.test.ts",
+          "tests/**/*.spec.ts",
+          "src/**/*.test.ts",
+          "src/**/*.test.tsx"
+        ],
+        "events": [
+          "tsc-test-red",
+          "test-type-error",
+          "contract-drift-detected"
+        ]
+      },
+      "gates": [
+        "错误按 file:line 归类到四大根因（契约漂移 / 严格空检 / vi.mock提升 / 未使用声明），每类产出证据",
+        "契约漂移类修复必须「先读真实源码类型再改测试」，禁止凭想象补全字段（防二次漂移）",
+        "空检暴露用 `!` / 可选链 / 默认值收敛，禁止用 `any` / `@ts-ignore` 掩盖",
+        "修复后 npm run tsc:test 实测 0 错误，且 tsc:prod 保持 0（生产门禁不被破坏）"
+      ],
+      "mandatory": false,
+      "covers_docs": [
+        "outputs/tsc-test-top5-repair-schedule.md"
+      ],
+      "related_skills": [
+        "v9-bash-conventions",
+        "v9-tsc-gate-scope-audit"
+      ],
+      "freshness_policy": {
+        "review_cycle": "quarterly",
+        "trigger_events": [
+          "test-change",
+          "tsconfig-update"
+        ]
+      },
+      "search_priority": "high",
+      "search_keywords": [
+        "tsc",
+        "typescript",
+        "test",
+        "contract",
+        "drift",
+        "vitest",
+        "测试",
+        "类型错误"
+      ]
+    },
+    {
+      "id": "V9-SKILL-ENV-PATH",
+      "name": "v9-windows-env-path-doctor",
+      "path": ".trae/skills/v9-windows-env-path-doctor/SKILL.md",
+      "category": "devops",
+      "tags": [
+        "env-migration",
+        "environment",
+        "hardcode",
+        "path",
+        "portability",
+        "windows"
+      ],
+      "triggers": {
+        "keywords": [
+          "环境迁移",
+          "机器迁移",
+          "换电脑",
+          "DELL",
+          "Huawei",
+          "路径硬编码",
+          "用户目录写死",
+          "environment migration",
+          "hardcoded user path",
+          "portable path"
+        ],
+        "files": [
+          "scripts/**",
+          "src/**",
+          "package.json",
+          "vite.config.ts",
+          "tsconfig*.json",
+          ".trae/**",
+          ".trae/skills/**"
+        ],
+        "events": [
+          "on_env_change"
+        ]
+      },
+      "gates": [
+        "node .trae/skills/v9-windows-env-path-doctor/scripts/scan.cjs --verify-current 输出可移植（crossUser=0 且 sameUserHardcode=0）"
+      ],
+      "mandatory": false,
+      "covers_docs": [
+        "AGENTS.md"
+      ],
+      "related_skills": [
+        "v9-bash-conventions"
+      ],
+      "freshness_policy": {
+        "review_cycle": "monthly",
+        "trigger_events": [
+          "env-change",
+          "machine-migration"
+        ]
+      },
+      "search_priority": "high",
+      "search_keywords": [
+        "windows",
+        "path",
+        "env",
+        "环境",
+        "migration",
+        "迁移",
+        "portable",
+        "hardcode"
+      ]
+    },
+    {
+      "id": "V9-SKILL-CODE-QUALITY",
+      "name": "v9-code-quality-audit",
+      "path": ".trae/skills/v9-code-quality-audit/SKILL.md",
+      "category": "code-quality",
+      "tags": [
+        "audit",
+        "code-quality",
+        "data-interface",
+        "hardcode",
+        "type-safety"
+      ],
+      "triggers": {
+        "keywords": [
+          "代码质量",
+          "合规审查",
+          "code quality audit",
+          "分层检查",
+          "依赖方向",
+          "DataBridge",
+          "Envelope",
+          "ACL",
+          "类型安全",
+          "零硬编码"
+        ],
+        "files": [
+          "src/core/**",
+          "src/services/**",
+          "src/store/**",
+          "src/components/**",
+          ".trae/skills/v9-code-quality-audit/scripts/quality-gate-check.cjs"
+        ],
+        "events": [
+          "pr-review",
+          "module-integration",
+          "pre-commit"
+        ]
+      },
+      "gates": [
+        "四步集成契约：类型→Store→Service→UI 每步可回滚",
+        "DataBridge/Envelope/ACL 协议合规检查",
+        "tsc + audit 套件全绿"
+      ],
+      "mandatory": true,
+      "covers_docs": [
+        "AGENTS.md",
+        "V9-DOC-QA-046"
+      ],
+      "related_skills": [
+        "architecture-debt-remediation",
+        "v9-dev-checklist"
+      ],
+      "freshness_policy": {
+        "review_cycle": "monthly",
+        "trigger_events": [
+          "pr-review",
+          "module-integration"
+        ]
+      },
+      "search_priority": "high",
+      "search_keywords": [
+        "code-quality",
+        "代码",
+        "质量",
+        "audit",
+        "审查",
+        "compliance",
+        "gate",
+        "门禁"
+      ]
+    },
+    {
+      "id": "V9-SKILL-DEV-CHECKLIST",
+      "name": "v9-dev-checklist",
+      "path": ".trae/skills/v9-dev-checklist/SKILL.md",
+      "category": "code-quality",
+      "tags": [
+        "bidirectional",
+        "component",
+        "dev-checklist",
+        "module",
+        "pr-review"
+      ],
+      "triggers": {
+        "keywords": [
+          "开发检查",
+          "PR Review",
+          "新组件",
+          "新模块",
+          "dev checklist",
+          "双向校验"
+        ],
+        "files": [
+          "src/components/**",
+          "src/widgets/**",
+          "src/store/**",
+          "src/services/**"
+        ],
+        "events": [
+          "pr-submit",
+          "component-add",
+          "module-add"
+        ]
+      },
+      "gates": [
+        "正向校验：功能完整性检查",
+        "逆向校验：遗漏项扫描",
+        "准确率与覆盖率 ≥ 95%"
+      ],
+      "mandatory": false,
+      "covers_docs": [
+        "V9-DOC-GUIDE-021",
+        "V9-DOC-QA-069"
+      ],
+      "related_skills": [
+        "v9-code-quality-audit",
+        "v9-data-flow-integrity-audit"
+      ],
+      "freshness_policy": {
+        "review_cycle": "monthly",
+        "trigger_events": [
+          "pr-submit",
+          "component-add"
+        ]
+      },
+      "search_priority": "medium",
+      "search_keywords": [
+        "checklist",
+        "清单",
+        "dev",
+        "开发",
+        "review",
+        "审查",
+        "pr"
+      ]
+    },
+    {
+      "id": "V9-SKILL-DATABRIDGE-MIGRATION",
+      "name": "v9-databridge-migration",
+      "path": ".trae/skills/v9-databridge-migration/SKILL.md",
+      "category": "architecture",
+      "tags": [
+        "architecture",
+        "data-layer",
+        "databridge",
+        "envelope",
+        "migration"
+      ],
+      "triggers": {
+        "keywords": [
+          "DataBridge 迁移",
+          "信封协议",
+          "dataLayer 违规",
+          "核心层读写",
+          "直接操作数据",
+          "databridge-migration",
+          "envelope protocol",
+          "数据迁移",
+          "数据总线"
+        ],
+        "files": [
+          "src/core/**",
+          "src/services/**",
+          "src/store/**",
+          ".trae/skills/**"
+        ],
+        "events": [
+          "refactor-request",
+          "audit-warning",
+          "data-bridge-change"
+        ]
+      },
+      "gates": [
+        "所有读操作改为 dataBridge.query",
+        "所有写操作改为 dataBridge.forward + ENVELOPE_ACTION",
+        "持久化实体类型归位，避免越界"
+      ],
+      "mandatory": true,
+      "covers_docs": [
+        "V9-DOC-ARCH-001",
+        "V9-DOC-DATA-050",
+        "V9-DOC-LESSONS-001"
+      ],
+      "related_skills": [
+        "v9-code-quality-audit",
+        "v9-data-flow-integrity-audit",
+        "v9-module-sync-checklist"
+      ],
+      "freshness_policy": {
+        "review_cycle": "monthly",
+        "trigger_events": [
+          "data-schema-change",
+          "databridge-migration"
+        ]
+      },
+      "search_priority": "high",
+      "search_keywords": [
+        "databridge",
+        "信封",
+        "envelope",
+        "data-layer",
+        "数据层",
+        "migration",
+        "迁移"
+      ]
+    },
+    {
+      "id": "V9-SKILL-ARCH-DEBT",
+      "name": "architecture-debt-remediation",
+      "path": ".trae/skills/architecture-debt-remediation/SKILL.md",
+      "category": "architecture",
+      "tags": [
+        "architecture",
+        "component-refactor",
+        "dead-code",
+        "debt",
+        "layer-violation"
+      ],
+      "triggers": {
+        "keywords": [
+          "架构债务",
+          "分层违规",
+          "死代码",
+          "大组件重构",
+          "lint清理",
+          "architecture debt",
+          "layer violation",
+          "dead code",
+          "refactor"
+        ],
+        "files": [
+          "src/core/**",
+          "src/services/**",
+          "src/components/**",
+          "scripts/audit/**"
+        ],
+        "events": [
+          "audit-warning",
+          "refactor-request",
+          "lint-debt"
+        ]
+      },
+      "gates": [
+        "先扫描后动手：audit:layers / audit:hardcode / audit:deadcode 建立基线",
+        "分批验证：tsc:prod + lint + vitest + audit:layers",
+        "禁止编造人员/日期，TODO清单必须真实"
+      ],
+      "mandatory": true,
+      "covers_docs": [
+        "V9-DOC-ARCH-005",
+        "V9-DOC-ARCH-018",
+        "V9-DOC-ARCH-032"
+      ],
+      "related_skills": [
+        "component-health-check",
+        "cross-index-governance"
+      ],
+      "freshness_policy": {
+        "review_cycle": "quarterly",
+        "trigger_events": [
+          "audit-warning",
+          "refactor"
+        ]
+      },
+      "search_priority": "high",
+      "search_keywords": [
+        "architecture",
+        "debt",
+        "架构",
+        "债务",
+        "refactor",
+        "重构",
+        "layer",
+        "violation"
+      ]
+    },
+    {
+      "id": "V9-SKILL-COMP-HEALTH",
+      "name": "component-health-check",
+      "path": ".trae/skills/component-health-check/SKILL.md",
+      "category": "architecture",
+      "tags": [
+        "component",
+        "health",
+        "naming-conflict",
+        "registration",
+        "zombie"
+      ],
+      "triggers": {
+        "keywords": [
+          "组件健康度",
+          "僵尸组件",
+          "命名冲突",
+          "注册一致性",
+          "component health",
+          "zombie component",
+          "naming conflict"
+        ],
+        "files": [
+          "src/components/**",
+          "src/widgets/**",
+          "src/store/**"
+        ],
+        "events": [
+          "component-add",
+          "refactor",
+          "cleanup-quarterly"
+        ]
+      },
+      "gates": [
+        "全量扫描组件注册表，建立僵尸清单",
+        "命名冲突双检：目录名 + 组件名唯一",
+        "修复后 audit:component-usage 全绿"
+      ],
+      "mandatory": false,
+      "covers_docs": [
+        "V9-DOC-ARCH-044",
+        "V9-DOC-QA-069"
+      ],
+      "related_skills": [
+        "architecture-debt-remediation",
+        "cross-index-governance"
+      ],
+      "freshness_policy": {
+        "review_cycle": "quarterly",
+        "trigger_events": [
+          "component-add",
+          "refactor"
+        ]
+      },
+      "search_priority": "medium",
+      "search_keywords": [
+        "component",
+        "组件",
+        "health",
+        "健康",
+        "zombie",
+        "僵尸",
+        "registry"
+      ]
+    },
+    {
+      "id": "V9-SKILL-CROSSINDEX",
+      "name": "cross-index-governance",
+      "path": ".trae/skills/cross-index-governance/SKILL.md",
+      "category": "doc-governance",
+      "tags": [
+        "bidirectional",
+        "cross-index",
+        "doc-governance",
+        "frontmatter"
+      ],
+      "triggers": {
+        "keywords": [
+          "交叉索引",
+          "文档索引",
+          "cross-index",
+          "frontmatter",
+          "双向引用",
+          "doc governance"
+        ],
+        "files": [
+          "docs/**",
+          ".trae/skills/**",
+          ".trae/skills/**"
+        ],
+        "events": [
+          "doc-update",
+          "index-sync",
+          "governance-run"
+        ]
+      },
+      "gates": [
+        "正向扫描：文档→代码→测试→SKILL 覆盖率 ≥ 95%",
+        "逆向扫描：每个代码实体至少被一份文档引用",
+        "孤立文档清单为零"
+      ],
+      "mandatory": true,
+      "covers_docs": [
+        "V9-DOC-ARCH-018",
+        "V9-DOC-ARCH-044",
+        "V9-DOC-DATA-038",
+        "V9-DOC-PROJ-288",
+        "V9-DOC-PROJ-CROSSINDEX-001",
+        "V9-DOC-QA-CROSSINDEX-001"
+      ],
+      "related_skills": [
+        "doc-management-principles",
+        "v9-constant-migration"
+      ],
+      "freshness_policy": {
+        "review_cycle": "monthly",
+        "trigger_events": [
+          "doc-update",
+          "index-sync"
+        ]
+      },
+      "search_priority": "high",
+      "search_keywords": [
+        "cross-index",
+        "交叉",
+        "index",
+        "索引",
+        "doc",
+        "文档",
+        "governance"
+      ]
+    },
+    {
+      "id": "V9-SKILL-DOC-PRINCIPLES",
+      "name": "doc-management-principles",
+      "path": ".trae/skills/doc-management-principles/SKILL.md",
+      "category": "doc-governance",
+      "tags": [
+        "documentation",
+        "frontmatter",
+        "naming",
+        "principles",
+        "quality-chain"
+      ],
+      "triggers": {
+        "keywords": [
+          "文档管理",
+          "目录架构",
+          "frontmatter",
+          "命名规范",
+          "质量链",
+          "documentation",
+          "doc principles"
+        ],
+        "files": [
+          "docs/**"
+        ],
+        "events": [
+          "doc-create",
+          "doc-edit",
+          "doc-organize"
+        ]
+      },
+      "gates": [
+        "十目录架构合规：文档归入对应编号目录",
+        "Frontmatter 完整：必备字段齐全",
+        "命名规范：ID+主题+版本三段式"
+      ],
+      "mandatory": false,
+      "covers_docs": [
+        "V9-DOC-AUDIT-001",
+        "V9-DOC-LESSONS-001",
+        "V9-DOC-META-STRATEGY-001",
+        "V9-DOC-PROJ-016"
+      ],
+      "related_skills": [
+        "cross-index-governance",
+        "v9-constant-migration"
+      ],
+      "freshness_policy": {
+        "review_cycle": "monthly",
+        "trigger_events": [
+          "doc-create",
+          "doc-edit"
+        ]
+      },
+      "search_priority": "medium",
+      "search_keywords": [
+        "documentation",
+        "文档",
+        "principles",
+        "原则",
+        "naming",
+        "命名",
+        "frontmatter"
+      ]
+    },
+    {
+      "id": "V9-SKILL-CONSTANT-MIGRATION",
+      "name": "v9-constant-migration",
+      "path": ".trae/skills/v9-constant-migration/SKILL.md",
+      "category": "architecture",
+      "tags": [
+        "architecture",
+        "config",
+        "constants",
+        "dedup",
+        "migration"
+      ],
+      "triggers": {
+        "keywords": [
+          "业务常量",
+          "常量迁移",
+          "config 重复",
+          "股票池常量",
+          "constant-migration",
+          "constants dedup",
+          "跨层常量",
+          "常量归位",
+          "重复定义"
+        ],
+        "files": [
+          "src/constants/**",
+          "src/config/**",
+          "tests/**",
+          "docs/**"
+        ],
+        "events": [
+          "batch-fix",
+          "refactor-request",
+          "audit-warning"
+        ]
+      },
+      "gates": [
+        "常量归位到 src/constants/ 单一真相源",
+        "批量修复导入路径、Mock 和文档注释",
+        "config 层禁止再定义业务常量（保留环境/构建参数）"
+      ],
+      "mandatory": true,
+      "covers_docs": [
+        "V9-DOC-ARCH-001",
+        "V9-DOC-LESSONS-001",
+        "V9-DOC-META-STRATEGY-001"
+      ],
+      "related_skills": [
+        "cross-index-governance",
+        "doc-management-principles",
+        "v9-module-sync-checklist"
+      ],
+      "freshness_policy": {
+        "review_cycle": "monthly",
+        "trigger_events": [
+          "batch-fix",
+          "refactor-request"
+        ]
+      },
+      "search_priority": "high",
+      "search_keywords": [
+        "constants",
+        "常量",
+        "config",
+        "migration",
+        "迁移",
+        "dedup",
+        "去重"
+      ]
+    },
+    {
+      "id": "V9-SKILL-STALE-PATH-AUDIT",
+      "name": "stale-path-reference-audit",
+      "path": ".trae/skills/stale-path-reference-audit/SKILL.md",
+      "category": "doc-governance",
+      "tags": [
+        "dead-links",
+        "doc-refs",
+        "file-management",
+        "migration",
+        "path-governance"
+      ],
+      "triggers": {
+        "keywords": [
+          "僵尸路径",
+          "失效链接",
+          "文档引用修复",
+          "文件迁移",
+          "doc-refs",
+          "stale path",
+          "broken link",
+          "dead link",
+          "残留扫描",
+          "路径治理"
+        ],
+        "files": [
+          "docs/**",
+          "src/**",
+          ".trae/skills/**"
+        ],
+        "events": [
+          "file-rename",
+          "file-move",
+          "doc-link-fix"
+        ]
+      },
+      "gates": [
+        "九类文件全仓 Grep 残留扫描",
+        "排除生成物/备份噪声",
+        "交叉验证目标文件存在性"
+      ],
+      "mandatory": false,
+      "covers_docs": [
+        "docs/how-to/FILE-MANAGEMENT-GUIDE.md"
+      ],
+      "related_skills": [
+        "cross-index-governance",
+        "doc-management-principles",
+        "v9-constant-migration"
+      ],
+      "freshness_policy": {
+        "review_cycle": "quarterly",
+        "trigger_events": [
+          "file-migration",
+          "refactor-batch",
+          "doc-cleanup"
+        ]
+      },
+      "search_priority": "medium",
+      "search_keywords": [
+        "僵尸路径",
+        "失效链接",
+        "文档引用",
+        "文件迁移",
+        "路径治理",
+        "dead-links",
+        "stale-path"
+      ]
+    },
+    {
+      "id": "V9-SKILL-COLOR-TOKEN-REMEDIATION",
+      "name": "v9-color-token-remediation",
+      "path": ".trae/skills/v9-color-token-remediation/SKILL.md",
+      "category": "code-quality",
+      "tags": [
+        "color-tokens",
+        "design-system",
+        "hardcode",
+        "theme",
+        "ui-consistency"
+      ],
+      "triggers": {
+        "keywords": [
+          "颜色令牌",
+          "色值硬编码",
+          "theme",
+          "tokens",
+          "color token",
+          "hardcoded color",
+          "HEX",
+          "设计系统",
+          "主题一致性"
+        ],
+        "files": [
+          "src/constants/theme.tokens.ts",
+          "src/config/chartColors.ts",
+          "src/**/*.tsx",
+          "src/**/*.css"
+        ],
+        "events": [
+          "theme-update",
+          "color-refactor",
+          "design-system-change"
+        ]
+      },
+      "gates": [
+        "npm run audit:tokens",
+        "npm run verify:colorSoT",
+        "npm run audit:hardcode"
+      ],
+      "mandatory": false,
+      "covers_docs": [
+        "docs/how-to/COLOR-TOKEN-GUIDE.md"
+      ],
+      "related_skills": [
+        "v9-code-quality-audit",
+        "v9-databridge-migration"
+      ],
+      "freshness_policy": {
+        "review_cycle": "monthly",
+        "trigger_events": [
+          "theme-change",
+          "brand-update",
+          "color-migration"
+        ]
+      },
+      "search_priority": "medium",
+      "search_keywords": [
+        "颜色令牌",
+        "色值硬编码",
+        "theme",
+        "tokens",
+        "设计系统",
+        "color-soT",
+        "hardcode"
+      ]
+    }
+  ]
+}
