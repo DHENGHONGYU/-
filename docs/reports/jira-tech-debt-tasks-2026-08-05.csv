@@ -1,0 +1,14 @@
+Summary,Issue Type,Priority,Assignee,Description,Component,Labels
+[DOC-DEBT-001] docs/meta/trae-file-management-review.md 不存在,Task,Low,文档团队,"AGENTS.md:1233 引用 docs/meta/trae-file-management-review.md 但文件不存在。需创建该文档或移除引用。",Documentation,doc-debt
+[DOC-DEBT-002] src/pages/WidgetPriceGuardDemoPage.tsx 不存在,Task,Low,文档团队,"docs/pr-safe-format-design-decisions.md:29 引用 src/pages/WidgetPriceGuardDemoPage.tsx 但文件不存在。需创建该 Demo 页面或更新文档引用。",Documentation,doc-debt
+[DOC-DEBT-003] docs/guides/type-contract-governance.md 不存在,Task,Low,文档团队,"docs/refactor/m1-week1-daily-tasks.md:35 引用 docs/guides/type-contract-governance.md 但文件不存在。需创建类型契约治理文档或移除引用。",Documentation,doc-debt
+[DOC-DEBT-004] docs/guides/pre-commit-types-check.md 不存在,Task,Low,文档团队,"docs/refactor/m1-week1-daily-tasks.md:56 引用 docs/guides/pre-commit-types-check.md 但文件不存在。需创建 pre-commit 类型检查指南或移除引用。",Documentation,doc-debt
+[DOC-DEBT-005] docs/refactor/reports/ 目录下技术债务报告缺失,Task,Low,文档团队,"docs/refactor/optimization-issues.md:8 引用 docs/refactor/reports/2026-08-04-tech-debt-remediation-report.md 但文件/目录不存在。需创建报告或更新引用路径。",Documentation,doc-debt
+[DOC-DEBT-006] docs/refactor/issue-01-body.md 不存在,Task,Low,文档团队,"docs/refactor/optimization-issues.md:23 引用 docs/refactor/issue-01-body.md 但文件不存在。需创建该 issue body 文档或移除引用。",Documentation,doc-debt
+[DOC-DEBT-007] docs/api-types 目录不存在,Task,Low,文档团队,"docs/refactor/optimization-issues.md:341 引用 docs/api-types 但目录不存在。需创建 API 类型文档目录或更新引用。",Documentation,doc-debt
+[DOC-DEBT-008] docs/refactor/2026-08-04-tech-debt-remediation-report.md 不存在,Task,Low,文档团队,"docs/refactor/p0-refactor-plan.md:8 引用 docs/refactor/2026-08-04-tech-debt-remediation-report.md 但文件不存在。需创建该技术债务修复报告或移除引用。",Documentation,doc-debt
+[DOC-DEBT-009] scripts/quality/eslint-plugin-no-raw-tofixed.js 不存在,Task,Low,文档团队,"docs/refactor/p0-refactor-plan.md:286 引用 scripts/quality/eslint-plugin-no-raw-tofixed.js 但文件不存在。需创建 ESLint 插件或移除引用。",Documentation,doc-debt
+[DOC-DEBT-010] docs/guides/eslint-rules.md 不存在,Task,Low,文档团队,"docs/refactor/p0-refactor-plan.md:306 引用 docs/guides/eslint-rules.md 但文件不存在。需创建 ESLint 规则文档或移除引用。",Documentation,doc-debt
+[DOC-DEBT-011] scripts/quality/eslint-plugin-no-raw-tofixed.test.js 不存在,Task,Low,文档团队,"docs/refactor/p0-refactor-plan.md:428 引用 scripts/quality/eslint-plugin-no-raw-tofixed.test.js 但文件不存在。需创建 ESLint 插件测试或移除引用。",Documentation,doc-debt
+[DOC-DEBT-012] src/cockpit/widgets/MarketIndicesWidget.test.tsx 不存在,Task,Low,文档团队,"docs/regression-test-report-2026-08-04.md:184 引用 src/cockpit/widgets/MarketIndicesWidget.test.tsx 但文件不存在（MarketIndicesWidget.tsx 存在但无对应测试文件）。需创建测试文件或更新文档引用。",Documentation,doc-debt
+[DOC-DEBT-013] docs/tofixed-scan-report.md 不存在,Task,Low,文档团队,"docs/widget-types-change-analysis.md:331 引用 docs/tofixed-scan-report.md 但文件不存在。需创建 toFixed 扫描报告或移除引用。",Documentation,doc-debt

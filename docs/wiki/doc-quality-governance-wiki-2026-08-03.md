@@ -264,7 +264,7 @@ P0 = 0 ?  →  exit 0  →  ✅ 允许 PR 合并
 
 ### 9.1 文档编写
 
-- **使用相对路径**: `[文档](../architecture.md)` 而非 `file:///d:/...`
+- **使用相对路径**: `[文档](../explanation/ARCHITECTURE.md)` 而非 `file:///d:/...`
 - **禁止 file:/// 前缀**: CI 会自动拦截 P0 级 file:/// 断链
 - **使用 VS Code 拖拽**: 从文件树拖拽到 Markdown 编辑器会自动生成相对路径
 

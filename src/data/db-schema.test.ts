@@ -22,7 +22,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import 'fake-indexeddb/auto'
 import { createSchema, ensureStore } from './db-schema'
 import { STORE_NAME } from '@/config/dbConfig'
-import { DEFAULT_POOL_GROUP, POOL_TYPE } from '@/constants/pool.constants'
+import { POOL_TYPE } from '@/constants/pool.constants'
 
 // ============================================================
 // 辅助函数

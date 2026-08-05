@@ -36,7 +36,7 @@ code_version: 2.0.0
 
 | 属性 | 文件 A | 文件 B |
 |:---|:---|:---|
-| 路径 | `docs/explanation/design/ai-center-data-definition.md` | `docs/reference/ai/ai-center-data-definition.md` |
+| 路径 | `docs/explanation/design/ai-center-data-definition.md` | `docs/reference/AI_CENTER_DATA_DEFINITION.md` |
 | SHA256 | `893A35EEA057...` | `893A35EEA057...`（相同） |
 | 差异行数 | +0 / -0 | |
 
@@ -49,7 +49,7 @@ code_version: 2.0.0
 
 | 属性 | 文件 A | 文件 B |
 |:---|:---|:---|
-| 路径 | `docs/explanation/design/news-data-definition.md` | `docs/reference/news/news-data-definition.md` |
+| 路径 | `docs/explanation/design/news-data-definition.md` | `docs/reference/NEWS_DATA_DEFINITION.md` |
 | SHA256 | `B7C64B0B0BD4...` | `B7C64B0B0BD4...`（相同） |
 | 差异行数 | +0 / -0 | |
 

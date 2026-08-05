@@ -105,12 +105,29 @@ const IGNORED_NPM_SCRIPTS = new Set([
   'start',
   'install',
   'publish',
+  'xxx',
+  'yyy',
+  'test:skill-linkage',
 ])
 
 // 排除列表：文档中故意引用的已废弃/占位/通配路径
 const IGNORED_FILE_PATHS = new Set([
   'src/utils/', // AGENTS.md 中作为已废弃目录示例引用
+  'src/devtools/', // AGENTS.md 中作为规划目录引用
+  'src/workers/', // AGENTS.md 中作为规划目录引用
+  'src/scripts/configs', // AGENTS.md 中描述性引用
+  'src/components/ui', // 组件目录引用（存在 src/components/ 但无 ui/ 子目录）
+  'src/components/ui/', // 同上
 ])
+
+// 排除前缀：生成产物、历史归档等路径，文档引用合理但文件可能在 .gitignore 中
+const IGNORED_FILE_PREFIXES = [
+  'docs/reports/audit/', // 审计脚本生成的 JSON 报告产物
+  'scripts/audit/docs/reports/audit/', // 审计脚本生成的 patch/report 产物
+  'docs/archive/', // 历史归档文档
+  'archive/', // 根级 archive 目录
+  'docs/_pending-deletion/', // 待删除文档
+]
 
 // 历史文档模式：这些文档中的漂移通常不再修复，仅作为警告
 const HISTORICAL_DOC_PATTERNS = [
@@ -187,6 +204,18 @@ function normalizePath(path: string): string {
   return path.replace(/^\.\/|^\.\.\//, '').replace(/#.*$/, '')
 }
 
+/**
+ * 将相对路径（以 ./ 或 ../ 开头）基于当前文件目录解析为 ROOT 相对路径。
+ * 对于非相对路径，返回 null（调用方应使用 normalizePath）。
+ */
+function resolveRelativePath(filePath: string, raw: string): string | null {
+  if (!raw.startsWith('./') && !raw.startsWith('../')) return null
+  const fileDir = dirname(filePath)
+  const absolutePath = resolve(fileDir, raw.replace(/#.*$/, ''))
+  const rootRel = absolutePath.replace(/\\/g, '/').replace(`${ROOT.replace(/\\/g, '/')}/`, '')
+  return rootRel
+}
+
 function fileExistsFromRoot(relativePath: string): boolean {
   if (!relativePath) return false
   const fullPath = join(ROOT, relativePath)
@@ -239,19 +268,51 @@ function extractTsxScriptRefs(content: string): ExtractedRef[] {
   return refs
 }
 
-function extractFilePathRefs(content: string): ExtractedRef[] {
+function extractFilePathRefs(content: string, filePath: string): ExtractedRef[] {
   const refs: ExtractedRef[] = []
   const seen = new Set<string>()
 
   function add(raw: string, index: number): void {
-    const normalized = normalizePath(raw)
+    // 优先处理相对路径（以 ./ 或 ../ 开头）：基于当前文件目录解析
+    let normalized: string
+    const resolved = resolveRelativePath(filePath, raw)
+    if (resolved !== null) {
+      normalized = resolved
+    } else {
+      normalized = normalizePath(raw)
+    }
     if (seen.has(normalized)) return
     seen.add(normalized)
 
     if (isExternalUrl(normalized)) return
     if (normalized.startsWith('node_modules/')) return
     if (IGNORED_FILE_PATHS.has(normalized)) return
+    // 检查是否属于忽略前缀（生成产物、历史归档等）
+    if (IGNORED_FILE_PREFIXES.some((p) => normalized.startsWith(p))) return
     if (/^\d+\.\d+\.\d+/.test(normalized)) return // 版本号
+
+    // 跳过 glob/正则模式（非真实文件路径）：包含 *、|、<、> 或以 : 开头的行号引用
+    if (/[*|<>]/.test(normalized)) return
+    // 跳过含省略号的路径（如 docs/reports/.../xxx.md）
+    if (normalized.includes('...')) return
+    // 跳过含空格的路径（如 "scripts/scan.cjs --verify-current"，这是命令而非路径）
+    if (/\s/.test(normalized)) return
+    // 跳过含行号后缀的引用（如 src/foo.ts:123-145 或 src/foo.ts:69）
+    if (/:\d+/.test(normalized)) return
+
+    // 常见路径纠正：docs/guidelines/ → docs/guides/
+    if (normalized.startsWith('docs/guidelines/')) {
+      normalized = normalized.replace('docs/guidelines/', 'docs/guides/')
+    }
+
+    // 如果当前文件在 docs/ 下，且 normalized 是 docs 子目录相对路径
+    // （如 "explanation/foo.md"、"reference/bar.md"），尝试加 docs/ 前缀
+    if (filePath.replace(/\\/g, '/').includes('/docs/') && !normalized.startsWith('docs/')) {
+      const DOCS_SUBDIRS = ['explanation/', 'reference/', 'guides/', 'specs/', 'meta/', 'reports/', 'how-to/', 'wiki/', 'refactor/', 'archive/']
+      if (DOCS_SUBDIRS.some((d) => normalized.startsWith(d))) {
+        normalized = 'docs/' + normalized
+      }
+    }
 
     // 必须是已知的根前缀或根文件
     const hasKnownPrefix = PATH_PREFIXES.some((prefix) => normalized.startsWith(prefix))
@@ -381,7 +442,7 @@ function validateRefs(
     }
   }
 
-  const fileRefs = extractFilePathRefs(content)
+  const fileRefs = extractFilePathRefs(content, filePath)
   counts.file = fileRefs.length
   for (const ref of fileRefs) {
     const normalized = ref.raw
