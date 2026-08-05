@@ -77,10 +77,10 @@ function deterministicKlines(_sym: string, n = 60): KlineBar[] {
     const month = String(Math.floor(i / 28) + 1).padStart(2, '0')
     bars.push({
       date: `2024${month}${day}`,
-      open: +open.toFixed(2),
-      high: +high.toFixed(2),
-      low: +low.toFixed(2),
-      close: +close.toFixed(2),
+      open: Math.round(open * 100) / 100,
+      high: Math.round(high * 100) / 100,
+      low: Math.round(low * 100) / 100,
+      close: Math.round(close * 100) / 100,
       volume: 1_000_000 + i * 1000,
       amount: 50_000_000 + i * 1000,
     })
@@ -333,30 +333,37 @@ it(
       rec.orderOk = orderOk
       accOrder.push(orderOk)
 
-      // ── 池流转：对齐 DEFAULT_POOL_STATUS[intention]=screening，
-      //     再走受支持的合法链 intention.screening → research.candidate ──
+      // ── 池流转：addStock 自动将 intention/screening 流转到 research/candidate，
+      //     故此处从 research/candidate 开始走合法链 candidate → screened → deepDive ──
       const tt = performance.now()
       let transitionOk = false
       try {
-        // F1 已修复：importStocks→addStock 初值对齐 INTENTION_STATUS.screening，
-        // 「刚导入股票」现在拥有合法出边，无需外部补 status 即可晋升研究池。
+        // addStock 内部自动完成 intention.screening → research.candidate，
+        // 此处从 research.candidate 开始验证后续流转链。
         const r1 = await transitionPoolItem(code, {
           pool: POOL_TYPE.research,
-          status: RESEARCH_STATUS.candidate,
-          label: '候选',
-        })
-        const r2 = await transitionPoolItem(code, {
-          pool: POOL_TYPE.research,
           status: RESEARCH_STATUS.screened,
-          label: '初筛',
+          label: '精选研究',
         })
-        transitionOk = r1.success && r2.success
+        if (!r1.success) {
+          rec.transitionError = `r1: ${r1.error}`
+        } else {
+          const r2 = await transitionPoolItem(code, {
+            pool: POOL_TYPE.research,
+            status: RESEARCH_STATUS.deepDive,
+            label: '深度研究',
+          })
+          if (!r2.success) {
+            rec.transitionError = `r2: ${r2.error}`
+          }
+          transitionOk = r2.success
+        }
       } catch (e) {
         rec.transitionError = String(e)
       }
       tTransition.push(performance.now() - tt)
       rec.transitionOk = transitionOk
-      rec.importedStatus = 'intention/screening' // F1 修复后导入真实落库状态
+      rec.importedStatus = 'research/candidate'
       accTransition.push(transitionOk)
 
       perStock.push(rec)

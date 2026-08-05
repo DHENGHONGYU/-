@@ -15,7 +15,7 @@
 */
 
 import { it, expect, vi } from 'vitest'
-import { writeFileSync } from 'node:fs'
+import { writeFileSync, mkdirSync } from 'node:fs'
 import path from 'node:path'
 
 import { db } from '@/data/db'
@@ -104,10 +104,10 @@ function deterministicKlines(_sym: string, n = 60): KlineBar[] {
     const month = String(Math.floor(i / 28) + 1).padStart(2, '0')
     bars.push({
       date: `2024${month}${day}`,
-      open: +open.toFixed(2),
-      high: +high.toFixed(2),
-      low: +low.toFixed(2),
-      close: +close.toFixed(2),
+      open: Math.round(open * 100) / 100,
+      high: Math.round(high * 100) / 100,
+      low: Math.round(low * 100) / 100,
+      close: Math.round(close * 100) / 100,
       volume: 1_000_000 + i * 1000,
       amount: 50_000_000 + i * 1000,
     })
@@ -262,6 +262,7 @@ it('冗余设计 E2E 验证（R1 配置冗余 / R2 降级 / R3 幂等 / R4 隔�
   expect(redundancyScore, `冗余维度分过低: ${redundancyScore}`).toBeGreaterThanOrEqual(70)
 
   const outPath = path.resolve('outputs', 'e2e-verify-redundancy.report.json')
+  mkdirSync(path.dirname(outPath), { recursive: true })
   writeFileSync(outPath, JSON.stringify(report, null, 2), 'utf-8')
   // eslint-disable-next-line no-console
   console.log(`[冗余设计验证] 得分=${redundancyScore}(${grade}) R1-5=${JSON.stringify(rScores)} findings=${findings.length}`)

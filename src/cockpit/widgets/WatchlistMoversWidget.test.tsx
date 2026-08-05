@@ -1,8 +1,22 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import WatchlistMoversWidget from './WatchlistMoversWidget'
-import * as MarketDataProvider from '@/cockpit/providers/MarketDataProvider'
-import type { MarketData, WidgetConfig } from '@/types/modules/widget.types'
+import type { WatchlistData, WidgetConfig } from '@/types/modules/widget.types'
+
+// ============================================================
+// Mock: useMarketDataStore（细粒度 selector 模式）
+// 组件通过 useMarketDataStore(selector) 直接读取数据。
+// 使用 vi.hoisted 确保 mockStoreState 在 vi.mock hoisting 之前定义。
+// ============================================================
+const mockStoreState = vi.hoisted(() => ({
+  mergedData: {} as Record<string, unknown>,
+  loadingMap: {} as Record<string, boolean>,
+  errorMap: {} as Record<string, string | null>,
+  refreshWidget: vi.fn() as unknown,
+}))
+vi.mock('@/store/marketDataStore', () => ({
+  useMarketDataStore: (selector: (s: typeof mockStoreState) => unknown) => selector(mockStoreState),
+}))
 
 const baseConfig: WidgetConfig = {
   instanceId: 'wm-1',
@@ -14,92 +28,46 @@ const baseConfig: WidgetConfig = {
   collapsed: false,
 }
 
-function mockMarketData(partial: Partial<MarketData> = {}, loading = false, error?: string) {
-  const data: MarketData = {
-    timestamp: Date.now(),
-    indices: [],
-    sectors: [],
-    fundFlows: [],
-    sentiment: {
-      fearGreedIndex: 50,
-      fearGreedLabel: '中性',
-      totalStocks: 0,
-      up: 0,
-      down: 0,
-      flat: 0,
-      limitUp: 0,
-      limitDown: 0,
-    },
-    watchlist: [],
-    portfolio: {
-      totalAssets: '0',
-      availableFunds: '0',
-      todayPnL: '0',
-      todayPnLPercent: 0,
-      totalPnL: '0',
-      totalPnLPercent: 0,
-      holdings: 0,
-      holdingsList: [],
-      rebalancePlan: [],
-      maxDrawdown: 0,
-      sharpeRatio: 0,
-    },
-    tradeReview: {
-      totalTrades: 0,
-      profitable: 0,
-      losing: 0,
-      winRate: 0,
-      profitLossRatio: 0,
-      disciplineScore: 0,
-    },
-    analysisScores: {
-      profile: { tags: [], metrics: [] },
-      kai: {
-        totalScore: 0,
-        sentiment: 0,
-        trend: 0,
-        flow: 0,
-        dimensions: [],
-        detailDistribution: [],
-      },
-    },
-    modelComparison: {
-      leftModel: { id: '', name: '', version: '', score: 0 },
-      rightModel: { id: '', name: '', version: '', score: 0 },
-      dimensions: [],
-      riskHint: '',
-    },
-    poolBoard: { items: [], total: 0, page: 1, pageSize: 20 },
-    chatHistory: { target: '', targetType: 'stock', messages: [] },
-    hotSectors: [],
-    valuePit: [],
-    ...partial,
-  }
-  vi.spyOn(MarketDataProvider, 'useMarketData').mockReturnValue({
-    data,
-    loadingMap: { 'wm-1': loading },
-    errorMap: { 'wm-1': error ?? null },
-    refreshWidget: vi.fn(),
-    getTaskStats: () => ({ total: 0, running: 0, error: 0 }),
-    sendChatMessage: vi.fn().mockResolvedValue({ id: '1', role: 'assistant', content: '', timestamp: Date.now() }),
-  })
+/** 配置 mockStoreState（直接以属性赋值方式控制各字段） */
+function setupMarketData(options: {
+  watchlist?: WatchlistData[]
+  loading?: boolean
+  error?: string | null
+} = {}): void {
+  const { watchlist = [], loading = false, error = null } = options
+  mockStoreState.mergedData = { watchlist }
+  mockStoreState.loadingMap = { [baseConfig.instanceId]: loading }
+  mockStoreState.errorMap = { [baseConfig.instanceId]: error }
+  mockStoreState.refreshWidget = vi.fn()
 }
 
 describe('WatchlistMoversWidget', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockStoreState.mergedData = {}
+    mockStoreState.loadingMap = {}
+    mockStoreState.errorMap = {}
+    mockStoreState.refreshWidget = vi.fn()
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('renders loading skeleton when loading', () => {
-    mockMarketData({}, true)
+    setupMarketData({ loading: true })
     render(<WatchlistMoversWidget config={baseConfig} />)
     expect(screen.getByText('自选股异动')).toBeInTheDocument()
   })
 
   it('renders error state', () => {
-    mockMarketData({}, false, '行情加载失败')
+    setupMarketData({ loading: false, error: '行情加载失败' })
     render(<WatchlistMoversWidget config={baseConfig} />)
     expect(screen.getByText('行情加载失败')).toBeInTheDocument()
   })
 
   it('renders top gainers and losers', () => {
-    mockMarketData({
+    setupMarketData({
       watchlist: [
         { code: '600519.SH', name: '贵州茅台', price: 1700, changePercent: 2.5 },
         { code: '000001.SZ', name: '平安银行', price: 12.5, changePercent: -1.8 },
@@ -115,7 +83,7 @@ describe('WatchlistMoversWidget', () => {
   })
 
   it('shows empty text when no movers', () => {
-    mockMarketData({ watchlist: [] })
+    setupMarketData({ watchlist: [] })
     render(<WatchlistMoversWidget config={baseConfig} />)
     expect(screen.getByText('暂无上涨标的')).toBeInTheDocument()
     expect(screen.getByText('暂无下跌标的')).toBeInTheDocument()
