@@ -59,7 +59,7 @@ interface EnsureStoreOptions {
  * @param options store 配置、索引列表、创建日志级别
  * @returns 新创建的 store 实例；若已存在则返回 null
  */
-function ensureStore(
+export function ensureStore(
   db: IDBDatabase,
   storeName: string,
   logger: SchemaLogger,
