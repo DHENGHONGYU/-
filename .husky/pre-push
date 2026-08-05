@@ -2,6 +2,7 @@
 # V9 智能投研复盘系统 — pre-push 门禁
 # 推送前运行核心测试套件，确保不将失败用例推送到远端。
 # 更新: 2026-07-18 新增 gate:quick（layers+mock+acl+atomic+docs+db-references）
+# 更新: 2026-08-05 新增 scope 校验（第三道防线，拦截 --no-verify 跳过钩子的不合规提交）
 
 set -e
 
@@ -13,6 +14,98 @@ command -v npm >/dev/null 2>&1 || npm() { npm.cmd "$@"; }
 echo ""
 echo "🚀 V9 pre-push 门禁启动 ..."
 echo "================================================"
+
+# 0. Commit Message Scope 校验（第三道防线）
+#    遍历即将推送的 commits，对每个 commit 的 subject 进行 scope 校验
+#    防止通过 git commit --no-verify 跳过 pre-commit/commit-msg 的不合规提交进入远端
+#    三重校验策略: pre-commit 提前拦截 + commit-msg 最终保障 + pre-push 远端守卫
+#
+#    边界情况处理：
+#    - 已有分支增量推送 (remote_sha != 0): 检查 ${remote_sha}..${local_sha} 的新增 commits
+#      - 无增量提交 (remote_sha == local_sha): rev-list 空结果，for 循环自动跳过
+#    - 新分支首次推送 (remote_sha == 0000... or empty): 只检查 HEAD 这一个 commit
+#      - 避免 merge-base 到 origin/main 扫出历史遗留坏 scope（fix(p1) 等）
+#      - 对超过 1 个 commit 的新分支，用户会通过后续 PR 增量提交被校验
+#      - 兜底支持 SINGLE_COMMIT（~1 失败场景，浅克隆、首 commit 仓库）
+#    - 删除分支 (local_sha == 0000...): 整个 while 循环体跳过，不校验
+#    - merge commits: --no-merges 自动跳过，不校验 merge commit 消息
+#    - repo 浅克隆 / rev-list 失败: 容错跳过，不阻断推送
+SCOPE_VIOLATIONS=0
+SCOPE_VIOLATION_MSGS=""
+while read -r local_ref local_sha remote_ref remote_sha; do
+  # 删除分支场景: local_sha 全 0，直接跳过不校验
+  case "$local_sha" in
+    0000000000000000000000000000000000000000|"") continue ;;
+  esac
+
+  # 确定推送范围
+  case "$remote_sha" in
+    0000000000000000000000000000000000000000|"")
+      # 新分支首次推送: 只检查 HEAD 这一个 commit
+      # (避免 ~50 或 merge-base 扫到历史遗留的 p0/p1 scope)
+      RANGE=""
+      SINGLE_COMMIT=""
+      if git rev-list "${local_sha}~1..${local_sha}" --no-merges >/dev/null 2>&1; then
+        RANGE="${local_sha}~1..${local_sha}"
+      else
+        # 浅克隆或首 commit 仓库: ~1 可能失败，退化为单 commit 枚举
+        SINGLE_COMMIT="$local_sha"
+      fi
+      ;;
+    *)
+      # 已有分支更新：只检查新增的 commits（无增量时 rev-list 返回空，for 自动跳过）
+      RANGE="${remote_sha}..${local_sha}"
+      SINGLE_COMMIT=""
+      ;;
+  esac
+
+  # 遍历推送范围内的非 merge commits（rev-list 失败容错，不阻断推送）
+  CHECK_SHAS=""
+  if [ -n "$RANGE" ]; then
+    CHECK_SHAS=$(git rev-list "$RANGE" --no-merges 2>/dev/null || echo "")
+  fi
+  # SINGLE_COMMIT 兜底（浅克隆/首 commit 仓库，RANGE 未生成）
+  if [ -z "$CHECK_SHAS" ] && [ -n "${SINGLE_COMMIT:-}" ]; then
+    CHECK_SHAS="$SINGLE_COMMIT"
+  fi
+  for sha in $CHECK_SHAS; do
+    [ -z "$sha" ] && continue
+    SUBJECT=$(git log --format='%s' -n 1 "$sha" 2>/dev/null || echo "")
+    [ -z "$SUBJECT" ] && continue
+
+    # 提取 scope: type(scope): desc → scope
+    SCOPE=$(echo "$SUBJECT" | sed -nE 's/^(feat|fix|docs|chore|refactor|test|ci|style|perf|build|revert)\((.+)\): .*/\2/p')
+    [ -z "$SCOPE" ] && continue
+
+    # 检查 scope 是否包含内部编号（p0, P0, p1-2, P1-2 等，不区分大小写）
+    # 正则: p 前面不能是字母或连字符（避免误匹配 app0 和 FIN-P0 中的 P0），p 后面是数字 0-6
+    if echo "$SCOPE" | grep -qiE '(^|[^a-zA-Z-])p[0-6]([^0-9a-zA-Z-]|$)|(^|[^a-zA-Z-])p[0-6]-[0-9]+'; then
+      SCOPE_VIOLATIONS=$((SCOPE_VIOLATIONS + 1))
+      SHORT_SHA=$(echo "$sha" | cut -c1-8)
+      SCOPE_VIOLATION_MSGS="${SCOPE_VIOLATION_MSGS}
+   - ${SHORT_SHA}: ${SUBJECT}"
+    fi
+  done
+  # 清除单轮变量，避免污染下一轮 while read
+  unset RANGE CHECK_SHAS SINGLE_COMMIT
+done
+
+if [ "$SCOPE_VIOLATIONS" -gt 0 ]; then
+  echo ""
+  echo "❌ Commit Message Scope 校验失败：发现 ${SCOPE_VIOLATIONS} 个不合规提交"
+  echo "$SCOPE_VIOLATION_MSGS"
+  echo ""
+  echo "   这些提交的 scope 包含内部编号（p0, P0, p1-2, P1-2 等）"
+  echo "   合规示例: fix(FIN-P0), fix(auth), fix(store)"
+  echo ""
+  echo "   修复方式:"
+  echo "   - 最近一次:   git commit --amend -m \"fix(FIN-P0): <正确描述>\""
+  echo "   - 历史多条:   git rebase -i HEAD~N，对应 commit 选 reword"
+  echo "   - 绕过(紧急): git push --no-verify（不推荐，需在代码评审中人工兜底）"
+  exit 1
+fi
+
+echo "✅ [0/6] Commit Message Scope 校验通过（无内部编号泄漏）"
 
 # 0. 技能路由强制校验（mandatory 技能 gates 确认；旁路：SKILL_GATE_CONFIRM=1 git push）
 echo ""

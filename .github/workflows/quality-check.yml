@@ -208,7 +208,7 @@ jobs:
   quality-gate-summary:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: [lint, typecheck, route-verify, test, chart-industry-tests, audit, dependency-analysis, databridge-integrity, bootstrap-p0-gate]
+    needs: [lint, typecheck, route-verify, test, chart-industry-tests, audit, dependency-analysis, databridge-integrity, bootstrap-p0-gate, p0-core-gate]
     if: always()
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -233,6 +233,7 @@ jobs:
           echo "  - audit (P0 checks): ${{ needs.audit.result }}"
           echo "  - databridge-integrity: ${{ needs.databridge-integrity.result }}"
           echo "  - bootstrap-p0-gate (种子数据 + 内存降级): ${{ needs.bootstrap-p0-gate.result }}"
+          echo "  - p0-core-gate (cascadeExecutor + databridgeAdapter + acl fail-closed + 回归测试，141 项用例): ${{ needs.p0-core-gate.result }}"
           echo ""
           echo "P1 重要检查:"
           echo "  - dependency-analysis: ${{ needs.dependency-analysis.result }}"
@@ -281,7 +282,12 @@ jobs:
             echo "❌ P0 检查失败: bootstrap-p0-gate (种子数据初始化+重试 / 编排容错 / 内存降级模式)"
             FAILURE=true
           fi
-          
+
+          if [ "${{ needs.p0-core-gate.result }}" != "success" ] && [ "${{ needs.p0-core-gate.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: p0-core-gate (cascadeExecutor + databridgeAdapter + acl fail-closed + 回归测试，141 项用例)"
+            FAILURE=true
+          fi
+
           if [ "$FAILURE" = true ]; then
             exit 1
           else
@@ -329,6 +335,118 @@ jobs:
           echo "✅ bootstrapService 启动日志：13 单元用例通过"
           echo "✅ ACL 矩阵配置：5 契约用例通过"
           echo "全链路数据流转完整性已验证"
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # P0 核心模块门禁：cascadeExecutor / databridgeAdapter / acl fail-closed + 回归测试
+  # ════════════════════════════════════════════════════════════════════════════
+  # 覆盖：
+  #   - cascadeExecutor.test.ts (36 用例)：4 种级联策略 + 递归 + 循环防护 + 错误容错
+  #   - databridgeAdapter.test.ts (39 用例)：query/subscribe/单例 + forward().catch() 错误处理
+  #   - acl.fail-closed.test.ts (20 用例)：ACL 异常时 fail-closed 默认拒绝行为
+  #   - databridgeAdapter.regression.test.ts (46 用例)：竞态条件 + 错误传播机制回归
+  # 策略：阻塞性门禁（非 continue-on-error），任一失败即阻止 PR 合并
+  # 告警：失败时自动在 PR 上评论告警 + 上传 JUnit XML 报告
+  # 设计依据：docs/reports/changelogs/2026-08/2026-08-05-p0-cascade-databridge-acl-fail-closed.md
+  #           docs/reports/testing/2026-08-05-databridgeAdapter-codereview-regression-report.md
+  p0-core-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      - name: P0 核心模块测试（cascadeExecutor + databridgeAdapter + acl fail-closed + 回归测试，141 项用例）
+        run: npm run test:p0:core:ci
+        env:
+          CI: true
+      - name: Upload JUnit XML test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p0-core-junit-report
+          path: reports/p0-core-junit.xml
+          retention-days: 30
+      - name: Upload P0 core test source files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p0-core-test-files
+          path: |
+            src/core/cascadeExecutor.test.ts
+            src/core/databridgeAdapter.test.ts
+            src/core/acl.fail-closed.test.ts
+            src/core/databridgeAdapter.regression.test.ts
+          retention-days: 14
+      # ═══ 失败告警：自动在 PR 上评论，通知提交者 ═══
+      - name: Alert on PR failure
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              `## ❌ P0 核心模块门禁失败`,
+              ``,
+              `**提交者**: @${context.payload.pull_request.user.login}`,
+              `**PR**: #${prNumber} - ${context.payload.pull_request.title}`,
+              `**失败 Job**: [p0-core-gate](${runUrl})`,
+              ``,
+              `### 影响范围`,
+              `P0 核心模块测试覆盖 141 项用例，包括：`,
+              `- cascadeExecutor（36 项）：4 种级联删除策略 + 递归 + 循环防护`,
+              `- databridgeAdapter（39 项）：查询/订阅 + forward().catch() 错误处理`,
+              `- acl fail-closed（20 项）：ACL 异常时默认拒绝行为`,
+              `- databridgeAdapter 回归（46 项）：竞态条件 + 错误传播机制`,
+              ``,
+              `### 修复指引`,
+              `1. 下载 artifact \`p0-core-junit-report\` 查看详细失败用例`,
+              `2. 本地复现：\`npm run test:p0:core\``,
+              `3. 修复后重新推送，门禁将自动重跑`,
+              ``,
+              `<!-- auto-generated by p0-core-gate -->`
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body,
+            });
+      # ═══ 失败告警：非 PR 场景（如 main 分支推送）创建 Issue ═══
+      - name: Alert on main branch failure (create issue)
+        if: failure() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const commitSha = context.payload.after.substring(0, 7);
+            const body = [
+              `## ❌ P0 核心模块门禁失败（main 分支）`,
+              ``,
+              `**提交**: ${commitSha} - ${context.payload.head_commit.message.split('\n')[0]}`,
+              `**触发者**: @${context.payload.pusher.name}`,
+              `**失败 Job**: [p0-core-gate](${runUrl})`,
+              ``,
+              `### 影响范围`,
+              `P0 核心模块测试覆盖 141 项用例，失败表明核心模块存在回归。`,
+              ``,
+              `### 修复指引`,
+              `1. 下载 artifact \`p0-core-junit-report\` 查看详细失败用例`,
+              `2. 本地复现：\`npm run test:p0:core\``,
+              `3. 修复后创建 hotfix PR 合并到 main`,
+              ``,
+              `<!-- auto-generated by p0-core-gate -->`
+            ].join('\n');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[P0-GATE] 核心模块门禁失败 - ${commitSha}`,
+              body,
+              labels: ['p0-gate-failure', 'bug'],
+            });
 
   # ════════════════════════════════════════════════════════════════════════════
   # P0 强制门禁：种子数据重试 + 内存降级模式检测
