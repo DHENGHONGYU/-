@@ -8,20 +8,152 @@ status: active
 maintainer: V9 Architecture Team
 summary: "release-notes - reference documentation (project)"
 tags: [project, release, reference, changelog, deployment]
-version: v1.0.0
-last_updated: 2026-07-17
+version: v1.1.0
+last_updated: 2026-08-05
 code_version: 2.0.0
 doc_id: V9-DOC-PROJ-104
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-PROJ-032, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:
+  - version: v1.1.0
+    changes: 新增 v0.9.7 db.ts 100% 覆盖率提升记录
+    date: 2026-08-05
   - version: v1.0.0
-changes: Initial version established
-date: 2026-07-17
+    changes: Initial version established
+    date: 2026-07-17
 ---
 
 # 发布说明
 
 > 本文件面向用户与开发者，汇总每个已发布版本的核心变更、质量指标与升级须知。
+
+---
+
+## v0.9.7 — db.ts 覆盖率提升至 100% + 防御性代码分支治理
+
+**发布日期**：2026-08-05
+
+### 概要
+
+本次版本聚焦 **`src/data/db.ts` V6Database 类的测试覆盖率从 4.68% 分支覆盖率提升至 100% 全维度覆盖**，通过 64 个针对性测试用例覆盖所有正常/异常路径，并按"不可达分支消除优先级 1（redundant condition removal）"重构 `withTransaction.settleOnce` 内冗余的 `value instanceof Error` 检查。本次变更同步消除一个不可达分支（line 126）并补齐 `tx.oncomplete` 回调覆盖（line 131-133）。
+
+### 质量指标
+
+| 指标 | 改进前 | 改进后 | 变化 |
+|------|--------|--------|------|
+| Statements 覆盖率 | 36.79% | 100% (212/212) | +63.21pp |
+| Branches 覆盖率 | 4.68% (3/64) | 100% (62/62) | +95.32pp |
+| Functions 覆盖率 | — | 100% (53/53) | — |
+| Lines 覆盖率 | — | 100% (195/195) | — |
+| 测试用例总数（db.ts 相关） | 0 | 64 | +64 |
+| 双向测试验证（3 文件） | — | 205 passed (205) | — |
+
+> 注：分支总数从 64 减至 62，因重构移除了 `settleOnce` 内冗余的 `value instanceof Error` 三元表达式（含 2 个分支 location）。
+
+### 核心变更
+
+#### 1. 新增 `src/data/db.v6database.test.ts` 测试套件（64 用例）
+
+通过 Mock IDBDatabase 构造可控测试环境，覆盖 V6Database 全部 12 个方法的所有路径：
+
+| 方法 | 覆盖路径 | 用例数 |
+|------|---------|--------|
+| `init()` | 未初始化 / 已初始化跳过 / 失败 Error / 失败非 Error | 4 |
+| `ready()` | 已就绪直接返回 / 未就绪等待 Promise | 2 |
+| `close()` | db 存在 / db 为 null / close 抛 Error / close 抛非 Error | 4 |
+| `withTransaction()` | 回调成功 resolve + tx.oncomplete / 回调 reject Error / 回调 reject 非 Error / tx.onabort / tx.onerror Error / tx.onerror 非 Error / 双 settle 幂等 / ensureDB 抛错 / 外层 catch 非 Error | 9 |
+| `getDatabase()` / `ensureDB()` | 成功返回 / 未初始化抛错 | 2 |
+| `get()` | onsuccess / onerror Error / onerror 非 Error / catch 非 Error / 未初始化 | 5 |
+| `getAll()` | onsuccess / onerror Error / onerror 非 Error / catch 非 Error | 4 |
+| `getAllByIndex()` | onsuccess / onerror Error / onerror 非 Error / catch 非 Error | 4 |
+| `put()` | onsuccess / onerror Error / onerror 非 Error / catch 非 Error | 4 |
+| `delete()` | onsuccess / onerror Error / onerror 非 Error / catch 非 Error | 4 |
+| `clear()` | onsuccess / onerror Error / onerror 非 Error / catch 非 Error | 4 |
+| `deleteByIndex()` | 成功删除多条 / request.onerror Error / request.onerror 非 Error / tx.onerror Error / tx.onerror 非 Error / tx.onabort / catch 非 Error | 7 |
+| `reset()` | 成功 / catch Error / catch 非 Error | 3 |
+| `export()` | 成功 / catch Error / catch 非 Error | 3 |
+| `import()` | 带数据 / 不带数据（?? false 路径）/ catch Error / catch 非 Error | 4 |
+| `close()` 函数 | 调用单例 db.close() | 1 |
+
+**测试隔离策略**：
+- `beforeEach` 使用 `vi.resetAllMocks()` 重置所有 mock 实现（避免 `mockImplementation` 跨测试污染）
+- `afterEach` 调用 `testDb.close()` 清理 V6Database 单例状态
+- 使用 `vi.hoisted` 提升 mock 对象确保 `vi.mock` 工厂可访问
+- 通过 `mocks.requests` 数组按索引访问每次创建的 IDBRequest，避免状态串扰
+
+#### 2. 重构 `src/data/db.ts` 消除不可达分支
+
+**位置**：`withTransaction` 内的 `settleOnce` 闭包函数（[db.ts#L120-L131](file:///d:/FinSightV9/src/data/db.ts#L120-L131)）
+
+**问题**：原代码在 `settleOnce` 的 reject 分支中包含 `value instanceof Error ? value : new Error(String(value))` 三元检查。然而所有 3 个调用点都已通过 `instanceof` 检查保证了传入的 value 是 Error 实例：
+- line 135: `settleOnce('reject', new Error('Transaction aborted'))` — 直接 new Error
+- line 138: `settleOnce('reject', tx.error instanceof Error ? tx.error : new Error(String(tx.error)))` — 已包装
+- line 150: `settleOnce('reject', err instanceof Error ? err : new Error(String(err)))` — 已包装
+
+因此 `value instanceof Error` 的 false 分支（`new Error(String(value))`）不可达，覆盖率永远无法达到 100%。
+
+**重构方案**（遵循项目规则：不可达分支消除优先级 1 - redundant condition removal）：
+
+```typescript
+// 重构前
+reject(value instanceof Error ? value : new Error(String(value)))
+
+// 重构后
+// 所有调用点（tx.onabort / tx.onerror / callback catch）已通过 instanceof 检查
+// 保证 value 为 Error 实例，直接断言避免冗余分支
+reject(value as Error)
+```
+
+#### 3. 补齐 `tx.oncomplete` 回调覆盖
+
+**位置**：[db.ts#L131-L133](file:///d:/FinSightV9/src/data/db.ts#L131-L133)
+
+**问题**：`withTransaction` 内的 `tx.oncomplete` 回调（`logger.info('[DB] withTransaction completed')`）从未被任何测试触发，导致函数覆盖率停留在 98.11% (52/53)。
+
+**修复**：在"回调成功 resolve"测试用例中，于 await 后主动触发 `mocks.mockTx.oncomplete!()`，验证回调日志输出：
+```typescript
+it('回调成功 resolve（覆盖 settleOnce resolve, kind=resolve + tx.oncomplete 回调）', async () => {
+  await testDb.init()
+  const promise = testDb.withTransaction(['stocks'], 'readonly', () => 'success')
+  await new Promise((r) => setTimeout(r, 0))
+  mocks.mockTx.oncomplete!()
+  expect(await promise).toBe('success')
+  expect(mockLogger.info).toHaveBeenCalledWith('[DB] withTransaction completed')
+})
+```
+
+### 双向测试验证
+
+为确保重构未引入回归，运行 3 个相关测试文件进行双向交叉验证：
+
+| 测试文件 | 用例数 | 状态 |
+|---------|-------|------|
+| `src/data/db.v6database.test.ts` | 64 | ✓ 全部通过 |
+| `src/data/db.test.ts` | 6 | ✓ 全部通过 |
+| `src/data/dataLayer.test.ts` | 135 | ✓ 全部通过 |
+| **合计** | **205** | **✓ 100% 通过** |
+
+### 新增文件
+
+| 文件 | 说明 |
+|------|------|
+| `src/data/db.v6database.test.ts` | V6Database 类单元测试（64 用例，覆盖全部 12 个方法） |
+
+### 修改文件
+
+| 文件 | 变更说明 |
+|------|----------|
+| `src/data/db.ts` | `withTransaction.settleOnce` 移除冗余 `value instanceof Error` 检查（line 126），改为 `value as Error` 断言；添加注释说明重构理由 |
+| `docs/reference/release-notes.md` | 新增 v0.9.7 版本记录 |
+
+### 覆盖率报告
+
+详细 HTML 覆盖率报告：`docs/reports/coverage/db/index.html`
+
+### 升级须知
+
+- **无破坏性变更**。`settleOnce` 是 `withTransaction` 内的闭包函数，外部 API 完全不变。
+- `withTransaction` 的 reject 行为保持一致：所有调用点已通过 `instanceof` 检查保证 value 为 Error，重构后行为等价。
+- 防御性编程原则未减弱：调用点的 `instanceof` 包装仍然保留，仅移除了 `settleOnce` 内的冗余二次检查。
 
 ---
 

@@ -123,7 +123,9 @@ export class V6Database {
           if (kind === 'resolve') {
             resolve(value as T)
           } else {
-            reject(value instanceof Error ? value : new Error(String(value)))
+            // 所有调用点（tx.onabort / tx.onerror / callback catch）已通过 instanceof 检查
+            // 保证 value 为 Error 实例，直接断言避免冗余分支
+            reject(value as Error)
           }
           return true
         }
