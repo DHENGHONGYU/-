@@ -308,22 +308,53 @@ function DimensionRow({
  * SevenDimConfigPage
  */
 export default function SevenDimConfigPage() {
-  const store = useSevenDimConfigStore()
+  // ===== Store: useSevenDimConfigStore — 细粒度订阅（模式 A + C）=====
+
+  // 模式 A（数据字段）—— 仅对应字段变化时触发重渲染
+  const activeTemplate = useSevenDimConfigStore((s) => s.activeTemplate)
+  const dimensions = useSevenDimConfigStore((s) => s.dimensions)
+  const symbolCount = useSevenDimConfigStore((s) => s.symbolCount)
+  const historyDays = useSevenDimConfigStore((s) => s.historyDays)
+  const isDirty = useSevenDimConfigStore((s) => s.isDirty)
+  const isSaving = useSevenDimConfigStore((s) => s.isSaving)
+  const isCollecting = useSevenDimConfigStore((s) => s.isCollecting)
+  const collectProgress = useSevenDimConfigStore((s) => s.collectProgress)
+  const error = useSevenDimConfigStore((s) => s.error)
+
+  // 模式 C（派生计算函数 + 方法字段）—— 稳定引用，永不触发重渲染
+  const computeEnabledCount = useSevenDimConfigStore((s) => s.enabledCount)
+  const computeMonthlyCalls = useSevenDimConfigStore((s) => s.monthlyCallEstimate)
+  const computeIsClickable = useSevenDimConfigStore((s) => s.isClickable)
+  const computeTooltipText = useSevenDimConfigStore((s) => s.tooltipText)
+  const applyTemplate = useSevenDimConfigStore((s) => s.applyTemplate)
+  const toggleDimension = useSevenDimConfigStore((s) => s.toggleDimension)
+  const setDimensionFrequency = useSevenDimConfigStore((s) => s.setDimensionFrequency)
+  const setDimensionSources = useSevenDimConfigStore((s) => s.setDimensionSources)
+  const setDimensionSourcePriority = useSevenDimConfigStore((s) => s.setDimensionSourcePriority)
+  const setDimensionFields = useSevenDimConfigStore((s) => s.setDimensionFields)
+  const setDimensionPolicy = useSevenDimConfigStore((s) => s.setDimensionPolicy)
+  const setSymbolCount = useSevenDimConfigStore((s) => s.setSymbolCount)
+  const setHistoryDays = useSevenDimConfigStore((s) => s.setHistoryDays)
+  const reset = useSevenDimConfigStore((s) => s.reset)
+  const saveConfig = useSevenDimConfigStore((s) => s.saveConfig)
+  const runCollection = useSevenDimConfigStore((s) => s.runCollection)
+  const clearError = useSevenDimConfigStore((s) => s.clearError)
+
   const [showApiTest, setShowApiTest] = useState(false)
   const [expandedCode, setExpandedCode] = useState<string | null>(null)
   const [kimiPlan, setKimiPlan] = useState('free')
 
   logger.info('[SevenDimConfigPage] 渲染', {
-    activeTemplate: store.activeTemplate,
-    enabledCount: store.enabledCount(),
-    isCollecting: store.isCollecting,
+    activeTemplate,
+    enabledCount: computeEnabledCount(),
+    isCollecting,
   })
 
-  // 派生状态
-  const enabledCount = store.enabledCount()
-  const monthlyCalls = store.monthlyCallEstimate()
-  const isDisabled = !store.isClickable()
-  const tooltipText = store.tooltipText()
+  // 派生状态（调用稳定引用的函数获取当前值）
+  const enabledCount = computeEnabledCount()
+  const monthlyCalls = computeMonthlyCalls()
+  const isDisabled = !computeIsClickable()
+  const tooltipText = computeTooltipText()
 
   // 策略模板维度数映射
   const templateDimCounts = useMemo(() => {
@@ -366,11 +397,11 @@ export default function SevenDimConfigPage() {
         />
 
         {/* 错误提示 */}
-        {store.error && (
+        {error && (
           <Card className="border-destructive">
             <CardContent className="flex items-center justify-between py-3">
-              <span className="text-sm text-destructive">{store.error}</span>
-              <Button variant="ghost" size="sm" onClick={store.clearError}>
+              <span className="text-sm text-destructive">{error}</span>
+              <Button variant="ghost" size="sm" onClick={clearError}>
                 关闭
               </Button>
             </CardContent>
@@ -378,14 +409,14 @@ export default function SevenDimConfigPage() {
         )}
 
         {/* 采集进度条 */}
-        {store.isCollecting && (
+        {isCollecting && (
           <Card>
             <CardContent className="py-4">
               <div className="mb-2 flex items-center justify-between">
                 <span className="text-sm font-medium">采集中...</span>
-                <span className="text-sm text-muted-foreground">{store.collectProgress}%</span>
+                <span className="text-sm text-muted-foreground">{collectProgress}%</span>
               </div>
-              <Progress value={store.collectProgress} />
+              <Progress value={collectProgress} />
             </CardContent>
           </Card>
         )}
@@ -401,9 +432,9 @@ export default function SevenDimConfigPage() {
                 name={template.name}
                 description={template.description}
                 dimensionCount={templateDimCounts[template.id] ?? 0}
-                isActive={store.activeTemplate === template.id}
+                isActive={activeTemplate === template.id}
                 disabled={isDisabled}
-                onSelect={() => store.applyTemplate(template.id)}
+                onSelect={() => applyTemplate(template.id)}
               />
             ))}
           </div>
@@ -429,33 +460,33 @@ export default function SevenDimConfigPage() {
               </CardHeader>
               <CardContent>
                 <Separator />
-                {store.dimensions.map((dim) => (
+                {dimensions.map((dim) => (
                   <DimensionRow
                     key={dim.code}
                     dim={dim}
                     disabled={isDisabled}
                     expanded={expandedCode === dim.code}
-                    onToggle={() => store.toggleDimension(dim.code)}
+                    onToggle={() => toggleDimension(dim.code)}
                     onExpand={() => setExpandedCode(expandedCode === dim.code ? null : dim.code)}
                     onFrequencyChange={(freq) => {
                       logger.info(`[SevenDimConfigPage] 维度 ${dim.code} 频率变更`, {
                         from: dim.frequency,
                         to: freq,
                       })
-                      store.setDimensionFrequency(dim.code, freq)
+                      setDimensionFrequency(dim.code, freq)
                     }}
                     onSourcesChange={(nextSources) => {
                       logger.info(`[SevenDimConfigPage] 维度 ${dim.code} 数据源变更`, {
                         from: dim.sources,
                         to: nextSources,
                       })
-                      store.setDimensionSources(dim.code, nextSources)
+                      setDimensionSources(dim.code, nextSources)
                     }}
                     onSourcePriorityChange={(priority) =>
-                      store.setDimensionSourcePriority(dim.code, priority)
+                      setDimensionSourcePriority(dim.code, priority)
                     }
-                    onFieldsChange={(fields) => store.setDimensionFields(dim.code, fields)}
-                    onPolicyChange={(policy) => store.setDimensionPolicy(dim.code, policy)}
+                    onFieldsChange={(fields) => setDimensionFields(dim.code, fields)}
+                    onPolicyChange={(policy) => setDimensionPolicy(dim.code, policy)}
                   />
                 ))}
               </CardContent>
@@ -477,9 +508,9 @@ export default function SevenDimConfigPage() {
                     type="number"
                     min={1}
                     max={GLOBAL_LIMITS.maxSymbols}
-                    value={store.symbolCount}
+                    value={symbolCount}
                     disabled={isDisabled}
-                    onChange={(e) => store.setSymbolCount(Number(e.target.value) || 0)}
+                    onChange={(e) => setSymbolCount(Number(e.target.value) || 0)}
                   />
                   <p className="text-xs text-muted-foreground">
                     上限 {GLOBAL_LIMITS.maxSymbols}
@@ -492,9 +523,9 @@ export default function SevenDimConfigPage() {
                     type="number"
                     min={1}
                     max={1000}
-                    value={store.historyDays}
+                    value={historyDays}
                     disabled={isDisabled}
-                    onChange={(e) => store.setHistoryDays(Number(e.target.value) || 0)}
+                    onChange={(e) => setHistoryDays(Number(e.target.value) || 0)}
                   />
                 </div>
               </CardContent>
@@ -507,23 +538,23 @@ export default function SevenDimConfigPage() {
             <div className="space-y-2">
               <Button
                 className="w-full"
-                onClick={() => store.runCollection()}
+                onClick={() => runCollection()}
                 disabled={isDisabled || enabledCount === 0}
               >
-                {store.isCollecting ? '采集中...' : '开始采集'}
+                {isCollecting ? '采集中...' : '开始采集'}
               </Button>
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => store.saveConfig()}
-                disabled={isDisabled || !store.isDirty}
+                onClick={() => saveConfig()}
+                disabled={isDisabled || !isDirty}
               >
-                {store.isSaving ? '保存中...' : '保存配置'}
+                {isSaving ? '保存中...' : '保存配置'}
               </Button>
               <Button
                 variant="ghost"
                 className="w-full"
-                onClick={() => store.reset()}
+                onClick={() => reset()}
                 disabled={isDisabled}
               >
                 重置为默认
