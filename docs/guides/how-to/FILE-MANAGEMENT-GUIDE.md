@@ -33,7 +33,7 @@ tier: important
 | E2E 测试 | `e2e/` | Playwright `.spec.ts` 文件 |
 | 脚本工具 | `scripts/` | 构建、审计、数据迁移脚本 |
 | 文档规范 | `docs/` | 需求、架构、数据字典、实现文档 |
-| 审计报告 | `docs/audit/` | 质量审计、架构扫描报告 |
+| 审计报告 | `docs/reports/audit/` | 质量审计、架构扫描报告 |
 | 临时输出 | `temp/` | 已在 `.gitignore` 中忽略 |
 | 提示词模板 | `prompts/` | 系统提示词模板存放目录 |
 | AI Skill 定义 | `.agents/skills/` | AI 技能定义文件（系统提示词模板） |
@@ -53,7 +53,7 @@ tier: important
 
 以下文件不受根目录禁止规则限制：
 - 标准项目配置文件：`package.json`、`tsconfig.*.json`、`*.config.ts`、`vite.config.ts` 等
-- 项目根级文档：`../../README.md`、`../../AGENTS.md`、`../../CHANGELOG.md` 等
+- 项目根级文档：`../../README.md`、`../../meta/AGENTS.md`、`../../reports/CHANGELOG.md` 等
 - CI/CD 配置文件：`.github/workflows/*.yml`、`.husky/*` 等
 
 #### docs/ 根目录允许文件清单（2026-08-03 更新）
@@ -85,7 +85,7 @@ tier: important
 | `docs/reports/project-management/` | 项目管理 | 版本计划、进度报告、里程碑记录、任务分配 |
 | `docs/07-archive/` | 归档 | 历史文档、废弃方案、已替代决策记录 |
 
-> 详细分层规则参见 [AGENTS.md](../../AGENTS.md) 第一节
+> 详细分层规则参见 [AGENTS.md](../../meta/AGENTS.md) 第一节
 
 ---
 
@@ -100,7 +100,7 @@ tier: important
 | 类型 | PascalCase + `Interface` 前缀 | `interface StockData` |
 | UI 组件 import 路径 | 大小写必须一致 | `Card` 而非 `card` |
 
-> 详细命名约定参见 [AGENTS.md](../../AGENTS.md) 第四节
+> 详细命名约定参见 [AGENTS.md](../../meta/AGENTS.md) 第四节
 
 ---
 
@@ -114,14 +114,46 @@ tier: important
 2. 根目录规则必须带前导 `/`（如 `/tsc_errors.txt`），避免误伤子目录同名文件
 3. 添加分组注释说明忽略类别
 
-### 2.2 已配置的忽略类别
+### 2.2 IDE/环境部署追踪治理（2026-08-05 强化）
+
+> **核心原则**：仅 `.trae/`（团队 SKILL 体系）被 Git 追踪；其他所有 IDE/环境部署文件必须从 Git 追踪移除并加入 `.gitignore`。
+
+#### 保留追踪清单（团队共享资产）
+
+| 目录 | 用途 | 追踪状态 |
+|------|------|---------|
+| `.trae/` | 团队 SKILL 体系（SKILL.md / skill-registry.json / INDEX.md） | ✅ 保留追踪 |
+| `.agents/` | 跨工具技能库 | ✅ 保留追踪 |
+| `.github/` | 团队 CI 工作流 | ✅ 保留追踪 |
+| `.husky/` | git hooks | ✅ 保留追踪 |
+
+#### 必须忽略的 IDE/环境部署（`.gitignore` line 263-268）
+
+| 路径 | 类型 | 忽略理由 |
+|------|------|---------|
+| `.codebuddy/` | IDE 私有配置 | CodeBuddy IDE 私有设置 |
+| `.cursorrules` | IDE 规则 | Cursor IDE 私有规则 |
+| `.workbuddy/` | IDE 部署模块 | WorkBuddy PowerShell 自动推送模块（IDE 私有部署） |
+| `.trae-cn/` | IDE 会话产物 | TRAE CN 会话临时工作目录 |
+| `.vscode/` | IDE 配置 | VSCode 私有设置 |
+| `.idea/` | IDE 配置 | IntelliJ IDEA 私有设置 |
+
+#### 治理纪律
+
+1. **新增 IDE 文件拦截**：pre-commit 钩子运行 `audit-gitignore-coverage.sh` 自动检查暂存区是否包含上述路径的文件，命中即 BLOCK
+2. **删除模块同步清理**：删除模块/Job 时必须同步删除引用该模块/Job 的操作文档与草稿，避免失效引用
+3. **CI Job 依赖清理**：删除模块时必须同步删除依赖该模块的 CI Job（如原 `git-autopush-test` 已删除）
+4. **回归测试**：`tests/__tests__/scripts/gitignore-coverage.test.ts` 验证 6 个路径被忽略 + `.trae/` 仍被追踪
+
+### 2.3 已配置的忽略类别
 
 | 类别 | 规则示例 | 说明 |
 |---|---|---|
 | 依赖 | `node_modules/` | npm 依赖 |
 | 构建产物 | `dist/` | Vite 构建输出 |
 | 环境配置 | `.env`, `.env.local` | 含敏感信息的本地配置 |
-| IDE 产物 | `.vscode/`, `.idea/`, `.trae/` | 本地 IDE 配置 |
+| IDE 私有部署 | `.vscode/`, `.idea/`, `.workbuddy/`, `.trae-cn/`, `.codebuddy/`, `.cursorrules` | 本地 IDE 配置与私有部署（详见 §2.2） |
+| 团队共享资产 | `.trae/`（**保留追踪**） | 团队 SKILL 体系，不入 `.gitignore` |
 | 日志 | `*.log`, `logs/` | 运行日志 |
 | 测试覆盖 | `coverage/` | 测试覆盖率报告 |
 | Playwright | `/playwright-report/`, `.playwright-mcp/` | E2E 测试产物 |
@@ -140,7 +172,6 @@ tier: important
 | Widget 测试日志 | `widget_test_logs/`, `widget_test_logs_run2/` | Widget 测试产物 |
 | 构建变体 | `dist_s1verify/`, `dist_preview/`, `dist_e2e/`, `dist-e2e/` | 构建验证产物 |
 | 代码质量合规 | `code-quality-compliance/`, `code-quality-compliance.zip` | 代码质量检查产物 |
-| Agent 工作日志 | `.workbuddy/*.log` | AI Agent 工作日志 |
 | 发布包 | `releases/`, `*.zip` | 发布归档 |
 | 独立工具子包 | `tools/file-management-system/` | 工具子包（建议后续抽子仓） |
 | 治理备份 | `build-artifacts/` | 集中存放一次性生成物/治理备份 |
@@ -148,7 +179,7 @@ tier: important
 | 根级审计日志 | `/lint_output.txt`, `/nested-code-review-report.json`, `/audit-*.txt` | 根级审计/日志/报告产物 |
 | ESLint 缓存 | `.eslintcache` | ESLint 增量检查缓存 |
 
-> 本文档基于 `.gitignore`（167 行规则）编写，新增规则时须同步更新本节。
+> 本文档基于 `.gitignore`（279 行规则）编写，新增规则时须同步更新本节。
 
 ---
 
@@ -165,7 +196,7 @@ tier: important
    - **禁止在两处同时添加同一 store 的创建逻辑**（违反 DRY 原则）
 5. **新增 `ENVELOPE_ACTION`** → 必须在 `DataBridge.routeToDB()` 中添加对应 case
 
-> 详细规则参见 [AGENTS.md](../../AGENTS.md) 第八节
+> 详细规则参见 [AGENTS.md](../../meta/AGENTS.md) 第八节
 
 ---
 
@@ -283,11 +314,11 @@ npm run audit:ai-output
 
 编写或更新任何技术文档前，必须遵守以下 5 大原则：
 
-1. **Truth-First（真相优先）**：先读取 `../../AGENTS.md` 当前版本，再写文档，不凭记忆。
+1. **Truth-First（真相优先）**：先读取 `../../meta/AGENTS.md` 当前版本，再写文档，不凭记忆。
 2. **Scan-Before-Write（先扫描后编写）**：先执行 `find`/`cat` 扫描实际文件系统，再写描述，不用模板。
 3. **Exhaustiveness（穷尽性原则）**：文件管理规范必须包含 8 个必含章节（目录映射、命名、`.gitignore`、提交前检查、定期审计、生命周期管理、交叉引用、变更日志），不允许"最小化原则"。
 4. **Bidirectional Linking（双向引用）**：新文档必须注册到索引、引用相关文档、被相关文档反向引用——三步骤缺一不可。
-5. **Version Pinning（版本锁定）**：文档头部必须声明兼容的 `../../AGENTS.md` 版本号（如 `兼容 ../../AGENTS.md v1.4.5+`）。
+5. **Version Pinning（版本锁定）**：文档头部必须声明兼容的 `../../meta/AGENTS.md` 版本号（如 `兼容 ../../meta/AGENTS.md v1.4.5+`）。
 
 ### 7.2 10 行快速检查清单（编写任何文档前逐行确认）
 
@@ -359,8 +390,8 @@ git ls-files | ForEach-Object { git check-ignore -q $_ }
 
 ## 十、相关文档
 
-- **[AGENTS.md](../../AGENTS.md)**：V9 架构契约、分层规则、命名约定、验证命令、数据库版本管理
-- **[trae-file-management-review.md](../00-meta/trae-file-management-review.md)**：更详细的文件管理审查报告（Trae IDE 生成）
+- **[AGENTS.md](../../meta/AGENTS.md)**：V9 架构契约、分层规则、命名约定、验证命令、数据库版本管理
+- **[trae-file-management-review.md](../meta/trae-file-management-review.md)**：更详细的文件管理审查报告（Trae IDE 生成）
 - **[README.md](../README.md)**：文档体系主索引（`docs/specs/requirements/` 目录说明）
 
 
