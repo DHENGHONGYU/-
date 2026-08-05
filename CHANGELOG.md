@@ -3,7 +3,7 @@
 > 本日志按 [SemVer](https://semver.org/lang/zh-CN/) 记录 V9 智能投研复盘系统的版本变更、架构决策与验收数据。  
 > 未发布版本以 `Unreleased` 开头；已发布版本附带构建与测试硬指标。
 > 
-> ⚠️ **历史引用声明**：本日志中 v2.4.0 之前的条目引用的部分文档路径（如 `docs/03-architecture-standards.md`、`docs/CODE-REVIEW.md`、`docs/reports/code-graph.json` 等）可能因文档体系重构（SDLC 目录重组）已发生变更。如需最新路径，请查询 `docs/README.md` 或 `docs/00-meta/` 索引。
+> ⚠️ **历史引用声明**：本日志中 v2.4.0 之前的条目引用的部分文档路径（如 `docs/explanation/03-architecture-standards.md`、`docs/guides/CODE-REVIEW.md`、`docs/reports/code-graph.json` 等）可能因文档体系重构（SDLC 目录重组）已发生变更。如需最新路径，请查询 `docs/README.md` 或 `docs/meta/` 索引。
 
 ---
 
@@ -63,6 +63,62 @@
 
 ### Added
 
+- **P0 阻塞项清理工具链与验收体系（2026-08-05）**：
+  - `scripts/p0-cleanup.sh` 新增 10 步 P0 自动化清理与验证脚本（支持 `--apply` / `--verify-only` / dry-run 模式），覆盖 tsc:prod 退出码验证、.gitignore 规则验证、路由残留检查、备份文件清理、e2e 产物清理、scripts 同名重复扫描、doc-sync 实现检测、ADR 散落检测、git status 清洁度检查
+  - `Dockerfile.prod` 升级为多阶段构建模板（目标镜像 ≤50 MB）：builder 阶段含 Brotli+Gzip 双压缩、runner 阶段使用 `nginxinc/nginx-unprivileged:1.27-alpine` 非 root 运行、8080 端口、`/healthz` 健康检查、OCI 标准标签
+  - `docs/reports/p0-cleanup-acceptance-report-2026-08-05.md` 新增 P0 验收报告（含双向回归测试矩阵：正向 4 项 + 逆向 3 项 + IDE 配置规则 10 项全通过）
+
+### Changed
+
+- **`.gitignore` 修复 4 处漏洞 + IDE 配置追踪治理（2026-08-05）**：
+  - 新增 P0 修复规则段：`e2e/**/.playwright-artifacts-*/`、`e2e/**/test-artifacts/`、`e2e/**/.last-run.json`、`src/**/__backup__/`、`*.bak`、`*.orig`、`*.backup`、`.codebuddy/`、`.cursorrules`、`e2e/full-coverage/{verify,fresh,final}-*/`
+  - 新增 IDE 配置忽略规则：`.workbuddy/`、`.trae-cn/`、`.vscode/`、`.idea/`（保留 `.trae/` 被追踪，作为团队共享 SKILL 体系）
+  - 移除过时规则 `.trae/`（line 94，原规则会阻止 .trae/ 整个目录被追踪，与"保留 TRAE"意图冲突）
+- **`docs/tech-debt/frozen-tsc-test-baseline-2026-08-05.md` §4 状态同步（2026-08-05）**：
+  - §4 标题更新为"tsc:prod P0 问题（2026-08-05 新发现 → 2026-08-05 已修复 ✅）"
+  - §4.1 添加状态更新说明：原 75 个 P0 嵌套 import 错误已全部修复，tsc:prod 退出码 = 0
+  - §4.4 添加执行状态：15 个文件全部修复，双向回归测试通过
+  - §5.3 更新为"tsc:prod P0（原 75 项 → 已修复 0 项 ✅）"
+
+### Removed
+
+- **环境部署追踪清理 — 仅保留 TRAE 被 Git 追踪（2026-08-05）**：
+  - **目标**：仅保留 `.trae/`（团队 SKILL 体系）被 Git 追踪，移除所有其他 IDE/环境部署文件的追踪
+  - **追踪移除（git rm --cached，工作区文件保留）**：
+    - `.workbuddy/`（5 files）：GitAutoPush.psm1 / auto-push-on-network.ps1 / schedule-auto-push.ps1 / GitAutoPush-Deploy-Guide.md / GitAutoPush.Tests.ps1，IDE 私有 PowerShell 自动推送模块
+    - `.trae-cn/work/6a43e703deccb368f0f3650f/update-mocks.ps1`（1 file）：TRAE CN 会话临时工作目录产物
+    - `.codebuddy/settings.local.json`（1 file）：含 `.local` 后缀的私有配置（工作区文件已在前序清理中删除）
+    - `.cursorrules`（1 file）：Cursor IDE 私有规则（前序清理已删除工作区文件）
+    - `src/store/__backup__/collectionWizardStore.ts.2026-07-15.bak`（1 file）：源码目录下的备份文件，应使用 git 历史而非文件备份
+  - **CI 工作流清理**：
+    - `.github/workflows/ci.yml` 删除 `git-autopush-test` Job（依赖已不追踪的 `.workbuddy/tests/GitAutoPush.Tests.ps1`，会因路径缺失而失败）
+  - **失效文档删除（死文档治理）**：
+    - `docs/reports/release-management/git-auto-push-operation-guide.md`：GitAutoPush 模块操作文档，模块已不再追踪，文档失效
+    - `docs/reports/release-management/v2.6.0-changelog-draft.md`：v2.6.0 changelog 草稿，已被 CHANGELOG.md v2.6.0 正式条目取代；且引用了已删除的操作指南与不存在的 `.github/workflows/git-auto-push.yml`
+  - **保留追踪（团队共享资产）**：
+    - `.trae/`（8 files，团队 SKILL 体系）
+    - `.agents/`（18 files，跨工具技能库）
+    - `.github/`（12 files，团队 CI，原 13 files - 1 个被删除 Job）
+    - `.husky/`（5 files，git hooks）
+  - **验证**：`git check-ignore -v` 确认 6 个路径全部被 `.gitignore` 忽略（line 263-268）；`git ls-files .trae/` 确认 8 文件仍被追踪
+
+### Metrics
+
+| 指标 | 数值 |
+|------|------|
+| 删除追踪文件数 | 9 |
+| 新增 .gitignore 规则 | 13 |
+| tsc:prod P0 错误修复 | 75 |
+| 双向回归测试通过率 | 100% (7/7) |
+| IDE 配置规则验证通过率 | 100% (10/10) |
+
+- **完整测试套件运行结果记录（2026-08-05）**：
+  - `docs/tech-debt/frozen-tsc-test-baseline-2026-08-05.md` 新增 §9 章节，记录完整 vitest 测试套件运行结果
+  - 执行命令：`npx vitest run --no-coverage --reporter=dot`，退出码 1，时长 848.89s（约 14 分钟）
+  - 统计：测试文件 526（518 通过 / 7 失败 / 1 跳过），测试用例 9128（9091 通过 / 15 失败 / 22 跳过）
+  - 15 个失败用例分布在 7 个文件：`scripts/verify-logger-components.test.tsx`（2，SVG 未渲染）、`tests/e2e-verify-25stocks.integration.test.ts`（1，池流转准确率 0%）、`tests/SectorHeatmapWidget.test.tsx`（1，空数据文案变更）、`tests/ui-components.test.tsx`（3，Toggle 组件 API 漂移）、`src/data/db-connection.test.ts`（4，IDBRequest mock 方法缺失）、`tests/unit/tofixed-p0-regression.test.tsx`（3，组件空安全回归）、`tests/__tests__/scripts/daily-doc-validation.test.ts`（1，文档校验逻辑变更）
+  - **关键结论**：47 个非冻结 tsc:test 类型错误与 15 个 vitest 运行时失败之间无直接因果关系（vitest 使用 esbuild 转译跳过类型检查）；构建阻塞由 tsc:prod P0 问题（§4，75 个语法错误）导致，非 tsc:test 错误导致
+
 - **SKILL 体系扩展：安全审查与性能审计能力建设（2026-08-04）**：
   - `.trae/skills/v9-security-review/SKILL.md` 新增安全审查 SKILL（V9-SKILL-SECURITY-REVIEW，mandatory=true），覆盖五大维度：密钥与凭证泄露扫描（`npm run audit:secrets`）、XSS 防护审查（`dangerouslySetInnerHTML`/`innerHTML` Grep + `xssSanitizer` 保护校验）、输入验证审计（URL params/API response/用户输入经 `validation.ts` 校验）、ACL 权限矩阵校验（`npm run audit:acl-consistency`）、依赖安全扫描（`npm audit --audit-level=moderate`）
   - `.trae/skills/v9-performance-audit/SKILL.md` 新增性能审计 SKILL（V9-SKILL-PERFORMANCE-AUDIT），覆盖四大维度：Bundle 体积审计（主 chunk ≤500KB、总体积 ≤2MB gzip）、渲染性能审计（React.memo/useMemo/useCallback 覆盖率、useEffect 依赖与竞态防护、虚拟列表）、数据流效率审计（Store selector 粒度、请求去重、防抖节流）、内存泄漏检测（`quality-gate-check.cjs` 检出事件监听器 cleanup 配对率）
@@ -101,7 +157,7 @@
   - `HealthDashboardPage` 引入 `SystemArchitectureDiagram` 架构可视化面板
 
 - **组合层检查清单（2026-07-25）**：
-  - 新增 `docs/audit/checklists/assembly-layer-checklist.md`，覆盖组合层架构验收检查项
+  - 新增 `docs/reports/audit/checklists/assembly-layer-checklist.md`，覆盖组合层架构验收检查项
 
 - **ADR-010 决策记录（2026-07-25）**：
   - 新增 ADR-010：Cockpit/Command 职责边界与纵横交叉布局决策记录
@@ -136,7 +192,7 @@
 ### Fixed
 
 - **SKILL 体系 P0 配置修复与注册表同步（2026-08-04）**：
-  - 修复 `v9-doc-encoding-remediation` triggers.files 引用不存在的 `scripts/fix-doc-refs.ts`（历史脚本已迁移），改为 `scripts/lib/encoding.ts` + `scripts/fix/*.ts` + `docs/**/*.md` + `src/**/*.ts`，覆盖实际编码处理文件与受影响文本文件
+  - 修复 `v9-doc-encoding-remediation` triggers.files 引用不存在的 `scripts/fix/fix-doc-refs.ts`（历史脚本已迁移），改为 `scripts/lib/encoding.ts` + `scripts/fix/*.ts` + `docs/**/*.md` + `src/**/*.ts`，覆盖实际编码处理文件与受影响文本文件
   - 修复 `component-health-check` gates 命令大小写错误：`audit:component-usage` → `npm run audit:componentUsage`，与 `package.json` 实际脚本名对齐，恢复健康检查门禁可执行性
   - 同步 `skill-registry.json` 与 SKILL.md frontmatter 漂移：v9-doc-encoding-remediation 的 tags/triggers.files/related_skills/freshness_policy/search_keywords 全量对齐
   - 验证：`node -e "require('./.trae/skills/skill-registry.json')"` JSON 合法性通过，22 个 SKILL 全部可解析
@@ -289,19 +345,19 @@
   - 为 `src/components/ui/PageHeader.tsx` 添加模块级注释。
   - 为 `src/constants/sectorConstants.ts` 添加完整 JSDoc 注释（热门赛道标签、热力等级说明）。
   - 新增 `docs/RISK_DERIVED_DATA_DEFINITION.md`：`riskStore.derived.ts` 详细文档（风控三态规则、熔断状态机、趋势分析规则）。
-  - 更新 `docs/DATA_DICTIONARY_INDEX.md`：添加 Store 派生计算、事件订阅、基础设施模块等索引条目。
-  - 更新 `docs/03-architecture-standards.md`：新增 Store 派生计算与事件订阅架构说明（§3.1.10）、V6 评分引擎 L3 层辅助函数说明（§3.5.1）。
+  - 更新 `docs/reference/DATA_DICTIONARY_INDEX.md`：添加 Store 派生计算、事件订阅、基础设施模块等索引条目。
+  - 更新 `docs/explanation/03-architecture-standards.md`：新增 Store 派生计算与事件订阅架构说明（§3.1.10）、V6 评分引擎 L3 层辅助函数说明（§3.5.1）。
   - 新增机制健康监控模块文档：`src/store/mechanismHealthStore.ts`、`src/services/system/mechanismMonitorService.ts`、`src/cockpit/widgets/MechanismHealthWidget.tsx`、`src/pages/command/health/MechanismHealthPanel.tsx` 已在 CHANGELOG 中记录。
 
 - **审计脚本修复（v2.6.0）**：
   - 修复 `scripts/audit-doc-sync.ts` 逻辑缺陷：将完整路径检查移到噪音词检查之前。原逻辑中，文件名是噪音词（如 `helpers`）的文件即使在文档中有完整路径引用，也会被误判为未文档化。修复后，完整路径引用优先于噪音词过滤，避免误判。
 
 - **代码审查系统建立（v2.1.0）**：
-  - 新增 `docs/CODE-REVIEW.md`：完整审查标准与流程（P0/P1/P2 三级检查、审查清单、常见问题）。
+  - 新增 `docs/guides/CODE-REVIEW.md`：完整审查标准与流程（P0/P1/P2 三级检查、审查清单、常见问题）。
   - 新增 `docs/CODE-REVIEW-CHEATSHEET.md`：快速参考卡（10 分钟审查指南、检查清单、常见问题）。
   - 新增 `docs/CODE-REVIEW-TRAINING.md`：审查者培训材料（角色职责、审查技巧、沟通礼仪）。
   - 新增 `docs/SOLO-REVIEW.md`：单人开发审查指南（自我审查清单、常见陷阱、工具配置）。
-  - 新增 `docs/TECH-DEBT.md`：技术债管理文档（登记模板、优先级定义、清理计划）。
+  - 新增 `docs/reports/TECH-DEBT.md`：技术债管理文档（登记模板、优先级定义、清理计划）。
   - 新增 `.github/pull_request_template.md`：PR 模板（审查清单、测试覆盖、技术债登记）。
   - 新增 `.github/CODEOWNERS`：审查者配置（单人开发模式）。
   - 新增 `scripts/pre-review-check.ts` v2.1：预审查检查脚本（ESLint 输出过大修复、临时文件捕获、错误判断优化）。
@@ -325,7 +381,7 @@
   - 全部自动化审计脚本（audit:layers / audit:hardcode / audit:deadcode / audit:docs）通过；TypeScript 编译 0 错误；madge 0 循环依赖。
   - 修复 [P0-01] `src/store/executionStore.ts` ↔ `src/store/executionStoreSubscriptions.ts` 循环依赖（删除第 612 行重导出，拆分 `ExecutionPlanPanel.tsx` 与 `TradingApp.test.tsx` 导入）。
   - **经验教训**：首次系统性评分仅运行了 4 个 audit:* 脚本，未运行 `npm run lint` 与文档-代码引用完整性审计。教训 1：完整 CI 门禁必须包含 lint + 全套 audit 脚本；教训 2：文档同步审计需区分"未文档化文件"与"文档引用断裂"两类问题；教训 3：架构评分需引入 lint 评分维度（warn 数量分等级），与 tsc、madge、audit 共同构成五维健康度。
-  - 详细分析见 `docs/00-meta/secondary-verification-report-2026-07-15.md`。
+  - 详细分析见 `docs/meta/secondary-verification-report-2026-07-15.md`。
   - 删除 `.husky/_/prepare-commit-msg` 钩子（路径解析错误）。
   - 提交记录：`ca0c493`、`6d923ab`、`703abbb`、`9dd6ea8`、`1a8ca92`。
 
@@ -355,7 +411,7 @@
   - 更新 `src/apps/command/AgentApp.tsx` 引用路径（`LlmManagementPage` → `LlmManagement`）。
   - 同步修复 4 个 lint 警告：no-misused-promises、strict-boolean-expressions、no-unused-vars、no-floating-promises。
   - 验证通过：tsc 0 错误、madge 0 循环依赖、audit:layers 0 违规、该目录 0 lint 警告。
-  - 详细报告见 `docs/00-meta/p1-01-llm-management-split-report.md`。
+  - 详细报告见 `docs/meta/p1-01-llm-management-split-report.md`。
   - 拆分后最大文件 495 行（-52.5%），容器 122 行，**P1-01 任务完成**。
 
 ### Fixed
@@ -401,7 +457,7 @@
 - **颜色硬编码治理与 Token 消耗优化（v2.0.0）**：
   - 新增 `AGENTS.md §3.5` 颜色令牌使用规范：4 层令牌体系（L1 基础令牌 / L2 语义令牌 / L3 色阶令牌 / L4 图表令牌）、5 个场景化使用规则、15 个业务场景语义映射速查表、新增颜色 SOP 决策树、豁免清单。
   - 新增 `docs/reports/hardcoded-colors-inventory.json` 违规清单缓存文件：记录 35 个文件 140 处颜色违规，按优先级（P0/P1/P2）分类，预计 Token 节省 88%。
-  - `scripts/audit-hardcode.ts` 升级至 v2.1：新增 `--export-inventory` 参数，支持扫描并导出违规清单缓存文件，优化 Token 消耗（AI 会话优先查询缓存而非重新扫描）。
+  - `scripts/audit/audit-hardcode.ts` 升级至 v2.1：新增 `--export-inventory` 参数，支持扫描并导出违规清单缓存文件，优化 Token 消耗（AI 会话优先查询缓存而非重新扫描）。
   - **根因诊断**：识别 5 大系统性缺陷（令牌系统已建立但未被广泛采用、缺乏自动化强制机制、Token 无谓消耗严重、测试文件颜色断言脆弱、缺乏颜色语义映射文档）。
   - **整改计划**：P0 建立规范与缓存机制（已完成）、P1 重构 TOP 5 热点文件（已完成）、P2 全量迁移剩余文件（已完成）。
   - **P1 批次完成**：重构 5 个热点文件（MockTestPage.tsx 23处、ExecutionPlanCard.tsx 19处、PhaseStepper.tsx 13处、ValuePitPage.tsx 12处、BacktestPage.tsx 11处），共消除 78 处颜色硬编码。新增 ESLint 自定义规则 `no-hardcoded-tailwind-colors`，支持自动检测 className 中的硬编码颜色类。违规文件数从 35 个降至 33 个，颜色违规数从 140 处降至 116 处（-17%）。
@@ -411,7 +467,7 @@
   - 新增 `scripts/audit-token-consumption.ts`：Token 消耗检测脚本，检查知识图谱增量更新支持、快速查询模板、Token 预算文档、Token 优化文档完整性，预计月度节省 7.58M tokens。
   - 新增 `npm run audit:token` 脚本，纳入 `npm run audit` 全量审计流程。
   - `scripts/audit-layer-calls.ts` 升级至 v2.0：新增 services→store 依赖检测（规则5）、lib→上层依赖检测（规则6）、constants→业务层依赖检测（规则7），支持动态 import() 和 re-export 解析。
-  - `scripts/audit-hardcode.ts` 升级至 v2.0：新增硬编码 URL/API 端点检测（Critical）、硬编码超时时间检测（Major）、改进魔法数字排除列表（HTTP 状态码、常见阈值）、增强 Tailwind 颜色检测（支持 hover:/focus:/dark: 等变体前缀）。
+  - `scripts/audit/audit-hardcode.ts` 升级至 v2.0：新增硬编码 URL/API 端点检测（Critical）、硬编码超时时间检测（Major）、改进魔法数字排除列表（HTTP 状态码、常见阈值）、增强 Tailwind 颜色检测（支持 hover:/focus:/dark: 等变体前缀）。
   - `scripts/audit-dead-code.ts` 升级至 v2.0：扩展排除规则，新增 hooks/utils/types 子目录排除、useXxx React hooks 文件排除、纯类型文件（*types.ts/*interfaces.ts）排除，显著减少误报。
   - `AGENTS.md` 升级至 v1.3.0：§7 新增 Token 消耗控制规则（§7.1），强制知识图谱优先、增量解析、缓存查询结果、Token 预算控制（单次会话 < 50,000 tokens）。
   - `package.json` 新增 `audit:token` 脚本，`audit` 全量审计命令包含 token 检测。
@@ -421,19 +477,19 @@
 
 - **V6 Pro 驾驶舱深度比对评估（v0.9.0-docs-v6pro-assessment）**：
   - 完成 V6 Pro 驾驶舱与 V9 开发基线的全维度架构比对，覆盖 DataBridge、Engine、UI、Agent 四大核心模块。
-  - 新增数据流引擎设计（`docs/03-architecture-standards.md` 3.1.2）：支持 SSE 推送 + 轮询回退、内存缓存（10秒 TTL/200条目）、通道元数据配置、慢订阅者检测、序列号追踪。
-  - 新增数据融合层设计（`docs/03-architecture-standards.md` 3.1.3）：`UnifiedStockData` 统一数据视图，聚合基础/K线/财务/评分/信号多源数据。
-  - 新增驾驶舱 Widget 架构设计（`docs/03-architecture-standards.md` 3.1.4）：注册表 + 懒加载引擎 + 生命周期 + 跨 Widget 联动 + 12列响应式网格。
-  - 新增 Agent 层设计（`docs/03-architecture-standards.md` 3.1.5）：Agent 运行时、注册表、任务队列、健康监控、AI 助手架构。
+  - 新增数据流引擎设计（`docs/explanation/03-architecture-standards.md` 3.1.2）：支持 SSE 推送 + 轮询回退、内存缓存（10秒 TTL/200条目）、通道元数据配置、慢订阅者检测、序列号追踪。
+  - 新增数据融合层设计（`docs/explanation/03-architecture-standards.md` 3.1.3）：`UnifiedStockData` 统一数据视图，聚合基础/K线/财务/评分/信号多源数据。
+  - 新增驾驶舱 Widget 架构设计（`docs/explanation/03-architecture-standards.md` 3.1.4）：注册表 + 懒加载引擎 + 生命周期 + 跨 Widget 联动 + 12列响应式网格。
+  - 新增 Agent 层设计（`docs/explanation/03-architecture-standards.md` 3.1.5）：Agent 运行时、注册表、任务队列、健康监控、AI 助手架构。
   - 扩展偏差清单至 D19，新增数据流引擎缺失（D12）、数据融合层缺失（D13）、Widget 框架缺失（D14）、评分算法降级（D15）等关键偏差。
-  - 新增评分报告生成设计（`docs/05-engine-specs.md`）：包含理由、目标价、风险、催化剂的完整报告 Schema。
-  - 新增板块轮动评分引擎设计（`docs/05-engine-specs.md`）：五因子十六指标模型（景气度/估值/动量/资金/政策），支持轮动信号生成。
-  - 新增图表组件规范（`docs/04-ui-ux-specs.md`）：`lightweight-charts` K线图、`recharts` 折线图/雷达图/热力图。
-  - 扩展组件库清单（`docs/04-ui-ux-specs.md`）：基础 UI 组件、业务组件、图表组件三类。
-  - 新增实施计划任务（`docs/08-implementation-plan.md`）：数据流引擎、数据融合、评分报告、板块轮动、Widget框架、图表库、错误边界、反馈闭环共 8 项任务。
-  - 更新版本比对文档（`docs/implementation/architecture-version-comparison.md`）：新增 `v0.9.0-docs-v6pro-assessment` 版本记录与 V6 Pro 对照评估新增偏差项。
+  - 新增评分报告生成设计（`docs/explanation/05-engine-specs.md`）：包含理由、目标价、风险、催化剂的完整报告 Schema。
+  - 新增板块轮动评分引擎设计（`docs/explanation/05-engine-specs.md`）：五因子十六指标模型（景气度/估值/动量/资金/政策），支持轮动信号生成。
+  - 新增图表组件规范（`docs/specs/04-ui-ux-specs.md`）：`lightweight-charts` K线图、`recharts` 折线图/雷达图/热力图。
+  - 扩展组件库清单（`docs/specs/04-ui-ux-specs.md`）：基础 UI 组件、业务组件、图表组件三类。
+  - 新增实施计划任务（`docs/guides/08-implementation-plan.md`）：数据流引擎、数据融合、评分报告、板块轮动、Widget框架、图表库、错误边界、反馈闭环共 8 项任务。
+  - 更新版本比对文档（`docs/explanation/architecture-version-comparison.md`）：新增 `v0.9.0-docs-v6pro-assessment` 版本记录与 V6 Pro 对照评估新增偏差项。
   - 更新 `docs/01~10` 全部核心文档版本号为 `v0.9.0-docs-v6pro-assessment`，更新日期为 2026-06-25。
-  - **新增 Page 组件红色高危区（`docs/03-architecture-standards.md` 3.13）**：识别页面脚本中最容易被忽略但对人机交互影响致命的三类问题：
+  - **新增 Page 组件红色高危区（`docs/explanation/03-architecture-standards.md` 3.13）**：识别页面脚本中最容易被忽略但对人机交互影响致命的三类问题：
     - 问题一：数据请求缺少 pending 状态处理 → 强制包裹 `isLoading` 状态，绑定全局骨架屏
     - 问题二：监听器未在组件卸载时销毁 → 显式调用 `removeListener`，使用 `WeakRef` 优化
     - 问题三：路由参数变化未重新触发数据刷新 → 强制添加 `resetState + refetch` 逻辑
@@ -457,11 +513,11 @@
   - 新增 `src/constants/health.constants.ts`：定义 `HEALTH_STATUS`、`HEALTH_MODULE_CATEGORY`、`DIAGNOSTIC_LEVEL`、`HEALTH_SCORE_THRESHOLDS`。
   - 新增 `src/types/modules/ai-center.types.ts`：定义 `AgentItem`、`AgentListData`、`HealthMetricItem`、`HealthMetricsData`、`DiagnosticReportItem`、`DiagnosticReportsData`、`AICenterData`。
   - 新增 `src/services/ai-center/mockAICenterProvider.ts`：三大板块 Mock 数据生成器，含异常/预警状态用于演示监控效果。
-  - 新增 `docs/AI_CENTER_DATA_DEFINITION.md`：AI 中心数据字典，含接口字段、枚举常量、服务端 statusCode 映射、引用约束。
-  - 新增 `docs/AI_CENTER_VUE3_EXAMPLES.md`：纯前端 Vue3 组件示例（图标渲染器、Pinia Store、三大 Panel、服务封装、硬编码检查清单），所有状态/颜色/标签/轮询间隔均引用 constants。
+  - 新增 `docs/reference/AI_CENTER_DATA_DEFINITION.md`：AI 中心数据字典，含接口字段、枚举常量、服务端 statusCode 映射、引用约束。
+  - 新增 `docs/reference/AI_CENTER_VUE3_EXAMPLES.md`：纯前端 Vue3 组件示例（图标渲染器、Pinia Store、三大 Panel、服务封装、硬编码检查清单），所有状态/颜色/标签/轮询间隔均引用 constants。
 
 - **NewsPage PoC 数据字典补齐**：
-  - 新增 `docs/NEWS_DATA_DEFINITION.md`：覆盖 `NewsArticle`、`NewsStockMap`、`SentimentCache`、`V6NewsArticle`、情感映射规则、`newsService` API、DataBridge Store / Envelope Action、路由映射。
+  - 新增 `docs/reference/NEWS_DATA_DEFINITION.md`：覆盖 `NewsArticle`、`NewsStockMap`、`SentimentCache`、`V6NewsArticle`、情感映射规则、`newsService` API、DataBridge Store / Envelope Action、路由映射。
   - 明确 PoC 未新增全局 Store 与 DataBridge 端点，读取复用 `newsService.listNews()`，写入由 `newsService` 内部调用 `dataLayer`。
 
 - **V9 文档治理官批次 2：图表/反馈/Widget 错误/PWA 实施规格补齐**：
@@ -469,18 +525,18 @@
   - 新增 `docs/implementation/feedback-loop-spec.md`：Toast 四态持续时间、`FeedbackService` 接口、操作反馈闭环流程图、`feedback:*` 事件与 `EventBus` 集成。
   - 新增 `docs/implementation/widget-error-handling.md`：Widget 级 `ErrorBoundary` 复用与包裹策略、降级 UI 规范、错误分类上报、`widget:error` 事件定义。
   - 新增 `docs/implementation/pwa-offline-guide.md`：`vite-plugin-pwa` 注册策略、Precache/Runtime Cache 清单、版本更新流程、Lighthouse 离线测试标准。
-  - 更新 `docs/implementation/v9-system-blueprint.md`：文档索引新增 4 份实施规格；D16/D18/D19 标记为「规格已起草，代码待引入」；版本号更新为 `v0.9.0-doc-sync-batch2`。
+  - 更新 `docs/reference/v9-system-blueprint.md`：文档索引新增 4 份实施规格；D16/D18/D19 标记为「规格已起草，代码待引入」；版本号更新为 `v0.9.0-doc-sync-batch2`。
 
 - **代码-文档同步机制建立**：
   - 新增 `docs/implementation/doc-sync-execution-plan.md`：定义“扫描差异 → 补齐文档 → 验证”闭环，明确与 V9 问题整改调度表、实施计划、NewsPage PoC、CHANGELOG 的衔接方式。
   - 新增 `docs/implementation/doc-sync-gap-list.md`：首次扫描记录已闭环 4 项、待处理 12 项差异。
-  - 新增 `docs/DATA_DICTIONARY_INDEX.md`：汇总所有模块数据字典入口与通用类型，便于快速查找。
+  - 新增 `docs/reference/DATA_DICTIONARY_INDEX.md`：汇总所有模块数据字典入口与通用类型，便于快速查找。
   - 新增/完善 `scripts/audit-doc-sync.ts`：自动化差异扫描脚本，支持 git diff 与全量 src 扫描；已纳入 `npm run audit:docs` 与 `npm run audit`。
-  - 更新 `docs/08-implementation-plan.md`：新增任务 2.22“代码-文档同步机制”，版本号更新为 `v0.9.0-doc-sync-plan`。
-  - 更新 `docs/06-routing-specs.md`：补全 `/analysis/news-v6`、`/trading/holdings`、`/mock-test` 等路由映射，版本号更新为 `v0.9.0-doc-sync-plan`。
-  - 更新 `docs/09-quality-gates.md`：修正跨层调用基线为 0/0，更新硬编码基线为 749、死代码基线为 0/0/16，版本号更新为 `v0.9.0-doc-sync-plan`。
-  - 新增 `docs/DATAFLOW_DATA_DEFINITION.md`：覆盖数据流引擎 `DataChannel`、`DataPacket`、`ChannelMeta`、API、事件、回退数据、重连策略、性能阈值。
-  - 更新 `docs/05-engine-specs.md`：数据流引擎章节引用 `docs/DATAFLOW_DATA_DEFINITION.md`，版本号更新为 `v0.9.0-doc-sync-plan`。
+  - 更新 `docs/guides/08-implementation-plan.md`：新增任务 2.22“代码-文档同步机制”，版本号更新为 `v0.9.0-doc-sync-plan`。
+  - 更新 `docs/explanation/06-routing-specs.md`：补全 `/analysis/news-v6`、`/trading/holdings`、`/mock-test` 等路由映射，版本号更新为 `v0.9.0-doc-sync-plan`。
+  - 更新 `docs/guides/09-quality-gates.md`：修正跨层调用基线为 0/0，更新硬编码基线为 749、死代码基线为 0/0/16，版本号更新为 `v0.9.0-doc-sync-plan`。
+  - 新增 `docs/reference/DATAFLOW_DATA_DEFINITION.md`：覆盖数据流引擎 `DataChannel`、`DataPacket`、`ChannelMeta`、API、事件、回退数据、重连策略、性能阈值。
+  - 更新 `docs/explanation/05-engine-specs.md`：数据流引擎章节引用 `docs/reference/DATAFLOW_DATA_DEFINITION.md`，版本号更新为 `v0.9.0-doc-sync-plan`。
 
 ### Fixed
 
@@ -516,10 +572,10 @@
 - 工作区存在未跟踪文件 `src/services/unifiedStockService.ts`、`src/services/feedbackService.ts`、`src/components/WidgetErrorBoundary.tsx`，非本次修改产生，未纳入本次提交。
 
 - **文档体系架构校对（v0.9.0-docs-review）**：
-  - 新增 `docs/implementation/architecture-version-comparison.md`，记录架构文档从规划基线到校对版的全量差异。
-  - 新增 `docs/implementation/input-cabin-spec.md`，补齐输入舱业务蓝图、数据协议、服务契约、UI 组件映射。
-  - 新增 `docs/implementation/data-interaction-protocols.md`，明确调用矩阵、事件命名、数据血缘、输入舱专用契约。
-  - 新增 `docs/implementation/implementation-governance.md`，建立 ADR 模板、版本比对机制、审计基线维护、代码-文档同步规则。
+  - 新增 `docs/explanation/architecture-version-comparison.md`，记录架构文档从规划基线到校对版的全量差异。
+  - 新增 `docs/reference/input-cabin-spec.md`，补齐输入舱业务蓝图、数据协议、服务契约、UI 组件映射。
+  - 新增 `docs/reference/data-interaction-protocols.md`，明确调用矩阵、事件命名、数据血缘、输入舱专用契约。
+  - 新增 `docs/explanation/design/implementation-governance.md`，建立 ADR 模板、版本比对机制、审计基线维护、代码-文档同步规则。
   - 新增 `docs/implementation/v9-input-cabin-strategy-report.md`，汇总输入舱升级策略、利弊分析与实施计划。
 - 引入 V10 架构白皮书与 V6 Pro UI 模块比对参考：
   - 新增 `docs/implementation/v10-architecture-alignment.md`，分类吸收 V10 框架思想（直接吸收/适配吸收/暂不采纳）。
@@ -541,19 +597,19 @@
   - 新增 `docs/implementation/data-collection-architecture.md` 架构设计文档。
   - 新增 `tests/fetcherService.test.ts`、`tests/fetcherKline.test.ts` 单元测试。
 - 建立项目级文档体系：`docs/01~10` 规划文档导航，`docs/README.md` 声明为文档唯一真相源。
-- 补充缺失规格文档：`docs/05-engine-specs.md`、`docs/06-routing-specs.md`、`docs/07-operation-strategy.md`、`docs/09-quality-gates.md`。
+- 补充缺失规格文档：`docs/explanation/05-engine-specs.md`、`docs/explanation/06-routing-specs.md`、`docs/guides/07-operation-strategy.md`、`docs/guides/09-quality-gates.md`。
 - 引入架构决策记录（ADR）与当前代码-架构偏差清单，强化架构、功能、实现三维度论证。
 - 建立架构守护扫描脚本：
-  - `scripts/audit-layer-calls.ts`：检测跨层调用违规（当前基线 14 处）。
-  - `scripts/audit-hardcode.ts`：检测硬编码、静默回退、魔法数字（当前基线 53 处）。
+  - `scripts/audit/audit-layer-calls.ts`：检测跨层调用违规（当前基线 14 处）。
+  - `scripts/audit/audit-hardcode.ts`：检测硬编码、静默回退、魔法数字（当前基线 53 处）。
   - `scripts/audit-dead-code.ts`：检测空壳代码与路由一致性（当前基线 5 处提示）。
 - 新增 npm scripts：`audit:layers`、`audit:hardcode`、`audit:deadcode`、`audit`。
 - 补全五舱与驾驶舱路由：`/`、`/input`、`/analysis`、`/trading`、`/output`、`/command`、`/cockpit` 全部注册到 `ROUTE_REGISTRY`。
 - `App.tsx` 改为遍历 `ROUTE_REGISTRY` 渲染，移除硬编码路径。
 - `PortalShell` 支持子路径前缀匹配，确保 `/analysis/stock-score` 等子页面仍高亮分析舱。
 - 交易引擎下沉：新增 `src/services/trading/tradingService.ts`，`TradingApp.tsx` 仅保留 UI 编排。
-- 导入 v6-pro-cockpit 交易相关策略报告核心结论，形成 `docs/implementation/trading-core-factors.md`。
-- 扩展 `docs/05-engine-specs.md` 交易引擎章节，覆盖择时信号、仓位管理、风控、错误分类、复盘引擎。
+- 导入 v6-pro-cockpit 交易相关策略报告核心结论，形成 `docs/explanation/trading-core-factors.md`。
+- 扩展 `docs/explanation/05-engine-specs.md` 交易引擎章节，覆盖择时信号、仓位管理、风控、错误分类、复盘引擎。
 - **交易引擎 P0 落地**：
   - 新增 `src/config/tradingConfig.ts`，集中管理信号阈值、Kelly 仓位参数、风控阈值。
   - 新增 `src/services/trading/signalGenerator.ts`：基于 K 线计算 MA/RSI/量比/MACD，生成 `buy_dip`、`buy_pivot`、`sell_profit_taking`、`sell_trailing_stop`、`hold`、`watch` 及 `composite` 共振信号。
@@ -562,7 +618,7 @@
   - `tradingService.ts` 集成风控检查，新增 `scanWatchingSignals`、`adviseForStock` 统一交易建议接口。
   - `TradingApp.tsx` 展示信号、建议仓位与风控提示，支持按建议数量买入/卖出、一键扫描信号。
   - 新增 `tests/signalGenerator.test.ts`、`tests/positionSizer.test.ts`、`tests/riskEngine.test.ts`。
-- 扩展 `docs/02-functional-specs.md`、`docs/10-glossary.md`、`docs/08-implementation-plan.md` 中交易与复盘相关内容。
+- 扩展 `docs/specs/02-functional-specs.md`、`docs/reference/10-glossary.md`、`docs/guides/08-implementation-plan.md` 中交易与复盘相关内容。
 - **股票池分组（股票池组）改造**：
   - `Stock` 数据模型新增可选 `group` 字段，默认分组为「默认分组」。
   - IndexedDB 版本 4→5，`stocks` 存储新增 `by-group` 索引；升级时自动将历史缺失分组的股票回写为默认分组。
@@ -587,11 +643,11 @@
   - 参考 `dashboard_v2.html` 的深色侧边栏 + 顶部状态栏 + 卡片网格布局，将 `PortalShell` 升级为全局深色经典布局容器。
   - 输入舱由单文件巨石组件拆分为子页面：`/input`（录入看板）、`/input/bulk-import`（批量导入）、`/input/hot-sectors`（热门板块）、`/input/data-test`（采集测试）。
   - 新增 `src/apps/input/InputDashboard.tsx`、`BulkImportPanel.tsx`、`HotSectorPanel.tsx`；`InputApp.tsx` 改为按路径分发的布局组件。
-  - `src/config/routes.ts` 注册输入舱子路由；`docs/06-routing-specs.md`、`docs/08-implementation-plan.md` 同步更新。
+  - `src/config/routes.ts` 注册输入舱子路由；`docs/explanation/06-routing-specs.md`、`docs/guides/08-implementation-plan.md` 同步更新。
   - 修复 `batchImportService.parseBulkInput` 对 `代码,名称` 格式的解析 bug，批量导入测试全部通过。
 
 - **Phase 2 第二步：V6 Pro → V9 JSON 数据迁移**：
-  - 新增迁移规范中间文档 `docs/implementation/v6-to-v9-migration-spec.md`，明确 V6 `dataManager.export()` 全量导出 JSON 的字段映射、转换规则、冲突处理与导入顺序，作为 `v6MigrationService` 的唯一权威转换依据。
+  - 新增迁移规范中间文档 `docs/reference/v6-to-v9-migration-spec.md`，明确 V6 `dataManager.export()` 全量导出 JSON 的字段映射、转换规则、冲突处理与导入顺序，作为 `v6MigrationService` 的唯一权威转换依据。
   - 新增 `src/services/system/v6MigrationService.ts`：
     - 定义 V6 全量导出 12 个核心 store 的输入类型与 V9 转换结果类型。
     - 实现通用转换工具：`sentimentNumberToLabel`、`parseTimestamp`、安全数值/字符串/数组处理。
@@ -620,36 +676,36 @@
 
 ### Changed
 
-- `docs/03-architecture-standards.md`：
+- `docs/explanation/03-architecture-standards.md`：
   - 更新 L3/L4 实际目录映射（交易/采集引擎下沉、输入舱子页拆分）。
   - 增加 `dataQuality` 字段、`daily_quotes` store 与输入舱数据协议。
   - 增加 3.9.7「共享字段契约」，借鉴 V10 StateBoard 思想。
   - 更新偏差清单，标记已修复项并新增未解决项（含 V10 Agent/Gateway 机制）。
   - 增加「版本比对」小节。
-- `docs/08-implementation-plan.md`：
+- `docs/guides/08-implementation-plan.md`：
   - 更新当前基线为 107/107 测试通过、`audit:layers` 0 违规。
   - 细化 Phase 2 输入舱子任务（2.3.6 ~ 2.3.10）。
   - 增加「版本比对」小节。
-- `docs/06-routing-specs.md`：
+- `docs/explanation/06-routing-specs.md`：
   - 增加第 8 节「路由 → 组件 → 服务映射」。
   - 第 3.2 节增加输入舱子路由映射。
   - 增加 `/input/prototype` 临时路由处理计划与「版本比对」小节。
-- `docs/02-functional-specs.md`：新增 US-006~US-009（搜索、批量导入预览、热门板块、采集测试），增加「版本比对」小节。
-- `docs/04-ui-ux-specs.md`：更新 PortalShell 为 Kimi 经典深色布局，增加分组侧边栏与输入舱子页布局说明，增加「版本比对」小节。
-- `docs/05-engine-specs.md`：新增第 3 节「输入舱服务层」；数据采集引擎增加「只采集不计算」约束与未来扩展方向（Agent/Gateway/SectorFactorUpdater）；`EnvelopeAction` 增加 `SAVE_DAILY_QUOTES`；更新偏差清单。
-- `docs/09-quality-gates.md`：
+- `docs/specs/02-functional-specs.md`：新增 US-006~US-009（搜索、批量导入预览、热门板块、采集测试），增加「版本比对」小节。
+- `docs/specs/04-ui-ux-specs.md`：更新 PortalShell 为 Kimi 经典深色布局，增加分组侧边栏与输入舱子页布局说明，增加「版本比对」小节。
+- `docs/explanation/05-engine-specs.md`：新增第 3 节「输入舱服务层」；数据采集引擎增加「只采集不计算」约束与未来扩展方向（Agent/Gateway/SectorFactorUpdater）；`EnvelopeAction` 增加 `SAVE_DAILY_QUOTES`；更新偏差清单。
+- `docs/guides/09-quality-gates.md`：
   - 更新测试基线为 107/107 通过、跨层调用 0 违规。
   - 新增路由一致性审计项，补充硬编码/死代码数量说明。
   - 调整章节顺序，增加「版本比对」小节。
 - `docs/README.md`：文档版本更新为 `v0.9.0-docs-review`，新增专项文档导航；为核心规格文档增加状态/版本列。
 - 统一 `docs/01~10`、`docs/implementation/*`、`docs/implementation/adr/*` 文档顶部的 `Status` / `Version` / `Last Updated` 标识；外部参考蓝图标记为 `Future Reference / Deferred`，ADR 标记为 `Accepted`。
-- `docs/01-vision-and-goals.md`：补全 `Status: Current` / `Version: v0.9.0-docs-review` 标识。
-- `docs/10-glossary.md`：补全状态/版本标识；`Stock` 字段表增加 `dataQuality`；明确 `rotation_scores` 为规划中（P2）。
-- `docs/07-operation-strategy.md`：补全状态/版本标识；新增 1.6 节「代码变更前的架构自诘（守护者检查清单）」，要求 PR 前回答 3 个架构守护问题。
-- `docs/08-implementation-plan.md`：细化 Phase 2~4 的验收标准、任务依赖与风险登记表。
-- `docs/03-architecture-standards.md`：补充技术选型理由、离线机制与真实偏差清单。
-- `docs/09-quality-gates.md`：更新扫描脚本状态与当前基线数据。
-- `docs/02-functional-specs.md`：补充 P1/P2 功能规格、异常边界、导入导出格式。
+- `docs/specs/01-vision-and-goals.md`：补全 `Status: Current` / `Version: v0.9.0-docs-review` 标识。
+- `docs/reference/10-glossary.md`：补全状态/版本标识；`Stock` 字段表增加 `dataQuality`；明确 `rotation_scores` 为规划中（P2）。
+- `docs/guides/07-operation-strategy.md`：补全状态/版本标识；新增 1.6 节「代码变更前的架构自诘（守护者检查清单）」，要求 PR 前回答 3 个架构守护问题。
+- `docs/guides/08-implementation-plan.md`：细化 Phase 2~4 的验收标准、任务依赖与风险登记表。
+- `docs/explanation/03-architecture-standards.md`：补充技术选型理由、离线机制与真实偏差清单。
+- `docs/guides/09-quality-gates.md`：更新扫描脚本状态与当前基线数据。
+- `docs/specs/02-functional-specs.md`：补充 P1/P2 功能规格、异常边界、导入导出格式。
 - `README.md`：修正单元测试覆盖范围描述。
 
 ---
@@ -716,9 +772,9 @@
 ### Added
 
 - **视觉规范审计脚本工具集**：
-  - 新增 `scripts/audit-color-tokens.ts`：颜色系统合规性检查，检测硬编码 HEX/RGB/HSL 颜色，排除 constants 定义源和 mock 数据文件。
-  - 新增 `scripts/audit-spacing.ts`：间距系统合规性检查，检测非 4px 栅格的硬编码间距值。
-  - 新增 `scripts/audit-typography.ts`：字体系统合规性检查，检测硬编码字体大小/字重/行高。
+  - 新增 `scripts/audit/audit-color-tokens.ts`：颜色系统合规性检查，检测硬编码 HEX/RGB/HSL 颜色，排除 constants 定义源和 mock 数据文件。
+  - 新增 `scripts/audit/audit-spacing.ts`：间距系统合规性检查，检测非 4px 栅格的硬编码间距值。
+  - 新增 `scripts/audit/audit-typography.ts`：字体系统合规性检查，检测硬编码字体大小/字重/行高。
 
 - **E2E 响应式与可访问性测试**：
   - 新增 `e2e/responsive.spec.ts`：覆盖移动端(375x667)、平板端(768x1024)、桌面端(1920x1080) 三种视口的响应式布局验证，共 10 个测试用例。
@@ -787,7 +843,7 @@
 
 ### Migration Guide
 
-1. 运行 `npx tsx scripts/audit-color-tokens.ts` 检查硬编码颜色。
+1. 运行 `npx tsx scripts/audit/audit-color-tokens.ts` 检查硬编码颜色。
 2. 将硬编码颜色替换为 `theme.tokens.ts` 中的设计令牌。
 3. 图表组件使用 `CHART_PALETTE.*`，服务层使用 `COLOR_TOKENS.*.hex`，Widget 使用 `THEME_TOKENS.*`。
 
