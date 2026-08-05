@@ -11,6 +11,10 @@ import {
 } from 'recharts'
 import { CHART_PALETTE } from '@/constants/theme.tokens'
 import { usePerfTrace } from '@/hooks/usePerfTrace'
+import { safeFormatNumber } from '@/lib/format'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 export interface IndustryV4RadarDataItem {
   dimension: string
@@ -58,6 +62,13 @@ const IndustryV4Radar = forwardRef<HTMLDivElement, IndustryV4RadarProps>(
   ) => {
     usePerfTrace('IndustryV4Radar', { points: data.length, series: series.length })
 
+    logger.info('[IndustryV4Radar] 渲染', {
+      dataPoints: data.length,
+      seriesCount: series.length,
+      maxValue,
+      hasRadarParams: !!radarConfig,
+    })
+
     const chartData = data.map((item) => ({
       ...item,
       dimension: item.label,
@@ -89,7 +100,7 @@ const IndustryV4Radar = forwardRef<HTMLDivElement, IndustryV4RadarProps>(
                 color: CHART_PALETTE.tooltipText,
               }}
               labelStyle={{ color: CHART_PALETTE.tooltipText }}
-              formatter={(value) => [Number(value).toFixed(2), '得分']}
+              formatter={(value) => [safeFormatNumber(Number(value), 2), '得分']}
             />
             {showLegend && <Legend wrapperStyle={{ fontSize: '12px' }} />}
             {series.map((s) => (

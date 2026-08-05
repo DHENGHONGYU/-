@@ -257,10 +257,21 @@ class SemanticSearchEngine {
       return []
     }
 
+    logger.info('[semanticSearch] search 入口', {
+      query,
+      topK,
+      indexedDocs: this.documents.length,
+    })
+
     // 查询向量化
     const queryTokens = tokenize(query)
     const queryTF = computeTF(queryTokens)
     const queryVector = computeTFIDf(queryTF, this.idf)
+
+    logger.info('[semanticSearch] 查询向量化完成', {
+      queryTokenCount: queryTokens.length,
+      queryVectorDim: queryVector.size,
+    })
 
     // 计算相似度
     const scores: Array<{ item: SearchItem; score: number }> = []

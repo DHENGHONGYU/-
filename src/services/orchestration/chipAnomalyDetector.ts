@@ -228,7 +228,7 @@ export class ChipAnomalyDetector {
   private extractNumber(data: Record<string, unknown>, candidates: string[]): number | null {
     for (const key of candidates) {
       if (key in data && typeof data[key] === 'number') {
-        return data[key] as number
+        return data[key]
       }
     }
     return null
@@ -243,13 +243,35 @@ export class ChipAnomalyDetector {
     if (!previous) {
       // 首次记录快照，不做异动检测
       this.previousSnapshots.set(current.symbol, { ...current })
+      logger.info('[ChipAnomalyDetector] detectAnomalies 首次快照', {
+        symbol: current.symbol,
+        holderCount: current.holderCount,
+        concentration: current.concentration,
+        institutionalRatio: current.institutionalRatio,
+      })
       return
     }
+
+    logger.info('[ChipAnomalyDetector] detectAnomalies 入口', {
+      symbol: current.symbol,
+      hasPrevious: true,
+      currentHolder: current.holderCount,
+      previousHolder: previous.holderCount,
+      currentConc: current.concentration,
+      previousConc: previous.concentration,
+    })
 
     // 检测股东人数变化
     if (current.holderCount !== undefined && previous.holderCount !== undefined && previous.holderCount > 0) {
       const changePct = ((current.holderCount - previous.holderCount) / previous.holderCount) * 100
       if (Math.abs(changePct) >= this.config.holderCountThreshold) {
+        logger.info('[ChipAnomalyDetector] holder_count_change 触发', {
+          symbol: current.symbol,
+          changePct: Math.round(changePct * 100) / 100,
+          threshold: this.config.holderCountThreshold,
+          prev: previous.holderCount,
+          curr: current.holderCount,
+        })
         const severity = this.computeSeverity(Math.abs(changePct), this.config.holderCountThreshold)
         const direction: 'increase' | 'decrease' = changePct > 0 ? 'increase' : 'decrease'
 
@@ -271,6 +293,13 @@ export class ChipAnomalyDetector {
     if (current.concentration !== undefined && previous.concentration !== undefined && previous.concentration > 0) {
       const changePct = ((current.concentration - previous.concentration) / previous.concentration) * 100
       if (Math.abs(changePct) >= this.config.concentrationThreshold) {
+        logger.info('[ChipAnomalyDetector] concentration_change 触发', {
+          symbol: current.symbol,
+          changePct: Math.round(changePct * 100) / 100,
+          threshold: this.config.concentrationThreshold,
+          prev: previous.concentration,
+          curr: current.concentration,
+        })
         const severity = this.computeSeverity(Math.abs(changePct), this.config.concentrationThreshold)
         const direction: 'increase' | 'decrease' = changePct > 0 ? 'increase' : 'decrease'
 
@@ -297,6 +326,13 @@ export class ChipAnomalyDetector {
       const instThreshold = this.config.concentrationThreshold * 1.5
       const changePct = ((current.institutionalRatio - previous.institutionalRatio) / previous.institutionalRatio) * 100
       if (Math.abs(changePct) >= instThreshold) {
+        logger.info('[ChipAnomalyDetector] institutional_change 触发', {
+          symbol: current.symbol,
+          changePct: Math.round(changePct * 100) / 100,
+          threshold: instThreshold,
+          prev: previous.institutionalRatio,
+          curr: current.institutionalRatio,
+        })
         const severity = this.computeSeverity(Math.abs(changePct), instThreshold)
         const direction: 'increase' | 'decrease' = changePct > 0 ? 'increase' : 'decrease'
 

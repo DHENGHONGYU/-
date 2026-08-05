@@ -11,6 +11,10 @@ import {
 } from 'recharts'
 import { CHART_PALETTE } from '@/constants/theme.tokens'
 import { usePerfTrace } from '@/hooks/usePerfTrace'
+import { safeFormatNumber } from '@/lib/format'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 export interface SubIndicatorBarDataItem {
   name: string
@@ -52,6 +56,13 @@ const SubIndicatorBar = forwardRef<HTMLDivElement, SubIndicatorBarProps>(
     ref,
   ) => {
     usePerfTrace('SubIndicatorBar', { points: data.length })
+
+    logger.info('[SubIndicatorBar] 渲染', {
+      dataPoints: data.length,
+      layout,
+      sortByValue,
+      hasValueDomain: !!valueDomain,
+    })
 
     const sortedData = [...data].filter((d) => d.value !== null).sort((a, b) => {
       if (sortByValue === 'asc') return (a.value ?? 0) - (b.value ?? 0)
@@ -133,7 +144,7 @@ const SubIndicatorBar = forwardRef<HTMLDivElement, SubIndicatorBarProps>(
                 formatter={(value, _name, props) => {
                   const payload = props?.payload as SubIndicatorBarDataItem | undefined
                   const unit = payload?.unit ?? ''
-                  return [Number(value).toFixed(2) + unit, payload?.name ?? '']
+                  return [safeFormatNumber(Number(value), 2) + unit, payload?.name ?? '']
                 }}
               />
             )}
@@ -147,7 +158,7 @@ const SubIndicatorBar = forwardRef<HTMLDivElement, SubIndicatorBarProps>(
                       position: isVertical ? 'right' : 'top',
                       fill: CHART_PALETTE.axisDark,
                       fontSize: 10,
-                      formatter: (value) => Number(value).toFixed(1),
+                      formatter: (value) => safeFormatNumber(Number(value), 1),
                     }
                   : undefined
               }
