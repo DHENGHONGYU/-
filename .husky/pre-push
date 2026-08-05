@@ -6,10 +6,36 @@
 
 set -e
 
+# ── 引入共享 scope 正则校验函数 ──
+. "$(dirname "$0")/scope-regex.sh"
+
+# ── 日志系统 ──
+# 日志路径: .tmp/logs/pre-push.log（自动创建目录，追加写入）
+# 日志格式: [ISO 时间戳] [级别] 内容
+PREPUSH_LOG_DIR=".tmp/logs"
+PREPUSH_LOG_FILE="${PREPUSH_LOG_DIR}/pre-push.log"
+_prepush_log() {
+  _level="$1"
+  _msg="$2"
+  _ts=$(date '+%Y-%m-%dT%H:%M:%S%z' 2>/dev/null || date '+%Y-%m-%dT%H:%M:%S')
+  mkdir -p "$PREPUSH_LOG_DIR" 2>/dev/null || true
+  printf '[%s] [%s] %s\n' "$_ts" "$_level" "$_msg" >> "$PREPUSH_LOG_FILE" 2>/dev/null || true
+}
+log_info()  { _prepush_log "INFO"  "$1"; }
+log_warn()  { _prepush_log "WARN"  "$1"; }
+log_error() { _prepush_log "ERROR" "$1"; }
+
 # 便携垫片：本机无独立 Node 安装（仅 Kimi 受管 runtime 的 npm.cmd/npx.cmd），
 # Git Bash 的 sh 不按裸名解析 .cmd，此处兜底定义为 shell 函数（不影响已有正常环境）。
 command -v npx >/dev/null 2>&1 || npx() { npx.cmd "$@"; }
 command -v npm >/dev/null 2>&1 || npm() { npm.cmd "$@"; }
+
+# 记录脚本启动环境信息
+log_info "===== pre-push 钩子启动 ====="
+log_info "Git 版本: $(git --version 2>/dev/null || echo 'unknown')"
+log_info "当前分支: $(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'unknown')"
+log_info "HEAD SHA: $(git rev-parse HEAD 2>/dev/null || echo 'unknown')"
+log_info "Shell: $(sh --version 2>/dev/null | head -1 || echo 'unknown')"
 
 echo ""
 echo "🚀 V9 pre-push 门禁启动 ..."
@@ -32,11 +58,13 @@ echo "================================================"
 #    - repo 浅克隆 / rev-list 失败: 容错跳过，不阻断推送
 SCOPE_VIOLATIONS=0
 SCOPE_VIOLATION_MSGS=""
+log_info "Scope 校验开始 — 读取 stdin 推送信息"
 while read -r local_ref local_sha remote_ref remote_sha; do
   # 删除分支场景: local_sha 全 0，直接跳过不校验
   case "$local_sha" in
     0000000000000000000000000000000000000000|"") continue ;;
   esac
+  log_info "检查 ref: local=${local_sha:0:12} remote=${remote_sha:0:12}"
 
   # 确定推送范围
   case "$remote_sha" in
@@ -47,15 +75,18 @@ while read -r local_ref local_sha remote_ref remote_sha; do
       SINGLE_COMMIT=""
       if git rev-list "${local_sha}~1..${local_sha}" --no-merges >/dev/null 2>&1; then
         RANGE="${local_sha}~1..${local_sha}"
+        log_info "新分支推送: RANGE=${local_sha:0:8}~1..${local_sha:0:8}"
       else
         # 浅克隆或首 commit 仓库: ~1 可能失败，退化为单 commit 枚举
         SINGLE_COMMIT="$local_sha"
+        log_warn "新分支推送: HEAD~1 不可用，退化为 SINGLE_COMMIT（浅克隆/首commit）"
       fi
       ;;
     *)
       # 已有分支更新：只检查新增的 commits（无增量时 rev-list 返回空，for 自动跳过）
       RANGE="${remote_sha}..${local_sha}"
       SINGLE_COMMIT=""
+      log_info "增量推送: RANGE=${remote_sha:0:8}..${local_sha:0:8}"
       ;;
   esac
 
@@ -68,29 +99,38 @@ while read -r local_ref local_sha remote_ref remote_sha; do
   if [ -z "$CHECK_SHAS" ] && [ -n "${SINGLE_COMMIT:-}" ]; then
     CHECK_SHAS="$SINGLE_COMMIT"
   fi
+  _commit_count=0
   for sha in $CHECK_SHAS; do
     [ -z "$sha" ] && continue
+    _commit_count=$((_commit_count + 1))
     SUBJECT=$(git log --format='%s' -n 1 "$sha" 2>/dev/null || echo "")
     [ -z "$SUBJECT" ] && continue
+    log_info "解析 commit: ${sha:0:8} subject='${SUBJECT}'"
 
-    # 提取 scope: type(scope): desc → scope
-    SCOPE=$(echo "$SUBJECT" | sed -nE 's/^(feat|fix|docs|chore|refactor|test|ci|style|perf|build|revert)\((.+)\): .*/\2/p')
-    [ -z "$SCOPE" ] && continue
-
-    # 检查 scope 是否包含内部编号（p0, P0, p1-2, P1-2 等，不区分大小写）
-    # 正则: p 前面不能是字母或连字符（避免误匹配 app0 和 FIN-P0 中的 P0），p 后面是数字 0-6
-    if echo "$SCOPE" | grep -qiE '(^|[^a-zA-Z-])p[0-6]([^0-9a-zA-Z-]|$)|(^|[^a-zA-Z-])p[0-6]-[0-9]+'; then
+    # 使用共享函数校验 scope
+    if validate_scope "$SUBJECT"; then
+      # 合规或无 scope
+      if [ -n "$SCOPE" ]; then
+        log_info "Scope 合规: scope='${SCOPE}' commit=${sha:0:8}"
+      else
+        log_info "无 scope（非 conventional commit），跳过"
+      fi
+    else
+      # 不合规
       SCOPE_VIOLATIONS=$((SCOPE_VIOLATIONS + 1))
       SHORT_SHA=$(echo "$sha" | cut -c1-8)
       SCOPE_VIOLATION_MSGS="${SCOPE_VIOLATION_MSGS}
    - ${SHORT_SHA}: ${SUBJECT}"
+      log_error "Scope 违规: scope='${SCOPE}' commit=${SHORT_SHA} subject='${SUBJECT}'"
     fi
   done
+  log_info "本轮检查完成: 扫描 ${_commit_count} 个 commit，累计违规 ${SCOPE_VIOLATIONS} 个"
   # 清除单轮变量，避免污染下一轮 while read
-  unset RANGE CHECK_SHAS SINGLE_COMMIT
+  unset RANGE CHECK_SHAS SINGLE_COMMIT _commit_count
 done
 
 if [ "$SCOPE_VIOLATIONS" -gt 0 ]; then
+  log_error "Scope 校验失败: ${SCOPE_VIOLATIONS} 个不合规提交，推送被阻止"
   echo ""
   echo "❌ Commit Message Scope 校验失败：发现 ${SCOPE_VIOLATIONS} 个不合规提交"
   echo "$SCOPE_VIOLATION_MSGS"
@@ -105,6 +145,8 @@ if [ "$SCOPE_VIOLATIONS" -gt 0 ]; then
   exit 1
 fi
 
+log_info "Scope 校验通过: 0 个违规提交"
+log_info "Scope 校验段结束 — 进入后续门禁步骤"
 echo "✅ [0/6] Commit Message Scope 校验通过（无内部编号泄漏）"
 
 # 0. 技能路由强制校验（mandatory 技能 gates 确认；旁路：SKILL_GATE_CONFIRM=1 git push）
@@ -167,3 +209,4 @@ echo ""
 echo "================================================"
 echo "✅ V9 pre-push 门禁全部通过，允许推送。"
 echo ""
+log_info "===== pre-push 钩子完成 — 全部门禁通过 ====="

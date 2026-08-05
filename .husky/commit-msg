@@ -18,6 +18,9 @@
 
 set -eu
 
+# ── 引入共享 scope 正则校验函数 ──
+. "$(dirname "$0")/scope-regex.sh"
+
 COMMIT_MSG_FILE="$1"
 # 读取内容并去除 BOM（PowerShell utf8 编码可能带入 BOM）
 CONTENT=$(sed '1s/^\xEF\xBB\xBF//' "$COMMIT_MSG_FILE")
@@ -71,17 +74,14 @@ else
   success "Subject 格式正确"
 fi
 
-# 1c. Scope 内部编号校验（防止 fix(p0) 这种小写/大写内部编号作为 scope）
-#     提取 scope: type(scope): desc → scope
-SCOPE=$(echo "$SUBJECT" | sed -nE 's/^(feat|fix|docs|chore|refactor|test|ci|style|perf|build|revert)\((.+)\): .*/\2/p')
-if [ -n "$SCOPE" ]; then
-  # 检查 scope 是否包含内部编号（p0, P0, p1-2, P1-2 等，不区分大小写）
-  # 正则: p 前面不能是字母或连字符（避免误匹配 app0 和 FIN-P0 中的 P0），p 后面是数字 0-6
-  if echo "$SCOPE" | grep -qiE '(^|[^a-zA-Z-])p[0-6]([^0-9a-zA-Z-]|$)|(^|[^a-zA-Z-])p[0-6]-[0-9]+'; then
-    error "Scope 包含内部编号: '$SCOPE'，请使用 Jira Key 或功能模块名"
-    echo "         内部编号示例: p0, P0, p1-2, P1-2"
-    echo "         合规示例: fix(FIN-P0), fix(auth), fix(store)"
-  fi
+# 1c. Scope 内部编号校验（使用共享函数）
+if validate_scope "$SUBJECT"; then
+  # 合规，继续
+  :
+else
+  error "Scope 包含内部编号: '$SCOPE'，请使用 Jira Key 或功能模块名"
+  echo "         内部编号示例: p0, P0, p1-2, P1-2"
+  echo "         合规示例: fix(FIN-P0), fix(auth), fix(store)"
 fi
 
 # ── 2. 提取 Footer 行 ──

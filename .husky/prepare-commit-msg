@@ -1,0 +1,86 @@
+#!/bin/sh
+# V9 智能投研复盘系统 — prepare-commit-msg 钩子
+# 在用户编辑 commit message 前，自动提示 scope 格式规范
+# 如果检测到不合规的 scope（如 fix(p0)），提供修正建议
+#
+# 触发时机:
+#   - 无参数: 正常提交（首次创建 commit message）
+#   - -m/-F: 使用命令行参数或文件作为初始消息
+#   - merge: merge commit
+#   - squash: squash commit
+#   - rebase: rebase commit
+#
+# 退出码:
+#   0 = 继续，不阻塞提交
+
+set -e
+
+# ── 引入共享 scope 正则校验函数 ──
+. "$(dirname "$0")/scope-regex.sh"
+
+COMMIT_MSG_FILE="${1:-}"
+COMMIT_SOURCE="${2:-}"   # message, template, merge, squash, rebase
+SHA1="${3:-}"            # commit SHA1 (仅在 merge/squash/rebase 时提供)
+
+# 如果没有 commit message 文件，跳过
+if [ -z "$COMMIT_MSG_FILE" ]; then
+  exit 0
+fi
+
+# 合并或 rebase 场景跳过（不修改已有提交历史）
+if [ "$COMMIT_SOURCE" = "merge" ] || [ "$COMMIT_SOURCE" = "squash" ] || [ "$COMMIT_SOURCE" = "rebase" ]; then
+  exit 0
+fi
+
+# 读取当前提交信息
+CURRENT_MSG=$(cat "$COMMIT_MSG_FILE" 2>/dev/null || echo "")
+
+# 如果没有提交信息，跳过
+if [ -z "$(echo "$CURRENT_MSG" | grep -v '^#' | tr -d '[:space:]')" ]; then
+  exit 0
+fi
+
+# 提取第一行（subject）
+SUBJECT=$(echo "$CURRENT_MSG" | head -n 1)
+
+# 使用共享函数校验 scope
+if validate_scope "$SUBJECT"; then
+  # 合规，检查是否有改进空间
+  SCOPE=$SCOPE  # 从 validate_scope 获取的全局变量
+
+  if [ -n "$SCOPE" ]; then
+    # 检查 scope 是否使用了 Jira Key 格式（建议使用 Jira Key）
+    if ! echo "$SCOPE" | grep -qE '^[A-Z][A-Z0-9_]+-[0-9]+$'; then
+      # 不是 Jira Key 格式，给出建议但不阻塞
+      if [ "$COMMIT_SOURCE" = "message" ]; then
+        # 命令行 -m 提交，给出提示
+        echo ""
+        echo "📝 [prepare-commit-msg] Tip: Consider using a Jira Key as scope (e.g., fix(FIN-P0))"
+        echo "   Current scope '$SCOPE' is valid, but Jira Keys provide better traceability"
+      fi
+    fi
+  fi
+  exit 0
+else
+  # 不合规 scope，给出修正建议（不阻塞，由 commit-msg 拦截）
+  echo ""
+  echo "╔══════════════════════════════════════════════════════════════╗"
+  echo "║  ⚠  Scope Format Warning                                      ║"
+  echo "╠══════════════════════════════════════════════════════════════╣"
+  echo "║                                                              ║"
+  printf "║  Your commit message contains an invalid scope: '%s'\n" "$SCOPE"
+  echo "║                                                              ║"
+  echo "║  Invalid scopes use internal numbering (p0, P0, p1-2, etc.)   ║"
+  echo "║  which is not allowed in commit messages.                    ║"
+  echo "║                                                              ║"
+  echo "║  Suggested fixes:                                            ║"
+  echo "║    • Use Jira Key:  fix(FIN-P0)  fix(AUTH-123)               ║"
+  echo "║    • Use module name:  fix(auth)  fix(deps)                  ║"
+  echo "║                                                              ║"
+  echo "║  Your commit will be blocked by commit-msg hook.             ║"
+  echo "║  Please amend: git commit --amend -m 'fix(FIN-P0): ...'      ║"
+  echo "║                                                              ║"
+  echo "╚══════════════════════════════════════════════════════════════╝"
+  echo ""
+  exit 0  # 不阻塞，由 commit-msg 钩子拦截
+fi
