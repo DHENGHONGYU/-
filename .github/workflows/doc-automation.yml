@@ -23,7 +23,7 @@ jobs:
         with:
           # 需要完整历史以支持 git diff（doc-update-trigger / doc-auto-updater 依赖变更检测）
           fetch-depth: 0
-      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 20
           cache: 'npm'

@@ -1,0 +1,101 @@
+# .github/workflows/skill-ghosts-weekly.yml
+# 每周 SKILL 幽灵条目巡检 — 每周一 08:17 (Asia/Shanghai = UTC 00:17)
+# 巡检内容: ① skill-doc-index.json 幽灵引用 ② related_skills 可达性
+#           ③ covers_docs 存在性 ④ gates 脚本注册 ⑤ frontmatter 一致性 ⑥ 目录对应
+# 报告输出: outputs/audit-reports/skill-ghosts-weekly-YYYY-MM-DD.json
+#
+# ⚠️ GitHub Actions cron 在高峰期可能延迟 5-30 分钟，属正常现象。
+#    如需精确触发，建议改用外部调度器（如 cron-job.org）调用 workflow_dispatch API。
+name: SKILL Ghosts Weekly
+
+on:
+  schedule:
+    # 每周一 UTC 00:17 = Asia/Shanghai 08:17
+    - cron: '17 0 * * 1'
+  workflow_dispatch:  # 支持手动触发
+
+permissions:
+  contents: read
+  issues: write  # 用于自动创建 Issue 跟踪幽灵条目
+
+jobs:
+  skill-ghosts-weekly:
+    name: SKILL ghosts weekly audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - run: npm ci --ignore-scripts --no-audit
+
+      - name: Run weekly SKILL ghosts audit
+        run: node scripts/audit/audit-skill-ghosts-weekly.cjs
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: skill-ghosts-weekly-${{ github.run_id }}
+          path: outputs/audit-reports/skill-ghosts-weekly-*.json
+          retention-days: 90
+
+      - name: Create Issue on failure (auto-track ghosts)
+        if: failure()
+        uses: actions/github-script@60a0d8304853c3a3f0a1f3ff0c2c2f7e60c3e8b3 # v7.0.1
+        with:
+          script: |
+            const fs = require('fs');
+            const date = new Date().toISOString().split('T')[0];
+            const reportPath = `outputs/audit-reports/skill-ghosts-weekly-${date}.json`;
+            let reportSummary = '无法读取报告文件';
+            try {
+              const report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
+              const failed = report.checks.filter(c => c.status === 'fail');
+              reportSummary = failed.map(c =>
+                `### ❌ ${c.name}\n${c.message}\n\n详情:\n${c.details.slice(0, 5).map(d => `- ${JSON.stringify(d)}`).join('\n')}`
+              ).join('\n\n');
+            } catch (e) {}
+
+            const body = `## 🔴 SKILL 幽灵巡检发现异常
+
+**巡检日期**: ${date}
+**触发方式**: ${context.eventName}
+**运行 ID**: ${context.runId}
+**报告链接**: [查看 Actions 运行](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+
+---
+
+${reportSummary}
+
+---
+
+### 修复指南
+
+1. 查看 \`outputs/audit-reports/skill-ghosts-weekly-${date}.json\` 完整报告
+2. 参考 \`docs/how-to/SKILL-PR-CHECKLIST.md\` §四「常见违规修复手册」
+3. 修复后运行 \`npm run audit:skill-coverage\` 验证退出码=0
+4. 关闭本 Issue 时附上修复 PR 链接
+`;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[SKILL 巡检] ${date} 发现幽灵条目`,
+              body: body,
+              labels: ['bug', 'skill-governance', 'auto-generated']
+            });
+
+      - name: Notify on failure (optional, requires secrets.SLACK_WEBHOOK)
+        if: failure()
+        uses: rtCamp/action-slack-notify@007880c84f2ebf4138f4d1c1799fd5d45b2c9740 # v2.3.2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_TITLE: 'SKILL 幽灵巡检发现异常'
+          SLACK_MESSAGE: '每周巡检未通过，请查看报告: outputs/audit-reports/'
+          SLACK_COLOR: '#FF0000'
+        continue-on-error: true

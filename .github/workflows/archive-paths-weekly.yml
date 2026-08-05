@@ -1,0 +1,203 @@
+# .github/workflows/archive-paths-weekly.yml
+# 归档路径完整性巡检 — 每周一 09:17 (Asia/Shanghai = UTC 01:17)
+# 巡检内容: docs/meta/skill-p0-archive-index.md 中引用的 18 个路径是否有效
+# 报告输出: outputs/audit-reports/archive-paths-weekly-YYYY-MM-DD.json
+# 汇总输出: outputs/audit-reports/archive-paths-summary-YYYY-MM-DD.xlsx
+#
+# v1.2.0 新增 USE_DOCKER 环境变量:
+#   - USE_DOCKER=false（默认）: 原生执行（setup-node + setup-python）
+#   - USE_DOCKER=true: 使用预构建镜像 ghcr.io/<owner>/<repo>/archive-paths-monitoring:latest
+#
+# ⚠️ GitHub Actions cron 在高峰期可能延迟 5-30 分钟，属正常现象。
+name: Archive Paths Weekly
+
+on:
+  schedule:
+    # 每周一 UTC 01:17 = Asia/Shanghai 09:17（错开 SKILL 幽灵巡检的 08:17）
+    - cron: '17 1 * * 1'
+  workflow_dispatch:  # 支持手动触发
+    inputs:
+      use_docker:
+        description: '使用预构建 Docker 镜像（true）或原生执行（false）'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write  # 用于自动创建 Issue 跟踪死链
+  packages: read  # 用于拉取 GHCR 镜像
+
+env:
+  # 默认 false（兼容旧版本）。可在 Actions 页面手动设为 true 切换到 Docker 模式
+  USE_DOCKER: ${{ github.event.inputs.use_docker || 'false' }}
+  IMAGE_NAME: ghcr.io/${{ github.repository }}/archive-paths-monitoring:latest
+
+jobs:
+  archive-paths-weekly:
+    name: Archive paths weekly audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      # === 原生执行模式（USE_DOCKER=false）===
+      - name: Set up Node.js
+        if: env.USE_DOCKER == 'false'
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Set up Python
+        if: env.USE_DOCKER == 'false'
+        uses: actions/setup-python@42375524e23c412d7fb33b2e5b226d47e7a905df # v5.4.0
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install npm dependencies
+        if: env.USE_DOCKER == 'false'
+        run: npm ci --ignore-scripts --no-audit
+
+      - name: Install Python dependencies
+        if: env.USE_DOCKER == 'false'
+        run: pip install openpyxl
+
+      - name: Run weekly archive paths audit (native)
+        if: env.USE_DOCKER == 'false'
+        run: node scripts/audit/archive-paths-weekly.cjs
+
+      - name: Aggregate historical reports to Excel (native)
+        if: env.USE_DOCKER == 'false' && always()
+        run: python scripts/audit/aggregate-archive-reports.py
+
+      # === Docker 镜像模式（USE_DOCKER=true）===
+      - name: Login to GHCR
+        if: env.USE_DOCKER == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run weekly archive paths audit (Docker)
+        if: env.USE_DOCKER == 'true'
+        run: |
+          docker run --rm -v "$PWD":/workspace -w /workspace \
+            -e ARCHIVE_ROOT=/workspace \
+            -e ARCHIVE_REPORT_DIR=/workspace/outputs/audit-reports \
+            "$IMAGE_NAME" audit
+
+      - name: Aggregate historical reports to Excel (Docker)
+        if: env.USE_DOCKER == 'true' && always()
+        run: |
+          docker run --rm -v "$PWD":/workspace -w /workspace \
+            -e ARCHIVE_ROOT=/workspace \
+            -e ARCHIVE_REPORT_DIR=/workspace/outputs/audit-reports \
+            "$IMAGE_NAME" aggregate
+
+      # === 错误日志解析（两种模式共用，使用预构建镜像）===
+      - name: Parse error log (if any)
+        if: failure() && hashFiles('outputs/audit-reports/aggregate-errors-*.log') != ''
+        run: |
+          # 优先使用 Docker 镜像解析，回退到本地 python
+          if docker pull "$IMAGE_NAME" 2>/dev/null; then
+            docker run --rm -v "$PWD":/workspace -w /workspace \
+              "$IMAGE_NAME" \
+              parse outputs/audit-reports/aggregate-errors-$(date +%F).log --json \
+              > error-summary.json
+          else
+            pip install -q -r scripts/toolkit/archive-paths-monitoring/requirements.txt
+            python scripts/toolkit/archive-paths-monitoring/parse_error_log.py \
+              outputs/audit-reports/aggregate-errors-$(date +%F).log --json \
+              > error-summary.json
+          fi
+          echo "📋 错误摘要:"
+          cat error-summary.json
+
+      - name: Upload error summary (JSON)
+        if: always() && hashFiles('error-summary.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: error-summary-json-${{ github.run_id }}
+          path: error-summary.json
+          retention-days: 90
+
+      - name: Upload audit report (JSON)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: archive-paths-weekly-json-${{ github.run_id }}
+          path: outputs/audit-reports/archive-paths-weekly-*.json
+          retention-days: 90
+
+      - name: Upload audit summary (Excel)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: archive-paths-summary-xlsx-${{ github.run_id }}
+          path: outputs/audit-reports/archive-paths-summary-*.xlsx
+          retention-days: 90
+
+      - name: Create Issue on failure (auto-track dead links)
+        if: failure()
+        uses: actions/github-script@60a0d8304853c3a3f0a1f3ff0c2c2f7e60c3e8b3 # v7.0.1
+        with:
+          script: |
+            const fs = require('fs');
+            const date = new Date().toISOString().split('T')[0];
+            const reportPath = `outputs/audit-reports/archive-paths-weekly-${date}.json`;
+            let reportSummary = '无法读取报告文件';
+            try {
+              const report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
+              const dead = report.checks.filter(c => !c.exists);
+              reportSummary = dead.map(c =>
+                `### ❌ [${c.section}] ${c.path}\n- 类别: ${c.category}\n- 状态: 文件不存在\n- 修复: 检查文件是否被移动/重命名/删除`
+              ).join('\n\n');
+            } catch (e) {}
+
+            const body = `## 🔴 归档路径巡检发现死链
+
+**巡检日期**: ${date}
+**触发方式**: ${context.eventName}
+**运行 ID**: ${context.runId}
+**执行模式**: ${process.env.USE_DOCKER === 'true' ? 'Docker 镜像' : '原生执行'}
+**报告链接**: [查看 Actions 运行](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+
+---
+
+${reportSummary}
+
+---
+
+### 修复指南
+
+1. 查看 \`outputs/audit-reports/archive-paths-weekly-${date}.json\` 完整报告
+2. 下载 Excel 汇总报表 artifact（含 4 个 Sheet: 周报汇总/路径明细/死链事件/趋势数据）
+3. 下载 \`error-summary-json-${context.runId}\` artifact（错误日志结构化摘要，便于程序化处理）
+4. 参考 \`docs/meta/skill-p0-archive-index.md\` §五.3 中的路径清单
+5. 确认文件是否被移动/重命名/删除
+6. 更新归档索引中的路径引用
+7. 同步更新 \`scripts/audit/archive-paths-weekly.cjs\` 的 ARCHIVE_PATHS 数组
+8. 重新运行本脚本验证退出码=0
+9. 关闭本 Issue 时附上修复 PR 链接
+`;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[归档巡检] ${date} 发现 ${dead ? dead.length : '?'} 个死链`,
+              body: body,
+              labels: ['bug', 'doc-governance', 'auto-generated']
+            });
+
+      - name: Notify on failure (optional, requires secrets.SLACK_WEBHOOK)
+        if: failure()
+        uses: rtCamp/action-slack-notify@007880c84f2ebf4138f4d1c1799fd5d45b2c9740 # v2.3.2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_TITLE: '归档路径巡检发现死链'
+          SLACK_MESSAGE: '每周巡检未通过，请查看报告: outputs/audit-reports/'
+          SLACK_COLOR: '#FF0000'
+        continue-on-error: true
+
