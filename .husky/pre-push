@@ -6,6 +6,12 @@
 
 set -e
 
+# ── echo 容错垫片（2026-08-05 修复）──
+# Windows + PowerShell 环境下，git hooks 的 stdout 偶发被绑定到已关闭的管道，
+# 导致 `echo` 写入失败 "Bad file descriptor"，set -e 会让脚本立即退出。
+# 重定义 echo 为容错函数：写入失败时不触发 set -e 退出。
+echo() { command echo "$@" 2>/dev/null || true; }
+
 # ── 引入共享 scope 正则校验函数 ──
 . "$(dirname "$0")/scope-regex.sh"
 
