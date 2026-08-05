@@ -24,7 +24,11 @@ jobs:
           node-version: 22
           cache: 'npm'
       # build 需要 esbuild 原生二进制，故不使用 --ignore-scripts
-      - run: npm ci
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+      - run: npm install --no-audit
       - name: Type check (tsc:prod)
         run: npm run tsc:prod
       - name: Production build
@@ -41,7 +45,11 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+      - run: npm install --no-audit
       # Phase1 覆盖率仅报告，continue-on-error 使基线建立期不阻塞推送；
       # Phase2 改为 ratchet 下限（建议 line≥80 / branch≥70）后去掉 continue-on-error
       - name: Unit tests + coverage (Phase1 report-only)
@@ -68,7 +76,11 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+      - run: npm install --no-audit
       - name: Run chart industry tests (106 cases)
         run: npm run test:chart:industry
         env:
@@ -97,7 +109,11 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci --ignore-scripts --no-audit
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+      - run: npm install --no-audit --ignore-scripts --no-audit
       - name: P0-1 种子数据重试 + P0-2 内存降级模式
         run: npm run test:bootstrap:p0
         env:
@@ -122,7 +138,11 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+      - run: npm install --no-audit
       - name: audit:layers (禁止跨层调用)
         run: npm run audit:layers
 
@@ -138,7 +158,11 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+      - run: npm install --no-audit
       - name: DataBridge 数据流转 + bootstrapService + ACL 完整性检查
         run: npm run test:databridge:gate
         env:
@@ -155,7 +179,11 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+      - run: npm install --no-audit
       - name: P0 核心模块测试（cascadeExecutor + databridgeAdapter + acl fail-closed + 回归测试，141 项用例）
         run: npm run test:p0:core:ci
         env:
