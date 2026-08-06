@@ -252,7 +252,7 @@ export default defineConfig({
     modulePreload: {
       polyfill: false,
       resolveDependencies(_filename, deps, context) {
-        const heavyChunks = ['charts', 'pdf', 'excel', 'transformers', 'duckdb', 'html2canvas']
+        const heavyChunks = ['charts', 'pdf', 'excel', 'duckdb', 'html2canvas']
         return deps.filter((dep) => {
           const isHeavy = heavyChunks.some((name) => dep.includes(name))
           return !isHeavy
@@ -267,7 +267,6 @@ export default defineConfig({
           'charts': ['recharts', 'lightweight-charts'],
           'pdf': ['jspdf', 'jspdf-autotable'],
           'excel': ['xlsx'],
-          'transformers': ['@xenova/transformers'],
           'duckdb': ['@duckdb/duckdb-wasm'],
           'purify': ['dompurify'],
           'html2canvas': ['html2canvas'],
