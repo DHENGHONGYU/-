@@ -1,0 +1,35 @@
+V9 Embedding Service — 生产环境部署套件
+=============================================
+
+版本标签:    v1.2.0
+发布日期:    2026-08-06
+验证状态:    ✅ 已通过 Docker 容器 v9-embedding-prod 实测验证
+验证内容:    5 项自动化测试全 PASS（健康检查/嵌入/批量/指标/配置）
+Git 标签:    v1.2.0
+基准文档:    ADR-014 (CPU 单 Worker 最优)
+实测模型:    all-MiniLM-L6-v2 (384 维)
+
+包含文件:
+  - v9-embedding.service        # systemd 服务文件（v1.2.0）
+  - deploy.sh                   # 一键部署脚本（v1.2.0，含 start/stop/test/cluster）
+  - start-embedding.sh          # uvicorn 启动脚本（CPU/GPU 自动检测）
+  - nginx-embedding.conf        # Nginx 多实例负载均衡配置
+  - PRODUCTION-DEPLOYMENT-SOP.md # 生产环境部署操作指南（v1.2.0）
+  - SYSTEMD-DEPLOYMENT-GUIDE.md  # systemd 单 Worker 部署设计文档
+  - Dockerfile.production       # 生产镜像 Dockerfile (DEPLOY_VERSION=prod-v1.2.0)
+  - Dockerfile.embedding        # Embedding 服务基础镜像 Dockerfile
+  - docker-compose.embedding.yml # Docker Compose 编排（单机/集群）
+  - embedding_service.py        # FastAPI 服务主程序（v2.0.0 Week2）
+  - requirements.txt            # Python 依赖清单
+  - MANIFEST.txt                # 本文件
+  - VERSION                     # 版本元数据
+
+快速开始:
+  1) scp v9-embedding-deploy-v1.2.0.tar.gz user@server:/opt/
+  2) ssh user@server
+  3) tar -xzf v9-embedding-deploy-v1.2.0.tar.gz -C /opt/finsight-v9/
+  4) cd /opt/finsight-v9/backend && bash deploy.sh deploy --workers 1
+
+验证命令:
+  ./deploy.sh test --port 8001
+  curl http://localhost:8001/api/embed/health

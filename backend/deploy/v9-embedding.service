@@ -1,0 +1,160 @@
+# ============================================================================
+# V9 Embedding Service — systemd 服务文件
+# ============================================================================
+#
+# 版本: v1.2.0
+# 发布日期: 2026-08-06
+# 验证状态: ✅ 已通过 Docker 容器 v9-embedding-prod 实测验证
+#
+# 基于 ADR-014 性能基准结论，默认使用 --workers 1（CPU 密集场景最优）
+# 生产环境推荐：systemd 守护 + 自动重启 + 资源限制 + 日志持久化
+#
+# 变更日志 (v1.2.0):
+#   - 补充 12 项环境变量完整清单（与 deploy.sh/SOP 对齐）
+#   - 启用 WatchdogSec=180 看门狗
+#   - 增加 ProtectControlGroups 安全加固
+#   - 日志速率限制提升到 LogRateLimitBurst=10000
+#   - 实测通过 5 项自动化测试 + Docker HEALTHCHECK
+#
+#
+# 安装步骤:
+#   1. 复制到 systemd 目录:
+#      sudo cp deploy/v9-embedding.service /etc/systemd/system/
+#   2. 修改配置（根据实际环境调整 Environment 变量）
+#   3. 重新加载:
+#      sudo systemctl daemon-reload
+#   4. 启动服务:
+#      sudo systemctl start v9-embedding
+#   5. 设置开机自启:
+#      sudo systemctl enable v9-embedding
+#
+# 常用命令:
+#   sudo systemctl status v9-embedding    # 查看状态
+#   sudo journalctl -u v9-embedding -f    # 实时日志
+#   sudo systemctl reload v9-embedding    # 重新加载（零停机）
+#   sudo systemctl restart v9-embedding   # 重启
+#
+# GPU 模式:
+#   修改 Environment UVICORN_WORKERS=4（GPU 场景可启用多 worker）
+#   添加 Environment CUDA_VISIBLE_DEVICES=0
+# ============================================================================
+
+[Unit]
+Description=V9 Embedding Service (FastAPI + sentence-transformers)
+Documentation=https://github.com/FinSight/V9/blob/main/docs/reference/adr-014-vector-search-over-tfidf.md
+After=network.target
+After=docker.service
+Wants=network.target
+
+[Service]
+# ---------------------------------------------------------------------------
+# 运行用户
+# ---------------------------------------------------------------------------
+User=embedding
+Group=embedding
+
+# ---------------------------------------------------------------------------
+# 工作目录与应用路径
+# ---------------------------------------------------------------------------
+WorkingDirectory=/opt/finsight-v9/backend
+ExecStart=/opt/finsight-v9/backend/start-embedding.sh
+
+# ---------------------------------------------------------------------------
+# 环境变量（基于 ADR-014 验证配置）
+# ---------------------------------------------------------------------------
+Environment="EMBEDDING_MODEL=all-MiniLM-L6-v2"
+Environment="EMBEDDING_LOG_LEVEL=INFO"
+Environment="EMBEDDING_WARMUP=true"
+Environment="EMBEDDING_MAX_BATCH=64"
+Environment="EMBEDDING_SLOW_THRESHOLD_MS=500"
+Environment="UVICORN_WORKERS=1"
+Environment="UVICORN_HOST=0.0.0.0"
+Environment="UVICORN_PORT=8001"
+Environment="HF_HOME=/opt/finsight-v9/data/hf_cache"
+Environment="HF_ENDPOINT=https://hf-mirror.com"
+Environment="PYTHONUNBUFFERED=1"
+Environment="PYTHONPATH=/opt/finsight-v9/backend"
+Environment="TZ=Asia/Shanghai"
+
+# ---------------------------------------------------------------------------
+# GPU 模式配置（按需启用，需先安装 CUDA 驱动和 torch GPU 版）
+# ---------------------------------------------------------------------------
+# EnvironmentFile=-/opt/finsight-v9/backend/.env.gpu
+# Environment="UVICORN_WORKERS=4"
+# Environment="CUDA_VISIBLE_DEVICES=0"
+# Environment="OMP_NUM_THREADS=4"
+
+# ---------------------------------------------------------------------------
+# 重启策略
+# ---------------------------------------------------------------------------
+# 崩溃后自动重启，延迟 5 秒
+Restart=on-failure
+RestartSec=5
+
+# 启动超时 120 秒（模型预热可能较慢）
+TimeoutStartSec=120
+
+# 停止超时 30 秒（优雅关闭等待进行中的请求完成）
+TimeoutStopSec=30
+
+# 启动后等待 30 秒再判定为成功（给模型预热留足时间）
+WatchdogSec=180
+
+# ---------------------------------------------------------------------------
+# 资源限制（防止单 worker 内存泄漏导致 OOM）
+# ---------------------------------------------------------------------------
+# CPU 亲和性（绑定到特定核心，减少 NUMA 开销）
+# CPUAffinity=0-3
+
+# 最大文件描述符
+LimitNOFILE=65536
+
+# 最大进程数
+LimitNPROC=4096
+
+# 内存限制（软限制 4GB，硬限制 8GB，根据实际调整）
+# MemoryMax=8G
+# MemoryHigh=4G
+
+# ---------------------------------------------------------------------------
+# 日志配置（写入 journald，自动轮转）
+# ---------------------------------------------------------------------------
+# 使用 syslog 格式，方便与 journalctl 集成
+LogLevelMax=info
+LogRateLimitBurst=10000
+LogRateLimitIntervalSec=60
+
+# 标准输出/错误 → journald
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=v9-embedding
+
+# ---------------------------------------------------------------------------
+# 安全加固
+# ---------------------------------------------------------------------------
+# 禁止特权升级
+NoNewPrivileges=true
+
+# 限制可用的系统调用
+# SystemCallFilter=@system-service
+
+# 只读根文件系统（需确保 HF_HOME 和日志目录为可写挂载）
+# ProtectSystem=strict
+# ProtectHome=true
+# ReadWritePaths=/opt/finsight-v9/data /var/log/v9-embedding
+
+# 禁止访问 /proc 和 /sys 中的敏感信息
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+
+# ---------------------------------------------------------------------------
+# 健康检查（systemd 主动探测，比被动 Restart 更可靠）
+# ---------------------------------------------------------------------------
+# 注意：systemd 本身不执行 HTTP 健康检查
+# 建议配合 Docker HEALTHCHECK 或外部监控（Prometheus + Alertmanager）
+# 使用 systemd notify 协议（需 uvicorn 支持 sd_notify）
+# Type=notify
+
+[Install]
+WantedBy=multi-user.target

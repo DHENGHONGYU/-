@@ -1,0 +1,153 @@
+# ============================================================================
+# Dockerfile.production — V9 Embedding Service 生产环境部署镜像
+# ============================================================================
+#
+# 基于 ADR-014 性能基准结论，打包内容：
+#   1. Embedding Service 应用（继承自 Dockerfile.embedding）
+#   2. deploy.sh — 一键部署脚本（start/stop/cluster/gpu/test）
+#   3. start-embedding.sh — uvicorn 启动脚本（CPU/GPU 自动检测）
+#   4. v9-embedding.service — systemd 服务文件（生产守护进程）
+#   5. nginx-embedding.conf — Nginx 负载均衡配置（多实例集群）
+#   6. SYSTEMD-DEPLOYMENT-GUIDE.md — 部署指南文档
+#
+# 多阶段构建：
+#   Stage 1 (builder): 基于 Dockerfile.embedding 构建应用层
+#   Stage 2 (production): 添加部署工具，生成最终生产镜像
+#
+# 构建:
+#   # 标准生产镜像（all-MiniLM-L6-v2，~2GB）
+#   docker build -t finsightv9/embedding-service:prod \
+#     -f Dockerfile.production .
+#
+#   # 带 bge-large-zh-v1.5 模型的生产镜像（~3.5GB）
+#   docker build -t finsightv9/embedding-service:prod-bge \
+#     --build-arg PRELOAD_MODELS="bge-large-zh-v1.5" \
+#     -f Dockerfile.production .
+#
+#   # 双模型预加载（最大镜像 ~4GB）
+#   docker build -t finsightv9/embedding-service:prod-full \
+#     --build-arg PRELOAD_MODELS="all-MiniLM-L6-v2 bge-large-zh-v1.5" \
+#     -f Dockerfile.production .
+#
+# 运行:
+#   # 方式 1: 容器直接运行（推荐）
+#   docker run -d --name v9-embedding --restart unless-stopped \
+#     -p 8001:8001 \
+#     -e EMBEDDING_WARMUP=true \
+#     -v v9-hf-cache:/app/hf_cache \
+#     finsightv9/embedding-service:prod
+#
+#   # 方式 2: 提取部署脚本到宿主机（bare-metal 部署）
+#   docker create --name deploy-helper finsightv9/embedding-service:prod
+#   docker cp deploy-helper:/app/deploy.sh /opt/finsight-v9/backend/
+#   docker cp deploy-helper:/app/deploy/ /opt/finsight-v9/backend/
+#   docker cp deploy-helper:/app/start-embedding.sh /opt/finsight-v9/backend/
+#   docker rm deploy-helper
+#
+#   # 方式 3: 使用 deploy.sh 管理容器
+#   docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+#     finsightv9/embedding-service:prod ./deploy.sh status
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Stage 1: Builder — 构建 Embedding Service 应用层
+# ----------------------------------------------------------------------------
+FROM finsightv9/embedding-service:v2.0.0 AS builder
+
+# ----------------------------------------------------------------------------
+# Stage 2: Production — 添加部署工具，生成最终镜像
+# ----------------------------------------------------------------------------
+FROM builder AS production
+
+# 构建参数
+ARG PRELOAD_MODELS="all-MiniLM-L6-v2"
+ARG DEPLOY_VERSION="prod-v1.2.0"
+
+# 元数据标签
+LABEL org.opencontainers.image.title="V9 Embedding Service (Production)"
+LABEL org.opencontainers.image.description="CPU 密集推理场景生产镜像，含部署脚本和 systemd 配置"
+LABEL org.opencontainers.image.version="${DEPLOY_VERSION}"
+LABEL org.opencontainers.image.source="https://github.com/FinSight/V9"
+LABEL org.opencontainers.image.documentation="docs/reference/adr-014-vector-search-over-tfidf.md"
+LABEL v9.adr="ADR-014"
+LABEL v9.workers="1 (CPU 密集场景最优)"
+LABEL v9.qps="90.67 req/s (实测)"
+
+# -------------------------------------------------------------
+# 安装部署工具依赖
+# -------------------------------------------------------------
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        curl \
+        lsof \
+        net-tools \
+        procps \
+    && rm -rf /var/lib/apt/lists/*
+
+# -------------------------------------------------------------
+# 复制部署脚本和配置文件
+# -------------------------------------------------------------
+WORKDIR /app
+
+# 复制一键部署脚本
+COPY deploy.sh /app/deploy.sh
+RUN chmod +x /app/deploy.sh
+
+# 复制 uvicorn 启动脚本
+COPY start-embedding.sh /app/start-embedding.sh
+RUN chmod +x /app/start-embedding.sh
+
+# 复制部署配置文件目录
+COPY deploy/ /app/deploy/
+
+# -------------------------------------------------------------
+# 环境变量（生产默认值，基于 ADR-014 验证配置）
+# -------------------------------------------------------------
+# 默认单 Worker（CPU 密集场景实测最优：QPS 90.67, P95 177ms, P99 293ms）
+ENV UVICORN_WORKERS=1
+ENV EMBEDDING_MODEL=all-MiniLM-L6-v2
+ENV EMBEDDING_LOG_LEVEL=INFO
+ENV EMBEDDING_WARMUP=true
+ENV EMBEDDING_MAX_BATCH=64
+ENV EMBEDDING_SLOW_THRESHOLD_MS=500
+ENV UVICORN_HOST=0.0.0.0
+ENV UVICORN_PORT=8001
+ENV HF_HOME=/app/hf_cache
+ENV HF_ENDPOINT=https://hf-mirror.com
+ENV PYTHONUNBUFFERED=1
+ENV TZ=Asia/Shanghai
+
+# 部署工具相关
+ENV DEPLOY_VERSION=${DEPLOY_VERSION}
+ENV PYTHONPATH=/app
+
+# -------------------------------------------------------------
+# 健康检查（与 Dockerfile.embedding 保持一致）
+# -------------------------------------------------------------
+HEALTHCHECK --interval=15s --timeout=5s --retries=5 --start-period=90s \
+    CMD python -c "import urllib.request, sys; \
+        r = urllib.request.urlopen('http://localhost:8001/api/embed/health', timeout=3); \
+        data = r.read().decode(); \
+        sys.exit(0 if r.status == 200 and 'ok' in data else 1)"
+
+# -------------------------------------------------------------
+# 端口
+# -------------------------------------------------------------
+EXPOSE 8001
+
+# -------------------------------------------------------------
+# 启动入口
+#
+# 默认行为：启动 Embedding Service（--workers 1）
+# 可通过 docker run 参数覆盖：
+#   docker run ... finsightv9/embedding-service:prod ./deploy.sh start --workers 4
+#   docker run ... finsightv9/embedding-service:prod ./deploy.sh status
+#   docker run ... finsightv9/embedding-service:prod ./deploy.sh test
+# -------------------------------------------------------------
+CMD ["sh", "-c", "\
+    uvicorn embedding_service:app \
+      --host ${UVICORN_HOST:-0.0.0.0} \
+      --port ${UVICORN_PORT:-8001} \
+      --workers ${UVICORN_WORKERS:-1} \
+      --log-level $(echo ${EMBEDDING_LOG_LEVEL:-INFO} | tr '[:upper:]' '[:lower:]') \
+      --access-log \
+      --no-date-header"]
