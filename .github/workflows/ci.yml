@@ -34,8 +34,8 @@ jobs:
       - name: Production build
         run: npm run build
 
-  test:                       # 测试 + 覆盖率（Phase1：先报告建基线，不硬卡）
-    name: Test + coverage (report-only in Phase1)
+  test:                       # 测试 + 覆盖率（Phase2：阈值未达标即阻断）
+    name: Test + coverage (Phase2 threshold gate)
     needs: smoke
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -50,11 +50,10 @@ jobs:
       - name: Build local @finsightv9/safe-format
         run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
       - run: npm install --no-audit
-      # Phase1 覆盖率仅报告，continue-on-error 使基线建立期不阻塞推送；
-      # Phase2 改为 ratchet 下限（建议 line≥80 / branch≥70）后去掉 continue-on-error
-      - name: Unit tests + coverage (Phase1 report-only)
+      # Phase2: 覆盖率阈值正式阻断 — 未达标即 FAIL
+      # 阈值定义见 vite.config.ts coverage.thresholds (src/core/data/lib/services/components/hooks/pages 七级)
+      - name: Unit tests + coverage (Phase2 threshold gate)
         run: npm run test:ci
-        continue-on-error: true
         env:
           CI: true
       - name: Upload coverage report
@@ -300,12 +299,11 @@ jobs:
               body,
             });
 
-  security-audit:             # 依赖安全审计（npm audit, 独立 job, 不阻塞推送）
-    name: Security audit (npm audit)
+  security-audit:             # 依赖安全审计（Phase2：high+critical 即阻断）
+    name: Security audit (npm audit, Phase2 blocking)
     needs: smoke
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    continue-on-error: true    # Phase1: report-only, 不阻塞推送
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -320,8 +318,8 @@ jobs:
         run: npm config set registry https://registry.npmjs.org
       - name: Install dependencies (with npmjs registry)
         run: npm install --package-lock-only --no-audit
-      # 运行审计：仅 high + critical 级别
-      - name: Run npm audit (high+critical only)
+      # Phase2: high + critical 级别漏洞即阻断 CI
+      - name: Run npm audit (high+critical = block)
         run: npm audit --audit-level=high
       - name: Upload audit report
         if: always()
