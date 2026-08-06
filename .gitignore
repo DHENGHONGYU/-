@@ -20,8 +20,13 @@ logs
 .env
 .env.local
 .env.*.local
+.env.docker
 
 # IDE
+.codebuddy/
+.cursorrules
+.workbuddy/
+.trae-cn/
 .vscode
 .idea
 
@@ -89,7 +94,7 @@ __pycache__/
 *.pyo
 
 # Local IDE / tool specs
-.trae/
+# .trae/ 保留追踪（团队 SKILL 体系，不入 .gitignore）
 
 # Root-level generated reports, logs and artifacts
 /tsc_*.txt

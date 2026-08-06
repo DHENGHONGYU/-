@@ -19,7 +19,7 @@
  *      本测试确保未来新增 IDE 文件能被自动拦截。
  */
 import { describe, it, expect } from 'vitest'
-import { execSync, spawnSync } from 'node:child_process'
+import { spawnSync } from 'node:child_process'
 import * as path from 'node:path'
 
 const REPO_ROOT = path.resolve(__dirname, '../../..')
@@ -40,14 +40,23 @@ const MUST_TRACK_PATHS = ['.trae/skills/skill-registry.json', '.trae/skills/INDE
 
 /**
  * 运行 git check-ignore，返回退出码（0=被忽略，1=未被忽略）
+ *
+ * spawnSync 防死锁配置（与 commit-msg-scope-validation.test.ts 对齐）：
+ *  - shell: false + 参数数组形式，避免 shell 解释与命令注入
+ *  - stdio: 'ignore' 不读取 stdout，但仍然设置 maxBuffer 防御性配置
+ *  - windowsHide: true 避免抢焦点
  */
 function gitCheckIgnore(filePath: string): number {
-  try {
-    execSync(`git check-ignore "${filePath}"`, { cwd: REPO_ROOT, stdio: 'ignore' })
-    return 0
-  } catch {
-    return 1
-  }
+  const result = spawnSync('git', ['check-ignore', filePath], {
+    cwd: REPO_ROOT,
+    encoding: 'utf-8',
+    timeout: 15000,
+    stdio: 'ignore',
+    maxBuffer: 10 * 1024 * 1024,
+    windowsHide: true,
+  })
+  // git check-ignore 退出码：0=被忽略，1=未被忽略，>1=错误（视为未被忽略）
+  return result.status === 0 ? 0 : 1
 }
 
 /**
@@ -61,10 +70,19 @@ function runAuditScript(): { status: number; stdout: string } {
   if (probe.status !== 0 || probe.stdout.trim() !== 'ok') {
     return { status: -1, stdout: '[sh unavailable in this environment]' }
   }
+  // spawnSync 防死锁配置（与 commit-msg-scope-validation.test.ts 对齐）：
+  //  1. stdio[0]='ignore' 避免 sh.exe 在 Windows 等待 tty 交互
+  //  2. maxBuffer=10MB 防止输出 >64KB 触发管道缓冲区死锁
+  //  3. windowsHide=true 避免 console 窗口抢占焦点造成 GUI 等待
+  //  4. timeout=15000 防止子进程异常卡住整个测试套件
   const result = spawnSync('sh', [AUDIT_SCRIPT], {
     cwd: REPO_ROOT,
     encoding: 'utf-8',
-    env: { ...process.env, PATH: process.env.PATH || '' },
+    timeout: 15000,
+    stdio: ['ignore', 'pipe', 'pipe'],
+    maxBuffer: 10 * 1024 * 1024,
+    windowsHide: true,
+    env: { ...process.env, PATH: process.env.PATH || '', CI: 'true' },
   })
   return {
     status: result.status ?? -1,
@@ -125,12 +143,12 @@ describe('gitignore-coverage — IDE/环境部署追踪治理', () => {
     })
   })
 
-  describe('完整性：.gitignore line 263-268 规则覆盖', () => {
+  describe('完整性：.gitignore IDE/环境部署追踪规则覆盖', () => {
     it('.gitignore 包含 6 条 IDE 忽略规则', () => {
       const fs = require('node:fs')
       const gitignorePath = path.join(REPO_ROOT, '.gitignore')
       const content = fs.readFileSync(gitignorePath, 'utf-8')
-      const lines = content.split('\n')
+      const lines = content.split(/\r?\n/)
 
       // 6 个必须忽略的路径
       const requiredRules = [
@@ -138,8 +156,8 @@ describe('gitignore-coverage — IDE/环境部署追踪治理', () => {
         '.cursorrules',
         '.workbuddy/',
         '.trae-cn/',
-        '.vscode/',
-        '.idea/',
+        '.vscode',
+        '.idea',
       ]
 
       for (const rule of requiredRules) {
@@ -154,7 +172,7 @@ describe('gitignore-coverage — IDE/环境部署追踪治理', () => {
       const fs = require('node:fs')
       const gitignorePath = path.join(REPO_ROOT, '.gitignore')
       const content = fs.readFileSync(gitignorePath, 'utf-8')
-      const lines = content.split('\n')
+      const lines = content.split(/\r?\n/)
 
       // .trae/ 不应作为独立忽略规则出现（注释中的提及除外）
       const traeIgnoreRule = lines.find(
