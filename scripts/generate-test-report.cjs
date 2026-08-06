@@ -1,43 +1,81 @@
 /**
  * 读取 vitest JSON 输出，生成可视化 HTML 测试报告
+ * 输入文件: outputs/test-results/chartTests.json (与 test:chart:industry --outputFile 严格一致)
+ * 输出文件: outputs/test-results/chart-report.html
  */
 const fs = require('fs')
 const path = require('path')
 
-const jsonPath = path.resolve(__dirname, '../outputs/test-results/chart-tests.json')
-const outPath = path.resolve(__dirname, '../outputs/test-results/chart-report.html')
+const resultsDir = path.resolve(__dirname, '../outputs/test-results')
+const jsonPath = path.join(resultsDir, 'chartTests.json')
+const outPath = path.join(resultsDir, 'chart-report.html')
+
+// 兜底创建目录（CI 中可能存在无 outputs/ 的空 checkout 场景）
+if (!fs.existsSync(resultsDir)) {
+  fs.mkdirSync(resultsDir, { recursive: true })
+  console.log(`[report:chart] Created missing directory: ${resultsDir}`)
+}
+
+// 兜底错误：JSON 不存在时给出明确的排查路径
+if (!fs.existsSync(jsonPath)) {
+  const expectedOldName = path.join(resultsDir, 'chart-tests.json')
+  const suggestions = [
+    '可能原因 1: 上游测试步骤 (test:chart:industry) 未成功执行，请先检查该步骤退出码',
+    `可能原因 2: 文件名不一致 — package.json 使用 "chartTests.json" (无连字符)`,
+    `可能原因 3: 仍使用旧文件名 "chart-tests.json" (有连字符) 但 CI 未更新 upload artifact 路径`,
+    `当前期望路径: ${jsonPath}`,
+    fs.existsSync(expectedOldName) ? `⚠ 发现旧文件名: ${expectedOldName} — 请同步改为 chartTests.json` : '未发现旧文件名',
+  ]
+  console.error('[report:chart] ERROR: chartTests.json not found\n' + suggestions.map(l => '  - ' + l).join('\n'))
+  process.exit(1)
+}
 
 const raw = fs.readFileSync(jsonPath, 'utf-8')
-const data = JSON.parse(raw)
+let data
+try {
+  data = JSON.parse(raw)
+} catch (err) {
+  console.error(`[report:chart] ERROR: JSON 解析失败 — ${err.message}`)
+  console.error(`  文件路径: ${jsonPath}`)
+  console.error(`  文件内容前 200 字节: ${raw.slice(0, 200)}`)
+  process.exit(1)
+}
 
-const totalTests = data.numTotalTests
-const passedTests = data.numPassedTests
-const failedTests = data.numFailedTests
-const duration = ((data.endTime - data.startTime) / 1000).toFixed(2)
-const passRate = ((passedTests / totalTests) * 100).toFixed(1)
+const totalTests = data.numTotalTests ?? 0
+const passedTests = data.numPassedTests ?? 0
+const failedTests = data.numFailedTests ?? 0
+// 避免 toFixed：使用 Math.round 按精度缩放 (no-raw-tofixed 规则延伸)
+const durationSecRaw = ((data.endTime ?? 0) - (data.startTime ?? 0)) / 1000
+const duration = String(Math.round(durationSecRaw * 100) / 100)
+const passRateRaw = totalTests > 0 ? (passedTests / totalTests) * 100 : 0
+const passRate = String(Math.round(passRateRaw * 10) / 10)
 
 // 按文件分组
-const files = data.testResults.map((file) => {
-  const fileName = file.name.split(/[\\/]/).pop()
+const fileTestResults = Array.isArray(data.testResults) ? data.testResults : []
+const files = fileTestResults.map((file) => {
+  const fileName = (file.name || 'unknown').split(/[\\/]/).pop()
   const groups = {}
-  file.assertionResults.forEach((t) => {
-    const group = t.ancestorTitles[0] || '默认'
+  const assertions = Array.isArray(file.assertionResults) ? file.assertionResults : []
+  assertions.forEach((t) => {
+    const group = Array.isArray(t.ancestorTitles) ? (t.ancestorTitles[0] || '默认') : '默认'
     if (!groups[group]) groups[group] = { passed: 0, failed: 0, tests: [] }
     if (t.status === 'passed') groups[group].passed++
     else groups[group].failed++
     groups[group].tests.push({
-      title: t.title,
-      status: t.status,
-      duration: t.duration,
-      ancestors: t.ancestorTitles,
+      title: t.title || '',
+      status: t.status || 'unknown',
+      duration: t.duration ?? 0,
+      ancestors: Array.isArray(t.ancestorTitles) ? t.ancestorTitles : [],
     })
   })
+  const fileDurSecRaw = ((file.endTime ?? 0) - (file.startTime ?? 0)) / 1000
+  // 3 位小数 → 1000 倍取整
   return {
     fileName,
-    fullName: file.name,
-    passed: file.numPassingTests,
-    total: file.assertionResults.length,
-    duration: ((file.endTime - file.startTime) / 1000).toFixed(3),
+    fullName: file.name || '',
+    passed: file.numPassingTests ?? 0,
+    total: assertions.length,
+    duration: String(Math.round(fileDurSecRaw * 1000) / 1000),
     groups,
   }
 })
@@ -55,8 +93,13 @@ const cardColors = {
 function renderTest(test) {
   const statusIcon = test.status === 'passed' ? '✓' : '✗'
   const statusClass = test.status === 'passed' ? 'pass' : 'fail'
-  const dur = test.duration ? `<span class="dur">${test.duration.toFixed(1)}ms</span>` : ''
-  const ancestorPath = test.ancestors.length > 1 ? test.ancestors.slice(1).join(' › ') + ' › ' : ''
+  let dur = ''
+  if (test.duration != null && !Number.isNaN(Number(test.duration))) {
+    const rounded = Math.round(Number(test.duration) * 10) / 10
+    dur = `<span class="dur">${rounded}ms</span>`
+  }
+  const ancestors = Array.isArray(test.ancestors) ? test.ancestors : []
+  const ancestorPath = ancestors.length > 1 ? ancestors.slice(1).join(' › ') + ' › ' : ''
   return `
     <div class="test ${statusClass}">
       <span class="icon">${statusIcon}</span>
@@ -322,6 +365,12 @@ const html = `<!DOCTYPE html>
 </body>
 </html>`
 
-fs.writeFileSync(outPath, html, 'utf-8')
-console.log(`HTML report generated: ${outPath}`)
-console.log(`Tests: ${totalTests} total | ${passedTests} passed | ${failedTests} failed | ${passRate}% pass rate`)
+try {
+  fs.writeFileSync(outPath, html, 'utf-8')
+} catch (err) {
+  console.error(`[report:chart] ERROR: 写入 HTML 报告失败 — ${err.message}`)
+  console.error(`  目标路径: ${outPath}`)
+  process.exit(1)
+}
+console.log(`✅ [report:chart] HTML report generated: ${outPath}`)
+console.log(`  Tests: ${totalTests} total | ${passedTests} passed | ${failedTests} failed | ${passRate}% pass rate | ${duration}s`)

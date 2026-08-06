@@ -94,7 +94,7 @@ jobs:
         with:
           name: dev-chart-industry-test-report
           path: |
-            outputs/test-results/chart-tests.json
+            outputs/test-results/chartTests.json
             outputs/test-results/chart-report.html
           retention-days: 7
 
