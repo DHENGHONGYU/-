@@ -4,7 +4,7 @@
  * 基于 IndexedDB 存储嵌入向量，使用余弦相似度进行检索。
  * 遵循 VectorProvider 接口。
  *
- * 与 localEmbeddingService 配合使用：
+ * 与 cloudEmbeddingService 配合使用：
  * - upsertVector / upsertVectors 存入文档向量
  * - searchVectors 用余弦相似度召回 top-k
  *
@@ -17,7 +17,7 @@ import { STORE_NAME } from '@/config/dbConfig'
 import type { LocalDoc } from '@/data/types'
 import { queryGet, queryList, sendWriteEnvelope } from '@/data/dataLayerHelpers'
 import { getLogger } from '@/lib/logger'
-import { cosineSimilarity } from '@/services/system/localEmbeddingService'
+import { cosineSimilarity } from '@/services/system/cloudEmbeddingService'
 import { HNSWIndex } from './hnswIndex'
 import type {
   DataMorphology,

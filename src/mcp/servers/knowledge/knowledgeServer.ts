@@ -9,7 +9,7 @@ import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor } from '@/types/modules/mcp.types'
 import { getLogger } from '@/lib/logger'
 import { searchLocalDocs } from '@/services/system/localDocService'
-import { embedText, findTopK } from '@/services/system/localEmbeddingService'
+import { embedText, findTopK } from '@/services/system/cloudEmbeddingService'
 import type { LocalDoc } from '@/data/types/types.knowledge'
 
 const logger = getLogger()

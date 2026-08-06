@@ -9,7 +9,7 @@ import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { getLogger } from '@/lib/logger'
-import { embedText, findTopK, getEmbeddingStatus } from '@/services/system/localEmbeddingService'
+import { embedText, findTopK, getEmbeddingStatus } from '@/services/system/cloudEmbeddingService'
 import { nanoid } from 'nanoid'
 
 const logger = getLogger()
