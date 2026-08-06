@@ -1,0 +1,19 @@
+ID,Module,Category,Priority,Status,Description,Impact,RecommendedFix,EstimatedEffort,Alternative,TargetSprint
+FC-1,services/fetcher,Services Layer,P2,known-failing,"fetcherClient 超时重试测试","数据采集链路超时重试路径无单测保护",引入统一 HTTP mocker 复用 fetcherService mock 模式,2d,data-collector 集成测试部分覆盖,Sprint 2 Week 2
+FC-2,services/fetcher,Services Layer,P2,known-failing,"fetcherClient 熔断测试","数据采集熔断恢复路径无单测保护",引入统一 HTTP mocker,2d,data-collector 集成测试部分覆盖,Sprint 2 Week 2
+FC-3,services/fetcher,Services Layer,P2,known-failing,"fetcherClient 半开恢复测试","熔断半开状态恢复无单测保护",引入统一 HTTP mocker,2d,—,Sprint 2 Week 2
+FC-4,services/fetcher,Services Layer,P2,known-failing,"fetcherClient 并发限流测试","并发请求限流路径无单测保护",引入统一 HTTP mocker,2d,—,Sprint 2 Week 2
+LLM-1,services/llm,Services Layer,P2,known-failing,"llmClient V6-LLM 增强路径测试（模型A）","V6-LLM 增强评分路径无单测保护",CI 注入 VITE_LLM_MOCK=1 环境变量,0.5d,V6 pure 路径由 scoreService 99.2% 独立覆盖,Sprint 2 Week 1
+LLM-2,services/llm,Services Layer,P2,known-failing,"llmClient V6-LLM 增强路径测试（模型B）","V6-LLM 增强评分路径无单测保护",CI 注入 VITE_LLM_MOCK=1 环境变量,0.5d,V6 pure 路径由 scoreService 99.2% 独立覆盖,Sprint 2 Week 1
+LLM-3,services/llm,Services Layer,P2,known-failing,"llmClient JSON 解析异常测试","LLM 返回非法 JSON 时容错路径无单测保护",CI 注入 VITE_LLM_MOCK=1 环境变量,0.5d,—,Sprint 2 Week 1
+LLM-4,services/llm,Services Layer,P2,known-failing,"llmClient 多模型链路测试","多模型切换链路无单测保护",CI 注入 VITE_LLM_MOCK=1 环境变量,0.5d,—,Sprint 2 Week 1
+AS-1,store/agent,Store Layer,P2,known-failing,"agentStore broadcast 子频道回调时序测试","子频道回调时序无单测保护",advanceTimersByTime(1) 微任务等待,0.5d,agentService 单测覆盖主路径,Sprint 2 Week 2
+ES-1,store/engine,Store Layer,P2,known-failing,"engine store 生命周期事件测试","引擎生命周期事件无单测保护",数据完整性治理 Phase 2,1d,—,Sprint 2 Week 2-3
+ES-2,store/engine,Store Layer,P2,known-failing,"engine store 健康告警测试","引擎健康告警事件无单测保护",数据完整性治理 Phase 2,1d,—,Sprint 2 Week 2-3
+SQ-QUALITY-1,store/signal,Store Layer,P2,known-failing,"signalQualityStore 数据完整性测试","信号质量数据完整性无单测保护",数据完整性治理 Phase 2,1d,—,Sprint 2 Week 2-3
+DIALOG-1,components/molecules,Component Layer,P2,known-failing,"Dialog Portal 预挂载容器测试","Dialog focus-trap / 遮罩滚动分支无单测保护",Dialog Portal 预挂载容器 refactor,3d,services 层 + useConfirmDialog.test 覆盖核心逻辑,Sprint 2 Week 1
+OUT-1,components/output,Component Layer,P2,known-failing,"OutputHub 页面渲染测试","OutputHub 页面渲染路径无单测保护",页面级统一治理,1d,—,Sprint 2 Month 1
+UI-TOP-1,tests/ui-components,UI Components,P2,known-failing,"ui-components 顶层 describe skip（Dialog/Tabs/Alert 子组）","UI 通用组件 Dialog/Tabs/Alert 未单测保护",拆分文件或缩小 exclude 范围,1d,—,Sprint 2 Day 1
+UI-DIALOG,tests/ui-components,UI Components,P2,known-failing,"UI Dialog 组件测试","UI Dialog 交互无单测保护",Dialog Portal 预挂载容器 refactor（与 DIALOG-1 同源）,3d,—,Sprint 2 Week 1
+UI-TABS,tests/ui-components,UI Components,P2,known-failing,"UI Tabs controlled 模式测试","Tabs controlled 分支无单测保护（同 Toggle 修复前问题）",复用 Toggle controlled rerender 模板,1d,—,Sprint 2 Day 1
+UI-ALERT,tests/ui-components,UI Components,P2,known-failing,"UI Alert 组件测试","UI Alert 交互无单测保护",Dialog Portal 预挂载容器 refactor（与 DIALOG-1 同源）,3d,—,Sprint 2 Week 1

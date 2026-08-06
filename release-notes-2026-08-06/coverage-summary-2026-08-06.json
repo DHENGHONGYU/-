@@ -1,0 +1,58 @@
+{
+  "generatedAt": "2026-08-06T08:40:12.903Z",
+  "totals": {
+    "statements": {
+      "total": 1862,
+      "covered": 1765,
+      "pct": 94.7905477980666
+    },
+    "branches": {
+      "total": 540,
+      "covered": 506,
+      "pct": 93.7037037037037
+    },
+    "functions": {
+      "total": 92,
+      "covered": 79,
+      "pct": 85.86956521739131
+    }
+  },
+  "modules": {
+    "src/pages": {
+      "fileCount": 3,
+      "statements": {
+        "total": 993,
+        "covered": 915,
+        "pct": 92.14501510574019
+      },
+      "branches": {
+        "total": 248,
+        "covered": 242,
+        "pct": 97.58064516129032
+      },
+      "functions": {
+        "total": 40,
+        "covered": 27,
+        "pct": 67.5
+      }
+    },
+    "src/services": {
+      "fileCount": 5,
+      "statements": {
+        "total": 869,
+        "covered": 850,
+        "pct": 97.81357882623706
+      },
+      "branches": {
+        "total": 292,
+        "covered": 264,
+        "pct": 90.41095890410958
+      },
+      "functions": {
+        "total": 52,
+        "covered": 52,
+        "pct": 100
+      }
+    }
+  }
+}

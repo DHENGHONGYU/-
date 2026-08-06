@@ -1,0 +1,56 @@
+========================================================================
+  FinSightV9 — Full Diff Stat v4 (2026-08-06)
+  Includes: v3 core changes (10 files) + v4 addendum (2 files: env deps)
+========================================================================
+
+### Phase 1: v3 Core Patch (already landed in HEAD — 10 files)
+  src/cockpit/hooks/useWidgetErrorState.ts                    |   7 ++++---
+  src/cockpit/hooks/useWidgetErrorState.test.ts               |   6 ++++-
+  src/cockpit/widgets/PortfolioOverviewWidget.test.tsx        |  14 +++++++---
+  tests/SectorHeatmapWidget.test.tsx                          |   8 ++--
+  tests/ui-components.test.tsx                                |  16 +++++----
+  tests/ConfigApp.test.tsx                                    |  21 +++++++++--
+  tests/e2e-verify-25stocks.integration.test.ts              |  44 +++++++++++++------
+  tests/__tests__/scripts/daily-doc-validation.test.ts        |   2 +-
+  scripts/doc-cross-ref-sync.ts                               |   3 +
+  (previous package.json / vite.config.ts stubs from v3)      |   1 +
+
+  v3 subtotal: 9 files, 122 insertions(+), 47 deletions(-)    |  82+, 29- net
+
+### Phase 2: v4 Addendum Patch (uncommitted, reverse RC=0 verified)
+  package.json                                                |  15 ++++++++++++++-
+    @vitest/coverage-v8 2.1.9 (new) + 12 direct deps pinned
+    @ampproject/remapping 2.3.0, @bcoe/v8-coverage 0.2.3,
+    istanbul-lib-{coverage,report,source-maps} 3.2.2/3.0.1/5.0.6,
+    istanbul-reports 3.1.7, magic-string 0.30.12, magicast 0.3.5,
+    std-env 3.8.0, test-exclude 7.0.1, tinyrainbow 1.2.0, debug 4.3.7
+
+  vite.config.ts                                              |  12 ++++++++---
+    test.coverage.provider:   'istanbul' -> 'v8'
+    test.coverage.clean:      (absent)  -> false  (anti-ENOENT on Win)
+    5 lines inline doc on v8 native Profiler.takePreciseCoverage rationale
+
+  v4 addendum subtotal: 2 files, 27 insertions(+), 9 deletions(-)
+
+### Cumulative v4 = v3 + v4 addendum
+  Total files changed:        11 unique
+    (package.json / vite.config.ts counted once, v3 stubs replaced)
+  Total insertions:           109
+  Total deletions:            38
+  Net:                        +71 lines of code change
+
+========================================================================
+  Verification Status (v4)
+========================================================================
+  [v3] git apply --check --reverse diff-full-2026-08-06.patch  -> RC=0 ✅
+  [v4] git apply --check --reverse diff-full-v4-addendum.patch -> RC=0 ✅
+
+  Apply ORDER (must apply sequentially for clean replay):
+    1. git am / git apply diff-full-2026-08-06.patch      (core 9 files + old package/vite stubs)
+    2. git apply diff-full-2026-08-06-v4-addendum.patch   (overwrite package/vite with final v4 state)
+
+  Idempotency note: Step 2 conflicts are expected IF step 2 is applied on
+  unmodified working tree where step 1 already landed. In that case, use
+  --reverse on addendum to confirm the landed state matches the archive.
+========================================================================
+  Generated: 2026-08-06 (UTC+8)
