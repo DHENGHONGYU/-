@@ -111,6 +111,25 @@ const SAFE_FULL_MOCKS: Array<{ file: string; module: string; reason: string }> =
     module: '@/services/errorBus',
     reason: 'C29 熔断状态机独立测试，需全量替换 errorBus 以避免真实总线副作用',
   },
+
+  // ============================================================
+  // P1 豁免：infrastructure-extreme 集成测试 + tofixed P0 回归测试
+  // ============================================================
+  {
+    file: 'tests/__tests__/integration/infrastructure-extreme.test.ts',
+    module: '@/services/data-collector/tracePersistenceService',
+    reason: '集成测试仅 mock 3 个方法（saveTrace/batchSaveTraces/listTracesBySymbol），importActual 会引入真实 DataCollector 副作用',
+  },
+  {
+    file: 'tests/__tests__/integration/infrastructure-extreme.test.ts',
+    module: '@/services/data-collector/qualityMetricsCollector',
+    reason: '集成测试需替换 QualityMetricsCollector 类以避免真实指标计算副作用，全量 mock 仅覆盖必要接口',
+  },
+  {
+    file: 'tests/unit/tofixed-p0-regression.test.tsx',
+    module: '@/core/databridge',
+    reason: 'P0 #10 回归测试需 mock dataBridge.query 返回空股票池，importActual 会引入真实 DataBridge 实例干扰',
+  },
 ]
 const FULL_MOCK_PATTERN = /vi\.mock\s*\(\s*(['"][^'"]+['"])\s*,\s*(?:async\s*)?\s*(?:\(\s*\)|\(\))\s*=>\s*\{/g
 
