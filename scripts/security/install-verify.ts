@@ -19,7 +19,7 @@ import { chromium, type Browser, type Page } from 'playwright'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as net from 'net'
-import { execSync, type ExecSyncOptions } from 'child_process'
+import { spawnSync, type SpawnSyncOptionsWithStringEncoding } from 'child_process'
 import { loadSecurityPolicy, checkAuthorization, type SecurityPolicy } from '../../src/config/security-policy'
 
 // ============================================================
@@ -85,10 +85,28 @@ async function checkHttpService(url: string): Promise<boolean> {
   }
 }
 
-/** 同步执行命令并返回输出 */
-function runCmd(cmd: string, options?: ExecSyncOptions): string {
+/** 同步执行命令并返回输出（spawnSync 安全模板：10MB / 15s / windowsHide）
+ *  注意：简单命令按空格拆成 [cmd, ...args] 数组；复杂命令直接走 shell 并设置 shell 选项即可。
+ *  为了保持 runCmd(cmd: string) 的调用签名不变，此处采用"内部拆分"，
+ *  若拆分后单元素或检测到管道(|)则回退到 shell:true 并保留原有字符串语义。 */
+function runCmd(cmd: string, options?: Partial<SpawnSyncOptionsWithStringEncoding>): string {
+  const hasPipeOrRedirect = /[|&;><]/.test(cmd)
+  const parts = hasPipeOrRedirect ? null : cmd.split(/\s+/).filter(Boolean)
+  const base: SpawnSyncOptionsWithStringEncoding = {
+    encoding: 'utf-8',
+    timeout: 15000,
+    cwd: process.cwd(),
+    stdio: ['ignore', 'pipe', 'pipe'],
+    maxBuffer: 10 * 1024 * 1024,
+    windowsHide: true,
+    ...options,
+  }
   try {
-    return execSync(cmd, { encoding: 'utf-8', timeout: 10000, ...options }).trim()
+    const result = parts
+      ? spawnSync(parts[0], parts.slice(1), base)
+      : spawnSync(cmd, [], { ...base, shell: true })
+    if (result.status !== 0) return ''
+    return (result.stdout || '').trim()
   } catch {
     return ''
   }
