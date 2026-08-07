@@ -252,7 +252,6 @@
     "scripts/regression_news_v6.py": "scripts/other/regression_news_v6.py",
     "scripts/regression_news_v6_test.cjs": "scripts/other/regression_news_v6_test.cjs",
     "scripts/doc-notify.ts": "scripts/docs-tool/doc-update-trigger.ts",
-    "scripts/doc-pipeline.ts": "scripts/docs-tool/doc-sync-scheduler.ts",
     "scripts/ai-dev-loop.ts": "scripts/docs-tool/llm-doc-generator.ts",
     "scripts/cleanup-temp.ts": "scripts/other/cleanup-reports.ts",
     "scripts/cleanup-drafts.sh": "scripts/other/cleanup-reports.ts",
