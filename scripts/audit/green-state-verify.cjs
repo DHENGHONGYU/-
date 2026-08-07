@@ -13,8 +13,13 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { spawnSync } = require('child_process');
 const ROOT = path.resolve(__dirname, '..', '..');
+const GREEN_OPTS = {
+  cwd: ROOT, encoding: 'utf-8', stdio: ['ignore', 'pipe', 'pipe'],
+  maxBuffer: 50 * 1024 * 1024, timeout: 10 * 60 * 1000, windowsHide: true,
+  env: { ...process.env, CI: 'true' },
+};
 const OUT = path.join(ROOT, 'outputs');
 
 function now() { return Date.now(); }
@@ -23,9 +28,15 @@ const results = [];
 function runCmd(title, cmd, { failOnExit = false, grepErrors = null } = {}) {
   const s = now();
   let stdout = '', stderr = '', exit = 0;
+  const hasPipeOrRedirect = /[|&;><]/.test(cmd);
+  const parts = hasPipeOrRedirect ? null : cmd.split(/\s+/).filter(Boolean);
   try {
-    stdout = execSync(cmd, { cwd: ROOT, encoding: 'utf-8', stdio: ['ignore', 'pipe', 'pipe'],
-      env: { ...process.env, CI: 'true' } });
+    const result = parts
+      ? spawnSync(parts[0], parts.slice(1), GREEN_OPTS)
+      : spawnSync(cmd, [], { ...GREEN_OPTS, shell: true });
+    exit = result.status ?? (result.error ? 1 : 0);
+    stdout = (result.stdout || '');
+    stderr = (result.stderr || (result.error ? result.error.message : ''));
   } catch (e) {
     exit = e.status || 1;
     stdout = (e.stdout || '') + '';
@@ -60,8 +71,9 @@ console.log('\n========== 绿色稳态验证（P0 修复后）==========\n');
 let authoritativeErrors = -1;
 try {
   // 0.1 执行
-  try { execSync('node scripts/audit/detect-skill-dangling-ref.cjs',
-    { cwd: ROOT, encoding: 'utf-8', stdio: ['ignore','pipe','pipe'], env: { ...process.env, CI:'true' } }); } catch(e) {}
+  try {
+    spawnSync('node', ['scripts/audit/detect-skill-dangling-ref.cjs'], GREEN_OPTS);
+  } catch(e) {}
   // 0.2 找最新 report JSON
   const reportDir = path.join(ROOT,'scripts','audit','docs','reports','skill-integrity');
   const jsons = fs.readdirSync(reportDir).filter(f => f.endsWith('.json')).sort();
@@ -95,8 +107,7 @@ const r3 = runCmd('3. B-02 Gate 2/2: audit:skill-error-scenarios（E01-E05 全�
 // 4) 重新抽取治理清单（验证 S6 必填缺失 = 0）
 console.log('  4. 重新抽取治理清单...');
 try {
-  execSync('node scripts/audit/b03-extract-governance.cjs', { cwd: ROOT, stdio: ['ignore','pipe','pipe'],
-    env: { ...process.env, CI:'true' } });
+  spawnSync('node', ['scripts/audit/b03-extract-governance.cjs'], GREEN_OPTS);
 } catch(e) {}
 const govData = JSON.parse(fs.readFileSync(path.join(OUT, 'b03-governance-drift.json'), 'utf-8'));
 const r4 = {

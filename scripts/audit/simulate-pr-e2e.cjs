@@ -13,8 +13,13 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { spawnSync } = require('child_process');
 const ROOT = path.resolve(__dirname, '..', '..');
+const SPAWN_OPTS_E2E = {
+  cwd: ROOT, encoding: 'utf-8', stdio: ['ignore', 'pipe', 'pipe'],
+  maxBuffer: 50 * 1024 * 1024, timeout: 15 * 60 * 1000, windowsHide: true,
+  env: { ...process.env, CI: 'true', SKILL_GATE_CONFIRM: '', SKILL_INTEGRITY_SKIP: '' }
+};
 const LOG_DIR = path.join(ROOT, 'outputs');
 const TARGET_DIR = path.join(ROOT, '.trae', 'skills', 'v9-color-token-remediation');
 const TARGET_SKILL = path.join(TARGET_DIR, 'SKILL.md');
@@ -25,8 +30,16 @@ function now() { return Date.now(); }
 function run(title, cmd, { expectedExit = 0 } = {}) {
   const t0 = now();
   let stdout = '', stderr = '', exit = 0;
+  // 简单空格拆分 + 管道回退（保留 shell:true 语义避免破坏复杂 npm 命令）
+  const hasPipeOrRedirect = /[|&;><]/.test(cmd)
+  const parts = hasPipeOrRedirect ? null : cmd.split(/\s+/).filter(Boolean)
   try {
-    stdout = execSync(cmd, { cwd: ROOT, encoding: 'utf-8', stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, CI: 'true', SKILL_GATE_CONFIRM: '', SKILL_INTEGRITY_SKIP: '' } });
+    const result = parts
+      ? spawnSync(parts[0], parts.slice(1), SPAWN_OPTS_E2E)
+      : spawnSync(cmd, [], { ...SPAWN_OPTS_E2E, shell: true });
+    exit = result.status ?? (result.error ? 1 : 0);
+    stdout = result.stdout || '';
+    stderr = result.stderr || (result.error ? result.error.message : '');
   } catch (e) {
     exit = e.status || 1;
     stdout = e.stdout || '';
@@ -81,8 +94,14 @@ run('B1. B-01 路径校验 → 预期 0 ERROR（可接受 INFO 漂移）',
 // 更精确地判断: 只要不含"新增"错路径的 ERROR 就算 B-01 通过
 const checkIntegrity = (() => {
   let out = '', exit = 0;
-  try { out = execSync('node scripts/audit/detect-skill-dangling-ref.cjs', { cwd: ROOT, encoding: 'utf-8', stdio: ['ignore','pipe','pipe'] }); }
-  catch (e) { exit = e.status||1; out = (e.stdout||'') + (e.stderr||''); }
+  try {
+    const r = spawnSync('node', ['scripts/audit/detect-skill-dangling-ref.cjs'], {
+      cwd: ROOT, encoding: 'utf-8', stdio: ['ignore','pipe','pipe'],
+      maxBuffer: 50 * 1024 * 1024, timeout: 10 * 60 * 1000, windowsHide: true,
+    });
+    exit = r.status ?? (r.error ? 1 : 0);
+    out = (r.stdout || '') + (r.stderr || (r.error ? r.error.message : ''));
+  } catch (e) { exit = e.status||1; out = (e.stdout||'') + (e.stderr||''); }
   const hasNewBad = /NOT_EXIST_FAKE_PATH_12345/.test(out);
   const hasKnownError = /dev-checklist.*缺少 (gates|triggers|mandatory)/.test(out);
   const stepB1 = { title:'B1. 严格校验 B-01 路径阻断正确性（不应再报新注入的错路径 ERROR，允许已知 dev-checklist 历史 ERROR）',
@@ -104,9 +123,12 @@ run('B3. B-02 Gate 2/2: audit:skill-error-scenarios（E01-E05 全绿）',
 (() => {
   const t0 = now(); let exit = 0; let out = '';
   try {
-    out = execSync('node scripts/skill-router.cjs --enforce --since HEAD~1 --log',
+    const r = spawnSync('node', ['scripts/skill-router.cjs','--enforce','--since','HEAD~1','--log'],
       { cwd: ROOT, encoding: 'utf-8', stdio: ['ignore','pipe','pipe'],
+        maxBuffer: 10 * 1024 * 1024, timeout: 5 * 60 * 1000, windowsHide: true,
         env: { ...process.env, CI:'true', SKILL_GATE_CONFIRM:'1', SKILL_INTEGRITY_SKIP:'' } });
+    exit = r.status ?? (r.error ? 1 : 0);
+    out = (r.stdout || '') + (r.stderr || (r.error ? r.error.message : ''));
   } catch (e) { exit = e.status||1; out = (e.stdout||'') + (e.stderr||''); }
   const elapsed = now()-t0;
   const passed = exit === 0;

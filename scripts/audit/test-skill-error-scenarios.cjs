@@ -13,7 +13,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { spawnSync } = require('child_process');
 const ROOT = path.resolve(__dirname, '..', '..');
 const AGENTS_PATH = path.join(ROOT, 'AGENTS.md');
 const REGISTRY_PATH = path.join(ROOT, '.trae', 'skills', 'skill-registry.json');
@@ -44,9 +44,15 @@ function assert(cond, title, resultText) {
   }
 }
 function run(args) {
-  const cmd = ['node', '"' + DETECT + '"'].concat(args || []).join(' ');
-  try { return execSync(cmd, { cwd: ROOT, encoding: 'utf-8', stdio: ['ignore', 'pipe', 'pipe'] }); }
-  catch (e) { return String(e.stdout || '') + String(e.stderr || ''); }
+  const argv = ['node', DETECT, ...(args || [])];
+  try {
+    const result = spawnSync(argv[0], argv.slice(1), {
+      cwd: ROOT, encoding: 'utf-8', stdio: ['ignore', 'pipe', 'pipe'],
+      maxBuffer: 50 * 1024 * 1024, timeout: 10 * 60 * 1000, windowsHide: true,
+    });
+    if (result.status === 0) return result.stdout || '';
+    return String(result.stdout || '') + String(result.stderr || (result.error ? result.error.message : ''));
+  } catch (e) { return String(e.stdout || '') + String(e.stderr || ''); }
 }
 function box(title) {
   const w = 72;

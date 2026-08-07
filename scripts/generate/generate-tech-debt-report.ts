@@ -20,8 +20,8 @@
  * - SONARQUBE_PROJECT: SonarQube 项目 key（可选）
  */
 
-import { execSync } from 'child_process'
-import { writeFileSync, readFileSync, existsSync } from 'fs'
+import { spawnSync } from 'child_process'
+import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs'
 import { join } from 'path'
 import { getLogger } from '@/lib/logger'
 
@@ -118,8 +118,16 @@ async function fetchGitHubIssues(): Promise<GitHubIssue[]> {
   }
 
   try {
-    const cmd = `gh issue list --label tech-debt --state all --json number,title,labels,state,assignee,createdAt,closedAt,body --limit 100`
-    const output = execSync(cmd, { encoding: 'utf-8' })
+    const ghArgs = ['issue','list','--label','tech-debt','--state','all',
+      '--json','number,title,labels,state,assignee,createdAt,closedAt,body','--limit','100'];
+    const result = spawnSync('gh', ghArgs, {
+      encoding: 'utf-8', cwd: process.cwd(), stdio: ['ignore', 'pipe', 'pipe'],
+      maxBuffer: 50 * 1024 * 1024, timeout: 2 * 60 * 1000, windowsHide: true,
+    });
+    if (result.status !== 0) {
+      throw new Error(`gh issue list 失败 (exit=${result.status ?? 'unknown'}): ${result.stderr || result.error?.message || ''}`);
+    }
+    const output = result.stdout || '';
     const issues = JSON.parse(output) as GitHubIssue[]
     
     logger.info(`[TechDebtReport] 从 GitHub 获取 ${issues.length} 个技术债 Issue`)
@@ -452,7 +460,7 @@ async function main() {
 
   // 4. 保存报告
   if (!existsSync(config.outputDir)) {
-    execSync(`mkdir -p "${config.outputDir}"`, { shell: true })
+    mkdirSync(config.outputDir, { recursive: true, mode: 0o755 });
   }
 
   const reportFile = join(config.outputDir, `tech-debt-report-${new Date().toISOString().split('T')[0]}.md`)

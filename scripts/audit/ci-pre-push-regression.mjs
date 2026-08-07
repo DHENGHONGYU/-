@@ -16,7 +16,7 @@
  *   1 = 有失败用例
  */
 
-import { execSync, spawnSync } from 'child_process';
+import { spawnSync } from 'child_process';
 import { existsSync, mkdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -34,7 +34,7 @@ function detectShBin() {
     ];
     for (const c of candidates) {
       try {
-        execSync(`"${c}" --version`, { stdio: 'pipe', timeout: 3000 });
+        spawnSync(c, ['--version'], { encoding: 'utf-8', stdio: 'pipe', timeout: 3000, maxBuffer: 10 * 1024 * 1024, windowsHide: true });
         return c;
       } catch {
         // 尝试下一个候选
@@ -59,13 +59,14 @@ const failures = [];
  */
 function createCommit(message, parent = null) {
   // 使用 SH_BIN 执行，避免 PowerShell 吞掉 ^ 字符
-  const tree = execSync('git rev-parse "HEAD^{tree}"', { encoding: 'utf-8', shell: SH_BIN }).trim();
+  const tree = (spawnSync('git', ['rev-parse', 'HEAD^{tree}'], {
+    encoding: 'utf-8', shell: SH_BIN, maxBuffer: 10 * 1024 * 1024, timeout: 15000, windowsHide: true,
+  }).stdout || '').trim();
   const parentArg = parent ? `-p ${parent}` : '';
   const escapedMsg = message.replace(/'/g, "'\\''");
-  const sha = execSync(
-    `git commit-tree ${tree} ${parentArg} -m '${escapedMsg}'`,
-    { encoding: 'utf-8', shell: SH_BIN }
-  ).trim();
+  const sha = (spawnSync('git', ['commit-tree', tree, ...(parentArg ? [parentArg.split(' ')[0], parentArg.split(' ')[1], '-m', escapedMsg.replace(/^'|'$/g, '')] : ['-m', escapedMsg.replace(/^'|'$/g, '')])], {
+    encoding: 'utf-8', shell: SH_BIN, maxBuffer: 10 * 1024 * 1024, timeout: 15000, windowsHide: true,
+  }).stdout || '').trim();
   return sha;
 }
 
@@ -431,7 +432,7 @@ console.log('══════════════════════�
 console.log('  CI 回归测试 — pre-push 钩子 scope 校验');
 console.log('═══════════════════════════════════════════════════════════');
 console.log(`  测试环境:`);
-console.log(`    Git: ${execSync('git --version', { encoding: 'utf-8' }).trim()}`);
+console.log(`    Git: ${(spawnSync('git', ['--version'], { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024, timeout: 10000, windowsHide: true, }).stdout || '').trim()}`);
 console.log(`    Node: ${process.version}`);
 console.log(`    Shell: ${SH_BIN}`);
 console.log(`    平台: ${process.platform} ${process.arch}`);
@@ -450,15 +451,15 @@ for (const tc of testCases) {
   if (tc.localSha === ZERO) {
     // 删除分支场景
     localSha = ZERO;
-    remoteSha = tc.remoteSha === 'HEAD' ? execSync('git rev-parse HEAD', { encoding: 'utf-8' }).trim() : tc.remoteSha;
+    remoteSha = tc.remoteSha === 'HEAD' ? (spawnSync('git', ['rev-parse','HEAD'], { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024, timeout: 10000, windowsHide: true }).stdout || '').trim() : tc.remoteSha;
   } else if (tc.localSha === 'HEAD') {
     // 无增量场景
-    const headSha = execSync('git rev-parse HEAD', { encoding: 'utf-8' }).trim();
+    const headSha = (spawnSync('git', ['rev-parse','HEAD'], { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024, timeout: 10000, windowsHide: true }).stdout || '').trim();
     localSha = headSha;
     remoteSha = headSha;
   } else if (tc.isIncremental) {
     // 增量推送场景：创建父 commit + 子 commit
-    const parentSha = execSync('git rev-parse HEAD', { encoding: 'utf-8' }).trim();
+    const parentSha = (spawnSync('git', ['rev-parse','HEAD'], { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024, timeout: 10000, windowsHide: true }).stdout || '').trim();
 
     // 创建额外的前置 commits
     let baseParent = parentSha;
