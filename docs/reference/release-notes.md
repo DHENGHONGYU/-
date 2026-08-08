@@ -8,12 +8,15 @@ status: active
 maintainer: V9 Architecture Team
 summary: "release-notes - reference documentation (project)"
 tags: [project, release, reference, changelog, deployment]
-version: v1.1.0
-last_updated: 2026-08-05
+version: v1.2.1
+last_updated: 2026-08-08
 code_version: 2.0.0
 doc_id: V9-DOC-PROJ-104
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-PROJ-032, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:
+  - version: v1.2.1
+    changes: 新增 v1.2.1 embedding dtype 假报修复 + INT8 死代码清除记录
+    date: 2026-08-08
   - version: v1.1.0
     changes: 新增 v0.9.7 db.ts 100% 覆盖率提升记录
     date: 2026-08-05
@@ -25,6 +28,54 @@ change_log:
 # 发布说明
 
 > 本文件面向用户与开发者，汇总每个已发布版本的核心变更、质量指标与升级须知。
+
+---
+
+## v1.2.1 — embedding health 接口 dtype 假报修复 + INT8 死代码清除
+
+**发布日期**：2026-08-08
+
+### 概要
+
+本次版本修复 embedding 服务 health 接口在 CPU 场景下假报 `dtype=float16` 的误导性 bug，移除经实测证明反优化的 INT8 动态量化代码路径，并修正 `embedding.env` 中错误的 FP16 配置与内存注释。同步修复 `embedding_daemon.py` 中相同的 dtype 上报问题。
+
+### 核心变更
+
+#### 1. health 接口 dtype 假报修复（service + daemon）
+
+`/api/embed/health` 和 `/daemon/health` 的精度字段此前基于 `USE_FP16` 环境变量上报，而非实际加载精度。CPU 机器上 `EMBEDDING_FP16=true` 会被硬件门控静默跳过（模型仍以 FP32 加载），但 health 接口仍假报 `float16`，导致监控/告警误判。
+
+| 文件 | 改动 |
+|------|------|
+| `backend/embedding_service.py` | 新增 `_model_actual_dtype` 状态变量，health 端点 3 处改用实际值 |
+| `backend/embedding_daemon.py` | 同步新增 `_model_actual_dtype`，`/daemon/health` 新增 `dtype` 字段 |
+
+#### 2. INT8 动态量化代码路径移除
+
+移除 `torch.quantization.quantize_dynamic` 整段代码及相关 `EMBEDDING_INT8` 配置。实测发现该方案在当前架构下**反优化**：PyTorch 加载 `.bin` 权重默认走 mmap（实际 USS 仅 ~390 MB），而 `quantize_dynamic` 把权重从 mmap 拷贝到堆内存，USS 暴涨至 ~2.3 GB。这是架构层面问题，换 torchao API 不解决。
+
+#### 3. embedding.env 配置修正
+
+| 项目 | 修正前 | 修正后 |
+|------|--------|--------|
+| `EMBEDDING_FP16` | `true`（CPU 场景死配置） | `false` |
+| 内存注释 | "内存减半（约 1.7GB）" | 准确说明：GPU ~620 MB / CPU mmap USS ~390 MB |
+
+### 质量验证
+
+| 验证项 | 结果 |
+|--------|------|
+| `scripts/verify-embedding-dtype.py` 端到端测试 | PASS：`dtype=float32`，不再假报 `float16` |
+| PyTorch 2.13 兼容性（`-W all` 全量警告检查） | 零 deprecation 警告 |
+| 全仓 `torch.ao.quantization` 残留扫描 | 零匹配 |
+| `embedding_service.py` / `embedding_daemon.py` 语法检查 | 通过 |
+
+### 实测数据
+
+```
+[FP32 loaded]  RSS=450MB  USS=389MB  dtype=torch.float32
+[after embed]  status=ok  model_loaded=True  use_fp16=False  dtype=float32  ✅
+```
 
 ---
 

@@ -3,8 +3,8 @@ title: V9 文档中心总入口
 doc_id: V9-DOC-ROOT-901
 tier: important
 status: active
-version: v1.0.0
-last_updated: 2026-07-21
+version: v1.1.0
+last_updated: 2026-08-08
 code_version: 2.0.0
 ---
 # 智能投研复盘系统 V9 — 项目文档体系
@@ -75,6 +75,32 @@ code_version: 2.0.0
 4. **配置驱动**：所有常量、阈值、权重、股票代码池来自 `src/config/`；禁止引擎层与 UI 层硬编码业务数字。
 5. **测试先行**：关键引擎函数必须附带防御性测试；新增功能必须同步补充验收测试。
 6. **架构诚实**：文档必须记录当前代码与架构策略的真实偏差，禁止用愿景替代现状。
+
+---
+
+## 技术参考：Embedding 模型内存优化（mmap vs ONNX）
+
+> **2026-08-08 实测结论**：PyTorch 加载 `.bin` 权重默认走 mmap 内存映射，实际内存远低于文件体积；
+> `torch.quantization.quantize_dynamic` 会破坏 mmap 导致内存反增。INT8 量化收益仅在 ONNX Runtime 路径下成立。
+
+### 快速参考：bge-large-zh-v1.5 各加载方式内存对比
+
+| 加载方式 | 路径 | FP32 USS | INT8 USS | 适用场景 |
+|---------|------|---------|---------|---------|
+| torch 默认（`.bin`） | 原生 | **~390 MB** | N/A（反优化） | CPU 推理首选，mmap 按需分页 |
+| `torch.quantization.quantize_dynamic` | 原生 | — | **~2,300 MB** ⚠️ | **不可用**，破坏 mmap，6 倍内存暴涨 |
+| ONNX Runtime（量化后） | ONNX | ~1,300 MB | **~325 MB** | 需极致内存优化时可选，需额外依赖 |
+
+### 决策速查
+
+| 场景 | 推荐方案 | 预期内存 |
+|------|---------|---------|
+| CPU 推理（当前） | torch 原生 FP32 + daemon 共享 | ~390 MB（单实例） |
+| GPU 推理 | torch FP16（`torch_dtype=float16`） | ~620 MB |
+| 极致内存优化 | ONNX Runtime + INT8 动态量化 | ~325 MB（需改造） |
+| ❌ 禁止 | torch 原生 + `quantize_dynamic` INT8 | ~2,300 MB（反优化） |
+
+> 详见：[memopt 设计文档](./memopt-bge-large-zh-v1.5-4workers.md) §1.1 mmap 实测修正 | [CHANGELOG v1.2.1](../CHANGELOG.md) | [发布说明 v1.2.1](./reference/release-notes.md)
 
 ---
 

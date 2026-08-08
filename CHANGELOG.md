@@ -7,6 +7,59 @@
 
 ---
 
+## [v1.2.1-embedding-dtype-fix] - 2026-08-08
+
+### Summary
+
+修复 embedding_service health 接口在 CPU 场景下假报 `dtype=float16` 的误导性 bug，移除经实测证明反优化的 INT8 动态量化代码路径，修正 `embedding.env` 中错误的 FP16 配置与内存注释。
+
+### Fixed — health 接口 dtype 假报（service 3 处 + daemon 2 处）
+
+`/api/embed/health` 和 `/daemon/health` 的精度字段此前基于 `USE_FP16` 环境变量上报，而非实际加载精度。CPU 机器上 `EMBEDDING_FP16=true` 会被硬件门控静默跳过（模型仍以 FP32 加载），但 health 接口仍假报 `float16`，导致监控/告警误判。
+
+| 文件 | 改动 |
+|------|------|
+| `backend/embedding_service.py` | 新增 `_model_actual_dtype` 模块级状态变量，在模型加载时记录真实精度 |
+| `backend/embedding_service.py` | health 端点 3 处 `dtype="float16" if USE_FP16 else "float32"` → `dtype=_model_actual_dtype` |
+| `backend/embedding_daemon.py` | 同步新增 `_model_actual_dtype`，`/daemon/health` 新增 `dtype` 字段（2 处） |
+| `backend/embedding_daemon.py` | `USE_FP16` 默认值 `"true"` → `"false"`（与 service 保持一致） |
+
+**验证**：`scripts/verify-embedding-dtype.py` 启动服务 → 触发模型加载 → 断言 `dtype == "float32"`，实测 PASS。
+
+### Removed — INT8 动态量化代码路径
+
+移除 `torch.quantization.quantize_dynamic` 整段代码及相关 `EMBEDDING_INT8` 配置。实测发现该方案在当前架构下**反优化**：
+
+| 阶段 | RSS | USS（真实占用） |
+|------|-----|------|
+| FP32 加载后（mmap） | 450 MB | 389 MB |
+| INT8 量化 + GC 后 | 3590 MB | 2292 MB |
+
+**根因**：PyTorch 加载 `.bin` 权重默认走 mmap 内存映射（实际 USS 仅 ~390 MB），而 `quantize_dynamic` 把权重从 mmap 拷贝到堆内存做量化，反而使 USS 暴涨 6 倍。这是架构层面问题，换 torchao API 不解决。
+
+| 文件 | 删除内容 |
+|------|---------|
+| `backend/embedding_service.py` | `USE_INT8` 配置项 + `quantize_dynamic` 代码块（~20 行）+ `int8_config` 日志字段 |
+| `scripts/embedding.env` | `EMBEDDING_INT8=false` 配置及注释 |
+
+**附带收益**：消除 `torch.ao.quantization is deprecated and will be removed in 2.10` 警告。全仓零残留该 API 引用（grep 验证）。
+
+### Changed — embedding.env FP16 配置修正
+
+| 项目 | 修正前 | 修正后 |
+|------|--------|--------|
+| `EMBEDDING_FP16` | `true`（CPU 场景死配置） | `false` |
+| 内存注释 | "FP16 半精度推理，内存减半（约 1.7GB）" | 准确说明：GPU ~620 MB / CPU mmap USS ~390 MB / 权重文件 1.3 GB |
+
+### 实测数据
+
+```
+[FP32 loaded]  RSS=450MB  USS=389MB  dtype=torch.float32
+[after embed]  status=ok  model_loaded=True  use_fp16=False  dtype=float32  ✅
+```
+
+---
+
 ## [v1.2.0-fix-doc-links] - 2026-08-05
 
 ### Summary

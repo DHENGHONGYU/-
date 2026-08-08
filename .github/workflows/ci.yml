@@ -328,3 +328,18 @@ jobs:
           name: dev-security-audit-report
           path: .npm/audit.json
           retention-days: 14
+
+  ci-trigger-paths:           # CI 工作流触发路径 + 缓存策略验证（元测试，确保 YAML 配置正确）
+    name: CI trigger paths validation
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-python@49933ea5288caeca8642d1e84afbd3f7d6820020 # v5
+        with:
+          python-version: '3.11'
+      - name: Install pyyaml
+        run: pip install pyyaml --quiet
+      - name: Run CI trigger paths test (48 cases)
+        run: python tests/test_ci_trigger_paths.py
