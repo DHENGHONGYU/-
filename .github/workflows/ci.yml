@@ -336,7 +336,7 @@ jobs:
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: actions/setup-python@49933ea5288caeca8642d1e84afbd3f7d6820020 # v5
+      - uses: actions/setup-python@a26aa6937d34acfa051bb2549601e8aa6a3b0322 # v5
         with:
           python-version: '3.11'
       - name: Install pyyaml
