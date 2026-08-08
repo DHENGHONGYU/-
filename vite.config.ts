@@ -266,7 +266,7 @@ export default defineConfig({
           'ui': ['lucide-react', 'clsx', 'tailwind-merge'],
           'charts': ['recharts', 'lightweight-charts'],
           'pdf': ['jspdf', 'jspdf-autotable'],
-          'excel': ['xlsx'],
+          'excel': ['@e965/xlsx'],
           'duckdb': ['@duckdb/duckdb-wasm'],
           'purify': ['dompurify'],
           'html2canvas': ['html2canvas'],

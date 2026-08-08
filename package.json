@@ -249,6 +249,7 @@
   },
   "dependencies": {
     "@duckdb/duckdb-wasm": "1.33.1-dev57.0",
+    "@e965/xlsx": "0.20.3",
     "@finsightv9/safe-format": "file:packages/safe-format",
     "@tanstack/react-virtual": "^3.14.4",
     "clsx": "^2.1.1",
@@ -262,11 +263,10 @@
     "react-grid-layout": "^2.2.3",
     "react-hotkeys-hook": "5.3.3",
     "react-markdown": "10.1.0",
-    "react-router": "^7.0.0",
+    "react-router": "8.3.0",
     "recharts": "^3.9.1",
     "tailwind-merge": "^2.5.0",
     "web-vitals": "^5.3.0",
-    "xlsx": "^0.18.5",
     "zustand": "^5.0.0"
   },
   "devDependencies": {

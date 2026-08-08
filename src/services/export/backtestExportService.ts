@@ -161,7 +161,7 @@ async function exportExcel(
   meta: BacktestReportMeta,
 ): Promise<BacktestExportResult> {
   try {
-    const XLSX = await import('xlsx')
+    const XLSX = await import('@e965/xlsx')
     const wb = XLSX.utils.book_new()
 
     XLSX.utils.book_append_sheet(

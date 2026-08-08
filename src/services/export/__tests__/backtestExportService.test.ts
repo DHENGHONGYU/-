@@ -43,7 +43,7 @@ vi.mock('jspdf-autotable', () => ({
   default: mockAutoTable,
 }))
 
-vi.mock('xlsx', () => ({
+vi.mock('@e965/xlsx', () => ({
   utils: {
     book_new: mockBookNew,
     json_to_sheet: mockJsonToSheet,
