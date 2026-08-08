@@ -25,7 +25,7 @@ export class DataCollectorServer extends MCPServerBase {
     return [
       {
         name: 'fetch_market_data',
-        description: '获取指定股票的行情数据',
+        description: '[未实现] 获取指定股票的行情数据。请改用 fetch_realtime_quote 或 fetch_kline_data',
         inputSchema: {
           type: 'object',
           properties: {
@@ -39,7 +39,7 @@ export class DataCollectorServer extends MCPServerBase {
           const days = (args.days as number) ?? 30
           logger.info('[DataCollectorServer] fetch_market_data called', { symbol, days })
           // TODO[阻塞·#7]: MarketDataAdapter 仅有 adapt/merge，fetchMarketData 未实现；待接真实数据源（AKShare/HTTP）后补全。
-          return Promise.resolve({ content: [{ type: 'text', text: JSON.stringify({ symbol, days, data: [], note: 'fetchMarketData 尚未实现' }) }] })
+          return Promise.resolve({ content: [{ type: 'text', text: JSON.stringify({ symbol, days, error: 'FETCH_NOT_IMPLEMENTED', message: 'fetchMarketData 功能尚未实现，请使用 fetch_realtime_quote 或 fetch_kline_data 工具' }) }], isError: true })
         },
       },
       {

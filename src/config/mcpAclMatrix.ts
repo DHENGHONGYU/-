@@ -47,7 +47,8 @@ export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> 
   //   实际功能已合并至 trading:main / fetcher:data。
   // 显式排除的写操作（allowedTools 中故意不列出）：
   //   execute_trade_action / create_buy_order / create_sell_order（交易执行）
-  //   list_pool_items / list_groups / transition_pool_item（股票池写入）
+  //   transition_pool_item / create_pool_item / delete_pool_item（股票池写入操作）
+  //   注：list_pool_items / list_groups 为纯查询，已在 allowedTools 中显式放行
   ui: {
     allowedServers: [
       'fetcher',

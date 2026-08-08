@@ -13,7 +13,7 @@ import { StockSearch } from '@/components/organisms/input/StockSearch'
 import type { StockSearchResult } from '@/services/input/inputService'
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'
-import { COLOR_TOKENS, twText, twBg } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, twText, twBg, HOVER } from '@/constants/theme.tokens'
 import { Skeleton } from '@/components/molecules/states/Skeleton'
 import { GaugeRing } from '@/components/chart/GaugeChart'
 import { formatPrice, formatMarketCap } from '@/lib/precision'
@@ -472,7 +472,7 @@ export default function InputDashboard(): React.JSX.Element {
                     const dictItem = findStockBySymbol(item.symbol)
                     const isCollecting = collectingSymbols.has(item.symbol)
                     return (
-                      <tr key={item.symbol} className={cn('hover:bg-stone-50/50 transition-colors')}>
+                      <tr key={item.symbol} className={cn(HOVER.bgStone50Half, 'transition-colors')}>
                         <td className="whitespace-nowrap px-3 py-2 text-center">
                           <Checkbox
                             checked={selectedSymbols.includes(item.symbol)}

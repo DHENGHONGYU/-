@@ -17,6 +17,11 @@ export interface MockStock {
 
 /**
  * MOCK_STOCK_LIBRARY
+ * @deprecated 该 mock 数据仅用于离线降级场景，不应在新功能中依赖。
+ *   后续将由 AKShare 实时搜索接口取代，计划在 v3.0 主版本移除。
+ *   新功能请使用 `stockSearchService` 或直接对接 AKShare 数据源。
+ * @see {@link file://src/services/input/stockSearchService.ts stockSearchService}
+ * @see {@link https://akshare.akfamily.xyz/ AKShare 官方文档}
  */
 export const MOCK_STOCK_LIBRARY: MockStock[] = [
   { symbol: '600519.SH', name: '贵州茅台', industry: '白酒', pe: 28.5, pb: 8.2, marketCap: 2100000000000 },

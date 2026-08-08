@@ -75,6 +75,7 @@ describe('sevenDimConfigStore - 初始状态', () => {
     const state = useSevenDimConfigStore.getState()
     expect(state.isSaving).toBe(false)
     expect(state.isCollecting).toBe(false)
+    expect(state.collectingDimensions).toEqual([])
   })
 
   it('error 初始为 null', () => {
@@ -374,6 +375,7 @@ describe('sevenDimConfigStore - runCollection', () => {
   it('采集完成后 isCollecting 恢复 false', async () => {
     await useSevenDimConfigStore.getState().runCollection()
     expect(useSevenDimConfigStore.getState().isCollecting).toBe(false)
+    expect(useSevenDimConfigStore.getState().collectingDimensions).toEqual([])
   })
 
   it('采集完成后 collectProgress 为 100', async () => {
@@ -385,6 +387,7 @@ describe('sevenDimConfigStore - runCollection', () => {
     useSevenDimConfigStore.setState({ isCollecting: true, collectingDimensions: ['01'] })
     await useSevenDimConfigStore.getState().runCollection()
     expect(useSevenDimConfigStore.getState().isCollecting).toBe(true)
+    expect(useSevenDimConfigStore.getState().collectingDimensions).toEqual(['01'])
   })
 })
 
@@ -415,6 +418,7 @@ describe('联动测试 — 数据链路 ↔ 按钮状态 (S1)', () => {
     expect(useSevenDimConfigStore.getState().isClickable()).toBe(true)
     expect(useSevenDimConfigStore.getState().collectProgress).toBe(100)
     expect(useSevenDimConfigStore.getState().isCollecting).toBe(false)
+    expect(useSevenDimConfigStore.getState().collectingDimensions).toEqual([])
   })
 
   // === S1.2: 维度级锁定 ===
@@ -450,6 +454,7 @@ describe('联动测试 — 数据链路 ↔ 按钮状态 (S1)', () => {
     // 无标的可采集，应保持未锁定
     expect(useSevenDimConfigStore.getState().isClickable()).toBe(true)
     expect(useSevenDimConfigStore.getState().isCollecting).toBe(false)
+    expect(useSevenDimConfigStore.getState().collectingDimensions).toEqual([])
   })
 
   // === S1.5: 无启用维度时不锁定 ===
@@ -465,6 +470,7 @@ describe('联动测试 — 数据链路 ↔ 按钮状态 (S1)', () => {
     // 无可用维度，应保持未锁定
     expect(useSevenDimConfigStore.getState().isClickable()).toBe(true)
     expect(useSevenDimConfigStore.getState().isCollecting).toBe(false)
+    expect(useSevenDimConfigStore.getState().collectingDimensions).toEqual([])
   })
 })
 

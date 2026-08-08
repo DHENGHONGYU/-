@@ -14,6 +14,7 @@ import {
   type DimensionProgress,
 } from '@/services/pool/collectionProgressService'
 import { twText, twBg, twBorder, DARK } from '@/constants/theme.tokens'
+import { COLLECTION_STATUS_COLORS, RATING_COLORS } from '@/constants/collectionColors'
 import { cn } from '@/lib/utils'
 import { eventBus } from '@/lib/eventBus'
 import { COLLECTION_EVENTS } from '@/types/modules/collection.types'
@@ -27,24 +28,24 @@ type DimStatus = 'success' | 'partial' | 'fail' | 'none'
 type QualityRating = 'excellent' | 'good' | 'fair' | 'poor'
 
 const STATUS_CONFIG: { [K in DimStatus]: { label: string; color: string; darkColor: string } } = {
-  success: { label: '已完成', color: 'text-emerald-600', darkColor: 'dark:text-emerald-400' },
-  partial: { label: '部分', color: 'text-amber-600', darkColor: 'dark:text-amber-300' },
-  fail: { label: '失败', color: 'text-red-600', darkColor: 'dark:text-red-400' },
-  none: { label: '未采集', color: 'text-stone-400', darkColor: 'dark:text-neutral-500' },
+  success: { label: '已完成', color: COLLECTION_STATUS_COLORS.success.text, darkColor: COLLECTION_STATUS_COLORS.success.darkText },
+  partial: { label: '部分', color: COLLECTION_STATUS_COLORS.partial.text, darkColor: COLLECTION_STATUS_COLORS.partial.darkText },
+  fail: { label: '失败', color: COLLECTION_STATUS_COLORS.fail.text, darkColor: COLLECTION_STATUS_COLORS.fail.darkText },
+  none: { label: '未采集', color: COLLECTION_STATUS_COLORS.none.text, darkColor: COLLECTION_STATUS_COLORS.none.darkText },
 }
 
 const RATING_CONFIG: { [K in QualityRating]: { label: string; color: string; bg: string; darkBg: string } } = {
-  excellent: { label: '优秀', color: 'text-emerald-700', bg: 'bg-emerald-50', darkBg: 'dark:bg-emerald-950/30' },
-  good: { label: '良好', color: 'text-blue-700', bg: 'bg-blue-50', darkBg: 'dark:bg-blue-950/30' },
-  fair: { label: '一般', color: 'text-amber-700', bg: 'bg-amber-50', darkBg: 'dark:bg-amber-950/30' },
-  poor: { label: '较差', color: 'text-red-700', bg: 'bg-red-50', darkBg: 'dark:bg-red-950/30' },
+  excellent: { label: '优秀', color: RATING_COLORS.excellent.text, bg: RATING_COLORS.excellent.bg, darkBg: RATING_COLORS.excellent.darkBg },
+  good: { label: '良好', color: RATING_COLORS.good.text, bg: RATING_COLORS.good.bg, darkBg: RATING_COLORS.good.darkBg },
+  fair: { label: '一般', color: RATING_COLORS.fair.text, bg: RATING_COLORS.fair.bg, darkBg: RATING_COLORS.fair.darkBg },
+  poor: { label: '较差', color: RATING_COLORS.poor.text, bg: RATING_COLORS.poor.bg, darkBg: RATING_COLORS.poor.darkBg },
 }
 
 function ProgressBar({ percent, rating }: { percent: number; rating: string }): React.JSX.Element {
   const barColor =
-    rating === 'excellent' ? 'bg-emerald-500' :
-    rating === 'good' ? 'bg-blue-500' :
-    rating === 'fair' ? 'bg-amber-500' : 'bg-red-400'
+    rating === 'excellent' ? RATING_COLORS.excellent.dot :
+    rating === 'good' ? RATING_COLORS.good.dot :
+    rating === 'fair' ? RATING_COLORS.fair.dot : RATING_COLORS.poor.dot
 
   return (
     <div className={cn('h-2 w-full overflow-hidden rounded-full', twBg('stone', 200), DARK.bgNeutral700)}>
@@ -58,9 +59,9 @@ function ProgressBar({ percent, rating }: { percent: number; rating: string }): 
 
 function DimensionDot({ dim }: { dim: DimensionProgress }): React.JSX.Element {
   const dotColor =
-    dim.status === 'success' ? 'bg-emerald-500' :
-    dim.status === 'partial' ? 'bg-amber-500' :
-    dim.status === 'fail' ? 'bg-red-500' : 'bg-stone-300'
+    dim.status === 'success' ? COLLECTION_STATUS_COLORS.success.bg :
+    dim.status === 'partial' ? COLLECTION_STATUS_COLORS.partial.bg :
+    dim.status === 'fail' ? COLLECTION_STATUS_COLORS.fail.bg : COLLECTION_STATUS_COLORS.none.bg
 
   return (
     <div className="flex items-center gap-1" title={`${dim.name}：${STATUS_CONFIG[dim.status].label}`}>

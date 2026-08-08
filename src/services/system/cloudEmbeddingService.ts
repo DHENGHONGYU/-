@@ -53,7 +53,7 @@ export interface ChunkEmbedding extends TextChunk {
 // ============================================================
 
 /** 后端 embedding API 基础路径（通过 Vite proxy 转发到 localhost:8001） */
-const EMBEDDING_API_BASE = '/api/embed'
+import { EMBEDDING_API_BASE_PATH } from '@/config/apiEndpoints'
 /** 嵌入向量维度（与后端 all-MiniLM-L6-v2 一致） */
 const EMBEDDING_DIMENSION = 384
 /** 嵌入模型 ID */
@@ -84,7 +84,7 @@ async function callEmbedApi(texts: string[]): Promise<EmbedApiResponse> {
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT)
 
   try {
-    const res = await fetch(EMBEDDING_API_BASE, {
+    const res = await fetch(EMBEDDING_API_BASE_PATH, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ texts }),
@@ -286,7 +286,7 @@ export async function checkEmbeddingHealth(): Promise<{
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 5_000)
 
-    const res = await fetch(`${EMBEDDING_API_BASE}/health`, {
+    const res = await fetch(`${EMBEDDING_API_BASE_PATH}/health`, {
       signal: controller.signal,
     })
     clearTimeout(timeout)

@@ -14,16 +14,17 @@
 import { getLogger } from '@/lib/logger'
 import { BaseCollector } from './BaseCollector'
 import type { RawMarketData, DataSourceConfig } from '@/types/modules/widget.types'
+import { NEWS_SOURCES } from '@/config/newsSources'
 
 const logger = getLogger()
 
-/** 新闻来源配置 */
-const NEWS_SOURCES = [
-  { id: 'finance', name: '财经头条', baseUrl: 'https://finance.sina.com.cn' },
-  { id: 'securities', name: '证券时报', baseUrl: 'https://www.stcn.com' },
-  { id: 'eastmoney', name: '东方财富', baseUrl: 'https://www.eastmoney.com' },
-  { id: 'xueqiu', name: '雪球', baseUrl: 'https://xueqiu.com' },
-]
+/** 时间常量（毫秒） */
+const HOUR_MS = 3600 * 1000
+const NEWS_AGE_4H = 4 * HOUR_MS
+const NEWS_AGE_6H = 6 * HOUR_MS
+const NEWS_AGE_8H = 8 * HOUR_MS
+const NEWS_AGE_2D = 48 * HOUR_MS
+const NEWS_AGE_3D = 72 * HOUR_MS
 
 /** 情感分析关键词 */
 const SENTIMENT_KEYWORDS = {
@@ -150,7 +151,7 @@ export class NewsCrawler extends BaseCollector {
         source: sources[2]!.name,
         sourceUrl: sources[2]!.baseUrl,
         url: `${sources[2]!.baseUrl}/news/detail/${Date.now()}`,
-        publishedAt: Date.now() - 14400000,
+        publishedAt: Date.now() - NEWS_AGE_4H,
         sentiment: this.analyzeTextSentiment('机构调研纪要：长期看好行业龙头'),
         keywords: ['机构', '调研', '看好'],
         category: 'institutional',
@@ -162,7 +163,7 @@ export class NewsCrawler extends BaseCollector {
         source: sources[0]!.name,
         sourceUrl: sources[0]!.baseUrl,
         url: `${sources[0]!.baseUrl}/article/${Date.now()}_4`,
-        publishedAt: Date.now() - 21600000,
+        publishedAt: Date.now() - NEWS_AGE_6H,
         sentiment: this.analyzeTextSentiment(`${stockName}获得大额订单，未来增长可期`),
         keywords: ['订单', '增长', '合同'],
         category: 'business',
@@ -174,7 +175,7 @@ export class NewsCrawler extends BaseCollector {
         source: sources[1]!.name,
         sourceUrl: sources[1]!.baseUrl,
         url: `${sources[1]!.baseUrl}/news/${Date.now()}_5`,
-        publishedAt: Date.now() - 28800000,
+        publishedAt: Date.now() - NEWS_AGE_8H,
         sentiment: this.analyzeTextSentiment('市场波动加剧，分析师建议谨慎操作'),
         keywords: ['波动', '谨慎', '风险'],
         category: 'market',
@@ -210,7 +211,7 @@ export class NewsCrawler extends BaseCollector {
         targetPrice: this.generateTargetPrice(),
         analyst: analysts[1]!,
         institution: institutions[1]!,
-        publishDate: new Date(Date.now() - 172800000).toISOString().split('T')[0]!,
+        publishDate: new Date(Date.now() - NEWS_AGE_2D).toISOString().split('T')[0]!,
         summary: '行业整体向好，建议关注业绩确定性高的优质标的，${stockName}作为行业龙头值得重点关注。',
         keyPoints: ['行业景气度回升', '龙头优势明显', '估值具备吸引力'],
         industry: this.getIndustry(symbol),
@@ -222,7 +223,7 @@ export class NewsCrawler extends BaseCollector {
         targetPrice: this.generateTargetPrice(),
         analyst: analysts[2]!,
         institution: institutions[2]!,
-        publishDate: new Date(Date.now() - 259200000).toISOString().split('T')[0]!,
+        publishDate: new Date(Date.now() - NEWS_AGE_3D).toISOString().split('T')[0]!,
         summary: `${stockName}在细分领域具备竞争优势，技术壁垒较高，长期投资价值显著。`,
         keyPoints: ['技术壁垒高', '竞争优势明显', '长期价值显著'],
         industry: this.getIndustry(symbol),

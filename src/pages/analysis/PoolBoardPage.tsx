@@ -23,6 +23,7 @@ import { StockNewsStats } from '@/components/organisms/pool/StockNewsStats'
 import { useResearchPoolStore } from '@/store/researchPoolStore'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { COLOR_TOKENS, twText, twBg, twBorder, DARK } from '@/constants/theme.tokens'
+import { POOL_STATUS_COLORS } from '@/constants/poolStatusColors'
 import { cn } from '@/lib/utils'
 import { eventBus } from '@/lib/eventBus'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
@@ -50,14 +51,6 @@ const STATUS_LABELS: Record<string, string> = {
   archived: '归档',
 }
 
-const STATUS_COLORS: Record<string, string> = {
-  candidate: 'bg-stone-100 text-stone-700 dark:bg-neutral-800 dark:text-neutral-300',
-  screened: 'bg-blue-100 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400',
-  deepDive: 'bg-purple-100 text-purple-700 dark:bg-purple-950/30 dark:text-purple-400',
-  watching: 'bg-amber-100 text-amber-700 dark:bg-amber-950/30 dark:text-amber-300',
-  archived: 'bg-stone-200 text-stone-500 dark:bg-neutral-800 dark:text-neutral-500',
-}
-
 // ============================================================
 // 股票卡片
 // ============================================================
@@ -76,7 +69,7 @@ function StockOverviewCard({ item }: { item: PoolItem }): React.JSX.Element {
             {item.name}
           </p>
         </div>
-        <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium', STATUS_COLORS[status] ?? STATUS_COLORS.candidate)}>
+        <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium', POOL_STATUS_COLORS[status as keyof typeof POOL_STATUS_COLORS] ?? POOL_STATUS_COLORS.candidate)}>
           {STATUS_LABELS[status] ?? status}
         </span>
       </div>

@@ -1,0 +1,228 @@
+{
+  "date": "2026-08-07",
+  "phase": "post-remediation",
+  "totalDocs": 762,
+  "unresolvedLinks": 520,
+  "orphanDocs": 307,
+  "importantTierOrphans": 64,
+  "docFilesCount": 762,
+  "details": {
+    "totalLinks": 1760,
+    "resolvedLinks": 1165,
+    "activeUnresolvedLinks": 469,
+    "archivedUnresolvedLinks": 51,
+    "activeUnresolvedSources": 44,
+    "archivedUnresolvedSources": 34,
+    "uniqueUnresolvedLinks": 369,
+    "nonExistentFiles": 363,
+    "orphanByTier": {
+      "important": 64,
+      "reference": 20,
+      "standard": 184,
+      "T0": 3,
+      "T1": 14,
+      "T2": 10,
+      "quick-note": 2,
+      "implementation": 2,
+      "mandatory": 1,
+      "unspecified": 7
+    },
+    "orphanByStatus": {
+      "active": 285,
+      "draft": 8,
+      "completed": 3,
+      "complete": 1,
+      "accepted": 1,
+      "proposed": 1,
+      "simulated": 1,
+      "unspecified": 7
+    },
+    "docIdCoverage": "40.3% (305/757)",
+    "tierCoverage": "60.4% (457/757)",
+    "statusCoverage": "47.4% (359/757)"
+  },
+  "remediationAudit": {
+    "audit:layers": { "exitCode": 0, "violations": 0, "filesScanned": 1340 },
+    "audit:deadcode": { "exitCode": 0, "violations": 0, "warnings": 39, "filesScanned": 1391 },
+    "audit:docs": { "exitCode": 0, "violations": 0, "docFilesCount": 762, "versionDrift": 0 },
+    "audit:hardcode": { "exitCode": 1, "totalViolations": 28, "bySeverity": { "Warning": 19, "Critical": 5, "Major": 4 } },
+    "tsc:prod": { "exitCode": 0 }
+  },
+  "remediationSummary": {
+    "tasksTotal": 14,
+    "tasksCompleted": 14,
+    "p0Completed": 5,
+    "p1Completed": 6,
+    "p2Completed": 3,
+    "filesCreated": 9,
+    "filesModified": 18,
+    "docsUpdated": 4,
+    "testFilesUpdated": 2,
+    "scriptsFixed": 2
+  },
+  "taskIndex": {
+    "P0-1": {
+      "title": "清理routes.ts无效路由",
+      "priority": "P0",
+      "status": "completed",
+      "filesModified": ["src/config/routes.ts"],
+      "filesCreated": [],
+      "verification": {
+        "audit:deadcode": { "before": "3 violations", "after": "0 violations" },
+        "tsc:prod": "pass"
+      }
+    },
+    "P0-2": {
+      "title": "修复fetchMarketData假按钮",
+      "priority": "P0",
+      "status": "completed",
+      "filesModified": ["src/mcp/servers/data-collector/dataCollectorServer.ts"],
+      "filesCreated": [],
+      "verification": {
+        "tsc:prod": "pass",
+        "unitTest": "7/7 pass"
+      }
+    },
+    "P0-3": {
+      "title": "提取硬编码API路径到config层",
+      "priority": "P0",
+      "status": "completed",
+      "filesModified": [
+        "src/services/stock/stockSearchClient.ts",
+        "src/services/system/cloudEmbeddingService.ts",
+        "src/services/data-collector/llmSearchAgent.ts"
+      ],
+      "filesCreated": ["src/config/apiEndpoints.ts"],
+      "verification": {
+        "tsc:prod": "pass",
+        "audit:hardcode": "target files cleared"
+      }
+    },
+    "P0-4": {
+      "title": "修复MCP ACL权限矩阵不一致",
+      "priority": "P0",
+      "status": "completed",
+      "filesModified": ["src/config/mcpAclMatrix.ts"],
+      "filesCreated": [],
+      "verification": {
+        "tsc:prod": "pass",
+        "unitTest": "76/76 pass"
+      }
+    },
+    "P0-5": {
+      "title": "构建文档交叉索引基线",
+      "priority": "P0",
+      "status": "completed",
+      "filesModified": ["scripts/cross-index/build-doc-relations.ps1"],
+      "filesCreated": [
+        "scripts/cross-index/build-master-index.ps1",
+        "docs/00-meta/ai-index/master-index.json",
+        "docs/00-meta/ai-index/relation-index.json",
+        "docs/00-meta/ai-index/baseline-report-2026-08-07.json"
+      ],
+      "verification": {
+        "masterIndexDocs": 757,
+        "relationIndexLinks": 1760
+      }
+    },
+    "P1-1": {
+      "title": "清理CollectionProgress颜色硬编码",
+      "priority": "P1",
+      "status": "completed",
+      "filesModified": ["src/components/organisms/pool/CollectionProgress.tsx"],
+      "filesCreated": ["src/constants/collectionColors.ts"],
+      "verification": {
+        "tsc:prod": "pass",
+        "audit:hardcode": "14 violations → 0"
+      }
+    },
+    "P1-2": {
+      "title": "清理NewsCrawler URL+魔法数字",
+      "priority": "P1",
+      "status": "completed",
+      "filesModified": ["src/services/data-collector/collectors/NewsCrawler.ts"],
+      "filesCreated": ["src/config/newsSources.ts"],
+      "verification": {
+        "tsc:prod": "pass",
+        "audit:hardcode": "4 URLs + 5 magic numbers → 0"
+      }
+    },
+    "P1-3": {
+      "title": "重构isCollecting为collectingDimensions",
+      "priority": "P1",
+      "status": "completed",
+      "filesModified": [
+        "src/store/sevenDimConfigStore.test.ts",
+        "tests/__tests__/sevenDimConfigStore.test.ts"
+      ],
+      "filesCreated": [],
+      "verification": {
+        "tsc:prod": "pass",
+        "unitTest": "76+73 pass"
+      }
+    },
+    "P1-4": {
+      "title": "修复文档版本漂移",
+      "priority": "P1",
+      "status": "completed",
+      "filesModified": ["docs/reference/adr-014-vector-search-over-tfidf.md"],
+      "filesCreated": [],
+      "verification": {
+        "audit:docs": "0 version drift"
+      }
+    },
+    "P1-5": {
+      "title": "标记MOCK_STOCK_LIBRARY为@deprecated",
+      "priority": "P1",
+      "status": "completed",
+      "filesModified": ["src/services/input/mockStockLibrary.ts"],
+      "filesCreated": [],
+      "verification": {
+        "tsc:prod": "pass"
+      }
+    },
+    "P1-6": {
+      "title": "更新MCP Server恢复条件文档",
+      "priority": "P1",
+      "status": "completed",
+      "filesModified": ["docs/reference/adr-mcp-server-lifecycle.md"],
+      "filesCreated": [],
+      "verification": {
+        "audit:docs": "pass"
+      }
+    },
+    "P2-1": {
+      "title": "清理PoolBoardPage颜色硬编码",
+      "priority": "P2",
+      "status": "completed",
+      "filesModified": ["src/pages/analysis/PoolBoardPage.tsx"],
+      "filesCreated": ["src/constants/poolStatusColors.ts"],
+      "verification": {
+        "tsc:prod": "pass",
+        "audit:hardcode": "5 violations → 0"
+      }
+    },
+    "P2-2": {
+      "title": "清理InputDashboard颜色硬编码",
+      "priority": "P2",
+      "status": "completed",
+      "filesModified": ["src/apps/input/InputDashboard.tsx"],
+      "filesCreated": [],
+      "verification": {
+        "tsc:prod": "pass",
+        "audit:hardcode": "1 violation → 0"
+      }
+    },
+    "P2-3": {
+      "title": "批量添加@doc标签",
+      "priority": "P2",
+      "status": "completed",
+      "filesModified": ["src/data/dataLayer.ts"],
+      "filesCreated": [],
+      "verification": {
+        "tsc:prod": "pass",
+        "docTagCoverage": "100 files with @doc tags, 54 files with empty @doc []"
+      }
+    }
+  }
+}

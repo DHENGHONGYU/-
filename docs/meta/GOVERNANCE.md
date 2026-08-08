@@ -8,12 +8,15 @@ status: active
 maintainer: V9 Architecture Team
 summary: "V9 文档治理宪法：基于 Diátaxis + 数字前缀的实际分类体系，定义单一真相源、双向一致性、保鲜度、归档清理四大治理原则"
 tags: [project, governance, documentation, meta, diataxis]
-version: v2.0.0
-last_updated: 2026-07-19
+version: v2.1.0
+last_updated: 2026-08-07
 code_version: 2.0.0
 doc_id: V9-DOC-PROJ-016
 referenced_by: [V9-DOC-PROJ-032, V9-DOC-META-000, V9-DOC-PROJ-CROSSINDEX-001, V9-DOC-PROJ-217, V9-DOC-PROJ-175, V9-DOC-PROJ-218]
 change_log:
+  - version: v2.1.0
+    changes: "补全 dataLayer @doc 交叉索引；更新 MCP Server 生命周期 ADR（Server 列表表格化 + 恢复流程章节）；颜色令牌治理（POOL_STATUS_COLORS 抽取、HOVER 令牌应用）"
+    date: 2026-08-07
   - version: v2.0.0
     changes: "重写分类体系：A-H 八类 → Diátaxis + 数字前缀（对齐实测数据 806 文档）"
     date: 2026-07-19
@@ -24,10 +27,10 @@ change_log:
 
 # V9 文档治理宪法（GOVERNANCE）
 
-> **Version**: v2.0.0 | **日期**: 2026-07-19
+> **Version**: v2.1.0 | **日期**: 2026-08-07
 > **适用范围**: `docs/` 目录下所有文档及自动产物
 > **强制等级**: 所有文档维护者必须遵守
-> **变更说明**: v2.0.0 将 A-H 八类分类体系改为实际使用的 Diátaxis + 数字前缀体系，对齐 2026-07-19 实测 806 文档现状
+> **变更说明**: v2.0.0 将 A-H 八类分类体系改为实际使用的 Diátaxis + 数字前缀体系，对齐 2026-07-19 实测 806 文档现状；v2.1.0 补全交叉索引与颜色令牌治理
 
 ---
 
@@ -310,5 +313,6 @@ draft → review → active → deprecated → archived → purged
 
 | 版本 | 日期 | 变更摘要 |
 |------|------|----------|
+| v2.1.0 | 2026-08-07 | 补全 dataLayer @doc 交叉索引；更新 MCP Server 生命周期 ADR（Server 列表表格化 + 恢复流程章节）；颜色令牌治理（POOL_STATUS_COLORS 抽取、HOVER 令牌应用） |
 | v2.0.0 | 2026-07-19 | 重写分类体系：A-H 八类 → Diátaxis + 数字前缀；新增五阶段状态机；新增 frontmatter 完整规范；对齐 806 文档实测数据 |
 | v1.0.0 | 2026-07-12 | 初始版本：A-H 八类分类体系 + 治理原则 + 自动产物治理 |

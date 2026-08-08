@@ -14,11 +14,9 @@
 */
 
 import { getLogger } from '@/lib/logger'
+import { TENCENT_SMARTBOX_API } from '@/config/marketDataEndpoints'
 
 const logger = getLogger()
-
-/** Smartbox API 代理路径（Vite proxy 配置） */
-const SMARTBOX_PROXY = '/api/proxy/smartbox/'
 
 /** Smartbox 返回的单条股票信息 */
 interface SmartboxItem {
@@ -41,7 +39,7 @@ interface SmartboxItem {
 function parseSmartboxResponse(raw: string): SmartboxItem[] {
   // 提取 v_hint="..." 中的内容
   const match = raw.match(/v_hint="([^"]+)"/)
-  if (!match || !match[1]) return []
+  if (!match?.[1]) return []
 
   const items: SmartboxItem[] = []
   const segments = match[1].split('^')
@@ -81,7 +79,7 @@ export async function searchViaSmartbox(
   if (!trimmed) return []
 
   try {
-    const url = `${SMARTBOX_PROXY}?v=2&q=${encodeURIComponent(trimmed)}&t=all`
+    const url = `${TENCENT_SMARTBOX_API}?v=2&q=${encodeURIComponent(trimmed)}&t=all`
     const response = await fetch(url)
     if (!response.ok) {
       logger.warn('[stockSearchClient] Smartbox API 请求失败', {

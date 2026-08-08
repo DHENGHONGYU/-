@@ -18,7 +18,7 @@ import { check, get, set } from './llmSearchCache'
 const logger = getLogger()
 
 /** Qwen-Plus DashScope 原生 API 端点（阿里云百炼，支持 enable_search 联网搜索） */
-const DASHSCOPE_API_URL = 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation'
+import { DASHSCOPE_API_URL, QWEN_PROXY_PATH } from '@/config/apiEndpoints'
 
 /** 请求超时（LLM 搜索比普通 API 慢） */
 const REQUEST_TIMEOUT_MS = 15000
@@ -74,7 +74,7 @@ async function callQwen(systemPrompt: string, userPrompt: string): Promise<strin
 
   const url = isNodeEnv()
     ? DASHSCOPE_API_URL
-    : '/api/proxy/qwen/api/v1/services/aigc/text-generation/generation'
+    : QWEN_PROXY_PATH
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -158,7 +158,7 @@ function extractJsonArray<T>(text: string): T[] {
 
   // 尝试匹配 ```json ... ``` 代码块
   const codeBlockMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/)
-  if (codeBlockMatch && codeBlockMatch[1]) {
+  if (codeBlockMatch?.[1]) {
     try {
       const parsed = JSON.parse(codeBlockMatch[1].trim())
       if (Array.isArray(parsed)) return parsed as T[]

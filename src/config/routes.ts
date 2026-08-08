@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
  */
 import React, { type ComponentType, type LazyExoticComponent } from 'react'
@@ -470,32 +470,6 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '研究候选池总览（基本信息 + 采集进度）',
   },
 
-  // // [DEPRECATED 2026-08-04] MockTestPage 已从路由解耦，待删除
-  // // 原因：开发期 Mock 验证页，不应进入生产路由注册表。
-  // // 文件 src/pages/MockTestPage.tsx 标记为待删除，可在确认无引用后移除。
-  // {
-  //   path: '/mock-test',
-  //   component: React.lazy(() => import('@/pages/MockTestPage')),
-  //   category: 'other',
-  //   description: 'V9 模块 Mock 验证页（Slider/Sheet/Toggle/Engine）',
-  // },
-
-  // // [DEPRECATED 2026-08-04] StockQuoteDashboardDemoPage 已从路由解耦，待删除
-  // // 原因：开发期价格守卫演示页，不应进入生产路由注册表。
-  // // 文件 src/pages/StockQuoteDashboardDemoPage.tsx 已物理删除。
-  // {
-  //   path: '/dev/quote-dashboard',
-  //   component: React.lazy(() => import('@/pages/StockQuoteDashboardDemoPage')),
-  //   category: 'other',
-  //   description: 'StockQuoteDashboard 价格守卫演示（开发验证用）',
-  // },
-  // [DEV-ONLY 2026-08-04] safeFormatNumber 迁移验证页（已删除 WidgetPriceGuardVerifyPage.tsx）
-  // {
-  //   path: '/dev/widget-price-guard',
-  //   component: React.lazy(() => import('@/pages/WidgetPriceGuardVerifyPage')),
-  //   category: 'other',
-  //   description: 'safeFormatNumber 迁移验证页（开发期临时验证用）',
-  // },
 
 ]
 

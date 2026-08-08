@@ -8,15 +8,18 @@ status: active
 maintainer: V9 Architecture Team
 summary: "V9 项目 MCP 层经历了从 18 个 Server 到 13 个 Server 的治理过程。在此过程中暴露以下问题："
 tags: [ai, adr, mcp, reference, documentation]
-version: v1.0.0
-last_updated: 2026-07-17
+version: v1.1.0
+last_updated: 2026-08-07
 code_version: 2.0.0
 doc_id: V9-DOC-AI-005
 referenced_by: [V9-DOC-META-000, V9-DOC-PROD-005, V9-DOC-PROJ-176, V9-DOC-PROJ-149, V9-DOC-ARCH-013]
 change_log:
+  - version: v1.1.0
+    changes: "Server 列表表格化；新增恢复流程章节"
+    date: 2026-08-07
   - version: v1.0.0
-changes: Initial version established
-date: 2026-07-17
+    changes: "Initial version established"
+    date: 2026-07-17
 ---
 
 # ADR-013: MCP Server 生命周期管理 SOP
@@ -109,18 +112,62 @@ V9 项目 MCP 层经历了从 18 个 Server 到 13 个 Server 的治理过程。
 
 ### 3.2 最终 Registry 配置（2026-07-16 更新）
 
-```typescript
-// Enabled（10）
-fetcher:data, scoring:v6, trading:main, news:main, llm:main,
-screening:main, backtest:main, pool:main, system:main, data-collector:main
-
-// Disabled（5）- 详见 3.1 恢复条件
-analysis:main, portfolio:main, knowledge:local, execution:main, workflow:main
-```
+| Server 名称 | 状态 | 说明 |
+|-------------|------|------|
+| `fetcher:data` | Enabled | 数据采集主入口 |
+| `scoring:v6` | Enabled | V6 评分引擎 |
+| `trading:main` | Enabled | 交易主服务（已合并 `trade`） |
+| `news:main` | Enabled | 资讯主服务 |
+| `llm:main` | Enabled | LLM 调用主服务 |
+| `screening:main` | Enabled | 筛选服务（Agent 编排驱动） |
+| `backtest:main` | Enabled | 回测引擎（保留，参数复杂） |
+| `pool:main` | Enabled | 股票池服务 |
+| `system:main` | Enabled | 系统管理服务 |
+| `data-collector:main` | Enabled | 数据采集器服务 |
+| `analysis:main` | Disabled | 详见 3.1 恢复条件 |
+| `portfolio:main` | Disabled | 详见 3.1 恢复条件 |
+| `knowledge:local` | Disabled | 详见 3.1 恢复条件 |
+| `execution:main` | Disabled | 详见 3.1 恢复条件 |
+| `workflow:main` | Disabled | 详见 3.1 恢复条件 |
 
 **当前状态：15 个 Registry 条目（10 enabled / 5 disabled）**
 
 **已移除（3）**：export（降级纯 Service）、trade（合并入 trading:main）、input（MCP 层移除）
+
+### 3.3 恢复流程（Recovery Procedure）
+
+当 Disabled 状态的 Server 满足恢复条件时，必须按以下流程执行恢复操作，确保状态转换可控、可追溯。
+
+#### 3.3.1 恢复触发
+
+1. **条件检测**：恢复条件达成（如 Agent 编排上线、Store API 补齐、参数简化完成等）
+2. **发起申请**：由需求方提交恢复申请，附恢复理由与预期使用场景
+3. **RFC 评审**：重新走 RFC 流程，架构评审会议审核恢复必要性
+
+#### 3.3.2 恢复执行步骤
+
+| 步骤 | 操作 | 负责人 | 验证方式 |
+|------|------|--------|---------|
+| 1 | Registry 启用：将 `enabled` 改为 `true`，移除 `@deprecated` 注释 | 开发者 | `tsc --noEmit` 通过 |
+| 2 | ACL 恢复：在 `mcpAclMatrix.ts` 中重新授权对应 `allowedServers` 和 `allowedTools` | 开发者 | `audit:layers` 通过 |
+| 3 | Agent 注册：在 `src/agents/` 中新增/恢复对应 Agent 配置 | 开发者 | Agent 配置加载无报错 |
+| 4 | 类型恢复：确认 `src/types/modules/` 中类型定义完整（若已清理需重建） | 开发者 | `tsc --noEmit` 通过 |
+| 5 | 功能验证：运行集成测试确认 Tool 调用链路畅通 | QA | 测试用例全绿 |
+| 6 | 文档更新：更新本 ADR 恢复记录，在 CHANGELOG 中记录恢复事件 | 开发者 | 文档审查通过 |
+
+#### 3.3.3 恢复后观察期
+
+- **观察期 30 天**：恢复后 30 天内持续监控 Tool 调用量（通过 `mcpBridge.getToolUsageStats()`）
+- **观察期达标**：30 天内日均调用 ≥ 1 次，视为恢复成功，状态正式回到 Active
+- **观察期未达标**：30 天内仍零调用，重新进入 Under Review 状态，评估是否再次禁用
+
+#### 3.3.4 恢复记录
+
+每次恢复操作必须在本 ADR 的"已执行决策记录"（第 3 节）中追加恢复记录，包含：
+- 恢复日期
+- 恢复原因（对应的恢复条件达成证据）
+- 评审会议纪要链接
+- 观察期达标结果
 
 ---
 

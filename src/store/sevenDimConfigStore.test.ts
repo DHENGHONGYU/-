@@ -645,6 +645,7 @@ describe('useSevenDimConfigStore', () => {
       const state = useSevenDimConfigStore.getState()
       expect(state.error).toContain('个维度采集失败')
       expect(state.isCollecting).toBe(false)
+      expect(state.collectingDimensions).toEqual([])
     })
 
     it('runCollection: 无启用维度时直接返回', async () => {
@@ -659,6 +660,7 @@ describe('useSevenDimConfigStore', () => {
 
       expect(runBatchTrace).not.toHaveBeenCalled()
       expect(useSevenDimConfigStore.getState().isCollecting).toBe(false)
+      expect(useSevenDimConfigStore.getState().collectingDimensions).toEqual([])
     })
 
     it('runCollection: 意向池为空时跳过采集', async () => {
@@ -706,6 +708,7 @@ describe('useSevenDimConfigStore', () => {
       const state = useSevenDimConfigStore.getState()
       expect(state.error).toContain('维度配置不完整')
       expect(state.isCollecting).toBe(false)
+      expect(state.collectingDimensions).toEqual([])
     })
 
     it('runCollection: 调用 runtime.setRunning', async () => {

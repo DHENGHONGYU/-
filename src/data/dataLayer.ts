@@ -16,7 +16,7 @@
  * - dataLayerContentStores.ts: researchLogStore / strategySnapshotStore / localDocStore /
  *   newsStore / newsStockMapStore / sentimentCacheStore / missingReportStore
  * - dataLayerWatchlistStore.ts: watchlistStore（观察列表快照，修复 C4 孤立表）
-  * @doc []
+  * @doc [V9-DOC-DATA-003, V9-DOC-DATA-013, V9-DOC-DATA-016, V9-DOC-DATA-017, V9-DOC-DATA-020]
 */
 import { db } from './db'
 
