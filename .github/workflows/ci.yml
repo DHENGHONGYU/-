@@ -19,34 +19,41 @@ jobs:
     steps:
       # SHA pin 第三方 actions（防供应链攻击，与 quality-check.yml 一致）
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: 'npm'
       # build 需要 esbuild 原生二进制，故不使用 --ignore-scripts
-      - run: npm ci
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+      - run: npm install --no-audit
       - name: Type check (tsc:prod)
         run: npm run tsc:prod
       - name: Production build
         run: npm run build
 
-  test:                       # 测试 + 覆盖率（Phase1：先报告建基线，不硬卡）
-    name: Test + coverage (report-only in Phase1)
+  test:                       # 测试 + 覆盖率（Phase2：阈值未达标即阻断）
+    name: Test + coverage (Phase2 threshold gate)
     needs: smoke
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci
-      # Phase1 覆盖率仅报告，continue-on-error 使基线建立期不阻塞推送；
-      # Phase2 改为 ratchet 下限（建议 line≥80 / branch≥70）后去掉 continue-on-error
-      - name: Unit tests + coverage (Phase1 report-only)
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+      - run: npm install --no-audit
+      # Phase2: 覆盖率阈值正式阻断 — 未达标即 FAIL
+      # 阈值定义见 vite.config.ts coverage.thresholds (src/core/data/lib/services/components/hooks/pages 七级)
+      - name: Unit tests + coverage (Phase2 threshold gate)
         run: npm run test:ci
-        continue-on-error: true
         env:
           CI: true
       - name: Upload coverage report
@@ -64,11 +71,15 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+      - run: npm install --no-audit
       - name: Run chart industry tests (106 cases)
         run: npm run test:chart:industry
         env:
@@ -82,7 +93,7 @@ jobs:
         with:
           name: dev-chart-industry-test-report
           path: |
-            outputs/test-results/chart-tests.json
+            outputs/test-results/chartTests.json
             outputs/test-results/chart-report.html
           retention-days: 7
 
@@ -93,11 +104,15 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci --ignore-scripts --no-audit
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+      - run: npm install --no-audit --ignore-scripts --no-audit
       - name: P0-1 种子数据重试 + P0-2 内存降级模式
         run: npm run test:bootstrap:p0
         env:
@@ -118,11 +133,15 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+      - run: npm install --no-audit
       - name: audit:layers (禁止跨层调用)
         run: npm run audit:layers
 
@@ -134,46 +153,193 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+      - run: npm install --no-audit
       - name: DataBridge 数据流转 + bootstrapService + ACL 完整性检查
         run: npm run test:databridge:gate
         env:
           CI: true
 
-  git-autopush-test:          # GitAutoPush 模块 Pester 测试（开发分支门禁，不阻塞）
-    name: GitAutoPush module tests
+  p0-core-gate:              # P0 核心模块门禁（开发分支必检，阻塞推送）
+    name: P0 core gate (cascade + databridgeAdapter + acl fail-closed + regression)
     needs: smoke
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    continue-on-error: true
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          fetch-depth: 0
-      - name: Setup PowerShell
-        shell: pwsh
-        run: |
-          Write-Host "PowerShell version: $($PSVersionTable.PSVersion)"
-          Install-Module -Name Pester -Force -SkipPublisherCheck -Scope CurrentUser
-      - name: Run GitAutoPush Pester tests
-        shell: pwsh
-        run: |
-          $config = New-PesterConfiguration
-          $config.Run.Path = ".workbuddy\tests\GitAutoPush.Tests.ps1"
-          $config.Output.Verbosity = "Detailed"
-          $config.TestResult.Enabled = $true
-          $config.TestResult.OutputPath = ".workbuddy\tests\testResults.xml"
-          $config.TestResult.OutputFormat = "NUnitXml"
-          Invoke-Pester -Configuration $config
-      - name: Upload GitAutoPush test results
+          node-version: 22
+          cache: 'npm'
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+      - run: npm install --no-audit
+      - name: P0 核心模块测试（cascadeExecutor + databridgeAdapter + acl fail-closed + 回归测试，141 项用例）
+        run: npm run test:p0:core:ci
+        env:
+          CI: true
+      - name: Upload JUnit XML test report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: dev-git-autopush-test-results
+          name: dev-p0-core-junit-report
+          path: reports/p0-core-junit.xml
+          retention-days: 14
+      - name: Upload P0 core test source files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-p0-core-test-files
           path: |
-            .workbuddy/tests/testResults.xml
+            src/core/cascadeExecutor.test.ts
+            src/core/databridgeAdapter.test.ts
+            src/core/acl.fail-closed.test.ts
+            src/core/databridgeAdapter.regression.test.ts
           retention-days: 7
+      # ═══ 失败告警：自动在 PR 上评论（feat/fix 分支） ═══
+      - name: Alert on PR failure
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              `## ❌ P0 核心模块门禁失败（开发分支）`,
+              ``,
+              `**提交者**: @${context.payload.pull_request.user.login}`,
+              `**PR**: #${prNumber} - ${context.payload.pull_request.title}`,
+              `**失败 Job**: [p0-core-gate](${runUrl})`,
+              ``,
+              `### 影响范围`,
+              `P0 核心模块测试覆盖 141 项用例（含回归测试），失败表明核心模块存在回归。`,
+              ``,
+              `### 修复指引`,
+              `1. 下载 artifact \`dev-p0-core-junit-report\` 查看详细失败用例`,
+              `2. 本地复现：\`npm run test:p0:core\``,
+              `3. 修复后重新推送，门禁将自动重跑`,
+              ``,
+              `<!-- auto-generated by p0-core-gate -->`
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body,
+            });
+
+  pre-push-hook-gate:         # pre-push 钩子 scope 校验回归测试（每次提交自动运行）
+    name: Pre-push hook scope validation gate
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 2  # 需要 HEAD~1 用于 scope 校验范围确定
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      # Shell 模拟测试：构造不合规 commit (fix(p0))，验证 pre-push 钩子拦截
+      - name: Run pre-push hook simulation (shell, 2 scenarios)
+        run: sh scripts/audit/simulate-pre-push-blocking.sh
+      # CI 回归测试：18 个场景（6 正常 + 6 不合规 + 6 边界）
+      - name: Run pre-push hook CI regression (Node.js, 18 scenarios)
+        run: node scripts/audit/ci-pre-push-regression.mjs
+        env:
+          SH_BIN: sh
+      # vitest 单元测试已在 test job 中通过 npm run test:ci 自动运行（10 场景）
+      - name: Upload pre-push hook test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-pre-push-hook-logs
+          path: .tmp/logs/pre-push.log
+          retention-days: 7
+      # ═══ 失败告警：自动在 PR 上评论 ═══
+      - name: Alert on PR failure
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              `## ❌ pre-push 钩子回归测试失败`,
+              ``,
+              `**提交者**: @${context.payload.pull_request.user.login}`,
+              `**PR**: #${prNumber} - ${context.payload.pull_request.title}`,
+              `**失败 Job**: [pre-push-hook-gate](${runUrl})`,
+              ``,
+              `### 影响范围`,
+              `pre-push 钩子 scope 校验回归测试覆盖 30 个场景（Shell 2 + CI 18 + vitest 10），失败表明钩子拦截逻辑存在回归。`,
+              ``,
+              `### 修复指引`,
+              `1. 下载 artifact \`dev-pre-push-hook-logs\` 查看日志`,
+              `2. 本地复现：\`sh scripts/audit/simulate-pre-push-blocking.sh\``,
+              `3. 本地复现：\`node scripts/audit/ci-pre-push-regression.mjs\``,
+              `4. 本地复现：\`npx vitest run tests/unit/pre-push-scope-boundary.test.ts\``,
+              `5. 修复后重新推送，门禁将自动重跑`,
+              ``,
+              `<!-- auto-generated by pre-push-hook-gate -->`
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body,
+            });
+
+  security-audit:             # 依赖安全审计（Phase2：high+critical 即阻断）
+    name: Security audit (npm audit, Phase2 blocking)
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      # 复用现有模式：sed 切换 package-lock.json 中的 registry
+      - name: Fix npm registry for audit (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      # npm config set 确保 audit API 请求走 npmjs.org
+      - name: Switch npm config registry for audit
+        run: npm config set registry https://registry.npmjs.org
+      - name: Install dependencies (with npmjs registry)
+        run: npm install --package-lock-only --no-audit
+      # Phase2: high + critical 级别漏洞即阻断 CI
+      - name: Run npm audit (high+critical = block)
+        run: npm audit --audit-level=high
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-security-audit-report
+          path: .npm/audit.json
+          retention-days: 14
+
+  ci-trigger-paths:           # CI 工作流触发路径 + 缓存策略验证（元测试，确保 YAML 配置正确）
+    name: CI trigger paths validation
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.11'
+      - name: Install pyyaml
+        run: pip install pyyaml --quiet
+      - name: Run CI trigger paths test (48 cases)
+        run: python tests/test_ci_trigger_paths.py

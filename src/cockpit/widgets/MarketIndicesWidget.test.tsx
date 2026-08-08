@@ -1,0 +1,102 @@
+/**
+ * @fileoverview MarketIndicesWidget 单元测试 (P0)
+ * @description 覆盖防御性 guard 分支 + 正常渲染路径。
+ *
+ * P0 用例：
+ * 1. config 为空时渲染"配置未就绪"占位
+ * 2. 正常 config 渲染 WidgetStateShell 标题 + 大盘指数数据
+ */
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import React from 'react'
+import type { WidgetConfig, MarketData, MarketIndexData } from '@/types/modules/widget.types'
+import { buildWidgetConfig } from '../../../tests/fixtures'
+
+// ============================================================
+// Mock: useMarketData
+// ============================================================
+const mockUseMarketData = vi.hoisted(() => vi.fn())
+vi.mock('@/cockpit/providers/MarketDataProvider', () => ({
+  useMarketData: mockUseMarketData,
+}))
+
+// 延迟导入，确保 mock 生效
+const MarketIndicesWidget = (await import('./MarketIndicesWidget')).default
+
+// ============================================================
+// 辅助函数
+// ============================================================
+
+/** 构建默认 WidgetConfig */
+function buildConfig(title = '大盘行情监控'): WidgetConfig {
+  return buildWidgetConfig({
+    instanceId: 'market-indices-1',
+    title,
+    widgetType: 'marketIndices',
+  })
+}
+
+/** 构建 mock MarketIndexData */
+function buildIndices(overrides: Partial<MarketIndexData>[] = []): MarketIndexData[] {
+  const defaults: MarketIndexData[] = [
+    { code: '000001', name: '上证指数', price: 3200.5, change: 15.3, changePercent: 0.48, high: 3210, low: 3190, volume: '3500亿' },
+    { code: '399001', name: '深证成指', price: 10500.2, change: -20.1, changePercent: -0.19, high: 10530, low: 10480, volume: '4200亿' },
+  ]
+  return defaults.map((d, i) => ({ ...d, ...overrides[i] }))
+}
+
+/** 配置 mock useMarketData 返回值 */
+function setupMarketData(
+  indices: MarketIndexData[] = [],
+  loading = false,
+  error: string | null = null,
+): void {
+  mockUseMarketData.mockReturnValue({
+    data: { indices } as unknown as MarketData,
+    loadingMap: { 'market-indices-1': loading },
+    errorMap: error ? { 'market-indices-1': error } : {},
+    refreshWidget: vi.fn(),
+  })
+}
+
+// ============================================================
+// 测试用例
+// ============================================================
+
+describe('MarketIndicesWidget (P0)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  // ----------------------------------------------------------
+  // P0 用例 1：config 为空 → 渲染"配置未就绪"占位
+  // ----------------------------------------------------------
+  it('config 为空时渲染"配置未就绪"占位', () => {
+    // useMarketData 仍需返回有效值（hooks 必须无条件调用）
+    setupMarketData(buildIndices(), false)
+
+    const props = { config: undefined as unknown as WidgetConfig }
+    render(<MarketIndicesWidget {...props} />)
+
+    expect(screen.getByText('配置未就绪')).toBeInTheDocument()
+  })
+
+  // ----------------------------------------------------------
+  // P0 用例 2：正常 config → 渲染标题 + 大盘指数数据
+  // ----------------------------------------------------------
+  it('正常 config 渲染 WidgetStateShell 标题 + 大盘指数数据', () => {
+    const indices = buildIndices()
+    setupMarketData(indices, false)
+
+    render(<MarketIndicesWidget config={buildConfig()} />)
+
+    // 标题渲染
+    expect(screen.getByText('大盘行情监控')).toBeInTheDocument()
+    // 指数名称渲染
+    expect(screen.getByText('上证指数')).toBeInTheDocument()
+    expect(screen.getByText('深证成指')).toBeInTheDocument()
+    // 价格渲染（toFixed(2) 格式）
+    expect(screen.getByText('3200.50')).toBeInTheDocument()
+    expect(screen.getByText('10500.20')).toBeInTheDocument()
+  })
+})
