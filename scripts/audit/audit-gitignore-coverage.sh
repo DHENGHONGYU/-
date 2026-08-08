@@ -104,6 +104,7 @@ done
 # ---------------------------------------------------------------------------
 if [ "$EXIT_CODE" -eq 0 ]; then
   echo "  ✅ .gitignore 覆盖率审计通过"
+  echo "  依据：FILE-MANAGEMENT-GUIDE.md §2.2 IDE/环境部署追踪治理"
 else
   echo ""
   echo "❌ .gitignore 覆盖率审计失败：请按上述提示修复后再提交。"
