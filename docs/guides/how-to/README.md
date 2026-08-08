@@ -39,6 +39,7 @@ date: 2026-07-17
 | **PWA 离线** | [pwa-offline-guide.md](pwa-offline-guide.md) |
 | **视觉回归** | [visual-regression-guide.md](visual-regression-guide.md) |
 | **文件管理规范** | [FILE-MANAGEMENT-GUIDE.md](FILE-MANAGEMENT-GUIDE.md) |
+| **存储清理** | [storage-cleanup-guide.md](storage-cleanup-guide.md) |
 | **Widget 开发** | [widget-development-guide.md](widget-development-guide.md) |
 
 ### 测试相关指南

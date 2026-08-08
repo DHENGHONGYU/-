@@ -1,0 +1,77 @@
+# 每周存储占用巡检与清理提醒
+# 触发：每周一 03:00 UTC + 手动触发
+# 作用：
+#   1. 在 CI runner 上清理可重建产物（dist 等 git 追踪的构建产物）
+#   2. 清理 CI 自身的 pip/npm 缓存，避免 runner 磁盘膨胀
+#   3. 输出存储占用报告，提醒开发者本地运行 npm run clean:storage
+#
+# 注意：test-results / coverage / .tmp / outputs 等目录已在 .gitignore 中，
+#       CI checkout 不包含它们，真正的本地磁盘清理需开发者手动执行：
+#         npm run clean:storage          # dry-run 检查
+#         npx tsx scripts/cleanup-storage.ts --execute        # safe 级清理
+#         npx tsx scripts/cleanup-storage.ts --deep --execute  # deep 级清理
+name: Storage Cleanup (Weekly)
+
+on:
+  schedule:
+    # 每周一 03:00 UTC（北京时间 11:00）
+    - cron: '0 3 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install tsx
+        run: npm install -g tsx
+
+      - name: 生成存储占用报告（CI runner 视角）
+        run: npx tsx scripts/cleanup-storage.ts --report
+
+      - name: 执行 safe 级清理（清理 git 追踪的构建产物如 dist）
+        run: npx tsx scripts/cleanup-storage.ts --execute
+
+      - name: 清理 CI 缓存（pip / npm / apt）
+        run: |
+          echo "清理 pip 缓存..."
+          pip cache purge 2>/dev/null || true
+          echo "清理 npm 缓存..."
+          npm cache clean --force 2>/dev/null || true
+          echo "清理 apt 缓存..."
+          sudo apt-get clean 2>/dev/null || true
+          echo "CI 缓存清理完成"
+
+      - name: 清理后存储占用报告
+        run: npx tsx scripts/cleanup-storage.ts --report
+
+      - name: 开发者提醒
+        run: |
+          echo "═══════════════════════════════════════════════════════════════"
+          echo "  ⚠ 本地磁盘清理提醒"
+          echo "═══════════════════════════════════════════════════════════════"
+          echo ""
+          echo "  CI 只能清理 git 追踪的构建产物，以下大目录仅在本地存在："
+          echo "  • test-results/   — Playwright 测试产物（可达 400-600MB）"
+          echo "  • coverage/       — 覆盖率 HTML 报告（~50MB）"
+          echo "  • .tmp/           — embedding 服务日志（~40MB）"
+          echo "  • outputs/*.log   — coverage 运行日志（可达 150MB）"
+          echo "  • backend/wheels/ — Linux wheel 包（~193MB，Windows 无法使用）"
+          echo "  • .hf_cache 重复缓存 — HuggingFace 模型重复副本（~670MB）"
+          echo ""
+          echo "  请在本地执行："
+          echo "    npm run clean:storage                                    # dry-run 检查"
+          echo "    npx tsx scripts/cleanup-storage.ts --execute             # safe 级清理"
+          echo "    npx tsx scripts/cleanup-storage.ts --deep --execute      # deep 级清理"
+          echo "═══════════════════════════════════════════════════════════════"

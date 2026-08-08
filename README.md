@@ -50,6 +50,18 @@ npm run build     # 生产构建
 npm run preview   # 预览生产构建
 ```
 
+## 存储清理
+
+项目随着开发迭代会积累大量测试产物、缓存和临时文件（可达 5GB+）。内置自动化清理脚本支持两级清理：
+
+```bash
+npm run clean:storage           # dry-run 检查可释放空间（不删除）
+npx tsx scripts/cleanup-storage.ts --execute        # safe 级清理（~845MB，无功能影响）
+npx tsx scripts/cleanup-storage.ts --deep --execute # deep 级清理（~1.6GB，含重复模型缓存）
+```
+
+GitHub Actions 每周一自动巡检并提醒本地清理。完整指南见 [存储清理维护指南](docs/guides/how-to/storage-cleanup-guide.md)。
+
 ## 构建优化（PR-5）
 
 本项目采用 Vite v6.4.3 构建，已实施以下优化（详见 [docs/reference/changelogs/2026-07/pr-5-build-optimization-summary.md](docs/reference/changelogs/2026-07/pr-5-build-optimization-summary.md)）：
