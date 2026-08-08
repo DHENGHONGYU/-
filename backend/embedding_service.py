@@ -16,6 +16,9 @@ Embedding Service — FastAPI 转发层
   1. daemon 单进程持有模型，避免重复加载
   2. service 可多 worker 处理并发请求
   3. daemon 崩溃时 service 可返回降级响应
+
+健康检查：
+  /api/embed/health 上报实际加载 dtype（float32/fp16），由 embedding-health-check.yml CI 验证
 """
 
 import os
