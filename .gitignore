@@ -246,3 +246,34 @@ e2e/**/test-artifacts-temp/
 _backups/
 # 构建部署产物（不入 VCS）
 dist-deploy-check/
+
+# --- 2026-08-08 上线清理补充 ---
+
+# 敏感凭证（必须忽略，禁止提交）
+verdaccio-htpasswd
+verdaccio-storage/
+verdaccio-plugins/
+*.htpasswd
+
+# 备份文件通配
+*.bak
+*.bak-*
+*.backup-*
+src/**/__backup__/
+
+# 环境变量文件
+scripts/embedding.env
+
+# 生成报告产物
+/reports/
+docs/reports/**/*.csv
+docs/reports/**/*.xlsx
+docs/reports/**/*.pdf
+docs/reports/changelogs/**/*.patch
+/scripts/outputs/
+scripts/uncovered-branches.json
+release-notes-*/
+
+# 临时 PR 草稿
+PR_draft.md
+PR_Description_*.md
