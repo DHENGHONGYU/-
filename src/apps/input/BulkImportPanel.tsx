@@ -16,6 +16,8 @@ import {
   type ImportStocksOptions,
 } from '@/services/input/batchImportService'
 import { useIntentionPoolStore, getIntentionPoolGroups } from '@/store/intentionPoolStore'
+import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
+import { collectPoolSymbols } from '@/services/pool/collectionService'
 import { getLogger } from '@/lib/logger'
 import { twText, twBg, twBorder, DARK, HOVER, FOCUS, DIVIDE } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
@@ -61,6 +63,8 @@ export default function BulkImportPanel(): React.JSX.Element {
   const [dragOver, setDragOver] = useState(false)
   const [fileInfo, setFileInfo] = useState<FileInfo | null>(null)
   const [parsing, setParsing] = useState(false)
+  const [isCollecting, setIsCollecting] = useState(false)
+  const [collectMessage, setCollectMessage] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // 同步 importPhase 状态
@@ -187,9 +191,41 @@ export default function BulkImportPanel(): React.JSX.Element {
     setImportResult(null)
     setImportPhase('idle')
     setMessage('')
+    setCollectMessage('')
     setFileInfo(null)
     setImportProgress(0)
     if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  // ── 立即采集：导入完成后直接触发七维度采集 ──
+  const handleStartCollection = async (): Promise<void> => {
+    // 从预览中提取所有有效代码（包括重复的，因为可能需要重新采集）
+    const symbols = importPreview
+      .filter((r) => r.status === 'valid' || r.status === 'duplicate')
+      .map((r) => r.symbol)
+      .filter(Boolean)
+    if (symbols.length === 0) {
+      setCollectMessage('没有可采集的标的')
+      return
+    }
+
+    const config = useSevenDimConfigStore.getState().getCollectionConfig()
+    setIsCollecting(true)
+    setCollectMessage(`正在采集 ${symbols.length} 只标的的七维度数据...`)
+
+    try {
+      const result = await collectPoolSymbols(symbols, config)
+      setCollectMessage(
+        `采集完成：共 ${result.totalDimensions} 个维度，失败 ${result.failedDimensions} 个`,
+      )
+      logger.info('[BulkImportPanel] 立即采集完成', { symbols: symbols.length, ...result })
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : String(err)
+      setCollectMessage(`采集失败：${errMsg}`)
+      logger.error('[BulkImportPanel] 立即采集失败', { error: errMsg })
+    } finally {
+      setIsCollecting(false)
+    }
   }
 
   // ── 状态标签 ──
@@ -529,12 +565,34 @@ export default function BulkImportPanel(): React.JSX.Element {
             </p>
           )}
 
+          {/* ── 采集消息 ── */}
+          {collectMessage && (
+            <p className={cn(
+              'rounded-md px-3 py-2 text-sm',
+              collectMessage.startsWith('采集失败')
+                ? [twBg('red', 50), twText('red', 600), DARK.bgRed950_30, DARK.textRed400]
+                : collectMessage.startsWith('采集完成')
+                  ? [twBg('emerald', 50), twText('emerald', 600), DARK.bgGreen950, DARK.textEmerald400]
+                  : [twBg('blue', 50), twText('blue', 600), DARK.bgBlue950, DARK.textBlue100],
+            )}>
+              {collectMessage}
+            </p>
+          )}
+
           {/* ── 操作按钮区 ── */}
           <div className={cn('flex items-center justify-end gap-2 border-t pt-4', twBorder('stone', 100), DARK.borderNeutral800)}>
             {importPhase === 'done' && (
               <>
                 <Button variant="outline" size="sm" onClick={handleReset}>
                   继续导入
+                </Button>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => void handleStartCollection()}
+                  disabled={isCollecting}
+                >
+                  {isCollecting ? '采集中...' : '立即采集'}
                 </Button>
                 <Button variant="secondary" size="sm" asChild>
                   <Link to="/input/seven-dim">前往采集配置</Link>
