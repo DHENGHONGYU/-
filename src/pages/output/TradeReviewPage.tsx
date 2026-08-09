@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useCallback, useMemo } from 'react'
+import { memo, useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { Link } from 'react-router'
 import { BarChart3, Download, RefreshCw, ArrowLeft, CandlestickChart as ChartIcon, Loader2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
@@ -13,6 +13,7 @@ import {
 } from '@/components/atoms/Breadcrumb'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { useDisciplineStore } from '@/store/disciplineStore'
+import { useThemeStore } from '@/store/themeStore'
 import type { TradeReviewReport } from '@/services/trading/tradeReviewAI'
 import { useToast } from '@/hooks/useToast'
 import { usePageGuard } from '@/hooks/usePageGuard'
@@ -26,7 +27,13 @@ import type { KlinePeriod, KlineAdjust } from '@/services/fetcher/fetcherTypes'
 import { collectKline } from '@/services/fetcher/fetcherClient'
 import { PageContainer, PageHeader } from '@/components/templates'
 import { twBg, twText } from '@/constants/theme.tokens'
+import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
+
+const logger = getLogger()
+
+/** 颜色令牌切换闪烁检测阈值（ms），超过则判定为存在视觉闪烁 */
+const FLICKER_THRESHOLD_MS = 50
 
 interface ReviewData {
   report: TradeReviewReport
@@ -43,6 +50,87 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
   // 阶段 B-2：从 store 读取 latestReport（持久化在 IDB.trade_reviews），不再维护本地 review state
   const latestReport = useDisciplineStore((s) => s.latestReport)
   const { loadOrders: loadOrdersFromStore, generateReviewReport, refresh: refreshReport } = useDisciplineStore()
+
+  // 运行时检查：确保深色模式下颜色令牌切换没有视觉闪烁
+  // 通过 MutationObserver 监听 documentElement class 变化，
+  // 检测切换过程中是否存在多次变化（闪烁）或延迟同步
+  const resolvedMode = useThemeStore((s) => s.resolvedMode)
+  const prevResolvedModeRef = useRef(resolvedMode)
+
+  useEffect(() => {
+    if (typeof document === 'undefined' || typeof window === 'undefined') return
+
+    const prevMode = prevResolvedModeRef.current
+    prevResolvedModeRef.current = resolvedMode
+    // 仅在主题实际变化时执行检查
+    if (prevMode === resolvedMode) return
+
+    const root = document.documentElement
+    const expectedHasDark = resolvedMode === 'dark'
+    let classChangeCount = 0
+    const startTime = performance.now()
+
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          classChangeCount++
+          const elapsed = performance.now() - startTime
+          const hasDarkClass = root.classList.contains('dark')
+          const dataTheme = root.getAttribute('data-theme')
+
+          // 闪烁检测 1：单次切换中 class 变化超过 1 次 → 存在中间态闪烁
+          if (classChangeCount > 1) {
+            logger.warn('[TradeReviewPage] 深色模式颜色令牌切换检测到多次 class 变化，存在视觉闪烁', {
+              resolvedMode,
+              classChangeCount,
+              elapsedMs: elapsed,
+              hasDarkClass,
+              dataTheme,
+            })
+          }
+
+          // 闪烁检测 2：class 变化耗时超过阈值 → 切换延迟可能导致闪烁
+          if (elapsed > FLICKER_THRESHOLD_MS) {
+            logger.warn('[TradeReviewPage] 深色模式颜色令牌切换耗时过长，可能存在视觉闪烁', {
+              resolvedMode,
+              elapsedMs: elapsed,
+              threshold: FLICKER_THRESHOLD_MS,
+              hasDarkClass,
+              dataTheme,
+            })
+          }
+
+          // 同步性验证：class 与预期主题不一致 → 颜色令牌未正确切换
+          if (hasDarkClass !== expectedHasDark) {
+            logger.warn('[TradeReviewPage] 颜色令牌 class 与预期主题不一致', {
+              resolvedMode,
+              expectedHasDark,
+              actualHasDarkClass: hasDarkClass,
+              dataTheme,
+            })
+          }
+
+          observer.disconnect()
+          return
+        }
+      }
+    })
+
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] })
+
+    // 超时清理：200ms 后停止监听（主题已正确同步则无需 class 变化）
+    const timeoutId = window.setTimeout(() => {
+      observer.disconnect()
+      if (classChangeCount === 0) {
+        logger.debug('[TradeReviewPage] 颜色令牌已同步，无需切换 class', { resolvedMode })
+      }
+    }, 200)
+
+    return () => {
+      observer.disconnect()
+      window.clearTimeout(timeoutId)
+    }
+  }, [resolvedMode])
 
   // 将 store 中的 latestReport 转成 UI 用的 ReviewData
   const review: ReviewData | null = latestReport
