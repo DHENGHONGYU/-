@@ -11,10 +11,25 @@ V9 数据采集服务接口契约
 
 from datetime import datetime, timedelta
 from typing import Any, Optional
+import logging
+import re
+import time
 from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s: %(message)s")
+logger = logging.getLogger("v9-data-collector")
 
 app = FastAPI(title="V9 Data Collector", version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # ---------------------------------------------------------------------------
@@ -31,7 +46,7 @@ class CollectResponse(BaseModel):
     data: Optional[dict[str, Any]] = None
     records: int = 0
     error: Optional[str] = None
-    fetched_at: str = datetime.now().isoformat()
+    fetched_at: str = Field(default_factory=lambda: datetime.now().isoformat())
 
 
 class HealthCheckResponse(BaseModel):
@@ -59,6 +74,245 @@ class BasicCollectData(BaseModel):
     pb: Optional[float] = None
     roe: Optional[float] = None
     market_cap: Optional[float] = None
+    industry_code: Optional[str] = None
+
+
+# ---------------------------------------------------------------------------
+# 申万行业代码映射表（name → code，24h 缓存）
+# ---------------------------------------------------------------------------
+
+_SW_MAP_CACHE: dict[str, Any] = {"data": None, "ts": 0.0}
+_SW_MAP_TTL = 86400  # 申万行业分类调整频率低，缓存 24 小时
+
+
+def _normalize_sw_name(name: str) -> str:
+    """归一化申万行业名称：去除尾部罗马数字后缀(II/Ⅰ/Ⅱ/Ⅲ/Ⅳ)及首尾空白。
+
+    申万二级名称常带 "II" 后缀（如 "白酒II"），而 stock_individual_info_em
+    返回的行业名通常无此后缀（如 "白酒"），归一化后可精确匹配。
+    """
+    return re.sub(r"[\sⅠⅡⅢⅣIV]+$", "", str(name)).strip()
+
+
+def _get_sw_industry_map() -> dict[str, dict[str, str]] | None:
+    """获取申万行业名称→代码映射（二级 + 一级），带 24h 缓存。
+
+    数据源：
+    - ak.sw_index_second_info()：申万二级行业（行业代码 / 行业名称）
+    - ak.sw_index_first_info()：申万一级行业（行业代码 / 行业名称）
+
+    返回 {"second": {name: code}, "first": {name: code}}，失败返回 None。
+    """
+    now = time.time()
+    if _SW_MAP_CACHE["data"] is not None and now - _SW_MAP_CACHE["ts"] < _SW_MAP_TTL:
+        return _SW_MAP_CACHE["data"]
+
+    try:
+        import akshare as ak
+
+        second_df = ak.sw_index_second_info()
+        first_df = ak.sw_index_first_info()
+    except Exception as e:
+        logger.warning("[SW映射] 获取申万行业映射失败: %s", e)
+        return None
+
+    second_map: dict[str, str] = {}
+    for _, row in second_df.iterrows():
+        name = str(row["行业名称"]).strip()
+        code = str(row["行业代码"]).strip()
+        second_map[name] = code
+        second_map[_normalize_sw_name(name)] = code  # 归一化键，兼容无后缀名
+
+    first_map: dict[str, str] = {}
+    for _, row in first_df.iterrows():
+        first_map[str(row["行业名称"]).strip()] = str(row["行业代码"]).strip()
+
+    data = {"second": second_map, "first": first_map}
+    _SW_MAP_CACHE["data"] = data
+    _SW_MAP_CACHE["ts"] = now
+    logger.info("[SW映射] 申万行业映射表已加载: 二级 %d 条, 一级 %d 条", len(second_map), len(first_map))
+    return data
+
+
+def resolve_sw_industry_code(industry_name: str | None) -> str | None:
+    """将行业名称解析为申万二级代码，实现精确代码匹配。
+
+    匹配顺序：
+    1. 申万二级名称精确匹配（如 "白酒II"）
+    2. 申万二级名称归一化匹配（如 "白酒" → 匹配 "白酒II" 的代码）
+
+    注意：stock_individual_info_em 的"行业"字段为东财/证监会行业分类，
+    部分个股对应申万一级名称（如 "银行"），无法精确映射到申万二级代码。
+    此时返回 None，前端 isHotSector 会回退到 sectorName 名称匹配兜底，
+    避免 industryCode 填入非二级代码而阻断匹配链路。
+
+    @see hot-momentum-strategy.md §2.5.4 申万二级代码精确匹配
+    """
+    if not industry_name:
+        return None
+    mapping = _get_sw_industry_map()
+    if not mapping:
+        return None
+    name = industry_name.strip()
+    norm = _normalize_sw_name(name)
+    second = mapping["second"]
+    if name in second:
+        return second[name]
+    if norm and norm != name and norm in second:
+        return second[norm]
+    return None
+
+
+# ---------------------------------------------------------------------------
+# 腾讯行情直连（price/pe/pb/kline 真实数据源，替代被东财封禁的 akshare 接口）
+# ---------------------------------------------------------------------------
+
+
+def _safe_float(val: Any) -> float | None:
+    """安全转 float，空值/非数字返回 None"""
+    if val is None or str(val).strip() == "":
+        return None
+    try:
+        return float(val)
+    except (TypeError, ValueError):
+        return None
+
+
+def _to_tencent_code(symbol: str) -> str:
+    """将 6 位代码转为腾讯格式（sh600519 / sz000001 / bj832000）"""
+    clean = symbol.split(".")[0].upper()
+    if clean.startswith("6"):
+        return f"sh{clean}"
+    elif clean.startswith(("0", "3", "2")):
+        return f"sz{clean}"
+    elif clean.startswith(("8", "4", "9")):
+        return f"bj{clean}"
+    return f"sh{clean}"
+
+
+def fetch_tencent_quote(symbol: str) -> dict[str, Any] | None:
+    """
+    从腾讯实时行情 API 获取 price / pe / pb / 总市值。
+
+    API: https://qt.gtimg.cn/q=sh600519
+    字段索引: [3]=price, [39]=PE, [47]=PB, [46]=总市值(亿)
+    """
+    import requests
+
+    tc = _to_tencent_code(symbol)
+    url = f"https://qt.gtimg.cn/q={tc}"
+    try:
+        r = requests.get(url, timeout=8, headers={"Referer": "https://gu.qq.com/"})
+        parts = r.text.split('="')
+        if len(parts) < 2:
+            return None
+        fields = parts[1].strip('";\n').split("~")
+        if len(fields) < 50:
+            return None
+        market_cap_yi = _safe_float(fields[46])
+        return {
+            "price": _safe_float(fields[3]),
+            "pe": _safe_float(fields[39]),
+            "pb": _safe_float(fields[47]),
+            "market_cap": market_cap_yi * 1e8 if market_cap_yi else None,  # 亿→元
+        }
+    except Exception as e:
+        logger.warning("[tencent_quote] 获取失败: %s, %s", symbol, e)
+        return None
+
+
+def fetch_tencent_kline(symbol: str, count: int = 60) -> list[dict[str, Any]] | None:
+    """
+    从腾讯 K 线 API 获取前复权日线数据。
+
+    API: https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600519,day,,,60,qfq
+    字段: [date, open, close, high, low, volume, amount?]
+    """
+    import requests
+
+    tc = _to_tencent_code(symbol)
+    url = f"https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param={tc},day,,,{count},qfq"
+    try:
+        r = requests.get(url, timeout=10)
+        data = r.json()
+        kline_data = data.get("data", {}).get(tc, {})
+        day_list = kline_data.get("day") or kline_data.get("qfqday")
+        if not day_list:
+            return None
+        bars: list[dict[str, Any]] = []
+        for item in day_list:
+            if len(item) >= 6:
+                bars.append({
+                    "date": item[0],
+                    "open": _safe_float(item[1]),
+                    "close": _safe_float(item[2]),
+                    "high": _safe_float(item[3]),
+                    "low": _safe_float(item[4]),
+                    "volume": _safe_float(item[5]),
+                    "amount": _safe_float(item[6]) if len(item) > 6 else 0.0,
+                })
+        return bars if bars else None
+    except Exception as e:
+        logger.warning("[tencent_kline] 获取失败: %s, %s", symbol, e)
+        return None
+
+
+def fetch_individual_info(symbol: str) -> dict[str, Any] | None:
+    """
+    调用 AKShare stock_individual_info_em 获取个股基础信息。
+
+    返回字段（来自接口的 item/value 两列结构）：
+    - name: 股票简称
+    - industry_name: 东财/证监会行业名称（原始值，用于日志与兜底）
+    - industry_code: 申万二级代码（经映射表解析，精确代码匹配；无法解析时为 None）
+    - market_cap: 总市值（元）
+
+    AKShare 不可用或调用失败时返回 None，由调用方回退到占位数据。
+    """
+    try:
+        import akshare as ak
+    except ImportError:
+        logger.warning("[basic] akshare 未安装，回退到占位数据: %s", symbol)
+        return None
+
+    # stock_individual_info_em 接收 6 位纯数字代码（去除 .SH/.SZ 后缀）
+    clean_symbol = symbol.split(".")[0].upper()
+    try:
+        df = ak.stock_individual_info_em(symbol=clean_symbol)
+    except Exception as e:
+        logger.warning("[basic] stock_individual_info_em 调用失败: %s, %s", symbol, e)
+        return None
+    if df is None or df.empty or "item" not in df.columns or "value" not in df.columns:
+        logger.warning("[basic] stock_individual_info_em 返回空: %s", symbol)
+        return None
+
+    info: dict[str, Any] = {}
+    industry_name: str | None = None
+    # item/value 两列，按行遍历取值
+    for _, row in df.iterrows():
+        item = str(row["item"]).strip()
+        value = row["value"]
+        if item == "股票简称":
+            info["name"] = str(value).strip() if value is not None else None
+        elif item == "行业":
+            industry_name = str(value).strip() if value is not None else None
+            info["industry_name"] = industry_name
+        elif item == "总市值":
+            try:
+                info["market_cap"] = float(value)
+            except (TypeError, ValueError):
+                pass
+
+    # 通过申万行业代码映射表解析为申万二级代码（精确代码匹配）
+    sw_code = resolve_sw_industry_code(industry_name)
+    info["industry_code"] = sw_code
+    logger.info(
+        "[basic] 行业代码解析: symbol=%s 行业=%s → 申万二级代码=%s",
+        symbol,
+        industry_name,
+        sw_code if sw_code else "(未命中，回退名称匹配)",
+    )
+    return info or None
 
 
 @app.post("/api/collect/basic", response_model=CollectResponse)
@@ -66,22 +320,27 @@ def collect_basic(request: BasicCollectRequest) -> CollectResponse:
     """
     拉取单只股票基础信息。
 
-    真实实现应调用 AKShare 的 stock_individual_info_em、stock_zh_a_gdhs、
-    stock_comment_em 等接口，并将结果映射到 BasicCollectData 字段。
+    数据源：
+    - AKShare stock_individual_info_em：name / industry_code / market_cap
+    - 腾讯实时行情 qt.gtimg.cn：price / pe / pb（替代东财被封接口）
     """
-    # TODO: 接入 AKShare 真实接口
+    info = fetch_individual_info(request.symbol)
+    tq = fetch_tencent_quote(request.symbol)
+
+    data = BasicCollectData(
+        name=(info or {}).get("name"),
+        industry_code=(info or {}).get("industry_code"),
+        market_cap=(info or {}).get("market_cap") or (tq or {}).get("market_cap"),
+        price=(tq or {}).get("price"),
+        pe=(tq or {}).get("pe"),
+        pb=(tq or {}).get("pb"),
+    )
+
     return CollectResponse(
         success=True,
         symbol=request.symbol,
         dimension="basic",
-        data=BasicCollectData(
-            name=f"{request.symbol}（示例）",
-            price=100.0,
-            pe=20.0,
-            pb=3.0,
-            roe=15.0,
-            market_cap=1e11,
-        ).model_dump(),
+        data=data.model_dump(),
         records=1,
         fetched_at=datetime.now().isoformat(),
     )
@@ -118,39 +377,34 @@ class KlineCollectData(BaseModel):
 @app.post("/api/collect/kline", response_model=CollectResponse)
 def collect_kline(request: KlineCollectRequest) -> CollectResponse:
     """
-    拉取单只股票 K线数据。
+    拉取单只股票 K线数据（前复权日线）。
 
-    真实实现应调用 AKShare 的 stock_zh_a_hist 接口：
-        akshare.stock_zh_a_hist(
-            symbol=request.symbol,
-            period=request.period,
-            start_date=request.start_date,
-            end_date=request.end_date,
-            adjust=request.adjust,
-        )
-    返回字段通常包含：日期、开盘、收盘、最高、最低、成交量、成交额、
-    振幅、涨跌幅、涨跌额、换手率。本接口只保留 OHLCV + 成交额。
+    数据源：腾讯 fqkline API（web.ifzq.gtimg.cn），返回最近 60 根日线。
+    字段: [date, open, close, high, low, volume]
+    替代被东财封禁的 akshare.stock_zh_a_hist。
     """
-    # TODO: 接入 AKShare 真实接口
-    # 示例：生成最近 30 个交易日的模拟 K线
-    today = datetime.now()
-    history: list[KlineBar] = []
-    base_price = 100.0
-    for i in range(30, 0, -1):
-        date = (today - timedelta(days=i)).strftime("%Y-%m-%d")
-        close = base_price + (30 - i) * 0.5 + (i % 5) * 0.2
-        history.append(
-            KlineBar(
-                date=date,
-                open=close - 0.5,
-                high=close + 0.8,
-                low=close - 0.8,
-                close=close,
-                volume=12345.0 + i * 100,
-                amount=(12345.0 + i * 100) * close,
-            )
+    bars = fetch_tencent_kline(request.symbol, count=60)
+    if not bars:
+        return CollectResponse(
+            success=False,
+            symbol=request.symbol,
+            dimension="kline",
+            error="腾讯K线API返回空或请求失败",
+            fetched_at=datetime.now().isoformat(),
         )
 
+    history: list[KlineBar] = [
+        KlineBar(
+            date=b["date"],
+            open=b["open"] or 0.0,
+            high=b["high"] or 0.0,
+            low=b["low"] or 0.0,
+            close=b["close"] or 0.0,
+            volume=b["volume"] or 0.0,
+            amount=b.get("amount") or 0.0,
+        )
+        for b in bars
+    ]
     latest = history[-1] if history else None
     return CollectResponse(
         success=True,
@@ -169,6 +423,7 @@ def collect_kline(request: KlineCollectRequest) -> CollectResponse:
 
 class FinancialCollectRequest(BaseModel):
     symbol: str
+    use_llm: bool = False  # True 时走 LLM 解析路径（PDF文本提取 + LLM JSON抽取）
 
 
 class FinancialCollectData(BaseModel):
@@ -189,160 +444,117 @@ class FinancialCollectData(BaseModel):
     shareholder_pledge: Optional[float] = None
 
 
-# 模拟财务数据字典（用于本地测试）
-MOCK_FINANCIAL_DATA: dict[str, dict[str, Any]] = {
-    # 贵州茅台 - 白酒龙头，高毛利、高净利率、低负债
-    "600519": {
-        "report_date": "2024-12-31",
-        "revenue": 1505.6,
-        "revenue_yoy": 16.3,
-        "net_profit": 862.3,
-        "net_profit_yoy": 19.2,
-        "gross_margin": 91.5,
-        "net_margin": 57.3,
-        "operating_cf": 920.5,
-        "rd_ratio": 2.1,
-        "receivables": 12.8,
-        "inventory_turnover_days": 480,
-        "interest_bearing_debt": 0,
-        "goodwill": 0,
-        "net_assets": 1520.3,
-        "shareholder_pledge": 0,
-    },
-    # 宁德时代 - 新能源龙头，高增长、中等毛利
-    "300750": {
-        "report_date": "2024-12-31",
-        "revenue": 4009.2,
-        "revenue_yoy": 22.8,
-        "net_profit": 467.5,
-        "net_profit_yoy": 28.5,
-        "gross_margin": 22.8,
-        "net_margin": 11.7,
-        "operating_cf": 580.3,
-        "rd_ratio": 6.5,
-        "receivables": 450.2,
-        "inventory_turnover_days": 95,
-        "interest_bearing_debt": 320.5,
-        "goodwill": 45.8,
-        "net_assets": 1850.6,
-        "shareholder_pledge": 8.5,
-    },
-    # 招商银行 - 银行龙头，稳定分红、高ROE
-    "600036": {
-        "report_date": "2024-12-31",
-        "revenue": 3391.5,
-        "revenue_yoy": 5.2,
-        "net_profit": 1466.8,
-        "net_profit_yoy": 6.8,
-        "gross_margin": None,  # 银行无毛利率概念
-        "net_margin": 43.2,
-        "operating_cf": 1250.3,
-        "rd_ratio": 3.8,
-        "receivables": None,  # 银行应收类科目不同
-        "inventory_turnover_days": None,
-        "interest_bearing_debt": 8500.0,
-        "goodwill": 0,
-        "net_assets": 9200.5,
-        "shareholder_pledge": 0,
-    },
-    # 比亚迪 - 新能源车龙头，高增长、低净利率
-    "002594": {
-        "report_date": "2024-12-31",
-        "revenue": 6023.2,
-        "revenue_yoy": 42.0,
-        "net_profit": 300.4,
-        "net_profit_yoy": 80.7,
-        "gross_margin": 20.2,
-        "net_margin": 5.0,
-        "operating_cf": 450.8,
-        "rd_ratio": 7.2,
-        "receivables": 380.5,
-        "inventory_turnover_days": 65,
-        "interest_bearing_debt": 520.3,
-        "goodwill": 12.5,
-        "net_assets": 2150.8,
-        "shareholder_pledge": 3.2,
-    },
-    # 海康威视 - 安防龙头，稳定增长、中等毛利
-    "002415": {
-        "report_date": "2024-12-31",
-        "revenue": 893.5,
-        "revenue_yoy": 8.5,
-        "net_profit": 141.2,
-        "net_profit_yoy": 10.3,
-        "gross_margin": 44.5,
-        "net_margin": 15.8,
-        "operating_cf": 180.5,
-        "rd_ratio": 10.2,
-        "receivables": 280.3,
-        "inventory_turnover_days": 120,
-        "interest_bearing_debt": 85.0,
-        "goodwill": 28.5,
-        "net_assets": 520.8,
-        "shareholder_pledge": 5.8,
-    },
-    # 腾讯控股 - 互联网龙头（港股，用于测试非A股场景）
-    "00700": {
-        "report_date": "2024-12-31",
-        "revenue": 6190.5,
-        "revenue_yoy": 9.8,
-        "net_profit": 1940.2,
-        "net_profit_yoy": 15.5,
-        "gross_margin": 52.3,
-        "net_margin": 31.3,
-        "operating_cf": 2150.8,
-        "rd_ratio": 12.5,
-        "receivables": 450.2,
-        "inventory_turnover_days": None,
-        "interest_bearing_debt": 2800.0,
-        "goodwill": 1850.5,
-        "net_assets": 6500.3,
-        "shareholder_pledge": 0,
-    },
-    # 中芯国际 - 半导体龙头，高研发、周期性
-    "688981": {
-        "report_date": "2024-12-31",
-        "revenue": 527.3,
-        "revenue_yoy": 18.5,
-        "net_profit": 48.5,
-        "net_profit_yoy": -35.2,
-        "gross_margin": 19.8,
-        "net_margin": 9.2,
-        "operating_cf": 185.3,
-        "rd_ratio": 15.8,
-        "receivables": 85.2,
-        "inventory_turnover_days": 145,
-        "interest_bearing_debt": 420.5,
-        "goodwill": 0,
-        "net_assets": 1680.5,
-        "shareholder_pledge": 0,
-    },
-    # 隆基绿能 - 光伏龙头，周期下行、利润下滑
-    "601012": {
-        "report_date": "2024-12-31",
-        "revenue": 856.2,
-        "revenue_yoy": -38.5,
-        "net_profit": -85.3,
-        "net_profit_yoy": -180.5,
-        "gross_margin": 12.5,
-        "net_margin": -9.9,
-        "operating_cf": 45.8,
-        "rd_ratio": 5.8,
-        "receivables": 180.5,
-        "inventory_turnover_days": 110,
-        "interest_bearing_debt": 280.3,
-        "goodwill": 15.2,
-        "net_assets": 680.5,
-        "shareholder_pledge": 12.5,
-    },
-}
+def fetch_real_financial_data(symbol: str) -> dict[str, Any] | None:
+    """
+    从 AKShare 获取真实财务数据。
+
+    数据源：
+    - stock_financial_analysis_indicator：比率类指标（毛利率/净利率/ROE/增长率/周转天数）
+    - stock_financial_abstract：绝对值指标（营收/净利润/现金流/净资产/应收/负债/商誉）
+    """
+    import akshare as ak
+
+    clean = symbol.split(".")[0].upper()
+    result: dict[str, Any] = {}
+
+    # 1. 比率类指标（stock_financial_analysis_indicator）
+    try:
+        df = ak.stock_financial_analysis_indicator(symbol=clean, start_year="2023")
+        if df is not None and not df.empty:
+            latest = df.iloc[-1]
+            result["report_date"] = str(latest.get("日期", ""))
+            result["gross_margin"] = _safe_float(latest.get("销售毛利率(%)"))
+            result["net_margin"] = _safe_float(latest.get("销售净利率(%)"))
+            result["revenue_yoy"] = _safe_float(latest.get("主营业务收入增长率(%)"))
+            result["net_profit_yoy"] = _safe_float(latest.get("净利润增长率(%)"))
+            result["inventory_turnover_days"] = _safe_float(latest.get("存货周转天数(天)"))
+            total_assets = _safe_float(latest.get("总资产(元)"))
+            debt_ratio = _safe_float(latest.get("资产负债率(%)"))
+            if total_assets and debt_ratio is not None:
+                result["net_assets"] = total_assets * (1 - debt_ratio / 100)
+                result["interest_bearing_debt"] = total_assets * debt_ratio / 100
+    except Exception as e:
+        logger.warning("[financial] stock_financial_analysis_indicator 失败: %s, %s", symbol, e)
+
+    # 2. 绝对值指标（stock_financial_abstract）
+    try:
+        df2 = ak.stock_financial_abstract(symbol=clean)
+        if df2 is not None and not df2.empty:
+            date_cols = [c for c in df2.columns if c not in ("选项", "指标")]
+            if date_cols:
+                latest_col = date_cols[0]
+                for _, row in df2.iterrows():
+                    metric = str(row["指标"]).strip()
+                    val = _safe_float(row[latest_col])
+                    if val is None:
+                        continue
+                    if metric == "营业总收入":
+                        result.setdefault("revenue", val)
+                    elif metric == "归母净利润":
+                        result.setdefault("net_profit", val)
+                    elif metric == "净利润" and "net_profit" not in result:
+                        result.setdefault("net_profit", val)
+                    elif "经营活动产生的现金流量净额" in metric or metric == "经营活动现金流量净额":
+                        result.setdefault("operating_cf", val)
+                    elif metric == "应收账款":
+                        result.setdefault("receivables", val)
+                    elif metric in ("股东权益合计", "归属于母公司股东权益合计"):
+                        result.setdefault("net_assets", val)
+                    elif metric == "商誉":
+                        result.setdefault("goodwill", val)
+                    elif metric == "负债合计":
+                        result.setdefault("interest_bearing_debt", val)
+                    elif metric == "研发费用":
+                        result["_rd_expense"] = val
+                if "_rd_expense" in result and result.get("revenue"):
+                    result["rd_ratio"] = round(result["_rd_expense"] / result["revenue"] * 100, 2)
+                    result.pop("_rd_expense", None)
+    except Exception as e:
+        logger.warning("[financial] stock_financial_abstract 失败: %s, %s", symbol, e)
+
+    return result if result else None
 
 
-def get_mock_financial_data(symbol: str) -> dict[str, Any] | None:
-    """获取模拟财务数据"""
-    # 去除后缀（如 600519.SH → 600519）
-    clean_symbol = symbol.split(".")[0].upper()
-    return MOCK_FINANCIAL_DATA.get(clean_symbol)
+def _collect_financial_llm(symbol: str) -> CollectResponse:
+    """LLM 财务解析路径：从年报 PDF 提取文本，LLM 抽取结构化 JSON。
+
+    异常处理：extract_one 可能因网络超时、PDF 下载失败、LLM API 错误等抛异常，
+    必须捕获并返回结构化错误响应，避免 FastAPI 返回 500。
+    """
+    try:
+        from llm_financial_extractor import extract_one
+
+        result = extract_one(symbol)
+    except Exception as e:
+        logger.error("[financial] LLM 解析异常: %s, %s", symbol, e)
+        return CollectResponse(
+            success=False,
+            symbol=symbol,
+            dimension="financial",
+            error=f"LLM 解析异常: {e}",
+            fetched_at=datetime.now().isoformat(),
+        )
+
+    fin_data = result.get("financial_data") or {}
+
+    valid_fields = {
+        "report_date", "revenue", "revenue_yoy", "net_profit", "net_profit_yoy",
+        "gross_margin", "net_margin", "operating_cf", "rd_ratio",
+        "receivables", "inventory_turnover_days", "interest_bearing_debt",
+        "goodwill", "net_assets", "shareholder_pledge",
+    }
+    filtered = {k: v for k, v in fin_data.items() if k in valid_fields}
+    success = result.get("source") != "failed" and not fin_data.get("_error")
+
+    return CollectResponse(
+        success=success,
+        symbol=symbol,
+        dimension="financial",
+        data=FinancialCollectData(**filtered).model_dump() if filtered else None,
+        records=1 if success else 0,
+        error=fin_data.get("_error") or result.get("error"),
+        fetched_at=datetime.now().isoformat(),
+    )
 
 
 @app.post("/api/collect/financial", response_model=CollectResponse)
@@ -350,39 +562,36 @@ def collect_financial(request: FinancialCollectRequest) -> CollectResponse:
     """
     拉取单只股票财务分析指标。
 
-    真实实现应调用 AKShare 的 stock_financial_analysis_indicator 接口，
-    并将结果映射到 FinancialCollectData 字段。
-
-    当前为模拟实现，返回预置的测试数据。
+    数据源：
+    - use_llm=True：巨潮年报 PDF 文本提取 + LLM JSON 抽取（llm_financial_extractor）
+    - AKShare stock_financial_analysis_indicator：比率类指标（毛利率/净利率/ROE/增长率）
+    - AKShare stock_financial_abstract：绝对值指标（营收/净利润/现金流/净资产）
     """
-    # TODO: 接入 AKShare 真实接口
-    mock_data = get_mock_financial_data(request.symbol)
+    if request.use_llm:
+        return _collect_financial_llm(request.symbol)
 
-    if mock_data is None:
-        # 对于未预置的股票，返回默认模拟数据
-        mock_data = {
-            "report_date": "2024-12-31",
-            "revenue": 100.0,
-            "revenue_yoy": 10.0,
-            "net_profit": 15.0,
-            "net_profit_yoy": 12.0,
-            "gross_margin": 30.0,
-            "net_margin": 15.0,
-            "operating_cf": 20.0,
-            "rd_ratio": 5.0,
-            "receivables": 25.0,
-            "inventory_turnover_days": 60.0,
-            "interest_bearing_debt": 50.0,
-            "goodwill": 5.0,
-            "net_assets": 120.0,
-            "shareholder_pledge": 8.0,
-        }
+    real_data = fetch_real_financial_data(request.symbol)
+    if real_data is None:
+        return CollectResponse(
+            success=False,
+            symbol=request.symbol,
+            dimension="financial",
+            error="AKShare 财务数据获取失败",
+            fetched_at=datetime.now().isoformat(),
+        )
 
+    valid_fields = {
+        "report_date", "revenue", "revenue_yoy", "net_profit", "net_profit_yoy",
+        "gross_margin", "net_margin", "operating_cf", "rd_ratio",
+        "receivables", "inventory_turnover_days", "interest_bearing_debt",
+        "goodwill", "net_assets", "shareholder_pledge",
+    }
+    filtered = {k: v for k, v in real_data.items() if k in valid_fields}
     return CollectResponse(
         success=True,
         symbol=request.symbol,
         dimension="financial",
-        data=FinancialCollectData(**mock_data).model_dump(),
+        data=FinancialCollectData(**filtered).model_dump(),
         records=1,
         fetched_at=datetime.now().isoformat(),
     )
@@ -391,6 +600,179 @@ def collect_financial(request: FinancialCollectRequest) -> CollectResponse:
 # ---------------------------------------------------------------------------
 # 健康检查
 # ---------------------------------------------------------------------------
+
+
+# ---------------------------------------------------------------------------
+# 板块轮动评分采集（申万二级，2026-08-09 新增，按 hot-momentum-strategy.md §2.5）
+# ---------------------------------------------------------------------------
+
+
+class SectorScoreItem(BaseModel):
+    """板块轮动评分记录（对应前端 RotationSectorScore）"""
+
+    id: str
+    sectorCode: str
+    sectorName: str
+    swLevel1: Optional[str] = None
+    swLevel2: Optional[str] = None
+    swLevel3: Optional[str] = None
+    scoreDate: str
+    f1Jingqi: float
+    f2Zijin: float
+    f3Guzhi: float
+    f4Beta: float
+    f5Nengliang: float
+    total: float
+    resonance: float
+    signal: str
+    alertLevel: str
+    declineType: str
+    poolStocks: list[dict[str, Any]] = []
+    modelUsed: str
+    createdAt: str
+
+
+class SectorCollectRequest(BaseModel):
+    topN: int = 20
+
+
+def _normalize_to_100(values: dict[str, float]) -> dict[str, float]:
+    """将一组数值按排名分位归一化到 0-100（最高值=100）。"""
+    if not values:
+        return {}
+    sorted_items = sorted(values.items(), key=lambda x: x[1])
+    n = len(sorted_items)
+    return {k: (i / max(n - 1, 1)) * 100 for i, (k, _v) in enumerate(sorted_items)}
+
+
+def fetch_sector_rotation_scores(topN: int = 20) -> list[SectorScoreItem]:
+    """
+    采集申万二级行业板块轮动评分（按 hot-momentum-strategy.md §2.5.2）。
+
+    数据源：
+    - ak.sw_index_second_info()：板块估值（PE/PB/股息率）+ 成份个数 + 上级行业
+    - ak.index_hist_sw(symbol, 'day')：板块指数日线（涨幅/量能/成交额）
+
+    五因子：
+    - f1Jingqi：近5日涨幅（景气代理）
+    - f2Zijin：近5日均成交额/前20日均成交额（资金代理，TODO: 接真实资金流接口）
+    - f3Guzhi：PE 分位反向（低估值高分）
+    - f4Beta：0（TODO: 板块 vs 大盘 β 回归）
+    - f5Nengliang：近5日均成交量/前20日均成交量（量能放大）
+    """
+    import akshare as ak
+    import pandas as pd
+    from concurrent.futures import ThreadPoolExecutor
+
+    score_date = datetime.now().strftime("%Y-%m-%d")
+    created_at = datetime.now().isoformat()
+
+    # 1. 获取申万二级板块估值列表，按成份个数降序取 TOP N
+    spot_df = ak.sw_index_second_info()
+    spot_df = spot_df.sort_values("成份个数", ascending=False).head(topN)
+
+    def calc_sector(row):
+        code = str(row["行业代码"])  # 如 801120.SI
+        code_num = code.split(".")[0]  # index_hist_sw 用纯数字
+        name = str(row["行业名称"])
+        level1 = str(row["上级行业"]) if pd.notna(row.get("上级行业")) else None
+        pe = float(row["静态市盈率"]) if pd.notna(row.get("静态市盈率")) else 0.0
+
+        try:
+            hist = ak.index_hist_sw(symbol=code_num, period="day")
+            if hist is None or len(hist) < 25:
+                return None
+            closes = hist["收盘"].astype(float).tolist()
+            volumes = hist["成交量"].astype(float).tolist()
+            amounts = hist["成交额"].astype(float).tolist()
+
+            change_5d = (closes[-1] - closes[-6]) / closes[-6] * 100 if len(closes) >= 6 and closes[-6] != 0 else 0.0
+            recent_vol = sum(volumes[-5:]) / 5 if len(volumes) >= 5 else 0.0
+            prior_vol = sum(volumes[-25:-5]) / 20 if len(volumes) >= 25 else recent_vol
+            vol_ratio = recent_vol / prior_vol if prior_vol > 0 else 1.0
+            recent_amt = sum(amounts[-5:]) / 5 if len(amounts) >= 5 else 0.0
+            prior_amt = sum(amounts[-25:-5]) / 20 if len(amounts) >= 25 else recent_amt
+            amt_ratio = recent_amt / prior_amt if prior_amt > 0 else 1.0
+        except Exception:
+            return None
+
+        return {"code": code, "name": name, "level1": level1, "pe": pe,
+                "change_5d": change_5d, "vol_ratio": vol_ratio, "amt_ratio": amt_ratio}
+
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        results = list(executor.map(calc_sector, [row for _, row in spot_df.iterrows()]))
+    sector_data = [r for r in results if r is not None]
+    if not sector_data:
+        return []
+
+    # 2. 跨板块归一化五因子到 0-100
+    change_ranks = _normalize_to_100({s["code"]: s["change_5d"] for s in sector_data})
+    vol_ranks = _normalize_to_100({s["code"]: s["vol_ratio"] for s in sector_data})
+    amt_ranks = _normalize_to_100({s["code"]: s["amt_ratio"] for s in sector_data})
+    pe_ranks = _normalize_to_100({s["code"]: -s["pe"] for s in sector_data})  # 反向：低 PE 高分
+
+    items: list[SectorScoreItem] = []
+    for s in sector_data:
+        code = s["code"]
+        f1 = change_ranks.get(code, 0.0)
+        f2 = amt_ranks.get(code, 0.0)
+        f3 = pe_ranks.get(code, 0.0)
+        f4 = 0.0  # TODO: 板块 vs 大盘 β 回归
+        f5 = vol_ranks.get(code, 0.0)
+        # total 加权：涨幅 40% + 资金 25% + 估值 15% + 量能 20%（f4 待实现，权重分给其他）
+        total = f1 * 0.40 + f2 * 0.25 + f3 * 0.15 + f5 * 0.20
+        resonance = total / 10.0
+        if total >= 70:
+            signal, alert = "强势上攻", "正常"
+        elif total >= 50:
+            signal, alert = "震荡上行", "关注"
+        elif total >= 30:
+            signal, alert = "观望", "关注"
+        else:
+            signal, alert = "弱势", "预警"
+
+        items.append(SectorScoreItem(
+            id=f"{code}__{score_date}", sectorCode=code, sectorName=s["name"],
+            swLevel1=s["level1"], swLevel2=s["name"], swLevel3=None,
+            scoreDate=score_date,
+            f1Jingqi=round(f1, 2), f2Zijin=round(f2, 2), f3Guzhi=round(f3, 2),
+            f4Beta=round(f4, 2), f5Nengliang=round(f5, 2),
+            total=round(total, 2), resonance=round(resonance, 2),
+            signal=signal, alertLevel=alert, declineType="",
+            poolStocks=[], modelUsed="akshare-sw-v1", createdAt=created_at,
+        ))
+    return items
+
+
+@app.post("/api/collect/sectors", response_model=CollectResponse)
+def collect_sectors(request: SectorCollectRequest) -> CollectResponse:
+    """
+    采集申万二级行业板块轮动评分（按 hot-momentum-strategy.md §2.5）。
+
+    数据源：AKShare sw_index_second_info（估值）+ index_hist_sw（涨幅/量能）。
+    返回 RotationSectorScore 列表，供前端 rotationScoreStore 持久化。
+    """
+    logger.info("[sectors] 收到板块轮动评分采集请求: topN=%s", request.topN)
+    try:
+        items = fetch_sector_rotation_scores(topN=request.topN)
+        score_date = items[0].scoreDate if items else datetime.now().strftime("%Y-%m-%d")
+        logger.info(
+            "[sectors] 板块轮动评分采集成功: count=%d, scoreDate=%s, top3=%s",
+            len(items),
+            score_date,
+            [(i.sectorCode, i.sectorName, i.total) for i in items[:3]],
+        )
+        return CollectResponse(
+            success=True, symbol="*", dimension="sectors",
+            data={"sectors": [item.model_dump() for item in items], "scoreDate": score_date},
+            records=len(items), fetched_at=datetime.now().isoformat(),
+        )
+    except Exception as e:
+        logger.error("[sectors] 板块轮动评分采集失败: %s", e, exc_info=True)
+        return CollectResponse(
+            success=False, symbol="*", dimension="sectors", error=str(e),
+            fetched_at=datetime.now().isoformat(),
+        )
 
 
 @app.get("/health", response_model=HealthCheckResponse)

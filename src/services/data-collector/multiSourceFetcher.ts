@@ -17,6 +17,10 @@
 
 import { getLogger } from '@/lib/logger'
 import { TENCENT_API_BASE, SINA_FINANCE_API_BASE, TENCENT_FINANCE_API_BASE } from '@/config/marketDataEndpoints'
+import { MOCK_AKSHARE_BASE_URL } from '@/config/dataSourceUrls'
+import { DEFAULT_REQUEST_TIMEOUT_MS } from '@/config/timeouts'
+import { safeFetch as _safeFetch } from '@/services/shared/safeFetch'
+import { canExecute, recordSourceResult } from './adaptiveSourceOrchestrator'
 import type { ChipData, NewsItem, CompetitorData, IndexCorrelation, ResearchReport } from './dimensionDataTypes'
 
 export type { ChipData, NewsItem, CompetitorData, IndexCorrelation, ResearchReport } from './dimensionDataTypes'
@@ -46,9 +50,6 @@ import {
 
 const logger = getLogger()
 
-/** Mock 服务基础 URL（开发环境） */
-const MOCK_BASE = 'http://localhost:8000'
-
 // ============================================================
 // 维度 03-08 数据获取接口
 // ============================================================
@@ -59,21 +60,9 @@ const MOCK_BASE = 'http://localhost:8000'
 // 公开 API 代理辅助
 // ============================================================
 
-/** 安全 fetch，超时 5s */
-async function safeFetch(url: string, timeoutMs = 5000): Promise<Response | null> {
-  try {
-    const controller = new AbortController()
-    const timer = setTimeout(() => controller.abort(), timeoutMs)
-    const resp = await fetch(url, { signal: controller.signal })
-    clearTimeout(timer)
-    return resp.ok ? resp : null
-  } catch (err) {
-    logger.warn(`[multiSourceFetcher] safeFetch 网络失败: ${url}`, {
-      error: err instanceof Error ? err.message : String(err),
-      category: 'network',
-    })
-    return null
-  }
+/** 安全 fetch — 委托至共享实现，超时取自 config，requireOk */
+async function safeFetch(url: string, timeoutMs = DEFAULT_REQUEST_TIMEOUT_MS): Promise<Response | null> {
+  return _safeFetch(url, { timeoutMs, requireOk: true }, '[multiSourceFetcher]')
 }
 
 /** 从本地 Mock 服务拉取维度数据（开发环境 fallback） */
@@ -88,7 +77,7 @@ async function fetchFromMockServer(symbol: string, dimensionCode: string): Promi
   }
   const path = pathMap[dimensionCode]
   if (!path) return null
-  const resp = await safeFetch(`${MOCK_BASE}${path}&symbol=${symbol}`.replace('&', '?'))
+  const resp = await safeFetch(`${MOCK_AKSHARE_BASE_URL}${path}&symbol=${symbol}`.replace('&', '?'))
   if (!resp) return null
   try {
     const json = await resp.json()
@@ -104,7 +93,7 @@ async function fetchTencentQuote(symbol: string): Promise<Record<string, string>
   const text = await resp.text()
   // Tencent returns: v_{code}="{fields}"
   const match = text.match(/v_[^=]+="([^"]+)"/)
-  if (!match || !match[1]) return null
+  if (!match?.[1]) return null
   const parts = match[1].split('~')
   return {
     name: parts[1] || '',
@@ -129,27 +118,38 @@ async function fetchTencentQuote(symbol: string): Promise<Record<string, string>
  * 优先级：Tushare stk_holdernumber → 东财股东户数 → 新浪代理 → null
  */
 export async function fetchChipData(symbol: string): Promise<ChipData | null> {
-  // 1. Tushare
-  try {
-    const records = await tushareHolderNumber(symbol)
-    if (records.length > 0) {
-      // Tushare stk_holdernumber 返回记录为「最新在前」，取首条即最新一期股东户数
-      const latest = records[0]
-      if (latest) {
-        const chip = mapHolderNumberToChip(latest)
-        return { ...chip, _source: 'tushare' }
+  // 1. Tushare（熔断器检查：circuit-open 时跳过）
+  if (canExecute('tushare')) {
+    try {
+      const tushareStart = Date.now()
+      const records = await tushareHolderNumber(symbol)
+      if (records.length > 0) {
+        const latest = records[0]
+        if (latest) {
+          const chip = mapHolderNumberToChip(latest)
+          recordSourceResult('tushare', { success: true, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 1 })
+          return { ...chip, _source: 'tushare' }
+        }
       }
+      recordSourceResult('tushare', { success: false, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 0 })
+    } catch (err) {
+      recordSourceResult('tushare', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+      logger.warn(`[multiSourceFetcher] Tushare 筹码失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
     }
-  } catch (err) {
-    logger.warn(`[multiSourceFetcher] Tushare 筹码失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
   }
 
-  // 2. 东财爬虫补充
-  try {
-    const chip = await fetchEastMoneyHolderNumber(symbol)
-    if (chip) return { ...chip, _source: 'crawler' }
-  } catch (err) {
-    logger.warn(`[multiSourceFetcher] 东财筹码失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
+  // 2. 东财爬虫补充（熔断器检查）
+  if (canExecute('crawler')) {
+    try {
+      const chip = await fetchEastMoneyHolderNumber(symbol)
+      if (chip) {
+        recordSourceResult('crawler', { success: true, isMock: false, latencyMs: 0, completeness: 1 })
+        return { ...chip, _source: 'crawler' }
+      }
+    } catch (err) {
+      recordSourceResult('crawler', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+      logger.warn(`[multiSourceFetcher] 东财筹码失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
+    }
   }
 
   // 3. 新浪代理（原有兜底）
@@ -157,14 +157,22 @@ export async function fetchChipData(symbol: string): Promise<ChipData | null> {
     const url = `${SINA_FINANCE_API_BASE}corp/go.php/vCI_CorpHolder/stockid/${symbol.replace(/\.(SH|SZ)$/i, '')}.phtml`
     const resp = await safeFetch(url)
     if (resp) {
-      const data = await resp.json()
-      return {
-        shareholderCount: data?.holderNum,
-        concentration: data?.concentration,
-        trend: data?.trend || 'stable',
-        date: new Date().toISOString().slice(0, 10),
-        _source: 'sina',
-      } as unknown as ChipData
+      const data = (await resp.json()) as Record<string, unknown> | null
+      if (data) {
+        const rawTrend = data['trend']
+        const validTrends = ['increasing', 'decreasing', 'stable'] as const
+        const trend =
+          typeof rawTrend === 'string' && (validTrends as readonly string[]).includes(rawTrend)
+            ? (rawTrend as (typeof validTrends)[number])
+            : 'stable'
+        return {
+          shareholderCount: typeof data['holderNum'] === 'number' ? data['holderNum'] : undefined,
+          concentration: typeof data['concentration'] === 'number' ? data['concentration'] : undefined,
+          trend,
+          date: new Date().toISOString().slice(0, 10),
+          _source: 'sina',
+        }
+      }
     }
   } catch (err) {
     logger.warn(`[multiSourceFetcher] fetchChipData 失败: ${symbol}`, {
@@ -183,60 +191,48 @@ export async function fetchChipData(symbol: string): Promise<ChipData | null> {
 export async function fetchNews(
   symbol: string,
   category: 'announcement' | 'hot_news',
-  stockName?: string,
+  _stockName?: string,
 ): Promise<NewsItem[]> {
-  // 1. Tushare
-  try {
-    const startDate = getRecentTradeDate(30)
-    const records = category === 'announcement'
-      ? await tushareAnnouncements(symbol, startDate)
-      : await tushareNews(symbol, startDate)
-    if (records.length > 0) {
-      const mapper = category === 'announcement' ? mapAnnouncementToNews : mapNewsToNewsItem
-      return records.slice(0, 10).map(mapper).map((item) => ({ ...item, _source: 'tushare' as const }))
-    }
-  } catch (err) {
-    logger.warn(`[multiSourceFetcher] Tushare 新闻失败: ${symbol} ${category}`, { error: err instanceof Error ? err.message : String(err) })
-  }
-
-  // 2. 东财爬虫补充
-  try {
-    const items = category === 'announcement'
-      ? await fetchEastMoneyAnnouncements(symbol)
-      : await fetchEastMoneyNews(symbol)
-    if (items.length > 0) {
-      return items.slice(0, 10).map((item) => ({ ...item, _source: 'crawler' as const }))
-    }
-  } catch (err) {
-    logger.warn(`[multiSourceFetcher] 东财新闻失败: ${symbol} ${category}`, { error: err instanceof Error ? err.message : String(err) })
-  }
-
-  // 2.5 LLM 联网搜索（P0 新增）
-  if (stockName) {
+  // 1. Tushare（熔断器检查：circuit-open 时跳过）
+  if (canExecute('tushare')) {
     try {
-      const { searchAnnouncements, searchNews, getCachedOrSearch } = await import('./llmSearchAgent')
-      const dimension = category === 'announcement' ? 'announcements' : 'news'
-      const cacheKey = `${symbol}_${dimension}`
-      const ttlHours = category === 'announcement' ? 720 : 168 // 公告 30 天，新闻 7 天
-      const cached = await getCachedOrSearch(
-        cacheKey,
-        async () => {
-          if (category === 'announcement') {
-            return searchAnnouncements(symbol, stockName)
-          }
-          return searchNews(symbol, stockName)
-        },
-        ttlHours,
-      )
-      if (cached && cached.length > 0) {
-        return cached.map((item) => ({ ...item, _source: 'llm' as const }))
+      const tushareStart = Date.now()
+      const startDate = getRecentTradeDate(30)
+      const records = category === 'announcement'
+        ? await tushareAnnouncements(symbol, startDate)
+        : await tushareNews(symbol, startDate)
+      if (records.length > 0) {
+        const mapper = category === 'announcement' ? mapAnnouncementToNews : mapNewsToNewsItem
+        recordSourceResult('tushare', { success: true, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 1 })
+        return records.slice(0, 10).map(mapper).map((item) => ({ ...item, _source: 'tushare' as const }))
+      }
+      recordSourceResult('tushare', { success: false, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 0 })
+    } catch (err) {
+      recordSourceResult('tushare', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+      logger.warn(`[multiSourceFetcher] Tushare 新闻失败: ${symbol} ${category}`, { error: err instanceof Error ? err.message : String(err) })
+    }
+  }
+
+  // 2. 东财爬虫补充（熔断器检查）
+  if (canExecute('crawler')) {
+    try {
+      const items = category === 'announcement'
+        ? await fetchEastMoneyAnnouncements(symbol)
+        : await fetchEastMoneyNews(symbol)
+      if (items.length > 0) {
+        recordSourceResult('crawler', { success: true, isMock: false, latencyMs: 0, completeness: 1 })
+        return items.slice(0, 10).map((item) => ({ ...item, _source: 'crawler' as const }))
       }
     } catch (err) {
-      logger.warn(`[multiSourceFetcher] LLM 搜索失败: ${symbol} ${category}`, {
-        error: err instanceof Error ? err.message : String(err),
-      })
+      recordSourceResult('crawler', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+      logger.warn(`[multiSourceFetcher] 东财新闻失败: ${symbol} ${category}`, { error: err instanceof Error ? err.message : String(err) })
     }
   }
+
+  // LLM 同步分支已移除（P1 优化 2026-08-09）
+  // 原因：LLM 调用 2-5s 同步阻塞采集主链，违反"采集环节不依赖 LLM"原则。
+  // 研报/公告摘要改为夜间异步批处理，详见 llmBatchProcessor.ts。
+  // stockName 参数保留以维持接口兼容，后续可由 llmBatchProcessor 消费。
 
   // 3. 新浪代理（原有兜底）
   const endpoint = category === 'announcement'
@@ -280,25 +276,37 @@ function getRecentTradeDate(daysAgo: number): string {
  * 优先级：Tushare stock_basic → 东财行业 → 腾讯代理 → []
  */
 export async function fetchCompetitorData(symbol: string): Promise<CompetitorData[]> {
-  // 1. Tushare
-  try {
-    const records = await tushareIndustry(symbol)
-    if (records.length > 0) {
-      const first = records[0]
-      if (first) return [mapIndustryToCompetitor(first)].map((item) => ({ ...item, _source: 'tushare' }))
+  // 1. Tushare（熔断器检查）
+  if (canExecute('tushare')) {
+    try {
+      const tushareStart = Date.now()
+      const records = await tushareIndustry(symbol)
+      if (records.length > 0) {
+        const first = records[0]
+        if (first) {
+          recordSourceResult('tushare', { success: true, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 1 })
+          return [mapIndustryToCompetitor(first)].map((item) => ({ ...item, _source: 'tushare' }))
+        }
+      }
+      recordSourceResult('tushare', { success: false, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 0 })
+    } catch (err) {
+      recordSourceResult('tushare', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+      logger.warn(`[multiSourceFetcher] Tushare 行业失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
     }
-  } catch (err) {
-    logger.warn(`[multiSourceFetcher] Tushare 行业失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
   }
 
-  // 2. 东财爬虫补充
-  try {
-    const items = await fetchEastMoneyIndustry(symbol)
-    if (items.length > 0) {
-      return items.slice(0, 10).map((item) => ({ ...item, _source: 'crawler' }))
+  // 2. 东财爬虫补充（熔断器检查）
+  if (canExecute('crawler')) {
+    try {
+      const items = await fetchEastMoneyIndustry(symbol)
+      if (items.length > 0) {
+        recordSourceResult('crawler', { success: true, isMock: false, latencyMs: 0, completeness: 1 })
+        return items.slice(0, 10).map((item) => ({ ...item, _source: 'crawler' }))
+      }
+    } catch (err) {
+      recordSourceResult('crawler', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+      logger.warn(`[multiSourceFetcher] 东财行业失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
     }
-  } catch (err) {
-    logger.warn(`[multiSourceFetcher] 东财行业失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
   }
 
   // 3. 腾讯代理（原有兜底）
@@ -340,41 +348,48 @@ export async function fetchIndexCorrelation(symbol: string): Promise<IndexCorrel
     { code: '399006.SZ', name: '创业板指' },
   ]
 
-  // 1. 尝试用 Tushare 计算真实相关性
-  try {
-    const { tushareDaily } = await import('./tushareProvider')
-    const stockRecords = await tushareDaily(symbol, getRecentTradeDate(90), getRecentTradeDate(0))
-    const stockMap = new Map<string, number>()
-    stockRecords.forEach((r) => {
-      const date = String(r.trade_date)
-      const close = Number(r.close)
-      if (date && Number.isFinite(close)) stockMap.set(date, close)
-    })
+  // 1. 尝试用 Tushare 计算真实相关性（熔断器检查）
+  if (canExecute('tushare')) {
+    try {
+      const { tushareDaily } = await import('./tushareProvider')
+      const stockRecords = await tushareDaily(symbol, getRecentTradeDate(90), getRecentTradeDate(0))
+      const stockMap = new Map<string, number>()
+      stockRecords.forEach((r) => {
+        const date = String(r.trade_date)
+        const close = Number(r.close)
+        if (date && Number.isFinite(close)) stockMap.set(date, close)
+      })
 
-    if (stockMap.size > 10) {
-      const results = await Promise.all(
-        indices.map(async (idx) => {
-          const indexRecords = await tushareIndexDaily(idx.code, getRecentTradeDate(90), getRecentTradeDate(0))
-          const pairs: Array<[number, number]> = []
-          indexRecords.forEach((r) => {
-            const date = String(r.trade_date)
-            const close = Number(r.close)
-            if (stockMap.has(date)) pairs.push([stockMap.get(date)!, close])
-          })
-          const correlation = pairs.length > 5 ? calculatePearson(pairs) : 0
-          return {
-            indexCode: idx.code,
-            indexName: idx.name,
-            correlation: Number(correlation.toFixed(4)),
-            beta: pairs.length > 5 ? calculateBeta(pairs) : undefined,
-            _source: 'tushare',
-          }
-        }),
-      )
-      if (results.some((r) => r.correlation !== 0)) return results
+      if (stockMap.size > 10) {
+        const results = await Promise.all(
+          indices.map(async (idx) => {
+            const indexRecords = await tushareIndexDaily(idx.code, getRecentTradeDate(90), getRecentTradeDate(0))
+            const pairs: Array<[number, number]> = []
+            indexRecords.forEach((r) => {
+              const date = String(r.trade_date)
+              const close = Number(r.close)
+              if (stockMap.has(date)) pairs.push([stockMap.get(date)!, close])
+            })
+            const correlation = pairs.length > 5 ? calculatePearson(pairs) : 0
+            return {
+              indexCode: idx.code,
+              indexName: idx.name,
+              correlation: Number(correlation.toFixed(4)),
+              beta: pairs.length > 5 ? calculateBeta(pairs) : undefined,
+              _source: 'tushare',
+            }
+          }),
+        )
+        if (results.some((r) => r.correlation !== 0)) {
+          recordSourceResult('tushare', { success: true, isMock: false, latencyMs: 0, completeness: 1 })
+          return results
+        }
+      }
+      recordSourceResult('tushare', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+    } catch (err) {
+      recordSourceResult('tushare', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+      logger.warn(`[multiSourceFetcher] Tushare 指数相关失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
     }
-  } catch (err) {
-    logger.warn(`[multiSourceFetcher] Tushare 指数相关失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
   }
 
   // 2. 原有兜底
@@ -398,22 +413,34 @@ export async function fetchIndexCorrelation(symbol: string): Promise<IndexCorrel
   }))
 }
 
-/** 计算 Pearson 相关系数 */
-function calculatePearson(pairs: Array<[number, number]>): number {
-  const n = pairs.length
+/** 计算 Pearson 相关系数。
+ *
+ * NaN 防护：如果 pairs 中包含 NaN/undefined（来自异常的 API 响应），
+ * 计算结果会是 NaN 而非 0，会污染后续评分。因此过滤无效对并检查结果。
+ */
+export function calculatePearson(pairs: Array<[number, number]>): number {
+  // 过滤掉含 NaN/undefined 的无效数据对
+  const valid = pairs.filter(
+    ([x, y]) => typeof x === 'number' && typeof y === 'number' && !Number.isNaN(x) && !Number.isNaN(y),
+  )
+  const n = valid.length
   if (n < 2) return 0
-  const sumX = pairs.reduce((s, [x]) => s + x, 0)
-  const sumY = pairs.reduce((s, [, y]) => s + y, 0)
-  const sumX2 = pairs.reduce((s, [x]) => s + x * x, 0)
-  const sumY2 = pairs.reduce((s, [, y]) => s + y * y, 0)
-  const sumXY = pairs.reduce((s, [x, y]) => s + x * y, 0)
+  const sumX = valid.reduce((s, [x]) => s + x, 0)
+  const sumY = valid.reduce((s, [, y]) => s + y, 0)
+  const sumX2 = valid.reduce((s, [x]) => s + x * x, 0)
+  const sumY2 = valid.reduce((s, [, y]) => s + y * y, 0)
+  const sumXY = valid.reduce((s, [x, y]) => s + x * y, 0)
   const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY))
-  if (denominator === 0) return 0
-  return (n * sumXY - sumX * sumY) / denominator
+  if (denominator === 0 || Number.isNaN(denominator)) return 0
+  const result = (n * sumXY - sumX * sumY) / denominator
+  return Number.isNaN(result) ? 0 : result
 }
 
-/** 计算 Beta（标的收益相对指数收益的回归系数） */
-function calculateBeta(pairs: Array<[number, number]>): number {
+/** 计算 Beta（标的收益相对指数收益的回归系数）。
+ *
+ * NaN 防护：同 calculatePearson，过滤无效数据对。
+ */
+export function calculateBeta(pairs: Array<[number, number]>): number {
   const returns: Array<[number, number]> = []
   for (let i = 1; i < pairs.length; i++) {
     const prev = pairs[i - 1]
@@ -421,6 +448,12 @@ function calculateBeta(pairs: Array<[number, number]>): number {
     if (!prev || !curr) continue
     const [prevX, prevY] = prev
     const [x, y] = curr
+    // 跳过 NaN/undefined 值
+    if (
+      typeof prevX !== 'number' || typeof prevY !== 'number' ||
+      typeof x !== 'number' || typeof y !== 'number' ||
+      Number.isNaN(prevX) || Number.isNaN(prevY) || Number.isNaN(x) || Number.isNaN(y)
+    ) continue
     if (prevX !== 0 && prevY !== 0) {
       returns.push([(x - prevX) / prevX, (y - prevY) / prevY])
     }
@@ -431,8 +464,9 @@ function calculateBeta(pairs: Array<[number, number]>): number {
   const sumXY = returns.reduce((s, [x, y]) => s + x * y, 0)
   const sumX2 = returns.reduce((s, [x]) => s + x * x, 0)
   const denominator = sumX2 - (sumX * sumX) / returns.length
-  if (denominator === 0) return 0
-  return (sumXY - (sumX * sumY) / returns.length) / denominator
+  if (denominator === 0 || Number.isNaN(denominator)) return 0
+  const result = (sumXY - (sumX * sumY) / returns.length) / denominator
+  return Number.isNaN(result) ? 0 : result
 }
 
 /**
@@ -440,46 +474,41 @@ function calculateBeta(pairs: Array<[number, number]>): number {
  *
  * 优先级：Tushare report_rc → 东财研报 → LLM 联网搜索 → 网易（已下线）→ []
  */
-export async function fetchResearchReports(symbol: string, stockName?: string): Promise<ResearchReport[]> {
-  // 1. Tushare
-  try {
-    const records = await tushareResearchReports(symbol)
-    if (records.length > 0) {
-      return records.slice(0, 10).map(mapReportToResearch).map((item) => ({ ...item, _source: 'tushare' }))
-    }
-  } catch (err) {
-    logger.warn(`[multiSourceFetcher] Tushare 研报失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
-  }
-
-  // 2. 东财爬虫补充
-  try {
-    const items = await fetchEastMoneyResearch(symbol)
-    if (items.length > 0) {
-      return items.slice(0, 10).map((item) => ({ ...item, _source: 'crawler' }))
-    }
-  } catch (err) {
-    logger.warn(`[multiSourceFetcher] 东财研报失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
-  }
-
-  // 2.5 LLM 联网搜索（P0 新增）
-  if (stockName) {
+export async function fetchResearchReports(symbol: string, _stockName?: string): Promise<ResearchReport[]> {
+  // 1. Tushare（熔断器检查）
+  if (canExecute('tushare')) {
     try {
-      const { searchReports, getCachedOrSearch } = await import('./llmSearchAgent')
-      const cacheKey = `${symbol}_reports`
-      const cached = await getCachedOrSearch(
-        cacheKey,
-        async () => searchReports(symbol, stockName),
-        720, // 研报缓存 30 天
-      )
-      if (cached && cached.length > 0) {
-        return cached.map((item) => ({ ...item, _source: 'llm' as const }))
+      const tushareStart = Date.now()
+      const records = await tushareResearchReports(symbol)
+      if (records.length > 0) {
+        recordSourceResult('tushare', { success: true, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 1 })
+        return records.slice(0, 10).map(mapReportToResearch).map((item) => ({ ...item, _source: 'tushare' }))
+      }
+      recordSourceResult('tushare', { success: false, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 0 })
+    } catch (err) {
+      recordSourceResult('tushare', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+      logger.warn(`[multiSourceFetcher] Tushare 研报失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
+    }
+  }
+
+  // 2. 东财爬虫补充（熔断器检查）
+  if (canExecute('crawler')) {
+    try {
+      const items = await fetchEastMoneyResearch(symbol)
+      if (items.length > 0) {
+        recordSourceResult('crawler', { success: true, isMock: false, latencyMs: 0, completeness: 1 })
+        return items.slice(0, 10).map((item) => ({ ...item, _source: 'crawler' }))
       }
     } catch (err) {
-      logger.warn(`[multiSourceFetcher] LLM 研报搜索失败: ${symbol}`, {
-        error: err instanceof Error ? err.message : String(err),
-      })
+      recordSourceResult('crawler', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+      logger.warn(`[multiSourceFetcher] 东财研报失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
     }
   }
+
+  // LLM 同步分支已移除（P1 优化 2026-08-09）
+  // 原因：LLM 调用 2-5s 同步阻塞采集主链，违反"采集环节不依赖 LLM"原则。
+  // 研报摘要改为夜间异步批处理，详见 llmBatchProcessor.ts。
+  // stockName 参数保留以维持接口兼容，后续可由 llmBatchProcessor 消费。
 
   // 3. 网易端点已不可用（DNS 不可达），直接返回空 → 触发 Mock 回退
   logger.warn(`[multiSourceFetcher] fetchResearchReports: 网易端点已下线，暂无可用研报数据源: ${symbol}`)
