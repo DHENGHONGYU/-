@@ -1,6 +1,6 @@
 import { memo, useState, useEffect, useCallback, useMemo } from 'react'
 import { Link } from 'react-router'
-import { BarChart3, Download, RefreshCw, ArrowLeft, CandlestickChart as ChartIcon } from 'lucide-react'
+import { BarChart3, Download, RefreshCw, ArrowLeft, CandlestickChart as ChartIcon, Loader2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
@@ -22,7 +22,11 @@ import { CandlestickChart } from '@/components/chart'
 import { ordersToMarkers } from '@/services/trading/buySellPointMarkerBuilder'
 import type { CandlestickChartData } from '@/components/chart'
 import type { Order } from '@/data/types'
+import type { KlinePeriod, KlineAdjust } from '@/services/fetcher/fetcherTypes'
+import { collectKline } from '@/services/fetcher/fetcherClient'
 import { PageContainer, PageHeader } from '@/components/templates'
+import { twBg, twText } from '@/constants/theme.tokens'
+import { cn } from '@/lib/utils'
 
 interface ReviewData {
   report: TradeReviewReport
@@ -347,7 +351,7 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <ChartIcon className="h-5 w-5" />
-                K线买卖点标注
+                多周期K线买卖点标注
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -407,27 +411,121 @@ function generateDemoKlineData(orders: Order[]): CandlestickChartData[] {
   return data
 }
 
+/** 从订单列表中提取主交易标的 */
+function getPrimarySymbol(orders: Order[]): string | null {
+  if (orders.length === 0) return null
+  const sorted = [...orders].sort((a, b) => a.createdAt - b.createdAt)
+  return sorted[0]!.symbol
+}
+
+/** 从采集API响应转换为图表数据格式 */
+function adaptKlineResponseToChartData(
+  history: Array<{ date: string; open: number; high: number; low: number; close: number; volume: number; amount: number }>,
+): CandlestickChartData[] {
+  return history.map((bar) => ({
+    time: bar.date,
+    open: bar.open,
+    high: bar.high,
+    low: bar.low,
+    close: bar.close,
+    volume: bar.volume,
+  }))
+}
+
 function KlineWithMarkers({ orders }: { orders: Order[] }): React.JSX.Element {
-  const chartData = useMemo(() => generateDemoKlineData(orders), [orders])
+  const primarySymbol = useMemo(() => getPrimarySymbol(orders), [orders])
+  const [period, setPeriod] = useState<KlinePeriod>('daily')
+  const [adjust, setAdjust] = useState<KlineAdjust>('qfq')
+  const [klineData, setKlineData] = useState<CandlestickChartData[]>([])
+  const [loading, setLoading] = useState(false)
+  const [dataSource, setDataSource] = useState<'real' | 'demo' | 'loading'>('loading')
+
   const markers = useMemo(() => ordersToMarkers(orders), [orders])
 
-  if (chartData.length === 0) {
+  useEffect(() => {
+    if (!primarySymbol) {
+      setKlineData([])
+      setDataSource('loading')
+      return
+    }
+
+    let cancelled = false
+    setLoading(true)
+
+    const isDaily = period === 'daily' || period === 'weekly' || period === 'monthly'
+    const effectiveAdjust = isDaily ? adjust : ''
+
+    collectKline({
+      symbol: primarySymbol,
+      period,
+      adjust: effectiveAdjust,
+      count: 320,
+    })
+      .then((response) => {
+        if (cancelled) return
+        if (response.success && response.data?.history && response.data.history.length > 0) {
+          const chartData = adaptKlineResponseToChartData(response.data.history)
+          setKlineData(chartData)
+          setDataSource('real')
+        } else {
+          // API 返回空或失败，降级到 demo 数据
+          setKlineData(generateDemoKlineData(orders))
+          setDataSource('demo')
+        }
+      })
+      .catch(() => {
+        if (cancelled) return
+        setKlineData(generateDemoKlineData(orders))
+        setDataSource('demo')
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [primarySymbol, period, adjust, orders])
+
+  if (klineData.length === 0 && !loading) {
     return <p className="text-sm text-muted-foreground text-center py-8">暂无交易数据</p>
   }
 
   return (
     <div className="space-y-2">
-      <CandlestickChart data={chartData} markers={markers} height={360} />
+      {loading && (
+        <div className="flex items-center justify-center gap-2 py-2 text-sm text-muted-foreground">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          加载 {period} K线数据...
+        </div>
+      )}
+      <CandlestickChart
+        data={klineData}
+        markers={markers}
+        height={400}
+        showToolbar
+        showVolume
+        period={period}
+        adjust={adjust}
+        onPeriodChange={setPeriod}
+        onAdjustChange={setAdjust}
+      />
       <div className="flex items-center gap-4 text-xs text-muted-foreground">
         <span className="flex items-center gap-1">
-          <span className="inline-block w-3 h-3 rounded-full bg-red-600" />
+          <span className={cn('inline-block w-3 h-3 rounded-full', twBg('red', 600))} />
           买入点
         </span>
         <span className="flex items-center gap-1">
-          <span className="inline-block w-3 h-3 rounded-full bg-green-600" />
+          <span className={cn('inline-block w-3 h-3 rounded-full', twBg('green', 600))} />
           卖出点
         </span>
-        <span className="text-muted-foreground">标注基于实际交易订单生成</span>
+        <span>
+          数据来源：
+          {dataSource === 'real' && <span className={cn('font-medium', twText('green', 500))}>真实行情</span>}
+          {dataSource === 'demo' && <span className={cn('font-medium', twText('amber', 500))}>模拟数据（采集失败降级）</span>}
+          {dataSource === 'loading' && <span>加载中...</span>}
+        </span>
+        {primarySymbol && <span>标的：{primarySymbol}</span>}
       </div>
     </div>
   )
