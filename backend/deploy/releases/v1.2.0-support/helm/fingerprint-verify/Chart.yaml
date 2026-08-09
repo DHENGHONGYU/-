@@ -1,0 +1,7 @@
+apiVersion: v2
+name: v9-fingerprint-verify
+description: V9 Embedding 向量指纹一致性验证 Helm Chart
+type: application
+version: 1.2.0
+appVersion: "1.2.0"
+kubeVersion: ">=1.24.0-0"

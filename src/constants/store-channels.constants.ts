@@ -97,6 +97,8 @@ export const EVENT_NAMES = {
   ANALYSIS_INDUSTRY_COMPLETED: 'analysis:industry:completed',
   /** 分析：个股评分完成 */
   ANALYSIS_SCORE_COMPLETED: 'analysis:score:completed',
+  /** 分析：V6 批量评分完成 */
+  V6_BATCH_SCORE_COMPLETED: 'v6:batch:score:completed',
   // ---- P1 编排器扩展事件 ----
   /** 新闻文章加载完成 */
   NEWS_ARTICLE_LOADED: 'news:article:loaded',

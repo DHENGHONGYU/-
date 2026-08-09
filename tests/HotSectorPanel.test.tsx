@@ -10,8 +10,8 @@ import { UI_TEXT } from '@/constants/uiText'
 const mockAddHotSectorStock = vi.fn()
 const mockAddHotSectorStocks = vi.fn()
 vi.mock('@/services/input/hotSectorService', () => ({
-  getHotSectors: () => DEFAULT_HOT_SECTORS,
-  getHotSectorByCode: (code: string) => DEFAULT_HOT_SECTORS.find((s) => s.code === code) ?? null,
+  getHotSectors: async () => DEFAULT_HOT_SECTORS,
+  getHotSectorByCode: async (code: string) => DEFAULT_HOT_SECTORS.find((s) => s.code === code) ?? null,
   addHotSectorStock: (...args: unknown[]) => mockAddHotSectorStock(...args),
   addHotSectorStocks: (...args: unknown[]) => mockAddHotSectorStocks(...args),
 }))

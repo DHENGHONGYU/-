@@ -177,38 +177,13 @@ export async function addStock(
     logger.info('[inputService] 数据库写入成功', { symbol })
 
     // 广播 POOL_CHANGED 事件，通知各池模块刷新
+    logger.info('[inputService] 准备广播 POOL_CHANGED', { action: 'add', pool: stock.pool, symbol })
     await withBroadcast(EVENT_NAMES.POOL_CHANGED, {
       action: 'add',
       pool: stock.pool,
       symbol,
     })
-
-    // 自动流转到研究池（意向池 → 研究池，通过 updateStock 更新 pool 字段）
-    if (stock.pool === 'intention') {
-      try {
-        const transitionEnvelope = EnvelopeFactory.create(
-          {
-            source: MODULE_ID.pool,
-            target: ENVELOPE_TARGET.db,
-            action: ENVELOPE_ACTION.updateStock,
-            traceId: `input-intention-to-research-${nanoid(8)}-${symbol}`,
-          },
-          {
-            symbol,
-            pool: 'research' as Stock['pool'],
-            researchStatus: 'candidate' as Stock['researchStatus'],
-          },
-        )
-        await dataBridge.forward(transitionEnvelope)
-        await withBroadcast(EVENT_NAMES.POOL_CHANGED, { action: 'transition', pool: 'research', symbol })
-        logger.info('[inputService] 自动流转到研究池成功', { symbol })
-      } catch (researchErr) {
-        logger.warn('[inputService] 自动流转到研究池失败（不影响意向池录入）', {
-          symbol,
-          error: researchErr instanceof Error ? researchErr.message : String(researchErr),
-        })
-      }
-    }
+    logger.info('[inputService] POOL_CHANGED 广播完成', { symbol, pool: stock.pool })
 
     const basic = await fetchBasicIfNeeded(stock, options)
     stock = basic.stock
@@ -230,7 +205,7 @@ export async function addStock(
       }
     }
 
-    logger.info('[inputService] addStock 完成', { symbol, name, group: stock.group })
+    logger.info('[inputService] addStock 完成', { symbol, name, pool: stock.pool, group: stock.group })
     return { success: true, data: stock }
   } catch (err) {
     return {

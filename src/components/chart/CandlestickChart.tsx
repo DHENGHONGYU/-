@@ -5,8 +5,19 @@ import {
   useRef,
   type ComponentPropsWithoutRef,
 } from 'react'
-import { createChart, CandlestickSeries, type IChartApi, type ISeriesApi, type CandlestickData, type Time } from 'lightweight-charts'
+import {
+  createChart,
+  CandlestickSeries,
+  createSeriesMarkers,
+  type IChartApi,
+  type ISeriesApi,
+  type CandlestickData,
+  type Time,
+  type ISeriesMarkersPluginApi,
+  type SeriesMarker,
+} from 'lightweight-charts'
 import { CHART_PALETTE } from '@/constants/theme.tokens'
+import type { ChartMarker } from '@/types/modules/buySellPoint.types'
 
 export interface CandlestickChartData {
   time: string
@@ -22,22 +33,23 @@ export interface CandlestickChartProps extends ComponentPropsWithoutRef<'div'> {
   height?: number
   upColor?: string
   downColor?: string
+  /** 买卖点标注列表，渲染为 K 线图上的 marker */
+  markers?: ChartMarker[]
 }
 
 const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
-  ({ data, height = 400, upColor, downColor, ...divProps }, ref) => {
+  ({ data, height = 400, upColor, downColor, markers, ...divProps }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null)
     const chartRef = useRef<IChartApi | null>(null)
     const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null)
+    const markersRef = useRef<ISeriesMarkersPluginApi<Time> | null>(null)
 
-    // 涨跌色默认值
     const positiveColor = upColor ?? CHART_PALETTE.upColor
     const negativeColor = downColor ?? CHART_PALETTE.downColor
 
     useEffect(() => {
       if (!containerRef.current) return
 
-      // 创建图表
       const chart = createChart(containerRef.current, {
         height,
         layout: {
@@ -70,7 +82,6 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
         },
       })
 
-      // 添加 K 线系列
       const series = chart.addSeries(CandlestickSeries, {
         upColor: positiveColor,
         downColor: negativeColor,
@@ -80,7 +91,6 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
         wickDownColor: negativeColor,
       })
 
-      // 格式化数据
       const formattedData: CandlestickData<Time>[] = data.map((item) => ({
         time: item.time,
         open: item.open,
@@ -91,21 +101,41 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
 
       series.setData(formattedData)
 
-      // 适应窗口
+      const markersPlugin = createSeriesMarkers(series, [])
+      markersRef.current = markersPlugin
+
       chart.timeScale().fitContent()
 
       chartRef.current = chart
       seriesRef.current = series
 
-      // 清理
       return () => {
         chart.remove()
         chartRef.current = null
         seriesRef.current = null
+        markersRef.current = null
       }
     }, [data, height, positiveColor, negativeColor])
 
-    // 转发 ref
+    useEffect(() => {
+      if (!markersRef.current) return
+
+      if (!markers || markers.length === 0) {
+        markersRef.current.setMarkers([])
+        return
+      }
+
+      const chartMarkers: SeriesMarker<Time>[] = markers.map((m) => ({
+        time: m.time,
+        position: m.position,
+        shape: m.shape,
+        color: m.color,
+        text: m.text,
+        size: m.size,
+      }))
+      markersRef.current.setMarkers(chartMarkers)
+    }, [markers])
+
     if (ref) {
       if (typeof ref === 'function') {
         ref(containerRef.current)
@@ -122,7 +152,6 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
 
 CandlestickChart.displayName = 'CandlestickChart'
 
-// 同时导出 named + default
 const CandlestickChartMemo = memo(CandlestickChart)
 CandlestickChartMemo.displayName = 'CandlestickChart'
 /**

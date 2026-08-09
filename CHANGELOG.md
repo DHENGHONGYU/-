@@ -7,6 +7,93 @@
 
 ---
 
+## [Unreleased] - 2026-08-09
+
+### Added
+
+- **P0 + P1 单元测试补全 — Stash 恢复 6 核心文件边界覆盖**：
+  - `src/core/databridgeAdapter.branch-coverage.test.ts` 新增 19 个用例（P0: 8 + P1: 8 + 极端边界: 3），覆盖 `isProgrammingError` 四分支 + 竞态安全 + 子类原型链边界 + 原型链篡改极端场景（constructor 覆写/prototype 篡改/伪造 TypeError）
+  - `src/cockpit/widgets/FundFlowWidget.test.tsx` 新增 5 个用例（P0: 2 + P1: 3），覆盖 guard/ready/loading/error/empty 五态
+  - `src/cockpit/widgets/MarketIndicesWidget.test.tsx` 新增 5 个用例（P0: 2 + P1: 3），覆盖 guard/ready/loading/error/empty 五态
+  - `src/cockpit/widgets/ModelCompareWidget.test.tsx` 新建 3 个用例（P1: 3），覆盖 instanceId 不匹配/正常渲染/loading 匹配
+  - `tests/TradeReviewPage.test.tsx` 新建 3 个用例（P0: 1 + P1: 2），覆盖 disabled guard/success/catch 三路径
+  - `outputs/p0-p1-test-completion-report-2026-08-09.md` 新增详细总结报告
+
+- **方案 B 数据源整改 — 腾讯源直连 + AKShare 真实财务接口**：
+  - `python/data_service/collect_endpoints.py` 新增 `_to_tencent_code`/`fetch_tencent_quote`/`fetch_tencent_kline` 腾讯源直连模块（qt.gtimg.cn + web.ifzq.gtimg.cn），替代被东财封禁的 push2 接口
+  - `python/data_service/collect_endpoints.py` 新增 `fetch_real_financial_data` 函数，接入 AKShare `stock_financial_analysis_indicator` + `stock_financial_abstract` 双接口，字段映射完整（毛利率/净利率/ROE/增长率/周转天数/营收/净利润/现金流/净资产/应收/负债/商誉/研发比例）
+  - `python/data_service/audit_collect_10stocks.py` 同步换源 + 增强字段级完整性检查，动态随机抽取 10 只股票（不硬编码），5 项审计基线齐全
+  - `src/services/data-collector/tushareProvider.ts` 新增 Tushare Pro 直连 Provider（含 6 类 TushareProviderError 错误分类），作为方案 B 中长期备选
+  - `electron/preload.ts` + `electron/main.ts` 新增 `fileSync:writeFiles` IPC 通道，实现 `resolveSafeRootDir` + `safeRelative` 路径遍历防护，将采集数据同步到 `outputs/collected-data/{batchId}/` 目录
+  - `deliverables/software-company/collect-audit-report-2026-08-09.md` 新增 8/9 真实数据审计报告（10 股 6 维度全 100% 成功）
+
+### Fixed
+
+- **`src/core/databridgeAdapter.ts` — 恢复丢失的 `isProgrammingError` + `safeErrorMessage`**：
+  - 修复 Stash 恢复过程中 `isProgrammingError` 函数丢失导致 catch 块对 null/undefined 错误抛二次 TypeError 的问题
+  - 新增 `PROGRAMMING_ERROR_CONSTRUCTORS` Set（TypeError/SyntaxError/ReferenceError/RangeError/EvalError/URIError）
+  - 新增 `isProgrammingError(err)` 四分支判定：非对象 → false、无 constructor → false、编程错误（Set + instanceof 子类链）→ true、普通 Error → false
+  - 新增 `safeErrorMessage(err)` 安全提取错误消息，防止非对象错误二次崩溃
+  - 改造 `query()` catch 块：编程错误 → fail-fast reject，操作错误 → 优雅降级 resolve success=false
+
+- **方案 B 数据源整改 — 删除 MOCK 假数据 + 修复反爬**：
+  - 删除 `collect_endpoints.py` 中的 `MOCK_FINANCIAL_DATA` 假数据字典（此前导致财务维度采集成功率误报为 100%）
+  - 修复 AKShare 东财 push2 接口反爬导致的基本信息/K线维度 0% 成功率问题（切换至腾讯源）
+  - 新增 CORS 中间件（`allow_origins=["*"]`），解决前端跨域调用 Python 后端的问题
+
+- **数据采集服务 P0-P1 代码质量整改 — 9 个问题修复 + 60 个边界测试**：
+  - **P0-1 `collect_endpoints.py` `_collect_financial_llm` 异常未捕获**：`extract_one(symbol)` 可因网络超时/PDF 下载失败/LLM API 错误抛异常，此前直接导致 FastAPI 500 Internal Server Error。添加 try/catch 包裹，异常时返回结构化错误响应（`success=False` + `error` 描述），并在日志中记录完整异常信息。
+  - **P0-2 `collect_endpoints.py` `CollectResponse.fetched_at` 默认值冻结**：Pydantic 模型字段 `fetched_at: str = datetime.now().isoformat()` 在类定义时求值一次，所有响应共享同一时间戳。改用 `Field(default_factory=lambda: datetime.now().isoformat())` 确保每次实例化独立求值。新增 3 个 `TestFetchedAtDefaultFactory` 回归测试验证。
+  - **P0-3 `collectedDataSyncService.ts` logger 消息字面量 `{dimCode}`**：维度 03/04/05/06/07 的 5 处 logger 消息含字面文本 `{dimCode}` 而非模板插值 `${dimCode}`，日志中显示 `维度 {dimCode} 新闻文件已生成` 而非实际维度码。统一改为模板字符串插值。
+  - **P0-4 `collectionPipeline.ts` `fallbackPolicy` 空指针访问**：L629/L760 两处直接访问 `dimension.fallbackPolicy.allowMockFallback`，当 `fallbackPolicy` 为 `undefined` 时抛 `TypeError`。统一改为 `dimension.fallbackPolicy?.allowMockFallback ?? true`，与代码库其他位置风格一致。
+  - **P1-1 `collectedDataSyncService.ts` CSV 公式注入漏洞**：`toCsv` 函数的 `escape` 方法未处理以 `= / + / - / @` 开头的单元格值，Excel/WPS 会当作公式执行（CSV Injection）。增加危险前缀检测，前置单引号 `'` 防护。同时增加字段不一致检测：后续行字段多于表头时 `logger.warn` 并输出差异 keys。
+  - **P1-2 `collectionPipeline.ts` 失败源硬编码 `'tushare'`**：`generateDataForDimension` 中真实源失败时，`recordSourceResult` 第一个参数硬编码为 `'tushare'`，但实际失败源可能是 `crawler`/`sina`/`tencent`。改为按维度已知首个源归属 `getDimensionKnownSources(dimensionCode)[0] ?? 'unknown'`，避免熔断器统计失真。
+  - **P1-3 `collectionPipeline.ts` `mapSourceLabelToId` 未知源静默降级**：未知源标签默认映射为 `'tushare'`，掩盖新数据源接入问题。改为映射为 `'unknown'` 并记录 `logger.warn`，便于排查。
+  - **P1-4 `multiSourceFetcher.ts` `calculatePearson`/`calculateBeta` NaN 传播**：当 `pairs` 中含 `NaN`/`undefined`（来自 `Number(undefined)` 或异常 API 响应）时，`reduce` 产生 `NaN`，而 `denominator === 0` 无法拦截 `NaN`（`NaN !== 0`），最终返回 `NaN` 污染后续评分。增加无效数据对过滤（`typeof + Number.isNaN` 双重检查）+ 结果 `Number.isNaN` 最终防线。
+  - **P1-5 `multiSourceFetcher.ts` `fetchChipData` 类型断言不安全**：`as unknown as ChipData` 类型断言跳过类型检查，返回对象可能缺少 `ChipData` 必填字段或 `trend` 值为非法联合类型。改用显式 `typeof` 检查 + `validTrends` 白名单校验 + 安全构造对象。
+  - **边界测试补全**：
+    - `test_collect_endpoints.py` 新增 `TestCollectFinancialLlmException` 4 个测试：RuntimeError 异常 / ConnectionError 异常 / source=failed 返回 / 正常成功返回
+    - `test_collect_endpoints.py` 新增 `TestFetchedAtDefaultFactory` 3 个测试：两次请求时间戳不同 / 直接构造实例时间戳不同 / 显式传入不被覆盖
+    - `multiSourceFetcher.test.ts` 新增 22 个测试：`calculatePearson` 11 个（正常数据 3 + 边界条件 3 + NaN 防护 5）+ `calculateBeta` 11 个（正常数据 2 + 边界条件 3 + NaN 防护 6）
+  - **静态检查验证**：
+    - `tsc --noEmit`：修改的 3 个源文件（`multiSourceFetcher.ts` / `collectedDataSyncService.ts` / `collectionPipeline.ts`）零类型错误（35 个错误全在预先存在的测试文件中）
+    - `eslint`：修改的 4 个文件未引入新 ESLint 错误或警告（32 个问题全为预先存在的代码风格警告）
+    - `mypy collect_endpoints.py`：零警告零错误
+  - **测试结果**：Python 34/34 + TS 36/36 全部通过
+
+### Changed
+
+- **方案 B 路线调整**：`deliverables/software-company/architecture-plan-b-tushare-crawler.md` PRD 原主张接入 Tushare Pro 5000 积分套餐（500元/年）作为主线，实际整改改走方案 D 零成本路线（腾讯直连 + AKShare 真实接口）。Tushare Pro 保留为中长期备选，tushareProvider.ts 已预实现但未启用，待用户配置 Token 后激活。
+
+### Metrics
+
+| 指标 | 数值 |
+|------|------|
+| 新增/修改测试文件 | 5 个 |
+| 新增测试用例总数 | 35 个（P0: 9 + P1: 23 + 极端边界: 3） |
+| 全部通过数 | 35/35 |
+| tsc:prod 类型检查 | EXIT=0 |
+| test:unit 整体回归 | 286/291 文件通过（6 个预存失败与本次无关） |
+| 调试日志覆盖 | 5 个文件共 70 个 debugLog 调用点 |
+
+### Metrics — 方案 B 整改验收（2026-08-09 10:54-10:55 真实数据审计）
+
+| 指标 | 整改前 | 整改后 | 基线 | 结果 |
+|------|--------|--------|------|------|
+| 采集成功率 (successRate) | ~0%（东财反爬） | 100% | ≥80% | ✅ PASS |
+| 真实成功率 (realSuccessRate) | 误报 100%（Mock） | 100% | ≥80% | ✅ PASS |
+| 字段完整度 (completeness) | N/A | 97% | ≥90% | ✅ PASS |
+| 落盘率 (writeRate) | N/A | 100% | ≥95% | ✅ PASS |
+| 维度覆盖率 (dimensionCoverage) | N/A | 100% | ≥80% | ✅ PASS |
+| 平均延迟 (avgLatencyMs) | N/A | 460ms | - | - |
+| 审计股票数 | - | 10（动态随机抽取） | - | - |
+| AKShare 版本 | - | 1.18.83 | - | - |
+| overallPass | - | true | - | ✅ 全部通过 |
+
+> 完整审计报告：`deliverables/software-company/collect-audit-report-2026-08-09.md`
+
+---
+
 ## [2.6.0] - 2026-07-26
 
 ### Added

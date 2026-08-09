@@ -13,6 +13,10 @@ export { default as ScoreRadar } from './ScoreRadar'
 export { GaugeChart, GaugeRing } from './GaugeChart'
 export { default as FactorHeatmap } from './FactorHeatmap'
 
+// K线图组件（v2.9.6 新增买卖点标注能力）
+export { CandlestickSeriesChart, CandlestickChart } from './CandlestickChart'
+export type { CandlestickChartData, CandlestickChartProps } from './CandlestickChart'
+
 // 行业分析图表组件（v2.9.5 新增）
 export {
   IndustryV4Radar,

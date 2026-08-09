@@ -169,8 +169,8 @@ describe('七维采集额度预估计算', () => {
   })
 
   describe('DEFAULT_DIMENSIONS 配置验证', () => {
-    it('应该包含 8 个维度', () => {
-      expect(DEFAULT_DIMENSIONS).toHaveLength(8)
+    it('应该包含 10 个维度', () => {
+      expect(DEFAULT_DIMENSIONS).toHaveLength(10)
     })
 
     it('每个维度应该包含必要字段', () => {
@@ -193,7 +193,7 @@ describe('七维采集额度预估计算', () => {
 
   describe('额度预估准确性验证', () => {
     it('默认配置下的额度预估应该合理', () => {
-      // 默认配置：40个标的，8个维度全部启用
+      // 默认配置：40个标的，10个维度全部启用
       const dimensions = DEFAULT_DIMENSIONS.filter(d => d.enabled)
       const symbolCount = 40
       const monthlyCalls = estimateTotalMonthlyCalls(dimensions, symbolCount)
@@ -212,7 +212,7 @@ describe('七维采集额度预估计算', () => {
     })
 
     it('全维度策略的额度预估应该最高', () => {
-      const fullStrategy = DEFAULT_DIMENSIONS // 全部8个维度
+      const fullStrategy = DEFAULT_DIMENSIONS // 全部10个维度
       const valueStrategy = DEFAULT_DIMENSIONS.filter(d => 
         ['01', '02', '03', '04'].includes(d.code)
       )

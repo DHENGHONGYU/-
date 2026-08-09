@@ -13,6 +13,9 @@
 
 import { getLogger } from '@/lib/logger'
 import { TUSHARE_API_BASE } from '@/config/marketDataEndpoints'
+import { TUSHARE_DIRECT_URL } from '@/config/dataSourceUrls'
+import { DATA_COLLECTION_TIMEOUT_MS } from '@/config/timeouts'
+import { safeFetch as _safeFetch } from '@/services/shared/safeFetch'
 
 const logger = getLogger()
 
@@ -56,22 +59,13 @@ export class TushareProviderError extends Error {
   }
 }
 
-/** 内部轻量 safeFetch，带超时 */
+/** 内部 safeFetch — 委托至共享实现，保持原有签名不变 */
 async function safeFetch(
   input: string,
   init?: RequestInit,
-  timeoutMs = 10000,
+  timeoutMs = DATA_COLLECTION_TIMEOUT_MS,
 ): Promise<Response | null> {
-  const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), timeoutMs)
-  try {
-    return await fetch(input, { ...init, signal: controller.signal })
-  } catch (err) {
-    logger.warn('[tushareProvider] fetch 异常', { error: err instanceof Error ? err.message : String(err), url: input })
-    return null
-  } finally {
-    clearTimeout(timer)
-  }
+  return _safeFetch(input, { timeoutMs, init }, '[tushareProvider]')
 }
 
 /** 从 items 数组映射为对象数组 */
@@ -137,12 +131,12 @@ export async function tushareRequest(
 
   // 构造请求地址。
   // - 浏览器环境（存在 window）保持相对路径，经 Vite 代理 /api/proxy/tushare 转发；
-  // - Node / tsx 环境下相对路径无法被 fetch 解析，自动降级为直连根路径
-  //   https://api.tushare.pro（仅作为 Node 环境 fallback 直连，非生产默认值）。
+  // - Node / tsx 环境下相对路径无法被 fetch 解析，自动降级为直连 TUSHARE_DIRECT_URL
+  //   （仅作为 Node 环境 fallback 直连，非生产默认值）。
   const baseUrl = TUSHARE_API_BASE
   const url =
     typeof window === 'undefined' && typeof baseUrl === 'string' && baseUrl.startsWith('/')
-      ? 'https://api.tushare.pro'
+      ? TUSHARE_DIRECT_URL
       : baseUrl
 
   let resp: Response | null

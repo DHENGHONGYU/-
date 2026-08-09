@@ -5,7 +5,7 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { useSevenDimConfigStore } from './sevenDimConfigStore'
 import { useIntentionPoolStore } from '@/store/intentionPoolStore'
-import { GLOBAL_LIMITS } from '@/config/collectConfig'
+import { GLOBAL_LIMITS, DIMENSION_COUNT } from '@/config/collectConfig'
 
 // ============================================================
 // Mocks
@@ -113,8 +113,8 @@ describe('useSevenDimConfigStore', () => {
       expect(useSevenDimConfigStore.getState().activeTemplate).toBe('full')
     })
 
-    it('默认维度数量为 8 个', () => {
-      expect(useSevenDimConfigStore.getState().dimensions).toHaveLength(8)
+    it(`默认维度数量为 ${DIMENSION_COUNT} 个`, () => {
+      expect(useSevenDimConfigStore.getState().dimensions).toHaveLength(DIMENSION_COUNT)
     })
 
     it('所有维度都有 code 和 name 字段', () => {
@@ -129,7 +129,7 @@ describe('useSevenDimConfigStore', () => {
     it('full 模板下所有维度均启用', () => {
       const dims = useSevenDimConfigStore.getState().dimensions
       const enabledCount = dims.filter((d) => d.enabled).length
-      expect(enabledCount).toBe(8)
+      expect(enabledCount).toBe(DIMENSION_COUNT)
     })
 
     it('默认 symbolCount 为 40', () => {
@@ -175,9 +175,9 @@ describe('useSevenDimConfigStore', () => {
   // ==========================================================
 
   describe('派生计算', () => {
-    it('enabledCount: full 模板下返回 8', () => {
+    it(`enabledCount: full 模板下返回 ${DIMENSION_COUNT}`, () => {
       const count = useSevenDimConfigStore.getState().enabledCount()
-      expect(count).toBe(8)
+      expect(count).toBe(DIMENSION_COUNT)
     })
 
     it('monthlyCallEstimate: 返回数字且大于 0', () => {
@@ -210,7 +210,7 @@ describe('useSevenDimConfigStore', () => {
       const config = useSevenDimConfigStore.getState().getCollectionConfig()
       expect(config.version).toBe('1.0.0')
       expect(config.activeTemplate).toBe('full')
-      expect(config.dimensions).toHaveLength(8)
+      expect(config.dimensions).toHaveLength(DIMENSION_COUNT)
       expect(config.symbolCount).toBe(40)
       expect(config.historyDays).toBe(252)
       expect(typeof config.updatedAt).toBe('number')
@@ -624,8 +624,8 @@ describe('useSevenDimConfigStore', () => {
 
       await useSevenDimConfigStore.getState().runCollection()
 
-      // full 模板 8 个维度都启用
-      expect(runBatchTrace).toHaveBeenCalledTimes(8)
+      // full 模板全部维度都启用
+      expect(runBatchTrace).toHaveBeenCalledTimes(DIMENSION_COUNT)
     })
 
     it('runCollection: 部分维度失败时设置错误信息', async () => {
@@ -693,7 +693,7 @@ describe('useSevenDimConfigStore', () => {
       // 注意：runBatchTrace 会被调用多次（每个维度一次），但第二次 runCollection 应该直接返回
       // 我们验证第二次调用时 collectingDimensions 已经非空所以直接返回
       const callCount = vi.mocked(runBatchTrace).mock.calls.length
-      expect(callCount).toBe(8) // 只有第一次的 8 个维度
+      expect(callCount).toBe(DIMENSION_COUNT) // 只有第一次的全部维度
     })
 
     it('runCollection: 维度缺少数据源时设置错误', async () => {

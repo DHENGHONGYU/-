@@ -1,7 +1,7 @@
 {
   "name": "v9-intelligent-research-review-system",
   "private": true,
-  "version": "2.0.0",
+  "version": "2.0.0-rc.1",
   "type": "module",
   "scripts": {
     "predev": "tsc -p tsconfig.prod.json --noEmit",
@@ -28,6 +28,15 @@
     "test:clean": "vitest run",
     "test:stable": "node scripts/test-quarantine.mjs stable",
     "test:quarantine": "node scripts/test-quarantine.mjs quarantine",
+    "test:p0:core": "vitest run src/core/cascadeExecutor.test.ts src/core/databridgeAdapter.test.ts src/core/databridgeAdapter.branch-coverage.test.ts src/core/acl.test.ts src/core/acl.defensive.test.ts src/core/acl.system-dimension.test.ts --reporter=verbose",
+    "test:p0:core:ci": "vitest run src/core/cascadeExecutor.test.ts src/core/databridgeAdapter.test.ts src/core/databridgeAdapter.branch-coverage.test.ts src/core/acl.test.ts src/core/acl.defensive.test.ts src/core/acl.system-dimension.test.ts --reporter=junit --outputFile.junit=reports/p0-core-junit.xml --reporter=verbose",
+    "test:chart:industry": "vitest run src/store/industryDashboardStore.test.ts src/store/industryScoreStore.test.ts src/services/scoring/industryScoreSkill.test.ts src/services/skills/industryScoreMappingSkill.test.ts --reporter=default --reporter=json --outputFile.json=outputs/test-results/chart-tests.json",
+    "report:chart": "node scripts/generate-test-report.cjs",
+    "test:bootstrap:p0": "vitest run src/services/system/bootstrapService.test.ts src/services/system/seedService.test.ts --reporter=verbose",
+    "test:databridge:gate": "vitest run src/services/execution/executionPlanService.dataflow.test.ts src/services/system/bootstrapService.test.ts src/core/acl.test.ts src/core/acl.defensive.test.ts --reporter=verbose",
+    "test:databridge:integration": "vitest run src/services/execution/executionPlanService.dataflow.test.ts --reporter=verbose",
+    "test:databridge:bootstrap": "vitest run src/services/system/bootstrapService.test.ts --reporter=verbose",
+    "test:databridge:acl": "vitest run src/core/acl.test.ts src/core/acl.defensive.test.ts src/core/acl.system-dimension.test.ts --reporter=verbose",
     "test:e2e-verify": "vitest run tests/e2e-verify-25stocks.integration.test.ts tests/e2e-verify-redundancy.integration.test.ts tests/v6-score-discrimination.integration.test.ts --no-coverage",
     "test:known": "vitest run src/store/agentStore.test.ts src/services/fetcher/fetcherClient.test.ts src/services/llm/llmClient.multimodel.test.ts tests/fetcher/dataSourceProvider.test.ts tests/ui-components.test.tsx tests/agentModule.integration.test.tsx",
     "pretest:e2e": "npm run build",
@@ -216,7 +225,11 @@
     "sync:doc:watch:fix": "tsx scripts/sync/doc-sync.ts --watch --fix",
     "sync:all": "npm run sync:test && npm run sync:doc",
     "sync:all:fix": "npm run sync:test:fix && npm run sync:doc:fix",
-    "backup:bundle": "node scripts/backup/git-bundle.cjs"
+    "backup:bundle": "node scripts/backup/git-bundle.cjs",
+    "sidecar:build": ".venv\\Scripts\\python.exe -m PyInstaller backend/v9_sidecar.spec --distpath dist/v9-python-sidecar --workpath build/v9-sidecar --noconfirm",
+    "electron:compile": "tsc -p electron/tsconfig.json",
+    "electron:dev": "npm run electron:compile && cross-env VITE_DEV_SERVER_URL=http://localhost:3000 V9_PYTHON_EXE=.venv\\Scripts\\python.exe electron dist-electron/main.js",
+    "electron:build": "npm run build && npm run electron:compile && electron-builder --publish never"
   },
   "dependencies": {
     "@duckdb/duckdb-wasm": "1.33.1-dev57.0",
@@ -258,8 +271,11 @@
     "ajv-formats": "^3.0.1",
     "autoprefixer": "^10.4.20",
     "concurrently": "^10.0.3",
+    "cross-env": "7.0.3",
     "cz-conventional-changelog": "3.3.0",
     "dependency-cruiser": "18.0.0",
+    "electron": "33.4.11",
+    "electron-builder": "^25.1.8",
     "eslint": "^9.15.0",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.14",
@@ -276,6 +292,7 @@
     "typescript-eslint": "^8.16.0",
     "vite": "^6.0.0",
     "vitest": "^2.1.0",
+    "wait-on": "8.0.5",
     "zod": "4.4.3"
   },
   "lint-staged": {
@@ -296,6 +313,51 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "build": {
+    "appId": "com.finsight.v9",
+    "productName": "FinSightV9",
+    "directories": {
+      "output": "release"
+    },
+    "npmRebuild": false,
+    "nodeGypRebuild": false,
+    "extraMetadata": {
+      "main": "dist-electron/main.js",
+      "type": "commonjs"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "dist/v9-python-sidecar/v9-python-sidecar",
+        "to": "v9-python-sidecar",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.png",
+      "signAndEditExecutable": false,
+      "compression": "normal"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "FinSightV9",
+      "differentialPackage": false
+    }
+  },
+  "overrides": {
+    "electron-builder": {
+      "yargs": "17.7.3"
     }
   }
 }

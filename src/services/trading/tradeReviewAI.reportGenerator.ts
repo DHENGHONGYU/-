@@ -22,6 +22,7 @@ import type {
   ActionPlan,
   AIDeepInsight,
 } from './tradeReviewAI.types'
+import type { BuySellPointReview } from '@/types/modules/buySellPoint.types'
 import { generatePsychologicalProfile, generateRiskProfile } from './tradeReviewAI.profileGenerator'
 import { buildTradePairs } from './tradeReviewAI.utils'
 import { PERCENTAGE_BASE, PROFIT_LOSS_RATIO_UNBOUNDED } from '@/constants/trade.constants'
@@ -256,6 +257,59 @@ export function generateAIDeepInsight(
   personalizedAdvice.push('交易纪律是核心竞争力。数据显示：无错误交易的胜率显著高于有错误交易')
   if (personalizedAdvice.length < 3) {
     personalizedAdvice.push('继续保持当前的交易纪律，可逐步优化交易系统的细节参数')
+  }
+
+  return { pnlAttribution, dataPatterns, personalizedAdvice }
+}
+
+/**
+ * 生成买卖点复盘洞察（整合到 AI 深度洞察中）
+ */
+export function generateBuySellPointInsight(
+  review: BuySellPointReview,
+): { pnlAttribution: string[]; dataPatterns: string[]; personalizedAdvice: string[] } {
+  const pnlAttribution: string[] = []
+  const dataPatterns: string[] = []
+  const personalizedAdvice: string[] = []
+
+  // 盈亏归因：买卖点系统综合评分
+  pnlAttribution.push(
+    `买卖点系统综合评分 ${review.overallScore} 分，` +
+      `${review.overallScore >= 80 ? '入场出场体系成熟' : review.overallScore >= 60 ? '入场出场体系基本有效，仍有优化空间' : '入场出场体系亟需系统性改善'}`,
+  )
+
+  // 入场时机归因
+  if (review.entryTiming.buyPointStats.length > 0) {
+    const best = review.entryTiming.buyPointStats[0]!
+    pnlAttribution.push(
+      `最优入场策略「${best.name}」胜率 ${best.winRate}%，平均收益 ${best.avgReturn}%`,
+    )
+  }
+
+  // 出场时机归因
+  if (review.exitTiming.sellPointStats.length > 0) {
+    const best = review.exitTiming.sellPointStats[0]!
+    pnlAttribution.push(
+      `最优出场策略「${best.name}」胜率 ${best.winRate}%，保护了 ${best.profitableCount} 笔交易利润`,
+    )
+  }
+
+  // 数据规律
+  dataPatterns.push(review.entryTiming.summary)
+  dataPatterns.push(review.exitTiming.summary)
+
+  // 参数有效性规律
+  const lowScoreParams = review.parameterEffectiveness.filter((p) => p.effectivenessScore < 60)
+  if (lowScoreParams.length > 0) {
+    dataPatterns.push(
+      `${lowScoreParams.length} 个买卖点参数有效性偏低：${lowScoreParams.map((p) => p.parameterName).join('、')}`,
+    )
+  }
+
+  // 个性化建议：核心技能
+  const highPrioritySkills = review.coreSkills.filter((s) => s.priority === 'high')
+  for (const skill of highPrioritySkills.slice(0, 3)) {
+    personalizedAdvice.push(`【${skill.skill}】${skill.insight} → ${skill.action}`)
   }
 
   return { pnlAttribution, dataPatterns, personalizedAdvice }

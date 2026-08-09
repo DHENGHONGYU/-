@@ -62,3 +62,16 @@ export const API_COLLECT_KLINE = '/api/collect/kline'
 
 /** 财务数据采集 API */
 export const API_COLLECT_FINANCIAL = '/api/collect/financial'
+
+/** 板块轮动评分采集 API（申万二级，按 hot-momentum-strategy.md §2.5） */
+export const API_COLLECT_SECTORS = '/api/collect/sectors'
+
+// ============================================================
+// 代理 API 路径（Vite proxy 转发）
+// ============================================================
+
+/** Qwen/DashScope LLM 代理路径（浏览器环境经 Vite proxy 转发） */
+export const API_PROXY_QWEN_GENERATION = '/api/proxy/qwen/api/v1/services/aigc/text-generation/generation'
+
+/** 腾讯 Smartbox 搜索代理路径（Vite proxy 转发） */
+export const API_PROXY_SMARTBOX = '/api/proxy/smartbox/'

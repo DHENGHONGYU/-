@@ -18,3 +18,9 @@ export const DEFAULT_REQUEST_TIMEOUT_MS = 5_000
 
 /** LLM 调用超时（ms） */
 export const LLM_CALL_TIMEOUT_MS = 60_000
+
+/** LLM 搜索请求超时（ms）— llmSearchAgent 使用 */
+export const LLM_SEARCH_TIMEOUT_MS = 15_000
+
+/** 直连行情 API 请求超时（ms）— fetcher/directDataAPI 使用 */
+export const DIRECT_DATA_API_TIMEOUT_MS = 30_000

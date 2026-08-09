@@ -110,9 +110,22 @@ export const useIntentionPoolStore = create<IntentionPoolState>((set, get) => ({
       if (!result.success) {
         throw new Error(result.error ?? '查询意向池失败')
       }
-      const list = (result.data ?? [])
+      const rawData = result.data ?? []
+      const list = rawData
         .filter((s) => s.pool === POOL)
+        // 按 ingestedAt 倒序排序：最新加入的标的排在最前，
+        // 避免依赖 IndexedDB 索引返回顺序（默认按主键 symbol 排序）导致新增股票不在第一顺位。
+        .sort((a, b) => (b.ingestedAt ?? 0) - (a.ingestedAt ?? 0))
         .map(toPoolItem)
+      logger.info('[intentionPoolStore] refresh 数据流', {
+        queryIndex: 'by-pool',
+        queryValue: POOL,
+        rawCount: rawData.length,
+        afterFilter: list.length,
+        sortBy: 'ingestedAt DESC',
+        filteredOut: rawData.length - list.length,
+        filteredOutSymbols: rawData.filter((s) => s.pool !== POOL).map((s) => ({ symbol: s.symbol, pool: s.pool })),
+      })
       set({
         items: list,
         loading: false,
@@ -120,7 +133,10 @@ export const useIntentionPoolStore = create<IntentionPoolState>((set, get) => ({
         lastUpdated: Date.now(),
         error: null,
       })
-      logger.info(`[intentionPoolStore] refresh 完成: ${list.length} 条`)
+      logger.info('[intentionPoolStore] refresh 完成', {
+        count: list.length,
+        symbols: list.map((s) => s.symbol),
+      })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       logger.error(`[intentionPoolStore] refresh 失败: ${message}`)
@@ -169,33 +185,8 @@ export const useIntentionPoolStore = create<IntentionPoolState>((set, get) => ({
         fullStock,
       )
       await dataBridge.forward(envelope)
+      logger.info('[intentionPoolStore] addItem 写入成功', { symbol: normalizedSymbol, pool: POOL })
       withBroadcast(EVENT_NAMES.POOL_CHANGED, { action: 'add', pool: POOL, symbol: normalizedSymbol })
-
-      // 自动流转到研究池（意向池 → 研究池，通过 updateStock 更新 pool 字段）
-      try {
-        const transitionEnvelope = EnvelopeFactory.create(
-          {
-            source: MODULE_ID.pool,
-            target: ENVELOPE_TARGET.db,
-            action: ENVELOPE_ACTION.updateStock,
-            traceId: `pool-intention-to-research-${nanoid(8)}-${normalizedSymbol}`,
-          },
-          {
-            symbol: normalizedSymbol,
-            pool: 'research' as PoolType,
-            researchStatus: 'candidate' as IntentionStatus,
-          },
-        )
-        await dataBridge.forward(transitionEnvelope)
-        withBroadcast(EVENT_NAMES.POOL_CHANGED, { action: 'transition', pool: 'research', symbol: normalizedSymbol })
-        logger.info(`[intentionPoolStore] 自动流转到研究池: ${normalizedSymbol}`)
-      } catch (researchErr) {
-        // 研究池流转失败不影响意向池录入成功
-        logger.warn('[intentionPoolStore] 自动流转到研究池失败', {
-          symbol: normalizedSymbol,
-          error: researchErr instanceof Error ? researchErr.message : String(researchErr),
-        })
-      }
 
       return true
     } catch (err) {

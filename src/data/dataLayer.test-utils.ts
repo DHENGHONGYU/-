@@ -5,6 +5,7 @@
  * 包含：mock 定义、工厂函数、mock 辅助函数。
  */
 import { vi } from 'vitest'
+import { TEST_MOCK_NEWS_URL, TEST_MOCK_LLM_BASE_URL } from '@/config/dataSourceUrls'
 
 // ── Mock 依赖（使用 vi.hoisted 确保 vi.mock 工厂可访问）──
 const {
@@ -178,7 +179,7 @@ export function makeIntelligentScore(overrides: Record<string, unknown> = {}) {
     basis: 'test',
     missingFields: [],
     sourceSnapshot: { stock: undefined, fileNames: [], reportLength: 0 },
-    configSnapshot: { model: 'gpt-4', baseURL: 'http://localhost' },
+    configSnapshot: { model: 'gpt-4', baseURL: TEST_MOCK_LLM_BASE_URL },
     modelResponse: '{}',
     dataVersion: 1,
     scoredAt: 1700000000000,
@@ -197,7 +198,7 @@ export function makeIndustryScore(overrides: Record<string, unknown> = {}) {
     basis: 'test',
     missingFields: [],
     sectorSnapshot: { composite: 80, recommendation: 'buy', positionPct: '10', subTracks: [] },
-    configSnapshot: { model: 'gpt-4', baseURL: 'http://localhost' },
+    configSnapshot: { model: 'gpt-4', baseURL: TEST_MOCK_LLM_BASE_URL },
     modelResponse: '{}',
     scoredAt: 1700000000000,
     ...overrides,
@@ -325,7 +326,7 @@ export function makeNewsArticle() {
     id: 'news-001',
     title: '茅台发布半年报',
     content: '贵州茅台2026年上半年营收增长15%',
-    url: 'https://example.com/news/1',
+    url: TEST_MOCK_NEWS_URL,
     source: '东方财富',
     category: '财报',
     publishTime: '2026-07-01T10:00:00Z',

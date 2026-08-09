@@ -44,6 +44,9 @@ export function adaptBasicDataToStock(
   if (data.market_cap !== undefined && !Number.isNaN(data.market_cap)) {
     update.marketCap = data.market_cap
   }
+  if (data.industry_code !== undefined && data.industry_code.trim().length > 0) {
+    update.industryCode = data.industry_code.trim()
+  }
 
   return update
 }

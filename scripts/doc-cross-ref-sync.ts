@@ -3,9 +3,10 @@
  * @description 文档交叉引用同步器（最小存根）
  */
 
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, extname, join, relative, resolve } from 'node:path'
 import type { DocUpdateEntry, ScannedFile } from '../src/types/modules/doc-validation.types'
+import { safeWriteFileSync } from '../src/lib/safeFs'
 
 export interface RawLink {
   readonly text: string
@@ -255,7 +256,7 @@ export function syncCrossReferences(
     }
     const newIndex = lines.join('\n') + '\n'
     const isNewFile = !existsSync(indexPath)
-    writeFileSync(indexPath, newIndex, 'utf-8')
+    safeWriteFileSync(indexPath, newIndex)
     updates.push({
       id: generateId(),
       timestamp: formatTimestampSeconds(new Date()),

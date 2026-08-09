@@ -34,7 +34,7 @@ vi.mock('@/lib/logger', () => ({
 describe('hotSectorQueryUseCase', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockGetHotSectors.mockReturnValue([])
+    mockGetHotSectors.mockResolvedValue([])
   })
 
   // 测试数据
@@ -109,7 +109,7 @@ describe('hotSectorQueryUseCase', () => {
   describe('正常流程', () => {
     it('应当成功查询热门板块并按 score 降序排序', async () => {
       // 准备
-      mockGetHotSectors.mockReturnValue(mockHotSectors)
+      mockGetHotSectors.mockResolvedValue(mockHotSectors)
 
       // 执行
       const result = await hotSectorQueryUseCase()
@@ -148,7 +148,7 @@ describe('hotSectorQueryUseCase', () => {
         },
         stocks: [],
       }))
-      mockGetHotSectors.mockReturnValue(manySectors)
+      mockGetHotSectors.mockResolvedValue(manySectors)
 
       // 执行：不传参数，使用默认值
       const result = await hotSectorQueryUseCase()
@@ -164,7 +164,7 @@ describe('hotSectorQueryUseCase', () => {
 
     it('应当支持自定义 topN 参数', async () => {
       // 准备
-      mockGetHotSectors.mockReturnValue(mockHotSectors)
+      mockGetHotSectors.mockResolvedValue(mockHotSectors)
 
       // 执行
       const result = await hotSectorQueryUseCase({ topN: 3 })
@@ -181,7 +181,7 @@ describe('hotSectorQueryUseCase', () => {
 
     it('应当正确传递 topN 给底层服务调用', async () => {
       // 准备
-      mockGetHotSectors.mockReturnValue(mockHotSectors)
+      mockGetHotSectors.mockResolvedValue(mockHotSectors)
 
       // 执行
       await hotSectorQueryUseCase({ topN: 5 })
@@ -194,7 +194,7 @@ describe('hotSectorQueryUseCase', () => {
   describe('数据为空', () => {
     it('应当返回空数组：没有热门板块数据', async () => {
       // 准备
-      mockGetHotSectors.mockReturnValue([])
+      mockGetHotSectors.mockResolvedValue([])
 
       // 执行
       const result = await hotSectorQueryUseCase()
@@ -209,7 +209,7 @@ describe('hotSectorQueryUseCase', () => {
 
     it('应当在数据为空时记录日志', async () => {
       // 准备
-      mockGetHotSectors.mockReturnValue([])
+      mockGetHotSectors.mockResolvedValue([])
 
       // 执行
       await hotSectorQueryUseCase()
@@ -299,7 +299,7 @@ describe('hotSectorQueryUseCase', () => {
   describe('参数传递验证', () => {
     it('应当正确传递 topN = 0', async () => {
       // 准备
-      mockGetHotSectors.mockReturnValue(mockHotSectors)
+      mockGetHotSectors.mockResolvedValue(mockHotSectors)
 
       // 执行
       const result = await hotSectorQueryUseCase({ topN: 0 })
@@ -313,7 +313,7 @@ describe('hotSectorQueryUseCase', () => {
 
     it('应当正确传递 topN 大于数据总数', async () => {
       // 准备：只有 5 个板块，但 topN = 100
-      mockGetHotSectors.mockReturnValue(mockHotSectors)
+      mockGetHotSectors.mockResolvedValue(mockHotSectors)
 
       // 执行
       const result = await hotSectorQueryUseCase({ topN: 100 })
@@ -327,7 +327,7 @@ describe('hotSectorQueryUseCase', () => {
 
     it('应当在不传 input 参数时使用默认值', async () => {
       // 准备
-      mockGetHotSectors.mockReturnValue(mockHotSectors)
+      mockGetHotSectors.mockResolvedValue(mockHotSectors)
 
       // 执行：不传任何参数
       const result = await hotSectorQueryUseCase()
@@ -347,7 +347,7 @@ describe('hotSectorQueryUseCase', () => {
 
     it('应当在 topN 为负数时返回空数组', async () => {
       // 准备
-      mockGetHotSectors.mockReturnValue(mockHotSectors)
+      mockGetHotSectors.mockResolvedValue(mockHotSectors)
 
       // 执行
       const result = await hotSectorQueryUseCase({ topN: -5 })
@@ -371,7 +371,7 @@ describe('hotSectorQueryUseCase', () => {
         { ...mockHotSectors[1]!, score: 80 }, // 次高
         { ...mockHotSectors[4]!, score: 50 }, // 较低
       ]
-      mockGetHotSectors.mockReturnValue(unorderedSectors)
+      mockGetHotSectors.mockResolvedValue(unorderedSectors)
 
       // 执行
       const result = await hotSectorQueryUseCase()
@@ -391,7 +391,7 @@ describe('hotSectorQueryUseCase', () => {
         { ...mockHotSectors[1]!, score: 80 },
         { ...mockHotSectors[2]!, score: 80 },
       ]
-      mockGetHotSectors.mockReturnValue(sameScoreSectors)
+      mockGetHotSectors.mockResolvedValue(sameScoreSectors)
 
       // 执行
       const result = await hotSectorQueryUseCase()
@@ -410,7 +410,7 @@ describe('hotSectorQueryUseCase', () => {
   describe('日志记录', () => {
     it('应当在查询开始时记录 info 级别日志', async () => {
       // 准备
-      mockGetHotSectors.mockReturnValue(mockHotSectors)
+      mockGetHotSectors.mockResolvedValue(mockHotSectors)
 
       // 执行
       await hotSectorQueryUseCase({ topN: 3 })
@@ -424,7 +424,7 @@ describe('hotSectorQueryUseCase', () => {
 
     it('应当在查询完成时记录详细信息', async () => {
       // 准备
-      mockGetHotSectors.mockReturnValue(mockHotSectors)
+      mockGetHotSectors.mockResolvedValue(mockHotSectors)
 
       // 执行
       await hotSectorQueryUseCase({ topN: 3 })
@@ -441,7 +441,7 @@ describe('hotSectorQueryUseCase', () => {
 
     it('应当在完成日志中包含 topSectors 摘要', async () => {
       // 准备
-      mockGetHotSectors.mockReturnValue(mockHotSectors.slice(0, 3))
+      mockGetHotSectors.mockResolvedValue(mockHotSectors.slice(0, 3))
 
       // 执行
       await hotSectorQueryUseCase({ topN: 3 })
@@ -459,7 +459,7 @@ describe('hotSectorQueryUseCase', () => {
 
     it('应当在成功时不记录 error 日志', async () => {
       // 准备
-      mockGetHotSectors.mockReturnValue(mockHotSectors)
+      mockGetHotSectors.mockResolvedValue(mockHotSectors)
 
       // 执行
       await hotSectorQueryUseCase()
@@ -492,7 +492,7 @@ describe('hotSectorQueryUseCase', () => {
   describe('数据完整性', () => {
     it('应当保留板块的所有字段', async () => {
       // 准备
-      mockGetHotSectors.mockReturnValue(mockHotSectors)
+      mockGetHotSectors.mockResolvedValue(mockHotSectors)
 
       // 执行
       const result = await hotSectorQueryUseCase({ topN: 1 })
@@ -517,7 +517,7 @@ describe('hotSectorQueryUseCase', () => {
     it('应当不修改原始数据源（返回新数组）', async () => {
       // 准备
       const originalSectors = [...mockHotSectors]
-      mockGetHotSectors.mockReturnValue(mockHotSectors)
+      mockGetHotSectors.mockResolvedValue(mockHotSectors)
 
       // 执行
       const result = await hotSectorQueryUseCase()

@@ -21,13 +21,21 @@ import type { Stock, DailyQuotes } from '@/data/types'
 
 // ============================================================
 // Mock 依赖
+// 使用 vi.hoisted() 确保 mock 变量在 vi.mock 工厂提升后仍可访问
+// 避免 TDZ（暂时性死区）导致闭包捕获 undefined
 // ============================================================
 
+const { mockQuery, mockRunFullIndustryAnalysis, mockRunV6ScoreBatch } = vi.hoisted(() => ({
+  mockQuery: vi.fn(),
+  mockRunFullIndustryAnalysis: vi.fn(),
+  mockRunV6ScoreBatch: vi.fn(),
+}))
+
 // --- Mock dataBridge ---
-const mockQuery = vi.fn()
+// 直接将 query 设为 mockQuery 本身（非闭包包装），避免作用域问题
 vi.mock('@/core/databridge', () => ({
   dataBridge: {
-    query: (...args: unknown[]) => mockQuery(...args),
+    query: mockQuery,
     forward: vi.fn().mockResolvedValue({ success: true }),
     invalidateAll: vi.fn(),
   },
@@ -67,22 +75,31 @@ vi.mock('@/services/data-collector/collectionPipeline', () => ({
 }))
 
 // --- Mock runFullIndustryAnalysis: 捕获入参 ---
-const mockRunFullIndustryAnalysis = vi.fn()
 vi.mock('@/services/analysis/industryAnalysisService', () => ({
-  runFullIndustryAnalysis: (...args: unknown[]) => mockRunFullIndustryAnalysis(...args),
+  runFullIndustryAnalysis: mockRunFullIndustryAnalysis,
   invalidateIndustryCache: vi.fn(),
   getCachedV4Analyses: vi.fn(() => null),
 }))
 
 // --- Mock runV6ScoreBatch: 捕获调用 ---
-const mockRunV6ScoreBatch = vi.fn()
 vi.mock('@/services/scoring/v6ScoreService', () => ({
-  runV6ScoreBatch: (...args: unknown[]) => mockRunV6ScoreBatch(...args),
+  runV6ScoreBatch: mockRunV6ScoreBatch,
   runV6Score: vi.fn(),
 }))
 
-// --- 保留 quotesToQuoteData 真实实现 ---
-// 不 mock @/services/scoring/v6-engine，让 quotesToQuoteData 正常工作
+// --- Mock v6-engine: 提供 quotesToQuoteData 简单实现 + 类型 ---
+// 避免加载整个 v6-engine 模块树（含 calculators/enhancers 等）造成副作用
+vi.mock('@/services/scoring/v6-engine', () => ({
+  quotesToQuoteData: (quotes: { history?: Array<{ close?: number }> }) => {
+    const history = quotes.history ?? []
+    const latestClose = history[history.length - 1]?.close ?? 0
+    return {
+      latestClose,
+      history,
+      volumeHistory: [],
+    }
+  },
+}))
 
 // ============================================================
 // 种子数据
@@ -172,6 +189,24 @@ describe('QualityGate P0 修复验证', () => {
 
   afterEach(() => {
     qualityGate?.stop()
+  })
+
+  // === 诊断测试：验证 mock 在 QualityGate 上下文中是否工作 ===
+
+  it('诊断: dataBridge.query mock 在 QualityGate 导入后是否工作', async () => {
+    const { dataBridge, STORE_NAME } = await import('@/core/databridge')
+
+    console.log('[diag] STORE_NAME:', JSON.stringify(STORE_NAME))
+    console.log('[diag] dataBridge.query === mockQuery:', dataBridge.query === mockQuery)
+
+    mockQuery.mockImplementation((req: { store: string }) => {
+      console.log('[diag] mockQuery called, store:', req.store)
+      return Promise.resolve({ success: true, data: { symbol: 'test' } })
+    })
+
+    const result = await dataBridge.query({ store: STORE_NAME.stocks, key: '000001' })
+    console.log('[diag] result:', JSON.stringify(result))
+    console.log('[diag] mockQuery calls:', mockQuery.mock.calls.length)
   })
 
   // === P0-3: 验证 financials 和 quotes 不再为空 ===

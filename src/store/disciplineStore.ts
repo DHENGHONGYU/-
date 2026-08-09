@@ -380,7 +380,15 @@ export const useDisciplineStore = create<DisciplineState>()(
       logger.info(`[disciplineStore] generateReviewReport 开始: ${orders.length} 笔`)
       try {
         const report = generateReview(orders)
-        logger.info('[disciplineStore] generateReviewReport 完成')
+        const derived = extractReviewDerived(report)
+        set({
+          latestReport: report,
+          ...derived,
+          loading: false,
+          error: null,
+          lastUpdated: Date.now(),
+        })
+        logger.info('[disciplineStore] generateReviewReport 完成，latestReport 已更新')
         return report
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err)

@@ -16,7 +16,7 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
-import { STRATEGY_TEMPLATES, GLOBAL_LIMITS } from '@/config/collectConfig'
+import { STRATEGY_TEMPLATES, GLOBAL_LIMITS, DIMENSION_COUNT } from '@/config/collectConfig'
 import { seedDefaultPool, clearIntentionPool } from '../utils/seedTestData'
 
 vi.mock('@/core/databridge', () => ({
@@ -55,8 +55,8 @@ describe('sevenDimConfigStore - 初始状态', () => {
     expect(useSevenDimConfigStore.getState().activeTemplate).toBe('full')
   })
 
-  it('dimensions 包含 8 个维度', () => {
-    expect(useSevenDimConfigStore.getState().dimensions).toHaveLength(8)
+  it(`dimensions 包含 ${DIMENSION_COUNT} 个维度`, () => {
+    expect(useSevenDimConfigStore.getState().dimensions).toHaveLength(DIMENSION_COUNT)
   })
 
   it('symbolCount 初始为 40', () => {
@@ -87,11 +87,11 @@ describe('sevenDimConfigStore - 初始状态', () => {
 })
 
 describe('sevenDimConfigStore - 策略模板切换', () => {
-  it('full 模板启用 8 个维度 (01-08)', () => {
+  it(`full 模板启用 ${DIMENSION_COUNT} 个维度 (01-10)`, () => {
     const state = useSevenDimConfigStore.getState()
-    expect(state.enabledCount()).toBe(8)
+    expect(state.enabledCount()).toBe(DIMENSION_COUNT)
     const enabledCodes = state.dimensions.filter((d) => d.enabled).map((d) => d.code)
-    expect(enabledCodes).toEqual(['01', '02', '03', '04', '05', '06', '07', '08'])
+    expect(enabledCodes).toEqual(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'])
   })
 
   it('切换到 growth 模板启用 5 个维度', () => {
@@ -106,14 +106,14 @@ describe('sevenDimConfigStore - 策略模板切换', () => {
     expect(useSevenDimConfigStore.getState().enabledCount()).toBe(4)
   })
 
-  it('切换到 cycle 模板启用 5 个维度', () => {
+  it('切换到 cycle 模板启用 6 个维度', () => {
     useSevenDimConfigStore.getState().applyTemplate('cycle')
-    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(5)
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(6)
   })
 
-  it('切换到 full 模板启用全部 8 个维度', () => {
+  it(`切换到 full 模板启用全部 ${DIMENSION_COUNT} 个维度`, () => {
     useSevenDimConfigStore.getState().applyTemplate('full')
-    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(8)
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(DIMENSION_COUNT)
   })
 
   it('切换模板后 isDirty 变为 true', () => {
@@ -258,9 +258,9 @@ describe('sevenDimConfigStore - 全局参数', () => {
 
 describe('sevenDimConfigStore - 派生计算', () => {
   it('enabledCount 正确反映启用维度数', () => {
-    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(8)
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(DIMENSION_COUNT)
     useSevenDimConfigStore.getState().toggleDimension('01')
-    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(7)
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(DIMENSION_COUNT - 1)
   })
 
   it('monthlyCallEstimate 大于 0（有启用维度时）', () => {
@@ -338,10 +338,10 @@ describe('sevenDimConfigStore - reset', () => {
     expect(useSevenDimConfigStore.getState().error).toBe(null)
   })
 
-  it('reset 恢复 enabledCount 为 8（full 模板）', () => {
+  it(`reset 恢复 enabledCount 为 ${DIMENSION_COUNT}（full 模板）`, () => {
     useSevenDimConfigStore.getState().applyTemplate('value')
     useSevenDimConfigStore.getState().reset()
-    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(8)
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(DIMENSION_COUNT)
   })
 })
 

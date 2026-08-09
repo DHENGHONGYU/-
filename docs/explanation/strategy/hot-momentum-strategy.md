@@ -67,6 +67,141 @@ hot-momentum 判定条件（全部满足）：
 
 ---
 
+### 2.5 热门板块检索定义（精准定义）
+
+> 本节明确"热门板块"的可量化定义与检索协议，作为 hot-momentum 分类条件 #2（sector 属于热门 TOP N）的**唯一判定依据**。
+> 2026-08-09 新增，消除原"热门"无定义、检索硬编码 Mock、匹配方式脆弱三类问题。
+
+#### 2.5.1 板块代码体系
+
+采用**申万行业分类（SW 分类）**，与 `RotationSectorScore` 的 `swLevel1/swLevel2/swLevel3` 字段对齐：
+
+| 层级 | 字段 | 用途 | 示例 |
+|:---|:---|:---|:---|
+| 申万一级 | `swLevel1` | 粗粒度分组 | "电子" |
+| 申万二级 | `swLevel2` / `sectorCode` | **热门检索主键** | "半导体"（`801120.SW`）|
+| 申万三级 | `swLevel3` | 细分定位 | "半导体设备" |
+
+- `sectorCode` 采用申万二级代码（如 `801120.SW`），为热门匹配的**唯一键**。
+- `Stock.industryCode` 须在 basic 采集时填充为申万二级代码，确保 `isHotSector` 可精确匹配（见 2.5.4）。
+
+#### 2.5.2 "热门"判定标准
+
+**定义**：在指定评分日期，板块轮动综合得分 `total`（五因子加权，0-100）排名 TOP N 的板块即为"热门板块"。
+
+| 要素 | 值 | 配置位置 |
+|:---|:---|:---|
+| 排序指标 | `RotationSectorScore.total`（0-100）| `types.rotation.ts` |
+| 取前 N | `hotMomentumTopSectors`（默认 5）| `strategyRules.ts` |
+| 观察周期 | 评分日当日（五因子基于近 5 个交易日数据计算）| Python `/api/collect/sectors` |
+| 评分日期 | `scoreDate`（取最新）| `rotationScoreStore.getLatestBySector` |
+
+**五因子构成**（已存在于 `RotationSectorScore` 实体）：
+
+| 因子 | 字段 | 数据来源 |
+|:---|:---|:---|
+| 景气 | `f1Jingqi` | 行业景气度 |
+| 资金 | `f2Zijin` | 主力资金净流入 |
+| 估值 | `f3Guzhi` | PE/PB 历史分位 |
+| β+相关 | `f4Beta` | 相对大盘 β 系数 |
+| 量能 | `f5Nengliang` | 成交量放大倍数 |
+| **综合总分** | `total` (0-100) | 五因子加权 |
+
+> `total` 即"板块强度分"，与双策略的 `HotSectorScore`（0-5）是**不同分制**，详见 2.5.5。
+
+#### 2.5.3 检索协议（数据链路）
+
+```
+AKShare 申万板块接口（ak.sw_index_* / ak.stock_board_industry_*）
+  → Python /api/collect/sectors（新增）
+    → 计算五因子 → RotationSectorScore
+      → rotationScoreStore.save（持久化到 IndexedDB rotationScores store）
+        → hotSectorService.getHotSectors() 读取最新 scoreDate 的 TOP N
+          → hotSectorQueryUseCase
+            → strategyEngine.fetchTopHotSectors
+              → isHotSector 匹配
+```
+
+**关键变更**：废弃 `hotSectorService.ts` 中硬编码的 `HOT_SECTORS` 样本数组，改为读取 `rotationScoreStore`。
+
+#### 2.5.4 板块匹配规则（isHotSector）
+
+废弃原字符串模糊匹配（`includes` 双向），改为**两段式精确匹配**：
+
+```typescript
+// 改造前（脆弱）：Stock.sector 中文名 vs HotSector.name 中文名，includes 双向
+function isHotSector(sector: string, topHotSectors: HotSector[]): boolean {
+  const normalized = sector.toLowerCase()
+  return topHotSectors.some((s) =>
+    normalized.includes(s.name.toLowerCase()) ||
+    s.name.toLowerCase().includes(normalized),
+  )
+}
+
+// 改造后（两段式精确）：
+// 1. 主匹配：Stock.industryCode vs HotSector.code，申万二级代码严格相等
+// 2. 回退匹配：industryCode 缺失时，Stock.sector vs HotSector.name，中文名精确相等（非 includes）
+function isHotSector(
+  industryCode: string | null,
+  sectorName: string | null,
+  topHotSectors: HotSector[],
+): boolean {
+  if (industryCode) {
+    return topHotSectors.some((s) => s.code === industryCode)
+  }
+  if (sectorName) {
+    return topHotSectors.some((s) => s.name === sectorName)
+  }
+  return false
+}
+```
+
+**两段式匹配设计理由**：
+- **主匹配（industryCode）**：申万二级代码精确相等，最高精度，无歧义。
+- **回退匹配（sectorName）**：当 `Stock.industryCode` 未填充时（basic 采集尚未接入行业代码），使用 `Stock.sector` 中文名与 `HotSector.name` 精确相等匹配。相比废弃的 `includes` 模糊匹配，精确相等避免了"半导体设备"误匹配"半导体"的问题。
+- **未来路径**：basic 采集接入 AKShare `stock_individual_info_em` 行业字段后，所有 Stock 将填充 `industryCode`，回退匹配将自然失效，全部走主匹配路径。
+
+#### 2.5.5 两套 score 分制澄清
+
+| score | 分制 | 含义 | 产出环节 | 消费方 |
+|:---|:---|:---|:---|:---|
+| `RotationSectorScore.total` | 0-100 | 板块强度分（五因子加权）| 检索层（判定"是否热门"）| `isHotSector` 选 TOP N |
+| `HotSectorScore.score` | 0-5 | 热门板块策略评分（五维）| 评分层（判定"跟进动作"）| `HotSectorWidget` 展示 |
+
+- **检索层**用 `total` 选出 TOP N 板块（哪些板块热门）
+- **评分层**对已入选板块用 `HotSectorScore` 决定动作（立即跟进/试探/不追）
+- 两者**不可混用**，分制不同、用途不同、产出环节不同。
+
+#### 2.5.6 HotSector 接口字段映射
+
+`hotSectorService.HotSector` 作为检索层对外契约（消费方 `strategyEngine` / `HotSectorWidget` 不破坏），字段由 `RotationSectorScore` 映射：
+
+| HotSector 字段 | RotationSectorScore 来源 | 说明 |
+|:---|:---|:---|
+| `code` | `sectorCode` | 申万二级代码（匹配键）|
+| `name` | `sectorName` | 板块中文名（展示）|
+| `score` | `total` | 板块强度分（0-100）|
+| `trend` | 由 `total` 派生 | `≥70` → `up` / `≤30` → `down` / 否则 `neutral` |
+| `factors.momentum` | `f1Jingqi` + `f5Nengliang` 加权 | 景气+量能 |
+| `factors.fundFlow` | `f2Zijin` | 资金因子 |
+| `factors.valuation` | `f3Guzhi` | 估值因子 |
+| `factors.sentiment` | `f1Jingqi` | 景气含情绪 |
+| `stocks` | `poolStocks` | 相关股票池标的 |
+
+#### 2.5.7 改造影响清单
+
+| 层 | 文件 | 变更 |
+|:---|:---|:---|
+| Python 后端 | `python/data_service/collect_endpoints.py` | 新增 `/api/collect/sectors`，接 AKShare 申万板块接口，计算五因子 |
+| Python 后端 | `collect_basic` | 补充返回 `industry_code`（申万二级），填充 `Stock.industryCode` |
+| 采集层 | `src/services/data-collector/collectors/LiveCollector.ts` | `collectHotSectors` 改调 `/api/collect/sectors`，返回 `RotationSectorScore` |
+| 持久化 | `MarketDataAdapter` + 采集调度 | 采集后 `rotationScoreStore.save` 持久化 |
+| 检索层 | `src/services/input/hotSectorService.ts` | `getHotSectors` 改读 `rotationScoreStore`，按 `total` DESC 取 TOP N |
+| 匹配层 | `src/services/trading/strategyEngine.ts` | `isHotSector` 两段式：`industryCode === code` 主匹配 + `sector === name` 精确回退 |
+| 数据字典 | `docs/reference/v9核心数据字典与类型定义(整合版).md` | 补充 `total` 与 `HotSectorScore.score` 分制说明 |
+
+---
+
 ## 3. 三梯队位置
 
 热门赛道策略属于 **第二梯队（中等优先级）**，与价值洼地策略并列。

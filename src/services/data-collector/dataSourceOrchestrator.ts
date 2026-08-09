@@ -44,7 +44,7 @@ import {
 import { mapDailyToQuote, mapDailyToKlines } from './tushareAdapter'
 import { fetchBaostockKline } from './crawlerProvider'
 import { getQualityMetrics } from './qualityMetricsCollector'
-import { orderChainAdaptive, recordSourceResult } from './adaptiveSourceOrchestrator'
+import { orderChainAdaptive, recordSourceResult, canExecute } from './adaptiveSourceOrchestrator'
 
 const logger = getLogger()
 
@@ -288,6 +288,13 @@ async function attemptQuoteSource(
   start: number,
 ): Promise<QuoteAttempt> {
   const attemptStart = Date.now()
+
+  // P0 优化：熔断器检查 — circuit-open 的源直接跳过，不发网络请求
+  if (source !== 'mock' && !canExecute(source)) {
+    logger.debug(`[orchestrator] 行情源 ${source} 熔断中，跳过: ${code}`)
+    return { kind: 'empty' }
+  }
+
   try {
     const result = await tryQuoteSource(code, source)
     if (!result) {
@@ -340,6 +347,13 @@ async function attemptKlineSource(
   start: number,
 ): Promise<KlineAttempt> {
   const attemptStart = Date.now()
+
+  // P0 优化：熔断器检查 — circuit-open 的源直接跳过，不发网络请求
+  if (source !== 'mock' && !canExecute(source)) {
+    logger.debug(`[orchestrator] K线源 ${source} 熔断中，跳过: ${code}`)
+    return { kind: 'empty' }
+  }
+
   try {
     const result = await tryKlineSource(code, days, source)
     if (!result || result.length === 0) {

@@ -38,7 +38,7 @@ export async function hotSectorQueryUseCase(
 
   const result = await tryResult(
     async () => {
-      const allSectors = getHotSectors()
+      const allSectors = await getHotSectors()
       const sorted = allSectors.sort((a, b) => b.score - a.score)
       const hotSectors = sorted.slice(0, topN)
 

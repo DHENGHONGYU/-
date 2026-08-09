@@ -16,6 +16,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import SevenDimConfigPage from '@/pages/input/SevenDimConfigPage'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
+import { DIMENSION_COUNT } from '@/config/collectConfig'
 
 // Mock logger
 vi.mock('@/lib/logger', () => ({
@@ -40,16 +41,16 @@ beforeEach(() => {
 })
 
 describe('Flux 集成测试 — 模板切换 → Store → UI', () => {
-  it('切换模板后维度数从 8 变为 4', () => {
+  it(`切换模板后维度数从 ${DIMENSION_COUNT} 变为 4`, () => {
     renderPage()
-    expect(screen.getByText('8 / 8')).toBeInTheDocument()
+    expect(screen.getByText(`${DIMENSION_COUNT} / ${DIMENSION_COUNT}`)).toBeInTheDocument()
 
     fireEvent.click(screen.getByText('价值投资'))
 
     // Store 验证
     expect(useSevenDimConfigStore.getState().dimensions.filter(d => d.enabled).length).toBe(4)
     // UI 验证
-    expect(screen.getByText('4 / 8')).toBeInTheDocument()
+    expect(screen.getByText(`4 / ${DIMENSION_COUNT}`)).toBeInTheDocument()
   })
 
   it('切换模板后 isDirty=true，保存按钮启用', () => {
@@ -68,7 +69,7 @@ describe('Flux 集成测试 — 模板切换 → Store → UI', () => {
     // 点击重置恢复默认
     fireEvent.click(screen.getByText('重置为默认'))
     expect(useSevenDimConfigStore.getState().isDirty).toBe(false)
-    expect(screen.getByText('8 / 8')).toBeInTheDocument()
+    expect(screen.getByText(`${DIMENSION_COUNT} / ${DIMENSION_COUNT}`)).toBeInTheDocument()
   })
 })
 
@@ -76,15 +77,15 @@ describe('Flux 集成测试 — 维度开关 → Store → UI', () => {
   it('切换到 value 模板后禁用维度 01，计数从 4 降为 3', () => {
     renderPage()
     fireEvent.click(screen.getByText('价值投资'))
-    expect(screen.getByText('4 / 8')).toBeInTheDocument()
+    expect(screen.getByText(`4 / ${DIMENSION_COUNT}`)).toBeInTheDocument()
 
-    const switches = screen.getAllByRole('checkbox')
+    const switches = screen.getAllByRole('switch')
     fireEvent.click(switches[0]!) // 禁用第一个维度
 
     // Store 验证
     expect(useSevenDimConfigStore.getState().dimensions.filter(d => d.enabled).length).toBe(3)
     // UI 验证
-    expect(screen.getByText('3 / 8')).toBeInTheDocument()
+    expect(screen.getByText(`3 / ${DIMENSION_COUNT}`)).toBeInTheDocument()
   })
 })
 

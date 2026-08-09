@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>§8.1 Job 一直 Pending</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+        h1 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        #diagram {
+            background: #fff;
+        }
+        .tip {
+            margin-top: 15px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>§8.1 Job 一直 Pending</h1>
+    <div id="diagram" class="mermaid">
+flowchart TD
+    A[Pod Pending] --> B[kubectl describe pod]
+    B --> C{Events 分析}
+    C -->|ImagePullBackOff| D[§A: 镜像拉取失败]
+    D --> D1[设置 images.pythonRegistry 为内网镜像]
+    C -->|Insufficient cpu/memory| E[§B: 资源不足]
+    E --> E1[降低 resources.requests 或扩容节点]
+    C -->|FailedScheduling taint| F[§C: 调度约束]
+    F --> F1[检查 nodeSelector / tolerations]
+    </div>
+    <div class="tip">
+        右键点击图表 → "图片另存为" 即可保存 PNG.<br/>
+        或使用浏览器截图工具截取整个页面.
+    </div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

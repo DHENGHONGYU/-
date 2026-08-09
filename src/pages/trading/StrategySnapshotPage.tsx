@@ -1,9 +1,10 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router'
-import { Save, History, Camera } from 'lucide-react'
+import { Save, History, Camera, Download, FileJson, CheckSquare, Square } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
+import { Checkbox } from '@/components/atoms/Checkbox'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,6 +19,13 @@ import { ChangeLogPanel } from '@/components/organisms/strategy/ChangeLogPanel'
 import { useStrategySnapshotStore } from '@/store/strategySnapshotStore'
 import { getLogger } from '@/lib/logger'
 import { PageContainer, PageHeader } from '@/components/templates'
+import {
+  exportGroupToExcel,
+  exportAllGroupsToExcel,
+  exportSnapshotToJson,
+  exportBatchSnapshotsToExcel,
+} from '@/services/trading/strategySnapshotExport'
+import type { StrategySnapshot } from '@/data/types'
 
 
 const logger = getLogger()
@@ -122,6 +130,184 @@ export default function StrategySnapshotPage(): React.JSX.Element {
     selectSnapshot(id)
   }
 
+  // 批量选中的快照 id 集合
+  const [selectedSnapshotIds, setSelectedSnapshotIds] = useState<Set<string>>(new Set())
+  const [exporting, setExporting] = useState<null | 'core' | 'all' | 'json' | 'batch'>(null)
+
+  // 导出核心稀缺组合到 Excel（任务2：加强日志 + 错误捕获）
+  async function handleExportCoreExcel() {
+    const clickedAt = new Date().toISOString()
+    logger.info(`[StrategySnapshotPage][CLICK] 导出核心稀缺按钮点击 @${clickedAt}`, {
+      coreCount: items.core.length,
+      hotCount: items.hot.length,
+      valueCount: items.value.length,
+      stockCount: stocks.length,
+    })
+    setExporting('core')
+    try {
+      const result = await exportGroupToExcel(items.core, '核心稀缺组合')
+      if (!result.success) {
+        logger.error(`[StrategySnapshotPage][CLICK] 导出核心稀缺失败 @${clickedAt}`, {
+          error: result.error,
+          traceId: (result as { traceId?: string }).traceId,
+        })
+        alert(`导出核心稀缺失败：${result.error}\n追踪ID：${(result as { traceId?: string }).traceId ?? 'N/A'}`)
+      } else {
+        logger.info(`[StrategySnapshotPage][CLICK] 导出核心稀缺成功 @${clickedAt}`, {
+          filename: result.filename,
+        })
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      logger.error(`[StrategySnapshotPage][CLICK] 导出核心稀缺发生未捕获异常 @${clickedAt}`, {
+        error: msg,
+        stack: e instanceof Error ? e.stack : undefined,
+      })
+      alert(`导出核心稀缺异常：${msg}`)
+    } finally {
+      setExporting(null)
+    }
+  }
+
+  // 导出全部三策略分组到 Excel（任务2：加强日志 + 错误捕获）
+  async function handleExportAllExcel() {
+    const clickedAt = new Date().toISOString()
+    logger.info(`[StrategySnapshotPage][CLICK] 导出全部按钮点击 @${clickedAt}`, {
+      core: items.core.length,
+      hot: items.hot.length,
+      value: items.value.length,
+    })
+    setExporting('all')
+    try {
+      const result = await exportAllGroupsToExcel(items)
+      if (!result.success) {
+        logger.error(`[StrategySnapshotPage][CLICK] 导出全部失败 @${clickedAt}`, {
+          error: result.error,
+          traceId: (result as { traceId?: string }).traceId,
+        })
+        alert(`导出全部失败：${result.error}\n追踪ID：${(result as { traceId?: string }).traceId ?? 'N/A'}`)
+      } else {
+        logger.info(`[StrategySnapshotPage][CLICK] 导出全部成功 @${clickedAt}`, {
+          filename: result.filename,
+        })
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      logger.error(`[StrategySnapshotPage][CLICK] 导出全部发生未捕获异常 @${clickedAt}`, {
+        error: msg,
+        stack: e instanceof Error ? e.stack : undefined,
+      })
+      alert(`导出全部异常：${msg}`)
+    } finally {
+      setExporting(null)
+    }
+  }
+
+  // 导出选中快照为 JSON（任务2：加强日志 + 错误捕获）
+  async function handleExportSnapshotJson() {
+    const clickedAt = new Date().toISOString()
+    if (!selectedSnapshot) {
+      logger.warn(`[StrategySnapshotPage][CLICK] 导出JSON跳过：未选中快照 @${clickedAt}`)
+      return
+    }
+    logger.info(`[StrategySnapshotPage][CLICK] 导出快照JSON按钮点击 @${clickedAt}`, {
+      snapshotId: selectedSnapshot.id,
+      version: selectedSnapshot.version,
+      coreCount: selectedSnapshot.core.count,
+    })
+    setExporting('json')
+    try {
+      const result = exportSnapshotToJson(selectedSnapshot)
+      if (!result.success) {
+        logger.error(`[StrategySnapshotPage][CLICK] 导出JSON失败 @${clickedAt}`, {
+          error: result.error,
+          traceId: (result as { traceId?: string }).traceId,
+        })
+        alert(`导出JSON失败：${result.error}\n追踪ID：${(result as { traceId?: string }).traceId ?? 'N/A'}`)
+      } else {
+        logger.info(`[StrategySnapshotPage][CLICK] 导出JSON成功 @${clickedAt}`, {
+          filename: result.filename,
+        })
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      logger.error(`[StrategySnapshotPage][CLICK] 导出JSON发生未捕获异常 @${clickedAt}`, {
+        error: msg,
+        stack: e instanceof Error ? e.stack : undefined,
+      })
+      alert(`导出JSON异常：${msg}`)
+    } finally {
+      setExporting(null)
+    }
+  }
+
+  // 任务3：批量导出选中的快照到 Excel
+  async function handleExportBatchSnapshots() {
+    const clickedAt = new Date().toISOString()
+    const selected = snapshots.filter((s) => selectedSnapshotIds.has(s.id))
+    logger.info(`[StrategySnapshotPage][CLICK] 批量导出快照按钮点击 @${clickedAt}`, {
+      totalSnapshots: snapshots.length,
+      selectedCount: selected.length,
+      selectedIds: selected.map((s) => `${s.id}(v${s.version})`),
+    })
+    if (selected.length === 0) {
+      logger.warn(`[StrategySnapshotPage][CLICK] 批量导出跳过：未勾选任何快照 @${clickedAt}`)
+      alert('请先在左侧勾选要导出的快照')
+      return
+    }
+    setExporting('batch')
+    try {
+      const result = await exportBatchSnapshotsToExcel(selected as StrategySnapshot[])
+      if (!result.success) {
+        logger.error(`[StrategySnapshotPage][CLICK] 批量导出失败 @${clickedAt}`, {
+          error: result.error,
+          traceId: (result as { traceId?: string }).traceId,
+        })
+        alert(`批量导出失败：${result.error}\n追踪ID：${(result as { traceId?: string }).traceId ?? 'N/A'}`)
+      } else {
+        logger.info(`[StrategySnapshotPage][CLICK] 批量导出成功 @${clickedAt}`, {
+          filename: result.filename,
+          snapshotCount: result.snapshotCount,
+          sheetCount: result.sheetCount,
+        })
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      logger.error(`[StrategySnapshotPage][CLICK] 批量导出发生未捕获异常 @${clickedAt}`, {
+        error: msg,
+        stack: e instanceof Error ? e.stack : undefined,
+      })
+      alert(`批量导出异常：${msg}`)
+    } finally {
+      setExporting(null)
+    }
+  }
+
+  // 切换单个快照的选中状态
+  function toggleSnapshotSelected(id: string) {
+    const next = new Set(selectedSnapshotIds)
+    if (next.has(id)) {
+      next.delete(id)
+      logger.debug('[StrategySnapshotPage] 取消勾选快照', { snapshotId: id })
+    } else {
+      next.add(id)
+      logger.debug('[StrategySnapshotPage] 勾选快照', { snapshotId: id })
+    }
+    setSelectedSnapshotIds(next)
+  }
+
+  // 全选/取消全选
+  function toggleSelectAll() {
+    if (selectedSnapshotIds.size === snapshots.length) {
+      setSelectedSnapshotIds(new Set())
+      logger.info('[StrategySnapshotPage] 取消全选快照')
+    } else {
+      const next = new Set(snapshots.map((s) => s.id))
+      setSelectedSnapshotIds(next)
+      logger.info('[StrategySnapshotPage] 全选快照', { count: next.size })
+    }
+  }
+
   return (
     <PageContainer className="space-y-6">
       <Breadcrumb>
@@ -161,15 +347,40 @@ export default function StrategySnapshotPage(): React.JSX.Element {
             <div className="text-sm text-muted-foreground">
               股票 {stocks.length} / V6 评分 {v6Scores.length} / 轮动评分 {rotationScores.length}
             </div>
-            <Button
-              size="sm"
-              onClick={() => void handleSaveSnapshot()}
-              disabled={saving || stocks.length === 0}
-              data-testid="save-snapshot-button"
-            >
-              <Save className="mr-2 h-4 w-4" />
-              {saving ? '保存中...' : '保存当前快照'}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => void handleExportCoreExcel()}
+                disabled={items.core.length === 0 || exporting === 'core'}
+                data-testid="export-core-excel-button"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                {exporting === 'core' ? '导出中...' : '导出核心稀缺'}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => void handleExportAllExcel()}
+                disabled={
+                  (items.core.length === 0 && items.hot.length === 0 && items.value.length === 0) ||
+                  exporting === 'all'
+                }
+                data-testid="export-all-excel-button"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                {exporting === 'all' ? '导出中...' : '导出全部'}
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => void handleSaveSnapshot()}
+                disabled={saving || stocks.length === 0}
+                data-testid="save-snapshot-button"
+              >
+                <Save className="mr-2 h-4 w-4" />
+                {saving ? '保存中...' : '保存当前快照'}
+              </Button>
+            </div>
           </div>
 
           {error && <p className="text-sm text-destructive">{error}</p>}
@@ -198,11 +409,46 @@ export default function StrategySnapshotPage(): React.JSX.Element {
             <div className="grid gap-4 lg:grid-cols-3">
               <Card className="lg:col-span-1">
                 <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <History className="h-4 w-4 text-muted-foreground" />
-                    <CardTitle className="text-base">快照列表</CardTitle>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <History className="h-4 w-4 text-muted-foreground" />
+                      <CardTitle className="text-base">快照列表</CardTitle>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={toggleSelectAll}
+                        className="h-7 px-2 text-xs"
+                        data-testid="select-all-snapshots-button"
+                      >
+                        {selectedSnapshotIds.size === snapshots.length && snapshots.length > 0 ? (
+                          <CheckSquare className="mr-1 h-3 w-3" />
+                        ) : (
+                          <Square className="mr-1 h-3 w-3" />
+                        )}
+                        全选 ({selectedSnapshotIds.size}/{snapshots.length})
+                      </Button>
+                    </div>
                   </div>
-                  <CardDescription>最近 20 条策略快照</CardDescription>
+                  <CardDescription>
+                    最近 20 条策略快照 · 勾选后可<span className="text-primary font-medium">批量导出</span>
+                  </CardDescription>
+                  <div className="pt-2">
+                    <Button
+                      size="sm"
+                      onClick={() => void handleExportBatchSnapshots()}
+                      disabled={selectedSnapshotIds.size === 0 || exporting === 'batch'}
+                      data-testid="export-batch-excel-button"
+                      className="w-full"
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      {exporting === 'batch'
+                        ? `批量导出中 (${selectedSnapshotIds.size})...`
+                        : `批量导出 Excel (${selectedSnapshotIds.size})`}
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   {snapshots.length === 0 ? (
@@ -211,24 +457,40 @@ export default function StrategySnapshotPage(): React.JSX.Element {
                     <ul className="space-y-2">
                       {snapshots.map((snapshot) => (
                         <li key={snapshot.id}>
-                          <button
-                            type="button"
-                            onClick={() => handleSelectSnapshot(snapshot.id)}
-                            className={`w-full rounded-md border p-3 text-left text-sm transition-colors hover:bg-accent ${
-                              selectedSnapshot?.id === snapshot.id ? 'border-primary bg-primary/5' : ''
-                            }`}
-                            data-testid={`snapshot-item-${snapshot.id}`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="font-medium">版本 {snapshot.version}</span>
-                              <Badge variant="outline" className="text-xs">
-                                {snapshot.trigger}
-                              </Badge>
+                          <div className="flex items-start gap-2">
+                            <div className="pt-3">
+                              <Checkbox
+                                checked={selectedSnapshotIds.has(snapshot.id)}
+                                onChange={() => toggleSnapshotSelected(snapshot.id)}
+                                data-testid={`snapshot-checkbox-${snapshot.id}`}
+                              />
                             </div>
-                            <div className="mt-1 text-xs text-muted-foreground">
-                              {snapshot.date} {snapshot.time}
-                            </div>
-                          </button>
+                            <button
+                              type="button"
+                              onClick={() => handleSelectSnapshot(snapshot.id)}
+                              className={`flex-1 rounded-md border p-3 text-left text-sm transition-colors hover:bg-accent ${
+                                selectedSnapshot?.id === snapshot.id
+                                  ? 'border-primary bg-primary/5'
+                                  : ''
+                              }`}
+                              data-testid={`snapshot-item-${snapshot.id}`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="font-medium">版本 {snapshot.version}</span>
+                                <Badge variant="outline" className="text-xs">
+                                  {snapshot.trigger}
+                                </Badge>
+                              </div>
+                              <div className="mt-1 text-xs text-muted-foreground">
+                                {snapshot.date} {snapshot.time}
+                              </div>
+                              <div className="mt-1 flex gap-2 text-[10px] text-muted-foreground">
+                                <span>核心{snapshot.core.count}</span>
+                                <span>热点{snapshot.hot.count}</span>
+                                <span>价值{snapshot.value.count}</span>
+                              </div>
+                            </button>
+                          </div>
                         </li>
                       ))}
                     </ul>
@@ -241,9 +503,21 @@ export default function StrategySnapshotPage(): React.JSX.Element {
                   <>
                     <Card>
                       <CardHeader>
-                        <div className="flex items-center gap-2">
-                          <Camera className="h-4 w-4 text-muted-foreground" />
-                          <CardTitle className="text-base">快照详情</CardTitle>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Camera className="h-4 w-4 text-muted-foreground" />
+                            <CardTitle className="text-base">快照详情</CardTitle>
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => void handleExportSnapshotJson()}
+                            disabled={exporting === 'json'}
+                            data-testid="export-snapshot-json-button"
+                          >
+                            <FileJson className="mr-2 h-4 w-4" />
+                            {exporting === 'json' ? '导出中...' : '导出 JSON'}
+                          </Button>
                         </div>
                         <CardDescription>
                           版本 {selectedSnapshot.version} · {selectedSnapshot.date} {selectedSnapshot.time} · 触发器{' '}
@@ -277,7 +551,7 @@ export default function StrategySnapshotPage(): React.JSX.Element {
                 ) : (
                   <Card>
                     <CardContent className="py-8 text-center text-sm text-muted-foreground">
-                      选择左侧快照查看详情
+                      选择左侧快照查看详情（可勾选多个快照进行批量导出）
                     </CardContent>
                   </Card>
                 )}

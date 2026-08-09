@@ -384,7 +384,7 @@ describe('intentionPoolStore 单元测试', () => {
       expect(stockData.updatedAt).toBeGreaterThan(0)
     })
 
-    it('添加成功后自动流转到研究池', async () => {
+    it('添加成功后不自动流转到研究池（保持在意向池）', async () => {
       mockQueryGetNotFound()
 
       await useIntentionPoolStore.getState().addItem({
@@ -398,26 +398,15 @@ describe('intentionPoolStore 单元测试', () => {
         (c: { action?: string; traceId?: string }[]) =>
           c[0]?.traceId?.includes('intention-to-research'),
       )
-      expect(transitionCall).toBeDefined()
-      expect(transitionCall![1].pool).toBe('research')
-      expect(transitionCall![1].researchStatus).toBe('candidate')
+      // 自动流转已移除，不应存在 transition 调用
+      expect(transitionCall).toBeUndefined()
 
-      // 应该触发两次广播：add + transition
-      expect((withBroadcast as ReturnType<typeof vi.fn>).mock.calls.length).toBeGreaterThanOrEqual(2)
+      // 只触发一次广播：add（不再有 transition）
+      expect((withBroadcast as ReturnType<typeof vi.fn>).mock.calls.length).toBe(1)
     })
 
-    it('研究池流转失败不影响意向池添加成功', async () => {
-      // 第一次 queryGet 返回不存在
-      // forward 第一次成功，第二次（研究池流转）失败
-      let callCount = 0
+    it('添加成功后只调用一次 forward（无研究池流转）', async () => {
       mockQueryGetNotFound()
-      mockForward.mockImplementation(() => {
-        callCount++
-        if (callCount >= 2) {
-          return Promise.reject(new Error('研究池写入失败'))
-        }
-        return Promise.resolve()
-      })
 
       const result = await useIntentionPoolStore.getState().addItem({
         symbol: '000001',
@@ -425,8 +414,9 @@ describe('intentionPoolStore 单元测试', () => {
         source: 'manual',
       })
 
-      // 意向池添加仍应成功
       expect(result).toBe(true)
+      // 自动流转已移除，只应调用一次 forward（insertStock）
+      expect(mockForward).toHaveBeenCalledTimes(1)
     })
 
     it('添加失败时设置 error 并返回 false', async () => {

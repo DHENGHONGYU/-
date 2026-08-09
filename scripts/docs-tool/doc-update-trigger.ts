@@ -34,8 +34,9 @@
  */
 
 import { execSync } from 'node:child_process'
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
-import { basename, dirname, join, relative, resolve } from 'node:path'
+import { existsSync, readFileSync, statSync } from 'node:fs'
+import { basename, join, relative, resolve } from 'node:path'
+import { safeWriteFileSync } from '../../src/lib/safeFs'
 
 // ─── 常量 ────────────────────────────────────────────────────────────────────
 
@@ -400,7 +401,7 @@ function upsertAutoUpdateMarker(absPath: string, ctx: GenerateContext): void {
   const next = AUTO_UPDATE_MARKER_RE.test(content)
     ? content.replace(AUTO_UPDATE_MARKER_RE, marker)
     : `${body}\n\n${marker}`
-  writeFileSync(absPath, next, 'utf-8')
+  safeWriteFileSync(absPath, next)
 }
 
 /** 默认生成器：缺失建骨架、存在刷新标记（非破坏性） */
@@ -418,8 +419,7 @@ const defaultDocGenerator: DocGenerator = {
         return { docPath: ctx.docPath, status: 'created', detail: '（dry-run）将创建骨架', needsAudit }
       }
       try {
-        mkdirSync(dirname(abs), { recursive: true })
-        writeFileSync(abs, renderScaffold(ctx), 'utf-8')
+        safeWriteFileSync(abs, renderScaffold(ctx))
         return { docPath: ctx.docPath, status: 'created', detail: '已创建骨架', needsAudit }
       } catch (err) {
         return { docPath: ctx.docPath, status: 'failed', detail: `IO: ${msgOf(err)}`, errorCode: 'IO', needsAudit }

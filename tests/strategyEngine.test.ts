@@ -36,9 +36,9 @@ describe('strategyEngine', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
 
-    vi.spyOn(hotSectorService, 'getHotSectors').mockReturnValue([
+    vi.spyOn(hotSectorService, 'getHotSectors').mockResolvedValue([
       {
-        code: 'ai',
+        code: '801750.SW',
         name: '人工智能',
         score: 90,
         trend: 'up',
@@ -46,7 +46,7 @@ describe('strategyEngine', () => {
         stocks: [],
       },
       {
-        code: 'semiconductor',
+        code: '801120.SW',
         name: '半导体',
         score: 80,
         trend: 'up',
@@ -111,8 +111,8 @@ describe('strategyEngine', () => {
 
     const result = await runStrategy(
       [
-        { ...mockStocks[3]!, sector: '人工智能' },
-        { ...mockStocks[0]!, sector: '半导体设备' },
+        { ...mockStocks[3]!, sector: '人工智能', industryCode: '801750.SW' },
+        { ...mockStocks[0]!, sector: '半导体设备', industryCode: '801120.SW' },
       ],
       {
         theme: CORE_RESOURCE_THEME,
@@ -123,6 +123,41 @@ describe('strategyEngine', () => {
     expect(result.hotMomentum.map((c) => c.symbol)).toContain('002230.SZ')
     // 002371 匹配主题且综合分 3.9 < 4.0，但满足热门追涨条件
     expect(result.hotMomentum.map((c) => c.symbol)).toContain('002371.SZ')
+  })
+
+  it('classifies hot-momentum via sector name fallback when industryCode is missing', async () => {
+    // 场景：stock.industryCode 未填充，但 stock.sector 与 HotSector.name 精确相等
+    // 验证两段式匹配的回退路径（按 hot-momentum-strategy.md §2.5.4 兼容策略）
+    vi.spyOn(scoringAdapter, 'getCompositeScores').mockResolvedValue([
+      makeScoreView({ symbol: '002230.SZ', composite: 3.8, valuationScore: 3.5 }),
+    ])
+
+    const result = await runStrategy(
+      [{ ...mockStocks[3]!, sector: '人工智能', industryCode: undefined }],
+      {
+        theme: CORE_RESOURCE_THEME,
+        momentumMap: { '002230.SZ': 0.06 },
+      },
+    )
+
+    expect(result.hotMomentum.map((c) => c.symbol)).toContain('002230.SZ')
+  })
+
+  it('does not classify hot-momentum when sector name does not exactly match', async () => {
+    // 场景：stock.sector 为 '半导体设备'，HotSector.name 为 '半导体'，精确相等不匹配
+    vi.spyOn(scoringAdapter, 'getCompositeScores').mockResolvedValue([
+      makeScoreView({ symbol: '002371.SZ', composite: 3.8, valuationScore: 3.5 }),
+    ])
+
+    const result = await runStrategy(
+      [{ ...mockStocks[0]!, sector: '半导体设备', industryCode: undefined }],
+      {
+        theme: CORE_RESOURCE_THEME,
+        momentumMap: { '002371.SZ': 0.06 },
+      },
+    )
+
+    expect(result.hotMomentum.map((c) => c.symbol)).not.toContain('002371.SZ')
   })
 
   it('applies 20 into 13 selection and filters low valuation with moderate composite', async () => {

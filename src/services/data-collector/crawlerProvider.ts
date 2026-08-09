@@ -15,10 +15,13 @@ import { getLogger } from '@/lib/logger'
 import {
   EASTMONEY_F10_SHAREHOLDER_API,
   EASTMONEY_ANNOUNCEMENT_API,
+  EASTMONEY_ANNOUNCEMENT_DETAIL_API,
   EASTMONEY_NEWS_API_UNAVAILABLE,
   EASTMONEY_RESEARCH_API_UNAVAILABLE,
   EASTMONEY_INDUSTRY_API_UNAVAILABLE,
 } from '@/config/marketDataEndpoints'
+import { DATA_COLLECTION_TIMEOUT_MS } from '@/config/timeouts'
+import { safeFetch as _safeFetch } from '@/services/shared/safeFetch'
 import type { ChipData, NewsItem, CompetitorData, ResearchReport } from './dimensionDataTypes'
 import type { KlineBar } from '@/data/types/types.marketData'
 
@@ -47,22 +50,19 @@ function rotateUA(): string {
   return USER_AGENTS[idx] ?? USER_AGENTS[0] ?? 'Mozilla/5.0'
 }
 
-/** 安全 fetch，带超时和 UA */
-async function safeFetch(url: string, timeoutMs = 10000): Promise<Response | null> {
+/** 安全 fetch — 委托至共享实现，保留节流与 UA 轮换 */
+async function safeFetch(url: string, timeoutMs = DATA_COLLECTION_TIMEOUT_MS): Promise<Response | null> {
   await throttleEastMoney()
-  const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), timeoutMs)
-  try {
-    return await fetch(url, {
-      signal: controller.signal,
-      headers: { 'User-Agent': rotateUA(), Accept: 'application/json, text/html' },
-    })
-  } catch (err) {
-    logger.warn('[crawlerProvider] fetch 失败', { url, error: err instanceof Error ? err.message : String(err) })
-    return null
-  } finally {
-    clearTimeout(timer)
-  }
+  return _safeFetch(
+    url,
+    {
+      timeoutMs,
+      init: {
+        headers: { 'User-Agent': rotateUA(), Accept: 'application/json, text/html' },
+      },
+    },
+    '[crawlerProvider]',
+  )
 }
 
 /** 从 600519.SH 提取 6 位代码 */
@@ -218,7 +218,7 @@ export async function fetchEastMoneyAnnouncements(symbol: string): Promise<NewsI
       source: '东方财富公告',
       date: (item.notice_date ?? '').slice(0, 10),
       category: 'announcement' as const,
-      url: item.art_code ? `https://np-anotice-stock.eastmoney.com/api/security/ann/detail?art_code=${item.art_code}` : undefined,
+      url: item.art_code ? `${EASTMONEY_ANNOUNCEMENT_DETAIL_API}?art_code=${item.art_code}` : undefined,
     }))
   } catch (err) {
     logger.warn('[crawlerProvider] 东财公告解析失败', { symbol, error: err instanceof Error ? err.message : String(err) })

@@ -1,5 +1,5 @@
-import { writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
+import { safeWriteFileSync } from '../../src/lib/safeFs'
 import { fileURLToPath } from 'node:url'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -132,7 +132,7 @@ ${otherNames.map(o => `- [ ] \`${o}\` - [描述]`).join('\n')}
   }
 
   const listPath = join(DOCS_DIR, 'drafts', `doc-update-list-${new Date().toISOString().replace(/[:.]/g, '-')}.md`)
-  writeFileSync(listPath, listContent, 'utf-8')
+  safeWriteFileSync(listPath, listContent)
   console.log(`文档更新清单已写入: ${listPath}`)
 
   let mdContent = `# API 文档草稿
@@ -222,7 +222,7 @@ TODO: 说明返回值类型和含义
   }
 
   const mdPath = join(DOCS_DIR, 'drafts', `api-doc-draft-${new Date().toISOString().replace(/[:.]/g, '-')}.md`)
-  writeFileSync(mdPath, mdContent, 'utf-8')
+  safeWriteFileSync(mdPath, mdContent)
   console.log(`Markdown 导出文件已写入: ${mdPath}`)
 
   const recentFiles = report.findings

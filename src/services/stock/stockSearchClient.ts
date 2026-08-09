@@ -14,11 +14,12 @@
 */
 
 import { getLogger } from '@/lib/logger'
+import { API_PROXY_SMARTBOX } from '@/config/apiPaths'
 
 const logger = getLogger()
 
 /** Smartbox API 代理路径（Vite proxy 配置） */
-const SMARTBOX_PROXY = '/api/proxy/smartbox/'
+const SMARTBOX_PROXY = API_PROXY_SMARTBOX
 
 /** Smartbox 返回的单条股票信息 */
 interface SmartboxItem {

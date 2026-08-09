@@ -1,10 +1,13 @@
 ---
 title: V9 实施文档健康度报告
-version: v1.0.0
-last_updated: 2026-06-27
+version: v1.1.0
+last_updated: 2026-08-09
 maintainer: Documentation Governor
 status: active
 change_log:
+  - date: 2026-08-09
+    author: Documentation Governor
+    desc: 补充方案 B 整改后文档健康度评估；新增 CHANGELOG/TECH-DEBT 同步记录
   - date: 2026-06-27
     author: Documentation Governor
     desc: 初始创建：Phase 4 保鲜度评分与健康度标签化
@@ -15,13 +18,13 @@ domain: project
 doc_id: V9-DOC-AUTO-FF80FA
 code_version: 2.0.0
 
-summary: 全部 31 份活跃文档均处于 🟢 健康状态。所有文档：
+summary: 全部 31 份活跃文档均处于 🟢 健康状态。方案 B 数据源整改（2026-08-09）已同步至 CHANGELOG.md 与 TECH-DEBT.md，新增 8/9 真实数据审计报告归档至 deliverables/software-company/。
 phase: maintenance
 ---
 
 # V9 实施文档健康度报告
 
-> Generated: 2026-06-27  
+> Generated: 2026-08-09（最近一次同步：方案 B 整改文档归档）  
 > 评分算法：更新时效性(40%) + 代码一致性(35%) + 变更日志(15%) + 索引引用(10%)  
 > 健康度标签：🟢 健康(80-100) | 🟡 需关注(50-79) | 🔴 过时(0-49)
 
@@ -137,8 +140,40 @@ phase: maintenance
 
 ---
 
-## 五、变更日志
+## 五、方案 B 整改后文档健康度补充评估（2026-08-09）
+
+> 本章节为方案 B 数据源整改后的补充评估，不影响原有 31 份文档的健康度评分。
+
+### 5.1 整改涉及的文档同步情况
+
+| 文档 | 同步状态 | 说明 |
+|:---|:---:|:---|
+| `CHANGELOG.md` | ✅ 已同步 | [Unreleased] 区追加方案 B 整改条目（Added/Fixed/Changed/Metrics 四块） |
+| `docs/reports/TECH-DEBT.md` | ✅ 已同步 | 新增 TD-012（directDataAPI 重复副本，P1）、TD-013（PRD 偏离，P2）、TD-014（Tushare Token 未配置，P2） |
+| `deliverables/software-company/collect-audit-report-2026-08-09.md` | ✅ 新增 | 8/9 真实数据审计报告（10 股 6 维度全 100% 成功，5 项基线 PASS） |
+| `deliverables/software-company/architecture-plan-b-tushare-crawler.md` | 🟡 待更新 | PRD §"待确认事项"需标注"已改走方案 D"（见 TD-013） |
+| `deliverables/software-company/concentration-test-report-2026-07-19.md` | ⚪ 已过时 | 被 collect-audit-report-2026-08-09.md 替代，建议归档 |
+
+### 5.2 原有 31 份文档健康度评分
+
+原有 31 份 docs/ 下文档的健康度评分**不受方案 B 整改影响**，维持 🟢 健康状态。原因：
+- 方案 B 整改主要影响 `python/data_service/`、`src/services/data-collector/`、`electron/` 代码层与 `deliverables/` 交付物
+- `docs/` 下 31 份文档均为架构设计、接口规格、迁移记录、治理报告等，与数据源整改无直接关联
+- 原有文档的更新时效性、代码一致性、变更日志、索引引用四维度评分均无变化
+
+### 5.3 新增技术债对文档健康度的影响
+
+| 技术债 | 优先级 | 对文档健康度的影响 |
+|:---|:---:|:---|
+| TD-012 directDataAPI 重复副本 | P1 | 不影响 docs/ 文档，但需在迁移完成后更新相关架构文档 |
+| TD-013 PRD 偏离 | P2 | 影响 `deliverables/software-company/architecture-plan-b-tushare-crawler.md`，需更新"待确认事项" |
+| TD-014 Tushare Token 未配置 | P2 | 不影响 docs/ 文档，待用户决策后处理 |
+
+---
+
+## 六、变更日志
 
 | 日期 | 版本 | 变更内容 | 变更人 |
 |:---|:---|:---|:---|
+| 2026-08-09 | v1.1.0 | 补充方案 B 整改后文档健康度评估；记录 CHANGELOG/TECH-DEBT 同步；新增 8/9 审计报告归档 | Documentation Governor |
 | 2026-06-27 | v1.0.0 | 初始创建：Phase 4 保鲜度评分与健康度标签化 | Documentation Governor |

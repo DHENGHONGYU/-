@@ -15,8 +15,8 @@
  * @compliance AGENTS.md §一 分层规则
  */
 
-import { writeFileSync } from 'fs'
 import { join, resolve } from 'path'
+import { safeWriteFileSync } from '../src/lib/safeFs'
 import { fileURLToPath } from 'url'
 
 import {
@@ -461,7 +461,7 @@ function main(): void {
 
   // ─── 写入文件 ───────────────────────────────────────────────────────────────
   console.log(`[写入] 输出文件: ${OUTPUT_FILE.replace(/\\/g, '/')}`)
-  writeFileSync(OUTPUT_FILE, JSON.stringify(report, null, 2), 'utf-8')
+  safeWriteFileSync(OUTPUT_FILE, JSON.stringify(report, null, 2))
 
   console.log(`\n═══════════════════════════════════════════════════════════════`)
   console.log(`  生成完成`)

@@ -249,6 +249,8 @@ export interface TradeReviewReport {
   aiInsight: AIDeepInsight
   /** AI 洞察来源（仅 LLM 增强模式下存在） */
   aiInsightSource?: 'llm' | 'rule'
+  /** 买卖点复盘分析（v1.1.0 新增） */
+  buySellPointReview?: import('./buySellPoint.types').BuySellPointReview
 }
 
 /** 技能维度定义项 */

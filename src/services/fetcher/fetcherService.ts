@@ -5,9 +5,10 @@ import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/confi
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { getLogger } from '@/lib/logger'
-import type { DataLayerResult, DailyQuotes, FinancialReport, Stock } from '@/data/types'
+import type { DataLayerResult, DailyQuotes, FinancialReport, RotationSectorScore, Stock } from '@/data/types'
 import { adaptBasicDataToStock, adaptFinancialDataToReport, adaptKlineDataToDailyQuotes } from './fetcherAdapter'
-import { collectBasic, collectFinancial, collectKline, checkFetcherHealth } from './fetcherClient'
+import { collectBasic, collectFinancial, collectKline, collectSectors, checkFetcherHealth } from './fetcherClient'
+import type { CollectSectorScoreItem, CollectSectorsRequest } from './fetcherTypes'
 
 const logger = getLogger()
 
@@ -124,6 +125,7 @@ export async function fetchStockBasic(symbol: string): Promise<DataLayerResult<S
     fetchedPb: response.data.pb,
     fetchedRoe: response.data.roe,
     fetchedMarketCap: response.data.market_cap,
+    fetchedIndustryCode: response.data.industry_code,
   })
 
   const update = adaptBasicDataToStock(normalized, response.data, existing)
@@ -442,4 +444,139 @@ export async function fetchFinancial(
     })
     return { success: false, error: message }
   }
+}
+
+/**
+ * 将 CollectSectorScoreItem（Python 端返回）转换为 RotationSectorScore（前端存储格式）。
+ *
+ * 字段名已对齐（均为 camelCase），仅做 null → undefined 规范化，
+ * 确保 IndexedDB 写入时类型与 RotationSectorScore 接口一致。
+ */
+function adaptSectorItemToRotationScore(item: CollectSectorScoreItem): RotationSectorScore {
+  return {
+    id: item.id,
+    sectorCode: item.sectorCode,
+    sectorName: item.sectorName,
+    swLevel1: item.swLevel1 ?? undefined,
+    swLevel2: item.swLevel2 ?? undefined,
+    swLevel3: item.swLevel3 ?? undefined,
+    scoreDate: item.scoreDate,
+    f1Jingqi: item.f1Jingqi,
+    f2Zijin: item.f2Zijin,
+    f3Guzhi: item.f3Guzhi,
+    f4Beta: item.f4Beta,
+    f5Nengliang: item.f5Nengliang,
+    total: item.total,
+    resonance: item.resonance,
+    signal: item.signal,
+    alertLevel: item.alertLevel,
+    declineType: item.declineType,
+    poolStocks: item.poolStocks,
+    modelUsed: item.modelUsed,
+    createdAt: item.createdAt,
+  }
+}
+
+/**
+ * 通过 DataBridge 信封将单条板块轮动评分写入 IndexedDB rotationScores store。
+ * 使用 saveRotationScores action，由 databridgeHandlers 路由到 STORE_NAME.rotationScores。
+ */
+async function saveRotationScoreViaDataBridge(score: RotationSectorScore): Promise<DataLayerResult<void>> {
+  try {
+    const envelope = EnvelopeFactory.create(
+      {
+        source: MODULE_ID.rotation,
+        target: ENVELOPE_TARGET.db,
+        action: ENVELOPE_ACTION.saveRotationScores,
+        traceId: createTraceId(`sector-${score.sectorCode}`),
+      },
+      score,
+    )
+    await dataBridge.forward(envelope)
+    return { success: true }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error('[fetcherService] 保存板块轮动评分失败', {
+      sectorCode: score.sectorCode,
+      scoreDate: score.scoreDate,
+      error: message,
+    })
+    return { success: false, error: message }
+  }
+}
+
+/**
+ * fetchSectorRotationScores —— 采集申万二级行业板块轮动评分并持久化到 rotationScores store。
+ *
+ * 全链路（按 hot-momentum-strategy.md §2.5.3）：
+ * 1. 调用 Python 后端 /api/collect/sectors（AKShare sw_index_second_info + index_hist_sw）
+ * 2. 将返回的 CollectSectorScoreItem[] 适配为 RotationSectorScore[]
+ * 3. 逐条通过 DataBridge 信封写入 IndexedDB rotationScores store
+ * 4. 返回写入结果，供 hotSectorService.getHotSectors / strategyEngine.isHotSector 消费
+ *
+ * @param params.topN 采集的板块数量，默认 20
+ */
+export async function fetchSectorRotationScores(
+  params: CollectSectorsRequest = {},
+): Promise<DataLayerResult<RotationSectorScore[]>> {
+  logger.info('[fetcherService] fetchSectorRotationScores 开始', { topN: params.topN })
+
+  // 1. 调用采集接口
+  let response
+  try {
+    response = await collectSectors(params)
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error('[fetcherService] fetchSectorRotationScores 采集接口调用失败', { error: message })
+    return { success: false, error: message }
+  }
+
+  if (!response.success || !response.data || !response.data.sectors) {
+    logger.error('[fetcherService] fetchSectorRotationScores 采集接口返回失败', {
+      success: response.success,
+      error: response.error,
+    })
+    return { success: false, error: response.error ?? '采集板块轮动评分失败' }
+  }
+
+  const rawItems = response.data.sectors
+  logger.info('[fetcherService] fetchSectorRotationScores 采集成功', {
+    sectorCount: rawItems.length,
+    scoreDate: response.data.scoreDate,
+  })
+
+  if (rawItems.length === 0) {
+    logger.warn('[fetcherService] fetchSectorRotationScores 返回空板块列表')
+    return { success: true, data: [] }
+  }
+
+  // 2. 适配 + 3. 持久化
+  const saved: RotationSectorScore[] = []
+  let failedCount = 0
+  for (const raw of rawItems) {
+    const score = adaptSectorItemToRotationScore(raw)
+    const saveResult = await saveRotationScoreViaDataBridge(score)
+    if (saveResult.success) {
+      saved.push(score)
+    } else {
+      failedCount++
+    }
+  }
+
+  logger.info('[fetcherService] fetchSectorRotationScores 持久化完成', {
+    total: rawItems.length,
+    saved: saved.length,
+    failed: failedCount,
+    scoreDate: response.data.scoreDate,
+    topSectorCodes: saved
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 5)
+      .map((s) => ({ code: s.sectorCode, name: s.sectorName, total: s.total.toFixed(1) })),
+  })
+
+  if (saved.length === 0) {
+    return { success: false, error: '全部板块轮动评分持久化失败' }
+  }
+
+  return { success: true, data: saved }
 }

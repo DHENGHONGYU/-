@@ -1,0 +1,29 @@
+# Docker build 排除清单（python/data_service 构建上下文）
+# 减少 Python 镜像体积 + 避免缓存失效
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 测试缓存
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 虚拟环境
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 输出产物（运行时通过 volume 挂载，不进镜像）
+outputs/
+*.log

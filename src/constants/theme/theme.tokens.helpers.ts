@@ -46,12 +46,19 @@ export const DARK = {
   hoverBgNeutral900Half: 'dark:hover:bg-neutral-900/50',
   hoverTextNeutral200: 'dark:hover:text-neutral-200',
   // emerald 暗色
+  textEmerald300: 'dark:text-emerald-300',
   textEmerald400: 'dark:text-emerald-400',
   borderEmerald500: 'dark:border-emerald-500',
   borderEmerald800: 'dark:border-emerald-800',
+  borderEmerald900: 'dark:border-emerald-900',
+  bgEmerald950_20: 'dark:bg-emerald-950/20',
+  bgEmerald950_30: 'dark:bg-emerald-950/30',
+  bgEmerald950_50: 'dark:bg-emerald-950/50',
   // 状态色暗色
   bgRed950: 'dark:bg-red-950',
+  bgRed950_20: 'dark:bg-red-950/20',
   bgRed950_30: 'dark:bg-red-950/30',
+  bgRed950_50: 'dark:bg-red-950/50',
   textRed200: 'dark:text-red-200',
   textRed300: 'dark:text-red-300',
   textRed400: 'dark:text-red-400',
@@ -69,8 +76,16 @@ export const DARK = {
   textYellow100: 'dark:text-yellow-100',
   borderYellow900: 'dark:border-yellow-900',
   bgBlue950: 'dark:bg-blue-950',
+  bgBlue950_30: 'dark:bg-blue-950/30',
   textBlue100: 'dark:text-blue-100',
+  textBlue400: 'dark:text-blue-400',
   borderBlue900: 'dark:border-blue-900',
+  // purple 暗色
+  bgPurple950_30: 'dark:bg-purple-950/30',
+  textPurple400: 'dark:text-purple-400',
+  // neutral 补充
+  bgNeutral600: 'dark:bg-neutral-600',
+  bgNeutral900_60: 'dark:bg-neutral-900/60',
 } as const
 
 /**

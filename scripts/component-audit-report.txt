@@ -1,0 +1,114 @@
+=== 组件复用审计报告 ===
+生成时间: 2026-08-09T02:46:17.529Z
+版本: v0.9.11 P2-CMP-002
+
+
+总计组件: 219
+
+✅ 可复用组件 (≥2次): 42
+⚠️  单次使用组件: 61
+❌ 未使用组件: 116
+
+--- 单次使用组件 (建议审查) ---
+  Radio (114行, src\components\organisms\trading\OrderExecutionPanel.tsx)
+  Slider (82行, src\pages\MockTestPage.tsx)
+  Toggle (50行, src\pages\MockTestPage.tsx)
+  IndustryHistoryCard (59行, src\pages\analysis\IndustryScorePage.tsx)
+  IndustrySkillSnapshotCard (44行, src\pages\analysis\IndustryScorePage.tsx)
+  IntelligentScoreBasisCard (292行, src\pages\analysis\IntelligentScorePage.tsx)
+  AreaChart (160行, src\components\organisms\analysis\score\MultiPeriodTrendChart.tsx)
+  IndustryHeatmap (232行, src\pages\analysis\IndustryDashboardPage.tsx)
+  DataQualityIndicator (110行, src\pages\analysis\IndustryDashboardPage.tsx)
+  RankedCard (116行, src\pages\analysis\IndustryDashboardPage.tsx)
+  ScoreGauge (76行, src\pages\analysis\IndustryDashboardPage.tsx)
+  SignalBadge (85行, src\pages\analysis\IndustryDashboardPage.tsx)
+  TrendArrow (68行, src\pages\analysis\IndustryDashboardPage.tsx)
+  AnalysisTemplateCards (85行, src\apps\analysis\AnalysisApp.tsx)
+  NewsSentimentTrend (168行, src\pages\analysis\NewsPage.tsx)
+  IntelligentScoreExplanation (216行, src\pages\analysis\IntelligentScorePage.tsx)
+  MultiPeriodTrendChart (114行, src\pages\analysis\IntelligentScorePage.tsx)
+  ScoreFactorWaterfall (274行, src\components\organisms\analysis\score\IntelligentScoreExplanation.tsx)
+  MultiFactorFilterPanel (319行, src\pages\analysis\MultiFactorFilterPage.tsx)
+  SectorRotationHeatmap (268行, src\pages\analysis\SectorAnalysisPage.tsx)
+  SignalQualityTrendChart (302行, src\cockpit\widgets\SignalQualityDashboardWidget.tsx)
+  CollectionProgressPanel (91行, src\pages\input\CollectTask\index.tsx)
+  CollectionReportPanel (87行, src\pages\input\CollectTask\index.tsx)
+  ApiTestDialog (219行, src\pages\input\SevenDimConfigPage.tsx)
+  CollectionPlanPanel (277行, src\pages\input\SevenDimConfigPage.tsx)
+  CollectionSwimlane (219行, src\pages\input\CollectTask\index.tsx)
+  DataCollectionWizard (203行, src\pages\trading\TradingFlowPage.tsx)
+  DimensionConfigCard (175行, src\pages\input\SevenDimConfigPage.tsx)
+  InputFlowErrorBoundary (133行, src\apps\input\InputApp.tsx)
+  QuotaEstimatePanel (109行, src\pages\input\SevenDimConfigPage.tsx)
+
+--- 未使用组件 (建议删除或审查) ---
+  Breadcrumb (123行) - src\components\atoms\Breadcrumb.tsx
+  Button.test (163行) - src\components\atoms\Button.test.tsx
+  Card.test (126行) - src\components\atoms\Card.test.tsx
+  Checkbox.test (102行) - src\components\atoms\Checkbox.test.tsx
+  ComplianceDisclaimer.test (36行) - src\components\atoms\ComplianceDisclaimer.test.tsx
+  DatePicker (53行) - src\components\atoms\DatePicker.tsx
+  Grid (60行) - src\components\atoms\Grid.tsx
+  Index (99行) - src\components\atoms\index.ts
+  Input.test (101行) - src\components\atoms\Input.test.tsx
+  Label.test (96行) - src\components\atoms\Label.test.tsx
+  List (66行) - src\components\atoms\List.tsx
+  Menu (71行) - src\components\atoms\Menu.tsx
+  Pagination (99行) - src\components\atoms\Pagination.tsx
+  Popover (49行) - src\components\atoms\Popover.tsx
+  Progress.test (103行) - src\components\atoms\Progress.test.tsx
+  Radio.test (79行) - src\components\atoms\Radio.test.tsx
+  Result (76行) - src\components\atoms\Result.tsx
+  Select.test (54行) - src\components\atoms\Select.test.tsx
+  Separator.test (81行) - src\components\atoms\Separator.test.tsx
+  Sheet.test (204行) - src\components\atoms\Sheet.test.tsx
+
+--- 大组件分析 (>300行) ---
+  ❌ IndustryV4Panel.test (465行, 使用0次)
+  ❌ TrendLineChart.test (338行, 使用0次)
+  ❌ ValuationDistribution.test (369行, 使用0次)
+  ✅ ErrorState (328行, 使用8次)
+  ⚠️ MultiFactorFilterPanel (319行, 使用1次)
+  ⚠️ SignalQualityTrendChart (302行, 使用1次)
+  ❌ ApiTestDialog.test (460行, 使用0次)
+  ❌ DataSourceConfigStep (662行, 使用0次)
+  ❌ ExecutionMonitorStep (370行, 使用0次)
+  ⚠️ ReviewWizard (552行, 使用1次)
+  ⚠️ EngineStatusCard (312行, 使用1次)
+  ⚠️ LogStreamPanel (313行, 使用1次)
+  ⚠️ MigrationPanel (378行, 使用1次)
+  ⚠️ SystemArchitectureDiagram (430行, 使用1次)
+  ⚠️ OrderExecutionPanel (325行, 使用1次)
+
+--- 复用性建议 ---
+
+1. 单次使用组件优化建议:
+   - 发现 61 个单次使用组件
+   - 建议审查这些组件是否可以合并到使用方
+   - 或考虑是否存在其他页面也需要类似功能
+
+2. 大组件拆分建议:
+   - 以下组件过大且使用次数少，建议拆分:
+     * IntelligentScoreBasisCard (292行) - src\components\cabin\IntelligentScoreBasisCard.tsx
+     * IndustryHeatmap (232行) - src\components\chart\industry\IndustryHeatmap.tsx
+     * IntelligentScoreExplanation (216行) - src\components\organisms\analysis\score\IntelligentScoreExplanation.tsx
+     * ScoreFactorWaterfall (274行) - src\components\organisms\analysis\score\ScoreFactorWaterfall.tsx
+     * MultiFactorFilterPanel (319行) - src\components\organisms\analysis\screening\MultiFactorFilterPanel.tsx
+     * SectorRotationHeatmap (268行) - src\components\organisms\analysis\sector\SectorRotationHeatmap.tsx
+     * SignalQualityTrendChart (302行) - src\components\organisms\analysis\signal\SignalQualityTrendChart.tsx
+     * ApiTestDialog (219行) - src\components\organisms\input\ApiTestDialog.tsx
+     * CollectionPlanPanel (277行) - src\components\organisms\input\CollectionPlanPanel.tsx
+     * CollectionSwimlane (219行) - src\components\organisms\input\CollectionSwimlane.tsx
+     * DataCollectionWizard (203行) - src\components\organisms\input\DataCollectionWizard.tsx
+     * StockSearch (275行) - src\components\organisms\input\StockSearch.tsx
+     * TraceReplayPanel (258行) - src\components\organisms\input\TraceReplayPanel.tsx
+     * ReviewWizard (552行) - src\components\organisms\output\ReviewWizard.tsx
+     * CollectionProgress (286行) - src\components\organisms\pool\CollectionProgress.tsx
+     * LLMConfigWidget (238行) - src\components\organisms\shared\LLMConfigWidget.tsx
+     * AgentHealthCard (203行) - src\components\organisms\system\AgentHealthCard.tsx
+     * AgentTaskList (278行) - src\components\organisms\system\AgentTaskList.tsx
+     * EngineStatusCard (312行) - src\components\organisms\system\EngineStatusCard.tsx
+     * LogStreamPanel (313行) - src\components\organisms\system\LogStreamPanel.tsx
+     * MigrationPanel (378行) - src\components\organisms\system\MigrationPanel.tsx
+     * SystemArchitectureDiagram (430行) - src\components\organisms\system\SystemArchitectureDiagram.tsx
+     * OrderExecutionPanel (325行) - src\components\organisms\trading\OrderExecutionPanel.tsx

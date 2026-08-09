@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>§8.2 Check 2 指纹漂移</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+        h1 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        #diagram {
+            background: #fff;
+        }
+        .tip {
+            margin-top: 15px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>§8.2 Check 2 指纹漂移</h1>
+    <div id="diagram" class="mermaid">
+flowchart TD
+    A["Check 2 FAIL: 指纹漂移"] --> B[提取完整日志 + 当前指纹 + 基线指纹]
+    B --> C[检查 /api/embed/config 中 model_id]
+    C --> D{model_id 是否正确?}
+    D -->|model_id ≠ all-MiniLM-L6-v2| E[§A: 模型被切换]
+    E --> E1[→ 场景 A 回滚 §9.5]
+    D -->|model_id == all-MiniLM-L6-v2| F[§B: 模型正确但指纹不同]
+    F --> G[重新 --gen-baseline]
+    G --> H{新指纹 == 基线?}
+    H -->|是| I[基线 SHA 抄错<br/>修正 baseline.sha 重跑验证]
+    H -->|否| J[代码/配置隐式变更<br/>→ 场景 B/C 回滚 §9.6 / §9.7]
+    </div>
+    <div class="tip">
+        右键点击图表 → "图片另存为" 即可保存 PNG.<br/>
+        或使用浏览器截图工具截取整个页面.
+    </div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

@@ -174,12 +174,18 @@ export function generateSkillDevelopment(
     {
       order: 3,
       title: '提升入场与出场时机',
-      description: '通过技术分析和回测优化进出场信号',
+      description: '通过买卖点复盘分析和K线标注工具优化进出场信号',
       resources: [
         { type: 'course', title: '技术分析进阶' },
         { type: 'course', title: 'V6 Pro 回测工具实战' },
+        { type: 'tool', title: 'K线买卖点标注系统' },
       ],
-      exercises: ['对最近 20 笔交易进行买卖点复盘', '建立个人交易信号 checklist'],
+      exercises: [
+        '对最近 20 笔交易进行买卖点复盘，使用K线markers标注实际买卖点',
+        '根据买卖点分析报告调整止盈止损参数',
+        '建立个人交易信号 checklist，验证买卖点参数有效性',
+        '每周复盘最优/最差买卖点策略，迭代入场出场规则',
+      ],
       estimatedHours: 15,
       completed: classification.disciplineScore >= TRADE_REVIEW_AI_THRESHOLDS.LEARNING_PATH_STEP_3_COMPLETE_THRESHOLD,
     },

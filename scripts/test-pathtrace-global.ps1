@@ -142,6 +142,52 @@ Check "全局模块已清理" (-not (Test-Path $globalModuleDir))
 $result5 = & powershell -NoProfile -ExecutionPolicy Bypass -Command "Import-Module PathTrace -ErrorAction SilentlyContinue; if (Get-Command Write-PathTrace -ErrorAction SilentlyContinue) { 'STILL_AVAILABLE' } else { 'NOT_AVAILABLE' }" 2>&1 | Out-String
 Check "清理后模块不可导入" ($result5 -match "NOT_AVAILABLE")
 
+# ====== 9. 边界情况: 空字符串路径 ======
+Write-Host ""
+Write-Host "--- 9. 边界情况: 空字符串路径 ---"
+# 重新导入模块用于边界测试
+Remove-Module PathTrace -ErrorAction SilentlyContinue
+Import-Module "D:\FinSightV9\scripts\PathTrace.psm1" -Force
+Enable-PathTraceDebug
+
+$r_edge1 = Test-PathChain -Paths @("", "", "") -Label "空路径测试"
+Check "空字符串路径数组返回 null" ($null -eq $r_edge1)
+
+# ====== 10. 边界情况: 混合空与非空路径 ======
+Write-Host ""
+Write-Host "--- 10. 边界情况: 混合空与非空路径 ---"
+$r_edge2 = Test-PathChain -Paths @("", "D:\FinSightV9\.venv\Scripts\python.exe", "") -Label "混合路径"
+Check "混合数组跳过空路径并命中" ($r_edge2 -match "python\.exe")
+
+# ====== 11. 边界情况: 空数组 ======
+Write-Host ""
+Write-Host "--- 11. 边界情况: 空数组 ---"
+$r_edge3 = Test-PathChain -Paths @() -Label "空数组"
+Check "空数组不崩溃 (返回 null)" ($null -eq $r_edge3)
+
+# ====== 12. 边界情况: 空消息 ======
+Write-Host ""
+Write-Host "--- 12. 边界情况: 空消息 ---"
+try {
+    Write-PathTrace "" -Level INFO
+    Check "空消息不崩溃" $true
+} catch {
+    Check "空消息不崩溃" $false
+}
+
+# ====== 13. 边界情况: 无效驱动器 ======
+Write-Host ""
+Write-Host "--- 13. 边界情况: 无效驱动器 ---"
+$r_edge5 = Find-PythonExe -RepoRoot "X:\NonExistent\Project" -IncludeSystemPath:$false
+Check "无效驱动器不崩溃 (返回 null)" ($null -eq $r_edge5)
+
+# ====== 14. 边界情况: 正常路径仍工作 ======
+Write-Host ""
+Write-Host "--- 14. 边界情况: 正常路径仍工作 (回归验证) ---"
+Disable-PathTraceDebug
+$r_edge6 = Find-PythonExe -RepoRoot "D:\FinSightV9"
+Check "正常路径仍命中" ($r_edge6 -match "python\.exe")
+
 # ====== 汇总 ======
 Write-Host ""
 Write-Host "============================================="

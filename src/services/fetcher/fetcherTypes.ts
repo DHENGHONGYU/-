@@ -19,6 +19,41 @@ export interface CollectFinancialRequest {
   symbol: string
 }
 
+/** 板块轮动评分采集请求（申万二级，对应 Python /api/collect/sectors） */
+export interface CollectSectorsRequest {
+  topN?: number
+}
+
+/** 板块轮动评分单条记录（字段与 RotationSectorScore 对齐） */
+export interface CollectSectorScoreItem {
+  id: string
+  sectorCode: string
+  sectorName: string
+  swLevel1?: string | null
+  swLevel2?: string | null
+  swLevel3?: string | null
+  scoreDate: string
+  f1Jingqi: number
+  f2Zijin: number
+  f3Guzhi: number
+  f4Beta: number
+  f5Nengliang: number
+  total: number
+  resonance: number
+  signal: string
+  alertLevel: string
+  declineType: string
+  poolStocks: Array<{ symbol: string; name: string; v6Composite?: number }>
+  modelUsed: string
+  createdAt: string
+}
+
+/** 板块轮动评分采集响应 data 字段 */
+export interface CollectSectorsData {
+  sectors: CollectSectorScoreItem[]
+  scoreDate: string
+}
+
 export interface CollectBasicData {
   name?: string
   price?: number
@@ -26,6 +61,8 @@ export interface CollectBasicData {
   pb?: number
   roe?: number
   market_cap?: number
+  /** 行业（来自 AKShare stock_individual_info_em 行业字段，映射到 Stock.industryCode） */
+  industry_code?: string
 }
 
 export interface CollectKlineData {

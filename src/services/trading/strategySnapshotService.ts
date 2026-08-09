@@ -82,7 +82,13 @@ function classify(
   v6Score: V6Score | undefined,
   rotationScoreMap: Map<string, RotationSectorScore>,
 ): StrategyGroupItem | undefined {
-  if (!v6Score) return undefined
+  if (!v6Score) {
+    logger.debug('[strategySnapshotService] classify 跳过：无 V6 评分', {
+      symbol: stock.symbol,
+      name: stock.name,
+    })
+    return undefined
+  }
 
   const factors = v6Score.factors
   const composite = v6Score.score
@@ -92,7 +98,32 @@ function classify(
   const l7Score = pickFactor(factors, ['L7', '情绪'])
   const resonance = getResonance(stock, rotationScoreMap)
 
+  // 详细评分计算日志：追踪每个标的的因子分解与阈值对比
+  logger.info('[strategySnapshotService] classify 评分计算', {
+    symbol: stock.symbol,
+    name: stock.name,
+    sector: stock.sector ?? null,
+    industryCode: stock.industryCode ?? null,
+    composite: Number(composite.toFixed(2)),
+    l1Score: Number(l1Score.toFixed(2)),
+    l7Score: Number(l7Score.toFixed(2)),
+    l3v: Number(l3v.toFixed(2)),
+    l3fScore: Number(l3fScore.toFixed(2)),
+    resonance: Number(resonance.toFixed(2)),
+    thresholds: {
+      core: { composite: 4.0, l7: 3.5, l1: 3.5 },
+      hot: { composite: 3.0, l3vMax: 2.5, resonanceMin: 60 },
+      value: { composite: 3.0, l3vMax: 3.0, resonanceMax: 50, l3fMin: 3.0 },
+    },
+  })
+
   if (composite >= 4.0 && l7Score >= 3.5 && l1Score >= 3.5) {
+    logger.info('[strategySnapshotService] classify 命中核心稀缺', {
+      symbol: stock.symbol,
+      composite: composite.toFixed(2),
+      l1Score: l1Score.toFixed(2),
+      l7Score: l7Score.toFixed(2),
+    })
     return {
       symbol: stock.symbol,
       name: stock.name,
@@ -109,6 +140,12 @@ function classify(
   }
 
   if (composite >= 3.0 && l3v < 2.5 && resonance >= 60) {
+    logger.info('[strategySnapshotService] classify 命中热点动量', {
+      symbol: stock.symbol,
+      composite: composite.toFixed(2),
+      l3v: l3v.toFixed(2),
+      resonance: resonance.toFixed(2),
+    })
     return {
       symbol: stock.symbol,
       name: stock.name,
@@ -126,6 +163,13 @@ function classify(
   }
 
   if (composite >= 3.0 && l3v < 3.0 && resonance < 50 && l3fScore >= 3.0) {
+    logger.info('[strategySnapshotService] classify 命中价值洼地', {
+      symbol: stock.symbol,
+      composite: composite.toFixed(2),
+      l3v: l3v.toFixed(2),
+      resonance: resonance.toFixed(2),
+      l3fScore: l3fScore.toFixed(2),
+    })
     return {
       symbol: stock.symbol,
       name: stock.name,
@@ -142,6 +186,20 @@ function classify(
     }
   }
 
+  // 未命中任何策略：记录具体未满足条件，便于排查
+  const failReasons: string[] = []
+  if (composite < 3.0) failReasons.push(`综合分 ${composite.toFixed(2)} < 3.0`)
+  if (composite >= 3.0 && composite < 4.0) failReasons.push(`综合分 ${composite.toFixed(2)} 处于 [3.0,4.0) 且未满足 hot/value 条件`)
+  if (composite >= 4.0) {
+    if (l7Score < 3.5) failReasons.push(`L7 ${l7Score.toFixed(2)} < 3.5`)
+    if (l1Score < 3.5) failReasons.push(`L1 ${l1Score.toFixed(2)} < 3.5`)
+  }
+  logger.info('[strategySnapshotService] classify 未命中任何策略', {
+    symbol: stock.symbol,
+    composite: composite.toFixed(2),
+    failReasons,
+  })
+
   return undefined
 }
 
@@ -150,16 +208,55 @@ function classify(
  */
 export function classifyStocks(input: ClassifyStocksInput): StrategyGroupItem[] {
   const { stocks, v6Scores, rotationScores } = input
+  logger.info('[strategySnapshotService] classifyStocks 开始', {
+    stockCount: stocks.length,
+    v6ScoreCount: v6Scores.length,
+    rotationScoreCount: rotationScores.length,
+  })
+
   const v6ScoreMap = new Map(v6Scores.map((score) => [score.symbol, score]))
   const rotationScoreMap = buildRotationScoreMap(rotationScores)
 
+  // 按 symbol 去重，防止输入含重复标的导致分类结果重复
+  const stockMap = new Map(stocks.map((s) => [s.symbol, s]))
+  const uniqueStocks = Array.from(stockMap.values())
+  if (uniqueStocks.length < stocks.length) {
+    logger.warn('[strategySnapshotService] classifyStocks 输入含重复标的，已去重', {
+      inputCount: stocks.length,
+      uniqueCount: uniqueStocks.length,
+    })
+  }
+
+  const missingV6 = uniqueStocks.filter((s) => !v6ScoreMap.has(s.symbol)).map((s) => s.symbol)
+  if (missingV6.length > 0) {
+    logger.warn('[strategySnapshotService] classifyStocks 部分标的缺失 V6 评分', {
+      count: missingV6.length,
+      symbols: missingV6,
+    })
+  }
+
   const items: StrategyGroupItem[] = []
-  for (const stock of stocks) {
+  for (const stock of uniqueStocks) {
     const item = classify(stock, v6ScoreMap.get(stock.symbol), rotationScoreMap)
     if (item) {
       items.push(item)
     }
   }
+
+  const stats = {
+    core: items.filter((i) => i.classification === 'core').length,
+    hot: items.filter((i) => i.classification === 'hot').length,
+    value: items.filter((i) => i.classification === 'value').length,
+    excluded: uniqueStocks.length - items.length,
+  }
+  logger.info('[strategySnapshotService] classifyStocks 完成', {
+    ...stats,
+    total: uniqueStocks.length,
+    coreSymbols: items.filter((i) => i.classification === 'core').map((i) => i.symbol),
+    hotSymbols: items.filter((i) => i.classification === 'hot').map((i) => i.symbol),
+    valueSymbols: items.filter((i) => i.classification === 'value').map((i) => i.symbol),
+  })
+
   return items
 }
 
@@ -279,6 +376,13 @@ export async function saveStrategySnapshot(
   input: ClassifyStocksInput,
   trigger = 'manual',
 ): Promise<DataLayerResult<StrategySnapshot>> {
+  const t0 = Date.now()
+  logger.info('[strategySnapshotService] saveStrategySnapshot 开始', {
+    trigger,
+    stockCount: input.stocks.length,
+    v6ScoreCount: input.v6Scores.length,
+    rotationScoreCount: input.rotationScores.length,
+  })
   try {
     const items = classifyStocks(input)
     const coreItems = items.filter((item) => item.classification === 'core')
@@ -288,6 +392,12 @@ export async function saveStrategySnapshot(
     const core = buildGroupSnapshot(coreItems)
     const hot = buildGroupSnapshot(hotItems)
     const value = buildGroupSnapshot(valueItems)
+
+    logger.info('[strategySnapshotService] saveStrategySnapshot 分组完成', {
+      coreCount: core.count,
+      hotCount: hot.count,
+      valueCount: value.count,
+    })
 
     const prevResult = await getLatestSnapshot()
     const prevSnapshot = prevResult.success ? prevResult.data : undefined
@@ -318,14 +428,30 @@ export async function saveStrategySnapshot(
       trigger,
     }
 
+    logger.info('[strategySnapshotService] saveStrategySnapshot 写入 IndexedDB', {
+      snapshotId: snapshot.id,
+      version: nextVersion,
+      prevVersion: prevSnapshot?.version ?? null,
+    })
+
     const result = await sendWriteEnvelope('saveStrategySnapshots', snapshot, 'tradinghub')
     if (!result.success) {
+      logger.error('[strategySnapshotService] saveStrategySnapshot 写入失败', {
+        snapshotId: snapshot.id,
+        error: result.error,
+        elapsedMs: Date.now() - t0,
+      })
       return { success: false, error: result.error }
     }
+    logger.info('[strategySnapshotService] saveStrategySnapshot 完成', {
+      snapshotId: snapshot.id,
+      version: nextVersion,
+      elapsedMs: Date.now() - t0,
+    })
     return { success: true, data: snapshot }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    logger.error('保存策略快照失败', { error: message })
+    logger.error('保存策略快照失败', { error: message, elapsedMs: Date.now() - t0 })
     return { success: false, error: message }
   }
 }

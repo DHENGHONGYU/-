@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, Suspense } from 'react'
+import React, { useEffect, useRef, useState, Suspense } from 'react'
 import { useLocation } from 'react-router'
 import InputDashboard from './InputDashboard'
-import BulkImportPanel from './BulkImportPanel'
-import HotSectorPanel from './HotSectorPanel'
 import DataTestPanel from './DataTestPanel'
 import LocalKnowledgePage from '@/pages/input/LocalKnowledgePage'
+import { InputFlowErrorBoundary } from '@/components/organisms/input/InputFlowErrorBoundary'
 import { getLogger } from '@/lib/logger'
 
 // 子页面懒加载（G4 集成：七维采集配置 / 抓取引擎配置 / 采集任务监控 / 股票池看板）
@@ -23,8 +22,6 @@ interface InputRoute {
 }
 
 const INPUT_ROUTES: InputRoute[] = [
-  { path: '/input/bulk-import', branch: 'bulk-import', componentName: 'BulkImportPanel', component: <BulkImportPanel />, fallback: '' },
-  { path: '/input/hot-sectors', branch: 'hot-sectors', componentName: 'HotSectorPanel', component: <HotSectorPanel />, fallback: '' },
   { path: '/input/data-test', branch: 'data-test', componentName: 'DataTestPanel', component: <DataTestPanel />, fallback: '' },
   { path: '/input/local-knowledge', branch: 'local-knowledge', componentName: 'LocalKnowledgePage', component: <LocalKnowledgePage />, fallback: '' },
   { path: '/input/seven-dim', branch: 'seven-dim', componentName: 'SevenDimConfigPage', component: <SevenDimConfigPage />, fallback: '加载七维采集配置中...' },
@@ -61,13 +58,14 @@ const logger = getLogger()
  * Routes 的路径匹配问题。新增子面板仅需在 INPUT_ROUTES 中追加条目。
  *
  * 路由映射：
- * - /input/bulk-import     → BulkImportPanel
- * - /input/hot-sectors     → HotSectorPanel
  * - /input/data-test       → DataTestPanel
  * - /input/local-knowledge → LocalKnowledgePage
  * - /input/seven-dim       → SevenDimConfigPage（懒加载）
  * - /input/fetcher-config  → FetcherConfigPage（懒加载）
  * - /input/collect-tasks   → CollectTaskPage（懒加载）
+ * - /input/pool-board      → PoolBoardPage（懒加载）
+ * - /input/bulk-import     → 已整合至 InputDashboard（fallback 到录入看板）
+ * - /input/hot-sectors     → 已整合至 InputDashboard（fallback 到录入看板）
  * - /input（默认）         → InputDashboard
  */
 export default function InputApp(): React.JSX.Element {
@@ -97,6 +95,9 @@ export default function InputApp(): React.JSX.Element {
     prevPathRef.current = path
   }, [path])
 
+  // 错误边界 reset key：onReset 时自增，强制 InputDashboard 重建实例清空错误态
+  const [resetKey, setResetKey] = useState(0)
+
   const matched = matchInputRoute(path)
 
   return (
@@ -107,13 +108,18 @@ export default function InputApp(): React.JSX.Element {
           <p className="text-sm text-muted-foreground">股票录入 · 批量导入 · 热门板块 · 采集测试</p>
         </div>
       </div>
-      {matched.component ? (
-        <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">{matched.fallback}</div>}>
-          {matched.component}
-        </Suspense>
-      ) : (
-        <InputDashboard />
-      )}
+      <InputFlowErrorBoundary
+        label="InputApp"
+        onReset={() => setResetKey((k) => k + 1)}
+      >
+        {matched.component ? (
+          <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">{matched.fallback}</div>}>
+            {matched.component}
+          </Suspense>
+        ) : (
+          <InputDashboard key={resetKey} />
+        )}
+      </InputFlowErrorBoundary>
     </div>
   )
 }

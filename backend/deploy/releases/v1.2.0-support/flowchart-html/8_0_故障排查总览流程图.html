@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>§8.0 故障排查总览流程图</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+        h1 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        #diagram {
+            background: #fff;
+        }
+        .tip {
+            margin-top: 15px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>§8.0 故障排查总览流程图</h1>
+    <div id="diagram" class="mermaid">
+flowchart TD
+    A[验证 Job 异常] --> B{kubectl get job}
+    B -->|Job 不存在| C[§8.4 ConfigMap 脚本缺失?]
+    B -->|Job 存在| D[kubectl get pods]
+    D --> E{Pod 状态}
+    E -->|Pending| F[§8.1 Job Pending]
+    E -->|Running / 正常退出| G[提取 JSON exit_code]
+    E -->|Error / ExitCode| G
+    G --> H{exit_code}
+    H -->|exit=0| I[✅ 正常 关闭工单]
+    H -->|exit=1| J[§8.2 指纹漂移 → 回滚 §9]
+    H -->|exit=2| K[§8.3 服务不可达]
+    H -->|DeadlineExceeded| L[§8.5 超时 调参]
+    </div>
+    <div class="tip">
+        右键点击图表 → "图片另存为" 即可保存 PNG.<br/>
+        或使用浏览器截图工具截取整个页面.
+    </div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

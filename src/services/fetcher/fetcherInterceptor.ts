@@ -2,6 +2,7 @@
  * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
  */
 import { HttpError, HttpErrorType, getHttpErrorType } from './fetcherErrors'
+import { DIRECT_DATA_API_TIMEOUT_MS } from '@/config/timeouts'
 
 // 拦截器配置
 export interface InterceptorConfig {
@@ -115,7 +116,7 @@ async function tryOnce(
   init: RequestInit | undefined,
 ): Promise<Response> {
   const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 30000)
+  const timeout = setTimeout(() => controller.abort(), DIRECT_DATA_API_TIMEOUT_MS)
   try {
     return await fetch(input, { ...init, signal: controller.signal })
   } finally {

@@ -14,14 +14,12 @@
 import { getLogger } from '@/lib/logger'
 import type { NewsItem, ResearchReport } from './dimensionDataTypes'
 import { check, get, set } from './llmSearchCache'
+import { DASHSCOPE_API_URL } from '@/config/dataSourceUrls'
+import { API_PROXY_QWEN_GENERATION } from '@/config/apiPaths'
+import { LLM_SEARCH_TIMEOUT_MS } from '@/config/timeouts'
+import { safeFetch as _safeFetch } from '@/services/shared/safeFetch'
 
 const logger = getLogger()
-
-/** Qwen-Plus DashScope 原生 API 端点（阿里云百炼，支持 enable_search 联网搜索） */
-const DASHSCOPE_API_URL = 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation'
-
-/** 请求超时（LLM 搜索比普通 API 慢） */
-const REQUEST_TIMEOUT_MS = 15000
 
 // ============================================================
 // API Key 读取
@@ -74,7 +72,7 @@ async function callQwen(systemPrompt: string, userPrompt: string): Promise<strin
 
   const url = isNodeEnv()
     ? DASHSCOPE_API_URL
-    : '/api/proxy/qwen/api/v1/services/aigc/text-generation/generation'
+    : API_PROXY_QWEN_GENERATION
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -101,24 +99,19 @@ async function callQwen(systemPrompt: string, userPrompt: string): Promise<strin
     },
   })
 
+  const resp = await _safeFetch(
+    url,
+    {
+      timeoutMs: LLM_SEARCH_TIMEOUT_MS,
+      requireOk: true,
+      init: { method: 'POST', headers, body },
+    },
+    '[llmSearchAgent]',
+  )
+
+  if (!resp) return null
+
   try {
-    const controller = new AbortController()
-    const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
-
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers,
-      body,
-      signal: controller.signal,
-    })
-
-    clearTimeout(timer)
-
-    if (!resp.ok) {
-      logger.warn(`[llmSearchAgent] Qwen API 返回非 200: ${resp.status} ${resp.statusText}`)
-      return null
-    }
-
     // DashScope 原生 API 响应格式：output.choices[0].message.content
     const json = await resp.json() as {
       output?: { choices?: Array<{ message?: { content?: string } }> }
@@ -132,7 +125,7 @@ async function callQwen(systemPrompt: string, userPrompt: string): Promise<strin
 
     return content
   } catch (err) {
-    logger.warn('[llmSearchAgent] DeepSeek API 调用失败', {
+    logger.warn('[llmSearchAgent] Qwen 响应解析失败', {
       error: err instanceof Error ? err.message : String(err),
     })
     return null

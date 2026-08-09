@@ -339,6 +339,17 @@ export function getSourceMetrics(sourceId: string): SourceHealthMetrics {
   return m ? { ...m } : createInitialMetrics()
 }
 
+/**
+ * 查询源是否允许执行请求（熔断器门禁）。
+ * 委托至模块级 defaultBreaker，供 multiSourceFetcher / dataSourceOrchestrator / collectionPipeline 调用。
+ * open 状态的源返回 false，调用方应跳过该源不发网络请求。
+ * @param sourceId 数据源 id（如 'tushare'、'crawler'）
+ * @returns 允许执行返回 true，熔断中返回 false
+ */
+export function canExecute(sourceId: string): boolean {
+  return defaultBreaker.canExecute(sourceId)
+}
+
 /** 清空指标注册表 / 限流器 / 熔断器（测试用） */
 export function resetAdaptiveOrchestrator(): void {
   metricsRegistry.clear()

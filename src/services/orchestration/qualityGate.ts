@@ -11,6 +11,7 @@ import { getQualityMetrics } from '@/services/data-collector/qualityMetricsColle
 import { runBatchTrace, createDefaultCollectionConfig } from '@/services/data-collector/collectionPipeline'
 import { dataBridge, ENVELOPE_ACTION, STORE_NAME } from '@/core/databridge'
 import { runFullIndustryAnalysis } from '@/services/analysis/industryAnalysisService'
+import { runV6ScoreBatch } from '@/services/scoring/v6ScoreService'
 import { getLogger } from '@/lib/logger'
 import type { QualityMetrics } from '@/services/data-collector/qualityMetricsCollector'
 
@@ -184,38 +185,121 @@ export class QualityGate {
   }
 
   private async triggerAnalysis(symbols: string[]): Promise<void> {
-    const stocks = await this.loadStocksFromDB(symbols)
-    if (stocks.length === 0) {
+    const stockData = await this.loadStocksWithData(symbols)
+    if (stockData.length === 0) {
       logger.warn('[QualityGate] 无可分析的股票数据')
       return
     }
 
     try {
       const analysisResult = await runFullIndustryAnalysis(
-        stocks.map((s) => ({ stock: s, financials: {}, quotes: {} })) as unknown as Parameters<typeof runFullIndustryAnalysis>[0],
+        stockData as Parameters<typeof runFullIndustryAnalysis>[0],
       )
       eventBus.emit(EVENT_NAMES.ANALYSIS_INDUSTRY_COMPLETED, analysisResult)
       logger.info('[QualityGate] 行业分析完成')
+
+      // P0-2: 行业分析完成后触发 V6 批量评分
+      try {
+        const batchResult = await runV6ScoreBatch(symbols)
+        eventBus.emit(EVENT_NAMES.V6_BATCH_SCORE_COMPLETED, batchResult)
+        logger.info('[QualityGate] V6 批量评分完成', {
+          total: batchResult.data?.stats?.total ?? 0,
+          completed: batchResult.data?.stats?.completed ?? 0,
+        })
+      } catch (e) {
+        logger.error('[QualityGate] V6 批量评分失败', { error: e instanceof Error ? e.message : String(e) })
+      }
     } catch (e) {
       logger.error('[QualityGate] 行业分析失败', { error: e instanceof Error ? e.message : String(e) })
     }
   }
 
-  private async loadStocksFromDB(symbols: string[]): Promise<unknown[]> {
-    const results: unknown[] = []
+  /**
+   * 加载股票基础数据 + 行情数据 + 财务数据
+   * P0-3 修复：不再传空 financials/quotes，而是从 DB 查询真实数据
+   * 每只股票的三个数据源查询均记录耗时，用于性能监控和瓶颈定位
+   */
+  private async loadStocksWithData(
+    symbols: string[],
+  ): Promise<Array<{ stock: unknown; financials: Record<string, unknown>; quotes: Record<string, unknown> }>> {
+    const results: Array<{ stock: unknown; financials: Record<string, unknown>; quotes: Record<string, unknown> }> = []
+    const batchStart = performance.now()
+
     for (const symbol of symbols) {
+      const symbolStart = performance.now()
       try {
-        const res = await dataBridge.query({
-          action: ENVELOPE_ACTION.queryList,
+        // 1. 查询股票基础数据
+        const t0 = performance.now()
+        const stockRes = await dataBridge.query({
+          action: ENVELOPE_ACTION.queryGet,
           store: STORE_NAME.stocks,
+          key: symbol,
         })
-        const list = (res.data ?? []) as unknown[]
-        const match = list.find((s) => (s as { symbol?: string } | null)?.symbol === symbol)
-        if (match) results.push(match)
+        const stockMs = performance.now() - t0
+        if (!stockRes.success || !stockRes.data) {
+          logger.warn(`[QualityGate] 股票 ${symbol} 不存在于DB，跳过`, { stockMs: Math.round(stockMs) })
+          continue
+        }
+        const stock = stockRes.data
+
+        // 2. 查询行情数据（可缺失，不阻断流程）
+        let quotes: Record<string, unknown> = {}
+        const t1 = performance.now()
+        try {
+          const quotesRes = await dataBridge.query({
+            action: ENVELOPE_ACTION.queryGet,
+            store: STORE_NAME.dailyQuotes,
+            key: symbol,
+          })
+          if (quotesRes.success && quotesRes.data) {
+            quotes = quotesRes.data as Record<string, unknown>
+          }
+        } catch {
+          /* quotes 可缺失 */
+        }
+        const quotesMs = performance.now() - t1
+
+        // 3. 查询财务数据（可缺失，不阻断流程）
+        let financials: Record<string, unknown> = { dataStatus: 'missing' }
+        const t2 = performance.now()
+        try {
+          const finRes = await dataBridge.query({
+            action: ENVELOPE_ACTION.queryGet,
+            store: STORE_NAME.financialReports,
+            key: symbol,
+          })
+          if (finRes.success && finRes.data) {
+            financials = { ...(finRes.data as Record<string, unknown>), dataStatus: 'complete' }
+          }
+        } catch {
+          /* financials 可缺失 */
+        }
+        const financialsMs = performance.now() - t2
+
+        const totalMs = performance.now() - symbolStart
+        logger.info(`[QualityGate] 数据加载完成 ${symbol}`, {
+          stockMs: Math.round(stockMs),
+          quotesMs: Math.round(quotesMs),
+          financialsMs: Math.round(financialsMs),
+          totalMs: Math.round(totalMs),
+          finStatus: financials.dataStatus,
+          quotesLoaded: Object.keys(quotes).length > 0,
+        })
+
+        results.push({ stock, financials, quotes })
       } catch {
-        /* skip */
+        const totalMs = performance.now() - symbolStart
+        logger.error(`[QualityGate] 股票 ${symbol} 数据加载异常`, { totalMs: Math.round(totalMs) })
       }
     }
+
+    const batchMs = performance.now() - batchStart
+    logger.info('[QualityGate] 批量数据加载完成', {
+      symbolCount: symbols.length,
+      loadedCount: results.length,
+      batchMs: Math.round(batchMs),
+    })
+
     return results
   }
 }

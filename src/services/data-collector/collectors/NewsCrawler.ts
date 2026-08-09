@@ -14,15 +14,16 @@
 import { getLogger } from '@/lib/logger'
 import { BaseCollector } from './BaseCollector'
 import type { RawMarketData, DataSourceConfig } from '@/types/modules/widget.types'
+import { NEWS_SOURCE_SINA, NEWS_SOURCE_STCN, NEWS_SOURCE_EASTMONEY, NEWS_SOURCE_XUEQIU } from '@/config/dataSourceUrls'
 
 const logger = getLogger()
 
 /** 新闻来源配置 */
 const NEWS_SOURCES = [
-  { id: 'finance', name: '财经头条', baseUrl: 'https://finance.sina.com.cn' },
-  { id: 'securities', name: '证券时报', baseUrl: 'https://www.stcn.com' },
-  { id: 'eastmoney', name: '东方财富', baseUrl: 'https://www.eastmoney.com' },
-  { id: 'xueqiu', name: '雪球', baseUrl: 'https://xueqiu.com' },
+  { id: 'finance', name: '财经头条', baseUrl: NEWS_SOURCE_SINA },
+  { id: 'securities', name: '证券时报', baseUrl: NEWS_SOURCE_STCN },
+  { id: 'eastmoney', name: '东方财富', baseUrl: NEWS_SOURCE_EASTMONEY },
+  { id: 'xueqiu', name: '雪球', baseUrl: NEWS_SOURCE_XUEQIU },
 ]
 
 /** 情感分析关键词 */

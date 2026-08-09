@@ -1,0 +1,92 @@
+# V9 Embedding 向量指纹一致性验证 Helm Chart 默认配置
+fullnameOverride: ""
+nameOverride: ""
+
+replicaCount: 1
+
+# 目标 v9-embedding 服务
+service:
+  name: v9-embedding
+  namespace: default
+  port: 8001
+  # 若为空，将按 <service.name>.<service.namespace>.svc 生成 DNS
+  hostOverride: ""
+
+# 指纹基线 SHA。sha 为空时 ConfigMap 输出空文件，由运行期 BASELINE_SHA_OVERRIDE 覆盖
+baseline:
+  sha: ""
+  # 若引用已存在的 ConfigMap，则本 Chart 不再创建 baseline ConfigMap
+  existingConfigMap: ""
+
+# 调度模式：Job（始终创建一次性 Job）/ CronJob（额外创建定时任务）
+job:
+  mode: "Job"
+  cronSchedule: "0 */4 * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: "Forbid"
+  restartPolicy: "Never"
+  backoffLimit: 1
+  ttlSecondsAfterFinished: 3600
+
+runtime:
+  # Job activeDeadlineSeconds，整体超时
+  timeoutSeconds: 300
+  # 单次 Embedding 请求超时
+  verifyTimeout: 15
+  failFast: true
+  # 追加环境变量（列表），合并进 container env
+  extraEnv: []
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+# 容器级安全上下文（nobody/nogroup）
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 65534
+  runAsGroup: 65534
+  fsGroup: 65534
+
+serviceAccount:
+  create: true
+  annotations: {}
+  existingName: ""
+
+rbac:
+  create: true
+  rules:
+    - apiGroups: [""]
+      resources: ["pods"]
+      verbs: ["get", "list"]
+    - apiGroups: [""]
+      resources: ["pods/log"]
+      verbs: ["get", "list"]
+
+result:
+  enabled: true
+  jsonPath: "/tmp/fp-result.json"
+  # 若指定，结果将写入既有 ConfigMap（否则仅落盘到 jsonPath）
+  outputConfigMap: ""
+
+imagePullSecrets: []
+
+images:
+  pythonRegistry: docker.io/library
+  pythonImage: python
+  pythonTag: "3.11-slim"

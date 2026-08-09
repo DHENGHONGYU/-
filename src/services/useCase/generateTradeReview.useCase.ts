@@ -19,8 +19,10 @@ import {
   generateDisciplineAnalysis,
   generateActionPlan,
   generateAIDeepInsight,
+  generateBuySellPointInsight,
 } from '@/services/trading/tradeReviewAI.reportGenerator'
 import { generateSkillDevelopment } from '@/services/trading/tradeReviewAI.skillDevelopment'
+import { analyzeBuySellPoints } from '@/services/trading/buySellPointAnalyzer'
 import {
   buildAIDeepInsightPrompt,
   parseAIDeepInsightFromLlm,
@@ -57,6 +59,14 @@ export function generateTradeReviewUseCase(orders: Order[], now = Date.now()): T
   const skillDevelopment = generateSkillDevelopment(classification, orders)
   const actionPlan = generateActionPlan(classification, disciplineAnalysis)
   const aiInsight = generateAIDeepInsight(summary, errorAnalysis, disciplineAnalysis)
+  const buySellPointReview = analyzeBuySellPoints(orders)
+
+  const bsInsight = generateBuySellPointInsight(buySellPointReview)
+  const enrichedAiInsight: AIDeepInsight = {
+    pnlAttribution: [...aiInsight.pnlAttribution, ...bsInsight.pnlAttribution],
+    dataPatterns: [...aiInsight.dataPatterns, ...bsInsight.dataPatterns],
+    personalizedAdvice: [...aiInsight.personalizedAdvice, ...bsInsight.personalizedAdvice],
+  }
 
   logger.info(
     `[GenerateTradeReviewUseCase] 复盘报告生成完成: 纪律评分=${summary.disciplineScore}, ` +
@@ -70,7 +80,8 @@ export function generateTradeReviewUseCase(orders: Order[], now = Date.now()): T
     disciplineAnalysis,
     skillDevelopment,
     actionPlan,
-    aiInsight,
+    aiInsight: enrichedAiInsight,
+    buySellPointReview,
   }
 }
 
@@ -144,6 +155,14 @@ export async function generateTradeReviewAsyncUseCase(
       ? await generateLlmInsight(summary, errorAnalysis, disciplineAnalysis, llmOverride, onProgress)
       : { aiInsight: generateAIDeepInsight(summary, errorAnalysis, disciplineAnalysis), usedLlm: false }
 
+    const buySellPointReview = analyzeBuySellPoints(orders)
+    const bsInsight = generateBuySellPointInsight(buySellPointReview)
+    const enrichedAiInsight: AIDeepInsight = {
+      pnlAttribution: [...aiInsight.pnlAttribution, ...bsInsight.pnlAttribution],
+      dataPatterns: [...aiInsight.dataPatterns, ...bsInsight.dataPatterns],
+      personalizedAdvice: [...aiInsight.personalizedAdvice, ...bsInsight.personalizedAdvice],
+    }
+
     const report: TradeReviewReport = {
       generatedAt: now,
       summary,
@@ -151,7 +170,8 @@ export async function generateTradeReviewAsyncUseCase(
       disciplineAnalysis,
       skillDevelopment,
       actionPlan,
-      aiInsight,
+      aiInsight: enrichedAiInsight,
+      buySellPointReview,
       ...(usedLlm && { aiInsightSource: 'llm' as const }),
     }
 

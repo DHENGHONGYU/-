@@ -630,7 +630,7 @@ describe('完整数据流测试', () => {
 
     // Mock 热门板块
     const hotSectorService = await import('@/services/input/hotSectorService')
-    vi.spyOn(hotSectorService, 'getHotSectors').mockReturnValue([
+    vi.spyOn(hotSectorService, 'getHotSectors').mockResolvedValue([
       {
         code: 'semiconductor',
         name: '半导体',

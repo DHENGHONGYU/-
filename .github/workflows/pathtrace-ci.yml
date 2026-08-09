@@ -1,0 +1,360 @@
+# .github/workflows/pathtrace-ci.yml
+# PathTrace PowerShell Module CI/CD — 自动构建、测试和发布
+# 触发:
+#   - push 到 feat/**/fix/**/main/develop 分支（含 scripts/PathTrace* / .github/workflows/pathtrace-* 路径变更时）
+#   - push v* tags（触发 release job，打包并发布 GitHub Release）
+#   - pull request 到 main/develop
+#   - workflow_dispatch 手动触发
+name: PathTrace Module CI/CD
+
+on:
+  push:
+    branches: ['main', 'develop', 'feat/**', 'fix/**']
+    paths:
+      - 'scripts/PathTrace.ps*'
+      - 'scripts/deploy-pathtrace-module.ps1'
+      - 'scripts/test-pathtrace-global.ps1'
+      - '.github/workflows/pathtrace-ci.yml'
+    tags: ['v*']
+  pull_request:
+    branches: ['main', 'develop']
+    paths:
+      - 'scripts/PathTrace.ps*'
+      - 'scripts/deploy-pathtrace-module.ps1'
+      - 'scripts/test-pathtrace-global.ps1'
+      - '.github/workflows/pathtrace-ci.yml'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Override release version (e.g. 1.2.0). Leave empty to use git tag.'
+        required: false
+        default: ''
+      create_release:
+        description: 'Create GitHub Release even without tag push (workflow_dispatch only)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write   # release job 创建 Release + 上传资产需要 write
+
+concurrency:
+  group: pathtrace-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: pwsh   # 默认使用 pwsh (cross-platform)，PS 5.1 场景单独在 Windows runner 覆盖
+
+jobs:
+  # =============================================================
+  # Job 1: validate — 语法校验 + 清单结构校验（跨平台，无 Windows 依赖）
+  # =============================================================
+  validate:
+    name: Validate (Syntax + Manifest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup PowerShell
+        uses: powershell-actions/setup-powershell@1d96d8c0a3c18e12f1e8f3b160e5a0a1f5ddca7e # v1.1.0
+        with:
+          version: '7.4'
+
+      - name: Check all required files exist
+        run: |
+          $files = @(
+            'scripts/PathTrace.psm1',
+            'scripts/PathTrace.psd1',
+            'scripts/deploy-pathtrace-module.ps1',
+            'scripts/test-pathtrace-global.ps1',
+            'scripts/PathTrace-README.md'
+          )
+          $missing = $files | Where-Object { -not (Test-Path $_) }
+          if ($missing) {
+            Write-Error "Missing required files: $($missing -join ', ')"
+            exit 1
+          }
+          Write-Host "All $($files.Count) required files present" -ForegroundColor Green
+
+      - name: Validate PowerShell syntax of all .ps1/.psm1/.psd1
+        run: |
+          $targets = Get-ChildItem -Path scripts -Include *.ps1,*.psm1,*.psd1 |
+                     Where-Object { $_.Name -like 'PathTrace*' -or $_.Name -like 'deploy-pathtrace*' -or $_.Name -like 'test-pathtrace*' }
+          $failed = @()
+          foreach ($f in $targets) {
+            $tokens = $null
+            $errors = $null
+            $ast = [System.Management.Automation.Language.Parser]::ParseFile(
+              $f.FullName, [ref]$tokens, [ref]$errors
+            )
+            if ($errors -and $errors.Count -gt 0) {
+              $failed += "$($f.Name): $($errors[0].Message)"
+              Write-Host "  [FAIL] $($f.Name): $($errors[0].Message)" -ForegroundColor Red
+            } else {
+              Write-Host "  [PASS] $($f.Name) — syntax OK" -ForegroundColor Green
+            }
+          }
+          if ($failed.Count -gt 0) {
+            Write-Error "Syntax check FAILED: $($failed -join ' | ')"
+            exit 1
+          }
+
+      - name: Validate PSD1 module manifest structure (Test-ModuleManifest)
+        run: |
+          $psd1 = Join-Path (Get-Location) 'scripts/PathTrace.psd1'
+          $manifest = Test-ModuleManifest -Path $psd1 -ErrorAction Stop
+          Write-Host "Module:   $($manifest.Name)"
+          Write-Host "Version:  $($manifest.Version)"
+          Write-Host "GUID:     $($manifest.Guid)"
+          Write-Host "Root:     $($manifest.RootModule)"
+          Write-Host "Exports:  $($manifest.ExportedFunctions.Keys -join ', ')"
+          # 验证 7 个核心函数都在清单中声明
+          $required = @(
+            'Write-PathTrace', 'Test-PathChain', 'Find-PythonExe',
+            'Enable-PathTraceLog', 'Disable-PathTraceLog',
+            'Enable-PathTraceDebug', 'Disable-PathTraceDebug'
+          )
+          $missing = $required | Where-Object { $_ -notin $manifest.ExportedFunctions.Keys }
+          if ($missing) {
+            Write-Error "Functions NOT declared in FunctionsToExport: $($missing -join ', ')"
+            exit 1
+          }
+          # 验证 ModuleVersion 不是 0.0.x
+          if ([version]$manifest.Version -lt [version]'1.0.0') {
+            Write-Error "ModuleVersion $($manifest.Version) is < 1.0.0"
+            exit 1
+          }
+          Write-Host "Manifest structure VALID" -ForegroundColor Green
+
+      - name: Cross-check Export-ModuleMember matches PSD1 FunctionsToExport
+        run: |
+          # 从 .psm1 提取 Export-ModuleMember 的函数列表
+          $psm1Content = Get-Content 'scripts/PathTrace.psm1' -Raw
+          $exportLine = ($psm1Content -split "`n") | Where-Object { $_ -match 'Export-ModuleMember -Function (.+)$' }
+          if (-not $exportLine) {
+            Write-Error "Export-ModuleMember line not found in .psm1"
+            exit 1
+          }
+          $psm1Funcs = ($Matches[1] -split ',') | ForEach-Object { $_.Trim() } | Sort-Object
+          $manifest = Test-ModuleManifest -Path scripts/PathTrace.psd1
+          $psd1Funcs = @($manifest.ExportedFunctions.Keys) | Sort-Object
+          $diff = Compare-Object $psm1Funcs $psd1Funcs
+          if ($diff) {
+            Write-Error "Export mismatch between .psm1 and .psd1`n$($diff | Out-String)"
+            exit 1
+          }
+          Write-Host "Export-ModuleMember <-> PSD1 FunctionsToExport: MATCH ($($psm1Funcs.Count) functions)" -ForegroundColor Green
+
+      - name: Upload module package as artifact (for downstream jobs)
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
+        with:
+          name: pathtrace-module-package
+          path: |
+            scripts/PathTrace.psm1
+            scripts/PathTrace.psd1
+            scripts/PathTrace-README.md
+            scripts/PathTrace-Usage.md
+            scripts/deploy-pathtrace-module.ps1
+            scripts/test-pathtrace-global.ps1
+          retention-days: 7
+
+  # =============================================================
+  # Job 2: test — 跨平台测试（Windows PS 5.1 重点，含 pwsh7 交叉验证）
+  # =============================================================
+  test:
+    name: Test (${{ matrix.os }} / ${{ matrix.ps }})
+    needs: validate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # 主测试: Windows + PS 5.1（项目主流环境，16 项完整测试套件）
+          - os: windows-latest
+            ps: 'powershell'        # Windows PowerShell 5.1
+            full_suite: true
+          # 交叉验证: Windows + pwsh7（确保跨 PS 版本兼容）
+          - os: windows-latest
+            ps: 'pwsh'
+            full_suite: true
+          # 轻量验证: Ubuntu + pwsh7（确保脚本不使用 Windows-only 原语）
+          - os: ubuntu-latest
+            ps: 'pwsh'
+            full_suite: false
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Download module package artifact
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          name: pathtrace-module-package
+          path: scripts/
+
+      - name: Run full test suite (test-pathtrace-global.ps1)
+        if: matrix.full_suite == true
+        shell: ${{ matrix.ps }}
+        run: |
+          Set-Location $env:GITHUB_WORKSPACE
+          $ErrorActionPreference = 'Continue'
+          & '${{ matrix.ps }}' -NoProfile -ExecutionPolicy Bypass -File scripts/test-pathtrace-global.ps1
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "Test suite failed with exit code $LASTEXITCODE"
+            exit $LASTEXITCODE
+          }
+        # NOTE: 某些 runners 上可能没有 Python/.venv（Find-PythonExe 会在所有候选失败时回退），
+        # 但测试套件的 16 项中只有 #7 (env pass) 需要真实 Python，其余为纯逻辑。
+
+      - name: Deploy script smoke test (deploy + verify + uninstall)
+        if: matrix.full_suite == true
+        shell: ${{ matrix.ps }}
+        run: |
+          Set-Location $env:GITHUB_WORKSPACE
+          Write-Host "=== STEP 1: Deploy to CurrentUser ===" -ForegroundColor Cyan
+          & '${{ matrix.ps }}' -NoProfile -ExecutionPolicy Bypass -File scripts/deploy-pathtrace-module.ps1
+          $exitDeploy = $LASTEXITCODE
+
+          Write-Host "=== STEP 2: Verify ===" -ForegroundColor Cyan
+          & '${{ matrix.ps }}' -NoProfile -ExecutionPolicy Bypass -File scripts/deploy-pathtrace-module.ps1 -Verify
+          $exitVerify = $LASTEXITCODE
+
+          Write-Host "=== STEP 3: Uninstall ===" -ForegroundColor Cyan
+          & '${{ matrix.ps }}' -NoProfile -ExecutionPolicy Bypass -File scripts/deploy-pathtrace-module.ps1 -Uninstall
+          $exitUninstall = $LASTEXITCODE
+
+          if ($exitDeploy -ne 0 -or $exitVerify -ne 0 -or $exitUninstall -ne 0) {
+            Write-Error "Deploy flow FAILED: deploy=$exitDeploy verify=$exitVerify uninstall=$exitUninstall"
+            exit 1
+          }
+
+      - name: Cross-platform module import check (pwsh on Linux)
+        if: matrix.full_suite == false
+        shell: pwsh
+        run: |
+          Set-Location $env:GITHUB_WORKSPACE
+          # Ubuntu 无 C:\ 路径语义，仅验证模块文件可导入、核心函数可用
+          try {
+            Import-Module scripts/PathTrace.psm1 -Force -ErrorAction Stop
+          } catch {
+            Write-Error "Import-Module FAILED on Linux/pwsh7: $_"
+            exit 1
+          }
+          $requiredCmds = @('Write-PathTrace','Test-PathChain','Find-PythonExe','Enable-PathTraceDebug')
+          foreach ($cmd in $requiredCmds) {
+            if (-not (Get-Command $cmd -ErrorAction SilentlyContinue)) {
+              Write-Error "Command not available after import: $cmd"
+              exit 1
+            }
+          }
+          # 语法级: 调用 Write-PathTrace 空字符串（边界 #12）
+          Write-PathTrace "" -Level INFO
+          # 语法级: Test-PathChain 空数组（边界 #11）
+          $nullRet = Test-PathChain -Paths @() -Label "Linux smoke"
+          if ($null -ne $nullRet) {
+            Write-Error "Empty array should return `$null, got: $nullRet"
+            exit 1
+          }
+          # 语法级: Test-PathChain 空字符串（边界 #9）
+          $emptyRet = Test-PathChain -Paths @("","","") -Label "Linux smoke 2"
+          if ($null -ne $emptyRet) {
+            Write-Error "Empty-strings array should return `$null, got: $emptyRet"
+            exit 1
+          }
+          Write-Host "Linux/pwsh7 cross-platform smoke: OK (4/4)" -ForegroundColor Green
+
+  # =============================================================
+  # Job 3: release — tag push 时打包 zip + 创建 GitHub Release + 上传资产
+  # =============================================================
+  release:
+    name: Release (package + GitHub Release)
+    needs: [validate, test]
+    if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && github.event.inputs.create_release == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Download module package artifact
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          name: pathtrace-module-package
+          path: staging/
+
+      - name: Determine version (tag / manual override)
+        id: version
+        run: |
+          $rawTag = '${{ github.ref_name }}'
+          $manual = '${{ github.event.inputs.version }}'.Trim()
+          if ($manual) {
+            $ver = $manual
+          } elseif ($rawTag -match '^v(\d+\.\d+\.\d+)') {
+            $ver = $Matches[1]
+          } else {
+            # 从 .psd1 读取作为兜底
+            $m = Test-ModuleManifest -Path staging/PathTrace.psd1
+            $ver = $m.Version.ToString()
+            Write-Host "WARNING: no v* tag detected, falling back to PSD1 ModuleVersion: $ver" -ForegroundColor Yellow
+          }
+          Write-Host "Version: $ver"
+          "VERSION=$ver" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "TAG=v$ver" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          Write-Host "TAG_NAME=v$ver"
+          echo "tag_name=v$ver" >> $env:GITHUB_OUTPUT
+
+      - name: Build release zip package
+        run: |
+          $ver = $env:VERSION
+          $staging = (Resolve-Path staging).Path
+          $pkgName = "PathTrace-v$ver"
+          $pkgDir = "$staging/$pkgName"
+          New-Item -ItemType Directory -Path $pkgDir -Force | Out-Null
+          # 拷贝资产
+          Copy-Item $staging/PathTrace.psm1 $pkgDir/
+          Copy-Item $staging/PathTrace.psd1 $pkgDir/
+          Copy-Item $staging/PathTrace-README.md $pkgDir/README.md
+          Copy-Item $staging/PathTrace-Usage.md $pkgDir/
+          Copy-Item $staging/deploy-pathtrace-module.ps1 $pkgDir/
+          Copy-Item $staging/test-pathtrace-global.ps1 $pkgDir/
+          # 写入 VERSION 文件
+          "PathTrace v$ver - built $((Get-Date).ToString('o'))" | Out-File -FilePath "$pkgDir/VERSION" -Encoding utf8
+          # 打包 zip
+          $zipPath = "$staging/$pkgName.zip"
+          Compress-Archive -Path "$pkgDir/*" -DestinationPath $zipPath -Force
+          Write-Host "Package created: $zipPath ($([math]::Round((Get-Item $zipPath).Length / 1KB, 2)) KB)"
+          "ZIP_PATH=$zipPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "ZIP_NAME=$pkgName.zip" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Generate release notes from README sections
+        run: |
+          $ver = $env:VERSION
+          $readme = Get-Content staging/PathTrace-README.md -Raw
+          # 提取核心功能、升级对比、边界测试报告 3 个章节作为 release notes
+          $sections = @()
+          if ($readme -match '(## 核心功能[\s\S]*?)(?=## 快速开始)') { $sections += $Matches[1] }
+          if ($readme -match '(## DEBUG 模式日志输出示例[\s\S]*?)(?=## 边界测试报告)') { $sections += $Matches[1] }
+          if ($readme -match '(## 边界测试报告[\s\S]*?)(?=## 三级导入策略)') { $sections += $Matches[1] }
+          if ($readme -match '(## 升级对比[\s\S]*?)(?=## 测试套件)') { $sections += $Matches[1] }
+          $header = "# PathTrace v$ver`n`nBuilt from commit ${{ github.sha }} by GitHub Actions.`n`n"
+          $footer = "`n---`nInstall: extract zip -> run `deploy-pathtrace-module.ps1``nFull docs: PathTrace-README.md inside archive"
+          $body = $header + ($sections -join "`n---`n") + $footer
+          $body | Out-File -FilePath staging/release_notes.md -Encoding utf8
+          Write-Host "Release notes generated ($($body.Length) chars)"
+
+      - name: Create GitHub Release and upload assets
+        uses: softprops/action-gh-release@69320dbe05506a9a39fc8ae11030b214ec2d1f87 # v2
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: PathTrace v${{ env.VERSION }}
+          body_path: staging/release_notes.md
+          files: |
+            ${{ env.ZIP_PATH }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          prerelease: ${{ contains(env.VERSION, 'pre') || contains(env.VERSION, 'rc') || contains(env.VERSION, 'beta') || contains(env.VERSION, 'alpha') }}
+          make_latest: true

@@ -24,12 +24,31 @@ import { useResearchPoolStore } from '@/store/researchPoolStore'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { COLOR_TOKENS, twText, twBg, twBorder, DARK } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
+import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { getBatchCollectionProgress, type CollectionProgress as ProgressType } from '@/services/pool/collectionProgressService'
 import { collectPoolSymbols } from '@/services/pool/collectionService'
 import type { PoolItem } from '@/types/modules/pool.types'
-import type { CollectionConfig } from '@/types/modules/collection.types'
+import type { CollectionConfig, DimensionPipelineConfig } from '@/types/modules/collection.types'
+import { STRATEGY_TEMPLATES, DEFAULT_DIMENSIONS } from '@/config/collectConfig'
+import { upgradeDimensionsToPipeline } from '@/services/data-collector/collectionPipeline'
+
+/** 全局批量采集进度刷新事件：批量采集进行中触发，通知所有子组件刷新进度 */
+export const PROGRESS_REFRESH_EVENT = 'pool:progress-refresh'
+
+// ── Debug：采集中途断连模拟钩子（可在浏览器控制台调用或通过 sessionStorage 设置）
+//    触发方式：
+//      1) window.__SIMULATE_DISCONNECT__?.()    // 控制台直接调用
+//      2) sessionStorage.setItem('POOL_SIMULATE_DISCONNECT', '1')  // 跨代码段通用
+//    恢复方式：
+//      window.__SIMULATE_RESET__?.() 或 sessionStorage.removeItem('POOL_SIMULATE_DISCONNECT')
+declare global {
+  interface Window {
+    __SIMULATE_DISCONNECT__?: () => void
+    __SIMULATE_RESET__?: () => void
+  }
+}
 
 // ============================================================
 // 辅助函数
@@ -51,11 +70,11 @@ const STATUS_LABELS: Record<string, string> = {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  candidate: 'bg-stone-100 text-stone-700 dark:bg-neutral-800 dark:text-neutral-300',
-  screened: 'bg-blue-100 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400',
-  deepDive: 'bg-purple-100 text-purple-700 dark:bg-purple-950/30 dark:text-purple-400',
-  watching: 'bg-amber-100 text-amber-700 dark:bg-amber-950/30 dark:text-amber-300',
-  archived: 'bg-stone-200 text-stone-500 dark:bg-neutral-800 dark:text-neutral-500',
+  candidate: cn(twBg('stone', 100), twText('stone', 700), DARK.bgNeutral800, DARK.textNeutral300),
+  screened: cn(twBg('blue', 100), twText('blue', 700), DARK.bgBlue950_30, DARK.textBlue400),
+  deepDive: cn(twBg('purple', 100), twText('purple', 700), DARK.bgPurple950_30, DARK.textPurple400),
+  watching: cn(twBg('amber', 100), twText('amber', 700), DARK.bgAmber950_30, DARK.textAmber300),
+  archived: cn(twBg('stone', 200), twText('stone', 500), DARK.bgNeutral800, DARK.textNeutral500),
 }
 
 // ============================================================
@@ -165,6 +184,140 @@ function buildSummary(progressMap: Map<string, ProgressType>): PoolCollectionSum
   }
 }
 
+// ============================================================
+// 批量采集进度面板
+// ============================================================
+
+interface BatchProgressDetail {
+  symbol: string
+  name: string
+  percent: number
+  completedDims: number
+  totalDims: number
+  dimStatuses: { name: string; status: string }[]
+}
+
+function BatchCollectionPanel({
+  collecting,
+  symbols,
+  progressMap,
+  refreshError,
+}: {
+  collecting: boolean
+  symbols: { symbol: string; name: string }[]
+  progressMap: Map<string, ProgressType> | null
+  refreshError: string | null
+}): React.JSX.Element | null {
+  if (!collecting) return null
+
+  // 计算总进度
+  let totalCompleted = 0
+  let totalDims = 0
+  const details: BatchProgressDetail[] = []
+
+  for (const item of symbols) {
+    const p = progressMap?.get(item.symbol)
+    const completedDims = p?.completedCount ?? 0
+    const totalD = p?.totalDimensions ?? 7
+    totalCompleted += completedDims
+    totalDims += totalD
+    details.push({
+      symbol: item.symbol,
+      name: item.name,
+      percent: p?.completionPercent ?? 0,
+      completedDims,
+      totalDims: totalD,
+      dimStatuses: p?.dimensions?.map((d) => ({ name: d.name, status: d.status })) ?? [],
+    })
+  }
+
+  const overallPercent = totalDims > 0 ? Math.round((totalCompleted / totalDims) * 100) : 0
+  const isBroken = !!refreshError
+
+  return (
+    <div className={cn(
+      'rounded-lg border-2 p-4',
+      isBroken
+        ? cn(twBorder('red', 300), twBg('red', '50/60'), DARK.borderRed800, DARK.bgRed950_20)
+        : cn(twBorder('emerald', 200), twBg('emerald', '50/50'), DARK.borderEmerald800, DARK.bgEmerald950_20),
+    )}>
+      {/* 总进度条 */}
+      <div className="flex items-center gap-3">
+        {isBroken ? (
+          <span className={cn('text-sm', twText('red', 600))}>⚠</span>
+        ) : (
+          <div className={cn('h-3 w-3 animate-spin rounded-full border-2', twBorder('emerald', 300), 'border-t-emerald-600')} />
+        )}
+        <span className={cn('text-sm font-medium', isBroken ? twText('red', 700) : twText('emerald', 700), isBroken ? DARK.textRed300 : DARK.textEmerald300)}>
+          {isBroken ? '采集断连，已停止进度更新' : '批量采集进行中'}
+        </span>
+        <div className={cn('flex-1 h-3 overflow-hidden rounded-full', isBroken ? twBg('red', 100) : twBg('emerald', 100), isBroken ? DARK.bgRed950_50 : DARK.bgEmerald950_50)}>
+          <div
+            className={cn('h-full rounded-full transition-all duration-700 ease-out', isBroken ? twBg('red', 400) : twBg('emerald', 500))}
+            style={{ width: `${overallPercent}%` }}
+          />
+        </div>
+        <span className={cn('text-lg font-bold tabular-nums', isBroken ? twText('red', 700) : twText('emerald', 700), isBroken ? DARK.textRed300 : DARK.textEmerald300)}>
+          {overallPercent}%
+        </span>
+      </div>
+      <p className={cn('mt-1 text-xs', twText('stone', 500))}>
+        已完成 {totalCompleted} / {totalDims} 个维度 · 共 {symbols.length} 只标的
+      </p>
+      {/* 断连错误详情 */}
+      {refreshError && (
+        <div className={cn('mt-2 rounded-md border px-2 py-1.5 text-[11px]', twBorder('red', 200), DARK.borderRed900, DARK.bgNeutral900_60, twText('red', 700), DARK.textRed300)}>
+          <span className="font-medium">断连原因：</span>
+          <span className="font-mono break-all">{refreshError}</span>
+        </div>
+      )}
+
+      {/* 每只股票的维度采集状态 */}
+      <div className={cn('mt-3 space-y-1.5 rounded-md border p-3', twBorder('emerald', 100), DARK.bgNeutral900Half, DARK.borderEmerald900)}>
+        {details.map((d) => (
+          <div key={d.symbol} className="flex items-center gap-2 text-xs">
+            <span className={cn('w-24 shrink-0 truncate font-mono', twText('stone', 600), DARK.textNeutral300)} title={d.name}>
+              {d.symbol}
+            </span>
+            <span className={cn('w-16 shrink-0 truncate', twText('stone', 500))} title={d.name}>
+              {d.name}
+            </span>
+            {/* 维度圆点：与 CollectionProgress STATUS_CONFIG 保持一致 */}
+            <div className="flex flex-1 items-center gap-1">
+              {d.dimStatuses.map((dim, i) => {
+                const dotClass =
+                  dim.status === 'success' ? twBg('emerald', 500) :
+                  dim.status === 'partial' ? twBg('amber', 500) :
+                  dim.status === 'fail' ? twBg('red', 500) :
+                  cn(twBg('stone', 300), DARK.bgNeutral600)
+                return (
+                  <div
+                    key={i}
+                    className={cn('h-2 w-2 rounded-full transition-colors duration-300', dotClass)}
+                    title={`${dim.name}：${dim.status === 'success' ? '已完成' : dim.status === 'partial' ? '部分' : dim.status === 'fail' ? '失败' : '待采集'}`}
+                  />
+                )
+              })}
+            </div>
+            {/* 百分比 */}
+            <div className={cn('flex items-center gap-1.5', 'w-20 shrink-0 justify-end')}>
+              <div className={cn('h-1.5 w-12 overflow-hidden rounded-full', twBg('stone', 200), DARK.bgNeutral700)}>
+                <div
+                  className={cn('h-full rounded-full transition-all duration-500', twBg('emerald', 500))}
+                  style={{ width: `${d.percent}%` }}
+                />
+              </div>
+              <span className={cn('tabular-nums', twText('stone', 600), DARK.textNeutral300)}>
+                {d.completedDims}/{d.totalDims}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 const RATING_LABELS: Record<string, string> = {
   excellent: '优秀',
   good: '良好',
@@ -176,6 +329,8 @@ const RATING_LABELS: Record<string, string> = {
 // 主页面
 // ============================================================
 
+const pageLogger = getLogger()
+
 export default function PoolBoardPage(): React.JSX.Element {
   const items = useResearchPoolStore((s) => s.items)
   const loading = useResearchPoolStore((s) => s.loading)
@@ -183,30 +338,237 @@ export default function PoolBoardPage(): React.JSX.Element {
   const [summary, setSummary] = React.useState<PoolCollectionSummary | null>(null)
   const [collecting, setCollecting] = React.useState(false)
   const [collectError, setCollectError] = React.useState<string | null>(null)
+  const [batchProgressMap, setBatchProgressMap] = React.useState<Map<string, ProgressType> | null>(null)
+  const [refreshError, setRefreshError] = React.useState<string | null>(null)
 
   const handleCollect = React.useCallback(async (): Promise<void> => {
     if (collecting || items.length === 0) return
+    let forceDemoFlag = false
+    try { forceDemoFlag = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('POOL_FORCE_DEMO') === '1' } catch { /* noop */ }
+    pageLogger.info('[PoolBoardPage · handleCollect] 批量采集启动', {
+      symbolCount: items.length,
+      symbols: items.map((i) => i.symbol),
+      mode: forceDemoFlag ? 'DEMO' : 'REAL',
+    })
     setCollecting(true)
     setCollectError(null)
+    setRefreshError(null)
+
+    // ── Debug：强制批量采集走演示 Mock 模式
+    //    sessionStorage.POOL_FORCE_DEMO === '1' 时，所有维度都走 mock 分支
+    //    （800–2200ms 随机延迟 + 85%绿 / 10%红 / 5%琥珀 状态分布），
+    //    让进度面板能观察到进度条从 0%→100% 流畅增长及圆点颜色切换。
+    try {
+      if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.setItem('POOL_FORCE_DEMO', '1')
+      }
+    } catch { /* noop */ }
+
+    // 连续刷新失败计数，超过阈值判定为断连
+    let consecutiveRefreshFailures = 0
+    const REFRESH_FAILURE_THRESHOLD = 3
+    let refreshForceStopped = false
+
+    // ── Debug Hook：两种方式触发采集中途断连场景
+    //    1) 控制台调用：window.__SIMULATE_DISCONNECT__?.()
+    //    2) sessionStorage：sessionStorage.setItem('POOL_SIMULATE_DISCONNECT', '1')
+    //    恢复：window.__SIMULATE_RESET__?.() 或 sessionStorage.removeItem('POOL_SIMULATE_DISCONNECT')
+    let simFail = false
+    let simCallCount = 0
+    const checkSimFlag = (): boolean => {
+      if (simFail) return true
+      try {
+        if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('POOL_SIMULATE_DISCONNECT') === '1') {
+          simFail = true
+        }
+      } catch { /* noop */ }
+      return simFail
+    }
+    if (typeof window !== 'undefined') {
+      window.__SIMULATE_DISCONNECT__ = () => {
+        console.warn('[PoolBoardPage · Debug] ⚡ 采集中途断连模拟已启用（window hook），下次刷新开始抛错')
+        simFail = true
+        try { sessionStorage.setItem('POOL_SIMULATE_DISCONNECT', '1') } catch { /* noop */ }
+      }
+      window.__SIMULATE_RESET__ = () => {
+        console.info('[PoolBoardPage · Debug] 断连模拟已重置')
+        simFail = false
+        simCallCount = 0
+        try { sessionStorage.removeItem('POOL_SIMULATE_DISCONNECT') } catch { /* noop */ }
+      }
+    }
+
+    // 进度定时刷新：采集过程中每 1 秒触发一次所有子组件的进度刷新
+    let refreshTimer: ReturnType<typeof setInterval> | null = setInterval(() => {
+      if (refreshForceStopped) return
+      eventBus.emit(PROGRESS_REFRESH_EVENT, {})
+      void (async () => {
+        try {
+          // Debug 模式：模拟断连 —— 连续抛出 IndexedDB 查询失败
+          if (checkSimFlag()) {
+            simCallCount++
+            const errMsg = `IndexedDB 读取失败：transaction aborted (模拟网络断连 #${simCallCount})`
+            console.error(`[PoolBoardPage · Debug] 注入进度刷新失败 (${simCallCount}/${REFRESH_FAILURE_THRESHOLD}): ${errMsg}`)
+            pageLogger.warn('[PoolBoardPage · handleCollect · Progress] 注入模拟断连错误', {
+              attempt: simCallCount,
+              threshold: REFRESH_FAILURE_THRESHOLD,
+              error: errMsg,
+            })
+            throw new Error(errMsg)
+          }
+          const progressMap = await getBatchCollectionProgress(items.map((i) => i.symbol))
+          setSummary(buildSummary(progressMap))
+          setBatchProgressMap(progressMap)
+          consecutiveRefreshFailures = 0
+          setRefreshError(null)
+          if (consecutiveRefreshFailures === 0) {
+            // 每次刷新成功都输出一次进度摘要日志（每秒一次，方便排查卡住的情况）
+            const summaryStats = buildSummary(progressMap)
+            pageLogger.info('[PoolBoardPage · handleCollect · Progress] 进度刷新成功', {
+              avgPercent: summaryStats.avgPercent,
+              collectedCount: summaryStats.collectedCount,
+              totalSymbols: items.length,
+              ratingCounts: summaryStats.ratingCounts,
+            })
+          }
+        } catch (err) {
+          consecutiveRefreshFailures++
+          const msg = err instanceof Error ? err.message : String(err)
+          console.error(`[PoolBoardPage] 进度刷新失败 (${consecutiveRefreshFailures}/${REFRESH_FAILURE_THRESHOLD}):`, err)
+          pageLogger.warn('[PoolBoardPage · handleCollect · Progress] 进度刷新失败', {
+            attempt: consecutiveRefreshFailures,
+            threshold: REFRESH_FAILURE_THRESHOLD,
+            error: msg,
+          })
+          setRefreshError(msg)
+          if (consecutiveRefreshFailures >= REFRESH_FAILURE_THRESHOLD) {
+            refreshForceStopped = true
+            if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null }
+            const stopMsg = `⚠ 采集中途断连：进度刷新连续 ${REFRESH_FAILURE_THRESHOLD} 次失败 (${msg})，已停止更新。`
+            console.error('[PoolBoardPage] ' + stopMsg)
+            pageLogger.error('[PoolBoardPage · handleCollect · Progress] 采集中途断连，已停止进度更新', {
+              threshold: REFRESH_FAILURE_THRESHOLD,
+              lastError: msg,
+              symbolCount: items.length,
+            })
+            setCollectError(stopMsg)
+          }
+        }
+      })()
+    }, 1000)
+
     try {
       const cfgState = useSevenDimConfigStore.getState()
+
+      // 关键修复：dimensions 为空时（用户未到配置页面），
+      // 自动从 STRATEGY_TEMPLATES 的第一个模板加载默认启用维度，
+      // 避免抛出"没有可用的采集维度"异常导致采集功能悬空。
+      let dims = cfgState.dimensions
+      if (!Array.isArray(dims) || dims.length === 0 || dims.every((d) => !d.enabled)) {
+        const defaultTemplate = STRATEGY_TEMPLATES.find((t) => t.id === 'value') ?? STRATEGY_TEMPLATES[0]
+        if (!defaultTemplate) {
+          throw new Error('未找到任何策略模板，无法构建默认维度配置')
+        }
+        const fallbackDims = upgradeDimensionsToPipeline(
+          DEFAULT_DIMENSIONS.map((d) => ({
+            ...d,
+            enabled: defaultTemplate.dimensions.includes(d.code),
+            frequency: defaultTemplate.updateInterval,
+            sources: defaultTemplate.sources,
+          })) as DimensionPipelineConfig[],
+        )
+        dims = fallbackDims
+        pageLogger.warn('[PoolBoardPage · handleCollect · Config] 维度配置为空，已回退到默认策略模板', {
+          activeTemplate: defaultTemplate.id,
+          templateName: defaultTemplate.name,
+          enabledDimensionCodes: fallbackDims.filter((d) => d.enabled).map((d) => d.code),
+        })
+        // 尝试写回 store，下次无需再重建
+        try {
+          useSevenDimConfigStore.setState({ dimensions: fallbackDims, activeTemplate: defaultTemplate.id, isDirty: true })
+        } catch { /* ignore */ }
+      }
+
+      const activeTemplate = cfgState.activeTemplate ?? 'value'
       const config: CollectionConfig = {
         version: '1.0.0',
-        activeTemplate: cfgState.activeTemplate,
-        dimensions: cfgState.dimensions,
+        activeTemplate,
+        dimensions: dims,
         global: cfgState.global,
         symbolCount: items.length,
-        historyDays: cfgState.historyDays,
+        historyDays: cfgState.historyDays ?? 252,
         updatedAt: Date.now(),
       }
-      await collectPoolSymbols(items.map((i) => i.symbol), config)
+      pageLogger.info('[PoolBoardPage · handleCollect · Config] 采集配置构建完成', {
+        activeTemplate,
+        dimensionCount: dims.length,
+        enabledDimensionCodes: dims.filter((d) => d.enabled).map((d) => d.code),
+        historyDays: config.historyDays,
+      })
+
+      // collectPoolSymbols 内部会 Promise.allSettled + 抛错合并，
+      try {
+        pageLogger.info('[PoolBoardPage · handleCollect · Main] collectPoolSymbols 开始执行', {
+          symbolCount: items.length,
+          activeTemplate,
+        })
+        const collectStart = Date.now()
+        await collectPoolSymbols(items.map((i) => i.symbol), config)
+        pageLogger.info('[PoolBoardPage · handleCollect · Main] collectPoolSymbols 执行完成', {
+          symbolCount: items.length,
+          elapsedMs: Date.now() - collectStart,
+        })
+      } catch (collectErr) {
+        const msg = collectErr instanceof Error ? collectErr.message : String(collectErr)
+        console.error('[PoolBoardPage] 批量采集主流程异常:', collectErr)
+        pageLogger.error('[PoolBoardPage · handleCollect · Main] 批量采集主流程异常（部分维度失败不视为完全失败）', {
+          error: msg,
+          stack: collectErr instanceof Error ? collectErr.stack : undefined,
+        })
+        // 部分维度失败不视为完全失败，记录即可
+        setCollectError(msg)
+      }
+
       await refresh()
       const progressMap = await getBatchCollectionProgress(items.map((i) => i.symbol))
-      setSummary(buildSummary(progressMap))
+      const finalSummary = buildSummary(progressMap)
+      setSummary(finalSummary)
+      pageLogger.info('[PoolBoardPage · handleCollect · Main] 批量采集结束 — 最终结果摘要', {
+        avgPercent: finalSummary.avgPercent,
+        collectedCount: finalSummary.collectedCount,
+        totalSymbols: items.length,
+        ratingCounts: finalSummary.ratingCounts,
+        status: collectError ? 'ERROR' : refreshForceStopped ? 'DISCONNECTED' : 'SUCCESS',
+      })
+      // 最终通知所有子组件最后刷新一次
+      eventBus.emit(PROGRESS_REFRESH_EVENT, {})
     } catch (err) {
-      setCollectError(err instanceof Error ? err.message : String(err))
+      const msg = err instanceof Error ? err.message : String(err)
+      console.error('[PoolBoardPage] 批量采集全局异常:', err)
+      pageLogger.error('[PoolBoardPage · handleCollect · Main] 批量采集全局异常', {
+        error: msg,
+        stack: err instanceof Error ? err.stack : undefined,
+      })
+      setCollectError(msg)
     } finally {
+      if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null }
+      // 清理调试钩子，避免全局污染
+      if (typeof window !== 'undefined') {
+        try { delete (window as unknown as Record<string, unknown>).__SIMULATE_DISCONNECT__ } catch { /* noop */ }
+        try { delete (window as unknown as Record<string, unknown>).__SIMULATE_RESET__ } catch { /* noop */ }
+      }
+      try {
+        if (typeof sessionStorage !== 'undefined') {
+          sessionStorage.removeItem('POOL_FORCE_DEMO')
+          sessionStorage.removeItem('POOL_SIMULATE_DISCONNECT')
+        }
+      } catch { /* noop */ }
+      pageLogger.info('[PoolBoardPage · handleCollect · Finally] 批量采集流程收尾完成，定时器/调试钩子已清理', {
+        hadCollectError: Boolean(collectError),
+        wasForceStopped: refreshForceStopped,
+      })
       setCollecting(false)
+      setBatchProgressMap(null)
     }
   }, [collecting, items, refresh])
 
@@ -296,6 +658,14 @@ export default function PoolBoardPage(): React.JSX.Element {
           {collectError}
         </div>
       )}
+
+      {/* ── 批量采集进度面板（采集中显示） ── */}
+      <BatchCollectionPanel
+        collecting={collecting}
+        symbols={items.map((i) => ({ symbol: i.symbol, name: i.name }))}
+        progressMap={batchProgressMap}
+        refreshError={refreshError}
+      />
 
       {/* ── 说明 ── */}
       <div className={cn('rounded-md border px-4 py-3 text-xs', twBorder('stone', 100), twBg('stone', 50) + '/50', DARK.borderNeutral800, DARK.bgNeutral900)}>

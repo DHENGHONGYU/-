@@ -33,11 +33,18 @@ block_cipher = None
 # ──────────────────────────────────────────────
 # UPX 路径配置
 # ──────────────────────────────────────────────
+# SPECPATH 由 PyInstaller 注入，指向 spec 文件所在目录（backend/）
+# 项目根目录 = SPECPATH 的上一级
 
-_UPX_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'upx', 'upx-4.2.4-win64')
+try:
+    _SPEC_DIR = SPECPATH
+except NameError:
+    _SPEC_DIR = os.getcwd()
+_PROJECT_ROOT = os.path.dirname(os.path.abspath(_SPEC_DIR)) if os.path.basename(_SPEC_DIR) == 'backend' else os.path.abspath(_SPEC_DIR)
+
+_UPX_DIR = os.path.join(_PROJECT_ROOT, 'upx', 'upx-4.2.4-win64')
 if not os.path.isdir(_UPX_DIR):
-    # 尝试备选路径
-    _UPX_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'upx')
+    _UPX_DIR = os.path.join(_PROJECT_ROOT, 'upx')
     if not os.path.isdir(_UPX_DIR):
         _UPX_DIR = None
 
@@ -139,7 +146,6 @@ a = Analysis(
         'matplotlib',
         'tkinter',
         'test',
-        'unittest',
         'pydoc',
         'doctest',
         'IPython',
@@ -173,6 +179,15 @@ a = Analysis(
         'sklearn.utils.tests',
         'sklearn.cluster.tests',
         'sklearn.decomposition.tests',
+        # ── pandas 测试模块（优化体积 + 解决 NSIS 路径问题）──
+        'pandas.tests',
+        'pandas.io.json._test',
+        'pandas._testing',
+        'pandas.test',
+        # ── pandas 不需要的子模块 ──
+        'pandas.io.pytables',
+        'pandas.io.sql',
+        'pandas.io.xml',
     ],
     cipher=block_cipher,
     noarchive=False,

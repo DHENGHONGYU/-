@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>§9.6 场景 B: 维度漂移事故回滚</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+        h1 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        #diagram {
+            background: #fff;
+        }
+        .tip {
+            margin-top: 15px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>§9.6 场景 B: 维度漂移事故回滚</h1>
+    <div id="diagram" class="mermaid">
+flowchart TD
+    A["Check 1/3: dim ≠ 384 如 385"] --> B[检查 Embedding 配置]
+    B --> C[dim 来源判断]
+    C -->|dim 来自配置文件/环境变量| D[检查 ConfigMap / env]
+    D --> E{配置是否被改?}
+    E -->|配置被改| F[恢复 v1.1.0 ConfigMap]
+    E -->|配置正确但 dim 仍错| G[检查代码镜像]
+    C -->|dim 来自模型本身| G
+    G --> H[代码镜像 tag 漂移<br/>残留调试代码]
+    H --> I[回滚 Deployment 镜像到 v1.1.0]
+    F --> J[等待 Rollout + 重新验证]
+    I --> J
+    J --> K{exit code?}
+    K -->|exit=0| L[✅ 关闭工单<br/>排查调试代码为何残留]
+    K -->|exit=1| M[§8.2 继续排查]
+    </div>
+    <div class="tip">
+        右键点击图表 → "图片另存为" 即可保存 PNG.<br/>
+        或使用浏览器截图工具截取整个页面.
+    </div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

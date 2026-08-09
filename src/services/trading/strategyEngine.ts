@@ -258,13 +258,15 @@ function classify(
     return 'value-bargain'
   }
 
-  // hot-momentum：sector 属于热门板块 TOP N 且动量达标
+  // hot-momentum：industryCode 属于热门板块 TOP N 且动量达标
+  // 按 hot-momentum-strategy.md §2.5.4：申万二级代码精确匹配为主
+  // 兼容回退：industryCode 未填充时，用 sector 精确相等匹配 HotSector.name
   if (
     composite >= rules.compositeMin &&
     sector !== null &&
     momentum !== null &&
     momentum >= rules.hotMomentumMinMomentum &&
-    isHotSector(sector, topHotSectors)
+    isHotSector(stock.industryCode ?? null, sector, topHotSectors)
   ) {
     return 'hot-momentum'
   }
@@ -343,12 +345,20 @@ async function fetchTopHotSectors(topN: number): Promise<HotSector[]> {
   return result.ok ? result.value.hotSectors : []
 }
 
-function isHotSector(sector: string, topHotSectors: HotSector[]): boolean {
-  const normalized = sector.toLowerCase()
-  return topHotSectors.some((s) =>
-    normalized.includes(s.name.toLowerCase()) ||
-    s.name.toLowerCase().includes(normalized),
-  )
+function isHotSector(
+  industryCode: string | null,
+  sectorName: string | null,
+  topHotSectors: HotSector[],
+): boolean {
+  // 按 hot-momentum-strategy.md §2.5.4：申万二级代码精确匹配为主
+  // 兼容回退：industryCode 未填充时，用 sector 精确相等匹配 HotSector.name（非 includes 模糊匹配）
+  if (industryCode) {
+    return topHotSectors.some((s) => s.code === industryCode)
+  }
+  if (sectorName) {
+    return topHotSectors.some((s) => s.name === sectorName)
+  }
+  return false
 }
 
 function emptyResult(): StrategyResult {

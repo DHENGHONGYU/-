@@ -23,10 +23,6 @@ import '@/agents'
 // （src/mcp/register.ts 在模块加载时通过 import.meta.glob eager 加载并注册所有 MCP Server）
 import '@/mcp/register'
 
-if (import.meta.env.DEV) {
-  void import('@/devtools/testDataFlow')
-}
-
 const logger = getLogger()
 
 function AppContent(): React.JSX.Element {

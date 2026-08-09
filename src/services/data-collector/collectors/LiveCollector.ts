@@ -14,8 +14,11 @@
 
 import { getLogger } from '@/lib/logger'
 import { BaseCollector } from './BaseCollector'
-import type { RawMarketData, DataSourceConfig } from '@/types/modules/widget.types'
+import type { RawMarketData, DataSourceConfig, HotSectorData } from '@/types/modules/widget.types'
 import { getBatchQuotes, getKline } from '../dataSourceOrchestrator'
+import { fetchSectorRotationScores } from '@/services/fetcher/fetcherService'
+import { API_COLLECT_SECTORS } from '@/config/apiPaths'
+import type { RotationSectorScore } from '@/data/types'
 
 const logger = getLogger()
 
@@ -56,6 +59,39 @@ const INDUSTRY_MAP: Record<string, { name: string; competitors: string[]; market
   '002371': { name: '半导体设备', competitors: ['600584', '002373'], marketShare: 12.1 },
   '600519': { name: '白酒', competitors: ['000858', '000568'], marketShare: 25.3 },
   '688981': { name: '半导体制造', competitors: ['600584', '002156'], marketShare: 18.9 },
+}
+
+/**
+ * 将 RotationSectorScore（检索层 0-100）映射为 HotSectorData（评分层 0-5，供 Widget 展示）。
+ *
+ * 分制转换规则（按 hot-momentum-strategy.md §2.5.5 两套分制澄清）：
+ * - 0-100 total → 0-5 score（除以 20）
+ * - 五因子 0-100 → 四维 0-5（除以 20，景气/资金/量能/估值 分别映射到 momentum/sentiment/technical/valuation）
+ *
+ * 注意：此映射仅用于 Widget 展示。策略判定（isHotSector）使用检索层 sectorCode 精确匹配，
+ * 不依赖此 0-5 评分。
+ */
+function toHotSectorData(rs: RotationSectorScore): HotSectorData {
+  const score = rs.total / 20
+  const momentum = (rs.f1Jingqi ?? 0) / 20
+  const sentiment = (rs.f2Zijin ?? 0) / 20
+  const technical = (rs.f5Nengliang ?? 0) / 20
+  const valuation = (rs.f3Guzhi ?? 0) / 20
+  const action: HotSectorData['action'] = score >= 4 ? 'immediate' : score >= 3 ? 'probe' : 'ignore'
+
+  return {
+    symbol: rs.sectorCode,
+    name: rs.sectorName,
+    score,
+    action,
+    dimensions: {
+      momentum,
+      sentiment,
+      technical,
+      valuation,
+      composite: (momentum + sentiment + technical + valuation) / 4,
+    },
+  }
 }
 
 /**
@@ -122,7 +158,13 @@ export class LiveCollector extends BaseCollector {
   }
 
   private async collectIndices(): Promise<RawMarketData> {
-    logger.info('[LiveCollector] 开始采集指数行情', { codes: INDEX_CODES })
+    logger.info('[LiveCollector] 开始采集指数行情', {
+      routedEndpoint: 'indices',
+      orchestrator: 'getBatchQuotes',
+      dataSource: 'tencent-proxy',
+      codes: INDEX_CODES,
+      count: INDEX_CODES.length,
+    })
 
     const result = await getBatchQuotes(INDEX_CODES)
 
@@ -144,7 +186,13 @@ export class LiveCollector extends BaseCollector {
   }
 
   private async collectWatchlist(): Promise<RawMarketData> {
-    logger.info('[LiveCollector] 开始采集自选股行情', { codes: WATCHLIST_CODES })
+    logger.info('[LiveCollector] 开始采集自选股行情', {
+      routedEndpoint: 'watchlist',
+      orchestrator: 'getBatchQuotes',
+      dataSource: 'tencent-proxy',
+      codes: WATCHLIST_CODES,
+      count: WATCHLIST_CODES.length,
+    })
 
     const result = await getBatchQuotes(WATCHLIST_CODES)
 
@@ -166,7 +214,14 @@ export class LiveCollector extends BaseCollector {
   }
 
   private async collectKline(symbol: string): Promise<RawMarketData> {
-    logger.info('[LiveCollector] 开始采集K线数据', { symbol })
+    logger.info('[LiveCollector] 开始采集K线数据', {
+      routedEndpoint: 'kline',
+      orchestrator: 'getKline',
+      dataSource: 'tencent-proxy',
+      symbol,
+      code: symbol.replace(/\.[A-Z]+$/, ''),
+      bars: 252,
+    })
 
     const code = symbol.replace(/\.[A-Z]+$/, '')
     const result = await getKline(code, 252)
@@ -184,7 +239,14 @@ export class LiveCollector extends BaseCollector {
   }
 
   private async collectStockProfile(symbol: string): Promise<RawMarketData> {
-    logger.info('[LiveCollector] 开始采集股票基本信息', { symbol })
+    logger.info('[LiveCollector] 开始采集股票基本信息', {
+      routedEndpoint: 'stock-analysis/profile',
+      orchestrator: 'getBatchQuotes',
+      dataSource: 'tencent-proxy',
+      symbol,
+      code: symbol.replace(/\.[A-Z]+$/, ''),
+      note: 'industry/pe/pb/roe 当前由 INDUSTRY_MAP 与估算函数提供，待 /api/collect/basic 接入',
+    })
 
     const code = symbol.replace(/\.[A-Z]+$/, '')
     const result = await getBatchQuotes([code])
@@ -215,12 +277,20 @@ export class LiveCollector extends BaseCollector {
   }
 
   private async collectStockCompare(symbol: string): Promise<RawMarketData> {
-    logger.info('[LiveCollector] 开始采集股票对比数据', { symbol })
-
     const code = symbol.replace(/\.[A-Z]+$/, '')
     const industryInfo = INDUSTRY_MAP[code] || { name: '未知行业', competitors: [], marketShare: 0 }
 
     const compareCodes = [...industryInfo.competitors.slice(0, 3), code]
+    logger.info('[LiveCollector] 开始采集股票对比数据', {
+      routedEndpoint: 'stock-analysis/compare',
+      orchestrator: 'getBatchQuotes',
+      dataSource: 'tencent-proxy',
+      symbol,
+      code,
+      industry: industryInfo.name,
+      compareCodes,
+    })
+
     const result = await getBatchQuotes(compareCodes)
 
     if (!result.success || !result.data || result.data.length === 0) {
@@ -240,20 +310,56 @@ export class LiveCollector extends BaseCollector {
     return this.wrapData('stockComparison', { industry: industryInfo.name, stocks: comparison }, result.source)
   }
 
+  /**
+   * 采集热门板块数据（按 hot-momentum-strategy.md §2.5）。
+   *
+   * 全链路：
+   * 1. 调用 fetchSectorRotationScores → Python /api/collect/sectors（AKShare 申万二级）
+   * 2. 采集结果持久化到 IndexedDB rotationScores store（检索层 0-100）
+   * 3. 映射为 HotSectorData[]（评分层 0-5，供 Widget 展示）并返回
+   *
+   * 分制转换（0-100 → 0-5）：
+   * - score = total / 20
+   * - dimensions.momentum = f1Jingqi / 20（景气）
+   * - dimensions.sentiment = f2Zijin / 20（资金，作为情绪代理）
+   * - dimensions.technical = f5Nengliang / 20（量能）
+   * - dimensions.valuation = f3Guzhi / 20（估值）
+   * - action: score >= 4 → immediate, >= 3 → probe, else ignore
+   */
   private async collectHotSectors(): Promise<RawMarketData> {
-    logger.info('[LiveCollector] 开始采集热门板块数据')
+    logger.info('[LiveCollector] 开始采集热门板块数据（AKShare 申万二级）', {
+      dataSource: 'akshare',
+      backendEndpoint: API_COLLECT_SECTORS,
+      routedEndpoint: 'strategy/hot-sectors',
+      akshareInterfaces: ['sw_index_second_info', 'index_hist_sw'],
+      topN: 20,
+      swLevel: '二级',
+      pipeline: 'fetchSectorRotationScores → DataBridge.saveRotationScores → rotationScores store',
+    })
 
-    const sectors = [
-      { name: '半导体', change: 3.25, volume: 256000000, leader: '600584' },
-      { name: '新能源', change: 2.85, volume: 312000000, leader: '300750' },
-      { name: '白酒', change: 1.52, volume: 189000000, leader: '600519' },
-      { name: '医药', change: -0.85, volume: 98000000, leader: '600276' },
-      { name: '银行', change: 0.35, volume: 67000000, leader: '600036' },
-    ]
+    const result = await fetchSectorRotationScores({ topN: 20 })
 
-    logger.info('[LiveCollector] 热门板块数据采集成功', { count: sectors.length })
+    if (!result.success || !result.data || result.data.length === 0) {
+      logger.error('[LiveCollector] 热门板块采集失败或为空', {
+        success: result.success,
+        error: result.error,
+      })
+      throw new Error(`[LiveCollector] 热门板块采集失败: ${result.error ?? '无数据'}`)
+    }
 
-    return this.wrapData('hotSectors', sectors, 'live')
+    const rotationScores = result.data
+    const hotSectorData = rotationScores.map(toHotSectorData)
+
+    logger.info('[LiveCollector] 热门板块数据采集并持久化成功', {
+      count: hotSectorData.length,
+      scoreDate: rotationScores[0]?.scoreDate,
+      topSectors: hotSectorData
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 5)
+        .map((s) => ({ name: s.name, score: s.score.toFixed(2) })),
+    })
+
+    return this.wrapData('hotSectors', hotSectorData, 'live')
   }
 
   private async collectValuePit(): Promise<RawMarketData> {

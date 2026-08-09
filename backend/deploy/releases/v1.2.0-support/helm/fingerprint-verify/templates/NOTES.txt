@@ -1,0 +1,33 @@
+V9 Embedding 向量指纹一致性验证 Helm Chart 部署完成。
+
+Release:    {{ .Release.Name }}
+Namespace:  {{ .Release.Namespace }}
+模式:       {{ .Values.job.mode }}
+目标服务:   {{ include "v9-fingerprint-verify.targetHost" . }}:{{ .Values.service.port }}
+基线来源:   {{ include "v9-fingerprint-verify.baselineConfigMap" . }}
+
+1. 查看 Job 状态：
+   kubectl get jobs -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+2. 查看 Pod 状态：
+   kubectl get pods -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+3. 查看 Pod 日志：
+   POD=$(kubectl get pods -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }} -o jsonpath='{.items[0].metadata.name}')
+   kubectl logs -n {{ .Release.Namespace }} "$POD"
+
+4. 通过 Job 名称查看日志：
+   kubectl logs -n {{ .Release.Namespace }} job/{{ include "v9-fingerprint-verify.fullname" . }}
+
+{{- if eq .Values.job.mode "CronJob" }}
+
+5. 查看 CronJob：
+   kubectl get cronjobs -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+6. 手动触发一次验证：
+   kubectl create job --from=cronjob/{{ include "v9-fingerprint-verify.fullname" . }}-cron \
+     -n {{ .Release.Namespace }} {{ .Release.Name }}-manual-$(date +%s)
+{{- end }}
+
+7. 查看基线 ConfigMap：
+   kubectl get configmap -n {{ .Release.Namespace }} {{ include "v9-fingerprint-verify.baselineConfigMap" . }} -o yaml

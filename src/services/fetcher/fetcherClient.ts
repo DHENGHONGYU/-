@@ -4,7 +4,7 @@
 import { getDefaultFetcherServiceConfig } from '@/config/fetcherConfig'
 import { getLogger } from '@/lib/logger'
 import { measureAsync, PERF } from '@/lib/perf'
-import { API_COLLECT_BASIC, API_COLLECT_FINANCIAL, API_COLLECT_KLINE } from '@/config/apiPaths'
+import { API_COLLECT_BASIC, API_COLLECT_FINANCIAL, API_COLLECT_KLINE, API_COLLECT_SECTORS } from '@/config/apiPaths'
 import type {
   CollectBasicData,
   CollectBasicRequest,
@@ -13,6 +13,8 @@ import type {
   CollectKlineData,
   CollectKlineRequest,
   CollectResponse,
+  CollectSectorsData,
+  CollectSectorsRequest,
   HealthCheckResponse,
 } from './fetcherTypes'
 
@@ -125,12 +127,22 @@ async function request<T>(
 
 /**
  * checkFetcherHealth
+ *
+ * 仅 `real` 模式请求 Python AkShare 服务 `/health`；
+ * 其他模式（rest/mock/websocket）不依赖 Python 服务，直接返回 `ok: true`，
+ * 避免对未启动的 :8000 端口发起无意义请求触发 HTTP 500 噪声。
+ *
  * @returns Promise<
  */
 export async function checkFetcherHealth(): Promise<{
   ok: boolean
   error?: string
 }> {
+  const dataSourceType = import.meta.env.VITE_DATA_SOURCE_TYPE ?? 'mock'
+  if (dataSourceType !== 'real') {
+    return { ok: true }
+  }
+
   try {
     const result = await request<HealthCheckResponse>('/health', { method: 'GET' }, 0)
     if (result.status === 'ok') {
@@ -241,6 +253,42 @@ export async function collectFinancial(
     const durationMs = Date.now() - startTs
     logger.error('[fetcherClient] collectFinancial 请求失败', {
       symbol,
+      durationMs,
+      error: err instanceof Error ? err.message : String(err),
+    })
+    throw err
+  }
+}
+
+/**
+ * collectSectors —— 采集申万二级行业板块轮动评分
+ *
+ * 调用 Python 后端 /api/collect/sectors，返回 RotationSectorScore 列表。
+ * 数据源为 AKShare sw_index_second_info + index_hist_sw，五因子加权评分。
+ *
+ * @param topN 返回的板块数量（按成份个数降序取 TOP N），默认由后端决定
+ */
+export async function collectSectors(
+  params: CollectSectorsRequest = {},
+): Promise<CollectResponse<CollectSectorsData>> {
+  logger.info('[fetcherClient] collectSectors 开始请求', { topN: params.topN, path: API_COLLECT_SECTORS })
+  const startTs = Date.now()
+  try {
+    const result = await request<CollectResponse<CollectSectorsData>>(API_COLLECT_SECTORS, {
+      method: 'POST',
+      body: JSON.stringify({ topN: params.topN ?? 20 } satisfies CollectSectorsRequest),
+    })
+    const durationMs = Date.now() - startTs
+    logger.info('[fetcherClient] collectSectors 请求成功', {
+      success: result.success,
+      durationMs,
+      sectorCount: result.data?.sectors?.length ?? 0,
+      scoreDate: result.data?.scoreDate,
+    })
+    return result
+  } catch (err) {
+    const durationMs = Date.now() - startTs
+    logger.error('[fetcherClient] collectSectors 请求失败', {
       durationMs,
       error: err instanceof Error ? err.message : String(err),
     })

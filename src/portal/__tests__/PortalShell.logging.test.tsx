@@ -298,7 +298,7 @@ describe('PortalShell 日志埋点', () => {
 
       render(<PortalShell />)
 
-      const sidebarButton = screen.getByText('批量导入').closest('button')
+      const sidebarButton = screen.getByText('研究候选池').closest('button')
 
       expect(sidebarButton).not.toBeNull()
       fireEvent.click(sidebarButton!)
@@ -319,11 +319,11 @@ describe('PortalShell 日志埋点', () => {
 
       render(<PortalShell />)
 
-      const sidebarButton = screen.getByText('批量导入').closest('button')
+      const sidebarButton = screen.getByText('研究候选池').closest('button')
 
       fireEvent.click(sidebarButton!)
 
-      expect(mockNavigate).toHaveBeenCalledWith('/input/bulk-import')
+      expect(mockNavigate).toHaveBeenCalledWith('/input/pool-board')
     })
   })
 

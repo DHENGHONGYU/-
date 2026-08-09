@@ -64,13 +64,13 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     path: '/input/bulk-import',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'input',
-    description: '输入舱 - 批量导入',
+    description: '输入舱 - 批量导入（已整合至录入看板，fallback 到 /input）',
   },
   {
     path: '/input/hot-sectors',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'input',
-    description: '输入舱 - 热门板块',
+    description: '输入舱 - 热门板块（已整合至录入看板，fallback 到 /input）',
   },
   {
     path: '/input/data-test',
@@ -336,6 +336,12 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'analysis',
     description: 'V4 行业评分',
+  },
+  {
+    path: '/analysis/stock-score',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'analysis',
+    description: 'V6 个股评分',
   },
   {
     path: '/analysis/intelligent-score',

@@ -318,15 +318,73 @@ export async function generateSignalsForSymbol(
 }
 
 /**
- * 从一组信号中挑选最强信号（买入优先于卖出，再按置信度）
+ * 置信度覆盖机制参数。
+ *
+ * 当低优先级方向的信号置信度显著更高时，允许覆盖方向优先级。
+ * 触发条件（全部满足）：
+ * 1. 两个方向都是交易方向（buy / sell）
+ * 2. 低优先级方向置信度 >= MIN_CONF_TO_OVERRIDE（0.70，高置信度信号）
+ * 3. 双向置信度差距 >= CONFIDENCE_GAP（0.20，显著差距）
+ *
+ * 注意：浮点比较使用 EPSILON 容差，避免 0.7-0.5=0.1999... < 0.20 的精度问题。
+ *
+ * 示例：buy(0.50) vs sell(0.70) → gap=0.20>=0.20, sell_conf=0.70>=0.70 → sell 胜出
+ * 示例：buy(0.65) vs sell(0.75) → gap=0.10<0.20 → 方向优先级仍生效，buy 胜出
+ */
+const MIN_CONF_TO_OVERRIDE = 0.70
+const CONFIDENCE_GAP = 0.20
+const FLOAT_EPSILON = 1e-9
+
+function compareDirectionWithConfidenceOverride(
+  a: TradingSignal,
+  b: TradingSignal,
+): number {
+  const priority: Record<SignalDirection, number> = { buy: 3, sell: 2, watch: 1, hold: 0 }
+  const pa = priority[a.direction] ?? 0
+  const pb = priority[b.direction] ?? 0
+
+  // 方向相同 → 直接按置信度降序
+  if (pa === pb) return b.confidence - a.confidence
+
+  // 只有 buy / sell 两个交易方向之间才启用置信度覆盖
+  const areBothTradeDirs = (pa === 2 || pa === 3) && (pb === 2 || pb === 3)
+  if (!areBothTradeDirs) return pb - pa
+
+  // 确定高/低优先级方向及其信号
+  let highDirSignal: TradingSignal
+  let lowDirSignal: TradingSignal
+  if (pa > pb) {
+    highDirSignal = a
+    lowDirSignal = b
+  } else {
+    highDirSignal = b
+    lowDirSignal = a
+  }
+
+  const confidenceGap = lowDirSignal.confidence - highDirSignal.confidence
+  if (
+    lowDirSignal.confidence >= MIN_CONF_TO_OVERRIDE - FLOAT_EPSILON &&
+    confidenceGap >= CONFIDENCE_GAP - FLOAT_EPSILON
+  ) {
+    // 低优先级方向覆盖胜出
+    return highDirSignal === a ? 1 : -1
+  }
+
+  // 默认方向优先级
+  return pb - pa
+}
+
+/**
+ * 从一组信号中挑选最强信号。
+ *
+ * 优先级规则：
+ * 1. 方向基准：buy(3) > sell(2) > watch(1) > hold(0)
+ * 2. 置信度覆盖（仅 buy↔sell 之间）：低优先级方向置信度 ≥0.70 且与高优先级差距 ≥0.20 时胜出
+ * 3. 同方向内按置信度降序
+ *
+ * @doc [V9-DOC-ARCH-007]
  */
 export function pickStrongestSignal(signals: TradingSignal[]): TradingSignal | undefined {
   if (signals.length === 0) return undefined
-  const priority: Record<SignalDirection, number> = { buy: 3, sell: 2, watch: 1, hold: 0 }
-  return signals.slice().sort((a, b) => {
-    const pa = priority[a.direction] ?? 0
-    const pb = priority[b.direction] ?? 0
-    if (pa !== pb) return pb - pa
-    return b.confidence - a.confidence
-  })[0]
+  return signals.slice().sort(compareDirectionWithConfidenceOverride)[0]
 }

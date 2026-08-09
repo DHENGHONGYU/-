@@ -18,7 +18,7 @@
  * 注意：
  * - 浏览器跨域 (CORS) 限制可能导致这些请求在开发环境直接失败，
  *   调用方应捕获异常并按降级链切换到下一个源。
- * - 所有网络请求均使用 AbortController(30s) 超时控制。
+ * - 所有网络请求均使用 AbortController 超时控制（超时值取自 config/timeouts.ts）。
  * - 严格遵守项目硬约束：核心分支均打印 logger.info，全部 try-catch。
   * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
 */
@@ -30,12 +30,12 @@ import {
   SINA_QUOTE_API,
   NETEASE_HISTORY_API,
 } from '@/config/dataSourceUrls'
+import { DIRECT_DATA_API_TIMEOUT_MS } from '@/config/timeouts'
 import { WAN_TO_YUAN_MULTIPLIER } from '@/constants/math.constants'
+import { checkMarketDataContract } from '@/lib/validation/marketDataContract'
+import type { Stock, DailyQuotes } from '@/data/types'
 
 const logger = getLogger()
-
-/** 单请求默认超时（30s） */
-const REQUEST_TIMEOUT_MS = 30000
 
 // ============================================================
 // 公共类型定义
@@ -109,7 +109,7 @@ function safeNumber(val: string | undefined | null, fallback = 0): number {
 }
 
 /** fetch + AbortController 超时控制 */
-async function fetchWithTimeout(url: string, timeoutMs: number = REQUEST_TIMEOUT_MS): Promise<Response> {
+async function fetchWithTimeout(url: string, timeoutMs: number = DIRECT_DATA_API_TIMEOUT_MS): Promise<Response> {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
   try {

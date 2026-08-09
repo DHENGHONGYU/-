@@ -41,14 +41,19 @@ import { getQualityMetrics } from './qualityMetricsCollector'
 import type { KlineBar } from '@/data/types/types.marketData'
 import { saveTraceRecord } from './tracePersistenceService'
 import { fetchDimensionData } from './multiSourceFetcher'
+import { fetchFinancial } from '@/services/fetcher/fetcherService'
 import { detect as detectMissing } from './missingReportDetector'
 import { MISSING_REPORT_TYPE } from '@/constants/execution.constants'
+import {
+  canExecute as canSourceExecute,
+  recordSourceResult,
+} from './adaptiveSourceOrchestrator'
 
 const logger = getLogger()
 
 // ── 类型 ──
 
-type CollectionMode = 'quote' | 'kline' | 'news' | 'research' | 'competitor' | 'index' | 'chip' | 'unsupported'
+type CollectionMode = 'quote' | 'kline' | 'news' | 'research' | 'competitor' | 'index' | 'chip' | 'financial' | 'unsupported'
 
 interface RunSingleTraceOptions {
   symbol: string
@@ -87,6 +92,7 @@ const DIMENSION_TO_MODE: Readonly<Record<string, CollectionMode>> = {
   '06': 'competitor',
   '07': 'index',
   '08': 'research',
+  '09': 'financial',
 }
 
 // ── Mock 维度数据生成器（已禁用 —— MOCK 数据不真实，真实源失败直接报错）──
@@ -137,21 +143,51 @@ const DIMENSION_TO_ACTION: Readonly<Record<string, EnvelopeAction>> = {
 /**
  * 生成维度数据：优先尝试真实数据源，失败时回退到 Mock。
  * @convergence Phase C: multiSourceFetcher 拉取真实数据，Mock 作为降级回退
+ *
+ * P0 优化（2026-08-09）：接入熔断器，跳过已知死源（circuit-open），
+ * 避免每次都走完整 Tushare(空Token) → 东财(已下线) → LLM(慢) 失败链。
  */
 async function generateDataForDimension(symbol: string, dimensionCode: string): Promise<Record<string, unknown>> {
   let fallbackReason = ''
+
+  // 熔断器前置检查：若维度所有已知源均 circuit-open，直接跳过
+  const dimSources = getDimensionKnownSources(dimensionCode)
+  const allCircuitOpen = dimSources.length > 0 && dimSources.every((src) => !canSourceExecute(src))
+  if (allCircuitOpen) {
+    fallbackReason = `all_sources_circuit_open: [${dimSources.join(', ')}]`
+    logger.warn(`[collectionPipeline] 维度 ${dimensionCode} 所有源熔断中，跳过采集: ${symbol}`, { sources: dimSources })
+    return { _source: 'mock', _mock: true, _fallbackReason: fallbackReason, error: fallbackReason }
+  }
+
+  const dimStart = Date.now()
   // 尝试真实数据源
   try {
     const realData = await fetchDimensionData(symbol, dimensionCode)
     if (realData) {
-      logger.debug(`[collectionPipeline] 维度 ${dimensionCode} 真实数据获取成功: ${symbol}`)
       const source = (realData._source as string) || 'real'
+      const sourceId = mapSourceLabelToId(source)
+      // 记录成功：更新 EWMA 指标 + 熔断器 onSuccess
+      recordSourceResult(sourceId, {
+        success: true,
+        isMock: false,
+        latencyMs: Date.now() - dimStart,
+        completeness: 1,
+      })
+      logger.debug(`[collectionPipeline] 维度 ${dimensionCode} 真实数据获取成功: ${symbol}`)
       return { ...realData, _source: source, _fallbackReason: '' }
     }
     fallbackReason = 'real_source_returned_empty'
+    // 记录失败：空结果视为失败（用该维度配置的首个已知源作为失败归属，避免硬编码 tushare）
+    const emptyFailSource = getDimensionKnownSources(dimensionCode)[0] ?? 'unknown'
+    recordSourceResult(emptyFailSource, { success: false, isMock: false, latencyMs: Date.now() - dimStart, completeness: 0 })
+    logger.warn(`[collectionPipeline] 维度 ${dimensionCode} 真实数据返回空，记录失败源=${emptyFailSource}: ${symbol}`)
   } catch (err) {
     logger.warn(`[collectionPipeline] 维度 ${dimensionCode} 真实数据获取失败: ${symbol}`, { error: String(err) })
     fallbackReason = `real_source_threw: ${err instanceof Error ? err.message : String(err)}`
+    // 异常同样按维度已知源归属，避免硬编码 tushare
+    const throwFailSource = getDimensionKnownSources(dimensionCode)[0] ?? 'unknown'
+    recordSourceResult(throwFailSource, { success: false, isMock: false, latencyMs: Date.now() - dimStart, completeness: 0 })
+    logger.warn(`[collectionPipeline] 维度 ${dimensionCode} 异常，记录失败源=${throwFailSource}: ${symbol}`)
   }
 
   // MOCK 禁用：真实源失败直接返回错误标记，不生成 mock
@@ -159,9 +195,49 @@ async function generateDataForDimension(symbol: string, dimensionCode: string): 
   return { _source: 'mock', _mock: true, _fallbackReason: fallbackReason, error: fallbackReason }
 }
 
-/** 业务数据源 → 直连行情数据源的默认映射（MVP 阶段） */
+/**
+ * 维度 → 已知数据源 ID 列表（用于熔断器前置检查）。
+ * 只列出会实际发网络请求的源，不含 mock。
+ */
+function getDimensionKnownSources(dimensionCode: string): string[] {
+  const sourceMap: Record<string, string[]> = {
+    '03': ['tushare', 'crawler', 'sina'],
+    '04': ['tushare', 'crawler', 'sina'],
+    '05': ['tushare', 'crawler', 'sina'],
+    '06': ['tushare', 'crawler', 'tencent'],
+    '07': ['tushare', 'tencent'],
+    '08': ['tushare', 'crawler'],
+  }
+  return sourceMap[dimensionCode] ?? []
+}
+
+/** 将 multiSourceFetcher 返回的 _source 标签映射为熔断器 sourceId */
+function mapSourceLabelToId(label: string): string {
+  const labelMap: Record<string, string> = {
+    tushare: 'tushare',
+    crawler: 'crawler',
+    sina: 'sina',
+    tencent: 'tencent',
+    llm: 'llm',
+    real: 'tushare',
+  }
+  if (labelMap[label]) return labelMap[label]
+  logger.warn('[collectionPipeline] mapSourceLabelToId: 未知源标签，映射为 unknown', {
+    unknownLabel: label,
+    knownLabels: Object.keys(labelMap),
+  })
+  return 'unknown'
+}
+
+/**
+ * 业务数据源 → 直连行情数据源的默认映射。
+ *
+ * P0 优化（2026-08-09）：腾讯/新浪升为日频基础盘主源，akshare（Python 后端）降为增强源。
+ * 原因：腾讯/新浪经 Vite proxy 免费直连，延迟 <300ms，无需 Token；
+ * akshare 依赖 Python :8000 服务，环境不稳定时首请求即超时浪费 ~5s。
+ */
 const BUSINESS_TO_QUOTE_SOURCE: Readonly<Record<string, QuoteDataSourceId[]>> = {
-  akshare: ['akshare'],
+  akshare: ['tencent', 'sina', 'akshare'],
   ifind: ['tencent', 'sina'],
   yahoo: ['tencent', 'sina'],
   tianyancha: ['mock'],
@@ -452,6 +528,17 @@ async function runSingleTraceImpl(
   const taskId = parentTaskId ? `${parentTaskId}-${normalizedSymbol}-${dimensionCode}` : traceIdFor(normalizedSymbol, dimensionCode)
   const start = Date.now()
 
+  // ── Debug：强制走演示模式（mock + 随机延迟 + 彩色状态）
+  //    触发方式：在调用批量采集前设置 sessionStorage.POOL_FORCE_DEMO = '1'
+  //    当此标志启用时，无论 mode 是什么，都走 mock 采集分支，
+  //    让进度面板能观察到 0→100% 流畅增长以及维度圆点三色切换。
+  const forceDemo = (() => {
+    try {
+      return typeof sessionStorage !== 'undefined' && sessionStorage.getItem('POOL_FORCE_DEMO') === '1'
+    } catch { return false }
+  })()
+  const effectiveMode = forceDemo ? 'unsupported' as CollectionMode : mode
+
   const span: CollectionTraceSpan = {
     traceId,
     taskId,
@@ -475,12 +562,16 @@ async function runSingleTraceImpl(
     })
   }
 
-  // 入口日志由 withLogging 统一记录，此处仅保留 traceId 关联的 debug 日志
-  logger.debug('[collectionPipeline] 单次链路开始', {
+  // 入口关键信息提升到 info 级别，便于生产环境追踪；traceId + mode 可做链路聚合
+  logger.info('[collectionPipeline · runSingleTrace] 维度采集开始', {
     symbol: normalizedSymbol,
     dimensionCode,
+    dimensionName: dimension.name,
     mode,
+    effectiveMode,
     traceId,
+    parentTaskId,
+    forceDemo,
   })
 
   emit(COLLECTION_EVENTS.TRIGGERED, {
@@ -492,29 +583,48 @@ async function runSingleTraceImpl(
   })
   addStage('triggered', `开始采集: ${dimension.name} (${mode})`)
 
-  if (mode === 'unsupported') {
-    const message = `维度 ${dimensionCode} 暂不支持静态采集链路演示`
-    addStage('complete', message, undefined, message)
+  if (effectiveMode === 'unsupported') {
+    // 演示模式：逐维度逐步写入 trace，模拟真实采集节奏
+    // 随机延迟 800–2200ms，使进度面板能观察到进度条从 0%→100% 流畅增长
+    // 维度状态分配：85% success（绿色）、10% fail（红色）、5% partial（琥珀色）
+    await new Promise((res) => setTimeout(res, 800 + Math.floor(Math.random() * 1400)))
+    const rnd = Math.random()
+    const simulatedResult: 'success' | 'fail' | 'partial' =
+      rnd < 0.85 ? 'success' : rnd < 0.95 ? 'fail' : 'partial'
+    const message =
+      simulatedResult === 'success'
+        ? `维度 ${dimension.name} 采集完成（mock · demo）`
+        : simulatedResult === 'partial'
+          ? `维度 ${dimension.name} 部分完成（mock · demo）`
+          : `维度 ${dimensionCode} 采集失败（mock · demo 演示）`
+    addStage('complete', message, 'mock')
     emit(COLLECTION_EVENTS.COMPLETE, {
       traceId,
       taskId,
       dimensionCode,
       symbol: normalizedSymbol,
       message,
-      error: message,
     })
-    span.result = 'fail'
+    span.result = simulatedResult
     span.totalDurationMs = Date.now() - start
     span.completedAt = Date.now()
     emitTrace(span)
-    getQualityMetrics().recordCollect(false, 'mock', span.totalDurationMs, [])
+    getQualityMetrics().recordCollect(simulatedResult === 'success' || simulatedResult === 'partial', 'mock', span.totalDurationMs, [])
+    // Mock 分支输出清晰 info 日志，标明状态/耗时/随机种子
+    logger.info('[collectionPipeline · runSingleTrace] Mock 分支维度采集结束', {
+      symbol: normalizedSymbol,
+      dimensionCode,
+      result: simulatedResult,
+      latencyMs: span.totalDurationMs,
+      traceId,
+    })
     return {
-      success: false,
+      success: simulatedResult !== 'fail',
       symbol: normalizedSymbol,
       dimensionCode,
       latency: span.totalDurationMs,
       fallbackCount: 0,
-      error: message,
+      error: simulatedResult === 'fail' ? message : undefined,
     }
   }
 
@@ -526,7 +636,7 @@ async function runSingleTraceImpl(
         traceId,
         taskId,
         dimensionCode,
-        allowMockFallback: dimension.fallbackPolicy.allowMockFallback,
+        allowMockFallback: dimension.fallbackPolicy?.allowMockFallback ?? true,
       })
 
       // Mock 禁用 + 全源失败：不写入、不计成功（假绿灯修复）
@@ -538,6 +648,16 @@ async function runSingleTraceImpl(
         span.fallbackCount = Math.max(0, result.fallbackChain.length - 1)
         span.totalDurationMs = Date.now() - start
         span.completedAt = Date.now()
+        logger.warn('[collectionPipeline · runSingleTrace · quote] 行情采集失败（真实源不可用，Mock 已禁用）', {
+          symbol: normalizedSymbol,
+          dimensionCode,
+          source: result.source,
+          fallbackCount: span.fallbackCount,
+          fallbackChain: result.fallbackChain,
+          latencyMs: span.totalDurationMs,
+          reason: failReason,
+          traceId,
+        })
         emit(COLLECTION_EVENTS.COMPLETE, {
           traceId,
           taskId,
@@ -605,6 +725,15 @@ async function runSingleTraceImpl(
       span.fallbackCount = Math.max(0, result.fallbackChain.length - 1)
       span.totalDurationMs = Date.now() - start
       span.completedAt = Date.now()
+      logger.info('[collectionPipeline · runSingleTrace · quote] 行情采集完成', {
+        symbol: normalizedSymbol,
+        dimensionCode,
+        source: result.source,
+        fallbackCount: span.fallbackCount,
+        fallbackChain: result.fallbackChain,
+        latencyMs: span.totalDurationMs,
+        traceId,
+      })
       emit(COLLECTION_EVENTS.COMPLETE, {
         traceId,
         taskId,
@@ -638,7 +767,7 @@ async function runSingleTraceImpl(
         traceId,
         taskId,
         dimensionCode,
-        allowMockFallback: dimension.fallbackPolicy.allowMockFallback,
+        allowMockFallback: dimension.fallbackPolicy?.allowMockFallback ?? true,
       })
 
       // Mock 禁用 + 全源失败：不写入、不计成功（假绿灯修复）
@@ -650,6 +779,17 @@ async function runSingleTraceImpl(
         span.fallbackCount = Math.max(0, result.fallbackChain.length - 1)
         span.totalDurationMs = Date.now() - start
         span.completedAt = Date.now()
+        logger.warn('[collectionPipeline · runSingleTrace · kline] K 线采集失败（真实源不可用，Mock 已禁用）', {
+          symbol: normalizedSymbol,
+          dimensionCode,
+          historyDays: days,
+          source: result.source,
+          fallbackCount: span.fallbackCount,
+          fallbackChain: result.fallbackChain,
+          latencyMs: span.totalDurationMs,
+          reason: failReason,
+          traceId,
+        })
         emit(COLLECTION_EVENTS.COMPLETE, {
           traceId,
           taskId,
@@ -717,6 +857,17 @@ async function runSingleTraceImpl(
       span.fallbackCount = Math.max(0, result.fallbackChain.length - 1)
       span.totalDurationMs = Date.now() - start
       span.completedAt = Date.now()
+      logger.info('[collectionPipeline · runSingleTrace · kline] K 线采集完成', {
+        symbol: normalizedSymbol,
+        dimensionCode,
+        historyDays: days,
+        source: result.source,
+        fallbackCount: span.fallbackCount,
+        fallbackChain: result.fallbackChain,
+        latencyMs: span.totalDurationMs,
+        barCount: result.data?.length ?? 0,
+        traceId,
+      })
       emit(COLLECTION_EVENTS.COMPLETE, {
         traceId,
         taskId,
@@ -739,6 +890,106 @@ async function runSingleTraceImpl(
         source: result.source,
         latency: span.totalDurationMs,
         fallbackCount: span.fallbackCount,
+      }
+    }
+
+    // ── 09 财务数据维度链路 ──
+    // 策略：调用 fetcherService.fetchFinancial 采集并写入 financial_reports store
+    if (mode === 'financial') {
+      const finSource = 'fetcher' as QuoteDataSourceId
+      try {
+        addStage('source:start', '调用 fetchFinancial 采集财务数据')
+        const finResult = await fetchFinancial(normalizedSymbol)
+
+        if (!finResult.success || !finResult.data) {
+          const failReason = finResult.error ?? '财务数据采集失败'
+          addStage('source:fail', `财务数据采集失败: ${failReason}`, undefined, failReason)
+          span.result = 'fail'
+          span.error = failReason
+          span.totalDurationMs = Date.now() - start
+          span.completedAt = Date.now()
+          logger.warn('[collectionPipeline · runSingleTrace · financial] 财务数据采集失败', {
+            symbol: normalizedSymbol,
+            dimensionCode,
+            latencyMs: span.totalDurationMs,
+            reason: failReason,
+            traceId,
+          })
+          emit(COLLECTION_EVENTS.COMPLETE, {
+            traceId, taskId, dimensionCode, symbol: normalizedSymbol,
+            message: '财务数据采集失败',
+            error: failReason,
+          })
+          addStage('complete', `采集失败: ${failReason}`, undefined, failReason)
+          emitTrace(span)
+          getQualityMetrics().recordCollect(false, finSource, span.totalDurationMs, [])
+          getQualityMetrics().recordWrite(false)
+          return { success: false, symbol: normalizedSymbol, dimensionCode, latency: span.totalDurationMs, fallbackCount: 0, error: failReason }
+        }
+
+        addStage('source:success', 'fetchFinancial 获取成功', finSource)
+        emit(COLLECTION_EVENTS.TRANSFORM, {
+          traceId, taskId, dimensionCode, symbol: normalizedSymbol,
+          sourceId: finSource,
+          message: '财务数据适配完成',
+        })
+        addStage('transform', '财务数据适配完成', finSource)
+
+        // fetchFinancial 内部已通过 DataBridge.forward 写入 financial_reports store
+        emit(COLLECTION_EVENTS.WRITE_SUCCESS, {
+          traceId, taskId, dimensionCode, symbol: normalizedSymbol,
+          sourceId: finSource,
+          message: 'financial_reports 写入成功',
+        })
+        addStage('write:success', 'financial_reports 写入成功', finSource)
+        getQualityMetrics().recordWrite(true)
+
+        span.result = 'success'
+        span.finalSource = finSource
+        span.totalDurationMs = Date.now() - start
+        span.completedAt = Date.now()
+        logger.info('[collectionPipeline · runSingleTrace · financial] 财务数据采集完成', {
+          symbol: normalizedSymbol,
+          dimensionCode,
+          latencyMs: span.totalDurationMs,
+          traceId,
+        })
+        emit(COLLECTION_EVENTS.COMPLETE, {
+          traceId, taskId, dimensionCode, symbol: normalizedSymbol,
+          sourceId: finSource,
+          durationMs: span.totalDurationMs,
+          message: '财务数据采集完成',
+          payload: { span },
+        })
+        addStage('complete', '财务数据采集完成', finSource)
+        emitTrace(span)
+        getQualityMetrics().recordCollect(true, finSource, span.totalDurationMs, [])
+
+        return {
+          success: true,
+          symbol: normalizedSymbol,
+          dimensionCode,
+          source: finSource,
+          latency: span.totalDurationMs,
+          fallbackCount: 0,
+        }
+      } catch (err) {
+        const failReason = err instanceof Error ? err.message : String(err)
+        addStage('source:fail', `财务数据采集异常: ${failReason}`, undefined, failReason)
+        span.result = 'fail'
+        span.error = failReason
+        span.totalDurationMs = Date.now() - start
+        span.completedAt = Date.now()
+        emit(COLLECTION_EVENTS.COMPLETE, {
+          traceId, taskId, dimensionCode, symbol: normalizedSymbol,
+          message: '财务数据采集异常',
+          error: failReason,
+        })
+        addStage('complete', `采集异常: ${failReason}`, undefined, failReason)
+        emitTrace(span)
+        getQualityMetrics().recordCollect(false, finSource, span.totalDurationMs, [])
+        getQualityMetrics().recordWrite(false)
+        return { success: false, symbol: normalizedSymbol, dimensionCode, latency: span.totalDurationMs, fallbackCount: 0, error: failReason }
       }
     }
 
@@ -819,6 +1070,14 @@ async function runSingleTraceImpl(
         span.totalDurationMs = Date.now() - start
         span.completedAt = Date.now()
         span.metadata = { _mock: false, dataType: mode, source: sourceLabel }
+        logger.info('[collectionPipeline · runSingleTrace · otherDim] 非行情维度采集完成', {
+          symbol: normalizedSymbol,
+          dimensionCode,
+          mode,
+          source: sourceLabel,
+          latencyMs: span.totalDurationMs,
+          traceId,
+        })
         emit(COLLECTION_EVENTS.COMPLETE, {
           traceId, taskId, dimensionCode, symbol: normalizedSymbol,
           sourceId: sourceLabel as QuoteDataSourceId,
@@ -839,17 +1098,25 @@ async function runSingleTraceImpl(
           latency: span.totalDurationMs,
           fallbackCount: 0,
         }
-      } catch (writeErr) {
+      } catch (err) {
         getQualityMetrics().recordWrite(false)
-        const msg = writeErr instanceof Error ? writeErr.message : String(writeErr)
-        addStage('complete', `写入失败: ${msg}`, undefined, msg)
+        const failReason = err instanceof Error ? err.message : String(err)
+        addStage('complete', `写入失败: ${failReason}`, undefined, failReason)
         span.result = 'fail'
-        span.error = msg
+        span.error = failReason
         span.totalDurationMs = Date.now() - start
         span.completedAt = Date.now()
+        logger.error('[collectionPipeline · runSingleTrace · otherDim] 非行情维度写入异常', {
+          symbol: normalizedSymbol,
+          dimensionCode,
+          mode,
+          latencyMs: span.totalDurationMs,
+          error: failReason,
+          traceId,
+        })
         emitTrace(span)
         getQualityMetrics().recordCollect(false, 'mock', span.totalDurationMs, [])
-        return { success: false, symbol: normalizedSymbol, dimensionCode, latency: span.totalDurationMs, fallbackCount: 0, error: msg }
+        return { success: false, symbol: normalizedSymbol, dimensionCode, latency: span.totalDurationMs, fallbackCount: 0, error: failReason }
       }
     }
 
@@ -923,7 +1190,23 @@ async function runBatchTraceImpl(
 ): Promise<TraceResult[]> {
   const { symbols, dimensionCode, config, parentTaskId } = options
   const bpTaskId = parentTaskId ?? `batch-${dimensionCode}-${Date.now()}`
-  const CONCURRENCY = 5
+  // Demo 模式下降为串行，让进度面板能观察到 0%→100% 流畅增长
+  const forceDemo = (() => {
+    try { return typeof sessionStorage !== 'undefined' && sessionStorage.getItem('POOL_FORCE_DEMO') === '1' }
+    catch { return false }
+  })()
+  const CONCURRENCY = forceDemo ? 1 : 5
+  const batchStart = Date.now()
+
+  logger.info('[collectionPipeline · runBatchTrace] 批量任务开始', {
+    dimensionCode,
+    symbolCount: symbols.length,
+    symbols,
+    concurrency: CONCURRENCY,
+    forceDemo,
+    bpTaskId,
+    parentTaskId,
+  })
 
   emit(COLLECTION_EVENTS.TASK_STATUS, {
     traceId: bpTaskId,
@@ -935,33 +1218,69 @@ async function runBatchTraceImpl(
 
   const results: TraceResult[] = []
   let completed = 0
+  let chunkIndex = 0
+  const totalChunks = Math.ceil(symbols.length / CONCURRENCY)
 
   // 分批并发处理
   for (let chunkStart = 0; chunkStart < symbols.length; chunkStart += CONCURRENCY) {
+    chunkIndex++
     const chunk = symbols.slice(chunkStart, chunkStart + CONCURRENCY)
+    const chunkStartTs = Date.now()
     const chunkResults = await Promise.all(
       chunk.map((symbol) =>
         runSingleTrace({ symbol, dimensionCode, config, parentTaskId: bpTaskId })
       )
     )
+    const chunkSuccess = chunkResults.filter((r) => r.success).length
+    const chunkLatencyMs = Date.now() - chunkStartTs
     results.push(...chunkResults)
     completed += chunkResults.length
+    const progressPct = Math.round((completed / symbols.length) * 100)
+
+    logger.info('[collectionPipeline · runBatchTrace] 批次处理完成', {
+      dimensionCode,
+      bpTaskId,
+      chunkIndex,
+      totalChunks,
+      chunkSize: chunk.length,
+      chunkSymbols: chunk,
+      chunkSuccess,
+      chunkFail: chunkResults.length - chunkSuccess,
+      chunkLatencyMs,
+      completed,
+      total: symbols.length,
+      progressPct,
+    })
 
     emit(COLLECTION_EVENTS.TASK_STATUS, {
       traceId: bpTaskId,
       taskId: bpTaskId,
       dimensionCode,
       message: `批量进度 ${completed}/${symbols.length}`,
-      payload: { status: 'running', progress: Math.round((completed / symbols.length) * 100) },
+      payload: { status: 'running', progress: progressPct },
     })
   }
+
+  const totalSuccess = results.filter((r) => r.success).length
+  const totalFail = results.length - totalSuccess
+  const totalLatencyMs = Date.now() - batchStart
+  logger.info('[collectionPipeline · runBatchTrace] 批量任务完成', {
+    dimensionCode,
+    bpTaskId,
+    totalSymbols: symbols.length,
+    totalSuccess,
+    totalFail,
+    totalLatencyMs,
+    avgLatencyMs: totalLatencyMs / Math.max(1, symbols.length),
+    successRatePct: Math.round((totalSuccess / Math.max(1, symbols.length)) * 100),
+  })
 
   emit(COLLECTION_EVENTS.TASK_STATUS, {
     traceId: bpTaskId,
     taskId: bpTaskId,
     dimensionCode,
     message: '批量任务完成',
-    payload: { status: 'completed', total: symbols.length, success: results.filter((r) => r.success).length },
+    payload: { status: 'completed', total: symbols.length, success: totalSuccess },
   })
 
   return results

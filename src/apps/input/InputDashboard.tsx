@@ -1,32 +1,47 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState, useCallback, lazy, Suspense } from 'react'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Input } from '@/components/atoms/Input'
 import { Badge } from '@/components/atoms/Badge'
 import { Checkbox } from '@/components/atoms/Checkbox'
 import { Select, SelectItem } from '@/components/atoms/Select'
-import { addStock } from '@/services/input/inputService'
+import { useStockAdd } from '@/hooks/useStockAdd'
 import { checkFetcherHealth } from '@/services/fetcher/fetcherService'
 import { fetchBasicDataUseCase } from '@/services/useCase/fetcherOrchestrator.useCase'
 import { useIntentionPoolStore, getIntentionPoolGroups } from '@/store/intentionPoolStore'
 import { StockSearch } from '@/components/organisms/input/StockSearch'
 import type { StockSearchResult } from '@/services/input/inputService'
 import { getLogger } from '@/lib/logger'
+import { createDebugLogger } from '@/lib/debugToolkit'
 import { eventBus } from '@/lib/eventBus'
-import { COLOR_TOKENS, twText, twBg } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, twText, twBg, DARK, HOVER, DIVIDE } from '@/constants/theme.tokens'
 import { Skeleton } from '@/components/molecules/states/Skeleton'
 import { GaugeRing } from '@/components/chart/GaugeChart'
 import { formatPrice, formatMarketCap } from '@/lib/precision'
 import { cn } from '@/lib/utils'
 import { findStockBySymbol } from '@/services/stock/stockDictionary'
+import HotSectorSection from './HotSectorSection'
+
+// 批量导入区块懒加载（整合自原 BulkImportPanel 独立页）
+const BulkImportPanel = lazy(() => import('./BulkImportPanel'))
 
 const logger = getLogger()
+/** 采集状态 Badge 三态切换的 Debug 日志（控制台筛选 [CollectBadge]） */
+const debug = createDebugLogger('CollectBadge')
 
 /** 市场代码 → 中文标签 */
 function getMarketLabel(market: string): string {
   const map: Record<string, string> = { SH: '沪市', SZ: '深市', HK: '港股', BJ: '北交所' }
   return map[market.toUpperCase()] ?? market
 }
+
+// Tab 与分段控件样式常量
+const TAB_BASE = 'rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200'
+const TAB_ACTIVE = cn(twBg('white'), 'shadow-sm', DARK.bgNeutral700, twText('stone', 800), DARK.textNeutral100)
+const TAB_INACTIVE = cn(twText('stone', 500), HOVER.textStone700, DARK.textNeutral400, DARK.hoverTextNeutral200)
+
+type InputTab = 'manual' | 'hot-sector'
+type ManualMode = 'single' | 'bulk'
 
 export default function InputDashboard(): React.JSX.Element {
   // 从 intentionPoolStore 获取状态
@@ -35,15 +50,22 @@ export default function InputDashboard(): React.JSX.Element {
   const error = useIntentionPoolStore((s) => s.error)
   const refresh = useIntentionPoolStore((s) => s.refresh)
 
+  // 通过 useStockAdd Hook 管理股票添加流程的表单状态与提交逻辑
+  const {
+    symbol, name, group,
+    setSymbol, setName, setGroup,
+    submitting, message, setMessage,
+    handleAdd,
+  } = useStockAdd()
+
   // 本地 UI 状态
-  const [symbol, setSymbol] = useState('')
-  const [name, setName] = useState('')
-  const [group, setGroup] = useState('')
-  const [message, setMessage] = useState('')
   const [fetcherOk, setFetcherOk] = useState<boolean | null>(null)
-  const [submitting, setSubmitting] = useState(false)
   const [searchMode, setSearchMode] = useState<'fill' | 'add'>('fill')
   const [collectingSymbols, setCollectingSymbols] = useState<Set<string>>(new Set())
+
+  // Tab 与录入模式状态
+  const [activeTab, setActiveTab] = useState<InputTab>('manual')
+  const [manualMode, setManualMode] = useState<ManualMode>('single')
 
   // 勾选状态：已选中的标的代码集合（用于批量删除）
   const [selectedSymbols, setSelectedSymbols] = useState<string[]>([])
@@ -64,7 +86,8 @@ export default function InputDashboard(): React.JSX.Element {
     return off
   }, [refresh])
 
-  const allGroups = useMemo(() => getIntentionPoolGroups(), [])
+  // 分组列表：依赖 items，items 变化时重新计算
+  const allGroups = useMemo(() => getIntentionPoolGroups(), [items])
   const allStocks = items
 
   // 全选框的半选（indeterminate）状态
@@ -75,152 +98,199 @@ export default function InputDashboard(): React.JSX.Element {
     }
   }, [selectedSymbols.length, allStocks.length])
 
-  const handleAdd = async (fetchBasic: boolean, fetchKline: boolean): Promise<void> => {
-    if (!symbol || !name) {
-      setMessage('请输入代码和名称')
-      return
-    }
-
-    setSubmitting(true)
-    try {
-      const result = await addStock(
-        { symbol, name },
-        {
-          fetchBasicAfterAdd: fetchBasic,
-          fetchKlineAfterAdd: fetchKline,
-          group: group || undefined,
-        },
-      )
-
-      if (result.success) {
-        setMessage(
-          result.error != null
-            ? `已添加 ${result.data?.symbol}，${result.error}`
-            : `已添加 ${result.data?.symbol}`,
-        )
-        setSymbol('')
-        setName('')
-        setGroup('')
-        await refresh()
-      } else {
-        setMessage(result.error ?? '添加失败')
-      }
-    } catch (err) {
-      setMessage(`添加异常：${err instanceof Error ? err.message : String(err)}`)
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  const handleCollectStock = async (symbol: string, name: string): Promise<void> => {
-    setCollectingSymbols((prev) => new Set(prev).add(symbol))
-    setMessage(`正在采集 ${symbol} ${name} 的基础数据...`)
+  const handleCollectStock = useCallback(async (symbol: string): Promise<void> => {
+    debug.log('handleCollectStock 开始', {
+      symbol,
+      timestamp: Date.now(),
+      currentCollecting: Array.from(collectingSymbols),
+    })
+    setCollectingSymbols((prev) => {
+      const next = new Set(prev).add(symbol)
+      debug.log('setCollectingSymbols ADD', {
+        symbol,
+        newSet: Array.from(next),
+        size: next.size,
+      })
+      return next
+    })
     try {
       const result = await fetchBasicDataUseCase({ symbol })
-      if (result.success) {
-        setMessage(`${symbol} 基础数据采集完成`)
-      } else {
-        setMessage(`${symbol} 采集失败：${result.error ?? '未知错误'}`)
+      debug.log('handleCollectStock 采集结果', {
+        symbol,
+        success: result.success,
+        error: result.error,
+        hasPrice: result.data?.price,
+        elapsedMs: result.data ? 'completed' : 'n/a',
+      })
+      if (!result.success) {
+        logger.warn('[InputDashboard] 采集失败', { symbol, error: result.error })
       }
+      debug.log('handleCollectStock 刷新前', { symbol })
       await refresh()
+      const updated = useIntentionPoolStore.getState().items.find((s) => s.symbol === symbol)
+      debug.log('handleCollectStock 刷新后', {
+        symbol,
+        hasPrice: updated?.price !== undefined,
+        price: updated?.price,
+      })
     } catch (err) {
-      setMessage(`采集异常：${err instanceof Error ? err.message : String(err)}`)
+      logger.error('[InputDashboard] 采集异常', {
+        symbol,
+        error: err instanceof Error ? err.message : String(err),
+      })
     } finally {
       setCollectingSymbols((prev) => {
         const next = new Set(prev)
         next.delete(symbol)
+        debug.log('setCollectingSymbols REMOVE', {
+          symbol,
+          newSet: Array.from(next),
+          size: next.size,
+        })
         return next
       })
     }
-  }
+  }, [refresh, collectingSymbols])
 
-  const handleCollectAll = async (): Promise<void> => {
+  const handleCollectAll = useCallback(async (): Promise<void> => {
     const toCollect = allStocks.filter((s) => s.price === undefined)
     if (toCollect.length === 0) {
-      setMessage('所有标的数据已采集')
+      debug.log('handleCollectAll 无待采集标的')
       return
     }
-    setMessage(`开始批量采集 ${toCollect.length} 只标的...`)
-    let successCount = 0
-    let failCount = 0
-    for (const item of toCollect) {
-      setCollectingSymbols((prev) => new Set(prev).add(item.symbol))
-      try {
-        const result = await fetchBasicDataUseCase({ symbol: item.symbol })
-        if (result.success) {
-          successCount++
-        } else {
-          failCount++
-        }
-      } catch {
-        failCount++
-      }
-      setCollectingSymbols((prev) => {
-        const next = new Set(prev)
-        next.delete(item.symbol)
-        return next
-      })
-    }
-    setMessage(`批量采集完成：成功 ${successCount} 只，失败 ${failCount} 只`)
-    await refresh()
-  }
 
-  const handleDeleteStock = async (symbol: string): Promise<void> => {
+    const symbolsToCollect = toCollect.map((s) => s.symbol)
+    debug.log('handleCollectAll 开始并发采集', {
+      totalToCollect: toCollect.length,
+      symbols: symbolsToCollect,
+      timestamp: Date.now(),
+    })
+
+    // 并行采集：使用 Promise.allSettled 并发执行
+    setCollectingSymbols(new Set(symbolsToCollect))
+    debug.log('handleCollectAll 已设置 collectingSymbols', {
+      count: symbolsToCollect.length,
+    })
+
+    try {
+      const results = await Promise.allSettled(
+        toCollect.map(async (item, idx) => {
+          debug.log('并发采集子任务启动', {
+            symbol: item.symbol,
+            taskIndex: idx,
+            timestamp: Date.now(),
+          })
+          const result = await fetchBasicDataUseCase({ symbol: item.symbol })
+          debug.log('并发采集子任务完成', {
+            symbol: item.symbol,
+            taskIndex: idx,
+            success: result.success,
+            elapsedMs: Date.now(),
+          })
+          // 立即移除该 symbol，让 Badge 从「采集中」及时切换为「已采/待采」，
+          // 避免先完成的股票被卡在「采集中」状态等待最慢的子任务。
+          setCollectingSymbols((prev) => {
+            const next = new Set(prev)
+            next.delete(item.symbol)
+            debug.log('子任务完成即移除 collectingSymbol', {
+              symbol: item.symbol,
+              remaining: next.size,
+            })
+            return next
+          })
+          return { symbol: item.symbol, result }
+        }),
+      )
+      const successCount = results.filter(
+        (r) => r.status === 'fulfilled' && r.value.result.success,
+      ).length
+      const failCount = results.length - successCount
+      const detail = results.map((r, i) => ({
+        symbol: symbolsToCollect[i],
+        status: r.status,
+        success: r.status === 'fulfilled' ? r.value.result.success : false,
+        error: r.status === 'rejected' ? String(r.reason) : r.status === 'fulfilled' ? r.value.result.error : null,
+      }))
+      debug.log('handleCollectAll 并发采集汇总', {
+        total: toCollect.length,
+        successCount,
+        failCount,
+        detail,
+      })
+      logger.info('[InputDashboard] 批量采集完成', { successCount, failCount, total: toCollect.length })
+      debug.log('handleCollectAll 刷新前候选池', {
+        poolSize: allStocks.length,
+      })
+      await refresh()
+      debug.log('handleCollectAll 刷新后候选池', {
+        poolSize: useIntentionPoolStore.getState().items.length,
+        withPrice: useIntentionPoolStore.getState().items.filter((s) => s.price !== undefined).length,
+      })
+    } catch (err) {
+      logger.error('[InputDashboard] 批量采集异常', {
+        error: err instanceof Error ? err.message : String(err),
+      })
+    } finally {
+      setCollectingSymbols(new Set())
+      debug.log('handleCollectAll 已清除 collectingSymbols')
+    }
+  }, [allStocks, refresh])
+
+  const handleDeleteStock = useCallback(async (symbol: string): Promise<void> => {
     const store = useIntentionPoolStore.getState()
     try {
       const deleted = await store.deleteItem(symbol)
       if (deleted) {
-        setMessage(`已移除 ${symbol}`)
         setSelectedSymbols((prev) => prev.filter((s) => s !== symbol))
         await refresh()
-      } else {
-        setMessage(`移除 ${symbol} 失败`)
       }
     } catch (err) {
-      setMessage(`移除异常：${err instanceof Error ? err.message : String(err)}`)
+      logger.error('[InputDashboard] 移除异常', {
+        symbol,
+        error: err instanceof Error ? err.message : String(err),
+      })
     }
-  }
+  }, [refresh])
 
   // ── 勾选 / 批量删除 ──
-  const handleToggleSelect = (symbol: string): void => {
+  const handleToggleSelect = useCallback((symbol: string): void => {
     setSelectedSymbols((prev) =>
       prev.includes(symbol) ? prev.filter((s) => s !== symbol) : [...prev, symbol],
     )
-  }
+  }, [])
 
-  const handleToggleSelectAll = (checked: boolean): void => {
+  const handleToggleSelectAll = useCallback((checked: boolean): void => {
     setSelectedSymbols(checked ? allStocks.map((s) => s.symbol) : [])
-  }
+  }, [allStocks])
 
-  const handleBatchDelete = async (): Promise<void> => {
+  const handleBatchDelete = useCallback(async (): Promise<void> => {
     if (selectedSymbols.length === 0) return
     const store = useIntentionPoolStore.getState()
     try {
       const count = await store.deleteItems(selectedSymbols)
       setSelectedSymbols([])
-      if (count > 0) {
-        setMessage(`已批量删除 ${count} 条标的`)
-      } else {
-        setMessage('批量删除失败')
+      if (count === 0) {
+        logger.warn('[InputDashboard] 批量删除失败', { symbols: selectedSymbols })
       }
     } catch (err) {
-      setMessage(`批量删除异常：${err instanceof Error ? err.message : String(err)}`)
+      logger.error('[InputDashboard] 批量删除异常', {
+        error: err instanceof Error ? err.message : String(err),
+      })
     }
-  }
+  }, [selectedSymbols])
 
-  const handleRefreshHealth = async (): Promise<void> => {
+  const handleRefreshHealth = useCallback(async (): Promise<void> => {
     setFetcherOk(null)
     try {
       const result = await checkFetcherHealth()
       setFetcherOk(result.ok)
-      if (!result.ok) {
-        setMessage(result.error ?? '数据采集服务异常')
-      }
     } catch (err) {
       setFetcherOk(false)
-      setMessage(`采集服务检查异常：${err instanceof Error ? err.message : String(err)}`)
+      logger.error('[InputDashboard] 采集服务检查异常', {
+        error: err instanceof Error ? err.message : String(err),
+      })
     }
-  }
+  }, [])
 
   const stats = useMemo(() => {
     const total = allStocks.length
@@ -286,17 +356,14 @@ export default function InputDashboard(): React.JSX.Element {
               <CardContent className="p-5">
                 <p className="text-xs text-muted-foreground">快捷操作</p>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  <Button size="sm" variant="secondary" onClick={() => window.location.hash = '#/input/bulk-import'}>
-                    批量导入
+                  <Button size="sm" variant="secondary" onClick={() => window.location.hash = '#/input/collect-tasks'}>
+                    采集任务
                   </Button>
-                  <Button size="sm" variant="secondary" onClick={() => window.location.hash = '#/input/hot-sectors'}>
-                    热门板块
+                  <Button size="sm" variant="secondary" onClick={() => window.location.hash = '#/input/pool-board'}>
+                    研究候选池
                   </Button>
                   <Button size="sm" variant="secondary" onClick={() => window.location.hash = '#/input/data-test'}>
                     数据测试
-                  </Button>
-                  <Button size="sm" variant="secondary" onClick={() => window.location.hash = '#/input/collect-tasks'}>
-                    采集任务
                   </Button>
                 </div>
               </CardContent>
@@ -305,103 +372,155 @@ export default function InputDashboard(): React.JSX.Element {
         )}
       </div>
 
+      {/* ─── 录入 Tab 切换区 ─── */}
       <Card>
         <CardHeader>
-          <CardTitle>录入候选股票</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>录入候选股票</CardTitle>
+            <div className={cn('inline-flex rounded-lg p-0.5', twBg('stone', 100), DARK.bgNeutral800)}>
+              <button
+                onClick={() => setActiveTab('manual')}
+                className={`${TAB_BASE} ${activeTab === 'manual' ? TAB_ACTIVE : TAB_INACTIVE}`}
+              >
+                自行意向输入
+              </button>
+              <button
+                onClick={() => setActiveTab('hot-sector')}
+                className={`${TAB_BASE} ${activeTab === 'hot-sector' ? TAB_ACTIVE : TAB_INACTIVE}`}
+              >
+                热门板块纳入
+              </button>
+            </div>
+          </div>
         </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm text-muted-foreground">搜索模式：</span>
-            <Button
-              size="sm"
-              variant={searchMode === 'fill' ? 'secondary' : 'ghost'}
-              onClick={() => setSearchMode('fill')}
-            >
-              填充代码/名称
-            </Button>
-            <Button
-              size="sm"
-              variant={searchMode === 'add' ? 'secondary' : 'ghost'}
-              onClick={() => setSearchMode('add')}
-            >
-              直接录入意向候选池
-            </Button>
-          </div>
-          <StockSearch
-            className="max-w-md"
-            mode={searchMode}
-            onSelect={(result: StockSearchResult): void => {
-              setSymbol(result.symbol)
-              setName(result.name)
-              setMessage(`已选择 ${result.symbol} ${result.name}，请选择录入方式`)
-            }}
-            onAdded={(): void => {
-              setMessage('搜索标的已录入意向候选池')
-              void refresh()
-            }}
-          />
-          <div className="flex flex-wrap gap-2">
-            <Input
-              className="min-w-[160px] flex-1"
-              placeholder="股票代码，如 600519.SH"
-              aria-label="股票代码"
-              value={symbol}
-              onChange={(e) => setSymbol(e.target.value)}
-            />
-            <Input
-              className="min-w-[120px] flex-1"
-              placeholder="股票名称"
-              aria-label="股票名称"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <Select
-              className="h-10 min-w-[140px] flex-1"
-              value={group}
-              onChange={(e) => setGroup(e.target.value)}
-              aria-label="目标分组"
-            >
-              <SelectItem value="">默认分组</SelectItem>
-              {allGroups.map((g) => (
-                <SelectItem key={g} value={g}>
-                  {g}
-                </SelectItem>
-              ))}
-            </Select>
-            <Button onClick={() => void handleAdd(false, false)} disabled={submitting}>
-              {submitting ? '处理中...' : '仅录入'}
-            </Button>
-            <Button variant="secondary" onClick={() => void handleAdd(true, false)} disabled={submitting}>
-              {submitting ? '处理中...' : '录入并拉基础'}
-            </Button>
-            <Button variant="secondary" onClick={() => void handleAdd(true, true)} disabled={submitting}>
-              {submitting ? '处理中...' : '录入并拉全部'}
-            </Button>
-          </div>
-          <div className="flex flex-wrap items-center gap-3 text-sm">
-            <span className="text-muted-foreground">采集服务状态：</span>
-            {fetcherOk === null ? (
-              <Badge variant="outline">检查中...</Badge>
-            ) : fetcherOk ? (
-              <Badge className={`${COLOR_TOKENS.up.bgClass} ${COLOR_TOKENS.up.tailwind}`}>已连接</Badge>
-            ) : (
-              <Badge variant="destructive">未连接</Badge>
-            )}
-            <Button variant="ghost" size="sm" onClick={() => void handleRefreshHealth()} disabled={fetcherOk === null}>
-              {fetcherOk === null ? '检查中...' : '刷新'}
-            </Button>
-          </div>
-          {(message !== '' || (error ?? '') !== '') && (
-            <p className="text-sm text-muted-foreground">{message !== '' ? message : (error ?? '')}</p>
+        <CardContent className="space-y-4">
+          {/* ── Tab 1: 自行意向输入 ── */}
+          {activeTab === 'manual' && (
+            <>
+              {/* 子分段：逐项 / 批量 */}
+              <div className={cn('inline-flex rounded-lg p-0.5', twBg('stone', 100), DARK.bgNeutral800)}>
+                <button
+                  onClick={() => setManualMode('single')}
+                  className={`${TAB_BASE} ${manualMode === 'single' ? TAB_ACTIVE : TAB_INACTIVE}`}
+                >
+                  逐项输入
+                </button>
+                <button
+                  onClick={() => setManualMode('bulk')}
+                  className={`${TAB_BASE} ${manualMode === 'bulk' ? TAB_ACTIVE : TAB_INACTIVE}`}
+                >
+                  批量导入
+                </button>
+              </div>
+
+              {manualMode === 'single' ? (
+                <>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-sm text-muted-foreground">搜索模式：</span>
+                    <Button
+                      size="sm"
+                      variant={searchMode === 'fill' ? 'secondary' : 'ghost'}
+                      onClick={() => setSearchMode('fill')}
+                    >
+                      填充代码/名称
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant={searchMode === 'add' ? 'secondary' : 'ghost'}
+                      onClick={() => setSearchMode('add')}
+                    >
+                      直接录入意向候选池
+                    </Button>
+                  </div>
+                  <StockSearch
+                    className="max-w-md"
+                    mode={searchMode}
+                    onSelect={(result: StockSearchResult): void => {
+                      setSymbol(result.symbol)
+                      setName(result.name)
+                      setMessage(`已选择 ${result.symbol} ${result.name}，请选择录入方式`)
+                    }}
+                    onAdded={(): void => {
+                      setMessage('搜索标的已录入意向候选池')
+                      void refresh()
+                    }}
+                  />
+                  <div className="flex flex-wrap gap-2">
+                    <Input
+                      className="min-w-[160px] flex-1"
+                      placeholder="股票代码，如 600519.SH"
+                      aria-label="股票代码"
+                      value={symbol}
+                      onChange={(e) => setSymbol(e.target.value)}
+                    />
+                    <Input
+                      className="min-w-[120px] flex-1"
+                      placeholder="股票名称"
+                      aria-label="股票名称"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                    <Select
+                      className="h-10 min-w-[140px] flex-1"
+                      value={group}
+                      onChange={(e) => setGroup(e.target.value)}
+                      aria-label="目标分组"
+                    >
+                      <SelectItem value="">默认分组</SelectItem>
+                      {allGroups.map((g) => (
+                        <SelectItem key={g} value={g}>
+                          {g}
+                        </SelectItem>
+                      ))}
+                    </Select>
+                    <Button onClick={() => void handleAdd(false, false)} disabled={submitting}>
+                      {submitting ? '处理中...' : '仅录入'}
+                    </Button>
+                    <Button variant="secondary" onClick={() => void handleAdd(true, false)} disabled={submitting}>
+                      {submitting ? '处理中...' : '录入并拉基础'}
+                    </Button>
+                    <Button variant="secondary" onClick={() => void handleAdd(true, true)} disabled={submitting}>
+                      {submitting ? '处理中...' : '录入并拉全部'}
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3 text-sm">
+                    <span className="text-muted-foreground">采集服务状态：</span>
+                    {fetcherOk === null ? (
+                      <Badge variant="outline">检查中...</Badge>
+                    ) : fetcherOk ? (
+                      <Badge className={`${COLOR_TOKENS.up.bgClass} ${COLOR_TOKENS.up.tailwind}`}>已连接</Badge>
+                    ) : (
+                      <Badge variant="destructive">未连接</Badge>
+                    )}
+                    <Button variant="ghost" size="sm" onClick={() => void handleRefreshHealth()} disabled={fetcherOk === null}>
+                      {fetcherOk === null ? '检查中...' : '刷新'}
+                    </Button>
+                  </div>
+                  {(message !== '' || (error ?? '') !== '') && (
+                    <p className="text-sm text-muted-foreground">{message !== '' ? message : (error ?? '')}</p>
+                  )}
+                </>
+              ) : (
+                // 批量导入区块（整合自原独立页）
+                <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">加载批量导入...</div>}>
+                  <BulkImportPanel />
+                </Suspense>
+              )}
+            </>
+          )}
+
+          {/* ── Tab 2: 热门板块纳入 ── */}
+          {activeTab === 'hot-sector' && (
+            <HotSectorSection />
           )}
         </CardContent>
       </Card>
 
-      {/* ─── 意向候选池数据表 ─── */}
+      {/* ─── 意向候选池清单（合并采集任务状态展示） ─── */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>意向候选池</CardTitle>
+            <CardTitle>意向候选池清单</CardTitle>
             <div className="flex items-center gap-2">
               <span className="text-xs text-muted-foreground">
                 {allStocks.filter((s) => s.price !== undefined).length}/{allStocks.length} 已采
@@ -444,7 +563,7 @@ export default function InputDashboard(): React.JSX.Element {
               <svg className="mb-2 h-8 w-8 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l-2.25 2.25m2.25-2.25H3.375" />
               </svg>
-              <p className="text-sm">暂无候选股票，请通过上方搜索录入</p>
+              <p className="text-sm">暂无候选股票，请通过上方录入或热门板块纳入</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -458,14 +577,15 @@ export default function InputDashboard(): React.JSX.Element {
                     <th className="whitespace-nowrap px-3 py-2 text-left text-xs font-semibold">三级分类</th>
                     <th className="whitespace-nowrap px-3 py-2 text-right text-xs font-semibold">最新价</th>
                     <th className="whitespace-nowrap px-3 py-2 text-right text-xs font-semibold">总市值</th>
-                    <th className="whitespace-nowrap px-3 py-2 text-center text-xs font-semibold">状态</th>
+                    <th className="whitespace-nowrap px-3 py-2 text-center text-xs font-semibold">采集状态</th>
                     <th className="whitespace-nowrap px-3 py-2 text-center text-xs font-semibold">操作</th>
                   </tr>
                 </thead>
-                <tbody className={cn('divide-y', 'divide-stone-100')}>
+                <tbody className={cn('divide-y', DIVIDE.stone100)}>
                   {allStocks.map((item) => {
                     const dictItem = findStockBySymbol(item.symbol)
                     const isCollecting = collectingSymbols.has(item.symbol)
+                    const isCollected = item.price !== undefined
                     return (
                       <tr key={item.symbol} className={cn('hover:bg-stone-50/50 transition-colors')}>
                         <td className="whitespace-nowrap px-3 py-2 text-center">
@@ -488,7 +608,7 @@ export default function InputDashboard(): React.JSX.Element {
                           {item.industryCode ?? '-'}
                         </td>
                         <td className="whitespace-nowrap px-3 py-2 text-right font-mono text-xs">
-                          {item.price !== undefined ? formatPrice(item.price) : (
+                          {isCollected ? formatPrice(item.price) : (
                             <span className="text-muted-foreground">待采集</span>
                           )}
                         </td>
@@ -498,29 +618,29 @@ export default function InputDashboard(): React.JSX.Element {
                           )}
                         </td>
                         <td className="whitespace-nowrap px-3 py-2 text-center">
-                          <Badge variant={item.price !== undefined ? 'success' : 'outline'} className="text-[10px]">
-                            {item.price !== undefined ? '已采' : '待采'}
-                          </Badge>
+                          {isCollecting ? (
+                            <Badge className={cn(twBg('blue', 100), twText('blue', 700))}>
+                              <span className="flex items-center gap-1">
+                                <span className="inline-block h-2 w-2 animate-spin rounded-full border border-current border-t-transparent" />
+                                采集中
+                              </span>
+                            </Badge>
+                          ) : isCollected ? (
+                            <Badge variant="success" className="text-[10px]">已采</Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-[10px]">待采</Badge>
+                          )}
                         </td>
                         <td className="whitespace-nowrap px-3 py-2 text-center">
                           <div className="flex items-center justify-center gap-1">
                             <Button
                               size="sm"
                               variant="ghost"
-                              disabled={isCollecting || item.price !== undefined}
-                              onClick={() => void handleCollectStock(item.symbol, item.name)}
+                              disabled={isCollecting || isCollected}
+                              onClick={() => void handleCollectStock(item.symbol)}
                               className="h-7 px-2 text-xs"
                             >
-                              {isCollecting ? (
-                                <span className="flex items-center gap-1">
-                                  <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                                  采集中
-                                </span>
-                              ) : item.price !== undefined ? (
-                                '已采集'
-                              ) : (
-                                '采集'
-                              )}
+                              {isCollecting ? '采集中' : isCollected ? '已采集' : '采集'}
                             </Button>
                             <Button
                               size="sm"

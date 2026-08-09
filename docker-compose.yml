@@ -1,0 +1,89 @@
+# V9 数据采集服务 — Docker Compose 编排
+#
+# 提供两种运行模式：
+#   1. 仅采集服务（核心）：
+#        docker compose up -d data-collector
+#        curl http://localhost:8000/health
+#
+#   2. 采集 + 前端开发服务（完整调试）：
+#        docker compose up -d
+#        浏览器访问 http://localhost:3000
+#
+# 常用命令：
+#   docker compose up -d                     # 启动全部服务
+#   docker compose up -d data-collector      # 仅启动采集服务
+#   docker compose logs -f data-collector     # 查看采集日志
+#   docker compose exec data-collector python -c "import akshare; print(akshare.__version__)"
+#   docker compose down                       # 停止并清理
+#   docker compose down -v                   # 停止并删除数据卷
+#
+# 采集结果持久化：
+#   outputs/collected-data 目录通过 volume 挂载，容器停止后数据保留在宿主机
+#   浏览器端同步（collectedDataSyncService）会生成 .bundle.json 下载
+
+services:
+  # ════════════════════════════════════════════════════════════════════════════
+  # 采集服务：Python FastAPI + AkShare
+  # 暴露端口 8000，提供 /api/collect/* 与 /health 接口
+  # ════════════════════════════════════════════════════════════════════════════
+  data-collector:
+    build:
+      context: ./python/data_service
+      dockerfile: Dockerfile
+    container_name: v9-data-collector
+    ports:
+      - "8000:8000"
+    volumes:
+      # 采集输出持久化到宿主机（与前端 outputs/collected-data 对应）
+      - ./outputs/collected-data:/app/outputs/collected-data
+    environment:
+      - PYTHONUNBUFFERED=1
+      # 时区设置（AkShare 接口依赖北京时间）
+      - TZ=Asia/Shanghai
+    # 重启策略：异常退出自动重启（采集服务不应中断）
+    restart: unless-stopped
+    # 健康检查由 Dockerfile 内置 HEALTHCHECK 负责
+    networks:
+      - v9-net
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # 前端开发服务：Vite dev server（可选，用于浏览器端同步调试）
+  # 通过 COLLECTOR_TARGET 指向 data-collector 服务
+  # ════════════════════════════════════════════════════════════════════════════
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: v9-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      # 挂载源码实现热更新（开发模式）
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./index.html:/app/index.html
+      - ./vite.config.ts:/app/vite.config.ts
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./outputs:/app/outputs
+      # 排除 node_modules（使用容器内安装的版本）
+      - /app/node_modules
+    environment:
+      # 代理目标指向 Docker 网络内的采集服务
+      - COLLECTOR_TARGET=http://data-collector:8000
+      # 数据源类型：real（走采集服务）/ mock（前端假数据）
+      - VITE_DATA_SOURCE_TYPE=real
+      - VITE_AKSHARE_BASE_URL=/api/akshare
+      - VITE_API_BASE_URL=/api
+      - TZ=Asia/Shanghai
+    # 依赖采集服务先启动
+    depends_on:
+      data-collector:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - v9-net
+
+# 自定义网络：服务间通过服务名互相访问
+networks:
+  v9-net:
+    driver: bridge

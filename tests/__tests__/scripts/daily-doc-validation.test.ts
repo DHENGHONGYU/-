@@ -209,7 +209,7 @@ describe('doc-cross-ref-sync.ts', () => {
     expect(result.fixedLinkCount).toBe(0)
     expect(result.updates.length).toBeGreaterThanOrEqual(1)
 
-    const indexPath = path.join(tempDir, 'REGISTRY_INDEX.md')
+    const indexPath = path.join(tempDir, '00-meta', 'REGISTRY_INDEX.md')
     expect(fs.existsSync(indexPath)).toBe(true)
 
     const indexContent = fs.readFileSync(indexPath, 'utf-8')

@@ -3,7 +3,7 @@
  * @description 七维采集配置常量定义。
  *
  * 参考 V6 Pro collectConfig.ts 设计，适配 V9 架构：
- * - 8 个采集维度（七维 + 研报中心）
+ * - 10 个采集维度（七维 + 研报中心 + 财务数据 + 热门板块）
  * - 5 个策略模板（价值 / 成长 / 防御 / 周期 / 全维度）
  * - 频率枚举与中文标签映射
  * - 数据源类型与优先级
@@ -140,7 +140,7 @@ export const STRATEGY_TEMPLATES: StrategyTemplate[] = [
     id: 'cycle',
     name: '周期轮动',
     description: '中频采集，跟踪行业排名与资金流向',
-    dimensions: ['01', '02', '05', '06', '07'],
+    dimensions: ['01', '02', '05', '06', '07', '10'],
     updateInterval: 'daily',
     historyDays: 252,
     sources: ['akshare', 'yahoo'],
@@ -149,7 +149,7 @@ export const STRATEGY_TEMPLATES: StrategyTemplate[] = [
     id: 'full',
     name: '全维度',
     description: '高频全量采集，适用于深度研究',
-    dimensions: ['01', '02', '03', '04', '05', '06', '07', '08'],
+    dimensions: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'],
     updateInterval: 'daily',
     historyDays: 756,
     sources: ['akshare', 'ifind', 'yahoo'],
@@ -157,7 +157,7 @@ export const STRATEGY_TEMPLATES: StrategyTemplate[] = [
 ]
 
 // ============================================================
-// 8 个采集维度默认配置
+// 采集维度默认配置
 // ============================================================
 
 export const DEFAULT_DIMENSIONS: DimensionConfig[] = [
@@ -257,7 +257,37 @@ export const DEFAULT_DIMENSIONS: DimensionConfig[] = [
     fields: ['reportTitle', 'rating', 'targetPrice', 'analyst', 'summary'],
     importance: 'critical',
   },
+  {
+    code: '09',
+    name: '财务数据',
+    enabled: true,
+    frequency: 'quarterly',
+    batchSize: 20,
+    sources: ['ifind'],
+    cacheTtl: 43200,
+    storageType: 'full',
+    fields: ['revenue', 'netProfit', 'grossMargin', 'netMargin', 'operatingCF', 'rdRatio', 'reportDate', 'eps', 'bps', 'roe'],
+    importance: 'critical',
+  },
+  {
+    code: '10',
+    name: '热门板块',
+    enabled: true,
+    frequency: 'daily',
+    batchSize: 20,
+    sources: ['akshare'],
+    cacheTtl: 1440,
+    storageType: 'full',
+    fields: ['sectorCode', 'sectorName', 'score', 'signal', 'alertLevel', 'f1Jingqi', 'f2Zijin', 'f3Guzhi', 'f5Nengliang', 'total'],
+    importance: 'high',
+  },
 ]
+
+/** 采集维度总数（从 DEFAULT_DIMENSIONS 自动派生，禁止硬编码） */
+export const DIMENSION_COUNT = DEFAULT_DIMENSIONS.length
+
+/** 全部维度 code 列表（从 DEFAULT_DIMENSIONS 自动派生） */
+export const ALL_DIMENSION_CODES = DEFAULT_DIMENSIONS.map((d) => d.code)
 
 // ============================================================
 // 维度颜色映射（用于 UI 标识）
@@ -272,6 +302,8 @@ export const DIMENSION_COLORS: Record<string, string> = {
   '06': 'bg-pink-500',
   '07': 'bg-indigo-500',
   '08': 'bg-red-500',
+  '09': 'bg-teal-500',
+  '10': 'bg-amber-500',
 }
 
 export const IMPORTANCE_BADGE_VARIANT: Record<DimensionImportance, 'default' | 'secondary' | 'destructive' | 'outline'> = {
@@ -339,6 +371,18 @@ export const FIELD_REGISTRY: FieldRegistry = {
     { id: 'targetPrice', name: '目标价', description: '目标价', dimensions: ['08'] },
     { id: 'analyst', name: '分析师', description: '分析师', dimensions: ['08'] },
     { id: 'summary', name: '摘要', description: '研报摘要', dimensions: ['08'] },
+  ],
+  '10': [
+    { id: 'sectorCode', name: '板块代码', description: '申万二级板块代码', dimensions: ['10'] },
+    { id: 'sectorName', name: '板块名称', description: '申万二级板块名称', dimensions: ['10'] },
+    { id: 'score', name: '综合评分', description: '板块轮动综合评分(0-5)', dimensions: ['10'] },
+    { id: 'signal', name: '信号', description: '板块轮动信号(强势上攻/震荡上行/观望/弱势)', dimensions: ['10'] },
+    { id: 'alertLevel', name: '预警等级', description: '预警等级(正常/关注/预警)', dimensions: ['10'] },
+    { id: 'f1Jingqi', name: '景气因子', description: '近5日涨幅(0-100)', dimensions: ['10'] },
+    { id: 'f2Zijin', name: '资金因子', description: '近5日均成交额/前20日均成交额(0-100)', dimensions: ['10'] },
+    { id: 'f3Guzhi', name: '估值因子', description: 'PE分位反向(0-100)', dimensions: ['10'] },
+    { id: 'f5Nengliang', name: '量能因子', description: '近5日均成交量/前20日均成交量(0-100)', dimensions: ['10'] },
+    { id: 'total', name: '综合得分', description: '五因子加权综合得分(0-100)', dimensions: ['10'] },
   ],
 }
 
@@ -448,4 +492,6 @@ export const DIMENSION_API_MAPPING: DimensionApiMapping[] = [
   { code: '06', name: '行业竞品', api: '/api/industry/competitors', method: 'GET', cache: '10080s' },
   { code: '07', name: '关联指数', api: '/api/index/correlation', method: 'GET', cache: '10080s' },
   { code: '08', name: '研报中心', api: '/api/research/reports', method: 'GET', cache: '1440s' },
+  { code: '09', name: '财务数据', api: '/api/stock/financial', method: 'GET', cache: '43200s' },
+  { code: '10', name: '热门板块', api: '/api/strategy/hot-sectors', method: 'GET', cache: '1440s' },
 ]

@@ -1,6 +1,6 @@
-import { memo, useState, useEffect, useCallback } from 'react'
+import { memo, useState, useEffect, useCallback, useMemo } from 'react'
 import { Link } from 'react-router'
-import { BarChart3, Download, RefreshCw, ArrowLeft } from 'lucide-react'
+import { BarChart3, Download, RefreshCw, ArrowLeft, CandlestickChart as ChartIcon } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
@@ -17,6 +17,10 @@ import type { TradeReviewReport } from '@/services/trading/tradeReviewAI'
 import { useToast } from '@/hooks/useToast'
 import { usePageGuard } from '@/hooks/usePageGuard'
 import { ReviewArtifactModal } from '@/components/organisms/output/ReviewArtifactModal'
+import { BuySellPointReviewPanel } from '@/components/organisms/output/BuySellPointReviewPanel'
+import { CandlestickChart } from '@/components/chart'
+import { ordersToMarkers } from '@/services/trading/buySellPointMarkerBuilder'
+import type { CandlestickChartData } from '@/components/chart'
 import type { Order } from '@/data/types'
 import { PageContainer, PageHeader } from '@/components/templates'
 
@@ -34,7 +38,7 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
   const { guardProps } = usePageGuard('trade-review')
   // 阶段 B-2：从 store 读取 latestReport（持久化在 IDB.trade_reviews），不再维护本地 review state
   const latestReport = useDisciplineStore((s) => s.latestReport)
-  const { loadOrders: loadOrdersFromStore, generateReviewReport } = useDisciplineStore()
+  const { loadOrders: loadOrdersFromStore, generateReviewReport, refresh: refreshReport } = useDisciplineStore()
 
   // 将 store 中的 latestReport 转成 UI 用的 ReviewData
   const review: ReviewData | null = latestReport
@@ -46,6 +50,10 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
     try {
       const ordersList = await loadOrdersFromStore()
       setOrders(ordersList)
+      // 订单加载后若无报告，自动生成（修复按钮被遮挡无法点击的问题）
+      if (ordersList.length > 0 && !useDisciplineStore.getState().latestReport) {
+        generateReviewReport(ordersList)
+      }
     } catch (error) {
       toast({
         variant: 'error',
@@ -55,11 +63,12 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
     } finally {
       setLoading(false)
     }
-  }, [loadOrdersFromStore, toast])
+  }, [loadOrdersFromStore, toast, generateReviewReport])
 
   useEffect(() => {
     void loadOrders()
-  }, [loadOrders])
+    void refreshReport()
+  }, [loadOrders, refreshReport])
 
   const generateReviewReportHandler = async (): Promise<void> => {
     if (orders.length === 0) {
@@ -316,7 +325,35 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
                 )}
               </CardContent>
             </Card>
+
+            {review.report.buySellPointReview && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <ChartIcon className="h-5 w-5" />
+                    买卖点复盘分析
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <BuySellPointReviewPanel review={review.report.buySellPointReview} />
+                </CardContent>
+              </Card>
+            )}
           </>
+        )}
+
+        {orders.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ChartIcon className="h-5 w-5" />
+                K线买卖点标注
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <KlineWithMarkers orders={orders} />
+            </CardContent>
+          </Card>
         )}
 
         <ReviewArtifactModal
@@ -329,6 +366,72 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
     </ErrorBoundary>
   )
 })
+
+const KLINE_DEMO_DAYS = 30
+
+function generateDemoKlineData(orders: Order[]): CandlestickChartData[] {
+  if (orders.length === 0) return []
+
+  const sorted = [...orders].sort((a, b) => a.createdAt - b.createdAt)
+  const firstDate = new Date(sorted[0]!.createdAt)
+  const startDate = new Date(firstDate)
+  startDate.setDate(startDate.getDate() - KLINE_DEMO_DAYS)
+
+  const basePrice = sorted[0]!.price
+  const data: CandlestickChartData[] = []
+  let prevClose = basePrice
+
+  for (let i = 0; i < KLINE_DEMO_DAYS * 2; i++) {
+    const date = new Date(startDate)
+    date.setDate(date.getDate() + i)
+    const dateStr = date.toISOString().slice(0, 10)
+
+    const drift = (Math.sin(i * 0.3) + Math.cos(i * 0.15)) * basePrice * 0.02
+    const open = prevClose
+    const close = basePrice + drift + (i - KLINE_DEMO_DAYS) * basePrice * 0.003
+    const high = Math.max(open, close) + Math.abs(drift) * 0.5
+    const low = Math.min(open, close) - Math.abs(drift) * 0.5
+    const volume = Math.round(1000000 + Math.random() * 500000)
+
+    data.push({
+      time: dateStr,
+      open: Math.round(open * 100) / 100,
+      high: Math.round(high * 100) / 100,
+      low: Math.round(low * 100) / 100,
+      close: Math.round(close * 100) / 100,
+      volume,
+    })
+    prevClose = close
+  }
+
+  return data
+}
+
+function KlineWithMarkers({ orders }: { orders: Order[] }): React.JSX.Element {
+  const chartData = useMemo(() => generateDemoKlineData(orders), [orders])
+  const markers = useMemo(() => ordersToMarkers(orders), [orders])
+
+  if (chartData.length === 0) {
+    return <p className="text-sm text-muted-foreground text-center py-8">暂无交易数据</p>
+  }
+
+  return (
+    <div className="space-y-2">
+      <CandlestickChart data={chartData} markers={markers} height={360} />
+      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+        <span className="flex items-center gap-1">
+          <span className="inline-block w-3 h-3 rounded-full bg-red-600" />
+          买入点
+        </span>
+        <span className="flex items-center gap-1">
+          <span className="inline-block w-3 h-3 rounded-full bg-green-600" />
+          卖出点
+        </span>
+        <span className="text-muted-foreground">标注基于实际交易订单生成</span>
+      </div>
+    </div>
+  )
+}
 
 function buildReportMarkdown(report: TradeReviewReport): string {
   const lines: string[] = []

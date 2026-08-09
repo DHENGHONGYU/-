@@ -8,15 +8,18 @@ status: active
 maintainer: V9 Architecture Team
 summary: "定位：汇总 `../../AGENTS.md` 中的工程约束为一页可速查的编码规范，补「应有文档：coding-conventions」缺口。..."
 tags: [project, spec, reference]
-version: v1.0.0
-last_updated: 2026-07-17
+version: v1.1.0
+last_updated: 2026-08-09
 code_version: 2.0.0
 doc_id: V9-DOC-PROJ-225
 referenced_by: [V9-DOC-PROJ-032, V9-DOC-META-000, V9-DOC-BACK-026, V9-DOC-QA-009, V9-DOC-PROJ-176, V9-DOC-PROJ-294, V9-DOC-PROJ-149]
 change_log:
+  - version: v1.1.0
+    changes: 新增 §7 文件系统操作规范（safeWriteFileSync 强制使用）
+    date: 2026-08-09
   - version: v1.0.0
-changes: Initial version established
-date: 2026-07-17
+    changes: Initial version established
+    date: 2026-07-17
 ---
 
 # V9 编码规范（Coding Conventions）
@@ -87,7 +90,41 @@ useEffect(() => {
 
 ---
 
-## 7. 门禁速查
+## 7. 文件系统操作
+
+### 7.1 强制使用 safeWriteFileSync
+
+- **禁止**在脚本和业务代码中直接调用 `writeFileSync` 写入动态路径（路径含变量拼接、时间戳、用户输入等）。
+- **必须**使用 `src/lib/safeFs.ts` 中的 `safeWriteFileSync`，该函数在写入前自动调用 `mkdirSync(dirname(filePath), { recursive: true })` 创建父目录，避免 ENOENT 异常。
+
+```typescript
+// ❌ 禁止：动态路径 + 无目录创建 → ENOENT 风险
+import { writeFileSync } from 'fs'
+writeFileSync(join(dir, `report-${Date.now()}.json`), data, 'utf-8')
+
+// ✅ 正确：自动创建父目录
+import { safeWriteFileSync } from '@/lib/safeFs'
+safeWriteFileSync(join(dir, `report-${Date.now()}.json`), data)
+```
+
+### 7.2 适用范围
+
+| 场景 | 要求 |
+|------|------|
+| 脚本写入报告/输出文件（`scripts/`） | 必须使用 `safeWriteFileSync` |
+| 业务代码写入缓存/日志（`src/`） | 必须使用 `safeWriteFileSync` |
+| 写入静态路径（目录确定存在） | 可直接 `writeFileSync`，但建议统一 |
+| `.cjs`/`.mjs` 脚本 | 无法导入 TS 模块时，须在 `writeFileSync` 前显式 `mkdirSync` |
+
+### 7.3 迁移要点
+
+- 替换 `writeFileSync` → `safeWriteFileSync` 时，移除冗余的 `mkdirSync` 前置调用和 `existsSync` 目录检查。
+- `safeWriteFileSync` 签名与 `writeFileSync` 兼容：`(filePath, data, options?)`，默认编码 `'utf-8'`。
+- 导入路径：`scripts/` 下用相对路径 `'../src/lib/safeFs'`，`src/` 下用 `'@/lib/safeFs'`。
+
+---
+
+## 8. 门禁速查
 
 | 命令 | 作用 |
 |------|------|

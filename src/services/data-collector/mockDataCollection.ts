@@ -13,6 +13,7 @@
 */
 
 import { DATA_COLLECTION_TIMEOUT_MS } from '@/config/timeouts'
+import { DEFAULT_WS_URL } from '@/config/dataSourceUrls'
 import { MockStockAnalysisScoringStrategy } from '@/services/stock-analysis/scoringStrategy'
 import { getTradeReviewScoreCalculator } from '@/services/trading/tradeReviewScoring'
 
@@ -710,7 +711,7 @@ export function generateWebSocketCollectorConfig(): CollectorConfig & { wsUrl: s
     timeout: DATA_COLLECTION_TIMEOUT_MS,
     retryCount: 3,
     retryInterval: 2000,
-    wsUrl: 'ws://localhost:8080/ws',
+    wsUrl: DEFAULT_WS_URL,
     reconnectInterval: 3000,
     maxReconnectCount: 5,
   }

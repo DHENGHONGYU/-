@@ -34,7 +34,7 @@ import threading
 import time
 import logging
 import argparse
-from multiprocessing import Process
+from multiprocessing import Process, freeze_support
 
 # ──────────────────────────────────────────────
 # 日志配置
@@ -238,6 +238,13 @@ def main():
         "--no-collector", action="store_true",
         help="不启动 AKShare Collector（仅嵌入服务）",
     )
+    # PyInstaller frozen 模式下 multiprocessing.spawn 会注入 --multiprocessing-fork
+    # argparse 需要识别并跳过它，否则报 "unrecognized arguments" 错误
+    parser.add_argument(
+        "--multiprocessing-fork", dest="multiprocessing_fork",
+        nargs="+", default=None,
+        help=argparse.SUPPRESS,
+    )
     args = parser.parse_args()
 
     logger.info("=" * 60)
@@ -310,4 +317,9 @@ def main():
 
 
 if __name__ == "__main__":
+    # PyInstaller 打包模式下必须调用 freeze_support()
+    # 否则 multiprocessing.Process 的 spawn 方式会传递 --multiprocessing-fork 参数
+    # 导致 argparse 无法识别而崩溃
+    from multiprocessing import freeze_support
+    freeze_support()
     main()

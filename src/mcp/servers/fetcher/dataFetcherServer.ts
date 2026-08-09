@@ -20,7 +20,7 @@ import {
   refreshSymbol,
   checkFetcherHealth,
 } from '@/services/fetcher/fetcherService'
-import { testSourceConnectivity } from '@/services/data-collector/dataSourceOrchestrator'
+import { testSourceConnectivity } from '@/services/fetcher/dataSourceOrchestrator'
 import { DataSourceRegistry } from '@/services/fetcher/dataSourceRegistry'
 import { AkshareProvider } from '@/services/fetcher/akshareProvider'
 import { MockProvider } from '@/services/fetcher/mockProvider'

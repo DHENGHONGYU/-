@@ -98,3 +98,9 @@ export async function collectAllDimensions(
 ): Promise<CollectSession> {
   return getOrchestratorFacade().collectAllDimensions(symbols)
 }
+
+// ============================================================
+// 数据源连通性测试 re-export（从 data-collector 模块委托）
+// ============================================================
+
+export { testSourceConnectivity } from '../data-collector/dataSourceOrchestrator'

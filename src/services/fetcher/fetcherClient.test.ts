@@ -25,7 +25,7 @@ vi.mock('@/lib/logger', () => ({ getLogger: () => mockLogger }))
 
 const mockGetConfig = vi.hoisted(() =>
   vi.fn().mockReturnValue({
-    baseURL: 'http://localhost:8765',
+    baseURL: 'http://localhost:8000',
     timeoutMs: 30000,
     retries: 0,
   }),
@@ -40,15 +40,18 @@ const mockFetch = vi.hoisted(() => vi.fn())
 beforeEach(() => {
   mockFetch.mockClear()
   mockGetConfig.mockReturnValue({
-    baseURL: 'http://localhost:8765',
+    baseURL: 'http://localhost:8000',
     timeoutMs: 30000,
     retries: 0,
   })
   vi.stubGlobal('fetch', mockFetch)
+  // 默认进入 real 模式，让原有 checkFetcherHealth 测试用例保持原行为（实际请求 /health）
+  vi.stubEnv('VITE_DATA_SOURCE_TYPE', 'real')
 })
 
 afterEach(() => {
   vi.restoreAllMocks()
+  vi.unstubAllEnvs()
 })
 
 // ============================================================
@@ -155,6 +158,34 @@ describe('checkFetcherHealth', () => {
     expect(result.ok).toBe(false)
     expect(result.error).toBe(String(timeoutError))
   })
+
+  // ============================================================
+  // 非 real 模式（rest / mock / websocket）跳过 Python 服务健康检查
+  // ============================================================
+
+  test('VITE_DATA_SOURCE_TYPE=rest 时跳过 /health 请求，直接返回 ok=true', async () => {
+    vi.stubEnv('VITE_DATA_SOURCE_TYPE', 'rest')
+    const result = await checkFetcherHealth()
+    expect(result.ok).toBe(true)
+    expect(result.error).toBeUndefined()
+    expect(mockFetch).not.toHaveBeenCalled()
+  })
+
+  test('VITE_DATA_SOURCE_TYPE=mock 时跳过 /health 请求，直接返回 ok=true', async () => {
+    vi.stubEnv('VITE_DATA_SOURCE_TYPE', 'mock')
+    const result = await checkFetcherHealth()
+    expect(result.ok).toBe(true)
+    expect(result.error).toBeUndefined()
+    expect(mockFetch).not.toHaveBeenCalled()
+  })
+
+  test('VITE_DATA_SOURCE_TYPE 未设置时默认按 mock 处理，跳过 /health 请求', async () => {
+    vi.stubEnv('VITE_DATA_SOURCE_TYPE', '')
+    const result = await checkFetcherHealth()
+    expect(result.ok).toBe(true)
+    expect(result.error).toBeUndefined()
+    expect(mockFetch).not.toHaveBeenCalled()
+  })
 })
 
 // ============================================================
@@ -217,7 +248,7 @@ describe('collectBasic', () => {
     await collectBasic('600519.SH')
 
     const callArgs = mockFetch.mock.calls[0]!
-    expect(callArgs[0]).toBe('http://localhost:8765/api/collect/basic')
+    expect(callArgs[0]).toBe('http://localhost:8000/api/collect/basic')
   })
 
   test('请求包含 Content-Type: application/json', async () => {
@@ -304,7 +335,7 @@ describe('collectKline', () => {
     await collectKline({ symbol: '600519.SH' })
 
     const callArgs = mockFetch.mock.calls[0]!
-    expect(callArgs[0]).toBe('http://localhost:8765/api/collect/kline')
+    expect(callArgs[0]).toBe('http://localhost:8000/api/collect/kline')
   })
 })
 

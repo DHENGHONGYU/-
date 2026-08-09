@@ -12,7 +12,8 @@
  *     后续可用 TS Compiler API 增强（精确字段、继承关系、泛型）。
  */
 
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
+import { safeWriteFileSync } from '../../src/lib/safeFs'
 import { join, relative } from 'node:path'
 
 const ROOT = process.cwd()
@@ -103,7 +104,7 @@ function main(): void {
   const out = lines.join('\n')
   const outIdx = process.argv.indexOf('--output')
   if (outIdx > -1 && process.argv[outIdx + 1]) {
-    writeFileSync(process.argv[outIdx + 1]!, out, 'utf-8')
+    safeWriteFileSync(process.argv[outIdx + 1]!, out)
     console.log(`[doc-dict-ast-extract] 已写入 ${process.argv[outIdx + 1]}（${count} 个类型）`)
   } else {
     console.log(out)

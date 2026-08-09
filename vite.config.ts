@@ -134,12 +134,24 @@ export default defineConfig({
     proxy: {
       // Python 数据采集服务代理（AkShare 采集后端，端口 8000）
       // VITE_DATA_SOURCE_TYPE=real 时，前端 /health 与 /api/collect/* 需转发至 Python 服务
+      // 代理目标可通过 COLLECTOR_TARGET 环境变量覆盖（Docker 内指向 data-collector:8000）
       '/health': {
-        target: 'http://localhost:8000',
+        target: process.env.COLLECTOR_TARGET ?? 'http://localhost:8000',
         changeOrigin: true,
       },
       '/api/collect': {
-        target: 'http://localhost:8000',
+        target: process.env.COLLECTOR_TARGET ?? 'http://localhost:8000',
+        changeOrigin: true,
+      },
+      '/api/akshare': {
+        target: process.env.COLLECTOR_TARGET ?? 'http://localhost:8000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/akshare/, ''),
+      },
+      // Python Embedding Service 代理（方案B: Electron + Python Sidecar）
+      // 前端 /api/embed/* 请求转发至 Python Sidecar 的 Embedding Service
+      '/api/embed': {
+        target: process.env.EMBEDDING_TARGET ?? 'http://localhost:8001',
         changeOrigin: true,
       },
       // 腾讯行情 API 代理（解决浏览器 CORS）

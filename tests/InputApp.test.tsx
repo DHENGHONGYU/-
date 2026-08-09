@@ -99,8 +99,8 @@ describe('InputApp', () => {
       success: true,
       data: { total: 1, success: 1, failed: 0, errors: [], stocks: [mockStock] },
     } as never)
-    vi.spyOn(hotSectorService, 'getHotSectors').mockReturnValue([mockHotSector])
-    vi.spyOn(hotSectorService, 'getHotSectorByCode').mockReturnValue(mockHotSector)
+    vi.spyOn(hotSectorService, 'getHotSectors').mockResolvedValue([mockHotSector])
+    vi.spyOn(hotSectorService, 'getHotSectorByCode').mockResolvedValue(mockHotSector)
     vi.spyOn(hotSectorService, 'addHotSectorStock').mockResolvedValue({
       success: true,
       data: mockStock,

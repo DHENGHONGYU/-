@@ -17,6 +17,73 @@ const logger = getLogger()
 
 export type { DataBridgeAdapterConfig, DataAction, BridgeQueryOptions, BridgeQueryResult } from '@/types/modules/databridge.types'
 
+// ============================================================
+// 编程错误构造器集合 — fail-fast 策略
+// ============================================================
+const PROGRAMMING_ERROR_CONSTRUCTORS = new Set<unknown>([
+  TypeError,
+  SyntaxError,
+  ReferenceError,
+  RangeError,
+  EvalError,
+  URIError,
+])
+
+/**
+ * 判断错误是否为编程错误（bug），应 fail-fast reject。
+ * 操作错误（网络/超时等）则优雅降级 resolve success=false。
+ *
+ * 分支覆盖：
+ * 1. 非对象（string/null/undefined）→ false（操作错误）
+ * 2. Object.create(null)（无 constructor）→ false（操作错误）
+ * 3. TypeError/SyntaxError 等（含子类）→ true（编程错误 fail-fast）
+ * 4. 普通 Error → false（操作错误优雅降级）
+ */
+function isProgrammingError(err: unknown): boolean {
+  // 分支 1：非对象错误（string/null/undefined）
+  if (!err || typeof err !== 'object') {
+    logger.debug(`[DataBridgeAdapter] isProgrammingError: 非对象错误 → 操作错误(优雅降级), errorType=${typeof err}`)
+    return false
+  }
+
+  // 分支 2：Object.create(null) 无 constructor 原型链
+  const constructor = (err as object).constructor
+  if (!constructor) {
+    logger.debug(`[DataBridgeAdapter] isProgrammingError: 无 constructor → 操作错误(优雅降级), error=${safeErrorMessage(err)}`)
+    return false
+  }
+
+  // 分支 3：编程错误 — 先精确匹配构造器，再 instanceof 检查子类原型链
+  if (PROGRAMMING_ERROR_CONSTRUCTORS.has(constructor) ||
+      err instanceof TypeError || err instanceof SyntaxError ||
+      err instanceof ReferenceError || err instanceof RangeError ||
+      err instanceof EvalError || err instanceof URIError) {
+    logger.debug(`[DataBridgeAdapter] isProgrammingError: 编程错误(fail-fast reject), constructor=${(constructor as { name?: string }).name}`)
+    return true
+  }
+
+  // 分支 4：普通 Error → 操作错误
+  logger.debug(`[DataBridgeAdapter] isProgrammingError: 操作错误(优雅降级), constructor=${(constructor as { name?: string }).name}`)
+  return false
+}
+
+/**
+ * 安全提取错误消息，防止 null/undefined/非对象错误导致二次崩溃。
+ */
+function safeErrorMessage(err: unknown): string {
+  if (typeof err === 'string') return err
+  if (!err) return 'Unknown error'
+  if (typeof err === 'object' && 'message' in err && typeof (err as { message: unknown }).message === 'string') {
+    return (err as { message: string }).message
+  }
+  // Object.create(null) 或无 toString 的对象
+  try {
+    return String(err)
+  } catch {
+    return 'Unknown error'
+  }
+}
+
 /**
  * DataBridge 适配器 — 封装对 dataBridge 的 query/forward 调用，
  * 提供待处理查询追踪、自动订阅管理等功能。
@@ -93,11 +160,21 @@ export class DataBridgeAdapter {
           }
           this.pendingQueries.get(traceId)?.resolve(result)
         })
-        .catch((err) => {
-          logger.error(`[DataBridgeAdapter] Query failed: traceId="${traceId}", error="${err.message}"`)
+        .catch((err: unknown) => {
+          const errMsg = safeErrorMessage(err)
+          logger.error(`[DataBridgeAdapter] Query failed: traceId="${traceId}", error="${errMsg}"`)
+
+          if (isProgrammingError(err)) {
+            // 编程错误 → fail-fast reject，让上层感知 bug
+            const rejectErr = err instanceof Error ? err : new Error(errMsg)
+            this.pendingQueries.get(traceId)?.reject(rejectErr)
+            return
+          }
+
+          // 操作错误 → 优雅降级 resolve success=false
           const result: BridgeQueryResult<T> = {
             success: false,
-            error: err.message,
+            error: errMsg,
             traceId,
           }
           this.pendingQueries.get(traceId)?.resolve(result)

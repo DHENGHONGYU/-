@@ -340,6 +340,19 @@ P3: 得分 < 40
 - **负责人**: @xiaoying-ying
 - **相关 Issue**: #126
 
+#### [TD-012] directDataAPI.ts 重复副本（类型/签名/错误策略不兼容）
+
+- **发现日期**: 2026-08-09
+- **类型**: 代码债 / 设计债
+- **问题描述**: `src/services/fetcher/directDataAPI.ts`（CANONICAL）与 `src/services/data-collector/directDataAPI.ts`（副本）为独立实现，类型（StockQuote vs RealtimeQuote）、错误策略（throw DirectDataAPIError vs return null）、配置源（dataSourceUrls vs marketDataEndpoints）、新浪字段索引（[29]/[30] vs [8]/[9]）、腾讯 K 线 qfqday 兜底（有 vs 无）均不一致
+- **根因**: 阶段 1（2026-07-19）仅提取代码格式化函数至 stockCodeUtils.ts，未完成类型与错误策略统一
+- **影响**: 新浪字段索引不一致可能导致至少一份代码解析错误；批量行情实现差异（split 逐段 vs idx 索引对齐）存在顺序敏感 bug 风险
+- **解决方案**: 阶段 2 统一迁移至 fetcher/ 版本，保留 data-collector/ 版本的 quoteToStock/klinesToDailyQuotes 适配函数 + checkMarketDataContract 契约校验作为 wrapper
+- **计划完成**: 2026-09-15
+- **状态**: 🔴 待规划
+- **负责人**: 未分配
+- **相关 Issue**: 待创建
+
 ---
 
 ### P2: 可选改进（影响代码质量）
@@ -367,6 +380,30 @@ P3: 得分 < 40
 - **状态**: 🔴 待规划
 - **负责人**: @xiaoying-ying
 - **相关 Issue**: #128
+
+#### [TD-013] 方案 B PRD 与实际整改路线偏离
+
+- **发现日期**: 2026-08-09
+- **类型**: 文档债
+- **问题描述**: `deliverables/software-company/architecture-plan-b-tushare-crawler.md` PRD 主张接入 Tushare Pro 5000 积分套餐（500元/年）作为主线，实际 8/9 整改改走方案 D 零成本路线（腾讯直连 + AKShare 真实接口），PRD 未更新说明
+- **根因**: 整改时务实选择零成本方案，但未同步更新 PRD 文档的"待确认事项"
+- **解决方案**: 更新 PRD §"待确认事项"，明确标注"已改走方案 D，Tushare Pro 作为中长期备选"
+- **计划完成**: 2026-08-31
+- **状态**: 🔴 待规划
+- **负责人**: 未分配
+- **相关 Issue**: 待创建
+
+#### [TD-014] Tushare Token 未配置
+
+- **发现日期**: 2026-08-09
+- **类型**: 功能债
+- **问题描述**: `src/services/data-collector/tushareProvider.ts` 已预实现 Tushare Pro 直连 Provider（含 6 类错误分类），但未配置 Token，实际未启用
+- **根因**: PRD 待确认事项 #1"Tushare Token 用户是否已有"至今未解决
+- **解决方案**: 用户配置 Token 后激活 tushareProvider.ts，与方案 D 形成双源互备；或评估是否删除该模块以减少维护成本
+- **计划完成**: 待规划（依赖用户决策）
+- **状态**: 🔴 待规划
+- **负责人**: 未分配
+- **相关 Issue**: 待创建
 
 ---
 

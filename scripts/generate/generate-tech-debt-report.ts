@@ -21,9 +21,10 @@
  */
 
 import { execSync } from 'child_process'
-import { writeFileSync, readFileSync, existsSync } from 'fs'
+import { readFileSync } from 'fs'
 import { join } from 'path'
 import { getLogger } from '@/lib/logger'
+import { safeWriteFileSync } from '@/lib/safeFs'
 
 const logger = getLogger()
 
@@ -450,13 +451,9 @@ async function main() {
   // 3. 生成报告
   const report = generateMarkdownReport(items, stats, sonarMetrics)
 
-  // 4. 保存报告
-  if (!existsSync(config.outputDir)) {
-    execSync(`mkdir -p "${config.outputDir}"`, { shell: true })
-  }
-
+  // 4. 保存报告（safeWriteFileSync 自动创建父目录）
   const reportFile = join(config.outputDir, `tech-debt-report-${new Date().toISOString().split('T')[0]}.md`)
-  writeFileSync(reportFile, report, 'utf-8')
+  safeWriteFileSync(reportFile, report)
   logger.info(`[TechDebtReport] 报告已保存: ${reportFile}`)
 
   // 5. 输出统计摘要

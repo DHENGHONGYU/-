@@ -61,6 +61,10 @@ export const EASTMONEY_F10_SHAREHOLDER_API =
 export const EASTMONEY_ANNOUNCEMENT_API =
   'https://np-anotice-stock.eastmoney.com/api/security/ann'
 
+/** 东方财富公告详情 API 基础地址（用于构造公告详情链接） */
+export const EASTMONEY_ANNOUNCEMENT_DETAIL_API =
+  'https://np-anotice-stock.eastmoney.com/api/security/ann/detail'
+
 /**
  * 东方财富新闻 API（push2）。
  *

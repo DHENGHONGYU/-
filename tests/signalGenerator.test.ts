@@ -189,15 +189,72 @@ describe('signalGenerator', () => {
     expect(composite?.direction).toBe('sell')
   })
 
-  it('picks the strongest signal by direction priority and confidence', () => {
+  it('applies confidence override: high-confidence sell beats low-confidence buy', () => {
+    // sell(0.80) vs buy(0.50): gap=0.30>=0.20, sell_conf=0.80>=0.70 → sell 胜出
     const signals = [
       { direction: 'hold' as const, confidence: 0.9, type: 'hold', strategy: 'test', id: '1', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
       { direction: 'buy' as const, confidence: 0.5, type: 'buy_dip', strategy: 'test', id: '2', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
       { direction: 'sell' as const, confidence: 0.8, type: 'sell', strategy: 'test', id: '3', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
     ]
+    const strongest = pickStrongestSignal(signals)
+    expect(strongest?.direction).toBe('sell')
+    expect(strongest?.confidence).toBe(0.8)
+  })
 
+  it('applies confidence override at exact boundary: sell_trailing_stop(0.70) vs buy_safety_margin(0.50)', () => {
+    // 真实信号值：sell_trailing_stop conf=0.70, buy_safety_margin conf=0.50
+    // 浮点精度：0.7-0.5=0.1999... 需 EPSILON 容差才能 >= 0.20
+    const signals = [
+      { direction: 'buy' as const, confidence: 0.5, type: 'buy_safety_margin', strategy: 'test', id: '1', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
+      { direction: 'sell' as const, confidence: 0.7, type: 'sell_trailing_stop', strategy: 'test', id: '2', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
+    ]
+    const strongest = pickStrongestSignal(signals)
+    expect(strongest?.direction).toBe('sell')
+    expect(strongest?.confidence).toBe(0.7)
+  })
+
+  it('keeps direction priority when confidence gap is below threshold', () => {
+    // buy(0.65) vs sell(0.75): gap=0.10<0.20 → buy 胜出
+    const signals = [
+      { direction: 'sell' as const, confidence: 0.75, type: 'composite_sell', strategy: 'test', id: '1', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
+      { direction: 'buy' as const, confidence: 0.65, type: 'buy_pivot', strategy: 'test', id: '2', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
+    ]
     const strongest = pickStrongestSignal(signals)
     expect(strongest?.direction).toBe('buy')
-    expect(strongest?.confidence).toBe(0.5)
+    expect(strongest?.confidence).toBe(0.65)
+  })
+
+  it('keeps direction priority when sell confidence is below override floor', () => {
+    // buy(0.50) vs sell(0.68): sell_conf=0.68<0.70 → buy 胜出
+    const signals = [
+      { direction: 'sell' as const, confidence: 0.68, type: 'sell_trailing_stop', strategy: 'test', id: '1', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
+      { direction: 'buy' as const, confidence: 0.50, type: 'buy_safety_margin', strategy: 'test', id: '2', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
+    ]
+    const strongest = pickStrongestSignal(signals)
+    expect(strongest?.direction).toBe('buy')
+    expect(strongest?.confidence).toBe(0.50)
+  })
+
+  it('does not apply override for non-trade directions (watch/hold)', () => {
+    // buy(0.50) vs watch(0.95): watch 非交易方向 → buy 胜出
+    const signals = [
+      { direction: 'watch' as const, confidence: 0.95, type: 'watch', strategy: 'test', id: '1', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
+      { direction: 'buy' as const, confidence: 0.50, type: 'buy_safety_margin', strategy: 'test', id: '2', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
+    ]
+    const strongest = pickStrongestSignal(signals)
+    expect(strongest?.direction).toBe('buy')
+    expect(strongest?.confidence).toBe(0.50)
+  })
+
+  it('sorts same direction by confidence descending', () => {
+    const signals = [
+      { direction: 'buy' as const, confidence: 0.50, type: 'buy_safety_margin', strategy: 'test', id: '1', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
+      { direction: 'buy' as const, confidence: 0.75, type: 'composite_buy', strategy: 'test', id: '2', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
+      { direction: 'buy' as const, confidence: 0.55, type: 'buy_dip', strategy: 'test', id: '3', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
+    ]
+    const strongest = pickStrongestSignal(signals)
+    expect(strongest?.direction).toBe('buy')
+    expect(strongest?.confidence).toBe(0.75)
+    expect(strongest?.type).toBe('composite_buy')
   })
 })

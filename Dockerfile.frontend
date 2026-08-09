@@ -1,0 +1,33 @@
+# V9 前端开发服务 — Docker 镜像
+#
+# 用途：容器化运行 Vite 开发服务器，配合 data-collector 服务
+# 在 Docker 网络内通过 COLLECTOR_TARGET 环境变量指向采集服务
+#
+# 使用方式（配合项目根目录 docker-compose.yml）：
+#   docker compose up -d frontend   # 启动前端开发服务
+#   浏览器访问 http://localhost:3000
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 基础镜像：Node 20（与项目 package.json engines 一致）
+# ══════════════════════════════════════════════════════════════════════════════
+FROM node:20-slim
+
+# 设置工作目录
+WORKDIR /app
+
+# 先复制依赖清单，利用 Docker 缓存层
+COPY package.json package-lock.json* ./
+
+# 安装依赖（--ignore-scripts 避免 native 模块在容器内构建失败）
+RUN npm ci --ignore-scripts --no-audit || npm install --no-audit
+
+# 复制项目源码（通过 .dockerignore 排除 node_modules/dist 等）
+COPY . .
+
+# 暴露 Vite dev server 端口（与 vite.config.ts server.port 一致）
+EXPOSE 3000
+
+# 启动 Vite dev server
+# --host 0.0.0.0 允许容器外访问
+# COLLECTOR_TARGET 由 docker-compose.yml 注入，指向 data-collector:8000
+CMD ["npx", "vite", "--host", "0.0.0.0"]

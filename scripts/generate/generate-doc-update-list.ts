@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 
-import { writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
+import { safeWriteFileSync } from '../../src/lib/safeFs'
 import { fileURLToPath } from 'node:url'
 import { execSync } from 'node:child_process'
 
@@ -273,12 +273,12 @@ function main() {
 
   const listContent = generateDocUpdateList(report)
   const listPath = join(DOCS_DIR, 'drafts', `doc-update-list-${new Date().toISOString().replace(/[:.]/g, '-')}.md`)
-  writeFileSync(listPath, listContent, 'utf-8')
+  safeWriteFileSync(listPath, listContent)
   console.log(`文档更新清单已写入: ${listPath}`)
 
   const mdContent = generateMarkdownExport(report)
   const mdPath = join(DOCS_DIR, 'drafts', `api-doc-draft-${new Date().toISOString().replace(/[:.]/g, '-')}.md`)
-  writeFileSync(mdPath, mdContent, 'utf-8')
+  safeWriteFileSync(mdPath, mdContent)
   console.log(`Markdown 导出文件已写入: ${mdPath}`)
 
   const recentFiles = report.findings

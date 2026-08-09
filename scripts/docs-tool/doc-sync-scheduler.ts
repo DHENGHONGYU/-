@@ -22,9 +22,10 @@
  */
 
 import { execSync } from 'node:child_process'
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { join, dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { safeWriteFileSync } from '../../src/lib/safeFs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '..', '..')
@@ -64,8 +65,7 @@ function getHeadSha(): string {
 }
 
 function saveLastRef(ref: string): void {
-  mkdirSync(dirname(STATE_FILE), { recursive: true })
-  writeFileSync(STATE_FILE, ref, 'utf-8')
+  safeWriteFileSync(STATE_FILE, ref)
 }
 
 function gitDiff(ref: string): string[] {
@@ -115,7 +115,6 @@ function main(): void {
   const silent = args.includes('--silent')
 
   const timestamp = new Date().toISOString()
-  mkdirSync(REPORT_DIR, { recursive: true })
 
   console.log('[doc-sync-scheduler] since=%s, fix=%s, autoUpdate=%s', since, fix, autoUpdate)
 
@@ -200,7 +199,7 @@ function main(): void {
   }
 
   const reportPath = join(REPORT_DIR, `sync-${timestamp.replace(/[:.]/g, '-')}.json`)
-  writeFileSync(reportPath, JSON.stringify(report, null, 2), 'utf-8')
+  safeWriteFileSync(reportPath, JSON.stringify(report, null, 2))
 
   // 更新 last-ref 为本次基准的真实 SHA（供下次 diff 起点，避免字面量 HEAD 导致 0 变更）
   saveLastRef(since === 'HEAD' || since === 'HEAD~1' || since === 'HEAD~0' ? getHeadSha() : since)
