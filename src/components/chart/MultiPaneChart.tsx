@@ -28,6 +28,9 @@ import type { KlinePeriod, KlineAdjust } from '@/services/fetcher/fetcherTypes'
 import { computeKDJ, KDJ_COLORS, type KDJParams } from './indicators/kdj'
 import { computeMACD, MACD_COLORS, type MACDParams, type MACDResult } from './indicators/macd'
 import type { CandlestickChartData } from './types'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 /** 周期选项配置 */
 const PERIOD_OPTIONS: Array<{ value: KlinePeriod; label: string; group: 'intraday' | 'daily' }> = [
@@ -298,13 +301,11 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
     useEffect(() => {
       if (!containerRef.current) return
 
-      if (process.env.NODE_ENV === 'development') {
-        console.log('[MultiPaneChart] 初始化多窗格图表', {
-          showMACD,
-          showKDJ,
-          dataLength: data.length,
-        })
-      }
+      logger.info('[MultiPaneChart] 初始化多窗格图表', {
+        showMACD,
+        showKDJ,
+        dataLength: data.length,
+      })
 
       // ===== 主 K 线图 =====
       const mainContainer = document.createElement('div')
@@ -383,12 +384,10 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
       const macdSeriesList: Array<ISeriesApi<'Line' | 'Histogram'> | null> = []
       
       if (showMACD) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[MultiPaneChart] 创建 MACD 副图窗格', {
-            dataLength: data.length,
-            macdParams,
-          })
-        }
+        logger.info('[MultiPaneChart] 创建 MACD 副图窗格', {
+          dataLength: data.length,
+          macdParams,
+        })
 
         const macdContainer = document.createElement('div')
         macdContainer.style.height = `${subPaneHeight}px`
@@ -460,13 +459,11 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
         histogramSeries.setData(macdResult.histogram.filter((d): d is HistogramData<Time> => d !== null))
         macdSeriesList.push(histogramSeries)
 
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[MultiPaneChart] MACD 副图创建完成', {
-            difCount: macdResult.dif.filter(d => d !== null).length,
-            deaCount: macdResult.dea.filter(d => d !== null).length,
-            histogramCount: macdResult.histogram.filter(d => d !== null).length,
-          })
-        }
+        logger.info('[MultiPaneChart] MACD 副图创建完成', {
+          difCount: macdResult.dif.filter(d => d !== null).length,
+          deaCount: macdResult.dea.filter(d => d !== null).length,
+          histogramCount: macdResult.histogram.filter(d => d !== null).length,
+        })
       }
 
       // ===== KDJ 副图 =====
@@ -474,12 +471,10 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
       const kdjSeriesList: Array<ISeriesApi<'Line'> | null> = []
       
       if (showKDJ) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[MultiPaneChart] 创建 KDJ 副图窗格', {
-            dataLength: data.length,
-            kdjParams,
-          })
-        }
+        logger.info('[MultiPaneChart] 创建 KDJ 副图窗格', {
+          dataLength: data.length,
+          kdjParams,
+        })
 
         const kdjContainer = document.createElement('div')
         kdjContainer.style.height = `${subPaneHeight}px`
@@ -555,13 +550,11 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
         jSeries.setData(kdjResult.j.filter((d): d is LineData<Time> => d !== null))
         kdjSeriesList.push(jSeries)
 
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[MultiPaneChart] KDJ 副图创建完成', {
-            kCount: kdjResult.k.filter(d => d !== null).length,
-            dCount: kdjResult.d.filter(d => d !== null).length,
-            jCount: kdjResult.j.filter(d => d !== null).length,
-          })
-        }
+        logger.info('[MultiPaneChart] KDJ 副图创建完成', {
+          kCount: kdjResult.k.filter(d => d !== null).length,
+          dCount: kdjResult.d.filter(d => d !== null).length,
+          jCount: kdjResult.j.filter(d => d !== null).length,
+        })
       }
 
       // ===== 十字光标联动（带节流） =====
@@ -628,13 +621,11 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
           }
         }
 
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[MultiPaneChart] 十字光标联动', {
-            time: timeToString(bar.time),
-            macd: macd ? '✓' : '✗',
-            kdj: kdj ? '✓' : '✗',
-          })
-        }
+        logger.info('[MultiPaneChart] 十字光标联动', {
+          time: timeToString(bar.time),
+          macd: macd ? '✓' : '✗',
+          kdj: kdj ? '✓' : '✗',
+        })
 
         updateTooltip({
           time: timeToString(bar.time),
@@ -704,14 +695,12 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
       macdChartRef.current = macdChart
       kdjChartRef.current = kdjChart
 
-      if (process.env.NODE_ENV === 'development') {
-        console.log('[MultiPaneChart] 多窗格图表初始化完成', {
-          mainPaneHeight,
-          subPaneHeight,
-          macdEnabled: showMACD,
-          kdjEnabled: showKDJ,
-        })
-      }
+      logger.info('[MultiPaneChart] 多窗格图表初始化完成', {
+        mainPaneHeight,
+        subPaneHeight,
+        macdEnabled: showMACD,
+        kdjEnabled: showKDJ,
+      })
 
       return () => {
         mainChart.remove()

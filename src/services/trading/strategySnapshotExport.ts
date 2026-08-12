@@ -361,7 +361,7 @@ export interface BatchExportResult extends SnapshotExportResult {
 /** Excel Sheet 名称最大长度（Excel 限制） */
 const SHEET_NAME_MAX_LENGTH = 31
 /** Excel Sheet 名称中不允许的字符 */
-const SHEET_NAME_ILLEGAL_CHARS = /[:\\/?*\[\]]/g
+const SHEET_NAME_ILLEGAL_CHARS = /[:\\/?*[\]]/g
 
 /**
  * 构建唯一的 Excel Sheet 名称。

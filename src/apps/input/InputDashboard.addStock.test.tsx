@@ -93,8 +93,8 @@ const { mockStoreItemsRef, mockRefresh, mockDeleteItem, mockUpdateItem, mockAddS
   }
 })
 
-vi.mock('@/store/intentionPoolStore', () => {
-  const { create } = require('zustand') as typeof import('zustand')
+vi.mock('@/store/intentionPoolStore', async () => {
+  const { create } = await import('zustand')
   return {
     useIntentionPoolStore: create<{
       items: Stock[]

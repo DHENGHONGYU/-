@@ -43,7 +43,7 @@ const LAYOUT_MIGRATION_LOG_KEY = 'v9_cockpit_layout_migration_log'
 function saveMigrationLog(log: LayoutMigrationLog): void {
   try {
     const existing = localStorage.getItem(LAYOUT_MIGRATION_LOG_KEY)
-    const logs = existing ? JSON.parse(existing) as LayoutMigrationLog[] : []
+    const logs = (existing ?? '') !== '' ? (JSON.parse(existing!) as LayoutMigrationLog[]) : []
     logs.push(log)
     localStorage.setItem(LAYOUT_MIGRATION_LOG_KEY, JSON.stringify(logs.slice(-10)))
   } catch {
@@ -54,7 +54,7 @@ function saveMigrationLog(log: LayoutMigrationLog): void {
 function getLastMigrationLog(): LayoutMigrationLog | null {
   try {
     const existing = localStorage.getItem(LAYOUT_MIGRATION_LOG_KEY)
-    if (!existing) return null
+    if (existing === null || existing === '') return null
     const logs = JSON.parse(existing) as LayoutMigrationLog[]
     return logs[logs.length - 1] ?? null
   } catch {
@@ -66,7 +66,7 @@ function getLastMigrationLog(): LayoutMigrationLog | null {
 function loadLayout(): Record<string, { x: number; y: number }> | null {
   try {
     const raw = localStorage.getItem(LAYOUT_STORAGE_KEY)
-    if (!raw) return null
+    if (raw === null || raw === '') return null
 
     const parsed = JSON.parse(raw) as LayoutStorageData | Record<string, { x: number; y: number }>
 
@@ -246,21 +246,22 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
   // 防止 widget 组件内部解构 { config } 时收到 null props 导致崩溃
   // 注意：useMemo 必须在所有条件返回之前调用（rules of hooks）
   const SafeComponent = useMemo(() => {
-    if (!Component) return null
+    if (Component === null) return null
+    const Comp = Component
     const SafeWrapper = (wrapperProps: { config: unknown; data?: MarketData }): React.JSX.Element => {
-      if (!wrapperProps?.config) {
+      if (wrapperProps === null || wrapperProps === undefined || (wrapperProps.config ?? null) === null) {
         logger.warn('[CockpitShell] SafeWrapper: widget received null props', { widgetId: config?.widgetId })
         return <></>
       }
-      return <Component {...wrapperProps} />
+      return <Comp {...wrapperProps} />
     }
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    SafeWrapper.displayName = `Safe(${Component.displayName || Component.name || 'Widget'})`
+    SafeWrapper.displayName = `Safe(${Comp.displayName ?? Comp.name ?? 'Widget'})`
     return SafeWrapper
   }, [Component, config?.widgetId])
 
   // 空值守卫：所有 hooks 之后安全返回
-  if (!config) {
+  if (config === null || config === undefined) {
     logger.warn('[WidgetWrapper] config is null/undefined, rendering fallback')
     return (
       <Card>
@@ -284,7 +285,7 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
     )
   }
 
-  if (error) {
+  if ((error ?? '') !== '') {
     return (
       <Card>
         <CardHeader>
@@ -293,7 +294,7 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
         <CardContent className="p-8">
           <ErrorState
             title="组件加载失败"
-            description={error}
+            description={error ?? undefined}
             onRetry={async () => {
               setLoading(true)
               setError(null)

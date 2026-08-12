@@ -12,6 +12,9 @@
 import type { Time, LineData, HistogramData } from 'lightweight-charts'
 import { COLOR_SHADES } from '@/constants/theme.tokens'
 import type { CandlestickChartData } from '../types'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 /** MACD 计算参数 */
 export interface MACDParams {
@@ -76,19 +79,15 @@ export function computeMACD(
 ): MACDResult {
   const { fastPeriod = 12, slowPeriod = 26, signalPeriod = 9 } = params
   
-  if (process.env.NODE_ENV === 'development') {
-    console.log('[MACD] 开始计算', {
-      dataLength: data.length,
-      fastPeriod,
-      slowPeriod,
-      signalPeriod,
-    })
-  }
+  logger.info('[MACD] 开始计算', {
+    dataLength: data.length,
+    fastPeriod,
+    slowPeriod,
+    signalPeriod,
+  })
   
   if (data.length === 0) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('[MACD] 数据为空，返回空结果')
-    }
+    logger.warn('[MACD] 数据为空，返回空结果')
     return { dif: [], dea: [], histogram: [] }
   }
   
@@ -114,13 +113,11 @@ export function computeMACD(
     histogramValues.push((difValues[i]! - deaValues[i]!) * 2)
   }
   
-  if (process.env.NODE_ENV === 'development') {
-    console.log('[MACD] 计算完成', {
-      difLast: difValues[difValues.length - 1]?.toFixed(4),
-      deaLast: deaValues[deaValues.length - 1]?.toFixed(4),
-      histogramLast: histogramValues[histogramValues.length - 1]?.toFixed(4),
-    })
-  }
+  logger.info('[MACD] 计算完成', {
+    difLast: difValues[difValues.length - 1]?.toFixed(4),
+    deaLast: deaValues[deaValues.length - 1]?.toFixed(4),
+    histogramLast: histogramValues[histogramValues.length - 1]?.toFixed(4),
+  })
   
   // 转换为 lightweight-charts 数据格式
   const dif: Array<LineData<Time> | null> = data.map((item, i) => ({

@@ -21,7 +21,8 @@ const CLI = {
 const BASELINE = Object.freeze({
   storeEntriesMin: 64,
   serviceEntriesMin: 62,
-  componentEntriesMin: 166,
+  // 2026-08-13 校准：删除 6 个死组件条目 + 注册 3 个真实组件后，audit:registry 验证真实组件数为 159
+  componentEntriesMin: 159,
   componentSubRegistries: 4,
 });
 

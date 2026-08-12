@@ -16,6 +16,9 @@
 import type { Time, LineData } from 'lightweight-charts'
 import { COLOR_SHADES } from '@/constants/theme.tokens'
 import type { CandlestickChartData } from '../types'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 /** KDJ 计算参数 */
 export interface KDJParams {
@@ -50,34 +53,28 @@ export function computeKDJ(
 ): KDJResult {
   const { nPeriod = 9, kSmooth = 3, dSmooth = 3 } = params
   
-  if (process.env.NODE_ENV === 'development') {
-    console.log('[KDJ] 开始计算', {
-      dataLength: data.length,
-      nPeriod,
-      kSmooth,
-      dSmooth,
-    })
-  }
+  logger.info('[KDJ] 开始计算', {
+    dataLength: data.length,
+    nPeriod,
+    kSmooth,
+    dSmooth,
+  })
   
   // 数据校验
   if (data.length === 0) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('[KDJ] 数据为空，返回空结果')
-    }
+    logger.warn('[KDJ] 数据为空，返回空结果')
     return { k: [], d: [], j: [] }
   }
   
   // 数据有效性检查
-  if (process.env.NODE_ENV === 'development') {
-    const invalidData = data.filter((d) => {
-      return !d.time || typeof d.high !== 'number' || typeof d.low !== 'number' || typeof d.close !== 'number'
+  const invalidData = data.filter((d) => {
+    return !d.time || typeof d.high !== 'number' || typeof d.low !== 'number' || typeof d.close !== 'number'
+  })
+  if (invalidData.length > 0) {
+    logger.error('[KDJ] 发现无效数据点', {
+      invalidCount: invalidData.length,
+      firstInvalidIndex: data.indexOf(invalidData[0]!),
     })
-    if (invalidData.length > 0) {
-      console.error('[KDJ] 发现无效数据点', {
-        invalidCount: invalidData.length,
-        firstInvalidIndex: data.indexOf(invalidData[0]!),
-      })
-    }
   }
   
   // 计算 RSV (Raw Stochastic Value)
@@ -108,15 +105,13 @@ export function computeKDJ(
     }
   }
   
-  if (process.env.NODE_ENV === 'development') {
-    console.log('[KDJ] RSV 计算完成', {
-      length: rsv.length,
-      first: rsv[0]?.toFixed(2),
-      last: rsv[rsv.length - 1]?.toFixed(2),
-      min: Math.min(...rsv).toFixed(2),
-      max: Math.max(...rsv).toFixed(2),
-    })
-  }
+  logger.info('[KDJ] RSV 计算完成', {
+    length: rsv.length,
+    first: rsv[0]?.toFixed(2),
+    last: rsv[rsv.length - 1]?.toFixed(2),
+    min: Math.min(...rsv).toFixed(2),
+    max: Math.max(...rsv).toFixed(2),
+  })
   
   // 计算 K、D、J 线
   const kValues: number[] = []
@@ -146,28 +141,24 @@ export function computeKDJ(
     dPrev = d
   }
   
-  if (process.env.NODE_ENV === 'development') {
-    console.log('[KDJ] K/D/J 计算完成', {
-      kLast: kValues[kValues.length - 1]?.toFixed(2),
-      dLast: dValues[dValues.length - 1]?.toFixed(2),
-      jLast: jValues[jValues.length - 1]?.toFixed(2),
-      kRange: `[${Math.min(...kValues).toFixed(2)}, ${Math.max(...kValues).toFixed(2)}]`,
-      dRange: `[${Math.min(...dValues).toFixed(2)}, ${Math.max(...dValues).toFixed(2)}]`,
-      jRange: `[${Math.min(...jValues).toFixed(2)}, ${Math.max(...jValues).toFixed(2)}]`,
-    })
-  }
+  logger.info('[KDJ] K/D/J 计算完成', {
+    kLast: kValues[kValues.length - 1]?.toFixed(2),
+    dLast: dValues[dValues.length - 1]?.toFixed(2),
+    jLast: jValues[jValues.length - 1]?.toFixed(2),
+    kRange: `[${Math.min(...kValues).toFixed(2)}, ${Math.max(...kValues).toFixed(2)}]`,
+    dRange: `[${Math.min(...dValues).toFixed(2)}, ${Math.max(...dValues).toFixed(2)}]`,
+    jRange: `[${Math.min(...jValues).toFixed(2)}, ${Math.max(...jValues).toFixed(2)}]`,
+  })
   
   // 转换为 lightweight-charts 数据格式
   // 前 nPeriod - 1 个数据点为预热期，标记为 null
   const warmupPeriod = nPeriod - 1
   
-  if (process.env.NODE_ENV === 'development') {
-    console.log('[KDJ] 开始数据格式转换', {
-      warmupPeriod,
-      totalDataPoints: data.length,
-      validPointsAfterWarmup: data.length - warmupPeriod,
-    })
-  }
+  logger.info('[KDJ] 开始数据格式转换', {
+    warmupPeriod,
+    totalDataPoints: data.length,
+    validPointsAfterWarmup: data.length - warmupPeriod,
+  })
   
   const k: Array<LineData<Time> | null> = data.map((item, i) => {
     if (i < warmupPeriod) return null
@@ -184,52 +175,50 @@ export function computeKDJ(
     return { time: item.time as Time, value: jValues[i]! }
   })
   
-  if (process.env.NODE_ENV === 'development') {
-    const validCount = k.filter((d) => d !== null).length
-    console.log('[KDJ] 数据转换完成', {
-      warmupPeriod,
-      validCount,
-      totalLength: data.length,
-      nullCount: data.length - validCount,
+  const validCount = k.filter((d) => d !== null).length
+  logger.info('[KDJ] 数据转换完成', {
+    warmupPeriod,
+    validCount,
+    totalLength: data.length,
+    nullCount: data.length - validCount,
+  })
+  
+  // 数据对齐验证
+  const kValidTimes = k.filter((d) => d !== null).map((d) => d!.time)
+  const dValidTimes = d.filter((d) => d !== null).map((d) => d!.time)
+  const jValidTimes = j.filter((d) => d !== null).map((d) => d!.time)
+  
+  const allTimesMatch = 
+    kValidTimes.length === dValidTimes.length &&
+    kValidTimes.length === jValidTimes.length &&
+    kValidTimes.every((t, i) => t === dValidTimes[i] && t === jValidTimes[i])
+  
+  if (!allTimesMatch) {
+    logger.error('[KDJ] 数据对齐失败！K/D/J 时间戳不一致', {
+      kCount: kValidTimes.length,
+      dCount: dValidTimes.length,
+      jCount: jValidTimes.length,
     })
-    
-    // 数据对齐验证
-    const kValidTimes = k.filter((d) => d !== null).map((d) => d!.time)
-    const dValidTimes = d.filter((d) => d !== null).map((d) => d!.time)
-    const jValidTimes = j.filter((d) => d !== null).map((d) => d!.time)
-    
-    const allTimesMatch = 
-      kValidTimes.length === dValidTimes.length &&
-      kValidTimes.length === jValidTimes.length &&
-      kValidTimes.every((t, i) => t === dValidTimes[i] && t === jValidTimes[i])
-    
-    if (!allTimesMatch) {
-      console.error('[KDJ] 数据对齐失败！K/D/J 时间戳不一致', {
-        kCount: kValidTimes.length,
-        dCount: dValidTimes.length,
-        jCount: jValidTimes.length,
-      })
-    } else {
-      console.log('[KDJ] 数据对齐验证通过', {
-        validPoints: validCount,
-        firstTime: kValidTimes[0],
-        lastTime: kValidTimes[kValidTimes.length - 1],
-      })
-    }
-    
-    // 输出前 5 个有效数据点用于验证
-    const firstValidData = k
-      .map((kVal, i) => ({
-        time: kVal?.time,
-        k: kVal?.value,
-        d: d[i]?.value,
-        j: j[i]?.value,
-      }))
-      .filter((d) => d.k !== undefined && d.d !== undefined && d.j !== undefined)
-      .slice(0, 5)
-    
-    console.log('[KDJ] 前 5 个有效数据点', firstValidData)
+  } else {
+    logger.info('[KDJ] 数据对齐验证通过', {
+      validPoints: validCount,
+      firstTime: kValidTimes[0],
+      lastTime: kValidTimes[kValidTimes.length - 1],
+    })
   }
+  
+  // 输出前 5 个有效数据点用于验证
+  const firstValidData = k
+    .map((kVal, i) => ({
+      time: kVal?.time,
+      k: kVal?.value,
+      d: d[i]?.value,
+      j: j[i]?.value,
+    }))
+    .filter((d) => d.k !== undefined && d.d !== undefined && d.j !== undefined)
+    .slice(0, 5)
+  
+  logger.info('[KDJ] 前 5 个有效数据点', { points: firstValidData })
   
   return { k, d, j }
 }

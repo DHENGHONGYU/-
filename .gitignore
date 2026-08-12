@@ -60,6 +60,9 @@ _tmp_*
 .cache/
 temp/
 
+# External design review artifacts
+finsight-v9-ui-review/
+
 # Git backup / sandbox artifacts
 .git.backup-*/
 

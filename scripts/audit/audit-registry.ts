@@ -350,12 +350,18 @@ function checkUnregisteredComponents(registeredPaths: Set<string>): string[] {
   const componentDir = path.join(SRC, 'components')
   if (!fs.existsSync(componentDir)) return []
 
+  // 组件反向检查排除目录：基础设施（registry 注册表目录）、图表指标工具（indicators）
+  // 这些目录内的文件不是可注册的业务 UI 组件。
+  const EXCLUDE_DIRS = new Set(['node_modules', 'dist', '__tests__', 'registry', 'indicators'])
+  // 排除文件：纯类型/索引/无组件定义文件（注册表基础设施、图表 type、仅导出类型的面板）
+  const EXCLUDE_FILES = new Set(['index.ts', 'componentRegistry.ts', 'types.ts', 'ChipStrategyReviewPanel.tsx'])
+
   const allComponentFiles: string[] = []
 
   function scan(dir: string) {
     const entries = fs.readdirSync(dir, { withFileTypes: true })
     for (const entry of entries) {
-      if (entry.name === 'node_modules' || entry.name === 'dist' || entry.name === '__tests__') continue
+      if (EXCLUDE_DIRS.has(entry.name)) continue
 
       const full = path.join(dir, entry.name)
       if (entry.isDirectory()) {
@@ -363,7 +369,9 @@ function checkUnregisteredComponents(registeredPaths: Set<string>): string[] {
       } else if (entry.isFile()) {
         // 只扫描 .tsx 文件和 .ts 业务组件文件
         const isComponent =
-          (entry.name.endsWith('.tsx') && !entry.name.endsWith('.test.tsx')) ||
+          (entry.name.endsWith('.tsx') &&
+            !entry.name.endsWith('.test.tsx') &&
+            !EXCLUDE_FILES.has(entry.name)) ||
           (entry.name.endsWith('.ts') &&
             !entry.name.endsWith('.test.ts') &&
             !entry.name.endsWith('.spec.ts') &&
@@ -372,7 +380,8 @@ function checkUnregisteredComponents(registeredPaths: Set<string>): string[] {
             // 排除 hooks / 工具文件
             !entry.name.startsWith('use') &&
             // 排除纯类型文件
-            !entry.name.endsWith('.types.ts'))
+            !entry.name.endsWith('.types.ts') &&
+            !EXCLUDE_FILES.has(entry.name))
 
         if (isComponent) {
           allComponentFiles.push(full)

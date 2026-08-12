@@ -225,7 +225,7 @@ async function prepareItem(
   }
 
   // 自动打标
-  if (options.autoTag) {
+  if ((options.autoTag ?? false) === true) {
     try {
       return await autoTagItem(baseItem)
     } catch (err) {
@@ -273,7 +273,7 @@ export async function getProfileItem(id: string): Promise<ProfileItem | undefine
 export async function listProfileItemsBySymbol(symbol: string, limit?: number): Promise<ProfileItem[]> {
   const items = await queryByIndex<ProfileItem>(STORE_NAME.profileItems, 'by-symbol', symbol)
   const sorted = items.sort((a, b) => (b.qualityScore ?? 0) - (a.qualityScore ?? 0))
-  return limit ? sorted.slice(0, limit) : sorted
+  return (limit ?? 0) > 0 ? sorted.slice(0, limit!) : sorted
 }
 
 /**
@@ -289,7 +289,7 @@ export async function listProfileItemsByDomain(
     'by-symbol-domain-quality',
     [symbol, domain],
   )
-  return limit ? items.slice(0, limit) : items
+  return (limit ?? 0) > 0 ? items.slice(0, limit!) : items
 }
 
 /**
@@ -301,7 +301,7 @@ export async function listProfileItemsByType(
   limit?: number,
 ): Promise<ProfileItem[]> {
   const items = await queryByIndex<ProfileItem>(STORE_NAME.profileItems, 'by-symbol-type', [symbol, itemType])
-  return limit ? items.slice(0, limit) : items
+  return (limit ?? 0) > 0 ? items.slice(0, limit!) : items
 }
 
 /**
@@ -335,19 +335,19 @@ export async function queryProfileItems(filter: ProfileQueryFilter): Promise<Pro
   if (sentiment) {
     items = items.filter((i) => i.sentiment === sentiment)
   }
-  if (minQuality && minQuality > 0) {
-    items = items.filter((i) => (i.qualityScore ?? 0) >= minQuality)
+  if ((minQuality ?? 0) > 0) {
+    items = items.filter((i) => (i.qualityScore ?? 0) >= (minQuality ?? 0))
   }
-  if (source) {
+  if ((source ?? '') !== '') {
     items = items.filter((i) => i.source === source)
   }
-  if (keyword && keyword.trim()) {
-    const kw = keyword.toLowerCase()
+  if ((keyword ?? '').trim() !== '') {
+    const kw = keyword!.toLowerCase()
     items = items.filter(
       (i) =>
         i.title.toLowerCase().includes(kw) ||
         i.summary.toLowerCase().includes(kw) ||
-        i.topicTags?.some((t) => t.toLowerCase().includes(kw)),
+        ((i.topicTags ?? []).some((t) => t.toLowerCase().includes(kw))),
     )
   }
 
@@ -358,7 +358,7 @@ export async function queryProfileItems(filter: ProfileQueryFilter): Promise<Pro
     return sortOrder === 'desc' ? (bv as number) - (av as number) : (av as number) - (bv as number)
   })
 
-  return limit ? items.slice(0, limit) : items
+  return (limit ?? 0) > 0 ? items.slice(0, limit!) : items
 }
 
 // ============================================================

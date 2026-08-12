@@ -324,7 +324,7 @@ export class LocalStorageManager {
 
     for (let i = 0; i < localStorage.length; i++) {
       const fullKey = localStorage.key(i)
-      if (fullKey && fullKey.startsWith(prefix)) {
+      if (fullKey !== null && fullKey.startsWith(prefix)) {
         result.push(fullKey.slice(prefix.length))
       }
     }
@@ -397,8 +397,8 @@ export class LocalStorageManager {
 
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i)
-      if (key) {
-        usedBytes += LocalStorageManager.accumulateKeyBytes(key)
+      if ((key ?? '') !== '') {
+        usedBytes += LocalStorageManager.accumulateKeyBytes(key!)
       }
     }
 
@@ -425,7 +425,7 @@ export class LocalStorageManager {
 
     for (const fullKey of keys) {
       const raw = localStorage.getItem(fullKey)
-      if (!raw) {
+      if (raw === null || raw === '') {
         continue
       }
 
@@ -479,7 +479,7 @@ export class LocalStorageManager {
    */
   private static accumulateKeyBytes(key: string): number {
     const value = localStorage.getItem(key)
-    if (!value) return 0
+    if (value === null || value === '') return 0
     return byteLength(key) + byteLength(value)
   }
 
@@ -499,9 +499,9 @@ export class LocalStorageManager {
 
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i)
-      if (key) {
-        const ns = LocalStorageManager.extractNamespace(key)
-        if (ns) nsSet.add(ns)
+      if ((key ?? '') !== '') {
+        const ns = LocalStorageManager.extractNamespace(key!)
+        if (ns !== null) nsSet.add(ns)
       }
     }
 
@@ -525,8 +525,8 @@ export class LocalStorageManager {
 
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i)
-      if (key) {
-        usedBytes += LocalStorageManager.accumulateKeyBytes(key)
+      if ((key ?? '') !== '') {
+        usedBytes += LocalStorageManager.accumulateKeyBytes(key!)
       }
     }
 
@@ -567,8 +567,8 @@ export class LocalStorageManager {
 
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i)
-      if (key && key.startsWith(prefix)) {
-        result.push(key)
+      if ((key ?? '') !== '' && key!.startsWith(prefix)) {
+        result.push(key!)
       }
     }
 

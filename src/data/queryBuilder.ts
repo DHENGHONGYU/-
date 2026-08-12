@@ -122,7 +122,7 @@ export class QueryBuilder {
     const errors: string[] = []
 
     // --- 基础信息 ---
-    if (p.includeBasic) {
+    if ((p.includeBasic ?? false) === true) {
       dimensions.push('basic')
       tasks.push(
         (async (): Promise<TaskResult> => {
@@ -140,7 +140,7 @@ export class QueryBuilder {
     }
 
     // --- K 线行情 ---
-    if (p.includeQuotes) {
+    if ((p.includeQuotes ?? false) === true) {
       dimensions.push('quotes')
       tasks.push(
         (async (): Promise<TaskResult> => {
@@ -158,7 +158,7 @@ export class QueryBuilder {
     }
 
     // --- V6 评分 ---
-    if (p.includeV6Score) {
+    if ((p.includeV6Score ?? false) === true) {
       dimensions.push('v6Score')
       tasks.push(
         (async (): Promise<TaskResult> => {
@@ -176,7 +176,7 @@ export class QueryBuilder {
     }
 
     // --- 智能评分 ---
-    if (p.includeIntelligentScore) {
+    if ((p.includeIntelligentScore ?? false) === true) {
       dimensions.push('intelligentScore')
       tasks.push(
         (async (): Promise<TaskResult> => {
@@ -195,14 +195,14 @@ export class QueryBuilder {
     }
 
     // --- 行业评分（需要 industryCode） ---
-    if (p.includeIndustryScore) {
+    if ((p.includeIndustryScore ?? false) === true) {
       dimensions.push('industryScore')
       tasks.push(
         (async (): Promise<TaskResult> => {
           try {
             const stock = await queryGet<Stock>(STORE_NAME.stocks, symbol)
-            if (stock?.industryCode) {
-              const list = await queryListByIndex<IndustryScore>(STORE_NAME.industryScores, 'by-code', stock.industryCode)
+            if ((stock?.industryCode ?? '') !== '') {
+              const list = await queryListByIndex<IndustryScore>(STORE_NAME.industryScores, 'by-code', stock!.industryCode)
               const value = list.sort((a, b) => b.scoredAt - a.scoredAt)[0]
               return { key: 'industryScore', value }
             }
@@ -218,7 +218,7 @@ export class QueryBuilder {
     }
 
     // --- 交易信号 ---
-    if (p.includeSignals) {
+    if ((p.includeSignals ?? false) === true) {
       dimensions.push('signals')
       tasks.push(
         (async (): Promise<TaskResult> => {
@@ -248,7 +248,7 @@ function collectSuccessfulNews(
 }
 
     // --- 关联新闻（通过 newsStockMap 多对多关联） ---
-    if (p.includeNews) {
+    if ((p.includeNews ?? false) === true) {
       dimensions.push('news')
       tasks.push(
         (async (): Promise<TaskResult> => {

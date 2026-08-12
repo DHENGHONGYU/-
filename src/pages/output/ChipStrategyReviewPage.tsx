@@ -579,7 +579,7 @@ function appendDebugLog(content: string): void {
 
 /** 获取当前 debug.log 全文（含会话头） */
 export function getDebugLogContent(): string {
-  const header = debugLogSessionStart
+  const header = (debugLogSessionStart ?? '') !== ''
     ? `# 筹码策略复盘 debug.log\n# 会话开始: ${debugLogSessionStart}\n# 会话结束: ${new Date().toISOString()}\n# 日志条数: ${debugLogBuffer.length}\n${'='.repeat(80)}\n\n`
     : `# 筹码策略复盘 debug.log\n# 暂无日志记录\n`
   return header + debugLogBuffer.join('\n\n')
@@ -614,7 +614,7 @@ function logGrayZoneDecision(input: StockChipInput, result: ChipAnalysisResult):
   if (!isDefaultWatch && !isHighPositionHold && !isMidPositionHighTurnover) return
 
   // 首次记录时标记会话开始
-  if (!debugLogSessionStart) {
+  if ((debugLogSessionStart ?? '') === '') {
     debugLogSessionStart = new Date().toISOString()
   }
 
@@ -1354,7 +1354,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                     {poolOptions.filter((o) => o.label !== '模拟示例').map((opt) => (
                       <SelectItem key={opt.item.symbol} value={opt.item.symbol}>
                         {opt.item.name} ({opt.item.symbol}) · {opt.label}
-                        {opt.item.sector ? ` · ${opt.item.sector}` : ''}
+                        {(opt.item.sector ?? '') !== '' ? ` · ${opt.item.sector}` : ''}
                       </SelectItem>
                     ))}
                   </optgroup>
@@ -1476,7 +1476,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                     {selectedOption.item.name} ({selectedOption.item.symbol})
                   </span>
                   <Badge variant="outline" className="text-xs">{selectedOption.label}</Badge>
-                  {selectedOption.item.sector && (
+                  {(selectedOption.item.sector ?? '') !== '' && (
                     <Badge variant="secondary" className="text-xs">{selectedOption.item.sector}</Badge>
                   )}
                   {selectedOption.item.pe !== undefined && (
@@ -1933,7 +1933,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                       {row.action}
                     </TableCell>
                     <TableCell>
-                      {row.mockSymbol ? (
+                      {(row.mockSymbol ?? '') !== '' ? (
                         <div className="space-y-0.5">
                           <div className="text-xs font-medium">
                             {row.mockName} <span className="text-muted-foreground">({row.mockSymbol})</span>
@@ -1953,7 +1953,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                     <TableCell>
                       {(() => {
                         const actual = computeActualMatch(row)
-                        if (!row.mockSymbol) {
+                        if ((row.mockSymbol ?? '') === '') {
                           return <span className="text-xs text-muted-foreground">-</span>
                         }
                         return (
@@ -1967,7 +1967,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                                 <Badge variant="outline" className={cn('text-xs', twText('orange', 600))}>
                                   ⚠ {actual.matchedNames.join('、')}
                                 </Badge>
-                                {actual.grayZoneReason && (
+                                {(actual.grayZoneReason ?? '') !== '' && (
                                   <p className={cn('text-[10px] leading-tight', twText('orange', 600))}>{actual.grayZoneReason}</p>
                                 )}
                               </>

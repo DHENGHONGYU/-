@@ -174,7 +174,7 @@ export async function archiveOldResults(
 
     for (const item of allResults) {
       // 已归档或已压缩的跳过
-      if (item.archived || item.compressed) {
+      if ((item.archived ?? false) === true || (item.compressed ?? false) === true) {
         stats.skipped++
         continue
       }
@@ -254,7 +254,7 @@ export async function cleanupOldArchives(
 
     for (const item of allResults) {
       // 只处理已归档/已压缩且超过硬阈值的数据
-      if (item.archived && item.archivedAt && item.archivedAt < cutoff) {
+      if ((item.archived ?? false) === true && (item.archivedAt ?? 0) < cutoff) {
         const beforeSize = estimateSize(item)
         const tombstone = tombstoneResult(item)
         const afterSize = estimateSize(tombstone)
@@ -319,8 +319,8 @@ export async function getStorageStats(): Promise<StorageStats> {
     for (const item of items) {
       const size = estimateSize(item)
       totalBytes += size
-      if (item.archived) stats.archivedCount++
-      if (item.compressed) stats.compressedCount++
+      if ((item.archived ?? false) === true) stats.archivedCount++
+      if ((item.compressed ?? false) === true) stats.compressedCount++
 
       if (stats.oldestRecordAt === null || item.createdAt < stats.oldestRecordAt) {
         stats.oldestRecordAt = item.createdAt
@@ -370,7 +370,7 @@ export async function lightArchiveCheck(lookBackCount = 20): Promise<LifecycleSt
     // 按 createdAt 降序，取最近 lookBackCount 条中的最旧的
     const sorted = result.data.sort((a, b) => b.createdAt - a.createdAt)
     const candidates = sorted.slice(0, lookBackCount).filter(
-      (item) => !item.archived && !item.compressed && item.createdAt < cutoff,
+      (item) => (item.archived ?? false) !== true && (item.compressed ?? false) !== true && item.createdAt < cutoff,
     )
 
     stats.scanned = candidates.length

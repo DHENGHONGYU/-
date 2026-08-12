@@ -93,59 +93,62 @@ export async function getUnifiedStockViewUseCase(
     const timestamps: number[] = [stock.updatedAt ?? Date.now()]
 
     let quotes: DailyQuotes | undefined
-    if (opts.includeQuotes) {
+    if ((opts.includeQuotes ?? false) === true) {
       quotes = await queryGet<DailyQuotes>(STORE_NAME.dailyQuotes, symbol)
-      if (quotes) timestamps.push(quotes.updatedAt ?? Date.now())
+      if (quotes !== undefined) timestamps.push(quotes.updatedAt ?? Date.now())
       else missing.push('quotes')
     }
 
     let v6Score: V6Score | undefined
-    if (opts.includeV6Score) {
+    if ((opts.includeV6Score ?? false) === true) {
       v6Score = await queryGet<V6Score>(STORE_NAME.v6Scores, symbol)
-      if (v6Score) timestamps.push(v6Score.calculatedAt)
+      if (v6Score !== undefined) timestamps.push(v6Score.calculatedAt)
       else missing.push('v6Score')
     }
 
     let intelligentScore: IntelligentScore | undefined
-    if (opts.includeIntelligentScore) {
+    if ((opts.includeIntelligentScore ?? false) === true) {
       const intelligentScores = await queryByIndex<IntelligentScore>(STORE_NAME.intelligentScores, 'by-symbol', symbol)
       intelligentScore = intelligentScores.sort((a, b) => b.scoredAt - a.scoredAt)[0]
-      if (intelligentScore) timestamps.push(intelligentScore.scoredAt)
+      if (intelligentScore !== undefined) timestamps.push(intelligentScore.scoredAt)
       else missing.push('intelligentScore')
     }
 
     let industryScore: IndustryScore | undefined
-    if (opts.includeIndustryScore) {
+    if ((opts.includeIndustryScore ?? false) === true) {
       const scores = await queryByIndex<IndustryScore>(STORE_NAME.industryScores, 'by-code', stock.sector ?? '')
       industryScore = scores.sort((a, b) => b.scoredAt - a.scoredAt)[0]
-      if (industryScore) timestamps.push(industryScore.scoredAt)
+      if (industryScore !== undefined) timestamps.push(industryScore.scoredAt)
       else missing.push('industryScore')
     }
 
     let rotationScore: RotationSectorScore | undefined
-    if (opts.includeRotationScore) {
+    if ((opts.includeRotationScore ?? false) === true) {
       const scores = await queryList<RotationSectorScore>(STORE_NAME.rotationScores)
       rotationScore = scores.find((s) => s.sectorCode === stock.industryCode)
-      if (rotationScore) timestamps.push(rotationScore.createdAt ? new Date(rotationScore.createdAt).getTime() : Date.now())
+      if (rotationScore !== undefined) timestamps.push(rotationScore.createdAt ? new Date(rotationScore.createdAt).getTime() : Date.now())
       else missing.push('rotationScore')
     }
 
     let signal: Signal | undefined
-    if (opts.includeSignal) {
+    if ((opts.includeSignal ?? false) === true) {
       const allSignals = await queryList<Signal>(STORE_NAME.signals)
       const signals = allSignals.filter((s) => s.symbol === symbol).sort((a, b) => b.createdAt - a.createdAt)
       signal = signals[0]
-      if (signal) timestamps.push(signal.createdAt)
+      if (signal !== undefined) timestamps.push(signal.createdAt)
       else missing.push('signal')
     }
 
     let holding: PortfolioHolding | undefined
-    if (opts.includeHolding) {
+    if ((opts.includeHolding ?? false) === true) {
       // TODO: 待 dataLayer 实现 holdings 存储后启用
       missing.push('holding')
     }
 
-    const totalSources = Object.keys(opts).filter((k) => k.startsWith('include') && opts[k as keyof FusionOptions]).length
+    const totalSources = Object.keys(opts).filter((k) => {
+      const key = k as keyof FusionOptions
+      return k.startsWith('include') && (opts[key] ?? false) === true
+    }).length
     const completeness = ((totalSources - missing.length) / totalSources) * 100
     const freshness = Math.max(...timestamps)
 

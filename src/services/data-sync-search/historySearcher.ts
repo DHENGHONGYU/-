@@ -28,45 +28,45 @@ export function searchHistory(
   let filtered = [...records]
 
   // 关键词搜索
-  if (criteria.keyword) {
-    const kw = criteria.keyword.toLowerCase()
+  if ((criteria.keyword ?? '') !== '') {
+    const kw = criteria.keyword!.toLowerCase()
     filtered = filtered.filter(r =>
       r.collectionInfo.symbols.some(s => s.toLowerCase().includes(kw)) ||
-      r.collectionInfo.fileName?.toLowerCase().includes(kw) ||
-      r.errorMessage?.toLowerCase().includes(kw) ||
+      (r.collectionInfo.fileName ?? '').toLowerCase().includes(kw) ||
+      (r.errorMessage ?? '').toLowerCase().includes(kw) ||
       r.channel.toLowerCase().includes(kw),
     )
   }
 
   // 时间范围
-  if (criteria.dateRange?.start) {
+  if ((criteria.dateRange?.start ?? 0) !== 0) {
     filtered = filtered.filter(r => r.timestamp >= criteria.dateRange!.start!)
   }
-  if (criteria.dateRange?.end) {
+  if ((criteria.dateRange?.end ?? 0) !== 0) {
     filtered = filtered.filter(r => r.timestamp <= criteria.dateRange!.end!)
   }
 
   // 通道筛选
-  if (criteria.channels?.length) {
+  if ((criteria.channels?.length ?? 0) > 0) {
     filtered = filtered.filter(r => criteria.channels!.includes(r.channel))
   }
 
   // 标的筛选
-  if (criteria.symbols?.length) {
+  if ((criteria.symbols?.length ?? 0) > 0) {
     filtered = filtered.filter(r =>
       r.collectionInfo.symbols.some(s => criteria.symbols!.includes(s)),
     )
   }
 
   // 维度筛选
-  if (criteria.dimensions?.length) {
+  if ((criteria.dimensions?.length ?? 0) > 0) {
     filtered = filtered.filter(r =>
       r.collectionInfo.dimensions.some(d => criteria.dimensions!.includes(d)),
     )
   }
 
   // 状态筛选
-  if (criteria.statuses?.length) {
+  if ((criteria.statuses?.length ?? 0) > 0) {
     filtered = filtered.filter(r => criteria.statuses!.includes(r.status))
   }
 

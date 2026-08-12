@@ -72,14 +72,15 @@ export const LLMConfigWidget = memo(function LLMConfigWidget({
   const modelOptions = currentPreset?.models ?? []
 
   // 输入校验错误信息（仅展示用户已输入字段的错误）
-  const baseURLError = value.baseURL ? validateField('baseURL', value.baseURL) : ''
-  const apiKeyError = value.apiKey ? validateField('apiKey', value.apiKey) : ''
-  const modelError = value.model ? validateField('model', value.model) : ''
+  const baseURLError = (value.baseURL ?? '') !== '' ? validateField('baseURL', value.baseURL!) : ''
+  const apiKeyError = (value.apiKey ?? '') !== '' ? validateField('apiKey', value.apiKey!) : ''
+  const modelError = (value.model ?? '') !== '' ? validateField('model', value.model!) : ''
 
   // 格式化上下文窗口
   const contextStr = useMemo(() => {
-    if (!currentPreset?.contextWindow) return null
-    const w = currentPreset.contextWindow
+    if ((currentPreset?.contextWindow ?? 0) === 0) return null
+    const w = currentPreset!.contextWindow
+    if (!w) return null
     if (w >= 1_000_000) return `${(w / 1_000_000).toFixed(0)}M`
     if (w >= 1_000) return `${(w / 1_000).toFixed(0)}K`
     return String(w)
@@ -87,8 +88,8 @@ export const LLMConfigWidget = memo(function LLMConfigWidget({
 
   // 价格信息
   const priceInfo = useMemo(() => {
-    if (!currentPreset?.inputPrice) return null
-    return `${currentPreset.inputPrice}/${currentPreset.outputPrice}`
+    if ((currentPreset?.inputPrice ?? '') === '') return null
+    return `${currentPreset!.inputPrice}/${currentPreset!.outputPrice}`
   }, [currentPreset])
 
   function handlePresetChange(presetId: string) {
@@ -108,7 +109,7 @@ export const LLMConfigWidget = memo(function LLMConfigWidget({
         <div className="flex items-center gap-2">
           <label className="text-sm font-medium">大模型配置</label>
           {/* 状态指示 */}
-          {configReady && value.model && (
+          {(configReady ?? false) === true && (value.model ?? '') !== '' && (
             <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
               {value.model}
             </span>
@@ -217,8 +218,8 @@ export const LLMConfigWidget = memo(function LLMConfigWidget({
           {/* 模型信息摘要 */}
           {currentPreset && (
             <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
-              {contextStr && <span>上下文: {contextStr} tokens</span>}
-              {priceInfo && <span>价格: ${priceInfo} /M tokens</span>}
+              {(contextStr ?? '') !== '' && <span>上下文: {contextStr} tokens</span>}
+              {(priceInfo ?? '') !== '' && <span>价格: ${priceInfo} /M tokens</span>}
               <span>供应商: {currentPreset.provider}</span>
             </div>
           )}

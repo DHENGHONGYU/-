@@ -78,6 +78,10 @@ function safeErrorMessage(err: unknown): string {
   }
   // Object.create(null) 或无 toString 的对象
   try {
+    if (typeof err === 'object') {
+      return JSON.stringify(err)
+    }
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string -- err is narrowed to non-object primitive at this point
     return String(err)
   } catch {
     return 'Unknown error'

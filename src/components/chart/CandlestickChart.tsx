@@ -3,7 +3,7 @@ import {
   memo,
   useEffect,
   useRef,
-  useState,
+  useCallback,
   type ComponentPropsWithoutRef,
 } from 'react'
 import {
@@ -30,6 +30,13 @@ import { computeMACD, MACD_COLORS, type MACDParams, type MACDResult } from './in
 import type { CandlestickChartData } from './types'
 
 export type { CandlestickChartData }
+
+/** 将 lightweight-charts Time 类型安全转为字符串 */
+function timeToString(time: Time): string {
+  if (typeof time === 'string') return time
+  if (typeof time === 'number') return String(time)
+  return `${time.year}-${time.month}-${time.day}`
+}
 
 /** 周期选项配置 */
 const PERIOD_OPTIONS: Array<{ value: KlinePeriod; label: string; group: 'intraday' | 'daily' }> = [
@@ -117,7 +124,7 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
       adjust = 'qfq',
       onPeriodChange,
       onAdjustChange,
-      onSubChartChange,
+      onSubChartChange: _onSubChartChange,
       ...divProps
     },
     ref,
@@ -129,7 +136,7 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
     const markersRef = useRef<ISeriesMarkersPluginApi<Time> | null>(null)
     const maRefs = useRef<Array<ISeriesApi<'Line'> | null>>([])
     const tooltipRef = useRef<HTMLDivElement>(null)
-    const [tooltip, setTooltip] = useState<{
+    const tooltipDataRef = useRef<{
       time: string
       open: number
       high: number
@@ -143,6 +150,44 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
 
     const positiveColor = upColor ?? CHART_PALETTE.upColor
     const negativeColor = downColor ?? CHART_PALETTE.downColor
+
+    const updateTooltip = useCallback((data: typeof tooltipDataRef.current) => {
+      tooltipDataRef.current = data
+      const el = tooltipRef.current
+      if (!el) return
+
+      if (!data?.visible) {
+        el.style.display = 'none'
+        return
+      }
+
+      el.style.display = 'block'
+      const timeEl = el.querySelector('[data-tooltip-time]')
+      if (timeEl) timeEl.textContent = data.time
+
+      const valuesEl = el.querySelector('[data-tooltip-values]')
+      if (valuesEl) {
+        let html = `
+          <span style="color: ${CHART_PALETTE.series3}">开</span>
+          <span style="text-align: right">${data.open.toFixed(2)}</span>
+          <span style="color: ${CHART_PALETTE.series3}">高</span>
+          <span style="text-align: right">${data.high.toFixed(2)}</span>
+          <span style="color: ${CHART_PALETTE.series3}">低</span>
+          <span style="text-align: right">${data.low.toFixed(2)}</span>
+          <span style="color: ${CHART_PALETTE.series3}">收</span>
+          <span style="text-align: right; font-weight: 600; color: ${data.close >= data.open ? positiveColor : negativeColor}">${data.close.toFixed(2)}</span>
+        `
+
+        if (data.volume !== undefined) {
+          html += `
+            <span style="color: ${CHART_PALETTE.series3}">量</span>
+            <span style="text-align: right">${data.volume.toLocaleString('zh-CN')}</span>
+          `
+        }
+
+        valuesEl.innerHTML = html
+      }
+    }, [positiveColor, negativeColor])
 
     const isDailyPeriod = period === 'daily' || period === 'weekly' || period === 'monthly'
 
@@ -378,18 +423,21 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
       })
       maRefs.current = maSeriesList
 
-      // OHLCV + 副图指标十字光标浮层
-      const onCrosshair: MouseEventHandler<Time> = (param) => {
+      // OHLCV + 副图指标十字光标浮层（带节流）
+      let lastCrosshairTime = 0
+      const THROTTLE_MS = 16 // 60fps
+      
+      const processCrosshair = (param: Parameters<MouseEventHandler<Time>>[0]) => {
         if (!param.time || !param.point) {
-          setTooltip((t) => (t ? { ...t, visible: false } : null))
+          updateTooltip(null)
           return
         }
         const bar = param.seriesData.get(series) as CandlestickData<Time> | undefined
         if (!bar) {
-          setTooltip((t) => (t ? { ...t, visible: false } : null))
+          updateTooltip(null)
           return
         }
-        const idx = dataIndex.get(String(bar.time))
+        const idx = dataIndex.get(timeToString(bar.time))
         const volume = idx !== undefined ? data[idx]?.volume : undefined
 
         // 获取 MACD 数据（如果副图是 MACD）
@@ -406,7 +454,7 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
             }
             if (process.env.NODE_ENV === 'development') {
               console.log('[CandlestickChart] 十字光标 MACD 数据', {
-                time: String(bar.time),
+                time: timeToString(bar.time),
                 macd,
               })
             }
@@ -427,15 +475,15 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
             }
             if (process.env.NODE_ENV === 'development') {
               console.log('[CandlestickChart] 十字光标 KDJ 数据', {
-                time: String(bar.time),
+                time: timeToString(bar.time),
                 kdj,
               })
             }
           }
         }
 
-        setTooltip({
-          time: String(bar.time),
+        updateTooltip({
+          time: timeToString(bar.time),
           open: bar.open,
           high: bar.high,
           low: bar.low,
@@ -445,6 +493,19 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
           kdj,
           visible: true,
         })
+      }
+      
+      const onCrosshair: MouseEventHandler<Time> = (param) => {
+        const now = performance.now()
+        const elapsed = now - lastCrosshairTime
+        
+        // 标准节流：只执行间隔外的第一次调用，间隔内的调用被丢弃
+        if (elapsed < THROTTLE_MS) {
+          return
+        }
+        
+        lastCrosshairTime = now
+        processCrosshair(param)
       }
       chart.subscribeCrosshairMove(onCrosshair)
 
@@ -592,50 +653,30 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
           <div ref={containerRef} style={{ height: showToolbar ? height - 40 : height }} />
 
           {/* OHLCV 十字光标浮层 */}
-          {tooltip?.visible && (
-            <div
-              ref={tooltipRef}
-              style={{
-                position: 'absolute',
-                top: 8,
-                right: 8,
-                zIndex: 6,
-                minWidth: 150,
-                padding: '8px 10px',
-                borderRadius: '8px',
-                background: 'rgba(15,23,42,0.88)',
-                backdropFilter: 'blur(6px)',
-                border: `1px solid ${CHART_PALETTE.gridLight}`,
-                boxShadow: '0 4px 16px rgba(0,0,0,0.35)',
-                fontSize: '0.74rem',
-                fontFeatureSettings: 'tnum',
-                color: `var(--muted, ${THEME_TOKENS.color.chartMutedRaw})`,
-                pointerEvents: 'none',
-              }}
-            >
-              <div style={{ fontWeight: 600, marginBottom: 4, color: THEME_TOKENS.color.chartContrastRaw }}>
-                {tooltip.time}
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '2px 10px' }}>
-                <span style={{ color: CHART_PALETTE.series3 }}>开</span>
-                <span style={{ textAlign: 'right' }}>{tooltip.open.toFixed(2)}</span>
-                <span style={{ color: CHART_PALETTE.series3 }}>高</span>
-                <span style={{ textAlign: 'right' }}>{tooltip.high.toFixed(2)}</span>
-                <span style={{ color: CHART_PALETTE.series3 }}>低</span>
-                <span style={{ textAlign: 'right' }}>{tooltip.low.toFixed(2)}</span>
-                <span style={{ color: CHART_PALETTE.series3 }}>收</span>
-                <span style={{ textAlign: 'right', fontWeight: 600, color: tooltip.close >= tooltip.open ? positiveColor : negativeColor }}>
-                  {tooltip.close.toFixed(2)}
-                </span>
-                {tooltip.volume !== undefined && (
-                  <>
-                    <span style={{ color: CHART_PALETTE.series3 }}>量</span>
-                    <span style={{ textAlign: 'right' }}>{tooltip.volume.toLocaleString('zh-CN')}</span>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
+          <div
+            ref={tooltipRef}
+            style={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              zIndex: 6,
+              minWidth: 150,
+              padding: '8px 10px',
+              borderRadius: '8px',
+              background: 'rgba(15,23,42,0.88)',
+              backdropFilter: 'blur(6px)',
+              border: `1px solid ${CHART_PALETTE.gridLight}`,
+              boxShadow: '0 4px 16px rgba(0,0,0,0.35)',
+              fontSize: '0.74rem',
+              fontFeatureSettings: 'tnum',
+              color: `var(--muted, ${THEME_TOKENS.color.chartMutedRaw})`,
+              pointerEvents: 'none',
+              display: 'none',
+            }}
+          >
+            <div data-tooltip-time style={{ fontWeight: 600, marginBottom: 4, color: THEME_TOKENS.color.chartContrastRaw }} />
+            <div data-tooltip-values style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '2px 10px' }} />
+          </div>
         </div>
       </div>
     )

@@ -183,7 +183,7 @@ export class FakeBreakoutAlertPush {
     if (!this.config.watchSymbols.includes(symbol)) {
       this.config.watchSymbols.push(symbol)
     }
-    if (name && this.config.symbolNames) {
+    if (name !== undefined && name !== '' && this.config.symbolNames) {
       this.config.symbolNames.set(symbol, name)
     }
     logger.info('[FakeBreakoutAlertPush] 添加监控股票', { symbol, name })
@@ -216,7 +216,7 @@ export class FakeBreakoutAlertPush {
   /** 处理筹码异动事件 */
   private handleChipAnomaly(payload: unknown): void {
     const p = payload as { symbol?: string; type?: string }
-    if (!p?.symbol) return
+    if ((p?.symbol ?? '') === '') return
     // 筹码异动作为辅助信号，记录但不直接触发假突破预警
     logger.debug('[FakeBreakoutAlertPush] 筹码异动辅助信号', { symbol: p.symbol, type: p.type })
   }
@@ -241,9 +241,9 @@ export class FakeBreakoutAlertPush {
       }>
     }
 
-    if (p.quotes && p.quotes.length > 0) {
+    if (p.quotes !== undefined && p.quotes.length > 0) {
       return p.quotes
-        .filter((q) => q.symbol && q.turnover && q.volumeRatio)
+        .filter((q) => (q.symbol ?? '') !== '' && (q.turnover ?? 0) !== 0 && (q.volumeRatio ?? 0) !== 0)
         .map((q) => ({
           symbol: q.symbol!,
           name: q.name,
@@ -256,7 +256,7 @@ export class FakeBreakoutAlertPush {
         }))
     }
 
-    if (p.symbol && p.turnover && p.volumeRatio) {
+    if (p.symbol !== undefined && p.symbol !== '' && (p.turnover ?? 0) !== 0 && (p.volumeRatio ?? 0) !== 0) {
       return [{
         symbol: p.symbol,
         name: p.name,

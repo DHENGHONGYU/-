@@ -280,7 +280,13 @@ function toCsv(rows: Record<string, unknown>[]): string {
   const DANGEROUS_PREFIX = /^[=+\-@]/
   const escape = (val: unknown): string => {
     if (val == null) return ''
-    let str = String(val)
+    let str: string
+    if (typeof val === 'object') {
+      str = JSON.stringify(val)
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-base-to-string -- val is narrowed to non-object primitive
+      str = String(val)
+    }
     // CSV 公式注入防护：危险前缀前置单引号
     if (DANGEROUS_PREFIX.test(str)) {
       str = `'${str}`

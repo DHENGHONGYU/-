@@ -114,6 +114,10 @@ function formatContext(context: unknown): string {
   try {
     return JSON.stringify(context)
   } catch {
+    if (typeof context === 'object') {
+      return Object.prototype.toString.call(context)
+    }
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string -- fallback after JSON.stringify failure
     return String(context)
   }
 }

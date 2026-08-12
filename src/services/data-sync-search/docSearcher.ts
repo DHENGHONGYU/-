@@ -39,36 +39,36 @@ export function searchDocs(
   let filtered = [...docs]
 
   // 关键词搜索（标题 + 内容）
-  if (criteria.keyword) {
-    const kw = criteria.keyword.toLowerCase()
+  if ((criteria.keyword ?? '') !== '') {
+    const kw = criteria.keyword!.toLowerCase()
     filtered = filtered.filter(d =>
       d.title.toLowerCase().includes(kw) ||
       d.content.toLowerCase().includes(kw) ||
       d.fileName.toLowerCase().includes(kw) ||
-      d.symbols?.some(s => s.includes(kw)),
+      ((d.symbols ?? []).some(s => s.includes(kw))),
     )
   }
 
   // 文件类型筛选
-  if (criteria.fileTypes?.length) {
+  if ((criteria.fileTypes?.length ?? 0) > 0) {
     filtered = filtered.filter(d => {
       const ext = d.fileName.split('.').pop()?.toLowerCase() ?? ''
-      return ext && criteria.fileTypes!.includes(ext)
+      return ext !== '' && criteria.fileTypes!.includes(ext)
     })
   }
 
   // 时间范围
-  if (criteria.dateRange?.start) {
+  if ((criteria.dateRange?.start ?? 0) !== 0) {
     filtered = filtered.filter(d => d.lastModifiedAt >= criteria.dateRange!.start!)
   }
-  if (criteria.dateRange?.end) {
+  if ((criteria.dateRange?.end ?? 0) !== 0) {
     filtered = filtered.filter(d => d.lastModifiedAt <= criteria.dateRange!.end!)
   }
 
   // 标的筛选
-  if (criteria.symbols?.length) {
+  if ((criteria.symbols?.length ?? 0) > 0) {
     filtered = filtered.filter(d =>
-      d.symbols?.some(s => criteria.symbols!.includes(s)),
+      ((d.symbols ?? []).some(s => criteria.symbols!.includes(s))),
     )
   }
 
