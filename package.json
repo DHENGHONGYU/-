@@ -207,6 +207,8 @@
     "audit:visual": "tsx scripts/audit/audit-visual.ts",
     "audit:spacing": "tsx scripts/audit/audit-spacing.ts",
     "audit:registry": "tsx scripts/audit/audit-registry.ts",
+    "audit:registry:regression": "node scripts/audit/registry-governance-guardian.cjs",
+    "audit:registry:regression:json": "node scripts/audit/registry-governance-guardian.cjs --json",
     "audit:directory": "tsx scripts/audit/directory-audit.ts",
     "audit:dependencies": "tsx scripts/audit/audit-dependencies.ts",
     "audit:inlineColors": "tsx scripts/audit/audit-inline-colors.ts",

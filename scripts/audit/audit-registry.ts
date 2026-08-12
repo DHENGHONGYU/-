@@ -403,7 +403,8 @@ function auditRegistry(
   registryPath: string,
   label: string,
   reverseCheck: (ids: Set<string>) => string[],
-  isComponentRegistry: boolean = false
+  isComponentRegistry: boolean = false,
+  subRegistryPaths: string[] = []
 ): AuditResult {
   if (!fs.existsSync(registryPath)) {
     return {
@@ -415,7 +416,15 @@ function auditRegistry(
     }
   }
 
-  const content = fs.readFileSync(registryPath, 'utf-8')
+  let content = fs.readFileSync(registryPath, 'utf-8')
+  // 组件注册表为「薄入口 + 4 层级子注册表」结构：
+  // 薄入口只做 ...Xxx_REGISTRY 展开、不内联条目，因此需额外读取
+  // 各子注册表文件（atom/molecule/organism/template）才能解析到真实条目。
+  if (isComponentRegistry && subRegistryPaths.length > 0) {
+    for (const sub of subRegistryPaths) {
+      if (fs.existsSync(sub)) content += '\n' + fs.readFileSync(sub, 'utf-8')
+    }
+  }
   const entries = parseRegistryEntries(content)
 
   // 正向检查
@@ -602,9 +611,15 @@ function main(): void {
     auditRegistry(SERVICE_REGISTRY_PATH, 'Service 注册表', checkUnregisteredServices)
   )
 
-  // 3. Component 注册表
+  // 3. Component 注册表（薄入口 + 4 层级子注册表）
+  const componentSubRegistries = [
+    path.join(SRC, 'components', 'registry', 'atomRegistry.ts'),
+    path.join(SRC, 'components', 'registry', 'moleculeRegistry.ts'),
+    path.join(SRC, 'components', 'registry', 'organismRegistry.ts'),
+    path.join(SRC, 'components', 'registry', 'templateRegistry.ts'),
+  ]
   results.push(
-    auditRegistry(COMPONENT_REGISTRY_PATH, 'Component 注册表', () => [], true)
+    auditRegistry(COMPONENT_REGISTRY_PATH, 'Component 注册表', () => [], true, componentSubRegistries)
   )
 
   // 输出报告

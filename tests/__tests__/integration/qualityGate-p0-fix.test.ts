@@ -75,31 +75,43 @@ vi.mock('@/services/data-collector/collectionPipeline', () => ({
 }))
 
 // --- Mock runFullIndustryAnalysis: 捕获入参 ---
-vi.mock('@/services/analysis/industryAnalysisService', () => ({
-  runFullIndustryAnalysis: mockRunFullIndustryAnalysis,
-  invalidateIndustryCache: vi.fn(),
-  getCachedV4Analyses: vi.fn(() => null),
-}))
+vi.mock('@/services/analysis/industryAnalysisService', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    runFullIndustryAnalysis: mockRunFullIndustryAnalysis,
+    invalidateIndustryCache: vi.fn(),
+    getCachedV4Analyses: vi.fn(() => null),
+  }
+})
 
 // --- Mock runV6ScoreBatch: 捕获调用 ---
-vi.mock('@/services/scoring/v6ScoreService', () => ({
-  runV6ScoreBatch: mockRunV6ScoreBatch,
-  runV6Score: vi.fn(),
-}))
+vi.mock('@/services/scoring/v6ScoreService', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    runV6ScoreBatch: mockRunV6ScoreBatch,
+    runV6Score: vi.fn(),
+  }
+})
 
 // --- Mock v6-engine: 提供 quotesToQuoteData 简单实现 + 类型 ---
 // 避免加载整个 v6-engine 模块树（含 calculators/enhancers 等）造成副作用
-vi.mock('@/services/scoring/v6-engine', () => ({
-  quotesToQuoteData: (quotes: { history?: Array<{ close?: number }> }) => {
-    const history = quotes.history ?? []
-    const latestClose = history[history.length - 1]?.close ?? 0
-    return {
-      latestClose,
-      history,
-      volumeHistory: [],
-    }
-  },
-}))
+vi.mock('@/services/scoring/v6-engine', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    quotesToQuoteData: (quotes: { history?: Array<{ close?: number }> }) => {
+      const history = quotes.history ?? []
+      const latestClose = history[history.length - 1]?.close ?? 0
+      return {
+        latestClose,
+        history,
+        volumeHistory: [],
+      }
+    },
+  }
+})
 
 // ============================================================
 // 种子数据

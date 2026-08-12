@@ -62,29 +62,45 @@ vi.mock('@/services/data-collector/qualityMetricsCollector', () => ({
   }),
 }))
 
-vi.mock('@/services/data-collector/collectionPipeline', () => ({
-  runBatchTrace: vi.fn().mockResolvedValue([]),
-  createDefaultCollectionConfig: () => ({ dimensions: [], timeout: 30000 }),
-}))
+vi.mock('@/services/data-collector/collectionPipeline', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    runBatchTrace: vi.fn().mockResolvedValue([]),
+    createDefaultCollectionConfig: () => ({ dimensions: [], timeout: 30000 }),
+  }
+})
 
-vi.mock('@/services/analysis/industryAnalysisService', () => ({
-  runFullIndustryAnalysis: mockRunFullIndustryAnalysis,
-  invalidateIndustryCache: vi.fn(),
-  getCachedV4Analyses: vi.fn(() => null),
-}))
+vi.mock('@/services/analysis/industryAnalysisService', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    runFullIndustryAnalysis: mockRunFullIndustryAnalysis,
+    invalidateIndustryCache: vi.fn(),
+    getCachedV4Analyses: vi.fn(() => null),
+  }
+})
 
-vi.mock('@/services/scoring/v6ScoreService', () => ({
-  runV6ScoreBatch: mockRunV6ScoreBatch,
-  runV6Score: vi.fn(),
-}))
+vi.mock('@/services/scoring/v6ScoreService', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    runV6ScoreBatch: mockRunV6ScoreBatch,
+    runV6Score: vi.fn(),
+  }
+})
 
-vi.mock('@/services/scoring/v6-engine', () => ({
-  quotesToQuoteData: (quotes: { history?: Array<{ close?: number }> }) => {
-    const history = quotes.history ?? []
-    const latestClose = history[history.length - 1]?.close ?? 0
-    return { latestClose, history, volumeHistory: [] }
-  },
-}))
+vi.mock('@/services/scoring/v6-engine', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    quotesToQuoteData: (quotes: { history?: Array<{ close?: number }> }) => {
+      const history = quotes.history ?? []
+      const latestClose = history[history.length - 1]?.close ?? 0
+      return { latestClose, history, volumeHistory: [] }
+    },
+  }
+})
 
 // ============================================================
 // 种子数据

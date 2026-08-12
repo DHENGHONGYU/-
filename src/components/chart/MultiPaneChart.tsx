@@ -66,6 +66,13 @@ function computeMA(data: CandlestickChartData[], period: number): Array<LineData
   })
 }
 
+/** 将 lightweight-charts Time 类型安全转为字符串 */
+function timeToString(time: Time): string {
+  if (typeof time === 'string') return time
+  if (typeof time === 'number') return String(time)
+  return `${time.year}-${time.month}-${time.day}`
+}
+
 /** Tooltip 数据类型 */
 export interface TooltipData {
   time: string
@@ -373,7 +380,7 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
 
       // ===== MACD 副图 =====
       let macdChart: IChartApi | null = null
-      let macdSeriesList: Array<ISeriesApi<'Line' | 'Histogram'> | null> = []
+      const macdSeriesList: Array<ISeriesApi<'Line' | 'Histogram'> | null> = []
       
       if (showMACD) {
         if (process.env.NODE_ENV === 'development') {
@@ -464,7 +471,7 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
 
       // ===== KDJ 副图 =====
       let kdjChart: IChartApi | null = null
-      let kdjSeriesList: Array<ISeriesApi<'Line'> | null> = []
+      const kdjSeriesList: Array<ISeriesApi<'Line'> | null> = []
       
       if (showKDJ) {
         if (process.env.NODE_ENV === 'development') {
@@ -576,7 +583,7 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
           return
         }
 
-        const idx = dataIndex.get(String(bar.time))
+        const idx = dataIndex.get(timeToString(bar.time))
         const volume = idx !== undefined ? data[idx]?.volume : undefined
 
         // 获取 MACD 数据
@@ -623,14 +630,14 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
 
         if (process.env.NODE_ENV === 'development') {
           console.log('[MultiPaneChart] 十字光标联动', {
-            time: String(bar.time),
+            time: timeToString(bar.time),
             macd: macd ? '✓' : '✗',
             kdj: kdj ? '✓' : '✗',
           })
         }
 
         updateTooltip({
-          time: String(bar.time),
+          time: timeToString(bar.time),
           open: bar.open,
           high: bar.high,
           low: bar.low,

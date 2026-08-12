@@ -145,6 +145,119 @@ jobs:
       - name: audit:layers (禁止跨层调用)
         run: npm run audit:layers
 
+  registry-gate:              # 四层注册表治理 · 自动化回归守护（开发分支推送必检，阻塞 PR）
+    name: Registry governance gate
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    permissions:
+      contents: read
+      pull-requests: write   # PR 失败自动评论需要；不写默认 read 会 403 静默失败
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0      # 给未来条目数基线对比（增长 vs 突变）留 git 历史
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      # 与 smoke/test/layers 等所有 job 保持一致：sed 切 npmmirror → npmjs 否则 CI install 超时/404
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+
+      # workspace 依赖：safe-format 必须先构建
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      # ------------------------------------------------------------------
+      # 核心守护：JSON 模式执行 → 结构化报告方便 Artifact + 评论脚本解析
+      # 失败时先 cat 报告再 exit 1：确保 PR 页面 Actions log 里能直接看到
+      # failures 内容，而不是只能看到一句 "Process completed with exit code 1"
+      # ------------------------------------------------------------------
+      - name: audit:registry:regression (四层注册表回归守护)
+        id: registry_guard
+        run: |
+          mkdir -p outputs
+          npm run audit:registry:regression:json > outputs/registry-regression.json 2>&1 \
+            && cat outputs/registry-regression.json \
+            || ( \
+              echo 'REGISTRY-GATE FAILED. Report:'; \
+              cat outputs/registry-regression.json; \
+              exit 1 \
+            )
+
+      - name: Upload registry regression report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-registry-gate-report
+          path: outputs/registry-regression.json
+          if-no-files-found: error
+          retention-days: 30
+
+      # ------------------------------------------------------------------
+      # 仅 PR + job 失败时：自动在 PR 评论结构化 failures 列表
+      #   * 用 HTML 注释 tag 做幂等：同一个 PR 多次 push，每次覆盖同一条评论
+      #     （避免 10 次 push → 10 条相同警报评论，没人看）
+      #   * Artifact 也会同时上传，给下游脚本做长期趋势分析
+      # ------------------------------------------------------------------
+      - name: Alert on PR failure
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const reportPath = path.join(process.env.GITHUB_WORKSPACE, 'outputs', 'registry-regression.json');
+            let report = { failures: [], warnings: [], allPassed: false };
+            try {
+              report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+            } catch (e) {
+              report.parseError = String(e && e.message || e);
+            }
+            const fmt = (arr, emoji) => Array.isArray(arr) && arr.length
+              ? arr.map(x => `  ${emoji} \`${String(x).replace(/`/g, "'")}\``).join('\n')
+              : '  _(空)_';
+            const sha8 = (context.sha || 'unknown').substring(0, 8);
+            const body =
+              '## 🗂️ 四层注册表治理门 · 拦截报告 🔴\n' +
+              '> job: **registry-gate** · 触发事件: `pull_request` · commit: `' + sha8 + '`\n\n' +
+              '### 阻塞级回归（' + (report.failures?.length ?? 0) + ' 条）\n' +
+              fmt(report.failures, '⛔') + '\n\n' +
+              '### 非阻塞警告（' + (report.warnings?.length ?? 0) + ' 条）\n' +
+              fmt(report.warnings, '⚠️') + '\n\n' +
+              (report.counts
+                ? '### 条目数快照\n' +
+                  '| Store | Service | Component | ComponentSubRegistries |\n' +
+                  '|------:|--------:|----------:|-----------------------:|\n' +
+                  '| ' + report.counts.storeEntries + ' | ' + report.counts.serviceEntries + ' | ' +
+                    report.counts.componentEntries + ' | ' + (report.baseline?.componentSubRegistries ?? '—') + ' |\n\n'
+                : '') +
+              '📄 完整 JSON 报告：见本次 Run 的 Artifact **dev-registry-gate-report** → `outputs/registry-regression.json`\n\n' +
+              '---\n<sub>修复指南：`docs/reference/changelogs/2026-08/registry-governance-summary.md` §2 脚本重构 / §4 新增校验 / §7 SOP / §10 教训</sub>';
+            const tag = '<!-- registry-gate-report-tag:v1 -->';
+            const finalBody = tag + '\n' + body;
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const { data: existing } = await github.rest.issues.listComments({ owner, repo, issue_number, per_page: 100 });
+            const mine = existing.find(c => c.body && c.body.includes(tag) && c.user && (c.user.type === 'Bot' || c.user.login === 'github-actions[bot]'));
+            if (mine) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: mine.id, body: finalBody });
+              core.info('[registry-gate] updated previous comment, id=' + mine.id);
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body: finalBody });
+              core.info('[registry-gate] created new alert comment on PR #' + issue_number);
+            }
+
   databridge-gate:           # DataBridge 完整性快速门禁（开发分支必检，不阻塞推送）
     name: DataBridge integrity gate
     needs: smoke
