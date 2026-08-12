@@ -29,9 +29,9 @@ export interface RankedCardProps {
 }
 
 const RANK_COLORS: Record<number, string> = {
-  1: 'bg-amber-400 text-white',
+  1: 'bg-warning text-warning-foreground',
   2: 'bg-muted-foreground/60 text-white',
-  3: 'bg-amber-600 text-white',
+  3: 'bg-warning/70 text-warning-foreground',
 }
 
 /**
@@ -54,7 +54,7 @@ export function RankedCard({
   return (
     <Card
       className={cn(
-        'cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02]',
+        'cursor-pointer transition-all duration-200 hover:shadow-elevation-2 hover:scale-[1.02]',
         onClick && 'active:scale-[0.98]',
         className,
       )}

@@ -48,7 +48,7 @@ const getSampleStatus = (
 } => {
   switch (sampleAdequacy) {
     case 'sufficient':
-      return { label: '样本充足', color: 'text-emerald-600 dark:text-emerald-400' }
+      return { label: '样本充足', color: 'text-success' }
     case 'warning':
       return { label: '样本偏少', color: 'text-warning' }
     case 'insufficient':

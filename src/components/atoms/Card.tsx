@@ -10,7 +10,7 @@ export const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     const tokens = {
       radius: THEME_TOKENS.radius.lg,
       background: COLOR_TOKENS.bgCard.tailwind,
-      border: 'border shadow-sm',
+      border: 'border shadow-elevation-1',
     }
     return (
       <div
