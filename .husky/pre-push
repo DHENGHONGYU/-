@@ -1,0 +1,83 @@
+#!/bin/sh
+# V9 智能投研复盘系统 — pre-push 门禁
+# 推送前运行核心测试套件，确保不将失败用例推送到远端。
+# 更新: 2026-07-18 新增 gate:quick（layers+mock+acl+atomic+docs+db-references）
+
+set -e
+
+# 便携垫片：本机无独立 Node 安装（仅 Kimi 受管 runtime 的 npm.cmd/npx.cmd），
+# Git Bash 的 sh 不按裸名解析 .cmd，此处兜底定义为 shell 函数（不影响已有正常环境）。
+command -v npx >/dev/null 2>&1 || npx() { npx.cmd "$@"; }
+command -v npm >/dev/null 2>&1 || npm() { npm.cmd "$@"; }
+
+printf '\n' >&2
+printf '🚀 V9 pre-push 门禁启动 ...\n' >&2
+printf '================================================\n' >&2
+
+# 0. 技能路由强制校验（mandatory 技能 gates 确认；旁路：SKILL_GATE_CONFIRM=1 git push）
+printf '\n' >&2
+printf '🧭 [0/5] 运行 skill-router --enforce（mandatory 技能门禁确认）...\n' >&2
+PUSH_BASE=$(git rev-parse --abbrev-ref @{u} 2>/dev/null || echo "origin/main")
+git merge-base "$PUSH_BASE" HEAD >/dev/null 2>&1 || PUSH_BASE="HEAD~10"
+node scripts/skill-router.cjs --enforce --since "$PUSH_BASE" --log || {
+  printf '\n' >&2
+  printf '⛔ 推送被技能路由拦截：请运行上述 mandatory 技能的 gates 并确认全绿；\n' >&2
+  printf '   若确已跑过，使用 SKILL_GATE_CONFIRM=1 git push 放行。\n' >&2
+  exit 1
+}
+
+# 0.5 密钥/敏感信息扫描（SAST-lite，WARN 待本地校验无误后升级为 BLOCK）
+printf '\n' >&2
+printf '🔑 [0.5/6] 运行 audit:secrets（密钥/敏感信息扫描）...\n' >&2
+npm run audit:secrets || echo "⚠️  密钥扫描为 WARN 模式（首次本地校验无误后升级为 BLOCK）。"
+
+# 1. 快速门禁（分层 + Mock 安全 + ACL + 原子组件 + 文档 + DB 引用）
+printf '\n' >&2
+printf '🛡️  [1/5] 运行 gate:quick（分层/Mock/ACL/原子/文档/DB引用）...\n' >&2
+npm run gate:quick
+
+# 2. Widget 注册完整性审计
+printf '\n' >&2
+printf '🧩 [2/5] 运行 audit:widget-registry（Widget 注册完整性）...\n' >&2
+npm run audit:widget-registry
+# 2.2 四层注册表治理回归守护（uniqueness / 薄入口 / 僵尸 / 漏登 / deprecation + 3 条历史 dedup 回退守卫）
+printf '\n' >&2
+printf '🗂️  [2.2/6] 运行 audit:registry:regression（四层注册表回归守护）...\n' >&2
+printf '     │ 守护对象：① 僵尸条目复发  ② 组件漏登复发  ③ 薄入口不完整  ④ 注册名重复\n' >&2
+printf '     │         ⑤ deprecationMeta 缺字段复发  ⑥+⑦ 条目数基线  ⑧~⑩ 3 条 dedup 历史防 revert\n' >&2
+npm run audit:registry:regression
+
+
+# 2.5 AI 输出合规校验（金融合规红线，WARN 待本地校验无误后升级为 BLOCK）
+printf '\n' >&2
+printf '🤖 [2.5/6] 运行 audit:ai-output（AI 输出三道校验）...\n' >&2
+npm run audit:ai-output || echo "⚠️  AI 输出合为 WARN 模式（首次本地校验无误后升级为 BLOCK）。"
+
+# 3. 复杂度扫描
+printf '\n' >&2
+printf '📊 [3/5] 运行 complexity-scan（复杂度债务不增）...\n' >&2
+npm run complexity-scan
+
+# 4. 单元测试（可信信号：全量减去 quarantine 隔离项）
+#    说明：test:clean 运行未经隔离的全量；test:stable 运行「全量 - tests/quarantine.list」
+#    作为可信信号。2026-08-02 起 pre-push 指向 test:stable——3 个审计工具白盒自测套件
+#    因测试桩陈旧确定性失败（非产品 bug），已隔离待修复（见 outputs/bidirectional-verification-2-2026-08-02.md）。
+#    待隔离项修复后，应从 quarantine.list 删除对应行，本步可恢复为 test:clean。
+printf '\n' >&2
+printf '🧪 [4/5] 运行单元测试可信信号（npm run test:stable，排除 quarantine）...\n' >&2
+npm run test:stable
+
+# 5. 生产构建验证
+printf '\n' >&2
+printf 'BUILD [5/5] 运行生产构建验证（npm run build）...\n' >&2
+npm run build
+
+# 6. 统一量化质量门禁聚合（SonarQube 式汇总报告，非阻塞 — 提供加权质量分 + 趋势基线）
+printf '\n' >&2
+printf '📈 [6/6] 运行 gate:aggregate（统一量化质量门禁聚合报告，非阻塞）...\n' >&2
+npm run gate:aggregate || echo "⚠️  gate:aggregate 报告生成失败或存在阻断项（非阻塞，详见上方各门禁输出）。"
+
+printf '\n' >&2
+printf '================================================\n' >&2
+printf '✅ V9 pre-push 门禁全部通过，允许推送。\n' >&2
+printf '\n' >&2

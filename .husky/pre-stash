@@ -1,0 +1,125 @@
+#!/bin/sh
+# .husky/pre-stash — Stash 前置检查钩子
+# 防止 git stash -u/-a 意外纳入 .gitignore 忽略的构建产物/依赖/缓存
+#
+# 背景：Git 不原生支持 pre-stash 钩子，本脚本通过 Git alias 包装实现。
+# 配置：git config alias.stash '!f() { .husky/pre-stash "$@" && "$(git --exec-path)/git-stash" "$@"; }; f'
+#       或运行: sh .husky/setup-stash-guard.sh
+# 绕过：git -c core.hooksPath=/dev/null stash -u
+
+# --- 0. 环境检查 ---
+# 确认 git 命令可用
+if ! command -v git >/dev/null 2>&1; then
+  printf 'pre-stash: ERROR -- git not in PATH, blocking stash for safety\n' >&2
+  exit 1
+fi
+
+# 切换到仓库根目录（alias sh 环境下工作目录可能不正确）
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || {
+  printf 'pre-stash: ERROR -- not inside a git work tree\n' >&2
+  exit 1
+}
+cd "$REPO_ROOT" || {
+  printf 'pre-stash: ERROR -- cannot cd to repo root\n' >&2
+  exit 1
+}
+
+# --- 1. 参数解析 ---
+INCLUDE_UNTRACKED=0
+INCLUDE_ALL=0
+for arg in "$@"; do
+  case "$arg" in
+    -u|--include-untracked) INCLUDE_UNTRACKED=1 ;;
+    -a|--all) INCLUDE_ALL=1 ;;
+  esac
+done
+
+# 默认 stash（无 -u/-a）仅处理 tracked 修改，安全
+if [ "$INCLUDE_UNTRACKED" = "0" ] && [ "$INCLUDE_ALL" = "0" ]; then
+  exit 0
+fi
+
+# --- 2. 获取将被 stash 的文件列表 ---
+# 安全失败：git ls-files 失败时阻止 stash（而非静默通过）
+if [ "$INCLUDE_ALL" = "1" ]; then
+  STASH_FILES=$(git ls-files --others --ignored --exclude-standard 2>/dev/null)
+  LS_EXIT=$?
+else
+  STASH_FILES=$(git ls-files --others --exclude-standard 2>/dev/null)
+  LS_EXIT=$?
+fi
+
+if [ "$LS_EXIT" -ne 0 ]; then
+  printf 'pre-stash: ERROR -- git ls-files failed (exit %d), blocking stash for safety\n' "$LS_EXIT" >&2
+  exit 1
+fi
+
+if [ -z "$STASH_FILES" ]; then
+  exit 0
+fi
+
+# --- 3. 高风险目录检查 ---
+# 这些目录被 .gitignore 忽略，包含构建产物/依赖/缓存，stash 会导致 .git 膨胀
+HIGH_RISK_DIRS="release/ build/ .hf_cache/ node_modules/ .venv/ coverage/ dist/v9-python-sidecar/"
+
+RISK_FOUND=0
+RISK_REPORT=""
+
+for dir in $HIGH_RISK_DIRS; do
+  COUNT=$(printf '%s\n' "$STASH_FILES" | grep -c "^${dir}" 2>/dev/null || echo 0)
+  if [ "$COUNT" -gt 0 ] 2>/dev/null; then
+    RISK_FOUND=1
+    RISK_REPORT="${RISK_REPORT}  [BLOCKED] ${dir} -- ${COUNT} files\n"
+  fi
+done
+
+# --- 4. 大文件检查（仅 -u 模式，-a 模式文件太多跳过）---
+LARGE_REPORT=""
+if [ "$INCLUDE_UNTRACKED" = "1" ] && [ "$INCLUDE_ALL" = "0" ]; then
+  LARGE_REPORT=$(printf '%s\n' "$STASH_FILES" | while IFS= read -r file; do
+    if [ -f "$file" ]; then
+      size=$(wc -c < "$file" 2>/dev/null | tr -d ' ')
+      if [ -n "$size" ] && [ "$size" -gt 10485760 ] 2>/dev/null; then
+        mb=$((size / 1048576))
+        printf '  [WARN] %s (%dMB)\n' "$file" "$mb"
+      fi
+    fi
+  done)
+fi
+
+# --- 5. 输出结果 ---
+if [ "$RISK_FOUND" = "1" ]; then
+  printf '\n'
+  printf '=========================================================\n'
+  printf '  pre-stash: BLOCKED -- 高风险文件将被纳入 stash\n'
+  printf '=========================================================\n'
+  printf '\n'
+  printf '以下 .gitignore 忽略的目录/文件将被 stash:\n'
+  printf '%b' "$RISK_REPORT"
+  printf '\n'
+  if [ -n "$LARGE_REPORT" ]; then
+    printf '此外检测到 untracked 大文件 (>10MB):\n'
+    printf '%s\n' "$LARGE_REPORT"
+    printf '\n'
+  fi
+  printf '这些是构建产物/依赖/缓存，stash 会导致 .git 膨胀。\n'
+  printf '\n'
+  printf '建议:\n'
+  printf '  1. 使用 git stash (不带 -u/-a) 仅 stash tracked 修改\n'
+  printf '  2. 或先清理构建产物: git clean -xfd release/ build/\n'
+  printf '  3. 如确需强制 stash:\n'
+  printf '     git -c core.hooksPath=/dev/null stash %s\n' "$*"
+  printf '\n'
+  exit 1
+fi
+
+# 无高风险目录，但有大文件时发出警告（不阻止）
+if [ -n "$LARGE_REPORT" ]; then
+  printf '\n'
+  printf '  [pre-stash] WARNING: 检测到 untracked 大文件 (>10MB):\n'
+  printf '%s\n' "$LARGE_REPORT"
+  printf '  建议先清理或 .gitignore 这些文件。继续 stash...\n'
+  printf '\n'
+fi
+
+exit 0

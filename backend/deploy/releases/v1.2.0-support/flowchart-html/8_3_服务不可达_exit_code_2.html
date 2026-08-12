@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>§8.3 服务不可达 (exit code 2)</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+        h1 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        #diagram {
+            background: #fff;
+        }
+        .tip {
+            margin-top: 15px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>§8.3 服务不可达 (exit code 2)</h1>
+    <div id="diagram" class="mermaid">
+flowchart TD
+    A["exit code 2: 服务不可达"] --> B["kubectl get svc"]
+    B --> C{Service 是否存在?}
+    C -->|不存在| D[§A: Service 名/namespace 配错]
+    D --> D1[修正 service.name / service.namespace]
+    C -->|存在| E[kubectl get endpoints]
+    E --> F{Endpoints 是否为空?}
+    F -->|为空| G[§B: Pod 未运行 / label 不匹配]
+    G --> G1[检查 Deployment / Pod 状态]
+    F -->|有 IP| H[从 debug Pod 测试连通性]
+    H --> I{连接结果}
+    I -->|超时| J[§C: NetworkPolicy / 防火墙阻断]
+    J --> J1[检查 NetworkPolicy 规则]
+    I -->|连接拒绝| K[§D: Embedding 进程未启动]
+    K --> K1[检查 Pod 日志 / 健康检查]
+    </div>
+    <div class="tip">
+        右键点击图表 → "图片另存为" 即可保存 PNG.<br/>
+        或使用浏览器截图工具截取整个页面.
+    </div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+name: SKILL L5 — Mock 残留周检（v9-mock-data-diagnosis 周期调度）
+# 周期：AGENTS.md v1.5.5 注册 — 「Mock 残留周检」40 3 * * 1 (Asia/Shanghai ≡ UTC 周日 19:40)
+# 目的：每周一清晨主动抓出 vi.mock() 全量替换未 importActual 等高危模式，防止 P8 教训（collectionPipeline upgradeDimensionsToPipeline 补全逻辑丢失）在线上或预发布环境复发
+
+on:
+  schedule:
+    # 40 19 * * 0  UTC = Mon 03:40 Asia/Shanghai (UTC+8) — 精确对应 AGENTS.md L16 声称的 cron
+    - cron: '40 19 * * 0'
+  workflow_dispatch:      # 允许手动触发（应急/排障）
+    inputs:
+      reason:
+        description: '触发原因（例如：Mock 清理前复核）'
+        required: false
+        default: '周检手动复跑'
+
+permissions:
+  contents: read
+  # 同 skill-monthly-health-check.yml：显式声明避免未列出权限归零
+  actions: read
+  checks: write
+
+jobs:
+  weekly-mock-check:
+    name: Mock残留周检 audit:mock-modules
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TZ: 'Asia/Shanghai'
+      CI: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies (with tsx)
+        run: npm ci --ignore-scripts --no-audit || npm install --ignore-scripts --no-audit
+
+      # =====================================================================
+      # 核心审计：audit:mock-modules
+      #   R1: mock @/services/@/store/@/core 未 importActual → WARNING
+      #   R2: factory 全量替换（未展开 ...actual） → WARNING
+      #   R3: mock 目标模块 export function 未保留 → WARNING
+      #   continue-on-error=true：先完整收集证据，再以聚合脚本判定是否 fail
+      # =====================================================================
+      - name: Run audit:mock-modules (evidence collector)
+        id: mock_audit
+        run: |
+          set +e
+          OUT_DIR="outputs/mock-weekly"
+          mkdir -p "$OUT_DIR"
+          STAMP="$(date +%Y-%m-%dT%H-%M-%S%z)"
+          npm run audit:mock-modules 2>&1 | tee "$OUT_DIR/mock-audit-$STAMP.log"
+          EXIT=$?
+          echo "exit_code=$EXIT" >> $GITHUB_OUTPUT
+          echo "stamp=$STAMP" >> $GITHUB_OUTPUT
+          echo "log=outputs/mock-weekly/mock-audit-$STAMP.log" >> $GITHUB_OUTPUT
+          set -e
+        continue-on-error: true
+
+      # =====================================================================
+      # 证据归档：无论成败都上传作为周检审计证据
+      # =====================================================================
+      - name: Archive mock weekly audit evidence (90-day retention)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mock-weekly-audit-${{ github.run_id }}-${{ steps.mock_audit.outputs.stamp }}
+          path: |
+            outputs/mock-weekly/
+            scripts/audit/audit-mock-modules.ts
+          retention-days: 90
+
+      # =====================================================================
+      # 最终聚合判定：WARNING > 0 仍然只标红，不 fail workflow
+      #   （避免非阻断性 mock 策略导致 CI 红灯；改由 Issue/通知机制接管）
+      # =====================================================================
+      - name: Aggregate verdict (exit != 0 ⇒ WARNING count, fail on ERROR)
+        if: always()
+        run: |
+          EXIT="${{ steps.mock_audit.outputs.exit_code }}"
+          echo "audit:mock-modules 原始 exit_code=$EXIT"
+          echo ""
+          echo "== 本周 Mock 残留周检结论 =="
+          if [ "$EXIT" = "0" ]; then
+            echo "🟢 PASS: 没有新的高危 Mock 策略"
+          else
+            echo "🟡 WARNING: 存在 $EXIT 条或更多 mock 策略告警，请检查 artifact 日志 outputs/mock-weekly/"
+            echo "   参考：scripts/audit/audit-mock-modules.ts SAFE_FULL_MOCKS 豁免清单用于添加已知安全的全量替换"
+          fi
+          # 只在未知崩溃（非 0/1 退出）时 fail
+          if [ "$EXIT" != "0" ] && [ "$EXIT" != "1" ]; then
+            echo "🔴 CRITICAL: 审计脚本异常崩溃（exit=$EXIT），上报 fail"
+            exit 1
+          fi

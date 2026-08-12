@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>§9.5 场景 A: 模型切换事故回滚</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+        h1 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        #diagram {
+            background: #fff;
+        }
+        .tip {
+            margin-top: 15px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>§9.5 场景 A: 模型切换事故回滚</h1>
+    <div id="diagram" class="mermaid">
+flowchart TD
+    A["Check 1: model_id ≠ all-MiniLM-L6-v2"] --> B[确认当前镜像 tag]
+    B --> C{kubectl get deploy image}
+    C -->|镜像 tag 是最新非 v1.1.0| D[回滚 Deployment 到 v1.1.0 镜像]
+    D --> D1["kubectl rollout undo --to-revision"]
+    C -->|镜像 tag 正确但模型文件被替换| E[检查模型挂载 PVC / ConfigMap]
+    E --> F[恢复 v1.1.0 模型文件<br/>从备份 / PVC snapshot]
+    D1 --> G[等待 Rollout 完成]
+    F --> G
+    G --> G1["kubectl rollout status --timeout=5m"]
+    G1 --> H[重新执行指纹验证]
+    H --> I{exit code?}
+    I -->|exit=0| J[✅ 关闭工单]
+    I -->|exit=1| K[§8.2 继续排查]
+    </div>
+    <div class="tip">
+        右键点击图表 → "图片另存为" 即可保存 PNG.<br/>
+        或使用浏览器截图工具截取整个页面.
+    </div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

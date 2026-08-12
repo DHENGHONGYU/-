@@ -1,0 +1,36 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "Watchlist",
+    "watchlist",
+    "trae",
+    "workbuddy",
+    "kimi",
+    "Vite",
+    "nums",
+    "ULTRAWIDE",
+    "requestfinished",
+    "networkidle",
+    "akshare",
+    "databridge",
+    "Tushare",
+    "Qwen",
+    "DeepSeek",
+    "doubao",
+    "FinSight",
+    "indexeddb",
+    "vitejs",
+    "kospi",
+    "nikkei",
+    "sinanh",
+    "swl",
+    "tsconfig"
+  ],
+  "ignorePaths": [
+    "node_modules/**",
+    "dist/**",
+    "tmp-pw/**"
+  ]
+}

@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# post-commit hook — 代码提交后自动触发文档同步检测
+# 检测代码变更是否命中 TRIGGER_RULES，如有则提示更新文档
+# 不阻断提交（post-commit 性质），仅输出提醒
+
+set -e
+
+# 获取变更文件
+CHANGED=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || echo "")
+
+if [ -z "$CHANGED" ]; then
+  exit 0
+fi
+
+# 检测是否有 src/ 或 scripts/ 下的变更（可能触发 TRIGGER_RULES）
+CODE_CHANGED=$(echo "$CHANGED" | grep -E '^(src/|scripts/)' || true)
+DOC_CHANGED=$(echo "$CHANGED" | grep -E '^docs/.*\.md$' || true)
+
+if [ -n "$CODE_CHANGED" ]; then
+  echo ""
+  echo "📝 [doc-sync] 检测到代码变更，运行文档同步检测..."
+  TSX="node_modules/tsx/dist/cli.mjs"
+
+  # 快速检查 TRIGGER_RULES 命中
+  if [ -f "$TSX" ]; then
+    node "$TSX" scripts/docs-tool/doc-update-trigger.ts --check --since HEAD~1 2>/dev/null || true
+  fi
+
+  # 运行编制规则校验（只读模式，不阻断）
+  if [ -f "scripts/docs-tool/doc-rule-validator.ts" ] && [ -f "$TSX" ]; then
+    node "$TSX" scripts/docs-tool/doc-rule-validator.ts --silent 2>/dev/null || true
+  fi
+
+  echo "📝 [doc-sync] 检测完成。如需更新文档，运行: npm run doc:sync"
+  echo ""
+fi
+
+# 如果有文档变更，运行快速规则校验
+if [ -n "$DOC_CHANGED" ] && [ -f "scripts/docs-tool/doc-rule-validator.ts" ] && [ -f "$TSX" ]; then
+  echo ""
+  echo "📝 [doc-sync] 检测到文档变更，运行编制规则校验..."
+  node "$TSX" scripts/docs-tool/doc-rule-validator.ts --silent 2>/dev/null || true
+  echo ""
+fi
+
+exit 0

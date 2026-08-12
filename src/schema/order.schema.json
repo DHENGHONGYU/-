@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Order Data Schema",
+  "description": "Schema for trading orders",
+  "type": "object",
+  "required": ["id", "symbol", "direction", "quantity", "price", "amount", "status", "accountType", "createdAt"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Order ID"
+    },
+    "symbol": {
+      "type": "string",
+      "description": "Stock symbol"
+    },
+    "direction": {
+      "type": "string",
+      "enum": ["buy", "sell"],
+      "description": "Order direction"
+    },
+    "quantity": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Order quantity"
+    },
+    "price": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Order price"
+    },
+    "amount": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Order amount"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "submitted", "filled", "cancelled", "failed"],
+      "description": "Order status"
+    },
+    "accountType": {
+      "type": "string",
+      "enum": ["main", "margin", "futures"],
+      "description": "Account type"
+    },
+    "createdAt": {
+      "type": "number",
+      "description": "Timestamp when order was created"
+    }
+  }
+}

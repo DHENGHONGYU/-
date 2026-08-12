@@ -1,0 +1,560 @@
+---
+title: V9 文档风格指南与命名规范
+type: meta
+domain: project
+phase: development
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "文档定位：定义项目文档的命名规则、格式标准、结构要求和写作规范 适用范围：所有项目文档（Markdown 格式）>..."
+tags: [project, guide, standards]
+version: v1.0.0
+last_updated: 2026-07-17
+code_version: "2.0.0-rc.1"
+doc_id: V9-DOC-PROJ-315
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-320, V9-DOC-PROJ-026, V9-DOC-PROJ-317, V9-DOC-PROJ-175]
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
+---meta
+domain: project
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+tags: [project, guide, standards]
+phase: development
+version: v1.0.0
+last_updated: 2026-07-17
+code_version: 2.0.0
+---
+
+# V9 文档风格指南与命名规范
+> **文档定位**：定义项目文档的命名规则、格式标准、结构要求和写作规范
+> **适用范围**：所有项目文档（Markdown 格式）
+> **目标读者**：全体项目成员、文档贡献者
+---
+
+## 目录
+
+1. [文件命名规范](#一文件命名规范)
+2. [目录结构规范](#二目录结构规范)
+3. [文档格式标准](#三文档格式标准)
+4. [文档结构模板](#四文档结构模板)
+5. [写作风格指南](#五写作风格指南)
+6. [Frontmatter 规范](#六frontmatter-规范)
+7. [版本管理规范](#七版本管理规范)
+
+---
+
+## 一、文件命名规范
+
+### 1.1 命名总原则
+| 原则 | 说明 | 示例 |
+|------|------|------|
+| **语义化** | 文件名能反映文档内容 | `databridge-architecture.md` ✅ |
+| **全小写** | 统一使用小写字母 | `UserGuide.md` ❌ → `user-guide.md` ✅ |
+| **连字符分隔** | 多单词用 `-`（kebab-case） | `user_guide.md` ❌ → `user-guide.md` ✅ |
+| **英文优先** | 文件名使用英文，内容可用中文 | `数据架构.md` ❌ → `data-architecture.md` ✅ |
+| **简洁明确** | 不超过 5 个单词，30 字符以内 | `very-long-file-name-example.md` ❌ |
+| **不使用特殊字符** | 避免空格、中文、特殊符号 | `my doc (2).md` ❌ |
+
+### 1.2 各类型文档命名约定
+| 文档类型 | 命名模式 | 示例 |
+|----------|----------|------|
+| **架构设计** | `<module>-architecture.md` / `<module>-design.md` | `databridge-architecture.md` |
+| **ADR 决策** | `adr-<number>-<topic>.md` | `adr-001-pure-frontend.md` |
+| **操作指南** | `how-to-<action>.md` / `<topic>-guide.md` | `how-to-add-store.md` |
+| **教程** | `<topic>-tutorial.md` / `getting-started.md` | `getting-started.md` |
+| **规范标准** | `<domain>-conventions.md` / `<topic>-spec.md` | `coding-conventions.md` |
+| **报告** | `<type>-report.md` / `<topic>-audit.md` | `code-quality-audit-report.md` |
+| **经验教训** | `lessons-learned-<date>.md` / `<topic>-lessons.md` | `lessons-learned-2026-07.md` |
+| **数据定义** | `data-definition.md` / `<module>-types.md` | `news-data-definition.md` |
+| **模板** | `<type>-template.md` | `feature-doc-template.md` |
+| **README** | 目录入口固定为 `README.md` | `README.md` |
+
+### 1.3 版本号与日期命名
+
+**含日期的文档**：
+```
+<topic>-<YYYY-MM-DD>.md
+lessons-learned-2026-07-12.md
+release-notes-2026-07-15.md
+```
+
+**含版本号的文档**：
+```
+<topic>-v<major>.<minor>.md
+architecture-v2.0.md
+migration-guide-v1.5.md
+```
+
+**避免使用**：
+- ❌ `final.md` / `final-final.md`（用版本号替代）
+- ❌ `new.md` / `old.md`（用日期或版本号）
+- ❌ `test.md` / `temp.md`（删除临时文件）
+- ❌ `copy.md` / `副本.md`（用版本管理）
+---
+
+## 二、目录结构规范
+### 2.1 目录命名
+
+| 规则 | 说明 | 示例 |
+|------|------|------|
+| 全小写 | 目录名全部小写 | `reference/` ✅ |
+| kebab-case | 多单词用连字符 | `team-handbook/` ✅ |
+| 数字前缀（可选） | 用于排序时用两位数字 | `01-product/` ✅ |
+| 简洁明确 | 不超过 3 个单词 | `very-long-directory-name/` ❌ |
+
+### 2.2 目录层级
+
+```
+docs/                           # 文档根目录
+├── <一级目录>/                  # L1：大类别（6 大类型）
+│   ├── <二级目录>/             # L2：子类别（8 个子类）
+│   │   ├── <三级目录>/         # L3：细分类（可选）
+│   │   │   └── *.md           # 具体文档
+│   │   └── README.md          # 二级目录入口（可选）
+│   └── README.md              # 一级目录入口（必选）
+└── README.md                  # 文档总入口（必选）
+```
+
+**层级规则**：
+- 最多 4 层目录（不含 docs/）
+- 每个目录都有 README.md 作为入口（最深层可选）
+- 同级目录数量不超过 15 个，过多则考虑拆分
+
+### 2.3 必选目录
+
+| 目录 | 用途 | 入口 README |
+|------|------|-------------|
+| `reference/` | 参考类文档 | ✅ 必选 |
+| `explanation/` | 解释类文档 | ✅ 必选 |
+| `how-to/` | 指南类文档 | ✅ 必选 |
+| `tutorials/` | 教程类文档 | ✅ 必选 |
+| `reports/` | 报告类文档 | ✅ 必选 |
+| `00-meta/` | 元文档类 | ✅ 必选 |
+
+### 2.4 可选目录
+
+| 目录 | 用途 | 说明 |
+|------|------|------|
+| `team-handbook/` | 团队手册 | 跨类型综合资料 |
+| `archive/` | 归档文档 | 死文档/旧版本 |
+| `assets/` | 静态资源 | 图片/附件等 |
+| `drafts/` | 草稿 | 未完成文档 |
+| `design/` | 设计资源 | UI 设计相关 |
+
+---
+
+## 三、文档格式标准
+### 3.1 Markdown 规范
+
+**标题层级**：
+```markdown
+# H1 文档标题（唯一，每页 1 个）
+## H2 大章节
+### H3 子章节
+#### H4 小节
+##### H5 更细的小节（尽量少用）
+```
+
+**列表**：
+- 无序列表用 `-`，不用 `*` 或 `+`
+- 有序列表用 `1.`（自动编号）
+- 列表项超过 2 行要缩进对齐
+
+**代码块**：
+```markdown
+```typescript
+// 必须指定语言
+const foo = 'bar';
+``` ​
+```
+
+**表格**：
+- 表头与内容对齐
+- 列数不超过 6 列，过多考虑拆分
+- 简单表格优先，复杂数据用列表
+
+**链接**：
+```markdown
+<!-- 相对路径引用 -->
+[文件名](relative/path/to/file.md)
+
+<!-- 锚点引用 -->
+[章节名](file.md#章节锚点)
+
+<!-- 外部链接 -->
+[描述](https://example.com)
+```
+
+### 3.2 排版规范
+
+| 规则 | 说明 |
+|------|------|
+| **段落间距** | 段落之间空一行 |
+| **行尾空格** | 删除行尾多余空格 |
+| **文件末尾** | 文件末尾保留一个空行 |
+| **中文排版** | 中英文之间加空格（如 "React 组件"） |
+| **标点** | 中文用中文标点，英文用英文标点 |
+| **数字与单位** | 数字与单位之间加空格（如 "500 KB"） |
+
+### 3.3 文档长度
+
+| 文档类型 | 推荐长度 | 超过则考虑 |
+|----------|----------|-----------|
+| 操作指南 | 2-5 屏 | 拆分为系列指南 |
+| 技术参考 | 5-20 屏 | 按主题分章节 |
+| 设计文档 | 5-15 屏 | 拆分为多个 ADR |
+| 报告类 | 5-30 屏 | 摘要 + 详细分册 |
+| README | 1-3 屏 | 导航到详细文档 |
+
+---
+
+## 四、文档结构模板
+### 4.1 标准文档结构
+
+```markdown
+---
+# Frontmatter
+title: 文档标题
+doc_id: V9-DOC-T1D1P2-001
+type: reference
+domain: architecture
+phase: design
+---
+
+# 文档标题
+
+> 一句话文档定位 / 摘要
+> **适用范围**：...
+> **目标读者**：...
+
+---
+
+## 目录
+<!-- 可选，长文档建议有 -->
+
+---
+
+## 正文章节 1
+
+内容...
+
+## 正文章节 2
+
+内容...
+
+---
+
+## 附录 / 参考链接
+- 相关文档 1
+- 相关文档 2
+
+> **维护说明**：本文档由 XXX 维护，如有问题请联系...
+```
+
+### 4.2 README 模板
+
+```markdown
+---
+title: <目录名>
+tier: important
+code_version: 2.0.0
+---
+
+# <目录名>
+
+> **Diátaxis 分类**：<类型>
+> **用途**：一句话说明本目录内容
+> **读者**：目标读者
+---
+
+## 📂 快速入口
+| 文档 | 说明 |
+|------|------|
+| [文档 1](path/to/doc1.md) | 一句话描述 |
+| [文档 2](path/to/doc2.md) | 一句话描述 |
+
+---
+
+## 🔗 相关目录
+
+- [相关目录 1](../other-dir/)
+- [相关目录 2](../another-dir/)
+```
+
+### 4.3 ADR 模板
+
+```markdown
+---
+title: ADR-001 <决策标题>
+status: Accepted / Proposed / Deprecated
+date: YYYY-MM-DD
+---
+
+# ADR-001：<决策标题>
+
+## 背景
+
+问题描述...
+
+## 决策
+
+决策内容...
+
+## 备选方案
+
+- 方案 A：...
+- 方案 B：...
+
+## 后果
+
+### 正面
+- ...
+
+### 负面
+- ...
+
+## 相关文档
+
+- ...
+```
+
+### 4.4 报告类模板
+```markdown
+---
+title: <报告标题>
+date: YYYY-MM-DD
+author: 作者
+type: report
+---
+
+# <报告标题>
+
+## 概述
+
+背景、目的、范围...
+
+## 方法
+
+数据来源、分析方法...
+
+## 发现 / 结果
+
+主要发现、数据展示...
+
+## 建议 / 结论
+
+改进建议、行动计划...
+
+## 附录
+
+详细数据、补充说明...
+```
+
+---
+
+## 五、写作风格指南
+### 5.1 写作原则
+
+| 原则 | 说明 | 示例 |
+|------|------|------|
+| **读者优先** | 从读者角度思考，假设读者不了解背景 | ❌ "这个功能很简单" → ✅ "本功能用于..." |
+| **简洁明确** | 一句话说清一件事，避免冗长 | ❌ "在大多数情况下，通常我们会..." → ✅ "通常..." |
+| **结构化** | 用标题/列表/表格组织内容，不写大段文字 | 多用列表和表格 |
+| **可操作** | 指南类文档要有明确的操作步骤 | ❌ "你可以配置一下" → ✅ "步骤 1：打开配置文件..." |
+| **一致性** | 术语统一，命名统一，风格统一 | 同一概念用同一个词 |
+| **客观中性** | 描述事实，不带情绪和主观判断 | ❌ "这个设计很烂" → ✅ "该设计存在以下问题..." |
+
+### 5.2 不同类型文档的写作要点
+**参考类（Reference）**：
+- 信息密集，结构清晰
+- 按字母或逻辑顺序排列
+- 完整性优先，简洁其次
+- 适合查阅，不适合通读
+
+**解释类（Explanation）**：
+- 讲清楚"为什么"
+- 有背景、有推理、有结论
+- 可以有多种观点的对比
+- 适合深度理解
+
+**指南类（How-to）**：
+- 面向目标，步骤清晰
+- 每步有明确的输入输出
+- 有前置条件说明
+- 有常见问题和排错
+
+**教程类（Tutorials）**：
+- 从零开始，循序渐进
+- 每步有验证点
+- 假设读者是新手
+- 有完整的示例
+
+**报告类（Reports）**：
+- 数据驱动，结论明确
+- 有方法、有证据、有建议
+- 结构完整，逻辑清晰
+- 可追溯、可验证
+
+### 5.3 技术文档 Do's and Don'ts
+
+✅ **Do**：
+- 提供代码示例
+- 说明前置条件
+- 标注版本兼容性
+- 给出常见错误和解决方案
+- 提供相关文档链接
+
+❌ **Don't**：
+- 假设读者知道所有背景知识
+- 使用模糊的词语（"可能"、"大概"）
+- 只有文字没有示例
+- 写很长的段落而不分点
+- 在文档中夹杂个人情绪
+
+---
+
+## 六、Frontmatter 规范
+
+### 6.1 必填字段
+
+| 字段 | 类型 | 说明 | 示例 |
+|------|------|------|------|
+| `title` | string | 文档标题 | `DataBridge 架构设计` |
+| `doc_id` | string | 文档唯一编号 | `V9-DOC-T2D1P2-001` |
+| `type` | string | 文档类型（reference/explanation/how-to/tutorials/reports/meta） | `explanation` |
+| `domain` | string | 功能域（architecture/frontend/backend/data/ai/qa/project/product） | `architecture` |
+| `phase` | string | 开发阶段（planning/requirements/design/development/testing/deployment/retrospective） | `design` |
+| `code_version` | string | 对应代码版本 | `2.0.0` |
+| `version` | string | 文档版本 | `v1.0.0` |
+| `last_updated` | string | 最后更新日期（YYYY-MM-DD） | `2026-07-17` |
+| `status` | string | 文档状态（active/deprecated/draft/archived） | `active` |
+
+### 6.2 可选字段
+| 字段 | 类型 | 说明 | 示例 |
+|------|------|------|------|
+| `tier` | string | 重要级别（important/reference/supporting） | `important` |
+| `maintainer` | string | 维护者 | `Architecture Team` |
+| `author` | string | 作者 | `张三` |
+| `tags` | array | 自定义标签 | `[databridge, acl, envelope]` |
+| `summary` | string | 一句话摘要 | `DataBridge 统一写入网关的架构设计` |
+| `change_log` | array | 变更日志 | 见下 |
+| `deprecated_by` | string | 被哪个文档替代 | `new-doc.md` |
+| `supersedes` | string | 替代了哪个文档 | `old-doc.md` |
+
+### 6.3 完整示例
+
+```yaml
+---
+title: DataBridge 统一写入网关架构设计
+doc_id: V9-DOC-T2D1P2-001
+type: explanation
+domain: architecture
+phase: design
+tier: important
+code_version: 2.0.0
+version: v1.2.0
+last_updated: 2026-07-17
+maintainer: Architecture Team
+author: 张三
+---
+title: 文档风格指南与命名规范
+# Classification
+type: meta
+domain: project # TODO: confirm
+tier: standard # TODO: confirm
+status: active
+
+# Version
+version: v1.0.0 # TODO: confirm
+last_updated: 2026-07-17
+code_version: 2.0.0
+doc_system_version: v1.0.0
+
+# People & Tags
+maintainer: Documentation Team
+# tags: [tag1, tag2]
+# summary: One-line summary
+
+---
+tags: [databridge, acl, envelope, write-gateway]
+summary: 详细阐述 DataBridge 统一写入网关的设计思路、架构选型和实现方案
+change_log:
+  - date: 2026-07-17
+    version: v1.2.0
+    author: 张三
+    desc: 新增系统管理方法章节
+  - date: 2026-06-21
+    version: v1.0.0
+    author: 李四
+    desc: 初始版本
+---
+```
+
+---
+
+## 七、版本管理规范
+
+### 7.1 版本号规则
+
+采用**语义化版本**：`v<major>.<minor>.<patch>`
+
+| 级别 | 说明 | 示例 |
+|------|------|------|
+| `major` | 重大变更，结构重构，不兼容 | `v1.0.0` → `v2.0.0` |
+| `minor` | 新增内容，兼容扩展 | `v1.0.0` → `v1.1.0` |
+| `patch` | 小修订，错别字、格式调整 | `v1.0.0` → `v1.0.1` |
+
+### 7.2 变更日志
+
+每份重要文档必须维护 `change_log`，记录：
+- 日期
+- 版本号
+- 作者
+- 变更描述（简洁明了）
+
+### 7.3 文档生命周期
+
+```
+草稿（draft） → 活跃（active） → 废弃（deprecated） → 归档（archived）
+```
+
+| 状态 | 说明 | Frontmatter |
+|------|------|-------------|
+| `draft` | 编写中，未正式发布 | `status: draft` |
+| `active` | 当前有效，持续维护 | `---
+title: 文档风格指南与命名规范
+# Classification
+type: meta
+domain: project # TODO: confirm
+tier: standard # TODO: confirm
+status: active
+
+# Version
+version: v1.0.0 # TODO: confirm
+last_updated: 2026-07-17
+code_version: 2.0.0
+doc_system_version: v1.0.0
+
+# People & Tags
+maintainer: Documentation Team
+# tags: [tag1, tag2]
+# summary: One-line summary
+
+---` |
+| `deprecated` | 不推荐使用，有新文档替代 | `status: deprecated` + `deprecated_by` |
+| `archived` | 已归档，不再维护 | 移至 archive/ 目录 |
+
+### 7.4 废弃流程
+
+1. 在新文档中添加 `supersedes: old-doc.md`
+2. 在旧文档中添加 `status: deprecated` 和 `deprecated_by: new-doc.md`
+3. 在旧文档顶部添加废弃提示横幅
+4. 30 天后移入 `archive/` 目录
+
+---
+
+> **本规范由文档管理团队维护，如有疑问请联系文档管理员。**

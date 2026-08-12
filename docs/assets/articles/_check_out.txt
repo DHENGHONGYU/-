@@ -1,0 +1,6 @@
+PAGE_COUNT: 2
+PAGE_URL: chrome://new-tab-page/
+PAGE_URL: https://cloud.tencent.com/login?s_url=https%3A%2F%2Fcloud.tencent.com%2Fdeveloper%2Farticle%2Fwrite
+NAVIGATE_TO_WRITE
+CURRENT_URL: https://cloud.tencent.com/login?s_url=https%3A%2F%2Fcloud.tencent.com%2Fdeveloper%2Farticle%2Fwrite
+STILL_NEED_LOGIN

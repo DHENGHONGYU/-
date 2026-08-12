@@ -1,0 +1,659 @@
+name: Quality Check
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  # 每日 03:17 深度审计（避开已有 03:00 A+H 字典刷新 / 03:10 Git 备份）
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+# =============================================================================
+# 安全配置 — 最小权限原则
+# =============================================================================
+# 默认只读权限，防止 workflow 误写仓库或泄露 secrets
+permissions:
+  contents: read
+  security-events: write  # 用于上传审计结果到 GitHub Security
+  pull-requests: write   # P1-3: 用于在 PR 评论中嵌入快照 diff 信息
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # SHA pin 第三方 actions（防止供应链攻击：tag 可被重定向）
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      # --ignore-scripts: 禁止执行包安装脚本（防供应链攻击）
+      # --no-audit: 跳过安装时审计（在单独 audit job 中执行）
+      - run: npm ci --ignore-scripts --no-audit
+      - run: npm run lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      # 真实 tsc:prod 门禁（原 scripts/check-types.sh 不存在 → 假绿灯，已修复为真实类型检查）
+      - run: npm run tsc:prod
+
+  route-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      - run: npx tsx scripts/verify-all-routes.ts
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      # test:clean = 全量 vitest run（不跳过任何测试，失败即 CI 红）
+      # 已知不稳定用例见 package.json test:known（单独运行观察，不在此排除）
+      - run: npm run test:clean
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # 行业 V4 图表 5 件套单元测试（P0 阻塞 — PR 合并强制门禁）
+  # ════════════════════════════════════════════════════════════════════════════
+  # 设计依据：docs/reference/implementation/chart-integration.md §7
+  # 106 项用例覆盖 5 个组件：IndustryV4Panel / IndustryV4Radar / SubIndicatorBar
+  # / TrendLineChart / ValuationDistribution（含 buildHistogram 纯函数）
+  # 失败即阻塞 PR 合并；同时产出 JSON + HTML 可视化报告作为 artifact
+  chart-industry-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      # 1. 运行 5 件套测试，输出 JSON 结果到 outputs/test-results/chart-tests.json
+      - name: Run chart industry tests (106 cases, P0 blocking)
+        run: npm run test:chart:industry
+        env:
+          CI: true
+      # 2. 生成可视化 HTML 报告（基于上一步产出的 JSON）
+      - name: Generate HTML report
+        if: always()
+        run: npm run report:chart
+      # 3. 上传 JSON + HTML 报告作为 artifact（保留 14 天供 PR 调试）
+      - name: Upload chart test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chart-industry-test-report
+          path: |
+            outputs/test-results/chart-tests.json
+            outputs/test-results/chart-report.html
+          retention-days: 14
+
+  coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      # 运行测试并生成覆盖率报告（全量，不跳过任何测试）
+      # 覆盖率阈值定义在 vite.config.ts 的 test.coverage.thresholds
+      - run: npm run test:ci
+        env:
+          CI: true
+      # 上传覆盖率报告作为 artifact（供后续分析）
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      # Python 环境（doc-tier-validate.py 需要）
+      - uses: actions/setup-python@0b93647e04c5672476a5b030e1f4e16f85c6f85f # v5.3.0
+        with:
+          python-version: '3.13'
+      - run: npm ci --ignore-scripts --no-audit
+      # P0 阻塞性检查（必须通过）
+      - run: npm run audit:layers
+      - run: npm run audit:hardcode
+      # 文档门禁检查（P0 阻塞）— 8 项检查：frontmatter/tier/status/type/交叉引用/目录结构/编制规则/风格
+      - name: Document gate (P0 blocking — 8 checks)
+        run: npm run doc:gate
+        continue-on-error: false
+      # 文档同步审计 — 阻断性门禁（exit code 非零则 CI 失败）
+      - name: Documentation sync audit (P0 blocking gate)
+        run: npm run audit:docs
+        continue-on-error: false
+      # 文档-代码交叉引用断裂率门禁 — 阈值 0.5%（P0 阻塞）
+      - name: Documentation cross-reference broken rate gate (P0 blocking)
+        run: npm run doc:crossref:audit -- --max-broken-rate=0.5%
+        continue-on-error: false
+      # 文档-代码双向完整性审计 — 非阻塞，先积累基线数据
+      - name: Documentation-Code integrity audit (baseline collection)
+        run: npm run audit:doc-integrity
+        continue-on-error: true
+      - name: Upload doc-integrity report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: doc-integrity-report
+          path: docs/reports/audit/audit-doc-integrity-*.json
+          retention-days: 7
+      - name: Semantic validation (P0 blocking gate)
+        run: npm run audit:semantic
+        continue-on-error: false
+      - run: npm run lint:colors
+      # npm audit: 检查依赖漏洞（audit-level=high 时 high/critical 才失败）
+      - run: npm audit --audit-level=high
+
+  # 依赖分析：检测循环依赖、孤立模块、不可达模块
+  dependency-analysis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      # P1 重要检查：循环依赖为错误级别会阻止合并
+      - name: Run dependency analysis (P1 important check)
+        run: npm run audit:dependencies
+      # 上传依赖分析报告
+      - name: Upload dependency analysis report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-analysis-report
+          path: docs/reports/dependency-analysis.*
+          retention-days: 7
+
+  # 质量门禁汇总：汇总所有检查结果并生成报告
+  quality-gate-summary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [lint, typecheck, route-verify, test, chart-industry-tests, audit, dependency-analysis, databridge-integrity, bootstrap-p0-gate, dark-mode-e2e]
+    if: always()
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      # 统一量化质量门禁聚合（SonarQube 式加权质量分 + 趋势基线，非阻塞报告）
+      - name: Unified quality gate aggregate (non-blocking report)
+        continue-on-error: true
+        run: npm run gate:aggregate -- --json
+      - name: Generate quality gate summary
+        run: |
+          echo "=== 质量门禁检查汇总 ==="
+          echo "P0 阻塞性检查:"
+          echo "  - lint: ${{ needs.lint.result }}"
+          echo "  - typecheck: ${{ needs.typecheck.result }}"
+          echo "  - route-verify: ${{ needs.route-verify.result }}"
+          echo "  - test: ${{ needs.test.result }}"
+          echo "  - chart-industry-tests (5 件套图表组件): ${{ needs.chart-industry-tests.result }}"
+          echo "  - audit (P0 checks): ${{ needs.audit.result }}"
+          echo "  - databridge-integrity: ${{ needs.databridge-integrity.result }}"
+          echo "  - bootstrap-p0-gate (种子数据 + 内存降级): ${{ needs.bootstrap-p0-gate.result }}"
+          echo "  - dark-mode-e2e (深色模式视觉回归 P0 门禁): ${{ needs.dark-mode-e2e.result }}"
+          echo ""
+          echo "P1 重要检查:"
+          echo "  - dependency-analysis: ${{ needs.dependency-analysis.result }}"
+          echo ""
+          echo "P2 建议性检查（在单独的 workflow 中执行）"
+      - name: Check P0 gate status
+        run: |
+          FAILURE=false
+          
+          if [ "${{ needs.lint.result }}" != "success" ] && [ "${{ needs.lint.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: lint"
+            FAILURE=true
+          fi
+          
+          if [ "${{ needs.typecheck.result }}" != "success" ] && [ "${{ needs.typecheck.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: typecheck"
+            FAILURE=true
+          fi
+          
+          if [ "${{ needs.route-verify.result }}" != "success" ] && [ "${{ needs.route-verify.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: route-verify"
+            FAILURE=true
+          fi
+          
+          if [ "${{ needs.test.result }}" != "success" ] && [ "${{ needs.test.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: test"
+            FAILURE=true
+          fi
+          
+          if [ "${{ needs.chart-industry-tests.result }}" != "success" ] && [ "${{ needs.chart-industry-tests.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: chart-industry-tests (5 件套图表组件 106 项用例)"
+            FAILURE=true
+          fi
+          
+          if [ "${{ needs.audit.result }}" != "success" ] && [ "${{ needs.audit.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: audit"
+            FAILURE=true
+          fi
+          
+          if [ "${{ needs.databridge-integrity.result }}" != "success" ] && [ "${{ needs.databridge-integrity.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: databridge-integrity"
+            FAILURE=true
+          fi
+          
+          if [ "${{ needs.bootstrap-p0-gate.result }}" != "success" ] && [ "${{ needs.bootstrap-p0-gate.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: bootstrap-p0-gate (种子数据初始化+重试 / 编排容错 / 内存降级模式)"
+            FAILURE=true
+          fi
+          
+          if [ "${{ needs.dark-mode-e2e.result }}" != "success" ] && [ "${{ needs.dark-mode-e2e.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: dark-mode-e2e (深色模式视觉回归 P0 门禁：class 时序 + CSS 变量同步 + 快速切换无闪烁)"
+            FAILURE=true
+          fi
+          
+          if [ "$FAILURE" = true ]; then
+            exit 1
+          else
+            echo "✅ 所有 P0 阻塞性检查通过"
+          fi
+
+  # 契约验证：验证所有类型契约的运行时合规性
+  contract-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      - name: Run contract validation tests
+        run: npm run test:clean -- --reporter=verbose
+        env:
+          CI: true
+          CONTRACT_VALIDATION_LOG: true
+
+  # DataBridge 完整性：验证数据流转、ACL 权限、启动日志的端到端正确性
+  databridge-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      - name: DataBridge 数据流转集成测试（executionPlanService.dataflow）
+        run: npm run test:databridge:integration
+      - name: bootstrapService 启动链路日志验证
+        run: npm run test:databridge:bootstrap
+      - name: ACL 矩阵配置契约测试
+        run: npm run test:databridge:acl
+      - name: 交叉双向验证汇总
+        run: |
+          echo "=== DataBridge 完整性检查汇总 ==="
+          echo "✅ executionPlanService 数据流转：34 集成用例通过"
+          echo "✅ bootstrapService 启动日志：13 单元用例通过"
+          echo "✅ ACL 矩阵配置：5 契约用例通过"
+          echo "全链路数据流转完整性已验证"
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # P0 强制门禁：种子数据重试 + 内存降级模式检测
+  # ════════════════════════════════════════════════════════════════════════════
+  # 背景：P0-1（种子数据指数退避重试）和 P0-2（IndexedDB 不可用内存降级）
+  #       为系统启动核心链路，任何回归必须在 CI 中被捕获
+  # 覆盖：bootstrapService.test.ts 全部用例（20 项）
+  #       - P0-1: 种子数据重试耗尽回调 / 重试成功 / 重试次数验证
+  #       - P0-2: 内存降级跳过 IDB / 正常模式 / IDB 失败回调 / IDB 成功
+  #       - P0-3: 编排器失败回调 / 部分失败健康检查
+  # 策略：阻塞性门禁（非 continue-on-error），任一失败即阻止 PR 合并
+  bootstrap-p0-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      - name: P0-1 种子数据初始化/重试 + P0-2 编排容错 + P0-3 内存降级（bootstrapService 23 + seedService 9 = 32 项用例）
+        run: npm run test:bootstrap:p0
+        env:
+          CI: true
+      - name: Upload bootstrap P0 test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bootstrap-p0-test-report
+          path: |
+            src/services/system/bootstrapService.test.ts
+            src/services/system/seedService.test.ts
+          retention-days: 7
+
+  # 快照测试：检测 API 响应、文档和数据 schema 的意外变更
+  snapshot-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      - name: Run snapshot tests
+        run: npx vitest run tests/__tests__/snapshot/ --reporter=basic
+        env:
+          CI: true
+      - name: Upload snapshot report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-report
+          path: tests/__tests__/snapshot/__snapshots__/
+          retention-days: 7
+
+  # API 提取：从代码生成 API 文档
+  api-extraction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      - name: Extract API documentation
+        run: npm run api:extract
+      - name: Upload API report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-report
+          path: docs/reports/api-report.md
+          retention-days: 7
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # 视觉回归测试（EXPERIMENTAL — Docker 统一环境，逐步去实验性标志）
+  # ════════════════════════════════════════════════════════════════════════════
+  # 运行方式：通过 e2e/docker-compose.yml 启动 Playwright 官方容器
+  #   - 容器内预装 Ubuntu + Chromium + 中文字体 → 消除 Windows/macOS 渲染差异
+  #   - 基线真相源：本地运行 `npm run test:e2e:visual:docker:update` 后提交
+  #   - CI 回归：运行 `npm run test:e2e:visual:docker` 做 diff
+  #
+  # 当前仍标记 continue-on-error: true，待收集 2-3 次 CI 稳定运行数据后移除。
+  # ════════════════════════════════════════════════════════════════════════════
+  visual-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # 实验性：收集 Docker 方案稳定度，稳定后移除
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      # 安装 Docker Compose（ubuntu-latest 已内置，显式确保版本）
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@988b5a0280414a5213010198a302fdf5e5322a6c # v3.6.1
+      # 构建并运行视觉回归
+      - name: Build & run visual regression (Docker)
+        run: |
+          docker compose -f e2e/docker-compose.yml build visual-test
+          docker compose -f e2e/docker-compose.yml run --rm visual-test
+      # 上传失败截图（含 diff / actual / expected）便于调试
+      - name: Upload visual regression artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-failures
+          path: |
+            test-results/
+            e2e/visual-regression.spec.ts-snapshots/
+          retention-days: 7
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # 深色模式切换 E2E 测试（防视觉回归）
+  # ════════════════════════════════════════════════════════════════════════════
+  # 验证深色模式切换时颜色令牌无闪烁：
+  #   - class 变化在单帧内完成（无中间态闪烁）
+  #   - CSS 变量同步更新（无延迟渲染）
+  #   - 快速连续切换不产生闪烁
+  #   - TradeReviewPage 深色模式颜色令牌渲染正确
+  #
+  # 触发条件：main/develop 分支 push 或 PR
+  # 阻塞策略：失败即阻塞（视觉回归 P0 级别）
+  # ════════════════════════════════════════════════════════════════════════════
+  dark-mode-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+      - run: npm install --no-audit
+      - name: Install Playwright browsers (chromium + webkit)
+        run: npx playwright install --with-deps chromium webkit
+
+      # ── 阶段 1：闪烁时序检测（P0 阻塞，失败即门禁红） ──
+      # 覆盖：class 单帧变化、CSS 变量同步、快速切换无闪烁、颜色令牌渲染、切换一致性
+      # 这些用例不依赖基线快照，任何回归必须立即修复。
+      - name: Run dark mode flicker detection (P0 blocking — no snapshot baseline needed)
+        run: npx playwright test e2e/dark-mode-flicker.spec.ts --grep-invert "\[SNAPSHOT\]" --reporter=list --project=chromium
+        env:
+          CI: true
+
+      # ── 阶段 2：像素级视觉快照回归（非阻塞参考模式） ──
+      # 覆盖：9 页面 × 2 主题（首页/驾驶舱/输入舱/交易复盘/行业评分/个股评分/持仓/热门板块/研报 × light/dark）
+      # 基线快照在 Windows 上生成，CI 运行在 Ubuntu，跨平台字体/抗锯齿差异
+      # 会导致像素偏差。阶段 2 作为参考信息，不阻塞 PR 合并（阶段 1 已 P0 阻塞）。
+      #
+      # P1-1: 手动触发（workflow_dispatch）时，用 --update-snapshots 生成 Linux 基线快照，
+      # 通过下方 "Upload E2E test report" 步骤上传为 artifact。开发者下载后替换本地
+      # e2e/dark-mode-flicker.spec.ts-snapshots/ 并提交到 git，实现 Linux 基线对齐。
+      # 对齐后即可执行 P1-2（移除 continue-on-error，升级为 P0 阻塞）。
+      #
+      # UI 改版后本地执行：npx playwright test e2e/dark-mode-flicker.spec.ts --grep "\[SNAPSHOT\]" --update-snapshots
+      # 然后提交更新后的 e2e/dark-mode-flicker.spec.ts-snapshots/ 到 git。
+      - name: Run visual snapshot regression (non-blocking reference — cross-platform diff)
+        continue-on-error: true
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "=== 手动触发：生成 Linux 基线快照 (--update-snapshots) ==="
+            echo "生成的基线将上传为 artifact，下载后替换本地 e2e/dark-mode-flicker.spec.ts-snapshots/"
+            echo "然后提交到 git，实现 Linux 基线对齐（P1-2 前提条件）"
+            npx playwright test e2e/dark-mode-flicker.spec.ts --grep "\[SNAPSHOT\]" --update-snapshots --project=chromium
+          else
+            echo "=== 自动触发：对比现有基线（非阻塞参考，跨平台差异容忍） ==="
+            npx playwright test e2e/dark-mode-flicker.spec.ts --grep "\[SNAPSHOT\]" --reporter=list --project=chromium
+          fi
+        env:
+          CI: true
+
+      # ── 调试：输出 diff 信息（总是执行，用于定位像素偏差） ──
+      - name: Debug snapshot diff info (always)
+        if: always()
+        run: |
+          echo "=== 快照目录文件 ==="
+          ls -la e2e/dark-mode-flicker.spec.ts-snapshots/ 2>/dev/null || echo "目录不存在"
+          echo ""
+          echo "=== test-results 中的 diff 截图 ==="
+          find test-results/ -type f \( -name "*.png" -o -name "*.txt" -o -name "*.json" \) 2>/dev/null || echo "无 test-results 文件"
+          echo ""
+          echo "=== Playwright trace 文件 ==="
+          find test-results/ -name "*.zip" 2>/dev/null || echo "无 trace 文件"
+
+      # ── P1-3: PR 评论嵌入快照 diff 信息（有差异时自动评论） ──
+      # 在 PR 中创建评论，列出 diff 文件 + 提供 artifact 下载链接 + 修复指引
+      # 仅在 PR 事件且有 diff 文件时触发
+      - name: Comment snapshot diff info on PR (P1-3)
+        if: always() && github.event_name == 'pull_request'
+        run: |
+          # 收集失败的快照 diff 文件
+          DIFFS=$(find test-results/ -name "*-diff.png" 2>/dev/null | head -20 || echo "")
+          DIFF_COUNT=$(echo "$DIFFS" | grep -c "png" 2>/dev/null || echo "0")
+
+          # 仅在有 diff 时创建评论
+          if [ "$DIFF_COUNT" -eq 0 ]; then
+            echo "无快照 diff，跳过 PR 评论"
+            exit 0
+          fi
+
+          ARTIFACT_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          # 构建 PR 评论 body（GitHub Markdown 格式）
+          {
+            echo "### 🔍 视觉快照回归 diff 报告"
+            echo ""
+            echo "检测到 **${DIFF_COUNT}** 个快照像素差异（阶段 2 非阻塞参考）。"
+            echo ""
+            echo "#### 差异文件："
+            echo '```'
+            echo "$DIFFS"
+            echo '```'
+            echo ""
+            echo "📄 **下载完整 diff 截图**：[dark-mode-e2e-report artifact](${ARTIFACT_URL})"
+            echo ""
+            echo "---"
+            echo "💡 **本地修复指引**："
+            echo '```bash'
+            echo 'npx playwright test e2e/dark-mode-flicker.spec.ts --grep "\[SNAPSHOT\]" --update-snapshots'
+            echo '```'
+            echo "然后提交更新后的 \`e2e/dark-mode-flicker.spec.ts-snapshots/\` 到 git。"
+          } > /tmp/pr-comment.md
+
+          # 通过 GitHub CLI 创建 PR 评论
+          gh pr comment ${{ github.event.pull_request.number }} --body-file /tmp/pr-comment.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── P2-3: 基线快照 stale 检测（非阻塞，提醒更新过期基线） ──
+      # 检查快照文件的 git 最后修改时间，超过 90 天则输出 stale 警告
+      - name: Check snapshot baseline staleness (P2-3, non-blocking)
+        if: always()
+        run: |
+          echo "=== 基线快照 stale 检测（阈值 90 天） ==="
+          STALE_THRESHOLD_DAYS=90
+          STALE_COUNT=0
+
+          for snapshot in e2e/dark-mode-flicker.spec.ts-snapshots/*.png; do
+            if [ ! -f "$snapshot" ]; then continue; fi
+
+            # 获取文件最后 git 提交时间
+            LAST_COMMIT_DATE=$(git log -1 --format="%ci" -- "$snapshot" 2>/dev/null || echo "")
+            if [ -z "$LAST_COMMIT_DATE" ]; then
+              echo "⚠️  $(basename "$snapshot"): 未提交到 git（新文件）"
+              continue
+            fi
+
+            # 计算年龄（天）
+            FILE_AGE_DAYS=$(( ( $(date +%s) - $(date -d "$LAST_COMMIT_DATE" +%s) ) / 86400 ))
+
+            if [ "$FILE_AGE_DAYS" -gt "$STALE_THRESHOLD_DAYS" ]; then
+              echo "⚠️  STALE: $(basename "$snapshot") (${FILE_AGE_DAYS} 天未更新)"
+              STALE_COUNT=$((STALE_COUNT + 1))
+            else
+              echo "✅ $(basename "$snapshot") (${FILE_AGE_DAYS} 天)"
+            fi
+          done
+
+          echo ""
+          if [ "$STALE_COUNT" -gt 0 ]; then
+            echo "=== ⚠️ 发现 ${STALE_COUNT} 个过期基线快照（> ${STALE_THRESHOLD_DAYS} 天） ==="
+            echo "💡 建议执行基线更新："
+            echo "   npx playwright test e2e/dark-mode-flicker.spec.ts --grep \"\[SNAPSHOT\]\" --update-snapshots"
+            echo "   然后提交更新后的快照到 git"
+          else
+            echo "=== ✅ 所有基线快照在 ${STALE_THRESHOLD_DAYS} 天内有更新 ==="
+          fi
+
+      # ── 上传测试报告 + 基线快照（供审查与基线更新） ──
+      - name: Upload E2E test report + golden snapshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dark-mode-e2e-report
+          path: |
+            test-results/
+            playwright-report/
+            e2e/dark-mode-flicker.spec.ts-snapshots/
+          retention-days: 14
+
+      # ── PR 失败自动评论指引 ──
+      - name: Alert on PR failure
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              `## ❌ 深色模式切换 E2E 测试失败`,
+              ``,
+              `**提交者**: @${context.payload.pull_request.user.login}`,
+              `**PR**: #${prNumber} - ${context.payload.pull_request.title}`,
+              `**失败 Job**: [dark-mode-e2e](${runUrl})`,
+              ``,
+              `### 失败类型（请定位对应阶段）`,
+              `- **阶段 1（P0 阻塞）**：class 变化时序 / CSS 变量同步 / 快速切换 — 必须立即修复`,
+              `- **阶段 2（非阻塞参考）**：像素级视觉差异（跨平台字体/抗锯齿差异）— 下载 artifact 查看 diff 图，不阻塞 PR 合并`,
+              ``,
+              `### 修复指引`,
+              `1. 下载 artifact \`dark-mode-e2e-report\` 查看截图 diff / 日志`,
+              `2. 本地复现（阶段 1）：\`npx playwright test e2e/dark-mode-flicker.spec.ts --grep-invert "\\[SNAPSHOT\\]"\``,
+              `3. 本地复现（阶段 2）：\`npx playwright test e2e/dark-mode-flicker.spec.ts --grep "\\[SNAPSHOT\\]"\``,
+              `4. 合法 UI 改版 → 更新基线：\`npx playwright test e2e/dark-mode-flicker.spec.ts --grep "\\[SNAPSHOT\\]" --update-snapshots && git add e2e/dark-mode-flicker.spec.ts-snapshots/\``,
+              `5. 检查 \`src/pages/output/TradeReviewPage.tsx\` MutationObserver 运行时检查`,
+              `6. 修复后重新推送，门禁将自动重跑`,
+              ``,
+              `<!-- auto-generated by dark-mode-e2e -->`
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body,
+            });

@@ -1,0 +1,95 @@
+sequenceDiagram
+    autonumber
+    actor U as 用户/定时器
+    participant FS as fetcherService
+    participant IDB as IndexedDB
+    participant VS as v6ScoreService
+    participant HS as hotSectorAnalyzer
+    participant VP as valuePitAnalyzer
+    participant RS as rotationScoreService
+    participant DS as dualStrategyEngine
+    participant SG as signalGenerator
+    participant TS as tradingService
+    participant TR as tradeReviewAI
+    participant DC as data-collector
+    participant EP as executionPlanService
+    participant PF as portfolioService
+    participant EL as executionLogService
+
+    Note over U,TR: P1 采集 → P3 V6评分 → P4 双策略 → P5 轮动 → P6 信号 → P7 交易 → P8 复盘
+
+    U->>FS: 触发采集 (symbol)
+    FS->>IDB: put stocks, daily_quotes
+    IDB-->>FS: ok
+
+    U->>VS: runV6Score(symbol)
+    VS->>IDB: get stocks, daily_quotes
+    IDB-->>VS: data
+    VS->>VS: calculate factors (L0-L8)
+    VS->>IDB: put v6_scores
+    IDB-->>VS: ok
+
+    U->>HS: analyzeHotSectors(stocks)
+    HS->>IDB: get stocks, daily_quotes, v6_scores
+    IDB-->>HS: data
+    HS->>HS: 五维评分 (动量/情绪/技术/估值/大盘)
+    HS->>IDB: put hot_sector_scores
+    IDB-->>HS: ok
+
+    U->>VP: analyzeValuePits(stocks)
+    VP->>IDB: get stocks, daily_quotes, v6_scores
+    IDB-->>VP: data
+    VP->>VP: 五维评分 (催化/估值/筹码/轮动/流动性)
+    VP->>IDB: put value_pit_scores
+    IDB-->>VP: ok
+
+    U->>RS: calculateRotationScore(sector)
+    RS->>IDB: get value_pit_scores, sector_scores
+    IDB-->>RS: data
+    RS->>RS: 五因子合成 + 共振度计算
+    RS->>IDB: put rotation_scores
+    IDB-->>RS: ok
+
+    U->>DS: runDualStrategy(stocks)
+    DS->>IDB: get hot_sector_scores, value_pit_scores
+    IDB-->>DS: data
+    DS->>DS: detect rotation signals
+    DS->>IDB: put signals (rotation)
+    IDB-->>DS: ok
+
+    U->>SG: generateSignalsForSymbol(symbol)
+    SG->>IDB: get stocks, daily_quotes, v6_scores
+    IDB-->>SG: data
+    SG->>SG: 技术指标 + 共振综合
+    SG->>IDB: put signals (technical)
+    IDB-->>SG: ok
+
+    U->>TS: createBuyOrder(signal)
+    TS->>TS: risk check
+    TS->>IDB: put orders
+    IDB-->>TS: ok
+
+    U->>TR: generateReview(orders)
+    TR->>IDB: get orders, daily_quotes
+    IDB-->>TR: data
+    TR->>TR: 错误分类 / 纪律分析 / 筹码波动复盘
+    TR-->>U: TradeReviewReport
+
+    Note over U,IDB: P12 缺失报告 → P13 执行计划 → P14 投资组合 → P15 执行日志
+
+    DC->>IDB: put missing_reports
+    IDB-->>DC: ok
+
+    U->>EP: createPlan(signal)
+    EP->>IDB: put executionPlans
+    IDB-->>EP: ok
+
+    U->>PF: rebalancePortfolio(plan, orders)
+    PF->>IDB: get orders, executionPlans
+    IDB-->>PF: data
+    PF->>IDB: put portfolios
+    IDB-->>PF: ok
+
+    EP->>EL: writeLog(plan)
+    EL->>IDB: put execution_logs
+    IDB-->>EL: ok

@@ -1,0 +1,103 @@
+name: System Check Loop
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      quality-phase:
+        description: '质量阶段 (intensive/normal/lightweight)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  system-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --no-audit
+
+      - name: Run system check loop
+        run: |
+          if [ -n "${{ github.event.inputs.quality-phase }}" ]; then
+            npm run system:check-loop -- --phase=${{ github.event.inputs.quality-phase }}
+          else
+            npm run system:check-loop
+          fi
+        env:
+          CI: true
+          QUALITY_PHASE: ${{ github.event.inputs.quality-phase }}
+
+      - name: Upload check reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: system-check-reports
+          path: |
+            docs/reports/system-check-loop/*.json
+            docs/reports/system-health/*.json
+            docs/reports/doc-freshness/*.json
+            docs/reports/issues/*.json
+          retention-days: 7
+
+      - name: Create issue for critical problems
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            let issueBody = '# 🚨 系统检查发现严重问题\n\n';
+            issueBody += '## 检查时间\n';
+            issueBody += `${new Date().toISOString()}\n\n`;
+            
+            const latestReport = path.join('docs', 'reports', 'system-check-loop', 'latest.json');
+            if (fs.existsSync(latestReport)) {
+              const report = JSON.parse(fs.readFileSync(latestReport, 'utf8'));
+              issueBody += '## 检查结果\n';
+              issueBody += `- 运行ID: ${report.meta.runId}\n`;
+              issueBody += `- 整体状态: **${report.summary.overallStatus.toUpperCase()}**\n`;
+              issueBody += `- 严重问题: ${report.summary.criticalCount} 个\n`;
+              issueBody += `- 高优先级问题: ${report.summary.highCount} 个\n`;
+              
+              if (report.issues.length > 0) {
+                issueBody += '\n## 核心问题列表\n\n';
+                const topIssues = report.issues.slice(0, 5);
+                for (const issue of topIssues) {
+                  issueBody += `### [${issue.type.toUpperCase()}] ${issue.title}\n`;
+                  issueBody += `- 来源: ${issue.source}\n`;
+                  issueBody += `- 建议: ${issue.suggestedFix}\n\n`;
+                }
+              }
+            }
+            
+            issueBody += '\n---\n';
+            issueBody += '*此问题由系统自动检查触发，请尽快处理*';
+            
+            await github.rest.issues.create({
+              issue_number: context.issue?.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🚨 系统检查失败 - ${new Date().toLocaleDateString()}`,
+              body: issueBody,
+              labels: ['bug', 'priority:high', 'system-check']
+            });

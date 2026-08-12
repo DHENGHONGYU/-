@@ -1,0 +1,129 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - img [ref=e6]
+        - generic [ref=e9]:
+          - paragraph [ref=e10]: V6 Pro
+          - paragraph [ref=e11]: 智能投研系统
+      - navigation [ref=e12]:
+        - generic [ref=e13]:
+          - paragraph [ref=e14]: 系统
+          - link "仪表盘" [ref=e15] [cursor=pointer]:
+            - /url: "#/"
+            - img [ref=e16]
+            - generic [ref=e21]: 仪表盘
+          - link "驾驶舱" [ref=e22] [cursor=pointer]:
+            - /url: "#/cockpit"
+            - img [ref=e23]
+            - generic [ref=e26]: 驾驶舱
+          - link "数据管理" [ref=e27] [cursor=pointer]:
+            - /url: "#/data"
+            - img [ref=e28]
+            - generic [ref=e31]: 数据管理
+          - link "本地知识库" [ref=e32] [cursor=pointer]:
+            - /url: "#/knowledge"
+            - img [ref=e33]
+            - generic [ref=e35]: 本地知识库
+          - link "AI助手" [ref=e36] [cursor=pointer]:
+            - /url: "#/ai-assistant"
+            - img [ref=e37]
+            - generic [ref=e49]: AI助手
+        - paragraph [ref=e50]: 功能模块
+        - generic [ref=e51]:
+          - button "数据采集及接口" [active] [ref=e52] [cursor=pointer]:
+            - img [ref=e53]
+            - generic [ref=e57]: 数据采集及接口
+            - img [ref=e205]
+          - generic [ref=e207]:
+            - link "数据工场" [ref=e208] [cursor=pointer]:
+              - /url: "#/data-hub"
+              - img [ref=e209]
+              - generic [ref=e212]: 数据工场
+            - link "股票池管理" [ref=e213] [cursor=pointer]:
+              - /url: "#/stock-pool"
+              - img [ref=e214]
+              - generic [ref=e218]: 股票池管理
+            - link "七维采集" [ref=e219] [cursor=pointer]:
+              - /url: "#/seven-dim"
+              - img [ref=e220]
+              - generic [ref=e224]: 七维采集
+            - link "采集任务" [ref=e225] [cursor=pointer]:
+              - /url: "#/collect-task"
+              - img [ref=e226]
+              - generic [ref=e228]: 采集任务
+            - link "智能资讯" [ref=e229] [cursor=pointer]:
+              - /url: "#/news"
+              - img [ref=e230]
+              - generic [ref=e233]: 智能资讯
+            - link "抓取引擎" [ref=e234] [cursor=pointer]:
+              - /url: "#/fetcher"
+              - img [ref=e235]
+              - generic [ref=e239]: 抓取引擎
+        - button "智能AI体调度" [ref=e61] [cursor=pointer]:
+          - img [ref=e62]
+          - generic [ref=e70]: 智能AI体调度
+          - img [ref=e71]
+        - button "行业个股分析" [ref=e74] [cursor=pointer]:
+          - img [ref=e75]
+          - generic [ref=e77]: 行业个股分析
+          - img [ref=e78]
+        - button "交易及持仓" [ref=e81] [cursor=pointer]:
+          - img [ref=e82]
+          - generic [ref=e85]: 交易及持仓
+          - img [ref=e86]
+      - button [ref=e89] [cursor=pointer]:
+        - img [ref=e90]
+    - generic [ref=e93]:
+      - banner [ref=e94]:
+        - generic [ref=e95]:
+          - link "数据采集及接口" [ref=e250] [cursor=pointer]:
+            - /url: "#/data-hub"
+            - img [ref=e251]
+            - text: 数据采集及接口
+          - generic [ref=e253]: /
+          - heading "智能资讯" [level=1] [ref=e1450]
+        - generic [ref=e97]:
+          - generic [ref=e98]: AI Agent 就绪
+          - img [ref=e99]
+      - main [ref=e101]:
+        - link "返回 数据采集及接口 首页" [ref=e256] [cursor=pointer]:
+          - /url: "#/data-hub"
+          - img [ref=e257]
+          - text: 返回 数据采集及接口 首页
+        - generic [ref=e1451]:
+          - generic [ref=e1453]:
+            - heading "智能资讯中心" [level=1] [ref=e1454]
+            - paragraph [ref=e1455]: AI驱动的金融资讯筛选与分析系统 — 自动去重 · 情感分析 · 股票关联
+          - generic [ref=e1456]:
+            - generic [ref=e1457]:
+              - generic [ref=e1458]:
+                - img [ref=e1459]
+                - generic [ref=e1462]:
+                  - heading "智能资讯流" [level=2] [ref=e1463]
+                  - paragraph [ref=e1464]:
+                    - text: 共 0 条 |
+                    - generic [ref=e1465]: 看多 0
+                    - text: "|"
+                    - generic [ref=e1466]: 看空 0
+                    - text: "|"
+                    - generic [ref=e1467]: 中性 0
+              - generic [ref=e1468]:
+                - generic [ref=e1469]:
+                  - img [ref=e1470]
+                  - textbox "搜索标题/内容..." [ref=e1473]
+                - combobox [ref=e1474] [cursor=pointer]:
+                  - generic: 时间
+                  - img
+                - button [ref=e1475] [cursor=pointer]:
+                  - img
+                - button [disabled]:
+                  - img
+            - generic [ref=e1477]:
+              - img [ref=e1478]
+              - generic [ref=e1480]: 加载中...
+  - link "Kimi Kimi Agent" [ref=e202] [cursor=pointer]:
+    - /url: https://www.kimi.com/agent
+    - img "Kimi" [ref=e203]
+    - generic [ref=e204]: Kimi Agent
+    - img

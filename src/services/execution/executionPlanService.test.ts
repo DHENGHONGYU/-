@@ -1,0 +1,198 @@
+/**
+ * @test_id V9-TEST-ST-076
+ * @module executionPlanService.test
+ * @description 执行计划服务单元测试（E-2-6）
+ *
+ * 注：`createPlan` 相关用例覆盖的是已 @deprecated 的旧路径（无风控 / 无仓位计算），
+ * 仅用于兼容保留，不视为新功能的回归基准。该方法全仓无生产调用方，
+ * 待 `executionStore.createPlan` / `createExecutionPlanUseCase` 接管后，这些用例将随方法一并下线。
+  * @covers_docs [V9-DOC-BACK-013, V9-DOC-ARCH-007, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
+
+ 
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+
+// Mock dataLayer
+vi.mock('@/data/dataLayerTradingStores', () => ({
+  executionPlanStore: {
+    list: vi.fn(),
+    getAll: vi.fn(),
+    get: vi.fn(),
+    save: vi.fn(),
+    update: vi.fn(),
+  },
+  executionLogStore: {
+    save: vi.fn(),
+    listByPlan: vi.fn(),
+    listBySymbol: vi.fn(),
+    list: vi.fn(),
+  },
+}))
+
+// Mock dataFreshnessGuard（避免 logger 噪音）
+vi.mock('@/services/analysis/dataFreshnessGuard', () => ({
+  checkExecutionPlanFreshness: vi.fn(() => ({ valid: true })),
+  checkExecutionLogFreshness: vi.fn(() => ({ valid: true })),
+}))
+
+// Mock DataBridge：executionPlanService 已迁移至 DataBridge 架构（所有数据访问走
+// dataBridge.query() / dataBridge.forward()）。旧 store 层 mock 对 service 无效，
+// 且真实 dataBridge.query() 会触发 db.ready() 等待（测试环境无 init()）导致永久挂起
+// （全量 test:clean 超时元凶之一）。修复 2026-08-02：按 analysisOrchestrator.test.ts
+// 同款模式 mock dataBridge。
+vi.mock('@/core/databridge', () => ({
+  dataBridge: {
+    query: vi.fn(),
+    forward: vi.fn().mockResolvedValue(undefined),
+    broadcast: vi.fn(),
+    invalidateCache: vi.fn(),
+  },
+}))
+
+import { executionLogStore } from '@/data/dataLayerTradingStores'
+import {
+  createPlan,
+  listPlans,
+  updatePhase,
+  cancelPlan,
+  getOrphanPlans,
+} from '@/services/execution/executionPlanService'
+import { dataBridge } from '@/core/databridge'
+import { EXECUTION_PHASE } from '@/constants/execution.constants'
+import type { Signal, ExecutionPlan } from '@/data/types'
+
+const mockSignal = (overrides: Partial<Signal> = {}): Signal => ({
+  id: 'sig_001',
+  symbol: '600000',
+  action: 'buy',
+  confidence: 0.8,
+  createdAt: 1_000,
+  ...overrides,
+} as Signal)
+
+const mockPlan = (overrides: Partial<ExecutionPlan> = {}): ExecutionPlan => ({
+  id: 'plan_001',
+  signalId: 'sig_001',
+  symbol: '600000',
+  name: '测试股票',
+  direction: 'buy',
+  phase: EXECUTION_PHASE.PLAN,
+  quantity: 100,
+  targetPrice: 10.0,
+  rationale: '测试理由',
+  confidence: 0.8,
+  riskChecks: [],
+  accountType: 'paper',
+  createdAt: 2_000,
+  ...overrides,
+})
+
+describe('executionPlanService', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.mocked(executionLogStore.save).mockResolvedValue({ success: true, data: {} as any })
+  })
+
+  describe('createPlan', () => {
+    it('creates a plan when signal confidence exceeds threshold', async () => {
+      const plan = await createPlan(mockSignal({ confidence: 0.8 }), { now: 2_000 })
+      expect(plan).toBeDefined()
+      expect(plan!.symbol).toBe('600000')
+      expect(plan!.phase).toBe(EXECUTION_PHASE.PLAN)
+      expect(dataBridge.forward).toHaveBeenCalledTimes(1)
+    })
+
+    it('returns undefined when signal confidence below threshold', async () => {
+      const plan = await createPlan(mockSignal({ confidence: 0.3 }), { now: 2_000 })
+      expect(plan).toBeUndefined()
+      expect(dataBridge.forward).not.toHaveBeenCalled()
+    })
+
+    it('returns undefined when save fails', async () => {
+      vi.mocked(dataBridge.forward).mockRejectedValueOnce(new Error('db_error'))
+      const plan = await createPlan(mockSignal(), { now: 2_000 })
+      expect(plan).toBeUndefined()
+    })
+
+    it('writes a creation log after plan is saved', async () => {
+      await createPlan(mockSignal(), { now: 2_000 })
+      expect(executionLogStore.save).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('listPlans', () => {
+    it('returns all plans when no symbol provided', async () => {
+      const plans = [mockPlan(), mockPlan({ id: 'plan_002', symbol: '600001' })]
+      vi.mocked(dataBridge.query).mockResolvedValue({ success: true, data: plans })
+      const result = await listPlans()
+      expect(result).toHaveLength(2)
+    })
+
+    it('filters plans by symbol', async () => {
+      const plans = [mockPlan(), mockPlan({ id: 'plan_002', symbol: '600001' })]
+      vi.mocked(dataBridge.query).mockResolvedValue({ success: true, data: plans })
+      const result = await listPlans('600000')
+      expect(result).toHaveLength(1)
+      expect(result[0]!.symbol).toBe('600000')
+    })
+  })
+
+  describe('updatePhase', () => {
+    it('advances phase when transition is allowed', async () => {
+      vi.mocked(dataBridge.query).mockResolvedValue({ success: true, data: mockPlan() })
+      const updated = await updatePhase('plan_001', EXECUTION_PHASE.CONFIRMED, { now: 3_000 })
+      expect(updated).toBeDefined()
+      expect(updated!.phase).toBe(EXECUTION_PHASE.CONFIRMED)
+      expect(updated!.confirmedAt).toBe(3_000)
+    })
+
+    it('rejects invalid phase transition', async () => {
+      vi.mocked(dataBridge.query).mockResolvedValue({
+        success: true,
+        data: mockPlan({ phase: EXECUTION_PHASE.EXECUTED }),
+      })
+      const updated = await updatePhase('plan_001', EXECUTION_PHASE.CONFIRMED)
+      expect(updated).toBeUndefined()
+      expect(dataBridge.forward).not.toHaveBeenCalled()
+    })
+
+    it('returns undefined when plan not found', async () => {
+      vi.mocked(dataBridge.query).mockResolvedValue({ success: true, data: undefined })
+      const updated = await updatePhase('plan_999', EXECUTION_PHASE.CONFIRMED)
+      expect(updated).toBeUndefined()
+    })
+  })
+
+  describe('cancelPlan', () => {
+    it('cancels a plan in plan phase', async () => {
+      vi.mocked(dataBridge.query).mockResolvedValue({ success: true, data: mockPlan() })
+      const cancelled = await cancelPlan('plan_001', { now: 5_000 })
+      expect(cancelled).toBeDefined()
+      expect(cancelled!.phase).toBe(EXECUTION_PHASE.CANCELLED)
+    })
+
+    it('rejects cancel when phase does not allow it', async () => {
+      vi.mocked(dataBridge.query).mockResolvedValue({
+        success: true,
+        data: mockPlan({ phase: EXECUTION_PHASE.REVIEWED }),
+      })
+      const cancelled = await cancelPlan('plan_001')
+      expect(cancelled).toBeUndefined()
+    })
+  })
+
+  describe('getOrphanPlans', () => {
+    it('returns non-terminal plans', async () => {
+      vi.mocked(dataBridge.query).mockResolvedValue({
+        success: true,
+        data: [
+          mockPlan({ phase: EXECUTION_PHASE.PLAN }),
+          mockPlan({ id: 'plan_002', phase: EXECUTION_PHASE.EXECUTED }),
+          mockPlan({ id: 'plan_003', phase: EXECUTION_PHASE.CONFIRMED }),
+        ],
+      })
+      const orphans = await getOrphanPlans()
+      expect(orphans).toHaveLength(2)
+    })
+  })
+})

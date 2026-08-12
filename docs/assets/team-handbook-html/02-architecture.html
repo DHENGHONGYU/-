@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>② 整体架构设计 · FinSightV9 团队手册</title>
+<style>
+:root{
+  --bg:#fafaf9; --panel:#ffffff; --border:#e7e5e4; --text:#292524;
+  --text2:#57534e; --muted:#a8a29e; --accent:#10b981; --accent-bg:#ecfdf5;
+  --code-bg:#f5f5f4;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;line-height:1.75;font-size:15px}
+.layout{display:flex;align-items:flex-start;min-height:100vh}
+.sidebar{position:sticky;top:0;align-self:flex-start;width:240px;flex-shrink:0;height:100vh;
+  overflow-y:auto;background:var(--panel);border-right:1px solid var(--border);padding:24px 18px}
+.sidebar h2{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:0 0 12px}
+.sidebar a{display:block;color:var(--text2);text-decoration:none;font-size:14px;padding:7px 10px;
+  border-radius:8px;margin-bottom:2px}
+.sidebar a:hover{background:var(--accent-bg);color:#047857}
+.sidebar a.active{background:var(--accent);color:#fff}
+.sidebar .sub{font-size:11px;color:var(--muted);margin:14px 0 6px;padding-left:10px}
+.content{flex:1;max-width:880px;margin:0 auto;padding:40px 48px 80px}
+article h1{font-size:30px;font-weight:800;letter-spacing:-.5px;margin:0 0 6px;
+  border-bottom:3px solid var(--accent);padding-bottom:14px}
+article h2{font-size:22px;font-weight:700;margin:38px 0 12px;padding-left:12px;border-left:4px solid var(--accent)}
+article h3{font-size:18px;font-weight:700;margin:26px 0 8px;color:var(--text)}
+article h4{font-size:15.5px;font-weight:700;margin:18px 0 6px;color:var(--text2)}
+article p{margin:10px 0;color:var(--text2)}
+article ul,article ol{padding-left:24px;margin:10px 0;color:var(--text2)}
+article li{margin:5px 0}
+article a{color:var(--accent);text-decoration:none;border-bottom:1px solid #a7f3d0}
+article a:hover{color:#047857}
+article code{background:var(--code-bg);border:1px solid var(--border);border-radius:5px;padding:1px 6px;
+  font-size:13px;font-family:'SFMono-Regular',Consolas,monospace;color:#be123c}
+article pre{background:var(--code-bg);border:1px solid var(--border);border-radius:12px;padding:18px 20px;
+  overflow-x:auto;margin:14px 0}
+article pre code{background:none;border:none;padding:0;color:#1c1917;font-size:13px;line-height:1.6}
+article blockquote{border-left:4px solid var(--accent);background:var(--accent-bg);margin:14px 0;
+  padding:12px 18px;border-radius:0 10px 10px 0;color:#065f46}
+article table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px}
+article th,article td{border:1px solid var(--border);padding:9px 12px;text-align:left}
+article th{background:var(--panel);font-weight:700;color:var(--text)}
+article tr:nth-child(even) td{background:#fcfcfb}
+article hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+article img{max-width:100%;border-radius:10px;border:1px solid var(--border)}
+pre.mermaid{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:48px;padding-top:20px;border-top:1px solid var(--border)}
+.back{display:inline-block;margin-bottom:18px;color:var(--accent);text-decoration:none;font-size:13px}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <h2>团队体系手册</h2>
+    <a href="index.html">📑 总览索引</a>
+    <div class="sub">手册正文</div>
+    <a href="README.html">总导航 · 团队手册地图</a>
+    <a href="01-design-philosophy.html">① 设计与原创思路</a>
+    <a href="02-architecture.html" class="active">② 整体架构设计</a>
+    <a href="03-ui-components.html">③ UI 组件设计</a>
+    <a href="04-model-runtime.html">④ 模型运行机制</a>
+    <a href="05-competitive-analysis.html">⑤ 竞品对比分析</a>
+    <div class="sub">补充资料</div>
+    <a href="supplementary/index.html">📁 高质量补充 HTML</a>
+  </aside>
+  <main class="content"><article>
+    <a class="back" href="index.html">← 返回总览</a>
+    <h1>02 · 整体架构设计思路（Overall Architecture）</h1>
+<blockquote>
+<p>本文回答&quot;<strong>系统怎么搭、模块怎么连、未来怎么扩</strong>&quot;。权威基线：<code>AGENTS.md</code>（分层契约）、<code>docs/explanation/system-architecture.md</code>、<code>docs/explanation/architecture.md</code>、<code>docs/reference/gateway-write-permission-spec.md</code>、<code>docs/explanation/adr-001-pure-frontend-architecture.md</code>。
+⚠️ 见 <code>README.md</code> 文档漂移提示：Gateway 网关当前为<strong>目标架构</strong>，DataBridge 仍直连 <code>db</code>。</p>
+</blockquote>
+<hr>
+<h2>1. 架构总览（L5 → L1 五层视图）</h2>
+<pre><code>L5 表现层   pages / components / portal / cockpit
+L4 应用层   apps（React.lazy 三级加载链中间层）
+L3 引擎层   services / agents / core / 数据流(dataflow)
+L2 数据层   data / db（IndexedDB）
+L1 基础设施 src/lib / config / core
+</code></pre>
+<p>五大业务舱（Cabin）映射：</p>
+<table>
+<thead>
+<tr>
+<th>舱</th>
+<th>目录</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>输入舱</td>
+<td><code>input</code></td>
+<td>采集任务、七维配置</td>
+</tr>
+<tr>
+<td>分析舱</td>
+<td><code>analysis</code></td>
+<td>热门板块/行业评分/智能评分/多因子筛选/回测</td>
+</tr>
+<tr>
+<td>交易舱</td>
+<td><code>trading</code></td>
+<td>持仓/组合/风控/策略快照/交易流（可选插件）</td>
+</tr>
+<tr>
+<td>输出舱</td>
+<td><code>output</code></td>
+<td>仪表盘/研报/复盘向导</td>
+</tr>
+<tr>
+<td>总控舱</td>
+<td><code>command</code></td>
+<td>MCP 看板/智能体看板/系统健康/能力展示</td>
+</tr>
+</tbody>
+</table>
+<p>渲染链路：<code>main.tsx → App.tsx → portal/PortalShell.tsx → apps/*/XxxApp（lazy）→ pages/*</code></p>
+<hr>
+<h2>2. 分层与依赖规则（禁止跨层调用）</h2>
+<p><code>AGENTS.md</code> §一 定义 <code>src/</code> 下 <strong>23 个目录</strong>的分层与依赖方向。核心约束：</p>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>可依赖</th>
+<th>禁止依赖</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pages/components</code></td>
+<td><code>store</code> / <code>services</code></td>
+<td>直连 <code>db</code> / <code>dataLayer</code></td>
+</tr>
+<tr>
+<td><code>store</code></td>
+<td><code>services</code> / <code>core</code></td>
+<td>直连 <code>db</code></td>
+</tr>
+<tr>
+<td><code>services</code></td>
+<td><code>core</code> / <code>data</code> / <code>lib</code>（基础设施）</td>
+<td>直连 <code>db</code>（写必须经 DataBridge）</td>
+</tr>
+<tr>
+<td><code>core</code></td>
+<td>—</td>
+<td><code>pages/components/apps/lib</code> 业务模块</td>
+</tr>
+<tr>
+<td><code>lib</code></td>
+<td><code>core</code> / <code>config</code></td>
+<td><code>services/store/pages/components</code></td>
+</tr>
+<tr>
+<td><code>config/constants/types</code></td>
+<td>零依赖</td>
+<td>任何运行时模块</td>
+</tr>
+<tr>
+<td><code>workers</code></td>
+<td><code>core/lib/config/data/types/constants</code></td>
+<td><code>store/pages/components/apps</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键写约束</strong>：<code>services</code> 所有写入必须封装为 <code>StandardEnvelope</code> 并经 <code>DataBridge.forward()</code>，最终由 <code>data/gateway/</code>（目标）执行。</p>
+<p>验证：<code>npm run audit:layers</code>（目标 0 violations）。</p>
+<hr>
+<h2>3. 核心运行时基础设施（src/core）</h2>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>databridge.ts</code></td>
+<td>唯一切面入口：校验信封 → ACL 鉴权 → 审计日志 → 路由 → 广播变更事件</td>
+</tr>
+<tr>
+<td><code>envelope.ts</code></td>
+<td>统一消息信封 <code>{ meta, payload }</code>，meta 含 <code>source/target/action/traceId</code></td>
+</tr>
+<tr>
+<td><code>acl.ts</code></td>
+<td>基于 <code>ACL_MATRIX</code> 的 module→store→operation 鉴权（&quot;最后一公里&quot;深度防御）</td>
+</tr>
+<tr>
+<td><code>memoryCache.ts</code></td>
+<td>内存缓存（默认 TTL 10s、LRU 200 条、<code>performance.now()</code> 时间戳）</td>
+</tr>
+<tr>
+<td><code>eventBus.ts</code></td>
+<td>跨模块事件总线；写后 <code>emit(&quot;${store}Changed&quot;)</code>，订阅方自动刷新</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>4. 数据流（Data Flow）</h2>
+<h3>4.1 写路径（采集 → 存储）</h3>
+<pre class="mermaid">sequenceDiagram
+    participant S as Service
+    participant DB as DataBridge
+    participant A as ACL
+    participant G as data/gateway (目标)
+    participant D as IndexedDB
+    participant E as EventBus
+    S-&gt;&gt;DB: forward(Envelope)
+    DB-&gt;&gt;DB: EnvelopeFactory.validate()
+    DB-&gt;&gt;A: assertAclWithFallback()
+    A--&gt;&gt;DB: pass / reject(入队重试)
+    DB-&gt;&gt;G: routeToAction()
+    G-&gt;&gt;D: db.put / store.save
+    DB-&gt;&gt;DB: invalidateCache(store)
+    DB-&gt;&gt;E: broadcast(store, envelope)
+    E--&gt;&gt;Store: &quot;${store}Changed&quot; → Zustand set()
+</pre>
+<h3>4.2 读 / 响应路径</h3>
+<ul>
+<li>Store 订阅 EventBus 频道 → <code>set()</code> 更新 Zustand → 组件 <code>useStore()</code> 重渲染。</li>
+<li>或直接经 <code>dataBridge.query()</code> / <code>dataLayer</code> 查询。</li>
+</ul>
+<h3>4.3 驾驶舱采集管道</h3>
+<pre class="mermaid">flowchart LR
+    TS[TaskScheduler] --&gt; C[Collector: Mock/REST/WebSocket]
+    C --&gt; R[RawMarketData]
+    R --&gt; A[MarketDataAdapter.adapt]
+    A --&gt; P[MarketDataProvider.setData]
+    P --&gt; U[useMarketData]
+    U --&gt; W[Widget 重渲染]
+</pre>
+<p><strong>核心原则</strong>：统一数据入口（写库必经 DataBridge）；事件驱动刷新（写库后广播 <code>${store}${CHANGED_SUFFIX}</code>，订阅 Store 自动更新并触发视图重渲染）。</p>
+<hr>
+<h2>5. 五舱与驾驶舱（Cockpit）</h2>
+<ul>
+<li>驾驶舱基于 <strong>React-Grid-Layout</strong> 实现可拖拽/可缩放 Widget；所有数据收敛到 <code>MarketData</code> 接口，经 <code>MarketDataProvider</code> 注入。</li>
+<li>五大核心 Widget：A 投资画像/分析中心、B 股票池管理监控、C KAI 选股综合评分、D AI 大模型智能对比、E 个股/市场深度分析聊天。</li>
+<li>当前已注册 <strong>33 个 Widget</strong>；新增 Widget 见 <code>03-ui-components.md</code> §3 的&quot;三处注册&quot;。</li>
+</ul>
+<hr>
+<h2>6. 扩展能力（分布式 / 任务部署可扩展性）</h2>
+<p>当前为<strong>纯前端、无服务端</strong>架构（ADR-001），但有意识地把扩展能力放在以下维度：</p>
+<table>
+<thead>
+<tr>
+<th>扩展维度</th>
+<th>机制</th>
+<th>文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>多实例一致性</strong></td>
+<td>跨 Tab 广播（<code>withBroadcast</code> 封装 <code>eventBus.emit</code>，主动同步 <code>${store}Changed</code>）</td>
+<td><code>src/lib/withBroadcast.ts</code></td>
+</tr>
+<tr>
+<td><strong>算力横向扩展</strong></td>
+<td>Web Worker 计算池（≤4 Worker），重计算移出主线程，失败自动回退主线程</td>
+<td><code>src/services/workers/v6ScoreTaskScheduler.ts</code> + <code>v6ScoreWorker.ts</code></td>
+</tr>
+<tr>
+<td><strong>任务调度/部署</strong></td>
+<td>Agent 运行时 + 任务队列（<code>agentRuntime</code>/<code>taskQueue</code>/<code>agentHealthMonitor</code>），订阅 <code>AGENT_*</code> 事件</td>
+<td><code>src/agents/</code></td>
+</tr>
+<tr>
+<td><strong>能力横向扩展</strong></td>
+<td>MCP 协议接入无限第三方工具/数据（15 个 Server，双端 ACL 校验）</td>
+<td><code>src/mcp/</code></td>
+</tr>
+<tr>
+<td><strong>AI 记忆/检索</strong></td>
+<td>倒排索引 <code>public/ai-memory-index.json</code>，<code>queryMemory()</code> 关键词检索</td>
+<td><code>scripts/build-ai-memory-index.ts</code> + <code>src/services/system/aiMemoryService.ts</code></td>
+</tr>
+</tbody>
+</table>
+<h3>6.1 关于&quot;分布式任务部署&quot;的诚实说明</h3>
+<ul>
+<li><strong>现状边界</strong>：所有数据在单一浏览器 IndexedDB 内，无服务端、无跨机调度。所谓&quot;分布式&quot;目前体现为<strong>客户端多实例（跨 Tab）+ Worker 并行 + MCP 远程能力调用</strong>三层。</li>
+<li><strong>未来路径</strong>：当规模 &gt; 1 万用户且需集中数据管理时（ADR-001 回滚条件），在 V10 评估引入服务端；届时 Gateway 网关（<code>dataGateway.execute()</code> 单一写入口）即是为该演进预留的收口点——当前先把写权限逻辑收敛到 <code>DataBridge</code> + <code>ACL_MATRIX</code>，降低未来迁移成本。</li>
+</ul>
+<hr>
+<h2>7. 质量门禁（Quality Gates）</h2>
+<table>
+<thead>
+<tr>
+<th>门禁</th>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>分层调用</td>
+<td><code>audit:layers</code></td>
+<td>目录分层合规</td>
+</tr>
+<tr>
+<td>原子层级</td>
+<td><code>audit:atomic</code></td>
+<td>组件跨层 import 禁令</td>
+</tr>
+<tr>
+<td>颜色硬编码</td>
+<td><code>lint:colors</code></td>
+<td>强制设计令牌</td>
+</tr>
+<tr>
+<td>令牌扫描</td>
+<td><code>audit:tokens</code></td>
+<td>无令牌硬编码违规</td>
+</tr>
+<tr>
+<td>文档同步</td>
+<td><code>audit:docs</code></td>
+<td>触发→更新映射一致</td>
+</tr>
+<tr>
+<td>JSDoc</td>
+<td><code>audit:jsdoc</code></td>
+<td>公共实体必须有 JSDoc</td>
+</tr>
+<tr>
+<td>复杂度</td>
+<td><code>audit:complexity</code></td>
+<td>嵌套/链式/重复 if 债务只减不增</td>
+</tr>
+<tr>
+<td>硬编码</td>
+<td><code>audit:hardcode</code></td>
+<td>硬编码 URL/颜色基线</td>
+</tr>
+<tr>
+<td>合流</td>
+<td><code>gate:dev</code> / <code>gate:quick</code></td>
+<td>串联多项门禁</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>附：架构图可视化</h2>
+<ul>
+<li>源文件：<code>docs/architecture/architecture-diagrams.html</code>（分层图/数据流图/舱室地图）。</li>
+<li>本文 Mermaid 图需在支持 Mermaid 的查看器（GitHub、VS Code Mermaid 插件、Typora）中渲染。</li>
+</ul>
+
+    <footer>FinSightV9 智能投研复盘系统 · 团队体系手册 · 由 markdown-it 自动转换生成</footer>
+  </article></main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ startOnLoad: true, theme: 'base',
+      themeVariables: { primaryColor:'#ecfdf5', lineColor:'#57534e', fontFamily:'sans-serif' } });
+  }
+</script>
+</body>
+</html>

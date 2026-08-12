@@ -1,0 +1,115 @@
+name: SKILL 完整性 PR 门禁（B-02 2026-08-01 升级，2026-08-03 移除每日 schedule 与 auto-PR）
+on:
+  workflow_dispatch:      # 允许手动触发
+  push:
+    branches: [feat/cross-index-20260719, main, feat/**]
+    paths:
+      - 'AGENTS.md'
+      - '.trae/skills/**'
+      - 'scripts/audit/detect-skill-dangling-ref.cjs'
+      - 'scripts/audit/skill-route-test.cjs'
+      - 'scripts/audit/test-skill-error-scenarios.cjs'
+  # B-02 NEW: PR 级门禁 —— 在 PR opened / 新 push 同步 / PR reopen 时触发，与作者 S5 自证截图做交叉校验防造假
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main, feat/**]
+    paths:
+      - 'AGENTS.md'
+      - '.trae/skills/**'
+      - '.trae/skills/skill-registry.json'
+      - 'scripts/audit/detect-skill-dangling-ref.cjs'
+      - 'scripts/audit/skill-route-test.cjs'
+      - 'scripts/audit/test-skill-error-scenarios.cjs'
+      - 'scripts/audit/green-state-verify.cjs'
+      - 'scripts/audit/b03-extract-governance.cjs'
+      - 'package.json'
+      - '.husky/pre-commit'
+      - '.husky/pre-push'
+
+jobs:
+  skill-integrity-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 行尾 CRLF → LF 归一化（Linux 执行环境）
+        run: |
+          find . -type f \( -name "*.md" -o -name "*.cjs" -o -name "*.yml" -o -name "*.yaml" \) -exec sed -i 's/\r$//' {} \;
+
+      - name: Install dependencies
+        run: npm ci || npm install --ignore-scripts
+
+      # =====================================================================
+      # B-02 NEW: 阻断型前置门禁 1/2
+      # 路由匹配 9 场景必须 100% 通过，Exit !=0 直接阻断后续流程
+      # 防：AGENTS 路由表被改乱导致历史正向 9 场景匹配失败 -> 立即在 Review 前失败
+      # =====================================================================
+      - name: 🔴 B-02 Gate 1/2: audit:skill-routes（9 场景必须全绿，阻断型）
+        run: npm run audit:skill-routes
+        env:
+          CI: true
+
+      # =====================================================================
+      # B-02 NEW: 阻断型前置门禁 2/2
+      # 错误场景 5/5 必须全绿
+      # 防：检测脚本本身 bug 导致常见违规（悬空引用/covers假路径等都抓不到，PR 截图造假防不住）
+      # =====================================================================
+      - name: 🔴 B-02 Gate 2/2: audit:skill-error-scenarios（E01-E05 全绿阻断型）
+        run: npm run audit:skill-error-scenarios
+        env:
+          CI: true
+
+      # =====================================================================
+      # 主力：三源一致性检测
+      # 有 auto-fix PR creation for fixable issues
+      # =====================================================================
+      - name: Run SKILL integrity (三源一致性检测)
+        id: integrity_check
+        run: |
+          set +e
+          npm run audit:skill-integrity -- --report-only
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+          set -e
+        continue-on-error: true
+
+      # 注：2026-08-03 移除 auto-fix / auto-PR / Report-to-Issues 三步骤
+      # 原因：取消自动 git 备案；schedule 触发器已删除，auto-PR 属于自动备案变体。
+      # 检查仍保留（manual workflow_dispatch / push / PR 触发），修复由开发者本地执行 npm run audit:skill-integrity:fix。
+
+      # =====================================================================
+      # GREEN-STATE FINAL BLOCKING GATE (5/5 must pass to unblock PR merge)
+      # 依次执行 5 项稳态验证，任何一项失败都阻断 CI（exit != 0 会 fail job）：
+      #   0. audit:skill-integrity 权威报告 ERROR 数 === 0
+      #   1. audit:skill-integrity 复跑 exit === 0
+      #   2. B-02 Gate1: audit:skill-routes 9 场景全过
+      #   3. B-02 Gate2: audit:skill-error-scenarios E01-E05 全过
+      #   4. 治理清单重新抽取 → S6 必填缺失 === 0
+      # =====================================================================
+      - name: 🟢 绿色稳态 5/5 全量验证（PR 合并阻断型 + 产物存档）
+        id: green_state
+        run: node scripts/audit/green-state-verify.cjs
+        env:
+          CI: true
+
+      - name: 📦 归档绿色稳态报告（JSON + MD，无论成败都上传作为审计证据）
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: green-state-reports-${{ github.run_id }}
+          path: |
+            outputs/green-state-verify.json
+            outputs/SKILL元数据一致性治理完成报告.md
+            outputs/b03-governance-drift.json
+            outputs/SKILL元数据一致性治理清单.md
+            scripts/audit/docs/reports/skill-integrity/*.json
+            scripts/audit/docs/reports/skill-integrity/*.md
+          retention-days: 90

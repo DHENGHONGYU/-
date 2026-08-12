@@ -1,0 +1,51 @@
+/**
+ * @doc [V9-DOC-BACK-005, V9-DOC-PROJ-003, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-PROJ-002]
+ */
+import type { Stock } from '@/data/types'
+import type { LlmMessage } from '@/services/llm/llmTypes'
+import { INTELLIGENT_SCORE_SKILL } from './intelligentScoreSkill'
+
+/** 行业分析报告未提供时的兜底文案 */
+const DEFAULT_REPORT_UNAVAILABLE = '未提供'
+
+export interface ScorePromptInput {
+  symbol: string
+  stock: Stock | undefined
+  supplementaryTexts: string[]
+  reportText: string
+}
+
+/**
+ * buildIntelligentScorePrompt
+ * @param input
+ * @returns LlmMessage[]
+ */
+export function buildIntelligentScorePrompt(input: ScorePromptInput): LlmMessage[] {
+  const { symbol, stock, supplementaryTexts, reportText } = input
+
+  const basicFields = stock
+    ? {
+        symbol: stock.symbol,
+        name: stock.name,
+        price: stock.price ?? '数据缺失',
+        pe: stock.pe ?? '数据缺失',
+        pb: stock.pb ?? '数据缺失',
+        roe: stock.roe ?? '数据缺失',
+        marketCap: stock.marketCap ?? '数据缺失',
+      }
+    : '未找到该标的基础数据'
+
+  const userContent = [
+    `标的代码: ${symbol}`,
+    `基础数据:\n${JSON.stringify(basicFields, null, 2)}`,
+    `补充文件资料 (${supplementaryTexts.length} 份):`,
+    ...supplementaryTexts.map((text, idx) => `[文件${idx + 1}]\n${text}`),
+    `行业分析报告/资料:\n${reportText || DEFAULT_REPORT_UNAVAILABLE}`,
+    '请严格按照 system 指令中的 JSON 格式返回九维评分结果。',
+  ].join('\n\n')
+
+  return [
+    { role: 'system', content: INTELLIGENT_SCORE_SKILL },
+    { role: 'user', content: userContent },
+  ]
+}

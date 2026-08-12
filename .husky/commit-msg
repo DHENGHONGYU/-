@@ -1,0 +1,67 @@
+#!/bin/sh
+# V9 提交信息格式校验（commit-msg hook）
+# 规则：提交信息必须符合 Conventional Commits 规范
+# 格式：type(scope): description
+# 合法 type：feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+# 额外约束：禁止中文冒号「：」
+
+set -e
+
+COMMIT_MSG_FILE="$1"
+if [ -z "$COMMIT_MSG_FILE" ]; then
+  echo "❌ [commit-msg] 无法读取提交信息文件"
+  exit 1
+fi
+
+# 读取提交信息（忽略注释行）
+COMMIT_MSG=$(grep -v '^#' "$COMMIT_MSG_FILE" | grep -v '^$' | head -1)
+
+# 允许空消息（git commit --allow-empty）
+if [ -z "$COMMIT_MSG" ]; then
+  exit 0
+fi
+
+# 检查是否包含中文冒号
+case "$COMMIT_MSG" in
+  *：*)
+    echo "❌ [commit-msg] 提交信息包含中文冒号「：」"
+    echo "     请使用英文冒号「:」分隔 type(scope) 和描述"
+    echo "     正确格式: feat(scope): description"
+    exit 1
+    ;;
+esac
+
+# Conventional Commits 正则校验
+VALID_TYPES="feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert"
+CC_PATTERN="^($VALID_TYPES)(\([a-zA-Z0-9_-]+\))?: .+"
+
+if echo "$COMMIT_MSG" | grep -qE "$CC_PATTERN"; then
+  echo "  ✅ 提交信息格式校验通过"
+  exit 0
+fi
+
+# 校验失败，输出格式说明
+echo "❌ [commit-msg] 提交信息不符合 Conventional Commits 规范"
+echo ""
+echo "  当前提交信息: $COMMIT_MSG"
+echo ""
+echo "  正确格式: type(scope): description"
+echo ""
+echo "  合法 type:"
+echo "    feat     新功能"
+echo "    fix      修复 bug"
+echo "    docs     文档变更"
+echo "    style    代码格式（不影响功能）"
+echo "    refactor 重构（非新功能/非修复）"
+echo "    perf     性能优化"
+echo "    test     增加或修改测试"
+echo "    build    构建系统或外部依赖变更"
+echo "    ci       CI 配置变更"
+echo "    chore    其他杂项"
+echo "    revert   回退之前的提交"
+echo ""
+echo "  示例:"
+echo "    feat(input): 新增意向候选池筛选功能"
+echo "    fix(store): 修复意图池状态不同步问题"
+echo "    docs(readme): 更新本地开发环境说明"
+exit 1

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>§9.0 E2E 验证报告部署决策矩阵</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+        h1 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        #diagram {
+            background: #fff;
+        }
+        .tip {
+            margin-top: 15px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>§9.0 E2E 验证报告部署决策矩阵</h1>
+    <div id="diagram" class="mermaid">
+flowchart TD
+    A[E2E 仿真结果] --> B{6 阶段结果}
+    B -->|全部 PASS| C[✅ 允许发布<br/>继续 Linux 真实服务验证]
+    B -->|Phase 1/2 FAIL| D[❌ 禁止发布<br/>指纹算法本身有问题]
+    D --> D1[通知开发团队修复<br/>verify-embedding-fingerprint.py]
+    B -->|Phase 3/4/5 FAIL| E[❌ 禁止发布<br/>指纹无法检测对应事故类型]
+    E --> E1[检查指纹算法是否被篡改]
+    B -->|Phase 6 FAIL| F[❌ 禁止发布<br/>回滚无法恢复一致性]
+    F --> F1[检查基线向量是否被污染<br/>重新生成 BASELINE_SHA]
+    </div>
+    <div class="tip">
+        右键点击图表 → "图片另存为" 即可保存 PNG.<br/>
+        或使用浏览器截图工具截取整个页面.
+    </div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

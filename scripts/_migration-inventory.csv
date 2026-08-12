@@ -1,0 +1,160 @@
+old_path,filename,size,last_modified,script_type,target_subdir,package_json_registered,dependencies,description
+a11y-contrast.cjs,a11y-contrast.cjs,14962,2026-07-10T08:36:59.847647,other,other,true,fs; path,!/usr/bin/env node
+analyze-code-graph.cjs,analyze-code-graph.cjs,7016,2026-07-05T23:04:57.823182,other,other,true,fs; path; to,
+anomaly-detector.ts,anomaly-detector.ts,12839,2026-07-05T23:04:41.821134,other,other,true,node:path; node:child_process; node:fs,!/usr/bin/env node
+audit-ai-output.ts,audit-ai-output.ts,6665,2026-07-13T00:43:34.915640,audit,audit,true,,
+audit-atomic.ts,audit-atomic.ts,14537,2026-07-11T21:48:12.432729,audit,audit,true,node:url,
+audit-batch-c-scanner.ts,audit-batch-c-scanner.ts,15262,2026-07-08T18:10:09.559040,audit,audit,true,url,
+audit-color-tokens.ts,audit-color-tokens.ts,3492,2026-07-13T15:50:08.081151,audit,audit,true,path; glob; node:url; fs/promises,
+audit-component-usage.ts,audit-component-usage.ts,8553,2026-07-13T15:50:08.081151,audit,audit,true,fs; path,
+audit-db-references.ts,audit-db-references.ts,19817,2026-07-13T13:27:26.610227,audit,audit,true,node:url,!/usr/bin/env tsx
+audit-dead-code.ts,audit-dead-code.ts,25907,2026-07-13T15:50:08.082498,audit,audit,true,node:url; react,!/usr/bin/env tsx
+audit-dependencies.ts,audit-dependencies.ts,7457,2026-07-12T15:40:59.258794,audit,audit,true,url; dependency-cruiser,
+audit-doc-integrity.ts,audit-doc-integrity.ts,17788,2026-07-14T08:28:18.315655,audit,audit,true,node:path; node:url; node:fs,!/usr/bin/env tsx
+audit-doc-sync.ts,audit-doc-sync.ts,10304,2026-07-13T21:10:54.779436,audit,audit,true,node:path; node:child_process; node:url; node:fs,!/usr/bin/env tsx
+audit-execution-paths.ts,audit-execution-paths.ts,8799,2026-07-08T18:10:09.563855,audit,audit,true,node:url,!/usr/bin/env tsx
+audit-hardcode.ts,audit-hardcode.ts,34093,2026-07-13T13:28:24.115762,audit,audit,true,node:url,!/usr/bin/env tsx
+audit-inline-colors.ts,audit-inline-colors.ts,7488,2026-07-13T15:50:08.083502,audit,audit,true,node:url,!/usr/bin/env tsx
+audit-jsdoc.ts,audit-jsdoc.ts,3356,2026-07-10T23:29:06.331652,audit,audit,true,glob,
+audit-layer-calls.ts,audit-layer-calls.ts,18076,2026-07-13T15:50:08.083502,audit,audit,true,node:url,!/usr/bin/env tsx
+audit-mapping-integrity.ts,audit-mapping-integrity.ts,49069,2026-07-13T13:56:32.063489,audit,audit,true,fs; path; url,!/usr/bin/env tsx
+audit-mcp-tool-usage.ts,audit-mcp-tool-usage.ts,9113,2026-07-13T20:55:53.199755,audit,audit,true,fs; path; url,!/usr/bin/env tsx
+audit-mcp.ts,audit-mcp.ts,15748,2026-07-14T08:28:18.315655,audit,audit,true,node:url,!/usr/bin/env tsx
+audit-path-match.mjs,audit-path-match.mjs,4273,2026-07-12T18:55:37.831852,audit,audit,false,node:url,!/usr/bin/env node
+audit-path-match.ts,audit-path-match.ts,7018,2026-07-14T08:28:18.315655,audit,audit,false,fs; path,!/usr/bin/env node
+audit-registry.ts,audit-registry.ts,15511,2026-07-11T16:43:50.960072,audit,audit,true,node:url,!/usr/bin/env tsx
+audit-reserved-stores.ts,audit-reserved-stores.ts,27433,2026-07-08T18:10:09.577999,audit,audit,true,node:url,!/usr/bin/env tsx
+audit-spacing.ts,audit-spacing.ts,3590,2026-07-13T15:50:08.084929,audit,audit,true,path; glob; node:url; fs/promises,
+audit-split-quality.ts,audit-split-quality.ts,37861,2026-07-13T20:55:49.162162,audit,audit,true,node:url,!/usr/bin/env tsx
+audit-tests.ts,audit-tests.ts,4093,2026-07-09T10:58:24.706469,audit,audit,true,glob; fs/promises,
+audit-token-consumption.ts,audit-token-consumption.ts,12817,2026-07-13T15:50:08.086846,audit,audit,true,node:url,!/usr/bin/env tsx
+audit-trend-monitor.ts,audit-trend-monitor.ts,13433,2026-07-12T16:13:33.957474,audit,audit,true,fs; path; child_process; url,!/usr/bin/env tsx
+audit-typography.ts,audit-typography.ts,4809,2026-07-13T14:48:01.248505,audit,audit,true,path; glob; url; fs/promises,
+audit-version-drift.ts,audit-version-drift.ts,3241,2026-07-13T09:03:55.547056,audit,audit,true,node:path; node:fs,!/usr/bin/env tsx
+audit-visual.ts,audit-visual.ts,5747,2026-07-12T14:39:33.582083,audit,audit,true,node:path; node:child_process; node:url; node:fs,!/usr/bin/env node
+audit-widget-registry.ts,audit-widget-registry.ts,14680,2026-07-13T20:55:51.229154,audit,audit,true,node:url,
+auto-fix-jsdoc.ts,auto-fix-jsdoc.ts,3335,2026-07-10T22:50:38.727284,fix,fix,true,,
+batch-add-jsdoc.ts,batch-add-jsdoc.ts,9487,2026-07-13T09:22:26.264762,other,other,false,,
+batch-fix-tsc.ts,batch-fix-tsc.ts,7969,2026-07-13T09:22:26.264762,fix,fix,false,,
+batch-test-runner.sh,batch-test-runner.sh,4931,2026-07-07T21:53:57.161040,test,test-tool,true,,!/bin/bash
+browser_verify_agent_b.py,browser_verify_agent_b.py,7174,2026-07-05T22:56:45.314274,verify,verify,false,,
+build-ai-memory-index.ts,build-ai-memory-index.ts,4351,2026-07-10T20:36:11.499452,build,build,true,node:url,
+build-health-report.ts,build-health-report.ts,5391,2026-07-12T15:46:53.738920,build,build,true,node:child_process; node:url,
+changelog-query.ts,changelog-query.ts,34339,2026-07-08T18:10:09.581238,other,other,true,node:path; node:fs,!/usr/bin/env node
+check-docs.js,check-docs.js,3694,2026-07-14T08:28:18.315655,doc,docs-tool,true,url,scripts/check-docs.js
+check-docs.ts,check-docs.ts,5113,2026-07-13T09:17:13.619200,doc,docs-tool,true,node:path; node:fs,!/usr/bin/env tsx
+check-types.ps1,check-types.ps1,617,2026-07-04T11:56:45.554158,monitor,monitor,true,,Type-check script: only checks non-test file TypeScript errors
+check-types.sh,check-types.sh,714,2026-07-04T11:55:02.943676,monitor,monitor,true,,!/bin/bash
+cleanup-reports.ts,cleanup-reports.ts,2489,2026-07-13T09:22:26.264762,other,other,true,node:path; node:fs,!/usr/bin/env tsx
+codeQualityAudit.cjs,codeQualityAudit.cjs,21173,2026-06-30T00:01:23.570101,quality,quality,true,fs; path,
+compare-visual-baselines.sh,compare-visual-baselines.sh,3341,2026-07-13T00:27:50.019014,other,other,false,,!/usr/bin/env bash
+complexity-scan.ts,complexity-scan.ts,14810,2026-07-10T20:01:33.846851,quality,quality,true,url,!/usr/bin/env node
+create-ah-directory-structure.ts,create-ah-directory-structure.ts,7477,2026-07-14T00:15:34.904920,other,other,false,fs; path; url,
+create-mcp-server.ts,create-mcp-server.ts,5945,2026-07-04T11:49:05.102913,security,security,true,node:url,!/usr/bin/env tsx
+daily-doc-validation.mock.ts,daily-doc-validation.mock.ts,4897,2026-07-07T21:53:57.163096,doc,docs-tool,true,node:path; node:os; node:fs,!/usr/bin/env node
+daily-doc-validation.ts,daily-doc-validation.ts,34608,2026-07-13T15:50:08.087355,doc,docs-tool,true,node:url; node:crypto; node:child_process; node:path; node:fs,!/usr/bin/env node
+dedup-jsdoc.ts,dedup-jsdoc.ts,2313,2026-07-10T22:50:38.732413,other,other,true,,
+deploy-rectification-toolkit.ts,deploy-rectification-toolkit.ts,7918,2026-07-13T09:22:37.637645,build,build,false,url,!/usr/bin/env tsx
+detect-duplicate-tests.ts,detect-duplicate-tests.ts,1487,2026-07-07T21:53:57.167175,test,test-tool,true,glob,
+directory-audit.ts,directory-audit.ts,8795,2026-07-12T23:44:51.396757,audit,audit,true,,!/usr/bin/env tsx
+doc-arch-version-compare.ts,doc-arch-version-compare.ts,3456,2026-07-13T21:10:54.812064,doc,docs-tool,true,node:path; node:fs,!/usr/bin/env node
+doc-auto-updater.ts,doc-auto-updater.ts,43058,2026-07-12T23:18:12.149118,doc,docs-tool,true,node:url; node:crypto; node:child_process; node:path; node:fs,!/usr/bin/env node
+doc-cross-ref-sync.ts,doc-cross-ref-sync.ts,18991,2026-07-12T23:58:01.999583,doc,docs-tool,true,node:path; node:fs,!/usr/bin/env node
+doc-dict-ast-extract.ts,doc-dict-ast-extract.ts,3605,2026-07-12T23:20:18.505180,doc,docs-tool,true,node:path; node:fs,!/usr/bin/env node
+doc-freshness-alert.ts,doc-freshness-alert.ts,8082,2026-07-13T20:56:17.054300,doc,docs-tool,true,node:path; node:child_process; node:url; node:fs,!/usr/bin/env node
+doc-freshness-score.ts,doc-freshness-score.ts,17838,2026-07-12T14:55:54.854793,doc,docs-tool,true,node:url; crypto; node:child_process; node:path; node:fs,!/usr/bin/env node
+doc-update-trigger.ts,doc-update-trigger.ts,26307,2026-07-13T21:01:15.208460,doc,docs-tool,true,node:path; node:child_process; node:fs,!/usr/bin/env node
+doc-version-check.ts,doc-version-check.ts,5425,2026-07-12T21:45:21.037319,doc,docs-tool,true,node:path; node:child_process; node:url; node:fs,!/usr/bin/env node
+doc-version-history.ts,doc-version-history.ts,8642,2026-07-13T15:50:08.087355,doc,docs-tool,true,node:path; node:child_process; node:fs,!/usr/bin/env node
+eslint-plugin-no-hardcoded-colors.js,eslint-plugin-no-hardcoded-colors.js,5135,2026-07-08T14:22:06.697331,quality,quality,true,,
+extract-code-graph.ts,extract-code-graph.ts,29851,2026-07-08T20:32:44.264331,other,other,true,url,!/usr/bin/env ts-node
+extract-violations.cjs,extract-violations.cjs,7204,2026-07-05T23:04:58.035790,other,other,true,fs; path,
+file-dedup-scan.mjs,file-dedup-scan.mjs,6404,2026-07-13T20:56:19.498458,other,other,false,node:os; node:url; node:crypto; node:path; node:fs,内容哈希去重扫描器（仅用于文件治理评估，不修改任何文件）
+five-dimension-stress-test.ts,five-dimension-stress-test.ts,41111,2026-07-14T00:15:34.904920,test,test-tool,false,,
+fix-cross-references.ts,fix-cross-references.ts,4531,2026-07-13T22:53:46.034012,fix,fix,false,fs; path; url,
+fix-doc-refs.ts,fix-doc-refs.ts,26111,2026-07-14T08:28:18.319038,fix,fix,false,node:path; node:url; node:fs,!/usr/bin/env tsx
+fix-layer-violations.ts,fix-layer-violations.ts,8729,2026-07-08T18:10:09.587716,fix,fix,true,url,
+fix-p0-violations.ts,fix-p0-violations.ts,13213,2026-07-12T16:20:01.988911,fix,fix,true,fs; path; url,!/usr/bin/env tsx
+fix-silent-fallback.ts,fix-silent-fallback.ts,7320,2026-07-08T18:10:09.588512,fix,fix,true,"))
+      if (firstImportIndex >= 0) {
+        lines.splice(firstImportIndex, 0, importLine)
+        content = lines.join(; glob",!/usr/bin/env tsx
+fix-typography-violations.ts,fix-typography-violations.ts,5102,2026-07-12T15:26:12.831475,fix,fix,true,fs; path; url,!/usr/bin/env tsx
+gen-cleanup-list.py,gen-cleanup-list.py,5095,2026-07-12T08:31:15.834538,other,other,false,,!/usr/bin/env python3
+generate-ah-index-docs.ts,generate-ah-index-docs.ts,11852,2026-07-14T00:24:46.172069,generate,generate,false,fs; path; url,
+generate-doc-list-simple.ts,generate-doc-list-simple.ts,7105,2026-07-12T16:33:15.197776,generate,generate,false,node:path; node:url; node:fs,
+generate-doc-update-list.ts,generate-doc-update-list.ts,8378,2026-07-12T16:28:56.776629,generate,generate,false,node:path; node:child_process; node:url; node:fs,!/usr/bin/env tsx
+generate-pdf-report.ts,generate-pdf-report.ts,5756,2026-07-09T17:48:45.140430,generate,generate,true,node:path; node:url; node:fs,!/usr/bin/env tsx
+generate-rectification-pdf.ts,generate-rectification-pdf.ts,6522,2026-07-13T09:22:26.267779,generate,generate,false,node:path; node:url; node:fs,!/usr/bin/env tsx
+generate-store-graph.ts,generate-store-graph.ts,24072,2026-07-07T21:53:57.176131,generate,generate,true,fs; path; url,!/usr/bin/env tsx
+generate-tech-debt-report.ts,generate-tech-debt-report.ts,16284,2026-07-08T18:25:46.566546,generate,generate,true,fs; path; child_process,!/usr/bin/env tsx
+generate-tokens.ts,generate-tokens.ts,6643,2026-07-09T10:51:38.092605,generate,generate,true,fs; path; url,!/usr/bin/env tsx
+generate_data_link_diagram.py,generate_data_link_diagram.py,15763,2026-07-08T20:44:05.474413,generate,generate,false,,!/usr/bin/env python3
+git-push-with-retry.ps1,git-push-with-retry.ps1,4008,2026-07-07T21:53:57.180109,other,other,false,,Requires -Version 5.1
+inject-frontmatter.ts,inject-frontmatter.ts,3482,2026-06-27T08:19:08.540634,other,other,true,url,
+lessons-learned.ts,lessons-learned.ts,13124,2026-07-12T08:39:27.453002,other,other,true,node:path; node:child_process; node:url; node:fs,!/usr/bin/env node
+llm-doc-generator.ts,llm-doc-generator.ts,17428,2026-07-13T09:22:37.637645,doc,docs-tool,false,node:path; node:child_process; node:url; node:fs,!/usr/bin/env tsx
+mcp-tool-usage-audit.py,mcp-tool-usage-audit.py,4018,2026-07-13T10:55:21.503747,audit,audit,false,,
+measure-complexity-now.ts,measure-complexity-now.ts,7357,2026-07-12T11:00:53.739962,quality,quality,true,node:url,
+mechanism-self-diagnose.ts,mechanism-self-diagnose.ts,32077,2026-07-13T21:01:15.209941,other,other,true,node:path; node:child_process; node:url; node:fs,!/usr/bin/env node
+migrate-doc-categories.ts,migrate-doc-categories.ts,5741,2026-07-14T00:24:46.188315,doc,docs-tool,true,fs; path; url,
+migrate-docs.ps1,migrate-docs.ps1,16927,2026-07-14T00:24:46.198033,doc,docs-tool,true,,
+migrate-script-scan-v2.py,migrate-script-scan-v2.py,6159,2026-07-14T08:33:47.039199,migrate,migrate,false,,
+migrate-scripts-exec.py,migrate-scripts-exec.py,4377,2026-07-14T08:31:49.394522,migrate,migrate,false,,
+optimize-silent-fallback.ts,optimize-silent-fallback.ts,7291,2026-07-09T10:58:24.728350,other,other,true,glob; fs/promises,
+p1-1-migrate.py,p1-1-migrate.py,5973,2026-07-12T22:39:51.590298,migrate,migrate,false,,
+patch-error-handling-dynamic.ts,patch-error-handling-dynamic.ts,8275,2026-07-12T14:41:39.161757,other,other,false,"))
+            if (firstImportIndex >= 0) {
+              lines.splice(firstImportIndex, 0, importLine)
+              await fs.writeFile(fullPath, lines.join(",!/usr/bin/env tsx
+patch-error-handling.ts,patch-error-handling.ts,11603,2026-07-12T14:40:07.125131,other,other,false,"))
+          if (firstImportIndex >= 0) {
+            lines.splice(firstImportIndex, 0, importLine)
+            await fs.writeFile(fullPath, lines.join(",!/usr/bin/env tsx
+pitfall_check.py,pitfall_check.py,19590,2026-07-05T16:32:35.709262,monitor,monitor,false,,!/usr/bin/env python3
+pre-review-check.ts,pre-review-check.ts,7468,2026-07-06T08:01:50.756168,monitor,monitor,true,child_process,!/usr/bin/env tsx
+quality-config.ts,quality-config.ts,11477,2026-07-12T14:39:33.716016,quality,quality,true,node:child_process,
+query-ai-memory.ts,query-ai-memory.ts,2871,2026-07-10T20:25:23.137094,other,other,true,node:url,
+quick-query.sh,quick-query.sh,2206,2026-07-08T20:33:27.001582,other,other,true,,!/usr/bin/env bash
+regression-test.mjs,regression-test.mjs,12220,2026-07-01T22:20:11.939159,test,test-tool,true,playwright,V9 全量浏览器回归测试脚本
+regression_news_v6.py,regression_news_v6.py,11663,2026-06-25T23:39:59.208670,other,other,true,,
+regression_news_v6_test.cjs,regression_news_v6_test.cjs,9614,2026-06-25T23:45:07.951611,other,other,true,playwright,
+release-changelog-bump.ts,release-changelog-bump.ts,2186,2026-07-12T23:11:48.150234,other,other,true,node:path; node:fs,!/usr/bin/env node
+rename-ah-index-files.ts,rename-ah-index-files.ts,8834,2026-07-14T00:24:46.221109,other,other,false,fs; path; url,
+replace-date-now-ids.ts,replace-date-now-ids.ts,8455,2026-07-07T21:53:57.182388,other,other,true,nanoid,!/usr/bin/env tsx
+rotate-ark-api-key.ps1,rotate-ark-api-key.ps1,4434,2026-07-07T21:53:57.184982,other,other,false,,requires -Version 5.1
+run-with-log.ts,run-with-log.ts,1328,2026-07-13T09:22:37.637645,other,other,false,node:path; node:child_process; node:url; node:fs,
+run_browser_test.ps1,run_browser_test.ps1,248,2026-06-27T22:31:58.636768,other,other,false,,
+scaffold-widget.ts,scaffold-widget.ts,8921,2026-07-13T00:53:01.639432,other,other,true,child_process; react,
+semantic-validation.ts,semantic-validation.ts,14901,2026-07-13T13:55:10.056962,other,other,true,node:path; node:child_process; node:url; node:fs,!/usr/bin/env tsx
+split-constants.ts,split-constants.ts,15991,2026-07-07T21:53:57.186052,other,other,true,url,
+stress-test-realtime-quotes.sh,stress-test-realtime-quotes.sh,6526,2026-07-13T00:58:23.276130,test,test-tool,false,,!/bin/bash
+stress-test-runner.ts,stress-test-runner.ts,13430,2026-07-14T00:15:34.904920,test,test-tool,false,perf_hooks,
+sync-doc-categories.ts,sync-doc-categories.ts,8499,2026-07-14T00:24:46.382437,doc,docs-tool,true,fs; path; url,
+system-check-loop.ts,system-check-loop.ts,16329,2026-07-12T14:39:33.825304,monitor,monitor,true,node:path; node:child_process; node:url; node:fs,!/usr/bin/env node
+system-health-dashboard.ts,system-health-dashboard.ts,29699,2026-07-12T14:39:33.841079,monitor,monitor,true,node:path; node:child_process; node:url; node:fs,!/usr/bin/env node
+test-hybrid-proofread.ts,test-hybrid-proofread.ts,9284,2026-07-09T17:48:45.207874,test,test-tool,true,url,
+test-news-v6.cjs,test-news-v6.cjs,2164,2026-06-25T23:35:47.719992,test,test-tool,true,playwright,
+test-stock-color-debug.ts,test-stock-color-debug.ts,2118,2026-07-07T21:53:57.188051,test,test-tool,true,jsdom,
+test_browser.py,test_browser.py,12083,2026-07-04T17:42:02.844879,test,test-tool,false,,
+test_connectivity.py,test_connectivity.py,661,2026-07-04T17:40:54.330445,test,test-tool,false,,
+test_diag.py,test_diag.py,1233,2026-07-04T17:45:25.486217,test,test-tool,false,,
+test_file.py,test_file.py,2913,2026-07-04T17:49:42.612148,test,test-tool,false,,
+token-debug-hex.cjs,token-debug-hex.cjs,1473,2026-07-10T08:36:04.215351,other,other,true,fs; path,
+token-debug-size.cjs,token-debug-size.cjs,648,2026-07-10T08:35:43.160879,other,other,true,fs; path,
+token-debug.cjs,token-debug.cjs,1368,2026-07-10T08:35:26.115481,other,other,true,fs; path,
+token-scan.cjs,token-scan.cjs,12982,2026-07-09T11:23:25.918722,other,other,true,fs; path,!/usr/bin/env node
+translate-test-descriptions.ts,translate-test-descriptions.ts,18559,2026-07-09T10:58:24.753234,test,test-tool,true,glob; fs/promises,
+validate-acl-impact.ts,validate-acl-impact.ts,6200,2026-07-08T18:06:17.631067,security,security,true,node:path; node:fs,!/usr/bin/env tsx
+validate-data-blueprint.ts,validate-data-blueprint.ts,3326,2026-07-13T22:08:17.989949,other,other,true,,!/usr/bin/env tsx
+validate-data-consistency.ts,validate-data-consistency.ts,26511,2026-07-13T14:42:59.115008,other,other,true,node:url,!/usr/bin/env tsx
+validate-json.ts,validate-json.ts,11067,2026-07-08T18:10:09.597190,other,other,true,,!/usr/bin/env tsx
+verify-all-routes.ts,verify-all-routes.ts,14369,2026-07-14T08:28:18.319038,verify,verify,true,node:url,!/usr/bin/env tsx
+verify-design-tokens.ts,verify-design-tokens.ts,5805,2026-07-13T15:50:08.088864,verify,verify,true,node:path; node:url; node:fs,!/usr/bin/env node
+verify-m1.ts,verify-m1.ts,10930,2026-07-13T09:22:37.637645,verify,verify,false,,
+verify-m2-m3.ts,verify-m2-m3.ts,10858,2026-07-13T09:22:37.637645,verify,verify,false,,
+verify-pipeline-output.ts,verify-pipeline-output.ts,19521,2026-07-07T07:49:35.186057,verify,verify,true,node:child_process; node:url,!/usr/bin/env tsx
+verify-tools.ts,verify-tools.ts,4506,2026-07-13T16:08:37.498081,verify,verify,false,,
+workflow-rule-engine.ts,workflow-rule-engine.ts,16782,2026-07-08T18:10:09.600991,other,other,true,node:path; node:child_process; node:fs,!/usr/bin/env node
+_audit-pipeline.ts,_audit-pipeline.ts,9507,2026-07-13T21:10:54.759612,debug,_debug,true,node:url,
+_verify-pipeline-child.ts,_verify-pipeline-child.ts,3478,2026-07-13T18:39:41.022648,debug,_debug,true,,!/usr/bin/env tsx

@@ -1,0 +1,150 @@
+- generic [ref=e36]:
+  - banner [ref=e37]:
+    - link "V9 智能投研复盘系统" [ref=e39] [cursor=pointer]:
+      - /url: "#/"
+      - generic [ref=e40]: V9
+      - generic [ref=e41]: 智能投研复盘系统
+    - navigation [ref=e42]:
+      - button "📦 输入舱" [active] [ref=e43] [cursor=pointer]:
+        - generic [ref=e44]: 📦
+        - generic [ref=e45]: 输入舱
+      - button "🔬 分析舱" [ref=e46] [cursor=pointer]:
+        - generic [ref=e47]: 🔬
+        - generic [ref=e48]: 分析舱
+      - button "💹 交易舱" [ref=e49] [cursor=pointer]:
+        - generic [ref=e50]: 💹
+        - generic [ref=e51]: 交易舱
+      - button "📊 输出舱" [ref=e52] [cursor=pointer]:
+        - generic [ref=e53]: 📊
+        - generic [ref=e54]: 输出舱
+      - button "🎛️ 总控舱" [ref=e55] [cursor=pointer]:
+        - generic [ref=e56]: 🎛️
+        - generic [ref=e57]: 总控舱
+      - button "驾驶舱" [ref=e58] [cursor=pointer]:
+        - img [ref=e59]
+        - generic [ref=e63]: 驾驶舱
+    - generic [ref=e64]:
+      - generic [ref=e65]: 采集服务未连接
+      - generic [ref=e67]: 运行 00:01:17
+      - generic [ref=e68]: v0.9.0
+  - generic [ref=e69]:
+    - complementary [ref=e70]:
+      - generic [ref=e71]:
+        - generic [ref=e227]:
+          - generic [ref=e228]: 模块
+          - list [ref=e229]:
+            - listitem [ref=e230]:
+              - button "输入舱首页" [ref=e231] [cursor=pointer]:
+                - img [ref=e232]
+                - text: 输入舱首页
+        - generic [ref=e237]:
+          - generic [ref=e238]: 候选池
+          - list [ref=e239]:
+            - listitem [ref=e240]:
+              - button "录入看板" [ref=e241] [cursor=pointer]:
+                - img [ref=e242]
+                - text: 录入看板
+            - listitem [ref=e247]:
+              - button "批量导入" [ref=e248] [cursor=pointer]:
+                - img [ref=e249]
+                - text: 批量导入
+            - listitem [ref=e252]:
+              - button "热门板块" [ref=e253] [cursor=pointer]:
+                - img [ref=e254]
+                - text: 热门板块
+        - generic [ref=e256]:
+          - generic [ref=e257]: 数据采集
+          - list [ref=e258]:
+            - listitem [ref=e259]:
+              - button "采集测试" [ref=e260] [cursor=pointer]:
+                - img [ref=e261]
+                - text: 采集测试
+    - main [ref=e110]:
+      - generic [ref=e265]:
+        - generic [ref=e267]:
+          - heading "输入舱" [level=1] [ref=e268]
+          - paragraph [ref=e269]: 股票录入 · 批量导入 · 热门板块 · 采集测试
+        - generic [ref=e270]:
+          - generic [ref=e271]:
+            - generic [ref=e273]:
+              - paragraph [ref=e274]: 候选池标的
+              - paragraph [ref=e275]: "0"
+            - generic [ref=e277]:
+              - paragraph [ref=e278]: 已采行情
+              - paragraph [ref=e279]: "0"
+            - generic [ref=e281]:
+              - paragraph [ref=e282]: 采集服务
+              - generic [ref=e284]: 检查中...
+            - generic [ref=e286]:
+              - paragraph [ref=e287]: 快捷操作
+              - generic [ref=e288]:
+                - button "批量导入" [ref=e289] [cursor=pointer]
+                - button "热门板块" [ref=e290] [cursor=pointer]
+                - button "交互原型" [ref=e291] [cursor=pointer]
+          - generic [ref=e292]:
+            - heading "录入候选股票" [level=3] [ref=e294]
+            - generic [ref=e295]:
+              - generic [ref=e296]:
+                - generic [ref=e297]: 搜索模式：
+                - button "填充代码/名称" [ref=e298] [cursor=pointer]
+                - button "直接录入候选池" [ref=e299] [cursor=pointer]
+              - combobox "搜索代码 / 名称 / 行业" [ref=e301]
+              - generic [ref=e302]:
+                - textbox "股票代码，如 600519.SH" [ref=e303]
+                - textbox "股票名称" [ref=e304]
+                - generic [ref=e305]:
+                  - combobox "目标分组" [ref=e306]:
+                    - option "默认分组" [selected]
+                    - option "默认分组"
+                  - img
+                - button "仅录入" [ref=e307] [cursor=pointer]
+                - button "录入并拉基础" [ref=e308] [cursor=pointer]
+                - button "录入并拉全部" [ref=e309] [cursor=pointer]
+              - generic [ref=e310]:
+                - generic [ref=e311]: 采集服务状态：
+                - generic [ref=e312]: 检查中...
+                - button "刷新" [ref=e313] [cursor=pointer]
+          - generic [ref=e314]:
+            - heading "股票池看板" [level=3] [ref=e316]
+            - generic [ref=e317]:
+              - generic [ref=e318]:
+                - button "刷新看板" [ref=e319] [cursor=pointer]
+                - button "看板视图" [ref=e320] [cursor=pointer]
+                - button "列表视图" [ref=e321] [cursor=pointer]
+                - generic [ref=e322]:
+                  - combobox "分组筛选" [ref=e323]:
+                    - option "全部组" [selected]
+                    - option "默认分组"
+                  - img
+                - button "新建分组" [ref=e324] [cursor=pointer]
+                - combobox "数据质量筛选" [ref=e325]:
+                  - option "全部质量状态" [selected]
+                  - option "缺失基础数据"
+                  - option "缺失行情数据"
+                  - option "缺失财务数据"
+              - generic [ref=e326]:
+                - generic [ref=e327]:
+                  - generic [ref=e329]:
+                    - heading "意向候选池" [level=3] [ref=e330]
+                    - generic [ref=e331]: "0"
+                  - paragraph [ref=e333]: 暂无标的
+                - generic [ref=e334]:
+                  - generic [ref=e336]:
+                    - heading "研究精选池" [level=3] [ref=e337]
+                    - generic [ref=e338]: "0"
+                  - paragraph [ref=e340]: 暂无标的
+                - generic [ref=e341]:
+                  - generic [ref=e343]:
+                    - heading "深度研究池" [level=3] [ref=e344]
+                    - generic [ref=e345]: "0"
+                  - paragraph [ref=e347]: 暂无标的
+                - generic [ref=e348]:
+                  - generic [ref=e350]:
+                    - heading "观察池" [level=3] [ref=e351]
+                    - generic [ref=e352]: "0"
+                  - paragraph [ref=e354]: 暂无标的
+                - generic [ref=e355]:
+                  - generic [ref=e357]:
+                    - heading "归档池" [level=3] [ref=e358]
+                    - generic [ref=e359]: "0"
+                  - paragraph [ref=e361]: 暂无标的

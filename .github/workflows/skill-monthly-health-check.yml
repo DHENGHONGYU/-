@@ -1,0 +1,257 @@
+name: SKILL L5 — 技能健康度月检（registry / coverage / routes 三方稳态）
+# 周期：AGENTS.md v1.5.5 注册 — 「技能健康度月检」17 8 1 * * (Asia/Shanghai ≡ UTC 每月1号 00:17)
+# 目的：每月 1 号主动验证：(1) L1 registry 45 条 / 16 物理 / 9 插件 / 20 虚拟计数自洽；(2) audit:skill-coverage 三方一致；(3) audit:routes（路由表74条+孤儿/重复检测）全绿；(4) 绿态报告 artifacts 留存
+
+on:
+  schedule:
+    # 17 0 1 * *  UTC = 每月1号 08:17 Asia/Shanghai (UTC+8) — 精确对应 AGENTS.md L16 声称的 cron
+    - cron: '17 0 1 * *'
+  workflow_dispatch:      # 允许手动触发（PR 合并前复跑 / 复现）
+    inputs:
+      reason:
+        description: '触发原因（例如：registry 升级后复跑）'
+        required: false
+        default: '月检手动复跑'
+
+permissions:
+  contents: read
+  # =====================================================================
+  # 显式声明（避免 GitHub "显式 permissions 块 => 未列出权限全部置为 none" 规则
+  # 导致的 GITHUB_TOKEN 调 /actions/artifacts REST API 403 / actions/download-artifact 失败）
+  #   actions: read   → 允许 gh run download / REST API 拉取 4 个 zip 产物
+  #   checks: write   → 允许写 Checks annotations / Job Summary markdown
+  # =====================================================================
+  actions: read
+  checks: write
+
+jobs:
+  monthly-skill-health:
+    name: 技能健康度月检 3 条主线
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      TZ: 'Asia/Shanghai'
+      CI: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies (tsx 等 audit 依赖)
+        run: npm ci --ignore-scripts --no-audit || npm install --ignore-scripts --no-audit
+
+      - name: 行尾 CRLF → LF 归一化（Linux 执行环境）
+        run: |
+          find . -type f \( -name "*.md" -o -name "*.cjs" -o -name "*.mjs" -o -name "*.yml" -o -name "*.yaml" \) -exec sed -i 's/\r$//' {} \;
+
+      # =====================================================================
+      # 主线 1/3: audit:skill-coverage — frontmatter ↔ registry ↔ AGENTS.md 三方一致
+      # =====================================================================
+      - name: 🟢 Gate 1/3 audit:skill-coverage (三方一致)
+        id: coverage
+        run: |
+          set +e
+          OUT_DIR="outputs/skill-monthly"
+          mkdir -p "$OUT_DIR"
+          STAMP="$(date +%Y-%m-%dT%H-%M-%S%z)"
+          npm run audit:skill-coverage 2>&1 | tee "$OUT_DIR/skill-coverage-$STAMP.log"
+          EXIT=$?
+          echo "exit_code=$EXIT" >> $GITHUB_OUTPUT
+          echo "stamp=$STAMP" >> $GITHUB_OUTPUT
+          echo "out_dir=$OUT_DIR" >> $GITHUB_OUTPUT
+          set -e
+          [ "$EXIT" = "0" ]
+        continue-on-error: true
+
+      # =====================================================================
+      # 主线 2/3: audit:routes — ROUTE_REGISTRY 74 条路径全匹配 + 无重复
+      # =====================================================================
+      - name: 🟢 Gate 2/3 audit:routes (74路由覆盖+孤儿/重复检测)
+        id: routes
+        run: |
+          set -euxo pipefail
+          OUT_DIR="${{ steps.coverage.outputs.out_dir }}"
+          STAMP="${{ steps.coverage.outputs.stamp }}"
+          npm run audit:routes 2>&1 | tee "$OUT_DIR/skill-routes-$STAMP.log"
+          EXIT=$?
+          echo "exit_code=$EXIT" >> $GITHUB_OUTPUT
+          set -e
+          [ "$EXIT" = "0" ]
+        continue-on-error: true
+
+      # =====================================================================
+      # 主线 3/3: skill-route-test + skill-error-scenarios — 错误场景 E01-E05 全绿
+      # =====================================================================
+      - name: 🟢 Gate 3/3 Error scenarios E01-E05 全绿
+        id: errors
+        run: |
+          set +e
+          OUT_DIR="outputs/skill-monthly"
+          STAMP="${{ steps.coverage.outputs.stamp }}"
+          node scripts/audit/test-skill-error-scenarios.cjs 2>&1 | tee "$OUT_DIR/skill-error-scenarios-$STAMP.log"
+          EXIT=$?
+          echo "exit_code=$EXIT" >> $GITHUB_OUTPUT
+          set -e
+          [ "$EXIT" = "0" ]
+        continue-on-error: true
+
+      # =====================================================================
+      # 45 条 registry 结构自证：三层计数聚合
+      # =====================================================================
+      - name: 📊 Registry schema 结构自证（16/9/20/45/8 mandatory 计数）
+        id: reg_stat
+        if: always()
+        run: |
+          REG=".trae/skills/skill-registry.json"
+          if [ ! -f "$REG" ]; then echo "❌ skill-registry.json 不存在" ; exit 1; fi
+          PHYSICAL=$(node -e "console.log(JSON.parse(require('fs').readFileSync('$REG','utf8')).projectPhysicalSkills.length)")
+          PLUGIN=$(node -e "console.log(JSON.parse(require('fs').readFileSync('$REG','utf8')).externalPluginSkills.length)")
+          VIRT=$(node -e "console.log(JSON.parse(require('fs').readFileSync('$REG','utf8')).virtualPlatformSkills.length)")
+          TOTAL=$(node -e "console.log(JSON.parse(require('fs').readFileSync('$REG','utf8')).summary.totalEntries)")
+          MAND=$(node -e "console.log(JSON.parse(require('fs').readFileSync('$REG','utf8')).summary.mandatoryCount)")
+          SCHEMA=$(node -e "console.log(JSON.parse(require('fs').readFileSync('$REG','utf8')).schemaVersion)")
+          echo "projectPhysical=$PHYSICAL (期望 16)"
+          echo "externalPlugin=$PLUGIN    (期望  9)"
+          echo "virtualPlatform=$VIRT     (期望 20)"
+          echo "totalEntries=$TOTAL       (期望 45)"
+          echo "mandatory=$MAND           (期望  8)"
+          echo "schemaVersion=$SCHEMA     (期望 >= 1.1.0)"
+          echo ""
+          FAIL=0
+          [ "$PHYSICAL" = "16" ] || { echo "❌ projectPhysical 不匹配"; FAIL=1; }
+          [ "$PLUGIN"   = "9"  ] || { echo "❌ externalPlugin 不匹配";   FAIL=1; }
+          [ "$VIRT"     = "20" ] || { echo "❌ virtualPlatform 不匹配";  FAIL=1; }
+          [ "$TOTAL"    = "45" ] || { echo "❌ totalEntries 不匹配";     FAIL=1; }
+          [ "$MAND"     = "8"  ] || { echo "❌ mandatoryCount 不匹配";   FAIL=1; }
+          [ "$FAIL" = "0" ] && echo "✅ registry 三层计数与 schema v1.1.0 定义完全对齐" || exit 1
+
+      # =====================================================================
+      # 最终 fail 判定：三条主线任一失败 => workflow fail
+      #   额外产出：
+      #     1) outputs/skill-monthly/verdict.md  → summary artifact 核心内容
+      #     2) $GITHUB_STEP_SUMMARY              → GitHub Checks UI 汇总卡片
+      # =====================================================================
+      - name: 🏁 Final verdict (3/3 must PASS) + write summary markdown
+        id: verdict
+        if: always()
+        run: |
+          C="${{ steps.coverage.outputs.exit_code }}"
+          R="${{ steps.routes.outputs.exit_code }}"
+          E="${{ steps.errors.outputs.exit_code }}"
+          STAMP="${{ steps.coverage.outputs.stamp }}"
+          OUT_DIR="${{ steps.coverage.outputs.out_dir }}"
+          [ -z "$OUT_DIR" ] && OUT_DIR="outputs/skill-monthly"
+          [ -z "$STAMP"   ] && STAMP="$(date +%Y-%m-%dT%H-%M-%S%z)"
+          mkdir -p "$OUT_DIR"
+
+          # --- 1) 控制台输出（实时日志可见）-----------------------------------
+          echo ""
+          echo "== 技能健康度月检 三主线汇总 =="
+          echo "   run_id=${{ github.run_id }}  stamp=$STAMP  reason=${{ github.event.inputs.reason }}"
+          echo "   1/3 audit:skill-coverage  exit=$C  (期望 0)"
+          echo "   2/3 audit:routes          exit=$R  (期望 0)"
+          echo "   3/3 error scenarios E01-E05 exit=$E  (期望 0)"
+          echo ""
+
+          # --- 2) 生成 verdict.md（UTF-8 LF，供 summary artifact 打包）--------
+          VERDICT_FILE="$OUT_DIR/verdict.md"
+          {
+            echo "# 技能健康度月检 — 汇总判定"
+            echo ""
+            echo "- run_id: \`${{ github.run_id }}\`"
+            echo "- timestamp: \`$STAMP\`"
+            echo "- trigger: \`${{ github.event_name }}\` — reason: \`${{ github.event.inputs.reason }}\`"
+            echo "- sha: \`${{ github.sha }}\`"
+            echo ""
+            echo "## 三主线退出码"
+            echo ""
+            echo "| 主线 | 命令 | exit | 期望 | 结果 |"
+            echo "|---|---|---:|---:|:---:|"
+            [ "$C" = "0" ] && C_ICON="✅" || C_ICON="❌"
+            [ "$R" = "0" ] && R_ICON="✅" || R_ICON="❌"
+            [ "$E" = "0" ] && E_ICON="✅" || E_ICON="❌"
+            echo "| 1/3 | audit:skill-coverage | $C | 0 | $C_ICON |"
+            echo "| 2/3 | audit:routes | $R | 0 | $R_ICON |"
+            echo "| 3/3 | E01-E05 error scenarios | $E | 0 | $E_ICON |"
+            echo ""
+            echo "## 最终判定"
+            echo ""
+            if [ "$C" = "0" ] && [ "$R" = "0" ] && [ "$E" = "0" ]; then
+              echo "✅ **PASS 3/3 全绿，三方稳态验证通过**"
+            else
+              echo "❌ **FAIL** — 存在主线失败"
+              echo ""
+              echo "排查建议：下载本 run 的 4 个 zip 产物（logs / summary / coverage / data），对照各 Gate 日志定位。"
+            fi
+            echo ""
+            echo "## 关联 Artifact"
+            echo ""
+            echo "- \`skill-health-check-logs-main\`：3 条主线原始 \`.log\`"
+            echo "- \`skill-health-check-summary-main\`：本判定表（verdict.md）"
+            echo "- \`skill-health-check-coverage-report-main\`：coverage 专项详细输出"
+            echo "- \`skill-health-check-data-main\`：registry.json + INDEX.md 结构快照"
+          } > "$VERDICT_FILE"
+
+          # --- 3) 同步写到 Checks Summary 卡片（GitHub Actions run 详情页顶部）
+          cat "$VERDICT_FILE" >> "$GITHUB_STEP_SUMMARY"
+
+          # --- 4) 最终退出码 -------------------------------------------------
+          echo ""
+          if [ "$C" = "0" ] && [ "$R" = "0" ] && [ "$E" = "0" ]; then
+            echo "✅ PASS 3/3 全绿，三方稳态验证通过"
+            exit 0
+          else
+            echo "❌ FAIL 有主线失败，请下载 4 个 zip 产物（logs/summary/coverage/data）查看对应日志"
+            exit 1
+          fi
+
+      # =====================================================================
+      # Artifacts 归档 — 拆成 4 个独立 zip，每个对应名称 logs/summary/coverage/data
+      #   设计动机：用户侧可以"按需下载 + 比对多次 run"，而非每次拉整个大包
+      #   全部 if: always() 保证即使主线失败也能拿到证据
+      # =====================================================================
+      - name: 📦 1/4 Artifact · logs（3 主线 .log 原始日志）
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: skill-health-check-logs-main
+          path: |
+            outputs/skill-monthly/skill-coverage-*.log
+            outputs/skill-monthly/skill-routes-*.log
+            outputs/skill-monthly/skill-error-scenarios-*.log
+          retention-days: 90
+
+      - name: 📦 2/4 Artifact · summary（verdict.md 汇总判定表）
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: skill-health-check-summary-main
+          path: |
+            outputs/skill-monthly/verdict.md
+          retention-days: 90
+
+      - name: 📦 3/4 Artifact · coverage（skill-coverage 专项输出 + 三方对比证据）
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: skill-health-check-coverage-report-main
+          path: |
+            outputs/skill-monthly/skill-coverage-*.log
+          retention-days: 90
+
+      - name: 📦 4/4 Artifact · data（registry.json / INDEX.md 结构快照）
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: skill-health-check-data-main
+          path: |
+            .trae/skills/skill-registry.json
+            .trae/skills/INDEX.md
+          retention-days: 90

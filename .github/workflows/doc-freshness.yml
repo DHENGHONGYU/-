@@ -1,0 +1,109 @@
+name: Document Freshness Dashboard
+
+# 文档保鲜度 Dashboard（P2-10）— 每月 1 日定时运行
+# 关联：docs/02-design/freshness-alerts.md（告警规则）、scripts/docs-tool/doc-freshness-score.ts / doc-freshness-alert.ts
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'  # 每月 1 日 00:00 UTC
+  workflow_dispatch:      # 允许手动触发
+
+permissions:
+  contents: read
+
+jobs:
+  freshness:
+    name: Document freshness evaluation & report
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0  # 需要完整 git 历史以计算文档时效性
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+
+      # 1. 文档保鲜度评分（四维度：完整性/时效性/准确性/一致性）
+      - name: Run doc freshness score
+        run: npx tsx scripts/docs-tool/doc-freshness-score.ts
+        continue-on-error: true
+
+      # 2. 保鲜度告警评估（ALERT-01~05）
+      - name: Run doc freshness alert
+        run: npx tsx scripts/docs-tool/doc-freshness-alert.ts --silent
+        continue-on-error: true
+
+      # 3. 生成月度 Markdown 报告
+      - name: Generate monthly freshness report
+        run: |
+          REPORT_DIR="docs/00-meta"
+          mkdir -p "$REPORT_DIR"
+          REPORT_FILE="$REPORT_DIR/freshness-report-$(date +%Y-%m).md"
+          echo "---" > "$REPORT_FILE"
+          echo "title: 文档保鲜度月度报告" >> "$REPORT_FILE"
+          echo "date: $(date +%Y-%m-%d)" >> "$REPORT_FILE"
+          echo "version: $(date +%Y.%m).0" >> "$REPORT_FILE"
+          echo "---" >> "$REPORT_FILE"
+          echo "" >> "$REPORT_FILE"
+          echo "# 文档保鲜度月度报告 ($(date +%Y-%m))" >> "$REPORT_FILE"
+          echo "" >> "$REPORT_FILE"
+          echo "> 生成时间：$(date -Iseconds)" >> "$REPORT_FILE"
+          echo "> 触发方式：GitHub Actions 定时任务" >> "$REPORT_FILE"
+          echo "" >> "$REPORT_FILE"
+          echo "## 一、评分概览" >> "$REPORT_FILE"
+          echo "" >> "$REPORT_FILE"
+          if [ -f "docs/reports/doc-freshness/latest.json" ]; then
+            AVG=$(cat docs/reports/doc-freshness/latest.json | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const r=JSON.parse(d);console.log(r.summary.avgScore);})" 2>/dev/null || echo "N/A")
+            echo "- 平均评分：$AVG/100" >> "$REPORT_FILE"
+            STATUS=$(cat docs/reports/doc-freshness/latest.json | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const r=JSON.parse(d);console.log(r.summary.overallStatus);})" 2>/dev/null || echo "unknown")
+            echo "- 整体状态：$STATUS" >> "$REPORT_FILE"
+            TOTAL=$(cat docs/reports/doc-freshness/latest.json | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const r=JSON.parse(d);console.log(r.meta.totalDocs);})" 2>/dev/null || echo "N/A")
+            echo "- 扫描文档数：$TOTAL" >> "$REPORT_FILE"
+          else
+            echo "- 评分数据不可用（请检查 doc-freshness-score.ts 运行日志）" >> "$REPORT_FILE"
+          fi
+          echo "" >> "$REPORT_FILE"
+          echo "## 二、告警清单" >> "$REPORT_FILE"
+          echo "" >> "$REPORT_FILE"
+          ALERT_DIR="docs/reports/doc-freshness-alerts"
+          if [ -d "$ALERT_DIR" ]; then
+            LATEST_ALERT=$(ls -t "$ALERT_DIR"/*.json 2>/dev/null | head -n 1)
+            if [ -n "$LATEST_ALERT" ]; then
+              COUNT=$(cat "$LATEST_ALERT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const r=JSON.parse(d);console.log(r.alertCount);})" 2>/dev/null || echo "N/A")
+              echo "- 命中告警数：$COUNT" >> "$REPORT_FILE"
+              echo "" >> "$REPORT_FILE"
+              echo "| 级别 | 代码 | 标题 | 路径 |" >> "$REPORT_FILE"
+              echo "|------|------|------|------|" >> "$REPORT_FILE"
+              cat "$LATEST_ALERT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const r=JSON.parse(d);r.alerts.forEach(a=>console.log('| '+(a.level==='error'?'🔴':'🟡')+' | '+a.code+' | '+a.title+' | '+(a.context?.path||'-')+' |'));})" >> "$REPORT_FILE" 2>/dev/null || echo "（告警数据解析失败）" >> "$REPORT_FILE"
+            else
+              echo "无告警数据" >> "$REPORT_FILE"
+            fi
+          else
+            echo "无告警目录" >> "$REPORT_FILE"
+          fi
+          echo "" >> "$REPORT_FILE"
+          echo "## 三、相关文档" >> "$REPORT_FILE"
+          echo "" >> "$REPORT_FILE"
+          echo "- [保鲜度告警规则](docs/02-design/freshness-alerts.md)" >> "$REPORT_FILE"
+          echo "- [文档清理周期](docs/00-meta/CLEANUP_SCHEDULE.md)" >> "$REPORT_FILE"
+          echo "- [文档体系体检报告](docs/00-meta/文档体系体检报告-v9.md)" >> "$REPORT_FILE"
+          echo "" >> "$REPORT_FILE"
+          echo "---" >> "$REPORT_FILE"
+          echo "_本报告由 GitHub Actions 自动生成。_" >> "$REPORT_FILE"
+          echo "Report generated: $REPORT_FILE"
+        continue-on-error: true
+
+      # 4. 上传产物
+      - name: Upload freshness artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: doc-freshness-$(date +%Y-%m)
+          path: |
+            docs/reports/doc-freshness/
+            docs/reports/doc-freshness-alerts/
+            docs/00-meta/freshness-report-*.md
+          retention-days: 30

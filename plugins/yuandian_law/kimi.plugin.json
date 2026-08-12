@@ -1,0 +1,37 @@
+{
+  "$schema": "https://catalog.deva.msh.team/schemas/kimi.plugin.schema.json",
+  "name": "yuandian_law",
+  "version": "0.1.4",
+  "description": "Yuandian Law (元典法律数据库), a Chinese (mainland-PRC) legal database covering statutes, regulations, and court cases. Provides semantic and keyword search plus detail lookup — over laws/regulations across all effect levels (the Constitution, national laws, judicial interpretations, administrative regulations, departmental rules, etc.) and over both ordinary and authoritative cases — with multi-dimensional filters (effect level, effectiveness status, court, administrative region, case category, date, etc.). Suitable for legal case analysis, legal consultation, legal research, and compliance analysis.",
+  "keywords": [
+    "yuandian law",
+    "yuan dian",
+    "chinese law",
+    "legal database",
+    "statutes",
+    "regulations",
+    "court cases",
+    "case law",
+    "legal research",
+    "compliance",
+    "元典",
+    "元典法律",
+    "法律数据库",
+    "法规检索",
+    "案例检索"
+  ],
+  "author": "Moonshot AI",
+  "homepage": "https://open.chineselaw.com/",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "skillInstructions": "Use the Yuandian Law skill when the user needs mainland China legal database search, statute or regulation lookup, judicial interpretation research, ordinary or authoritative case retrieval, legal case analysis, legal consultation, legal research, or compliance analysis. First inspect the datasource description, choose the exact API documented there, build parameters exactly as required, and call the datasource through the bundled script. Use semantic or keyword search and the available filters such as effect level, effectiveness status, court, administrative region, case category, and date when relevant. Do not invent legal authorities or case facts when the datasource call fails or returns no result. Treat returned legal information as third-party legal data and include meaningful jurisdiction, effect status, date, source, and coverage caveats when the returned content provides them.",
+  "interface": {
+    "displayName": "Yuandian Law",
+    "shortDescription": "Mainland China laws, regulations, and court cases from Yuandian Law.",
+    "longDescription": "Yuandian Law (元典法律数据库), a Chinese (mainland-PRC) legal database covering statutes, regulations, and court cases. Provides semantic and keyword search plus detail lookup — over laws/regulations across all effect levels (the Constitution, national laws, judicial interpretations, administrative regulations, departmental rules, etc.) and over both ordinary and authoritative cases — with multi-dimensional filters (effect level, effectiveness status, court, administrative region, case category, date, etc.). Suitable for legal case analysis, legal consultation, legal research, and compliance analysis.",
+    "developerName": "Yuandian Law",
+    "websiteURL": "https://open.chineselaw.com/",
+    "iconUrl": "https://avatar.moonshot.cn/avatar/plugin/hyyd.png",
+    "category": "PRODUCTIVITY"
+  }
+}

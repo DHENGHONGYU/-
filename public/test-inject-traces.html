@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Inject Test Traces</title></head>
+<body>
+<h3>Injecting test trace records...</h3>
+<pre id="output"></pre>
+<script>
+(function() {
+  var out = document.getElementById('output');
+  function log(msg) { out.textContent += msg + '\n'; }
+
+  var DB_NAME = 'V6ProDB';
+  var STORE = 'trace_records';
+  var SYMBOL = '000002.SZ';
+
+  // 7 dimensions with two-digit codes (matching collectionPipeline output)
+  var dims = [
+    { code: '01', name: '基本信息' },
+    { code: '02', name: 'K线数据' },
+    { code: '03', name: '筹码分布' },
+    { code: '04', name: '重大事项' },
+    { code: '05', name: '热点新闻' },
+    { code: '06', name: '行业竞品' },
+    { code: '07', name: '关联指数' }
+  ];
+
+  var now = Date.now();
+
+  var req = indexedDB.open(DB_NAME);
+  req.onerror = function() { log('ERROR opening DB: ' + req.error); };
+  req.onsuccess = function(e) {
+    var db = e.target.result;
+    log('DB opened: ' + DB_NAME);
+    log('Object stores: ' + Array.from(db.objectStoreNames).join(', '));
+
+    if (!db.objectStoreNames.contains(STORE)) {
+      log('ERROR: store ' + STORE + ' not found');
+      return;
+    }
+
+    var tx = db.transaction(STORE, 'readwrite');
+    var store = tx.objectStore(STORE);
+
+    // First, clear old test records for this symbol
+    var index = store.index('by-symbol');
+    var cursorReq = index.openCursor(IDBKeyRange.only(SYMBOL));
+    var deleted = 0;
+    cursorReq.onsuccess = function(ev) {
+      var cursor = ev.target.result;
+      if (cursor) {
+        cursor.delete();
+        deleted++;
+        cursor.continue();
+      }
+    };
+
+    tx.oncomplete = function() {
+      log('Deleted ' + deleted + ' old records for ' + SYMBOL);
+
+      // Now inject 7 successful trace records
+      var tx2 = db.transaction(STORE, 'readwrite');
+      var store2 = tx2.objectStore(STORE);
+
+      dims.forEach(function(dim, i) {
+        var traceId = 'test-trace-' + dim.code + '-' + SYMBOL + '-' + now;
+        var record = {
+          traceId: traceId,
+          taskId: 'test-batch-' + now,
+          parentTaskId: 'test-parent-' + now,
+          dimensionCode: dim.code,  // Two-digit code (as collectionPipeline writes)
+          symbol: SYMBOL,
+          stages: [
+            { stage: 'triggered', timestamp: now + i, message: '开始采集: ' + dim.name },
+            { stage: 'source:success', sourceId: 'tencent', timestamp: now + i + 100, message: 'tencent 获取成功' },
+            { stage: 'write:success', sourceId: 'tencent', timestamp: now + i + 200, message: '写入成功' },
+            { stage: 'complete', sourceId: 'tencent', timestamp: now + i + 300, message: '采集完成' }
+          ],
+          result: 'success',
+          totalDurationMs: 100 + i * 10,
+          fallbackCount: 0,
+          startedAt: now + i,
+          completedAt: now + i + 300,
+          finalSource: 'tencent',
+          persistedAt: now + i
+        };
+        store2.put(record);
+      });
+
+      tx2.oncomplete = function() {
+        log('Injected 7 successful trace records for ' + SYMBOL);
+        log('Dimension codes: 01,02,03,04,05,06,07 (two-digit format)');
+        log('');
+        log('Now navigating back to pool board...');
+
+        // Verify by reading back
+        var tx3 = db.transaction(STORE, 'readonly');
+        var store3 = tx3.objectStore(STORE);
+        var idx3 = store3.index('by-symbol');
+        var getAllReq = idx3.getAll(SYMBOL);
+        getAllReq.onsuccess = function() {
+          log('Verification: found ' + getAllReq.result.length + ' records');
+          getAllReq.result.forEach(function(r) {
+            log('  - dim=' + r.dimensionCode + ' result=' + r.result + ' traceId=' + r.traceId);
+          });
+          log('');
+          log('Redirecting in 2 seconds...');
+          setTimeout(function() {
+            window.location.href = '/#/input/pool-board';
+          }, 2000);
+        };
+      };
+
+      tx2.onerror = function() { log('ERROR injecting: ' + tx2.error); };
+    };
+  };
+})();
+</script>
+</body>
+</html>

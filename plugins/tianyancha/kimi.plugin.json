@@ -1,0 +1,31 @@
+{
+  "$schema": "https://catalog.deva.msh.team/schemas/kimi.plugin.schema.json",
+  "name": "tianyancha",
+  "version": "0.1.6",
+  "description": "Query Tianyancha enterprise registration, risk, judicial, IP, investment, and relationship data through agent-gw.",
+  "keywords": [
+    "tianyancha",
+    "enterprise data",
+    "company search",
+    "business registration",
+    "risk",
+    "judicial",
+    "天眼查",
+    "企业查询",
+    "工商信息"
+  ],
+  "author": "Moonshot AI",
+  "homepage": "https://www.tianyancha.com/",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "skillInstructions": "Use the Tianyancha skill when the user needs enterprise, business registration, operating, risk, judicial, intellectual property, investment, relationship, group, qualification, private equity fund, person-related, report, or company search data. First inspect the datasource description, choose the exact API documented there, build parameters exactly as required, and call the datasource through the bundled script. Do not invent company data when the datasource call fails or returns no result. For report or export APIs, save returned files before summarizing them. Treat Tianyancha results as third-party business data and mention meaningful freshness or coverage caveats when the returned content provides them.",
+  "interface": {
+    "displayName": "Tianyancha",
+    "shortDescription": "Corporate Information Search and Business Due Diligence Platform",
+    "longDescription": "Query Tianyancha's enterprise database for company registration records, operating status, business risks, judicial records, intellectual property, investment relationships, group structures, construction qualifications, private equity funds, personnel-related information, reports, and search workflows. The plugin exposes the datasource documentation at run time so the model can select the right API and provide answers grounded in returned Tianyancha data.",
+    "developerName": "Beijing Jindi Technology Co., Ltd.",
+    "websiteURL": "https://www.tianyancha.com/",
+    "iconUrl": "https://avatar.moonshot.cn/avatar/plugin/tianyancha.png",
+    "category": "PRODUCTIVITY"
+  }
+}

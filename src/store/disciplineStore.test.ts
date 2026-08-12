@@ -1,0 +1,807 @@
+/**
+ * @test_id V9-TEST-ST-133
+ * @covers_docs [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-QA-080]
+ */
+import { vi, describe, it, expect, beforeEach } from 'vitest'
+import type { Order } from '@/data/types'
+import type { StandardEnvelope } from '@/core/envelope'
+import type { TradeReviewReport, TradeError } from '@/services/trading/tradeReviewAI'
+
+// ============================================================
+// vi.hoisted mocks
+// ============================================================
+
+const mockLogger = vi.hoisted(() => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }))
+vi.mock('@/lib/logger', () => ({ getLogger: () => mockLogger }))
+
+const mockGenerateReview = vi.hoisted(() => vi.fn())
+const mockGenerateReviewAsync = vi.hoisted(() => vi.fn())
+const mockClassifyErrors = vi.hoisted(() => vi.fn())
+
+vi.mock('@/services/trading/tradeReviewAI', () => ({
+  generateReview: mockGenerateReview,
+  generateReviewAsync: mockGenerateReviewAsync,
+}))
+
+vi.mock('@/services/trading/tradeErrorClassifier', () => ({
+  classifyErrors: mockClassifyErrors,
+}))
+
+const mockForward = vi.hoisted(() => vi.fn().mockResolvedValue(undefined))
+const mockQuery = vi.hoisted(() => vi.fn())
+
+const mockOrderStoreRefresh = vi.hoisted(() => vi.fn())
+const mockOrderStoreOrders = vi.hoisted(() => [] as Order[])
+
+vi.mock('./orderStore', () => ({
+  useOrderStore: {
+    getState: () => ({
+      refresh: mockOrderStoreRefresh,
+      orders: mockOrderStoreOrders,
+    }),
+  },
+}))
+
+const { mockSubscribe, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
+  const capturedCallbacks = new Map<string, ((envelope: StandardEnvelope) => void)>()
+  const unsubscribes: Array<ReturnType<typeof vi.fn>> = []
+  const mockSubscribe = vi.fn((channel: string, callback: (envelope: StandardEnvelope) => void) => {
+    capturedCallbacks.set(channel, callback)
+    const unsub = vi.fn()
+    unsubscribes.push(unsub)
+    return unsub
+  })
+  return { mockSubscribe, capturedCallbacks, unsubscribes }
+})
+
+vi.mock('@/core/databridge', () => ({
+  dataBridge: { subscribe: mockSubscribe, forward: mockForward, query: mockQuery },
+}))
+
+vi.mock('@/config/dbConfig', () => ({
+  ENVELOPE_ACTION: {
+    insertOrder: 'INSERT_ORDER',
+    updateOrder: 'UPDATE_ORDER',
+    deleteOrder: 'DELETE_ORDER',
+    tradeActionExecuted: 'TRADE_ACTION_EXECUTED',
+    saveTradeReview: 'SAVE_TRADE_REVIEW',
+    queryGet: 'QUERY_GET',
+  },
+  ENVELOPE_TARGET: { db: 'db' },
+  MODULE_ID: { trading: 'trading', tradeReviews: 'tradeReviews' },
+  STORE_NAME: { orders: 'orders', tradeReviews: 'trade_reviews' },
+}))
+
+// ============================================================
+// Imports
+// ============================================================
+
+import { useDisciplineStore, initDisciplineStoreSubscriptions } from './disciplineStore'
+import { eventBus } from '@/lib/eventBus'
+import { EVENT_NAMES } from '@/constants/store-channels.constants'
+
+// ============================================================
+// Helpers
+// ============================================================
+
+function createMockOrder(overrides: Partial<Order> = {}): Order {
+  return {
+    id: 'ord-1',
+    symbol: 'AAPL',
+    direction: 'buy',
+    price: 100,
+    quantity: 10,
+    amount: 1000,
+    status: 'filled',
+    accountType: 'real',
+    createdAt: Date.now(),
+    ...overrides,
+  } as Order
+}
+
+function createMockReport(): TradeReviewReport {
+  return {
+    generatedAt: Date.now(),
+    summary: {
+      totalTrades: 10,
+      profitableTrades: 6,
+      losingTrades: 4,
+      winRate: 60,
+      profitLossRatio: 1.5,
+      avgProfit: 5,
+      avgLoss: -3,
+      totalPnL: 1000,
+      totalPnLPercent: 10,
+      disciplineScore: 85,
+      totalErrors: 2,
+    },
+    errorAnalysis: {
+      topErrors: [],
+      errorTrend: 'stable',
+      psychologicalProfile: {
+        primaryType: 'chase_type',
+        name: '追涨型',
+        characteristics: [],
+        rootCause: 'fomo',
+        improvementDirection: '制定交易计划并严格执行',
+      },
+      riskProfile: {
+        riskAppetite: 'moderate',
+        maxDrawdown: 20,
+        concentrationLevel: 'medium',
+        suggestions: [],
+      },
+    },
+    disciplineAnalysis: {
+      planAdherenceRate: 80,
+      stopLossExecutionRate: 70,
+      positionManagementScore: 75,
+      emotionControlScore: 65,
+      overallScore: 85,
+      improvements: [],
+    },
+    skillDevelopment: {
+      currentLevel: 'intermediate',
+      prioritySkills: [],
+      recommendedResources: [],
+      userId: 'test-user',
+      dimensions: [],
+      milestones: [],
+      learningPath: [
+        {
+          order: 1,
+          title: '止损纪律',
+          description: '',
+          resources: [],
+          exercises: [],
+          estimatedHours: 2,
+          completed: false,
+        },
+        {
+          order: 2,
+          title: '仓位管理',
+          description: '',
+          resources: [],
+          exercises: [],
+          estimatedHours: 3,
+          completed: false,
+        },
+      ],
+      overallLevel: 'intermediate',
+      updatedAt: Date.now(),
+    },
+    actionPlan: {
+      immediate: [],
+      shortTerm: [],
+      longTerm: [],
+    },
+    aiInsight: {
+      pnlAttribution: [],
+      dataPatterns: [],
+      personalizedAdvice: [],
+    },
+  }
+}
+
+function createMockClassification(errors: TradeError[] = []) {
+  return {
+    errors,
+    totalErrors: errors.length,
+  }
+}
+
+// ============================================================
+// Setup
+// ============================================================
+
+beforeEach(() => {
+  vi.clearAllMocks()
+  capturedCallbacks.clear()
+  unsubscribes.length = 0
+  mockOrderStoreOrders.length = 0
+  mockForward.mockResolvedValue(undefined)
+  mockQuery.mockResolvedValue({ success: true, data: null })
+
+  // 重新设置 mockSubscribe 实现（clearAllMocks 可能清除实现）
+  mockSubscribe.mockImplementation((channel: string, callback: (envelope: StandardEnvelope) => void) => {
+    capturedCallbacks.set(channel, callback)
+    const unsub = vi.fn()
+    unsubscribes.push(unsub)
+    return unsub
+  })
+
+  // 清理模块级订阅状态
+  const cleanup = initDisciplineStoreSubscriptions()
+  cleanup()
+
+  useDisciplineStore.setState({
+    latestReport: null,
+    tradeErrors: [],
+    disciplineScore: 100,
+    skillRoadmap: [],
+    psychologicalProfile: null,
+    loading: true,
+    error: null,
+    isRefreshing: false,
+    lastUpdated: 0,
+  })
+})
+
+// ============================================================
+// useDisciplineStore
+// ============================================================
+
+describe('useDisciplineStore', () => {
+  it('初始状态验证', () => {
+    const state = useDisciplineStore.getState()
+    expect(state.latestReport).toBeNull()
+    expect(state.tradeErrors).toEqual([])
+    expect(state.disciplineScore).toBe(100)
+    expect(state.skillRoadmap).toEqual([])
+    expect(state.psychologicalProfile).toBeNull()
+    expect(state.loading).toBe(true)
+    expect(state.error).toBeNull()
+    expect(state.isRefreshing).toBe(false)
+    expect(state.lastUpdated).toBe(0)
+  })
+
+  it('recalculate: 传入订单时直接计算', async () => {
+    const report = createMockReport()
+    mockGenerateReviewAsync.mockResolvedValue(report)
+    mockClassifyErrors.mockReturnValue(createMockClassification())
+
+    const orders = [createMockOrder()]
+    await useDisciplineStore.getState().recalculate(orders)
+
+    const state = useDisciplineStore.getState()
+    expect(state.latestReport).toEqual(report)
+    expect(state.disciplineScore).toBe(85)
+    expect(state.skillRoadmap).toEqual(['止损纪律', '仓位管理'])
+    expect(state.psychologicalProfile).not.toBeNull()
+    expect(state.loading).toBe(false)
+    expect(state.error).toBeNull()
+    expect(state.isRefreshing).toBe(false)
+    expect(state.lastUpdated).toBeGreaterThan(0)
+    expect(mockForward).toHaveBeenCalledTimes(1)
+  })
+
+  it('recalculate: 未传入订单时从 orderStore 获取', async () => {
+    const report = createMockReport()
+    mockGenerateReviewAsync.mockResolvedValue(report)
+    mockClassifyErrors.mockReturnValue(createMockClassification())
+
+    mockOrderStoreOrders.push(createMockOrder())
+    await useDisciplineStore.getState().recalculate()
+
+    expect(mockOrderStoreRefresh).toHaveBeenCalledTimes(1)
+    expect(useDisciplineStore.getState().latestReport).toEqual(report)
+    expect(mockForward).toHaveBeenCalledTimes(1)
+  })
+
+  it('recalculate: 持久化失败应只 warn 不影响状态', async () => {
+    const report = createMockReport()
+    mockGenerateReviewAsync.mockResolvedValue(report)
+    mockClassifyErrors.mockReturnValue(createMockClassification())
+    mockForward.mockRejectedValue(new Error('Save failed'))
+
+    await useDisciplineStore.getState().recalculate([createMockOrder()])
+
+    const state = useDisciplineStore.getState()
+    expect(state.latestReport).toEqual(report)
+    expect(state.loading).toBe(false)
+    expect(state.error).toBeNull()
+    expect(mockForward).toHaveBeenCalledTimes(1)
+  })
+
+  it('recalculate: 异常时回滚到旧快照', async () => {
+    const oldReport = createMockReport()
+    useDisciplineStore.setState({
+      latestReport: oldReport,
+      disciplineScore: 70,
+      skillRoadmap: ['old'],
+      lastUpdated: 9999,
+    })
+
+    mockGenerateReviewAsync.mockRejectedValue(new Error('AI error'))
+
+    await useDisciplineStore.getState().recalculate([createMockOrder()])
+
+    const state = useDisciplineStore.getState()
+    expect(state.latestReport).toEqual(oldReport)
+    expect(state.disciplineScore).toBe(70)
+    expect(state.skillRoadmap).toEqual(['old'])
+    expect(state.error).toBe('AI error')
+    expect(state.isRefreshing).toBe(false)
+    expect(state.loading).toBe(false)
+  })
+
+  it('recalculate: 并发锁（isRefreshing=true 跳过）', async () => {
+    useDisciplineStore.setState({ isRefreshing: true })
+    await useDisciplineStore.getState().recalculate([createMockOrder()])
+    expect(mockGenerateReviewAsync).not.toHaveBeenCalled()
+  })
+
+  it('recalculate: 无报告时启动 isRefreshing 并在完成后释放', async () => {
+    useDisciplineStore.setState({ latestReport: null, isRefreshing: false })
+    let resolveReview: (v: TradeReviewReport) => void
+    const reviewPromise = new Promise<TradeReviewReport>((r) => { resolveReview = r })
+    mockGenerateReviewAsync.mockReturnValue(reviewPromise)
+    mockClassifyErrors.mockReturnValue(createMockClassification())
+
+    const promise = useDisciplineStore.getState().recalculate([createMockOrder()])
+
+    expect(useDisciplineStore.getState().isRefreshing).toBe(true)
+
+    resolveReview!(createMockReport())
+    await promise
+
+    expect(useDisciplineStore.getState().isRefreshing).toBe(false)
+    expect(useDisciplineStore.getState().loading).toBe(false)
+  })
+
+  it('refresh: 从持久化存储恢复', async () => {
+    const report = createMockReport()
+    mockQuery.mockResolvedValue({
+      success: true,
+      data: {
+        id: 'latest',
+        generatedAt: 12345,
+        report,
+        tradeErrors: [{
+          type: 'stop_loss',
+          name: '止损错误',
+          severity: 'high',
+          psychologicalRoot: 'fear',
+          relatedOrderIds: [],
+        } as unknown as TradeError],
+        disciplineScore: 80,
+        skillRoadmap: ['a', 'b'],
+        psychologicalProfile: report.errorAnalysis.psychologicalProfile,
+      },
+    })
+
+    await useDisciplineStore.getState().refresh()
+
+    const state = useDisciplineStore.getState()
+    expect(state.latestReport).toEqual(report)
+    expect(state.disciplineScore).toBe(80)
+    expect(state.skillRoadmap).toEqual(['a', 'b'])
+    expect(state.loading).toBe(false)
+    expect(state.error).toBeNull()
+    expect(state.isRefreshing).toBe(false)
+    expect(state.lastUpdated).toBe(12345)
+  })
+
+  it('refresh: 无持久化记录时应清空 loading', async () => {
+    mockQuery.mockResolvedValue({ success: true, data: null })
+
+    await useDisciplineStore.getState().refresh()
+
+    const state = useDisciplineStore.getState()
+    expect(state.loading).toBe(false)
+    expect(state.error).toBeNull()
+    expect(state.isRefreshing).toBe(false)
+  })
+
+  it('refresh: 异常时回滚到旧快照', async () => {
+    const oldReport = createMockReport()
+    useDisciplineStore.setState({
+      latestReport: oldReport,
+      disciplineScore: 70,
+      lastUpdated: 9999,
+    })
+
+    mockQuery.mockResolvedValue({ success: false, error: 'DB error' })
+
+    await useDisciplineStore.getState().refresh()
+
+    const state = useDisciplineStore.getState()
+    expect(state.latestReport).toEqual(oldReport)
+    expect(state.disciplineScore).toBe(70)
+    expect(state.error).toBe('DB error')
+    expect(state.isRefreshing).toBe(false)
+    expect(state.loading).toBe(false)
+  })
+
+  it('refresh: 并发锁（isRefreshing=true 跳过）', async () => {
+    useDisciplineStore.setState({ isRefreshing: true })
+    await useDisciplineStore.getState().refresh()
+    expect(mockQuery).not.toHaveBeenCalled()
+  })
+
+  it('reset: 重置到初始状态', () => {
+    useDisciplineStore.setState({
+      latestReport: createMockReport(),
+      disciplineScore: 50,
+      skillRoadmap: ['x'],
+      error: 'err',
+      isRefreshing: true,
+      lastUpdated: 12345,
+    })
+
+    useDisciplineStore.getState().reset()
+
+    const state = useDisciplineStore.getState()
+    expect(state.latestReport).toBeNull()
+    expect(state.tradeErrors).toEqual([])
+    expect(state.disciplineScore).toBe(100)
+    expect(state.skillRoadmap).toEqual([])
+    expect(state.psychologicalProfile).toBeNull()
+    expect(state.loading).toBe(true)
+    expect(state.error).toBeNull()
+    expect(state.isRefreshing).toBe(false)
+    expect(state.lastUpdated).toBe(0)
+  })
+
+  // ============================================================
+  // DISCIPLINE_CHANGED 广播（LoopBanner 复盘阶段脉搏）
+  // ============================================================
+
+  it('recalculate: 成功完成时广播 DISCIPLINE_CHANGED', async () => {
+    const emitSpy = vi.spyOn(eventBus, 'emit')
+    mockGenerateReviewAsync.mockResolvedValue(createMockReport())
+    mockClassifyErrors.mockReturnValue(createMockClassification())
+
+    await useDisciplineStore.getState().recalculate([createMockOrder()])
+
+    expect(emitSpy).toHaveBeenCalledWith(
+      EVENT_NAMES.DISCIPLINE_CHANGED,
+      expect.objectContaining({ action: 'recalculate' }),
+    )
+    emitSpy.mockRestore()
+  })
+
+  it('refresh: 有持久化记录时广播 DISCIPLINE_CHANGED，无记录不广播', async () => {
+    const report = createMockReport()
+    mockQuery.mockResolvedValue({
+      success: true,
+      data: {
+        id: 'latest',
+        generatedAt: 12345,
+        report,
+        tradeErrors: [],
+        disciplineScore: 80,
+        skillRoadmap: [],
+        psychologicalProfile: report.errorAnalysis.psychologicalProfile,
+      },
+    })
+
+    const emitSpy = vi.spyOn(eventBus, 'emit')
+    await useDisciplineStore.getState().refresh()
+    expect(emitSpy).toHaveBeenCalledWith(
+      EVENT_NAMES.DISCIPLINE_CHANGED,
+      expect.objectContaining({ action: 'refresh', generatedAt: 12345 }),
+    )
+
+    // 无持久化记录：不广播
+    emitSpy.mockClear()
+    mockQuery.mockResolvedValue({ success: true, data: null })
+    await useDisciplineStore.getState().refresh()
+    expect(emitSpy).not.toHaveBeenCalledWith(EVENT_NAMES.DISCIPLINE_CHANGED, expect.anything())
+    emitSpy.mockRestore()
+  })
+})
+
+// ============================================================
+// initDisciplineStoreSubscriptions
+// ============================================================
+
+describe('initDisciplineStoreSubscriptions', () => {
+  it('source 过滤 + action 过滤', async () => {
+    const cleanup = initDisciplineStoreSubscriptions()
+    const cb = capturedCallbacks.get('orders')
+    expect(cb).toBeDefined()
+
+    // trading source 应该被过滤
+    cb!({
+      meta: { source: 'trading' as any, target: 'db' as any, action: 'INSERT_ORDER' as any, traceId: 't1', timestamp: Date.now() },
+      payload: {},
+    } as StandardEnvelope)
+
+    // 不相关的 action 应该被过滤
+    cb!({
+      meta: { source: 'other' as any, target: 'db' as any, action: 'SAVE_SCORES' as any, traceId: 't2', timestamp: Date.now() },
+      payload: {},
+    } as StandardEnvelope)
+
+    await new Promise((r) => setTimeout(r, 150))
+
+    // 有效事件应该触发
+    cb!({
+      meta: { source: 'other' as any, target: 'db' as any, action: 'INSERT_ORDER' as any, traceId: 't3', timestamp: Date.now() },
+      payload: {},
+    } as StandardEnvelope)
+
+    await new Promise((r) => setTimeout(r, 150))
+
+    cleanup()
+  })
+
+  it('去抖 100ms', async () => {
+    const cleanup = initDisciplineStoreSubscriptions()
+    const cb = capturedCallbacks.get('orders')
+    expect(cb).toBeDefined()
+
+    // 连续发送 3 个有效事件
+    cb!({
+      meta: { source: 'other' as any, target: 'db' as any, action: 'INSERT_ORDER' as any, traceId: 't1', timestamp: Date.now() },
+      payload: {},
+    } as StandardEnvelope)
+    cb!({
+      meta: { source: 'other' as any, target: 'db' as any, action: 'UPDATE_ORDER' as any, traceId: 't2', timestamp: Date.now() },
+      payload: {},
+    } as StandardEnvelope)
+    cb!({
+      meta: { source: 'other' as any, target: 'db' as any, action: 'DELETE_ORDER' as any, traceId: 't3', timestamp: Date.now() },
+      payload: {},
+    } as StandardEnvelope)
+
+    // 50ms 内不应触发
+    await new Promise((r) => setTimeout(r, 50))
+
+    // 150ms 后应只触发一次
+    await new Promise((r) => setTimeout(r, 150))
+
+    cleanup()
+  })
+
+  it('tradeActionExecuted 也应触发', async () => {
+    const cleanup = initDisciplineStoreSubscriptions()
+    const cb = capturedCallbacks.get('orders')
+    expect(cb).toBeDefined()
+
+    cb!({
+      meta: { source: 'other' as any, target: 'db' as any, action: 'TRADE_ACTION_EXECUTED' as any, traceId: 't1', timestamp: Date.now() },
+      payload: {},
+    } as StandardEnvelope)
+
+    await new Promise((r) => setTimeout(r, 150))
+
+    cleanup()
+  })
+
+  it('返回 cleanup 函数', () => {
+    const cleanup = initDisciplineStoreSubscriptions()
+    expect(typeof cleanup).toBe('function')
+
+    cleanup()
+
+    // 再次初始化应该能重新订阅
+    const cleanup2 = initDisciplineStoreSubscriptions()
+    expect(typeof cleanup2).toBe('function')
+    cleanup2()
+  })
+
+  // ============================================================
+  // 重复初始化：已存在订阅时直接返回旧 cleanup
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-133-sub-dup-01 */
+  it('重复初始化：_unsubscribeOrders 已存在时返回旧 cleanup 并跳过', () => {
+    // beforeEach 已调用过一次 init+cleanup，mockSubscribe 已被调用
+    const subscribeCountBefore = mockSubscribe.mock.calls.length
+
+    // 首次初始化（_unsubscribeOrders 为 null，因为 beforeEach 的 cleanup 清理了）
+    const cleanup1 = initDisciplineStoreSubscriptions()
+    expect(typeof cleanup1).toBe('function')
+    // 新增了 1 次 subscribe 调用
+    expect(mockSubscribe.mock.calls.length).toBe(subscribeCountBefore + 1)
+
+    // 重复初始化 → 应该 warn 并跳过 subscribe
+    const cleanup2 = initDisciplineStoreSubscriptions()
+    expect(typeof cleanup2).toBe('function')
+    expect(mockLogger.warn).toHaveBeenCalledWith(
+      '[disciplineStore] Subscriptions already initialized, skipping',
+    )
+
+    // subscribe 调用次数没有增加（重复初始化被跳过）
+    expect(mockSubscribe.mock.calls.length).toBe(subscribeCountBefore + 1)
+
+    // 清理
+    cleanup1()
+  })
+
+  // ============================================================
+  // 补充：source 自激过滤（覆盖分支 458 真分支）
+  // ============================================================
+
+  /** @test_id V9-TEST-ST-133-sub-self-filter */
+  it('source === tradeReviews 时跳过（自激过滤，分支 458）', async () => {
+    const cleanup = initDisciplineStoreSubscriptions()
+    const cb = capturedCallbacks.get('orders')
+
+    // source === DISCIPLINE_STORE_SOURCE('tradeReviews') 应被过滤
+    cb!({
+      meta: {
+        source: 'tradeReviews' as any,
+        target: 'db' as any,
+        action: 'INSERT_ORDER' as any,
+        traceId: 'self-filter-t1',
+        timestamp: Date.now(),
+      },
+      payload: {},
+    } as StandardEnvelope)
+
+    await new Promise((r) => setTimeout(r, 200))
+
+    // 不应触发 recalculate
+    expect(mockGenerateReviewAsync).not.toHaveBeenCalled()
+
+    cleanup()
+  })
+
+  /** @test_id V9-TEST-ST-133-sub-cleanup-timer-01 */
+  it('cleanup 函数：有去抖定时器时清除定时器', async () => {
+    initDisciplineStoreSubscriptions()
+    const cb = capturedCallbacks.get('orders')!
+
+    // 触发一次有效事件（产生去抖定时器）
+    cb!({
+      meta: { source: 'other' as any, target: 'db' as any, action: 'INSERT_ORDER' as any, traceId: 't1', timestamp: Date.now() },
+      payload: {},
+    } as StandardEnvelope)
+
+    // 在去抖窗口内（50ms）调用 cleanup，此时 _debounceTimer 仍存在
+    await new Promise((r) => setTimeout(r, 50))
+
+    const cleanup = initDisciplineStoreSubscriptions()
+    cleanup()
+
+    // 等待确认定时器被清除（不应有 recalculate 触发）
+    await new Promise((r) => setTimeout(r, 200))
+  })
+})
+
+// ============================================================
+// 补充：loadOrders / generateReviewReport / 异常分支覆盖
+// （覆盖行 366-389, 459, 478-479 及分支 225, 250, 306, 343, 373, 386, 458, 477）
+// ============================================================
+
+describe('disciplineStore 补充覆盖', () => {
+  // ----------------------------------------------------------
+  // loadOrders（覆盖行 366-376）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-133-load-01 */
+  it('loadOrders: 成功委托 orderStore.refresh 并返回订单', async () => {
+    const orders = [createMockOrder(), createMockOrder({ id: 'ord-2' })]
+    mockOrderStoreOrders.push(...orders)
+    mockOrderStoreRefresh.mockResolvedValue(undefined)
+
+    const result = await useDisciplineStore.getState().loadOrders()
+
+    expect(mockOrderStoreRefresh).toHaveBeenCalledTimes(1)
+    expect(result).toEqual(orders)
+  })
+
+  /** @test_id V9-TEST-ST-133-load-02 */
+  it('loadOrders: orderStore.refresh 抛出 Error 时 rethrow', async () => {
+    mockOrderStoreRefresh.mockRejectedValueOnce(new Error('刷新失败'))
+
+    await expect(useDisciplineStore.getState().loadOrders()).rejects.toThrow('刷新失败')
+  })
+
+  /** @test_id V9-TEST-ST-133-load-03 */
+  it('loadOrders: orderStore.refresh 抛出非 Error 值时转为字符串并 rethrow（分支 373）', async () => {
+    mockOrderStoreRefresh.mockRejectedValueOnce('字符串错误')
+
+    let caught: unknown
+    try {
+      await useDisciplineStore.getState().loadOrders()
+    } catch (err) {
+      caught = err
+    }
+    expect(caught).toBe('字符串错误')
+  })
+
+  // ----------------------------------------------------------
+  // generateReviewReport（覆盖行 380-389）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-133-gen-01 */
+  it('generateReviewReport: 成功委托 generateReview 并返回报告', () => {
+    const report = createMockReport()
+    mockGenerateReview.mockReturnValue(report)
+
+    const result = useDisciplineStore.getState().generateReviewReport([createMockOrder()])
+
+    expect(mockGenerateReview).toHaveBeenCalledTimes(1)
+    expect(result).toEqual(report)
+  })
+
+  /** @test_id V9-TEST-ST-133-gen-02 */
+  it('generateReviewReport: generateReview 抛出 Error 时 rethrow', () => {
+    mockGenerateReview.mockImplementationOnce(() => {
+      throw new Error('生成报告失败')
+    })
+
+    expect(() =>
+      useDisciplineStore.getState().generateReviewReport([createMockOrder()]),
+    ).toThrow('生成报告失败')
+  })
+
+  /** @test_id V9-TEST-ST-133-gen-03 */
+  it('generateReviewReport: generateReview 抛出非 Error 值时转为字符串并 rethrow（分支 386）', () => {
+    mockGenerateReview.mockImplementationOnce(() => {
+      throw '生成报告字符串错误'
+    })
+
+    let caught: unknown
+    try {
+      useDisciplineStore.getState().generateReviewReport([createMockOrder()])
+    } catch (err) {
+      caught = err
+    }
+    expect(caught).toBe('生成报告字符串错误')
+  })
+
+  // ----------------------------------------------------------
+  // recalculate 非 Error 异常路径（覆盖分支 225, 250）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-133-recalc-persist-nonerr */
+  it('recalculate: 持久化抛出非 Error 值时 warn 且不影响主流程（分支 225）', async () => {
+    mockGenerateReviewAsync.mockResolvedValue(createMockReport())
+    mockClassifyErrors.mockReturnValue(createMockClassification())
+    mockForward.mockRejectedValueOnce('持久化字符串错误')
+
+    await useDisciplineStore.getState().recalculate([createMockOrder()])
+
+    const state = useDisciplineStore.getState()
+    expect(state.latestReport).toBeDefined()
+    expect(state.error).toBeNull()
+    expect(mockLogger.warn).toHaveBeenCalledWith(
+      '[disciplineStore] 复盘摘要持久化失败',
+      { error: '持久化字符串错误' },
+    )
+  })
+
+  /** @test_id V9-TEST-ST-133-recalc-main-nonerr */
+  it('recalculate: generateReviewAsync 抛出非 Error 值时回滚到旧快照（分支 250）', async () => {
+    const oldReport = createMockReport()
+    useDisciplineStore.setState({
+      latestReport: oldReport,
+      disciplineScore: 70,
+    })
+
+    mockGenerateReviewAsync.mockRejectedValueOnce('AI字符串错误')
+
+    await useDisciplineStore.getState().recalculate([createMockOrder()])
+
+    const state = useDisciplineStore.getState()
+    expect(state.latestReport).toEqual(oldReport)
+    expect(state.disciplineScore).toBe(70)
+    expect(state.error).toBe('AI字符串错误')
+  })
+
+  // ----------------------------------------------------------
+  // refresh 默认错误消息 + 非 Error 异常（覆盖分支 306, 343）
+  // ----------------------------------------------------------
+
+  /** @test_id V9-TEST-ST-133-refresh-default-err */
+  it('refresh: queryResult.error 为 null 时使用默认错误消息（分支 306）', async () => {
+    mockQuery.mockResolvedValueOnce({ success: false, error: null })
+
+    await useDisciplineStore.getState().refresh()
+
+    expect(useDisciplineStore.getState().error).toBe('读取复盘记录失败')
+  })
+
+  /** @test_id V9-TEST-ST-133-refresh-nonerr */
+  it('refresh: query 抛出非 Error 值时回滚到旧快照（分支 343）', async () => {
+    const oldReport = createMockReport()
+    useDisciplineStore.setState({
+      latestReport: oldReport,
+      disciplineScore: 70,
+    })
+
+    mockQuery.mockRejectedValueOnce('查询字符串错误')
+
+    await useDisciplineStore.getState().refresh()
+
+    const state = useDisciplineStore.getState()
+    expect(state.latestReport).toEqual(oldReport)
+    expect(state.disciplineScore).toBe(70)
+    expect(state.error).toBe('查询字符串错误')
+  })
+})

@@ -1,0 +1,24 @@
+{{/*
+基线 SHA ConfigMap。若指定 baseline.existingConfigMap 则跳过创建。
+*/}}
+{{- if not .Values.baseline.existingConfigMap -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "v9-fingerprint-verify.fullname" . }}-baseline
+  labels:
+    {{- include "v9-fingerprint-verify.labels" . | nindent 4 }}
+data:
+  baseline.sha: |-
+{{ .Values.baseline.sha | default "" | indent 4 }}
+---
+{{- end }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "v9-fingerprint-verify.fullname" . }}-script
+  labels:
+    {{- include "v9-fingerprint-verify.labels" . | nindent 4 }}
+data:
+  verify-embedding-fingerprint.py: |-
+{{ .Files.Get "files/verify-embedding-fingerprint.py" | default "# placeholder: 将 verify-embedding-fingerprint.py 放入 files/ 目录\n" | indent 4 }}

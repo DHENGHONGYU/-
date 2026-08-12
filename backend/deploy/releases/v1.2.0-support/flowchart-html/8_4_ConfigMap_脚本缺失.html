@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>§8.4 ConfigMap 脚本缺失</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+        h1 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        #diagram {
+            background: #fff;
+        }
+        .tip {
+            margin-top: 15px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>§8.4 ConfigMap 脚本缺失</h1>
+    <div id="diagram" class="mermaid">
+flowchart TD
+    A[Pod 启动失败: 脚本文件不存在] --> B[kubectl get configmap fingerprint-script]
+    B --> C{ConfigMap 是否存在?}
+    C -->|不存在| D{部署方式判断}
+    D -->|Helm Chart| E[检查 files/ 目录是否有脚本]
+    D -->|原生 YAML| F[手动创建 ConfigMap]
+    C -->|存在| G{key 名是否正确?}
+    G -->|key 名不对| H[检查 VolumeMount mountPath]
+    H --> I[检查 ConfigMap data key 名称]
+    </div>
+    <div class="tip">
+        右键点击图表 → "图片另存为" 即可保存 PNG.<br/>
+        或使用浏览器截图工具截取整个页面.
+    </div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

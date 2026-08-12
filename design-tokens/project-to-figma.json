@@ -1,0 +1,332 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "V9 代码令牌到 Figma / MasterGo 设计变量的反向映射（Project → Figma）",
+  "version": "1.0.0",
+  "lastUpdated": "2026-08-11",
+  "mappings": [
+    {
+      "project": "CHART_PALETTE.grid",
+      "figma": "color/chart/grid",
+      "themeAware": false,
+      "usage": "图表网格线"
+    },
+    {
+      "project": "CHART_PALETTE.series1",
+      "figma": "color/chart/series-1",
+      "themeAware": false,
+      "usage": "图表系列色 1"
+    },
+    {
+      "project": "CHART_PALETTE.series2",
+      "figma": "color/chart/series-2",
+      "themeAware": false,
+      "usage": "图表系列色 2"
+    },
+    {
+      "project": "CHART_PALETTE.series3",
+      "figma": "color/chart/series-3",
+      "themeAware": false,
+      "usage": "图表系列色 3"
+    },
+    {
+      "project": "COLOR_TOKENS.factorBeta.tailwind",
+      "figma": "color/factor/beta",
+      "themeAware": false,
+      "usage": "β 因子"
+    },
+    {
+      "project": "COLOR_TOKENS.factorGuzhi.tailwind",
+      "figma": "color/factor/guzhi",
+      "themeAware": false,
+      "usage": "估值因子"
+    },
+    {
+      "project": "COLOR_TOKENS.factorJingqi.tailwind",
+      "figma": "color/factor/jingqi",
+      "themeAware": false,
+      "usage": "景气因子"
+    },
+    {
+      "project": "COLOR_TOKENS.factorNengliang.tailwind",
+      "figma": "color/factor/nengliang",
+      "themeAware": false,
+      "usage": "量能因子"
+    },
+    {
+      "project": "COLOR_TOKENS.factorZijin.tailwind",
+      "figma": "color/factor/zijin",
+      "themeAware": false,
+      "usage": "资金因子"
+    },
+    {
+      "project": "COLOR_TOKENS.scoreHigh.tailwind",
+      "figma": "color/score/high",
+      "themeAware": false,
+      "usage": "评分高分"
+    },
+    {
+      "project": "COLOR_TOKENS.scoreLow.tailwind",
+      "figma": "color/score/low",
+      "themeAware": false,
+      "usage": "评分低分"
+    },
+    {
+      "project": "COLOR_TOKENS.scoreMid.tailwind",
+      "figma": "color/score/mid",
+      "themeAware": false,
+      "usage": "评分中分"
+    },
+    {
+      "project": "COLOR_TOKENS.signalMedium.tailwind",
+      "figma": "color/signal/medium",
+      "themeAware": false,
+      "usage": "中信号"
+    },
+    {
+      "project": "COLOR_TOKENS.signalMediumStrong.tailwind",
+      "figma": "color/signal/medium-strong",
+      "themeAware": false,
+      "usage": "中强信号"
+    },
+    {
+      "project": "COLOR_TOKENS.signalNone.tailwind",
+      "figma": "color/signal/none",
+      "themeAware": false,
+      "usage": "无信号"
+    },
+    {
+      "project": "COLOR_TOKENS.signalStrong.tailwind",
+      "figma": "color/signal/strong",
+      "themeAware": false,
+      "usage": "强信号"
+    },
+    {
+      "project": "COLOR_TOKENS.signalWeak.tailwind",
+      "figma": "color/signal/weak",
+      "themeAware": false,
+      "usage": "弱信号"
+    },
+    {
+      "project": "SEMANTIC_COLOR_ROLES.primary.bg",
+      "figma": "color/semantic/primary-bg",
+      "themeAware": true,
+      "usage": "品牌主色背景（主题感知）"
+    },
+    {
+      "project": "SEMANTIC_COLOR_ROLES.primary.text",
+      "figma": "color/semantic/primary",
+      "themeAware": true,
+      "usage": "品牌主色文本（主题感知）"
+    },
+    {
+      "project": "SEMANTIC_COLOR_ROLES.surface.bg",
+      "figma": "color/semantic/surface-bg",
+      "themeAware": true,
+      "usage": "卡片/面板背景（主题感知）"
+    },
+    {
+      "project": "SEMANTIC_COLOR_ROLES.surface.border",
+      "figma": "color/semantic/surface-border",
+      "themeAware": true,
+      "usage": "表面边框（主题感知）"
+    },
+    {
+      "project": "SEMANTIC_COLOR_ROLES.text.primary",
+      "figma": "color/semantic/neutral-text",
+      "themeAware": true,
+      "usage": "主要文字（主题感知）"
+    },
+    {
+      "project": "SEMANTIC_COLOR_ROLES.text.secondary",
+      "figma": "color/semantic/neutral-text-secondary",
+      "themeAware": true,
+      "usage": "次要文字（主题感知）"
+    },
+    {
+      "project": "SPACING_TOKENS.xl",
+      "figma": "spacing/6",
+      "themeAware": false,
+      "usage": "超大间距 24px"
+    },
+    {
+      "project": "STOCK_COLOR_TOKENS.down.tailwind",
+      "figma": "color/stock/down",
+      "themeAware": false,
+      "usage": "股票下跌（红涨绿跌，豁免主题切换）"
+    },
+    {
+      "project": "STOCK_COLOR_TOKENS.neutral.tailwind",
+      "figma": "color/stock/neutral",
+      "themeAware": false,
+      "usage": "股票平盘"
+    },
+    {
+      "project": "STOCK_COLOR_TOKENS.up.tailwind",
+      "figma": "color/stock/up",
+      "themeAware": false,
+      "usage": "股票上涨（红涨绿跌，豁免主题切换）"
+    },
+    {
+      "project": "THEME_TOKENS.color.border",
+      "figma": "color/semantic/border",
+      "themeAware": true,
+      "usage": "默认边框"
+    },
+    {
+      "project": "THEME_TOKENS.color.destructive",
+      "figma": "color/semantic/destructive",
+      "themeAware": true,
+      "usage": "危险/错误文本"
+    },
+    {
+      "project": "THEME_TOKENS.color.destructiveBg",
+      "figma": "color/semantic/destructive-bg",
+      "themeAware": true,
+      "usage": "危险/错误背景"
+    },
+    {
+      "project": "THEME_TOKENS.color.info",
+      "figma": "color/semantic/info",
+      "themeAware": true,
+      "usage": "信息提示文本"
+    },
+    {
+      "project": "THEME_TOKENS.color.infoBg",
+      "figma": "color/semantic/info-bg",
+      "themeAware": true,
+      "usage": "信息提示背景"
+    },
+    {
+      "project": "THEME_TOKENS.color.muted",
+      "figma": "color/semantic/muted",
+      "themeAware": true,
+      "usage": "弱化/次要文本"
+    },
+    {
+      "project": "THEME_TOKENS.color.mutedForeground",
+      "figma": "color/semantic/muted-foreground",
+      "themeAware": true,
+      "usage": "更弱提示文本"
+    },
+    {
+      "project": "THEME_TOKENS.color.success",
+      "figma": "color/semantic/success",
+      "themeAware": true,
+      "usage": "成功/正向文本"
+    },
+    {
+      "project": "THEME_TOKENS.color.successBg",
+      "figma": "color/semantic/success-bg",
+      "themeAware": true,
+      "usage": "成功/正向背景"
+    },
+    {
+      "project": "THEME_TOKENS.color.warning",
+      "figma": "color/semantic/warning",
+      "themeAware": true,
+      "usage": "警告/注意文本"
+    },
+    {
+      "project": "THEME_TOKENS.color.warningBg",
+      "figma": "color/semantic/warning-bg",
+      "themeAware": true,
+      "usage": "警告/注意背景"
+    },
+    {
+      "project": "THEME_TOKENS.radius.full",
+      "figma": "border-radius/full",
+      "themeAware": false,
+      "usage": "全圆角"
+    },
+    {
+      "project": "THEME_TOKENS.radius.lg",
+      "figma": "border-radius/lg",
+      "themeAware": false,
+      "usage": "大圆角"
+    },
+    {
+      "project": "THEME_TOKENS.radius.md",
+      "figma": "border-radius/md",
+      "themeAware": false,
+      "usage": "中圆角"
+    },
+    {
+      "project": "THEME_TOKENS.radius.sm",
+      "figma": "border-radius/sm",
+      "themeAware": false,
+      "usage": "小圆角"
+    },
+    {
+      "project": "THEME_TOKENS.spacing.lg",
+      "figma": "spacing/4",
+      "themeAware": false,
+      "usage": "大间距 16px"
+    },
+    {
+      "project": "THEME_TOKENS.spacing.md",
+      "figma": "spacing/3",
+      "themeAware": false,
+      "usage": "中间距 12px"
+    },
+    {
+      "project": "THEME_TOKENS.spacing.sm",
+      "figma": "spacing/2",
+      "themeAware": false,
+      "usage": "小间距 8px"
+    },
+    {
+      "project": "THEME_TOKENS.spacing.xs",
+      "figma": "spacing/1",
+      "themeAware": false,
+      "usage": "极小间距 4px"
+    },
+    {
+      "project": "THEME_TOKENS.typography.fontSize.base",
+      "figma": "typography/font-size-base",
+      "themeAware": false,
+      "usage": "默认字号"
+    },
+    {
+      "project": "THEME_TOKENS.typography.fontSize.lg",
+      "figma": "typography/font-size-lg",
+      "themeAware": false,
+      "usage": "大字号"
+    },
+    {
+      "project": "THEME_TOKENS.typography.fontSize.sm",
+      "figma": "typography/font-size-sm",
+      "themeAware": false,
+      "usage": "小字号"
+    },
+    {
+      "project": "THEME_TOKENS.typography.fontSize.xl",
+      "figma": "typography/font-size-xl",
+      "themeAware": false,
+      "usage": "超大字号"
+    },
+    {
+      "project": "THEME_TOKENS.typography.fontSize.xs",
+      "figma": "typography/font-size-xs",
+      "themeAware": false,
+      "usage": "超小字号"
+    },
+    {
+      "project": "THEME_TOKENS.typography.fontWeight.bold",
+      "figma": "typography/font-weight-bold",
+      "themeAware": false,
+      "usage": "粗体字重"
+    },
+    {
+      "project": "THEME_TOKENS.typography.fontWeight.medium",
+      "figma": "typography/font-weight-medium",
+      "themeAware": false,
+      "usage": "中等字重"
+    },
+    {
+      "project": "THEME_TOKENS.typography.fontWeight.semibold",
+      "figma": "typography/font-weight-semibold",
+      "themeAware": false,
+      "usage": "半粗字重"
+    }
+  ]
+}

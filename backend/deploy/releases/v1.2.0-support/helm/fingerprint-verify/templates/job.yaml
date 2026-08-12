@@ -1,0 +1,48 @@
+{{/*
+一次性 Job：始终创建，便于手动触发验证。
+*/}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "v9-fingerprint-verify.fullname" . }}
+  labels:
+    {{- include "v9-fingerprint-verify.labels" . | nindent 4 }}
+spec:
+  {{- if .Values.runtime.timeoutSeconds }}
+  activeDeadlineSeconds: {{ .Values.runtime.timeoutSeconds }}
+  {{- end }}
+  backoffLimit: {{ .Values.job.backoffLimit }}
+  {{- if .Values.job.ttlSecondsAfterFinished }}
+  ttlSecondsAfterFinished: {{ .Values.job.ttlSecondsAfterFinished }}
+  {{- end }}
+  template:
+    {{- include "v9-fingerprint-verify.fullPodTemplate" . | nindent 4 }}
+
+{{/*
+定时 CronJob：仅当 job.mode=CronJob 时创建。
+*/}}
+{{- if eq .Values.job.mode "CronJob" }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "v9-fingerprint-verify.fullname" . }}-cron
+  labels:
+    {{- include "v9-fingerprint-verify.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.job.cronSchedule | quote }}
+  concurrencyPolicy: {{ .Values.job.concurrencyPolicy }}
+  successfulJobsHistoryLimit: {{ .Values.job.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.job.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      {{- if .Values.runtime.timeoutSeconds }}
+      activeDeadlineSeconds: {{ .Values.runtime.timeoutSeconds }}
+      {{- end }}
+      backoffLimit: {{ .Values.job.backoffLimit }}
+      {{- if .Values.job.ttlSecondsAfterFinished }}
+      ttlSecondsAfterFinished: {{ .Values.job.ttlSecondsAfterFinished }}
+      {{- end }}
+      template:
+        {{- include "v9-fingerprint-verify.fullPodTemplate" . | nindent 8 }}
+{{- end }}

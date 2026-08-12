@@ -1,0 +1,21 @@
+# Known flaky / load-sensitive test files (one glob per line, # = comment).
+#
+# Population procedure (requires a working shell):
+#   for i in $(seq 1 20); do npx vitest run <file> || echo "FLAKE at $i"; done
+# If a file passes in isolation but fails under full-suite load, add its glob here.
+#
+# Discipline: this list MUST shrink over time. When a quarantined test becomes
+# deterministic again, DELETE its line so it rejoins `test:clean`. Never let the
+# list grow unbounded — that defeats the purpose of isolation.
+#
+# Run:  npm run test:stable      (full suite minus these — the trust signal)
+#       npm run test:quarantine  (only these — re-verify / fix without blocking CI)
+#
+# ---- 已修复并移出隔离（2026-08-02）----
+# 以下 3 个审计白盒套件曾因路径解析错位（audit-mapping-integrity ROOT 缺一级 /
+# audit-token-consumption 重复路径段）与测试桩路径未对齐而 stale/broken。
+# 已随源码修复（ROOT/docsPath 修正 + 测试路径对齐 scripts/other/extract-code-graph.ts）
+# 重新变绿（test:quarantine 56/56 通过），现已 rejoined test:clean，本段仅留痕。
+# tests/__tests__/scripts/audit-doc-sync.test.ts
+# tests/__tests__/scripts/audit-token-consumption.test.ts
+# tests/__tests__/scripts/audit-mapping-integrity.test.ts

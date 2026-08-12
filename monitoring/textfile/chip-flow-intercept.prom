@@ -1,0 +1,115 @@
+# HELP chip_flow_intercept_total 低流动性拦截总数 v4.5.4
+# TYPE chip_flow_intercept_total gauge
+chip_flow_intercept_total{benchmark="v4.5.4",date="20260810",sample_total="22",kind="tp"} 9
+chip_flow_intercept_total{benchmark="v4.5.4",date="20260810",sample_total="22",kind="fp"} 0
+chip_flow_intercept_total{benchmark="v4.5.4",date="20260810",sample_total="22",kind="tn"} 8
+chip_flow_intercept_total{benchmark="v4.5.4",date="20260810",sample_total="22",kind="fn"} 0
+chip_flow_intercept_total{benchmark="v4.5.4",date="20260810",sample_total="22",kind="bypass"} 5
+# HELP chip_flow_intercept_accuracy_ratio 低流动性拦截准确率指标 v4.5.4
+# TYPE chip_flow_intercept_accuracy_ratio gauge
+chip_flow_intercept_accuracy_ratio{benchmark="v4.5.4",date="20260810",sample_total="22",metric="accuracy"} 1.000000
+chip_flow_intercept_accuracy_ratio{benchmark="v4.5.4",date="20260810",sample_total="22",metric="precision"} 1.000000
+chip_flow_intercept_accuracy_ratio{benchmark="v4.5.4",date="20260810",sample_total="22",metric="recall"} 1.000000
+chip_flow_intercept_accuracy_ratio{benchmark="v4.5.4",date="20260810",sample_total="22",metric="miskill_rate"} 0.000000
+chip_flow_intercept_accuracy_ratio{benchmark="v4.5.4",date="20260810",sample_total="22",metric="leakage_rate"} 0.000000
+chip_flow_intercept_accuracy_ratio{benchmark="v4.5.4",date="20260810",sample_total="22",metric="bypass_precision"} 1.000000
+chip_flow_intercept_accuracy_ratio{benchmark="v4.5.4",date="20260810",sample_total="22",metric="bypass_recall"} 1.000000
+# HELP chip_flow_intercept_sample 被拦截/未拦截股票样本点 v4.5.4
+# TYPE chip_flow_intercept_sample gauge
+# HELP chip_flow_turnover_actual 换手率实际值 v4.5.4
+# TYPE chip_flow_turnover_actual gauge
+# HELP chip_flow_volume_ratio_actual 量比实际值 v4.5.4
+# TYPE chip_flow_volume_ratio_actual gauge
+# HELP chip_flow_daily_turnover_amount 日成交金额（元）v4.5.4 蓝筹豁免判定依据
+# TYPE chip_flow_daily_turnover_amount gauge
+# ---- 活跃股 TN（8只）----
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600519.SH",name="贵州茅台",sector="active",intercepted="0",class="TN"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600519.SH",name="贵州茅台",sector="active",intercepted="0",class="TN"} 0.008000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600519.SH",name="贵州茅台",sector="active",intercepted="0",class="TN"} 1.2000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600519.SH",name="贵州茅台",sector="active",intercepted="0",class="TN",bypassed="0"} 1500000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="000001.SZ",name="平安银行",sector="active",intercepted="0",class="TN"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="000001.SZ",name="平安银行",sector="active",intercepted="0",class="TN"} 0.015000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="000001.SZ",name="平安银行",sector="active",intercepted="0",class="TN"} 1.5000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="000001.SZ",name="平安银行",sector="active",intercepted="0",class="TN",bypassed="0"} 800000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="300750.SZ",name="宁德时代",sector="active",intercepted="0",class="TN"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="300750.SZ",name="宁德时代",sector="active",intercepted="0",class="TN"} 0.020000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="300750.SZ",name="宁德时代",sector="active",intercepted="0",class="TN"} 2.0000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="300750.SZ",name="宁德时代",sector="active",intercepted="0",class="TN",bypassed="0"} 2000000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="002594.SZ",name="比亚迪",sector="active",intercepted="0",class="TN"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="002594.SZ",name="比亚迪",sector="active",intercepted="0",class="TN"} 0.018000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="002594.SZ",name="比亚迪",sector="active",intercepted="0",class="TN"} 1.8000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="002594.SZ",name="比亚迪",sector="active",intercepted="0",class="TN",bypassed="0"} 1200000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600036.SH",name="招商银行",sector="active",intercepted="0",class="TN"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600036.SH",name="招商银行",sector="active",intercepted="0",class="TN"} 0.006000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600036.SH",name="招商银行",sector="active",intercepted="0",class="TN"} 0.9000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600036.SH",name="招商银行",sector="active",intercepted="0",class="TN",bypassed="0"} 500000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-002.SZ",name="边界-量比0.70放行",sector="borderline",intercepted="0",class="TN"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-002.SZ",name="边界-量比0.70放行",sector="borderline",intercepted="0",class="TN"} 0.004000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-002.SZ",name="边界-量比0.70放行",sector="borderline",intercepted="0",class="TN"} 0.7000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-002.SZ",name="边界-量比0.70放行",sector="borderline",intercepted="0",class="TN",bypassed="0"} 50000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-003.SZ",name="边界-量比0.75放行",sector="borderline",intercepted="0",class="TN"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-003.SZ",name="边界-量比0.75放行",sector="borderline",intercepted="0",class="TN"} 0.004000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-003.SZ",name="边界-量比0.75放行",sector="borderline",intercepted="0",class="TN"} 0.7500
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-003.SZ",name="边界-量比0.75放行",sector="borderline",intercepted="0",class="TN",bypassed="0"} 50000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-004.SZ",name="边界-换手0.5%放行",sector="borderline",intercepted="0",class="TN"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-004.SZ",name="边界-换手0.5%放行",sector="borderline",intercepted="0",class="TN"} 0.005000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-004.SZ",name="边界-换手0.5%放行",sector="borderline",intercepted="0",class="TN"} 0.5000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-004.SZ",name="边界-换手0.5%放行",sector="borderline",intercepted="0",class="TN",bypassed="0"} 50000000
+# ---- 僵尸股 TP（9只，正确拦截）----
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600001.SH",name="僵尸股A",sector="low_liq_zombie",intercepted="1",class="TP"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600001.SH",name="僵尸股A",sector="low_liq_zombie",intercepted="1",class="TP"} 0.003000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600001.SH",name="僵尸股A",sector="low_liq_zombie",intercepted="1",class="TP"} 0.5000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600001.SH",name="僵尸股A",sector="low_liq_zombie",intercepted="1",class="TP",bypassed="0"} 50000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600002.SH",name="僵尸股B",sector="low_liq_zombie",intercepted="1",class="TP"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600002.SH",name="僵尸股B",sector="low_liq_zombie",intercepted="1",class="TP"} 0.002000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600002.SH",name="僵尸股B",sector="low_liq_zombie",intercepted="1",class="TP"} 0.4000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600002.SH",name="僵尸股B",sector="low_liq_zombie",intercepted="1",class="TP",bypassed="0"} 30000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600003.SH",name="僵尸股C",sector="low_liq_zombie",intercepted="1",class="TP"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600003.SH",name="僵尸股C",sector="low_liq_zombie",intercepted="1",class="TP"} 0.004000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600003.SH",name="僵尸股C",sector="low_liq_zombie",intercepted="1",class="TP"} 0.6000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600003.SH",name="僵尸股C",sector="low_liq_zombie",intercepted="1",class="TP",bypassed="0"} 80000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600004.SH",name="僵尸股D",sector="low_liq_zombie",intercepted="1",class="TP"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600004.SH",name="僵尸股D",sector="low_liq_zombie",intercepted="1",class="TP"} 0.001000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600004.SH",name="僵尸股D",sector="low_liq_zombie",intercepted="1",class="TP"} 0.3000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600004.SH",name="僵尸股D",sector="low_liq_zombie",intercepted="1",class="TP",bypassed="0"} 10000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600005.SH",name="僵尸股E",sector="low_liq_zombie",intercepted="1",class="TP"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600005.SH",name="僵尸股E",sector="low_liq_zombie",intercepted="1",class="TP"} 0.002500
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600005.SH",name="僵尸股E",sector="low_liq_zombie",intercepted="1",class="TP"} 0.4500
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600005.SH",name="僵尸股E",sector="low_liq_zombie",intercepted="1",class="TP",bypassed="0"} 40000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600006.SH",name="僵尸股F",sector="low_liq_zombie",intercepted="1",class="TP"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600006.SH",name="僵尸股F",sector="low_liq_zombie",intercepted="1",class="TP"} 0.003500
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600006.SH",name="僵尸股F",sector="low_liq_zombie",intercepted="1",class="TP"} 0.5500
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="600006.SH",name="僵尸股F",sector="low_liq_zombie",intercepted="1",class="TP",bypassed="0"} 60000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-001.SZ",name="边界-量比0.69拦截",sector="borderline",intercepted="1",class="TP"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-001.SZ",name="边界-量比0.69拦截",sector="borderline",intercepted="1",class="TP"} 0.004000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-001.SZ",name="边界-量比0.69拦截",sector="borderline",intercepted="1",class="TP"} 0.6900
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-001.SZ",name="边界-量比0.69拦截",sector="borderline",intercepted="1",class="TP",bypassed="0"} 50000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-005.SZ",name="边界-换手0.49%拦截",sector="borderline",intercepted="1",class="TP"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-005.SZ",name="边界-换手0.49%拦截",sector="borderline",intercepted="1",class="TP"} 0.004900
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-005.SZ",name="边界-换手0.49%拦截",sector="borderline",intercepted="1",class="TP"} 0.5000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-005.SZ",name="边界-换手0.49%拦截",sector="borderline",intercepted="1",class="TP",bypassed="0"} 50000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-006.SZ",name="边界-3亿整不豁免",sector="borderline",intercepted="1",class="TP"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-006.SZ",name="边界-3亿整不豁免",sector="borderline",intercepted="1",class="TP"} 0.003000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-006.SZ",name="边界-3亿整不豁免",sector="borderline",intercepted="1",class="TP"} 0.5000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-006.SZ",name="边界-3亿整不豁免",sector="borderline",intercepted="1",class="TP",bypassed="0"} 300000000
+# ---- 蓝筹股 BYPASS（5只，正确豁免放行）----
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601398.SH",name="工商银行",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601398.SH",name="工商银行",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS"} 0.001500
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601398.SH",name="工商银行",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS"} 0.6000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601398.SH",name="工商银行",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS",bypassed="1"} 400000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601939.SH",name="建设银行",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601939.SH",name="建设银行",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS"} 0.001200
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601939.SH",name="建设银行",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS"} 0.5000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601939.SH",name="建设银行",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS",bypassed="1"} 350000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601288.SH",name="农业银行",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601288.SH",name="农业银行",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS"} 0.001000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601288.SH",name="农业银行",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS"} 0.4500
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601288.SH",name="农业银行",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS",bypassed="1"} 500000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601857.SH",name="中国石油",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601857.SH",name="中国石油",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS"} 0.000800
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601857.SH",name="中国石油",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS"} 0.4000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="601857.SH",name="中国石油",sector="blue_chip_low_turnover",intercepted="0",class="BYPASS",bypassed="1"} 320000000
+chip_flow_intercept_sample{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-007.SZ",name="边界-3.01亿豁免",sector="borderline",intercepted="0",class="BYPASS"} 1.0
+chip_flow_turnover_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-007.SZ",name="边界-3.01亿豁免",sector="borderline",intercepted="0",class="BYPASS"} 0.003000
+chip_flow_volume_ratio_actual{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-007.SZ",name="边界-3.01亿豁免",sector="borderline",intercepted="0",class="BYPASS"} 0.5000
+chip_flow_daily_turnover_amount{benchmark="v4.5.4",date="20260810",sample_total="22",symbol="BD-007.SZ",name="边界-3.01亿豁免",sector="borderline",intercepted="0",class="BYPASS",bypassed="1"} 301000000

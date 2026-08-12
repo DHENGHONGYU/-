@@ -1,0 +1,2740 @@
+{
+  "version": "1.0.0",
+  "created_at": "2026-07-14T00:00:00Z",
+  "redirects": [
+    {
+      "old_path": "A-H-INDEX.md",
+      "new_path": "docs/explanation/A-H-INDEX.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "README.md",
+      "new_path": "docs/explanation/README.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "refactor-research-pool-rename-plan.md",
+      "new_path": "docs/reference/refactor-research-pool-rename-plan.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "00-meta/23-core-docs-final-verification-report.md",
+      "new_path": "docs/00-meta/23-core-docs-final-verification-report.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/23-core-docs-functional-match-report.md",
+      "new_path": "docs/00-meta/23-core-docs-functional-match-report.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/23-core-docs-v2-final-report.md",
+      "new_path": "docs/00-meta/23-core-docs-v2-final-report.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/23个核心文档重新检索报告.md",
+      "new_path": "docs/00-meta/23个核心文档重新检索报告.md",
+      "diataxis_category": "how-to",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/CHANGELOG_WARNINGS_HANDLING_STRATEGY.md",
+      "new_path": "docs/00-meta/CHANGELOG_WARNINGS_HANDLING_STRATEGY.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/CLEANUP_SCHEDULE.md",
+      "new_path": "docs/00-meta/CLEANUP_SCHEDULE.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/directory-audit-report-v1.4.3.md",
+      "new_path": "docs/00-meta/directory-audit-report-v1.4.3.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/DIRECTORY_AUDIT_FEASIBILITY_PLAN.md",
+      "new_path": "docs/00-meta/DIRECTORY_AUDIT_FEASIBILITY_PLAN.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/DIRECTORY_AUDIT_TODO.md",
+      "new_path": "docs/00-meta/DIRECTORY_AUDIT_TODO.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/DIRECTORY_STRUCTURE_AUDIT_REPORT.md",
+      "new_path": "docs/00-meta/DIRECTORY_STRUCTURE_AUDIT_REPORT.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/DIRECTORY_STRUCTURE_GUIDE.md",
+      "new_path": "docs/00-meta/DIRECTORY_STRUCTURE_GUIDE.md",
+      "diataxis_category": "how-to",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/doc-auto-update-kanban.md",
+      "new_path": "docs/00-meta/doc-auto-update-kanban.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/doc-file-management-optimization-plan.md",
+      "new_path": "docs/00-meta/doc-file-management-optimization-plan.md",
+      "diataxis_category": "reference",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/doc-system-check-v9.md",
+      "new_path": "docs/00-meta/doc-system-check-v9.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/doc-trigger-action-map.md",
+      "new_path": "docs/00-meta/doc-trigger-action-map.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/FILE-MANAGEMENT-GUIDE-cleanup-decisions.md",
+      "new_path": "docs/00-meta/FILE-MANAGEMENT-GUIDE-cleanup-decisions.md",
+      "diataxis_category": "how-to",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
+      "new_path": "docs/00-meta/FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
+      "diataxis_category": "how-to",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/FILE-MANAGEMENT-GUIDE-optimization-prompt.md",
+      "new_path": "docs/00-meta/FILE-MANAGEMENT-GUIDE-optimization-prompt.md",
+      "diataxis_category": "how-to",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/FILE-MANAGEMENT-GUIDE-RCA-report.md",
+      "new_path": "docs/00-meta/FILE-MANAGEMENT-GUIDE-RCA-report.md",
+      "diataxis_category": "how-to",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/FILE-MANAGEMENT-GUIDE-task-list.md",
+      "new_path": "docs/00-meta/FILE-MANAGEMENT-GUIDE-task-list.md",
+      "diataxis_category": "how-to",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/GOVERNANCE.md",
+      "new_path": "docs/00-meta/GOVERNANCE.md",
+      "diataxis_category": "reference",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/migration-plan.md",
+      "new_path": "docs/00-meta/migration-plan.md",
+      "diataxis_category": "reference",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/outputs-and-undefined-src-evaluation-report.md",
+      "new_path": "docs/00-meta/outputs-and-undefined-src-evaluation-report.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/P5-verification-report.md",
+      "new_path": "docs/00-meta/P5-verification-report.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/prompt-execute-remediation.md",
+      "new_path": "docs/00-meta/prompt-execute-remediation.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/prompt-merge-dedup.md",
+      "new_path": "docs/00-meta/prompt-merge-dedup.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/REGISTRY_INDEX.md",
+      "new_path": "docs/00-meta/REGISTRY_INDEX.md",
+      "diataxis_category": "reference",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/src-directories-evaluation-report.md",
+      "new_path": "docs/00-meta/src-directories-evaluation-report.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/trae-file-management-review.md",
+      "new_path": "docs/00-meta/trae-file-management-review.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/v9-next-phase-todo.md",
+      "new_path": "docs/00-meta/v9-next-phase-todo.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/V9-PRE-LAUNCH-AUDIT-REPORT-20260713.md",
+      "new_path": "docs/00-meta/V9-PRE-LAUNCH-AUDIT-REPORT-20260713.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/V9-文档治理修复行动计划.md",
+      "new_path": "docs/00-meta/V9-文档治理修复行动计划.md",
+      "diataxis_category": "reference",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/V9-项目健康状态总览.md",
+      "new_path": "docs/00-meta/V9-项目健康状态总览.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/执行校验报告.md",
+      "new_path": "docs/00-meta/执行校验报告.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/文档体系体检报告-v9.md",
+      "new_path": "docs/00-meta/文档体系体检报告-v9.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/文档体系修复执行计划-v1.md",
+      "new_path": "docs/00-meta/文档体系修复执行计划-v1.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/文档归类体系结构.md",
+      "new_path": "docs/00-meta/文档归类体系结构.md",
+      "diataxis_category": "reference",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/文档理解核查报告.md",
+      "new_path": "docs/00-meta/文档理解核查报告.md",
+      "diataxis_category": "reference",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/文档管理系统评分报告.md",
+      "new_path": "docs/00-meta/文档管理系统评分报告.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/文档自动更新体系-架构梳理与任务清单.md",
+      "new_path": "docs/00-meta/文档自动更新体系-架构梳理与任务清单.md",
+      "diataxis_category": "reference",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/月度文档体检检查清单.md",
+      "new_path": "docs/00-meta/月度文档体检检查清单.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "00-meta/ai-index/.ai-index/README.md",
+      "new_path": "docs/00-meta/README.md",
+      "diataxis_category": "explanation",
+      "status": "skipped"
+    },
+    {
+      "old_path": "01-requirements/01-vision-and-goals.md",
+      "new_path": "docs/explanation/01-vision-and-goals.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "01-requirements/02-functional-specs.md",
+      "new_path": "docs/reference/02-functional-specs.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "01-requirements/03-architecture-standards.md",
+      "new_path": "docs/explanation/03-architecture-standards.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "01-requirements/action-list.md",
+      "new_path": "docs/explanation/action-list.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "01-requirements/completeness-profile-batch1.md",
+      "new_path": "docs/reference/completeness-profile-batch1.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "01-requirements/completeness-profile-batch4.md",
+      "new_path": "docs/explanation/completeness-profile-batch4.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "01-requirements/completeness-profile-batch5.md",
+      "new_path": "docs/explanation/completeness-profile-batch5.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "01-requirements/completeness-profile.md",
+      "new_path": "docs/explanation/completeness-profile.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "01-requirements/FILE-MANAGEMENT-GUIDE.md",
+      "new_path": "docs/how-to/FILE-MANAGEMENT-GUIDE.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "01-requirements/fourth-industrial-revolution-core-resource-strategy.md",
+      "new_path": "docs/explanation/fourth-industrial-revolution-core-resource-strategy.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "01-requirements/overview.md",
+      "new_path": "docs/explanation/overview.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "01-requirements/README.md",
+      "new_path": "docs/reference/README.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "01-requirements/RM剩余任务全量盘点与整改方案_2026-07-08.md",
+      "new_path": "docs/reference/RM剩余任务全量盘点与整改方案_2026-07-08.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "01-requirements/v9-input-cabin-strategy-report.md",
+      "new_path": "docs/explanation/v9-input-cabin-strategy-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "01-requirements/v9-system-blueprint.md",
+      "new_path": "docs/reference/v9-system-blueprint.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "01-requirements/V9数据宪法.md",
+      "new_path": "docs/reference/V9数据宪法.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/ai/ai-generate-audit-fix-loop.md",
+      "new_path": "docs/explanation/ai-generate-audit-fix-loop.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/ai/ai-memory-layer.md",
+      "new_path": "docs/explanation/ai-memory-layer.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/ai/mcp-coupling-analysis-report.md",
+      "new_path": "docs/explanation/mcp-coupling-analysis-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/2026-06-20-pure-frontend-architecture.md",
+      "new_path": "docs/explanation/2026-06-20-pure-frontend-architecture.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/architecture-version-comparison.md",
+      "new_path": "docs/explanation/architecture-version-comparison.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/cabins-overview.md",
+      "new_path": "docs/explanation/cabins-overview.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/overview.md",
+      "new_path": "docs/explanation/overview.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/services-catalog.md",
+      "new_path": "docs/reference/services-catalog.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/v10-architecture-alignment.md",
+      "new_path": "docs/explanation/v10-architecture-alignment.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/v9-strategy-architecture.md",
+      "new_path": "docs/explanation/v9-strategy-architecture.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/adr/2026-06-21-databridge-over-direct-datalayer.md",
+      "new_path": "docs/explanation/2026-06-21-databridge-over-direct-datalayer.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/adr/adr-001-pure-frontend-architecture.md",
+      "new_path": "docs/explanation/adr-001-pure-frontend-architecture.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/adr/adr-002-indexeddb-over-localstorage.md",
+      "new_path": "docs/reference/adr-002-indexeddb-over-localstorage.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/adr/adr-003-databridge-over-direct-datalayer.md",
+      "new_path": "docs/reference/adr-003-databridge-over-direct-datalayer.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/adr/adr-004-hashrouter-static-hosting.md",
+      "new_path": "docs/explanation/adr-004-hashrouter-static-hosting.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/adr/adr-005-portalshell-dark-kimi-layout.md",
+      "new_path": "docs/explanation/adr-005-portalshell-dark-kimi-layout.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/adr/adr-006-input-cabin-subpages.md",
+      "new_path": "docs/reference/adr-006-input-cabin-subpages.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/adr/adr-007-screening-signal-persistence-review.md",
+      "new_path": "docs/explanation/adr-007-screening-signal-persistence-review.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/adr/adr-008-v6-core-resource-trading-strategy.md",
+      "new_path": "docs/explanation/adr-008-v6-core-resource-trading-strategy.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/adr/adr-009-dual-strategy-system.md",
+      "new_path": "docs/explanation/adr-009-dual-strategy-system.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/adr/adr-mcp-server-lifecycle.md",
+      "new_path": "docs/reference/adr-mcp-server-lifecycle.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/adr/README.md",
+      "new_path": "docs/reference/README.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/compliance/2026-06-29-data-architecture-governance.md",
+      "new_path": "docs/explanation/2026-06-29-data-architecture-governance.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/compliance/architecture-compliance-report.md",
+      "new_path": "docs/explanation/architecture-compliance-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/compliance/v6-v9-architecture-audit-action-list.md",
+      "new_path": "docs/explanation/v6-v9-architecture-audit-action-list.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/compliance/v6-v9-architecture-audit-plan.md",
+      "new_path": "docs/explanation/v6-v9-architecture-audit-plan.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/compliance/v6-v9-rectification-feasibility-report.md",
+      "new_path": "docs/explanation/v6-v9-rectification-feasibility-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/compliance/v9-architecture-data-dictionary-validation-report.md",
+      "new_path": "docs/reference/v9-architecture-data-dictionary-validation-report.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/compliance/v9-architecture-data-diff-report.md",
+      "new_path": "docs/explanation/v9-architecture-data-diff-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/compliance/v9-architecture-rectification-strategy.md",
+      "new_path": "docs/explanation/v9-architecture-rectification-strategy.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/subsystems/2026-06-21-hashrouter-for-static-hosting.md",
+      "new_path": "docs/explanation/2026-06-21-hashrouter-for-static-hosting.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/subsystems/2026-06-27-dual-strategy-system.md",
+      "new_path": "docs/explanation/2026-06-27-dual-strategy-system.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/subsystems/ARCHITECTURE.md",
+      "new_path": "docs/explanation/ARCHITECTURE.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/subsystems/component-deprecation-policy.md",
+      "new_path": "docs/explanation/component-deprecation-policy.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/subsystems/security-model.md",
+      "new_path": "docs/reference/security-model.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/architecture/subsystems/V9_L2状态层补齐路线图.md",
+      "new_path": "docs/explanation/V9_L2状态层补齐路线图.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cabins/analysis-cabin-spec.md",
+      "new_path": "docs/reference/analysis-cabin-spec.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cabins/analysis-screening-module-dev-plan.md",
+      "new_path": "docs/explanation/analysis-screening-module-dev-plan.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cabins/command-cabin-spec.md",
+      "new_path": "docs/reference/command-cabin-spec.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cabins/core-scarce-strategy.md",
+      "new_path": "docs/explanation/core-scarce-strategy.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cabins/hot-momentum-strategy.md",
+      "new_path": "docs/explanation/hot-momentum-strategy.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cabins/input-cabin-spec.md",
+      "new_path": "docs/reference/input-cabin-spec.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cabins/input-cabin-ui-reshaping.md",
+      "new_path": "docs/reference/input-cabin-ui-reshaping.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cabins/investment-pipeline-stage-analysis.md",
+      "new_path": "docs/explanation/investment-pipeline-stage-analysis.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cabins/output-cabin-spec.md",
+      "new_path": "docs/reference/output-cabin-spec.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cabins/stock-selection-strategy.md",
+      "new_path": "docs/explanation/stock-selection-strategy.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cabins/trading-cabin-spec.md",
+      "new_path": "docs/reference/trading-cabin-spec.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cabins/trading-core-factors.md",
+      "new_path": "docs/explanation/trading-core-factors.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cabins/value-bargain-strategy.md",
+      "new_path": "docs/explanation/value-bargain-strategy.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cabins/watchlist-strategy.md",
+      "new_path": "docs/explanation/watchlist-strategy.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cabins/业务能力补充报告_自选股异动_2026-07-09.md",
+      "new_path": "docs/explanation/业务能力补充报告_自选股异动_2026-07-09.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cockpit/tradeReviewAI-skill-testing.md",
+      "new_path": "docs/explanation/tradeReviewAI-skill-testing.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cockpit/v6-cockpit-ui-reference.md",
+      "new_path": "docs/reference/v6-cockpit-ui-reference.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cockpit/widget-development-guide.md",
+      "new_path": "docs/how-to/widget-development-guide.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cockpit/widget-error-handling.md",
+      "new_path": "docs/reference/widget-error-handling.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/cockpit/widget-integration-checklist.md",
+      "new_path": "docs/reference/widget-integration-checklist.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/components/atomic-component-system.md",
+      "new_path": "docs/reference/atomic-component-system.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/components/component-library-guide.md",
+      "new_path": "docs/how-to/component-library-guide.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/components/ui-design-agent-execution-plan.md",
+      "new_path": "docs/explanation/ui-design-agent-execution-plan.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/components/ui-design-system.md",
+      "new_path": "docs/explanation/ui-design-system.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/components/ui-only-implementation-summary.md",
+      "new_path": "docs/explanation/ui-only-implementation-summary.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/components/ui-remediation-tracker.md",
+      "new_path": "docs/reference/ui-remediation-tracker.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/components/UI改善部分检索报告.md",
+      "new_path": "docs/explanation/UI改善部分检索报告.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/components/UI设计优化实施计划_详细版.md",
+      "new_path": "docs/reference/UI设计优化实施计划_详细版.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/components/V6-V9界面设计HTML精读报告.md",
+      "new_path": "docs/explanation/V6-V9界面设计HTML精读报告.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/components/V6-V9界面设计优化可行性计划.md",
+      "new_path": "docs/explanation/V6-V9界面设计优化可行性计划.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/components/v6pro-ui-page-diff-report.md",
+      "new_path": "docs/explanation/v6pro-ui-page-diff-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/components/v6pro-v9-gap-analysis-final.md",
+      "new_path": "docs/explanation/v6pro-v9-gap-analysis-final.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/core-data-strategy-report.md",
+      "new_path": "docs/explanation/core-data-strategy-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/data-collection-architecture.md",
+      "new_path": "docs/explanation/data-collection-architecture.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/data-collection-gap-analysis.md",
+      "new_path": "docs/explanation/data-collection-gap-analysis.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/data-collection-route-ui-audit.md",
+      "new_path": "docs/reference/data-collection-route-ui-audit.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/data-flow-spec.md",
+      "new_path": "docs/reference/data-flow-spec.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/data-interaction-protocols.md",
+      "new_path": "docs/reference/data-interaction-protocols.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/data-layer-overview.md",
+      "new_path": "docs/explanation/data-layer-overview.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/dual-strategy-dataflow-spec.md",
+      "new_path": "docs/reference/dual-strategy-dataflow-spec.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/dual-strategy-gap-analysis.md",
+      "new_path": "docs/explanation/dual-strategy-gap-analysis.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/dual-strategy-update-log-and-consistency-check.md",
+      "new_path": "docs/reference/dual-strategy-update-log-and-consistency-check.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/factor-tracking-roadmap.md",
+      "new_path": "docs/explanation/factor-tracking-roadmap.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/v9-data-relationship-er.md",
+      "new_path": "docs/explanation/v9-data-relationship-er.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/v9-data-timeline.md",
+      "new_path": "docs/reference/v9-data-timeline.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/V9_IndexedDB_Store_Schema.md",
+      "new_path": "docs/reference/V9_IndexedDB_Store_Schema.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/V9_数据血缘追踪.md",
+      "new_path": "docs/reference/V9_数据血缘追踪.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/《V9数据架构修订建议》.md",
+      "new_path": "docs/reference/《V9数据架构修订建议》.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/data-layer/数据治理路线图.md",
+      "new_path": "docs/reference/数据治理路线图.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/05-engine-specs.md",
+      "new_path": "docs/reference/05-engine-specs.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/06-routing-specs.md",
+      "new_path": "docs/reference/06-routing-specs.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/ai-center-contract.md",
+      "new_path": "docs/reference/ai-center-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/analysis-contract.md",
+      "new_path": "docs/reference/analysis-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/API_CONTRACT.md",
+      "new_path": "docs/reference/API_CONTRACT.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/backtest-contract.md",
+      "new_path": "docs/reference/backtest-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/collection-contract.md",
+      "new_path": "docs/reference/collection-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/data-collector-contract.md",
+      "new_path": "docs/reference/data-collector-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/dataflow-engine-spec.md",
+      "new_path": "docs/reference/dataflow-engine-spec.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/execution-contract.md",
+      "new_path": "docs/reference/execution-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/export-contract.md",
+      "new_path": "docs/reference/export-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/fetcher-contract.md",
+      "new_path": "docs/reference/fetcher-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/hybrid-proofread-contract.md",
+      "new_path": "docs/reference/hybrid-proofread-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/input-contract.md",
+      "new_path": "docs/reference/input-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/llm-contract.md",
+      "new_path": "docs/reference/llm-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/news-contract.md",
+      "new_path": "docs/reference/news-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/portfolio-contract.md",
+      "new_path": "docs/reference/portfolio-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/pwa-contract.md",
+      "new_path": "docs/reference/pwa-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/rbac-contract.md",
+      "new_path": "docs/reference/rbac-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/scoring-contract.md",
+      "new_path": "docs/reference/scoring-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/screening-contract.md",
+      "new_path": "docs/reference/screening-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/stock-analysis-contract.md",
+      "new_path": "docs/reference/stock-analysis-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/stockpool-contract.md",
+      "new_path": "docs/reference/stockpool-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/system-contract.md",
+      "new_path": "docs/reference/system-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/trade-contract.md",
+      "new_path": "docs/reference/trade-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/trading-contract.md",
+      "new_path": "docs/reference/trading-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/useCase-contract.md",
+      "new_path": "docs/reference/useCase-contract.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/_contract-template.md",
+      "new_path": "docs/reference/_contract-template.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/《功能模块数据契约》.md",
+      "new_path": "docs/reference/《功能模块数据契约》.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/services/双通道投研评分系统技术方案.md",
+      "new_path": "docs/explanation/双通道投研评分系统技术方案.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/07-operation-strategy.md",
+      "new_path": "docs/reference/07-operation-strategy.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/08-implementation-plan.md",
+      "new_path": "docs/reference/08-implementation-plan.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/10-glossary.md",
+      "new_path": "docs/explanation/10-glossary.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/ai-center-data-definition.md",
+      "new_path": "docs/explanation/ai-center-data-definition.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/AI_CENTER_VUE3_EXAMPLES.md",
+      "new_path": "docs/explanation/AI_CENTER_VUE3_EXAMPLES.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/audit-b4-4-security.md",
+      "new_path": "docs/reference/audit-b4-4-security.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/backtest-data-definition.md",
+      "new_path": "docs/reference/backtest-data-definition.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/chart-integration.md",
+      "new_path": "docs/reference/chart-integration.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/code-review-guide.md",
+      "new_path": "docs/how-to/code-review-guide.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/CODE-REVIEW.md",
+      "new_path": "docs/reference/CODE-REVIEW.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/coding-conventions.md",
+      "new_path": "docs/reference/coding-conventions.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/complexity-governance.md",
+      "new_path": "docs/explanation/complexity-governance.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/dataflow-data-definition.md",
+      "new_path": "docs/explanation/dataflow-data-definition.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/DATA_DEFINITION.md",
+      "new_path": "docs/reference/DATA_DEFINITION.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/DATA_DICTIONARY_INDEX.md",
+      "new_path": "docs/reference/DATA_DICTIONARY_INDEX.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/development-workflow-sop.md",
+      "new_path": "docs/reference/development-workflow-sop.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/gateway-write-permission-spec.md",
+      "new_path": "docs/reference/gateway-write-permission-spec.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/HOOKS_GUIDE.md",
+      "new_path": "docs/how-to/HOOKS_GUIDE.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/implementation-governance.md",
+      "new_path": "docs/explanation/implementation-governance.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/jsdoc-convention.md",
+      "new_path": "docs/explanation/jsdoc-convention.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/multi-factor-screening-data-definition.md",
+      "new_path": "docs/explanation/multi-factor-screening-data-definition.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/news-data-definition.md",
+      "new_path": "docs/explanation/news-data-definition.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/overview.md",
+      "new_path": "docs/explanation/overview.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/RBAC整合可行性分析与实施计划_2026-07-08.md",
+      "new_path": "docs/explanation/RBAC整合可行性分析与实施计划_2026-07-08.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/risk-derived-data-definition.md",
+      "new_path": "docs/reference/risk-derived-data-definition.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/seven-dim-advanced-config-implementation.md",
+      "new_path": "docs/reference/seven-dim-advanced-config-implementation.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/seven-dim-config-data-definition.md",
+      "new_path": "docs/explanation/seven-dim-config-data-definition.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/task-graph-template.md",
+      "new_path": "docs/explanation/task-graph-template.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/《V9核心数据字典与类型定义（整合版）》.md",
+      "new_path": "docs/reference/《V9核心数据字典与类型定义（整合版）》.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/《V9现有数据资产清单》.md",
+      "new_path": "docs/reference/《V9现有数据资产清单》.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/design-tokens/04-ui-ux-specs.md",
+      "new_path": "docs/reference/04-ui-ux-specs.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/design-tokens/design-token-mapping.md",
+      "new_path": "docs/explanation/design-token-mapping.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/design-tokens/design-tokens.md",
+      "new_path": "docs/explanation/design-tokens.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/design-tokens/PAGE_STRUCTURE.md",
+      "new_path": "docs/explanation/PAGE_STRUCTURE.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/design-tokens/song-aesthetics.md",
+      "new_path": "docs/explanation/song-aesthetics.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/design-tokens/spacing-tokens.md",
+      "new_path": "docs/explanation/spacing-tokens.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/design-tokens/token-usage-cookbook.md",
+      "new_path": "docs/explanation/token-usage-cookbook.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/quality-gates/09-quality-gates.md",
+      "new_path": "docs/explanation/09-quality-gates.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/quality-gates/audit-b4-1-code-quality.md",
+      "new_path": "docs/reference/audit-b4-1-code-quality.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/quality-gates/audit-b4-2-test-quality.md",
+      "new_path": "docs/explanation/audit-b4-2-test-quality.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/quality-gates/audit-b4-3-performance.md",
+      "new_path": "docs/explanation/audit-b4-3-performance.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/quality-gates/optimization-progress-report.md",
+      "new_path": "docs/explanation/optimization-progress-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/quality-gates/performance-baseline.md",
+      "new_path": "docs/explanation/performance-baseline.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/quality-gates/quality-assurance-strategy.md",
+      "new_path": "docs/explanation/quality-assurance-strategy.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/quality-gates/quality-gates-baseline.md",
+      "new_path": "docs/explanation/quality-gates-baseline.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/quality-gates/TECH-DEBT.md",
+      "new_path": "docs/reference/TECH-DEBT.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/quality-gates/visual-regression-guide.md",
+      "new_path": "docs/how-to/visual-regression-guide.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/quality-gates/《V9 代码实现分析报告》.md",
+      "new_path": "docs/explanation/《V9 代码实现分析报告》.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/standards/quality-gates/《V9 架构覆盖分析报告》.md",
+      "new_path": "docs/explanation/《V9 架构覆盖分析报告》.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/store/migration-news-useState-to-zustand.md",
+      "new_path": "docs/explanation/migration-news-useState-to-zustand.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/store/STATE_MANAGEMENT.md",
+      "new_path": "docs/explanation/STATE_MANAGEMENT.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "02-design/store/unified-pool-storage-spec.md",
+      "new_path": "docs/reference/unified-pool-storage-spec.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/checklists/batchB-fix-plan.md",
+      "new_path": "docs/reference/batchB-fix-plan.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/checklists/batchD-fix-plan.md",
+      "new_path": "docs/reference/batchD-fix-plan.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/checklists/batchE-fix-plan.md",
+      "new_path": "docs/reference/batchE-fix-plan.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/checklists/cockpit-news-doc-fix-plan.md",
+      "new_path": "docs/reference/cockpit-news-doc-fix-plan.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/checklists/feedback-loop-spec.md",
+      "new_path": "docs/reference/feedback-loop-spec.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/checklists/P4-文档去重清单与执行方案.md",
+      "new_path": "docs/explanation/P4-文档去重清单与执行方案.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/checklists/pending-items-backlog-20260704.md",
+      "new_path": "docs/explanation/pending-items-backlog-20260704.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/checklists/ui-migration-checklist.md",
+      "new_path": "docs/explanation/ui-migration-checklist.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/checklists/《V9 架构缺陷与整改行动清单》.md",
+      "new_path": "docs/explanation/《V9 架构缺陷与整改行动清单》.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/guides/accessibility/a11y-checklist.md",
+      "new_path": "docs/explanation/a11y-checklist.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/guides/accessibility/a11y-i18n.md",
+      "new_path": "docs/explanation/a11y-i18n.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/guides/getting-started/00-README.md",
+      "new_path": "docs/reference/00-README.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/guides/getting-started/getting-started.md",
+      "new_path": "docs/tutorials/getting-started.md",
+      "diataxis_category": "tutorials",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/guides/getting-started/how-to-add-service.md",
+      "new_path": "docs/how-to/how-to-add-service.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/guides/getting-started/how-to-add-store.md",
+      "new_path": "docs/how-to/how-to-add-store.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/guides/getting-started/how-to-add-widget.md",
+      "new_path": "docs/how-to/how-to-add-widget.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/guides/getting-started/README.md",
+      "new_path": "docs/reference/README.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/guides/getting-started/report-generation-architecture-assessment.md",
+      "new_path": "docs/explanation/report-generation-architecture-assessment.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/guides/getting-started/《V9 目标功能清单》.md",
+      "new_path": "docs/explanation/《V9 目标功能清单》.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/guides/getting-started/文件整理清单.md",
+      "new_path": "docs/reference/文件整理清单.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/guides/getting-started/网页测试检索校对纳入采集方案分析.md",
+      "new_path": "docs/reference/网页测试检索校对纳入采集方案分析.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/guides/security/mcp-acl-guide.md",
+      "new_path": "docs/how-to/mcp-acl-guide.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/guides/security/踩坑规则门禁指南.md",
+      "new_path": "docs/reference/踩坑规则门禁指南.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/migration/2026-06-20-indexeddb-over-localstorage.md",
+      "new_path": "docs/reference/2026-06-20-indexeddb-over-localstorage.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/migration/2026-06-23-portalshell-dark-kimi-layout.md",
+      "new_path": "docs/explanation/2026-06-23-portalshell-dark-kimi-layout.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/migration/2026-06-24-adopt-v6-core-resource-trading-strategy.md",
+      "new_path": "docs/explanation/2026-06-24-adopt-v6-core-resource-trading-strategy.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/migration/2026-06-24-input-cabin-subpages.md",
+      "new_path": "docs/explanation/2026-06-24-input-cabin-subpages.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/migration/2026-06-24-pool-screening-signal-persistence-review-engine.md",
+      "new_path": "docs/explanation/2026-06-24-pool-screening-signal-persistence-review-engine.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/migration/2026-06-25-v6-migration.md",
+      "new_path": "docs/explanation/2026-06-25-v6-migration.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/migration/2026-06-29-data-relationship-blueprint.md",
+      "new_path": "docs/reference/2026-06-29-data-relationship-blueprint.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/migration/2026-07-01-v6-architecture-dominance-batch-a.md",
+      "new_path": "docs/explanation/2026-07-01-v6-architecture-dominance-batch-a.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/migration/db-migration-v4-to-v6.md",
+      "new_path": "docs/explanation/db-migration-v4-to-v6.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/migration/refactor-impact-analysis-2026-06-27.md",
+      "new_path": "docs/explanation/refactor-impact-analysis-2026-06-27.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/migration/rotation-score-spec.md",
+      "new_path": "docs/reference/rotation-score-spec.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/migration/stock-pool-board-migration-proposal.md",
+      "new_path": "docs/explanation/stock-pool-board-migration-proposal.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/migration/v6-to-v9-migration-spec.md",
+      "new_path": "docs/reference/v6-to-v9-migration-spec.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/migration/v6pro-to-v9-migration-analysis.md",
+      "new_path": "docs/explanation/v6pro-to-v9-migration-analysis.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/plugins/ifind.md",
+      "new_path": "docs/reference/ifind.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/plugins/imf.md",
+      "new_path": "docs/reference/imf.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/plugins/index.md",
+      "new_path": "docs/reference/index.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/plugins/kimi-webbridge.md",
+      "new_path": "docs/explanation/kimi-webbridge.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/plugins/scholar.md",
+      "new_path": "docs/reference/scholar.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/plugins/sec_edgar.md",
+      "new_path": "docs/reference/sec_edgar.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/plugins/tianyancha.md",
+      "new_path": "docs/reference/tianyancha.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/plugins/world_bank_open_data.md",
+      "new_path": "docs/reference/world_bank_open_data.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/plugins/yahoo_finance.md",
+      "new_path": "docs/reference/yahoo_finance.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "03-development/plugins/yuandian_law.md",
+      "new_path": "docs/reference/yuandian_law.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/2026-07-04-ui-testing-optimization.md",
+      "new_path": "docs/reference/2026-07-04-ui-testing-optimization.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/automation-test-evaluation.md",
+      "new_path": "docs/explanation/automation-test-evaluation.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/automation-test-plan.md",
+      "new_path": "docs/reference/automation-test-plan.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/testing-strategy.md",
+      "new_path": "docs/reference/testing-strategy.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/gates/production-release-checklist-SKILL.md",
+      "new_path": "docs/explanation/production-release-checklist-SKILL.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/gates/rollback-drill-report.md",
+      "new_path": "docs/explanation/rollback-drill-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/gates/v9-issue-management.md",
+      "new_path": "docs/explanation/v9-issue-management.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/gates/V9-体系化上线测试-TODO-LIST.md",
+      "new_path": "docs/explanation/V9-体系化上线测试-TODO-LIST.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/reports/2026-07-05-exception-handling-test-report.md",
+      "new_path": "docs/explanation/2026-07-05-exception-handling-test-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/reports/a11y-contrast-report.md",
+      "new_path": "docs/explanation/a11y-contrast-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/reports/B批次组件集成测试报告_B6_2026-07-08.md",
+      "new_path": "docs/explanation/B批次组件集成测试报告_B6_2026-07-08.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/reports/B批次高价值孤儿集成状态报告_2026-07-08.md",
+      "new_path": "docs/explanation/B批次高价值孤儿集成状态报告_2026-07-08.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/reports/complexity-remediation-plan.md",
+      "new_path": "docs/explanation/complexity-remediation-plan.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/reports/databridge-split-plan.md",
+      "new_path": "docs/reference/databridge-split-plan.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/reports/nested-code-review-report.md",
+      "new_path": "docs/explanation/nested-code-review-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/reports/optimization-plan.md",
+      "new_path": "docs/explanation/optimization-plan.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/reports/penetration-test-report.md",
+      "new_path": "docs/explanation/penetration-test-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/reports/regression-test-report.md",
+      "new_path": "docs/explanation/regression-test-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/reports/v9-code-quality-audit-report-20260629.md",
+      "new_path": "docs/explanation/v9-code-quality-audit-report-20260629.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/reports/v9-code-quality-audit-report-20260713.md",
+      "new_path": "docs/explanation/v9-code-quality-audit-report-20260713.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/reports/vulnerability-scan-report.md",
+      "new_path": "docs/explanation/vulnerability-scan-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/test-cases/completeness-profile-batch2.md",
+      "new_path": "docs/explanation/completeness-profile-batch2.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/test-cases/completeness-profile-batch3.md",
+      "new_path": "docs/explanation/completeness-profile-batch3.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/test-cases/feature-entry-list.md",
+      "new_path": "docs/explanation/feature-entry-list.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/test-cases/regression-suite.md",
+      "new_path": "docs/explanation/regression-suite.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/test-cases/test-catalog.md",
+      "new_path": "docs/reference/test-catalog.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/test-cases/test-expansion-design.md",
+      "new_path": "docs/explanation/test-expansion-design.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "04-testing/test-cases/V9-TEST-CASES.md",
+      "new_path": "docs/reference/V9-TEST-CASES.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "05-deployment/PR_DESCRIPTION.md",
+      "new_path": "docs/reference/PR_DESCRIPTION.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "05-deployment/RELEASE_NOTES.md",
+      "new_path": "docs/reference/RELEASE_NOTES.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "05-deployment/ops/deployment.md",
+      "new_path": "docs/reference/deployment.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "05-deployment/ops/pwa-offline-guide.md",
+      "new_path": "docs/how-to/pwa-offline-guide.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "05-deployment/ops/runbook.md",
+      "new_path": "docs/explanation/runbook.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "assets/articles/01-tutorial-audit-workflow.md",
+      "new_path": "docs/assets/articles/01-tutorial-audit-workflow.md",
+      "diataxis_category": "tutorials",
+      "status": "pending"
+    },
+    {
+      "old_path": "assets/articles/02-experience-five-pitfalls.md",
+      "new_path": "docs/assets/articles/02-experience-five-pitfalls.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "assets/articles/publish-ready.md",
+      "new_path": "docs/assets/articles/publish-ready.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "drafts/README.md",
+      "new_path": "docs/drafts/README.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "prompts/agent-runtime-spec.md",
+      "new_path": "docs/prompts/agent-runtime-spec.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "prompts/autonomous-workflow-optimization.md",
+      "new_path": "docs/prompts/autonomous-workflow-optimization.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "prompts/autonomous-workflow-user-guide.md",
+      "new_path": "docs/prompts/autonomous-workflow-user-guide.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "prompts/README.md",
+      "new_path": "docs/prompts/README.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "prompts/service-integration-guide.md",
+      "new_path": "docs/prompts/service-integration-guide.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "prompts/store-integration-guide.md",
+      "new_path": "docs/prompts/store-integration-guide.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/doc-governance-audit-report-2026-07-13.md",
+      "new_path": "docs/reports/doc-governance-audit-report-2026-07-13.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/e2e-verify-25stocks-plan.md",
+      "new_path": "docs/reports/e2e-verify-25stocks-plan.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/AGENT_AUDIT_REPORT.md",
+      "new_path": "docs/reports/audit/AGENT_AUDIT_REPORT.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/audit-summary-report.md",
+      "new_path": "docs/reports/audit/audit-summary-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/cockpit_widget_40错误核查-分析判断.md",
+      "new_path": "docs/reports/audit/cockpit_widget_40错误核查-分析判断.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/cockpit_整体设计一致性审查.md",
+      "new_path": "docs/reports/audit/cockpit_整体设计一致性审查.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/code-quality-audit-report.md",
+      "new_path": "docs/reports/audit/code-quality-audit-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/code-quality-rubric.md",
+      "new_path": "docs/reports/audit/code-quality-rubric.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/CODE-REVIEW-CHEATSHEET.md",
+      "new_path": "docs/reports/audit/CODE-REVIEW-CHEATSHEET.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/CODE-REVIEW-TRAINING.md",
+      "new_path": "docs/reports/audit/CODE-REVIEW-TRAINING.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/color-remediation-summary-report-20260703.md",
+      "new_path": "docs/reports/audit/color-remediation-summary-report-20260703.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/debug-output-cabin-not-rendering.md",
+      "new_path": "docs/reports/audit/debug-output-cabin-not-rendering.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/FILE-MANAGEMENT-GUIDE-test-report.md",
+      "new_path": "docs/reports/audit/FILE-MANAGEMENT-GUIDE-test-report.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/file-system-diagnosis-report-2026-07-20.md",
+      "new_path": "docs/reports/audit/file-system-diagnosis-report-2026-07-20.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/mcp-server-governance-retrospective.md",
+      "new_path": "docs/reports/audit/mcp-server-governance-retrospective.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/output-cabin-remediation-report.md",
+      "new_path": "docs/reports/audit/output-cabin-remediation-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/quality-audit-plan.md",
+      "new_path": "docs/reports/audit/quality-audit-plan.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/SOLO-REVIEW.md",
+      "new_path": "docs/reports/audit/SOLO-REVIEW.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/TypeScript错误处理和类型安全检测报告.md",
+      "new_path": "docs/reports/audit/TypeScript错误处理和类型安全检测报告.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/untracked-files-remediation-report.md",
+      "new_path": "docs/reports/audit/untracked-files-remediation-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/v6-v9-ui-component-comparison-report.md",
+      "new_path": "docs/reports/audit/v6-v9-ui-component-comparison-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/V9 架构缺陷与整改行动清单.md",
+      "new_path": "docs/reports/audit/V9 架构缺陷与整改行动清单.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/v9-code-quality-kanban-20260629.md",
+      "new_path": "docs/reports/audit/v9-code-quality-kanban-20260629.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/v9-documentation-audit-report.md",
+      "new_path": "docs/reports/audit/v9-documentation-audit-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/v9-ui-component-feasibility-assessment.md",
+      "new_path": "docs/reports/audit/v9-ui-component-feasibility-assessment.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/代码清理待确认清单与信息孤岛整合建议.md",
+      "new_path": "docs/reports/audit/代码清理待确认清单与信息孤岛整合建议.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/代码质量合规审查报告_2026-07-08.md",
+      "new_path": "docs/reports/audit/代码质量合规审查报告_2026-07-08.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/代码质量整改与回归测试报告_2026-07-08.md",
+      "new_path": "docs/reports/audit/代码质量整改与回归测试报告_2026-07-08.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/文档-代码双向一致性检测报告_2026-07-08.md",
+      "new_path": "docs/reports/audit/文档-代码双向一致性检测报告_2026-07-08.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/模块补全验收报告.md",
+      "new_path": "docs/reports/audit/模块补全验收报告.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/audit/比对分析报告检索与比对报告.md",
+      "new_path": "docs/reports/audit/比对分析报告检索与比对报告.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/2026-07-05-audit-false-positive-analysis.md",
+      "new_path": "docs/reports/changelogs/2026-07-05-audit-false-positive-analysis.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/2026-07-05-color-refactor-p1.md",
+      "new_path": "docs/reports/changelogs/2026-07-05-color-refactor-p1.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/2026-07-05-color-refactor-p2.md",
+      "new_path": "docs/reports/changelogs/2026-07-05-color-refactor-p2.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/2026-07-05-color-token-refactor.md",
+      "new_path": "docs/reports/changelogs/2026-07-05-color-token-refactor.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/2026-07-05-comprehensive-audit-and-remediation.md",
+      "new_path": "docs/reports/changelogs/2026-07-05-comprehensive-audit-and-remediation.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/2026-07-05-databridge-query-implementation.md",
+      "new_path": "docs/reports/changelogs/2026-07-05-databridge-query-implementation.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/2026-07-05-module-registry-and-integration.md",
+      "new_path": "docs/reports/changelogs/2026-07-05-module-registry-and-integration.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/2026-07-05-p2-completion-and-backlog.md",
+      "new_path": "docs/reports/changelogs/2026-07-05-p2-completion-and-backlog.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/2026-07-05-post-dev-review-actions.md",
+      "new_path": "docs/reports/changelogs/2026-07-05-post-dev-review-actions.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/2026-07-05-post-dev-review.md",
+      "new_path": "docs/reports/changelogs/2026-07-05-post-dev-review.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/2026-07-05-systematic-doc-update.md",
+      "new_path": "docs/reports/changelogs/2026-07-05-systematic-doc-update.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/2026-07-05-ui-testing-optimization.md",
+      "new_path": "docs/reference/changelogs/2026-07/2026-07-05-ui-testing-optimization.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "reports/changelogs/action-list-p1.md",
+      "new_path": "docs/reports/changelogs/action-list-p1.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/CHANGELOG.md",
+      "new_path": "docs/reports/changelogs/CHANGELOG.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/completeness-profile-p1.md",
+      "new_path": "docs/reports/changelogs/completeness-profile-p1.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/pr-5-build-optimization-summary.md",
+      "new_path": "docs/reports/changelogs/pr-5-build-optimization-summary.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/pr-7-trade-error-classifier-split-plan.md",
+      "new_path": "docs/reports/changelogs/pr-7-trade-error-classifier-split-plan.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/pr-8-dedup-audit-report.md",
+      "new_path": "docs/reports/changelogs/pr-8-dedup-audit-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/pr-8-dedup-plan.md",
+      "new_path": "docs/reports/changelogs/pr-8-dedup-plan.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/test-cache-fix-summary.md",
+      "new_path": "docs/reports/changelogs/test-cache-fix-summary.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/changelogs/变更摘要-2026-06-28-Phase0-数据层改造.md",
+      "new_path": "docs/reports/changelogs/变更摘要-2026-06-28-Phase0-数据层改造.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/release-management/buildscoredocdiff-rollback-plan.md",
+      "new_path": "docs/reports/release-management/buildscoredocdiff-rollback-plan.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/release-management/README.md",
+      "new_path": "docs/reports/release-management/README.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/release-management/发布计划与评审_R01.md",
+      "new_path": "docs/reports/release-management/发布计划与评审_R01.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/release-management/回滚方案与演练_R03.md",
+      "new_path": "docs/reports/release-management/回滚方案与演练_R03.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/release-management/迁移风险复盘与应对策略文档.md",
+      "new_path": "docs/reports/release-management/迁移风险复盘与应对策略文档.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/batch-merge-reports.md",
+      "new_path": "docs/reports/retrospectives/batch-merge-reports.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/data-collection-task-list.md",
+      "new_path": "docs/reports/retrospectives/data-collection-task-list.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/data_link_sequence_diagram.md",
+      "new_path": "docs/reports/retrospectives/data_link_sequence_diagram.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/doc-cross-check-report.md",
+      "new_path": "docs/reports/retrospectives/doc-cross-check-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/doc-sync-execution-plan.md",
+      "new_path": "docs/reports/retrospectives/doc-sync-execution-plan.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/doc-update-report-20260701.md",
+      "new_path": "docs/reports/retrospectives/doc-update-report-20260701.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/freshness-alerts.md",
+      "new_path": "docs/reports/retrospectives/freshness-alerts.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/health-report.md",
+      "new_path": "docs/reports/retrospectives/health-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/lessons-learned-summary.md",
+      "new_path": "docs/reports/retrospectives/lessons-learned-summary.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/lessons-learned.md",
+      "new_path": "docs/reports/retrospectives/lessons-learned.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/mcp-disabled-server-deep-dive.md",
+      "new_path": "docs/reports/retrospectives/mcp-disabled-server-deep-dive.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/mcp-module-status.md",
+      "new_path": "docs/reports/retrospectives/mcp-module-status.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/mcp-zombie-server-audit-report.md",
+      "new_path": "docs/reports/retrospectives/mcp-zombie-server-audit-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/optimization-summary-report.md",
+      "new_path": "docs/reports/retrospectives/optimization-summary-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/pending-tasks-inventory-20260701.md",
+      "new_path": "docs/reports/retrospectives/pending-tasks-inventory-20260701.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/timeline-report.md",
+      "new_path": "docs/reports/retrospectives/timeline-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/v9-acceptance-report.md",
+      "new_path": "docs/reports/retrospectives/v9-acceptance-report.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/v9-current-state-review.md",
+      "new_path": "docs/reports/retrospectives/v9-current-state-review.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/v9-data-blueprint-task-tracking.md",
+      "new_path": "docs/reports/retrospectives/v9-data-blueprint-task-tracking.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/v9-interaction-flows-review.md",
+      "new_path": "docs/reports/retrospectives/v9-interaction-flows-review.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/v9-p0-remediation-plan.md",
+      "new_path": "docs/reports/retrospectives/v9-p0-remediation-plan.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/v9-post-dev-review.md",
+      "new_path": "docs/reports/retrospectives/v9-post-dev-review.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/v9-rectification-tasks-v15-v16.md",
+      "new_path": "docs/reports/retrospectives/v9-rectification-tasks-v15-v16.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/v9-remediation-plan.md",
+      "new_path": "docs/reports/retrospectives/v9-remediation-plan.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/walkthrough-scoredoc-report.md",
+      "new_path": "docs/reports/retrospectives/walkthrough-scoredoc-report.md",
+      "diataxis_category": "how-to",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/weekly-check-2026-06-30.md",
+      "new_path": "docs/reports/retrospectives/weekly-check-2026-06-30.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/WEEKLY-TASKS-2026-07-05.md",
+      "new_path": "docs/reports/retrospectives/WEEKLY-TASKS-2026-07-05.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/《DataBridge改进建议整改实施计划》.md",
+      "new_path": "docs/reports/retrospectives/《DataBridge改进建议整改实施计划》.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/《DataBridge改进建议整改报告》.md",
+      "new_path": "docs/reports/retrospectives/《DataBridge改进建议整改报告》.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/《DataBridge数据链路全景分析报告》.md",
+      "new_path": "docs/reports/retrospectives/《DataBridge数据链路全景分析报告》.md",
+      "diataxis_category": "reference",
+      "status": "pending"
+    },
+    {
+      "old_path": "reports/retrospectives/《DataBridge端点与数据映射清单》.md",
+      "new_path": "docs/reports/retrospectives/《DataBridge端点与数据映射清单》.md",
+      "diataxis_category": "explanation",
+      "status": "pending"
+    },
+    {
+      "old_path": "docs/WEEKLY-TASKS-2026-07-05.md",
+      "new_path": "docs/06-project-management/archive/weekly-tasks-2026-07-05.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/AGENT_AUDIT_REPORT.md",
+      "new_path": "docs/00-meta/audit-reports/agent-audit-report.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/v6pro-v9-gap-analysis-final.md",
+      "new_path": "docs/00-meta/audit-reports/v6pro-v9-gap-analysis-final.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/v9-post-dev-review.md",
+      "new_path": "docs/06-project-management/v9-post-dev-review.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/system_design.md",
+      "new_path": "docs/02-design/system-design.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/SOLO-REVIEW.md",
+      "new_path": "docs/03-development/code-review/solo-review.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/CODE-REVIEW-CHEATSHEET.md",
+      "new_path": "docs/03-development/code-review/code-review-cheatsheet.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/CODE-REVIEW-TRAINING.md",
+      "new_path": "docs/03-development/code-review/code-review-training.md",
+      "diataxi_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/01-vision-and-goals.md",
+      "new_path": "docs/01-vision-and-goals.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/01-vision-and-goals.md",
+      "new_path": "docs/01-vision-and-goals.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/registry-index.md",
+      "new_path": "docs/registry-index.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/meta/registry-index.md",
+      "new_path": "docs/00-meta/registry-index.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/10-glossary.md",
+      "new_path": "docs/10-glossary.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/10-glossary.md",
+      "new_path": "docs/10-glossary.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/02-functional-specs.md",
+      "new_path": "docs/02-functional-specs.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/03-architecture-standards.md",
+      "new_path": "docs/03-architecture-standards.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/design/04-ui-ux-specs.md",
+      "new_path": "docs/04-ui-ux-specs.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/04-ui-ux-specs.md",
+      "new_path": "docs/04-ui-ux-specs.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/05-engine-specs.md",
+      "new_path": "docs/05-engine-specs.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/design/06-routing-specs.md",
+      "new_path": "docs/06-routing-specs.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/06-routing-specs.md",
+      "new_path": "docs/06-routing-specs.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/07-operation-strategy.md",
+      "new_path": "docs/07-operation-strategy.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/design/07-operation-strategy.md",
+      "new_path": "docs/07-operation-strategy.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/design/08-implementation-plan.md",
+      "new_path": "docs/08-implementation-plan.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/08-implementation-plan.md",
+      "new_path": "docs/08-implementation-plan.md",
+      "diataxis_category": "explanation",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/09-quality-gates.md",
+      "new_path": "docs/09-quality-gates.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/design/09-quality-gates.md",
+      "new_path": "docs/09-quality-gates.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/CHANGELOG.md",
+      "new_path": "docs/CHANGELOG.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reports/CHANGELOG.md",
+      "new_path": "docs/CHANGELOG.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/CODE-REVIEW.md",
+      "new_path": "docs/CODE-REVIEW.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/design-tokens.md",
+      "new_path": "docs/design-tokens.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/design-tokens.md",
+      "new_path": "docs/design-tokens.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/explanation/design/design-tokens.md",
+      "new_path": "docs/design-tokens.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/how-to/testing/testing-strategy.md",
+      "new_path": "docs/testing-strategy.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/testing-strategy.md",
+      "new_path": "docs/testing-strategy.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/how-to/widget-development-guide.md",
+      "new_path": "docs/widget-development-guide.md",
+      "diataxis_category": "how-to",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/widget-development-guide.md",
+      "new_path": "docs/widget-development-guide.md",
+      "diataxis_category": "how-to",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/01-p1-debt-cleanup-todo.md",
+      "new_path": "docs/06-project-management/01-p1-debt-cleanup-todo.md",
+      "diataxis_category": "reference",
+      "status": "completed"
+    },
+    {
+      "old_path": "docs/reference/V9现有数据资产清单.md",
+      "new_path": "docs/reference/《V9现有数据资产清单》.md",
+      "diataxis_category": "reference",
+      "status": "completed",
+      "reason": "DC-20260809-01 D1: 重复文档清理，保留《》版（v2.2）"
+    },
+    {
+      "old_path": "docs/reference/SEVEN_DIM_CONFIG_DATA_DEFINITION.md",
+      "new_path": "docs/reference/seven-dim-config-data-definition.md",
+      "diataxis_category": "reference",
+      "status": "completed",
+      "reason": "DC-20260809-01 D2: 重复文档清理，保留 kebab-case 版"
+    },
+    {
+      "old_path": "docs/reference/NEWS_DATA_DEFINITION.md",
+      "new_path": "docs/reference/news/DATA_DEFINITION.md",
+      "diataxis_category": "reference",
+      "status": "completed",
+      "reason": "DC-20260809-01 D3: 重复文档清理，保留 news/ 子目录版（v1.2.0）"
+    },
+    {
+      "old_path": "docs/reference/news-data-definition.md",
+      "new_path": "docs/reference/news/DATA_DEFINITION.md",
+      "diataxis_category": "reference",
+      "status": "completed",
+      "reason": "DC-20260809-01 D3: 重复文档清理，保留 news/ 子目录版（v1.2.0）"
+    },
+    {
+      "old_path": "docs/reference/功能模块数据契约.md",
+      "new_path": "docs/reference/《功能模块数据契约》.md",
+      "diataxis_category": "reference",
+      "status": "completed",
+      "reason": "DC-20260809-01 D4: 重复文档清理，保留《》版（含 changelog）"
+    },
+    {
+      "old_path": "docs/reference/V9_数据血缘追踪.md",
+      "new_path": "docs/reference/v9-数据血缘追踪.md",
+      "diataxis_category": "reference",
+      "status": "completed",
+      "reason": "DC-20260809-01 D5: 重复文档清理，保留小写前缀版"
+    },
+    {
+      "old_path": "docs/reference/《V9核心数据字典与类型定义（整合版）》.md",
+      "new_path": "docs/reference/v9核心数据字典与类型定义(整合版).md",
+      "diataxis_category": "reference",
+      "status": "completed",
+      "reason": "DC-20260809-01 D6: 重复文档清理，保留无书名号版"
+    },
+    {
+      "old_path": "docs/reference/MULTI_FACTOR_SCREENING_DATA_DEFINITION.md",
+      "new_path": "docs/reference/multi-factor-screening-data-definition.md",
+      "diataxis_category": "reference",
+      "status": "completed",
+      "reason": "DC-20260809-01 D7: 重复文档清理，保留 kebab-case 版"
+    },
+    {
+      "old_path": "docs/reference/V9_IndexedDB_Store_Schema.md",
+      "new_path": "docs/reference/v9-indexeddb-store-schema.md",
+      "diataxis_category": "reference",
+      "status": "completed",
+      "reason": "DC-20260809-01 D8: 重复文档清理，保留 kebab-case 版"
+    }
+  ],
+  "preserved_directories": [
+    "00-meta",
+    "assets",
+    "reports",
+    "drafts",
+    "prompts"
+  ]
+}

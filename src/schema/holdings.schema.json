@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Holdings Data Schema",
+  "description": "Schema for portfolio holdings data",
+  "type": "object",
+  "required": ["symbol", "name", "currentShares", "currentWeight", "targetWeight", "targetShares", "price", "marketValue", "score", "rationale"],
+  "properties": {
+    "symbol": {
+      "type": "string",
+      "description": "Stock symbol"
+    },
+    "name": {
+      "type": "string",
+      "description": "Stock name"
+    },
+    "currentShares": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Current number of shares"
+    },
+    "currentWeight": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Current weight percentage"
+    },
+    "targetWeight": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Target weight percentage"
+    },
+    "targetShares": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Target number of shares"
+    },
+    "price": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Current price"
+    },
+    "marketValue": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Current market value"
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Stock score"
+    },
+    "rationale": {
+      "type": "string",
+      "description": "Holding rationale"
+    }
+  }
+}

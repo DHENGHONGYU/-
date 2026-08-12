@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V9项目代码知识图谱</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #1a1a1a;
+      border-bottom: 3px solid #007acc;
+      padding-bottom: 10px;
+    }
+    h2 {
+      color: #333;
+      margin-top: 30px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .stat-card h3 {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    .stat-card .value {
+      font-size: 32px;
+      font-weight: bold;
+    }
+    .violation-list {
+      margin: 20px 0;
+    }
+    .violation-item {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    .violation-item.error {
+      background: #f8d7da;
+      border-left-color: #dc3545;
+    }
+    .violation-item.warning {
+      background: #fff3cd;
+      border-left-color: #ffc107;
+    }
+    .violation-item.info {
+      background: #d1ecf1;
+      border-left-color: #17a2b8;
+    }
+    .violation-header {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .violation-file {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+    .violation-message {
+      margin: 5px 0;
+    }
+    .violation-suggestion {
+      color: #28a745;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    .layer-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .layer-card {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 6px;
+      border: 1px solid #dee2e6;
+    }
+    .layer-card h4 {
+      margin: 0 0 10px 0;
+      color: #495057;
+    }
+    .layer-card .stat {
+      display: flex;
+      justify-content: space-between;
+      margin: 5px 0;
+    }
+    .mermaid {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #dee2e6;
+    }
+    th {
+      background: #f8f9fa;
+      font-weight: 600;
+    }
+    tr:hover {
+      background: #f8f9fa;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-error { background: #dc3545; color: white; }
+    .badge-warning { background: #ffc107; color: #000; }
+    .badge-info { background: #17a2b8; color: white; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 V9项目代码知识图谱</h1>
+    <p><strong>生成时间:</strong> 2026/7/12 23:16:27</p>
+    <p><strong>版本:</strong> 1.0.0</p>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>总文件数</h3>
+        <div class="value">708</div>
+      </div>
+      <div class="stat-card">
+        <h3>总代码行数</h3>
+        <div class="value">138,543</div>
+      </div>
+      <div class="stat-card">
+        <h3>架构违规</h3>
+        <div class="value">5556</div>
+      </div>
+      <div class="stat-card">
+        <h3>层级数量</h3>
+        <div class="value">11</div>
+      </div>
+    </div>
+
+    <h2>📊 各层统计</h2>
+    <div class="layer-stats">
+      
+        <div class="layer-card">
+          <h4>unknown</h4>
+          <div class="stat">
+            <span>文件数:</span>
+            <strong>140</strong>
+          </div>
+          <div class="stat">
+            <span>代码行数:</span>
+            <strong>22,224</strong>
+          </div>
+        </div>
+      
+        <div class="layer-card">
+          <h4>components</h4>
+          <div class="stat">
+            <span>文件数:</span>
+            <strong>142</strong>
+          </div>
+          <div class="stat">
+            <span>代码行数:</span>
+            <strong>18,808</strong>
+          </div>
+        </div>
+      
+        <div class="layer-card">
+          <h4>config</h4>
+          <div class="stat">
+            <span>文件数:</span>
+            <strong>36</strong>
+          </div>
+          <div class="stat">
+            <span>代码行数:</span>
+            <strong>6,536</strong>
+          </div>
+        </div>
+      
+        <div class="layer-card">
+          <h4>constants</h4>
+          <div class="stat">
+            <span>文件数:</span>
+            <strong>25</strong>
+          </div>
+          <div class="stat">
+            <span>代码行数:</span>
+            <strong>4,268</strong>
+          </div>
+        </div>
+      
+        <div class="layer-card">
+          <h4>core</h4>
+          <div class="stat">
+            <span>文件数:</span>
+            <strong>23</strong>
+          </div>
+          <div class="stat">
+            <span>代码行数:</span>
+            <strong>5,513</strong>
+          </div>
+        </div>
+      
+        <div class="layer-card">
+          <h4>data</h4>
+          <div class="stat">
+            <span>文件数:</span>
+            <strong>42</strong>
+          </div>
+          <div class="stat">
+            <span>代码行数:</span>
+            <strong>6,308</strong>
+          </div>
+        </div>
+      
+        <div class="layer-card">
+          <h4>lib</h4>
+          <div class="stat">
+            <span>文件数:</span>
+            <strong>18</strong>
+          </div>
+          <div class="stat">
+            <span>代码行数:</span>
+            <strong>2,921</strong>
+          </div>
+        </div>
+      
+        <div class="layer-card">
+          <h4>pages</h4>
+          <div class="stat">
+            <span>文件数:</span>
+            <strong>52</strong>
+          </div>
+          <div class="stat">
+            <span>代码行数:</span>
+            <strong>16,394</strong>
+          </div>
+        </div>
+      
+        <div class="layer-card">
+          <h4>portal</h4>
+          <div class="stat">
+            <span>文件数:</span>
+            <strong>1</strong>
+          </div>
+          <div class="stat">
+            <span>代码行数:</span>
+            <strong>500</strong>
+          </div>
+        </div>
+      
+        <div class="layer-card">
+          <h4>services</h4>
+          <div class="stat">
+            <span>文件数:</span>
+            <strong>168</strong>
+          </div>
+          <div class="stat">
+            <span>代码行数:</span>
+            <strong>38,985</strong>
+          </div>
+        </div>
+      
+        <div class="layer-card">
+          <h4>store</h4>
+          <div class="stat">
+            <span>文件数:</span>
+            <strong>61</strong>
+          </div>
+          <div class="stat">
+            <span>代码行数:</span>
+            <strong>16,086</strong>
+          </div>
+        </div>
+      
+    </div>
+
+    <h2>🔝 Top 20 被引用文件</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>排名</th>
+          <th>文件路径</th>
+          <th>被引用次数</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+          <tr>
+            <td>1</td>
+            <td><code>@/lib/logger</code></td>
+            <td><strong>295</strong></td>
+          </tr>
+        
+          <tr>
+            <td>2</td>
+            <td><code>react</code></td>
+            <td><strong>224</strong></td>
+          </tr>
+        
+          <tr>
+            <td>3</td>
+            <td><code>@/data/types</code></td>
+            <td><strong>145</strong></td>
+          </tr>
+        
+          <tr>
+            <td>4</td>
+            <td><code>@/constants/theme.tokens</code></td>
+            <td><strong>129</strong></td>
+          </tr>
+        
+          <tr>
+            <td>5</td>
+            <td><code>lucide-react</code></td>
+            <td><strong>94</strong></td>
+          </tr>
+        
+          <tr>
+            <td>6</td>
+            <td><code>@/components/atoms/Badge</code></td>
+            <td><strong>94</strong></td>
+          </tr>
+        
+          <tr>
+            <td>7</td>
+            <td><code>@/lib/utils</code></td>
+            <td><strong>88</strong></td>
+          </tr>
+        
+          <tr>
+            <td>8</td>
+            <td><code>@/config/dbConfig</code></td>
+            <td><strong>87</strong></td>
+          </tr>
+        
+          <tr>
+            <td>9</td>
+            <td><code>@/components/atoms/Card</code></td>
+            <td><strong>86</strong></td>
+          </tr>
+        
+          <tr>
+            <td>10</td>
+            <td><code>@/components/atoms/Button</code></td>
+            <td><strong>84</strong></td>
+          </tr>
+        
+          <tr>
+            <td>11</td>
+            <td><code>zustand</code></td>
+            <td><strong>53</strong></td>
+          </tr>
+        
+          <tr>
+            <td>12</td>
+            <td><code>react-router</code></td>
+            <td><strong>45</strong></td>
+          </tr>
+        
+          <tr>
+            <td>13</td>
+            <td><code>@/core/databridge</code></td>
+            <td><strong>44</strong></td>
+          </tr>
+        
+          <tr>
+            <td>14</td>
+            <td><code>nanoid</code></td>
+            <td><strong>42</strong></td>
+          </tr>
+        
+          <tr>
+            <td>15</td>
+            <td><code>@/types/modules/widget.types</code></td>
+            <td><strong>40</strong></td>
+          </tr>
+        
+          <tr>
+            <td>16</td>
+            <td><code>@/data/dataLayer</code></td>
+            <td><strong>37</strong></td>
+          </tr>
+        
+          <tr>
+            <td>17</td>
+            <td><code>@/lib/eventBus</code></td>
+            <td><strong>36</strong></td>
+          </tr>
+        
+          <tr>
+            <td>18</td>
+            <td><code>@/components/templates</code></td>
+            <td><strong>36</strong></td>
+          </tr>
+        
+          <tr>
+            <td>19</td>
+            <td><code>@/types/modules/collection.types</code></td>
+            <td><strong>31</strong></td>
+          </tr>
+        
+          <tr>
+            <td>20</td>
+            <td><code>@/core/envelope</code></td>
+            <td><strong>30</strong></td>
+          </tr>
+        
+      </tbody>
+    </table>
+
+    <h2>📏 Top 20 最大文件</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>排名</th>
+          <th>文件路径</th>
+          <th>代码行数</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+          <tr>
+            <td>1</td>
+            <td><code>D:\FinSightV9\src\pages\command\agent\LlmManagementPage.tsx</code></td>
+            <td><strong>1,044</strong></td>
+          </tr>
+        
+          <tr>
+            <td>2</td>
+            <td><code>D:\FinSightV9\src\services\data-collector\mockDataCollection.ts</code></td>
+            <td><strong>1,040</strong></td>
+          </tr>
+        
+          <tr>
+            <td>3</td>
+            <td><code>D:\FinSightV9\src\services\rbac\permissionRevocationService.ts</code></td>
+            <td><strong>978</strong></td>
+          </tr>
+        
+          <tr>
+            <td>4</td>
+            <td><code>D:\FinSightV9\src\pages\input\CollectTaskPage.tsx</code></td>
+            <td><strong>896</strong></td>
+          </tr>
+        
+          <tr>
+            <td>5</td>
+            <td><code>D:\FinSightV9\src\data\sectorSkillData.ts</code></td>
+            <td><strong>879</strong></td>
+          </tr>
+        
+          <tr>
+            <td>6</td>
+            <td><code>D:\FinSightV9\src\core\databridge.ts</code></td>
+            <td><strong>822</strong></td>
+          </tr>
+        
+          <tr>
+            <td>7</td>
+            <td><code>D:\FinSightV9\src\store\collectionWizardStore.ts</code></td>
+            <td><strong>777</strong></td>
+          </tr>
+        
+          <tr>
+            <td>8</td>
+            <td><code>D:\FinSightV9\src\services\data-collector\dataSourceOrchestrator.ts</code></td>
+            <td><strong>730</strong></td>
+          </tr>
+        
+          <tr>
+            <td>9</td>
+            <td><code>D:\FinSightV9\src\config\thresholds.ts</code></td>
+            <td><strong>708</strong></td>
+          </tr>
+        
+          <tr>
+            <td>10</td>
+            <td><code>D:\FinSightV9\src\store\riskStore.derived.ts</code></td>
+            <td><strong>694</strong></td>
+          </tr>
+        
+          <tr>
+            <td>11</td>
+            <td><code>D:\FinSightV9\src\services\rbac\rbacManagementService.ts</code></td>
+            <td><strong>676</strong></td>
+          </tr>
+        
+          <tr>
+            <td>12</td>
+            <td><code>D:\FinSightV9\src\components\organisms\input\wizard-steps\DataSourceConfigStep.tsx</code></td>
+            <td><strong>662</strong></td>
+          </tr>
+        
+          <tr>
+            <td>13</td>
+            <td><code>D:\FinSightV9\src\services\data-collector\MarketDataAdapter.ts</code></td>
+            <td><strong>656</strong></td>
+          </tr>
+        
+          <tr>
+            <td>14</td>
+            <td><code>D:\FinSightV9\src\pages\trading\TradingFlowPage.tsx</code></td>
+            <td><strong>652</strong></td>
+          </tr>
+        
+          <tr>
+            <td>15</td>
+            <td><code>D:\FinSightV9\src\services\fetcher\directDataAPI.ts</code></td>
+            <td><strong>635</strong></td>
+          </tr>
+        
+          <tr>
+            <td>16</td>
+            <td><code>D:\FinSightV9\src\data\sectorDefinitions.ts</code></td>
+            <td><strong>626</strong></td>
+          </tr>
+        
+          <tr>
+            <td>17</td>
+            <td><code>D:\FinSightV9\src\services\system\migration\migrationTransformers.ts</code></td>
+            <td><strong>615</strong></td>
+          </tr>
+        
+          <tr>
+            <td>18</td>
+            <td><code>D:\FinSightV9\src\store\executionStore.ts</code></td>
+            <td><strong>613</strong></td>
+          </tr>
+        
+          <tr>
+            <td>19</td>
+            <td><code>D:\FinSightV9\src\lib\localStorageManager.ts</code></td>
+            <td><strong>612</strong></td>
+          </tr>
+        
+          <tr>
+            <td>20</td>
+            <td><code>D:\FinSightV9\src\services\data-collector\collectionPipeline.ts</code></td>
+            <td><strong>612</strong></td>
+          </tr>
+        
+      </tbody>
+    </table>
+
+    <h2>⚠️ 架构违规 (5556)</h2>
+    <div class="violation-list">
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\agents\agentHealthMonitor.ts:46</div>
+          <div class="violation-message">魔法数字: 60000</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\agents\index.ts:31</div>
+          <div class="violation-message">魔法数字: 30000</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\agents\index.ts:42</div>
+          <div class="violation-message">魔法数字: 45000</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\agents\index.ts:53</div>
+          <div class="violation-message">魔法数字: 60000</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\agents\index.ts:64</div>
+          <div class="violation-message">魔法数字: 15000</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\agents\index.ts:75</div>
+          <div class="violation-message">魔法数字: 20000</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\agents\index.ts:129</div>
+          <div class="violation-message">魔法数字: 30000</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\App.tsx:68</div>
+          <div class="violation-message">魔法数字: 404</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            missing-cleanup
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\App.tsx:29</div>
+          <div class="violation-message">useEffect 缺少清理逻辑</div>
+          <div class="violation-suggestion">💡 在useEffect的cleanup函数中移除事件监听</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            missing-cleanup
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\analysis\AnalysisApp.tsx:88</div>
+          <div class="violation-message">useEffect 缺少清理逻辑</div>
+          <div class="violation-suggestion">💡 在useEffect的cleanup函数中移除事件监听</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            missing-cleanup
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\analysis\AnalysisApp.tsx:147</div>
+          <div class="violation-message">useEffect 缺少清理逻辑</div>
+          <div class="violation-suggestion">💡 在useEffect的cleanup函数中移除事件监听</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            missing-cleanup
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\command\AgentApp.tsx:52</div>
+          <div class="violation-message">useEffect 缺少清理逻辑</div>
+          <div class="violation-suggestion">💡 在useEffect的cleanup函数中移除事件监听</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            missing-cleanup
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\command\CommandApp.tsx:99</div>
+          <div class="violation-message">useEffect 缺少清理逻辑</div>
+          <div class="violation-suggestion">💡 在useEffect的cleanup函数中移除事件监听</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            missing-cleanup
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\command\CommandApp.tsx:228</div>
+          <div class="violation-message">useEffect 缺少清理逻辑</div>
+          <div class="violation-suggestion">💡 在useEffect的cleanup函数中移除事件监听</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\command\ConfigApp.tsx:77</div>
+          <div class="violation-message">魔法数字: 300</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\command\ConfigApp.tsx:78</div>
+          <div class="violation-message">魔法数字: 900</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            missing-cleanup
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\command\ConfigApp.tsx:202</div>
+          <div class="violation-message">useEffect 缺少清理逻辑</div>
+          <div class="violation-suggestion">💡 在useEffect的cleanup函数中移除事件监听</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            missing-cleanup
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\command\ConfigApp.tsx:217</div>
+          <div class="violation-message">addEventListener 缺少清理逻辑</div>
+          <div class="violation-suggestion">💡 在useEffect的cleanup函数中移除事件监听</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:34</div>
+          <div class="violation-message">魔法数字: 200</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:35</div>
+          <div class="violation-message">魔法数字: 800</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:36</div>
+          <div class="violation-message">魔法数字: 500</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:39</div>
+          <div class="violation-message">魔法数字: 600</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:40</div>
+          <div class="violation-message">魔法数字: 500</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:41</div>
+          <div class="violation-message">魔法数字: 400</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:42</div>
+          <div class="violation-message">魔法数字: 400</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:202</div>
+          <div class="violation-message">魔法数字: 1024</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:203</div>
+          <div class="violation-message">魔法数字: 1024</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:203</div>
+          <div class="violation-message">魔法数字: 1024</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:203</div>
+          <div class="violation-message">魔法数字: 1024</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:204</div>
+          <div class="violation-message">魔法数字: 1024</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:204</div>
+          <div class="violation-message">魔法数字: 1024</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:242</div>
+          <div class="violation-message">魔法数字: 300</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:244</div>
+          <div class="violation-message">魔法数字: 600</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:250</div>
+          <div class="violation-message">魔法数字: 600</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:258</div>
+          <div class="violation-message">魔法数字: 400</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:258</div>
+          <div class="violation-message">魔法数字: 300</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:313</div>
+          <div class="violation-message">魔法数字: 500</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:314</div>
+          <div class="violation-message">魔法数字: 600519</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:317</div>
+          <div class="violation-message">魔法数字: 200</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:317</div>
+          <div class="violation-message">魔法数字: 800</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:317</div>
+          <div class="violation-message">魔法数字: 400</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:318</div>
+          <div class="violation-message">魔法数字: 600519</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:329</div>
+          <div class="violation-message">魔法数字: 500</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:334</div>
+          <div class="violation-message">魔法数字: 200</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:336</div>
+          <div class="violation-message">魔法数字: 400</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:337</div>
+          <div class="violation-message">魔法数字: 300</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:353</div>
+          <div class="violation-message">魔法数字: 300</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:353</div>
+          <div class="violation-message">魔法数字: 500</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:354</div>
+          <div class="violation-message">魔法数字: 500</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+        <div class="violation-item warning">
+          <div class="violation-header">
+            <span class="badge badge-warning">WARNING</span>
+            magic-number
+          </div>
+          <div class="violation-file">📁 D:\FinSightV9\src\apps\input\BulkImportPanel.tsx:358</div>
+          <div class="violation-message">魔法数字: 800</div>
+          <div class="violation-suggestion">💡 提取为常量或使用配置文件</div>
+        </div>
+      
+      <p><em>... 还有 5506 个违规未显示</em></p>
+    </div>
+
+    <h2>🔗 依赖关系图 (Mermaid)</h2>
+    <div class="mermaid">
+graph TD
+        subgraph unknown["unknown (140文件)"]
+        style unknown fill:#95a5a622,stroke:#95a5a6,stroke-width:2px
+        SignalQualityDashboardWidget[SignalQualityDashboardWidget<br/>540行]
+        BulkImportPanel[BulkImportPanel<br/>537行]
+        widget.types[widget.types<br/>520行]
+        ConfigApp[ConfigApp<br/>489行]
+        collection.types[collection.types<br/>482行]
+    end
+    subgraph components["components (142文件)"]
+        style components fill:#54a0ff22,stroke:#54a0ff,stroke-width:2px
+        DataSourceConfigStep[DataSourceConfigStep<br/>662行]
+        ReviewWizard[ReviewWizard<br/>552行]
+        SystemArchitectureDiagram[SystemArchitectureDiagram<br/>395行]
+        MigrationPanel[MigrationPanel<br/>378行]
+        ExecutionMonitorStep[ExecutionMonitorStep<br/>370行]
+    end
+    subgraph config["config (36文件)"]
+        style config fill:#ff6b6b22,stroke:#ff6b6b,stroke-width:2px
+        thresholds[thresholds<br/>708行]
+        rotationConfig[rotationConfig<br/>476行]
+        dbConfig[dbConfig<br/>473行]
+        routes[routes<br/>471行]
+        collectConfig[collectConfig<br/>449行]
+    end
+    subgraph constants["constants (25文件)"]
+        style constants fill:#10ac8422,stroke:#10ac84,stroke-width:2px
+        cockpit.constants[cockpit.constants<br/>557行]
+        uiText.cockpit[uiText.cockpit<br/>302行]
+        uiText.errors[uiText.errors<br/>287行]
+        trade.constants[trade.constants<br/>276行]
+        theme.tokens.shades[theme.tokens.shades<br/>256行]
+    end
+    subgraph core["core (23文件)"]
+        style core fill:#4ecdc422,stroke:#4ecdc4,stroke-width:2px
+        databridge[databridge<br/>822行]
+        databridgeHandlers[databridgeHandlers<br/>545行]
+        pipelineScheduler[pipelineScheduler<br/>506行]
+        dataflowEngine[dataflowEngine<br/>491行]
+        feedbackOrchestrator[feedbackOrchestrator<br/>418行]
+    end
+    subgraph data["data (42文件)"]
+        style data fill:#45b7d122,stroke:#45b7d1,stroke-width:2px
+        sectorSkillData[sectorSkillData<br/>879行]
+        sectorDefinitions[sectorDefinitions<br/>626行]
+        db-schema[db-schema<br/>384行]
+        db[db<br/>352行]
+        queryBuilder[queryBuilder<br/>286行]
+    end
+    subgraph lib["lib (18文件)"]
+        style lib fill:#f7b73122,stroke:#f7b731,stroke-width:2px
+        localStorageManager[localStorageManager<br/>612行]
+        validation[validation<br/>402行]
+        derivedCache[derivedCache<br/>291行]
+        xssSanitizer[xssSanitizer<br/>207行]
+        precision[precision<br/>185行]
+    end
+    subgraph pages["pages (52文件)"]
+        style pages fill:#ff9ff322,stroke:#ff9ff3,stroke-width:2px
+        LlmManagementPage[LlmManagementPage<br/>1044行]
+        CollectTaskPage[CollectTaskPage<br/>896行]
+        TradingFlowPage[TradingFlowPage<br/>652行]
+        ApiConfigurationPage[ApiConfigurationPage<br/>601行]
+        ModelUpgradePage[ModelUpgradePage<br/>562行]
+    end
+    subgraph portal["portal (1文件)"]
+        style portal fill:#5f27cd22,stroke:#5f27cd,stroke-width:2px
+        PortalShell[PortalShell<br/>500行]
+    end
+    subgraph services["services (168文件)"]
+        style services fill:#5f27cd22,stroke:#5f27cd,stroke-width:2px
+        mockDataCollection[mockDataCollection<br/>1040行]
+        permissionRevocationService[permissionRevocationService<br/>978行]
+        dataSourceOrchestrator[dataSourceOrchestrator<br/>730行]
+        rbacManagementService[rbacManagementService<br/>676行]
+        MarketDataAdapter[MarketDataAdapter<br/>656行]
+    end
+    subgraph store["store (61文件)"]
+        style store fill:#00d2d322,stroke:#00d2d3,stroke-width:2px
+        collectionWizardStore[collectionWizardStore<br/>777行]
+        riskStore.derived[riskStore.derived<br/>694行]
+        executionStore[executionStore<br/>613行]
+        dualStrategyStore[dualStrategyStore<br/>585行]
+        orderStore[orderStore<br/>567行]
+    end
+    components --> core
+    </div>
+  </div>
+
+  <script>
+    mermaid.initialize({ 
+      startOnLoad: true,
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true
+      }
+    });
+  </script>
+</body>
+</html>

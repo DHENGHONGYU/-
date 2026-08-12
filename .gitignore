@@ -1,0 +1,88 @@
+# Dependencies
+node_modules/
+.venv/
+
+# Build artifacts
+dist/
+build/
+release/
+*.exe
+*.msi
+*.dmg
+*.AppImage
+*.snap
+*.deb
+*.rpm
+
+# Electron
+dist-electron/*.js.map
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Test artifacts
+test_err.txt
+test-output.txt
+coverage/
+*.lcov
+test-results/
+
+# Temporary
+*.tmp
+*.bak
+.cache/
+temp/
+
+# Git backup / sandbox artifacts
+.git.backup-*/
+
+# HuggingFace model cache
+.hf_cache/
+
+# Test results & audit outputs
+outputs/
+e2e/test-results/
+e2e/full-coverage/test-results-e2e/
+
+# Reports (generated)
+reports/
+
+# TSC / audit output files
+tsc_*.txt
+audit-out.txt
+
+# Misc temp files
+test_out*.txt
+
+# Python data_service — 临时/调试文件
+# _ 前缀下划线命名约定：正式代码另择其名
+python/data_service/_chip_disasm.txt
+python/data_service/_test_sw_*.py
+
+# Secrets (LLM API Key from UI config page, never commit)
+.secrets/

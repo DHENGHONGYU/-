@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>§9.7 场景 C: 精度丢失事故回滚</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+        h1 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        #diagram {
+            background: #fff;
+        }
+        .tip {
+            margin-top: 15px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>§9.7 场景 C: 精度丢失事故回滚</h1>
+    <div id="diagram" class="mermaid">
+flowchart TD
+    A["Check 1 PASS 元数据全对<br/>+ Check 2 FAIL 指纹漂移"] --> B[检查推理精度配置]
+    B --> C{有 dtype/precision 字段?}
+    C -->|dtype=float16 / precision=half| D[§A: 推理精度被降为 FP16]
+    D --> D1[检查环境变量 / 启动参数]
+    D1 --> D2[移除 FP16 配置 恢复 FP32]
+    D2 --> E[回滚 Deployment]
+    C -->|dtype=float32 / precision=full| F[§B: 精度配置正确<br/>可能是模型权重变化]
+    F --> F1[回滚 Deployment 镜像 + 模型文件]
+    C -->|无 dtype/precision 字段| G[§C: 检查环境变量]
+    G --> G1["grep -iE fp16|half|float16"]
+    G1 --> G2[清除相关环境变量 重新部署]
+    E --> H[重新验证]
+    F1 --> H
+    G2 --> H
+    H --> I{exit code?}
+    I -->|exit=0| J[✅ 关闭工单<br/>加固精度配置告警]
+    I -->|exit=1| K[§8.2 继续排查<br/>可能同时存在多种漂移]
+    </div>
+    <div class="tip">
+        右键点击图表 → "图片另存为" 即可保存 PNG.<br/>
+        或使用浏览器截图工具截取整个页面.
+    </div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

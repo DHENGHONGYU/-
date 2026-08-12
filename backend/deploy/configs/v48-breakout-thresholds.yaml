@@ -1,0 +1,292 @@
+# V9 断线交易策略 v4.8 阈值参数与降级逻辑配置
+# 用于 K8s 集群 ConfigMap 注入，供 v6-engine 运行时加载
+#
+# 版本：v4.8（能量级别差异化资金流向降级阈值）
+# 生成日期：2026-08-10
+# 关联文件：
+#   - src/config/thresholds.ts（阈值常量定义）
+#   - src/services/scoring/v6-engine/calculators/l7_l8.ts（降级逻辑实现）
+#   - docs/explanation/strategy/breakout-trading-strategy.md v1.2.0（策略文档）
+#
+# 部署方式：
+#   kubectl apply -f v48-breakout-thresholds.yaml
+#   或通过 Helm values.yaml 引用：
+#     extraEnv:
+#       - name: V48_THRESHOLDS_CONFIG
+#         valueFrom:
+#           configMapKeyRef:
+#             name: v48-breakout-thresholds
+#             key: thresholds.yaml
+#
+# 回滚策略：
+#   回退至 v4.7：将 L3/L2 阈值改为 0（与 L4 一致）
+#   回退至 v4.6：将 enableFundFlowConfirmation 设为 false
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: v48-breakout-thresholds
+  namespace: default
+  labels:
+    app.kubernetes.io/name: finsight-v9
+    app.kubernetes.io/component: v6-engine
+    app.kubernetes.io/part-of: breakout-trading-strategy
+    app.kubernetes.io/version: v4.8
+    strategy.version: v4.8
+  annotations:
+    # 版本元数据，便于 K8s 集群中检索与审计
+    strategy.version: "v4.8"
+    strategy.changelog: "能量级别差异化降级阈值：L3 >0.5, L2 >1.0，召回率 71.4%→100%"
+    strategy.generated-at: "2026-08-10"
+    strategy.source-code: "src/services/scoring/v6-engine/calculators/l7_l8.ts"
+    strategy.source-thresholds: "src/config/thresholds.ts"
+    strategy.documentation: "docs/explanation/strategy/breakout-trading-strategy.md"
+    rollback.note: "回退 v4.7：将 L3/L2 downgradeThreshold 改为 0；回退 v4.6：enableFundFlowConfirmation=false"
+
+data:
+  # ────────────────────────────────────────────────────────────
+  # v4.8 阈值参数（完整 YAML 格式，可被运行时解析）
+  # ────────────────────────────────────────────────────────────
+  thresholds.yaml: |
+    # V9 断线交易策略 v4.8 阈值配置
+    version: "4.8"
+    generated_at: "2026-08-10"
+
+    # ════════════════════════════════════════════════════════════
+    # 1. 能量等级阈值（computeTurnoverVolumeEnergy 使用）
+    #    raw = turnover × volumeRatio
+    # ════════════════════════════════════════════════════════════
+    energy_tiers:
+      # 能量等级 4-5 级边界（激进 → 爆炸）：如 6%×2.5 = 0.15
+      L8_BREAKOUT_ENERGY_TIER4: 0.15
+      # 能量等级 3-4 级边界（活跃 → 激进）：如 4%×2 = 0.08
+      L8_BREAKOUT_ENERGY_TIER3: 0.08
+      # 能量等级 2-3 级边界（温和 → 活跃）：如 2%×1.5 = 0.03
+      L8_BREAKOUT_ENERGY_TIER2: 0.03
+      # 能量等级 1-2 级边界（冷清 → 温和）：如 0.5%×1 = 0.005
+      L8_BREAKOUT_ENERGY_TIER1: 0.005
+
+    # 能量等级仓位/止盈/止损配置
+    energy_level_config:
+      L5_explosive:
+        position_cap_pct: 70
+        take_profit_pct: 25
+        stop_loss_pct: 10
+      L4_aggressive:
+        position_cap_pct: 50
+        take_profit_pct: 18
+        stop_loss_pct: 8
+      L3_active:
+        position_cap_pct: 35
+        take_profit_pct: 12
+        stop_loss_pct: 6
+      L2_moderate:
+        position_cap_pct: 20
+        take_profit_pct: 8
+        stop_loss_pct: 5
+      L1_dormant:
+        position_cap_pct: 0  # 观望
+        take_profit_pct: 0
+        stop_loss_pct: 0
+
+    # ════════════════════════════════════════════════════════════
+    # 2. 假突破技术条件（所有版本通用）
+    #    tpct = turnover × 100（百分比视角）
+    # ════════════════════════════════════════════════════════════
+    fake_breakout:
+      # 技术条件：tpct >= 8% AND volumeRatio < 1.5（严格小于）
+      min_turnover_pct: 8.0       # tpct 下限（百分比）
+      max_volume_ratio: 1.5       # v 上限（严格小于，不含 1.5）
+
+      # ══════════════════════════════════════════════════════════
+      # 3. ★ v4.8 能量级别差异化资金流向降级阈值
+      #    当假突破技术条件满足时，根据 energy.level 选择降级阈值：
+      #      - L5/L4 (level >= 4)：mainForceNet > 0    → 降级 no_breakout（精度优先）
+      #      - L3     (level == 3)：mainForceNet > 0.5  → 降级 no_breakout（平衡召回）
+      #      - L2/L1  (level <= 2)：mainForceNet > 1.0  → 降级 no_breakout（召回优先）
+      #    回滚 v4.7：将 L3/L2 阈值改为 0
+      # ══════════════════════════════════════════════════════════
+      enableFundFlowConfirmation: true   # v4.7+ 启用资金流向二次确认
+
+      # 降级阈值（单位：亿元）
+      downgrade_thresholds:
+        L4_L5: 0       # level >= 4：严格 >0，保持 v4.7 行为，精度优先
+        L3: 0.5        # level == 3：放宽至 >0.5，过滤机构调仓噪音，平衡召回
+        L2_L1: 1.0     # level <= 2：更放宽至 >1.0，召回优先，需强证据才不预警
+
+      # 阈值递增约束（部署前校验）
+      # 必须满足：L4_L5 < L3 < L2_L1
+      threshold_ordering_constraint: "L4_L5 < L3 < L2_L1"
+
+    # ════════════════════════════════════════════════════════════
+    # 4. 8 种断线交易风格判定条件
+    # ════════════════════════════════════════════════════════════
+    breakout_styles:
+      # 优先级从高到低匹配
+      - name: sniper_breakout
+        priority: 1
+        signal: golden_buy
+        condition:
+          energy_level_gte: 4
+          turnover_pct_gte: 5
+          volume_ratio_gte: 2.5
+
+      - name: momentum_breakout
+        priority: 2
+        signal: golden_buy
+        condition:
+          energy_level_gte: 3
+          turnover_pct_gte: 3
+          volume_ratio_gte: 2
+
+      - name: fake_breakout
+        priority: 3
+        signal: escape
+        condition:
+          turnover_pct_gte: 8.0
+          volume_ratio_lt: 1.5
+        fund_flow_confirmation:
+          enabled: true
+          # v4.8 差异化降级阈值映射
+          downgrade_threshold_map:
+            level_gte_4: 0      # L5/L4
+            level_eq_3: 0.5     # L3
+            level_lte_2: 1.0    # L2/L1
+
+      - name: probe_breakout
+        priority: 4
+        signal: follow_buy
+        condition:
+          turnover_pct_lt: 2
+          volume_ratio_gte: 5
+
+      - name: steady_breakout
+        priority: 5
+        signal: hold
+        condition:
+          energy_level_gte: 3
+          turnover_pct_gte: 2
+          turnover_pct_lt: 5
+          volume_ratio_gte: 1.5
+
+      - name: value_breakout
+        priority: 6
+        signal: hold
+        condition:
+          energy_level_gte: 2
+          turnover_pct_lt: 3
+          volume_ratio_gte: 1
+          volume_ratio_lt: 2.5
+
+      - name: breakout_watch
+        priority: 7
+        signal: wait
+        condition:
+          energy_level_eq: 1
+
+      - name: no_breakout
+        priority: 8
+        signal: wait
+        condition: fallback
+
+    # ════════════════════════════════════════════════════════════
+    # 5. 假突破预警系统配置（FakeBreakoutAlertPush）
+    # ════════════════════════════════════════════════════════════
+    alert_system:
+      enabled: true
+      # 预警级别映射
+      levels:
+        critical:
+          condition: "energy.level >= 5 AND fake_breakout AND mainForceNet < 0"
+          action: "立即逃离"
+        warning:
+          condition: "energy.level == 4 AND fake_breakout"
+          action: "减仓防范"
+        info:
+          condition: "energy.level <= 3 AND fake_breakout"
+          action: "提示性预警"
+        suppressed:
+          condition: "mainForceNet > downgrade_threshold（v4.7/v4.8 降级）"
+          action: "不预警"
+
+    # ════════════════════════════════════════════════════════════
+    # 6. 版本演进与回滚配置
+    # ════════════════════════════════════════════════════════════
+    version_history:
+      v4.6:
+        description: "基础假突破判定，无资金流向确认"
+        fund_flow_confirmation: false
+        downgrade_threshold: null
+      v4.7:
+        description: "新增资金流向二次确认，统一 >0 降级阈值"
+        fund_flow_confirmation: true
+        downgrade_thresholds:
+          L4_L5: 0
+          L3: 0      # v4.7 统一 >0
+          L2_L1: 0   # v4.7 统一 >0
+      v4.8:
+        description: "能量级别差异化降级阈值（当前版本）"
+        fund_flow_confirmation: true
+        downgrade_thresholds:
+          L4_L5: 0
+          L3: 0.5
+          L2_L1: 1.0
+        performance:
+          recall_rate: "71.4% → 100.0%"
+          precision_rate: "100.0%（无退化）"
+          false_positive_rate: "0.0%（无退化）"
+
+  # ────────────────────────────────────────────────────────────
+  # 环境变量映射（供容器 env 直接引用）
+  # ────────────────────────────────────────────────────────────
+  env-overrides.sh: |
+    #!/bin/bash
+    # v4.8 阈值环境变量覆盖（可选，用于运行时动态调整）
+    export V48_FAKE_BREAKOUT_MIN_TURNOVER_PCT=8.0
+    export V48_FAKE_BREAKOUT_MAX_VOLUME_RATIO=1.5
+    export V48_DOWNGRADE_THRESHOLD_L4_L5=0
+    export V48_DOWNGRADE_THRESHOLD_L3=0.5
+    export V48_DOWNGRADE_THRESHOLD_L2_L1=1.0
+    export V48_ENABLE_FUND_FLOW_CONFIRMATION=true
+
+  # ────────────────────────────────────────────────────────────
+  # 部署校验脚本（post-deploy hook）
+  # ────────────────────────────────────────────────────────────
+  verify-config.sh: |
+    #!/bin/bash
+    # 部署后校验 v4.8 阈值配置一致性
+    set -e
+
+    echo "[v4.8] 校验阈值配置..."
+
+    # 1. 校验阈值递增约束：L4_L5 < L3 < L2_L1
+    L4_L5=0
+    L3=0.5
+    L2_L1=1.0
+
+    if [ $(echo "$L3 <= $L4_L5" | bc -l) -eq 1 ]; then
+      echo "❌ 校验失败：L3 阈值 ($L3) 必须大于 L4/L5 阈值 ($L4_L5)"
+      exit 1
+    fi
+    if [ $(echo "$L2_L1 <= $L3" | bc -l) -eq 1 ]; then
+      echo "❌ 校验失败：L2/L1 阈值 ($L2_L1) 必须大于 L3 阈值 ($L3)"
+      exit 1
+    fi
+
+    # 2. 校验假突破技术条件
+    if [ $(echo "$V48_FAKE_BREAKOUT_MIN_TURNOVER_PCT < 8.0" | bc -l) -eq 1 ]; then
+      echo "❌ 校验失败：假突破换手率下限 ($V48_FAKE_BREAKOUT_MIN_TURNOVER_PCT) 不得低于 8.0%"
+      exit 1
+    fi
+
+    # 3. 校验资金流向确认启用
+    if [ "$V48_ENABLE_FUND_FLOW_CONFIRMATION" != "true" ]; then
+      echo "⚠️ 警告：资金流向二次确认未启用（回退至 v4.6 行为）"
+    fi
+
+    echo "✅ v4.8 阈值配置校验通过"
+    echo "   - L4/L5 降级阈值: $L4_L5 亿（精度优先）"
+    echo "   - L3 降级阈值: $L3 亿（平衡召回）"
+    echo "   - L2/L1 降级阈值: $L2_L1 亿（召回优先）"
+    echo "   - 召回率: 71.4% → 100.0%"
+    echo "   - 精确率: 100.0%（无退化）"

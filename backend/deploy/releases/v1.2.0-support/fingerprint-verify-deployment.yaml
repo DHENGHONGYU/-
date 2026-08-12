@@ -1,0 +1,332 @@
+# ---------------------------------------------------------------------------
+# V9 Embedding 向量指纹一致性验证 — 生产环境一键部署清单
+# ---------------------------------------------------------------------------
+# 用法:
+#   1. 修改下方 BASELINE_SHA 为你的 v1.1.0 黄金基线指纹
+#   2. 修改 NAMESPACE / SERVICE_NAME / SERVICE_PORT 为实际值
+#   3. 先创建脚本 ConfigMap (见注释步骤)
+#   4. kubectl apply -f fingerprint-verify-deployment.yaml
+#   5. kubectl -n <NAMESPACE> logs job/fingerprint-verify-job -c verifier
+#
+# 对应文档: ROLLBACK-v1.2.0-to-v1.1.0.md §4 / OPS-CHEATSHEET-FINGERPRINT.md
+# ---------------------------------------------------------------------------
+
+# ============================================================
+# 0. Namespace
+# ============================================================
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: v9-embedding
+  labels:
+    app.kubernetes.io/name: v9-embedding
+    app.kubernetes.io/component: embedding-service
+    finsight.internal/managed-by: ops-team
+
+---
+# ============================================================
+# 1. ServiceAccount (最小权限)
+# ============================================================
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fingerprint-verify-sa
+  namespace: v9-embedding
+  labels:
+    app.kubernetes.io/name: v9-fingerprint-verify
+    app.kubernetes.io/component: fingerprint-verify
+    finsight.internal/role: fingerprint-verifier
+  annotations:
+    finsight.internal/description: "向量指纹验证 Job 专用 ServiceAccount"
+
+---
+# ============================================================
+# 2. RBAC — Role (仅允许 get/list 自身 Pod 和日志)
+# ============================================================
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: fingerprint-verify-role
+  namespace: v9-embedding
+  labels:
+    app.kubernetes.io/name: v9-fingerprint-verify
+    app.kubernetes.io/component: fingerprint-verify
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/log"]
+    verbs: ["get", "list"]
+  # 不授予 create/update/delete/watch — 最小权限原则
+
+---
+# ============================================================
+# 3. RBAC — RoleBinding
+# ============================================================
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: fingerprint-verify-binding
+  namespace: v9-embedding
+  labels:
+    app.kubernetes.io/name: v9-fingerprint-verify
+    app.kubernetes.io/component: fingerprint-verify
+subjects:
+  - kind: ServiceAccount
+    name: fingerprint-verify-sa
+    namespace: v9-embedding
+roleRef:
+  kind: Role
+  name: fingerprint-verify-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# ============================================================
+# 4. ConfigMap — 基线指纹 (v1.1.0 黄金基线)
+# ============================================================
+# 修改 BASELINE_SHA 为你的实际基线:
+#   生成方式: python3 verify-embedding-fingerprint.py --port 8001 --gen-baseline
+#   然后把输出的 16-hex 写入下方 baseline.sha
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fingerprint-baseline
+  namespace: v9-embedding
+  labels:
+    app.kubernetes.io/name: v9-fingerprint-verify
+    finsight.internal/role: fingerprint-baseline
+    finsight.internal/baseline-version: "v1.1.0"
+  annotations:
+    finsight.internal/rollback-doc: "ROLLBACK-v1.2.0-to-v1.1.0.md §4"
+data:
+  baseline.sha: "1f1f307f2eab7e11"
+
+---
+# ============================================================
+# 5. ConfigMap — 验证脚本
+# ============================================================
+# 注意: 此 ConfigMap 需要通过以下命令单独创建 (脚本太大不适合内联 YAML):
+#
+#   kubectl -n v9-embedding create configmap fingerprint-script \
+#     --from-file=verify-embedding-fingerprint.py=/path/to/verify-embedding-fingerprint.py
+#
+# 或者使用 Helm Chart 自动打包:
+#   helm upgrade --install fp-verify helm/fingerprint-verify \
+#     --set baseline.sha="1f1f307f2eab7e11"
+#
+# 以下 YAML 仅在脚本内容较小时可用 (生产环境建议用上面命令):
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fingerprint-script
+  namespace: v9-embedding
+  labels:
+    app.kubernetes.io/name: v9-fingerprint-verify
+    finsight.internal/role: fingerprint-verify-script
+# data:
+#   verify-embedding-fingerprint.py: |
+#     <脚本内容 — 请用 kubectl create configmap 命令注入>
+
+---
+# ============================================================
+# 6. Job — 一次性指纹验证
+# ============================================================
+# 运行后查看结果:
+#   kubectl -n v9-embedding wait job/fingerprint-verify-job \
+#     --for=condition=Complete --timeout=5m
+#   kubectl -n v9-embedding logs job/fingerprint-verify-job -c verifier
+#
+# 提取结果 JSON:
+#   kubectl -n v9-embedding logs job/fingerprint-verify-job -c verifier | \
+#     sed -n '/=== RESULT BEGIN ===/,/=== RESULT END ===/p' | \
+#     sed '1d;$d' | python3 -m json.tool
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fingerprint-verify-job
+  namespace: v9-embedding
+  labels:
+    app.kubernetes.io/name: v9-fingerprint-verify
+    app.kubernetes.io/component: fingerprint-verify
+    finsight.internal/role: fingerprint-verifier
+  annotations:
+    finsight.internal/rollback-doc: "ROLLBACK-v1.2.0-to-v1.1.0.md §4"
+    finsight.internal/description: "V9 Embedding 向量指纹一致性验证"
+spec:
+  backoffLimit: 1                    # 最多重试 1 次
+  ttlSecondsAfterFinished: 3600      # 完成 1h 后自动清理 Pod
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: v9-fingerprint-verify
+        app.kubernetes.io/component: fingerprint-verify
+        job-name: fingerprint-verify-job
+    spec:
+      serviceAccountName: fingerprint-verify-sa
+      restartPolicy: Never
+      activeDeadlineSeconds: 300       # 整次 Job 超时 5 分钟
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+      containers:
+        - name: verifier
+          image: docker.io/library/python:3.11-slim
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              SCRIPT_PATH="/opt/verifier/verify-embedding-fingerprint.py"
+              chmod +r "$SCRIPT_PATH" 2>/dev/null || true
+
+              # 从挂载的 ConfigMap 读取基线
+              BASELINE=""
+              if [ -f /etc/fingerprint/baseline.sha ]; then
+                BASELINE=$(cat /etc/fingerprint/baseline.sha | tr -d '[:space:]')
+              fi
+              # 环境变量优先
+              if [ -n "$V9_BASELINE_SHA_ENV" ]; then
+                BASELINE="$V9_BASELINE_SHA_ENV"
+              fi
+
+              ARGS=(
+                --host "$TARGET_HOST"
+                --port "$TARGET_PORT"
+                --k8s-mode
+                --k8s-service "$TARGET_SERVICE"
+                --k8s-namespace "$POD_NAMESPACE"
+                --timeout "$VERIFY_TIMEOUT"
+                --fail-fast
+                --result-json "$RESULT_JSON"
+              )
+              if [ -n "$BASELINE" ]; then
+                ARGS+=(--baseline "$BASELINE")
+              fi
+
+              echo "[verifier] Running: python3 $SCRIPT_PATH ${ARGS[*]}"
+              python3 "$SCRIPT_PATH" "${ARGS[@]}"
+              ec=$?
+              echo "[verifier] Exit code = $ec"
+
+              if [ -f "$RESULT_JSON" ]; then
+                echo "[verifier] === RESULT BEGIN ==="
+                cat "$RESULT_JSON"
+                echo "[verifier] === RESULT END ==="
+              fi
+              exit $ec
+          env:
+            - name: TARGET_HOST
+              # 修改为实际 Embedding Service DNS: <service>.<namespace>.svc
+              value: "v9-embedding.v9-embedding.svc"
+            - name: TARGET_PORT
+              value: "8001"
+            - name: TARGET_SERVICE
+              value: "v9-embedding"
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: V9_BASELINE_SHA_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: fingerprint-baseline
+                  key: baseline.sha
+                  optional: true
+            - name: VERIFY_TIMEOUT
+              value: "15"
+            - name: RESULT_JSON
+              value: "/tmp/fp-result.json"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: verifier-script
+              mountPath: /opt/verifier
+              readOnly: true
+            - name: baseline-file
+              mountPath: /etc/fingerprint
+              readOnly: true
+      volumes:
+        - name: verifier-script
+          configMap:
+            name: fingerprint-script
+            items:
+              - key: verify-embedding-fingerprint.py
+                path: verify-embedding-fingerprint.py
+        - name: baseline-file
+          configMap:
+            name: fingerprint-baseline
+            items:
+              - key: baseline.sha
+                path: baseline.sha
+
+---
+# ============================================================
+# 7. (可选) CronJob — 周期性指纹巡检
+# ============================================================
+# 启用: 取消注释并 kubectl apply
+# 每 4 小时自动执行一次指纹验证, 结果写入 Pod 日志
+#
+# apiVersion: batch/v1
+# kind: CronJob
+# metadata:
+#   name: fingerprint-verify-cron
+#   namespace: v9-embedding
+#   labels:
+#     app.kubernetes.io/name: v9-fingerprint-verify
+#     finsight.internal/role: fingerprint-verifier-cron
+# spec:
+#   schedule: "0 */4 * * *"
+#   concurrencyPolicy: Forbid
+#   successfulJobsHistoryLimit: 3
+#   failedJobsHistoryLimit: 1
+#   jobTemplate:
+#     spec:
+#       backoffLimit: 1
+#       ttlSecondsAfterFinished: 3600
+#       template:
+#         metadata:
+#           labels:
+#             app.kubernetes.io/name: v9-fingerprint-verify
+#         spec:
+#           serviceAccountName: fingerprint-verify-sa
+#           restartPolicy: Never
+#           activeDeadlineSeconds: 300
+#           containers:
+#             - name: verifier
+#               image: docker.io/library/python:3.11-slim
+#               command: ["/bin/sh", "-c"]
+#               args:
+#                 - |
+#                   set -eu
+#                   python3 /opt/verifier/verify-embedding-fingerprint.py \
+#                     --host v9-embedding.v9-embedding.svc \
+#                     --port 8001 \
+#                     --k8s-mode \
+#                     --baseline $(cat /etc/fingerprint/baseline.sha) \
+#                     --fail-fast \
+#                     --result-json /tmp/fp-result.json
+#               env:
+#                 - name: POD_NAMESPACE
+#                   valueFrom:
+#                     fieldRef:
+#                       fieldPath: metadata.namespace
+#               volumeMounts:
+#                 - name: verifier-script
+#                   mountPath: /opt/verifier
+#                   readOnly: true
+#                 - name: baseline-file
+#                   mountPath: /etc/fingerprint
+#                   readOnly: true
+#           volumes:
+#             - name: verifier-script
+#               configMap:
+#                 name: fingerprint-script
+#             - name: baseline-file
+#               configMap:
+#                 name: fingerprint-baseline

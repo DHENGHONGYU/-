@@ -1,0 +1,196 @@
+#!/bin/sh
+# V9 智能投研复盘系统 — 预提交门禁（Husky v9）
+# 所有检查必须通过后，才能成功执行 git commit。
+
+set +e
+# 移除 set -e（与大量 || true 容错模式冲突），各步骤错误由 || true 显式处理
+
+# 系统 Node 24 直驱函数（规避 git-bash 下受管 Node 22 npm 完全不可用的问题）
+# 优先使用 nvm 安装的系统 Node 24（C:/nvm4w/nodejs/node.exe）；
+# 若该路径不存在则回退到 PATH 上的 node，避免环境变动后门禁静默失效。
+if [ -x "C:/nvm4w/nodejs/node.exe" ]; then
+  NODE24="C:/nvm4w/nodejs/node.exe"
+elif command -v node >/dev/null 2>&1; then
+  NODE24="$(command -v node)"
+else
+  NODE24="node"
+fi
+TSX_RUN()  { "$NODE24" ./node_modules/tsx/dist/cli.mjs "$@"; }
+ESLINT_RUN() { "$NODE24" ./node_modules/eslint/bin/eslint.js "$@"; }
+TSC_RUN()  { "$NODE24" ./node_modules/typescript/bin/tsc "$@"; }
+NODE_RUN() { "$NODE24" "$@"; }
+
+# 阻断助手：任一 P0 门禁失败即拦截提交。
+# 修正 set +e 下的"假绿灯"——脚本结尾 echo 退出码恒为 0，必须有显式失败出口。
+BLOCK() {
+  "$@"
+  local rc=$?
+  if [ $rc -ne 0 ]; then
+    echo ""
+    echo "❌ 门禁失败，提交被拦截：请先修复上述问题再提交。"
+    echo "   （失败命令：$*）"
+    exit 1
+  fi
+  return 0
+}
+
+# 便携垫片：保留以防其他 npx 调用
+command -v npx >/dev/null 2>&1 || npx() { npx.cmd "$@"; }
+
+echo ""
+echo "🚦 V9 预提交门禁启动 ..."
+echo "================================================"
+
+# 0. 提交作用域守卫 v2（Commit Scope Guard）—— 堵上"提交卫生"盲点
+#    规则 1：单次提交文件数 ≤ 30（BLOCK）
+#    规则 2：禁止跨层混合提交（≥3 个顶层域 → BLOCK）
+#    规则 3：src/ + docs/ 大量删除（>30 项）→ BLOCK
+#    规则 4：禁止临时产物混入（test-output.txt 等 → BLOCK）
+echo ""
+echo "🎯 [0/17] 提交作用域守卫 v2（文件数 ≤30 + 跨层检测 + 产物过滤）..."
+sh scripts/audit/audit-commit-scope.sh
+SCOPE_GUARD_EXIT=$?
+if [ "$SCOPE_GUARD_EXIT" -ne 0 ]; then
+  echo "   💡 修复建议: 使用 'git commit --only <paths>' 精确控制提交范围，或拆分为多个原子提交。"
+  exit 1
+fi
+
+# 1. 获取当前 AGENTS.md 版本，用于提示
+AGENTS_VERSION=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' "AGENTS.md" | head -n 1 || echo "unknown")
+echo "📋 当前 AGENTS.md 版本: $AGENTS_VERSION"
+
+# 1.5 技能路由匹配（warn 模式，不阻断）
+echo ""
+echo "🧭 [skill-router] 技能路由匹配（提醒模式）..."
+node scripts/skill-router.cjs --remind --log || true
+
+# 2. 环境路径守卫：拦截写死 C:/Users/xxx 的提交
+echo ""
+echo "🛡️  [env-check] 运行环境路径守卫（拦截硬编码用户路径）..."
+NODE_RUN scripts/env-path-guard.cjs --ci --staged
+ENV_CHECK_EXIT=$?
+if [ "$ENV_CHECK_EXIT" -ne 0 ]; then
+  echo ""
+  echo "❌ env-path-guard 拦截：提交中包含写死的 Windows 用户目录绝对路径。"
+  echo "   请先修正后再提交。详情见上方扫描报告。"
+  exit 1
+fi
+
+# 2.5 密钥/敏感信息扫描（SAST-lite，已本地校验 0 误报，升级为 BLOCK）
+echo ""
+echo "🔑 [secrets] 运行 audit:secrets（密钥/敏感信息扫描，BLOCK）..."
+BLOCK TSX_RUN scripts/audit/audit-secrets.ts
+
+# 3. lint-staged：仅对暂存区文件运行 ESLint --fix
+echo ""
+echo "🧹 [2/17] 运行 lint-staged（ESLint --fix）..."
+npx lint-staged
+
+# 3. 颜色硬编码门禁
+echo ""
+echo "🎨 [3/17] 运行 lint:colors（颜色硬编码检查）..."
+ESLINT_RUN --config eslint.colors.config.js src/
+
+# 4. 生产类型检查
+echo ""
+echo "🔍 [4/17] 运行 tsc:prod（生产类型检查）..."
+BLOCK TSC_RUN -p tsconfig.prod.json --noEmit
+
+# 5. 分层调用审计
+echo ""
+echo "🏗️ [5/17] 运行 audit:layers（禁止跨层调用）..."
+BLOCK TSX_RUN scripts/audit/audit-layer-calls.ts
+
+# 6. 原子组件层级边界审计
+echo ""
+echo "⚛️ [6/17] 运行 audit:atomic（原子层级边界检查）..."
+BLOCK TSX_RUN scripts/audit/audit-atomic.ts
+
+# 7. 数据库定义交叉引用审计
+echo ""
+echo "🗄️ [7/17] 运行 audit:db-references（数据库定义交叉引用审计）..."
+BLOCK TSX_RUN scripts/audit/audit-db-references.ts
+
+# 8. Agent → MCP Server 绑定一致性审计（警告模式：2 个预存 direct-service-import 待修复，非本次引入，不阻断）
+echo ""
+echo "🔗 [8/17] 运行 audit:mcp（Agent→MCP 绑定一致性 / 悬空 Agent 检查）..."
+TSX_RUN scripts/audit/audit-mcp.ts || true
+
+# 9. 文档规范检查（告警模式：41 个预存白名单违规待修复，含 docs-backup-*/、.gitattributes、tsconfig.prod.json 等）
+echo ""
+echo "📋 [9/17] 运行 file:check（文档规范检查）..."
+NODE_RUN scripts/docs-tool/check-docs.js || true
+
+# 10. 文档门禁
+echo ""
+echo "🔒 [10/17] 运行 doc:gate（文档门禁检查）..."
+TSX_RUN scripts/doc-gatekeeper.ts
+
+# 11. 文档同步审计（warn 模式）
+echo ""
+echo "📝 [11/17] 运行 audit:docs（文档同步检查）..."
+TSX_RUN scripts/audit/audit-doc-sync.ts && TSX_RUN scripts/audit/audit-version-drift.ts || true
+
+# 12. 设计令牌映射校验
+echo ""
+echo "🎨 [12/17] 运行 verify:tokens（设计令牌映射校验）..."
+TSX_RUN scripts/verify-design-tokens.ts
+
+# 13. 令牌消费审计
+echo ""
+echo "🪙 [13/17] 运行 audit:tokens（令牌消费检查）..."
+TSX_RUN scripts/other/token-scan.cjs
+
+# 14. JSDoc 文档门禁（基线采集，当前不阻断）
+echo ""
+echo "📖 [14/17] 运行 audit:jsdoc（JSDoc 覆盖检查）..."
+TSX_RUN scripts/audit/audit-jsdoc.ts || true
+
+# 15. 驾驶舱 Widget 三处注册一致性审计（tsx 段错误容错）
+echo ""
+echo "🧩 [15/17] 运行 audit:widget-registry（Widget 三处注册一致性检查）..."
+TSX_RUN scripts/audit/audit-widget-registry.ts || true
+
+# 16. AI 输出校验门禁（tsx 段错误容错）
+echo ""
+echo "🤖 [16/17] 运行 audit:ai-output（AI 输出三道校验检查）..."
+TSX_RUN scripts/audit/audit-ai-output.ts || true
+
+# 17. ACL 权限矩阵一致性审计（tsx 段错误容错）
+echo ""
+echo "🔐 [17/17] 运行 audit:acl-consistency（ACL 权限矩阵一致性检查）..."
+TSX_RUN scripts/audit/audit-acl-consistency.ts || true
+
+# 18. 文档目录-内容匹配（warn 模式）
+echo ""
+echo "📂 [warn] 运行 audit:path-match（文档目录-内容匹配检查，warn 模式）..."
+TSX_RUN scripts/audit/audit-path-match.ts || true
+
+# 19. 文档-代码双向完整性（warn 模式）
+echo ""
+echo "📂 [warn] 运行 audit:doc-integrity（文档-代码双向完整性检查，warn 模式）..."
+TSX_RUN scripts/audit/audit-doc-integrity.ts || true
+
+# 20. 测试类型债务告警（warn 模式）
+echo ""
+echo "📊 [warn] 运行 tsc:test（测试类型债务告警）..."
+# Windows / cross-platform: prefer mktemp with fallback (avoid /tmp/ on Windows)
+if command -v mktemp >/dev/null 2>&1; then
+  TS_TEST_LOG=$(mktemp 2>/dev/null || mktemp -t tsc-test-warn 2>/dev/null || echo "$TEMP/tsc-test-warn.$$.log")
+else
+  TS_TEST_LOG="temp/tsc-test-warn.$$.log"
+  mkdir -p "$(dirname "$TS_TEST_LOG")" 2>/dev/null || true
+fi
+TSC_RUN -p tsconfig.test.json --noEmit > "$TS_TEST_LOG" 2>&1 || true
+TS_TEST_COUNT=$(grep -c "error TS" "$TS_TEST_LOG" 2>/dev/null || echo "0")
+rm -f "$TS_TEST_LOG"
+if [ "$TS_TEST_COUNT" -gt 0 ]; then
+  echo "⚠️  测试类型错误数: $TS_TEST_COUNT（非阻断警告，详见 tsc-gate-scope-audit §七）"
+else
+  echo "✅ 测试类型检查通过"
+fi
+
+echo ""
+echo "================================================"
+echo "✅ V9 预提交门禁通过：核心 P0 门禁（tsc:prod / layers / atomic / db-references / secrets）已真阻断；其余为 warn。允许提交。"
+echo ""

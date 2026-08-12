@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⑤ 竞品对比分析 · FinSightV9 团队手册</title>
+<style>
+:root{
+  --bg:#fafaf9; --panel:#ffffff; --border:#e7e5e4; --text:#292524;
+  --text2:#57534e; --muted:#a8a29e; --accent:#10b981; --accent-bg:#ecfdf5;
+  --code-bg:#f5f5f4;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;line-height:1.75;font-size:15px}
+.layout{display:flex;align-items:flex-start;min-height:100vh}
+.sidebar{position:sticky;top:0;align-self:flex-start;width:240px;flex-shrink:0;height:100vh;
+  overflow-y:auto;background:var(--panel);border-right:1px solid var(--border);padding:24px 18px}
+.sidebar h2{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:0 0 12px}
+.sidebar a{display:block;color:var(--text2);text-decoration:none;font-size:14px;padding:7px 10px;
+  border-radius:8px;margin-bottom:2px}
+.sidebar a:hover{background:var(--accent-bg);color:#047857}
+.sidebar a.active{background:var(--accent);color:#fff}
+.sidebar .sub{font-size:11px;color:var(--muted);margin:14px 0 6px;padding-left:10px}
+.content{flex:1;max-width:880px;margin:0 auto;padding:40px 48px 80px}
+article h1{font-size:30px;font-weight:800;letter-spacing:-.5px;margin:0 0 6px;
+  border-bottom:3px solid var(--accent);padding-bottom:14px}
+article h2{font-size:22px;font-weight:700;margin:38px 0 12px;padding-left:12px;border-left:4px solid var(--accent)}
+article h3{font-size:18px;font-weight:700;margin:26px 0 8px;color:var(--text)}
+article h4{font-size:15.5px;font-weight:700;margin:18px 0 6px;color:var(--text2)}
+article p{margin:10px 0;color:var(--text2)}
+article ul,article ol{padding-left:24px;margin:10px 0;color:var(--text2)}
+article li{margin:5px 0}
+article a{color:var(--accent);text-decoration:none;border-bottom:1px solid #a7f3d0}
+article a:hover{color:#047857}
+article code{background:var(--code-bg);border:1px solid var(--border);border-radius:5px;padding:1px 6px;
+  font-size:13px;font-family:'SFMono-Regular',Consolas,monospace;color:#be123c}
+article pre{background:var(--code-bg);border:1px solid var(--border);border-radius:12px;padding:18px 20px;
+  overflow-x:auto;margin:14px 0}
+article pre code{background:none;border:none;padding:0;color:#1c1917;font-size:13px;line-height:1.6}
+article blockquote{border-left:4px solid var(--accent);background:var(--accent-bg);margin:14px 0;
+  padding:12px 18px;border-radius:0 10px 10px 0;color:#065f46}
+article table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px}
+article th,article td{border:1px solid var(--border);padding:9px 12px;text-align:left}
+article th{background:var(--panel);font-weight:700;color:var(--text)}
+article tr:nth-child(even) td{background:#fcfcfb}
+article hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+article img{max-width:100%;border-radius:10px;border:1px solid var(--border)}
+pre.mermaid{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:48px;padding-top:20px;border-top:1px solid var(--border)}
+.back{display:inline-block;margin-bottom:18px;color:var(--accent);text-decoration:none;font-size:13px}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <h2>团队体系手册</h2>
+    <a href="index.html">📑 总览索引</a>
+    <div class="sub">手册正文</div>
+    <a href="README.html">总导航 · 团队手册地图</a>
+    <a href="01-design-philosophy.html">① 设计与原创思路</a>
+    <a href="02-architecture.html">② 整体架构设计</a>
+    <a href="03-ui-components.html">③ UI 组件设计</a>
+    <a href="04-model-runtime.html">④ 模型运行机制</a>
+    <a href="05-competitive-analysis.html" class="active">⑤ 竞品对比分析</a>
+    <div class="sub">补充资料</div>
+    <a href="supplementary/index.html">📁 高质量补充 HTML</a>
+  </aside>
+  <main class="content"><article>
+    <a class="back" href="index.html">← 返回总览</a>
+    <h1>05 · 竞品对比分析（Competitive Analysis）</h1>
+<blockquote>
+<p>本文回答&quot;<strong>我们凭什么差异化</strong>&quot;。基线参考：<code>docs/01-product/competitive-analysis.md</code>（分析 5 大类 12 款工具）。
+⚠️ 说明：竞品的功能/架构描述基于公开认知与一般行业常识；<strong>性能维度多为定性推断，非基准测试</strong>。涉及具体数字请以各产品官方披露为准。本分析用于团队内部战略对齐，不构成第三方评价结论。</p>
+</blockquote>
+<hr>
+<h2>1. 分析框架</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>关注点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>功能</strong></td>
+<td>研究/交易/复盘/AI/数据广度/可扩展性</td>
+</tr>
+<tr>
+<td><strong>架构</strong></td>
+<td>前端/后端形态、数据存储归属、扩展机制、离线能力</td>
+</tr>
+<tr>
+<td><strong>性能</strong></td>
+<td>响应速度、算力卸载、数据处理规模、实时性</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>2. 市场格局与定位</h2>
+<pre><code>[行情交易工具] ───┐                        ┌─── [机构研究终端]
+ 同花顺/东财/通达信    └── 空白地带 ──► V9    Wind/iFinD
+ 券商APP/雪球                │
+                      [AI投顾/智能选股]
+</code></pre>
+<p>FinSightV9 卡位：<strong>个人投资研究操作系统</strong>——在&quot;行情交易工具&quot;和&quot;机构研究终端&quot;之间的空白地带，强调<strong>研究、方法论、复盘、数据主权</strong>。</p>
+<hr>
+<h2>3. 竞品矩阵（定性对比）</h2>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>类型</th>
+<th>功能侧重</th>
+<th>架构形态</th>
+<th>数据存储</th>
+<th>扩展性</th>
+<th>性能特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>同花顺/东财</strong></td>
+<td>零售行情交易</td>
+<td>行情/交易/资讯/社区</td>
+<td>重后端 SaaS</td>
+<td>云端</td>
+<td>封闭</td>
+<td>实时性强、海量并发</td>
+</tr>
+<tr>
+<td><strong>雪球</strong></td>
+<td>社交投资</td>
+<td>组合/讨论/跟投</td>
+<td>重后端 SaaS</td>
+<td>云端</td>
+<td>社区生态</td>
+<td>社交驱动、实时</td>
+</tr>
+<tr>
+<td><strong>通达信</strong></td>
+<td>交易终端</td>
+<td>盯盘/公式/交易</td>
+<td>桌面客户端</td>
+<td>本地+券商</td>
+<td>公式/插件</td>
+<td>低延迟、稳定</td>
+</tr>
+<tr>
+<td><strong>Wind/iFinD</strong></td>
+<td>机构终端</td>
+<td>数据/研报/终端</td>
+<td>重后端+桌面</td>
+<td>云端</td>
+<td>API/Excel</td>
+<td>数据极广、贵</td>
+</tr>
+<tr>
+<td><strong>券商 APP</strong></td>
+<td>经纪</td>
+<td>开户/交易/资讯</td>
+<td>重后端 SaaS</td>
+<td>云端</td>
+<td>弱</td>
+<td>交易优先</td>
+</tr>
+<tr>
+<td><strong>AI 投顾</strong></td>
+<td>智能决策</td>
+<td>选股/择时</td>
+<td>黑箱模型</td>
+<td>云端</td>
+<td>模型驱动</td>
+<td>依赖云算力</td>
+</tr>
+<tr>
+<td><strong>FinSightV9</strong></td>
+<td><strong>研究操作系统</strong></td>
+<td><strong>复盘/方法论/认知</strong></td>
+<td><strong>纯前端 PWA</strong></td>
+<td><strong>本地 IndexedDB</strong></td>
+<td><strong>Widget+MCP+Worker</strong></td>
+<td><strong>离线、可解释、可审计</strong></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>4. V9 的四大差异化支柱</h2>
+<ol>
+<li>
+<p><strong>数据主权（最根本）</strong>
+数据 100% 存本地、零上传。竞品几乎全部云端采集，用户数据归平台。隐私觉醒趋势下这是越来越强的卖点。</p>
+</li>
+<li>
+<p><strong>方法论驱动而非信息驱动</strong>
+五舱工作流 = 投资方法论软件化，把&quot;输入→分析→交易→输出→总控&quot;固化为连续研究流，配合&quot;不切屏原则&quot;保持心流。竞品多偏&quot;数据查询/资讯推送&quot;，V9 偏&quot;研究方法论与复盘体系&quot;。</p>
+</li>
+<li>
+<p><strong>AI 增强但不替代（白盒可解释）</strong>
+双轨评分：V6 规则引擎 100% 可解释 + AI 评分透明可追溯，交叉验证。区别于&quot;AI 替你做决策&quot;的黑箱投顾——<strong>用户始终掌握最终决策权</strong>。</p>
+</li>
+<li>
+<p><strong>可扩展平台（工具→平台→生态）</strong>
+驾驶舱 Widget 市场 + 15 个 MCP Server 生态 + Web Worker 计算池。竞品多为固定功能集，V9 预留&quot;接入无限第三方工具/数据&quot;的协议化通道。</p>
+</li>
+</ol>
+<p><strong>附加护城河</strong>：认知复利——评分历史 + 复盘笔记 + 知识库，把&quot;信息消费&quot;变成&quot;认知生产&quot;，迁移成本即壁垒。</p>
+<hr>
+<h2>5. 能力差距与风险（诚实评估）</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>V9 现状</th>
+<th>差距/风险</th>
+<th>应对</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>实时性</td>
+<td>盘后/历史为主，无盘中推送</td>
+<td>不满足盯盘族</td>
+<td>明确&quot;研究复盘&quot;定位，不硬刚实时行情</td>
+</tr>
+<tr>
+<td>数据广度</td>
+<td>依赖第三方行情源（腾讯/新浪兜底）</td>
+<td>广度受限、有降级风险</td>
+<td>强化 MCP 接入、明确数据源 SLA</td>
+</tr>
+<tr>
+<td>算力规模</td>
+<td>单浏览器 Worker 池（≤4）</td>
+<td>无法跑大规模回测/训练</td>
+<td>架构预留 Gateway，V10 评估服务端</td>
+</tr>
+<tr>
+<td>生态成熟度</td>
+<td>15 MCP Server，早期</td>
+<td>远不及 Wind/同花顺生态</td>
+<td>聚焦&quot;个人研究&quot;垂直场景，做深不做广</td>
+</tr>
+<tr>
+<td>合规</td>
+<td>纯前端规避集中数据合规</td>
+<td>但 AI 输出须持续标注&quot;非投资建议&quot;</td>
+<td>固化 disclaimer 组件，门禁校验</td>
+</tr>
+<tr>
+<td>协作</td>
+<td>单用户本地</td>
+<td>无多人协作/云同步</td>
+<td>暂不在范围；V10 评估可选同步</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>6. 战略建议</h2>
+<ol>
+<li><strong>守住蓝海定位</strong>：不与行情交易工具拼实时，不与机构终端拼数据广度，死守&quot;个人研究操作系统 + 数据主权 + 认知复利&quot;。</li>
+<li><strong>补齐关键短板</strong>：在&quot;研究&quot;闭环内做深——更丰富的复盘模板、更强的信号可解释性、更顺滑的 MCP 接入体验。</li>
+<li><strong>开放生态</strong>：把 Widget 市场与 MCP Server 做成&quot;可贡献&quot;机制，让早期用户成为生态共建者（护城河正向循环）。</li>
+<li><strong>架构演进节奏</strong>：当前纯前端是有意选择（合规/成本/隐私）；只有当规模 &gt; 1 万且需集中数据时，才在 V10 评估引入 Gateway 服务端，避免过早复杂化。</li>
+</ol>
+<hr>
+<h2>附：与团队手册其他篇的关系</h2>
+<ul>
+<li>差异化支柱 2/3 的方法论与白盒评分 → <code>01-design-philosophy.md</code> §2、§5；<code>04-model-runtime.md</code> §1–§5。</li>
+<li>扩展性（Widget/MCP/Worker）→ <code>03-ui-components.md</code> §3；<code>02-architecture.md</code> §6；<code>04-model-runtime.md</code> §7–§8。</li>
+<li>架构形态决策（纯前端 ADR-001）→ <code>02-architecture.md</code> §6.1。</li>
+</ul>
+
+    <footer>FinSightV9 智能投研复盘系统 · 团队体系手册 · 由 markdown-it 自动转换生成</footer>
+  </article></main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ startOnLoad: true, theme: 'base',
+      themeVariables: { primaryColor:'#ecfdf5', lineColor:'#57534e', fontFamily:'sans-serif' } });
+  }
+</script>
+</body>
+</html>

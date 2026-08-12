@@ -1,0 +1,46 @@
+# Docker build 排除清单（项目根目录构建上下文）
+# 减少 Node 前端镜像体积 + 避免缓存失效
+
+# 构建产物
+dist
+dist-test
+coverage
+
+# 依赖（通过 package*.json 重新安装）
+node_modules
+
+# 大型数据/日志/文档（不影响构建）
+docs/reports
+outputs
+*.log
+
+# Python 环境（前端镜像不需要）
+python/data_service/__pycache__
+python/data_service/.pytest_cache
+python/data_service/.venv
+python/data_service/venv
+
+# IDE
+.vscode
+.idea
+
+# 版本控制
+.git
+.gitignore
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 临时文件
+tmp
+temp
+*.tmp
+
+# 测试产物
+test-results
+playwright-report
+
+# Electron 构建（容器内不打包桌面应用）
+release
+dist-electron

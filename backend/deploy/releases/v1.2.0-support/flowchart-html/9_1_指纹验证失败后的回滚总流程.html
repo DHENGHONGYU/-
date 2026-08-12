@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>§9.1 指纹验证失败后的回滚总流程</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+        h1 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        #diagram {
+            background: #fff;
+        }
+        .tip {
+            margin-top: 15px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>§9.1 指纹验证失败后的回滚总流程</h1>
+    <div id="diagram" class="mermaid">
+flowchart TD
+    A[指纹验证失败 exit=1] --> B[Step 1: 确认失败类型<br/>查看日志中哪个 Check FAIL]
+    B --> C{哪个 Check 失败?}
+    C -->|Check 1 元数据错| D[模型被切换]
+    C -->|Check 2 指纹漂移| E[模型/代码变更]
+    C -->|Check 3 维度异常| F[代码/配置变更]
+    D --> G[Step 2: 回滚 Embedding 服务到 v1.1.0]
+    E --> G
+    F --> G
+    G --> H[Step 3: 重新部署验证 Job<br/>helm upgrade --install]
+    H --> I[Step 4: 验证通过?]
+    I -->|exit=0| J[✅ 关闭工单]
+    I -->|exit=1| K[进 §8 FAQ 排查]
+    </div>
+    <div class="tip">
+        右键点击图表 → "图片另存为" 即可保存 PNG.<br/>
+        或使用浏览器截图工具截取整个页面.
+    </div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

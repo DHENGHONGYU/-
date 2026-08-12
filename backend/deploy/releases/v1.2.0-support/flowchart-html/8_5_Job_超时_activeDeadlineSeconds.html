@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>§8.5 Job 超时 (activeDeadlineSeconds)</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+        h1 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        #diagram {
+            background: #fff;
+        }
+        .tip {
+            margin-top: 15px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>§8.5 Job 超时 (activeDeadlineSeconds)</h1>
+    <div id="diagram" class="mermaid">
+flowchart TD
+    A[Job DeadlineExceeded] --> B[检查 Embedding 服务响应延迟]
+    B --> C["curl -w time_total localhost:8001/api/embed/health"]
+    C --> D{响应时间}
+    D -->|> 10s| E[§A: Embedding 服务过载]
+    E --> E1[扩容 Embedding Pod / 检查 GPU 利用率]
+    D -->|< 1s| F[§B: 超时阈值过低]
+    F --> F1["设置 runtime.timeoutSeconds=600"]
+    </div>
+    <div class="tip">
+        右键点击图表 → "图片另存为" 即可保存 PNG.<br/>
+        或使用浏览器截图工具截取整个页面.
+    </div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.6.0
+akshare>=1.14.0
+requests>=2.31.0
+pdfplumber>=0.11.0
+# f2Zijin L2 兜底：同花顺 hexin-v 验证码生成（@see _ths_hexinv.py）
+py_mini_racer>=0.6.1

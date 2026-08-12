@@ -1,0 +1,42 @@
+/**
+ * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+ */
+import type { StandardEnvelope } from './envelope'
+
+export interface FallbackQueueStats {
+  length: number
+}
+
+/**
+ * FallbackQueue
+ */
+export class FallbackQueue {
+  private queue: StandardEnvelope[] = []
+
+  push(envelope: StandardEnvelope): void {
+    this.queue.push(envelope)
+  }
+
+  drain(): StandardEnvelope[] {
+    const copy = [...this.queue]
+    this.queue = []
+    return copy
+  }
+
+  peek(): readonly StandardEnvelope[] {
+    return this.queue
+  }
+
+  get length(): number {
+    return this.queue.length
+  }
+
+  clear(): void {
+    this.queue = []
+  }
+}
+
+/**
+ * fallbackQueue
+ */
+export const fallbackQueue = new FallbackQueue()

@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Score Data Schema",
+  "description": "Schema for scoring data in the V9 intelligent research review system",
+  "type": "object",
+  "required": ["symbol", "score", "factors", "algorithmVersion", "calculatedAt", "dataVersion"],
+  "properties": {
+    "symbol": {
+      "type": "string",
+      "description": "Stock symbol"
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Overall score 0-100"
+    },
+    "factors": {
+      "type": "object",
+      "additionalProperties": { "type": "number" },
+      "description": "Factor scores"
+    },
+    "algorithmVersion": {
+      "type": "string",
+      "description": "Algorithm version"
+    },
+    "calculatedAt": {
+      "type": "number",
+      "description": "Timestamp when score was calculated"
+    },
+    "dataVersion": {
+      "type": "number",
+      "description": "Data version number"
+    },
+    "qualityWarning": {
+      "type": "string",
+      "description": "Quality warning message"
+    },
+    "overallScore": {
+      "type": ["number", "null"],
+      "description": "Overall intelligent score"
+    },
+    "dimensionScores": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "score": { "type": ["number", "null"] },
+          "rationale": { "type": "string" },
+          "evidence": { "type": "array", "items": { "type": "string" } },
+          "weight": { "type": "number" },
+          "source": { "type": ["string", "null"], "enum": ["llm", "auto", null] }
+        },
+        "required": ["name", "score", "rationale", "evidence", "weight"]
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "Score summary"
+    },
+    "basis": {
+      "type": "string",
+      "description": "Scoring basis"
+    },
+    "missingFields": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Missing data fields"
+    },
+    "scoredAt": {
+      "type": "number",
+      "description": "Timestamp when scored"
+    }
+  }
+}

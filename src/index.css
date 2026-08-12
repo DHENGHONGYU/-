@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    /* P1-4 修复：L 从 39% → 31%，确保与白色文字对比度 ≥ 4.5:1（WCAG AA） */
+    --primary: 160 84% 31%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 160 84% 31%;
+    --radius: 0.625rem;
+
+    /* 宋瓷语义扩展 */
+    --ru-blue: 205 35% 70%;
+    --guan-green: 145 15% 65%;
+    --cinnabar: 5 65% 52%;
+    --ivory: 40 33% 94%;
+    --warm-gray: 30 12% 90%;
+
+    /* ===== 统一设计系统 · 语义色角色（V9 设计基座） ===== */
+    /* 次级表面：卡片内嵌面板 / 悬浮底 / 嵌套区块 */
+    --surface-2: 240 4.8% 96.5%;
+    /* 三级文字：辅助说明、占位、弱化标签 */
+    --text-tertiary: 240 3.8% 60%;
+    /* 强边框：分区强调、输入框聚焦态 */
+    --divider: 240 5.9% 78%;
+    /* 状态色（与股票涨跌例外规则无关，见 STOCK_COLOR_TOKENS） */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
+
+    /* ===== 统一设计系统 · 层级阴影 ===== */
+    --shadow-color: 240 10% 20%;
+    --shadow-sm: 0 1px 2px -1px rgb(15 23 42 / 0.08);
+    --shadow-md: 0 4px 12px -2px rgb(15 23 42 / 0.10);
+    --shadow-lg: 0 16px 40px -8px rgb(15 23 42 / 0.16);
+  }
+
+  .dark {
+    --background: 0 0% 13%;
+    --foreground: 0 0% 96%;
+    --card: 0 0% 16%;
+    --card-foreground: 0 0% 96%;
+    --popover: 0 0% 16%;
+    --popover-foreground: 0 0% 96%;
+    /* P1-4 修复：L 从 45% → 28%，确保与白色文字对比度 ≥ 4.5:1（WCAG AA） */
+    --primary: 160 70% 28%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 20%;
+    --secondary-foreground: 0 0% 96%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 64%;
+    --accent: 0 0% 20%;
+    --accent-foreground: 0 0% 96%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 24%;
+    --input: 0 0% 24%;
+    --ring: 160 70% 28%;
+
+    /* ===== 统一设计系统 · 暗色语义角色（高级灰：中性灰 hue 0） ===== */
+    --surface-2: 0 0% 18%;
+    --text-tertiary: 0 0% 55%;
+    --divider: 0 0% 28%;
+    --success: 142 69% 48%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 55%;
+    --warning-foreground: 0 0% 100%;
+    --info: 217 91% 65%;
+    --info-foreground: 0 0% 100%;
+
+    --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 0.40);
+    --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.50);
+    --shadow-lg: 0 16px 40px -8px rgb(0 0 0 / 0.60);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "tnum";
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ===== 统一设计系统 · 排版基线（信息层级） ===== */
+  h1 { @apply text-h1 font-bold tracking-tight text-foreground; }
+  h2 { @apply text-h2 font-semibold tracking-tight text-foreground; }
+  h3 { @apply text-h3 font-semibold text-foreground; }
+  h4 { @apply text-h4 font-semibold text-foreground; }
+  p { @apply leading-relaxed; }
+}

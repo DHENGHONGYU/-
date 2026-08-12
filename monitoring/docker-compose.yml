@@ -1,0 +1,56 @@
+# Chip-Flow Intercept Dashboard — Local Monitoring Stack
+#
+# Services:
+#   - Prometheus (port 9090): scrapes node-exporter textfile metrics
+#   - Grafana (port 3000): visualizes chip-flow intercept metrics
+#   - Node Exporter (port 9100): exposes .prom textfile gauges
+#
+# Usage:
+#   docker compose up -d
+#   # then run import-dashboard.ps1 to import the Grafana dashboard
+#
+services:
+  prometheus:
+    image: prom/prometheus:v3.2.1
+    container_name: chip-flow-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    restart: unless-stopped
+    networks:
+      - chip-flow-net
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: chip-flow-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+    volumes:
+      - ./provisioning:/etc/grafana/provisioning
+      - ../outputs:/var/lib/grafana/dashboards:ro
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    networks:
+      - chip-flow-net
+
+  node-exporter:
+    image: prom/node-exporter:v1.8.2
+    container_name: chip-flow-node-exporter
+    ports:
+      - "9100:9100"
+    command:
+      - --collector.textfile.directory=/etc/node-exporter/textfile
+    volumes:
+      - ./textfile:/etc/node-exporter/textfile:ro
+    restart: unless-stopped
+    networks:
+      - chip-flow-net
+
+networks:
+  chip-flow-net:
+    driver: bridge
