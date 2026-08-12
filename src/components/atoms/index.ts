@@ -71,9 +71,6 @@ export {
   BreadcrumbSeparator,
 } from './Breadcrumb'
 
-export { Result } from './Result'
-export type { ResultProps, ResultStatus } from './Result'
-
 export { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './Table'
 
 export { StockPriceChangeBadge } from './StockPriceChange'

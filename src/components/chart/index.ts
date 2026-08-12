@@ -25,13 +25,15 @@ export {
   SubIndicatorBarChart,
   IndustryHeatmap,
   IndustryHeatmapChart,
-  TrendLineChart,
-  IndustryTrendChart,
   ValuationDistribution,
   ValuationDistributionChart,
-  IndustryV4Panel,
   buildHistogram,
 } from './industry'
+/**
+ * @internal 行业分析预留组件，已从对外导出移除（registry 内部用）：
+ *   TrendLineChart · IndustryTrendChart · IndustryV4Panel
+ * 接入产品路由/Widget 后重新开放 export，禁止直接 <JSX> 静态直引。
+ */
 
 // 筹码分布图组件
 export { default as ChipDistributionChart } from './ChipDistributionChart'
@@ -57,11 +59,11 @@ export type {
   IndustryHeatmapProps,
   IndustryHeatmapDataItem,
   HeatmapColorScheme,
-  TrendLineChartProps,
-  TrendLineDataPoint,
-  TrendLineSeries,
-  TrendLineReferenceLine,
   ValuationDistributionProps,
   ValuationDistributionBin,
-  IndustryV4PanelProps,
 } from './industry'
+/**
+ * @internal 行业分析预留类型（随组件一并从对外导出移除）：
+ *   TrendLineChartProps · TrendLineDataPoint · TrendLineSeries · TrendLineReferenceLine · IndustryV4PanelProps
+ * 产品规划确认接入方式后，与组件同时恢复类型导出。
+ */
