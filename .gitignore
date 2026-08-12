@@ -73,6 +73,14 @@ e2e/full-coverage/test-results-e2e/
 
 # Reports (generated)
 reports/
+# 精准白名单：仅纳入本次 5 个治理产物，其余 docs/reports 内容保持忽略
+!docs/reports/
+docs/reports/**
+!docs/reports/registry-doc-id-audit-2026-08-13.md
+!docs/reports/registry-fill-checklist-V9-DOC-PROJ.md
+!docs/reports/registry-fill-checklist-V9-DOC-QA.md
+!docs/reports/registry-duplicate-docid-3-groups.md
+!docs/reports/proj-195-vs-proj-260-diff.md
 
 # TSC / audit output files
 tsc_*.txt
