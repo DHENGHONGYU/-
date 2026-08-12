@@ -55,6 +55,7 @@ test-results/
 # Temporary
 *.tmp
 *.bak
+*.bak-*
 .cache/
 temp/
 

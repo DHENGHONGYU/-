@@ -203,11 +203,11 @@ export class WeeklyReviewScheduler {
       timestamp?: number
     }
 
-    if (p.symbol && p.price && (p.action === 'buy' || p.action === 'sell')) {
+    if ((p.symbol ?? '') !== '' && (p.price ?? 0) !== 0 && (p.action === 'buy' || p.action === 'sell')) {
       this.weekTrades.push({
-        symbol: p.symbol,
+        symbol: p.symbol ?? '',
         action: p.action as 'buy' | 'sell',
-        price: p.price,
+        price: p.price ?? 0,
         timestamp: p.timestamp ?? Date.now(),
       })
     }
@@ -227,11 +227,11 @@ export class WeeklyReviewScheduler {
     if (!p?.orders) return
 
     for (const order of p.orders) {
-      if (order.symbol && order.price && (order.side === 'buy' || order.side === 'sell')) {
+      if ((order.symbol ?? '') !== '' && (order.price ?? 0) !== 0 && (order.side === 'buy' || order.side === 'sell')) {
         this.weekTrades.push({
-          symbol: order.symbol,
+          symbol: order.symbol ?? '',
           action: order.side as 'buy' | 'sell',
-          price: order.price,
+          price: order.price ?? 0,
           timestamp: order.timestamp ?? Date.now(),
         })
       }
@@ -248,12 +248,12 @@ export class WeeklyReviewScheduler {
 
     if (p.scores) {
       for (const s of p.scores) {
-        if (s.symbol && s.score !== undefined) {
-          this.weekScores.set(s.symbol, s.score)
+        if ((s.symbol ?? '') !== '' && s.score !== undefined) {
+          this.weekScores.set(s.symbol ?? '', s.score)
         }
       }
-    } else if (p.symbol && p.score !== undefined) {
-      this.weekScores.set(p.symbol, p.score)
+    } else if ((p.symbol ?? '') !== '' && p.score !== undefined) {
+      this.weekScores.set(p.symbol ?? '', p.score)
     }
   }
 
@@ -264,8 +264,8 @@ export class WeeklyReviewScheduler {
       finalScore?: number
     }
 
-    if (p.symbol && p.finalScore !== undefined) {
-      this.weekScores.set(p.symbol, p.finalScore)
+    if ((p.symbol ?? '') !== '' && p.finalScore !== undefined) {
+      this.weekScores.set(p.symbol ?? '', p.finalScore)
     }
   }
 
@@ -277,7 +277,7 @@ export class WeeklyReviewScheduler {
       symbol?: string
     }
 
-    if (p.strategy || p.action) {
+    if ((p.strategy ?? '') !== '' || (p.action ?? '') !== '') {
       this.strategyActions.push({
         strategy: p.strategy ?? '',
         action: p.action ?? '',

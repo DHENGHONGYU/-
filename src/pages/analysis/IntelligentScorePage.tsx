@@ -64,7 +64,7 @@ function exportToMarkdown(score: IntelligentScore): void {
 
 ## 维度评分
 
-${score.dimensionScores.map(d => `- **${d.name}**: ${d.score?.toFixed(1) ?? 'N/A'}${d.usedLlm ? ' (LLM增强)' : ''}`).join('\n')}
+${score.dimensionScores.map(d => `- **${d.name}**: ${d.score?.toFixed(1) ?? 'N/A'}${(d.usedLlm ?? false) ? ' (LLM增强)' : ''}`).join('\n')}
 
 ## 评分依据
 
@@ -137,7 +137,7 @@ function exportToPDF(score: IntelligentScore): void {
     <div class="dimension">
       <span class="dimension-name">${d.name}</span>
       <span class="dimension-score">${d.score?.toFixed(1) ?? 'N/A'}</span>
-      ${d.usedLlm ? '<span class="llm-badge">LLM增强</span>' : ''}
+      ${(d.usedLlm ?? false) ? '<span class="llm-badge">LLM增强</span>' : ''}
       <div style="margin-top: 10px; color: ${COLOR_SHADES.gray.hex[500]}; font-size: 14px;">${d.rationale}</div>
     </div>
   `).join('')}
@@ -418,12 +418,12 @@ export default function IntelligentScorePage(): React.JSX.Element {
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-base">
                         评分结果 · {result.symbol}
-                        {result.configSnapshot.v6EngineVersion && (
+                        {(result.configSnapshot.v6EngineVersion ?? '') !== '' && (
                           <Badge variant="secondary" className="ml-2 text-xs" title={`v6 引擎版本 ${result.configSnapshot.v6EngineVersion}`}>
                             V6 实时因子
                           </Badge>
                         )}
-                        {!result.configSnapshot.v6EngineVersion && !result.dimensionScores.some((d) => d.usedLlm) && (
+                        {(result.configSnapshot.v6EngineVersion ?? '') === '' && !result.dimensionScores.some((d) => (d.usedLlm ?? false)) && (
                           <Badge variant="outline" className="ml-2 text-xs" title="当前为合成示例数据，非真实引擎信号">
                             示例 · LLM 合成
                           </Badge>
@@ -467,7 +467,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
                       </div>
                       <div className="text-sm text-muted-foreground">综合分 / 5.0</div>
                       {previousResult && previousResult.scoredAt !== result.scoredAt && (
-                        <Badge variant={result.overallScore && previousResult.overallScore && result.overallScore > previousResult.overallScore ? 'default' : 'destructive'}>
+                        <Badge variant={(result.overallScore ?? 0) > 0 && (previousResult.overallScore ?? 0) > 0 && (result.overallScore ?? 0) > (previousResult.overallScore ?? 0) ? 'default' : 'destructive'}>
                           较上次 {formatIntelligentDelta(result.overallScore, previousResult.overallScore)}
                         </Badge>
                       )}
@@ -485,7 +485,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
                                 value={dimension.score ?? 0}
                                 label={`${dimension.name} ${dimension.score !== null ? dimension.score.toFixed(1) : 'N/A'} ${formatIntelligentDelta(dimension.score, previousDimension?.score ?? null)}`}
                               />
-                              {dimension.usedLlm && (
+                              {(dimension.usedLlm ?? false) && (
                                 <Badge variant="secondary" className="text-xs" title="该因子使用了 LLM 增强分析">
                                   <Brain className="mr-1 h-3 w-3" />
                                   LLM
@@ -499,7 +499,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
                                   {dimension.rationale}
                                 </p>
                               </div>
-                              {dimension.evidence && dimension.evidence.length > 0 && (
+                              {dimension.evidence !== null && dimension.evidence !== undefined && dimension.evidence.length > 0 && (
                                 <div>
                                   <p className="text-xs font-medium text-muted-foreground">支撑证据</p>
                                   <ul className="mt-1 space-y-1">

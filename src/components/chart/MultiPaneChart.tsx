@@ -3,7 +3,7 @@ import {
   memo,
   useEffect,
   useRef,
-  useState,
+  useCallback,
   type ComponentPropsWithoutRef,
 } from 'react'
 import {
@@ -66,6 +66,97 @@ function computeMA(data: CandlestickChartData[], period: number): Array<LineData
   })
 }
 
+/** Tooltip 数据类型 */
+export interface TooltipData {
+  time: string
+  open: number
+  high: number
+  low: number
+  close: number
+  volume?: number
+  macd?: { dif: number; dea: number; histogram: number }
+  kdj?: { k: number; d: number; j: number }
+  visible: boolean
+}
+
+/** Tooltip 组件 Props */
+interface ChartTooltipProps {
+  data: TooltipData | null
+  positiveColor: string
+  negativeColor: string
+}
+
+/** 独立的 Tooltip 组件（使用 React.memo 优化） */
+const ChartTooltip = memo<ChartTooltipProps>(({ data, positiveColor, negativeColor }) => {
+  if (!data?.visible) return null
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: 8,
+        right: 8,
+        zIndex: 6,
+        minWidth: 150,
+        padding: '8px 10px',
+        borderRadius: '8px',
+        background: 'rgba(15,23,42,0.88)',
+        backdropFilter: 'blur(6px)',
+        border: `1px solid ${CHART_PALETTE.gridLight}`,
+        boxShadow: '0 4px 16px rgba(0,0,0,0.35)',
+        fontSize: '0.74rem',
+        fontFeatureSettings: 'tnum',
+        color: `var(--muted, ${THEME_TOKENS.color.chartMutedRaw})`,
+        pointerEvents: 'none',
+      }}
+    >
+      <div style={{ fontWeight: 600, marginBottom: 4, color: THEME_TOKENS.color.chartContrastRaw }}>
+        {data.time}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '2px 10px' }}>
+        <span style={{ color: CHART_PALETTE.series3 }}>开</span>
+        <span style={{ textAlign: 'right' }}>{data.open.toFixed(2)}</span>
+        <span style={{ color: CHART_PALETTE.series3 }}>高</span>
+        <span style={{ textAlign: 'right' }}>{data.high.toFixed(2)}</span>
+        <span style={{ color: CHART_PALETTE.series3 }}>低</span>
+        <span style={{ textAlign: 'right' }}>{data.low.toFixed(2)}</span>
+        <span style={{ color: CHART_PALETTE.series3 }}>收</span>
+        <span style={{ textAlign: 'right', fontWeight: 600, color: data.close >= data.open ? positiveColor : negativeColor }}>
+          {data.close.toFixed(2)}
+        </span>
+        {data.volume !== undefined && (
+          <>
+            <span style={{ color: CHART_PALETTE.series3 }}>量</span>
+            <span style={{ textAlign: 'right' }}>{data.volume.toLocaleString('zh-CN')}</span>
+          </>
+        )}
+        {data.macd && (
+          <>
+            <span style={{ color: MACD_COLORS.dif }}>DIF</span>
+            <span style={{ textAlign: 'right' }}>{data.macd.dif.toFixed(3)}</span>
+            <span style={{ color: MACD_COLORS.dea }}>DEA</span>
+            <span style={{ textAlign: 'right' }}>{data.macd.dea.toFixed(3)}</span>
+            <span style={{ color: data.macd.histogram >= 0 ? '#ef4444' : '#22c55e' }}>MACD</span>
+            <span style={{ textAlign: 'right' }}>{data.macd.histogram.toFixed(3)}</span>
+          </>
+        )}
+        {data.kdj && (
+          <>
+            <span style={{ color: KDJ_COLORS.k }}>K</span>
+            <span style={{ textAlign: 'right' }}>{data.kdj.k.toFixed(2)}</span>
+            <span style={{ color: KDJ_COLORS.d }}>D</span>
+            <span style={{ textAlign: 'right' }}>{data.kdj.d.toFixed(2)}</span>
+            <span style={{ color: KDJ_COLORS.j }}>J</span>
+            <span style={{ textAlign: 'right' }}>{data.kdj.j.toFixed(2)}</span>
+          </>
+        )}
+      </div>
+    </div>
+  )
+})
+
+ChartTooltip.displayName = 'ChartTooltip'
+
 export interface MultiPaneChartProps extends ComponentPropsWithoutRef<'div'> {
   data: CandlestickChartData[]
   height?: number
@@ -120,20 +211,75 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
     const macdResultRef = useRef<MACDResult | null>(null)
     const kdjResultRef = useRef<ReturnType<typeof computeKDJ> | null>(null)
     
-    const [tooltip, setTooltip] = useState<{
-      time: string
-      open: number
-      high: number
-      low: number
-      close: number
-      volume?: number
-      macd?: { dif: number; dea: number; histogram: number }
-      kdj?: { k: number; d: number; j: number }
-      visible: boolean
-    } | null>(null)
-
     const positiveColor = upColor ?? CHART_PALETTE.upColor
     const negativeColor = downColor ?? CHART_PALETTE.downColor
+
+    // 使用 ref 存储 tooltip 数据，避免 React 重渲染
+    const tooltipRef = useRef<TooltipData | null>(null)
+    const tooltipElementRef = useRef<HTMLDivElement | null>(null)
+
+    // 直接操作 DOM 更新 tooltip，不触发 React re-render
+    const updateTooltip = useCallback((data: TooltipData | null) => {
+      tooltipRef.current = data
+      const el = tooltipElementRef.current
+      if (!el) return
+
+      if (!data?.visible) {
+        el.style.display = 'none'
+        return
+      }
+
+      el.style.display = 'block'
+      // 更新内容
+      const timeEl = el.querySelector('[data-tooltip-time]')
+      if (timeEl) timeEl.textContent = data.time
+
+      const valuesEl = el.querySelector('[data-tooltip-values]')
+      if (valuesEl) {
+        let html = `
+          <span style="color: ${CHART_PALETTE.series3}">开</span>
+          <span style="text-align: right">${data.open.toFixed(2)}</span>
+          <span style="color: ${CHART_PALETTE.series3}">高</span>
+          <span style="text-align: right">${data.high.toFixed(2)}</span>
+          <span style="color: ${CHART_PALETTE.series3}">低</span>
+          <span style="text-align: right">${data.low.toFixed(2)}</span>
+          <span style="color: ${CHART_PALETTE.series3}">收</span>
+          <span style="text-align: right; font-weight: 600; color: ${data.close >= data.open ? positiveColor : negativeColor}">${data.close.toFixed(2)}</span>
+        `
+
+        if (data.volume !== undefined) {
+          html += `
+            <span style="color: ${CHART_PALETTE.series3}">量</span>
+            <span style="text-align: right">${data.volume.toLocaleString('zh-CN')}</span>
+          `
+        }
+
+        if (data.macd) {
+          html += `
+            <span style="color: ${MACD_COLORS.dif}">DIF</span>
+            <span style="text-align: right">${data.macd.dif.toFixed(3)}</span>
+            <span style="color: ${MACD_COLORS.dea}">DEA</span>
+            <span style="text-align: right">${data.macd.dea.toFixed(3)}</span>
+            <span style="color: ${data.macd.histogram >= 0 ? '#ef4444' : '#22c55e'}">MACD</span>
+            <span style="text-align: right">${data.macd.histogram.toFixed(3)}</span>
+          `
+        }
+
+        if (data.kdj) {
+          html += `
+            <span style="color: ${KDJ_COLORS.k}">K</span>
+            <span style="text-align: right">${data.kdj.k.toFixed(2)}</span>
+            <span style="color: ${KDJ_COLORS.d}">D</span>
+            <span style="text-align: right">${data.kdj.d.toFixed(2)}</span>
+            <span style="color: ${KDJ_COLORS.j}">J</span>
+            <span style="text-align: right">${data.kdj.j.toFixed(2)}</span>
+          `
+        }
+
+        valuesEl.innerHTML = html
+      }
+    }, [positiveColor, negativeColor])
+
     const isDailyPeriod = period === 'daily' || period === 'weekly' || period === 'monthly'
 
     // 计算各 pane 高度
@@ -418,7 +564,7 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
       
       const processCrosshair = (param: Parameters<MouseEventHandler<Time>>[0]) => {
         if (!param.time || !param.point) {
-          setTooltip((t) => (t ? { ...t, visible: false } : null))
+          updateTooltip(null)
           if (macdChart) macdChart.clearCrosshairPosition()
           if (kdjChart) kdjChart.clearCrosshairPosition()
           return
@@ -426,7 +572,7 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
 
         const bar = param.seriesData.get(mainSeries) as CandlestickData<Time> | undefined
         if (!bar) {
-          setTooltip((t) => (t ? { ...t, visible: false } : null))
+          updateTooltip(null)
           return
         }
 
@@ -483,7 +629,7 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
           })
         }
 
-        setTooltip({
+        updateTooltip({
           time: String(bar.time),
           open: bar.open,
           high: bar.high,
@@ -500,17 +646,13 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
         const now = performance.now()
         const elapsed = now - lastCrosshairTime
         
-        if (elapsed >= THROTTLE_MS) {
-          // 超过节流间隔，立即执行
-          lastCrosshairTime = now
-          processCrosshair(param)
-        } else {
-          // 未超过节流间隔，延迟执行
-          setTimeout(() => {
-            lastCrosshairTime = performance.now()
-            processCrosshair(param)
-          }, THROTTLE_MS - elapsed)
+        // 标准节流：只执行间隔外的第一次调用，间隔内的调用被丢弃
+        if (elapsed < THROTTLE_MS) {
+          return
         }
+        
+        lastCrosshairTime = now
+        processCrosshair(param)
       }
 
       mainChart.subscribeCrosshairMove(onMainCrosshair)
@@ -683,69 +825,30 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
         )}
 
         <div ref={containerRef} style={{ position: 'relative' }}>
-          {tooltip?.visible && (
-            <div
-              style={{
-                position: 'absolute',
-                top: 8,
-                right: 8,
-                zIndex: 6,
-                minWidth: 150,
-                padding: '8px 10px',
-                borderRadius: '8px',
-                background: 'rgba(15,23,42,0.88)',
-                backdropFilter: 'blur(6px)',
-                border: `1px solid ${CHART_PALETTE.gridLight}`,
-                boxShadow: '0 4px 16px rgba(0,0,0,0.35)',
-                fontSize: '0.74rem',
-                fontFeatureSettings: 'tnum',
-                color: `var(--muted, ${THEME_TOKENS.color.chartMutedRaw})`,
-                pointerEvents: 'none',
-              }}
-            >
-              <div style={{ fontWeight: 600, marginBottom: 4, color: THEME_TOKENS.color.chartContrastRaw }}>
-                {tooltip.time}
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '2px 10px' }}>
-                <span style={{ color: CHART_PALETTE.series3 }}>开</span>
-                <span style={{ textAlign: 'right' }}>{tooltip.open.toFixed(2)}</span>
-                <span style={{ color: CHART_PALETTE.series3 }}>高</span>
-                <span style={{ textAlign: 'right' }}>{tooltip.high.toFixed(2)}</span>
-                <span style={{ color: CHART_PALETTE.series3 }}>低</span>
-                <span style={{ textAlign: 'right' }}>{tooltip.low.toFixed(2)}</span>
-                <span style={{ color: CHART_PALETTE.series3 }}>收</span>
-                <span style={{ textAlign: 'right', fontWeight: 600, color: tooltip.close >= tooltip.open ? positiveColor : negativeColor }}>
-                  {tooltip.close.toFixed(2)}
-                </span>
-                {tooltip.volume !== undefined && (
-                  <>
-                    <span style={{ color: CHART_PALETTE.series3 }}>量</span>
-                    <span style={{ textAlign: 'right' }}>{tooltip.volume.toLocaleString('zh-CN')}</span>
-                  </>
-                )}
-                {tooltip.macd && (
-                  <>
-                    <span style={{ color: MACD_COLORS.dif }}>DIF</span>
-                    <span style={{ textAlign: 'right' }}>{tooltip.macd.dif.toFixed(3)}</span>
-                    <span style={{ color: MACD_COLORS.dea }}>DEA</span>
-                    <span style={{ textAlign: 'right' }}>{tooltip.macd.dea.toFixed(3)}</span>
-                    <span style={{ color: tooltip.macd.histogram >= 0 ? '#ef4444' : '#22c55e' }}>MACD</span>
-                    <span style={{ textAlign: 'right' }}>{tooltip.macd.histogram.toFixed(3)}</span>
-                  </>
-                )}
-                {tooltip.kdj && (
-                  <>
-                    <span style={{ color: KDJ_COLORS.k }}>K</span>
-                    <span style={{ textAlign: 'right' }}>{tooltip.kdj.k.toFixed(2)}</span>
-                    <span style={{ color: KDJ_COLORS.d }}>D</span>
-                    <span style={{ textAlign: 'right' }}>{tooltip.kdj.d.toFixed(2)}</span>
-                    <span style={{ color: KDJ_COLORS.j }}>J</span>
-                    <span style={{ textAlign: 'right' }}>{tooltip.kdj.j.toFixed(2)}</span>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
+          <div
+            ref={tooltipElementRef}
+            style={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              zIndex: 6,
+              minWidth: 150,
+              padding: '8px 10px',
+              borderRadius: '8px',
+              background: 'rgba(15,23,42,0.88)',
+              backdropFilter: 'blur(6px)',
+              border: `1px solid ${CHART_PALETTE.gridLight}`,
+              boxShadow: '0 4px 16px rgba(0,0,0,0.35)',
+              fontSize: '0.74rem',
+              fontFeatureSettings: 'tnum',
+              color: `var(--muted, ${THEME_TOKENS.color.chartMutedRaw})`,
+              pointerEvents: 'none',
+              display: 'none',
+            }}
+          >
+            <div data-tooltip-time style={{ fontWeight: 600, marginBottom: 4, color: THEME_TOKENS.color.chartContrastRaw }} />
+            <div data-tooltip-values style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '2px 10px' }} />
+          </div>
         </div>
       </div>
     )

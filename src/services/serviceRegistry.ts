@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Service 注册表（自动生成 — 单一事实源）
  *
  * @description
