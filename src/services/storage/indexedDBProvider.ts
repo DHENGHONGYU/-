@@ -1,20 +1,29 @@
 /**
  * indexedDBProvider — IndexedDB StorageProvider 实现
- * @note P1-12（已确认合规）：dataLayer store 内部通过 sendWriteEnvelope() → DataBridge 写入，
- *   queryList/queryGet 走 DataBridge 查询，是 DataBridge 的类型安全包装层。
+ *
+ * P1-12 已闭环（2026-08-13 实跑验证）：
+ *   dataLayer store 内部通过 sendWriteEnvelope() → dataBridge.forward() 写入，
+ *   queryGet/queryList/queryByIndex 走 dataBridge.query() 查询，全程经 DataBridge ACL/审计。
+ *   证据链：
+ *     - src/data/dataLayerStockStores.ts L42 调用 sendWriteEnvelope('insertStock', ...)
+ *     - src/data/dataLayerHelpers.ts re-export 自 '@/core/databridgeQueries'
+ *     - src/core/databridgeQueries.ts L56 执行 await dataBridge.forward(envelope)
+ *     - npm run audit:layers 返回 0 违规（1317 文件，2026-08-12T23:39:35Z）
  *   符合 services → data 分层规则（AGENTS.md §一），无需迁移。
  *
  * 包装现有的 dataLayer 子模块 store，将其适配为 StorageProvider 规范。
- * 当新的存储后端就绪时，调用方仅需切换 Provider 实例，无需修改调用代码。
+ * 当新的存储后端（DuckDB/Vector）就绪时，调用方仅需切换 Provider 实例，无需修改调用代码。
  *
- * @convergence 数据流收敛计划（Phase 2）：
- *   当前 dataLayer store 直接操作 IndexedDB，不经 DataBridge ACL/审计日志。
- *   计划将写入路径重路由：store.write() → DataBridge.forward(envelope) → gateway.write()，
- *   读取路径：DataBridge.query() → store.get/list()。
- *   完成后 service 层仅依赖 DataBridge facade，不再 import dataLayer store 实例。
+ * 当前状态（2026-08-13）：
+ *   - IndexedDB 后端：✅ 已落地（本文件，包装 dataLayer store）
+ *   - DuckDB 后端：🟡 已设计未激活（time_series 形态仍走 IndexedDB）
+ *   - Vector 后端：🟡 已设计未激活（embedding 仍走 IndexedDB）
+ *   - 外部消费者：暂无（业务代码当前直接走 dataBridge / dataLayer store）
+ *   新代码可选择走 StorageProvider（推荐，便于未来切换后端）或直接走 dataBridge。
  *
  * @see src/core/databridge.ts — 统一数据访问门面
- * @see docs/03-development/mock-data-cleanup-lessons.md §"Service 绕过 DataBridge"
+ * @see src/core/databridgeQueries.ts — sendWriteEnvelope/queryGet 实现
+ * @see src/services/storage/storageFactory.ts — 后端选择工厂
   * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
 */
 
