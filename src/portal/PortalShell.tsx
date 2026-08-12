@@ -37,7 +37,6 @@ export default function PortalShell(): React.JSX.Element {
   const { setActiveCabin } = useWorkflowStore()
   const { mode, cycleMode } = useThemeStore()
   const [fetcherOk, setFetcherOk] = useState<boolean | null>(null)
-  const [uptime, setUptime] = useState(0)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
   const systemSignal = fetcherOk === null ? 48 : fetcherOk ? 92 : 12
@@ -77,11 +76,6 @@ export default function PortalShell(): React.JSX.Element {
       mounted = false
     }
   }, [activeCabin])
-
-  useEffect(() => {
-    const timer = setInterval(() => setUptime((s) => s + 1), 1000)
-    return () => clearInterval(timer)
-  }, [])
 
   useEffect(() => {
     preloadCabinApps(activeCabin)
@@ -130,13 +124,6 @@ export default function PortalShell(): React.JSX.Element {
   }, [location.pathname, activeCabin, isAgentPath, isMCPPath])
 
   const activeGroups = PANEL_ITEMS[activeCabin]
-
-  const formatUptime = (seconds: number): string => {
-    const h = Math.floor(seconds / 3600)
-    const m = Math.floor((seconds % 3600) / 60)
-    const s = seconds % 60
-    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
-  }
 
   const fetcherStatusDot = cn(
     'h-2 w-2 rounded-full',
@@ -286,16 +273,11 @@ export default function PortalShell(): React.JSX.Element {
             </span>
           </span>
 
-          <span className="hidden h-3.5 w-px bg-border md:block" />
+          <span className="hidden h-3.5 w-px bg-border lg:block" />
 
           <span className="hidden w-40 items-center gap-2 lg:flex">
             <SignalSpectrum size="sm" value={systemSignal} label={systemSignalLabel} showValue={false} />
           </span>
-
-          <span className="hidden h-3.5 w-px bg-border lg:block" />
-          <span className="hidden font-mono md:inline">{formatUptime(uptime)}</span>
-          <span className="hidden h-3.5 w-px bg-border lg:block" />
-          <span className="hidden font-mono lg:inline">v1.2.0</span>
         </div>
       </header>
 
