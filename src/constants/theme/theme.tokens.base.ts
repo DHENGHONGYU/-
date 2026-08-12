@@ -141,8 +141,8 @@ export const THEME_TOKENS = {
   focusVisible: {
     /** 焦点环宽度 */
     ringWidth: 'ring-2',
-    /** 焦点环颜色 */
-    ringColor: 'ring-blue-500',
+    /** 焦点环颜色（主题感知，映射到 --ring CSS 变量） */
+    ringColor: 'ring-ring',
     /** 焦点环偏移量 */
     ringOffset: 'ring-offset-2',
     /** 焦点环偏移背景色 */

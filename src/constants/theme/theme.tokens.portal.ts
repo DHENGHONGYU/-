@@ -76,11 +76,11 @@ export const PORTAL_MOBILE_TOKENS = {
 
 /** 状态指示令牌 */
 export const PORTAL_STATUS_TOKENS = {
-  /** 采集中 / 检查中 */
-  checking: 'bg-amber-400/80 ring-1 ring-amber-400/40 animate-pulse',
-  /** 采集正常 / 已连接 */
-  connected: 'bg-emerald-500/80 ring-1 ring-emerald-500/40',
-  /** 采集断连 / 未连接 */
+  /** 采集中 / 检查中（语义令牌，主题感知） */
+  checking: 'bg-warning/80 ring-1 ring-warning/40 animate-pulse',
+  /** 采集正常 / 已连接（语义令牌，主题感知） */
+  connected: 'bg-success/80 ring-1 ring-success/40',
+  /** 采集断连 / 未连接（语义令牌，主题感知） */
   disconnected: 'bg-destructive/80 ring-1 ring-destructive/40',
 } as const
 
