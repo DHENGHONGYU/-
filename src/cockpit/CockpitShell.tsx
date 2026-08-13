@@ -18,7 +18,6 @@ import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { ConfirmDialog } from '@/components/molecules/ConfirmDialog'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { cn } from '@/lib/utils'
-import { twBg } from '@/constants/theme.tokens'
 import type { WidgetConfig, MarketData } from '@/types/modules/widget.types'
 
 const logger = getLogger()
@@ -255,7 +254,7 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
       }
       return <Comp {...wrapperProps} />
     }
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+     
     SafeWrapper.displayName = `Safe(${Comp.displayName ?? Comp.name ?? 'Widget'})`
     return SafeWrapper
   }, [Component, config?.widgetId])
@@ -285,7 +284,16 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
     )
   }
 
-  if ((error ?? '') !== '') {
+  // safe default: error 为 null/undefined 属正常无错误；
+  // 若非字符串类型则说明类型损坏，打日志后再展示。
+  const hasError = error != null && String(error) !== ''
+  if (hasError) {
+    if (typeof error !== 'string') {
+      logger.warn('[CockpitShell] Widget error 非字符串类型，请核对上游写入', {
+        instanceId: config.instanceId,
+        type: typeof error,
+      })
+    }
     return (
       <Card>
         <CardHeader>
@@ -518,12 +526,12 @@ function CockpitContent(): React.JSX.Element {
             <Link to="/command/system-health" className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors">
               <Activity className="h-3.5 w-3.5" />
               <span>系统健康</span>
-              <span className={cn('inline-flex h-1.5 w-1.5 rounded-full', twBg('green', 500))} />
+              <span className={cn('inline-flex h-1.5 w-1.5 rounded-full', 'bg-success')} />
             </Link>
             <Link to="/command/agents" className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors">
               <Bot className="h-3.5 w-3.5" />
               <span>智能体状态</span>
-              <span className={cn('inline-flex h-1.5 w-1.5 rounded-full', twBg('blue', 500))} />
+              <span className={cn('inline-flex h-1.5 w-1.5 rounded-full', 'bg-info')} />
             </Link>
             <Link to="/command/agents/optimization-panel" className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors">
               <Lightbulb className="h-3.5 w-3.5" />

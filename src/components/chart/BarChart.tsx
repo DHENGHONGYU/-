@@ -12,6 +12,9 @@ import {
 import { cn } from '@/lib/utils'
 import { CHART_PALETTE, COLOR_SHADES } from '@/constants/theme.tokens'
 import { usePerfTrace } from '@/hooks/usePerfTrace'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 interface BarChartProps {
   data?: Array<Record<string, unknown>>
@@ -72,9 +75,18 @@ export const BarChart = memo(
 
       // 空数据占位
       if (pointCount === 0) {
+        const resolvedEmptyText: string =
+          emptyText === undefined
+            ? '暂无数据'
+            : typeof emptyText === 'string'
+              ? emptyText
+              : (() => {
+                  logger.warn('[BarChart] emptyText 非字符串类型', { type: typeof emptyText })
+                  return String(emptyText)
+                })()
         return (
           <div ref={ref} className={cn('w-full flex items-center justify-center text-muted-foreground text-sm', className)} style={{ height }}>
-            {emptyText ?? '暂无数据'}
+            {resolvedEmptyText}
           </div>
         )
       }

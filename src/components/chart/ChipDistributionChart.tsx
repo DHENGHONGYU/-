@@ -18,6 +18,24 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { CHART_PALETTE, COLOR_SHADES, THEME_TOKENS } from '@/constants/theme.tokens'
 import type { CollectChipData } from '@/services/fetcher/fetcherTypes'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
+
+/**
+ * 数值安全 fallback（单值版）：用于数组单项、局部中间值等不绑定到 CollectChipData key 的场景。
+ * - undefined / null → fallback（静默）
+ * - 非 number / NaN → logger.warn + fallback
+ */
+function toSingleNum(value: unknown, fieldName: string, fallback = 0): number {
+  if (value === undefined || value === null) return fallback
+  if (typeof value === 'number' && !Number.isNaN(value)) return value
+  logger.warn(`[ChipDistributionChart] ${fieldName} 非有效数字，请核对上游写入`, {
+    value,
+    type: typeof value,
+  })
+  return fallback
+}
 
 /** 筹码图买卖点标注（基于价格维度） */
 export interface ChipTradePoint {
@@ -146,11 +164,15 @@ export function ChipDistributionChart({
     const step = Math.max(Math.ceil(priceBins.length / PRICE_LABEL_COUNT), 1)
     const items: Array<{ index: number; price: number; y: number }> = []
     for (let i = 0; i < priceBins.length; i += step) {
-      items.push({ index: i, price: priceBins[i] ?? 0, y: priceToY(priceBins[i] ?? 0) })
+      const bin = priceBins[i]
+      const price = toSingleNum(bin, `priceBins[${i}]`)
+      items.push({ index: i, price, y: priceToY(price) })
     }
     const lastIdx = priceBins.length - 1
-    if (items.length === 0 || items[items.length - 1]!.index !== lastIdx) {
-      items.push({ index: lastIdx, price: priceBins[lastIdx] ?? 0, y: priceToY(priceBins[lastIdx] ?? 0) })
+    if (lastIdx >= 0 && (items.length === 0 || items[items.length - 1]!.index !== lastIdx)) {
+      const lastBin = priceBins[lastIdx]
+      const price = toSingleNum(lastBin, `priceBins[${lastIdx}]`)
+      items.push({ index: lastIdx, price, y: priceToY(price) })
     }
     return items
   }, [priceBins, priceToY])

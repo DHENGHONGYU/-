@@ -14,7 +14,7 @@ import type { StockSearchResult } from '@/services/input/inputService'
 import { getLogger } from '@/lib/logger'
 import { createDebugLogger } from '@/lib/debugToolkit'
 import { eventBus } from '@/lib/eventBus'
-import { COLOR_TOKENS, twText, twBg, DIVIDE } from '@/constants/theme.tokens'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { Skeleton } from '@/components/molecules/states/Skeleton'
 import { GaugeRing } from '@/components/chart/GaugeChart'
 import { formatPrice, formatMarketCap } from '@/lib/precision'
@@ -318,7 +318,7 @@ export default function InputDashboard(): React.JSX.Element {
                 <div className="flex items-baseline gap-2">
                   <p className="text-2xl font-bold">{stats.total}</p>
                   {stats.total > 0 && (
-                    <span className={`text-xs ${twText('green', 600)}`}>↑ {Math.round((stats.withPrice / stats.total) * 100)}% 覆盖</span>
+                    <span className="text-xs text-success">↑ {Math.round((stats.withPrice / stats.total) * 100)}% 覆盖</span>
                   )}
                 </div>
               </CardContent>
@@ -330,7 +330,7 @@ export default function InputDashboard(): React.JSX.Element {
                   <div>
                     <p className="text-2xl font-bold">{stats.withPrice}</p>
                     {stats.total > 0 && stats.withPrice < stats.total && (
-                      <span className={`text-xs ${twText('amber', 600)}`}>↓ {stats.total - stats.withPrice} 待采</span>
+                      <span className="text-xs text-warning">↓ {stats.total - stats.withPrice} 待采</span>
                     )}
                   </div>
                   {stats.total > 0 && (
@@ -346,7 +346,7 @@ export default function InputDashboard(): React.JSX.Element {
                   {fetcherOk === null ? (
                     <Badge variant="outline">检查中...</Badge>
                   ) : fetcherOk ? (
-                    <Badge className={`${twBg('green', 100)} ${twText('green', 800)}`}>已连接</Badge>
+                    <Badge className="bg-success/10 text-success">已连接</Badge>
                   ) : (
                     <Badge variant="destructive">未连接</Badge>
                   )}
@@ -359,7 +359,7 @@ export default function InputDashboard(): React.JSX.Element {
                 <div className="flex items-baseline gap-2">
                   <p className="text-2xl font-bold">{stats.total - stats.withPrice}</p>
                   {stats.total - stats.withPrice > 0 && (
-                    <span className={`text-xs ${twText('amber', 600)}`}>点击「采集全部」开始</span>
+                    <span className="text-xs text-warning">点击「采集全部」开始</span>
                   )}
                 </div>
               </CardContent>
@@ -492,8 +492,23 @@ export default function InputDashboard(): React.JSX.Element {
                       {fetcherOk === null ? '检查中...' : '刷新'}
                     </Button>
                   </div>
-                  {(message !== '' || (error ?? '') !== '') && (
-                    <p className="text-sm text-muted-foreground">{message !== '' ? message : (error ?? '')}</p>
+                  {(message !== '' || (error != null && error !== '')) && (
+                    <p className="text-sm text-muted-foreground">
+                      {message !== ''
+                        ? message
+                        : (() => {
+                            // 安全兜底：仅当 error 确为非字符串类型时打日志，
+                            // 避免上游塞了 Error 对象却被静默渲染成 [object Object]
+                            if (error != null && typeof error !== 'string') {
+                              logger.warn('[InputDashboard] error 非字符串类型，请核对上游写入', {
+                                type: typeof error,
+                                keys: typeof error === 'object' ? Object.keys(error) : undefined,
+                              })
+                              return String(error)
+                            }
+                            return error as string
+                          })()}
+                    </p>
                   )}
                 </>
               ) : (
@@ -566,7 +581,7 @@ export default function InputDashboard(): React.JSX.Element {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className={cn('border-b', twText('stone', 500))}>
+                  <tr className="border-b text-muted-foreground">
                     <th className="w-10 whitespace-nowrap px-3 py-2 text-center text-xs font-semibold">选择</th>
                     <th className="whitespace-nowrap px-3 py-2 text-left text-xs font-semibold">代码</th>
                     <th className="whitespace-nowrap px-3 py-2 text-left text-xs font-semibold">名称</th>
@@ -578,7 +593,7 @@ export default function InputDashboard(): React.JSX.Element {
                     <th className="whitespace-nowrap px-3 py-2 text-center text-xs font-semibold">操作</th>
                   </tr>
                 </thead>
-                <tbody className={cn('divide-y', DIVIDE.stone100)}>
+                <tbody className={cn('divide-y', 'divide-border')}>
                   {allStocks.map((item) => {
                     const dictItem = findStockBySymbol(item.symbol)
                     const isCollecting = collectingSymbols.has(item.symbol)
@@ -616,7 +631,7 @@ export default function InputDashboard(): React.JSX.Element {
                         </td>
                         <td className="whitespace-nowrap px-3 py-2 text-center">
                           {isCollecting ? (
-                            <Badge className={cn(twBg('blue', 100), twText('blue', 700))}>
+                            <Badge className={cn('bg-info/10', 'text-info')}>
                               <span className="flex items-center gap-1">
                                 <span className="inline-block h-2 w-2 animate-spin rounded-full border border-current border-t-transparent" />
                                 采集中
