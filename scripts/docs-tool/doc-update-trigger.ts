@@ -3,7 +3,7 @@
  * @module scripts/doc-update-trigger
  * @description 文档自动更新触发器 — 监控代码变更并按「触发-动作映射表」生成/更新对应文档
  *
- * 触发器类型（与 docs/00-meta/doc-trigger-action-map.md §二 一一对应）：
+ * 触发器类型（与 docs/meta/doc-trigger-action-map.md §二 一一对应）：
  * - T1 类型定义变更 → 数据字典
  * - T2 接口变更 → API 契约
  * - T3 架构调整 → 架构标准
@@ -68,7 +68,7 @@ interface TriggerRule {
 }
 
 /**
- * 触发规则权威集（单一事实源：docs/00-meta/doc-trigger-action-map.md §二）。
+ * 触发规则权威集（单一事实源：docs/meta/doc-trigger-action-map.md §二）。
  * docsToUpdate 路径已对齐 Diátaxis 新结构（2026-07-14 pr-6 重组后修订），
  * 新增/改动须同步映射表。
  */
@@ -201,7 +201,7 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
     patterns: ['src/cockpit/core/widgetRegistry.ts'],
     docsToUpdate: [
       'docs/reference/cockpit/data-definition.md',
-      'docs/00-meta/registry-index.md',
+      'docs/meta/registry-index.md',
       'docs/guides/team-handbook/03-ui-components.md',
     ],
     description: 'Widget 注册表结构变更时，需重写驾驶舱数据定义并增量维护注册索引',
@@ -219,7 +219,7 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
     id: 'T11',
     name: 'Mock 模块安全',
     patterns: ['scripts/audit/audit-mock-modules.ts', 'tests/**/*.test.ts'],
-    docsToUpdate: ['docs/00-meta/doc-trigger-action-map.md'],
+    docsToUpdate: ['docs/meta/doc-trigger-action-map.md'],
     description: 'Mock 审计脚本变更或新增全量 mock 时，更新映射表 + AGENTS.md §7.3',
     auditDocs: false,
   },
@@ -243,7 +243,7 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
     ],
     docsToUpdate: [
       'docs/reference/stock-dictionary-generation.md',
-      'docs/00-meta/doc-trigger-action-map.md',
+      'docs/meta/doc-trigger-action-map.md',
     ],
     description: '股票字典生成/校验脚本或字典源文件变更时，更新「股票字典生成」参考文档（数据源=akshare、受管 venv python、四交易所 8331 条、单一事实源、每周自动刷新）',
     auditDocs: true,
@@ -384,7 +384,7 @@ function renderScaffold(ctx: GenerateContext): string {
     '',
     `匹配规则：${ctx.rule.id}（${ctx.rule.name}）`,
     '',
-    '详见 `docs/00-meta/doc-trigger-action-map.md`。',
+    '详见 `docs/meta/doc-trigger-action-map.md`。',
     '',
   ].join('\n')
 }
@@ -741,7 +741,7 @@ function main(): void {
       for (const d of missingDocs) {
         console.log(`    ${C.red}-${C.reset} ${d}`)
       }
-      console.log(`${C.dim}请同步修正 docs/00-meta/doc-trigger-action-map.md §二 与 TRIGGER_RULES。${C.reset}`)
+      console.log(`${C.dim}请同步修正 docs/meta/doc-trigger-action-map.md §二 与 TRIGGER_RULES。${C.reset}`)
       process.exit(1)
     }
     console.log(`${C.green}✓ 所有触发文档均存在${C.reset}`)

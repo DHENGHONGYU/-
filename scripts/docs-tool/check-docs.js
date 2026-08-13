@@ -72,7 +72,7 @@ function checkRootDir() {
 
 function checkDocsStructure() {
   const expectedDirs = [
-    '00-meta', '01-requirements', '02-design', '03-development',
+    'meta', '01-requirements', '02-design', '03-development',
     '04-testing', '05-deployment', '06-project-management', '07-archive',
     'assets', 'playground', 'reports',
     // 接受的扩展文档结构（与已暂存的文档迁移对齐，避免误删真实文档）：

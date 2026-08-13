@@ -1,16 +1,16 @@
 $docsRoot = Join-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) 'docs'
 
 $migrations = @(
-    @{ Source = "$docsRoot\00-meta\DIRECTORY_STRUCTURE_GUIDE.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\DIRECTORY_STRUCTURE_GUIDE.md" }
-    @{ Source = "$docsRoot\00-meta\GOVERNANCE.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\GOVERNANCE.md" }
-    @{ Source = "$docsRoot\00-meta\REGISTRY_INDEX.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\REGISTRY_INDEX.md" }
-    @{ Source = "$docsRoot\00-meta\CLEANUP_SCHEDULE.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\CLEANUP_SCHEDULE.md" }
-    @{ Source = "$docsRoot\00-meta\文档体系体检报告-v9.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\文档体系体检报告-v9.md" }
-    @{ Source = "$docsRoot\00-meta\文档归类体系结构.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\文档归类体系结构.md" }
-    @{ Source = "$docsRoot\00-meta\V9-项目健康状态总览.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\V9-项目健康状态总览.md" }
-    @{ Source = "$docsRoot\00-meta\V9-文档治理修复行动计划.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\V9-文档治理修复行动计划.md" }
-    @{ Source = "$docsRoot\00-meta\文档管理系统评分报告.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\文档管理系统评分报告.md" }
-    @{ Source = "$docsRoot\00-meta\月度文档体检检查清单.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\月度文档体检检查清单.md" }
+    @{ Source = "$docsRoot\meta\DIRECTORY_STRUCTURE_GUIDE.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\DIRECTORY_STRUCTURE_GUIDE.md" }
+    @{ Source = "$docsRoot\meta\GOVERNANCE.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\GOVERNANCE.md" }
+    @{ Source = "$docsRoot\meta\REGISTRY_INDEX.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\REGISTRY_INDEX.md" }
+    @{ Source = "$docsRoot\meta\CLEANUP_SCHEDULE.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\CLEANUP_SCHEDULE.md" }
+    @{ Source = "$docsRoot\meta\文档体系体检报告-v9.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\文档体系体检报告-v9.md" }
+    @{ Source = "$docsRoot\meta\文档归类体系结构.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\文档归类体系结构.md" }
+    @{ Source = "$docsRoot\meta\V9-项目健康状态总览.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\V9-项目健康状态总览.md" }
+    @{ Source = "$docsRoot\meta\V9-文档治理修复行动计划.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\V9-文档治理修复行动计划.md" }
+    @{ Source = "$docsRoot\meta\文档管理系统评分报告.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\文档管理系统评分报告.md" }
+    @{ Source = "$docsRoot\meta\月度文档体检检查清单.md"; Target = "$docsRoot\1-nav-governance\a1-index-constitution\月度文档体检检查清单.md" }
     @{ Source = "$docsRoot\01-requirements\01-vision-and-goals.md"; Target = "$docsRoot\1-nav-governance\a2-requirements\01-vision-and-goals.md" }
     @{ Source = "$docsRoot\01-requirements\02-functional-specs.md"; Target = "$docsRoot\1-nav-governance\a2-requirements\02-functional-specs.md" }
     @{ Source = "$docsRoot\01-requirements\03-architecture-standards.md"; Target = "$docsRoot\1-nav-governance\a2-requirements\03-architecture-standards.md" }

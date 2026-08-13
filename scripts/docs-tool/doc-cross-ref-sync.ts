@@ -6,7 +6,7 @@
  * 职责：
  * 1. 扫描 docs/ 目录下所有 Markdown 文件中的相对链接
  * 2. 检测断裂链接并尝试自动修复
- * 3. 维护 docs/00-meta/registry-index.md 中的文档索引
+ * 3. 维护 docs/meta/registry-index.md 中的文档索引
  * 4. 返回更新记录供每日验证流程归档
  */
 
@@ -590,11 +590,11 @@ export function syncCrossReferences(
   }
 
   // 2. 更新索引文件（changed 作用域下增量合并，避免全仓库重写）
-  const indexPath = join(docsDir, '00-meta', 'registry-index.md')
+  const indexPath = join(docsDir, 'meta', 'registry-index.md')
   try {
     const entries = scope === 'changed' ? mergeIndexEntries(indexPath, scannedFiles) : buildIndexEntries(docsDir)
-    // 修复路径基准：索引文件位于 docs/00-meta/ 子目录，但 entries.relativePath 是相对 docs 根的路径；
-    // 若直接作为链接目标，浏览器会按子目录解析导致前缀翻倍（如指向 00-meta/00-meta/x.md）。
+    // 修复路径基准：索引文件位于 docs/meta/ 子目录，但 entries.relativePath 是相对 docs 根的路径；
+    // 若直接作为链接目标，浏览器会按子目录解析导致前缀翻倍（如指向 meta/meta/x.md）。
     // 此处将每个 entry 的 relativePath 转换为「相对索引文件所在目录」。
     const indexDir = dirname(indexPath)
     const adjustedEntries = entries.map((e) => ({

@@ -106,7 +106,7 @@ const VALID_TIERS = new Set<DocTier>(['core', 'important', 'reference'])
 /** 路径分类（与 doc-rule-validator.classifyTier 保持一致的冻结实现副本） */
 export function classifyTier(relPath: string): DocTier {
   const p = relPath.toLowerCase()
-  if (p.startsWith('00-meta/') && !p.includes('deprecated') && !p.includes('old-versions')) return 'core'
+  if (p.startsWith('meta/') && !p.includes('deprecated') && !p.includes('old-versions')) return 'core'
   if (
     p.startsWith('reference/') &&
     [

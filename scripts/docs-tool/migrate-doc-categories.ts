@@ -5,9 +5,9 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const DOCS_DIR = join(__dirname, '../docs');
-const CATEGORY_INDEX_PATH = join(DOCS_DIR, '00-meta/ai-index/.ai-index/category-index.json');
+const CATEGORY_INDEX_PATH = join(DOCS_DIR, 'meta/ai-index/.ai-index/category-index.json');
 const SUB_CATEGORY_MAP: Record<string, string> = {
-  'A/A1-index-constitution': '00-meta',
+  'A/A1-index-constitution': 'meta',
   'A/A2-requirements': '01-requirements',
   'A/A3-plugins': '03-development/plugins',
   'B/B1-overview': '02-design/architecture',
@@ -63,7 +63,7 @@ function normalizePath(path: string): string {
 function shouldMigrate(filePath: string): boolean {
   const normalized = normalizePath(filePath);
   const skipPatterns = [
-    /^00-meta\/ai-index\//,
+    /^meta\/ai-index\//,
     /^assets\//,
     /^07-archive\//,
   ];
@@ -143,7 +143,7 @@ function main(): void {
   console.log(`Skipped: ${skipped}`);
   console.log(`Errors: ${errors}`);
 
-  const logPath = join(DOCS_DIR, '00-meta/migration-log.json');
+  const logPath = join(DOCS_DIR, 'meta/migration-log.json');
   writeFileSync(logPath, JSON.stringify(migrationLog, null, 2), 'utf-8');
   console.log(`Migration log written to: ${logPath}`);
 }

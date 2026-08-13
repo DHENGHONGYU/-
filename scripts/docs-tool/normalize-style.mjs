@@ -2,7 +2,7 @@
 /**
  * normalize-style.mjs — P1/P2 文档风格半自动归一
  *
- * 依据 docs/00-meta/doc-style-standard.md：
+ * 依据 docs/meta/doc-style-standard.md：
  *   P1: 元数据块中文键→英文(精确白名单)；已知作者标签→受控枚举；
  *       正文术语 数据定义→数据字典 / 部件→组件
  *   P2: 标题装饰 emoji 清理(保留状态 emoji)；日期格式归一 YYYY-MM-DD
@@ -31,12 +31,12 @@ const DRY = process.argv.includes('--dry')
 
 // 治理元文档：整体跳过，避免破坏规则示例表述（手动保持合规）
 const EXCLUDE_ALL = new Set([
-  'docs/00-meta/doc-style-standard.md',
-  'docs/00-meta/doc-style-remediation-plan.md',
-  'docs/00-meta/markdown-reorg-framework.md',
-  'docs/00-meta/agent-app-docs-classification.md',
+  'docs/meta/doc-style-standard.md',
+  'docs/meta/doc-style-remediation-plan.md',
+  'docs/meta/markdown-reorg-framework.md',
+  'docs/meta/agent-app-docs-classification.md',
   'docs/reference/hybrid-proofread-contract.md',
-  'docs/00-meta/doc-proofreading-strategy.md',
+  'docs/meta/doc-proofreading-strategy.md',
 ])
 
 const pad = (n) => String(n).padStart(2, '0')
@@ -132,7 +132,7 @@ const RE_DOT = /\b(\d{4})\.(\d{1,2})\.(\d{1,2})\b/g
 // ---- T5: 术语（排除治理元文档 + archive + deprecated）----
 const T5_SKIP_PREFIX = [
   'docs/archive/',
-  'docs/00-meta/deprecated-docs/',
+  'docs/meta/deprecated-docs/',
 ]
 const TERM_REPL = [
   [/数据定义/g, '数据字典'],

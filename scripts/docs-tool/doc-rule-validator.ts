@@ -80,7 +80,7 @@ function isKebabCase(name: string): boolean {
 
 function classifyTier(relPath: string): string {
   const p = relPath.toLowerCase()
-  if (p.startsWith('00-meta/') && !p.includes('deprecated') && !p.includes('old-versions')) return 'core'
+  if (p.startsWith('meta/') && !p.includes('deprecated') && !p.includes('old-versions')) return 'core'
   if (p.startsWith('reference/') && ['api-contract', 'data-dictionary', 'data-definition', 'architecture-standards', 'engine-specs', 'quality-gates', 'routing-specs', 'data-flow-spec', 'databridge', 'functional-module'].some(k => p.includes(k))) return 'core'
   if (p.startsWith('reports/') || p.startsWith('archive/') || p.startsWith('drafts/')) return 'reference'
   if (/^adr-\d{3}/.test(basename(relPath).toLowerCase())) return 'reference'
@@ -169,7 +169,7 @@ export function validateRules(fix: boolean): { total: number; violations: Violat
   }
 
   // R6 清单同步
-  const manifestPath = join(DOCS, '00-meta/doc-manifest.csv')
+  const manifestPath = join(DOCS, 'meta/doc-manifest.csv')
   if (existsSync(manifestPath)) {
     const manifestLines = readFileSync(manifestPath, 'utf-8').split('\n').filter(l => l.trim() && !l.startsWith('num,'))
     if (manifestLines.length !== files.length) {

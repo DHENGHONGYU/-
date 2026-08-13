@@ -312,7 +312,7 @@ export function scanDirectory(dir: string, callback: (filePath: string) => void)
 
 /** 校验 registry-index.md 索引完整性 */
 export function checkRegistryIntegrity(rootDir: string): AuditResult['registryIntegrity'] {
-  const REGISTRY_INDEX = join(rootDir, 'docs', '00-meta', 'registry-index.md')
+  const REGISTRY_INDEX = join(rootDir, 'docs', 'meta', 'registry-index.md')
   if (!existsSync(REGISTRY_INDEX)) return undefined
 
   const indexContent = readFileSync(REGISTRY_INDEX, 'utf-8')

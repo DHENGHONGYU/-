@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const DOCS_ROOT = join(__dirname, '..', 'docs');
-const CATEGORY_INDEX_PATH = join(DOCS_ROOT, '00-meta', 'ai-index', '.ai-index', 'category-index.json');
+const CATEGORY_INDEX_PATH = join(DOCS_ROOT, 'meta', 'ai-index', '.ai-index', 'category-index.json');
 
 interface DocumentInfo {
   path: string;
@@ -26,7 +26,7 @@ const normalizePath = (path: string): string => path.replace(/\\/g, '/');
 
 const CATEGORY_RULES: Record<string, { pattern: RegExp; subCategory: string }[]> = {
   'A': [
-    { pattern: /^00-meta\//, subCategory: 'A1-index-constitution' },
+    { pattern: /^meta\//, subCategory: 'A1-index-constitution' },
     { pattern: /^01-requirements\/(01-vision|02-functional|03-architecture)/, subCategory: 'A2-requirements' },
     { pattern: /^01-requirements\/V9数据宪法/, subCategory: 'A2-requirements' },
     { pattern: /^01-requirements\/v9-system-blueprint/, subCategory: 'A2-requirements' },
