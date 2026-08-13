@@ -162,23 +162,31 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     category: 'output',
     description: '输出舱 - 复盘向导',
   },
+  // 预测三件套已合并为 FactorAnalysisHubPage（Tabs 多面板）
+  // 主入口 /output/factor-analysis；三个旧路由保留向后兼容，由 OutputApp 内部重定向到 HubPage
+  {
+    path: '/output/factor-analysis',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'output',
+    description: '输出舱 - 因子分析（预测校验+周期复盘+因子画板三合一）',
+  },
   {
     path: '/output/prediction',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'output',
-    description: '输出舱 - 预测校验',
+    description: '输出舱 - 预测校验（已合并到因子分析）',
   },
   {
     path: '/output/retrospective',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'output',
-    description: '输出舱 - 周期复盘',
+    description: '输出舱 - 周期复盘（已合并到因子分析）',
   },
   {
     path: '/output/factor-dashboard',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'output',
-    description: '输出舱 - 因子画板',
+    description: '输出舱 - 因子画板（已合并到因子分析）',
   },
   {
     path: '/output/chip-strategy',
