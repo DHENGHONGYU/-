@@ -9,7 +9,7 @@ import { useIntentionPoolStore, getIntentionPoolGroups } from '@/store/intention
 import { useToast } from '@/hooks/useToast'
 import { getLogger } from '@/lib/logger'
 import { createDebugLogger } from '@/lib/debugToolkit'
-import { rankSectorsByDynamicScore } from '../hotSector.utils'
+import { rankSectorsByDynamicScore, extractRepresentativeStocks, getTimeliness, type RepresentativePick } from '../hotSector.utils'
 import type {
   RankedSector,
   SectorDetail,
@@ -42,6 +42,15 @@ export interface HotSectorState {
   // 派生数据
   totalSelectedStocks: number
   rankedSectors: RankedSector[]
+  /** 是否仅展示近一周内有评分的板块（考核标准·及时性） */
+  timelyOnly: boolean
+  setTimelyOnly: (v: boolean) => void
+  /** 近一周内有评分的板块数 */
+  timelySectorsCount: number
+  /** 抽取出的热门赛道代表股（15-20 只筛选清单） */
+  picks: RepresentativePick[]
+  handleExtractRepresentatives: () => void
+  handleAddPicks: () => Promise<void>
 
   // 板块勾选
   handleToggleSector: (sectorCode: string) => void
@@ -66,7 +75,7 @@ export interface HotSectorState {
 export function useHotSectorState(): HotSectorState {
   const refresh = useIntentionPoolStore((s) => s.refresh)
   const items = useIntentionPoolStore((s) => s.items)
-  const allGroups = useMemo(() => getIntentionPoolGroups(), [items])
+  const allGroups = useMemo(() => getIntentionPoolGroups(), [items]) // eslint-disable-line react-hooks/exhaustive-deps -- items is a reactivity trigger for store-driven getIntentionPoolGroups()
 
   const [hotSectors, setHotSectors] = useState<HotSector[]>([])
   const [targetGroup, setTargetGroup] = useState('')
@@ -74,6 +83,11 @@ export function useHotSectorState(): HotSectorState {
   const [addingAll, setAddingAll] = useState(false)
   const [message, setMessage] = useState('')
   const { toast } = useToast()
+
+  // 考核标准·及时性：仅看近一周内有评分的板块
+  const [timelyOnly, setTimelyOnly] = useState(false)
+  // 抽取出的热门赛道代表股（15-20 只筛选清单）
+  const [picks, setPicks] = useState<RepresentativePick[]>([])
 
   // 板块级勾选状态
   const [selectedSectors, setSelectedSectors] = useState<Set<string>>(new Set())
@@ -458,11 +472,65 @@ export function useHotSectorState(): HotSectorState {
     return Object.values(selectedStocksBySector).reduce((sum, set) => sum + set.size, 0)
   }, [selectedStocksBySector])
 
-  // ── 动态权重排序 ──
+  // ── 动态权重排序（先按及时性过滤，再按动态分降序） ──
+  const filteredSectors = useMemo(
+    () => (timelyOnly ? hotSectors.filter((s) => getTimeliness(s.scoreDate).timely) : hotSectors),
+    [hotSectors, timelyOnly],
+  )
   const rankedSectors = useMemo(
-    () => rankSectorsByDynamicScore(hotSectors),
+    () => rankSectorsByDynamicScore(filteredSectors),
+    [filteredSectors],
+  )
+  // 近一周内有评分的板块数（用于展示"仅看近一周"开关状态）
+  const timelySectorsCount = useMemo(
+    () => hotSectors.filter((s) => getTimeliness(s.scoreDate).timely).length,
     [hotSectors],
   )
+
+  // ── 抽取热门赛道代表股（15-20 只） ──
+  const handleExtractRepresentatives = useCallback((): void => {
+    const extracted = extractRepresentativeStocks(rankedSectors, { limit: 20, timelyOnly })
+    setPicks(extracted)
+    logger.info('[HotSectorSection] 抽取代表股完成', { count: extracted.length, timelyOnly })
+    if (extracted.length === 0) {
+      setMessage('当前条件下无可抽取的代表股（可关闭"仅看近一周"后重试）')
+      return
+    }
+    setMessage(`已抽取 ${extracted.length} 只热门赛道代表股，请确认后加入候选池`)
+  }, [rankedSectors, timelyOnly])
+
+  // 将抽取的代表股全部加入意向候选池
+  const handleAddPicks = async (): Promise<void> => {
+    if (picks.length === 0 || addingAll) return
+    debug.log('handleAddPicks 开始', {
+      count: picks.length,
+      symbols: picks.map((p) => p.symbol),
+      targetGroup: addOptions.group ?? '默认分组',
+      existingInPool: picks.filter((p) => existingSymbols.has(p.symbol)).map((p) => p.symbol),
+    })
+    setAddingAll(true)
+    setAddingHot(new Set(picks.map((p) => p.symbol)))
+    try {
+      let added = 0
+      let failed = 0
+      for (const pick of picks) {
+        const result = await addHotSectorStock(pick.sectorCode, pick.symbol, addOptions)
+        if (result.success) added++
+        else failed++
+      }
+      debug.log('handleAddPicks 汇总', { total: picks.length, added, failed })
+      toast({
+        title: '代表股入池完成',
+        description: `成功 ${added} 只，失败 ${failed} 只`,
+        variant: added > 0 ? 'success' : 'error',
+      })
+      setMessage(`代表股入池完成：成功 ${added} 只，失败 ${failed} 只`)
+      await refresh()
+    } finally {
+      setAddingAll(false)
+      setAddingHot(new Set())
+    }
+  }
 
   return {
     hotSectors,
@@ -478,6 +546,12 @@ export function useHotSectorState(): HotSectorState {
     existingSymbols,
     totalSelectedStocks,
     rankedSectors,
+    timelyOnly,
+    setTimelyOnly,
+    timelySectorsCount,
+    picks,
+    handleExtractRepresentatives,
+    handleAddPicks,
     handleToggleSector,
     handleToggleExpand,
     handleToggleStock,

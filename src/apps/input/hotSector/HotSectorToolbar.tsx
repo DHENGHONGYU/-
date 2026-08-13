@@ -3,6 +3,7 @@ import { Button } from '@/components/atoms/Button'
 import { Checkbox } from '@/components/atoms/Checkbox'
 import { Select, SelectItem } from '@/components/atoms/Select'
 import { cn } from '@/lib/utils'
+import type { RepresentativePick } from '../hotSector.utils'
 
 export interface HotSectorToolbarProps {
   hotSectorsCount: number
@@ -15,10 +16,20 @@ export interface HotSectorToolbarProps {
   onTargetGroupChange: (group: string) => void
   onAddSelectedSectors: () => void
   onAddSelectedStocks: () => void
+
+  // 考核标准·及时性
+  timelyOnly: boolean
+  setTimelyOnly: (v: boolean) => void
+  timelySectorsCount: number
+
+  // 代表股抽取（15-20 只筛选）
+  picks: RepresentativePick[]
+  handleExtractRepresentatives: () => void
+  handleAddPicks: () => void
 }
 
 /**
- * 板块级操作工具条 — 全选 + 分组选择 + 批量加入按钮
+ * 板块级操作工具条 — 全选 + 及时性过滤 + 分组选择 + 代表股抽取 + 批量加入
  */
 export function HotSectorToolbar({
   hotSectorsCount,
@@ -31,14 +42,20 @@ export function HotSectorToolbar({
   onTargetGroupChange,
   onAddSelectedSectors,
   onAddSelectedStocks,
+
+  timelyOnly,
+  setTimelyOnly,
+  timelySectorsCount,
+
+  picks,
+  handleExtractRepresentatives,
+  handleAddPicks,
 }: HotSectorToolbarProps): React.JSX.Element {
   const allSelected = hotSectorsCount > 0 && selectedSectorsCount === hotSectorsCount
 
   return (
     <div className={cn('flex flex-wrap items-center gap-3 rounded-md border px-3 py-2 border-border bg-muted/50')}>
-      {/* 包裹可点击区域确保 checkbox 点击可靠。
-          注意：外层 onClick 已处理所有点击事件，内部 Checkbox 仅做视觉展示，
-          内部 onClick/onChange 都做屏蔽，避免 <label> 标签再次触发 click 事件导致双重 toggle。 */}
+      {/* 全选 */}
       <div
         className="cursor-pointer"
         role="checkbox"
@@ -63,7 +80,43 @@ export function HotSectorToolbar({
           <span className={cn('ml-2 text-info')}>· 成分股 {totalSelectedStocks} 只</span>
         )}
       </span>
+
+      {/* 及时性过滤（考核标准·近一周） */}
+      <div className="flex items-center gap-1.5">
+        <div
+          className="cursor-pointer"
+          role="checkbox"
+          aria-checked={timelyOnly}
+          onClick={(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+            setTimelyOnly(!timelyOnly)
+          }}
+          onMouseDown={(e) => e.preventDefault()}
+        >
+          <Checkbox
+            checked={timelyOnly}
+            onChange={() => {}}
+            onClick={(e) => { e.stopPropagation(); e.preventDefault() }}
+            aria-label="仅看近一周有评分的板块"
+          />
+        </div>
+        <span className={cn('text-xs text-muted-foreground whitespace-nowrap')}>
+          仅看近一周 {timelyOnly && timelySectorsCount > 0 && `(${timelySectorsCount})`}
+        </span>
+      </div>
+
       <div className="ml-auto flex flex-wrap items-center gap-2">
+        {/* 代表股抽取按钮 */}
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={handleExtractRepresentatives}
+          disabled={addingAll}
+        >
+          抽取代表股 (15-20)
+        </Button>
+
         <Select
           className="h-8 w-auto min-w-[140px]"
           value={targetGroup}
@@ -78,6 +131,18 @@ export function HotSectorToolbar({
             </SelectItem>
           ))}
         </Select>
+
+        {picks.length > 0 && (
+          <Button
+            size="sm"
+            variant="primary"
+            onClick={() => void handleAddPicks()}
+            disabled={addingAll}
+          >
+            {addingAll ? '加入中...' : `加入代表股 (${picks.length})`}
+          </Button>
+        )}
+
         {selectedSectorsCount > 0 && (
           <Button
             size="sm"

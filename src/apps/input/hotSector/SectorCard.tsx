@@ -4,6 +4,7 @@ import { Button } from '@/components/atoms/Button'
 import { Checkbox } from '@/components/atoms/Checkbox'
 import { cn } from '@/lib/utils'
 import type { RankedSector } from '../hotSector.types'
+import { getTimeliness } from '../hotSector.utils'
 import { StockItem } from './StockItem'
 
 export interface SectorCardProps {
@@ -94,6 +95,18 @@ export function SectorCard({
           >
             {sector.score}
           </Badge>
+          {/* 考核标准·及时性：近一周评分标记 */}
+          {(() => {
+            const { timely, daysAgo } = getTimeliness(sector.scoreDate)
+            if (timely) {
+              return <Badge className="bg-success/10 text-success">近一周</Badge>
+            }
+            return (
+              <Badge variant="secondary" className="text-muted-foreground">
+                {daysAgo !== null ? `${daysAgo}天前` : '未标注日期'}
+              </Badge>
+            )
+          })()}
           <span className={cn('text-xs text-muted-foreground/70')}>
             {sector.stocks.length} 只成分股
           </span>

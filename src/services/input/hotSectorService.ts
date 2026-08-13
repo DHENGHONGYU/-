@@ -26,6 +26,11 @@ export interface HotSector {
   name: string
   /** 板块强度分 0-100（来自 RotationSectorScore.total）*/
   score: number
+  /**
+   * 评分日期（来自 RotationSectorScore.scoreDate，YYYY-MM-DD）。
+   * 用于考核标准中的及时性判定（近一周内视为及时）。
+   */
+  scoreDate?: string
   trend: 'up' | 'down' | 'neutral'
   factors: {
     momentum: number
@@ -48,6 +53,7 @@ function toHotSector(rs: RotationSectorScore): HotSector {
     code: rs.sectorCode,
     name: rs.sectorName,
     score: total,
+    scoreDate: rs.scoreDate,
     trend: total >= 70 ? 'up' : total <= 30 ? 'down' : 'neutral',
     factors: {
       // 景气 + 量能 加权作为动量
@@ -145,7 +151,7 @@ export async function addHotSectorStocks(
 
     const addResult = await addStock(
       { symbol: stock.symbol, name: stock.name },
-      { fetchBasicAfterAdd: false, group: options.group },
+      { fetchBasicAfterAdd: false, group: options.group, screenSource: 'hot-sector' },
     )
     if (addResult.success && addResult.data) {
       result.added.push(addResult.data)
@@ -188,6 +194,6 @@ export async function addHotSectorStock(
 
   return addStock(
     { symbol: stock.symbol, name: stock.name },
-    { fetchBasicAfterAdd: false, group: options.group },
+    { fetchBasicAfterAdd: false, group: options.group, screenSource: 'hot-sector' },
   )
 }
