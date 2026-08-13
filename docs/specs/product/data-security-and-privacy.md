@@ -415,9 +415,9 @@ V9 采用纯前端架构，**没有自己的后端服务器**，因此：
 
 ### 10.2 相关文档
 
-- [system-architecture.md](../explanation/system-architecture.md) — 系统架构文档
-- [testing-strategy.md](../reference/testing-strategy.md) — 测试策略文档
-- [v9-system-blueprint.md](../reference/v9-system-blueprint.md) — 系统蓝图
+- [system-architecture.md](../../explanation/system-architecture.md) — 系统架构文档
+- [testing-strategy.md](../../guides/testing-strategy.md) — 测试策略文档
+- [v9-system-blueprint.md](../../reference/v9-system-blueprint.md) — 系统蓝图
 
 ---
 

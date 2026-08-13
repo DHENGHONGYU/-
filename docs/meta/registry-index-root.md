@@ -21,11 +21,11 @@ date: 2026-07-17
 
 # 文档索引已迁移
 
-> ⚠️ 本文件为旧入口兼容页，**权威文档索引已迁移至** [00-meta/registry-index.md](00-meta/registry-index.md)。
+> ⚠️ 本文件为旧入口兼容页，**权威文档索引已迁移至** [00-meta/registry-index.md](./registry-index.md)。
 
 ## 说明
 
-- **权威索引**：[00-meta/registry-index.md](00-meta/registry-index.md) — 自动生成的全量文档索引
+- **权威索引**：[00-meta/registry-index.md](./registry-index.md) — 自动生成的全量文档索引
 - **文档导航**：[README.md](README.md) — 按优先级分级的文档导航入口
 - **本页保留原因**：兼容旧路径引用，所有访问将被引导至权威版本
 

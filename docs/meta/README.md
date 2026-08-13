@@ -57,7 +57,7 @@ date: 2026-07-17
 | [doc-trigger-action-map.md](doc-trigger-action-map.md) | 映射 | 触发器-动作映射 |
 | [agent-app-docs-classification.md](agent-app-docs-classification.md) | 分类 | Agent 应用文档分类体系 |
 | [文档整理待办清单.md](文档整理待办清单.md) | 待办 | 文档整理进度跟踪 |
-| [p1-debt-cleanup-todo.md](p1-debt-cleanup-todo.md) | 待办 | P1 架构债务清理待办 |
+| [p1-debt-cleanup-todo.md](../reports/project-management/01-p1-debt-cleanup-todo.md) | 待办 | P1 架构债务清理待办 |
 
 ---
 

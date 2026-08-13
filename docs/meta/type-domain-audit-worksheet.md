@@ -37,9 +37,9 @@ date: 2026-07-18
 
 | # | ĵ | ԭֵ type | ԭֵ domain | ж type | ж domain |  | ע |
 |---|------|-----------|------------|----------|------------|------|------|
-| 1 | [explanation/design/ui-design-agent-execution-plan.md](explanation/design/ui-design-agent-execution-plan.md) | explanation | ai | | | | |
-| 2 | [explanation/ui-design-agent-execution-plan.md](explanation/ui-design-agent-execution-plan.md) | explanation | ai | | | | |
-| 3 | [how-to/mcp-acl-guide.md](../how-to/mcp-acl-guide.md) | how-to | ai | | | | |
+| 1 | [explanation/design/ui-design-agent-execution-plan.md](../explanation/ui-design-agent-execution-plan.md) | explanation | ai | | | | |
+| 2 | [explanation/ui-design-agent-execution-plan.md](../explanation/ui-design-agent-execution-plan.md) | explanation | ai | | | | |
+| 3 | [how-to/mcp-acl-guide.md](../guides/how-to/mcp-acl-guide.md) | how-to | ai | | | | |
 | 4 | [00-meta/agent-app-docs-classification.md](agent-app-docs-classification.md) | meta | ai | | | | |
 | 5 | [00-meta/FILE-MANAGEMENT-GUIDE-optimization-prompt.md](FILE-MANAGEMENT-GUIDE-optimization-prompt.md) | meta | ai | | | | |
 | 6 | [reference/ai-memory-layer.md](reference/ai-memory-layer.md) | reference | ai | | | | |
@@ -55,7 +55,7 @@ date: 2026-07-18
 | 2 | [explanation/adr-004-hashrouter-static-hosting.md](../explanation/adr-004-hashrouter-static-hosting.md) | explanation | architecture | | | | |
 | 3 | [00-meta/markdown-reorg-framework.md](markdown-reorg-framework.md) | meta | architecture | | | | |
 | 4 | [00-meta/lessons-architecture-review-2026-07-16.md](lessons-architecture-review-2026-07-16.md) | meta | architecture | | | | |
-| 5 | [03-architecture-standards.md](../03-architecture-standards.md) | reference | architecture | | | | |
+| 5 | [03-architecture-standards.md](../explanation/03-architecture-standards.md) | reference | architecture | | | | |
 | 6 | [reference/v9-architecture-data-dictionary-validation-report.md](../reference/v9-architecture-data-dictionary-validation-report.md) | reference | architecture | | | | |
 | 7 | [reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md](../reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md) | reports | architecture | | | | |
 | 8 | [reports/retrospectives/complexity-optimization-plan.md](../reports/retrospectives/complexity-optimization-plan.md) | reports | architecture | | | | |
@@ -70,7 +70,7 @@ date: 2026-07-18
 | 4 | [guides/how-to-add-service.md](guides/how-to-add-service.md) | reference | backend | | | | |
 | 5 | [reference/rotation-score-spec.md](../reference/rotation-score-spec.md) | reference | backend | | | | |
 | 6 | [reports/release-management/buildscoredocdiff-rollback-plan.md](reports/release-management/buildscoredocdiff-rollback-plan.md) | reports | backend | | | | |
-| 7 | [reports/retrospectives/walkthrough-scoredoc-report.md](reports/retrospectives/walkthrough-scoredoc-report.md) | reports | backend | | | | |
+| 7 | [reports/retrospectives/walkthrough-scoredoc-report.md](../reference/walkthrough-scoredoc-report.md) | reports | backend | | | | |
 
 ## data 9 ݣ
 
@@ -83,7 +83,7 @@ date: 2026-07-18
 | 5 | [00-meta/deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md](deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md) | meta | data | | | | |
 | 6 | [reference/data-collection/data-definition.md](reference/data-collection/data-definition.md) | reference | data | | | | |
 | 7 | [modules/data-layer-overview.md](modules/data-layer-overview.md) | reference | data | | | | |
-| 8 | [reports/retrospectives/data-collection-task-list.md](reports/retrospectives/data-collection-task-list.md) | reports | data | | | | |
+| 8 | [reports/retrospectives/data-collection-task-list.md](../reference/data-collection-task-list.md) | reports | data | | | | |
 | 9 | [reports/retrospectives/v9-data-blueprint-task-tracking.md](reports/retrospectives/v9-data-blueprint-task-tracking.md) | reports | data | | | | |
 
 ## frontend 8 ݣ
@@ -92,7 +92,7 @@ date: 2026-07-18
 |---|------|-----------|------------|----------|------------|------|------|
 | 1 | [explanation/kimi-webbridge.md](../explanation/kimi-webbridge.md) | explanation | frontend | | | | |
 | 2 | [explanation/design/widget-integration-checklist.md](explanation/design/widget-integration-checklist.md) | explanation | frontend | | | | |
-| 3 | [how-to/widget-development-guide.md](how-to/widget-development-guide.md) | how-to | frontend | | | | |
+| 3 | [how-to/widget-development-guide.md](../guides/widget-development-guide.md) | how-to | frontend | | | | |
 | 4 | [how-to/how-to-add-widget.md](how-to/how-to-add-widget.md) | how-to | frontend | | | | |
 | 5 | [reference/chart-integration.md](../reference/chart-integration.md) | reference | frontend | | | | |
 | 6 | [reference/ui-remediation-tracker.md](../reference/ui-remediation-tracker.md) | reference | frontend | | | | |
@@ -104,9 +104,9 @@ date: 2026-07-18
 | # | ĵ | ԭֵ type | ԭֵ domain | ж type | ж domain |  | ע |
 |---|------|-----------|------------|----------|------------|------|------|
 | 1 | [explanation/production-release-checklist-SKILL.md](../explanation/production-release-checklist-SKILL.md) | explanation | product | | | | |
-| 2 | [explanation/01-vision-and-goals.md](explanation/01-vision-and-goals.md) | explanation | product | | | | |
+| 2 | [explanation/01-vision-and-goals.md](../specs/01-vision-and-goals.md) | explanation | product | | | | |
 | 3 | [reference/autonomous-workflow-user-guide.md](reference/autonomous-workflow-user-guide.md) | reference | product | | | | |
-| 4 | [team-handbook/05-competitive-analysis.md](../team-handbook/05-competitive-analysis.md) | reference | product | | | | |
+| 4 | [team-handbook/05-competitive-analysis.md](../guides/team-handbook/05-competitive-analysis.md) | reference | product | | | | |
 
 ## project 12 ݣ
 
@@ -115,10 +115,10 @@ date: 2026-07-18
 | 1 | [explanation/completeness-profile-batch2.md](explanation/completeness-profile-batch2.md) | explanation | project | | | | |
 | 2 | [explanation/README.md](../explanation/README.md) | explanation | project | | | | |
 | 3 | [how-to/README.md](../explanation/README.md) | how-to | project | | | | |
-| 4 | [how-to/hooks-guide.md](../how-to/hooks-guide.md) | how-to | project | | | | |
+| 4 | [how-to/hooks-guide.md](../guides/how-to/hooks-guide.md) | how-to | project | | | | |
 | 5 | [00-meta/deprecated-docs/old-versions/deployment-v1.0.0.md](deprecated-docs/old-versions/deployment-v1.0.0.md) | meta | project | | | | |
 | 6 | [00-meta/23-core-docs-final-verification-report.md](23-core-docs-final-verification-report.md) | meta | project | | | | |
-| 7 | [reference/changelogs/2026-07/pr-8-dedup-plan.md](reference/changelogs/2026-07/pr-8-dedup-plan.md) | reference | project | | | | |
+| 7 | [reference/changelogs/2026-07/pr-8-dedup-plan.md](../reference/changelogs/2026-07/pr-8-dedup-plan.md) | reference | project | | | | |
 | 8 | [reference/trade-contract.md](../reference/trade-contract.md) | reference | project | | | | |
 | 9 | [reports/retrospectives/2026-07-09-technical-sharing-ppt-outline.md](../reports/retrospectives/2026-07-09-technical-sharing-ppt-outline.md) | reports | project | | | | |
 | 10 | [reports/changelogs/2026-07-08-documentation-summary-report.md](../reports/changelogs/2026-07-08-documentation-summary-report.md) | reports | project | | | | |
@@ -131,12 +131,12 @@ date: 2026-07-18
 |---|------|-----------|------------|----------|------------|------|------|
 | 1 | [explanation/design/v9-code-quality-kanban-20260629.md](explanation/design/v9-code-quality-kanban-20260629.md) | explanation | qa | | | | |
 | 2 | [explanation/design/automation-test-evaluation.md](../explanation/design/automation-test-evaluation.md) | explanation | qa | | | | |
-| 3 | [how-to/visual-regression-guide.md](../how-to/visual-regression-guide.md) | how-to | qa | | | | |
+| 3 | [how-to/visual-regression-guide.md](../guides/how-to/visual-regression-guide.md) | how-to | qa | | | | |
 | 4 | [how-to/testing/complexity-remediation-plan.md](how-to/testing/complexity-remediation-plan.md) | how-to | qa | | | | |
 | 5 | [00-meta/directory-audit-report-v1.4.3.md](directory-audit-report-v1.4.3.md) | meta | qa | | | | |
 | 6 | [00-meta/directory-structure-audit-report.md](directory-structure-audit-report.md) | meta | qa | | | | |
 | 7 | [reference/changelogs/2026-07/test-cache-fix-summary.md](../reference/changelogs/2026-07/test-cache-fix-summary.md) | reference | qa | | | | |
-| 8 | [04-testing/security-test-plan.md](../04-testing/security-test-plan.md) | reference | qa | | | | |
+| 8 | [04-testing/security-test-plan.md](../reports/testing/security-test-plan.md) | reference | qa | | | | |
 | 9 | [reports/audit/audit-warning-report.md](../reports/audit/audit-warning-report.md) | reports | qa | | | | |
 | 10 | [reports/retrospectives/e2e-verify-redundancy-report.md](../reports/retrospectives/e2e-verify-redundancy-report.md) | reports | qa | | | | |
 
