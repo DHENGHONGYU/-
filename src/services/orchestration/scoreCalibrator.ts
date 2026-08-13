@@ -11,6 +11,7 @@ import { dataBridge, ENVELOPE_ACTION, STORE_NAME } from '@/core/databridge'
 import { runDualStrategyUseCase } from '@/services/useCase/runDualStrategy.useCase'
 import { getLogger } from '@/lib/logger'
 import type { IntelligentScore } from '@/data/types'
+import { scoreToTier as scoreToTierPublic, scoreToRating as scoreToRatingPublic } from './scoreTier'
 
 const logger = getLogger()
 
@@ -174,18 +175,11 @@ export class ScoreCalibrator {
   }
 
   private scoreToRating(score: number): string {
-    if (score >= 4.0) return 'strong_buy'
-    if (score >= 3.5) return 'buy'
-    if (score >= 3.0) return 'hold'
-    if (score >= 2.5) return 'sell'
-    return 'strong_sell'
+    return scoreToRatingPublic(score)
   }
 
   private scoreToTier(score: number): string {
-    if (score >= 4.0) return 'core-scarce'
-    if (score >= 3.5) return 'value-bargain'
-    if (score >= 3.2) return 'hot-momentum'
-    return 'watch'
+    return scoreToTierPublic(score)
   }
 
   getAllCalibrations(): CalibrationResult[] {
