@@ -3,7 +3,6 @@ import { HashRouter, Route, Routes } from 'react-router'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { PageSkeleton } from '@/components/organisms/shared/PageSkeleton'
 import { MemoryModeBanner } from '@/components/organisms/shared/MemoryModeBanner'
-import { OrchestratorStatusPanel } from '@/components/organisms/system/OrchestratorStatusPanel'
 import { ToastProvider, useToast } from '@/hooks/useToast'
 import { Toaster } from '@/components/atoms/Toast'
 import { ROUTE_REGISTRY } from '@/config/routes'
@@ -191,11 +190,6 @@ function AppContent(): React.JSX.Element {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       {isMemoryMode && <MemoryModeBanner />}
-      {import.meta.env.DEV && (
-        <div className="fixed right-4 top-4 z-40">
-          <OrchestratorStatusPanel />
-        </div>
-      )}
     </Suspense>
   )
 }
