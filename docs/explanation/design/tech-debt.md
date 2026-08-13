@@ -12,7 +12,7 @@
 > - **tsc:prod**: 0 错误 ✅
 > - **lint**: 0 errors / 852 warnings（从 2130 降至 852，减少 54.1%；eslint 配置优化：测试文件豁免 5 规则、strict-boolean-expressions 允许可空类型、MCP 服务器豁免 require-await、数据/配置/服务层豁免 no-magic-numbers + no-unnecessary-condition）
 > - **未使用组件**: 2 个死代码已删除（ChipStrategyReviewPanel + usePoolDataFromStore），111 个为误报（测试文件/注册表引用/桶导出）
-> - **大组件**: 25 个（P1-M2 待开始）
+> - **大组件**: 5/7 Top 大组件已拆分（ChipStrategyReviewPage 2127→1097、MultiPaneChart 863→435、TradingFlowPage 718→139、HotSectorSection 656→85、InputDashboard 651→220）；剩余 CandlestickChart(621) + DataSourceConfigStep(613) 待后续处理
 > - **domain/ 层**: 已创建（scoring/energy, trading/markers, collection/pipeline, export/strategySnapshotExport）
 > - **审计脚本**: audit-layer-calls.ts v3.7 白名单已同步（移除已迁移的 lib/scoring 等条目）
 > - **DataBridge 级联删除**: DeleteStockHandler 增强（+8 store）、DeleteExecutionPlanHandler/DeleteWorkflowDefHandler 新增
