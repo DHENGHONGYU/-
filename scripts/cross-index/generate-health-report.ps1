@@ -9,19 +9,19 @@ $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 
 Write-Host "Loading all index files..."
 
-$masterIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/00-meta/ai-index/master-index.json").Path, $utf8NoBom)
+$masterIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/meta/ai-index/master-index.json").Path, $utf8NoBom)
 $masterIndex = $masterIndexContent | ConvertFrom-Json
 
-$relationIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/00-meta/ai-index/relation-index.json").Path, $utf8NoBom)
+$relationIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/meta/ai-index/relation-index.json").Path, $utf8NoBom)
 $relationIndex = $relationIndexContent | ConvertFrom-Json
 
-$testDocIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/00-meta/ai-index/test-doc-index.json").Path, $utf8NoBom)
+$testDocIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/meta/ai-index/test-doc-index.json").Path, $utf8NoBom)
 $testDocIndex = $testDocIndexContent | ConvertFrom-Json
 
-$codeDocIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/00-meta/ai-index/code-doc-index.json").Path, $utf8NoBom)
+$codeDocIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/meta/ai-index/code-doc-index.json").Path, $utf8NoBom)
 $codeDocIndex = $codeDocIndexContent | ConvertFrom-Json
 
-$skillDocIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/00-meta/ai-index/skill-doc-index.json").Path, $utf8NoBom)
+$skillDocIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/meta/ai-index/skill-doc-index.json").Path, $utf8NoBom)
 $skillDocIndex = $skillDocIndexContent | ConvertFrom-Json
 
 Write-Host "Calculating statistics..."
@@ -82,11 +82,11 @@ $docIdMonth = $dateNow.ToString('MM')
 $activePercent = if ($totalDocs -gt 0) { [math]::Round(($activeDocs / $totalDocs) * 100, 1) } else { 0 }
 $archivedPercent = if ($totalDocs -gt 0) { [math]::Round(($archivedDocs / $totalDocs) * 100, 1) } else { 0 }
 
-$masterIndexSize = (Get-Item "docs/00-meta/ai-index/master-index.json").Length
-$relationIndexSize = (Get-Item "docs/00-meta/ai-index/relation-index.json").Length
-$testDocIndexSize = (Get-Item "docs/00-meta/ai-index/test-doc-index.json").Length
-$codeDocIndexSize = (Get-Item "docs/00-meta/ai-index/code-doc-index.json").Length
-$skillDocIndexSize = (Get-Item "docs/00-meta/ai-index/skill-doc-index.json").Length
+$masterIndexSize = (Get-Item "docs/meta/ai-index/master-index.json").Length
+$relationIndexSize = (Get-Item "docs/meta/ai-index/relation-index.json").Length
+$testDocIndexSize = (Get-Item "docs/meta/ai-index/test-doc-index.json").Length
+$codeDocIndexSize = (Get-Item "docs/meta/ai-index/code-doc-index.json").Length
+$skillDocIndexSize = (Get-Item "docs/meta/ai-index/skill-doc-index.json").Length
 
 $utCount = $testDocIndex.stats.ut_count
 $e2eCount = $testDocIndex.stats.e2e_count
@@ -242,11 +242,11 @@ change_log:
 
 | Index | Location | Size |
 |-------|----------|------|
-| master-index.json | docs/00-meta/ai-index/ | $masterIndexSize bytes |
-| relation-index.json | docs/00-meta/ai-index/ | $relationIndexSize bytes |
-| test-doc-index.json | docs/00-meta/ai-index/ | $testDocIndexSize bytes |
-| code-doc-index.json | docs/00-meta/ai-index/ | $codeDocIndexSize bytes |
-| skill-doc-index.json | docs/00-meta/ai-index/ | $skillDocIndexSize bytes |
+| master-index.json | docs/meta/ai-index/ | $masterIndexSize bytes |
+| relation-index.json | docs/meta/ai-index/ | $relationIndexSize bytes |
+| test-doc-index.json | docs/meta/ai-index/ | $testDocIndexSize bytes |
+| code-doc-index.json | docs/meta/ai-index/ | $codeDocIndexSize bytes |
+| skill-doc-index.json | docs/meta/ai-index/ | $skillDocIndexSize bytes |
 
 ### 6.2 Coverage Heatmap
 

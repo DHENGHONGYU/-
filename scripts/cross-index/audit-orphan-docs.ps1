@@ -7,11 +7,11 @@ $ErrorActionPreference = "Stop"
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 
 Write-Host "Loading relation-index.json..."
-$relationIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/00-meta/ai-index/relation-index.json").Path, $utf8NoBom)
+$relationIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/meta/ai-index/relation-index.json").Path, $utf8NoBom)
 $relationIndex = $relationIndexContent | ConvertFrom-Json
 
 Write-Host "Loading master-index.json..."
-$masterIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/00-meta/ai-index/master-index.json").Path, $utf8NoBom)
+$masterIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/meta/ai-index/master-index.json").Path, $utf8NoBom)
 $masterIndex = $masterIndexContent | ConvertFrom-Json
 
 $docIdToTier = @{}

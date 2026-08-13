@@ -13,7 +13,7 @@ $ErrorActionPreference = "Stop"
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 
 Write-Host "Loading master-index.json..."
-$masterIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/00-meta/ai-index/master-index.json").Path, $utf8NoBom)
+$masterIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/meta/ai-index/master-index.json").Path, $utf8NoBom)
 $masterIndex = $masterIndexContent | ConvertFrom-Json
 
 $pathToDocId = @{}
@@ -203,7 +203,7 @@ $testDocIndex = [ordered]@{
 }
 
 $json = $testDocIndex | ConvertTo-Json -Depth 10 -Compress:$false
-$outPath = "docs/00-meta/ai-index/test-doc-index.json"
+$outPath = "docs/meta/ai-index/test-doc-index.json"
 [System.IO.File]::WriteAllText((Resolve-Path -LiteralPath (Split-Path $outPath -Parent)).Path + "\test-doc-index.json", $json, $utf8NoBom)
 
 Write-Host ""

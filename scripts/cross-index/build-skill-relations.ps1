@@ -7,7 +7,7 @@ $ErrorActionPreference = "Stop"
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 
 Write-Host "Loading master-index.json..."
-$masterIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/00-meta/ai-index/master-index.json").Path, $utf8NoBom)
+$masterIndexContent = [System.IO.File]::ReadAllText((Resolve-Path "docs/meta/ai-index/master-index.json").Path, $utf8NoBom)
 $masterIndex = $masterIndexContent | ConvertFrom-Json
 
 $docIdToPath = @{}
@@ -105,7 +105,7 @@ $skillDocIndex = [ordered]@{
 }
 
 $json = $skillDocIndex | ConvertTo-Json -Depth 10 -Compress:$false
-$outPath = "docs/00-meta/ai-index/skill-doc-index.json"
+$outPath = "docs/meta/ai-index/skill-doc-index.json"
 [System.IO.File]::WriteAllText((Resolve-Path -LiteralPath (Split-Path $outPath -Parent)).Path + "\skill-doc-index.json", $json, $utf8NoBom)
 
 Write-Host ""

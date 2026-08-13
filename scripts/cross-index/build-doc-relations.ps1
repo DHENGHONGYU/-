@@ -28,7 +28,7 @@ function Read-File-Utf8 {
 }
 
 Write-Host "Loading master-index.json..."
-$masterIndexPath = "docs/00-meta/ai-index/master-index.json"
+$masterIndexPath = "docs/meta/ai-index/master-index.json"
 if (-not (Test-Path $masterIndexPath)) {
     Write-Host "ERROR: master-index.json not found at $masterIndexPath"
     Write-Host "Run build-master-index.ps1 first"
@@ -281,7 +281,7 @@ $relationIndex = [ordered]@{
 }
 
 $json = $relationIndex | ConvertTo-Json -Depth 10 -Compress:$false
-$outPath = "docs/00-meta/ai-index/relation-index.json"
+$outPath = "docs/meta/ai-index/relation-index.json"
 [System.IO.File]::WriteAllText((Resolve-Path -LiteralPath (Split-Path $outPath -Parent)).Path + "\relation-index.json", $json, $utf8NoBom)
 
 Write-Host ""
