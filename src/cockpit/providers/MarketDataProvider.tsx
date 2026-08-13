@@ -53,9 +53,10 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
   const subscribeRef = useRef<(() => void) | null>(null)
 
   const updateInstanceStatus = useCallback((instanceId: string | undefined, error: string | null) => {
-    if (!instanceId) return
-    setErrorMap((prev) => ({ ...prev, [instanceId]: error }))
-    setLoadingMap((prev) => ({ ...prev, [instanceId]: false }))
+    const id = instanceId ?? ''
+    if (id === '') return
+    setErrorMap((prev) => ({ ...prev, [id]: error }))
+    setLoadingMap((prev) => ({ ...prev, [id]: false }))
   }, [])
 
   const handleCollectionResult: CollectionResultCallback = useCallback((taskId, rawData, error) => {
@@ -90,12 +91,12 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
     instances.forEach((instance) => {
       const { instanceId, widgetId, dataSource } = instance
 
-      if (!dataSource?.enabled) {
+      if (dataSource?.enabled !== true) {
         logger.warn(`[MarketDataProvider] Widget ${instanceId} 未配置数据源，跳过`)
         return
       }
 
-      if (taskMapRef.current[instanceId]) {
+      if ((taskMapRef.current[instanceId] ?? '') !== '') {
         logger.warn(`[MarketDataProvider] Widget ${instanceId} 已有采集任务，跳过重复注册`)
         return
       }
@@ -125,7 +126,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
 
   const refreshWidget = useCallback((instanceId: string) => {
     const taskId = taskMapRef.current[instanceId]
-    if (!taskId) {
+    if (!taskId || taskId === '') {
       logger.warn(`[MarketDataProvider] 未找到实例 ${instanceId} 对应的任务`)
       return
     }

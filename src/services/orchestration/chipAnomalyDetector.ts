@@ -138,19 +138,20 @@ export class ChipAnomalyDetector {
     }
 
     // 仅处理 chip 维度的采集
-    if (p.dimensionCode && p.dimensionCode !== 'chip') return
+    if ((p.dimensionCode ?? '') !== '' && p.dimensionCode !== 'chip') return
 
     if (!p?.results) return
 
     for (const result of p.results) {
-      if (!result.symbol) continue
+      const sym = result.symbol ?? ''
+      if (sym === '') continue
 
       // 检查关注列表
-      if (this.config.watchSymbols.length > 0 && !this.config.watchSymbols.includes(result.symbol)) {
+      if (this.config.watchSymbols.length > 0 && !this.config.watchSymbols.includes(sym)) {
         continue
       }
 
-      const chipData = this.extractChipData(result.symbol, result.data ?? {})
+      const chipData = this.extractChipData(sym, result.data ?? {})
       if (chipData) {
         this.detectAnomalies(chipData)
       }
@@ -174,9 +175,10 @@ export class ChipAnomalyDetector {
 
     if (p.stocks) {
       for (const stock of p.stocks) {
-        if (stock.symbol) {
+        const stockSymbol = stock.symbol ?? ''
+        if (stockSymbol !== '') {
           const chipData: ChipDataSnapshot = {
-            symbol: stock.symbol,
+            symbol: stockSymbol,
             holderCount: stock.holderCount,
             concentration: stock.concentration,
             institutionalRatio: stock.institutionalRatio,
@@ -185,15 +187,18 @@ export class ChipAnomalyDetector {
           this.detectAnomalies(chipData)
         }
       }
-    } else if (p.symbol && (p.holderCount !== undefined || p.concentration !== undefined)) {
-      const chipData: ChipDataSnapshot = {
-        symbol: p.symbol,
-        holderCount: p.holderCount,
-        concentration: p.concentration,
-        institutionalRatio: p.institutionalRatio,
-        collectedAt: Date.now(),
+    } else {
+      const pSymbol = p.symbol ?? ''
+      if (pSymbol !== '' && (p.holderCount !== undefined || p.concentration !== undefined)) {
+        const chipData: ChipDataSnapshot = {
+          symbol: pSymbol,
+          holderCount: p.holderCount,
+          concentration: p.concentration,
+          institutionalRatio: p.institutionalRatio,
+          collectedAt: Date.now(),
+        }
+        this.detectAnomalies(chipData)
       }
-      this.detectAnomalies(chipData)
     }
   }
 
@@ -228,7 +233,7 @@ export class ChipAnomalyDetector {
   private extractNumber(data: Record<string, unknown>, candidates: string[]): number | null {
     for (const key of candidates) {
       if (key in data && typeof data[key] === 'number') {
-        return data[key] as number
+        return data[key]
       }
     }
     return null

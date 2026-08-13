@@ -149,8 +149,8 @@ export class IndexedDBProvider implements StorageProvider {
    * 根据 store 名称获取对应的 dataLayer store 对象
    */
   private resolveStore(store?: string): Record<string, unknown> | null {
-    if (!store) return null
-    const storeObj = STORE_REGISTRY[store]
+    if ((store ?? '') === '') return null
+    const storeObj = STORE_REGISTRY[store!]
     if (!storeObj) {
       logger.warn('[IndexedDBProvider] store 不存在', { store })
       return null
@@ -173,16 +173,17 @@ export class IndexedDBProvider implements StorageProvider {
 
   async list<T>(options?: ListOptions): Promise<ListResult<T>> {
     try {
-      if (options?.store) {
-        const store = this.resolveStore(options.store)
+      const opts = options ?? {}
+      if ((opts.store ?? '') !== '') {
+        const store = this.resolveStore(opts.store)
         if (store && typeof store.list === 'function') {
           const result = await (store.list as () => Promise<T[]>)()
 
           let filtered = result
 
           // 按字段过滤
-          if (options.filter) {
-            for (const [key, value] of Object.entries(options.filter)) {
+          if (opts.filter) {
+            for (const [key, value] of Object.entries(opts.filter)) {
               filtered = filtered.filter((item) => {
                 const itemRecord = item as Record<string, unknown>
                 return itemRecord[key] === value
@@ -191,20 +192,22 @@ export class IndexedDBProvider implements StorageProvider {
           }
 
           // 排序
-          if (options.orderBy) {
+          if ((opts.orderBy ?? '') !== '') {
+            const orderBy = opts.orderBy!
             filtered = [...filtered].sort((a, b) => {
-              const aVal = (a as Record<string, unknown>)[options.orderBy!]
-              const bVal = (b as Record<string, unknown>)[options.orderBy!]
+              const aVal = (a as Record<string, unknown>)[orderBy]
+              const bVal = (b as Record<string, unknown>)[orderBy]
               if (typeof aVal === 'number' && typeof bVal === 'number') {
-                return options.orderDir === 'desc' ? bVal - aVal : aVal - bVal
+                return opts.orderDir === 'desc' ? bVal - aVal : aVal - bVal
               }
               return 0
             })
           }
 
           // 限制
-          if (options.limit && filtered.length > options.limit) {
-            filtered = filtered.slice(0, options.limit)
+          const limit = opts.limit ?? 0
+          if (limit > 0 && filtered.length > limit) {
+            filtered = filtered.slice(0, limit)
           }
 
           return { success: true, data: filtered }

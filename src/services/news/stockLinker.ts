@@ -95,8 +95,9 @@ export function buildStockMap(stocks: StockInfo[]): Map<string, StockInfo> {
   for (const stock of stocks) {
     map.set(stock.symbol, stock)
     const codeMatch = stock.symbol.match(/(\d{6})/)
-    if (codeMatch?.[1]) {
-      map.set(codeMatch[1], stock)
+    const code = codeMatch?.[1] ?? ''
+    if (code !== '') {
+      map.set(code, stock)
     }
   }
   return map
@@ -136,8 +137,8 @@ function matchExactCode(
   const codePattern = /\b(\d{6})\b/g
   let match: RegExpExecArray | null
   while ((match = codePattern.exec(text)) !== null) {
-    const code = match[1]
-    if (!code) continue
+    const code = match[1] ?? ''
+    if (code === '') continue
     const matchedStock = stockMap.get(code) ?? stockMap.get(`${code}.SH`) ?? stockMap.get(`${code}.SZ`)
     if (matchedStock?.symbol === stock.symbol) {
       links.push({
@@ -186,8 +187,9 @@ function matchFuzzyName(text: string, stock: StockInfo, source: 'title' | 'conte
 }
 
 function matchIndustry(text: string, stock: StockInfo, source: 'title' | 'content', sourceWeight: number): StockLink[] {
-  if (!stock.industry) return []
-  const keywords = DEFAULT_INDUSTRY_KEYWORDS[stock.industry] ?? []
+  const industry = stock.industry ?? ''
+  if (industry === '') return []
+  const keywords = DEFAULT_INDUSTRY_KEYWORDS[industry] ?? []
   const links: StockLink[] = []
   for (const keyword of keywords) {
     if (text.includes(keyword)) {
@@ -226,7 +228,7 @@ function matchText(
     if (config.enableFuzzy) {
       candidates.push(...matchFuzzyName(text, stock, source, sourceWeight))
     }
-    if (config.enableIndustry && stock.industry) {
+    if (config.enableIndustry && (stock.industry ?? '') !== '') {
       candidates.push(...matchIndustry(text, stock, source, sourceWeight))
     }
 

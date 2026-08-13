@@ -112,16 +112,17 @@ export function parseSymbolFromFilename(filename: string): { symbol: string; nam
   }
 
   const hkMatch = filename.match(/(\d{1,5})\.HK\b/i) ?? filename.match(/hk(\d{1,5})/i)
-  if (hkMatch?.[1]) {
-    const code = hkMatch[1].padStart(5, '0')
+  const hkCode = hkMatch?.[1] ?? ''
+  if (hkCode !== '') {
+    const code = hkCode.padStart(5, '0')
     return { symbol: `${code}.HK`, name: normalizeName(filename) }
   }
 
   const aShareMatch = filename.match(/(\d{6})/)
-  if (aShareMatch?.[1]) {
-    const code = aShareMatch[1]
-    const prefix = code.startsWith('6') || code.startsWith('5') ? 'SH' : 'SZ'
-    return { symbol: `${code}.${prefix}`, name: normalizeName(filename) }
+  const aCode = aShareMatch?.[1] ?? ''
+  if (aCode !== '') {
+    const prefix = aCode.startsWith('6') || aCode.startsWith('5') ? 'SH' : 'SZ'
+    return { symbol: `${aCode}.${prefix}`, name: normalizeName(filename) }
   }
 
   return { symbol: 'UNKNOWN', name: filename }
@@ -397,7 +398,7 @@ export async function searchLocalDocsSemantic(
     let docs = all
 
     // 按标的筛选
-    if (symbol) {
+    if ((symbol ?? '') !== '') {
       docs = docs.filter((d) => d.symbol === symbol || d.symbol === 'ALL')
     }
 
@@ -410,7 +411,7 @@ export async function searchLocalDocsSemantic(
       const queryResult = await embedText(query)
       if (queryResult.success) {
         const candidates = docs
-          .filter((d) => d.embedding && d.embedding.length > 0)
+          .filter((d) => (d.embedding != null) && d.embedding.length > 0)
           .map((d) => ({ id: d.id, vector: d.embedding! }))
 
         if (candidates.length > 0) {

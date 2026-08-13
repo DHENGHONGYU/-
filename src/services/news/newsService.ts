@@ -103,7 +103,7 @@ export async function saveNewsArticle(
 
     let links: StockLink[] = []
     let maps: NewsStockMap[] = []
-    if (!options?.skipLinking) {
+    if ((options?.skipLinking ?? false) !== true) {
       const stocks = await resolveStockLibrary(options?.stocks)
       const linkResult = linkArticleToStocks(
         {
@@ -194,16 +194,16 @@ export async function listNews(options?: {
     const result = await dataBridge.query<NewsArticle[]>({ action: ENVELOPE_ACTION.queryList, store: STORE_NAME.news })
     let articles = result.success ? result.data ?? [] : []
 
-    if (options?.source) {
-      articles = articles.filter((article) => article.source === options.source)
+    if ((options?.source ?? '') !== '') {
+      articles = articles.filter((article) => article.source === options!.source)
     }
-    if (options?.category) {
-      articles = articles.filter((article) => article.category === options.category)
+    if ((options?.category ?? '') !== '') {
+      articles = articles.filter((article) => article.category === options!.category)
     }
-    if (options?.sentiment) {
-      articles = articles.filter((article) => article.sentiment === options.sentiment)
+    if ((options?.sentiment ?? '') !== '') {
+      articles = articles.filter((article) => article.sentiment === options!.sentiment)
     }
-    if (options?.symbol) {
+    if (options != null && (options.symbol ?? '') !== '') {
       const mapsResult = await dataBridge.query<NewsStockMap[]>({
         action: ENVELOPE_ACTION.queryByIndex,
         store: STORE_NAME.newsStockMap,
@@ -214,19 +214,19 @@ export async function listNews(options?: {
       const newsIds = new Set(maps.map((map) => map.newsId))
       articles = articles.filter((article) => newsIds.has(article.id))
     }
-    if (options?.keyword) {
-      const keyword = options.keyword.toLowerCase()
+    if ((options?.keyword ?? '') !== '') {
+      const keyword = options!.keyword!.toLowerCase()
       articles = articles.filter(
         (article) =>
           article.title.toLowerCase().includes(keyword) ||
           article.content.toLowerCase().includes(keyword),
       )
     }
-    if (options?.fromTime) {
-      articles = articles.filter((article) => article.publishTime >= options.fromTime!)
+    if ((options?.fromTime ?? '') !== '') {
+      articles = articles.filter((article) => article.publishTime >= options!.fromTime!)
     }
-    if (options?.toTime) {
-      articles = articles.filter((article) => article.publishTime <= options.toTime!)
+    if ((options?.toTime ?? '') !== '') {
+      articles = articles.filter((article) => article.publishTime <= options!.toTime!)
     }
 
     articles.sort((a, b) => b.publishTime.localeCompare(a.publishTime))

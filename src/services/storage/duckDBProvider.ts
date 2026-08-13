@@ -86,10 +86,10 @@ export class DuckDBProviderImpl implements TimeSeriesProvider {
       const bundle = await ddb.selectBundle(bundles)
 
       const workerUrl = bundle.mainWorker
-      if (!workerUrl) {
+      if ((workerUrl ?? '') === '') {
         throw new Error('DuckDB bundle 不包含 worker URL')
       }
-      const worker = new Worker(workerUrl)
+      const worker = new Worker(workerUrl!)
       const logger_ = new ddb.ConsoleLogger()
       this.db = new ddb.AsyncDuckDB(logger_, worker)
       await this.db.instantiate(bundle.mainModule, bundle.pthreadWorker)
@@ -279,10 +279,10 @@ export class DuckDBProviderImpl implements TimeSeriesProvider {
       const table = this.tableName(query.symbol)
       let sql = `SELECT timestamp, value FROM ${table} WHERE 1=1`
 
-      if (query.startTime) sql += ` AND timestamp >= ${query.startTime}`
-      if (query.endTime) sql += ` AND timestamp <= ${query.endTime}`
+      if ((query.startTime ?? 0) !== 0) sql += ` AND timestamp >= ${query.startTime}`
+      if ((query.endTime ?? 0) !== 0) sql += ` AND timestamp <= ${query.endTime}`
       sql += ' ORDER BY timestamp ASC'
-      if (query.limit) sql += ` LIMIT ${query.limit}`
+      if ((query.limit ?? 0) > 0) sql += ` LIMIT ${query.limit}`
 
       const result = await this.conn!.query(sql)
 

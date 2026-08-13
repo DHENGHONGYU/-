@@ -334,9 +334,9 @@ const actions = {
 
     // 通过 taskScheduler 重新执行
     const taskId = useMarketDataStore.getState().taskMap[key]
-    if ((taskId ?? '') !== '') {
-      taskScheduler.stopTask(taskId!)
-      void taskScheduler.startTask(taskId!)
+    if (taskId) {
+      taskScheduler.stopTask(taskId)
+      void taskScheduler.startTask(taskId)
     }
   },
 

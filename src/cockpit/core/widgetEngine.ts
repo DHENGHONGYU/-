@@ -42,20 +42,19 @@ export class WidgetEngine {
       const module = await template.component()
       const component = module.default as React.ComponentType<{ config: unknown; data?: MarketData }>
 
-      if (!component) {
+      if (component == null) {
         throw new Error(`Widget "${widgetId}" component is empty`)
       }
 
       // P0-2 全局防御：包裹所有 widget 组件，防止 props 为 null 时解构崩溃
       const SafeWrapper = (props: { config: unknown; data?: MarketData }): React.JSX.Element | null => {
-        if (!props?.config) {
+        if (props?.config == null) {
           logger.warn(`[WidgetEngine] Widget "${widgetId}" received null props, rendering fallback`)
           return null
         }
         return React.createElement(component, props)
       }
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      SafeWrapper.displayName = `Safe(${component.displayName || component.name || 'Widget'})`
+      SafeWrapper.displayName = `Safe(${component.displayName ?? component.name ?? 'Widget'})`
 
       componentCache.set(widgetId, SafeWrapper)
       const duration = Date.now() - startTs
@@ -205,10 +204,11 @@ export class WidgetEngine {
   }
 
   clearCache(widgetId?: string): void {
-    if (widgetId) {
-      const existed = componentCache.has(widgetId)
-      componentCache.delete(widgetId)
-      logger.info(`[WidgetEngine] Cache cleared for: widgetId="${widgetId}", existed=${existed}`)
+    const id = widgetId ?? ''
+    if (id !== '') {
+      const existed = componentCache.has(id)
+      componentCache.delete(id)
+      logger.info(`[WidgetEngine] Cache cleared for: widgetId="${id}", existed=${existed}`)
     } else {
       const prevSize = componentCache.size
       componentCache.clear()

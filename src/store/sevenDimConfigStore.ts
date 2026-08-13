@@ -316,14 +316,14 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
   isClickable: (dimensionCode) => {
     const state = get()
     if (state.isSaving) return false
-    if (dimensionCode) return !state.collectingDimensions.includes(dimensionCode)
+    if (dimensionCode && dimensionCode !== '') return !state.collectingDimensions.includes(dimensionCode)
     return state.collectingDimensions.length === 0
   },
 
   tooltipText: (dimensionCode) => {
     const state = get()
     if (state.isSaving) return '配置保存中，请稍候...'
-    if (dimensionCode) {
+    if (dimensionCode && dimensionCode !== '') {
       return state.collectingDimensions.includes(dimensionCode)
         ? `维度 ${dimensionCode} 采集中，请稍候...`
         : ''
@@ -364,7 +364,7 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
     }))
 
     const dim = get().dimensions.find((d) => d.code === code)
-    logger.info(`[SevenDimConfigStore] 维度切换: ${code} → ${dim?.enabled ? '启用' : '禁用'}`)
+    logger.info(`[SevenDimConfigStore] 维度切换: ${code} → ${(dim?.enabled ?? false) === true ? '启用' : '禁用'}`)
   },
 
   setDimensionFrequency: (code, frequency) => {
@@ -534,7 +534,7 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
         dimensions: Array.isArray(raw.dimensions)
           ? upgradeDimensionsToPipeline(raw.dimensions as DimensionPipelineConfig[])
           : createPipelineDimensions(),
-        global: raw.global ? (raw.global as GlobalCollectPolicy) : createDefaultGlobal(),
+        global: raw.global !== null && raw.global !== undefined ? (raw.global as GlobalCollectPolicy) : createDefaultGlobal(),
         symbolCount: typeof raw.symbolCount === 'number' ? raw.symbolCount : 40,
         historyDays: typeof raw.historyDays === 'number' ? raw.historyDays : 252,
         updatedAt: typeof raw.updatedAt === 'number' ? raw.updatedAt : Date.now(),
@@ -624,7 +624,7 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
 
       if (failures.length > 0) {
         const errMsg = failures
-          .map((f) => (f as PromiseRejectedResult).reason)
+          .map((f) => (f).reason)
           .join('; ')
         logger.error('[SevenDimConfigStore] 并发采集部分失败', { failures: failures.length, errors: errMsg })
       } else {

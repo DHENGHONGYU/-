@@ -79,15 +79,11 @@ export function buildReportMarkdown(doc: ScoreDocVersion): string {
   }
   lines.push('')
 
-  if (doc.recommendation) {
-    lines.push(`## 投资建议：${doc.recommendation.label}`)
-  }
+  lines.push(`## 投资建议：${doc.recommendation.label}`)
 
-  if (doc.targetPrice) {
-    lines.push(
+  lines.push(
       `## 目标价：乐观 ${doc.targetPrice.bull} / 基准 ${doc.targetPrice.base} / 悲观 ${doc.targetPrice.bear}`,
     )
-  }
 
   if (doc.keyRisks?.length) {
     lines.push('## 关键风险')
@@ -139,7 +135,7 @@ export function validateScoreDocInput(input: ScoreDocInput): { valid: boolean; e
   if (!input.stockName?.trim()) errors.push('stockName 不能为空')
   if (input.composite === undefined || Number.isNaN(input.composite)) errors.push('composite 必须为数字')
   if (input.l3v === undefined || Number.isNaN(input.l3v)) errors.push('l3v 必须为数字')
-  if (!input.layers || Object.keys(input.layers).length === 0) errors.push('layers 不能为空')
+  if (Object.keys(input.layers).length === 0) errors.push('layers 不能为空')
   return { valid: errors.length === 0, errors }
 }
 
@@ -309,7 +305,7 @@ export async function saveScoreDoc(input: ScoreDocInput): Promise<DataLayerResul
     }
 
     // 如果没有外部传入 reportMd，使用自动生成的（已包含差异）
-    if (!input.reportMd) {
+    if ((input.reportMd ?? '') === '') {
       doc.reportMd = buildReportMarkdown(doc)
     }
 
