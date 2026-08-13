@@ -9,7 +9,6 @@ import {
   TableRow,
 } from '@/components/atoms/Table'
 import React from 'react'
-import { twText } from '@/constants/theme.tokens'
 import type { ScoreDocVersion } from '@/data/types'
 
 export interface ScoreDocVersionTableProps {
@@ -73,9 +72,9 @@ export default function ScoreDocVersionTable({
                   <span
                     className={
                       doc.changeFromPrev.compositeDelta > 0
-                        ? twText('green', 600)
+                        ? 'text-success'
                         : doc.changeFromPrev.compositeDelta < 0
-                          ? twText('red', 600)
+                          ? 'text-destructive'
                           : 'text-muted-foreground'
                     }
                   >
