@@ -90,7 +90,7 @@ change_log:
 | `docs/reports/project-management/` | 项目管理 | 版本计划、进度报告、里程碑记录、任务分配 |
 | `docs/07-archive/` | 归档 | 历史文档、废弃方案、已替代决策记录 |
 
-> 详细分层规则参见 [AGENTS.md](../../AGENTS.md) 第一节
+> 详细分层规则参见 [AGENTS.md](../../meta/AGENTS.md) 第一节
 
 ---
 
@@ -105,7 +105,7 @@ change_log:
 | 类型 | PascalCase + `Interface` 前缀 | `interface StockData` |
 | UI 组件 import 路径 | 大小写必须一致 | `Card` 而非 `card` |
 
-> 详细命名约定参见 [AGENTS.md](../../AGENTS.md) 第四节
+> 详细命名约定参见 [AGENTS.md](../../meta/AGENTS.md) 第四节
 
 ---
 
@@ -170,7 +170,7 @@ change_log:
    - **禁止在两处同时添加同一 store 的创建逻辑**（违反 DRY 原则）
 5. **新增 `ENVELOPE_ACTION`** → 必须在 `DataBridge.routeToDB()` 中添加对应 case
 
-> 详细规则参见 [AGENTS.md](../../AGENTS.md) 第八节
+> 详细规则参见 [AGENTS.md](../../meta/AGENTS.md) 第八节
 
 ---
 
@@ -364,7 +364,7 @@ git ls-files | ForEach-Object { git check-ignore -q $_ }
 
 ## 十、相关文档
 
-- **[AGENTS.md](../../AGENTS.md)**：V9 架构契约、分层规则、命名约定、验证命令、数据库版本管理
+- **[AGENTS.md](../../meta/AGENTS.md)**：V9 架构契约、分层规则、命名约定、验证命令、数据库版本管理
 - **[trae-file-management-review.md](../00-meta/trae-file-management-review.md)**：更详细的文件管理审查报告（Trae IDE 生成）
 - **[README.md](../README.md)**：文档体系主索引（`docs/specs/requirements/` 目录说明）
 

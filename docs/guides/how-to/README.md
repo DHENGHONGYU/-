@@ -39,7 +39,7 @@ date: 2026-07-17
 | **PWA 离线** | [pwa-offline-guide.md](pwa-offline-guide.md) |
 | **视觉回归** | [visual-regression-guide.md](visual-regression-guide.md) |
 | **文件管理规范** | [FILE-MANAGEMENT-GUIDE.md](FILE-MANAGEMENT-GUIDE.md) |
-| **Widget 开发** | [widget-development-guide.md](widget-development-guide.md) |
+| **Widget 开发** | [widget-development-guide.md](../widget-development-guide.md) |
 
 ### 测试相关指南
 
@@ -47,7 +47,7 @@ date: 2026-07-17
 
 | 文档 | 说明 |
 |------|------|
-| [testing/testing-strategy.md](testing/testing-strategy.md) | 测试分层策略 |
+| [testing/testing-strategy.md](../testing-strategy.md) | 测试分层策略 |
 | [testing/complexity-remediation-plan.md](testing/complexity-remediation-plan.md) | 复杂度治理整改计划 |
 | [testing/completeness-profile-batch2.md](testing/completeness-profile-batch2.md) | 完整性画像批次报告 |
 

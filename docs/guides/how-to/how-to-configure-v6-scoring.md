@@ -33,7 +33,7 @@ change_log:
 
 开始配置前，请逐项确认以下前置条件：
 
-- [ ] 已阅读并理解 [V6 评分契约文档](../reference/scoring-contract.md) 中的评分口径定义
+- [ ] 已阅读并理解 [V6 评分契约文档](../../reference/scoring-contract.md) 中的评分口径定义
 - [ ] 已能独立运行完整评分流水线（参见 [如何运行评分流水线](./how-to-run-scoring-pipeline.md)）
 - [ ] 了解 V6 评分模型的 11 层因子结构（L-1 至 L8）
 - [ ] 具备 TypeScript 基础阅读能力，能修改配置文件

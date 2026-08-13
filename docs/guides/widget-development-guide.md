@@ -1,13 +1,16 @@
 ---
 title: Widget 开发指南
 version: v1.2.0
-last_updated: 2026-07-05
+last_updated: 2026-08-13
 maintainer: Quality Auditor
 status: active
 change_log:
   - version: v1.2.0
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-07-05
+  - version: v1.2.1
+    changes: "文档新鲜度刷新：twBg/twText/twBorder 已废弃，确认令牌引用一致性"
+    date: 2026-08-13
 ---
 
 # Widget 开发指南

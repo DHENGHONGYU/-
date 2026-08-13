@@ -36,8 +36,8 @@ change_log:
 - [ ] 浏览器支持 IndexedDB（Chrome / Edge / Firefox 最新稳定版）
 - [ ] 数据库 `V6ProDB` 已初始化（版本 32，首次启动自动创建）
 - [ ] 已准备 1 只以上目标股票代码用于试跑（如 600519.SH）
-- [ ] 已阅读 [数据采集契约](../reference/data-collector-contract.md) 了解采集通道定义
-- [ ] 已阅读 [V6 评分契约](../reference/scoring-contract.md) 了解评分口径
+- [ ] 已阅读 [数据采集契约](../../reference/data-collector-contract.md) 了解采集通道定义
+- [ ] 已阅读 [V6 评分契约](../../reference/scoring-contract.md) 了解评分口径
 
 ---
 

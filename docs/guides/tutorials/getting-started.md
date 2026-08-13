@@ -233,12 +233,12 @@ npm run build
 
 | 我想了解... | 阅读文档 | 路径 |
 |-------------|----------|------|
-| 全局架构 | overview | [../explanation/overview.md](../explanation/overview.md) |
-| 舱室详情 | cabins-overview | [../explanation/cabins-overview.md](../explanation/cabins-overview.md) |
-| 服务子域 | services-catalog | [../reference/services-catalog.md](../reference/services-catalog.md) |
-| 数据字典 | data-dictionary-index | [../reference/data-dictionary-index.md](../reference/data-dictionary-index.md) |
-| 编码规范 | AGENTS 契约 | [../../AGENTS.md](../../AGENTS.md) |
-| 颜色令牌 | design-token-mapping | [../reference/design-token-mapping.md](../reference/design-token-mapping.md) |
+| 全局架构 | overview | [../../explanation/overview.md](../../explanation/overview.md) |
+| 舱室详情 | cabins-overview | [../../explanation/cabins-overview.md](../../explanation/cabins-overview.md) |
+| 服务子域 | services-catalog | [../../reference/services-catalog.md](../../reference/services-catalog.md) |
+| 数据字典 | data-dictionary-index | [../../reference/data-dictionary-index.md](../../reference/data-dictionary-index.md) |
+| 编码规范 | AGENTS 契约 | [../../../AGENTS.md](../../../AGENTS.md) |
+| 颜色令牌 | design-token-mapping | [../../reference/design-token-mapping.md](../../reference/design-token-mapping.md) |
 | 如何新增 Store | how-to-add-store | [../how-to/how-to-add-store.md](../how-to/how-to-add-store.md) |
 | 如何新增 Service | how-to-add-service | [../how-to/how-to-add-service.md](../how-to/how-to-add-service.md) |
 | 如何新增 Widget | how-to-add-widget | [../how-to/how-to-add-widget.md](../how-to/how-to-add-widget.md) |

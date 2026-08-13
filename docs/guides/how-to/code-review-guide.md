@@ -4,12 +4,15 @@ code_version: "2.0.0-rc.1"
 tier: reference
 status: active
 version: v1.0.0
-last_updated: 2026-07-21
+last_updated: 2026-08-13
 doc_id: V9-DOC-HOW-904
 change_log:
   - version: v1.0.0
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-07-21
+  - version: v1.0.1
+    changes: "文档新鲜度刷新：twBg/twText/twBorder 已废弃，确认令牌引用一致性"
+    date: 2026-08-13
 ---
 
 

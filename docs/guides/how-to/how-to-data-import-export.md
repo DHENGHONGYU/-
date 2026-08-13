@@ -35,8 +35,8 @@ change_log:
 - [ ] 已具备 IndexedDB 基础概念（数据库 / Store / 版本）
 - [ ] 了解 V9 采用 DataBridge 信封化写入架构
 - [ ] 导入前已对当前数据完成一次导出备份
-- [ ] 已阅读 [ADR-002: IndexedDB vs localStorage](../reference/adr-002-indexeddb-over-localstorage.md)
-- [ ] 已阅读 [数据库迁移 v4 到 v6](../explanation/db-migration-v4-to-v6.md)
+- [ ] 已阅读 [ADR-002: IndexedDB vs localStorage](../../reference/adr-002-indexeddb-over-localstorage.md)
+- [ ] 已阅读 [数据库迁移 v4 到 v6](../../explanation/db-migration-v4-to-v6.md)
 
 ---
 

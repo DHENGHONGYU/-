@@ -1,3 +1,12 @@
+---
+title: getting-started
+last_updated: 2026-08-13
+change_log:
+  - version: v1.0.0
+    changes: "文档新鲜度刷新：twBg/twText/twBorder 已废弃，确认令牌引用一致性"
+    date: 2026-08-13
+---
+
 # V9 智能投研复盘系统 — 新成员 30 分钟上手指南
 
 > **版本**：v1.0.0  

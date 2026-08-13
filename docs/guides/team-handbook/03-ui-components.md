@@ -19,10 +19,10 @@
 组合方向强制：`Page → Template → Organism → Molecule → Atom`（不可跨层跳跃）。
 
 ### 1.2 Barrel 导出
-- `atoms/index.ts`：导出 30+ 原子（Button/Input/Card…），头注释"原子不可再分，禁止依赖 Store/Service"。
-- `molecules/index.ts`：导出 12 分子（Alert/Dialog/Tabs/FormField/MetricCard…）；`states/` 子目录的 `Loading/Empty/ErrorState` 因重名需直引 `@/components/molecules/states/Error`。
+- `atoms/index.ts`：导出 24 原子（Button/Input/Card…），头注释"原子不可再分，禁止依赖 Store/Service"。
+- `molecules/index.ts`：导出 22 分子（Alert/Dialog/Tabs/FormField/MetricCard…）；`states/` 子目录的 `Loading/Empty/ErrorState` 因重名需直引 `@/components/molecules/states/Error`。
 - `organisms/index.ts`：业务有机体（pool/collection/analysis…）。
-- `templates/index.ts`：页面级布局骨架（`PageContainer`/`PageHeader`/`DashboardLayout`/`SidebarLayout`/`CockpitLayout`，无业务逻辑）。
+- `templates/index.ts`：页面级布局骨架（`CockpitLayout`/`PageContainer`/`PageHeader`/`SidebarLayout`，共 4 个，无业务逻辑）。注意：`PageHeader` 在 `moleculeRegistry` 中注册但 `level` 标记为 `'template'`。
 
 ### 1.3 迁移现状
 阶段 1–5 全部完成：**0 shim 残留、0 违规 0 警告**，`audit:atomic` 133 文件通过。最终保留原位目录 `chart/cabin/cockpit/widgets`（因与 Widget 注册表耦合，仅 registry 标注，不物理搬）。
@@ -31,7 +31,7 @@
 
 ## 2. 组件注册表与门禁
 
-- `src/components/componentRegistry.ts`：`COMPONENT_REGISTRY` 每项含 `name/level/sourcePath/targetPath/status/description`，`status: active|migrating|deprecated`（当前全量 active）。
+- `src/components/componentRegistry.ts`：`COMPONENT_REGISTRY` 每项含 `name/level/sourcePath/targetPath/status/description`，`status: active|migrating|deprecated`（当前全量 active，`SkeletonLegacy` 已标记 `deprecated`）。
 - `audit:atomic`（`scripts/audit/audit-atomic.ts`）：依据 registry 推断层级，扫描 `src/components/**/*.ts(x)`，按 `FORBIDDEN` 跨层表判定阻断性违规；含 `stale-ui-import`（探测已删的 `@/components/ui/`）、`unregistered` 警告。
 
 ---

@@ -37,8 +37,8 @@ date: 2026-07-17
 ## 🔗 进阶路径
 
 完成入门教程后，可按以下路径深入学习：
-1. **了解架构** →[../explanation/overview.md](../explanation/overview.md)
-2. **舱室总览** →[../explanation/cabins-overview.md](../explanation/cabins-overview.md)
+1. **了解架构** →[../../explanation/overview.md](../../explanation/overview.md)
+2. **舱室总览** →[../../explanation/cabins-overview.md](../../explanation/cabins-overview.md)
 3. **技术参考* →[../reference/](../reference/)
 4. **操作指南** →[../how-to/](../how-to/)
 
@@ -48,4 +48,4 @@ date: 2026-07-17
 
 - 遇到问题先查 [../how-to/](../how-to/) 操作指南
 - 架构问题查[../explanation/](../explanation/) 解释文档
-- 精确规范查[../reference/](../reference/) 技术参考- 项目最高契约：[../../AGENTS.md](../../AGENTS.md)
+- 精确规范查[../../reference/](../../reference/) 技术参考- 项目最高契约：[../../../AGENTS.md](../../../AGENTS.md)

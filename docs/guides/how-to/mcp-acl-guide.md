@@ -15,7 +15,7 @@ change_log:
 
 > **版本**: v1.1.0 | **日期**: 2026-07-22
 > **适用范围**: 所有通过 MCP 协议调用工具的开发场景
-> **相关规范**: [AGENTS.md §十四 MCP 权限控制规范](../../AGENTS.md#十四mcp-权限控制规范v140-新增) | [MCP 生命周期管理指南（入-移-出）](./MCP-LIFECYCLE-GUIDE.md)
+> **相关规范**: [AGENTS.md §十四 MCP 权限控制规范](../../meta/AGENTS.md) | [MCP 生命周期管理指南（入-移-出）](./MCP-LIFECYCLE-GUIDE.md)
 
 ---
 
@@ -351,7 +351,7 @@ npx vitest run tests/__tests__/integration/mcp-servers.integration.test.ts
 | [src/mcp/core/client.ts](../../src/mcp/core/client.ts) | `MCPClientImpl` Client 实现（主拦截点） |
 | [src/mcp/bridge/mcpBridge.ts](../../src/mcp/bridge/mcpBridge.ts) | `MCPBridge` 桥接层（透传 context） |
 | [src/mcp/__tests__/mcpAclInterceptor.test.ts](../../src/mcp/__tests__/mcpAclInterceptor.test.ts) | 72 个单元测试用例 |
-| [AGENTS.md §十四](../../AGENTS.md#十四mcp-权限控制规范v140-新增) | AI 行为约束契约 |
+| [AGENTS.md §十四](../../meta/AGENTS.md) | AI 行为约束契约 |
 
 ---
 

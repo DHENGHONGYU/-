@@ -37,7 +37,7 @@ V9 通过 **Husky 钩子** 在提交阶段强制提交规范，堵住「提交�
 | `scripts/audit/audit-commit-scope.sh` | 提交作用域守卫 | 每次 `git commit`（pre-commit 最先执行） |
 | `.husky/pre-commit` | 集成入口，调用 scope 守卫 | 每次 `git commit` |
 
-> 关联总览见 [development-workflow-sop](../reference/development-workflow-sop.md) §四；质量审计脚本全览见 [how-to-use-audit-scripts](how-to-use-audit-scripts.md)。
+> 关联总览见 [development-workflow-sop](../../reference/development-workflow-sop.md) §四；质量审计脚本全览见 [how-to-use-audit-scripts](how-to-use-audit-scripts.md)。
 
 ---
 

@@ -740,7 +740,7 @@ npm run audit:hardcode
 npm run build
 ```
 
-> **详细说明**：[09-quality-gates.md](../reference/09-quality-gates.md)
+> **详细说明**：[09-quality-gates.md](../09-quality-gates.md)
 
 ---
 
@@ -774,7 +774,7 @@ npm run build
 4. **描述清晰**：test 描述说明"测什么、期望什么"
 5. **边界覆盖**：正常值 + 边界值 + 异常值
 
-> **详细指南**：[testing-strategy.md](../how-to/testing/testing-strategy.md)
+> **详细指南**：[testing-strategy.md](../testing-strategy.md)
 
 ---
 
@@ -882,7 +882,7 @@ L1 基础设施层：lib/、config/、constants/、types/
 
 **验证**：`npm run audit:layers`
 
-> **详细架构**：[team-handbook/02-architecture.md](./02-architecture.md)、[AGENTS.md](../../AGENTS.md)
+> **详细架构**：[team-handbook/02-architecture.md](./02-architecture.md)、[AGENTS.md](../../meta/AGENTS.md)
 
 ---
 
@@ -1102,7 +1102,7 @@ export const xxxService = {
 4. 在三处注册
 5. 验证 `audit:widget-registry` 通过
 
-> **详细指南**：[how-to-add-widget.md](../how-to/how-to-add-widget.md)、[widget-development-guide.md](../how-to/widget-development-guide.md)
+> **详细指南**：[how-to-add-widget.md](../how-to/how-to-add-widget.md)、[widget-development-guide.md](../widget-development-guide.md)
 
 ---
 
@@ -1244,7 +1244,7 @@ npm run audit:atomic
 - [ ] Router 版本兼容性验证
 - [ ] SKILL 方法论与代码权重表对齐
 
-> **完整教训库**：[lessons-learned.md](../reports/retrospectives/lessons-learned.md)、[lessons-learned-summary.md](../reports/retrospectives/lessons-learned-summary.md)
+> **完整教训库**：[lessons-learned.md](../../reports/project-management/development-lessons-learned.md)、[lessons-learned-summary.md](../reports/retrospectives/lessons-learned-summary.md)
 
 ---
 
@@ -1337,7 +1337,7 @@ change_log:
 - 新增页面 → 更新路由文档
 - 架构变更 → 更新 ADR 或架构文档
 
-> **详细规范**：[doc-style-standard.md](../00-meta/doc-style-standard.md)、[jsdoc-convention.md](../reference/jsdoc-convention.md)
+> **详细规范**：[doc-style-standard.md](../../meta/doc-style-standard.md)、[jsdoc-convention.md](../reference/jsdoc-convention.md)
 
 ---
 
@@ -1393,16 +1393,16 @@ change_log:
 | **入门** | 团队手册 README | [team-handbook/README.md](./README.md) |
 | | 设计哲学 | [01-design-philosophy.md](./01-design-philosophy.md) |
 | | 架构总览 | [02-architecture.md](./02-architecture.md) |
-| **架构契约** | AGENTS.md | [AGENTS.md](../../AGENTS.md) |
-| | 架构标准 | [03-architecture-standards.md](../03-architecture-standards.md) |
-| **开发流程** | 开发工作流 SOP | [development-workflow-sop.md](../reference/development-workflow-sop.md) |
+| **架构契约** | AGENTS.md | [AGENTS.md](../../meta/AGENTS.md) |
+| | 架构标准 | [03-architecture-standards.md](../../explanation/03-architecture-standards.md) |
+| **开发流程** | 开发工作流 SOP | [development-workflow-sop.md](../../reference/development-workflow-sop.md) |
 | | 编码规范 | [coding-conventions.md](../reference/coding-conventions.md) |
 | | 质量门禁 | [09-quality-gates.md](../09-quality-gates.md) |
 | **专项指南** | 新增 Store | [how-to-add-store.md](../how-to/how-to-add-store.md) |
 | | 新增 Service | [how-to-add-service.md](../how-to/how-to-add-service.md) |
 | | 新增 Widget | [how-to-add-widget.md](../how-to/how-to-add-widget.md) |
 | | 代码评审 | [code-review-guide.md](../how-to/code-review-guide.md) |
-| **经验教训** | 完整教训库 | [lessons-learned.md](../reports/retrospectives/lessons-learned.md) |
+| **经验教训** | 完整教训库 | [lessons-learned.md](../../reports/project-management/development-lessons-learned.md) |
 | | 教训摘要 | [lessons-learned-summary.md](../reports/retrospectives/lessons-learned-summary.md) |
 | | 项目历程 | [project-development-journey.md](../reports/retrospectives/project-development-journey.md) |
 
