@@ -258,7 +258,7 @@ export class WorkflowServer extends MCPServerBase {
       const id = s.id
       const timer = setInterval(() => {
         const sch = this.schedules.get(id)
-        if (!sch || !sch.enabled) return
+        if (!sch?.enabled) return
         sch.lastRunAt = Date.now()
         sch.nextRunAt = Date.now() + intervalMs
         void this.runScheduled(id)
@@ -281,7 +281,7 @@ export class WorkflowServer extends MCPServerBase {
       const id = t.id
       const unsub = eventBus.on(t.event, (payload) => {
         const trig = this.triggers.get(id)
-        if (!trig || !trig.enabled) return
+        if (!trig?.enabled) return
         const targets = trig.targets ?? this.extractTargetsFromPayload(payload)
         void this.runTriggered(id, targets)
       })
@@ -597,7 +597,7 @@ export class WorkflowServer extends MCPServerBase {
           this.persistScheduleToRepo(schedule)
           const timer = setInterval(() => {
             const s = this.schedules.get(id)
-            if (!s || !s.enabled) return
+            if (!s?.enabled) return
             s.lastRunAt = Date.now()
             s.nextRunAt = Date.now() + intervalMs
             void this.runScheduled(id)
@@ -661,7 +661,7 @@ export class WorkflowServer extends MCPServerBase {
           }
           const unsub = eventBus.on(event, (payload) => {
             const t = this.triggers.get(id)
-            if (!t || !t.enabled) return
+            if (!t?.enabled) return
             const targets = t.targets ?? this.extractTargetsFromPayload(payload)
             void this.runTriggered(id, targets)
           })

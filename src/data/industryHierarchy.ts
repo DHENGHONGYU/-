@@ -680,8 +680,9 @@ export function getIndustryPath(code: string): IndustryDefinition[] {
 
   while (current) {
     path.unshift(current)
-    const pc = current.parentCode
-    current = pc && pc !== '' ? INDUSTRY_MAP[pc] : undefined
+    const pc = current.parentCode ?? ''
+    if (pc === '') break
+    current = INDUSTRY_MAP[pc]
   }
 
   return path
@@ -732,10 +733,10 @@ export function matchStockIndustry(stock: {
   if (tier3Matches.length > 0) {
     const bestMatch = tier3Matches[0]!
     const tier3 = bestMatch.industry
-    const t3pc = tier3.parentCode
-    const tier2 = t3pc && t3pc !== '' ? (INDUSTRY_MAP[t3pc!] ?? null) : null
-    const t2pc = tier2?.parentCode
-    const tier1 = t2pc && t2pc !== '' ? (INDUSTRY_MAP[t2pc!] ?? null) : null
+    const t3pc = tier3.parentCode ?? ''
+    const tier2 = t3pc !== '' ? (INDUSTRY_MAP[t3pc] ?? null) : null
+    const t2pc = tier2?.parentCode ?? ''
+    const tier1 = t2pc !== '' ? (INDUSTRY_MAP[t2pc] ?? null) : null
 
     return {
       tier3,
@@ -749,8 +750,8 @@ export function matchStockIndustry(stock: {
   if (tier2Matches.length > 0) {
     const bestMatch = tier2Matches[0]!
     const tier2 = bestMatch.industry
-    const parentCode = tier2.parentCode
-    const tier1 = parentCode && parentCode !== '' ? (INDUSTRY_MAP[parentCode] ?? null) : null
+    const parentCode = tier2.parentCode ?? ''
+    const tier1 = parentCode !== '' ? (INDUSTRY_MAP[parentCode] ?? null) : null
 
     return {
       tier3: null,

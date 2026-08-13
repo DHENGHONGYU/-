@@ -227,7 +227,7 @@ export class CatalystTracker {
       score = Math.min(score, 2)
     }
 
-    return Math.min(Math.max(score, 1), 5) as CatalystEvent['impactScore']
+    return Math.min(Math.max(score, 1), 5)
   }
 
   /** 记录催化事件并广播 */

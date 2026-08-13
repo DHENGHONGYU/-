@@ -56,7 +56,7 @@ export async function assertAclWithFallback(
   operation: DbOperation,
 ): Promise<boolean> {
   const { meta } = envelope
-  const source = meta.source as ModuleId
+  const source = meta.source
 
   try {
     aclEngine.assert({ module: source, store: targetStore, operation, apiVersion: meta.apiVersion })

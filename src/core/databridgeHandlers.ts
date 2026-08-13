@@ -290,6 +290,7 @@ class DeleteStockHandler implements EnvelopeHandler {
       STORE_NAME.dailyQuotes,
       STORE_NAME.hotSectorScores,
       STORE_NAME.valuePitScores,
+      STORE_NAME.financialReports,
     ]
     for (const s of stores) {
       try {
@@ -310,6 +311,11 @@ class DeleteStockHandler implements EnvelopeHandler {
       STORE_NAME.executionPlans,
       STORE_NAME.executionLogs,
       STORE_NAME.missingReports,
+      STORE_NAME.profileItems,
+      STORE_NAME.scoreEvidence,
+      STORE_NAME.traceRecords,
+      STORE_NAME.analysisResults,
+      STORE_NAME.conflictLog,
     ]
     for (const s of stores) {
       await this.deleteBySymbolIndex(s, symbol)
@@ -335,7 +341,7 @@ class DeleteStockHandler implements EnvelopeHandler {
   }
 
   private async deleteScannedRecords(symbol: string): Promise<void> {
-    const stores = [STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.watchlists]
+    const stores = [STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.watchlists, STORE_NAME.researchLogs, STORE_NAME.tradeReviews]
     for (const s of stores) {
       await this.deleteBySymbolScan(s, symbol)
     }
@@ -357,6 +363,81 @@ class DeleteStockHandler implements EnvelopeHandler {
         error: err instanceof Error ? err.message : String(err),
       })
     }
+  }
+}
+
+/**
+ * 执行计划删除处理器（级联删除关联的执行日志）
+ */
+class DeleteExecutionPlanHandler implements EnvelopeHandler {
+  canHandle(action: string): boolean {
+    return action === ENVELOPE_ACTION.deleteExecutionPlan
+  }
+
+  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
+    const { id } = envelope.payload as { id: string }
+    logger.info(`[DataBridge] DB deleteExecutionPlan: id="${id}" — 开始级联删除`)
+
+    await db.delete(store, id)
+
+    try {
+      const logs = await db.getAllByIndex<{ id: string }>(STORE_NAME.executionLogs, 'by-plan', id)
+      for (const log of logs) {
+        await db.delete(STORE_NAME.executionLogs, log.id)
+      }
+      if (logs.length > 0) {
+        logger.debug(`[DataBridge] 级联删除: executionLogs by-plan="${id}" count=${logs.length}`)
+      }
+    } catch (err) {
+      logger.warn(`[DataBridge] 级联删除失败: executionLogs by-plan="${id}"`, {
+        error: err instanceof Error ? err.message : String(err),
+      })
+    }
+
+    logger.info(`[DataBridge] DB deleteExecutionPlan 完成: id="${id}" — 级联删除结束`)
+  }
+}
+
+/**
+ * 工作流定义删除处理器（级联删除调度、触发器、运行实例）
+ */
+class DeleteWorkflowDefHandler implements EnvelopeHandler {
+  canHandle(action: string): boolean {
+    return action === ENVELOPE_ACTION.deleteWorkflowDef
+  }
+
+  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
+    const { id } = envelope.payload as { id: string }
+    logger.info(`[DataBridge] DB deleteWorkflowDef: id="${id}" — 开始级联删除`)
+
+    await db.delete(store, id)
+
+    const childStores = [
+      { store: STORE_NAME.workflowSchedules, index: 'by-workflow-id', keyField: 'id' },
+      { store: STORE_NAME.workflowTriggers, index: 'by-workflow-id', keyField: 'id' },
+      { store: STORE_NAME.workflowRuns, index: 'by-workflow-id', keyField: 'runId' },
+    ]
+
+    for (const child of childStores) {
+      try {
+        const records = await db.getAllByIndex<Record<string, unknown>>(child.store, child.index, id)
+        for (const rec of records) {
+          const key = rec[child.keyField]
+          if (typeof key === 'string') {
+            await db.delete(child.store, key)
+          }
+        }
+        if (records.length > 0) {
+          logger.debug(`[DataBridge] 级联删除: ${child.store} by-workflow-id="${id}" count=${records.length}`)
+        }
+      } catch (err) {
+        logger.warn(`[DataBridge] 级联删除失败: ${child.store} by-workflow-id="${id}"`, {
+          error: err instanceof Error ? err.message : String(err),
+        })
+      }
+    }
+
+    logger.info(`[DataBridge] DB deleteWorkflowDef 完成: id="${id}" — 级联删除结束`)
   }
 }
 
@@ -475,13 +556,11 @@ export function createHandlerRegistry(): HandlerRegistry {
   // 3. DELETE 操作处理器
   registry.register(
     new DeleteHandler([
-      ENVELOPE_ACTION.deleteExecutionPlan,
       ENVELOPE_ACTION.deleteCustomAgent,
       // v32: 补全未注册的 DELETE action（原 fallback 裸 put，无级联校验）
       ENVELOPE_ACTION.deleteOrder,
       ENVELOPE_ACTION.deleteCollectConfig,
       ENVELOPE_ACTION.deleteRbacAuditLog,
-      ENVELOPE_ACTION.deleteWorkflowDef,
       ENVELOPE_ACTION.deleteWorkflowSchedule,
       ENVELOPE_ACTION.deleteWorkflowTrigger,
       ENVELOPE_ACTION.deleteCollectionHistory,
@@ -492,6 +571,10 @@ export function createHandlerRegistry(): HandlerRegistry {
       ENVELOPE_ACTION.deleteProfileTag,
     ])
   )
+
+  // 3.1 级联删除处理器（P1-M3 新增）
+  registry.register(new DeleteExecutionPlanHandler())
+  registry.register(new DeleteWorkflowDefHandler())
 
   // 3.5 自定义智能体保存处理器（补齐时间戳）
   registry.register(new CustomAgentSaveHandler())

@@ -307,7 +307,7 @@ export async function seedSystemTags(): Promise<void> {
     ...TOPIC_TAG_RULES.map((rule, i) => ({
       id: `sys_topic_${i}`,
       name: rule.tag,
-      category: rule.category as TagCategory,
+      category: rule.category,
       usageCount: 0,
       isSystem: true,
       createdAt: now,
@@ -316,7 +316,7 @@ export async function seedSystemTags(): Promise<void> {
     ...RISK_TAG_RULES.map((rule, i) => ({
       id: `sys_risk_${i}`,
       name: rule.tag,
-      category: rule.category as TagCategory,
+      category: rule.category,
       usageCount: 0,
       isSystem: true,
       createdAt: now,
@@ -325,7 +325,7 @@ export async function seedSystemTags(): Promise<void> {
     ...QUALITY_TAG_RULES.map((rule, i) => ({
       id: `sys_quality_${i}`,
       name: rule.tag,
-      category: rule.category as TagCategory,
+      category: rule.category,
       usageCount: 0,
       isSystem: true,
       createdAt: now,

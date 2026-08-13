@@ -78,8 +78,9 @@ function detectMissingBasicFields(stock: Stock | undefined): string[] {
   if (stock.price === undefined || stock.price === null) missing.push('price')
   if (stock.pe === undefined || stock.pe === null) missing.push('pe')
   if (stock.pb === undefined || stock.pb === null) missing.push('pb')
-  if (stock.roe === undefined || stock.roe === null) missing.push('roe')
   if (stock.marketCap === undefined || stock.marketCap === null) missing.push('marketCap')
+  // roe / industryCode 为可选字段，V6 引擎各层已内置 null 降级（roe 缺失时 L0/L3f 使用中性分 3）
+  // 不再作为跳过 V6 引擎的必要条件
   return missing
 }
 

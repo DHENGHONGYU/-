@@ -206,7 +206,7 @@ export class WeeklyReviewScheduler {
     if ((p.symbol ?? '') !== '' && (p.price ?? 0) !== 0 && (p.action === 'buy' || p.action === 'sell')) {
       this.weekTrades.push({
         symbol: p.symbol ?? '',
-        action: p.action as 'buy' | 'sell',
+        action: p.action,
         price: p.price ?? 0,
         timestamp: p.timestamp ?? Date.now(),
       })
@@ -230,7 +230,7 @@ export class WeeklyReviewScheduler {
       if ((order.symbol ?? '') !== '' && (order.price ?? 0) !== 0 && (order.side === 'buy' || order.side === 'sell')) {
         this.weekTrades.push({
           symbol: order.symbol ?? '',
-          action: order.side as 'buy' | 'sell',
+          action: order.side,
           price: order.price ?? 0,
           timestamp: order.timestamp ?? Date.now(),
         })

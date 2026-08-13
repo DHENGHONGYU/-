@@ -42,7 +42,7 @@ interface SmartboxItem {
 function parseSmartboxResponse(raw: string): SmartboxItem[] {
   // 提取 v_hint="..." 中的内容
   const match = raw.match(/v_hint="([^"]+)"/)
-  if (!match || !match[1]) return []
+  if (!match?.[1]) return []
 
   const items: SmartboxItem[] = []
   const segments = match[1].split('^')

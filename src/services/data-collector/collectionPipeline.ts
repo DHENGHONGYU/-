@@ -119,7 +119,7 @@ async function writeMockDimensionData(
     '08': 'researchLogs',
   }
   const targetStore = storeForDim[dimensionCode] ?? ''
-  if (targetStore !== '') auditRecord(targetStore, data!)
+  if (targetStore !== '') auditRecord(targetStore, data)
 
   await dataBridge.forward({
     meta: {

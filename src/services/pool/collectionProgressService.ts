@@ -225,7 +225,7 @@ export async function getCollectionProgress(symbol: string): Promise<CollectionP
         code: dim.code,
         name: dim.name,
         collected: true,
-        status: trace.result as 'success' | 'partial' | 'fail',
+        status: trace.result,
         lastCollectedAt: trace.completedAt ?? trace.startedAt,
         durationMs: trace.totalDurationMs,
       }

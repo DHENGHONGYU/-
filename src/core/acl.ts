@@ -141,7 +141,7 @@ export class AclEngine {
           if (override.storeOverrides) {
             const allowedStores =
               operation === DB_OPERATION.select ? override.storeOverrides.read : override.storeOverrides.write
-            if (!allowedStores || !allowedStores.includes(store)) {
+            if (!allowedStores?.includes(store)) {
               return { allowed: false, reason: `Module ${module} v${apiVersion} cannot ${operation} on store ${store} (versioned override)` }
             }
             return { allowed: true, reason: 'Permission granted (versioned override)' }
@@ -220,7 +220,7 @@ export function registerBuiltinVersionedOverrides(): void {
   aclEngine.registerVersionedOverrides([
     // V6 engine → 只读（已有 V9 intelligentScore 接管写入）
     {
-      moduleId: 'system' as ModuleId,
+      moduleId: 'system',
       apiVersion: '1.0',
       level: 'readonly',
     },

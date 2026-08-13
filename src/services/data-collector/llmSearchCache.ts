@@ -128,7 +128,7 @@ export function set<T>(key: string, data: T, ttlHours: number): void {
     ttlHours,
   }
   if (!isNodeEnv) {
-    memCache.set(key, entry as CacheEntry<unknown>)
+    memCache.set(key, entry)
     return
   }
   try {

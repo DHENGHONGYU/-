@@ -97,7 +97,7 @@ async function fetchTencentQuote(symbol: string): Promise<Record<string, string>
   const text = await resp.text()
   // Tencent returns: v_{code}="{fields}"
   const match = text.match(/v_[^=]+="([^"]+)"/)
-  if (!match || !match[1]) return null
+  if (!match?.[1]) return null
   const parts = match[1].split('~')
   return {
     name: parts[1] ?? '',

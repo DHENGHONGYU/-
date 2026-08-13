@@ -531,7 +531,7 @@ export async function fetchSectorRotationScores(
     return { success: false, error: message }
   }
 
-  if (!response.success || !response.data || !response.data.sectors) {
+  if (!response.success || !response.data?.sectors) {
     logger.error('[fetcherService] fetchSectorRotationScores 采集接口返回失败', {
       success: response.success,
       error: response.error,

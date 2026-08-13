@@ -44,7 +44,7 @@ export function parseLlmJson<T = unknown>(
 
   // 1) 剥离 Markdown ```json ... ``` 代码块
   const fenceMatch = input.match(/```(?:json|JSON)?\s*([\s\S]*?)```/)
-  if (fenceMatch && fenceMatch[1]) {
+  if (fenceMatch?.[1]) {
     input = fenceMatch[1].trim()
   }
 

@@ -317,13 +317,13 @@ export class TimelinessSyncAnalyzer {
 
     if (trade.action === 'buy') {
       // 找窗口内最低点
-      const lowestQuote = windowQuotes.reduce((min, q) => (q.low < (min?.low ?? Infinity) ? q : min ?? q), windowQuotes[0] as QuotePoint | undefined)
+      const lowestQuote = windowQuotes.reduce((min, q) => (q.low < (min?.low ?? Infinity) ? q : min ?? q), windowQuotes[0])
       if (!lowestQuote) return null
       const lowestDate = Number(lowestQuote.date)
       return Math.round((tradeDate - lowestDate) / MS_PER_DAY)
     } else {
       // 找窗口内最高点
-      const highestQuote = windowQuotes.reduce((max, q) => (q.high > (max?.high ?? -Infinity) ? q : max ?? q), windowQuotes[0] as QuotePoint | undefined)
+      const highestQuote = windowQuotes.reduce((max, q) => (q.high > (max?.high ?? -Infinity) ? q : max ?? q), windowQuotes[0])
       if (!highestQuote) return null
       const highestDate = Number(highestQuote.date)
       return Math.round((tradeDate - highestDate) / MS_PER_DAY)

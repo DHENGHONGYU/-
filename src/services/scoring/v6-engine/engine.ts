@@ -229,7 +229,6 @@ export class V6ScoreEngine {
 
     for (const layerId of ALL_LAYER_IDS) {
       const layer = layers[layerId]
-      if (!layer) continue
       const w = weightMap[layerId]
 
       // NaN 防护：验证 layer.score 是否有效
@@ -318,7 +317,7 @@ export class V6ScoreEngine {
     const weight = weightMap[layerId]
 
     const layerName = LAYER_LABELS[layerId] ?? layerId
-    const summary = errorMsg
+    const summary = (errorMsg ?? '') !== ''
       ? `[计算失败] ${layerName} 层计算失败: ${errorMsg}`
       : `[未注册计算器] ${layerName} 层无可用计算器`
 
@@ -327,7 +326,7 @@ export class V6ScoreEngine {
       layerName,
       score: 0,
       summary,
-      risks: errorMsg ? [errorMsg] : ['数据缺失：该层评分未参与综合计算'],
+      risks: (errorMsg ?? '') !== '' ? [errorMsg!] : ['数据缺失：该层评分未参与综合计算'],
       evidence: [],
       weight,
       weightedScore: 0,

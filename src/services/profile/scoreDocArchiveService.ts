@@ -92,7 +92,7 @@ export async function scoreDocToProfileItems(
 
   // 2. 各层评分详情
   for (const [layerId, layerScore] of Object.entries(doc.layers)) {
-    items.push(buildLayerScoreItem(doc, layerId, layerScore as V6LayerScore) as unknown as Omit<ProfileItem, 'id' | 'collectedAt' | 'schemaVersion' | 'version' | 'dataHash'>)
+    items.push(buildLayerScoreItem(doc, layerId, layerScore) as unknown as Omit<ProfileItem, 'id' | 'collectedAt' | 'schemaVersion' | 'version' | 'dataHash'>)
   }
 
   // 3. 版本差异（如果有）
@@ -144,7 +144,7 @@ function buildCompositeReportItem(doc: ScoreDocVersion) {
   ]
 
   for (const [layerId, layer] of Object.entries(doc.layers)) {
-    const layerScore = layer as V6LayerScore
+    const layerScore = layer
     const label = LAYER_LABELS[layerId] || layerId
     contentLines.push(`- ${label}：${layerScore.score}/100 — ${layerScore.reason || ''}`)
   }
@@ -232,7 +232,7 @@ function buildVersionDiffItem(doc: ScoreDocVersion) {
   const layerDiffs: string[] = []
   for (const [layerId, delta] of Object.entries(diff.layerChanges)) {
     const label = LAYER_LABELS[layerId] || layerId
-    const sign = (delta as number) > 0 ? '+' : ''
+    const sign = (delta) > 0 ? '+' : ''
     layerDiffs.push(`${label}${sign}${delta}`)
   }
   const fullSummary = summary + ' ' + layerDiffs.join('，') + '。'
@@ -359,7 +359,7 @@ export async function archiveSingleScoreDoc(docId: string): Promise<number> {
 
     const items = await scoreDocToProfileItems(result.data)
     const { bulkSaveProfileItems } = await import('./profileService')
-    await bulkSaveProfileItems(items as unknown as Parameters<typeof bulkSaveProfileItems>[0])
+    await bulkSaveProfileItems(items)
 
     logger.info(`[scoreDocArchive] 单份报告归档完成`, { docId, itemCount: items.length })
     return items.length
@@ -381,7 +381,7 @@ export async function onScoreDocGenerated(doc: ScoreDocVersion): Promise<void> {
   try {
     const items = await scoreDocToProfileItems(doc)
     const { bulkSaveProfileItems } = await import('./profileService')
-    await bulkSaveProfileItems(items as unknown as Parameters<typeof bulkSaveProfileItems>[0])
+    await bulkSaveProfileItems(items)
 
     logger.info(`[scoreDocArchive] 新报告自动归档完成`, {
       docId: doc.docId,

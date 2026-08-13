@@ -165,7 +165,7 @@ export async function newsToProfileItem(
     source: article.source,
     sourceUrl: article.url,
     publishedAt: isNaN(publishTime) ? Date.now() : publishTime,
-    sentiment: article.sentiment as ProfileItem['sentiment'],
+    sentiment: article.sentiment,
     qualityScore,
     dataQuality: qualityScore >= 70 ? 'high' : qualityScore >= 40 ? 'medium' : 'low',
     topicTags: article.keywords?.slice(0, 5) ?? [],
@@ -177,7 +177,7 @@ export async function newsToProfileItem(
   }
 
   // 自动打标补充
-  return (await autoTagItem(item as ProfileItem)) as Omit<ProfileItem, 'id' | 'dataHash' | 'collectedAt' | 'schemaVersion' | 'version'>
+  return (await autoTagItem(item as ProfileItem))
 }
 
 // ============================================================

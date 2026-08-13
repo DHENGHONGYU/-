@@ -262,7 +262,7 @@ import type { StockBasicData, FinancialData } from '../types'
 
 /** 判断长期趋势 */
 export function judgeLongTermTrend(priceHistory: number[], days: number): string {
-  if (!priceHistory || priceHistory.length === 0 || days < V6_CALCULATOR_THRESHOLDS.L0_TREND_MIN_DAYS) return '无数据'
+  if (priceHistory.length === 0 || days < V6_CALCULATOR_THRESHOLDS.L0_TREND_MIN_DAYS) return '无数据'
   if (priceHistory.length < days) return '无数据'
   const slice = priceHistory.slice(-days)
   const first = safeFirst(slice)
@@ -338,8 +338,7 @@ export function scoreScoreBoard(board: Record<string, number>, filters?: string[
   if (missingBoardKeys.length > 0) {
     logger.warn('[l0_l1_l2] 评分板字段缺失，使用默认值', { field: missingBoardKeys.join(','), context: 'scoreScoreBoard' })
   }
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  const sum = keys.reduce((s, k) => s + (board[k] || 0), 0)
+  const sum = keys.reduce((s, k) => s + (board[k] ?? 0), 0)
   return Math.min(5, Math.max(1, sum / keys.length))
 }
 
@@ -353,8 +352,9 @@ export function judgeValuation(
   if (pe === undefined) return '无PE'
   if (pe < 0) return '亏损'
 
-  const isChip = sector
-    ? sector.toLowerCase().includes('芯片') || sector.toLowerCase().includes('半导体')
+  const sectorLower = sector?.toLowerCase() ?? ''
+  const isChip = sectorLower !== ''
+    ? sectorLower.includes('芯片') || sectorLower.includes('半导体')
     : false
 
   const highGrowth = (revenueYoY !== undefined && revenueYoY > 0.5) ||

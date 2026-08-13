@@ -19,7 +19,6 @@ import { sendWriteEnvelope, queryByIndex, queryGet } from '@/data/dataLayerHelpe
 import type {
   ScoreEvidence,
   ScoreLayerId,
-  SentimentLabel,
   StockProfile,
 } from '@/data/types/types.profile'
 import { DOMAIN_META } from '@/data/types/types.profile'
@@ -130,7 +129,7 @@ export async function getEvidenceOverview(symbol: string): Promise<{
 
   return {
     total: evidence.length,
-    byLayer: byLayer as Record<ScoreLayerId, number>,
+    byLayer: byLayer,
     coverage,
   }
 }
@@ -284,7 +283,7 @@ export async function autoBuildLayerEvidence(
     description: item.summary,
     weight: (item.qualityScore ?? 50) / 100 * (item.evidenceWeight ?? 0.5),
     confidence: (item.qualityScore ?? 50) / 100,
-    sentiment: item.sentiment as SentimentLabel,
+    sentiment: item.sentiment,
     profileItemId: item.id,
     source: item.source,
     createdAt: Date.now(),
@@ -340,7 +339,7 @@ export async function autoBuildAllEvidence(symbol: string): Promise<Record<strin
   const updated: StockProfile = {
     ...profile,
     totalEvidence: overview.total,
-    layerEvidenceCounts: overview.byLayer as unknown as Record<ScoreLayerId, number>,
+    layerEvidenceCounts: overview.byLayer,
     evidenceCoverage: overview.coverage,
     lastUpdatedAt: Date.now(),
   }

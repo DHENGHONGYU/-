@@ -88,9 +88,10 @@ function matchByExactSymbol(
 
 /** 按申万1级行业匹配赛道 */
 function matchBySector(swLevel1: string | undefined): { sector: SectorSkillAnalysis; relevance: number } | null {
-  if (!swLevel1) return null
-  const codes = SW1_TO_SECTOR[swLevel1]
-  if (!codes || codes.length === 0) return null
+  const sw = swLevel1 ?? ''
+  if (sw === '') return null
+  const codes = SW1_TO_SECTOR[sw] ?? []
+  if (codes.length === 0) return null
 
   // 取第一个匹配赛道；若多个则取综合分最高者
   let best: SectorSkillAnalysis | null = null
@@ -172,13 +173,13 @@ export async function executeIndustryScoreMappingSkill(
   let matchSource: IndustryScoreMappingOutput['matchSource'] = 'none'
 
   // 第一步：精确代码匹配
-  if (!forceKeywordMatch) {
+  if ((forceKeywordMatch ?? false) !== true) {
     match = matchByExactSymbol(ctx.symbol, ctx.stockName)
     if (match) matchSource = 'exact'
   }
 
   // 第二步：申万行业匹配
-  if (!match && swLevel1) {
+  if (!match && (swLevel1 ?? '') !== '') {
     match = matchBySector(swLevel1)
     if (match) matchSource = 'sector'
   }
