@@ -245,11 +245,11 @@ const actions = {
           error: null,
         },
       },
-      loadingMap: instanceId
-        ? { ...state.loadingMap, [instanceId]: true }
+      loadingMap: (instanceId ?? '') !== ''
+        ? { ...state.loadingMap, [instanceId!]: true }
         : state.loadingMap,
-      errorMap: instanceId
-        ? { ...state.errorMap, [instanceId]: null }
+      errorMap: (instanceId ?? '') !== ''
+        ? { ...state.errorMap, [instanceId!]: null }
         : state.errorMap,
     })
 
@@ -275,11 +275,11 @@ const actions = {
             error: message,
           },
         },
-        loadingMap: instanceId
-          ? { ...state.loadingMap, [instanceId]: false }
+        loadingMap: (instanceId ?? '') !== ''
+          ? { ...state.loadingMap, [instanceId!]: false }
           : state.loadingMap,
-        errorMap: instanceId
-          ? { ...state.errorMap, [instanceId]: message }
+        errorMap: (instanceId ?? '') !== ''
+          ? { ...state.errorMap, [instanceId!]: message }
           : state.errorMap,
       })
     }
@@ -334,9 +334,9 @@ const actions = {
 
     // 通过 taskScheduler 重新执行
     const taskId = useMarketDataStore.getState().taskMap[key]
-    if (taskId) {
-      taskScheduler.stopTask(taskId)
-      void taskScheduler.startTask(taskId)
+    if ((taskId ?? '') !== '') {
+      taskScheduler.stopTask(taskId!)
+      void taskScheduler.startTask(taskId!)
     }
   },
 
@@ -356,7 +356,7 @@ const actions = {
   refreshWidget: (instanceId: string) => {
     const state = useMarketDataStore.getState()
     const taskId = state.taskMap[instanceId]
-    if (!taskId) {
+    if (taskId == null || taskId === '') {
       logger.warn(`[marketDataStore] refreshWidget: 未找到实例 ${instanceId} 对应的任务`)
       return
     }
@@ -469,7 +469,7 @@ function updateDataSourceByKey(key: MarketDataSourceKey | undefined, patch: Part
  * 按 instanceId 更新 loadingMap/errorMap，将 `if (instanceId)` 守卫收敛到单一位置。
  */
 function updateLoadingMapByInstanceId(instanceId: string | undefined, error: string | null): void {
-  if (!instanceId) return
+  if (instanceId == null || instanceId === '') return
   useMarketDataStore.setState((s) => ({
     loadingMap: { ...s.loadingMap, [instanceId]: false },
     errorMap: { ...s.errorMap, [instanceId]: error },

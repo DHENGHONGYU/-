@@ -241,8 +241,8 @@ function parseCsvLine(line: string): string[] {
 
 /** 判断是否为表头行（包含"代码"/"名称"/"code"/"name"） */
 function isHeaderLine(line: string | undefined): boolean {
-  if (!line) return false
-  const lower = line.toLowerCase()
+  if ((line ?? '') === '') return false
+  const lower = (line ?? '').toLowerCase()
   return (
     lower.includes('代码') ||
     lower.includes('名称') ||
@@ -258,7 +258,7 @@ function extractStockCode(field: string): string | null {
     return trimmed
   }
   const match = trimmed.match(/^(\d{6})\.(SH|SZ|BJ)$/i)
-  if (match?.[1]) {
+  if (match?.[1] !== undefined) {
     return match[1]
   }
   return null
@@ -272,7 +272,7 @@ function buildRowFromFields(fields: string[]): BulkImportRow | null {
 
   for (let i = 0; i < fields.length; i++) {
     const candidate = extractStockCode(fields[i]!)
-    if (!candidate) continue
+    if (candidate === null) continue
     code = candidate
     const rawField = fields[i]!.trim()
     exchange = resolveExchange(code, rawField)
@@ -282,8 +282,8 @@ function buildRowFromFields(fields: string[]): BulkImportRow | null {
     break
   }
 
-  if (!code) return null
-  if (!name) name = code
+  if (code === null) return null
+  if ((name ?? '') === '') name = code
 
   return { code, name, symbol: `${code}.${exchange}`, status: 'valid' }
 }
@@ -291,7 +291,7 @@ function buildRowFromFields(fields: string[]): BulkImportRow | null {
 /** 从原始字段解析交易所代码：优先后缀 (.SH/.SZ/.BJ)，否则按代码规则推断 */
 function resolveExchange(code: string, rawField: string): string {
   const match = rawField.match(/\.(SH|SZ|BJ)$/i)
-  return match?.[1] ? match[1].toUpperCase() : detectExchange(code)
+  return match?.[1] !== undefined ? match[1].toUpperCase() : detectExchange(code)
 }
 
 /** 解析 CSV 文本为 BulkImportRow[] */
@@ -359,7 +359,7 @@ export async function parseCsvFile(file: File): Promise<BulkImportRow[]> {
 /** 将单个 JSON 对象转换为 BulkImportRow，返回 null 表示无效 */
 function parseJsonRow(item: unknown, maxRows: number, currentCount: number): BulkImportRow | null {
   if (currentCount >= maxRows) return null
-  if (!item || typeof item !== 'object') return null
+  if (item === null || item === undefined || typeof item !== 'object') return null
 
   const obj = item as Record<string, unknown>
   const rawCode = obj.code ?? obj.symbol ?? ''
@@ -409,7 +409,8 @@ export async function parseJsonFile(file: File): Promise<BulkImportRow[]> {
     if (Array.isArray(data)) {
       rawList = data
     } else if (
-      data &&
+      data !== null &&
+      data !== undefined &&
       typeof data === 'object' &&
       Array.isArray((data as Record<string, unknown>).stocks)
     ) {

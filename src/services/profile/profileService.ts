@@ -273,7 +273,7 @@ export async function getProfileItem(id: string): Promise<ProfileItem | undefine
 export async function listProfileItemsBySymbol(symbol: string, limit?: number): Promise<ProfileItem[]> {
   const items = await queryByIndex<ProfileItem>(STORE_NAME.profileItems, 'by-symbol', symbol)
   const sorted = items.sort((a, b) => (b.qualityScore ?? 0) - (a.qualityScore ?? 0))
-  return (limit ?? 0) > 0 ? sorted.slice(0, limit!) : sorted
+  return (limit ?? 0) > 0 ? sorted.slice(0, limit) : sorted
 }
 
 /**
@@ -289,7 +289,7 @@ export async function listProfileItemsByDomain(
     'by-symbol-domain-quality',
     [symbol, domain],
   )
-  return (limit ?? 0) > 0 ? items.slice(0, limit!) : items
+  return (limit ?? 0) > 0 ? items.slice(0, limit) : items
 }
 
 /**
@@ -301,7 +301,7 @@ export async function listProfileItemsByType(
   limit?: number,
 ): Promise<ProfileItem[]> {
   const items = await queryByIndex<ProfileItem>(STORE_NAME.profileItems, 'by-symbol-type', [symbol, itemType])
-  return (limit ?? 0) > 0 ? items.slice(0, limit!) : items
+  return (limit ?? 0) > 0 ? items.slice(0, limit) : items
 }
 
 /**
@@ -336,7 +336,8 @@ export async function queryProfileItems(filter: ProfileQueryFilter): Promise<Pro
     items = items.filter((i) => i.sentiment === sentiment)
   }
   if ((minQuality ?? 0) > 0) {
-    items = items.filter((i) => (i.qualityScore ?? 0) >= (minQuality ?? 0))
+    const minQ = minQuality ?? 0
+    items = items.filter((i) => (i.qualityScore ?? 0) >= minQ)
   }
   if ((source ?? '') !== '') {
     items = items.filter((i) => i.source === source)
@@ -355,10 +356,10 @@ export async function queryProfileItems(filter: ProfileQueryFilter): Promise<Pro
   items.sort((a, b) => {
     const av = a[sortBy] ?? 0
     const bv = b[sortBy] ?? 0
-    return sortOrder === 'desc' ? (bv as number) - (av as number) : (av as number) - (bv as number)
+    return sortOrder === 'desc' ? (bv) - (av) : (av) - (bv)
   })
 
-  return (limit ?? 0) > 0 ? items.slice(0, limit!) : items
+  return (limit ?? 0) > 0 ? items.slice(0, limit) : items
 }
 
 // ============================================================

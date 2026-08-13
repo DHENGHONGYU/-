@@ -201,8 +201,9 @@ export class QueryBuilder {
         (async (): Promise<TaskResult> => {
           try {
             const stock = await queryGet<Stock>(STORE_NAME.stocks, symbol)
-            if ((stock?.industryCode ?? '') !== '') {
-              const list = await queryListByIndex<IndustryScore>(STORE_NAME.industryScores, 'by-code', stock!.industryCode)
+            const industryCode = stock?.industryCode
+            if (stock != null && (industryCode ?? '') !== '') {
+              const list = await queryListByIndex<IndustryScore>(STORE_NAME.industryScores, 'by-code', industryCode!)
               const value = list.sort((a, b) => b.scoredAt - a.scoredAt)[0]
               return { key: 'industryScore', value }
             }

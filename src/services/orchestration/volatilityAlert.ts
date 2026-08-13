@@ -142,17 +142,20 @@ export class VolatilityAlertPush {
       quote?: { close?: number; date?: string | number }
     }
 
-    if (!p?.symbol) return
+    const symbol = p?.symbol
+    if (!symbol) return
 
     const quotes = p.quotes ?? (p.quote ? [p.quote] : [])
     if (quotes.length === 0) return
 
     const lastQuote = quotes[quotes.length - 1]
-    if (lastQuote?.close) {
+    const close = lastQuote?.close
+    if (close !== undefined && close !== 0) {
+      const date = lastQuote?.date
       this.processQuote({
-        symbol: p.symbol,
-        price: lastQuote.close,
-        timestamp: typeof lastQuote.date === 'number' ? lastQuote.date : Date.now(),
+        symbol,
+        price: close,
+        timestamp: typeof date === 'number' ? date : Date.now(),
       })
     }
   }
@@ -172,23 +175,26 @@ export class VolatilityAlertPush {
       }>
     }
 
-    if (p.quotes && p.quotes.length > 0) {
+    if (p.quotes !== undefined && p.quotes.length > 0) {
       return p.quotes
-        .filter((q) => q.symbol && q.price)
+        .filter((q): q is { symbol: string; price: number; previousClose?: number; timestamp?: number } =>
+          typeof q.symbol === 'string' && q.symbol !== '' && typeof q.price === 'number' && q.price !== 0)
         .map((q) => ({
-          symbol: q.symbol!,
-          price: q.price!,
+          symbol: q.symbol,
+          price: q.price,
           previousClose: q.previousClose,
           timestamp: q.timestamp,
         }))
     }
 
-    if (p.symbol && p.price) {
+    const sym = p.symbol
+    const pri = p.price
+    if (sym !== undefined && sym !== '' && pri !== undefined && pri !== 0) {
       return [{
-        symbol: p.symbol,
-        price: p.price,
+        symbol: sym,
+        price: pri,
         previousClose: p.previousClose,
-        timestamp: p.timestamp,
+        timestamp: p.timestamp ?? Date.now(),
       }]
     }
 
@@ -214,8 +220,9 @@ export class VolatilityAlertPush {
     }
 
     // 记录 previousClose
-    if (quote.previousClose) {
-      this.previousClose.set(quote.symbol, quote.previousClose)
+    const prevClose = quote.previousClose ?? 0
+    if (prevClose !== 0) {
+      this.previousClose.set(quote.symbol, prevClose)
     }
 
     // 判断是否需要预警
