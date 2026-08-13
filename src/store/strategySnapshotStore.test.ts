@@ -3,8 +3,7 @@
  * @covers_docs [V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-BACK-003, V9-DOC-BACK-009]
  */
 import { vi, describe, it, expect, beforeEach } from 'vitest'
-import type { Stock, V6Score, RotationSectorScore, StrategySnapshot } from '@/data/types'
-import type { StrategyGroupItem } from '@/services/trading/strategySnapshotService'
+import type { Stock, V6Score, RotationSectorScore, StrategySnapshot, StrategyGroupItem } from '@/data/types'
 
 // ============================================================
 // vi.hoisted mocks
