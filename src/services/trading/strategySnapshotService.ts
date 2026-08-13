@@ -13,6 +13,7 @@ import type {
   RotationSectorScore,
   Stock,
   StrategyGroupSnapshot,
+  StrategyGroupItem,
   StrategySnapshot,
   V6Score,
 } from '@/data/types'
@@ -20,18 +21,9 @@ import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
 
-export interface StrategyGroupItem {
-  symbol: string
-  name: string
-  composite: number
-  l3v: number
-  l1Score?: number
-  l3fScore?: number
-  l7Score?: number
-  resonance?: number
-  classification: 'core' | 'hot' | 'value'
-  reasons: string[]
-}
+// P1-12: StrategyGroupItem 已迁移到 @/data/types/types.scoreDoc.ts
+// 本文件 re-export 保持向后兼容
+export type { StrategyGroupItem } from '@/data/types'
 
 export interface ClassifyStocksInput {
   stocks: Stock[]

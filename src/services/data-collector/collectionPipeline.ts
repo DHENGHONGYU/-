@@ -15,6 +15,11 @@
 import { getLogger } from '@/lib/logger'
 import { withLogging } from '@/lib/logHelpers'
 import { eventBus } from '@/lib/eventBus'
+// P1-12 分层合规：buildDefaultSourcePriority / upgradeDimensionsToPipeline
+//  纯函数下沉到 domain/collection/pipeline.ts，此处 re-export 保持对外 API 兼容；
+//  内部 resolveQuoteChain / resolveKlineChain 仍调用本文件副本，但对外导入
+//  已统一到 domain 层入口。
+export { buildDefaultSourcePriority, upgradeDimensionsToPipeline } from '@/domain/collection/pipeline'
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, MODULE_ID, ENVELOPE_TARGET } from '@/config/dbConfig'
 import type { EnvelopeAction } from '@/config/dbConfig'
@@ -284,7 +289,9 @@ export function resolveDimensionMode(dimensionCode: string): CollectionMode {
  * @param allowMockFallback 是否注入 mock 兜底（缺省 true 保持旧行为；
  *   传 false 时映射表中的 mock 项与末尾 mock 兜底均被剔除 —— 假绿灯修复）
  */
-export function buildDefaultSourcePriority(
+// P1-12 分层合规：对外 buildDefaultSourcePriority 从 lib 层 re-export（见文件顶部）
+// 内部 resolveQuoteChain/resolveKlineChain 仍使用本地内部副本（同语义）。
+function internalBuildDefaultSourcePriority(
   dimension: DimensionPipelineConfig,
   allowMockFallback = true,
 ): SourcePriorityItem[] {
@@ -323,7 +330,7 @@ export function buildDefaultSourcePriority(
 export function resolveQuoteChain(dimension: DimensionPipelineConfig): QuoteDataSourceId[] {
   const chain = (dimension.sourcePriority?.length ?? 0) > 0
     ? dimension.sourcePriority
-    : buildDefaultSourcePriority(dimension)
+    : internalBuildDefaultSourcePriority(dimension)
   // 未配置 fallbackPolicy 时默认允许 mock（保持旧行为，见函数注释）
   const allowMock = dimension.fallbackPolicy?.allowMockFallback ?? true
   return chain
@@ -1326,15 +1333,15 @@ function emitTrace(span: CollectionTraceSpan): void {
 // ── 配置辅助 ──
 
 /**
- * 将基础 `DimensionConfig[]` 升级为 `DimensionPipelineConfig[]`，
- * 补充默认的 sourcePriority、策略等字段。
+ * @note upgradeDimensionsToPipeline 的对外 canonical 实现已在
+ *   src/lib/collection/pipeline.ts（P1-12 分层合规下沉），
+ *   文件顶部 export 自 lib，保持 API 零破坏。内部其他文件如需引用，
+ *   从 lib 层路径导入。
  */
-export function upgradeDimensionsToPipeline(
+function _unused_upgradeDimensionsLocally_(
   dimensions: DimensionPipelineConfig[],
 ): DimensionPipelineConfig[] {
   return dimensions.map((dim) => {
-    // 先解析 fallbackPolicy，再用其 allowMockFallback 决定默认链是否注入 mock（假绿灯修复）
-    // 未配置 fallbackPolicy 时默认允许 mock（保持旧行为）
     const fallbackPolicy = dim.fallbackPolicy
     const allowMock = fallbackPolicy?.allowMockFallback ?? true
     return {
@@ -1342,7 +1349,7 @@ export function upgradeDimensionsToPipeline(
       sourcePriority:
         (dim.sourcePriority?.length ?? 0) > 0
           ? dim.sourcePriority
-          : buildDefaultSourcePriority(dim, allowMock),
+          : internalBuildDefaultSourcePriority(dim, allowMock),
       concurrency: dim.concurrency,
       retryPolicy: dim.retryPolicy,
       timeoutPolicy: dim.timeoutPolicy,
@@ -1350,6 +1357,7 @@ export function upgradeDimensionsToPipeline(
     }
   })
 }
+void _unused_upgradeDimensionsLocally_
 
 /**
  * 从 `CollectionConfig` 构造一个用于 store/持久化的默认对象。

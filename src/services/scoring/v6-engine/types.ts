@@ -563,23 +563,12 @@ export type BreakoutTradeStyle =
 /**
  * ★ v4.6 新增：换手率 × 量比 能量等级（断线交易核心能量判断）
  *
- * 能量 = 换手率(小数) × 量比 。例如：3%换手×2.5量比 = 0.075。
- * 能量等级直接决定断线交易的仓位上限与止盈止损间距（交易纪律硬约束）。
+ * P1-12 分层合规迁移：类型实现已下沉到 src/domain/scoring/energy.ts，
+ * 此处 re-export 保持 API 零破坏；能量计算函数 computeTurnoverVolumeEnergy
+ * 同样从 domain/scoring/energy 经 l7_l8.ts re-export 对外暴露。
  */
-export interface TurnoverVolumeEnergy {
-  /** 原始能量值：换手率(小数) × 量比 。例如 0.03 × 2.5 = 0.075 */
-  raw: number
-  /** 能量等级：1级(冷清)~5级(爆炸) */
-  level: 1 | 2 | 3 | 4 | 5
-  /** 能量中文标签 */
-  label: '冷清能量' | '温和能量' | '活跃能量' | '激进能量' | '爆炸能量'
-  /** 建议仓位上限（%，断线交易纪律）：能量越低仓位越轻 */
-  positionCapPct: number
-  /** 建议止盈间距（%）：能量越高目标越大 */
-  takeProfitPct: number
-  /** 建议止损间距（%）：能量越高止损越宽（容错更大） */
-  stopLossPct: number
-}
+import type { TurnoverVolumeEnergy } from '@/domain/scoring/energy'
+export type { TurnoverVolumeEnergy } from '@/domain/scoring/energy'
 
 /**
  * ★ v4.7 资金流向上下文 — 用于假突破二次确认

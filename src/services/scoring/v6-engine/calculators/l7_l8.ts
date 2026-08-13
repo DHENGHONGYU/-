@@ -15,7 +15,7 @@ import type {
   TurnoverVolumeSynergyResult, TVRLevel,
   MainForceChipFlowSignal, MainForceChipFlowType, ChipFlowDirection,
   TradeSignal, TradeSignalType, MarketSession,
-  LowLiquidityInterceptMeta, BreakoutTradeStyle, TurnoverVolumeEnergy,
+  LowLiquidityInterceptMeta, BreakoutTradeStyle,
   FundFlowContext,
 } from '../types'
 import type { LayerId } from '../types'
@@ -26,6 +26,13 @@ import { V6_CALCULATOR_THRESHOLDS } from '@/config/thresholds'
 import { safeArrayGet, safeLast } from '@/lib/precision'
 import { calcChipDistribution, calcPAS, pasToScore, calcVWAP, calcBias, biasToScore, calcProfitRatio, profitToScore } from './chipDistribution'
 import type { ChipDistribution } from './chipDistribution'
+// P1-12 分层合规下沉：TurnoverVolumeEnergy + computeTurnoverVolumeEnergy
+//   原实现在本文件，为解除 domain → services 反向依赖，
+//   将纯函数落地到 domain 层，services 在此 re-export 保持 API 兼容。
+import { computeTurnoverVolumeEnergy } from '@/domain/scoring/energy'
+import type { TurnoverVolumeEnergy } from '@/domain/scoring/energy'
+export { computeTurnoverVolumeEnergy } from '@/domain/scoring/energy'
+export type { TurnoverVolumeEnergy } from '@/domain/scoring/energy'
 
 const logger = getLogger()
 
@@ -407,59 +414,9 @@ function buildChipFlowSignal(
 }
 
 /**
- * 计算换手率 × 量比 的能量等级（断线交易核心能量判断，v4.6 新增）
- *
- * 能量 = 换手率(小数) × 量比。例如 3% × 2.5 = 0.075。
- * 能量等级直接决定断线交易的仓位上限 / 止盈止损间距（交易纪律硬约束）。
- *
- * @export
- * @param turnover 20 日均换手率（小数，如 3% = 0.03）。若缺失，按 0.001 处理（极低能量）。
- * @param volumeRatio 量比（倍数，如 2.5）。若缺失，按 0.5 处理（缩量）。
- * @returns TurnoverVolumeEnergy 能量等级对象
+ * @note computeTurnoverVolumeEnergy / TurnoverVolumeEnergy 实现已下沉到
+ *   src/lib/scoring/energy.ts（P1-12 分层合规），本文件顶部 re-export 保持 API 兼容。
  */
-export function computeTurnoverVolumeEnergy(
-  turnover: number | undefined,
-  volumeRatio: number | undefined,
-): TurnoverVolumeEnergy {
-  const T = V6_CALCULATOR_THRESHOLDS
-  const t = turnover ?? 0.001
-  const v = volumeRatio ?? 0.5
-  const raw = t * v
-
-  let level: 1 | 2 | 3 | 4 | 5
-  let label: TurnoverVolumeEnergy['label']
-  let positionCapPct: number
-  let takeProfitPct: number
-  let stopLossPct: number
-
-  if (raw >= T.L8_BREAKOUT_ENERGY_TIER4) {
-    level = 5; label = '爆炸能量'
-    positionCapPct = T.L8_BREAKOUT_POS_CAP_L5
-    takeProfitPct = T.L8_BREAKOUT_TP_L5
-    stopLossPct = T.L8_BREAKOUT_SL_L5
-  } else if (raw >= T.L8_BREAKOUT_ENERGY_TIER3) {
-    level = 4; label = '激进能量'
-    positionCapPct = T.L8_BREAKOUT_POS_CAP_L4
-    takeProfitPct = T.L8_BREAKOUT_TP_L4
-    stopLossPct = T.L8_BREAKOUT_SL_L4
-  } else if (raw >= T.L8_BREAKOUT_ENERGY_TIER2) {
-    level = 3; label = '活跃能量'
-    positionCapPct = T.L8_BREAKOUT_POS_CAP_L3
-    takeProfitPct = T.L8_BREAKOUT_TP_L3
-    stopLossPct = T.L8_BREAKOUT_SL_L3
-  } else if (raw >= T.L8_BREAKOUT_ENERGY_TIER1) {
-    level = 2; label = '温和能量'
-    positionCapPct = T.L8_BREAKOUT_POS_CAP_L2
-    takeProfitPct = T.L8_BREAKOUT_TP_L2
-    stopLossPct = T.L8_BREAKOUT_SL_L2
-  } else {
-    level = 1; label = '冷清能量'
-    positionCapPct = T.L8_BREAKOUT_POS_CAP_L1
-    takeProfitPct = T.L8_BREAKOUT_TP_L1
-    stopLossPct = T.L8_BREAKOUT_SL_L1
-  }
-  return { raw: Number(raw.toFixed(4)), level, label, positionCapPct, takeProfitPct, stopLossPct }
-}
 
 /**
  * 断线交易风格分类（纯函数，v4.6 新增 / v4.7 资金流向二次确认）
@@ -647,7 +604,7 @@ export function detectMainForceChipFlow(
   // ★ v4.5.4 蓝筹豁免日志：记录被成交金额放行的股票，便于后续审计
   if (isLowLiquidity && lowLiquidityIntercept && amountBypassed) {
     logger.info(
-      `[ChipFlow] 蓝筹豁免放行: symbol=${input.stock.symbol} | 换手率=${(t * 100).toFixed(2)}% | 量比=${v.toFixed(2)} | 日成交金额=${(dailyAmount! / 1e8).toFixed(2)}亿元(>${(DAILY_TURNOVER_AMOUNT_BYPASS / 1e8).toFixed(1)}亿) → 跳过低流动性拦截，进入正常分支`,
+      `[ChipFlow] 蓝筹豁免放行: symbol=${input.stock.symbol} | 换手率=${(t * 100).toFixed(2)}% | 量比=${v.toFixed(2)} | 日成交金额=${(dailyAmount / 1e8).toFixed(2)}亿元(>${(DAILY_TURNOVER_AMOUNT_BYPASS / 1e8).toFixed(1)}亿) → 跳过低流动性拦截，进入正常分支`,
     )
   }
 
