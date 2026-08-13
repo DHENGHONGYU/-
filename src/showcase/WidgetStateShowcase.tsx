@@ -3,7 +3,7 @@ import { LayoutTemplate } from 'lucide-react'
 import { WidgetStateShell, type WidgetVisualState } from '@/cockpit/widgets/components/WidgetStateShell'
 import { Button } from '@/components/atoms/Button'
 import { cn } from '@/lib/utils'
-import { THEME_TOKENS, twText } from '@/constants/theme.tokens'
+import { THEME_TOKENS } from '@/constants/theme.tokens'
 import type { ShowcaseGroup } from './types'
 
 export function buildWidgetStateShowcase(): ShowcaseGroup {
@@ -56,7 +56,7 @@ function WidgetStateTransitionDemo(): React.JSX.Element {
         error={state === 'error' ? '网络异常，请稍后重试' : null}
         onRetry={() => setState('loading')}
       >
-        <div className={cn('text-sm', twText('stone', 700))}>
+        <div className={cn('text-sm', 'text-foreground')}>
           当前状态：<strong>{state}</strong>
         </div>
       </WidgetStateShell>
@@ -80,7 +80,7 @@ function WidgetStateGridDemo(): React.JSX.Element {
           error={s === 'error' ? '请求失败' : null}
           onRetry={() => {}}
         >
-          <span className={cn('text-sm', twText('stone', 600))}>正常内容区域</span>
+          <span className={cn('text-sm', 'text-muted-foreground')}>正常内容区域</span>
         </WidgetStateShell>
       ))}
     </div>

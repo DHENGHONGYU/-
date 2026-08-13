@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { THEME_TOKENS, twBg, twText, twBorder } from '@/constants/theme.tokens'
+import { THEME_TOKENS } from '@/constants/theme.tokens'
 import type { ShowcaseGroup } from './types'
 
 interface ShowcaseSectionProps {
@@ -17,8 +17,8 @@ export function ShowcaseSection({ group, defaultExpanded = true }: ShowcaseSecti
     <section
       className={cn(
         'rounded-xl border',
-        twBorder('gray', 200),
-        twBg('white', 0),
+        'border-border',
+        'bg-background',
         'overflow-hidden',
       )}
     >
@@ -27,20 +27,20 @@ export function ShowcaseSection({ group, defaultExpanded = true }: ShowcaseSecti
         onClick={() => setExpanded((prev) => !prev)}
         className={cn(
           'w-full flex items-center justify-between px-4 py-3',
-          twBg('gray', 50),
+          'bg-muted',
           'hover:bg-stone-100/80 transition-colors',
         )}
       >
         <div className="flex items-center gap-2">
-          <Icon className={cn('h-5 w-5', twText('emerald', 600))} />
-          <h2 className={cn('text-lg font-semibold', twText('stone', 800))}>
+          <Icon className={cn('h-5 w-5', 'text-success')} />
+          <h2 className={cn('text-lg font-semibold', 'text-foreground')}>
             {group.title}
           </h2>
         </div>
         {expanded ? (
-          <ChevronDown className={cn('h-5 w-5', twText('gray', 400))} />
+          <ChevronDown className={cn('h-5 w-5', 'text-muted-foreground/70')} />
         ) : (
-          <ChevronRight className={cn('h-5 w-5', twText('gray', 400))} />
+          <ChevronRight className={cn('h-5 w-5', 'text-muted-foreground/70')} />
         )}
       </button>
 
@@ -51,16 +51,16 @@ export function ShowcaseSection({ group, defaultExpanded = true }: ShowcaseSecti
               key={item.id}
               className={cn(
                 'rounded-lg border p-4',
-                twBorder('gray', 200),
-                twBg('white', 0),
+                'border-border',
+                'bg-background',
               )}
             >
               <div className="mb-2">
-                <h3 className={cn('text-base font-medium', twText('stone', 800))}>
+                <h3 className={cn('text-base font-medium', 'text-foreground')}>
                   {item.title}
                 </h3>
                 {item.description && (
-                  <p className={cn('text-sm mt-1', twText('gray', 500))}>
+                  <p className={cn('text-sm mt-1', 'text-muted-foreground')}>
                     {item.description}
                   </p>
                 )}
@@ -70,8 +70,8 @@ export function ShowcaseSection({ group, defaultExpanded = true }: ShowcaseSecti
                 <pre
                   className={cn(
                     'mt-4 text-xs overflow-x-auto rounded-md p-3',
-                    twBg('stone', 100),
-                    twText('stone', 700),
+                    'bg-muted',
+                    'text-foreground',
                   )}
                 >
                   <code>{item.codeSnippet}</code>

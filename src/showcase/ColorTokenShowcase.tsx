@@ -5,9 +5,6 @@ import {
   THEME_TOKENS,
   COLOR_TOKENS,
   STOCK_COLOR_TOKENS,
-  twText,
-  twBg,
-  twBorder,
 } from '@/constants/theme.tokens'
 import type { ShowcaseGroup } from './types'
 
@@ -57,12 +54,12 @@ function ThemeTokensDemo(): React.JSX.Element {
           key={t.label}
           className={cn(
             'flex items-center gap-2 px-3 py-1.5 rounded-md border',
-            twBorder('gray', 200),
-            twBg('white', 0),
+            'border-border',
+            'bg-background',
           )}
         >
           <span className={cn('h-4 w-4 rounded-full', t.className)} />
-          <span className={cn('text-sm', twText('stone', 700))}>{t.label}</span>
+          <span className={cn('text-sm', 'text-foreground')}>{t.label}</span>
         </div>
       ))}
     </div>
@@ -89,7 +86,7 @@ function ColorTokensDemo(): React.JSX.Element {
           className={cn(
             'text-sm px-3 py-1 rounded-md font-medium',
             t.className,
-            twBg('stone', 50),
+            'bg-muted',
           )}
         >
           {t.label}
@@ -116,7 +113,7 @@ function StockColorsDemo(): React.JSX.Element {
           平盘 0.00%
         </span>
       </div>
-      <div className={cn('text-sm', twText('gray', 500))}>
+      <div className={cn('text-sm', 'text-muted-foreground')}>
         推荐写法：{`<span className={STOCK_COLOR_TOKENS.up.tailwind}>+2.35%</span>`}
       </div>
     </div>

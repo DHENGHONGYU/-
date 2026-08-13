@@ -4,9 +4,6 @@ import {
   THEME_TOKENS,
   COLOR_TOKENS,
   getStockColorHex,
-  twText,
-  twBg,
-  twBorder,
 } from '@/constants/theme.tokens'
 import { Badge } from '@/components/atoms/Badge'
 import type { ShowcaseGroup } from './types'
@@ -53,19 +50,19 @@ function WatchlistRowDemo(): React.JSX.Element {
             key={stock.code}
             className={cn(
               'flex items-center justify-between rounded-md border px-3 py-2',
-              twBorder('gray', 200),
-              twBg('white', 0),
+              'border-border',
+              'bg-background',
             )}
           >
             <div className="flex items-center gap-3">
               <Icon className="h-4 w-4" style={{ color }} />
               <div>
-                <div className={cn('text-sm font-medium', twText('stone', 800))}>{stock.name}</div>
-                <div className={cn('text-xs', twText('gray', 500))}>{stock.code}</div>
+                <div className={cn('text-sm font-medium', 'text-foreground')}>{stock.name}</div>
+                <div className={cn('text-xs', 'text-muted-foreground')}>{stock.code}</div>
               </div>
             </div>
             <div className="text-right">
-              <div className={cn('text-sm font-semibold', twText('stone', 800))}>
+              <div className={cn('text-sm font-semibold', 'text-foreground')}>
                 ¥{stock.price.toFixed(2)}
               </div>
               <div className="text-sm font-medium" style={{ color }}>
@@ -103,18 +100,18 @@ function ScoreCardDemo(): React.JSX.Element {
           key={item.label}
           className={cn(
             'rounded-lg border p-3',
-            twBorder('gray', 200),
-            twBg('white', 0),
+            'border-border',
+            'bg-background',
           )}
         >
-          <div className={cn('text-xs', twText('gray', 500))}>{item.label}</div>
+          <div className={cn('text-xs', 'text-muted-foreground')}>{item.label}</div>
           <div className="flex items-center justify-between mt-1">
-            <span className={cn('text-xl font-bold', twText('stone', 800))}>{item.score}</span>
+            <span className={cn('text-xl font-bold', 'text-foreground')}>{item.score}</span>
             <Badge variant={getScoreVariant(item.score)}>
               {item.score >= 70 ? '优秀' : item.score >= 50 ? '一般' : '较弱'}
             </Badge>
           </div>
-          <div className={cn('mt-2 h-1.5 rounded-full', twBg('gray', 200))}>
+          <div className={cn('mt-2 h-1.5 rounded-full', 'bg-muted')}>
             <div
               className={cn('h-1.5 rounded-full', COLOR_TOKENS.scoreHigh.bgClass)}
               style={{ width: `${item.score}%` }}
