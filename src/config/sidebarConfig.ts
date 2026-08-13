@@ -141,7 +141,6 @@ export const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
         { key: 'reports', label: '研报复盘', path: '/output/research', icon: FileText },
         { key: 'review', label: '交易复盘', path: '/output/review', icon: BarChart3 },
         { key: 'chip-strategy', label: '筹码策略复盘', path: '/output/chip-strategy', icon: Layers },
-        { key: 'wizard', label: '复盘向导', path: '/output/wizard', icon: Sparkles },
       ],
     },
     {
