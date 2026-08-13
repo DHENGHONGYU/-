@@ -21,8 +21,8 @@ const CLI = {
 const BASELINE = Object.freeze({
   storeEntriesMin: 64,
   serviceEntriesMin: 62,
-  // 2026-08-13 校准：删除 SkeletonLegacy 废弃条目后，audit:registry 验证真实组件数为 157
-  componentEntriesMin: 157,
+  // 2026-08-13 校准：新增 CapitalAllocationPanel + DualFactorEvaluationPanel 后，组件数 157→159
+  componentEntriesMin: 159,
   componentSubRegistries: 4,
 });
 

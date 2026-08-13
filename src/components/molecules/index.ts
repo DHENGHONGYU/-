@@ -71,3 +71,19 @@ export type { DataQualityIndicatorProps } from './DataQualityIndicator'
 // P3 交互状态组件（ErrorState 与 ./ErrorState 重名，不通过桶导出，需直引 @/components/molecules/states/Error）
 export { Loading, Empty, Skeleton } from './states'
 export type { LoadingProps, EmptyProps, SkeletonProps } from './states'
+
+// 资金管理与双因子评估组件（v9 资金管理双轨框架）
+export { CapitalAllocationPanel } from './CapitalAllocationPanel'
+export type { CapitalAllocationPanelProps } from './CapitalAllocationPanel'
+
+export {
+  DualFactorEvaluationPanel,
+  evaluateDualFactor,
+  scoreToIndustryRating,
+} from './DualFactorEvaluationPanel'
+export type {
+  DualFactorEvaluationPanelProps,
+  DualFactorResult,
+  TechnicalSignal,
+  IndustryRating,
+} from './DualFactorEvaluationPanel'

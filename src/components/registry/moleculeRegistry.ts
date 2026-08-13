@@ -27,4 +27,6 @@ export const MOLECULE_REGISTRY: ComponentEntry[] = [
   { name: 'ScoreGauge', level: 'molecule', sourcePath: 'src/components/molecules/ScoreGauge.tsx', targetPath: 'src/components/molecules/ScoreGauge.tsx', status: 'active', description: '评分仪表', consumers: ['ScoreSummary', 'IntelligentScorePage'] },
   { name: 'SignalBadge', level: 'molecule', sourcePath: 'src/components/molecules/SignalBadge.tsx', targetPath: 'src/components/molecules/SignalBadge.tsx', status: 'active', description: '信号徽章', consumers: ['TradingSignalPanel', 'StrategyGroupCard'] },
   { name: 'TrendArrow', level: 'molecule', sourcePath: 'src/components/molecules/TrendArrow.tsx', targetPath: 'src/components/molecules/TrendArrow.tsx', status: 'active', description: '趋势箭头', consumers: ['MetricCard', 'StockPriceChange'] },
+  { name: 'CapitalAllocationPanel', level: 'molecule', sourcePath: 'src/components/molecules/CapitalAllocationPanel.tsx', targetPath: 'src/components/molecules/CapitalAllocationPanel.tsx', status: 'active', description: '资金管理双轨面板（30/70 分仓 + KPI 考核 + 大跌应对纪律）', consumers: ['PortfolioPage'] },
+  { name: 'DualFactorEvaluationPanel', level: 'molecule', sourcePath: 'src/components/molecules/DualFactorEvaluationPanel.tsx', targetPath: 'src/components/molecules/DualFactorEvaluationPanel.tsx', status: 'active', description: '双因子评估面板（技术信号 × 行业景气度共振）', consumers: ['PortfolioPage'] },
 ]
