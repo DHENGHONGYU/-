@@ -38,7 +38,6 @@ import {
   HeartPulse,
   SlidersHorizontal,
   Gem,
-  Wallet,
   Radar,
   Layers,
   type LucideIcon,
@@ -121,7 +120,6 @@ export const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
       group: '交易执行',
       items: [
         { key: 'portfolio', label: '投资组合', path: '/trading/portfolio', icon: TrendingUp },
-        { key: 'holdings', label: '持仓管理', path: '/trading/holdings', icon: Wallet },
         { key: 'execution-plans', label: '执行计划', path: '/trading/execution-plans', icon: ListTodo },
         { key: 'risk', label: '风险控制', path: '/trading/risk', icon: Scale },
       ],
