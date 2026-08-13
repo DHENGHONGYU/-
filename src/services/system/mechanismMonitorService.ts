@@ -105,7 +105,7 @@ const RAW_SOURCES = import.meta.glob(
     '../../../src/lib/eventBus.ts',
     '../../../src/lib/logger.ts',
     '../../../src/**/security-policy.ts',
-    '../../../../../../docs/00-meta/doc-trigger-action-map.md',
+    '../../../../../../docs/meta/doc-trigger-action-map.md',
     '../../../.github/workflows/*.yml',
   ],
   { query: '?raw', import: 'default', eager: true },
