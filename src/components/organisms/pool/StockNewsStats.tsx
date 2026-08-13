@@ -15,7 +15,6 @@ import {
   type StockNewsStats as StatsType,
   type NewsTimeWindow,
 } from '@/services/pool/newsStatsService'
-import { twText, twBg, twBorder, DARK } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
 
 export interface StockNewsStatsProps {
@@ -67,15 +66,15 @@ export function StockNewsStats({
 
   if (loading) {
     return (
-      <div className={cn('flex items-center gap-1 text-xs', twText('stone', 400))}>
-        <div className={cn('h-3 w-3 animate-spin rounded-full border', twBorder('stone', 300), 'border-t-emerald-500')} />
+      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+        <div className="h-3 w-3 animate-spin rounded-full border border-border border-t-primary" />
         <span>加载中</span>
       </div>
     )
   }
 
   if (!stats || stats.all.total === 0) {
-    return <span className={cn('text-xs', twText('stone', 400))}>暂无资讯</span>
+    return <span className="text-xs text-muted-foreground">暂无资讯</span>
   }
 
   const currentStats = getStatsForWindow(stats, activeWindow)
@@ -91,8 +90,8 @@ export function StockNewsStats({
               className={cn(
                 'rounded px-1.5 py-0.5 text-[10px] transition-colors',
                 w === activeWindow
-                  ? [twBg('emerald', 100), twText('emerald', 700), 'font-medium']
-                  : [twText('stone', 400), 'hover:' + twBg('stone', 100)],
+                  ? 'bg-primary/15 text-primary font-medium'
+                  : 'text-muted-foreground hover:bg-muted',
               )}
             >
               {WINDOW_LABELS[w]}
@@ -100,12 +99,12 @@ export function StockNewsStats({
           ))}
         </div>
         <div className="flex items-center gap-2 text-xs">
-          <span className={twText('stone', 600)}>
-            共 <strong className={twText('stone', 800)}>{currentStats.total}</strong> 条
+          <span className="text-muted-foreground">
+            共 <strong className="text-foreground">{currentStats.total}</strong> 条
           </span>
           {currentStats.highQuality > 0 && (
-            <span className={twText('emerald', 600)}>
-              高质量 <strong className={twText('emerald', 700)}>{currentStats.highQuality}</strong>
+            <span className="text-success">
+              高质量 <strong className="text-success">{currentStats.highQuality}</strong>
             </span>
           )}
         </div>
@@ -123,35 +122,35 @@ export function StockNewsStats({
             className={cn(
               'rounded-md px-2 py-1 text-xs transition-colors',
               w === activeWindow
-                ? [twBg('emerald', 100), twText('emerald', 700), 'font-medium', DARK.bgNeutral700, DARK.textEmerald400]
-                : [twText('stone', 500), 'hover:' + twBg('stone', 100), DARK.textNeutral400, DARK.hoverBgNeutral900Half],
+                ? 'bg-primary/15 text-primary font-medium'
+                : 'text-muted-foreground hover:bg-muted',
             )}
           >
             {WINDOW_LABELS[w]}
             {w !== 'all' && (
-              <span className={cn('ml-1 text-[10px]', twText('stone', 400))}>
+              <span className="ml-1 text-[10px] text-muted-foreground">
                 {getStatsForWindow(stats, w).total}
               </span>
             )}
           </button>
         ))}
       </div>
-      <div className={cn('flex items-center gap-4 rounded-md border px-3 py-2', twBorder('stone', 200), twBg('stone', 50), DARK.borderNeutral700, DARK.bgNeutral900)}>
+      <div className="flex items-center gap-4 rounded-md border border-border bg-surface-2 px-3 py-2">
         <div className="text-center">
-          <p className={cn('text-lg font-bold', twText('stone', 800), DARK.textNeutral100)}>{currentStats.total}</p>
-          <p className={cn('text-[10px]', twText('stone', 500))}>总条数</p>
+          <p className="text-lg font-bold text-foreground">{currentStats.total}</p>
+          <p className="text-[10px] text-muted-foreground">总条数</p>
         </div>
-        <div className={cn('h-8 w-px', twBg('stone', 200), DARK.bgNeutral700)} />
+        <div className="h-8 w-px bg-border" />
         <div className="text-center">
-          <p className={cn('text-lg font-bold', twText('emerald', 600), DARK.textEmerald400)}>{currentStats.highQuality}</p>
-          <p className={cn('text-[10px]', twText('stone', 500))}>高质量</p>
+          <p className="text-lg font-bold text-success">{currentStats.highQuality}</p>
+          <p className="text-[10px] text-muted-foreground">高质量</p>
         </div>
-        <div className={cn('h-8 w-px', twBg('stone', 200), DARK.bgNeutral700)} />
+        <div className="h-8 w-px bg-border" />
         <div className="text-center">
-          <p className={cn('text-lg font-bold', twText('amber', 600), DARK.textAmber300)}>
+          <p className="text-lg font-bold text-warning">
             {currentStats.total > 0 ? Math.round((currentStats.highQuality / currentStats.total) * 100) : 0}%
           </p>
-          <p className={cn('text-[10px]', twText('stone', 500))}>高质量占比</p>
+          <p className="text-[10px] text-muted-foreground">高质量占比</p>
         </div>
       </div>
     </div>

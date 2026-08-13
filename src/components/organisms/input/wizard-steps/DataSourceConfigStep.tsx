@@ -15,10 +15,6 @@ import { Button } from '@/components/atoms/Button'
 import { Input } from '@/components/atoms/Input'
 import {
   COLOR_TOKENS,
-  twText,
-  twBg,
-  twBorder,
-  FOCUS,
 } from '@/constants/theme.tokens'
 import {
   FolderOpen,
@@ -65,12 +61,12 @@ const PRIORITY_LABELS: Record<string, string> = {
 
 /** 优先级颜色映射 */
 const PRIORITY_COLORS: Record<string, { text: string; bg: string }> = {
-  high: { text: twText('red', 600), bg: twBg('red', 50) },
-  medium: { text: twText('amber', 600), bg: twBg('amber', 50) },
-  low: { text: twText('green', 600), bg: twBg('green', 50) },
+  high: { text: 'text-destructive', bg: 'bg-destructive/10' },
+  medium: { text: 'text-warning', bg: 'bg-warning/10' },
+  low: { text: 'text-success', bg: 'bg-success/10' },
 }
 
-const DEFAULT_PRIORITY_STYLE = { text: twText('amber', 600), bg: twBg('amber', 50) }
+const DEFAULT_PRIORITY_STYLE = { text: 'text-warning', bg: 'bg-warning/10' }
 
 /**
  * 格式化相对时间
@@ -174,8 +170,8 @@ function ConfigTemplateCard({
       className={cn(
         'transition-all duration-200',
         isLoaded
-          ? cn('ring-2', twBorder('emerald', 500))
-          : cn('hover:shadow-sm', twBorder('gray', 200)),
+          ? cn('ring-2 ring-primary')
+          : cn('hover:shadow-elevation-1 border-border'),
       )}
     >
       <CardContent className="p-3">
@@ -198,7 +194,7 @@ function ConfigTemplateCard({
                   onClick={handleConfirmRename}
                   className="h-7 w-7 p-0"
                 >
-                  <Check className={cn('h-3.5 w-3.5', twText('emerald', 600))} />
+                  <Check className={cn('h-3.5 w-3.5', 'text-success')} />
                 </Button>
                 <Button
                   variant="ghost"
@@ -216,8 +212,8 @@ function ConfigTemplateCard({
                   <span
                     className={cn(
                       'ml-2 text-xs px-1.5 py-0.5 rounded',
-                      twBg('emerald', 50),
-                      twText('emerald', 700),
+                      'bg-success/10',
+                      'text-success',
                     )}
                   >
                     已加载
@@ -234,8 +230,8 @@ function ConfigTemplateCard({
                   key={name}
                   className={cn(
                     'text-xs px-1.5 py-0.5 rounded',
-                    twBg('blue', 50),
-                    twText('blue', 700),
+                    'bg-info/10',
+                    'text-info',
                   )}
                 >
                   {name}
@@ -305,7 +301,7 @@ function ConfigTemplateCard({
               onClick={handleDeleteClick}
               className={cn(
                 'h-7 w-7 p-0',
-                showConfirmDelete ? twText('red', 600) : COLOR_TOKENS.textMuted.tailwind,
+                showConfirmDelete ? 'text-destructive' : COLOR_TOKENS.textMuted.tailwind,
               )}
               title={showConfirmDelete ? '再次点击确认删除' : '删除'}
             >
@@ -319,8 +315,8 @@ function ConfigTemplateCard({
           <div
             className={cn(
               'mt-2 text-xs px-2 py-1 rounded',
-              twBg('red', 50),
-              twText('red', 600),
+              'bg-destructive/10',
+              'text-destructive',
             )}
           >
             再次点击删除按钮确认删除此配置
@@ -455,8 +451,8 @@ export function DataSourceConfigStep(): React.JSX.Element {
               <span
                 className={cn(
                   'text-xs px-1.5 py-0.5 rounded-full',
-                  twBg('gray', 100),
-                  twText('gray', 600),
+                  'bg-muted',
+                  'text-muted-foreground',
                 )}
               >
                 {savedConfigs.length}
@@ -465,8 +461,8 @@ export function DataSourceConfigStep(): React.JSX.Element {
             
             <label className={cn(
               'flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-md cursor-pointer',
-              twBg('blue', 50),
-              twText('blue', 600),
+              'bg-info/10',
+              'text-info',
               'hover:opacity-80 transition-opacity',
             )}>
               <Upload className="h-3.5 w-3.5" />
@@ -502,12 +498,11 @@ export function DataSourceConfigStep(): React.JSX.Element {
                     value={selectedFilterDimension}
                     onChange={(e) => setSelectedFilterDimension(e.target.value)}
                     className={cn(
-                      'h-8 px-2 text-xs rounded-md border',
-                      twBorder('gray', 200),
+                      'h-8 px-2 text-xs rounded-md border border-border bg-background',
                       COLOR_TOKENS.textPrimary.tailwind,
-                      'bg-white focus:outline-none focus:ring-2',
-                      FOCUS.ringEmerald400_30,
-                      FOCUS.borderEmerald400,
+                      'focus:outline-none focus:ring-2',
+                      'focus:ring-primary/30',
+                      'focus:border-primary',
                     )}
                   >
                     <option value="">全部维度</option>
@@ -522,12 +517,11 @@ export function DataSourceConfigStep(): React.JSX.Element {
                     value={selectedFilterFrequency}
                     onChange={(e) => setSelectedFilterFrequency(e.target.value)}
                     className={cn(
-                      'h-8 px-2 text-xs rounded-md border',
-                      twBorder('gray', 200),
+                      'h-8 px-2 text-xs rounded-md border border-border bg-background',
                       COLOR_TOKENS.textPrimary.tailwind,
-                      'bg-white focus:outline-none focus:ring-2',
-                      FOCUS.ringEmerald400_30,
-                      FOCUS.borderEmerald400,
+                      'focus:outline-none focus:ring-2',
+                      'focus:ring-primary/30',
+                      'focus:border-primary',
                     )}
                   >
                     <option value="">全部频率</option>
@@ -554,8 +548,8 @@ export function DataSourceConfigStep(): React.JSX.Element {
               {importSuccess && (
                 <div className={cn(
                   'text-center py-2 text-sm rounded-md',
-                  twBg('green', 50),
-                  twText('green', 600),
+                  'bg-success/10',
+                  'text-success',
                 )}>
                   {importSuccess}
                 </div>
@@ -563,8 +557,8 @@ export function DataSourceConfigStep(): React.JSX.Element {
               {importError && (
                 <div className={cn(
                   'text-center py-2 text-sm rounded-md',
-                  twBg('red', 50),
-                  twText('red', 600),
+                  'bg-destructive/10',
+                  'text-destructive',
                 )}>
                   {importError}
                 </div>
@@ -611,8 +605,8 @@ export function DataSourceConfigStep(): React.JSX.Element {
                 className={cn(
                   'transition-all duration-150 cursor-pointer',
                   checked
-                    ? cn('ring-2', twBorder('emerald', 500))
-                    : cn('hover:shadow-sm', twBorder('gray', 200)),
+                    ? cn('ring-2 ring-primary')
+                    : cn('hover:shadow-elevation-1 border-border'),
                 )}
                 onClick={() => toggleDimension(dim.code, !checked)}
               >

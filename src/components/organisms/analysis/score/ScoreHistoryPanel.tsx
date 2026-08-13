@@ -5,7 +5,6 @@
  */
 
 import { useEffect } from 'react'
-import { twText } from '@/constants/theme.tokens'
 import { LoadingState } from '@/components/molecules/LoadingState'
 import { EmptyState } from '@/components/molecules/EmptyState'
 import { ErrorState } from '@/components/molecules/ErrorState'
@@ -55,7 +54,7 @@ export function ScoreHistoryPanel({ symbol }: ScoreHistoryPanelProps) {
       {historyDiff && (
         <div className="rounded border p-3">
           <div className="font-medium">综合分变化</div>
-          <div className={historyDiff.compositeDelta >= 0 ? twText('green', 600) : twText('red', 600)}>
+          <div className={historyDiff.compositeDelta >= 0 ? 'text-success' : 'text-destructive'}>
             {historyDiff.compositeDelta >= 0 ? '+' : ''}
             {historyDiff.compositeDelta.toFixed(2)}
           </div>

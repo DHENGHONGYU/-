@@ -1,6 +1,6 @@
 import React from 'react'
 import { Badge } from '@/components/atoms/Badge'
-import { twText, COLOR_SHADES } from '@/constants/theme.tokens'
+import { COLOR_SHADES } from '@/constants/theme.tokens'
 import type { StockDataQuality } from '@/data/types'
 
 export interface QualityIndicatorProps {
@@ -27,7 +27,7 @@ export function QualityIndicator({ quality, size = 'xs' }: QualityIndicatorProps
         ok ? (
           <Badge
             key={key}
-            className={`${sizeClass} ${twText('green', 400)}`}
+            className={`${sizeClass} text-success`}
             style={{ backgroundColor: `${COLOR_SHADES.green.hex[500]}33` }}
             title={`${label}数据已采集`}
           >

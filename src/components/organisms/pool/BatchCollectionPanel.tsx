@@ -1,5 +1,4 @@
 import React from 'react'
-import { twText, twBg, twBorder, DARK } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
 import type { CollectionProgress as ProgressType } from '@/services/pool/collectionProgressService'
 
@@ -54,56 +53,56 @@ export function BatchCollectionPanel({
     <div className={cn(
       'rounded-lg border-2 p-4',
       isBroken
-        ? cn(twBorder('red', 300), twBg('red', '50/60'), DARK.borderRed800, DARK.bgRed950_20)
-        : cn(twBorder('emerald', 200), twBg('emerald', '50/50'), DARK.borderEmerald800, DARK.bgEmerald950_20),
+        ? 'border-destructive/40 bg-destructive/5'
+        : 'border-success/30 bg-success/5',
     )}>
       {/* Progress Bar */}
       <div className="flex items-center gap-3">
         {isBroken ? (
-          <span className={cn('text-sm', twText('red', 600))}>⚠</span>
+          <span className="text-sm text-destructive">⚠</span>
         ) : (
-          <div className={cn('h-3 w-3 animate-spin rounded-full border-2', twBorder('emerald', 300), 'border-t-emerald-600')} />
+          <div className="h-3 w-3 animate-spin rounded-full border-2 border-success/40 border-t-success" />
         )}
-        <span className={cn('text-sm font-medium', isBroken ? twText('red', 700) : twText('emerald', 700), isBroken ? DARK.textRed300 : DARK.textEmerald300)}>
+        <span className={cn('text-sm font-medium', isBroken ? 'text-destructive' : 'text-success')}>
           {isBroken ? '采集断连，已停止进度更新' : '批量采集进行中'}
         </span>
-        <div className={cn('flex-1 h-3 overflow-hidden rounded-full', isBroken ? twBg('red', 100) : twBg('emerald', 100), isBroken ? DARK.bgRed950_50 : DARK.bgEmerald950_50)}>
+        <div className={cn('flex-1 h-3 overflow-hidden rounded-full', isBroken ? 'bg-destructive/15' : 'bg-success/15')}>
           <div
-            className={cn('h-full rounded-full transition-all duration-700 ease-out', isBroken ? twBg('red', 400) : twBg('emerald', 500))}
+            className={cn('h-full rounded-full transition-all duration-700 ease-out', isBroken ? 'bg-destructive/60' : 'bg-success')}
             style={{ width: `${overallPercent}%` }}
           />
         </div>
-        <span className={cn('text-lg font-bold tabular-nums', isBroken ? twText('red', 700) : twText('emerald', 700), isBroken ? DARK.textRed300 : DARK.textEmerald300)}>
+        <span className={cn('text-lg font-bold tabular-nums', isBroken ? 'text-destructive' : 'text-success')}>
           {overallPercent}%
         </span>
       </div>
-      <p className={cn('mt-1 text-xs', twText('stone', 500))}>
+      <p className="mt-1 text-xs text-muted-foreground">
         已完成 {totalCompleted} / {totalDims} 个维度 · 共 {symbols.length} 只标的
       </p>
-      
+
       {refreshError && (
-        <div className={cn('mt-2 rounded-md border px-2 py-1.5 text-[11px]', twBorder('red', 200), DARK.borderRed900, DARK.bgNeutral900_60, twText('red', 700), DARK.textRed300)}>
+        <div className="mt-2 rounded-md border border-destructive/30 bg-muted/60 px-2 py-1.5 text-[11px] text-destructive">
           <span className="font-medium">断连原因：</span>
           <span className="font-mono break-all">{refreshError}</span>
         </div>
       )}
 
-      <div className={cn('mt-3 space-y-1.5 rounded-md border p-3', twBorder('emerald', 100), DARK.bgNeutral900Half, DARK.borderEmerald900)}>
+      <div className="mt-3 space-y-1.5 rounded-md border border-success/20 bg-surface-2/50 p-3">
         {details.map((d) => (
           <div key={d.symbol} className="flex items-center gap-2 text-xs">
-            <span className={cn('w-24 shrink-0 truncate font-mono', twText('stone', 600), DARK.textNeutral300)} title={d.name}>
+            <span className="w-24 shrink-0 truncate font-mono text-muted-foreground" title={d.name}>
               {d.symbol}
             </span>
-            <span className={cn('w-16 shrink-0 truncate', twText('stone', 500))} title={d.name}>
+            <span className="w-16 shrink-0 truncate text-muted-foreground" title={d.name}>
               {d.name}
             </span>
             <div className="flex flex-1 items-center gap-1">
               {d.dimStatuses.map((dim, i) => {
                 const dotClass =
-                  dim.status === 'success' ? twBg('emerald', 500) :
-                  dim.status === 'partial' ? twBg('amber', 500) :
-                  dim.status === 'fail' ? twBg('red', 500) :
-                  cn(twBg('stone', 300), DARK.bgNeutral600)
+                  dim.status === 'success' ? 'bg-success' :
+                  dim.status === 'partial' ? 'bg-warning' :
+                  dim.status === 'fail' ? 'bg-destructive' :
+                  'bg-muted-foreground/40'
                 return (
                   <div
                     key={i}
@@ -113,14 +112,14 @@ export function BatchCollectionPanel({
                 )
               })}
             </div>
-            <div className={cn('flex items-center gap-1.5', 'w-20 shrink-0 justify-end')}>
-              <div className={cn('h-1.5 w-12 overflow-hidden rounded-full', twBg('stone', 200), DARK.bgNeutral700)}>
+            <div className="flex items-center gap-1.5 w-20 shrink-0 justify-end">
+              <div className="h-1.5 w-12 overflow-hidden rounded-full bg-muted">
                 <div
-                  className={cn('h-full rounded-full transition-all duration-500', twBg('emerald', 500))}
+                  className="h-full rounded-full bg-success transition-all duration-500"
                   style={{ width: `${d.percent}%` }}
                 />
               </div>
-              <span className={cn('tabular-nums', twText('stone', 600), DARK.textNeutral300)}>
+              <span className="tabular-nums text-muted-foreground">
                 {d.completedDims}/{d.totalDims}
               </span>
             </div>

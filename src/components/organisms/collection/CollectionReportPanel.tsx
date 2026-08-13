@@ -9,7 +9,7 @@ import React from 'react'
 import { Badge } from '@/components/atoms/Badge'
 import { Progress } from '@/components/atoms/Progress'
 import type { CollectionReportItem } from '@/services/data-collector/collectionReportService'
-import { COLOR_TOKENS, COLOR_SHADES, twText } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
 
 export interface CollectionReportPanelProps {
   items: CollectionReportItem[]
@@ -60,7 +60,7 @@ export function CollectionReportPanel({ items }: CollectionReportPanelProps): Re
               </span>
               <span className={COLOR_SHADES.gray[500]}>
                 {item.failures.length > 0 ? (
-                  <span className={twText('red', 500)}>{item.failures.length} 次失败</span>
+                  <span className="text-destructive">{item.failures.length} 次失败</span>
                 ) : (
                   <span className={COLOR_TOKENS.success.tailwind}>无失败</span>
                 )}

@@ -6,7 +6,6 @@
  * 每 5 秒自动刷新一次，供用户在设置页 / 开发调试时查看。
  */
 import { useEffect, useState } from 'react'
-import { twBg, twText } from '@/constants/theme.tokens'
 import { getOrchestratorHealth, type OrchestratorHealth } from '@/services/orchestration'
 import { cn } from '@/lib/utils'
 
@@ -44,7 +43,7 @@ export function OrchestratorStatusPanel({
           运行中: {runningCount}/{totalCount}
         </span>
         {failedCount > 0 && (
-          <span className={cn('rounded px-2 py-0.5 text-xs', twBg('red', 100), twText('red', 700))}>
+          <span className={cn('rounded px-2 py-0.5 text-xs', 'bg-destructive/10', 'text-destructive')}>
             {failedCount} 个异常
           </span>
         )}
@@ -66,10 +65,10 @@ export function OrchestratorStatusPanel({
 
 function StatusBadge({ status, errorMessage }: { status: string; errorMessage: string | null }) {
   const variants: Record<string, string> = {
-    running: cn(twBg('green', 100), twText('green', 700)),
-    failed: cn(twBg('red', 100), twText('red', 700)),
-    starting: cn(twBg('yellow', 100), twText('yellow', 700)),
-    idle: cn(twBg('gray', 100), twText('gray', 500)),
+    running: 'bg-success/10 text-success',
+    failed: 'bg-destructive/10 text-destructive',
+    starting: 'bg-warning/10 text-warning',
+    idle: 'bg-muted text-muted-foreground',
   }
   return (
     <span

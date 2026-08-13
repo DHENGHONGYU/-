@@ -14,7 +14,7 @@ import {
 } from 'lucide-react'
 import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
-import { STOCK_COLOR_TOKENS, COLOR_SHADES, twText, twBg } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
 import type { Signal, SignalSnapshot } from '@/data/types/types.signal'
 
 const logger = getLogger()
@@ -110,7 +110,7 @@ function ChipStrip({ signal }: { signal: Signal }): React.JSX.Element {
         <span className="text-muted-foreground ml-2">获利盘</span>
         <span className="font-semibold">{data.profitRatio}%</span>
       </div>
-      <div className={`h-2 rounded-full ${twBg('slate', 100)} overflow-hidden flex`}>
+      <div className="h-2 rounded-full bg-muted overflow-hidden flex">
         <div className="h-full transition-all" style={{ width: `${data.concentration}%`, backgroundColor: STOCK_COLOR_TOKENS.up.hex }} />
         <div className="h-full transition-all" style={{ width: `${100 - data.concentration}%`, backgroundColor: STOCK_COLOR_TOKENS.down.hex, opacity: 0.4 }} />
       </div>
@@ -147,7 +147,7 @@ function StrategyMatch({ signal }: { signal: Signal }): React.JSX.Element {
         const ok = item.score >= item.threshold
         return (
           <div key={item.label} className="flex items-center gap-1.5 text-xs">
-            {ok ? <CheckCircle2 className={`h-3.5 w-3.5 ${twText('emerald', 500)} shrink-0`} /> : <XCircle className={`h-3.5 w-3.5 ${twText('slate', 300)} shrink-0`} />}
+            {ok ? <CheckCircle2 className="h-3.5 w-3.5 text-success shrink-0" /> : <XCircle className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0" />}
             <span className="text-muted-foreground w-16">{item.label}</span>
             <span className="font-semibold w-8 text-right">{item.score}</span>
           </div>
@@ -188,7 +188,7 @@ function VolumeMetricsTable({ signal }: { signal: Signal }): React.JSX.Element {
         const has = row.value != null && !Number.isNaN(row.value)
         const Icon = row.icon
         return (
-          <div key={row.label} className={`rounded-md border ${twBg('slate', 50)}/50 px-2 py-1.5 text-center`}>
+          <div key={row.label} className="rounded-md border bg-muted/50 px-2 py-1.5 text-center">
             <div className="flex items-center justify-center gap-1 text-[10px] text-muted-foreground">
               <Icon className="h-3 w-3" />
               {row.label}
@@ -217,7 +217,7 @@ function SignalCard({
   const conf = signal.confidence <= 1 ? Math.round(signal.confidence * 100) : Math.round(signal.confidence)
 
   return (
-    <Card className="overflow-hidden transition-all duration-200 hover:shadow-md hover:-translate-y-0.5" style={{ borderLeft: `4px solid ${borderColor}` }}>
+    <Card className="overflow-hidden transition-all duration-200 hover:shadow-elevation-2 hover:-translate-y-0.5" style={{ borderLeft: `4px solid ${borderColor}` }}>
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
@@ -260,7 +260,7 @@ function SignalCard({
           <VolumeMetricsTable signal={signal} />
         </div>
         {conf < 70 && (
-          <div className={`mt-3 flex items-start gap-1.5 rounded-md ${twBg('amber', 50)} px-2 py-1.5 text-[11px] ${twText('amber', 700)}`}>
+          <div className="mt-3 flex items-start gap-1.5 rounded-md bg-warning/10 px-2 py-1.5 text-[11px] text-warning">
             <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
             <span>置信度偏低，建议进一步核验基本面与筹码结构后再操作</span>
           </div>

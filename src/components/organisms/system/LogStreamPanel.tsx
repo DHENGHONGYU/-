@@ -26,7 +26,7 @@ import {
   type MonitorLogSource,
 } from '@/services/system/monitorLogService'
 import { useSystemMonitorStore } from '@/store/systemMonitorStore'
-import { COLOR_TOKENS, twText, twBg } from '@/constants/theme.tokens'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { MONITOR_INTERVALS } from '@/constants/health.constants'
 import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
@@ -85,18 +85,18 @@ const LEVEL_DISPLAY: Record<
   MonitorLogLevel,
   { label: string; color: string; bgClass: string }
 > = {
-  info: { label: '信息', color: COLOR_TOKENS.info.hex, bgClass: `${twBg('blue', 100)} ${twText('blue', 700)}` },
-  warn: { label: '警告', color: COLOR_TOKENS.warning.hex, bgClass: `${twBg('amber', 100)} ${twText('amber', 700)}` },
-  error: { label: '错误', color: COLOR_TOKENS.danger.hex, bgClass: `${twBg('red', 100)} ${twText('red', 700)}` },
-  critical: { label: '严重', color: COLOR_TOKENS.danger.hex, bgClass: `${twBg('red', 200)} ${twText('red', 800)} font-bold` },
+  info: { label: '信息', color: COLOR_TOKENS.info.hex, bgClass: 'bg-info/10 text-info' },
+  warn: { label: '警告', color: COLOR_TOKENS.warning.hex, bgClass: 'bg-warning/10 text-warning' },
+  error: { label: '错误', color: COLOR_TOKENS.danger.hex, bgClass: 'bg-destructive/10 text-destructive' },
+  critical: { label: '严重', color: COLOR_TOKENS.danger.hex, bgClass: 'bg-destructive/20 text-destructive font-bold' },
 }
 
 /** 日志来源显示映射 */
 const SOURCE_DISPLAY: Record<MonitorLogSource, { label: string; bgClass: string }> = {
-  engine: { label: '引擎', bgClass: `${twBg('indigo', 100)} ${twText('indigo', 700)}` },
-  agent: { label: '智能体', bgClass: `${twBg('purple', 100)} ${twText('purple', 700)}` },
-  system: { label: '系统', bgClass: `${twBg('teal', 100)} ${twText('teal', 700)}` },
-  dataflow: { label: '数据流', bgClass: `${twBg('cyan', 100)} ${twText('cyan', 700)}` },
+  engine: { label: '引擎', bgClass: 'bg-info/10 text-info' },
+  agent: { label: '智能体', bgClass: 'bg-info/10 text-info' },
+  system: { label: '系统', bgClass: 'bg-success/10 text-success' },
+  dataflow: { label: '数据流', bgClass: 'bg-info/10 text-info' },
 }
 
 const logger = getLogger()
@@ -258,7 +258,7 @@ function LogStreamPanelBase({
       <CardContent>
         <div
           ref={logContainerRef}
-          className={`overflow-y-auto rounded-md border border-border ${twBg('slate', 50)}/50 p-2`}
+          className="overflow-y-auto rounded-md border border-border bg-muted/50 p-2"
           style={{ maxHeight: `${MAX_HEIGHT_PX}px` }}
         >
           {monitorLogs.length === 0 ? (
@@ -294,7 +294,7 @@ function LogStreamPanelBase({
                     >
                       {sourceMeta.label}
                     </Badge>
-                    <span className={`break-all ${twText('slate', 700)}`}>{entry.message}</span>
+                    <span className="break-all text-card-foreground">{entry.message}</span>
                   </div>
                 )
               })}

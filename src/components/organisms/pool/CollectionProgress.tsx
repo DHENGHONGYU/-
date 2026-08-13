@@ -15,7 +15,6 @@ import {
   type CollectionProgress as ProgressType,
   type DimensionProgress,
 } from '@/services/pool/collectionProgressService'
-import { twText, twBg, twBorder, DARK } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
 import { eventBus } from '@/lib/eventBus'
 import { COLLECTION_EVENTS } from '@/types/modules/collection.types'
@@ -28,18 +27,20 @@ export interface CollectionProgressProps {
 
 type DimStatus = 'success' | 'partial' | 'fail' | 'none'
 
-const STATUS_CONFIG: { [K in DimStatus]: { label: string; color: string; darkColor: string; dot: string } } = {
-  success: { label: '已完成', color: twText('emerald', 600), darkColor: DARK.textEmerald400, dot: twBg('emerald', 500) },
-  partial: { label: '部分', color: twText('amber', 600), darkColor: DARK.textAmber300, dot: twBg('amber', 500) },
-  fail: { label: '失败', color: twText('red', 600), darkColor: DARK.textRed400, dot: twBg('red', 500) },
-  none: { label: '未采集', color: twText('stone', 400), darkColor: DARK.textNeutral500, dot: twBg('stone', 300) },
+/** 维度状态语义色 — 全部使用 CSS 变量，主题感知 */
+const STATUS_CONFIG: { [K in DimStatus]: { label: string; color: string; dot: string } } = {
+  success: { label: '已完成', color: 'text-success', dot: 'bg-success' },
+  partial: { label: '部分', color: 'text-warning', dot: 'bg-warning' },
+  fail: { label: '失败', color: 'text-destructive', dot: 'bg-destructive' },
+  none: { label: '未采集', color: 'text-muted-foreground', dot: 'bg-muted-foreground/40' },
 }
 
-const RATING_CONFIG: { [K in ProgressType['qualityRating']]: { label: string; color: string; bg: string; darkBg: string } } = {
-  excellent: { label: '优秀', color: twText('emerald', 700), bg: twBg('emerald', 50), darkBg: DARK.bgEmerald950_30 },
-  good: { label: '良好', color: twText('blue', 700), bg: twBg('blue', 50), darkBg: DARK.bgBlue950_30 },
-  fair: { label: '一般', color: twText('amber', 700), bg: twBg('amber', 50), darkBg: DARK.bgAmber950_30 },
-  poor: { label: '较差', color: twText('red', 700), bg: twBg('red', 50), darkBg: DARK.bgRed950_30 },
+/** 质量评级语义色 */
+const RATING_CONFIG: { [K in ProgressType['qualityRating']]: { label: string; color: string; bg: string } } = {
+  excellent: { label: '优秀', color: 'text-success', bg: 'bg-success/10' },
+  good: { label: '良好', color: 'text-info', bg: 'bg-info/10' },
+  fair: { label: '一般', color: 'text-warning', bg: 'bg-warning/10' },
+  poor: { label: '较差', color: 'text-destructive', bg: 'bg-destructive/10' },
 }
 
 function formatTime(ts?: number): string {
@@ -51,13 +52,13 @@ function formatTime(ts?: number): string {
 
 function ProgressBar({ percent, rating, isHistorical }: { percent: number; rating: string; isHistorical: boolean }): React.JSX.Element {
   const barColor =
-    rating === 'excellent' ? (isHistorical ? twBg('emerald', 400) : twBg('emerald', 500)) :
-    rating === 'good' ? (isHistorical ? twBg('blue', 400) : twBg('blue', 500)) :
-    rating === 'fair' ? (isHistorical ? twBg('amber', 400) : twBg('amber', 500)) :
-    (isHistorical ? twBg('red', 300) : twBg('red', 400))
+    rating === 'excellent' ? (isHistorical ? 'bg-success/70' : 'bg-success') :
+    rating === 'good' ? (isHistorical ? 'bg-info/70' : 'bg-info') :
+    rating === 'fair' ? (isHistorical ? 'bg-warning/70' : 'bg-warning') :
+    (isHistorical ? 'bg-destructive/60' : 'bg-destructive/80')
 
   return (
-    <div className={cn('h-2 w-full overflow-hidden rounded-full', twBg('stone', 200), DARK.bgNeutral700)}>
+    <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
       <div
         className={cn('h-full rounded-full transition-all duration-500', barColor)}
         style={{ width: `${percent}%` }}
@@ -72,7 +73,7 @@ function DimensionDot({ dim }: { dim: DimensionProgress }): React.JSX.Element {
   return (
     <div className="flex items-center gap-1" title={`${dim.name}：${cfg.label}${dim.durationMs ? ` (${dim.durationMs}ms)` : ''}`}>
       <div className={cn('h-2.5 w-2.5 rounded-full', cfg.dot)} />
-      <span className={cn('text-[10px]', twText('stone', 500))}>{dim.name}</span>
+      <span className="text-[10px] text-muted-foreground">{dim.name}</span>
     </div>
   )
 }
@@ -83,8 +84,6 @@ function BatchInfoStrip({ progress }: { progress: ProgressType }): React.JSX.Ele
   const { lastBatch, isFromHistoricalBatch } = progress
   const hasFailures = lastBatch.failCount > 0
 
-  // 最新批次有失败但也有成功 → 显示混合状态
-  // 最新批次完全失败 → 显示历史回溯警告
   if (!hasFailures && !isFromHistoricalBatch) return null
 
   return (
@@ -92,8 +91,8 @@ function BatchInfoStrip({ progress }: { progress: ProgressType }): React.JSX.Ele
       className={cn(
         'flex items-center gap-2 rounded-md border px-2 py-1 text-[10px]',
         isFromHistoricalBatch
-          ? cn(twBorder('amber', 200), twBg('amber', 50), twText('amber', 700), DARK.borderAmber800, DARK.bgAmber950_30, DARK.textAmber300)
-          : cn(twBorder('red', 200), twBg('red', 50), twText('red', 700), DARK.borderRed800, DARK.bgRed950_30, DARK.textRed300),
+          ? 'border-warning/30 bg-warning/10 text-warning'
+          : 'border-destructive/30 bg-destructive/10 text-destructive',
       )}
     >
       {isFromHistoricalBatch ? (
@@ -136,8 +135,6 @@ export function CollectionProgress({
 
     void load()
 
-    // 单个 symbol 维度完成时：精确匹配 symbol 后刷新
-    // COMPLETE 事件在每个维度采集完成时触发，带 symbol 字段
     const offComplete = eventBus.on(COLLECTION_EVENTS.COMPLETE, (event: unknown) => {
       const payload = event as { symbol?: string } | undefined
       if (payload?.symbol === symbol) {
@@ -146,7 +143,6 @@ export function CollectionProgress({
       }
     })
 
-    // 单个 symbol 采集触发时：显示"采集中"状态
     const offTriggered = eventBus.on(COLLECTION_EVENTS.TRIGGERED, (event: unknown) => {
       const payload = event as { symbol?: string } | undefined
       if (payload?.symbol === symbol) {
@@ -155,7 +151,6 @@ export function CollectionProgress({
       }
     })
 
-    // 批量采集全局刷新事件：PoolBoardPage 定时 3 秒触发
     const offGlobalRefresh = eventBus.on(PROGRESS_REFRESH_EVENT, () => {
       void load()
     })
@@ -170,21 +165,20 @@ export function CollectionProgress({
 
   if (loading && !progress) {
     return (
-      <div className={cn('flex items-center gap-1 text-xs', twText('stone', 400))}>
-        <div className={cn('h-3 w-3 animate-spin rounded-full border', twBorder('stone', 300), 'border-t-emerald-500')} />
+      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+        <div className="h-3 w-3 animate-spin rounded-full border border-border border-t-primary" />
         <span>{collecting ? '采集中…' : '加载中'}</span>
       </div>
     )
   }
 
   if (!progress) {
-    return <span className={cn('text-xs', twText('stone', 400))}>暂无数据</span>
+    return <span className="text-xs text-muted-foreground">暂无数据</span>
   }
 
   const ratingCfg = RATING_CONFIG[progress.qualityRating]
   const isHistorical = progress.isFromHistoricalBatch
 
-  // 所有维度都为 none 时显示"未采集"
   const allNone = progress.dimensions.every((d) => d.status === 'none')
 
   if (compact) {
@@ -195,19 +189,19 @@ export function CollectionProgress({
             <ProgressBar percent={progress.completionPercent} rating={progress.qualityRating} isHistorical={isHistorical} />
           </div>
           {collecting ? (
-            <div className={cn('h-3 w-3 animate-spin rounded-full border', twBorder('stone', 300), 'border-t-emerald-500')} />
+            <div className="h-3 w-3 animate-spin rounded-full border border-border border-t-primary" />
           ) : (
-            <span className={cn('text-xs font-medium tabular-nums', twText('stone', 700), DARK.textNeutral200)}>
+            <span className="text-xs font-medium tabular-nums text-foreground">
               {allNone ? '—' : `${progress.completionPercent}%`}
             </span>
           )}
         </div>
         <div className="flex items-center gap-2 text-[10px]">
-          <span className={cn('rounded px-1 py-0.5 font-medium', ratingCfg.color, ratingCfg.bg, ratingCfg.darkBg)}>
+          <span className={cn('rounded px-1 py-0.5 font-medium', ratingCfg.color, ratingCfg.bg)}>
             {collecting ? '采集中' : (allNone ? '未采集' : ratingCfg.label)}
           </span>
           {!allNone && !collecting && (
-            <span className={twText('stone', 500)}>
+            <span className="text-muted-foreground">
               {progress.completedCount}/{progress.totalDimensions} 维度
             </span>
           )}
@@ -218,7 +212,6 @@ export function CollectionProgress({
 
   return (
     <div className="space-y-2">
-      {/* 批次信息条：失败批次时显示警告 */}
       <BatchInfoStrip progress={progress} />
 
       <div className="flex items-center gap-3">
@@ -230,51 +223,50 @@ export function CollectionProgress({
           />
         </div>
         {collecting ? (
-          <div className={cn('h-4 w-4 animate-spin rounded-full border-2', twBorder('stone', 300), 'border-t-emerald-500')} />
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-border border-t-primary" />
         ) : (
-          <span className={cn('text-sm font-bold tabular-nums', twText('stone', 800), DARK.textNeutral100)}>
+          <span className="text-sm font-bold tabular-nums text-foreground">
             {allNone ? '—' : `${progress.completionPercent}%`}
           </span>
         )}
       </div>
       <div className="flex items-center gap-3 text-xs">
-        <span className={cn('rounded-md px-2 py-1 font-medium', ratingCfg.color, ratingCfg.bg, ratingCfg.darkBg)}>
+        <span className={cn('rounded-md px-2 py-1 font-medium', ratingCfg.color, ratingCfg.bg)}>
           {collecting ? '采集中' : (allNone ? '未采集' : ratingCfg.label)}
         </span>
         {!allNone && !collecting && (
-          <span className={twText('stone', 600)}>
-            已完成 <strong className={twText('stone', 800)}>{progress.completedCount}</strong> / {progress.totalDimensions} 维度
+          <span className="text-muted-foreground">
+            已完成 <strong className="text-foreground">{progress.completedCount}</strong> / {progress.totalDimensions} 维度
           </span>
         )}
         {progress.lastBatch && (
-          <span className={cn('ml-auto text-[10px]', twText('stone', 400))}>
+          <span className="ml-auto text-[10px] text-muted-foreground">
             {formatTime(progress.lastBatch.startedAt)}
           </span>
         )}
       </div>
       {!allNone && (
-        <div className={cn('grid grid-cols-2 gap-1.5 rounded-md border p-2', twBorder('stone', 100), twBg('stone', 50), DARK.borderNeutral800, DARK.bgNeutral900)}>
+        <div className="grid grid-cols-2 gap-1.5 rounded-md border border-divider bg-surface-2 p-2">
           {progress.dimensions.map((dim) => {
             const cfg = STATUS_CONFIG[dim.status]
             return (
               <div key={dim.code} className="flex items-center gap-1.5">
                 <DimensionDot dim={dim} />
-                <span className={cn('text-[10px]', cfg.color, cfg.darkColor)}>{cfg.label}</span>
+                <span className={cn('text-[10px]', cfg.color)}>{cfg.label}</span>
               </div>
             )
           })}
         </div>
       )}
-      {/* 采集中且所有维度都未完成时，显示维度列表（待采集状态） */}
       {allNone && collecting && (
-        <div className={cn('grid grid-cols-2 gap-1.5 rounded-md border p-2', twBorder('stone', 100), twBg('stone', 50), DARK.borderNeutral800, DARK.bgNeutral900)}>
+        <div className="grid grid-cols-2 gap-1.5 rounded-md border border-divider bg-surface-2 p-2">
           {progress.dimensions.map((dim) => {
             const cfg = STATUS_CONFIG.none
             return (
               <div key={dim.code} className="flex items-center gap-1.5">
                 <div className={cn('h-2.5 w-2.5 animate-pulse rounded-full', cfg.dot)} />
-                <span className={cn('text-[10px]', twText('stone', 500))}>{dim.name}</span>
-                <span className={cn('text-[10px]', cfg.color, cfg.darkColor)}>待采集</span>
+                <span className="text-[10px] text-muted-foreground">{dim.name}</span>
+                <span className={cn('text-[10px]', cfg.color)}>待采集</span>
               </div>
             )
           })}

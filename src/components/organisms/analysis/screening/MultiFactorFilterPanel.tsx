@@ -10,7 +10,6 @@ import { Button } from '@/components/atoms/Button'
 import { Input } from '@/components/atoms/Input'
 import { Select, SelectItem } from '@/components/atoms/Select'
 import { useMultiFactorScreeningStore } from '@/store/multiFactorScreeningStore'
-import { twText, twBg, DARK } from '@/constants/theme.tokens'
 import {
   MULTI_FACTOR_SCREENING_FACTORS,
   MULTI_FACTOR_SCREENING_OPERATORS,
@@ -41,9 +40,9 @@ function CriterionRow({
   const factorMeta = MULTI_FACTOR_SCREENING_FACTORS.find((f) => f.factor === criterion.factor)
 
   return (
-    <div className={`flex flex-wrap items-end gap-2 rounded-lg ${twBg('slate', 50)} p-3 ${DARK.bgSlate800}`}>
+    <div className="flex flex-wrap items-end gap-2 rounded-lg bg-muted p-3">
       <div className="flex flex-col gap-1">
-        <label className={`text-xs ${twText('slate', 500)}`}>因子</label>
+        <label className="text-xs text-muted-foreground">因子</label>
         <Select
           value={criterion.factor}
           onChange={(e) => {
@@ -66,7 +65,7 @@ function CriterionRow({
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className={`text-xs ${twText('slate', 500)}`}>操作</label>
+        <label className="text-xs text-muted-foreground">操作</label>
         <Select
           value={criterion.operator}
           onChange={(e) =>
@@ -83,7 +82,7 @@ function CriterionRow({
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className={`text-xs ${twText('slate', 500)}`}>{isBetween ? '下限' : '数值'}</label>
+        <label className="text-xs text-muted-foreground">{isBetween ? '下限' : '数值'}</label>
         <Input
           type="number"
           step={factorMeta?.step ?? '0.1'}
@@ -95,7 +94,7 @@ function CriterionRow({
 
       {isBetween && (
         <div className="flex flex-col gap-1">
-          <label className={`text-xs ${twText('slate', 500)}`}>上限</label>
+          <label className="text-xs text-muted-foreground">上限</label>
           <Input
             type="number"
             step={factorMeta?.step ?? '0.1'}
@@ -107,7 +106,7 @@ function CriterionRow({
       )}
 
       <Button type="button" variant="ghost" size="sm" onClick={onRemove} aria-label="删除条件">
-        <Trash2 className={`h-4 w-4 ${twText('slate', 500)}`} />
+        <Trash2 className="h-4 w-4 text-muted-foreground" />
       </Button>
     </div>
   )
@@ -127,7 +126,7 @@ function ConditionGroupCard({
   onAddCriterion: (groupId: string) => void
 }) {
   return (
-    <Card className={`${twBg('slate', 50)}/50 ${DARK.bgSlate900Half}`}>
+    <Card className="bg-muted/50">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div className="flex items-center gap-3">
           <CardTitle className="text-sm font-medium">条件组 {index + 1}</CardTitle>
@@ -144,7 +143,7 @@ function ConditionGroupCard({
           </Select>
         </div>
         <Button type="button" variant="ghost" size="sm" onClick={onRemove} aria-label="删除条件组">
-          <Trash2 className={`h-4 w-4 ${twText('slate', 500)}`} />
+          <Trash2 className="h-4 w-4 text-muted-foreground" />
         </Button>
       </CardHeader>
       <CardContent className="space-y-2">
@@ -218,7 +217,7 @@ export function MultiFactorFilterPanel() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className={`text-lg font-semibold ${twText('slate', 900)} ${DARK.textSlate100}`}>筛选条件</h2>
+        <h2 className="text-lg font-semibold text-foreground">筛选条件</h2>
         <div className="flex flex-wrap gap-2">
           <Button type="button" variant="outline" size="sm" onClick={addGroup}>
             <Plus className="mr-1 h-4 w-4" />
@@ -256,7 +255,7 @@ export function MultiFactorFilterPanel() {
         <CardContent className="space-y-3 pt-4">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
             <div className="flex-1">
-              <label className={`mb-1 block text-xs ${twText('slate', 500)}`}>保存当前条件为模板</label>
+              <label className="mb-1 block text-xs text-muted-foreground">保存当前条件为模板</label>
               <Input
                 placeholder="模板名称"
                 value={templateName}
@@ -272,7 +271,7 @@ export function MultiFactorFilterPanel() {
 
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
             <div className="flex-1">
-              <label className={`mb-1 block text-xs ${twText('slate', 500)}`}>加载已保存模板</label>
+              <label className="mb-1 block text-xs text-muted-foreground">加载已保存模板</label>
               <Select
                 value={selectedTemplateId}
                 onChange={(e) => handleLoadTemplate(e.target.value)}

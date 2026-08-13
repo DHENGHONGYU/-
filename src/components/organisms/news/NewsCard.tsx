@@ -2,7 +2,6 @@ import type { NewsArticle } from '@/data/types'
 import { Badge } from '@/components/atoms/Badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { THEME_TOKENS } from '@/constants/theme/theme.tokens.base'
-import { twBg } from '@/constants/theme.tokens'
 
 export interface NewsCardProps {
   article: NewsArticle
@@ -13,9 +12,9 @@ const SENTIMENT_CONFIG: Record<
   NewsArticle['sentiment'],
   { label: string; variant: 'default' | 'secondary' | 'outline' | 'destructive'; className: string }
 > = {
-  positive: { label: '正面', variant: 'default', className: `${twBg('emerald', 500)} text-white hover:${twBg('emerald', 500)}/80` },
+  positive: { label: '正面', variant: 'default', className: 'bg-success text-white hover:bg-success/80' },
   negative: { label: '负面', variant: 'destructive', className: '' },
-  neutral: { label: '中性', variant: 'secondary', className: `${twBg('slate', 500)} text-white hover:${twBg('slate', 500)}/80` },
+  neutral: { label: '中性', variant: 'secondary', className: 'bg-muted-foreground text-white hover:bg-muted-foreground/80' },
 }
 
 /**
@@ -33,8 +32,8 @@ export function NewsCard({ article, onClick }: NewsCardProps): React.JSX.Element
     <Card
       className={
         onClick
-          ? `cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:${THEME_TOKENS.focusVisible.ringWidth} focus-visible:${THEME_TOKENS.focusVisible.ringColor} focus-visible:${THEME_TOKENS.focusVisible.ringOffset}`
-          : 'cursor-pointer transition-shadow hover:shadow-md'
+          ? `cursor-pointer transition-shadow hover:shadow-elevation-2 focus-visible:outline-none focus-visible:${THEME_TOKENS.focusVisible.ringWidth} focus-visible:${THEME_TOKENS.focusVisible.ringColor} focus-visible:${THEME_TOKENS.focusVisible.ringOffset}`
+          : 'cursor-pointer transition-shadow hover:shadow-elevation-2'
       }
       onClick={onClick}
       role="button"

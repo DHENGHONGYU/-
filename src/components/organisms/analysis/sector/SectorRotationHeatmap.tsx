@@ -25,7 +25,6 @@ import {
 } from '@/config/sectorHeatmapConfig'
 import { WIDGET_DEFAULT_DATA_SOURCE } from '@/constants/cockpit.constants'
 import { hexToRgba, cn } from '@/lib/utils'
-import { twText, twBg, twBorder, DARK, HOVER } from '@/constants/theme.tokens'
 
 export interface SectorRotationHeatmapProps {
   title?: string
@@ -158,9 +157,9 @@ export function SectorRotationHeatmap({ title = '板块轮动热力图' }: Secto
   const errorMessage = error ?? '操作失败'
 
   return (
-    <section className={`rounded-xl border ${twBorder('neutral', 200)} bg-card p-4 shadow-sm ${DARK.borderSlate700} ${DARK.bgSlate900}`}>
+    <section className="rounded-xl border border-border bg-card p-4 shadow-sm">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className={`text-lg font-semibold ${twText('slate', 900)} ${DARK.textSlate100}`}>{title}</h2>
+        <h2 className="text-lg font-semibold text-foreground">{title}</h2>
         <div className="flex flex-wrap items-center gap-2">
           <Select
             value={timeWindow}
@@ -208,7 +207,7 @@ export function SectorRotationHeatmap({ title = '板块轮动热力图' }: Secto
                   key={cell.code}
                   type="button"
                   onClick={() => handleCellClick(cell.code)}
-                  className={`flex flex-col items-center justify-center rounded-lg border border-transparent p-3 text-center transition ${HOVER.ringSlate300} focus:outline-none focus:ring-2 ${twBorder('slate', 400)}`}
+                  className="flex flex-col items-center justify-center rounded-lg border border-transparent p-3 text-center transition hover:ring-ring focus:outline-none focus:ring-2 border-input"
                   style={style}
                   aria-label={`${cell.name} ${formatMetricValue(value, metric)}`}
                 >
@@ -221,14 +220,14 @@ export function SectorRotationHeatmap({ title = '板块轮动热力图' }: Secto
 
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <h3 className={`mb-2 text-sm font-semibold ${twText('slate', 700)} ${DARK.textSlate300}`}>
+              <h3 className="mb-2 text-sm font-semibold text-card-foreground">
                 {metric === 'changePercent' ? '领涨板块' : metric === 'fundFlow' ? '资金流入' : '高换手板块'}
               </h3>
               <ul className="space-y-1">
                 {topGainers.map((cell) => (
                   <li
                     key={`top-${cell.code}`}
-                    className={`flex justify-between rounded ${twBg('slate', 50)} px-3 py-2 text-sm ${DARK.bgSlate800}`}
+                    className="flex justify-between rounded bg-muted px-3 py-2 text-sm"
                   >
                     <span>{cell.name}</span>
                     <span className="font-medium">
@@ -241,14 +240,14 @@ export function SectorRotationHeatmap({ title = '板块轮动热力图' }: Secto
 
             {topLosers.length > 0 && (
               <div>
-                <h3 className={`mb-2 text-sm font-semibold ${twText('slate', 700)} ${DARK.textSlate300}`}>
+                <h3 className="mb-2 text-sm font-semibold text-card-foreground">
                   {metric === 'changePercent' ? '领跌板块' : '资金流出'}
                 </h3>
                 <ul className="space-y-1">
                   {topLosers.map((cell) => (
                     <li
                       key={`bottom-${cell.code}`}
-                      className={`flex justify-between rounded ${twBg('slate', 50)} px-3 py-2 text-sm ${DARK.bgSlate800}`}
+                      className="flex justify-between rounded bg-muted px-3 py-2 text-sm"
                     >
                       <span>{cell.name}</span>
                       <span className="font-medium">

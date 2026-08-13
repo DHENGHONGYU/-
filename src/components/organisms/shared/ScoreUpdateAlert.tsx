@@ -1,6 +1,6 @@
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
-import { twText, COLOR_SHADES } from '@/constants/theme.tokens'
+import { COLOR_SHADES } from '@/constants/theme.tokens'
 
 export interface ScoreUpdateAlertProps {
   lastScoredAt: number | undefined
@@ -55,14 +55,14 @@ export function ScoreUpdateAlert({ lastScoredAt, onRefresh, loading }: ScoreUpda
     const days = Math.floor(elapsed / (24 * 60 * 60 * 1000))
     return (
       <div
-        className={`flex items-center justify-between rounded-md border p-3 ${twText('amber', 700)}`}
+        className="flex items-center justify-between rounded-md border p-3 text-warning"
         style={{
           borderColor: `${COLOR_SHADES.amber.hex[500]}4D`,
           backgroundColor: `${COLOR_SHADES.amber.hex[500]}1A`,
         }}
       >
         <div className="space-y-0.5">
-          <p className={`text-sm font-medium ${twText('amber', 700)}`}>
+          <p className="text-sm font-medium text-warning">
             建议更新 <Badge variant="outline">已 {days} 天</Badge>
           </p>
           <p className="text-xs text-muted-foreground">

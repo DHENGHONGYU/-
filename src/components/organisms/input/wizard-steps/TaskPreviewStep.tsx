@@ -12,7 +12,7 @@ import { Label } from '@/components/atoms/Label'
 import { Input } from '@/components/atoms/Input'
 import { Checkbox } from '@/components/atoms/Checkbox'
 import { useCollectionWizardStore } from '@/store/collectionWizardStore'
-import { COLOR_TOKENS, twBorder, twText, twBg } from '@/constants/theme.tokens'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { FileText, Save, AlertCircle } from 'lucide-react'
 import { getLogger } from '@/lib/logger'
 import { validateConfigName } from '@/lib/validation'
@@ -131,7 +131,7 @@ export function TaskPreviewStep(): React.JSX.Element {
               value={taskName}
               onChange={(e) => handleTaskNameChange(e.target.value)}
               className={cn(
-                taskNameError && cn('ring-2', twBorder('red', 400)),
+                taskNameError && cn('ring-2', 'border-destructive/30'),
               )}
               maxLength={50}
             />
@@ -139,8 +139,8 @@ export function TaskPreviewStep(): React.JSX.Element {
               <div
                 className={cn(
                   'text-xs px-2 py-1 rounded',
-                  twBg('red', 50),
-                  twText('red', 600),
+                  'bg-destructive/10',
+                  'text-destructive',
                 )}
               >
                 {taskNameError}
@@ -226,9 +226,9 @@ export function TaskPreviewStep(): React.JSX.Element {
 
       {/* 潜在风险 */}
       {risks.length > 0 && (
-        <Card className={twBorder('amber', 500)}>
+        <Card className="border-warning">
           <CardHeader>
-            <CardTitle className={cn('text-base flex items-center gap-2', twText('amber', 600))}>
+            <CardTitle className={cn('text-base flex items-center gap-2', 'text-warning')}>
               <AlertCircle className="w-4 h-4" />
               潜在风险
             </CardTitle>
@@ -237,7 +237,7 @@ export function TaskPreviewStep(): React.JSX.Element {
             <ul className="space-y-2">
               {risks.map((risk, index) => (
                 <li key={index} className="flex items-start gap-2 text-sm">
-                  <span className={cn('mt-0.5', twText('amber', 600))}>•</span>
+                  <span className={cn('mt-0.5', 'text-warning')}>•</span>
                   <span>{risk}</span>
                 </li>
               ))}

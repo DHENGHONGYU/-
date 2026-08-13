@@ -19,7 +19,7 @@ import type {
   FactorICStat,
   MarketCycle,
 } from '@/types/modules/prediction.types'
-import { THEME_TOKENS, twBg, twText } from '@/constants/theme.tokens'
+import { THEME_TOKENS } from '@/constants/theme.tokens'
 
 // ============================================================
 // 常量与样式映射
@@ -35,9 +35,9 @@ const CYCLE_LABELS: Record<MarketCycle, string> = {
 
 /** 因子有效性状态 -> 徽章样式 + 中文标签 */
 const STATUS_BADGE: Record<FactorEffectiveness, { label: string; className: string }> = {
-  effective: { label: '有效', className: `${twBg('green', 100)} ${twText('green', 700)} dark:${twBg('green', 900)}/40 dark:${twText('green', 300)}` },
-  weakening: { label: '衰减', className: `${twBg('amber', 100)} ${twText('amber', 700)} dark:${twBg('amber', 900)}/40 dark:${twText('amber', 300)}` },
-  ineffective: { label: '失效', className: `${twBg('red', 100)} ${twText('red', 700)} dark:${twBg('red', 900)}/40 dark:${twText('red', 300)}` },
+  effective: { label: '有效', className: 'bg-success/10 text-success' },
+  weakening: { label: '衰减', className: 'bg-warning/10 text-warning' },
+  ineffective: { label: '失效', className: 'bg-destructive/10 text-destructive' },
 }
 
 /** 按准确率值选取环形进度颜色 */
@@ -196,9 +196,9 @@ function WeightAdjustmentTable({ adjustments }: WeightAdjustmentTableProps) {
             const arrowLabel = dir === 'up' ? '上调' : dir === 'down' ? '下调' : '持平'
             const arrowColor =
               dir === 'up'
-                ? `${twText('green', 600)} dark:${twText('green', 400)}`
+                ? 'text-success'
                 : dir === 'down'
-                  ? `${twText('red', 600)} dark:${twText('red', 400)}`
+                  ? 'text-destructive'
                   : 'text-muted-foreground'
             return (
               <tr key={adj.factorId} className="border-b last:border-0" data-testid="weight-adj-row">

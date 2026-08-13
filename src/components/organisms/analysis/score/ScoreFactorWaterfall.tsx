@@ -20,7 +20,7 @@ import {
 import { LoadingState } from '@/components/molecules/LoadingState'
 import { EmptyState } from '@/components/molecules/EmptyState'
 import { ErrorState } from '@/components/molecules/ErrorState'
-import { COLOR_TOKENS, twBg, twText } from '@/constants/theme.tokens'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import type { FactorContribution, ScoreAuditTrail } from '@/services/scoring/v6-engine'
 import type { DimensionScore } from '@/data/types'
 
@@ -148,9 +148,9 @@ function WaterfallTooltip({ active, payload }: { active?: boolean; payload?: Arr
   if (!row) return <></>
   if (row.isTotal) {
     return (
-      <div className={`rounded-md border p-2 shadow-sm text-xs ${twBg('neutral', 50)}`}>
+      <div className="rounded-md border p-2 shadow-sm text-xs bg-muted">
         <div className="font-medium">{row.label}</div>
-        <div className={twText('slate', 600)}>{formatScore(row.value)}</div>
+        <div className="text-muted-foreground">{formatScore(row.value)}</div>
       </div>
     )
   }
@@ -160,11 +160,11 @@ function WaterfallTooltip({ active, payload }: { active?: boolean; payload?: Arr
     if (row.dimensionInfo) {
       const { score, weight } = row.dimensionInfo
       return (
-        <div className={`rounded-md border p-2 shadow-sm text-xs space-y-1 ${twBg('neutral', 50)}`}>
+        <div className="rounded-md border p-2 shadow-sm text-xs space-y-1 bg-muted">
           <div className="font-medium">{row.label}</div>
-          <div className={twText('slate', 600)}>维度得分: {score.toFixed(2)}</div>
-          <div className={twText('slate', 600)}>权重: {formatPercent(weight)}</div>
-          <div className={twText('slate', 600)}>
+          <div className="text-muted-foreground">维度得分: {score.toFixed(2)}</div>
+          <div className="text-muted-foreground">权重: {formatPercent(weight)}</div>
+          <div className="text-muted-foreground">
             加权贡献: {score.toFixed(2)} × {formatPercent(weight)} = {(score * weight).toFixed(3)}
           </div>
         </div>
@@ -174,15 +174,15 @@ function WaterfallTooltip({ active, payload }: { active?: boolean; payload?: Arr
   }
 
   return (
-    <div className={`rounded-md border p-2 shadow-sm text-xs space-y-1 ${twBg('neutral', 50)}`}>
+    <div className="rounded-md border p-2 shadow-sm text-xs space-y-1 bg-muted">
       <div className="font-medium">{c.label}</div>
-      <div className={twText('slate', 600)}>原始得分: {c.score.toFixed(2)}</div>
-      <div className={twText('slate', 600)}>权重: {formatPercent(c.normalizedWeight)}</div>
-      <div className={c.signedContribution >= 0 ? twText('green', 600) : twText('red', 600)}>
+      <div className="text-muted-foreground">原始得分: {c.score.toFixed(2)}</div>
+      <div className="text-muted-foreground">权重: {formatPercent(c.normalizedWeight)}</div>
+      <div className={c.signedContribution >= 0 ? 'text-success' : 'text-destructive'}>
         {c.signedContribution >= 0 ? '正向贡献' : '负向贡献'}: {c.signedContribution >= 0 ? '+' : ''}
         {c.signedContribution.toFixed(2)} 分
       </div>
-      <div className={twText('slate', 600)}>绝对贡献: {c.contribution.toFixed(2)} 分 ({formatPercent(c.contributionRate)})</div>
+      <div className="text-muted-foreground">绝对贡献: {c.contribution.toFixed(2)} 分 ({formatPercent(c.contributionRate)})</div>
     </div>
   )
 }
@@ -219,7 +219,7 @@ export function ScoreFactorWaterfall({
 
   return (
     <div className="space-y-4" data-testid="score-factor-waterfall">
-      <div className={`flex flex-wrap items-center gap-4 text-xs ${twText('slate', 600)}`}>
+      <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
         <div className="flex items-center gap-1">
           <span className="inline-block h-3 w-3 rounded-sm" style={{ backgroundColor: COLOR_TOKENS.success.hex }} />
           <span>正向贡献</span>

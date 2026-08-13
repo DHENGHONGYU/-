@@ -13,7 +13,7 @@ import {
 } from '@/components/atoms/Breadcrumb'
 import { getAgentComponent } from '@/components/organisms/agent/agentComponentRegistry'
 import type { AgentDetailComponentProps } from '@/components/organisms/agent/agentComponentRegistry'
-import { COLOR_TOKENS, COLOR_SHADES, twBg, twText } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
 
 /**
  * GenericAgentDetail
@@ -76,7 +76,7 @@ export default function GenericAgentDetail({ agentId }: AgentDetailComponentProp
       <section className="grid gap-4 sm:grid-cols-2">
         <Card>
           <CardContent className="flex items-center gap-4 p-4">
-            <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${twBg('emerald', 500)}/10 ${twText('emerald', 500)}`}>
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-success/10 text-success">
               <Clock className="h-5 w-5" />
             </div>
             <div>

@@ -8,7 +8,6 @@
  */
 
 import { usePredictionStore } from '@/store/predictionStore'
-import { twText } from '@/constants/theme.tokens'
 import type { FactorEffectiveness } from '@/types/modules/prediction.types'
 
 const CYCLE_LABELS: Record<string, string> = {
@@ -19,9 +18,9 @@ const CYCLE_LABELS: Record<string, string> = {
 }
 
 const EFFECTIVENESS_LABELS: Record<FactorEffectiveness, { text: string; color: string }> = {
-  effective: { text: '✅ 有效', color: `${twText('green', 600)} dark:${twText('green', 400)}` },
-  weakening: { text: '⚠️ 衰减', color: `${twText('yellow', 600)} dark:${twText('yellow', 400)}` },
-  ineffective: { text: '❌ 失效', color: `${twText('red', 600)} dark:${twText('red', 400)}` },
+  effective: { text: '✅ 有效', color: 'text-success' },
+  weakening: { text: '⚠️ 衰减', color: 'text-warning' },
+  ineffective: { text: '❌ 失效', color: 'text-destructive' },
 }
 
 /**
@@ -56,13 +55,13 @@ export function CycleRetrospectivePanel(): React.JSX.Element {
             <div className="text-xs text-muted-foreground">总预测</div>
           </div>
           <div>
-            <div className={`text-xl font-bold ${twText('red', 500)}`}>
+            <div className="text-xl font-bold text-destructive">
               {(report.directionAccuracy * 100).toFixed(1)}%
             </div>
             <div className="text-xs text-muted-foreground">方向准确率</div>
           </div>
           <div>
-            <div className={`text-xl font-bold ${twText('green', 500)}`}>
+            <div className="text-xl font-bold text-success">
               {(report.rangeAccuracy * 100).toFixed(1)}%
             </div>
             <div className="text-xs text-muted-foreground">幅度准确率</div>
@@ -86,7 +85,7 @@ export function CycleRetrospectivePanel(): React.JSX.Element {
             </thead>
             <tbody>
               {report.factorICs.slice(0, 10).map((stat) => {
-                const eff = EFFECTIVENESS_LABELS[stat.status] ?? { text: '未知', color: twText('slate', 500) }
+                const eff = EFFECTIVENESS_LABELS[stat.status] ?? { text: '未知', color: 'text-muted-foreground' }
                 return (
                   <tr key={stat.factorId} className="border-b last:border-0">
                     <td className="py-1 pr-3 font-medium">{stat.factorId}</td>
@@ -114,7 +113,7 @@ export function CycleRetrospectivePanel(): React.JSX.Element {
                 <div key={adj.factorId} className="flex items-center gap-2 text-xs">
                   <span className="w-16 font-medium">{adj.factorId}</span>
                   <span className="text-muted-foreground">{adj.currentWeight.toFixed(2)}</span>
-                  <span className={isUp ? twText('red', 500) : isDown ? twText('green', 500) : 'text-muted-foreground'}>
+                  <span className={isUp ? 'text-destructive' : isDown ? 'text-success' : 'text-muted-foreground'}>
                     {isUp ? '→↑' : isDown ? '→↓' : '→'} {adj.suggestedWeight.toFixed(2)}
                   </span>
                   <span className="flex-1 truncate text-muted-foreground">{adj.reason}</span>

@@ -13,7 +13,7 @@ import { Badge } from '@/components/atoms/Badge'
 import { Progress } from '@/components/atoms/Progress'
 import { Button } from '@/components/atoms/Button'
 import { useCollectionWizardStore } from '@/store/collectionWizardStore'
-import { COLOR_TOKENS, COLOR_SHADES, twText, twBorder } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
 import {
   Play,
   Pause,
@@ -141,11 +141,11 @@ export function ExecutionMonitorStep(): React.JSX.Element {
       case 'info':
         return COLOR_TOKENS.textPrimary.tailwind
       case 'warn':
-        return twText('yellow', 600)
+        return 'text-warning'
       case 'error':
-        return twText('red', 600)
+        return 'text-destructive'
       case 'success':
-        return twText('green', 600)
+        return 'text-success'
       default:
         return COLOR_TOKENS.textMuted.tailwind
     }
@@ -350,12 +350,12 @@ export function ExecutionMonitorStep(): React.JSX.Element {
 
       {/* 失败提示 */}
       {taskStatus === 'failed' && (
-        <Card className={cn(twBorder('red', 500), 'border-2')}>
+        <Card className={cn('border-destructive', 'border-2')}>
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
               <XCircle className={cn('w-5 h-5 mt-0.5', COLOR_TOKENS.danger.tailwind)} />
               <div>
-                <div className={cn('font-medium', twText('red', 600))}>采集任务失败</div>
+                <div className={cn('font-medium', 'text-destructive')}>采集任务失败</div>
                 <div className={cn('text-sm mt-1', COLOR_TOKENS.textMuted.tailwind)}>
                   部分维度数据采集失败，请检查日志或重试
                 </div>
