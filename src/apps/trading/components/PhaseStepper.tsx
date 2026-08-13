@@ -2,7 +2,6 @@ import React from 'react'
 import { cn } from '@/lib/utils'
 import type { ExecutionPhase } from '@/data/types'
 import { Loader2 } from 'lucide-react'
-import { COLOR_SHADES, twBg, twText, twBorder } from '@/constants/theme.tokens'
 
 export interface PhaseStepperProps {
   phase: ExecutionPhase
@@ -21,13 +20,14 @@ const PHASE_LABELS: Record<ExecutionPhase, string> = {
   reviewed: '已复盘',
 }
 
-const PHASE_COLORS: Record<ExecutionPhase, { bg: string; text: string; border: string }> = {
-  plan: { bg: twBg('blue', 500), text: twText('blue', 500), border: twBorder('blue', 500) },
-  confirmed: { bg: twBg('blue', 500), text: twText('blue', 500), border: twBorder('blue', 500) },
-  pending: { bg: twBg('yellow', 500), text: twText('yellow', 500), border: twBorder('yellow', 500) },
-  executed: { bg: twBg('green', 500), text: twText('green', 500), border: twBorder('green', 500) },
-  cancelled: { bg: twBg('red', 500), text: twText('red', 500), border: twBorder('red', 500) },
-  reviewed: { bg: twBg('purple', 500), text: twText('purple', 500), border: twBorder('purple', 500) },
+/** 阶段语义色映射 — 全部使用 CSS 变量，主题感知 */
+const PHASE_STYLES: Record<ExecutionPhase, { bg: string; text: string; border: string }> = {
+  plan: { bg: 'hsl(var(--info))', text: 'hsl(var(--info))', border: 'hsl(var(--info))' },
+  confirmed: { bg: 'hsl(var(--info))', text: 'hsl(var(--info))', border: 'hsl(var(--info))' },
+  pending: { bg: 'hsl(var(--warning))', text: 'hsl(var(--warning))', border: 'hsl(var(--warning))' },
+  executed: { bg: 'hsl(var(--success))', text: 'hsl(var(--success))', border: 'hsl(var(--success))' },
+  cancelled: { bg: 'hsl(var(--destructive))', text: 'hsl(var(--destructive))', border: 'hsl(var(--destructive))' },
+  reviewed: { bg: 'hsl(var(--primary))', text: 'hsl(var(--primary))', border: 'hsl(var(--primary))' },
 }
 
 export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): React.JSX.Element {
@@ -48,26 +48,24 @@ export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): R
 
   const getLineStyle = (index: number): { bg: string; dashed: boolean } => {
     const nextIndex = index + 1
-    if (nextIndex >= PHASES.length) return { bg: 'bg-transparent', dashed: false }
+    if (nextIndex >= PHASES.length) return { bg: 'transparent', dashed: false }
 
     const isNextReached = isPhaseReached(nextIndex)
     const isCurrentReached = isPhaseReached(index)
 
-    // 取消模式下，从当前 phase 到 cancelled 的连线为红色断裂线
     if (cancelled && index === currentIndex && nextIndex === cancelledIndex) {
-      return { bg: COLOR_SHADES.red[500], dashed: true }
+      return { bg: 'hsl(var(--destructive))', dashed: true }
     }
 
-    // 取消模式下，cancelled 之后的连线灰色
     if (cancelled && index >= cancelledIndex) {
-      return { bg: twBg('gray', 200), dashed: false }
+      return { bg: 'hsl(var(--divider))', dashed: false }
     }
 
     if (isCurrentReached && isNextReached) {
-      return { bg: COLOR_SHADES.blue[500], dashed: false }
+      return { bg: 'hsl(var(--info))', dashed: false }
     }
 
-    return { bg: twBg('gray', 200), dashed: false }
+    return { bg: 'hsl(var(--divider))', dashed: false }
   }
 
   return (
@@ -75,7 +73,7 @@ export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): R
       {PHASES.map((p, index) => {
         const reached = isPhaseReached(index)
         const current = isPhaseCurrent(index)
-        const colors = PHASE_COLORS[p]
+        const styles = PHASE_STYLES[p]
         const lineStyle = getLineStyle(index)
         const isPendingSpinner = p === 'pending' && current && !cancelled
 
@@ -87,12 +85,12 @@ export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): R
                 className={cn(
                   'relative flex items-center justify-center rounded-full border-2 transition-colors',
                   'w-6 h-6',
-                  reached || current
-                    ? `${colors.bg} ${colors.border} text-white`
-                    : `${twBg('slate', 50)} ${twBorder('slate', 300)} ${twText('slate', 400)}`,
-                  current && !cancelled && 'ring-2 ring-offset-1',
-                  current && !cancelled && colors.border.replace('border-', 'ring-')
                 )}
+                style={
+                  reached || current
+                    ? { backgroundColor: styles.bg, borderColor: styles.border, color: 'white' }
+                    : { backgroundColor: 'hsl(var(--muted))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--muted-foreground))' }
+                }
               >
                 {isPendingSpinner ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -103,20 +101,21 @@ export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): R
                 {/* 结果指示器 */}
                 {p === 'executed' && reached && result && (
                   <span
-                    className={cn(
-                      'absolute -top-1 -right-1 flex h-2.5 w-2.5 rounded-full border border-white',
-                      result === 'success' && COLOR_SHADES.green[600],
-                      result === 'failed' && COLOR_SHADES.red[600],
-                      result === 'partial' && COLOR_SHADES.yellow[600]
-                    )}
+                    className="absolute -top-1 -right-1 flex h-2.5 w-2.5 rounded-full border border-white"
+                    style={{
+                      backgroundColor:
+                        result === 'success'
+                          ? 'hsl(var(--success))'
+                          : result === 'failed'
+                            ? 'hsl(var(--destructive))'
+                            : 'hsl(var(--warning))',
+                    }}
                   />
                 )}
               </div>
               <span
-                className={cn(
-                  'text-[10px] font-medium whitespace-nowrap',
-                  reached || current ? colors.text : twText('gray', 400)
-                )}
+                className="text-[10px] font-medium whitespace-nowrap"
+                style={{ color: reached || current ? styles.text : 'hsl(var(--muted-foreground))' }}
               >
                 {PHASE_LABELS[p]}
               </span>
@@ -128,9 +127,13 @@ export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): R
                 <div
                   className={cn(
                     'absolute inset-0 rounded-full',
-                    lineStyle.bg,
-                    lineStyle.dashed && `bg-transparent border-t-2 border-dashed ${COLOR_SHADES.red[500]}`
+                    lineStyle.dashed && 'bg-transparent border-t-2 border-dashed',
                   )}
+                  style={
+                    lineStyle.dashed
+                      ? { borderColor: lineStyle.bg }
+                      : { backgroundColor: lineStyle.bg }
+                  }
                 />
               </div>
             )}

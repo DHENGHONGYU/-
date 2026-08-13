@@ -13,7 +13,6 @@ import { useIntentionPoolStore, getIntentionPoolGroups } from '@/store/intention
 import { useToast } from '@/hooks/useToast'
 import { getLogger } from '@/lib/logger'
 import { createDebugLogger } from '@/lib/debugToolkit'
-import { twText, twBg, twBorder, DARK, HOVER, DIVIDE } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
 
 const logger = getLogger()
@@ -436,7 +435,7 @@ export default function HotSectorSection(): React.JSX.Element {
   return (
     <div className="space-y-4">
       {/* ── 板块级操作工具条 ── */}
-      <div className={cn('flex flex-wrap items-center gap-3 rounded-md border px-3 py-2', twBorder('stone', 200), twBg('stone', 50) + '/50', DARK.borderNeutral700, DARK.bgNeutral900Half)}>
+      <div className={cn('flex flex-wrap items-center gap-3 rounded-md border px-3 py-2 border-border bg-muted/50')}>
         {/* 包裹可点击区域确保 checkbox 点击可靠。
             注意：外层 onClick 已处理所有点击事件，内部 Checkbox 仅做视觉展示，
             内部 onClick/onChange 都做屏蔽，避免 <label> 标签再次触发 click 事件导致双重 toggle。 */}
@@ -458,10 +457,10 @@ export default function HotSectorSection(): React.JSX.Element {
             aria-label="全选板块"
           />
         </div>
-        <span className={cn('text-xs', twText('stone', 500), DARK.textNeutral400)}>
+        <span className={cn('text-xs text-muted-foreground')}>
           已选 {selectedSectors.size} / {hotSectors.length} 个板块
           {totalSelectedStocks > 0 && (
-            <span className={cn('ml-2', twText('blue', 600))}>· 成分股 {totalSelectedStocks} 只</span>
+            <span className={cn('ml-2 text-info')}>· 成分股 {totalSelectedStocks} 只</span>
           )}
         </span>
         <div className="ml-auto flex flex-wrap items-center gap-2">
@@ -514,8 +513,8 @@ export default function HotSectorSection(): React.JSX.Element {
               className={cn(
                 'rounded-md border transition-colors',
                 isSelected
-                  ? [twBorder('blue', 400), twBg('blue', 50) + '/30', DARK.borderBlue700, DARK.bgBlue950_30]
-                  : [twBorder('stone', 200), DARK.borderNeutral700],
+                  ? 'border-info bg-info/10'
+                  : 'border-border',
               )}
             >
               {/* 板块头部：勾选 + 名称 + 评分 + 展开按钮 + 全部加入 */}
@@ -547,27 +546,27 @@ export default function HotSectorSection(): React.JSX.Element {
                 </div>
                 <button
                   onClick={() => handleToggleExpand(sector.code)}
-                  className={cn('flex flex-1 items-center gap-2 text-left', HOVER.textStone700, DARK.hoverTextNeutral200)}
+                  className={cn('flex flex-1 items-center gap-2 text-left hover:text-foreground')}
                 >
-                  <span className={cn('font-medium', twText('stone', 800), DARK.textNeutral100)}>
+                  <span className={cn('font-medium text-foreground')}>
                     {sector.name}
                   </span>
                   <Badge
                     className={
                       sector.trend === 'up'
-                        ? `${twBg('green', 100)} ${twText('green', 800)}`
+                        ? 'bg-success/10 text-success'
                         : sector.trend === 'down'
-                          ? `${twBg('red', 100)} ${twText('red', 800)}`
-                          : `${twBg('gray', 100)} ${twText('gray', 600)}`
+                          ? 'bg-destructive/10 text-destructive'
+                          : 'bg-muted text-muted-foreground'
                     }
                   >
                     {sector.score}
                   </Badge>
-                  <span className={cn('text-xs', twText('stone', 400), DARK.textNeutral500)}>
+                  <span className={cn('text-xs text-muted-foreground/70')}>
                     {sector.stocks.length} 只成分股
                   </span>
                   <svg
-                    className={cn('h-4 w-4 transition-transform', isExpanded ? 'rotate-90' : '', twText('stone', 400))}
+                    className={cn('h-4 w-4 transition-transform', isExpanded ? 'rotate-90' : '', 'text-muted-foreground/70')}
                     fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -586,9 +585,9 @@ export default function HotSectorSection(): React.JSX.Element {
 
               {/* 成分股展开区（逐项选择） */}
               {isExpanded && (
-                <div className={cn('border-t', twBorder('stone', 100), DARK.borderNeutral800)}>
+                <div className={cn('border-t border-border')}>
                   <div className="px-3 py-2">
-                    <div className={cn('mb-2 flex items-center gap-2 text-xs', twText('stone', 500), DARK.textNeutral400)}>
+                    <div className={cn('mb-2 flex items-center gap-2 text-xs text-muted-foreground')}>
                       {/* 包裹可点击区域确保 checkbox 点击可靠。
                           外层 onClick 统一处理所有点击事件，内部 Checkbox 仅做视觉展示。 */}
                       <div
@@ -620,7 +619,7 @@ export default function HotSectorSection(): React.JSX.Element {
                       </div>
                       <span>全选成分股</span>
                     </div>
-                    <div className={cn('grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3', DIVIDE.stone100)}>
+                    <div className={cn('grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3', 'divide-border')}>
                       {sector.stocks.map((stock) => {
                         const isAdded = existingSymbols.has(stock.symbol)
                         const isAdding = addingHot.has(stock.symbol)
@@ -630,7 +629,7 @@ export default function HotSectorSection(): React.JSX.Element {
                             key={stock.symbol}
                             className={cn(
                               'flex items-center gap-2 rounded px-2 py-1.5 text-sm',
-                              HOVER.bgStone50Half, DARK.hoverBgNeutral900Half,
+                              'hover:bg-muted/50',
                             )}
                           >
                             {/* 包裹可点击区域确保 checkbox 点击可靠。
@@ -656,10 +655,10 @@ export default function HotSectorSection(): React.JSX.Element {
                                 aria-label={`选择 ${stock.symbol}`}
                               />
                             </div>
-                            <span className={cn('font-mono text-xs', twText('stone', 700), DARK.textNeutral200)}>
+                            <span className={cn('font-mono text-xs text-foreground')}>
                               {stock.symbol}
                             </span>
-                            <span className={cn('flex-1 truncate text-xs', twText('stone', 500), DARK.textNeutral400)}>
+                            <span className={cn('flex-1 truncate text-xs text-muted-foreground')}>
                               {stock.name}
                             </span>
                             {isAdded ? (
@@ -688,7 +687,7 @@ export default function HotSectorSection(): React.JSX.Element {
       </div>
 
       {message && (
-        <p className={cn('rounded-md px-3 py-2 text-sm', twBg('stone', 50), twText('stone', 600), DARK.bgNeutral900, DARK.textNeutral400)}>
+        <p className={cn('rounded-md px-3 py-2 text-sm bg-muted text-muted-foreground')}>
           {message}
         </p>
       )}

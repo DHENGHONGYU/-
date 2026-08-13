@@ -3,7 +3,6 @@ import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import type { Portfolio, StrategyClassification, StrategyResult } from '@/data/types'
-import { twBg, twText } from '@/constants/theme.tokens'
 
 export interface CoreResourcePanelProps {
   portfolio?: Portfolio
@@ -144,10 +143,10 @@ export function CoreResourcePanel({
                       <Badge
                         className={
                           action.action === 'buy'
-                            ? twBg('green', 100) + ' ' + twText('green', 800)
+                            ? 'bg-success/10 text-success'
                             : action.action === 'sell'
-                              ? twBg('red', 100) + ' ' + twText('red', 800)
-                              : twBg('gray', 100) + ' ' + twText('gray', 700)
+                              ? 'bg-destructive/10 text-destructive'
+                              : 'bg-muted text-muted-foreground'
                         }
                       >
                         {action.action === 'buy'
@@ -184,12 +183,12 @@ function ClassificationBadge({
 
   const badgeClass =
     classification === 'core-scarce'
-      ? twBg('blue', 100) + ' ' + twText('blue', 700)
+      ? 'bg-info/10 text-info'
       : classification === 'value-bargain'
-        ? twBg('purple', 100) + ' ' + twText('purple', 700)
+        ? 'bg-info/10 text-info'
         : classification === 'hot-momentum'
-          ? twBg('orange', 100) + ' ' + twText('orange', 600)
-          : twBg('gray', 100) + ' ' + twText('gray', 700)
+          ? 'bg-warning/10 text-warning'
+          : 'bg-muted text-muted-foreground'
 
   return <Badge className={badgeClass}>{label}</Badge>
 }

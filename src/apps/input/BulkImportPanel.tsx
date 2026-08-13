@@ -19,7 +19,6 @@ import { useIntentionPoolStore, getIntentionPoolGroups } from '@/store/intention
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { collectPoolSymbols } from '@/services/pool/collectionService'
 import { getLogger } from '@/lib/logger'
-import { twText, twBg, twBorder, DARK, HOVER, FOCUS, DIVIDE } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
 
 const logger = getLogger()
@@ -35,14 +34,14 @@ interface FileInfo {
 
 // 模式切换分段控件按钮样式常量（宋韵 stone 系列）
 const SEGMENT_BASE = 'rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-200'
-const SEGMENT_ACTIVE = cn(twBg('white'), 'shadow-sm', DARK.bgNeutral700, twText('stone', 800), DARK.textNeutral100)
-const SEGMENT_INACTIVE = cn(twText('stone', 500), HOVER.textStone700, DARK.textNeutral400, DARK.hoverTextNeutral200)
+const SEGMENT_ACTIVE = cn('bg-background', 'shadow-sm', 'text-foreground')
+const SEGMENT_INACTIVE = cn('text-muted-foreground', 'hover:text-foreground')
 
 // 步骤指示器色（宋韵天青/完成绿）
-const STEP_DONE_TEXT = cn(twText('emerald', 600), DARK.textEmerald400)
-const STEP_DONE_BG = cn(twBg('emerald', 500), twText('white'))
-const STEP_IDLE_TEXT = cn(twText('stone', 400), DARK.textNeutral500)
-const STEP_IDLE_BG = cn(twBg('stone', 100), twText('stone', 400), DARK.bgNeutral800, DARK.textNeutral500)
+const STEP_DONE_TEXT = 'text-success'
+const STEP_DONE_BG = 'bg-success text-success-foreground'
+const STEP_IDLE_TEXT = 'text-muted-foreground/70'
+const STEP_IDLE_BG = 'bg-muted text-muted-foreground/70'
 
 export default function BulkImportPanel(): React.JSX.Element {
   const refresh = useIntentionPoolStore((s) => s.refresh)
@@ -290,13 +289,13 @@ export default function BulkImportPanel(): React.JSX.Element {
             <React.Fragment key={step.num}>
               <div className={`flex items-center gap-1.5 transition-colors duration-300 ${
                 isDone ? STEP_DONE_TEXT :
-                step.active ? twText('blue', 600) : STEP_IDLE_TEXT
+                step.active ? 'text-info' : STEP_IDLE_TEXT
               }`}>
                 <span className={`flex h-5 w-5 items-center justify-center rounded-full text-xs ${
                   isDone
                     ? STEP_DONE_BG
                     : step.active
-                      ? twBg('blue', 600) + ' ' + twText('white')
+                      ? 'bg-primary text-primary-foreground'
                       : STEP_IDLE_BG
                 }`}>
                   {isDone ? '✓' : step.num}
@@ -304,7 +303,7 @@ export default function BulkImportPanel(): React.JSX.Element {
                 <span className="font-medium">{step.label}</span>
               </div>
               {idx < steps.length - 1 && (
-                <span className={isDone ? twText('emerald', 400) : cn(twText('stone', 300), DARK.textNeutral600)}>→</span>
+                <span className={isDone ? 'text-success' : 'text-muted-foreground/50'}>→</span>
               )}
             </React.Fragment>
           )
@@ -339,7 +338,7 @@ export default function BulkImportPanel(): React.JSX.Element {
         </CardHeader>
         <CardContent className="space-y-4">
           {/* ── 模式切换 — 分段控件风格 ── */}
-          <div className={cn('inline-flex rounded-lg p-0.5', twBg('stone', 100), DARK.bgNeutral800)}>
+          <div className={cn('inline-flex rounded-lg p-0.5 bg-muted')}>
             <button
               onClick={() => setInputMode('text')}
               disabled={importPhase === 'importing'}
@@ -359,11 +358,11 @@ export default function BulkImportPanel(): React.JSX.Element {
           {/* ── 文本输入 ── */}
           {inputMode === 'text' && (
             <>
-              <p className={cn('text-xs', twText('stone', 500), DARK.textNeutral400)}>
+              <p className={cn('text-xs text-muted-foreground')}>
                 支持 CSV 文本，格式：代码,名称 或 代码.交易所,名称（如 600519.SH,贵州茅台）
               </p>
               <textarea
-                className={cn('min-h-[160px] w-full rounded-md border p-3 text-sm outline-none transition-colors focus:ring-1', twBorder('stone', 200), twBg('white'), twText('stone', 800), 'placeholder:' + twText('stone', 400), FOCUS.borderEmerald400, FOCUS.ringEmerald400_30, FOCUS.darkBorderEmerald500, DARK.borderNeutral700, DARK.bgNeutral900, DARK.textNeutral100, DARK.placeholderNeutral500)}
+                className={cn('min-h-[160px] w-full rounded-md border p-3 text-sm outline-none transition-colors focus:ring-1 border-border bg-background text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:ring-primary/30')}
                 placeholder={`600519.SH,贵州茅台\n000001.SZ,平安银行\n300750.SZ,宁德时代`}
                 value={importText}
                 onChange={(e) => handleParseImport(e.target.value)}
@@ -375,15 +374,15 @@ export default function BulkImportPanel(): React.JSX.Element {
           {/* ── 文件上传 ── */}
           {inputMode === 'file' && (
             <>
-              <p className={cn('text-xs', twText('stone', 500), DARK.textNeutral400)}>
+              <p className={cn('text-xs text-muted-foreground')}>
                 支持 CSV (.csv)、Excel (.xlsx)、JSON (.json) 格式
               </p>
               <div
                 className={cn(
                   'flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-all duration-200',
                   dragOver
-                    ? [twBorder('blue', 400), twBg('blue', 50), 'scale-[1.01]']
-                    : [twBorder('gray', 300), HOVER.borderEmerald400, HOVER.bgStone50, DARK.hoverBgNeutral900Half]
+                    ? 'border-info bg-info/10 scale-[1.01]'
+                    : 'border-input hover:border-primary hover:bg-muted'
                 )}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
@@ -399,25 +398,25 @@ export default function BulkImportPanel(): React.JSX.Element {
                 />
                 {parsing ? (
                   <div className="text-center">
-                    <div className={cn('mb-2 h-5 w-5 animate-spin rounded-full border-2', twBorder('stone', 300), 'border-t-emerald-500')} />
-                    <p className={cn('text-sm', twText('stone', 500))}>解析中...</p>
+                    <div className={cn('mb-2 h-5 w-5 animate-spin rounded-full border-2 border-muted border-t-primary')} />
+                    <p className={cn('text-sm text-muted-foreground')}>解析中...</p>
                   </div>
                 ) : fileInfo ? (
                   <div className="text-center">
-                    <p className={cn('font-medium', twText('stone', 800), DARK.textNeutral100)}>{fileInfo.name}</p>
-                    <p className={cn('text-xs', twText('stone', 400))}>
+                    <p className={cn('font-medium text-foreground')}>{fileInfo.name}</p>
+                    <p className={cn('text-xs text-muted-foreground/70')}>
                       {formatFileSize(fileInfo.size)} · {fileInfo.type}
                     </p>
-                    <p className={cn('mt-1 text-xs', twText('emerald', 600), DARK.textEmerald400)}>点击更换文件</p>
+                    <p className={cn('mt-1 text-xs text-success')}>点击更换文件</p>
                   </div>
                 ) : (
                   <div className="text-center">
-                    <svg className={cn('mx-auto mb-2 h-8 w-8', twText('stone', 300), DARK.textNeutral600)} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <svg className={cn('mx-auto mb-2 h-8 w-8 text-muted-foreground/50')} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
                     </svg>
-                    <p className={cn('text-sm font-medium', twText('stone', 700), DARK.textNeutral200)}>拖拽文件到此处</p>
-                    <p className={cn('text-xs', twText('stone', 400))}>或点击选择文件</p>
-                    <p className={cn('mt-2 text-xs', twText('stone', 400))}>.csv / .xlsx / .json</p>
+                    <p className={cn('text-sm font-medium text-foreground')}>拖拽文件到此处</p>
+                    <p className={cn('text-xs text-muted-foreground/70')}>或点击选择文件</p>
+                    <p className={cn('mt-2 text-xs text-muted-foreground/70')}>.csv / .xlsx / .json</p>
                   </div>
                 )}
               </div>
@@ -426,7 +425,7 @@ export default function BulkImportPanel(): React.JSX.Element {
 
           {/* ── 目标分组 ── */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className={cn('text-xs', twText('stone', 500))}>目标分组：</span>
+            <span className={cn('text-xs text-muted-foreground')}>目标分组：</span>
             <Select
               className="h-8 w-auto min-w-[140px]"
               value={targetGroup}
@@ -445,43 +444,43 @@ export default function BulkImportPanel(): React.JSX.Element {
 
           {/* ── 统计概览 ── */}
           {importPreview.length > 0 && (
-            <div className={cn('flex flex-wrap items-center gap-3 rounded-md border px-3 py-2 text-sm', twBorder('stone', 200), twBg('stone', 50) + '/50', DARK.borderNeutral700, DARK.bgNeutral900Half)}>
-              <span className={cn(twText('stone', 500))}>共 <strong className={cn(twText('stone', 700), DARK.textNeutral200)}>{stats.total}</strong> 条</span>
-              <span className={cn('h-3.5 w-px', twBg('stone', 200), DARK.bgNeutral700)} />
-              <span className={twText('green', 600)}>✓ 有效 <strong>{stats.valid}</strong></span>
-              <span className={twText('amber', 600)}>⚠ 重复 <strong>{stats.duplicate}</strong></span>
-              <span className={twText('red', 600)}>✕ 无效 <strong>{stats.invalid}</strong></span>
+            <div className={cn('flex flex-wrap items-center gap-3 rounded-md border px-3 py-2 text-sm border-border bg-muted/50')}>
+              <span className={cn('text-muted-foreground')}>共 <strong className={cn('text-foreground')}>{stats.total}</strong> 条</span>
+              <span className={cn('h-3.5 w-px bg-border')} />
+              <span className="text-success">✓ 有效 <strong>{stats.valid}</strong></span>
+              <span className="text-warning">⚠ 重复 <strong>{stats.duplicate}</strong></span>
+              <span className="text-destructive">✕ 无效 <strong>{stats.invalid}</strong></span>
               {stats.valid === 0 && stats.total > 0 && (
-                <span className={cn('text-xs', twText('stone', 400))}>（所有行均不可导入）</span>
+                <span className={cn('text-xs text-muted-foreground/70')}>（所有行均不可导入）</span>
               )}
             </div>
           )}
 
           {/* ── 预览表格 ── */}
           {importPreview.length > 0 && (
-            <div className={cn('max-h-64 overflow-auto rounded-md border', twBorder('stone', 200), DARK.borderNeutral700)}>
+            <div className={cn('max-h-64 overflow-auto rounded-md border border-border')}>
               <table className="w-full text-sm">
-                <thead className={cn('sticky top-0', twBg('stone', 50), DARK.bgNeutral900)}>
+                <thead className={cn('sticky top-0 bg-muted')}>
                   <tr>
-                    <th className={cn('px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider', twText('stone', 500))}>#</th>
-                    <th className={cn('px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider', twText('stone', 500))}>代码</th>
-                    <th className={cn('px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider', twText('stone', 500))}>名称</th>
-                    <th className={cn('px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider', twText('stone', 500))}>标准化</th>
-                    <th className={cn('px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider', twText('stone', 500))}>状态</th>
+                    <th className={cn('px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground')}>#</th>
+                    <th className={cn('px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground')}>代码</th>
+                    <th className={cn('px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground')}>名称</th>
+                    <th className={cn('px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground')}>标准化</th>
+                    <th className={cn('px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground')}>状态</th>
                   </tr>
                 </thead>
-                <tbody className={cn('divide-y', DIVIDE.stone100, DARK.divideNeutral800)}>
+                <tbody className={cn('divide-y divide-border')}>
                   {importPreview.map((row, idx) => (
-                    <tr key={`${row.symbol}-${idx}`} className={cn(HOVER.bgStone50Half, DARK.hoverBgNeutral900Half)}>
-                      <td className={cn('px-3 py-2', twText('stone', 400))}>{idx + 1}</td>
-                      <td className={cn('px-3 py-2 font-mono', twText('stone', 700), DARK.textNeutral200)}>{row.code}</td>
-                      <td className={cn('px-3 py-2', twText('stone', 700), DARK.textNeutral200)}>{row.name}</td>
-                      <td className={cn('px-3 py-2 font-mono text-xs', twText('stone', 500))}>{row.symbol}</td>
+                    <tr key={`${row.symbol}-${idx}`} className={cn('hover:bg-muted/50')}>
+                      <td className={cn('px-3 py-2 text-muted-foreground/70')}>{idx + 1}</td>
+                      <td className={cn('px-3 py-2 font-mono text-foreground')}>{row.code}</td>
+                      <td className={cn('px-3 py-2 text-foreground')}>{row.name}</td>
+                      <td className={cn('px-3 py-2 font-mono text-xs text-muted-foreground')}>{row.symbol}</td>
                       <td className="px-3 py-2">
                         <div className="flex items-center gap-1.5">
                           {statusBadge(row.status)}
                           {(row.statusReason ?? '') !== '' && (
-                            <span className={cn('max-w-[120px] truncate text-xs', twText('stone', 400))} title={row.statusReason}>
+                            <span className={cn('max-w-[120px] truncate text-xs text-muted-foreground/70')} title={row.statusReason}>
                               {row.statusReason}
                             </span>
                           )}
@@ -496,10 +495,10 @@ export default function BulkImportPanel(): React.JSX.Element {
 
           {/* ── 导入进度 ── */}
           {importPhase === 'importing' && (
-            <div className={cn('rounded-md border p-4', twBorder('stone', 200), twBg('stone', 50) + '/50', DARK.borderNeutral700, DARK.bgNeutral900Half)}>
+            <div className={cn('rounded-md border p-4 border-border bg-muted/50')}>
               <div className="mb-2 flex items-center justify-between text-xs">
-                <span className={cn('font-medium', twText('stone', 600), DARK.textNeutral300)}>正在导入...</span>
-                <span className={twText('stone', 400)}>{importProgress}%</span>
+                <span className={cn('font-medium text-muted-foreground')}>正在导入...</span>
+                <span className="text-muted-foreground/70">{importProgress}%</span>
               </div>
               <Progress value={importProgress} max={100} showMax={false} />
             </div>
@@ -510,16 +509,16 @@ export default function BulkImportPanel(): React.JSX.Element {
             <div className={cn(
               'rounded-md border p-4 text-sm',
               importResult.failed > 0
-                ? [twBorder('amber', 200), twBg('amber', 50) + '/50', DARK.borderAmber800, DARK.bgAmber950_30]
-                : [twBorder('emerald', 200), twBg('emerald', 50) + '/50', DARK.borderEmerald800, DARK.bgGreen950]
+                ? 'border-warning/30 bg-warning/10'
+                : 'border-success/30 bg-success/10'
             )}>
               <div className="flex items-start gap-3">
                 {importResult.failed > 0 ? (
-                  <svg className={cn('mt-0.5 h-5 w-5 shrink-0', twText('amber', 500))} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className={cn('mt-0.5 h-5 w-5 shrink-0 text-warning')} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
                   </svg>
                 ) : (
-                  <svg className={cn('mt-0.5 h-5 w-5 shrink-0', twText('emerald', 500))} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className={cn('mt-0.5 h-5 w-5 shrink-0 text-success')} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                   </svg>
                 )}
@@ -527,26 +526,26 @@ export default function BulkImportPanel(): React.JSX.Element {
                   <p className={cn(
                     'font-semibold',
                     importResult.failed > 0
-                      ? [twText('amber', 700), DARK.textAmber300]
-                      : [twText('emerald', 700), DARK.textGreen100]
+                      ? 'text-warning'
+                      : 'text-success'
                   )}>
                     {importResult.failed > 0 ? '导入完成（部分失败）' : '导入完成'}
                   </p>
-                  <p className={cn('mt-0.5', twText('stone', 600), DARK.textNeutral400)}>
-                    成功 <strong className={cn(twText('stone', 800), DARK.textNeutral100)}>{importResult.success}</strong> 条
+                  <p className={cn('mt-0.5 text-muted-foreground')}>
+                    成功 <strong className={cn('text-foreground')}>{importResult.success}</strong> 条
                     {importResult.skipped > 0 && (
-                      <>，跳过 <strong className={cn(twText('amber', 600), DARK.textAmber300)}>{importResult.skipped}</strong> 条（已在池中）</>
+                      <>，跳过 <strong className={cn('text-warning')}>{importResult.skipped}</strong> 条（已在池中）</>
                     )}
                     {importResult.failed > 0 && (
-                      <>，失败 <strong className={cn(twText('red', 600), DARK.textRed400)}>{importResult.failed}</strong> 条</>
+                      <>，失败 <strong className={cn('text-destructive')}>{importResult.failed}</strong> 条</>
                     )}
                   </p>
                   {importResult.errors.length > 0 && (
                     <details className="mt-2">
-                      <summary className={cn('cursor-pointer text-xs', twText('stone', 500), HOVER.textStone700, DARK.textNeutral400, DARK.hoverTextNeutral200)}>
+                      <summary className={cn('cursor-pointer text-xs text-muted-foreground hover:text-foreground')}>
                         查看 {importResult.errors.length} 条失败明细
                       </summary>
-                      <ul className={cn('mt-2 space-y-0.5 text-xs', twText('stone', 500), DARK.textNeutral400)}>
+                      <ul className={cn('mt-2 space-y-0.5 text-xs text-muted-foreground')}>
                         {importResult.errors.map((e, idx) => (
                           <li key={idx} className="pl-2">· 第 {e.row} 行 {e.raw}：{e.error}</li>
                         ))}
@@ -560,7 +559,7 @@ export default function BulkImportPanel(): React.JSX.Element {
 
           {/* ── 消息 ── */}
           {message && (
-            <p className={cn('rounded-md px-3 py-2 text-sm', twBg('stone', 50), twText('stone', 600), DARK.bgNeutral900, DARK.textNeutral400)}>
+            <p className={cn('rounded-md px-3 py-2 text-sm bg-muted text-muted-foreground')}>
               {message}
             </p>
           )}
@@ -570,17 +569,17 @@ export default function BulkImportPanel(): React.JSX.Element {
             <p className={cn(
               'rounded-md px-3 py-2 text-sm',
               collectMessage.startsWith('采集失败')
-                ? [twBg('red', 50), twText('red', 600), DARK.bgRed950_30, DARK.textRed400]
+                ? 'bg-destructive/10 text-destructive'
                 : collectMessage.startsWith('采集完成')
-                  ? [twBg('emerald', 50), twText('emerald', 600), DARK.bgGreen950, DARK.textEmerald400]
-                  : [twBg('blue', 50), twText('blue', 600), DARK.bgBlue950, DARK.textBlue100],
+                  ? 'bg-success/10 text-success'
+                  : 'bg-info/10 text-info',
             )}>
               {collectMessage}
             </p>
           )}
 
           {/* ── 操作按钮区 ── */}
-          <div className={cn('flex items-center justify-end gap-2 border-t pt-4', twBorder('stone', 100), DARK.borderNeutral800)}>
+          <div className={cn('flex items-center justify-end gap-2 border-t pt-4 border-border')}>
             {importPhase === 'done' && (
               <>
                 <Button variant="outline" size="sm" onClick={handleReset}>

@@ -206,8 +206,19 @@ type SemanticColor = keyof typeof SEMANTIC_COLORS
  * @example twText('red', 600) → 'text-red-600'
  * @example twText('primary') → 'text-gray-900' (语义模式)
  *
- * @deprecated 语义模式（单参数）已弃用，请使用双参数显式指定色阶
- * 推荐：twText('gray', 900) 而非 twText('primary')
+ * @deprecated 此函数已全面弃用（2026-08-13 第四轮技术债务清零）。
+ * 所有 UI 组件已迁移至 CSS 变量语义令牌，请改用以下替代方案：
+ * - 主文字：`'text-foreground'`
+ * - 次要文字：`'text-muted-foreground'`
+ * - 辅助文字：`'text-muted-foreground/70'`
+ * - 错误/危险：`'text-destructive'`
+ * - 警告：`'text-warning'`
+ * - 成功：`'text-success'`
+ * - 信息：`'text-info'`
+ *
+ * @migration twText('slate', 900) → 'text-foreground'
+ * @migration twText('red', 600) → 'text-destructive'
+ * @migration twText('green', 600) → 'text-success'
  */
 export function twText(color: string, shade?: number): string {
   if (shade === undefined) {
@@ -228,8 +239,20 @@ export function twText(color: string, shade?: number): string {
  * @example twBg('red', 50) → 'bg-red-50'
  * @example twBg('surface') → 'bg-white' (语义模式)
  *
- * @deprecated 语义模式（单参数）已弃用，请使用双参数显式指定色阶
- * 推荐：twBg('gray', 100) 而非 twBg('muted')
+ * @deprecated 此函数已全面弃用（2026-08-13 第四轮技术债务清零）。
+ * 所有 UI 组件已迁移至 CSS 变量语义令牌，请改用以下替代方案：
+ * - 主背景：`'bg-background'`
+ * - 次要背景：`'bg-muted'`
+ * - 半透明背景：`'bg-muted/50'`
+ * - 错误背景：`'bg-destructive/10'`
+ * - 警告背景：`'bg-warning/10'`
+ * - 成功背景：`'bg-success/10'`
+ * - 信息背景：`'bg-info/10'`
+ * - 主色按钮：`'bg-primary'`
+ *
+ * @migration twBg('stone', 50) → 'bg-muted'
+ * @migration twBg('red', 50) → 'bg-destructive/10'
+ * @migration twBg('blue', 600) → 'bg-primary'
  */
 export function twBg(color: string, shade?: number | string): string {
   if (shade === undefined) {
@@ -250,8 +273,18 @@ export function twBg(color: string, shade?: number | string): string {
  * @example twBorder('red', 200) → 'border-red-200'
  * @example twBorder('default') → 'border-gray-300' (语义模式)
  *
- * @deprecated 语义模式（单参数）已弃用，请使用双参数显式指定色阶
- * 推荐：twBorder('gray', 300) 而非 twBorder('default')
+ * @deprecated 此函数已全面弃用（2026-08-13 第四轮技术债务清零）。
+ * 所有 UI 组件已迁移至 CSS 变量语义令牌，请改用以下替代方案：
+ * - 标准边框：`'border-border'`
+ * - 输入框边框：`'border-input'`
+ * - 错误边框：`'border-destructive/30'`
+ * - 警告边框：`'border-warning/30'`
+ * - 成功边框：`'border-success/30'`
+ * - 信息边框：`'border-info'`
+ *
+ * @migration twBorder('stone', 200) → 'border-border'
+ * @migration twBorder('red', 200) → 'border-destructive/30'
+ * @migration twBorder('emerald', 300) → 'border-success/30'
  */
 export function twBorder(color: string, shade?: number): string {
   if (shade === undefined) {

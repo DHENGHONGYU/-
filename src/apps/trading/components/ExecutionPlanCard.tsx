@@ -6,7 +6,7 @@ import { Button } from '@/components/atoms/Button'
 import { PhaseStepper } from './PhaseStepper'
 import type { ExecutionPlan, ExecutionPhase, RiskCheckItem } from '@/data/types'
 import { ChevronDown, ChevronUp, ShieldAlert, ShieldCheck, Info } from 'lucide-react'
-import { COLOR_SHADES, twText, twBg } from '@/constants/theme.tokens'
+import { COLOR_SHADES } from '@/constants/theme.tokens'
 
 export interface ExecutionPlanCardProps {
   plan: ExecutionPlan
@@ -17,12 +17,12 @@ export interface ExecutionPlanCardProps {
 }
 
 const PHASE_BADGE_COLORS: Record<ExecutionPhase, string> = {
-  plan: `${twBg('blue', 100)} ${twText('blue', 800)}`,
-  confirmed: `${twBg('blue', 100)} ${twText('blue', 800)}`,
-  pending: `${twBg('yellow', 100)} ${twText('yellow', 800)}`,
-  executed: `${twBg('green', 100)} ${twText('green', 800)}`,
-  cancelled: `${twBg('red', 100)} ${twText('red', 800)}`,
-  reviewed: `${twBg('purple', 100)} ${twText('purple', 800)}`,
+  plan: 'bg-info/10 text-info',
+  confirmed: 'bg-info/10 text-info',
+  pending: 'bg-warning/10 text-warning',
+  executed: 'bg-success/10 text-success',
+  cancelled: 'bg-destructive/10 text-destructive',
+  reviewed: 'bg-info/10 text-info',
 }
 
 const PHASE_LABELS: Record<ExecutionPhase, string> = {
@@ -159,9 +159,9 @@ export function ExecutionPlanCard({
                     key={idx}
                     className={cn(
                       'flex items-start gap-1.5 rounded-md border px-2 py-1.5 text-xs',
-                      check.severity === 'blocker' && `${twBg('red', 50)} ${twBg('red', 200)} ${twText('red', 800)}`,
-                      check.severity === 'warning' && `${twBg('yellow', 50)} ${twBg('yellow', 200)} ${twText('yellow', 800)}`,
-                      check.severity === 'info' && `${twBg('gray', 50)} ${twBg('gray', 200)} ${twText('gray', 700)}`
+                      check.severity === 'blocker' && 'bg-destructive/10 bg-destructive/20 text-destructive',
+                      check.severity === 'warning' && 'bg-warning/10 bg-warning/20 text-warning',
+                      check.severity === 'info' && 'bg-muted/50 bg-muted text-muted-foreground'
                     )}
                   >
                     {check.severity === 'blocker' && <ShieldAlert className={`h-3.5 w-3.5 ${COLOR_SHADES.red[600]} mt-0.5 shrink-0`} />}
