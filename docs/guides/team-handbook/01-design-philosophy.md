@@ -73,7 +73,7 @@ design-tokens/tokens.json
 |----|------|------|
 | L1 | `THEME_TOKENS` | 通用语义色/尺寸/间距/圆角/排版/图标/控件尺寸 |
 | L2 | `COLOR_TOKENS` | 业务语义色（涨跌/状态/评分等级/信号分级） |
-| L3 | `COLOR_SHADES` + `twText/twBg/twBorder` | 色阶与 Tailwind 文本/背景/边框映射 |
+| L3 | `COLOR_SHADES` + `twText/twBg/twBorder`（已废弃） | 色阶与 Tailwind 文本/背景/边框映射（已迁移至 CSS 变量语义类） |
 | L4 | `chartColors.ts` | 图表专用调色板（饼图/轮动因子/市场风格/信号等级） |
 | L5 | `STOCK_COLOR_TOKENS` | **股票红涨绿跌固定色**（不随主题） |
 | L6 | `SEMANTIC_COLOR_ROLES` | 主题感知 CSS 变量 + 排版/海拔/布局令牌 |
@@ -85,6 +85,8 @@ design-tokens/tokens.json
 - 业务语义（状态/评分/信号）→ `COLOR_TOKENS`
 - 暗色/悬停/Focus/渐变 → `DARK/HOVER/FOCUS/FILL/GRADIENT`
 - 新模块 → 优先 `SEMANTIC_COLOR_ROLES`
+
+> **⚠️ 废弃通知（2026-08-13）**：`twBg`/`twText`/`twBorder` 辅助函数已于 2026-08-13 全面废弃，UI 层统一使用 CSS 变量语义令牌（如 `text-foreground`、`bg-muted`、`border-border`、`text-destructive`、`bg-primary` 等）。L3 层 `COLOR_SHADES` 仍可用于 JS 逻辑取色，但 UI 层不再通过 `twText()`/`twBg()`/`twBorder()` 生成 Tailwind 类名。常用映射：`twText('slate'/'stone', 900/800)` → `text-foreground`；`twText('slate'/'stone', 500/600)` → `text-muted-foreground`；`twText('red', 600)` → `text-destructive`；`twBg('stone'/'slate', 50)` → `bg-muted`；`twBg('white')` → `bg-background`；`twBorder('stone'/'slate', 200)` → `border-border`。
 
 ### 4.3 防硬编码治理（三道门禁）
 `lint:colors`（ESLint 禁 HEX/RGB/HSL 与 Tailwind 数字色类）+ `audit:tokens` + `verify:tokens`。

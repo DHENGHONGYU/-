@@ -2,9 +2,12 @@
 title: 颜色令牌生命周期管理指南（入-移-出）
 code_version: "2.0.0-rc.1"
 tier: important
-version: v1.0.0
-last_updated: 2026-08-11
+version: v1.1.0
+last_updated: 2026-08-13
 change_log:
+  - version: v1.1.0
+    changes: "twText/twBg/twBorder 全面废弃，迁移至 CSS 变量语义令牌"
+    date: 2026-08-13
   - version: v1.0.0
     changes: "P0 版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
@@ -26,11 +29,13 @@ change_log:
 |------|----------|------|
 | L1 基础 | `THEME_TOKENS.color/iconSizes/controlSizes/spacing/radius/typography` | 通用语义色 + 尺寸/间距/圆角/排版 |
 | L2 语义 | `COLOR_TOKENS` | 业务语义色（涨跌/评分/因子/信号/背景/文字/边框） |
-| L3 色阶 | `COLOR_SHADES` + `twText/twBg/twBorder` | 特定色阶（`red-600`、`blue-50`） |
+| L3 色阶 | `COLOR_SHADES` | 特定色阶（图表等特殊场景）|
 | L4 图表 | `chartColors.ts`（PIE_CHART_PALETTE / ROTATION_FACTOR_COLORS / SIGNAL_GRADE_COLORS） | 图表/热力图/轮动图配色 |
 | 例外 | `STOCK_COLOR_TOKENS` / `getStockColor()` | A股红涨绿跌，**豁免主题切换** |
 
 > 完整场景示例（A–H）与禁止清单见 AGENTS.md §3.5，**本指南不再复制**，仅规定生命周期动作。
+
+> ⚠️ twText/twBg/twBorder 辅助函数已全面废弃（2026-08-13），UI 层请使用 CSS 变量语义令牌（text-foreground / bg-muted / border-border 等）
 
 ---
 
@@ -67,6 +72,8 @@ change_log:
 3. **安全删除**：从 `tokens.json` + `theme.tokens.ts` 导出 + `design-token-mapping.md` 移除；`generate-tokens.ts` 重新生成 `index.css`。
 4. **基线刷新**：若 `audit:tokens` 基线计数变化，消减后 `npm run audit:tokens -- --update-baseline` 并提交 `.token-baseline.json`。
 
+> ⚠️ **当前废弃实例**：`twText/twBg/twBorder` 辅助函数已于 2026-08-13 全面废弃，UI 组件已迁移至 CSS 变量语义令牌（text-foreground / bg-muted / border-border 等）。`COLOR_SHADES` 保留用于图表等特殊场景。
+
 ---
 
 ## 五、审计门禁清单
@@ -83,4 +90,5 @@ change_log:
 
 | 版本 | 日期 | 变更摘要 |
 |------|------|----------|
+| v1.1.0 | 2026-08-13 | twText/twBg/twBorder 辅助函数全面废弃，UI 层迁移至 CSS 变量语义令牌；L3 层仅保留 COLOR_SHADES 用于图表等特殊场景 |
 | v1.0.0 | 2026-07-22 | 从 AGENTS §3.5 抽取颜色令牌「入-移-出」生命周期指南（不复制场景细则）；绑定 `v9-color-token-remediation` 技能与 `audit:tokens`/`verify:colorSoT` 门禁；修正 AGENTS:376 `design-token-mapping.md` 断链（已加 `reference/` 前缀） |

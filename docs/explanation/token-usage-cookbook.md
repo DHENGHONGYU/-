@@ -2,9 +2,12 @@
 title: token-usage-cookbook
 code_version: "2.0.0-rc.1"
 tier: important
-version: v1.0.0
-last_updated: 2026-08-11
+version: v1.1.0
+last_updated: 2026-08-13
 change_log:
+  - version: v1.1.0
+    changes: "twText/twBg/twBorder 全面废弃，迁移至 CSS 变量语义令牌"
+    date: 2026-08-13
   - version: v1.0.0
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
@@ -36,12 +39,14 @@ import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 ## 场景 3：特定色阶（浅背景 / 深文字）
 ```tsx
-import { COLOR_SHADES } from '@/constants/theme.tokens'
-<div className={COLOR_SHADES.red[50]}>浅红背景</div>
-<span className={COLOR_SHADES.red[600]}>深红文字</span>
-// 或辅助函数
-import { twBg, twText } from '@/constants/theme.tokens'
-<div className={twBg('blue',50)}>浅蓝</div>
+// ✅ 推荐：CSS 变量语义令牌
+<div className="bg-destructive/10">浅红背景</div>
+<span className="text-destructive">深红文字</span>
+
+// ⚠️ 已废弃：twBg/twText（2026-08-13 全面弃用）
+// import { twBg, twText } from '@/constants/theme.tokens'
+// <div className={twBg('blue',50)}>浅蓝</div>
+// → 改用：<div className="bg-info/10">浅蓝</div>
 ```
 
 ## 场景 4：图表 / 热力图 / 轮动图
@@ -55,8 +60,12 @@ import { chartColors } from '@/config/chartColors'  // L4
 
 ## 场景 6：Widget 卡片背景 / 边框 / 间距
 ```tsx
-import { twBg, twBorder, THEME_TOKENS } from '@/constants/theme.tokens'
-<div className={`${twBg('stone',50)} ${twBorder('stone',200)} ${THEME_TOKENS.radius.md}`}>
+// ✅ 推荐：CSS 变量语义令牌
+<div className="bg-muted border-border rounded-lg">
+
+// ⚠️ 已废弃：twBg/twBorder
+// import { twBg, twBorder, THEME_TOKENS } from '@/constants/theme.tokens'
+// <div className={`${twBg('stone',50)} ${twBorder('stone',200)} ${THEME_TOKENS.radius.md}`}>
 ```
 
 ## 场景 7：文本层级（字号/字重/行高）
@@ -75,7 +84,7 @@ import { THEME_TOKENS } from '@/constants/theme.tokens'
 |----|------|------|
 | L1 | `THEME_TOKENS` | 通用语义色/尺寸/圆角/排版 |
 | L2 | `COLOR_TOKENS` | 涨跌/评分/因子/信号/背景/文字/边框 |
-| L3 | `COLOR_SHADES` + `twText/twBg/twBorder` | 特定色阶 |
+| L3 | `COLOR_SHADES` | 特定色阶（图表等特殊场景）|
 | L4 | `chartColors` | 图表专用 |
 | L5 | 股票红涨绿跌固定色 | 不随主题 |
 | L6 | `SEMANTIC_COLOR_ROLES` | 语义角色映射 |

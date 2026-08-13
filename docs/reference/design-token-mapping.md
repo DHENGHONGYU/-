@@ -14,7 +14,7 @@
 
 - 不知道某个场景该用 `THEME_TOKENS.color` 还是 `COLOR_TOKENS`；
 - 股票涨跌应该走 `STOCK_COLOR_TOKENS` 例外规则，但经常被误写成通用语义色；
-- 需要 `text-red-600` 时不知道用 `COLOR_SHADES` 还是 `twText`；
+- 需要 `text-red-600` 时不知道用 CSS 变量语义令牌还是 `COLOR_SHADES`；
 - 图表颜色直接使用 `COLOR_TOKENS` 而非 `chartColors.ts` 中业务调色板；
 - 暗色模式、悬停态、Focus 状态大量裸写 Tailwind 类名。
 
@@ -34,21 +34,20 @@
    └─ 否 → 继续下一步
 
 3. 是否需要特定色阶（如 bg-red-50、text-red-600）？
-   ├─ 是 → 使用 COLOR_SHADES 或 twText/twBg/twBorder（L3），见 §3.3
+   ├─ 是 → 使用 CSS 变量语义令牌（推荐）：text-destructive / bg-destructive/10 等
+   │       或 COLOR_SHADES（L3，仅限图表等特殊场景）
    └─ 否 → 继续下一步
 
 4. 是否是业务语义色（涨跌/评分/信号/因子/风格）？
    ├─ 是 → 使用 COLOR_TOKENS（L2），见 §3.2
    └─ 否 → 使用 THEME_TOKENS.color（L1）或 SEMANTIC_COLOR_ROLES（L6），见 §3.1
 
-5. 是否是暗色模式、悬停、Focus、渐变、SVG fill？
-   ├─ 是 → 使用 DARK / HOVER / FOCUS / FILL / GRADIENT（L3），见 §3.3
-   └─ 否 → 继续下一步
-
-6. 是否需要使用主题感知的新设计系统（CSS 变量）？
+5. 是否需要使用主题感知的新设计系统（CSS 变量）？
    ├─ 是 → 使用 SEMANTIC_COLOR_ROLES（L6），见 §3.5
    └─ 否 → 使用 THEME_TOKENS（L1）
 ```
+
+> ⚠️ twText/twBg/twBorder/DARK/HOVER/FOCUS/FILL 辅助函数已于 2026-08-13 全面废弃，所有 UI 组件已迁移至 CSS 变量语义令牌。
 
 ---
 
@@ -108,26 +107,28 @@
 | 悬停边框 | `COLOR_TOKENS.borderHover` | `<div className={COLOR_TOKENS.borderHover.tailwind} />` | `border-slate-300` |
 | 焦点环 | `COLOR_TOKENS.focusRing` | `<input className={COLOR_TOKENS.focusRing.tailwind} />` | `ring-blue-500` |
 
-### 3.3 特定色阶与状态辅助（L3 COLOR_SHADES / DARK / HOVER / FOCUS / FILL / GRADIENT）
+### 3.3 特定色阶（L3 COLOR_SHADES）
+
+> ⚠️ twText/twBg/twBorder/DARK/HOVER/FOCUS/FILL/GRADIENT 辅助函数已于 2026-08-13 全面废弃，以下为迁移参考。
 
 | 业务场景 | 推荐方式 | 代码示例 | 禁止写法 |
 |----------|----------|----------|----------|
-| 浅红背景 | `COLOR_SHADES.red[50]` | `<div className={COLOR_SHADES.red[50]} />` | `bg-red-50` |
-| 深红文字 | `COLOR_SHADES.red[600]` | `<span className={COLOR_SHADES.red[600]} />` | `text-red-600` |
-| 浅蓝背景 | `COLOR_SHADES.blue[50]` | `<div className={COLOR_SHADES.blue[50]} />` | `bg-blue-50` |
-| 深蓝文字 | `COLOR_SHADES.blue[700]` | `<span className={COLOR_SHADES.blue[700]} />` | `text-blue-700` |
-| 任意色阶 | `twText / twBg / twBorder` | `<span className={twText('red', 600)} />` | `text-red-600` |
-| 暗色背景 slate-800 | `DARK.bgSlate800` | `<div className={DARK.bgSlate800} />` | `dark:bg-slate-800` |
-| 暗色背景 neutral-900 | `DARK.bgNeutral900` | `<div className={DARK.bgNeutral900} />` | `dark:bg-neutral-900` |
-| 暗色文字 neutral-200 | `DARK.textNeutral200` | `<span className={DARK.textNeutral200} />` | `dark:text-neutral-200` |
-| 暗色边框 neutral-700 | `DARK.borderNeutral700` | `<div className={DARK.borderNeutral700} />` | `dark:border-neutral-700` |
-| 悬停背景 stone-100 | `HOVER.bgStone100` | `<div className={HOVER.bgStone100} />` | `hover:bg-stone-100` |
-| 暗色悬停背景 neutral-800 | `HOVER.darkHoverBgNeutral800` | `<div className={HOVER.darkHoverBgNeutral800} />` | `dark:hover:bg-neutral-800` |
-| Focus 边框 emerald | `FOCUS.borderEmerald400` | `<input className={FOCUS.borderEmerald400} />` | `focus:border-emerald-400` |
-| SVG 填充 | `FILL.stone700` | `<svg className={FILL.stone700} />` | `fill-stone-700` |
-| 渐变 emerald → sky | `GRADIENT.fromEmerald500` + `GRADIENT.toSky500` | `<div className={cn('bg-gradient-to-r', GRADIENT.fromEmerald500, GRADIENT.toSky500)} />` | `from-emerald-500 to-sky-500` |
-| 暗色红文字 | `COLOR_SHADES.red['200Dark']` | `<span className={COLOR_SHADES.red['200Dark']} />` | `dark:text-red-200` |
-| 暗色红背景 | `COLOR_SHADES.red['900DarkBg']` | `<div className={COLOR_SHADES.red['900DarkBg']} />` | `dark:bg-red-950` |
+| 浅红背景 | `bg-destructive/10`（CSS 变量） | `<div className="bg-destructive/10" />` | `bg-red-50` |
+| 深红文字 | `text-destructive`（CSS 变量） | `<span className="text-destructive" />` | `text-red-600` |
+| 浅蓝背景 | `bg-info/10`（CSS 变量） | `<div className="bg-info/10" />` | `bg-blue-50` |
+| 深蓝文字 | `text-info`（CSS 变量） | `<span className="text-info" />` | `text-blue-700` |
+| ⚠️ 任意色阶（已废弃） | ~~`twText / twBg / twBorder`~~ → CSS 变量语义令牌 | ~~`<span className={twText('red', 600)} />`~~ → `<span className="text-destructive" />` | `text-red-600` |
+| ⚠️ 暗色背景（已废弃） | ~~`DARK.bgSlate800`~~ → 主题自动适配 | ~~`<div className={DARK.bgSlate800} />`~~ → `<div className="bg-background" />` | `dark:bg-slate-800` |
+| ⚠️ 暗色背景（已废弃） | ~~`DARK.bgNeutral900`~~ → 主题自动适配 | ~~`<div className={DARK.bgNeutral900} />`~~ → `<div className="bg-background" />` | `dark:bg-neutral-900` |
+| ⚠️ 暗色文字（已废弃） | ~~`DARK.textNeutral200`~~ → `text-muted-foreground` | ~~`<span className={DARK.textNeutral200} />`~~ → `<span className="text-muted-foreground" />` | `dark:text-neutral-200` |
+| ⚠️ 暗色边框（已废弃） | ~~`DARK.borderNeutral700`~~ → `border-border` | ~~`<div className={DARK.borderNeutral700} />`~~ → `<div className="border-border" />` | `dark:border-neutral-700` |
+| ⚠️ 悬停背景（已废弃） | ~~`HOVER.bgStone100`~~ → `hover:bg-muted` | ~~`<div className={HOVER.bgStone100} />`~~ → `<div className="hover:bg-muted" />` | `hover:bg-stone-100` |
+| ⚠️ 暗色悬停（已废弃） | ~~`HOVER.darkHoverBgNeutral800`~~ → 主题自动适配 | ~~`<div className={HOVER.darkHoverBgNeutral800} />`~~ → `<div className="hover:bg-muted" />` | `dark:hover:bg-neutral-800` |
+| ⚠️ Focus 边框（已废弃） | ~~`FOCUS.borderEmerald400`~~ → `focus:border-primary` | ~~`<input className={FOCUS.borderEmerald400} />`~~ → `<input className="focus:border-primary" />` | `focus:border-emerald-400` |
+| ⚠️ SVG 填充（已废弃） | ~~`FILL.stone700`~~ → `fill-foreground` | ~~`<svg className={FILL.stone700} />`~~ → `<svg className="fill-foreground" />` | `fill-stone-700` |
+| ⚠️ 渐变（已废弃） | ~~`GRADIENT.fromEmerald500`~~ → CSS 变量渐变 | ~~`<div className={cn('bg-gradient-to-r', GRADIENT.fromEmerald500, GRADIENT.toSky500)} />`~~ → 使用 CSS 变量渐变 | `from-emerald-500 to-sky-500` |
+| 暗色红文字（图表） | `COLOR_SHADES.red['200Dark']` | `<span className={COLOR_SHADES.red['200Dark']} />` | `dark:text-red-200` |
+| 暗色红背景（图表） | `COLOR_SHADES.red['900DarkBg']` | `<div className={COLOR_SHADES.red['900DarkBg']} />` | `dark:bg-red-950` |
 
 ### 3.4 图表与业务调色板（L4 chartColors.ts）
 
@@ -251,11 +252,11 @@ import { COLOR_TOKENS } from '@/constants/theme.tokens'
 | `bg-blue-500` | 硬编码 Tailwind 颜色类 | 业务语义用 `COLOR_TOKENS.info.bgClass`；通用状态用 `THEME_TOKENS.color.infoBg` |
 | `text-slate-800` | 硬编码文字色 | `COLOR_TOKENS.textPrimary.tailwind` 或 `SEMANTIC_COLOR_ROLES.neutral.text` |
 | `border-gray-200` | 硬编码边框色 | `THEME_TOKENS.color.border` 或 `COLOR_TOKENS.border.tailwind` |
-| `dark:bg-slate-800` | 硬编码暗色模式 | `DARK.bgSlate800` |
-| `hover:bg-stone-100` | 硬编码悬停态 | `HOVER.bgStone100` |
-| `focus:border-emerald-400` | 硬编码 Focus | `FOCUS.borderEmerald400` |
-| `from-emerald-500 to-sky-500` | 硬编码渐变 | `GRADIENT.fromEmerald500` + `GRADIENT.toSky500` |
-| `fill-stone-700` | 硬编码 SVG fill | `FILL.stone700` |
+| `dark:bg-slate-800` | 硬编码暗色模式 | 使用 CSS 变量语义令牌（主题自动适配，如 `bg-background`） |
+| `hover:bg-stone-100` | 硬编码悬停态 | `hover:bg-muted`（CSS 变量） |
+| `focus:border-emerald-400` | 硬编码 Focus | `focus:border-primary`（CSS 变量） |
+| `from-emerald-500 to-sky-500` | 硬编码渐变 | 使用 CSS 变量渐变 |
+| `fill-stone-700` | 硬编码 SVG fill | `fill-foreground`（CSS 变量） |
 | `h-4 w-4` | 硬编码图标尺寸 | `THEME_TOKENS.iconSizes.sm` |
 | `text-xs` | 硬编码字号 | `THEME_TOKENS.typography.fontSize.xs` |
 | `p-4` | 硬编码间距 | `THEME_TOKENS.spacing.md` |
@@ -276,8 +277,8 @@ import { COLOR_TOKENS } from '@/constants/theme.tokens'
 - 所有颜色必须引用 `src/constants/theme.tokens.ts` 或 `src/config/chartColors.ts`。
 - 股票涨跌幅必须使用 `STOCK_COLOR_TOKENS`（红涨绿跌，暗色模式不变）。
 - 图表颜色使用 `chartColors.ts` 中的业务调色板。
-- 需要特定色阶时使用 `COLOR_SHADES` 或 `twText/twBg/twBorder`。
-- 暗色模式、悬停、Focus、渐变、SVG fill 使用 `DARK / HOVER / FOCUS / FILL / GRADIENT`。
+- 需要特定色阶时使用 CSS 变量语义令牌（推荐）或 `COLOR_SHADES`（仅限图表等特殊场景）。
+- 暗色模式、悬停、Focus、渐变、SVG fill 使用 CSS 变量语义令牌（`twText/twBg/twBorder/DARK/HOVER/FOCUS/FILL/GRADIENT` 已于 2026-08-13 全面废弃）。
 - 新组件优先使用 `SEMANTIC_COLOR_ROLES`（主题感知）。
 - 不确定时参考 `./design-token-mapping.md`。
 ```
@@ -292,10 +293,10 @@ import { COLOR_TOKENS } from '@/constants/theme.tokens'
 - [ ] 源码中不存在 `#[0-9a-fA-F]{6}` 形式的硬编码 HEX 颜色；
 - [ ] 股票涨跌使用 `STOCK_COLOR_TOKENS` 或 `getStockColor*` 函数；
 - [ ] 图表使用 `chartColors.ts` 业务调色板；
-- [ ] 暗色模式使用 `DARK.*` 而非 `dark:bg-*` 等裸类；
-- [ ] 悬停态使用 `HOVER.*`；
-- [ ] Focus 状态使用 `FOCUS.*`；
-- [ ] 渐变使用 `GRADIENT.*`；
+- [ ] 暗色模式使用 CSS 变量语义令牌（主题自动适配）而非 `dark:bg-*` 等裸类；
+- [ ] 悬停态使用 CSS 变量语义令牌（如 `hover:bg-muted`）；
+- [ ] Focus 状态使用 CSS 变量语义令牌（如 `focus:border-primary`）；
+- [ ] 渐变使用 CSS 变量渐变；
 - [ ] 字号、字重、行高、间距、圆角、图标尺寸均走 `THEME_TOKENS`；
 - [ ] 运行 `npm run lint:colors` 无 error；
 - [ ] 运行 `npm run audit:tokens` 无违规；
@@ -308,8 +309,8 @@ import { COLOR_TOKENS } from '@/constants/theme.tokens'
 - `src/constants/theme.tokens.ts` — 令牌 barrel 导出
 - `src/constants/theme/theme.tokens.base.ts` — L1 基础令牌
 - `src/constants/theme/theme.tokens.color.ts` — L2 语义色
-- `src/constants/theme/theme.tokens.shades.ts` — L3 色阶 + 辅助函数
-- `src/constants/theme/theme.tokens.helpers.ts` — L3/4 暗色/悬停/渐变 + 图表调色板
+- `src/constants/theme/theme.tokens.shades.ts` — L3 色阶（twText/twBg/twBorder 已废弃）
+- `src/constants/theme/theme.tokens.helpers.ts` — L3/4 暗色/悬停/渐变 + 图表调色板（DARK/HOVER/FOCUS/FILL/GRADIENT 已废弃）
 - `src/constants/theme/theme.tokens.stock.ts` — L5 股票颜色
 - `src/constants/theme/theme.tokens.design.ts` — L6 设计系统
 - `src/config/chartColors.ts` — 图表与业务调色板

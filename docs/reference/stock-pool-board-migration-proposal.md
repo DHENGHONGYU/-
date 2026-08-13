@@ -221,7 +221,7 @@ StockPoolBoardPage
 | 进度条依赖 `taskStatuses`，无任务时全部空白 | 体验 | 无任务时显示“暂无采集任务”，并提供手动触发入口 |
 | 新增路由未同步到 `RouteGuard` 白名单 | 访问 404 | 注册 `ROUTE_REGISTRY` 后白名单自动生成 |
 | `audit:layers` 检测到 UI 跨层调用 | 阻塞 | 新增页面仅通过 store/service 获取数据，不直接访问 `dataLayer` |
-| 颜色硬编码导致 `lint:colors` 失败 | 阻塞 | 统一使用 `COLOR_TOKENS` / `THEME_TOKENS` / `twText` / `twBg` |
+| 颜色硬编码导致 `lint:colors` 失败 | 阻塞 | 统一使用 `COLOR_TOKENS` / `THEME_TOKENS`；UI 颜色类改用 CSS 变量语义类（如 `text-foreground`、`bg-muted`、`border-border`），`twText` / `twBg` 已于 2026-08-13 全面废弃 |
 
 ---
 

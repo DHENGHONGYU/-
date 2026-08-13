@@ -199,7 +199,7 @@ v3/v4 的单层 ReactGridLayout 4 列网格存在严重信息过载：
 |------|--------|--------|
 | CardTitle（CockpitShell 5 处） | `text-base` | `text-base text-foreground` |
 | CardTitle（WidgetStateShell） | `text-base font-semibold` | `text-base font-semibold text-foreground` |
-| MarketIndicesWidget 数据 | `twText('gray', 400)` | `twText('gray', 500)` |
+| MarketIndicesWidget 数据 | `twText('gray', 400)` | `text-muted-foreground`（CSS 变量语义类；原 `twText('gray', 500)` 已废弃） |
 | 占位骨架 Card | `className="opacity-60"` | 移除 opacity |
 
 ### 5.7 代码清理

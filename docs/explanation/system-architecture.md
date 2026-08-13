@@ -3,11 +3,14 @@ title: system-architecture
 tier: important
 code_version: "2.0.0-rc.1"
 version: v1.0
-last_updated: 2026-08-11
+last_updated: 2026-08-13
 change_log:
   - version: v1.0
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
+  - version: v1.1
+    changes: "架构文档同步：修正 services 子域表（移除 11 幻影子域、新增 15 未文档化子域）、目录结构（schema 单数、移除 blueprints/devtools/utils）、cockpit 结构（移除 providers/MarketDataProvider）、令牌文件表（新增 badges/portal）、确认 twBg/twText/twBorder 废弃、SkeletonLegacy 标记 deprecated"
+    date: 2026-08-13
 ---
 
 
@@ -71,7 +74,7 @@ change_log:
 │  pages/  +  components/   ← 视图层（5 舱页面 + 原子设计组件库） │
 ├──────────────────────────────────────────────────────────────┤
 │  store/        ← 状态层（Zustand，withBroadcast 跨 Tab 广播）  │
-│  services/     ← 服务层（22 业务子域，经 DataBridge 写数据）   │
+│  services/     ← 服务层（27 业务子域，经 DataBridge 写数据）   │
 ├──────────────────────────────────────────────────────────────┤
 │  core/         ← 数据治理层（DataBridge / Envelope / ACL /     │
 │                    MemoryCache / EventBus / 级联与管道编排）    │
@@ -121,20 +124,38 @@ change_log:
 - `dataLayer.ts` 及按域拆分的 `dataLayer*Stores.ts`，直连 IndexedDB（`db`）。
 - 仅被 `core/databridge.ts` 的 `routeToDB` 调用；`store/` 与 `services/` 不得直连。
 
-### 3.3 `services/` 业务服务子域（22 个）
+### 3.3 `services/` 业务服务子域（27 个）
 
 | 子域 | 职责 |
 |------|------|
 | `analysis/` | 分析服务：轮动评分、板块分析引擎、评分文档、筛选引擎、新鲜度守卫（写经 `DataBridge.forward()`） |
-| `data-collector/` | 采集管道：`collectionPipeline` `dataSourceOrchestrator` `MarketDataAdapter` `collectors/{Mock,Rest,WebSocket}` `tracePersistenceService` |
 | `scoring/` | 评分服务：行业评分、热门板块分析/编排、因子 |
 | `trading/` | 交易服务：双策略引擎、组合、仓位、风险引擎、盈亏计算、评分适配 |
 | `fetcher/` | 数据拉取：`fetcherClient`（akshare 等 Provider）、`fetcherAdapter`、`fetcherService`（写经 `EnvelopeFactory + dataBridge.forward`） |
 | `llm/` | 大模型：`llmClient`（多模型）、`llmGateway` |
 | `news/` | 新闻：新闻服务、情绪分析、情绪趋势、股票关联 |
-| `execution/` | 执行：执行计划、执行日志 |
-| `collection/` `input/` `stock-analysis/` `stockpool/` `screening/` `portfolio/` `backtest/` `export/` `pwa/` `rbac/` `system/` `trade/` `ai-center/` `hybrid-proofread/` `mcp/` | 各业务/基础设施子域 |
-| 平铺服务 | `contracts.ts` `errorBus.ts` `feedbackService.ts` `resilience.ts` `riskControlService.ts` `unifiedStockService.ts` |
+| `input/` | 输入服务：批量导入、热门板块、Mock 股票库 |
+| `backtest/` | 回测引擎、回测指标、回测事件加载 |
+| `pwa/` | PWA 服务：Service Worker 注册 |
+| `system/` | 系统服务：AI 记忆、引导、自定义 Agent、本地文档、监控、种子数据 |
+| `hybrid-proofread/` | 混合校阅：云同步、哈希、报告生成、规则引擎 |
+| `mcp/` | MCP 服务（见 `src/mcp/` 框架） |
+| `data-sync/` | 数据同步：冲突解决、字段合并、过期检测、更新执行 |
+| `data-sync-search/` | 数据同步搜索：代码/文档/历史/语义搜索 |
+| `evaluators/` | 评估器：一致性、回归、评分规则、Schema 校验 |
+| `file-import/` | 文件导入：差异分析、哈希对比、解析器注册 |
+| `lifecycle/` | 生命周期：分析结果生命周期管理 |
+| `orchestration/` | 编排：催化剂追踪、筹码异常、假突破告警、质量门禁 |
+| `output/` | 输出：周期复盘、因子看板、预测验证 |
+| `perf/` | 性能：压力测试服务 |
+| `pool/` | 股票池：采集进度、池服务、新闻统计 |
+| `profile/` | 画像：社区同步、本地文档同步、新闻同步、评分证据 |
+| `shared/` | 共享：安全 fetch |
+| `skills/` | 技能：进场/离场信号、风险止损、因子回归、情绪分析等技能注册 |
+| `stock/` | 股票：全市场股票服务、行业映射、股票字典、搜索客户端 |
+| `storage/` | 存储：DuckDB、HNSW 索引、IndexedDB、向量提供者 |
+| `workers/` | Worker：V6 评分任务调度与 Worker |
+| 平铺服务 | `contracts.ts` `errorBus.ts` `feedbackService.ts` `resilience.ts` `riskControlService.ts` `unifiedStockService.ts` `serviceRegistry.ts` |
 
 **写库规范（Service → DataBridge）**：
 ```ts
@@ -250,13 +271,15 @@ sequenceDiagram
 |------|------|------|------|
 | **L1** 基础 | `THEME_TOKENS` | 通用语义色、尺寸、间距、圆角、排版 | `theme.tokens.base.ts` |
 | **L2** 语义 | `COLOR_TOKENS` + `getColorHex/Tailwind/BgClass` | 涨跌/评分/信号/背景/文字/边框 | `theme.tokens.color.ts` |
-| **L3** 色阶 | `COLOR_SHADES` + `twText/twBg/twBorder` | 特定色阶 + Tailwind 辅助 | `theme.tokens.shades.ts` |
+| **L3** 色阶 | `COLOR_SHADES` + `twText/twBg/twBorder`（已废弃） | 特定色阶 + Tailwind 辅助（已迁移至 CSS 变量语义类） | `theme.tokens.shades.ts` |
 | L3/L4 辅助 | `DARK/HOVER/FOCUS/FILL/GRADIENT/CHART_PALETTE/SPACING` | 交互态/图表调色板 | `theme.tokens.helpers.ts` |
 | **L5** 股票 | `STOCK_COLOR_TOKENS` + `getStockColor*` | 红涨绿跌固定例外（不随主题） | `theme.tokens.stock.ts` |
 | **L6** 设计 | `SEMANTIC_COLOR_ROLES` + `TYPOGRAPHY_SCALE` + `ELEVATION` + `LAYOUT_TOKENS` | 语义角色/排版/层级/布局 | `theme.tokens.design.ts` |
 
 - 图表配色 `src/config/chartColors.ts`（198 行）全部引用 `COLOR_TOKENS.hex`，关键导出：`PIE_CHART_PALETTE` `ROTATION_FACTOR_COLORS` `MARKET_STYLE_COLORS` `SIGNAL_GRADE_COLORS` `SCORE_BUCKET_COLORS`。
 - **约束**：UI 层颜色必须走令牌；A 股涨跌色固定；`lint:colors` + `audit:tokens` + `verify:tokens` 三道门禁校验。
+
+> **⚠️ 废弃通知（2026-08-13）**：`twBg`/`twText`/`twBorder` 辅助函数已于 2026-08-13 全面废弃，UI 层统一使用 CSS 变量语义令牌（如 `text-foreground`、`bg-muted`、`border-border`、`text-destructive`、`bg-primary` 等）。`COLOR_SHADES` 仍可用于 JS 逻辑取色，但 UI 层不再通过 `twText()`/`twBg()`/`twBorder()` 生成 Tailwind 类名。映射参考：`twText('slate'/'stone', 900/800)` → `text-foreground`；`twText('slate'/'stone', 500/600)` → `text-muted-foreground`；`twText('red', 600)` → `text-destructive`；`twBg('stone'/'slate', 50)` → `bg-muted`；`twBg('white')` → `bg-background`；`twBorder('stone'/'slate', 200)` → `border-border`。
 
 ---
 

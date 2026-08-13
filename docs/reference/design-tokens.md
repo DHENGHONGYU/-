@@ -2,9 +2,12 @@
 title: design-tokens
 tier: important
 code_version: "2.0.0-rc.1"
-version: v1.0.0
-last_updated: 2026-08-11
+version: v1.1.0
+last_updated: 2026-08-13
 change_log:
+  - version: v1.1.0
+    changes: "twBg/twText/twBorder 全面废弃，迁移至 CSS 变量语义令牌"
+    date: 2026-08-13
   - version: v1.0.0
     changes: "P0 版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
@@ -37,20 +40,23 @@ src/constants/theme.tokens.ts (语义化令牌)
 ### 1. 在组件中使用颜色令牌
 
 ```tsx
-import { COLOR_TOKENS, COLOR_SHADES, twText, twBg } from '@/constants/theme.tokens'
+// ✅ 正确：使用 CSS 变量语义令牌（推荐）
+<span className="text-foreground">主文字</span>
+<div className="bg-muted">次要背景</div>
+<span className="text-destructive">错误</span>
+<div className="bg-success/10 text-success">成功状态</div>
 
-// ✅ 正确：使用语义化令牌
+// ✅ 正确：使用业务语义色（COLOR_TOKENS）
 <span className={COLOR_TOKENS.up.tailwind}>上涨</span>
-<div className={COLOR_TOKENS.bgCard.bgClass}>卡片背景</div>
+<div className={COLOR_TOKENS.scoreHigh.bgClass}>高分</div>
+
+// ✅ 正确：使用图表色板
 <span style={{ color: COLOR_TOKENS.danger.hex }}>危险</span>
 
-// ✅ 正确：使用色阶令牌
-<div className={COLOR_SHADES.red[50]}>浅红背景</div>
-<span className={COLOR_SHADES.blue[600]}>深蓝文字</span>
-
-// ✅ 正确：使用辅助函数
-<span className={twText('red', 600)}>深红文字</span>
-<div className={twBg('blue', 50)}>浅蓝背景</div>
+// ⚠️ 已废弃：twText/twBg/twBorder（2026-08-13 全面弃用）
+// import { twText, twBg } from '@/constants/theme.tokens'
+// <span className={twText('red', 600)}>深红文字</span>
+// → 改用：<span className="text-destructive">深红文字</span>
 
 // ❌ 错误：硬编码颜色
 <span className="text-red-500">上涨</span>
@@ -91,6 +97,28 @@ import { SPACING_TOKENS } from '@/constants/theme.tokens'
   区块内容
 </div>
 ```
+
+## CSS 变量语义令牌映射
+
+| 语义令牌 | 用途 | 原 twText/twBg 调用 |
+|----------|------|---------------------|
+| text-foreground | 主标题文字 | twText('slate', 900) |
+| text-muted-foreground | 次要文字 | twText('slate', 500) |
+| text-muted-foreground/70 | 辅助文字 | twText('slate', 400) |
+| text-destructive | 错误/危险 | twText('red', 600) |
+| text-warning | 警告 | twText('amber', 600) |
+| text-success | 成功 | twText('green', 600) |
+| text-info | 信息 | twText('blue', 600) |
+| bg-background | 主背景 | twBg('white') |
+| bg-muted | 次要背景 | twBg('stone', 50) |
+| bg-muted/50 | 半透明背景 | twBg('stone', 50) + '/50' |
+| bg-destructive/10 | 错误背景 | twBg('red', 50) |
+| bg-warning/10 | 警告背景 | twBg('amber', 50) |
+| bg-success/10 | 成功背景 | twBg('green', 50) |
+| bg-primary | 主色按钮 | twBg('blue', 600) |
+| border-border | 标准边框 | twBorder('stone', 200) |
+| border-input | 输入框边框 | twBorder('stone', 300) |
+| border-destructive/30 | 错误边框 | twBorder('red', 200) |
 
 ## 令牌分类
 
@@ -325,22 +353,25 @@ import {
 
 ## 暗色模式支持
 
-### 使用 DARK 辅助类
+> ⚠️ DARK/HOVER/FOCUS/FILL/GRADIENT 辅助函数已于 2026-08-13 全面废弃，暗色模式现通过 CSS 变量语义令牌自动适配。以下为历史迁移参考。
+
+### 使用 CSS 变量语义令牌（推荐）
 
 ```tsx
-import { DARK, HOVER, GRADIENT } from '@/constants/theme.tokens'
-
-<div className={`${DARK.bgSlate800} ${DARK.textSlate100}`}>
+// ✅ 推荐：CSS 变量语义令牌自动适配暗色模式
+<div className="bg-background text-foreground">
   暗色模式背景 + 文字
 </div>
 
-<div className={`${HOVER.bgRed100} ${HOVER.bgSlate200}`}>
+<div className="hover:bg-muted">
   悬停效果
 </div>
 
-<div className={`${GRADIENT.fromEmerald500} ${GRADIENT.toSky500}`}>
-  渐变背景
-</div>
+// ⚠️ 已废弃：DARK / HOVER / GRADIENT（2026-08-13 全面弃用）
+// import { DARK, HOVER, GRADIENT } from '@/constants/theme.tokens'
+// <div className={`${DARK.bgSlate800} ${DARK.textSlate100}`}>暗色模式背景 + 文字</div>
+// <div className={`${HOVER.bgRed100} ${HOVER.bgSlate200}`}>悬停效果</div>
+// <div className={`${GRADIENT.fromEmerald500} ${GRADIENT.toSky500}`}>渐变背景</div>
 ```
 
 ### 使用 COLOR_SHADES 暗色变体
@@ -413,9 +444,11 @@ npm run audit:hardcode  # 扫描颜色硬编码违规
    <div className={COLOR_SHADES.red[50]}>浅红背景</div>
    ```
 
-3. **使用辅助函数**
+3. **使用 CSS 变量语义令牌（辅助函数已废弃）**
    ```tsx
-   <span className={twText('red', 600)}>深红文字</span>
+   // ⚠️ twText/twBg/twBorder 已于 2026-08-13 全面弃用
+   // ✅ 改用 CSS 变量语义令牌
+   <span className="text-destructive">深红文字</span>
    ```
 
 4. **图表使用业务配色**
@@ -423,9 +456,11 @@ npm run audit:hardcode  # 扫描颜色硬编码违规
    <PieChart colors={PIE_CHART_PALETTE} />
    ```
 
-5. **暗色模式使用 DARK 辅助类**
+5. **暗色模式使用 CSS 变量语义令牌（DARK 辅助类已废弃）**
    ```tsx
-   <div className={DARK.bgSlate800}>暗色背景</div>
+   // ⚠️ DARK.* 已于 2026-08-13 全面弃用
+   // ✅ 改用 CSS 变量语义令牌（自动适配暗色模式）
+   <div className="bg-background">暗色背景</div>
    ```
 
 ### ❌ 禁止做法
@@ -583,5 +618,6 @@ function MyComponent() {
 
 ## 更新日志
 
+- **2026-08-13**: twBg/twText/twBorder/DARK/HOVER/FOCUS/FILL/GRADIENT 辅助函数全面废弃，所有 UI 组件迁移至 CSS 变量语义令牌；新增「CSS 变量语义令牌映射」章节。
 - **2026-07-15**: 新增 `PORTAL_TOKENS`（L6 门户布局令牌扩展）；新增 `themeStore` 统一管理 light/dark/system 主题切换；`PortalShell.tsx` 全面改用 PORTAL_TOKENS 并集成 themeStore。
 - **2026-07-05**: 初始版本，建立 Design Tokens 系统和主题切换机制

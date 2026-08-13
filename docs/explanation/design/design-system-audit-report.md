@@ -214,6 +214,8 @@ date: 2026-07-17
 
 ## 7. 结论与优先级建议
 
+> **迁移完成通知（2026-08-13）**：`twBg`/`twText`/`twBorder` 辅助函数已于 2026-08-13 全面废弃，所有 UI 组件已迁移至 CSS 变量语义令牌类（如 `text-foreground`、`bg-muted`、`border-border`、`text-destructive`、`bg-primary` 等）。本报告 §5 中涉及的 `COLOR_TOKENS.*.bgClass` 裸类问题已通过 CSS 变量语义类迁移彻底解决。`COLOR_SHADES` 仍可用于 JS 逻辑取色，但 UI 层不再通过 `twText()`/`twBg()`/`twBorder()` 生成 Tailwind 类名。
+
 **总体评价**：V9 设计系统具备**优秀的骨�?*——分层令牌（L1–L6）、HSL 主题变量、明暗双模、figma 双向映射、股票涨跌例外规则、原子组件结构，均为行业最佳实践。但**细节层存在「多源并行、文档漂移、规范缺位�?*三类问题，拉低了一致性与完整性得分（综合 �?6.0/10）�?
 **建议优先处理（高 ROI�?*�?1. **【高】收敛令牌单一事实�?*（C1–C3）：�?`raw` / `tokens.json` / 文档全部�?`index.css` 变量推导，一次性消�?4�? 种主�?成功色分裂�?2. **【高】补全组件规范文�?*（C12）：以本报告 §5 为基线，沉淀�?`docs/explanation/design/component-specs.md`，并接入 `audit:docs` 同步门禁�?3. **【中】字�?间距单一�?*（C8–C10）：废弃 `THEME_TOKENS.typography` �?`theme.config.ts` 旧体系，8px 刻度收敛，补 H5/H6�?4. **【中】修�?Button 缺陷**（C11）：danger/success 改语义令牌、`default` 变体落地、内边距并入 8px 栅格�?5. **【低】宋韵落地与文档校验**（C4/C7）：统一文档与代码，明确 cinnabar 用途�?
 完成上述后，规范�?一致性可提升�?8+，完整性可补齐 H5/H6 与组件规范，整体达到可对外发布的设计系统水准�?

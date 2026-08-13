@@ -34,6 +34,8 @@ tags: [frontend, component, design, standards]
 > 关联文档：差异核查见 `docs/explanation/design/design-system-audit-report.md`；触发治理见 `docs/meta/doc-trigger-action-map.md` T6�?
 ## 0. 规范约定
 
+> **废弃通知（2026-08-13）**：`twBg`/`twText`/`twBorder` 辅助函数已于 2026-08-13 全面废弃，UI 层统一使用 CSS 变量语义令牌类。本文件所有组件规范均已使用 CSS 变量语义类（如 `bg-primary`、`text-foreground`、`border-input`、`bg-destructive`、`bg-success` 等），不再使用 `twText()`/`twBg()`/`twBorder()` 生成 Tailwind 类名。`COLOR_SHADES` 仍可用于 JS 逻辑取色。
+
 - **令牌引用基线**：所有组件颜色必须走语义令牌（`bg-primary` / `text-foreground` / `border-input` / `bg-destructive` / `bg-success` 等），禁�?`bg-red-500` / `bg-green-700` �?Tailwind 调色板裸类（非主题感知，明暗不一致）�?- **五态覆�?*：每个组件规范含 默认 / 悬停 / 聚焦 / 禁用 / 加载 五态�?- **字体层级**：引�?`tailwind.config.js` 的排版阶梯（`text-h1`~`text-h4` / `text-body` / `text-body-sm` / `text-caption` / `text-overline`），禁止硬编码字号�?- **间距栅格**：基�?8px 基准（`4/8/16/24/32/48/64`），组件�?间距须落在基准倍数，禁�?12px/20px 等非基准值�?- **明暗适配**：所有颜色经 `index.css` �?HSL 变量自动适配�?暗模式，组件不得写死明暗分支�?- **一致性严重度**：�?合规 �?🟡 待微�?�?🔴 阻断（需整改）�?
 ---
 
