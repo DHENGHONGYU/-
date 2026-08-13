@@ -1,0 +1,211 @@
+# V9 FinSight CI/CD 流水线配置
+# GitHub Actions — 代码质量门禁 + 自动部署
+
+name: V9 Quality Gates
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/**'
+      - 'scripts/audit/**'
+      - 'package.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'scripts/audit/**'
+  schedule:
+    # 每日凌晨 2:00 (北京时间) 自动运行质量审计
+    - cron: '0 18 * * *'  # UTC 18:00 = 北京时间 02:00
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+
+# ═══════════════════════════════════════════════════════════════
+# 工作流定义
+# ═══════════════════════════════════════════════════════════════
+
+jobs:
+  # ── 阶段 1：类型检查 + 基础审计（并行） ──
+  typecheck:
+    name: TypeScript 类型检查
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+      - name: tsc 类型检查
+        run: npm run tsc:prod
+
+  lint:
+    name: 代码规范 + 分层审计
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+      - name: ESLint
+        run: npm run lint --if-present
+      - name: 分层审计
+        run: npm run audit:layers --if-present
+
+  # ── 阶段 2：P0 高危门禁（必须全绿） ──
+  p0-gates:
+    name: P0 高危门禁
+    runs-on: ubuntu-latest
+    needs: [typecheck]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+
+      - name: R01 KPI 假绿灯审计
+        run: npm run audit:kpi-consistency
+        continue-on-error: false  # P0 必须通过
+
+      - name: R05 复权一致性审计
+        run: npm run audit:adjustment-consistency
+        continue-on-error: false
+
+      - name: R10 权重一致性审计
+        run: npm run audit:weights
+        continue-on-error: false
+
+  # ── 阶段 3：P1 质量门禁（可降级为 warn） ──
+  p1-gates:
+    name: P1 质量门禁
+    runs-on: ubuntu-latest
+    needs: [typecheck]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+
+      - name: R06+R07+R11 综合质量审计
+        run: npm run audit:quality
+        continue-on-error: true  # P1 可降级
+
+      - name: R08 ACL 权限审计
+        run: npm run audit:acl
+        continue-on-error: true
+
+  # ── 阶段 4：单元测试（因子公式 + 核心模块） ──
+  unit-tests:
+    name: 单元测试
+    runs-on: ubuntu-latest
+    needs: [typecheck]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+
+      - name: 因子公式测试
+        run: npm run test:factors --if-present
+
+      - name: 核心模块测试
+        run: npx vitest run tests/unit/ --if-present
+
+  # ── 阶段 5：构建验证 ──
+  build:
+    name: 构建验证
+    runs-on: ubuntu-latest
+    needs: [p0-gates, p1-gates, unit-tests]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+      - name: 生产构建
+        run: npm run build
+      - name: 构建产物大小
+        run: du -sh dist/ 2>/dev/null || echo "dist/ 不存在"
+
+  # ── 阶段 6：质量报告（仅 main 分支） ──
+  quality-report:
+    name: 生成质量报告
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+      - name: 生成质量报告
+        run: npm run quality:report --if-present
+      - name: 上传质量报告
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-report
+          path: outputs/quality-report-*.md
+
+# ═══════════════════════════════════════════════════════════════
+# 定时任务：每日质量巡检
+# ═══════════════════════════════════════════════════════════════
+
+  daily-health-check:
+    name: 每日健康巡检
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+      - name: 运行全部审计
+        run: npm run audit:all
+      - name: 生成健康报告
+        run: |
+          echo "## V9 每日健康巡检" > health-report.md
+          echo "**时间**: $(date -u +'%Y-%m-%d %H:%M UTC')" >> health-report.md
+          echo "**分支**: ${{ github.ref_name }}" >> health-report.md
+          echo "**提交**: ${{ github.sha }}" >> health-report.md
+          echo "" >> health-report.md
+          echo "审计结果: $(npm run audit:all 2>&1 | tail -20)" >> health-report.md
+      - name: 上传健康报告
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-health-report
+          path: health-report.md
+
+# ═══════════════════════════════════════════════════════════════
+# 通知配置（可选：Slack / 飞书）
+# ═══════════════════════════════════════════════════════════════
+# 如需 Slack 通知，取消注释以下配置：
+#
+#   - name: Slack 通知
+#     if: failure()
+#     uses: slackapi/slack-github-action@v1.24.0
+#     with:
+#       payload: |
+#         {
+#           "text": "❌ V9 CI 失败: ${{ github.workflow }} #${{ github.run_number }}"
+#         }
+#     env:
+#       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
