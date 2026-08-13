@@ -121,17 +121,17 @@ export function computeMACD(
   
   // 转换为 lightweight-charts 数据格式
   const dif: Array<LineData<Time> | null> = data.map((item, i) => ({
-    time: item.time as Time,
+    time: item.time,
     value: difValues[i]!,
   }))
   
   const dea: Array<LineData<Time> | null> = data.map((item, i) => ({
-    time: item.time as Time,
+    time: item.time,
     value: deaValues[i]!,
   }))
   
   const histogram: Array<HistogramData<Time> | null> = data.map((item, i) => ({
-    time: item.time as Time,
+    time: item.time,
     value: histogramValues[i]!,
     color: histogramValues[i]! >= 0 ? '#ef444480' : '#22c55e80',
   }))
