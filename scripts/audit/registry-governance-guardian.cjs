@@ -21,8 +21,8 @@ const CLI = {
 const BASELINE = Object.freeze({
   storeEntriesMin: 64,
   serviceEntriesMin: 62,
-  // 2026-08-13 校准：删除 6 个死组件条目 + 注册 3 个真实组件后，audit:registry 验证真实组件数为 159
-  componentEntriesMin: 159,
+  // 2026-08-13 校准：删除 SkeletonLegacy 废弃条目后，audit:registry 验证真实组件数为 158
+  componentEntriesMin: 158,
   componentSubRegistries: 4,
 });
 
@@ -138,30 +138,13 @@ function historicalRegressionCheck() {
     const mol = fsMod.readFileSync(MOLECULE_REGISTRY_TS, 'utf8');
     const atomSkeletons = [...atom.matchAll(/name:\s*['"](Skeleton|SkeletonLegacy)['"]/g)].map((x) => x[1]);
     const molSkeletons = [...mol.matchAll(/name:\s*['"](Skeleton|SkeletonLegacy)['"]/g)].map((x) => x[1]);
-    if (atomSkeletons.length !== 1 || atomSkeletons[0] !== 'SkeletonLegacy') {
-      errors.push('[Dedup2] Atom 层 Skeleton 条目异常：期望仅 1 条 SkeletonLegacy，实际 [' + atomSkeletons.join(', ') + ']');
+    if (atomSkeletons.length !== 0) {
+      errors.push('[Dedup2] Atom 层 Skeleton 条目异常：期望 0 条（已迁移至 Molecule 层），实际 [' + atomSkeletons.join(', ') + ']');
     }
     if (molSkeletons.length !== 1 || molSkeletons[0] !== 'Skeleton') {
       errors.push('[Dedup2] Molecule 层 Skeleton 条目异常：期望仅 1 条 Skeleton(active)，实际 [' + molSkeletons.join(', ') + ']');
     }
-    const legacyBlockMatch = atom.match(/name:\s*['"]SkeletonLegacy['"][\s\S]{0,1200}/);
-    if (!legacyBlockMatch) {
-      errors.push('[Atom] SkeletonLegacy 条目块未找到（可能被误删）');
-    } else {
-      const block = legacyBlockMatch[0];
-      if (!/supersededBy\s*:\s*['"][^'"]+['"]/.test(block)) {
-        errors.push('[Atom] SkeletonLegacy.deprecationMeta.supersededBy 缺失（本轮 DeprecationMeta 修复被 revert）');
-      }
-      if (!/deprecatedSince\s*:\s*['"][0-9]{4}-[0-9]{2}-[0-9]{2}['"]/.test(block)) {
-        errors.push('[Atom] SkeletonLegacy.deprecationMeta.deprecatedSince 字段缺失或格式非 YYYY-MM-DD');
-      }
-      if (!/removalTarget\s*:\s*['"][0-9]{4}-[0-9]{2}-[0-9]{2}['"]/.test(block)) {
-        warnings.push('[Atom] SkeletonLegacy.deprecationMeta.removalTarget 字段缺失或格式非 YYYY-MM-DD');
-      }
-      if (!/status:\s*['"]deprecated['"]/.test(block)) {
-        errors.push('[Atom] SkeletonLegacy status 非 deprecated');
-      }
-    }
+    
   } catch (e) {
     errors.push('Component 注册表读取失败：' + (e && e.message));
   }

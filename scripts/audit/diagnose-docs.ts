@@ -4,7 +4,7 @@ import * as path from 'path';
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename).replace(/^\/([A-Z]:)/, '$1');
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
-const REGISTRY_INDEX = path.join(PROJECT_ROOT, 'docs', '00-meta', 'registry-index.md');
+const REGISTRY_INDEX = path.join(PROJECT_ROOT, 'docs', 'meta', 'registry-index.md');
 
 interface PathCheckResult {
   exists: boolean;
@@ -57,7 +57,7 @@ function analyzeDocsStructure(): {
   const entries = fs.readdirSync(docsDir, { withFileTypes: true });
 
   const diataxisDirs = ['tutorials', 'how-to', 'reference', 'explanation', 'prompts'];
-  const numberedDirs = ['00-meta', '02-design', '04-testing', '06-project-management'];
+  const numberedDirs = ['meta', '02-design', '04-testing', '06-project-management'];
 
   let diataxisFileCount = 0;
   let numberedFileCount = 0;

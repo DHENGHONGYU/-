@@ -27,7 +27,7 @@ const PROJECT_ROOT = resolve(__dirname, '..', '..')
 const DOCS_DIR = join(PROJECT_ROOT, 'docs')
 const SRC_DIR = join(PROJECT_ROOT, 'src')
 const SCRIPTS_DIR = join(PROJECT_ROOT, 'scripts')
-const REGISTRY_INDEX = join(DOCS_DIR, '00-meta', 'registry-index.md')
+const REGISTRY_INDEX = join(DOCS_DIR, 'meta', 'registry-index.md')
 const REPORTS_DIR = join(PROJECT_ROOT, 'scripts', 'docs', 'reports', 'audit')
 
 function audit(): AuditResult {

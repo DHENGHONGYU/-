@@ -51,7 +51,7 @@ import { runAuditPipeline, colorize, writeStderr, type AuditReport } from './_de
 export interface Finding {
   file: string
   line: number
-  severity: 'Fatal' | 'Critical' | 'Major' | 'Minor' | 'Warning'
+  severity: 'Fatal' | 'Critical' | 'Major' | 'Minor' | 'Warning' | 'Info'
   category: string
   message: string
   context: string
@@ -64,6 +64,8 @@ export interface Report extends AuditReport {
     totalFiles: number
     totalViolations: number
     totalWarnings: number
+    /** 图表/渲染层安全回退（Info 级，不阻断）数量 */
+    totalInfo: number
     bySeverity: Record<string, number>
     byCategory: Record<string, number>
   }
@@ -255,6 +257,30 @@ const UI_LAYER_DIRS = [
 // v2.5：检查文件是否属于 UI 层（颜色硬编码检测范围）
 function isUiLayerFile(rel: string): boolean {
   return UI_LAYER_DIRS.some(dir => rel.startsWith(dir))
+}
+
+// v3.2：图表/渲染层安全回退检测（静默回退严重度分级）
+// 图表组件中的空态默认值（data ?? []、profitRatio ?? 0、emptyText ?? '暂无数据'）
+// 仅是渲染层防御性默认值，不会掩盖业务逻辑错误，降级为 Info 避免误判。
+const CHART_RENDER_LAYER_DIRS = [
+  'src/components/chart/',
+  'src/components/molecules/',
+  'src/components/organisms/',
+]
+
+// 图表渲染相关关键词：匹配行上下文含其一即视为渲染层安全回退
+const CHART_RENDER_KEYWORDS = [
+  'data', 'profit', 'series', 'tooltip', 'emptyText', 'default',
+]
+
+// 检查文件是否属于图表/渲染层（可降级为 Info 的路径范围）
+function isChartRenderLayerFile(rel: string): boolean {
+  return CHART_RENDER_LAYER_DIRS.some(dir => rel.includes(dir))
+}
+
+// 检查匹配行的上下文是否含图表渲染相关关键词
+function isChartRenderSafeFallback(line: string): boolean {
+  return CHART_RENDER_KEYWORDS.some(kw => line.includes(kw))
 }
 
 function collectFiles(dir: string): string[] {
@@ -551,8 +577,9 @@ function scanFile(file: string): Finding[] {
           if (/as\s+\w+\)\s*(?:\?\?|\|\|)/.test(raw)) continue
 
           // ── 严重级别判定 ──
+          // 优先级：Critical（catch/store+math）> Info（图表渲染层空态默认值）> Warning（默认）
 
-          let severity: 'Critical' | 'Warning' = 'Warning'
+          let severity: 'Critical' | 'Warning' | 'Info' = 'Warning'
 
           // Critical 条件 a：catch 块中的 ?? ''（可能掩盖错误信息）
           // 检测策略：检查当前行及前 3 行是否包含 catch 关键字
@@ -572,6 +599,19 @@ function scanFile(file: string): Finding[] {
             if (mathOps.test(raw)) {
               severity = 'Critical'
             }
+          }
+
+          // Info 条件：图表/渲染层安全回退（空态默认值）
+          // 理由：components/chart|molecules|organisms 中的 data ?? []、profitRatio ?? 0、
+          //       emptyText ?? '暂无数据' 等仅是渲染层防御性默认值，不会掩盖业务逻辑错误，
+          //       降级为 Info 避免与业务路径的 silent fallback 混为一谈。
+          // 仅对 empty-array / zero / empty-string 三类回退生效；null 类回退仍按默认规则。
+          // Critical 已命中的不再降级（catch/核心计算中的回退风险更高）。
+          if (severity === 'Warning' &&
+              (pattern.type === 'empty-array' || pattern.type === 'zero' || pattern.type === 'empty-string') &&
+              isChartRenderLayerFile(rel) &&
+              isChartRenderSafeFallback(raw)) {
+            severity = 'Info'
           }
 
           findings.push({
@@ -606,6 +646,7 @@ export function scan(): Report {
   }
 
   const warningCount = violations.filter(f => f.severity === 'Warning').length
+  const infoCount = violations.filter(f => f.severity === 'Info').length
 
   return {
     violations,
@@ -613,6 +654,7 @@ export function scan(): Report {
       totalFiles: files.length,
       totalViolations: violations.length,
       totalWarnings: warningCount,
+      totalInfo: infoCount,
       bySeverity,
       byCategory,
     },
@@ -624,7 +666,7 @@ export function formatReport(report: Report): string {
   const lines: string[] = []
 
   lines.push('╔════════════════════════════════════════════════════════════╗')
-  lines.push('║  硬编码与静默回退审计 — audit-hardcode.ts v3.0             ║')
+  lines.push('║  硬编码与静默回退审计 — audit-hardcode.ts v3.2             ║')
   lines.push('╚════════════════════════════════════════════════════════════╝')
   lines.push('')
 
@@ -645,6 +687,10 @@ export function formatReport(report: Report): string {
     for (const [sev, count] of Object.entries(report.summary.bySeverity)) {
       lines.push(`  ${sev}: ${count}`)
     }
+    lines.push('')
+    // v3.2：单独统计 Info（图表渲染层安全回退）与 Warning（业务路径静默回退）
+    lines.push(`Info（图表渲染层安全回退）: ${report.summary.totalInfo ?? 0}`)
+    lines.push(`Warning（业务路径静默回退）: ${report.summary.totalWarnings ?? 0}`)
     lines.push('')
     lines.push('按类别汇总：')
     for (const [cat, count] of Object.entries(report.summary.byCategory)) {
@@ -800,6 +846,18 @@ function inferModule(filePath: string): string {
   return '其他'
 }
 
+// v3.2：基于最高严重度的退出码策略（覆盖管道默认 0/1 逻辑）
+// Critical/Fatal=3, Major=2, Warning=1, Info=0（Info 不影响退出码）
+// 管道执行错误(exit 2)优先保留
+function computeSeverityExitCode(report: Report): number {
+  const bySeverity = report.summary.bySeverity
+  if ((bySeverity.Fatal ?? 0) > 0 || (bySeverity.Critical ?? 0) > 0) return 3
+  if ((bySeverity.Major ?? 0) > 0) return 2
+  if ((bySeverity.Warning ?? 0) > 0) return 1
+  // 仅 Info 或无违规 → 0
+  return 0
+}
+
 /** CLI 入口（编排：scan → stdout JSON → stderr 诊断 → 持久化 → exit） */
 export function main(): void {
   // 保留 v2.1 的 --export-inventory 参数（在管道完成后追加导出步骤）
@@ -807,7 +865,7 @@ export function main(): void {
 
   const result = runAuditPipeline<Report>({
     scriptName: 'audit-hardcode',
-    version: '3.0',
+    version: '3.2',
     scanFn: scan,
     formatReportFn: formatReport,
   })
@@ -817,7 +875,13 @@ export function main(): void {
     exportInventory(result.report)
   }
 
-  process.exit(result.exitCode)
+  // v3.2：退出码策略 Critical=3 / Major=2 / Warning=1 / Info=0
+  // 管道执行错误(exit 2)优先保留；否则按本脚本最高严重度计算
+  const exitCode = result.exitCode === 2 ? 2 : computeSeverityExitCode(result.report)
+  if (!process.argv.slice(2).includes('--quiet')) {
+    writeStderr(`\n退出码策略（Critical=3 / Major=2 / Warning=1 / Info=0）→ 实际退出码: ${exitCode}`)
+  }
+  process.exit(exitCode)
 }
 
 // 仅在直接作为 CLI 运行时执行（避免被 import 时自动运行）

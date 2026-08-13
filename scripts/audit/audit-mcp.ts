@@ -105,10 +105,33 @@ function analyzeFile(filePath: string): { violations: Finding[]; warnings: Findi
   const EXEMPTED_SERVICES = ['errorBus', 'system/monitorLogService', 'system/architectureService']
 
   // 检查 1: 页面/组件直接 import service（绕过 MCP）
+  // 支持多行 import type { ... } from '...' 块的正确跳过：
+  //   import type {          ← 首行，进入 type-only 块
+  //     Foo,
+  //     Bar,
+  //   } from '@/services/...' ← 续行，需跳过（此前被误报为违规）
   if (filePath.includes('pages') || filePath.includes('components')) {
+    let inTypeOnlyBlock = false
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i] ?? ''
-      if (line.startsWith('import type')) continue
+
+      // 单行 import type { ... } from '...' — 整行跳过
+      if (line.startsWith('import type') && line.includes('from ')) {
+        continue
+      }
+      // 多行 import type { — 进入 type-only 块
+      if (line.startsWith('import type')) {
+        inTypeOnlyBlock = true
+        continue
+      }
+      // 在 type-only 块中，等待 } from 结束行
+      if (inTypeOnlyBlock) {
+        if (line.includes('} from') || line.includes('}from')) {
+          inTypeOnlyBlock = false
+        }
+        continue
+      }
+
       const match = DIRECT_SERVICE_IMPORT.exec(line)
       if (match) {
         const servicePath = match[1]
