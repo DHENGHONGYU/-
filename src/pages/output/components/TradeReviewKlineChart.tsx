@@ -10,7 +10,6 @@ import type { CandlestickChartData } from '@/components/chart'
 import { useTradeReviewKline } from '@/pages/output/hooks/useTradeReviewKline'
 import type { Order } from '@/data/types'
 import { cn } from '@/lib/utils'
-import { twBg, twText } from '@/constants/theme.tokens'
 
 const KLINE_DEMO_DAYS = 30
 
@@ -142,17 +141,17 @@ export function TradeReviewKlineChart({ orders }: TradeReviewKlineChartProps): R
           />
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
-              <span className={cn('inline-block w-3 h-3 rounded-full', twBg('red', 600))} />
+              <span className={cn('inline-block w-3 h-3 rounded-full', 'bg-destructive')} />
               买入点
             </span>
             <span className="flex items-center gap-1">
-              <span className={cn('inline-block w-3 h-3 rounded-full', twBg('green', 600))} />
+              <span className={cn('inline-block w-3 h-3 rounded-full', 'bg-success')} />
               卖出点
             </span>
             <span>
               数据来源：
-              {dataSource === 'real' && <span className={cn('font-medium', twText('green', 500))}>真实行情</span>}
-              {dataSource === 'demo' && <span className={cn('font-medium', twText('amber', 500))}>模拟数据（采集失败降级）</span>}
+              {dataSource === 'real' && <span className={cn('font-medium', 'text-success')}>真实行情</span>}
+              {dataSource === 'demo' && <span className={cn('font-medium', 'text-warning')}>模拟数据（采集失败降级）</span>}
               {dataSource === 'loading' && <span>加载中...</span>}
             </span>
             {primarySymbol !== null && <span>标的：{primarySymbol}</span>}

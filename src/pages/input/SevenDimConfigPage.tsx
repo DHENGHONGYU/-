@@ -112,7 +112,7 @@ function StrategyCard({
   return (
     <Card
       className={`cursor-pointer transition-all duration-200 ${
-        isActive ? 'ring-2 ring-primary/20' : 'hover:shadow-md'
+        isActive ? 'ring-2 ring-primary/20' : 'hover:shadow-elevation-2'
       } ${disabled ? 'pointer-events-none opacity-50' : ''}`}
       style={{ borderColor: colorToken.hex, borderWidth: isActive ? 2 : 1 }}
       onClick={onSelect}

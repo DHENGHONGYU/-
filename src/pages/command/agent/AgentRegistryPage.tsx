@@ -151,7 +151,7 @@ export default function AgentRegistryPage(): React.JSX.Element {
             const Icon = agent.icon
             const isRegistered = registeredAgents.includes(agent.agentId)
             return (
-              <Card key={agent.agentId} className="transition-shadow hover:shadow-md">
+              <Card key={agent.agentId} className="transition-shadow hover:shadow-elevation-2">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-2">

@@ -15,7 +15,7 @@ import { useCommandStore } from '@/store/commandStore'
 import { useScoreDocStore } from '@/store/scoreDocStore'
 import { useDisciplineStore } from '@/store/disciplineStore'
 import { useSectorAnalysisStore } from '@/store/sectorAnalysisStore'
-import { COLOR_TOKENS, COLOR_SHADES, twBg, twText } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
 import { getLogger } from '@/lib/logger'
 import { PageContainer, PageHeader } from '@/components/templates'
 
@@ -145,7 +145,7 @@ const DashboardPage = memo(() => {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">盈亏比</p>
-                    <p className={`text-xl font-bold ${twText('yellow', 600)}`}>
+                    <p className="text-xl font-bold text-warning">
                       {latestReport.summary.profitLossRatio}
                     </p>
                   </div>
@@ -182,7 +182,7 @@ const DashboardPage = memo(() => {
                   {topIndustries.map((score) => {
                     const ratio = (score.overallScore ?? 0) / maxIndustryScore
                     const barColor =
-                      ratio > 0.7 ? twBg('red', 500) : ratio > 0.4 ? twBg('orange', 500) : twBg('green', 500)
+                      ratio > 0.7 ? 'bg-destructive' : ratio > 0.4 ? 'bg-warning' : 'bg-success'
                     return (
                       <div key={score.code} className="space-y-1">
                         <div className="flex items-center justify-between text-xs">

@@ -21,7 +21,6 @@ import { StockOverviewCard } from '@/components/organisms/pool/StockOverviewCard
 import { BatchCollectionPanel } from '@/components/organisms/pool/BatchCollectionPanel'
 import { useResearchPoolStore } from '@/store/researchPoolStore'
 import { eventBus } from '@/lib/eventBus'
-import { twText, twBg, twBorder, DARK, HOVER } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
 import type { CollectionProgress as ProgressType } from '@/types/modules/collection.types'
 
@@ -68,12 +67,12 @@ const PoolBoardPage: React.FC = () => {
       <div className="mb-6">
         <div className="flex items-start justify-between">
           <div>
-            <h2 className={cn('text-xl font-bold', twText('stone', 800), DARK.textNeutral100)}>
+            <h2 className={cn('text-xl font-bold', 'text-foreground')}>
               研究候选池
             </h2>
-            <p className={cn('mt-1 text-sm', twText('stone', 500), DARK.textNeutral400)}>
+            <p className={cn('mt-1 text-sm', 'text-muted-foreground')}>
               共 <span className="font-semibold">{items.length}</span> 只股票 · 平均采集进度{' '}
-              <span className={cn('font-semibold', twText('blue', 600))}>
+              <span className={cn('font-semibold', 'text-info')}>
                 {summary?.avgPercent ?? 0}%
               </span>
             </p>
@@ -84,10 +83,8 @@ const PoolBoardPage: React.FC = () => {
                     key={rating}
                     className={cn(
                       'rounded-full px-2 py-0.5 text-[10px] font-medium',
-                      twBg('stone', 100),
-                      twText('stone', 600),
-                      DARK.bgNeutral800,
-                      DARK.textNeutral300,
+                      'bg-muted',
+                      'text-muted-foreground',
                     )}
                   >
                     {rating} 级: {count} 只
@@ -100,11 +97,7 @@ const PoolBoardPage: React.FC = () => {
             <button
               className={cn(
                 'rounded-md border px-3 py-1.5 text-sm transition-colors',
-                twBorder('stone', 300),
-                twText('stone', 700),
-                DARK.borderNeutral700,
-                DARK.textNeutral200,
-                HOVER.bgStone50,
+                'border-input text-foreground hover:bg-muted',
                 (collecting || loading) && 'cursor-not-allowed opacity-50',
               )}
               onClick={handleRefresh}
@@ -115,9 +108,7 @@ const PoolBoardPage: React.FC = () => {
             <button
               className={cn(
                 'rounded-md border px-3 py-1.5 text-sm transition-colors',
-                twBorder('red', 300),
-                twText('red', 600),
-                HOVER.bgRed50,
+                'border-destructive/30 text-destructive hover:bg-destructive/10',
                 (collecting || items.length === 0) && 'cursor-not-allowed opacity-50',
               )}
               onClick={handleClearPool}
@@ -127,9 +118,7 @@ const PoolBoardPage: React.FC = () => {
             </button>
             <button
               className={cn(
-                'rounded-md px-3 py-1.5 text-sm font-medium text-white transition-colors',
-                twBg('blue', 600),
-                HOVER.bgBlue700,
+                'rounded-md px-3 py-1.5 text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90',
                 (collecting || items.length === 0) && 'cursor-not-allowed opacity-50',
               )}
               onClick={handleCollect}
@@ -146,19 +135,16 @@ const PoolBoardPage: React.FC = () => {
         <div
           className={cn(
             'mb-4 rounded-lg border p-4',
-            twBorder('red', 200),
-            twBg('red', '50'),
-            DARK.borderRed800,
-            DARK.bgRed950_20,
+            'border-destructive/30 bg-destructive/10',
           )}
         >
           {collectError && (
-            <p className={cn('text-sm', twText('red', 700), DARK.textRed300)}>
+            <p className={cn('text-sm', 'text-destructive')}>
               采集异常: {collectError}
             </p>
           )}
           {refreshError && (
-            <p className={cn('mt-1 text-sm', twText('amber', 700), DARK.textAmber300)}>
+            <p className={cn('mt-1 text-sm', 'text-warning')}>
               进度刷新异常: {refreshError}
             </p>
           )}
@@ -179,16 +165,15 @@ const PoolBoardPage: React.FC = () => {
           <div
             className={cn(
               'mx-auto h-8 w-8 animate-spin rounded-full border-2',
-              twBorder('stone', 300),
-              'border-t-blue-600',
+              'border-muted border-t-primary',
             )}
           />
-          <p className={cn('mt-2 text-sm', twText('stone', 500))}>加载研究池数据...</p>
+          <p className={cn('mt-2 text-sm', 'text-muted-foreground')}>加载研究池数据...</p>
         </div>
       ) : items.length === 0 ? (
         <div className="py-12 text-center">
-          <p className={cn('text-sm', twText('stone', 500))}>研究池为空</p>
-          <p className={cn('mt-1 text-xs', twText('stone', 400))}>
+          <p className={cn('text-sm', 'text-muted-foreground')}>研究池为空</p>
+          <p className={cn('mt-1 text-xs', 'text-muted-foreground/70')}>
             在个股分析页面点击"加入研究池"或使用批量导入功能
           </p>
         </div>

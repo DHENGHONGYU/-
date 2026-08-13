@@ -290,7 +290,7 @@ const ApiConfigurationPage: React.FC = () => {
       {/* API配置列表 */}
       <div className="space-y-6">
         {apis.map(api => (
-          <Card key={api.id} className="p-6 hover:shadow-md transition-shadow">
+          <Card key={api.id} className="p-6 hover:shadow-elevation-2 transition-shadow">
             {/* API头部 */}
             <div className="flex justify-between items-start mb-4">
               <div className="flex items-center gap-4">

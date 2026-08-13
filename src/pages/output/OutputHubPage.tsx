@@ -109,7 +109,7 @@ export default memo(function OutputHubPage(): React.JSX.Element {
               return (
                 <Card
                   key={module.title}
-                  className={isPlaceholder ? 'border-dashed bg-muted/30' : 'transition-shadow hover:shadow-md'}
+                  className={isPlaceholder ? 'border-dashed bg-muted/30' : 'transition-shadow hover:shadow-elevation-2'}
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">

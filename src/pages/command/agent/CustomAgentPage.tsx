@@ -244,7 +244,7 @@ const CustomAgentPage: React.FC = () => {
       {/* 智能体列表 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {agents.map(agent => (
-          <Card key={agent.id} className="p-6 hover:shadow-md transition-shadow">
+          <Card key={agent.id} className="p-6 hover:shadow-elevation-2 transition-shadow">
             {/* 智能体头部 */}
             <div className="flex justify-between items-start mb-4">
               <div className="flex-1">

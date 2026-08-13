@@ -182,7 +182,7 @@ export default function ValuePitPage(): React.JSX.Element {
             'text-destructive'
 
           return (
-            <Card key={score.symbol} className="transition-shadow hover:shadow-md">
+            <Card key={score.symbol} className="transition-shadow hover:shadow-elevation-2">
               <CardHeader
                 className="cursor-pointer pb-2"
                 onClick={() => toggleExpand(score.symbol)}

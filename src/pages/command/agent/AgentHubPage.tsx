@@ -212,7 +212,7 @@ export default function AgentHubPage(): React.JSX.Element {
           {NAV_CARDS.map((card) => {
             const Icon = card.icon
             return (
-              <Card key={card.title} className="transition-shadow hover:shadow-md">
+              <Card key={card.title} className="transition-shadow hover:shadow-elevation-2">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">

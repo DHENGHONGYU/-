@@ -304,7 +304,7 @@ const DagSchedulerPage: React.FC = () => {
           return (
             <div
               key={workflow.id}
-              className={`bg-card rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow`}
+              className={`bg-card rounded-lg shadow-sm border border-border p-6 hover:shadow-elevation-2 transition-shadow`}
             >
               {/* 工作流头部 */}
               <div className="flex justify-between items-start mb-4">

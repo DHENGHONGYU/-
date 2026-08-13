@@ -36,7 +36,7 @@ function statusIcon(status: HealthMetric['status']) {
 
 function statusClass(): string {
   // 颜色通过内联 style 注入，避免 token-scan 识别到裸 Tailwind 色类
-  return 'transition-shadow hover:shadow-md'
+  return 'transition-shadow hover:shadow-elevation-2'
 }
 
 function statusStyle(status: HealthMetric['status']): React.CSSProperties {

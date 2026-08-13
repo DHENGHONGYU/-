@@ -43,7 +43,7 @@ export function DimHealthCard({ code, name, total, success }: DimHealthCardProps
 
   return (
     <Card
-      className="transition-all duration-200 hover:shadow-md"
+      className="transition-all duration-200 hover:shadow-elevation-2"
       style={{ borderLeftColor: COLOR_TOKENS[colorKey].hex, borderLeftWidth: 3 }}
     >
       <CardHeader className="pb-2">

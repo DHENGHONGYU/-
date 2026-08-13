@@ -193,7 +193,7 @@ export default function HotSectorPage(): React.JSX.Element {
 
             return (
               <WidgetShell key={score.symbol} widgetId={`hot-sector-${score.symbol}`} config={widgetConfig}>
-                <Card className="transition-shadow hover:shadow-md" style={{ marginBottom: 0 }}>
+                <Card className="transition-shadow hover:shadow-elevation-2" style={{ marginBottom: 0 }}>
                   <CardHeader
                     className="cursor-pointer pb-2"
                     onClick={() => toggleExpand(score.symbol)}

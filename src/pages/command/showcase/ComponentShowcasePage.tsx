@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { BookOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { PageContainer, PageHeader } from '@/components/templates'
-import { THEME_TOKENS, twText, twBg, twBorder } from '@/constants/theme.tokens'
+import { THEME_TOKENS } from '@/constants/theme.tokens'
 import {
   ShowcaseSection,
   buildUIComponentShowcase,
@@ -34,17 +34,17 @@ export default function ComponentShowcasePage(): React.JSX.Element {
   return (
     <PageContainer
       centered={false}
-      className={cn('min-h-screen space-y-6', twBg('stone', 50))}
+      className={cn('min-h-screen space-y-6', 'bg-muted')}
     >
       <PageHeader
         title={
           <span className="flex items-center gap-2">
-            <BookOpen className={cn('h-6 w-6', twText('emerald', 600))} />
-            <span className={cn(twText('stone', 800))}>组件示例库</span>
+            <BookOpen className={cn('h-6 w-6', 'text-success')} />
+            <span className={cn('text-foreground')}>组件示例库</span>
           </span>
         }
         description={
-          <span className={cn(twText('gray', 500))}>
+          <span className={cn('text-muted-foreground')}>
             汇总项目常用 UI 组件、驾驶舱 Widget 状态、颜色令牌与股票数据展示模式，用于 AI 生成样例与人工复用参考。
           </span>
         }
@@ -59,8 +59,8 @@ export default function ComponentShowcasePage(): React.JSX.Element {
       <footer
         className={cn(
           'text-xs border-t pt-4',
-          twText('gray', 400),
-          twBorder('gray', 200),
+          'text-muted-foreground/70',
+          'border-border',
         )}
       >
         提示：新增组件示例时，请同步更新 src/showcase/ 下对应文件，并在 ComponentShowcasePage 中注册。

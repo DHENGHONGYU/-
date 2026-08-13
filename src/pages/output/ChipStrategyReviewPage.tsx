@@ -33,7 +33,7 @@ import { computeTurnoverVolumeEnergy } from '@/services/scoring/v6-engine/calcul
 import type { TurnoverVolumeEnergy } from '@/services/scoring/v6-engine/types'
 import type { PoolItem } from '@/types/modules/pool.types'
 import { cn } from '@/lib/utils'
-import { twBg, twText, twBorder, COLOR_SHADES } from '@/constants/theme.tokens'
+import { COLOR_SHADES } from '@/constants/theme.tokens'
 import { MOCK_EXAMPLES, type MockExample, type SignalDirection } from '@/fixtures/chipStrategyMockData'
 
 // ============================================================
@@ -882,12 +882,12 @@ function getActionBadgeVariant(action: SignalDirection): 'default' | 'secondary'
 function getActionColor(action: SignalDirection): string {
   switch (action) {
     case 'buy':
-      return twText('red', 600)
+      return 'text-destructive'
     case 'sell':
     case 'escape':
-      return twText('green', 600)
+      return 'text-success'
     case 'hold':
-      return twText('blue', 500)
+      return 'text-info'
     default:
       return 'text-muted-foreground'
   }
@@ -1326,7 +1326,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
           </CardHeader>
           <CardContent className="space-y-4">
             {/* 说明 */}
-            <div className={cn('rounded-md border border-dashed p-3 text-xs text-muted-foreground leading-relaxed', twBorder('blue', 300), twBg('blue', 50))}>
+            <div className={cn('rounded-md border border-dashed p-3 text-xs text-muted-foreground leading-relaxed', 'border-info/70', 'bg-info/10')}>
               <span className="font-medium text-foreground">使用说明：</span>
               从下方下拉菜单选择股票池中的个股，填入当日行情软件读取的换手率/量比/60日收益/当日涨跌（PE/PB/行业自动从股票池带入），
               系统将<strong>五层判断框架 + 7 条核心经验法则 + 12 种主力筹码信号矩阵</strong>作为内在嵌入判断规则，
@@ -1480,10 +1480,10 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                     <Badge variant="secondary" className="text-xs">{selectedOption.item.sector}</Badge>
                   )}
                   {selectedOption.item.pe !== undefined && (
-                    <span className="text-muted-foreground">PE: <span className={cn('font-medium', (selectedOption.item.pe < 25) ? twText('red', 600) : twText('green', 600))}>{selectedOption.item.pe.toFixed(1)}</span></span>
+                    <span className="text-muted-foreground">PE: <span className={cn('font-medium', (selectedOption.item.pe < 25) ? 'text-destructive' : 'text-success')}>{selectedOption.item.pe.toFixed(1)}</span></span>
                   )}
                   {selectedOption.item.pb !== undefined && (
-                    <span className="text-muted-foreground">PB: <span className={cn('font-medium', (selectedOption.item.pb < 20) ? twText('red', 600) : twText('green', 600))}>{selectedOption.item.pb.toFixed(2)}</span></span>
+                    <span className="text-muted-foreground">PB: <span className={cn('font-medium', (selectedOption.item.pb < 20) ? 'text-destructive' : 'text-success')}>{selectedOption.item.pb.toFixed(2)}</span></span>
                   )}
                   {selectedOption.item.price !== undefined && (
                     <span className="text-muted-foreground">现价: ¥{selectedOption.item.price.toFixed(2)}</span>
@@ -1516,10 +1516,10 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                         <BarChart3 className="h-4 w-4" />
                         K线图
                         {chartData.klineDataSource === 'demo' && (
-                          <Badge variant="outline" className={cn('text-xs', twText('amber', 600))}>模拟数据</Badge>
+                          <Badge variant="outline" className={cn('text-xs', 'text-warning')}>模拟数据</Badge>
                         )}
                         {chartData.klineDataSource === 'real' && (
-                          <Badge variant="outline" className={cn('text-xs', twText('green', 600))}>实时数据</Badge>
+                          <Badge variant="outline" className={cn('text-xs', 'text-success')}>实时数据</Badge>
                         )}
                       </CardTitle>
                       <Button
@@ -1562,10 +1562,10 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                         <Activity className="h-4 w-4" />
                         筹码分布
                         {chartData.chipDataSource === 'demo' && (
-                          <Badge variant="outline" className={cn('text-xs', twText('amber', 600))}>模拟数据</Badge>
+                          <Badge variant="outline" className={cn('text-xs', 'text-warning')}>模拟数据</Badge>
                         )}
                         {chartData.chipDataSource === 'real' && (
-                          <Badge variant="outline" className={cn('text-xs', twText('green', 600))}>实时数据</Badge>
+                          <Badge variant="outline" className={cn('text-xs', 'text-success')}>实时数据</Badge>
                         )}
                       </CardTitle>
                       <Button
@@ -1607,23 +1607,23 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                 <div className={cn(
                   'rounded-md border-2 p-4',
                   analysisResult.tradeAction === 'buy'
-                    ? cn(twBorder('red', 300), twBg('red', 50))
+                    ? 'border-destructive/30 bg-destructive/10'
                     : analysisResult.tradeAction === 'sell' || analysisResult.tradeAction === 'escape'
-                      ? cn(twBorder('green', 300), twBg('green', 50))
+                      ? 'border-success/30 bg-success/10'
                       : analysisResult.tradeAction === 'hold'
-                        ? cn(twBorder('blue', 300), twBg('blue', 50))
-                        : cn(twBorder('gray', 300), twBg('gray', 50))
+                        ? 'border-info/70 bg-info/10'
+                        : 'border-input bg-muted'
                 )}>
                   <div className="flex items-start gap-3">
                     <div className={cn(
                       'flex h-10 w-10 items-center justify-center rounded-full text-white',
                       analysisResult.tradeAction === 'buy'
-                        ? twBg('red', 500)
+                        ? 'bg-destructive'
                         : analysisResult.tradeAction === 'sell' || analysisResult.tradeAction === 'escape'
-                          ? twBg('green', 500)
+                          ? 'bg-success'
                           : analysisResult.tradeAction === 'hold'
-                            ? twBg('blue', 500)
-                            : twBg('gray', 500)
+                            ? 'bg-primary'
+                            : 'bg-muted-foreground'
                     )}>
                       {analysisResult.tradeAction === 'buy' ? <TrendingUp className="h-5 w-5" />
                         : analysisResult.tradeAction === 'escape' ? <AlertTriangle className="h-5 w-5" />
@@ -1692,7 +1692,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                   <div className="text-xs font-medium">命中信号矩阵（共 {analysisResult.matchedSignals.length} 个）</div>
                   <div className="flex flex-wrap gap-2">
                     {analysisResult.matchedSignals.map((sig) => (
-                      <div key={sig.id} className={cn('rounded border px-2 py-1 text-xs', twBorder('gray', 200))}>
+                      <div key={sig.id} className={cn('rounded border px-2 py-1 text-xs', 'border-border')}>
                         <span className="font-medium">{sig.name}</span>
                         <span className="text-muted-foreground ml-1">· {sig.tradeSignal}</span>
                         <span className={cn('ml-1', getActionColor(sig.tradeAction))}>· {sig.action}</span>
@@ -1724,10 +1724,10 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                               variant={b.source === 'framework' ? 'default' : b.source === 'rule' ? 'secondary' : 'outline'}
                               className={cn(
                                 'text-xs',
-                                b.source === 'framework' && twText('blue', 700),
-                                b.source === 'rule' && twText('orange', 600),
-                                b.source === 'signal' && twText('purple', 700),
-                                b.source === 'valuation' && twText('green', 700),
+                                b.source === 'framework' && 'text-info',
+                                b.source === 'rule' && 'text-warning',
+                                b.source === 'signal' && 'text-info',
+                                b.source === 'valuation' && 'text-success',
                               )}
                             >
                               {b.source === 'framework' ? '五层框架' : b.source === 'rule' ? '7法则' : b.source === 'signal' ? '12信号' : '估值层'}
@@ -1745,10 +1745,10 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                     </TableBody>
                   </Table>
                   <div className="flex flex-wrap gap-2 pt-2 text-xs text-muted-foreground border-t">
-                    <span className="flex items-center gap-1"><Badge variant="default" className={cn('text-xs', twText('blue', 700))}>五层框架</Badge> 行情启动判断框架（5层）</span>
-                    <span className="flex items-center gap-1"><Badge variant="secondary" className={cn('text-xs', twText('orange', 600))}>7法则</Badge> 核心经验法则（7条）</span>
-                    <span className="flex items-center gap-1"><Badge variant="outline" className={cn('text-xs', twText('purple', 700))}>12信号</Badge> 主力筹码变动信号矩阵（12种）</span>
-                    <span className="flex items-center gap-1"><Badge variant="outline" className={cn('text-xs', twText('green', 700))}>估值层</Badge> PE/PB 估值判断</span>
+                    <span className="flex items-center gap-1"><Badge variant="default" className={cn('text-xs', 'text-info')}>五层框架</Badge> 行情启动判断框架（5层）</span>
+                    <span className="flex items-center gap-1"><Badge variant="secondary" className={cn('text-xs', 'text-warning')}>7法则</Badge> 核心经验法则（7条）</span>
+                    <span className="flex items-center gap-1"><Badge variant="outline" className={cn('text-xs', 'text-info')}>12信号</Badge> 主力筹码变动信号矩阵（12种）</span>
+                    <span className="flex items-center gap-1"><Badge variant="outline" className={cn('text-xs', 'text-success')}>估值层</Badge> PE/PB 估值判断</span>
                   </div>
                 </div>
               </div>
@@ -1763,9 +1763,9 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">买入信号</p>
-                  <p className={cn('text-2xl font-bold', twText('red', 600))}>{buyCount}</p>
+                  <p className={cn('text-2xl font-bold', 'text-destructive')}>{buyCount}</p>
                 </div>
-                <TrendingUp className={cn('h-8 w-8', twText('red', 400))} />
+                <TrendingUp className={cn('h-8 w-8', 'text-destructive/70')} />
               </div>
             </CardContent>
           </Card>
@@ -1774,9 +1774,9 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">卖出信号</p>
-                  <p className={cn('text-2xl font-bold', twText('green', 600))}>{sellCount}</p>
+                  <p className={cn('text-2xl font-bold', 'text-success')}>{sellCount}</p>
                 </div>
-                <Target className={cn('h-8 w-8', twText('green', 400))} />
+                <Target className={cn('h-8 w-8', 'text-success/70')} />
               </div>
             </CardContent>
           </Card>
@@ -1785,9 +1785,9 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">持有信号</p>
-                  <p className={cn('text-2xl font-bold', twText('blue', 500))}>{holdCount}</p>
+                  <p className={cn('text-2xl font-bold', 'text-info')}>{holdCount}</p>
                 </div>
-                <Layers className={cn('h-8 w-8', twText('blue', 400))} />
+                <Layers className={cn('h-8 w-8', 'text-info/70')} />
               </div>
             </CardContent>
           </Card>
@@ -1796,9 +1796,9 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">逃离信号</p>
-                  <p className={cn('text-2xl font-bold', twText('amber', 600))}>{escapeCount}</p>
+                  <p className={cn('text-2xl font-bold', 'text-warning')}>{escapeCount}</p>
                 </div>
-                <AlertTriangle className={cn('h-8 w-8', twText('amber', 400))} />
+                <AlertTriangle className={cn('h-8 w-8', 'text-warning/70')} />
               </div>
             </CardContent>
           </Card>
@@ -1837,12 +1837,12 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                   variant="outline"
                   size="sm"
                   onClick={handleDownloadDebugLog}
-                  className={cn(debugLogCount > 0 && cn(twBorder('orange', 400), twText('orange', 700)))}
+                  className={cn(debugLogCount > 0 && 'border-warning/50 text-warning')}
                 >
                   <FileText className="mr-1 h-3.5 w-3.5" />
                   下载 debug.log
                   {debugLogCount > 0 && (
-                    <Badge variant="outline" className={cn('ml-1 text-[10px] px-1 py-0', cn(twBg('orange', 100), twText('orange', 700), twBorder('orange', 300)))}>
+                    <Badge variant="outline" className={cn('ml-1 text-[10px] px-1 py-0', 'bg-warning/10 text-warning border-warning/30')}>
                       {debugLogCount}
                     </Badge>
                   )}
@@ -1882,10 +1882,10 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                       <span className={cn(
                         'inline-block rounded px-1.5 py-0.5 text-xs font-medium',
                         row.turnoverRange.includes('> 10') || row.turnoverRange.includes('> 15')
-                          ? cn(twBg('red', 100), twText('red', 700))
+                          ? 'bg-destructive/10 text-destructive'
                           : row.turnoverRange.includes('< 1') || row.turnoverRange.includes('< 3')
-                            ? cn(twBg('blue', 100), twText('blue', 700))
-                            : cn(twBg('gray', 100), twText('gray', 700))
+                            ? 'bg-info/10 text-info'
+                            : 'bg-muted text-muted-foreground'
                       )}>
                         {row.turnoverRange}
                       </span>
@@ -1894,10 +1894,10 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                       <span className={cn(
                         'inline-block rounded px-1.5 py-0.5 text-xs font-medium',
                         row.volumeRatioRange.includes('> 5')
-                          ? cn(twBg('orange', 100), twText('orange', 700))
+                          ? 'bg-warning/10 text-warning'
                           : row.volumeRatioRange.includes('< 0.5') || row.volumeRatioRange.includes('< 1.5')
-                            ? cn(twBg('gray', 100), twText('gray', 600))
-                            : cn(twBg('blue', 100), twText('blue', 700))
+                            ? 'bg-muted text-muted-foreground'
+                            : 'bg-info/10 text-info'
                       )}>
                         {row.volumeRatioRange}
                       </span>
@@ -1917,9 +1917,9 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                     <TableCell>
                       <span className={cn(
                         'text-sm font-bold',
-                        row.opportunityScore >= 4 ? twText('red', 600)
-                          : row.opportunityScore <= 1.5 ? twText('green', 600)
-                            : twText('blue', 500)
+                        row.opportunityScore >= 4 ? 'text-destructive'
+                          : row.opportunityScore <= 1.5 ? 'text-success'
+                            : 'text-info'
                       )}>
                         {row.opportunityScore.toFixed(1)}
                       </span>
@@ -1941,7 +1941,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                           <div className="flex gap-1 text-[10px] text-muted-foreground">
                             <span>换{row.mockTurnover}%</span>
                             <span>量{row.mockVolumeRatio}</span>
-                            <span className={cn(row.mockPriceChange !== undefined && row.mockPriceChange >= 0 ? twText('red', 600) : twText('green', 600))}>
+                            <span className={cn(row.mockPriceChange !== undefined && row.mockPriceChange >= 0 ? 'text-destructive' : 'text-success')}>
                               {row.mockPriceChange !== undefined ? `${row.mockPriceChange >= 0 ? '+' : ''}${row.mockPriceChange}%` : ''}
                             </span>
                           </div>
@@ -1959,20 +1959,20 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                         return (
                           <div className="space-y-0.5">
                             {actual.isExpected ? (
-                              <Badge variant="outline" className={cn('text-xs', twText('green', 600))}>
+                              <Badge variant="outline" className={cn('text-xs', 'text-success')}>
                                 ✓ {actual.matchedNames.join('、')}
                               </Badge>
                             ) : actual.isGrayZone ? (
                               <>
-                                <Badge variant="outline" className={cn('text-xs', twText('orange', 600))}>
+                                <Badge variant="outline" className={cn('text-xs', 'text-warning')}>
                                   ⚠ {actual.matchedNames.join('、')}
                                 </Badge>
                                 {(actual.grayZoneReason ?? '') !== '' && (
-                                  <p className={cn('text-[10px] leading-tight', twText('orange', 600))}>{actual.grayZoneReason}</p>
+                                  <p className={cn('text-[10px] leading-tight', 'text-warning')}>{actual.grayZoneReason}</p>
                                 )}
                               </>
                             ) : (
-                              <Badge variant="outline" className={cn('text-xs', twText('red', 600))}>
+                              <Badge variant="outline" className={cn('text-xs', 'text-destructive')}>
                                 ✗ {actual.matchedNames.join('、')}
                               </Badge>
                             )}
@@ -2018,8 +2018,8 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                 ].map((row, i) => (
                   <TableRow key={i}>
                     <TableCell className="font-medium">{row.dim}</TableCell>
-                    <TableCell className={cn('text-sm', twText('green', 600))}>{row.fake}</TableCell>
-                    <TableCell className={cn('text-sm', twText('red', 600))}>{row.violent}</TableCell>
+                    <TableCell className={cn('text-sm', 'text-success')}>{row.fake}</TableCell>
+                    <TableCell className={cn('text-sm', 'text-destructive')}>{row.violent}</TableCell>
                     <TableCell className="text-xs text-muted-foreground">{row.diff}</TableCell>
                   </TableRow>
                 ))}
@@ -2068,7 +2068,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                     <TableCell className="text-xs font-mono">{row.threshold}</TableCell>
                     <TableCell className="text-xs text-muted-foreground">{row.example}</TableCell>
                     <TableCell>
-                      <span className={cn('text-sm font-bold', twText('red', 600))}>{row.posCap}</span>
+                      <span className={cn('text-sm font-bold', 'text-destructive')}>{row.posCap}</span>
                     </TableCell>
                     <TableCell className="text-sm">{row.tp}</TableCell>
                     <TableCell className="text-sm">{row.sl}</TableCell>
@@ -2090,30 +2090,30 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
           </CardHeader>
           <CardContent>
             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-              <div className={cn('rounded-md border p-4 space-y-2', twBorder('red', 200))}>
+              <div className={cn('rounded-md border p-4 space-y-2', 'border-destructive/30')}>
                 <div className="flex items-center gap-2">
-                  <span className={cn('flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white', twBg('red', 500))}>!</span>
+                  <span className={cn('flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white', 'bg-destructive')}>!</span>
                   <h4 className="text-sm font-medium">景气恶化线</h4>
                 </div>
                 <p className="text-xs text-muted-foreground">行业景气度连续两期 &lt; 45 → 禁止加仓</p>
               </div>
-              <div className={cn('rounded-md border p-4 space-y-2', twBorder('orange', 200))}>
+              <div className={cn('rounded-md border p-4 space-y-2', 'border-warning/30')}>
                 <div className="flex items-center gap-2">
-                  <span className={cn('flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white', twBg('orange', 500))}>!</span>
+                  <span className={cn('flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white', 'bg-warning')}>!</span>
                   <h4 className="text-sm font-medium">资金破位线</h4>
                 </div>
                 <p className="text-xs text-muted-foreground">主力资金流出 &gt; 3天 → 减仓</p>
               </div>
-              <div className={cn('rounded-md border p-4 space-y-2', twBorder('amber', 200))}>
+              <div className={cn('rounded-md border p-4 space-y-2', 'border-warning/30')}>
                 <div className="flex items-center gap-2">
-                  <span className={cn('flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white', twBg('amber', 500))}>!</span>
+                  <span className={cn('flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white', 'bg-warning')}>!</span>
                   <h4 className="text-sm font-medium">回撤风控线</h4>
                 </div>
                 <p className="text-xs text-muted-foreground">单票亏损 &gt; 7% 或回撤 &gt; 10% → 止损</p>
               </div>
-              <div className={cn('rounded-md border p-4 space-y-2', twBorder('blue', 200))}>
+              <div className={cn('rounded-md border p-4 space-y-2', 'border-info/50')}>
                 <div className="flex items-center gap-2">
-                  <span className={cn('flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white', twBg('blue', 500))}>i</span>
+                  <span className={cn('flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white', 'bg-primary')}>i</span>
                   <h4 className="text-sm font-medium">仓位纪律</h4>
                 </div>
                 <p className="text-xs text-muted-foreground">单票≤25%，总仓位≤80%，间隔24h，每日≤5笔</p>
