@@ -9,14 +9,17 @@ maintainer: V9 Architecture Team
 summary: "评审范围：`src/` 目录下全部非测试 TypeScript/TSX 文件 扫描文件数：674 个 生成时间：2026/7/10 08:42:12"
 tags: [project, report, plan]
 version: v1.0.0
-last_updated: 2026-07-17
+last_updated: 2026-08-13
 code_version: "2.0.0-rc.1"
 doc_id: V9-DOC-PROJ-282
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-149]
 change_log:
   - version: v1.0.0
-changes: Initial version established
-date: 2026-07-17
+    changes: Initial version established
+    date: 2026-07-17
+  - version: v1.0.1
+    changes: "文档新鲜度刷新：twBg/twText/twBorder 已废弃，确认令牌引用一致性"
+    date: 2026-08-13
 ---
 
 # 代码多层嵌套评审报告

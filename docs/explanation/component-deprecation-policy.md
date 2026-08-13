@@ -184,7 +184,7 @@ npx tsx scripts/audit-component-usage.ts
 
 ## 5. 相关文档
 
-- [组件开发指南](../how-to/widget-development-guide.md)
+- [组件开发指南](../guides/widget-development-guide.md)
 - [代码质量审计报告](v9-code-quality-audit-report-20260629.md)
 - [代码质量看板](../reports/audit/v9-code-quality-kanban-20260629.md)
 - [数据流规范](design/data-flow-spec.md)

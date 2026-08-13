@@ -27,4 +27,4 @@ date: 2026-07-17
 ## 入口
 
 - API 契约总览：[../reference/api-contract.md](../reference/api-contract.md)
-- 相关参考：[../reference/analysis-contract.md](../reference/analysis-contract.md)、[../reference/trading-contract.md](../reference/trading-contract.md)
+- 相关参考：[../reference/analysis-contract.md](../reference/analysis-contract.md)、[../reference/trading-contract.md](../../reference/trading-contract.md)

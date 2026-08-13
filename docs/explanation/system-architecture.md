@@ -27,7 +27,7 @@ change_log:
 本文档面向后续接入的 AI 智能体与研发人员，说明 V9 系统的**整体架构**（而非仅驾驶舱 Widget 层，驾驶舱细节见 `architecture.md`）。阅读后应能理解：
 
 - 系统采用的分层结构与**依赖方向约束**；
-- 22 个业务服务子域、50+ 个 Zustand Store、核心数据治理层（`core/`）各自的职责边界；
+- 27 个业务服务子域、50+ 个 Zustand Store、核心数据治理层（`core/`）各自的职责边界；
 - 一条数据从「业务服务 → 写入 IndexedDB → 广播 → 视图重渲染」的完整链路；
 - 设计令牌体系（L1–L6）与质量门禁（Husky 11 道预提交 + 2 道预推送）。
 
@@ -186,11 +186,11 @@ await dataBridge.forward(envelope)
 | templates | `templates/` | CockpitLayout、DashboardLayout、PageContainer、PageHeader、SidebarLayout |
 | 专用 | `chart/` `cabin/` `cockpit/` `widgets/` | 图表、评分舱卡片、信号谱、Widget 壳 |
 
-`componentRegistry.ts` 全量 `active`；`chart/` 与 `cockpit/cabin/widgets` 经 Widget 注册表耦合不物理搬迁。
+`componentRegistry.ts` 全量 `active`（`SkeletonLegacy` 已标记 `deprecated`）；`chart/` 与 `cockpit/cabin/widgets` 经 Widget 注册表耦合不物理搬迁。
 
 ### 3.6 `cockpit/` 驾驶舱 Widget 框架
 
-- `CockpitShell.tsx` + `core/{widgetEngine,widgetRegistry}` + `providers/MarketDataProvider` + `widgets/`（A–E 类 Widget）+ `data/mockDataProvider`。
+- `CockpitShell.tsx` + `core/{widgetEngine,widgetRegistry}` + `widgets/`（A–E 类 Widget）+ `data/mockDataProvider` + `layout/{CockpitCrossLayout,WidgetSheetDrawer}` + `shared/score`。实际子目录：`core/` `data/` `layout/` `shared/` `widgets/`（无 `providers/` 目录）。
 - 数据流：`MarketDataProvider` → `useMarketData()` → Widget；底层 `TaskScheduler` + `Collector`(Mock/Rest/WebSocket) → `MarketDataAdapter` → 标准 `MarketData`。详见 `architecture.md`。
 
 ### 3.7 `portal/` 入口外壳
@@ -275,6 +275,8 @@ sequenceDiagram
 | L3/L4 辅助 | `DARK/HOVER/FOCUS/FILL/GRADIENT/CHART_PALETTE/SPACING` | 交互态/图表调色板 | `theme.tokens.helpers.ts` |
 | **L5** 股票 | `STOCK_COLOR_TOKENS` + `getStockColor*` | 红涨绿跌固定例外（不随主题） | `theme.tokens.stock.ts` |
 | **L6** 设计 | `SEMANTIC_COLOR_ROLES` + `TYPOGRAPHY_SCALE` + `ELEVATION` + `LAYOUT_TOKENS` | 语义角色/排版/层级/布局 | `theme.tokens.design.ts` |
+| 徽章/状态色 | `BADGE_COLORS` | 市场周期/告警/预测方向/校验状态/情绪等组合式 Tailwind 颜色类 | `theme.tokens.badges.ts` |
+| L6 门户 | `PORTAL_TOKENS`（layout/cabin/nav/mobile/status/brand） | PortalShell 布局、导航、舱室切换、移动端、状态指示专用样式令牌 | `theme.tokens.portal.ts` |
 
 - 图表配色 `src/config/chartColors.ts`（198 行）全部引用 `COLOR_TOKENS.hex`，关键导出：`PIE_CHART_PALETTE` `ROTATION_FACTOR_COLORS` `MARKET_STYLE_COLORS` `SIGNAL_GRADE_COLORS` `SCORE_BUCKET_COLORS`。
 - **约束**：UI 层颜色必须走令牌；A 股涨跌色固定；`lint:colors` + `audit:tokens` + `verify:tokens` 三道门禁校验。
@@ -315,8 +317,8 @@ src/
 ├── portal/        PortalShell.tsx 入口外壳
 ├── pages/         input / analysis / trading / output / command 五舱页面
 ├── components/    atoms molecules organisms templates chart cabin cockpit widgets
-├── cockpit/       CockpitShell + core + providers + widgets（驾驶舱框架）
-├── services/      22 业务子域 + 平铺服务
+├── cockpit/       CockpitShell + core + data + layout + shared + widgets（驾驶舱框架）
+├── services/      27 业务子域 + 平铺服务
 ├── store/         ~50+ Zustand store + helpers(withBroadcast/withOptimisticUpdate)
 ├── core/          databridge / envelope / acl / memoryCache / widgetEventBus / dataflow / 编排器
 ├── data/          dataLayer → IndexedDB
@@ -325,7 +327,7 @@ src/
 ├── constants/     theme.tokens.ts → theme/*.ts（L1–L6）
 ├── types/         纯类型定义
 ├── agents/        智能体运行时
-├── hooks/ schemas/ blueprints/ devtools/ fixtures/ generated/ i18n/ mcp/ showcase/ utils/
+├── hooks/ schema/ fixtures/ generated/ i18n/ mcp/ showcase/
 └── main.tsx App.tsx index.css
 ```
 

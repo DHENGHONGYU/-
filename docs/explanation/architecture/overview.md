@@ -27,5 +27,5 @@ date: 2026-07-17
 ## 主要入口
 
 - [../explanation/overview.md](../explanation/overview.md)
-- [../explanation/ARCHITECTURE.md](../explanation/ARCHITECTURE.md)
+- [../explanation/ARCHITECTURE.md](../ARCHITECTURE.md)
 - [../explanation/cabins-overview.md](../explanation/cabins-overview.md)

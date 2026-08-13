@@ -28,7 +28,7 @@ date: 2026-07-17
 > - [架构总览](overview.md) — 全局分层与依赖方向
 > - [AGENTS.md](../../AGENTS.md) — 工程契约（禁止跨层调用、四步集成、DB_VERSION 规则）
 > - [数据字典索引](design/data-dictionary-index.md) — 字段级定义唯一索引
-> - [引擎规格](../05-engine-specs.md) — L0-L8 引擎分层说明
+> - [引擎规格](./05-engine-specs.md) — L0-L8 引擎分层说明
 
 ---
 
