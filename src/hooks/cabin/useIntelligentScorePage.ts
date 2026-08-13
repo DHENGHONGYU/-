@@ -3,7 +3,7 @@
  */
 import { useEffect, useMemo, useState } from 'react'
 import type { IntelligentScore, ResearchLog, Stock } from '@/data/types'
-import { getDefaultLlmConfig, getLlmApiKeyAsync, setLlmApiKey, type LlmConfig } from '@/config/llmConfig'
+import { getDefaultLlmConfig, getDefaultLlmTransparencyConfig, getLlmApiKeyAsync, setLlmApiKey, type LlmConfig } from '@/config/llmConfig'
 import {
   runIntelligentScore,
   type RunIntelligentScoreInput,
@@ -180,11 +180,6 @@ export function useIntelligentScorePage(): UseIntelligentScorePageReturn {
       setError('请选择或输入股票代码')
       return
     }
-    if (!configReady) {
-      setError('请先配置 LLM 接口（baseURL、apiKey、model）')
-      setShowConfig(true)
-      return
-    }
 
     setLoading(true)
     setError('')
@@ -192,11 +187,18 @@ export function useIntelligentScorePage(): UseIntelligentScorePageReturn {
     setProgressMessage('')
     setProgress({ ...INITIAL_PROGRESS })
 
+    const transparencyConfig = configReady ? undefined : {
+      ...getDefaultLlmTransparencyConfig(),
+      enableLlm: false,
+      showTransparencyPanel: false,
+    }
+
     const input: RunIntelligentScoreInput = {
       symbol: symbol.trim(),
       files,
       reportText: reportText.trim(),
-      llmConfig,
+      llmConfig: configReady ? llmConfig : undefined,
+      transparencyConfig,
     }
 
     const onProgress: ScoreProgressCallback = ({ step, status, message }) => {

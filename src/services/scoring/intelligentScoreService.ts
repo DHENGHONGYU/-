@@ -75,12 +75,9 @@ async function readSupplementaryFiles(files: File[]): Promise<string[]> {
 function detectMissingBasicFields(stock: Stock | undefined): string[] {
   if (!stock) return ['stock']
   const missing: string[] = []
+  // 仅 price 为行情必需字段（维度 01 采集即可获得）
+  // pe/pb/marketCap 来自财务维度（09），缺失时 V6 引擎各层已内置降级
   if (stock.price === undefined || stock.price === null) missing.push('price')
-  if (stock.pe === undefined || stock.pe === null) missing.push('pe')
-  if (stock.pb === undefined || stock.pb === null) missing.push('pb')
-  if (stock.marketCap === undefined || stock.marketCap === null) missing.push('marketCap')
-  // roe / industryCode 为可选字段，V6 引擎各层已内置 null 降级（roe 缺失时 L0/L3f 使用中性分 3）
-  // 不再作为跳过 V6 引擎的必要条件
   return missing
 }
 
@@ -365,18 +362,24 @@ export async function runIntelligentScore(
     reportProgress(currentStep, 'done', reportText ? '已整理报告资料' : '未提供报告资料')
 
     currentStep = 'llmAnalysis'
-    reportProgress(currentStep, 'running', '调用大模型进行评分分析...')
-    const messages = buildIntelligentScorePrompt({ symbol, stock, supplementaryTexts, reportText })
-    // 阶段 B：LLM 调用容错——数据驱动路径（v6 可用）不应因 LLM 不可达而整体失败
     let response: LlmResponse | null = null
     let llmError: string | null = null
-    try {
-      response = await chat(messages, llmConfig)
-      reportProgress(currentStep, 'done', `模型 ${response.model} 返回分析结果`)
-    } catch (err) {
-      llmError = err instanceof Error ? err.message : String(err)
-      logger.warn('[runIntelligentScore] LLM 调用失败，将按数据可用性决策', { symbol, error: llmError })
-      reportProgress(currentStep, 'done', `LLM 不可达（${llmError}），按既有数据决策`)
+
+    const llmEnabled = transparencyConfig?.enableLlm ?? true
+    if (llmEnabled && llmConfig) {
+      reportProgress(currentStep, 'running', '调用大模型进行评分分析...')
+      const messages = buildIntelligentScorePrompt({ symbol, stock, supplementaryTexts, reportText })
+      try {
+        response = await chat(messages, llmConfig)
+        reportProgress(currentStep, 'done', `模型 ${response.model} 返回分析结果`)
+      } catch (err) {
+        llmError = err instanceof Error ? err.message : String(err)
+        logger.warn('[runIntelligentScore] LLM 调用失败，将按数据可用性决策', { symbol, error: llmError })
+        reportProgress(currentStep, 'done', `LLM 不可达（${llmError}），按既有数据决策`)
+      }
+    } else {
+      logger.info('[runIntelligentScore] LLM 未启用，跳过 LLM 分析', { symbol, enableLlm: llmEnabled })
+      reportProgress(currentStep, 'done', '跳过 LLM 分析（未配置或已禁用）')
     }
 
     currentStep = 'parseScore'
