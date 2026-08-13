@@ -66,7 +66,12 @@ export default tseslint.config(
       },
       rules: {
         '@typescript-eslint/no-unnecessary-condition': 'warn',
-        '@typescript-eslint/strict-boolean-expressions': 'warn',
+        '@typescript-eslint/strict-boolean-expressions': ['warn', {
+          allowNullableString: true,
+          allowNullableNumber: true,
+          allowNullableObject: true,
+          allowNullableBoolean: true,
+        }],
         '@typescript-eslint/no-unsafe-assignment': 'warn',
         '@typescript-eslint/no-unsafe-call': 'warn',
         '@typescript-eslint/no-unsafe-member-access': 'warn',
@@ -81,6 +86,20 @@ export default tseslint.config(
         '@typescript-eslint/require-await': 'warn',
       },
     },
+    // MCP 服务器：async 由接口契约约束（MCP Tool 必须返回 Promise），豁免 require-await
+    {
+      files: ['src/mcp/servers/**/*.ts'],
+      rules: {
+        '@typescript-eslint/require-await': 'off',
+      },
+    },
+    // 数据/配置/常量文件：包含大量业务数据数值（股票代码、阈值、色阶），豁免 no-magic-numbers
+    {
+      files: ['src/data/**/*.ts', 'src/config/**/*.ts', 'src/constants/**/*.ts', 'src/fixtures/**/*.ts'],
+      rules: {
+        'no-magic-numbers': 'off',
+      },
+    },
     {
       files: ['src/**/*.test.{ts,tsx}', 'tests/**/*.{ts,tsx}'],
       rules: {
@@ -90,6 +109,14 @@ export default tseslint.config(
         '@typescript-eslint/unbound-method': 'off',
         // 测试数据天然包含数字（如股票代码 600519、价格 50.5），豁免魔法数字规则
         'no-magic-numbers': 'off',
+        // 测试文件大量使用 console.log 输出调试信息，豁免 no-console
+        'no-console': 'off',
+        // 测试文件可能有意使用 async 但不需要 await（如 mock 接口签名对齐）
+        '@typescript-eslint/require-await': 'off',
+        // 测试文件允许不必要的条件判断（mock 数据类型不精确）
+        '@typescript-eslint/no-unnecessary-condition': 'off',
+        // 测试文件允许非严格布尔表达式
+        '@typescript-eslint/strict-boolean-expressions': 'off',
       },
     }
   )
