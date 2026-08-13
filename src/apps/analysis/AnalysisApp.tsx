@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect, useMemo, useRef } from 'react'
-import { Link, useLocation } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
@@ -14,7 +14,7 @@ import {
 } from '@/store/analysisStore'
 
 // ── Lazy 页面导入 ────────────────────────────────────────────────────────────
-const SectorAnalysisPage = React.lazy(() => import('@/pages/analysis/SectorAnalysisPage'))
+// 注：SectorAnalysisPage 已废弃，功能合并到 IndustryDashboardPage（行业全景仪表盘）
 const BacktestPage = React.lazy(() => import('@/pages/analysis/BacktestPage'))
 const IndustryScorePage = React.lazy(() => import('@/pages/analysis/IndustryScorePage'))
 const IndustryDashboardPage = React.lazy(() => import('@/pages/analysis/IndustryDashboardPage'))
@@ -40,7 +40,6 @@ interface AnalysisRoute {
 
 const ANALYSIS_ROUTES: AnalysisRoute[] = [
   { path: '/analysis/intelligent-score', branch: 'intelligent-score', componentName: 'IntelligentScorePage', exact: false, component: <IntelligentScorePage />, fallback: '加载个股智能分析页...' },
-  { path: '/analysis/sector', branch: 'sector', componentName: 'SectorAnalysisPage', component: <SectorAnalysisPage />, fallback: '加载板块分析页...' },
   { path: '/analysis/backtest', branch: 'backtest', componentName: 'BacktestPage', component: <BacktestPage />, fallback: '加载回测页...' },
   { path: '/analysis/industry-score', branch: 'industry-score', componentName: 'IndustryScorePage', component: <IndustryScorePage />, fallback: '加载行业评分页...' },
   { path: '/analysis/industry-dashboard', branch: 'industry-dashboard', componentName: 'IndustryDashboardPage', component: <IndustryDashboardPage />, fallback: '加载行业全景仪表盘...' },
@@ -79,8 +78,18 @@ function matchAnalysisRoute(path: string): AnalysisRoute {
  */
 export default function AnalysisApp(): React.JSX.Element {
   const location = useLocation()
+  const navigate = useNavigate()
   const path = location.pathname
   const prevPathRef = useRef<string | null>(null)
+
+  // ── 废弃路由重定向：/analysis/sector → /analysis/industry-dashboard ──────────
+  // SectorAnalysisPage 已合并到 IndustryDashboardPage，旧链接自动跳转
+  useEffect(() => {
+    if (path === '/analysis/sector' || path.startsWith('/analysis/sector/')) {
+      logger.info('[AnalysisApp] 废弃路由重定向', { from: path, to: '/analysis/industry-dashboard' })
+      navigate('/analysis/industry-dashboard', { replace: true })
+    }
+  }, [path, navigate])
 
   // ── 路由切换检测日志 ────────────────────────────────────────────────────────
   useEffect(() => {
