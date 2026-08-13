@@ -7,6 +7,29 @@
 
 ---
 
+## [Unreleased] - 2026-08-13
+
+### Added
+
+- **热门板块推荐独立页（来源一）布局定版 + 代表股抽取全流程**：
+  - `src/apps/input/HotSectorPage.tsx`（新增）—— 输入舱「来源一：热门板块核心标的」独立页，整合 `PageContainer + PageHeader + Breadcrumb`，页头提供「来源二：自定义检索」入口
+  - `src/apps/input/components/InputFlowOverview.tsx`（新增）—— 输入舱流程阶段总览条（双源输入 → 数据采集 → 结果汇总 → 分析舱调用），数据来自意向候选池 store
+  - `src/apps/input/hotSector/RepresentativePanel.tsx`（新增）—— 代表股筛选面板：按板块综合评分降序跨板块抽取 15-20 只，展示板块归属/评分/近一周及时性标记，支持「重新抽取」
+  - `src/apps/input/hotSector/SectorCard.tsx` / `HotSectorToolbar.tsx` / `useHotSectorState.ts` / `hotSector.utils.ts` —— 布局调整定版：板块卡片勾选+展开、工具条「抽取代表股 (15-20)」、动态权重排序、及时性过滤
+  - `src/services/input/hotSectorService.ts` —— 同步适配（板块检索与纳入服务）
+
+- **热门板块交互全流程验证（浏览器实测通过）**：
+  - 注入 8 个模拟热门板块（计算机 86 / 电子 81 / 电力设备 78 / 医药生物 77 / 国防军工 74 / 机械设备 74 / 通信 65 / 基础化工 57），评分日期近一周，共 36 只代表股
+  - 「抽取代表股 (15-20)」按钮 → 抽取 20 只代表股清单（面板显示）→ 「加入代表股 (20)」→ 意向候选池 18 只成功入池（来源标记「热门板块」）
+  - 录入看板统计「来源二 手动 4 · 来源一 热门 18」，InputFlowOverview 流程条联动正确
+
+- **`src/services/scoring/seedRotationScores.ts`（新增，开发调试用）**：
+  - 浏览器动态 import 执行的模拟数据种子脚本（`await import('/src/services/scoring/seedRotationScores.ts').then(m => m.seedRotationScores())`），按五因子权重推导子指标分值，写入 rotation_scores store，用于非上线环境填充热门板块数据验证交互
+
+### Changed
+
+- 热门板块页布局从「内嵌区块」调整为「独立页 + 流程总览条」，提升输入舱整体流程可见性
+
 ## [Unreleased] - 2026-08-09
 
 ### Added
