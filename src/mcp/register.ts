@@ -76,7 +76,7 @@ function instantiateServer(
 
     const instance = new ServerCtor() as MCPServer
 
-    if (!instance.info || !instance.listTools) {
+    if ((instance.info ?? null) === null || (instance.listTools ?? null) === null) {
       logger.error(`[MCP:register] "${exportName}" does not implement MCPServer interface`)
       return null
     }
@@ -155,8 +155,8 @@ export function syncWithConfig(): SyncResult {
   // 导致 syncWithConfig 误将全部 Server 注销（F2 根因）。
   const registeredByModulePath = new Map<string, RegisteredServer>()
   for (const rs of mcpRegistry.listServers()) {
-    const mp = rs.options.modulePath
-    if (mp) registeredByModulePath.set(mp, rs)
+    const mp = rs.options.modulePath ?? ''
+    if (mp !== '') registeredByModulePath.set(mp, rs)
   }
 
   const configByModulePath = new Map<string, (typeof MCP_SERVER_REGISTRY)[number]>()

@@ -131,19 +131,19 @@ const PoolBoardPage: React.FC = () => {
       </div>
 
       {/* 错误提示区 */}
-      {(collectError || refreshError) && (
+      {((collectError ?? '') !== '' || (refreshError ?? '') !== '') && (
         <div
           className={cn(
             'mb-4 rounded-lg border p-4',
             'border-destructive/30 bg-destructive/10',
           )}
         >
-          {collectError && (
+          {(collectError ?? '') !== '' && (
             <p className={cn('text-sm', 'text-destructive')}>
               采集异常: {collectError}
             </p>
           )}
-          {refreshError && (
+          {(refreshError ?? '') !== '' && (
             <p className={cn('mt-1 text-sm', 'text-warning')}>
               进度刷新异常: {refreshError}
             </p>

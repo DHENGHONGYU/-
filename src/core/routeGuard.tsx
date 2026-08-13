@@ -94,7 +94,8 @@ export const hasPermission: PermissionChecker = (ctx): boolean => {
   if (ctx.level === 'route') {
     if (!ALLOWED_ROUTE_CATEGORIES.includes(ctx.module)) return false
     // 若提供了 storeName（此处复用为路径前缀），检查是否在 ROUTE_WHITELIST 中
-    if (ctx.storeName && ROUTE_WHITELIST.size > 0 && !ROUTE_WHITELIST.has(ctx.storeName)) {
+    const sn = ctx.storeName ?? ''
+    if (sn !== '' && ROUTE_WHITELIST.size > 0 && !ROUTE_WHITELIST.has(sn)) {
       return false
     }
     return true
@@ -106,10 +107,12 @@ export const hasPermission: PermissionChecker = (ctx): boolean => {
   }
 
   // Button 级：检查 action 是否在模块白名单中
-  if (ctx.level === 'button' && ctx.action) {
+  if (ctx.level === 'button') {
+    const act = ctx.action ?? ''
+    if (act === '') return false
     const actions = buttonPermissionRegistry[ctx.module]
     if (!actions) return false // 未注册的模块默认拒绝（安全优先）
-    return actions.has(ctx.action)
+    return actions.has(act)
   }
 
   // CRUD 级：委托给 ACL_MATRIX（已在 acl.ts 中实现）
@@ -167,7 +170,7 @@ export function RouteGuard({
   const location = useLocation()
 
   // 如果指定了模块，检查路由级权限
-  if (module && !hasPermission({ module, level: 'route' })) {
+  if ((module ?? '') !== '' && !hasPermission({ module: module!, level: 'route' })) {
     logger.warn(`[RouteGuard] 访问被拒绝: path="${location.pathname}", module="${module}"`)
     return <Navigate to={redirectTo} replace state={{ from: location }} />
   }

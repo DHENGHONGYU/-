@@ -103,7 +103,7 @@ export default function MCPServerDashboardPage(): React.JSX.Element {
         </Card>
       )}
 
-      {error && (
+      {(error ?? '') !== '' && (
         <Card className="border-destructive/50">
           <CardContent className="py-4">
             <p className="text-destructive">{error}</p>
@@ -111,7 +111,7 @@ export default function MCPServerDashboardPage(): React.JSX.Element {
         </Card>
       )}
 
-      {!isLoading && !error && servers.length === 0 && (
+      {!isLoading && (error ?? '') === '' && servers.length === 0 && (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-16 text-muted-foreground">
             <Server className="h-12 w-12 mb-3 opacity-30" />
@@ -228,10 +228,10 @@ export default function MCPServerDashboardPage(): React.JSX.Element {
                                 <Play className="mr-1 h-3 w-3" />
                                 执行
                               </Button>
-                              {toolResult && (
+                              {(toolResult ?? '') !== '' && (
                                 <pre className="text-xs font-mono bg-muted p-2 rounded max-h-40 overflow-auto">{toolResult}</pre>
                               )}
-                              {toolError && (
+                              {(toolError ?? '') !== '' && (
                                 <p className="text-xs text-destructive">{toolError}</p>
                               )}
                             </div>

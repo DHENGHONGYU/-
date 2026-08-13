@@ -21,9 +21,9 @@ function isQualityOk(
 ): boolean {
   const q = stock.dataQuality
   if (!q) return false
-  if (required.basic && !q.basic) return false
-  if (required.kline && !q.kline) return false
-  if (required.finance && !q.finance) return false
+  if ((required.basic ?? false) === true && !q.basic) return false
+  if ((required.kline ?? false) === true && !q.kline) return false
+  if ((required.finance ?? false) === true && !q.finance) return false
   return true
 }
 

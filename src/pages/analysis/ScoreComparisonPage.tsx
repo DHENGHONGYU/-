@@ -465,8 +465,8 @@ export default function ScoreComparisonPage(): React.JSX.Element {
 
       <DataState
         isLoading={comparisonLoading}
-        isError={!!comparisonError}
-        isEmpty={!hasResult && !comparisonLoading && !comparisonError}
+        isError={(comparisonError ?? '') !== ''}
+        isEmpty={!hasResult && !comparisonLoading && (comparisonError ?? '') === ''}
         data={comparisonResult}
         loadingProps={{ message: '正在计算比对结果...' }}
         errorProps={{ error: comparisonError ?? '比对失败', showErrorDetail: true }}
@@ -475,7 +475,7 @@ export default function ScoreComparisonPage(): React.JSX.Element {
           description: '请选择比对对象并点击「开始比对」',
         }}
       >
-        {hasResult && comparisonResult && (
+        {hasResult && (comparisonResult ?? null) !== null && (
           <div className="space-y-6">
             <ComparisonHeader result={comparisonResult} />
 

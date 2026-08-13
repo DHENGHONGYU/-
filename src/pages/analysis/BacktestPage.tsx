@@ -144,7 +144,7 @@ export default function BacktestPage(): React.JSX.Element {
         </CardContent>
       </Card>
 
-      {error && (
+      {(error ?? '') !== '' && (
         <Card className={`border-destructive/50 bg-destructive/5`}>
           <CardContent className="flex items-center gap-3">
             <AlertCircle className={`h-5 w-5 text-destructive`} />
@@ -187,7 +187,7 @@ export default function BacktestPage(): React.JSX.Element {
               ))}
             </div>
 
-            {results.pnlCurve && results.pnlCurve.length > 1 && (
+            {(results.pnlCurve ?? null) !== null && results.pnlCurve.length > 1 && (
               <Card>
                 <CardHeader>
                   <CardTitle>净值曲线</CardTitle>
@@ -327,7 +327,7 @@ export default function BacktestPage(): React.JSX.Element {
           </CardContent>
         </Card>
       )}
-      {history && history.length > 0 && (
+      {(history ?? null) !== null && history.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">

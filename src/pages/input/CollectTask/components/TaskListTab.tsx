@@ -15,7 +15,6 @@ import {
   CardTitle,
   Button,
   Badge,
-  Skeleton,
   Progress,
   Table,
   TableBody,
@@ -25,6 +24,7 @@ import {
   TableRow,
 } from '@/components/atoms'
 import { EmptyState } from '@/components/molecules'
+import { Skeleton } from '@/components/molecules/states/Skeleton'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import type { CollectionTaskRuntime } from '@/types/modules/collection.types'
 import { normalizeStatus, STATUS_BADGE } from '../utils'

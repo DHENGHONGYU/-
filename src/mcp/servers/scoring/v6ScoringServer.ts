@@ -213,10 +213,12 @@ export class V6ScoringServer extends MCPServerBase {
         ],
         generator: async (args) => {
           const { symbol, compositeScore, context } = args
-          if (!symbol || !compositeScore) {
+          const sym = symbol ?? ''
+          const cs = compositeScore ?? ''
+          if (sym === '' || cs === '') {
             throw new Error('[scoring:v6] stock_analysis prompt: symbol and compositeScore are required')
           }
-          const scoreData: CompositeScore = JSON.parse(compositeScore)
+          const scoreData: CompositeScore = JSON.parse(cs)
           const layerSummary = Object.entries(scoreData.layers)
             .map(([id, layer]) => `- ${id}(${layer.layerName}): ${layer.score} (权重 ${layer.weight * 100}%)`)
             .join('\n')
@@ -234,14 +236,14 @@ export class V6ScoringServer extends MCPServerBase {
               content: {
                 type: 'text',
                 text: [
-                  `请分析股票 ${symbol} 的 V6 评分结果：`,
+                  `请分析股票 ${sym} 的 V6 评分结果：`,
                   `综合评分: ${scoreData.score}`,
                   `评级: ${scoreData.rating}`,
                   `推荐: ${scoreData.recommendation}`,
                   `各层得分:`,
                   layerSummary,
                   `风险提示: ${scoreData.allRisks.join('、')}`,
-                  context ? `额外信息: ${context}` : '',
+                  (context ?? '') !== '' ? `额外信息: ${context}` : '',
                 ].filter(Boolean).join('\n'),
               },
             },

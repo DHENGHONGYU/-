@@ -5,7 +5,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { collectKline } from '@/services/fetcher/fetcherClient'
-import { ordersToMarkers } from '@/services/trading/buySellPointMarkerBuilder'
+import { ordersToMarkers } from '@/domain/trading/markers'
 import type { KlinePeriod, KlineAdjust } from '@/types/modules/tradeReviewAI.types'
 import type { CandlestickChartData } from '@/components/chart'
 import type { Order } from '@/data/types'

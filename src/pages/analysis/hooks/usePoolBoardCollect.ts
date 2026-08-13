@@ -10,7 +10,7 @@ import { getBatchCollectionProgress, type CollectionProgress as ProgressType } f
 import { collectPoolSymbols } from '@/services/pool/collectionService'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { STRATEGY_TEMPLATES, DEFAULT_DIMENSIONS } from '@/config/collectConfig'
-import { upgradeDimensionsToPipeline } from '@/services/data-collector/collectionPipeline'
+import { upgradeDimensionsToPipeline } from '@/domain/collection/pipeline'
 import type { PoolItem } from '@/types/modules/pool.types'
 import type { CollectionConfig, DimensionPipelineConfig } from '@/types/modules/collection.types'
 

@@ -108,10 +108,11 @@ export class DataFlowEngine {
     }
     logger.info(`[DataFlowEngine] connect() called, url=${getSafeString(url) || 'none (polling mode)'}`)
 
-    if (url && typeof EventSource !== 'undefined') {
+    const sseUrl = url ?? ''
+    if (sseUrl !== '' && typeof EventSource !== 'undefined') {
       logger.debug('[DataFlowEngine] Attempting SSE connection...')
       try {
-        this.eventSource = new EventSource(url)
+        this.eventSource = new EventSource(sseUrl)
         this.eventSource.onopen = () => {
           this.connected = true
           this.reconnectAttempts = 0
@@ -238,9 +239,9 @@ export class DataFlowEngine {
     }
 
     const meta = this.channelMeta.get(channel)
-    const ttl = meta?.ttl
+    const ttl = meta?.ttl ?? 0
 
-    if (ttl && Date.now() - entry.timestamp > ttl) {
+    if (ttl > 0 && Date.now() - entry.timestamp > ttl) {
       this.cache.delete(channel)
       this.cacheStats.expiredCount++
       this.cacheStats.totalEntries = this.cache.size
@@ -422,7 +423,7 @@ export class DataFlowEngine {
       logger.debug('[DataFlowEngine] _tryReconnect() skipped - already connected')
       return
     }
-    if (!url) {
+    if ((url ?? '') === '') {
       logger.debug('[DataFlowEngine] _tryReconnect() skipped - no URL')
       return
     }

@@ -98,7 +98,7 @@ export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
 
         // 从 localStorage 读取已保存的透明度配置（因子开关 + 全局开关）
         const savedTransparency = localStorage.getItem('v9-llm-transparency')
-        if (savedTransparency) {
+        if (savedTransparency != null && savedTransparency !== '') {
           const parsed = JSON.parse(savedTransparency) as {
             enableLlm?: boolean
             factorOverrides?: typeof factorOverrides
@@ -209,7 +209,8 @@ export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
   // ── 模型列表 ───────────────────────────────────────────
   const getCurrentModels = useCallback((): string[] => {
     if (selectedPreset === 'custom') {
-      return config.model ? [config.model] : []
+      const model = config.model ?? ''
+      return model !== '' ? [model] : []
     }
     const preset = getPresetById(selectedPreset)
     return preset?.models ?? []
@@ -221,7 +222,8 @@ export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
       if (modelFilters.providers.length > 0 && !modelFilters.providers.includes(preset.provider)) {
         return false
       }
-      if (preset.contextWindow && preset.contextWindow < modelFilters.minContextWindow) {
+      const cw = preset.contextWindow ?? 0
+      if (cw > 0 && cw < modelFilters.minContextWindow) {
         return false
       }
       const inputPrice = parsePriceString(preset.inputPrice)

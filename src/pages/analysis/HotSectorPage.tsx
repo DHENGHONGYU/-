@@ -96,7 +96,7 @@ export default function HotSectorPage(): React.JSX.Element {
   // Error 状态
   // ============================================================
 
-  if (error) {
+  if ((error ?? '') !== '') {
     return (
       <PageContainer>
         <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4">
@@ -168,7 +168,7 @@ export default function HotSectorPage(): React.JSX.Element {
         <div className="grid gap-4">
           {scores.map((score) => {
             const isExpanded = expandedSymbol === score.symbol
-            const actionCfg = ACTION_CONFIG[score.action] || ACTION_CONFIG.ignore
+            const actionCfg = (ACTION_CONFIG[score.action] ?? null) !== null ? ACTION_CONFIG[score.action] : ACTION_CONFIG.ignore
             const scoreNum = score.score || 0
               const scoreColor =
                 scoreNum >= 4 ? 'text-success' :
@@ -176,7 +176,7 @@ export default function HotSectorPage(): React.JSX.Element {
                 'text-destructive'
 
             // 构造雷达图数据
-            const radarData: ScoreRadarData[] = Object.entries(score.dimensions || {}).map(([key, value]) => ({
+            const radarData: ScoreRadarData[] = Object.entries((score.dimensions ?? null) !== null ? score.dimensions : {}).map(([key, value]) => ({
               dimension: DIMENSION_LABELS[key] ?? key,
               score: (getSafeNumber(value) * 100),
               fullMark: 100,

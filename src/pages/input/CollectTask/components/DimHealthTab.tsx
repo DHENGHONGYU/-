@@ -4,8 +4,9 @@
  * @module CollectTask/components/DimHealthTab
  */
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, Skeleton } from '@/components/atoms'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms'
 import { EmptyState } from '@/components/molecules'
+import { Skeleton } from '@/components/molecules/states/Skeleton'
 import type { DimHealth } from '../hooks/useCollectionTaskStats'
 import { DimHealthCard } from './DimHealthCard'
 

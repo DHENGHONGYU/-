@@ -118,8 +118,8 @@ async function writeMockDimensionData(
     '06': 'sectorScores', '07': 'sectorScores',
     '08': 'researchLogs',
   }
-  const targetStore = storeForDim[dimensionCode]
-  if (targetStore) auditRecord(targetStore, data)
+  const targetStore = storeForDim[dimensionCode] ?? ''
+  if (targetStore !== '') auditRecord(targetStore, data)
 
   await dataBridge.forward({
     meta: {
@@ -226,7 +226,8 @@ function mapSourceLabelToId(label: string): string {
     llm: 'llm',
     real: 'tushare',
   }
-  if (labelMap[label]) return labelMap[label]
+  const mapped = labelMap[label] ?? ''
+  if (mapped !== '') return mapped
   logger.warn('[collectionPipeline] mapSourceLabelToId: 未知源标签，映射为 unknown', {
     unknownLabel: label,
     knownLabels: Object.keys(labelMap),
@@ -532,7 +533,7 @@ async function runSingleTraceImpl(
 
   const mode = resolveDimensionMode(dimensionCode)
   const traceId = traceIdFor(normalizedSymbol, dimensionCode)
-  const taskId = parentTaskId ? `${parentTaskId}-${normalizedSymbol}-${dimensionCode}` : traceIdFor(normalizedSymbol, dimensionCode)
+  const taskId = (parentTaskId ?? '') !== '' ? `${parentTaskId}-${normalizedSymbol}-${dimensionCode}` : traceIdFor(normalizedSymbol, dimensionCode)
   const start = Date.now()
 
   // ── Debug：强制走演示模式（mock + 随机延迟 + 彩色状态）

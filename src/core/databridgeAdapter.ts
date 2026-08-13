@@ -41,14 +41,14 @@ const PROGRAMMING_ERROR_CONSTRUCTORS = new Set<unknown>([
  */
 function isProgrammingError(err: unknown): boolean {
   // 分支 1：非对象错误（string/null/undefined）
-  if (!err || typeof err !== 'object') {
+  if ((err ?? null) === null || typeof err !== 'object') {
     logger.debug(`[DataBridgeAdapter] isProgrammingError: 非对象错误 → 操作错误(优雅降级), errorType=${typeof err}`)
     return false
   }
 
   // 分支 2：Object.create(null) 无 constructor 原型链
   const constructor = (err as object).constructor
-  if (!constructor) {
+  if (typeof constructor !== 'function') {
     logger.debug(`[DataBridgeAdapter] isProgrammingError: 无 constructor → 操作错误(优雅降级), error=${safeErrorMessage(err)}`)
     return false
   }
@@ -72,9 +72,10 @@ function isProgrammingError(err: unknown): boolean {
  */
 function safeErrorMessage(err: unknown): string {
   if (typeof err === 'string') return err
-  if (!err) return 'Unknown error'
-  if (typeof err === 'object' && 'message' in err && typeof (err as { message: unknown }).message === 'string') {
-    return (err as { message: string }).message
+  if ((err ?? null) === null) return 'Unknown error'
+  const e = err as Record<string, unknown>
+  if (typeof err === 'object' && 'message' in e && typeof e.message === 'string') {
+    return e.message
   }
   // Object.create(null) 或无 toString 的对象
   try {

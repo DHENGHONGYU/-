@@ -86,7 +86,7 @@ const PortfolioPage = memo(() => {
         </div>
 
         {/* 加载/错误提示 */}
-        {pfError && (
+        {(pfError ?? '') !== '' && (
           <p className={`text-sm ${COLOR_TOKENS.danger.tailwind}`}>错误：{pfError}</p>
         )}
 
@@ -117,7 +117,7 @@ const PortfolioPage = memo(() => {
                     <span className="font-medium">{portfolio.holdings?.length ?? 0}</span>
                   </div>
                 </div>
-                {portfolio.holdings && portfolio.holdings.length > 0 && (
+                {(portfolio.holdings ?? null) !== null && portfolio.holdings.length > 0 && (
                   <div className="mt-3 space-y-2">
                     {portfolio.holdings.map((holding, i) => (
                       <div
@@ -154,7 +154,7 @@ const PortfolioPage = memo(() => {
                   <div>
                     <span className="text-muted-foreground">策略名称：</span>
                     <span className="font-medium">
-                      {pfStrategyResult.summary ? `策略筛选 (${pfStrategyResult.summary.total})` : '未命名'}
+                      {(pfStrategyResult.summary ?? null) !== null ? `策略筛选 (${pfStrategyResult.summary.total})` : '未命名'}
                     </span>
                   </div>
                   <div>

@@ -9,10 +9,9 @@ import {
   exportAllGroupsToExcel,
   exportSnapshotToJson,
   exportBatchSnapshotsToExcel,
-} from '@/services/trading/strategySnapshotExport'
+} from '@/domain/export/strategySnapshotExport'
 import { getLogger } from '@/lib/logger'
-import type { StrategySnapshot } from '@/data/types'
-import type { StrategyGroupItem } from '@/services/trading/strategySnapshotService'
+import type { StrategySnapshot, StrategyGroupItem } from '@/data/types'
 
 const logger = getLogger()
 
