@@ -256,7 +256,7 @@ describe('PnLAnalysisWidget', () => {
 
     const value = screen.getByText('2.3')
     expect(value).toBeInTheDocument()
-    expect(value.className).toContain('text-yellow-500')
+    expect(value.className).toContain('text-warning')
   })
 
   // ----------------------------------------------------------
@@ -376,7 +376,7 @@ describe('PnLAnalysisWidget', () => {
     expect(COLOR_TOKENS.success.tailwind).toBe('text-success')
     // 源码 亏损分支 使用 COLOR_TOKENS.danger.hex (#ef4444)
     expect(COLOR_TOKENS.danger.hex).toBe('#ef4444')
-    // 源码 盈亏比 使用 twText('yellow', 500)
+    // 源码 盈亏比 使用 text-warning
     expect(THEME_TOKENS).toBeTruthy()
   })
 })

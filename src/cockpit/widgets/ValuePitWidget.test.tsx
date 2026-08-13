@@ -16,7 +16,6 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import type { WidgetConfig, ValuePitData } from '@/types/modules/widget.types'
 import { SCORE_LEVELS } from '@/constants/cockpit.constants'
-import { twBg } from '@/constants/theme.tokens'
 import { buildWidgetConfig } from '../../../tests/fixtures'
 
 vi.mock('@/lib/logger', () => ({
@@ -146,6 +145,6 @@ describe('ValuePitWidget', () => {
   it('rotationSignal=true 时显示轮动信号徽章', () => {
     render(<ValuePitWidget config={buildConfig()} data={{ valuePit: [buildItem({ rotationSignal: true })] }} />)
     const badge = screen.getByText('轮动信号')
-    expect(badge).toHaveClass(twBg('green', 600))
+    expect(badge).toHaveClass('bg-success')
   })
 })

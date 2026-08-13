@@ -24,7 +24,7 @@ import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import PortfolioOverviewWidget from '@/cockpit/widgets/PortfolioOverviewWidget'
 import type { PortfolioData, MarketData, HoldingItem, RebalancePlanItem } from '@/types/modules/widget.types'
-import { COLOR_TOKENS, twBg, twText } from '@/constants/theme.tokens'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { buildWidgetConfig } from '../../../tests/fixtures'
 
 // ============================================================
@@ -163,7 +163,7 @@ describe('PortfolioOverviewWidget', () => {
     setupMarketData({ portfolio: buildPortfolioData(), loading: true })
     render(<PortfolioOverviewWidget config={buildConfig()} />)
 
-    const skeletons = document.querySelectorAll('.bg-gray-200')
+    const skeletons = document.querySelectorAll('.bg-muted')
     expect(skeletons.length).toBeGreaterThanOrEqual(5)
     expect(screen.queryByText('总资产')).not.toBeInTheDocument()
   })
@@ -173,7 +173,7 @@ describe('PortfolioOverviewWidget', () => {
     render(<PortfolioOverviewWidget config={buildConfig()} />)
 
     expect(screen.queryByText('总资产')).not.toBeInTheDocument()
-    const skeletons = document.querySelectorAll('.bg-gray-200')
+    const skeletons = document.querySelectorAll('.bg-muted')
     expect(skeletons.length).toBeGreaterThan(0)
   })
 
@@ -249,7 +249,7 @@ describe('PortfolioOverviewWidget', () => {
     const pnlLabel = screen.getByText('当日盈亏')
     const pnlCard = pnlLabel.parentElement
     expect(pnlCard).not.toBeNull()
-    expect(pnlCard).toHaveClass(twBg('green', 50))
+    expect(pnlCard).toHaveClass('bg-success/10')
   })
 
   it('渲染累计盈亏并使用 info 颜色令牌', () => {
@@ -387,9 +387,9 @@ describe('PortfolioOverviewWidget', () => {
     })
     render(<PortfolioOverviewWidget config={buildConfig()} />)
 
-    // 权重显示容器应使用 twText('red', 500)
+    // 权重显示容器应使用 text-destructive
     const weightElement = screen.getByText('50.0%')
-    expect(weightElement).toHaveClass(twText('red', 500))
+    expect(weightElement).toHaveClass('text-destructive')
   })
 
   it('持仓权重 - 低配（targetWeight - weight > 5%）使用 amber-500 颜色令牌', () => {
@@ -402,7 +402,7 @@ describe('PortfolioOverviewWidget', () => {
     render(<PortfolioOverviewWidget config={buildConfig()} />)
 
     const weightElement = screen.getByText('30.0%')
-    expect(weightElement).toHaveClass(twText('amber', 500))
+    expect(weightElement).toHaveClass('text-warning')
   })
 
   it('持仓权重 - 平衡状态（偏离 ≤ 5%）使用 gray-500 颜色令牌', () => {

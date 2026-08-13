@@ -239,7 +239,7 @@ describe('RiskMonitorWidget', () => {
     const badge = screen.getByText('高风险')
     expect(badge).toBeInTheDocument()
     expect(badge.className).toContain(COLOR_TOKENS.danger.tailwind) // text-red-500
-    expect(badge.className).toContain('border-red-300') // twBorder('red', 300)
+    expect(badge.className).toContain('border-destructive/30') // border-destructive/30
   })
 
   it('renders "中风险" badge with yellow token when varLevel is medium', () => {
@@ -248,8 +248,8 @@ describe('RiskMonitorWidget', () => {
 
     const badge = screen.getByText('中风险')
     expect(badge).toBeInTheDocument()
-    expect(badge.className).toContain('text-yellow-500') // twText('yellow', 500)
-    expect(badge.className).toContain('border-yellow-300') // twBorder('yellow', 300)
+    expect(badge.className).toContain('text-warning') // text-warning
+    expect(badge.className).toContain('border-warning/30') // border-warning/30
   })
 
   it('renders "低风险" badge with success token when varLevel is low', () => {
@@ -259,7 +259,7 @@ describe('RiskMonitorWidget', () => {
     const badge = screen.getByText('低风险')
     expect(badge).toBeInTheDocument()
     expect(badge.className).toContain(COLOR_TOKENS.success.tailwind) // text-success
-    expect(badge.className).toContain('border-green-300') // twBorder('green', 300)
+    expect(badge.className).toContain('border-success/30') // border-success/30
   })
 
   // ----------------------------------------------------------
