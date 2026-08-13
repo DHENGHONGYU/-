@@ -27,4 +27,4 @@ date: 2026-07-17
 ## 入口
 
 - [../prompts/store-integration-guide.md](../prompts/store-integration-guide.md)
-- [../how-to/how-to-add-store.md](../how-to/how-to-add-store.md)
+- [../../guides/how-to/how-to-add-store.md](../../guides/how-to/how-to-add-store.md)

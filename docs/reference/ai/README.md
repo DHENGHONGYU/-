@@ -29,4 +29,4 @@ date: 2026-07-17
 - AI 相关提示词：[../prompts/README.md](../prompts/README.md)
 - Store 集成指南：[../prompts/store-integration-guide.md](../prompts/store-integration-guide.md)
 - Service 集成指南：[../prompts/service-integration-guide.md](../prompts/service-integration-guide.md)
-- Agent 运行时规范：[../reference/agent-runtime-spec.md](../reference/agent-runtime-spec.md)
+- Agent 运行时规范：[../agent-runtime-spec.md](../agent-runtime-spec.md)

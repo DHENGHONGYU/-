@@ -456,8 +456,8 @@ interface StandardEnvelope {
  V9 
 
 - [](../00-meta/../explanation/design/registry-index.md)
-- [data-security-and-privacy](../01-product/data-security-and-privacy.md)
-- [V9  ?? ](../reports/retrospectives/-v2.0.0.md)
+- [data-security-and-privacy](../specs/product/data-security-and-privacy.md)
+- [V9  ?? ](../reports/上线前全面校验报告-v2.0.0.md)
 - [](../explanation/design/../explanation/design/registry-index.md)
 - [V9 ](../explanation/design/00-readme.md)
 - [](../00-meta/REGISTRY_INDEX.md)

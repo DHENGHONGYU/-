@@ -283,9 +283,9 @@ grep -r "new DataBridge()" src/
 
 ## 📚 参考资料
 
-- [AGENTS.md](./AGENTS.md) - AI 行为约束契约 v1.3.5
+- [AGENTS.md](../meta/AGENTS.md) - AI 行为约束契约 v1.3.5
 - [ARCHITECTURE.md](../explanation/ARCHITECTURE.md) - 系统架构文档
-- [docs/TECH-DEBT.md](../TECH-DEBT.md) - 技术债务清单
+- [docs/TECH-DEBT.md](../reports/TECH-DEBT.md) - 技术债务清单
 
 ---
 

@@ -352,7 +352,7 @@ Remove-Item src/services/scoring/_shared -Recurse -ErrorAction SilentlyContinue
 ## 七、参考文档
 
 - [PR-8 审计报告](./pr-8-dedup-audit-report.md)
-- [PR-7 变更日志](../../CHANGELOG.md)
+- [PR-7 变更日志](../../../reports/CHANGELOG.md)
 - 边界定义同步文档
-- [架构标准 §3.16 模块拆分架构原则](../../03-architecture-standards.md)
-- [AP-007 重复代码检测策略 A（保守合并）](../../03-architecture-standards.md)
+- [架构标准 §3.16 模块拆分架构原则](../../../explanation/03-architecture-standards.md)
+- [AP-007 重复代码检测策略 A（保守合并）](../../../explanation/03-architecture-standards.md)

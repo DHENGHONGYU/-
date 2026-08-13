@@ -35,5 +35,5 @@ date: 2026-07-17
 
 ## 相关文档
 
-- 数据桥接 ADR：[../reference/adr-003-databridge-over-direct-datalayer.md](../reference/adr-003-databridge-over-direct-datalayer.md)
-- IndexedDB 方案 ADR：[../reference/adr-002-indexeddb-over-localstorage.md](../reference/adr-002-indexeddb-over-localstorage.md)
+- 数据桥接 ADR：[../reference/adr-003-databridge-over-direct-datalayer.md](../adr-003-databridge-over-direct-datalayer.md)
+- IndexedDB 方案 ADR：[../reference/adr-002-indexeddb-over-localstorage.md](../adr-002-indexeddb-over-localstorage.md)

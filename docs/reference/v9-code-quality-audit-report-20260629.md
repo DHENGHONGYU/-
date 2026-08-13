@@ -679,7 +679,7 @@ date: 2026-07-17
 
 ## 10. 参考文档
 
-- [V9 架构标准](03-architecture-standards.md)
+- [V9 架构标准](../explanation/03-architecture-standards.md)
 - [V9 策略架构](../explanation/v9-strategy-architecture.md)
 - [V9 模块完成度剖面图](./completeness-profile.md)
 - [V9 审计总结报告](../explanation/design/audit-summary-report.md)
