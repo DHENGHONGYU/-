@@ -181,7 +181,7 @@ export async function clearOldVersionEvidence(symbol: string, keepVersions = 3):
   // 收集所有版本号
   const versions = new Set<number>()
   for (const e of evidence) {
-    if (e.scoreVersion) {
+    if (e.scoreVersion !== undefined) {
       versions.add(e.scoreVersion)
     }
   }
@@ -194,7 +194,7 @@ export async function clearOldVersionEvidence(symbol: string, keepVersions = 3):
 
   let deleted = 0
   for (const e of evidence) {
-    if (e.scoreVersion && versionsToDelete.includes(e.scoreVersion)) {
+    if (e.scoreVersion !== undefined && versionsToDelete.includes(e.scoreVersion)) {
       await sendWriteEnvelope('deleteScoreEvidence', { id: e.id }, 'analyzer')
       deleted++
     }
@@ -265,7 +265,7 @@ export async function autoBuildLayerEvidence(
     }
   }
 
-  if (!domain) {
+  if ((domain ?? '') === '') {
     logger.warn(`[scoreEvidence] 未找到层对应的域`, { layer })
     return []
   }

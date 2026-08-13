@@ -105,7 +105,7 @@ async function fetchKlineIfNeeded(
   stock: Stock,
   options: AddStockOptions,
 ): Promise<{ stock: Stock; warning?: string }> {
-  if (!options.fetchKlineAfterAdd) return { stock }
+  if ((options.fetchKlineAfterAdd ?? false) !== true) return { stock }
   logger.info('[inputService] 拉取 K线数据', { symbol: stock.symbol })
   const klineResult = await fetchKlineDataUseCase({ symbol: stock.symbol })
   if (klineResult.success && klineResult.data) {
@@ -187,7 +187,7 @@ export async function addStock(
 
     const basic = await fetchBasicIfNeeded(stock, options)
     stock = basic.stock
-    if (basic.warning) {
+    if ((basic.warning ?? '') !== '') {
       return {
         success: true,
         data: stock,
@@ -197,7 +197,7 @@ export async function addStock(
 
     const kline = await fetchKlineIfNeeded(stock, options)
     stock = kline.stock
-    if (kline.warning) {
+    if ((kline.warning ?? '') !== '') {
       return {
         success: true,
         data: stock,

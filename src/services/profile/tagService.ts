@@ -149,8 +149,8 @@ function calculateQualityScore(item: ProfileItem, qualityTags: string[]): number
   else if (contentLen > 200) score += 5
 
   // 结构完整性（20分）
-  if (item.content) score += 10 // 有完整内容
-  if (item.sourceUrl) score += 5 // 有来源链接
+  if ((item.content ?? '') !== '') score += 10 // 有完整内容
+  if ((item.sourceUrl ?? '') !== '') score += 5 // 有来源链接
   if (item.summary.length > 50) score += 5 // 摘要完整
 
   // 质量标签加成（20分）
@@ -248,8 +248,9 @@ export async function createTag(params: {
   await sendWriteEnvelope('saveProfileTag', tag, 'analyzer')
 
   // 如果有父标签，更新父标签的 childrenIds
-  if (params.parentId) {
-    await addChildTag(params.parentId, tag.id)
+  const parentId = params.parentId ?? ''
+  if (parentId !== '') {
+    await addChildTag(parentId, tag.id)
   }
 
   return tag

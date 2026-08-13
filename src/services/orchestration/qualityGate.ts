@@ -236,7 +236,7 @@ export class QualityGate {
           key: symbol,
         })
         const stockMs = performance.now() - t0
-        if (!stockRes.success || !stockRes.data) {
+        if ((stockRes.success ?? false) !== true || stockRes.data == null) {
           logger.warn(`[QualityGate] 股票 ${symbol} 不存在于DB，跳过`, { stockMs: Math.round(stockMs) })
           continue
         }
@@ -251,7 +251,7 @@ export class QualityGate {
             store: STORE_NAME.dailyQuotes,
             key: symbol,
           })
-          if (quotesRes.success && quotesRes.data) {
+          if (quotesRes.success === true && quotesRes.data != null) {
             quotes = quotesRes.data as Record<string, unknown>
           }
         } catch {
@@ -268,7 +268,7 @@ export class QualityGate {
             store: STORE_NAME.financialReports,
             key: symbol,
           })
-          if (finRes.success && finRes.data) {
+          if (finRes.success === true && finRes.data != null) {
             financials = { ...(finRes.data as Record<string, unknown>), dataStatus: 'complete' }
           }
         } catch {

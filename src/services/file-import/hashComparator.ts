@@ -59,7 +59,7 @@ export async function computeRecordHash(record: Record<string, unknown>): Promis
   const businessFields = sortObjectKeys(record)
   const jsonStr = JSON.stringify(businessFields)
 
-  if (typeof crypto !== 'undefined' && crypto.subtle) {
+  if (typeof crypto !== 'undefined' && crypto.subtle != null) {
     const encoder = new TextEncoder()
     const data = encoder.encode(jsonStr)
     const hashBuffer = await crypto.subtle.digest('SHA-256', data)
@@ -82,7 +82,7 @@ export async function computeRecordHash(record: Record<string, unknown>): Promis
  * @returns SHA-256 十六进制哈希字符串
  */
 export async function computeFileHash(file: File): Promise<string> {
-  if (typeof crypto !== 'undefined' && crypto.subtle) {
+  if (typeof crypto !== 'undefined' && crypto.subtle != null) {
     let buffer: ArrayBuffer
     if (typeof (file as File & { arrayBuffer?: () => Promise<ArrayBuffer> }).arrayBuffer === 'function') {
       buffer = await (file as File & { arrayBuffer: () => Promise<ArrayBuffer> }).arrayBuffer()
@@ -192,7 +192,7 @@ export function buildFileHashComparison(
   lastImportHash?: string,
   recordComparison?: HashComparisonResult,
 ): HashComparisonResult {
-  const fileChanged = !lastImportHash || currentFileHash !== lastImportHash
+  const fileChanged = (lastImportHash ?? '') === '' || currentFileHash !== lastImportHash
 
   return {
     fileHash: currentFileHash,

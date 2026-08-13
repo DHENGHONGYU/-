@@ -122,16 +122,18 @@ export class ScoreAutoTrigger {
   private handleCollectComplete = (event: unknown): void => {
     if (!this.config.enabled) return
     const e = event as Partial<CollectionLifecycleEvent>
-    if (!e.symbol || !e.dimensionCode) return
+    const sym = e.symbol ?? ''
+    const dim = e.dimensionCode ?? ''
+    if (sym === '' || dim === '') return
 
-    if (!this.config.triggerDimensions.has(e.dimensionCode)) {
-      logger.debug(`[ScoreAutoTrigger] 维度 ${e.dimensionCode} 不触发评分`, {
-        symbol: e.symbol,
+    if (!this.config.triggerDimensions.has(dim)) {
+      logger.debug(`[ScoreAutoTrigger] 维度 ${dim} 不触发评分`, {
+        symbol: sym,
       })
       return
     }
 
-    this.scheduleTrigger(e.symbol, e.dimensionCode)
+    this.scheduleTrigger(sym, dim)
   }
 
   private scheduleTrigger(symbol: string, dimensionCode: string): void {
@@ -164,8 +166,8 @@ export class ScoreAutoTrigger {
     if (this.runningCount >= this.config.maxConcurrent) return
     if (this.queue.length === 0) return
 
-    const symbol = this.queue.shift()
-    if (!symbol) return
+    const symbol = this.queue.shift() ?? ''
+    if (symbol === '') return
 
     this.runningCount++
     logger.info(`[ScoreAutoTrigger] 开始评分: ${symbol}, 并发: ${this.runningCount}/${this.config.maxConcurrent}`)

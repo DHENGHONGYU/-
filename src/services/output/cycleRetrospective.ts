@@ -53,8 +53,8 @@ export function generateRetrospectiveReport(
 
   // 1. 准确率统计
   const verified = predictions.filter((p) => p.status === 'verified')
-  const directionHits = verified.filter((p) => p.hitDirection).length
-  const rangeHits = verified.filter((p) => p.hitRange).length
+  const directionHits = verified.filter((p) => (p.hitDirection ?? false) === true).length
+  const rangeHits = verified.filter((p) => (p.hitRange ?? false) === true).length
   const directionAccuracy = verified.length > 0 ? directionHits / verified.length : 0
   const rangeAccuracy = verified.length > 0 ? rangeHits / verified.length : 0
 
@@ -70,7 +70,7 @@ export function generateRetrospectiveReport(
   }
   for (const cycle of Object.keys(cycleAdaptation) as MarketCycle[]) {
     const cyclePreds = verified.filter((p) => p.marketCycle === cycle)
-    const cycleHits = cyclePreds.filter((p) => p.hitDirection).length
+    const cycleHits = cyclePreds.filter((p) => (p.hitDirection ?? false) === true).length
     cycleAdaptation[cycle] = cyclePreds.length > 0 ? cycleHits / cyclePreds.length : 0
   }
 

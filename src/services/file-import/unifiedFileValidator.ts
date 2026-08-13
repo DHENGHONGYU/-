@@ -182,7 +182,7 @@ async function detectEncoding(file: File): Promise<'utf-8' | 'gbk' | 'unknown'> 
  * @returns 十六进制哈希字符串
  */
 async function computeSHA256(file: File): Promise<string> {
-  if (typeof crypto !== 'undefined' && crypto.subtle) {
+  if (typeof crypto !== 'undefined' && crypto.subtle != null) {
     let buffer: ArrayBuffer
     if (typeof (file as File & { arrayBuffer?: () => Promise<ArrayBuffer> }).arrayBuffer === 'function') {
       buffer = await (file as File & { arrayBuffer: () => Promise<ArrayBuffer> }).arrayBuffer()
@@ -314,7 +314,7 @@ export async function validateFile(
 
   // 3. MIME 类型交叉校验
   const expectedMime = EXTENSION_MIME_MAP[ext]
-  if (expectedMime && file.type && file.type !== expectedMime) {
+  if ((expectedMime ?? '') !== '' && (file.type ?? '') !== '' && file.type !== expectedMime) {
     warnings.push({
       code: 'MIME_MISMATCH',
       message: `MIME 类型 "${file.type}" 与扩展名 ".${ext}" 预期 "${expectedMime}" 不匹配`,
@@ -369,7 +369,7 @@ export async function validateFile(
     fileName: file.name,
     fileSize: file.size,
     fileType: dataType,
-    mimeType: file.type || expectedMime || 'unknown',
+    mimeType: file.type ?? expectedMime ?? 'unknown',
     encoding,
     rowCount,
     hash,
