@@ -8,7 +8,7 @@
  *
  * 子模块结构：
  *   - registry/registryTypes.ts   → 类型定义 + registerComponent 工厂
- *   - registry/atomRegistry.ts    → Atom 层（24 条）
+ *   - registry/atomRegistry.ts    → Atom 层（23 条）
  *   - registry/moleculeRegistry.ts → Molecule 层（22 条）
  *   - registry/organismRegistry.ts → Organism 层（70+ 条）
  *   - registry/templateRegistry.ts → Template 层（4 条）

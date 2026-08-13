@@ -379,8 +379,10 @@ function checkUnregisteredComponents(registeredPaths: Set<string>): string[] {
             entry.name !== 'componentRegistry.ts' &&
             // 排除 hooks / 工具文件
             !entry.name.startsWith('use') &&
-            // 排除纯类型文件
+            // 排除纯类型/配置/工具文件
             !entry.name.endsWith('.types.ts') &&
+            !entry.name.endsWith('.config.ts') &&
+            !entry.name.endsWith('.utils.ts') &&
             !EXCLUDE_FILES.has(entry.name))
 
         if (isComponent) {
