@@ -39,18 +39,27 @@ interface LayoutMigrationLog {
 
 const LAYOUT_MIGRATION_LOG_KEY = 'v9_cockpit_layout_migration_log'
 
-function saveMigrationLog(log: LayoutMigrationLog): void {
+/** @internal 仅供 CockpitShell.migration.test.tsx 测试使用 */
+export function saveMigrationLog(log: LayoutMigrationLog): void {
   try {
     const existing = localStorage.getItem(LAYOUT_MIGRATION_LOG_KEY)
-    const logs = (existing ?? '') !== '' ? (JSON.parse(existing!) as LayoutMigrationLog[]) : []
-    logs.push(log)
-    localStorage.setItem(LAYOUT_MIGRATION_LOG_KEY, JSON.stringify(logs.slice(-10)))
+    if (existing != null && existing !== '') {
+      if (typeof existing !== 'string') {
+        logger.warn('[CockpitShell] migration log 类型异常，跳过合并', { type: typeof existing })
+      }
+      const logs = JSON.parse(existing) as LayoutMigrationLog[]
+      logs.push(log)
+      localStorage.setItem(LAYOUT_MIGRATION_LOG_KEY, JSON.stringify(logs.slice(-10)))
+    } else {
+      localStorage.setItem(LAYOUT_MIGRATION_LOG_KEY, JSON.stringify([log]))
+    }
   } catch {
     logger.warn('[CockpitShell] Failed to save migration log')
   }
 }
 
-function getLastMigrationLog(): LayoutMigrationLog | null {
+/** @internal 仅供 CockpitShell.migration.test.tsx 测试使用 */
+export function getLastMigrationLog(): LayoutMigrationLog | null {
   try {
     const existing = localStorage.getItem(LAYOUT_MIGRATION_LOG_KEY)
     if (existing === null || existing === '') return null
