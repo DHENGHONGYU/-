@@ -194,8 +194,16 @@ export const CHART_PALETTE = {
   axisDark: '#475569', // slate-600（中性收敛，与 tokens.json 一致）
   /** 涨跌色 - 涨（A股红涨，对齐 STOCK_COLOR_TOKENS.up） */
   upColor: '#ef4444', // red-500
+  /** 涨跌色 - 涨 50% 透明（对齐 STOCK_COLOR_TOKENS.up.hexAlpha50） */
+  upColor50: '#ef444480',
+  /** 涨跌色 - 涨 80% 透明（对齐 STOCK_COLOR_TOKENS.up.hexAlpha80） */
+  upColor80: '#ef4444cc',
   /** 涨跌色 - 跌（A股绿跌，对齐 STOCK_COLOR_TOKENS.down） */
   downColor: '#22c55e', // green-500
+  /** 涨跌色 - 跌 50% 透明（对齐 STOCK_COLOR_TOKENS.down.hexAlpha50） */
+  downColor50: '#22c55e80',
+  /** 涨跌色 - 跌 80% 透明（对齐 STOCK_COLOR_TOKENS.down.hexAlpha80） */
+  downColor80: '#22c55ecc',
   /** 主题强调色 */
   accent: '#0ea5e9', // sky-500
   /** Gauge 仪表盘轨道 */

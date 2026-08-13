@@ -218,8 +218,8 @@ export const LLMConfigWidget = memo(function LLMConfigWidget({
           {/* 模型信息摘要 */}
           {currentPreset && (
             <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
-              {(contextStr ?? '') !== '' && <span>上下文: {contextStr} tokens</span>}
-              {(priceInfo ?? '') !== '' && <span>价格: ${priceInfo} /M tokens</span>}
+              {contextStr != null && contextStr !== '' && <span>上下文: {contextStr} tokens</span>}
+              {priceInfo != null && priceInfo !== '' && <span>价格: ${priceInfo} /M tokens</span>}
               <span>供应商: {currentPreset.provider}</span>
             </div>
           )}

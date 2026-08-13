@@ -22,7 +22,7 @@ import {
   type SeriesMarker,
   type MouseEventHandler,
 } from 'lightweight-charts'
-import { CHART_PALETTE, COLOR_TOKENS, THEME_TOKENS } from '@/constants/theme.tokens'
+import { CHART_PALETTE, COLOR_TOKENS, STOCK_COLOR_TOKENS, THEME_TOKENS } from '@/constants/theme.tokens'
 import type { ChartMarker } from '@/types/modules/buySellPoint.types'
 import type { KlinePeriod, KlineAdjust } from '@/services/fetcher/fetcherTypes'
 import { computeKDJ, KDJ_COLORS, type KDJParams } from './indicators/kdj'
@@ -146,7 +146,7 @@ const ChartTooltip = memo<ChartTooltipProps>(({ data, positiveColor, negativeCol
             <span style={{ textAlign: 'right' }}>{data.macd.dif.toFixed(3)}</span>
             <span style={{ color: MACD_COLORS.dea }}>DEA</span>
             <span style={{ textAlign: 'right' }}>{data.macd.dea.toFixed(3)}</span>
-            <span style={{ color: data.macd.histogram >= 0 ? '#ef4444' : '#22c55e' }}>MACD</span>
+            <span style={{ color: data.macd.histogram >= 0 ? STOCK_COLOR_TOKENS.up.hex : STOCK_COLOR_TOKENS.down.hex }}>MACD</span>
             <span style={{ textAlign: 'right' }}>{data.macd.histogram.toFixed(3)}</span>
           </>
         )}

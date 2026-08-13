@@ -19,20 +19,16 @@ export type { CandlestickChartData, CandlestickChartProps } from './CandlestickC
 
 // 行业分析图表组件（v2.9.5 新增）
 export {
-  IndustryV4Radar,
-  IndustryV4RadarChart,
-  SubIndicatorBar,
-  SubIndicatorBarChart,
   IndustryHeatmap,
   IndustryHeatmapChart,
-  ValuationDistribution,
-  ValuationDistributionChart,
   buildHistogram,
 } from './industry'
 /**
- * @internal 行业分析预留组件，已从对外导出移除（registry 内部用）：
+ * @internal 行业分析预留组件，已从对外导出移除（registry 内部用 + 同目录父子组合）：
  *   TrendLineChart · IndustryTrendChart · IndustryV4Panel
- * 接入产品路由/Widget 后重新开放 export，禁止直接 <JSX> 静态直引。
+ *   IndustryV4Radar · SubIndicatorBar · ValuationDistribution
+ * 接入产品路由/Widget 后重新开放 export；IndustryV4Radar/SubIndicatorBar 属
+ * IndustryV4Panel 内部子组件，仅允许同目录内部 import（非对外 API）。
  */
 
 // 筹码分布图组件
@@ -51,19 +47,15 @@ export type { GaugeChartProps } from './GaugeChart'
 
 // 行业分析图表类型导出（v2.9.5 新增）
 export type {
-  IndustryV4RadarProps,
-  IndustryV4RadarDataItem,
-  IndustryV4RadarSeries,
-  SubIndicatorBarProps,
-  SubIndicatorBarDataItem,
   IndustryHeatmapProps,
   IndustryHeatmapDataItem,
   HeatmapColorScheme,
-  ValuationDistributionProps,
-  ValuationDistributionBin,
 } from './industry'
 /**
  * @internal 行业分析预留类型（随组件一并从对外导出移除）：
  *   TrendLineChartProps · TrendLineDataPoint · TrendLineSeries · TrendLineReferenceLine · IndustryV4PanelProps
+ *   IndustryV4RadarProps · IndustryV4RadarDataItem · IndustryV4RadarSeries
+ *   SubIndicatorBarProps · SubIndicatorBarDataItem
+ *   ValuationDistributionProps · ValuationDistributionBin
  * 产品规划确认接入方式后，与组件同时恢复类型导出。
  */

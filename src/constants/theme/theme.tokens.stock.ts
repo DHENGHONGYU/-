@@ -42,6 +42,10 @@ export const STOCK_COLOR_TOKENS = {
     tailwind: 'text-red-500',
     bgClass: 'bg-red-500',
     rgb: '239, 68, 68',
+    /** 80% 透明度版本（rgba 近似），用于 MACD histogram 等半透明柱状 / 面积叠层 */
+    hexAlpha80: '#ef4444cc',
+    /** 50% 透明度版本，用于弱提示填充背景 */
+    hexAlpha50: '#ef444480',
   },
   /** 下跌颜色（绿色，中国A股标准） */
   down: {
@@ -49,6 +53,10 @@ export const STOCK_COLOR_TOKENS = {
     tailwind: 'text-green-500',
     bgClass: 'bg-green-500',
     rgb: '34, 197, 94',
+    /** 80% 透明度版本，用于 MACD histogram 等半透明柱状 / 面积叠层 */
+    hexAlpha80: '#22c55ecc',
+    /** 50% 透明度版本，用于弱提示填充背景 */
+    hexAlpha50: '#22c55e80',
   },
   /** 平盘/中性颜色（灰色） */
   neutral: {
@@ -56,6 +64,8 @@ export const STOCK_COLOR_TOKENS = {
     tailwind: 'text-gray-400',
     bgClass: 'bg-gray-400',
     rgb: '156, 163, 175',
+    hexAlpha80: '#9ca3afcc',
+    hexAlpha50: '#9ca3af80',
   },
 } as const
 

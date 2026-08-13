@@ -49,7 +49,7 @@ function resolveColorToken(raw: ColorTokenKey | string | undefined): string | un
   // 向后兼容：HEX 字面量，但打一次日志提醒迁移（避免 UI 层硬编码扩散）
   logger.warn('[MetricCard] color 参数使用了字面量 HEX，请迁移到 ColorTokenKey 键以对齐主题令牌与深色模式', {
     raw,
-    suggestion: "例如：将 color=\"#10b981\" 改为 color=\"emerald\"",
+    suggestion: '例如：将 color="HEX绿" 改为 color="emerald"',
   })
   return raw
 }
