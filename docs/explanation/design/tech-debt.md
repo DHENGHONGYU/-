@@ -10,11 +10,12 @@
 > - **audit:layers**: 0 违规 ✅
 > - **audit:mcp**: 8 违规（从 13 降至 8，5 条 C 类通过 domain 层彻底解决）
 > - **tsc:prod**: 0 错误 ✅
-> - **lint**: 0 errors / ~2130 warnings（P1-L1/L2 待清理）
+> - **lint**: 0 errors / 1862 warnings（从 2130 降至 1862，自动修复 268 个；P1-L1 持续清理中）
 > - **未使用组件**: 2 个死代码已删除（ChipStrategyReviewPanel + usePoolDataFromStore），111 个为误报（测试文件/注册表引用/桶导出）
 > - **大组件**: 25 个（P1-M2 待开始）
 > - **domain/ 层**: 已创建（scoring/energy, trading/markers, collection/pipeline, export/strategySnapshotExport）
 > - **审计脚本**: audit-layer-calls.ts v3.7 白名单已同步（移除已迁移的 lib/scoring 等条目）
+> - **DataBridge 级联删除**: DeleteStockHandler 增强（+8 store）、DeleteExecutionPlanHandler/DeleteWorkflowDefHandler 新增
 > - 关联文档：[MCP 债务修复方案](../../reports/governance/mcp-direct-service-import-debt-fix-plan-2026-08-12.md) | [P1 清理清单](../../reports/project-management/01-p1-debt-cleanup-todo.md)
 
 ---
