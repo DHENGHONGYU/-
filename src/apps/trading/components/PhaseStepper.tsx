@@ -35,12 +35,12 @@ export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): R
   const cancelledIndex = PHASES.indexOf('cancelled')
 
   const isPhaseReached = (index: number): boolean =>
-    cancelled
+    (cancelled ?? false) === true
       ? index === cancelledIndex || index <= currentIndex
       : index <= currentIndex
 
   const isPhaseCurrent = (index: number): boolean => {
-    if (cancelled) {
+    if ((cancelled ?? false) === true) {
       return PHASES[index] === 'cancelled'
     }
     return index === currentIndex
@@ -53,11 +53,11 @@ export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): R
     const isNextReached = isPhaseReached(nextIndex)
     const isCurrentReached = isPhaseReached(index)
 
-    if (cancelled && index === currentIndex && nextIndex === cancelledIndex) {
+    if ((cancelled ?? false) === true && index === currentIndex && nextIndex === cancelledIndex) {
       return { bg: 'hsl(var(--destructive))', dashed: true }
     }
 
-    if (cancelled && index >= cancelledIndex) {
+    if ((cancelled ?? false) === true && index >= cancelledIndex) {
       return { bg: 'hsl(var(--divider))', dashed: false }
     }
 
@@ -75,7 +75,7 @@ export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): R
         const current = isPhaseCurrent(index)
         const styles = PHASE_STYLES[p]
         const lineStyle = getLineStyle(index)
-        const isPendingSpinner = p === 'pending' && current && !cancelled
+        const isPendingSpinner = p === 'pending' && current && (cancelled ?? false) !== true
 
         return (
           <React.Fragment key={p}>
