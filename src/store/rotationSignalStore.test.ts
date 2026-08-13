@@ -23,7 +23,7 @@ const TEST_INPUTS = [
 
 /** 辅助函数：加载测试数据 */
 function loadTestSignals() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   useRotationSignalStore.getState().fetchSignals(TEST_INPUTS as any)
 }
 
