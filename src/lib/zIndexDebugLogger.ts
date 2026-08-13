@@ -162,7 +162,7 @@ export function installZIndexDebugAppender(
         component: `${componentPrefix}.Auto`,
         elementId: id,
         zIndex,
-        phase: 'auto-change' as ZIndexLogPhase,
+        phase: 'auto-change',
         position,
         transform: cs.transform,
         opacity: cs.opacity,

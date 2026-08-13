@@ -20,7 +20,6 @@ import { useStrategySnapshotStore } from '@/store/strategySnapshotStore'
 import { getLogger } from '@/lib/logger'
 import { PageContainer, PageHeader } from '@/components/templates'
 import { useStrategyExport } from './hooks/useStrategyExport'
-import type { StrategySnapshot } from '@/data/types'
 
 
 const logger = getLogger()
@@ -183,7 +182,7 @@ export default function StrategySnapshotPage(): React.JSX.Element {
       alert('请先在左侧勾选要导出的快照')
       return
     }
-    const result = await exportBatchSnapshots(selected as StrategySnapshot[])
+    const result = await exportBatchSnapshots(selected)
     if (!result.success) {
       alert(`批量导出失败：${result.error}`)
     }
