@@ -429,7 +429,6 @@ describe('initSystemMonitorSubscriptions', () => {
   it('cleanup 函数：取消所有订阅并清空数组', () => {
     // 初始的 initSystemMonitorSubscriptions() 在模块加载时已执行，
     // 模块级自动初始化已注册了 3 个订阅
-    const initialSubs = [...allUnsubscribers]
 
     // 手动调用 initSystemMonitorSubscriptions 获取 cleanup
     const cleanup = initSystemMonitorSubscriptions()

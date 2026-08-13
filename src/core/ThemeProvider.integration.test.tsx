@@ -13,7 +13,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render, screen, fireEvent, act, renderHook } from '@testing-library/react'
 import React from 'react'
 import { ThemeProvider, useTheme, ThemeToggle } from './ThemeProvider'
-import { twText, twBg, twBorder, COLOR_SHADES } from '@/constants/theme.tokens'
+import { COLOR_SHADES } from '@/constants/theme.tokens'
 
 // ── DOM 清理 ──
 function resetDOM(): void {
@@ -302,8 +302,8 @@ describe('颜色令牌系统 + 主题切换联动（集成）', () => {
    */
   function DataSourceBadge(): React.JSX.Element {
     const ctx = useTheme()
-    const realClass = twText('green', 500)
-    const demoClass = twText('amber', 500)
+    const realClass = 'text-success'
+    const demoClass = 'text-warning'
     const darkVariant = COLOR_SHADES.green?.['200Dark'] ?? 'dark:text-green-200'
     return (
       <div data-testid="badge">
@@ -329,9 +329,9 @@ describe('颜色令牌系统 + 主题切换联动（集成）', () => {
     )
     const realEl = screen.getByTestId('real-class')
     const demoEl = screen.getByTestId('demo-class')
-    expect(realEl.className).toContain('text-green-500')
+    expect(realEl.className).toContain('text-success')
     expect(realEl.className).toContain('dark:text-green-')
-    expect(demoEl.className).toContain('text-amber-500')
+    expect(demoEl.className).toContain('text-warning')
   })
 
   it('切换到 dark mode 后：基础类名保持不变，dark 变体可同时生效', () => {
@@ -342,7 +342,7 @@ describe('颜色令牌系统 + 主题切换联动（集成）', () => {
     )
     // 记录切换前的基础类名
     const realClassBefore = screen.getByTestId('real-class').className
-    expect(realClassBefore).toContain('text-green-500')
+    expect(realClassBefore).toContain('text-success')
     expect(screen.getByTestId('theme-mode').textContent).toBe('light')
 
     // 通过按钮切换 theme（避免 unmount 触发 beforeEach 清 DOM）
@@ -353,10 +353,10 @@ describe('颜色令牌系统 + 主题切换联动（集成）', () => {
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark')
     expect(screen.getByTestId('theme-mode').textContent).toBe('dark')
     // 组件内基础类名不变
-    expect(screen.getByTestId('real-class').className).toContain('text-green-500')
+    expect(screen.getByTestId('real-class').className).toContain('text-success')
     expect(screen.getByTestId('real-class').className).toContain('dark:text-green-')
     // demo 类名不变
-    expect(screen.getByTestId('demo-class').className).toContain('text-amber-500')
+    expect(screen.getByTestId('demo-class').className).toContain('text-warning')
   })
 
   it('切换到 dark mode 后：dark 变体类名应与 Tailwind dark: 前缀一致', () => {
@@ -375,7 +375,7 @@ describe('颜色令牌系统 + 主题切换联动（集成）', () => {
       return (
         <div
           data-testid="usage"
-          className={`${twText('green', 500)} ${twBg('red', 600)} ${twBorder('red', 200)}`}
+          className="text-success bg-destructive border-destructive/30"
         />
       )
     }
@@ -385,8 +385,8 @@ describe('颜色令牌系统 + 主题切换联动（集成）', () => {
       </ThemeProvider>,
     )
     const el = screen.getByTestId('usage')
-    expect(el.className).toContain('text-green-500')
-    expect(el.className).toContain('bg-red-600')
-    expect(el.className).toContain('border-red-200')
+    expect(el.className).toContain('text-success')
+    expect(el.className).toContain('bg-destructive')
+    expect(el.className).toContain('border-destructive/30')
   })
 })
