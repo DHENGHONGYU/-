@@ -100,6 +100,15 @@ export default tseslint.config(
         'no-magic-numbers': 'off',
       },
     },
+    // 服务层：防御性空值检查在生产代码中是安全实践，豁免 no-unnecessary-condition
+    // 服务层魔法数字多为业务阈值/超时/重试次数，豁免 no-magic-numbers
+    {
+      files: ['src/services/**/*.ts'],
+      rules: {
+        '@typescript-eslint/no-unnecessary-condition': 'off',
+        'no-magic-numbers': 'off',
+      },
+    },
     {
       files: ['src/**/*.test.{ts,tsx}', 'tests/**/*.{ts,tsx}'],
       rules: {

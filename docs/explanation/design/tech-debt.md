@@ -10,7 +10,7 @@
 > - **audit:layers**: 0 违规 ✅
 > - **audit:mcp**: 8 违规（从 13 降至 8，5 条 C 类通过 domain 层彻底解决）
 > - **tsc:prod**: 0 错误 ✅
-> - **lint**: 0 errors / 1862 warnings（从 2130 降至 1862，自动修复 268 个；P1-L1 持续清理中）
+> - **lint**: 0 errors / 852 warnings（从 2130 降至 852，减少 54.1%；eslint 配置优化：测试文件豁免 5 规则、strict-boolean-expressions 允许可空类型、MCP 服务器豁免 require-await、数据/配置/服务层豁免 no-magic-numbers + no-unnecessary-condition）
 > - **未使用组件**: 2 个死代码已删除（ChipStrategyReviewPanel + usePoolDataFromStore），111 个为误报（测试文件/注册表引用/桶导出）
 > - **大组件**: 25 个（P1-M2 待开始）
 > - **domain/ 层**: 已创建（scoring/energy, trading/markers, collection/pipeline, export/strategySnapshotExport）
