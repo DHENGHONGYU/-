@@ -8,7 +8,7 @@
  */
 import { memo } from 'react'
 import { Link } from 'react-router'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, BarChart3 } from 'lucide-react'
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -47,12 +47,20 @@ export default memo(function ReviewWizardPage(): React.JSX.Element {
           title="复盘向导"
           description="四步渐进式复盘，逐维揭示，一键导出成品卡"
           actions={
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/output">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                返回
-              </Link>
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/output/review">
+                  <BarChart3 className="mr-2 h-4 w-4" />
+                  深度报告
+                </Link>
+              </Button>
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/output">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  返回
+                </Link>
+              </Button>
+            </div>
           }
         />
 

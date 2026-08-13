@@ -4,7 +4,7 @@
 
 import { memo, useState } from 'react'
 import { Link } from 'react-router'
-import { ArrowLeft, BarChart3, Download, RefreshCw, TrendingUp } from 'lucide-react'
+import { ArrowLeft, BarChart3, Download, RefreshCw, Sparkles, TrendingUp } from 'lucide-react'
 import { PageContainer } from '@/components/templates/PageContainer'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage } from '@/components/atoms/Breadcrumb'
 import { PageHeader } from '@/components/templates/PageHeader'
@@ -60,12 +60,20 @@ const TradeReviewPage: React.FC = () => {
           title="交易复盘"
           description="基于交易记录生成六维复盘报告"
           actions={
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/output">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                返回
-              </Link>
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/output/wizard">
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  向导模式
+                </Link>
+              </Button>
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/output">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  返回
+                </Link>
+              </Button>
+            </div>
           }
         />
 
