@@ -6,7 +6,7 @@ import { Progress } from '@/components/atoms/Progress'
 import { useOptionalMarketData } from '@/cockpit/providers/MarketDataProvider'
 import type { WidgetConfig, ValuePitData } from '@/types/modules/widget.types'
 import { SCORE_LEVELS } from '@/constants/cockpit.constants'
-import { COLOR_TOKENS, twBg } from '@/constants/theme.tokens'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { UI_TEXT } from '@/constants/uiText'
 
 interface ValuePitWidgetProps {
@@ -94,7 +94,7 @@ export default function ValuePitWidget({ config, data }: ValuePitWidgetProps): R
                     </span>
                     <Badge variant={action.variant}>{action.label}</Badge>
                     {item.rotationSignal && (
-                      <Badge variant="default" className={twBg('green', 600)}>
+                      <Badge variant="default" className="bg-success">
                         轮动信号
                       </Badge>
                     )}

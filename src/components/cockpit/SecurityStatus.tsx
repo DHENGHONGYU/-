@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Shield, ShieldCheck, ShieldAlert, Lock, Key, Database, FileKey } from 'lucide-react'
 import { createStorage } from '@/lib/localStorageManager'
-import { COLOR_TOKENS, twText, twBg } from '@/constants/theme.tokens'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 export interface SecurityStatusProps {
   className?: string
@@ -60,18 +60,18 @@ export function SecurityStatus({ className = '' }: SecurityStatusProps): React.J
       {isSecure ? (
         <>
           <ShieldCheck className={`h-3.5 w-3.5 ${COLOR_TOKENS.emerald.tailwind}`} />
-          <span className={twText('emerald', 600)}>本地加密存储</span>
-          <Lock className={`h-3 w-3 ${twText('emerald', 400)}`} />
+          <span className="text-success">本地加密存储</span>
+          <Lock className="h-3 w-3 text-success" />
         </>
       ) : status.cryptoAvailable ? (
         <>
           <Shield className={`h-3.5 w-3.5 ${COLOR_TOKENS.warning.tailwind}`} />
-          <span className={twText('amber', 600)}>加密可用</span>
+          <span className="text-warning">加密可用</span>
         </>
       ) : (
         <>
           <ShieldAlert className={`h-3.5 w-3.5 ${COLOR_TOKENS.danger.tailwind}`} />
-          <span className={twText('red', 600)}>加密不可用</span>
+          <span className="text-destructive">加密不可用</span>
         </>
       )}
     </div>
@@ -124,11 +124,11 @@ export function SecurityBadge({ variant = 'icon' }: SecurityBadgeProps): React.J
   const isSecure = info.cryptoAvailable && info.encryptedStorage
 
   const iconVariantClasses = isSecure
-    ? `${twBg('emerald', 50)} ${twText('emerald', 600)}`
-    : `${twBg('amber', 50)} ${twText('amber', 600)}`
+    ? 'bg-success/10 text-success'
+    : 'bg-warning/10 text-warning'
   const compactVariantClasses = isSecure
-    ? `${twBg('emerald', 50)} ${twText('emerald', 700)}`
-    : `${twBg('amber', 50)} ${twText('amber', 700)}`
+    ? 'bg-success/10 text-success'
+    : 'bg-warning/10 text-warning'
 
   if (variant === 'icon') {
     return (

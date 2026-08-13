@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/molecules/states'
 import { WidgetStateShell } from './components/WidgetStateShell'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import { getStockColorHex, twText, twBorder, DARK } from '@/constants/theme.tokens'
+import { getStockColorHex } from '@/constants/theme.tokens'
 import { computeWatchlistMovers } from '@/services/trading/watchlistMoversService'
 import { cn } from '@/lib/utils'
 
@@ -28,7 +28,7 @@ export default function WatchlistMoversWidget({ config }: WatchlistMoversWidgetP
   return (
     <WidgetStateShell
       title={config.title}
-      titleIcon={<Activity className={cn('h-4 w-4', twText('emerald', 500))} />}
+      titleIcon={<Activity className={cn('h-4 w-4', 'text-success')} />}
       visualState={visualState}
       error={error}
       onRetry={() => refreshWidget(config.instanceId)}
@@ -47,19 +47,19 @@ export default function WatchlistMoversWidget({ config }: WatchlistMoversWidgetP
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <MoverList
           title="涨幅榜"
-          icon={<TrendingUp className={cn('h-4 w-4', twText('red', 500))} />}
+          icon={<TrendingUp className={cn('h-4 w-4', 'text-destructive')} />}
           stocks={movers.gainers}
           emptyText="暂无上涨标的"
         />
         <MoverList
           title="跌幅榜"
-          icon={<TrendingDown className={cn('h-4 w-4', twText('green', 500))} />}
+          icon={<TrendingDown className={cn('h-4 w-4', 'text-success')} />}
           stocks={movers.losers}
           emptyText="暂无下跌标的"
         />
         <MoverList
           title="振幅榜"
-          icon={<Activity className={cn('h-4 w-4', twText('amber', 500))} />}
+          icon={<Activity className={cn('h-4 w-4', 'text-warning')} />}
           stocks={movers.mostActive}
           emptyText="暂无活跃标的"
         />
@@ -94,8 +94,7 @@ function MoverList({ title, icon, stocks, emptyText }: MoverListProps): React.JS
                 className={cn(
                   'flex items-center justify-between rounded-md border px-2.5 py-1.5',
                   'bg-card',
-                  twBorder('stone', 200),
-                  DARK.borderNeutral700,
+                  'border-border',
                 )}
               >
                 <div className="min-w-0">

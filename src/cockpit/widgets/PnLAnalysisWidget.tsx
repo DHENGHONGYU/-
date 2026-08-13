@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { getLogger } from '@/lib/logger'
 import { useOrderStore, initOrderStoreSubscriptions } from '@/store/orderStore'
-import { COLOR_TOKENS, COLOR_SHADES, twText } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
 import { WidgetStateShell } from './components/WidgetStateShell'
 
 const logger = getLogger()
@@ -88,9 +88,9 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
           </div>
           <div className={`${COLOR_SHADES.gray[50]} rounded-lg p-3 text-center`}>
             <div className="flex justify-center mb-1">
-              <TrendingUp className={`h-5 w-5 ${twText('yellow', 500)}`} />
+              <TrendingUp className="h-5 w-5 text-warning" />
             </div>
-            <div className={`text-xl font-bold ${twText('yellow', 500)}`}>{pnlSummary.profitFactor}</div>
+            <div className="text-xl font-bold text-warning">{pnlSummary.profitFactor}</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>盈亏比</div>
           </div>
         </div>

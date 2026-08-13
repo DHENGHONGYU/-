@@ -11,9 +11,6 @@ import {
   STOCK_COLOR_TOKENS,
   COLOR_TOKENS,
   COLOR_SHADES,
-  twText,
-  twBg,
-  twBorder,
 } from '@/constants/theme.tokens'
 
 /** 权重偏离阈值（百分比），超过此值视为需要调整 */
@@ -36,8 +33,8 @@ function getWeightStatus(
 
 /** 获取权重显示的颜色令牌 */
 function getWeightColorClass(status: 'overweight' | 'underweight' | 'balanced'): string {
-  if (status === 'overweight') return twText('red', 500)
-  if (status === 'underweight') return twText('amber', 500)
+  if (status === 'overweight') return 'text-destructive'
+  if (status === 'underweight') return 'text-warning'
   return COLOR_SHADES.gray[500]
 }
 
@@ -55,7 +52,7 @@ function HoldingRow({ holding }: { holding: HoldingItem }): React.JSX.Element {
   const pnlPositive = holding.pnlPercent >= 0
 
   return (
-    <div className={cn('flex items-center justify-between py-2 border-b', twBorder('gray', 100), 'last:border-0')}>
+    <div className={cn('flex items-center justify-between py-2 border-b', 'border-border', 'last:border-0')}>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium truncate">{holding.name}</span>
@@ -134,12 +131,12 @@ export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWid
       loadingLabel="加载持仓数据中…"
       skeleton={
         <div className="space-y-4">
-          <Skeleton variant="text" className={cn(twBg('gray', 200), 'h-10 w-full')} />
+          <Skeleton variant="text" className={cn('bg-muted', 'h-10 w-full')} />
           <div className="grid grid-cols-2 gap-4">
             {[1, 2, 3, 4].map((i) => (
               <div key={i}>
-                <Skeleton variant="text" className={cn(twBg('gray', 200), 'h-4 w-16')} />
-                <Skeleton variant="text" className={cn(twBg('gray', 200), 'h-6 w-20 mt-1')} />
+                <Skeleton variant="text" className={cn('bg-muted', 'h-4 w-16')} />
+                <Skeleton variant="text" className={cn('bg-muted', 'h-6 w-20 mt-1')} />
               </div>
             ))}
           </div>
@@ -171,7 +168,7 @@ export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWid
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div className={cn('rounded-lg p-3 border', twBg('green', 50))}>
+          <div className={cn('rounded-lg p-3 border', 'bg-success/10')}>
             <div className={cn('text-xs', COLOR_SHADES.gray[500])}>当日盈亏</div>
             <div className="flex items-center gap-1">
               <TrendingUp className="h-4 w-4" style={{ color: COLORS.UP }} />
@@ -192,7 +189,7 @@ export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWid
         <div className="grid grid-cols-2 gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <AlertTriangle className={cn('h-4 w-4', twText('red', 400))} />
+              <AlertTriangle className={cn('h-4 w-4', 'text-destructive')} />
               <span className={cn('text-xs', COLOR_SHADES.gray[400])}>最大回撤</span>
             </div>
             {hasEquityCurve ? (

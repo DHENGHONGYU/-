@@ -78,7 +78,7 @@ export function WidgetSheetDrawer({
             setOpen(true)
           }
         }}
-        className="group cursor-pointer transition-all hover:border-primary/50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className="group cursor-pointer transition-all hover:border-primary/50 hover:shadow-elevation-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
         <CardContent className="flex items-center gap-3 p-4">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">

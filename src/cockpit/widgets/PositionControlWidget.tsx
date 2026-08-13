@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/molecules/states'
 import { Badge } from '@/components/atoms/Badge'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { usePositionStore, initPositionStoreSubscriptions } from '@/store/positionStore'
-import { THEME_TOKENS, COLOR_TOKENS, COLOR_SHADES, twText, twBg, twBorder } from '@/constants/theme.tokens'
+import { THEME_TOKENS, COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
@@ -68,10 +68,10 @@ const PositionControlWidget = memo(function PositionControlWidget({ config }: Po
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             {[1, 2].map((i) => (
-              <Skeleton key={i} variant="rect" className={cn(twBg('gray', 200), 'h-20')} />
+              <Skeleton key={i} variant="rect" className={cn('bg-muted', 'h-20')} />
             ))}
           </div>
-          <Skeleton variant="rect" className={cn(twBg('gray', 200), 'h-32')} />
+          <Skeleton variant="rect" className={cn('bg-muted', 'h-32')} />
         </div>
       }
     >
@@ -101,9 +101,9 @@ const PositionControlWidget = memo(function PositionControlWidget({ config }: Po
             <Badge
               variant="outline"
               className={
-                positionRatio > 80 ? `${COLOR_TOKENS.danger.tailwind} ${twBorder('red', 300)}` :
-                positionRatio > 50 ? `${twText('yellow', 500)} ${twBorder('yellow', 300)}` :
-                `${COLOR_TOKENS.success.tailwind} ${twBorder('green', 300)}`
+                positionRatio > 80 ? `${COLOR_TOKENS.danger.tailwind} border-destructive/30` :
+                positionRatio > 50 ? 'text-warning border-warning/30' :
+                `${COLOR_TOKENS.success.tailwind} border-success/30`
               }
             >
               {positionRatio}%

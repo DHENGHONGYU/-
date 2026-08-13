@@ -5,7 +5,7 @@ import { WidgetStateShell } from './components/WidgetStateShell'
 import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig, FundFlowData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import { COLOR_TOKENS, STOCK_COLOR_TOKENS, twText, twBg } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 
 interface FundFlowWidgetProps {
   config: WidgetConfig
@@ -19,7 +19,7 @@ interface FundFlowWidgetProps {
 export default function FundFlowWidget(props: FundFlowWidgetProps): React.JSX.Element {
   const { data, loadingMap, errorMap, refreshWidget } = useMarketData()
   // 防御性 guard：防止 props 为 null 时解构崩溃（hooks 之后条件返回）
-  if (!props?.config) return <div className={cn('p-4 text-sm', twText('gray', 400))}>配置未就绪</div>
+  if (!props?.config) return <div className={cn('p-4 text-sm', 'text-muted-foreground/70')}>配置未就绪</div>
   const { config } = props
   const flows = data.fundFlows
   const loading = loadingMap[config.instanceId] ?? true
@@ -34,7 +34,7 @@ export default function FundFlowWidget(props: FundFlowWidgetProps): React.JSX.El
         case 'north':
           return <ArrowUpCircle className={cn('h-6 w-6', STOCK_COLOR_TOKENS.up.tailwind)} />
         default:
-          return <ArrowDownCircle className={cn('h-6 w-6', twText('gray', 500))} />
+          return <ArrowDownCircle className={cn('h-6 w-6', 'text-muted-foreground')} />
       }
     }
     switch (type) {
@@ -43,7 +43,7 @@ export default function FundFlowWidget(props: FundFlowWidgetProps): React.JSX.El
       case 'north':
         return <ArrowDownCircle className={cn('h-6 w-6', STOCK_COLOR_TOKENS.down.tailwind)} />
       default:
-        return <ArrowUpCircle className={cn('h-6 w-6', twText('gray', 500))} />
+        return <ArrowUpCircle className={cn('h-6 w-6', 'text-muted-foreground')} />
     }
   }
 
@@ -74,10 +74,10 @@ export default function FundFlowWidget(props: FundFlowWidgetProps): React.JSX.El
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="flex items-center gap-4">
-              <Skeleton variant="circle" className={cn('h-8 w-8', twBg('gray', 200))} />
+              <Skeleton variant="circle" className={cn('h-8 w-8', 'bg-muted')} />
               <div className="flex-1 space-y-2">
-                <Skeleton variant="text" className={cn(twBg('gray', 200), 'w-24')} />
-                <Skeleton variant="text" className={cn(twBg('gray', 200), 'h-6 w-16')} />
+                <Skeleton variant="text" className={cn('bg-muted', 'w-24')} />
+                <Skeleton variant="text" className={cn('bg-muted', 'h-6 w-16')} />
               </div>
             </div>
           ))}

@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { getLogger } from '@/lib/logger'
 import { useOrderStore, initOrderStoreSubscriptions } from '@/store/orderStore'
-import { THEME_TOKENS, COLOR_TOKENS, COLOR_SHADES, twText, twBg, twBorder } from '@/constants/theme.tokens'
+import { THEME_TOKENS, COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
 import { WidgetStateShell } from './components/WidgetStateShell'
 
 const logger = getLogger()
@@ -60,7 +60,7 @@ const RiskMonitorWidget = memo(function RiskMonitorWidget({ config }: RiskMonito
             {/* 风险等级 Badge 使用动态颜色类：高风险红/中风险黄/低风险绿，因三目条件链中混用多个语义色，暂不替换为单一 token */}
             <Badge
               variant="outline"
-              className={`text-xs mt-1 ${riskMetrics.varLevel === 'high' ? `${COLOR_TOKENS.danger.tailwind} ${twBorder('red', 300)}` : riskMetrics.varLevel === 'medium' ? `${twText('yellow', 500)} ${twBorder('yellow', 300)}` : `${COLOR_TOKENS.success.tailwind} ${twBorder('green', 300)}`}`}
+              className={`text-xs mt-1 ${riskMetrics.varLevel === 'high' ? `${COLOR_TOKENS.danger.tailwind} border-destructive/30` : riskMetrics.varLevel === 'medium' ? 'text-warning border-warning/30' : `${COLOR_TOKENS.success.tailwind} border-success/30`}`}
             >
               {riskMetrics.varLevel === 'high' ? '高风险' : riskMetrics.varLevel === 'medium' ? '中风险' : '低风险'}
             </Badge>
@@ -106,13 +106,13 @@ const RiskMonitorWidget = memo(function RiskMonitorWidget({ config }: RiskMonito
 
         {/* 风险告警 */}
         {riskMetrics.alerts.length > 0 && (
-          <div className={`${twBg('red', 50)} rounded-lg p-3`}>
-            <h4 className={`text-sm font-semibold ${twText('red', 700)} mb-2 flex items-center gap-1`}>
+          <div className="bg-destructive/10 rounded-lg p-3">
+            <h4 className="text-sm font-semibold text-destructive mb-2 flex items-center gap-1">
               <AlertTriangle className="h-4 w-4" /> 风险告警
             </h4>
             <ul className="space-y-1">
               {riskMetrics.alerts.map((alert, i) => (
-                <li key={i} className={`text-xs ${twText('red', 600)} flex items-start gap-1`}>
+                <li key={i} className="text-xs text-destructive flex items-start gap-1">
                   <span>-</span>
                   <span>{alert}</span>
                 </li>
@@ -122,8 +122,8 @@ const RiskMonitorWidget = memo(function RiskMonitorWidget({ config }: RiskMonito
         )}
 
         {riskMetrics.alerts.length === 0 && (
-          <div className={`${twBg('green', 50)} rounded-lg p-3`}>
-            <p className={`text-xs ${twText('green', 600)} text-center`}>当前无风险告警，组合风险可控</p>
+          <div className="bg-success/10 rounded-lg p-3">
+            <p className="text-xs text-success text-center">当前无风险告警，组合风险可控</p>
           </div>
         )}
       </div>

@@ -21,7 +21,7 @@ import {
   type MechanismCategory,
   type MechanismHealthSnapshot,
 } from '@/services/system/mechanismMonitorService'
-import { twText, twBg, COLOR_SHADES } from '@/constants/theme.tokens'
+import { COLOR_SHADES } from '@/constants/theme.tokens'
 
 interface MechanismHealthWidgetProps {
   config: WidgetConfig
@@ -67,7 +67,7 @@ export default function MechanismHealthWidget(props: MechanismHealthWidgetProps)
 
   // hooks 调用完毕后再做防御性 guard（遵循现有 Widget 惯例）
   if (!props?.config) {
-    return <div className={cn('p-4 text-sm', twText('gray', 400))}>配置未就绪</div>
+    return <div className={cn('p-4 text-sm', 'text-muted-foreground/70')}>配置未就绪</div>
   }
 
   const summary = latest?.summary
@@ -76,22 +76,22 @@ export default function MechanismHealthWidget(props: MechanismHealthWidgetProps)
   const ratio = summary?.activatedRatio ?? 0
   const allActive = active === total && total > 0
 
-  const headerColor = allActive ? twText('green', 600) : twText('amber', 600)
-  const headerBg = allActive ? twBg('green', 50) : twBg('amber', 50)
+  const headerColor = allActive ? 'text-success' : 'text-warning'
+  const headerBg = allActive ? 'bg-success/10' : 'bg-warning/10'
 
   return (
     <div className="flex flex-col gap-3 p-3">
       {/* 概览头部 */}
       <div className={cn('flex items-center justify-between rounded-lg p-3', headerBg)}>
         <div>
-          <div className={cn('text-xs', twText('gray', 500))}>机制健康</div>
+          <div className={cn('text-xs', 'text-muted-foreground')}>机制健康</div>
           <div className={cn('text-2xl font-bold', headerColor)}>
             {active}
-            <span className={cn('text-sm font-normal', twText('gray', 400))}>/{total}</span>
+            <span className={cn('text-sm font-normal', 'text-muted-foreground/70')}>/{total}</span>
           </div>
         </div>
         <div className="text-right">
-          <div className={cn('text-xs', twText('gray', 500))}>激活率</div>
+          <div className={cn('text-xs', 'text-muted-foreground')}>激活率</div>
           <div className={cn('text-lg font-semibold', headerColor)}>
             {(ratio * 100).toFixed(0)}%
           </div>
@@ -113,14 +113,14 @@ export default function MechanismHealthWidget(props: MechanismHealthWidgetProps)
                 COLOR_SHADES.gray[50],
               )}
             >
-              <span className={cn('text-xs', twText('gray', 600))}>{CATEGORY_LABELS[cat]}</span>
+              <span className={cn('text-xs', 'text-muted-foreground')}>{CATEGORY_LABELS[cat]}</span>
               <span
                 className={cn(
                   'flex items-center gap-1.5 text-xs font-medium',
-                  catOk ? twText('green', 600) : twText('red', 600),
+                  catOk ? 'text-success' : 'text-destructive',
                 )}
               >
-                <span className={cn('h-2 w-2 rounded-full', catOk ? twBg('green', 500) : twBg('red', 500))} />
+                <span className={cn('h-2 w-2 rounded-full', catOk ? 'bg-success' : 'bg-destructive')} />
                 {catActive}/{catTotal}
               </span>
             </div>
@@ -135,8 +135,8 @@ export default function MechanismHealthWidget(props: MechanismHealthWidgetProps)
           onClick={() => runScan()}
           className={cn(
             'rounded-md px-2.5 py-1 text-xs font-medium',
-            twBg('blue', 50),
-            twText('blue', 700),
+            'bg-info/10',
+            'text-info',
           )}
         >
           立即扫描
@@ -146,8 +146,8 @@ export default function MechanismHealthWidget(props: MechanismHealthWidgetProps)
           onClick={() => (isMonitoring ? stopMonitoring() : startMonitoring())}
           className={cn(
             'rounded-md px-2.5 py-1 text-xs font-medium',
-            isMonitoring ? twBg('red', 50) : twBg('green', 50),
-            isMonitoring ? twText('red', 700) : twText('green', 700),
+            isMonitoring ? 'bg-destructive/10' : 'bg-success/10',
+            isMonitoring ? 'text-destructive' : 'text-success',
           )}
         >
           {isMonitoring ? '停止监控' : '开启监控'}
@@ -155,7 +155,7 @@ export default function MechanismHealthWidget(props: MechanismHealthWidgetProps)
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className={cn('rounded-md px-2.5 py-1 text-xs font-medium', COLOR_SHADES.gray[100], twText('gray', 600))}
+          className={cn('rounded-md px-2.5 py-1 text-xs font-medium', COLOR_SHADES.gray[100], 'text-muted-foreground')}
         >
           {expanded ? '收起' : '明细'}
         </button>
@@ -166,16 +166,16 @@ export default function MechanismHealthWidget(props: MechanismHealthWidgetProps)
         <div className="flex max-h-48 flex-col gap-1 overflow-y-auto">
           {latest.probes.map((p) => (
             <div key={p.id} className="flex items-start justify-between gap-2 text-xs">
-              <span className={cn('flex items-center gap-1.5', twText('gray', 600))}>
+              <span className={cn('flex items-center gap-1.5', 'text-muted-foreground')}>
                 <span
                   className={cn(
                     'h-1.5 w-1.5 rounded-full',
-                    p.status === 'active' ? twBg('green', 500) : twBg('red', 500),
+                    p.status === 'active' ? 'bg-success' : 'bg-destructive',
                   )}
                 />
                 {p.label}
               </span>
-              <span className={p.status === 'active' ? twText('green', 600) : twText('red', 600)}>
+              <span className={p.status === 'active' ? 'text-success' : 'text-destructive'}>
                 {p.status === 'active' ? '正常' : '失活'}
               </span>
             </div>
@@ -185,7 +185,7 @@ export default function MechanismHealthWidget(props: MechanismHealthWidgetProps)
 
       {/* 最后更新时间 */}
       {latest && (
-        <div className={cn('text-[10px]', twText('gray', 400))}>
+        <div className={cn('text-[10px]', 'text-muted-foreground/70')}>
           最后扫描：{new Date(latest.timestamp).toLocaleTimeString('zh-CN')}
           {isMonitoring && ' · 监控中'}
         </div>

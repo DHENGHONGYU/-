@@ -6,8 +6,6 @@ import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig, MarketIndexData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import {
-  twText,
-  twBg,
   getStockColorClass,
   getStockColorHex,
 } from '@/constants/theme.tokens'
@@ -23,7 +21,7 @@ interface MarketIndicesWidgetProps {
 export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): React.JSX.Element {
   const { data, loadingMap, errorMap, refreshWidget } = useMarketData()
   // P0-2 防御性 guard：防止 props 为 null 时解构崩溃（hooks 之后条件返回）
-  if (!props?.config) return <div className={cn('p-4 text-sm', twText('gray', 400))}>配置未就绪</div>
+  if (!props?.config) return <div className={cn('p-4 text-sm', 'text-muted-foreground/70')}>配置未就绪</div>
   const { config } = props
   const indices = data.indices
   const loading = loadingMap[config.instanceId] ?? true
@@ -33,7 +31,7 @@ export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): Re
     const iconColorClass = getStockColorClass(change)
     if (change > 0) return <TrendingUp className={cn('h-4 w-4', iconColorClass)} />
     if (change < 0) return <TrendingDown className={cn('h-4 w-4', iconColorClass)} />
-    return <Minus className={cn('h-4 w-4', twText('gray', 400))} />
+    return <Minus className={cn('h-4 w-4', 'text-muted-foreground/70')} />
   }
 
   const getChangeColor = (change: number) => {
@@ -62,9 +60,9 @@ export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): Re
         <div className="grid grid-cols-2 gap-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="space-y-2">
-              <Skeleton variant="text" className={twBg('gray', 200)} />
-              <Skeleton variant="text" className={cn(twBg('gray', 200), 'h-6 w-20')} />
-              <Skeleton variant="text" className={cn(twBg('gray', 200), 'h-4 w-16')} />
+              <Skeleton variant="text" className="bg-muted" />
+              <Skeleton variant="text" className={cn('bg-muted', 'h-6 w-20')} />
+              <Skeleton variant="text" className={cn('bg-muted', 'h-4 w-16')} />
             </div>
           ))}
         </div>
@@ -81,10 +79,10 @@ export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): Re
             <div className="text-sm" style={{ color: getChangeColor(index.changePercent) }}>
               {index.changePercent > 0 ? '+' : ''}{index.changePercent.toFixed(2)}%
             </div>
-            <div className={cn('text-xs', twText('gray', 400))}>
+            <div className={cn('text-xs', 'text-muted-foreground/70')}>
               最高:{index.high?.toFixed(0)} 最低:{index.low?.toFixed(0)}
             </div>
-            <div className={cn('text-xs', twText('gray', 400))}>成交:{index.volume}</div>
+            <div className={cn('text-xs', 'text-muted-foreground/70')}>成交:{index.volume}</div>
           </div>
         ))}
       </div>

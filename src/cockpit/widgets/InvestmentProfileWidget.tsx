@@ -86,7 +86,7 @@ export default function InvestmentProfileWidget({ config, data }: InvestmentProf
             return (
               <div
                 key={metric.name}
-                className="rounded-lg border bg-card p-3 transition-shadow hover:shadow-sm"
+                className="rounded-lg border bg-card p-3 transition-shadow hover:shadow-elevation-1"
               >
                 <div className="flex items-center gap-2 text-muted-foreground mb-2">
                   {ICON_MAP[metric.name] ?? <User className="h-4 w-4" />}

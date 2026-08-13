@@ -4,7 +4,7 @@ import { Badge } from '@/components/atoms/Badge'
 import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { useSignalStore, initSignalStoreSubscriptions } from '@/store/signalStore'
-import { THEME_TOKENS, COLOR_TOKENS, STOCK_COLOR_TOKENS, twText, twBg, twBorder } from '@/constants/theme.tokens'
+import { THEME_TOKENS, COLOR_TOKENS, STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 import { getLogger } from '@/lib/logger'
 import { WidgetStateShell } from './components/WidgetStateShell'
 
@@ -41,21 +41,21 @@ const SignalMonitorWidget = memo(function SignalMonitorWidget({ config }: Signal
   const getSignalIcon = (direction: string) => {
     if (direction === 'buy') return <ArrowUpCircle className={`h-5 w-5 ${COLOR_TOKENS.success.tailwind}`} />
     if (direction === 'sell') return <ArrowDownCircle className={`h-5 w-5 ${COLOR_TOKENS.danger.tailwind}`} />
-    return <MinusCircle className={`h-5 w-5 ${twText('gray', 400)}`} />
+    return <MinusCircle className="h-5 w-5 text-muted-foreground/70" />
   }
 
   const getSignalBadge = (direction: string) => {
     if (direction === 'buy') return <Badge className="text-xs" style={{ backgroundColor: THEME_TOKENS.color.successRaw, color: 'white' }}>买入</Badge>
     if (direction === 'sell') return <Badge className="text-xs" style={{ backgroundColor: THEME_TOKENS.color.destructiveRaw, color: 'white' }}>卖出</Badge>
-    if (direction === 'hold') return <Badge variant="outline" className={`text-xs ${COLOR_TOKENS.info.tailwind} ${twBorder('blue', 300)}`}>持有</Badge>
-    return <Badge variant="outline" className={`text-xs ${twText('gray', 400)}`}>观望</Badge>
+    if (direction === 'hold') return <Badge variant="outline" className={`text-xs ${COLOR_TOKENS.info.tailwind} border-info/30`}>持有</Badge>
+    return <Badge variant="outline" className="text-xs text-muted-foreground/70">观望</Badge>
   }
 
   const getConfidenceColor = (confidence: number) => {
     if (confidence >= 80) return COLOR_TOKENS.success.tailwind
     if (confidence >= 60) return COLOR_TOKENS.info.tailwind
     if (confidence >= 40) return COLOR_TOKENS.warning.tailwind
-    return twText('gray', 400)
+    return 'text-muted-foreground/70'
   }
 
   return (
@@ -80,7 +80,7 @@ const SignalMonitorWidget = memo(function SignalMonitorWidget({ config }: Signal
           {signals.map((signal) => (
             <div
               key={signal.symbol}
-              className={`flex items-center gap-3 ${twBg('gray', 50)} rounded-lg p-3 hover:${twBg('gray', 100)} transition-colors`}
+              className="flex items-center gap-3 bg-muted rounded-lg p-3 hover:bg-muted transition-colors"
             >
               <div className="shrink-0">
                 {getSignalIcon(signal.direction)}
@@ -88,7 +88,7 @@ const SignalMonitorWidget = memo(function SignalMonitorWidget({ config }: Signal
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className={`text-sm font-medium ${twText('gray', 700)}`}>{signal.symbol}</span>
+                    <span className="text-sm font-medium text-muted-foreground">{signal.symbol}</span>
                     {getSignalBadge(signal.direction)}
                   </div>
                   <span className={`text-xs font-bold ${getConfidenceColor(signal.confidence)}`}>
@@ -99,7 +99,7 @@ const SignalMonitorWidget = memo(function SignalMonitorWidget({ config }: Signal
                   {signal.rationale}
                 </p>
                 {/* 置信度条 */}
-                <div className={`w-full ${twBg('gray', 200)} rounded-full h-1 mt-1.5`}>
+                <div className="w-full bg-muted rounded-full h-1 mt-1.5">
                   <div
                     className="h-1 rounded-full"
                     style={{
@@ -121,7 +121,7 @@ const SignalMonitorWidget = memo(function SignalMonitorWidget({ config }: Signal
 
         {/* 信号统计 */}
         {signals.length > 0 && (
-          <div className={`flex items-center justify-between text-xs ${twText('gray', 500)} pt-2 border-t`}>
+          <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t">
             <span>
               买入: <span className={`font-medium ${STOCK_COLOR_TOKENS.up.tailwind}`}>{signals.filter((s) => s.direction === 'buy').length}</span>
             </span>
@@ -129,7 +129,7 @@ const SignalMonitorWidget = memo(function SignalMonitorWidget({ config }: Signal
               卖出: <span className={`font-medium ${STOCK_COLOR_TOKENS.down.tailwind}`}>{signals.filter((s) => s.direction === 'sell').length}</span>
             </span>
             <span>
-              持有/观望: <span className={`font-medium ${twText('gray', 500)}`}>{signals.filter((s) => s.direction === 'hold' || s.direction === 'watch').length}</span>
+              持有/观望: <span className="font-medium text-muted-foreground">{signals.filter((s) => s.direction === 'hold' || s.direction === 'watch').length}</span>
             </span>
           </div>
         )}

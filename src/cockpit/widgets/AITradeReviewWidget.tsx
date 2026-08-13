@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/molecules/states'
 import { WidgetStateShell } from './components/WidgetStateShell'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import { STOCK_COLOR_TOKENS, COLOR_TOKENS, COLOR_SHADES, twText } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS, COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
 
 interface AITradeReviewWidgetProps {
   config: WidgetConfig
@@ -51,9 +51,9 @@ export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps
           </div>
           <div className="text-center">
             <div className="flex justify-center mb-2">
-              <Award className={`h-6 w-6 ${twText('yellow', 500)}`} />
+              <Award className="h-6 w-6 text-warning" />
             </div>
-            <div className={`text-2xl font-bold ${twText('yellow', 500)}`}>{tradeReview.profitLossRatio}</div>
+            <div className="text-2xl font-bold text-warning">{tradeReview.profitLossRatio}</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>盈亏比</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>目标: 1.5+</div>
           </div>

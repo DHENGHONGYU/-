@@ -11,7 +11,7 @@ import React from 'react'
 import { BarChart3, Clock } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import type { WidgetConfig } from '@/types/modules/widget.types'
-import { twBg, twText, COLOR_SHADES } from '@/constants/theme.tokens'
+import { COLOR_SHADES } from '@/constants/theme.tokens'
 
 interface KeyDataItem {
   date: string
@@ -31,9 +31,9 @@ const KEY_DATA: KeyDataItem[] = [
 ]
 
 const IMPACT_STYLE: Record<KeyDataItem['impact'], string> = {
-  high: `${twBg('red', 50)} ${twText('red', 600)}`,
-  medium: `${twBg('amber', 50)} ${twText('amber', 600)}`,
-  low: `${twBg('gray', 50)} ${twText('gray', 500)}`,
+  high: 'bg-destructive/10 text-destructive',
+  medium: 'bg-warning/10 text-warning',
+  low: 'bg-muted text-muted-foreground',
 }
 
 const IMPACT_LABEL: Record<KeyDataItem['impact'], string> = {

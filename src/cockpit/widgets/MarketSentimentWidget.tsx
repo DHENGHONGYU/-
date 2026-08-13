@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/molecules/states'
 import { WidgetStateShell } from './components/WidgetStateShell'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import { STOCK_COLOR_TOKENS, COLOR_SHADES, twText, twBg } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
 
 interface MarketSentimentWidgetProps {
   config: WidgetConfig
@@ -42,7 +42,7 @@ export default function MarketSentimentWidget({ config }: MarketSentimentWidgetP
             <div className="flex items-center gap-2 mt-1">
               <span className="text-2xl font-bold">{sentiment.fearGreedIndex}</span>
               {/* 恐慌贪婪指数标签色（A股惯例：贪婪=看涨=红，恐慌=看跌=绿；语义对应 STOCK_COLOR_TOKENS.up/down） */}
-              <span className={`px-2 py-0.5 rounded text-xs font-medium ${sentiment.fearGreedIndex > 50 ? `${twBg('red', 100)} ${twText('red', 700)}` : `${twBg('green', 100)} ${twText('green', 700)}`}`}>
+              <span className={`px-2 py-0.5 rounded text-xs font-medium ${sentiment.fearGreedIndex > 50 ? 'bg-destructive/10 text-destructive' : 'bg-success/10 text-success'}`}>
                 {sentiment.fearGreedLabel}
               </span>
             </div>

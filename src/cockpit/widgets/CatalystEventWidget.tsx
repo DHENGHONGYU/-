@@ -11,7 +11,7 @@ import React from 'react'
 import { Calendar, TrendingUp, Landmark, Unlock, Coins, AlertCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import type { WidgetConfig } from '@/types/modules/widget.types'
-import { twBg, twText, COLOR_SHADES } from '@/constants/theme.tokens'
+import { COLOR_SHADES } from '@/constants/theme.tokens'
 
 interface CatalystEvent {
   date: string
@@ -39,9 +39,9 @@ const TYPE_META: Record<CatalystEvent['type'], { icon: React.ElementType; label:
 }
 
 const IMPORTANCE_STYLE: Record<CatalystEvent['importance'], string> = {
-  high: `${twBg('red', 50)} ${twText('red', 600)}`,
-  medium: `${twBg('amber', 50)} ${twText('amber', 600)}`,
-  low: `${twBg('gray', 50)} ${twText('gray', 500)}`,
+  high: 'bg-destructive/10 text-destructive',
+  medium: 'bg-warning/10 text-warning',
+  low: 'bg-muted text-muted-foreground',
 }
 
 const IMPORTANCE_LABEL: Record<CatalystEvent['importance'], string> = {

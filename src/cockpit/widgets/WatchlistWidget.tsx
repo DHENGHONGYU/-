@@ -4,7 +4,7 @@ import { WidgetStateShell } from './components/WidgetStateShell'
 import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig, WatchlistData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import { getStockColorHex, twText, twBg } from '@/constants/theme.tokens'
+import { getStockColorHex } from '@/constants/theme.tokens'
 
 interface WatchlistWidgetProps {
   config: WidgetConfig
@@ -42,7 +42,7 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
   return (
     <WidgetStateShell
       title={config.title}
-      titleIcon={<Eye className={twText('emerald', 500)} />}
+      titleIcon={<Eye className="text-success" />}
       visualState={visualState}
       error={error}
       onRetry={() => refreshWidget(config.instanceId)}
@@ -53,10 +53,10 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
         <div className="grid grid-cols-2 gap-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="space-y-2">
-              <Skeleton variant="text" className={twBg('gray', 200)} />
+              <Skeleton variant="text" className="bg-muted" />
               <div className="flex gap-2">
-                <Skeleton variant="text" className={twBg('gray', 200)} />
-                <Skeleton variant="text" className={twBg('gray', 200)} />
+                <Skeleton variant="text" className="bg-muted" />
+                <Skeleton variant="text" className="bg-muted" />
               </div>
             </div>
           ))}
@@ -70,7 +70,7 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
               <span className="text-sm font-medium truncate">{stock.name}</span>
               {getChangeIcon(stock.changePercent)}
             </div>
-            <div className={twText('gray', 400)}>{stock.code}</div>
+            <div className="text-muted-foreground/70">{stock.code}</div>
             <div className="text-lg font-bold">{stock.price.toFixed(2)}</div>
             <div className="text-sm font-medium" style={{ color: getChangeColor(stock.changePercent) }}>
               {stock.changePercent > 0 ? '+' : ''}{stock.changePercent.toFixed(2)}%

@@ -21,7 +21,6 @@ import { Badge } from '@/components/atoms/Badge'
 import { PoolBoard } from '@/components/organisms/pool/PoolBoard'
 import { usePoolBoard } from '@/hooks/usePoolBoard'
 import type { WidgetConfig, MarketData } from '@/types/modules/widget.types'
-import { twText, twBg, DARK } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
 
 interface PoolBoardWidgetProps {
@@ -73,7 +72,7 @@ export default function PoolBoardWidget({ config }: PoolBoardWidgetProps): React
       }
       titleAction={
         <div className="flex items-center gap-2">
-          <Badge variant="outline" className={cn('text-[10px]', twText('stone', 500))}>
+          <Badge variant="outline" className={cn('text-[10px]', 'text-muted-foreground')}>
             {board.items.length} 只
           </Badge>
         </div>
@@ -93,13 +92,13 @@ export default function PoolBoardWidget({ config }: PoolBoardWidgetProps): React
           </Button>
 
           {/* 视图切换 */}
-          <div className={cn('flex rounded-lg p-0.5', twBg('stone', 100), DARK.bgNeutral800)}>
+          <div className={cn('flex rounded-lg p-0.5', 'bg-muted')}>
             <button
               className={cn(
                 'rounded-md px-2 py-1 text-xs font-medium transition-all',
                 board.viewMode === 'kanban'
-                  ? [twBg('white'), 'shadow-sm', DARK.bgNeutral700, twText('stone', 800), DARK.textNeutral100]
-                  : [twText('stone', 500), DARK.textNeutral400],
+                  ? 'bg-background shadow-sm text-foreground'
+                  : 'text-muted-foreground',
               )}
               onClick={() => board.setViewMode('kanban')}
             >
@@ -109,8 +108,8 @@ export default function PoolBoardWidget({ config }: PoolBoardWidgetProps): React
               className={cn(
                 'rounded-md px-2 py-1 text-xs font-medium transition-all',
                 board.viewMode === 'list'
-                  ? [twBg('white'), 'shadow-sm', DARK.bgNeutral700, twText('stone', 800), DARK.textNeutral100]
-                  : [twText('stone', 500), DARK.textNeutral400],
+                  ? 'bg-background shadow-sm text-foreground'
+                  : 'text-muted-foreground',
               )}
               onClick={() => board.setViewMode('list')}
             >
@@ -120,7 +119,7 @@ export default function PoolBoardWidget({ config }: PoolBoardWidgetProps): React
 
           {/* 分组筛选 */}
           <select
-            className={cn('h-7 rounded-md border bg-background px-2 text-xs', twText('stone', 600), DARK.borderNeutral700, DARK.bgNeutral800, DARK.textNeutral200)}
+            className={cn('h-7 rounded-md border bg-background px-2 text-xs', 'text-muted-foreground', 'border-border', 'bg-muted')}
             value={board.selectedGroup || board.ALL_GROUPS_VALUE}
             onChange={(e) =>
               board.setSelectedGroup(
@@ -137,7 +136,7 @@ export default function PoolBoardWidget({ config }: PoolBoardWidgetProps): React
 
           {/* 质量筛选 */}
           <select
-            className={cn('h-7 rounded-md border bg-background px-2 text-xs', twText('stone', 600), DARK.borderNeutral700, DARK.bgNeutral800, DARK.textNeutral200)}
+            className={cn('h-7 rounded-md border bg-background px-2 text-xs', 'text-muted-foreground', 'border-border', 'bg-muted')}
             value={board.qualityFilter}
             onChange={(e) =>
               board.setQualityFilter(e.target.value as typeof board.qualityFilter)
@@ -153,7 +152,7 @@ export default function PoolBoardWidget({ config }: PoolBoardWidgetProps): React
           {/* 批量操作 */}
           {board.selectedSymbols.length > 0 && (
             <>
-              <span className={cn('text-xs', twText('stone', 500))}>
+              <span className={cn('text-xs', 'text-muted-foreground')}>
                 已选 {board.selectedSymbols.length}
               </span>
               <Button size="sm" variant="secondary" onClick={() => void board.handleBulkArchive()}>
