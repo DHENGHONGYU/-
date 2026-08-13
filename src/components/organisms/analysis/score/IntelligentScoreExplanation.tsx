@@ -101,7 +101,7 @@ export const IntelligentScoreExplanation = memo(function IntelligentScoreExplana
     return sanitizeLlmOutput(result.modelResponse ?? result.basis ?? '')
   }, [result])
 
-  const isEmpty = !loading && !error && !result
+  const isEmpty = (loading ?? false) !== true && (error ?? '') === '' && !result
 
   return (
     <Card className={cn('overflow-hidden', className)}>
@@ -113,7 +113,7 @@ export const IntelligentScoreExplanation = memo(function IntelligentScoreExplana
       <CardContent className="pt-0">
         <DataState
           isLoading={loading ?? false}
-          isError={!!error}
+          isError={(error ?? '') !== ''}
           isEmpty={isEmpty}
           data={result}
           loadingProps={{ message: '加载中...' }}

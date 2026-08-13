@@ -141,7 +141,7 @@ function ErrorInline({ error, errorInfo, onRetry, showErrorDetail, className }: 
     <div className={cn('flex items-center gap-2 text-sm', className)}>
       {getErrorIcon(errorInfo.code)}
       <span className="text-destructive flex-1">
-        {showErrorDetail ? errorMessage : errorInfo.defaultMessage}
+        {(showErrorDetail ?? false) === true ? errorMessage : errorInfo.defaultMessage}
       </span>
       {onRetry && (
         <Button variant="ghost" size="sm" onClick={onRetry} className="h-auto p-0 text-xs">
@@ -190,7 +190,7 @@ function ErrorCard({
             {title ?? errorInfo.title}
           </p>
           <p className="text-sm text-destructive/80">
-            {showErrorDetail ? errorMessage : errorInfo.defaultMessage}
+            {(showErrorDetail ?? false) === true ? errorMessage : errorInfo.defaultMessage}
           </p>
           {onRetry && (
             <Button
@@ -249,7 +249,7 @@ function ErrorFullscreen({
             {title ?? errorInfo.title}
           </h2>
           <p className="text-sm text-muted-foreground">
-            {showErrorDetail ? errorMessage : errorInfo.defaultMessage}
+            {(showErrorDetail ?? false) === true ? errorMessage : errorInfo.defaultMessage}
           </p>
         </div>
         {onRetry && (

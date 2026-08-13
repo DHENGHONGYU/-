@@ -69,7 +69,7 @@ interface LoadingSkeletonProps {
 function LoadingSkeleton({ rows = 5, height, message, className }: LoadingSkeletonProps) {
   return (
     <div className={cn('space-y-4 p-6', className)}>
-      {message && (
+      {(message ?? '') !== '' && (
         <p className="text-sm text-muted-foreground text-center">{message}</p>
       )}
       <div className="space-y-2">
@@ -101,7 +101,7 @@ function LoadingSpinner({ message, icon }: LoadingSpinnerProps) {
       {icon ?? (
         <Loader2 className="h-10 w-10 text-muted-foreground animate-spin" />
       )}
-      {message && (
+      {(message ?? '') !== '' && (
         <p className="text-sm text-muted-foreground">{message}</p>
       )}
     </div>
@@ -123,7 +123,7 @@ function LoadingProgress({ progress = 0, message, className }: LoadingProgressPr
 
   return (
     <div className={cn('space-y-3 p-6', className)}>
-      {message && (
+      {(message ?? '') !== '' && (
         <div className="flex justify-between items-center text-sm">
           <span className="text-muted-foreground">{message}</span>
           <span className="font-medium">{clampedProgress}%</span>

@@ -116,9 +116,9 @@ export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWid
   const sharpe = hasEquityCurve ? computeSharpeRatio(equityCurve) : NaN
 
   let visualState: 'ready' | 'loading' | 'empty' | 'error' = 'ready'
-  if (error) {
+  if ((error ?? '') !== '') {
     visualState = 'error'
-  } else if (loading || !portfolio) {
+  } else if ((loading ?? false) === true || portfolio == null) {
     visualState = 'loading'
   }
 
@@ -143,7 +143,7 @@ export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWid
         </div>
       }
     >
-      {portfolio && (
+      {portfolio != null && (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <span className={cn('text-sm', COLOR_SHADES.gray[500])}>总资产</span>

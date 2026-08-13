@@ -35,8 +35,6 @@ export type { ProgressProps } from './Progress'
 
 export { Separator } from './Separator'
 
-export { Skeleton } from './Skeleton'
-
 export {
   Card,
   CardHeader,

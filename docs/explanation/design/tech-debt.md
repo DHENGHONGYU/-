@@ -1,8 +1,21 @@
 # TECH-DEBT.md — 技术债管理文档
 
-> **版本**: v1.0.0 | **日期**: 2026-07-05
+> **版本**: v1.1.0 | **日期**: 2026-08-13
 > **适用范围**: V9 项目技术债登记、跟踪、清理
 > **核心原则**: 技术债必须记录、定期清理、防止累积
+
+---
+
+> **2026-08-13 状态更新**（实时工具验证）：
+> - **audit:layers**: 0 违规 ✅
+> - **audit:mcp**: 8 违规（从 13 降至 8，5 条 C 类通过 domain 层彻底解决）
+> - **tsc:prod**: 0 错误 ✅
+> - **lint**: 0 errors / ~2130 warnings（P1-L1/L2 待清理）
+> - **未使用组件**: 2 个死代码已删除（ChipStrategyReviewPanel + usePoolDataFromStore），111 个为误报（测试文件/注册表引用/桶导出）
+> - **大组件**: 25 个（P1-M2 待开始）
+> - **domain/ 层**: 已创建（scoring/energy, trading/markers, collection/pipeline, export/strategySnapshotExport）
+> - **审计脚本**: audit-layer-calls.ts v3.7 白名单已同步（移除已迁移的 lib/scoring 等条目）
+> - 关联文档：[MCP 债务修复方案](../../reports/governance/mcp-direct-service-import-debt-fix-plan-2026-08-12.md) | [P1 清理清单](../../reports/project-management/01-p1-debt-cleanup-todo.md)
 
 ---
 

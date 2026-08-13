@@ -119,7 +119,7 @@ async function writeMockDimensionData(
     '08': 'researchLogs',
   }
   const targetStore = storeForDim[dimensionCode] ?? ''
-  if (targetStore !== '') auditRecord(targetStore, data)
+  if (targetStore !== '') auditRecord(targetStore, data!)
 
   await dataBridge.forward({
     meta: {
@@ -226,7 +226,7 @@ function mapSourceLabelToId(label: string): string {
     llm: 'llm',
     real: 'tushare',
   }
-  const mapped = labelMap[label] ?? ''
+  const mapped: string = labelMap[label] ?? ''
   if (mapped !== '') return mapped
   logger.warn('[collectionPipeline] mapSourceLabelToId: 未知源标签，映射为 unknown', {
     unknownLabel: label,

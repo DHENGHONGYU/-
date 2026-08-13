@@ -80,7 +80,7 @@ export default function LiveLogStream({
       if (dimFilter !== 'all' && log.dimensionCode !== dimFilter) return false
       if (symbolSearch.trim()) {
         const q = symbolSearch.trim().toUpperCase()
-        if (!log.message.toUpperCase().includes(q) && !log.symbol?.toUpperCase().includes(q)) return false
+        if (!log.message.toUpperCase().includes(q) && (log.symbol?.toUpperCase().includes(q) ?? false) !== true) return false
       }
       return true
     })
@@ -189,10 +189,10 @@ export default function LiveLogStream({
                   >
                     {LEVEL_LABELS[log.level]}
                   </Badge>
-                  {log.dimensionCode && (
+                  {(log.dimensionCode ?? '') !== '' && (
                     <span className="shrink-0 text-muted-foreground">[{log.dimensionCode}]</span>
                   )}
-                  {log.symbol && (
+                  {(log.symbol ?? '') !== '' && (
                     <Badge variant="secondary" className="shrink-0 text-[10px]">
                       {log.symbol}
                     </Badge>

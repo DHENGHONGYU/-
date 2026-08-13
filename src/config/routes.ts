@@ -30,7 +30,7 @@ export interface RouteConfig {
  * 3. 输入舱子路径（/input/bulk-import 等）由 InputApp 内部 <Routes> 声明式分发，
  *    此处统一指向 PortalShell 即可。
  * 4. 分析舱子页面（/analysis/*）排在舱室入口之后，React Router 按顺序匹配。
- * 5. 新增页面必须同步更新本表与 docs/06-routing-specs.md。
+ * 5. 新增页面必须同步更新本表与 docs/explanation/06-routing-specs.md。
  */
 export const ROUTE_REGISTRY: RouteConfig[] = [
   // 门户与驾驶舱

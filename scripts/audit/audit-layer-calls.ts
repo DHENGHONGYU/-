@@ -93,12 +93,9 @@ const DYNAMIC_IMPORT_STORE_PATTERN = /import\s*\(\s*['"](?:\.\.\/store\/|@\/stor
 // 注：perf 为性能监控基础设施（measureAsync/measureSync/getPerfStats），与 logger 同属 lib 基础设施
 // 注：safeRegex 为安全正则构造器（限制模式长度防 ReDoS），纯函数无业务依赖，同属 lib 基础设施
 // 注：logHelpers 为纯日志基础设施（withLogging 日志包装器，仅依赖 logger），同属 lib 基础设施
-// P1-12 v3.6 扩展：以下 lib 子模块为「纯函数工具集合」，无状态/副作用，允许 services 引用：
-//   - scoring：    L7 成交量能量、评分因子等纯函数计算（原 services 内下沉，避免上层反向引用循环）
-//   - trading：    买卖点标注构建（signalsToMarkers 等纯数据转换）
-//   - collection： 采集流水线维度/优先级配置构建（纯对象生成）
-//   - export：     策略快照 JSON/Excel 导出（纯客户端下载工具）
-const SERVICES_IMPORT_LIB_BUSINESS = /from\s+['"](?:\.\.\/lib\/|@\/lib\/)(?!logger|withBroadcast|eventBus|format|errors|utils|localStorageManager|safeCoerce|perf|precision|validation|safeRegex|logHelpers|scoring|trading|collection|export)[^'"]+['"]/
+// P1-12 v3.6→v3.7 更新：scoring / trading / collection / export 纯函数已从 lib/ 迁移至 domain/ 层（2026-08-13）
+//   - 原 lib 白名单条目已移除，domain/ 作为独立共享纯函数层由架构分层规则管理（services/domain/lib 均可引用）
+const SERVICES_IMPORT_LIB_BUSINESS = /from\s+['"](?:\.\.\/lib\/|@\/lib\/)(?!logger|withBroadcast|eventBus|format|errors|utils|localStorageManager|safeCoerce|perf|precision|validation|safeRegex|logHelpers)[^'"]+['"]/
 
 // v2.1 修复：检测 lib 层依赖上层（排除 types 层）
 const LIB_IMPORT_UPPER_LAYER = /from\s+['"](?:\.\.\/(services|store|pages|components|apps|portal|cockpit)\/(?!types\/)|@\/(services|store|pages|components|apps|portal|cockpit)\/(?!types\/))[^'"]+['"]/
@@ -263,9 +260,9 @@ function isCompliantStoreModule(importPath: string, fromFile: string): boolean {
 // ── v3.1 新增（2026-07-16 架构审查 P0：堵住既有盲区） ──────────────────
 // lib 基础设施白名单（core/config/services 三层可依赖的横切基础设施）
 // v3.2: 补入 safeRegex（安全正则构造器，纯函数无业务依赖）
-// P1-12 v3.6: 补入 scoring / trading / collection / export 纯函数工具子模块（services 内代码下沉，避免循环引用）
+// v3.7 (2026-08-13): 移除 scoring / trading / collection / export（已迁移至 domain/ 层）
 const LIB_INFRA_WHITELIST =
-  'logger|withBroadcast|eventBus|format|errors|utils|localStorageManager|safeCoerce|perf|precision|validation|safeRegex|logHelpers|scoring|trading|collection|export'
+  'logger|withBroadcast|eventBus|format|errors|utils|localStorageManager|safeCoerce|perf|precision|validation|safeRegex|logHelpers'
 // core/config 依赖 lib 中的业务模块（白名单外）——违规；白名单内基础设施放行
 const CORE_CONFIG_IMPORT_LIB_BUSINESS = new RegExp(
   `from\\s+['"](?:\\.\\.\\/lib\\/|@\\/lib\\/)(?!${LIB_INFRA_WHITELIST})[^'"]+['"]`,

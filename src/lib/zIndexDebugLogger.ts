@@ -86,7 +86,7 @@ export function logZIndex(
     (description ? ` 描述=${description}` : '')
   logger.debug(line, { component, elementId: id, zIndex, phase, description })
   // 避免生产环境噪音：仅在 DEV 打 console
-  if (typeof import.meta !== 'undefined' && (import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV) {
+  if (typeof import.meta !== 'undefined' && ((import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV ?? false) === true) {
     // eslint-disable-next-line no-console
     console.debug(line)
   }
@@ -111,7 +111,7 @@ export function logZIndexChange(
     `[${ts}] [Z-INDEX-CHG] 组件=${component} 元素ID=${id} 变更前=${before} 变更后=${after} 是否变化=${changed}` +
     (description ? ` 描述=${description}` : '')
   logger.debug(line, { component, elementId: id, before, after, changed, description })
-  if (typeof import.meta !== 'undefined' && (import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV) {
+  if (typeof import.meta !== 'undefined' && ((import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV ?? false) === true) {
     // eslint-disable-next-line no-console
     console.debug(line)
   }
@@ -132,7 +132,7 @@ export function installZIndexDebugAppender(
   if (typeof MutationObserver !== 'function') return () => {}
   const isDev =
     typeof import.meta !== 'undefined' &&
-    !!(import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV
+    ((import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV ?? false) === true
   if (!isDev) return () => {}
 
   const seen = new WeakSet<Node>()
@@ -176,7 +176,7 @@ export function installZIndexDebugAppender(
     for (const m of mutations) {
       // 属性变化：直接检查 target
       if (m.type === 'attributes') {
-        const name = m.attributeName || ''
+        const name = m.attributeName ?? ''
         const lower = name.toLowerCase()
         // 只有 style/class/id 相关变化才可能影响 stacking
         if (

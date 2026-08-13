@@ -41,13 +41,13 @@ export default function KaiScoreWidget({ config, data }: KaiScoreWidgetProps): R
   const sourceData = data ?? marketData
   const kai = sourceData?.analysisScores?.kai
 
-  const loading = !!loadingMap?.[config.instanceId]
+  const loading = (loadingMap?.[config.instanceId] ?? false) === true
   const error = errorMap?.[config.instanceId] ?? null
-  const visualState = error
+  const visualState = (error ?? '') !== ''
     ? 'error'
     : loading
       ? 'loading'
-      : !kai || kai.dimensions.length === 0
+      : kai == null || (kai?.dimensions?.length ?? 0) === 0
         ? 'empty'
         : 'ready'
 

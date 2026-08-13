@@ -87,6 +87,7 @@ src/core/         ← 核心工具与类型守卫（DataBridge/databridgeAcl/dat
 src/agents/       ← AI 行为扩展（运行时模块，core 层扩展）
 src/data/         ← 数据层（IndexedDB/dataLayer/queryBuilder/types/gateway）
 src/lib/          ← 库函数（logger/logHelpers/format/errors/utils/localStorageManager）
+src/domain/       ← 共享业务纯函数层（无 IO/无副作用；scoring/energy, trading/markers, collection/pipeline, export/...）
 src/services/      ← 服务层（30+子域：analysis/scoring/fetcher/news/llm/trading/execution/...）
 src/store/        ← 状态层（63个Zustand Store + helpers/withBroadcast；含 intentionPoolStore.ts / researchPoolStore.ts / positionPoolStore.ts / registrationContractStore.ts）
 src/pages/        ← 页面层（5舱：input/analysis/trading/output/command）
@@ -109,13 +110,14 @@ src/services/workers/  ← Web Worker 脚本（纯计算逻辑，禁止引 store
 
 ### 依赖方向规则
 
-- `pages/` 和 `components/` → 只能依赖 `store/` 和 `services/`，禁止直接调用 `dataLayer` 或 `db`
-- `store/` → 只能依赖 `services/` 和 `core/`
-- `services/` → 只能依赖 `core/`、`data/` 和 `lib/`（仅限基础设施），禁止直接写 `db`；所有写入必须封装为 `StandardEnvelope` 并通过 `DataBridge.forward()` 发起，最终由 `data/gateway/` 执行
+- `pages/` 和 `components/` → 只能依赖 `store/`、`services/` 和 `domain/`，禁止直接调用 `dataLayer` 或 `db`
+- `store/` → 只能依赖 `services/`、`core/` 和 `domain/`
+- `services/` → 只能依赖 `core/`、`data/`、`lib/`（仅限基础设施）和 `domain/`，禁止直接写 `db`；所有写入必须封装为 `StandardEnvelope` 并通过 `DataBridge.forward()` 发起，最终由 `data/gateway/` 执行
   - **lib 基础设施白名单**：`logger`、`logHelpers`、`withBroadcast`、`eventBus`、`format`、`errors`、`utils`、`localStorageManager`、`safeCoerce`、`perf`、`precision`、`validation`、`safeRegex`
   - 禁止依赖 `lib/` 中的业务模块
+- `domain/` → 共享业务纯函数层，仅可依赖 `lib/`（基础设施白名单）、`data/types/`、`config/`、`constants/`、`types/`；禁止依赖 `services/`、`store/`、`pages/`、`components/`、`core/`、`apps/`
 - `data/` → `data/gateway/` 是唯一允许直接操作 `dataLayer` 与 `db` 的入口；`dataLayer` 子模块仅被 `data/gateway/` 与同级 `data/` 基础设施依赖
-- `lib/` → 仅可依赖 `core/` 和 `config/`，禁止依赖 `services/`、`store/`、`pages/`、`components/`、`apps/`
+- `lib/` → 仅可依赖 `core/` 和 `config/`，禁止依赖 `services/`、`store/`、`pages/`、`components/`、`apps/`、`domain/`
 - `core/` → 禁止依赖 `pages/`、`components/`、`apps/`；仅可依赖 `lib/` 中的**基础设施白名单**（`logger`/`withBroadcast`/`eventBus`/`format`/`errors`/`utils`/`localStorageManager`/`safeCoerce`/`perf`/`precision`/`validation`/`safeRegex`），禁止依赖 `lib/` 业务模块；`DataBridge` 写操作必须委托 `data/gateway/`，禁止直接 `import { db }` 或 `dataLayer` store
   - **说明（v1.4.7）**：`logger`/`eventBus` 等为横切基础设施，被 `core/` 依赖属工程常态，与 `services/` 白名单保持一致；`audit:layers` v3.1 按白名单放行、对业务模块报违规
 - `config/` → 禁止依赖 `services/`、`pages/`、`components/`；仅可依赖 `lib/` 中的**基础设施白名单**（同上），禁止依赖 `lib/` 业务模块

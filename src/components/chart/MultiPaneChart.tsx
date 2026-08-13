@@ -98,7 +98,8 @@ interface ChartTooltipProps {
 
 /** 独立的 Tooltip 组件（使用 React.memo 优化） */
 const ChartTooltip = memo<ChartTooltipProps>(({ data, positiveColor, negativeColor }) => {
-  if (!data?.visible) return null
+  if ((data?.visible ?? false) !== true) return null
+  const d = data!
 
   return (
     <div
@@ -121,43 +122,43 @@ const ChartTooltip = memo<ChartTooltipProps>(({ data, positiveColor, negativeCol
       }}
     >
       <div style={{ fontWeight: 600, marginBottom: 4, color: THEME_TOKENS.color.chartContrastRaw }}>
-        {data.time}
+        {d.time}
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '2px 10px' }}>
         <span style={{ color: CHART_PALETTE.series3 }}>开</span>
-        <span style={{ textAlign: 'right' }}>{data.open.toFixed(2)}</span>
+        <span style={{ textAlign: 'right' }}>{d.open.toFixed(2)}</span>
         <span style={{ color: CHART_PALETTE.series3 }}>高</span>
-        <span style={{ textAlign: 'right' }}>{data.high.toFixed(2)}</span>
+        <span style={{ textAlign: 'right' }}>{d.high.toFixed(2)}</span>
         <span style={{ color: CHART_PALETTE.series3 }}>低</span>
-        <span style={{ textAlign: 'right' }}>{data.low.toFixed(2)}</span>
+        <span style={{ textAlign: 'right' }}>{d.low.toFixed(2)}</span>
         <span style={{ color: CHART_PALETTE.series3 }}>收</span>
-        <span style={{ textAlign: 'right', fontWeight: 600, color: data.close >= data.open ? positiveColor : negativeColor }}>
-          {data.close.toFixed(2)}
+        <span style={{ textAlign: 'right', fontWeight: 600, color: d.close >= d.open ? positiveColor : negativeColor }}>
+          {d.close.toFixed(2)}
         </span>
-        {data.volume !== undefined && (
+        {d.volume !== undefined && (
           <>
             <span style={{ color: CHART_PALETTE.series3 }}>量</span>
-            <span style={{ textAlign: 'right' }}>{data.volume.toLocaleString('zh-CN')}</span>
+            <span style={{ textAlign: 'right' }}>{d.volume.toLocaleString('zh-CN')}</span>
           </>
         )}
-        {data.macd && (
+        {d.macd && (
           <>
             <span style={{ color: MACD_COLORS.dif }}>DIF</span>
-            <span style={{ textAlign: 'right' }}>{data.macd.dif.toFixed(3)}</span>
+            <span style={{ textAlign: 'right' }}>{d.macd.dif.toFixed(3)}</span>
             <span style={{ color: MACD_COLORS.dea }}>DEA</span>
-            <span style={{ textAlign: 'right' }}>{data.macd.dea.toFixed(3)}</span>
-            <span style={{ color: data.macd.histogram >= 0 ? STOCK_COLOR_TOKENS.up.hex : STOCK_COLOR_TOKENS.down.hex }}>MACD</span>
-            <span style={{ textAlign: 'right' }}>{data.macd.histogram.toFixed(3)}</span>
+            <span style={{ textAlign: 'right' }}>{d.macd.dea.toFixed(3)}</span>
+            <span style={{ color: d.macd.histogram >= 0 ? STOCK_COLOR_TOKENS.up.hex : STOCK_COLOR_TOKENS.down.hex }}>MACD</span>
+            <span style={{ textAlign: 'right' }}>{d.macd.histogram.toFixed(3)}</span>
           </>
         )}
-        {data.kdj && (
+        {d.kdj && (
           <>
             <span style={{ color: KDJ_COLORS.k }}>K</span>
-            <span style={{ textAlign: 'right' }}>{data.kdj.k.toFixed(2)}</span>
+            <span style={{ textAlign: 'right' }}>{d.kdj.k.toFixed(2)}</span>
             <span style={{ color: KDJ_COLORS.d }}>D</span>
-            <span style={{ textAlign: 'right' }}>{data.kdj.d.toFixed(2)}</span>
+            <span style={{ textAlign: 'right' }}>{d.kdj.d.toFixed(2)}</span>
             <span style={{ color: KDJ_COLORS.j }}>J</span>
-            <span style={{ textAlign: 'right' }}>{data.kdj.j.toFixed(2)}</span>
+            <span style={{ textAlign: 'right' }}>{d.kdj.j.toFixed(2)}</span>
           </>
         )}
       </div>
@@ -234,55 +235,56 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
       const el = tooltipElementRef.current
       if (!el) return
 
-      if (!data?.visible) {
+      if ((data?.visible ?? false) !== true) {
         el.style.display = 'none'
         return
       }
 
+      const d = data!
       el.style.display = 'block'
       // 更新内容
       const timeEl = el.querySelector('[data-tooltip-time]')
-      if (timeEl) timeEl.textContent = data.time
+      if (timeEl) timeEl.textContent = d.time
 
       const valuesEl = el.querySelector('[data-tooltip-values]')
       if (valuesEl) {
         let html = `
           <span style="color: ${CHART_PALETTE.series3}">开</span>
-          <span style="text-align: right">${data.open.toFixed(2)}</span>
+          <span style="text-align: right">${d.open.toFixed(2)}</span>
           <span style="color: ${CHART_PALETTE.series3}">高</span>
-          <span style="text-align: right">${data.high.toFixed(2)}</span>
+          <span style="text-align: right">${d.high.toFixed(2)}</span>
           <span style="color: ${CHART_PALETTE.series3}">低</span>
-          <span style="text-align: right">${data.low.toFixed(2)}</span>
+          <span style="text-align: right">${d.low.toFixed(2)}</span>
           <span style="color: ${CHART_PALETTE.series3}">收</span>
-          <span style="text-align: right; font-weight: 600; color: ${data.close >= data.open ? positiveColor : negativeColor}">${data.close.toFixed(2)}</span>
+          <span style="text-align: right; font-weight: 600; color: ${d.close >= d.open ? positiveColor : negativeColor}">${d.close.toFixed(2)}</span>
         `
 
-        if (data.volume !== undefined) {
+        if (d.volume !== undefined) {
           html += `
             <span style="color: ${CHART_PALETTE.series3}">量</span>
-            <span style="text-align: right">${data.volume.toLocaleString('zh-CN')}</span>
+            <span style="text-align: right">${d.volume.toLocaleString('zh-CN')}</span>
           `
         }
 
-        if (data.macd) {
+        if (d.macd) {
           html += `
             <span style="color: ${MACD_COLORS.dif}">DIF</span>
-            <span style="text-align: right">${data.macd.dif.toFixed(3)}</span>
+            <span style="text-align: right">${d.macd.dif.toFixed(3)}</span>
             <span style="color: ${MACD_COLORS.dea}">DEA</span>
-            <span style="text-align: right">${data.macd.dea.toFixed(3)}</span>
-            <span style="color: ${data.macd.histogram >= 0 ? COLOR_TOKENS.up.hex : COLOR_TOKENS.down.hex}">MACD</span>
-            <span style="text-align: right">${data.macd.histogram.toFixed(3)}</span>
+            <span style="text-align: right">${d.macd.dea.toFixed(3)}</span>
+            <span style="color: ${d.macd.histogram >= 0 ? COLOR_TOKENS.up.hex : COLOR_TOKENS.down.hex}">MACD</span>
+            <span style="text-align: right">${d.macd.histogram.toFixed(3)}</span>
           `
         }
 
-        if (data.kdj) {
+        if (d.kdj) {
           html += `
             <span style="color: ${KDJ_COLORS.k}">K</span>
-            <span style="text-align: right">${data.kdj.k.toFixed(2)}</span>
+            <span style="text-align: right">${d.kdj.k.toFixed(2)}</span>
             <span style="color: ${KDJ_COLORS.d}">D</span>
-            <span style="text-align: right">${data.kdj.d.toFixed(2)}</span>
+            <span style="text-align: right">${d.kdj.d.toFixed(2)}</span>
             <span style="color: ${KDJ_COLORS.j}">J</span>
-            <span style="text-align: right">${data.kdj.j.toFixed(2)}</span>
+            <span style="text-align: right">${d.kdj.j.toFixed(2)}</span>
           `
         }
 
@@ -563,7 +565,7 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
       const THROTTLE_MS = 16 // 60fps
       
       const processCrosshair = (param: Parameters<MouseEventHandler<Time>>[0]) => {
-        if (!param.time || !param.point) {
+        if (param.time == null || param.point == null) {
           updateTooltip(null)
           if (macdChart) macdChart.clearCrosshairPosition()
           if (kdjChart) kdjChart.clearCrosshairPosition()

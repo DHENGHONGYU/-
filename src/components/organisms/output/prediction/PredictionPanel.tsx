@@ -71,8 +71,8 @@ function PredictionCard({ prediction }: { prediction: FactorPrediction }): React
           <span className={prediction.actualReturn >= 0 ? BADGE_COLORS.direction.bullish : BADGE_COLORS.direction.bearish}>
             {prediction.actualReturn >= 0 ? '+' : ''}{prediction.actualReturn.toFixed(2)}%
           </span>
-          {prediction.hitDirection && <span className={`ml-2 ${BADGE_COLORS.hit}`}>✓ 方向命中</span>}
-          {prediction.hitRange && <span className={`ml-1 ${BADGE_COLORS.hit}`}>✓ 幅度命中</span>}
+          {(prediction.hitDirection ?? false) === true && <span className={`ml-2 ${BADGE_COLORS.hit}`}>✓ 方向命中</span>}
+          {(prediction.hitRange ?? false) === true && <span className={`ml-1 ${BADGE_COLORS.hit}`}>✓ 幅度命中</span>}
         </div>
       )}
 
@@ -99,8 +99,8 @@ export function PredictionPanel(): React.JSX.Element {
 
   // 直接从 predictions 计算统计（避免 selector 返回函数调用）
   const verified = predictions.filter((p) => p.status === 'verified')
-  const directionHits = verified.filter((p) => p.hitDirection).length
-  const rangeHits = verified.filter((p) => p.hitRange).length
+  const directionHits = verified.filter((p) => (p.hitDirection ?? false) === true).length
+  const rangeHits = verified.filter((p) => (p.hitRange ?? false) === true).length
   const stats = {
     total: predictions.length,
     verified: verified.length,

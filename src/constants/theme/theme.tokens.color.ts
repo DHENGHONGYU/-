@@ -156,21 +156,20 @@ export type ColorTokenKey = keyof typeof COLOR_TOKENS
 /** 获取颜色 token 的 HEX 值 */
 export function getColorHex(key: ColorTokenKey): string {
   const token = COLOR_TOKENS[key]
-  if (token && 'hex' in token) return token.hex
+  if ('hex' in token) return token.hex
   return '#9ca3af'
 }
 
 /** 获取颜色 token 的 Tailwind 类名 */
 export function getColorTailwind(key: ColorTokenKey): string {
   const token = COLOR_TOKENS[key]
-  if (token && 'tailwind' in token) return token.tailwind
+  if ('tailwind' in token) return token.tailwind
   return 'text-gray-400'
 }
 
 /** 获取颜色 token 的背景类名 */
 export function getColorBgClass(key: ColorTokenKey): string {
   const token = COLOR_TOKENS[key]
-  if (!token) return 'bg-gray-400'
   // 如果有 bgClass 属性则返回，否则返回 tailwind 值（某些 token 的 tailwind 本身就是背景类）
   if ('bgClass' in token) return token.bgClass
   if ('tailwind' in token) return token.tailwind

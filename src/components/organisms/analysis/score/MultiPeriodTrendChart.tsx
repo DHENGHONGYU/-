@@ -50,7 +50,7 @@ export const MultiPeriodTrendChart = memo(function MultiPeriodTrendChart({
 }: MultiPeriodTrendChartProps) {
   const points = useMemo(() => data?.points ?? [], [data?.points])
   const volatility = useMemo(() => computeVolatility(points), [points])
-  const isEmpty = !loading && !error && points.length === 0
+  const isEmpty = (loading ?? false) !== true && (error ?? '') === '' && points.length === 0
 
   return (
     <Card className={cn('overflow-hidden', className)}>
@@ -69,7 +69,7 @@ export const MultiPeriodTrendChart = memo(function MultiPeriodTrendChart({
       <CardContent className="pt-0">
         <DataState
           isLoading={loading ?? false}
-          isError={!!error}
+          isError={(error ?? '') !== ''}
           isEmpty={isEmpty}
           data={points}
           loadingProps={{ message: '加载中...' }}

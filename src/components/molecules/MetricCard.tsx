@@ -28,7 +28,7 @@ export interface MetricCardProps {
    * @example
    * <MetricCard title="智能评分" value={92} color="scoreHigh" border />
    */
-  color?: ColorTokenKey | string
+  color?: ColorTokenKey | (string & {})
   /** 是否以左边框强调（需配合 color） */
   border?: boolean
   /** 容器 className */
@@ -41,7 +41,7 @@ export interface MetricCardProps {
  * - HEX 字符串 → 原样返回（记录一次 warn 提醒迁移）
  * - undefined / null → undefined（走默认渲染）
  */
-function resolveColorToken(raw: ColorTokenKey | string | undefined): string | undefined {
+function resolveColorToken(raw: string | undefined): string | undefined {
   if (raw === undefined || raw === null || raw === '') return undefined
   if (typeof raw === 'string' && TOKEN_KEY_SET.has(raw as ColorTokenKey)) {
     return getColorHex(raw as ColorTokenKey)

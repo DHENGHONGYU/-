@@ -49,7 +49,7 @@ export function RankedCard({
   onClick,
   className,
 }: RankedCardProps) {
-  const rankColor = RANK_COLORS[rank] || 'bg-muted text-foreground'
+  const rankColor = RANK_COLORS[rank] ?? 'bg-muted text-foreground'
 
   return (
     <Card
@@ -68,7 +68,7 @@ export function RankedCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <span className="font-medium text-sm truncate">{name}</span>
-            {code && <span className="text-xs text-muted">{code}</span>}
+            {(code ?? '') !== '' && <span className="text-xs text-muted">{code}</span>}
           </div>
 
           <div className="flex items-center gap-3 mt-1">
@@ -76,7 +76,7 @@ export function RankedCard({
               <span className="text-base font-semibold">
                 {mainMetric.value != null ? mainMetric.value.toFixed(2) : '--'}
               </span>
-              {mainMetric.unit && <span className="text-xs text-muted">{mainMetric.unit}</span>}
+              {(mainMetric.unit ?? '') !== '' && <span className="text-xs text-muted">{mainMetric.unit}</span>}
             </div>
 
             {mainMetric.change != null && (
@@ -95,7 +95,7 @@ export function RankedCard({
                 {secondaryMetric.value != null
                   ? secondaryMetric.value.toFixed(2)
                   : '--'}
-                {secondaryMetric.unit && ` ${secondaryMetric.unit}`}
+                {(secondaryMetric.unit ?? '') !== '' && ` ${secondaryMetric.unit}`}
               </span>
             </div>
           )}

@@ -266,7 +266,7 @@ export function ExecutionMonitorStep(): React.JSX.Element {
                   </span>
                 </div>
                 <Progress value={dim.progress} max={100} showMax={false} />
-                {dim.message && (
+                {(dim.message ?? '') !== '' && (
                   <p className={cn('text-xs', COLOR_TOKENS.textMuted.tailwind)}>
                     {dim.message}
                   </p>
@@ -306,19 +306,23 @@ export function ExecutionMonitorStep(): React.JSX.Element {
                   {getLogIcon(log.level)}
                   <span className={getLogColor(log.level)}>{log.message}</span>
                   <div className="flex items-center gap-1 ml-auto">
-                    {log.stage && (
-                      <Badge variant="outline" className="text-xs">
-                        <Tag className="w-3 h-3 mr-1" />
-                        {STAGE_LABELS[log.stage] ?? log.stage}
-                      </Badge>
-                    )}
+                    {(() => {
+                      const stage = log.stage ?? ''
+                      if (stage === '') return null
+                      return (
+                        <Badge variant="outline" className="text-xs">
+                          <Tag className="w-3 h-3 mr-1" />
+                          {STAGE_LABELS[stage] ?? stage}
+                        </Badge>
+                      )
+                    })()}
                     {log.durationMs !== undefined && (
                       <span className={cn('text-xs', COLOR_TOKENS.textMuted.tailwind)}>
                         <Timer className="w-3 h-3 inline mr-1" />
                         {log.durationMs}ms
                       </span>
                     )}
-                    {log.dimensionCode && (
+                    {(log.dimensionCode ?? '') !== '' && (
                       <Badge variant="outline" className="text-xs">
                         {log.dimensionCode}
                       </Badge>

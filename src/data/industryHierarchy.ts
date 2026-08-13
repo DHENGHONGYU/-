@@ -680,7 +680,8 @@ export function getIndustryPath(code: string): IndustryDefinition[] {
 
   while (current) {
     path.unshift(current)
-    current = current.parentCode ? INDUSTRY_MAP[current.parentCode] : undefined
+    const pc = current.parentCode
+    current = pc && pc !== '' ? INDUSTRY_MAP[pc] : undefined
   }
 
   return path
@@ -731,8 +732,10 @@ export function matchStockIndustry(stock: {
   if (tier3Matches.length > 0) {
     const bestMatch = tier3Matches[0]!
     const tier3 = bestMatch.industry
-    const tier2 = tier3.parentCode ? (INDUSTRY_MAP[tier3.parentCode] ?? null) : null
-    const tier1 = tier2?.parentCode ? (INDUSTRY_MAP[tier2.parentCode] ?? null) : null
+    const t3pc = tier3.parentCode
+    const tier2 = t3pc && t3pc !== '' ? (INDUSTRY_MAP[t3pc!] ?? null) : null
+    const t2pc = tier2?.parentCode
+    const tier1 = t2pc && t2pc !== '' ? (INDUSTRY_MAP[t2pc!] ?? null) : null
 
     return {
       tier3,
@@ -746,7 +749,8 @@ export function matchStockIndustry(stock: {
   if (tier2Matches.length > 0) {
     const bestMatch = tier2Matches[0]!
     const tier2 = bestMatch.industry
-    const tier1 = tier2.parentCode ? (INDUSTRY_MAP[tier2.parentCode] ?? null) : null
+    const parentCode = tier2.parentCode
+    const tier1 = parentCode && parentCode !== '' ? (INDUSTRY_MAP[parentCode] ?? null) : null
 
     return {
       tier3: null,

@@ -62,7 +62,7 @@ const ALL_SRC_DIR = join(PROJECT_ROOT, 'src')
  * 递归扫描 ts/tsx 文件（排除生成物和 node_modules），返回相对于 PROJECT_ROOT 的路径数组
  */
 function listSourceFiles(dir: string, out: string[] = []): string[] {
-  const entries = require('node:fs').readdirSync(dir, { withFileTypes: true }) as Array<{
+  const entries = readdirSync(dir, { withFileTypes: true }) as Array<{
     name: string
     isDirectory(): boolean
     isFile(): boolean

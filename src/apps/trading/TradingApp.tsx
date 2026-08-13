@@ -132,18 +132,18 @@ function TradingDashboard(): React.JSX.Element {
                       <span>置信 {(signal.confidence * 100).toFixed(0)}%</span>
                     </div>
                     <p className="text-muted-foreground">{signal.rationale}</p>
-                    {advice.sizing && advice.sizing.action !== 'hold' && (
+                    {advice.sizing != null && advice.sizing.action !== 'hold' && (
                       <p>
                         建议：{advice.sizing.action} {advice.sizing.targetShares} 股
                         （仓位 {(advice.sizing.positionPct * 100).toFixed(1)}%）
                       </p>
                     )}
-                    {advice.risk && !advice.risk.ok && (
+                    {advice.risk != null && !advice.risk.ok && (
                       <p className={COLOR_TOKENS.danger.tailwind}>
                         风控阻塞：{advice.risk.blocks.join('；')}
                       </p>
                     )}
-                    {advice.risk && advice.risk.ok && advice.risk.warnings.length > 0 && (
+                    {advice.risk != null && advice.risk.ok && advice.risk.warnings.length > 0 && (
                       <p className={COLOR_TOKENS.warning.tailwind}>
                         风控提示：{advice.risk.warnings.join('；')}
                       </p>
@@ -266,7 +266,7 @@ export default function TradingApp(): React.JSX.Element {
 
   return (
     <div className="space-y-4 p-4">
-      {matched.component ? (
+      {matched.component != null ? (
         <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">{matched.fallback}</div>}>
           {matched.component}
         </Suspense>

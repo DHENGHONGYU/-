@@ -37,7 +37,7 @@ export function Empty({
       )}
       {...props}
     >
-      {icon && (
+      {icon != null && (
         <div className={cn(THEME_TOKENS.iconSizes.xl, THEME_TOKENS.color.muted)}>{icon}</div>
       )}
       <p
@@ -49,12 +49,12 @@ export function Empty({
       >
         {title}
       </p>
-      {description && (
+      {(description ?? '') !== '' && (
         <p className={cn(THEME_TOKENS.typography.fontSize.sm, THEME_TOKENS.color.mutedForeground)}>
           {description}
         </p>
       )}
-      {action && <div className="mt-2">{action}</div>}
+      {action != null && <div className="mt-2">{action}</div>}
     </div>
   )
 }

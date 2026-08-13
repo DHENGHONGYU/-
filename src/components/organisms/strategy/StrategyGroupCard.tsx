@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { cn } from '@/lib/utils'
-import type { StrategyGroupItem } from '@/services/trading/strategySnapshotService'
+import type { StrategyGroupItem } from '@/data/types'
 
 export interface StrategyGroupCardProps {
   title: string

@@ -146,6 +146,7 @@ export type {
   ScoreDocVersion,
   FileLibraryStats,
   StrategyGroupSnapshot,
+  StrategyGroupItem,
   StrategySnapshot,
 } from './types/types.scoreDoc'
 

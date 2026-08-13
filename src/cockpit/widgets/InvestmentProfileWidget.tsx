@@ -43,9 +43,9 @@ export default function InvestmentProfileWidget({ config, data }: InvestmentProf
   const sourceData = data ?? marketData
   const { profile } = sourceData.analysisScores
 
-  const loading = !!loadingMap[config.instanceId]
+  const loading = (loadingMap[config.instanceId] ?? false) === true
   const error = errorMap[config.instanceId] ?? null
-  const visualState = error
+  const visualState = (error ?? '') !== ''
     ? 'error'
     : loading
       ? 'loading'
@@ -100,7 +100,7 @@ export default function InvestmentProfileWidget({ config, data }: InvestmentProf
                     {level.label}
                   </Badge>
                 </div>
-                {metric.description && (
+                {(metric.description ?? '') !== '' && (
                   <p className="mt-1 text-[10px] text-muted-foreground line-clamp-2">
                     {metric.description}
                   </p>

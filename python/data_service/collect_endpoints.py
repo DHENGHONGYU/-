@@ -19,13 +19,60 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-# 日志级别通过环境变量控制，默认 INFO，本地调试可设 LOG_LEVEL=DEBUG
+# 日志级别通过环境变量控制，默认 INFO，调试可设 LOG_LEVEL=DEBUG
 _LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(
     level=getattr(logging, _LOG_LEVEL, logging.INFO),
     format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
 )
 logger = logging.getLogger("v9-data-collector")
+
+
+# ---------------------------------------------------------------------------
+# 性能计时与结构化日志工具
+# ---------------------------------------------------------------------------
+
+import contextlib
+from contextlib import contextmanager
+
+
+@contextmanager
+def _timed_operation(label: str, **kwargs: Any):
+    """上下文管理器：为任意代码块添加耗时日志（debug 级别）。
+
+    用法:
+        with _timed_operation("fetch_tencent_kline", symbol="600519", period="daily"):
+            do_work()
+
+    输出:
+        [timing] fetch_tencent_kline start symbol=600519 period=daily
+        [timing] fetch_tencent_kline done elapsed=0.234ms
+    """
+    extra = " ".join(f"{k}={v}" for k, v in kwargs.items())
+    logger.debug("[timing] %s start %s", label, extra)
+    t0 = time.perf_counter()
+    try:
+        yield
+    finally:
+        elapsed_ms = (time.perf_counter() - t0) * 1000
+        logger.info("[timing] %s done elapsed=%.1fms %s", label, elapsed_ms, extra)
+
+
+def _summarize_data(data: Any, max_fields: int = 8) -> str:
+    """将任意数据对象序列化为简短摘要日志字符串，避免日志膨胀。"""
+    if data is None:
+        return "None"
+    if isinstance(data, dict):
+        keys = list(data.keys())[:max_fields]
+        parts = [f"{k}={data[k]}" for k in keys]
+        if len(data) > max_fields:
+            parts.append(f"...(+{len(data) - max_fields} more)")
+        return "{" + ", ".join(parts) + "}"
+    if isinstance(data, list):
+        return f"list[{len(data)}]"
+    if hasattr(data, "model_dump"):
+        return _summarize_data(data.model_dump(), max_fields)
+    return str(data)[:200]
 
 app = FastAPI(title="V9 Data Collector", version="0.1.0")
 
@@ -36,6 +83,62 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ---------------------------------------------------------------------------
+# 全局 HTTP 请求日志中间件（记录每个请求的 method/path/status/耗时）
+# ---------------------------------------------------------------------------
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+from starlette.responses import Response
+
+
+class _RequestLoggingMiddleware(BaseHTTPMiddleware):
+    """请求日志中间件：记录 method / path / status_code / duration_ms / client_ip。
+
+    日志格式: [http] POST /api/collect/basic status=200 duration=123.4ms client=127.0.0.1
+    """
+
+    async def dispatch(self, request: Request, call_next) -> Response:
+        # 跳过健康检查的详细日志（高频且无调试价值）
+        is_health = request.url.path == "/health"
+
+        t0 = time.perf_counter()
+        try:
+            response = await call_next(request)
+        except Exception as exc:
+            duration_ms = (time.perf_counter() - t0) * 1000
+            logger.error(
+                "[http] %s %s status=500 duration=%.1fms client=%s error=%s",
+                request.method, request.url.path, duration_ms,
+                request.client.host if request.client else "unknown", exc,
+            )
+            raise
+
+        duration_ms = (time.perf_counter() - t0) * 1000
+        status = response.status_code
+        client_ip = request.client.host if request.client else "unknown"
+
+        if is_health:
+            # 健康检查仅 debug 级别，避免日志刷屏
+            logger.debug(
+                "[http] %s %s status=%d duration=%.1fms client=%s",
+                request.method, request.url.path, status, duration_ms, client_ip,
+            )
+        elif status >= 400:
+            logger.warning(
+                "[http] %s %s status=%d duration=%.1fms client=%s",
+                request.method, request.url.path, status, duration_ms, client_ip,
+            )
+        else:
+            logger.info(
+                "[http] %s %s status=%d duration=%.1fms client=%s",
+                request.method, request.url.path, status, duration_ms, client_ip,
+            )
+
+        return response
+
+
+app.add_middleware(_RequestLoggingMiddleware)
 
 
 # ---------------------------------------------------------------------------
@@ -198,33 +301,144 @@ def _to_tencent_code(symbol: str) -> str:
 
 def fetch_tencent_quote(symbol: str) -> dict[str, Any] | None:
     """
-    从腾讯实时行情 API 获取 price / pe / pb / 总市值。
+    从腾讯实时行情 API 获取 price / pe / pb / 总市值 / 股票简称。
 
     API: https://qt.gtimg.cn/q=sh600519
-    字段索引: [3]=price, [39]=PE, [47]=PB, [46]=总市值(亿)
+    字段索引: [1]=股票简称, [3]=price, [39]=PE, [47]=PB, [46]=总市值(亿)
     """
     import requests
 
     tc = _to_tencent_code(symbol)
     url = f"https://qt.gtimg.cn/q={tc}"
-    try:
-        r = requests.get(url, timeout=8, headers={"Referer": "https://gu.qq.com/"})
-        parts = r.text.split('="')
-        if len(parts) < 2:
+    with _timed_operation("tencent_quote", symbol=symbol, tencent_code=tc):
+        try:
+            logger.debug("[tencent_quote] 请求腾讯行情API: symbol=%s url=%s", symbol, url)
+            t0 = time.perf_counter()
+            r = requests.get(url, timeout=8, headers={"Referer": "https://gu.qq.com/"})
+            http_ms = (time.perf_counter() - t0) * 1000
+            logger.debug(
+                "[tencent_quote] HTTP响应: symbol=%s status=%d elapsed=%.1fms body_len=%d encoding=%s",
+                symbol, r.status_code, http_ms, len(r.content), r.encoding,
+            )
+            # 腾讯行情接口历史上返回 GBK/GB18030，但近期部分节点返回 UTF-8
+            # 采用 UTF-8 优先 + GBK 回退策略
+            raw_text = r.content.decode("utf-8", errors="replace")
+            if "\ufffd" in raw_text:
+                # 存在替换字符，说明不是 UTF-8，改用 GBK
+                raw_text = r.content.decode("gbk", errors="replace")
+                logger.debug("[tencent_quote] 编码检测: symbol=%s 回退到 GBK 解码", symbol)
+            parts = raw_text.split('="')
+            if len(parts) < 2:
+                logger.warning("[tencent_quote] 响应解析失败: symbol=%s parts_len=%d (期望>=2)", symbol, len(parts))
+                return None
+            fields = parts[1].strip('";\n').split("~")
+            if len(fields) < 50:
+                logger.warning("[tencent_quote] 字段数不足: symbol=%s fields_len=%d (期望>=50)", symbol, len(fields))
+                return None
+            market_cap_yi = _safe_float(fields[46])
+            result = {
+                "name": fields[1] if len(fields) > 1 and fields[1] else None,
+                "price": _safe_float(fields[3]),
+                "pe": _safe_float(fields[39]),
+                "pb": _safe_float(fields[47]),
+                "market_cap": market_cap_yi * 1e8 if market_cap_yi else None,
+            }
+            logger.info("[tencent_quote] 行情获取成功: symbol=%s name=%s price=%.2f pe=%.1f pb=%.1f market_cap=%.0f亿",
+                        symbol, result["name"], result["price"] or 0, result["pe"] or 0, result["pb"] or 0,
+                        market_cap_yi or 0)
+            return result
+        except Exception as e:
+            logger.error("[tencent_quote] 获取失败: symbol=%s error=%s", symbol, e, exc_info=True)
             return None
-        fields = parts[1].strip('";\n').split("~")
-        if len(fields) < 50:
-            return None
-        market_cap_yi = _safe_float(fields[46])
-        return {
-            "price": _safe_float(fields[3]),
-            "pe": _safe_float(fields[39]),
-            "pb": _safe_float(fields[47]),
-            "market_cap": market_cap_yi * 1e8 if market_cap_yi else None,  # 亿→元
-        }
-    except Exception as e:
-        logger.warning("[tencent_quote] 获取失败: %s, %s", symbol, e)
+
+
+# ---------------------------------------------------------------------------
+# 行业信息回退源（当 AKShare stock_individual_info_em 被封时使用）
+# ---------------------------------------------------------------------------
+
+
+def fetch_industry_fallback(symbol: str) -> dict[str, Any] | None:
+    """
+    回退获取行业信息，依次尝试：
+    1. AKShare stock_individual_spot_xq（雪球源，使用不同域名不易被封）
+    2. Tencent 股票扩展行情中的行业分类字段
+    3. 返回 None，前端 sectorName 名称匹配兜底
+    """
+    with _timed_operation("industry_fallback", symbol=symbol):
+        clean = symbol.split(".")[0].upper()
+
+        # ---- 方案 1: stock_individual_spot_xq（雪球）----
+        try:
+            import akshare as ak
+            xq_symbol = f"SZ{clean}" if clean.startswith(("0", "3")) else f"SH{clean}"
+            df = ak.stock_individual_spot_xq(symbol=xq_symbol)
+            if df is not None and not df.empty:
+                for _, row in df.iterrows():
+                    col_name = str(row.get("item", ""))
+                    col_val = row.get("value")
+                    if "行业" in col_name or "所属" in col_name or "公司" in col_name:
+                        industry_name = str(col_val).strip() if col_val else None
+                        if industry_name and len(industry_name) < 20:
+                            sw_code = resolve_sw_industry_code(industry_name)
+                            logger.info("[industry_fallback] 雪球源成功: symbol=%s industry=%s sw_code=%s",
+                                        symbol, industry_name, sw_code)
+                            return {"industry_name": industry_name, "industry_code": sw_code}
+        except Exception as e:
+            logger.debug("[industry_fallback] stock_individual_spot_xq 失败: symbol=%s error=%s", symbol, e)
+
+        # ---- 方案 2: Tencent 行业接口 + 深度查找 ----
+        try:
+            import requests
+            tc = _to_tencent_code(symbol)
+            url = (
+                f"https://proxy.finance.qq.com/ifzqgtimg/appstock/app/"
+                f"newflvcode/getStockIndustry?stockCode={tc}"
+            )
+            r = requests.get(url, timeout=6, headers={"Referer": "https://gu.qq.com/"})
+            body = r.text.strip() if r.text else ""
+            logger.debug(
+                "[industry_fallback] 腾讯行业响应: symbol=%s status=%d body_len=%d body=%s",
+                symbol, r.status_code, len(body), repr(body[:200]),
+            )
+            if r.status_code == 200 and body:
+                try:
+                    data = r.json()
+                    if data:
+                        industry_name = _deep_find_first(
+                            data, {"industryName", "industry", "swIndustry", "name", "stockIndustry"}
+                        )
+                        if industry_name:
+                            sw_code = resolve_sw_industry_code(industry_name)
+                            logger.info("[industry_fallback] 腾讯源成功: symbol=%s industry=%s sw_code=%s",
+                                        symbol, industry_name, sw_code)
+                            return {"industry_name": industry_name, "industry_code": sw_code}
+                except (ValueError, TypeError):
+                    logger.debug("[industry_fallback] 腾讯行业响应 JSON 解析失败: symbol=%s", symbol)
+        except Exception as e:
+            logger.debug("[industry_fallback] 腾讯行业接口失败: symbol=%s error=%s", symbol, e)
+
+        logger.warning("[industry_fallback] 所有回退源均失败: symbol=%s", symbol)
         return None
+
+
+def _deep_find_first(obj: Any, keys: set[str]) -> str | None:
+    """在任意嵌套 dict/list 结构中递归查找第一个匹配 key 的字符串值。"""
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if k in keys and v is not None and str(v).strip():
+                val = str(v).strip()
+                if len(val) >= 2:
+                    return val
+        for v in obj.values():
+            result = _deep_find_first(v, keys)
+            if result:
+                return result
+    elif isinstance(obj, list):
+        for item in obj:
+            result = _deep_find_first(item, keys)
+            if result:
+                return result
+    return None
 
 
 # 周期映射：前端标准 period → 腾讯 API period 参数
@@ -277,54 +491,79 @@ def fetch_tencent_kline(
             f"https://web.ifzq.gtimg.cn/appstock/app/kline/kline"
             f"?param={tc},{tencent_period},,,{count}"
         )
+        logger.debug("[tencent_kline] 分钟级K线: symbol=%s period=%s count=%d url=%s", symbol, period, count, url)
     else:
         adj = adjust if adjust else ""
         url = (
             f"https://web.ifzq.gtimg.cn/appstock/app/fqkline/get"
             f"?param={tc},{tencent_period},{start_date or ''},{end_date or ''},{count},{adj}"
         )
+        logger.debug("[tencent_kline] 日级K线: symbol=%s period=%s adjust=%s count=%d url=%s", symbol, period, adj, count, url)
 
-    try:
-        r = requests.get(url, timeout=10)
-        data = r.json()
-        kline_data = data.get("data", {}).get(tc, {})
+    with _timed_operation("tencent_kline", symbol=symbol, period=period, count=count, adjust=adjust):
+        try:
+            t0 = time.perf_counter()
+            r = requests.get(url, timeout=10)
+            http_ms = (time.perf_counter() - t0) * 1000
+            data = r.json()
+            kline_data = data.get("data", {}).get(tc, {})
+            logger.debug("[tencent_kline] HTTP响应: symbol=%s status=%d elapsed=%.1fms body_keys=%s",
+                        symbol, r.status_code, http_ms, list(kline_data.keys()))
 
-        # 日级数据可能存在 day/qfqday/hfqday/week/month 等多个 key
-        if period in _DAILY_PERIODS:
-            key_candidates = [tencent_period]
-            if adjust == "qfq":
-                key_candidates = [f"qfq{tencent_period}", tencent_period]
-            elif adjust == "hfq":
-                key_candidates = [f"hfq{tencent_period}", tencent_period]
-            day_list = None
-            for key in key_candidates:
-                day_list = kline_data.get(key)
-                if day_list:
-                    break
-        else:
-            day_list = kline_data.get(tencent_period)
+            # 日级数据可能存在 day/qfqday/hfqday/week/month 等多个 key
+            if period in _DAILY_PERIODS:
+                key_candidates = [tencent_period]
+                if adjust == "qfq":
+                    key_candidates = [f"qfq{tencent_period}", tencent_period]
+                elif adjust == "hfq":
+                    key_candidates = [f"hfq{tencent_period}", tencent_period]
+                day_list = None
+                matched_key = None
+                for key in key_candidates:
+                    day_list = kline_data.get(key)
+                    if day_list:
+                        matched_key = key
+                        break
+                if matched_key:
+                    logger.debug("[tencent_kline] 匹配到数据源key: symbol=%s key=%s (候选=%s)",
+                                symbol, matched_key, key_candidates)
+            else:
+                day_list = kline_data.get(tencent_period)
 
-        if not day_list:
+            if not day_list:
+                logger.warning("[tencent_kline] K线数据为空: symbol=%s period=%s tencent_code=%s data_keys=%s",
+                               symbol, period, tc, list(kline_data.keys()))
+                return None
+
+            bars: list[dict[str, Any]] = []
+            for item in day_list:
+                if len(item) >= 6:
+                    bars.append({
+                        "date": item[0],
+                        "open": _safe_float(item[1]),
+                        "close": _safe_float(item[2]),
+                        "high": _safe_float(item[3]),
+                        "low": _safe_float(item[4]),
+                        "volume": _safe_float(item[5]),
+                        "amount": _safe_float(item[6]) if len(item) > 6 else 0.0,
+                    })
+
+            if not bars:
+                logger.warning("[tencent_kline] K线列表为空: symbol=%s period=%s", symbol, period)
+                return None
+
+            first = bars[0]
+            last = bars[-1]
+            logger.info(
+                "[tencent_kline] K线获取成功: symbol=%s period=%s adjust=%s bars=%d range=%s~%s latest_close=%.2f latest_vol=%.0f",
+                symbol, period, adjust, len(bars),
+                first["date"], last["date"],
+                last["close"] or 0, last["volume"] or 0,
+            )
+            return bars
+        except Exception as e:
+            logger.error("[tencent_kline] 获取失败: symbol=%s period=%s error=%s", symbol, period, e, exc_info=True)
             return None
-
-        bars: list[dict[str, Any]] = []
-        for item in day_list:
-            if len(item) >= 6:
-                bars.append({
-                    "date": item[0],
-                    "open": _safe_float(item[1]),
-                    "close": _safe_float(item[2]),
-                    "high": _safe_float(item[3]),
-                    "low": _safe_float(item[4]),
-                    "volume": _safe_float(item[5]),
-                    "amount": _safe_float(item[6]) if len(item) > 6 else 0.0,
-                })
-
-        # 分钟级数据的 date 字段格式为 "2026-08-09 14:30"
-        return bars if bars else None
-    except Exception as e:
-        logger.warning("[tencent_kline] 获取失败: %s, period=%s, %s", symbol, period, e)
-        return None
 
 
 def fetch_individual_info(symbol: str) -> dict[str, Any] | None:
@@ -344,87 +583,94 @@ def fetch_individual_info(symbol: str) -> dict[str, Any] | None:
     4. adata 回退成功且能解析申万二级代码 → 用 adata 结果覆盖 industry_name/industry_code
        （name/market_cap 仍保留 AKShare 的值，因为 adata 不提供这两个字段）
     """
-    # ------------------------------------------------------------------
-    # 1. AKShare 主路径
-    # ------------------------------------------------------------------
-    clean_symbol = symbol.split(".")[0].upper()
-    ak_info: dict[str, Any] | None = None
-    ak_industry_name: str | None = None
+    with _timed_operation("fetch_individual_info", symbol=symbol):
+        logger.info("[basic] 开始获取个股基础信息: symbol=%s", symbol)
+        # ------------------------------------------------------------------
+        # 1. AKShare 主路径
+        # ------------------------------------------------------------------
+        clean_symbol = symbol.split(".")[0].upper()
+        ak_info: dict[str, Any] | None = None
+        ak_industry_name: str | None = None
 
-    try:
-        import akshare as ak
-    except ImportError:
-        logger.warning("[basic] akshare 未安装，跳过主路径，直接走 adata 回退: %s", symbol)
-    else:
         try:
-            df = ak.stock_individual_info_em(symbol=clean_symbol)
-        except Exception as e:
-            logger.warning("[basic] stock_individual_info_em 调用失败，回退 adata: %s, %s", symbol, e)
+            import akshare as ak
+        except ImportError:
+            logger.warning("[basic] akshare 未安装，跳过主路径，直接走 adata 回退: %s", symbol)
         else:
-            if df is None or df.empty or "item" not in df.columns or "value" not in df.columns:
-                logger.warning("[basic] stock_individual_info_em 返回空，回退 adata: %s", symbol)
+            try:
+                t_ak = time.perf_counter()
+                df = ak.stock_individual_info_em(symbol=clean_symbol)
+                ak_ms = (time.perf_counter() - t_ak) * 1000
+                logger.debug("[basic] AKShare stock_individual_info_em 返回: symbol=%s rows=%d elapsed=%.1fms",
+                            symbol, 0 if df is None else len(df), ak_ms)
+            except Exception as e:
+                logger.warning("[basic] stock_individual_info_em 调用失败，回退 adata: %s, %s", symbol, e)
             else:
-                ak_info = {}
-                # item/value 两列，按行遍历取值
-                for _, row in df.iterrows():
-                    item = str(row["item"]).strip()
-                    value = row["value"]
-                    if item == "股票简称":
-                        ak_info["name"] = str(value).strip() if value is not None else None
-                    elif item == "行业":
-                        ak_industry_name = str(value).strip() if value is not None else None
-                        ak_info["industry_name"] = ak_industry_name
-                    elif item == "总市值":
-                        try:
-                            ak_info["market_cap"] = float(value)
-                        except (TypeError, ValueError):
-                            pass
+                if df is None or df.empty or "item" not in df.columns or "value" not in df.columns:
+                    logger.warning("[basic] stock_individual_info_em 返回空，回退 adata: %s", symbol)
+                else:
+                    ak_info = {}
+                    # item/value 两列，按行遍历取值
+                    for _, row in df.iterrows():
+                        item = str(row["item"]).strip()
+                        value = row["value"]
+                        if item == "股票简称":
+                            ak_info["name"] = str(value).strip() if value is not None else None
+                        elif item == "行业":
+                            ak_industry_name = str(value).strip() if value is not None else None
+                            ak_info["industry_name"] = ak_industry_name
+                        elif item == "总市值":
+                            try:
+                                ak_info["market_cap"] = float(value)
+                            except (TypeError, ValueError):
+                                pass
 
-                # 通过申万行业代码映射表解析为申万二级代码（精确代码匹配）
-                sw_code = resolve_sw_industry_code(ak_industry_name)
-                ak_info["industry_code"] = sw_code
-                if sw_code:
+                    # 通过申万行业代码映射表解析为申万二级代码（精确代码匹配）
+                    sw_code = resolve_sw_industry_code(ak_industry_name)
+                    ak_info["industry_code"] = sw_code
+                    if sw_code:
+                        logger.info(
+                            "[basic] AKShare 解析成功: symbol=%s name=%s 行业=%s → 申万二级代码=%s",
+                            symbol, ak_info.get("name"), ak_industry_name, sw_code,
+                        )
+                        return ak_info
                     logger.info(
-                        "[basic] AKShare 解析成功: symbol=%s 行业=%s → 申万二级代码=%s",
-                        symbol, ak_industry_name, sw_code,
+                        "[basic] AKShare 行业未命中映射，尝试 adata 回退: symbol=%s 东财行业=%s",
+                        symbol, ak_industry_name,
                     )
-                    return ak_info
-                logger.info(
-                    "[basic] AKShare 行业未命中映射，尝试 adata 回退: symbol=%s 东财行业=%s",
-                    symbol, ak_industry_name,
-                )
 
-    # ------------------------------------------------------------------
-    # 2. adata 回退路径
-    # ------------------------------------------------------------------
-    adata_info = _fetch_individual_info_adata(symbol)
+        # ------------------------------------------------------------------
+        # 2. adata 回退路径
+        # ------------------------------------------------------------------
+        adata_info = _fetch_individual_info_adata(symbol)
 
-    # 2a. adata 成功且解析到申万二级代码：优先用 adata 的行业信息，
-    #     但保留 AKShare 的 name/market_cap（adata 不提供这两个字段）
-    if adata_info and adata_info.get("industry_code"):
-        merged: dict[str, Any] = {
-            "name": (ak_info or {}).get("name"),
-            "industry_name": adata_info.get("industry_name"),
-            "industry_code": adata_info.get("industry_code"),
-            "market_cap": (ak_info or {}).get("market_cap"),
-        }
-        logger.info(
-            "[basic] adata 回退成功: symbol=%s 申万二级=%s → 代码=%s (name/market_cap 沿用 AKShare)",
-            symbol, adata_info.get("industry_name"), adata_info.get("industry_code"),
-        )
-        return merged
+        # 2a. adata 成功且解析到申万二级代码：优先用 adata 的行业信息，
+        #     但保留 AKShare 的 name/market_cap（adata 不提供这两个字段）
+        if adata_info and adata_info.get("industry_code"):
+            merged: dict[str, Any] = {
+                "name": (ak_info or {}).get("name"),
+                "industry_name": adata_info.get("industry_name"),
+                "industry_code": adata_info.get("industry_code"),
+                "market_cap": (ak_info or {}).get("market_cap"),
+            }
+            logger.info(
+                "[basic] adata 回退成功: symbol=%s 申万二级=%s → 代码=%s name=%s market_cap=%s",
+                symbol, adata_info.get("industry_name"), adata_info.get("industry_code"),
+                merged.get("name"), merged.get("market_cap"),
+            )
+            return merged
 
-    # 2b. adata 也失败：回退到 AKShare 的原始 info（保留 industry_code=None，
-    #     前端 isHotSector 会回退到 sectorName 名称匹配兜底）
-    if ak_info:
-        logger.warning(
-            "[basic] adata 回退失败，沿用 AKShare 原始结果（industry_code=None，前端走名称匹配）: symbol=%s",
-            symbol,
-        )
-        return ak_info
+        # 2b. adata 也失败：回退到 AKShare 的原始 info（保留 industry_code=None，
+        #     前端 isHotSector 会回退到 sectorName 名称匹配兜底）
+        if ak_info:
+            logger.warning(
+                "[basic] adata 回退失败，沿用 AKShare 原始结果（industry_code=None，前端走名称匹配）: symbol=%s",
+                symbol,
+            )
+            return ak_info
 
-    logger.warning("[basic] AKShare 与 adata 均不可用，返回 None: %s", symbol)
-    return None
+        logger.warning("[basic] AKShare 与 adata 均不可用，返回 None: %s", symbol)
+        return None
 
 
 def _fetch_individual_info_adata(symbol: str) -> dict[str, Any] | None:
@@ -492,30 +738,83 @@ def collect_basic(request: BasicCollectRequest) -> CollectResponse:
     """
     拉取单只股票基础信息。
 
-    数据源：
-    - AKShare stock_individual_info_em：name / industry_code / market_cap
-    - 腾讯实时行情 qt.gtimg.cn：price / pe / pb（替代东财被封接口）
+    数据源优先级（多路回退）：
+    - name: 腾讯行情 → AKShare → 其他
+    - industry_code: AKShare stock_individual_info_em → 雪球源 → 腾讯源
+    - price/pe/pb: 腾讯行情 qt.gtimg.cn
+    - market_cap: AKShare → 腾讯行情
     """
-    info = fetch_individual_info(request.symbol)
-    tq = fetch_tencent_quote(request.symbol)
+    with _timed_operation("route.collect_basic", symbol=request.symbol):
+        logger.info("[route] POST /api/collect/basic: symbol=%s", request.symbol)
+        try:
+            info = fetch_individual_info(request.symbol)
+            tq = fetch_tencent_quote(request.symbol)
 
-    data = BasicCollectData(
-        name=(info or {}).get("name"),
-        industry_code=(info or {}).get("industry_code"),
-        market_cap=(info or {}).get("market_cap") or (tq or {}).get("market_cap"),
-        price=(tq or {}).get("price"),
-        pe=(tq or {}).get("pe"),
-        pb=(tq or {}).get("pb"),
-    )
+            # ---- name 回退链 ----
+            # 1) 腾讯行情返回的 name（最可靠，已验证稳定）
+            stock_name = (tq or {}).get("name")
+            # 2) AKShare 返回的 name
+            if not stock_name:
+                stock_name = (info or {}).get("name")
+            if not stock_name:
+                logger.warning("[route] collect_basic name 缺失: symbol=%s", request.symbol)
 
-    return CollectResponse(
-        success=True,
-        symbol=request.symbol,
-        dimension="basic",
-        data=data.model_dump(),
-        records=1,
-        fetched_at=datetime.now().isoformat(),
-    )
+            # ---- industry_code 回退链 ----
+            industry_code = (info or {}).get("industry_code")
+            industry_name = (info or {}).get("industry_name")
+            # 1) AKShare 主路径未命中申万二级 → 启动回退源
+            if not industry_code:
+                fallback = fetch_industry_fallback(request.symbol)
+                if fallback:
+                    industry_code = fallback.get("industry_code")
+                    industry_name = fallback.get("industry_name")
+                    logger.info(
+                        "[route] collect_basic 行业回退命中: symbol=%s source=fallback industry=%s code=%s",
+                        request.symbol, industry_name, industry_code,
+                    )
+
+            data = BasicCollectData(
+                name=stock_name,
+                industry_code=industry_code,
+                market_cap=(info or {}).get("market_cap") or (tq or {}).get("market_cap"),
+                price=(tq or {}).get("price"),
+                pe=(tq or {}).get("pe"),
+                pb=(tq or {}).get("pb"),
+            )
+
+            # 检查数据源完整性
+            missing = []
+            if not data.name:
+                missing.append("name")
+            if not data.price:
+                missing.append("price")
+            if not data.industry_code:
+                missing.append("industry_code")
+            if not data.pe:
+                missing.append("pe")
+
+            if missing:
+                logger.warning(
+                    "[route] collect_basic 部分字段缺失: symbol=%s missing=%s data=%s",
+                    request.symbol, missing, _summarize_data(data.model_dump()),
+                )
+
+            logger.info(
+                "[route] collect_basic 完成: symbol=%s name=%s price=%.2f pe=%s pb=%s industry_code=%s missing=%d",
+                request.symbol, data.name, data.price or 0, data.pe, data.pb,
+                data.industry_code, len(missing),
+            )
+            return CollectResponse(
+                success=True,
+                symbol=request.symbol,
+                dimension="basic",
+                data=data.model_dump(),
+                records=1,
+                fetched_at=datetime.now().isoformat(),
+            )
+        except Exception as e:
+            logger.error("[route] collect_basic 异常: symbol=%s error=%s", request.symbol, e, exc_info=True)
+            raise
 
 
 # ---------------------------------------------------------------------------
@@ -558,47 +857,66 @@ def collect_kline(request: KlineCollectRequest) -> CollectResponse:
 
     数据源：腾讯 fqkline API（日级）/ kline API（分钟级）
     """
-    # 分钟级周期忽略 adjust
-    effective_adjust = request.adjust if request.period in _DAILY_PERIODS else ""
-
-    bars = fetch_tencent_kline(
-        request.symbol,
-        count=request.count,
-        period=request.period,
-        adjust=effective_adjust,
-        start_date=request.start_date,
-        end_date=request.end_date,
-    )
-    if not bars:
-        return CollectResponse(
-            success=False,
-            symbol=request.symbol,
-            dimension="kline",
-            error=f"腾讯K线API返回空或请求失败(period={request.period})",
-            fetched_at=datetime.now().isoformat(),
+    with _timed_operation("route.collect_kline", symbol=request.symbol, period=request.period, count=request.count):
+        logger.info(
+            "[route] POST /api/collect/kline: symbol=%s period=%s adjust=%s count=%d",
+            request.symbol, request.period, request.adjust, request.count,
         )
+        # 分钟级周期忽略 adjust
+        effective_adjust = request.adjust if request.period in _DAILY_PERIODS else ""
 
-    history: list[KlineBar] = [
-        KlineBar(
-            date=b["date"],
-            open=b["open"] or 0.0,
-            high=b["high"] or 0.0,
-            low=b["low"] or 0.0,
-            close=b["close"] or 0.0,
-            volume=b["volume"] or 0.0,
-            amount=b.get("amount") or 0.0,
-        )
-        for b in bars
-    ]
-    latest = history[-1] if history else None
-    return CollectResponse(
-        success=True,
-        symbol=request.symbol,
-        dimension="kline",
-        data=KlineCollectData(latest=latest, history=history).model_dump(),
-        records=len(history),
-        fetched_at=datetime.now().isoformat(),
-    )
+        try:
+            bars = fetch_tencent_kline(
+                request.symbol,
+                count=request.count,
+                period=request.period,
+                adjust=effective_adjust,
+                start_date=request.start_date,
+                end_date=request.end_date,
+            )
+            if not bars:
+                logger.warning(
+                    "[route] collect_kline 返回空: symbol=%s period=%s adjust=%s count=%d",
+                    request.symbol, request.period, effective_adjust, request.count,
+                )
+                return CollectResponse(
+                    success=False,
+                    symbol=request.symbol,
+                    dimension="kline",
+                    error=f"腾讯K线API返回空或请求失败(period={request.period})",
+                    fetched_at=datetime.now().isoformat(),
+                )
+
+            history: list[KlineBar] = [
+                KlineBar(
+                    date=b["date"],
+                    open=b["open"] or 0.0,
+                    high=b["high"] or 0.0,
+                    low=b["low"] or 0.0,
+                    close=b["close"] or 0.0,
+                    volume=b["volume"] or 0.0,
+                    amount=b.get("amount") or 0.0,
+                )
+                for b in bars
+            ]
+            latest = history[-1] if history else None
+            logger.info(
+                "[route] collect_kline 完成: symbol=%s period=%s bars=%d latest=%s close=%.2f",
+                request.symbol, request.period, len(history),
+                latest.date if latest else "N/A",
+                latest.close if latest else 0,
+            )
+            return CollectResponse(
+                success=True,
+                symbol=request.symbol,
+                dimension="kline",
+                data=KlineCollectData(latest=latest, history=history).model_dump(),
+                records=len(history),
+                fetched_at=datetime.now().isoformat(),
+            )
+        except Exception as e:
+            logger.error("[route] collect_kline 异常: symbol=%s period=%s error=%s", request.symbol, request.period, e, exc_info=True)
+            raise
 
 
 # ---------------------------------------------------------------------------
@@ -639,65 +957,97 @@ def fetch_real_financial_data(symbol: str) -> dict[str, Any] | None:
     """
     import akshare as ak
 
-    clean = symbol.split(".")[0].upper()
-    result: dict[str, Any] = {}
+    with _timed_operation("financial_data", symbol=symbol):
+        logger.info("[financial] 开始获取财务数据: symbol=%s", symbol)
+        clean = symbol.split(".")[0].upper()
+        result: dict[str, Any] = {}
 
-    # 1. 比率类指标（stock_financial_analysis_indicator）
-    try:
-        df = ak.stock_financial_analysis_indicator(symbol=clean, start_year="2023")
-        if df is not None and not df.empty:
-            latest = df.iloc[-1]
-            result["report_date"] = str(latest.get("日期", ""))
-            result["gross_margin"] = _safe_float(latest.get("销售毛利率(%)"))
-            result["net_margin"] = _safe_float(latest.get("销售净利率(%)"))
-            result["revenue_yoy"] = _safe_float(latest.get("主营业务收入增长率(%)"))
-            result["net_profit_yoy"] = _safe_float(latest.get("净利润增长率(%)"))
-            result["inventory_turnover_days"] = _safe_float(latest.get("存货周转天数(天)"))
-            total_assets = _safe_float(latest.get("总资产(元)"))
-            debt_ratio = _safe_float(latest.get("资产负债率(%)"))
-            if total_assets and debt_ratio is not None:
-                result["net_assets"] = total_assets * (1 - debt_ratio / 100)
-                result["interest_bearing_debt"] = total_assets * debt_ratio / 100
-    except Exception as e:
-        logger.warning("[financial] stock_financial_analysis_indicator 失败: %s, %s", symbol, e)
+        # 1. 比率类指标（stock_financial_analysis_indicator）
+        try:
+            t0 = time.perf_counter()
+            df = ak.stock_financial_analysis_indicator(symbol=clean, start_year="2023")
+            elapsed_ms = (time.perf_counter() - t0) * 1000
+            if df is not None and not df.empty:
+                latest = df.iloc[-1]
+                result["report_date"] = str(latest.get("日期", ""))
+                result["gross_margin"] = _safe_float(latest.get("销售毛利率(%)"))
+                result["net_margin"] = _safe_float(latest.get("销售净利率(%)"))
+                result["revenue_yoy"] = _safe_float(latest.get("主营业务收入增长率(%)"))
+                result["net_profit_yoy"] = _safe_float(latest.get("净利润增长率(%)"))
+                result["inventory_turnover_days"] = _safe_float(latest.get("存货周转天数(天)"))
+                total_assets = _safe_float(latest.get("总资产(元)"))
+                debt_ratio = _safe_float(latest.get("资产负债率(%)"))
+                if total_assets and debt_ratio is not None:
+                    result["net_assets"] = total_assets * (1 - debt_ratio / 100)
+                    result["interest_bearing_debt"] = total_assets * debt_ratio / 100
+                logger.debug(
+                    "[financial] stock_financial_analysis_indicator 成功: symbol=%s rows=%d elapsed=%.1fms report_date=%s net_margin=%.2f revenue_yoy=%.2f",
+                    symbol, len(df), elapsed_ms, result.get("report_date"), result.get("net_margin") or 0, result.get("revenue_yoy") or 0,
+                )
+            else:
+                logger.warning("[financial] stock_financial_analysis_indicator 返回空: symbol=%s elapsed=%.1fms", symbol, elapsed_ms)
+        except Exception as e:
+            logger.error("[financial] stock_financial_analysis_indicator 失败: symbol=%s error=%s", symbol, e, exc_info=True)
 
-    # 2. 绝对值指标（stock_financial_abstract）
-    try:
-        df2 = ak.stock_financial_abstract(symbol=clean)
-        if df2 is not None and not df2.empty:
-            date_cols = [c for c in df2.columns if c not in ("选项", "指标")]
-            if date_cols:
-                latest_col = date_cols[0]
-                for _, row in df2.iterrows():
-                    metric = str(row["指标"]).strip()
-                    val = _safe_float(row[latest_col])
-                    if val is None:
-                        continue
-                    if metric == "营业总收入":
-                        result.setdefault("revenue", val)
-                    elif metric == "归母净利润":
-                        result.setdefault("net_profit", val)
-                    elif metric == "净利润" and "net_profit" not in result:
-                        result.setdefault("net_profit", val)
-                    elif "经营活动产生的现金流量净额" in metric or metric == "经营活动现金流量净额":
-                        result.setdefault("operating_cf", val)
-                    elif metric == "应收账款":
-                        result.setdefault("receivables", val)
-                    elif metric in ("股东权益合计", "归属于母公司股东权益合计"):
-                        result.setdefault("net_assets", val)
-                    elif metric == "商誉":
-                        result.setdefault("goodwill", val)
-                    elif metric == "负债合计":
-                        result.setdefault("interest_bearing_debt", val)
-                    elif metric == "研发费用":
-                        result["_rd_expense"] = val
-                if "_rd_expense" in result and result.get("revenue"):
-                    result["rd_ratio"] = round(result["_rd_expense"] / result["revenue"] * 100, 2)
-                    result.pop("_rd_expense", None)
-    except Exception as e:
-        logger.warning("[financial] stock_financial_abstract 失败: %s, %s", symbol, e)
+        # 2. 绝对值指标（stock_financial_abstract）
+        try:
+            t1 = time.perf_counter()
+            df2 = ak.stock_financial_abstract(symbol=clean)
+            elapsed2_ms = (time.perf_counter() - t1) * 1000
+            if df2 is not None and not df2.empty:
+                date_cols = [c for c in df2.columns if c not in ("选项", "指标")]
+                if date_cols:
+                    latest_col = date_cols[0]
+                    for _, row in df2.iterrows():
+                        metric = str(row["指标"]).strip()
+                        val = _safe_float(row[latest_col])
+                        if val is None:
+                            continue
+                        if metric == "营业总收入":
+                            result.setdefault("revenue", val)
+                        elif metric == "归母净利润":
+                            result.setdefault("net_profit", val)
+                        elif metric == "净利润" and "net_profit" not in result:
+                            result.setdefault("net_profit", val)
+                        elif "经营活动产生的现金流量净额" in metric or metric == "经营活动现金流量净额":
+                            result.setdefault("operating_cf", val)
+                        elif metric == "应收账款":
+                            result.setdefault("receivables", val)
+                        elif metric in ("股东权益合计", "归属于母公司股东权益合计"):
+                            result.setdefault("net_assets", val)
+                        elif metric == "商誉":
+                            result.setdefault("goodwill", val)
+                        elif metric == "负债合计":
+                            result.setdefault("interest_bearing_debt", val)
+                        elif metric == "研发费用":
+                            result["_rd_expense"] = val
+                    if "_rd_expense" in result and result.get("revenue"):
+                        result["rd_ratio"] = round(result["_rd_expense"] / result["revenue"] * 100, 2)
+                        result.pop("_rd_expense", None)
+                logger.debug(
+                    "[financial] stock_financial_abstract 成功: symbol=%s rows=%d elapsed=%.1fms revenue=%s net_profit=%s rd_ratio=%s",
+                    symbol, len(df2), elapsed2_ms,
+                    f"{result.get('revenue', 0):.0f}" if result.get("revenue") else "N/A",
+                    f"{result.get('net_profit', 0):.0f}" if result.get("net_profit") else "N/A",
+                    result.get("rd_ratio"),
+                )
+            else:
+                logger.warning("[financial] stock_financial_abstract 返回空: symbol=%s", symbol)
+        except Exception as e:
+            logger.error("[financial] stock_financial_abstract 失败: symbol=%s error=%s", symbol, e, exc_info=True)
 
-    return result if result else None
+        if result:
+            logger.info(
+                "[financial] 财务数据获取成功: symbol=%s revenue=%s net_profit=%s net_margin=%s report_date=%s",
+                symbol,
+                f"{result.get('revenue', 0):.0f}" if result.get("revenue") else "N/A",
+                f"{result.get('net_profit', 0):.0f}" if result.get("net_profit") else "N/A",
+                f"{result.get('net_margin', 0):.2f}%" if result.get("net_margin") else "N/A",
+                result.get("report_date", "N/A"),
+            )
+        else:
+            logger.warning("[financial] 财务数据全部为空: symbol=%s", symbol)
+        return result if result else None
 
 
 def _collect_financial_llm(symbol: str) -> CollectResponse:
@@ -752,34 +1102,60 @@ def collect_financial(request: FinancialCollectRequest) -> CollectResponse:
     - AKShare stock_financial_analysis_indicator：比率类指标（毛利率/净利率/ROE/增长率）
     - AKShare stock_financial_abstract：绝对值指标（营收/净利润/现金流/净资产）
     """
-    if request.use_llm:
-        return _collect_financial_llm(request.symbol)
+    with _timed_operation("route.collect_financial", symbol=request.symbol, use_llm=request.use_llm):
+        logger.info("[route] POST /api/collect/financial: symbol=%s use_llm=%s", request.symbol, request.use_llm)
+        try:
+            if request.use_llm:
+                logger.info("[route] collect_financial 走 LLM 路径: symbol=%s", request.symbol)
+                return _collect_financial_llm(request.symbol)
 
-    real_data = fetch_real_financial_data(request.symbol)
-    if real_data is None:
-        return CollectResponse(
-            success=False,
-            symbol=request.symbol,
-            dimension="financial",
-            error="AKShare 财务数据获取失败",
-            fetched_at=datetime.now().isoformat(),
-        )
+            real_data = fetch_real_financial_data(request.symbol)
+            if real_data is None:
+                logger.warning("[route] collect_financial 数据为空: symbol=%s", request.symbol)
+                return CollectResponse(
+                    success=False,
+                    symbol=request.symbol,
+                    dimension="financial",
+                    error="AKShare 财务数据获取失败",
+                    fetched_at=datetime.now().isoformat(),
+                )
 
-    valid_fields = {
-        "report_date", "revenue", "revenue_yoy", "net_profit", "net_profit_yoy",
-        "gross_margin", "net_margin", "operating_cf", "rd_ratio",
-        "receivables", "inventory_turnover_days", "interest_bearing_debt",
-        "goodwill", "net_assets", "shareholder_pledge",
-    }
-    filtered = {k: v for k, v in real_data.items() if k in valid_fields}
-    return CollectResponse(
-        success=True,
-        symbol=request.symbol,
-        dimension="financial",
-        data=FinancialCollectData(**filtered).model_dump(),
-        records=1,
-        fetched_at=datetime.now().isoformat(),
-    )
+            valid_fields = {
+                "report_date", "revenue", "revenue_yoy", "net_profit", "net_profit_yoy",
+                "gross_margin", "net_margin", "operating_cf", "rd_ratio",
+                "receivables", "inventory_turnover_days", "interest_bearing_debt",
+                "goodwill", "net_assets", "shareholder_pledge",
+            }
+            filtered = {k: v for k, v in real_data.items() if k in valid_fields}
+
+            # 检查关键字段完整性
+            key_fields = ["revenue", "net_profit", "net_margin", "report_date"]
+            missing = [f for f in key_fields if not filtered.get(f)]
+            if missing:
+                logger.warning(
+                    "[route] collect_financial 关键字段缺失: symbol=%s missing=%s data=%s",
+                    request.symbol, missing, _summarize_data(filtered),
+                )
+
+            logger.info(
+                "[route] collect_financial 完成: symbol=%s revenue=%s net_profit=%s net_margin=%s report_date=%s",
+                request.symbol,
+                f"{filtered.get('revenue', 0):.0f}" if filtered.get("revenue") else "N/A",
+                f"{filtered.get('net_profit', 0):.0f}" if filtered.get("net_profit") else "N/A",
+                f"{filtered.get('net_margin', 0):.2f}%" if filtered.get("net_margin") else "N/A",
+                filtered.get("report_date", "N/A"),
+            )
+            return CollectResponse(
+                success=True,
+                symbol=request.symbol,
+                dimension="financial",
+                data=FinancialCollectData(**filtered).model_dump(),
+                records=1,
+                fetched_at=datetime.now().isoformat(),
+            )
+        except Exception as e:
+            logger.error("[route] collect_financial 异常: symbol=%s error=%s", request.symbol, e, exc_info=True)
+            raise
 
 
 # ---------------------------------------------------------------------------

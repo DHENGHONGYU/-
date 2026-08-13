@@ -20,16 +20,16 @@ export default function MarketSentimentWidget({ config }: MarketSentimentWidgetP
   const loading = loadingMap[config.instanceId] ?? true
   const error = errorMap[config.instanceId]
 
-  const visualState = error
+  const visualState = (error ?? '') !== ''
     ? 'error'
-    : loading
+    : (loading ?? false) === true
       ? 'loading'
-      : !sentiment
+      : sentiment == null
         ? 'empty'
         : 'ready'
 
   const content = (() => {
-    if (!sentiment) return null
+    if (sentiment == null) return null
 
     const upPercent = ((sentiment.up / sentiment.totalStocks) * 100).toFixed(0)
     const downPercent = ((sentiment.down / sentiment.totalStocks) * 100).toFixed(0)

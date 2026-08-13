@@ -246,8 +246,7 @@ export const MOCK_COLLECTOR_CONFIG = {
 /** REST 采集器配置 */
 export const REST_COLLECTOR_CONFIG = {
   /** 基础 API URL */
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || '/api',
+  BASE_URL: import.meta.env.VITE_API_BASE_URL ?? '/api',
   /** 默认请求头 */
   DEFAULT_HEADERS: {
     'Content-Type': 'application/json',
@@ -258,8 +257,7 @@ export const REST_COLLECTOR_CONFIG = {
 /** WebSocket 采集器配置 */
 export const WEBSOCKET_COLLECTOR_CONFIG = {
   /** WebSocket URL */
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  WS_URL: import.meta.env.VITE_WS_URL || 'ws://localhost:8080/ws',
+  WS_URL: import.meta.env.VITE_WS_URL ?? 'ws://localhost:8080/ws',
   /** 重连间隔（毫秒） */
   RECONNECT_INTERVAL: 3000,
   /** 最大重连次数 */
@@ -269,8 +267,7 @@ export const WEBSOCKET_COLLECTOR_CONFIG = {
 /** 环境变量驱动的数据源类型
  * @remarks 开发环境默认 mock，生产环境可配置为 rest 或 websocket
  */
-// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-export const ACTIVE_DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE_TYPE || DATA_SOURCE_TYPE.MOCK
+export const ACTIVE_DATA_SOURCE = import.meta.env.VITE_DATA_SOURCE_TYPE ?? DATA_SOURCE_TYPE.MOCK
 
 /** 各 Widget 默认数据源配置
  * @remarks 新增 5 个金融业务 Widget 的数据源配置

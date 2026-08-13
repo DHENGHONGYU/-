@@ -14,11 +14,11 @@ export interface SheetProps extends HTMLAttributes<HTMLDivElement> {
 export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
   ({ className, open, onOpenChange, side = 'right', children, ...props }, ref) => {
     const internalRef = useRef<HTMLDivElement>(null)
-    const sheetRef = (ref as React.RefObject<HTMLDivElement>) || internalRef
+    const sheetRef = (ref as React.RefObject<HTMLDivElement>) != null ? (ref as React.RefObject<HTMLDivElement>) : internalRef
 
     useEffect(() => {
       const handleEscape = (e: KeyboardEvent) => {
-        if (e.key === 'Escape' && open) {
+        if (e.key === 'Escape' && (open ?? false) === true) {
           onOpenChange?.(false)
         }
       }
@@ -35,7 +35,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
         'inset-x-0 bottom-0 w-full h-auto max-h-[50vh] data-[state=open]:animate-in data-[state=open]:slide-in-from-bottom',
     }
 
-    if (!open) return <></>
+    if ((open ?? false) !== true) return <></>
 
     return (
       <div className="fixed inset-0 z-50">
@@ -46,7 +46,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
         />
         <div
           ref={sheetRef}
-          data-state={open ? 'open' : 'closed'}
+          data-state={(open ?? false) === true ? 'open' : 'closed'}
           className={cn(
             'fixed z-50 gap-4 bg-background p-6 shadow-lg',
             sideClasses[side],

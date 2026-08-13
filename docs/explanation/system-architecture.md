@@ -76,6 +76,10 @@ change_log:
 │  store/        ← 状态层（Zustand，withBroadcast 跨 Tab 广播）  │
 │  services/     ← 服务层（27 业务子域，经 DataBridge 写数据）   │
 ├──────────────────────────────────────────────────────────────┤
+│  domain/       ← 共享业务纯函数层（无 IO/无副作用，跨层复用）   │
+│                  scoring/energy, trading/markers,              │
+│                  collection/pipeline, export/...               │
+├──────────────────────────────────────────────────────────────┤
 │  core/         ← 数据治理层（DataBridge / Envelope / ACL /     │
 │                    MemoryCache / EventBus / 级联与管道编排）    │
 ├──────────────────────────────────────────────────────────────┤
@@ -91,12 +95,13 @@ change_log:
 
 | 层 | 可依赖 | 禁止依赖 |
 |----|--------|----------|
-| `pages/` `components/` | `store/` `services/` | 直接调用 `dataLayer` / `db` |
-| `store/` | `services/` `core/` | 直接写 `db`（须经 DataBridge） |
-| `services/` | `core/` `data/` `lib/`（仅基础设施白名单） | 直接写 `db`（经 `DataBridge.forward()`） |
-| `lib/` | `core/` `config/` | `services/` `store/` `pages/` `components/` |
-| `core/` | `types/` | `pages/` `components/` `lib/`（业务模块） |
-| `config/` | — | `services/` `pages/` `components/` `lib/` |
+| `pages/` `components/` | `store/` `services/` `domain/` | 直接调用 `dataLayer` / `db` |
+| `store/` | `services/` `core/` `domain/` | 直接写 `db`（须经 DataBridge） |
+| `services/` | `core/` `data/` `lib/`（仅基础设施白名单）`domain/` | 直接写 `db`（经 `DataBridge.forward()`） |
+| `domain/` | `lib/` `data/types/` `config/` `constants/` | `services/` `store/` `pages/` `components/` `core/` |
+| `lib/` | `core/` `config/` | `services/` `store/` `pages/` `components/` `domain/` |
+| `core/` | `types/` | `pages/` `components/` `lib/`（业务模块） `domain/` |
+| `config/` | — | `services/` `pages/` `components/` `lib/` `domain/` |
 | `constants/` `types/` | — | 任何运行时模块 |
 
 > **门禁**：`npm run audit:layers` 校验跨层调用；`npm run audit:atomic` 校验原子组件层级边界（atom 不引 store/service/molecule，molecule 不引 organism/template/store/service，template 不引 organism/store/service）。

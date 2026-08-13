@@ -50,8 +50,8 @@ function formatRelativeTime(timestamp: number): string {
 function getStepperPhase(plan: ExecutionPlan): ExecutionPhase {
   if (plan.phase !== 'cancelled') return plan.phase
   // 根据时间戳推断取消前最后到达的阶段
-  if (plan.executedAt) return 'pending'
-  if (plan.confirmedAt) return 'confirmed'
+  if ((plan.executedAt ?? 0) > 0) return 'pending'
+  if ((plan.confirmedAt ?? 0) > 0) return 'confirmed'
   return 'plan'
 }
 
@@ -179,7 +179,7 @@ export function ExecutionPlanCard({
         )}
 
         {/* 错误信息 */}
-        {plan.errorMessage && (
+        {(plan.errorMessage ?? '') !== '' && (
           <p className={`text-xs ${COLOR_SHADES.red[600]} ${COLOR_SHADES.red[50]} rounded-md px-2 py-1.5 border ${COLOR_SHADES.red[200]}`}>
             {plan.errorMessage}
           </p>

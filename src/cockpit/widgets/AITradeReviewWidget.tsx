@@ -20,16 +20,16 @@ export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps
   const loading = loadingMap[config.instanceId] ?? true
   const error = errorMap[config.instanceId]
 
-  const visualState = error
+  const visualState = (error ?? '') !== ''
     ? 'error'
-    : loading
+    : (loading ?? false) === true
       ? 'loading'
-      : !tradeReview
+      : tradeReview == null
         ? 'empty'
         : 'ready'
 
   const content = (() => {
-    if (!tradeReview) return null
+    if (tradeReview == null) return null
 
     return (
       <div className="space-y-4">

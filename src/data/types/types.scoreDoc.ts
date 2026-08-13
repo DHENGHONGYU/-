@@ -143,6 +143,36 @@ export interface StrategyGroupSnapshot {
 }
 
 /**
+ * 策略分组单项（策略快照内标的明细）
+ *
+ * 由 strategySnapshotService.classifyStocks 生成，用于策略导出、展示和回测。
+ * 原 @/services/trading/strategySnapshotService.ts 定义，P1-12 迁移到 data/types
+ * 以解除 domain/export 对 services 的类型依赖。
+ */
+export interface StrategyGroupItem {
+  /** 股票代码 */
+  symbol: string
+  /** 股票名称 */
+  name: string
+  /** 综合评分 */
+  composite: number
+  /** L3b 估值水平评分 */
+  l3v: number
+  /** L1 护城河评分 */
+  l1Score?: number
+  /** L3a 财务健康评分 */
+  l3fScore?: number
+  /** L7 第二曲线评分 */
+  l7Score?: number
+  /** 板块共振系数 */
+  resonance?: number
+  /** 策略分类 */
+  classification: 'core' | 'hot' | 'value'
+  /** 入选原因列表 */
+  reasons: string[]
+}
+
+/**
  * 策略快照
  *
  * 记录某一时间点的策略分组状态，包含核心/热门/价值三个分组的股票列表

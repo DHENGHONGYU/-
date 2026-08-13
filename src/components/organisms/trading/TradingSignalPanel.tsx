@@ -67,7 +67,7 @@ function MiniKlineChart({ signal }: { signal: Signal }): React.JSX.Element {
         <polyline points={pts} fill="none" stroke={color} strokeWidth="1.5" strokeLinejoin="round" />
         <circle cx={pad + (w - pad * 2)} cy={h - pad - ((last - min) / range) * (h - pad * 2)} r="2.5" fill={color} />
       </svg>
-      {snap.klinePattern && (
+      {(snap.klinePattern ?? '') !== '' && (
         <span className="text-[10px] text-muted-foreground">{snap.klinePattern}</span>
       )}
     </div>
@@ -226,7 +226,11 @@ function SignalCard({
                 {directionLabel}
               </Badge>
               <span className="font-semibold text-sm">{signal.symbol}</span>
-              {stock?.name && <span className="text-xs text-muted-foreground">{stock.name}</span>}
+              {(() => {
+                const stockName = stock?.name ?? ''
+                if (stockName === '') return null
+                return <span className="text-xs text-muted-foreground">{stockName}</span>
+              })()}
               {signal.type === 'mock' && <Badge variant="outline" className={cn('text-[9px] px-1 py-0', COLOR_SHADES.amber[600], COLOR_SHADES.amber[300])}>mock</Badge>}
             </div>
             <div className="mt-1 flex items-center gap-3 text-xs">
@@ -359,7 +363,7 @@ export function TradingSignalPanel({
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <Badge className={cn('text-[10px] px-1.5 py-0 shrink-0', isBuy && cn(COLOR_SHADES.red[50], COLOR_SHADES.red[700], COLOR_SHADES.red[200]), isSell && cn(COLOR_SHADES.green[50], COLOR_SHADES.green[700], COLOR_SHADES.green[200]), !isBuy && !isSell && cn(COLOR_SHADES.slate[50], COLOR_SHADES.slate[500], COLOR_SHADES.slate[200]))}>{isBuy ? '买入' : isSell ? '卖出' : signal.direction === 'hold' ? '持有' : '观察'}</Badge>
                     <span className="font-medium text-sm">{signal.symbol}</span>
-                    {stock?.name && <span className="text-xs text-muted-foreground truncate">{stock.name}</span>}
+                    {(stock?.name ?? '') !== '' && <span className="text-xs text-muted-foreground truncate">{stock!.name}</span>}
                     <span className="text-xs text-muted-foreground shrink-0">置信度 {signal.confidence}%</span>
                   </div>
                   <Button size="sm" variant="ghost" className="h-7 text-xs shrink-0" onClick={() => handleCreateOrder({ symbol: signal.symbol, direction: signal.direction })}>下单</Button>
