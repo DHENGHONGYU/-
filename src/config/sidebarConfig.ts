@@ -111,7 +111,7 @@ export const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
     {
       group: '市场研究',
       items: [
-        { key: 'sector', label: '行业分析', path: '/analysis/sector', icon: Database },
+        { key: 'sector', label: '行业全景', path: '/analysis/industry-dashboard', icon: Database },
         { key: 'news', label: '智能资讯', path: '/analysis/news', icon: Newspaper },
         { key: 'backtest', label: '策略回测', path: '/analysis/backtest', icon: TrendingUp },
       ],

@@ -363,11 +363,13 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
   },
 
   // 分析舱子页面（统一通过 PortalShell → AnalysisApp 分发，保持 TopBar + Sidebar 导航）
+  // 注：/analysis/sector 已废弃，SectorAnalysisPage 是 IndustryDashboardPage 的功能子集，
+  //     旧路由统一由 AnalysisApp 内部重定向到 /analysis/industry-dashboard
   {
     path: '/analysis/sector',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'analysis',
-    description: '行业与板块分析',
+    description: '行业分析（已合并到行业全景仪表盘，自动重定向）',
   },
   {
     path: '/analysis/backtest',
