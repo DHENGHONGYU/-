@@ -86,7 +86,7 @@ export function CockpitCrossLayout({
       const meta = instanceMetaMap.get(inst.instanceId)
       if (meta?.domain && meta?.perspective) {
         const key = `${meta.domain}:${meta.perspective}`
-        counts.set(key, (counts.get(key) || 0) + 1)
+        counts.set(key, (counts.get(key) ?? 0) + 1)
       }
     }
     return counts
@@ -113,7 +113,7 @@ export function CockpitCrossLayout({
     for (const inst of instances) {
       const meta = instanceMetaMap.get(inst.instanceId)
       if (meta?.domain) {
-        counts.set(meta.domain, (counts.get(meta.domain) || 0) + 1)
+        counts.set(meta.domain, (counts.get(meta.domain) ?? 0) + 1)
       }
     }
     return counts
@@ -172,7 +172,7 @@ export function CockpitCrossLayout({
         <nav className="flex flex-col gap-1 px-3">
           {COCKPIT_CROSS_DOMAINS.map((domain) => {
             const isActive = activeDomain === domain.id
-            const domainCount = domainCounts.get(domain.id) || 0
+            const domainCount = domainCounts.get(domain.id) ?? 0
 
             return (
               <button
@@ -227,7 +227,7 @@ export function CockpitCrossLayout({
           <TabsList className="h-9">
             {COCKPIT_CROSS_PERSPECTIVES.map((p) => {
               const key = `${activeDomain}:${p.id}`
-              const count = matrixCounts.get(key) || 0
+              const count = matrixCounts.get(key) ?? 0
               return (
                 <TabsTrigger
                   key={p.id}
