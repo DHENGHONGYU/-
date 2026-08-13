@@ -1,5 +1,6 @@
 import { memo, useEffect, useMemo } from 'react'
 import { Link } from 'react-router'
+import { Wallet } from 'lucide-react'
 import { useTradingStore } from '@/store/tradingStore'
 import { usePortfolioStore } from '@/store/portfolioStore'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
@@ -77,6 +78,14 @@ const PortfolioPage = memo(() => {
         <PageHeader
           title="投资组合"
           description="资金双轨配置（30% 耐心资本 + 70% 博收益）+ 核心组合管理 + 双因子评估"
+          actions={
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/trading/holdings">
+                <Wallet className="mr-2 h-4 w-4" />
+                持仓明细
+              </Link>
+            </Button>
+          }
         />
 
         {/* 资金管理双轨配置（30/70 分仓 + KPI 考核 + 大跌应对纪律） */}

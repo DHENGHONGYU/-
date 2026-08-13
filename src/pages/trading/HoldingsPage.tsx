@@ -14,7 +14,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import type React from 'react'
 import { Link } from 'react-router'
-import { FileText } from 'lucide-react'
+import { FileText, TrendingUp } from 'lucide-react'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,6 +22,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
+import { Button } from '@/components/atoms/Button'
 import { useToast } from '@/hooks/useToast'
 import HoldingsFilter from './components/HoldingsFilter'
 import HoldingsTable from './components/HoldingsTable'
@@ -271,9 +272,17 @@ export default function HoldingsPage(): React.JSX.Element {
         title="交易持仓管理"
         description="统一管理投资组合持仓，支持策略评分对比与资产配置全局视图"
         actions={
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <FileText className="h-4 w-4" />
-            共 {pagination.total} 条持仓记录
+          <div className="flex items-center gap-3">
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/trading/portfolio">
+                <TrendingUp className="mr-2 h-4 w-4" />
+                组合视角
+              </Link>
+            </Button>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <FileText className="h-4 w-4" />
+              共 {pagination.total} 条持仓记录
+            </div>
           </div>
         }
       />
