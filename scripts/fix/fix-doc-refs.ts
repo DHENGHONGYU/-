@@ -104,8 +104,8 @@ const HISTORICAL_DOC_PATTERNS = [
   /^docs\/04-testing\/audit-reports\//,
   /^docs\/07-archive\//,
   /^docs\/[^/]+\/DEPRECATED_/,
-  /^docs\/00-meta\/.*-report\.md$/,
-  /^docs\/00-meta\/23.*\.md$/,
+  /^docs\/meta\/.*-report\.md$/,
+  /^docs\/meta\/23.*\.md$/,
 ]
 
 // 构建目标注册表时跳过的重型 / 无关目录

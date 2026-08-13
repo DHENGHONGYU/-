@@ -435,17 +435,17 @@ async function main(): Promise<void> {
       'B3',
       'B',
       '触发→动作映射表（单一事实源）',
-      'docs/00-meta/doc-trigger-action-map.md 存在且含映射章节',
-      fileHas('docs/00-meta/doc-trigger-action-map.md', /触发/) &&
-        fileHas('docs/00-meta/doc-trigger-action-map.md', /动作/)
+      'docs/meta/doc-trigger-action-map.md 存在且含映射章节',
+      fileHas('docs/meta/doc-trigger-action-map.md', /触发/) &&
+        fileHas('docs/meta/doc-trigger-action-map.md', /动作/)
         ? 'active'
-        : fileHas('docs/00-meta/doc-trigger-action-map.md', /./)
+        : fileHas('docs/meta/doc-trigger-action-map.md', /./)
           ? 'partial'
           : 'inactive',
       [
         {
-          file: 'docs/00-meta/doc-trigger-action-map.md',
-          detail: fileHas('docs/00-meta/doc-trigger-action-map.md', /./) ? '存在 ✔' : '缺失',
+          file: 'docs/meta/doc-trigger-action-map.md',
+          detail: fileHas('docs/meta/doc-trigger-action-map.md', /./) ? '存在 ✔' : '缺失',
         },
       ],
     ),

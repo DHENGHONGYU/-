@@ -66,7 +66,7 @@ def main(ctx):
         f.write(content2)
     
     # 3. 更新体检报告
-    rpt_path = os.path.join(base, "docs/00-meta/文档体系体检报告-v9.md")
+    rpt_path = os.path.join(base, "docs/meta/文档体系体检报告-v9.md")
     with open(rpt_path, 'r', encoding='utf-8') as f:
         rpt = f.read()
     

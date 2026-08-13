@@ -17,7 +17,7 @@ const A_H_MAP: CategoryMap[] = [
     category: 'A',
     name: '导航与治理',
     subCategories: [
-      { id: 'A1', name: '索引与宪法', directories: ['00-meta'] },
+      { id: 'A1', name: '索引与宪法', directories: ['meta'] },
       { id: 'A2', name: '需求规格', directories: ['01-requirements'] },
       { id: 'A3', name: '插件集成', directories: ['03-development/plugins'] }
     ]
@@ -138,7 +138,7 @@ function createRootIndex(): void {
   content += `---\n\n`;
   content += `## 快速导航\n\n`;
   content += `- [数字编码目录结构](../README.md)\n`;
-  content += `- [文档治理宪法](00-meta/governance.md)\n`;
+  content += `- [文档治理宪法](meta/governance.md)\n`;
   
   writeFileSync(join(DOCS_DIR, 'a-h-index.md'), content, 'utf-8');
 }

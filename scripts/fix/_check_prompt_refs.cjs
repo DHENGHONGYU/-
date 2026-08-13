@@ -1,5 +1,5 @@
 const fs = require('fs');
-const dir = 'docs/00-meta';
+const dir = 'docs/meta';
 const files = fs.readdirSync(dir).filter(f => /[\u4e00-\u9fa5]/.test(f));
 for (const f of files) {
   const content = fs.readFileSync(dir + '/' + f, 'utf8');

@@ -16,7 +16,7 @@ function createMigrationMap(): MigrationItem[] {
   const items: MigrationItem[] = [];
   
   const mappings: Record<string, string> = {
-    '00-meta/': 'reference/meta/',
+    'meta/': 'reference/meta/',
     '02-design/': 'explanation/design/',
     '04-testing/': 'how-to/testing/',
     '06-project-management/': 'reference/project/',
@@ -106,7 +106,7 @@ function createRedirectMarkdown(oldPath: string, newPath: string): void {
 }
 
 function updateRegistryIndex(): void {
-  const registryPath = path.join(DOCS_DIR, '00-meta', 'registry-index.md');
+  const registryPath = path.join(DOCS_DIR, 'meta', 'registry-index.md');
   
   if (!fs.existsSync(registryPath)) {
     console.log('⚠️ registry-index.md 不存在');
@@ -117,7 +117,7 @@ function updateRegistryIndex(): void {
   let updatedContent = content;
   
   const pathMappings: Record<string, string> = {
-    '../00-meta/': '../reference/meta/',
+    '../meta/': '../reference/meta/',
     '../02-design/': '../explanation/design/',
     '../04-testing/': '../how-to/testing/',
     '../06-project-management/': '../reference/project/',
@@ -172,7 +172,7 @@ function main() {
   migrations.forEach(item => {
     const relativeSource = item.source.replace(DOCS_DIR + '\\', '');
     
-    if (!relativeSource.startsWith('00-meta')) {
+    if (!relativeSource.startsWith('meta')) {
       createRedirectMarkdown(
         path.join(DOCS_DIR, relativeSource),
         path.join(DOCS_DIR, item.destination.replace(DOCS_DIR + '\\', ''))

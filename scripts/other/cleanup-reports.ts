@@ -3,7 +3,7 @@
  * cleanup-reports.ts
  * 清理过期自动产物
  *
- * 按 docs/00-meta/cleanup-schedule.md 定义的保留期规则，删除超过保留期的文件和目录。
+ * 按 docs/meta/cleanup-schedule.md 定义的保留期规则，删除超过保留期的文件和目录。
  *
  * 安全策略：
  * - 仅清理 RULES 中显式配置的目录
