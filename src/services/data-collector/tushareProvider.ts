@@ -115,7 +115,7 @@ function getTushareToken(): string | null {
   if (typeof globalThis.__TUSHARE_TOKEN__ === 'string' && globalThis.__TUSHARE_TOKEN__) {
     return globalThis.__TUSHARE_TOKEN__
   }
-  if (import.meta?.env?.VITE_TUSHARE_TOKEN) {
+  if ((import.meta?.env?.VITE_TUSHARE_TOKEN ?? '') !== '') {
     return import.meta.env.VITE_TUSHARE_TOKEN
   }
   return null
@@ -144,13 +144,13 @@ export async function tushareRequest(
 ): Promise<Record<string, unknown>[]> {
   lastTushareError = null // 每次调用先清空，确保仅反映本次调用结果
   const token = getTushareToken()
-  if (!token) {
+  if ((token ?? '') === '') {
     lastTushareError = { apiName, code: -2, msg: 'Tushare Token 未配置' }
     logger.warn('[tushareProvider] Token 未配置，跳过 Tushare 调用', { apiName })
     throw new TushareProviderError('Tushare Token 未配置', 'TOKEN_MISSING', apiName)
   }
 
-  const body: TushareRequest = { api_name: apiName, token, params, fields }
+  const body: TushareRequest = { api_name: apiName, token: token ?? '', params, fields }
 
   // 解析当前环境适用的 Tushare API URL（浏览器走 Vite 代理，Node 直连）
   const url = resolveTushareUrl()
@@ -221,8 +221,9 @@ export function fromTushareCode(tsCode: string): string {
 /** 01 股票基本信息：stock_basic */
 export async function tushareStockBasic(symbol?: string): Promise<Record<string, unknown>[]> {
   const params: Record<string, string | number | string[]> = {}
-  if (symbol) {
-    params.ts_code = toTushareCode(symbol)
+  const sym = symbol ?? ''
+  if (sym !== '') {
+    params.ts_code = toTushareCode(sym)
   }
   return tushareRequest('stock_basic', params, 'ts_code,name,industry,list_date,list_status')
 }

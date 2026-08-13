@@ -402,7 +402,7 @@ export class LiveCollector extends BaseCollector {
     logger.info('[LiveCollector] 开始采集热点新闻', { symbol })
 
     const news = [
-      { title: `${WATCHLIST_NAMES[symbol] || '股票'}发布季度财报，业绩超预期`, summary: '公司今日发布财报，净利润同比增长35%', source: '财经头条', url: '#', publishedAt: Date.now() - 3600000 },
+      { title: `${(WATCHLIST_NAMES[symbol] ?? '股票')}发布季度财报，业绩超预期`, summary: '公司今日发布财报，净利润同比增长35%', source: '财经头条', url: '#', publishedAt: Date.now() - 3600000 },
       { title: '行业政策利好，板块集体上涨', summary: '相关政策落地，行业迎来发展机遇', source: '证券时报', url: '#', publishedAt: Date.now() - 7200000 },
       { title: '机构调研纪要：看好中长期发展', summary: '多家机构调研后表示长期看好', source: '东方财富', url: '#', publishedAt: Date.now() - 4 * HOUR_MS },
     ]
@@ -420,7 +420,7 @@ export class LiveCollector extends BaseCollector {
 
     const competitors = industryInfo.competitors.map((compCode) => ({
       symbol: compCode,
-      name: WATCHLIST_NAMES[compCode] || `股票${compCode}`,
+      name: (WATCHLIST_NAMES[compCode] ?? `股票${compCode}`),
       marketShare: INDUSTRY_MAP[compCode]?.marketShare ?? 0,
       industryRank: Math.floor(Math.random() * 10) + 1,
     }))
@@ -448,7 +448,7 @@ export class LiveCollector extends BaseCollector {
     logger.info('[LiveCollector] 开始采集研报数据', { symbol })
 
     const reports = [
-      { reportTitle: `${WATCHLIST_NAMES[symbol] || '股票'}深度研究报告`, rating: '买入', targetPrice: 180, analyst: '张三', summary: '公司基本面稳健，未来增长可期' },
+      { reportTitle: `${(WATCHLIST_NAMES[symbol] ?? '股票')}深度研究报告`, rating: '买入', targetPrice: 180, analyst: '张三', summary: '公司基本面稳健，未来增长可期' },
       { reportTitle: '行业景气度分析', rating: '增持', targetPrice: 165, analyst: '李四', summary: '行业整体向好，建议关注龙头' },
     ]
 
