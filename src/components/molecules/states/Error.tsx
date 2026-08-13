@@ -4,6 +4,7 @@
  * @module components/ui/states/Error
  */
 import { type ReactNode, type HTMLAttributes } from 'react'
+import { AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
 
@@ -41,7 +42,7 @@ export function ErrorState({
       {...props}
     >
       <div className={cn(THEME_TOKENS.iconSizes.xl, COLOR_TOKENS.danger.tailwind)} aria-hidden>
-        ⚠
+        <AlertCircle className="h-full w-full" />
       </div>
       <p
         className={cn(
@@ -64,7 +65,7 @@ export function ErrorState({
               type="button"
               onClick={onRetry}
               className={cn(
-                'rounded-md px-3 py-1.5 text-sm font-medium text-white',
+                'rounded-md px-3 py-1.5 text-sm font-medium text-destructive-foreground',
                 COLOR_TOKENS.danger.bgClass,
               )}
             >

@@ -12,6 +12,9 @@ import {
 import { cn } from '@/lib/utils'
 import { CHART_PALETTE, COLOR_SHADES } from '@/constants/theme.tokens'
 import { usePerfTrace } from '@/hooks/usePerfTrace'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 interface AreaChartProps {
   data?: Array<Record<string, unknown>>
@@ -57,7 +60,17 @@ export const AreaChart = memo(
       },
       ref,
     ) => {
-      const safeData = data ?? []
+      // safe default: data 为 undefined 属调用方可选参数（预期空状态）；
+      // 若传了非数组类型则说明上游契约破坏，打日志后回退到空数组。
+      let safeData: Array<Record<string, unknown>>
+      if (data === undefined) {
+        safeData = []
+      } else if (Array.isArray(data)) {
+        safeData = data
+      } else {
+        logger.warn('[AreaChart] data 非数组类型，请核对上游写入', { type: typeof data })
+        safeData = []
+      }
       const pointCount = safeData.length
       usePerfTrace('AreaChart', { points: pointCount, series: areas.length })
 
@@ -72,9 +85,18 @@ export const AreaChart = memo(
 
       // 空数据占位
       if (pointCount === 0) {
+        const resolvedEmptyText: string =
+          emptyText === undefined
+            ? '暂无数据'
+            : typeof emptyText === 'string'
+              ? emptyText
+              : (() => {
+                  logger.warn('[AreaChart] emptyText 非字符串类型', { type: typeof emptyText })
+                  return String(emptyText)
+                })()
         return (
           <div ref={ref} className={cn('w-full flex items-center justify-center text-muted-foreground text-sm', className)} style={{ height }}>
-            {emptyText ?? '暂无数据'}
+            {resolvedEmptyText}
           </div>
         )
       }

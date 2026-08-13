@@ -5,7 +5,7 @@
  * 零外部依赖，纯 SVG 绘制，支持宋韵色阶（天青→赭石→胭脂）
  */
 import React, { useMemo } from 'react'
-import { CHART_PALETTE, DARK, FILL, twText } from '@/constants/theme.tokens'
+import { CHART_PALETTE } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
 
 export interface GaugeChartProps {
@@ -126,7 +126,7 @@ export function GaugeChart({
           x={center}
           y={center - 2}
           textAnchor="middle"
-          className={cn(FILL.stone800, FILL.darkNeutral100)}
+          className="fill-foreground"
           style={{ fontSize: size * 0.16, fontWeight: 700 }}
         >
           {displayPct}
@@ -136,7 +136,7 @@ export function GaugeChart({
           x={center + size * 0.06}
           y={center - 6}
           textAnchor="start"
-          className={cn(FILL.stone400, FILL.darkNeutral500)}
+          className="fill-muted-foreground"
           style={{ fontSize: size * 0.08 }}
         >
           %
@@ -145,14 +145,14 @@ export function GaugeChart({
       {/* 底部标签 */}
       {label && (
         <p
-          className={cn('mt-1 truncate text-xs font-medium', twText('stone', 600), DARK.textNeutral300)}
+          className={cn('mt-1 truncate text-xs font-medium', 'text-muted-foreground')}
           style={{ maxWidth: size }}
         >
           {label}
         </p>
       )}
       {sublabel && (
-        <p className={cn('truncate text-[11px]', twText('stone', 400), DARK.textNeutral500)}>{sublabel}</p>
+        <p className={cn('truncate text-[11px]', 'text-muted-foreground/70')}>{sublabel}</p>
       )}
     </div>
   )
@@ -200,7 +200,7 @@ export function GaugeRing({
         y={center + 1}
         textAnchor="middle"
         dominantBaseline="central"
-        className={cn(FILL.stone700, FILL.darkNeutral200)}
+        className="fill-foreground"
         style={{ fontSize: size * 0.28, fontWeight: 600 }}
       >
         {Math.round((value / max) * 100)}

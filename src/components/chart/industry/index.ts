@@ -17,14 +17,17 @@ export { default as IndustryHeatmap } from './IndustryHeatmap'
 export { IndustryHeatmapChart } from './IndustryHeatmap'
 export type { IndustryHeatmapProps, IndustryHeatmapDataItem, HeatmapColorScheme } from './IndustryHeatmap'
 
-export { default as TrendLineChart } from './TrendLineChart'
-export { IndustryTrendChart } from './TrendLineChart'
-export type { TrendLineChartProps, TrendLineDataPoint, TrendLineSeries, TrendLineReferenceLine } from './TrendLineChart'
+// @internal - TrendLineChart：行业通用折线图（analysis舱 v2 预留，目前仅单测覆盖 + registry 引用）
+// 接入点落地后再恢复桶导出，避免静态直引误用
+// export { default as TrendLineChart } from './TrendLineChart'
+// export { IndustryTrendChart } from './TrendLineChart'
+// export type { TrendLineChartProps, TrendLineDataPoint, TrendLineSeries, TrendLineReferenceLine } from './TrendLineChart'
 
 export { default as ValuationDistribution } from './ValuationDistribution'
 export { ValuationDistributionChart } from './ValuationDistribution'
 export { buildHistogram } from './ValuationDistribution'
 export type { ValuationDistributionProps, ValuationDistributionBin } from './ValuationDistribution'
 
-export { default as IndustryV4Panel } from './IndustryV4Panel'
-export type { IndustryV4PanelProps, V4DimensionName } from './IndustryV4Panel'
+// @internal - IndustryV4Panel：行业V4复合面板（analysis舱 v2 预留，目前仅单测覆盖 + registry 引用）
+// export { default as IndustryV4Panel } from './IndustryV4Panel'
+// export type { IndustryV4PanelProps, V4DimensionName } from './IndustryV4Panel'

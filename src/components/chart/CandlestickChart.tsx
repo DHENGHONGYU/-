@@ -28,6 +28,9 @@ import type { KlinePeriod, KlineAdjust } from '@/services/fetcher/fetcherTypes'
 import { computeKDJ, KDJ_COLORS, type KDJParams } from './indicators/kdj'
 import { computeMACD, MACD_COLORS, type MACDParams, type MACDResult } from './indicators/macd'
 import type { CandlestickChartData } from './types'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 export type { CandlestickChartData }
 
@@ -280,19 +283,15 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
         volumeSeries.setData(volumeData)
         subChartSeriesList.push(volumeSeries)
 
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[CandlestickChart] 成交量副图渲染完成', {
-            dataCount: volumeData.length,
-          })
-        }
+        logger.info('[CandlestickChart] 成交量副图渲染完成', {
+          dataCount: volumeData.length,
+        })
       } else if (effectiveSubChart === 'macd') {
         // MACD 副图
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[CandlestickChart] 开始渲染 MACD 副图', {
-            dataLength: data.length,
-            macdParams,
-          })
-        }
+        logger.info('[CandlestickChart] 开始渲染 MACD 副图', {
+          dataLength: data.length,
+          macdParams,
+        })
 
         macdResult = computeMACD(data, macdParams)
 
@@ -333,21 +332,17 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
           scaleMargins: { top: 0.1, bottom: 0 },
         })
 
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[CandlestickChart] MACD 副图渲染完成', {
-            difCount: macdResult.dif.filter(d => d !== null).length,
-            deaCount: macdResult.dea.filter(d => d !== null).length,
-            histogramCount: macdResult.histogram.filter(d => d !== null).length,
-          })
-        }
+        logger.info('[CandlestickChart] MACD 副图渲染完成', {
+          difCount: macdResult.dif.filter(d => d !== null).length,
+          deaCount: macdResult.dea.filter(d => d !== null).length,
+          histogramCount: macdResult.histogram.filter(d => d !== null).length,
+        })
       } else if (effectiveSubChart === 'kdj') {
         // KDJ 副图
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[CandlestickChart] 开始渲染 KDJ 副图', {
-            dataLength: data.length,
-            kdjParams,
-          })
-        }
+        logger.info('[CandlestickChart] 开始渲染 KDJ 副图', {
+          dataLength: data.length,
+          kdjParams,
+        })
 
         const kdjResult = computeKDJ(data, kdjParams)
 
@@ -392,13 +387,11 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
           scaleMargins: { top: 0.1, bottom: 0 },
         })
 
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[CandlestickChart] KDJ 副图渲染完成', {
-            kCount: kdjResult.k.filter(d => d !== null).length,
-            dCount: kdjResult.d.filter(d => d !== null).length,
-            jCount: kdjResult.j.filter(d => d !== null).length,
-          })
-        }
+        logger.info('[CandlestickChart] KDJ 副图渲染完成', {
+          kCount: kdjResult.k.filter(d => d !== null).length,
+          dCount: kdjResult.d.filter(d => d !== null).length,
+          jCount: kdjResult.j.filter(d => d !== null).length,
+        })
       }
 
       subChartRefs.current = subChartSeriesList
@@ -452,12 +445,10 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
               dea: deaData.value,
               histogram: histData.value,
             }
-            if (process.env.NODE_ENV === 'development') {
-              console.log('[CandlestickChart] 十字光标 MACD 数据', {
-                time: timeToString(bar.time),
-                macd,
-              })
-            }
+            logger.info('[CandlestickChart] 十字光标 MACD 数据', {
+              time: timeToString(bar.time),
+              macd,
+            })
           }
         }
 
@@ -473,12 +464,10 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
               d: dData.value,
               j: jData.value,
             }
-            if (process.env.NODE_ENV === 'development') {
-              console.log('[CandlestickChart] 十字光标 KDJ 数据', {
-                time: timeToString(bar.time),
-                kdj,
-              })
-            }
+            logger.info('[CandlestickChart] 十字光标 KDJ 数据', {
+              time: timeToString(bar.time),
+              kdj,
+            })
           }
         }
 

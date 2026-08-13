@@ -19,7 +19,6 @@ import { memo, useCallback } from 'react'
 import { AlertCircle, RotateCcw, WifiOff, Clock } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 import { cn } from '@/lib/utils'
-import { twText, twBg, twBorder, DARK, HOVER } from '@/constants/theme.tokens'
 
 // ============================================================
 // Props 定义
@@ -53,7 +52,6 @@ interface ErrorInfo {
 }
 
 function getErrorInfo(error: Error | string, errorCode?: ErrorStateProps['errorCode']): ErrorInfo {
-  // 优先使用传入的 errorCode
   if (errorCode === 'network') {
     return {
       code: 'network',
@@ -76,10 +74,8 @@ function getErrorInfo(error: Error | string, errorCode?: ErrorStateProps['errorC
     }
   }
 
-  // 从 error 对象推断错误类型
   const errorMessage = typeof error === 'string' ? error : error.message || ''
 
-  // 网络错误常见关键词
   const networkKeywords = [
     'network', 'Network', 'fetch', 'connection', 'internet',
     '断网', '网络', '无法连接', '连接失败', '网络异常',
@@ -93,7 +89,6 @@ function getErrorInfo(error: Error | string, errorCode?: ErrorStateProps['errorC
     }
   }
 
-  // 超时错误常见关键词
   const timeoutKeywords = [
     'timeout', 'Timeout', 'timed out', '超时', '请求超时'
   ]
@@ -119,11 +114,11 @@ function getErrorInfo(error: Error | string, errorCode?: ErrorStateProps['errorC
 function getErrorIcon(code: ErrorInfo['code']) {
   switch (code) {
     case 'network':
-      return <WifiOff className={`h-5 w-5 ${twText('red', 600)}`} />
+      return <WifiOff className="h-5 w-5 text-destructive" />
     case 'timeout':
-      return <Clock className={`h-5 w-5 ${twText('red', 600)}`} />
+      return <Clock className="h-5 w-5 text-destructive" />
     default:
-      return <AlertCircle className={`h-5 w-5 ${twText('red', 600)}`} />
+      return <AlertCircle className="h-5 w-5 text-destructive" />
   }
 }
 
@@ -145,7 +140,7 @@ function ErrorInline({ error, errorInfo, onRetry, showErrorDetail, className }: 
   return (
     <div className={cn('flex items-center gap-2 text-sm', className)}>
       {getErrorIcon(errorInfo.code)}
-      <span className={`${twText('red', 600)} flex-1`}>
+      <span className="text-destructive flex-1">
         {showErrorDetail ? errorMessage : errorInfo.defaultMessage}
       </span>
       {onRetry && (
@@ -184,18 +179,17 @@ function ErrorCard({
   return (
     <div
       className={cn(
-        `rounded-lg border ${twBorder('red', 200)} ${twBg('red', 50)} p-4`,
-        `${DARK.bgRed950_30} ${DARK.borderRed900}`,
+        'rounded-lg border border-destructive/30 bg-destructive/5 p-4',
         className
       )}
     >
       <div className="flex items-start gap-3">
         <div className="shrink-0 mt-0.5">{getErrorIcon(errorInfo.code)}</div>
         <div className="flex-1 space-y-2">
-          <p className={`text-sm font-medium ${twText('red', 800)} ${DARK.textRed200}`}>
+          <p className="text-sm font-medium text-destructive">
             {title ?? errorInfo.title}
           </p>
-          <p className={`text-sm ${twText('red', 700)} ${DARK.textRed300}`}>
+          <p className="text-sm text-destructive/80">
             {showErrorDetail ? errorMessage : errorInfo.defaultMessage}
           </p>
           {onRetry && (
@@ -203,7 +197,7 @@ function ErrorCard({
               variant="outline"
               size="sm"
               onClick={onRetry}
-              className={`mt-1 ${twBorder('red', 300)} ${twText('red', 700)} ${twBg('red', 100)} ${HOVER.bgRed100} ${DARK.borderRed800} ${DARK.textRed300}`}
+              className="mt-1 border-destructive/30 text-destructive hover:bg-destructive/10"
             >
               <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
               重试
@@ -287,7 +281,6 @@ export const ErrorState = memo(function ErrorState({
 }: ErrorStateProps) {
   const errorInfo = getErrorInfo(error, errorCode)
 
-  // 使用 useCallback 包装 onRetry，避免不必要的重渲染
   const handleRetry = useCallback(() => {
     onRetry?.()
   }, [onRetry])

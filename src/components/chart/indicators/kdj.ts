@@ -105,12 +105,21 @@ export function computeKDJ(
     }
   }
   
+  // 计算 RSV 的最小值和最大值（避免使用扩展运算符导致栈溢出）
+  let rsvMin = rsv[0] ?? 0
+  let rsvMax = rsv[0] ?? 0
+  for (let i = 1; i < rsv.length; i++) {
+    const val = rsv[i]!
+    if (val < rsvMin) rsvMin = val
+    if (val > rsvMax) rsvMax = val
+  }
+  
   logger.info('[KDJ] RSV 计算完成', {
     length: rsv.length,
     first: rsv[0]?.toFixed(2),
     last: rsv[rsv.length - 1]?.toFixed(2),
-    min: Math.min(...rsv).toFixed(2),
-    max: Math.max(...rsv).toFixed(2),
+    min: rsvMin.toFixed(2),
+    max: rsvMax.toFixed(2),
   })
   
   // 计算 K、D、J 线
@@ -184,9 +193,9 @@ export function computeKDJ(
   })
   
   // 数据对齐验证
-  const kValidTimes = k.filter((d) => d !== null).map((d) => d!.time)
-  const dValidTimes = d.filter((d) => d !== null).map((d) => d!.time)
-  const jValidTimes = j.filter((d) => d !== null).map((d) => d!.time)
+  const kValidTimes = k.filter((d) => d !== null).map((d) => d.time)
+  const dValidTimes = d.filter((d) => d !== null).map((d) => d.time)
+  const jValidTimes = j.filter((d) => d !== null).map((d) => d.time)
   
   const allTimesMatch = 
     kValidTimes.length === dValidTimes.length &&

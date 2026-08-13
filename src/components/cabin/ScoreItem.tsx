@@ -4,7 +4,6 @@
  * 显示单个评分维度
  */
 import { memo } from 'react'
-import { twText } from '@/constants/theme.tokens'
 
 interface ScoreItemProps {
   /** 评分维度名称 */
@@ -34,7 +33,7 @@ export const ScoreItem = memo(function ScoreItem({ name, score, prevScore }: Sco
         {delta !== null && (
           <span
             className={`text-xs ${
-              isPositive ? twText('green', 600) : isNegative ? twText('red', 600) : 'text-muted-foreground'
+              isPositive ? 'text-success' : isNegative ? 'text-destructive' : 'text-muted-foreground'
             }`}
           >
             {isPositive ? '+' : ''}{delta.toFixed(2)}
