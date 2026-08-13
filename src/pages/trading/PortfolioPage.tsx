@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react'
+import { memo, useEffect, useMemo } from 'react'
 import { Link } from 'react-router'
 import { useTradingStore } from '@/store/tradingStore'
 import { usePortfolioStore } from '@/store/portfolioStore'
@@ -17,6 +17,11 @@ import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { PageContainer, PageHeader } from '@/components/templates'
+import {
+  CapitalAllocationPanel,
+  DualFactorEvaluationPanel,
+  type DualFactorResult,
+} from '@/components/molecules'
 
 const logger = getLogger()
 
@@ -41,6 +46,10 @@ const PortfolioPage = memo(() => {
     // loadPortfolio 为 Zustand action，引用稳定；仅在组件挂载时触发一次
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // 双因子评估结果占位：待 portfolioStore 接入真实技术信号 + 行业评分后填充
+  // 当前阶段展示空态，让面板渲染"暂无评估数据"与共振规则速查矩阵
+  const dualFactorResults = useMemo<DualFactorResult[]>(() => [], [])
 
   return (
     <ErrorBoundary>
@@ -67,8 +76,11 @@ const PortfolioPage = memo(() => {
 
         <PageHeader
           title="投资组合"
-          description="核心组合管理与策略筛选结果"
+          description="资金双轨配置（30% 耐心资本 + 70% 博收益）+ 核心组合管理 + 双因子评估"
         />
+
+        {/* 资金管理双轨配置（30/70 分仓 + KPI 考核 + 大跌应对纪律） */}
+        <CapitalAllocationPanel />
 
         {/* 操作按钮 */}
         <div className="flex flex-wrap gap-2">
@@ -168,6 +180,9 @@ const PortfolioPage = memo(() => {
             </CardContent>
           </Card>
         )}
+
+        {/* 双因子评估（技术信号 × 行业景气度 → 共振才操作） */}
+        <DualFactorEvaluationPanel results={dualFactorResults} />
       </PageContainer>
     </ErrorBoundary>
   )
