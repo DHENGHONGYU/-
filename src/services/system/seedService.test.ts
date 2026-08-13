@@ -132,7 +132,7 @@ describe('seedService — P0 修复验证 (seedService.ts)', () => {
       expect(typeof env?.meta?.traceId).toBe('string')
       expect(env?.meta?.traceId).toMatch(/^seed-/)
 
-      const payload = env?.payload
+      const payload = env?.payload as Record<string, unknown>
       expect(payload.symbol).toBe('600519.SH')
       expect(payload.name).toBe('贵州茅台')
       expect(payload.pool).toBeDefined()

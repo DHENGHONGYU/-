@@ -156,7 +156,7 @@ describe('addStock 数据流测试（自动流转已移除）', () => {
 
     // 验证 forward 的数据中 pool 为 intention
     const forwardCall = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]
-    expect(forwardCall[1].pool).toBe('intention')
+    expect(forwardCall![1].pool).toBe('intention')
   })
 
   it('addStock + refresh 后 store items 包含新添加的股票', async () => {

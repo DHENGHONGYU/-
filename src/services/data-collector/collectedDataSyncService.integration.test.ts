@@ -271,9 +271,9 @@ function mockCollectionConfig(dimCodes: string[]): CollectionConfig {
       importance: 'medium' as const,
       sourcePriority: [{ id: 'akshare', priority: 1, enabled: true }],
       concurrency: 5,
-      retryPolicy: { maxRetries: 2, backoffMs: 1000 },
-      timeoutPolicy: { connectMs: 5000, readMs: 10000 },
-      fallbackPolicy: { allowMockFallback: false },
+      retryPolicy: { maxRetries: 2, backoffMultiplier: 1, initialDelayMs: 1000 },
+      timeoutPolicy: { requestTimeoutMs: 5000, dimensionTimeoutMs: 10000 },
+      fallbackPolicy: { allowFallback: false, allowMockFallback: false, alertFailureRate: 0 },
     })),
     global: {
       maxSymbols: 40,
@@ -302,18 +302,15 @@ interface CapturedFile {
 }
 
 let capturedFiles: CapturedFile[] = []
-let capturedRootDir = ''
 
 function setupElectronMock(): void {
   capturedFiles = []
-  capturedRootDir = ''
   ;(globalThis as unknown as { window: Record<string, unknown> }).window = {
     fileSync: {
       writeFiles: async (params: {
         rootDir: string
         files: Array<{ relativePath: string; content: string }>
       }): Promise<{ success: boolean; rootDir: string; writtenCount: number }> => {
-        capturedRootDir = params.rootDir
         capturedFiles = params.files.map((f) => ({ ...f }))
         return {
           success: true,

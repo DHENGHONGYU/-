@@ -274,7 +274,6 @@ function runBacktest(cases: BacktestCase[]): BacktestResult {
   }
 
   const realFake = cases.filter(c => c.isRealFakeBreakout).length
-  const nonFake = cases.length - realFake
 
   return {
     total: cases.length, realFake,
@@ -388,7 +387,6 @@ describe('v4.7 vs v4.8 回测对比', () => {
     console.log('\n========== v4.8 改善案例明细 ==========')
 
     const improved: string[] = []
-    const unchanged: string[] = []
 
     for (const c of dataset) {
       const energy = computeTurnoverVolumeEnergy(c.turnover, c.volumeRatio)

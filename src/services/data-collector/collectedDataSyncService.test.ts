@@ -14,7 +14,7 @@
  * @module collectedDataSyncService.test
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import {
   buildSummaryMarkdown,
   extractEnabledDimensionCodes,
@@ -23,7 +23,7 @@ import {
   type SymbolMetadata,
 } from '@/services/data-collector/collectedDataSyncService'
 import { createDefaultCollectionConfig } from '@/services/data-collector/collectionPipeline'
-import type { CollectionConfig } from '@/types/modules/collection.types'
+import type { CollectionConfig, DimensionPipelineConfig } from '@/types/modules/collection.types'
 
 // ============================================================
 // Fixtures
@@ -77,19 +77,33 @@ function makeSymbolMetas(): SymbolMetadata[] {
   ]
 }
 
+function makeDimConfig(code: string, name: string, enabled: boolean): DimensionPipelineConfig {
+  return {
+    code,
+    name,
+    enabled,
+    frequency: 'daily',
+    batchSize: 50,
+    sources: [],
+    cacheTtl: 1440,
+    storageType: 'full',
+    fields: [],
+    importance: 'medium',
+    sourcePriority: [],
+    concurrency: 5,
+    retryPolicy: { maxRetries: 2, backoffMultiplier: 1, initialDelayMs: 1000 },
+    timeoutPolicy: { requestTimeoutMs: 5000, dimensionTimeoutMs: 10000 },
+    fallbackPolicy: { allowFallback: false, allowMockFallback: false, alertFailureRate: 0 },
+  }
+}
+
 function makeConfig(enabledCodes: string[]): CollectionConfig {
   const cfg = createDefaultCollectionConfig()
-  cfg.dimensions = enabledCodes.map((code) => ({
-    code,
-    name: `D${code}`,
-    enabled: true,
-    sources: ['akshare'],
-    fallbackPolicy: { allowMockFallback: false },
-  }))
+  cfg.dimensions = enabledCodes.map((code) => makeDimConfig(code, `D${code}`, true))
   // 添加两个禁用维度用于验证过滤
   cfg.dimensions.push(
-    { code: '98', name: 'DISABLED_A', enabled: false, sources: [], fallbackPolicy: { allowMockFallback: false } },
-    { code: '99', name: 'DISABLED_B', enabled: false, sources: [], fallbackPolicy: { allowMockFallback: false } },
+    makeDimConfig('98', 'DISABLED_A', false),
+    makeDimConfig('99', 'DISABLED_B', false),
   )
   return cfg
 }
@@ -198,8 +212,8 @@ describe('extractEnabledDimensionCodes', () => {
   it('当 config.dimensions 全为禁用时应返回空数组', () => {
     const cfg = createDefaultCollectionConfig()
     cfg.dimensions = [
-      { code: '01', name: 'X', enabled: false, sources: [], fallbackPolicy: { allowMockFallback: false } },
-      { code: '02', name: 'Y', enabled: false, sources: [], fallbackPolicy: { allowMockFallback: false } },
+      makeDimConfig('01', 'X', false),
+      makeDimConfig('02', 'Y', false),
     ]
     expect(extractEnabledDimensionCodes(cfg)).toEqual([])
   })

@@ -172,7 +172,7 @@ describe('v4.8 能量级别差异化阈值调优', () => {
 
     console.log('\n--- v4.7 误降级 → v4.8 正确保留（召回率提升）---')
     for (const c of recallImprovedCases) {
-      const { style, energy } = classify(c.turnover, c.vr, c.mf)
+      const { style } = classify(c.turnover, c.vr, c.mf)
       console.log(`  ${c.level} ${c.desc}`)
       console.log(`    v4.7: no_breakout (误降级) ❌ → v4.8: ${style} ${style === 'fake_breakout' ? '✅' : '⚠️'}`)
       expect(style).toBe('fake_breakout')

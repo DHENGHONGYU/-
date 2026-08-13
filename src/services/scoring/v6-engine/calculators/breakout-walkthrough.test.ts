@@ -177,7 +177,7 @@ describe('断线交易穿行测试 — 10 只典型股票', () => {
 
   test('假突破交易信号: tradeSignal.type 应为 escape', () => {
     // BD-010: 16%换手 + 1.0量比 = L5 但假突破
-    const input = buildInput(TEST_CASES[9])
+    const input = buildInput(TEST_CASES[9]!)
     const signal = detectMainForceChipFlow(input)
     expect(signal.breakoutStyle).toBe('fake_breakout')
     expect(signal.tradeSignal.type).toBe('escape')
@@ -228,7 +228,7 @@ describe('断线交易穿行测试 — 10 只典型股票', () => {
 
   test('v4.7 detectMainForceChipFlow 集成: 资金流向数据传入后假突破降级', () => {
     // BD-010 原始数据：16%换手 + 1.0量比 → 无资金数据时 fake_breakout
-    const baseInput = buildInput(TEST_CASES[9])
+    const baseInput = buildInput(TEST_CASES[9]!)
 
     // 附加主力净流入数据 → breakoutStyle 降级为 no_breakout
     const inflowInput: LayerInput = {
