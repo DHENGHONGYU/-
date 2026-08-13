@@ -29,9 +29,9 @@ const ResearchReportPage = React.lazy(() => import('@/pages/output/ResearchRepor
 const TradeReviewPage = React.lazy(() => import('@/pages/output/TradeReviewPage'))
 const ReviewWizardPage = React.lazy(() => import('@/pages/output/ReviewWizardPage'))
 const DashboardPage = React.lazy(() => import('@/pages/output/DashboardPage'))
-const PredictionPage = React.lazy(() => import('@/pages/output/PredictionPage'))
-const RetrospectivePage = React.lazy(() => import('@/pages/output/RetrospectivePage'))
-const FactorDashboardPage = React.lazy(() => import('@/pages/output/FactorDashboardPage'))
+// 预测三件套已合并为 FactorAnalysisHubPage（Tabs 多面板）
+// 三个旧路由 + 新主路由 /output/factor-analysis 统一渲染 HubPage
+const FactorAnalysisHubPage = React.lazy(() => import('@/pages/output/FactorAnalysisHubPage'))
 const ChipStrategyReviewPage = React.lazy(() => import('@/pages/output/ChipStrategyReviewPage'))
 
 interface OutputRoute {
@@ -49,9 +49,11 @@ const OUTPUT_ROUTES: OutputRoute[] = [
   { path: '/output/dashboard', branch: 'dashboard', componentName: 'DashboardPage', component: <DashboardPage />, fallback: '加载中...' },
   { path: '/output/review', branch: 'review', componentName: 'TradeReviewPage', component: <TradeReviewPage />, fallback: '加载中...' },
   { path: '/output/wizard', branch: 'wizard', componentName: 'ReviewWizardPage', component: <ReviewWizardPage />, fallback: '加载中...' },
-  { path: '/output/prediction', branch: 'prediction', componentName: 'PredictionPage', component: <PredictionPage />, fallback: '加载中...' },
-  { path: '/output/retrospective', branch: 'retrospective', componentName: 'RetrospectivePage', component: <RetrospectivePage />, fallback: '加载中...' },
-  { path: '/output/factor-dashboard', branch: 'factorDashboard', componentName: 'FactorDashboardPage', component: <FactorDashboardPage />, fallback: '加载中...' },
+  // 预测三件套合并为 FactorAnalysisHubPage（URL 初始 Tab 由 pathname 推断）
+  { path: '/output/factor-analysis', branch: 'factorAnalysis', componentName: 'FactorAnalysisHubPage', component: <FactorAnalysisHubPage />, fallback: '加载因子分析页...' },
+  { path: '/output/prediction', branch: 'prediction', componentName: 'FactorAnalysisHubPage', component: <FactorAnalysisHubPage />, fallback: '加载因子分析页...' },
+  { path: '/output/retrospective', branch: 'retrospective', componentName: 'FactorAnalysisHubPage', component: <FactorAnalysisHubPage />, fallback: '加载因子分析页...' },
+  { path: '/output/factor-dashboard', branch: 'factorDashboard', componentName: 'FactorAnalysisHubPage', component: <FactorAnalysisHubPage />, fallback: '加载因子分析页...' },
   { path: '/output/chip-strategy', branch: 'chipStrategy', componentName: 'ChipStrategyReviewPage', component: <ChipStrategyReviewPage />, fallback: '加载中...' },
   { path: '/output', branch: 'hub', componentName: 'OutputHubPage', component: <OutputHubPage />, fallback: '加载中...' },
   { path: '/output/hub', branch: 'hub', componentName: 'OutputHubPage', component: <OutputHubPage />, fallback: '加载中...' },
