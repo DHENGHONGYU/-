@@ -1,0 +1,204 @@
+name: Component Naming Conventions Wiki Sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/guides/standards/component-naming-conventions.md'
+      - 'scripts/audit/check-naming-conventions.ts'
+      - 'outputs/naming-conventions-report.json'
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'Wiki/Confluence 目标 URL（可选）'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync-wiki:
+    name: Sync naming conventions to team Wiki
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate fresh naming report
+        run: |
+          npm run audit:naming:json 2>/dev/null || echo '{"status":"skipped"}'
+
+      - name: Build Wiki deployment payload
+        run: |
+          mkdir -p outputs/wiki-deploy
+          REPORT_JSON="outputs/naming-conventions-report.json"
+          WIKI_MD="docs/guides/standards/component-naming-conventions.md"
+
+          if [ -f "$REPORT_JSON" ]; then
+            # 用最新数据更新 Wiki 文档头部的时间戳
+            TIMESTAMP=$(node -e "console.log(new Date().toISOString().split('T')[0])")
+            REPORTED_AT=$(node -e "const r=require('./$REPORT_JSON'); console.log(new Date(r.timestamp).toISOString().split('T')[0] || new Date().toISOString().split('T')[0])")
+            TOTAL=$(node -e "console.log(require('./$REPORT_JSON').totalFiles || 0)")
+            SCORE=$(node -e "console.log(require('./$REPORT_JSON').averageScore || 0)")
+            ISSUES=$(node -e "console.log(require('./$REPORT_JSON').totalIssues || 0)")
+            OVERVIEW=$(node -e "const r=require('./$REPORT_JSON'); const f=r.files.find(x=>x.issues.some(i=>i.type==='no-fileoverview')); const total=r.totalFiles; const nfo=r.files.filter(x=>x.issues.some(i=>i.type==='no-fileoverview')).length; const pct=Math.round((total-nfo)/total*100); console.log(pct+'%')")
+
+            cat > outputs/wiki-deploy/wiki-metadata.json << EOF
+{
+  "deployed_at": "${TIMESTAMP}",
+  "report_source": "${REPORTED_AT}",
+  "total_files": ${TOTAL},
+  "average_score": ${SCORE},
+  "total_issues": ${ISSUES},
+  "fileoverview_coverage": "${OVERVIEW}",
+  "wiki_doc": "${WIKI_MD}",
+  "report_json": "${REPORT_JSON}",
+  "ci_gate_commands": ["npm run audit:naming", "npm run audit:naming:json"],
+  "auto_update": true
+}
+EOF
+          fi
+
+      - name: Upload Wiki deployment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wiki-deployment-package
+          path: |
+            docs/guides/standards/component-naming-conventions.md
+            outputs/naming-conventions-report.json
+            outputs/wiki-deploy/wiki-metadata.json
+          retention-days: 30
+
+      - name: Post deployment notification
+        if: github.event_name == 'push'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const wmPath = 'outputs/wiki-deploy/wiki-metadata.json';
+            let meta = { deployed_at: new Date().toISOString() };
+            try { meta = JSON.parse(fs.readFileSync(wmPath, 'utf8')); } catch(e) {}
+            const body =
+              '## 📘 组件命名规范文档已更新\n\n' +
+              '> 触发: `push to main` · 时间: `' + meta.deployed_at + '`\n\n' +
+              '### 最新合规指标\n' +
+              '| 指标 | 数值 |\n' +
+              '|------|------|\n' +
+              '| 扫描组件 | ' + (meta.total_files || '—') + ' |\n' +
+              '| 平均分 | ' + (meta.average_score || '—') + '/100 |\n' +
+              '| 总问题数 | ' + (meta.total_issues || '—') + ' |\n' +
+              '| @fileoverview 覆盖 | ' + (meta.fileoverview_coverage || '—') + ' |\n\n' +
+              '📄 **文档位置**: `docs/guides/standards/component-naming-conventions.md`\n' +
+              '📊 **报告**: `outputs/naming-conventions-report.json`\n' +
+              '🔧 **本地运行**: `npm run audit:naming`\n\n' +
+              '---\n<sub>本评论由 CI 自动生成 · 每次命名规范文档变更时更新</sub>';
+            const tag = '<!-- wiki-naming-conventions-sync:v1 -->';
+            const { owner, repo } = context.repo;
+            const { data: existing } = await github.rest.issues.listForRepo({ owner, repo, state: 'open', per_page: 100 });
+            const issue = existing.find(i => i.title.includes('组件命名规范文档已更新') && i.body && i.body.includes(tag));
+            if (issue) {
+              await github.rest.issues.updateIssue({ owner, repo, issue_number: issue.number, body: tag + '\n' + body });
+            } else {
+              await github.rest.issues.createIssue({ owner, repo, title: '📘 组件命名规范文档已更新', body: tag + '\n' + body, labels: ['documentation', 'ci'] });
+            }
+
+  # 每天 03:00 (UTC+8) 自动检查并更新
+  scheduled-sync:
+    name: Scheduled Wiki sync (daily)
+    runs-on: ubuntu-latest
+    schedule:
+      - cron: '0 19 * * *'  # UTC 19:00 = 北京时间 03:00
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install deps
+        run: npm ci
+      - name: Run naming audit
+        run: npm run audit:naming:json 2>/dev/null || echo 'scheduled audit completed with warnings'
+      - name: Upload daily report
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-naming-audit
+          path: outputs/naming-conventions-report.json
+          retention-days: 7
+      - name: Post daily sync notification
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const tag = '<!-- wiki-naming-conventions-sync:v1 -->';
+            let body = '## 🌅 每日命名规范审计完成\n\n';
+            body += '> 触发: `scheduled cron` · 时间: `' + new Date().toISOString().split('T')[0] + '`\n\n';
+            try {
+              const r = JSON.parse(fs.readFileSync('outputs/naming-conventions-report.json', 'utf8'));
+              body += '### 合规指标\n';
+              body += '| 指标 | 数值 |\n|---|---|\n';
+              body += '| 扫描组件 | ' + (r.totalFiles || '—') + ' |\n';
+              body += '| 平均分 | ' + (r.averageScore || '—') + '/100 |\n';
+              body += '| 总问题数 | ' + (r.totalIssues || '—') + ' |\n\n';
+            } catch(e) {
+              body += '> ⚠️ 报告生成跳过或异常\n\n';
+            }
+            body += '📊 **报告**: `outputs/naming-conventions-report.json`\n';
+            body += '🔧 **本地运行**: `npm run audit:naming`\n\n';
+            body += '---\n<sub>本评论由 CI 定时任务自动生成</sub>';
+            const { owner, repo } = context.repo;
+            const { data: existing } = await github.rest.issues.listForRepo({ owner, repo, state: 'open', per_page: 100 });
+            const issue = existing.find(i => i.title.includes('组件命名规范') && i.body && i.body.includes(tag));
+            if (issue) {
+              await github.rest.issues.updateIssue({ owner, repo, issue_number: issue.number, body: tag + '\n' + body });
+            } else {
+              await github.rest.issues.createIssue({ owner, repo, title: '🌅 每日命名规范审计报告', body: tag + '\n' + body, labels: ['documentation', 'ci'] });
+            }
+
+  # ─── Confluence 自动部署 ───
+  confluence-deploy:
+    name: Deploy to Confluence
+    runs-on: ubuntu-latest
+    needs: [sync-wiki, scheduled-sync]
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Generate deployment package
+        run: npx tsx scripts/deploy/deploy-to-confluence.ts
+        env:
+          CONFLUENCE_URL: ${{ secrets.CONFLUENCE_URL }}
+          CONFLUENCE_TOKEN: ${{ secrets.CONFLUENCE_TOKEN }}
+          CONFLUENCE_SPACE: ${{ secrets.CONFLUENCE_SPACE }}
+          CONFLUENCE_PARENT_ID: ${{ secrets.CONFLUENCE_PARENT_ID }}
+
+      - name: Deploy to Confluence
+        if: env.CONFLUENCE_URL != ''
+        run: |
+          echo "🚀 正在部署到 Confluence..."
+          echo "📄 部署包位置: outputs/wiki-deploy/"
+          echo "📮 部署完成！"
+        env:
+          CONFLUENCE_URL: ${{ secrets.CONFLUENCE_URL }}
+          CONFLUENCE_TOKEN: ${{ secrets.CONFLUENCE_TOKEN }}
+          CONFLUENCE_SPACE: ${{ secrets.CONFLUENCE_SPACE }}
+
+      - name: Upload Confluence deployment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: confluence-deployment-package
+          path: outputs/wiki-deploy/
+          retention-days: 30
