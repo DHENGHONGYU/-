@@ -543,9 +543,8 @@ export const COCKPIT_LAYOUT = {
 - `WidgetSheetDrawer.tsx`：紧凑触发卡片（图标 + 标题 + 描述 + 箭头）→ 点击 → Sheet 右侧抽屉展开完整 Widget
 - `CockpitCrossLayout.tsx`：交叉点实例分为 `gridInstances`（网格直接渲染）和 `drawerInstances`（触发卡片渲染），抽屉卡片在网格下方排列
 
-**步骤 1.6 落地明细**：
-- `WatchlistMoversWidget.tsx`：导出 `WatchlistMoversContent`（不含 WidgetStateShell 外壳的纯内容组件），默认导出内部复用该组件
-- `WatchlistWidget.tsx`：内部新增 Tabs（"自选行情" + "异动榜"），异动榜 Tab 渲染 `WatchlistMoversContent`，复用同一份 watchlist 数据
+**步骤 1.6 落地明细**（注：原设计计划在 `WatchlistWidget.tsx` 中新增 Tabs 并复用 `WatchlistMoversWidget.tsx` 的纯内容组件，但该集成实际未落地；`WatchlistMoversWidget.tsx` 及其依赖 `watchlistMoversService.ts` 已于 2026-08-15 作为死代码删除）：
+- `WatchlistWidget.tsx`：当前实现为简单的 4 列网格展示自选股，未集成异动榜子 Tab
 
 **验收结果**：tsc 0 新增错误；vitest 24 files / 350 tests 全绿；首屏矩阵总览可渲染；交叉筛选单屏 ≤4 Widget
 

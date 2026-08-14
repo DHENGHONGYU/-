@@ -180,19 +180,19 @@ export interface ClassifyStocksInput {
   rotationScores: RotationSectorScore[]
 }
 
-// src/services/trading/watchlistMoversService.ts
-export interface WatchlistMover {
-  name: string
-  code: string
-  price: number
-  changePercent: number
-}
-
-export interface WatchlistMoversResult {
-  gainers: WatchlistMover[]
-  losers: WatchlistMover[]
-  mostActive: WatchlistMover[]
-}
+// src/services/trading/watchlistMoversService.ts —— 已于 2026-08-15 删除（死代码）
+// 历史保留接口定义（仅供历史文档参考，源文件已不存在）：
+// export interface WatchlistMover {
+//   name: string
+//   code: string
+//   price: number
+//   changePercent: number
+// }
+// export interface WatchlistMoversResult {
+//   gainers: WatchlistMover[]
+//   losers: WatchlistMover[]
+//   mostActive: WatchlistMover[]
+// }
 
 // src/services/trading/positionComputer.ts
 export interface MatchedTradePair extends TradePair {
@@ -364,7 +364,7 @@ export interface TradePair {
 | `saveStrategySnapshot(input, trigger?)` | `(input: ClassifyStocksInput, trigger?: string) => Promise<DataLayerResult<StrategySnapshot>>` | 保存策略快照到 IndexedDB | `DataLayer` 写入失败返回错误 |
 | `getLatestSnapshot()` | `() => Promise<DataLayerResult<StrategySnapshot \| undefined>>` | 获取最新策略快照 | `DataLayer` 查询失败返回错误 |
 | `listSnapshots(limit?)` | `(limit?: number) => Promise<DataLayerResult<StrategySnapshot[]>>` | 列出历史策略快照 | `DataLayer` 查询失败返回错误 |
-| `computeWatchlistMovers(watchlist, topN?)` | `(watchlist: WatchlistData[], topN?: number) => WatchlistMoversResult` | 纯函数：计算自选股异动榜 | 纯计算 |
+| ~~`computeWatchlistMovers(watchlist, topN?)`~~ | ~~`(watchlist: WatchlistData[], topN?: number) => WatchlistMoversResult`~~ | ~~纯函数：计算自选股异动榜~~ | **已删除（2026-08-15 死代码清理）** |
 | `buildTradePairs(orders)` | `(orders: Order[]) => SymbolTradePair[]` | FIFO 配对计算交易对与已实现盈亏 | 纯计算 |
 | `buildPositions(tradePairs)` | `(tradePairs: SymbolTradePair[]) => PositionItem[]` | 从交易对派生当前持仓列表 | 纯计算 |
 | `generateReview(...)` | `(...) => Promise<TradeReviewReport>` | AI 交易复盘报告（Facade，来自 useCase） | 由 useCase 处理 |
@@ -461,7 +461,7 @@ pages/trading/* / apps/trading/* / cockpit/widgets (PortfolioOverviewWidget, Sig
 - `tradeReviewAI.reportGenerator.test.ts`
 - `tradeReviewAI.skillDevelopment.test.ts`
 - `tradeReviewAI.utils.test.ts`
-- `watchlistMoversService.test.ts`
+- ~~`watchlistMoversService.test.ts`~~（已删除，2026-08-15 死代码清理）
 
 ---
 
