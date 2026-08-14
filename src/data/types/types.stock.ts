@@ -10,6 +10,10 @@
 
 import type { DataSource } from '@/config/dbConfig'
 import type { PoolStatus, PoolType } from '@/types/modules/pool.types'
+
+/** 股票录入来源：hot-sector=来源一（热门板块核心标的）/ manual=来源二（自定义检索） */
+export type ScreenSource = 'hot-sector' | 'manual'
+
 /** 股票数据质量标记 */
 export interface StockDataQuality {
   basic: boolean
@@ -118,6 +122,8 @@ export interface Stock {
   researchStatus: PoolStatus
   source: DataSource
   dataVersion: number
+  /** 录入来源（hot-sector/manual），用于来源溯源与过滤 */
+  screenSource?: ScreenSource
   dataQuality?: StockDataQuality
   ingestedAt?: number
   updatedAt?: number

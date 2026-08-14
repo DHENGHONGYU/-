@@ -14,7 +14,7 @@
 */
 
 import type { DataSource } from '@/config/dbConfig'
-import type { StockDataQuality } from '@/data/types/types.stock'
+import type { ScreenSource, StockDataQuality } from '@/data/types/types.stock'
 
 // ============================================================
 // Pool 类型
@@ -98,6 +98,8 @@ export interface PoolItemBase {
 export interface IntentionPoolItem extends PoolItemBase {
   pool: 'intention'
   status: IntentionStatus
+  /** 录入来源（hot-sector/manual），用于来源溯源与过滤 */
+  screenSource?: ScreenSource
   screenReason?: string
 }
 

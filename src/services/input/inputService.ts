@@ -7,6 +7,7 @@ import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION, STORE_NAME } from '@/confi
 import { INTENTION_STATUS, DEFAULT_POOL_GROUP, DEFAULT_POOL_TYPE, type ResearchStatus } from '@/constants/pool.constants'
 import { INPUT_CONFIG } from '@/config/inputConfig'
 import type { DataLayerResult, Stock } from '@/data/types'
+import type { ScreenSource } from '@/data/types/types.stock'
 import { fetchBasicDataUseCase, fetchKlineDataUseCase } from '@/services/useCase/fetcherOrchestrator.useCase'
 import { getLogger } from '@/lib/logger'
 import { withBroadcast } from '@/lib/withBroadcast'
@@ -62,6 +63,10 @@ export interface AddStockOptions {
    * 目标股票池分组，未指定时使用默认分组
    */
   group?: string
+  /**
+   * 录入来源（hot-sector/manual），用于来源溯源与过滤
+   */
+  screenSource?: ScreenSource
 }
 
 // ============================================================
