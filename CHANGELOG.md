@@ -7,6 +7,33 @@
 
 ---
 
+## [Unreleased] - 2026-08-14
+
+### Added
+
+- **分析舱调用输入舱数据接口方案（跨舱只读契约）**：
+  - `src/types/modules/analysis.types.ts`（新增）—— `AnalysisScope`（intention/all）+ `AnalysisCandidate` + `AnalysisCandidateQuery` 契约类型，跨舱类型安全
+  - `src/services/input/intentionPoolService.ts`（新增）—— 防腐层只读服务 `listIntentionCandidates`：经 DataBridge 按 `by-pool` 索引读意向候选池，支持来源/分组过滤、join 已有 V6 评分、按 `ingestedAt` 倒序；v6Scores 读取失败降级不阻塞
+  - `src/services/input/intentionPoolService.test.ts`（新增）—— 服务单元测试 8 例（读取/过滤/join/降级/异常）
+  - `docs/reference/input-analysis-cabin-contract.md`（新增）—— 接口契约设计文档（V9-DOC-BACK-047）
+  - `docs/reference/changelogs/2026-08/2026-08-14-analysis-input-cabin-interface-report.md`（新增）—— 实现报告
+
+### Changed
+
+- `src/store/analysisStore.ts` —— 扩展 `candidates`/`scope` 状态与 `loadStocks(scope)`/`runBatchScore(symbols)`：`scope='intention'` 走 `listIntentionCandidates`（兼容原全量 `listStocks`）；交接后自动刷新评分列表，已评分候选展示 V6 分值
+- `src/apps/analysis/AnalysisApp.tsx` —— V6ScoreCard 新增作用域 Badge、「加载全部标的/加载意向候选池」切换、「批量评分（N）」、「运行评分」；读取 `searchParams.scope` 自动加载意向候选池
+- `src/apps/input/components/InputDashboardPoolTable.tsx` —— 新增「送入分析舱」按钮 → `/analysis?scope=intention`
+- `src/apps/input/components/InputFlowOverview.tsx` —— 「分析舱调用」步骤路径改为 `/analysis?scope=intention`
+- `src/store/analysisStore.test.ts` —— 新增 intention 加载/批量评分/作用域边界用例（41 例通过）
+- `src/services/scoring/seedRotationScores.ts` —— 纳入版本库（commit 4f38078），供调试复用
+
+### Verified（真实数据浏览器实测）
+
+- 输入舱「送入分析舱」→ 分析舱 `#/analysis?scope=intention` 自动加载 4 只意向候选（600584.SH/300750.SZ/000001.SZ/600519.SH），作用域 Badge「意向候选池」正确
+- 「批量评分（4）」→ Worker 并行评分落库 v6Scores → UI 刷新显示 V6: 2.29 / 2.10 / 2.41 / 2.10
+- 再次交接加载时自动刷新评分列表（loadScores 完成 4 条评分），不误显示「未评分」
+- 单元测试 49 例通过（store 41 + service 8），改动文件 tsc 0 错误
+
 ## [Unreleased] - 2026-08-13
 
 ### Added
