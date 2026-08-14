@@ -6,10 +6,27 @@
   * @covers_docs [V9-DOC-PROJ-114, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066]
 */
 
-import { describe, test, expect } from 'vitest'
+import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { buildFactorContributions } from './factorContributions'
 import type { ScoreAuditTrail } from './types'
 import { DEFAULT_ENGINE_CONFIG } from './config'
+
+const { mockLogger } = vi.hoisted(() => ({
+  mockLogger: {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+  },
+}))
+
+vi.mock('@/lib/logger', () => ({
+  getLogger: () => mockLogger,
+}))
+
+beforeEach(() => {
+  vi.clearAllMocks()
+})
 
 function createAuditTrail(
   layerScores: Partial<ScoreAuditTrail['composite']['layers']>,
@@ -95,5 +112,60 @@ describe('buildFactorContributions', () => {
     trail.composite.layers.l2 = 4
     const contributions = buildFactorContributions(trail)
     expect(contributions.some((c) => c.factorId === 'l2')).toBe(false)
+  })
+
+  test('NaN 层得分被排除且记录 NaN 原因', () => {
+    const trail = createAuditTrail({ l1: NaN, l2: 3 })
+    const contributions = buildFactorContributions(trail)
+
+    // NaN 层不参与贡献计算，有效层不受影响
+    expect(contributions.some((c) => c.factorId === 'l1')).toBe(false)
+    expect(contributions.some((c) => c.factorId === 'l2')).toBe(true)
+    expect(mockLogger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('score 为 NaN'),
+    )
+  })
+
+  test('+Infinity 层得分被排除且记录原因', () => {
+    const trail = createAuditTrail({ l1: Infinity, l2: 3 })
+    const contributions = buildFactorContributions(trail)
+
+    expect(contributions.some((c) => c.factorId === 'l1')).toBe(false)
+    expect(mockLogger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('score 为 +Infinity'),
+    )
+  })
+
+  test('-Infinity 层得分被排除且记录原因', () => {
+    const trail = createAuditTrail({ l1: -Infinity, l2: 3 })
+    const contributions = buildFactorContributions(trail)
+
+    expect(contributions.some((c) => c.factorId === 'l1')).toBe(false)
+    expect(mockLogger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('score 为 -Infinity'),
+    )
+  })
+
+  test('非数字层得分被排除且记录类型原因', () => {
+    const trail = createAuditTrail({ l1: 'invalid' as unknown as number, l2: 3 })
+    const contributions = buildFactorContributions(trail)
+
+    expect(contributions.some((c) => c.factorId === 'l1')).toBe(false)
+    expect(mockLogger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('score 类型非法'),
+    )
+  })
+
+  test('缺失层得分被排除且记录缺失原因', () => {
+    const trail = createAuditTrail({ l2: 3 })
+    // 将 l1 层得分置为 undefined，模拟缺失层
+    trail.composite.layers.l1 = undefined as unknown as number
+    const contributions = buildFactorContributions(trail)
+
+    expect(contributions.some((c) => c.factorId === 'l1')).toBe(false)
+    expect(mockLogger.warn).toHaveBeenCalledWith(
+      expect.stringContaining('因子贡献度缺失'),
+      expect.any(Object),
+    )
   })
 })

@@ -231,9 +231,23 @@ export class V6ScoreEngine {
       const layer = layers[layerId]
       const w = weightMap[layerId]
 
-      // NaN 防护：验证 layer.score 是否有效
-      if (!Number.isFinite(layer.score)) {
-        logger.warn(`[V6ScoreEngine] aggregate: ${layerId} 层评分无效 (${layer.score})，跳过该层`)
+      // NaN/缺失防护：layer 缺失或 score 非有限值（NaN/±Infinity/非数字）时跳过该层，并记录具体原因
+      if (layer == null || !Number.isFinite(layer.score)) {
+        let reason: string
+        if (layer == null) {
+          reason = 'layer 缺失 (undefined)'
+        } else if (typeof layer.score !== 'number') {
+          reason = `score 类型非法 (${typeof layer.score} = ${String(layer.score)})`
+        } else if (Number.isNaN(layer.score)) {
+          reason = 'score 为 NaN'
+        } else if (layer.score === Infinity) {
+          reason = 'score 为 +Infinity'
+        } else if (layer.score === -Infinity) {
+          reason = 'score 为 -Infinity'
+        } else {
+          reason = `score 非有限值 (${layer.score})`
+        }
+        logger.warn(`[V6ScoreEngine] aggregate: ${layerId} 层评分无效，跳过该层。原因: ${reason}，权重: ${w}`)
         skippedLayers.push(layerId)
         continue
       }

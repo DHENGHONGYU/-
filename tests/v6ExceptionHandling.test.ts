@@ -197,6 +197,9 @@ describe('engine.ts 异常处理', () => {
       expect(mockLogger.warn).toHaveBeenCalledWith(
         expect.stringContaining('l0 层评分无效'),
       )
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('原因: score 为 NaN'),
+      )
     })
 
     it('所有层 NaN 应返回 0 分', async () => {
@@ -209,6 +212,79 @@ describe('engine.ts 异常处理', () => {
       const result = engine.aggregate(layers, [])
 
       expect(result.score).toBe(0)
+    })
+
+    it('缺失层（undefined）应被跳过并记录缺失原因', async () => {
+      const layers = {
+        lMinus1: createMockLayerScore('lMinus1', 4.0),
+        l0: createMockLayerScore('l0', 3.0),
+        l1: createMockLayerScore('l1', 3.5),
+      } as Record<LayerId, LayerScore>
+
+      const result = engine.aggregate(layers, [])
+
+      // 未提供的层（如 l2/l3v/...）为 undefined，应被安全跳过
+      expect(Number.isFinite(result.score)).toBe(true)
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('l2 层评分无效'),
+      )
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('原因: layer 缺失 (undefined)'),
+      )
+    })
+
+    it('+Infinity 评分应被跳过并记录原因', async () => {
+      const layers = {
+        lMinus1: createMockLayerScore('lMinus1', 4.0),
+        l0: createMockLayerScore('l0', Infinity),
+        l1: createMockLayerScore('l1', 3.0),
+      } as Record<LayerId, LayerScore>
+
+      const result = engine.aggregate(layers, [])
+
+      expect(Number.isFinite(result.score)).toBe(true)
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('l0 层评分无效'),
+      )
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('原因: score 为 +Infinity'),
+      )
+    })
+
+    it('-Infinity 评分应被跳过并记录原因', async () => {
+      const layers = {
+        lMinus1: createMockLayerScore('lMinus1', 4.0),
+        l0: createMockLayerScore('l0', -Infinity),
+        l1: createMockLayerScore('l1', 3.0),
+      } as Record<LayerId, LayerScore>
+
+      const result = engine.aggregate(layers, [])
+
+      expect(Number.isFinite(result.score)).toBe(true)
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('l0 层评分无效'),
+      )
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('原因: score 为 -Infinity'),
+      )
+    })
+
+    it('非数字 score 应被跳过并记录类型原因', async () => {
+      const layers = {
+        lMinus1: createMockLayerScore('lMinus1', 4.0),
+        l0: createMockLayerScore('l0', 'invalid' as unknown as number),
+        l1: createMockLayerScore('l1', 3.0),
+      } as Record<LayerId, LayerScore>
+
+      const result = engine.aggregate(layers, [])
+
+      expect(Number.isFinite(result.score)).toBe(true)
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('l0 层评分无效'),
+      )
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('原因: score 类型非法'),
+      )
     })
 
     it('混合有效和无效评分应正确计算', async () => {
@@ -225,6 +301,12 @@ describe('engine.ts 异常处理', () => {
       // 只有 lMinus1, l1, l3f 有效
       expect(Number.isFinite(result.score)).toBe(true)
       expect(result.score).toBeGreaterThan(0)
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('l2 层评分无效'),
+      )
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining('原因: score 为 +Infinity'),
+      )
     })
   })
 })

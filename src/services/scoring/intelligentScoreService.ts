@@ -195,14 +195,17 @@ function calculateOverallScore(dimensions: DimensionScore[]): number | null {
   )
 }
 
-/** 获取 v6 层名映射中层的得分，返回 [0,5] 的分数 */
+/** 获取 v6 层名映射中层的得分，返回 [0,5] 的分数；缺失或 NaN/±Infinity/非数字时返回 null */
 function scoreFromLayer(layer: LayerScore | undefined): number | null {
-  return layer ? Math.max(0, Math.min(5, layer.score)) : null
+  if (!layer || !Number.isFinite(layer.score)) return null
+  return Math.max(0, Math.min(5, layer.score))
 }
 
-/** 从多个 v6 层中取综合得分（平均各层分） */
+/** 从多个 v6 层中取综合得分（平均各层分）；无效层（缺失/NaN/±Infinity/非数字）被排除 */
 function averageFromLayers(...layers: (LayerScore | undefined)[]): number | null {
-  const scores = layers.filter((l): l is LayerScore => l !== undefined).map((l) => l.score)
+  const scores = layers
+    .filter((l): l is LayerScore => l !== undefined && Number.isFinite(l.score))
+    .map((l) => l.score)
   if (scores.length === 0) return null
   return scores.reduce((a, b) => a + b, 0) / scores.length
 }

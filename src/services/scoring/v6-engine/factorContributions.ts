@@ -12,10 +12,37 @@ import { getLogger } from '@/lib/logger'
 const logger = getLogger()
 
 /**
+ * 将 score 转换为有限值，NaN/±Infinity/非数字 → 0
+ */
+function toFiniteScore(value: unknown): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return 0
+  return value
+}
+
+/**
+ * 检测层得分是否有效（非缺失、非 NaN/Infinity、非非数字）
+ */
+function isValidScore(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value)
+}
+
+/**
+ * 获取层得分无效的原因描述（与 engine.ts aggregate 保持一致）
+ */
+function invalidScoreReason(layerId: string, score: unknown): string {
+  if (score == null) return `层 ${layerId} 缺失 (${score === null ? 'null' : 'undefined'})`
+  if (typeof score !== 'number') return `层 ${layerId} score 类型非法 (${typeof score} = ${String(score)})`
+  if (Number.isNaN(score)) return `层 ${layerId} score 为 NaN`
+  if (score === Infinity) return `层 ${layerId} score 为 +Infinity`
+  if (score === -Infinity) return `层 ${layerId} score 为 -Infinity`
+  return `层 ${layerId} score 非有限值 (${score})`
+}
+
+/**
  * 根据审计追踪计算因子贡献明细。
  *
  * 计算规则：
- * 1. 仅参与计算的层（score > 0 且 weight > 0）纳入总权重。
+ * 1. 仅参与计算的层（score > 0 且 weight > 0，且 score 为有限数字）纳入总权重。
  * 2. 归一化权重 = 该层权重 / 总权重。
  * 3. 绝对贡献 = 层得分 × 归一化权重 × 100 / 层满分（默认 5）。
  * 4. 中性基准 = (layerScore.min + layerScore.max) / 2，来自阈值配置。
@@ -33,16 +60,24 @@ export function buildFactorContributions(trail: ScoreAuditTrail): FactorContribu
   const baseline = (min + max) / 2
   const scale = max > 0 ? 100 / max : 20
 
-  // 检测缺失的因子得分和权重
+  // 检测缺失/无效的因子得分
   const missingFactors: string[] = []
   const missingWeights: string[] = []
+  const invalidScores: string[] = []
   for (const id of ALL_LAYER_IDS) {
-    const lid = id
-    if (layerScores[lid] == null) missingFactors.push(LAYER_LABELS[lid])
-    if (weights[lid] == null) missingWeights.push(lid)
+    const score = layerScores[id]
+    const w = weights[id]
+    if (score == null) missingFactors.push(LAYER_LABELS[id])
+    else if (!isValidScore(score)) invalidScores.push(`${LAYER_LABELS[id]}(${id}) — ${invalidScoreReason(id, score)}`)
+    if (w == null) missingWeights.push(id)
   }
   if (missingFactors.length > 0) {
     logger.warn('[V6Engine] 因子贡献度缺失', { factor: missingFactors.join(', ') })
+  }
+  if (invalidScores.length > 0) {
+    for (const msg of invalidScores) {
+      logger.warn(`[V6Engine] 因子贡献度无效评分，跳过该层。原因: ${msg}`)
+    }
   }
   if (missingWeights.length > 0) {
     logger.warn('[V6Engine] 因子权重缺失', { factor: missingWeights.join(', ') })
@@ -51,7 +86,7 @@ export function buildFactorContributions(trail: ScoreAuditTrail): FactorContribu
   const activeLayers = ALL_LAYER_IDS.filter((id) => {
     const rawScore = layerScores[id]
     const rawWeight = weights[id]
-    const score = rawScore
+    const score = toFiniteScore(rawScore)
     const weight = rawWeight
     return score > 0 && weight > 0
   })
