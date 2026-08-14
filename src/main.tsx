@@ -5,11 +5,15 @@ import App from './App'
 import { installGlobalErrorHandler } from '@/components/organisms/shared/installGlobalErrorHandler'
 // 提前导入并初始化 themeStore，确保在 React 首屏渲染前应用持久化主题
 import { useThemeStore } from '@/store/themeStore'
+import { verifyDesignTokensOnReady } from '@/lib/designTokenVerifier'
 import './index.css'
-import './generated/tokens.css'
+
+// V5 Apple Business Design Tokens 加载验证（仅开发环境，生产构建 tree-shake 移除）
+verifyDesignTokensOnReady()
 
 useThemeStore.getState()
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 const LOG_LEVEL = (import.meta.env.VITE_LOG_LEVEL as 'debug' | 'info' | 'warn' | 'error') || 'info'
 
 setLogLevel(LOG_LEVEL)
