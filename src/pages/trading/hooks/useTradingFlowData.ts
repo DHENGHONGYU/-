@@ -1,4 +1,4 @@
-﻿/**
+/**
  * TradingFlowPage 数据获取与处理逻辑
  * 从 TradingFlowPage.tsx 提取
  * 封装：store 选取、mock 数据生成、Facade 同步、初始加载、数据监听、
@@ -13,6 +13,19 @@ import type { MockTradingData } from '@/types/modules/pool.types'
 import type { TradingPosition, RiskRules, CreateOrderForm, SignalOrderInput } from '../tradingFlow.types'
 
 const logger = getLogger()
+
+/** Seeded random constants (LCG-based pseudo-random for deterministic mock data) */
+const HASH_MULTIPLIER = 31
+const LCG_MULTIPLIER = 1103515245
+const LCG_INCREMENT = 12345
+const LCG_MODULUS = 0xffffffff
+const MOCK_VOLUME_RATIO_RANGE = 3.2
+const MOCK_PRICE_TO_MA20_RANGE = 18
+const MACD_RED_THRESHOLD = 0.42
+const MACD_GREEN_THRESHOLD = 0.84
+const FALLBACK_VOLUME_RATIO = 1.23
+const FALLBACK_PRICE_TO_MA20 = 2.4
+const FALLBACK_TURN_RATE = 1.85
 
 /** DEV 环境使用 Mock 交易数据（生产构建时 tree-shaken 移除）。真实数据通过 MCP trading tools 接入。 */
 export const USE_MOCK_DATA = import.meta.env.DEV
@@ -61,17 +74,17 @@ export function useTradingFlowData() {
           // ——— snapshot 指标派生（基于 symbol 确定性种子，避免每次刷新跳动）———
           const enrichedSignals = data.signals.map((s) => {
             let seed = 0
-            for (let i = 0; i < s.symbol.length; i++) seed = (seed * 31 + s.symbol.charCodeAt(i)) >>> 0
+            for (let i = 0; i < s.symbol.length; i++) seed = (seed * HASH_MULTIPLIER + s.symbol.charCodeAt(i)) >>> 0
             const rand = (): number => {
-              seed = (seed * 1103515245 + 12345) >>> 0
-              return seed / 0xffffffff
+              seed = (seed * LCG_MULTIPLIER + LCG_INCREMENT) >>> 0
+              return seed / LCG_MODULUS
             }
-            const volumeRatio = +(0.4 + rand() * 3.2).toFixed(2)
+            const volumeRatio = +(0.4 + rand() * MOCK_VOLUME_RATIO_RANGE).toFixed(2)
             const rsi14 = Math.round(15 + rand() * 75)
-            const priceToMA20 = +((rand() - 0.4) * 18).toFixed(2)
+            const priceToMA20 = +((rand() - 0.4) * MOCK_PRICE_TO_MA20_RANGE).toFixed(2)
             const macdDirRand = rand()
             const macdDirection =
-              macdDirRand < 0.42 ? 'red' : macdDirRand < 0.84 ? 'green' : 'neutral'
+              macdDirRand < MACD_RED_THRESHOLD ? 'red' : macdDirRand < MACD_GREEN_THRESHOLD ? 'green' : 'neutral'
             const turnRate = +(0.3 + rand() * 12).toFixed(2)
             const patterns = [
               '双底反弹', '放量突破', '均线金叉', '顶部背离',
@@ -179,7 +192,7 @@ export function useTradingFlowData() {
     void scanSignals().then(() => {
       logger.info('[TradingFlowPage] scanSignals 完成', {
         timestamp: new Date().toISOString(),
-        signalsCount: signals?.length ?? 0,
+        signalsCount: signals.length,
       })
     }).catch((err) => {
       logger.error('[TradingFlowPage] scanSignals 失败', {
@@ -453,14 +466,14 @@ export function useTradingFlowData() {
           confidence: s.confidence,
           rationale: s.rationale,
           snapshot: {
-            ...(s.snapshot ?? {}),
+            ...s.snapshot,
             // 兜底值，确保指标表格不为空
-            volumeRatio: (s.snapshot as Record<string, unknown>)?.volumeRatio ?? 1.23,
-            rsi14: (s.snapshot as Record<string, unknown>)?.rsi14 ?? 52,
-            priceToMA20: (s.snapshot as Record<string, unknown>)?.priceToMA20 ?? 2.4,
-            macdDirection: (s.snapshot as Record<string, unknown>)?.macdDirection ?? 'neutral',
-            turnRate: (s.snapshot as Record<string, unknown>)?.turnRate ?? 1.85,
-            klinePattern: (s.snapshot as Record<string, unknown>)?.klinePattern ?? '趋势确立',
+            volumeRatio: (s.snapshot as Record<string, unknown>).volumeRatio ?? FALLBACK_VOLUME_RATIO,
+            rsi14: (s.snapshot as Record<string, unknown>).rsi14 ?? 52,
+            priceToMA20: (s.snapshot as Record<string, unknown>).priceToMA20 ?? FALLBACK_PRICE_TO_MA20,
+            macdDirection: (s.snapshot as Record<string, unknown>).macdDirection ?? 'neutral',
+            turnRate: (s.snapshot as Record<string, unknown>).turnRate ?? FALLBACK_TURN_RATE,
+            klinePattern: (s.snapshot as Record<string, unknown>).klinePattern ?? '趋势确立',
           },
           createdAt: Date.now(),
         } as const

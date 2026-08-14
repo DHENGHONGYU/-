@@ -8,7 +8,7 @@ import { OrderExecutionPanel } from '@/components/organisms/trading/OrderExecuti
 import { RiskControlPanel } from '@/components/organisms/trading/RiskControlPanel'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { DataCollectionWizard } from '@/components/organisms/input/DataCollectionWizard'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 import { PageContainer } from '@/components/templates'
 import { TradingFlowHeader } from './components/TradingFlowHeader'
 import { TradingFlowSummary } from './components/TradingFlowSummary'
@@ -53,7 +53,7 @@ export default function TradingFlowPage(): React.JSX.Element {
           <TradingSignalPanel
             signals={displaySignals}
             stocks={stocks.map((st) => ({ symbol: st.symbol, name: st.name }))}
-            onCreateOrder={handleCreateOrderFromSignal}
+            onCreateOrder={(signal) => void handleCreateOrderFromSignal(signal)}
           />
         </div>
 
@@ -104,7 +104,7 @@ export default function TradingFlowPage(): React.JSX.Element {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className={position.pnl >= 0 ? COLOR_TOKENS.up.tailwind : COLOR_TOKENS.down.tailwind}>
+                      <div className={position.pnl >= 0 ? STOCK_COLOR_TOKENS.up.tailwind : STOCK_COLOR_TOKENS.down.tailwind}>
                         {position.pnl >= 0 ? '+' : ''}{position.pnl.toFixed(2)}
                       </div>
                       <div className="text-xs text-muted-foreground">

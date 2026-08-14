@@ -107,6 +107,7 @@ const PortfolioPage = memo(() => {
         </div>
 
         {/* 加载/错误提示 */}
+        // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
         {(pfError ?? '') !== '' && (
           <p className={`text-sm ${COLOR_TOKENS.danger.tailwind}`}>错误：{pfError}</p>
         )}
@@ -135,14 +136,14 @@ const PortfolioPage = memo(() => {
                   </div>
                   <div>
                     <span className="text-muted-foreground">持仓数：</span>
-                    <span className="font-medium">{portfolio.holdings?.length ?? 0}</span>
+                    <span className="font-medium">{portfolio.holdings.length}</span>
                   </div>
                 </div>
-                {(portfolio.holdings ?? null) !== null && portfolio.holdings.length > 0 && (
+                {portfolio.holdings.length > 0 && (
                   <div className="mt-3 space-y-2">
-                    {portfolio.holdings.map((holding, i) => (
+                    {portfolio.holdings.map((holding, _i) => (
                       <div
-                        key={holding.symbol ?? i}
+                        key={holding.symbol}
                         className="flex items-center justify-between rounded-md border p-3"
                       >
                         <div>
@@ -152,7 +153,7 @@ const PortfolioPage = memo(() => {
                           </span>
                         </div>
                         <Badge variant="secondary">
-                          {holding.currentShares ?? holding.currentWeight ?? '-'}
+                          {holding.currentShares}
                         </Badge>
                       </div>
                     ))}
@@ -175,13 +176,13 @@ const PortfolioPage = memo(() => {
                   <div>
                     <span className="text-muted-foreground">策略名称：</span>
                     <span className="font-medium">
-                      {(pfStrategyResult.summary ?? null) !== null ? `策略筛选 (${pfStrategyResult.summary.total})` : '未命名'}
+                      {`策略筛选 (${pfStrategyResult.summary.total})`}
                     </span>
                   </div>
                   <div>
                     <span className="text-muted-foreground">选中数：</span>
                     <span className="font-medium">
-                      {pfStrategyResult.summary?.selectedCount ?? 0}
+                      {pfStrategyResult.summary.selectedCount}
                     </span>
                   </div>
                 </div>
