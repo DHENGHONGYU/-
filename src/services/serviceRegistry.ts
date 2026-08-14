@@ -53,6 +53,7 @@ export const SERVICE_REGISTRY: ReadonlyArray<ServiceRegistryEntry> = [
   { id: 'IndustryAnalysisService', filePath: 'src/services/analysis/industryAnalysisService', status: 'active' },
   { id: 'IndustryScoreService', filePath: 'src/services/scoring/industryScoreService', status: 'active' },
   { id: 'InputService', filePath: 'src/services/input/inputService', status: 'active' },
+  { id: 'IntentionPoolService', filePath: 'src/services/input/intentionPoolService', status: 'active' },
   { id: 'IntelligentScoreService', filePath: 'src/services/scoring/intelligentScoreService', status: 'active' },
   { id: 'LocalDocService', filePath: 'src/services/system/localDocService', status: 'active' },
   { id: 'LocalDocSyncService', filePath: 'src/services/profile/localDocSyncService', status: 'active' },
