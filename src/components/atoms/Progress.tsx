@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Progress Atom层组件（Atom层组件）
+ * @module components/atoms/Progress
+ */
+
 import { type HTMLAttributes, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 

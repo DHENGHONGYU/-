@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Table - 表格组件（Atom层组件）
+ * @module components/atoms/Table
+ */
+
 import { type HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 import { THEME_TOKENS } from '@/constants/theme.tokens'

@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Sheet Atom层组件（Atom层组件）
+ * @module components/atoms/Sheet
+ */
+
 import { type ButtonHTMLAttributes, type HTMLAttributes, forwardRef, useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
 import { X } from 'lucide-react'
@@ -14,6 +19,7 @@ export interface SheetProps extends HTMLAttributes<HTMLDivElement> {
 export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
   ({ className, open, onOpenChange, side = 'right', children, ...props }, ref) => {
     const internalRef = useRef<HTMLDivElement>(null)
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const sheetRef = (ref as React.RefObject<HTMLDivElement>) != null ? (ref as React.RefObject<HTMLDivElement>) : internalRef
 
     useEffect(() => {

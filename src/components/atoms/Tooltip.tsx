@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Tooltip - 工具提示组件（Atom层组件）
+ * @module components/atoms/Tooltip
+ */
+
 import { type ReactNode, useState } from 'react'
 import { cn } from '@/lib/utils'
 

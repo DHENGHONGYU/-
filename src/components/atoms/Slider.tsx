@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Slider Atom层组件（Atom层组件）
+ * @module components/atoms/Slider
+ */
+
 import { type HTMLAttributes, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 

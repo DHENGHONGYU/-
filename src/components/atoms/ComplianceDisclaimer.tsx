@@ -4,6 +4,11 @@
  * 在投资助手指引、选股结果、研报生成处统一展示。
  * 内容：数据来源声明、AI输出非投资建议警示、版权归属。
  */
+/**
+ * @fileoverview ComplianceDisclaimer Atom层组件（Atom层组件）
+ * @module components/atoms/ComplianceDisclaimer
+ */
+
 import { AlertTriangle, FileText, Shield } from 'lucide-react'
 import type React from 'react'
 import { COLOR_SHADES } from '@/constants/theme.tokens'

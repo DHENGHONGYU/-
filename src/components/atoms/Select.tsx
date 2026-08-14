@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Select - 选择器组件（Atom层组件）
+ * @module components/atoms/Select
+ */
+
 import { forwardRef, type SelectHTMLAttributes, type HTMLAttributes, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { ChevronDown } from 'lucide-react'

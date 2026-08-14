@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Button - 按钮组件（Atom层组件）
+ * @module components/atoms/Button
+ */
+
 import { type ButtonHTMLAttributes, cloneElement, forwardRef, isValidElement } from 'react'
 import { cn } from '@/lib/utils'
 import { THEME_TOKENS } from '@/constants/theme.tokens'

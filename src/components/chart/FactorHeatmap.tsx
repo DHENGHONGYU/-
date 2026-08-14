@@ -6,6 +6,8 @@ import {
 import { CHART_PALETTE } from '@/constants/theme.tokens'
 import { EmptyState } from '@/components/molecules'
 
+const EPSILON = 1e-10
+
 export interface FactorHeatmapData {
   name: string
   value: number
@@ -38,7 +40,7 @@ const FactorHeatmap = forwardRef<HTMLDivElement, FactorHeatmapProps>(
     // 将值映射到颜色渐变：低(-1) -> 中(0) -> 高(1)
     // 颜色端点全部来自 CHART_PALETTE，禁止硬编码
     const range = maxValue - minValue
-    const hasRange = Math.abs(range) > 1e-10
+    const hasRange = Math.abs(range) > EPSILON
 
     const valueToColor = (value: number): string => {
       // 守卫：minValue ≈ maxValue 时，避免除零产生 NaN，返回中点色

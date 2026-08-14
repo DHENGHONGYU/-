@@ -5,6 +5,11 @@
  * BadgeStyle.badge 为 CSS 类名字符串，BadgeStyle.label 为显示文本。
  */
 
+/**
+ * @fileoverview DEFAULT_BADGE Atom层组件（Atom层组件）
+ * @module components/atoms/statusColors
+ */
+
 export interface BadgeStyle {
   /** CSS 类名（用于 Badge className） */
   badge: string

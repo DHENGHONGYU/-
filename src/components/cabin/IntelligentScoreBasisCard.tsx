@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Car
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
 import type { IntelligentScore, ResearchLog } from '@/data/types'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
+
+const MAX_LOG_ENTRIES = 10
 
 interface Props {
   result: IntelligentScore
@@ -166,7 +167,7 @@ export function IntelligentScoreBasisCard({ result, history, logs }: Props): Rea
                         <td className="px-3 py-2">{record.overallScore?.toFixed(2) ?? 'N/A'}</td>
                         <td className="px-3 py-2">
                           {overallDelta !== null ? (
-                            <span className={overallDelta > 0 ? COLOR_TOKENS.up.tailwind : overallDelta < 0 ? COLOR_TOKENS.down.tailwind : ''}>
+                            <span className={overallDelta > 0 ? 'text-success' : overallDelta < 0 ? 'text-destructive' : ''}>
                               {overallDelta > 0 ? '+' : ''}{overallDelta.toFixed(2)}
                             </span>
                           ) : '—'}
@@ -267,7 +268,7 @@ export function IntelligentScoreBasisCard({ result, history, logs }: Props): Rea
           <div className="rounded-md border p-3">
             <p className="text-sm font-medium">操作日志</p>
             <ul className="mt-2 max-h-40 space-y-1 overflow-auto text-xs text-muted-foreground">
-              {logs.slice(-10).map((log) => (
+              {logs.slice(-MAX_LOG_ENTRIES).map((log) => (
                 <li key={log.id ?? log.timestamp}>
                   {new Date(log.timestamp).toLocaleString()} · {log.action} · {log.actor}
                 </li>

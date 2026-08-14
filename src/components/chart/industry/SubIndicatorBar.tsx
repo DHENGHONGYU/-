@@ -34,6 +34,8 @@ export interface SubIndicatorBarProps extends ComponentPropsWithoutRef<'div'> {
   sortByValue?: 'asc' | 'desc' | 'none'
 }
 
+const DOMAIN_HEADROOM_FACTOR = 1.1
+
 const SubIndicatorBar = forwardRef<HTMLDivElement, SubIndicatorBarProps>(
   (
     {
@@ -63,7 +65,7 @@ const SubIndicatorBar = forwardRef<HTMLDivElement, SubIndicatorBarProps>(
 
     const defaultDomain: [number, number] = valueDomain ?? [
       0,
-      Math.max(...sortedData.map((d) => d.maxValue ?? d.value ?? 0), 1) * 1.1,
+      Math.max(...sortedData.map((d) => d.maxValue ?? d.value ?? 0), 1) * DOMAIN_HEADROOM_FACTOR,
     ]
 
     return (
@@ -131,7 +133,7 @@ const SubIndicatorBar = forwardRef<HTMLDivElement, SubIndicatorBarProps>(
                 }}
                 labelStyle={{ color: CHART_PALETTE.tooltipText }}
                 formatter={(value, _name, props) => {
-                  const payload = props?.payload as SubIndicatorBarDataItem | undefined
+                  const payload = props.payload as SubIndicatorBarDataItem | undefined
                   const unit = payload?.unit ?? ''
                   return [Number(value).toFixed(2) + unit, payload?.name ?? '']
                 }}

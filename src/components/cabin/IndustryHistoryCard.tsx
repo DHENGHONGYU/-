@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import type { IndustryScore, ResearchLog } from '@/data/types'
 
+const MAX_LOG_ENTRIES = 10
+
 interface Props {
   history: IndustryScore[]
   logs: ResearchLog[]
@@ -44,7 +46,7 @@ export function IndustryHistoryCard({ history, logs }: Props): React.JSX.Element
           <div className="rounded-md border p-3">
             <p className="text-sm font-medium">操作日志</p>
             <ul className="mt-2 max-h-40 space-y-1 overflow-auto text-xs text-muted-foreground">
-              {logs.slice(-10).map((log) => (
+              {logs.slice(-MAX_LOG_ENTRIES).map((log) => (
                 <li key={log.id ?? log.timestamp}>
                   {new Date(log.timestamp).toLocaleString()} · {log.action} · {log.actor}
                 </li>

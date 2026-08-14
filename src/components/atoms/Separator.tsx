@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Separator Atom层组件（Atom层组件）
+ * @module components/atoms/Separator
+ */
+
 import { forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 

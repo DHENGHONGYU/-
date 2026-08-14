@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Input - 输入框组件（Atom层组件）
+ * @module components/atoms/Input
+ */
+
 import { type InputHTMLAttributes, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'

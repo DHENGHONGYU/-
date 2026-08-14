@@ -3,7 +3,6 @@
  *
  * @module components/cabin
  * @doc [V9-DOC-FRONT-046]
- * @internal 评分相关组件（ScoreSnapshot/ScoreItem/ScoreSummary/ScoreHistoryTable）
- *           属 analysis舱 v2 预留，当前仅单测覆盖 + registry 映射。
- *           接入路由/Widget 后再重新开放对外 export；禁止直接静态 `<JSX>` 直引。
+ * @note ScoreSnapshot/ScoreItem/ScoreSummary/ScoreHistoryTable 已于 2026-08-14 删除（僵尸组件）
+ *           保留文件：IndustryHistoryCard、IndustrySkillSnapshotCard、IntelligentScoreBasisCard
  */

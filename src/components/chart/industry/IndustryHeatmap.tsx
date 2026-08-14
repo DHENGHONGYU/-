@@ -3,6 +3,12 @@ import { CHART_PALETTE } from '@/constants/theme.tokens'
 import { THEME_TOKENS } from '@/constants/theme/theme.tokens.base'
 import { usePerfTrace } from '@/hooks/usePerfTrace'
 
+/** ITU-R BT.601 luminance coefficients */
+const LUMA_R = 0.299
+const LUMA_G = 0.587
+const LUMA_B = 0.114
+const DEFAULT_HEATMAP_HEIGHT = 280
+
 export interface IndustryHeatmapDataItem {
   code: string
   name: string
@@ -54,7 +60,7 @@ function interpolateColor(color1: string, color2: string, ratio: number): string
 }
 
 function getLuminance(r: number, g: number, b: number): number {
-  return (0.299 * r + 0.587 * g + 0.114 * b) / 255
+  return (LUMA_R * r + LUMA_G * g + LUMA_B * b) / 255
 }
 
 const IndustryHeatmap = forwardRef<HTMLDivElement, IndustryHeatmapProps>(
@@ -63,7 +69,7 @@ const IndustryHeatmap = forwardRef<HTMLDivElement, IndustryHeatmapProps>(
       data,
       minValue,
       maxValue,
-      height = 280,
+      height = DEFAULT_HEATMAP_HEIGHT,
       columns,
       colorScheme = 'redGreen',
       showValue = true,

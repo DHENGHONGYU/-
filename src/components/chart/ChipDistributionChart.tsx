@@ -116,6 +116,7 @@ export function ChipDistributionChart({
     const mp = Math.max(...chipPercent, 1)
     const range = (priceMax ?? 0) - (priceMin ?? 0) || 1
     const toY = (price: number): number => {
+      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
       const ratio = (price - (priceMin ?? 0)) / range
       return PAD_TOP + (1 - ratio) * chartHeight
     }
@@ -127,6 +128,7 @@ export function ChipDistributionChart({
     const loss = 100 - profit
     const profitColor =
       profit >= 60 ? CHART_PALETTE.upColor : profit >= 30 ? CHART_PALETTE.series3 : CHART_PALETTE.downColor
+    // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
     const coverage = coverageRatio ?? 0
     const coverageColor =
       coverage >= 80 ? CHART_PALETTE.upColor : coverage >= 50 ? CHART_PALETTE.series3 : CHART_PALETTE.downColor
@@ -135,16 +137,24 @@ export function ChipDistributionChart({
       profit,
       loss,
       profitColor,
+      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
       avgCost: avgCost ?? 0,
+      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
       concentration: concentration ?? 0,
+      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
       currentPrice: currentPrice ?? 0,
+      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
       costCenter: costCenter ?? 0,
+      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
       costLow: costLow ?? 0,
+      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
       costHigh: costHigh ?? 0,
       coverage,
       coverageColor,
       coverageLabel,
+      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
       avgTurnoverRate: avgTurnoverRate ?? 0,
+      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
       maxTurnoverRate: maxTurnoverRate ?? 0,
     }
   }, [

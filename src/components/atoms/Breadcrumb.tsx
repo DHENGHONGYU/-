@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Breadcrumb Atom层组件（Atom层组件）
+ * @module components/atoms/Breadcrumb
+ */
+
 import { ChevronRight, MoreHorizontal } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { cloneElement, forwardRef, isValidElement, type HTMLAttributes } from 'react'

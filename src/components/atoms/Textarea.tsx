@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Textarea Atom层组件（Atom层组件）
+ * @module components/atoms/Textarea
+ */
+
 import { type TextareaHTMLAttributes, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'

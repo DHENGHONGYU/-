@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Label Atom层组件（Atom层组件）
+ * @module components/atoms/Label
+ */
+
 import { type LabelHTMLAttributes, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 

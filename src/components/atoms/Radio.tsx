@@ -1,3 +1,8 @@
+/**
+ * @fileoverview RadioGroup Atom层组件（Atom层组件）
+ * @module components/atoms/Radio
+ */
+
 import { createContext, forwardRef, memo, useContext, useMemo, useRef, useState, type InputHTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -106,7 +111,7 @@ export const Radio = memo(forwardRef<HTMLInputElement, RadioProps>(
             <span className="h-2.5 w-2.5 rounded-full bg-primary" />
           )}
         </span>
-        {label && <span>{label}</span>}
+        {label != null && <span>{label}</span>}
       </label>
     )
   },

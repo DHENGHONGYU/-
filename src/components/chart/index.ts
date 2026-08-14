@@ -21,7 +21,6 @@ export type { CandlestickChartData, CandlestickChartProps } from './CandlestickC
 export {
   IndustryHeatmap,
   IndustryHeatmapChart,
-  buildHistogram,
 } from './industry'
 /**
  * @internal 行业分析预留组件，已从对外导出移除（registry 内部用 + 同目录父子组合）：

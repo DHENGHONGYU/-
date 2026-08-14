@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Badge - 徽章组件（Atom层组件）
+ * @module components/atoms/Badge
+ */
+
 import { type HTMLAttributes, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 import { THEME_TOKENS } from '@/constants/theme.tokens'

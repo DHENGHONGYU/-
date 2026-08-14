@@ -43,12 +43,14 @@ const DEFAULT_SERIES: IndustryV4RadarSeries[] = [
   { name: '行业', dataKey: 'score', color: CHART_PALETTE.series1 },
 ]
 
+const DEFAULT_RADAR_HEIGHT = 320
+
 const IndustryV4Radar = forwardRef<HTMLDivElement, IndustryV4RadarProps>(
   (
     {
       data,
       series = DEFAULT_SERIES,
-      height = 320,
+      height = DEFAULT_RADAR_HEIGHT,
       showLegend = true,
       maxValue = 5,
       radarConfig,

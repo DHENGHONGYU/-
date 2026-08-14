@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Switch Atom层组件（Atom层组件）
+ * @module components/atoms/Switch
+ */
+
 import { type ButtonHTMLAttributes, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 import { THEME_TOKENS } from '@/constants/theme.tokens'
