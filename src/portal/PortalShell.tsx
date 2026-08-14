@@ -132,12 +132,15 @@ export default function PortalShell(): React.JSX.Element {
 
   const ThemeIcon = THEME_ICONS[mode]
 
-  const renderSidebarNav = (onNavigate?: () => void): React.ReactNode => (
+  const renderSidebarNav = (onNavigate?: () => void): React.ReactNode => {
+    const activeCabinDef = CABINS.find((c) => c.id === activeCabin)
+    const HeaderIcon = activeCabinDef?.icon
+    return (
     <>
       <div className={cn('flex items-center gap-2 border-b px-4 py-3', nav.drawerHeaderBorder)}>
-        <span className="text-lg">{CABINS.find((c) => c.id === activeCabin)?.emoji}</span>
+        {HeaderIcon ? <HeaderIcon className="h-5 w-5 shrink-0 text-primary" /> : null}
         <span className={cn('text-sm font-semibold', nav.sidebarTitle)}>
-          {CABINS.find((c) => c.id === activeCabin)?.label}
+          {activeCabinDef?.label}
         </span>
       </div>
       <div className="flex-1 overflow-y-auto py-3">
@@ -188,7 +191,8 @@ export default function PortalShell(): React.JSX.Element {
         <div className="h-6" />
       </div>
     </>
-  )
+    )
+  }
 
   return (
     <div className={cn('flex min-h-screen flex-col', layout.shellBg)} data-testid="portal-shell">
@@ -227,27 +231,31 @@ export default function PortalShell(): React.JSX.Element {
 
         <nav className={cn('flex items-center gap-0.5 rounded-xl p-1', cabin.containerBg)}>
           {CABINS.map((c) => {
+            const Icon = c.icon
             const active = activeCabin === c.id
             return (
               <button
                 key={c.id}
                 onClick={() => handleCabinSwitch(c.id, c.path)}
                 className={cn(
-                  'rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-300 ease-out',
+                  'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-300 ease-out',
                   active ? cabin.active : cabin.inactive,
                 )}
               >
-                <span className="mr-1 text-[11px]">{c.emoji}</span>
+                <Icon className="h-3.5 w-3.5 shrink-0 transition-colors duration-200" />
                 <span className="hidden sm:inline">{c.label}</span>
               </button>
             )
           })}
           <span className={cn('mx-1 h-4 w-px', layout.headerBorder)} />
           <button
-            onClick={() => navigate('/cockpit')}
-            className={cn('rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-300', cabin.cockpit)}
+            onClick={() => void navigate('/cockpit')}
+            className={cn(
+              'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-300',
+              cabin.cockpit,
+            )}
           >
-            <Target className="mr-1 inline h-3.5 w-3.5" />
+            <Target className="h-3.5 w-3.5 shrink-0 transition-colors duration-200" />
             <span className="hidden sm:inline">驾驶舱</span>
           </button>
         </nav>
@@ -284,16 +292,18 @@ export default function PortalShell(): React.JSX.Element {
       {/* 主体 */}
       <div className="flex flex-1 overflow-hidden">
         <aside
-          className={cn('hidden w-64 shrink-0 flex-col border-r md:flex', layout.sidebarBg, layout.sidebarBorder)}
+          className={cn('hidden w-60 shrink-0 flex-col border-r md:flex', layout.sidebarBg, layout.sidebarBorder)}
         >
           {renderSidebarNav()}
         </aside>
 
         <main className={cn('min-w-0 flex-1 overflow-auto', layout.mainBg)}>
-          <div className={cn('mx-auto', layout.mainMaxWidth, layout.mainPadding)}>
-            <React.Suspense fallback={<PageSkeleton />}>
-              <ActiveApp />
-            </React.Suspense>
+          <div className={cn('mx-auto flex min-h-full flex-col', layout.mainMaxWidth, layout.mainPadding)}>
+            <div className="my-auto">
+              <React.Suspense fallback={<PageSkeleton />}>
+                <ActiveApp />
+              </React.Suspense>
+            </div>
           </div>
         </main>
       </div>

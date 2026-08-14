@@ -20,6 +20,9 @@ import { Progress } from '@/components/atoms/Progress'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import type { ScoreStats, DimHealth } from '../hooks/useCollectionTaskStats'
 
+const ONE_HOUR_MS = 3_600_000
+const ONE_DAY_MS = 86_400_000
+
 interface DataQualityTabProps {
   // 采集质量指标
   successRate: number
@@ -51,9 +54,9 @@ function formatFreshness(ts: number | null): string {
   if (ts === null) return '暂无数据'
   const diff = Date.now() - ts
   if (diff < 60_000) return '刚刚'
-  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)} 分钟前`
-  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)} 小时前`
-  return `${Math.floor(diff / 86_400_000)} 天前`
+  if (diff < ONE_HOUR_MS) return `${Math.floor(diff / 60_000)} 分钟前`
+  if (diff < ONE_DAY_MS) return `${Math.floor(diff / ONE_HOUR_MS)} 小时前`
+  return `${Math.floor(diff / ONE_DAY_MS)} 天前`
 }
 
 /**
@@ -91,7 +94,7 @@ export function DataQualityTab({
   let timelinessScore = 0
   if (lastSuccessAt !== null) {
     const diff = Date.now() - lastSuccessAt
-    if (diff < 3_600_000) timelinessScore = 100
+    if (diff < ONE_HOUR_MS) timelinessScore = 100
     else if (diff < 86_400_000) timelinessScore = 80
     else timelinessScore = 50
   }

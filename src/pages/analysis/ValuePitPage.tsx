@@ -164,6 +164,7 @@ export default function ValuePitPage(): React.JSX.Element {
         description="五维评分引擎 · 催化确定性 · 估值安全垫 · 筹码结构 · 轮动位置 · 流动性"
         actions={
           <Button variant="outline" onClick={runAnalysis} disabled={loading}>
+            {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
             <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             刷新
           </Button>

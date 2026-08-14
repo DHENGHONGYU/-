@@ -213,7 +213,7 @@ export default function AgentTriggerPage(): React.JSX.Element {
 
             <Button
               className="w-full"
-              onClick={handleExecute}
+              onClick={() => void handleExecute()}
               disabled={isExecuting || !selectedAgentId || !selectedToolName}
             >
               {isExecuting ? (

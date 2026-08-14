@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
-import { Select } from '@/components/atoms/Select'
+import { StockSelector } from '@/components/organisms/input/StockSelector'
+import { toStockOption } from '@/constants/stockList'
 import { PageContainer, PageHeader } from '@/components/templates'
 import {
   Breadcrumb,
@@ -98,19 +99,15 @@ export default function ScoreDocPage(): React.JSX.Element {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">
-            <Select
-              value={symbol}
-              onChange={(e) => setSymbol(e.target.value)}
-              aria-label="股票代码"
-              className="w-64"
-            >
-              <option value="">请选择股票代码</option>
-              {stocks.map((stock) => (
-                <option key={stock.symbol} value={stock.symbol}>
-                  {stock.symbol} - {stock.name}
-                </option>
-              ))}
-            </Select>
+            <div className="w-64">
+              <StockSelector
+                value={symbol}
+                onChange={(stock) => setSymbol(stock.symbol)}
+                stocks={stocks.map(toStockOption)}
+                placeholder="搜索股票..."
+                showIcon={false}
+              />
+            </div>
             <Button onClick={handleRefresh} disabled={!symbol || loading}>
               {loading ? '加载中...' : '刷新'}
             </Button>

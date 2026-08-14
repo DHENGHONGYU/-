@@ -96,6 +96,7 @@ export default function HotSectorPage(): React.JSX.Element {
   // Error 状态
   // ============================================================
 
+  // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
   if ((error ?? '') !== '') {
     return (
       <PageContainer>
@@ -158,7 +159,7 @@ export default function HotSectorPage(): React.JSX.Element {
           description="五维评分引擎 · 动量强度 · 情绪热度 · 技术突破 · 估值风险 · 综合评分"
           actions={
             <Button variant="outline" {...guardProps} onClick={runAnalysis}>
-              <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className="mr-2 h-4 w-4" />
               刷新
             </Button>
           }
@@ -168,7 +169,7 @@ export default function HotSectorPage(): React.JSX.Element {
         <div className="grid gap-4">
           {scores.map((score) => {
             const isExpanded = expandedSymbol === score.symbol
-            const actionCfg = (ACTION_CONFIG[score.action] ?? null) !== null ? ACTION_CONFIG[score.action] : ACTION_CONFIG.ignore
+            const actionCfg = ACTION_CONFIG[score.action]
             const scoreNum = score.score || 0
               const scoreColor =
                 scoreNum >= 4 ? 'text-success' :
@@ -176,7 +177,7 @@ export default function HotSectorPage(): React.JSX.Element {
                 'text-destructive'
 
             // 构造雷达图数据
-            const radarData: ScoreRadarData[] = Object.entries((score.dimensions ?? null) !== null ? score.dimensions : {}).map(([key, value]) => ({
+            const radarData: ScoreRadarData[] = Object.entries(score.dimensions).map(([key, value]) => ({
               dimension: DIMENSION_LABELS[key] ?? key,
               score: (getSafeNumber(value) * 100),
               fullMark: 100,
@@ -211,7 +212,7 @@ export default function HotSectorPage(): React.JSX.Element {
                       <div className="flex items-center gap-3">
                         <Badge variant={actionCfg.variant}>{actionCfg.label}</Badge>
                         <span className={`text-xl font-bold ${scoreColor}`}>
-                          {(score.score ?? 0).toFixed(2)}
+                          {score.score.toFixed(2)}
                         </span>
                         {isExpanded ? (
                           <ChevronUp className="h-4 w-4 text-muted-foreground" />
@@ -246,8 +247,8 @@ export default function HotSectorPage(): React.JSX.Element {
                           </span>
                         </div>
                         <p className="mt-2 text-xs text-muted-foreground">
-                          综合评分 {(score.score ?? 0).toFixed(2)} / 5.0
-                          · 生成时间 {new Date(score.calculatedAt ?? Date.now()).toLocaleString('zh-CN')}
+                          综合评分 {score.score.toFixed(2)} / 5.0
+                          · 生成时间 {new Date(score.calculatedAt).toLocaleString('zh-CN')}
                         </p>
                       </div>
                     </CardContent>

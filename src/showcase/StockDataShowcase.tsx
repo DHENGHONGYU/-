@@ -6,6 +6,7 @@ import {
   getStockColorHex,
 } from '@/constants/theme.tokens'
 import { Badge } from '@/components/atoms/Badge'
+import { RealtimeQuoteShowcase } from './RealtimeQuoteShowcase'
 import type { ShowcaseGroup } from './types'
 
 export function buildStockDataShowcase(): ShowcaseGroup {
@@ -14,6 +15,16 @@ export function buildStockDataShowcase(): ShowcaseGroup {
     title: '股票数据展示',
     icon: Database,
     items: [
+      {
+        id: 'realtime-quote',
+        title: '实时行情（支持选股）',
+        description: '使用 useRealtimeQuote + useKline Hooks 展示实时行情和K线数据，支持股票选择器，可切换不同股票查看实时数据。',
+        component: <RealtimeQuoteShowcase />,
+        codeSnippet: `// 通用组件：支持股票选择器
+const [symbol, setSymbol] = useState('600519')
+const { data, loading, refresh } = useRealtimeQuote({ symbol, refreshIntervalMs: 30_000 })
+const { data: kline } = useKline({ symbol, period: 'daily', count: 60 })`,
+      },
       {
         id: 'watchlist-row',
         title: '自选股列表行',

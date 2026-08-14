@@ -1,22 +1,20 @@
 /**
- * @fileoverview 模型配置面板 — 合并「LLM管理」「API配置」「模型升级」
+ * @fileoverview 模型配置面板 — 合并「LLM管理」「模型升级」
  * 从用户视角：用户配置 AI 模型的完整流程是
- *   选择模型(LLM) → 配置API密钥 → 检查模型升级
- * 三者紧密关联，合并为一个页面通过 Tab 切换。
+ *   选择模型(LLM) → 配置API密钥(内置在LLM管理页) → 检查模型升级
+ * API密钥配置已合并到 LLM 管理页「基础配置」Tab，不再单独展示。
  */
 import React, { Suspense, useState } from 'react'
-import { Sparkles, Code, TrendingUp } from 'lucide-react'
+import { Sparkles, TrendingUp } from 'lucide-react'
 import { PageSkeleton } from '@/components/organisms/shared/PageSkeleton'
 
 const LlmManagement = React.lazy(() => import('@/pages/command/agent/LlmManagement'))
-const ApiConfigurationPage = React.lazy(() => import('@/pages/command/agent/ApiConfigurationPage'))
 const ModelUpgradePage = React.lazy(() => import('@/pages/command/agent/ModelUpgradePage'))
 
-type TabId = 'llm' | 'api' | 'upgrade'
+type TabId = 'llm' | 'upgrade'
 
 const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
   { id: 'llm', label: '模型选择', icon: Sparkles },
-  { id: 'api', label: 'API 密钥', icon: Code },
   { id: 'upgrade', label: '模型升级', icon: TrendingUp },
 ]
 
@@ -48,7 +46,6 @@ export default function ModelConfigPanel(): React.JSX.Element {
 
       <Suspense fallback={<PageSkeleton />}>
         {activeTab === 'llm' && <LlmManagement />}
-        {activeTab === 'api' && <ApiConfigurationPage />}
         {activeTab === 'upgrade' && <ModelUpgradePage />}
       </Suspense>
     </div>

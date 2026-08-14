@@ -57,6 +57,18 @@ export interface LlmConfigState {
   showApiKey: boolean
   setShowApiKey: React.Dispatch<React.SetStateAction<boolean>>
 
+  // Tushare Token（数据源密钥）
+  tushareToken: string
+  setTushareToken: React.Dispatch<React.SetStateAction<string>>
+  showTushareToken: boolean
+  setShowTushareToken: React.Dispatch<React.SetStateAction<boolean>>
+
+  // Qwen API Key（辅助 LLM 密钥）
+  qwenApiKey: string
+  setQwenApiKey: React.Dispatch<React.SetStateAction<string>>
+  showQwenApiKey: boolean
+  setShowQwenApiKey: React.Dispatch<React.SetStateAction<boolean>>
+
   // 预设选择
   selectedPreset: string
   setSelectedPreset: React.Dispatch<React.SetStateAction<string>>
@@ -98,6 +110,10 @@ export function useLlmConfigState(): LlmConfigState {
   const [config, setConfig] = useState<Partial<LlmConfig>>({})
   const [apiKey, setApiKey] = useState('')
   const [showApiKey, setShowApiKey] = useState(false)
+  const [tushareToken, setTushareToken] = useState('')
+  const [showTushareToken, setShowTushareToken] = useState(false)
+  const [qwenApiKey, setQwenApiKey] = useState('')
+  const [showQwenApiKey, setShowQwenApiKey] = useState(false)
   const [selectedPreset, setSelectedPreset] = useState<string>('')
   const [isSaving, setIsSaving] = useState(false)
   const [isTesting, setIsTesting] = useState(false)
@@ -132,6 +148,14 @@ export function useLlmConfigState(): LlmConfigState {
     setApiKey,
     showApiKey,
     setShowApiKey,
+    tushareToken,
+    setTushareToken,
+    showTushareToken,
+    setShowTushareToken,
+    qwenApiKey,
+    setQwenApiKey,
+    showQwenApiKey,
+    setShowQwenApiKey,
     selectedPreset,
     setSelectedPreset,
     isSaving,

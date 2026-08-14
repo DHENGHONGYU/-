@@ -28,7 +28,7 @@ import { useToast } from '@/hooks/useToast'
 import { useIntentionPoolStore } from '@/store/intentionPoolStore'
 import { useResearchPoolStore } from '@/store/researchPoolStore'
 import { usePositionPoolStore } from '@/store/positionPoolStore'
-import { useChipStrategyCharts } from '@/pages/output/hooks/useChipStrategyCharts'
+import { useChipStrategyCharts } from '@/hooks/chip/useChipStrategyCharts'
 import type { PoolItem } from '@/types/modules/pool.types'
 import { cn } from '@/lib/utils'
 import { MOCK_EXAMPLES, type MockExample } from '@/fixtures/chipStrategyMockData'
@@ -37,6 +37,7 @@ import { computeActualMatch, analyzeStockChips, logGrayZoneDecision, exportChipS
 import { getDebugLogContent, clearDebugLog, getDebugLogCount, downloadDebugLogFile } from '@/domain/chip/debugLog'
 import { getPositionLabel, getEnergyLabel, getActionBadgeVariant, getActionColor } from '@/domain/chip/helpers'
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { getDebugLogContent, clearDebugLog, getDebugLogCount }
 
 // ============================================================
@@ -193,6 +194,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
 
   // === K线图 + 筹码分布图数据（随 symbol 变动自动加载）===
   const chartData = useChipStrategyCharts(
+    // 静默回退：确认数据源和兜底意图
     selectedSymbol || null,
     selectedOption?.item.price,
     turnover ? parseFloat(turnover) : undefined,
@@ -206,6 +208,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
       if (filter === 'buy') return s.tradeAction === 'buy'
       if (filter === 'sell') return s.tradeAction === 'sell'
       if (filter === 'hold') return s.tradeAction === 'hold'
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (filter === 'escape') return s.tradeAction === 'escape'
       return true
     })
@@ -799,7 +802,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                     )
                   })}
                 </div>
-                <Button variant="outline" size="sm" onClick={handleExportExcel}>
+                <Button variant="outline" size="sm" onClick={() => void handleExportExcel()}>
                   <Download className="mr-1 h-3.5 w-3.5" />
                   导出 Excel
                 </Button>

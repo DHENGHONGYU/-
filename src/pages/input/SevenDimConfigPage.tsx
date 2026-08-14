@@ -251,7 +251,10 @@ function DimensionRow({
             <div className="mt-1 flex flex-wrap gap-2 text-xs text-muted-foreground">
               <span>频率: {FREQUENCY_LABELS[dim.frequency]}</span>
               <span>·</span>
-              <span>源: {dim.sources.map((s) => DATA_SOURCE_LABELS[s] ?? s).join(' > ')}</span>
+              <span>源: {dim.sources.map((s) => {
+                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                  return DATA_SOURCE_LABELS[s] ?? s
+                }).join(' > ')}</span>
               <span>·</span>
               <span>存储: {STORAGE_TYPE_LABELS[dim.storageType]}</span>
             </div>
@@ -507,7 +510,7 @@ export default function SevenDimConfigPage() {
             <div className="space-y-2">
               <Button
                 className="w-full"
-                onClick={() => store.runCollection()}
+                onClick={() => void store.runCollection()}
                 disabled={isDisabled || enabledCount === 0}
               >
                 {store.isCollecting ? '采集中...' : '开始采集'}
@@ -515,7 +518,7 @@ export default function SevenDimConfigPage() {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => store.saveConfig()}
+                onClick={() => void store.saveConfig()}
                 disabled={isDisabled || !store.isDirty}
               >
                 {store.isSaving ? '保存中...' : '保存配置'}

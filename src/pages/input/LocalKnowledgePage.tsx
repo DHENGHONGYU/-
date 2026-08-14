@@ -135,7 +135,7 @@ export default function LocalKnowledgePage(): React.JSX.Element {
         title="本地知识库"
         description="管理本地文档、研报、财报与策略笔记"
         actions={
-          <Button variant="outline" size="sm" onClick={handleScanFolder} disabled={loading}>
+          <Button variant="outline" size="sm" onClick={() => void handleScanFolder()} disabled={loading}>
             <FolderOpen className="mr-2 h-4 w-4" />
             导入文件夹
           </Button>
@@ -177,7 +177,7 @@ export default function LocalKnowledgePage(): React.JSX.Element {
                 ))}
               </select>
             </div>
-            <Button variant="secondary" size="sm" onClick={handleImportSamples} disabled={loading}>
+            <Button variant="secondary" size="sm" onClick={() => void handleImportSamples()} disabled={loading}>
               <Plus className="mr-2 h-4 w-4" />
               导入示例数据
             </Button>
@@ -206,7 +206,7 @@ export default function LocalKnowledgePage(): React.JSX.Element {
                 }
               }}
             />
-            <Button onClick={handleSearch} disabled={loading}>
+            <Button onClick={() => void handleSearch()} disabled={loading}>
               <Search className="mr-2 h-4 w-4" />
               搜索
             </Button>

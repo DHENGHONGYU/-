@@ -18,10 +18,28 @@ import {
   setLlmApiKey,
   isLlmApiKeyConfigured,
   getDefaultLlmConfig,
+  getLlmApiKeyAsync,
+  isLlmApiKeyExpired,
+  getLlmApiKeyAgeDays,
+  markLlmApiKeyVerified,
 } from '@/config/llmConfig'
+import {
+  setTushareToken as saveTushareToken,
+  isTushareTokenConfigured,
+  isTushareTokenExpired,
+  getTushareTokenAgeDays,
+  setQwenApiKey as saveQwenApiKey,
+  isQwenApiKeyConfigured,
+  isQwenApiKeyExpired,
+  getQwenApiKeyAgeDays,
+} from '@/config/secretConfig'
+import { chat } from '@/services/llm/llmClient'
 import type { LlmConfigState } from './useLlmConfigState'
 
 const logger = getLogger()
+
+/** 密钥输入框的掩码占位（与 LlmConfigTab 一致，命中时表示使用已加密存储的 Key） */
+const API_KEY_MASK = '••••••••'
 
 /**
  * 业务逻辑返回
@@ -33,6 +51,22 @@ export interface LlmConfigActions {
   handleSave: () => Promise<void>
   // 测试连接
   handleTest: () => Promise<void>
+  // 密钥存活天数（未配置为 0）
+  getLlmApiKeyAgeDays: () => number
+  // 密钥是否超过 TTL 需要轮换
+  isLlmApiKeyExpired: () => boolean
+  // 保存 Tushare Token（加密存储）
+  handleSaveTushareToken: () => Promise<void>
+  // Tushare Token 存活天数（未配置为 0）
+  getTushareTokenAgeDays: () => number
+  // Tushare Token 是否超过 TTL 需要轮换
+  isTushareTokenExpired: () => boolean
+  // 保存 Qwen API Key（加密存储）
+  handleSaveQwenApiKey: () => Promise<void>
+  // Qwen API Key 存活天数（未配置为 0）
+  getQwenApiKeyAgeDays: () => number
+  // Qwen API Key 是否超过 TTL 需要轮换
+  isQwenApiKeyExpired: () => boolean
   // 预设变更
   handlePresetChange: (presetId: string) => void
   // 模型列表（当前预设）
@@ -74,6 +108,10 @@ export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
     setIsTesting,
     setTestResult,
     setApiKey,
+    tushareToken,
+    setTushareToken,
+    qwenApiKey,
+    setQwenApiKey,
     modelFilters,
     recommendScenario,
     factorOverrides,
@@ -84,6 +122,7 @@ export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
 
   // ── 初始化 ─────────────────────────────────────────────
   const initialize = useCallback(() => {
+    // eslint-disable-next-line @typescript-eslint/require-await
     void (async () => {
       try {
         const defaultConfig = getDefaultLlmConfig()
@@ -92,14 +131,21 @@ export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
         if (isLlmApiKeyConfigured()) {
           setApiKey('••••••••')
         }
+        if (isTushareTokenConfigured()) {
+          setTushareToken('••••••••')
+        }
+        if (isQwenApiKeyConfigured()) {
+          setQwenApiKey('••••••••')
+        }
 
         const presetId = inferPresetId(defaultConfig.baseURL || '')
         setSelectedPreset(presetId)
 
         // 从 localStorage 读取已保存的透明度配置（因子开关 + 全局开关）
         const savedTransparency = localStorage.getItem('v9-llm-transparency')
-        if (savedTransparency != null && savedTransparency !== '') {
-          const parsed = JSON.parse(savedTransparency) as {
+        // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
+        if ((savedTransparency ?? '') !== '') {
+          const parsed = JSON.parse(savedTransparency!) as {
             enableLlm?: boolean
             factorOverrides?: typeof factorOverrides
           }
@@ -118,7 +164,7 @@ export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
         logger.error('[LlmManagement] 加载配置失败', { error: err })
       }
     })()
-  }, [setConfig, setApiKey, setSelectedPreset, setGlobalLlmEnabled, setFactorOverrides])
+  }, [setConfig, setApiKey, setSelectedPreset, setGlobalLlmEnabled, setFactorOverrides, setTushareToken, setQwenApiKey])
 
   useEffect(() => {
     initialize()
@@ -128,7 +174,7 @@ export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
   const handleSave = useCallback(async () => {
     setIsSaving(true)
     try {
-      if (apiKey && apiKey !== '••••••••') {
+      if (apiKey && apiKey !== API_KEY_MASK) {
         await setLlmApiKey(apiKey)
       }
 
@@ -171,12 +217,25 @@ export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
     setTestResult(null)
 
     try {
-      // TODO: 接入真实 API 测试
-      await new Promise((resolve) => { setTimeout(resolve, 1500) })
+      const effectiveKey = apiKey && apiKey !== API_KEY_MASK ? apiKey : await getLlmApiKeyAsync()
+
+      const response = await chat(
+        [{ role: 'user', content: 'ping' }],
+        {
+          baseURL: config.baseURL,
+          apiKey: effectiveKey,
+          model: config.model,
+          maxTokens: 16,
+          temperature: 0,
+          timeout: 15000,
+        },
+      )
+
+      markLlmApiKeyVerified()
 
       setTestResult({
         success: true,
-        message: '连接成功！API Key有效，模型可访问。',
+        message: `连接成功！模型 ${response.model} 可访问。`,
       })
     } catch (err) {
       setTestResult({
@@ -186,7 +245,21 @@ export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
     } finally {
       setIsTesting(false)
     }
-  }, [setIsTesting, setTestResult])
+  }, [apiKey, config.baseURL, config.model, setIsTesting, setTestResult])
+
+  // ── 保存 Tushare Token ─────────────────────────────────
+  const handleSaveTushareToken = useCallback(async () => {
+    if (!tushareToken || tushareToken === API_KEY_MASK) return
+    await saveTushareToken(tushareToken)
+    setTushareToken('••••••••')
+  }, [tushareToken, setTushareToken])
+
+  // ── 保存 Qwen API Key ──────────────────────────────────
+  const handleSaveQwenApiKey = useCallback(async () => {
+    if (!qwenApiKey || qwenApiKey === API_KEY_MASK) return
+    await saveQwenApiKey(qwenApiKey)
+    setQwenApiKey('••••••••')
+  }, [qwenApiKey, setQwenApiKey])
 
   // ── 预设变更 ───────────────────────────────────────────
   const handlePresetChange = useCallback(
@@ -209,8 +282,7 @@ export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
   // ── 模型列表 ───────────────────────────────────────────
   const getCurrentModels = useCallback((): string[] => {
     if (selectedPreset === 'custom') {
-      const model = config.model ?? ''
-      return model !== '' ? [model] : []
+      return (config.model ?? '') !== '' ? [config.model!] : []
     }
     const preset = getPresetById(selectedPreset)
     return preset?.models ?? []
@@ -222,8 +294,7 @@ export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
       if (modelFilters.providers.length > 0 && !modelFilters.providers.includes(preset.provider)) {
         return false
       }
-      const cw = preset.contextWindow ?? 0
-      if (cw > 0 && cw < modelFilters.minContextWindow) {
+      if ((preset.contextWindow ?? 0) > 0 && preset.contextWindow! < modelFilters.minContextWindow) {
         return false
       }
       const inputPrice = parsePriceString(preset.inputPrice)
@@ -300,6 +371,14 @@ export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
     getFilteredPresets,
     getAvailableProviders,
     getRecommendedModels,
+    getLlmApiKeyAgeDays,
+    isLlmApiKeyExpired,
+    handleSaveTushareToken,
+    getTushareTokenAgeDays,
+    isTushareTokenExpired,
+    handleSaveQwenApiKey,
+    getQwenApiKeyAgeDays,
+    isQwenApiKeyExpired,
   }
 }
 

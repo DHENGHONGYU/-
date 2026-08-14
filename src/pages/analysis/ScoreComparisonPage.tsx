@@ -23,6 +23,8 @@ import { getLogger } from '@/lib/logger'
 import { CHART_PALETTE, STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 import type { ScoreComparisonResult, DimensionComparisonItem } from '@/types/modules/score.types'
 import { cn } from '@/lib/utils'
+import { StockSelector } from '@/components/organisms/input/StockSelector'
+import { toStockOption } from '@/constants/stockList'
 
 const logger = getLogger()
 
@@ -305,11 +307,6 @@ export default function ScoreComparisonPage(): React.JSX.Element {
     [versions],
   )
 
-  const stockOptions = useMemo(
-    () => stocks.map((s) => ({ value: s.symbol, label: `${s.symbol} ${s.name ?? ''}` })),
-    [stocks],
-  )
-
   const timelineChartData = useMemo(
     () =>
       timelineData.map((t) => ({
@@ -368,21 +365,17 @@ export default function ScoreComparisonPage(): React.JSX.Element {
             <div className="grid grid-cols-1 gap-4 pt-2 md:grid-cols-3">
               <div className="space-y-2">
                 <label className="text-sm font-medium">选择股票</label>
-                <Select
+                <StockSelector
                   value={symbol}
-                  onValueChange={(v) => {
-                    setSymbol(v)
+                  onChange={(stock) => {
+                    setSymbol(stock.symbol)
                     setComparisonLeft('')
                     setComparisonRight('')
                   }}
-                >
-                  <option value="">请选择股票</option>
-                  {stockOptions.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </Select>
+                  stocks={stocks.map(toStockOption)}
+                  placeholder="搜索股票名称或代码..."
+                  showIcon={false}
+                />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">左版本</label>
@@ -419,31 +412,23 @@ export default function ScoreComparisonPage(): React.JSX.Element {
             <div className="grid grid-cols-1 gap-4 pt-2 md:grid-cols-2">
               <div className="space-y-2">
                 <label className="text-sm font-medium">左侧股票</label>
-                <Select
+                <StockSelector
                   value={comparisonLeft}
-                  onValueChange={setComparisonLeft}
-                >
-                  <option value="">选择左侧股票</option>
-                  {stockOptions.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </Select>
+                  onChange={(stock) => setComparisonLeft(stock.symbol)}
+                  stocks={stocks.map(toStockOption)}
+                  placeholder="搜索左侧股票..."
+                  showIcon={false}
+                />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">右侧股票</label>
-                <Select
+                <StockSelector
                   value={comparisonRight}
-                  onValueChange={setComparisonRight}
-                >
-                  <option value="">选择右侧股票</option>
-                  {stockOptions.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </Select>
+                  onChange={(stock) => setComparisonRight(stock.symbol)}
+                  stocks={stocks.map(toStockOption)}
+                  placeholder="搜索右侧股票..."
+                  showIcon={false}
+                />
               </div>
             </div>
           )}
@@ -465,7 +450,9 @@ export default function ScoreComparisonPage(): React.JSX.Element {
 
       <DataState
         isLoading={comparisonLoading}
+        // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
         isError={(comparisonError ?? '') !== ''}
+        // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
         isEmpty={!hasResult && !comparisonLoading && (comparisonError ?? '') === ''}
         data={comparisonResult}
         loadingProps={{ message: '正在计算比对结果...' }}
@@ -475,7 +462,8 @@ export default function ScoreComparisonPage(): React.JSX.Element {
           description: '请选择比对对象并点击「开始比对」',
         }}
       >
-        {hasResult && (comparisonResult ?? null) !== null && (
+        // 静默回退：确认数据源和兜底意图
+        {hasResult && (
           <div className="space-y-6">
             <ComparisonHeader result={comparisonResult} />
 

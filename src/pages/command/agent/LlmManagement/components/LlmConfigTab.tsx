@@ -64,6 +64,14 @@ export function LlmConfigTab({ state, actions }: LlmConfigTabProps): React.JSX.E
     setApiKey,
     showApiKey,
     setShowApiKey,
+    tushareToken,
+    setTushareToken,
+    showTushareToken,
+    setShowTushareToken,
+    qwenApiKey,
+    setQwenApiKey,
+    showQwenApiKey,
+    setShowQwenApiKey,
     selectedPreset,
     setSelectedPreset,
     isTesting,
@@ -113,6 +121,25 @@ export function LlmConfigTab({ state, actions }: LlmConfigTabProps): React.JSX.E
         isTesting={isTesting}
         testResult={testResult}
         onTest={actions.handleTest}
+        keyAgeDays={actions.getLlmApiKeyAgeDays()}
+        keyExpired={actions.isLlmApiKeyExpired()}
+      />
+
+      <DataServiceKeyCard
+        tushareToken={tushareToken}
+        onTushareTokenChange={setTushareToken}
+        showTushareToken={showTushareToken}
+        onToggleShowTushare={() => { setShowTushareToken(!showTushareToken) }}
+        onSaveTushare={actions.handleSaveTushareToken}
+        tushareAgeDays={actions.getTushareTokenAgeDays()}
+        tushareExpired={actions.isTushareTokenExpired()}
+        qwenApiKey={qwenApiKey}
+        onQwenApiKeyChange={setQwenApiKey}
+        showQwenApiKey={showQwenApiKey}
+        onToggleShowQwen={() => { setShowQwenApiKey(!showQwenApiKey) }}
+        onSaveQwen={actions.handleSaveQwenApiKey}
+        qwenAgeDays={actions.getQwenApiKeyAgeDays()}
+        qwenExpired={actions.isQwenApiKeyExpired()}
       />
     </div>
   )
@@ -474,9 +501,11 @@ interface ApiKeyCardProps {
   isTesting: boolean
   testResult: TestResult | null
   onTest: () => Promise<void>
+  /** 密钥存活天数（未配置为 0） */
+  keyAgeDays: number
+  /** 密钥是否超过 TTL 需要轮换 */
+  keyExpired: boolean
 }
-
-const API_KEY_MASK = '••••••••'
 
 function ApiKeyCard({
   apiKey,
@@ -486,13 +515,16 @@ function ApiKeyCard({
   isTesting,
   testResult,
   onTest,
+  keyAgeDays,
+  keyExpired,
 }: ApiKeyCardProps): React.JSX.Element {
-  const canTest = !isTesting && !!apiKey && apiKey !== API_KEY_MASK
+  // 已输入新 Key 或已保存（掩码）时均可测试：掩码态由 handleTest 读取加密存储
+  const canTest = !isTesting && !!apiKey
   return (
     <Card>
       <CardHeader>
         <CardTitle>API 密钥配置</CardTitle>
-        <CardDescription>配置LLM API Key（将加密存储）</CardDescription>
+        <CardDescription>配置LLM API Key（将加密存储、30 天建议轮换）</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
@@ -510,6 +542,14 @@ function ApiKeyCard({
             </Button>
           </div>
         </div>
+
+        {keyAgeDays > 0 && (
+          <div className={`rounded-md p-3 text-sm ${keyExpired ? 'bg-warning/15 text-warning' : 'bg-muted text-muted-foreground'}`}>
+            {keyExpired
+              ? `当前 Key 已使用 ${keyAgeDays} 天，建议更新轮换以保障安全。`
+              : `当前 Key 已使用 ${keyAgeDays} 天（30 天内无需轮换）。`}
+          </div>
+        )}
 
         <div className="flex gap-2">
           <Button onClick={() => { void onTest() }} disabled={!canTest}>
@@ -532,6 +572,117 @@ function ApiKeyCard({
             {testResult.message}
           </div>
         )}
+      </CardContent>
+    </Card>
+  )
+}
+
+// ──────────────────────────────────────────────────────────
+// 数据服务密钥配置（Tushare Token / Qwen API Key）
+// ──────────────────────────────────────────────────────────
+
+interface DataServiceKeyCardProps {
+  // Tushare Token
+  tushareToken: string
+  onTushareTokenChange: (v: string) => void
+  showTushareToken: boolean
+  onToggleShowTushare: () => void
+  onSaveTushare: () => Promise<void>
+  /** Tushare Token 存活天数（未配置为 0） */
+  tushareAgeDays: number
+  /** Tushare Token 是否超过 TTL 需要轮换 */
+  tushareExpired: boolean
+  // Qwen API Key
+  qwenApiKey: string
+  onQwenApiKeyChange: (v: string) => void
+  showQwenApiKey: boolean
+  onToggleShowQwen: () => void
+  onSaveQwen: () => Promise<void>
+  /** Qwen API Key 存活天数（未配置为 0） */
+  qwenAgeDays: number
+  /** Qwen API Key 是否超过 TTL 需要轮换 */
+  qwenExpired: boolean
+}
+
+function DataServiceKeyCard({
+  tushareToken,
+  onTushareTokenChange,
+  showTushareToken,
+  onToggleShowTushare,
+  onSaveTushare,
+  tushareAgeDays,
+  tushareExpired,
+  qwenApiKey,
+  onQwenApiKeyChange,
+  showQwenApiKey,
+  onToggleShowQwen,
+  onSaveQwen,
+  qwenAgeDays,
+  qwenExpired,
+}: DataServiceKeyCardProps): React.JSX.Element {
+  const canSaveTushare = !!tushareToken && tushareToken !== '••••••••'
+  const canSaveQwen = !!qwenApiKey && qwenApiKey !== '••••••••'
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>数据服务密钥</CardTitle>
+        <CardDescription>配置数据源与辅助服务密钥（AES-GCM 加密存储、30 天建议轮换）</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* Tushare Token */}
+        <div className="space-y-2">
+          <Label>Tushare Token</Label>
+          <div className="flex gap-2">
+            <Input
+              type={showTushareToken ? 'text' : 'password'}
+              value={tushareToken}
+              onChange={(e) => { onTushareTokenChange(e.target.value) }}
+              placeholder="输入 Tushare Token"
+              className="flex-1"
+            />
+            <Button variant="outline" size="sm" onClick={onToggleShowTushare}>
+              {showTushareToken ? '隐藏' : '显示'}
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => { void onSaveTushare() }} disabled={!canSaveTushare}>
+              保存
+            </Button>
+          </div>
+          {tushareAgeDays > 0 && (
+            <div className={`rounded-md p-3 text-sm ${tushareExpired ? 'bg-warning/15 text-warning' : 'bg-muted text-muted-foreground'}`}>
+              {tushareExpired
+                ? `当前 Token 已使用 ${tushareAgeDays} 天，建议更新轮换以保障安全。`
+                : `当前 Token 已使用 ${tushareAgeDays} 天（30 天内无需轮换）。`}
+            </div>
+          )}
+        </div>
+
+        {/* Qwen API Key */}
+        <div className="space-y-2">
+          <Label>Qwen API Key</Label>
+          <div className="flex gap-2">
+            <Input
+              type={showQwenApiKey ? 'text' : 'password'}
+              value={qwenApiKey}
+              onChange={(e) => { onQwenApiKeyChange(e.target.value) }}
+              placeholder="输入 Qwen API Key"
+              className="flex-1"
+            />
+            <Button variant="outline" size="sm" onClick={onToggleShowQwen}>
+              {showQwenApiKey ? '隐藏' : '显示'}
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => { void onSaveQwen() }} disabled={!canSaveQwen}>
+              保存
+            </Button>
+          </div>
+          {qwenAgeDays > 0 && (
+            <div className={`rounded-md p-3 text-sm ${qwenExpired ? 'bg-warning/15 text-warning' : 'bg-muted text-muted-foreground'}`}>
+              {qwenExpired
+                ? `当前 Key 已使用 ${qwenAgeDays} 天，建议更新轮换以保障安全。`
+                : `当前 Key 已使用 ${qwenAgeDays} 天（30 天内无需轮换）。`}
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   )

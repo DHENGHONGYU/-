@@ -144,7 +144,7 @@ export function useCollectionTaskStats(): CollectionTaskState & CollectionTaskAc
 
   // 数据新鲜度：最近一次成功采集时间
   const lastSuccessAt = useMemo(() => {
-    const successSpans = spans.filter((s) => s.result === 'success' && s.completedAt)
+    const successSpans = spans.filter((s) => s.result === 'success' && s.completedAt != null)
     if (successSpans.length === 0) return null
     return Math.max(...successSpans.map((s) => s.completedAt!))
   }, [spans])

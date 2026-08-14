@@ -7,6 +7,8 @@ import { Input } from '@/components/atoms/Input'
 import { Progress } from '@/components/atoms/Progress'
 import { Textarea } from '@/components/atoms/Textarea'
 import { Tooltip } from '@/components/atoms/Tooltip'
+import { StockSelector } from '@/components/organisms/input/StockSelector'
+import { toStockOption } from '@/constants/stockList'
 import { ScoreFactorDeltaPanel } from '@/components/organisms/shared/ScoreFactorDeltaPanel'
 import { ScoreUpdateAlert } from '@/components/organisms/shared/ScoreUpdateAlert'
 import { PageContainer, PageHeader } from '@/components/templates'
@@ -273,25 +275,16 @@ export default function IntelligentScorePage(): React.JSX.Element {
             <div className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">选择标的</label>
-                <select
-                  aria-label="选择标的股票"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                <StockSelector
                   value={symbol}
-                  onChange={(e) => setSymbol(e.target.value)}
-                >
-                  <option value="">请输入或选择股票代码</option>
-                  {stocks.map((stock) => (
-                    <option key={stock.symbol} value={stock.symbol}>
-                      {stock.symbol} · {stock.name}
-                    </option>
-                  ))}
-                </select>
-                <Input
-                  placeholder="或直接输入代码，如 600519.SH"
-                  aria-label="手动输入股票代码"
-                  value={symbol}
-                  onChange={(e) => setSymbol(e.target.value)}
+                  onChange={(stock) => setSymbol(stock.symbol)}
+                  stocks={stocks.map(toStockOption)}
+                  placeholder="搜索股票名称或代码..."
+                  maxDisplayCount={20}
                 />
+                <p className="text-xs text-muted-foreground">
+                  支持搜索名称/代码，↑↓键导航，Enter确认
+                </p>
               </div>
 
               <div className="space-y-2">
@@ -499,7 +492,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
                                   {dimension.rationale}
                                 </p>
                               </div>
-                              {dimension.evidence !== null && dimension.evidence !== undefined && dimension.evidence.length > 0 && (
+                              {dimension.evidence.length > 0 && (
                                 <div>
                                   <p className="text-xs font-medium text-muted-foreground">支撑证据</p>
                                   <ul className="mt-1 space-y-1">

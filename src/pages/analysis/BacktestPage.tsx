@@ -144,6 +144,7 @@ export default function BacktestPage(): React.JSX.Element {
         </CardContent>
       </Card>
 
+      // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
       {(error ?? '') !== '' && (
         <Card className={`border-destructive/50 bg-destructive/5`}>
           <CardContent className="flex items-center gap-3">
@@ -187,7 +188,7 @@ export default function BacktestPage(): React.JSX.Element {
               ))}
             </div>
 
-            {(results.pnlCurve ?? null) !== null && results.pnlCurve.length > 1 && (
+            {results.pnlCurve.length > 1 && (
               <Card>
                 <CardHeader>
                   <CardTitle>净值曲线</CardTitle>
@@ -327,7 +328,8 @@ export default function BacktestPage(): React.JSX.Element {
           </CardContent>
         </Card>
       )}
-      {(history ?? null) !== null && history.length > 0 && (
+      // 静默回退：确认数据源和兜底意图
+      {history.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">

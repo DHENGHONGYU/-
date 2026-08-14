@@ -103,6 +103,7 @@ export default function MCPServerDashboardPage(): React.JSX.Element {
         </Card>
       )}
 
+      // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
       {(error ?? '') !== '' && (
         <Card className="border-destructive/50">
           <CardContent className="py-4">
@@ -111,6 +112,7 @@ export default function MCPServerDashboardPage(): React.JSX.Element {
         </Card>
       )}
 
+      // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
       {!isLoading && (error ?? '') === '' && servers.length === 0 && (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-16 text-muted-foreground">
@@ -223,14 +225,16 @@ export default function MCPServerDashboardPage(): React.JSX.Element {
                               />
                               <Button
                                 size="sm"
-                                onClick={() => handleToolTest(server.serverName, tool.name)}
+                                onClick={() => void handleToolTest(server.serverName, tool.name)}
                               >
                                 <Play className="mr-1 h-3 w-3" />
                                 执行
                               </Button>
+                              // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
                               {(toolResult ?? '') !== '' && (
                                 <pre className="text-xs font-mono bg-muted p-2 rounded max-h-40 overflow-auto">{toolResult}</pre>
                               )}
+                              // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
                               {(toolError ?? '') !== '' && (
                                 <p className="text-xs text-destructive">{toolError}</p>
                               )}

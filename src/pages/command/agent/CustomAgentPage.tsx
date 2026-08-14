@@ -269,7 +269,7 @@ const CustomAgentPage: React.FC = () => {
                 {/* 启用/禁用切换（原子 Switch） */}
                 <Switch
                   checked={agent.isActive}
-                  onChange={() => handleToggleAgent(agent.id)}
+                  onChange={() => void handleToggleAgent(agent.id)}
                   aria-label={agent.isActive ? '禁用智能体' : '启用智能体'}
                 />
               </div>
@@ -328,12 +328,12 @@ const CustomAgentPage: React.FC = () => {
                 编辑
               </Button>
 
-              <Button variant="secondary" size="sm" onClick={() => handleTestAgent(agent)}>
+              <Button variant="secondary" size="sm" onClick={() => void handleTestAgent(agent)}>
                 <BeakerIcon className="w-4 h-4" />
                 测试
               </Button>
 
-              <Button variant="danger" size="sm" onClick={() => handleDeleteAgent(agent.id)}>
+              <Button variant="danger" size="sm" onClick={() => void handleDeleteAgent(agent.id)}>
                 <TrashIcon className="w-4 h-4" />
               </Button>
             </div>
@@ -472,7 +472,7 @@ const CustomAgentPage: React.FC = () => {
               <Button
                 variant="primary"
                 disabled={!editingAgent.name || !editingAgent.description || !editingAgent.systemPrompt}
-                onClick={handleSaveAgent}
+                onClick={() => void handleSaveAgent()}
               >
                 保存
               </Button>

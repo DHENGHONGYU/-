@@ -196,7 +196,7 @@ const CapabilityGraphPage: React.FC = () => {
               const targetAgent = agents.find(a => a.id === edge.target)
               if (!sourceAgent || !targetAgent) return null
 
-              const isHighlighted = selectedEdge?.source === edge.source && selectedEdge?.target === edge.target
+              const isHighlighted = selectedEdge?.source === edge.source && selectedEdge.target === edge.target
 
               return (
                 <g key={index} onClick={() => handleEdgeClick(edge)} style={{ cursor: 'pointer' }}>

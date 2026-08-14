@@ -82,7 +82,7 @@ export default function IndustryDashboardPage(): React.JSX.Element {
 
       const stocksWithData = stocks.map((stock) => ({
         stock,
-        financials: financialMap.get(stock.symbol as string) || ({
+        financials: financialMap.get(stock.symbol as string) ?? ({
           revenueGrowth: null,
           profitGrowth: null,
           grossMargin: null,
@@ -91,7 +91,7 @@ export default function IndustryDashboardPage(): React.JSX.Element {
           revenue: null,
           profit: null,
         }),
-        quotes: quoteMap.get(stock.symbol as string) || ({
+        quotes: quoteMap.get(stock.symbol as string) ?? ({
           close: null,
           open: null,
           high: null,
@@ -112,17 +112,17 @@ export default function IndustryDashboardPage(): React.JSX.Element {
       const mcpResult = await mcpBridge.callTool('analysis', 'analyze_industry_v4', {
         data: JSON.stringify(stocksWithData),
       })
-      const resultText = mcpResult.content?.[0] && 'text' in mcpResult.content[0]
+      const resultText = mcpResult.content[0] && 'text' in mcpResult.content[0]
         ? (mcpResult.content[0] as { text: string }).text
         : '{}'
-      const parsed: {
+      const parsed = JSON.parse(resultText) as {
         v4Analyses: IndustryV4AnalysisEnhanced[]
         rotationSignals: IndustryRotationSignal[]
-      } = JSON.parse(resultText)
+      }
       setV4Analyses(parsed.v4Analyses)
       setRotationSignals(parsed.rotationSignals)
 
-      logger.info(`[IndustryDashboardPage] 加载完成：${parsed.v4Analyses?.length ?? 0} 个行业`)
+      logger.info(`[IndustryDashboardPage] 加载完成：${parsed.v4Analyses.length} 个行业`)
     } catch (err) {
       logger.error('[IndustryDashboardPage] 加载失败', { error: err as Error })
       setError(err instanceof Error ? err.message : '加载失败')
@@ -195,7 +195,7 @@ export default function IndustryDashboardPage(): React.JSX.Element {
   ]
 
   const getTrendDirection = (analysis: IndustryV4AnalysisEnhanced): TrendDirection => {
-    if (analysis.trend?.prosperityTrend?.direction) {
+    if (analysis.trend?.prosperityTrend.direction) {
       return analysis.trend.prosperityTrend.direction
     }
     return 'flat'
@@ -212,9 +212,9 @@ export default function IndustryDashboardPage(): React.JSX.Element {
   const qualitySummary = v4Analyses.length > 0
     ? {
         completeness:
-          v4Analyses.reduce((sum, a) => sum + (a.dataCompleteness ?? 0), 0) /
+          v4Analyses.reduce((sum, a) => sum + a.dataCompleteness, 0) /
           v4Analyses.length,
-        sampleCount: v4Analyses.reduce((sum, a) => sum + (a.constituentCount ?? 0), 0),
+        sampleCount: v4Analyses.reduce((sum, a) => sum + a.constituentCount, 0),
       }
     : null
 
@@ -468,7 +468,7 @@ export default function IndustryDashboardPage(): React.JSX.Element {
                     <TableCell>
                       <TrendArrow
                         direction={getTrendDirection(analysis)}
-                        strength={analysis.trend?.prosperityTrend?.strength}
+                        strength={analysis.trend?.prosperityTrend.strength}
                         size="sm"
                         showLabel
                       />

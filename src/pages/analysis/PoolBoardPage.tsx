@@ -15,8 +15,8 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { usePoolBoardData } from './hooks/usePoolBoardData'
-import { usePoolBoardCollect } from './hooks/usePoolBoardCollect'
+import { usePoolBoardData } from '@/hooks/pool/usePoolBoardData'
+import { usePoolBoardCollect } from '@/hooks/pool/usePoolBoardCollect'
 import { StockOverviewCard } from '@/components/organisms/pool/StockOverviewCard'
 import { BatchCollectionPanel } from '@/components/organisms/pool/BatchCollectionPanel'
 import { useResearchPoolStore } from '@/store/researchPoolStore'
@@ -100,7 +100,7 @@ const PoolBoardPage: React.FC = () => {
                 'border-input text-foreground hover:bg-muted',
                 (collecting || loading) && 'cursor-not-allowed opacity-50',
               )}
-              onClick={handleRefresh}
+              onClick={() => void handleRefresh()}
               disabled={collecting || loading}
             >
               刷新
@@ -111,7 +111,7 @@ const PoolBoardPage: React.FC = () => {
                 'border-destructive/30 text-destructive hover:bg-destructive/10',
                 (collecting || items.length === 0) && 'cursor-not-allowed opacity-50',
               )}
-              onClick={handleClearPool}
+              onClick={() => void handleClearPool()}
               disabled={collecting || items.length === 0}
             >
               清空池
@@ -121,7 +121,7 @@ const PoolBoardPage: React.FC = () => {
                 'rounded-md px-3 py-1.5 text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90',
                 (collecting || items.length === 0) && 'cursor-not-allowed opacity-50',
               )}
-              onClick={handleCollect}
+              onClick={() => void handleCollect()}
               disabled={collecting || items.length === 0}
             >
               {collecting ? '采集中...' : '批量采集'}
@@ -131,6 +131,7 @@ const PoolBoardPage: React.FC = () => {
       </div>
 
       {/* 错误提示区 */}
+      // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
       {((collectError ?? '') !== '' || (refreshError ?? '') !== '') && (
         <div
           className={cn(
@@ -138,11 +139,13 @@ const PoolBoardPage: React.FC = () => {
             'border-destructive/30 bg-destructive/10',
           )}
         >
+          // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
           {(collectError ?? '') !== '' && (
             <p className={cn('text-sm', 'text-destructive')}>
               采集异常: {collectError}
             </p>
           )}
+          // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
           {(refreshError ?? '') !== '' && (
             <p className={cn('mt-1 text-sm', 'text-warning')}>
               进度刷新异常: {refreshError}
