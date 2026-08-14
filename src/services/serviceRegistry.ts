@@ -19,8 +19,8 @@ export interface ServiceRegistryEntry {
   id: string
   /** 相对 src 的路径（不含扩展名，供 resolveRegistryPath 解析） */
   filePath: string
-  /** 状态（默认 active） */
-  status: 'active'
+  /** 状态（active 可用 / wip 在制品） */
+  status: 'active' | 'wip'
 }
 
 /**
@@ -70,7 +70,7 @@ export const SERVICE_REGISTRY: ReadonlyArray<ServiceRegistryEntry> = [
   { id: 'TradingPortfolioService', filePath: 'src/services/trading/portfolioService', status: 'active' },
   { id: 'ProfileIntegrationService', filePath: 'src/services/analysis/profileIntegrationService', status: 'active' },
   { id: 'ProfileService', filePath: 'src/services/profile/profileService', status: 'active' },
-  { id: 'QualityMetricsService', filePath: 'src/services/quality/QualityMetricsService', status: 'active' },
+  { id: 'QualityMetricsService', filePath: 'src/services/quality/QualityMetricsService', status: 'wip' },
   { id: 'RbacManagementService', filePath: 'src/services/rbac/rbacManagementService', status: 'active' },
   { id: 'RegistrationContractService', filePath: 'src/services/analysis/registrationContractService', status: 'active' },
   { id: 'ResearchReportSyncService', filePath: 'src/services/profile/researchReportSyncService', status: 'active' },

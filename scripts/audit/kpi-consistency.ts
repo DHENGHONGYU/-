@@ -12,7 +12,7 @@
  * @doc V9-DOC-QUALITY-001
  */
 
-import { getQualityMetrics, getRecentRecords } from '../src/services/quality/QualityMetricsService'
+import { getQualityMetrics, getRecentRecords } from '../../src/services/quality/QualityMetricsService'
 
 interface AuditResult {
   passed: boolean
