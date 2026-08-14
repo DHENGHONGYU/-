@@ -23,6 +23,11 @@ vi.mock('@/services/analysis/analysisService', () => ({
 
 vi.mock('@/services/scoring/v6ScoreService', () => ({
   runV6Score: vi.fn(),
+  runV6ScoreBatch: vi.fn(),
+}))
+
+vi.mock('@/services/input/intentionPoolService', () => ({
+  listIntentionCandidates: vi.fn(),
 }))
 
 vi.mock('@/services/analysis/scoreTrendService', () => ({
@@ -63,7 +68,8 @@ vi.mock('@/lib/utils', () => ({
 
 import { useAnalysisStore } from './analysisStore'
 import { listStocks, listV6Scores } from '@/services/analysis/analysisService'
-import { runV6Score } from '@/services/scoring/v6ScoreService'
+import { runV6Score, runV6ScoreBatch } from '@/services/scoring/v6ScoreService'
+import { listIntentionCandidates } from '@/services/input/intentionPoolService'
 import { loadIndustryScoreTrend, loadStockScoreTrend } from '@/services/analysis/scoreTrendService'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
 
@@ -92,6 +98,8 @@ describe('useAnalysisStore', () => {
   it('初始状态验证', () => {
     const state = useAnalysisStore.getState()
     expect(state.stocks).toEqual([])
+    expect(state.candidates).toEqual([])
+    expect(state.scope).toBe('all')
     expect(state.scores).toEqual([])
     expect(state.loading).toBe(false)
     expect(state.error).toBeNull()
@@ -184,6 +192,93 @@ describe('useAnalysisStore', () => {
     const state = useAnalysisStore.getState()
     expect(state.scores).toHaveLength(1)
     expect(state.scores[0]!.score).toBe(90)
+  })
+
+  // ---------- loadStocks('intention') ----------
+
+  it('loadStocks(intention): 成功加载意向候选池', async () => {
+    const mockCandidates = [
+      { symbol: '600519.SH', name: '贵州茅台', screenSource: 'hot-sector' },
+      { symbol: '000858.SZ', name: '五粮液', screenSource: 'manual' },
+    ]
+    vi.mocked(listIntentionCandidates).mockResolvedValue({ success: true, data: mockCandidates as any })
+    vi.mocked(listV6Scores).mockResolvedValue({ success: true, data: [] })
+
+    await useAnalysisStore.getState().loadStocks('intention')
+
+    const state = useAnalysisStore.getState()
+    expect(state.candidates).toHaveLength(2)
+    expect(state.scope).toBe('intention')
+    expect(state.stocks).toEqual([])
+    expect(state.loading).toBe(false)
+    expect(state.error).toBeNull()
+    // 交接后应刷新评分列表，使已评分候选展示 V6 分值（避免误显示「未评分」）
+    expect(listV6Scores).toHaveBeenCalled()
+  })
+
+  it('loadStocks(intention): 失败时设置 error', async () => {
+    vi.mocked(listIntentionCandidates).mockResolvedValue({ success: false, error: '意向池加载失败' })
+
+    await useAnalysisStore.getState().loadStocks('intention')
+
+    const state = useAnalysisStore.getState()
+    expect(state.candidates).toEqual([])
+    expect(state.loading).toBe(false)
+    expect(state.error).toBe('意向池加载失败')
+  })
+
+  it('loadStocks(intention): 抛出异常时使用 Error 消息', async () => {
+    vi.mocked(listIntentionCandidates).mockRejectedValue(new Error('网络异常'))
+
+    await useAnalysisStore.getState().loadStocks('intention')
+
+    const state = useAnalysisStore.getState()
+    expect(state.candidates).toEqual([])
+    expect(state.loading).toBe(false)
+    expect(state.error).toBe('网络异常')
+  })
+
+  // ---------- runBatchScore ----------
+
+  it('runBatchScore: 空列表直接跳过', async () => {
+    await useAnalysisStore.getState().runBatchScore([])
+
+    expect(runV6ScoreBatch).not.toHaveBeenCalled()
+    expect(useAnalysisStore.getState().loading).toBe(false)
+  })
+
+  it('runBatchScore: 成功时自动刷新评分列表', async () => {
+    vi.mocked(runV6ScoreBatch).mockResolvedValue({
+      success: true,
+      data: { stats: { completed: 2, total: 2 }, errors: [] },
+    } as any)
+    vi.mocked(listV6Scores).mockResolvedValue({ success: true, data: [] })
+
+    await useAnalysisStore.getState().runBatchScore(['600519.SH', '000858.SZ'])
+
+    expect(runV6ScoreBatch).toHaveBeenCalledWith(['600519.SH', '000858.SZ'])
+    expect(listV6Scores).toHaveBeenCalled()
+    expect(useAnalysisStore.getState().loading).toBe(false)
+  })
+
+  it('runBatchScore: 失败时设置 error', async () => {
+    vi.mocked(runV6ScoreBatch).mockResolvedValue({ success: false, error: '批量评分失败' })
+
+    await useAnalysisStore.getState().runBatchScore(['600519.SH'])
+
+    const state = useAnalysisStore.getState()
+    expect(state.loading).toBe(false)
+    expect(state.error).toBe('批量评分失败')
+  })
+
+  it('runBatchScore: 抛出异常时使用 Error 消息', async () => {
+    vi.mocked(runV6ScoreBatch).mockRejectedValue(new Error('网络异常'))
+
+    await useAnalysisStore.getState().runBatchScore(['600519.SH'])
+
+    const state = useAnalysisStore.getState()
+    expect(state.loading).toBe(false)
+    expect(state.error).toBe('网络异常')
   })
 
   // ---------- clearError ----------

@@ -15,7 +15,13 @@ import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import type { Stock, V6Score } from '@/data/types'
 import { listStocks, listV6Scores } from '@/services/analysis/analysisService'
-import { runV6Score } from '@/services/scoring/v6ScoreService'
+import { runV6Score, runV6ScoreBatch } from '@/services/scoring/v6ScoreService'
+import { listIntentionCandidates } from '@/services/input/intentionPoolService'
+import type {
+  AnalysisCandidate,
+  AnalysisCandidateQuery,
+  AnalysisScope,
+} from '@/types/modules/analysis.types'
 import {
   loadIndustryScoreTrend,
   loadStockScoreTrend,
@@ -37,8 +43,12 @@ const logger = getLogger()
 // ============================================================
 
 interface AnalysisState {
-  /** 分析标的列表 */
+  /** 分析标的列表（全量，scope='all' 时使用） */
   stocks: Stock[]
+  /** 分析候选标的（意向候选池，scope='intention' 时使用，来自输入舱） */
+  candidates: AnalysisCandidate[]
+  /** 当前分析作用域 */
+  scope: AnalysisScope
   /** V6 评分列表 */
   scores: V6Score[]
   /** 加载状态（标的加载 / 评分计算共用） */
@@ -56,10 +66,12 @@ interface AnalysisState {
   trendPeriod: ScoreTrendPeriod
 
   // Actions
-  /** 加载标的列表并刷新评分 */
-  loadStocks: () => Promise<void>
+  /** 加载标的列表并刷新评分（scope='intention' 时经 intentionPoolService 读取输入舱意向候选池） */
+  loadStocks: (scope?: AnalysisScope, filter?: Omit<AnalysisCandidateQuery, 'scope'>) => Promise<void>
   /** 对指定标的运行 V6 评分，完成后自动刷新评分列表 */
   handleScore: (symbol: string) => Promise<void>
+  /** 对指定标的列表批量运行 V6 评分（Worker 并行），完成后自动刷新评分列表 */
+  runBatchScore: (symbols: string[]) => Promise<void>
   /** 刷新评分列表（静默） */
   loadScores: () => Promise<void>
   /** 清空错误 */
@@ -80,6 +92,8 @@ interface AnalysisState {
 
 const initialState = {
   stocks: [] as Stock[],
+  candidates: [] as AnalysisCandidate[],
+  scope: 'all' as AnalysisScope,
   scores: [] as V6Score[],
   loading: false,
   error: null as string | null,
@@ -99,14 +113,31 @@ const initialState = {
 export const useAnalysisStore = create<AnalysisState>((set, get) => ({
   ...initialState,
 
-  loadStocks: async () => {
-    logger.info('[analysisStore] loadStocks 开始')
+  loadStocks: async (scope: AnalysisScope = 'all', filter?: Omit<AnalysisCandidateQuery, 'scope'>) => {
+    logger.info(`[analysisStore] loadStocks 开始: scope=${scope}`)
     set({ loading: true, error: null })
 
     try {
+      // 意向候选池作用域：经 intentionPoolService 读取输入舱数据（含来源溯源与已有评分）
+      if (scope === 'intention') {
+        const result = await listIntentionCandidates({ scope: 'intention', ...filter })
+        if (result.success && result.data) {
+          set({ candidates: result.data, scope: 'intention', stocks: [], loading: false })
+          logger.info(`[analysisStore] loadStocks(intention) 完成: ${result.data.length} 只候选`)
+          // 刷新评分列表：让已评分的候选展示 V6 分值，避免交接后误显示「未评分」
+          void get().loadScores()
+        } else {
+          const message = result.error ?? '无法加载意向候选池'
+          logger.error(`[analysisStore] loadStocks(intention) 失败: ${message}`)
+          set({ loading: false, error: message })
+        }
+        return
+      }
+
+      // 默认全量作用域（向后兼容）
       const result = await listStocks()
       if (result.success && result.data) {
-        set({ stocks: result.data, loading: false })
+        set({ stocks: result.data, scope: 'all', candidates: [], loading: false })
         logger.info(`[analysisStore] loadStocks 完成: ${result.data.length} 只标的`)
       } else {
         const message = result.error ?? '无法加载标的列表'
@@ -168,6 +199,36 @@ export const useAnalysisStore = create<AnalysisState>((set, get) => ({
     }
   },
 
+  runBatchScore: async (symbols: string[]) => {
+    if (symbols.length === 0) {
+      logger.warn('[analysisStore] runBatchScore 收到空列表，跳过')
+      return
+    }
+    logger.info(`[analysisStore] runBatchScore 开始: ${symbols.length} 只`)
+    set({ loading: true, error: null })
+
+    try {
+      const result = await runV6ScoreBatch(symbols)
+      if (result.success && result.data) {
+        // 批量评分落库后刷新评分列表，驱动 UI 评分标签联动
+        await get().loadScores()
+        logger.info(
+          `[analysisStore] runBatchScore 完成: ${result.data.stats.completed}/${result.data.stats.total}`,
+          { failed: result.data.errors.length },
+        )
+        set({ loading: false })
+      } else {
+        const message = result.error ?? '批量评分失败'
+        logger.error(`[analysisStore] runBatchScore 失败: ${message}`)
+        set({ loading: false, error: message })
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : '批量评分失败'
+      logger.error(`[analysisStore] runBatchScore 异常: ${message}`)
+      set({ loading: false, error: message })
+    }
+  },
+
   loadScores: async () => {
     logger.info('[analysisStore] loadScores 开始')
     try {
@@ -207,6 +268,7 @@ export const useAnalysisStore = create<AnalysisState>((set, get) => ({
         set({ trendData: data, trendLoading: false })
         logger.info(`[analysisStore] loadTrend 完成: ${data.points.length} 个周期点`)
       } else {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         const message = result.error ?? '无法加载趋势数据'
         logger.error(`[analysisStore] loadTrend 失败: ${message}`)
         set({ trendLoading: false, trendError: message })
