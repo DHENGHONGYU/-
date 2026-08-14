@@ -7,6 +7,53 @@
 
 ---
 
+## [Unreleased] - 2026-08-15
+
+### Added
+
+- **设计令牌验证 Utility 模块（`src/lib/designTokenVerifier.ts`）**：
+  - 封装 V5 Apple Business Design Tokens 的运行时验证逻辑，导出 3 个函数：
+    - `collectDesignTokens(el?)` — 纯函数，采集 15 个 V5 令牌 + 4 个旧版令牌，返回结构化 `TokenVerificationResult`
+    - `verifyDesignTokens(el?)` — 采集 + 输出结构化日志（含 light/dark 期望值对比、缺失/不匹配/旧版残留检测）
+    - `verifyDesignTokensOnReady()` — 便捷封装，自动处理 DOM 就绪 + DEV 守卫
+  - 所有函数内部 `import.meta.env.DEV` 守卫，生产构建 Vite tree-shake 完全移除，零运行时开销
+  - `src/lib/designTokenVerifier.test.ts`（新增）—— 17 个单元测试，覆盖 light/dark 模式、缺失/不匹配/旧版残留、DEV 守卫、DOM 就绪等场景
+
+- **Design→Code 工作流规范文档（`docs/guides/design-to-code-workflow.md` v1.2.0）**：
+  - 新增第 3.3 节「令牌验证 Utility」：API 参考表、`TokenVerificationResult` 接口定义、3 个使用场景（入口验证 / 主题切换重验 / 单元测试断言）、4 项设计约束
+  - 新增第 10 节「验证记录」：静态检查 8 项（旧版文件/脚本/包配置清理）+ 运行时验证 11 项令牌对比表 + 截图证据
+  - 第 3.1 节添加 ✅ 验证完成标记
+
+### Changed
+
+- `src/main.tsx` —— 从 120 行内联验证逻辑简化为 2 行：`import { verifyDesignTokensOnReady }` + `verifyDesignTokensOnReady()`
+- `src/store/themeStore.ts` —— `applyTheme()` 函数在主题切换后通过 `requestAnimationFrame` 延迟一帧自动调用 `verifyDesignTokens()`，覆盖 setMode / toggleTheme / cycleMode / system listener / rehydrate 全部 5 条主题切换路径
+
+### Removed
+
+- **旧版双套令牌系统彻底清除**：
+  - `src/generated/tokens.css` —— 旧版 slate 色彩令牌（178 行）
+  - `src/generated/tokens.ts` —— 旧版 TypeScript 常量
+  - `scripts/generate-tokens.ts` —— 旧版令牌自动生成器
+  - `design-tokens/tokens.json` —— 旧版令牌源数据
+  - `package.json` `prebuild` 钩子中的 `generate:tokens` 调用
+  - `src/main.tsx` 中的 `import './generated/tokens.css'`
+
+### Verified
+
+- `npm run build` 全量构建通过（exit 0，3223 modules transformed，仅常规 chunk size 警告）
+- `npx vitest run src/lib/designTokenVerifier.test.ts` —— 17/17 通过（1.08s）
+- Playwright 运行时验证（`http://127.0.0.1:5199`）：15 项 V5 令牌全部匹配期望值，4 个旧版令牌均为空，0 页面错误
+- 生产 bundle 搜索 `TokenVerify` / `旧版 tokens.css` / `MISSING` —— 均为 0 处（DEV 守卫 tree-shake 验证通过）
+- 主题切换后 TokenVerify 日志自动重新输出，dark 模式期望值（`--primary: 210 100% 60%`）正确切换
+
+### Documentation
+
+- `docs/guides/design-to-code-workflow.md` —— 版本 v1.0.0 → v1.2.0（3 次增量更新）
+- `CHANGELOG.md` —— 本条目
+
+---
+
 ## [Unreleased] - 2026-08-14
 
 ### Added
@@ -248,7 +295,7 @@
   - 新增 `CockpitCrossLayout` 纵横交叉布局骨架组件，以「域 × 视角」矩阵组织 Widget 面板
   - 新增 `CrossMatrixOverview` 交叉矩阵总览组件，支持域/视角双向筛选与单元格快速导航
   - 新增 `WidgetSheetDrawer` Widget 详情抽屉组件，承载原独立 Widget 的详情展开交互
-  - `WatchlistWidget` 新增子 Tab（自选行情 / 异动榜），整合 `WatchlistMoversWidget`
+  - `WatchlistWidget` 新增子 Tab（自选行情 / 异动榜），整合 `WatchlistMoversWidget`（注：此声明已废弃——子 Tab 集成实际未落地，`WatchlistMoversWidget.tsx` 及其依赖 `watchlistMoversService.ts` 已于 2026-08-15 作为死代码删除）
 
 - **Command Hub 增强 Phase 2：摘要区与架构可视化（2026-07-25）**：
   - Command Hub 运维摘要区嵌入 `EngineStatusCard` 引擎状态摘要卡片

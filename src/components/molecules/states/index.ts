@@ -5,10 +5,10 @@
 */
 export { Loading } from './Loading'
 export { Empty } from './Empty'
-export { ErrorState } from './Error'
+export { ErrorState } from './ErrorState'
 export { Skeleton } from './Skeleton'
 
 export type { LoadingProps } from './Loading'
 export type { EmptyProps } from './Empty'
-export type { ErrorStateProps } from './Error'
+export type { ErrorStateProps } from './ErrorState'
 export type { SkeletonProps } from './Skeleton'

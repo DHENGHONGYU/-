@@ -1,7 +1,7 @@
 /**
  * @fileoverview P3 交互状态：错误（ErrorState）
  * 统一错误占位，提供重试动作，引用令牌，无硬编码颜色。
- * @module components/ui/states/Error
+ * @module components/ui/states/ErrorState
  */
 import { type ReactNode, type HTMLAttributes } from 'react'
 import { AlertCircle } from 'lucide-react'

@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Toaster - 组件（Atom层组件）
+ * @module components/atoms/Toaster
+ */
+
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/hooks/useToast'

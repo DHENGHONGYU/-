@@ -58,8 +58,6 @@ export {
   SheetTitle,
 } from './Sheet'
 
-export type { Toast } from './Toast'
-
 export {
   Breadcrumb,
   BreadcrumbItem,
@@ -71,7 +69,7 @@ export {
 
 export { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './Table'
 
-export { StockPriceChangeBadge } from './StockPriceChange'
+export { StockPriceChangeBadge } from './StockPriceChangeBadge'
 
 export {
   DEFAULT_BADGE,

@@ -4,6 +4,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { getLogger } from '@/lib/logger'
+import { verifyDesignTokens } from '@/lib/designTokenVerifier'
 
 const logger = getLogger()
 
@@ -47,6 +48,10 @@ function applyTheme(resolvedMode: 'light' | 'dark'): void {
     root.classList.remove('dark')
   }
   logger.info('[themeStore] 主题已应用', { theme: resolvedMode })
+  // 主题切换后延迟一帧验证令牌（等待浏览器重算样式）
+  if (import.meta.env.DEV) {
+    requestAnimationFrame(() => verifyDesignTokens())
+  }
 }
 
 function readStoredMode(): ThemeMode {

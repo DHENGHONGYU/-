@@ -1,3 +1,8 @@
+/**
+ * @fileoverview StockPriceChangeBadge - 组件（Atom层组件）
+ * @module components/atoms/StockPriceChangeBadge
+ */
+
 import { cn } from '@/lib/utils'
 
 export interface StockPriceChangeBadgeProps {

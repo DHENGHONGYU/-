@@ -17,7 +17,7 @@ import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
 import { Loading } from '@/components/molecules/states/Loading'
 import { Empty } from '@/components/molecules/states/Empty'
-import { ErrorState } from '@/components/molecules/states/Error'
+import { AppErrorState } from '@/components/molecules/AppErrorState'
 import { Skeleton } from '@/components/molecules/states/Skeleton'
 import { SignalSpectrum } from '@/components/cockpit/SignalSpectrum'
 import { useDisciplineStore } from '@/store/disciplineStore'
@@ -32,6 +32,7 @@ import { getLogger } from '@/lib/logger'
 const logger = getLogger()
 
 const STEPS = ['选择范围', '生成复盘', '逐维复盘', '导出成品卡'] as const
+const REVIEW_GENERATION_DELAY_MS = 480
 
 interface ReviewData {
   report: TradeReviewReport
@@ -107,7 +108,7 @@ export default memo(function ReviewWizard({ initialOrders }: WizardProps): React
       } finally {
         setGenerating(false)
       }
-    }, 480)
+    }, REVIEW_GENERATION_DELAY_MS)
     return () => clearTimeout(timer)
   }, [step, review, orders, generateReviewReport])
 
@@ -320,7 +321,7 @@ function StepGenerate({
   hasData: boolean
 }) {
   if (error) {
-    return <ErrorState title="生成失败" description={error} />
+    return <AppErrorState title="生成失败" error={error} />
   }
   if (generating || !hasData) {
     return (

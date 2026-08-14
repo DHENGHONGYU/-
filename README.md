@@ -2,7 +2,7 @@
 
 > 面向中国 A 股个人投资者的研究决策与复盘工具  
 > 纯前端 PWA，数据本地主权，离线可用  
-> **当前版本**：2.0.0-rc.1 | **基准日期**：2026-08-13
+> **当前版本**：2.0.0-rc.1 | **基准日期**：2026-08-15
 
 ## 项目简介
 
@@ -22,6 +22,7 @@ FinSight V9 是一款专为 A 股个人投资者设计的智能投研复盘系�
 - 🔒 **数据主权**：IndexedDB 本地存储，离线可用
 - 📊 **专业图表**：K 线 + 均线 + MACD/KDJ 指标（A 股配色）
 - 🔄 **DataBridge 信封协议**：跨模块写操作统一规范
+- 🎨 **V5 Apple Business Design Tokens**：单一真相源令牌系统，内置运行时验证 Utility（开发环境自动校验令牌加载、主题切换后自动重验证）
 - 🧪 **质量保障**：单元测试 + E2E 测试 + 视觉回归 + 自动化审计
 
 ## 技术栈
@@ -137,9 +138,12 @@ FinSightV9/
 - 📖 [文档首页](docs/README.md)
 - 🏗️ [架构设计](docs/explanation/)
 - 📚 [使用指南](docs/guides/)
+  - [Design→Code 工作流规范](docs/guides/design-to-code-workflow.md) — 令牌系统 + 6 项门禁
+  - [团队手册 · 设计哲学](docs/guides/team-handbook/01-design-philosophy.md) — 令牌体系与设计决策
 - 🔧 [开发规范](docs/meta/)
 - 📋 [API 契约](docs/reference/)
 - 📝 [更新日志](CHANGELOG.md)
+- 📦 [发布说明](docs/release-notes/RELEASE-NOTES-design-token-cleanup.md) — 设计令牌清理与 Utility 重构
 
 ## 开发规范
 
@@ -175,4 +179,4 @@ FinSightV9/
 
 ---
 
-**最后更新**：2026-08-13 | **版本**：2.0.0-rc.1 | **Git 基准**：初始化提交
+**最后更新**：2026-08-15 | **版本**：2.0.0-rc.1 | **Git 基准**：初始化提交

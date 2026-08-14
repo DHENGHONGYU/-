@@ -99,3 +99,6 @@ python/data_service/_test_sw_*.py
 
 # Secrets (LLM API Key from UI config page, never commit)
 .secrets/
+
+# Legacy token generation (removed 2026-08-15, prevent regeneration)
+src/generated/

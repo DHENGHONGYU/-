@@ -90,7 +90,6 @@
 
 | 脚本 | 用途 | 调用方式 |
 |------|------|---------|
-| `generate-tokens.ts` | 生成设计令牌 CSS | `npm run generate:tokens` |
 | `build-ai-memory-index.ts` | 构建 AI 记忆索引 | `npm run build:ai-memory` |
 | `query-ai-memory.ts` | 查询 AI 记忆索引 | `npm run query:ai-memory` |
 | `generate-store-graph.ts` | 生成 Store 依赖图 | `npm run generate:storeGraph` |

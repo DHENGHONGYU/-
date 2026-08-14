@@ -59,14 +59,16 @@ FinSightV9 不是又一个"看盘软件"，而是定位为：
 
 ## 4. 设计令牌体系（Design Token System）
 
-单一数据源链路：
+> ✅ **令牌清理已完成（2026-08-15）**: 旧版双套令牌系统（`src/generated/tokens.css` + `scripts/generate-tokens.ts` + `design-tokens/tokens.json`）已彻底清除。`src/index.css` 为唯一真相源（V5 Apple Business Design Tokens）。运行时验证 Utility 见 [src/lib/designTokenVerifier.ts](../../../src/lib/designTokenVerifier.ts)，工作流规范见 [Design→Code 工作流](../design-to-code-workflow.md)。
+
+单一数据源链路（V5，2026-08-15 起）：
 ```
-design-tokens/tokens.json
-  → scripts/generate-tokens.ts
-  → src/generated/tokens.css + tokens.ts
+src/index.css（唯一真相源 — V5 Apple Business Design Tokens）
   → src/constants/theme.tokens.ts / src/config/chartColors.ts
   → 组件层
 ```
+
+> ⚠️ **已废弃链路（2026-08-15 清除）**: `design-tokens/tokens.json → scripts/generate-tokens.ts → src/generated/tokens.css + tokens.ts` 这条旧版生成管道已全部删除，不再使用。
 
 ### 4.1 六层令牌（L1–L6）
 | 层 | 令牌 | 用途 |
@@ -90,7 +92,9 @@ design-tokens/tokens.json
 
 ### 4.3 防硬编码治理（三道门禁）
 `lint:colors`（ESLint 禁 HEX/RGB/HSL 与 Tailwind 数字色类）+ `audit:tokens` + `verify:tokens`。
-豁免仅限：`theme.tokens.ts`、`chartColors.ts`、`themeRegistry.ts`、`theme.config.ts`、`src/generated/*`、`tests/`。
+豁免仅限：`theme.tokens.ts`、`chartColors.ts`、`themeRegistry.ts`、`theme.config.ts`、`src/index.css`（令牌定义处）、`tests/`。
+
+> ⚠️ **豁免列表更新（2026-08-15）**: `src/generated/*` 已从豁免列表中移除（目录已删除），新增 `src/index.css` 作为令牌定义的唯一豁免文件。
 
 ---
 
