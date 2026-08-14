@@ -12,6 +12,7 @@ import {
   getAllV6Scores,
   runV6Score,
   getV6ScoreQuality,
+  formatScore,
 } from './v6ScoreService'
 import type { Stock, DailyQuotes, V6Score, KlineBar } from '@/data/types'
 
@@ -248,5 +249,22 @@ describe('getV6ScoreQuality', () => {
     expect(result.dataCompleteness).toBeCloseTo(18.18, 1)
     expect(result.missingLayers.length).toBe(9)
     expect(result.hasBasicData).toBe(false)
+  })
+})
+
+// ============================================================
+// formatScore（展示层 toFixed(NaN) 防御）
+// ============================================================
+
+describe('formatScore', () => {
+  test('正常有限值保留两位小数', () => {
+    expect(formatScore(3.75)).toBe('3.75')
+    expect(formatScore(4)).toBe('4.00')
+  })
+
+  test('NaN / ±Infinity 兜底为 0.00（不输出 "NaN"）', () => {
+    expect(formatScore(NaN)).toBe('0.00')
+    expect(formatScore(Infinity)).toBe('0.00')
+    expect(formatScore(-Infinity)).toBe('0.00')
   })
 })

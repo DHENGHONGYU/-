@@ -30,6 +30,14 @@ import {
 const logger = getLogger()
 
 /**
+ * 展示层分数格式化：防御 NaN/±Infinity，兜底输出 "0.00"。
+ * 与评分链路 NaN 防护口径一致，防止 future 重构移除上层守卫后 toFixed(NaN) 泄漏到日志/UI。
+ */
+export function formatScore(score: number): string {
+  return Number.isFinite(score) ? score.toFixed(2) : '0.00'
+}
+
+/**
  * 从 financialReports store 读取真实财务数据，映射为引擎 FinancialData。
  *
  * 若数据库中无记录，返回空对象（引擎各层会降级处理）。
@@ -192,7 +200,7 @@ function compositeToV6Score(
     engineVersion: composite.engineVersion,
     // 质量警告
     ...(dataCompleteness < 100 && {
-      qualityWarning: `数据完整度 ${dataCompleteness.toFixed(0)}%，${scoredLayers}/${totalLayers} 层有效评分`,
+      qualityWarning: `数据完整度 ${Number.isFinite(dataCompleteness) ? dataCompleteness.toFixed(0) : '0'}%，${scoredLayers}/${totalLayers} 层有效评分`,
     }),
     // P1-M2：财务数据缺失显式标记
     ...(financials?.dataStatus === 'missing' && {
@@ -341,7 +349,7 @@ export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Scor
 
     logger.info(`[v6ScoreService] runV6Score V6Score 映射完成`, {
       symbol,
-      score: v6Score.score.toFixed(2),
+      score: formatScore(v6Score.score),
       rating: v6Score.rating,
       layersScored: Object.keys(v6Score.layerDetails ?? {}).length,
       risks: v6Score.allRisks?.length ?? 0,
@@ -373,7 +381,7 @@ export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Scor
 
     logger.info(`[v6ScoreService] runV6Score 评分完成并已持久化`, {
       symbol,
-      score: v6Score.score.toFixed(2),
+      score: formatScore(v6Score.score),
       rating: v6Score.rating,
     })
 
@@ -671,7 +679,7 @@ export function injectIndustryV4ToInput(
 
   try {
     const { bestMatch } = industryServices.getStockIndustryV4Analysis(stock, allV4Analyses)
-    if (!bestMatch || bestMatch.v4Composite === null) {
+    if (bestMatch?.v4Composite == null) {
       return input
     }
 
