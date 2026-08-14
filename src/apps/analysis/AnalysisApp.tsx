@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect, useMemo, useRef } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router'
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
@@ -12,6 +12,8 @@ import {
   useIsLoadingAny,
   useErrorUnion,
 } from '@/store/analysisStore'
+import type { AnalysisScope } from '@/types/modules/analysis.types'
+import type { ScreenSource } from '@/data/types/types.stock'
 
 // ── Lazy 页面导入 ────────────────────────────────────────────────────────────
 // 注：SectorAnalysisPage 已废弃，功能合并到 IndustryDashboardPage（行业全景仪表盘）
@@ -79,15 +81,28 @@ function matchAnalysisRoute(path: string): AnalysisRoute {
 export default function AnalysisApp(): React.JSX.Element {
   const location = useLocation()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const path = location.pathname
   const prevPathRef = useRef<string | null>(null)
+
+  // ── 输入舱 → 分析舱交接：携带 scope=intention 进入时自动加载意向候选池 ────────
+  const loadStocksAction = useAnalysisStore((s) => s.loadStocks)
+  const handoffScope: AnalysisScope = searchParams.get('scope') === 'intention' ? 'intention' : 'all'
+  useEffect(() => {
+    if (handoffScope === 'intention') {
+      logger.info('[AnalysisApp] 交接：加载输入舱意向候选池', {
+        source: searchParams.get('source') ?? 'all',
+      })
+      void loadStocksAction('intention')
+    }
+  }, [handoffScope, loadStocksAction, searchParams])
 
   // ── 废弃路由重定向：/analysis/sector → /analysis/industry-dashboard ──────────
   // SectorAnalysisPage 已合并到 IndustryDashboardPage，旧链接自动跳转
   useEffect(() => {
     if (path === '/analysis/sector' || path.startsWith('/analysis/sector/')) {
       logger.info('[AnalysisApp] 废弃路由重定向', { from: path, to: '/analysis/industry-dashboard' })
-      navigate('/analysis/industry-dashboard', { replace: true })
+      void navigate('/analysis/industry-dashboard', { replace: true })
     }
   }, [path, navigate])
 
@@ -114,7 +129,7 @@ export default function AnalysisApp(): React.JSX.Element {
 
   // ── 子路由页面渲染 ──────────────────────────────────────────────────────────
   const matched = matchAnalysisRoute(path)
-  if (matched.component) {
+  if (matched.component != null) {
     return (
       <Suspense fallback={<div className="p-4 text-muted-foreground">{matched.fallback}</div>}>
         {matched.component}
@@ -138,8 +153,11 @@ export default function AnalysisApp(): React.JSX.Element {
 function V6ScoreCard(): React.JSX.Element {
   // ── 接入 analysisStore，替代本地 useState ────────────────────────────────────
   const stocks = useAnalysisStore((s) => s.stocks)
+  const candidates = useAnalysisStore((s) => s.candidates)
+  const scope = useAnalysisStore((s) => s.scope)
   const scores = useAnalysisStore((s) => s.scores)
   const loadStocks = useAnalysisStore((s) => s.loadStocks)
+  const runBatchScoreAction = useAnalysisStore((s) => s.runBatchScore)
   const handleScoreAction = useAnalysisStore((s) => s.handleScore)
   const clearError = useAnalysisStore((s) => s.clearError)
 
@@ -170,23 +188,119 @@ function V6ScoreCard(): React.JSX.Element {
     [scores],
   )
 
+  // 意向候选池中尚未评分的标的（已有 V6 评分则跳过批量）
+  const unscoredCandidates = useMemo(
+    () => candidates.filter((c) => !scoreMap.has(c.symbol)),
+    [candidates, scoreMap],
+  )
+
+  // 双源输入来源标签（与输入舱 InputDashboardPoolTable 语义一致）
+  const sourceMeta = (source?: ScreenSource): { label: string; className: string } => {
+    if (source === 'hot-sector') {
+      return { label: '热门板块', className: 'text-info' }
+    }
+    if (source === 'manual') {
+      return { label: '自定义检索', className: 'text-muted-foreground' }
+    }
+    // 历史数据无来源标记
+    return { label: '—', className: 'text-muted-foreground' }
+  }
+
   return (
     <div className="space-y-4 p-4">
       <Card>
         <CardHeader>
-          <CardTitle>分析舱 · V6 九维评分</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>分析舱 · V6 九维评分</CardTitle>
+            <Badge variant="outline">
+              {scope === 'intention' ? '意向候选池' : '全量标的'}
+            </Badge>
+          </div>
         </CardHeader>
         <CardContent className="space-y-3">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => void loadStocks()}
-            disabled={loading}
-          >
-            加载标的
-          </Button>
+          {/* 作用域切换 + 批量评分工具条 */}
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => void loadStocks('all')}
+              disabled={loading}
+            >
+              加载全部标的
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => void loadStocks('intention')}
+              disabled={loading}
+            >
+              加载意向候选池
+            </Button>
+            {scope === 'intention' && unscoredCandidates.length > 0 && (
+              <Button
+                size="sm"
+                onClick={() =>
+                  void runBatchScoreAction(unscoredCandidates.map((c) => c.symbol))
+                }
+                disabled={loading}
+              >
+                {loading ? '评分中...' : `批量评分（${unscoredCandidates.length}）`}
+              </Button>
+            )}
+          </div>
+
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {stocks.length === 0 && (
+            {/* 意向候选池作用域：展示输入舱候选（含来源溯源与已有评分） */}
+            {scope === 'intention' && candidates.length === 0 && (
+              <div className="col-span-full rounded-md border border-dashed p-6 text-center">
+                <p className="text-sm text-muted-foreground">
+                  暂无意向候选，请先在输入舱录入股票或纳入热门板块核心标的
+                </p>
+                <Button variant="secondary" size="sm" asChild className="mt-2">
+                  <Link to="/input">去输入舱录入 →</Link>
+                </Button>
+              </div>
+            )}
+            {scope === 'intention' &&
+              candidates.map((candidate) => {
+                const score = scoreMap.get(candidate.symbol)
+                const source = sourceMeta(candidate.screenSource)
+                return (
+                  <div
+                    key={candidate.symbol}
+                    className="rounded-md border p-3 hover:bg-accent"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex min-w-0 items-center gap-2">
+                        <span className="font-medium">{candidate.symbol}</span>
+                        <span className={`truncate text-xs ${source.className}`}>
+                          {source.label}
+                        </span>
+                        {candidate.group != null && (
+                          <span className="truncate text-xs text-muted-foreground">
+                            {candidate.group}
+                          </span>
+                        )}
+                      </div>
+                      <Badge variant={score ? 'default' : 'outline'}>
+                        {score ? `V6: ${score.score.toFixed(2)}` : '未评分'}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{candidate.name}</p>
+                    <Button
+                      className="mt-2"
+                      size="sm"
+                      disabled={loading}
+                      onClick={() => void handleScoreAction(candidate.symbol)}
+                    >
+                      {loading ? '评分中...' : '运行评分'}
+                    </Button>
+                  </div>
+                )
+              })}
+
+            {/* 全量作用域：展示全部标的（向后兼容） */}
+            {scope !== 'intention' && stocks.length === 0 && (
               <div className="col-span-full rounded-md border border-dashed p-6 text-center">
                 <p className="text-sm text-muted-foreground">暂无标的，请先在输入舱录入股票</p>
                 <Button variant="secondary" size="sm" asChild className="mt-2">
@@ -194,31 +308,32 @@ function V6ScoreCard(): React.JSX.Element {
                 </Button>
               </div>
             )}
-            {stocks.map((stock) => {
-              const score = scoreMap.get(stock.symbol)
-              return (
-                <div
-                  key={stock.symbol}
-                  className="rounded-md border p-3 hover:bg-accent"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">{stock.symbol}</span>
-                    <Badge variant={score ? 'default' : 'outline'}>
-                      {score ? `V6: ${score.score.toFixed(2)}` : '未评分'}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">{stock.name}</p>
-                  <Button
-                    className="mt-2"
-                    size="sm"
-                    disabled={loading}
-                    onClick={() => void handleScoreAction(stock.symbol)}
+            {scope !== 'intention' &&
+              stocks.map((stock) => {
+                const score = scoreMap.get(stock.symbol)
+                return (
+                  <div
+                    key={stock.symbol}
+                    className="rounded-md border p-3 hover:bg-accent"
                   >
-                    {loading ? '评分中...' : '运行评分'}
-                  </Button>
-                </div>
-              )
-            })}
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium">{stock.symbol}</span>
+                      <Badge variant={score ? 'default' : 'outline'}>
+                        {score ? `V6: ${score.score.toFixed(2)}` : '未评分'}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{stock.name}</p>
+                    <Button
+                      className="mt-2"
+                      size="sm"
+                      disabled={loading}
+                      onClick={() => void handleScoreAction(stock.symbol)}
+                    >
+                      {loading ? '评分中...' : '运行评分'}
+                    </Button>
+                  </div>
+                )
+              })}
           </div>
         </CardContent>
       </Card>

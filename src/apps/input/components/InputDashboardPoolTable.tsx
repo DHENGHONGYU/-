@@ -4,16 +4,17 @@
  */
 
 import React, { type RefObject } from 'react'
+import { Link } from 'react-router'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { Checkbox } from '@/components/atoms/Checkbox'
 import { cn } from '@/lib/utils'
 import { formatPrice, formatMarketCap } from '@/lib/precision'
-import { findStockBySymbol } from '@/services/stock/stockDictionary'
-import { Download, Trash2, RefreshCw } from 'lucide-react'
+import { findStockBySymbol } from '@/lib/stockDictionary'
+import { Download, Trash2, RefreshCw, ArrowRightLeft } from 'lucide-react'
 import { getMarketLabel } from '../inputDashboard.utils'
-import type { PoolItem } from '@/types/modules/pool.types'
+import type { PoolItem, IntentionPoolItem } from '@/types/modules/pool.types'
 
 interface InputDashboardPoolTableProps {
   allStocks: PoolItem[]
@@ -43,6 +44,22 @@ export default function InputDashboardPoolTable({
   onCollectStock,
   onDeleteStock,
 }: InputDashboardPoolTableProps): React.JSX.Element {
+  // 双源输入来源标签（spec 2.4.15）：hot-sector=来源一/热门板块，manual=来源二/自定义检索
+  const isIntentionItem = (item: PoolItem): item is IntentionPoolItem =>
+    item.pool === 'intention'
+
+  const screenSourceMeta = (item: PoolItem): { label: string; className: string } => {
+    const source = isIntentionItem(item) ? item.screenSource : undefined
+    if (source === 'hot-sector') {
+      return { label: '热门板块', className: 'text-info' }
+    }
+    if (source === 'manual') {
+      return { label: '自定义检索', className: 'text-muted-foreground' }
+    }
+    // 历史数据无来源标记
+    return { label: '—', className: 'text-muted-foreground' }
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -52,6 +69,13 @@ export default function InputDashboardPoolTable({
             <span className="text-xs text-muted-foreground">
               {allStocks.filter((s) => s.price !== undefined).length}/{allStocks.length} 已采
             </span>
+            {/* 输入舱 → 分析舱交接：携带 scope=intention 进入分析舱默认视图，自动加载意向候选池 */}
+            <Button size="sm" variant="secondary" asChild disabled={allStocks.length === 0}>
+              <Link to="/analysis?scope=intention">
+                <ArrowRightLeft className="mr-1.5 h-3.5 w-3.5" />
+                送入分析舱
+              </Link>
+            </Button>
             <Button
               size="sm"
               variant="outline"
@@ -103,6 +127,7 @@ export default function InputDashboardPoolTable({
                   <th className="whitespace-nowrap px-3 py-2 text-left text-xs font-semibold">名称</th>
                   <th className="whitespace-nowrap px-3 py-2 text-left text-xs font-semibold">板块</th>
                   <th className="whitespace-nowrap px-3 py-2 text-left text-xs font-semibold">三级分类</th>
+                  <th className="whitespace-nowrap px-3 py-2 text-center text-xs font-semibold">来源</th>
                   <th className="whitespace-nowrap px-3 py-2 text-right text-xs font-semibold">最新价</th>
                   <th className="whitespace-nowrap px-3 py-2 text-right text-xs font-semibold">总市值</th>
                   <th className="whitespace-nowrap px-3 py-2 text-center text-xs font-semibold">采集状态</th>
@@ -134,6 +159,11 @@ export default function InputDashboardPoolTable({
                       </td>
                       <td className="whitespace-nowrap px-3 py-2 text-xs text-muted-foreground">
                         {item.industryCode ?? '-'}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-2 text-center text-xs">
+                        <span className={screenSourceMeta(item).className}>
+                          {screenSourceMeta(item).label}
+                        </span>
                       </td>
                       <td className="whitespace-nowrap px-3 py-2 text-right font-mono text-xs">
                         {isCollected ? formatPrice(item.price) : (

@@ -16,7 +16,7 @@ const STEPS = [
   { key: 'input', title: '双源输入', desc: '股票清单', path: '/input', icon: Inbox },
   { key: 'collect', title: '数据采集', desc: '采集过程显示', path: '/input/collection-monitor', icon: Radar },
   { key: 'summary', title: '结果汇总', desc: '数据库 · 本地文件夹', path: '/input/pool-board', icon: Database },
-  { key: 'analysis', title: '分析舱调用', desc: '个股智能分析等', path: '/analysis', icon: FlaskConical },
+  { key: 'analysis', title: '分析舱调用', desc: '个股智能分析等', path: '/analysis?scope=intention', icon: FlaskConical },
 ] as const
 
 /**
