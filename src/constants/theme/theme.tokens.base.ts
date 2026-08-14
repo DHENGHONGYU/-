@@ -20,7 +20,7 @@ export const THEME_TOKENS = {
     /** 信息提示背景色 */
     infoBg: 'bg-blue-500',
     /** 信息色原始值（用于 style/图表） */
-    infoRaw: '#3b82f6',
+    infoRaw: '#007aff',
     /** 警告提示文本色 */
     warning: 'text-amber-500',
     /** 警告提示背景色 */

@@ -12,7 +12,7 @@
 /** 门户布局容器令牌  * @doc []
 */
 export const PORTAL_LAYOUT_TOKENS = {
-  /** 整个 Shell 背景（高级灰 / 宋韵宣纸） */
+  /** 整个 Shell 背景（Apple 商务风：浅灰 #F2F2F7） */
   shellBg: 'bg-background',
   /** 顶栏背景（带透明毛玻璃） */
   headerBg: 'bg-background/80 backdrop-blur-xl',
@@ -22,8 +22,8 @@ export const PORTAL_LAYOUT_TOKENS = {
   sidebarBg: 'bg-muted/40 backdrop-blur-sm',
   /** 侧边栏右边框 */
   sidebarBorder: 'border-border/50',
-  /** 主内容区背景 */
-  mainBg: 'bg-card',
+  /** 主内容区背景（Apple：白卡片悬浮于浅灰底，而非整块白色） */
+  mainBg: 'bg-background',
   /** 主内容区内边距 */
   mainPadding: 'p-5 sm:p-6 lg:p-7',
   /** 主内容区最大宽度 */
@@ -50,8 +50,8 @@ export const PORTAL_NAV_TOKENS = {
   sidebarTitle: 'text-foreground',
   /** 分组标签文字 */
   groupLabel: 'text-muted-foreground/80',
-  /** 导航项激活态 */
-  active: 'bg-primary/8 text-foreground shadow-sm shadow-primary/5',
+  /** 导航项激活态（Apple：surface-2 底 + 主色文字 + 左侧指示条） */
+  active: 'bg-surface-2 text-primary',
   /** 导航项激活态左侧指示条 */
   activeIndicator: 'before:bg-primary before:transition-all before:duration-300',
   /** 导航项未激活态 */

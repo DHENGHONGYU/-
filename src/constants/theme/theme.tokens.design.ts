@@ -25,13 +25,13 @@
  * 注意：股票涨跌色见 STOCK_COLOR_TOKENS（红涨绿跌例外规则），不在此处。
  */
 export const SEMANTIC_COLOR_ROLES = {
-  /** 品牌主色：关键操作、强调、选中态 */
+  /** 品牌主色：关键操作、强调、选中态（Apple Blue #007AFF） */
   primary: {
     text: 'text-primary',
     bg: 'bg-primary',
     soft: 'bg-primary/10 text-primary',
     fg: 'text-primary-foreground',
-    raw: '#0d9165',
+    raw: '#007aff',
   },
   /** 辅助色：次级操作、标签底 */
   secondary: {
@@ -91,7 +91,7 @@ export const SEMANTIC_COLOR_ROLES = {
     bg: 'bg-info',
     soft: 'bg-info/10 text-info',
     fg: 'text-info-foreground',
-    raw: '#3c83f6',
+    raw: '#007aff',
   },
 } as const
 

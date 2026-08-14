@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Card - 卡片组件（Atom层组件）
+ * @module components/atoms/Card
+ */
+
 import { type HTMLAttributes, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
@@ -10,7 +15,7 @@ export const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     const tokens = {
       radius: THEME_TOKENS.radius.lg,
       background: COLOR_TOKENS.bgCard.tailwind,
-      border: 'border shadow-elevation-1',
+      border: 'shadow-elevation-1', // Apple 风格：无边框，仅阴影悬浮
     }
     return (
       <div

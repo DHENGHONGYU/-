@@ -17,6 +17,11 @@
  * @compliance AGENTS.md §三 颜色令牌规范：使用 THEME_TOKENS 而非硬编码颜色
  */
 
+/**
+ * @fileoverview PageHeader - 页面 / 头部组件（Template层组件）
+ * @module components/templates/PageHeader
+ */
+
 import React from 'react'
 import { cn } from '@/lib/utils'
 
@@ -51,11 +56,11 @@ export function PageHeader({
     >
       <div className="space-y-1.5">
         <h1 className="text-h1 text-foreground">{title}</h1>
-        {description && (
+        {description != null && (
           <p className="text-body-sm text-muted-foreground">{description}</p>
         )}
       </div>
-      {actions && <div className="flex items-center gap-2">{actions}</div>}
+      {actions != null && <div className="flex items-center gap-2">{actions}</div>}
     </header>
   )
 }

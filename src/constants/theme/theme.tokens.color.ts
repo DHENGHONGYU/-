@@ -18,8 +18,8 @@ export const COLOR_TOKENS = {
   // ============================================================
   // 状态色
   // ============================================================
-  /** 信息提示色（蓝） */
-  info: { hex: '#3b82f6', tailwind: 'text-blue-500', bgClass: 'bg-blue-500', rgb: '59, 130, 246' },
+  /** 信息提示色（Apple Blue #007AFF） */
+  info: { hex: '#007aff', tailwind: 'text-blue-500', bgClass: 'bg-blue-500', rgb: '0, 122, 255' },
   /** 成功色（绿）—— 与语义令牌 text-success / #21C45D 对齐；bgClass 保留 green-700 确保白字徽章对比度 ≥ 4.5:1（WCAG AA） */
   success: { hex: '#21c45d', tailwind: 'text-success', bgClass: 'bg-green-700', rgb: '33, 196, 93' },
   /** 警告色（琥珀） */
@@ -68,8 +68,8 @@ export const COLOR_TOKENS = {
   factorJingqi: { hex: '#ef4444', tailwind: 'text-red-500', bgClass: 'bg-red-500', rgb: '239, 68, 68' },
   /** 资金因子色（琥珀） */
   factorZijin: { hex: '#f59e0b', tailwind: 'text-amber-500', bgClass: 'bg-amber-500', rgb: '245, 158, 11' },
-  /** 估值因子色（蓝） */
-  factorGuzhi: { hex: '#3b82f6', tailwind: 'text-blue-500', bgClass: 'bg-blue-500', rgb: '59, 130, 246' },
+  /** 估值因子色（Apple Blue） */
+  factorGuzhi: { hex: '#007aff', tailwind: 'text-blue-500', bgClass: 'bg-blue-500', rgb: '0, 122, 255' },
   /** β因子色（紫） */
   factorBeta: { hex: '#8b5cf6', tailwind: 'text-purple-500', bgClass: 'bg-purple-500', rgb: '139, 92, 246' },
   /** 量能因子色（青） */
@@ -78,8 +78,8 @@ export const COLOR_TOKENS = {
   // ============================================================
   // 市场风格色
   // ============================================================
-  /** 成长主导期（蓝） */
-  styleGrowth: { hex: '#3b82f6', tailwind: 'text-blue-500', bgClass: 'bg-blue-500', rgb: '59, 130, 246' },
+  /** 成长主导期（Apple Blue） */
+  styleGrowth: { hex: '#007aff', tailwind: 'text-blue-500', bgClass: 'bg-blue-500', rgb: '0, 122, 255' },
   /** 价值修复期（翠绿） */
   styleValue: { hex: '#10b981', tailwind: 'text-emerald-500', bgClass: 'bg-emerald-500', rgb: '16, 185, 129' },
   /** 均衡震荡期（紫） */
@@ -92,18 +92,18 @@ export const COLOR_TOKENS = {
   signalStrong: { hex: '#10b981', tailwind: 'text-emerald-500', bgClass: 'bg-emerald-500', rgb: '16, 185, 129' },
   /** 中强信号（绿） */
   signalMediumStrong: { hex: '#22c55e', tailwind: 'text-green-500', bgClass: 'bg-green-500', rgb: '34, 197, 94' },
-  /** 中信号（蓝） */
-  signalMedium: { hex: '#3b82f6', tailwind: 'text-blue-500', bgClass: 'bg-blue-500', rgb: '59, 130, 246' },
+  /** 中信号（Apple Blue） */
+  signalMedium: { hex: '#007aff', tailwind: 'text-blue-500', bgClass: 'bg-blue-500', rgb: '0, 122, 255' },
   /** 弱信号（琥珀） */
   signalWeak: { hex: '#f59e0b', tailwind: 'text-amber-500', bgClass: 'bg-amber-500', rgb: '245, 158, 11' },
   /** 无信号（灰） */
   signalNone: { hex: '#9ca3af', tailwind: 'text-gray-400', bgClass: 'bg-gray-400', rgb: '156, 163, 175' },
 
   // ============================================================
-  // 背景色（高级灰色系）
+  // 背景色（高级灰色系 · Apple 卡片白）
   // ============================================================
-  /** 卡片背景（支持暗色模式） */
-  bgCard: { hex: '#fafafa', tailwind: 'bg-neutral-50', rgb: '250, 250, 250' },
+  /** 卡片背景（Apple 设计令牌：纯白 #FFFFFF，配合阴影悬浮） */
+  bgCard: { hex: '#ffffff', tailwind: 'bg-white', rgb: '255, 255, 255' },
   /** 悬停背景 */
   bgHover: { hex: '#f5f5f5', tailwind: 'bg-neutral-100', rgb: '245, 245, 245' },
   /** 次要背景 */
@@ -140,8 +140,18 @@ export const COLOR_TOKENS = {
   // ============================================================
   // 焦点可见样式（Focus Visible）
   // ============================================================
-  /** 焦点环颜色（用于 focus-visible 状态） */
-  focusRing: { hex: '#3b82f6', tailwind: 'ring-blue-500', bgClass: 'bg-blue-500', rgb: '59, 130, 246' },
+  /** 焦点环颜色（Apple Blue，用于 focus-visible 状态） */
+  focusRing: { hex: '#007aff', tailwind: 'ring-blue-500', bgClass: 'bg-blue-500', rgb: '0, 122, 255' },
+
+  // ============================================================
+  // 徽章/标签色（Badge & Tag）
+  // ============================================================
+  /** 警告徽章背景（Bootstrap warning badge） */
+  badgeWarningBg: { hex: '#FFF3CD', tailwind: 'bg-yellow-100', bgClass: 'bg-yellow-100', rgb: '255, 243, 205' },
+  /** 警告徽章文字（Bootstrap warning badge） */
+  badgeWarningText: { hex: '#856404', tailwind: 'text-yellow-700', bgClass: 'bg-yellow-700', rgb: '133, 100, 4' },
+  /** 警告徽章边框（Bootstrap warning badge） */
+  badgeWarningBorder: { hex: '#FFEEBA', tailwind: 'border-yellow-200', bgClass: 'border-yellow-200', rgb: '255, 238, 186' },
 
   // ============================================================
   // 灰色阶（用于文字/边框/背景的灰度语义）

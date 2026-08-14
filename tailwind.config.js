@@ -82,14 +82,14 @@ export default {
         'elevation-3': 'var(--shadow-lg)',
       },
       fontFamily: {
-        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['DM Sans', 'SF Pro Display', 'Inter', 'PingFang SC', 'Microsoft YaHei', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
       },
       fontSize: {
         // ===== 统一设计系统 · 排版阶梯（单一信息层级） =====
-        /** 页面主标题 / 英雄区 */
-        display: ['1.75rem', { lineHeight: '1.2', fontWeight: '700', letterSpacing: '-0.01em' }],
+        /** 页面主标题 / 英雄区（CJK 字距 0，不再负字距） */
+        display: ['1.75rem', { lineHeight: '1.2', fontWeight: '700', letterSpacing: '0em' }],
         /** 一级标题 */
-        h1: ['1.5rem', { lineHeight: '1.25', fontWeight: '700', letterSpacing: '-0.01em' }],
+        h1: ['1.5rem', { lineHeight: '1.25', fontWeight: '700', letterSpacing: '0em' }],
         /** 二级标题 */
         h2: ['1.25rem', { lineHeight: '1.3', fontWeight: '600' }],
         /** 三级标题 */
