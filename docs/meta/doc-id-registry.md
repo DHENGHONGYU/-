@@ -55,6 +55,7 @@ date: 2026-07-17
 | V9-DOC-BACK-011 | backend | refactor-research-pool-rename-plan | reference/refactor-research-pool-rename-plan.md |
 | V9-DOC-BACK-012 | backend | Rotation Score Service 实现规格 | reference/rotation-score-spec.md |
 | V9-DOC-BACK-013 | backend | Trading 舱规格（trading-cabin-spec） | reference/trading-cabin-spec.md |
+| V9-DOC-BACK-047 | backend | 输入舱→分析舱数据调用接口契约 | reference/input-analysis-cabin-contract.md |
 | V9-DOC-DATA-002 | data | dataflow-data-definition | explanation/dataflow-data-definition.md |
 | V9-DOC-DATA-003 | data | data-layer-overview | explanation/data-layer-overview.md |
 | V9-DOC-DATA-004 | data | data-definition | explanation/design/data-definition.md |
@@ -152,3 +153,5 @@ date: 2026-07-17
 | V9-DOC-QA-009 | qa | V9 测试目录与策略 | reference/test-catalog.md |
 | V9-DOC-QA-010 | qa | testing-strategy | reference/testing-strategy.md |
 | V9-DOC-QA-121 | qa | git-commit-governance | guides/how-to/git-commit-governance.md |
+| V9-DOC-QA-122 | qa | LLM API Key 真实调用测试整体方案 | reports/testing/llm-api-key-realtime-test-plan.md |
+| V9-DOC-QA-123 | qa | LLM API Key 真实调用发布验收报告 | releases/llm-api-key-release-acceptance-report-2026-08-15.md |

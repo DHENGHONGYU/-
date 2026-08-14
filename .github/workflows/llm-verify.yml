@@ -1,0 +1,165 @@
+# .github/workflows/llm-verify.yml
+# LLM API Key 真实调用自动化验证（CI 门禁）
+# 集成验证脚本：
+#   - dogfood-output/scripts/verify-llm-success.mjs  成功路径（需 LLM_REAL_KEY 真实密钥）
+#   - dogfood-output/scripts/verify-llm-ttl.mjs      TTL 轮换 + 失败路径（无需真实 Key）
+# 设计依据：docs/reports/testing/llm-api-key-realtime-test-plan.md §8 自动化工具 / §6 验收标准
+#
+# 安全说明：
+#   - 真实 Key 仅通过 GitHub Secret LLM_REAL_KEY 注入环境变量，不写入任何文件
+#   - verify-llm-success.mjs 输出自动脱敏（真实 Key 全部替换为掩码）
+#   - 未配置 Secret 时成功路径自动跳过（不会误报失败），TTL 路径照常执行
+# 触发：仅验证脚本或 LLM 相关代码变更时自动运行（paths 过滤）+ 手动触发（workflow_dispatch 可用于补测）
+# paths 说明：push/pull_request 按变更文件匹配；workflow_dispatch 手动触发不受 paths 限制
+
+name: LLM Key Real Verify
+
+on:
+  push:
+    branches: ['main', 'develop']
+    paths:
+      - '.github/workflows/llm-verify.yml'
+      - 'dogfood-output/scripts/verify-llm-success.mjs'
+      - 'dogfood-output/scripts/verify-llm-ttl.mjs'
+      - 'src/services/llm/**'
+      - 'src/config/llmConfig.ts'
+      - 'src/config/secretConfig.ts'
+      - 'src/config/fetcherConfig.ts'
+      - 'src/lib/localStorageManager.ts'
+      - 'src/pages/command/agent/LlmManagement/**'
+  pull_request:
+    branches: ['main', 'develop']
+    paths:
+      - '.github/workflows/llm-verify.yml'
+      - 'dogfood-output/scripts/verify-llm-success.mjs'
+      - 'dogfood-output/scripts/verify-llm-ttl.mjs'
+      - 'src/services/llm/**'
+      - 'src/config/llmConfig.ts'
+      - 'src/config/secretConfig.ts'
+      - 'src/config/fetcherConfig.ts'
+      - 'src/lib/localStorageManager.ts'
+      - 'src/pages/command/agent/LlmManagement/**'
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: '前端地址（默认 http://localhost:5173）'
+        required: false
+        default: 'http://localhost:5173'
+
+permissions:
+  contents: read
+
+jobs:
+  llm-verify:
+    name: LLM real verify (success + TTL)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      LLM_BASE_URL: ${{ github.event.inputs.base_url || 'http://localhost:5173' }}
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      # 与 ci.yml / quality-check.yml 保持一致：sed 切 npmmirror → npmjs 否则 CI install 超时/404
+      - name: Fix npm registry for CI (npmmirror → npmjs)
+        run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json
+
+      # workspace 依赖：safe-format 必须先构建
+      - name: Build local @finsightv9/safe-format
+        run: cd packages/safe-format && npm install --no-audit && npm run build && cd ../..
+
+      - name: Install dependencies
+        run: npm install --no-audit
+
+      - name: Install Playwright Chromium (headless)
+        run: npx playwright install --with-deps chromium
+
+      # vite.config.ts 默认端口 5199，这里显式覆盖为 5173 与脚本默认 base 对齐
+      # predev（tsc:prod）耗时较长，用 wait-for-ready 循环兜底
+      - name: Start dev server (background)
+        run: |
+          nohup npm run dev -- --host --port 5173 > /tmp/llm-dev-server.log 2>&1 &
+          echo "dev server pid: $!"
+        shell: bash
+
+      - name: Wait for dev server ready
+        run: |
+          for i in $(seq 1 90); do
+            if curl -sf http://localhost:5173/ > /dev/null 2>&1; then
+              echo "✅ dev server ready (try $i)"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "❌ dev server not ready in 180s. log tail:"
+          tail -n 50 /tmp/llm-dev-server.log
+          exit 1
+        shell: bash
+
+      # ── 成功路径（需真实 Key Secret）：TC-D1-02/03、TC-D3-01、TC-D4-01/02/04、TC-D6-01 ──
+      # 未配置 LLM_REAL_KEY 时自动跳过（fork/未授权场景不误报失败）
+      - name: Run verify-llm-success.mjs (real key success path)
+        id: success
+        if: ${{ secrets.LLM_REAL_KEY != '' }}
+        run: node dogfood-output/scripts/verify-llm-success.mjs
+        env:
+          LLM_REAL_KEY: ${{ secrets.LLM_REAL_KEY }}
+          LLM_BASE_URL: ${{ env.LLM_BASE_URL }}
+
+      - name: Skip notice — LLM_REAL_KEY secret not configured
+        if: ${{ secrets.LLM_REAL_KEY == '' }}
+        run: echo "⚠️ 未配置 Secret LLM_REAL_KEY，成功路径跳过（TTL 路径仍执行）"
+
+      # ── TTL 轮换 + 失败路径（无需真实 Key）：TC-D2-01/02、TC-D4-03、TC-D5-01 ──
+      - name: Run verify-llm-ttl.mjs (TTL rotation + failure path)
+        id: ttl
+        run: node dogfood-output/scripts/verify-llm-ttl.mjs
+        env:
+          LLM_BASE_URL: ${{ env.LLM_BASE_URL }}
+
+      - name: Upload LLM verify evidence (screenshots + JSON)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: llm-verify-evidence-${{ github.sha }}
+          path: dogfood-output/screenshots-llm/
+          if-no-files-found: warn
+          retention-days: 7
+
+      # ── PR 失败自动评论指引 ──
+      - name: Alert on PR failure
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              `## ❌ LLM API Key 真实调用验证失败`,
+              ``,
+              `**提交者**: @${context.payload.pull_request.user.login}`,
+              `**PR**: #${prNumber} - ${context.payload.pull_request.title}`,
+              `**失败 Job**: [llm-verify](${runUrl})`,
+              ``,
+              `### 影响范围`,
+              `LLM 密钥安全（AES-GCM 加密存储 / TTL 轮换 / 日志脱敏）或真实调用链路（chat / 测试连接）存在回归。`,
+              ``,
+              `### 修复指引`,
+              `1. 下载 artifact \`llm-verify-evidence\` 查看截图 / JSON 证据`,
+              `2. 本地复现成功路径：\`$env:LLM_REAL_KEY='sk-xxx'; node dogfood-output/scripts/verify-llm-success.mjs\``,
+              `3. 本地复现 TTL 路径：\`node dogfood-output/scripts/verify-llm-ttl.mjs\``,
+              `4. 修复后重新推送，门禁将自动重跑`,
+              ``,
+              `<!-- auto-generated by llm-verify -->`
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body,
+            });
