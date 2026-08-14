@@ -10,22 +10,18 @@
  *           audit:registry 正向校验条目指向文件存在、反向校验磁盘文件均已登记。
  * ⚠️ 同名 id 冲突 1 条（不同目录下同名文件，保留多条 id 相同条目；audit 反向检查按文件名匹配，不影响校验）：
  *   - PortfolioService: src/services/portfolio/portfolioService vs src/services/trading/portfolioService
- * 生成时间：2026-07-16 15:28:55
-  * @doc [V9-DOC-BACK-012, V9-DOC-ARCH-004, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
-*/
+ * 生成时间：2026-08-14 17:54:17
+ */
 
 export interface ServiceRegistryEntry {
   /** 条目标识（PascalCase，与文件名 camelCase 对应） */
   id: string
   /** 相对 src 的路径（不含扩展名，供 resolveRegistryPath 解析） */
   filePath: string
-  /** 状态（active 可用 / wip 在制品） */
-  status: 'active' | 'wip'
+  /** 状态（默认 active） */
+  status: 'active'
 }
 
-/**
- * SERVICE_REGISTRY
- */
 export const SERVICE_REGISTRY: ReadonlyArray<ServiceRegistryEntry> = [
   { id: 'AiMemoryService', filePath: 'src/services/system/aiMemoryService', status: 'active' },
   { id: 'AnalysisService', filePath: 'src/services/analysis/analysisService', status: 'active' },
@@ -53,8 +49,8 @@ export const SERVICE_REGISTRY: ReadonlyArray<ServiceRegistryEntry> = [
   { id: 'IndustryAnalysisService', filePath: 'src/services/analysis/industryAnalysisService', status: 'active' },
   { id: 'IndustryScoreService', filePath: 'src/services/scoring/industryScoreService', status: 'active' },
   { id: 'InputService', filePath: 'src/services/input/inputService', status: 'active' },
-  { id: 'IntentionPoolService', filePath: 'src/services/input/intentionPoolService', status: 'active' },
   { id: 'IntelligentScoreService', filePath: 'src/services/scoring/intelligentScoreService', status: 'active' },
+  { id: 'IntentionPoolService', filePath: 'src/services/input/intentionPoolService', status: 'active' },
   { id: 'LocalDocService', filePath: 'src/services/system/localDocService', status: 'active' },
   { id: 'LocalDocSyncService', filePath: 'src/services/profile/localDocSyncService', status: 'active' },
   { id: 'LocalEmbeddingService', filePath: 'src/services/system/localEmbeddingService', status: 'active' },
@@ -71,7 +67,7 @@ export const SERVICE_REGISTRY: ReadonlyArray<ServiceRegistryEntry> = [
   { id: 'TradingPortfolioService', filePath: 'src/services/trading/portfolioService', status: 'active' },
   { id: 'ProfileIntegrationService', filePath: 'src/services/analysis/profileIntegrationService', status: 'active' },
   { id: 'ProfileService', filePath: 'src/services/profile/profileService', status: 'active' },
-  { id: 'QualityMetricsService', filePath: 'src/services/quality/QualityMetricsService', status: 'wip' },
+  { id: 'QualityMetricsService', filePath: 'src/services/quality/QualityMetricsService', status: 'active' },
   { id: 'RbacManagementService', filePath: 'src/services/rbac/rbacManagementService', status: 'active' },
   { id: 'RegistrationContractService', filePath: 'src/services/analysis/registrationContractService', status: 'active' },
   { id: 'ResearchReportSyncService', filePath: 'src/services/profile/researchReportSyncService', status: 'active' },
@@ -93,5 +89,4 @@ export const SERVICE_REGISTRY: ReadonlyArray<ServiceRegistryEntry> = [
   { id: 'UnifiedStockService', filePath: 'src/services/unifiedStockService', status: 'active' },
   { id: 'V6MigrationService', filePath: 'src/services/system/v6MigrationService', status: 'active' },
   { id: 'V6ScoreService', filePath: 'src/services/scoring/v6ScoreService', status: 'active' },
-  { id: 'WatchlistMoversService', filePath: 'src/services/trading/watchlistMoversService', status: 'active' },
 ]
