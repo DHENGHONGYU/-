@@ -19,7 +19,7 @@ change_log:
 # Cockpit / Command 结构设计蓝图
 
 > **版本**: v2.0.0 | **日期**: 2026-07-24
-> **v2.1.0 → v2.2.0 变更**: Phase 1 纵横交叉骨架全部落地（步骤 1.2-1.6 完成）；新增 CockpitCrossLayout + CrossMatrixOverview + WidgetSheetDrawer 三个组件；CockpitShell 从 ReactGridLayout 切换为纵横交叉布局；StockChat/IndustryChain 收为 Sheet 抽屉；WatchlistMovers 复用为 Watchlist 子 Tab；tsc 0 错误，24 files / 350 tests 全绿
+> **v2.1.0 → v2.2.0 变更**: Phase 1 纵横交叉骨架全部落地（步骤 1.2-1.6 完成）；新增 CockpitCrossLayout + CrossMatrixOverview + WidgetSheetDrawer 三个组件；CockpitShell 从 ReactGridLayout 切换为纵横交叉布局；StockChat/IndustryChain 收为 Sheet 抽屉；WatchlistMovers 复用为 Watchlist 子 Tab（注：该集成实际未落地，WatchlistMoversWidget 及 watchlistMoversService 已于 2026-08-15 作为死代码删除）；tsc 0 错误，24 files / 350 tests 全绿
 > **v1.0.0 → v2.0.0 变更**: Phase 0 已落地（26→21 Widget，4 类标准 category，共享 score.ts 抽取）；新增各舱布局校对分析；新增 Cockpit-Command 组件去重与数据流治理；基于 Command 模块实际探索结果修正迁移方案
 > **核心原则**: 不重写原子组件代码，仅做排列组合与重新引用；保持数据链条传递的完整性与效率
 > **设计哲学**: 从消费者视角出发 — 投资者的思维路径是"扫市场 → 筛机会 → 看持仓 → 做决策"，运维者的路径是"看健康 → 调 Agent → 管配置"
@@ -189,7 +189,7 @@ PortalShell 采用**固定顶栏 + 固定侧边栏 + 主内容区**的三段式�
 | 操作 | Widget | 处理方式 | 组件文件 | 状态 |
 |------|--------|---------|---------|------|
 | 去重 | researchPoolBoard | 删除注册，保留 poolBoard 单实例 | PoolBoardWidget.tsx 保留 | 已完成 |
-| 去重 | watchlistMovers | 删除注册（异动功能 Phase 1 作为子 Tab 复用） | WatchlistMoversWidget.tsx 保留 | 已完成 |
+| 去重 | watchlistMovers | 删除注册（异动功能 Phase 1 作为子 Tab 复用） | WatchlistMoversWidget.tsx 已删除（2026-08-15 死代码清理） | 已完成→已撤销 |
 | 移出 | engineStatus | 取消 Cockpit 注册，Phase 2 在 Command/monitor 引入 | EngineStatusWidget.tsx 保留 | 已完成 |
 | 移出 | systemArchitecture | 取消 Cockpit 注册，Phase 2 在 Command 引入 | SystemArchitectureWidget.tsx 保留 | 已完成 |
 | 移出 | mechanismHealth | 取消 Cockpit 注册（Command 已有 MechanismHealthPanel） | MechanismHealthWidget.tsx 保留 | 已完成 |
@@ -526,7 +526,7 @@ export const COCKPIT_LAYOUT = {
 | 1.3 | 新增矩阵总览组件（引用 IndustryHeatmap 色阶模式） | 新增 `src/cockpit/layout/CrossMatrixOverview.tsx` | 新增文件 | **已完成** |
 | 1.4 | 改造 `CockpitShell` 使用 CrossLayout 替换平铺 map | `CockpitShell.tsx` | 替换渲染逻辑 | **已完成** |
 | 1.5 | StockChat/IndustryChain 收为 Sheet 抽屉触发 | 新增 `WidgetSheetDrawer.tsx` + 改造 `CockpitCrossLayout` | 新增组件 + 网格分离 | **已完成** |
-| 1.6 | WatchlistMoversWidget 作为 Watchlist 子 Tab 复用 | `WatchlistWidget.tsx` + `WatchlistMoversWidget.tsx` | 内部加 Tab + 导出 Content | **已完成** |
+| 1.6 | WatchlistMoversWidget 作为 Watchlist 子 Tab 复用 | `WatchlistWidget.tsx` + `WatchlistMoversWidget.tsx` | 内部加 Tab + 导出 Content | **已撤销**（集成未落地，2026-08-15 删除死代码） |
 
 **步骤 1.1 落地明细**：
 - `widget.types.ts`：新增 `WidgetDomain`（'research'|'market'|'ai'|'portfolio'）和 `WidgetPerspective`（'overview'|'analysis'|'signal'|'risk'）类型，`WidgetMeta` 新增可选 `domain` + `perspective` 字段
