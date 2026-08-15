@@ -208,6 +208,7 @@ date: 2026-07-17
 | V9-DOC-HOW-902 | how-to | how-to-add-store | guides/how-to/how-to-add-store.md |
 | V9-DOC-HOW-903 | how-to | how-to-add-service | guides/how-to/how-to-add-service.md |
 | V9-DOC-HOW-904 | how-to | code-review-guide | guides/how-to/code-review-guide.md |
+| V9-DOC-HOW-905 | how-to | how-to-deploy-docker-network | guides/how-to/how-to-deploy-docker-network.md |
 | V9-DOC-META-002 | meta | 无 doc_id 归档候选清单 | meta/orphan-archive-candidates.md |
 | V9-DOC-META-003 | meta | "V9 模块注册体系索引" | meta/REGISTRY_INDEX.md |
 | V9-DOC-PROD-008 | product | TODO-ADD-TITLE | guides/team-handbook/05-competitive-analysis.md |
