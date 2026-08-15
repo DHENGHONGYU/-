@@ -24,7 +24,7 @@ date: 2026-07-17
 
 > **定位**：文档系统的治理层与元数据层
 > **治理宪法**：[GOVERNANCE.md](GOVERNANCE.md)
-> **全量索引**：[registry-index.md](registry-index.md)（自动生成）
+> **全量索引**：[registry-index.md（已废弃）](registry-index.md（已废弃）)（自动生成）
 
 ---
 
@@ -37,7 +37,7 @@ date: 2026-07-17
 | [document-style-guide.md](document-style-guide.md) | 风格指南 | 命名规范 + 格式标准 + 结构模板 + 写作风格 |
 | [document-organization-workflow.md](document-organization-workflow.md) | 工作流程 | 五阶段整理流程 + 质量控制点 + 工具模板 |
 | [document-archive-management.md](document-archive-management.md) | 归档管理 | 死文档判定 + 三级归档 + 生命周期管理 |
-| [document-quality-control-report.md](document-quality-control-report.md) | 质量报告 | 整理质量评估 + 问题清单 + 改进计划 |
+| [document-quality-control-report.md（已废弃）](document-quality-control-report.md（已废弃）) | 质量报告 | 整理质量评估 + 问题清单 + 改进计划 |
 | [documentation-team-training.md](documentation-team-training.md) | 培训材料 | 团队培训 + 快速参考 + FAQ |
 | `document-inventory.csv` | 清单数据 | 全量文档清单 CSV（586 份活跃文档） |
 
@@ -48,7 +48,7 @@ date: 2026-07-17
 | 文件 | 类型 | 说明 |
 |------|------|------|
 | [GOVERNANCE.md](GOVERNANCE.md) | 治理宪法 | 文档治理最高规则 |
-| [registry-index.md](registry-index.md) | 索引 | 全量文档注册表（自动生成） |
+| [registry-index.md（已废弃）](registry-index.md（已废弃）) | 索引 | 全量文档注册表（自动生成） |
 | `doc-manifest.csv` | 元数据 | 文档清单 CSV（自动生成） |
 | `_migration-inventory.csv` | 元数据 | 迁移清单（自动生成） |
 | [markdown-reorg-framework.md](markdown-reorg-framework.md) | 框架 | 文档重组框架 |
@@ -56,10 +56,10 @@ date: 2026-07-17
 | [doc-style-standard.md](doc-style-standard.md) | 规范 | 文档样式标准 |
 | [doc-trigger-action-map.md](doc-trigger-action-map.md) | 映射 | 触发器-动作映射 |
 | [agent-app-docs-classification.md](agent-app-docs-classification.md) | 分类 | Agent 应用文档分类体系 |
-| [文档整理待办清单.md](文档整理待办清单.md) | 待办 | 文档整理进度跟踪 |
-| [p1-debt-cleanup-todo.md](../reports/project-management/01-p1-debt-cleanup-todo.md) | 待办 | P1 架构债务清理待办 |
+| [文档整理待办清单.md（已废弃）](文档整理待办清单.md（已废弃）) | 待办 | 文档整理进度跟踪 |
+| [p1-debt-cleanup-todo.md](../archive/historical-2026-08-16/batch6/docs/reports/project-management/01-p1-debt-cleanup-todo.md（已归档）) | 待办 | P1 架构债务清理待办 |
 
 ---
 
 **历史归档** → [../archive/](../archive/)（历史治理文档已于 2026-08-03 清理，见 archive/README.md）
-**返回根目录** → [../README.md](../README.md)
+**返回根目录** → [../../README.md](../../README.md)

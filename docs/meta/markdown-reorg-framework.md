@@ -46,7 +46,7 @@ code_version: 2.0.0
 |------|------|------|
 | 总量 | 1238 份业务 .md，docs/ 占 693 | 文档规模已失控，缺乏统一治理入口 |
 | 分布 | `explanation/` 204 + `reference/` 198 + `reports/` 114 + `00-meta/` 59 + `archive/` 56 居前五位 | 解释性与过程文件占比过高（≈ 75%），"活文档"被淹没 |
-| 重复 | `docs/specs/01-vision-and-goals.md`、`docs/explanation/03-architecture-standards.md`、`docs/explanation/complexity-governance.md` 曾同时存在于 `explanation/` 与 `reference/`（已合并去重） | 同名跨目录，单一事实源被破坏，AI 易取错版本 |
+| 重复 | `docs/specs/01-vision-and-goals.md`、`docs/explanation/03-architecture-standards.md`、`../archive/historical-2026-08-16/batch8/complexity-governance.md（已归档）` 曾同时存在于 `explanation/` 与 `reference/`（已合并去重） | 同名跨目录，单一事实源被破坏，AI 易取错版本 |
 | 缺口 | docs/ 实际 693 → manifest 仅登记 595（**缺口 98**） | 索引漂移，新文档未入册 |
 | 过程文件 | 带日期/报告/复盘/诊断命名者约 345 份（docs 229 + outputs 68 + archive 41） | 未做生命周期管理，越积越多 |
 | 编号 | C- 71 / I- 302 / R- 222，类目 17 种 | 类目过细（MISC 136 占最大），编号与 slug 混用 |
@@ -66,11 +66,11 @@ code_version: 2.0.0
 | 子类 | 内容 | 代表文件 |
 |------|------|----------|
 | 行为契约 | AI/分层/四步集成强制约束 | `AGENTS.md`（项目根，P0 事实标准） |
-| 编码规范 | 类型安全、复杂度治理、lint 规则 | `docs/guides/standards/coding-conventions.md`、`docs/explanation/complexity-redlines.md` |
+| 编码规范 | 类型安全、复杂度治理、lint 规则 | `docs/guides/standards/coding-conventions.md`、`../archive/historical-2026-08-16/batch8/complexity-redlines.md（已归档）` |
 | 质量门禁 | 12 道门禁定义与基线 | `docs/guides/standards/quality-gates.md`、`docs/guides/09-quality-gates.md`、`docs/reference/踩坑规则门禁指南.md` |
-| 测试规范 | 单测/集成/E2E 基线 | `docs/reports/testing/*`、`docs/reports/testing/test-catalog.md` |
+| 测试规范 | 单测/集成/E2E 基线 | `docs/reports/testing/*`、`../archive/historical-2026-08-16/batch6/docs/reference/test-catalog.md（已归档）` |
 | 校对契约 | 文档-代码双向校对规则 | `docs/reference/hybrid-proofread-contract.md`、doc-proofreading-strategy.md（已废弃） |
-| 开发 SOP | 工作流、工具链地图 | `docs/reference/development-workflow-sop.md`（P0） |
+| 开发 SOP | 工作流、工具链地图 | `../archive/historical-2026-08-16/batch7/docs/reference/development-workflow-sop.md（已归档）`（P0） |
 
 ### 🔵 B 类 · 系统初始文档（定义与边界）
 > **定义**：系统"是什么、怎么定义、数据怎么存、架构怎么画、各板块怎么说明"。是 AI 与新人理解系统的唯一正源。
@@ -79,12 +79,12 @@ code_version: 2.0.0
 
 | 子类 | 内容 | 代表文件 |
 |------|------|----------|
-| 系统入口 | 项目/文档总 README | 根 `README.md`、`docs/README.md` |
-| 架构总览 | 分层、舱室、PortalShell | `docs/explanation/architecture/overview.md`、`docs/explanation/ARCHITECTURE.md` |
-| 数据宪法/字典 | 数据定义规范、主数据字典 | `docs/reference/v9数据宪法.md`（P0）、`docs/reference/data-definition.md`、`docs/explanation/ai-center-data-definition.md` |
-| API 契约 | 27 个 service 契约 | docs/reference/*-contract.md、`docs/explanation/architecture/api-contracts.md` |
+| 系统入口 | 项目/文档总 README | 根 `README.md`、`../../README.md` |
+| 架构总览 | 分层、舱室、PortalShell | `../archive/historical-2026-08-16/batch7/docs/explanation/architecture/overview.md（已归档）`、`docs/explanation/ARCHITECTURE.md` |
+| 数据宪法/字典 | 数据定义规范、主数据字典 | `docs/reference/v9数据宪法.md`（P0）、`../archive/historical-2026-08-16/batch7/docs/reference/data-definition.md（已归档）`、`../archive/historical-2026-08-16/batch8/ai-center-data-definition.md` |
+| API 契约 | 27 个 service 契约 | docs/reference/*-contract.md、`../archive/historical-2026-08-16/batch7/docs/explanation/architecture/api-contracts.md（已归档）` |
 | ADR 决策 | 架构决策记录 | docs/reference/adr-*.md、docs/explanation/adr-*.md |
-| 板块说明 | 各舱/模块/子系统说明 | `docs/reference/modules/*`、`docs/explanation/architecture/cabins-overview.md`、`team-handbook/*` |
+| 板块说明 | 各舱/模块/子系统说明 | `docs/reference/modules/*`、`../archive/historical-2026-08-16/batch7/docs/explanation/cabins-overview.md（已归档）`、`team-handbook/*` |
 
 ### 🟡 C 类 · 解释性 / 验证性过程文件（过程产物）
 > **定义**：带日期、报告、复盘、诊断、计划、看板，记录"我们做过什么、发现什么、怎么改"。**有时效性，需生命周期管理**。
@@ -96,8 +96,8 @@ code_version: 2.0.0
 | 审计/检视报告 | 架构/安全/智能体审计 | `docs/reports/audit/*`、`docs/reference/agent-audit-report.md` |
 | 定期更新报告 | 文档治理/同步报告 | 已归档 |
 | 复盘/诊断 | 故障 RCA、功能遗漏诊断 | 2026-07-12 安全审计报告（已删除）、`docs/assets/team-handbook-html/supplementary/V9_MCP_Server与Agent功能遗漏诊断.html` |
-| 计划/看板 | 整改计划、执行看板 | `docs/reference/meta/doc-auto-update-kanban.md`、prompt-execute-remediation.md（已删除） |
-| 验证基线 | 集成基线比对、完成度校验 | 已归档、`docs/explanation/implementation/quality-audit-plan.md` |
+| 计划/看板 | 整改计划、执行看板 | `../archive/historical-2026-08-16/batch6/docs/reference/meta/doc-auto-update-kanban.md（已归档）`、prompt-execute-remediation.md（已删除） |
+| 验证基线 | 集成基线比对、完成度校验 | 已归档、`../archive/historical-2026-08-16/batch7/docs/explanation/design/quality-audit-plan.md` |
 
 ---
 
@@ -139,7 +139,7 @@ code_version: 2.0.0
 | `testing/` | 1 | A 类 | 测试目录，归 **A 类** |
 | `tutorials/` | 1 | B 类 | 教程，归 **B 类** |
 | `assets/` | 3 | — | 静态资源，非文档，移出计数 |
-| `docs 根` | 2 | A 类 | `README.md` 入口（B 类），`docs/reports/project-management/01-p1-debt-cleanup-todo.md` → C 类 R- |
+| `docs 根` | 2 | A 类 | `README.md` 入口（B 类），`../archive/historical-2026-08-16/batch6/docs/reports/project-management/01-p1-debt-cleanup-todo.md（已归档）` → C 类 R- |
 
 > **关键动作**：`explanation/` 与 `reference/` 同名文件（已确认 3 个）必须合并——以 `reference/` 为权威定义源，`explanation/` 仅保留"为什么这样设计"的解释，删除重复定义。
 ---
@@ -164,7 +164,7 @@ code_version: 2.0.0
 
 1. **单一事实源（Single Source of Truth）**
    - 每个定义只在一处。跨目录同名 = 腐败信号。合并后立即更新 `links_to/linked_by`。
-   - 例：数据字典只在 `docs/reference/data-definition.md`，别处引用，不复制。
+   - 例：数据字典只在 `../archive/historical-2026-08-16/batch7/docs/reference/data-definition.md（已归档）`，别处引用，不复制。
 
 2. **文档即镜像（Docs as Mirror）**
    - 代码改 → 文档必须同步改，靠 `docs/meta/doc-trigger-action-map.md` 的 T1–T10 触发规则 + `--auto-update` 强制。

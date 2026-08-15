@@ -35,7 +35,7 @@ change_log:
 
 ### 1.1 单一真相源（Single Source of Truth）
 
-- `docs/README.md` 是文档体系的**唯一顶层入口**，任何新成员或 AI Agent 应从这里 1 步定位核心文档
+- `../../README.md` 是文档体系的**唯一顶层入口**，任何新成员或 AI Agent 应从这里 1 步定位核心文档
 - 禁止在 `docs/` 根目录下散落独立文档；所有新增文档必须落入对应分类子目录
 - 同一主题**禁止**出现多份独立文档；如有重复，必须合并或归档到 `docs/archive/`
 - `docs/meta/master-index.json`（待建）是文档元数据的**唯一机械真相源**，所有派生索引必须从其生成
@@ -164,12 +164,12 @@ change_log:
 
 | 类型 | 命名规则 | 示例 |
 |------|---------|------|
-| 规范文档 | `kebab-case.md` | `coding-conventions.md` |
-| 数据字典 | `*-data-definition.md` | `news-data-definition.md` |
+| 规范文档 | `kebab-case.md（已废弃）` | `../guides/standards/coding-conventions.md` |
+| 数据字典 | `*-data-definition.md` | `../archive/historical-2026-08-16/batch7/docs/explanation/news-data-definition.md（已归档）` |
 | 索引文件 | `*-index.md` 或 `*-registry.md` | `doc-id-registry.md` |
-| 报告文件 | `YYYY-MM-DD-*.md` | `2026-07-12-security-audit.md` |
-| 归档文件 | `DEPRECATED_*.md` 或置于 `archive/` 目录 | `DEPRECATED_old-spec.md` |
-| ADR 文档 | `adr-NNN-*.md` | `adr-001-pure-frontend-architecture.md` |
+| 报告文件 | `YYYY-MM-DD-*.md` | `2026-07-12-security-audit.md（已废弃）` |
+| 归档文件 | `DEPRECATED_*.md` 或置于 `archive/` 目录 | `DEPRECATED_old-spec.md（已废弃）` |
+| ADR 文档 | `adr-NNN-*.md` | `../archive/historical-2026-08-16/batch8/adr-001-pure-frontend-architecture.md（已归档）` |
 
 ### 3.4 版本号规范
 
@@ -293,15 +293,15 @@ draft → review → active → deprecated → archived → purged
 
 | 文档 | 路径 | 内容 |
 |------|------|------|
-| 文档主控索引 | `docs/README.md` | 六类导航、快速入门 |
+| 文档主控索引 | `../../README.md` | 六类导航、快速入门 |
 | 文档元数据标准 | `docs/meta/document-metadata-standard.md` | frontmatter 字段规范 |
 | doc_id 注册表 | `docs/meta/doc-id-registry.md` | 所有 doc_id 登记 |
 | 标签分类体系 | `docs/meta/tag-taxonomy.md` | tags 字段受控词表 |
-| 清理周期表 | `docs/meta/cleanup-schedule.md`（待建） | 自动产物保留期与清理脚本 |
-| 文档体系体检 | `docs/meta/文档体系体检报告-v9.md`（待建） | 文档体系健康度评估 |
+| 清理周期表 | `docs/meta/cleanup-schedule.md（已废弃）`（待建） | 自动产物保留期与清理脚本 |
+| 文档体系体检 | `docs/meta/文档体系体检报告-v9.md（已废弃）`（待建） | 文档体系健康度评估 |
 | 变更日志 | `CHANGELOG.md`（根级） | 版本变更、质量指标 |
 | 代码审查标准 | `docs/guides/how-to/code-review-guide.md` | PR 审查清单 |
-| 技术债管理 | `docs/explanation/design/tech-debt.md` | 技术债登记与清理计划 |
+| 技术债管理 | `../archive/historical-2026-08-16/batch6/docs/reports/TECH-DEBT.md（已归档）` | 技术债登记与清理计划 |
 | 文件管理指南 | `docs/guides/how-to/FILE-MANAGEMENT-GUIDE.md` | 文件生命周期 SOP |
 
 ---

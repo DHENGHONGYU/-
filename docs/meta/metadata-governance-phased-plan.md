@@ -1,4 +1,4 @@
-﻿---
+---
 title: 文档元数据治理分阶段实施计划
 type: meta
 domain: project
@@ -202,7 +202,7 @@ Week 2:
 ---
 
 ## 二、Phase 2：推荐字段完善（进行?🚧?
-> **自动化任务已完成?026-07-17?*?> - 任务?2.3 phase 补全?5.8% ?**81.2%**（[complete-phase-field.ps1](../../scripts/complete-phase-field.ps1)?68 份自动补全，124 份转人工?> - 任务?2.1 doc_id 分配?74 ?important 文档 **100%** 完成（[assign-doc-id.ps1](../../scripts/assign-doc-id.ps1)，[注册表](doc-id-registry.md)?> - 任务?2.2 标签词表初稿：[tag-taxonomy.md](tag-taxonomy.md)（三层结构，基于词频提取?> - 人工任务已输出：[phase2-manual-task-list.md](phase2-manual-task-list.md)（审?maintainer/summary 四类清单?>
+> **自动化任务已完成?026-07-17?*?> - 任务?2.3 phase 补全?5.8% ?**81.2%**（[complete-phase-field.ps1](../../scripts/complete-phase-field.ps1)?68 份自动补全，124 份转人工?> - 任务?2.1 doc_id 分配?74 ?important 文档 **100%** 完成（[assign-doc-id.ps1](../../scripts/assign-doc-id.ps1)，[注册表](doc-id-registry.md)?> - 任务?2.2 标签词表初稿：[tag-taxonomy.md](tag-taxonomy.md)（三层结构，基于词频提取?> - 人工任务已输出：[phase2-manual-task-list.md（已废弃）](phase2-manual-task-list.md（已废弃）)（审?maintainer/summary 四类清单?>
 > **剩余人工任务**：summary 质量抽查（paragraph 来源 116 份）、type/domain 抽样终审
 >
 > **任务 A 进展?026-07-17?*：domain 二次推断已应用（[reinfer-domain.ps1](../../scripts/reinfer-domain.ps1)），114 份高置信度修正完成；`project` 域从 407 降至 292（其?00-meta 58 ?+ 变更日志/复盘类为合理归属）；33 ?doc_id ?domain 一致性问题已修复（重编号），当前不一致数 **0**。新分布：project 292 / qa 113 / data 72 / frontend 51 / architecture 47 / backend 45 / ai 32 / product 11。剩余：各领域负责人抽样终审 + 3 份歧义文档人工定域?>
@@ -212,7 +212,7 @@ Week 2:
 > **Phase 3 进展?026-07-18?*?> - **tags 批量打标 V2**：词表从 30 个模?12 个特性扩展到 39 个模?22 个特性（新增 changelog/scoring/factor/stocks/position/routing/validation 模块，report/guide/deprecated/plan/spec/template/research/batch 特性），并加入目录路径维度（reports/ ?report tag、how-to/ ?guide tag），覆盖?56% ?**86.7%**?79/668，远?60% 目标；剩?89 份无明确关键词命中）
 > - **3 份歧义文档定?*：visual-regression-guide ?qa；color-token-refactor、seven-dim-config ?frontend
 > - **生成器源头修?*：[rebuild-registry-index.py](../../scripts/rebuild-registry-index.py)、[update-registry-index.py](../../scripts/update-registry-index.py)、[generate-manual-tasks.ps1](../../scripts/generate-manual-tasks.ps1) 补充完整 FM 字段?*核心修复**：[doc-cross-ref-sync.ts](../../scripts/docs-tool/doc-cross-ref-sync.ts) ?`renderIndex` 函数——此前索引同步会覆盖?Frontmatter，导?registry-index.md 反复丢失 FM，已从源头根?> - 新增文档 FM 补齐：color-token-consolidation-feasibility.md
-> - **summary 质量润色**?1 份弱摘要（标题重?列表碎片/表格碎片/代码碎片）已人工重写（[rewrite-weak-summaries.ps1](../../scripts/rewrite-weak-summaries.ps1)）；131 ?paragraph/H1 来源?89 份质量合格直接保留，41 份重写后达标? 份已废弃文档维持简短描?> - **type/domain 抽样审计**：[generate-type-domain-audit.ps1](../../scripts/generate-type-domain-audit.ps1) ?8 domain × 6 type 分层抽样 67 份（10%），输出 [type-domain-audit-worksheet.md](type-domain-audit-worksheet.md) 审计工作?+ CSV。人工抽?10 份初判准确率?85-90%，待领域负责人终?> - 全库最终态：668 份，FM 100%，核心字?100%，maintainer 100%，phase 100%，tags 86.7%，P0 通过 100%
+> - **summary 质量润色**?1 份弱摘要（标题重?列表碎片/表格碎片/代码碎片）已人工重写（[rewrite-weak-summaries.ps1](../../scripts/rewrite-weak-summaries.ps1)）；131 ?paragraph/H1 来源?89 份质量合格直接保留，41 份重写后达标? 份已废弃文档维持简短描?> - **type/domain 抽样审计**：[generate-type-domain-audit.ps1](../../scripts/generate-type-domain-audit.ps1) ?8 domain × 6 type 分层抽样 67 份（10%），输出 [../archive/historical-2026-08-16/batch7/docs/meta/type-domain-audit-worksheet.md（已归档）](../archive/historical-2026-08-16/batch7/docs/meta/type-domain-audit-worksheet.md（已归档）) 审计工作?+ CSV。人工抽?10 份初判准确率?85-90%，待领域负责人终?> - 全库最终态：668 份，FM 100%，核心字?100%，maintainer 100%，phase 100%，tags 86.7%，P0 通过 100%
 >
 > **Phase 3 深化优化?026-07-18 续）**?> - **P1 警告清零**：[p1-warnings-fix.ps1](../../scripts/p1-warnings-fix.ps1) 批量修复三类 P1 问题—?4 ?deprecated 文档补充 `deprecated_by`? 份非语义化版本号统一?v1.0.0? ?important 文档补分?`doc_id`。P1 Warnings: 20 ?**0**
 > - **P2 信息清零**：[p2-tags-optimization.ps1](../../scripts/p2-tags-optimization.ps1) 扩展关键词规则至 50+，修?31 份缺?tags + 73 ?<3 tags 文档；统一 typeDirMap 配置消除 63 ?type/path 误报。P2 Info: 104 ?**0**
@@ -222,7 +222,7 @@ Week 2:
 >
 > **Phase 3 扩展优化?026-07-18 再续?*?> - **standard ?summary 全覆?*：[add-standard-summaries.ps1](../../scripts/add-standard-summaries.ps1) ?394 ?standard 级文档批量生?summary（基?title + type 组合），standard tier summary 覆盖?0.5% ?**100%**
 > - **title 粘连问题二次修复**：增?[fix-broken-title-fields.ps1](../../scripts/fix-broken-title-fields.ps1) 正则（支?`how-to` 等带连字符的 type 值），再修复 2 ?`type: how-to` 粘连文档
-> - **乱码文件修复**：修?`guides/getting-started.md` 全文件乱码问题（重定向入口页?> - **全库 summary 覆盖终?*：整?summary 覆盖?38.8% ?**97.6%**?54/670），其中 important/reference/standard 三级均达 100%
+> - **乱码文件修复**：修?`../guides/getting-started.md` 全文件乱码问题（重定向入口页?> - **全库 summary 覆盖终?*：整?summary 覆盖?38.8% ?**97.6%**?54/670），其中 important/reference/standard 三级均达 100%
 >
 > **Phase 3 深度优化?026-07-18 三续?*?> - **低质?summary 修复**：[fix-bad-summaries.ps1](../../scripts/fix-bad-summaries.ps1) 基于 blockquote/首段智能提取，修?22 份低质量 summary（代码片?过短/模板化），summary 质量整体提升
 > - **高优先级文档 tags 增强**：[enhance-hightier-tags.ps1](../../scripts/enhance-hightier-tags.ps1) 基于 50+ 关键词规则（文件?路径/标题三维匹配），?149 ?important/reference 文档扩充标签维度

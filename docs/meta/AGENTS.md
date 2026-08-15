@@ -25,6 +25,6 @@ change_log:
 
 ## 相关文档
 
-- [AI 智能体调度中心数据字典](docs/explanation/ai-center-data-definition.md)
-- [AI 生成—审计—修正飞轮](docs/explanation/ai-generate-audit-fix-loop.md)
-- [项目专属 AI 记忆层（RAG）](docs/explanation/ai-memory-layer.md)
+- [AI 智能体调度中心数据字典](../archive/historical-2026-08-16/batch8/ai-center-data-definition.md（已归档）)
+- [AI 生成—审计—修正飞轮](../archive/historical-2026-08-16/batch8/ai-generate-audit-fix-loop.md（已归档）)
+- [项目专属 AI 记忆层（RAG）](../archive/historical-2026-08-16/batch7/docs/explanation/ai-memory-layer.md（已归档）)

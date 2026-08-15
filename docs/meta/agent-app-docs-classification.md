@@ -58,15 +58,15 @@ code_version: 2.0.0
 | 1 | Agent Runtime 实现规格 | `docs/reference/agent-runtime-spec.md` | I-257 / SPEC | Agent 层执行引擎唯一实现规格，定义注册/调度/队列/超时核心机制 |
 | 2 | AGENTS.md（AI 行为约束契约） | `./AGENTS.md` | — | 项目级顶层契约，分层规则/四步集成/MCP 权限全部在此 |
 | 3 | V9 智能体全面检视报告 | `docs/reference/agent-audit-report.md` | R-128 / RPT | Agent/LLM/AI 全面审计，含 src/agents/、services/llm/、.agents/skills/ 断层分析 |
-| 4 | UI 设计分布式 AGENT 执行清单 | `docs/explanation/ui-design-agent-execution-plan.md` | I-68/I-69 / DESIGN | P0–P8 可并行验收的具体 Agent 任务分配 |
+| 4 | UI 设计分布式 AGENT 执行清单 | `../archive/historical-2026-08-16/batch7/docs/explanation/ui-design-agent-execution-plan.md（已归档）` | I-68/I-69 / DESIGN | P0–P8 可并行验收的具体 Agent 任务分配 |
 | 5 | 大模型服务接口契约 | `docs/reference/llm-contract.md` | I-17 / API | LLM 子域接口契约，Agent 调用大模型的协议层 |
 
 ### 重要（6 份）
 
 | # | 文档名 | 路径 | 关联注册 ID | 归类理由 |
 |---|--------|------|------------|----------|
-| 6 | AI 文档入口 | `docs/reference/ai/README.md` | — | 旧文档入口，指向 prompts/ 与 agent-runtime-spec.md |
-| 7 | Service 集成指南 | `docs/reference/ai/service-integration-guide.md` | — | Agent 如何与 Service 层交互 |
+| 6 | AI 文档入口 | `../../README.md` | — | 旧文档入口，指向 prompts/ 与 agent-runtime-spec.md |
+| 7 | Service 集成指南 | `../archive/historical-2026-08-16/batch7/docs/reference/ai/service-integration-guide.md（已归档）` | — | Agent 如何与 Service 层交互 |
 | 8 | Store 集成指南 | `docs/reference/ai/store-integration-guide.md` | — | Agent 与 Zustand Store 的集成路径 |
 | 9 | AI 智能体调度中心数据字典 | `docs/reference/ai-center-data-definition.md` | C-14 / DAT | 调度/监控/诊断分析数据字典 |
 | 10 | 系统提示词模板 | `../../prompts/system-prompt-template.md` | — | AI 行为模板，强依赖 AGENTS.md |
@@ -80,7 +80,7 @@ code_version: 2.0.0
 | 13 | 架构说明（面向 AI 智能体） | `docs/explanation/architecture.md` | I-39 / ARC | 驾驶舱 Widget 架构，面向 AI 智能体接入 |
 | 14 | 文档注册索引（Agent 条目） | `docs/meta/REGISTRY_INDEX.md` | C-01/C-14/C-63/I-257/R-128 等 | 搜索 Agent 相关条目的索引工具 |
 | 15 | 模块集成基线比较报告 | docs/reports/audit/report-12-integration-baseline-comparison.md（文件不存在，已归档或移除） | R-144 / RPT | Agent 集群修复后的验证报告 |
-| 16 | 模块完成度校验（含 10 个 Agent 子系统） | `docs/explanation/design/quality-audit-plan.md` | R-141/R-142 / RPT | 逆向校验含 Agent 子系统 |
+| 16 | 模块完成度校验（含 10 个 Agent 子系统） | `../archive/historical-2026-08-16/batch7/docs/explanation/design/quality-audit-plan.md（已归档）` | R-141/R-142 / RPT | 逆向校验含 Agent 子系统 |
 
 ### 🟢 备选（3 份）
 

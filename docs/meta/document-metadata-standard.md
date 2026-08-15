@@ -1,4 +1,4 @@
-﻿---
+---
 title: V9 文档元数据标准规范
 type: meta
 domain: project
@@ -91,7 +91,7 @@ domain: architecture
 - 元文档（文档治理文档）
 
 **不适用于**：
-- 自动生成的索引文件（如 `registry-index.md`）
+- 自动生成的索引文件（如 `registry-index.md（已废弃）`）
 - 归档目录下的历史文档（`archive/`）
 - README.md 索引文件（建议有但不强制）
 
@@ -1172,7 +1172,7 @@ Phase 3: 质量持续优化（覆盖率 90%+）
 
 - [文档分类体系规范](document-classification-system.md) — 三维分类体系详细说明
 - [文档风格指南](document-style-guide.md) — 文档格式和写作规范
-- [文档质量控制报告](document-quality-control-report.md) — 质量评估报告
+- [文档质量控制报告](document-quality-control-report.md（已废弃）) — 质量评估报告
 
 ### B. 工具脚本
 

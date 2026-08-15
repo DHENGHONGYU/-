@@ -34,7 +34,7 @@ code_version: 2.0.0
 # V9 文档风格统一标准（doc-style-standard）
 
 > **定位**：全项目 Markdown 风格**唯一正源**。取代各模型/各趟 pass 自行发挥的写法。
-> **关联契约**：`doc-proofreading-strategy.md`（交叉引用检查）、`hybrid-proofread-contract.md`（校对服务）、`markdown-reorg-framework.md`（三级分类）。
+> **关联契约**：`doc-proofreading-strategy.md（已废弃）`（交叉引用检查）、`../reference/hybrid-proofread-contract.md`（校对服务）、`markdown-reorg-framework.md`（三级分类）。
 > **强制等级**：core。任何新文档/修改必须遵循；变更需架构评审。
 ---
 
@@ -42,10 +42,10 @@ code_version: 2.0.0
 
 二次检索（2026-07-16）发现多模型/多趟校对导致风格严重割裂：
 
-- **585 / 694** 个 `.md` 含**重复 frontmatter 块**（双块/三块），块间 tier/title 自相矛盾（如 `docs/README.md` 块1 `tier:important` 块2 `tier:reference`）。
+- **585 / 694** 个 `.md` 含**重复 frontmatter 块**（双块/三块），块间 tier/title 自相矛盾（如 `../../README.md` 块1 `tier:important` 块2 `tier:reference`）。
 - **12+ 种**署名标签：`Kimi Code CLI`、`AI Assistant (GLM-5.2)`、`AI 辅助开发流程`、`AI 文档工程师`、`V9 Quality Audit Team`、`software-engineer-2（寇豆码）`… 且字段键名有 **6 种**（执行人/校对人员/报告生成人/报告作者/日志生成工具/测试执行人）。
 - **术语异词**：数据字典 vs 数据定义、智能体 vs Agent vs 代理。
-- **日期 4+ 种**且曾存在错年（`registry-index.md` 等曾写 `2025-07-12`，已于 P0-2 修复为 `2026-07-12`）。
+- **日期 4+ 种**且曾存在错年（`registry-index.md（已废弃）` 等曾写 `2025-07-12`，已于 P0-2 修复为 `2026-07-12`）。
 - **emoji 体系混乱**：🟢🔵🟡⭐🔶📘📊📋✅🔴⚠️ℹ️ 混用，装饰性 emoji 进标题。
 - **元数据键中英混用**：`Status/Version/Last Updated` vs `版本/日期/生成时间`。
 
@@ -149,7 +149,7 @@ tier: reference                        ← 与块1 冲突
 
 | 概念 | 统一用词 | 禁用 | 说明 |
 |------|---------|------|------|
-| 数据字典 / 数据定义 | **数据字典**（文件 `data-definition.md`） | 混用二者 | 以 `reference/data-definition.md` 为唯一正源 |
+| 数据字典 / 数据定义 | **数据字典**（文件 `../archive/historical-2026-08-16/batch7/docs/reference/data-definition.md（已归档）`） | 混用二者 | 以 `reference/../archive/historical-2026-08-16/batch7/docs/reference/data-definition.md（已归档）` 为唯一正源 |
 | 智能体 / Agent / 代理 | 正文用**智能体**；代码标识符用 **Agent** | 代理（指 AI 时） | "代理"仅用于 proxy/网络代理 |
 | 组件 / 部件 | **组件**（component） | 部件 | |
 | 契约 / 合同 | **契约**（contract） | 合同 | |
@@ -193,8 +193,8 @@ tier: reference                        ← 与块1 冲突
 - `npm run doc:proofread`：现有 XREF 检查（D2C/C2D/D2D）**已扩展 `style` 维度**（见下方输出 `[style]` 行）。
 - 检查器：`scripts/docs-tool/style-lint.ts`（实现本节全部检查项：重复 frontmatter 块、中文键、未归一署名、术语违例、日期格式、emoji 违规、标题跳级）。
 - 半自动归一脚本：`scripts/docs-tool/normalize-style.mjs`（P1/P2 批量修复，含 `--dry` 预演）。
-- `doc:gate`：已新增第 7 项「文档风格」检查，当前 `warning` 级（不阻断），与 `doc-proofreading-strategy.md` §4 升级路径一致；待 backlog 清理后翻 `blocking`。
-- 关联：`doc-style-remediation-plan.md`（P0–P3 执行方案与验收）、`markdown-reorg-framework.md`（三级分类）。
+- `doc:gate`：已新增第 7 项「文档风格」检查，当前 `warning` 级（不阻断），与 `doc-proofreading-strategy.md（已废弃）` §4 升级路径一致；待 backlog 清理后翻 `blocking`。
+- 关联：`doc-style-remediation-plan.md（已废弃）`（P0–P3 执行方案与验收）、`markdown-reorg-framework.md`（三级分类）。
 ---
 
 ## 10. 合规自查清单（作者/AI 必读）

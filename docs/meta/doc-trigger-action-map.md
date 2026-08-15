@@ -62,7 +62,7 @@ date: 2026-07-17
 | **T6 UI 组件变更** | `src/components/**/*.tsx`、`src/components/**/*.ts` | 更新 `docs/archive/historical-2026-08-16/batch8/component-library-guide.md`（已归档） | 是 | 补充：`docs/archive/historical-2026-08-16/batch8/component-specs.md`（已归档）、`docs/archive/historical-2026-08-16/batch8/ui-design-system.md`（已归档）、团队手册 `docs/guides/team-handbook/03-ui-components.md`。 |
 | **T7 Hook 自定义变更** | `src/hooks/**/*.ts`、`src/hooks/**/*.tsx` | 更新 `docs/guides/how-to/hooks-guide.md` | 是 | 补充：`docs/reference/data-flow-spec.md`、团队手册 `docs/guides/team-handbook/03-ui-components.md`。 |
 | **T8 页面组件变更** | `src/pages/**/*.tsx`、`src/pages/**/*.ts` | 更新 `docs/archive/historical-2026-08-16/batch7/docs/explanation/06-routing-specs.md`（已归档） | 是 | 补充：`docs/archive/historical-2026-08-16/batch8/page-structure.md`（已归档）、团队手册 `docs/guides/team-handbook/02-architecture.md`。 |
-| **T9 Widget 注册表变更** | `src/cockpit/core/widgetRegistry.ts` | 重写 `docs/reference/cockpit/data-definition.md` | 是 | 补充：`docs/meta/registry-index.md`（已删除，见任务 A1）、团队手册 `docs/guides/team-handbook/03-ui-components.md` + 跑 `audit:docs` 和 `audit:widget-registry`。变更 defaultLayout 时必须同步更新 `AGENTS.md` §7.2 布局原则。 |
+| **T9 Widget 注册表变更** | `src/cockpit/core/widgetRegistry.ts` | 重写 `docs/reference/cockpit/data-definition.md` | 是 | 补充：`docs/meta/registry-index.md（已废弃）`（已删除，见任务 A1）、团队手册 `docs/guides/team-handbook/03-ui-components.md` + 跑 `audit:docs` 和 `audit:widget-registry`。变更 defaultLayout 时必须同步更新 `AGENTS.md` §7.2 布局原则。 |
 | **T10 版本发布（package.json version bump）** | `package.json`（仅 `version` 字段变更） | 全仓 `docs/**/*.md` frontmatter `code_version` 同步 | 否（由 `doc:version-check` 覆盖） | 补充：将 `CHANGELOG` 的 `[Unreleased]` 段提升为对应版本段（对应计划 T4/T5/T6）。此事件为**跨仓库元数据同步**，不触达正文，故不跑 `audit:docs`；`--auto-update` 对 T10 对接 `npm run doc:version-check`。 |
 | **T11 Mock 模块安全** | `scripts/audit/audit-mock-modules.ts`、`tests/**/*.test.ts`（新增全量 mock 时） | 更新本表（当前文件）+ `AGENTS.md` §7.3 | 否 | 新增 SAFE_FULL_MOCKS allowlist 条目必须附带 `reason` 注释。audit:mock-modules exit 0 即无新增违规。 |
 | **T12 ESLint/门禁变更** | `eslint.config.js`、`eslint-rules/*.js`、`scripts/quality/*.js`、`package.json`（scripts 段） | 更新 `AGENTS.md` §三 类型安全 + §七 验证命令 | 否 | 新增规则需在 AGENTS.md 登记规则用途和背景教训编号（如 P3 → no-record-string-to-branded）。 |
@@ -108,13 +108,13 @@ date: 2026-07-17
 
 
 <!-- merge-source: docs/meta/doc-trigger-action-map.md（2026-08-15 路径已对齐当前磁盘位置） -->
-## 补充内容（合并自 `docs/reference/meta/doc-trigger-action-map.md`）
+## 补充内容（合并自 `../archive/historical-2026-08-16/batch7/docs/reference/meta/doc-trigger-action-map.md（已归档）`）
 
 > 文档日期：2026-07-12（N2/N3 修订）
 > 维护者：架构治理（里程碑 M1 / T1 产出；N2/N3 收尾）
 > 关联文档：`scripts/docs-tool/doc-update-trigger.ts` 的 `TRIGGER_RULES`（原「文档自动更新体系-架构梳理与任务清单」已删除，约束已并入本文件）
 3. **与代码同步**：本表的 **T1–T14** 必须与 `scripts/docs-tool/doc-update-trigger.ts` 的 `TRIGGER_RULES` 保持同步。代码改动 `TRIGGER_RULES` 时，本表须同步修订（反之亦然）。
-> **路径基准（N2 修订后，2026-08-15 归档更新）**：原指向的 9 个文档已归档至 `archive/historical-2026-08-16/batch7/`（`data-definition.md`、`state-management.md`、`routing-specs.md` 等），4 个 design 文档已归档至 `archive/historical-2026-08-16/batch8/`（`component-library-guide.md`、`component-specs.md`、`ui-design-system.md`、`page-structure.md`）。`hooks-guide.md` 实际路径为 `docs/guides/how-to/hooks-guide.md`（T7 引用正确）。
+> **路径基准（N2 修订后，2026-08-15 归档更新）**：原指向的 9 个文档已归档至 `archive/historical-2026-08-16/batch7/`（`data-definition.md`、`state-management.md`、`routing-specs.md` 等），4 个 design 文档已归档至 `archive/historical-2026-08-16/batch8/`（`../archive/historical-2026-08-16/batch8/component-library-guide.md`、`../archive/historical-2026-08-16/batch8/component-specs.md`、`../archive/historical-2026-08-16/batch8/ui-design-system.md`、`../archive/historical-2026-08-16/batch8/page-structure.md`）。`../guides/how-to/hooks-guide.md` 实际路径为 `docs/guides/how-to/hooks-guide.md`（T7 引用正确）。
 
 > **一致性治理说明（2026-07-21）**：上方 §二 主矩阵已采用 pr-6 重组后的真实权威路径
 > （`docs/reference/...`、`docs/explanation/...`、`docs/guides/how-to/...` 等），并由 N2 对齐磁盘。

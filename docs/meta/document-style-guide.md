@@ -69,7 +69,7 @@ code_version: 2.0.0
 | **规范标准** | `<domain>-conventions.md` / `<topic>-spec.md` | coding-conventions.md |
 | **报告** | `<type>-report.md` / `<topic>-audit.md` | code-quality-audit-report.md |
 | **经验教训** | `lessons-learned-<date>.md` / `<topic>-lessons.md` | lessons-learned-2026-07.md |
-| **数据定义** | data-definition.md / `<module>-types.md` | `docs/reference/news-data-definition.md` |
+| **数据定义** | data-definition.md / `<module>-types.md` | `../archive/historical-2026-08-16/batch7/docs/explanation/news-data-definition.md（已归档）` |
 | **模板** | `<type>-template.md` | feature-doc-template.md |
 | **README** | 目录入口固定为 `README.md` | `README.md` |
 

@@ -146,7 +146,7 @@ PortalShell (src/portal/PortalShell.tsx)
 | command | `CommandApp.tsx` + `AgentApp.tsx` + `ConfigApp.tsx` | 命令舱分发器（三 dispatcher） | PortalShell→CommandApp / AgentApp；`CommandApp` 内再 `React.lazy(() => import('@/apps/command/ConfigApp'))` → `/command/config` | ?? 文档需显式画出二级嵌套；`ConfigApp` 经 CommandApp 接入而非 PortalShell |
 
 > **角色边界铁律**：`apps/` 内只放 `{Cabin}App.tsx` 分发器；页面组件（Panel/Dashboard/子组件）一律落在 `pages/{cabin}/` 或 `components/`。违反即层级越界，由 `audit:layers` / `audit:deadcode`（AGENTS.md L721 已将 `apps/` 列为路由源扫描）捕获。
-> **权威依据**：`AGENTS.md §一`（apps/ 定义）、L720–726（App 分发器契约）。详细逐 App 角色见 `../explanation/cabins-overview.md` §2。
+> **权威依据**：`AGENTS.md §一`（apps/ 定义）、L720–726（App 分发器契约）。详细逐 App 角色见 `../archive/historical-2026-08-16/batch7/docs/explanation/cabins-overview.md（已归档）` §2。
 
 > **`src/` 根级入口/配置文件**（非子目录）：`App.tsx`、`main.tsx`、`index.css`、`theme.config.ts`、`vite-env.d.ts`。
 
@@ -183,7 +183,7 @@ PortalShell (src/portal/PortalShell.tsx)
 | 类型定义 | snake_case | `backtest.types.ts`, `trade.types.ts` |
 | 配置文件 | snake_case | `api_paths.ts`, `llm_config.ts` |
 | 测试文件 | `.test.ts/.test.tsx` | `utils.test.ts`, `Button.test.tsx` |
-| 文档文件 | PascalCase / 中文 | `../explanation/03-architecture-standards.md`, `../reference/V9数据宪法.md` |
+| 文档文件 | PascalCase / 中文 | `../archive/historical-2026-08-16/batch7/docs/explanation/03-architecture-standards.md（已归档）`, `../archive/historical-2026-08-16/batch7/docs/reference/V9数据宪法.md` |
 | 脚本文件 | kebab-case（正式） | `audit-layer-calls.ts`, `generate-report.ts` |
 
 ### 3.2 目录命名规则
@@ -287,7 +287,7 @@ archive/
 ### 5.3 归档操作流程
 
 1. **评估**：确认文件不再被项目引用
-2. **记录**：在 `docs/meta/registry-index.md` 中记录归档信息
+2. **记录**：在 `docs/meta/registry-index.md（已废弃）` 中记录归档信息
 3. **迁移**：移动文件到 `archive/` 对应子目录
 4. **验证**：运行 `npm run audit:doc-integrity` 确认无引用断裂
 
@@ -351,15 +351,15 @@ archive/
 |--------|----------|--------|------|----------|
 | **P0** | `../../AGENTS.md` | AGENTS.md | AI Agent 行为约束、架构决策记录 | §一、§十、§十四 |
 | **P0** | `../explanation/architecture.md` | architecture.md | 系统架构总览、分层设计、模块关系 | §一、§1.1 |
-| **P0** | `../reference/v9数据宪法.md` | v9数据宪法.md | 数据字典规范、数据源标准 | §2.5 |
-| **P0** | `../reference/development-workflow-sop.md` | development-workflow-sop.md | 开发工作流 SOP、门禁清单、工具链地图 | 全文 |
+| **P0** | `../archive/historical-2026-08-16/batch7/docs/reference/V9数据宪法.md（已归档）` | v9数据宪法.md | 数据字典规范、数据源标准 | §2.5 |
+| **P0** | `../archive/historical-2026-08-16/batch7/docs/reference/development-workflow-sop.md（已归档）` | development-workflow-sop.md | 开发工作流 SOP、门禁清单、工具链地图 | 全文 |
 | **P1** | `./directory-structure-guide.md` | directory-structure-guide.md | 目录结构规范、命名规则、归档流程 | 全文 |
 | **P1** | `./governance.md` | governance.md | 文档治理规范、版本控制策略 | §七 |
 | **P1** | `../reference/api-contract.md` | api-contract.md | API 契约定义、接口规范 | §3.6 |
-| **P1** | `../explanation/06-routing-specs.md` | 06-routing-specs.md | 路由规范、页面注册规则 | §4.3 |
-| **P1** | `../how-to/code-review-guide.md` | code-review-guide.md | 代码审查规范、检查清单 | §8.2 |
+| **P1** | `../archive/historical-2026-08-16/batch7/docs/explanation/06-routing-specs.md（已归档）` | 06-routing-specs.md | 路由规范、页面注册规则 | §4.3 |
+| **P1** | `../guides/how-to/code-review-guide.md` | code-review-guide.md | 代码审查规范、检查清单 | §8.2 |
 | **P2** | `../reference/jsdoc-convention.md` | jsdoc-convention.md | JSDoc 编写规范 | §3.3 |
-| **P2** | `../explanation/quality-gates-baseline.md` | quality-gates-baseline.md | 质量门禁基线、阈值标准 | §4.2 |
+| **P2** | `../archive/historical-2026-08-16/batch8/quality-gates-baseline.md（已归档）` | quality-gates-baseline.md | 质量门禁基线、阈值标准 | §4.2 |
 
 ### 8.2 自动化门禁脚本清单（Husky 14 步阻断门禁）
 
@@ -548,7 +548,7 @@ npm run audit:layers && npm run audit:docs && npm run audit:doc-integrity
 
 - **组件库**：`src/components/` 提供统一的 UI 组件
 - **工具函数**：`src/lib/` 提供通用工具函数
-- **开发环境**：参考 `../tutorials/getting-started.md`
+- **开发环境**：参考 `../guides/getting-started.md`
 - **文档系统**：`docs/` 目录提供完整的技术文档
 
 ---

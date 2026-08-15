@@ -145,7 +145,7 @@ last_updated: 2026-08-15
 
 ### P2：重建 ADR 索引 ✅ 已完成
 
-修复 `docs/explanation/architecture/adr/README.md` 的 58 条断链：
+修复 `../../README.md` 的 58 条断链：
 - 重建 §4.1 索引表，移除 9 条断链，新增 6 条实际存在的 ADR
 - 修复 §4.2 摘要引用路径（8 条）
 - 修复 §5/§6/§9 关联路径（6 条）
@@ -154,7 +154,7 @@ last_updated: 2026-08-15
 ### P3：评估数据资产清单文档 ✅ 已完成
 
 - 归档 2 个重复副本（V9-DOC-REF-977、V9-DOC-PROJ-366）
-- 保留 `docs/reference/《V9现有数据资产清单》.md`（V9-DOC-REF-981）作为权威版本
+- 保留 `../archive/historical-2026-08-16/batch7/docs/reference/%E3%80%8AV9%E7%8E%B0%E6%9C%89%E6%95%B0%E6%8D%AE%E8%B5%84%E4%BA%A7%E6%B8%85%E5%8D%95%E3%80%8B.md（已归档）`（V9-DOC-REF-981）作为权威版本
 - 保留版本仍有 ~44 条断链（引用已重构 Store），建议后续基于 storeRegistry 重新生成
 
 ### P4：断链率递减基线 ✅ 已建立

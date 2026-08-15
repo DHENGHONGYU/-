@@ -34,7 +34,7 @@ change_log:
 
 | 分类 | 典型路径 | 说明 |
 |:---|:---|:---|
-| 旧版架构文档 | `../explanation/03-architecture-standards.md` | 已迁移到 `docs/specs/design/architecture/` |
+| 旧版架构文档 | `../archive/historical-2026-08-16/batch7/docs/explanation/03-architecture-standards.md（已归档）` | 已迁移到 `docs/specs/design/architecture/` |
 | 代码审查文档 | `../guides/how-to/code-review-guide.md` | 已迁移到 `../guides/how-to/code-review-guide.md` |
 | 数据定义文档 | `docs/RISK_DERIVED_data-definition.md` | 已归档到 `archive/docs/07-archive/` |
 | UI 组件 | `src/components/templates/PageContainer.tsx` | 组件结构变更 |
@@ -59,21 +59,21 @@ change_log:
 CHANGELOG.md 第 6 行已添加声明：
 
 ```markdown
-⚠️ **历史引用声明**：本日志中 v2.4.0 之前的条目引用的部分文档路径（如 `../explanation/03-architecture-standards.md`、`../guides/how-to/code-review-guide.md`、`docs/reports/code-graph.json` 等）可能因文档体系重构（SDLC 目录重组）已发生变更。如需最新路径，请查询 `docs/README.md` 或 `docs/meta/` 索引。
+⚠️ **历史引用声明**：本日志中 v2.4.0 之前的条目引用的部分文档路径（如 `../archive/historical-2026-08-16/batch7/docs/explanation/03-architecture-standards.md（已归档）`、`../guides/how-to/code-review-guide.md`、`docs/reports/code-graph.json` 等）可能因文档体系重构（SDLC 目录重组）已发生变更。如需最新路径，请查询 `../../README.md` 或 `docs/meta/` 索引。
 ```
 
 ### 2.3 路径别名映射
 
 | 旧路径 | 新路径 | 状态 |
 |:---|:---|:---|
-| `../explanation/03-architecture-standards.md` | `../explanation/architecture.md` | ✅ 映射 |
+| `../archive/historical-2026-08-16/batch7/docs/explanation/03-architecture-standards.md（已归档）` | `../explanation/architecture.md` | ✅ 映射 |
 | `../guides/how-to/code-review-guide.md` | `../guides/how-to/code-review-guide.md` | ✅ 映射 |
 | `docs/RISK_DERIVED_data-definition.md` | `archive/docs/07-archive/RISK_DERIVED_data-definition.md.DEPRECATED` | ✅ 已归档 |
-| `../reference/data-dictionary-index.md` | `../reference/data-dictionary-index.md` | ✅ 映射 |
-| `../reference/code-review-cheatsheet.md` | `../guides/how-to/code-review-guide.md` | ✅ 已合并 |
-| `../guides/development/code-review/code-review-training.md` | `../guides/how-to/code-review-guide.md` | ✅ 已合并 |
-| `../guides/development/code-review/solo-review.md` | `../guides/how-to/code-review-guide.md` | ✅ 已合并 |
-| `../explanation/design/tech-debt.md` | `../explanation/design/tech-debt.md` | ✅ 映射 |
+| `../archive/historical-2026-08-16/batch7/docs/explanation/design/data-dictionary-index.md（已归档）` | `../archive/historical-2026-08-16/batch7/docs/explanation/design/data-dictionary-index.md（已归档）` | ✅ 映射 |
+| `../archive/historical-2026-08-16/batch7/docs/reference/code-review-cheatsheet.md（已归档）` | `../guides/how-to/code-review-guide.md` | ✅ 已合并 |
+| `../archive/historical-2026-08-16/batch7/docs/guides/development/code-review/code-review-training.md（已归档）` | `../guides/how-to/code-review-guide.md` | ✅ 已合并 |
+| `../archive/historical-2026-08-16/batch6/docs/reports/SOLO-REVIEW.md（已归档）` | `../guides/how-to/code-review-guide.md` | ✅ 已合并 |
+| `../archive/historical-2026-08-16/batch6/docs/reports/TECH-DEBT.md（已归档）` | `../archive/historical-2026-08-16/batch6/docs/reports/TECH-DEBT.md（已归档）` | ✅ 映射 |
 
 ---
 
