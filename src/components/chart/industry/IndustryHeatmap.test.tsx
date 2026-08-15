@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { IndustryHeatmap, type IndustryHeatmapDataItem } from './IndustryHeatmap'
+import { THEME_TOKENS } from '@/constants/theme/theme.tokens.base'
 
 const baseData: IndustryHeatmapDataItem[] = [
   { code: 'A', name: '行业A', value: 80 },
@@ -53,7 +54,8 @@ describe('IndustryHeatmap 独立复检（验收闸门一档实跑）', () => {
     const cell = screen.getByText('行业A').closest('div')!
     expect(cell.className).toContain('focus-visible:outline-none')
     expect(cell.className).toContain('focus-visible:ring-2')
-    expect(cell.className).toContain('focus-visible:ring-blue-500')
+    // shadcn 语义焦点环：ring-ring（映射到 --ring CSS 变量），替代硬编码 ring-blue-500
+    expect(cell.className).toContain(`focus-visible:${THEME_TOKENS.focusVisible.ringColor}`)
     expect(cell.className).toContain('focus-visible:ring-offset-2')
   })
 

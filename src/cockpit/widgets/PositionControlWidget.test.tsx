@@ -98,15 +98,18 @@ describe('PositionControlWidget', () => {
     render(<PositionControlWidget config={buildConfig()} />)
     const badge = screen.getByText('85%')
     expect(badge.className).toContain(COLOR_TOKENS.danger.tailwind) // text-red-500
-    expect(badge.className).toContain('border-red-300')
+    // shadcn 语义边框色：destructive/30 对应红系半透明
+    expect(badge.className).toContain('border-destructive/30')
   })
 
   it('仓位比例 50~80 时 Badge 使用黄色', () => {
     setupPositionStore({ positionRatio: 60, holdings: [] })
     render(<PositionControlWidget config={buildConfig()} />)
     const badge = screen.getByText('60%')
-    expect(badge.className).toContain('text-yellow-500')
-    expect(badge.className).toContain('border-yellow-300')
+    // shadcn 语义文字色：warning（对应琥珀系）
+    expect(badge.className).toContain('text-warning')
+    // shadcn 语义边框色：warning/30
+    expect(badge.className).toContain('border-warning/30')
   })
 
   it('仓位比例 ≤50 时 Badge 使用 success 绿', () => {
@@ -114,7 +117,8 @@ describe('PositionControlWidget', () => {
     render(<PositionControlWidget config={buildConfig()} />)
     const badge = screen.getByText('30%')
     expect(badge.className).toContain(COLOR_TOKENS.success.tailwind) // text-success
-    expect(badge.className).toContain('border-green-300')
+    // shadcn 语义边框色：success/30 对应绿系半透明
+    expect(badge.className).toContain('border-success/30')
   })
 
   it('仓位比例进度条 backgroundColor：>80 用 danger.hex', () => {

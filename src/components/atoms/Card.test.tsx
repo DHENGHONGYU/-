@@ -29,7 +29,8 @@ describe('Card 组件族', () => {
     const card = screen.getByTestId('card')
     expect(card.tagName).toBe('DIV')
     expect(card).toHaveClass('rounded-lg')
-    expect(card).toHaveClass('border')
+    // Apple 风格升级：原 border 硬边框已替换为 shadow-elevation-1 悬浮阴影（Card 源码 tokens.border = 'shadow-elevation-1'）
+    expect(card).toHaveClass('shadow-elevation-1')
     // 断言令牌引用(AGENTS.md §3.5.5):COLOR_TOKENS.bgCard.tailwind = 'bg-white'
     expect(card).toHaveClass(COLOR_TOKENS.bgCard.tailwind)
     expect(card).toHaveClass('text-card-foreground')

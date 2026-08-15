@@ -216,8 +216,9 @@ describe('SignalMonitorWidget', () => {
 
     const confidenceSpan = container.querySelector('.text-xs.font-bold')
     expect(confidenceSpan).not.toBeNull()
-    // 源码硬编码 'text-gray-400'，等价于 COLOR_TOKENS.neutral.tailwind
-    expect(confidenceSpan?.className).toContain(COLOR_TOKENS.neutral.tailwind)
+    // 源码 getConfidenceColor 对 <40 返回 shadcn 语义色 text-muted-foreground/70
+    // （等价语义：弱化前景色，对应 COLOR_TOKENS.neutral 语义层级）
+    expect(confidenceSpan?.className).toContain('text-muted-foreground')
   })
 
   it('handles extreme confidence values 0 and 100 without crashing', () => {
@@ -228,11 +229,11 @@ describe('SignalMonitorWidget', () => {
 
     const { container } = render(<SignalMonitorWidget config={buildConfig()} />)
 
-    // 0 → text-gray-400（neutral），100 → text-success（success）
+    // 0 → text-muted-foreground/70（shadcn 弱化前景，等价 neutral 语义），100 → text-success（success）
     const confidenceSpans = container.querySelectorAll('.text-xs.font-bold')
     expect(confidenceSpans.length).toBe(2)
     const classNames = Array.from(confidenceSpans).map((s) => s.className)
-    expect(classNames.some((c) => c.includes(COLOR_TOKENS.neutral.tailwind))).toBe(true)
+    expect(classNames.some((c) => c.includes('text-muted-foreground'))).toBe(true)
     expect(classNames.some((c) => c.includes(COLOR_TOKENS.success.tailwind))).toBe(true)
   })
 

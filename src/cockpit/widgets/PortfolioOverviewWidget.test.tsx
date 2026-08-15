@@ -48,6 +48,12 @@ vi.mock('lucide-react', () => ({
   Target: () => <svg data-testid="icon-target" />,
   AlertTriangle: () => <svg data-testid="icon-alert" />,
   ArrowRight: () => <svg data-testid="icon-arrow-right" />,
+  // WidgetStateShell→ErrorState 内部依赖 AlertCircle 图标，需一并 mock 避免错误态渲染抛 NoExport 异常
+  AlertCircle: () => <svg data-testid="icon-alert-circle" />,
+  // Skeleton 组件也可能间接引用其他图标（如 Loader2），兜底 mock 常见状态图标
+  Loader2: () => <svg data-testid="icon-loader" />,
+  Inbox: () => <svg data-testid="icon-inbox" />,
+  RefreshCw: () => <svg data-testid="icon-refresh-cw" />,
 }))
 
 // ============================================================

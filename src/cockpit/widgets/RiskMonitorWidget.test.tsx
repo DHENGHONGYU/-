@@ -380,8 +380,8 @@ describe('RiskMonitorWidget', () => {
     // 源码 夏普>=0 / 集中度<=50 使用 COLOR_TOKENS.success.hex（与 text-success 一致）
     expect(COLOR_TOKENS.success.hex).toBe('#21c45d')
     expect(COLOR_TOKENS.success.tailwind).toBe('text-success')
-    // 源码 波动率 使用 COLOR_TOKENS.info.hex (#3b82f6)
-    expect(COLOR_TOKENS.info.hex).toBe('#3b82f6')
+    // 源码 波动率 使用 COLOR_TOKENS.info.hex（Apple Blue #007aff，shadcn 主题色对齐）
+    expect(COLOR_TOKENS.info.hex).toBe('#007aff')
     // 源码 VaR 非高风险 使用 THEME_TOKENS.color.warningRaw (#f59e0b)
     expect(THEME_TOKENS.color.warningRaw).toBe('#f59e0b')
     // 三档 Badge 边界 token
