@@ -39,7 +39,7 @@ change_log:
 | 工程分层契约 | [`../../meta/AGENTS.md`](../../meta/AGENTS.md) | 分层规则、四步集成、依赖方向铁律 |
 | 新增 Service 实操 | [`../../guides/how-to-add-service.md`](../../guides/how-to-add-service.md) | 15 分钟快速创建 Service 的模板与踩坑指南 |
 | 服务子域目录 | [`../services-catalog.md`](../services-catalog.md) | 24 子域清单与职责摘要 |
-| 全局架构总览 | [`../../explanation/overview.md`](../../explanation/overview.md) | 数据流、三级加载链、引擎分层 |
+| 全局架构总览 | [`../../explanation/overview.md`](../../explanation/overview.md)（已归档） | 数据流、三级加载链、引擎分层 |
 | 新增 Store 指南 | [`../../guides/how-to-add-store.md`](../../guides/how-to-add-store.md) | Service 的上游消费方（Zustand Store） |
 | 编码规范 | [`../../guides/standards/coding-conventions.md`](../../guides/standards/coding-conventions.md) | JSDoc、复杂度、命名规范 |
 | 数据库配置 | `src/config/dbConfig.ts` | `STORE_NAME`、`ACL_MATRIX`、`ENVELOPE_ACTION` 定义 |
@@ -569,7 +569,7 @@ errorBus.report({
 ### 7.4 文档与索引
 
 - [ ] 新 Service 已注册到 `../services-catalog.md`（如新增子域）。
-- [ ] 新文档已回链 `docs/README.md` 对应类目（F 类：AI 辅助工程治理）。
+- [ ] 新文档已回链 `docs/README.md`（已废弃） 对应类目（F 类：AI 辅助工程治理）。
 - [ ] 双向引用检查：本文引用了 `../../meta/AGENTS.md`，`../../meta/AGENTS.md` 或相关索引应引用本文。
 - [ ] 变更日志已记录（如需）于 `docs/changelogs/YYYY-MM/`。
 

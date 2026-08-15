@@ -44,7 +44,7 @@ change_log:
 
 ---
 
-## 1. 架构分层（`../explanation/03-architecture-standards.md`）
+## 1. 架构分层（`../explanation/03-architecture-standards.md`（已归档））
 
 | 层级 | 规划目录 | v0.9.0-docs-base 描述 | v0.9.0-docs-review 更新 | v0.9.0-docs-v6pro-assessment 更新 | 影响 |
 |------|----------|------------------------|-------------------------|----------------------------------|------|
@@ -56,7 +56,7 @@ change_log:
 
 ---
 
-## 2. 调用方向与数据访问（`../explanation/03-architecture-standards.md`）
+## 2. 调用方向与数据访问（`../explanation/03-architecture-standards.md`（已归档））
 
 | 规则 | v0.9.0-docs-base | v0.9.0-docs-review | v0.9.0-docs-v6pro-assessment | 理由 |
 |------|------------------|--------------------|------------------------------|------|
@@ -66,7 +66,7 @@ change_log:
 
 ---
 
-## 3. 配置层清单（`../explanation/03-architecture-standards.md`）
+## 3. 配置层清单（`../explanation/03-architecture-standards.md`（已归档））
 
 | 文件 | v0.9.0-docs-base | v0.9.0-docs-review |
 |------|------------------|--------------------|
@@ -81,7 +81,7 @@ change_log:
 
 ---
 
-## 4. 数据 Schema（`../explanation/03-architecture-standards.md`）
+## 4. 数据 Schema（`../explanation/03-architecture-standards.md`（已归档））
 
 | Store | v0.9.0-docs-base | v0.9.0-docs-review | 说明 |
 |-------|------------------|--------------------|------|
@@ -92,7 +92,7 @@ change_log:
 
 ---
 
-## 5. 路由与 UI 映射（`../explanation/06-routing-specs.md`）
+## 5. 路由与 UI 映射（`../explanation/06-routing-specs.md`（已归档））
 
 | 路径 | v0.9.0-docs-base | v0.9.0-docs-review | 组件 | 服务 |
 |------|------------------|--------------------|------|------|
@@ -191,11 +191,11 @@ change_log:
 
 ## 附录：受影响的文档清单
 
-- `../explanation/03-architecture-standards.md`
+- `../explanation/03-architecture-standards.md`（已归档）
 - `../specs/02-functional-specs.md`
 - `../specs/04-ui-ux-specs.md`
 - `../explanation/05-engine-specs.md`
-- `../explanation/06-routing-specs.md`
+- `../explanation/06-routing-specs.md`（已归档）
 - `../guides/08-implementation-plan.md`
 - `../guides/09-quality-gates.md`
 - `./architecture-version-comparison.md`

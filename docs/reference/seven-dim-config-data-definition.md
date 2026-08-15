@@ -325,7 +325,7 @@ change_log:
 **与既有模块的关系**:
 - 维度 code `01`~`08` 与 `src/data/types.ts:694` 的 `DataDimensionType`（`01_basic`~`08_research`）对齐；8 个维度均已正式纳入 DataDimensionType 类型。
 - `StorageType`（`'full' | 'lightweight'`）与 `DataDimensionMeta.storageStrategy`（`src/data/types.ts:708`）语义一致。
-- `GLOBAL_LIMITS` 为全局限流基线，与 Widget 数据采集三层架构（`./data-definition.md`）的 `COLLECTOR_DEFAULT_CONFIG` 互补：前者管宏观配额，后者管单任务执行参数。
+- `GLOBAL_LIMITS` 为全局限流基线，与 Widget 数据采集三层架构（`./data-definition.md`（已归档））的 `COLLECTOR_DEFAULT_CONFIG` 互补：前者管宏观配额，后者管单任务执行参数。
 
 ---
 

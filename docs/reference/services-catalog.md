@@ -55,8 +55,8 @@ date: 2026-07-17
 | 15 | rbac | `src/services/rbac/` | 权限：角色与访问控制 | ? `rbac-contract.md` |
 | 16 | scoring | `src/services/scoring/` | 评分引擎：v6 五因子（合成种子，UI 标示例） | ? `scoring-contract.md` |
 | 17 | screening | `src/services/screening/` | 选股/筛选：条件引擎 | ? `screening-contract.md` |
-| 18 | stock-analysis | `src/services/stock-analysis/` | 个股分析：深度分析 | ? `stock-analysis-contract.md` |
-| 19 | stockpool | `src/services/stockpool/` | 股票池：池管理/监控 | ? `stockpool-contract.md` |
+| 18 | stock-analysis | `src/services/stock-analysis/` | 个股分析：深度分析 | ? `stock-analysis-contract.md`（已归档） |
+| 19 | stockpool | `src/services/stockpool/` | 股票池：池管理/监控 | ? `stockpool-contract.md`（已归档） |
 | 20 | system | `src/services/system/` | 系统级：配置/健康/启动 | ? `system-contract.md` |
 | 21 | trade | `src/services/trading/` | 交易域：交易实体/状态 | ? `trade-contract.md` |
 | 22 | trading | `src/services/trading/` | 交易业务：组合/策略/风控编排 | ? `trading-contract.md` |
@@ -79,4 +79,4 @@ date: 2026-07-17
 
 - ? 24 子域 100% 在此有锚点（本文件）。
 - ? 各子域独立契约文档：24/24 完成（P3-3 已完成）。
-- 索引接入：本文件已被 `docs/README.md` B 类引用。
+- 索引接入：本文件已被 `docs/README.md`（已废弃） B 类引用。

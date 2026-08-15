@@ -15,13 +15,13 @@ change_log:
 # V9 PWA 离线化实施指南
 
 > **对应蓝图**：`./v9-system-blueprint.md` §1 系统定位（离线需求）、§8 Phase 3（PWA manifest + service worker）、§9 质量门禁 11（PWA 离线验证）、§10 偏差 D18/D19 相关质量加固。
-> **依赖文档**：`../explanation/03-architecture-standards.md` §3.10.1（离线目标）、`../explanation/06-routing-specs.md`（HashRouter 与静态托管）。
+> **依赖文档**：`../explanation/03-architecture-standards.md`（已归档） §3.10.1（离线目标）、`../explanation/06-routing-specs.md`（已归档）（HashRouter 与静态托管）。
 
 ---
 
 ## 1. 目标与范围
 
-本文档规定 V9 作为纯前端 PWA 的离线化实施细节，包括 Service Worker 注册策略、核心资源缓存清单、应用更新与版本管理机制，以及 Lighthouse 离线测试标准。不覆盖图表性能与操作反馈闭环（见 `chart-integration.md`、`feedback-loop-spec.md`）。
+本文档规定 V9 作为纯前端 PWA 的离线化实施细节，包括 Service Worker 注册策略、核心资源缓存清单、应用更新与版本管理机制，以及 Lighthouse 离线测试标准。不覆盖图表性能与操作反馈闭环（见 `chart-integration.md`、`feedback-loop-spec.md`（已归档））。
 
 ---
 
@@ -74,7 +74,7 @@ eventBus.on('pwa:update-available', () => {
 })
 ```
 
-> `feedbackService` 规范见 `./feedback-loop-spec.md` §3。
+> `feedbackService` 规范见 `./feedback-loop-spec.md`（已归档） §3。
 
 ---
 
@@ -224,6 +224,6 @@ test('离线后可进入首页与驾驶舱', async ({ page, context }) => {
 ## 7. 相关链接
 
 - `./v9-system-blueprint.md` §1、§8 Phase 3、§9、D18/D19
-- `../explanation/03-architecture-standards.md` §3.10.1
-- `../explanation/06-routing-specs.md` §1（HashRouter 说明）
-- `./feedback-loop-spec.md` §5.3（pwa:* 事件通过 EventBus 触发 Toast）
+- `../explanation/03-architecture-standards.md`（已归档） §3.10.1
+- `../explanation/06-routing-specs.md`（已归档） §1（HashRouter 说明）
+- `./feedback-loop-spec.md`（已归档） §5.3（pwa:* 事件通过 EventBus 触发 Toast）

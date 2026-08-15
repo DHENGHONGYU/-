@@ -327,8 +327,8 @@ DataBridge 广播 "store_changed"
 
 ## 8. 相关文档
 
-- [V9 数据宪法](../reference/v9数据宪法.md)
+- [V9 数据宪法](../reference/v9数据宪法.md)（已归档）
 - [数据流引擎规范](dataflow-engine-spec.md)
 - [双策略数据流规范](dual-strategy-dataflow-spec.md)
-- [数据交互协议](data-interaction-protocols.md)
+- [数据交互协议](data-interaction-protocols.md)（已归档）
 - [Widget 错误处理](widget-error-handling.md)

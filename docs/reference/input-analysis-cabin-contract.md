@@ -22,7 +22,7 @@ change_log:
 # input-analysis-cabin-contract.md — 输入舱 → 分析舱 数据调用接口契约
 
 > **定位**：定义「分析舱」消费「输入舱」意向候选池数据的接口契约、数据流、防腐层与交接机制。
-> **关联**：`./stockpool-contract.md`（股票池存储）、`./scoring-contract.md`（V6 评分）、`./v9-input-cabin-strategy-report.md`（输入舱策略）。
+> **关联**：`./stockpool-contract.md`（已归档）（股票池存储）、`./scoring-contract.md`（V6 评分）、`./v9-input-cabin-strategy-report.md`（已归档）（输入舱策略）。
 
 ---
 

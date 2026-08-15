@@ -358,7 +358,7 @@ V9 当前约 13 条路由，集中在 `analysis` 舱：
 
 1. **禁止引入 Node 后端**：V9 为纯前端架构，V6 的 tRPC 调用必须替换为本地 `services/` 层调用。
 2. **写操作必经 DataBridge**：所有 IndexedDB 写入必须通过 `DataBridge.forward(StandardEnvelope)`，禁止 L5/L4 直接调用 `dataLayer`。
-3. **路由注册规范**：新增页面必须在 `src/config/routes.ts` 注册，并同步更新 `../explanation/06-routing-specs.md`。
+3. **路由注册规范**：新增页面必须在 `src/config/routes.ts` 注册，并同步更新 `../explanation/06-routing-specs.md`（已归档）。
 4. **配置优先**：阈值、权重、解析规则必须从 `src/config/` 读取。
 5. **API 兼容性**：对外暴露的服务方法签名尽量保持不变，避免影响上层调用。
 6. **不新增大型依赖**：除非经过 ADR 评审。
@@ -381,7 +381,7 @@ V9 当前约 13 条路由，集中在 `analysis` 舱：
 ### 9.4 测试与文档风险
 
 1. **测试覆盖**：V9 当前要求 `npm test` 全部通过，新增模块需同步补充单元测试。
-2. **文档同步**：每新增一个模块，需更新 `../specs/02-functional-specs.md`、`../explanation/05-engine-specs.md`、`../explanation/06-routing-specs.md`、`../guides/08-implementation-plan.md`。
+2. **文档同步**：每新增一个模块，需更新 `../specs/02-functional-specs.md`、`../explanation/05-engine-specs.md`、`../explanation/06-routing-specs.md`（已归档）、`../guides/08-implementation-plan.md`。
 3. **审计基线**：新增代码可能增加 `audit:hardcode` 的静默回退/魔法数字计数，需保持 Fatal 为 0，并尽量控制 Critical/Major 增长。
 
 ---

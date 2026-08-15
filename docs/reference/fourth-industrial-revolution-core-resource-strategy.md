@@ -20,7 +20,7 @@ change_log:
 > **Last Updated**: 2026-06-24
 >
 > 本文档解析 `D:/v6-pro-cockpit` 中围绕"第四次工业革命稀缺核心资源"的交易策略，结合 A 股市场公开研究资料，提出在 V9 中采用该策略的落地方案。  
-> 任何代码落地前须先通过 ADR 评审（见 `docs/explanation/implementation/adr/2026-06-24-adopt-v6-core-resource-trading-strategy.md`）。
+> 任何代码落地前须先通过 ADR 评审（见 `../reference/2026-06-24-adopt-v6-core-resource-trading-strategy.md`）。
 
 ---
 
@@ -325,7 +325,7 @@ POSITION_RULES = {
 - `D:/v6-pro-cockpit/src/config/strategyRules.ts`
 - `D:/v6-pro-cockpit/src/agents/trading/TradingOrchestrator.ts`
 - `D:/v6-pro-cockpit/src/data/sectorSkillData.ts`
-- `docs/explanation/implementation/trading-core-factors.md`
+- `docs/explanation/implementation/trading-core-factors.md`（已归档）
 - 公开研究资料来源见本文第 2 节表格脚注。
 
 ---

@@ -72,7 +72,7 @@ AI 生成代码后，必须依次运行以下门禁：
 - 常见修正模式：
   - `lint:colors` 失败 → 将硬编码色改为 CSS 变量语义类（如 `text-foreground`、`bg-muted`、`text-destructive`、`border-border`）；`COLOR_TOKENS` / `COLOR_SHADES` 仍可用于 JS 逻辑取色，但 `twText()` / `twBg()` / `twBorder()` 已于 2026-08-13 全面废弃，UI 层统一使用 CSS 变量语义令牌；
   - `audit:layers` 失败 → 将跨层调用改为通过 Store/Service/DataBridge；
-  - `audit:docs` 失败 → 在 `../explanation/overview.md` 或相关 `.md` 中补充引用；
+  - `audit:docs` 失败 → 在 `../explanation/overview.md`（已归档） 或相关 `.md` 中补充引用；
   - `audit:jsdoc` 失败 → 为导出函数/组件补充 JSDoc；
   - `audit:complexity` 失败 → 用卫语句/提前返回/提取函数/策略表降低复杂度。
 

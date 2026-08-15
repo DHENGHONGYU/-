@@ -86,7 +86,7 @@ V9 输入舱（`/input`）负责数据输入与采集配置。初期设计为单
 ### 负面影响 / 技术债
 
 - `InputApp` 分发器的 else-if 链可能膨胀（从 4 分支到 8 分支）。
-  - **技术债**：`../explanation/design/tech-debt.md` — 「InputApp 分发器路由表膨胀」（待评估 switch/映射表重构）。
+  - **技术债**：`../explanation/design/tech-debt.md`（已归档） — 「InputApp 分发器路由表膨胀」（待评估 switch/映射表重构）。
 - 子页面间共享状态需要通过 `InputStore`（Zustand）或 URL 参数传递。
   - **缓解**：已定义 `inputStore.ts` 管理跨子页面状态。
 
@@ -116,9 +116,9 @@ npm run audit:layers       # 验证 InputApp 依赖合规
 
 | 文档 | 路径 |
 |------|------|
-| 路由规格 | `../explanation/06-routing-specs.md` §3.2 |
-| 舱室总览 | `../explanation/cabins-overview.md` §1 |
-| 原始提案 | `../explanation/2026-06-24-input-cabin-subpages.md` |
+| 路由规格 | `../explanation/06-routing-specs.md`（已归档） §3.2 |
+| 舱室总览 | `../explanation/cabins-overview.md`（已归档） §1 |
+| 原始提案 | `../explanation/implementation/adr/2026-06-24-input-cabin-subpages.md` |
 
 ---
 

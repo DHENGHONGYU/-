@@ -50,7 +50,7 @@ date: 2026-07-17
 |:---:|:---|:---|:---|
 | **** | `/input/seven-dim` δ `ROUTE_REGISTRY` ע | ·ɱܿأΥ"ҵ·ɱڴע" | ? ޸2026-07-01 |
 | **** | `ResearchReportPage.tsx` / `TradeReviewPage.tsx` Ϊȫ¶ | ʵֵҳ޷ | ? ޸2026-07-01 |
-| **** | `../explanation/06-routing-specs.md` 8ڲ `/hub`  `/analysis/news-v6` | ĵ벻һ | ͬĵӳ |
+| **** | `../explanation/06-routing-specs.md`（已归档） 8ڲ `/hub`  `/analysis/news-v6` | ĵ벻һ | ͬĵӳ |
 | **** | ĵ汾ìܣv1.5.0 vs v1.2.0 / 29 vs 31 | ĵŶȽ | 汾·ɼ |
 | **** | ĵ7"ErrorBoundary·"ͺ | `RouteErrorBoundary` ʵֵĵδ | ĵעѱջ |
 | **** | `OutputApp` δʽ `<React.Suspense>` | Suspense߽粻ȷ | ʽ |
@@ -246,7 +246,7 @@ V6ݹ `/data-hub` 4TabV9Ǩ
 |:---:|:---|:---|:---:|
 | F-01 | `/input/seven-dim` עᵽ `ROUTE_REGISTRY` | [routes.ts](../../src/config/routes.ts) | ?  |
 | F-02 | 滻 OutputApp  PlaceholderPanel  ʵҳ | [OutputApp.tsx](../../src/apps/output/OutputApp.tsx) | ?  |
-| F-03 | ͬ docs/06-routing-specs.md ·ɱ | [06-routing-specs.md](../explanation/06-routing-specs.md) |  |
+| F-03 | ͬ docs/06-routing-specs.md ·ɱ | [06-routing-specs.md](../explanation/06-routing-specs.md)（已归档） |  |
 
 ### 6.2 ŻP1 - UIϹ棩
 

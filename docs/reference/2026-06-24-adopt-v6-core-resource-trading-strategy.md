@@ -163,7 +163,7 @@ V9 交易舱当前已实现：
 ## 相关文档
 
 - `./fourth-industrial-revolution-core-resource-strategy.md`
-- `../explanation/trading-core-factors.md`
+- `../explanation/trading-core-factors.md`（已归档）
 - `../explanation/05-engine-specs.md`
 - `../specs/02-functional-specs.md`
 - `./10-glossary.md`

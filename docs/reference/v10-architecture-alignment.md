@@ -49,8 +49,8 @@ change_log:
 
 | V10 原则 | V9 落地方式 |
 |----------|-------------|
-| 数据优先，界面其次 | 已在 `../explanation/03-architecture-standards.md` 强调 schema 最高优先级 |
-| 研究体系不依赖交易层 | 已在 `../explanation/03-architecture-standards.md` 写明；交易引擎已下沉到 `src/services/trading/` |
+| 数据优先，界面其次 | 已在 `../explanation/03-architecture-standards.md`（已归档） 强调 schema 最高优先级 |
+| 研究体系不依赖交易层 | 已在 `../explanation/03-architecture-standards.md`（已归档） 写明；交易引擎已下沉到 `src/services/trading/` |
 | 采集层只采集不计算 | 已在 `fetcherService` 中遵循；需在 `../explanation/05-engine-specs.md` 中显式声明 |
 | 分析层不直接输出交易策略 | V9 `v6ScoreService` 仅输出评分，交易信号由 `signalGenerator` 生成；符合 |
 
@@ -79,7 +79,7 @@ V10 20 个 Store 中，V9 已有或近期可扩展的 Store：
 
 ### 2.3 模块间桥梁思想
 
-V10 的「模块间桥梁定义表」可直接作为 V9 数据流文档模板。已在 `./data-interaction-protocols.md` 中吸收：
+V10 的「模块间桥梁定义表」可直接作为 V9 数据流文档模板。已在 `./data-interaction-protocols.md`（已归档） 中吸收：
 
 - 明确桥梁名称、起点、终点、数据类型、触发方式、文件位置。
 - 可作为后续扩展 Agent/TradingGateway 的参考。
@@ -115,7 +115,7 @@ V10 的「模块间桥梁定义表」可直接作为 V9 数据流文档模板。
 
 | V10 | V9 现状 | 适配建议 |
 |-----|---------|----------|
-| `src/store/engineStore.ts` 作为跨模块唯一状态 truth source | V9 使用 `eventBus` + Zustand + DataBridge | 可借鉴「字段契约」思想，但不必完全替换现有机制。建议在 `./data-interaction-protocols.md` 中增加「共享字段契约」章节 |
+| `src/store/engineStore.ts` 作为跨模块唯一状态 truth source | V9 使用 `eventBus` + Zustand + DataBridge | 可借鉴「字段契约」思想，但不必完全替换现有机制。建议在 `./data-interaction-protocols.md`（已归档） 中增加「共享字段契约」章节 |
 
 ---
 
@@ -134,7 +134,7 @@ V10 的「模块间桥梁定义表」可直接作为 V9 数据流文档模板。
 
 ## 5. 对 V9 文档的更新建议
 
-1. **`../explanation/03-architecture-standards.md`**：
+1. **`../explanation/03-architecture-standards.md`（已归档）**：
    - 在「数据访问规范」中增加「共享字段契约」小节，借鉴 StateBoard 思想。
    - 在偏差清单中增加「V10 的 Agent/StateBoard/Gateway 暂未引入」说明。
 

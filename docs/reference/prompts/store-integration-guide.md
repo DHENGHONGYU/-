@@ -32,7 +32,7 @@ date: 2026-07-17
 > **定位**：本文档是 `src/store/` 目录的**权威开发指南**，指导开发者按统一模式创建、注册和测试新的 Zustand Store。所有新增 Store 必须遵循本指南，否则 `audit:layers` / `audit:docs` 门禁将拦截。
 >
 > **权威契约**：`../../meta/AGENTS.md` §一（分层规则）、§二（四步集成）、§四（命名约定）、§八（数据库版本管理）。本文档与 `../../meta/AGENTS.md` 冲突时，以 `../../meta/AGENTS.md` 为准。
-> **回链**：`docs/README.md` → H 类 / `../../guides/how-to-add-store.md`(P1)
+> **回链**：`docs/README.md`（已废弃） → H 类 / `../../guides/how-to-add-store.md`(P1)
 
 ---
 
@@ -559,14 +559,14 @@ npm run build
 | 文档 | 路径 | 说明 |
 |------|------|------|
 | **AGENTS.md** | `../../meta/AGENTS.md` | 工程分层契约（§一、§二、§四、§八） |
-| **全局架构总览** | `../../explanation/overview.md` | 分层架构与数据流 |
-| **舱室总览** | `../../explanation/cabins-overview.md` | 5 大舱页面清单 |
+| **全局架构总览** | `../../explanation/overview.md`（已归档） | 分层架构与数据流 |
+| **舱室总览** | `../../explanation/cabins-overview.md`（已归档） | 5 大舱页面清单 |
 | **服务目录** | `../services-catalog.md` | 24 服务子域目录 |
 | **引擎规格** | `../../explanation/05-engine-specs.md` | L0-L8 引擎分层 |
-| **路由规格** | `../../explanation/06-routing-specs.md` | 路由注册规则 |
+| **路由规格** | `../../explanation/06-routing-specs.md`（已归档） | 路由注册规则 |
 | **编码规范** | `../../guides/standards/coding-conventions.md` | 代码风格 |
-| **JSDoc 规范** | `../../explanation/jsdoc-convention.md` | JSDoc 注释标准 |
-| **复杂度治理** | `../../explanation/complexity-governance.md` | 函数长度/嵌套深度 |
+| **JSDoc 规范** | `../jsdoc-convention.md` | JSDoc 注释标准 |
+| **复杂度治理** | `../complexity-governance.md` | 函数长度/嵌套深度 |
 | **how-to-add-store** | `../../guides/how-to-add-store.md` (P1) | 面向新手的简化版指南 |
 | **withBroadcast 实现** | `../../src/lib/withBroadcast.ts` | 广播工具源码 |
 | **EVENT_NAMES 常量** | `../../src/constants/store-channels.constants.ts` | 广播事件常量 |

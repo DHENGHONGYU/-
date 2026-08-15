@@ -6,7 +6,7 @@ phase: testing
 tier: standard
 status: deprecated
 maintainer: V9 Architecture Team
-summary: "⚠️ 此文件已废弃（2026-07-14） 数据定义已整合至 `docs/reference/data-dictionary-index.md`，请通过主索引访问最新定义。"
+summary: "⚠️ 此文件已废弃（2026-07-14） 数据定义已整合至 `docs/reference/data-dictionary-index.md`（已归档），请通过主索引访问最新定义。"
 tags: [data, data-definition, test]
 version: v2.4.0
 last_updated: 2026-08-15
@@ -26,7 +26,7 @@ change_log:
 
 > ⚠️ **此文件已废弃**（2026-07-14）
 > 
-> 数据定义已整合至 `docs/reference/data-dictionary-index.md`，请通过主索引访问最新定义。
+> 数据定义已整合至 `docs/reference/data-dictionary-index.md`（已归档），请通过主索引访问最新定义。
 
 ---
 

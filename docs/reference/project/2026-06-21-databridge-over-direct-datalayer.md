@@ -53,4 +53,4 @@ date: 2026-07-17
 ## 相关文档
 
 - `../../explanation/05-engine-specs.md`
-- `../data-interaction-protocols.md`
+- `../data-interaction-protocols.md`（已归档）

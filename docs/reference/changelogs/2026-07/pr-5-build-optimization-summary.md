@@ -76,4 +76,4 @@ sourcemap: false,  // PR-5 5.2：关闭生?sourcemap，调试时改为 'hidden'
 |------|------|
 | [vite.config.ts](../../../../vite.config.ts) | 5.1 manualChunks 扩展 + 5.2 sourcemap 关闭 |
 | [.gitignore](../../../../.gitignore) | 补充构建产物排除规则 |
-| [README.md](../../../README.md) | 新增构建优化章节 |
+| [README.md](../../../../README.md) | 新增构建优化章节 |

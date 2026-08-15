@@ -36,7 +36,7 @@ date: 2026-07-17
 |---------|--------|------------|------------------------|-------------------|
 | **ifind** | 同花顺金融数据（A股/港股/美股） | [ifind.md](ifind.md) | [`plugins/ifind/SKILL.md`](../../plugins/ifind/SKILL.md) | [`plugins/ifind/skills/ifind/SKILL.md`](../../plugins/ifind/skills/ifind/SKILL.md) |
 | **imf** | IMF 全球宏观经济数据 | [imf.md](imf.md) | [`plugins/imf/SKILL.md`](../../plugins/imf/SKILL.md) | [`plugins/imf/skills/imf/SKILL.md`](../../plugins/imf/skills/imf/SKILL.md) |
-| **kimi-webbridge** | 浏览器自动化控制 | [kimi-webbridge.md](../explanation/kimi-webbridge.md) | [`plugins/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/SKILL.md) | [`plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md) |
+| **kimi-webbridge** | 浏览器自动化控制 | [kimi-webbridge.md](../explanation/kimi-webbridge.md)（已归档） | [`plugins/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/SKILL.md) | [`plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md) |
 | **scholar** | 学术文献检索 | [scholar.md](scholar.md) | [`plugins/scholar/SKILL.md`](../../plugins/scholar/SKILL.md) | [`plugins/scholar/skills/scholar/SKILL.md`](../../plugins/scholar/skills/scholar/SKILL.md) |
 | **sec_edgar** | 美国 SEC 上市公司财报 | [sec_edgar.md](sec_edgar.md) | [`plugins/sec_edgar/SKILL.md`](../../plugins/sec_edgar/SKILL.md) | [`plugins/sec_edgar/skills/sec_edgar/SKILL.md`](../../plugins/sec_edgar/skills/sec_edgar/SKILL.md) |
 | **tianyancha** | 天眼查企业数据库 | [tianyancha.md](tianyancha.md) | [`plugins/tianyancha/SKILL.md`](../../plugins/tianyancha/SKILL.md) | [`plugins/tianyancha/skills/tianyancha/SKILL.md`](../../plugins/tianyancha/skills/tianyancha/SKILL.md) |

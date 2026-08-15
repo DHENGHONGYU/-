@@ -18,7 +18,7 @@ change_log:
 
 > ⚠️ **此文件已废弃**（2026-07-14）
 > 
-> 数据定义已整合至 `docs/reference/data-dictionary-index.md`，请通过主索引访问最新定义。
+> 数据定义已整合至 `docs/reference/data-dictionary-index.md`（已归档），请通过主索引访问最新定义。
 
 ---
 

@@ -124,8 +124,8 @@ npm run audit:docs   # 验证文档同步
 
 | 文档 | 路径 |
 |------|------|
-| ADR-001（纯前端架构） | `../explanation/adr-001-pure-frontend-architecture.md` |
-| ADR-003（DataBridge） | `adr-003-databridge-over-direct-datalayer.md` |
+| ADR-001（纯前端架构） | `../explanation/adr-001-pure-frontend-architecture.md`（已归档） |
+| ADR-003（DataBridge） | `adr-003-databridge-over-direct-datalayer.md`（已归档） |
 | 数据层总览 | `../explanation/data-layer-overview.md` |
 | 原始提案 | `./2026-06-20-indexeddb-over-localstorage.md` |
 

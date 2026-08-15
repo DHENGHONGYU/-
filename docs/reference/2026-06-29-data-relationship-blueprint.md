@@ -36,7 +36,7 @@ date: 2026-07-17
 | 文件 | 类型 | 职责 |
 |------|------|------|
 | `./2026-06-29-data-relationship-blueprint.md` | 计划主文档 | 定义任务、关系表、时序、验证方法 |
-| `../explanation/v9-data-relationship-er.md` | 创建 | 20 个 Store 的实体关系图与字段说明 |
+| `../explanation/v9-data-relationship-er.md`（已归档） | 创建 | 20 个 Store 的实体关系图与字段说明 |
 | `./v9-data-timeline.md` | 创建 | 数据产生、刷新、消费的时序与生命周期 |
 | `docs/blueprints/v9-pipeline-sequence.mmd` | 创建 | 核心管线 Mermaid 序列图 |
 | `src/blueprints/` | 创建 | 关系与时间表的可执行校验测试 |
@@ -47,7 +47,7 @@ date: 2026-07-17
 ### Task 1: 建立 V9 数据库实体关系蓝图 (ER)
 
 **Files:**
-- Create: `../explanation/v9-data-relationship-er.md`
+- Create: `../explanation/v9-data-relationship-er.md`（已归档）
 - Reference: `src/data/types.ts`, `src/data/db.ts`, `./v9-indexeddb-store-schema.md`, `./v9-数据血缘追踪.md`
 
 - [ ] **Step 1: 列出全部 20 个 Store 及其主键/索引**
@@ -551,7 +551,7 @@ git commit -m "feat(blueprint): add automated blueprint consistency scanner"
 ```markdown
 ## 数据关系与时间关系蓝图
 
-- 实体关系图：`../explanation/v9-data-relationship-er.md`
+- 实体关系图：`../explanation/v9-data-relationship-er.md`（已归档）
 - 数据生命周期：`./v9-data-timeline.md`
 - 核心管线序列图：`docs/blueprints/v9-pipeline-sequence.mmd`
 - 自动化校验：`npm run validate:blueprint`

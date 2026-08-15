@@ -22,7 +22,7 @@ date: 2026-07-17
 # V9 图表组件集成规格
 
 > **对应蓝图**：`./v9-system-blueprint.md` §2 技术栈（图表选型）、§7.3 图表组件规范、§10 偏差项 D16「缺少图表组件库」。
-> **依赖文档**：`./dataflow-data-definition.md`（数据流引擎通道定义）、`../specs/04-ui-ux-specs.md`（图表交互规范）。
+> **依赖文档**：`./dataflow-data-definition.md`（已归档）（数据流引擎通道定义）、`../specs/04-ui-ux-specs.md`（图表交互规范）。
 
 ---
 
@@ -130,7 +130,7 @@ export function IndicatorChart(props: IndicatorChartProps): JSX.Element
 
 ### 4.1 数据流订阅模型
 
-图表不直接读取 IndexedDB，而是通过 `DataFlowEngine.subscribe()` 订阅通道。具体通道定义见 `./dataflow-data-definition.md` §2。
+图表不直接读取 IndexedDB，而是通过 `DataFlowEngine.subscribe()` 订阅通道。具体通道定义见 `./dataflow-data-definition.md`（已归档） §2。
 
 ```ts
 // src/services/chart/klineAdapter.ts
@@ -225,6 +225,6 @@ export const CHART_REFRESH_POLICY = {
 
 - `./v9-system-blueprint.md` §2、§7.3、D16
 - `../specs/04-ui-ux-specs.md` §4.3
-- `./dataflow-data-definition.md`
-- `./feedback-loop-spec.md`（图表加载失败时的 Toast 反馈）
+- `./dataflow-data-definition.md`（已归档）
+- `./feedback-loop-spec.md`（已归档）（图表加载失败时的 Toast 反馈）
 - `./widget-error-handling.md`（图表 Widget 的错误边界）

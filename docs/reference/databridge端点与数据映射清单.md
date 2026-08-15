@@ -511,4 +511,4 @@ Subscribe 频道是 DataBridge.subscribe() 方法支持的所有可订阅频道�
 
 > **文档结束**
 >
-> 本文档基于 `src/core/databridge.ts`、`src/core/envelope.ts`、`src/config/dbConfig.ts` 与 `./v9核心数据字典与类型定义(整合版).md` (v1.2) 综合梳理生成。
+> 本文档基于 `src/core/databridge.ts`、`src/core/envelope.ts`、`src/config/dbConfig.ts` 与 `./v9核心数据字典与类型定义(整合版).md`（已废弃） (v1.2) 综合梳理生成。

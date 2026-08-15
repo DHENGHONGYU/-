@@ -30,10 +30,10 @@ change_log:
 > **⚠️ 路径归档说明（2026-08-16）**：本文档已废弃，被 [system-architecture.md](../explanation/system-architecture.md) 取代。文中引用的目标文件（如 `system-architecture.md`、`03-architecture-standards.md`、`06-routing-specs.md`、`feedback-loop-spec.md` 等）已归档或重组。本文档仅保留作为历史参考，路径不再更新。  
 > **Version**: v0.9.1-deprecated  
 > **Last Updated**: 2026-08-15  
-> **取代文档**: [`../explanation/system-architecture.md`](../explanation/system-architecture.md)（v1.1，2026-08-13）  
+> **取代文档**: [`../explanation/system-architecture.md`](../explanation/system-architecture.md)（已归档，v1.1，2026-08-13）  
 >
-> **废弃原因**：本文档内容大量空白、版本停留在 v0.9.0-migration-implemented（2026-06-24），系统架构权威描述已迁移至 `../explanation/system-architecture.md`。新内容请勿在此追加，仅保留作为历史参考。  
-> 相关历史文档：v10-architecture-whitepaper（已归档）、`../explanation/completeness-profile-batch4.md`
+> **废弃原因**：本文档内容大量空白、版本停留在 v0.9.0-migration-implemented（2026-06-24），系统架构权威描述已迁移至 `../explanation/system-architecture.md`（已归档）。新内容请勿在此追加，仅保留作为历史参考。  
+> 相关历史文档：v10-architecture-whitepaper（已归档）、`../explanation/completeness-profile-batch4.md`（已归档）
 
 ---
 
@@ -371,7 +371,7 @@ interface StandardEnvelope {
 | **D15** | **** | `src/services/scoring/v6ScoreService.ts`  +  LLM  | Phase 2  LLM |
 | **D16** | **** | `src/components/ui/`  `lightweight-charts` / `recharts``./chart-integration.md` API  DataFlow  | Phase 2  |
 | **D17** | **`rotationScoreService.ts`  `SectorAnalysisPage` ** |  | Phase 2  `SectorAnalysisPage`  |
-| **D18** | **** | src/components/atoms/Toaster.tsx `./feedback-loop-spec.md`  FeedbackService  EventBus  | Phase 2  |
+| **D18** | **** | src/components/atoms/Toaster.tsx `./feedback-loop-spec.md`（已归档）  FeedbackService  EventBus  | Phase 2  |
 | **D19** | **`ErrorBoundary.tsx`  `App.tsx` Widget ** | `./widget-error-handling.md`  Widget  UI | Phase 2  Widget  ErrorBoundary |
 | **D20** | **** | // HotSectorScore / ValuePitScore  | Phase 2  StoreAnalyzerDetectorWidget ADR-009 |
 
@@ -415,10 +415,10 @@ interface StandardEnvelope {
 |------|------|------|
 | 01 | `../specs/01-vision-and-goals.md` |  |
 | 02 | `../specs/02-functional-specs.md` |  |
-| 03 | `../explanation/03-architecture-standards.md` |  Schema |
+| 03 | `../explanation/03-architecture-standards.md`（已归档） |  Schema |
 | 04 | `../specs/04-ui-ux-specs.md` | UI/UX  |
 | 05 | `../explanation/05-engine-specs.md` | DataBridge |
-| 06 | `../explanation/06-routing-specs.md` |  |
+| 06 | `../explanation/06-routing-specs.md`（已归档） |  |
 | 07 | `../guides/07-operation-strategy.md` | ADR |
 | 08 | `../guides/08-implementation-plan.md` |  |
 | 09 | `../guides/09-quality-gates.md` |  |
@@ -432,16 +432,16 @@ interface StandardEnvelope {
 | `./dual-strategy-dataflow-spec.md` | / |
 | `../explanation/dual-strategy-gap-analysis.md` |  |
 | `./architecture-version-comparison.md` |  |
-| `./input-cabin-spec.md` |  |
-| `./data-interaction-protocols.md` |  |
-| `../explanation/design/implementation-governance.md` |  ADR  |
-| `./v9-input-cabin-strategy-report.md` |  |
+| `./input-cabin-spec.md`（已归档） |  |
+| `./data-interaction-protocols.md`（已归档） |  |
+| `../explanation/design/implementation-governance.md`（已归档） |  ADR  |
+| `./v9-input-cabin-strategy-report.md`（已归档） |  |
 | `./v10-architecture-alignment.md` | V10  |
 | ui-module-alignment（已归档） | V6 Pro UI  |
-| `./v6-cockpit-ui-reference.md` | v6 UI  |
-| `../explanation/trading-core-factors.md` |  |
+| `./v6-cockpit-ui-reference.md`（已归档） | v6 UI  |
+| `../explanation/trading-core-factors.md`（已归档） |  |
 | `./chart-integration.md` |  DataBridge  |
-| `./feedback-loop-spec.md` |  EventBus  |
+| `./feedback-loop-spec.md`（已归档） |  EventBus  |
 | `./widget-error-handling.md` | Widget  UI |
 | `./pwa-offline-guide.md` | PWA Service Worker  |
 | ADR-001~009（已归档） |  |
@@ -465,6 +465,6 @@ interface StandardEnvelope {
 - [data-security-and-privacy](../specs/product/data-security-and-privacy.md)
 - [V9  ?? ](../reports/上线前全面校验报告-v2.0.0.md)
 - [](../explanation/design/../explanation/design/registry-index.md)
-- [V9 ](../explanation/design/00-readme.md)
+- [V9 ](../explanation/design/00-readme.md)（已归档）
 - [](../00-meta/REGISTRY_INDEX.md)
 

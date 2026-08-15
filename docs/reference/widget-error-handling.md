@@ -22,7 +22,7 @@ date: 2026-07-17
 # V9 Widget 错误隔离与降级规格
 
 > **对应蓝图**：`./v9-system-blueprint.md` §7.1 PortalShell/Widget 布局、§9 质量门禁（E2E / PWA / 死代码）、§10 偏差项 D19「Widget 级 ErrorBoundary 待专项接入」。
-> **依赖文档**：`./feedback-loop-spec.md`（错误状态的用户反馈）、`./chart-integration.md`（图表 Widget 的渲染错误处理）。
+> **依赖文档**：`./feedback-loop-spec.md`（已归档）（错误状态的用户反馈）、`./chart-integration.md`（图表 Widget 的渲染错误处理）。
 
 ---
 
@@ -186,7 +186,7 @@ export function reportWidgetError(report: WidgetErrorReport): void {
 
 ### 5.2 与反馈服务的协作
 
-ErrorBoundary 捕获后，除渲染降级 UI 外，应通过 `feedbackService.notify()` 向用户提示严重错误。详见 `./feedback-loop-spec.md` §6。
+ErrorBoundary 捕获后，除渲染降级 UI 外，应通过 `feedbackService.notify()` 向用户提示严重错误。详见 `./feedback-loop-spec.md`（已归档） §6。
 
 ```ts
 // 在 ErrorBoundary componentDidCatch 中扩展
@@ -228,5 +228,5 @@ componentDidCatch(error: Error, info: ErrorInfo) {
 
 - `./v9-system-blueprint.md` §7.1、§9、D19
 - `../specs/04-ui-ux-specs.md` §4.5（ErrorBoundary 组件清单）
-- `./feedback-loop-spec.md` §6
+- `./feedback-loop-spec.md`（已归档） §6
 - `./chart-integration.md` §5.3（图表渲染错误处理）

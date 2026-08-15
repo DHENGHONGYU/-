@@ -15,7 +15,7 @@ change_log:
 # Command 舱规格（command-cabin-spec）
 
 > **定位**：command 舱（总控舱）的职责边界、子路由、数据流。补「4 舱缺 spec」缺口。
-> **权威契约**：`../../AGENTS.md`；路由见 `../explanation/06-routing-specs.md`；总览见 `../explanation/cabins-overview.md`。
+> **权威契约**：`../../AGENTS.md`；路由见 `../explanation/06-routing-specs.md`（已归档）；总览见 `../explanation/cabins-overview.md`（已归档）。
 > **状态**：✅ P0 新增（骨架版）
 
 ---
@@ -54,7 +54,7 @@ change_log:
 
 ## 6. 文档锚点
 
-- 总览：`../explanation/cabins-overview.md`
-- 路由：`../explanation/06-routing-specs.md`
+- 总览：`../explanation/cabins-overview.md`（已归档）
+- 路由：`../explanation/06-routing-specs.md`（已归档）
 - 健康仪表盘：见 `/command/health` 与 `public/health-report.json`
 - 服务：`./services-catalog.md`（system / ai-center / useCase）
