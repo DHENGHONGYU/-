@@ -35,6 +35,7 @@ import {
   fetchNewsViaTencentNews,
   fetchIndustryNewsViaTencentNews,
   parseTencentNewsText,
+  clearTencentNewsCache,
 } from './tencentNewsMcpSource'
 
 const callToolMock = mcpBridge.callTool as unknown as ReturnType<typeof vi.fn>
@@ -82,6 +83,7 @@ const SEARCH_TEXT = `【腾讯新闻 - 搜索「数据采集」】 2026-08-16 00
 `
 
 beforeEach(() => {
+  clearTencentNewsCache()
   callToolMock.mockReset()
   canExecuteMock.mockReset().mockReturnValue(true)
   recordMock.mockReset()
@@ -123,11 +125,11 @@ describe('fetchNewsViaTencentNews（维度 04/05 泛资讯）', () => {
     const items = await fetchNewsViaTencentNews('sh600519', 'hot_news')
 
     expect(items).not.toBeNull()
-    expect(items!.length).toBe(3) // 2 from hot + 1 from morning
+    expect(items!.length).toBe(2) // hot(2) 与 morning(1) 标题重复，去重后剩 2
     expect(items![0]!._source).toBe('tencentnews')
     expect(items![0]!.category).toBe('hot_news')
     expect(items![0]!.source).toBe('新华社新闻')
-    // 合并后去重非必须；至少含两条不同标题
+    // 去重后至少含两条不同标题
     const titles = items!.map((i) => i.title)
     expect(titles).toContain('国防部：日方若一意孤行')
     expect(recordMock).toHaveBeenCalledWith('tencentnews', expect.objectContaining({ success: true }))
@@ -151,6 +153,37 @@ describe('fetchNewsViaTencentNews（维度 04/05 泛资讯）', () => {
     const items = await fetchNewsViaTencentNews('sh600519', 'hot_news')
     expect(items).toBeNull()
     expect(recordMock).toHaveBeenCalledWith('tencentnews', expect.objectContaining({ success: false }))
+  })
+
+  it('仅早报（hot 空）：补 source/date 默认值且早报条目进入结果', async () => {
+    callToolMock.mockImplementation(async (_s: string, tool: string) => {
+      if (tool === 'tencentnews_hot') return okText('')
+      if (tool === 'tencentnews_morning') return okText(MORNING_TEXT)
+      return okText('')
+    })
+    const items = await fetchNewsViaTencentNews('sh600519', 'hot_news')
+    expect(items).not.toBeNull()
+    expect(items!.length).toBe(1)
+    // 早报缺 source/date，应被补默认，保证字段完整率
+    expect(items![0]!.source).toBe('腾讯新闻·早报')
+    expect(items![0]!.date).toBe(new Date().toISOString().slice(0, 10))
+  })
+
+  it('缓存命中：同采集周期内二次调用不重复 spawn CLI（效率）', async () => {
+    let invokeCount = 0
+    callToolMock.mockImplementation(async (_s: string, tool: string) => {
+      invokeCount++
+      if (tool === 'tencentnews_hot') return okText(HOT_TEXT)
+      if (tool === 'tencentnews_morning') return okText(MORNING_TEXT)
+      return okText('')
+    })
+    const first = await fetchNewsViaTencentNews('sh600519', 'hot_news')
+    const second = await fetchNewsViaTencentNews('sz000001', 'hot_news')
+    expect(first).not.toBeNull()
+    expect(second).not.toBeNull()
+    // 两次「不同标的」调用只真实发起 1 次（hot+morning 各 1）= 2 次 callTool，而非 4 次
+    expect(invokeCount).toBe(2)
+    expect(callToolMock).toHaveBeenCalledTimes(2)
   })
 })
 

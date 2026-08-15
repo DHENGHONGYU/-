@@ -114,10 +114,12 @@ export class TencentNewsCliBridge {
    *
    * @param command 子命令（如 'hot'、'search'、'morning'、'apikey-get'）
    * @param args 命令参数（空格分隔字符串，如 '数据要素 --limit 20'）
+   * @param options.timeoutMs 单次调用超时覆盖（ms）；缺省用实例级 timeoutMs（默认 20s）。
+   *        用于上游天然缓慢的命令（如 jiaozhen 事实核查，常态 >20s），避免误杀。
    * @returns 解码后的 stdout 文本（编码自适应，见 decodeCliBytes）
    * @throws {CliError} spawn 失败 / 超时 / 非零退出 / 空输出 / 非 Node 环境
    */
-  async invoke(command: string, args = ''): Promise<string> {
+  async invoke(command: string, args = '', options: { timeoutMs?: number } = {}): Promise<string> {
     // Electron 渲染进程无 child_process：优先走 preload 暴露的 IPC 入口（main 进程承载 CLI）
     const ipc = this.resolveIpcTarget()
     if (ipc) return ipc(command, args)
@@ -133,7 +135,7 @@ export class TencentNewsCliBridge {
       stdio: ['ignore', 'pipe', 'pipe'],
     })
 
-    const buf = await this.collect(child)
+    const buf = await this.collect(child, options.timeoutMs)
     if (buf.length === 0) throw new CliError('CLI 返回空输出', 'empty')
     return decodeCliBytes(buf)
   }
@@ -213,8 +215,10 @@ export class TencentNewsCliBridge {
   /**
    * 收集 stdout 原始字节（先缓存 Buffer 分片，close 后一次性 concat + 解码，
    * 保证跨 chunk 的多字节序列不被切断）。超时即杀子进程并 reject。
+   * @param timeoutMsOverride 覆盖实例级超时（用于上游天然缓慢的命令，如 jiaozhen）
    */
-  private collect(child: import('node:child_process').ChildProcess): Promise<Buffer> {
+  private collect(child: import('node:child_process').ChildProcess, timeoutMsOverride?: number): Promise<Buffer> {
+    const effectiveTimeout = timeoutMsOverride && timeoutMsOverride > 0 ? timeoutMsOverride : this.timeoutMs
     return new Promise((resolve, reject) => {
       const outChunks: Buffer[] = []
       const errChunks: Buffer[] = []
@@ -227,8 +231,8 @@ export class TencentNewsCliBridge {
 
       const timer = setTimeout(() => {
         child.kill('SIGKILL')
-        reject(new CliError(`CLI 调用超时（>${this.timeoutMs}ms），已终止子进程`, 'timeout'))
-      }, this.timeoutMs)
+        reject(new CliError(`CLI 调用超时（>${effectiveTimeout}ms），已终止子进程`, 'timeout'))
+      }, effectiveTimeout)
 
       child.on('error', (err: Error) => {
         clearTimeout(timer)

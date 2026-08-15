@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, Suspense } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, Suspense } from 'react'
 import { useLocation } from 'react-router'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
@@ -9,6 +9,7 @@ import { CoreResourcePanel } from './panels/CoreResourcePanel'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { EmptyState } from '@/components/molecules/EmptyState'
+import { Skeleton } from '@/components/molecules'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { PageHeader } from '@/components/templates/PageHeader'
 import { useToast } from '@/hooks/useToast'
@@ -68,6 +69,7 @@ function TradingDashboard(): React.JSX.Element {
   const portfolioLoading = useTradingStore((s) => s.portfolioLoading)
   const processingSymbols = useTradingStore((s) => s.processingSymbols)
   const message = useTradingStore((s) => s.message)
+  const isRefreshing = useTradingStore((s) => s.isRefreshing)
 
   const loadStocks = useTradingStore((s) => s.loadStocks)
   const loadOrders = useTradingStore((s) => s.loadOrders)
@@ -104,15 +106,15 @@ function TradingDashboard(): React.JSX.Element {
     }
   }
 
-  const onBuy = async (stock: Parameters<typeof handleBuy>[0]) => {
+  const onBuy = useCallback(async (stock: Parameters<typeof handleBuy>[0]) => {
     await handleBuy(stock)
     toast({ title: '买入成功', variant: 'success' })
-  }
+  }, [handleBuy, toast])
 
-  const onSell = async (stock: Parameters<typeof handleSell>[0]) => {
+  const onSell = useCallback(async (stock: Parameters<typeof handleSell>[0]) => {
     await handleSell(stock)
     toast({ title: '卖出成功', variant: 'success' })
-  }
+  }, [handleSell, toast])
 
   return (
     <Card>
@@ -137,14 +139,20 @@ function TradingDashboard(): React.JSX.Element {
         {message && <p className="text-sm text-muted-foreground">{message}</p>}
 
         <h3 className="text-sm font-semibold">观察池交易建议</h3>
-        {stocks.length === 0 ? (
+        {stocks.length === 0 && isRefreshing ? (
+          <div className="space-y-3">
+            <Skeleton variant="text" className="h-16 w-full" />
+            <Skeleton variant="text" className="h-16 w-full" />
+            <Skeleton variant="text" className="h-16 w-full" />
+          </div>
+        ) : stocks.length === 0 ? (
           <EmptyState
             title="暂无观察池标的"
             description="请先在输入舱录入股票，或加载观察池"
             action={{ label: '加载观察池', onClick: () => void loadStocks() }}
           />
         ) : (
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 transition-opacity duration-300">
             {stocks.map((stock) => {
               const advice = adviceMap[stock.symbol]
               const signal = advice?.signal
@@ -337,7 +345,7 @@ export default function TradingApp(): React.JSX.Element {
     void loadOrders()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const matched = matchTradingRoute(path)
+  const matched = useMemo(() => matchTradingRoute(path), [path])
 
   return (
     <ErrorBoundary>
