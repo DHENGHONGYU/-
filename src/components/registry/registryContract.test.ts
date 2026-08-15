@@ -22,7 +22,7 @@
  *      接入路由 / Widget，对应 organism 不应在 page / app 层出现任何引用
  */
 import { describe, it, expect } from 'vitest'
-import { readFileSync, existsSync } from 'node:fs'
+import { readFileSync, existsSync, readdirSync } from 'node:fs'
 import { join, dirname, basename } from 'node:path'
 import { ORGANISM_REGISTRY } from './organismRegistry'
 
@@ -49,7 +49,7 @@ const RESERVED_INTERNAL = [
   'TrendLineChart',
   'ValuationDistribution',
 ] as const
-type ReservedName = (typeof RESERVED_INTERNAL)[number]
+// type ReservedName = (typeof RESERVED_INTERNAL)[number]
 
 /** 同目录父子组合允许例外：父面板 IndustryV4Panel 内部可直接引用 2 个子组件 */
 const SAME_DIR_SIBLING_EXCEPTIONS: Record<string, Set<string>> = {
@@ -83,8 +83,6 @@ function listSourceFiles(dir: string, out: string[] = []): string[] {
 }
 
 describe('Registry Contract: @internal reserved components (9 个预留组件)', () => {
-  const allReservedSet = new Set<string>(RESERVED_INTERNAL)
-
   it('1. 所有预留组件必须在 ORGANISM_REGISTRY 中声明（registry 映射闭环）', () => {
     const declaredNames = new Set(ORGANISM_REGISTRY.map((e) => e.name))
     const missing = RESERVED_INTERNAL.filter((n) => !declaredNames.has(n))
@@ -182,7 +180,6 @@ describe('Registry Contract: @internal reserved components (9 个预留组件)',
       expect(pendingNames).toEqual([])
       return
     }
-    const pendingSet = new Set(pendingNames)
     const files = listSourceFiles(ALL_SRC_DIR).filter(
       (rel) => rel.startsWith('src/pages/') || rel.startsWith('src/apps/') || rel.startsWith('src/cockpit/'),
     )

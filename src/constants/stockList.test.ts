@@ -152,13 +152,13 @@ describe('searchStocks', () => {
   test('按名称搜索（贵州茅台）', () => {
     const result = searchStocks('贵州茅台')
     expect(result.length).toBeGreaterThanOrEqual(1)
-    expect(result[0].symbol).toBe('600519')
+    expect(result[0]!.symbol).toBe('600519')
   })
 
   test('按代码搜索（600519）', () => {
     const result = searchStocks('600519')
     expect(result.length).toBeGreaterThanOrEqual(1)
-    expect(result[0].name).toBe('贵州茅台')
+    expect(result[0]!.name).toBe('贵州茅台')
   })
 
   test('模糊搜索（茅台）', () => {
@@ -297,7 +297,7 @@ describe('getStocksByGroup', () => {
 
 describe('StockOption 接口', () => {
   test('POPULAR_STOCKS 元素符合 StockOption 接口', () => {
-    const stock: StockOption = POPULAR_STOCKS[0]
+    const stock: StockOption = POPULAR_STOCKS[0]!
     expect(typeof stock.symbol).toBe('string')
     expect(typeof stock.name).toBe('string')
     expect(stock.market).toBe('sh' as const)

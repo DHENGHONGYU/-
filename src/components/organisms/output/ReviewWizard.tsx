@@ -17,7 +17,7 @@ import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
 import { Loading } from '@/components/molecules/states/Loading'
 import { Empty } from '@/components/molecules/states/Empty'
-import { AppErrorState } from '@/components/molecules/AppErrorState'
+import { ErrorState } from '@/components/molecules/states/ErrorState'
 import { Skeleton } from '@/components/molecules/states/Skeleton'
 import { SignalSpectrum } from '@/components/cockpit/SignalSpectrum'
 import { useDisciplineStore } from '@/store/disciplineStore'
@@ -321,7 +321,7 @@ function StepGenerate({
   hasData: boolean
 }) {
   if (error) {
-    return <AppErrorState title="生成失败" error={error} />
+    return <ErrorState title="生成失败" description={error} />
   }
   if (generating || !hasData) {
     return (

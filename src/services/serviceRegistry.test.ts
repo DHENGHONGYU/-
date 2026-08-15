@@ -31,7 +31,7 @@ const NEW_ENTRIES: ReadonlyArray<ServiceRegistryEntry> = [
   { id: 'DataCleanupService', filePath: 'src/services/storage/DataCleanupService', status: 'active' },
   { id: 'DeduplicationService', filePath: 'src/services/storage/DeduplicationService', status: 'active' },
   { id: 'ParseAccuracyService', filePath: 'src/services/validation/ParseAccuracyService', status: 'active' },
-  { id: 'QualityMetricsService', filePath: 'src/services/quality/QualityMetricsService', status: 'wip' },
+  { id: 'QualityMetricsService', filePath: 'src/services/quality/QualityMetricsService', status: 'active' },
 ]
 
 /** 按 id 查找注册条目 */
@@ -142,7 +142,7 @@ describe('Service 注册表契约：新增模块可解析性与 API 面', () => 
       expect(typeof mod[fn], `QualityMetricsService 缺少导出: ${fn}`).toBe('function')
     }
     // 桩返回值验证
-    const metrics = (mod.getQualityMetrics as () => { writeTotal: number })()
+    const metrics = (mod.getQualityMetrics as () => { writeTotal: number; writeSuccess: number; writeFailure: number })()
     expect(metrics.writeTotal).toBe(0)
     expect(metrics.writeSuccess).toBe(0)
     expect(metrics.writeFailure).toBe(0)

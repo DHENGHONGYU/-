@@ -11,6 +11,9 @@ import { CockpitCrossLayout } from '@/cockpit/layout/CockpitCrossLayout'
 import { getLogger } from '@/lib/logger'
 import { useIntentionPoolStore } from '@/store/intentionPoolStore'
 import { useTradingStore } from '@/store/tradingStore'
+import { useOrderStore } from '@/store/orderStore'
+import { useCollectionRuntimeStore } from '@/store/collectionRuntimeStore'
+import { useMarketDataStore } from '@/store/marketDataStore'
 import { Loading, Empty, ErrorState } from '@/components/molecules/states'
 import { Alert } from '@/components/molecules/Alert'
 import { ComplianceDisclaimer } from '@/components/atoms/ComplianceDisclaimer'
@@ -29,7 +32,7 @@ interface LayoutStorageData {
   positions: Record<string, { x: number; y: number }>
 }
 
-interface LayoutMigrationLog {
+export interface LayoutMigrationLog {
   timestamp: number
   fromVersion: number | string
   toVersion: number
@@ -40,6 +43,7 @@ interface LayoutMigrationLog {
 const LAYOUT_MIGRATION_LOG_KEY = 'v9_cockpit_layout_migration_log'
 
 /** @internal 仅供 CockpitShell.migration.test.tsx 测试使用 */
+// eslint-disable-next-line react-refresh/only-export-components
 export function saveMigrationLog(log: LayoutMigrationLog): void {
   try {
     const existing = localStorage.getItem(LAYOUT_MIGRATION_LOG_KEY)
@@ -59,6 +63,7 @@ export function saveMigrationLog(log: LayoutMigrationLog): void {
 }
 
 /** @internal 仅供 CockpitShell.migration.test.tsx 测试使用 */
+// eslint-disable-next-line react-refresh/only-export-components
 export function getLastMigrationLog(): LayoutMigrationLog | null {
   try {
     const existing = localStorage.getItem(LAYOUT_MIGRATION_LOG_KEY)
@@ -117,6 +122,7 @@ function loadLayout(): Record<string, { x: number; y: number }> | null {
 void loadLayout // Phase 1: 函数保留用于未来布局恢复，当前通过 void 消除 unused 警告
 
 /** 持久化布局到 localStorage，带版本号（Phase 1 纵横交叉布局后保留用于未来恢复） */
+// eslint-disable-next-line react-refresh/only-export-components
 export function saveLayout(layout: { i: string; x: number; y: number; w: number; h: number }[]): void {
   try {
     const positions: Record<string, { x: number; y: number }> = {}
@@ -149,6 +155,7 @@ function resetLayout(): void {
  * 清理布局中的失效引用（已不存在的 instanceId）。
  * 如果清理了失效项，将清理后的布局重新保存到 localStorage。
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function sanitizeLayout(
   positions: Record<string, { x: number; y: number }>,
   validInstanceIds: Set<string>,
@@ -312,17 +319,19 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
           <ErrorState
             title="组件加载失败"
             description={error ?? undefined}
-            onRetry={async () => {
-              setLoading(true)
-              setError(null)
-              const refreshed = await widgetEngine.refreshInstance(config.instanceId)
-              if (refreshed) {
-                const component = await widgetEngine.loadComponent(config.widgetId)
-                setComponent(component)
-              } else {
-                setError('刷新失败')
-              }
-              setLoading(false)
+            onRetry={() => {
+              void (async () => {
+                setLoading(true)
+                setError(null)
+                const refreshed = await widgetEngine.refreshInstance(config.instanceId)
+                if (refreshed) {
+                  const component = await widgetEngine.loadComponent(config.widgetId)
+                  setComponent(component)
+                } else {
+                  setError('刷新失败')
+                }
+                setLoading(false)
+              })()
             }}
           />
         </CardContent>
@@ -346,14 +355,16 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={async () => {
-                  const ok = await confirm({
-                    title: '重置驾驶舱布局',
-                    description: '确定要重置驾驶舱布局为默认吗？此操作将清除所有自定义布局。',
-                    variant: 'danger',
-                    confirmLabel: '重置',
-                  })
-                  if (ok) resetLayout()
+                onClick={() => {
+                  void (async () => {
+                    const ok = await confirm({
+                      title: '重置驾驶舱布局',
+                      description: '确定要重置驾驶舱布局为默认吗？此操作将清除所有自定义布局。',
+                      variant: 'danger',
+                      confirmLabel: '重置',
+                    })
+                    if (ok) resetLayout()
+                  })()
                 }}
               >
                 重置布局
@@ -377,6 +388,69 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
     >
       <SafeComponent config={config} data={data} />
     </WidgetErrorBoundary>
+  )
+}
+
+/**
+ * 驾驶舱顶部 KPI 摘要条 —— 组合总资产、今日盈亏、持仓数、信号数、市场温度、引擎状态
+ */
+function KpiSummaryBar(): React.JSX.Element {
+  const portfolio = useTradingStore((s) => s.portfolio)
+  const pnlSummary = useOrderStore((s) => s.pnlSummary)
+  const signals = useTradingStore((s) => s.signals)
+  const { isRunning } = useCollectionRuntimeStore()
+  const marketStatus = useMarketDataStore((s) => s.status)
+
+  const formatCurrency = (value: number): string => {
+    const absValue = Math.abs(value)
+    if (absValue >= 10000) {
+      return `${value >= 0 ? '' : '-'}¥${(absValue / 10000).toFixed(2)}万`
+    }
+    return `${value >= 0 ? '' : '-'}¥${absValue.toFixed(0)}`
+  }
+
+  const totalValue = portfolio?.totalValue
+  const todayPnl = pnlSummary.totalRealizedPnl + pnlSummary.totalUnrealizedPnl
+  const hasPnl = pnlSummary.totalTrades > 0
+  const holdingsCount = portfolio?.holdings?.length ?? null
+  const signalsCount = signals.length
+
+  const marketTempLabel =
+    marketStatus === 'ready' ? '正常' : marketStatus === 'loading' ? '采集中…' : marketStatus === 'error' ? '异常' : '待启动'
+
+  const engineStatusLabel = isRunning ? '运行中' : '待机'
+
+  return (
+    <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 px-4 py-3 border-b border-border bg-card/50">
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-xs text-muted-foreground">总资产</span>
+        <span className="text-lg font-bold">{totalValue != null ? formatCurrency(totalValue) : '--'}</span>
+      </div>
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-xs text-muted-foreground">今日盈亏</span>
+        <span className={cn('text-lg font-bold', hasPnl && (todayPnl >= 0 ? 'text-emerald-500' : 'text-red-500'))}>
+          {hasPnl ? `${todayPnl >= 0 ? '+' : ''}${formatCurrency(todayPnl)}` : '--'}
+        </span>
+      </div>
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-xs text-muted-foreground">持仓数</span>
+        <span className="text-lg font-bold">{holdingsCount != null ? holdingsCount : '--'}</span>
+      </div>
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-xs text-muted-foreground">信号数</span>
+        <span className="text-lg font-bold">{signalsCount}</span>
+      </div>
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-xs text-muted-foreground">市场温度</span>
+        <span className="text-lg font-bold">{marketTempLabel}</span>
+      </div>
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-xs text-muted-foreground">引擎状态</span>
+        <span className={cn('text-lg font-bold', isRunning ? 'text-emerald-500' : 'text-muted-foreground')}>
+          {engineStatusLabel}
+        </span>
+      </div>
+    </div>
   )
 }
 
@@ -470,14 +544,16 @@ function CockpitContent(): React.JSX.Element {
               variant="ghost"
               size="sm"
               className="rounded-full"
-              onClick={async () => {
-                const ok = await confirm({
-                  title: '重置驾驶舱布局',
-                  description: '确定要重置驾驶舱布局为默认吗？此操作将清除所有自定义布局。',
-                  variant: 'danger',
-                  confirmLabel: '重置',
-                })
-                if (ok) handleResetLayout()
+              onClick={() => {
+                void (async () => {
+                  const ok = await confirm({
+                    title: '重置驾驶舱布局',
+                    description: '确定要重置驾驶舱布局为默认吗？此操作将清除所有自定义布局。',
+                    variant: 'danger',
+                    confirmLabel: '重置',
+                  })
+                  if (ok) handleResetLayout()
+                })()
               }}
             >
               <Settings className="h-4 w-4 mr-1" />
@@ -507,6 +583,8 @@ function CockpitContent(): React.JSX.Element {
           </div>
         </div>
       )}
+
+      <KpiSummaryBar />
 
       <main className="mx-auto max-w-7xl p-4">
         {isMobile ? (
