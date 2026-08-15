@@ -49,6 +49,9 @@ export type { MetricCardProps } from './MetricCard'
 export { SearchBar } from './SearchBar'
 export type { SearchBarProps } from './SearchBar'
 
+export { OnboardingGuide } from './OnboardingGuide'
+// 注：OnboardingGuideProps 为源文件内部接口，暂不对外 barrel 导出
+
 export { FilterChip } from './FilterChip'
 export type { FilterChipProps } from './FilterChip'
 
