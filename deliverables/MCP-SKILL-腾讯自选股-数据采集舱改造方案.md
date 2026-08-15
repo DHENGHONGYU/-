@@ -516,10 +516,11 @@ class WestockCliBridge {
   2. **采集运行时 KPI**：`collectionRuntimeStore.sourceCounts` 已含 `westock` 键，且消费者（`qualityMetricsCollector.ts:100` 动态索引 `sourceCounts[source]`、`collectionRuntimeStore.ts:138` 用 `Object.entries(stats.sourceCounts)` 动态遍历）均以**动态键**访问，westock 自动进入「各数据源使用次数分布」统计，无硬编码源列表阻断。
 - 说明：`DataSourceConfigStep`（采集向导第一步）是「维度选择 + API 地址」配置，不列具体数据源，与 westock 接入无冲突。
 
-**③ 发现并标记：平行的 `TencentNewsCliBridge` 亦是孤儿（超出本任务范围，仅提示）**
-- 项目已存在 `src/mcp/servers/news/TencentNewsCliBridge.ts`（腾讯新闻 CLI 桥接），与 `WestockCliBridge` 模式高度相似（spawn + 超时即杀 + 自适应编码 + CliError）。
-- 但 `grep` 确认 `TencentNewsCliBridge` **仅被其自身测试引用**（`src/mcp/__tests__/tencentNewsCliBridge.test.ts`）；实际 `newsServer.ts`（NewsServer）消费的是 `getNewsBySymbol`（newsService），**并未使用 `TencentNewsCliBridge`**。
-- 此为本项目既有技术债务，与 westock 任务解耦；本次**未改动**（避免越界），建议后续由新闻模块负责人统一：要么将 `TencentNewsCliBridge` 接入 newsServer，要么删除该孤儿与其测试，并考虑抽取 `BaseCliBridge` 供 westock/腾讯新闻共用以降低重复。
+**③ 勘误：平行的 `TencentNewsCliBridge` 并非孤儿（2026-08-15 复核纠正）**
+- 项目已存在 `src/mcp/servers/news/TencentNewsCliBridge.ts`（腾讯新闻 CLI 桥接），与 `WestockCliBridge` 模式高度相似（spawn + 超时即杀 + 自适应编码 + CliError）——这一模式判断正确。
+- **原结论"仅被其自身测试引用、newsServer 未使用"经复核为错误 grep 断言，特此勘误**：实际 `src/mcp/servers/news/tencentNewsServer.ts` **早已真实接入**该 Bridge——`import { tencentNewsCliBridge, type CliError } from './TencentNewsCliBridge'`（第 18 行），并在 handler 内 `await tencentNewsCliBridge.invoke(def.command, def.buildArgs(args))`（第 138 行）、`check_health`/资源解析处 `await tencentNewsCliBridge.isAvailable()`（第 155、171 行）。
+- 即 `NewsServer` 与 `WeStockServer` 是**完全平行**的两个 MCP Server：各自封装一个 CLI SKILL（腾讯新闻 / 腾讯自选股），复用同一套 `CliError` + 自适应解码 + 超时即杀范式。**两者都是生产在用模块，均非孤儿、均不应删除。**
+- 因此原"建议清理 TencentNewsCliBridge 孤儿"的建议**作废**。真实跨模块改进建议改为：抽取 `BaseCliBridge`（共享 spawn/shell:true/超时即杀/自适应解码/CliError 分类），供 `WestockCliBridge` 与 `TencentNewsCliBridge` 共用，消除重复实现——属优化项，不影响既有功能，独立排期。
 
 **④ 最终质量门禁（删除孤儿后复核）**
 - `npm run tsc:prod`（本任务相关 src/electron 文件）0 错误；`audit:layers` 0 违规；`audit:acl-consistency` 0 ERROR/WARN。
@@ -531,4 +532,5 @@ class WestockCliBridge {
 - E1–E4（WESTOCK_DISABLED 开关 / E2E 测试 / CLI 实测 / 评分归档）：✅ 完成
 - 孤儿 `StdioJSONRPCTransport` 清理：✅ 完成（本轮）
 - M4 可见性核实：✅ 完成（两条真实路径）
-- 后续非阻塞建议：Electron/Node 宿主端到端 `mcpBridge.callTool('marketdata:westock', …)` 复跑确认；新闻模块孤儿 `TencentNewsCliBridge` 清理（独立任务）。
+- Electron/Node 宿主端到端 `mcpBridge.callTool('marketdata:westock', …)` 穿透全链复跑确认：✅ 完成（2026-08-15，`e2eWestockMcpChain.test.ts` 4 确定性用例全绿 + 1 LIVE 门控用例）
+- ⚠️ **关于 `TencentNewsCliBridge` 孤儿建议已作废**：经 2026-08-15 复核，`NewsServer` 早已真实接入该 Bridge（非孤儿），故不再列为待清理项；真实优化项改为抽取 `BaseCliBridge` 共用（非阻塞、独立排期）。

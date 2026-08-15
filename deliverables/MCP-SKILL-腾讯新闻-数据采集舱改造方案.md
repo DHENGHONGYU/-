@@ -296,7 +296,17 @@ class TencentNewsCliBridge {
 - [x] **API Key 配置**：用户自取后执行 `apikey-set`，2026-08-16 已验证可取数。
 - [x] **真实采集**：用 `search`/`hot`/`morning` 采集「数据采集/数据要素/金融科技/财经/AI数据/算力/科技产业」行业与资讯资料，整理为 `deliverables/腾讯新闻-数据采集行业及资讯资料.md` 补充进项目，并回填本文件「实际采集结果」章节（§12）。
 - [x] M1 代码落地（`TencentNewsCliBridge` + 自适应解码 + 单测 15/15，见 §11.1）。
-- [ ] M2–M5 代码落地（Server + 注册/ACL + 接线 + 可观测 + 打包），遵循项目质量门禁（见 §8）。
+- [x] **M2–M5 代码落地（Server + 注册/ACL + 接线 + 可观测 + 打包）**，遵循项目质量门禁（见 §8）。交付物与门禁实测如下（2026-08-15 续做）：
+
+| 里程碑 | 交付物（路径） | 门禁实测 |
+|---|---|---|
+| M2 Server | `src/mcp/servers/news/tencentNewsServer.ts`（`marketdata:tencentnews`，6 Tool + `check_health` + `marketdata://tencentnews/health` 资源）；注册 `src/config/mcpServerRegistry.ts` | `tsc:prod` 0 错误；`audit:layers` 0 违规；`audit:acl-consistency` 0 ERROR/WARN |
+| M3 接线 | `src/services/data-collector/tencentNewsMcpSource.ts`（`fetchNewsViaTencentNews`/`fetchIndustryNewsViaTencentNews`/`parseTencentNewsText` + `recordSourceResult('tencentnews')`）；`multiSourceFetcher.ts` 插入 `tencentnews` 优先级 0.5（westock 之后、Tushare 之前） | vitest `tencentNewsMcpSource.test.ts` **10/10 通过**（1.49s，线程池） |
+| M4 可观测 | `qualityMetricsCollector.ts` / `collectionRuntimeStore.ts`（含 test fixtures）`sourceCounts` 增 `tencentnews: 0` | `tsc:prod` 0 错误 |
+| M5 打包 | `electron/tencentNewsHost.ts`（main 进程承载 CLI）+ `electron/main.ts` IPC 句柄 `tencentnews:invoke`/`tencentnews:health` + `electron/preload.ts` 暴露 `window.tencentnews` | `tsc:prod` 0 错误 |
+
+> **门禁总览（2026-08-15 实测）**：`tsc:prod` ✅ 0 错误 · `audit:layers` ✅ 0 违规 · `audit:acl-consistency` ✅ 0 ERROR/0 WARN · `audit:hardcode` ⚠️ 166 项均为**仓库既有**问题（扫描 1482 文件），**本 M1–M5 新增文件 0 命中** · vitest 单测 ✅ 10/10。
+> **环境注意**：本沙箱 `vitest` 默认 `forks` 池冷启动会挂起（>5min 无输出），改用 `--pool=threads` 即 1.49s 跑完；属 vitest 环境特性，非代码缺陷。
 
 ### 11.3 备注
 
@@ -344,4 +354,38 @@ class TencentNewsCliBridge {
 
 ### 12.4 下一步（代码落地）
 
-§8 的 M1–M5 仍可沿用本实证结论推进：`TencentNewsCliBridge` 按 UTF-8 解码（非 GBK）；`news:tencent` Server 暴露 §4.1 全 Tool；`multiSourceFetcher.fetchNews` 将 `'tencentnews'` 置为维度 04/05 优先级 1。
+§8 的 M1–M5 已落地：Server 实际命名为 `marketdata:tencentnews`（对齐 westock 的 `marketdata:westock`），调用路径与 §4.1 设计一致；`TencentNewsCliBridge` 按 UTF-8 解码（非 GBK）；`multiSourceFetcher.fetchNews` 将 `'tencentnews'` 置为维度 04/05 优先级 0.5（westock 之后、Tushare 之前）。
+
+---
+
+## 13. 跨环境可移植性（其他开发环境接入）
+
+> 目标：保证 M1–M5 在任意其他开发机 / CI 上均可跑通，不产生"本机能跑、换机器挂"的路径或密钥漂移。
+
+### 13.1 已验证（本仓库源码 0 风险）
+
+- **零硬编码用户路径**：M1–M5 全部 11 个源文件（Server / Bridge / Source / Host / main / preload / registry / multiSourceFetcher / qualityMetricsCollector / collectionRuntimeStore 及两个 test fixture）经 Grep 扫描 **0 命中** `C:/Users`、`/Users/`、`D:/FinSightV9`、`DELL`、`Huawei` 等用户绝对路径。
+- **零硬编码密钥**：API Key **不进入任何源码或提交文件**（`git grep 69e89c82` 在已跟踪文件中返回空）。密钥由 CLI 本地配置持有（`tencent-news-cli apikey-set`），写入用户目录 `~/.tencent-news-cli/`，随用户走、不进仓库。
+- **CLI bin 解析全平台可移植**：`electron/tencentNewsHost.ts` 的 `resolveBin()` 顺序为 `env.TENCENT_NEWS_CLI` → `${HOME|USERPROFILE}/.tencent-news-cli/bin/` → `PATH` 兜底；`win32` 自动补 `.exe`，其它平台用无后缀名。无硬编码落盘路径。
+- **优雅降级**：CLI 未安装 / 密钥未配置 / 调用超时 → `CliError` 被 `tencentNewsMcpSource` 捕获并 `recordSourceResult('tencentnews',{success:false})`，`multiSourceFetcher` 自动降级到 Tushare→EastMoney→Sina；Electron `init()` 在 bin 缺失时仅 `warn`，**不阻塞主进程启动**。
+- **编码自适应**：`TencentNewsCliBridge.decodeCliBytes` 在 UTF-8 → gb18030 → 宽松 UTF-8 间回退，跨宿主 codepage 不崩。
+
+### 13.2 其他开发环境接入前置条件（一次性）
+
+1. **安装腾讯新闻 CLI**（本机形态 A 自宿主，不依赖平台连接器）：
+   - 安装后确保 `tencent-news-cli`（Windows 为 `tencent-news-cli.exe`）在 `PATH`，或落在 `~/.tencent-news-cli/bin/`，或用 `TENCENT_NEWS_CLI` 指向自定义绝对路径。
+2. **配置密钥（每机各自配置，勿共用 / 勿入库）**：
+   ```bash
+   tencent-news-cli apikey-set <YOUR_OWN_KEY>
+   ```
+3. **可选环境变量**：
+   - `TENCENT_NEWS_CLI`：自定义 CLI 可执行文件路径（覆盖默认解析顺序）。
+   - `TENCENT_NEWS_TIMEOUT_MS`：单次调用超时（默认 20000ms；超时自动 SIGKILL）。
+
+### 13.3 测试运行注意
+
+- 本仓库单测在本沙箱默认 `forks` 池冷启动会挂起（>5min 无输出，属 vitest 环境特性，非代码缺陷）；本机正常 `npx vitest run` 即可。若遇挂起，加 `--pool=threads`：
+  ```bash
+  npx vitest run src/services/data-collector/tencentNewsMcpSource.test.ts --pool=threads
+  ```
+- 门禁在普通开发环境按 AGENTS.md 执行：`npm run tsc:prod` / `audit:layers` / `audit:acl-consistency` / `audit:hardcode` / 相关 vitest。
