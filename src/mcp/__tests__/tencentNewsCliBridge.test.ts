@@ -16,7 +16,12 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { EventEmitter } from 'node:events'
 import type { ChildProcess } from 'node:child_process'
 
-vi.mock('node:child_process', () => ({ spawn: vi.fn() }))
+// mock 工厂保留真实模块：默认 spawn 为真实实现（供端到端用例），
+// mock 用例经 mockImplementation 覆盖为假子进程（mockReset 会清空实现，须先 reset 再覆盖）
+vi.mock('node:child_process', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('node:child_process')>()
+  return { ...actual, spawn: vi.fn(actual.spawn) }
+})
 
 import { spawn } from 'node:child_process'
 import {
@@ -26,6 +31,9 @@ import {
 } from '@/mcp/servers/news/TencentNewsCliBridge'
 
 const mockedSpawn = vi.mocked(spawn)
+
+/** 真实 spawn 实现（mockReset 清空后由端到端用例还原） */
+const realSpawn = mockedSpawn.getMockImplementation()!
 
 /**
  * invoke() 内部先 `await import('node:child_process')` 再 spawn、挂 stdout/close 监听；
@@ -269,6 +277,80 @@ describe('CliError', () => {
     expect(e.name).toBe('CliError')
     expect(e.kind).toBe('timeout')
     expect(e.message).toBe('boom')
+  })
+})
+
+// ============================================================
+// 真实乱码场景 — 真实子进程管道端到端（不 mock child_process）
+//
+// 用 bin=process.execPath 把桥接器指向 node 本身，子进程经 `node -e <script>`
+// 向真实 stdout 管道写入原始字节，走完整 spawn → pipe → chunk 收集 → 拼接 →
+// 自适应解码链路，验证真实 GBK 乱码场景下的解码逻辑。
+//
+// GBK 载荷（153 字节）经 PowerShell GetEncoding(936) 实测核准（2026-08-16），
+// 对应文本：
+//   tencent-news-cli hot --limit 3
+//   【热点】腾讯新闻：数据采集行业动态，数据要素市场加速发展。
+//   【早报】金融科技资讯；算力基础设施投入持续增长、政策利好释放。
+// 分片点选在首个 GBK 双字节序列（【=A1 BE）中间：PART1 以 lead byte 0xA1 结尾、
+// PART2 以 trail byte 0xBE 开头——天然构造「多字节序列被 chunk 切断」的真实管道形态。
+// ============================================================
+
+/** 期望解码文本（GBK 载荷的原文） */
+const GBK_SIM_EXPECTED =
+  'tencent-news-cli hot --limit 3\n' +
+  '【热点】腾讯新闻：数据采集行业动态，数据要素市场加速发展。\n' +
+  '【早报】金融科技资讯；算力基础设施投入持续增长、政策利好释放。\n'
+
+/** PART1（32B）：ASCII 行 + \n + 【的 lead byte 0xA1（与 PART2 拼回后为完整 GBK 序列） */
+const GBK_SIM_PART1 = [
+  0x74, 0x65, 0x6e, 0x63, 0x65, 0x6e, 0x74, 0x2d, 0x6e, 0x65, 0x77, 0x73, 0x2d, 0x63, 0x6c, 0x69,
+  0x20, 0x68, 0x6f, 0x74, 0x20, 0x2d, 0x2d, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x20, 0x33, 0x0a, 0xa1,
+] as const
+
+/** PART2（121B）：自 【的 trail byte 0xBE 起至文末 */
+const GBK_SIM_PART2 = [
+  0xbe, 0xc8, 0xc8, 0xb5, 0xe3, 0xa1, 0xbf, 0xcc, 0xda, 0xd1, 0xb6, 0xd0, 0xc2, 0xce, 0xc5, 0xa3,
+  0xba, 0xca, 0xfd, 0xbe, 0xdd, 0xb2, 0xc9, 0xbc, 0xaf, 0xd0, 0xd0, 0xd2, 0xb5, 0xb6, 0xaf, 0xcc,
+  0xac, 0xa3, 0xac, 0xca, 0xfd, 0xbe, 0xdd, 0xd2, 0xaa, 0xcb, 0xd8, 0xca, 0xd0, 0xb3, 0xa1, 0xbc,
+  0xd3, 0xcb, 0xd9, 0xb7, 0xa2, 0xd5, 0xb9, 0xa1, 0xa3, 0x0a, 0xa1, 0xbe, 0xd4, 0xe7, 0xb1, 0xa8,
+  0xa1, 0xbf, 0xbd, 0xf0, 0xc8, 0xda, 0xbf, 0xc6, 0xbc, 0xbc, 0xd7, 0xca, 0xd1, 0xb6, 0xa3, 0xbb,
+  0xcb, 0xe3, 0xc1, 0xa6, 0xbb, 0xf9, 0xb4, 0xa1, 0xc9, 0xe8, 0xca, 0xa9, 0xcd, 0xb6, 0xc8, 0xeb,
+  0xb3, 0xd6, 0xd0, 0xf8, 0xd4, 0xf6, 0xb3, 0xa4, 0xa1, 0xa2, 0xd5, 0xfe, 0xb2, 0xdf, 0xc0, 0xfb,
+  0xba, 0xc3, 0xca, 0xcd, 0xb7, 0xc5, 0xa1, 0xa3, 0x0a,
+] as const
+
+describe('真实乱码场景 — 真实子进程管道输出 GBK 字节（端到端，不 mock）', () => {
+  beforeEach(() => {
+    mockedSpawn.mockReset()
+    mockedSpawn.mockImplementation(realSpawn) // 还原真实 spawn，走真实管道
+  })
+
+  it('模拟真 GBK CLI 输出：解码精确还原中文，无 U+FFFD、无 GBK 显示乱码', async () => {
+    const bridge = new TencentNewsCliBridge({ bin: process.execPath, timeoutMs: 10_000 })
+    // node -e 脚本（无空格/引号，规避 tokenize 切分）：两次 write 模拟真实管道 chunk 分片
+    const script =
+      `process.stdout.write(Buffer.from([${GBK_SIM_PART1.join(',')}]));` +
+      `process.stdout.write(Buffer.from([${GBK_SIM_PART2.join(',')}]))`
+    const out = await bridge.invoke('-e', script)
+
+    expect(out).toBe(GBK_SIM_EXPECTED)
+    expect(out).not.toContain('\uFFFD')
+    // 若桥接层误按 UTF-8 解码（未回退 gb18030），此处会出现典型乱码字符（如 备/鏂/椂 类）
+    expect(out).not.toMatch(/[鏄吘璁柊椂囧璁銆]/)
+  })
+
+  it('同一管道按 UTF-8 输出（CLI v1.0.14 实测形态）：优先 UTF-8 不误判为 GBK', async () => {
+    const bridge = new TencentNewsCliBridge({ bin: process.execPath, timeoutMs: 10_000 })
+    // 同一段中文以 UTF-8 写出：UTF-8 字节恰好也能被 gb18030「合法」解码成乱码（鏄吘璁 悖论），
+    // 本用例钉死「严格 UTF-8 优先」的判定顺序，防止解码顺序回归。
+    // 载荷经 hex 传递（无空格/换行/引号，规避 tokenize 切分与 JS 字符串跨行限制）
+    const hex = Buffer.from(GBK_SIM_EXPECTED, 'utf8').toString('hex')
+    const script = `process.stdout.write(Buffer.from('${hex}','hex'))`
+    const out = await bridge.invoke('-e', script)
+
+    expect(out).toBe(GBK_SIM_EXPECTED)
+    expect(out).not.toContain('\uFFFD')
   })
 })
 

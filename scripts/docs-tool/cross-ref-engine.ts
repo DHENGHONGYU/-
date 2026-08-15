@@ -56,15 +56,53 @@ export interface AuditResult {
 
 // ─── 扫描工具 ───────────────────────────────────────────────────────────────
 
-function extractReferences(content: string, regex: RegExp): string[] {
+/**
+ * 剥离引用尾部的中文注解（如"已废弃""已重构""占位示例""原名 xxx"等）。
+ * 这类注解可能是 Phase 2 修复时有意添加的归档说明，不应被引擎误判为文件路径的一部分。
+ */
+function stripChineseAnnotation(target: string): string {
+  // 剥离尾部的中文全角括号注解：`（已废弃，不再使用）`、`（已重构，不再存在）`、`（占位示例，非实际文件）`、`（原名 xxx）` 等
+  return target.replace(/[（(][^）)]*[）)]\s*$/g, '').trim()
+}
+
+/**
+ * 判定目标引用所在行是否包含"废弃/重构/占位"等归档说明。
+ * 用于处理注解在 backtick 外但文件确已不再存在的情况（如 `src/router/routes.ts`（已重构，不再存在））。
+ */
+function hasDeprecationContext(line: string, target: string): boolean {
+  const deprecationPatterns = [
+    /已废弃/,
+    /已重构/,
+    /不再存在/,
+    /不再使用/,
+    /不再维护/,
+    /占位示例/,
+    /非实际文件/,
+    /原名\s/,
+  ]
+  // 在 target 在行中的位置之后查找注解
+  const idx = line.indexOf(target)
+  if (idx === -1) return false
+  const afterTarget = line.substring(idx + target.length)
+  return deprecationPatterns.some((p) => p.test(afterTarget))
+}
+
+function extractReferences(
+  content: string,
+  regex: RegExp,
+  sourceLine?: string,
+): string[] {
   const refs: string[] = []
   let match
   while ((match = regex.exec(content)) !== null) {
-    const cleaned = match[0].replace(/`/g, '')
+    let cleaned = match[0].replace(/`/g, '')
+    // 剥离尾部中文注解（处理注解在 backtick 内的情况）
+    cleaned = stripChineseAnnotation(cleaned)
     // 模板字符串插值 / glob 通配属于"伪引用"，不应判为断链
-    if (!isPseudoReference(cleaned)) {
-      refs.push(cleaned)
-    }
+    if (isPseudoReference(cleaned)) continue
+    // 检查原始行是否包含废弃/重构/占位注解（处理注解在 backtick 外的情况）
+    if (sourceLine !== undefined && hasDeprecationContext(sourceLine, cleaned)) continue
+    refs.push(cleaned)
   }
   return refs
 }
@@ -92,6 +130,8 @@ function isPseudoReference(target: string): boolean {
   if (/:\d+$/.test(target)) return true // 行号后缀
   if (target.includes('--')) return true // 命令行 flag
   if (target.endsWith('/')) return true // 纯目录引用（尾斜杠）
+  // 占位符文件名：Xxx/xxx 前缀表示模板示例（如 XxxWidget.tsx、xxx.types.ts、useXxxStore.ts）
+  if (/\b[Xx]xx\w*\.(?:ts|tsx|js|jsx)\b/.test(target)) return true
   return false
 }
 
@@ -135,7 +175,8 @@ export function scanDocReferences(filePath: string): Reference[] {
     }
 
     // 2. 扫描剩余的反引号路径（非 Markdown 链接文本）
-    const codeTargets = extractReferences(lineWithoutMdLinks, /(?:`)(?:src|scripts)\/[^`]+(?:`)/g)
+    // 传入原始行 line 用于检测废弃/重构/占位注解
+    const codeTargets = extractReferences(lineWithoutMdLinks, /(?:`)(?:src|scripts)\/[^`]+(?:`)/g, line)
     for (const target of codeTargets) {
       references.push({
         source: relative(process.cwd(), filePath),
@@ -145,7 +186,7 @@ export function scanDocReferences(filePath: string): Reference[] {
       })
     }
 
-    const docTargets = extractReferences(lineWithoutMdLinks, /(?:`)(?:docs\/)?[^`]+\.md(?:`)/g)
+    const docTargets = extractReferences(lineWithoutMdLinks, /(?:`)(?:docs\/)?[^`]+\.md(?:`)/g, line)
     for (const target of docTargets) {
       if (isPseudoReference(target)) continue
       if (target.includes('+')) {
@@ -207,7 +248,7 @@ export function scanCodeReferences(filePath: string): Reference[] {
     }
 
     // 2. 扫描剩余的反引号文档路径
-    const docTargets = extractReferences(lineWithoutMdLinks, /(?:`)(?:docs\/)?[^`]+\.md(?:`)/g)
+    const docTargets = extractReferences(lineWithoutMdLinks, /(?:`)(?:docs\/)?[^`]+\.md(?:`)/g, line)
     for (const target of docTargets) {
       references.push({
         source: relative(process.cwd(), filePath),
