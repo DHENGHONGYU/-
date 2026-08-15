@@ -30,7 +30,7 @@ change_log:
 >
 > 本文档定义 V9 的分析引擎、交易引擎、评分模型与跨模块通信协议（DataBridge / Envelope）。  
 > 目标读者：前端/全栈开发者、算法研究员、测试工程师。  
-> 与规划基线的差异见 `./architecture-version-comparison.md`。
+> 与规划基线的差异见 `../reference/architecture-version-comparison.md`。
 
 ---
 
@@ -136,7 +136,7 @@ src/store/
 └── dataflowStore.ts       # 状态管理
 ```
 
-**当前状态**：?? 部分实现。已支持 SSE/轮询、内存缓存、定时刷新、慢订阅者检测、通道 priority 字段；TTL/容量上限/按优先级排序分发待完善。详细字段与 API 见 `./dataflow-data-definition.md`。
+**当前状态**：?? 部分实现。已支持 SSE/轮询、内存缓存、定时刷新、慢订阅者检测、通道 priority 字段；TTL/容量上限/按优先级排序分发待完善。详细字段与 API 见 `./dataflow-data-definition.md`（已归档）。
 
 ### 1.4 Hybrid Proofread 混合校对引擎（v2.6.0 新增）
 
@@ -845,7 +845,7 @@ candidate → screened → deepDive → watching → archived
 
 本文档当前版本为 `v0.9.0-docs-review`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
-- `./architecture-version-comparison.md`
+- `../reference/architecture-version-comparison.md`
 
 主要变化：
 

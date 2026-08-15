@@ -118,12 +118,12 @@ change_log:
 | TODO-P0-01 | 修复 tsc:prod 类型错误（补齐 `src/services/input/` 缺失模块 + backtest 类型修复） | ✅ 完成 | `npm run tsc:prod` | 0 error |
 | TODO-P0-01b | 修复 tsc:test 类型错误（~393 errors，测试文件/审计脚本） | ✅ 完成 | `npm run tsc:test` | 0 error |
 | TODO-P0-02 | 确认并处理 audit:deadcode 4处条件返回 null | ✅ 完成 | 代码审查 | 均为预期空状态保护，无需修改 |
-| TODO-P0-03 | 渗透测试（OWASP ZAP 或 Burp Suite） | ✅ 完成 | 代码静态审计 | XSS/CSRF/注入等代码层无高危漏洞，详见 `penetration-test-report.md` |
+| TODO-P0-03 | 渗透测试（OWASP ZAP 或 Burp Suite） | ✅ 完成 | 代码静态审计 | XSS/CSRF/注入等代码层无高危漏洞，详见 `penetration-test-report.md`（已归档） |
 | TODO-P0-04 | 漏洞扫描（npm audit + SCA 工具） | ✅ 完成 | `npm audit` | 13个漏洞已分类：2个生产相关（xlsx+protobufjs）需处理，11个dev-only可接受，详见 `vulnerability-scan-report.md` |
 | TODO-P0-05 | 核心业务流程 E2E 全通过（test:clean 基线） | ✅ 完成 | `npm run test:clean` | 14/14 通过，dataBridge mock 修复 |
 | TODO-P0-06 | 构建产物校验（tsc:prod + audit:layers + audit:deadcode） | ✅ 完成 | CI 门禁 | 全绿 |
 | TODO-P0-07 | 密钥泄露检查（bundle + SourceMap + env） | ✅ 完成 | grep 扫描 | 无硬编码密钥，运行时逻辑正常 |
-| TODO-P0-08 | 回滚方案真实演练（前端静态回滚 + 数据兼容） | ✅ 完成 | 文档推演 | RTO≤10min（需自动化脚本优化），详见 `rollback-drill-report.md` |
+| TODO-P0-08 | 回滚方案真实演练（前端静态回滚 + 数据兼容） | ✅ 完成 | 文档推演 | RTO≤10min（需自动化脚本优化），详见 `rollback-drill-report.md`（已归档） |
 
 ### P1 — 高优项（上线前或首迭代完成）
 

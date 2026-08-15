@@ -45,4 +45,4 @@ change_log:
 
 ## 相关文档
 
-- `../../03-architecture-standards.md`
+- `../../03-architecture-standards.md`（已归档）

@@ -45,5 +45,5 @@ change_log:
 
 ## 相关文档
 
-- `../../06-routing-specs.md`
-- `docs/explanation/implementation/input-cabin-spec.md`
+- `../../06-routing-specs.md`（已归档）
+- `docs/explanation/implementation/input-cabin-spec.md`（已归档）

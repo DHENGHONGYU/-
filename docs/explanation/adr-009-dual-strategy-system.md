@@ -38,7 +38,7 @@ ADR-007 曾提出「补齐筛选引擎、信号持久化与复盘引擎」，但
 
 ### 触发条件
 
-- `./2026-06-27-dual-strategy-system.md` 提出双策略体系设计。
+- `./2026-06-27-dual-strategy-system.md`（已归档） 提出双策略体系设计。
 - 用户反馈：单一评分模型无法同时满足趋势交易和价值投资两种需求。
 
 ---
@@ -80,9 +80,9 @@ ADR-007 曾提出「补齐筛选引擎、信号持久化与复盘引擎」，但
 ### 负面影响 / 技术债
 
 - `HotSectorScore` / `ValuePitScore` 类型与 Store 待新增（`v6ScoreService` 需扩展）。
-  - **技术债登记**：`./design/tech-debt.md` — 「双策略 Store 待新增」。
+  - **技术债登记**：`./design/tech-debt.md`（已归档） — 「双策略 Store 待新增」。
 - Analyzer（`hotSectorAnalyzer.ts`、`valuePitAnalyzer.ts`）与 Widget 待实现。
-  - **技术债登记**：`./design/tech-debt.md` — 「双策略 Widget 待实现」。
+  - **技术债登记**：`./design/tech-debt.md`（已归档） — 「双策略 Widget 待实现」。
 - 计算量翻倍：每次评分需要跑两套模型，浏览器端性能压力增大。
   - **缓解**：使用 Web Worker 跑评分计算；结果缓存于 IndexedDB。
 
@@ -124,8 +124,8 @@ npm run audit:layers  # 验证 scoring → core/data 无跨层调用
 | ADR-007（被取代） | `adr-007-screening-signal-persistence-review.md` |
 | ADR-008（V6 策略） | `adr-008-v6-core-resource-trading-strategy.md` |
 | 引擎规格 | `../explanation/05-engine-specs.md` §2.5 |
-| 舱室总览 | `./cabins-overview.md` §4 |
-| 双策略原始设计 | `./2026-06-27-dual-strategy-system.md` |
+| 舱室总览 | `./cabins-overview.md`（已归档） §4 |
+| 双策略原始设计 | `./2026-06-27-dual-strategy-system.md`（已归档） |
 
 ---
 

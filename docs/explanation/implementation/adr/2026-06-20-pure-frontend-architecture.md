@@ -45,5 +45,5 @@ V9 面向中国 A 股个人投资者，需要本地主权数据、离线可用�
 
 ## 相关文档
 
-- `../../03-architecture-standards.md`
-- `docs/explanation/implementation/data-interaction-protocols.md`
+- `../../03-architecture-standards.md`（已归档）
+- `docs/explanation/implementation/data-interaction-protocols.md`（已归档）

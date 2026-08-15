@@ -26,7 +26,7 @@ change_log:
 > **Last Updated**: 2026-06-27  
 >  
 > 本文档将 `../reference/dual-strategy-dataflow-spec.md` 中的用户输入规格，与 V9 当前代码实际状态、架构文档进行逐项校对。  
-> 所有结论基于 `03-architecture-standards.md`、`05-engine-specs.md`、`../reference/v9-system-blueprint.md`、  
+> 所有结论基于 `03-architecture-standards.md`（已归档）、`05-engine-specs.md`、`../reference/v9-system-blueprint.md`、  
 > `src/services/trading/strategyEngine.ts`、`src/core/dataflow/`、`src/cockpit/`、`src/config/strategyRules.ts` 等真实状态。
 
 ---
@@ -130,11 +130,11 @@ export interface ValuePitScore {
 
 1. 由架构负责人评审本报告与 `../reference/dual-strategy-dataflow-spec.md`。
 2. 决定是否以本规格替换/扩展 ADR-008 中的「第四次工业革命稀缺核心资源」策略，或作为并行的「双策略体系」独立存在。
-3. 若采纳，按 `./design/implementation-governance.md` 创建新 ADR：
+3. 若采纳，按 `./design/implementation-governance.md`（已归档） 创建新 ADR：
    - 标题建议：`ADR-009: 引入热门板块与价值洼地双策略体系`
    - 状态：`Proposal` → `Accepted`
 4. 更新以下文档：
-   - `03-architecture-standards.md`：补充双策略类型、Store、Widget 映射
+   - `03-architecture-standards.md`（已归档）：补充双策略类型、Store、Widget 映射
    - `05-engine-specs.md`：补充 HotSectorAnalyzer / ValuePitAnalyzer / RotationSignalDetector
    - `../reference/10-glossary.md`：新增 `HotSectorScore`、`ValuePitScore`、`RotationSignal` 术语
    - `../guides/08-implementation-plan.md`：将双策略纳入 Phase 2
@@ -189,7 +189,7 @@ export interface ValuePitScore {
 | 引用 | 路径 |
 |---|---|
 | 用户输入规格 | `../reference/dual-strategy-dataflow-spec.md` |
-| 架构标准 | `03-architecture-standards.md` |
+| 架构标准 | `03-architecture-standards.md`（已归档） |
 | 引擎规格 | `05-engine-specs.md` |
 | 整体蓝图 | `../reference/v9-system-blueprint.md` |
 | 策略引擎 | `src/services/trading/strategyEngine.ts` |

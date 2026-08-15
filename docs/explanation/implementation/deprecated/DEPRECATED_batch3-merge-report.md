@@ -26,7 +26,7 @@
 1. **并发回归脚本**：在 `package.json` 中新增 `regression` 脚本，使用 `concurrently` 并行执行 lint / test / audit，然后串行执行 build 与 e2e。
 2. **测试超时调整**：`vite.config.ts` 中 `testTimeout` 从 10000ms 调整为 15000ms，以缓解 `NewsPage.test.tsx` 在并发资源紧张时的偶发超时。
 3. **`.nvmrc`**：已创建，指定 Node 22。
-4. **覆盖率阈值**：已在 `vite.config.ts` 配置，但当前实测覆盖率未达标，作为已知问题记录在 `docs/explanation/implementation/quality-gates-baseline.md`。
+4. **覆盖率阈值**：已在 `vite.config.ts` 配置，但当前实测覆盖率未达标，作为已知问题记录在 `docs/explanation/implementation/quality-gates-baseline.md`（已归档）。
 
 ---
 

@@ -17,6 +17,7 @@ import { Button } from '@/components/atoms/Button'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { PageContainer } from '@/components/templates/PageContainer'
 import { EmptyState } from '@/components/molecules/EmptyState'
+import { Skeleton } from '@/components/molecules'
 import { StockSelector } from '@/components/organisms/input/StockSelector'
 import { useIntentionPoolStore } from '@/store/intentionPoolStore'
 import { useTradingStore } from '@/store/tradingStore'
@@ -132,7 +133,7 @@ function SystemStatusOverview(): React.JSX.Element {
     [taskStatuses],
   )
 
-  const statusCards = [
+  const statusCards = useMemo(() => [
     {
       icon: Database,
       label: '股票池',
@@ -169,7 +170,7 @@ function SystemStatusOverview(): React.JSX.Element {
       color: fetcherOk === null ? 'text-muted-foreground' : fetcherOk ? 'text-success' : 'text-destructive',
       bgColor: fetcherOk === null ? 'bg-muted' : fetcherOk ? 'bg-success/10' : 'bg-destructive/10',
     },
-  ]
+  ], [poolItems.length, signals.length, taskCount, completedTasks, fetcherOk])
 
   return (
     <section className={`grid grid-cols-2 gap-4 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
@@ -224,20 +225,53 @@ function PortfolioHero(): React.JSX.Element {
     )
   }
 
-  const totalAssets = portfolio?.totalValue ?? 0
-  const todayPnL = hasPortfolio ? pnlSummary.totalUnrealizedPnl : 0
-  const todayPnLPercent = totalAssets > 0 ? (todayPnL / totalAssets) * 100 : 0
-  const todayIsUp = todayPnL >= 0
-  const todayColor = todayIsUp ? 'hsl(var(--stock-up))' : 'hsl(var(--stock-down))'
+  const totalAssets = useMemo(() => portfolio?.totalValue ?? 0, [portfolio])
 
-  const ytdReturn = pnlSummary.totalRealizedPnl
-  const ytdReturnPercent = totalAssets > 0 ? (ytdReturn / totalAssets) * 100 : 0
-  const ytdIsUp = ytdReturn >= 0
+  const {
+    todayPnL,
+    todayPnLPercent,
+    todayIsUp,
+    todayColor,
+  } = useMemo(() => {
+    const pnl = hasPortfolio ? pnlSummary.totalUnrealizedPnl : 0
+    const pnlPct = totalAssets > 0 ? (pnl / totalAssets) * 100 : 0
+    const isUp = pnl >= 0
+    return {
+      todayPnL: pnl,
+      todayPnLPercent: pnlPct,
+      todayIsUp: isUp,
+      todayColor: isUp ? 'hsl(var(--stock-up))' : 'hsl(var(--stock-down))',
+    }
+  }, [hasPortfolio, pnlSummary.totalUnrealizedPnl, totalAssets])
 
-  const sharpeRatio = hasPositions ? riskMetrics.sharpeRatio : 0
-  const maxDrawdown = hasPositions ? riskMetrics.maxDrawdown : 0
+  const {
+    ytdReturn,
+    ytdReturnPercent,
+    ytdIsUp,
+  } = useMemo(() => {
+    const ytd = pnlSummary.totalRealizedPnl
+    const ytdPct = totalAssets > 0 ? (ytd / totalAssets) * 100 : 0
+    return {
+      ytdReturn: ytd,
+      ytdReturnPercent: ytdPct,
+      ytdIsUp: ytd >= 0,
+    }
+  }, [pnlSummary.totalRealizedPnl, totalAssets])
 
-  const sharpeLabel = sharpeRatio >= 2 ? '优秀' : sharpeRatio >= 1 ? '良好' : sharpeRatio > 0 ? '一般' : '待评估'
+  const {
+    sharpeRatio,
+    maxDrawdown,
+    sharpeLabel,
+  } = useMemo(() => {
+    const sharpe = hasPositions ? riskMetrics.sharpeRatio : 0
+    const drawdown = hasPositions ? riskMetrics.maxDrawdown : 0
+    const label = sharpe >= 2 ? '优秀' : sharpe >= 1 ? '良好' : sharpe > 0 ? '一般' : '待评估'
+    return {
+      sharpeRatio: sharpe,
+      maxDrawdown: drawdown,
+      sharpeLabel: label,
+    }
+  }, [hasPositions, riskMetrics.sharpeRatio, riskMetrics.maxDrawdown])
 
   return (
     <section
@@ -332,7 +366,7 @@ function SignalList(): React.JSX.Element {
     )
   }
 
-  const displaySignals = signals.slice(0, 10)
+  const displaySignals = useMemo(() => signals.slice(0, 10), [signals])
 
   return (
     <section
@@ -383,9 +417,9 @@ export default function HomePage(): React.JSX.Element {
   const navigate = useNavigate()
   const isMobile = useMediaQuery('(max-width: 767px)')
 
-  const handleQuickSelect = (stock: { symbol: string }): void => {
+  const handleQuickSelect = useCallback((stock: { symbol: string }): void => {
     void navigate(`/analysis/intelligent-score?symbol=${stock.symbol}`)
-  }
+  }, [navigate])
 
   return (
     <PageContainer>
