@@ -300,7 +300,7 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 ## 4.5 组件库清单
 
 > **v2.1.0 变更**：组件库按原子设计（Atomic Design）分层，分为 `atoms`、`molecules`、`organisms`、`templates` 四级。
-> 详见 `../../reference/atomic-component-system.md` 与 `src/components/componentRegistry.ts`。
+> 详见 `../reference/atomic-component-system.md` 与 `src/components/componentRegistry.ts`。
 > 过渡期内 `src/components/ui/` 仍保留兼容 shim，但新增组件须按原子层级放置。
 
 ### 原子组件（Atoms）

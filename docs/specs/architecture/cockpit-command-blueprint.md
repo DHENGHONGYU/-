@@ -43,7 +43,7 @@ change_log:
 | 维度 | v1.0.0 状态 | v2.0.0 状态 | 变更依据 |
 |------|------------|------------|---------|
 | Widget 数量 | 26（规划降至 21） | **21（已落地）** | Phase 0 完成，vitest 350/350 通过 |
-| Category 体系 | 7 类含 system/analysis/trading/sector | **4 类：market/portfolio/ai/strategy** | 对齐 `../../explanation/03-architecture-standards.md` 蓝图标准 |
+| Category 体系 | 7 类含 system/analysis/trading/sector | **4 类：market/portfolio/ai/strategy** | 对齐 `../../explanation/03-architecture-standards.md`（已归档） 蓝图标准 |
 | 共享逻辑 | 规划抽取 score.ts | **已落地 `src/cockpit/shared/score.ts`** | 消除 7 处重复函数 |
 | Command 结构认知 | 模糊（"五舱之一"） | **精确：22 子页面，3 分组，无 Cockpit import** | Command 模块完整探索 |
 | 重叠组件处理 | "移出 3 个 Widget 到 Command" | **修正：Command 未 import 任何 Cockpit Widget；MechanismHealthPanel 已自建并共享 Store** | 探索发现实际代码零依赖 |
@@ -555,7 +555,7 @@ export const COCKPIT_LAYOUT = {
 | 2.1 | Command Hub 新增摘要 Widget 区 | `CommandApp.tsx` | 新增组件 | ✅ 已完成 |
 | 2.2 | SystemMonitorPage 引入 EngineStatusWidget | `SystemMonitorPage.tsx` | 新增 import | ✅ 已完成 |
 | 2.3 | HealthDashboardPage 引入 SystemArchitectureWidget | `HealthDashboardPage.tsx` | 新增 import | ✅ 已完成 |
-| 2.4 | 验收 SOP 增补组合层检查清单 | `outputs/interaction-component-qa-gate-SOP.md` §八 | 新增文档 | ✅ 已完成 |
+| 2.4 | 验收 SOP 增补组合层检查清单 | `outputs/interaction-component-qa-gate-SOP.md`（已废弃） §八 | 新增文档 | ✅ 已完成 |
 | 2.5 | ADR-010 决策记录归档 | `docs/specs/architecture/adr-010-cockpit-command-cross-layout.md` | 新增文档 | ✅ 已完成 |
 
 **验收标准**：Command Hub 展示摘要卡片；点击跳转详情页；移出 Widget 在 Command 正常渲染

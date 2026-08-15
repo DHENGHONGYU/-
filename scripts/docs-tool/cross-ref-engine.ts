@@ -73,6 +73,8 @@ function hasDeprecationContext(line: string, target: string): boolean {
   const deprecationPatterns = [
     /已废弃/,
     /已重构/,
+    /已归档/,
+    /已不存在/,
     /不再存在/,
     /不再使用/,
     /不再维护/,
@@ -158,6 +160,8 @@ export function scanDocReferences(filePath: string): Reference[] {
       if (isPseudoReference(url)) continue
 
       if (url.startsWith('src/') || url.startsWith('scripts/')) {
+        // 检查 Markdown 链接后方是否有废弃/归档注解
+        if (hasDeprecationContext(line, match[0])) continue
         references.push({
           source: relative(process.cwd(), filePath),
           target: url,
@@ -165,6 +169,8 @@ export function scanDocReferences(filePath: string): Reference[] {
           type: 'doc-to-code',
         })
       } else if (url.endsWith('.md') || url.startsWith('docs/')) {
+        // 检查 Markdown 链接后方是否有废弃/归档注解
+        if (hasDeprecationContext(line, match[0])) continue
         references.push({
           source: relative(process.cwd(), filePath),
           target: url,

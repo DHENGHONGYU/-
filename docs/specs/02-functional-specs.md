@@ -550,7 +550,7 @@ symbol,name,source
 
 本文档当前版本为 `v0.9.0-docs-review`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
-- `./architecture-version-comparison.md`
+- `../reference/architecture-version-comparison.md`
 
 主要变化：
 

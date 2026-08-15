@@ -47,6 +47,6 @@ Cockpit 原将 26 个 Widget 平铺成一堵约 6 米高的长墙，与 Command 
 ## 关联文档
 
 - 设计蓝图：`docs/specs/architecture/cockpit-command-blueprint.md`（§10 为本文摘要，§4 为纵横交叉设计）
-- 组合层检查清单：`outputs/interaction-component-qa-gate-SOP.md` §八
-- 堆砌诊断与方案：`outputs/cockpit-ui-consolidation-analysis-2026-07-24.md`
-- 整改与优化落地：`outputs/cockpit-consolidation-p3-p4-2026-07-24.md`
+- 组合层检查清单：`outputs/interaction-component-qa-gate-SOP.md`（已废弃） §八
+- 堆砌诊断与方案：`outputs/cockpit-ui-consolidation-analysis-2026-07-24.md`（已废弃）
+- 整改与优化落地：`outputs/cockpit-consolidation-p3-p4-2026-07-24.md`（已废弃）

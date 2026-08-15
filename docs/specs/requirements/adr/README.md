@@ -27,5 +27,5 @@ date: 2026-07-17
 ## 入口
 
 - [../../../reference/adr-002-indexeddb-over-localstorage.md](../../../reference/adr-002-indexeddb-over-localstorage.md)
-- [../../../reference/adr-003-databridge-over-direct-datalayer.md](../../../reference/adr-003-databridge-over-direct-datalayer.md)
-- [../../../reference/adr-mcp-server-lifecycle.md](../../../reference/adr-mcp-server-lifecycle.md)
+- [../../../reference/adr-003-databridge-over-direct-datalayer.md](../../../reference/adr-003-databridge-over-direct-datalayer.md)（已归档）
+- [../../../reference/adr-mcp-server-lifecycle.md](../../../reference/adr-mcp-server-lifecycle.md)（已归档）
