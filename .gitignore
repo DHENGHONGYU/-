@@ -119,3 +119,11 @@ test_finsight.py
 uc-error.txt
 violation-code.txt
 violation-details.txt
+
+# Large binary tools (exceed GitHub 100MB limit)
+tools/*.zip
+
+# Audit temp outputs (generated during scan, not source)
+tmp_audit_*.txt
+test_result.json
+test_screenshot_*.png
