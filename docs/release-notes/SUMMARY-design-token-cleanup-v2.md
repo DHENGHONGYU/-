@@ -1,4 +1,4 @@
-# 设计令牌清理工作总结报告
+﻿# 设计令牌清理工作总结报告
 
 > **报告日期**：2026-08-14  
 > **报告类型**：技术重构总结  
@@ -57,7 +57,7 @@
 | `dogfood-output/token-verify-v5.png` | `801395d` |  |
 | `StockPriceChangeBadge.tsx` | `801395d` | 5 行 |
 | `Toaster.tsx` | `801395d` | 5 行 |
-| `src/components/molecules/AppErrorState.tsx` | `801395d` | 326 行 |
+| `src/components/molecules/ErrorState.tsx`（原名 AppErrorState.tsx） | `801395d` | 326 行 |
 
 #### 修改的文件（20 个）
 
@@ -122,3 +122,4 @@
 ## 七、经验教训
 
 > ⚠️ **请手动补充**：总结本次清理工作中的经验教训，避免未来重复同样的问题。
+

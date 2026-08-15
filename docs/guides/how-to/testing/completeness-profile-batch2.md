@@ -1,4 +1,4 @@
----
+﻿---
 title: completeness-profile-batch2
 tier: important
 code_version: "2.0.0-rc.1"
@@ -114,7 +114,7 @@ change_log:
 | B1-P2-002 | 输入舱 Hub | P2 | 无独立 Zustand Store，状态无法跨组件共享 | `src/apps/input/InputApp.tsx` |
 | B2-P2-003 | 录入看板 | P2 | 使用 `usePoolData` hook，无独立 Zustand Store | `src/apps/input/InputDashboard.tsx` |
 | B3-P2-004 | 批量导入 | P2 | 使用 `usePoolData` hook，无独立 Zustand Store | `src/apps/input/BulkImportPanel.tsx` |
-| B4-P2-005 | 热门板块 | P2 | 使用 `usePoolData` hook，无独立 Zustand Store | `src/apps/input/HotSectorPanel.tsx` |
+| B4-P2-005 | 热门板块 | P2 | 使用 `usePoolData` hook，无独立 Zustand Store | `src/apps/input/HotSectorPanel.tsx`（已重构，不再存在） |
 | B5-P2-006 | 本地知识库 | P2 | 无独立 Zustand Store | `src/pages/input/LocalKnowledgePage.tsx` |
 | B6-P2-007 | 采集测试 | P2 | 无独立 Zustand Store | `src/apps/input/DataTestPanel.tsx` |
 

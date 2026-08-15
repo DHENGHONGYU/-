@@ -1,4 +1,4 @@
----
+﻿---
 title: 04. UI/UX 规范
 type: explanation
 domain: frontend
@@ -307,7 +307,7 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 
 | 组件 | 路径 | 说明 |
 |------|------|------|
-| Button | `src/components/atoms/Button.tsx`（shim: `src/components/atoms/Button.tsx`） | 主/次/危险/幽灵按钮 |
+| Button | src/components/atoms/Button.tsx（shim: `src/components/atoms/Button.tsx`） | 主/次/危险/幽灵按钮 |
 | Card | `src/components/atoms/Card.tsx` | 卡片容器 |
 | Input | `src/components/atoms/Input.tsx` | 文本输入 |
 | Badge | `src/components/atoms/Badge.tsx` | 状态徽章 |
@@ -321,17 +321,17 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 | Slider | `src/components/atoms/Slider.tsx` | 滑块 |
 | Toggle | `src/components/atoms/Toggle.tsx` | 切换 |
 | Tooltip | `src/components/atoms/Tooltip.tsx` | 工具提示 |
-| Popover | `src/components/atoms/Popover.tsx` | 气泡卡片 |
+| Popover | `src/components/atoms/Popover.tsx（已废弃，不再使用）` | 气泡卡片 |
 | Sheet | `src/components/atoms/Sheet.tsx` | 抽屉 |
 | Toast | `src/components/atoms/Toaster.tsx` | 轻提示 |
-| Menu | `src/components/atoms/Menu.tsx` | 菜单 |
+| Menu | `src/components/atoms/Menu.tsx（已废弃，不再使用）` | 菜单 |
 | Pagination | `src/pages/trading/components/Pagination.tsx` | 分页 |
 | Breadcrumb | `src/components/atoms/Breadcrumb.tsx` | 面包屑 |
-| Result | `src/components/atoms/Result.tsx` | 结果展示 |
-| List | `src/components/atoms/List.tsx` | 列表 |
-| Grid | `src/components/atoms/Grid.tsx` | 栅格 |
+| Result | `src/components/atoms/Result.tsx（已废弃，不再使用）` | 结果展示 |
+| List | `src/components/atoms/List.tsx（已废弃，不再使用）` | 列表 |
+| Grid | `src/components/atoms/Grid.tsx（已废弃，不再使用）` | 栅格 |
 | Table | `src/components/atoms/Table.tsx` | 表格 |
-| DatePicker | `src/components/atoms/DatePicker.tsx` | 日期选择 |
+| DatePicker | `src/components/atoms/DatePicker.tsx（已废弃，不再使用）` | 日期选择 |
 | StockPriceChange | `src/components/atoms/StockPriceChangeBadge.tsx` | 股价变化 |
 
 ### 分子组件（Molecules）

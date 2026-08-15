@@ -1,4 +1,4 @@
----
+﻿---
 title: 僵尸组件治理经验教训参考手册
 type: guide
 domain: frontend
@@ -684,8 +684,8 @@ npm run audit:atomic && npm run audit:deadcode -- --staged
 |------|------|------|
 | 组件注册表 | `src/components/componentRegistry.ts` | 组件原子层级登记、状态管理、消费方追踪 |
 | 路由注册表 | `src/config/routes.ts` | 项目路由唯一真相源，入口层验证依据 |
-| 模块清单 | `src/config/moduleManifest.ts` | 模块元数据声明，状态/版本/替代关系管理 |
-| Widget 注册表 | `src/components/widgets/widgetRegistry.ts` | Cockpit 组件动态注册 |
+| 模块清单 | `src/config/moduleManifest.ts`（已废弃，不再存在） | 模块元数据声明，状态/版本/替代关系管理 |
+| Widget 注册表 | `src/components/widgets/widgetRegistry.ts`（已废弃，不再存在） | Cockpit 组件动态注册 |
 | Agent 组件注册表 | `src/components/organisms/agent/agentComponentRegistry.ts` | Agent 详情组件映射 |
 | Atoms barrel 导出 | `src/components/atoms/index.ts` | 原子层统一导出 |
 | Molecules barrel 导出 | `src/components/molecules/index.ts` | 分子层统一导出 |

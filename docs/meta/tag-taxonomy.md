@@ -1,4 +1,4 @@
----
+﻿---
 title: 文档标签分类体系（受控词表）
 type: meta
 domain: project
@@ -23,7 +23,7 @@ date: 2026-07-17
 
 > **状态**：v0.1.0 初稿（基于 661 份文档高频词自动提取 + 人工规整）
 > **用途**：`tags` 字段的受控词表；打标签时优先从本表选取，新标签需先登记
-> **提取依据**：`scripts/extract-tag-candidates.ps1` 对全库文件名/路径的词频统计
+> **提取依据**：`scripts/extract-tag-candidates.ps1（已废弃）` 对全库文件名/路径的词频统计
 
 ---
 
@@ -161,6 +161,6 @@ tags: [architecture, adr]
 ## 六、后续工作
 
 - [ ] 各领域负责人确认本领域模块标签（第二层）
-- [ ] 运行 `suggest-tags.ps1`（待开发）批量推荐标签
+- [ ] 运行 suggest-tags.ps1（待开发）批量推荐标签
 - [ ] 人工确认后批量写入 Frontmatter
 - [ ] 目标：tags 覆盖率 ≥ 60%

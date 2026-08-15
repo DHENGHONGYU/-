@@ -1,4 +1,4 @@
----
+﻿---
 title: 剩余复杂度整改任务清单与计划（2026-07-12）
 type: how-to
 domain: qa
@@ -61,7 +61,7 @@ date: 2026-07-17
 `src/core/databridge.ts`(query 段，谨慎)、`src/lib/store-audit/analyzer.ts`、`src/mcp/core/client.ts`、`src/mcp/core/mcpAclMonitor.ts`、`src/mcp/register.ts`、`src/services/backtest/backtestMetrics.ts`、`src/services/collection/collectionWizardPersistence.ts`、`src/services/data-collector/directDataAPI.ts`、`src/services/fetcher/dataSourceRegistry.ts`、`src/services/fetcher/directDataAPI.ts`、`src/services/fetcher/fetcherInterceptor.ts`、`src/services/fetcher/orchestrator/phaseOrchestrator.ts`、`src/services/input/batchImportExecutor.ts`、`src/services/news/stockLinker.ts`、`src/services/rbac/rbacManagementService.ts`、`src/services/scoring/v6-engine/calculators/l7_l8.ts`、`src/services/scoring/v6-engine/engine.ts`、`src/services/scoring/v6-engine/types.ts`、`src/services/screening/multiFactorScreeningEngine.ts`、`src/services/pool/poolService.ts`、`src/services/system/migration/storeMigrators.ts`、`src/services/system/v6MigrationService.ts`、`src/services/trading/positionComputer.ts`、`src/services/trading/scoringAdapter.ts`、`src/services/trading/strategySnapshotService.ts`、`src/services/trading/tradeErrorClassifier.ts`、`src/services/trading/tradeErrorUtils.ts`、`src/services/trading/tradeReviewAI.skillDevelopment.ts`、`src/services/trading/tradeReviewAI.utils.ts`、`src/services/useCase/getUnifiedStockView.useCase.ts`
 
 ### Tier 3 — 单文件单违规（UI / 页面 / 组件 / Hook 层，约 18 处）
-`src/apps/command/ConfigApp.tsx`、`src/apps/input/BulkImportPanel.tsx`、`src/apps/trading/components/PhaseStepper.tsx`、`src/cockpit/CockpitShell.tsx`、`src/components/organisms/input/TraceReplayPanel.tsx`、`src/components/organisms/pool/usePoolDataFromStore.ts`、`src/components/organisms/system/LogStreamPanel.tsx`、`src/components/organisms/system/migration/MigrationUploadTab.tsx`、`src/data/repository.ts`(重复)、`src/hooks/cabin/useIndustryScorePage.ts`、`src/hooks/useConfirmDialog.tsx`、`src/hooks/useFreshData.ts`、`src/hooks/usePoolBoard.ts`、`src/pages/analysis/IntelligentScorePage.tsx`、`src/pages/analysis/ScoreDocPage.tsx`、`src/pages/analysis/StockAnalysisPage.tsx`、`src/pages/input/CollectTask/index.tsx`、`src/pages/trading/components/TradeModal.tsx`、`src/pages/trading/HoldingsPage.tsx`、`src/pages/trading/TradingFlowPage.tsx`
+`src/apps/command/ConfigApp.tsx`、`src/apps/input/BulkImportPanel.tsx`、`src/apps/trading/components/PhaseStepper.tsx`、`src/cockpit/CockpitShell.tsx`、`src/components/organisms/input/TraceReplayPanel.tsx`、`src/components/organisms/pool/usePoolDataFromStore.ts（已重构，不再存在）`、`src/components/organisms/system/LogStreamPanel.tsx`、`src/components/organisms/system/migration/MigrationUploadTab.tsx`、`src/data/repository.ts`(重复)、`src/hooks/cabin/useIndustryScorePage.ts`、`src/hooks/useConfirmDialog.tsx`、`src/hooks/useFreshData.ts`、`src/hooks/usePoolBoard.ts`、`src/pages/analysis/IntelligentScorePage.tsx`、`src/pages/analysis/ScoreDocPage.tsx`、`src/pages/analysis/StockAnalysisPage.tsx（已重构为 AnalysisApp，不再存在）`、`src/pages/input/CollectTask/index.tsx`、`src/pages/trading/components/TradeModal.tsx`、`src/pages/trading/HoldingsPage.tsx`、`src/pages/trading/TradingFlowPage.tsx`
 
 ## 三、重复条件（29 处）整改清单
 
@@ -73,7 +73,7 @@ date: 2026-07-17
 | C3 | `src/cockpit/CockpitShell.tsx` | `WidgetWrapper` L50 | UI 包装，安全 |
 | C4 | `src/components/organisms/input/StockSearch.tsx` | L20 | 查询条件，安全 |
 | C5 | `src/components/organisms/input/TraceReplayPanel.tsx` | L82 | UI，安全 |
-| C6 | `src/components/organisms/pool/usePoolDataFromStore.ts` | L39 | Hook，安全 |
+| C6 | `src/components/organisms/pool/usePoolDataFromStore.ts（已重构，不再存在）` | L39 | Hook，安全 |
 | C7 | `src/components/organisms/system/LogStreamPanel.tsx` | `LogStreamPanelBase` L125 | UI，安全 |
 | C8 | `src/components/organisms/system/migration/MigrationUploadTab.tsx` | L15 | UI，安全 |
 | C9 | `src/components/organisms/system/MigrationPanel.tsx` | L23 | UI，安全 |
@@ -86,7 +86,7 @@ date: 2026-07-17
 | C16 | `src/mcp/servers/fetcher/dataFetcherServer.ts` | `getResources` L186 | 服务端判定，安全 |
 | C17 | `src/pages/analysis/IntelligentScorePage.tsx` | L175 | 页面，安全 |
 | C18 | `src/pages/analysis/ScoreDocPage.tsx` | L24 | 页面，安全 |
-| C19 | `src/pages/analysis/StockAnalysisPage.tsx` | L17 | 页面，安全 |
+| C19 | `src/pages/analysis/StockAnalysisPage.tsx（已重构为 AnalysisApp，不再存在）` | L17 | 页面，安全 |
 | C20 | `src/pages/trading/components/TradeModal.tsx` | L40 | 页面，安全 |
 | C21 | `src/pages/trading/HoldingsPage.tsx` | L48 | 页面，安全 |
 | C22 | `src/pages/trading/TradingFlowPage.tsx` | L30 | 页面，安全 |
@@ -148,17 +148,17 @@ date: 2026-07-17
 ### 整改质量验证（测试补充 + 运行效率基准，2026-07-12 复核）
 - **复核结论**：重复条件 29 处确已清零（自研 `find-dups.ts` 与权威 `complexity-scan` 口径对齐，仅余 C29 熔断状态机两处 `state==='half-open'` 属 per-function 不同函数、不计重复）；`tsc:prod` / `audit:layers` / `audit:atomic` / `complexity-scan` 四道门禁全绿。
 - **新增回归测试**（`tests/remediation/`，锁定「不变量」防止重复条件被重新内联）：
-  - `resilience-guard-c29.test.ts`（5 用例）：C29 熔断状态机「半开→探测→闭合/恢复」状态迁移正确，确保该处有意不消重不被误改。
-  - `dualStrategy-dedup-invariant.test.ts`（4 用例）：抽取后的单一守卫 `shouldSkipSelf` 在 4 个 analyzer 派生频道全部生效（self-source 拦截 0 refresh、other-source 去抖合并为 1 次 refresh=3 query、混合 source 仅 external 触发）；含运行效率基准。
-  - `signal-dedup-invariant.test.ts`（2 用例）：De Morgan 反转后的两频道 source 守卫——`trading`/`tradinghub` 跳过 0 refresh、其余来源去抖合并为 1 次 refresh。
+  - resilience-guard-c29.test.ts（5 用例）：C29 熔断状态机「半开→探测→闭合/恢复」状态迁移正确，确保该处有意不消重不被误改。
+  - dualStrategy-dedup-invariant.test.ts（4 用例）：抽取后的单一守卫 `shouldSkipSelf` 在 4 个 analyzer 派生频道全部生效（self-source 拦截 0 refresh、other-source 去抖合并为 1 次 refresh=3 query、混合 source 仅 external 触发）；含运行效率基准。
+  - signal-dedup-invariant.test.ts（2 用例）：De Morgan 反转后的两频道 source 守卫——`trading`/`tradinghub` 跳过 0 refresh、其余来源去抖合并为 1 次 refresh。
 - **运行效率基准**（`docs/reports/remediation-efficiency.json`）：dualStrategyStore 订阅热路径 5 频道批量派发 50 万次信封，**798,311 ops/sec**（626ms）。抽取守卫后与整改前结构等价，守卫开销微秒级，**无运行时回归**。
 - **全量回归**：既有 store 套件（dualStrategyStore 32 + signalStore 16 + positionStore 20 = 68 用例）全部通过，证明 27 个源文件抽取/反转改法未改变既有行为。
 
 ### 38 文件逻辑嵌套（D4）测试补充（2026-07-12 续）
 - **覆盖范围**：38 个 D4 平铺文件中，既有测试已覆盖 10 个（localStorageManager / llmClient / db / databridge / collectionWizardPersistence / stockLinker / l7_l8 / multiFactorScreeningEngine / tradeReviewAI.skillDevelopment / tradeReviewAI.utils）；其余约 28 个为测试缺口。
 - **新增行为不变量测试**（`tests/remediation/d4-purelogic-invariant.test.ts`，15 用例）：针对「最易因平铺引入行为偏差、且无既有测试」的纯逻辑模块锁定输入/输出语义：
-  - `sentimentAnalyzer.ts`（D12）：`classifySentiment` 三态边界 + 自定义阈值、`analyzeText` 正/负/中性方向、`analyzeNewsArticle` 标题/正文权重融合与空输入中性、`hashContent` 稳定可复现。
-  - `batchImportParsers.ts`（D9）：`detectExchange` 交易所推断、`parseBulkInput` 四种格式解析 + 无效行标记 + 空文本、`parseCsvText` 表头自动跳过。
-  - `tradeErrorDetectors.ts`（D15）：7 个独立型检测器（重仓豪赌 / 违反计划 / 逆势加仓 / 报复性交易 / 犹豫错过 / 过度交易 / 追涨杀跌）命中与返回 null 的双向断言。
+  - sentimentAnalyzer.ts（D12）：`classifySentiment` 三态边界 + 自定义阈值、`analyzeText` 正/负/中性方向、`analyzeNewsArticle` 标题/正文权重融合与空输入中性、`hashContent` 稳定可复现。
+  - batchImportParsers.ts（D9）：`detectExchange` 交易所推断、`parseBulkInput` 四种格式解析 + 无效行标记 + 空文本、`parseCsvText` 表头自动跳过。
+  - tradeErrorDetectors.ts（D15）：7 个独立型检测器（重仓豪赌 / 违反计划 / 逆势加仓 / 报复性交易 / 犹豫错过 / 过度交易 / 追涨杀跌）命中与返回 null 的双向断言。
 - **全量回归**：`vitest run` 完整套件在后台运行（验证 38 文件平铺无 broad 回归），完成自动通知；本批新增测试单文件 15 用例全过。
 

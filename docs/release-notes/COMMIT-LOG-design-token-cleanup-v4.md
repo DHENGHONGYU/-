@@ -1,4 +1,4 @@
-# 设计令牌清理工作 Commit 记录归档
+﻿# 设计令牌清理工作 Commit 记录归档
 
 > **归档日期**：2026-08-14  
 > **归档目的**：供项目 Wiki 参考，记录设计令牌清理工作的完整提交链  
@@ -105,7 +105,7 @@ Date:   2026-08-15 01:40:52
 | `StockPriceChangeBadge.tsx` | 新增 | +5 |
 | `Toaster.tsx` | 新增 | +5 |
 | `src/components/atoms/index.ts` | 修改 | +1 / -3 |
-| `src/components/molecules/AppErrorState.tsx` | 新增 | +326 |
+| `src/components/molecules/ErrorState.tsx`（原名 AppErrorState.tsx） | 新增 | +326 |
 | `ErrorState.tsx` | 修改 | +2 / -2 |
 | `src/components/molecules/states/index.ts` | 修改 | +2 / -2 |
 | `src/components/organisms/output/ReviewWizard.tsx` | 修改 | +4 / -3 |
@@ -180,3 +180,4 @@ Date:   2026-08-15 01:50:29
 ## 相关文档
 
 - [设计令牌清理工作总结报告](./SUMMARY-design-token-cleanup-v4.md)
+

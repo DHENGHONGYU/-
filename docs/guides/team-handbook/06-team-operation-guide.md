@@ -1,4 +1,4 @@
----
+﻿---
 title: 团队开发操作指南
 type: reference
 domain: project
@@ -954,9 +954,9 @@ const scores = await dataBridge.query('scores', 'getAll');
 
 | # | 位置 | 说明 |
 |---|------|------|
-| 1 | `src/data/types/xxx.types.ts` | 类型定义 |
-| 2 | `src/data/schema/xxx.schema.ts` | IndexedDB Schema |
-| 3 | `src/store/useXxxStore.ts` | Zustand Store |
+| 1 | `src/data/types/xxx.types.ts`（占位示例，非实际文件） | 类型定义 |
+| 2 | `src/data/schema/xxx.schema.ts`（占位示例，非实际文件） | IndexedDB Schema |
+| 3 | `src/store/useXxxStore.ts`（占位示例，非实际文件） | Zustand Store |
 | 4 | `src/core/acl.ts` 中 ACL_MATRIX | 权限配置 |
 
 #### 17.2 Store 模板

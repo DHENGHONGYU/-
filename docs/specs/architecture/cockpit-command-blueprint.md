@@ -1,4 +1,4 @@
----
+﻿---
 title: cockpit-command-blueprint
 tier: T0
 status: active
@@ -274,7 +274,7 @@ PortalShell 采用**固定顶栏 + 固定侧边栏 + 主内容区**的三段式�
 | 矩阵总览 | IndustryHeatmap 模式 | `src/components/chart/industry/IndustryHeatmap.tsx` | 适配为 域×视角 密度矩阵 | 适配渲染逻辑 |
 | 重型下钻 | Sheet | `src/components/atoms/Sheet.tsx` | StockChat/IndustryChain 下钻 | PortalShell 已验证 |
 | 卡片外壳 | WidgetStateShell | `src/cockpit/widgets/components/WidgetStateShell.tsx` | 不变 | 25/25 Widget 统一 |
-| Widget 错误边界 | WidgetErrorBoundary | `src/cockpit/widgets/components/WidgetErrorBoundary.tsx` | 不变 | 已有 |
+| Widget 错误边界 | WidgetErrorBoundary | `src/cockpit/widgets/components/WidgetErrorBoundary.tsx（已废弃，不再存在）` | 不变 | 已有 |
 
 ---
 
@@ -511,7 +511,7 @@ export const COCKPIT_LAYOUT = {
 | 0.3 | 移出 engineStatus/systemArchitecture/mechanismHealth 注册 | 已完成 |
 | 0.4 | AgentPerformance → agent，RiskMonitor → portfolio 归类 | 已完成 |
 | 0.5 | 消除 system/analysis/trading/sector 非标 category | 已完成 |
-| 0.6 | 抽取 `src/cockpit/shared/score.ts`（消除 7 处复制） | 已完成 |
+| 0.6 | 抽取 src/cockpit/shared/score.ts（消除 7 处复制） | 已完成 |
 | 0.7 | 增补 COCKPIT_LAYOUT 布局令牌 | 已完成 |
 | 0.8 | 移除 CockpitShell system zone 逻辑 | 已完成 |
 
@@ -570,7 +570,7 @@ export const COCKPIT_LAYOUT = {
 |------|------|---------|---------|------|
 | 3.1 | 矩阵切换按钮、业务域 Rail 按钮、矩阵单元格按钮补充 `focus-visible:ring` 焦点环 | `CockpitCrossLayout.tsx`、`CrossMatrixOverview.tsx` | a11y 合规 | ✅ 已完成 |
 | 3.2 | 矩阵切换按钮补 `aria-pressed` 状态 | `CockpitCrossLayout.tsx` | a11y | ✅ 已完成 |
-| 3.3 | 矩阵单元格新增原生 `title` tooltip，列出交叉点的 Widget 名称 | `CrossMatrixOverview.tsx` + `CockpitCrossLayout.tsx`（下传 `matrixTitles`） | 体验提升 | ✅ 已完成 |
+| 3.3 | 矩阵单元格新增原生 `title` tooltip，列出交叉点的 Widget 名称 | `CrossMatrixOverview.tsx` + CockpitCrossLayout.tsx（下传 `matrixTitles`） | 体验提升 | ✅ 已完成 |
 | 3.4 | 内容区冗余 inline `gap` 清理（改 `space-y-3`） | `CockpitCrossLayout.tsx` | 清理 | ✅ 已完成 |
 
 **验收**：tsc:prod 0 错误；audit:layers 0 违规；CockpitShell.test.tsx 14/14 通过；eslint 0 error（仅存文件既有 style warning，与全文 `||`/`?.` 风格一致）。提交 `37880ac`。

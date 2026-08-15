@@ -1,4 +1,4 @@
----
+﻿---
 title: V9 文档整理工作流程指南
 type: meta
 domain: project
@@ -410,7 +410,7 @@ date: 2026-07-17
 
 | 工具 | 用途 | 位置 |
 |------|------|------|
-| 文档清单生成脚本 | 扫描生成 CSV 清单 | `scripts/generate-doc-inventory.ps1` |
+| 文档清单生成脚本 | 扫描生成 CSV 清单 | `scripts/generate-doc-inventory.ps1`（已废弃） |
 | Frontmatter 检查脚本 | 检查 Frontmatter 完整性 | `scripts/` |
 | 死链接检查 | 检查文档链接有效性 | `scripts/` |
 | 命名规范检查 | 检查文件名合规性 | `scripts/` |

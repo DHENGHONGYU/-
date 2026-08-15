@@ -48,6 +48,12 @@ change_log:
 > - **L3 平台内置虚拟技能（20 项）**：定义于 AGENTS.md §平台内置虚拟 SKILL 索引（L38-L43），由 TRAE CN 平台内置，无本地物理目录。
 > - **禁止混加计数**：L1（16）+ L2（9）+ L3（20）= 45 条登记，任何声明不得绕过此分层。
 
+> ⚠️ **技能安装态勘误（2026-08-16）**：经实地核查，本索引/路由表与物理落盘、加载器存在两层结构性错位，特此标注以免"声明强制却无法加载"的契约失信：
+> 1. **`v9-collection-pipeline-testing` 已补装（2026-08-16）**：原物理缺失 → 已新建 `.agents/skills/v9-collection-pipeline-testing/SKILL.md`；另完成 `constant-migration`→`v9-constant-migration`、`databridge-migration`→`v9-databridge-migration` 加前缀重命名（含 `name` 字段同步）。该技能为数据采集链路 mandatory 门禁；本轮相关改动已按其既定门禁**手动等效执行**并通过（`tsc:prod` 0、`audit:layers` 0、`audit:acl-consistency` 0、穿透全链 vitest 4 passed/1 skipped）。**残留**：仍有 11+ 个声明 `v9-*` 物理缺失、`architecture-debt-remediation`/`cross-index-governance` 无对应物理体；14 个物理技能未声明（两套分类法不一致，详见报告 §6）。
+> 2. **命名前缀不一致**：索引/registry 用 `v9-*` 名，而 `.agents/skills/` 物理 slug 多为**无前缀同名**（`constant-migration`/`databridge-migration`）或**完全不同名**（`architecture-cleanup` 等）；且另有 14 个物理技能未在本索引声明。即便在读取 `.agents/skills/` 的 TRAE CN，声明名亦可能无法解析到物理目录。
+> 3. **加载器路径错位**：WorkBuddy 加载器仅扫描 `~/.workbuddy/skills/` 与 `{workspace}/.workbuddy/skills/`，**不扫 `.agents/skills/`**，故物理存在的 L1 技能在本环境不可经 `Skill()` 加载（用户级仅 `v9-color-token-remediation` 可加载）。
+> 完整映射、缺口、剩余决策与加载器 caveat（含 frontmatter `triggers`/`gates`/`mandatory` 声明失真）见 `deliverables/AGENTS-skill-governance-reconciliation.md` §6。
+
 ### 技能路由表（任务开始时必须先匹配，v1.5.3 新增）
 
 > **匹配规则**：先文件信号（改动路径），再关键词信号（用户表述/问题现象）；命中 **mandatory** 技能时，其「交付前必跑」未全绿不得声明"完成"。各技能的完整触发词与 gates 以其 SKILL.md frontmatter（`triggers` / `gates` / `mandatory` 字段）为单一真相源，本表为会话级路由摘要。

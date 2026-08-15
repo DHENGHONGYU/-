@@ -1,4 +1,4 @@
----
+﻿---
 title: 模块完成标准（DoD）
 type: guide
 domain: project
@@ -220,7 +220,7 @@ npm test -- --run src/pages/MyPage.test.tsx  # UI 测试
 **标准**：用户可以通过某种方式发现并进入该模块。
 
 **检查项**：
-- [ ] 在路由表 `src/router/routes.ts` 中注册了路由
+- [ ] 在路由表 `src/router/routes.ts`（已重构，不再存在） 中注册了路由
   - 或者：有明确的调用入口（如其他页面的按钮/链接）
 - [ ] 路由路径命名规范，与模块名一致
 - [ ] 如果是菜单项，已在导航配置中登记
@@ -234,7 +234,7 @@ npm run audit:routes    # 路由一致性检查 0 漂移
 
 **路由注册示例**：
 ```typescript
-// src/router/routes.ts
+// src/router/routes.ts（已重构，不再存在）
 export const routes = [
   {
     path: '/pool',

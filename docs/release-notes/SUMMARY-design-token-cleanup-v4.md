@@ -1,4 +1,4 @@
-# 设计令牌清理工作总结报告
+﻿# 设计令牌清理工作总结报告
 
 > **报告日期**：2026-08-15  
 > **报告类型**：技术重构总结  
@@ -58,7 +58,7 @@
 | `dogfood-output/token-verify-v5.png` | `801395d` |  |
 | `StockPriceChangeBadge.tsx` | `801395d` | 5 行 |
 | `Toaster.tsx` | `801395d` | 5 行 |
-| `src/components/molecules/AppErrorState.tsx` | `801395d` | 326 行 |
+| `src/components/molecules/ErrorState.tsx（原名 AppErrorState.tsx）` | `801395d` | 326 行 |
 
 #### 修改的文件（20 个）
 
@@ -285,7 +285,7 @@ IDE 后台 git 索引会覆盖暂存区，导致文件被混合提交到错误�
 
 ## 八、脚本能力边界说明
 
-`scripts/generate-cleanup-report.ts`（v2）当前能力：
+scripts/generate-cleanup-report.ts（v2）当前能力：
 
 - ✅ 自动收集提交链、文件变更（`--name-status` + `--numstat`）、行数统计、按变更类型分类。
 - ✅ **自动运行 build / tsc:prod / vitest --coverage**，真实数据填入第五节（非占位符）。
@@ -293,3 +293,4 @@ IDE 后台 git 索引会覆盖暂存区，导致文件被混合提交到错误�
 - ✅ 自动派生第四节（关键变更点脚手架）与第六节文档影响表。
 - ⚠️ 不自动运行 Playwright E2E（耗时过长），需人工填入。
 - ⚠️ 运行时影响 / 经验教训为语义内容，需人工补充。
+

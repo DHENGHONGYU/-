@@ -1,4 +1,4 @@
----
+﻿---
 title: V9 文档元数据标准规范
 type: meta
 domain: project
@@ -1093,7 +1093,7 @@ Phase 3: 质量持续优化（覆盖率 90%+）
 #### 第 1 天：准备与脚本验证
 
 1. 运行 `audit-frontmatter.ps1`，获取基线数据
-2. 运行 `auto-complete-frontmatter.ps1`（report 模式），预览补全建议
+2. 运行 auto-complete-frontmatter.ps1（report 模式），预览补全建议
 3. 抽样检查 20 份文档的推断准确率，调整推断规则
 
 #### 第 2-3 天：批量自动补全
@@ -1178,10 +1178,10 @@ Phase 3: 质量持续优化（覆盖率 90%+）
 
 | 脚本 | 用途 | 用法 |
 |------|------|------|
-| `scripts/audit-frontmatter.ps1` | Frontmatter 现状审计 | 扫描所有文档，统计各字段覆盖率 |
-| `scripts/validate-frontmatter.ps1` | Frontmatter 验证检查 | 按 P0/P1/P2 三级规则验证，输出问题清单 |
-| `scripts/auto-complete-frontmatter.ps1` | 自动补全元数据 | 根据路径/文件名推断 type/domain/phase，支持 -Apply 直接写入 |
-| `scripts/generate-doc-inventory.ps1` | 生成文档清单 | 扫描文档并导出 CSV 清单 |
+| scripts/docs-tool/normalize-frontmatter.mjs（替代 audit-frontmatter.ps1） | Frontmatter 现状审计与规范化 | 扫描所有文档，统计各字段覆盖率 |
+| scripts/docs-tool/normalize-frontmatter.mjs（替代 validate-frontmatter.ps1） | Frontmatter 验证检查 | 按 P0/P1/P2 三级规则验证，输出问题清单 |
+| scripts/other/inject-frontmatter.ts（替代 auto-complete-frontmatter.ps1） | 自动补全元数据 | 根据路径/文件名推断 type/domain/phase，支持直接写入 |
+| scripts/generate-doc-inventory.ps1（已废弃） | 生成文档清单 | 扫描文档并导出 CSV 清单 |
 
 **常用命令**：
 

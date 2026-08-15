@@ -1,4 +1,4 @@
----
+﻿---
 doc_id: V9-DOC-DEV-009
 title: visual-regression-guide
 code_version: "2.0.0-rc.1"
@@ -125,7 +125,7 @@ git commit -m "chore: update visual baselines via Docker"
 | `e2e/docker-compose.yml` | Docker Compose 服务（visual-test / visual-update） |
 | `.github/workflows/visual-baseline-update.yml` | GitHub Actions 手动触发基线更新 |
 | `.github/workflows/quality-check.yml` | CI 回归比对（visual-regression job） |
-| `scripts/compare-visual-baselines.sh` | Windows vs Docker 基线对比脚本 |
+| `scripts/compare-visual-baselines.sh`（已废弃，不再维护） | Windows vs Docker 基线对比脚本 |
 | 本文档 | 团队规范与操作指南 |
 
 ---

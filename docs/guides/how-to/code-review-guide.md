@@ -1,4 +1,4 @@
----
+﻿---
 title: code-review-guide
 code_version: "2.0.0-rc.1"
 tier: reference
@@ -223,7 +223,7 @@ useEffect(() => {
 
 - [ ] **自动化校验通过** — `npm run audit:widget-registry` 期望 P0=0, P1=0
   - 脚本自动校验：registry ↔ DEFAULT_WIDGET_CONFIG ↔ WIDGET_DEFAULT_DATA_SOURCE 三处 key 一致性
-  - 脚本自动校验：组件文件存在性（`src/cockpit/widgets/XxxWidget.tsx`）
+  - 脚本自动校验：组件文件存在性（`src/cockpit/widgets/XxxWidget.tsx`（占位示例，非实际文件））
   - 脚本自动校验：defaultLayout 默认布局覆盖性
 - [ ] **第 1 处**: `src/cockpit/core/widgetRegistry.ts` — 注册 WidgetTemplate
 - [ ] **第 2 处**: `src/constants/cockpit.constants.ts` — `DEFAULT_WIDGET_CONFIG` 添加配置

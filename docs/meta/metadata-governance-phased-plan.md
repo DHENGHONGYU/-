@@ -1,4 +1,4 @@
----
+﻿---
 title: 文档元数据治理分阶段实施计划
 type: meta
 domain: project
@@ -23,7 +23,7 @@ date: 2026-07-17
 # V9 文档元数据治??分阶段详细实施计?
 > **版本**：v1.0.0 ?**日期**?026-07-17 ?**维护?*：文档治理小?> **适用范围**：V9 项目全部 660 ?Markdown 文档
 > **配套标准**：[《V9 文档元数据标准规范》](document-metadata-standard.md)
-> **工具?*：`scripts/audit-frontmatter.ps1` · `scripts/validate-frontmatter.ps1` · `scripts/auto-complete-frontmatter.ps1` · `scripts/cleanup-frontmatter.ps1` · `scripts/fix-frontmatter.ps1`
+> **工具?*：scripts/docs-tool/normalize-frontmatter.mjs（替代 audit-frontmatter.ps1 / validate-frontmatter.ps1）· scripts/other/inject-frontmatter.ts（替代 auto-complete-frontmatter.ps1）· scripts/cleanup-frontmatter.ps1（已废弃）· scripts/fix-frontmatter.ps1（已废弃）
 
 ---
 
@@ -78,7 +78,7 @@ Phase 1: 核心字段补齐（已完成 ✅）
 
 **目的**：修复因历史脚本错误导致?Frontmatter 重复/损坏文件?
 **背景**：约 200+ 份文档存在多?`---` 块重复、Frontmatter 内容重复追加等损坏情况，必须先修复才能进行后续补全?
-**步骤**?- [ ] 运行 `fix-frontmatter.ps1`（报告模式），扫描损坏文件清?- [ ] 抽样检?10 份损坏文件，确认损坏模式
+**步骤**?- [ ] 运行 fix-frontmatter.ps1（报告模式），扫描损坏文件清?- [ ] 抽样检?10 份损坏文件，确认损坏模式
 - [ ] 在独立分支上运行 `fix-frontmatter.ps1 -Apply`
 - [ ] 抽样验证 20 份修复后的文?- [ ] 运行 `validate-frontmatter.ps1`，确认损坏导致的 P0 错误清零
 

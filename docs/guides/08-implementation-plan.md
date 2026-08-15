@@ -46,7 +46,7 @@ change_log:
 | # | 任务 | 文件 | 状态 | 验收标准 |
 |---|------|------|------|----------|
 | 1.1 | 项目配置：package/vite/tsconfig/eslint | 根目录 | ✅ | 所有命令可执行，无报错 |
-| 1.2 | 主题系统与 CSS 变量 | `src/index.css`, `src/theme.config.ts` | ✅ | 主题令牌覆盖颜色/间距/圆角 |
+| 1.2 | 主题系统与 CSS 变量 | `src/index.css`, `src/config/themeRegistry.ts`（已从 theme.config.ts 迁移） | ✅ | 主题令牌覆盖颜色/间距/圆角 |
 | 1.3 | 路由注册表 | `src/config/routes.ts` | ✅ | 路由可注册、可懒加载 |
 | 1.4 | IndexedDB 封装 | `src/data/db.ts` | ✅ | 支持 CRUD、迁移、导入导出重置 |
 | 1.5 | DataBridge + Envelope + ACL | `src/core/*` | ✅ | 跨模块写入经 ACL 校验并审计 |

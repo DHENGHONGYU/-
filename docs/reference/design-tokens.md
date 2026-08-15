@@ -427,8 +427,7 @@ npm run audit:hardcode  # 扫描颜色硬编码违规
 以下文件允许颜色硬编码：
 - `src/constants/theme.tokens.ts` - 令牌定义文件
 - `src/config/chartColors.ts` - 图表配色定义
-- `src/config/themeRegistry.ts` - 主题注册文件
-- `src/theme.config.ts` - 主题配置文件
+- `src/config/themeRegistry.ts` - 主题注册文件（已替代 theme.config.ts）
 - `tests/` 目录 - 测试文件
 
 ## 最佳实践
