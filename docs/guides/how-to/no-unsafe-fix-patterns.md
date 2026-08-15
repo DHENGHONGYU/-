@@ -459,7 +459,7 @@ const stores = parseStoreSnapshots(json)   // ×4 处全部改为辅助调用
   1. 扫描 `messages[].ruleId` 前缀 `@typescript-eslint/no-unsafe-` 全部条目
   2. 按文件聚合，每文件统计违规数 → 对应模式优先级队列（模式 03/06 低难度先处理，模式 13/14 不改动、只输出报告）
   3. 每文件生成 AST 替换补丁（JSON Patch format，输出到 stdout 或 `.patch.json`）
-  4. 生成 `nounsafe-dryrun-summary.md`，列出：
+  4. 生成 `nounsafe-dryrun-summary.md（已废弃）`，列出：
      - ✅ 可自动修复（模式 02/03/06/07/08/09/10/11/12）
      - ⚠️ 半自动（模式 01/04/05）—— 已生成补丁但依赖类型推断
      - 🛑 人工（模式 13/14）—— 仅输出候选，需人工裁定

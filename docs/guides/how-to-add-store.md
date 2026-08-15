@@ -340,4 +340,4 @@ export function getTopSector(): SectorData | null {
 
 ---
 
-> **验证完成后**：更新 `docs/README.md` 的 C 类索引，将新增 Store 链接回主索引。
+> **验证完成后**：更新 `../../README.md` 的 C 类索引，将新增 Store 链接回主索引。

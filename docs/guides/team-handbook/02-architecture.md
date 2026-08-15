@@ -8,7 +8,7 @@ last_updated: 2026-08-15
 
 # 02 · 整体架构设计思路（Overall Architecture）
 
-> 本文回答"**系统怎么搭、模块怎么连、未来怎么扩**"。权威基线：`AGENTS.md`（分层契约）、`docs/explanation/system-architecture.md`、`docs/explanation/architecture.md`、`docs/reference/gateway-write-permission-spec.md`、`docs/explanation/adr-001-pure-frontend-architecture.md`。
+> 本文回答"**系统怎么搭、模块怎么连、未来怎么扩**"。权威基线：`AGENTS.md`（分层契约）、`../../archive/historical-2026-08-16/batch8/system-architecture.md（已归档）`、`docs/explanation/architecture.md`、`../../archive/historical-2026-08-16/batch7/docs/reference/gateway-write-permission-spec.md`、`../../archive/historical-2026-08-16/batch8/adr-001-pure-frontend-architecture.md`。
 > ⚠️ 见 `README.md` 文档漂移提示：Gateway 网关当前为**目标架构**，DataBridge 仍直连 `db`。
 
 ---
@@ -127,7 +127,7 @@ flowchart TD
     E --> G[其他 Store 各自 reset]
 ```
 
-**级联规则**：Facade Store（`tradingStore`）的 `reset()` 先级联子 Store，再 reset 自身。DB 驱动的池 Store（`intentionPoolStore`/`positionPoolStore`/`researchPoolStore`）不需要 Store 层 reset，由 DataBridge 订阅自动 refresh。详见 `docs/explanation/state-management.md` §5。
+**级联规则**：Facade Store（`tradingStore`）的 `reset()` 先级联子 Store，再 reset 自身。DB 驱动的池 Store（`intentionPoolStore`/`positionPoolStore`/`researchPoolStore`）不需要 Store 层 reset，由 DataBridge 订阅自动 refresh。详见 `../../archive/historical-2026-08-16/batch7/docs/explanation/state-management.md（已归档）` §5。
 
 ---
 

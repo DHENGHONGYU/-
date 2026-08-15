@@ -36,7 +36,7 @@ date: 2026-07-17
 | **MCP ACL 配置** | [mcp-acl-guide.md](mcp-acl-guide.md) |
 | **代码评审** | [code-review-guide.md](code-review-guide.md) |
 | **Hooks 规范** | [hooks-guide.md](hooks-guide.md) |
-| **PWA 离线** | [pwa-offline-guide.md](pwa-offline-guide.md) |
+| **PWA 离线** | [../../archive/historical-2026-08-16/batch7/docs/explanation/implementation/pwa-offline-guide.md（已归档）](../../archive/historical-2026-08-16/batch7/docs/explanation/implementation/pwa-offline-guide.md（已归档）) |
 | **视觉回归** | [visual-regression-guide.md](visual-regression-guide.md) |
 | **文件管理规范** | [FILE-MANAGEMENT-GUIDE.md](FILE-MANAGEMENT-GUIDE.md) |
 | **Widget 开发** | [widget-development-guide.md](../widget-development-guide.md) |

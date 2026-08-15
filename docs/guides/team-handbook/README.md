@@ -13,7 +13,7 @@ FinSightV9 是一个**纯前端、本地优先的个人 A 股投研复盘系统*
 本手册把分散的"设计思路、架构、组件规范、模型运行、竞品定位"**收敛到同一目录**，作为团队分享与 onboarding 的单一入口。它不是文档的替代品，而是**导航图 + 精华萃取**。
 
 > ⚠️ 文档漂移提示（编写时已核正）
-> 1. **Gateway 网关**：`docs/reference/gateway-write-permission-spec.md` 描述的 `dataGateway.execute()` 是**目标架构**，当前 `core/databridge.ts` 仍直接 `import { db }` 写库，尚未收口。手册中相关处已标注"目标/现状"。
+> 1. **Gateway 网关**：`../../archive/historical-2026-08-16/batch7/docs/reference/gateway-write-permission-spec.md（已归档）` 描述的 `dataGateway.execute()` 是**目标架构**，当前 `core/databridge.ts` 仍直接 `import { db }` 写库，尚未收口。手册中相关处已标注"目标/现状"。
 > 2. **MCP 规模**：当前为 **15 个 enabled Server**（P0 清理后），非早期文档所述的"20+"。
 > 3. **五因子**：指**板块轮动五因子**（合成种子，UI 标"示例"），与个股 V6 十一层引擎、九维智能评分是**三个不同概念**，请勿混淆。
 
@@ -30,7 +30,7 @@ FinSightV9 是一个**纯前端、本地优先的个人 A 股投研复盘系统*
 | 04 | `04-model-runtime.md` | 模型**怎么跑**、数据**怎么流** | V6 引擎、采集流水线、Agent/LLM/MCP |
 | 05 | `05-competitive-analysis.md` | 我们**凭什么**差异化 | 竞品矩阵、差异化支柱、能力差距 |
 | 06 | `06-team-operation-guide.md` | 团队**怎么协作** | 提交规范、CI/CD、门禁、复盘流程 |
-| 07 | `07-design-token-cleanup.md` | 令牌清理**怎么归档** | 设计令牌清理工作记录（Wiki 归档页） |
+| 07 | `../../archive/historical-2026-08-16/batch7/docs/guides/team-handbook/07-design-token-cleanup.md（已归档）` | 令牌清理**怎么归档** | 设计令牌清理工作记录（Wiki 归档页） |
 
 建议阅读顺序：**00 → 01 → 02 →（前端看 03 / 算法看 04）→ 05 → 06**；07 为事件型归档页，按需查阅。
 

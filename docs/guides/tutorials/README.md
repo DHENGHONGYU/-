@@ -37,8 +37,8 @@ date: 2026-07-17
 ## 🔗 进阶路径
 
 完成入门教程后，可按以下路径深入学习：
-1. **了解架构** →[../../explanation/overview.md](../../explanation/overview.md)
-2. **舱室总览** →[../../explanation/cabins-overview.md](../../explanation/cabins-overview.md)
+1. **了解架构** →[../../archive/historical-2026-08-16/batch7/docs/explanation/architecture/overview.md（已归档）](../../archive/historical-2026-08-16/batch7/docs/explanation/architecture/overview.md（已归档）)
+2. **舱室总览** →[../../archive/historical-2026-08-16/batch7/docs/explanation/cabins-overview.md（已归档）](../../archive/historical-2026-08-16/batch7/docs/explanation/cabins-overview.md（已归档）)
 3. **技术参考* →[../reference/](../reference/)
 4. **操作指南** →[../how-to/](../how-to/)
 

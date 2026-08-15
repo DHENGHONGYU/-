@@ -253,10 +253,10 @@ export function DensityProvider({ children, ... }: Props): React.JSX.Element { .
 
 ## 7. 相关资源
 
-- [组件注册表治理](./registry-governance-summary.md)
+- [组件注册表治理](../../archive/historical-2026-08-16/batch7/docs/reference/changelogs/2026-08/registry-governance-summary.md（已归档）)
 - [代码规范基础](coding-conventions.md)
 - [质量门禁](quality-gates.md)
-- [四层架构说明](../../architecture/layered-architecture.md)
+- [四层架构说明](../../architecture/layered-architecture.md（已废弃）)
 
 ---
 

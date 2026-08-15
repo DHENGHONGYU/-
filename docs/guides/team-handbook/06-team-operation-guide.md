@@ -1,4 +1,4 @@
-﻿---
+---
 title: 团队开发操作指南
 type: reference
 domain: project
@@ -1076,7 +1076,7 @@ export const xxxService = {
 };
 ```
 
-> **详细指南**：[how-to-add-service.md](../how-to/how-to-add-service.md)、[service-integration-guide.md](../../reference/ai/service-integration-guide.md)
+> **详细指南**：[how-to-add-service.md](../how-to/how-to-add-service.md)、[service-integration-guide.md](../../archive/historical-2026-08-16/batch7/docs/reference/ai/service-integration-guide.md（已归档）)
 
 ---
 
@@ -1394,8 +1394,8 @@ change_log:
 | | 设计哲学 | [01-design-philosophy.md](./01-design-philosophy.md) |
 | | 架构总览 | [02-architecture.md](./02-architecture.md) |
 | **架构契约** | AGENTS.md | [AGENTS.md](../../meta/AGENTS.md) |
-| | 架构标准 | [03-architecture-standards.md](../../explanation/03-architecture-standards.md) |
-| **开发流程** | 开发工作流 SOP | [development-workflow-sop.md](../../reference/development-workflow-sop.md) |
+| | 架构标准 | [03-architecture-standards.md](../../archive/historical-2026-08-16/batch7/docs/explanation/03-architecture-standards.md（已归档）) |
+| **开发流程** | 开发工作流 SOP | [development-workflow-sop.md](../../archive/historical-2026-08-16/batch7/docs/reference/development-workflow-sop.md（已归档）) |
 | | 编码规范 | [coding-conventions.md](../../reference/coding-conventions.md) |
 | | 质量门禁 | [09-quality-gates.md](../09-quality-gates.md) |
 | **专项指南** | 新增 Store | [how-to-add-store.md](../how-to/how-to-add-store.md) |

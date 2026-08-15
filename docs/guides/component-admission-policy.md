@@ -26,7 +26,7 @@ change_log:
 > **配套文档**：
 > - `docs/guides/team-handbook/03-ui-components.md` — UI 组件设计思路
 > - `docs/reference/atomic-component-system.md` — 原子设计体系
-> - `docs/reference/component-deprecation-policy.md` — 组件废弃政策
+> - `../archive/historical-2026-08-16/batch7/docs/explanation/component-deprecation-policy.md（已归档）` — 组件废弃政策
 
 ---
 

@@ -24,8 +24,8 @@ change_log:
 ## 前置检查
 
 - [ ] 已阅读 `../tutorials/getting-started.md`（了解四步集成契约）
-- [ ] 已阅读 `../reference/widget-integration-checklist.md`（Widget 集成检查清单）
-- [ ] 已阅读 `../reference/atomic-component-system.md`（原子组件系统）
+- [ ] 已阅读 `../../archive/historical-2026-08-16/batch8/widget-integration-checklist.md（已归档）`（Widget 集成检查清单）
+- [ ] 已阅读 `../../reference/atomic-component-system.md`（原子组件系统）
 - [ ] 已确定 Widget 的数据来源（Store 或 Service）
 - [ ] 已确认 Widget 的宿主位置（驾驶舱 `/cockpit` 或页面内嵌）
 
@@ -430,11 +430,11 @@ import { FixedSizeGrid } from 'react-window'
 |------|------|------|
 | 新增 Store | `./how-to-add-store.md` | Widget 的数据来源 |
 | 新增 Service | `./how-to-add-service.md` | Store 的下游依赖 |
-| Widget 集成检查清单 | `../reference/widget-integration-checklist.md` | 逐项核对 |
-| Widget 错误处理 | `../reference/widget-error-handling.md` | 错误边界与降级 |
-| 原子组件系统 | `../reference/atomic-component-system.md` | 组件分层 |
+| Widget 集成检查清单 | `../../archive/historical-2026-08-16/batch8/widget-integration-checklist.md（已归档）` | 逐项核对 |
+| Widget 错误处理 | `../../reference/widget-error-handling.md` | 错误边界与降级 |
+| 原子组件系统 | `../../reference/atomic-component-system.md` | 组件分层 |
 | WidgetShell 源码 | `src/components/widgets/WidgetShell.tsx` | 外壳实现 |
 
 ---
 
-> **验证完成后**：更新 `docs/README.md` 的 C 类索引，将新增 Widget 链接回主索引。
+> **验证完成后**：更新 `../../../README.md` 的 C 类索引，将新增 Widget 链接回主索引。

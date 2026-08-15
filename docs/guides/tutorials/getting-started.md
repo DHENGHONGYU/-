@@ -233,10 +233,10 @@ npm run build
 
 | 我想了解... | 阅读文档 | 路径 |
 |-------------|----------|------|
-| 全局架构 | overview | [../../explanation/overview.md](../../explanation/overview.md) |
-| 舱室详情 | cabins-overview | [../../explanation/cabins-overview.md](../../explanation/cabins-overview.md) |
+| 全局架构 | overview | [../../archive/historical-2026-08-16/batch7/docs/explanation/architecture/overview.md（已归档）](../../archive/historical-2026-08-16/batch7/docs/explanation/architecture/overview.md（已归档）) |
+| 舱室详情 | cabins-overview | [../../archive/historical-2026-08-16/batch7/docs/explanation/cabins-overview.md（已归档）](../../archive/historical-2026-08-16/batch7/docs/explanation/cabins-overview.md（已归档）) |
 | 服务子域 | services-catalog | [../../reference/services-catalog.md](../../reference/services-catalog.md) |
-| 数据字典 | data-dictionary-index | [../../reference/data-dictionary-index.md](../../reference/data-dictionary-index.md) |
+| 数据字典 | data-dictionary-index | [../../archive/historical-2026-08-16/batch7/docs/explanation/design/data-dictionary-index.md（已归档）](../../archive/historical-2026-08-16/batch7/docs/explanation/design/data-dictionary-index.md（已归档）) |
 | 编码规范 | AGENTS 契约 | [../../../AGENTS.md](../../../AGENTS.md) |
 | 颜色令牌 | design-token-mapping | [../../reference/design-token-mapping.md](../../reference/design-token-mapping.md) |
 | 如何新增 Store | how-to-add-store | [../how-to/how-to-add-store.md](../how-to/how-to-add-store.md) |
@@ -254,7 +254,7 @@ A：使用 `withBroadcast()` 广播变更事件。其他 Tab 的 Store 订阅相
 A：不能。必须通过 `DataBridge.forward()` 发送 Envelope，由 ACL 校验后路由到 DB。
 
 **Q3：新增页面需要注册路由吗？**  
-A：必须。在 `src/config/routes.ts` 的 `ROUTE_REGISTRY` 中注册，并同步更新 `../../explanation/06-routing-specs.md`。
+A：必须。在 `src/config/routes.ts` 的 `ROUTE_REGISTRY` 中注册，并同步更新 `../../archive/historical-2026-08-16/batch7/docs/explanation/06-routing-specs.md（已归档）`。
 
 **Q4：如何调试 IndexedDB 数据？**  
 A：浏览器 DevTools → Application → IndexedDB → `v9-database` → 查看各 store。
@@ -338,7 +338,7 @@ npm run tsc:prod
 
 **验证步骤**：
 1. 打开 Kimi 桌面客户端，确认已登录。
-2. 将 2-3 个项目文件（如 `../../README.md`、`../../../AGENTS.md`）添加到上下文面板。
+2. 将 2-3 个项目文件（如 `../../../README.md`、`../../../AGENTS.md`）添加到上下文面板。
 3. 点击每个文件，确认能**打开预览内容**。
 4. 若点击无反应 → **完全退出客户端**（任务栏托盘右键退出）→ 重新打开 → 重试。
 5. 若仍无法打开 → **清除客户端缓存**（设置 → 高级 → 清除缓存）→ 重新登录。
@@ -382,7 +382,7 @@ npm run audit:layers
 # 5. 若仍无法打开 → 清除客户端缓存 → 重新登录
 ```
 
-> **若仍无法打开**：激活 `../../.agents/skills/feature-window-context-doc/SKILL.md` 进行深度诊断。
+> **若仍无法打开**：激活 `../../../.agents/skills/architecture-cleanup/SKILL.md` 进行深度诊断。
 
 ---
 

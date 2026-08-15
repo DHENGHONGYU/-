@@ -270,8 +270,8 @@ if (score) {
 
 | 文档 | 路径 | 说明 |
 |------|------|------|
-| 数据采集契约 | `../reference/data-collector-contract.md` | 采集通道、数据格式与写入约定 |
-| V6 评分契约 | `../reference/scoring-contract.md` | V6 评分口径与接口定义 |
+| 数据采集契约 | `../../reference/data-collector-contract.md` | 采集通道、数据格式与写入约定 |
+| V6 评分契约 | `../../reference/scoring-contract.md` | V6 评分口径与接口定义 |
 | 数据库配置 | `../../src/config/dbConfig.ts` | STORE_NAME / ACL_MATRIX / DB_VERSION |
 | 引擎配置文件 | `../../src/services/scoring/v6-engine/config.ts` | 权重、阈值与行业基准定义 |
 | 引擎核心实现 | `../../src/services/scoring/v6-engine/engine.ts` | V6ScoreEngine 主逻辑 |

@@ -504,9 +504,9 @@ npm run audit:hardcode > hardcode-audit.txt
 | 审计脚本使用指南 | `./how-to-use-audit-scripts.md` | 质量门禁与审计命令详解 |
 | 数据导入导出指南 | `./how-to-data-import-export.md` | 备份恢复与数据重置操作 |
 | V6 评分配置指南 | `./how-to-configure-v6-scoring.md` | 权重阈值调整与回测验证 |
-| V6 评分契约 | `../reference/scoring-contract.md` | 评分口径与接口定义 |
-| 数据采集契约 | `../reference/data-collector-contract.md` | 采集通道与数据格式定义 |
-| 测试策略 | `./testing/testing-strategy.md` | 测试分层与回归策略 |
+| V6 评分契约 | `../../reference/scoring-contract.md` | 评分口径与接口定义 |
+| 数据采集契约 | `../../reference/data-collector-contract.md` | 采集通道与数据格式定义 |
+| 测试策略 | `../testing-strategy.md` | 测试分层与回归策略 |
 
 ---
 

@@ -120,7 +120,7 @@ npm run pre-review        # 一键执行所有检查
 
 ## 🔗 相关文档
 
-- **完整标准**: `docs/CODE-REVIEW.md`
+- **完整标准**: `../../CODE-REVIEW.md`
 - **项目规范**: `AGENTS.md`
 - **PR 模板**: `docs/CODE-REVIEW.md §4.1`
 - **审查指南**: `docs/CODE-REVIEW.md §5`
@@ -138,4 +138,4 @@ npm run pre-review        # 一键执行所有检查
 
 ---
 
-**打印版本**: 使用浏览器打印 `docs/CODE-REVIEW.md`（Chrome: 打印 → 另存为 PDF）
+**打印版本**: 使用浏览器打印 `../../CODE-REVIEW.md`（Chrome: 打印 → 另存为 PDF）

@@ -11,7 +11,7 @@ last_updated: 2026-08-15
 > **Status**: Current  
 > **Version**: v1.0.0  
 > **Last Updated**: 2026-07-12  
-> **Related**: `src/hooks/`、`docs/specs/design/data-flow-spec.md`、`AGENTS.md` §三 事件监听清理
+> **Related**: `src/hooks/`、`../../archive/historical-2026-08-16/batch7/docs/explanation/implementation/data-flow-spec.md（已归档）`、`AGENTS.md` §三 事件监听清理
 
 ---
 
@@ -64,7 +64,7 @@ last_updated: 2026-08-15
 | 动作 | 文档 |
 |------|------|
 | 主更新动作 | 本文档（`docs/specs/design/HOOKS_GUIDE.md`） |
-| 补充文档 | `docs/specs/design/data-flow-spec.md` |
+| 补充文档 | `../../archive/historical-2026-08-16/batch7/docs/explanation/implementation/data-flow-spec.md（已归档）` |
 | 写后校验 | `npm run audit:docs`（是） |
 
 详见 `docs/meta/doc-trigger-action-map.md` §二 T7 行。

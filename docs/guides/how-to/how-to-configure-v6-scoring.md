@@ -460,13 +460,13 @@ console.log(currentConfig.weights)
 
 | 文档 | 路径 | 说明 |
 |------|------|------|
-| V6 评分契约 | `../reference/scoring-contract.md` | V6 评分口径、数据结构与接口定义 |
-| 数据采集契约 | `../reference/data-collector-contract.md` | 采集层数据格式与通道定义 |
+| V6 评分契约 | `../../reference/scoring-contract.md` | V6 评分口径、数据结构与接口定义 |
+| 数据采集契约 | `../../reference/data-collector-contract.md` | 采集层数据格式与通道定义 |
 | 引擎配置文件 | `../../src/services/scoring/v6-engine/config.ts` | 权重/阈值/基准的唯一定义处 |
 | 引擎核心实现 | `../../src/services/scoring/v6-engine/engine.ts` | V6ScoreEngine 主逻辑 |
 | 引擎类型定义 | `../../src/services/scoring/v6-engine/types.ts` | 输入输出类型定义 |
 | 评分流水线指南 | `./how-to-run-scoring-pipeline.md` | 采集+评分的完整运行流程 |
-| ADR-008 V6 评分架构 | `../reference/adr-008-v6-scoring-architecture.md` | V6 架构设计决策记录 |
+| ADR-008 V6 评分架构 | `../reference/adr-008-v6-scoring-architecture.md（已废弃）` | V6 架构设计决策记录 |
 
 ---
 

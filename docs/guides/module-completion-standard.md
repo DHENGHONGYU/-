@@ -1,4 +1,4 @@
-﻿---
+---
 title: 模块完成标准（DoD）
 type: guide
 domain: project
@@ -25,7 +25,7 @@ change_log:
 > **核心目标**：解决"模块孤岛化开发"问题，杜绝"代码写完但用户用不了"的半成品模块
 > **配套文档**：
 > - `docs/guides/team-handbook/06-team-operation-guide.md` — 团队开发操作指南
-> - `docs/reference/09-quality-gates_reference.md` — 质量门禁
+> - `docs/reference/09-quality-gates_reference.md（已废弃）` — 质量门禁
 > - `docs/guides/component-admission-policy.md` — 组件新增准入政策
 
 ---
@@ -68,7 +68,7 @@ change_log:
 5. **有局部无整体**：子功能做了几个，但主流程走不通
 
 > **经验教训**：「框架与业务必须同步落地」——不要建空壳框架，业务要跟上。
-> 来源：`docs/lessons/process/lessons-architecture-review-2026-07-16.md`
+> 来源：`docs/lessons/process/lessons-architecture-review-2026-07-16.md（已废弃）`
 
 ### 1.3 为什么需要模块 DoD
 
@@ -257,7 +257,7 @@ export const routes = [
 - [ ] 有技术文档（面向开发者）
   - 位置：`docs/explanation/design/` 或 `docs/reference/`
   - 内容：架构设计、数据结构、API 说明
-- [ ] 模块在功能清单 `feature-entry-list.md` 中有登记
+- [ ] 模块在功能清单 `../archive/historical-2026-08-16/batch7/docs/explanation/feature-entry-list.md（已归档）` 中有登记
 - [ ] 代码中有完整的 JSDoc 注释
 
 **文档层级要求**：
@@ -422,7 +422,7 @@ PR 模板中增加"模块新增专项检查"section（仅新增模块时勾选�
 - [ ] 新模块 6 要素齐全（类型/服务/状态/UI/入口/文档）
 ```
 
-详细内容见 `.github/pull_request_template.md`。
+详细内容见 `../../.github/pull_request_template.md`。
 
 ### 4.4 特殊情况处理
 

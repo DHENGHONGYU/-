@@ -1,4 +1,4 @@
-﻿---
+---
 title: 僵尸组件治理经验教训参考手册
 type: guide
 domain: frontend
@@ -27,7 +27,7 @@ change_log:
 > - `docs/guides/component-admission-policy.md` — 组件新增准入政策
 > - `docs/guides/component-lifecycle-sop.md` — 组件全生命周期管理 SOP
 > - `docs/guides/module-completion-standard.md` — 模块完成标准（DoD）
-> - `docs/reference/component-deprecation-policy_reference.md` — 组件弃用政策
+> - `docs/reference/component-deprecation-policy_reference.md（已废弃）` — 组件弃用政策
 
 ---
 
@@ -672,7 +672,7 @@ npm run audit:atomic && npm run audit:deadcode -- --staged
 | 组件新增准入政策 | `docs/guides/component-admission-policy.md` | 准入原则、Checklist、WIP 管理、储备申请流程 |
 | 模块完成标准（DoD） | `docs/guides/module-completion-standard.md` | 6 要素、孤岛检测、验收流程 |
 | 组件全生命周期 SOP | `docs/guides/component-lifecycle-sop.md` | 五道防线、季度清理节奏、僵尸判定标准 |
-| 组件弃用政策 | `docs/reference/component-deprecation-policy_reference.md` | 弃用判定标准、五阶段流程 |
+| 组件弃用政策 | `docs/reference/component-deprecation-policy_reference.md（已废弃）` | 弃用判定标准、五阶段流程 |
 | UI 组件设计思路 | `docs/guides/team-handbook/03-ui-components.md` | 组件设计哲学、分层原则 |
 | 代码审查规范 | `docs/guides/CODE-REVIEW.md` | Review 标准、常见问题 |
 

@@ -18,7 +18,7 @@ change_log:
 > **关联规范**:
 > - [AGENTS.md §十四 MCP 权限控制规范](../../meta/AGENTS.md)（契约真相源）
 > - [MCP 权限控制开发指南 mcp-acl-guide.md](./mcp-acl-guide.md)（ACL 配置权威）
-> - [v9-code-quality-audit 技能](../../.trae/skills/v9-code-quality-audit/SKILL.md)（交付前必跑；mcp-server-design-review 已并入此技能）
+> - [v9-code-quality-audit 技能](../../../.agents/skills/architecture-cleanup/SKILL.md)（交付前必跑；mcp-server-design-review 已并入此技能）
 > **事实基线**: `src/mcp/servers/` 实测 **15** 个子服务器（analysis/backtest/data-collector/execution/fetcher/knowledge/llm/news/pool/portfolio/scoring/screening/system/trading/workflow）；其中 `audit:mcp-usage` 识别 **6 个零调用 server**，属"出"阶段清理对象。
 
 ---

@@ -55,7 +55,7 @@ last_updated: 2026-08-15
 
 一致性由 `npm run audit:widget-registry` 校验（P0 违规 exit 1）。
 
-> ⚠️ 文档漂移：旧 `widget-integration-checklist.md` 示例用 `WIDGET_CATEGORY.MARKET` 枚举，但代码实际用**字符串字面量** category（如 `'market'`/`'analysis'`/`'系统监控'`）。新增时以代码为准。
+> ⚠️ 文档漂移：旧 `../../archive/historical-2026-08-16/batch8/widget-integration-checklist.md（已归档）` 示例用 `WIDGET_CATEGORY.MARKET` 枚举，但代码实际用**字符串字面量** category（如 `'market'`/`'analysis'`/`'系统监控'`）。新增时以代码为准。
 
 ### 3.2 数据消费（useMarketData）
 `MarketDataProvider`（Context）注入统一 `MarketData`；Widget 通过 `useMarketData()` 强校验消费（必须在 Provider 内），或 `useOptionalMarketData()`。Provider 在 `useEffect` 中按 `dataSource` 注册采集任务到 `taskScheduler`，结果经 `marketDataAdapter.adapt/merge` 注入，卸载时完整 cleanup。
@@ -109,14 +109,14 @@ last_updated: 2026-08-15
 | 复杂度 | `audit:complexity` | 嵌套≥4、链式 if≥6、重复 if 债务只减不增 |
 | Widget 注册 | `audit:widget-registry` | 三处注册一致性 |
 
-**JSDoc 要点**（`jsdoc-convention.md`）：导出函数需 `@param/@returns`；组件需 `@description`+props；复杂 Hook 需说明输入输出/副作用/清理；禁止空 JSDoc、`@ts-ignore`（用 `@ts-expect-error`+原因）。
+**JSDoc 要点**（`../../archive/historical-2026-08-16/batch8/jsdoc-convention.md（已归档）`）：导出函数需 `@param/@returns`；组件需 `@description`+props；复杂 Hook 需说明输入输出/副作用/清理；禁止空 JSDoc、`@ts-ignore`（用 `@ts-expect-error`+原因）。
 **复杂度要点**（`../explanation`）：卫语句+提前返回降嵌套；查找表替代长 if-else；提取常量/函数消除重复判断；基线对比 `.complexity-baseline.json`，债务只减不增。
 
 ---
 
 ## 7. UI 迁移与协作约定
 
-迁移清单核心（`../reference/ui-migration-checklist.md`）：
+迁移清单核心（`../../reference/ui-migration-checklist.md`）：
 1. 备份基线 → 移动文件 + 样式/类型/测试。
 2. 更新所有 import + barrel `index.ts` 导出。
 3. 更新路由/导航。

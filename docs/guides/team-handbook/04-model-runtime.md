@@ -8,7 +8,7 @@ last_updated: 2026-08-15
 
 # 04 · 模型运行思路（Model Runtime & Data Flow）
 
-> 本文回答"**模型怎么跑、数据怎么流**"。权威基线：`src/services/scoring/`、`src/services/data-collector/`、`src/core/`、`src/data/`、`src/agents/`、`src/services/llm/`、`src/mcp/`、`../../explanation/05-engine-specs.md`、`docs/reference/ai-memory-layer.md`、`docs/reference/ai-generate-audit-fix-loop.md`。
+> 本文回答"**模型怎么跑、数据怎么流**"。权威基线：`src/services/scoring/`、`src/services/data-collector/`、`src/core/`、`src/data/`、`src/agents/`、`src/services/llm/`、`src/mcp/`、`../../explanation/05-engine-specs.md`、`../../archive/historical-2026-08-16/batch7/docs/explanation/ai-memory-layer.md（已归档）`、`docs/reference/ai-generate-audit-fix-loop.md`。
 > ⚠️ 概念澄清：**五因子（板块轮动，合成种子）≠ V6 十一层引擎 ≠ 九维智能评分**，三者独立。
 
 ---
@@ -103,7 +103,7 @@ last_updated: 2026-08-15
 | 缓存 | `memoryCache.ts` 读缓存（10s TTL/200 LRU） | 同现状 |
 | 事件 | `eventBus.ts` 写后广播 `${store}Changed` | 同现状 |
 
-> ⚠️ 文档中"services 写仅经 DataBridge → data/gateway/"目前**未完全落地**；DataGateway 仅存在于 `docs/reference/gateway-write-permission-spec.md`。手册表述为"目标架构/待迁移"。
+> ⚠️ 文档中"services 写仅经 DataBridge → data/gateway/"目前**未完全落地**；DataGateway 仅存在于 `../../archive/historical-2026-08-16/batch7/docs/reference/gateway-write-permission-spec.md（已归档）`。手册表述为"目标架构/待迁移"。
 
 ### Web Worker 池（算力卸载）
 - `src/services/workers/v6ScoreWorker.ts`：Vite 模块 Worker，**纯计算、不触及 IndexedDB/DOM**。

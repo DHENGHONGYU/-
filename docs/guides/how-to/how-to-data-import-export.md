@@ -36,7 +36,7 @@ change_log:
 - [ ] 了解 V9 采用 DataBridge 信封化写入架构
 - [ ] 导入前已对当前数据完成一次导出备份
 - [ ] 已阅读 [ADR-002: IndexedDB vs localStorage](../../reference/adr-002-indexeddb-over-localstorage.md)
-- [ ] 已阅读 [数据库迁移 v4 到 v6](../../explanation/db-migration-v4-to-v6.md)
+- [ ] 已阅读 [数据库迁移 v4 到 v6](../../archive/historical-2026-08-16/batch8/db-migration-v4-to-v6.md（已归档）)
 
 ---
 
@@ -403,9 +403,9 @@ IndexedDB 容量受浏览器配额限制（通常 50MB ~ 数 GB，视磁盘与�
 
 | 文档 | 路径 | 说明 |
 |------|------|------|
-| ADR-002: IndexedDB vs localStorage | `../reference/adr-002-indexeddb-over-localstorage.md` | 存储选型决策记录 |
-| ADR-003: DataBridge 架构 | `../reference/adr-003-databridge-over-direct-datalayer.md` | 信封化写入架构决策 |
-| 数据库迁移 v4 到 v6 | `../explanation/db-migration-v4-to-v6.md` | 历史迁移背景说明 |
+| ADR-002: IndexedDB vs localStorage | `../../reference/adr-002-indexeddb-over-localstorage.md` | 存储选型决策记录 |
+| ADR-003: DataBridge 架构 | `../../archive/historical-2026-08-16/batch7/docs/reference/adr-003-databridge-over-direct-datalayer.md（已归档）` | 信封化写入架构决策 |
+| 数据库迁移 v4 到 v6 | `../../archive/historical-2026-08-16/batch8/db-migration-v4-to-v6.md（已归档）` | 历史迁移背景说明 |
 | 数据库配置锚点 | `../../src/config/dbConfig.ts` | DB_NAME / DB_VERSION / STORE_NAME |
 | 迁移脚本实现 | `../../src/data/db-migrations.ts` | D-01 迁移脚本注册处 |
 | DataBridge 核心 | `../../src/core/databridge.ts` | 信封路由与 ACL 实现 |

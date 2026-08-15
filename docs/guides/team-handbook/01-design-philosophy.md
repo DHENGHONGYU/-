@@ -9,7 +9,7 @@ last_updated: 2026-08-15
 # 01 · 设计与原创思路（Design & Original Thinking）
 
 > 本文回答"**我们为什么这样设计**"。理解设计意图，团队才能在接手模块时做出符合初心的决策，而不是被历史代码牵着走。
-> 权威基线：`docs/explanation/01-vision-and-goals.md`、`docs/explanation/song-aesthetics.md`、`docs/explanation/design-tokens.md`、`docs/specs/product/competitive-analysis.md`。
+> 权威基线：`../../specs/01-vision-and-goals.md`、`../../archive/historical-2026-08-16/batch8/song-aesthetics.md（已归档）`、`../../reference/design-tokens.md`、`docs/specs/product/competitive-analysis.md`。
 
 ---
 
@@ -50,7 +50,7 @@ FinSightV9 不是又一个"看盘软件"，而是定位为：
 
 ## 3. 宋韵美学（Song-yun Aesthetic）
 
-设计指南见 `docs/explanation/song-aesthetics.md`，落地令牌见 `docs/explanation/design/ui-design-system.md`（命名语言 **"Refined Finance"**）。
+设计指南见 `../../archive/historical-2026-08-16/batch8/song-aesthetics.md（已归档）`，落地令牌见 `../../archive/historical-2026-08-16/batch8/ui-design-system.md`（命名语言 **"Refined Finance"**）。
 
 ### 3.1 明暗双模铁律
 - **亮色**：默认 `stone` 暖灰系（底 `stone-50/100`、正文 `stone-800`、强调 `emerald-500` 低饱和绿=宋韵点翠）。

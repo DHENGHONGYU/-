@@ -221,8 +221,8 @@ npm run build
 
 | 我想了解... | 阅读文档 | 路径 |
 |-------------|----------|------|
-| 全局架构 | architecture/overview.md | `docs/explanation/architecture/overview.md` |
-| 舱室详情 | cabins-overview.md | `docs/explanation/architecture/cabins-overview.md` |
+| 全局架构 | architecture/overview.md | `../archive/historical-2026-08-16/batch7/docs/explanation/architecture/overview.md（已归档）` |
+| 舱室详情 | cabins-overview.md | `../archive/historical-2026-08-16/batch7/docs/explanation/cabins-overview.md（已归档）` |
 | 服务子域 | services-catalog.md | `../reference/services-catalog.md` |
 | 数据定义 | DATA_DICTIONARY_INDEX.md | `docs/guides/standards/DATA_DICTIONARY_INDEX.md` |
 | 编码规范 | AGENTS.md | `AGENTS.md` |
@@ -242,7 +242,7 @@ A：使用 `withBroadcast()` 广播变更事件。其他 Tab 的 Store 订阅相
 A：不能。必须通过 `DataBridge.forward()` 发送 Envelope，由 ACL 校验后路由到 DB。
 
 **Q3：新增页面需要注册路由吗？**  
-A：必须。在 `src/config/routes.ts` 的 `ROUTE_REGISTRY` 中注册，并同步更新 `../explanation/06-routing-specs.md`。
+A：必须。在 `src/config/routes.ts` 的 `ROUTE_REGISTRY` 中注册，并同步更新 `../archive/historical-2026-08-16/batch7/docs/explanation/06-routing-specs.md（已归档）`。
 
 **Q4：如何调试 IndexedDB 数据？**  
 A：浏览器 DevTools → Application → IndexedDB → `v9-database` → 查看各 store。

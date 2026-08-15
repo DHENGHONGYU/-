@@ -240,7 +240,7 @@ node scripts/audit/audit-test-duplicates.mjs
 - 新增测试文件后检查是否与现有文件重名
 - CI 守护：防止 @test_id 重复
 
-**关联报告**：`docs/reports/test-duplicate-cleanup-suggestions-2026-08-09.md`
+**关联报告**：`../../archive/historical-2026-08-16/batch7/docs/reports/test-duplicate-cleanup-suggestions-2026-08-09.md（已归档）`
 
 **关联技术债**：TD-012（已完成）、TD-015（P2 完成，P3 暂缓）— 详见 TECH-DEBT.md（已归档至 `docs/archive/historical-2026-08-16/batch6/docs/reports/TECH-DEBT.md`）
 
@@ -266,7 +266,7 @@ node scripts/audit/fix-duplicate-test-ids.mjs [--dry-run]
 
 **执行结果**（2026-08-09）：扫描 534 文件，发现 23 组重复，修改 32 个文件，新分配 23 个 @test_id。
 
-**关联报告**：`docs/reports/test-duplicate-cleanup-suggestions-2026-08-09.md` §三
+**关联报告**：`../../archive/historical-2026-08-16/batch7/docs/reports/test-duplicate-cleanup-suggestions-2026-08-09.md（已归档）` §三
 
 **关联治理**：tech-debt-cleanup-summary-2026-08-09.md（已归档）
 
@@ -504,10 +504,10 @@ npm install -g tsx
 |------|------|------|
 | 质量门禁标准 | `../standards/quality-gates.md` | 三级门禁的完整定义与验收标准 |
 | 测试策略 | `../testing-strategy.md` | 测试分层与回归策略 |
-| 审计脚本 README | `../../scripts/audit/README.md` | 全部审计脚本的索引与参数说明 |
+| 审计脚本 README | `../../../README.md` | 全部审计脚本的索引与参数说明 |
 | 质量审计配置文件 | `../../scripts/audit-quality.config.json` | audit-quality-enhanced 规则配置 |
 | 代码评审指南 | `./code-review-guide.md` | 评审流程与检查清单 |
-| 回归套件说明 | `../../explanation/regression-suite.md` | 回归流程的设计背景 |
+| 回归套件说明 | `../../archive/historical-2026-08-16/batch8/regression-suite.md（已归档）` | 回归流程的设计背景 |
 
 ---
 

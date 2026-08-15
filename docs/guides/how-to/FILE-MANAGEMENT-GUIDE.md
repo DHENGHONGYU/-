@@ -289,7 +289,7 @@ npm run audit:ai-output
 
 ## 七、AI 辅助开发操作规范（docs-as-mirror）
 
-> **来源**：`.trae/skills/docs-as-mirror/SKILL.md` v1.0.0 + [prompts/docs-as-mirror-quickref.md](../../../prompts/docs-as-mirror-quickref.md)
+> **来源**：`../../../.agents/skills/architecture-cleanup/SKILL.md` v1.0.0 + [prompts/docs-as-mirror-quickref.md](../../../prompts/docs-as-mirror-quickref.md)
 > **目的**：防止 AI 辅助编写文档时出现架构漂移、信息孤岛、版本号不一致等系统性错误
 
 ### 7.1 五大核心原则

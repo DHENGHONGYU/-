@@ -90,14 +90,14 @@ npm run build
 ### 1.4 文档先行原则
 
 - 新增引擎/路由/质量门禁前，必须先更新或新增 `docs/` 规格文档。
-- 修改 `src/config/dbConfig.ts` 中的 schema 前，必须同步更新 `../explanation/03-architecture-standards.md` 与 `../reference/10-glossary.md`。
+- 修改 `src/config/dbConfig.ts` 中的 schema 前，必须同步更新 `../archive/historical-2026-08-16/batch7/docs/explanation/03-architecture-standards.md（已归档）` 与 `../reference/10-glossary.md`。
 - 重构结束后必须产出 `POST_REFACTOR_AUDIT_REPORT.md` 与 `POST_REFACTOR_FIX_LOG_*.md`。
 
 ### 1.5 外部参考蓝图管控（跨代文件治理）
 
 > **目的**：防止 V10 / v6-pro-cockpit 等外部参考文档被误读为 V9 当前必须遵循的规则。
 
-`docs/explanation/implementation/` 中部分文档（如 `v10-architecture-alignment.md`、`<宸插綊妗?`、`v6-cockpit-ui-reference.md`、`../explanation/trading-core-factors.md`）属于**外部参考蓝图**，其状态统一标记为：
+`docs/explanation/implementation/` 中部分文档（如 `../archive/historical-2026-08-16/batch7/docs/explanation/v10-architecture-alignment.md（已归档）`、`<宸插綊妗?`、`../archive/historical-2026-08-16/batch7/docs/reference/v6-cockpit-ui-reference.md`、`../archive/historical-2026-08-16/batch7/docs/explanation/trading-core-factors.md`）属于**外部参考蓝图**，其状态统一标记为：
 
 ```
 Status: Future Reference / Deferred
@@ -107,31 +107,31 @@ Status: Future Reference / Deferred
 
 1. **仅作参考，禁止直接作为代码依据**。外部蓝图中的架构（如 V10 的 20 个 Store、三舱硬隔离、A2A Agent、真实券商 Gateway）必须经过 V9 架构评审，转化为新的 ADR 或 `docs/01~10` 规格后，方可落地。
 2. **读取时必须交叉校验**。AI、开发者或维护者在引用外部参考文档时，必须同时核对：
-   - `../explanation/03-architecture-standards.md` 当前实际架构分层；
+   - `../archive/historical-2026-08-16/batch7/docs/explanation/03-architecture-standards.md（已归档）` 当前实际架构分层；
    - `./08-implementation-plan.md` 当前 Phase 范围；
    - `../reference/10-glossary.md` 当前术语定义；
    - 当前代码实际目录与路由。
-3. **落地前必须新建 ADR**。若外部蓝图中的某项设计需要进入 V9，须先按 `../explanation/design/implementation-governance.md` 的 ADR 模板创建新的 ADR，状态从 `Proposal` → `Accepted` 后方可实施。
-4. **文档首页必须标注状态**。所有外部参考蓝图在文件顶部和 `docs/README.md` 中必须显示 `Status: Future Reference / Deferred`。
+3. **落地前必须新建 ADR**。若外部蓝图中的某项设计需要进入 V9，须先按 `../archive/historical-2026-08-16/batch7/docs/explanation/design/implementation-governance.md（已归档）` 的 ADR 模板创建新的 ADR，状态从 `Proposal` → `Accepted` 后方可实施。
+4. **文档首页必须标注状态**。所有外部参考蓝图在文件顶部和 `../../README.md` 中必须显示 `Status: Future Reference / Deferred`。
 
 **当前外部参考蓝图清单**：
 
 | 文档 | 来源 | 状态 | 说明 |
 |------|------|------|------|
-| `../explanation/v10-architecture-alignment.md` | V10 白皮书 | Future Reference / Deferred | V10 框架思想对齐参考 |
+| `../archive/historical-2026-08-16/batch7/docs/explanation/v10-architecture-alignment.md（已归档）` | V10 白皮书 | Future Reference / Deferred | V10 框架思想对齐参考 |
 | `<宸插綊妗?` | V6 Pro UI 比对 | Future Reference / Deferred | V6 Pro UI 模式吸收参考 |
-| `../reference/v6-cockpit-ui-reference.md` | v6 UI 参考 | Future Reference / Deferred | v6 可复用 UI 组件总结 |
-| `../explanation/trading-core-factors.md` | v6 交易报告 | Future Reference / Deferred | v6 交易因子导入参考 |
+| `../archive/historical-2026-08-16/batch7/docs/reference/v6-cockpit-ui-reference.md（已归档）` | v6 UI 参考 | Future Reference / Deferred | v6 可复用 UI 组件总结 |
+| `../archive/historical-2026-08-16/batch7/docs/explanation/trading-core-factors.md（已归档）` | v6 交易报告 | Future Reference / Deferred | v6 交易因子导入参考 |
 
 ### 1.6 代码变更前的架构自诘（守护者检查清单）
 
 任何涉及 L3 引擎、L2 数据、跨模块通信、schema 变更的 PR，作者必须先回答以下 3 个问题，并在 PR 描述中显式写出答案：
 
-1. **我的建议是否触及 `../explanation/03-architecture-standards.md` 中的调用方向铁律？**
+1. **我的建议是否触及 `../archive/historical-2026-08-16/batch7/docs/explanation/03-architecture-standards.md（已归档）` 中的调用方向铁律？**
    - 若触及，必须调整方案，确保 L5/L4 不直接写 `dataLayer`，L3 写操作经 `DataBridge.forward()`。
 
 2. **我的建议是否新增或修改了 IndexedDB 的 Store 或字段？**
-   - 如果是，必须同步更新 `../explanation/03-architecture-standards.md` 的 Schema 章节、`../reference/10-glossary.md` 的字段/术语表，并评估是否需要 DB 版本迁移。
+   - 如果是，必须同步更新 `../archive/historical-2026-08-16/batch7/docs/explanation/03-architecture-standards.md（已归档）` 的 Schema 章节、`../reference/10-glossary.md` 的字段/术语表，并评估是否需要 DB 版本迁移。
 
 3. **我建议的功能对应哪个文档？**
    - 必须引用 `../specs/02-functional-specs.md` 的用户故事，或提供新的 ADR / implementation 文件草案，并带状态标签：`Proposal` / `Accepted` / `Deferred`。
@@ -154,7 +154,7 @@ Status: Future Reference / Deferred
 
 1. 在 `CHANGELOG.md` 顶部新增版本条目，填写 Added/Changed/Fixed/Architecture/Quality/Known Issues。
 2. 更新 `package.json` 的 `version` 字段。
-3. 更新 `docs/README.md` 的「文档版本」。
+3. 更新 `../../README.md` 的「文档版本」。
 4. 执行完整质量门禁（见 `./09-quality-gates.md`）。
 5. 打 tag：`git tag -a v0.9.0 -m "release v0.9.0"`。
 6. 构建并部署到 GitHub Pages（v1.0.0 目标）。
@@ -272,9 +272,9 @@ Status: Future Reference / Deferred
 
 | 文档 | 用途 |
 |------|------|
-| `../explanation/03-architecture-standards.md` | 分层与调用规则 |
+| `../archive/historical-2026-08-16/batch7/docs/explanation/03-architecture-standards.md（已归档）` | 分层与调用规则 |
 | `../explanation/05-engine-specs.md` | 引擎与信封协议 |
-| `../explanation/06-routing-specs.md` | 路由与懒加载 |
+| `../archive/historical-2026-08-16/batch7/docs/explanation/06-routing-specs.md（已归档）` | 路由与懒加载 |
 | `./08-implementation-plan.md` | 阶段计划与验收 |
 | `./09-quality-gates.md` | 上线前 checklist |
 | `CHANGELOG.md` | 版本变更记录 |

@@ -1,4 +1,4 @@
-﻿---
+---
 title: code-review-guide
 code_version: "2.0.0-rc.1"
 tier: reference
@@ -219,7 +219,7 @@ useEffect(() => {
 
 ### 3.4 驾驶舱 Widget 三处注册 [P0 阻塞]
 
-> 新增 Widget 必改三处,详见 `../reference/widget-integration-checklist.md`
+> 新增 Widget 必改三处,详见 `../../archive/historical-2026-08-16/batch8/widget-integration-checklist.md（已归档）`
 
 - [ ] **自动化校验通过** — `npm run audit:widget-registry` 期望 P0=0, P1=0
   - 脚本自动校验：registry ↔ DEFAULT_WIDGET_CONFIG ↔ WIDGET_DEFAULT_DATA_SOURCE 三处 key 一致性
@@ -236,7 +236,7 @@ useEffect(() => {
 - [ ] **新文件放在正确目录** — 参见 `../../../AGENTS.md` §一目录定义
 - [ ] **相似目录不混淆** — `src/agents/`(运行时) vs `.agents/skills/`(AI技能);`src/lib/`(库函数) vs `src/lib/`(已废弃)
 - [ ] **导入路径使用 `@/` 别名** — 不使用相对路径 `../../`
-- [ ] **无旧路径残留** — 全文件类型扫描(详见 `../reference/ui-migration-checklist.md`)
+- [ ] **无旧路径残留** — 全文件类型扫描(详见 `../../reference/ui-migration-checklist.md`)
 
 ---
 
@@ -288,7 +288,7 @@ useEffect(() => {
 
 - [ ] **架构变更同步** — 修改 `../../../AGENTS.md` 后同步相关文档
 - [ ] **触发→动作映射** — 新增模块时检查 `docs/meta/doc-trigger-action-map.md`
-- [ ] **API 路径变更** — 更新 `../../explanation/06-routing-specs.md` 或相关数据字典
+- [ ] **API 路径变更** — 更新 `../../archive/historical-2026-08-16/batch7/docs/explanation/06-routing-specs.md（已归档）` 或相关数据字典
 - [ ] **目录结构变更** — 更新 `../../../AGENTS.md` §一目录定义
 
 **验证命令**: `npm run audit:docs` — 期望 `0 violations`

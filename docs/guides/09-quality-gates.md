@@ -332,7 +332,7 @@ jobs:
 
 本文档当前版本为 `v0.9.0-doc-sync-plan`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
-- `./architecture-version-comparison.md`
+- `../archive/historical-2026-08-16/batch8/architecture-version-comparison.md（已归档）`
 
 主要变化：
 

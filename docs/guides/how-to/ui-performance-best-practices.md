@@ -178,8 +178,8 @@ change_log:
 
 ## 4. 相关文档
 
-- `docs/explanation/design/ui-design-system.md` — 设计系统总览
+- `../../archive/historical-2026-08-16/batch8/ui-design-system.md（已归档）` — 设计系统总览
 - `docs/release-notes/RELEASE-NOTES-dark-mode-optimization.md` — 暗色模式优化 Release Notes
-- `docs/reference/ui-remediation-tracker.md` — 界面设计优化整改追踪
+- `docs/reference/ui-remediation-tracker.md（已废弃）` — 界面设计优化整改追踪
 - `src/index.css` — CSS 变量定义（`.dark` 选择器）
 - `tailwind.config.js` — 语义色扩展配置

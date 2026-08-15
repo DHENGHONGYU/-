@@ -326,7 +326,7 @@ Code 模式完成后，须交付以下产物：
 | 组件注册 | [src/components/registry/](../../src/components/registry/) | 新增 Widget 须注册 |
 | 单元测试 | `src/**/*.test.ts(x)` | 新增组件须配套测试 |
 | 门禁报告 | `outputs/` | 审计脚本输出（可选） |
-| Dogfood 报告 | `dogfood-output/report.md` | UI 上线前测试报告（参考 [dogfood SKILL](.trae-cn/skills/dogfood)） |
+| Dogfood 报告 | `../../dogfood-output/report.md` | UI 上线前测试报告（参考 [dogfood SKILL](.trae-cn/skills/dogfood)） |
 
 ---
 
@@ -356,7 +356,7 @@ Code 模式完成后，须交付以下产物：
 
 **处理**:
 1. 运行 [dogfood SKILL](.trae-cn/skills/dogfood) 进行 UI 上线前测试
-2. 生成 `dogfood-output/report.md` 记录差异点
+2. 生成 `../../dogfood-output/report.md` 记录差异点
 3. 差异分为 Critical / High / Medium / Low 四级，Critical 必须修复后才能上线
 
 ---
