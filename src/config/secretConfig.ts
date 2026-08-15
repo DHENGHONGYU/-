@@ -78,7 +78,7 @@ const TUSHARE_TOKEN_STORAGE = 'tushare_token'
 export async function getTushareTokenAsync(): Promise<string> {
   try {
     const token = await defaultStorage.getEncrypted<string>(TUSHARE_TOKEN_STORAGE)
-    const result = token ? token : ''
+    const result = token ?? ''
     if (!result) {
       logger.debug('[secretConfig] Tushare Token 为空或未配置')
     } else {
@@ -96,7 +96,7 @@ export async function getTushareTokenAsync(): Promise<string> {
  */
 export async function setTushareToken(token: string): Promise<void> {
   if (!token.trim()) {
-    await defaultStorage.remove(TUSHARE_TOKEN_STORAGE)
+    defaultStorage.remove(TUSHARE_TOKEN_STORAGE)
     removeMeta(TUSHARE_TOKEN_STORAGE)
     logger.info('[secretConfig] 已清除 Tushare Token')
     return
@@ -114,7 +114,7 @@ export function isTushareTokenConfigured(): boolean {
   try {
     const fullKey = `app:${TUSHARE_TOKEN_STORAGE}`
     const raw = localStorage.getItem(fullKey)
-    return !!(raw && raw.includes('__encrypted'))
+    return !!raw?.includes('__encrypted')
   } catch {
     return false
   }
@@ -174,7 +174,7 @@ const QWEN_API_KEY_STORAGE = 'qwen_api_key'
 export async function getQwenApiKeyAsync(): Promise<string> {
   try {
     const key = await defaultStorage.getEncrypted<string>(QWEN_API_KEY_STORAGE)
-    const result = key ? key : ''
+    const result = key ?? ''
     if (!result) {
       logger.debug('[secretConfig] Qwen API Key 为空或未配置')
     } else {
@@ -192,7 +192,7 @@ export async function getQwenApiKeyAsync(): Promise<string> {
  */
 export async function setQwenApiKey(key: string): Promise<void> {
   if (!key.trim()) {
-    await defaultStorage.remove(QWEN_API_KEY_STORAGE)
+    defaultStorage.remove(QWEN_API_KEY_STORAGE)
     removeMeta(QWEN_API_KEY_STORAGE)
     logger.info('[secretConfig] 已清除 Qwen API Key')
     return
@@ -210,7 +210,7 @@ export function isQwenApiKeyConfigured(): boolean {
   try {
     const fullKey = `app:${QWEN_API_KEY_STORAGE}`
     const raw = localStorage.getItem(fullKey)
-    return !!(raw && raw.includes('__encrypted'))
+    return !!raw?.includes('__encrypted')
   } catch {
     return false
   }

@@ -466,7 +466,7 @@ function analyzePolicy(
     3.5: '中等政策支持',
     3.0: '一般政策支持',
   }
-  const policyLevel = policyLevelMap[baseScore] || '一般政策支持'
+  const policyLevel = policyLevelMap[baseScore] ?? '一般政策支持'
 
   // 研发费用率作为政策支持强度验证（高研发通常对应政策鼓励方向）
   const rdS = rdScore(fin.rdRatioMedian)

@@ -164,10 +164,10 @@ V9 交易舱当前已实现：
 
 - `./fourth-industrial-revolution-core-resource-strategy.md`
 - `../explanation/trading-core-factors.md`
-- `./05-engine-specs.md`
-- `./02-functional-specs.md`
+- `../explanation/05-engine-specs.md`
+- `../specs/02-functional-specs.md`
 - `./10-glossary.md`
-- `./08-implementation-plan.md`
+- `../guides/08-implementation-plan.md`
 
 ---
 
@@ -180,5 +180,5 @@ V9 交易舱当前已实现：
 - [x] 新建 `src/services/trading/portfolioBuilder.ts`
 - [ ] 扩展 `src/apps/trading/TradingApp.tsx`（核心稀缺面板）—— Phase 2
 - [x] 新增测试 `tests/portfolioBuilder.test.ts`、`tests/themeRegistry.test.ts`、`tests/scoringAdapter.test.ts`、`tests/CoreResourcePanel.test.ts`、`tests/TradingApp.test.tsx` 已扩展
-- [x] 更新 `./02-functional-specs.md`、`./05-engine-specs.md`、`./10-glossary.md`
+- [x] 更新 `../specs/02-functional-specs.md`、`../explanation/05-engine-specs.md`、`./10-glossary.md`
 - [x] 质量门禁全部通过（159/159 tests，0 跨层违规）

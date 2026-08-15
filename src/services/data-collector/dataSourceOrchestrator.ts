@@ -443,7 +443,7 @@ async function getQuoteWithConfigImpl(
 
     if (i < chain.length - 1) {
       const nextSource = chain[i + 1]
-      const fallbackTarget = nextSource !== undefined ? nextSource : '无'
+      const fallbackTarget = nextSource ?? '无'
       emitLifecycleEvent(COLLECTION_EVENTS.FALLBACK, {
         traceId,
         taskId: config.taskId,
@@ -668,7 +668,7 @@ async function getKlineWithConfigImpl(
 
     if (i < chain.length - 1) {
       const nextSource = chain[i + 1]
-      const fallbackTarget = nextSource !== undefined ? nextSource : '无'
+      const fallbackTarget = nextSource ?? '无'
       emitLifecycleEvent(COLLECTION_EVENTS.FALLBACK, {
         traceId,
         taskId: config.taskId,

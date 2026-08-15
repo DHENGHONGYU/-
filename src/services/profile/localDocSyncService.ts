@@ -92,7 +92,7 @@ export function localDocToProfileItem(
 
   // 基础元数据
   const title = doc.name
-  const source = doc.source || doc.category
+  const source = doc.source ?? doc.category
   const sourceUrl = '' // 本地文件无 URL，sourcePath 存原始路径
 
   // 质量评分（基于文件大小、是否有标签、授权状态）

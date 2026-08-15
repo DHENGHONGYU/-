@@ -1,18 +1,22 @@
 ---
+doc_id: V9-DOC-REF-920
 title: data-definition
 tier: important
 code_version: "2.0.0-rc.1"
-version: v1.2.0
-last_updated: 2026-07-06
+version: v1.2.1
+last_updated: 2026-08-15
 change_log:
+  - version: v1.2.1
+    changes: "2026-08-15 系统性核对：与 src/types/modules/widget.types.ts、src/constants/cockpit.constants.ts、src/cockpit/core/widgetRegistry.ts 对齐，字段无漂移；登记为主字典 §C 内容副本，权威 SSOT 转向 docs/reference/data-definition.md v2.0.1 与 docs/reference/data-dictionary-index.md v1.1.0。"
+    date: 2026-08-15
   - version: v1.2.0
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-07-06
 ---
 
 
-> **Version**: v1.2.0  
-> **Last Updated**: 2026-07-06  
+> **Version**: v1.2.1  
+> **Last Updated**: 2026-08-15  
 > **Maintainer**: 架构资产治理官
 
 # Cockpit Widget 框架数据字典

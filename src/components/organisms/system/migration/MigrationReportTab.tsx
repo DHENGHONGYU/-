@@ -33,7 +33,7 @@ export function MigrationReportTab({ report, onGenerateReport, onReset }: Migrat
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         <div className="rounded-md border p-2 text-center">
           <p className="text-lg font-bold">{summary.totalStores}</p>
           <Badge variant="outline">存储区</Badge>

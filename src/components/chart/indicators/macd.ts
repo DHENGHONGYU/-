@@ -10,7 +10,7 @@
  */
 
 import type { Time, LineData, HistogramData } from 'lightweight-charts'
-import { COLOR_SHADES, STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 import type { CandlestickChartData } from '../types'
 import { getLogger } from '@/lib/logger'
 
@@ -164,11 +164,16 @@ export function getLatestMACD(
 }
 
 /**
- * MACD 颜色配置
+ * MACD 颜色配置（暗色主题）
+ * 对标 TradingView 暗色主题 MACD 指标配色
  */
 export const MACD_COLORS = {
-  dif: COLOR_SHADES.blue[500], // DIF 线颜色：蓝色
-  dea: COLOR_SHADES.orange[500], // DEA 线颜色：橙色
-  histogramPositive: STOCK_COLOR_TOKENS.up.hexAlpha50, // 正值柱状：股票上涨红色半透明
-  histogramNegative: STOCK_COLOR_TOKENS.down.hexAlpha50, // 负值柱状：股票下跌绿色半透明
+  /** DIF 线 - 浅蓝 */
+  dif: '#60a5fa',
+  /** DEA 线 - 金色 */
+  dea: '#fbbf24',
+  /** 正值柱状 - 红色半透明 */
+  histogramPositive: STOCK_COLOR_TOKENS.up.hexAlpha50,
+  /** 负值柱状 - 绿色半透明 */
+  histogramNegative: STOCK_COLOR_TOKENS.down.hexAlpha50,
 } as const

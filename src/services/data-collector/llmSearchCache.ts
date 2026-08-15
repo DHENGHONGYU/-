@@ -34,8 +34,8 @@ interface CacheEntry<T> {
  * 解析缓存目录（懒计算：仅 Node 环境调用，浏览器分支不触达 process）。
  */
 function resolveCacheDir(): string {
-  const envDir = process.env.LLM_SEARCH_CACHE_DIR
-  return envDir || path.join(process.cwd(), 'cache', 'llm-search')
+  const envDir = process.env.LLM_SEARCH_CACHE_DIR ?? ''
+  return envDir !== '' ? envDir : path.join(process.cwd(), 'cache', 'llm-search')
 }
 
 /**
@@ -78,7 +78,7 @@ export function check(key: string, ttlHours: number): boolean {
     if (!fs.existsSync(filePath)) return false
 
     const raw = fs.readFileSync(filePath, 'utf-8')
-    const entry: CacheEntry<unknown> = JSON.parse(raw)
+    const entry = JSON.parse(raw) as CacheEntry<unknown>
 
     const cachedAt = new Date(entry.cachedAt).getTime()
     if (Number.isNaN(cachedAt)) return false
@@ -107,7 +107,7 @@ export function get<T>(key: string): T | null {
     if (!fs.existsSync(filePath)) return null
 
     const raw = fs.readFileSync(filePath, 'utf-8')
-    const entry: CacheEntry<T> = JSON.parse(raw)
+    const entry = JSON.parse(raw) as CacheEntry<T>
     return entry.data
   } catch {
     return null

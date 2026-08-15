@@ -37,9 +37,9 @@
 - `package.json` — 移除 `prebuild` 中的 `generate:tokens`
 
 ### 删除（4）
-- `src/generated/tokens.css` — 旧版 slate 色彩令牌（178 行）
-- `src/generated/tokens.ts` — 旧版 TypeScript 常量
-- `scripts/generate-tokens.ts` — 令牌自动生成器
+- src/generated/tokens.css — 旧版 slate 色彩令牌（178 行）
+- src/generated/tokens.ts — 旧版 TypeScript 常量
+- scripts/generate-tokens.ts — 令牌自动生成器
 - `design-tokens/tokens.json` — 旧版令牌源数据
 
 ## 验证结果

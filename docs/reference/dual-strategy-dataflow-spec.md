@@ -26,7 +26,7 @@ date: 2026-07-17
 > **Last Updated**: 2026-06-27  
 >  
 > 本文档按用户给定开发策略整理，尚未经过架构评审，未与当前代码对齐。  
-> 校对目标：`./03-architecture-standards.md`、`./v9-system-blueprint.md`、  
+> 校对目标：`../explanation/03-architecture-standards.md`、`./v9-system-blueprint.md`、  
 > `src/services/trading/strategyEngine.ts`、`src/core/dataflow/`、`src/cockpit/`。
 
 ---
@@ -171,4 +171,4 @@ HotSectorScore [0-5]        ValuePitScore [0-5]
 3. 更新 `src/config/strategyRules.ts` 或新增 `src/config/dualStrategyRules.ts` 以承载双策略阈值。
 4. 在 `src/services/trading/` 中新增 `hotSectorAnalyzer.ts`、`valuePitAnalyzer.ts`、`rotationSignalDetector.ts`。
 5. 在 `src/cockpit/widgets/` 中新增 `HotSectorWidget.tsx`、`ValuePitWidget.tsx`。
-6. 同步更新 `./03-architecture-standards.md`、`./05-engine-specs.md`、`./10-glossary.md`。
+6. 同步更新 `../explanation/03-architecture-standards.md`、`../explanation/05-engine-specs.md`、`./10-glossary.md`。

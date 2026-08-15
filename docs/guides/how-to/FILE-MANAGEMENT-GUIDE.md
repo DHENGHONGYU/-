@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-DEV-010
+title: "V9 文件管理规范"
+domain: dev
+status: active
+last_updated: 2026-08-15
+---
+
+﻿---
 title: file-management-guide
 code_version: "2.0.0-rc.1"
 tier: important
@@ -58,22 +66,22 @@ change_log:
 
 以下文件不受根目录禁止规则限制：
 - 标准项目配置文件：`package.json`、`tsconfig.*.json`、`*.config.ts`、`vite.config.ts` 等
-- 项目根级文档：`../../README.md`、`../../AGENTS.md`、`../../CHANGELOG.md` 等
+- 项目根级文档：`../../../README.md`、`../../meta/AGENTS.md` 等
 - CI/CD 配置文件：`.github/workflows/*.yml`、`.husky/*` 等
 
 #### docs/ 根目录允许文件清单（2026-08-03 更新）
 
 `docs/` 根目录仅保留以下核心概览文档与索引文件，其余文档必须归入 `NN-语义/` 子目录：
 
-| 类别 | 允许文件 | 说明 |
-|------|----------|------|
-| 编号核心文档 | `01-vision-and-goals.md` ~ `10-glossary.md` | 01-10 编号系列，已合并权威版本 |
-| 变更与发布 | `CHANGELOG.md`、`RELEASE_NOTES.md` | 变更日志与发布说明 |
-| 审查与规范 | `CODE-REVIEW.md`、`design-tokens.md`、`testing-strategy.md`、`widget-development-guide.md` | 代码审查、设计令牌、测试策略、Widget 开发指南 |
-| 索引与导航 | `README.md`、`registry-index.md`（重定向页）、`REGISTRY_INDEX.md` | 文档导航与模块注册索引 |
-| 技术债务 | `TECH-DEBT.md` | 技术债务追踪 |
-| 数据定义 | `AI_CENTER_DATA_DEFINITION.md`、`BACKTEST_DATA_DEFINITION.md`、`DATAFLOW_DATA_DEFINITION.md`、`DATA_DICTIONARY_INDEX.md`、`multi-factor-screening-data-definition.md`、`news/DATA_DEFINITION.md`、`seven-dim-config-data-definition.md`、`v9-indexeddb-store-schema.md` | 数据字典（被多处引用，待后续迁移至 `reference/`） |
-| 配置文件 | `_redirect-map.json`、`class-diagram.mermaid` | 文档重定向映射与类图 |
+| 类别 | 允许文件（当前实际位置） | 说明 |
+|------|--------------------------|------|
+| 编号核心文档 | [01-vision-and-goals.md](../../specs/01-vision-and-goals.md) ~ [10-glossary.md](../../reference/10-glossary.md)（已迁移至 `specs/`、`reference/`） | 01-10 编号系列，已合并权威版本 |
+| 变更与发布 | `CHANGELOG.md`（根级）、`RELEASE_NOTES.md`（已迁移至 `reports/`） | 变更日志与发布说明 |
+| 审查与规范 | [CODE-REVIEW.md](../CODE-REVIEW.md)、[design-tokens.md](../../reference/design-tokens.md)、`guides/testing-strategy.md`（已归档）、`guides/widget-development-guide.md`（已归档） | 代码审查、设计令牌、测试策略、Widget 开发指南 |
+| 索引与导航 | `README.md`、`meta/REGISTRY_INDEX.md` | 文档导航与模块注册索引 |
+| 技术债务 | `TECH-DEBT.md`（已归档至 `archive/`） | 技术债务追踪 |
+| 数据定义 | `reference/AI_CENTER_DATA_DEFINITION.md`、`reference/BACKTEST_DATA_DEFINITION.md`、`reference/DATAFLOW_DATA_DEFINITION.md`、`reference/DATA_DICTIONARY_INDEX.md`、`reference/MULTI_FACTOR_SCREENING_DATA_DEFINITION.md`、`reference/news/DATA_DEFINITION.md`、`reference/SEVEN_DIM_CONFIG_DATA_DEFINITION.md`、`reference/V9_IndexedDB_Store_Schema.md` | 数据字典（已迁移至 `reference/`） |
+| 配置文件 | `_redirect-map.json`、`reference/class-diagram.mermaid` | 文档重定向映射与类图 |
 
 ### docs/ 子目录分层
 
@@ -86,9 +94,9 @@ change_log:
 | `docs/specs/design/` | 设计文档 | 架构设计、数据流、策略文档、接口契约 |
 | `docs/guides/development/` | 开发指南 | 编码规范、迁移检查清单、开发手册、构建说明 |
 | `docs/reports/testing/` | 测试文档 | 测试计划、测试报告、修复方案、覆盖率分析 |
-| `docs/05-deployment/` | 部署文档 | 部署手册、运维 runbook、环境配置指南 |
+| `docs/reports/ops/` | 部署文档 | 部署手册、运维 runbook、环境配置指南 |
 | `docs/reports/project-management/` | 项目管理 | 版本计划、进度报告、里程碑记录、任务分配 |
-| `docs/07-archive/` | 归档 | 历史文档、废弃方案、已替代决策记录 |
+| `docs/archive/` | 归档 | 历史文档、废弃方案、已替代决策记录 |
 
 > 详细分层规则参见 [AGENTS.md](../../meta/AGENTS.md) 第一节
 
@@ -233,7 +241,7 @@ npm run audit:ai-output
 - **存放位置**：`docs/archive/drafts/` 为 AI 辅助生成的草稿/建议文件专用目录
 - **当前存量**：9 个文件（api-doc-draft-*.md 2个、complete-api-doc.md 1个、doc-update-list-*.md 2个、doc-update-suggestion-*.md 3个、script-output-*.log 1个）
 - **保留期限**：
-  - `.md` 草稿文件：生成后 7 天内若未采纳/迁移，应归档至 `docs/07-archive/drafts/` 或删除
+  - `.md` 草稿文件：生成后 7 天内若未采纳/迁移，应归档至 `docs/archive/drafts/` 或删除
   - `.log` 输出文件：生成后 3 天内保留，过期删除
 - **迁移规则**：有价值的草稿内容应在 7 天内合并到正式文档（`docs/specs/requirements/`、`docs/guides/development/` 等），并删除原草稿
 - **命名规范**：AI 生成文件建议带时间戳前缀，如 `doc-update-suggestion-YYYY-MM-DDTHH-mm-ss.md`
@@ -274,25 +282,25 @@ npm run audit:ai-output
   1. 已达保留截止版本；
   2. Grep 全仓 0 命中该目录引用；
   3. `npm run audit:layers` 0 违规。
-- **归档 vs 删除**：历史文档/废弃方案迁入 `docs/07-archive/`；纯一次性生成物（已被 `.gitignore` 覆盖）直接删除，无需归档。
+- **归档 vs 删除**：历史文档/废弃方案迁入 `docs/archive/`；纯一次性生成物（已被 `.gitignore` 覆盖）直接删除，无需归档。
 - **操作**：满足条件后 `git rm -r <dir>` 并提交，补记 §九 变更日志。
 
 ---
 
 ## 七、AI 辅助开发操作规范（docs-as-mirror）
 
-> **来源**：`.agents/skills/docs-as-mirror/SKILL.md` v1.0.0 + `prompts/docs-as-mirror-quickref.md`
+> **来源**：`.trae/skills/docs-as-mirror/SKILL.md` v1.0.0 + [prompts/docs-as-mirror-quickref.md](../../../prompts/docs-as-mirror-quickref.md)
 > **目的**：防止 AI 辅助编写文档时出现架构漂移、信息孤岛、版本号不一致等系统性错误
 
 ### 7.1 五大核心原则
 
 编写或更新任何技术文档前，必须遵守以下 5 大原则：
 
-1. **Truth-First（真相优先）**：先读取 `../../AGENTS.md` 当前版本，再写文档，不凭记忆。
+1. **Truth-First（真相优先）**：先读取 `../../meta/AGENTS.md` 当前版本，再写文档，不凭记忆。
 2. **Scan-Before-Write（先扫描后编写）**：先执行 `find`/`cat` 扫描实际文件系统，再写描述，不用模板。
 3. **Exhaustiveness（穷尽性原则）**：文件管理规范必须包含 8 个必含章节（目录映射、命名、`.gitignore`、提交前检查、定期审计、生命周期管理、交叉引用、变更日志），不允许"最小化原则"。
 4. **Bidirectional Linking（双向引用）**：新文档必须注册到索引、引用相关文档、被相关文档反向引用——三步骤缺一不可。
-5. **Version Pinning（版本锁定）**：文档头部必须声明兼容的 `../../AGENTS.md` 版本号（如 `兼容 ../../AGENTS.md v1.4.5+`）。
+5. **Version Pinning（版本锁定）**：文档头部必须声明兼容的 `../../meta/AGENTS.md` 版本号（如 `v1.4.5`）。
 
 ### 7.2 10 行快速检查清单（编写任何文档前逐行确认）
 
@@ -303,7 +311,7 @@ npm run audit:ai-output
 4. [ ] 已读取实际 .gitignore（cat .gitignore），文档覆盖率 ≥ 95%
 5. [ ] 已区分相似目录（agents/ vs .agents/skills/，utils/ vs lib/ 等）
 6. [ ] 文档包含 8 个必含章节（目录映射、命名、.gitignore、提交前检查、定期审计、生命周期、交叉引用、变更日志）
-7. [ ] 已注册到文档索引（docs/README.md 或 registry-index.md）
+7. [ ] 已注册到文档索引（docs/README.md 或 docs/meta/REGISTRY_INDEX.md）
 8. [ ] 已建立双向引用（文档引用 AGENTS.md，AGENTS.md 反向引用本文档）
 9. [ ] 文档头部声明版本号体系（项目级版本 + 文档修订号 + 兼容 AGENTS.md 版本）
 10. [ ] 已运行 npm run audit:directory && npm run audit:docs，结果 0 违规
@@ -365,12 +373,12 @@ git ls-files | ForEach-Object { git check-ignore -q $_ }
 ## 十、相关文档
 
 - **[AGENTS.md](../../meta/AGENTS.md)**：V9 架构契约、分层规则、命名约定、验证命令、数据库版本管理
-- **[trae-file-management-review.md](../00-meta/trae-file-management-review.md)**：更详细的文件管理审查报告（Trae IDE 生成）
-- **[README.md](../README.md)**：文档体系主索引（`docs/specs/requirements/` 目录说明）
+- **trae-file-management-review.md（已归档）**：更详细的文件管理审查报告（Trae IDE 生成）
+- **[README.md](../../../README.md)**：文档体系主索引（`docs/specs/requirements/` 目录说明）
 
 
-<!-- merge-source: docs/reference/file-management-guide.md (2026-07-14 内容融合，避免去重丢失有效信息) -->
-## 补充内容（合并自 `./file-management-guide.md`）
+<!-- merge-source: docs/reference/file-management-guide.md（已归档，2026-07-14 内容融合） -->
+## 补充内容（合并自 file-management-guide.md，源文件已归档）
 
 | 源代码 | `src/` | 按分层规则放入 `core/`、`data/`、`services/`、`store/`、`pages/`、`components/` |
 | AI Skill | `.agents/skills/` | AI 辅助技能定义 |

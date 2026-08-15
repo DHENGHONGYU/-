@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-REF-965
+title: "交易持仓管理模块 API 契约文档"
+domain: ref
+status: active
+last_updated: 2026-08-15
+---
+
 > **Version**: v1.1.0  
 > **Last Updated**: 2026-06-26  
 > **Maintainer**: 架构资产治理官

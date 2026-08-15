@@ -1,4 +1,4 @@
-
+﻿
 import React, { useCallback } from 'react'
 import type { ReactNode } from 'react'
 import { WidgetContext } from '../../core/WidgetContext'
@@ -7,6 +7,9 @@ import type { WidgetConfig } from '../../types/widget'
 import { THEME_TOKENS } from '@/constants/theme.tokens'
 import { Loading, Empty, ErrorState } from '@/components/molecules/states'
 import { Button } from '@/components/atoms/Button'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 /**
  * Widget 视觉状态：控制 Loading/Empty/Error 占位，默认 ready 渲染 children。
@@ -59,7 +62,7 @@ class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    console.error('[WidgetShell] ErrorBoundary caught an error:', error, errorInfo)
+    logger.error('[WidgetShell] ErrorBoundary caught an error', { error, errorInfo })
     this.props.onError?.(error)
   }
 

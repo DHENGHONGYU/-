@@ -5,7 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Car
 import { Badge } from '@/components/atoms/Badge'
 import { useToast } from '@/hooks/useToast'
 import { AnalysisTemplateCards } from '@/components/organisms/analysis/hub/AnalysisTemplateCards'
+import { PageHeader } from '@/components/templates/PageHeader'
+import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
+import { PageSkeleton } from '@/components/organisms/shared/PageSkeleton'
 import { getLogger } from '@/lib/logger'
+import { cn } from '@/lib/utils'
 import {
   useAnalysisStore,
   // 派生查询 Hook（通过 export * 从 .derived.ts 导入）
@@ -14,6 +18,12 @@ import {
 } from '@/store/analysisStore'
 import type { AnalysisScope } from '@/types/modules/analysis.types'
 import type { ScreenSource } from '@/data/types/types.stock'
+
+function getScoreColorClass(score: number): string {
+  if (score >= 4.0) return 'text-[hsl(var(--stock-up))]'
+  if (score >= 3.0) return 'text-primary'
+  return 'text-[hsl(var(--stock-down))]'
+}
 
 // ── Lazy 页面导入 ────────────────────────────────────────────────────────────
 // 注：SectorAnalysisPage 已废弃，功能合并到 IndustryDashboardPage（行业全景仪表盘）
@@ -129,21 +139,30 @@ export default function AnalysisApp(): React.JSX.Element {
 
   // ── 子路由页面渲染 ──────────────────────────────────────────────────────────
   const matched = matchAnalysisRoute(path)
-  if (matched.component != null) {
-    return (
-      <Suspense fallback={<div className="p-4 text-muted-foreground">{matched.fallback}</div>}>
+
+  const content =
+    matched.component != null ? (
+      <Suspense fallback={<PageSkeleton />}>
         {matched.component}
       </Suspense>
+    ) : (
+      // ── 默认视图：分析模板卡片 + V6 九维评分卡片 ────────────────────────────────
+      <div className="space-y-4">
+        <PageHeader
+          title="分析舱"
+          description="多因子深度研究工作台"
+          actions={
+            <Button size="sm" variant="secondary" asChild>
+              <Link to="/analysis/intelligent-score">快速评分</Link>
+            </Button>
+          }
+        />
+        <AnalysisTemplateCards />
+        <V6ScoreCard />
+      </div>
     )
-  }
 
-  // ── 默认视图：分析模板卡片 + V6 九维评分卡片 ────────────────────────────────
-  return (
-    <div className="space-y-4">
-      <AnalysisTemplateCards />
-      <V6ScoreCard />
-    </div>
-  )
+  return <ErrorBoundary>{content}</ErrorBoundary>
 }
 
 // ── V6 评分卡片（接入 analysisStore + 派生查询 Hook）─────────────────────────
@@ -282,7 +301,7 @@ function V6ScoreCard(): React.JSX.Element {
                           </span>
                         )}
                       </div>
-                      <Badge variant={score ? 'default' : 'outline'}>
+                      <Badge variant={score ? 'default' : 'outline'} className={score && cn(getScoreColorClass(score.score))}>
                         {score ? `V6: ${score.score.toFixed(2)}` : '未评分'}
                       </Badge>
                     </div>
@@ -318,7 +337,7 @@ function V6ScoreCard(): React.JSX.Element {
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-medium">{stock.symbol}</span>
-                      <Badge variant={score ? 'default' : 'outline'}>
+                      <Badge variant={score ? 'default' : 'outline'} className={score && cn(getScoreColorClass(score.score))}>
                         {score ? `V6: ${score.score.toFixed(2)}` : '未评分'}
                       </Badge>
                     </div>

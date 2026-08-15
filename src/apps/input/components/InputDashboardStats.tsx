@@ -41,7 +41,7 @@ export default function InputDashboardStats({
         <CardContent className="p-5">
           <p className="text-xs text-muted-foreground">意向候选池标的</p>
           <div className="flex items-baseline gap-2">
-            <p className="text-2xl font-bold">{stats.total}</p>
+            <p className="text-h1 font-bold">{stats.total}</p>
             {stats.total > 0 && (
               <span className="text-xs text-success">↑ {Math.round((stats.withPrice / stats.total) * 100)}% 覆盖</span>
             )}
@@ -53,7 +53,7 @@ export default function InputDashboardStats({
           <p className="text-xs text-muted-foreground">已采行情</p>
           <div className="flex items-center gap-3">
             <div>
-              <p className="text-2xl font-bold">{stats.withPrice}</p>
+              <p className="text-h1 font-bold">{stats.withPrice}</p>
               {stats.total > 0 && stats.withPrice < stats.total && (
                 <span className="text-xs text-warning">↓ {stats.total - stats.withPrice} 待采</span>
               )}
@@ -69,7 +69,7 @@ export default function InputDashboardStats({
           <p className="text-xs text-muted-foreground">采集服务</p>
           <div className="mt-1 flex items-center gap-2">
             {fetcherOk === null ? (
-              <Badge variant="outline">检查中...</Badge>
+              <Skeleton className="h-6 w-16" />
             ) : fetcherOk ? (
               <Badge className="bg-success/10 text-success">已连接</Badge>
             ) : (
@@ -82,7 +82,7 @@ export default function InputDashboardStats({
         <CardContent className="p-5">
           <p className="text-xs text-muted-foreground">待采集标的</p>
           <div className="flex items-baseline gap-2">
-            <p className="text-2xl font-bold">{stats.total - stats.withPrice}</p>
+            <p className="text-h1 font-bold">{stats.total - stats.withPrice}</p>
             {stats.total - stats.withPrice > 0 && (
               <span className="text-xs text-warning">点击「采集全部」开始</span>
             )}

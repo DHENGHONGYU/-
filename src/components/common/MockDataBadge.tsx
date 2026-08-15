@@ -111,6 +111,7 @@ export function MockDataBadge({ meta, size = 'default', className }: MockDataBad
  * ]
  * ```
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function renderDataSourceColumn(record: Record<string, unknown>): React.ReactElement {
   const meta = record.__meta as DataRecordMeta | undefined
   return <MockDataBadge meta={meta} size="small" />
@@ -119,6 +120,7 @@ export function renderDataSourceColumn(record: Record<string, unknown>): React.R
 /**
  * 批量检查数据中是否包含 Mock 数据
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function hasMockData(records: Array<Record<string, unknown>>): boolean {
   return records.some((r) => {
     const meta = r.__meta as DataRecordMeta | undefined

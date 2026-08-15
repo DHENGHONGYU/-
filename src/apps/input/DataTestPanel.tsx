@@ -185,7 +185,7 @@ export default function DataTestPanel(): React.JSX.Element {
               </div>
               <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
                 <div
-                  className="h-full bg-primary transition-all"
+                  className="h-full bg-primary transition-[width]"
                   style={{ width: `${store.progress}%` }}
                 />
               </div>

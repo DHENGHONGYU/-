@@ -32,12 +32,12 @@ const RiskMonitorWidget = memo(function RiskMonitorWidget({ config }: RiskMonito
       titleIcon={<Shield className="h-5 w-5" style={{ color: COLOR_TOKENS.info.hex }} />}
       visualState={visualState}
       error={error}
-      onRetry={refresh}
+      onRetry={() => void refresh()}
       emptyTitle="暂无风险数据"
       emptyDescription="完成交易后将自动计算VaR、回撤、波动率等风险指标"
       skeleton={(
         <div className="space-y-4">
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[1, 2, 3].map((i) => (
               <Skeleton key={i} className="h-16" />
             ))}
@@ -48,12 +48,12 @@ const RiskMonitorWidget = memo(function RiskMonitorWidget({ config }: RiskMonito
     >
       <div className="space-y-4">
         {/* 核心风险指标 */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className={`${COLOR_SHADES.gray[50]} rounded-lg p-3 text-center`}>
             <div className="flex justify-center mb-1">
               <AlertTriangle className="h-5 w-5" style={{ color: riskMetrics.varLevel === 'high' ? COLOR_TOKENS.danger.hex : THEME_TOKENS.color.warningRaw }} />
             </div>
-            <div className="text-xl font-bold" style={{ color: riskMetrics.varLevel === 'high' ? COLOR_TOKENS.danger.hex : THEME_TOKENS.color.warningRaw }}>
+            <div className="text-h2 font-bold" style={{ color: riskMetrics.varLevel === 'high' ? COLOR_TOKENS.danger.hex : THEME_TOKENS.color.warningRaw }}>
               {riskMetrics.var95}%
             </div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>VaR(95%)</div>
@@ -69,14 +69,14 @@ const RiskMonitorWidget = memo(function RiskMonitorWidget({ config }: RiskMonito
             <div className="flex justify-center mb-1">
               <TrendingDown className="h-5 w-5" style={{ color: COLOR_TOKENS.danger.hex }} />
             </div>
-            <div className="text-xl font-bold" style={{ color: COLOR_TOKENS.danger.hex }}>{riskMetrics.maxDrawdown}%</div>
+            <div className="text-h2 font-bold" style={{ color: COLOR_TOKENS.danger.hex }}>{riskMetrics.maxDrawdown}%</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>最大回撤</div>
           </div>
           <div className={`${COLOR_SHADES.gray[50]} rounded-lg p-3 text-center`}>
             <div className="flex justify-center mb-1">
               <Activity className="h-5 w-5" style={{ color: COLOR_TOKENS.info.hex }} />
             </div>
-            <div className="text-xl font-bold" style={{ color: COLOR_TOKENS.info.hex }}>{riskMetrics.volatility}%</div>
+            <div className="text-h2 font-bold" style={{ color: COLOR_TOKENS.info.hex }}>{riskMetrics.volatility}%</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>波动率</div>
           </div>
         </div>

@@ -122,7 +122,7 @@ npm run audit:layers # 验证引擎层依赖合规
 | 文档 | 路径 |
 |------|------|
 | ADR-009（取代部分条款） | `adr-009-dual-strategy-system.md` |
-| 引擎规格 | `../reference/05-engine-specs.md` §3.7-3.8 |
+| 引擎规格 | `05-engine-specs.md` §3.7-3.8 |
 | 原始提案 | `./2026-06-24-pool-screening-signal-persistence-review-engine.md` |
 
 ---

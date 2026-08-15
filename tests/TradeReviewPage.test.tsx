@@ -61,9 +61,10 @@ vi.mock('@/lib/logger', () => ({
 // ============================================================
 // Mock: useDisciplineStore
 // ============================================================
-const { mockLoadOrders, mockGenerateReviewReport, mockLatestReport } = vi.hoisted(() => ({
+const { mockLoadOrders, mockGenerateReviewReport, mockRefresh, mockLatestReport } = vi.hoisted(() => ({
   mockLoadOrders: vi.fn(),
   mockGenerateReviewReport: vi.fn(),
+  mockRefresh: vi.fn(),
   mockLatestReport: { value: null as unknown },
 }))
 
@@ -73,6 +74,7 @@ vi.mock('@/store/disciplineStore', () => ({
       latestReport: mockLatestReport.value,
       loadOrders: mockLoadOrders,
       generateReviewReport: mockGenerateReviewReport,
+      refresh: mockRefresh,
     }
     return selector ? selector(state) : state
   },

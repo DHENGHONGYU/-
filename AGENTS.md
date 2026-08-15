@@ -523,8 +523,8 @@ import { THEME_TOKENS } from '@/constants/theme.tokens'
 **单一克制强调色公约 & 令牌管线一致性**（v1.4.0 新增）
 
 > 为满足经典 UI 美学「色彩节制（60-30-10）」与 Nielsen 一致性原则，新增以下硬性规则：
-> 1. **单一克制强调色**：全站仅允许一个品牌强调色（当前 = emerald 翠绿，由 `index.css` 的 `--primary` 决定）。禁止在业务组件中引入第二个品牌色；语义色（涨跌/评分/因子/信号）仅限于状态传达，不得用作装饰性强调。
-> 2. **令牌管线一致性**：`design-tokens/tokens.json` 是规范单一真相源；其 `primary`/`ring` 必须与运行时 `index.css` 的 `--primary` 同色相。`scripts/generate-tokens.ts` 生成的 `--color-*` 变量须被 Tailwind 映射消费（当前 `--color-primary` 为死变量，属 P0 待修管线债）。
+> 1. **单一克制强调色**：全站仅允许一个品牌强调色（当前 = Apple Blue #007AFF，由 `index.css` 的 `--primary` 决定）。禁止在业务组件中引入第二个品牌色；语义色（涨跌/评分/因子/信号）仅限于状态传达，不得用作装饰性强调。
+> 2. **令牌管线一致性**：`src/index.css` 是 V5 Apple Business Design Tokens 唯一真相源（`--primary: 210 100% 50%`）。已删除旧版 `design-tokens/tokens.json` 与 `src/generated/tokens.{css,ts}` 生成管道。运行时验证见 `src/lib/designTokenVerifier.ts`。
 > 3. **禁止裸色类**：UI 层（`components/pages/cockpit/apps`）禁止直接书写 HEX 或数字色类，一律经 `THEME_TOKENS`/`COLOR_TOKENS`/`COLOR_SHADES`/`chartColors`。
 > 4. **对比度门槛**：强调色配白字须达 WCAG AA 正文 4.5:1（`node scripts/a11y-contrast.cjs` 校验）。
 > 5. **视觉 QA 回归闸**：`npm run audit:tokens` 为令牌合规 CI 门禁（零依赖，扫描 hex 字面量 + className 裸色类）。采用**基线 ratchet**——违规数只减不增，新增即 exit 1 拦截。基线存于仓库根 `.token-baseline.json`；消减债务后须 `npm run audit:tokens -- --update-baseline` 刷新并提交；本地全量体检用 `--strict`（任意违规即失败）。

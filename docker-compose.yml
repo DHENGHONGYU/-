@@ -5,9 +5,9 @@
 #        docker compose up -d data-collector
 #        curl http://localhost:8000/health
 #
-#   2. 采集 + 前端开发服务（完整调试）：
+#   2.  采集 + 前端开发服务（完整调试）：
 #        docker compose up -d
-#        浏览器访问 http://localhost:3000
+#        浏览器访问 http://localhost:5199
 #
 # 常用命令：
 #   docker compose up -d                     # 启动全部服务
@@ -56,7 +56,9 @@ services:
       dockerfile: Dockerfile.frontend
     container_name: v9-frontend
     ports:
-      - "3000:3000"
+      # 宿主机 3000 已被 chip-flow-grafana 占用，前端开发服务映射到 5199
+      # （与 vite.config.ts 本机 dev 端口一致）；容器内仍监听 3000
+      - "5199:3000"
     volumes:
       # 挂载源码实现热更新（开发模式）
       - ./src:/app/src
@@ -70,6 +72,8 @@ services:
     environment:
       # 代理目标指向 Docker 网络内的采集服务
       - COLLECTOR_TARGET=http://data-collector:8000
+      # 嵌入服务同在 v9-net 网络（容器名 DNS），覆盖 vite.config.ts 的 127.0.0.1 默认值
+      - EMBEDDING_TARGET=http://v9-embedding-service:8001
       # 数据源类型：real（走采集服务）/ mock（前端假数据）
       - VITE_DATA_SOURCE_TYPE=real
       - VITE_AKSHARE_BASE_URL=/api/akshare

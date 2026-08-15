@@ -52,14 +52,14 @@ export function RiskControlPanel({
         <CardDescription>风险指标与预警</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card>
             <CardContent className="p-4">
               <p className="text-xs text-muted-foreground">VaR (95%)</p>
               {noRiskData ? (
-                <p className="text-2xl font-bold text-muted-foreground">数据不足</p>
+                <p className="text-h1 font-bold text-muted-foreground">数据不足</p>
               ) : (
-                <p className="text-2xl font-bold text-primary">{riskMetrics.var.toFixed(2)}%</p>
+                <p className="text-h1 font-bold text-primary">{riskMetrics.var.toFixed(2)}%</p>
               )}
             </CardContent>
           </Card>
@@ -67,9 +67,9 @@ export function RiskControlPanel({
             <CardContent className="p-4">
               <p className="text-xs text-muted-foreground">最大回撤</p>
               {noRiskData ? (
-                <p className="text-2xl font-bold text-muted-foreground">数据不足</p>
+                <p className="text-h1 font-bold text-muted-foreground">数据不足</p>
               ) : (
-                <p className="text-2xl font-bold text-primary">{riskMetrics.maxDrawdown.toFixed(2)}%</p>
+                <p className="text-h1 font-bold text-primary">{riskMetrics.maxDrawdown.toFixed(2)}%</p>
               )}
             </CardContent>
           </Card>
@@ -77,9 +77,9 @@ export function RiskControlPanel({
             <CardContent className="p-4">
               <p className="text-xs text-muted-foreground">夏普比率</p>
               {noRiskData ? (
-                <p className="text-2xl font-bold text-muted-foreground">数据不足</p>
+                <p className="text-h1 font-bold text-muted-foreground">数据不足</p>
               ) : (
-                <p className="text-2xl font-bold text-primary">{riskMetrics.sharpeRatio.toFixed(2)}</p>
+                <p className="text-h1 font-bold text-primary">{riskMetrics.sharpeRatio.toFixed(2)}</p>
               )}
             </CardContent>
           </Card>
@@ -87,7 +87,7 @@ export function RiskControlPanel({
 
         <div className="space-y-3">
           <h3 className="font-semibold">止损/止盈规则</h3>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>止损比例 (%)</Label>
               <Input

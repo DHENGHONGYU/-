@@ -261,6 +261,7 @@ export default function StrategySnapshotPage(): React.JSX.Element {
                 onClick={() => void handleExportCoreExcel()}
                 disabled={items.core.length === 0 || exporting === 'core'}
                 data-testid="export-core-excel-button"
+                aria-label="导出核心稀缺 Excel"
               >
                 <Download className="mr-2 h-4 w-4" />
                 {exporting === 'core' ? '导出中...' : '导出核心稀缺'}
@@ -283,6 +284,7 @@ export default function StrategySnapshotPage(): React.JSX.Element {
                 onClick={() => void handleSaveSnapshot()}
                 disabled={saving || stocks.length === 0}
                 data-testid="save-snapshot-button"
+                aria-label="保存当前策略快照"
               >
                 <Save className="mr-2 h-4 w-4" />
                 {saving ? '保存中...' : '保存当前快照'}
@@ -329,6 +331,7 @@ export default function StrategySnapshotPage(): React.JSX.Element {
                         onClick={toggleSelectAll}
                         className="h-7 px-2 text-xs"
                         data-testid="select-all-snapshots-button"
+                        aria-label="全选快照"
                       >
                         {selectedSnapshotIds.size === snapshots.length && snapshots.length > 0 ? (
                           <CheckSquare className="mr-1 h-3 w-3" />
@@ -421,6 +424,7 @@ export default function StrategySnapshotPage(): React.JSX.Element {
                             onClick={() => void handleExportSnapshotJson()}
                             disabled={exporting === 'json'}
                             data-testid="export-snapshot-json-button"
+                            aria-label="导出快照 JSON"
                           >
                             <FileJson className="mr-2 h-4 w-4" />
                             {exporting === 'json' ? '导出中...' : '导出 JSON'}
@@ -434,15 +438,15 @@ export default function StrategySnapshotPage(): React.JSX.Element {
                       <CardContent>
                         <div className="grid gap-4 sm:grid-cols-3">
                           <div className="rounded-md border p-3 text-center">
-                            <div className="text-2xl font-bold">{selectedSnapshot.core.count}</div>
+                            <div className="text-h1 font-bold">{selectedSnapshot.core.count}</div>
                             <div className="text-xs text-muted-foreground">核心稀缺</div>
                           </div>
                           <div className="rounded-md border p-3 text-center">
-                            <div className="text-2xl font-bold">{selectedSnapshot.hot.count}</div>
+                            <div className="text-h1 font-bold">{selectedSnapshot.hot.count}</div>
                             <div className="text-xs text-muted-foreground">热点动量</div>
                           </div>
                           <div className="rounded-md border p-3 text-center">
-                            <div className="text-2xl font-bold">{selectedSnapshot.value.count}</div>
+                            <div className="text-h1 font-bold">{selectedSnapshot.value.count}</div>
                             <div className="text-xs text-muted-foreground">价值洼地</div>
                           </div>
                         </div>

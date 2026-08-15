@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-GUIDE-031
+title: "01 · 设计与原创思路（Design & Original Thinking）"
+domain: guide
+status: active
+last_updated: 2026-08-15
+---
+
 # 01 · 设计与原创思路（Design & Original Thinking）
 
 > 本文回答"**我们为什么这样设计**"。理解设计意图，团队才能在接手模块时做出符合初心的决策，而不是被历史代码牵着走。
@@ -59,7 +67,7 @@ FinSightV9 不是又一个"看盘软件"，而是定位为：
 
 ## 4. 设计令牌体系（Design Token System）
 
-> ✅ **令牌清理已完成（2026-08-15）**: 旧版双套令牌系统（`src/generated/tokens.css` + `scripts/generate-tokens.ts` + `design-tokens/tokens.json`）已彻底清除。`src/index.css` 为唯一真相源（V5 Apple Business Design Tokens）。运行时验证 Utility 见 [src/lib/designTokenVerifier.ts](../../../src/lib/designTokenVerifier.ts)，工作流规范见 [Design→Code 工作流](../design-to-code-workflow.md)。
+> ✅ **令牌清理已完成（2026-08-15）**: 旧版双套令牌系统（src/generated/tokens.css + scripts/generate-tokens.ts + `design-tokens/tokens.json`）已彻底清除。`src/index.css` 为唯一真相源（V5 Apple Business Design Tokens）。运行时验证 Utility 见 [src/lib/designTokenVerifier.ts](../../../src/lib/designTokenVerifier.ts)，工作流规范见 [Design→Code 工作流](../design-to-code-workflow.md)。
 
 单一数据源链路（V5，2026-08-15 起）：
 ```

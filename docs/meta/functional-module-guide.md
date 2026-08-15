@@ -157,7 +157,7 @@ config/  →  core/  →  data/  →  services/  →  store/  →  pages/ + comp
 |---|------|------|
 | 1 | **A 股红涨绿跌** | 涨=红色，跌=绿色（中国股市惯例，与欧美相反） |
 | 2 | **货币格式** | 默认 ¥（CNY/RMB） |
-| 3 | **宋韵美学** | 亮色用 stone 暖灰系；暗色用 neutral 高级灰（hue 0） |
+| 3 | **品牌色体系** | Apple Blue #007AFF 单一克制强调色（V5 Apple Business Design）；亮色 neutral 高级灰系；暗色 neutral 高级灰（hue 0）；宋瓷语义色为装饰性点缀 |
 | 4 | **Widget 三处同步** | 新增 Widget 必改：widgetRegistry.ts + DEFAULT_WIDGET_CONFIG + WIDGET_DEFAULT_DATA_SOURCE |
 | 5 | **事件名规范** | 采集事件：collect:triggered/source:start/success/fail/complete |
 | 6 | **行情 URL 集中** | 所有行情 URL 在 `src/config/marketDataEndpoints.ts` |

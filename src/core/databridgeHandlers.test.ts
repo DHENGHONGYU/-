@@ -152,23 +152,27 @@ describe('databridgeHandlers', () => {
   // DeleteHandler
   // ──────────────────────────────────────────
   describe('DeleteHandler', () => {
+    // 注意：DeleteHandler 是集成了 cascadeExecutor 的通用删除处理器，
+    // 注册时绑定 deleteCustomAgent / deleteOrder 等 action（见 createHandlerRegistry）。
+    // deleteExecutionPlan 由专门的 DeleteExecutionPlanHandler 处理，不走 cascadeExecutor，
+    // 因此这里使用 deleteCustomAgent + STORE_NAME.customAgents 来覆盖 DeleteHandler 的真实路径。
     it('正常删除（无级联目标）', async () => {
-      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteExecutionPlan)!
-      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteExecutionPlan, { id: 'plan-1' })
+      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteCustomAgent)!
+      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteCustomAgent, { id: 'agent-1' })
       vi.mocked(cascadeExecutor.execute).mockResolvedValueOnce({ targets: [] })
 
-      await handler.handle(envelope, STORE_NAME.executionPlans)
+      await handler.handle(envelope, STORE_NAME.customAgents)
 
-      expect(cascadeExecutor.execute).toHaveBeenCalledWith(STORE_NAME.executionPlans, 'plan-1')
-      expect(dbModule.db.delete).toHaveBeenCalledWith(STORE_NAME.executionPlans, 'plan-1')
+      expect(cascadeExecutor.execute).toHaveBeenCalledWith(STORE_NAME.customAgents, 'agent-1')
+      expect(dbModule.db.delete).toHaveBeenCalledWith(STORE_NAME.customAgents, 'agent-1')
       expect(logger.debug).toHaveBeenCalledWith(
         expect.stringContaining('DB delete'),
       )
     })
 
     it('级联删除成功（有子记录被级联删除）', async () => {
-      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteExecutionPlan)!
-      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteExecutionPlan, { id: 'plan-1' })
+      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteCustomAgent)!
+      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteCustomAgent, { id: 'agent-1' })
       vi.mocked(cascadeExecutor.execute).mockResolvedValueOnce({
         targets: [
           { store: 'execution_logs', strategy: 'CASCADE', affectedCount: 5 },
@@ -176,9 +180,9 @@ describe('databridgeHandlers', () => {
         ],
       })
 
-      await handler.handle(envelope, STORE_NAME.executionPlans)
+      await handler.handle(envelope, STORE_NAME.customAgents)
 
-      expect(dbModule.db.delete).toHaveBeenCalledWith(STORE_NAME.executionPlans, 'plan-1')
+      expect(dbModule.db.delete).toHaveBeenCalledWith(STORE_NAME.customAgents, 'agent-1')
       expect(logger.info).toHaveBeenCalledWith(
         expect.stringContaining('级联策略执行完成'),
         expect.objectContaining({
@@ -189,13 +193,13 @@ describe('databridgeHandlers', () => {
     })
 
     it('RESTRICT 策略阻止删除时抛出 EnvelopeError', async () => {
-      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteExecutionPlan)!
-      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteExecutionPlan, { id: 'plan-1' })
+      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteCustomAgent)!
+      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteCustomAgent, { id: 'agent-1' })
       vi.mocked(cascadeExecutor.execute).mockRejectedValueOnce(
         new CascadeError('存在 3 条关联记录'),
       )
 
-      const promise = handler.handle(envelope, STORE_NAME.executionPlans)
+      const promise = handler.handle(envelope, STORE_NAME.customAgents)
       await expect(promise).rejects.toThrow(EnvelopeError)
       await expect(promise).rejects.toThrow('删除被阻止')
       // 不执行 db.delete
@@ -207,14 +211,14 @@ describe('databridgeHandlers', () => {
     })
 
     it('级联执行非 CascadeError 异常时继续删除（容错策略）', async () => {
-      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteExecutionPlan)!
-      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteExecutionPlan, { id: 'plan-1' })
+      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteCustomAgent)!
+      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteCustomAgent, { id: 'agent-1' })
       vi.mocked(cascadeExecutor.execute).mockRejectedValueOnce(new Error('Unexpected error'))
 
-      await handler.handle(envelope, STORE_NAME.executionPlans)
+      await handler.handle(envelope, STORE_NAME.customAgents)
 
       // 仍然执行删除
-      expect(dbModule.db.delete).toHaveBeenCalledWith(STORE_NAME.executionPlans, 'plan-1')
+      expect(dbModule.db.delete).toHaveBeenCalledWith(STORE_NAME.customAgents, 'agent-1')
       expect(logger.error).toHaveBeenCalledWith(
         expect.stringContaining('级联执行异常'),
         expect.any(Object),
@@ -222,8 +226,8 @@ describe('databridgeHandlers', () => {
     })
 
     it('cascadeExecutor 返回多个目标时正确统计', async () => {
-      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteExecutionPlan)!
-      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteExecutionPlan, { id: 'plan-1' })
+      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteCustomAgent)!
+      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteCustomAgent, { id: 'agent-1' })
       vi.mocked(cascadeExecutor.execute).mockResolvedValueOnce({
         targets: [
           { store: 'a', strategy: 'CASCADE', affectedCount: 10 },
@@ -232,7 +236,7 @@ describe('databridgeHandlers', () => {
         ],
       })
 
-      await handler.handle(envelope, STORE_NAME.executionPlans)
+      await handler.handle(envelope, STORE_NAME.customAgents)
 
       expect(logger.info).toHaveBeenCalledWith(
         expect.stringContaining('级联策略执行完成'),

@@ -22,7 +22,7 @@ date: 2026-07-17
 # V9 图表组件集成规格
 
 > **对应蓝图**：`./v9-system-blueprint.md` §2 技术栈（图表选型）、§7.3 图表组件规范、§10 偏差项 D16「缺少图表组件库」。
-> **依赖文档**：`./dataflow-data-definition.md`（数据流引擎通道定义）、`./04-ui-ux-specs.md`（图表交互规范）。
+> **依赖文档**：`./dataflow-data-definition.md`（数据流引擎通道定义）、`../specs/04-ui-ux-specs.md`（图表交互规范）。
 
 ---
 
@@ -41,7 +41,7 @@ date: 2026-07-17
 | `lightweight-charts` | K 线图、分时图、成交量 | `npm i lightweight-charts` | 金融场景专用，60 FPS 渲染，内置时间轴、十字光标、缩放平移 |
 | `recharts` | 折线/柱状/面积/雷达/热力图 | `npm i recharts` | React 声明式 API，与组件生命周期天然契合 |
 
-> 详细 UI 规范见 `./04-ui-ux-specs.md` §4.3「图表组件规范」。
+> 详细 UI 规范见 `../specs/04-ui-ux-specs.md` §4.3「图表组件规范」。
 
 ### 2.2 分层封装策略
 
@@ -224,7 +224,7 @@ export const CHART_REFRESH_POLICY = {
 ## 7. 相关链接
 
 - `./v9-system-blueprint.md` §2、§7.3、D16
-- `./04-ui-ux-specs.md` §4.3
+- `../specs/04-ui-ux-specs.md` §4.3
 - `./dataflow-data-definition.md`
 - `./feedback-loop-spec.md`（图表加载失败时的 Toast 反馈）
 - `./widget-error-handling.md`（图表 Widget 的错误边界）

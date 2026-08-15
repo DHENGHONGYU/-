@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-GUIDE-028
+title: "如何新增一个 Widget（WidgetShell + 事件总线）"
+domain: guide
+status: active
+last_updated: 2026-08-15
+---
+
 # 如何新增一个 Widget（WidgetShell + 事件总线）
 
 > **版本**：v1.0.0  

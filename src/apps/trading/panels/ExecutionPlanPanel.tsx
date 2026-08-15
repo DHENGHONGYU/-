@@ -112,7 +112,7 @@ export function ExecutionPlanPanel(): React.JSX.Element {
 
       <CardContent className="space-y-4">
         {/* 统计栏 */}
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           <div className="rounded-md border p-2 text-center">
             <p className="text-xs text-muted-foreground">活跃</p>
             <p className="text-lg font-semibold">{stats.active}</p>
@@ -167,10 +167,10 @@ export function ExecutionPlanPanel(): React.JSX.Element {
                     <ExecutionPlanCard
                       key={plan.id}
                       plan={plan}
-                      onConfirm={confirmPlan}
-                      onExecute={executePlan}
-                      onCancel={cancelPlan}
-                      onReview={markReviewed}
+                      onConfirm={(plan) => void confirmPlan(plan)}
+                      onExecute={(plan) => void executePlan(plan)}
+                      onCancel={(plan) => void cancelPlan(plan)}
+                      onReview={(plan) => void markReviewed(plan)}
                     />
                   ))}
                 </div>

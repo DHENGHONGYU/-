@@ -477,7 +477,7 @@ export class TimelinessSyncAnalyzer {
 let _instance: TimelinessSyncAnalyzer | null = null
 
 export function getTimelinessSyncAnalyzer(config?: TimelinessSyncConfig): TimelinessSyncAnalyzer {
-  if (!_instance) _instance = new TimelinessSyncAnalyzer(config)
+  _instance ??= new TimelinessSyncAnalyzer(config)
   return _instance
 }
 

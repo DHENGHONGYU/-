@@ -16,12 +16,14 @@ import {
   type Time,
   type ISeriesMarkersPluginApi,
 } from 'lightweight-charts'
-import { CHART_PALETTE } from '@/constants/theme.tokens'
+import { CHART_PALETTE_PRO, STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 import type { CandlestickChartProps, TooltipData } from './candlestickChart.types'
 import {
   PERIOD_OPTIONS,
   ADJUST_OPTIONS,
   MA_OPTIONS,
+  EMA_OVERLAY_OPTIONS,
+  OVERLAY_OPTIONS,
   toolbarContainerStyle,
   buttonGroupStyle,
   getToolbarButtonStyle,
@@ -31,6 +33,7 @@ import {
   tooltipContainerStyle,
   tooltipTimeStyle,
   tooltipValuesStyle,
+  PRICE_PULSE_KEYFRAMES,
 } from './candlestickChart.config'
 import {
   computeMA,
@@ -39,6 +42,9 @@ import {
   buildTimeIndex,
   formatTooltipValuesHTML,
   renderSubChartSeries,
+  renderEMAOverlay,
+  renderBollingerOverlay,
+  renderRSISubChart,
   createCrosshairHandler,
 } from './candlestickChart.utils'
 
@@ -58,11 +64,16 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
       showVolume = false,
       macdParams,
       kdjParams,
+      rsiParams,
+      overlay = 'none',
+      emaParams,
+      bollingerParams,
       period = 'daily',
       adjust = 'qfq',
       onPeriodChange,
       onAdjustChange,
       onSubChartChange: _onSubChartChange,
+      onOverlayChange,
       ...divProps
     },
     ref,
@@ -71,13 +82,16 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
     const chartRef = useRef<IChartApi | null>(null)
     const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null)
     const subChartRefs = useRef<Array<ISeriesApi<'Histogram' | 'Line'> | null>>([])
+    const overlayRefs = useRef<Array<ISeriesApi<'Line' | 'Area'> | null>>([])
     const markersRef = useRef<ISeriesMarkersPluginApi<Time> | null>(null)
     const maRefs = useRef<Array<ISeriesApi<'Line'> | null>>([])
     const tooltipRef = useRef<HTMLDivElement>(null)
     const tooltipDataRef = useRef<TooltipData | null>(null)
+    const pricePulseRef = useRef<HTMLDivElement>(null)
 
-    const positiveColor = upColor ?? CHART_PALETTE.upColor
-    const negativeColor = downColor ?? CHART_PALETTE.downColor
+    // A-share 红涨绿跌（买入红色、卖出绿色）
+    const positiveColor = upColor ?? STOCK_COLOR_TOKENS.up.hex
+    const negativeColor = downColor ?? STOCK_COLOR_TOKENS.down.hex
 
     const updateTooltip = useCallback((data: TooltipData | null) => {
       tooltipDataRef.current = data
@@ -104,46 +118,66 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
     // 向后兼容：如果传入了 showVolume=true 但没有指定 subChart，则使用 volume
     const effectiveSubChart = subChart !== 'none' ? subChart : (showVolume ? 'volume' : subChart)
 
+    // 注入脉冲动画 keyframes
+    useEffect(() => {
+      const styleId = 'v9-price-pulse-styles'
+      if (document.getElementById(styleId)) return
+      const style = document.createElement('style')
+      style.id = styleId
+      style.textContent = PRICE_PULSE_KEYFRAMES
+      document.head.appendChild(style)
+    }, [])
+
     useEffect(() => {
       if (!containerRef.current) return
 
       const chartHeight = showToolbar ? height - 40 : height
-      const volumeHeight = effectiveSubChart === 'volume' ? Math.floor(chartHeight * 0.2) : 0
-      const priceHeight = chartHeight - volumeHeight
+      const hasSubChart = effectiveSubChart !== 'none'
+      const subChartHeight = hasSubChart ? Math.floor(chartHeight * 0.2) : 0
+      const priceHeight = chartHeight - subChartHeight
 
       const chart = createChart(containerRef.current, {
         height: priceHeight,
         layout: {
-          background: { color: 'transparent' },
-          textColor: CHART_PALETTE.axis,
+          background: { color: CHART_PALETTE_PRO.bg },
+          textColor: CHART_PALETTE_PRO.axis,
         },
         grid: {
-          vertLines: { color: CHART_PALETTE.gridLight },
-          horzLines: { color: CHART_PALETTE.gridLight },
+          vertLines: { color: CHART_PALETTE_PRO.grid, style: 1 },
+          horzLines: { color: CHART_PALETTE_PRO.grid, style: 1 },
         },
         crosshair: {
           mode: 1,
           vertLine: {
-            color: CHART_PALETTE.accent,
+            color: CHART_PALETTE_PRO.grid,
             width: 1,
-            style: 2,
+            style: 1,
+            labelBackgroundColor: CHART_PALETTE_PRO.bg,
           },
           horzLine: {
-            color: CHART_PALETTE.accent,
+            color: CHART_PALETTE_PRO.grid,
             width: 1,
-            style: 2,
+            style: 1,
+            labelBackgroundColor: CHART_PALETTE_PRO.bg,
           },
         },
         rightPriceScale: {
-          borderColor: CHART_PALETTE.gridLight,
+          borderColor: CHART_PALETTE_PRO.grid,
+          scaleMargins: { top: 0.05, bottom: 0.05 },
         },
         timeScale: {
-          borderColor: CHART_PALETTE.gridLight,
+          borderColor: CHART_PALETTE_PRO.grid,
           timeVisible: true,
           secondsVisible: false,
+          fixLeftEdge: true,
+          fixRightEdge: true,
+        },
+        handleScroll: {
+          vertTouchDrag: false,
         },
       })
 
+      // 专业级 K 线样式：更宽的实体、更细的影线
       const series = chart.addSeries(CandlestickSeries, {
         upColor: positiveColor,
         downColor: negativeColor,
@@ -156,15 +190,20 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
       series.setData(toCandlestickData(data))
 
       // 副图渲染
-      const subChartSeriesList = renderSubChartSeries(
-        chart,
-        data,
-        effectiveSubChart,
-        macdParams,
-        kdjParams,
-        positiveColor,
-        negativeColor,
-      )
+      let subChartSeriesList: Array<ISeriesApi<'Histogram' | 'Line'> | null> = []
+      if (effectiveSubChart === 'rsi') {
+        subChartSeriesList = renderRSISubChart(chart, data, rsiParams)
+      } else {
+        subChartSeriesList = renderSubChartSeries(
+          chart,
+          data,
+          effectiveSubChart,
+          macdParams,
+          kdjParams,
+          positiveColor,
+          negativeColor,
+        )
+      }
       subChartRefs.current = subChartSeriesList
 
       const markersPlugin = createSeriesMarkers(series, [])
@@ -187,6 +226,18 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
       })
       maRefs.current = maSeriesList
 
+      // EMA 叠加层
+      if (overlay === 'ema' || overlay === 'all') {
+        const emaSeriesList = renderEMAOverlay(chart, data, emaParams)
+        overlayRefs.current = [...overlayRefs.current, ...emaSeriesList]
+      }
+
+      // Bollinger Bands 叠加层
+      if (overlay === 'bollinger' || overlay === 'all') {
+        const bollSeriesList = renderBollingerOverlay(chart, data, bollingerParams)
+        overlayRefs.current = [...overlayRefs.current, ...bollSeriesList]
+      }
+
       // OHLCV + 副图指标十字光标浮层（带节流）
       const onCrosshair = createCrosshairHandler(
         series,
@@ -200,18 +251,46 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
 
       chart.timeScale().fitContent()
 
+      // ── 高 DPI 自适应：监听容器尺寸变化 ──
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const { width: w, height: h } = entry.contentRect
+          if (w > 0 && h > 0) {
+            chart.applyOptions({
+              width: w,
+              height: hasSubChart ? h - subChartHeight : h,
+            })
+          }
+        }
+      })
+      resizeObserver.observe(containerRef.current)
+
       chartRef.current = chart
       seriesRef.current = series
 
+      // 价格变动脉冲动画
+      if (data.length >= 2 && pricePulseRef.current) {
+        const last = data[data.length - 1]!
+        const prev = data[data.length - 2]!
+        const isUp = last.close >= prev.close
+        const pulseEl = pricePulseRef.current
+        pulseEl.style.animation = 'none'
+        void pulseEl.offsetWidth // 强制回流
+        pulseEl.style.animation = `v9-price-pulse-${isUp ? 'up' : 'down'} 0.6s ease-out`
+        pulseEl.style.color = isUp ? positiveColor : negativeColor
+      }
+
       return () => {
+        resizeObserver.disconnect()
         chart.remove()
         chartRef.current = null
         seriesRef.current = null
         subChartRefs.current = []
+        overlayRefs.current = []
         markersRef.current = null
         maRefs.current = []
       }
-    }, [data, height, showToolbar, positiveColor, negativeColor, effectiveSubChart, macdParams, kdjParams, updateTooltip])
+    }, [data, height, showToolbar, positiveColor, negativeColor, effectiveSubChart, macdParams, kdjParams, rsiParams, overlay, emaParams, bollingerParams, updateTooltip])
 
     useEffect(() => {
       if (!markersRef.current) return
@@ -231,6 +310,17 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
         ;(ref as { current: HTMLDivElement | null }).current = containerRef.current
       }
     }
+
+    // 图例构建
+    const legendItems = [
+      ...MA_OPTIONS.map(({ period: p, color }) => ({ label: `MA${p}`, color })),
+      ...(overlay === 'ema' || overlay === 'all'
+        ? EMA_OVERLAY_OPTIONS.map(({ period: p, color }) => ({ label: `EMA${p}`, color }))
+        : []),
+      ...(overlay === 'bollinger' || overlay === 'all'
+        ? [{ label: 'BOLL', color: '#60a5fa' }]
+        : []),
+    ]
 
     return (
       <div {...divProps}>
@@ -263,23 +353,67 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
                 ))}
               </div>
             )}
+
+            {/* 叠加指标切换 */}
+            {onOverlayChange && (
+              <div style={buttonGroupStyle}>
+                {OVERLAY_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => onOverlayChange(opt.value as typeof overlay)}
+                    style={getToolbarButtonStyle(overlay === opt.value)}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
         <div style={{ position: 'relative' }}>
-          {/* 均线图例（MA5/10/20/60） */}
-          <div style={maLegendContainerStyle}>
-            {MA_OPTIONS.map(({ period, color }) => (
-              <span key={period} style={maLegendItemStyle}>
-                <span style={{ ...maLegendColorBarStyle, background: color }} />
-                MA{period}
-              </span>
-            ))}
-          </div>
+          {/* 均线 + EMA + BOLL 图例 */}
+          {legendItems.length > 0 && (
+            <div style={maLegendContainerStyle}>
+              {legendItems.map(({ label, color }) => (
+                <span key={label} style={maLegendItemStyle}>
+                  <span style={{ ...maLegendColorBarStyle, background: color }} />
+                  {label}
+                </span>
+              ))}
+            </div>
+          )}
 
           <div ref={containerRef} style={{ height: showToolbar ? height - 40 : height }} />
 
-          {/* OHLCV 十字光标浮层 */}
+          {/* 最新价格脉冲指示器 */}
+          {data.length > 0 && (
+            <div
+              ref={pricePulseRef}
+              style={{
+                position: 'absolute',
+                bottom: 6,
+                right: 8,
+                zIndex: 5,
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                fontFeatureSettings: 'tnum',
+                fontFamily: 'monospace',
+                padding: '2px 8px',
+                borderRadius: '4px',
+                background: 'rgba(19,23,34,0.7)',
+                backdropFilter: 'blur(4px)',
+                color: data[data.length - 1]!.close >= data[data.length - 1]!.open
+                  ? positiveColor
+                  : negativeColor,
+                transition: 'color 0.3s ease',
+              }}
+            >
+              ¥{data[data.length - 1]!.close.toFixed(2)}
+            </div>
+          )}
+
+          {/* OHLCV + RSI 十字光标浮层 */}
           <div ref={tooltipRef} style={tooltipContainerStyle}>
             <div data-tooltip-time style={tooltipTimeStyle} />
             <div data-tooltip-values style={tooltipValuesStyle} />

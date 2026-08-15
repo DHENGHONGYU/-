@@ -409,7 +409,7 @@ export class ChipAnomalyDetector {
 let _instance: ChipAnomalyDetector | null = null
 
 export function getChipAnomalyDetector(config?: ChipAnomalyConfig): ChipAnomalyDetector {
-  if (!_instance) _instance = new ChipAnomalyDetector(config)
+  _instance ??= new ChipAnomalyDetector(config)
   return _instance
 }
 

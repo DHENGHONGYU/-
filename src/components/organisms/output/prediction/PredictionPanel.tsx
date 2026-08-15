@@ -113,19 +113,19 @@ export function PredictionPanel(): React.JSX.Element {
       {/* 统计卡片 */}
       <div className="grid grid-cols-4 gap-3">
         <div className="rounded-lg border bg-card p-3 text-center shadow-sm">
-          <div className="text-2xl font-bold">{stats.total}</div>
+          <div className="text-h1 font-bold">{stats.total}</div>
           <div className="text-xs text-muted-foreground">总预测</div>
         </div>
         <div className="rounded-lg border bg-card p-3 text-center shadow-sm">
-          <div className={`text-2xl font-bold ${COLOR_TOKENS.info.tailwind}`}>{stats.verified}</div>
+          <div className={`text-h1 font-bold ${COLOR_TOKENS.info.tailwind}`}>{stats.verified}</div>
           <div className="text-xs text-muted-foreground">已校验</div>
         </div>
         <div className="rounded-lg border bg-card p-3 text-center shadow-sm">
-          <div className={`text-2xl font-bold ${COLOR_TOKENS.up.tailwind}`}>{(stats.directionHitRate * 100).toFixed(0)}%</div>
+          <div className={`text-h1 font-bold ${COLOR_TOKENS.up.tailwind}`}>{(stats.directionHitRate * 100).toFixed(0)}%</div>
           <div className="text-xs text-muted-foreground">方向准确率</div>
         </div>
         <div className="rounded-lg border bg-card p-3 text-center shadow-sm">
-          <div className={`text-2xl font-bold ${COLOR_TOKENS.down.tailwind}`}>{(stats.rangeHitRate * 100).toFixed(0)}%</div>
+          <div className={`text-h1 font-bold ${COLOR_TOKENS.down.tailwind}`}>{(stats.rangeHitRate * 100).toFixed(0)}%</div>
           <div className="text-xs text-muted-foreground">幅度准确率</div>
         </div>
       </div>

@@ -37,10 +37,7 @@ const WATCH: ReadonlyArray<{ readonly pkg: string; readonly pattern: RegExp; rea
 /** 待扫描的关键架构文档 */
 const DOCS: ReadonlyArray<string> = [
   'architecture.md',
-  'docs/reference/05-engine-specs.md',
-  'docs/explanation/design/ui-design-system.md',
-  'docs/explanation/design/component-library-guide.md',
-  'docs/reference/03-architecture-standards.md',
+  // 以下文档已归档至 archive/historical-2026-08-16/batch8/: 05-engine-specs, ui-design-system, component-library-guide
 ]
 
 interface Drift {

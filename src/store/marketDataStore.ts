@@ -16,11 +16,8 @@
  * 无需全局快照回滚，因为不存在会清空所有数据源的全局 refresh 操作。
  *
  * @see docs/reference/v9核心数据字典与类型定义(整合版).md — MarketDataState / MarketDataSourceKey / DataSourceEntry / MarketDataStatus 实体定义
- * @see docs/reference/功能模块数据契约.md — MarketDataStore 模块契约（总览/输入/输出/接口/订阅/迁移路线）
- * @see docs/reference/v9-system-blueprint.md — Widget 数据流从 MarketDataProvider → Store 的迁移路径
- * @see docs/reference/databridge端点与数据映射清单.md — MarketDataStore 订阅频道（orders → portfolioOverview 刷新）
- * @see docs/reference/V9现有数据资产清单.md — marketDataStore 资产登记
- * @see ../../docs/reports/changelogs/CHANGELOG.md — Phase 2 变更记录（version 0.9.9）
+ * 原文档（功能模块数据契约、v9-system-blueprint、databridge端点与数据映射清单、V9现有数据资产清单）已归档至 archive/historical-2026-08-16/batch7/
+ * Phase 2 变更记录（version 0.9.9）原 changelogs/CHANGELOG.md 已归档至 archive/historical-2026-08-15/
   * @doc [V9-DOC-ARCH-010, V9-DOC-PROJ-118, V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076]
 */
 

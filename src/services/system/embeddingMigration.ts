@@ -112,15 +112,18 @@ async function embedBatchViaBackend(texts: string[]): Promise<number[][] | null>
       logger.warn('[Migration] Backend batch API returned non-200', { status: resp.status })
       return null
     }
-    const data = await resp.json()
-    if (data.vectors?.length !== texts.length) {
+    const json: unknown = await resp.json()
+    const data: Record<string, unknown> =
+      typeof json === 'object' && json !== null ? (json as Record<string, unknown>) : {}
+    const vectors: unknown = data.vectors
+    if (!Array.isArray(vectors) || vectors.length !== texts.length) {
       logger.warn('[Migration] Backend batch returned mismatched count', {
         expected: texts.length,
-        got: data.vectors?.length,
+        got: Array.isArray(vectors) ? vectors.length : undefined,
       })
       return null
     }
-    return data.vectors as number[][]
+    return vectors as number[][]
   } catch (err) {
     logger.warn('[Migration] Backend batch API failed', { error: err })
     return null
@@ -161,8 +164,10 @@ async function checkBackendHealth(): Promise<boolean> {
       signal: AbortSignal.timeout(3_000),
     })
     if (!resp.ok) return false
-    const data = await resp.json()
-    return data.model_loaded === true
+    const json: unknown = await resp.json()
+    return typeof json === 'object' && json !== null
+      ? (json as Record<string, unknown>).model_loaded === true
+      : false
   } catch {
     return false
   }

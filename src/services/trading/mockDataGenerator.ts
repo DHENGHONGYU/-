@@ -409,7 +409,7 @@ export function loadMockDataFromStorage(): MockTradingData | null {
   try {
     const data = localStorage.getItem('mock_trading_data')
     if (data) {
-      return JSON.parse(data)
+      return JSON.parse(data) as MockTradingData
     }
   } catch (error) {
     console.error('[MockDataGenerator] 加载模拟数据失败', error)

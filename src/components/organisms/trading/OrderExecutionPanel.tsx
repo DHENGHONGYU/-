@@ -209,8 +209,8 @@ export function OrderExecutionPanel({
         <CardDescription>创建和管理交易订单</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>股票代码</Label>
               <Input
@@ -307,7 +307,7 @@ export function OrderExecutionPanel({
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleCancel(order.id)}
+                        onClick={() => void handleCancel(order.id)}
                       >
                         取消
                       </Button>

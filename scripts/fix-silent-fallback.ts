@@ -164,8 +164,8 @@ async function main() {
     return
   }
 
-  // 生成修复报告
-  const reportPath = 'docs/archive/silent-fallback-fix-report.md'
+  // 生成修复报告（原 <docs/archive/silent-fallback-fix-report.md> 路径已归档）
+  const reportPath = path.join('docs', 'archive', 'silent-fallback-fix-report.md')
   const report = generateReport(allViolations)
   await fs.writeFile(reportPath, report, 'utf-8')
   console.log(`📝 修复报告已生成：${reportPath}\n`)

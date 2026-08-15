@@ -397,7 +397,7 @@ export function sanitizeObject<T>(
   seen.add(obj)
 
   if (Array.isArray(obj)) {
-    return obj.map((item) => sanitizeObject(item, maxDepth - 1, seen)) as unknown as T
+    return obj.map((item: unknown) => sanitizeObject(item, maxDepth - 1, seen)) as unknown as T
   }
 
   const result: Record<string, unknown> = {}

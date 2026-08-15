@@ -12,6 +12,8 @@ import type {
   SentimentData,
   WatchlistData,
   PortfolioData,
+  HoldingItem,
+  RebalancePlanItem,
   TradeReviewData,
   AnalysisScores,
   ModelComparison,
@@ -23,6 +25,210 @@ import type {
   ValuePitData,
 } from '@/types/modules/widget.types'
 import { FUND_FLOW_NAMES } from '@/constants/cockpit.constants'
+
+// ============================================================
+// Raw Data Payload Interfaces
+// ============================================================
+
+interface RawIndexItem {
+  code?: string
+  symbol?: string
+  name?: string
+  shortName?: string
+  price?: number
+  value?: number
+  current?: number
+  change?: number
+  changePercent?: number
+  change_percent?: number
+  pctChange?: number
+  high?: number
+  low?: number
+  volume?: string | number
+}
+
+interface RawSectorItem {
+  name?: string
+  sectorName?: string
+  code?: string
+  sectorCode?: string
+  changePercent?: number
+  change_percent?: number
+  pctChange?: number
+  turnover?: string | number
+}
+
+interface RawFundFlowItem {
+  type?: string
+  name?: string
+  value?: number
+  netInflow?: number
+  unit?: string
+}
+
+interface RawSentimentData {
+  fearGreedIndex?: number
+  fear_greed_index?: number
+  fgi?: number
+  fearGreedLabel?: string
+  fear_greed_label?: string
+  totalStocks?: number
+  total_stocks?: number
+  total?: number
+  up?: number
+  rise?: number
+  down?: number
+  fall?: number
+  flat?: number
+  unchanged?: number
+  limitUp?: number
+  limit_up?: number
+  limitRise?: number
+  limitDown?: number
+  limit_down?: number
+  limitFall?: number
+}
+
+interface RawWatchlistItem {
+  name?: string
+  stockName?: string
+  code?: string
+  symbol?: string
+  price?: number
+  currentPrice?: number
+  current?: number
+  changePercent?: number
+  change_percent?: number
+  pctChange?: number
+}
+
+interface RawKaiDimension {
+  name?: string
+  score?: number
+  weight?: number
+  status?: string
+  color?: string
+}
+
+interface RawKaiDetailItem {
+  dimensionName?: string
+  dimension_name?: string
+  itemName?: string
+  item_name?: string
+  score?: number
+  weight?: number
+  color?: string
+}
+
+interface RawKaiScoreData {
+  totalScore?: number
+  total_score?: number
+  score?: number
+  sentiment?: number
+  trend?: number
+  flow?: number
+  dimensions?: RawKaiDimension[]
+  detailDistribution?: RawKaiDetailItem[]
+}
+
+interface RawProfileData {
+  tags?: string[]
+  metrics?: Array<{
+    name?: string
+    score?: number
+    description?: string
+    icon?: string
+  }>
+}
+
+interface RawModelInfo {
+  id?: string
+  name?: string
+  version?: string
+  score?: number
+}
+
+interface RawModelComparisonData {
+  leftModel?: RawModelInfo
+  left_model?: RawModelInfo
+  modelA?: RawModelInfo
+  rightModel?: RawModelInfo
+  right_model?: RawModelInfo
+  modelB?: RawModelInfo
+  dimensions?: Array<{
+    name?: string
+    leftScore?: number
+    left_score?: number
+    scoreA?: number
+    rightScore?: number
+    right_score?: number
+    scoreB?: number
+    weight?: number
+  }>
+  riskHint?: string
+  risk_hint?: string
+  risk?: string
+}
+
+interface RawPoolBoardItem {
+  code?: string
+  symbol?: string
+  name?: string
+  stockName?: string
+  price?: number
+  currentPrice?: number
+  current?: number
+  changePercent?: number
+  change_percent?: number
+  pctChange?: number
+  turnover?: string
+  turnoverRate?: string
+  turnover_rate?: string
+  statusColor?: string
+  status_color?: string
+  statusLabel?: string
+  status_label?: string
+}
+
+interface RawChatMessage {
+  id?: string
+  role?: string
+  content?: string
+  timestamp?: number
+  ts?: number
+}
+
+interface RawHotSectorDimensions {
+  momentum?: number
+  sentiment?: number
+  technical?: number
+  valuation?: number
+}
+
+interface RawHotSectorItem {
+  symbol?: string
+  name?: string
+  score?: number
+  action?: string
+  dimensions?: RawHotSectorDimensions
+}
+
+interface RawValuePitDimensions {
+  catalyst?: number
+  valuation?: number
+  chip?: number
+  rotation?: number
+  liquidity?: number
+}
+
+interface RawValuePitItem {
+  symbol?: string
+  name?: string
+  score?: number
+  action?: string
+  rotationSignal?: boolean
+  dimensions?: RawValuePitDimensions
+}
 
 const logger = getLogger()
 
@@ -42,34 +248,34 @@ export class MarketDataAdapter {
 
     switch (rawData.dataType) {
       case 'indices':
-        return { indices: this.adaptIndices(rawData.payload) }
+        return { indices: this.adaptIndices(rawData.payload as RawIndexItem[]) }
       case 'sectors':
-        return { sectors: this.adaptSectors(rawData.payload) }
+        return { sectors: this.adaptSectors(rawData.payload as RawSectorItem[]) }
       case 'fundFlow':
-        return { fundFlows: this.adaptFundFlows(rawData.payload) }
+        return { fundFlows: this.adaptFundFlows(rawData.payload as RawFundFlowItem[]) }
       case 'sentiment':
-        return { sentiment: this.adaptSentiment(rawData.payload) }
+        return { sentiment: this.adaptSentiment(rawData.payload as RawSentimentData) }
       case 'watchlist':
-        return { watchlist: this.adaptWatchlist(rawData.payload) }
+        return { watchlist: this.adaptWatchlist(rawData.payload as RawWatchlistItem[]) }
       case 'portfolio':
-        return { portfolio: this.adaptPortfolio(rawData.payload) }
+        return { portfolio: this.adaptPortfolio(rawData.payload as Record<string, unknown>) }
       case 'tradeReview':
-        return { tradeReview: this.adaptTradeReview(rawData.payload) }
+        return { tradeReview: this.adaptTradeReview(rawData.payload as Record<string, unknown>) }
       // ============================================================
       // 新增金融业务数据适配
       // ============================================================
       case 'analysisScores':
-        return { analysisScores: this.adaptAnalysisScores(rawData.payload) }
+        return { analysisScores: this.adaptAnalysisScores(rawData.payload as Record<string, unknown>) }
       case 'modelComparison':
-        return { modelComparison: this.adaptModelComparison(rawData.payload) }
+        return { modelComparison: this.adaptModelComparison(rawData.payload as RawModelComparisonData) }
       case 'poolBoard':
-        return { poolBoard: this.adaptPoolBoard(rawData.payload) }
+        return { poolBoard: this.adaptPoolBoard(rawData.payload as Record<string, unknown>) }
       case 'chatHistory':
-        return { chatHistory: this.adaptChatHistory(rawData.payload) }
+        return { chatHistory: this.adaptChatHistory(rawData.payload as Record<string, unknown>) }
       case 'hotSectors':
-        return { hotSectors: this.adaptHotSectors(rawData.payload) }
+        return { hotSectors: this.adaptHotSectors(rawData.payload as RawHotSectorItem[]) }
       case 'valuePit':
-        return { valuePit: this.adaptValuePit(rawData.payload) }
+        return { valuePit: this.adaptValuePit(rawData.payload as RawValuePitItem[]) }
       default:
         logger.warn(`[MarketDataAdapter] 未知的数据类型: ${String(rawData.dataType)}`)
         return {}
@@ -129,12 +335,8 @@ export class MarketDataAdapter {
    * @param payload 原始指数数据（数组）
    * @returns 标准化后的 MarketIndexData[]
    */
-  private adaptIndices(payload: unknown): MarketIndexData[] {
-    if (!Array.isArray(payload)) {
-      logger.warn('[MarketDataAdapter] indices payload 不是数组')
-      return []
-    }
-
+  private adaptIndices(payload: RawIndexItem[]): MarketIndexData[] {
+    if (!Array.isArray(payload)) return []
     return payload.map((item) => ({
       code: toSafeString(item.code ?? item.symbol),
       name: toSafeString(item.name ?? item.shortName),
@@ -152,12 +354,8 @@ export class MarketDataAdapter {
    * @param payload 原始板块数据（数组）
    * @returns 标准化后的 SectorHeatmapData[]
    */
-  private adaptSectors(payload: unknown): SectorHeatmapData[] {
-    if (!Array.isArray(payload)) {
-      logger.warn('[MarketDataAdapter] sectors payload 不是数组')
-      return []
-    }
-
+  private adaptSectors(payload: RawSectorItem[]): SectorHeatmapData[] {
+    if (!Array.isArray(payload)) return []
     return payload.map((item) => ({
       name: toSafeString(item.name ?? item.sectorName),
       code: toSafeString(item.code ?? item.sectorCode),
@@ -171,15 +369,11 @@ export class MarketDataAdapter {
    * @param payload 原始资金流向数据（数组）
    * @returns 标准化后的 FundFlowData[]
    */
-  private adaptFundFlows(payload: unknown): FundFlowData[] {
-    if (!Array.isArray(payload)) {
-      logger.warn('[MarketDataAdapter] fundFlows payload 不是数组')
-      return []
-    }
-
+  private adaptFundFlows(payload: RawFundFlowItem[]): FundFlowData[] {
+    if (!Array.isArray(payload)) return []
     return payload.map((item) => ({
       type: toSafeString(item.type),
-      name: toSafeString(item.name ?? FUND_FLOW_NAMES[item.type]),
+      name: toSafeString(item.name ?? (item.type != null ? FUND_FLOW_NAMES[item.type] : '')),
       value: toSafeNumber(item.value ?? item.netInflow ?? 0),
       unit: toSafeString(item.unit, '亿'),
     }))
@@ -190,23 +384,17 @@ export class MarketDataAdapter {
    * @param payload 原始市场情绪数据
    * @returns 标准化后的 SentimentData
    */
-  private adaptSentiment(payload: unknown): SentimentData {
-    if (payload === null || payload === undefined || typeof payload !== 'object') {
-      logger.warn('[MarketDataAdapter] sentiment payload 不是对象')
-      return this.getDefaultSentiment()
-    }
-
-    const p = payload as Record<string, unknown>
-
+  private adaptSentiment(payload: RawSentimentData): SentimentData {
+    if (!payload) return this.getDefaultSentiment()
     return {
-      fearGreedIndex: toSafeNumber(p.fearGreedIndex ?? p.fear_greed_index ?? p.fgi ?? 50),
-      fearGreedLabel: toSafeString(p.fearGreedLabel ?? p.fear_greed_label, '中性'),
-      totalStocks: toSafeNumber(p.totalStocks ?? p.total_stocks ?? p.total ?? 0),
-      up: toSafeNumber(p.up ?? p.rise ?? 0),
-      down: toSafeNumber(p.down ?? p.fall ?? 0),
-      flat: toSafeNumber(p.flat ?? p.unchanged ?? 0),
-      limitUp: toSafeNumber(p.limitUp ?? p.limit_up ?? p.limitRise ?? 0),
-      limitDown: toSafeNumber(p.limitDown ?? p.limit_down ?? p.limitFall ?? 0),
+      fearGreedIndex: toSafeNumber(payload.fearGreedIndex ?? payload.fear_greed_index ?? payload.fgi ?? 50),
+      fearGreedLabel: toSafeString(payload.fearGreedLabel ?? payload.fear_greed_label, '中性'),
+      totalStocks: toSafeNumber(payload.totalStocks ?? payload.total_stocks ?? payload.total ?? 0),
+      up: toSafeNumber(payload.up ?? payload.rise ?? 0),
+      down: toSafeNumber(payload.down ?? payload.fall ?? 0),
+      flat: toSafeNumber(payload.flat ?? payload.unchanged ?? 0),
+      limitUp: toSafeNumber(payload.limitUp ?? payload.limit_up ?? payload.limitRise ?? 0),
+      limitDown: toSafeNumber(payload.limitDown ?? payload.limit_down ?? payload.limitFall ?? 0),
     }
   }
 
@@ -215,12 +403,8 @@ export class MarketDataAdapter {
    * @param payload 原始自选股数据（数组）
    * @returns 标准化后的 WatchlistData[]
    */
-  private adaptWatchlist(payload: unknown): WatchlistData[] {
-    if (!Array.isArray(payload)) {
-      logger.warn('[MarketDataAdapter] watchlist payload 不是数组')
-      return []
-    }
-
+  private adaptWatchlist(payload: RawWatchlistItem[]): WatchlistData[] {
+    if (!Array.isArray(payload)) return []
     return payload.map((item) => ({
       name: toSafeString(item.name ?? item.stockName),
       code: toSafeString(item.code ?? item.symbol),
@@ -234,31 +418,32 @@ export class MarketDataAdapter {
    * @param payload 原始持仓概览数据
    * @returns 标准化后的 PortfolioData
    */
-  private adaptPortfolio(payload: unknown): PortfolioData {
-    if (payload === null || payload === undefined || typeof payload !== 'object') {
-      logger.warn('[MarketDataAdapter] portfolio payload 不是对象')
-      return this.getDefaultPortfolio()
-    }
-
-    const p = payload as Record<string, unknown>
+  private adaptPortfolio(payload: Record<string, unknown>): PortfolioData {
+    if (!payload) return this.getDefaultPortfolio()
+    const holdingsList: HoldingItem[] = Array.isArray(payload.holdingsList)
+      ? (payload.holdingsList as HoldingItem[])
+      : []
+    const rebalancePlan: RebalancePlanItem[] = Array.isArray(payload.rebalancePlan)
+      ? (payload.rebalancePlan as RebalancePlanItem[])
+      : []
 
     return {
-      totalAssets: toSafeString(p.totalAssets ?? p.total_assets, '0'),
-      availableFunds: toSafeString(p.availableFunds ?? p.available_funds, '0'),
-      todayPnL: toSafeString(p.todayPnL ?? p.today_pnl ?? p.todayProfit, '0'),
-      todayPnLPercent: toSafeNumber(p.todayPnLPercent ?? p.today_pnl_percent ?? p.todayProfitPct ?? 0),
-      totalPnL: toSafeString(p.totalPnL ?? p.total_pnl ?? p.totalProfit, '0'),
-      totalPnLPercent: toSafeNumber(p.totalPnLPercent ?? p.total_pnl_percent ?? p.totalProfitPct ?? 0),
-      holdings: toSafeNumber(p.holdings ?? p.holdingCount ?? p.positionCount ?? 0),
-      holdingsList: Array.isArray(p.holdingsList) ? p.holdingsList : [],
-      rebalancePlan: Array.isArray(p.rebalancePlan) ? p.rebalancePlan : [],
-      equityCurve: Array.isArray(p.equityCurve)
-        ? (p.equityCurve as number[])
-        : Array.isArray(p.equity_curve)
-          ? (p.equity_curve as number[])
+      totalAssets: toSafeString(payload.totalAssets ?? payload.total_assets, '0'),
+      availableFunds: toSafeString(payload.availableFunds ?? payload.available_funds, '0'),
+      todayPnL: toSafeString(payload.todayPnL ?? payload.today_pnl ?? payload.todayProfit, '0'),
+      todayPnLPercent: toSafeNumber(payload.todayPnLPercent ?? payload.today_pnl_percent ?? payload.todayProfitPct ?? 0),
+      totalPnL: toSafeString(payload.totalPnL ?? payload.total_pnl ?? payload.totalProfit, '0'),
+      totalPnLPercent: toSafeNumber(payload.totalPnLPercent ?? payload.total_pnl_percent ?? payload.totalProfitPct ?? 0),
+      holdings: toSafeNumber(payload.holdings ?? payload.holdingCount ?? payload.positionCount ?? 0),
+      holdingsList,
+      rebalancePlan,
+      equityCurve: Array.isArray(payload.equityCurve)
+        ? (payload.equityCurve as number[])
+        : Array.isArray(payload.equity_curve)
+          ? (payload.equity_curve as number[])
           : [],
-      maxDrawdown: toSafeNumber(p.maxDrawdown ?? p.max_drawdown ?? p.maxDrawdownPct ?? 0),
-      sharpeRatio: toSafeNumber(p.sharpeRatio ?? p.sharpe_ratio ?? 0),
+      maxDrawdown: toSafeNumber(payload.maxDrawdown ?? payload.max_drawdown ?? payload.maxDrawdownPct ?? 0),
+      sharpeRatio: toSafeNumber(payload.sharpeRatio ?? payload.sharpe_ratio ?? 0),
     }
   }
 
@@ -267,21 +452,15 @@ export class MarketDataAdapter {
    * @param payload 原始交易复盘数据
    * @returns 标准化后的 TradeReviewData
    */
-  private adaptTradeReview(payload: unknown): TradeReviewData {
-    if (payload === null || payload === undefined || typeof payload !== 'object') {
-      logger.warn('[MarketDataAdapter] tradeReview payload 不是对象')
-      return this.getDefaultTradeReview()
-    }
-
-    const p = payload as Record<string, unknown>
-
+  private adaptTradeReview(payload: Record<string, unknown>): TradeReviewData {
+    if (!payload) return this.getDefaultTradeReview()
     return {
-      totalTrades: toSafeNumber(p.totalTrades ?? p.total_trades ?? p.total ?? 0),
-      profitable: toSafeNumber(p.profitable ?? p.profitCount ?? 0),
-      losing: toSafeNumber(p.losing ?? p.lossCount ?? 0),
-      winRate: toSafeNumber(p.winRate ?? p.win_rate ?? p.winPct ?? 0),
-      profitLossRatio: toSafeNumber(p.profitLossRatio ?? p.profit_loss_ratio ?? p.plRatio ?? 0),
-      disciplineScore: toSafeNumber(p.disciplineScore ?? p.discipline_score ?? p.score ?? 0),
+      totalTrades: toSafeNumber(payload.totalTrades ?? payload.total_trades ?? payload.total ?? 0),
+      profitable: toSafeNumber(payload.profitable ?? payload.profitCount ?? 0),
+      losing: toSafeNumber(payload.losing ?? payload.lossCount ?? 0),
+      winRate: toSafeNumber(payload.winRate ?? payload.win_rate ?? payload.winPct ?? 0),
+      profitLossRatio: toSafeNumber(payload.profitLossRatio ?? payload.profit_loss_ratio ?? payload.plRatio ?? 0),
+      disciplineScore: toSafeNumber(payload.disciplineScore ?? payload.discipline_score ?? payload.score ?? 0),
     }
   }
 
@@ -293,17 +472,11 @@ export class MarketDataAdapter {
    * 适配投资画像 / KAI 评分数据
    * @remarks 支持字段别名，便于接入不同量化服务返回的 JSON 结构
    */
-  private adaptAnalysisScores(payload: unknown): AnalysisScores {
-    if (payload === null || payload === undefined || typeof payload !== 'object') {
-      logger.warn('[MarketDataAdapter] analysisScores payload 不是对象')
-      return this.getDefaultAnalysisScores()
-    }
-
-    const p = payload as Record<string, unknown>
-
+  private adaptAnalysisScores(payload: Record<string, unknown>): AnalysisScores {
+    if (!payload) return this.getDefaultAnalysisScores()
     return {
-      profile: this.adaptProfile(p.profile ?? p.userProfile ?? {}),
-      kai: this.adaptKaiScore(p.kai ?? p.score ?? {}),
+      profile: this.adaptProfile(payload.profile ?? payload.userProfile ?? {}),
+      kai: this.adaptKaiScore(payload.kai ?? payload.score ?? {}),
     }
   }
 
@@ -312,16 +485,12 @@ export class MarketDataAdapter {
    * @param payload 原始画像数据
    * @returns 标准化后的 AnalysisScores['profile']
    */
-  private adaptProfile(payload: unknown): AnalysisScores['profile'] {
-    if (payload === null || payload === undefined || typeof payload !== 'object') {
-      return { tags: [], metrics: [] }
-    }
-
-    const p = payload as Record<string, unknown>
-    const metrics = Array.isArray(p.metrics) ? p.metrics : []
+  private adaptProfile(payload: RawProfileData): AnalysisScores['profile'] {
+    if (!payload) return { tags: [], metrics: [] }
+    const metrics = Array.isArray(payload.metrics) ? payload.metrics : []
 
     return {
-      tags: Array.isArray(p.tags) ? p.tags.map((t) => toSafeString(t)) : [],
+      tags: Array.isArray(payload.tags) ? payload.tags.map((t) => toSafeString(t)) : [],
       metrics: metrics.map((item) => ({
         name: toSafeString(item.name),
         score: toSafeNumber(item.score ?? 0),
@@ -336,20 +505,25 @@ export class MarketDataAdapter {
    * @param payload 原始 KAI 评分数据
    * @returns 标准化后的 AnalysisScores['kai']
    */
-  private adaptKaiScore(payload: unknown): AnalysisScores['kai'] {
-    if (payload === null || payload === undefined || typeof payload !== 'object') {
-      return this.getDefaultAnalysisScores().kai
+  private adaptKaiScore(payload: RawKaiScoreData): AnalysisScores['kai'] {
+    if (!payload) {
+      return {
+        totalScore: 0,
+        sentiment: 0,
+        trend: 0,
+        flow: 0,
+        dimensions: [],
+        detailDistribution: [],
+      }
     }
-
-    const p = payload as Record<string, unknown>
-    const dimensions = Array.isArray(p.dimensions) ? p.dimensions : []
-    const detailDistribution = Array.isArray(p.detailDistribution) ? p.detailDistribution : []
+    const dimensions: RawKaiDimension[] = Array.isArray(payload.dimensions) ? payload.dimensions : []
+    const detailDistribution: RawKaiDetailItem[] = Array.isArray(payload.detailDistribution) ? payload.detailDistribution : []
 
     return {
-      totalScore: toSafeNumber(p.totalScore ?? p.total_score ?? p.score ?? 0),
-      sentiment: toSafeNumber(p.sentiment ?? 0),
-      trend: toSafeNumber(p.trend ?? 0),
-      flow: toSafeNumber(p.flow ?? 0),
+      totalScore: toSafeNumber(payload.totalScore ?? payload.total_score ?? payload.score ?? 0),
+      sentiment: toSafeNumber(payload.sentiment ?? 0),
+      trend: toSafeNumber(payload.trend ?? 0),
+      flow: toSafeNumber(payload.flow ?? 0),
       dimensions: dimensions.map((item) => ({
         name: toSafeString(item.name),
         score: toSafeNumber(item.score ?? 0),
@@ -370,25 +544,20 @@ export class MarketDataAdapter {
   /**
    * 适配 AI 大模型对比数据
    */
-  private adaptModelComparison(payload: unknown): ModelComparison {
-    if (payload === null || payload === undefined || typeof payload !== 'object') {
-      logger.warn('[MarketDataAdapter] modelComparison payload 不是对象')
-      return this.getDefaultModelComparison()
-    }
-
-    const p = payload as Record<string, unknown>
-    const dimensions = Array.isArray(p.dimensions) ? p.dimensions : []
+  private adaptModelComparison(payload: RawModelComparisonData): ModelComparison {
+    if (!payload) return this.getDefaultModelComparison()
+    const dimensions = Array.isArray(payload.dimensions) ? payload.dimensions : []
 
     return {
-      leftModel: this.adaptModelInfo(p.leftModel ?? p.left_model ?? p.modelA ?? {}),
-      rightModel: this.adaptModelInfo(p.rightModel ?? p.right_model ?? p.modelB ?? {}),
+      leftModel: this.adaptModelInfo(payload.leftModel ?? payload.left_model ?? payload.modelA ?? {}),
+      rightModel: this.adaptModelInfo(payload.rightModel ?? payload.right_model ?? payload.modelB ?? {}),
       dimensions: dimensions.map((item) => ({
         name: toSafeString(item.name),
         leftScore: toSafeNumber(item.leftScore ?? item.left_score ?? item.scoreA ?? 0),
         rightScore: toSafeNumber(item.rightScore ?? item.right_score ?? item.scoreB ?? 0),
         weight: toSafeNumber(item.weight ?? 0),
       })),
-      riskHint: toSafeString(p.riskHint ?? p.risk_hint ?? p.risk),
+      riskHint: toSafeString(payload.riskHint ?? payload.risk_hint ?? payload.risk),
     }
   }
 
@@ -397,37 +566,28 @@ export class MarketDataAdapter {
    * @param payload 原始模型信息
    * @returns 标准化后的 ModelComparison['leftModel']
    */
-  private adaptModelInfo(payload: unknown): ModelComparison['leftModel'] {
-    if (payload === null || payload === undefined || typeof payload !== 'object') {
-      return { id: '', name: '', version: '', score: 0 }
-    }
-
-    const p = payload as Record<string, unknown>
+  private adaptModelInfo(payload: RawModelInfo): ModelComparison['leftModel'] {
+    if (!payload) return { id: '', name: '', version: '', score: 0 }
     return {
-      id: toSafeString(p.id),
-      name: toSafeString(p.name),
-      version: toSafeString(p.version),
-      score: toSafeNumber(p.score ?? 0),
+      id: toSafeString(payload.id),
+      name: toSafeString(payload.name),
+      version: toSafeString(payload.version),
+      score: toSafeNumber(payload.score ?? 0),
     }
   }
 
   /**
    * 适配股票池数据
    */
-  private adaptPoolBoard(payload: unknown): PoolBoard {
-    if (payload === null || payload === undefined || typeof payload !== 'object') {
-      logger.warn('[MarketDataAdapter] poolBoard payload 不是对象')
-      return this.getDefaultPoolBoard()
-    }
-
-    const p = payload as Record<string, unknown>
-    const items = Array.isArray(p.items) ? p.items : Array.isArray(p.stocks) ? p.stocks : []
+  private adaptPoolBoard(payload: Record<string, unknown>): PoolBoard {
+    if (!payload) return this.getDefaultPoolBoard()
+    const items = Array.isArray(payload.items) ? payload.items : Array.isArray(payload.stocks) ? payload.stocks : []
 
     return {
-      items: items.map((item) => this.adaptPoolBoardItem(item)),
-      total: toSafeNumber(p.total ?? items.length),
-      page: toSafeNumber(p.page ?? 1),
-      pageSize: toSafeNumber(p.pageSize ?? p.page_size ?? p.limit ?? 10),
+      items: items.map((item) => this.adaptPoolBoardItem(item as RawPoolBoardItem)),
+      total: toSafeNumber(payload.total ?? items.length),
+      page: toSafeNumber(payload.page ?? 1),
+      pageSize: toSafeNumber(payload.pageSize ?? payload.page_size ?? payload.limit ?? 10),
     }
   }
 
@@ -436,36 +596,31 @@ export class MarketDataAdapter {
    * @param item 单个股票池原始条目
    * @returns 标准化后的 PoolBoardItem
    */
-  private adaptPoolBoardItem(item: unknown): PoolBoardItem {
-    const it = item as Record<string, unknown>
+  private adaptPoolBoardItem(item: RawPoolBoardItem): PoolBoardItem {
+    if (!item) return { code: '', name: '', price: 0, changePercent: 0, turnover: '', turnoverRate: '', statusColor: 'bg-gray-400', statusLabel: '' }
     return {
-      code: toSafeString(it.code ?? it.symbol),
-      name: toSafeString(it.name ?? it.stockName),
-      price: toSafeNumber(it.price ?? it.currentPrice ?? it.current ?? 0),
-      changePercent: toSafeNumber(it.changePercent ?? it.change_percent ?? it.pctChange ?? 0),
-      turnover: toSafeString(it.turnover),
-      turnoverRate: toSafeString(it.turnoverRate ?? it.turnover_rate),
-      statusColor: toSafeString(it.statusColor ?? it.status_color, 'bg-gray-400'),
-      statusLabel: toSafeString(it.statusLabel ?? it.status_label),
+      code: toSafeString(item.code ?? item.symbol),
+      name: toSafeString(item.name ?? item.stockName),
+      price: toSafeNumber(item.price ?? item.currentPrice ?? item.current ?? 0),
+      changePercent: toSafeNumber(item.changePercent ?? item.change_percent ?? item.pctChange ?? 0),
+      turnover: toSafeString(item.turnover),
+      turnoverRate: toSafeString(item.turnoverRate ?? item.turnover_rate),
+      statusColor: toSafeString(item.statusColor ?? item.status_color, 'bg-gray-400'),
+      statusLabel: toSafeString(item.statusLabel ?? item.status_label),
     }
   }
 
   /**
    * 适配聊天历史数据
    */
-  private adaptChatHistory(payload: unknown): ChatHistory {
-    if (payload === null || payload === undefined || typeof payload !== 'object') {
-      logger.warn('[MarketDataAdapter] chatHistory payload 不是对象')
-      return this.getDefaultChatHistory()
-    }
-
-    const p = payload as Record<string, unknown>
-    const messages = Array.isArray(p.messages) ? p.messages : []
+  private adaptChatHistory(payload: Record<string, unknown>): ChatHistory {
+    if (!payload) return this.getDefaultChatHistory()
+    const messages = Array.isArray(payload.messages) ? payload.messages : []
 
     return {
-      target: toSafeString(p.target),
-      targetType: (p.targetType ?? p.target_type ?? 'stock') as ChatHistory['targetType'],
-      messages: messages.map((item) => this.adaptChatMessage(item)),
+      target: toSafeString(payload.target),
+      targetType: (payload.targetType ?? payload.target_type ?? 'stock') as ChatHistory['targetType'],
+      messages: messages.map((item) => this.adaptChatMessage(item as RawChatMessage)),
     }
   }
 
@@ -474,13 +629,13 @@ export class MarketDataAdapter {
    * @param item 单条原始消息
    * @returns 标准化后的 ChatMessage
    */
-  private adaptChatMessage(item: unknown): ChatMessage {
-    const it = item as Record<string, unknown>
+  private adaptChatMessage(item: RawChatMessage): ChatMessage {
+    if (!item) return { id: '', role: 'assistant', content: '', timestamp: Date.now() }
     return {
-      id: toSafeString(it.id),
-      role: (it.role ?? 'assistant') as ChatMessage['role'],
-      content: toSafeString(it.content),
-      timestamp: toSafeNumber(it.timestamp ?? it.ts ?? Date.now()),
+      id: toSafeString(item.id),
+      role: (item.role ?? 'assistant') as ChatMessage['role'],
+      content: toSafeString(item.content),
+      timestamp: toSafeNumber(item.timestamp ?? item.ts ?? Date.now()),
     }
   }
 
@@ -603,12 +758,8 @@ export class MarketDataAdapter {
    * @param payload 原始热门板块数据（数组）
    * @returns 标准化后的 HotSectorData[]
    */
-  private adaptHotSectors(payload: unknown): HotSectorData[] {
-    if (!Array.isArray(payload)) {
-      logger.warn('[MarketDataAdapter] hotSectors payload 不是数组')
-      return []
-    }
-
+  private adaptHotSectors(payload: RawHotSectorItem[]): HotSectorData[] {
+    if (!Array.isArray(payload)) return []
     return payload.map((item) => {
       const dims = {
         momentum: toSafeNumber(item.dimensions?.momentum ?? 0),
@@ -634,12 +785,8 @@ export class MarketDataAdapter {
    * @param payload 原始价值洼地数据（数组）
    * @returns 标准化后的 ValuePitData[]
    */
-  private adaptValuePit(payload: unknown): ValuePitData[] {
-    if (!Array.isArray(payload)) {
-      logger.warn('[MarketDataAdapter] valuePit payload 不是数组')
-      return []
-    }
-
+  private adaptValuePit(payload: RawValuePitItem[]): ValuePitData[] {
+    if (!Array.isArray(payload)) return []
     return payload.map((item) => {
       const dims = {
         catalyst: toSafeNumber(item.dimensions?.catalyst ?? 0),

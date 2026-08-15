@@ -74,7 +74,7 @@ date: 2026-07-17
 ## 文档同步
 
 - [ ] 更新 `../explanation/03-architecture-standards.md` 中相关模块说明
-- [ ] 更新 `./06-routing-specs.md` 路由表（如涉及路由）
+- [ ] 更新 `../explanation/06-routing-specs.md` 路由表（如涉及路由）
 - [ ] 更新组件目录说明或 Storybook 示例
 - [ ] 在 `CHANGELOG.md` 中记录迁移内容
 

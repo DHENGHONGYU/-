@@ -52,25 +52,25 @@ code_version: 2.0.0
 ### 1.1 命名总原则
 | 原则 | 说明 | 示例 |
 |------|------|------|
-| **语义化** | 文件名能反映文档内容 | `databridge-architecture.md` ✅ |
-| **全小写** | 统一使用小写字母 | `UserGuide.md` ❌ → `user-guide.md` ✅ |
-| **连字符分隔** | 多单词用 `-`（kebab-case） | `user_guide.md` ❌ → `user-guide.md` ✅ |
-| **英文优先** | 文件名使用英文，内容可用中文 | `数据架构.md` ❌ → `data-architecture.md` ✅ |
-| **简洁明确** | 不超过 5 个单词，30 字符以内 | `very-long-file-name-example.md` ❌ |
-| **不使用特殊字符** | 避免空格、中文、特殊符号 | `my doc (2).md` ❌ |
+| **语义化** | 文件名能反映文档内容 | databridge-architecture.md ✅ |
+| **全小写** | 统一使用小写字母 | UserGuide.md ❌ → user-guide.md ✅ |
+| **连字符分隔** | 多单词用 `-`（kebab-case） | user_guide.md ❌ → user-guide.md ✅ |
+| **英文优先** | 文件名使用英文，内容可用中文 | 数据架构.md ❌ → data-architecture.md ✅ |
+| **简洁明确** | 不超过 5 个单词，30 字符以内 | very-long-file-name-example.md ❌ |
+| **不使用特殊字符** | 避免空格、中文、特殊符号 | my doc (2).md ❌ |
 
 ### 1.2 各类型文档命名约定
 | 文档类型 | 命名模式 | 示例 |
 |----------|----------|------|
-| **架构设计** | `<module>-architecture.md` / `<module>-design.md` | `databridge-architecture.md` |
-| **ADR 决策** | `adr-<number>-<topic>.md` | `adr-001-pure-frontend.md` |
-| **操作指南** | `how-to-<action>.md` / `<topic>-guide.md` | `how-to-add-store.md` |
-| **教程** | `<topic>-tutorial.md` / `getting-started.md` | `getting-started.md` |
-| **规范标准** | `<domain>-conventions.md` / `<topic>-spec.md` | `coding-conventions.md` |
-| **报告** | `<type>-report.md` / `<topic>-audit.md` | `code-quality-audit-report.md` |
-| **经验教训** | `lessons-learned-<date>.md` / `<topic>-lessons.md` | `lessons-learned-2026-07.md` |
-| **数据定义** | `data-definition.md` / `<module>-types.md` | `news-data-definition.md` |
-| **模板** | `<type>-template.md` | `feature-doc-template.md` |
+| **架构设计** | `<module>-architecture.md` / `<module>-design.md` | databridge-architecture.md |
+| **ADR 决策** | `adr-<number>-<topic>.md` | adr-001-pure-frontend.md |
+| **操作指南** | `how-to-<action>.md` / `<topic>-guide.md` | `docs/guides/how-to-add-store.md` |
+| **教程** | `<topic>-tutorial.md` / getting-started.md | `docs/guides/getting-started.md` |
+| **规范标准** | `<domain>-conventions.md` / `<topic>-spec.md` | coding-conventions.md |
+| **报告** | `<type>-report.md` / `<topic>-audit.md` | code-quality-audit-report.md |
+| **经验教训** | `lessons-learned-<date>.md` / `<topic>-lessons.md` | lessons-learned-2026-07.md |
+| **数据定义** | data-definition.md / `<module>-types.md` | `docs/reference/news-data-definition.md` |
+| **模板** | `<type>-template.md` | feature-doc-template.md |
 | **README** | 目录入口固定为 `README.md` | `README.md` |
 
 ### 1.3 版本号与日期命名
@@ -90,10 +90,10 @@ migration-guide-v1.5.md
 ```
 
 **避免使用**：
-- ❌ `final.md` / `final-final.md`（用版本号替代）
-- ❌ `new.md` / `old.md`（用日期或版本号）
-- ❌ `test.md` / `temp.md`（删除临时文件）
-- ❌ `copy.md` / `副本.md`（用版本管理）
+- ❌ final.md / final-final.md（用版本号替代）
+- ❌ new.md / old.md（用日期或版本号）
+- ❌ test.md / temp.md（删除临时文件）
+- ❌ copy.md / 副本.md（用版本管理）
 ---
 
 ## 二、目录结构规范
@@ -180,10 +180,10 @@ const foo = 'bar';
 **链接**：
 ```markdown
 <!-- 相对路径引用 -->
-[文件名](relative/path/to/file.md)
+[文件名](<文件相对路径>)
 
 <!-- 锚点引用 -->
-[章节名](file.md#章节锚点)
+[章节名](<#章节锚点>)
 
 <!-- 外部链接 -->
 [描述](https://example.com)
@@ -274,15 +274,15 @@ code_version: 2.0.0
 ## 📂 快速入口
 | 文档 | 说明 |
 |------|------|
-| [文档 1](path/to/doc1.md) | 一句话描述 |
-| [文档 2](path/to/doc2.md) | 一句话描述 |
+| [文档 1](<文档相对路径>) | 一句话描述 |
+| [文档 2](<文档相对路径>) | 一句话描述 |
 
 ---
 
 ## 🔗 相关目录
 
-- [相关目录 1](../other-dir/)
-- [相关目录 2](../another-dir/)
+- [相关目录 1](../reference/)
+- [相关目录 2](../explanation/)
 ```
 
 ### 4.3 ADR 模板
@@ -442,8 +442,8 @@ type: report
 | `tags` | array | 自定义标签 | `[databridge, acl, envelope]` |
 | `summary` | string | 一句话摘要 | `DataBridge 统一写入网关的架构设计` |
 | `change_log` | array | 变更日志 | 见下 |
-| `deprecated_by` | string | 被哪个文档替代 | `new-doc.md` |
-| `supersedes` | string | 替代了哪个文档 | `old-doc.md` |
+| `deprecated_by` | string | 被哪个文档替代 | new-doc.md |
+| `supersedes` | string | 替代了哪个文档 | old-doc.md |
 
 ### 6.3 完整示例
 
@@ -550,8 +550,8 @@ maintainer: Documentation Team
 
 ### 7.4 废弃流程
 
-1. 在新文档中添加 `supersedes: old-doc.md`
-2. 在旧文档中添加 `status: deprecated` 和 `deprecated_by: new-doc.md`
+1. 在新文档中添加 supersedes: old-doc.md 字段
+2. 在旧文档中添加 status: deprecated 和 deprecated_by: new-doc.md 字段
 3. 在旧文档顶部添加废弃提示横幅
 4. 30 天后移入 `archive/` 目录
 

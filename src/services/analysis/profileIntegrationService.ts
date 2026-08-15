@@ -107,7 +107,7 @@ export async function gatherProfileSummary(symbol: string): Promise<ProfileDataS
       if (evResult.success && evResult.data && evResult.data.length > 0) {
         const evidenceByLayer: Record<string, ScoreEvidence[]> = {}
         for (const ev of evResult.data) {
-          if (!evidenceByLayer[ev.layer]) evidenceByLayer[ev.layer] = []
+          evidenceByLayer[ev.layer] ??= []
           evidenceByLayer[ev.layer]!.push(ev)
         }
 

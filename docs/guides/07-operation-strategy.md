@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-GUIDE-037
+title: "07. 运营策略"
+domain: guide
+status: active
+last_updated: 2026-08-15
+---
+
+﻿---
 title: 07-operation-strategy
 type: reference
 domain: backend
@@ -29,6 +37,7 @@ change_log:
 > **Last Updated**: 2026-07-05
 >
 > 本文档定义 V9 的开发流程、版本策略、风险控制与架构决策记录（ADR）。  
+> **⚠️ 路径归档说明（2026-08-16）**：本文档中引用的部分目标文件（如 `03-architecture-standards.md`、`v10-architecture-alignment.md`、`v6-cockpit-ui-reference.md`、`trading-core-factors.md`、`06-routing-specs.md`、`implementation-governance.md`）已归档或重组。本文档作为运营策略参考保留，文中路径不再更新。现行文档结构见 [AGENTS.md](../meta/AGENTS.md)。  
 > 目标读者：项目管理者、核心开发者、QA、未来维护者。
 
 ---
@@ -81,14 +90,14 @@ npm run build
 ### 1.4 文档先行原则
 
 - 新增引擎/路由/质量门禁前，必须先更新或新增 `docs/` 规格文档。
-- 修改 `src/config/dbConfig.ts` 中的 schema 前，必须同步更新 `./03-architecture-standards.md` 与 `./10-glossary.md`。
+- 修改 `src/config/dbConfig.ts` 中的 schema 前，必须同步更新 `../explanation/03-architecture-standards.md` 与 `../reference/10-glossary.md`。
 - 重构结束后必须产出 `POST_REFACTOR_AUDIT_REPORT.md` 与 `POST_REFACTOR_FIX_LOG_*.md`。
 
 ### 1.5 外部参考蓝图管控（跨代文件治理）
 
 > **目的**：防止 V10 / v6-pro-cockpit 等外部参考文档被误读为 V9 当前必须遵循的规则。
 
-`docs/explanation/implementation/` 中部分文档（如 `v10-architecture-alignment.md`、`../archive/ui-module-alignment.md`、`v6-cockpit-ui-reference.md`、`../explanation/trading-core-factors.md`）属于**外部参考蓝图**，其状态统一标记为：
+`docs/explanation/implementation/` 中部分文档（如 `v10-architecture-alignment.md`、`<宸插綊妗?`、`v6-cockpit-ui-reference.md`、`../explanation/trading-core-factors.md`）属于**外部参考蓝图**，其状态统一标记为：
 
 ```
 Status: Future Reference / Deferred
@@ -98,9 +107,9 @@ Status: Future Reference / Deferred
 
 1. **仅作参考，禁止直接作为代码依据**。外部蓝图中的架构（如 V10 的 20 个 Store、三舱硬隔离、A2A Agent、真实券商 Gateway）必须经过 V9 架构评审，转化为新的 ADR 或 `docs/01~10` 规格后，方可落地。
 2. **读取时必须交叉校验**。AI、开发者或维护者在引用外部参考文档时，必须同时核对：
-   - `./03-architecture-standards.md` 当前实际架构分层；
+   - `../explanation/03-architecture-standards.md` 当前实际架构分层；
    - `./08-implementation-plan.md` 当前 Phase 范围；
-   - `./10-glossary.md` 当前术语定义；
+   - `../reference/10-glossary.md` 当前术语定义；
    - 当前代码实际目录与路由。
 3. **落地前必须新建 ADR**。若外部蓝图中的某项设计需要进入 V9，须先按 `../explanation/design/implementation-governance.md` 的 ADR 模板创建新的 ADR，状态从 `Proposal` → `Accepted` 后方可实施。
 4. **文档首页必须标注状态**。所有外部参考蓝图在文件顶部和 `docs/README.md` 中必须显示 `Status: Future Reference / Deferred`。
@@ -109,23 +118,23 @@ Status: Future Reference / Deferred
 
 | 文档 | 来源 | 状态 | 说明 |
 |------|------|------|------|
-| `./v10-architecture-alignment.md` | V10 白皮书 | Future Reference / Deferred | V10 框架思想对齐参考 |
-| `../archive/ui-module-alignment.md` | V6 Pro UI 比对 | Future Reference / Deferred | V6 Pro UI 模式吸收参考 |
-| `./v6-cockpit-ui-reference.md` | v6 UI 参考 | Future Reference / Deferred | v6 可复用 UI 组件总结 |
+| `../explanation/v10-architecture-alignment.md` | V10 白皮书 | Future Reference / Deferred | V10 框架思想对齐参考 |
+| `<宸插綊妗?` | V6 Pro UI 比对 | Future Reference / Deferred | V6 Pro UI 模式吸收参考 |
+| `../reference/v6-cockpit-ui-reference.md` | v6 UI 参考 | Future Reference / Deferred | v6 可复用 UI 组件总结 |
 | `../explanation/trading-core-factors.md` | v6 交易报告 | Future Reference / Deferred | v6 交易因子导入参考 |
 
 ### 1.6 代码变更前的架构自诘（守护者检查清单）
 
 任何涉及 L3 引擎、L2 数据、跨模块通信、schema 变更的 PR，作者必须先回答以下 3 个问题，并在 PR 描述中显式写出答案：
 
-1. **我的建议是否触及 `./03-architecture-standards.md` 中的调用方向铁律？**
+1. **我的建议是否触及 `../explanation/03-architecture-standards.md` 中的调用方向铁律？**
    - 若触及，必须调整方案，确保 L5/L4 不直接写 `dataLayer`，L3 写操作经 `DataBridge.forward()`。
 
 2. **我的建议是否新增或修改了 IndexedDB 的 Store 或字段？**
-   - 如果是，必须同步更新 `./03-architecture-standards.md` 的 Schema 章节、`./10-glossary.md` 的字段/术语表，并评估是否需要 DB 版本迁移。
+   - 如果是，必须同步更新 `../explanation/03-architecture-standards.md` 的 Schema 章节、`../reference/10-glossary.md` 的字段/术语表，并评估是否需要 DB 版本迁移。
 
 3. **我建议的功能对应哪个文档？**
-   - 必须引用 `./02-functional-specs.md` 的用户故事，或提供新的 ADR / implementation 文件草案，并带状态标签：`Proposal` / `Accepted` / `Deferred`。
+   - 必须引用 `../specs/02-functional-specs.md` 的用户故事，或提供新的 ADR / implementation 文件草案，并带状态标签：`Proposal` / `Accepted` / `Deferred`。
 
 未通过上述检查清单的 PR，禁止进入 Code Review。
 
@@ -263,9 +272,9 @@ Status: Future Reference / Deferred
 
 | 文档 | 用途 |
 |------|------|
-| `./03-architecture-standards.md` | 分层与调用规则 |
-| `./05-engine-specs.md` | 引擎与信封协议 |
-| `./06-routing-specs.md` | 路由与懒加载 |
+| `../explanation/03-architecture-standards.md` | 分层与调用规则 |
+| `../explanation/05-engine-specs.md` | 引擎与信封协议 |
+| `../explanation/06-routing-specs.md` | 路由与懒加载 |
 | `./08-implementation-plan.md` | 阶段计划与验收 |
 | `./09-quality-gates.md` | 上线前 checklist |
 | `CHANGELOG.md` | 版本变更记录 |

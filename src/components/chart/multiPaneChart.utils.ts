@@ -11,21 +11,20 @@ import {
   type Time,
   type MouseEventHandler,
 } from 'lightweight-charts'
-import { CHART_PALETTE, COLOR_TOKENS } from '@/constants/theme.tokens'
+import { CHART_PALETTE_PRO, COLOR_TOKENS } from '@/constants/theme.tokens'
 import { computeMACD, MACD_COLORS, type MACDParams } from './indicators/macd'
 import { computeKDJ, KDJ_COLORS, type KDJParams } from './indicators/kdj'
+import { computeRSI, RSI_COLORS, type RSIParams } from './indicators/rsi'
 import { MA_OPTIONS, THROTTLE_MS } from './multiPaneChart.config'
 import type {
   TooltipData,
   MainChartPaneResult,
   MacdChartPaneResult,
   KdjChartPaneResult,
+  RsiChartPaneResult,
   CrosshairHandlerOptions,
 } from './multiPaneChart.types'
 import type { CandlestickChartData } from './types'
-import { getLogger } from '@/lib/logger'
-
-const logger = getLogger()
 
 /** 计算简单移动平均线 */
 export function computeMA(data: CandlestickChartData[], period: number): Array<LineData<Time> | null> {
@@ -62,19 +61,19 @@ export function buildTooltipValuesHtml(
   negativeColor: string,
 ): string {
   let html = `
-        <span style="color: ${CHART_PALETTE.series3}">开</span>
+        <span style="color: ${CHART_PALETTE_PRO.axis}">开</span>
         <span style="text-align: right">${d.open.toFixed(2)}</span>
-        <span style="color: ${CHART_PALETTE.series3}">高</span>
+        <span style="color: ${CHART_PALETTE_PRO.axis}">高</span>
         <span style="text-align: right">${d.high.toFixed(2)}</span>
-        <span style="color: ${CHART_PALETTE.series3}">低</span>
+        <span style="color: ${CHART_PALETTE_PRO.axis}">低</span>
         <span style="text-align: right">${d.low.toFixed(2)}</span>
-        <span style="color: ${CHART_PALETTE.series3}">收</span>
+        <span style="color: ${CHART_PALETTE_PRO.axis}">收</span>
         <span style="text-align: right; font-weight: 600; color: ${d.close >= d.open ? positiveColor : negativeColor}">${d.close.toFixed(2)}</span>
       `
 
   if (d.volume !== undefined) {
     html += `
-            <span style="color: ${CHART_PALETTE.series3}">量</span>
+            <span style="color: ${CHART_PALETTE_PRO.axis}">量</span>
             <span style="text-align: right">${d.volume.toLocaleString('zh-CN')}</span>
           `
   }
@@ -101,6 +100,14 @@ export function buildTooltipValuesHtml(
           `
   }
 
+  if (d.rsi !== undefined) {
+    const rsiColor = d.rsi >= 70 ? RSI_COLORS.overbought : d.rsi <= 30 ? RSI_COLORS.oversold : RSI_COLORS.line
+    html += `
+            <span style="color: ${rsiColor}">RSI</span>
+            <span style="text-align: right; font-weight: 600; color: ${rsiColor}">${d.rsi.toFixed(1)}</span>
+          `
+  }
+
   return html
 }
 
@@ -119,31 +126,31 @@ export function createMainChartPane(
   const mainChart = createChart(mainContainer, {
     height,
     layout: {
-      background: { color: 'transparent' },
-      textColor: CHART_PALETTE.axis,
+      background: { color: CHART_PALETTE_PRO.bg },
+      textColor: CHART_PALETTE_PRO.axis,
     },
     grid: {
-      vertLines: { color: CHART_PALETTE.gridLight },
-      horzLines: { color: CHART_PALETTE.gridLight },
+      vertLines: { color: CHART_PALETTE_PRO.grid },
+      horzLines: { color: CHART_PALETTE_PRO.grid },
     },
     crosshair: {
       mode: 1,
       vertLine: {
-        color: CHART_PALETTE.accent,
+        color: CHART_PALETTE_PRO.grid,
         width: 1,
-        style: 2,
+        style: 1,
       },
       horzLine: {
-        color: CHART_PALETTE.accent,
+        color: CHART_PALETTE_PRO.grid,
         width: 1,
-        style: 2,
+        style: 1,
       },
     },
     rightPriceScale: {
-      borderColor: CHART_PALETTE.gridLight,
+      borderColor: CHART_PALETTE_PRO.grid,
     },
     timeScale: {
-      borderColor: CHART_PALETTE.gridLight,
+      borderColor: CHART_PALETTE_PRO.grid,
       timeVisible: true,
       secondsVisible: false,
     },
@@ -192,31 +199,31 @@ export function createMacdChartPane(
   const macdChart = createChart(macdContainer, {
     height,
     layout: {
-      background: { color: 'transparent' },
-      textColor: CHART_PALETTE.axis,
+      background: { color: CHART_PALETTE_PRO.bg },
+      textColor: CHART_PALETTE_PRO.axis,
     },
     grid: {
-      vertLines: { color: CHART_PALETTE.gridLight },
-      horzLines: { color: CHART_PALETTE.gridLight },
+      vertLines: { color: CHART_PALETTE_PRO.grid },
+      horzLines: { color: CHART_PALETTE_PRO.grid },
     },
     crosshair: {
       mode: 1,
       vertLine: {
-        color: CHART_PALETTE.accent,
+        color: CHART_PALETTE_PRO.grid,
         width: 1,
-        style: 2,
+        style: 1,
       },
       horzLine: {
-        color: CHART_PALETTE.accent,
+        color: CHART_PALETTE_PRO.grid,
         width: 1,
-        style: 2,
+        style: 1,
       },
     },
     rightPriceScale: {
-      borderColor: CHART_PALETTE.gridLight,
+      borderColor: CHART_PALETTE_PRO.grid,
     },
     timeScale: {
-      borderColor: CHART_PALETTE.gridLight,
+      borderColor: CHART_PALETTE_PRO.grid,
       timeVisible: true,
       secondsVisible: false,
       visible: false,
@@ -273,31 +280,31 @@ export function createKdjChartPane(
   const kdjChart = createChart(kdjContainer, {
     height,
     layout: {
-      background: { color: 'transparent' },
-      textColor: CHART_PALETTE.axis,
+      background: { color: CHART_PALETTE_PRO.bg },
+      textColor: CHART_PALETTE_PRO.axis,
     },
     grid: {
-      vertLines: { color: CHART_PALETTE.gridLight },
-      horzLines: { color: CHART_PALETTE.gridLight },
+      vertLines: { color: CHART_PALETTE_PRO.grid },
+      horzLines: { color: CHART_PALETTE_PRO.grid },
     },
     crosshair: {
       mode: 1,
       vertLine: {
-        color: CHART_PALETTE.accent,
+        color: CHART_PALETTE_PRO.grid,
         width: 1,
-        style: 2,
+        style: 1,
       },
       horzLine: {
-        color: CHART_PALETTE.accent,
+        color: CHART_PALETTE_PRO.grid,
         width: 1,
-        style: 2,
+        style: 1,
       },
     },
     rightPriceScale: {
-      borderColor: CHART_PALETTE.gridLight,
+      borderColor: CHART_PALETTE_PRO.grid,
     },
     timeScale: {
-      borderColor: CHART_PALETTE.gridLight,
+      borderColor: CHART_PALETTE_PRO.grid,
       timeVisible: true,
       secondsVisible: false,
       visible: false,
@@ -344,6 +351,84 @@ export function createKdjChartPane(
   return { kdjChart, kdjResult, kdjSeriesList }
 }
 
+/** 创建 RSI 副图窗格 */
+export function createRsiChartPane(
+  container: HTMLDivElement,
+  height: number,
+  data: CandlestickChartData[],
+  rsiParams: RSIParams = {},
+): RsiChartPaneResult {
+  const rsiChart = createChart(container, {
+    height,
+    layout: {
+      background: { color: CHART_PALETTE_PRO.bg },
+      textColor: CHART_PALETTE_PRO.axis,
+    },
+    grid: {
+      vertLines: { color: CHART_PALETTE_PRO.gridLight, style: 1 },
+      horzLines: { color: CHART_PALETTE_PRO.gridLight, style: 1 },
+    },
+    crosshair: {
+      mode: 0,
+    },
+    rightPriceScale: {
+      borderColor: CHART_PALETTE_PRO.grid,
+      scaleMargins: { top: 0.05, bottom: 0.05 },
+    },
+    timeScale: {
+      borderColor: CHART_PALETTE_PRO.grid,
+      visible: false,
+    },
+    handleScroll: {
+      vertTouchDrag: false,
+      horzTouchDrag: false,
+    },
+    handleScale: {
+      axisPressedMouseMove: false,
+    },
+  })
+
+  const rsiResult = computeRSI(data, rsiParams)
+  const rsiSeriesList: Array<ISeriesApi<'Line'> | null> = []
+
+  // RSI 线
+  const rsiSeries = rsiChart.addSeries(LineSeries, {
+    color: RSI_COLORS.line,
+    lineWidth: 2,
+    priceLineVisible: false,
+    lastValueVisible: false,
+    crosshairMarkerVisible: false,
+  })
+  rsiSeries.setData(rsiResult.rsi.filter((d): d is LineData<Time> => d !== null))
+  rsiSeriesList.push(rsiSeries)
+
+  // 超买线 (70)
+  const overboughtLine = rsiChart.addSeries(LineSeries, {
+    color: RSI_COLORS.overbought,
+    lineWidth: 1,
+    lineStyle: 2,
+    priceLineVisible: false,
+    lastValueVisible: false,
+    crosshairMarkerVisible: false,
+  })
+  overboughtLine.setData(data.map((d) => ({ time: d.time, value: 70 })))
+  rsiSeriesList.push(overboughtLine)
+
+  // 超卖线 (30)
+  const oversoldLine = rsiChart.addSeries(LineSeries, {
+    color: RSI_COLORS.oversold,
+    lineWidth: 1,
+    lineStyle: 2,
+    priceLineVisible: false,
+    lastValueVisible: false,
+    crosshairMarkerVisible: false,
+  })
+  oversoldLine.setData(data.map((d) => ({ time: d.time, value: 30 })))
+  rsiSeriesList.push(oversoldLine)
+
+  return { rsiChart, rsiResult, rsiSeriesList }
+}
+
 /** 创建十字光标联动处理器（带节流） */
 export function createCrosshairHandler(options: CrosshairHandlerOptions): MouseEventHandler<Time> {
   const {
@@ -352,12 +437,16 @@ export function createCrosshairHandler(options: CrosshairHandlerOptions): MouseE
     dataIndex,
     showMACD,
     showKDJ,
+    showRSI,
     macdResultRef,
     kdjResultRef,
+    rsiResultRef,
     macdChart,
     kdjChart,
+    rsiChart,
     macdSeriesList,
     kdjSeriesList,
+    rsiSeriesList,
     updateTooltip,
   } = options
 
@@ -367,7 +456,6 @@ export function createCrosshairHandler(options: CrosshairHandlerOptions): MouseE
     const now = performance.now()
     const elapsed = now - lastCrosshairTime
 
-    // 标准节流：只执行间隔外的第一次调用，间隔内的调用被丢弃
     if (elapsed < THROTTLE_MS) {
       return
     }
@@ -378,6 +466,7 @@ export function createCrosshairHandler(options: CrosshairHandlerOptions): MouseE
       updateTooltip(null)
       if (macdChart) macdChart.clearCrosshairPosition()
       if (kdjChart) kdjChart.clearCrosshairPosition()
+      if (rsiChart) rsiChart.clearCrosshairPosition()
       return
     }
 
@@ -390,6 +479,15 @@ export function createCrosshairHandler(options: CrosshairHandlerOptions): MouseE
     const idx = dataIndex.get(timeToString(bar.time))
     const volume = idx !== undefined ? data[idx]?.volume : undefined
 
+    // 涨跌幅
+    let changePct: number | undefined
+    if (idx !== undefined && idx > 0) {
+      const prevClose = data[idx - 1]?.close
+      if (prevClose && prevClose !== 0) {
+        changePct = ((bar.close - prevClose) / prevClose) * 100
+      }
+    }
+
     // 获取 MACD 数据
     let macd: { dif: number; dea: number; histogram: number } | undefined
     if (showMACD && macdResultRef.current && idx !== undefined) {
@@ -398,14 +496,8 @@ export function createCrosshairHandler(options: CrosshairHandlerOptions): MouseE
       const deaPoint = macdData.dea[idx]
       const histPoint = macdData.histogram[idx]
       if (difPoint && deaPoint && histPoint) {
-        macd = {
-          dif: difPoint.value,
-          dea: deaPoint.value,
-          histogram: histPoint.value,
-        }
+        macd = { dif: difPoint.value, dea: deaPoint.value, histogram: histPoint.value }
       }
-
-      // 同步 MACD 副图十字光标
       if (macdChart && macdSeriesList.length > 0 && difPoint) {
         macdChart.setCrosshairPosition(difPoint.value, bar.time, macdSeriesList[0]!)
       }
@@ -419,24 +511,25 @@ export function createCrosshairHandler(options: CrosshairHandlerOptions): MouseE
       const dPoint = kdjData.d[idx]
       const jPoint = kdjData.j[idx]
       if (kPoint && dPoint && jPoint) {
-        kdj = {
-          k: kPoint.value,
-          d: dPoint.value,
-          j: jPoint.value,
-        }
+        kdj = { k: kPoint.value, d: dPoint.value, j: jPoint.value }
       }
-
-      // 同步 KDJ 副图十字光标
       if (kdjChart && kdjSeriesList.length > 0 && kPoint) {
         kdjChart.setCrosshairPosition(kPoint.value, bar.time, kdjSeriesList[0]!)
       }
     }
 
-    logger.info('[MultiPaneChart] 十字光标联动', {
-      time: timeToString(bar.time),
-      macd: macd ? '✓' : '✗',
-      kdj: kdj ? '✓' : '✗',
-    })
+    // 获取 RSI 数据
+    let rsi: number | undefined
+    if (showRSI && rsiResultRef.current && idx !== undefined) {
+      const rsiData = rsiResultRef.current
+      const rsiPoint = rsiData.rsi[idx]
+      if (rsiPoint) {
+        rsi = rsiPoint.value
+      }
+      if (rsiChart && rsiSeriesList.length > 0 && rsiPoint) {
+        rsiChart.setCrosshairPosition(rsiPoint.value, bar.time, rsiSeriesList[0]!)
+      }
+    }
 
     updateTooltip({
       time: timeToString(bar.time),
@@ -445,8 +538,10 @@ export function createCrosshairHandler(options: CrosshairHandlerOptions): MouseE
       low: bar.low,
       close: bar.close,
       volume,
+      changePct,
       macd,
       kdj,
+      rsi,
       visible: true,
     })
   }
@@ -457,33 +552,25 @@ export function syncTimeScales(
   mainChart: IChartApi,
   macdChart: IChartApi | null,
   kdjChart: IChartApi | null,
+  rsiChart: IChartApi | null,
 ): void {
+  const subCharts = [macdChart, kdjChart, rsiChart].filter(Boolean) as IChartApi[]
+
   mainChart.timeScale().subscribeVisibleTimeRangeChange((range) => {
     if (!range) return
-    if (macdChart) {
-      macdChart.timeScale().setVisibleRange(range)
-    }
-    if (kdjChart) {
-      kdjChart.timeScale().setVisibleRange(range)
+    for (const chart of subCharts) {
+      chart.timeScale().setVisibleRange(range)
     }
   })
 
-  if (macdChart) {
-    macdChart.timeScale().subscribeVisibleTimeRangeChange((range) => {
+  for (const chart of subCharts) {
+    chart.timeScale().subscribeVisibleTimeRangeChange((range) => {
       if (!range) return
       mainChart.timeScale().setVisibleRange(range)
-      if (kdjChart) {
-        kdjChart.timeScale().setVisibleRange(range)
-      }
-    })
-  }
-
-  if (kdjChart) {
-    kdjChart.timeScale().subscribeVisibleTimeRangeChange((range) => {
-      if (!range) return
-      mainChart.timeScale().setVisibleRange(range)
-      if (macdChart) {
-        macdChart.timeScale().setVisibleRange(range)
+      for (const other of subCharts) {
+        if (other !== chart) {
+          other.timeScale().setVisibleRange(range)
+        }
       }
     })
   }

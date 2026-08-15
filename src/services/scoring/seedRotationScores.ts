@@ -14,6 +14,9 @@
  */
 
 import { saveRotationScore } from '@/services/analysis/rotationScoreService'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 // ============================================================
 // 五因子子指标最大值（与 rotationConfig.ts SUB_FACTOR_MAP 对齐）
@@ -191,7 +194,7 @@ export async function seedRotationScores(scoreDate?: string): Promise<BatchResul
       })
       if (saveResult.success) {
         result.inserted++
-        console.info(`[seedRotationScores] 已写入 ${sector.name} (${sector.code}) total=${saveResult.data?.total}`)
+        logger.info(`[seedRotationScores] 已写入 ${sector.name} (${sector.code}) total=${saveResult.data?.total}`)
       } else {
         result.failed++
         result.errors.push(`[${sector.code}] 保存失败: ${saveResult.error}`)
@@ -202,7 +205,7 @@ export async function seedRotationScores(scoreDate?: string): Promise<BatchResul
     }
   }
 
-  console.info(`[seedRotationScores] 完成：成功 ${result.inserted}，失败 ${result.failed}`)
+  logger.info(`[seedRotationScores] 完成：成功 ${result.inserted}，失败 ${result.failed}`)
   return result
 }
 

@@ -736,7 +736,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">买入信号</p>
-                  <p className={cn('text-2xl font-bold', 'text-destructive')}>{buyCount}</p>
+                  <p className={cn('text-h1 font-bold', 'text-destructive')}>{buyCount}</p>
                 </div>
                 <TrendingUp className={cn('h-8 w-8', 'text-destructive/70')} />
               </div>
@@ -747,7 +747,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">卖出信号</p>
-                  <p className={cn('text-2xl font-bold', 'text-success')}>{sellCount}</p>
+                  <p className={cn('text-h1 font-bold', 'text-success')}>{sellCount}</p>
                 </div>
                 <Target className={cn('h-8 w-8', 'text-success/70')} />
               </div>
@@ -758,7 +758,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">持有信号</p>
-                  <p className={cn('text-2xl font-bold', 'text-info')}>{holdCount}</p>
+                  <p className={cn('text-h1 font-bold', 'text-info')}>{holdCount}</p>
                 </div>
                 <Layers className={cn('h-8 w-8', 'text-info/70')} />
               </div>
@@ -769,7 +769,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">逃离信号</p>
-                  <p className={cn('text-2xl font-bold', 'text-warning')}>{escapeCount}</p>
+                  <p className={cn('text-h1 font-bold', 'text-warning')}>{escapeCount}</p>
                 </div>
                 <AlertTriangle className={cn('h-8 w-8', 'text-warning/70')} />
               </div>

@@ -59,7 +59,7 @@ const ROOT_DOC_FILES = [
   'architecture.md',
   'CHANGELOG.md',
   'data-definition.md',
-  'docs/explanation/README.md',
+  // 原 explanation/README.md 已归档至 archive/historical-2026-08-16/batch7/
 ]
 
 const PATH_PREFIXES = [

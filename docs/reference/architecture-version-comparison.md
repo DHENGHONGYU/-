@@ -44,7 +44,7 @@ change_log:
 
 ---
 
-## 1. 架构分层（`./03-architecture-standards.md`）
+## 1. 架构分层（`../explanation/03-architecture-standards.md`）
 
 | 层级 | 规划目录 | v0.9.0-docs-base 描述 | v0.9.0-docs-review 更新 | v0.9.0-docs-v6pro-assessment 更新 | 影响 |
 |------|----------|------------------------|-------------------------|----------------------------------|------|
@@ -56,7 +56,7 @@ change_log:
 
 ---
 
-## 2. 调用方向与数据访问（`./03-architecture-standards.md`）
+## 2. 调用方向与数据访问（`../explanation/03-architecture-standards.md`）
 
 | 规则 | v0.9.0-docs-base | v0.9.0-docs-review | v0.9.0-docs-v6pro-assessment | 理由 |
 |------|------------------|--------------------|------------------------------|------|
@@ -66,7 +66,7 @@ change_log:
 
 ---
 
-## 3. 配置层清单（`./03-architecture-standards.md`）
+## 3. 配置层清单（`../explanation/03-architecture-standards.md`）
 
 | 文件 | v0.9.0-docs-base | v0.9.0-docs-review |
 |------|------------------|--------------------|
@@ -81,7 +81,7 @@ change_log:
 
 ---
 
-## 4. 数据 Schema（`./03-architecture-standards.md`）
+## 4. 数据 Schema（`../explanation/03-architecture-standards.md`）
 
 | Store | v0.9.0-docs-base | v0.9.0-docs-review | 说明 |
 |-------|------------------|--------------------|------|
@@ -92,7 +92,7 @@ change_log:
 
 ---
 
-## 5. 路由与 UI 映射（`./06-routing-specs.md`）
+## 5. 路由与 UI 映射（`../explanation/06-routing-specs.md`）
 
 | 路径 | v0.9.0-docs-base | v0.9.0-docs-review | 组件 | 服务 |
 |------|------------------|--------------------|------|------|
@@ -106,11 +106,11 @@ change_log:
 
 ---
 
-## 6. UI/UX 规范（`./04-ui-ux-specs.md`）
+## 6. UI/UX 规范（`../specs/04-ui-ux-specs.md`）
 
 | 项目 | v0.9.0-docs-base | v0.9.0-docs-review | 理由 |
 |------|------------------|--------------------|------|
-| PortalShell 主题 | 浅色 + 翡翠绿 | 深色 Kimi 经典布局；首页/驾驶舱保持浅色 | 与 Kimi 产品风格对齐，提升专业感 |
+| PortalShell 主题 | 浅色 + 翡翠绿（旧版） | 深色 Kimi 经典布局；首页/驾驶舱保持浅色；品牌色已切换为 Apple Blue #007AFF（V5） | 与 Kimi 产品风格对齐，提升专业感 |
 | 侧边栏 | 未明确分组 | 260px 分组侧边栏：常用 / 采集 / 工具 | 功能多时导航更清晰 |
 | 顶部栏 | 未细化 | 56px 顶部状态栏：Logo/五舱/健康/运行时长/版本 | 全局状态可见 |
 | 主内容区 | 未细化 | `p-6` 内边距，可滚动 | 统一页面间距 |
@@ -118,7 +118,7 @@ change_log:
 
 ---
 
-## 7. 实施计划（`./08-implementation-plan.md`）
+## 7. 实施计划（`../guides/08-implementation-plan.md`）
 
 | Phase | v0.9.0-docs-base | v0.9.0-docs-review |
 |-------|------------------|--------------------|
@@ -129,7 +129,7 @@ change_log:
 
 ---
 
-## 8. 质量门禁（`./09-quality-gates.md`）
+## 8. 质量门禁（`../guides/09-quality-gates.md`）
 
 | 门禁项 | v0.9.0-docs-base | v0.9.0-docs-review |
 |--------|------------------|--------------------|
@@ -141,7 +141,7 @@ change_log:
 
 ---
 
-## 9. 功能规格（`./02-functional-specs.md`）
+## 9. 功能规格（`../specs/02-functional-specs.md`）
 
 | 用户故事 | v0.9.0-docs-base | v0.9.0-docs-review |
 |----------|------------------|--------------------|
@@ -191,12 +191,12 @@ change_log:
 
 ## 附录：受影响的文档清单
 
-- `./03-architecture-standards.md`
-- `./02-functional-specs.md`
-- `./04-ui-ux-specs.md`
-- `./05-engine-specs.md`
-- `./06-routing-specs.md`
-- `./08-implementation-plan.md`
-- `./09-quality-gates.md`
+- `../explanation/03-architecture-standards.md`
+- `../specs/02-functional-specs.md`
+- `../specs/04-ui-ux-specs.md`
+- `../explanation/05-engine-specs.md`
+- `../explanation/06-routing-specs.md`
+- `../guides/08-implementation-plan.md`
+- `../guides/09-quality-gates.md`
 - `./architecture-version-comparison.md`
 - `CHANGELOG.md`

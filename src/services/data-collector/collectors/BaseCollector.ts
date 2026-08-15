@@ -50,7 +50,7 @@ export abstract class BaseCollector {
     let lastError: Error | undefined
 
     for (let attempt = 0; attempt <= this.config.retryCount; attempt++) {
-      const result = await this.tryCollectOnce(dataSource).catch((error) => ({ error }))
+      const result = await this.tryCollectOnce(dataSource).catch((error: unknown) => ({ error }))
       if (!('error' in result)) {
         this.isRunning = false
         return result

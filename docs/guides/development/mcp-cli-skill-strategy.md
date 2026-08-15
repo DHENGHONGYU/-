@@ -11,7 +11,7 @@ tags: [mcp, cli, skill, ai, architecture, workflow]
 version: v1.1.0
 last_updated: 2026-07-21
 code_version: "2.0.0-rc.1"
-doc_id: V9-DOC-ARCH-???
+doc_id: V9-DOC-ARCH-058
 change_log:
   - version: v1.0.0
     changes: 编码损坏事件后重建 frontmatter 骨架（正文待 P3 重写）

@@ -493,7 +493,7 @@ export class FakeBreakoutAlertPush {
 let _instance: FakeBreakoutAlertPush | null = null
 
 export function getFakeBreakoutAlertPush(config?: FakeBreakoutAlertConfig): FakeBreakoutAlertPush {
-  if (!_instance) _instance = new FakeBreakoutAlertPush(config)
+  _instance ??= new FakeBreakoutAlertPush(config)
   return _instance
 }
 

@@ -1,10 +1,14 @@
 ---
+doc_id: V9-DOC-DEV-005
 title: mcp-acl-guide
 code_version: "2.0.0-rc.1"
 tier: important
-version: v1.1.0
-last_updated: 2026-08-11
+version: v1.2.0
+last_updated: 2026-08-15
 change_log:
+  - version: v1.2.0
+    changes: "P0-3 文档对齐(2026-08-15)：§3.2 权限矩阵与 mcpAclMatrix.ts/mcpServerRegistry.ts 对齐——修正 trading 为 ui ✅(仅读)、移除 5 个已禁用 Server 的 ui ✅、新增 marketdata 行、数据列与代码实际 ACL 一致"
+    date: 2026-08-15
   - version: v1.1.0
     changes: "P0 版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
@@ -105,25 +109,26 @@ V9 系统通过 MCP（Model Context Protocol）统一管理 15 个子服务器�
 
 ### 3.2 权限矩阵速查表
 
-> **与代码对齐声明**（v1.1.0）：本表 Server 列必须与 `src/config/mcpAclMatrix.ts` 的 `MCP_ACL_MATRIX` 及 `src/mcp/servers/*` 的真实注册名逐一一致。历史 Server `stockpool` 已重命名为 `pool`（`src/mcp/servers/pool/poolServer.ts:47`）；`trade`/`input`/`export` 已废弃合并（功能并入 `trading`/`fetcher`，见 `mcpAclMatrix.ts:46` 注释），已从本表移除；新增 `knowledge`（`knowledgeServer.ts:46`）与 `workflow:main`（`workflowServer.ts:40`）。当前共 **15** 个 Server，与 `src/mcp/servers/` 目录数一致。
+> **与代码对齐声明**（v1.2.0，2026-08-15 P0-3 僵尸 Server 清理后）：本表 Server 列与 `src/config/mcpAclMatrix.ts` 的 `MCP_ACL_MATRIX` 及 `src/config/mcpServerRegistry.ts` 的 `MCP_SERVER_REGISTRY` 逐一对齐。2026-08-15 P0-3 清理后，`analysis`/`portfolio`/`knowledge`/`execution`/`workflow:main` 已在 `mcpServerRegistry.ts` 中 `enabled:false`，UI 层 ACL 已同步移除（避免 UI→MCP→失败死链路）；`trading` 对 UI 开放但仅限只读工具（`scan_signals`/`get_orders` 等，写操作如 `execute_trade_action` 在 `allowedTools` 中排除）；新增 `marketdata`（腾讯自选股数据源，仅只读 `westock_*` Tool）。当前共 **15** 个 Registry 条目（10 enabled + 5 disabled），与 `src/mcp/servers/` 目录数一致。
 
 | Server\角色 | agent | ui | ci | system |
 |-------------|-------|-----|-----|--------|
 | fetcher | ✅ | ✅ | ❌ | ✅ |
 | pool | ✅ | ✅ | ❌ | ✅ |
 | scoring:v6 | ✅ | ✅ | ❌ | ✅ |
-| analysis | ✅ | ✅ | ❌ | ✅ |
 | news | ✅ | ✅ | ❌ | ✅ |
 | llm | ✅ | ✅ | ❌ | ✅ |
-| portfolio | ✅ | ✅ | ❌ | ✅ |
 | screening | ✅ | ✅ | ❌ | ✅ |
 | backtest | ✅ | ✅ | ❌ | ✅ |
-| trading | ✅ | ❌ | ❌ | ✅ |
-| execution | ✅ | ❌ | ❌ | ✅ |
+| trading | ✅ | ✅（仅读） | ❌ | ✅ |
+| system | ✅ | ✅（仅查询） | ✅（仅查询） | ✅ |
+| marketdata | ✅ | ✅（仅读） | ❌ | ✅ |
+| analysis | ✅ | ❌（已禁用） | ❌ | ✅ |
+| portfolio | ✅ | ❌（已禁用） | ❌ | ✅ |
 | data-collector | ✅ | ❌ | ❌ | ✅ |
-| system | ✅ | ❌ | ✅（仅查询） | ✅ |
-| knowledge | ✅ | ❌ | ❌ | ✅ |
-| workflow:main | ✅ | ❌ | ❌ | ✅ |
+| execution | ✅ | ❌（已禁用） | ❌ | ✅ |
+| knowledge | ✅ | ❌（已禁用） | ❌ | ✅ |
+| workflow:main | ✅ | ❌（已禁用） | ❌ | ✅ |
 
 ### 3.3 Tool 通配符规则
 
@@ -359,4 +364,5 @@ npx vitest run tests/__tests__/integration/mcp-servers.integration.test.ts
 
 | 版本 | 日期 | 变更摘要 |
 |------|------|----------|
+| v1.2.0 | 2026-08-15 | P0-3 文档对齐：§3.2 权限矩阵与 `src/config/mcpAclMatrix.ts` 及 `src/config/mcpServerRegistry.ts` 逐一对齐——修正 `trading` ui 列 ❌→✅(仅读)、移除 5 个已禁用 Server（analysis/portfolio/knowledge/execution/workflow:main）的 ui ✅、新增 `marketdata` 行；对齐声明更新至 v1.2.0 反映 2026-08-15 P0-3 清理状态 |
 | v1.1.0 | 2026-07-22 | doc-code 漂移修正：§3.2 权限矩阵 Server 列与 `src/config/mcpAclMatrix.ts` 及 `src/mcp/servers/*` 真实注册名对齐——`stockpool`→`pool`、`trade`/`input`/`export` 三行移除（已废弃合并）、新增 `knowledge` 与 `workflow:main` 两行（共 15 Server 与目录数一致）；§4.2 示例 `stockpool`→`pool` 且 `list_pool_stocks`→`list_pool_items`；§6.3 日志示例 `server="stockpool"`→`server="pool"`。ACL 执行代码无需改动（本就是代码正确、文档滞后）。 |

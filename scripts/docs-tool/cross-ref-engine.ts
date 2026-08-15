@@ -289,7 +289,7 @@ export function validateReference(ref: Reference, rootDir: string): boolean {
   return false
 }
 
-/** 递归遍历目录，对每个 .md/.ts/.tsx 文件调用回调（跳过隐藏/下划线前缀目录） */
+/** 递归遍历目录，对每个 .md/.ts/.tsx 文件调用回调（跳过隐藏/下划线前缀目录、archive 归档目录） */
 export function scanDirectory(dir: string, callback: (filePath: string) => void): void {
   if (!existsSync(dir)) return
 
@@ -299,7 +299,8 @@ export function scanDirectory(dir: string, callback: (filePath: string) => void)
     const fullPath = join(dir, item.name)
 
     if (item.isDirectory()) {
-      if (!item.name.startsWith('.') && !item.name.startsWith('_')) {
+      // 跳过隐藏目录、下划线前缀目录、archive 归档目录（归档文档不参与交叉引用审计）
+      if (!item.name.startsWith('.') && !item.name.startsWith('_') && item.name !== 'archive') {
         scanDirectory(fullPath, callback)
       }
     } else {

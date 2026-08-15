@@ -6,7 +6,7 @@ phase: planning
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: **梳理范围：全项目业务 `.md` 共 **1238 份（排除 `node_modules/` 1169、` .venv/` 39 第三方产物后）
+summary: **梳理范围：全项目业务 .md 共 **1238 份（排除 `node_modules/` 1169、` .venv/` 39 第三方产物后）
 tags: [architecture, refactor, documentation]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -32,11 +32,12 @@ code_version: 2.0.0
 # V9 Markdown 文档体系梳理与重构方案
 
 > **Date**：2026-07-16
-> **梳理范围**：全项目业务 `.md` 共 **1238** 份（排除 `node_modules/` 1169、` .venv/` 39 第三方产物后）
+> **梳理范围**：全项目业务 .md 共 **1238** 份（排除 `node_modules/` 1169、` .venv/` 39 第三方产物后）
 > **主战场**：`docs/` 共 **693** 份（占 56%）
-> **现有编号体系**：`doc-manifest.csv`（595 登记，缺口 98）+ `registry-index.md`（C-/I-/R- 三层）
-> **配套文档**：`agent-app-docs-classification.md`（scene#17 Agent 应用 19 份归类）
-> **风格治理**：`doc-style-standard.md`（唯一正源标准）、`doc-style-remediation-plan.md`（P0–P3 执行方案与验收）、`doc-style-remediation-log.md`（执行日志）
+> **现有编号体系**：doc-manifest.csv（已废弃，595 登记，缺口 98）+ `docs/meta/REGISTRY_INDEX.md`（C-/I-/R- 三层）
+> **配套文档**：`docs/meta/agent-app-docs-classification.md`（scene#17 Agent 应用 19 份归类）
+> **风格治理**：`docs/meta/doc-style-standard.md`（唯一正源标准）、doc-style-remediation-plan.md（已废弃，P0–P3 执行方案与验收）、doc-style-remediation-log.md（已废弃，执行日志）
+> **⚠️ 路径归档说明（2026-08-16）**：本文档中引用的文件路径均为 2026-07-16 规划阶段的快照路径。经历多轮文档治理（batch6-8 归档）后，部分目标文件已归档至 `docs/archive/historical-2026-08-16/` 或已被重命名/合并。本文档作为历史规划记录保留，文中路径不再更新。现行文档结构见 [AGENTS.md](AGENTS.md) 和 [GOVERNANCE.md](GOVERNANCE.md)。
 
 ---
 
@@ -45,7 +46,7 @@ code_version: 2.0.0
 |------|------|------|
 | 总量 | 1238 份业务 .md，docs/ 占 693 | 文档规模已失控，缺乏统一治理入口 |
 | 分布 | `explanation/` 204 + `reference/` 198 + `reports/` 114 + `00-meta/` 59 + `archive/` 56 居前五位 | 解释性与过程文件占比过高（≈ 75%），"活文档"被淹没 |
-| 重复 | `01-vision-and-goals.md`、`03-architecture-standards.md`、`complexity-governance.md` **同时存在于 `explanation/` 与 `reference/`** | 同名跨目录，单一事实源被破坏，AI 易取错版本 |
+| 重复 | `docs/specs/01-vision-and-goals.md`、`docs/explanation/03-architecture-standards.md`、`docs/explanation/complexity-governance.md` 曾同时存在于 `explanation/` 与 `reference/`（已合并去重） | 同名跨目录，单一事实源被破坏，AI 易取错版本 |
 | 缺口 | docs/ 实际 693 → manifest 仅登记 595（**缺口 98**） | 索引漂移，新文档未入册 |
 | 过程文件 | 带日期/报告/复盘/诊断命名者约 345 份（docs 229 + outputs 68 + archive 41） | 未做生命周期管理，越积越多 |
 | 编号 | C- 71 / I- 302 / R- 222，类目 17 种 | 类目过细（MISC 136 占最大），编号与 slug 混用 |
@@ -66,9 +67,9 @@ code_version: 2.0.0
 |------|------|----------|
 | 行为契约 | AI/分层/四步集成强制约束 | `AGENTS.md`（项目根，P0 事实标准） |
 | 编码规范 | 类型安全、复杂度治理、lint 规则 | `docs/guides/standards/coding-conventions.md`、`docs/explanation/complexity-redlines.md` |
-| 质量门禁 | 12 道门禁定义与基线 | `docs/guides/standards/quality-gates.md`、`docs/reference/09-quality-gates.md`、`docs/explanation/踩坑规则门禁指南.md` |
+| 质量门禁 | 12 道门禁定义与基线 | `docs/guides/standards/quality-gates.md`、`docs/guides/09-quality-gates.md`、`docs/reference/踩坑规则门禁指南.md` |
 | 测试规范 | 单测/集成/E2E 基线 | `docs/reports/testing/*`、`docs/reports/testing/test-catalog.md` |
-| 校对契约 | 文档-代码双向校对规则 | `docs/reference/hybrid-proofread-contract.md`、`docs/meta/doc-proofreading-strategy.md` |
+| 校对契约 | 文档-代码双向校对规则 | `docs/reference/hybrid-proofread-contract.md`、doc-proofreading-strategy.md（已废弃） |
 | 开发 SOP | 工作流、工具链地图 | `docs/reference/development-workflow-sop.md`（P0） |
 
 ### 🔵 B 类 · 系统初始文档（定义与边界）
@@ -80,9 +81,9 @@ code_version: 2.0.0
 |------|------|----------|
 | 系统入口 | 项目/文档总 README | 根 `README.md`、`docs/README.md` |
 | 架构总览 | 分层、舱室、PortalShell | `docs/explanation/architecture/overview.md`、`docs/explanation/ARCHITECTURE.md` |
-| 数据宪法/字典 | 数据定义规范、主数据字典 | `docs/reference/v9数据宪法.md`（P0）、`docs/reference/data-definition.md`、`ai-center-data-definition.md` |
-| API 契约 | 27 个 service 契约 | `docs/reference/*-contract.md`、`docs/explanation/architecture/api-contracts.md` |
-| ADR 决策 | 架构决策记录 | `docs/reference/adr-*.md`、`docs/explanation/adr-*.md` |
+| 数据宪法/字典 | 数据定义规范、主数据字典 | `docs/reference/v9数据宪法.md`（P0）、`docs/reference/data-definition.md`、`docs/explanation/ai-center-data-definition.md` |
+| API 契约 | 27 个 service 契约 | docs/reference/*-contract.md、`docs/explanation/architecture/api-contracts.md` |
+| ADR 决策 | 架构决策记录 | docs/reference/adr-*.md、docs/explanation/adr-*.md |
 | 板块说明 | 各舱/模块/子系统说明 | `docs/reference/modules/*`、`docs/explanation/architecture/cabins-overview.md`、`team-handbook/*` |
 
 ### 🟡 C 类 · 解释性 / 验证性过程文件（过程产物）
@@ -92,11 +93,11 @@ code_version: 2.0.0
 
 | 子类 | 内容 | 代表文件 |
 |------|------|----------|
-| 审计/检视报告 | 架构/安全/智能体审计 | `docs/reports/audit/*`、`agent-audit-report.md` |
-| 定期更新报告 | 文档治理/同步报告 | `../reports/changelogs/2026-07-08-documentation-summary-report.md` |
-| 复盘/诊断 | 故障 RCA、功能遗漏诊断 | `docs/archive/2026-07-12-security-audit.md`、`V9_MCP_Server与Agent功能遗漏诊断.html` |
-| 计划/看板 | 整改计划、执行看板 | `docs/meta/doc-auto-update-kanban.md`、`prompt-execute-remediation.md` |
-| 验证基线 | 集成基线比对、完成度校验 | `../reports/audit/report-12-integration-baseline-comparison.md`、`quality-audit-plan.md` |
+| 审计/检视报告 | 架构/安全/智能体审计 | `docs/reports/audit/*`、`docs/reference/agent-audit-report.md` |
+| 定期更新报告 | 文档治理/同步报告 | 已归档 |
+| 复盘/诊断 | 故障 RCA、功能遗漏诊断 | 2026-07-12 安全审计报告（已删除）、`docs/assets/team-handbook-html/supplementary/V9_MCP_Server与Agent功能遗漏诊断.html` |
+| 计划/看板 | 整改计划、执行看板 | `docs/reference/meta/doc-auto-update-kanban.md`、prompt-execute-remediation.md（已删除） |
+| 验证基线 | 集成基线比对、完成度校验 | 已归档、`docs/explanation/implementation/quality-audit-plan.md` |
 
 ---
 
@@ -112,7 +113,7 @@ code_version: 2.0.0
 
 ## 四、目录级重梳规则（逐目录去留判定）
 
-基于 `directory-structure-guide.md` §2.2 + 实测分布，给出每个 docs 子目录的"职责 + 归属类 + 重梳动作"：
+基于 `docs/meta/directory-structure-guide.md` §2.2 + 实测分布，给出每个 docs 子目录的"职责 + 归属类 + 重梳动作"：
 
 | docs 子目录 | .md 数 | 主导类 | 重梳规则 |
 |-------------|-------|--------|----------|
@@ -138,7 +139,7 @@ code_version: 2.0.0
 | `testing/` | 1 | A 类 | 测试目录，归 **A 类** |
 | `tutorials/` | 1 | B 类 | 教程，归 **B 类** |
 | `assets/` | 3 | — | 静态资源，非文档，移出计数 |
-| `docs 根` | 2 | A 类 | `README.md` 入口（B 类），`01-p1-debt-cleanup-todo.md` → C 类 R- |
+| `docs 根` | 2 | A 类 | `README.md` 入口（B 类），`docs/reports/project-management/01-p1-debt-cleanup-todo.md` → C 类 R- |
 
 > **关键动作**：`explanation/` 与 `reference/` 同名文件（已确认 3 个）必须合并——以 `reference/` 为权威定义源，`explanation/` 仅保留"为什么这样设计"的解释，删除重复定义。
 ---
@@ -163,10 +164,10 @@ code_version: 2.0.0
 
 1. **单一事实源（Single Source of Truth）**
    - 每个定义只在一处。跨目录同名 = 腐败信号。合并后立即更新 `links_to/linked_by`。
-   - 例：数据字典只在 `reference/data-definition.md`，别处引用，不复制。
+   - 例：数据字典只在 `docs/reference/data-definition.md`，别处引用，不复制。
 
 2. **文档即镜像（Docs as Mirror）**
-   - 代码改 → 文档必须同步改，靠 `doc-trigger-action-map.md` 的 T1–T10 触发规则 + `--auto-update` 强制。
+   - 代码改 → 文档必须同步改，靠 `docs/meta/doc-trigger-action-map.md` 的 T1–T10 触发规则 + `--auto-update` 强制。
    - 移动文档须同步 3 处：映射表、TRIGGER_RULES、各目录 README，否则报 FILE_NOT_FOUND。
 
 3. **编号是索引，slug 是真相**

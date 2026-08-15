@@ -182,7 +182,7 @@ export default function BacktestPage(): React.JSX.Element {
                 <Card key={m.label}>
                   <CardContent className="p-4">
                     <p className="text-sm text-muted-foreground">{m.label}</p>
-                    <p className={`text-xl font-bold mt-1 ${m.color}`}>{m.value}</p>
+                    <p className={`text-h2 font-bold mt-1 ${m.color}`}>{m.value}</p>
                   </CardContent>
                 </Card>
               ))}

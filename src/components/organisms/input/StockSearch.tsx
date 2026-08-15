@@ -52,13 +52,15 @@ export function StockSearch({
 
   // 初始化时拉取已导入的 symbol 集合
   useEffect(() => {
-    refreshExistingSymbols()
+    void refreshExistingSymbols()
   }, [refreshExistingSymbols])
 
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<StockSearchResult[]>([])
   const [open, setOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
+  // 搜索错误状态：当 storeSearchStocks 抛出异常时标记，用于 Input 的 aria-invalid
+  const [searchError, setSearchError] = useState<boolean>(false)
   // 记录最后交互方式：'mouse' | 'keyboard'，用于 mouseEnter 不覆盖键盘选中（P-mouseEnter 修复）
   const lastInteractionRef = useRef<'mouse' | 'keyboard'>('mouse')
   const { toast } = useToast()
@@ -84,12 +86,22 @@ export function StockSearch({
       return
     }
 
-    debounceRef.current = setTimeout(async () => {
-      const matches = await storeSearchStocks(trimmed)
-      setResults(matches)
-      // A1 修复：始终打开 listbox，由 listbox 内部根据 results.length 决定显示空态或选项
-      setOpen(true)
-      setActiveIndex(matches.length > 0 ? 0 : -1)
+    debounceRef.current = setTimeout(() => {
+      void (async () => {
+        try {
+          const matches = await storeSearchStocks(trimmed)
+          setResults(matches)
+          setSearchError(false)
+          // A1 修复：始终打开 listbox，由 listbox 内部根据 results.length 决定显示空态或选项
+          setOpen(true)
+          setActiveIndex(matches.length > 0 ? 0 : -1)
+        } catch {
+          setResults([])
+          setSearchError(true)
+          setOpen(true)
+          setActiveIndex(-1)
+        }
+      })()
     }, INPUT_CONFIG.search.debounceMs)
 
     return () => {
@@ -193,10 +205,13 @@ export function StockSearch({
       <Input
         ref={inputRef}
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => {
+          setQuery(e.target.value)
+          setSearchError(false)
+        }}
         onKeyDown={handleKeyDown}
         onFocus={() => {
-          if (results.length > 0) setOpen(true)
+          if (results.length > 0 || searchError) setOpen(true)
         }}
         onBlur={handleBlur}
         placeholder={placeholder}
@@ -209,6 +224,7 @@ export function StockSearch({
         aria-activedescendant={
           open && activeIndex >= 0 ? `stock-search-option-${activeIndex}` : undefined
         }
+        aria-invalid={searchError || undefined}
       />
       {open && (
         <div
@@ -217,7 +233,11 @@ export function StockSearch({
           className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-popover shadow-md"
         >
           {/* A1 修复：搜索无匹配时显示"无匹配"提示 */}
-          {results.length === 0 && query.trim().length >= INPUT_CONFIG.search.minQueryLength && (
+          {/* 搜索错误状态：显示错误提示 */}
+          {searchError && (
+            <div className="px-3 py-2 text-sm text-destructive" role="alert">搜索服务异常，请稍后重试</div>
+          )}
+          {!searchError && results.length === 0 && query.trim().length >= INPUT_CONFIG.search.minQueryLength && (
             <div className="px-3 py-2 text-sm text-muted-foreground">无匹配结果</div>
           )}
           {results.map((result, index) => {

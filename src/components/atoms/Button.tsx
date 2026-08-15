@@ -20,7 +20,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', asChild, children, ...props }, ref) => {
     const classes = cn(
-      'inline-flex items-center justify-center font-medium transition-all duration-200 ease-out',
+      'inline-flex items-center justify-center font-medium transition-colors duration-200 ease-out',
       THEME_TOKENS.radius.md,
       // 焦点环必须带 focus-visible: 前缀，否则 ring-2/ring-ring 会常驻显示
       // 使用主题感知的 ring-ring（映射到 --ring CSS 变量），替代原 ring-blue-500

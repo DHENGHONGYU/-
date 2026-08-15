@@ -136,7 +136,7 @@ export function toSafeBoolean(value: unknown, defaultValue = false): boolean {
  *   toSafeArray('abc')            // []
  */
 export function toSafeArray<T>(value: unknown): T[] {
-  return Array.isArray(value) ? value : []
+  return Array.isArray(value) ? (value as T[]) : []
 }
 
 /**

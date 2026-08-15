@@ -205,7 +205,7 @@ export function ExecutionMonitorStep(): React.JSX.Element {
           {/* 任务控制按钮 */}
           <div className="flex items-center gap-2 pt-2">
             {taskStatus === 'idle' && (
-              <Button onClick={handleStart} size="sm">
+              <Button onClick={() => void handleStart()} size="sm">
                 <Play className="w-4 h-4 mr-1" />
                 启动任务
               </Button>
@@ -235,7 +235,7 @@ export function ExecutionMonitorStep(): React.JSX.Element {
               </>
             )}
             {(taskStatus === 'completed' || taskStatus === 'failed') && (
-              <Button variant="outline" onClick={handleStart} size="sm">
+              <Button variant="outline" onClick={() => void handleStart()} size="sm">
                 <RefreshCw className="w-4 h-4 mr-1" />
                 重新执行
               </Button>

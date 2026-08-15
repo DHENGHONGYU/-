@@ -230,6 +230,24 @@ export async function listSnapshots(): Promise<SnapshotMeta[]> {
   return list.sort((a, b) => b.timestamp - a.timestamp);
 }
 
+/** 解析并校验存储区快照数组（JSON → StoreSnapshot[]，含结构校验） */
+function parseStoreSnapshots(json: string): StoreSnapshot[] {
+  const parsed: unknown = JSON.parse(json);
+  if (!Array.isArray(parsed)) {
+    throw new Error('Invalid snapshot data: expected an array of store snapshots');
+  }
+  return parsed.map((entry: unknown, i: number): StoreSnapshot => {
+    if (typeof entry !== 'object' || entry === null) {
+      throw new Error(`Invalid snapshot data: store entry #${i} is not an object`);
+    }
+    const obj = entry as Record<string, unknown>;
+    if (typeof obj.name !== 'string' || !Array.isArray(obj.records)) {
+      throw new Error(`Invalid snapshot data: store entry #${i} missing name/records`);
+    }
+    return { name: obj.name, records: obj.records as SnapshotRecord[] };
+  });
+}
+
 /**
  * 从快照恢复所有存储区数据。
  *
@@ -250,7 +268,7 @@ export async function restoreSnapshot(snapshotId: string): Promise<void> {
     throw new Error(`Snapshot not found: id="${snapshotId}"`);
   }
 
-  const stores: StoreSnapshot[] = JSON.parse(json);
+  const stores = parseStoreSnapshots(json);
 
   // 清空所有已注册存储区
   for (const store of Object.values(registry)) {
@@ -319,8 +337,8 @@ export async function compareSnapshots(id1: string, id2: string): Promise<Snapsh
   if (typeof json1 !== 'string') throw new Error(`Snapshot not found: id="${id1}"`);
   if (typeof json2 !== 'string') throw new Error(`Snapshot not found: id="${id2}"`);
 
-  const stores1: StoreSnapshot[] = JSON.parse(json1);
-  const stores2: StoreSnapshot[] = JSON.parse(json2);
+  const stores1 = parseStoreSnapshots(json1);
+  const stores2 = parseStoreSnapshots(json2);
 
   const diff: SnapshotDiff = { added: 0, removed: 0, modified: 0, details: [] };
 
@@ -390,7 +408,7 @@ export async function exportSnapshot(snapshotId: string): Promise<void> {
   const label = meta?.label ?? snapshotId;
 
   // 构建完整快照对象
-  const stores: StoreSnapshot[] = JSON.parse(json);
+  const stores = parseStoreSnapshots(json);
   const snapshot: Snapshot = {
     id: snapshotId,
     label: meta?.label ?? '',
@@ -445,17 +463,25 @@ export async function importSnapshot(file: File | { json: string }): Promise<Sna
     json = await file.text();
   }
 
-  let snapshot: Snapshot;
-
+  let parsed: unknown;
   try {
-    snapshot = JSON.parse(json);
+    parsed = JSON.parse(json);
   } catch {
     throw new Error('Invalid snapshot file: not valid JSON');
   }
 
-  if (!snapshot.id || !snapshot.stores || !Array.isArray(snapshot.stores)) {
+  const snapshotObj: Record<string, unknown> =
+    typeof parsed === 'object' && parsed !== null ? (parsed as Record<string, unknown>) : {};
+  if (typeof snapshotObj.id !== 'string' || !Array.isArray(snapshotObj.stores)) {
     throw new Error('Invalid snapshot file: missing required fields (id, stores)');
   }
+
+  const snapshot: Snapshot = {
+    id: snapshotObj.id,
+    label: typeof snapshotObj.label === 'string' ? snapshotObj.label : '',
+    timestamp: typeof snapshotObj.timestamp === 'number' ? snapshotObj.timestamp : 0,
+    stores: snapshotObj.stores as StoreSnapshot[],
+  };
 
   const id = snapshot.id;
   const label = snapshot.label || `imported_${Date.now()}`;

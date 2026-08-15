@@ -26,25 +26,26 @@ describe('logger', () => {
   it('应该记录 debug at debug level', () => {
     const logger = getLogger()
     logger.debug('debug msg')
-    expect(debugSpy).toHaveBeenCalledWith('[DEBUG] debug msg', expect.any(Object))
+    // pretty 格式: `🔍 [时间] [DEBUG] debug msg`，用 stringContaining 忽略动态时间戳与 emoji
+    expect(debugSpy).toHaveBeenCalledWith(expect.stringContaining('[DEBUG] debug msg'), expect.any(Object))
   })
 
   it('应该记录 info at debug level', () => {
     const logger = getLogger()
     logger.info('info msg')
-    expect(logSpy).toHaveBeenCalledWith('[INFO] info msg', expect.any(Object))
+    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('[INFO] info msg'), expect.any(Object))
   })
 
   it('应该记录 warn at debug level', () => {
     const logger = getLogger()
     logger.warn('warn msg')
-    expect(warnSpy).toHaveBeenCalledWith('[WARN] warn msg', expect.any(Object))
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('[WARN] warn msg'), expect.any(Object))
   })
 
   it('应该记录 error at debug level', () => {
     const logger = getLogger()
     logger.error('error msg')
-    expect(errorSpy).toHaveBeenCalledWith('[ERROR] error msg', expect.any(Object))
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('[ERROR] error msg'), expect.any(Object))
   })
 
   it('应该suppress debug when level is info', () => {
@@ -80,7 +81,7 @@ describe('logger', () => {
   it('应该包含 context when provided', () => {
     const logger = getLogger()
     logger.info('msg', { key: 'value' })
-    expect(logSpy).toHaveBeenCalledWith('[INFO] msg', { key: 'value' })
+    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('[INFO] msg'), { key: 'value' })
   })
 
   it('应该允许 changing log level dynamically', () => {

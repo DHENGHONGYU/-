@@ -29,9 +29,11 @@ export interface RankedCardProps {
 }
 
 const RANK_COLORS: Record<number, string> = {
-  1: 'bg-warning text-warning-foreground',
-  2: 'bg-muted-foreground/60 text-white',
-  3: 'bg-warning/70 text-warning-foreground',
+  1: 'bg-amber-500 text-white text-lg font-bold',
+  2: 'bg-muted text-muted-foreground',
+  3: 'bg-muted text-muted-foreground',
+  4: 'border border-border text-muted-foreground',
+  5: 'border border-border text-muted-foreground',
 }
 
 /**
@@ -49,19 +51,23 @@ export function RankedCard({
   onClick,
   className,
 }: RankedCardProps) {
-  const rankColor = RANK_COLORS[rank] ?? 'bg-muted text-foreground'
+  const rankColor = RANK_COLORS[rank] ?? 'border border-border text-muted-foreground'
+  const isOutline = rank >= 4 || !RANK_COLORS[rank]
+  const rankSize = rank === 1
+    ? 'w-8 h-8'
+    : 'w-7 h-7'
 
   return (
     <Card
       className={cn(
-        'cursor-pointer transition-all duration-200 hover:shadow-elevation-2 hover:scale-[1.02]',
+        'cursor-pointer transition-transform transition-shadow duration-200 hover:shadow-elevation-2 hover:scale-[1.02]',
         onClick && 'active:scale-[0.98]',
         className,
       )}
       onClick={onClick}
     >
       <CardContent className="p-3 flex items-center gap-3">
-        <Badge variant="default" className={cn(rankColor, 'w-7 h-7 flex items-center justify-center p-0 text-sm font-bold')}>
+        <Badge variant={isOutline ? 'outline' : 'default'} className={cn(rankColor, rankSize, 'flex items-center justify-center p-0 text-sm font-bold')}>
           {rank}
         </Badge>
 

@@ -153,12 +153,12 @@ function allocateWeights(count: number, theme: ThemeConfig): number[] {
   const equalWeight = 1 / count
 
   if (equalWeight <= effectiveMax) {
-    return Array(count).fill(Math.max(effectiveMin, equalWeight))
+    return Array<number>(count).fill(Math.max(effectiveMin, equalWeight))
   }
 
   // 等权超出上限：仅前 floor(1/effectiveMax) 只标的按上限配置，其余为 0
   const cappedCount = Math.min(count, Math.floor(1 / effectiveMax))
-  const weights = Array(count).fill(0)
+  const weights = Array<number>(count).fill(0)
   for (let i = 0; i < cappedCount; i++) {
     weights[i] = effectiveMax
   }

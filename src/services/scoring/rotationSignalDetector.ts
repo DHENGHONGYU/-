@@ -276,9 +276,9 @@ async function aggregateSectorBars(
   if (count === 0) return null
 
   const sortedDates = Array.from(allDates).sort()
-  const sectorVolumes: number[] = new Array(sortedDates.length).fill(0)
-  const sectorFlows: number[] = new Array(sortedDates.length).fill(0)
-  const closes: number[] = new Array(sortedDates.length).fill(0)
+  const sectorVolumes: number[] = Array.from({ length: sortedDates.length }, () => 0)
+  const sectorFlows: number[] = Array.from({ length: sortedDates.length }, () => 0)
+  const closes: number[] = Array.from({ length: sortedDates.length }, () => 0)
 
   for (let i = 0; i < sortedDates.length; i++) {
     const date = sortedDates[i]!

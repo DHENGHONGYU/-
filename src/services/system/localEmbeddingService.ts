@@ -85,7 +85,8 @@ async function loadPipelineWithRetry(): Promise<void> {
   // 动态导入 transformers.js（首次调用时自动下载模型）
   // 使用变量形式绕过 Vite 静态分析，避免预转换失败
   const transformerModule = '@xenova' + '/transformers'
-  const { pipeline } = await import(transformerModule)
+  const mod = (await import(transformerModule)) as typeof import('@xenova/transformers')
+  const { pipeline } = mod
 
   let lastErr: unknown
   for (let attempt = 1; attempt <= MODEL_LOAD_MAX_RETRIES; attempt++) {

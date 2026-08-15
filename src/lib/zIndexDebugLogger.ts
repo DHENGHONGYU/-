@@ -103,7 +103,7 @@ export function logZIndexChange(
   description = '',
 ): { before: number | string; after: number | string; changed: boolean } {
   const after = readComputedZIndex(element)
-  const before = beforeZ === null || beforeZ === undefined ? 'unknown' : beforeZ
+  const before = beforeZ ?? 'unknown'
   const changed = String(before) !== String(after)
   const ts = new Date().toISOString()
   const id = element?.id ?? 'none'

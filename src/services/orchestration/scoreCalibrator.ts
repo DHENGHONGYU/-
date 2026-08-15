@@ -130,7 +130,7 @@ export class ScoreCalibrator {
     eventBus.emit(EVENT_NAMES.SCORE_CALIBRATOR_ITEM, result)
 
     if (this.config.autoTriggerStrategy && this.pendingSymbols.size === 0) {
-      this.triggerStrategyClassification()
+      void this.triggerStrategyClassification()
     }
   }
 
@@ -217,7 +217,7 @@ export class ScoreCalibrator {
 let _instance: ScoreCalibrator | null = null
 
 export function getScoreCalibrator(config?: Partial<ScoreCalibratorConfig>): ScoreCalibrator {
-  if (!_instance) _instance = new ScoreCalibrator(config)
+  _instance ??= new ScoreCalibrator(config)
   return _instance
 }
 

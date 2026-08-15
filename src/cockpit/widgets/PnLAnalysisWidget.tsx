@@ -53,12 +53,12 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
       title={config.title}
       visualState={visualState}
       error={error}
-      onRetry={refresh}
+      onRetry={() => void refresh()}
       emptyTitle="暂无盈亏数据"
       emptyDescription="完成交易后将自动生成盈亏分析与收益曲线"
       skeleton={(
         <div className="space-y-4">
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[1, 2, 3].map((i) => (
               <Skeleton key={i} className="h-16" />
             ))}
@@ -69,12 +69,12 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
     >
       <div className="space-y-4">
         {/* 核心指标 */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className={`${COLOR_SHADES.gray[50]} rounded-lg p-3 text-center`}>
             <div className="flex justify-center mb-1">
               <BarChart3 className="h-5 w-5" style={{ color: pnlSummary.totalRealizedPnl >= 0 ? COLOR_TOKENS.success.hex : COLOR_TOKENS.danger.hex }} />
             </div>
-            <div className="text-xl font-bold" style={{ color: pnlSummary.totalRealizedPnl >= 0 ? COLOR_TOKENS.success.hex : COLOR_TOKENS.danger.hex }}>
+            <div className="text-h2 font-bold" style={{ color: pnlSummary.totalRealizedPnl >= 0 ? COLOR_TOKENS.success.hex : COLOR_TOKENS.danger.hex }}>
               {pnlSummary.totalRealizedPnl >= 0 ? '+' : ''}{pnlSummary.totalRealizedPnl}%
             </div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>总盈亏</div>
@@ -83,14 +83,14 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
             <div className="flex justify-center mb-1">
               <TrendingUp className="h-5 w-5" style={{ color: COLOR_TOKENS.success.hex }} />
             </div>
-            <div className="text-xl font-bold" style={{ color: COLOR_TOKENS.success.hex }}>{pnlSummary.winRate}%</div>
+            <div className="text-h2 font-bold" style={{ color: COLOR_TOKENS.success.hex }}>{pnlSummary.winRate}%</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>胜率</div>
           </div>
           <div className={`${COLOR_SHADES.gray[50]} rounded-lg p-3 text-center`}>
             <div className="flex justify-center mb-1">
               <TrendingUp className="h-5 w-5 text-warning" />
             </div>
-            <div className="text-xl font-bold text-warning">{pnlSummary.profitFactor}</div>
+            <div className="text-h2 font-bold text-warning">{pnlSummary.profitFactor}</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>盈亏比</div>
           </div>
         </div>
@@ -111,7 +111,7 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
                   title={`${point.date}: ${isPositive ? '+' : ''}${point.cumulativePnL}%`}
                 >
                   <div
-                    className="absolute bottom-0 w-full rounded-t-sm transition-all"
+                    className="absolute bottom-0 w-full rounded-t-sm transition-[height]"
                     style={{
                       height: `${Math.max(heightPct, 4)}%`,
                       backgroundColor: isPositive ? COLOR_TOKENS.success.hex : COLOR_TOKENS.danger.hex,

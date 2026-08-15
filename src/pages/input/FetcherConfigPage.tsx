@@ -197,14 +197,14 @@ export default function FetcherConfigPage(): React.JSX.Element {
           <Card>
             <CardContent className="py-4">
               <p className="text-xs text-muted-foreground">数据源数量</p>
-              <p className="mt-1 text-2xl font-bold">{DATA_SOURCE_ENDPOINTS.length}</p>
+              <p className="mt-1 text-h1 font-bold">{DATA_SOURCE_ENDPOINTS.length}</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="py-4">
               <p className="text-xs text-muted-foreground">已启用</p>
               <p
-                className="mt-1 text-2xl font-bold"
+                className="mt-1 text-h1 font-bold"
                 style={{ color: COLOR_TOKENS.success.hex }}
               >
                 {enabledEndpoints}
@@ -214,7 +214,7 @@ export default function FetcherConfigPage(): React.JSX.Element {
           <Card>
             <CardContent className="py-4">
               <p className="text-xs text-muted-foreground">启用维度</p>
-              <p className="mt-1 text-2xl font-bold">
+              <p className="mt-1 text-h1 font-bold">
                 {enabledDimensions} / {dimensions.length}
               </p>
             </CardContent>
@@ -222,7 +222,7 @@ export default function FetcherConfigPage(): React.JSX.Element {
           <Card>
             <CardContent className="py-4">
               <p className="text-xs text-muted-foreground">日志条数</p>
-              <p className="mt-1 text-2xl font-bold">{logs.length}</p>
+              <p className="mt-1 text-h1 font-bold">{logs.length}</p>
             </CardContent>
           </Card>
         </div>

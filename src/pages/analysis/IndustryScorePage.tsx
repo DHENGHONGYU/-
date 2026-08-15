@@ -23,6 +23,13 @@ import {
 } from '@/store/industryScoreStore'
 import type { LlmConfig } from '@/config/llmConfig'
 import { getLogger } from '@/lib/logger'
+import { cn } from '@/lib/utils'
+
+function getScoreColorClass(score: number): string {
+  if (score >= 4.0) return 'text-[hsl(var(--stock-up))]'
+  if (score >= 3.0) return 'text-primary'
+  return 'text-[hsl(var(--stock-down))]'
+}
 
 const logger = getLogger()
 
@@ -265,7 +272,7 @@ export default function IndustryScorePage(): React.JSX.Element {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex items-center gap-4">
-                      <div className="text-4xl font-bold text-primary">
+                      <div className={cn('text-4xl font-bold', result.overallScore !== null && getScoreColorClass(result.overallScore))}>
                         {result.overallScore !== null ? result.overallScore.toFixed(2) : '—'}
                       </div>
                       <div className="text-sm text-muted-foreground">综合分 / 5.0</div>

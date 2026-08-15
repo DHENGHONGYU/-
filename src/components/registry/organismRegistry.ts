@@ -156,4 +156,5 @@ export const ORGANISM_REGISTRY: ComponentEntry[] = [
   { name: 'DensityContext', level: 'organism', sourcePath: 'src/components/cockpit/DensityContext.tsx', targetPath: 'src/components/cockpit/DensityContext.tsx', status: 'active', description: '信息密度 Context', consumers: ['PortalShell', 'CockpitShell', 'DensityToggle'] },
   { name: 'DensityToggle', level: 'organism', sourcePath: 'src/components/cockpit/DensityToggle.tsx', targetPath: 'src/components/cockpit/DensityToggle.tsx', status: 'active', description: '信息密度切换', consumers: ['PortalShell', 'CockpitShell', 'PageHeader'] },
   { name: 'SecurityStatus', level: 'organism', sourcePath: 'src/components/cockpit/SecurityStatus.tsx', targetPath: 'src/components/cockpit/SecurityStatus.tsx', status: 'active', description: '安全状态', consumers: ['PortalShell', 'CockpitShell', 'HealthDashboardPage'] },
+  { name: 'StockSelector', level: 'organism', sourcePath: 'src/components/organisms/input/StockSelector.tsx', targetPath: 'src/components/organisms/input/StockSelector.tsx', status: 'active', description: '股票选择器（下拉搜索 + 选中态）', consumers: ['ScoreDocPage', 'AnalysisApp', 'InputDashboard'] },
 ]

@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState, Suspense } from 'react'
 import { useLocation } from 'react-router'
+import { Button } from '@/components/atoms/Button'
+import { PageHeader } from '@/components/templates/PageHeader'
 import InputDashboard from './InputDashboard'
 import LocalKnowledgePage from '@/pages/input/LocalKnowledgePage'
 import CollectionMonitorPanel from './CollectionMonitorPanel'
@@ -105,12 +107,11 @@ export default function InputApp(): React.JSX.Element {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold">输入舱</h1>
-          <p className="text-sm text-muted-foreground">候选池管理 · 数据采集 · 热门板块纳入</p>
-        </div>
-      </div>
+      <PageHeader
+        title="输入舱"
+        description="股票数据录入与采集管理"
+        actions={<Button variant="outline" size="sm" onClick={() => window.location.hash = '#/input/collection-monitor'}>采集监控</Button>}
+      />
       <InputFlowErrorBoundary
         label="InputApp"
         onReset={() => setResetKey((k) => k + 1)}

@@ -1,0 +1,361 @@
+# 智能股票分析复盘系统 UI 设计评审报告
+
+## 摘要
+
+本报告从**报表使用者（投研分析师/交易员/资产管理者）**视角，对 FinSight V9「智能股票分析复盘系统」的当前 UI 设计进行逐项检查、评分与优化可行性分析。评审基于 `docs/specs/04-ui-ux-specs.md` 设计规范、`src/constants/theme.tokens.ts` 主题系统、`src/components/` 组件库、`e2e/` 端到端测试基线以及两个 `.design` 交付项目（`cockpit-redesign`、`finsight-v9-ui-review`）进行交叉验证。
+
+核心发现：系统已建立较为完整的原子化组件体系（195 个组件文件）和自动化 UI 质量门禁（27 个 E2E 文件覆盖视觉回归、可访问性、响应式、暗色模式），但**设计规范与代码实现存在明显的"双线叙事"**：规范仍描述"翡翠绿 #0D9165 + 宋瓷美学"，而代码已落地为"Apple Business Design V5"（Apple Blue #007AFF）。这种不一致是报表使用者在品牌认知、主题信任和跨页面一致性上最大的潜在风险点。
+
+> **✅ 修复状态（2026-08-15）**：颜色分裂问题已修复。`docs/specs/04-ui-ux-specs.md`（v2.6.0）、`AGENTS.md`、`prompts/component-prompt-template.md`、`docs/explanation/a11y-contrast-report.md`、`docs/explanation/adr-005-portalshell-dark-kimi-layout.md`、`docs/reference/architecture-version-comparison.md`、`docs/meta/functional-module-guide.md`、`docs/assets/team-handbook-html/01-design-philosophy.html`、`docs/guides/how-to/COLOR-TOKEN-GUIDE.md` 共 9 个文件已统一为 Apple Blue #007AFF（`--primary: 210 100% 50%`）。宋瓷语义色保留为装饰性扩展，不参与功能语义。详见 [CHANGELOG.md](CHANGELOG.md)。
+
+**总体评分：78 / 100**（良好，但存在可落地的中高风险项）
+
+| 维度 | 评分 | 风险等级 |
+|---|---|---|
+| 信息架构与导航效率 | 75 | 中 |
+| 视觉层级与可读性 | 80 | 中 |
+| 数据可视化表现力 | 72 | 中高 |
+| 主题一致性与品牌认知 | 65 | 高 |
+| 交互反馈与操作效率 | 78 | 中 |
+| 响应式适配 | 70 | 中 |
+| 可访问性 | 74 | 中 |
+| 组件一致性与复用 | 82 | 低 |
+| 文档与实现一致性 | 58 | 高 |
+| 设计交付物完整性 | 85 | 低 |
+
+---
+
+## 1. 研究背景与方法论
+
+### 1.1 研究对象
+
+FinSight V9 是一款面向 A 股/港股/美股的智能投研与复盘系统，采用"五舱工作流"：输入 → 分析 → 交易 → 输出 → 总控。目标用户为需要高频查看报表、K 线、评分雷达、持仓明细和复盘结论的投研人员。
+
+### 1.2 分析框架
+
+本次评审采用 **HEART + 设计系统成熟度** 的复合框架：
+
+- **Happiness / Efficiency**：视觉层级、信息密度、操作路径。
+- **Engagement / Adoption**：数据可视化的可解释性与组件复用率。
+- **Retention / Task success**：可访问性、响应式、主题一致性。
+- **设计系统成熟度**：Token 单一真源、组件原子化、文档与代码一致性。
+
+### 1.3 数据来源
+
+| 数据类型 | 来源 | 量化结果 |
+|---|---|---|
+| 组件库规模 | `src/components/**/*.tsx` | 195 个组件文件 |
+| 原子/分子/有机体/模板/图表 | 组件目录统计 | 32 / 26 / 94 / 7 / 19 |
+| E2E 测试覆盖 | `e2e/**/*.spec.ts` | 27 个测试文件 |
+| 设计项目页面 | `finsight-v9-ui-review.design` | 约 40 个页面节点 |
+| 驾驶舱设计稿 | `cockpit-redesign.design` | 2 个页面（浅色/深色） |
+| 路由规模 | `src/config/routes.ts` | 70+ 注册路由 |
+
+---
+
+## 2. 逐项检查、评分与解析
+
+### 2.1 信息架构与导航效率
+
+**评分：75 / 100**
+
+#### 现状
+
+系统采用"五舱"顶层导航 + 左侧分组功能面板的 PortalShell 布局。`src/config/routes.ts` 注册了 70 余条路由，覆盖了输入、分析、交易、输出、总控五大舱室及其子页面。`finsight-v9-ui-review.design` 中也呈现了完整的五舱流转原型。
+
+#### 对报表使用者的影响
+
+- **优势**：五舱语义与投研工作流（采集 → 研究 → 交易 → 复盘 → 运维）高度同构，老用户可快速建立心智模型。
+- **风险**：路由数量庞大，部分子页面存在"合并后又保留旧路由"的兼容层（如 `/output/prediction`、`/output/retrospective` 已合并至 `/output/factor-analysis`），可能导致新用户在导航时遇到看似不同、实则重复的入口。
+- **风险**：规范中提到"左侧面板按常用 / 采集 / 工具分组"，但未在代码中读到统一的分组配置文件，分组稳定性依赖各舱 App 内部实现，跨舱一致性存在波动。
+
+#### 优化可行性
+
+- **高可行**：在 `sidebarConfig.ts` 中固化五舱统一的侧边栏分组 schema，并建立"常用 / 采集 / 分析 / 交易 / 运维"五类标签，减少各舱自行决定分组。
+- **中可行**：对合并后的旧路由增加视觉降级提示（如"此功能已迁移至因子分析"），而非直接重定向，避免用户迷失。
+
+---
+
+### 2.2 视觉层级与可读性
+
+**评分：80 / 100**
+
+#### 现状
+
+`src/index.css` 与 `tailwind.config.js` 建立了完整的排版阶梯：`display / h1-h6 / body-lg / body / body-sm / caption / overline`，并配套 CJK 字距系统。`TYPOGRAPHY_SCALE` 在 `theme.tokens.design.ts` 中进一步明确了字号、字重、行高与使用场景。卡片内边距统一为 24px（8px 栅格），数值使用 `font-variant-numeric: tabular-nums` 保证对齐。
+
+#### 对报表使用者的影响
+
+- **优势**：等宽数字、明确的标题层级、0.015em 的中文正文 tracking，对密集表格（持仓、评分、交易流水）的可读性友好。
+- **风险**：`theme.config.ts` 被标记为 `@deprecated`（第三套并行体系），说明历史上存在多套字体/间距体系并行，若仍有旧组件引用，可能导致同一页面出现 14px/16px/1rem 混用。
+- **风险**：规范要求"标题 `text-xl font-semibold`"，但实际 `tailwind.config.js` 已扩展 `text-h1` 等自定义字号，部分旧页面可能仍使用 `text-xl`，造成字号不统一。
+
+#### 优化可行性
+
+- **高可行**：运行一次 `text-xl` / `text-2xl` 硬编码扫描，统一替换为 `text-h1` / `text-h2`，属于纯样式重构，风险低。
+- **高可行**：删除 `theme.config.ts`（已零引用），消除"第三套体系"的干扰。
+
+---
+
+### 2.3 数据可视化表现力
+
+**评分：72 / 100**
+
+#### 现状
+
+组件库中图表组件共 19 个文件，包括 `CandlestickChart`、`LineChart`、`BarChart`、`AreaChart`、`ScoreRadar`、`FactorHeatmap`、`IndustryHeatmap`、`IndustryV4Radar` 等。规范第 4.3 节"图表组件规范"中列出的 6 个图表组件均已实现。`e2e/visual-regression.spec.ts` 对驾驶舱、个股评分、板块分析、持仓、交易复盘等 30+ 场景建立了视觉基线。
+
+#### 对报表使用者的影响
+
+- **优势**：K 线图使用 `lightweight-charts`，通用图表使用 `recharts`，选型符合金融数据可视化需求。
+- **风险**：规范中仍标注"?? 未实现。缺少图表组件"，说明文档未同步更新，用户看到的界面与规范描述不一致。
+- **风险**：驾驶舱 Widget 架构在 `App.tsx` 中通过 `widgetEngine.preloadComponents` 预热，但规范中标注"?? `CockpitShell.tsx` 为静态页面，缺少 Widget 框架"，同样存在文档滞后。
+- **风险**：图表色彩主要依赖 `CHART_PALETTE`，但未在评审中看到统一的"数据-颜色"映射规范（如行业评分雷达中各维度固定配色），不同页面可能因配色不一致导致误读。
+
+#### 优化可行性
+
+- **高可行**：更新 `04-ui-ux-specs.md` 第 4.3 节，删除"未实现"标注，补充图表组件清单与数据-颜色映射规则。
+- **中可行**：为驾驶舱 Widget 增加可拖拽/可配置的网格编辑器，从"静态页面"升级为真正的"投研决策视图"。
+- **中可行**：建立"图表语义色"规范（如估值维度固定用蓝色、质量维度固定用绿色），降低跨页面认知负荷。
+
+---
+
+### 2.4 主题一致性与品牌认知
+
+**评分：65 / 100**
+
+#### 现状
+
+这是当前**最突出的风险点**。存在两套品牌叙事：
+
+| 维度 | UI/UX 规范（v2.5.0） | 代码实现（index.css V5） |
+|---|---|---|
+| 主色 | 翡翠绿 `#0D9165` | Apple Blue `#007AFF` |
+| 背景 | 象牙白 `#ivory` | `#F2F2F7`（Apple 浅灰） |
+| 风格 | 宋瓷美学 + 现代极简 | Apple Business Design |
+| 警示色 | 琥珀 `38 92% 50%` | 琥珀 `36 100% 50%`（一致） |
+| 涨跌色 | 红涨绿跌（一致） | 红涨绿跌（一致） |
+
+`src/index.css` 顶部明确标注 `"FinSight V9 · Design Token Source of Truth" "Version: V5 (Apple Business Design)"`，而 `04-ui-ux-specs.md` 第 4.1 节仍称"翡翠绿强调色"。
+
+#### 对报表使用者的影响
+
+- **风险**：品牌认知分裂。若用户先阅读文档再使用系统，会对"为什么主色不是绿色"产生困惑，降低专业信任度。
+- **风险**：A 股用户习惯"红涨绿跌"，系统虽已正确实现，但若品牌色与涨跌色语义冲突（旧规范中的翡翠绿与上涨红可能过于接近），可能引发误读。代码切换到 Apple Blue 反而更稳妥。
+- **优势**：Apple Business Design 的浅色灰底 + 蓝色主色，在金融/企业级 SaaS 中具有更高的专业感和可扩展性。
+
+#### 优化可行性
+
+- **高可行**：将 `04-ui-ux-specs.md` 第 4.1 节、4.2 节的主色描述从"翡翠绿"更新为"Apple Blue #007AFF"，并说明切换理由（避免与 A 股红涨绿跌语义冲突、提升企业级信任感）。
+- **高可行**：保留宋瓷语义扩展色（`--ru-blue`、`--guan-green`、`--cinnabar`、`--ivory`、`--warm-gray`）作为文化点缀，但明确其"装饰性"用途，避免与功能色混淆。
+- **低可行（短期）**：若业务方坚持翡翠绿品牌，需重新设计整套浅色/深色变量，并重新生成 30+ 视觉回归基线，成本高。
+
+---
+
+### 2.5 交互反馈与操作效率
+
+**评分：78 / 100**
+
+#### 现状
+
+规范第 4.7 节定义了完整的交互动效：页面切换 `fade + slide` 200ms、骨架屏加载、Toast 反馈、按钮点击 scale 0.98、卡片悬停 shadow 提升。`useToast` hook 与 `Toaster` 组件已就位，`PageSkeleton` 作为统一加载态。
+
+#### 对报表使用者的影响
+
+- **优势**：Toast 明确区分 success / warning / error 变体，对交易/采集等关键操作提供即时反馈。
+- **优势**：骨架屏替代 spinner，减少用户等待焦虑。
+- **风险**：`App.tsx` 中 IndexedDB 初始化失败、内存降级模式等错误页面使用手写内联样式（`bg-background`、`text-primary` 等），未使用 `ErrorState` 或 `Result` 组件，视觉统一性受损。
+- **风险**：首次交互才触发 Agent 初始化，虽然优化了启动性能，但对于"打开系统后立即查看驾驶舱"的报表使用者，可能在第一次点击时出现 100-200ms 的延迟感知。
+
+#### 优化可行性
+
+- **高可行**：将 `App.tsx` 中的错误页面提取为 `AppErrorState` 组件（`src/components/molecules/AppErrorState.tsx` 已存在），统一错误视觉。
+- **中可行**：对 Agent 初始化增加"静默预热"策略：启动后 3 秒内若无交互则自动初始化（当前 fallback 为 10 秒），缩短首交互延迟。
+
+---
+
+### 2.6 响应式适配
+
+**评分：70 / 100**
+
+#### 现状
+
+规范定义了 sm/md/lg/xl 四个断点，并规定了"< md 左侧面板折叠、≥ md 固定显示、≥ lg 右侧多面板并排"。`e2e/responsive.spec.ts` 对 375×667、768×1024、1920×1080 三个视口下的输入/分析/交易/总控 Hub 页进行了测试。
+
+#### 对报表使用者的影响
+
+- **优势**：Hub 页使用模块卡片网格，在移动端可自动堆叠，符合 PWA 移动端优先原则。
+- **风险**：响应式测试仅验证了"页面标题可见 + 模块卡片可见 + 面包屑可见"，未验证复杂表格（如持仓表、交易流水表）在小屏下的横向滚动、列隐藏或卡片化转换。
+- **风险**：驾驶舱和投资看板等数据密集型页面未在响应式测试清单中出现，而这类页面恰恰是报表使用者在大屏与小屏间切换的核心场景。
+
+#### 优化可行性
+
+- **高可行**：为 `HoldingsTable`、`VirtualizedHoldingsTable`、`TradeFlowSummary` 等表格组件增加 `useMediaQuery` 列隐藏策略，小屏下仅保留股票名称、盈亏、仓位三列。
+- **中可行**：扩展响应式 E2E 至驾驶舱 `/cockpit`、交易复盘 `/trading/review`、投资看板 `/analysis/industry-score`，覆盖更多核心页面。
+
+---
+
+### 2.7 可访问性
+
+**评分：74 / 100**
+
+#### 现状
+
+`e2e/accessibility.spec.ts` 检查按钮 aria-label、链接文本、Tab 导航、焦点管理。`dark-mode-flicker.spec.ts` 将暗色模式切换作为 P0 级门禁，确保 class 变化在单帧内完成、无中间态闪烁。
+
+#### 对报表使用者的影响
+
+- **优势**：暗色模式切换无闪烁，对长时间盯盘的用户眼部疲劳友好。
+- **优势**：ARIA 标签和键盘导航有基础覆盖，满足部分合规要求。
+- **风险**：可访问性测试未覆盖颜色对比度（WCAG 4.5:1）、屏幕阅读器朗读顺序、复杂图表的替代文本。
+- **风险**：金融数据依赖颜色编码（红涨绿跌），对色盲用户不友好，未看到 `pattern` 或 `shape` 辅助编码。
+
+#### 优化可行性
+
+- **高可行**：引入 `@axe-core/playwright` 对 5 舱首屏进行自动化对比度扫描。
+- **中可行**：为 K 线/涨跌徽章增加 `+`/`-` 符号或方向箭头（`StockPriceChangeBadge` 已存在，可扩展），为色盲用户提供非颜色线索。
+- **中可行**：为复杂图表增加 `aria-label` 与键盘聚焦后的数据摘要。
+
+---
+
+### 2.8 组件一致性与复用
+
+**评分：82 / 100**
+
+#### 现状
+
+组件库按 Atomic Design 分层：`atoms`（32 个）、`molecules`（26 个）、`organisms`（94 个）、`templates`（7 个）、`chart`（19 个）。原子组件禁止依赖 Store/Service/业务逻辑，`src/components/atoms/index.ts` 统一导出。存在 `componentRegistry.ts`（规范提及）用于注册可用组件。
+
+#### 对报表使用者的影响
+
+- **优势**：原子组件职责单一，保证了按钮、输入框、徽章等基础元素在全系统的一致性。
+- **优势**：`MetricCard`、`ScoreGauge`、`DataState` 等分子组件在多个舱室复用，降低了跨页面学习成本。
+- **风险**：有机体组件数量高达 94 个，部分可能存在功能重叠（如 `molecules/ErrorState.tsx` 与 `organisms/shared/ErrorBoundary.tsx`、`molecules/EmptyState.tsx` 与 `molecules/states/Empty.tsx`），需要进一步清理。
+- **风险**：`src/components/ui/` 与 `src/components/atoms/` 的兼容 shim 仍在过渡期，可能导致同一页面引用两种命名空间下的相似组件。
+
+#### 优化可行性
+
+- **高可行**：对 `ErrorState`、`EmptyState`、`LoadingState`、`Skeleton` 等状态组件进行合并，建立单一真源。
+- **中可行**：扫描 `src/components/ui/` 的剩余 shim 引用，迁移至 `atoms/`，完成后删除兼容目录。
+- **中可行**：建立组件使用热力图（基于 E2E 与测试引用），识别 90 天未使用的有机体组件并归档。
+
+---
+
+### 2.9 文档与实现一致性
+
+**评分：58 / 100**
+
+#### 现状
+
+`04-ui-ux-specs.md` 中至少存在以下与代码不一致的标注：
+
+1. **第 4.1 节**：规范称"翡翠绿 #0D9165"，代码为 Apple Blue #007AFF。
+2. **第 4.3 节 Widget 架构**：规范称"?? `CockpitShell.tsx` 为静态页面，缺少 Widget 框架"，但 `App.tsx` 已调用 `widgetEngine.preloadComponents`。
+3. **第 4.3 节图表组件**：规范称"?? 未实现。缺少图表组件"，实际已实现 19 个图表组件。
+4. **第 4.9 版本比对**：称当前版本为 `v0.9.0-docs-review`，但文档 frontmatter 标注 `version: v2.5.0`。
+
+#### 对报表使用者的影响
+
+- **风险**：文档是用户与实施团队沟通的重要媒介，规范与实现不一致会导致需求评审、验收测试时的反复确认。
+- **风险**：新成员若按旧规范开发新页面，会引入与现有系统风格冲突的 UI 债务。
+- **优势**：`theme.tokens.ts` 拆分后的 6 个子模块有清晰的注释和版本说明，代码内部一致性较好。
+
+#### 优化可行性
+
+- **高可行**：对 `04-ui-ux-specs.md` 进行一次文档对齐治理（doc-freshness），修正主色、图表组件、Widget 状态、版本号。
+- **高可行**：在 `docs/specs/` 中增加"设计规范与代码实现一致性检查清单"，作为 PR Review 的固定项。
+
+---
+
+### 2.10 设计交付物完整性
+
+**评分：85 / 100**
+
+#### 现状
+
+工作区中存在两个 `.design` 项目：
+
+- `cockpit-redesign.design`：2 个页面（驾驶舱投研决策视图浅色/深色），覆盖大屏决策场景。
+- `finsight-v9-ui-review.design`：约 40 个页面节点，包括 UI 设计评分卡、首页/各舱 V2/V3/V4、投资看板 V1/V2/V3、优化对照总览、六轮优化报告、最终交付、数据架构全景图等。
+
+#### 对报表使用者的影响
+
+- **优势**：设计稿覆盖了五舱核心页面及浅色/深色双主题，能够支撑开发落地。
+- **优势**：设计稿中保留了从 V1 到 V4 的演进版本，便于追溯设计决策。
+- **风险**：页面节点过多（约 40 个），部分旧版本页面（如 V1/V2）可能与当前代码实现不一致，存在"设计稿过时"风险。
+- **风险**：`cockpit-redesign` 与 `finsight-v9-ui-review` 两个项目是平行关系还是继承关系不明确，可能造成设计资产维护混乱。
+
+#### 优化可行性
+
+- **高可行**：为 `.design` 项目建立"当前可用版本"标签，将过时版本归档到子分组或单独归档项目。
+- **中可行**：将两个 `.design` 项目合并或明确主从关系（如 `finsight-v9-ui-review` 为总控，`cockpit-redesign` 为驾驶舱专项）。
+
+---
+
+## 3. UI 组件优化可行性分析
+
+基于上述评分，将优化建议按**影响-成本矩阵**分类：
+
+### 3.1 高影响 + 低成本（立即执行）
+
+| 优化项 | 影响 | 成本 | 预期收益 |
+|---|---|---|---|
+| 修正 `04-ui-ux-specs.md` 主色、图表组件、Widget 状态、版本号 | 高 | 低 | 消除文档与实现分裂，降低新成员与用户的认知成本 |
+| 删除 `theme.config.ts` | 中 | 低 | 消除第三套并行字体/间距体系 |
+| 统一 `text-xl`/`text-2xl` 为 `text-h1`/`text-h2` | 中 | 低 | 提升跨页面字号一致性 |
+| 将 `App.tsx` 错误页面替换为 `AppErrorState` | 中 | 低 | 统一错误视觉，提升异常场景信任感 |
+| 合并 `ErrorState`/`EmptyState`/`LoadingState`/`Skeleton` 状态组件 | 中 | 低 | 减少重复组件，降低维护成本 |
+
+### 3.2 高影响 + 中成本（本季度落地）
+
+| 优化项 | 影响 | 成本 | 预期收益 |
+|---|---|---|---|
+| 更新视觉回归基线，建立统一的品牌主色叙事 | 高 | 中 | 消除品牌认知分裂，提升专业感 |
+| 为表格组件增加响应式列隐藏策略 | 高 | 中 | 提升移动端/平板端的报表可读性 |
+| 建立图表"数据-颜色"映射规范 | 中 | 中 | 降低跨页面数据误读风险 |
+| 引入 `@axe-core/playwright` 自动化可访问性扫描 | 中 | 中 | 提前发现对比度、ARIA 等问题 |
+| 为涨跌/评分增加非颜色编码（符号/形状） | 中 | 中 | 提升色盲用户的可用性 |
+
+### 3.3 高影响 + 高成本（下季度规划）
+
+| 优化项 | 影响 | 成本 | 预期收益 |
+|---|---|---|---|
+| 将驾驶舱从静态页面升级为可配置 Widget 网格 | 高 | 高 | 实现真正的"投研决策视图"，提升用户粘性 |
+| 若业务方坚持翡翠绿品牌，重新设计整套主题系统并回归测试 | 高 | 高 | 统一品牌与代码，但需重新生成全部视觉基线 |
+| 建立跨页面统一的数据密度切换（紧凑/舒适/宽松） | 中 | 高 | 适应不同屏幕尺寸与用户偏好 |
+
+### 3.4 低影响 + 低成本（顺手修复）
+
+| 优化项 | 影响 | 成本 | 预期收益 |
+|---|---|---|---|
+| 清理 `src/components/ui/` 兼容 shim | 中 | 低 | 减少组件命名空间混乱 |
+| 为 `.design` 项目过时版本打归档标签 | 低 | 低 | 提升设计资产管理效率 |
+| 在 `sidebarConfig.ts` 中固化五舱统一分组 | 中 | 低 | 提升跨舱导航一致性 |
+
+---
+
+## 4. 结论
+
+FinSight V9 的 UI 设计已从"功能可用"走向"体系化建设"。原子化组件库、自动化视觉回归、暗色模式 P0 门禁、设计项目交付物都表明团队在设计工程化上投入了大量精力。**当前最核心的矛盾不是"缺什么"，而是"说了什么"与"做了什么"不一致**——设计规范仍停留在翡翠绿/宋瓷美学阶段，而代码已迭代至 Apple Business Design V5。这种分裂是报表使用者对系统专业感产生怀疑的首要来源。
+
+从报表使用者角度看，系统的**信息架构、视觉层级、组件复用**已具备良好基础；**数据可视化、响应式、可访问性**仍有提升空间；**文档与实现一致性**是必须立即修复的高风险项。建议优先执行"文档对齐 + 删除废弃体系 + 统一字号"三类低成本高影响优化，再逐步推进响应式表格、可访问性扫描和驾驶舱 Widget 化等高价值改进。
+
+---
+
+## 5. 参考文献
+
+[1] FinSight V9 Architecture Team. 04. UI/UX 规范[EB/OL]. `d:\FinSightV9\docs\specs\04-ui-ux-specs.md`, 2026-07-17.
+
+[2] FinSight V9 Frontend Team. `theme.tokens.design.ts` — L6 设计系统（SEMANTIC_COLOR_ROLES + TYPOGRAPHY_SCALE + ELEVATION + LAYOUT_TOKENS）[EB/OL]. `d:\FinSightV9\src\constants\theme\theme.tokens.design.ts`, 2026-07-07.
+
+[3] FinSight V9 Frontend Team. `index.css` — FinSight V9 · Design Token Source of Truth V5 (Apple Business Design)[EB/OL]. `d:\FinSightV9\src\index.css`, 2026.
+
+[4] FinSight V9 QA Team. `visual-regression.spec.ts` — 视觉回归测试[EB/OL]. `d:\FinSightV9\e2e\visual-regression.spec.ts`, 2026-07-16.
+
+[5] FinSight V9 QA Team. `accessibility.spec.ts` — 可访问性测试[EB/OL]. `d:\FinSightV9\e2e\accessibility.spec.ts`, 2026.
+
+[6] FinSight V9 QA Team. `dark-mode-flicker.spec.ts` — 深色模式切换视觉闪烁检测[EB/OL]. `d:\FinSightV9\e2e\dark-mode-flicker.spec.ts`, 2026.
+
+[7] FinSight V9 Design Team. `finsight-v9-ui-review.design` — FinSight V9 UI 设计校对与优化[EB/OL]. `d:\FinSightV9\finsight-v9-ui-review\finsight-v9-ui-review.design`, 2026.
+
+[8] FinSight V9 Design Team. `cockpit-redesign.design` — V9 驾驶舱决策流重设计[EB/OL]. `d:\FinSightV9\cockpit-redesign\cockpit-redesign.design`, 2026.

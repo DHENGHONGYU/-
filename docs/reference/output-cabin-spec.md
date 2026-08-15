@@ -1,4 +1,5 @@
 ---
+doc_id: V9-DOC-REF-949
 title: output-cabin-spec
 code_version: 2.0.0-rc.1
 tier: important
@@ -14,7 +15,7 @@ change_log:
 # Output 舱规格（output-cabin-spec）
 
 > **定位**：output 舱（产出与复盘）的职责边界、页面、路由、数据流。补「4 舱缺 spec」缺口。
-> **权威契约**：`../../AGENTS.md`；路由见 `./06-routing-specs.md`；总览见 `../explanation/cabins-overview.md`。
+> **权威契约**：`../../AGENTS.md`；路由见 `../explanation/06-routing-specs.md`；总览见 `../explanation/cabins-overview.md`。
 > **状态**：✅ P0 新增（骨架版）
 
 ---
@@ -50,5 +51,5 @@ change_log:
 ## 6. 文档锚点
 
 - 总览：`../explanation/cabins-overview.md`
-- 路由：`./06-routing-specs.md`
+- 路由：`../explanation/06-routing-specs.md`
 - 服务：`./services-catalog.md`（export）

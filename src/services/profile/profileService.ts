@@ -157,7 +157,7 @@ export async function bulkSaveProfileItems(
   // 更新资料包统计
   if (result.saved > 0 && symbol) {
     void updateProfileStats(symbol).catch((err) => {
-      logger.warn('[profileService] 更新资料包统计失败', { symbol, error: err.message })
+      logger.warn('[profileService] 更新资料包统计失败', { symbol, error: err instanceof Error ? err.message : String(err) })
     })
   }
 
@@ -273,7 +273,8 @@ export async function getProfileItem(id: string): Promise<ProfileItem | undefine
 export async function listProfileItemsBySymbol(symbol: string, limit?: number): Promise<ProfileItem[]> {
   const items = await queryByIndex<ProfileItem>(STORE_NAME.profileItems, 'by-symbol', symbol)
   const sorted = items.sort((a, b) => (b.qualityScore ?? 0) - (a.qualityScore ?? 0))
-  return (limit ?? 0) > 0 ? sorted.slice(0, limit) : sorted
+  if (typeof limit === 'number' && limit > 0) return sorted.slice(0, limit)
+  return sorted
 }
 
 /**
@@ -289,7 +290,8 @@ export async function listProfileItemsByDomain(
     'by-symbol-domain-quality',
     [symbol, domain],
   )
-  return (limit ?? 0) > 0 ? items.slice(0, limit) : items
+  if (typeof limit === 'number' && limit > 0) return items.slice(0, limit)
+  return items
 }
 
 /**
@@ -301,7 +303,8 @@ export async function listProfileItemsByType(
   limit?: number,
 ): Promise<ProfileItem[]> {
   const items = await queryByIndex<ProfileItem>(STORE_NAME.profileItems, 'by-symbol-type', [symbol, itemType])
-  return (limit ?? 0) > 0 ? items.slice(0, limit) : items
+  if (typeof limit === 'number' && limit > 0) return items.slice(0, limit)
+  return items
 }
 
 /**
@@ -335,8 +338,8 @@ export async function queryProfileItems(filter: ProfileQueryFilter): Promise<Pro
   if (sentiment) {
     items = items.filter((i) => i.sentiment === sentiment)
   }
-  if ((minQuality ?? 0) > 0) {
-    const minQ = minQuality ?? 0
+  if (typeof minQuality === 'number' && minQuality > 0) {
+    const minQ = minQuality
     items = items.filter((i) => (i.qualityScore ?? 0) >= minQ)
   }
   if ((source ?? '') !== '') {
@@ -359,7 +362,8 @@ export async function queryProfileItems(filter: ProfileQueryFilter): Promise<Pro
     return sortOrder === 'desc' ? (bv) - (av) : (av) - (bv)
   })
 
-  return (limit ?? 0) > 0 ? items.slice(0, limit) : items
+  if (typeof limit === 'number' && limit > 0) return items.slice(0, limit)
+  return items
 }
 
 // ============================================================

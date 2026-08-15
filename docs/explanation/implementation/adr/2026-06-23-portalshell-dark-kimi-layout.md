@@ -45,4 +45,4 @@ change_log:
 
 ## 相关文档
 
-- `docs/04-ui-ux-specs.md`
+- `../../../specs/04-ui-ux-specs.md`

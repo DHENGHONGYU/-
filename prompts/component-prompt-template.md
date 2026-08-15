@@ -6,7 +6,7 @@
 
 ## 设计体系
 
-- **宋韵美学**：亮色用 `stone` 暖灰系（底 stone-50/100、正文 stone-800、强调 emerald-500）；暗色统一为 `neutral` 高级灰（hue 0，零彩度）。只改 `dark:*` 段，不动亮色 stone。
+- **Apple Business Design**：主色 Apple Blue #007AFF（`--primary: 210 100% 50%`），亮色用 `neutral` 高级灰系（底 `#F2F2F7`、正文 `#1A1A1A`、强调 `blue-500`）；暗色统一为 `neutral` 高级灰（hue 0，零彩度）。宋瓷语义色（汝窑天青、官窑粉青等）仅作装饰性点缀，不参与功能语义。
 - **令牌层级**：
   - L1 `THEME_TOKENS` → 通用语义色、尺寸、间距、圆角、排版
   - L2 `COLOR_TOKENS` → 业务语义色（涨跌/评分/信号/背景/文字/边框）
@@ -66,7 +66,7 @@
 生成完成后，自检以下项目：
 
 - [ ] 无 HEX 硬编码颜色
-- [ ] 无 Tailwind 数字颜色类（如 `bg-red-500`、`text-emerald-600`）
+- [ ] 无 Tailwind 数字颜色类（如 `bg-red-500`、`text-blue-500`）
 - [ ] A 股涨跌色使用 `STOCK_COLOR_TOKENS`
 - [ ] 图标尺寸使用 `THEME_TOKENS.iconSizes`
 - [ ] 字体使用 `THEME_TOKENS.typography`

@@ -187,4 +187,5 @@ ValuationDistributionMemo.displayName = 'ValuationDistribution'
 export const ValuationDistributionChart = ValuationDistributionMemo
 export { ValuationDistributionChart as ValuationDistribution }
 export default ValuationDistributionMemo
+// eslint-disable-next-line react-refresh/only-export-components
 export { buildHistogram }

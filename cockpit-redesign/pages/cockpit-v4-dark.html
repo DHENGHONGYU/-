@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>驾驶舱·投研决策视图（深色模式）</title>
+    <style id="theme-vars">
+/* V9 Cockpit Redesign - Decision Flow Dashboard Theme */
+/* Brand prefix: v9 */
+
+:root {
+  /* Core surfaces */
+  --v9-background: #f1f5f9;
+  --v9-foreground: #0f172a;
+
+  --v9-card: #ffffff;
+  --v9-card-foreground: #1e293b;
+
+  --v9-popover: #ffffff;
+  --v9-popover-foreground: #0f172a;
+
+  /* Primary - Professional blue */
+  --v9-primary: #2563eb;
+  --v9-primary-foreground: #ffffff;
+
+  /* Muted tones */
+  --v9-muted: #f1f5f9;
+  --v9-muted-foreground: #64748b;
+
+  /* Borders & inputs */
+  --v9-border: #e2e8f0;
+  --v9-input: #e2e8f0;
+  --v9-ring: #3b82f6;
+
+  /* Radius scale */
+  --v9-radius-sm: 6px;
+  --v9-radius-md: 8px;
+  --v9-radius-lg: 12px;
+
+  /* Financial semantic colors (A股: 红涨绿跌) */
+  --v9-up: #dc2626;
+  --v9-up-bg: #fee2e2;
+  --v9-down: #16a34a;
+  --v9-down-bg: #dcfce7;
+  --v9-neutral: #64748b;
+  --v9-warning: #f59e0b;
+  --v9-warning-bg: #fef3c7;
+  --v9-info: #3b82f6;
+  --v9-info-bg: #dbeafe;
+
+  /* Section accent colors */
+  --v9-accent-market: #3b82f6;
+  --v9-accent-opportunity: #10b981;
+  --v9-accent-portfolio: #f59e0b;
+  --v9-accent-ai: #8b5cf6;
+
+  /* Typography */
+  --v9-font-sans: "Inter", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+  --v9-font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", monospace;
+
+  /* Shadows */
+  --v9-shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --v9-shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+  --v9-shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.05);
+}
+
+/* Dark mode overrides */
+.dark {
+  --v9-background: #0b1120;
+  --v9-foreground: #e2e8f0;
+
+  --v9-card: #1e293b;
+  --v9-card-foreground: #e2e8f0;
+
+  --v9-popover: #1e293b;
+  --v9-popover-foreground: #e2e8f0;
+
+  --v9-primary: #3b82f6;
+  --v9-primary-foreground: #ffffff;
+
+  --v9-muted: #1e293b;
+  --v9-muted-foreground: #94a3b8;
+
+  --v9-border: #334155;
+  --v9-input: #334155;
+  --v9-ring: #60a5fa;
+
+  /* Financial semantic - brighter for dark bg */
+  --v9-up: #ef4444;
+  --v9-up-bg: rgba(239, 68, 68, 0.15);
+  --v9-down: #22c55e;
+  --v9-down-bg: rgba(34, 197, 94, 0.15);
+  --v9-neutral: #94a3b8;
+  --v9-warning: #fbbf24;
+  --v9-warning-bg: rgba(251, 191, 36, 0.15);
+  --v9-info: #60a5fa;
+  --v9-info-bg: rgba(96, 165, 250, 0.15);
+
+  /* Section accent - brighter for dark bg */
+  --v9-accent-market: #60a5fa;
+  --v9-accent-opportunity: #34d399;
+  --v9-accent-portfolio: #fbbf24;
+  --v9-accent-ai: #a78bfa;
+
+  /* Shadows - deeper for dark bg */
+  --v9-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --v9-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --v9-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+}
+
+html {
+  font-family: var(--v9-font-sans);
+  color: var(--v9-foreground);
+  background: var(--v9-background);
+}
+
+body {
+  margin: 0;
+  font-family: var(--v9-font-sans);
+  color: var(--v9-foreground);
+  background: var(--v9-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Numeric data display */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--v9-font-mono);
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--v9-background);
+    --color-foreground: var(--v9-foreground);
+    --color-card: var(--v9-card);
+    --color-card-foreground: var(--v9-card-foreground);
+    --color-popover: var(--v9-popover);
+    --color-popover-foreground: var(--v9-popover-foreground);
+    --color-primary: var(--v9-primary);
+    --color-primary-foreground: var(--v9-primary-foreground);
+    --color-muted: var(--v9-muted);
+    --color-muted-foreground: var(--v9-muted-foreground);
+    --color-border: var(--v9-border);
+    --color-input: var(--v9-input);
+    --color-ring: var(--v9-ring);
+    --radius-sm: var(--v9-radius-sm);
+    --radius-md: var(--v9-radius-md);
+    --radius-lg: var(--v9-radius-lg);
+  }
+  @layer base {
+    body { background: var(--v9-background); color: var(--v9-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--v9-background); }
+      .text-background { color: var(--v9-background); }
+      .border-background { border-color: var(--v9-background); }
+      .ring-background { --tw-ring-color: var(--v9-background); }
+      .bg-foreground { background-color: var(--v9-foreground); }
+      .text-foreground { color: var(--v9-foreground); }
+      .border-foreground { border-color: var(--v9-foreground); }
+      .ring-foreground { --tw-ring-color: var(--v9-foreground); }
+      .bg-card { background-color: var(--v9-card); }
+      .text-card { color: var(--v9-card); }
+      .border-card { border-color: var(--v9-card); }
+      .ring-card { --tw-ring-color: var(--v9-card); }
+      .bg-card-foreground { background-color: var(--v9-card-foreground); }
+      .text-card-foreground { color: var(--v9-card-foreground); }
+      .border-card-foreground { border-color: var(--v9-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--v9-card-foreground); }
+      .bg-popover { background-color: var(--v9-popover); }
+      .text-popover { color: var(--v9-popover); }
+      .border-popover { border-color: var(--v9-popover); }
+      .ring-popover { --tw-ring-color: var(--v9-popover); }
+      .bg-popover-foreground { background-color: var(--v9-popover-foreground); }
+      .text-popover-foreground { color: var(--v9-popover-foreground); }
+      .border-popover-foreground { border-color: var(--v9-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--v9-popover-foreground); }
+      .bg-primary { background-color: var(--v9-primary); }
+      .text-primary { color: var(--v9-primary); }
+      .border-primary { border-color: var(--v9-primary); }
+      .ring-primary { --tw-ring-color: var(--v9-primary); }
+      .bg-primary-foreground { background-color: var(--v9-primary-foreground); }
+      .text-primary-foreground { color: var(--v9-primary-foreground); }
+      .border-primary-foreground { border-color: var(--v9-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--v9-primary-foreground); }
+      .bg-muted { background-color: var(--v9-muted); }
+      .text-muted { color: var(--v9-muted); }
+      .border-muted { border-color: var(--v9-muted); }
+      .ring-muted { --tw-ring-color: var(--v9-muted); }
+      .bg-muted-foreground { background-color: var(--v9-muted-foreground); }
+      .text-muted-foreground { color: var(--v9-muted-foreground); }
+      .border-muted-foreground { border-color: var(--v9-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--v9-muted-foreground); }
+      .bg-border { background-color: var(--v9-border); }
+      .text-border { color: var(--v9-border); }
+      .border-border { border-color: var(--v9-border); }
+      .ring-border { --tw-ring-color: var(--v9-border); }
+      .bg-input { background-color: var(--v9-input); }
+      .text-input { color: var(--v9-input); }
+      .border-input { border-color: var(--v9-input); }
+      .ring-input { --tw-ring-color: var(--v9-input); }
+      .bg-ring { background-color: var(--v9-ring); }
+      .text-ring { color: var(--v9-ring); }
+      .border-ring { border-color: var(--v9-ring); }
+      .ring-ring { --tw-ring-color: var(--v9-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main class="pb-16">
+      <!-- ===== Sticky Top Bar ===== -->
+      <nav id="top-bar" class="sticky top-0 z-50 bg-[#0f172a]/95 backdrop-blur-sm border-b border-[#1e293b]">
+        <div class="max-w-[1440px] mx-auto px-6 h-14 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
+              <i data-lucide="bar-chart-3" class="w-5 h-5 text-primary-foreground"></i>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <span class="text-lg font-bold text-foreground tracking-tight">驾驶舱</span>
+              <span class="text-sm text-muted-foreground">投研决策视图·深色模式</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-muted text-xs">
+              <i data-lucide="target" class="w-3.5 h-3.5 text-primary"></i>
+              <span class="text-muted-foreground">跟踪标的</span>
+              <span class="tabular-nums font-semibold text-foreground">4</span>
+            </div>
+            <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-muted text-xs">
+              <i data-lucide="eye" class="w-3.5 h-3.5 text-primary"></i>
+              <span class="text-muted-foreground">观察池</span>
+              <span class="tabular-nums font-semibold text-foreground">8</span>
+            </div>
+            <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-muted text-xs">
+              <i data-lucide="bell" class="w-3.5 h-3.5 text-muted-foreground"></i>
+              <span class="text-muted-foreground">待处理信号</span>
+              <span class="tabular-nums font-semibold text-foreground">3</span>
+            </div>
+            <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-muted text-xs">
+              <span class="w-2 h-2 rounded-full bg-green-400"></span>
+              <span class="text-muted-foreground">数据状态</span>
+              <span class="text-xs font-medium text-green-400">正常</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="max-w-[1440px] mx-auto px-6 pt-6 space-y-6">
+
+        <!-- ===== Section: 大盘环境概览 ===== -->
+        <section id="market-env-summary" class="border-l-4 rounded-r-lg" style="border-left-color:#60a5fa">
+          <div class="bg-card pl-5 pr-6 py-4 rounded-r-lg">
+            <div class="flex items-center gap-2 mb-4">
+              <i data-lucide="globe" class="w-5 h-5" style="color:#60a5fa"></i>
+              <h2 class="text-base font-bold text-foreground">大盘环境概览</h2>
+              <span class="text-xs text-muted-foreground ml-2">近1周/近1月市场关键指标摘要</span>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="rounded-lg border border-border bg-muted/30 p-4">
+                <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">近1周大盘表现</h3>
+                <div class="space-y-2.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-foreground">上证指数</span>
+                    <div class="flex items-center gap-2">
+                      <span class="tabular-nums text-sm font-semibold" style="color:#ef4444">+0.82%</span>
+                      <svg class="w-14 h-5" viewBox="0 0 56 20" preserveAspectRatio="none"><polyline points="0,16 8,14 16,10 24,12 32,6 40,4 48,2 56,2" fill="none" stroke="#ef4444" stroke-width="1.2"/></svg>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-foreground">深证成指</span>
+                    <div class="flex items-center gap-2">
+                      <span class="tabular-nums text-sm font-semibold" style="color:#ef4444">+0.35%</span>
+                      <svg class="w-14 h-5" viewBox="0 0 56 20" preserveAspectRatio="none"><polyline points="0,14 8,12 16,8 24,10 32,4 40,6 48,2 56,2" fill="none" stroke="#ef4444" stroke-width="1.2"/></svg>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-foreground">成交量趋势</span>
+                    <span class="tabular-nums text-sm font-medium text-amber-400">日均 8,562亿 <span class="text-xs">放量</span></span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-foreground">涨跌比</span>
+                    <span class="tabular-nums text-sm font-medium text-foreground">2,103 / 1,856 <span class="text-xs" style="color:#ef4444">偏多</span></span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-foreground">资金情绪</span>
+                    <span class="text-sm font-medium" style="color:#ef4444">偏乐观</span>
+                  </div>
+                </div>
+              </div>
+              <div class="rounded-lg border border-border bg-muted/30 p-4">
+                <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">近1月大盘表现</h3>
+                <div class="space-y-2.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-foreground">上证指数</span>
+                    <div class="flex items-center gap-2">
+                      <span class="tabular-nums text-sm font-semibold" style="color:#ef4444">+2.15%</span>
+                      <svg class="w-14 h-5" viewBox="0 0 56 20" preserveAspectRatio="none"><polyline points="0,18 8,16 16,14 24,10 32,12 40,6 48,4 56,2" fill="none" stroke="#ef4444" stroke-width="1.2"/></svg>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-foreground">深证成指</span>
+                    <div class="flex items-center gap-2">
+                      <span class="tabular-nums text-sm font-semibold" style="color:#ef4444">+1.68%</span>
+                      <svg class="w-14 h-5" viewBox="0 0 56 20" preserveAspectRatio="none"><polyline points="0,16 8,14 16,10 24,12 32,8 40,6 48,4 56,2" fill="none" stroke="#ef4444" stroke-width="1.2"/></svg>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-foreground">成交量趋势</span>
+                    <span class="tabular-nums text-sm font-medium text-amber-400">日均 7,891亿 <span class="text-xs">温和放量</span></span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-foreground">涨跌比</span>
+                    <span class="tabular-nums text-sm font-medium text-foreground">2,456 / 1,503 <span class="text-xs" style="color:#ef4444">偏多</span></span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-foreground">资金情绪</span>
+                    <span class="text-sm font-medium" style="color:#ef4444">乐观</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 flex items-center gap-2">
+              <span class="text-xs text-muted-foreground">市场环境判断</span>
+              <span class="px-3 py-1 rounded-full text-xs font-semibold text-white" style="background:linear-gradient(135deg,#60a5fa,#818cf8)">震荡偏强，结构性机会</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== Section: 板块轮动与热门板块（含筛选原则 + 量化评分）===== -->
+        <section id="section-sector-rotation" class="border-l-4 rounded-r-lg" style="border-left-color:#34d399">
+          <div class="bg-card pl-5 pr-6 py-4 rounded-r-lg">
+            <div class="flex items-center gap-2 mb-4">
+              <i data-lucide="refresh-cw" class="w-5 h-5" style="color:#34d399"></i>
+              <h2 class="text-base font-bold text-foreground">板块轮动与热门板块</h2>
+              <span class="text-xs text-muted-foreground ml-2">量化评分·轮动方向与资金强度</span>
+            </div>
+
+            <!-- ===== NEW: 热门板块筛选原则 Panel ===== -->
+            <div class="mb-5 p-4 rounded-lg border" style="border-color:#34d399;background:linear-gradient(135deg,rgba(52,211,153,0.08),rgba(30,41,59,0.6))">
+              <!-- Title Row -->
+              <div class="flex items-center gap-2 mb-3">
+                <i data-lucide="filter" class="w-4 h-4" style="color:#34d399"></i>
+                <span class="text-sm font-bold text-foreground">热门板块筛选原则</span>
+                <span class="text-xs text-muted-foreground">五维量化筛选，每日盘后自动更新</span>
+              </div>
+
+              <!-- 5 Criteria Boxes -->
+              <div class="grid grid-cols-5 gap-3 mb-3">
+                <!-- 资金强度 30% -->
+                <div class="p-2.5 rounded-lg border" style="border-color:#60a5fa;background:linear-gradient(135deg,rgba(96,165,250,0.08),rgba(30,41,59,0.6))">
+                  <div class="flex items-center gap-1.5 mb-1">
+                    <i data-lucide="trending-up" class="w-3.5 h-3.5" style="color:#60a5fa"></i>
+                    <span class="text-xs font-semibold text-foreground">资金强度</span>
+                    <span class="ml-auto px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#60a5fa">30%</span>
+                  </div>
+                  <div class="text-[10px] text-muted-foreground leading-relaxed">主力资金净流入<br>+ 北向资金持仓变化</div>
+                </div>
+                <!-- 技术面 25% -->
+                <div class="p-2.5 rounded-lg border" style="border-color:#a78bfa;background:linear-gradient(135deg,rgba(167,139,250,0.08),rgba(30,41,59,0.6))">
+                  <div class="flex items-center gap-1.5 mb-1">
+                    <i data-lucide="line-chart" class="w-3.5 h-3.5" style="color:#a78bfa"></i>
+                    <span class="text-xs font-semibold text-foreground">技术面</span>
+                    <span class="ml-auto px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#a78bfa">25%</span>
+                  </div>
+                  <div class="text-[10px] text-muted-foreground leading-relaxed">板块指数趋势<br>+ 量价配合度</div>
+                </div>
+                <!-- 政策催化 20% -->
+                <div class="p-2.5 rounded-lg border" style="border-color:#34d399;background:linear-gradient(135deg,rgba(52,211,153,0.08),rgba(30,41,59,0.6))">
+                  <div class="flex items-center gap-1.5 mb-1">
+                    <i data-lucide="file-text" class="w-3.5 h-3.5" style="color:#34d399"></i>
+                    <span class="text-xs font-semibold text-foreground">政策催化</span>
+                    <span class="ml-auto px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#34d399">20%</span>
+                  </div>
+                  <div class="text-[10px] text-muted-foreground leading-relaxed">产业政策密度<br>+ 事件驱动强度</div>
+                </div>
+                <!-- 基本面 15% -->
+                <div class="p-2.5 rounded-lg border" style="border-color:#fbbf24;background:linear-gradient(135deg,rgba(251,191,36,0.08),rgba(30,41,59,0.6))">
+                  <div class="flex items-center gap-1.5 mb-1">
+                    <i data-lucide="bar-chart-2" class="w-3.5 h-3.5" style="color:#fbbf24"></i>
+                    <span class="text-xs font-semibold text-foreground">基本面</span>
+                    <span class="ml-auto px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#fbbf24">15%</span>
+                  </div>
+                  <div class="text-[10px] text-muted-foreground leading-relaxed">板块ROE趋势<br>+ 盈利增速</div>
+                </div>
+                <!-- 情绪面 10% -->
+                <div class="p-2.5 rounded-lg border" style="border-color:#f472b6;background:linear-gradient(135deg,rgba(244,114,182,0.08),rgba(30,41,59,0.6))">
+                  <div class="flex items-center gap-1.5 mb-1">
+                    <i data-lucide="heart" class="w-3.5 h-3.5" style="color:#f472b6"></i>
+                    <span class="text-xs font-semibold text-foreground">情绪面</span>
+                    <span class="ml-auto px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#f472b6">10%</span>
+                  </div>
+                  <div class="text-[10px] text-muted-foreground leading-relaxed">研报覆盖变化<br>+ 舆情热度</div>
+                </div>
+              </div>
+
+              <!-- Update Mechanism Row -->
+              <div class="flex items-center gap-4 mb-3 px-2 py-1.5 rounded-md bg-muted/50 text-[10px] text-muted-foreground">
+                <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i>更新机制: 每日盘后自动更新</span>
+                <span class="text-border">|</span>
+                <span>纳入观察池阈值: <span class="font-semibold text-foreground">≥70分</span></span>
+                <span class="text-border">|</span>
+                <span>下次更新: <span class="tabular-nums font-semibold" style="color:#60a5fa">2026-08-18 15:30</span></span>
+              </div>
+
+              <!-- 板块筛选对比 Mini Table -->
+              <div class="overflow-x-auto">
+                <table class="w-full text-xs">
+                  <thead>
+                    <tr class="border-b border-border">
+                      <th class="text-left py-1.5 px-2 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">板块</th>
+                      <th class="text-center py-1.5 px-2 text-[10px] font-semibold text-muted-foreground">资金强度<br><span class="font-normal text-[9px]">30%</span></th>
+                      <th class="text-center py-1.5 px-2 text-[10px] font-semibold text-muted-foreground">技术面<br><span class="font-normal text-[9px]">25%</span></th>
+                      <th class="text-center py-1.5 px-2 text-[10px] font-semibold text-muted-foreground">政策催化<br><span class="font-normal text-[9px]">20%</span></th>
+                      <th class="text-center py-1.5 px-2 text-[10px] font-semibold text-muted-foreground">基本面<br><span class="font-normal text-[9px]">15%</span></th>
+                      <th class="text-center py-1.5 px-2 text-[10px] font-semibold text-muted-foreground">情绪面<br><span class="font-normal text-[9px]">10%</span></th>
+                      <th class="text-center py-1.5 px-2 text-[10px] font-semibold text-muted-foreground">总分</th>
+                      <th class="text-center py-1.5 px-2 text-[10px] font-semibold text-muted-foreground">观察池<br>阈值≥70</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- 半导体 -->
+                    <tr class="border-b border-border/50 hover:bg-muted/30">
+                      <td class="py-2 px-2 text-sm font-semibold text-foreground">半导体</td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-semibold" style="color:#22c55e">85</span></td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-semibold" style="color:#22c55e">78</span></td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-semibold" style="color:#22c55e">72</span></td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-semibold" style="color:#22c55e">80</span></td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-semibold" style="color:#fbbf24">65</span></td>
+                      <td class="py-2 px-2 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold score-amber tabular-nums">76</span></td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-bold" style="color:#22c55e">✓</span></td>
+                    </tr>
+                    <!-- 人工智能 -->
+                    <tr class="border-b border-border/50 hover:bg-muted/30">
+                      <td class="py-2 px-2 text-sm font-semibold text-foreground">人工智能</td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-semibold" style="color:#22c55e">90</span></td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-semibold" style="color:#22c55e">82</span></td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-semibold" style="color:#22c55e">75</span></td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-semibold" style="color:#22c55e">85</span></td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-semibold" style="color:#22c55e">78</span></td>
+                      <td class="py-2 px-2 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold score-green tabular-nums">82</span></td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-bold" style="color:#22c55e">✓</span></td>
+                    </tr>
+                    <!-- 新能源 -->
+                    <tr class="border-b border-border/50 hover:bg-muted/30">
+                      <td class="py-2 px-2 text-sm font-semibold text-foreground">新能源</td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-semibold" style="color:#fbbf24">68</span></td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-semibold" style="color:#fbbf24">65</span></td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-semibold" style="color:#ef4444">58</span></td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-semibold" style="color:#fbbf24">70</span></td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-semibold" style="color:#ef4444">55</span></td>
+                      <td class="py-2 px-2 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold score-amber tabular-nums">64</span></td>
+                      <td class="py-2 px-2 text-center"><span class="tabular-nums font-bold" style="color:#ef4444">✗</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 轮动机会强度总览 -->
+            <div class="mb-5 p-3 rounded-lg border" style="border-color:#60a5fa;background:linear-gradient(135deg,rgba(96,165,250,0.08),rgba(30,41,59,0.6))">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold text-foreground">轮动机会强度</span>
+                <span class="text-xs" style="color:#60a5fa">偏强</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="flex-1 h-2.5 bg-blue-900/30 rounded-full overflow-hidden">
+                  <div class="h-full rounded-full" style="width:75%;background:linear-gradient(90deg,#3b82f6,#60a5fa)"></div>
+                </div>
+                <span class="tabular-nums text-sm font-bold text-primary">75/100</span>
+              </div>
+              <div class="flex items-center gap-4 mt-2 text-[10px] text-muted-foreground">
+                <span>轮入板块: 3</span>
+                <span>轮出板块: 2</span>
+                <span>平均资金强度: +7.2</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+              <!-- 板块轮动信号 -->
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">板块轮动信号</h3>
+                <div class="space-y-2.5">
+                  <!-- 半导体 轮入 -->
+                  <div class="p-3 rounded-lg border" style="border-left:3px solid #ef4444; background:linear-gradient(135deg,rgba(239,68,68,0.1),rgba(30,41,59,0.6))">
+                    <div class="flex items-center justify-between mb-1.5">
+                      <div class="flex items-center gap-2">
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#ef4444">轮入</span>
+                        <span class="text-sm font-bold text-foreground">半导体</span>
+                      </div>
+                      <div class="flex items-center gap-1">
+                        <span class="tabular-nums text-xs font-semibold" style="color:#ef4444">强度 +12</span>
+                        <svg class="w-3 h-3" viewBox="0 0 12 12"><path d="M6 2l4 6H2z" fill="#ef4444"/></svg>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-[10px] text-muted-foreground mb-2">
+                      <span>关联个股</span>
+                      <span class="px-1.5 py-0.5 rounded bg-muted tabular-nums">中芯国际</span>
+                      <span class="px-1.5 py-0.5 rounded bg-muted tabular-nums">北方华创</span>
+                      <span class="px-1.5 py-0.5 rounded bg-muted tabular-nums">韦尔股份</span>
+                    </div>
+                    <div class="pt-2 border-t border-border/50">
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-[9px] text-muted-foreground shrink-0">量化评分</span>
+                        <div class="flex-1 flex items-center gap-1.5">
+                          <div class="flex-1 flex flex-col gap-0.5">
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">资金</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:85%;background:linear-gradient(90deg,#3b82f6,#60a5fa)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">85</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">技术</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:78%;background:linear-gradient(90deg,#a78bfa,#c4b5fd)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">78</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">政策</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:72%;background:linear-gradient(90deg,#34d399,#6ee7b7)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">72</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">基本面</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:80%;background:linear-gradient(90deg,#fbbf24,#fcd34d)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">80</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">情绪</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:65%;background:linear-gradient(90deg,#f472b6,#f9a8d4)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">65</span>
+                            </div>
+                          </div>
+                          <span class="px-2 py-1 rounded text-[10px] font-bold score-amber tabular-nums shrink-0">76</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 人工智能 轮入 -->
+                  <div class="p-3 rounded-lg border" style="border-left:3px solid #ef4444; background:linear-gradient(135deg,rgba(239,68,68,0.1),rgba(30,41,59,0.6))">
+                    <div class="flex items-center justify-between mb-1.5">
+                      <div class="flex items-center gap-2">
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#ef4444">轮入</span>
+                        <span class="text-sm font-bold text-foreground">人工智能</span>
+                      </div>
+                      <div class="flex items-center gap-1">
+                        <span class="tabular-nums text-xs font-semibold" style="color:#ef4444">强度 +9</span>
+                        <svg class="w-3 h-3" viewBox="0 0 12 12"><path d="M6 2l4 6H2z" fill="#ef4444"/></svg>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-[10px] text-muted-foreground mb-2">
+                      <span>关联个股</span>
+                      <span class="px-1.5 py-0.5 rounded bg-muted tabular-nums">科大讯飞</span>
+                      <span class="px-1.5 py-0.5 rounded bg-muted tabular-nums">海康威视</span>
+                    </div>
+                    <div class="pt-2 border-t border-border/50">
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-[9px] text-muted-foreground shrink-0">量化评分</span>
+                        <div class="flex-1 flex items-center gap-1.5">
+                          <div class="flex-1 flex flex-col gap-0.5">
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">资金</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:90%;background:linear-gradient(90deg,#3b82f6,#60a5fa)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">90</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">技术</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:82%;background:linear-gradient(90deg,#a78bfa,#c4b5fd)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">82</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">政策</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:75%;background:linear-gradient(90deg,#34d399,#6ee7b7)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">75</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">基本面</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:85%;background:linear-gradient(90deg,#fbbf24,#fcd34d)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">85</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">情绪</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:78%;background:linear-gradient(90deg,#f472b6,#f9a8d4)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">78</span>
+                            </div>
+                          </div>
+                          <span class="px-2 py-1 rounded text-[10px] font-bold score-green tabular-nums shrink-0">82</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 通信 轮入 -->
+                  <div class="p-3 rounded-lg border" style="border-left:3px solid #ef4444; background:linear-gradient(135deg,rgba(239,68,68,0.1),rgba(30,41,59,0.6))">
+                    <div class="flex items-center justify-between mb-1.5">
+                      <div class="flex items-center gap-2">
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#ef4444">轮入</span>
+                        <span class="text-sm font-bold text-foreground">通信</span>
+                      </div>
+                      <div class="flex items-center gap-1">
+                        <span class="tabular-nums text-xs font-semibold" style="color:#ef4444">强度 +7</span>
+                        <svg class="w-3 h-3" viewBox="0 0 12 12"><path d="M6 2l4 6H2z" fill="#ef4444"/></svg>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-[10px] text-muted-foreground mb-2">
+                      <span>关联个股</span>
+                      <span class="px-1.5 py-0.5 rounded bg-muted tabular-nums">中兴通讯</span>
+                      <span class="px-1.5 py-0.5 rounded bg-muted tabular-nums">光迅科技</span>
+                    </div>
+                    <div class="pt-2 border-t border-border/50">
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-[9px] text-muted-foreground shrink-0">量化评分</span>
+                        <div class="flex-1 flex items-center gap-1.5">
+                          <div class="flex-1 flex flex-col gap-0.5">
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">资金</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:72%;background:linear-gradient(90deg,#3b82f6,#60a5fa)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">72</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">技术</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:68%;background:linear-gradient(90deg,#a78bfa,#c4b5fd)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">68</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">政策</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:65%;background:linear-gradient(90deg,#34d399,#6ee7b7)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">65</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">基本面</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:70%;background:linear-gradient(90deg,#fbbf24,#fcd34d)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">70</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">情绪</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:60%;background:linear-gradient(90deg,#f472b6,#f9a8d4)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">60</span>
+                            </div>
+                          </div>
+                          <span class="px-2 py-1 rounded text-[10px] font-bold score-amber tabular-nums shrink-0">67</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 房地产 轮出 -->
+                  <div class="p-3 rounded-lg border" style="border-left:3px solid #22c55e; background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(30,41,59,0.6))">
+                    <div class="flex items-center justify-between mb-1.5">
+                      <div class="flex items-center gap-2">
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#22c55e">轮出</span>
+                        <span class="text-sm font-bold text-foreground">房地产</span>
+                      </div>
+                      <div class="flex items-center gap-1">
+                        <span class="tabular-nums text-xs font-semibold" style="color:#22c55e">强度 -11</span>
+                        <svg class="w-3 h-3" viewBox="0 0 12 12"><path d="M6 10l4-6H2z" fill="#22c55e"/></svg>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-[10px] text-muted-foreground mb-2">
+                      <span>关联个股</span>
+                      <span class="px-1.5 py-0.5 rounded bg-muted tabular-nums">万科A</span>
+                      <span class="px-1.5 py-0.5 rounded bg-muted tabular-nums">保利发展</span>
+                    </div>
+                    <div class="pt-2 border-t border-border/50">
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-[9px] text-muted-foreground shrink-0">量化评分</span>
+                        <div class="flex-1 flex items-center gap-1.5">
+                          <div class="flex-1 flex flex-col gap-0.5">
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">资金</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:20%;background:linear-gradient(90deg,#3b82f6,#60a5fa)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">20</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">技术</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:25%;background:linear-gradient(90deg,#a78bfa,#c4b5fd)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">25</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">政策</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:30%;background:linear-gradient(90deg,#34d399,#6ee7b7)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">30</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">基本面</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:15%;background:linear-gradient(90deg,#fbbf24,#fcd34d)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">15</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">情绪</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:22%;background:linear-gradient(90deg,#f472b6,#f9a8d4)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">22</span>
+                            </div>
+                          </div>
+                          <span class="px-2 py-1 rounded text-[10px] font-bold score-red tabular-nums shrink-0">22</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 银行 轮出 -->
+                  <div class="p-3 rounded-lg border" style="border-left:3px solid #22c55e; background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(30,41,59,0.6))">
+                    <div class="flex items-center justify-between mb-1.5">
+                      <div class="flex items-center gap-2">
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#22c55e">轮出</span>
+                        <span class="text-sm font-bold text-foreground">银行</span>
+                      </div>
+                      <div class="flex items-center gap-1">
+                        <span class="tabular-nums text-xs font-semibold" style="color:#22c55e">强度 -8</span>
+                        <svg class="w-3 h-3" viewBox="0 0 12 12"><path d="M6 10l4-6H2z" fill="#22c55e"/></svg>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-[10px] text-muted-foreground mb-2">
+                      <span>关联个股</span>
+                      <span class="px-1.5 py-0.5 rounded bg-muted tabular-nums">工商银行</span>
+                      <span class="px-1.5 py-0.5 rounded bg-muted tabular-nums">招商银行</span>
+                    </div>
+                    <div class="pt-2 border-t border-border/50">
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-[9px] text-muted-foreground shrink-0">量化评分</span>
+                        <div class="flex-1 flex items-center gap-1.5">
+                          <div class="flex-1 flex flex-col gap-0.5">
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">资金</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:30%;background:linear-gradient(90deg,#3b82f6,#60a5fa)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">30</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">技术</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:35%;background:linear-gradient(90deg,#a78bfa,#c4b5fd)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">35</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">政策</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:28%;background:linear-gradient(90deg,#34d399,#6ee7b7)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">28</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">基本面</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:40%;background:linear-gradient(90deg,#fbbf24,#fcd34d)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">40</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-[8px] text-muted-foreground w-7">情绪</span>
+                              <div class="flex-1 h-1 bg-muted rounded-full overflow-hidden"><div class="h-full rounded-full" style="width:32%;background:linear-gradient(90deg,#f472b6,#f9a8d4)"></div></div>
+                              <span class="tabular-nums text-[8px] text-muted-foreground">32</span>
+                            </div>
+                          </div>
+                          <span class="px-2 py-1 rounded text-[10px] font-bold score-red tabular-nums shrink-0">33</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 热门板块排行 -->
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">热门板块排行</h3>
+                <div class="space-y-1.5">
+                  <div class="flex items-center gap-3 p-2.5 rounded-md bg-muted/30">
+                    <span class="w-5 h-5 rounded-full bg-amber-400 text-slate-900 text-[10px] flex items-center justify-center font-bold">1</span>
+                    <div class="flex-1 flex items-center justify-between">
+                      <span class="text-sm font-semibold text-foreground">人工智能</span>
+                      <div class="flex items-center gap-3">
+                        <span class="tabular-nums text-xs font-semibold" style="color:#ef4444">+4.12%</span>
+                        <span class="tabular-nums text-xs text-muted-foreground">资金强</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold score-green">84</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#ef4444">强势</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3 p-2.5 rounded-md bg-muted/30">
+                    <span class="w-5 h-5 rounded-full bg-amber-500 text-white text-[10px] flex items-center justify-center font-bold">2</span>
+                    <div class="flex-1 flex items-center justify-between">
+                      <span class="text-sm font-semibold text-foreground">半导体</span>
+                      <div class="flex items-center gap-3">
+                        <span class="tabular-nums text-xs font-semibold" style="color:#ef4444">+3.28%</span>
+                        <span class="tabular-nums text-xs text-muted-foreground">资金强</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold score-amber">76</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#ef4444">强势</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3 p-2.5 rounded-md bg-muted/30">
+                    <span class="w-5 h-5 rounded-full bg-amber-600 text-white text-[10px] flex items-center justify-center font-bold">3</span>
+                    <div class="flex-1 flex items-center justify-between">
+                      <span class="text-sm font-semibold text-foreground">传媒</span>
+                      <div class="flex items-center gap-3">
+                        <span class="tabular-nums text-xs font-semibold" style="color:#ef4444">+3.51%</span>
+                        <span class="tabular-nums text-xs text-muted-foreground">资金中</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold score-amber">72</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#ef4444">轮入</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3 p-2.5 rounded-md bg-muted/30">
+                    <span class="w-5 h-5 rounded-full bg-slate-500 text-white text-[10px] flex items-center justify-center font-bold">4</span>
+                    <div class="flex-1 flex items-center justify-between">
+                      <span class="text-sm font-semibold text-foreground">新能源</span>
+                      <div class="flex items-center gap-3">
+                        <span class="tabular-nums text-xs font-semibold" style="color:#ef4444">+2.83%</span>
+                        <span class="tabular-nums text-xs text-muted-foreground">资金中</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold score-amber">68</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#ef4444">轮入</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3 p-2.5 rounded-md bg-muted/30">
+                    <span class="w-5 h-5 rounded-full bg-slate-500 text-white text-[10px] flex items-center justify-center font-bold">5</span>
+                    <div class="flex-1 flex items-center justify-between">
+                      <span class="text-sm font-semibold text-foreground">通信</span>
+                      <div class="flex items-center gap-3">
+                        <span class="tabular-nums text-xs font-semibold" style="color:#ef4444">+2.71%</span>
+                        <span class="tabular-nums text-xs text-muted-foreground">资金中</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold score-amber">71</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#ef4444">轮入</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3 p-2.5 rounded-md bg-muted/30">
+                    <span class="w-5 h-5 rounded-full bg-slate-500 text-white text-[10px] flex items-center justify-center font-bold">6</span>
+                    <div class="flex-1 flex items-center justify-between">
+                      <span class="text-sm font-semibold text-foreground">光伏</span>
+                      <div class="flex items-center gap-3">
+                        <span class="tabular-nums text-xs font-semibold" style="color:#ef4444">+2.35%</span>
+                        <span class="tabular-nums text-xs text-muted-foreground">资金弱</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold score-red">58</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold text-slate-900" style="background:#fbbf24">关注</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3 p-2.5 rounded-md bg-muted/30">
+                    <span class="w-5 h-5 rounded-full bg-slate-500 text-white text-[10px] flex items-center justify-center font-bold">7</span>
+                    <div class="flex-1 flex items-center justify-between">
+                      <span class="text-sm font-semibold text-foreground">汽车</span>
+                      <div class="flex items-center gap-3">
+                        <span class="tabular-nums text-xs font-semibold" style="color:#ef4444">+1.82%</span>
+                        <span class="tabular-nums text-xs text-muted-foreground">资金弱</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold score-red">55</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold text-slate-900" style="background:#fbbf24">关注</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3 p-2.5 rounded-md bg-muted/30">
+                    <span class="w-5 h-5 rounded-full bg-slate-500 text-white text-[10px] flex items-center justify-center font-bold">8</span>
+                    <div class="flex-1 flex items-center justify-between">
+                      <span class="text-sm font-semibold text-foreground">消费电子</span>
+                      <div class="flex items-center gap-3">
+                        <span class="tabular-nums text-xs font-semibold" style="color:#ef4444">+1.55%</span>
+                        <span class="tabular-nums text-xs text-muted-foreground">资金弱</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold score-red">48</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold text-white" style="background:#22c55e">轮出</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== Section: 持仓关键指标跟踪（V6模型 + 异常预警）===== -->
+        <section id="section-holdings-tracking" class="border-l-4 rounded-r-lg" style="border-left-color:#fbbf24">
+          <div class="bg-card pl-5 pr-6 py-4 rounded-r-lg">
+            <div class="flex items-center gap-2 mb-4">
+              <i data-lucide="shield-check" class="w-5 h-5" style="color:#fbbf24"></i>
+              <h2 class="text-base font-bold text-foreground">持仓关键指标跟踪</h2>
+              <span class="text-xs text-muted-foreground ml-2">V6模型核心观察值·异常预警·组合健康度</span>
+            </div>
+            <div class="grid grid-cols-2 gap-6">
+              <!-- 持仓个股关键指标 -->
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">持仓个股关键指标</h3>
+                <div class="space-y-2">
+                  <!-- 中芯国际 -->
+                  <div class="p-3 rounded-lg border border-border bg-muted/30">
+                    <div class="flex items-center justify-between mb-2">
+                      <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full" style="background:#ef4444"></span>
+                        <span class="text-sm font-semibold text-foreground">中芯国际</span>
+                        <span class="text-xs text-muted-foreground">688981</span>
+                      </div>
+                      <span class="tabular-nums text-sm font-bold text-foreground">55.30</span>
+                    </div>
+                    <div class="grid grid-cols-5 gap-2 text-center">
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">成本</div>
+                        <div class="tabular-nums text-xs font-semibold text-foreground">48.20</div>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">盈亏</div>
+                        <div class="tabular-nums text-xs font-semibold" style="color:#ef4444">+14.7%</div>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">关键信号</div>
+                        <div class="flex flex-wrap gap-1 justify-center">
+                          <span class="px-1 py-0.5 rounded text-[9px] font-bold text-white" style="background:#ef4444">MA突破</span>
+                          <span class="px-1 py-0.5 rounded text-[9px] font-bold text-slate-900" style="background:#fbbf24">放量</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">预警</div>
+                        <span class="px-1.5 py-0.5 rounded text-[9px] font-bold text-white" style="background:#22c55e">正常</span>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">评分</div>
+                        <div class="tabular-nums text-xs font-bold" style="color:#60a5fa">87</div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 宁德时代 -->
+                  <div class="p-3 rounded-lg border border-border bg-muted/30">
+                    <div class="flex items-center justify-between mb-2">
+                      <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full" style="background:#ef4444"></span>
+                        <span class="text-sm font-semibold text-foreground">宁德时代</span>
+                        <span class="text-xs text-muted-foreground">300750</span>
+                      </div>
+                      <span class="tabular-nums text-sm font-bold text-foreground">193.20</span>
+                    </div>
+                    <div class="grid grid-cols-5 gap-2 text-center">
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">成本</div>
+                        <div class="tabular-nums text-xs font-semibold text-foreground">172.00</div>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">盈亏</div>
+                        <div class="tabular-nums text-xs font-semibold" style="color:#ef4444">+12.3%</div>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">关键信号</div>
+                        <div class="flex flex-wrap gap-1 justify-center">
+                          <span class="px-1 py-0.5 rounded text-[9px] font-bold text-white" style="background:#ef4444">MA突破</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">预警</div>
+                        <span class="px-1.5 py-0.5 rounded text-[9px] font-bold text-white" style="background:#22c55e">正常</span>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">评分</div>
+                        <div class="tabular-nums text-xs font-bold" style="color:#60a5fa">83</div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 贵州茅台 -->
+                  <div class="p-3 rounded-lg border border-border bg-muted/30">
+                    <div class="flex items-center justify-between mb-2">
+                      <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full" style="background:#ef4444"></span>
+                        <span class="text-sm font-semibold text-foreground">贵州茅台</span>
+                        <span class="text-xs text-muted-foreground">600519</span>
+                      </div>
+                      <span class="tabular-nums text-sm font-bold text-foreground">1,698.50</span>
+                    </div>
+                    <div class="grid grid-cols-5 gap-2 text-center">
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">成本</div>
+                        <div class="tabular-nums text-xs font-semibold text-foreground">1,605.00</div>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">盈亏</div>
+                        <div class="tabular-nums text-xs font-semibold" style="color:#ef4444">+5.8%</div>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">关键信号</div>
+                        <span class="px-1 py-0.5 rounded text-[9px] font-bold text-white" style="background:#94a3b8">缩量整理</span>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">预警</div>
+                        <span class="px-1.5 py-0.5 rounded text-[9px] font-bold text-slate-900" style="background:#fbbf24">关注</span>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">评分</div>
+                        <div class="tabular-nums text-xs font-bold" style="color:#60a5fa">74</div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 隆基绿能 -->
+                  <div class="p-3 rounded-lg border border-border bg-muted/30">
+                    <div class="flex items-center justify-between mb-2">
+                      <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full" style="background:#22c55e"></span>
+                        <span class="text-sm font-semibold text-foreground">隆基绿能</span>
+                        <span class="text-xs text-muted-foreground">601012</span>
+                      </div>
+                      <span class="tabular-nums text-sm font-bold text-foreground">21.11</span>
+                    </div>
+                    <div class="grid grid-cols-5 gap-2 text-center">
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">成本</div>
+                        <div class="tabular-nums text-xs font-semibold text-foreground">21.56</div>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">盈亏</div>
+                        <div class="tabular-nums text-xs font-semibold" style="color:#22c55e">-2.1%</div>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">关键信号</div>
+                        <span class="px-1 py-0.5 rounded text-[9px] font-bold text-white" style="background:#ef4444">MA突破</span>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">预警</div>
+                        <span class="px-1.5 py-0.5 rounded text-[9px] font-bold text-white" style="background:#fb923c">预警</span>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">评分</div>
+                        <div class="tabular-nums text-xs font-bold" style="color:#60a5fa">76</div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 海康威视 -->
+                  <div class="p-3 rounded-lg border border-border bg-muted/30">
+                    <div class="flex items-center justify-between mb-2">
+                      <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full" style="background:#ef4444"></span>
+                        <span class="text-sm font-semibold text-foreground">海康威视</span>
+                        <span class="text-xs text-muted-foreground">002415</span>
+                      </div>
+                      <span class="tabular-nums text-sm font-bold text-foreground">35.80</span>
+                    </div>
+                    <div class="grid grid-cols-5 gap-2 text-center">
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">成本</div>
+                        <div class="tabular-nums text-xs font-semibold text-foreground">33.50</div>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">盈亏</div>
+                        <div class="tabular-nums text-xs font-semibold" style="color:#ef4444">+6.9%</div>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">关键信号</div>
+                        <span class="px-1 py-0.5 rounded text-[9px] font-bold text-slate-900" style="background:#fbbf24">放量</span>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">预警</div>
+                        <span class="px-1.5 py-0.5 rounded text-[9px] font-bold text-slate-900" style="background:#fbbf24">关注</span>
+                      </div>
+                      <div>
+                        <div class="text-[10px] text-muted-foreground">评分</div>
+                        <div class="tabular-nums text-xs font-bold" style="color:#60a5fa">79</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- V6模型核心观察值 + 仓位分布 + 异常预警 -->
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">V6模型核心观察值</h3>
+
+                <!-- V6模型核心观察值 Card -->
+                <div class="p-3 rounded-lg border" style="border-left:3px solid #a78bfa; background:linear-gradient(135deg,rgba(167,139,250,0.1),rgba(30,41,59,0.6))">
+                  <div class="flex items-center gap-2 mb-3">
+                    <i data-lucide="brain" class="w-4 h-4" style="color:#a78bfa"></i>
+                    <span class="text-xs font-bold text-foreground">V6模型核心观察值</span>
+                    <span class="text-[10px] text-muted-foreground">八层递进评分体系</span>
+                  </div>
+                  <div class="space-y-1.5">
+                    <!-- L-1 行业评分 -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-muted-foreground w-28 shrink-0">L-1 行业评分</span>
+                      <div class="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div class="h-full rounded-full" style="width:82%;background:linear-gradient(90deg,#22c55e,#34d399)"></div>
+                      </div>
+                      <span class="tabular-nums text-[10px] font-semibold w-6 text-right" style="color:#22c55e">82</span>
+                    </div>
+                    <!-- L-2 宏观扫描 -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-muted-foreground w-28 shrink-0">L-2 宏观扫描</span>
+                      <div class="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div class="h-full rounded-full" style="width:75%;background:linear-gradient(90deg,#fbbf24,#fcd34d)"></div>
+                      </div>
+                      <span class="tabular-nums text-[10px] font-semibold w-6 text-right" style="color:#fbbf24">75</span>
+                    </div>
+                    <!-- L-3 护城河 -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-muted-foreground w-28 shrink-0">L-3 护城河</span>
+                      <div class="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div class="h-full rounded-full" style="width:87%;background:linear-gradient(90deg,#22c55e,#34d399)"></div>
+                      </div>
+                      <span class="tabular-nums text-[10px] font-semibold w-6 text-right" style="color:#22c55e">87</span>
+                    </div>
+                    <!-- L-4 竞品格局 -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-muted-foreground w-28 shrink-0">L-4 竞品格局</span>
+                      <div class="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div class="h-full rounded-full" style="width:71%;background:linear-gradient(90deg,#fbbf24,#fcd34d)"></div>
+                      </div>
+                      <span class="tabular-nums text-[10px] font-semibold w-6 text-right" style="color:#fbbf24">71</span>
+                    </div>
+                    <!-- L-5 财务估值 -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-muted-foreground w-28 shrink-0">L-5 财务估值</span>
+                      <div class="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div class="h-full rounded-full" style="width:79%;background:linear-gradient(90deg,#fbbf24,#fcd34d)"></div>
+                      </div>
+                      <span class="tabular-nums text-[10px] font-semibold w-6 text-right" style="color:#fbbf24">79</span>
+                    </div>
+                    <!-- L-6 情景推演 -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-muted-foreground w-28 shrink-0">L-6 情景推演</span>
+                      <div class="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div class="h-full rounded-full" style="width:68%;background:linear-gradient(90deg,#fbbf24,#fcd34d)"></div>
+                      </div>
+                      <span class="tabular-nums text-[10px] font-semibold w-6 text-right" style="color:#fbbf24">68</span>
+                    </div>
+                    <!-- L-7 T-M矩阵 -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-muted-foreground w-28 shrink-0">L-7 T-M矩阵</span>
+                      <div class="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div class="h-full rounded-full" style="width:73%;background:linear-gradient(90deg,#fbbf24,#fcd34d)"></div>
+                      </div>
+                      <span class="tabular-nums text-[10px] font-semibold w-6 text-right" style="color:#fbbf24">73</span>
+                    </div>
+                    <!-- L-8 第二曲线 -->
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-muted-foreground w-28 shrink-0">L-8 第二曲线</span>
+                      <div class="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div class="h-full rounded-full" style="width:65%;background:linear-gradient(90deg,#fbbf24,#fcd34d)"></div>
+                      </div>
+                      <span class="tabular-nums text-[10px] font-semibold w-6 text-right" style="color:#fbbf24">65</span>
+                    </div>
+                  </div>
+                  <!-- Summary Row -->
+                  <div class="mt-3 pt-2.5 border-t border-border/50 flex items-center gap-4 text-xs">
+                    <span class="text-muted-foreground">综合评分</span>
+                    <span class="tabular-nums font-bold" style="color:#a78bfa">75/100</span>
+                    <span class="text-border">|</span>
+                    <span class="text-muted-foreground">评级</span>
+                    <span class="font-semibold text-foreground">中等偏强</span>
+                    <span class="text-border">|</span>
+                    <span class="text-muted-foreground">建议仓位</span>
+                    <span class="font-semibold text-foreground">60-70%</span>
+                  </div>
+                </div>
+
+                <!-- 仓位分布 -->
+                <div class="p-3 rounded-lg border border-border bg-muted/30">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-medium text-foreground">仓位分布</span>
+                    <span class="tabular-nums text-[10px] text-muted-foreground">总仓位 78.5%</span>
+                  </div>
+                  <div class="flex items-center gap-3 mt-2">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-2.5 h-2.5 rounded-sm" style="background:#3b82f6"></span>
+                      <span class="text-[10px] text-muted-foreground">半导体</span>
+                      <span class="tabular-nums text-[10px] font-semibold text-foreground">28%</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-2.5 h-2.5 rounded-sm" style="background:#fbbf24"></span>
+                      <span class="text-[10px] text-muted-foreground">新能源</span>
+                      <span class="tabular-nums text-[10px] font-semibold text-foreground">35%</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-2.5 h-2.5 rounded-sm" style="background:#34d399"></span>
+                      <span class="text-[10px] text-muted-foreground">消费</span>
+                      <span class="tabular-nums text-[10px] font-semibold text-foreground">22%</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-2.5 h-2.5 rounded-sm" style="background:#a78bfa"></span>
+                      <span class="text-[10px] text-muted-foreground">安防</span>
+                      <span class="tabular-nums text-[10px] font-semibold text-foreground">15%</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 异常预警面板 -->
+                <div class="p-3 rounded-lg border" style="border-left:3px solid #ef4444; background:linear-gradient(135deg,rgba(239,68,68,0.1),rgba(30,41,59,0.6))">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                      <i data-lucide="bell" class="w-4 h-4" style="color:#ef4444"></i>
+                      <span class="text-xs font-bold text-foreground">异常预警</span>
+                    </div>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold text-white" style="background:#ef4444">1严重 1警告 1关注</span>
+                  </div>
+                  <div class="space-y-2">
+                    <!-- 严重预警 -->
+                    <div class="p-2.5 rounded-md border" style="border-left:3px solid #ef4444; background:rgba(239,68,68,0.1)">
+                      <div class="flex items-start gap-2">
+                        <span class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background:#ef4444">
+                          <i data-lucide="alert-triangle" class="w-3 h-3 text-white"></i>
+                        </span>
+                        <div class="flex-1 min-w-0">
+                          <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xs font-bold text-foreground">隆基绿能</span>
+                            <span class="text-[10px] text-muted-foreground tabular-nums">601012</span>
+                            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold text-white shrink-0" style="background:#ef4444">逼近止损线</span>
+                          </div>
+                          <div class="text-[10px] text-muted-foreground space-y-0.5">
+                            <div>当前21.11 vs 止损21.00 | 偏离 <span style="color:#ef4444">-0.5%</span></div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-muted-foreground">处理建议:</span>
+                              <span class="text-foreground">关注明日开盘</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- 警告 -->
+                    <div class="p-2.5 rounded-md border" style="border-left:3px solid #fb923c; background:rgba(251,146,60,0.1)">
+                      <div class="flex items-start gap-2">
+                        <span class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background:#fb923c">
+                          <i data-lucide="alert-circle" class="w-3 h-3 text-white"></i>
+                        </span>
+                        <div class="flex-1 min-w-0">
+                          <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xs font-bold text-foreground">贵州茅台</span>
+                            <span class="text-[10px] text-muted-foreground tabular-nums">600519</span>
+                            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold text-white shrink-0" style="background:#fb923c">连续缩量6日</span>
+                          </div>
+                          <div class="text-[10px] text-muted-foreground space-y-0.5">
+                            <div>均量比 <span class="tabular-nums" style="color:#fb923c">0.38</span></div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-muted-foreground">处理建议:</span>
+                              <span class="text-foreground">观察放量突破信号</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- 关注 -->
+                    <div class="p-2.5 rounded-md border" style="border-left:3px solid #fbbf24; background:rgba(251,191,36,0.1)">
+                      <div class="flex items-start gap-2">
+                        <span class="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background:#fbbf24">
+                          <i data-lucide="eye" class="w-3 h-3 text-slate-900"></i>
+                        </span>
+                        <div class="flex-1 min-w-0">
+                          <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xs font-bold text-foreground">海康威视</span>
+                            <span class="text-[10px] text-muted-foreground tabular-nums">002415</span>
+                            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold text-slate-900 shrink-0" style="background:#fbbf24">放量滞涨</span>
+                          </div>
+                          <div class="text-[10px] text-muted-foreground space-y-0.5">
+                            <div>量比 <span class="tabular-nums" style="color:#fbbf24">2.3x</span> 涨幅仅 <span style="color:#ef4444">0.3%</span></div>
+                            <div class="flex items-center gap-1">
+                              <span class="text-muted-foreground">处理建议:</span>
+                              <span class="text-foreground">警惕高位出货</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== Section: 观察池 ===== -->
+        <section id="section-observation-pool" class="border-l-4 rounded-r-lg" style="border-left-color:#60a5fa">
+          <div class="bg-card pl-5 pr-6 py-4 rounded-r-lg">
+            <div class="flex items-center gap-2 mb-4">
+              <i data-lucide="binoculars" class="w-5 h-5" style="color:#60a5fa"></i>
+              <h2 class="text-base font-bold text-foreground">观察池</h2>
+              <span class="text-xs text-muted-foreground ml-2">待触发标的跟踪</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-border">
+                    <th class="text-left py-2 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">代码</th>
+                    <th class="text-left py-2 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">名称</th>
+                    <th class="text-left py-2 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">关注理由</th>
+                    <th class="text-left py-2 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">关注日期</th>
+                    <th class="text-left py-2 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">触发条件</th>
+                    <th class="text-left py-2 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">当前状态</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-border/50 hover:bg-muted/30">
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">688981</td>
+                    <td class="py-2.5 px-3 text-sm font-medium text-foreground">中芯国际</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">平台突破</td>
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">2026-08-10</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">站稳55元 + 放量确认</td>
+                    <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold text-white" style="background:#ef4444">已触发</span></td>
+                  </tr>
+                  <tr class="border-b border-border/50 hover:bg-muted/30">
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">601398</td>
+                    <td class="py-2.5 px-3 text-sm font-medium text-foreground">工商银行</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">高股息防御</td>
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">2026-08-08</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">回调至5.5元以下</td>
+                    <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold text-slate-900" style="background:#fbbf24">接近触发</span></td>
+                  </tr>
+                  <tr class="border-b border-border/50 hover:bg-muted/30">
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">002230</td>
+                    <td class="py-2.5 px-3 text-sm font-medium text-foreground">科大讯飞</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">AI应用落地</td>
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">2026-08-12</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">日线MACD金叉 + 放量</td>
+                    <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold text-white" style="background:#ef4444">已触发</span></td>
+                  </tr>
+                  <tr class="border-b border-border/50 hover:bg-muted/30">
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">603259</td>
+                    <td class="py-2.5 px-3 text-sm font-medium text-foreground">药明康德</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">业绩拐点</td>
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">2026-08-11</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">Q2营收转正 + 外资回补</td>
+                    <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold text-slate-900" style="background:#fbbf24">接近触发</span></td>
+                  </tr>
+                  <tr class="border-b border-border/50 hover:bg-muted/30">
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">600809</td>
+                    <td class="py-2.5 px-3 text-sm font-medium text-foreground">山西汾酒</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">消费复苏</td>
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">2026-08-13</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">站稳200元 + 北向持续流入</td>
+                    <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold text-white" style="background:#94a3b8">等待中</span></td>
+                  </tr>
+                  <tr class="border-b border-border/50 hover:bg-muted/30">
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">300124</td>
+                    <td class="py-2.5 px-3 text-sm font-medium text-foreground">汇川技术</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">工业自动化</td>
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">2026-08-07</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">月线级别突破确认</td>
+                    <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold text-white" style="background:#94a3b8">等待中</span></td>
+                  </tr>
+                  <tr class="border-b border-border/50 hover:bg-muted/30">
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">002371</td>
+                    <td class="py-2.5 px-3 text-sm font-medium text-foreground">北方华创</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">国产替代</td>
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">2026-08-09</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">回调至300元支撑位</td>
+                    <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold text-slate-900" style="background:#fbbf24">接近触发</span></td>
+                  </tr>
+                  <tr class="border-b border-border/50 hover:bg-muted/30">
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">300274</td>
+                    <td class="py-2.5 px-3 text-sm font-medium text-foreground">阳光电源</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">储能龙头</td>
+                    <td class="py-2.5 px-3 tabular-nums text-xs text-muted-foreground">2026-08-14</td>
+                    <td class="py-2.5 px-3 text-xs text-foreground">海外大单公告 + 放量突破</td>
+                    <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold text-white" style="background:#94a3b8">等待中</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="mt-4 pt-3 border-t border-border flex items-center gap-4 text-xs">
+              <span class="text-muted-foreground">汇总</span>
+              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full" style="background:#ef4444"></span>已触发 <span class="tabular-nums font-semibold text-foreground">2</span></span>
+              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full" style="background:#fbbf24"></span>接近触发 <span class="tabular-nums font-semibold text-foreground">3</span></span>
+              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full" style="background:#94a3b8"></span>等待中 <span class="tabular-nums font-semibold text-foreground">3</span></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== Section: AI洞察复盘 ===== -->
+        <section id="section-ai-review" class="border-l-4 rounded-r-lg" style="border-left-color:#a78bfa">
+          <div class="bg-card pl-5 pr-6 py-4 rounded-r-lg">
+            <div class="flex items-center gap-2 mb-4">
+              <i data-lucide="brain" class="w-5 h-5" style="color:#a78bfa"></i>
+              <h2 class="text-base font-bold text-foreground">AI洞察复盘</h2>
+              <span class="text-xs text-muted-foreground ml-2">智能交易复盘与信号质量</span>
+            </div>
+            <div class="grid grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">近期AI交易复盘</h3>
+                <div class="space-y-3">
+                  <div class="p-3 rounded-lg border border-border bg-muted/30">
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="text-xs text-muted-foreground tabular-nums">2026-08-14</span>
+                      <span class="text-xs px-2 py-0.5 rounded-full text-white font-medium" style="background:#ef4444">买入</span>
+                    </div>
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="text-sm font-semibold text-foreground">中芯国际</span>
+                      <span class="text-xs text-muted-foreground">688981</span>
+                      <span class="text-xs text-muted-foreground">55.30</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs mb-1">
+                      <span class="text-muted-foreground">结果</span>
+                      <span class="tabular-nums font-semibold" style="color:#ef4444">+2.8%</span>
+                      <span class="text-muted-foreground">| 复盘</span>
+                      <span class="text-foreground">信号准确，AI算力需求持续超预期</span>
+                    </div>
+                  </div>
+                  <div class="p-3 rounded-lg border border-border bg-muted/30">
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="text-xs text-muted-foreground tabular-nums">2026-08-13</span>
+                      <span class="text-xs px-2 py-0.5 rounded-full text-white font-medium" style="background:#22c55e">卖出</span>
+                    </div>
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="text-sm font-semibold text-foreground">工商银行</span>
+                      <span class="text-xs text-muted-foreground">601398</span>
+                      <span class="text-xs text-muted-foreground">5.82</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs mb-1">
+                      <span class="text-muted-foreground">结果</span>
+                      <span class="tabular-nums font-semibold" style="color:#22c55e">-0.5%</span>
+                      <span class="text-muted-foreground">| 复盘</span>
+                      <span class="text-foreground">净息差收窄，顶背离，减仓决策合理</span>
+                    </div>
+                  </div>
+                  <div class="p-3 rounded-lg border border-border bg-muted/30">
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="text-xs text-muted-foreground tabular-nums">2026-08-12</span>
+                      <span class="text-xs px-2 py-0.5 rounded-full text-white font-medium" style="background:#ef4444">买入</span>
+                    </div>
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="text-sm font-semibold text-foreground">宁德时代</span>
+                      <span class="text-xs text-muted-foreground">300750</span>
+                      <span class="text-xs text-muted-foreground">193.20</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs mb-1">
+                      <span class="text-muted-foreground">结果</span>
+                      <span class="tabular-nums font-semibold" style="color:#ef4444">+3.5%</span>
+                      <span class="text-muted-foreground">| 复盘</span>
+                      <span class="text-foreground">储能超预期，突破关键阻力，加仓正确</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">信号质量复盘</h3>
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                  <div class="p-3 rounded-lg bg-muted/30 text-center">
+                    <div class="text-[10px] text-muted-foreground mb-1">信号准确率</div>
+                    <div class="tabular-nums text-xl font-bold" style="color:#a78bfa">73.4<span class="text-xs font-normal text-muted-foreground">%</span></div>
+                    <div class="text-[10px] text-muted-foreground mt-1">近30日</div>
+                  </div>
+                  <div class="p-3 rounded-lg bg-muted/30 text-center">
+                    <div class="text-[10px] text-muted-foreground mb-1">累计信号数</div>
+                    <div class="tabular-nums text-xl font-bold text-foreground">156</div>
+                    <div class="text-[10px] text-muted-foreground mt-1">买入89 / 卖出67</div>
+                  </div>
+                </div>
+                <div class="p-4 rounded-lg bg-muted/30">
+                  <div class="text-xs font-medium text-foreground mb-3">盈亏分布（近30日）</div>
+                  <div class="space-y-1.5">
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-muted-foreground w-10">>5%</span>
+                      <div class="flex-1 h-3 bg-muted rounded-sm overflow-hidden flex">
+                        <div class="h-full" style="width:12%;background:#ef4444"></div>
+                      </div>
+                      <span class="tabular-nums text-[10px] text-muted-foreground w-6">18</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-muted-foreground w-10">3-5%</span>
+                      <div class="flex-1 h-3 bg-muted rounded-sm overflow-hidden flex">
+                        <div class="h-full" style="width:16%;background:#ef4444"></div>
+                      </div>
+                      <span class="tabular-nums text-[10px] text-muted-foreground w-6">24</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-muted-foreground w-10">1-3%</span>
+                      <div class="flex-1 h-3 bg-muted rounded-sm overflow-hidden flex">
+                        <div class="h-full" style="width:21%;background:#ef4444"></div>
+                      </div>
+                      <span class="tabular-nums text-[10px] text-muted-foreground w-6">32</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-muted-foreground w-10">0-1%</span>
+                      <div class="flex-1 h-3 bg-muted rounded-sm overflow-hidden flex">
+                        <div class="h-full" style="width:25%;background:#ef4444"></div>
+                      </div>
+                      <span class="tabular-nums text-[10px] text-muted-foreground w-6">38</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-muted-foreground w-10">-1~0%</span>
+                      <div class="flex-1 h-3 bg-muted rounded-sm overflow-hidden flex">
+                        <div class="h-full" style="width:14%;background:#22c55e"></div>
+                      </div>
+                      <span class="tabular-nums text-[10px] text-muted-foreground w-6">21</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-muted-foreground w-10">-3~-1%</span>
+                      <div class="flex-1 h-3 bg-muted rounded-sm overflow-hidden flex">
+                        <div class="h-full" style="width:9%;background:#22c55e"></div>
+                      </div>
+                      <span class="tabular-nums text-[10px] text-muted-foreground w-6">14</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-[10px] text-muted-foreground w-10"><-3%</span>
+                      <div class="flex-1 h-3 bg-muted rounded-sm overflow-hidden flex">
+                        <div class="h-full" style="width:6%;background:#22c55e"></div>
+                      </div>
+                      <span class="tabular-nums text-[10px] text-muted-foreground w-6">9</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3 mt-3">
+                  <div class="p-2 rounded-lg text-center" style="background:rgba(239,68,68,0.15)">
+                    <div class="text-[10px] text-muted-foreground">盈利信号</div>
+                    <div class="tabular-nums text-sm font-bold" style="color:#ef4444">112</div>
+                    <div class="text-[10px] tabular-nums" style="color:#ef4444">71.8%</div>
+                  </div>
+                  <div class="p-2 rounded-lg text-center" style="background:rgba(34,197,94,0.15)">
+                    <div class="text-[10px] text-muted-foreground">亏损信号</div>
+                    <div class="tabular-nums text-sm font-bold" style="color:#22c55e">44</div>
+                    <div class="text-[10px] tabular-nums" style="color:#22c55e">28.2%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ===== Footer ===== -->
+      <footer class="max-w-[1440px] mx-auto px-6 pt-8 pb-6">
+        <div class="border-t border-border pt-4 text-center">
+          <p class="text-xs text-muted-foreground leading-relaxed">
+            免责声明：本驾驶舱展示的数据和AI分析仅供参考，不构成任何投资建议。投资有风险，入市需谨慎。数据来源：通达信、东方财富、Wind。
+          </p>
+        </div>
+      </footer>
+    </main>
+    <script>lucide.createIcons();</script>
+
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+      .score-green { background-color: #22c55e; color: #fff; }
+      .score-amber { background-color: #fbbf24; color: #1e293b; }
+      .score-red { background-color: #ef4444; color: #fff; }
+      .alert-severe { background-color: #ef4444; }
+      .alert-warning { background-color: #fb923c; }
+      .alert-attention { background-color: #fbbf24; }
+    </style>
+</body>
+</html>

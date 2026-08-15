@@ -84,20 +84,20 @@ export const VALUE_PIT_DEFAULT_SAMPLES: ValuePitAnalyzerInput[] = [
 export const ROTATION_DEFAULT_SAMPLES: RotationSignalInput[] = [
   {
     sectorId: '银行',
-    volume: { history: [...Array(20).fill(60000), 120000, 125000, 130000, 125000, 120000] },
+    volume: { history: [...Array<number>(20).fill(60000), 120000, 125000, 130000, 125000, 120000] },
     capitalFlow: { dailyNetFlow: [10, 20, 15, 30, 25] },
-    goldenCross: { closes: [...Array(20).fill(105), 100, 100, 100, 100, 130] },
+    goldenCross: { closes: [...Array<number>(20).fill(105), 100, 100, 100, 100, 130] },
   },
   {
     sectorId: '钢铁',
-    volume: { history: [...Array(20).fill(30000), 35000, 32000, 31000, 33000, 34000] },
+    volume: { history: [...Array<number>(20).fill(30000), 35000, 32000, 31000, 33000, 34000] },
     capitalFlow: { dailyNetFlow: [5, 3, -2, 8, 2] },
-    goldenCross: { closes: [...Array(25).fill(100)] },
+    goldenCross: { closes: [...Array<number>(25).fill(100)] },
   },
   {
     sectorId: '煤炭',
-    volume: { history: [...Array(20).fill(15000), 16000, 16000, 16000, 16000, 16000] },
+    volume: { history: [...Array<number>(20).fill(15000), 16000, 16000, 16000, 16000, 16000] },
     capitalFlow: { dailyNetFlow: [-3, -5, -2, 1, -1] },
-    goldenCross: { closes: Array(25).fill(100).map((v, i) => v - i * 0.5) },
+    goldenCross: { closes: Array<number>(25).fill(100).map((v, i) => v - i * 0.5) },
   },
 ]

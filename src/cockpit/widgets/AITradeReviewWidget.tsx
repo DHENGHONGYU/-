@@ -33,19 +33,19 @@ export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps
 
     return (
       <div className="space-y-4">
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="text-center">
             <div className="flex justify-center mb-2">
               <Target className={`h-6 w-6 ${COLOR_TOKENS.info.tailwind}`} />
             </div>
-            <div className="text-2xl font-bold">{tradeReview.totalTrades}</div>
+            <div className="text-h1 font-bold">{tradeReview.totalTrades}</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>总交易数</div>
           </div>
           <div className="text-center">
             <div className="flex justify-center mb-2">
               <TrendingUp className="h-6 w-6" style={{ color: STOCK_COLOR_TOKENS.up.hex }} />
             </div>
-            <div className="text-2xl font-bold" style={{ color: STOCK_COLOR_TOKENS.up.hex }}>{tradeReview.winRate}%</div>
+            <div className="text-h1 font-bold" style={{ color: STOCK_COLOR_TOKENS.up.hex }}>{tradeReview.winRate}%</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>胜率</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>目标: 55%+</div>
           </div>
@@ -53,7 +53,7 @@ export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps
             <div className="flex justify-center mb-2">
               <Award className="h-6 w-6 text-warning" />
             </div>
-            <div className="text-2xl font-bold text-warning">{tradeReview.profitLossRatio}</div>
+            <div className="text-h1 font-bold text-warning">{tradeReview.profitLossRatio}</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>盈亏比</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>目标: 1.5+</div>
           </div>
@@ -61,7 +61,7 @@ export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps
             <div className="flex justify-center mb-2">
               <AlertCircle className={`h-6 w-6 ${tradeReview.disciplineScore >= 80 ? COLOR_TOKENS.success.tailwind : COLOR_TOKENS.orange.tailwind}`} />
             </div>
-            <div className={`text-2xl font-bold ${tradeReview.disciplineScore >= 80 ? COLOR_TOKENS.success.tailwind : COLOR_TOKENS.orange.tailwind}`}>
+            <div className={`text-h1 font-bold ${tradeReview.disciplineScore >= 80 ? COLOR_TOKENS.success.tailwind : COLOR_TOKENS.orange.tailwind}`}>
               {tradeReview.disciplineScore}
             </div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>纪律评分</div>

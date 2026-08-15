@@ -4,19 +4,19 @@ type: reference
 domain: data
 phase: testing
 tier: standard
-status: active
+status: deprecated
 maintainer: V9 Architecture Team
-summary: "?? 此文件已废弃（2026-07-14） 数据定义已整合至 `docs/reference/data-dictionary-index.md`，请通过主索引访问最新定义。"
+summary: "⚠️ 此文件已废弃（2026-07-14） 数据定义已整合至 `docs/reference/data-dictionary-index.md`，请通过主索引访问最新定义。"
 tags: [data, data-definition, test]
 version: v2.4.0
-last_updated: 2026-07-17
+last_updated: 2026-08-15
 code_version: "2.0.0-rc.1"
 doc_id: V9-DOC-DATA-060
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:
   - version: v2.4.0
-    changes: "C 类版本闭环(2026-08-11)：change_log 对齐当前版本"
-    date: 2026-07-17
+    changes: "DEPRECATED（2026-07-14）；2026-08-15 系统性核对：仍保持废弃状态，最新定义见 docs/reference/data-dictionary-index.md v1.1.0 与《V9核心数据字典与类型定义（整合版）》.md v1.5。"
+    date: 2026-08-15
   - version: v1.0.0
     changes: Initial version established
     date: 2026-07-17
@@ -24,7 +24,7 @@ change_log:
 
 # DEPRECATED - backtest-data-definition.md
 
-> ?? **此文件已废弃**（2026-07-14）
+> ⚠️ **此文件已废弃**（2026-07-14）
 > 
 > 数据定义已整合至 `docs/reference/data-dictionary-index.md`，请通过主索引访问最新定义。
 

@@ -63,7 +63,7 @@ interface CollectionRuntimeState {
    *  │ mockSuccesses    │ mock 源成功写入数                                           │ ≥0           │ 同上              │
    *  │ realSuccessRate  │ (successCollects - mockSuccesses) / (totalCollects - mockCollects) × 100 │ [0, 100] % 或 0 │ 仅当 total>mock 时有效 │
    *  │ completeness     │ 字段级完整率（成功返回的字段数 ÷ 目标 schema 字段数）× 100    │ [0, 100] %   │ SOURCE_SUCCESS 后 │
-   *  │ sourceCounts     │ 各数据源调用次数分布：{tushare, tencent, sina, netease, akshare, mock} │ 每项 ≥0   │ 每次请求结束      │
+   *  │ sourceCounts     │ 各数据源调用次数分布：{tushare, tencent, sina, netease, akshare, mock, westock, tencentnews} │ 每项 ≥0   │ 每次请求结束      │
    *  │ fallbackCount    │ 主源失败后走 Fallback 链路的成功 / 失败总次数                │ ≥0           │ FALLBACK / FALLBACK_FAIL │
    *  │ writeSuccess     │ DataBridge.forward() 写入 IndexedDB 成功次数                │ ≥0           │ WRITE_SUCCESS     │
    *  │ writeTotal       │ 尝试写入总数（含 WRITE_FAIL）                                │ ≥0           │ WRITE_* 事件      │
@@ -186,7 +186,7 @@ function createInitialStats(): QualityMetrics {
     mockSuccesses: 0,
     realSuccessRate: 0,
     completeness: 0,
-    sourceCounts: { tushare: 0, tencent: 0, sina: 0, netease: 0, akshare: 0, mock: 0 },
+    sourceCounts: { tushare: 0, tencent: 0, sina: 0, netease: 0, akshare: 0, mock: 0, westock: 0, tencentnews: 0 },
     fallbackCount: 0,
     writeSuccess: 0,
     writeTotal: 0,
@@ -279,9 +279,7 @@ export const useCollectionRuntimeStore = create<CollectionRuntimeState>((set) =>
 
         for (const span of spans) {
           // 合并 span，不覆盖内存中已有更新版本
-          if (!merged[span.traceId]) {
-            merged[span.traceId] = span
-          }
+          merged[span.traceId] ??= span
 
           // 从 span 重建 taskStatuses（只填充内存中尚不存在的任务）
           if (span.taskId && !rehydratedTasks[span.taskId]) {

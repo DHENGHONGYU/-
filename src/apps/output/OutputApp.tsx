@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Car
 import { Badge } from '@/components/atoms/Badge'
 import { Select, SelectItem } from '@/components/atoms/Select'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
+import { PageHeader } from '@/components/templates/PageHeader'
 import {
   useOutputStore,
   selectExportData,
@@ -91,7 +92,7 @@ function sanitizeCsvValue(val: unknown): string {
 
 function jsonToCsv(jsonStr: string): string {
   try {
-    const parsed = JSON.parse(jsonStr)
+    const parsed: unknown = JSON.parse(jsonStr)
     // If it's an array of objects, flatten to CSV
     if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === 'object' && parsed[0] !== null) {
       const headers = Object.keys(parsed[0] as Record<string, unknown>)
@@ -250,7 +251,12 @@ export default function OutputApp(): React.JSX.Element {
   const matched = matchOutputRoute(path)
 
   return (
-    <ErrorBoundary
+    <div className="space-y-4">
+      <PageHeader
+        title="输出舱"
+        description="研究报告生成与数据导出"
+      />
+      <ErrorBoundary
       fallback={
         <div className="p-4 text-sm text-muted-foreground">
           输出舱加载失败，请刷新页面重试。若问题持续，请检查网络连接后联系管理员。
@@ -261,5 +267,6 @@ export default function OutputApp(): React.JSX.Element {
         {matched.component}
       </React.Suspense>
     </ErrorBoundary>
+    </div>
   )
 }

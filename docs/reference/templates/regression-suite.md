@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-REF-963
+title: "回归测试套件模板"
+domain: ref
+status: active
+last_updated: 2026-08-15
+---
+
 # 回归测试套件模板
 
 > 本模板参照 AGENTS.md §12.4 三级回归测试套件。

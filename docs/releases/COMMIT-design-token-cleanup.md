@@ -69,7 +69,7 @@ Refs: docs/guides/design-to-code-workflow.md v1.2.0"
 
 | 类型 | 文件数 | 说明 |
 |------|--------|------|
-| 删除 | 1 | `scripts/generate/generate-tokens.ts` |
+| 删除 | 1 | scripts/generate/generate-tokens.ts |
 | 新增 | 6 | designTokenVerifier.ts + 测试 + 3 份文档 + 截图 |
 | 修改 | 7 | main.tsx + themeStore.ts + .gitignore + CHANGELOG + README + scripts/README + 设计哲学 |
 | **合计** | **14** | 不含 dogfood-output 截图（3 张） |

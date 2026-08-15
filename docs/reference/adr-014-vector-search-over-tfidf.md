@@ -11,7 +11,7 @@ tags: [data, vector-search, hnsw, semantic-search, embedding, adr, reference]
 version: v1.0.0
 last_updated: 2026-07-20
 code_version: "2.0.0-rc.1"
-doc_id: V9-DOC-DATA-029
+doc_id: V9-DOC-DATA-080
 referenced_by: []
 change_log:
   - version: v1.0.0

@@ -46,7 +46,7 @@ export class RestCollector extends BaseCollector {
       throw new Error(`[RestCollector] HTTP ${response.status}: ${response.statusText}`)
     }
 
-    const rawData = await response.json()
+    const rawData: unknown = await response.json()
     logger.debug(`[RestCollector] 数据获取成功: ${url}`)
 
     // 根据 endpoint 推断数据类型
@@ -82,7 +82,7 @@ export class RestCollector extends BaseCollector {
       throw new Error(`[RestCollector] HTTP ${response.status}: ${response.statusText}`)
     }
 
-    const rawData = await response.json()
+    const rawData: unknown = await response.json()
     const dataType = this.inferDataType(endpoint)
 
     return this.wrapData(dataType, rawData, 'rest')

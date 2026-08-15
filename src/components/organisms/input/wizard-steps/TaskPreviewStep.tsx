@@ -210,15 +210,15 @@ export function TaskPreviewStep(): React.JSX.Element {
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-1">
               <div className={COLOR_TOKENS.textMuted.tailwind}>API调用次数</div>
-              <div className="text-2xl font-bold">{resourceEstimate.apiCalls}</div>
+              <div className="text-h1 font-bold">{resourceEstimate.apiCalls}</div>
             </div>
             <div className="space-y-1">
               <div className={COLOR_TOKENS.textMuted.tailwind}>预计耗时</div>
-              <div className="text-2xl font-bold">{resourceEstimate.estimatedTime}</div>
+              <div className="text-h1 font-bold">{resourceEstimate.estimatedTime}</div>
             </div>
             <div className="space-y-1">
               <div className={COLOR_TOKENS.textMuted.tailwind}>存储占用</div>
-              <div className="text-2xl font-bold">{resourceEstimate.storageUsage}</div>
+              <div className="text-h1 font-bold">{resourceEstimate.storageUsage}</div>
             </div>
           </div>
         </CardContent>

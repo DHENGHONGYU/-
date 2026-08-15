@@ -180,7 +180,7 @@ function main() {
     }
   });
 
-  console.log('\n阶段五：创建 docs/README.md 统一入口');
+  console.log('\n阶段五：创建 README.md 统一入口（原文档已归档至 archive/historical-2026-08-16/batch7/）');
   
   const readmeContent = `# FinSightV9 文档中心
 
@@ -227,9 +227,9 @@ FinSightV9 是一个基于 AI 的智能投研系统，提供全面的股票分�
 *文档中心基于 Diátaxis 文档分类体系构建*
 `;
   
-  const readmePath = path.join(DOCS_DIR, 'docs/explanation/README.md');
+  const readmePath = path.join(DOCS_DIR, 'explanation/README.md'); // 原路径已归档至 batch7/
   fs.writeFileSync(readmePath, readmeContent);
-  console.log('docs/explanation/README.md');
+  console.log('explanation/README.md（已归档）');
 
   console.log('\n' + '='.repeat(80));
   console.log('迁移完成！');

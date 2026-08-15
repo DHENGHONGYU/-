@@ -67,7 +67,7 @@ const PoolBoardPage: React.FC = () => {
       <div className="mb-6">
         <div className="flex items-start justify-between">
           <div>
-            <h2 className={cn('text-xl font-bold', 'text-foreground')}>
+            <h2 className={cn('text-h2 font-bold', 'text-foreground')}>
               研究候选池
             </h2>
             <p className={cn('mt-1 text-sm', 'text-muted-foreground')}>

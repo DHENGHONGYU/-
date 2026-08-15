@@ -1,7 +1,7 @@
 /**
  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-027, V9-DOC-BACK-023, V9-DOC-BACK-021, V9-DOC-BACK-033]
  */
-import { getDefaultLlmConfig, getLlmApiKeyAsync, type LlmConfig } from '@/config/llmConfig'
+import { getDefaultLlmConfig, getLlmApiKeyAsync, inferPresetId, getPresetById, type LlmConfig, type LlmApiStyle } from '@/config/llmConfig'
 import type { LlmMessage, LlmResponse, LlmUsage, LlmStreamCallback, LlmStreamChunk, LlmStructuredOptions } from './llmTypes'
 import { getLogger } from '@/lib/logger'
 import { isValidLlmBaseURL } from '@/lib/validation'
@@ -10,6 +10,65 @@ const logger = getLogger()
 
 // P0-02: 流式请求空闲超时阈值（毫秒），收到每个 chunk 后重置
 const STREAM_IDLE_TIMEOUT_MS = 30000
+
+/** 安全地截断 API Key 用于日志输出，仅显示前8后4位 */
+function maskApiKey(key: string): string {
+  if (!key || key.length <= 12) return '***'
+  return `${key.slice(0, 8)}...${key.slice(-4)}`
+}
+
+/** 根据预设 ID 推断 API 风格，默认 openai-compatible */
+function resolveApiStyle(presetId: string): LlmApiStyle {
+  const preset = getPresetById(presetId)
+  return preset?.apiStyle ?? 'openai-compatible'
+}
+
+/** 构建请求端点和头信息，支持多种 API 协议风格 */
+interface RequestComponents {
+  endpoint: string
+  headers: Record<string, string>
+  extraBody: Record<string, unknown>
+}
+
+function buildRequestComponents(
+  baseURL: string,
+  apiKey: string,
+  presetId: string,
+): RequestComponents {
+  const apiStyle = resolveApiStyle(presetId)
+  const normalizedURL = normalizeBaseURL(baseURL)
+
+  switch (apiStyle) {
+    case 'anthropic':
+      return {
+        endpoint: `${normalizedURL}/v1/messages`,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+        },
+        extraBody: {},
+      }
+    case 'gemini':
+      return {
+        endpoint: `${normalizedURL}/v1beta/models`,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        extraBody: {},
+      }
+    case 'openai-compatible':
+    default:
+      return {
+        endpoint: `${normalizedURL}/v1/chat/completions`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        extraBody: {},
+      }
+  }
+}
 
 /**
  * LlmConfigError
@@ -174,7 +233,23 @@ export async function chat<T = unknown>(
   }
   assertConfig(config)
 
-  const endpoint = `${normalizeBaseURL(config.baseURL)}/v1/chat/completions`
+  const presetId = inferPresetId(config.baseURL)
+  const { endpoint, headers } = buildRequestComponents(config.baseURL, config.apiKey, presetId)
+
+  // 🔍 Log Node 1: Config resolution
+  logger.debug('[llmClient] chat() 配置解析完成', {
+    preset: presetId,
+    apiStyle: resolveApiStyle(presetId),
+    baseURL: config.baseURL,
+    model: config.model,
+    endpoint,
+    messageCount: messages.length,
+    hasApiKey: !!config.apiKey,
+    apiKeyPreview: maskApiKey(config.apiKey),
+    temperature: config.temperature ?? 0.2,
+    maxTokens: config.maxTokens ?? 'unset',
+    timeout: config.timeout ?? 'unset',
+  })
 
   const body: Record<string, unknown> = {
     model: config.model,
@@ -190,27 +265,85 @@ export async function chat<T = unknown>(
 
   const controller = new AbortController()
   const timeoutId = config.timeout ? setTimeout(() => controller.abort(), config.timeout) : null
+  let requestStartTs = 0
 
   try {
+    // 🔍 Log Node 2: Pre-fetch
+    requestStartTs = performance.now()
+    logger.debug('[llmClient] chat() 发送请求', {
+      preset: presetId,
+      apiStyle: resolveApiStyle(presetId),
+      method: 'POST',
+      endpoint,
+      bodyKeys: Object.keys(body),
+      signalAborted: controller.signal.aborted,
+      requestBody: JSON.stringify(body).slice(0, 500),
+    })
+
     const response = await fetch(endpoint, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${config.apiKey}`,
-      },
+      headers,
       body: JSON.stringify(body),
       signal: controller.signal,
+    })
+
+    const ttfbMs = Math.round(performance.now() - requestStartTs)
+
+    // 🔍 Log Node 3: Post-fetch
+    logger.debug('[llmClient] chat() 收到响应', {
+      preset: presetId,
+      statusCode: response.status,
+      ok: response.ok,
+      ttfbMs,
+      contentType: response.headers?.get?.('content-type') ?? 'unknown',
     })
 
     // P0-03: 非 ok 响应时保护 response.json() 解析
     if (!response.ok) {
       const message = await parseErrorMessageFromResponse(response)
+      // 🔍 Log Node 4a: HTTP error
+      logger.error('[llmClient] chat() HTTP 错误响应', {
+        preset: presetId,
+        statusCode: response.status,
+        ttfbMs,
+        errorMessage: message,
+      })
       throw new LlmApiError(`LLM 请求失败: ${message}`, response.status)
     }
 
     const raw = (await response.json()) as RawResponse
-    return parseResponse(raw, structured)
+    const result = parseResponse(raw, structured)
+
+    const totalMs = Math.round(performance.now() - requestStartTs)
+    logger.debug('[llmClient] chat() 解析成功', {
+      preset: presetId,
+      responseModel: result.model,
+      usage: result.usage ? {
+        promptTokens: result.usage.promptTokens,
+        completionTokens: result.usage.completionTokens,
+        totalTokens: result.usage.totalTokens,
+      } : null,
+      contentLength: result.content.length,
+      ttfbMs,
+      totalMs,
+      responseContent: result.content.slice(0, 300),
+    })
+
+    return result
   } catch (err) {
+    const elapsedMs = Math.round(performance.now() - requestStartTs)
+    // 🔍 Log Node 4b: Error path
+    logger.error('[llmClient] chat() 请求异常', {
+      preset: presetId,
+      model: config.model,
+      endpoint,
+      elapsedMs,
+      errorName: err instanceof Error ? err.name : 'Unknown',
+      errorMessage: err instanceof Error ? err.message : String(err),
+      isAbort: err instanceof DOMException && err.name === 'AbortError',
+      statusCode: err instanceof LlmApiError ? err.statusCode : undefined,
+    })
+
     if (err instanceof LlmApiError) {
       throw err
     }
@@ -281,7 +414,7 @@ function parseErrorMessageFromResponse(response: Response): Promise<string> {
     .catch(() => {
       logger.warn('[llmClient] LLM 错误响应非 JSON 格式', {
         status: response.status,
-        contentType: response.headers.get('content-type'),
+        contentType: response.headers?.get?.('content-type'),
       })
       return `HTTP ${response.status} ${response.statusText}`.trim()
     })
@@ -368,7 +501,23 @@ export async function streamingChat(
   }
   assertConfig(config)
 
-  const endpoint = `${normalizeBaseURL(config.baseURL)}/v1/chat/completions`
+  const presetId = inferPresetId(config.baseURL)
+  const { endpoint, headers } = buildRequestComponents(config.baseURL, config.apiKey, presetId)
+
+  // 🔍 Log Node 1: Config resolution
+  logger.debug('[llmClient] streamingChat() 配置解析完成', {
+    preset: presetId,
+    apiStyle: resolveApiStyle(presetId),
+    baseURL: config.baseURL,
+    model: config.model,
+    endpoint,
+    messageCount: messages.length,
+    hasApiKey: !!config.apiKey,
+    apiKeyPreview: maskApiKey(config.apiKey),
+    temperature: config.temperature ?? 0.2,
+    maxTokens: config.maxTokens ?? 'unset',
+    timeout: config.timeout ?? 'unset',
+  })
 
   const body: Record<string, unknown> = {
     model: config.model,
@@ -394,21 +543,49 @@ export async function streamingChat(
   resetIdleTimer()
 
   let reader: ReadableStreamDefaultReader<Uint8Array> | null = null
+  let requestStartTs = 0
 
   try {
+    // 🔍 Log Node 2: Pre-fetch
+    requestStartTs = performance.now()
+    logger.debug('[llmClient] streamingChat() 发送请求', {
+      preset: presetId,
+      apiStyle: resolveApiStyle(presetId),
+      method: 'POST',
+      endpoint,
+      stream: true,
+      bodyKeys: Object.keys(body),
+      requestBody: JSON.stringify(body).slice(0, 500),
+    })
+
     const response = await fetch(endpoint, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${config.apiKey}`,
-      },
+      headers,
       body: JSON.stringify(body),
       signal: controller.signal,
+    })
+
+    const ttfbMs = Math.round(performance.now() - requestStartTs)
+
+    // 🔍 Log Node 3: Post-fetch
+    logger.debug('[llmClient] streamingChat() 收到响应头', {
+      preset: presetId,
+      statusCode: response.status,
+      ok: response.ok,
+      ttfbMs,
+      contentType: response.headers?.get?.('content-type') ?? 'unknown',
     })
 
     // P0-03: 非 ok 响应时保护 response.json() 解析
     if (!response.ok) {
       const message = await parseErrorMessageFromResponse(response)
+      // 🔍 Log Node 4a: HTTP error
+      logger.error('[llmClient] streamingChat() HTTP 错误响应', {
+        preset: presetId,
+        statusCode: response.status,
+        ttfbMs,
+        errorMessage: message,
+      })
       throw new LlmApiError(`LLM 请求失败: ${message}`, response.status)
     }
 
@@ -419,9 +596,38 @@ export async function streamingChat(
 
     const decoder = new TextDecoder()
     const state = { isFinished: false }
+    const streamStartTs = performance.now()
+
+    logger.debug('[llmClient] streamingChat() 开始接收流数据', {
+      preset: presetId,
+      ttfbMs,
+    })
 
     await pumpStream(reader, decoder, callback, state, resetIdleTimer)
+
+    const streamDrainMs = Math.round(performance.now() - streamStartTs)
+    const totalMs = Math.round(performance.now() - requestStartTs)
+    logger.debug('[llmClient] streamingChat() 流传输完成', {
+      preset: presetId,
+      ttfbMs,
+      streamDrainMs,
+      totalMs,
+      isFinished: state.isFinished,
+    })
   } catch (err) {
+    const elapsedMs = Math.round(performance.now() - requestStartTs)
+    // 🔍 Log Node 4b: Error path
+    logger.error('[llmClient] streamingChat() 请求异常', {
+      preset: presetId,
+      model: config.model,
+      endpoint,
+      elapsedMs,
+      errorName: err instanceof Error ? err.name : 'Unknown',
+      errorMessage: err instanceof Error ? err.message : String(err),
+      isAbort: err instanceof DOMException && err.name === 'AbortError',
+      statusCode: err instanceof LlmApiError ? err.statusCode : undefined,
+    })
+
     // P0-02: 识别 AbortError（总超时或空闲超时）
     if (err instanceof DOMException && err.name === 'AbortError') {
       throw new LlmApiError('LLM 流式请求超时或被中止')

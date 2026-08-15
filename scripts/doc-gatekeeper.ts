@@ -14,7 +14,7 @@
  *
  * 任一检查失败则非零退出（阻断门禁）。
  *
- * @see docs/meta/doc-auto-update-kanban.md
+ * @see 原文档（doc-auto-update-kanban）已归档至 archive/historical-2026-08-16/batch7/
  * @see scripts/docs-tool/doc-version-check.ts
  * @see scripts/docs-tool/doc-cross-ref-sync.ts
  * @see scripts/docs-tool/doc-update-trigger.ts

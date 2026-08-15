@@ -265,7 +265,7 @@ export class HNSWIndex {
       for (const n of selected) {
         const neighborNode = this.nodes.get(n.id)
         if (!neighborNode) continue
-        if (!neighborNode.neighbors[layer]) neighborNode.neighbors[layer] = []
+        neighborNode.neighbors[layer] ??= []
         neighborNode.neighbors[layer]!.push(id)
         if (neighborNode.neighbors[layer]!.length > this.M * 2) {
           neighborNode.neighbors[layer] = this.shrinkConnections(neighborNode, layer, this.M)

@@ -61,7 +61,7 @@ export default function GenericAgentDetail({ agentId }: AgentDetailComponentProp
             <Icon className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">{displayName}</h1>
+            <h1 className="text-h1 font-bold tracking-tight">{displayName}</h1>
             <p className="text-muted-foreground">{description}</p>
           </div>
         </div>
@@ -80,7 +80,7 @@ export default function GenericAgentDetail({ agentId }: AgentDetailComponentProp
               <Clock className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-2xl font-bold">—</p>
+              <p className="text-h1 font-bold">—</p>
               <p className="text-sm text-muted-foreground">默认超时</p>
             </div>
           </CardContent>
@@ -91,7 +91,7 @@ export default function GenericAgentDetail({ agentId }: AgentDetailComponentProp
               <Zap className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-2xl font-bold">—</p>
+              <p className="text-h1 font-bold">—</p>
               <p className="text-sm text-muted-foreground">最大并发</p>
             </div>
           </CardContent>

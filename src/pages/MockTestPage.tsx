@@ -67,7 +67,7 @@ export default function MockTestPage() {
 
       {/* 1. Slider 组件 */}
       <section className={`bg-card rounded-xl p-6 border-border`}>
-        <h2 className={`text-xl font-semibold text-primary mb-4 flex items-center gap-2`}>
+        <h2 className={`text-h2 font-semibold text-primary mb-4 flex items-center gap-2`}>
           <span>🎚️</span> Slider 滑动条组件
         </h2>
 
@@ -89,7 +89,7 @@ export default function MockTestPage() {
           />
 
           <div className="flex items-center gap-4">
-            <div className={`bg-muted px-6 py-3 rounded-lg text-2xl font-bold text-success`}>
+            <div className={`bg-muted px-6 py-3 rounded-lg text-h1 font-bold text-success`}>
               {sliderVal}
             </div>
             <span className="text-muted-foreground">← 当前 Slider 值</span>
@@ -113,7 +113,7 @@ export default function MockTestPage() {
 
       {/* 2. Sheet 侧边抽屉 */}
       <section className={`bg-card rounded-xl p-6 border-border`}>
-        <h2 className={`text-xl font-semibold text-primary mb-4 flex items-center gap-2`}>
+        <h2 className={`text-h2 font-semibold text-primary mb-4 flex items-center gap-2`}>
           <span>📋</span> Sheet 侧边抽屉组件
         </h2>
 
@@ -159,7 +159,7 @@ export default function MockTestPage() {
 
       {/* 3. Toggle 开关 */}
       <section className={`bg-card rounded-xl p-6 border-border`}>
-        <h2 className={`text-xl font-semibold text-primary mb-4 flex items-center gap-2`}>
+        <h2 className={`text-h2 font-semibold text-primary mb-4 flex items-center gap-2`}>
           <span>🔘</span> Toggle 开关组件
         </h2>
 
@@ -191,21 +191,21 @@ export default function MockTestPage() {
 
       {/* 4. Engine Mock 状态 */}
       <section className={`bg-card rounded-xl p-6 border-border`}>
-        <h2 className={`text-xl font-semibold text-primary mb-4 flex items-center gap-2`}>
+        <h2 className={`text-h2 font-semibold text-primary mb-4 flex items-center gap-2`}>
           <span>⚙️</span> Engine 模块状态（Mock）
         </h2>
 
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div className={`bg-muted rounded-lg p-4 text-center`}>
-            <div className={`text-2xl font-bold text-success`}>{started ? '运行中' : '已停止'}</div>
+            <div className={`text-h1 font-bold text-success`}>{started ? '运行中' : '已停止'}</div>
             <div className={`text-xs text-muted-foreground mt-1`}>Engine 状态</div>
           </div>
           <div className={`bg-muted rounded-lg p-4 text-center`}>
-            <div className={`text-2xl font-bold text-info`}>{channels}</div>
+            <div className={`text-h1 font-bold text-info`}>{channels}</div>
             <div className={`text-xs text-muted-foreground mt-1`}>DataFlow 通道</div>
           </div>
           <div className={`bg-muted rounded-lg p-4 text-center`}>
-            <div className={`text-2xl font-bold text-warning`}>{agents}</div>
+            <div className={`text-h1 font-bold text-warning`}>{agents}</div>
             <div className={`text-xs text-muted-foreground mt-1`}>Agent 实例</div>
           </div>
         </div>
@@ -220,7 +220,7 @@ export default function MockTestPage() {
 
       {/* 5. 事件日志 */}
       <section className={`bg-card rounded-xl p-6 border-border`}>
-        <h2 className={`text-xl font-semibold text-primary mb-4 flex items-center gap-2`}>
+        <h2 className={`text-h2 font-semibold text-primary mb-4 flex items-center gap-2`}>
           <span>📝</span> 实时事件日志
         </h2>
         <div className={`bg-background rounded-lg p-4 h-48 overflow-y-auto font-mono text-sm space-y-1`}>

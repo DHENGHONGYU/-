@@ -378,7 +378,7 @@ export const useSectorAnalysisStore = create<SectorAnalysisState>((set, get) => 
 |------|------|------|
 | 新增 Store | `./how-to-add-store.md` | Service 的上游消费方 |
 | 新增 Widget | `./how-to-add-widget.md` | Service 的间接消费方 |
-| DataBridge 规范 | `../../AGENTS.md` §六 | L4 应用层调用约束 |
+| DataBridge 规范 | `../../../AGENTS.md` §六 | L4 应用层调用约束 |
 | ACL 配置 | `src/config/dbConfig.ts` | 权限矩阵 |
 | Envelope 定义 | `src/core/envelope.ts` | 信封工厂 |
 

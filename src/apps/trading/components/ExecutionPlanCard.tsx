@@ -108,7 +108,7 @@ export function ExecutionPlanCard({
         />
 
         {/* 详情区 */}
-        <div className="grid grid-cols-3 gap-2 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
           <div className="rounded-md border p-2">
             <p className="text-muted-foreground">数量 / 仓位</p>
             <p className="font-medium">

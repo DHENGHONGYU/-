@@ -530,7 +530,7 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
       const raw = result.data
       const loadedConfig: CollectionConfig = {
         version: typeof raw.version === 'string' ? raw.version : '1.0.0',
-        activeTemplate: (raw.activeTemplate as StrategyTemplateId) ?? 'value',
+        activeTemplate: typeof raw.activeTemplate === 'string' ? (raw.activeTemplate as StrategyTemplateId) : 'value',
         dimensions: Array.isArray(raw.dimensions)
           ? upgradeDimensionsToPipeline(raw.dimensions as DimensionPipelineConfig[])
           : createPipelineDimensions(),
@@ -624,7 +624,7 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
 
       if (failures.length > 0) {
         const errMsg = failures
-          .map((f) => (f).reason)
+          .map((f) => (f.reason instanceof Error ? f.reason.message : String(f.reason)))
           .join('; ')
         logger.error('[SevenDimConfigStore] 并发采集部分失败', { failures: failures.length, errors: errMsg })
       } else {

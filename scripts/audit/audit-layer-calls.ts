@@ -543,7 +543,7 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
 
     // v2.0 规则 6：lib 层禁止依赖上层（services/store/pages/components）
     // P1-12 v3.6 豁免：src/lib/fetcher/kline.ts 为显式防腐层（页面 Hook 通过它引用 services/fetcher/fetcherClient.collectKline），
-    // 详见文件头注释 + docs/reports/governance/mcp-direct-service-import-debt-fix-plan-2026-08-12.md B1。
+    // 详见文件头注释（原治理报告已归档至 archive/historical-2026-08-16/batch6/）。
     if (rel.startsWith('src/lib/')) {
       const libUpperMatch = raw?.match(LIB_IMPORT_UPPER_LAYER)
       if (

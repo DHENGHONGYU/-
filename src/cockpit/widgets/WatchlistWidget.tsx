@@ -50,7 +50,7 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
       emptyTitle="暂无自选标的"
       emptyDescription="当前观察池为空，添加股票后将自动展示行情"
       skeleton={
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="space-y-2">
               <Skeleton variant="text" className="bg-muted" />
@@ -63,7 +63,7 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
         </div>
       }
     >
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {watchlist.map((stock: WatchlistData) => (
           <div key={stock.code} className="space-y-1">
             <div className="flex items-center gap-2">

@@ -283,6 +283,30 @@ function relative(filePath: string): string {
   return path.relative(ROOT, filePath).replace(/\\/g, '/')
 }
 
+/**
+ * 启发式判断 .ts 文件是否含有 React 组件特征（用于排除 drawing/engine.ts 这类纯类/工具文件）。
+ * 保守策略：满足任意一个即视为「可能是组件」；不满足则判为非组件跳过（防误报）。
+ *  - 导入 'react'（import/export ... from 'react'）
+ *  - 明确的 JSX 返回（`return <Xxx` 或 箭头 `=> <Xxx`）
+ *  - 类组件继承（React.Component / PureComponent）或 createElement 调用
+ * 读失败或超 256KB 默认按「可能是组件」处理（宁枉勿纵，避免真实组件被漏扫）。
+ */
+function hasReactComponentSignatures(filePath: string): boolean {
+  try {
+    const stat = fs.statSync(filePath)
+    if (stat.size > 256 * 1024) return true
+    const content = fs.readFileSync(filePath, 'utf8')
+    return (
+      /from\s+['"]react['"]/.test(content) ||
+      /return\s*</m.test(content) ||
+      /=>\s*</m.test(content) ||
+      /React\.(?:Component|PureComponent|createElement)/.test(content)
+    )
+  } catch {
+    return true
+  }
+}
+
 // ============================================================
 // 正向检查：注册表条目 → 文件是否存在
 // ============================================================
@@ -386,6 +410,10 @@ function checkUnregisteredComponents(registeredPaths: Set<string>): string[] {
             !EXCLUDE_FILES.has(entry.name))
 
         if (isComponent) {
+          // .ts 文件追加 React 特征门：防止 drawing/engine.ts 这类纯类/纯工具/纯常量文件误报为组件
+          if (entry.name.endsWith('.ts') && !hasReactComponentSignatures(full)) {
+            continue
+          }
           allComponentFiles.push(full)
         }
       }

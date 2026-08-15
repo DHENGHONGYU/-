@@ -50,6 +50,7 @@ export interface DualFactorEvaluationPanelProps {
 }
 
 /** 行业评分 → 评级 */
+// eslint-disable-next-line react-refresh/only-export-components
 export function scoreToIndustryRating(
   score: number,
   strongThreshold = DEFAULT_CAPITAL_ALLOCATION_CONFIG.dualFactorWeights.industryStrongThreshold,
@@ -61,6 +62,7 @@ export function scoreToIndustryRating(
 }
 
 /** 双因子共振规则 → 操作建议 */
+// eslint-disable-next-line react-refresh/only-export-components
 export function evaluateDualFactor(
   technicalSignal: TechnicalSignal,
   industryScore: number,

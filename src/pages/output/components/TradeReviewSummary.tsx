@@ -64,7 +64,7 @@ function MetricCell({
       )}
       <p className="text-xs text-muted-foreground">{label}</p>
       <div className="mt-1 flex items-baseline gap-1.5">
-        <span className="text-2xl font-semibold tabular-nums tracking-tight">
+        <span className="text-h1 font-semibold tabular-nums tracking-tight">
           {loading === true ? '—' : value}
         </span>
         {suffix && !loading && (

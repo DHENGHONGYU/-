@@ -190,11 +190,11 @@ change_log:
 | **覆盖率报告** | `npm run test:ci` | 14 天 | `coverage/` | 否（.gitignore） |
 | **视觉回归基线** | `npm run test:e2e:visual` | 永久 | `e2e/*-snapshots/` | 是 |
 | **变更日志** | 手动维护 | 永久 | `CHANGELOG.md`（根级） | 是 |
-| **Code Graph** | `npm run build:ai-memory` | 7 天 | `docs/reports/code-graph/` | 是 |
-| **系统巡检报告** | CI `system-check-loop.yml` | 7 天 | `docs/reports/system-check/` | 是 |
-| **依赖分析报告** | `npm run audit:dependencies` | 30 天 | `docs/reports/dependency-analysis.*` | 是 |
-| **API 提取报告** | `npm run api:extract` | 7 天 | `docs/reports/api/` | 是 |
-| **预审查报告** | `npm run pre-review` | 7 天 | `docs/reports/pre-review/` | 是 |
+| **Code Graph** | `npm run build:ai-memory` | 7 天 | `docs/reports/code-graph/`（待建） | 是 |
+| **系统巡检报告** | CI `system-check-loop.yml` | 7 天 | `docs/reports/system-check/`（待建） | 是 |
+| **依赖分析报告** | `npm run audit:dependencies` | 30 天 | `docs/reports/` | 是 |
+| **API 提取报告** | `npm run api:extract` | 7 天 | `docs/reports/` | 是 |
+| **预审查报告** | `npm run pre-review` | 7 天 | `docs/reports/` | 是 |
 
 ### 4.2 保留期规则
 
@@ -205,7 +205,7 @@ change_log:
 7 天:    系统巡检报告, Code Graph, API 提取, 预审查
 ```
 
-> **清理机制**：由 `./cleanup-schedule.md` 定义自动化清理脚本，定期扫描并删除过期产物。
+> **清理机制**：清理脚本待建，定期扫描并删除过期产物。
 
 ---
 
@@ -297,8 +297,8 @@ draft → review → active → deprecated → archived → purged
 | 文档元数据标准 | `docs/meta/document-metadata-standard.md` | frontmatter 字段规范 |
 | doc_id 注册表 | `docs/meta/doc-id-registry.md` | 所有 doc_id 登记 |
 | 标签分类体系 | `docs/meta/tag-taxonomy.md` | tags 字段受控词表 |
-| 清理周期表 | `docs/meta/cleanup-schedule.md` | 自动产物保留期与清理脚本 |
-| 文档体系体检 | `docs/meta/文档体系体检报告-v9.md` | 文档体系健康度评估 |
+| 清理周期表 | `docs/meta/cleanup-schedule.md`（待建） | 自动产物保留期与清理脚本 |
+| 文档体系体检 | `docs/meta/文档体系体检报告-v9.md`（待建） | 文档体系健康度评估 |
 | 变更日志 | `CHANGELOG.md`（根级） | 版本变更、质量指标 |
 | 代码审查标准 | `docs/guides/how-to/code-review-guide.md` | PR 审查清单 |
 | 技术债管理 | `docs/explanation/design/tech-debt.md` | 技术债登记与清理计划 |

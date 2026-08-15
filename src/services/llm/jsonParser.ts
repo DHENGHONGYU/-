@@ -135,7 +135,7 @@ function relaxJson(src: string): string {
   // 去掉 // 单行注释（不在字符串中），再处理尾随逗号 + 单引号键值
   const withoutComments = stripLineComments(src)
   return withoutComments
-    .replace(/'([^'\\]*(?:\\.[^'\\]*)*)'/g, (_m, body) => `"${body.replace(/"/g, '\\"')}"`)   // 单引号 → 双引号
+    .replace(/'([^'\\]*(?:\\.[^'\\]*)*)'/g, (_m: string, body: string) => `"${body.replace(/"/g, '\\"')}"`)   // 单引号 → 双引号
     .replace(/([{,]\s*)([A-Za-z_$][\w$]*)\s*:/g, '$1"$2":')                                   // 裸键加双引号
     .replace(/,(\s*[}\]])/g, '$1')                                                             // 去尾随逗号
 }

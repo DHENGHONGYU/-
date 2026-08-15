@@ -253,7 +253,7 @@ export class V6ScoreTaskScheduler {
     }
 
     const start = performance.now()
-    const results: (CompositeScore | null)[] = new Array(inputs.length).fill(null)
+    const results: (CompositeScore | null)[] = new Array<CompositeScore | null>(inputs.length).fill(null)
 
     // 先提交所有任务，保持索引顺序
     const promises = inputs.map((input, idx) =>
@@ -308,9 +308,7 @@ let globalScheduler: V6ScoreTaskScheduler | null = null
  * @returns V6ScoreTaskScheduler
  */
 export function getGlobalScheduler(options?: TaskSchedulerOptions): V6ScoreTaskScheduler {
-  if (!globalScheduler) {
-    globalScheduler = new V6ScoreTaskScheduler(options)
-  }
+  globalScheduler ??= new V6ScoreTaskScheduler(options)
   return globalScheduler
 }
 

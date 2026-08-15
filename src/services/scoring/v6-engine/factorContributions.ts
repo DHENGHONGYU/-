@@ -31,7 +31,16 @@ function isValidScore(value: unknown): value is number {
  */
 function invalidScoreReason(layerId: string, score: unknown): string {
   if (score == null) return `层 ${layerId} 缺失 (${score === null ? 'null' : 'undefined'})`
-  if (typeof score !== 'number') return `层 ${layerId} score 类型非法 (${typeof score} = ${String(score)})`
+  if (typeof score !== 'number') {
+    let scoreStr: string
+    if (typeof score === 'object' && score !== null) {
+      scoreStr = JSON.stringify(score)
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-base-to-string
+      scoreStr = String(score)
+    }
+    return `层 ${layerId} score 类型非法 (${typeof score} = ${scoreStr})`
+  }
   if (Number.isNaN(score)) return `层 ${layerId} score 为 NaN`
   if (score === Infinity) return `层 ${layerId} score 为 +Infinity`
   if (score === -Infinity) return `层 ${layerId} score 为 -Infinity`

@@ -175,19 +175,19 @@ export default function StressOverviewPage(): React.JSX.Element {
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>总耗时</CardDescription>
-              <CardTitle className="text-2xl">{fmtMs(latest.summary.totalDurationMs)}</CardTitle>
+              <CardTitle className="text-h1">{fmtMs(latest.summary.totalDurationMs)}</CardTitle>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>P95 耗时</CardDescription>
-              <CardTitle className="text-2xl">{fmtMs(latest.summary.p95Ms)}</CardTitle>
+              <CardTitle className="text-h1">{fmtMs(latest.summary.p95Ms)}</CardTitle>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>通过率</CardDescription>
-              <CardTitle className="text-2xl" style={{ color: rateColor(successRate(latest)) }}>
+              <CardTitle className="text-h1" style={{ color: rateColor(successRate(latest)) }}>
                 {Math.round(successRate(latest) * 100)}%
               </CardTitle>
             </CardHeader>
@@ -195,7 +195,7 @@ export default function StressOverviewPage(): React.JSX.Element {
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>V6 平均耗时</CardDescription>
-              <CardTitle className="text-2xl">{fmtMs(latest.summary.avgV6ScoreMs)}</CardTitle>
+              <CardTitle className="text-h1">{fmtMs(latest.summary.avgV6ScoreMs)}</CardTitle>
             </CardHeader>
           </Card>
         </div>

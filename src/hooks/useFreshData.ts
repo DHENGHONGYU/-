@@ -10,7 +10,7 @@
  * 纯 UI 层 Hook，不改变现有 Store 接口。
  *
  * @see src/core/refreshCoordinator.ts -- 跨 Store 刷新协调
- * @see docs/reports/retrospectives/freshness-alerts.md -- 数据新鲜度告警策略
+ * @see docs/archive/historical-2026-08-16/batch8/freshness-alerts.md -- 数据新鲜度告警策略（已归档）
   * @doc [V9-DOC-PROJ-177, V9-DOC-PROJ-239]
 */
 
@@ -42,7 +42,7 @@ export interface UseFreshDataResult {
   /** 距上次更新的秒数 */
   secondsSinceUpdate: number
   /** 强制立即刷新 */
-  forceRefresh: () => void
+  forceRefresh: () => Promise<void>
 }
 
 // ============================================================
@@ -132,16 +132,20 @@ export function useFreshData(options: UseFreshDataOptions): UseFreshDataResult {
   const secondsSinceUpdate = lastUpdated > 0 ? Math.floor((now - lastUpdated) / 1000) : 0
 
   // 强制刷新
-  const forceRefresh = useCallback(() => {
+  const forceRefresh = useCallback(async (): Promise<void> => {
     if (isRefreshingRef.current) {
       logger.debug(`[useFreshData:${label}] forceRefresh skipped: already refreshing`)
       return
     }
     isRefreshingRef.current = true
     logger.info(`[useFreshData:${label}] forceRefresh triggered`)
-    refresh().catch(() => {}).finally(() => {
+    try {
+      await refresh()
+    } catch {
+      // 忽略刷新失败，仅复位 in-flight 标记
+    } finally {
       isRefreshingRef.current = false
-    })
+    }
   }, [refresh, label])
 
   // 自动刷新：检测到过期时自动触发一次

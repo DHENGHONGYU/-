@@ -69,6 +69,8 @@ export {
 
 export { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './Table'
 
+export { Currency } from './Currency'
+export { Percent } from './Percent'
 export { StockPriceChangeBadge } from './StockPriceChangeBadge'
 
 export {

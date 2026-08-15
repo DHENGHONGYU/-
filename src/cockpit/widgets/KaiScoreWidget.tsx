@@ -96,7 +96,7 @@ export default function KaiScoreWidget({ config, data }: KaiScoreWidgetProps): R
                   <span className="text-xs">{metric.name}</span>
                 </div>
                 <div className="flex items-end gap-2">
-                  <span className="text-2xl font-bold" style={{ color: level.color }}>
+                  <span className="text-h1 font-bold" style={{ color: level.color }}>
                     {metric.value}
                   </span>
                   <Badge variant="outline" className="text-xs" style={{ borderColor: level.color, color: level.color }}>

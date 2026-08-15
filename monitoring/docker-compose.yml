@@ -1,56 +1,99 @@
-# Chip-Flow Intercept Dashboard — Local Monitoring Stack
+# V9 Data Collector Monitoring Stack
 #
 # Services:
-#   - Prometheus (port 9090): scrapes node-exporter textfile metrics
-#   - Grafana (port 3000): visualizes chip-flow intercept metrics
-#   - Node Exporter (port 9100): exposes .prom textfile gauges
+#   - Data Collector (port 8000): Python FastAPI with /metrics endpoint
+#   - Prometheus (port 9090): Scrapes cache metrics
+#   - Grafana (port 3000): Visualizes cache performance dashboards
+#   - Node Exporter (port 9100): System metrics
 #
 # Usage:
 #   docker compose up -d
-#   # then run import-dashboard.ps1 to import the Grafana dashboard
+#   curl http://localhost:8000/metrics  # Check Prometheus metrics
+#   open http://localhost:3000           # View Grafana dashboards
 #
+# Grafana Default Login: admin / admin
+
 services:
+  # V9 Data Collector
+  data-collector:
+    build:
+      context: ../python/data_service
+      dockerfile: Dockerfile
+    container_name: v9-data-collector
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../outputs:/app/outputs
+    environment:
+      - LOG_LEVEL=INFO
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3).read()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - monitoring-net
+
+  # Prometheus
   prometheus:
     image: prom/prometheus:v3.2.1
-    container_name: chip-flow-prometheus
+    container_name: v9-prometheus
     ports:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=30d'
+      - '--storage.tsdb.retention.size=5GB'
     restart: unless-stopped
+    depends_on:
+      - data-collector
     networks:
-      - chip-flow-net
+      - monitoring-net
 
+  # Grafana
   grafana:
     image: grafana/grafana-oss:latest
-    container_name: chip-flow-grafana
+    container_name: v9-grafana
     ports:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_USERS_ALLOW_SIGN_UP=false
     volumes:
-      - ./provisioning:/etc/grafana/provisioning
-      - ../outputs:/var/lib/grafana/dashboards:ro
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
     restart: unless-stopped
     depends_on:
       - prometheus
     networks:
-      - chip-flow-net
+      - monitoring-net
 
+  # Node Exporter
   node-exporter:
     image: prom/node-exporter:v1.8.2
-    container_name: chip-flow-node-exporter
+    container_name: v9-node-exporter
     ports:
       - "9100:9100"
     command:
-      - --collector.textfile.directory=/etc/node-exporter/textfile
+      - '--collector.textfile.directory=/etc/node-exporter/textfile'
     volumes:
       - ./textfile:/etc/node-exporter/textfile:ro
     restart: unless-stopped
     networks:
-      - chip-flow-net
+      - monitoring-net
 
 networks:
-  chip-flow-net:
+  monitoring-net:
     driver: bridge
+
+volumes:
+  prometheus-data:
+    driver: local

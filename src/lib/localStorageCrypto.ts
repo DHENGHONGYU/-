@@ -97,7 +97,7 @@ export function generateIv(): Uint8Array<ArrayBuffer> {
 /** ArrayBuffer → Base64 字符串 */
 export function arrayBufferToBase64(buffer: ArrayBuffer | Uint8Array): string {
   const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer)
-  const parts: string[] = new Array(bytes.byteLength)
+  const parts: string[] = new Array<string>(bytes.byteLength)
   for (let i = 0; i < bytes.byteLength; i++) {
     parts[i] = String.fromCharCode(bytes[i]!)
   }

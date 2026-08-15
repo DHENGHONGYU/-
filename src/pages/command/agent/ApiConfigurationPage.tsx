@@ -323,7 +323,7 @@ const ApiConfigurationPage: React.FC = () => {
                 />
 
                 {/* 操作按钮 */}
-                <Button variant="ghost" size="sm" onClick={() => handleTestConnection(api)} title="测试连接">
+                <Button variant="ghost" size="sm" onClick={() => void handleTestConnection(api)} title="测试连接">
                   <LinkIcon className="w-5 h-5" />
                 </Button>
 

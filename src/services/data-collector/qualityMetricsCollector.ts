@@ -12,7 +12,8 @@
 import { getLogger } from '@/lib/logger'
 import type { QuoteDataSourceId } from '@/types/modules/collection.types'
 
-type DataSource = QuoteDataSourceId
+/** 采集质量指标覆盖的源：报价链源 + MCP 多维源（westock 通过 marketdata:westock 接入，见 MCP 化改造方案 §5.4） */
+type DataSource = QuoteDataSourceId | 'westock' | 'tencentnews'
 
 const logger = getLogger()
 
@@ -33,7 +34,7 @@ export interface QualityMetrics {
   realSuccessRate: number
   /** 数据完整率（非空字段数/总字段数） */
   completeness: number
-  /** 各数据源使用次数 */
+  /** 各数据源使用次数（报价链源 + MCP 多维源 westock） */
   sourceCounts: Record<DataSource, number>
   /** 降级次数 */
   fallbackCount: number
@@ -75,7 +76,7 @@ class QualityMetricsCollector {
       mockCollects: 0,
       mockSuccesses: 0,
       completeness: 0,
-      sourceCounts: { tushare: 0, tencent: 0, sina: 0, netease: 0, akshare: 0, mock: 0 },
+      sourceCounts: { tushare: 0, tencent: 0, sina: 0, netease: 0, akshare: 0, mock: 0, westock: 0, tencentnews: 0 },
       fallbackCount: 0,
       writeSuccess: 0,
       writeTotal: 0,

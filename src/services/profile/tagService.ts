@@ -102,7 +102,7 @@ export async function autoTagItem(item: ProfileItem): Promise<ProfileItem> {
   const allTags = [...topicTags, ...riskTags]
   if (allTags.length > 0) {
     void incrementTagUsage(allTags).catch((err) => {
-      logger.warn('[tagService] 更新标签使用统计失败', { error: err.message })
+      logger.warn('[tagService] 更新标签使用统计失败', { error: err instanceof Error ? err.message : String(err) })
     })
   }
 

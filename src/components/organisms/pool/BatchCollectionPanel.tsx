@@ -68,7 +68,7 @@ export function BatchCollectionPanel({
         </span>
         <div className={cn('flex-1 h-3 overflow-hidden rounded-full', isBroken ? 'bg-destructive/15' : 'bg-success/15')}>
           <div
-            className={cn('h-full rounded-full transition-all duration-700 ease-out', isBroken ? 'bg-destructive/60' : 'bg-success')}
+            className={cn('h-full rounded-full transition-[width] duration-700 ease-out', isBroken ? 'bg-destructive/60' : 'bg-success')}
             style={{ width: `${overallPercent}%` }}
           />
         </div>
@@ -115,7 +115,7 @@ export function BatchCollectionPanel({
             <div className="flex items-center gap-1.5 w-20 shrink-0 justify-end">
               <div className="h-1.5 w-12 overflow-hidden rounded-full bg-muted">
                 <div
-                  className="h-full rounded-full bg-success transition-all duration-500"
+                  className="h-full rounded-full bg-success transition-[width] duration-500"
                   style={{ width: `${d.percent}%` }}
                 />
               </div>

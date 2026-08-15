@@ -43,7 +43,7 @@ change_log:
 | 维度 | v1.0.0 状态 | v2.0.0 状态 | 变更依据 |
 |------|------------|------------|---------|
 | Widget 数量 | 26（规划降至 21） | **21（已落地）** | Phase 0 完成，vitest 350/350 通过 |
-| Category 体系 | 7 类含 system/analysis/trading/sector | **4 类：market/portfolio/ai/strategy** | 对齐 `03-architecture-standards.md` 蓝图标准 |
+| Category 体系 | 7 类含 system/analysis/trading/sector | **4 类：market/portfolio/ai/strategy** | 对齐 `../../explanation/03-architecture-standards.md` 蓝图标准 |
 | 共享逻辑 | 规划抽取 score.ts | **已落地 `src/cockpit/shared/score.ts`** | 消除 7 处重复函数 |
 | Command 结构认知 | 模糊（"五舱之一"） | **精确：22 子页面，3 分组，无 Cockpit import** | Command 模块完整探索 |
 | 重叠组件处理 | "移出 3 个 Widget 到 Command" | **修正：Command 未 import 任何 Cockpit Widget；MechanismHealthPanel 已自建并共享 Store** | 探索发现实际代码零依赖 |

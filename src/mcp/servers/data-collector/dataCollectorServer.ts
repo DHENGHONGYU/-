@@ -8,6 +8,7 @@
 import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor } from '@/types/modules/mcp.types'
 import { getLogger } from '@/lib/logger'
+import { mcpBridge } from '@/mcp/bridge/mcpBridge'
 import { listUnresolved, listBySymbol } from '@/services/data-collector/missingReportDetector'
 import { buildCollectionReport } from '@/services/data-collector/collectionReportService'
 
@@ -34,12 +35,38 @@ export class DataCollectorServer extends MCPServerBase {
           },
           required: ['symbol'],
         },
-        handler: (args) => {
+        handler: async (args) => {
           const symbol = args.symbol as string
           const days = (args.days as number) ?? 30
           logger.info('[DataCollectorServer] fetch_market_data called', { symbol, days })
-          // TODO[阻塞·#7]: MarketDataAdapter 仅有 adapt/merge，fetchMarketData 未实现；待接真实数据源（AKShare/HTTP）后补全。
-          return Promise.resolve({ content: [{ type: 'text', text: JSON.stringify({ symbol, days, data: [], note: 'fetchMarketData 尚未实现' }) }] })
+          // 技术方案 §5.4：取消 TODO 桩，改为经 MCP 调用腾讯自选股 westock_kline 实采历史行情。
+          // 注意 K 线有延迟（非实时），实时盘口仍由 Tencent/Sina 直连承担。
+          // 失败时降级返回空 data（不抛错），由调用方决定后续兜底。
+          try {
+            const result = await mcpBridge.callTool(
+              'marketdata:westock',
+              'westock_kline',
+              { codes: symbol, period: 'day', limit: days },
+              { caller: 'system' },
+            )
+            if (result.isError) {
+              logger.warn('[DataCollectorServer] fetch_market_data westock 失败，降级空数据', { text: result.content[0]?.text })
+              return {
+                content: [{ type: 'text', text: JSON.stringify({ symbol, days, data: [], source: 'westock', note: 'westock 返回错误', error: result.content[0]?.text }) }],
+              }
+            }
+            const text = result.content[0]?.text ?? '{}'
+            const data = JSON.parse((text as string) || '{}')
+            return {
+              content: [{ type: 'text', text: JSON.stringify({ symbol, days, data, source: 'westock' }) }],
+            }
+          } catch (err) {
+            const msg = err instanceof Error ? err.message : String(err)
+            logger.warn('[DataCollectorServer] fetch_market_data 异常，降级空数据', { error: msg })
+            return {
+              content: [{ type: 'text', text: JSON.stringify({ symbol, days, data: [], source: 'westock', note: 'westock 异常', error: msg }) }],
+            }
+          }
         },
       },
       {

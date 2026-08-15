@@ -25,133 +25,262 @@ date: 2026-07-17
 
 | doc_id | domain | title | path |
 |--------|--------|-------|------|
+| GOV-SCRIPT-CLEANUP-2026-08-03 | governance | script-cleanup-report | reports/governance/script-cleanup-report-2026-08-03.md |
+| V9-DOC-SOP-MERGE-v2.1.0 | project | SOP Merge v2.1.0 | reports/release-management/merge-sop-v2.1.0.md |
+| V9-ADR-010 | architecture | ADR-010: Cockpit Command Cross-Layout | specs/architecture/adr-010-cockpit-command-cross-layout.md |
+| V9-DOC-AI-014 | ai | agent-audit-report | reference/agent-audit-report.md |
+| V9-DOC-AI-017 | ai | llm-contract.md — 大模型服务接口契约 | reference/llm-contract.md |
+| V9-DOC-AI-034 | ai | llm-multimodel-guide.md — 多模型 LLM 配置与测试实战指南 | reference/llm-multimodel-guide.md |
+| V9-DOC-AI-036 | ai | "Service 集成开发指南" | reference/prompts/service-integration-guide.md |
+| V9-DOC-AI-037 | ai | "Store 集成开发指南" | reference/prompts/store-integration-guide.md |
+| V9-DOC-ARCH-005 | architecture | V10 架构白皮书与 V9 对齐报告 | reference/v10-architecture-alignment.md |
+| V9-DOC-ARCH-019 | architecture | UI 组件迁移检查清单 | reference/ui-migration-checklist.md |
+| V9-DOC-ARCH-021 | architecture | 代码复杂度专项治理规范 | reference/complexity-governance.md |
+| V9-DOC-ARCH-050 | architecture | cockpit-command-blueprint | specs/architecture/cockpit-command-blueprint.md |
+| V9-DOC-ARCH-054 | architecture | "申万宏源 3 级行业分类 — 系统设计文档" | specs/design/system-design.md |
+| V9-DOC-ARCH-055 | architecture | competitive-analysis | specs/product/competitive-analysis.md |
+| V9-DOC-ARCH-056 | architecture | data-security-and-privacy | specs/product/data-security-and-privacy.md |
+| V9-DOC-ARCH-057 | architecture | V9 目标功能清单 | specs/《V9 目标功能清单》.md |
+| V9-DOC-AUDIT-018 | audit | no-unsafe-* 审计 JSON 报告归档索引 | reports/audit/no-unsafe-audit-INDEX.md |
+| V9-DOC-AUDIT-STABILITY-001 | audit | DataBridge 系统稳定性评估报告 | audit/reports/system/databridge-stability-assessment-20260726.md |
+| V9-DOC-AUTO-06E838 | auto | "评分拍照比对功能模块 — 补充穿行测试报告" | reports/optimization/walkthrough-scoredoc-report_optimization.md |
+| V9-DOC-AUTO-67F745 | auto | 上线前全面校验报告-v2.0.0 | reports/上线前全面校验报告-v2.0.0.md |
+| V9-DOC-AUTO-727A68 | auto | buildScoreDocDiff ޸  عԤ | reports/release-management/buildscoredocdiff-rollback-plan_release-management.md |
+| V9-DOC-BACK-018 | backend | ձȶԹģ  䴩вԱ | reference/walkthrough-scoredoc-report.md |
+| V9-DOC-BACK-019 | backend | trading-contract.md — 交易业务子域接口契约 | reference/trading-contract.md |
+| V9-DOC-BACK-021 | backend | pwa-contract.md — PWA Service Worker 接口契约 | reference/pwa-contract.md |
+| V9-DOC-BACK-022 | backend | screening-contract.md — 选股/筛选子域接口契约 | reference/screening-contract.md |
+| V9-DOC-BACK-023 | backend | V9 服务子域目录（Services Catalog） | reference/services-catalog.md |
+| V9-DOC-BACK-025 | backend | ADR-008: 采用 v6-pro-cockpit "第四次工业革命稀缺核心资源" 交易策略 | reference/2026-06-24-adopt-v6-core-resource-trading-strategy.md |
+| V9-DOC-DATA-032 | data | V9 IndexedDB Store Schema 文档 | reference/v9-indexeddb-store-schema.md |
+| V9-DOC-DATA-035 | data | ADR-002: IndexedDB 替代 localStorage | reference/adr-002-indexeddb-over-localstorage.md |
+| V9-DOC-DATA-036 | data | data-collection-route-ui-audit | reference/data-collection-route-ui-audit.md |
+| V9-DOC-DATA-037 | data | ADR-002: IndexedDB 替代 localStorage | reference/2026-06-20-indexeddb-over-localstorage.md |
+| V9-DOC-DATA-039 | data | V9 数据时间关系与生命周期蓝图 | reference/v9-data-timeline.md |
+| V9-DOC-DATA-040 | data | World Bank Open Data 插件 | reference/world_bank_open_data.md |
+| V9-DOC-DATA-042 | data | ADR-003: DataBridge 替代直接 dataLayer 写入 | reference/project/2026-06-21-databridge-over-direct-datalayer.md |
+| V9-DOC-DATA-044 | data | Tushare Pro Token 配置与注册指引 | reference/tushare-token-setup.md |
+| V9-DOC-DATA-048 | data | JSDoc ĵ嵥 - Data Collector ģ | reference/changelogs/2026-07/jsdoc-update-summary-data-collector-20260712.md |
+| V9-DOC-DATA-049 | data | data_link_sequence_diagram | reference/data_link_sequence_diagram.md |
+| V9-DOC-DATA-050 | data | collection-contract.md — 数据采集子域接口契约 | reference/collection-contract.md |
+| V9-DOC-DATA-057 | data | V9 数据库数据关系与时间关系蓝图计划 | reference/2026-06-29-data-relationship-blueprint.md |
+| V9-DOC-DATA-060 | data | DEPRECATED - backtest-data-definition.md | reference/backtest-data-definition.md |
+| V9-DOC-DATA-073 | data | Store 集成指南 | reference/ai/store-integration-guide.md |
+| V9-DOC-DATA-080 | data | ADR-014: 向量搜索升级方案（HNSW + transformers.js） | reference/adr-014-vector-search-over-tfidf.md |
+| V9-DOC-DEV-001 | dev | 股票字典生成与校验 | reference/stock-dictionary-generation.md |
+| V9-DOC-FM-DOCS-REPORTS-CYQ-CHIP-DISTRIBUTION-VERIF-002 | misc | "CYQ 筹码分布数据准确性验证报告" | reports/cyq-chip-distribution-verification-2026-08-09.md |
+| V9-DOC-FM-DOCS-REPORTS-PROJECT-MANAGEMENT-P2-BJ-HK-011 | misc | "P2 阶段任务：北交所和港股筹码分布支持" | reports/project-management/p2-bj-hk-stock-support-task.md |
+| V9-DOC-FM-DOCS-REPORTS-PROJECT-MANAGEMENT-P2-DEVEL-012 | misc | "P2 阶段开发排期表：北交所和港股筹码分布支持" | reports/project-management/p2-development-schedule.md |
+| V9-DOC-FM-DOCS-REPORTS-TESTING-PHASE1-FIXED-TESTS--026 | misc | "Phase 1 修复测试文件 Mock 数据与断言逻辑指南" | reports/testing/phase1-fixed-tests-mock-guide.md |
+| V9-DOC-FM-DOCS-REPORTS-WINDOWS-DEPLOYMENT-VERIFICA-030 | misc | "临时设置（仅当前终端会话）" | reports/windows-deployment-verification-checklist.md |
+| V9-DOC-FRONT-017 | frontend | 驾驶舱 Widget 集成检查清单 | reference/widget-integration-checklist.md |
+| V9-DOC-FRONT-019 | frontend | V9 Widget 错误隔离与降级规格 | reference/widget-error-handling.md |
+| V9-DOC-PROD-002 | product | user-personas-and-scenarios | specs/product/user-personas-and-scenarios.md |
+| V9-DOC-PROD-003 | product | TODO-ADD-TITLE | specs/product/README.md |
+| V9-DOC-PROD-004 | product | TODO-ADD-TITLE | specs/requirements/README.md |
+| V9-DOC-PROD-005 | product | ADR 入口 | specs/requirements/adr/README.md |
+| V9-DOC-PROD-010 | product | 01. 愿景与目标 | specs/01-vision-and-goals.md |
+| V9-DOC-PROJ-150 | project | Plans | reference/project/plans/README.md |
+| V9-DOC-PROJ-190 | project | Yuandian Law 插件 | reference/yuandian_law.md |
+| V9-DOC-PROJ-191 | project | ȿӹŽָ | reference/踩坑规则门禁指南.md |
+| V9-DOC-PROJ-195 | project | V9 L2 状态层补齐路线图 | reference/v9-l2状态层补齐路线图.md |
+| V9-DOC-PROJ-196 | project | Yahoo Finance 插件 | reference/yahoo_finance.md |
+| V9-DOC-PROJ-201 | project | Tianyancha 插件 | reference/tianyancha.md |
+| V9-DOC-PROJ-202 | project | usecase-contract.md — 业务用例编排接口契约 | reference/useCase-contract.md |
+| V9-DOC-PROJ-206 | project | Scholar 插件 | reference/scholar.md |
+| V9-DOC-PROJ-208 | project | SEC EDGAR 插件 | reference/sec_edgar.md |
+| V9-DOC-PROJ-209 | project | 每日文档变更历史 — 2026-07-12 | reference/changelogs/2026-07/daily-doc-validation-2026-07-12.md |
+| V9-DOC-PROJ-210 | project | JSDoc 注释完整汇总报? | reference/changelogs/2026-07/jsdoc-combined-report-20260712.md |
+| V9-DOC-PROJ-213 | project | P1 批次行动清单 — 2026-07-05 | reference/changelogs/2026-07/action-list-p1.md |
+| V9-DOC-PROJ-216 | project | PR-5 构建性能优化总结 | reference/changelogs/2026-07/pr-5-build-optimization-summary.md |
+| V9-DOC-PROJ-219 | project | iFinD 插件 | reference/ifind.md |
+| V9-DOC-PROJ-220 | project | IMF 插件 | reference/imf.md |
+| V9-DOC-PROJ-221 | project | export-contract.md — 导出服务接口契约 | reference/export-contract.md |
+| V9-DOC-PROJ-225 | project | V9 编码规范（Coding Conventions） | reference/coding-conventions.md |
+| V9-DOC-PROJ-226 | project | news-contract.md — 新闻资讯子域接口契约 | reference/news-contract.md |
+| V9-DOC-PROJ-228 | project | input-contract.md — 输入处理子域接口契约 | reference/input-contract.md |
+| V9-DOC-PROJ-301 | project | 审计场景下 WorkBuddy 的 5 个真实踩坑与解法 #WorkBuddy | assets/articles/02-experience-five-pitfalls.md |
+| V9-DOC-PROJ-302 | project | 发文就绪卡 · 腾讯云开发者社区 | assets/articles/publish-ready.md |
+| V9-DOC-PROJ-313 | project | 10. 领域词汇表 | reference/10-glossary.md |
+| V9-DOC-PROJ-336 | project | 任务图模板 | reference/templates/task-graph-template.md |
+| V9-DOC-PROJ-372 | project | "directDataAPI Bug 修复说明（2026-08-09）" | lessons/directDataAPI-bugfix-2026-08-09.md |
+| V9-DOC-PROJ-373 | project | "GitHub 连接问题网络排查报告" | release-notes/NETWORK-TROUBLESHOOTING.md |
+| V9-DOC-PROJ-374 | project | 深色模式优化 Release Notes | release-notes/RELEASE-NOTES-dark-mode-optimization.md |
+| V9-DOC-PROJ-375 | project | "FinSightV9 v2.0.0-rc.2 Release Notes (Draft)" | release-notes/RELEASE-NOTES-v2.0.0-rc.2.md |
+| V9-DOC-PROJ-376 | project | "FinSightV9 v2.0.0-rc.1 Release Notes" | release-notes/RELEASE-NOTES.md |
+| V9-DOC-PROJ-377 | project | "最终 Commit Message（请确认）" | releases/COMMIT-FINAL.md |
+| V9-DOC-PROJECT-021 | misc | Batch-04 P0/P1 技术债务治理最终修复报告（缓存幻影/静音回退/Null 守卫/TS 归零） | reports/governance/batch-04-p0-governance-final-report-2026-08-15.md |
+| V9-DOC-QA-005 | qa | security-test-plan | reports/testing/security-test-plan.md |
+| V9-DOC-QA-027 | qa | 2026-07-04-ui-testing-optimization | reference/2026-07-04-ui-testing-optimization.md |
+| V9-DOC-QA-028 | qa | ai-generate-audit-fix-loop | reference/ai-generate-audit-fix-loop.md |
+| V9-DOC-QA-036 | qa | 板块个股清单页面 UI 交互验收清单 | reports/testing/sector-stocks-ui-acceptance-checklist.md |
+| V9-DOC-QA-048 | qa | 测试缓存清理修复总结 | reference/changelogs/2026-07/test-cache-fix-summary.md |
+| V9-DOC-QA-049 | qa | backtest-contract.md — 回测引擎接口契约 | reference/backtest-contract.md |
+| V9-DOC-QA-074 | qa | V9 前端应用安全质量审计报告 | reference/audit-b4-4-security.md |
+| V9-DOC-QA-110 | qa | 我用 WorkBuddy 给审计团队搭了 20 个"分身"：一个审计合伙人的 AI 工作流改造实录 #WorkBuddy | assets/articles/01-tutorial-audit-workflow.md |
+| V9-DOC-REF-904 | reference | jsdoc-convention | reference/jsdoc-convention.md |
+| V9-DOC-REF-905 | reference | 全局接口契约（API Contract） | reference/api-contract.md |
+| V9-DOC-REF-907 | reference | Agent Runtime 实现规格 | reference/agent-runtime-spec.md |
+| V9-DOC-REF-909 | reference | ai-center-data-definition | reference/ai-center-data-definition.md |
+| V9-DOC-REF-910 | reference | "AI 智能体调度中心 / 健康监控 / 诊断分析 — 数据字典" | reference/AI_CENTER_DATA_DEFINITION.md |
+| V9-DOC-REF-912 | reference | analysis-cabin-spec | reference/analysis-cabin-spec.md |
+| V9-DOC-REF-913 | reference | analysis-contract | reference/analysis-contract.md |
+| V9-DOC-REF-914 | reference | atomic-component-system | reference/atomic-component-system.md |
+| V9-DOC-REF-919 | reference | "驾驶舱重构方案总结" | reference/cockpit/cockpit-refactor-plan.md |
+| V9-DOC-REF-920 | reference | data-definition | reference/cockpit/data-definition.md |
+| V9-DOC-REF-921 | reference | "Cockpit Widget 框架数据字典" | reference/cockpit/DATA_DEFINITION.md |
+| V9-DOC-REF-923 | reference | command-cabin-spec | reference/command-cabin-spec.md |
+| V9-DOC-REF-925 | reference | completeness-profile-batch5 | reference/completeness-profile-batch5.md |
+| V9-DOC-REF-926 | reference | completeness-profile | reference/completeness-profile.md |
+| V9-DOC-REF-928 | reference | data-definition | reference/data-collection/data-definition.md |
+| V9-DOC-REF-929 | reference | "数据采集模块数据字典" | reference/data-collection/DATA_DEFINITION.md |
+| V9-DOC-REF-930 | reference | data-collection-task-list | reference/data-collection-task-list.md |
+| V9-DOC-REF-932 | reference | data-flow-spec | reference/data-flow-spec.md |
+| V9-DOC-REF-933 | reference | databridge-split-plan | reference/databridge-split-plan.md |
+| V9-DOC-REF-934 | reference | databridge端点与数据映射清单 | reference/databridge端点与数据映射清单.md |
+| V9-DOC-REF-935 | reference | dataflow-engine-spec | reference/dataflow-engine-spec.md |
+| V9-DOC-REF-938 | reference | "V9 设计令牌映射表" | reference/design-token-mapping.md |
+| V9-DOC-REF-939 | reference | design-tokens | reference/design-tokens.md |
+| V9-DOC-REF-940 | reference | execution-contract | reference/execution-contract.md |
+| V9-DOC-REF-943 | reference | "KPI 口径目录（Store → MetricCard 消费映射）" | reference/kpi-catalog.md |
+| V9-DOC-REF-945 | reference | data-definition | reference/news/data-definition.md |
+| V9-DOC-REF-946 | reference | "新闻资讯模块数据字典" | reference/news/DATA_DEFINITION.md |
+| V9-DOC-REF-949 | reference | output-cabin-spec | reference/output-cabin-spec.md |
+| V9-DOC-REF-950 | reference | portfolio-contract | reference/portfolio-contract.md |
+| V9-DOC-REF-952 | reference | pwa-offline-guide | reference/pwa-offline-guide.md |
+| V9-DOC-REF-954 | reference | risk-derived-data-definition | reference/risk-derived-data-definition.md |
+| V9-DOC-REF-955 | reference | scoring-contract | reference/scoring-contract.md |
+| V9-DOC-REF-956 | reference | seven-dim-advanced-config-implementation | reference/seven-dim-advanced-config-implementation.md |
+| V9-DOC-REF-957 | reference | seven-dim-config-data-definition | reference/seven-dim-config-data-definition.md |
+| V9-DOC-REF-958 | reference | "七维采集配置模块 — 数据字典" | reference/SEVEN_DIM_CONFIG_DATA_DEFINITION.md |
+| V9-DOC-REF-962 | reference | system-contract | reference/system-contract.md |
+| V9-DOC-REF-963 | reference | "回归测试套件模板" | reference/templates/regression-suite.md |
+| V9-DOC-REF-964 | reference | "交易持仓管理模块 API 契约文档" | reference/trade/api-contract.md |
+| V9-DOC-REF-965 | reference | "交易持仓管理模块 API 契约文档" | reference/trade/API_CONTRACT.md |
+| V9-DOC-REF-969 | reference | v6-to-v9-migration-spec | reference/v6-to-v9-migration-spec.md |
+| V9-DOC-REF-971 | reference | v9-数据血缘追踪 | reference/v9-数据血缘追踪.md |
+| V9-DOC-REF-972 | reference | "V9 IndexedDB Store Schema 文档" | reference/V9_IndexedDB_Store_Schema.md |
+| V9-DOC-REF-978 | reference | _contract-template | reference/_contract-template.md |
+| V9-DOC-REF-980 | reference | "V9 核心数据字典与类型定义（整合版）" | reference/《V9核心数据字典与类型定义（整合版）》.md |
+| V9-DOC-REF-982 | reference | 功能模块数据契约 | reference/《功能模块数据契约》.md |
+| V9-DOC-REF-984 | reference | 网页测试检索校对纳入采集方案分析 | reference/网页测试检索校对纳入采集方案分析.md |
+| V9-DOC-REF-985 | reference | 第四次工业革命稀缺核心资源 — 交易策略解析与 V9 采用方案 | reference/fourth-industrial-revolution-core-resource-strategy.md |
+| V9-DOC-REF-986 | reference | v6pro-to-v9-migration-analysis | reference/v6pro-to-v9-migration-analysis.md |
+| V9-DOC-SOP-MERGE-v2 | misc | 合并操作 SOP — Bootstrap P0 Gate 生效版 | reports/release-management/merge-sop-v2.1.0.md |
+| V9-DOC-TECH-027 | misc | no-unsafe 大盘扫描与 Batch 4/5 拆分报告（GOV-P1-01） | reports/governance/no-unsafe-inventory-2026-08-15.md |
+| V9-DOC-AI-031 | ai | Agent 应用 · 文档分类索引表 | meta/agent-app-docs-classification.md |
+| V9-DOC-AI-AGENTS-001 | ai | V9 AI Agents 索引 | meta/AGENTS.md |
+| V9-DOC-ARCH-047 | architecture | V9 Markdown 文档体系梳理与重构方案 | meta/markdown-reorg-framework.md |
+| V9-DOC-BACK-033 | backend | 如何新增 Service | guides/how-to-add-service.md |
+| V9-DOC-BACK-046 | backend | 如何配置 V6 评分引擎权重与阈值 | guides/how-to/how-to-configure-v6-scoring.md |
+| V9-DOC-DATA-030 | data | Data Flow Convergence Plan | guides/development/data-flow-convergence-plan.md |
+| V9-DOC-DATA-077 | data | 如何运行采集与评分流水线 | guides/how-to/how-to-run-scoring-pipeline.md |
+| V9-DOC-DATA-078 | data | 如何导入导出与备份 V9 数据 | guides/how-to/how-to-data-import-export.md |
+| V9-DOC-DEV-002 | dev | 颜色令牌生命周期管理指南（入-移-出） | guides/how-to/COLOR-TOKEN-GUIDE.md |
+| V9-DOC-DEV-004 | dev | "自定义 Hook 使用指南" | guides/how-to/hooks-guide.md |
+| V9-DOC-DEV-005 | dev | mcp-acl-guide | guides/how-to/mcp-acl-guide.md |
+| V9-DOC-DEV-006 | dev | MCP 生命周期管理指南（入-移-出） | guides/how-to/MCP-LIFECYCLE-GUIDE.md |
+| V9-DOC-DEV-007 | dev | "PathTrace 模块部署与配置指南" | guides/how-to/pathtrace-deployment-guide.md |
+| V9-DOC-DEV-008 | dev | "PathTrace 模块 GitHub Actions 部署与版本门控指南" | guides/how-to/pathtrace-github-actions-deploy-guide.md |
+| V9-DOC-DEV-009 | dev | visual-regression-guide | guides/how-to/visual-regression-guide.md |
+| V9-DOC-DEV-010 | dev | "V9 文件管理规范" | guides/how-to/FILE-MANAGEMENT-GUIDE.md |
+| V9-DOC-FRONT-061 | frontend | UI性能最佳实践 | guides/how-to/ui-performance-best-practices.md |
+| V9-DOC-GUIDE-012 | guides | '@typescript-eslint/no-unsafe-* 系列规则 14 种修复模式实战手册' | guides/how-to/no-unsafe-fix-patterns.md |
+| V9-DOC-GUIDE-021 | guides | 组件新增准入政策 | guides/component-admission-policy.md |
+| V9-DOC-GUIDE-022 | guides | 模块完成标准（DoD） | guides/module-completion-standard.md |
+| V9-DOC-GUIDE-023 | guides | 僵尸组件治理经验教训参考手册 | guides/lessons-learned-component-governance.md |
+| V9-DOC-GUIDE-024 | guides | 08-implementation-plan | guides/08-implementation-plan.md |
+| V9-DOC-GUIDE-025 | guides | "组件全生命周期管理与季度僵尸组件清理 SOP" | guides/component-lifecycle-sop.md |
+| V9-DOC-GUIDE-026 | guides | getting-started | guides/getting-started.md |
+| V9-DOC-GUIDE-027 | guides | "如何新增一个 Store（Zustand + withBroadcast）" | guides/how-to-add-store.md |
+| V9-DOC-GUIDE-028 | guides | "如何新增一个 Widget（WidgetShell + 事件总线）" | guides/how-to-add-widget.md |
+| V9-DOC-GUIDE-029 | guides | "V9 编码规范（Coding Conventions）" | guides/standards/coding-conventions.md |
+| V9-DOC-GUIDE-030 | guides | "组件命名规范与文档模板标准" | guides/standards/component-naming-conventions.md |
+| V9-DOC-GUIDE-031 | guides | "01 · 设计与原创思路（Design & Original Thinking）" | guides/team-handbook/01-design-philosophy.md |
+| V9-DOC-GUIDE-032 | guides | "02 · 整体架构设计思路（Overall Architecture）" | guides/team-handbook/02-architecture.md |
+| V9-DOC-GUIDE-033 | guides | "03 · UI 组件设计思路（UI Component Design）" | guides/team-handbook/03-ui-components.md |
+| V9-DOC-GUIDE-034 | guides | "04 · 模型运行思路（Model Runtime & Data Flow）" | guides/team-handbook/04-model-runtime.md |
+| V9-DOC-GUIDE-035 | guides | Widget 开发指南 | guides/widget-development-guide.md |
+| V9-DOC-GUIDE-036 | guides | "踩坑规则门禁指南" | guides/踩坑规则门禁指南.md |
+| V9-DOC-GUIDE-037 | guides | "07. 运营策略" | guides/07-operation-strategy.md |
+| V9-DOC-GUIDE-DESIGN-CODE-001 | guides | Design→Code 工作流规范 | guides/design-to-code-workflow.md |
+| V9-DOC-HOW-901 | how-to | how-to-add-widget | guides/how-to/how-to-add-widget.md |
+| V9-DOC-HOW-902 | how-to | how-to-add-store | guides/how-to/how-to-add-store.md |
+| V9-DOC-HOW-903 | how-to | how-to-add-service | guides/how-to/how-to-add-service.md |
+| V9-DOC-HOW-904 | how-to | code-review-guide | guides/how-to/code-review-guide.md |
+| V9-DOC-META-002 | meta | 无 doc_id 归档候选清单 | meta/orphan-archive-candidates.md |
+| V9-DOC-META-003 | meta | "V9 模块注册体系索引" | meta/REGISTRY_INDEX.md |
+| V9-DOC-PROD-008 | product | TODO-ADD-TITLE | guides/team-handbook/05-competitive-analysis.md |
+| V9-DOC-PROJ-001 | project | 文档标签分类体系（受控词表） | meta/tag-taxonomy.md |
+| V9-DOC-PROJ-007 | project | directory-structure-guide | meta/directory-structure-guide.md |
+| V9-DOC-PROJ-010 | project | V9 文档风格统一标准（doc-style-standard） | meta/doc-style-standard.md |
+| V9-DOC-PROJ-015 | project | 功能模块分类图示与开发者必读清单 | meta/functional-module-guide.md |
+| V9-DOC-PROJ-016 | project | V9 文档治理宪法（GOVERNANCE） | meta/GOVERNANCE.md |
+| V9-DOC-PROJ-017 | project | 文档元数据治理分阶段实施计划 | meta/metadata-governance-phased-plan.md |
+| V9-DOC-PROJ-026 | project | V9 文档元数据标准规范 | meta/document-metadata-standard.md |
+| V9-DOC-PROJ-121 | project | 团队开发操作指南 | guides/team-handbook/06-team-operation-guide.md |
+| V9-DOC-PROJ-122 | project | getting-started | guides/tutorials/getting-started.md |
+| V9-DOC-PROJ-157 | project | how-to 操作指南目录索引 | guides/how-to/README.md |
+| V9-DOC-PROJ-175 | project | TODO-ADD-TITLE | meta/README.md |
+| V9-DOC-PROJ-181 | project | code-review | guides/CODE-REVIEW.md |
+| V9-DOC-PROJ-185 | project | 文档索引已迁移 | meta/registry-index-root.md |
+| V9-DOC-PROJ-186 | project | V9 doc_id Registry | meta/doc-id-registry.md |
+| V9-DOC-PROJ-187 | project | TODO-ADD-TITLE | guides/tutorials/README.md |
+| V9-DOC-PROJ-306 | project | docs/meta/ai-index/.ai-index/README.md | meta/ai-index/.ai-index/README.md |
+| V9-DOC-PROJ-315 | project | V9 文档风格指南与命名规范 | meta/document-style-guide.md |
+| V9-DOC-PROJ-316 | project | V9 文档分类体系规范 | meta/document-classification-system.md |
+| V9-DOC-PROJ-317 | project | V9 文档整理工作流程指南 | meta/document-organization-workflow.md |
+| V9-DOC-PROJ-320 | project | V9 文档管理体系团队培训材料 | meta/documentation-team-training.md |
+| V9-DOC-PROJ-321 | project | V9 死文档审计与归档管理规范 | meta/document-archive-management.md |
+| V9-DOC-PROJ-325 | project | 触发事件 → 更新动作 一一映射权威表 | meta/doc-trigger-action-map.md |
+| V9-DOC-PROJ-349 | project | V9 常见问题排查指南 | guides/how-to/how-to-troubleshooting.md |
+| V9-DOC-QA-064 | qa | 剩余复杂度整改任务清单与计划（2026-07-12） | guides/how-to/testing/complexity-remediation-plan.md |
+| V9-DOC-QA-065 | qa | 09. 质量门禁 | guides/09-quality-gates.md |
+| V9-DOC-QA-108 | qa | 质量门禁 | guides/standards/quality-gates.md |
+| V9-DOC-QA-116 | qa | 如何使用质量审计脚本 | guides/how-to/how-to-use-audit-scripts.md |
 | V9-DOC-AI-008 | ai | ai-center-vue3-examples | explanation/ai-center-vue3-examples.md |
-| V9-DOC-AI-009 | ai | ai-memory-layer | explanation/ai-memory-layer.md |
-| V9-DOC-AI-002 | ai | ui-design-agent-execution-plan | explanation/design/ui-design-agent-execution-plan.md |
-| V9-DOC-AI-003 | ai | ui-design-agent-execution-plan | explanation/ui-design-agent-execution-plan.md |
-| V9-DOC-AI-005 | ai | adr-mcp-server-lifecycle | reference/adr-mcp-server-lifecycle.md |
 | V9-DOC-AI-006 | ai | Agent Runtime 实现规格 | reference/agent-runtime-spec.md |
 | V9-DOC-AI-010 | ai | ai-center-contract | reference/ai-center-contract.md |
-| V9-DOC-AI-011 | ai | ai-memory-layer | reference/ai-memory-layer.md |
-| V9-DOC-ARCH-001 | architecture | ADR-001: 纯前端无后端架构 | explanation/adr-001-pure-frontend-architecture.md |
-| V9-DOC-ARCH-006 | architecture | ADR-004: HashRouter 静态托管方案 | explanation/adr-004-hashrouter-static-hosting.md |
 | V9-DOC-ARCH-007 | architecture | ADR-007: 补齐筛选引擎、信号持久化与复盘引擎 | explanation/adr-007-screening-signal-persistence-review.md |
 | V9-DOC-ARCH-008 | architecture | ADR-008: 采用 V6 核心资源交易策略 | explanation/adr-008-v6-core-resource-trading-strategy.md |
 | V9-DOC-ARCH-009 | architecture | ADR-009: 引入热门板块与价值洼地双策略体系 | explanation/adr-009-dual-strategy-system.md |
 | V9-DOC-ARCH-002 | architecture | architecture | explanation/ARCHITECTURE.md |
-| V9-DOC-ARCH-003 | architecture | V10 架构白皮书与 V9 对齐报告 | explanation/v10-architecture-alignment.md |
-| V9-DOC-ARCH-004 | architecture | 03-architecture-standards | reference/03-architecture-standards.md |
 | V9-DOC-ARCH-010 | architecture | v9-system-blueprint | reference/v9-system-blueprint.md |
-| V9-DOC-BACK-003 | backend | 07-operation-strategy | explanation/design/07-operation-strategy.md |
-| V9-DOC-BACK-004 | backend | analysis-screening-module-dev-plan | explanation/design/analysis-screening-module-dev-plan.md |
-| V9-DOC-BACK-005 | backend | 交易核心因子与复盘指标导入 | explanation/design/trading-core-factors.md |
+| V9-DOC-ARCH-058 | architecture | MCP Server CLI Skill 策略 | guides/development/mcp-cli-skill-strategy.md |
+| V9-DOC-BACK-001 | backend | 05-engine-specs | explanation/05-engine-specs.md |
 | V9-DOC-BACK-006 | backend | V9 双策略规格与现有项目差异分析报告 | explanation/dual-strategy-gap-analysis.md |
 | V9-DOC-BACK-007 | backend | 因子提炼、扩容与追踪路径分析 | explanation/factor-tracking-roadmap.md |
-| V9-DOC-BACK-008 | backend | 交易核心因子与复盘指标导入 | explanation/trading-core-factors.md |
-| V9-DOC-BACK-001 | backend | 05. 引擎规格 | reference/05-engine-specs.md |
-| V9-DOC-BACK-009 | backend | 07-operation-strategy | reference/07-operation-strategy.md |
 | V9-DOC-BACK-002 | backend | DataFlow Engine 实现规格 | reference/dataflow-engine-spec.md |
 | V9-DOC-BACK-010 | backend | 第四次工业革命稀缺核心资源 — 交易策略解析与 V9 采用方案 | reference/fourth-industrial-revolution-core-resource-strategy.md |
-| V9-DOC-BACK-011 | backend | refactor-research-pool-rename-plan | reference/refactor-research-pool-rename-plan.md |
 | V9-DOC-BACK-012 | backend | Rotation Score Service 实现规格 | reference/rotation-score-spec.md |
 | V9-DOC-BACK-013 | backend | Trading 舱规格（trading-cabin-spec） | reference/trading-cabin-spec.md |
 | V9-DOC-BACK-047 | backend | 输入舱→分析舱数据调用接口契约 | reference/input-analysis-cabin-contract.md |
-| V9-DOC-DATA-002 | data | dataflow-data-definition | explanation/dataflow-data-definition.md |
 | V9-DOC-DATA-003 | data | data-layer-overview | explanation/data-layer-overview.md |
-| V9-DOC-DATA-004 | data | data-definition | explanation/design/data-definition.md |
-| V9-DOC-DATA-005 | data | data-dictionary-index | explanation/design/data-dictionary-index.md |
-| V9-DOC-DATA-006 | data | dataflow-data-definition | explanation/design/dataflow-data-definition.md |
-| V9-DOC-DATA-007 | data | V9 数据流规范 | explanation/design/data-flow-spec.md |
 | V9-DOC-DATA-008 | data | V9 双策略体系与数据流架构规格 | explanation/design/dual-strategy-dataflow-spec.md |
 | V9-DOC-DATA-009 | data | multi-factor-screening-data-definition | explanation/design/multi-factor-screening-data-definition.md |
-| V9-DOC-DATA-010 | data | news-data-definition | explanation/design/news-data-definition.md |
 | V9-DOC-DATA-011 | data | multi-factor-screening-data-definition | explanation/multi-factor-screening-data-definition.md |
-| V9-DOC-DATA-012 | data | news-data-definition | explanation/news-data-definition.md |
-| V9-DOC-DATA-013 | data | ADR-003: DataBridge 替代直接 dataLayer 写入 | reference/adr-003-databridge-over-direct-datalayer.md |
 | V9-DOC-DATA-014 | data | data-definition | reference/cockpit/data-definition.md |
 | V9-DOC-DATA-015 | data | data-collector 服务契约 | reference/data-collector-contract.md |
-| V9-DOC-DATA-016 | data | data-definition | reference/data-definition.md |
-| V9-DOC-DATA-017 | data | data-dictionary-index | reference/data-dictionary-index.md |
-| V9-DOC-DATA-018 | data | dataflow-data-definition | reference/dataflow-data-definition.md |
 | V9-DOC-DATA-019 | data | V9 数据流规范 | reference/data-flow-spec.md |
-| V9-DOC-DATA-020 | data | 数据交互协议 | reference/data-interaction-protocols.md |
 | V9-DOC-DATA-021 | data | V9 双策略体系与数据流架构规格 | reference/dual-strategy-dataflow-spec.md |
 | V9-DOC-DATA-022 | data | multi-factor-screening-data-definition | reference/multi-factor-screening-data-definition.md |
 | V9-DOC-DATA-023 | data | news-data-definition | reference/news/DATA_DEFINITION.md |
-| V9-DOC-DATA-024 | data | 股票池统一存储方案规范 | reference/unified-pool-storage-spec.md |
-| V9-DOC-FRONT-002 | frontend | ADR-005: PortalShell 深色 Kimi 经典布局 | explanation/adr-005-portalshell-dark-kimi-layout.md |
-| V9-DOC-FRONT-003 | frontend | 04. UI/UX 规范 | explanation/design/04-ui-ux-specs.md |
-| V9-DOC-FRONT-004 | frontend | 06. 路由规格 | explanation/design/06-routing-specs.md |
-| V9-DOC-FRONT-005 | frontend | ui-only-implementation-summary | explanation/design/ui-only-implementation-summary.md |
-| V9-DOC-FRONT-006 | frontend | ui-only-implementation-summary | explanation/ui-only-implementation-summary.md |
-| V9-DOC-FRONT-007 | frontend | 04. UI/UX 规范 | reference/04-ui-ux-specs.md |
-| V9-DOC-FRONT-008 | frontend | 06. 路由规格 | reference/06-routing-specs.md |
+| V9-DOC-FRONT-003 | frontend | 04-ui-ux-specs | specs/04-ui-ux-specs.md |
 | V9-DOC-FRONT-001 | frontend | ADR-006: 输入舱拆分为四子页面 | reference/adr-006-input-cabin-subpages.md |
 | V9-DOC-FRONT-009 | frontend | V9 图表组件集成规格 | reference/chart-integration.md |
-| V9-DOC-FRONT-010 | frontend | Cockpit + News 模块文档修正方案 | reference/cockpit-news-doc-fix-plan.md |
-| V9-DOC-FRONT-012 | frontend | v6-cockpit-ui-reference | reference/v6-cockpit-ui-reference.md |
-| V9-DOC-PROJ-032 | project | a-h-index | explanation/A-H-INDEX.md |
-| V9-DOC-PROJ-035 | project | b批次高价值孤儿集成状态报告-2026-07-08 | explanation/b批次高价值孤儿集成状态报告-2026-07-08.md |
-| V9-DOC-PROJ-036 | project | cabins-overview | explanation/cabins-overview.md |
-| V9-DOC-PROJ-037 | project | V9 模块完成度剖面图 — 批次 D（交易舱） | explanation/completeness-profile-batch4.md |
-| V9-DOC-PROJ-043 | project | V9 模块完成度剖面图 — 批次 D（交易舱） | explanation/design/completeness-profile-batch4.md |
-| V9-DOC-PROJ-044 | project | deprecated-doc-sync-gap-list | explanation/design/deprecated-doc-sync-gap-list.md |
-| V9-DOC-PROJ-045 | project | 代码-文档同步整体方案与执行计划 | explanation/design/doc-sync-execution-plan.md |
-| V9-DOC-PROJ-046 | project | 输入舱业务规格与实现映射 | explanation/design/input-cabin-spec.md |
-| V9-DOC-PROJ-047 | project | p4-文档去重清单与执行方案 | explanation/design/p4-文档去重清单与执行方案.md |
-| V9-DOC-PROJ-048 | project | pending-items-backlog-20260704 | explanation/design/pending-items-backlog-20260704.md |
-| V9-DOC-PROJ-049 | project | tech-debt | explanation/design/tech-debt.md |
-| V9-DOC-PROJ-052 | project | ui改善部分检索报告 | explanation/design/ui改善部分检索报告.md |
-| V9-DOC-PROJ-054 | project | v6-v9界面设计优化可行性计划 | explanation/design/v6-v9界面设计优化可行性计划.md |
-| V9-DOC-PROJ-055 | project | v9现有数据资产清单 | explanation/design/v9现有数据资产清单.md |
 | V9-DOC-PROJ-056 | project | 踩坑规则门禁指南 | explanation/design/踩坑规则门禁指南.md |
-| V9-DOC-PROJ-057 | project | 迁移风险复盘与应对策略文档 | explanation/design/迁移风险复盘与应对策略文档.md |
-| V9-DOC-PROJ-058 | project | 数据治理路线图 | explanation/design/数据治理路线图.md |
-| V9-DOC-PROJ-061 | project | V9 操作反馈闭环规格 | explanation/feedback-loop-spec.md |
+
 | V9-DOC-PROJ-062 | project | 新闻模块 — useState → Zustand 迁移文档 | explanation/migration-news-useState-to-zustand.md |
-| V9-DOC-PROJ-063 | project | pending-items-backlog-20260704 | explanation/pending-items-backlog-20260704.md |
-| V9-DOC-PROJ-066 | project | V6 Pro → V9 源码比对与二次开发重点模块梳理 | explanation/v6pro-to-v9-migration-analysis.md |
-| V9-DOC-PROJ-067 | project | V9 问题整改管理与调度记录 | explanation/v9-issue-management.md |
-| V9-DOC-PROJ-068 | project | v9-架构缺陷与整改行动清单 | explanation/v9-架构缺陷与整改行动清单.md |
-| V9-DOC-PROJ-069 | project | weekly-check-2026-06-30 | explanation/weekly-check-2026-06-30.md |
-| V9-DOC-PROJ-073 | project | 02. 功能规格 | reference/02-functional-specs.md |
+| V9-DOC-PROJ-073 | project | 02-functional-specs | specs/02-functional-specs.md |
 | V9-DOC-PROJ-079 | project | Analysis 舱规格（analysis-cabin-spec） | reference/analysis-cabin-spec.md |
-| V9-DOC-PROJ-080 | project | 批次 B P2 问题修复方案 | reference/batchB-fix-plan.md |
-| V9-DOC-PROJ-081 | project | batchd-fix-plan | reference/batchD-fix-plan.md |
-| V9-DOC-PROJ-082 | project | batche-fix-plan | reference/batchE-fix-plan.md |
-| V9-DOC-PROJ-083 | project | CHANGELOG | reference/CHANGELOG.md |
-| V9-DOC-PROJ-084 | project | pr-7-trade-error-classifier-split-plan | reference/changelogs/2026-07/pr-7-trade-error-classifier-split-plan.md |
-| V9-DOC-PROJ-085 | project | pr-8-dedup-plan | reference/changelogs/2026-07/pr-8-dedup-plan.md |
 | V9-DOC-PROJ-088 | project | Command 舱规格（command-cabin-spec） | reference/command-cabin-spec.md |
-| V9-DOC-PROJ-089 | project | V9 模块完成度剖面图 — 批次 1 | reference/completeness-profile-batch1.md |
-| V9-DOC-PROJ-091 | project | V9 操作反馈闭环规格 | reference/feedback-loop-spec.md |
 | V9-DOC-PROJ-092 | project | fetcher 服务契约 | reference/fetcher-contract.md |
-| V9-DOC-PROJ-093 | project | file-naming-conventions | reference/file-naming-conventions.md |
-| V9-DOC-PROJ-095 | project | gateway-write-permission-spec | reference/gateway-write-permission-spec.md |
 | V9-DOC-PROJ-096 | project | hybrid-proofread 服务契约 | reference/hybrid-proofread-contract.md |
 | V9-DOC-PROJ-097 | project | index | reference/index.md |
-| V9-DOC-PROJ-098 | project | 输入舱业务规格与实现映射 | reference/input-cabin-spec.md |
-| V9-DOC-PROJ-099 | project | doc-auto-update-kanban | reference/meta/doc-auto-update-kanban.md |
 | V9-DOC-PROJ-100 | project | Output 舱规格（output-cabin-spec） | reference/output-cabin-spec.md |
 | V9-DOC-PROJ-101 | project | rbac-contract | reference/rbac-contract.md |
-| V9-DOC-PROJ-102 | project | README | reference/README.md |
-| V9-DOC-PROJ-104 | project | release-notes | reference/release-notes.md |
-| V9-DOC-PROJ-105 | project | rm剩余任务全量盘点与整改方案-2026-07-08 | reference/rm剩余任务全量盘点与整改方案-2026-07-08.md |
-| V9-DOC-PROJ-107 | project | stock-analysis-contract | reference/stock-analysis-contract.md |
-| V9-DOC-PROJ-108 | project | stockpool-contract | reference/stockpool-contract.md |
 | V9-DOC-PROJ-109 | project | trade-contract | reference/trade-contract.md |
-| V9-DOC-PROJ-111 | project | ui设计优化实施计划-详细版 | reference/ui设计优化实施计划-详细版.md |
 | V9-DOC-PROJ-113 | project | V6 Pro → V9 源码比对与二次开发重点模块梳理 | reference/v6pro-to-v9-migration-analysis.md |
 | V9-DOC-PROJ-114 | project | V6 Pro → V9 JSON 数据迁移规范（中间文档） | reference/v6-to-v9-migration-spec.md |
-| V9-DOC-PROJ-116 | project | v9核心数据字典与类型定义(整合版) | reference/v9核心数据字典与类型定义(整合版).md |
-| V9-DOC-PROJ-117 | project | v9数据架构修订建议 | reference/v9数据架构修订建议.md |
 | V9-DOC-PROJ-118 | project | 功能模块数据契约 | reference/《功能模块数据契约》.md |
-| V9-DOC-PROJ-119 | project | 数据治理路线图 | reference/数据治理路线图.md |
-| V9-DOC-PROJ-120 | project | 文件整理清单 | reference/文件整理清单.md |
-| V9-DOC-QA-011 | qa | a11y-checklist | explanation/a11y-checklist.md |
-| V9-DOC-QA-007 | qa | V9 代码质量校对分析 — 过程透明看板 | explanation/design/v9-code-quality-kanban-20260629.md |
-| V9-DOC-QA-009 | qa | V9 测试目录与策略 | reference/test-catalog.md |
-| V9-DOC-QA-010 | qa | testing-strategy | reference/testing-strategy.md |
 | V9-DOC-QA-121 | qa | git-commit-governance | guides/how-to/git-commit-governance.md |
-| V9-DOC-QA-122 | qa | LLM API Key 真实调用测试整体方案 | reports/testing/llm-api-key-realtime-test-plan.md |
-| V9-DOC-QA-123 | qa | LLM API Key 真实调用发布验收报告 | releases/llm-api-key-release-acceptance-report-2026-08-15.md |

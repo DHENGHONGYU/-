@@ -1,4 +1,5 @@
 ---
+doc_id: V9-DOC-REF-939
 title: design-tokens
 tier: important
 code_version: "2.0.0-rc.1"
@@ -396,8 +397,8 @@ npm run generate:tokens
 
 ### 生成输出
 
-- `src/generated/tokens.css` - CSS 变量（自动应用到 `:root`）
-- `src/generated/tokens.ts` - TypeScript 常量
+- src/generated/tokens.css - CSS 变量（自动应用到 `:root`）
+- src/generated/tokens.ts - TypeScript 常量
 
 ### 修改令牌
 

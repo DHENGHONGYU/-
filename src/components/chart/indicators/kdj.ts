@@ -14,7 +14,6 @@
  */
 
 import type { Time, LineData } from 'lightweight-charts'
-import { COLOR_SHADES } from '@/constants/theme.tokens'
 import type { CandlestickChartData } from '../types'
 import { getLogger } from '@/lib/logger'
 
@@ -260,10 +259,14 @@ export function getLatestKDJ(
 }
 
 /**
- * KDJ 颜色配置
+ * KDJ 颜色配置（暗色主题）
+ * 对标 TradingView 暗色主题 KDJ 指标配色
  */
 export const KDJ_COLORS = {
-  k: COLOR_SHADES.blue[500], // K 线颜色：蓝色
-  d: COLOR_SHADES.orange[500], // D 线颜色：橙色
-  j: COLOR_SHADES.purple[500], // J 线颜色：紫色
+  /** K 线 - 浅蓝 */
+  k: '#60a5fa',
+  /** D 线 - 金色 */
+  d: '#fbbf24',
+  /** J 线 - 紫色 */
+  j: '#a78bfa',
 } as const

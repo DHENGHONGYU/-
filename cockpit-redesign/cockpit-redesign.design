@@ -1,0 +1,55 @@
+{
+  "data": [
+    {
+      "id": "page-cockpit-v4",
+      "title": "驾驶舱·投研决策视图",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1786752000000,
+      "canvasData": {
+        "x": 0,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 3729,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-7c609e7b",
+          "measuredAt": 1786800401072
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/cockpit-v4.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-cockpit-v4-dark",
+      "title": "驾驶舱·投研决策视图（深色模式）",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1786802000000,
+      "canvasData": {
+        "x": 480,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 3729,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-3dc6d3ac",
+          "measuredAt": 1786803592484
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/cockpit-v4-dark.html",
+        "interactions": []
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": true,
+    "deviceType": "desktop",
+    "projectName": "V9 驾驶舱决策流重设计"
+  }
+}

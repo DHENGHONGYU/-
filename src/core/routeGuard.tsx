@@ -64,6 +64,7 @@ const buttonPermissionRegistry: Record<string, Set<string>> = {}
  * @param actions
  * @returns void
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function registerButtonPermission(module: string, actions: string[]): void {
   buttonPermissionRegistry[module] = new Set(actions)
   logger.debug(`[routeGuard] 注册按钮权限: module=${module}, actions=${actions.join(',')}`)
@@ -89,6 +90,7 @@ const ALLOWED_ROUTE_CATEGORIES: ReadonlyArray<string> = [
 /**
  * hasPermission
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const hasPermission: PermissionChecker = (ctx): boolean => {
   // Route 级：检查模块是否在路由白名单中，同时验证路径合法性
   if (ctx.level === 'route') {
@@ -132,6 +134,7 @@ export const hasPermission: PermissionChecker = (ctx): boolean => {
 /**
  * usePermission
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function usePermission(
   module: string,
   level: PermissionLevel = 'button',

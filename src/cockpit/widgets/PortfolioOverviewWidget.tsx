@@ -132,7 +132,7 @@ export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWid
       skeleton={
         <div className="space-y-4">
           <Skeleton variant="text" className={cn('bg-muted', 'h-10 w-full')} />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[1, 2, 3, 4].map((i) => (
               <div key={i}>
                 <Skeleton variant="text" className={cn('bg-muted', 'h-4 w-16')} />
@@ -147,10 +147,10 @@ export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWid
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <span className={cn('text-sm', COLOR_SHADES.gray[500])}>总资产</span>
-          <span className="text-xl font-bold">{portfolio.totalAssets}</span>
+          <span className="text-h2 font-bold">{portfolio.totalAssets}</span>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <div className="flex items-center gap-2">
               <Wallet className={cn('h-4 w-4', COLOR_SHADES.gray[400])} />

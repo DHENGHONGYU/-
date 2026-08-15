@@ -63,7 +63,7 @@ export function ScoreGauge({
     <div className={cn('flex items-center gap-2', className)}>
       <div className={cn('relative h-full rounded-full overflow-hidden bg-muted', SIZE_CLASSES[size])}>
         <div
-          className={cn('h-full rounded-full transition-all duration-300', color)}
+          className={cn('h-full rounded-full transition-[width] duration-300', color)}
           style={{ width: `${percentage}%` }}
         />
       </div>

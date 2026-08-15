@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Widget 专用错误边界组件
  *
  * 为 Widget 提供轻量级错误边界，显示错误状态并提供重试机制。
@@ -132,9 +132,9 @@ export class WidgetErrorBoundary extends Component<WidgetErrorBoundaryProps, Wid
               size="sm"
               onClick={() => {
                 logger.info('[WidgetErrorBoundary] 用户点击查看详情')
-                console.error('Widget Error Details:', {
+                logger.error('Widget Error Details', {
                   widgetId,
-                  error,
+                  error: error?.message ?? String(error),
                   retryCount,
                 })
               }}

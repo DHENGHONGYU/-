@@ -39,6 +39,12 @@ function getDeltaColor(delta: number): string {
   return 'text-muted-foreground'
 }
 
+function getScoreColorClass(score: number): string {
+  if (score >= 4.0) return 'text-[hsl(var(--stock-up))]'
+  if (score >= 3.0) return 'text-primary'
+  return 'text-[hsl(var(--stock-down))]'
+}
+
 function ComparisonHeader({ result }: { result: ScoreComparisonResult }): React.JSX.Element {
   const { left, right, compositeDelta, l3vDelta, ratingChanged } = result
 
@@ -54,7 +60,7 @@ function ComparisonHeader({ result }: { result: ScoreComparisonResult }): React.
         </CardHeader>
         <CardContent>
           <div className="space-y-1">
-            <div className="text-3xl font-bold">{left.composite.toFixed(1)}</div>
+            <div className={cn('text-3xl font-bold', getScoreColorClass(left.composite))}>{left.composite.toFixed(1)}</div>
             <div className="text-sm text-muted-foreground">综合评分</div>
             <div className="pt-2 text-sm">
               <span className="text-muted-foreground">L3V: </span>
@@ -99,7 +105,7 @@ function ComparisonHeader({ result }: { result: ScoreComparisonResult }): React.
         </CardHeader>
         <CardContent className="text-right">
           <div className="space-y-1">
-            <div className="text-3xl font-bold">{right.composite.toFixed(1)}</div>
+            <div className={cn('text-3xl font-bold', getScoreColorClass(right.composite))}>{right.composite.toFixed(1)}</div>
             <div className="text-sm text-muted-foreground">综合评分</div>
             <div className="pt-2 text-sm">
               <span className="text-muted-foreground">L3V: </span>

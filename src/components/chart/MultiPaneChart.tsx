@@ -13,11 +13,13 @@ import {
   type SeriesMarker,
   type Time,
 } from 'lightweight-charts'
-import { CHART_PALETTE, STOCK_COLOR_TOKENS, THEME_TOKENS } from '@/constants/theme.tokens'
+import { CHART_PALETTE_PRO, STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 import { KDJ_COLORS } from './indicators/kdj'
 import { MACD_COLORS } from './indicators/macd'
+import { RSI_COLORS } from './indicators/rsi'
 import type { KDJResult } from './indicators/kdj'
 import type { MACDResult } from './indicators/macd'
+import type { RSIResult } from './indicators/rsi'
 import { getLogger } from '@/lib/logger'
 import type { TooltipData, ChartTooltipProps, MultiPaneChartProps } from './multiPaneChart.types'
 import { PERIOD_OPTIONS, ADJUST_OPTIONS } from './multiPaneChart.config'
@@ -26,6 +28,7 @@ import {
   createMainChartPane,
   createMacdChartPane,
   createKdjChartPane,
+  createRsiChartPane,
   createCrosshairHandler,
   syncTimeScales,
 } from './multiPaneChart.utils'
@@ -47,33 +50,33 @@ const ChartTooltip = memo<ChartTooltipProps>(({ data, positiveColor, negativeCol
         minWidth: 150,
         padding: '8px 10px',
         borderRadius: '8px',
-        background: 'rgba(15,23,42,0.88)',
+        background: 'rgba(19,23,34,0.88)',
         backdropFilter: 'blur(6px)',
-        border: `1px solid ${CHART_PALETTE.gridLight}`,
+        border: `1px solid ${CHART_PALETTE_PRO.grid}`,
         boxShadow: '0 4px 16px rgba(0,0,0,0.35)',
         fontSize: '0.74rem',
         fontFeatureSettings: 'tnum',
-        color: `var(--muted, ${THEME_TOKENS.color.chartMutedRaw})`,
+        color: CHART_PALETTE_PRO.axis,
         pointerEvents: 'none',
       }}
     >
-      <div style={{ fontWeight: 600, marginBottom: 4, color: THEME_TOKENS.color.chartContrastRaw }}>
+      <div style={{ fontWeight: 600, marginBottom: 4, color: CHART_PALETTE_PRO.contrast }}>
         {d.time}
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '2px 10px' }}>
-        <span style={{ color: CHART_PALETTE.series3 }}>开</span>
+        <span style={{ color: CHART_PALETTE_PRO.axis }}>开</span>
         <span style={{ textAlign: 'right' }}>{d.open.toFixed(2)}</span>
-        <span style={{ color: CHART_PALETTE.series3 }}>高</span>
+        <span style={{ color: CHART_PALETTE_PRO.axis }}>高</span>
         <span style={{ textAlign: 'right' }}>{d.high.toFixed(2)}</span>
-        <span style={{ color: CHART_PALETTE.series3 }}>低</span>
+        <span style={{ color: CHART_PALETTE_PRO.axis }}>低</span>
         <span style={{ textAlign: 'right' }}>{d.low.toFixed(2)}</span>
-        <span style={{ color: CHART_PALETTE.series3 }}>收</span>
+        <span style={{ color: CHART_PALETTE_PRO.axis }}>收</span>
         <span style={{ textAlign: 'right', fontWeight: 600, color: d.close >= d.open ? positiveColor : negativeColor }}>
           {d.close.toFixed(2)}
         </span>
         {d.volume !== undefined && (
           <>
-            <span style={{ color: CHART_PALETTE.series3 }}>量</span>
+            <span style={{ color: CHART_PALETTE_PRO.axis }}>量</span>
             <span style={{ textAlign: 'right' }}>{d.volume.toLocaleString('zh-CN')}</span>
           </>
         )}
@@ -97,6 +100,15 @@ const ChartTooltip = memo<ChartTooltipProps>(({ data, positiveColor, negativeCol
             <span style={{ textAlign: 'right' }}>{d.kdj.j.toFixed(2)}</span>
           </>
         )}
+        {d.rsi !== undefined && (() => {
+          const rsiColor = d.rsi >= 70 ? RSI_COLORS.overbought : d.rsi <= 30 ? RSI_COLORS.oversold : RSI_COLORS.line
+          return (
+            <>
+              <span style={{ color: rsiColor }}>RSI</span>
+              <span style={{ textAlign: 'right', fontWeight: 600, color: rsiColor }}>{d.rsi.toFixed(1)}</span>
+            </>
+          )
+        })()}
       </div>
     </div>
   )
@@ -115,8 +127,10 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
       showToolbar = false,
       showMACD = false,
       showKDJ = false,
+      showRSI = false,
       macdParams,
       kdjParams,
+      rsiParams,
       period = 'daily',
       adjust = 'qfq',
       onPeriodChange,
@@ -129,6 +143,7 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
     const mainChartRef = useRef<IChartApi | null>(null)
     const macdChartRef = useRef<IChartApi | null>(null)
     const kdjChartRef = useRef<IChartApi | null>(null)
+    const rsiChartRef = useRef<IChartApi | null>(null)
 
     const mainSeriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null)
     const mainMarkersRef = useRef<ISeriesMarkersPluginApi<Time> | null>(null)
@@ -136,9 +151,10 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
 
     const macdResultRef = useRef<MACDResult | null>(null)
     const kdjResultRef = useRef<KDJResult | null>(null)
+    const rsiResultRef = useRef<RSIResult | null>(null)
 
-    const positiveColor = upColor ?? CHART_PALETTE.upColor
-    const negativeColor = downColor ?? CHART_PALETTE.downColor
+    const positiveColor = upColor ?? CHART_PALETTE_PRO.upColor
+    const negativeColor = downColor ?? CHART_PALETTE_PRO.downColor
 
     // 使用 ref 存储 tooltip 数据，避免 React 重渲染
     const tooltipRef = useRef<TooltipData | null>(null)
@@ -172,8 +188,11 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
     // 计算各 pane 高度
     const toolbarHeight = showToolbar ? 40 : 0
     const availableHeight = height - toolbarHeight
-    const mainPaneHeight = Math.floor(availableHeight * 0.5)
-    const subPaneHeight = Math.floor(availableHeight * 0.25)
+    const subPaneCount = (showMACD ? 1 : 0) + (showKDJ ? 1 : 0) + (showRSI ? 1 : 0)
+    const mainPaneRatio = subPaneCount > 0 ? 0.55 : 1
+    const subPaneRatio = subPaneCount > 0 ? (1 - mainPaneRatio) / subPaneCount : 0
+    const mainPaneHeight = Math.floor(availableHeight * mainPaneRatio)
+    const subPaneHeight = Math.floor(availableHeight * subPaneRatio)
 
     useEffect(() => {
       if (!containerRef.current) return
@@ -235,6 +254,27 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
         })
       }
 
+      // ===== RSI 副图 =====
+      let rsiChart: IChartApi | null = null
+      const rsiSeriesList: Array<ISeriesApi<'Line'> | null> = []
+
+      if (showRSI) {
+        logger.info('[MultiPaneChart] 创建 RSI 副图窗格', {
+          dataLength: data.length,
+          rsiParams,
+        })
+
+        const rsiPane = createRsiChartPane(containerRef.current, subPaneHeight, data, rsiParams)
+        rsiChart = rsiPane.rsiChart
+        rsiResultRef.current = rsiPane.rsiResult
+        rsiSeriesList.push(...rsiPane.rsiSeriesList)
+
+        logger.info('[MultiPaneChart] RSI 副图创建完成', {
+          rsiCount: rsiPane.rsiResult.rsi.filter(d => d !== null).length,
+          last: rsiPane.rsiResult.rsi.filter(d => d !== null).pop()?.value,
+        })
+      }
+
       // ===== 十字光标联动（带节流） =====
       const dataIndex = new Map(data.map((d, i) => [String(d.time), i]))
 
@@ -244,49 +284,73 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
         dataIndex,
         showMACD,
         showKDJ,
+        showRSI,
         macdResultRef,
         kdjResultRef,
+        rsiResultRef,
         macdChart,
         kdjChart,
+        rsiChart,
         macdSeriesList,
         kdjSeriesList,
+        rsiSeriesList,
         updateTooltip,
       })
 
       mainChart.subscribeCrosshairMove(onMainCrosshair)
 
       // ===== TimeScale 同步 =====
-      syncTimeScales(mainChart, macdChart, kdjChart)
+      syncTimeScales(mainChart, macdChart, kdjChart, rsiChart)
 
       mainChart.timeScale().fitContent()
       if (macdChart) macdChart.timeScale().fitContent()
       if (kdjChart) kdjChart.timeScale().fitContent()
+      if (rsiChart) rsiChart.timeScale().fitContent()
+
+      // ── 高 DPI 自适应：监听容器尺寸变化 ──
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const { width: w, height: h } = entry.contentRect
+          if (w <= 0 || h <= 0) continue
+          mainChart.applyOptions({ width: w, height: mainPaneHeight })
+          if (macdChart) macdChart.applyOptions({ width: w, height: subPaneHeight })
+          if (kdjChart) kdjChart.applyOptions({ width: w, height: subPaneHeight })
+          if (rsiChart) rsiChart.applyOptions({ width: w, height: subPaneHeight })
+        }
+      })
+      resizeObserver.observe(containerRef.current)
 
       mainChartRef.current = mainChart
       mainSeriesRef.current = mainSeries
       macdChartRef.current = macdChart
       kdjChartRef.current = kdjChart
+      rsiChartRef.current = rsiChart
 
       logger.info('[MultiPaneChart] 多窗格图表初始化完成', {
         mainPaneHeight,
         subPaneHeight,
         macdEnabled: showMACD,
         kdjEnabled: showKDJ,
+        rsiEnabled: showRSI,
       })
 
       return () => {
+        resizeObserver.disconnect()
         mainChart.remove()
         if (macdChart) macdChart.remove()
         if (kdjChart) kdjChart.remove()
+        if (rsiChart) rsiChart.remove()
         mainChartRef.current = null
         mainSeriesRef.current = null
         macdChartRef.current = null
         kdjChartRef.current = null
+        rsiChartRef.current = null
         maSeriesRefs.current = []
         macdResultRef.current = null
         kdjResultRef.current = null
+        rsiResultRef.current = null
       }
-    }, [data, positiveColor, negativeColor, showMACD, showKDJ, macdParams, kdjParams])
+    }, [data, positiveColor, negativeColor, showMACD, showKDJ, showRSI, macdParams, kdjParams, rsiParams])
 
     // Markers
     useEffect(() => {
@@ -301,9 +365,7 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
         return
       }
 
-      if (!mainMarkersRef.current) {
-        mainMarkersRef.current = createSeriesMarkers(mainSeriesRef.current, [])
-      }
+      mainMarkersRef.current ??= createSeriesMarkers(mainSeriesRef.current, [])
 
       const chartMarkers: SeriesMarker<Time>[] = markers.map((m) => ({
         time: m.time,
@@ -336,7 +398,7 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
               flexWrap: 'wrap',
             }}
           >
-            <div style={{ display: 'flex', gap: '2px', background: `var(--bg2, ${THEME_TOKENS.color.chartCanvasDarkRaw})`, borderRadius: '6px', padding: '2px' }}>
+            <div style={{ display: 'flex', gap: '2px', background: CHART_PALETTE_PRO.bgLight, borderRadius: '6px', padding: '2px' }}>
               {PERIOD_OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
@@ -349,11 +411,11 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
                     borderRadius: '4px',
                     cursor: 'pointer',
                     background: period === opt.value
-                      ? `${CHART_PALETTE.accent ?? THEME_TOKENS.color.infoRaw}`
+                      ? 'rgba(255,255,255,0.1)'
                       : 'transparent',
                     color: period === opt.value
-                      ? THEME_TOKENS.color.chartContrastRaw
-                      : `var(--muted, ${THEME_TOKENS.color.chartMutedRaw})`,
+                      ? CHART_PALETTE_PRO.contrast
+                      : CHART_PALETTE_PRO.axis,
                     transition: 'all 0.15s ease',
                   }}
                 >
@@ -363,7 +425,7 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
             </div>
 
             {isDailyPeriod && (
-              <div style={{ display: 'flex', gap: '2px', background: `var(--bg2, ${THEME_TOKENS.color.chartCanvasDarkRaw})`, borderRadius: '6px', padding: '2px' }}>
+              <div style={{ display: 'flex', gap: '2px', background: CHART_PALETTE_PRO.bgLight, borderRadius: '6px', padding: '2px' }}>
                 {ADJUST_OPTIONS.map((opt) => (
                   <button
                     key={opt.value || 'none'}
@@ -376,11 +438,11 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
                       borderRadius: '4px',
                       cursor: 'pointer',
                       background: adjust === opt.value
-                        ? `${CHART_PALETTE.accent ?? THEME_TOKENS.color.infoRaw}`
+                        ? 'rgba(255,255,255,0.1)'
                         : 'transparent',
                       color: adjust === opt.value
-                        ? THEME_TOKENS.color.chartContrastRaw
-                        : `var(--muted, ${THEME_TOKENS.color.chartMutedRaw})`,
+                        ? CHART_PALETTE_PRO.contrast
+                        : CHART_PALETTE_PRO.axis,
                       transition: 'all 0.15s ease',
                     }}
                   >
@@ -403,18 +465,18 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
               minWidth: 150,
               padding: '8px 10px',
               borderRadius: '8px',
-              background: 'rgba(15,23,42,0.88)',
+              background: 'rgba(19,23,34,0.88)',
               backdropFilter: 'blur(6px)',
-              border: `1px solid ${CHART_PALETTE.gridLight}`,
+              border: `1px solid ${CHART_PALETTE_PRO.grid}`,
               boxShadow: '0 4px 16px rgba(0,0,0,0.35)',
               fontSize: '0.74rem',
               fontFeatureSettings: 'tnum',
-              color: `var(--muted, ${THEME_TOKENS.color.chartMutedRaw})`,
+              color: CHART_PALETTE_PRO.axis,
               pointerEvents: 'none',
               display: 'none',
             }}
           >
-            <div data-tooltip-time style={{ fontWeight: 600, marginBottom: 4, color: THEME_TOKENS.color.chartContrastRaw }} />
+            <div data-tooltip-time style={{ fontWeight: 600, marginBottom: 4, color: CHART_PALETTE_PRO.contrast }} />
             <div data-tooltip-values style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '2px 10px' }} />
           </div>
         </div>

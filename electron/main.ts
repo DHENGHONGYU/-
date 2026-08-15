@@ -16,6 +16,8 @@ import * as path from 'node:path'
 import * as fs from 'node:fs'
 import { PythonSidecar } from './sidecar'
 import { createProxyHandler } from './proxy'
+import { WestockHost } from './westockHost'
+import { TencentNewsHost } from './tencentNewsHost'
 import { getLogger } from './logger'
 
 /** 安全写入文件：自动创建父目录，避免 ENOENT */
@@ -32,6 +34,8 @@ const logger = getLogger('main')
 
 let mainWindow: BrowserWindow | null = null
 let sidecar: PythonSidecar | null = null
+let westockHost: WestockHost | null = null
+let tencentNewsHost: TencentNewsHost | null = null
 let tray: Tray | null = null
 
 // ============================================================
@@ -176,6 +180,28 @@ function registerIpcHandlers(): void {
   })
 
   // ============================================================
+  // 腾讯自选股 CLI 宿主（Electron main 承载，渲染进程经 IPC 调用）
+  // ============================================================
+  ipcMain.handle('westock:invoke', (_event, command: string, args: string) => {
+    if (!westockHost) return Promise.reject(new Error('WestockHost 未初始化'))
+    return westockHost.invoke(command, args)
+  })
+  ipcMain.handle('westock:health', () => {
+    return westockHost?.getHealth() ?? { available: false, bin: '', note: '未初始化' }
+  })
+
+  // ============================================================
+  // 腾讯新闻 CLI 宿主（Electron main 承载，渲染进程经 IPC 调用）
+  // ============================================================
+  ipcMain.handle('tencentnews:invoke', (_event, command: string, args: string) => {
+    if (!tencentNewsHost) return Promise.reject(new Error('TencentNewsHost 未初始化'))
+    return tencentNewsHost.invoke(command, args)
+  })
+  ipcMain.handle('tencentnews:health', () => {
+    return tencentNewsHost?.getHealth() ?? { available: false, bin: '', note: '未初始化' }
+  })
+
+  // ============================================================
   // 文件同步 IPC：采集资料写入本地文件夹
   // ============================================================
 
@@ -298,6 +324,18 @@ app.whenReady().then(async () => {
   // 启动 Sidecar（异步，不阻塞窗口显示）
   startSidecar().catch((err) => {
     logger.error('Sidecar startup error', err)
+  })
+
+  // 启动腾讯自选股 CLI 宿主（异步，不阻塞窗口显示；CLI 不可用时采集舱自动降级）
+  westockHost = new WestockHost()
+  westockHost.init().catch((err) => {
+    logger.error('WestockHost init error', err)
+  })
+
+  // 启动腾讯新闻 CLI 宿主（异步，不阻塞窗口显示；CLI 不可用时采集舱自动降级）
+  tencentNewsHost = new TencentNewsHost()
+  tencentNewsHost.init().catch((err) => {
+    logger.error('TencentNewsHost init error', err)
   })
 })
 

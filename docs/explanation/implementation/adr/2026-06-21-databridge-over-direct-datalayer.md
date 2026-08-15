@@ -45,5 +45,5 @@ change_log:
 
 ## 相关文档
 
-- `docs/05-engine-specs.md`
+- `../../05-engine-specs.md`
 - `docs/explanation/implementation/data-interaction-protocols.md`

@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-GUIDE-025
+title: "组件全生命周期管理与季度僵尸组件清理 SOP"
+domain: guide
+status: active
+last_updated: 2026-08-15
+---
+
 # 组件全生命周期管理与季度僵尸组件清理 SOP
 
 > 文档版本：v1.0

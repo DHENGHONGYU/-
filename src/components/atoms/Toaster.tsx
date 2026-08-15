@@ -53,7 +53,7 @@ export function Toaster({ className }: ToasterProps): ReactNode {
         <div
           key={t.id}
           className={cn(
-            'pointer-events-auto flex items-start gap-3 rounded-lg border p-4 shadow-lg transition-all',
+            'pointer-events-auto flex items-start gap-3 rounded-lg border p-4 shadow-lg transition-opacity transition-transform',
             'min-w-[320px] max-w-[480px] animate-in slide-in-from-right',
             variantStyles[t.variant ?? 'default'],
           )}

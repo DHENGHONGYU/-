@@ -3,6 +3,7 @@ import { HashRouter, Route, Routes } from 'react-router'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { PageSkeleton } from '@/components/organisms/shared/PageSkeleton'
 import { MemoryModeBanner } from '@/components/organisms/shared/MemoryModeBanner'
+import { OnboardingGuide } from '@/components/molecules/OnboardingGuide'
 import { ToastProvider, useToast } from '@/hooks/useToast'
 import { Toaster } from '@/components/atoms/Toaster'
 import { ROUTE_REGISTRY } from '@/config/routes'
@@ -15,14 +16,11 @@ import { initAllGlobalSubscriptions } from '@/store/initGlobalSubscriptions'
 import { widgetEngine } from '@/cockpit/core/widgetEngine'
 import { PRELOAD_WIDGETS } from '@/constants/cockpit.constants'
 import { useRuntimeTradingConfigStore } from '@/store/runtimeTradingConfigStore'
-// 显式 import 智能体系统入口，触发 initAgentSystem() 自动初始化
-// （src/agents/index.ts 在模块加载时通过 setTimeout 延迟 100ms 调用 initAgentSystem）
-import '@/agents'
-// 显式 import MCP Server 注册入口，触发 registerAllServers() 同步全量注册
-// （src/mcp/register.ts 在模块加载时通过 import.meta.glob eager 加载并注册所有 MCP Server）
-import '@/mcp/register'
+import { triggerAgentInit } from '@/agents'
 
 const logger = getLogger()
+const _bootstrapStartTs = Date.now()
+logger.info(`[App] ⧉ BOOTSTRAP START at ${new Date(_bootstrapStartTs).toISOString()} (dev=${import.meta.env.DEV})`)
 
 function AppContent(): React.JSX.Element {
   const { toast } = useToast()
@@ -138,11 +136,45 @@ function AppContent(): React.JSX.Element {
       }
     }, 500)
 
+    // 首次交互触发 Agent 系统初始化（替代原 800ms setTimeout 延迟）
+    let agentInitTriggered = false
+    const triggerOnFirstInteraction = (): void => {
+      if (agentInitTriggered) return
+      agentInitTriggered = true
+      window.removeEventListener('pointerdown', triggerOnFirstInteraction)
+      window.removeEventListener('keydown', triggerOnFirstInteraction)
+      window.removeEventListener('touchstart', triggerOnFirstInteraction)
+      logger.info('[App] ▶ FIRST INTERACTION detected, triggering Agent init')
+      triggerAgentInit()
+    }
+
+    window.addEventListener('pointerdown', triggerOnFirstInteraction, { once: true, passive: true })
+    window.addEventListener('keydown', triggerOnFirstInteraction, { once: true, passive: true })
+    window.addEventListener('touchstart', triggerOnFirstInteraction, { once: true, passive: true })
+
+    // Fallback：3 秒内无交互则自动初始化
+    const fallbackTimer = setTimeout(() => {
+      if (!agentInitTriggered) {
+        agentInitTriggered = true
+        window.removeEventListener('pointerdown', triggerOnFirstInteraction)
+        window.removeEventListener('keydown', triggerOnFirstInteraction)
+        window.removeEventListener('touchstart', triggerOnFirstInteraction)
+        logger.info('[App] ▶ FALLBACK: auto-triggering Agent init after 3s idle')
+        triggerAgentInit()
+      }
+    }, 3000)
+
     useRuntimeTradingConfigStore.getState().hydrateFromConfigApp()
 
     const unsubscribeTheme = initSystemThemeListener()
     markHydrated()
+    const bootstrapTotal = Date.now() - _bootstrapStartTs
+    logger.info(`[App] ⧉ BOOTSTRAP COMPLETE (total=${bootstrapTotal}ms)`)
     return () => {
+      clearTimeout(fallbackTimer)
+      window.removeEventListener('pointerdown', triggerOnFirstInteraction)
+      window.removeEventListener('keydown', triggerOnFirstInteraction)
+      window.removeEventListener('touchstart', triggerOnFirstInteraction)
       unsubscribeTheme()
     }
   }, [toast, markHydrated])
@@ -152,7 +184,7 @@ function AppContent(): React.JSX.Element {
       <div className="flex min-h-screen items-center justify-center bg-background p-8">
         <div className="max-w-md text-center">
           <div className="mb-4 text-6xl" aria-hidden="true">⚠️</div>
-          <h1 className="mb-4 text-xl font-bold">本地存储不可用</h1>
+          <h1 className="mb-4 text-h2 font-bold">本地存储不可用</h1>
           <p className="mb-6 text-muted-foreground">{preflightError}</p>
           <div className="space-y-3">
             <p className="text-sm text-muted-foreground">请尝试以下操作：</p>
@@ -190,6 +222,7 @@ function AppContent(): React.JSX.Element {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       {isMemoryMode && <MemoryModeBanner />}
+      <OnboardingGuide />
     </Suspense>
   )
 }
@@ -206,8 +239,6 @@ function NotFoundPage(): React.JSX.Element {
 }
 
 export default function App(): React.JSX.Element {
-  // 主题状态由 themeStore 统一管理（light/dark/system + localStorage 持久化）。
-  // ThemeProvider 已退役，避免与 themeStore 重复操作 DOM/CSS 变量。
   return (
     <HashRouter>
       <ErrorBoundary>

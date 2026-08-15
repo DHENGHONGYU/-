@@ -148,12 +148,14 @@ export class DataFlowEngine {
 
   /** 解析并分发单条 SSE 消息（从 connect() 中抽取，降低嵌套深度） */
   private _handleSseMessage(event: MessageEvent): void {
-    logger.debug(`[DataFlowEngine] SSE message received, length=${event.data.length}`)
+    logger.debug(`[DataFlowEngine] SSE message received, length=${String(event.data).length}`)
     try {
-      const packet = JSON.parse(event.data as string) as DataPacket
-      if (packet.channel) {
+      const parsed: unknown = JSON.parse(event.data as string)
+      const packet: Partial<DataPacket> =
+        typeof parsed === 'object' && parsed !== null ? parsed : {}
+      if (packet.channel !== undefined) {
         logger.debug(`[DataFlowEngine] Parsed packet: channel=${packet.channel}, seq=${packet.seq}`)
-        this._distribute(packet)
+        this._distribute(packet as DataPacket)
       } else {
         logger.warn('[DataFlowEngine] Invalid packet: missing channel field')
       }

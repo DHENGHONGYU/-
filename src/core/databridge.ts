@@ -653,7 +653,7 @@ export class DataBridge {
       return String((payload as Record<string, unknown>).symbol)
     }
     if (!Array.isArray(payload) || payload.length === 0) return undefined
-    const firstItem = payload[0]
+    const firstItem: unknown = payload[0]
     if (typeof firstItem === 'object' && firstItem != null && 'symbol' in firstItem) {
       const symbol = (firstItem as Record<string, unknown>).symbol
       return typeof symbol === 'string' ? symbol : undefined

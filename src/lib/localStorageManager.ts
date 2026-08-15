@@ -324,7 +324,7 @@ export class LocalStorageManager {
 
     for (let i = 0; i < localStorage.length; i++) {
       const fullKey = localStorage.key(i)
-      if (fullKey !== null && fullKey.startsWith(prefix)) {
+      if (fullKey?.startsWith(prefix)) {
         result.push(fullKey.slice(prefix.length))
       }
     }

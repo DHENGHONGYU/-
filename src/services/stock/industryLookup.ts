@@ -92,9 +92,7 @@ let _enrichedDictCache: StockDictItem[] | null = null
  * @returns 已回填行业分类的 StockDictItem 数组（缓存复用）
  */
 export function getEnrichedStockDict(): StockDictItem[] {
-  if (_enrichedDictCache === null) {
-    _enrichedDictCache = STOCK_DICT.map(enrichStockDictItem)
-  }
+  _enrichedDictCache ??= STOCK_DICT.map(enrichStockDictItem)
   return _enrichedDictCache
 }
 

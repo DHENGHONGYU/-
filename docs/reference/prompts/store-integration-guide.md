@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-AI-037
+title: "Store 集成开发指南"
+domain: ai
+status: active
+last_updated: 2026-08-15
+---
+
+﻿---
 title: Store 集成开发指南
 type: reference
 domain: data
@@ -23,8 +31,8 @@ date: 2026-07-17
 
 > **定位**：本文档是 `src/store/` 目录的**权威开发指南**，指导开发者按统一模式创建、注册和测试新的 Zustand Store。所有新增 Store 必须遵循本指南，否则 `audit:layers` / `audit:docs` 门禁将拦截。
 >
-> **权威契约**：`../../AGENTS.md` §一（分层规则）、§二（四步集成）、§四（命名约定）、§八（数据库版本管理）。本文档与 `../../AGENTS.md` 冲突时，以 `../../AGENTS.md` 为准。
-> **回链**：`docs/README.md` → H 类 / `../how-to/how-to-add-store.md`(P1)
+> **权威契约**：`../../meta/AGENTS.md` §一（分层规则）、§二（四步集成）、§四（命名约定）、§八（数据库版本管理）。本文档与 `../../meta/AGENTS.md` 冲突时，以 `../../meta/AGENTS.md` 为准。
+> **回链**：`docs/README.md` → H 类 / `../../guides/how-to-add-store.md`(P1)
 
 ---
 
@@ -93,7 +101,7 @@ src/apps/         ← App 分发器
 | **派生函数** | `camelCase`（描述性） | `scoreBySymbol`, `topStocks` |
 | **Hook 形式派生** | `use` + `camelCase` | `useScoreLevelDistribution` |
 
-> 参见 `../../AGENTS.md` §四："Store: camelCase + `Store` 后缀（如 `analysisStore.ts`）"
+> 参见 `../../meta/AGENTS.md` §四："Store: camelCase + `Store` 后缀（如 `analysisStore.ts`）"
 
 ---
 
@@ -279,7 +287,7 @@ function useCrossTabSync() {
 }
 ```
 
-> **清理铁律**：所有 `EventBus.subscribe()` 必须配对 `EventBus.unsubscribe()`，在 `useEffect` cleanup 或组件卸载时执行。参见 `../../AGENTS.md` §三「事件监听清理」标准模板。
+> **清理铁律**：所有 `EventBus.subscribe()` 必须配对 `EventBus.unsubscribe()`，在 `useEffect` cleanup 或组件卸载时执行。参见 `../../meta/AGENTS.md` §三「事件监听清理」标准模板。
 
 ---
 
@@ -360,7 +368,7 @@ export { useSomeDistribution, itemById } from '@/store/{storeName}.derived'
 
 ## 6. 新 Store 创建 Checklist（四步集成）
 
-新 Store 必须按以下四步顺序创建，每步可独立回滚。参见 `../../AGENTS.md` §二。
+新 Store 必须按以下四步顺序创建，每步可独立回滚。参见 `../../meta/AGENTS.md` §二。
 
 ### 步骤 1：类型定义（`src/types/` 或 `src/data/types.ts`）
 
@@ -550,16 +558,16 @@ npm run build
 
 | 文档 | 路径 | 说明 |
 |------|------|------|
-| **AGENTS.md** | `../../AGENTS.md` | 工程分层契约（§一、§二、§四、§八） |
-| **全局架构总览** | `../explanation/overview.md` | 分层架构与数据流 |
-| **舱室总览** | `../explanation/cabins-overview.md` | 5 大舱页面清单 |
-| **服务目录** | `../reference/services-catalog.md` | 24 服务子域目录 |
-| **引擎规格** | `../reference/05-engine-specs.md` | L0-L8 引擎分层 |
-| **路由规格** | `../reference/06-routing-specs.md` | 路由注册规则 |
-| **编码规范** | `../reference/coding-conventions.md` | 代码风格 |
-| **JSDoc 规范** | `../reference/jsdoc-convention.md` | JSDoc 注释标准 |
-| **复杂度治理** | `../reference/complexity-governance.md` | 函数长度/嵌套深度 |
-| **how-to-add-store** | `../how-to/how-to-add-store.md` (P1) | 面向新手的简化版指南 |
+| **AGENTS.md** | `../../meta/AGENTS.md` | 工程分层契约（§一、§二、§四、§八） |
+| **全局架构总览** | `../../explanation/overview.md` | 分层架构与数据流 |
+| **舱室总览** | `../../explanation/cabins-overview.md` | 5 大舱页面清单 |
+| **服务目录** | `../services-catalog.md` | 24 服务子域目录 |
+| **引擎规格** | `../../explanation/05-engine-specs.md` | L0-L8 引擎分层 |
+| **路由规格** | `../../explanation/06-routing-specs.md` | 路由注册规则 |
+| **编码规范** | `../../guides/standards/coding-conventions.md` | 代码风格 |
+| **JSDoc 规范** | `../../explanation/jsdoc-convention.md` | JSDoc 注释标准 |
+| **复杂度治理** | `../../explanation/complexity-governance.md` | 函数长度/嵌套深度 |
+| **how-to-add-store** | `../../guides/how-to-add-store.md` (P1) | 面向新手的简化版指南 |
 | **withBroadcast 实现** | `../../src/lib/withBroadcast.ts` | 广播工具源码 |
 | **EVENT_NAMES 常量** | `../../src/constants/store-channels.constants.ts` | 广播事件常量 |
 | **derived.index.ts** | `../../src/store/derived.index.ts` | 派生查询统一导出 |
@@ -598,8 +606,8 @@ Store Action
 - [ ] `src/data/db-schema.ts` 中 `createSchema` 是否创建该 store（基线）或 Migration 中创建（增量）
 - [ ] `DB_VERSION` 是否已递增（如为增量 store）
 
-> 参见 `../../AGENTS.md` §八（数据库版本管理）。
+> 参见 `../../meta/AGENTS.md` §八（数据库版本管理）。
 
 ---
 
-_本文档基于 `../../AGENTS.md` v1.4.3 编写。当 `../../AGENTS.md` 版本升级时，需同步修订本文档。_
+_本文档基于 `../../meta/AGENTS.md` v1.4.3 编写。当 `../../meta/AGENTS.md` 版本升级时，需同步修订本文档。_

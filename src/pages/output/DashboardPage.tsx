@@ -132,27 +132,27 @@ const DashboardPage = memo(() => {
               {!latestReport ? (
                 <p className="text-sm text-muted-foreground">暂无复盘数据</p>
               ) : (
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <p className="text-xs text-muted-foreground">总交易笔数</p>
-                    <p className="text-xl font-bold">{latestReport.summary.totalTrades}</p>
+                    <p className="text-h2 font-bold">{latestReport.summary.totalTrades}</p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">胜率</p>
-                    <p className={`text-xl font-bold ${COLOR_TOKENS.success.tailwind}`}>
+                    <p className={`text-h2 font-bold ${COLOR_TOKENS.success.tailwind}`}>
                       {latestReport.summary.winRate}%
                     </p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">盈亏比</p>
-                    <p className="text-xl font-bold text-warning">
+                    <p className="text-h2 font-bold text-warning">
                       {latestReport.summary.profitLossRatio}
                     </p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">纪律评分</p>
                     <p
-                      className={`text-xl font-bold ${
+                      className={`text-h2 font-bold ${
                         latestReport.summary.disciplineScore >= 80
                           ? COLOR_TOKENS.success.tailwind
                           : COLOR_TOKENS.warning.tailwind

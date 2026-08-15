@@ -89,7 +89,7 @@ export default function ValuePitWidget({ config, data }: ValuePitWidgetProps): R
                     <div className="text-xs text-muted-foreground">{item.symbol}</div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-2xl font-bold" style={{ color: scoreColor }}>
+                    <span className="text-h1 font-bold" style={{ color: scoreColor }}>
                       {item.score.toFixed(2)}
                     </span>
                     <Badge variant={action.variant}>{action.label}</Badge>
@@ -101,7 +101,7 @@ export default function ValuePitWidget({ config, data }: ValuePitWidgetProps): R
                   </div>
                 </div>
 
-                <div className="grid grid-cols-6 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
                   {Object.entries(item.dimensions).map(([key, value]) => (
                     <div key={key} className="space-y-1">
                       <div className="flex items-center gap-1 text-xs text-muted-foreground">

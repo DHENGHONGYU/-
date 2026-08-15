@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-REF-910
+title: "AI 智能体调度中心 / 健康监控 / 诊断分析 — 数据字典"
+domain: ref
+status: active
+last_updated: 2026-08-15
+---
+
 > **Version**: v1.2.0  
 > **Last Updated**: 2026-07-06  
 > **Maintainer**: 架构资产治理官

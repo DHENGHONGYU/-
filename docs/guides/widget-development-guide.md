@@ -1,4 +1,5 @@
 ---
+doc_id: V9-DOC-GUIDE-035
 title: Widget 开发指南
 version: v1.2.0
 last_updated: 2026-08-13

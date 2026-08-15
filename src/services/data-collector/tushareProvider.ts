@@ -116,7 +116,7 @@ function getTushareToken(): string | null {
     return globalThis.__TUSHARE_TOKEN__
   }
   if ((import.meta?.env?.VITE_TUSHARE_TOKEN ?? '') !== '') {
-    return import.meta.env.VITE_TUSHARE_TOKEN
+    return import.meta.env.VITE_TUSHARE_TOKEN ?? null
   }
   return null
 }

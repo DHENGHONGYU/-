@@ -62,7 +62,7 @@ function computeRanks(values: readonly number[]): number[] {
   const indexed = values.map((v, i) => ({ value: v, index: i }))
   indexed.sort((a, b) => a.value - b.value)
 
-  const ranks = new Array(values.length).fill(0)
+  const ranks = new Array<number>(values.length).fill(0)
   let i = 0
   while (i < indexed.length) {
     let j = i

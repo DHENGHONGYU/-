@@ -85,7 +85,7 @@ export default function MechanismHealthWidget(props: MechanismHealthWidgetProps)
       <div className={cn('flex items-center justify-between rounded-lg p-3', headerBg)}>
         <div>
           <div className={cn('text-xs', 'text-muted-foreground')}>机制健康</div>
-          <div className={cn('text-2xl font-bold', headerColor)}>
+          <div className={cn('text-h1 font-bold', headerColor)}>
             {active}
             <span className={cn('text-sm font-normal', 'text-muted-foreground/70')}>/{total}</span>
           </div>

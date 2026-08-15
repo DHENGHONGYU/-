@@ -185,7 +185,7 @@ async function exportExcel(
       BACKTEST_EXCEL_SHEETS.dailyValues,
     )
 
-    const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+    const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' }) as ArrayBuffer
     const blob = new Blob([buffer], { type: EXCEL_MIME_TYPE })
     const filename = buildFilename('excel', meta)
 

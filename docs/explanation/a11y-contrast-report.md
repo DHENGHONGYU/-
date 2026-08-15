@@ -17,24 +17,24 @@ change_log:
 - **执行者**: A7 · 视觉 QA AGENT
 - **复核时间**: 2026/7/10 08:37:03
 - **项目**: 智能投研复盘系统 V9
-- **重点颜色**: emerald 主色（`#10b981` / Tailwind `emerald-500`）
+- **重点颜色**: Apple Blue 主色（`#007AFF` / `--primary: 210 100% 50%`，V5 Apple Business Design）
 
 ## 1. 色板体系速览
 
-当前颜色体系由两个来源共同定义：
+当前颜色体系由单一真相源定义：
 
-1. **Design Tokens 真源**: `design-tokens/tokens.json`
-2. **运行时主题令牌**: `src/constants/theme.tokens.ts`（及其拆分后的子模块）
+1. **运行时主题令牌**: `src/index.css`（V5 Apple Business Design Tokens 唯一真相源）
+2. **语义令牌 TS**: `src/constants/theme/theme.tokens.design.ts`（`SEMANTIC_COLOR_ROLES`，`primary.raw: #007aff`）
 
-### 1.1 emerald 相关关键色值
+### 1.1 品牌主色关键色值
 
 | 色阶 | HEX | 备注 |
 |------|-----|------|
-| emerald-50 | `#ecfdf5` | 浅色背景 |
-| emerald-400 | `#34d399` | 暗色模式高亮文字 |
-| emerald-500 | `#10b981` | **主色**，暗色主题 primary / 信号强 / 风格价值 |
-| emerald-600 | `#059669` | 亮色主题 primary |
-| emerald-700 | `#047857` | 可用于正文（AA 达标） |
+| primary (亮色) | `#007AFF` | **主色**，Apple Blue，`--primary: 210 100% 50%` |
+| primary (暗色) | `#007AFF` | 暗色模式 primary，`--primary: 210 100% 60%` |
+| info | `#007AFF` | 信息提示色，与主色同色相 |
+
+> **历史注记**：旧版 emerald 系（`#10b981` / `#0D9165`）已于 2026-08-15 正式切换为 Apple Blue #007AFF。以下对比度数据为历史记录，保留作参考。
 
 ### 1.2 WCAG 对比度阈值
 
@@ -133,7 +133,9 @@ change_log:
 
 ## 6. 结论
 
-本次复核发现 **6 组 Design Tokens 色对** 与 **20 处 src/ 文本色使用** 未满足 WCAG AA 正文对比度要求。emerald 主色（`#10b981`）在亮色背景下正文对比度仅约 3.0:1，在暗色背景下与浅色文字对比度仅 2.42:1，**不建议用于正文或小字号**。建议优先执行 P1 修复：将按钮/主色加深到 emerald-700（`#047857`），并调整文本色 token 为 emerald-700。
+本次复核发现 **6 组 Design Tokens 色对** 与 **20 处 src/ 文本色使用** 未满足 WCAG AA 正文对比度要求。emerald 主色（`#10b981`）在亮色背景下正文对比度仅约 3.0:1，在暗色背景下与浅色文字对比度仅 2.42:1，**不建议用于正文或小字号**。
+
+> **✅ 已解决（2026-08-15）**：品牌主色已从 emerald 系列切换为 Apple Blue #007AFF（`--primary: 210 100% 50%`）。Apple Blue 白字对比度 4.59:1，满足 WCAG AA 正文 4.5:1 要求。本次对比度复核报告中的 emerald 数据保留为历史参考。
 
 ---
 报告由 `scripts/other/a11y-contrast.cjs` 自动生成。

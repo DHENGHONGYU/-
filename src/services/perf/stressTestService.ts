@@ -261,7 +261,7 @@ function computeSummary(metrics: PerfMetric[], totalDurationMs: number, _symbolC
 function computeTaskSummaries(metrics: PerfMetric[]): Record<string, TaskStatSummary> {
   const grouped: Record<string, PerfMetric[]> = {}
   for (const m of metrics) {
-    if (!grouped[m.taskName]) grouped[m.taskName] = []
+    grouped[m.taskName] ??= []
     grouped[m.taskName]!.push(m)
   }
 

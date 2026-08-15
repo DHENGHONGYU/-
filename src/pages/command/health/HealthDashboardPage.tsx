@@ -192,7 +192,7 @@ export default function HealthDashboardPage(): React.JSX.Element {
                 <CardDescription>{metric.label}</CardDescription>
                 {statusIcon(metric.status)}
               </div>
-              <CardTitle className="text-2xl">
+              <CardTitle className="text-h1">
                 {metric.value}
                 <span className="ml-1 text-sm font-normal text-muted-foreground">{metric.unit}</span>
               </CardTitle>

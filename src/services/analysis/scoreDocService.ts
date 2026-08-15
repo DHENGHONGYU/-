@@ -316,7 +316,7 @@ export async function saveScoreDoc(input: ScoreDocInput): Promise<DataLayerResul
 
     // ── 八域资料体系：异步归档评分报告（ADR-010） ──
     // fire-and-forget，不阻塞主流程；失败不影响结果
-    ;(async () => {
+    void (async () => {
       try {
         const { onScoreDocGenerated } = await import('@/services/profile/scoreDocArchiveService')
         await onScoreDocGenerated(doc)

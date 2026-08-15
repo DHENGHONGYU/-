@@ -60,7 +60,7 @@ function ProgressBar({ percent, rating, isHistorical }: { percent: number; ratin
   return (
     <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
       <div
-        className={cn('h-full rounded-full transition-all duration-500', barColor)}
+        className={cn('h-full rounded-full transition-[width] duration-500', barColor)}
         style={{ width: `${percent}%` }}
       />
     </div>

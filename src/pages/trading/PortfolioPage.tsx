@@ -3,9 +3,12 @@ import { Link } from 'react-router'
 import { Wallet } from 'lucide-react'
 import { useTradingStore } from '@/store/tradingStore'
 import { usePortfolioStore } from '@/store/portfolioStore'
+import { useIndustryScoreStore } from '@/store/industryScoreStore'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
+import { Currency } from '@/components/atoms/Currency'
+import { Percent } from '@/components/atoms/Percent'
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -16,15 +19,25 @@ import {
 } from '@/components/atoms/Breadcrumb'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { getLogger } from '@/lib/logger'
+import { cn } from '@/lib/utils'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { PageContainer, PageHeader } from '@/components/templates'
 import {
   CapitalAllocationPanel,
   DualFactorEvaluationPanel,
+  evaluateDualFactor,
+  EmptyState,
   type DualFactorResult,
+  type TechnicalSignal,
 } from '@/components/molecules'
 
 const logger = getLogger()
+
+function getScoreColorClass(score: number): string {
+  if (score >= 4.0) return 'text-[hsl(var(--stock-up))]'
+  if (score >= 3.0) return 'text-primary'
+  return 'text-[hsl(var(--stock-down))]'
+}
 
 const PortfolioPage = memo(() => {
   const loadPortfolio = useTradingStore((s) => s.loadPortfolio)
@@ -37,6 +50,8 @@ const PortfolioPage = memo(() => {
   const pfLoading = usePortfolioStore((s) => s.loading)
   const pfError = usePortfolioStore((s) => s.error)
 
+  const industrySectors = useIndustryScoreStore((s) => s.sectors)
+
   useEffect(() => {
     logger.info('[PortfolioPage] 组件挂载，自动加载投资组合', {
       hasPortfolio: !!portfolio,
@@ -48,9 +63,35 @@ const PortfolioPage = memo(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // 双因子评估结果占位：待 portfolioStore 接入真实技术信号 + 行业评分后填充
-  // 当前阶段展示空态，让面板渲染"暂无评估数据"与共振规则速查矩阵
-  const dualFactorResults = useMemo<DualFactorResult[]>(() => [], [])
+  // 双因子评估：从 pfStrategyResult 获取技术信号 + 行业评分，计算共振结果
+  const dualFactorResults = useMemo<DualFactorResult[]>(() => {
+    if (!pfStrategyResult || !pfStrategyResult.selected.length) return []
+
+    return pfStrategyResult.selected.map((candidate) => {
+      // 从 composite 综合评分推导技术信号：≥3.5 买入，<2.0 卖出，其余观望
+      const composite = candidate.composite ?? 0
+      let technicalSignal: TechnicalSignal
+      if (composite >= 3.5) {
+        technicalSignal = 'buy'
+      } else if (composite < 2.0) {
+        technicalSignal = 'sell'
+      } else {
+        technicalSignal = 'hold'
+      }
+
+      // 行业评分：优先使用 candidate 自带的 industryScore，否则从 industryScoreStore 按 sector 匹配
+      const industryScore =
+        candidate.industryScore ??
+        (() => {
+          const sector = industrySectors.find(
+            (s) => s.name === candidate.sector || s.code === candidate.sector,
+          )
+          return sector?.skillC?.composite ?? 0
+        })()
+
+      return evaluateDualFactor(technicalSignal, industryScore)
+    })
+  }, [pfStrategyResult, industrySectors])
 
   return (
     <ErrorBoundary>
@@ -87,6 +128,54 @@ const PortfolioPage = memo(() => {
             </Button>
           }
         />
+
+        {/* 组合 KPI Hero 卡 */}
+        {portfolio && (
+          <div className="grid grid-cols-3 lg:grid-cols-6 gap-3">
+            <Card>
+              <CardContent className="p-3 text-center">
+                <p className="text-xs text-muted-foreground">总资产</p>
+                <p className="text-lg font-bold">
+                  <Currency value={portfolio.totalValue} compact decimals={1} />
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-3 text-center">
+                <p className="text-xs text-muted-foreground">持仓市值</p>
+                <p className="text-lg font-bold">
+                  <Currency value={portfolio.holdings.reduce((s, h) => s + h.marketValue, 0)} compact decimals={1} />
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-3 text-center">
+                <p className="text-xs text-muted-foreground">现金储备</p>
+                <p className="text-lg font-bold">
+                  <Currency value={portfolio.cashReserve} compact decimals={1} />
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-3 text-center">
+                <p className="text-xs text-muted-foreground">持仓数</p>
+                <p className="text-lg font-bold">{portfolio.holdings.length}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-3 text-center">
+                <p className="text-xs text-muted-foreground">今日盈亏</p>
+                <p className="text-lg font-bold text-muted-foreground">--</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-3 text-center">
+                <p className="text-xs text-muted-foreground">累计收益</p>
+                <p className="text-lg font-bold text-muted-foreground">--</p>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* 资金管理双轨配置（30/70 分仓 + KPI 考核 + 大跌应对纪律） */}
         <CapitalAllocationPanel />
@@ -129,7 +218,7 @@ const PortfolioPage = memo(() => {
               </div>
             ) : (
               <div className="space-y-2">
-                <div className="grid grid-cols-2 gap-2 text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                   <div>
                     <span className="text-muted-foreground">组合名称：</span>
                     <span className="font-medium">{portfolio.name || '未命名'}</span>
@@ -141,22 +230,74 @@ const PortfolioPage = memo(() => {
                 </div>
                 {portfolio.holdings.length > 0 && (
                   <div className="mt-3 space-y-2">
-                    {portfolio.holdings.map((holding, _i) => (
-                      <div
-                        key={holding.symbol}
-                        className="flex items-center justify-between rounded-md border p-3"
-                      >
-                        <div>
-                          <span className="font-medium">{holding.symbol}</span>
-                          <span className="ml-2 text-sm text-muted-foreground">
-                            {holding.name}
-                          </span>
+                    {/* 表头 */}
+                    <div className="grid grid-cols-[1fr_auto_auto_auto_auto] items-center gap-2 rounded-md bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground">
+                      <span>名称</span>
+                      <span className="text-right">当前价</span>
+                      <span className="text-right">持仓市值</span>
+                      <span className="text-right">仓位占比</span>
+                      <span className="text-right">评分</span>
+                    </div>
+                    {portfolio.holdings.map((holding) => {
+                      const stockInfo = stocks.find((s) => s.symbol === holding.symbol)
+                      const costPrice = stockInfo?.avgCost
+                      const currentPrice = stockInfo?.currentPrice ?? holding.price
+                      const pnl =
+                        costPrice != null && currentPrice != null
+                          ? (currentPrice - costPrice) * holding.currentShares
+                          : undefined
+                      const pnlPct =
+                        costPrice != null && costPrice !== 0 && currentPrice != null
+                          ? ((currentPrice - costPrice) / costPrice) * 100
+                          : undefined
+                      const isProfit = pnl != null && pnl >= 0
+
+                      return (
+                        <div
+                          key={holding.symbol}
+                          className="grid grid-cols-[1fr_auto_auto_auto_auto] items-center gap-2 rounded-md border p-3"
+                        >
+                          <div>
+                            <span className="font-medium">{holding.symbol}</span>
+                            <span className="ml-2 text-sm text-muted-foreground">
+                              {holding.name}
+                            </span>
+                          </div>
+                          <div className="text-right text-sm">
+                            {costPrice != null && (
+                              <span className="text-xs text-muted-foreground mr-1">
+                                成本 <Currency value={costPrice} decimals={2} />
+                              </span>
+                            )}
+                            <span className="font-mono">
+                              {currentPrice != null ? <Currency value={currentPrice} decimals={2} /> : '--'}
+                            </span>
+                            {pnl != null && (
+                              <span
+                                className="ml-1 text-xs"
+                                style={{
+                                  color: isProfit
+                                    ? 'hsl(var(--stock-up))'
+                                    : 'hsl(var(--stock-down))',
+                                }}
+                              >
+                                <Currency value={pnl} decimals={0} />
+                                {pnlPct != null && <> (<Percent value={pnlPct} decimals={1} />)</>}
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-right text-sm font-mono">
+                            <Currency value={holding.marketValue} compact decimals={1} />
+                          </div>
+                          <div className="text-right text-sm">
+                            <Percent value={holding.currentWeight * 100} decimals={1} />
+                          </div>
+                          <div className="text-right">
+                            <Badge variant="secondary" className={cn(getScoreColorClass(holding.score))}>{holding.score.toFixed(1)}</Badge>
+                          </div>
                         </div>
-                        <Badge variant="secondary">
-                          {holding.currentShares}
-                        </Badge>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 )}
               </div>
@@ -192,7 +333,21 @@ const PortfolioPage = memo(() => {
         )}
 
         {/* 双因子评估（技术信号 × 行业景气度 → 共振才操作） */}
-        <DualFactorEvaluationPanel results={dualFactorResults} />
+        {!pfStrategyResult ? (
+          <EmptyState
+            title="暂无策略筛选结果"
+            description="请先在交易舱扫描信号并加载行业评分"
+            action={{
+              label: '加载投资组合',
+              onClick: () => {
+                logger.info('[PortfolioPage] 空状态点击加载投资组合')
+                void loadPortfolio()
+              },
+            }}
+          />
+        ) : (
+          <DualFactorEvaluationPanel results={dualFactorResults} />
+        )}
       </PageContainer>
     </ErrorBoundary>
   )

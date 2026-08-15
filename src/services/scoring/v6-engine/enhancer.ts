@@ -108,7 +108,7 @@ export class LLMScoreEnhancer {
         const baseResult = await calculator.calculate(input)
 
         // 防御性校验：验证 baseResult 结构完整性
-        if (!baseResult || typeof baseResult.score !== 'number') {
+        if (typeof baseResult?.score !== 'number') {
           logger.warn(
             `[LLMScoreEnhancer] 层 ${calculator.layerId} baseResult 无效，跳过增强`,
             { score: baseResult?.score, hasLayerId: !!baseResult?.layerId },
@@ -263,20 +263,27 @@ export class LLMScoreEnhancer {
     try {
       const jsonMatch = content.match(/```(?:json)?\s*\n?([\s\S]*?)```/)
       const jsonStr = jsonMatch?.[1] ?? content
-      const parsed = JSON.parse(jsonStr.trim())
-      const parsedScore = parsed.score
-      const rawCitations = Array.isArray(parsed.citations) ? parsed.citations : []
+      // no-unsafe 治理：JSON.parse 返回 unknown，经 Record 收窄后逐字段类型守卫
+      const parsed: unknown = JSON.parse(jsonStr.trim())
+      const obj: Record<string, unknown> =
+        typeof parsed === 'object' && parsed !== null ? (parsed as Record<string, unknown>) : {}
+      const parsedScore = obj.score
+      const rawCitations = Array.isArray(obj.citations) ? obj.citations : []
       return {
         score: typeof parsedScore === 'number' ? Math.max(0, Math.min(5, parsedScore)) : undefined,
-        summary: typeof parsed.summary === 'string' ? parsed.summary : undefined,
-        rationale: typeof parsed.rationale === 'string' ? parsed.rationale : undefined,
-        risks: Array.isArray(parsed.risks) ? parsed.risks.map(String) : undefined,
-        citations: rawCitations.map((c: Record<string, unknown>) => ({
-          source: typeof c.source === 'string' ? c.source : '未知来源',
-          content: typeof c.content === 'string' ? c.content : '无内容',
-          url: typeof c.url === 'string' ? c.url : undefined,
-          date: typeof c.date === 'string' ? c.date : undefined,
-        })),
+        summary: typeof obj.summary === 'string' ? obj.summary : undefined,
+        rationale: typeof obj.rationale === 'string' ? obj.rationale : undefined,
+        risks: Array.isArray(obj.risks) ? obj.risks.map(String) : undefined,
+        citations: rawCitations.map((c) => {
+          const rec: Record<string, unknown> =
+            typeof c === 'object' && c !== null ? (c as Record<string, unknown>) : {}
+          return {
+            source: typeof rec.source === 'string' ? rec.source : '未知来源',
+            content: typeof rec.content === 'string' ? rec.content : '无内容',
+            url: typeof rec.url === 'string' ? rec.url : undefined,
+            date: typeof rec.date === 'string' ? rec.date : undefined,
+          }
+        }),
       }
     } catch {
       logger.warn('[LLMScoreEnhancer] LLM 返回内容无法解析', { snippet: content.slice(0, LOG_SNIPPET_MAX_CHARS) })

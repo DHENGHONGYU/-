@@ -1,4 +1,5 @@
 ---
+doc_id: V9-DOC-REF-907
 title: Agent Runtime 实现规格
 version: v0.9.0-migration-implemented
 last_updated: 2026-06-25

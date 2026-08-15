@@ -8,12 +8,14 @@ status: active
 maintainer: V9 Architecture Team
 summary: "设计参考：https://hslqownhhwaig.ok.kimi.link/ 设计特征：PWA 移动端优先、shadcn/ui 组件体系、HSL CSS 变量主题、widget..."
 tags: [frontend, spec, plan, architecture, component, explanation]
-version: v2.5.0
-last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+version: v2.6.0
+last_updated: 2026-08-15
 doc_id: V9-DOC-FRONT-003
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-149]
 change_log:
+  - version: v2.6.0
+    changes: "修订主色为 Apple Blue #007AFF（对齐 V5 Apple Business Design Tokens 唯一真相源），同步 CSS 变量、设计原则与图表组件/Widget 状态"
+    date: 2026-08-15
   - version: v2.5.0
     changes: "C 类版本闭环(2026-08-11)：change_log 对齐当前版本"
     date: 2026-07-17
@@ -25,19 +27,19 @@ change_log:
 # 04. UI/UX 规范
 
 > **Status**: Current  
-> **Version**: v2.5.0  
-> **Last Updated**: 2026-07-05
+> **Version**: v2.6.0  
+> **Last Updated**: 2026-08-15
 >
 > **设计参考**：https://hslqownhhwaig.ok.kimi.link/  
-> **设计特征**：PWA 移动端优先、shadcn/ui 组件体系、HSL CSS 变量主题、widget 化驾驶舱、翡翠绿强调色。
+> **设计特征**：PWA 移动端优先、shadcn/ui 组件体系、HSL CSS 变量主题、widget 化驾驶舱、Apple Blue #007AFF 强调色（V5 Apple Business Design）。
 
 ## 4.1 设计原则
 
 1. **移动端优先**：主要使用场景为平板/桌面研究，但需适配移动端浏览。
-2. **PWA 体验**：可安装、离线可用、主题色 `#0D9165`（翡翠绿）。
+2. **PWA 体验**：可安装、离线可用、主题色 `#007AFF`（Apple Blue）。
 3. **Widget 化**：驾驶舱由可配置 Widget 网格组成。
 4. **五舱工作流**：输入 → 分析 → 交易 → 输出 → 总控，不切屏。
-5. **宋瓷美学 + 现代极简**：以象牙白/暖灰为底，翡翠绿为行动色。功能性**警示色为琥珀（amber，`--warning: 38 92% 50%`）**——避免与错误色（`--destructive` 红）及 A 股「红涨」语义撞色；**朱砂红（`--cinnabar`）为文化强调/装饰色**，用于点缀而非功能状态。
+5. **Apple Business Design 主调 + 宋瓷语义点缀**：以象牙白/暖灰为底，Apple Blue #007AFF（`--primary: 210 100% 50%`）为行动色。功能性**警示色为琥珀（amber，`--warning: 36 100% 50%`）**——避免与错误色（`--destructive` 红）及 A 股「红涨」语义撞色；**朱砂红（`--cinnabar`）为文化强调/装饰色**，用于点缀而非功能状态。宋瓷语义色（汝窑天青、官窑粉青、象牙白、暖灰）保留为装饰性扩展，不参与功能语义。
 
 ## 4.2 主题系统
 
@@ -45,26 +47,52 @@ change_log:
 
 ```css
 :root {
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
+  /* ── Apple Business Design Tokens（V5 落地） ──
+     Primary: Apple Blue #007AFF · Background: #F2F2F7 · Card: #FFFFFF
+     Radius: 16px · Shadow: static alpha<=0.05 / floating alpha<=0.08
+  */
+  --background: 240 24% 96%;
+  --foreground: 240 3% 12%;
   --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
+  --card-foreground: 240 3% 12%;
   --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 160 84% 31%;        /* 翡翠绿 #0D9165 */
+  --popover-foreground: 240 3% 12%;
+  --primary: 210 100% 50%;        /* Apple Blue #007AFF */
   --primary-foreground: 0 0% 100%;
-  --secondary: 240 4.8% 95.9%;
+  --secondary: 240 20% 98%;
   --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
+  --muted: 240 20% 98%;
+  --muted-foreground: 240 2% 57%;
+  --accent: 240 20% 98%;
   --accent-foreground: 240 5.9% 10%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 160 84% 31%;
-  --radius: 0.625rem;
+  --destructive: 4 100% 59%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 240 8% 91%;
+  --input: 240 8% 91%;
+  --ring: 210 100% 50%;
+  --radius: 1rem;
+}
+
+.dark {
+  --background: 240 3% 10%;
+  --foreground: 240 10% 96%;
+  --card: 240 3% 14%;
+  --card-foreground: 240 10% 96%;
+  --popover: 240 3% 14%;
+  --popover-foreground: 240 10% 96%;
+  --primary: 210 100% 60%;
+  --primary-foreground: 240 3% 10%;
+  --secondary: 240 3% 16%;
+  --secondary-foreground: 240 10% 96%;
+  --muted: 240 3% 16%;
+  --muted-foreground: 240 3% 60%;
+  --accent: 240 3% 20%;
+  --accent-foreground: 240 10% 96%;
+  --destructive: 4 100% 67%;
+  --destructive-foreground: 240 3% 10%;
+  --border: 240 3% 24%;
+  --input: 240 3% 24%;
+  --ring: 210 100% 60%;
 }
 ```
 
@@ -193,7 +221,7 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 - 事件名格式：`widget:{widgetId}:{event}`
 - 支持数据同步与状态同步
 
-**当前状态**：?? `CockpitShell.tsx` 为静态页面，缺少 Widget 框架。
+**当前状态**：✅ 已实现。`App.tsx` 通过 `widgetEngine.preloadComponents` 预热 Widget 组件，驾驶舱支持可配置 Widget 网格。详见 `src/components/templates/CockpitLayout.tsx`。
 
 ### 图表组件规范
 
@@ -220,7 +248,7 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 - 支持时间范围选择
 - 支持数据导出
 
-**当前状态**：?? 未实现。缺少图表组件。
+**当前状态**：✅ 已实现。图表组件库完整（19 个文件），覆盖 LineChart、BarChart、CandlestickChart、AreaChart、ScoreRadar、FactorHeatmap 等。K 线图使用 `lightweight-charts`，通用图表使用 `recharts`。详见 `src/components/chart/`。
 
 ## 4.4 股票池 UI 规范
 
@@ -284,7 +312,7 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 | Input | `src/components/atoms/Input.tsx` | 文本输入 |
 | Badge | `src/components/atoms/Badge.tsx` | 状态徽章 |
 | Progress | `src/components/atoms/Progress.tsx` | 进度条 |
-| Skeleton | `src/components/atoms/Skeleton.tsx` | 加载骨架 |
+| Skeleton | `src/components/molecules/states/Skeleton.tsx` | 加载骨架 |
 | Checkbox | `src/components/atoms/Checkbox.tsx` | 复选框 |
 | Textarea | `src/components/atoms/Textarea.tsx` | 多行文本输入 |
 | Select | `src/components/atoms/Select.tsx` | 选择器 |
@@ -295,16 +323,16 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 | Tooltip | `src/components/atoms/Tooltip.tsx` | 工具提示 |
 | Popover | `src/components/atoms/Popover.tsx` | 气泡卡片 |
 | Sheet | `src/components/atoms/Sheet.tsx` | 抽屉 |
-| Toast | `src/components/atoms/Toast.tsx` | 轻提示 |
+| Toast | `src/components/atoms/Toaster.tsx` | 轻提示 |
 | Menu | `src/components/atoms/Menu.tsx` | 菜单 |
-| Pagination | `src/components/atoms/Pagination.tsx` | 分页 |
+| Pagination | `src/pages/trading/components/Pagination.tsx` | 分页 |
 | Breadcrumb | `src/components/atoms/Breadcrumb.tsx` | 面包屑 |
 | Result | `src/components/atoms/Result.tsx` | 结果展示 |
 | List | `src/components/atoms/List.tsx` | 列表 |
 | Grid | `src/components/atoms/Grid.tsx` | 栅格 |
 | Table | `src/components/atoms/Table.tsx` | 表格 |
 | DatePicker | `src/components/atoms/DatePicker.tsx` | 日期选择 |
-| StockPriceChange | `src/components/atoms/StockPriceChange.tsx` | 股价变化 |
+| StockPriceChange | `src/components/atoms/StockPriceChangeBadge.tsx` | 股价变化 |
 
 ### 分子组件（Molecules）
 
@@ -395,7 +423,7 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 
 本文档当前版本为 `v0.9.0-docs-review`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
-- `../../reference/architecture-version-comparison.md`
+- `../reference/architecture-version-comparison.md`
 
 主要变化：
 

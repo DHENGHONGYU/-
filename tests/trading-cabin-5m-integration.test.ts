@@ -317,7 +317,7 @@ describe('交易舱综合测试：20只股票×500万资金', () => {
     }
 
     // 测试触发单仓上限场景（已有持仓，空间不足最小仓位）
-    // 由于单仓剩余空间5万 < 最小仓位阈值3%(15万)，cappedBy为'single'（被单仓上限约束导致无法建仓）
+    // 由于单仓剩余空间5万 < 最小仓位阈值3%(15万)，cappedBy为'min'（先被single cap到5万，再因<最小仓位归零 → cappedBy='min'）
     const sizing3 = calculatePosition({
       direction: 'buy',
       price: 298,
@@ -326,9 +326,9 @@ describe('交易舱综合测试：20只股票×500万资金', () => {
     })
     console.log(`\n  北方华创(已持¥120万 → 24%, 剩余空间5万<最小15万):`)
     console.log(`    动作:${sizing3.action} | ${sizing3.targetShares}股 | ¥${sizing3.targetValue.toLocaleString()} | 约束:${sizing3.cappedBy}`)
-    // 单仓上限25%即125万，已有120万，剩余空间5万，不足最小仓位阈值
+    // 单仓上限25%即125万，已有120万，剩余空间5万，不足最小仓位阈值 → 被最小仓位约束过滤为hold → cappedBy='min'
     expect(sizing3.targetValue).toBeLessThanOrEqual(50_000 + 1)
-    expect(sizing3.cappedBy).toBe('single') // 被单仓上限约束导致无法达到最小仓位
+    expect(sizing3.cappedBy).toBe('min')
 
     // 测试触发总仓上限场景
     const sizing4 = calculatePosition({
@@ -340,7 +340,8 @@ describe('交易舱综合测试：20只股票×500万资金', () => {
     console.log(`\n  任意股票(总仓已持¥395万 → 79%, 剩余5万<最小15万):`)
     console.log(`    动作:${sizing4.action} | ${sizing4.targetShares}股 | ¥${sizing4.targetValue.toLocaleString()} | 约束:${sizing4.cappedBy}`)
     expect(sizing4.targetValue).toBeLessThanOrEqual(50_000 + 1)
-    expect(sizing4.cappedBy).toBe('total') // 被总仓上限约束导致无法达到最小仓位
+    // 总仓剩余空间5万 < 最小仓位阈值3%(15万) → 先被total cap到5万，再因<最小仓位归零 → cappedBy='min'
+    expect(sizing4.cappedBy).toBe('min')
   })
 
   // ----------------------------------------------------------

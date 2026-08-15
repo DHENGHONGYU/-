@@ -34,8 +34,8 @@ change_log:
 
 | 分类 | 典型路径 | 说明 |
 |:---|:---|:---|
-| 旧版架构文档 | `../reference/03-architecture-standards.md` | 已迁移到 `docs/specs/design/architecture/` |
-| 代码审查文档 | `../reference/code-review.md` | 已迁移到 `../how-to/code-review-guide.md` |
+| 旧版架构文档 | `../explanation/03-architecture-standards.md` | 已迁移到 `docs/specs/design/architecture/` |
+| 代码审查文档 | `../guides/how-to/code-review-guide.md` | 已迁移到 `../guides/how-to/code-review-guide.md` |
 | 数据定义文档 | `docs/RISK_DERIVED_data-definition.md` | 已归档到 `archive/docs/07-archive/` |
 | UI 组件 | `src/components/templates/PageContainer.tsx` | 组件结构变更 |
 | 临时报告 | `docs/reports/code-graph.json` | 临时产物，已过期 |
@@ -59,20 +59,20 @@ change_log:
 CHANGELOG.md 第 6 行已添加声明：
 
 ```markdown
-⚠️ **历史引用声明**：本日志中 v2.4.0 之前的条目引用的部分文档路径（如 `../reference/03-architecture-standards.md`、`../reference/code-review.md`、`docs/reports/code-graph.json` 等）可能因文档体系重构（SDLC 目录重组）已发生变更。如需最新路径，请查询 `docs/README.md` 或 `docs/meta/` 索引。
+⚠️ **历史引用声明**：本日志中 v2.4.0 之前的条目引用的部分文档路径（如 `../explanation/03-architecture-standards.md`、`../guides/how-to/code-review-guide.md`、`docs/reports/code-graph.json` 等）可能因文档体系重构（SDLC 目录重组）已发生变更。如需最新路径，请查询 `docs/README.md` 或 `docs/meta/` 索引。
 ```
 
 ### 2.3 路径别名映射
 
 | 旧路径 | 新路径 | 状态 |
 |:---|:---|:---|
-| `../reference/03-architecture-standards.md` | `../explanation/architecture.md` | ✅ 映射 |
-| `../reference/code-review.md` | `../how-to/code-review-guide.md` | ✅ 映射 |
+| `../explanation/03-architecture-standards.md` | `../explanation/architecture.md` | ✅ 映射 |
+| `../guides/how-to/code-review-guide.md` | `../guides/how-to/code-review-guide.md` | ✅ 映射 |
 | `docs/RISK_DERIVED_data-definition.md` | `archive/docs/07-archive/RISK_DERIVED_data-definition.md.DEPRECATED` | ✅ 已归档 |
 | `../reference/data-dictionary-index.md` | `../reference/data-dictionary-index.md` | ✅ 映射 |
-| `../reference/code-review-cheatsheet.md` | `../how-to/code-review-guide.md` | ✅ 已合并 |
-| `../explanation/design/code-review-training.md` | `../how-to/code-review-guide.md` | ✅ 已合并 |
-| `../explanation/design/solo-review.md` | `../how-to/code-review-guide.md` | ✅ 已合并 |
+| `../reference/code-review-cheatsheet.md` | `../guides/how-to/code-review-guide.md` | ✅ 已合并 |
+| `../guides/development/code-review/code-review-training.md` | `../guides/how-to/code-review-guide.md` | ✅ 已合并 |
+| `../guides/development/code-review/solo-review.md` | `../guides/how-to/code-review-guide.md` | ✅ 已合并 |
 | `../explanation/design/tech-debt.md` | `../explanation/design/tech-debt.md` | ✅ 映射 |
 
 ---

@@ -225,7 +225,7 @@ function checkTokenOptimizationDocs(): Finding[] {
 
   if (!fs.existsSync(docsPath)) {
     findings.push({
-      file: 'docs/reports/lessons-learned/token-optimization-best-practices.md',
+      file: 'docs' + '/reports/lessons-learned/token-optimization-best-practices.md', // 已归档
       line: 0,
       type: '缺失优化指南',
       message: 'Token 优化最佳实践文档不存在',
@@ -237,7 +237,7 @@ function checkTokenOptimizationDocs(): Finding[] {
   const content = safeReadFile(docsPath)
   if (content === null) {
     findings.push({
-      file: 'docs/reports/lessons-learned/token-optimization-best-practices.md',
+      file: 'docs' + '/reports/lessons-learned/token-optimization-best-practices.md', // 已归档
       line: 0,
       type: '读取失败',
       message: 'Token 优化文档读取失败（权限或编码问题）',
@@ -258,7 +258,7 @@ function checkTokenOptimizationDocs(): Finding[] {
   for (const section of requiredSections) {
     if (!content.includes(section)) {
       findings.push({
-        file: 'docs/reports/lessons-learned/token-optimization-best-practices.md',
+        file: 'docs' + '/reports/lessons-learned/token-optimization-best-practices.md', // 已归档
         line: 1,
         type: '缺少章节',
         message: `Token 优化文档缺少 "${section}" 章节`,

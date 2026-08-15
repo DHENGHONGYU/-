@@ -211,7 +211,8 @@ describe('scoreDocService', () => {
     expect(result.success).toBe(true)
     expect(result.data?.totalDocs).toBe(2)
     expect(result.data?.totalStocks).toBe(2)
-    expect(result.data?.coreStocks).toBe(1)
+    // strongBuy 阈值 v2 = 3.5 → 4.2 & 3.8 均 ≥ 3.5 → 2 只核心股
+    expect(result.data?.coreStocks).toBe(2)
   })
 
   it('应该list score docs by symbol', async () => {

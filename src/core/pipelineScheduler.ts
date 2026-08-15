@@ -168,11 +168,13 @@ class PipelineCycle {
 
     logger.debug(`[PipelineScheduler] 循环 "${this.config.name}" 下次执行: ${delay}ms 后`)
 
-    this.timer = setTimeout(async () => {
-      await this.execute()
-      if (this.state === 'RUNNING') {
-        this.scheduleNext()
-      }
+    this.timer = setTimeout(() => {
+      void (async () => {
+        await this.execute()
+        if (this.state === 'RUNNING') {
+          this.scheduleNext()
+        }
+      })()
     }, delay)
   }
 

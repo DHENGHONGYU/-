@@ -141,7 +141,7 @@ export default function SystemMonitorPage(): React.JSX.Element {
             <div className="grid gap-2 sm:grid-cols-3">
               {Object.entries(stats).map(([key, value]) => (
                 <div key={key} className="rounded-md border p-3 text-center">
-                  <p className="text-2xl font-bold">{value}</p>
+                  <p className="text-h1 font-bold">{value}</p>
                   <Badge variant="outline">{key}</Badge>
                 </div>
               ))}

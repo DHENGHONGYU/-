@@ -237,6 +237,98 @@ export const CHART_PALETTE = {
 } as const
 
 // ============================================================
+// 专业交易软件图表调色板（对标 TradingView / Wind / 同花顺）
+// ============================================================
+/**
+ * 专业级深色图表调色板
+ * @description 对标 TradingView 暗色主题的专业配色，适用于 K 线图和多窗格图表。
+ * 设计原则：低噪点网格、高对比度文字、柔和坐标轴、专业均线色。
+ */
+export const CHART_PALETTE_PRO = {
+  // ── 背景 ──
+  /** 图表背景 */
+  bg: '#131722',
+  /** 图表容器背景（略浅） */
+  bgLight: '#1a1d2e',
+
+  // ── 网格线 ──
+  /** 网格线（水平/垂直） */
+  grid: 'rgba(255,255,255,0.06)',
+  /** 网格线（浅色，副图用） */
+  gridLight: 'rgba(255,255,255,0.04)',
+
+  // ── 坐标轴文字 ──
+  /** 坐标轴文字 */
+  axis: '#787b86',
+  /** 坐标轴文字（深色） */
+  axisDark: '#5a5d6a',
+  /** 高对比度文字 */
+  contrast: '#d1d4dc',
+
+  // ── 浮层 ──
+  /** 浮层背景 */
+  tooltipBg: '#1e2233',
+  /** 浮层文字 */
+  tooltipText: '#d1d4dc',
+
+  // ── 涨跌色（A股红涨绿跌） ──
+  /** 上涨色 */
+  upColor: '#ef5350',
+  /** 上涨色 50% 透明 */
+  upColor50: '#ef535080',
+  /** 上涨色 80% 透明 */
+  upColor80: '#ef5350cc',
+  /** 下跌色 */
+  downColor: '#26a69a',
+  /** 下跌色 50% 透明 */
+  downColor50: '#26a69a80',
+  /** 下跌色 80% 透明 */
+  downColor80: '#26a69acc',
+
+  // ── 均线系列色（TradingView 经典色） ──
+  /** MA5 / 系列1 - 金色 */
+  series1: '#f7b731',
+  /** MA10 / 系列2 - 蓝色 */
+  series2: '#2d98da',
+  /** MA20 / 系列3 - 珊瑚红 */
+  series3: '#fc5c65',
+  /** MA60 / 系列4 - 翠绿 */
+  series4: '#26de81',
+  /** 系列5 - 紫色 */
+  series5: '#a55eea',
+  /** 系列6 - 青色 */
+  series6: '#2bcbba',
+
+  // ── 十字光标 ──
+  /** 十字光标强调色 */
+  accent: 'rgba(255,255,255,0.15)',
+  /** 十字光标线 */
+  crosshairLine: 'rgba(255,255,255,0.12)',
+
+  // ── 仪表盘 ──
+  gaugeTrack: '#2a2e3e',
+  gaugeLow: '#4a4e5e',
+  gaugeMidLow: '#f7b731',
+  gaugeMid: '#2bcbba',
+  gaugeHigh: '#26de81',
+  gaugeRiskHigh: '#ef5350',
+
+  // ── 热力图 ──
+  factorHeatmapLow: '#ffc832',
+  factorHeatmapMid: '#f7b731',
+  factorHeatmapHigh: '#3296ff',
+  heatmapRedGreen: { low: '#ef5350', mid: '#f7b731', high: '#26de81' },
+  heatmapBlueYellow: { low: '#2d98da', mid: '#f7b731', high: '#a5d63e' },
+  heatmapPurpleGreen: { low: '#a55eea', mid: '#2bcbba', high: '#26de81' },
+  heatmapMonoBlue: { low: '#1a2744', mid: '#2d98da', high: '#7fc4fd' },
+  heatmapTextDark: '#d1d4dc',
+  heatmapTextLight: '#131722',
+
+  // ── 雷达图 ──
+  radarDefault: '#2d98da',
+} as const
+
+// ============================================================
 // 间距令牌（Spacing Tokens）
 // ============================================================
 

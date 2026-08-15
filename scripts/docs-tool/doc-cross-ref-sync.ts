@@ -6,7 +6,7 @@
  * 职责：
  * 1. 扫描 docs/ 目录下所有 Markdown 文件中的相对链接
  * 2. 检测断裂链接并尝试自动修复
- * 3. 维护 docs/meta/registry-index.md 中的文档索引
+ * 3. 维护 doc-id-registry 中的文档索引（原 registry-index.md 已归档，当前 doc-id-registry.md 已归档至 archive/historical-2026-08-16/batch7/）
  * 4. 返回更新记录供每日验证流程归档
  */
 
@@ -159,7 +159,7 @@ export function extractRelativeLinks(content: string): RawLink[] {
       offset += line.length + 1
       continue
     }
-    // 链接 URL 允许包含一个内层括号对（如文件名 `docs/reference/v9核心数据字典与类型定义(整合版).md`），
+    // 链接 URL 允许包含一个内层括号对（如包含括号的文件名），
     // 与 GitHub 解析行为一致；否则半角 `)` 会错误截断 URL。
     const regex = /\[([^\]]+)\]\(((?:[^()]+|\([^()]*\))*)\)/g
     let match

@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-GUIDE-032
+title: "02 · 整体架构设计思路（Overall Architecture）"
+domain: guide
+status: active
+last_updated: 2026-08-15
+---
+
 # 02 · 整体架构设计思路（Overall Architecture）
 
 > 本文回答"**系统怎么搭、模块怎么连、未来怎么扩**"。权威基线：`AGENTS.md`（分层契约）、`docs/explanation/system-architecture.md`、`docs/explanation/architecture.md`、`docs/reference/gateway-write-permission-spec.md`、`docs/explanation/adr-001-pure-frontend-architecture.md`。

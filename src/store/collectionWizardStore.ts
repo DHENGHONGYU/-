@@ -199,7 +199,7 @@ export const useCollectionWizardStore = create<CollectionWizardStore>()((set, ge
     const previous = apiConfigs[code]
     logger.info('[CollectionWizardStore] updateApiConfig', {
       code,
-      previous: previous !== undefined ? previous : null,
+      previous: previous ?? null,
       updated: config,
     })
     set({ apiConfigs: { ...apiConfigs, [code]: config } })

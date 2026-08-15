@@ -115,14 +115,17 @@ export class AnalysisServer extends MCPServerBase {
         handler: async (args) => {
            
            
-          const stocks = JSON.parse(args.data as string)
+          const parsed: unknown = JSON.parse(args.data as string)
+          const stocks: unknown[] = Array.isArray(parsed) ? parsed : []
 
           const options: { forceRefresh?: boolean; hs300Pe?: number; hs300Pb?: number } = {}
           if (args.hs300Pe !== undefined) options.hs300Pe = args.hs300Pe as number
           if (args.hs300Pb !== undefined) options.hs300Pb = args.hs300Pb as number
           logger.info('[AnalysisServer] analyze_industry_v4 called', { stockCount: stocks.length })
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          const results = await runFullIndustryAnalysisEnhanced(stocks, options)
+          const results = await runFullIndustryAnalysisEnhanced(
+            stocks as Parameters<typeof runFullIndustryAnalysisEnhanced>[0],
+            options,
+          )
           const rotationSignals = generateRotationSignals(results.v4Analyses)
           return {
             content: [{ type: 'text', text: JSON.stringify({

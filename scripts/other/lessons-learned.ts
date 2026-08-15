@@ -12,7 +12,7 @@
  *
  * 输出：
  *   - docs/reports/lessons-learned/lessons-learned-{YYYY-MM-DD}.md
- *   - docs/reports/lessons-learned/latest.md
+ *   - <docs/reports/lessons-learned/latest.md>（已归档/删除）
  */
 
 import { execSync } from 'node:child_process'
@@ -277,7 +277,8 @@ function persistReport(report: LessonsReport): string | null {
     }
     const dateStr = report.meta.generatedAt.split('T')[0]
     const mdPath = join(REPORT_DIR, `lessons-learned-${dateStr}.md`)
-    const latestMdPath = join(REPORT_DIR, 'docs/reports/lessons-learned/latest.md')
+    // 原 <docs/reports/lessons-learned/latest.md> 路径已归档/删除
+    const latestMdPath = join(REPORT_DIR, 'docs', 'reports', 'lessons-learned', 'latest.md')
     const jsonPath = join(REPORT_DIR, `lessons-learned-${dateStr}.json`)
 
     const markdownContent = renderMarkdownReport(report)

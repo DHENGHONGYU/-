@@ -612,7 +612,7 @@ useEffect(() => {
 }, []);
 ```
 
-> **详细规范**：[coding-conventions.md](../reference/coding-conventions.md)
+> **详细规范**：[coding-conventions.md](../../reference/coding-conventions.md)
 
 ---
 
@@ -1022,7 +1022,7 @@ export const useXxxStore = create<XxxState>()(
 );
 ```
 
-> **详细指南**：[how-to-add-store.md](../how-to/how-to-add-store.md)、[store-integration-guide.md](../prompts/store-integration-guide.md)
+> **详细指南**：[how-to-add-store.md](../how-to/how-to-add-store.md)、[store-integration-guide.md](../../reference/ai/store-integration-guide.md)
 
 ---
 
@@ -1076,7 +1076,7 @@ export const xxxService = {
 };
 ```
 
-> **详细指南**：[how-to-add-service.md](../how-to/how-to-add-service.md)、[service-integration-guide.md](../prompts/service-integration-guide.md)
+> **详细指南**：[how-to-add-service.md](../how-to/how-to-add-service.md)、[service-integration-guide.md](../../reference/ai/service-integration-guide.md)
 
 ---
 
@@ -1244,7 +1244,7 @@ npm run audit:atomic
 - [ ] Router 版本兼容性验证
 - [ ] SKILL 方法论与代码权重表对齐
 
-> **完整教训库**：[lessons-learned.md](../../reports/project-management/development-lessons-learned.md)、[lessons-learned-summary.md](../reports/retrospectives/lessons-learned-summary.md)
+> **完整教训库**：[development-lessons-learned.md（已归档）](../../archive/historical-2026-08-16/batch6/docs/reports/project-management/development-lessons-learned.md)、lessons-learned-summary.md（已归档）
 
 ---
 
@@ -1337,7 +1337,7 @@ change_log:
 - 新增页面 → 更新路由文档
 - 架构变更 → 更新 ADR 或架构文档
 
-> **详细规范**：[doc-style-standard.md](../../meta/doc-style-standard.md)、[jsdoc-convention.md](../reference/jsdoc-convention.md)
+> **详细规范**：[doc-style-standard.md](../../meta/doc-style-standard.md)、[jsdoc-convention.md](../../reference/jsdoc-convention.md)
 
 ---
 
@@ -1396,15 +1396,15 @@ change_log:
 | **架构契约** | AGENTS.md | [AGENTS.md](../../meta/AGENTS.md) |
 | | 架构标准 | [03-architecture-standards.md](../../explanation/03-architecture-standards.md) |
 | **开发流程** | 开发工作流 SOP | [development-workflow-sop.md](../../reference/development-workflow-sop.md) |
-| | 编码规范 | [coding-conventions.md](../reference/coding-conventions.md) |
+| | 编码规范 | [coding-conventions.md](../../reference/coding-conventions.md) |
 | | 质量门禁 | [09-quality-gates.md](../09-quality-gates.md) |
 | **专项指南** | 新增 Store | [how-to-add-store.md](../how-to/how-to-add-store.md) |
 | | 新增 Service | [how-to-add-service.md](../how-to/how-to-add-service.md) |
 | | 新增 Widget | [how-to-add-widget.md](../how-to/how-to-add-widget.md) |
 | | 代码评审 | [code-review-guide.md](../how-to/code-review-guide.md) |
-| **经验教训** | 完整教训库 | [lessons-learned.md](../../reports/project-management/development-lessons-learned.md) |
-| | 教训摘要 | [lessons-learned-summary.md](../reports/retrospectives/lessons-learned-summary.md) |
-| | 项目历程 | [project-development-journey.md](../reports/retrospectives/project-development-journey.md) |
+| **经验教训** | 完整教训库 | [development-lessons-learned.md（已归档）](../../archive/historical-2026-08-16/batch6/docs/reports/project-management/development-lessons-learned.md) |
+| | 教训摘要 | lessons-learned-summary.md（已归档） |
+| | 项目历程 | project-development-journey.md（已归档） |
 
 ### 附录 B：命令速查
 

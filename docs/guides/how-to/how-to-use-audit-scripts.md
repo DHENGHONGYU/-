@@ -197,7 +197,7 @@ node scripts/audit/audit-circuit-breaker-reset.mjs
 node scripts/audit/audit-test-catalog-coverage.mjs
 ```
 
-**检查内容**：扫描所有 `*.test.{ts,tsx}` 文件，检查是否在 `docs/reference/test-catalog.md` 中收录，防止测试收录遗漏。
+**检查内容**：扫描所有 `*.test.{ts,tsx}` 文件，检查是否在 `docs/reference/test-catalog.md`（已归档至 `docs/archive/historical-2026-08-16/batch6/docs/reference/test-catalog.md`）中收录，防止测试收录遗漏。
 
 **使用时机**：
 - 新增测试文件后必跑
@@ -211,7 +211,7 @@ node scripts/audit/audit-test-catalog-coverage.mjs
 node scripts/audit/analyze-test-catalog-gaps.mjs
 ```
 
-**检查内容**：分析未收录在 test-catalog.md 中的测试文件，按子域分类统计，生成分批处理计划。输出 `docs/reports/test-catalog-gap-analysis-2026-08-09.md`。
+**检查内容**：分析未收录在 test-catalog.md 中的测试文件，按子域分类统计，生成分批处理计划。
 
 **使用时机**：test-catalog.md 收录率低于 100% 时运行，制定补录计划。
 
@@ -242,7 +242,7 @@ node scripts/audit/audit-test-duplicates.mjs
 
 **关联报告**：`docs/reports/test-duplicate-cleanup-suggestions-2026-08-09.md`
 
-**关联技术债**：TD-012（已完成）、TD-015（P2 完成，P3 暂缓）— 详见 [TECH-DEBT.md](../../reports/TECH-DEBT.md)
+**关联技术债**：TD-012（已完成）、TD-015（P2 完成，P3 暂缓）— 详见 TECH-DEBT.md（已归档至 `docs/archive/historical-2026-08-16/batch6/docs/reports/TECH-DEBT.md`）
 
 **关联治理报告**：
 - [directDataAPI 迁移验证报告](../../../deliverables/software-company/directDataAPI-migration-report-2026-08-09.md)
@@ -268,7 +268,7 @@ node scripts/audit/fix-duplicate-test-ids.mjs [--dry-run]
 
 **关联报告**：`docs/reports/test-duplicate-cleanup-suggestions-2026-08-09.md` §三
 
-**关联治理**：`docs/reports/tech-debt-cleanup-summary-2026-08-09.md` §九.3
+**关联治理**：tech-debt-cleanup-summary-2026-08-09.md（已归档）
 
 ### 命令 13：split-tests-directory（tests/ 目录按子域拆分）
 
@@ -292,7 +292,7 @@ node scripts/audit/split-tests-directory.mjs [--dry-run]
 
 **注意事项**：拆分后需运行回归测试确认 import 路径正确。
 
-**关联治理**：`docs/reports/tech-debt-cleanup-summary-2026-08-09.md` §九.4
+**关联治理**：tech-debt-cleanup-summary-2026-08-09.md（已归档）
 
 ---
 
@@ -503,11 +503,11 @@ npm install -g tsx
 | 文档 | 路径 | 说明 |
 |------|------|------|
 | 质量门禁标准 | `../standards/quality-gates.md` | 三级门禁的完整定义与验收标准 |
-| 测试策略 | `./testing/testing-strategy.md` | 测试分层与回归策略 |
+| 测试策略 | `../testing-strategy.md` | 测试分层与回归策略 |
 | 审计脚本 README | `../../scripts/audit/README.md` | 全部审计脚本的索引与参数说明 |
 | 质量审计配置文件 | `../../scripts/audit-quality.config.json` | audit-quality-enhanced 规则配置 |
 | 代码评审指南 | `./code-review-guide.md` | 评审流程与检查清单 |
-| 回归套件说明 | `../explanation/regression-suite.md` | 回归流程的设计背景 |
+| 回归套件说明 | `../../explanation/regression-suite.md` | 回归流程的设计背景 |
 
 ---
 

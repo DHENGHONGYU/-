@@ -33,7 +33,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { db, close } from '@/data/db'
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'
 import { mcpRegistry } from '@/mcp/core/registry'
-import { registerAllServers } from '@/mcp/register'
+import { ensureMCPRegistered, mcpReadyPromise, mcpFullyReadyPromise } from '@/mcp/register'
 import { mcpAclInterceptor, McpAclError } from '@/mcp/core/mcpAclInterceptor'
 import { MCP_ACL_MATRIX } from '@/config/mcpAclMatrix'
 import type {
@@ -111,9 +111,16 @@ function assertAclAllowed(result: ToolResult): void {
 // ============================================================
 
 beforeAll(async () => {
-  registerAllServers()
+  // 使用异步注册路径（ensureMCPRegistered + await ready promises），
+  // 而非同步 registerAllServers()——后者依赖 loadedModuleCache（由异步
+  // import.meta.glob 填充），在隔离测试环境中缓存为空，不会注册任何 server。
+  // 套件5/6/7 需要 mcpRegistry.getServer() 直接获取 Server 实例，必须确保
+  // 核心 + 懒加载 Server 均已注册完成。
+  ensureMCPRegistered()
+  await mcpReadyPromise
+  await mcpFullyReadyPromise
   await db.init()
-})
+}, 60000)
 
 afterAll(() => {
   // 关闭 db 连接 + 重置单例，避免同一进程串行运行多个测试文件时状态污染

@@ -64,7 +64,7 @@ const SignalMonitorWidget = memo(function SignalMonitorWidget({ config }: Signal
       titleIcon={<Zap className={`h-5 w-5 ${COLOR_TOKENS.warning.tailwind}`} />}
       visualState={visualState}
       error={error}
-      onRetry={refresh}
+      onRetry={() => void refresh()}
       emptyTitle="暂无交易信号"
       emptyDescription="添加股票到观察池后将自动生成信号"
       skeleton={(

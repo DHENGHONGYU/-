@@ -225,7 +225,7 @@ export class LiveCollector extends BaseCollector {
       dataSource: 'tencent-proxy',
       symbol,
       code: symbol.replace(/\.[A-Z]+$/, ''),
-      bars: 252,
+      bars: KLINE_BARS,
     })
 
     const code = symbol.replace(/\.[A-Z]+$/, '')
@@ -261,7 +261,7 @@ export class LiveCollector extends BaseCollector {
     }
 
     const quote = result.data[0]!
-    const industryInfo = INDUSTRY_MAP[code] || { name: '未知行业', competitors: [], marketShare: 0 }
+    const industryInfo = INDUSTRY_MAP[code] ?? { name: '未知行业', competitors: [], marketShare: 0 }
 
     const profile = {
       symbol: quote.symbol,
@@ -283,7 +283,7 @@ export class LiveCollector extends BaseCollector {
 
   private async collectStockCompare(symbol: string): Promise<RawMarketData> {
     const code = symbol.replace(/\.[A-Z]+$/, '')
-    const industryInfo = INDUSTRY_MAP[code] || { name: '未知行业', competitors: [], marketShare: 0 }
+    const industryInfo = INDUSTRY_MAP[code] ?? { name: '未知行业', competitors: [], marketShare: 0 }
 
     const compareCodes = [...industryInfo.competitors.slice(0, 3), code]
     logger.info('[LiveCollector] 开始采集股票对比数据', {
@@ -402,8 +402,8 @@ export class LiveCollector extends BaseCollector {
     logger.info('[LiveCollector] 开始采集热点新闻', { symbol })
 
     const news = [
-      { title: `${(WATCHLIST_NAMES[symbol] ?? '股票')}发布季度财报，业绩超预期`, summary: '公司今日发布财报，净利润同比增长35%', source: '财经头条', url: '#', publishedAt: Date.now() - 3600000 },
-      { title: '行业政策利好，板块集体上涨', summary: '相关政策落地，行业迎来发展机遇', source: '证券时报', url: '#', publishedAt: Date.now() - 7200000 },
+      { title: `${(WATCHLIST_NAMES[symbol] ?? '股票')}发布季度财报，业绩超预期`, summary: '公司今日发布财报，净利润同比增长35%', source: '财经头条', url: '#', publishedAt: Date.now() - 1 * HOUR_MS },
+      { title: '行业政策利好，板块集体上涨', summary: '相关政策落地，行业迎来发展机遇', source: '证券时报', url: '#', publishedAt: Date.now() - 2 * HOUR_MS },
       { title: '机构调研纪要：看好中长期发展', summary: '多家机构调研后表示长期看好', source: '东方财富', url: '#', publishedAt: Date.now() - 4 * HOUR_MS },
     ]
 
@@ -416,7 +416,7 @@ export class LiveCollector extends BaseCollector {
     logger.info('[LiveCollector] 开始采集行业竞品数据', { symbol })
 
     const code = symbol.replace(/\.[A-Z]+$/, '')
-    const industryInfo = INDUSTRY_MAP[code] || { name: '未知行业', competitors: [], marketShare: 0 }
+    const industryInfo = INDUSTRY_MAP[code] ?? { name: '未知行业', competitors: [], marketShare: 0 }
 
     const competitors = industryInfo.competitors.map((compCode) => ({
       symbol: compCode,

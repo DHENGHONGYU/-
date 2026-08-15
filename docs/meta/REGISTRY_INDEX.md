@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-META-003
+title: "V9 模块注册体系索引"
+domain: meta
+status: active
+last_updated: 2026-08-15
+---
+
 # V9 模块注册体系索引
 
 > **版本**: v1.1.0 | **日期**: 2026-07-05 | **对应代码版本**: v2.5.0

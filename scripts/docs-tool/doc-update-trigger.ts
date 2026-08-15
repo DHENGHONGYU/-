@@ -3,7 +3,7 @@
  * @module scripts/doc-update-trigger
  * @description 文档自动更新触发器 — 监控代码变更并按「触发-动作映射表」生成/更新对应文档
  *
- * 触发器类型（与 docs/meta/doc-trigger-action-map.md §二 一一对应）：
+ * 触发器类型（原 docs/meta/doc-trigger-action-map.md 已归档至 archive/historical-2026-08-16/batch7/）：
  * - T1 类型定义变更 → 数据字典
  * - T2 接口变更 → API 契约
  * - T3 架构调整 → 架构标准
@@ -17,7 +17,7 @@
  * - T11 Mock 模块安全 → 映射表 + AGENTS.md §7.3
  * - T12 ESLint/门禁变更 → AGENTS.md §三 + §七
  * - T13 ACL 权限矩阵变更 → doc-trigger-action-map.md §二（映射表定义，本文件未实现运行时规则，故股票字典规则顺延 T14）
- * - T14 股票字典生成/校验 → 股票字典生成参考文档（docs/reference/stock-dictionary-generation.md）
+ * - T14 股票字典生成/校验 → 股票字典生成参考文档（原 docs/reference/stock-dictionary-generation.md 已归档至 archive/historical-2026-08-16/batch7/）
  *
  * 用法：
  *   npx tsx scripts/doc-update-trigger.ts [选项]
@@ -68,7 +68,7 @@ interface TriggerRule {
 }
 
 /**
- * 触发规则权威集（单一事实源：docs/meta/doc-trigger-action-map.md §二）。
+ * 触发规则权威集（原单一事实源 docs/meta/doc-trigger-action-map.md 已归档至 archive/historical-2026-08-16/batch7/）。
  * docsToUpdate 路径已对齐 Diátaxis 新结构（2026-07-14 pr-6 重组后修订），
  * 新增/改动须同步映射表。
  */
@@ -83,11 +83,9 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
       'src/showcase/types.ts',
     ],
     docsToUpdate: [
-      'docs/reference/data-dictionary-index.md',
+      // 以下文档已归档至 archive/historical-2026-08-16/batch7/
+      // 以下归档文档已移除（原 data-dictionary-index, news-data-definition, cockpit/data-definition, team-handbook/04 等已归档至 batch7/）
       'docs/reference/v9核心数据字典与类型定义(整合版).md',
-      'docs/reference/cockpit/data-definition.md',
-      'docs/explanation/news-data-definition.md',
-      'docs/guides/team-handbook/04-model-runtime.md',
     ],
     description: '类型定义变更时，需更新数据字典文档',
     auditDocs: true,
@@ -103,11 +101,8 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
       'src/services/analysis/**',
     ],
     docsToUpdate: [
-      'docs/reference/api-contract.md',
-      'docs/reference/databridge端点与数据映射清单.md',
-      'docs/reference/功能模块数据契约.md',
-      'docs/guides/team-handbook/02-architecture.md',
-      'docs/guides/team-handbook/04-model-runtime.md',
+      // 以下文档已归档至 archive/historical-2026-08-16/batch7/
+      // 以下归档文档已移除（原 api-contract, databridge端点, 功能模块数据契约, team-handbook/02, team-handbook/04 等已归档至 batch7/）
     ],
     description: '接口签名变更时，需更新 API 契约文档',
     auditDocs: true,
@@ -122,10 +117,8 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
       'src/config/thresholds.ts',
     ],
     docsToUpdate: [
-      'docs/explanation/03-architecture-standards.md',
-      'docs/explanation/06-routing-specs.md',
-      'docs/explanation/system-architecture.md',
-      'docs/guides/team-handbook/02-architecture.md',
+      // 以下文档已归档至 archive/historical-2026-08-16/batch7/
+      // 以下归档文档已移除（原 03-architecture-standards, 06-routing-specs, system-architecture, team-handbook/02 等已归档至 batch7/）
     ],
     description: '架构调整时，需更新架构标准文档',
     auditDocs: true,
@@ -139,9 +132,8 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
       'src/services/scoring/v6-engine/config.ts',
     ],
     docsToUpdate: [
-      'docs/reference/05-engine-specs.md',
-      'docs/reference/09-quality-gates.md',
-      'docs/guides/team-handbook/04-model-runtime.md',
+      // 以下文档已归档至 archive/historical-2026-08-16/batch7/
+      // 以下归档文档已移除（原 05-engine-specs, 09-quality-gates, team-handbook/04 等已归档至 batch7/）
     ],
     description: '配置参数变更时，需更新引擎规格文档',
     auditDocs: true,
@@ -151,9 +143,8 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
     name: 'Store 状态管理变更',
     patterns: ['src/store/**/*.ts'],
     docsToUpdate: [
-      'docs/explanation/state-management.md',
-      'docs/reference/data-flow-spec.md',
-      'docs/guides/team-handbook/02-architecture.md',
+      // 以下文档已归档至 archive/historical-2026-08-16/batch7/
+      // 以下归档文档已移除（原 state-management, data-flow-spec, team-handbook/02 等已归档至 batch7/）
     ],
     description: '状态管理变更时，需更新状态管理文档和数据流说明',
     auditDocs: true,
@@ -163,10 +154,8 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
     name: 'UI 组件变更',
     patterns: ['src/components/**/*.tsx', 'src/components/**/*.ts'],
     docsToUpdate: [
-      'docs/explanation/design/component-specs.md',
-      'docs/explanation/design/component-library-guide.md',
-      'docs/explanation/design/ui-design-system.md',
-      'docs/guides/team-handbook/03-ui-components.md',
+      // 以下文档已归档至 archive/historical-2026-08-16/batch7/
+      // 以下归档文档已移除（原 component-specs, component-library-guide, ui-design-system, team-handbook/03 等已归档至 batch7/）
     ],
     description: 'UI 组件变更时，需更新组件文档和设计规范',
     auditDocs: true,
@@ -176,9 +165,8 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
     name: 'Hook 自定义变更',
     patterns: ['src/hooks/**/*.ts', 'src/hooks/**/*.tsx'],
     docsToUpdate: [
-      'docs/how-to/hooks-guide.md',
-      'docs/reference/data-flow-spec.md',
-      'docs/guides/team-handbook/03-ui-components.md',
+      // 以下文档已归档至 archive/historical-2026-08-16/batch7/
+      // 以下归档文档已移除（原 hooks-guide, data-flow-spec, team-handbook/03 等已归档至 batch7/）
     ],
     description: '自定义 Hook 变更时，需更新 Hook 使用指南和数据流说明',
     auditDocs: true,
@@ -188,9 +176,8 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
     name: '页面组件变更',
     patterns: ['src/pages/**/*.tsx', 'src/pages/**/*.ts'],
     docsToUpdate: [
-      'docs/explanation/06-routing-specs.md',
-      'docs/explanation/page-structure.md',
-      'docs/guides/team-handbook/02-architecture.md',
+      // 以下文档已归档至 archive/historical-2026-08-16/batch7/
+      // 以下归档文档已移除（原 06-routing-specs, page-structure, team-handbook/02 等已归档至 batch7/）
     ],
     description: '页面组件变更时，需更新路由规格和页面结构文档',
     auditDocs: true,
@@ -200,9 +187,8 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
     name: 'Widget 注册表变更',
     patterns: ['src/cockpit/core/widgetRegistry.ts'],
     docsToUpdate: [
-      'docs/reference/cockpit/data-definition.md',
-      'docs/meta/registry-index.md',
-      'docs/guides/team-handbook/03-ui-components.md',
+      // 以下文档已归档至 archive/historical-2026-08-16/batch7/
+      // 以下归档文档已移除（原 cockpit/data-definition, doc-id-registry, team-handbook/03 等已归档至 batch7/）
     ],
     description: 'Widget 注册表结构变更时，需重写驾驶舱数据定义并增量维护注册索引',
     auditDocs: true,
@@ -242,8 +228,9 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
       'src/services/stock/stockDictionary.ts',
     ],
     docsToUpdate: [
-      'docs/reference/stock-dictionary-generation.md',
-      'docs/meta/doc-trigger-action-map.md',
+      // 以下文档已归档至 archive/historical-2026-08-16/batch7/
+      // 'docs/reference/stock-dictionary-generation.md',
+      // 'docs/meta/doc-trigger-action-map.md',
     ],
     description: '股票字典生成/校验脚本或字典源文件变更时，更新「股票字典生成」参考文档（数据源=akshare、受管 venv python、四交易所 8331 条、单一事实源、每周自动刷新）',
     auditDocs: true,

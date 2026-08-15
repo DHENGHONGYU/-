@@ -293,8 +293,8 @@ function buildReasons(
       if (momentum === null || momentum === undefined) {
         logger.warn('[strategyEngine] 字段缺失，使用默认值', { field: 'momentum', context: 'hot-momentum' })
       }
-      const mv = momentum !== null && momentum !== undefined ? momentum : 0
-      const s = sector !== null && sector !== undefined ? sector : '-'
+      const mv = momentum ?? 0
+      const s = sector ?? '-'
       return [`热门追涨：板块 ${s}，动量 ${(mv * 100).toFixed(1)}%`]
     }
     case 'excluded':

@@ -162,7 +162,7 @@ export const ApiTestDialog = memo(({ open, onOpenChange }: ApiTestDialogProps) =
             <p className="text-sm text-muted-foreground">
               测试 5 个数据源的连接状态和响应延迟
             </p>
-            <Button onClick={handleTestAll} size="sm">
+            <Button onClick={() => void handleTestAll()} size="sm">
               测试全部
             </Button>
           </div>
@@ -198,7 +198,7 @@ export const ApiTestDialog = memo(({ open, onOpenChange }: ApiTestDialogProps) =
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleTestSingle(source.id)}
+                        onClick={() => void handleTestSingle(source.id)}
                         disabled={result.status === 'testing'}
                       >
                         测试

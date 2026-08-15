@@ -56,7 +56,7 @@ export default function MigrationPanel(): React.JSX.Element {
       try {
         const raw = e.target?.result
         const text = typeof raw === 'string' ? raw : ''
-        const parsed = JSON.parse(text)
+        const parsed: unknown = JSON.parse(text)
         setRawJson(parsed)
 
         const v6 = await parseV6Export(parsed)
@@ -344,7 +344,7 @@ export default function MigrationPanel(): React.JSX.Element {
           </TabsList>
 
           <TabsContent value="upload">
-            <MigrationUploadTab error={error} onFileSelected={handleFile} />
+            <MigrationUploadTab error={error} onFileSelected={(file) => void handleFile(file)} />
           </TabsContent>
 
           <TabsContent value="preview">
@@ -353,8 +353,8 @@ export default function MigrationPanel(): React.JSX.Element {
               transformed={transformed}
               overwrite={overwrite}
               onOverwriteChange={setOverwrite}
-              onImport={handleImport}
-              onRunMigration={handleRunMigration}
+              onImport={() => void handleImport()}
+              onRunMigration={() => void handleRunMigration()}
               loading={loading}
               error={error}
               backup={backup}

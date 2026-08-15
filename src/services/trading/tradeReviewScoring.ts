@@ -54,9 +54,7 @@ export function setTradeReviewScoreCalculator(calculator: TradeReviewScoreCalcul
  * 获取当前评分计算器
  */
 export function getTradeReviewScoreCalculator(): TradeReviewScoreCalculator {
-  if (!injectedCalculator) {
-    injectedCalculator = new MockTradeReviewScoreCalculator()
-  }
+  injectedCalculator ??= new MockTradeReviewScoreCalculator()
   return injectedCalculator
 }
 

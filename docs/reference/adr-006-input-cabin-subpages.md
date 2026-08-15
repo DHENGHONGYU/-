@@ -116,7 +116,7 @@ npm run audit:layers       # 验证 InputApp 依赖合规
 
 | 文档 | 路径 |
 |------|------|
-| 路由规格 | `../explanation/design/06-routing-specs.md` §3.2 |
+| 路由规格 | `../explanation/06-routing-specs.md` §3.2 |
 | 舱室总览 | `../explanation/cabins-overview.md` §1 |
 | 原始提案 | `../explanation/2026-06-24-input-cabin-subpages.md` |
 

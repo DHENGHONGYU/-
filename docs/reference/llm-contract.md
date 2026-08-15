@@ -180,7 +180,7 @@ components/pages (仅经 Store 取数)
 | 配置名 | 默认值 | 说明 | 来源 |
 |--------|--------|------|------|
 | `VITE_LLM_BASE_URL` | `https://api.deepseek.com` | LLM API 基础地址 | `.env` / `src/config/llmConfig.ts` |
-| `VITE_LLM_MODEL` | `deepseek-v4-flash` | 默认模型名 | `.env` / `src/config/llmConfig.ts` |
+| `VITE_LLM_MODEL` | `deepseek-chat` | 默认模型名 | `.env` / `src/config/llmConfig.ts` |
 | `apiKey` | `''`（从加密 localStorage 读取） | API 认证密钥 | `localStorageManager.setEncrypted` |
 | `temperature` | `0.2` | 采样温度 | 调用时 `override` / `LlmConfig` |
 | `maxTokens` | `undefined` | 最大输出 token 数 | 调用时 `override` / `LlmConfig` |
@@ -189,12 +189,27 @@ components/pages (仅经 Store 取数)
 
 ### 4.3 模型预设清单
 
+#### 国内模型
+
 | preset id | 供应商 | 默认模型 | baseURL |
 |-----------|--------|----------|---------|
-| `deepseek` | DeepSeek | `deepseek-v4-flash` | `https://api.deepseek.com` |
+| `deepseek` | DeepSeek | `deepseek-chat` | `https://api.deepseek.com` |
 | `kimi` | Moonshot | `kimi-k2.7-code` | `https://api.moonshot.cn` |
 | `qwen` | Alibaba | `qwen3.6-flash` | `https://dashscope.aliyuncs.com/compatible-mode` |
+| `tencent-hunyuan` | Tencent | `hy3` | `https://tokenhub.tencentmaas.com/v1` |
+| `bytedance-doubao` | ByteDance | `doubao-pro-32k` | `https://ark.cn-beijing.volces.com/api/v3` |
+| `baidu-ernie` | Baidu | `ERNIE-4.5-Turbo` | `https://qianfan.baidubce.com/v2` |
+| `zhipu-glm` | Zhipu AI | `glm-5-turbo` | `https://open.bigmodel.cn/api/paas/v4` |
 | `siliconflow` | SiliconFlow | `Qwen/Qwen2.5-7B-Instruct` | `https://api.siliconflow.cn` |
+
+#### 境外模型
+
+| preset id | 供应商 | 默认模型 | baseURL |
+|-----------|--------|----------|---------|
+| `openai` | OpenAI | `gpt-4o` | `https://api.openai.com/v1` |
+| `anthropic` | Anthropic | `claude-3.5-sonnet` | `https://api.anthropic.com/v1` |
+| `google-gemini` | Google | `gemini-2.0-flash` | `https://generativelanguage.googleapis.com/v1beta` |
+| `xai-grok` | xAI | `grok-4` | `https://api.x.ai/v1` |
 | `custom` | 自定义 | `''` | `''` |
 
 ---

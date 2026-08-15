@@ -307,7 +307,7 @@ export class QualityGate {
 let _instance: QualityGate | null = null
 
 export function getQualityGate(thresholds?: Partial<QualityGateThresholds>): QualityGate {
-  if (!_instance) _instance = new QualityGate(thresholds)
+  _instance ??= new QualityGate(thresholds)
   return _instance
 }
 

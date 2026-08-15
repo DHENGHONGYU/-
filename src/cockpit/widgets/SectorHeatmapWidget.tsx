@@ -56,7 +56,7 @@ export default function SectorHeatmapWidget({ config }: SectorHeatmapWidgetProps
       skeleton={
         <div className="space-y-4">
           <Skeleton className="h-32" />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               {[1, 2, 3, 4, 5].map((i) => (
                 <Skeleton key={i} variant="text" />
@@ -72,7 +72,7 @@ export default function SectorHeatmapWidget({ config }: SectorHeatmapWidgetProps
       }
     >
       <div className="space-y-4">
-        <div className="grid grid-cols-5 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
           {sectors.map((sector: SectorHeatmapData) => (
             <div
               key={sector.code}
@@ -86,7 +86,7 @@ export default function SectorHeatmapWidget({ config }: SectorHeatmapWidgetProps
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <h4 className="text-xs font-semibold" style={{ color: STOCK_COLOR_TOKENS.up.hex }}>领涨 Top5</h4>
             <div className="space-y-1">

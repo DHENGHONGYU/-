@@ -288,7 +288,7 @@ export class CatalystTracker {
 let _instance: CatalystTracker | null = null
 
 export function getCatalystTracker(config?: CatalystTrackerConfig): CatalystTracker {
-  if (!_instance) _instance = new CatalystTracker(config)
+  _instance ??= new CatalystTracker(config)
   return _instance
 }
 

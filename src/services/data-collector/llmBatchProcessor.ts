@@ -119,9 +119,11 @@ export function startNightlyScheduler(
     const delay = msUntilNextTrigger(triggerHour, triggerMinute)
     logger.info(`[llmBatchProcessor] 下次夜间批处理将在 ${Math.round(delay / 1000 / 60)} 分钟后触发`)
 
-    scheduledTimer = setTimeout(async () => {
-      await runBatchSafely()
-      scheduleNext()
+    scheduledTimer = setTimeout(() => {
+      void (async () => {
+        await runBatchSafely()
+        scheduleNext()
+      })()
     }, delay)
   }
 

@@ -4,12 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Car
 import { Input } from '@/components/atoms/Input'
 import { Badge } from '@/components/atoms/Badge'
 import { Select, SelectItem } from '@/components/atoms/Select'
+import { Tooltip } from '@/components/atoms/Tooltip'
+import { Skeleton } from '@/components/molecules/states/Skeleton'
 import { useStockAdd } from '@/hooks/useStockAdd'
 import { StockSearch } from '@/components/organisms/input/StockSearch'
 import type { StockSearchResult } from '@/services/input/inputService'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
+import { Info } from 'lucide-react'
 import HotSectorSection from './HotSectorSection'
 import type { InputTab, ManualMode } from './inputDashboard.types'
 import { TAB_BASE, TAB_ACTIVE, TAB_INACTIVE } from './inputDashboard.utils'
@@ -51,6 +54,16 @@ export default function InputDashboard(): React.JSX.Element {
 
   return (
     <div className="space-y-4">
+      {/* ─── 新用户引导 ─── */}
+      {!loading && stats.total === 0 && (
+        <div className="bg-primary/10 border border-primary/20 rounded-lg p-3 flex items-center gap-3">
+          <Info className="w-5 h-5 text-primary shrink-0" />
+          <div>
+            <p className="text-sm font-medium">新用户引导</p>
+            <p className="text-xs text-muted-foreground">1. 录入股票 → 2. 启动采集 → 3. 查看评分</p>
+          </div>
+        </div>
+      )}
       <InputDashboardStats loading={loading} stats={stats} fetcherOk={fetcherOk} />
 
       {/* ─── 录入 Tab 切换区 ─── */}
@@ -78,17 +91,27 @@ export default function InputDashboard(): React.JSX.Element {
           {/* ── Tab 1: 自行意向输入 ── */}
           {activeTab === 'manual' && (
             <>
-              {/* 子分段：逐项 / 批量 */}
-              <div className={cn('inline-flex rounded-xl bg-muted/60 p-1')}>
+              {/* 子分段：逐项 / 批量 — 下划线 Tab 样式 */}
+              <div className="inline-flex border-b border-border">
                 <button
                   onClick={() => setManualMode('single')}
-                  className={`${TAB_BASE} ${manualMode === 'single' ? TAB_ACTIVE : TAB_INACTIVE}`}
+                  className={cn(
+                    'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
+                    manualMode === 'single'
+                      ? 'border-primary text-foreground'
+                      : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30',
+                  )}
                 >
                   逐项输入
                 </button>
                 <button
                   onClick={() => setManualMode('bulk')}
-                  className={`${TAB_BASE} ${manualMode === 'bulk' ? TAB_ACTIVE : TAB_INACTIVE}`}
+                  className={cn(
+                    'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
+                    manualMode === 'bulk'
+                      ? 'border-primary text-foreground'
+                      : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30',
+                  )}
                 >
                   批量导入
                 </button>
@@ -96,36 +119,46 @@ export default function InputDashboard(): React.JSX.Element {
 
               {manualMode === 'single' ? (
                 <>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-sm text-muted-foreground">搜索模式：</span>
-                    <Button
-                      size="sm"
-                      variant={searchMode === 'fill' ? 'secondary' : 'ghost'}
-                      onClick={() => setSearchMode('fill')}
-                    >
-                      填充代码/名称
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant={searchMode === 'add' ? 'secondary' : 'ghost'}
-                      onClick={() => setSearchMode('add')}
-                    >
-                      直接录入意向候选池
-                    </Button>
+                  <div className="flex items-center gap-2">
+                    <StockSearch
+                      className="flex-1 max-w-md"
+                      mode={searchMode}
+                      onSelect={(result: StockSearchResult): void => {
+                        setSymbol(result.symbol)
+                        setName(result.name)
+                        setMessage(`已选择 ${result.symbol} ${result.name}，请选择录入方式`)
+                      }}
+                      onAdded={(): void => {
+                        setMessage('搜索标的已录入意向候选池')
+                        void refresh()
+                      }}
+                    />
+                    {/* 搜索模式 Chip — 搜索框右侧 */}
+                    <div className="inline-flex gap-1 shrink-0">
+                      <button
+                        onClick={() => setSearchMode('fill')}
+                        className={cn(
+                          'rounded-full px-3 py-1 text-xs font-medium transition-colors',
+                          searchMode === 'fill'
+                            ? 'bg-primary/10 text-primary'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
+                        )}
+                      >
+                        填充
+                      </button>
+                      <button
+                        onClick={() => setSearchMode('add')}
+                        className={cn(
+                          'rounded-full px-3 py-1 text-xs font-medium transition-colors',
+                          searchMode === 'add'
+                            ? 'bg-primary/10 text-primary'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
+                        )}
+                      >
+                        直接录入
+                      </button>
+                    </div>
                   </div>
-                  <StockSearch
-                    className="max-w-md"
-                    mode={searchMode}
-                    onSelect={(result: StockSearchResult): void => {
-                      setSymbol(result.symbol)
-                      setName(result.name)
-                      setMessage(`已选择 ${result.symbol} ${result.name}，请选择录入方式`)
-                    }}
-                    onAdded={(): void => {
-                      setMessage('搜索标的已录入意向候选池')
-                      void refresh()
-                    }}
-                  />
                   <div className="flex flex-wrap gap-2">
                     <Input
                       className="min-w-[160px] flex-1"
@@ -146,6 +179,7 @@ export default function InputDashboard(): React.JSX.Element {
                       value={group}
                       onChange={(e) => setGroup(e.target.value)}
                       aria-label="目标分组"
+                      aria-invalid={false}
                     >
                       <SelectItem value="">默认分组</SelectItem>
                       {allGroups.map((g) => (
@@ -154,26 +188,52 @@ export default function InputDashboard(): React.JSX.Element {
                         </SelectItem>
                       ))}
                     </Select>
-                    <Button onClick={() => void handleAdd(false, false)} disabled={submitting}>
-                      {submitting ? '处理中...' : '仅录入'}
-                    </Button>
-                    <Button variant="secondary" onClick={() => void handleAdd(true, false)} disabled={submitting}>
-                      {submitting ? '处理中...' : '录入并拉基础'}
-                    </Button>
-                    <Button variant="secondary" onClick={() => void handleAdd(true, true)} disabled={submitting}>
-                      {submitting ? '处理中...' : '录入并拉全部'}
-                    </Button>
+                    <Tooltip content="仅录入代码，不启动采集" side="bottom">
+                      <Button
+                        className="min-w-[100px]"
+                        variant="default"
+                        onClick={() => void handleAdd(false, false)}
+                        disabled={submitting}
+                      >
+                        {submitting ? '处理中...' : '仅代码'}
+                      </Button>
+                    </Tooltip>
+                    <Tooltip content="采集三表+行情数据，约30秒" side="bottom">
+                      <Button
+                        className="min-w-[100px]"
+                        variant="secondary"
+                        onClick={() => void handleAdd(true, false)}
+                        disabled={submitting}
+                      >
+                        {submitting ? '处理中...' : '基础资料'}
+                      </Button>
+                    </Tooltip>
+                    <Tooltip content="采集研报+公告+三表+行情，约2分钟" side="bottom">
+                      <Button
+                        className="min-w-[100px]"
+                        variant="secondary"
+                        onClick={() => void handleAdd(true, true)}
+                        disabled={submitting}
+                      >
+                        {submitting ? '处理中...' : '深度资料'}
+                      </Button>
+                    </Tooltip>
                   </div>
                   <div className="flex flex-wrap items-center gap-3 text-sm">
                     <span className="text-muted-foreground">采集服务状态：</span>
                     {fetcherOk === null ? (
-                      <Badge variant="outline">检查中...</Badge>
+                      <Skeleton className="h-6 w-16" />
                     ) : fetcherOk ? (
                       <Badge className={`${COLOR_TOKENS.up.bgClass} ${COLOR_TOKENS.up.tailwind}`}>已连接</Badge>
                     ) : (
                       <Badge variant="destructive">未连接</Badge>
                     )}
-                    <Button variant="ghost" size="sm" onClick={() => void handleRefreshHealth()} disabled={fetcherOk === null}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => void handleRefreshHealth()}
+                      disabled={fetcherOk === null}
+                    >
                       {fetcherOk === null ? '检查中...' : '刷新'}
                     </Button>
                   </div>

@@ -131,7 +131,7 @@ function LoadingProgress({ progress = 0, message, className }: LoadingProgressPr
       )}
       <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
         <div
-          className="h-full bg-primary transition-all duration-300 ease-out rounded-full"
+          className="h-full bg-primary transition-[width] duration-300 ease-out rounded-full"
           style={{ width: `${clampedProgress}%` }}
         />
       </div>

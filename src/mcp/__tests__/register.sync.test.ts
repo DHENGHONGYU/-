@@ -9,14 +9,16 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { mcpRegistry } from '@/mcp/core/registry'
 import { MCP_SERVER_REGISTRY } from '@/config/mcpServerRegistry'
-import { registerAllServers, syncWithConfig } from '@/mcp/register'
+import { ensureMCPRegistered, mcpReadyPromise, mcpFullyReadyPromise, syncWithConfig } from '@/mcp/register'
 import type { MCPServer } from '@/types/modules/mcp.types'
 
 const enabledConfigCount = MCP_SERVER_REGISTRY.filter((e) => e.enabled).length
 
 describe('syncWithConfig (F2/F3): modulePath-based reconciliation', () => {
-  beforeAll(() => {
-    registerAllServers()
+  beforeAll(async () => {
+    // lazy 注册模式下需先异步加载模块缓存：core 与 lazy 两路注册并行，需同时等待
+    ensureMCPRegistered()
+    await Promise.all([mcpReadyPromise, mcpFullyReadyPromise])
   })
 
   afterAll(() => {

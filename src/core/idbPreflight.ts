@@ -47,7 +47,7 @@ export async function checkIDBCapability(): Promise<IDBCapability> {
   }
 
   try {
-    if (navigator.storage && navigator.storage.estimate) {
+    if (navigator.storage?.estimate) {
       const estimate = await navigator.storage.estimate() as unknown as {
         quota?: number
         usage?: number

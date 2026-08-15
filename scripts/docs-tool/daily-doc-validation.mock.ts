@@ -25,8 +25,8 @@ function createMockScannedFiles(rootDir: string): ScannedFile[] {
   const now = new Date().toISOString()
   const files: ScannedFile[] = [
     {
-      absolutePath: join(rootDir, 'docs/explanation/README.md'),
-      relativePath: 'docs/explanation/README.md',
+      absolutePath: join(rootDir, 'docs/meta/README.md'), // 原 explanation/README.md 已归档
+      relativePath: 'docs/meta/README.md', // 原 explanation/README.md 已归档
       category: 'doc',
       updateType: 'modified',
       sizeBytes: 0,
@@ -83,7 +83,7 @@ function main(): void {
   mkdirSync(join(tempDir, 'src'), { recursive: true })
 
   writeFileSync(
-    join(tempDir, 'docs/explanation/README.md'),
+    join(tempDir, 'README.md'), // 原 explanation/README.md 已归档
     '# 根文档\n\n参见 [指南](./guide.md)\n\n参见 [不存在](./missing.md)\n',
     'utf-8',
   )

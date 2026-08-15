@@ -64,9 +64,9 @@ V9 通过 **Husky 钩子** 在提交阶段强制提交规范，堵住「提交�
 | 规则 3 | `src/` + `docs/` 目录删除项 > 30 | BLOCK |
 | 规则 4 | 禁止临时产物混入（`test-output.txt` / `audit-out.txt` / `.tmp-` / `draft-` / `WIP` / `_temp` / `debug-output`） | BLOCK |
 
-**顶层域分组**：`src/components|components`、`src/hooks|hooks`、`src/services|services`、`src/store|store`、`src/lib|lib`、`src/utils|utils`、`src/types|types`、`src/constants|constants`、`src/config|config`、`src/styles|styles`、`src/apps|apps`、`src/pages|pages`、`src/assets|assets`、`src/i18n|i18n`、`src/__tests__|tests`、`docs|docs`、`scripts|scripts`、`tests|tests`、`playwright|e2e`、`.cypress|e2e`、`public|public`、`vite.config|build_config`、`eslint|lint_config`、`tsconfig|ts_config`、`.husky|husky`、`package.json|package_config`、`README|docs_root`、`CHANGELOG|docs_root`、`AGENTS|agents_root`。
+**顶层域分组**：src/components|components、src/hooks|hooks、src/services|services、src/store|store、src/lib|lib、src/utils|utils、src/types|types、src/constants|constants、src/config|config、src/styles|styles、src/apps|apps、src/pages|pages、src/assets|assets、src/i18n|i18n、src/__tests__|tests、docs|docs、scripts|scripts、tests|tests、playwright|e2e、.cypress|e2e、public|public、vite.config|build_config、eslint|lint_config、tsconfig|ts_config、.husky|husky、package.json|package_config、README|docs_root、CHANGELOG|docs_root、AGENTS|agents_root。
 
-**根级文件精确匹配**：`package.json`、`tsconfig*.json`、`vite.config.ts`、`eslint*.config.js`、`.gitignore`、`.gitattributes`、`.dockerignore`、`AGENTS.md`、`CHANGELOG.md`、`README.md`、`playwright.config.ts`、`vitest.config.ts`、`.editorconfig`、`.husky/pre-commit|pre-push|commit-msg` 等归入对应域。
+**根级文件精确匹配**：`package.json`、`tsconfig*.json`、`vite.config.ts`、`eslint*.config.js`、`.gitignore`、`.gitattributes`、`.dockerignore`、`AGENTS.md`、`CHANGELOG.md`、`README.md`、`playwright.config.ts`、`vitest.config.ts`、`.editorconfig`、.husky/pre-commit|pre-push|commit-msg 等归入对应域。
 
 ---
 
@@ -76,10 +76,10 @@ V9 通过 **Husky 钩子** 在提交阶段强制提交规范，堵住「提交�
 
 | 项 | 约束 | 原因 |
 |----|------|------|
-| **运行环境** | 必须经 **Git Bash（MSYS）** 运行，不能直接在原生 cmd/PowerShell 调用 `sh` | 脚本依赖 POSIX 工具（`grep`/`awk`/`sort`/`tr`/`sed`/`cut`/`head`/`basename`）与 `/tmp`；husky v9 在 Windows 上正是经 git-bash 的 sh 调用 |
+| **运行环境** | 必须经 **Git Bash（MSYS）** 运行，不能直接在原生 cmd/PowerShell 调用 `sh` | 脚本依赖 POSIX 工具（`grep`/`awk`/`sort`/`tr`/`sed`/`cut`/`head`/`basename`）与 /tmp；husky v9 在 Windows 上正是经 git-bash 的 sh 调用 |
 | **行尾（CRLF）** | 所有 `.sh` 必须保持 **LF**，禁止 CRLF | 若脚本以 CRLF 检出，`\r` 会附着在变量/模式末尾，导致 `case` 匹配、`grep -F`、`cut -d'|'` 失效。已由 `.gitattributes` 全局 `* text=auto eol=lf` 保障，勿改动 |
-| **临时文件** | 用固定路径 + PID（`/tmp/v9-scope-guard-$$`），**禁用 `mktemp`** | Git Bash 下 `mktemp` 偶发 "Bad file descriptor"；脚本用 `trap cleanup EXIT` 兜底清理 |
-| **git 输出** | `git diff --cached --name-only` 在 Windows 也输出 `/` 分隔 | 路径前缀匹配 `src/components/*` 有效；脚本用 `read -r` 整行读取，可正确处理含空格路径 |
+| **临时文件** | 用固定路径 + PID（/tmp/v9-scope-guard-$$），**禁用 `mktemp`** | Git Bash 下 `mktemp` 偶发 "Bad file descriptor"；脚本用 `trap cleanup EXIT` 兜底清理 |
+| **git 输出** | `git diff --cached --name-only` 在 Windows 也输出 `/` 分隔 | 路径前缀匹配 src/components/* 有效；脚本用 `read -r` 整行读取，可正确处理含空格路径 |
 | **中文输出** | 脚本输出 UTF-8 中文 | 在 cmd 默认代码页下可能乱码；建议团队在 Git Bash / 配置 UTF-8 的终端提交 |
 | **`set -e` 安全** | 管道 / `if` / `|| echo 0` 组合已兜底 | 避免 `grep` 无匹配时在 `set -e` 下误退出 |
 

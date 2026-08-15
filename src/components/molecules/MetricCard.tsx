@@ -95,7 +95,7 @@ export function MetricCard({
         ) : (
           <div className="mt-1 flex items-baseline gap-1">
             <span
-              className="text-2xl font-semibold tracking-tight"
+              className="text-h1 font-semibold tracking-tight"
               style={resolvedColor ? { color: resolvedColor } : undefined}
             >
               {value}

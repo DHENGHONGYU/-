@@ -203,7 +203,7 @@ function formatMarkdownReport(report: AuditReport): string {
 
   lines.push('---')
   lines.push('')
-  lines.push('docs/reference/adr-mcp-server-lifecycle.md')
+  lines.push('原文档（adr-mcp-server-lifecycle）已归档至 archive/historical-2026-08-16/batch7/')
   lines.push('> 运行：`npm run audit:mcp-usage`')
   lines.push('')
 

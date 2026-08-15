@@ -44,22 +44,23 @@ describe('Label', () => {
  * @reason TODO: 待修复（详见 docs/reports/脚本与测试质量检查报告.md）
  */
 describe('Slider', () => {
-  it('应该渲染 with default value', () => {
-    render(<Slider data-testid="slider" />)
+  it('应该渲染 with default value 0（受控式，显式传 value=0）', () => {
+    // Slider 现为完全受控组件：value 必填，不再支持 defaultValue
+    render(<Slider value={0} data-testid="slider" />)
     const slider = screen.getByRole('slider') as HTMLInputElement
     expect(slider).toBeInTheDocument()
     expect(slider.value).toBe('0')
   })
 
-  it('应该渲染 with defaultValue prop', () => {
-    render(<Slider defaultValue={50} data-testid="slider" />)
+  it('应该渲染 with value prop（受控式，显式传 value=50）', () => {
+    render(<Slider value={50} data-testid="slider" />)
     const slider = screen.getByRole('slider') as HTMLInputElement
     expect(slider.value).toBe('50')
   })
 
   it('应该调用 onValueChange when value changes', async () => {
     const handleChange = vi.fn()
-    render(<Slider onValueChange={handleChange} data-testid="slider" />)
+    render(<Slider value={0} onValueChange={handleChange} data-testid="slider" />)
     const slider = screen.getByRole('slider') as HTMLInputElement
 
     fireEvent.change(slider, { target: { value: '75' } })
@@ -68,26 +69,26 @@ describe('Slider', () => {
   })
 
   it('应该是 disabled when disabled prop is true', () => {
-    render(<Slider disabled data-testid="slider" />)
+    render(<Slider value={0} disabled data-testid="slider" />)
     const slider = screen.getByRole('slider') as HTMLInputElement
     expect(slider).toBeDisabled()
   })
 
   it('应该respect min and max props', () => {
-    render(<Slider min={10} max={90} defaultValue={50} data-testid="slider" />)
+    render(<Slider min={10} max={90} value={50} data-testid="slider" />)
     const slider = screen.getByRole('slider') as HTMLInputElement
     expect(slider.min).toBe('10')
     expect(slider.max).toBe('90')
   })
 
-  it('应该show tooltip when dragging if showTooltip=true', () => {
-    render(<Slider showTooltip defaultValue={50} data-testid="slider" />)
-    const slider = screen.getByRole('slider') as HTMLInputElement
-
-    fireEvent.mouseDown(slider)
+  it('应该show tooltip with value 当 showTooltip=true（静态显示非拖拽触发）', () => {
+    // Slider v2 showTooltip 是静态开关：只要 true 就始终渲染 tooltip span（不依赖 mouseDown）
+    const { rerender } = render(<Slider showTooltip value={50} data-testid="slider" />)
+    // 初始即可看到 tooltip 中的 50（span 内有 value 文本）
     expect(screen.getByText('50')).toBeInTheDocument()
 
-    fireEvent.mouseUp(slider)
+    // 使用 rerender 切换到 showTooltip=false（同一组件实例），tooltip 应消失
+    rerender(<Slider value={50} data-testid="slider" />)
     expect(screen.queryByText('50')).not.toBeInTheDocument()
   })
 
@@ -188,25 +189,34 @@ describe('Toggle', () => {
     expect(screen.getByRole('button', { name: '开关' })).toBeInTheDocument()
   })
 
-  it('应该有 aria-pressed=false by default', () => {
-    render(<Toggle>开关</Toggle>)
+  it('应该有 aria-pressed=false when pressed=false（受控模式）', () => {
+    // Toggle 现为完全受控组件：pressed 必填，defaultPressed 已移除
+    render(<Toggle pressed={false}>开关</Toggle>)
     expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false')
   })
 
-  it('应该有 aria-pressed=true when defaultPressed=true', () => {
-    render(<Toggle defaultPressed={true}>开关</Toggle>)
+  it('应该有 aria-pressed=true when pressed=true（受控模式）', () => {
+    render(<Toggle pressed={true}>开关</Toggle>)
     expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true')
   })
 
-  it('应该调用 onPressedChange when clicked', async () => {
+  it('应该调用 onPressedChange when clicked（受控式，按下切反值）', async () => {
     const handleChange = vi.fn()
-    render(<Toggle onPressedChange={handleChange}>开关</Toggle>)
+    const { rerender } = render(
+      <Toggle pressed={false} onPressedChange={handleChange}>开关</Toggle>,
+    )
 
     await user.click(screen.getByRole('button'))
-    expect(handleChange).toHaveBeenCalledWith(true)
+    // pressed=false → !pressed=true
+    expect(handleChange).toHaveBeenNthCalledWith(1, true)
 
+    // 受控模式：父组件需回传 pressed 更新
+    rerender(
+      <Toggle pressed={true} onPressedChange={handleChange}>开关</Toggle>,
+    )
     await user.click(screen.getByRole('button'))
-    expect(handleChange).toHaveBeenCalledWith(false)
+    // pressed=true → !pressed=false
+    expect(handleChange).toHaveBeenNthCalledWith(2, false)
   })
 
   it('应该是 controlled by pressed prop', async () => {
@@ -224,21 +234,21 @@ describe('Toggle', () => {
 
   it('应该apply variant styles correctly', () => {
     const { rerender } = render(<Toggle variant="default">默认</Toggle>)
-    expect(screen.getByRole('button')).toHaveClass('bg-transparent')
+    // variant=default + 未 pressed = bg-secondary（Apple 商务风令牌 v2）
+    expect(screen.getByRole('button')).toHaveClass('bg-secondary')
 
     rerender(<Toggle variant="outline">轮廓</Toggle>)
     expect(screen.getByRole('button')).toHaveClass('border')
   })
 
-  it('应该apply size styles correctly', () => {
-    const { rerender } = render(<Toggle size="sm">小</Toggle>)
-    expect(screen.getByRole('button')).toHaveClass('h-8')
-
-    rerender(<Toggle size="md">中</Toggle>)
+  it('应该apply default control size（THEME_TOKENS.controlSizes.md = h-10）', () => {
+    // Toggle 默认使用 THEME_TOKENS.controlSizes.md，不通过 size prop 切换
+    const { rerender } = render(<Toggle>默认控件高度</Toggle>)
     expect(screen.getByRole('button')).toHaveClass('h-10')
 
-    rerender(<Toggle size="lg">大</Toggle>)
-    expect(screen.getByRole('button')).toHaveClass('h-12')
+    // pressed 态 → bg-primary
+    rerender(<Toggle pressed={true}>按下态</Toggle>)
+    expect(screen.getByRole('button')).toHaveClass('bg-primary')
   })
 
   it('应该是 disabled when disabled prop is true', () => {

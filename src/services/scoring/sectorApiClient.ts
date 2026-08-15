@@ -4,10 +4,12 @@
  */
 
 import { getLogger } from '@/lib/logger'
+import { AKSHARE_LOCAL_BASE_URL } from '@/config/dataSourceUrls'
+import { API_COLLECT_SECTORS } from '@/config/apiPaths'
 
 const logger = getLogger()
 
-const API_BASE = 'http://127.0.0.1:8000'
+const API_BASE = AKSHARE_LOCAL_BASE_URL
 
 export interface SectorApiItem {
   id: string
@@ -47,7 +49,7 @@ export async function fetchSectorRotationScores(topN: number = 10): Promise<Sect
   logger.info('[sectorApiClient] fetchSectorRotationScores', { topN })
 
   try {
-    const resp = await fetch(`${API_BASE}/api/collect/sectors`, {
+    const resp = await fetch(`${API_BASE}${API_COLLECT_SECTORS}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ topN }),
@@ -58,7 +60,7 @@ export async function fetchSectorRotationScores(topN: number = 10): Promise<Sect
       throw new Error(`HTTP ${resp.status}`)
     }
 
-    const body: SectorApiResponse = await resp.json()
+    const body = (await resp.json()) as SectorApiResponse
 
     if (!body.success) {
       logger.warn('[sectorApiClient] API returned failure', { error: body.error ?? 'unknown' })

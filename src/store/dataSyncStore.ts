@@ -99,6 +99,7 @@ export const useDataSyncStore = create<DataSyncState>((set) => ({
     })
   },
 
+  // eslint-disable-next-line @typescript-eslint/require-await -- placeholder async for API compatibility
   loadHistory: async (limit = 100) => {
     set({ historyLoading: true })
     try {

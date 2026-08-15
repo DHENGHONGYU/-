@@ -69,7 +69,7 @@ SECRET_TOKEN=my-secret-token-value
 `,
     },
     {
-      name: 'docs/explanation/README.md',
+      name: 'README.md', // 原 explanation/README.md 已归档至 batch7/
       content: `# Test Project
 This is a test project for hybrid proofreading.
 `,

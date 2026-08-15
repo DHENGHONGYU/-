@@ -5,9 +5,7 @@
  * 存储：所有配置保存在 localStorage，变更即时生效
  * 数据流：ConfigApp <-> localStorage
  *
- * @see docs/reference/功能模块数据契约.md — 18. ConfigApp 模块契约（配置管理页）
  * @see docs/reference/v9核心数据字典与类型定义(整合版).md — AppConfig 类型定义
- * @see docs/reference/v9-system-blueprint.md — Phase 7 总控舱功能扩展
  */
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
@@ -177,7 +175,7 @@ export default function ConfigApp(): React.JSX.Element {
   const [llmConfig, setLlmConfig] = useState<PartialLlmConfig>(() => {
     try {
       const stored = localStorage.getItem(LLM_CONFIG_KEY)
-      return stored ? JSON.parse(stored) : {}
+      return stored ? (JSON.parse(stored) as PartialLlmConfig) : {}
     } catch (err) { console.warn('[ConfigApp.tsx]', err);
       return {}
     }
@@ -304,12 +302,12 @@ export default function ConfigApp(): React.JSX.Element {
 
       {/* 页面标题 + 操作 */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">配置管理</h1>
+        <h1 className="text-h1 font-bold">配置管理</h1>
         <div className="flex items-center gap-2">
           {saved && (
             <span className={`text-sm ${COLOR_TOKENS.success.tailwind}`}>已自动保存</span>
           )}
-          <Button variant="outline" size="sm" onClick={handleResetToDefault}>
+          <Button variant="outline" size="sm" onClick={() => void handleResetToDefault()}>
             恢复默认
           </Button>
         </div>

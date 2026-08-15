@@ -12,10 +12,7 @@
  * - 订阅 STORE_NAME.signals / STORE_NAME.orders 频道，source 过滤防自激
  *
  * @see docs/reference/v9核心数据字典与类型定义(整合版).md
- * @see docs/reference/功能模块数据契约.md
- * @see docs/reference/v9-system-blueprint.md
- * @see docs/reference/databridge端点与数据映射清单.md
- * @see docs/explanation/v9-架构缺陷与整改行动清单.md
+ * 原文档（功能模块数据契约、v9-system-blueprint、databridge端点与数据映射清单、v9-架构缺陷与整改行动清单）已归档至 archive/historical-2026-08-16/batch7/
   * @doc [V9-DOC-PROJ-068, V9-DOC-ARCH-010, V9-DOC-PROJ-118, V9-DOC-DATA-031, V9-DOC-DATA-032]
 */
 

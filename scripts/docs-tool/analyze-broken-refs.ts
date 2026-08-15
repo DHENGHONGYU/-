@@ -46,7 +46,8 @@ function searchRealFiles(target: string, type: Reference['type']): string[] {
       found.push(...globSync(normalize(resolve(root, '**', baseNoExt + '*')), { nodir: false, absolute: true }).filter(p => /\.(ts|tsx|md|js|jsx)$/.test(p)))
     }
   }
-  const rootCandidates = ['AGENTS.md', 'docs/explanation/README.md', 'CHANGELOG.md', 'LICENSE', 'CONTRIBUTING.md']
+  const rootCandidates = ['AGENTS.md', 'CHANGELOG.md', 'LICENSE', 'CONTRIBUTING.md']
+  // 原 explanation/README.md 已归档至 archive/historical-2026-08-16/batch7/
   if (rootCandidates.includes(name)) {
     const rp = resolve(PROJECT_ROOT, name)
     if (existsSync(rp)) found.push(rp)

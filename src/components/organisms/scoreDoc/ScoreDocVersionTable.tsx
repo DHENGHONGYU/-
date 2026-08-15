@@ -9,7 +9,14 @@ import {
   TableRow,
 } from '@/components/atoms/Table'
 import React from 'react'
+import { cn } from '@/lib/utils'
 import type { ScoreDocVersion } from '@/data/types'
+
+function getScoreColorClass(score: number): string {
+  if (score >= 4.0) return 'text-[hsl(var(--stock-up))]'
+  if (score >= 3.0) return 'text-primary'
+  return 'text-[hsl(var(--stock-down))]'
+}
 
 export interface ScoreDocVersionTableProps {
   versions: ScoreDocVersion[]
@@ -65,7 +72,7 @@ export default function ScoreDocVersionTable({
             <TableRow key={doc.docId}>
               <TableCell>V{doc.version}</TableCell>
               <TableCell>{doc.scoreDate}</TableCell>
-              <TableCell>{doc.composite.toFixed(2)}</TableCell>
+              <TableCell className={cn(getScoreColorClass(doc.composite))}>{doc.composite.toFixed(2)}</TableCell>
               <TableCell>{doc.l3v.toFixed(2)}</TableCell>
               <TableCell>
                 {doc.changeFromPrev ? (

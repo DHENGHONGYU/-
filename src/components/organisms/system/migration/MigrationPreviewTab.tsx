@@ -24,7 +24,7 @@ function OverviewGrid({ items, title }: { items: PreviewItem[]; title: string })
   return (
     <div>
       <h4 className="mb-2 text-sm font-medium">{title}</h4>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {items.map((item) => (
           <div key={item.key} className="rounded-md border p-2 text-center">
             <p className="text-lg font-bold">{item.count}</p>

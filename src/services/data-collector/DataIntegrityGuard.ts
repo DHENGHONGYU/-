@@ -125,7 +125,7 @@ export function createDataPacket(
   const trace: DataPacketTrace = {
     traceId: generateTraceId(source, symbol),
     sequenceNumber: stats.sent + 1,
-    batchId: batchId || generateBatchId(),
+    batchId: batchId ?? generateBatchId(),
     sentAt: Date.now(),
     dimension: 'daily_quotes',
     symbol,

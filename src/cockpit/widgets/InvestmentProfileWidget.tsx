@@ -93,7 +93,7 @@ export default function InvestmentProfileWidget({ config, data }: InvestmentProf
                   <span className="text-xs">{metric.name}</span>
                 </div>
                 <div className="flex items-end justify-between">
-                  <span className="text-2xl font-bold" style={{ color: level.color }}>
+                  <span className="text-h1 font-bold" style={{ color: level.color }}>
                     {metric.score}
                   </span>
                   <Badge variant="outline" className="text-xs" style={{ borderColor: level.color, color: level.color }}>

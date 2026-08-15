@@ -21,19 +21,19 @@ export function TradeReviewErrorList({ analysis }: TradeReviewErrorListProps): R
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">计划遵守率</p>
-            <p className="text-xl font-bold">{analysis.planAdherenceRate.toFixed(1)}%</p>
+            <p className="text-h2 font-bold">{analysis.planAdherenceRate.toFixed(1)}%</p>
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">止损执行率</p>
-            <p className="text-xl font-bold">{analysis.stopLossExecutionRate.toFixed(1)}%</p>
+            <p className="text-h2 font-bold">{analysis.stopLossExecutionRate.toFixed(1)}%</p>
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">仓位管理</p>
-            <p className="text-xl font-bold">{analysis.positionManagementScore.toFixed(1)}</p>
+            <p className="text-h2 font-bold">{analysis.positionManagementScore.toFixed(1)}</p>
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">情绪控制</p>
-            <p className="text-xl font-bold">{analysis.emotionControlScore.toFixed(1)}</p>
+            <p className="text-h2 font-bold">{analysis.emotionControlScore.toFixed(1)}</p>
           </div>
         </div>
         {analysis.improvements.length > 0 && (

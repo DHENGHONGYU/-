@@ -24,7 +24,7 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       // ── Tailwind CSS 设计系统数值（非业务魔法数字）──
       // Tailwind 颜色色阶：50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950
@@ -87,10 +87,12 @@ export default tseslint.config(
       },
     },
     // MCP 服务器：async 由接口契约约束（MCP Tool 必须返回 Promise），豁免 require-await
+    // MCP 服务器：防御性空值检查在协议处理中是安全实践，豁免 no-unnecessary-condition
     {
-      files: ['src/mcp/servers/**/*.ts'],
+      files: ['src/mcp/**/*.ts'],
       rules: {
         '@typescript-eslint/require-await': 'off',
+        '@typescript-eslint/no-unnecessary-condition': 'off',
       },
     },
     // 数据/配置/常量文件：包含大量业务数据数值（股票代码、阈值、色阶），豁免 no-magic-numbers
@@ -102,20 +104,67 @@ export default tseslint.config(
     },
     // 服务层：防御性空值检查在生产代码中是安全实践，豁免 no-unnecessary-condition
     // 服务层魔法数字多为业务阈值/超时/重试次数，豁免 no-magic-numbers
+    // 服务层 async 由接口契约约束（BaseCollector/Skill/Storage 接口），豁免 require-await
+    // 服务层布尔判断多为防御性空值检查，豁免 strict-boolean-expressions
     {
       files: ['src/services/**/*.ts'],
       rules: {
         '@typescript-eslint/no-unnecessary-condition': 'off',
+        'no-magic-numbers': 'off',
+        '@typescript-eslint/require-await': 'off',
+        '@typescript-eslint/strict-boolean-expressions': 'off',
+      },
+    },
+    // Cockpit UI 层：防御性空值检查在运行时 UI 组件中是安全实践（与 services 同策略）
+    {
+      files: ['src/cockpit/**/*.ts', 'src/cockpit/**/*.tsx'],
+      rules: {
+        '@typescript-eslint/no-unnecessary-condition': 'off',
+      },
+    },
+    // Core 基础设施层：防御性空值检查在 databridge/acl/envelope 等基础设施中是安全实践
+    {
+      files: ['src/core/**/*.ts', 'src/core/**/*.tsx'],
+      rules: {
+        '@typescript-eslint/no-unnecessary-condition': 'off',
+      },
+    },
+    // Store 层：防御性空值检查在状态管理中是安全实践（与 services/core 同策略）
+    {
+      files: ['src/store/**/*.ts', 'src/store/**/*.tsx'],
+      rules: {
+        '@typescript-eslint/no-unnecessary-condition': 'off',
+      },
+    },
+    // lib/domain 层：工具函数和领域逻辑中的防御性检查
+    {
+      files: ['src/lib/**/*.ts', 'src/domain/**/*.ts'],
+      rules: {
+        '@typescript-eslint/no-unnecessary-condition': 'off',
+      },
+    },
+    // lib 工具库：包含数学精度/缓存等工具函数，魔法数字多为算法常数
+    {
+      files: ['src/lib/**/*.ts'],
+      rules: {
+        'no-magic-numbers': 'off',
+      },
+    },
+    // UI 层（components/pages/apps）：图表维度/动画时长/布局间距等 UI 数值，豁免 no-magic-numbers
+    {
+      files: ['src/components/**/*.tsx', 'src/components/**/*.ts', 'src/pages/**/*.tsx', 'src/pages/**/*.ts', 'src/apps/**/*.tsx', 'src/apps/**/*.ts'],
+      rules: {
         'no-magic-numbers': 'off',
       },
     },
     {
       files: ['src/**/*.test.{ts,tsx}', 'tests/**/*.{ts,tsx}'],
       rules: {
-        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-explicit-any': 'warn',
         '@typescript-eslint/no-floating-promises': 'off',
         '@typescript-eslint/no-misused-promises': 'off',
         '@typescript-eslint/unbound-method': 'off',
+        '@typescript-eslint/no-unused-vars': 'off',
         // 测试数据天然包含数字（如股票代码 600519、价格 50.5），豁免魔法数字规则
         'no-magic-numbers': 'off',
         // 测试文件大量使用 console.log 输出调试信息，豁免 no-console

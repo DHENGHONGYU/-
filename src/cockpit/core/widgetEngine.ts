@@ -188,7 +188,7 @@ export class WidgetEngine {
       const batch = pending.slice(index, index + concurrent)
       index += concurrent
 
-      Promise.all(
+      void Promise.all(
         batch.map((widgetId) =>
           this.loadComponent(widgetId).catch((err) => {
             logger.warn(`[WidgetEngine] Preload batch failed: widgetId="${widgetId}"`, { error: err })

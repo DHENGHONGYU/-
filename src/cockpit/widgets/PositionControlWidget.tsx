@@ -66,7 +66,7 @@ const PositionControlWidget = memo(function PositionControlWidget({ config }: Po
       loadingLabel="加载仓位数据中…"
       skeleton={
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[1, 2].map((i) => (
               <Skeleton key={i} variant="rect" className={cn('bg-muted', 'h-20')} />
             ))}
@@ -111,7 +111,7 @@ const PositionControlWidget = memo(function PositionControlWidget({ config }: Po
           </div>
           <div className={cn('w-full', COLOR_SHADES.gray[200], 'rounded-full h-3')}>
             <div
-              className="h-3 rounded-full transition-all"
+              className="h-3 rounded-full transition-[width]"
               style={{
                 width: `${Math.min(positionRatio, 100)}%`,
                 backgroundColor: positionRatio > 80 ? COLOR_TOKENS.danger.hex : positionRatio > 50 ? THEME_TOKENS.color.warningRaw : COLOR_TOKENS.success.hex,

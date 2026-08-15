@@ -65,7 +65,7 @@ export default function StandardAgentDetail({ agentId }: AgentDetailComponentPro
             <Icon className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">{displayName}</h1>
+            <h1 className="text-h1 font-bold tracking-tight">{displayName}</h1>
             <p className="text-muted-foreground">{description}</p>
           </div>
         </div>

@@ -35,7 +35,8 @@ interface Violation {
 }
 
 const VALID_TIERS = new Set(['core', 'important', 'reference'])
-const WHITELIST = new Set(['docs/explanation/README.md', 'CHANGELOG.md', 'AGENTS.md'])
+const WHITELIST = new Set(['CHANGELOG.md', 'AGENTS.md'])
+  // 原 explanation/README.md 已归档至 archive/historical-2026-08-16/batch7/
 
 function readPkgVersion(): string {
   try {

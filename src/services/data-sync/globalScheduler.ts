@@ -198,7 +198,7 @@ class GlobalCollectionScheduler {
       return
     }
     this.running = true
-    this.tickTimer = setInterval(() => this.tick(), TICK_INTERVAL_MS)
+    this.tickTimer = setInterval(() => void this.tick(), TICK_INTERVAL_MS)
     logger.info('[GlobalScheduler] 引擎已启动', {
       tickInterval: TICK_INTERVAL_MS,
       scheduleCount: this.schedules.size,

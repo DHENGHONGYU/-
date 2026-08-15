@@ -211,7 +211,7 @@ export default function HotSectorPage(): React.JSX.Element {
                       </div>
                       <div className="flex items-center gap-3">
                         <Badge variant={actionCfg.variant}>{actionCfg.label}</Badge>
-                        <span className={`text-xl font-bold ${scoreColor}`}>
+                        <span className={`text-h2 font-bold ${scoreColor}`}>
                           {score.score.toFixed(2)}
                         </span>
                         {isExpanded ? (

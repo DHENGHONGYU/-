@@ -1,0 +1,50 @@
+interface PercentProps {
+  /** 百分比数值（如 5.2 表示 5.2%） */
+  value: number
+  /** 小数位数，默认 2 */
+  decimals?: number
+  /** 是否显示正负号，默认 true */
+  showSign?: boolean
+  /** 是否根据正负自动着色，默认 true */
+  colored?: boolean
+  /** 自定义 className */
+  className?: string
+}
+
+/**
+ * 百分比格式化组件
+ * - 自动着色：正数 var(--stock-up) 红色，负数 var(--stock-down) 绿色
+ * - 正数显示 + 号
+ */
+export function Percent({
+  value,
+  decimals = 2,
+  showSign = true,
+  colored = true,
+  className = '',
+}: PercentProps) {
+  const sign = showSign
+    ? value > 0
+      ? '+'
+      : value < 0
+        ? '-'
+        : ''
+    : value < 0
+      ? '-'
+      : ''
+  const display = `${sign}${Math.abs(value).toFixed(decimals)}%`
+
+  const colorClass = colored
+    ? value > 0
+      ? 'text-[hsl(var(--stock-up))]'
+      : value < 0
+        ? 'text-[hsl(var(--stock-down))]'
+        : ''
+    : ''
+
+  return (
+    <span className={`${colorClass} ${className}`.trim()}>
+      {display}
+    </span>
+  )
+}

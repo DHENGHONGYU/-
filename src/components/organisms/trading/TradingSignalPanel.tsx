@@ -111,8 +111,8 @@ function ChipStrip({ signal }: { signal: Signal }): React.JSX.Element {
         <span className="font-semibold">{data.profitRatio}%</span>
       </div>
       <div className="h-2 rounded-full bg-muted overflow-hidden flex">
-        <div className="h-full transition-all" style={{ width: `${data.concentration}%`, backgroundColor: STOCK_COLOR_TOKENS.up.hex }} />
-        <div className="h-full transition-all" style={{ width: `${100 - data.concentration}%`, backgroundColor: STOCK_COLOR_TOKENS.down.hex, opacity: 0.4 }} />
+        <div className="h-full transition-[width]" style={{ width: `${data.concentration}%`, backgroundColor: STOCK_COLOR_TOKENS.up.hex }} />
+        <div className="h-full transition-[width]" style={{ width: `${100 - data.concentration}%`, backgroundColor: STOCK_COLOR_TOKENS.down.hex, opacity: 0.4 }} />
       </div>
       <div className="flex items-center gap-1">
         <Badge variant="outline" className="text-[10px] px-1.5 py-0">{chipLabel}</Badge>
@@ -217,7 +217,7 @@ function SignalCard({
   const conf = signal.confidence <= 1 ? Math.round(signal.confidence * 100) : Math.round(signal.confidence)
 
   return (
-    <Card className="overflow-hidden transition-all duration-200 hover:shadow-elevation-2 hover:-translate-y-0.5" style={{ borderLeft: `4px solid ${borderColor}` }}>
+    <Card className="overflow-hidden transition-shadow transition-transform duration-200 hover:shadow-elevation-2 hover:-translate-y-0.5" style={{ borderLeft: `4px solid ${borderColor}` }}>
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">

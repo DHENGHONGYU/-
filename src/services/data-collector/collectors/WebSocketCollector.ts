@@ -59,7 +59,7 @@ export class WebSocketCollector extends BaseCollector {
 
       this.ws.onmessage = (event) => {
         try {
-          const rawData = JSON.parse(event.data as string)
+          const rawData: unknown = JSON.parse(event.data as string)
           const dataType = this.inferDataType(endpoint)
           const wrappedData = this.wrapData(dataType, rawData, 'websocket')
           this.onMessageCallback?.(wrappedData)

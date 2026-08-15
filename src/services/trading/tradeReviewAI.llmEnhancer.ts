@@ -77,11 +77,14 @@ export function parseAIDeepInsightFromLlm(content: string): AIDeepInsight {
   try {
     const jsonMatch = content.match(/```(?:json)?\s*\n?([\s\S]*?)```/)
     const jsonStr = jsonMatch?.[1] ?? content
-    const parsed = JSON.parse(jsonStr.trim())
+    // no-unsafe 治理：JSON.parse 返回 unknown，经 Record 收窄后逐字段类型守卫
+    const parsed: unknown = JSON.parse(jsonStr.trim())
+    const obj: Record<string, unknown> =
+      typeof parsed === 'object' && parsed !== null ? (parsed as Record<string, unknown>) : {}
     return {
-      pnlAttribution: Array.isArray(parsed.pnlAttribution) ? parsed.pnlAttribution.map(String) : [],
-      dataPatterns: Array.isArray(parsed.dataPatterns) ? parsed.dataPatterns.map(String) : [],
-      personalizedAdvice: Array.isArray(parsed.personalizedAdvice) ? parsed.personalizedAdvice.map(String) : [],
+      pnlAttribution: Array.isArray(obj.pnlAttribution) ? obj.pnlAttribution.map(String) : [],
+      dataPatterns: Array.isArray(obj.dataPatterns) ? obj.dataPatterns.map(String) : [],
+      personalizedAdvice: Array.isArray(obj.personalizedAdvice) ? obj.personalizedAdvice.map(String) : [],
     }
   } catch {
     logger.warn('[TradeReviewAI] LLM 洞察解析失败，降级为规则模板', { snippet: content.slice(0, LOG_TRUNCATE_LENGTH) })

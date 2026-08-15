@@ -25,7 +25,7 @@ interface Finding {
 }
 
 const REQUIRED_ROOT_DOCS = [
-  'docs/explanation/README.md',
+  // 原 explanation/README.md 已归档至 archive/historical-2026-08-16/batch7/
   'AGENTS.md',
   'architecture.md',
   'CHANGELOG.md',

@@ -440,7 +440,7 @@ export class StrategyReportGenerator {
 let _instance: StrategyReportGenerator | null = null
 
 export function getStrategyReportGenerator(config?: StrategyReportGeneratorConfig): StrategyReportGenerator {
-  if (!_instance) _instance = new StrategyReportGenerator(config)
+  _instance ??= new StrategyReportGenerator(config)
   return _instance
 }
 

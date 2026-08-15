@@ -3,6 +3,12 @@ import { Badge } from '@/components/atoms/Badge'
 import { cn } from '@/lib/utils'
 import type { StrategyGroupItem } from '@/data/types'
 
+function getScoreColorClass(score: number): string {
+  if (score >= 4.0) return 'text-[hsl(var(--stock-up))]'
+  if (score >= 3.0) return 'text-primary'
+  return 'text-[hsl(var(--stock-down))]'
+}
+
 export interface StrategyGroupCardProps {
   title: string
   items: StrategyGroupItem[]
@@ -31,8 +37,8 @@ export function StrategyGroupCard({ title, items, color }: StrategyGroupCardProp
           </Badge>
         </div>
         <div className="flex gap-4 text-sm text-muted-foreground">
-          <span>均分 {avgComposite.toFixed(2)}</span>
-          <span>最高 {maxComposite.toFixed(2)}</span>
+          <span className={cn(getScoreColorClass(avgComposite))}>均分 {avgComposite.toFixed(2)}</span>
+          <span className={cn(getScoreColorClass(maxComposite))}>最高 {maxComposite.toFixed(2)}</span>
         </div>
       </CardHeader>
       <CardContent className="flex-1 overflow-auto">
@@ -50,7 +56,7 @@ export function StrategyGroupCard({ title, items, color }: StrategyGroupCardProp
                   <span className="font-medium">
                     {item.symbol} {item.name}
                   </span>
-                  <span className="text-muted-foreground">{item.composite.toFixed(2)}</span>
+                  <span className={cn(getScoreColorClass(item.composite))}>{item.composite.toFixed(2)}</span>
                 </div>
                 {item.reasons[0] && (
                   <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">

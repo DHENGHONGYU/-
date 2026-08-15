@@ -77,7 +77,7 @@ date: 2026-07-17
 - [ ] **分层规则**: 无跨层调用违规（通过 `npm run audit:layers`）
 - [ ] **依赖方向**: import 路径符合 AGENTS.md §1 依赖方向规则
 - [ ] **四步集成**: 新模块按类型定义 → Store → Service → UI 顺序集成
-- [ ] **路由注册**: 新增页面在 `routes.ts` + App 分发器 + `./06-routing-specs.md` 三处同步更新
+- [ ] **路由注册**: 新增页面在 `routes.ts` + App 分发器 + `../explanation/06-routing-specs.md` 三处同步更新
 
 #### ? 类型安全
 
@@ -120,7 +120,7 @@ date: 2026-07-17
 
 - [ ] **注释清晰**: 复杂逻辑有 JSDoc 注释
 - [ ] **日志规范**: 核心分支有 `logger.info` 打印（格式：`[模块名] 操作名`）
-- [ ] **文档同步**: 类型定义变更同步更新 `./06-routing-specs.md` 或数据字典
+- [ ] **文档同步**: 类型定义变更同步更新 `../explanation/06-routing-specs.md` 或数据字典
 - [ ] **TODO/FIXME**: 临时方案有 JSDoc 注释说明原因和后续计划
 
 ### 2.3 可选检查项（P2 - 建议改进）

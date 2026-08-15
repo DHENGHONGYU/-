@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-PROJ-373
+title: "GitHub 连接问题网络排查报告"
+domain: proj
+status: active
+last_updated: 2026-08-15
+---
+
 # GitHub 连接问题网络排查报告
 
 **报告编号**: NET-2026-0809-001  

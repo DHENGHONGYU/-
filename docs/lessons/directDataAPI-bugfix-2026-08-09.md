@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-PROJ-372
+title: "directDataAPI Bug 修复说明（2026-08-09）"
+domain: proj
+status: active
+last_updated: 2026-08-15
+---
+
 # directDataAPI Bug 修复说明（2026-08-09）
 
 ## 概述

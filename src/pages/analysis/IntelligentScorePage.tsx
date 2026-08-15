@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Badge } from '@/components/atoms/Badge'
-import { Brain, Download } from 'lucide-react'
+import { Brain, FileDown, FileJson, FileText, Settings2, UploadCloud } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Input } from '@/components/atoms/Input'
@@ -12,6 +12,7 @@ import { toStockOption } from '@/constants/stockList'
 import { ScoreFactorDeltaPanel } from '@/components/organisms/shared/ScoreFactorDeltaPanel'
 import { ScoreUpdateAlert } from '@/components/organisms/shared/ScoreUpdateAlert'
 import { PageContainer, PageHeader } from '@/components/templates'
+import { ScoreGauge } from '@/components/molecules/ScoreGauge'
 import { MultiPeriodTrendChart } from '@/components/organisms/analysis/score/MultiPeriodTrendChart'
 import { IntelligentScoreExplanation } from '@/components/organisms/analysis/score/IntelligentScoreExplanation'
 import type { ScoreTrendPeriod } from '@/types/modules/score.types'
@@ -27,6 +28,7 @@ import {
 } from '@/store/intelligentScoreStore'
 import { DEFAULT_LLM_BASE_URL, type LlmConfig } from '@/config/llmConfig'
 import { getLogger } from '@/lib/logger'
+import { cn } from '@/lib/utils'
 import type { IntelligentScore } from '@/data/types'
 import { COLOR_SHADES } from '@/constants/theme.tokens'
 
@@ -60,8 +62,8 @@ function exportToMarkdown(score: IntelligentScore): void {
   const stockName = score.sourceSnapshot.stock?.name ?? ''
   const md = `# ${score.symbol} ${stockName} 智能评分报告
 
-**评分时间**: ${date}  
-**综合评分**: ${score.overallScore?.toFixed(2) ?? 'N/A'} / 5.0  
+**评分时间**: ${date}
+**综合评分**: ${score.overallScore?.toFixed(2) ?? 'N/A'} / 5.0
 **使用模型**: ${score.configSnapshot.model}
 
 ## 维度评分
@@ -94,7 +96,6 @@ ${score.missingFields.length > 0 ? score.missingFields.map(f => `- ${f}`).join('
 }
 
 function exportToPDF(score: IntelligentScore): void {
-  // 创建打印友好的 HTML 内容
   const printWindow = window.open('', '_blank')
   if (!printWindow) return
 
@@ -173,10 +174,15 @@ function exportToPDF(score: IntelligentScore): void {
 }
 
 /**
- * IntelligentScorePage
+ * IntelligentScorePage — 布局结构：
+ *  - 顶部：输入区 + 进度/导出操作区（宽屏 lg: 12 栏分栏，输入 4 / 进度+操作 8）
+ *  - 中部：评分结果大卡（全宽行）
+ *    ・头部：综合分 + 维度 Progress 2 列网格
+ *    ・底部：AI 总结 + 因子 Delta
+ *  - 下部：趋势图（8 列）+ 智能解释（4 列）
+ *  - 最下：评分依据卡（全宽）
  */
 export default function IntelligentScorePage(): React.JSX.Element {
-  // 从 Store 获取状态
   const symbol = useIntelligentScoreStore((s) => s.symbol)
   const stocks = useIntelligentScoreStore((s) => s.stocks)
   const files = useIntelligentScoreStore((s) => s.files)
@@ -196,7 +202,6 @@ export default function IntelligentScorePage(): React.JSX.Element {
   const trendLoading = useIntelligentScoreStore((s) => s.trendLoading)
   const trendError = useIntelligentScoreStore((s) => s.trendError)
 
-  // 从 Store 获取 actions
   const setSymbol = useIntelligentScoreStore((s) => s.setSymbol)
   const setFiles = useIntelligentScoreStore((s) => s.setFiles)
   const setReportText = useIntelligentScoreStore((s) => s.setReportText)
@@ -208,18 +213,13 @@ export default function IntelligentScorePage(): React.JSX.Element {
   const runScore = useIntelligentScoreStore((s) => s.runScore)
   const loadScoreTrend = useIntelligentScoreStore((s) => s.loadScoreTrend)
 
-  // 初始化加载股票列表
   useEffect(() => {
     logger.info('[IntelligentScorePage] 初始化，加载股票列表')
     void loadStocks()
   }, [loadStocks])
 
-  // symbol 变化时加载历史和日志
   useEffect(() => {
-    if (!symbol) {
-      logger.info('[IntelligentScorePage] symbol 为空，清空历史和日志')
-      return
-    }
+    if (!symbol) return
     logger.info('[IntelligentScorePage] symbol 变化，加载历史和日志', { symbol })
     void loadHistory(symbol)
     void loadLogs(symbol)
@@ -237,9 +237,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
     await runScore()
   }
 
-  // 多周期趋势数据（通过 Store 管理）
   const [trendPeriod, setTrendPeriod] = useState<ScoreTrendPeriod>('month')
-
   useEffect(() => {
     if (symbol) {
       logger.info('[IntelligentScorePage] 加载评分趋势', { symbol, trendPeriod })
@@ -253,295 +251,359 @@ export default function IntelligentScorePage(): React.JSX.Element {
       ? 'LLM 未配置：请填写 baseURL、API Key 与模型名称后再运行评分'
       : undefined
 
-  const runButton = (
-    <Button onClick={() => void handleStart()} disabled={loading || !configReady} className="w-full">
-      {loading ? '评分中...' : '开始智能评分'}
-    </Button>
-  )
-
   return (
-    <PageContainer className="space-y-4">
+    <PageContainer className="space-y-6">
       <PageHeader title="V6 个股智能评分" description="多源资料综合评估" />
 
-      <Card>
-        <CardContent className="space-y-4">
-          <ScoreUpdateAlert
-            lastScoredAt={previousResult?.scoredAt}
-            onRefresh={() => void handleStart()}
-            loading={loading}
-          />
+      {/* ============ 顶部：输入区 + 进度区 ============ */}
+      <div className="grid gap-6 lg:grid-cols-12">
+        {/* 左栏：输入区 */}
+        <Card className="shadow-sm lg:col-span-4">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base font-semibold">评分输入</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-5">
+            <ScoreUpdateAlert
+              lastScoredAt={previousResult?.scoredAt}
+              onRefresh={() => void handleStart()}
+              loading={loading}
+            />
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">选择标的</label>
-                <StockSelector
-                  value={symbol}
-                  onChange={(stock) => setSymbol(stock.symbol)}
-                  stocks={stocks.map(toStockOption)}
-                  placeholder="搜索股票名称或代码..."
-                  maxDisplayCount={20}
-                />
-                <p className="text-xs text-muted-foreground">
-                  支持搜索名称/代码，↑↓键导航，Enter确认
-                </p>
+            {/* 选择标的 */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">选择标的</label>
+              <StockSelector
+                value={symbol}
+                onChange={(stock) => setSymbol(stock.symbol)}
+                stocks={stocks.map(toStockOption)}
+                placeholder="搜索股票名称或代码..."
+                maxDisplayCount={20}
+              />
+              <p className="text-xs text-muted-foreground">
+                支持搜索名称/代码，↑↓ 键导航，Enter 确认
+              </p>
+            </div>
+
+            {/* 大模型配置 */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-1.5 text-sm font-medium">
+                  <Settings2 className="h-3.5 w-3.5 text-muted-foreground" />
+                  大模型配置
+                </label>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowConfig((prev: boolean) => !prev)}
+                >
+                  {showConfig ? '收起' : '展开'}
+                </Button>
               </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium">大模型配置</label>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowConfig((prev: boolean) => !prev)}
-                  >
-                    {showConfig ? '收起' : '展开'}
-                  </Button>
+              {showConfig && (
+                <div className="space-y-2 rounded-md border p-3">
+                  <Input
+                    placeholder={`Base URL，如 ${DEFAULT_LLM_BASE_URL}/v1`}
+                    aria-label="大模型 Base URL"
+                    value={llmConfig.baseURL}
+                    onChange={(e) => setLlmConfig((prev: LlmConfig) => ({ ...prev, baseURL: e.target.value }))}
+                  />
+                  <Input
+                    type="password"
+                    placeholder="API Key"
+                    aria-label="大模型 API Key"
+                    value={llmConfig.apiKey}
+                    onChange={(e) => setLlmConfig((prev: LlmConfig) => ({ ...prev, apiKey: e.target.value }))}
+                  />
+                  <Input
+                    placeholder="Model，如 deepseek-chat / deepseek-reasoner"
+                    aria-label="大模型 Model"
+                    value={llmConfig.model}
+                    onChange={(e) => setLlmConfig((prev: LlmConfig) => ({ ...prev, model: e.target.value }))}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    支持 OpenAI 兼容接口，推荐 DeepSeek / Kimi / 硅基流动等国内模型。
+                  </p>
                 </div>
-                {showConfig && (
-                  <div className="space-y-2 rounded-md border p-3">
-                    <Input
-                      placeholder={`Base URL，如 ${DEFAULT_LLM_BASE_URL}/v1`}
-                      aria-label="大模型 Base URL"
-                      value={llmConfig.baseURL}
-                      onChange={(e) => setLlmConfig((prev: LlmConfig) => ({ ...prev, baseURL: e.target.value }))}
-                    />
-                    <Input
-                      type="password"
-                      placeholder="API Key"
-                      aria-label="大模型 API Key"
-                      value={llmConfig.apiKey}
-                      onChange={(e) => setLlmConfig((prev: LlmConfig) => ({ ...prev, apiKey: e.target.value }))}
-                    />
-                    <Input
-                      placeholder="Model，如 deepseek-chat / deepseek-reasoner"
-                      aria-label="大模型 Model"
-                      value={llmConfig.model}
-                      onChange={(e) => setLlmConfig((prev: LlmConfig) => ({ ...prev, model: e.target.value }))}
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      支持 OpenAI 兼容接口，推荐 DeepSeek / Kimi / 硅基流动等国内模型。
-                    </p>
-                  </div>
-                )}
-                {!configReady && (
-                  <p className="text-xs text-destructive">LLM 未配置，无法开始评分</p>
-                )}
-              </div>
+              )}
+              {!configReady && (
+                <p className="text-xs text-destructive">LLM 未配置，无法开始评分</p>
+              )}
+            </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium">补充资料上传</label>
-                <Input
-                  type="file"
-                  multiple
-                  accept=".txt,.md,.json"
-                  aria-label="补充资料上传"
-                  onChange={handleFileChange}
-                />
-                {files.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {files.map((file) => (
-                      <Badge key={file.name} variant="secondary">
-                        {file.name}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </div>
+            {/* 补充资料上传 */}
+            <div className="space-y-2">
+              <label className="flex items-center gap-1.5 text-sm font-medium">
+                <UploadCloud className="h-3.5 w-3.5 text-muted-foreground" />
+                补充资料上传
+              </label>
+              <Input
+                type="file"
+                multiple
+                accept=".txt,.md,.json"
+                aria-label="补充资料上传"
+                onChange={handleFileChange}
+              />
+              {files.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {files.map((file) => (
+                    <Badge key={file.name} variant="secondary">
+                      {file.name}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium">行业分析报告 / 资料</label>
-                <Textarea
-                  placeholder="在此粘贴行业分析报告、研报摘要、关键事件等文本..."
-                  aria-label="分析报告文本"
-                  value={reportText}
-                  onChange={(e) => setReportText(e.target.value)}
-                  rows={5}
-                />
-              </div>
+            {/* 行业分析报告 */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">行业分析报告 / 资料</label>
+              <Textarea
+                placeholder="在此粘贴行业分析报告、研报摘要、关键事件等文本..."
+                aria-label="分析报告文本"
+                value={reportText}
+                onChange={(e) => setReportText(e.target.value)}
+                rows={5}
+              />
+            </div>
 
+            {/* 开始评分按钮 + 错误提示 */}
+            <div className="space-y-2 pt-1">
               {runTooltip ? (
                 <Tooltip content={runTooltip} side="top">
-                  {runButton}
+                  <Button
+                    onClick={() => void handleStart()}
+                    disabled={loading || !configReady}
+                    className="w-full"
+                  >
+                    {loading ? '评分中...' : '开始智能评分'}
+                  </Button>
                 </Tooltip>
               ) : (
-                runButton
+                <Button
+                  onClick={() => void handleStart()}
+                  disabled={loading || !configReady}
+                  className="w-full"
+                >
+                  {loading ? '评分中...' : '开始智能评分'}
+                </Button>
               )}
-
               {error && (
                 <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
                   {error}
                 </div>
               )}
             </div>
+          </CardContent>
+        </Card>
 
-            <div className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">评分进度</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {STEP_ORDER.map((step) => {
-                    const status = progress[step]
-                    const { label, description } = STEP_LABELS[step]
-                    return (
-                      <div key={step} className="flex items-start gap-3">
-                        <div className="mt-0.5">
-                          {status === 'done' && <span className="text-primary">✓</span>}
-                          {status === 'running' && <span className="animate-pulse text-primary">●</span>}
-                          {status === 'error' && <span className="text-destructive">✕</span>}
-                          {status === 'pending' && <span className="text-muted-foreground">○</span>}
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">{label}</p>
-                          <p className="text-xs text-muted-foreground">{description}</p>
-                        </div>
+        {/* 右栏：评分进度 + 结果操作 */}
+        <div className="space-y-6 lg:col-span-8">
+          {/* 评分进度卡 */}
+          <Card className="shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base font-semibold">评分进度</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+                {STEP_ORDER.map((step) => {
+                  const rawStatus = progress[step]
+                  // 当 error 非空时，将 running 的步骤显示为 error
+                  const displayStatus = error && rawStatus === 'running' ? 'error' : rawStatus
+                  const { label, description } = STEP_LABELS[step]
+                  return (
+                    <div key={step} className="flex items-start gap-2.5">
+                      <div className="mt-0.5 shrink-0">
+                        {displayStatus === 'done' && <span className="text-primary">✓</span>}
+                        {displayStatus === 'running' && <span className="animate-pulse text-primary">●</span>}
+                        {displayStatus === 'error' && <span className="text-destructive">✕</span>}
+                        {displayStatus === 'pending' && <span className="text-muted-foreground">○</span>}
                       </div>
-                    )
-                  })}
-                  {progressMessage && (
-                    <p className="text-xs text-muted-foreground">{progressMessage}</p>
-                  )}
-                </CardContent>
-              </Card>
-
-              {result && (
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-base">
-                        评分结果 · {result.symbol}
-                        {(result.configSnapshot.v6EngineVersion ?? '') !== '' && (
-                          <Badge variant="secondary" className="ml-2 text-xs" title={`v6 引擎版本 ${result.configSnapshot.v6EngineVersion}`}>
-                            V6 实时因子
-                          </Badge>
-                        )}
-                        {(result.configSnapshot.v6EngineVersion ?? '') === '' && !result.dimensionScores.some((d) => (d.usedLlm ?? false)) && (
-                          <Badge variant="outline" className="ml-2 text-xs" title="当前为合成示例数据，非真实引擎信号">
-                            示例 · LLM 合成
-                          </Badge>
-                        )}
-                      </CardTitle>
-                      <div className="flex gap-2">
-                        <Tooltip content="导出 JSON">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => exportToJSON(result)}
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
-                        </Tooltip>
-                        <Tooltip content="导出 Markdown">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => exportToMarkdown(result)}
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
-                        </Tooltip>
-                        <Tooltip content="导出 PDF">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => exportToPDF(result)}
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
-                        </Tooltip>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium">{label}</p>
+                        <p className="truncate text-xs text-muted-foreground">{description}</p>
                       </div>
                     </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center gap-4">
-                      <div className="text-4xl font-bold text-primary">
-                        {result.overallScore !== null ? result.overallScore.toFixed(2) : '—'}
-                      </div>
-                      <div className="text-sm text-muted-foreground">综合分 / 5.0</div>
+                  )
+                })}
+              </div>
+              {/* 当 error 非空时显示错误信息，否则显示正常进度消息 */}
+              {error && (
+                <p className="mt-3 text-xs text-destructive">{error}</p>
+              )}
+              {!error && progressMessage && (
+                <p className="mt-3 text-xs text-muted-foreground">{progressMessage}</p>
+              )}
+              {/* 图例说明 */}
+              <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
+                <span><span className="text-primary">✓</span> 完成</span>
+                <span><span className="animate-pulse text-primary">●</span> 运行中</span>
+                <span><span className="text-destructive">✕</span> 失败</span>
+                <span><span className="text-muted-foreground">○</span> 待处理</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* 结果操作区（仅在有结果时显示） */}
+          {result && (
+            <Card className="shadow-sm">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <CardTitle className="text-base font-semibold">
+                      {result.symbol} {result.sourceSnapshot.stock?.name}
+                    </CardTitle>
+                    <div className="mt-0.5 flex flex-wrap items-center gap-2">
+                      {(result.configSnapshot.v6EngineVersion ?? '') !== '' ? (
+                        <Badge variant="secondary" className="text-xs" title={`v6 引擎版本 ${result.configSnapshot.v6EngineVersion}`}>
+                          V6 实时因子
+                        </Badge>
+                      ) : !result.dimensionScores.some((d) => (d.usedLlm ?? false)) ? (
+                        <Badge variant="outline" className="text-xs" title="当前为合成示例数据，非真实引擎信号">
+                          示例 · LLM 合成
+                        </Badge>
+                      ) : null}
+                      <span className="text-xs text-muted-foreground">
+                        {new Date(result.scoredAt).toLocaleString('zh-CN')}
+                      </span>
                       {previousResult && previousResult.scoredAt !== result.scoredAt && (
                         <Badge variant={(result.overallScore ?? 0) > 0 && (previousResult.overallScore ?? 0) > 0 && (result.overallScore ?? 0) > (previousResult.overallScore ?? 0) ? 'default' : 'destructive'}>
                           较上次 {formatIntelligentDelta(result.overallScore, previousResult.overallScore)}
                         </Badge>
                       )}
                     </div>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <Button variant="ghost" size="sm" onClick={() => exportToJSON(result)}>
+                      <FileJson className="w-4 h-4 mr-1" />
+                      JSON
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => exportToMarkdown(result)}>
+                      <FileText className="w-4 h-4 mr-1" />
+                      MD
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => exportToPDF(result)}>
+                      <FileDown className="w-4 h-4 mr-1" />
+                      PDF
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+            </Card>
+          )}
+        </div>
+      </div>
 
-                    <div className="space-y-4">
-                      {DIMENSION_ORDER.map((name) => {
-                        const dimension = result.dimensionScores.find((d) => d.name === name)
-                        const previousDimension = previousResult?.dimensionScores.find((d) => d.name === name)
-                        if (!dimension) return null
-                        return (
-                          <div key={dimension.name} className="space-y-2">
-                            <div className="flex items-center gap-2">
-                              <Progress
-                                value={dimension.score ?? 0}
-                                label={`${dimension.name} ${dimension.score !== null ? dimension.score.toFixed(1) : 'N/A'} ${formatIntelligentDelta(dimension.score, previousDimension?.score ?? null)}`}
-                              />
-                              {(dimension.usedLlm ?? false) && (
-                                <Badge variant="secondary" className="text-xs" title="该因子使用了 LLM 增强分析">
-                                  <Brain className="mr-1 h-3 w-3" />
-                                  LLM
-                                </Badge>
-                              )}
-                            </div>
-                            <div className="rounded-md bg-muted/50 p-3 space-y-2">
-                              <div>
-                                <p className="text-xs font-medium text-muted-foreground">评分依据</p>
-                                <p className="text-sm text-muted-foreground mt-1">
-                                  {dimension.rationale}
-                                </p>
-                              </div>
-                              {dimension.evidence.length > 0 && (
-                                <div>
-                                  <p className="text-xs font-medium text-muted-foreground">支撑证据</p>
-                                  <ul className="mt-1 space-y-1">
-                                    {dimension.evidence.map((item, idx) => (
-                                      <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
-                                        <span className="text-primary mt-0.5">•</span>
-                                        <span>{item}</span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-
-                    <div className="rounded-md bg-muted p-3">
-                      <p className="text-sm font-medium">AI 总结</p>
-                      <p className="text-sm text-muted-foreground">{result.summary}</p>
-                    </div>
-
-                    <ScoreFactorDeltaPanel current={result} previous={previousResult} />
-                  </CardContent>
-                </Card>
-              )}
+      {/* ============ 中部：评分结果大卡（全宽） ============ */}
+      {result && (
+        <Card className="shadow-sm">
+          <CardContent className="space-y-6 pt-6">
+            {/* 综合分 */}
+            <div className="flex flex-col items-start gap-3">
+              <div className="flex items-baseline gap-3">
+                <span className="text-xs text-muted-foreground">综合评分</span>
+                <span
+                  className={cn(
+                    'text-4xl font-semibold tabular-nums tracking-tight',
+                    result.overallScore !== null && result.overallScore >= 4.0
+                      ? 'text-[hsl(var(--stock-up))]'
+                      : result.overallScore !== null && result.overallScore >= 3.0
+                        ? 'text-primary'
+                        : 'text-[hsl(var(--stock-down))]',
+                  )}
+                >
+                  {result.overallScore !== null ? result.overallScore.toFixed(2) : '—'}
+                </span>
+                <span className="text-sm text-muted-foreground">/ 5.0</span>
+              </div>
+              <ScoreGauge
+                score={result.overallScore}
+                maxScore={5}
+                size="lg"
+                className="w-full max-w-md"
+              />
             </div>
-          </div>
-        </CardContent>
-      </Card>
 
-      {/* 多周期趋势图表 + 智能评分解释 */}
+            {/* 维度评分：2 列网格，维度名+分数 Progress 一行，依据/证据卡片在下 */}
+            <div className="grid gap-x-6 gap-y-4 md:grid-cols-2">
+              {DIMENSION_ORDER.map((name) => {
+                const dimension = result.dimensionScores.find((d) => d.name === name)
+                const previousDimension = previousResult?.dimensionScores.find((d) => d.name === name)
+                if (!dimension) return null
+                return (
+                  <div key={dimension.name} className="space-y-2.5 rounded-lg border border-border/40 p-4">
+                    <div className="flex items-center gap-2">
+                      <Progress
+                        value={dimension.score ?? 0}
+                        label={`${dimension.name} ${dimension.score !== null ? dimension.score.toFixed(1) : 'N/A'} ${formatIntelligentDelta(dimension.score, previousDimension?.score ?? null)}`}
+                      />
+                      {(dimension.usedLlm ?? false) && (
+                        <Badge variant="secondary" className="text-xs shrink-0" title="该因子使用了 LLM 增强分析">
+                          <Brain className="mr-1 h-3 w-3" />
+                          LLM
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground">评分依据</p>
+                        <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">
+                          {dimension.rationale}
+                        </p>
+                      </div>
+                      {dimension.evidence.length > 0 && (
+                        <div>
+                          <p className="text-xs font-medium text-muted-foreground">支撑证据</p>
+                          <ul className="mt-1 space-y-1">
+                            {dimension.evidence.map((item, idx) => (
+                              <li key={idx} className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
+                                <span className="mt-0.5 text-primary">•</span>
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* AI 总结 */}
+            <div className="rounded-lg border border-border/40 bg-card p-4">
+              <p className="text-sm font-medium">AI 总结</p>
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{result.summary}</p>
+            </div>
+
+            {/* 因子 Delta */}
+            <ScoreFactorDeltaPanel current={result} previous={previousResult} />
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ============ 下部：趋势图（8）+ 智能解释（4） ============ */}
       {symbol && (
-        <div className="grid gap-4 lg:grid-cols-2">
-          <MultiPeriodTrendChart
-            data={trendData}
-            period={trendPeriod}
-            onPeriodChange={setTrendPeriod}
-            loading={trendLoading}
-            error={trendError}
-          />
-          {result && <IntelligentScoreExplanation result={result} />}
+        <div className="grid gap-6 lg:grid-cols-12">
+          <div className="lg:col-span-8">
+            <MultiPeriodTrendChart
+              data={trendData}
+              period={trendPeriod}
+              onPeriodChange={setTrendPeriod}
+              loading={trendLoading}
+              error={trendError}
+            />
+          </div>
+          {result && (
+            <div className="lg:col-span-4">
+              <IntelligentScoreExplanation result={result} />
+            </div>
+          )}
         </div>
       )}
 
+      {/* ============ 最下：评分依据卡（全宽） ============ */}
       {result && <IntelligentScoreBasisCard result={result} history={history} logs={logs} />}
 
-      {/* 合规层 — 免责声明 */}
       <ComplianceDisclaimer variant="compact" />
     </PageContainer>
   )

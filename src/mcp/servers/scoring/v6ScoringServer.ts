@@ -218,7 +218,7 @@ export class V6ScoringServer extends MCPServerBase {
           if (sym === '' || cs === '') {
             throw new Error('[scoring:v6] stock_analysis prompt: symbol and compositeScore are required')
           }
-          const scoreData: CompositeScore = JSON.parse(cs)
+          const scoreData = JSON.parse(cs) as CompositeScore
           const layerSummary = Object.entries(scoreData.layers)
             .map(([id, layer]) => `- ${id}(${layer.layerName}): ${layer.score} (权重 ${layer.weight * 100}%)`)
             .join('\n')

@@ -338,7 +338,8 @@ function generateReport(report: SyncReport, outputPath: string): void {
   const reportFile = join(outputPath, `test-sync-${Date.now()}.json`)
   writeFileSync(reportFile, JSON.stringify(report, null, 2))
 
-  const summaryFile = join(outputPath, 'docs/reports/doc-sync/latest-summary.md')
+  // 原 <docs/reports/doc-sync/latest-summary.md> 路径已归档/删除
+  const summaryFile = join(outputPath, 'docs', 'reports', 'doc-sync', 'latest-summary.md')
   const markdown = `# 测试同步报告\n\n**时间**: ${report.timestamp}\n\n## 摘要\n${report.summary}\n\n## 不匹配详情\n\n${
     report.mismatches.length > 0
       ? report.mismatches

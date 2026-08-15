@@ -734,7 +734,7 @@ export class WorkflowServer extends MCPServerBase {
           const overwrite = args.overwrite === true
           let payload: { defs?: WorkflowDef[]; schedules?: ScheduleDef[]; triggers?: TriggerDef[] }
           try {
-            payload = JSON.parse(args.data as string)
+            payload = JSON.parse(args.data as string) as { defs?: WorkflowDef[]; schedules?: ScheduleDef[]; triggers?: TriggerDef[] }
           } catch (err) { console.warn('[workflowServer.ts]', err);
             return this.err('data 不是有效的 JSON 字符串')
           }

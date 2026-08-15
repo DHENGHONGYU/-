@@ -122,7 +122,7 @@ npm run audit:layers # 验证 trading 层依赖合规
 | 文档 | 路径 |
 |------|------|
 | ADR-009（双策略） | `adr-009-dual-strategy-system.md` |
-| 引擎规格 | `../reference/05-engine-specs.md` §3.3 |
+| 引擎规格 | `05-engine-specs.md` §3.3 |
 | 原始提案 | `../reference/2026-06-24-adopt-v6-core-resource-trading-strategy.md` |
 | 主题策略详情 | `../reference/fourth-industrial-revolution-core-resource-strategy.md` |
 

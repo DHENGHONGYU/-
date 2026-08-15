@@ -211,6 +211,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
  *   Widget 无需修改 import 路径即可获取 Store 数据。
  * @returns MarketDataContextValue
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useMarketData(): MarketDataContextValue {
   const mergedData = useMarketDataStore((s) => s.mergedData)
   const loadingMap = useMarketDataStore((s) => s.loadingMap)
@@ -234,6 +235,7 @@ export function useMarketData(): MarketDataContextValue {
  * @convergence Phase 2: 内部切换为从 marketDataStore 读取。
  * @returns MarketDataContextValue | undefined
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useOptionalMarketData(): MarketDataContextValue | undefined {
   const mergedData = useMarketDataStore((s) => s.mergedData)
   const loadingMap = useMarketDataStore((s) => s.loadingMap)

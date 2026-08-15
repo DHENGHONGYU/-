@@ -1,4 +1,4 @@
-﻿/**
+/**
  * TradingFlowPage 统计卡片区域
  * 从 TradingFlowPage.tsx 提取
  */
@@ -30,7 +30,7 @@ export function TradingFlowSummary({
           <CardTitle className="text-sm font-medium">交易信号</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{signals.length}</div>
+          <div className="text-h1 font-bold">{signals.length}</div>
           <p className="text-xs text-muted-foreground">
             {signals.filter((s) => s.direction === 'buy').length} 买入 / {signals.filter((s) => s.direction === 'sell').length} 卖出
           </p>
@@ -42,7 +42,7 @@ export function TradingFlowSummary({
           <CardTitle className="text-sm font-medium">待执行订单</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
+          <div className="text-h1 font-bold">
             {orders.filter((o) => o.status === 'pending').length}
           </div>
           <p className="text-xs text-muted-foreground">
@@ -56,7 +56,7 @@ export function TradingFlowSummary({
           <CardTitle className="text-sm font-medium">持仓数量</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{positions.length}</div>
+          <div className="text-h1 font-bold">{positions.length}</div>
           <p className="text-xs text-muted-foreground">
             已建仓 · 观察池 {stocksCount} 只标的
           </p>
@@ -68,7 +68,7 @@ export function TradingFlowSummary({
           <CardTitle className="text-sm font-medium">风险预警</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{riskAlertsCount}</div>
+          <div className="text-h1 font-bold">{riskAlertsCount}</div>
           <p className="text-xs text-muted-foreground">
             {riskAlertsCount === 0 ? '无预警' : '需要关注'}
           </p>

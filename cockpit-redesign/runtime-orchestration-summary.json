@@ -1,0 +1,246 @@
+{
+  "skillProvenance": {
+    "name": "solo-design"
+  },
+  "designSource": {
+    "cssFilePath": "colors_and_type.css",
+    "brandPrefix": "v9"
+  },
+  "project": {
+    "designProjectPath": "d:\\FinSightV9\\cockpit-redesign",
+    "deviceType": "desktop",
+    "operatingMode": "free-explore",
+    "language": "zh-CN",
+    "resolvedLane": "existing_edit_add_comparison",
+    "selectedIntentWorkflowRead": true,
+    "sourcePageId": "page-cockpit-v4",
+    "sourceHtmlSrc": "pages/cockpit-v4.html",
+    "derivationType": "comparison-page",
+    "inPlaceEditAllowed": false,
+    "contextRequirementsLoaded": [
+      {
+        "path": "shared-runtime/runtime-boundaries/lane-runtime-contracts.md",
+        "readStatus": "loaded",
+        "bodyRead": true
+      },
+      {
+        "path": "shared-runtime/agent-dispatch-runtime/lane-dispatch-index.md",
+        "readStatus": "loaded",
+        "bodyRead": true
+      },
+      {
+        "path": "delivery-quality/page-rendering-quality-gate.md",
+        "readStatus": "loaded",
+        "bodyRead": true
+      },
+      {
+        "path": "delivery-quality/design-artifact-validation.md",
+        "readStatus": "loaded",
+        "bodyRead": true
+      },
+      {
+        "path": "delivery-quality/delivery-evidence-contract.md",
+        "readStatus": "loaded",
+        "bodyRead": true
+      }
+    ],
+    "contextReadScope": {
+      "mainAgent": {
+        "forbiddenReads": [
+          "other intent-workflows/**",
+          "Sub-Agent implementation files before dispatch"
+        ]
+      },
+      "pageSubAgent": {
+        "allowedReads": [
+          "current lane page runtime guide",
+          "current lane dispatch contract excerpt",
+          "current Page Packet",
+          "supplementaryReads[] only"
+        ],
+        "forbiddenReads": [
+          "SKILL.md full re-read",
+          "other intent-workflows/**",
+          "full runtime-orchestration-summary.json unless explicitly sliced"
+        ]
+      },
+      "readScopeLedgerWriter": "shared-runtime/deterministic-tooling/build-page-dispatch-manifest.mjs"
+    },
+    "validationRunDiscipline": {
+      "maxFullValidationRuns": 2,
+      "softWarningsTriggerRepair": false,
+      "blockingRepairMode": "targeted-once",
+      "forbiddenRepairTriggers": [
+        "soft-warning-only",
+        "provenance-warning-only",
+        "style-warning-only"
+      ]
+    },
+    "lowValueCallWatchdog": {
+      "applies": true,
+      "noProgressSignals": [
+        "no_tool_call",
+        "no_artifact_diff",
+        "no_structured_decision"
+      ],
+      "noProgressNextAction": "enter_readiness_or_blocked_summary"
+    },
+    "intentProfile": {
+      "caseFamily": "existing_edit_add_comparison",
+      "routingReason": "User feedback on v1 cockpit: redesign from traditional trading-software format to investment research review tool. Focus on sector rotation, stock key indicator tracking, observation pool, with condensed 1W/1M market summary. Not a data aggregation dashboard.",
+      "operatingMode": "free-explore"
+    },
+    "cssPreflightEvidence": {
+      "applies": true,
+      "status": "passed",
+      "command": "node c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\apply-html-head-contract.mjs d:\\FinSightV9\\cockpit-redesign\\colors_and_type.css d:\\FinSightV9\\cockpit-redesign\\.preflight\\preflight.html --title=\"Preflight\" --lang=zh-CN --prefix=v9 --force-skeleton",
+      "brandPrefix": "v9",
+      "checks": {
+        "themeVars": "present",
+        "semanticTokenFallback": "present",
+        "themeInline": "present",
+        "tailwindCdn": "present",
+        "htmlClass": "present",
+        "semanticMappings": "resolved"
+      },
+      "retryCount": 0,
+      "blockingReason": null
+    },
+    "creativeRecipe": {
+      "businessTone": "Professional investment research review tool - NOT a traditional trading terminal. Researcher-focused, insight-driven. Clean, calm, analytical. Focus on what matters for decision-making: sector rotation, key indicator tracking, observation pool.",
+      "layoutArchetype": "Vertical research review dashboard with condensed market environment summary, sector rotation as main focus, holdings key indicator tracking, and observation pool. Each section is a research dimension, not a market data feed.",
+      "visualSignature": "Left accent borders per section (blue/emerald/amber/purple), tabular-nums for all financial figures, inline mini charts for trends, progress bars for scores. A股红涨绿跌. Condensed, insight-dense, not data-dense.",
+      "densityTarget": "medium-dense",
+      "avoidOneThing": "Traditional trading software patterns: OHLC tables, market depth, tick-level data, real-time streaming quotes. No trading-terminal style index panels. No matrix grids. Focus on research review dimensions."
+    },
+    "defaultDeliverableVisibility": {
+      "applies": true,
+      "requiredVisibleRegions": [
+        {
+          "htmlSrc": "pages/cockpit-v4.html",
+          "selector": "#market-env-summary",
+          "label": "大盘环境概览",
+          "source": "user requirement"
+        },
+        {
+          "htmlSrc": "pages/cockpit-v4.html",
+            "selector": "#section-sector-rotation",
+          "label": "板块轮动与热门板块",
+          "source": "user requirement"
+        },
+        {
+          "htmlSrc": "pages/cockpit-v4.html",
+          "selector": "#section-holdings-tracking",
+          "label": "持仓关键指标跟踪",
+          "source": "user requirement"
+        },
+        {
+          "htmlSrc": "pages/cockpit-v4.html",
+          "selector": "#section-observation-pool",
+          "label": "观察池",
+          "source": "user requirement"
+        },
+        {
+          "htmlSrc": "pages/cockpit-v4.html",
+          "selector": "#section-ai-review",
+          "label": "AI洞察复盘",
+          "source": "user requirement"
+        }
+      ],
+      "hiddenAllowed": []
+    },
+    "dispatchPreflightManifest": [
+      {
+        "recorded_at": "2026-08-15T00:00:00.000Z",
+        "generatedBy": "main-agent",
+        "packetType": "ExistingEditPagePacket",
+        "nodeId": "page-cockpit-v4",
+        "htmlSrc": "pages/cockpit-v4.html",
+        "allowedWritePaths": [
+          "pages/cockpit-v4.html",
+          "assets/"
+        ],
+        "toolPolicy": {
+          "todoWriteAllowed": false,
+          "validationScriptsAllowed": false,
+          "previewAllowed": false,
+          "helperScriptsAllowed": false,
+          "designFileWriteAllowed": false,
+          "allowedWritePaths": [
+            "pages/cockpit-v4.html",
+            "assets/"
+          ]
+        },
+        "skillRuntime": {
+          "skillDir": "c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design",
+          "deterministicToolDir": "c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling",
+          "toolPaths": {
+            "applyHtmlHeadContract": "c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\apply-html-head-contract.mjs",
+            "recordDispatchCompletion": "c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\record-dispatch-completion.mjs",
+            "validateDesignWorkspace": "c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\validate-design-workspace.mjs",
+            "validateFinishReadiness": "c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\validate-finish-readiness.mjs"
+          },
+          "requiredForPageSubAgent": [
+            "applyHtmlHeadContract",
+            "recordDispatchCompletion"
+          ],
+          "pathInjection": "absolute",
+          "commandTemplates": {
+            "recordDispatchCompletion": "node \"c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\record-dispatch-completion.mjs\" \"d:\\FinSightV9\\cockpit-redesign\" --node-id=\"page-cockpit-v4\" --html-src=\"pages/cockpit-v4.html\" --status=completed --changed-files=<comma-separated-project-relative-files> --trace-digest=<main-agent-runtime-trace-digest> --tool-ledger-json=<tool-ledger-json-or-file>"
+          }
+        },
+        "cssFilePath": "d:\\FinSightV9\\cockpit-redesign\\colors_and_type.css",
+        "htmlFilePath": "d:\\FinSightV9\\cockpit-redesign\\pages\\cockpit-v4.html",
+        "brandPrefix": "v9",
+        "fillHtmlHeadCommand": "node \"c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\apply-html-head-contract.mjs\" \"d:\\FinSightV9\\cockpit-redesign\\colors_and_type.css\" \"d:\\FinSightV9\\cockpit-redesign\\pages\\cockpit-v4.html\" --title=\"驾驶舱·投研决策视图\" --lang=\"zh-CN\" --prefix=\"v9\" --charts",
+        "headFillMode": "skeleton-first",
+        "viewportMode": "document-scroll",
+        "completionSchemaExpected": "compact",
+        "pageSliceOnly": true,
+        "requiredFieldsPresent": true,
+        "fillHtmlHeadCommandValid": true,
+        "persistedToSummary": true,
+        "proofSource": "summary-only",
+        "sourcePageId": "page-cockpit-v4",
+        "sourceHtmlSrc": "pages/cockpit-v4.html",
+        "derivationType": "comparison-page",
+        "inPlaceEditAllowed": false
+      }
+    ],
+    "readScopeLedger": [],
+    "expectedDispatches": [
+      {
+        "nodeId": "page-cockpit-v4",
+        "pageId": "page-cockpit-v4",
+        "targetPageId": "page-cockpit-v4",
+        "htmlSrc": "pages/cockpit-v4.html",
+        "packetType": "ExistingEditPagePacket",
+        "status": "completed",
+        "changedFiles": [
+          "pages/cockpit-v4.html"
+        ],
+        "toolCallLedger": {
+          "source": "main-agent-runtime-trace",
+          "traceDigest": "v4-v6-model-sector-principles",
+          "todoWriteCalls": 0,
+          "previewCalls": 0,
+          "validationScriptCalls": 0,
+          "helperScriptWrites": 0
+        },
+        "recordedAt": "2026-08-15T00:26:26.243Z",
+        "source": "record-dispatch-completion.mjs"
+      }
+    ],
+    "mainAgentPostDispatchMutations": []
+  },
+  "pages": [
+    {
+      "nodeId": "page-cockpit-v4",
+      "htmlSrc": "pages/cockpit-v4.html",
+      "title": "驾驶舱·投研决策视图",
+      "writeMode": "SectionPlanThenWrite",
+      "viewportMode": "document-scroll",
+      "chartsRequired": true
+    }
+  ]
+}

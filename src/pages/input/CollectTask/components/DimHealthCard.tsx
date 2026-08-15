@@ -43,7 +43,7 @@ export function DimHealthCard({ code, name, total, success }: DimHealthCardProps
 
   return (
     <Card
-      className="transition-all duration-200 hover:shadow-elevation-2"
+      className="transition-shadow transition-colors duration-200 hover:shadow-elevation-2"
       style={{ borderLeftColor: COLOR_TOKENS[colorKey].hex, borderLeftWidth: 3 }}
     >
       <CardHeader className="pb-2">
@@ -56,7 +56,7 @@ export function DimHealthCard({ code, name, total, success }: DimHealthCardProps
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="flex items-baseline gap-1">
-          <span className="text-2xl font-bold" style={{ color: COLOR_TOKENS[colorKey].hex }}>
+          <span className="text-h1 font-bold" style={{ color: COLOR_TOKENS[colorKey].hex }}>
             {rate.toFixed(1)}
           </span>
           <span className="text-xs text-muted-foreground">% 成功</span>

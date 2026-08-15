@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-AI-036
+title: "Service 集成开发指南"
+domain: ai
+status: active
+last_updated: 2026-08-15
+---
+
+﻿---
 title: service-integration-guide
 code_version: "2.0.0-rc.1"
 tier: important
@@ -16,9 +24,9 @@ change_log:
 
 # Service 集成开发指南
 
-> **定位**：本文是 `src/services/` 层的新增/维护 Service 的**权威操作手册**，与 `../../AGENTS.md` §一（分层规则）、§二（四步集成）和 `../how-to/how-to-add-service.md`（实操模板）共同构成 Service 开发的三级文档体系。
+> **定位**：本文是 `src/services/` 层的新增/维护 Service 的**权威操作手册**，与 `../../meta/AGENTS.md` §一（分层规则）、§二（四步集成）和 `../../guides/how-to-add-service.md`（实操模板）共同构成 Service 开发的三级文档体系。
 >
-> **权威契约**：`../../AGENTS.md` v1.4.3。当本文与 `../../AGENTS.md` 冲突时，以 `../../AGENTS.md` 为准。
+> **权威契约**：`../../meta/AGENTS.md` v1.4.3。当本文与 `../../meta/AGENTS.md` 冲突时，以 `../../meta/AGENTS.md` 为准。
 >
 > **状态**：骨架版（P1），关键节点标记 `[TODO]` 待架构组/各子域 owner 扩写。
 
@@ -28,12 +36,12 @@ change_log:
 
 | 文档 | 路径 | 职责 |
 |------|------|------|
-| 工程分层契约 | [`../../AGENTS.md`](../../meta/AGENTS.md) | 分层规则、四步集成、依赖方向铁律 |
-| 新增 Service 实操 | [`../how-to/how-to-add-service.md`](../how-to/how-to-add-service.md) | 15 分钟快速创建 Service 的模板与踩坑指南 |
-| 服务子域目录 | [`../reference/services-catalog.md`](../services-catalog.md) | 24 子域清单与职责摘要 |
-| 全局架构总览 | [`../explanation/overview.md`](../explanation/overview.md) | 数据流、三级加载链、引擎分层 |
-| 新增 Store 指南 | [`../how-to/how-to-add-store.md`](../how-to/how-to-add-store.md) | Service 的上游消费方（Zustand Store） |
-| 编码规范 | [`../reference/coding-conventions.md`](../reference/coding-conventions.md) | JSDoc、复杂度、命名规范 |
+| 工程分层契约 | [`../../meta/AGENTS.md`](../../meta/AGENTS.md) | 分层规则、四步集成、依赖方向铁律 |
+| 新增 Service 实操 | [`../../guides/how-to-add-service.md`](../../guides/how-to-add-service.md) | 15 分钟快速创建 Service 的模板与踩坑指南 |
+| 服务子域目录 | [`../services-catalog.md`](../services-catalog.md) | 24 子域清单与职责摘要 |
+| 全局架构总览 | [`../../explanation/overview.md`](../../explanation/overview.md) | 数据流、三级加载链、引擎分层 |
+| 新增 Store 指南 | [`../../guides/how-to-add-store.md`](../../guides/how-to-add-store.md) | Service 的上游消费方（Zustand Store） |
+| 编码规范 | [`../../guides/standards/coding-conventions.md`](../../guides/standards/coding-conventions.md) | JSDoc、复杂度、命名规范 |
 | 数据库配置 | `src/config/dbConfig.ts` | `STORE_NAME`、`ACL_MATRIX`、`ENVELOPE_ACTION` 定义 |
 | Envelope 工厂 | `src/core/envelope.ts` | 信封构造与类型守卫 |
 | DataBridge 核心 | `src/core/databridge.ts` | 路由分发与 ACL 校验 |
@@ -77,7 +85,7 @@ npm run audit:layers
 
 ## 2. Service 创建四步（Type → Store → Service → UI）
 
-> 来源：`../../AGENTS.md` §二。新模块必须按以下顺序集成，**每步可独立回滚**。
+> 来源：`../../meta/AGENTS.md` §二。新模块必须按以下顺序集成，**每步可独立回滚**。
 
 ### 步骤 1：类型定义（Interface）
 
@@ -266,7 +274,7 @@ export async function saveSectorAnalysis(
 
 **回滚**：删除 Service 文件 + 从子域 `index.ts` 移除导出。需同步检查 `ENVELOPE_ACTION` 和 `ACL_MATRIX` 是否有残留引用。
 
-> [TODO 扩写]：Service 内部模块拆分必要性评估框架（何时拆分子目录、何时使用 `contracts/`）。参考 `../../AGENTS.md` §十三。由架构组补充决策树与评分权重。
+> [TODO 扩写]：Service 内部模块拆分必要性评估框架（何时拆分子目录、何时使用 `contracts/`）。参考 `../../meta/AGENTS.md` §十三。由架构组补充决策树与评分权重。
 
 ---
 
@@ -309,7 +317,7 @@ npm run audit:layers
 npm run test -- --run
 ```
 
-> 详见 `../../AGENTS.md` §二「回滚验证流程」。
+> 详见 `../../meta/AGENTS.md` §二「回滚验证流程」。
 
 ---
 
@@ -524,7 +532,7 @@ errorBus.report({
 
 ## 7. 新服务创建 Checklist
 
-> 本文档的 Checklist 与 `../how-to/how-to-add-service.md` 互补：本文侧重架构合规，后者侧重实操模板。
+> 本文档的 Checklist 与 `../../guides/how-to-add-service.md` 互补：本文侧重架构合规，后者侧重实操模板。
 
 ### 7.1 创建前
 
@@ -560,9 +568,9 @@ errorBus.report({
 
 ### 7.4 文档与索引
 
-- [ ] 新 Service 已注册到 `../reference/services-catalog.md`（如新增子域）。
+- [ ] 新 Service 已注册到 `../services-catalog.md`（如新增子域）。
 - [ ] 新文档已回链 `docs/README.md` 对应类目（F 类：AI 辅助工程治理）。
-- [ ] 双向引用检查：本文引用了 `../../AGENTS.md`，`../../AGENTS.md` 或相关索引应引用本文。
+- [ ] 双向引用检查：本文引用了 `../../meta/AGENTS.md`，`../../meta/AGENTS.md` 或相关索引应引用本文。
 - [ ] 变更日志已记录（如需）于 `docs/changelogs/YYYY-MM/`。
 
 ---
@@ -591,7 +599,7 @@ errorBus.report({
 |------|------|----------|
 | v0.1.0 | 2026-07-20 | 骨架版创建：四步集成、DataBridge 规范、lib 白名单、命名规范、子域通信、Checklist。 |
 
-> **兼容性**：本文档基于 `../../AGENTS.md` v1.4.3 编写。当 `../../AGENTS.md` 版本升级时，须同步修订本文。
+> **兼容性**：本文档基于 `../../meta/AGENTS.md` v1.4.3 编写。当 `../../meta/AGENTS.md` 版本升级时，须同步修订本文。
 
 ---
 

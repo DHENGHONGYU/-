@@ -158,7 +158,7 @@ let _instance: RegistrationOrchestrator | null = null
 export function getRegistrationOrchestrator(
   config?: RegistrationOrchestratorConfig,
 ): RegistrationOrchestrator {
-  if (!_instance) _instance = new RegistrationOrchestrator(config)
+  _instance ??= new RegistrationOrchestrator(config)
   return _instance
 }
 

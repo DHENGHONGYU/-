@@ -30,7 +30,7 @@ function downloadBlob(blob: Blob, filename: string): void {
   if (typeof document === 'undefined') {
     throw new Error('浏览器环境不存在：document 未定义')
   }
-  if (!blob || blob.size === 0) {
+  if (blob.size === 0) {
     throw new Error('下载 Blob 为空或大小为 0')
   }
   let url: string | null = null
@@ -158,7 +158,7 @@ export async function exportGroupToExcel(
       { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 12 }, { wch: 60 },
     ]
     XLSX.utils.book_append_sheet(wb, ws, sheetName)
-    const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+    const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' }) as ArrayBuffer
     const blob = new Blob([buffer], { type: EXCEL_MIME_TYPE })
     const filename = buildFilename(sheetName, 'xlsx')
     downloadBlob(blob, filename)
@@ -218,7 +218,7 @@ export async function exportAllGroupsToExcel(
       const ws = XLSX.utils.json_to_sheet([{ 提示: '暂无策略组合数据' }])
       XLSX.utils.book_append_sheet(wb, ws, '空数据')
     }
-    const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+    const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' }) as ArrayBuffer
     const blob = new Blob([buffer], { type: EXCEL_MIME_TYPE })
     const filename = buildFilename('策略组合全量', 'xlsx')
     downloadBlob(blob, filename)
@@ -347,7 +347,7 @@ export async function exportBatchSnapshotsToExcel(
       const emptyName = buildUniqueSheetName('空数据', usedSheetNames)
       XLSX.utils.book_append_sheet(wb, ws, emptyName)
     }
-    const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+    const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' }) as ArrayBuffer
     const blob = new Blob([buffer], { type: EXCEL_MIME_TYPE })
     const filename = buildFilename(`策略快照批量_${snapshots.length}个`, 'xlsx')
     downloadBlob(blob, filename)

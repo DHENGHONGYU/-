@@ -2,7 +2,7 @@
  * @test_id V9-TEST-ST-084
  * @covers_docs [V9-DOC-PROJ-092]
  */
-/* eslint-disable no-console */
+ 
 /**
  * 行情数据契约校验测试（补充校验层）
  *

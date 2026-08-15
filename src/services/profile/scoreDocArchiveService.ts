@@ -103,7 +103,7 @@ export async function scoreDocToProfileItems(
   // 自动打标
   for (const item of items) {
     const tagged = await autoTagItem(item as unknown as ProfileItem)
-    item.topicTags = Array.from(new Set([...(item.topicTags || []), ...(tagged.topicTags || [])]))
+    item.topicTags = Array.from(new Set([...(item.topicTags ?? []), ...(tagged.topicTags ?? [])]))
     item.relatedLayers = Array.from(new Set([...(item.relatedLayers || []), ...(tagged.relatedLayers || [])]))
   }
 
@@ -145,7 +145,7 @@ function buildCompositeReportItem(doc: ScoreDocVersion) {
 
   for (const [layerId, layer] of Object.entries(doc.layers)) {
     const layerScore = layer
-    const label = LAYER_LABELS[layerId] || layerId
+    const label = LAYER_LABELS[layerId] ?? layerId
     contentLines.push(`- ${label}：${layerScore.score}/100 — ${layerScore.reason || ''}`)
   }
 
@@ -188,8 +188,8 @@ function buildLayerScoreItem(
   layerId: string,
   layerScore: V6LayerScore,
 ) {
-  const label = LAYER_LABELS[layerId] || layerId
-  const domain = LAYER_TO_DOMAIN[layerId] || 'D5'
+  const label = LAYER_LABELS[layerId] ?? layerId
+  const domain = LAYER_TO_DOMAIN[layerId] ?? 'D5'
   const title = `${label} — ${doc.stockName} v${doc.version}`
   const summary = `评分 ${layerScore.score}/100（权重 ${(layerScore.weight * 100).toFixed(1)}%）。${layerScore.reason || ''}`
 
@@ -231,7 +231,7 @@ function buildVersionDiffItem(doc: ScoreDocVersion) {
   // 构建各层变动详情（用于补充 summary）
   const layerDiffs: string[] = []
   for (const [layerId, delta] of Object.entries(diff.layerChanges)) {
-    const label = LAYER_LABELS[layerId] || layerId
+    const label = LAYER_LABELS[layerId] ?? layerId
     const sign = (delta) > 0 ? '+' : ''
     layerDiffs.push(`${label}${sign}${delta}`)
   }

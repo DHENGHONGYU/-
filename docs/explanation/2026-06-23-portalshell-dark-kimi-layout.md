@@ -43,4 +43,4 @@ change_log:
 
 ## 相关文档
 
-- `../reference/04-ui-ux-specs.md`
+- `../specs/04-ui-ux-specs.md`

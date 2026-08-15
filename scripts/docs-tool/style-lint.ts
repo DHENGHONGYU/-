@@ -45,13 +45,13 @@ interface StyleReport {
 // 治理元文档：术语/日期/署名检查跳过（其为规则定义，含示例）
 const EXCLUDE_ALL = new Set([
   'docs/meta/doc-style-standard.md',
-  'docs/archive/00-meta-historical/doc-style-remediation-plan.md',
+  // <docs/archive/00-meta-historical/doc-style-remediation-plan.md> — 已归档，不再参与审计
   'docs/meta/markdown-reorg-framework.md',
   'docs/meta/agent-app-docs-classification.md',
   'docs/reference/hybrid-proofread-contract.md',
-  'docs/meta/doc-proofreading-strategy.md',
-  'docs/archive/00-meta-historical/doc-style-remediation-log.md',
-  'docs/meta/registry-index.md',
+  // doc-proofreading-strategy.md 已归档/删除
+  // <docs/archive/00-meta-historical/doc-style-remediation-log.md> — 已归档，不再参与审计
+  'docs/meta/doc-id-registry.md',
 ])
 // 术语检查额外跳过（历史归档，冻结）
 const TERM_SKIP_PREFIX = ['docs/archive/', 'docs/meta/deprecated-docs/']

@@ -38,6 +38,7 @@ const SCORE_SCALE_MAX = 5
  * buildRadarData
  * @param result
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function buildRadarData(result: IntelligentScore) {
   return result.dimensionScores
     .filter((dim) => typeof dim.score === 'number' && Number.isFinite(dim.score))
@@ -56,6 +57,7 @@ export function buildRadarData(result: IntelligentScore) {
  * buildKeyFactors
  * @param result
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function buildKeyFactors(result: IntelligentScore) {
   const valid = result.dimensionScores.filter(
     (dim) => typeof dim.score === 'number' && Number.isFinite(dim.score),
@@ -73,6 +75,7 @@ export function buildKeyFactors(result: IntelligentScore) {
  * @param result
  * @returns FactorHeatmapData[]
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function buildFactorHeatmapData(result: IntelligentScore): FactorHeatmapData[] {
   return result.dimensionScores
     .filter((dim) => typeof dim.score === 'number' && Number.isFinite(dim.score))

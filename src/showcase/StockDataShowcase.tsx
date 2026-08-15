@@ -117,7 +117,7 @@ function ScoreCardDemo(): React.JSX.Element {
         >
           <div className={cn('text-xs', 'text-muted-foreground')}>{item.label}</div>
           <div className="flex items-center justify-between mt-1">
-            <span className={cn('text-xl font-bold', 'text-foreground')}>{item.score}</span>
+            <span className={cn('text-h2 font-bold', 'text-foreground')}>{item.score}</span>
             <Badge variant={getScoreVariant(item.score)}>
               {item.score >= 70 ? '优秀' : item.score >= 50 ? '一般' : '较弱'}
             </Badge>

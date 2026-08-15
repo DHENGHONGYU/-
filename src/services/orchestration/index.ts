@@ -105,6 +105,7 @@ import { getTimelinessSyncAnalyzer } from './timelinessSyncAnalyzer'
 import { getWeeklyReviewScheduler } from './weeklyReviewScheduler'
 import { getVolatilityAlertPush } from './volatilityAlert'
 import { getChipAnomalyDetector } from './chipAnomalyDetector'
+import { getLogger } from '@/lib/logger'
 
 export type OrchestratorStatus = 'idle' | 'starting' | 'running' | 'failed'
 
@@ -116,6 +117,8 @@ export interface OrchestratorHealth {
 }
 
 const orchestratorStates = new Map<string, OrchestratorHealth>()
+
+const logger = getLogger()
 
 interface OrchestratorEntry {
   name: string
@@ -138,7 +141,7 @@ function buildOrchestratorList(): OrchestratorEntry[] {
 }
 
 export function initOrchestration(): void {
-  console.log('[Orchestration] 初始化编排器...')
+  logger.debug('[Orchestration] 初始化编排器...')
 
   const orchestrators = buildOrchestratorList()
   let successCount = 0
@@ -168,7 +171,7 @@ export function initOrchestration(): void {
     }
   }
 
-  console.log(`[Orchestration] 编排器启动完成: ${successCount} 成功, ${failCount} 失败`)
+  logger.debug(`[Orchestration] 编排器启动完成: ${successCount} 成功, ${failCount} 失败`)
 
   if (failCount > 0) {
     const failedNames = orchestrators
@@ -217,5 +220,5 @@ export function stopOrchestration(): void {
     }
   }
 
-  console.log('[Orchestration] 编排器已停止')
+  logger.debug('[Orchestration] 编排器已停止')
 }

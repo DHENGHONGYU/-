@@ -375,7 +375,7 @@ export class VolatilityAlertPush {
 let _instance: VolatilityAlertPush | null = null
 
 export function getVolatilityAlertPush(config?: VolatilityConfig): VolatilityAlertPush {
-  if (!_instance) _instance = new VolatilityAlertPush(config)
+  _instance ??= new VolatilityAlertPush(config)
   return _instance
 }
 

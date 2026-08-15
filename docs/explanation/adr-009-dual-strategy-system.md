@@ -123,9 +123,9 @@ npm run audit:layers  # 验证 scoring → core/data 无跨层调用
 |------|------|
 | ADR-007（被取代） | `adr-007-screening-signal-persistence-review.md` |
 | ADR-008（V6 策略） | `adr-008-v6-core-resource-trading-strategy.md` |
-| 引擎规格 | `../reference/05-engine-specs.md` §2.5 |
+| 引擎规格 | `../explanation/05-engine-specs.md` §2.5 |
 | 舱室总览 | `./cabins-overview.md` §4 |
-| 双策略原始设计 | `./design/2026-06-27-dual-strategy-system.md` |
+| 双策略原始设计 | `./2026-06-27-dual-strategy-system.md` |
 
 ---
 

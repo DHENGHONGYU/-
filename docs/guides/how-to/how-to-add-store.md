@@ -343,7 +343,7 @@ export function getTopSector(): SectorData | null {
 | 新增 Widget | `./how-to-add-widget.md` | Store 的上游消费方 |
 | Store 广播规范 | `src/constants/store-channels.constants.ts` | 事件命名常量 |
 | withBroadcast 实现 | `src/lib/withBroadcast.ts` | 广播工具实现 |
-| ../../AGENTS.md 契约 | `../../AGENTS.md` | 分层规则与四步集成 |
+| ../../AGENTS.md 契约 | `../../../AGENTS.md` | 分层规则与四步集成 |
 
 ---
 

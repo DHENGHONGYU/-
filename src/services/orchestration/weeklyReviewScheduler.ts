@@ -477,7 +477,7 @@ export class WeeklyReviewScheduler {
 let _instance: WeeklyReviewScheduler | null = null
 
 export function getWeeklyReviewScheduler(config?: WeeklyReviewConfig): WeeklyReviewScheduler {
-  if (!_instance) _instance = new WeeklyReviewScheduler(config)
+  _instance ??= new WeeklyReviewScheduler(config)
   return _instance
 }
 

@@ -137,7 +137,7 @@ function ProgressBar({ lastScoredAt, nextEstimateAt }: { lastScoredAt: number | 
       </div>
       <div className="relative h-2 rounded-full bg-muted overflow-hidden">
         <div
-          className="absolute left-0 top-0 h-full transition-all"
+          className="absolute left-0 top-0 h-full transition-[width]"
           style={{ width: `${clampedProgress}%`, backgroundColor: COLOR_TOKENS.info.hex }}
         />
       </div>

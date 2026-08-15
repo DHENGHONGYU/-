@@ -143,7 +143,7 @@ async function callQwen(systemPrompt: string, userPrompt: string): Promise<strin
 function extractJsonArray<T>(text: string): T[] {
   try {
     // 先尝试直接解析
-    const direct = JSON.parse(text)
+    const direct: unknown = JSON.parse(text)
     if (Array.isArray(direct)) return direct as T[]
   } catch {
     // 继续尝试提取
@@ -153,7 +153,7 @@ function extractJsonArray<T>(text: string): T[] {
   const codeBlockMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/)
   if (codeBlockMatch?.[1]) {
     try {
-      const parsed = JSON.parse(codeBlockMatch[1].trim())
+      const parsed: unknown = JSON.parse(codeBlockMatch[1].trim())
       if (Array.isArray(parsed)) return parsed as T[]
     } catch {
       // 继续尝试
@@ -164,7 +164,7 @@ function extractJsonArray<T>(text: string): T[] {
   const arrayMatch = text.match(/\[\s*\{[\s\S]*\}\s*\]/)
   if (arrayMatch) {
     try {
-      const parsed = JSON.parse(arrayMatch[0])
+      const parsed: unknown = JSON.parse(arrayMatch[0])
       if (Array.isArray(parsed)) return parsed as T[]
     } catch {
       // 最后尝试失败

@@ -85,6 +85,26 @@ app.add_middleware(
 )
 
 # ---------------------------------------------------------------------------
+# Prometheus 监控指标初始化
+# ---------------------------------------------------------------------------
+try:
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from lib.prometheus_exporter import init_metrics, record_cache_access, record_sector_score_duration, record_akshare_fallback, update_cache_entries, get_metrics_summary
+    init_metrics(app)
+    logger.info("[prometheus] 监控指标已初始化，/metrics 端点已注册")
+except Exception as _prom_err:
+    logger.warning("[prometheus] 监控指标初始化失败（降级为日志模式）: %s", _prom_err)
+    # 创建空的占位符函数
+    def init_metrics(app=None): pass
+    def record_cache_access(cache_type, hit, latency_ms=0.0): pass
+    def record_sector_score_duration(source, duration_ms): pass
+    def record_akshare_fallback(endpoint): pass
+    def update_cache_entries(cache_type, count): pass
+    def get_metrics_summary(): return "[prometheus] 降级模式"
+
+# ---------------------------------------------------------------------------
 # 全局 HTTP 请求日志中间件（记录每个请求的 method/path/status/耗时）
 # ---------------------------------------------------------------------------
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -312,11 +332,11 @@ def fetch_tencent_quote(symbol: str) -> dict[str, Any] | None:
     url = f"https://qt.gtimg.cn/q={tc}"
     with _timed_operation("tencent_quote", symbol=symbol, tencent_code=tc):
         try:
-            logger.debug("[tencent_quote] 请求腾讯行情API: symbol=%s url=%s", symbol, url)
+            logger.info("[tencent_quote] 请求腾讯行情API: symbol=%s url=%s timeout=8s", symbol, url)
             t0 = time.perf_counter()
             r = requests.get(url, timeout=8, headers={"Referer": "https://gu.qq.com/"})
             http_ms = (time.perf_counter() - t0) * 1000
-            logger.debug(
+            logger.info(
                 "[tencent_quote] HTTP响应: symbol=%s status=%d elapsed=%.1fms body_len=%d encoding=%s",
                 symbol, r.status_code, http_ms, len(r.content), r.encoding,
             )
@@ -347,6 +367,9 @@ def fetch_tencent_quote(symbol: str) -> dict[str, Any] | None:
                         symbol, result["name"], result["price"] or 0, result["pe"] or 0, result["pb"] or 0,
                         market_cap_yi or 0)
             return result
+        except requests.exceptions.Timeout as e:
+            logger.error("[tencent_quote] 网络超时（timeout=8s，疑似网络波动）: symbol=%s error=%s", symbol, e)
+            return None
         except Exception as e:
             logger.error("[tencent_quote] 获取失败: symbol=%s error=%s", symbol, e, exc_info=True)
             return None
@@ -384,7 +407,7 @@ def fetch_industry_fallback(symbol: str) -> dict[str, Any] | None:
                                         symbol, industry_name, sw_code)
                             return {"industry_name": industry_name, "industry_code": sw_code}
         except Exception as e:
-            logger.debug("[industry_fallback] stock_individual_spot_xq 失败: symbol=%s error=%s", symbol, e)
+            logger.info("[industry_fallback] 雪球源 stock_individual_spot_xq 失败（将尝试腾讯源）: symbol=%s error=%s", symbol, e)
 
         # ---- 方案 2: Tencent 行业接口 + 深度查找 ----
         try:
@@ -394,11 +417,13 @@ def fetch_industry_fallback(symbol: str) -> dict[str, Any] | None:
                 f"https://proxy.finance.qq.com/ifzqgtimg/appstock/app/"
                 f"newflvcode/getStockIndustry?stockCode={tc}"
             )
+            logger.info("[industry_fallback] 请求腾讯行业接口: symbol=%s url=%s timeout=6s", symbol, url)
+            t0 = time.perf_counter()
             r = requests.get(url, timeout=6, headers={"Referer": "https://gu.qq.com/"})
             body = r.text.strip() if r.text else ""
-            logger.debug(
-                "[industry_fallback] 腾讯行业响应: symbol=%s status=%d body_len=%d body=%s",
-                symbol, r.status_code, len(body), repr(body[:200]),
+            logger.info(
+                "[industry_fallback] 腾讯行业响应: symbol=%s status=%d elapsed=%.1fms body_len=%d body=%s",
+                symbol, r.status_code, (time.perf_counter() - t0) * 1000, len(body), repr(body[:200]),
             )
             if r.status_code == 200 and body:
                 try:
@@ -413,9 +438,11 @@ def fetch_industry_fallback(symbol: str) -> dict[str, Any] | None:
                                         symbol, industry_name, sw_code)
                             return {"industry_name": industry_name, "industry_code": sw_code}
                 except (ValueError, TypeError):
-                    logger.debug("[industry_fallback] 腾讯行业响应 JSON 解析失败: symbol=%s", symbol)
+                    logger.info("[industry_fallback] 腾讯行业响应 JSON 解析失败: symbol=%s", symbol)
+        except requests.exceptions.Timeout as e:
+            logger.error("[industry_fallback] 腾讯行业接口网络超时（timeout=6s，疑似网络波动）: symbol=%s error=%s", symbol, e)
         except Exception as e:
-            logger.debug("[industry_fallback] 腾讯行业接口失败: symbol=%s error=%s", symbol, e)
+            logger.info("[industry_fallback] 腾讯行业接口失败: symbol=%s error=%s", symbol, e)
 
         logger.warning("[industry_fallback] 所有回退源均失败: symbol=%s", symbol)
         return None
@@ -491,14 +518,14 @@ def fetch_tencent_kline(
             f"https://web.ifzq.gtimg.cn/appstock/app/kline/kline"
             f"?param={tc},{tencent_period},,,{count}"
         )
-        logger.debug("[tencent_kline] 分钟级K线: symbol=%s period=%s count=%d url=%s", symbol, period, count, url)
+        logger.info("[tencent_kline] 请求分钟级K线: symbol=%s period=%s count=%d url=%s timeout=10s", symbol, period, count, url)
     else:
         adj = adjust if adjust else ""
         url = (
             f"https://web.ifzq.gtimg.cn/appstock/app/fqkline/get"
             f"?param={tc},{tencent_period},{start_date or ''},{end_date or ''},{count},{adj}"
         )
-        logger.debug("[tencent_kline] 日级K线: symbol=%s period=%s adjust=%s count=%d url=%s", symbol, period, adj, count, url)
+        logger.info("[tencent_kline] 请求日级K线: symbol=%s period=%s adjust=%s count=%d url=%s timeout=10s", symbol, period, adj, count, url)
 
     with _timed_operation("tencent_kline", symbol=symbol, period=period, count=count, adjust=adjust):
         try:
@@ -507,7 +534,7 @@ def fetch_tencent_kline(
             http_ms = (time.perf_counter() - t0) * 1000
             data = r.json()
             kline_data = data.get("data", {}).get(tc, {})
-            logger.debug("[tencent_kline] HTTP响应: symbol=%s status=%d elapsed=%.1fms body_keys=%s",
+            logger.info("[tencent_kline] HTTP响应: symbol=%s status=%d elapsed=%.1fms body_keys=%s",
                         symbol, r.status_code, http_ms, list(kline_data.keys()))
 
             # 日级数据可能存在 day/qfqday/hfqday/week/month 等多个 key
@@ -561,6 +588,9 @@ def fetch_tencent_kline(
                 last["close"] or 0, last["volume"] or 0,
             )
             return bars
+        except requests.exceptions.Timeout as e:
+            logger.error("[tencent_kline] 网络超时（timeout=10s，疑似网络波动）: symbol=%s period=%s error=%s", symbol, period, e)
+            return None
         except Exception as e:
             logger.error("[tencent_kline] 获取失败: symbol=%s period=%s error=%s", symbol, period, e, exc_info=True)
             return None
@@ -599,9 +629,10 @@ def fetch_individual_info(symbol: str) -> dict[str, Any] | None:
         else:
             try:
                 t_ak = time.perf_counter()
+                logger.info("[basic] 请求 AKShare stock_individual_info_em: symbol=%s", clean_symbol)
                 df = ak.stock_individual_info_em(symbol=clean_symbol)
                 ak_ms = (time.perf_counter() - t_ak) * 1000
-                logger.debug("[basic] AKShare stock_individual_info_em 返回: symbol=%s rows=%d elapsed=%.1fms",
+                logger.info("[basic] AKShare stock_individual_info_em 返回: symbol=%s rows=%d elapsed=%.1fms",
                             symbol, 0 if df is None else len(df), ak_ms)
             except Exception as e:
                 logger.warning("[basic] stock_individual_info_em 调用失败，回退 adata: %s, %s", symbol, e)
@@ -1222,7 +1253,10 @@ def _fetch_market_benchmark_return(window: int = 20) -> float | None:
 
     url = f"https://web.ifzq.gtimg.cn/appstock/app/kline/kline?param=sh000300,day,,,{window + 5}"
     try:
+        logger.info("[sectors] 请求大盘基准（沪深300）: url=%s timeout=8s window=%d", url, window)
+        t0 = time.perf_counter()
         r = requests.get(url, timeout=8)
+        logger.info("[sectors] 大盘基准响应: status=%d elapsed=%.1fms", r.status_code, (time.perf_counter() - t0) * 1000)
         data = r.json()
         day_list = data.get("data", {}).get("sh000300", {}).get("day")
         if not day_list or len(day_list) < window + 1:
@@ -1236,6 +1270,9 @@ def _fetch_market_benchmark_return(window: int = 20) -> float | None:
         if len(closes) < window + 1 or closes[-window - 1] == 0:
             return None
         return (closes[-1] - closes[-window - 1]) / closes[-window - 1] * 100
+    except requests.exceptions.Timeout as e:
+        logger.error("[sectors] 大盘基准网络超时（timeout=8s，疑似网络波动），f4 将回退为 0: %s", e)
+        return None
     except Exception as e:
         logger.warning("[sectors] 大盘基准拉取失败，f4 将回退为 0: %s", e)
         return None
@@ -1249,26 +1286,77 @@ def fetch_sector_rotation_scores(topN: int = 20) -> list[SectorScoreItem]:
     - ak.sw_index_second_info()：板块估值（PE/PB）+ 成份个数 + 上级行业
     - ak.index_hist_sw(symbol, 'day')：板块指数日线（涨幅/量能/成交额）
     - 腾讯日线 fetch_tencent_kline('000300')：大盘基准（沪深300，用于 f4 RS）
+    - SQLite 缓存：避免重复调用 AKShare 接口，提升响应速度
 
-    五因子（阶段一已对齐文档 §2.5.2，f1/f2 仍为代理，留阶段二升级）：
-    - f1Jingqi：近5日涨幅（景气代理，阶段二改财务景气）
-    - f2Zijin：近5日均成交额/前20日均成交额（资金代理，阶段二接主力净流入）
-    - f3Guzhi：(PE + PB) 分位反向（阶段一补 PB，对齐文档"PE/PB历史分位"）
-    - f4Beta：板块20日涨幅 - 沪深300 20日涨幅（相对强度 RS，阶段一补齐）
-    - f5Nengliang：量比（阶段一保持；换手率需成份股数据，留阶段二）
-
-    加权（阶段一）：f1*0.30 + f2*0.25 + f3*0.20 + f4*0.10 + f5*0.15
-    （f4 补齐后归还其权重；f3 升级补 PB 提权；f1/f5 让权给 f4）
+    缓存命中率监控日志：
+    - [cache_monitor] sector_info_hit/miss：板块基本信息缓存命中情况
+    - [cache_monitor] hist_data_hit/miss：板块日线数据缓存命中情况
+    - [cache_monitor] overall_hit_rate：整体缓存命中率统计
     """
     import akshare as ak
     import pandas as pd
     from concurrent.futures import ThreadPoolExecutor
 
+    # 缓存命中率监控计数器
+    cache_stats = {
+        "sector_info_hit": 0,
+        "sector_info_miss": 0,
+        "hist_data_hit": 0,
+        "hist_data_miss": 0,
+        "total_sectors": 0,
+        "cache_elapsed_ms": 0.0,
+        "akshare_elapsed_ms": 0.0,
+    }
+
     score_date = datetime.now().strftime("%Y-%m-%d")
     created_at = datetime.now().isoformat()
 
     # 1. 获取申万二级板块估值列表，按成份个数降序取 TOP N
-    spot_df = ak.sw_index_second_info()
+    # 优先尝试从 SQLite 缓存读取
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from _sector_cache_db import get_sector_info as get_cached_sector_info
+        t_cache_start = time.perf_counter()
+        cached_sectors = get_cached_sector_info()
+        t_cache_elapsed = (time.perf_counter() - t_cache_start) * 1000
+
+        if cached_sectors and len(cached_sectors) >= topN:
+            # 缓存命中
+            cache_stats["sector_info_hit"] = len(cached_sectors)
+            cache_stats["cache_elapsed_ms"] += t_cache_elapsed
+            record_cache_access("sector_info", hit=True, latency_ms=t_cache_elapsed)
+            update_cache_entries("sector_info", len(cached_sectors))
+            logger.info(
+                "[cache_monitor] sector_info_hit: 命中 %d 条板块信息缓存, latency=%.1fms",
+                len(cached_sectors), t_cache_elapsed
+            )
+            # 将缓存数据转换为 DataFrame 格式
+            spot_df = pd.DataFrame([{
+                "行业代码": s["sector_code"],
+                "行业名称": s["sector_name"],
+                "成份个数": s.get("constituent_count", 0),
+                "静态市盈率": s.get("pe_static", 0),
+                "市净率": s.get("pb", 0),
+                "上级行业": s.get("level1_name", ""),
+            } for s in cached_sectors[:topN]])
+        else:
+            # 缓存未命中或数据不足，走 AKShare
+            cache_stats["sector_info_miss"] = 1
+            record_cache_access("sector_info", hit=False)
+            record_akshare_fallback("sw_index_second_info")
+            logger.info("[cache_monitor] sector_info_miss: 缓存数据不足，走 AKShare 实时拉取")
+            t_ak_start = time.perf_counter()
+            spot_df = ak.sw_index_second_info()
+            cache_stats["akshare_elapsed_ms"] += (time.perf_counter() - t_ak_start) * 1000
+    except Exception as cache_err:
+        cache_stats["sector_info_miss"] = 1
+        record_cache_access("sector_info", hit=False)
+        record_akshare_fallback("sw_index_second_info")
+        logger.warning("[cache_monitor] sector_info_miss: 缓存读取异常，走 AKShare: %s", cache_err)
+        t_ak_start = time.perf_counter()
+        spot_df = ak.sw_index_second_info()
+        cache_stats["akshare_elapsed_ms"] += (time.perf_counter() - t_ak_start) * 1000
+
     if spot_df is None or spot_df.empty:
         logger.warning("[sectors] sw_index_second_info 返回空，无法采集板块轮动评分")
         return []
@@ -1281,39 +1369,77 @@ def fetch_sector_rotation_scores(topN: int = 20) -> list[SectorScoreItem]:
         name = str(row["行业名称"])
         level1 = str(row["上级行业"]) if pd.notna(row.get("上级行业")) else None
         pe = float(row["静态市盈率"]) if pd.notna(row.get("静态市盈率")) else 0.0
-        # 阶段一补 PB：sw_index_second_info 列名为"市净率"（见 test_sw_mapping.py）
         pb = float(row["市净率"]) if pd.notna(row.get("市净率")) else 0.0
 
+        # 尝试从缓存获取日线数据
         try:
-            hist = ak.index_hist_sw(symbol=code_num, period="day")
-            if hist is None or len(hist) < 25:
+            from _sector_cache_db import get_hist_for_sector, compute_technical_indicators
+            t_hist_start = time.perf_counter()
+            cached_hist = get_hist_for_sector(code, days=60)
+            t_hist_elapsed = (time.perf_counter() - t_hist_start) * 1000
+
+            if cached_hist and len(cached_hist) >= 25:
+                # 缓存命中：直接从缓存数据计算指标
+                cache_stats["hist_data_hit"] += 1
+                cache_stats["cache_elapsed_ms"] += t_hist_elapsed
+                record_cache_access("hist_data", hit=True, latency_ms=t_hist_elapsed)
+                closes = [r["close_price"] for r in cached_hist]
+                volumes = [r["volume"] for r in cached_hist]
+                amounts = [r["amount"] for r in cached_hist]
+            else:
+                # 缓存未命中：走 AKShare
+                cache_stats["hist_data_miss"] += 1
+                record_cache_access("hist_data", hit=False)
+                record_akshare_fallback("index_hist_sw")
+                t_ak_hist_start = time.perf_counter()
+                hist = ak.index_hist_sw(symbol=code_num, period="day")
+                cache_stats["akshare_elapsed_ms"] += (time.perf_counter() - t_ak_hist_start) * 1000
+                if hist is None or len(hist) < 25:
+                    logger.warning(
+                        "[sectors] index_hist_sw 返回数据不足: code=%s name=%s rows=%s",
+                        code, name, 0 if hist is None else len(hist),
+                    )
+                    return None
+                closes = hist["收盘"].astype(float).tolist()
+                volumes = hist["成交量"].astype(float).tolist()
+                amounts = hist["成交额"].astype(float).tolist()
+        except Exception as cache_err:
+            # 缓存异常：降级到 AKShare
+            cache_stats["hist_data_miss"] += 1
+            record_cache_access("hist_data", hit=False)
+            record_akshare_fallback("index_hist_sw")
+            logger.debug("[cache_monitor] hist_data_miss: 缓存读取异常 code=%s: %s", code, cache_err)
+            try:
+                t_ak_hist_start = time.perf_counter()
+                hist = ak.index_hist_sw(symbol=code_num, period="day")
+                cache_stats["akshare_elapsed_ms"] += (time.perf_counter() - t_ak_hist_start) * 1000
+                if hist is None or len(hist) < 25:
+                    logger.warning(
+                        "[sectors] index_hist_sw 返回数据不足: code=%s name=%s rows=%s",
+                        code, name, 0 if hist is None else len(hist),
+                    )
+                    return None
+                closes = hist["收盘"].astype(float).tolist()
+                volumes = hist["成交量"].astype(float).tolist()
+                amounts = hist["成交额"].astype(float).tolist()
+            except Exception as e:
                 logger.warning(
-                    "[sectors] index_hist_sw 返回数据不足: code=%s name=%s rows=%s",
-                    code, name, 0 if hist is None else len(hist),
+                    "[sectors] calc_sector 异常: code=%s name=%s error=%s",
+                    code, name, e, exc_info=True,
                 )
                 return None
-            closes = hist["收盘"].astype(float).tolist()
-            volumes = hist["成交量"].astype(float).tolist()
-            amounts = hist["成交额"].astype(float).tolist()
 
-            change_5d = (closes[-1] - closes[-6]) / closes[-6] * 100 if len(closes) >= 6 and closes[-6] != 0 else 0.0
-            # 阶段一补 f4 RS：板块近20日涨幅（减大盘涨幅得相对强度，在主流程归一化）
-            return_20d = (
-                (closes[-1] - closes[-21]) / closes[-21] * 100
-                if len(closes) >= 21 and closes[-21] != 0 else 0.0
-            )
-            recent_vol = sum(volumes[-5:]) / 5 if len(volumes) >= 5 else 0.0
-            prior_vol = sum(volumes[-25:-5]) / 20 if len(volumes) >= 25 else recent_vol
-            vol_ratio = recent_vol / prior_vol if prior_vol > 0 else 1.0
-            recent_amt = sum(amounts[-5:]) / 5 if len(amounts) >= 5 else 0.0
-            prior_amt = sum(amounts[-25:-5]) / 20 if len(amounts) >= 25 else recent_amt
-            amt_ratio = recent_amt / prior_amt if prior_amt > 0 else 1.0
-        except Exception as e:
-            logger.warning(
-                "[sectors] calc_sector 异常: code=%s name=%s error=%s",
-                code, name, e, exc_info=True,
-            )
-            return None
+        change_5d = (closes[-1] - closes[-6]) / closes[-6] * 100 if len(closes) >= 6 and closes[-6] != 0 else 0.0
+        return_20d = (
+            (closes[-1] - closes[-21]) / closes[-21] * 100
+            if len(closes) >= 21 and closes[-21] != 0 else 0.0
+        )
+        recent_vol = sum(volumes[-5:]) / 5 if len(volumes) >= 5 else 0.0
+        prior_vol = sum(volumes[-25:-5]) / 20 if len(volumes) >= 25 else recent_vol
+        vol_ratio = recent_vol / prior_vol if prior_vol > 0 else 1.0
+        recent_amt = sum(amounts[-5:]) / 5 if len(amounts) >= 5 else 0.0
+        prior_amt = sum(amounts[-25:-5]) / 20 if len(amounts) >= 25 else recent_amt
+        amt_ratio = recent_amt / prior_amt if prior_amt > 0 else 1.0
 
         return {"code": code, "name": name, "level1": level1, "pe": pe, "pb": pb,
                 "change_5d": change_5d, "return_20d": return_20d,
@@ -1417,6 +1543,46 @@ def fetch_sector_rotation_scores(topN: int = 20) -> list[SectorScoreItem]:
             signal=signal, alertLevel=alert, declineType="",
             poolStocks=[], modelUsed="akshare-sw-v1", createdAt=created_at,
         ))
+
+    # 缓存命中率汇总日志 + Prometheus 指标
+    total_sectors = len(sector_data)
+    total_info_requests = cache_stats["sector_info_hit"] + cache_stats["sector_info_miss"]
+    total_hist_requests = cache_stats["hist_data_hit"] + cache_stats["hist_data_miss"]
+
+    info_hit_rate = (cache_stats["sector_info_hit"] / max(total_info_requests, 1)) * 100
+    hist_hit_rate = (cache_stats["hist_data_hit"] / max(total_hist_requests, 1)) * 100
+
+    # 计算数据来源（主要使用缓存还是 AKShare）
+    cache_source = "cache" if hist_hit_rate >= 50 else "akshare"
+    total_duration_ms = cache_stats["cache_elapsed_ms"] + cache_stats["akshare_elapsed_ms"]
+
+    # 记录 Prometheus 指标
+    record_sector_score_duration(cache_source, total_duration_ms)
+    if total_sectors > 0:
+        avg_duration_per_sector = total_duration_ms / total_sectors
+        logger.info(
+            "[cache_monitor] perf_summary: total=%.1fms, cache=%.1fms, akshare=%.1fms, "
+            "avg_per_sector=%.1fms, source=%s",
+            total_duration_ms, cache_stats["cache_elapsed_ms"],
+            cache_stats["akshare_elapsed_ms"], avg_duration_per_sector, cache_source
+        )
+
+    logger.info(
+        "[cache_monitor] overall_hit_rate: 板块信息命中率=%.1f%% (%d/%d), "
+        "日线数据命中率=%.1f%% (%d/%d), 总板块数=%d",
+        info_hit_rate, cache_stats["sector_info_hit"], total_info_requests,
+        hist_hit_rate, cache_stats["hist_data_hit"], total_hist_requests,
+        total_sectors,
+    )
+    logger.info(
+        "[cache_monitor] detail: sectors_info[hit=%d,miss=%d], "
+        "hist_data[hit=%d,miss=%d], score_date=%s",
+        cache_stats["sector_info_hit"], cache_stats["sector_info_miss"],
+        cache_stats["hist_data_hit"], cache_stats["hist_data_miss"],
+        score_date,
+    )
+    logger.info("[prometheus] %s", get_metrics_summary())
+
     return items
 
 

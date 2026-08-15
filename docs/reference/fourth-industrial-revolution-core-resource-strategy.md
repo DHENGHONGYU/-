@@ -1,4 +1,5 @@
 ---
+doc_id: V9-DOC-REF-985
 title: 第四次工业革命稀缺核心资源 — 交易策略解析与 V9 采用方案
 version: v0.9.0-strategy-review
 last_updated: 2026-06-24
@@ -28,14 +29,14 @@ change_log:
 ### 1.1 来源
 
 - **原始实现**：`D:/v6-pro-cockpit`
-- **核心文件**：
-  - `src/data/v6StrategyEngine.ts` — 策略引擎主实现
-  - `src/config/strategyRules.ts` — 建仓/止盈/T+0/仓位规则
-  - `src/config/weights.ts` / `src/config/thresholds.ts` — 评分权重与阈值
-  - `src/agents/trading/TradingOrchestrator.ts` — 交易编排器
-  - `src/agents/trading/paperTrading.ts` — 模拟盘引擎
-  - `src/data/sectorData.ts` / `src/data/sectorSkillData.ts` — 行业/主题评分
-  - `src/components/trading/PortfolioManager.tsx` — 组合管理 UI
+- **核心文件**（均位于 `D:/v6-pro-cockpit` 外部参考项目）：
+  - `D:/v6-pro-cockpit/src/data/v6StrategyEngine.ts` — 策略引擎主实现
+  - `D:/v6-pro-cockpit/src/config/strategyRules.ts` — 建仓/止盈/T+0/仓位规则
+  - `D:/v6-pro-cockpit/src/config/weights.ts` / `D:/v6-pro-cockpit/src/config/thresholds.ts` — 评分权重与阈值
+  - `D:/v6-pro-cockpit/src/agents/trading/TradingOrchestrator.ts` — 交易编排器
+  - `D:/v6-pro-cockpit/src/agents/trading/paperTrading.ts` — 模拟盘引擎
+  - `D:/v6-pro-cockpit/src/data/sectorData.ts` / `D:/v6-pro-cockpit/src/data/sectorSkillData.ts` — 行业/主题评分
+  - `D:/v6-pro-cockpit/src/components/trading/PortfolioManager.tsx` — 组合管理 UI
 
 ### 1.2 策略目标
 
@@ -230,7 +231,7 @@ POSITION_RULES = {
 |------|------|
 | 是否触及调用方向铁律？ | 否。新增模块位于 L3 `services/trading/`，由 L4 `TradingApp` 调用，符合上层调用下层原则。 |
 | 是否修改 IndexedDB Schema？ | 是。需在 `Stock` 中增加 `industryCode` / `theme` / `sector` 字段；可能新增 `portfolios` / `portfolioHoldings` Store。必须通过 ADR 评审。 |
-| 对应哪个文档？ | 本方案文档 + ADR-008；落地后同步更新 `docs/02-functional-specs.md`、`docs/05-engine-specs.md`、`docs/10-glossary.md`、`docs/08-implementation-plan.md`。 |
+| 对应哪个文档？ | 本方案文档 + ADR-008；落地后同步更新 `docs/specs/02-functional-specs.md`、`docs/explanation/05-engine-specs.md`、`docs/reference/10-glossary.md`、`docs/guides/08-implementation-plan.md`。 |
 
 ### 5.2 落地范围（MVP）
 
@@ -268,14 +269,14 @@ POSITION_RULES = {
 
 2. **建仓/止盈/止损执行**
    - 扩展 `positionSizer.ts`：正/倒金字塔加仓计划。
-   - 新建 `src/services/trading/takeProfitEngine.ts`、`stopLossEngine.ts`。
+   - 新建 src/services/trading/takeProfitEngine.ts、stopLossEngine.ts。
 
 3. **模拟盘引擎增强**
    - 完善 `tradingService` 中订单金额计算：加入手续费、滑点、印花税、资金扣减。
    - 增加账户现金、持仓市值、净值曲线、绩效统计。
 
 4. **自动执行与回测**
-   - 新建 `src/services/trading/tradingOrchestrator.ts`：串联评分→策略筛选→信号→仓位→风控→止损止盈→交易建议。
+   - 新建 src/services/trading/tradingOrchestrator.ts：串联评分→策略筛选→信号→仓位→风控→止损止盈→交易建议。
    - 与复盘引擎（ReviewEngine）联动，记录信号-订单血缘。
 
 ### 5.3 与 V9 现有能力的复用
@@ -299,12 +300,12 @@ POSITION_RULES = {
 | 服务 | `src/services/trading/scoringAdapter.ts` | 评分消费适配 |
 | 服务 | `src/services/trading/portfolioBuilder.ts` | 组合构建 |
 | 服务 | `src/services/trading/strategyEngine.ts` | 策略规则引擎 |
-| 服务 | `src/services/trading/takeProfitEngine.ts` | 止盈引擎 |
-| 服务 | `src/services/trading/stopLossEngine.ts` | 止损引擎 |
-| 服务 | `src/services/trading/tradingOrchestrator.ts` | 交易编排器 |
-| 服务 | `src/services/trading/paperTradingEngine.ts` | 增强模拟盘 |
+| 服务 | src/services/trading/takeProfitEngine.ts（待新建） | 止盈引擎 |
+| 服务 | src/services/trading/stopLossEngine.ts（待新建） | 止损引擎 |
+| 服务 | src/services/trading/tradingOrchestrator.ts（待新建） | 交易编排器 |
+| 服务 | src/services/trading/paperTradingEngine.ts（待新建） | 增强模拟盘 |
 | UI | `src/apps/trading/panels/CoreResourcePanel.tsx` | 核心稀缺组合面板 |
-| UI | `src/apps/trading/panels/PortfolioRebalancePanel.tsx` | 再平衡面板 |
+| UI | src/apps/trading/panels/PortfolioRebalancePanel.tsx（待新建） | 再平衡面板 |
 | 类型 | `src/data/types.ts` | 扩展 Stock / 新增 Portfolio 类型 |
 | 数据层 | `src/data/dataLayer.ts` | 新增 portfolioStore |
 | 测试 | `tests/portfolioBuilder.test.ts` 等 | 覆盖组合构建、再平衡、风控 |
@@ -333,6 +334,6 @@ POSITION_RULES = {
 
 1. 评审并接受 ADR-008。
 2. 按阶段 A 落地核心稀缺主题持仓组合 MVP。
-3. 同步更新 `docs/02-functional-specs.md`、`docs/05-engine-specs.md`、`docs/10-glossary.md`。
+3. 同步更新 `docs/specs/02-functional-specs.md`、`docs/explanation/05-engine-specs.md`、`docs/reference/10-glossary.md`。
 4. 补充 `tests/portfolioBuilder.test.ts` 与 `tests/themeRegistry.test.ts`。
 5. 运行质量门禁：`npm run lint && npm run test && npm run build && npm run audit:layers`。

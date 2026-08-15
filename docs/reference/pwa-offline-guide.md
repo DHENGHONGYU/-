@@ -1,4 +1,5 @@
 ---
+doc_id: V9-DOC-REF-952
 title: pwa-offline-guide
 tier: important
 code_version: "2.0.0-rc.1"
@@ -14,7 +15,7 @@ change_log:
 # V9 PWA 离线化实施指南
 
 > **对应蓝图**：`./v9-system-blueprint.md` §1 系统定位（离线需求）、§8 Phase 3（PWA manifest + service worker）、§9 质量门禁 11（PWA 离线验证）、§10 偏差 D18/D19 相关质量加固。
-> **依赖文档**：`./03-architecture-standards.md` §3.10.1（离线目标）、`./06-routing-specs.md`（HashRouter 与静态托管）。
+> **依赖文档**：`../explanation/03-architecture-standards.md` §3.10.1（离线目标）、`../explanation/06-routing-specs.md`（HashRouter 与静态托管）。
 
 ---
 
@@ -223,6 +224,6 @@ test('离线后可进入首页与驾驶舱', async ({ page, context }) => {
 ## 7. 相关链接
 
 - `./v9-system-blueprint.md` §1、§8 Phase 3、§9、D18/D19
-- `./03-architecture-standards.md` §3.10.1
-- `./06-routing-specs.md` §1（HashRouter 说明）
+- `../explanation/03-architecture-standards.md` §3.10.1
+- `../explanation/06-routing-specs.md` §1（HashRouter 说明）
 - `./feedback-loop-spec.md` §5.3（pwa:* 事件通过 EventBus 触发 Toast）

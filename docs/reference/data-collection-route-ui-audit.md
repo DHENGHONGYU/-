@@ -50,7 +50,7 @@ date: 2026-07-17
 |:---:|:---|:---|:---|
 | **** | `/input/seven-dim` δ `ROUTE_REGISTRY` ע | ·ɱܿأΥ"ҵ·ɱڴע" | ? ޸2026-07-01 |
 | **** | `ResearchReportPage.tsx` / `TradeReviewPage.tsx` Ϊȫ¶ | ʵֵҳ޷ | ? ޸2026-07-01 |
-| **** | `./06-routing-specs.md` 8ڲ `/hub`  `/analysis/news-v6` | ĵ벻һ | ͬĵӳ |
+| **** | `../explanation/06-routing-specs.md` 8ڲ `/hub`  `/analysis/news-v6` | ĵ벻һ | ͬĵӳ |
 | **** | ĵ汾ìܣv1.5.0 vs v1.2.0 / 29 vs 31 | ĵŶȽ | 汾·ɼ |
 | **** | ĵ7"ErrorBoundary·"ͺ | `RouteErrorBoundary` ʵֵĵδ | ĵעѱջ |
 | **** | `OutputApp` δʽ `<React.Suspense>` | Suspense߽粻ȷ | ʽ |

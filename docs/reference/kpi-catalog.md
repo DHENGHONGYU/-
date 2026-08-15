@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-REF-943
+title: "KPI 口径目录（Store → MetricCard 消费映射）"
+domain: ref
+status: active
+last_updated: 2026-08-15
+---
+
 # KPI 口径目录（Store → MetricCard 消费映射）
 
 > 本文档由 P2-3 治理自动整理（2026-08-13），列出 V9 系统 3 个核心 Store 中所有带 `KPI-XX` 编号字段的口径、单位、阈值建议和消费者。

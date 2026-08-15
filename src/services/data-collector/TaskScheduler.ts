@@ -436,7 +436,7 @@ export class TaskScheduler {
           batchInfo.successCount++
         } else if (task?.status === 'error') {
           batchInfo.failCount++
-          batchInfo.errors.push({ taskId, error: task.error || '未知错误' })
+          batchInfo.errors.push({ taskId, error: task.error ?? '未知错误' })
         }
 
         const progress = Math.round((batchInfo.completedCount / batchInfo.totalCount) * 100)

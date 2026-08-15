@@ -44,4 +44,4 @@ V9 计划部署到 GitHub Pages 等静态托管，需要离线刷新无 404。
 
 ## 相关文档
 
-- `docs/06-routing-specs.md`
+- `../explanation/06-routing-specs.md`

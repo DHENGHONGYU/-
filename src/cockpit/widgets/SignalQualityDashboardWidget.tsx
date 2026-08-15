@@ -34,7 +34,6 @@ import {
   useSignalQualityStore,
   initSignalQualityStoreSubscriptions,
 } from '@/store/signalQualityStore'
-// 派生查询通过 export * 从 .derived.ts 导入
 import {
   accuracyTrend,
   winRateTrend,
@@ -54,160 +53,31 @@ import {
   getStockColorClass,
 } from '@/constants/theme.tokens'
 import { getLogger } from '@/lib/logger'
-import type { WidgetConfig } from '@/types/modules/widget.types'
+
+// Import from extracted sub-files
+import {
+  TREND_WINDOW_SIZE,
+  TOP_SIGNAL_TYPES_LIMIT,
+  RECENT_REVIEWS_LIMIT,
+  DIRECTION_COLOR,
+  DIRECTION_LABEL,
+} from './SignalQualityDashboardWidget.constants'
+import type {
+  SignalQualityDashboardWidgetProps,
+  DirectionStatRow,
+  SignalTypeStatRow,
+} from './SignalQualityDashboardWidget.types'
+import {
+  formatPercent,
+  formatPercentFrom100,
+  formatDecimal,
+  formatTime,
+  getAccuracyBadgeClass,
+  getSharpeBadgeClass,
+} from './SignalQualityDashboardWidget.utils'
+import { MetricCard, PnLCard } from './SignalQualityDashboardWidget.components'
 
 const logger = getLogger()
-
-// ============================================================
-// 常量定义
-// ============================================================
-
-/** 趋势图滚动窗口大小（每 20 条信号为一个统计周期） */
-const TREND_WINDOW_SIZE = 20
-
-/** Top 信号类型显示数量 */
-const TOP_SIGNAL_TYPES_LIMIT = 5
-
-/** 最近复盘列表显示数量 */
-const RECENT_REVIEWS_LIMIT = 5
-
-/** 信号方向枚举（与 SignalReviewRecord.direction 对应） */
-type SignalDirection = 'buy' | 'sell' | 'hold' | 'watch'
-
-/** 信号方向图标颜色映射（业务语义色，非涨跌色） */
-const DIRECTION_COLOR: Record<SignalDirection, string> = {
-  buy: COLOR_TOKENS.success.tailwind,
-  sell: COLOR_TOKENS.danger.tailwind,
-  hold: COLOR_TOKENS.info.tailwind,
-  watch: STOCK_COLOR_TOKENS.neutral.tailwind,
-}
-
-/** 信号方向中文标签 */
-const DIRECTION_LABEL: Record<SignalDirection, string> = {
-  buy: '买入',
-  sell: '卖出',
-  hold: '持有',
-  watch: '观察',
-}
-
-/** 指标良好阈值（≥ 显示绿色） */
-const METRIC_GOOD_THRESHOLD = 0.7
-/** 指标警告阈值（≥ 显示黄色） */
-const METRIC_WARN_THRESHOLD = 0.5
-/** Sharpe 比率良好阈值 */
-const SHARPE_GOOD_THRESHOLD = 1
-/** Sharpe 比率警告阈值 */
-const SHARPE_WARN_THRESHOLD = 0
-
-// ============================================================
-// 类型定义
-// ============================================================
-
-interface SignalQualityDashboardWidgetProps {
-  config: WidgetConfig
-}
-
-/** 方向统计行数据（来自 getDirectionStats 派生查询） */
-interface DirectionStatRow {
-  direction: SignalDirection
-  count: number
-  accuracy: number
-  avgReturn: number
-  winRate: number
-}
-
-/** 信号类型统计行数据（来自 topSignalTypes 派生查询） */
-interface SignalTypeStatRow {
-  type: string
-  count: number
-  accuracy: number
-  avgReturn: number
-}
-
-// ============================================================
-// 辅助函数
-// ============================================================
-
-/** 格式化百分比（0-1 → "65.0%"） */
-function formatPercent(value: number | undefined | null): string {
-  if (value === undefined || value === null) return '—'
-  return `${(value * 100).toFixed(1)}%`
-}
-
-/** 格式化百分比（0-100 → "65.0%"），用于已为百分比的值 */
-function formatPercentFrom100(value: number | undefined | null): string {
-  if (value === undefined || value === null) return '—'
-  return `${value.toFixed(1)}%`
-}
-
-/** 格式化数字（保留 2 位小数） */
-function formatDecimal(value: number | undefined | null): string {
-  if (value === undefined || value === null) return '—'
-  return value.toFixed(2)
-}
-
-/** 格式化时间戳为本地时间 */
-function formatTime(timestamp: number): string {
-  return new Date(timestamp).toLocaleString('zh-CN', {
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
-
-/** 根据准确率返回徽章颜色 */
-function getAccuracyBadgeClass(accuracy: number | undefined | null): string {
-  if (accuracy === undefined || accuracy === null) return STOCK_COLOR_TOKENS.neutral.tailwind
-  if (accuracy >= METRIC_GOOD_THRESHOLD) return COLOR_TOKENS.success.tailwind
-  if (accuracy >= METRIC_WARN_THRESHOLD) return COLOR_TOKENS.warning.tailwind
-  return COLOR_TOKENS.danger.tailwind
-}
-
-/** 根据 Sharpe 比率返回徽章颜色 */
-function getSharpeBadgeClass(sharpe: number | undefined | null): string {
-  if (sharpe === undefined || sharpe === null) return STOCK_COLOR_TOKENS.neutral.tailwind
-  if (sharpe >= SHARPE_GOOD_THRESHOLD) return COLOR_TOKENS.success.tailwind
-  if (sharpe >= SHARPE_WARN_THRESHOLD) return COLOR_TOKENS.warning.tailwind
-  return COLOR_TOKENS.danger.tailwind
-}
-
-// ============================================================
-// 子组件
-// ============================================================
-
-/** 核心指标卡（accuracy/winRate/sharpe/maxDrawdown） */
-interface MetricCardProps {
-  readonly label: string
-  readonly value: string
-  readonly colorClass: string
-}
-
-const MetricCard = memo(function MetricCard({ label, value, colorClass }: MetricCardProps) {
-  return (
-    <div className="rounded-md border p-3">
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p className={`text-lg font-semibold ${colorClass}`}>{value}</p>
-    </div>
-  )
-})
-
-/** 盈亏卡片（使用 STOCK_COLOR_TOKENS，A 股红涨绿跌例外规则） */
-interface PnLCardProps {
-  readonly label: string
-  readonly value: number
-}
-
-const PnLCard = memo(function PnLCard({ label, value }: PnLCardProps) {
-  return (
-    <div className="rounded-md border p-3">
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p className={`text-lg font-semibold ${getStockColorClass(value)}`}>
-        {value >= 0 ? '+' : ''}{value.toFixed(2)}%
-      </p>
-    </div>
-  )
-})
 
 // ============================================================
 // 主组件
@@ -227,7 +97,6 @@ const SignalQualityDashboardWidget = memo(
     useEffect(() => {
       logger.info('[SignalQualityDashboardWidget] 初始化', { title: config.title })
       const cleanup = initSignalQualityStoreSubscriptions()
-      // 自动加载复盘数据
       void loadReviews()
       return () => {
         cleanup()
@@ -304,7 +173,7 @@ const SignalQualityDashboardWidget = memo(
         }
         skeleton={
           <div className="space-y-4">
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[1, 2, 3, 4].map((i) => (
                 <Skeleton key={i} variant="rect" className="h-20" />
               ))}
@@ -320,7 +189,7 @@ const SignalQualityDashboardWidget = memo(
       >
         <div className="space-y-4">
           {/* 1. 核心指标卡（accuracy/winRate/sharpe/maxDrawdown） */}
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <MetricCard
               label="准确率"
               value={formatPercent(metrics?.accuracy)}
@@ -344,7 +213,7 @@ const SignalQualityDashboardWidget = memo(
           </div>
 
           {/* 2. 盈亏分析（A 股红涨绿跌例外规则） */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <PnLCard label="平均收益" value={avgReturn} />
             <PnLCard label="平均盈利" value={avgWin} />
             <PnLCard label="平均亏损" value={avgLoss} />
@@ -420,7 +289,7 @@ const SignalQualityDashboardWidget = memo(
           </div>
 
           {/* 6. 最佳/最差复盘 */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {best !== null ? (
               <div className="rounded-md border p-3">
                 <div className="mb-1 flex items-center gap-1 text-xs text-muted-foreground">

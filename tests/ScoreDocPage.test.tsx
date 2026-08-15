@@ -63,11 +63,17 @@ describe('ScoreDocPage', () => {
         <ScoreDocPage />
       </MemoryRouter>,
     )
+    // StockSelector 现为 Custom Combobox（value 为空时 trigger button 没有可读 name），
+    // 它是页面上的第一个 button（后续是"刷新"和"导出"，均有明确 name）
+    await waitFor(() => {
+      expect(screen.getAllByRole('button').length).toBeGreaterThan(0)
+    })
+    await userEvent.click(screen.getAllByRole('button')[0]!)
+
     await waitFor(() => {
       expect(screen.getByRole('option', { name: /平安银行/ })).toBeInTheDocument()
     })
-
-    await userEvent.selectOptions(screen.getByRole('combobox'), mockStock.symbol)
+    await userEvent.click(screen.getByRole('option', { name: /平安银行/ }))
 
     await waitFor(() => {
       expect(screen.getByText('V1')).toBeInTheDocument()
@@ -88,10 +94,14 @@ describe('ScoreDocPage', () => {
       </MemoryRouter>,
     )
     await waitFor(() => {
+      expect(screen.getAllByRole('button').length).toBeGreaterThan(0)
+    })
+    await userEvent.click(screen.getAllByRole('button')[0]!)
+
+    await waitFor(() => {
       expect(screen.getByRole('option', { name: /平安银行/ })).toBeInTheDocument()
     })
-
-    await userEvent.selectOptions(screen.getByRole('combobox'), mockStock.symbol)
+    await userEvent.click(screen.getByRole('option', { name: /平安银行/ }))
 
     await waitFor(() => {
       expect(screen.getByText('V2')).toBeInTheDocument()
@@ -119,10 +129,14 @@ describe('ScoreDocPage', () => {
       </MemoryRouter>,
     )
     await waitFor(() => {
+      expect(screen.getAllByRole('button').length).toBeGreaterThan(0)
+    })
+    await userEvent.click(screen.getAllByRole('button')[0]!)
+
+    await waitFor(() => {
       expect(screen.getByRole('option', { name: /平安银行/ })).toBeInTheDocument()
     })
-
-    await userEvent.selectOptions(screen.getByRole('combobox'), mockStock.symbol)
+    await userEvent.click(screen.getByRole('option', { name: /平安银行/ }))
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /下载 Markdown/ })).toBeInTheDocument()

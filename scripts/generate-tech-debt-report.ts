@@ -7,7 +7,7 @@
  * 1. 从 GitHub Issue 拉取技术债数据
  * 2. 从 SonarQube API 获取代码质量指标（可选）
  * 3. 统计技术债趋势（新增/解决/清理率）
- * 4. 生成 Markdown 报告并更新 docs/explanation/design/tech-debt.md
+ * 4. 生成 Markdown 报告并更新技术债文档（原技术债文档已归档至 archive/historical-2026-08-16/batch7/）
  * 5. 生成可视化趋势图（Mermaid 格式）
  * 
  * 使用方式：
@@ -48,7 +48,7 @@ const config: ReportConfig = {
   sonarqubeUrl: process.env.SONARQUBE_URL || 'http://localhost:9000',
   sonarqubeProject: process.env.SONARQUBE_PROJECT || 'v9-project',
   outputDir: join(process.cwd(), 'docs', 'reports'),
-  techDebtFile: join(process.cwd(), 'docs', 'explanation', 'design', 'tech-debt.md'),
+  techDebtFile: join(process.cwd(), 'docs', 'archive', 'historical-2026-08-16', 'batch7', 'tech-debt.md'),
 }
 
 // ============================================================
@@ -131,7 +131,7 @@ async function fetchGitHubIssues(): Promise<GitHubIssue[]> {
 }
 
 function getMockGitHubIssues(): GitHubIssue[] {
-  // 返回当前 docs/explanation/design/tech-debt.md 中的技术债数据
+  // 返回当前技术债数据（原技术债文档已归档至 archive/historical-2026-08-16/batch7/）
   return [
     {
       number: 123,

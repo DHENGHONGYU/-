@@ -60,7 +60,7 @@ const ROOT_DOC_FILES = [
   'architecture.md',
   'CHANGELOG.md',
   'data-definition.md',
-  'docs/explanation/README.md',
+  // 原 explanation/README.md 已归档至 archive/historical-2026-08-16/batch7/
 ]
 
 const PATH_PREFIXES = [
@@ -94,7 +94,8 @@ const ROOT_FILE_NAMES = [
   'eslint.colors.config.js',
 ]
 
-const SOP_PATH = 'docs/reference/development-workflow-sop.md'
+// 原 SOP_PATH 已归档至 archive/historical-2026-08-16/batch7/
+const SOP_PATH = ''
 const HUSKY_PRE_COMMIT_PATH = '.husky/pre-commit'
 
 // 排除列表：这些字符串看起来像脚本名但实际上是示例/占位符

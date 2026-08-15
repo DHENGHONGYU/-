@@ -10,15 +10,23 @@ import {
   Zap,
   Settings,
   ArrowUp,
+  ArrowDown,
   Search,
 } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { PageContainer } from '@/components/templates/PageContainer'
+import { EmptyState } from '@/components/molecules/EmptyState'
 import { StockSelector } from '@/components/organisms/input/StockSelector'
 import { useIntentionPoolStore } from '@/store/intentionPoolStore'
 import { useTradingStore } from '@/store/tradingStore'
+import { useOrderStore } from '@/store/orderStore'
 import { useCollectionRuntimeStore } from '@/store/collectionRuntimeStore'
+import { Currency } from '@/components/atoms/Currency'
+import { Percent } from '@/components/atoms/Percent'
+import { formatLargeNumber } from '@/lib/precision'
 import { mcpBridge } from '@/mcp'
+import type { TradingSignal } from '@/services/trading/signalGenerator'
 
 interface FeatureCardProps {
   icon: React.ElementType
@@ -72,10 +80,39 @@ const CABIN_FEATURES: FeatureCardProps[] = [
   },
 ]
 
+// ============================================================
+// 信号方向 → 中文标签 & 颜色映射
+// ============================================================
+
+const SIGNAL_DIRECTION_LABEL: Record<string, string> = {
+  buy: '买入信号',
+  sell: '卖出信号',
+  watch: '观望信号',
+  hold: '持有信号',
+}
+
+const SIGNAL_DIRECTION_COLOR: Record<string, string> = {
+  buy: 'hsl(var(--stock-up))',
+  sell: 'hsl(var(--stock-down))',
+  watch: 'hsl(var(--warning))',
+  hold: 'hsl(var(--muted-foreground))',
+}
+
+// ============================================================
+// 辅助函数
+// ============================================================
+
+function formatTime(ts: number): string {
+  const d = new Date(ts)
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+}
+
 /**
  * 系统状态总览卡片
  */
 function SystemStatusOverview(): React.JSX.Element {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  void isMobile
   const poolItems = useIntentionPoolStore((s) => s.items)
   const signals = useTradingStore((s) => s.signals)
   const taskStatuses = useCollectionRuntimeStore((s) => s.taskStatuses)
@@ -135,24 +172,24 @@ function SystemStatusOverview(): React.JSX.Element {
   ]
 
   return (
-    <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <section className={`grid grid-cols-2 gap-4 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
       {statusCards.map((s) => {
         const Icon = s.icon
         return (
           <Link
             key={s.label}
             to={s.to}
-            className="flex flex-col gap-2 rounded-lg p-5"
-            style={{ background: 'hsl(var(--card))', boxShadow: 'var(--shadow-sm)' }}
+            className="flex flex-col gap-2 rounded-lg p-5 bg-card"
+            style={{ boxShadow: 'var(--shadow-sm)' }}
           >
             <div className={`flex h-8 w-8 items-center justify-center rounded-md ${s.bgColor} ${s.color}`}>
               <Icon className="h-4 w-4" />
             </div>
-            <p className="mt-1 font-bold font-mono" style={{ fontSize: 'var(--fs-display)', lineHeight: 'var(--lh-tight)', color: 'hsl(var(--foreground))' }}>
+            <p className="mt-1 font-bold font-mono text-foreground" style={{ fontSize: 'var(--fs-display)', lineHeight: 'var(--lh-tight)' }}>
               {s.value}
             </p>
-            <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>{s.label}</p>
-            <p className="text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>{s.hint}</p>
+            <p className="text-sm text-muted-foreground">{s.label}</p>
+            <p className="text-xs text-muted-foreground">{s.hint}</p>
           </Link>
         )
       })}
@@ -161,10 +198,190 @@ function SystemStatusOverview(): React.JSX.Element {
 }
 
 /**
+ * 组合总览 Hero —— 从 useTradingStore + useOrderStore 读取真实数据
+ */
+function PortfolioHero(): React.JSX.Element {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  const portfolio = useTradingStore((s) => s.portfolio)
+  const riskMetrics = useOrderStore((s) => s.riskMetrics)
+  const pnlSummary = useOrderStore((s) => s.pnlSummary)
+  const positions = useOrderStore((s) => s.positions)
+
+  const hasPortfolio = portfolio != null
+  const hasPositions = positions.length > 0
+
+  if (!hasPortfolio && !hasPositions) {
+    return (
+      <section
+        className="mb-6 rounded-lg p-6 bg-card"
+        style={{ boxShadow: 'var(--shadow-sm)' }}
+      >
+        <EmptyState
+          title="暂无持仓数据"
+          description="请先在交易舱录入持仓"
+        />
+      </section>
+    )
+  }
+
+  const totalAssets = portfolio?.totalValue ?? 0
+  const todayPnL = hasPortfolio ? pnlSummary.totalUnrealizedPnl : 0
+  const todayPnLPercent = totalAssets > 0 ? (todayPnL / totalAssets) * 100 : 0
+  const todayIsUp = todayPnL >= 0
+  const todayColor = todayIsUp ? 'hsl(var(--stock-up))' : 'hsl(var(--stock-down))'
+
+  const ytdReturn = pnlSummary.totalRealizedPnl
+  const ytdReturnPercent = totalAssets > 0 ? (ytdReturn / totalAssets) * 100 : 0
+  const ytdIsUp = ytdReturn >= 0
+
+  const sharpeRatio = hasPositions ? riskMetrics.sharpeRatio : 0
+  const maxDrawdown = hasPositions ? riskMetrics.maxDrawdown : 0
+
+  const sharpeLabel = sharpeRatio >= 2 ? '优秀' : sharpeRatio >= 1 ? '良好' : sharpeRatio > 0 ? '一般' : '待评估'
+
+  return (
+    <section
+      className="mb-6 rounded-lg p-6 bg-card"
+      style={{ boxShadow: 'var(--shadow-sm)' }}
+    >
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:items-center">
+        <div className="lg:col-span-1">
+          <p className="text-sm text-muted-foreground">组合总资产</p>
+          <p
+            className="mt-1 font-bold font-mono text-foreground"
+            style={{ fontSize: 'var(--fs-display)', lineHeight: 'var(--lh-tight)' }}
+          >
+            ¥{formatLargeNumber(totalAssets)}
+          </p>
+          {hasPositions && todayPnL !== 0 && (
+            <p className="mt-1 flex items-center gap-1.5 text-sm" style={{ color: todayColor }}>
+              {todayIsUp ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
+              今日 <Currency value={todayPnL} compact decimals={0} /> (<Percent value={todayPnLPercent} decimals={2} />)
+            </p>
+          )}
+          {hasPositions && todayPnL === 0 && (
+            <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+              今日暂无变动
+            </p>
+          )}
+        </div>
+        <div className="lg:col-span-2">
+          <div className={`grid grid-cols-2 gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+            <div>
+              <p className="text-xs text-muted-foreground">今日盈亏</p>
+              <p className="mt-1 font-semibold" style={{ color: todayColor }}>
+                <Percent value={todayPnLPercent} decimals={2} />
+              </p>
+              <p className="mt-0.5 text-sm text-foreground">
+                <Currency value={todayPnL} compact decimals={0} />
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">年初至今</p>
+              <p className="mt-1 font-semibold" style={{ color: ytdIsUp ? 'hsl(var(--stock-up))' : 'hsl(var(--stock-down))' }}>
+                <Percent value={ytdReturnPercent} decimals={2} />
+              </p>
+              <p className="mt-0.5 text-sm text-foreground">
+                <Currency value={ytdReturn} compact decimals={0} />
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">夏普比率</p>
+              <p className="mt-1 font-mono font-semibold text-foreground">
+                {hasPositions ? sharpeRatio.toFixed(2) : '—'}
+              </p>
+              <p className="mt-0.5 text-xs" style={{ color: 'hsl(var(--success))' }}>{sharpeLabel}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">最大回撤</p>
+              <p className="mt-1 font-semibold" style={{ color: 'hsl(var(--stock-down))' }}>
+                {hasPositions ? <Percent value={maxDrawdown} decimals={2} /> : '—'}
+              </p>
+              <p className="mt-0.5 text-xs text-muted-foreground">历史</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/**
+ * 最新交易信号列表 —— 从 useTradingStore 读取真实 signals
+ */
+function SignalList(): React.JSX.Element {
+  const signals = useTradingStore((s) => s.signals)
+
+  if (signals.length === 0) {
+    return (
+      <section
+        className="mt-6 rounded-lg p-6 bg-card"
+        style={{ boxShadow: 'var(--shadow-sm)' }}
+      >
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-foreground" style={{ fontSize: 'var(--fs-h3)', lineHeight: 'var(--lh-tight)' }}>
+            最新交易信号
+          </h2>
+          <Link to="/trading" className="text-xs text-primary">查看全部</Link>
+        </div>
+        <EmptyState
+          title="暂无交易信号"
+          description="请先在交易舱扫描信号"
+        />
+      </section>
+    )
+  }
+
+  const displaySignals = signals.slice(0, 10)
+
+  return (
+    <section
+      className="mt-6 rounded-lg p-6 bg-card"
+      style={{ boxShadow: 'var(--shadow-sm)' }}
+    >
+      <div className="flex items-center justify-between">
+        <h2 className="font-semibold text-foreground" style={{ fontSize: 'var(--fs-h3)', lineHeight: 'var(--lh-tight)' }}>
+          最新交易信号
+        </h2>
+        <Link to="/trading" className="text-xs text-primary">查看全部</Link>
+      </div>
+      <div className="mt-3 space-y-0">
+        {displaySignals.map((signal: TradingSignal, idx: number) => {
+          const dirColor = SIGNAL_DIRECTION_COLOR[signal.direction] ?? 'hsl(var(--muted-foreground))'
+          const label = SIGNAL_DIRECTION_LABEL[signal.direction] ?? signal.direction
+          return (
+            <div
+              key={signal.id}
+              className="flex items-center gap-3 py-3"
+              style={{ borderTop: idx === 0 ? '1px solid hsl(var(--divider))' : '1px solid hsl(var(--divider))' }}
+            >
+              <span
+                className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
+                style={{ background: `${dirColor} / 0.1`, color: dirColor }}
+              >
+                {label}
+              </span>
+              <span className="text-sm font-medium text-foreground">{signal.symbol}</span>
+              <span className="flex-1 text-sm text-muted-foreground">{signal.rationale}</span>
+              <span className="font-mono text-xs text-muted-foreground">{formatTime(signal.createdAt)}</span>
+              <span className="font-mono text-sm" style={{ color: dirColor }}>评分 {(signal.confidence * 10).toFixed(1)}</span>
+            </div>
+          )
+        })}
+      </div>
+    </section>
+  )
+}
+
+/**
  * HomePage - 智能投研复盘系统首页
+ *
+ * F 型扫描模式布局：
+ * Header(h1) → Portfolio Hero KPI → 快速选股 → 系统状态 → 5 舱入口 → 信号列表
  */
 export default function HomePage(): React.JSX.Element {
   const navigate = useNavigate()
+  const isMobile = useMediaQuery('(max-width: 767px)')
 
   const handleQuickSelect = (stock: { symbol: string }): void => {
     void navigate(`/analysis/intelligent-score?symbol=${stock.symbol}`)
@@ -172,39 +389,12 @@ export default function HomePage(): React.JSX.Element {
 
   return (
     <PageContainer>
-      {/* Quick Stock Analysis */}
-      <section
-        className="mb-6 rounded-lg p-5"
-        style={{ background: 'hsl(var(--card))', boxShadow: 'var(--shadow-sm)' }}
-      >
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary/10">
-              <Search className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h2 className="font-semibold text-foreground">快速选股分析</h2>
-              <p className="text-xs text-muted-foreground">搜索股票名称或代码，一键跳转智能评分</p>
-            </div>
-          </div>
-          <div className="w-full sm:w-80">
-            <StockSelector
-              value=""
-              onChange={handleQuickSelect}
-              placeholder="搜索股票名称或代码..."
-              showIcon={false}
-              maxDisplayCount={10}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Page Header with badge */}
+      {/* 1. Page Header with badge */}
       <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <span
-            className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
-            style={{ background: 'hsl(var(--primary) / 0.1)', color: 'hsl(var(--primary))' }}
+            className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium text-primary"
+            style={{ background: 'hsl(var(--primary) / 0.1)' }}
           >
             投资组合总览
           </span>
@@ -220,64 +410,49 @@ export default function HomePage(): React.JSX.Element {
         </Button>
       </header>
 
-      {/* Portfolio Overview Hero */}
+      {/* 2. Portfolio Overview Hero */}
+      <PortfolioHero />
+
+      {/* 3. Quick Stock Analysis */}
       <section
-        className="rounded-lg p-6"
-        style={{ background: 'hsl(var(--card))', boxShadow: 'var(--shadow-sm)' }}
+        className="mb-6 rounded-lg p-5 bg-card"
+        style={{ boxShadow: 'var(--shadow-sm)' }}
       >
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:items-center">
-          <div className="lg:col-span-1">
-            <p className="text-sm text-muted-foreground">组合总资产</p>
-            <p
-              className="mt-1 font-bold font-mono text-foreground"
-              style={{ fontSize: 'var(--fs-display)', lineHeight: 'var(--lh-tight)' }}
-            >
-              ¥482,350
-            </p>
-            <p className="mt-1 flex items-center gap-1.5 text-sm" style={{ color: 'hsl(var(--stock-up))' }}>
-              <ArrowUp className="h-4 w-4" />
-              今日 +¥8,250 (+1.74%)
-            </p>
-          </div>
-          <div className="lg:col-span-2">
-            <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
-              <div>
-                <p className="text-xs text-muted-foreground">今日盈亏</p>
-                <p className="mt-1 font-semibold" style={{ color: 'hsl(var(--stock-up))' }}>+1.74%</p>
-                <p className="mt-0.5 text-sm text-foreground">¥8,250</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">年初至今</p>
-                <p className="mt-1 font-semibold" style={{ color: 'hsl(var(--stock-up))' }}>+12.3%</p>
-                <p className="mt-0.5 text-sm text-foreground">¥52,800</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">夏普比率</p>
-                <p className="mt-1 font-mono font-semibold text-foreground">2.15</p>
-                <p className="mt-0.5 text-xs" style={{ color: 'hsl(var(--success))' }}>优秀</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">最大回撤</p>
-                <p className="mt-1 font-semibold" style={{ color: 'hsl(var(--stock-down))' }}>-3.2%</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">近30天</p>
-              </div>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary/10">
+              <Search className="h-5 w-5 text-primary" />
             </div>
+            <div>
+              <h2 className="font-semibold text-foreground">快速选股分析</h2>
+              <p className="text-xs text-muted-foreground">搜索股票名称或代码，一键跳转智能评分</p>
+            </div>
+          </div>
+          <div className={isMobile ? 'w-full' : 'w-80'}>
+            <StockSelector
+              value=""
+              onChange={handleQuickSelect}
+              placeholder="搜索股票名称或代码..."
+              showIcon={false}
+              maxDisplayCount={10}
+            />
           </div>
         </div>
       </section>
 
+      {/* 4. System Status Overview */}
       <SystemStatusOverview />
 
-      {/* Feature Cabin Entry Cards (5-column grid) */}
-      <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+      {/* 5. Feature Cabin Entry Cards (5-column grid) */}
+      <section className="mt-6 grid gap-3" style={{ gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)' }}>
         {CABIN_FEATURES.map((feature) => {
           const Icon = feature.icon
           return (
             <Link
               key={feature.title}
               to={feature.to}
-              className="flex flex-col gap-2 rounded-lg p-5 transition-shadow hover:shadow-elevation-2"
-              style={{ background: 'hsl(var(--card))', boxShadow: 'var(--shadow-sm)' }}
+              className="flex flex-col gap-2 rounded-lg p-5 transition-shadow hover:shadow-elevation-2 bg-card"
+              style={{ boxShadow: 'var(--shadow-sm)' }}
             >
               <div className={`flex h-10 w-10 items-center justify-center rounded-md ${feature.bgColor} ${feature.color}`}>
                 <Icon className="h-5 w-5" />
@@ -290,94 +465,8 @@ export default function HomePage(): React.JSX.Element {
         })}
       </section>
 
-      {/* Latest Signals + System Status */}
-      <section className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div
-          className="rounded-lg p-6 lg:col-span-2"
-          style={{ background: 'hsl(var(--card))', boxShadow: 'var(--shadow-sm)' }}
-        >
-          <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-foreground" style={{ fontSize: 'var(--fs-h3)', lineHeight: 'var(--lh-tight)' }}>
-              最新交易信号
-            </h2>
-            <Link to="/trading" className="text-xs" style={{ color: 'hsl(var(--primary))' }}>查看全部</Link>
-          </div>
-          <div className="mt-3 space-y-0">
-            <div className="flex items-center gap-3 py-3" style={{ borderTop: '1px solid hsl(var(--divider))' }}>
-              <span
-                className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
-                style={{ background: 'hsl(var(--stock-up) / 0.1)', color: 'hsl(var(--stock-up))' }}
-              >
-                买入信号
-              </span>
-              <span className="text-sm font-medium text-foreground">贵州茅台 600519.SH</span>
-              <span className="flex-1 text-sm text-muted-foreground">突破前期高点</span>
-              <span className="font-mono text-xs text-muted-foreground">10:32</span>
-              <span className="font-mono text-sm" style={{ color: 'hsl(var(--stock-up))' }}>评分 8.5</span>
-            </div>
-            <div className="flex items-center gap-3 py-3" style={{ borderTop: '1px solid hsl(var(--divider))' }}>
-              <span
-                className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
-                style={{ background: 'hsl(var(--warning) / 0.1)', color: 'hsl(var(--warning))' }}
-              >
-                观望信号
-              </span>
-              <span className="text-sm font-medium text-foreground">宁德时代 300750.SZ</span>
-              <span className="flex-1 text-sm text-muted-foreground">量能不足</span>
-              <span className="font-mono text-xs text-muted-foreground">09:45</span>
-              <span className="font-mono text-sm" style={{ color: 'hsl(var(--warning))' }}>评分 6.5</span>
-            </div>
-            <div className="flex items-center gap-3 py-3" style={{ borderTop: '1px solid hsl(var(--divider))' }}>
-              <span
-                className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
-                style={{ background: 'hsl(var(--stock-down) / 0.1)', color: 'hsl(var(--stock-down))' }}
-              >
-                减仓信号
-              </span>
-              <span className="text-sm font-medium text-foreground">古井贡酒 000596.SZ</span>
-              <span className="flex-1 text-sm text-muted-foreground">技术面走弱</span>
-              <span className="font-mono text-xs text-muted-foreground">14:20</span>
-              <span className="font-mono text-sm" style={{ color: 'hsl(var(--stock-down))' }}>评分 5.0</span>
-            </div>
-          </div>
-        </div>
-
-        <div
-          className="rounded-lg p-6"
-          style={{ background: 'hsl(var(--card))', boxShadow: 'var(--shadow-sm)' }}
-        >
-          <h2 className="font-semibold text-foreground" style={{ fontSize: 'var(--fs-h3)', lineHeight: 'var(--lh-tight)' }}>
-            系统状态
-          </h2>
-          <div className="mt-3 space-y-0">
-            <div className="flex items-center justify-between py-2" style={{ borderTop: '1px solid hsl(var(--divider))' }}>
-              <span className="text-sm text-muted-foreground">采集服务</span>
-              <span className="flex items-center gap-1.5 text-sm" style={{ color: 'hsl(var(--success))' }}>
-                <span className="h-2 w-2 rounded-full" style={{ background: 'hsl(var(--success))' }}></span>
-                运行中
-              </span>
-            </div>
-            <div className="flex items-center justify-between py-2" style={{ borderTop: '1px solid hsl(var(--divider))' }}>
-              <span className="text-sm text-muted-foreground">LLM引擎</span>
-              <span className="flex items-center gap-1.5 text-sm" style={{ color: 'hsl(var(--success))' }}>
-                <span className="h-2 w-2 rounded-full" style={{ background: 'hsl(var(--success))' }}></span>
-                运行中
-              </span>
-            </div>
-            <div className="flex items-center justify-between py-2" style={{ borderTop: '1px solid hsl(var(--divider))' }}>
-              <span className="text-sm text-muted-foreground">数据库</span>
-              <span className="flex items-center gap-1.5 text-sm" style={{ color: 'hsl(var(--success))' }}>
-                <span className="h-2 w-2 rounded-full" style={{ background: 'hsl(var(--success))' }}></span>
-                正常
-              </span>
-            </div>
-            <div className="flex items-center justify-between py-2" style={{ borderTop: '1px solid hsl(var(--divider))' }}>
-              <span className="text-sm text-muted-foreground">最后同步</span>
-              <span className="font-mono text-sm text-muted-foreground">19:35:22</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 6. Latest Signals */}
+      <SignalList />
     </PageContainer>
   )
 }

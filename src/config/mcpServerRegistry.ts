@@ -5,14 +5,18 @@
  * 配置驱动的 MCP Server 自动注册与热更新。
  * 新增/移除/禁用 Server 只需修改此文件，无需改动注册逻辑。
  *
- * 当前状态（2026-07-20 P0 清理后）：
- *   15 个 Registry 条目 → 15 个 enabled
+ * 当前状态（2026-08-15 P0-3 僵尸 Server 清理后）：
+ *   15 个 Registry 条目 → 10 enabled + 5 disabled
  *   已移除 3 个 Server（export/trade/input）的 MCP 包装层：
  *   - export: 降级为纯 Service 函数（backtestExportService 保留）
  *   - trade: 合并入 trading:main（holdingsService 删除，功能由 trading 覆盖）
  *   - input: MCP 层移除（inputService 保留在 services/input/，业务代码直接调用）
+ *   已 Disabled 5 个 Server（代码保留，恢复条件见各条目注释）：
+ *   - analysis:main / portfolio:main / knowledge:local / execution:main / workflow:main
+ *   - 同步清理：mcpAclMatrix.ts ui 角色已移除对应 allowedServers 入口
  *   复盘待办进展：
- *   P0 ✅ 已执行 —— export/trade/input MCP 层清理完毕
+ *   P0 ✅ 已执行 —— export/trade/input MCP 层清理完毕（2026-07-20）
+ *   P0 ✅ 已执行 —— 5 个 Disabled Server 的 ACL 残留清理完毕（2026-08-15）
  *   P1 待执行 —— input Service 层合并入 fetcher:data（需评估）
  *   P2 保留 —— backtest/screening/pool 待 Agent 场景恢复
  *
@@ -42,6 +46,8 @@ export interface MCPServerConfigEntry {
   priority: ServerRegistrationOptions['priority']
   /** 是否启用（false 则跳过注册） */
   enabled: boolean
+  /** 是否延迟加载（true 则归入 lazy 注册队列，false/缺省为核心注册） */
+  lazy?: boolean
 }
 
 /** Server 模块的导出签名 */
@@ -101,6 +107,7 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     exportName: 'NewsServer',
     priority: 'medium',
     enabled: true,
+    lazy: true,
   },
   {
     name: 'llm:main',
@@ -108,6 +115,7 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     exportName: 'LLMServer',
     priority: 'medium',
     enabled: true,
+    lazy: true,
   },
 
   // Phase 3: 扩展业务 Server（中优先级）
@@ -127,6 +135,7 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     exportName: 'ScreeningServer',
     priority: 'medium',
     enabled: true,
+    lazy: true,
   },
 
   // Phase 4: 本地知识库 & AI 检索 Server（中优先级）
@@ -146,6 +155,7 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     exportName: 'BacktestServer',
     priority: 'medium',
     enabled: true,
+    lazy: true,
   },
   {
     name: 'pool:main',
@@ -153,6 +163,7 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     exportName: 'PoolServer',
     priority: 'medium',
     enabled: true,
+    lazy: true,
   },
   {
     name: 'system:main',
@@ -160,6 +171,7 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     exportName: 'SystemServer',
     priority: 'medium',
     enabled: true,
+    lazy: true,
   },
 
   // Phase 4: 补充已就绪的 MCP Server
@@ -169,6 +181,31 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     exportName: 'DataCollectorServer',
     priority: 'medium',
     enabled: true,
+    lazy: true,
+  },
+
+  // Phase 4.5: 腾讯自选股数据源（MCP+SKILL 整合，技术方案 §3/§5.2）
+  // 通过 westock-data-skillhub CLI 提供研报/公告/新闻/K线/财务/资金流等只读实采数据。
+  // 运行时由 Node 宿主承载 CLI（child_process），渲染进程经 MCPBridge 调用。
+  {
+    name: 'marketdata:westock',
+    modulePath: '@/mcp/servers/marketdata/westockServer',
+    exportName: 'WeStockServer',
+    priority: 'medium',
+    enabled: true,
+    lazy: true,
+  },
+
+  // Phase 4.5: 腾讯新闻数据源（MCP+SKILL 整合，技术方案 §3/§5.2）
+  // 通过 tencent-news SKILL CLI 提供热点/早报/晚报/行业检索/事实核查等只读实采资讯。
+  // 运行时由 Node 宿主承载 CLI（child_process / Electron IPC），渲染进程经 MCPBridge 调用。
+  {
+    name: 'marketdata:tencentnews',
+    modulePath: '@/mcp/servers/news/tencentNewsServer',
+    exportName: 'TencentNewsServer',
+    priority: 'medium',
+    enabled: true,
+    lazy: true,
   },
   {
     name: 'execution:main',

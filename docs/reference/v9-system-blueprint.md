@@ -4,30 +4,36 @@ type: reference
 domain: architecture
 phase: design
 tier: important
-status: active
+status: deprecated
 maintainer: V9 Architecture Team
-summary: " A   "
-tags: [architecture, system, reference, design, documentation]
-version: v0.9.0-migration-implemented
-last_updated: 2026-06-24
+summary: "已被 docs/explanation/system-architecture.md（v1.1）取代的早期系统蓝图。保留作为历史参考，新内容请勿在此文档追加。"
+tags: [architecture, system, reference, design, documentation, deprecated]
+version: v0.9.1-deprecated
+last_updated: 2026-08-15
 code_version: "2.0.0-rc.1"
 doc_id: V9-DOC-ARCH-010
 related_docs: [V9-DOC-META-000, V9-DOC-DATA-001, V9-DOC-PROJ-295, V9-DOC-PROJ-174, V9-DOC-PROJ-164, V9-DOC-PROJ-176]
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-164, V9-DOC-PROJ-176, V9-DOC-DATA-001, V9-DOC-PROJ-182, V9-DOC-PROJ-179, V9-DOC-PROJ-295, docs/meta/deprecated-docs/old-versions/registry-index-v1.0.0-02-design.md, V9-DOC-PROJ-149]
-change_log: 
+superseded_by: docs/explanation/system-architecture.md
 change_log:
   - version: v0.9.0-migration-implemented
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-06-24
+  - version: v0.9.1-deprecated
+    changes: "P0-2 文档版本漂移治理：标记为 deprecated，被 docs/explanation/system-architecture.md（v1.1）取代；正文内容大量空白不再维护，新内容统一写入 system-architecture.md"
+    date: 2026-08-15
 ---
 
-# V9   
+# V9 系统蓝图（已废弃）
 
-> **Status**: Current  
-> **Version**: v0.9.0-migration-implemented  
-> **Last Updated**: 2026-06-24
+> **Status**: Deprecated  
+> **⚠️ 路径归档说明（2026-08-16）**：本文档已废弃，被 [system-architecture.md](../explanation/system-architecture.md) 取代。文中引用的目标文件（如 `system-architecture.md`、`03-architecture-standards.md`、`06-routing-specs.md`、`feedback-loop-spec.md` 等）已归档或重组。本文档仅保留作为历史参考，路径不再更新。  
+> **Version**: v0.9.1-deprecated  
+> **Last Updated**: 2026-08-15  
+> **取代文档**: [`../explanation/system-architecture.md`](../explanation/system-architecture.md)（v1.1，2026-08-13）  
 >
->  `../archive/v10-architecture-whitepaper.md`  `../explanation/completeness-profile-batch4.md`  V9 UI 
+> **废弃原因**：本文档内容大量空白、版本停留在 v0.9.0-migration-implemented（2026-06-24），系统架构权威描述已迁移至 `../explanation/system-architecture.md`。新内容请勿在此追加，仅保留作为历史参考。  
+> 相关历史文档：v10-architecture-whitepaper（已归档）、`../explanation/completeness-profile-batch4.md`
 
 ---
 
@@ -365,7 +371,7 @@ interface StandardEnvelope {
 | **D15** | **** | `src/services/scoring/v6ScoreService.ts`  +  LLM  | Phase 2  LLM |
 | **D16** | **** | `src/components/ui/`  `lightweight-charts` / `recharts``./chart-integration.md` API  DataFlow  | Phase 2  |
 | **D17** | **`rotationScoreService.ts`  `SectorAnalysisPage` ** |  | Phase 2  `SectorAnalysisPage`  |
-| **D18** | **** | `src/components/atoms/Toast.tsx` `./feedback-loop-spec.md`  FeedbackService  EventBus  | Phase 2  |
+| **D18** | **** | src/components/atoms/Toaster.tsx `./feedback-loop-spec.md`  FeedbackService  EventBus  | Phase 2  |
 | **D19** | **`ErrorBoundary.tsx`  `App.tsx` Widget ** | `./widget-error-handling.md`  Widget  UI | Phase 2  Widget  ErrorBoundary |
 | **D20** | **** | // HotSectorScore / ValuePitScore  | Phase 2  StoreAnalyzerDetectorWidget ADR-009 |
 
@@ -407,15 +413,15 @@ interface StandardEnvelope {
 
 |  |  |  |
 |------|------|------|
-| 01 | `./01-vision-and-goals.md` |  |
-| 02 | `./02-functional-specs.md` |  |
-| 03 | `./03-architecture-standards.md` |  Schema |
-| 04 | `./04-ui-ux-specs.md` | UI/UX  |
-| 05 | `./05-engine-specs.md` | DataBridge |
-| 06 | `./06-routing-specs.md` |  |
-| 07 | `./07-operation-strategy.md` | ADR |
-| 08 | `./08-implementation-plan.md` |  |
-| 09 | `./09-quality-gates.md` |  |
+| 01 | `../specs/01-vision-and-goals.md` |  |
+| 02 | `../specs/02-functional-specs.md` |  |
+| 03 | `../explanation/03-architecture-standards.md` |  Schema |
+| 04 | `../specs/04-ui-ux-specs.md` | UI/UX  |
+| 05 | `../explanation/05-engine-specs.md` | DataBridge |
+| 06 | `../explanation/06-routing-specs.md` |  |
+| 07 | `../guides/07-operation-strategy.md` | ADR |
+| 08 | `../guides/08-implementation-plan.md` |  |
+| 09 | `../guides/09-quality-gates.md` |  |
 | 10 | `./10-glossary.md` |  |
 
 ### 
@@ -431,14 +437,14 @@ interface StandardEnvelope {
 | `../explanation/design/implementation-governance.md` |  ADR  |
 | `./v9-input-cabin-strategy-report.md` |  |
 | `./v10-architecture-alignment.md` | V10  |
-| `../archive/ui-module-alignment.md` | V6 Pro UI  |
+| ui-module-alignment（已归档） | V6 Pro UI  |
 | `./v6-cockpit-ui-reference.md` | v6 UI  |
 | `../explanation/trading-core-factors.md` |  |
 | `./chart-integration.md` |  DataBridge  |
 | `./feedback-loop-spec.md` |  EventBus  |
 | `./widget-error-handling.md` | Widget  UI |
 | `./pwa-offline-guide.md` | PWA Service Worker  |
-| `../archive/ADR-001~009.md` |  |
+| ADR-001~009（已归档） |  |
 | `CHANGELOG.md` |  |
 
 ---

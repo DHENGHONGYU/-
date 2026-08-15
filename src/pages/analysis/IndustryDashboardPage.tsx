@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { RefreshCw } from 'lucide-react'
+import { RefreshCw, ChevronUp, ChevronDown } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -245,6 +245,15 @@ export default function IndustryDashboardPage(): React.JSX.Element {
     )
   }
 
+  const renderSortArrow = (columnKey: SortKey) => {
+    if (sortKey === columnKey) {
+      return sortOrder === 'asc'
+        ? <ChevronUp className="inline h-3.5 w-3.5 ml-1" />
+        : <ChevronDown className="inline h-3.5 w-3.5 ml-1" />
+    }
+    return <span className="inline ml-1 text-muted">↕</span>
+  }
+
   if (v4Analyses.length === 0) {
     return (
       <PageContainer>
@@ -305,7 +314,7 @@ export default function IndustryDashboardPage(): React.JSX.Element {
               value: a.v4Composite ?? 0,
               category: a.industryCode.split('.')[0],
             }))}
-            colorScheme="redGreen"
+            colorScheme="blueYellow"
             showValue
           />
         </CardContent>
@@ -410,40 +419,40 @@ export default function IndustryDashboardPage(): React.JSX.Element {
                   <TableHead className="w-12">#</TableHead>
                   <TableHead>行业</TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted"
+                    className="cursor-pointer hover:bg-muted select-none"
                     onClick={() => {
                       setSortKey('composite')
                       setSortOrder(sortKey === 'composite' && sortOrder === 'desc' ? 'asc' : 'desc')
                     }}
                   >
-                    综合评分
+                    综合评分{renderSortArrow('composite')}
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted"
+                    className="cursor-pointer hover:bg-muted select-none"
                     onClick={() => {
                       setSortKey('prosperity')
                       setSortOrder(sortKey === 'prosperity' && sortOrder === 'desc' ? 'asc' : 'desc')
                     }}
                   >
-                    景气度
+                    景气度{renderSortArrow('prosperity')}
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted"
+                    className="cursor-pointer hover:bg-muted select-none"
                     onClick={() => {
                       setSortKey('valuation')
                       setSortOrder(sortKey === 'valuation' && sortOrder === 'desc' ? 'asc' : 'desc')
                     }}
                   >
-                    估值
+                    估值{renderSortArrow('valuation')}
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted"
+                    className="cursor-pointer hover:bg-muted select-none"
                     onClick={() => {
                       setSortKey('trend')
                       setSortOrder(sortKey === 'trend' && sortOrder === 'desc' ? 'asc' : 'desc')
                     }}
                   >
-                    趋势
+                    趋势{renderSortArrow('trend')}
                   </TableHead>
                   <TableHead>轮动信号</TableHead>
                 </TableRow>

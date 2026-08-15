@@ -26,7 +26,7 @@ export function MemoryModeBanner({ className, onRetry }: MemoryModeBannerProps):
       data-testid="memory-mode-banner"
     >
       <div className="flex items-start gap-3">
-        <span className="text-2xl" aria-hidden="true">💾</span>
+        <span className="text-h1" aria-hidden="true">💾</span>
         <div className="flex-1">
           <h4 className={cn('text-sm font-semibold', 'text-warning')}>内存模式运行中</h4>
           <p className={cn('mt-1 text-xs', 'text-warning')}>

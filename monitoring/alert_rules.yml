@@ -1,0 +1,75 @@
+# Alert rules for V9 Data Collector cache monitoring
+# Trigger alerts when cache hit rates drop below thresholds
+
+groups:
+  - name: cache_alerts
+    rules:
+      # 缓存命中率过低告警
+      - alert: CacheHitRateTooLow
+        expr: v9_cache_hit_rate < 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "缓存命中率过低 ({{ $labels.cache_type }})"
+          description: "{{ $labels.cache_type }} 缓存命中率已降至 {{ $value }}%，低于 80% 阈值。请检查缓存服务状态。"
+
+      # 板块信息缓存命中率告警
+      - alert: SectorInfoCacheHitRateCritical
+        expr: v9_cache_hit_rate{cache_type="sector_info"} < 90
+        for: 3m
+        labels:
+          severity: critical
+        annotations:
+          summary: "板块信息缓存命中率严重不足"
+          description: "sector_info 缓存命中率已降至 {{ $value }}%，低于 90% 阈值。可能影响板块评分性能。"
+
+      # 日线数据缓存命中率告警
+      - alert: HistDataCacheHitRateWarning
+        expr: v9_cache_hit_rate{cache_type="hist_data"} < 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "日线数据缓存命中率偏低"
+          description: "hist_data 缓存命中率已降至 {{ $value }}%，低于 85% 阈值。AKShare 调用可能增加。"
+
+      # 缓存延迟过高告警
+      - alert: CacheLatencyHigh
+        expr: histogram_quantile(0.95, rate(v9_cache_latency_seconds_bucket[5m])) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "缓存读取延迟偏高 (P95 > 100ms)"
+          description: "缓存读取延迟 P95 已达到 {{ $value }}s，超过 100ms 阈值。数据库性能可能下降。"
+
+      # AKShare 降级调用过多告警
+      - alert: AkshareFallbackExcessive
+        expr: rate(v9_akshare_fallback_total[5m]) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "AKShare 降级调用频率过高"
+          description: "AKShare 降级调用频率已达到 {{ $value }}/s，缓存可能失效或数据库连接异常。"
+
+      # 板块评分耗时告警
+      - alert: SectorScoreDurationHigh
+        expr: histogram_quantile(0.95, rate(v9_sector_score_duration_seconds_bucket{data_source="akshare"}[5m])) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "板块评分耗时过高 (AKShare 模式)"
+          description: "使用 AKShare 数据源的板块评分耗时 P95 已达到 {{ $value }}s，用户体验可能受影响。"
+
+      # 数据采集服务不可用告警
+      - alert: DataCollectorDown
+        expr: v9_data_collector_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "V9 数据采集服务不可用"
+          description: "数据采集服务已离线超过 1 分钟，所有板块数据接口不可访问。"

@@ -131,7 +131,7 @@ export async function fetchEastMoneyHolderNumber(symbol: string): Promise<ChipDa
   const resp = await safeFetch(url)
   if (!resp) return null
   try {
-    const data: EmShareholderResponse = await resp.json()
+    const data = (await resp.json()) as EmShareholderResponse
     const gdrs = data?.gdrs
     if (!Array.isArray(gdrs) || gdrs.length === 0) {
       logger.warn('[crawlerProvider] 东财股东户数无数据', { symbol })
@@ -205,7 +205,7 @@ export async function fetchEastMoneyAnnouncements(symbol: string): Promise<NewsI
   const resp = await safeFetch(url)
   if (!resp) return []
   try {
-    const data: EmAnnouncementResponse = await resp.json()
+    const data = (await resp.json()) as EmAnnouncementResponse
     if (data?.success !== 1) {
       logger.warn('[crawlerProvider] 东财公告 API 返回失败', { symbol, success: data?.success })
       return []

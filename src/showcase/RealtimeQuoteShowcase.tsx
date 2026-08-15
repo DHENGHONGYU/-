@@ -245,13 +245,13 @@ export function RealtimeQuoteShowcase(): React.JSX.Element {
               <div className={cn('mt-1 h-8 w-24 animate-pulse rounded', 'bg-muted')} />
             ) : price ? (
               <div className="flex items-center gap-2">
-                <span className={cn('text-2xl font-bold tabular-nums')} style={{ color: currentColor }}>
+                <span className={cn('text-h1 font-bold tabular-nums')} style={{ color: currentColor }}>
                   ¥{price.toFixed(2)}
                 </span>
                 <TrendIcon className="h-4 w-4" style={{ color: currentColor }} />
               </div>
             ) : (
-              <div className={cn('mt-1 text-xl font-bold', 'text-muted-foreground')}>--</div>
+              <div className={cn('mt-1 text-h2 font-bold', 'text-muted-foreground')}>--</div>
             )}
           </div>
 
@@ -261,12 +261,12 @@ export function RealtimeQuoteShowcase(): React.JSX.Element {
             {quoteLoading && !price ? (
               <div className={cn('mt-1 h-8 w-20 animate-pulse rounded', 'bg-muted')} />
             ) : price ? (
-              <div className={cn('text-xl font-semibold tabular-nums')} style={{ color: currentColor }}>
+              <div className={cn('text-h2 font-semibold tabular-nums')} style={{ color: currentColor }}>
                 {changePercent > 0 ? '+' : ''}
                 {changePercent.toFixed(2)}%
               </div>
             ) : (
-              <div className={cn('mt-1 text-xl font-semibold', 'text-muted-foreground')}>--</div>
+              <div className={cn('mt-1 text-h2 font-semibold', 'text-muted-foreground')}>--</div>
             )}
           </div>
 

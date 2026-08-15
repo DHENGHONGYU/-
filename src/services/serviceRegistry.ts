@@ -3,14 +3,14 @@
  *
  * @description
  * 本文件为 audit:registry 的 Service 层数据源，与 componentRegistry 同为注册表门禁的单一事实源。
- * 原 storeRegistry 因数据损坏被移除，本文档依 docs/reference/03-architecture-standards.md 标注"待重建"重新生成。
+ * 原 storeRegistry 因数据损坏被移除，重新生成。原文档已归档至 archive/historical-2026-08-16/batch7/。
  *
  * 生成方式：node scripts/gen-store-service-registries.mjs
  * 维护约定：新增 / 移除 Service 后重新运行上述脚本同步本文件；
  *           audit:registry 正向校验条目指向文件存在、反向校验磁盘文件均已登记。
  * ⚠️ 同名 id 冲突 1 条（不同目录下同名文件，保留多条 id 相同条目；audit 反向检查按文件名匹配，不影响校验）：
  *   - PortfolioService: src/services/portfolio/portfolioService vs src/services/trading/portfolioService
- * 生成时间：2026-08-14 17:54:17
+ * 生成时间：2026-08-15 09:46:46
  */
 
 export interface ServiceRegistryEntry {

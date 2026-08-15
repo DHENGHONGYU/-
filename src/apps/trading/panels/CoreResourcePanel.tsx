@@ -2,6 +2,7 @@ import React from 'react'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
+import { EmptyState } from '@/components/molecules/EmptyState'
 import type { Portfolio, StrategyClassification, StrategyResult } from '@/data/types'
 
 export interface CoreResourcePanelProps {
@@ -43,11 +44,13 @@ export function CoreResourcePanel({
       </CardHeader>
       <CardContent className="space-y-4">
         {!portfolio || portfolio.holdings.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            {loading
+          <EmptyState
+            title={loading ? '正在构建组合...' : '暂无核心稀缺组合'}
+            description={loading
               ? '正在根据观察池与评分构建组合...'
-              : '暂无核心稀缺组合，请确保观察池中有匹配标的且评分 ≥ 4.0，然后点击刷新。'}
-          </p>
+              : '请确保观察池中有匹配标的且评分 ≥ 4.0，然后点击刷新。'}
+            className="py-6"
+          />
         ) : (
           <>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">

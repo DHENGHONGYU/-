@@ -33,14 +33,14 @@ interface MemoryIndex {
 
 const SOURCE_FILES = [
   'AGENTS.md',
-  'docs/reference/design-token-mapping.md',
-  'docs/reference/ui-migration-checklist.md',
-  '../docs/reference/widget-integration-checklist.md',
-  'docs/reference/jsdoc-convention.md',
-  '../docs/reference/complexity-governance.md',
-  '../docs/reference/testing-strategy.md',
-  '../docs/reference/ai-memory-layer.md',
-  '../docs/reference/ai-generate-audit-fix-loop.md',
+  // 以下文档已归档至 archive/historical-2026-08-16/batch7/
+  // 'docs/reference/design-token-mapping.md',
+  // 'docs/reference/ui-migration-checklist.md',
+  // '../docs/reference/widget-integration-checklist.md',
+  // 'docs/reference/jsdoc-convention.md',
+  // '../docs/reference/complexity-governance.md',
+  // '../docs/guides/testing-strategy.md',
+  // 以下文档已归档至 archive/historical-2026-08-16/batch7/
   'prompts/system-prompt-template.md',
   'prompts/component-prompt-template.md',
   'prompts/service-prompt-template.md',

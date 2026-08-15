@@ -68,7 +68,7 @@ export default function V6ScoringAgentDetail({ agentId }: AgentDetailComponentPr
             <Activity className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">V6 评分智能体</h1>
+            <h1 className="text-h1 font-bold tracking-tight">V6 评分智能体</h1>
             <p className="text-muted-foreground">
               执行 V6 九维评分计算，返回评分结果与因子明细
             </p>
@@ -87,7 +87,7 @@ export default function V6ScoringAgentDetail({ agentId }: AgentDetailComponentPr
               <Clock className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-2xl font-bold">30s</p>
+              <p className="text-h1 font-bold">30s</p>
               <p className="text-sm text-muted-foreground">默认超时</p>
             </div>
           </CardContent>
@@ -98,7 +98,7 @@ export default function V6ScoringAgentDetail({ agentId }: AgentDetailComponentPr
               <Zap className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-2xl font-bold">5</p>
+              <p className="text-h1 font-bold">5</p>
               <p className="text-sm text-muted-foreground">最大并发</p>
             </div>
           </CardContent>
@@ -109,7 +109,7 @@ export default function V6ScoringAgentDetail({ agentId }: AgentDetailComponentPr
               <Target className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-2xl font-bold">9 层</p>
+              <p className="text-h1 font-bold">9 层</p>
               <p className="text-sm text-muted-foreground">评分维度</p>
             </div>
           </CardContent>

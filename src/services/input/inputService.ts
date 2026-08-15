@@ -183,7 +183,7 @@ export async function addStock(
 
     // 广播 POOL_CHANGED 事件，通知各池模块刷新
     logger.info('[inputService] 准备广播 POOL_CHANGED', { action: 'add', pool: stock.pool, symbol })
-    await withBroadcast(EVENT_NAMES.POOL_CHANGED, {
+    withBroadcast(EVENT_NAMES.POOL_CHANGED, {
       action: 'add',
       pool: stock.pool,
       symbol,

@@ -4,24 +4,24 @@ type: explanation
 domain: data
 phase: planning
 tier: important
-status: active
+status: deprecated
 maintainer: V9 Architecture Team
 summary: "多因子选股筛选器（DA-007）支持基于 PE、PB、ROE、市值、营收增速、净利润增速 六个因子构建条件组，对全量股票进行筛选，并支持模板保存/加载与 CSV 导出。"
 tags: [data, data-definition, screening, plan, factor, explanation]
 version: v1.0.0
-last_updated: 2026-07-17
+last_updated: 2026-08-15
 code_version: "2.0.0-rc.1"
 doc_id: V9-DOC-DATA-011
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:
   - version: v1.0.0
-changes: Initial version established
-date: 2026-07-17
+    changes: "DEPRECATED（2026-07-14）；2026-08-15 系统性核对：仍保持废弃状态，最新定义见 docs/explanation/design/multi-factor-screening-data-definition.md v1.0.1 与 docs/reference/data-dictionary-index.md v1.1.0。"
+    date: 2026-08-15
 ---
 
 # DEPRECATED - multi-factor-screening-data-definition.md
 
-> ?? **此文件已废弃**（2026-07-14）
+> ⚠️ **此文件已废弃**（2026-07-14）
 > 
 > 数据字典已整合至 `docs/reference/data-dictionary-index.md`，请通过主索引访问最新定义。
 

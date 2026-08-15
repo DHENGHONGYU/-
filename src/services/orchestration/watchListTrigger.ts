@@ -208,7 +208,7 @@ export class WatchListTrigger {
 let _instance: WatchListTrigger | null = null
 
 export function getWatchListTrigger(config?: WatchListTriggerConfig): WatchListTrigger {
-  if (!_instance) _instance = new WatchListTrigger(config)
+  _instance ??= new WatchListTrigger(config)
   return _instance
 }
 

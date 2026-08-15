@@ -14,6 +14,7 @@ export interface DensityConfig {
 /**
  * DENSITY_PRESETS
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const DENSITY_PRESETS: Record<DensityLevel, DensityConfig> = {
   compact: {
     level: 'compact',
@@ -98,6 +99,7 @@ export function DensityProvider({ children, defaultDensity = 'normal' }: { child
  * useDensity
  * @returns DensityContextType
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useDensity(): DensityContextType {
   const context = useContext(DensityContext)
   if (!context) {
@@ -110,6 +112,7 @@ export function useDensity(): DensityContextType {
  * useDensityConfig
  * @returns DensityConfig
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useDensityConfig(): DensityConfig {
   return useDensity().config
 }
@@ -118,6 +121,7 @@ export function useDensityConfig(): DensityConfig {
  * useDensityClass
  * @returns string
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useDensityClass(): string {
   const { density } = useDensity()
   return `density-${density}`

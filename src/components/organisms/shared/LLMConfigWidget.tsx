@@ -225,7 +225,9 @@ export const LLMConfigWidget = memo(function LLMConfigWidget({
           )}
 
           <p className="text-xs text-muted-foreground">
-            支持 OpenAI 兼容接口（/v1/chat/completions）。推荐 DeepSeek V4 / Kimi K2.7 / 通义千问 Qwen3.6 / 硅基流动。
+            支持 OpenAI 兼容接口（/v1/chat/completions）。
+            国内：DeepSeek / Kimi / 通义千问 / 腾讯混元 / TRAE豆包 / 百度文心 / 智谱GLM / 硅基流动；
+            境外：OpenAI GPT / Anthropic Claude / Google Gemini / xAI Grok。
           </p>
         </div>
       )}

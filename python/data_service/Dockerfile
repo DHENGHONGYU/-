@@ -30,18 +30,29 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # 设置工作目录
 WORKDIR /app
 
+# 国内网络环境下使用镜像源加速（可用 --build-arg 覆盖）
+ARG APT_MIRROR=mirrors.aliyun.com
+ARG PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/
+
 # 安装系统依赖（AkShare 部分 HTTP 接口需要）
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN sed -i "s|deb.debian.org|$APT_MIRROR|g" /etc/apt/sources.list.d/debian.sources 2>/dev/null \
+    || sed -i "s|deb.debian.org|$APT_MIRROR|g" /etc/apt/sources.list \
+    ; apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
 # 先复制依赖清单，利用 Docker 缓存层
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -i "$PIP_INDEX_URL" -r requirements.txt
 
 # 复制应用源码（collect_endpoints.py + lib/ 工具模块）
 COPY collect_endpoints.py ./
 COPY lib ./lib
+# 本地模块（缺一会导致运行时 ImportError：板块资金流 L1→L2→L3 降级链）
+COPY _sector_cache_db.py ./
+COPY _sector_fund_flow.py ./
+COPY _sector_fund_flow_db.py ./
+COPY _ths_hexinv.py ./
 
 # 创建采集输出目录（与前端 outputs/collected-data 对应，便于挂载持久化）
 RUN mkdir -p /app/outputs/collected-data

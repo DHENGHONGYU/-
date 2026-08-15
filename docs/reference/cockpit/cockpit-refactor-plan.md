@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-REF-919
+title: "驾驶舱重构方案总结"
+domain: ref
+status: active
+last_updated: 2026-08-15
+---
+
 # 驾驶舱重构方案总结
 
 ## 一、问题诊断

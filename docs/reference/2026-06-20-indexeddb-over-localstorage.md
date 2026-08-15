@@ -52,4 +52,4 @@ date: 2026-07-17
 
 ## 相关文档
 
-- `./03-architecture-standards.md`
+- `../explanation/03-architecture-standards.md`

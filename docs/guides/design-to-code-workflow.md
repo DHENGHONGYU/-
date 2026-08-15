@@ -395,8 +395,8 @@ Code 模式完成后，须交付以下产物：
 | `src/index.css` 中 `--color-*` 定义 | ✅ 0 处 | 全文核查，仅注释中提及禁令 |
 | `src/index.css` 中 `--spacing-*` / `--fontSize-*` | ✅ 0 处 | 使用 `--fs-*` 命名空间 |
 | `src/` 全目录 `--color-primary` 引用 | ✅ 仅 3 处 | 全部位于 [main.tsx](../../src/main.tsx) 运行时验证代码（防御性探测） |
-| 旧版 `tokens.css` 文件 | ✅ 已删除 | `src/generated/tokens.css` 不存在 |
-| 旧版 `generate-tokens.ts` 脚本 | ✅ 已删除 | `scripts/generate-tokens.ts` 不存在 |
+| 旧版 `tokens.css` 文件 | ✅ 已删除 | src/generated/tokens.css 不存在 |
+| 旧版 `generate-tokens.ts` 脚本 | ✅ 已删除 | scripts/generate-tokens.ts 不存在 |
 | 旧版 `design-tokens/tokens.json` | ✅ 已删除 | `design-tokens/tokens.json` 不存在 |
 | `package.json` `generate:tokens` 脚本 | ✅ 已移除 | `prebuild` 钩子不再调用 |
 | 生产 bundle 旧令牌残留 | ✅ 0 处 | `npm run build` 后 `dist/` 搜索 `TokenVerify` 为 0 |

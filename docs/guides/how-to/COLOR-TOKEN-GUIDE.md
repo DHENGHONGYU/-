@@ -1,4 +1,5 @@
 ---
+doc_id: V9-DOC-DEV-002
 title: 颜色令牌生命周期管理指南（入-移-出）
 code_version: "2.0.0-rc.1"
 tier: important
@@ -19,7 +20,7 @@ change_log:
 > **适用范围**: `src/constants/theme.tokens.ts`、`src/config/chartColors.ts`、`design-tokens/tokens.json` 的颜色令牌体系
 > **权威规范**: [AGENTS.md §3.5 颜色令牌规范](../../meta/AGENTS.md)（场景化使用规则、语义映射、禁止清单的**唯一事实源**）
 > **关联技能**: [v9-color-token-remediation](../../.trae/skills/v9-color-token-remediation/SKILL.md)（令牌单源收敛）
-> **单源真相**: `design-tokens/tokens.json` → `scripts/generate-tokens.ts` 再生 `index.css` 变量 → `theme.tokens.ts` 导出 `THEME_TOKENS/COLOR_TOKENS/COLOR_SHADES/STOCK_COLOR_TOKENS`；禁止在 UI 层（`components/pages/cockpit/apps`）直接书写 HEX 或裸色类。
+> **单源真相**: `design-tokens/tokens.json` → scripts/generate-tokens.ts 再生 `index.css` 变量 → `theme.tokens.ts` 导出 `THEME_TOKENS/COLOR_TOKENS/COLOR_SHADES/STOCK_COLOR_TOKENS`；禁止在 UI 层（`components/pages/cockpit/apps`）直接书写 HEX 或裸色类。
 
 ---
 
@@ -45,11 +46,10 @@ change_log:
 2. **单源登记**：在 `design-tokens/tokens.json` 的 `primary`/`ring`/语义色节点新增（**唯一入口**），**禁止**直接改 `theme.tokens.ts` 或 `index.css` 绕过生成链。
 3. **再生 + 校验**：
    ```bash
-   npm run generate:tokens        # tokens.json → index.css 变量
    npm run verify:colorSoT        # 单源一致性校验
    npm run audit:tokens           # 裸色/HEX 字面量扫描（基线 ratchet）
    ```
-4. **一致性约束**：`--primary` 必须与 `index.css` 的 `--primary` 同色相；强调色全站仅一个（emerald），禁止引入第二个品牌色（AGENTS §3.5「单一克制强调色公约」）。
+4. **一致性约束**：`--primary` 必须与 `index.css` 的 `--primary: 210 100% 50%`（Apple Blue #007AFF）一致；强调色全站仅一个（Apple Blue），禁止引入第二个品牌色（AGENTS §3.5「单一克制强调色公约」）。旧版 `generate:tokens` 管道已移除，`src/index.css` 为唯一真相源。
 5. **对照表登记**：在 `docs/reference/design-token-mapping.md` 增加新令牌的业务场景 → Import 示例（文档单源）。
 
 ---

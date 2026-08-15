@@ -280,7 +280,7 @@ function main() {
   console.log('  ✓ how-to/: 存在 (10个文件)');
   console.log('  ✓ reference/: 存在 (70+个文件)');
   console.log('  ✓ explanation/: 存在 (80+个文件)');
-  console.log('  ✗ 缺少: 统一的 docs/README.md 入口');
+  console.log('  ✗ 缺少: 统一的 README.md 入口（原文档已归档至 archive/historical-2026-08-16/batch7/）');
 
   console.log('\n企业级项目目录规范对照:');
   console.log('  ✓ src/types/: 零依赖类型定义');

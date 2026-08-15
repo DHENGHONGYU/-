@@ -10,9 +10,26 @@ coverage
 node_modules
 
 # 大型数据/日志/文档（不影响构建）
-docs/reports
+docs
 outputs
 *.log
+*.zip
+
+# 根目录 Python venv（重量级，前端镜像不需要；原仅排除 python/data_service 子目录）
+.venv
+venv
+
+# 大型二进制/工具/归档目录（与前端构建无关）
+tools
+upx
+archive
+plugins
+monitoring
+test_outputs
+e2e
+.trae
+.agents
+.github
 
 # Python 环境（前端镜像不需要）
 python/data_service/__pycache__

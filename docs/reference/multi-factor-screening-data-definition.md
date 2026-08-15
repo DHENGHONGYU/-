@@ -8,21 +8,24 @@ status: active
 maintainer: V9 Architecture Team
 summary: "多因子选股筛选器（DA-007）支持基于 PE、PB、ROE、市值、营收增速、净利润增速 六个因子构建条件组，对全量股票进行筛选，并支持模板保存/加载与 CSV 导出。"
 tags: [data, data-definition, screening, factor, reference]
-version: v1.0.0
-last_updated: 2026-07-17
+version: v1.0.1
+last_updated: 2026-08-15
 code_version: "2.0.0-rc.1"
 doc_id: V9-DOC-DATA-022
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 change_log:
+  - version: v1.0.1
+    changes: "2026-08-15 系统性核对：与 src/types/modules/screening.types.ts 对齐，字段无漂移；登记为 reference 视图，权威 SSOT 转向 docs/reference/data-dictionary-index.md v1.1.0。"
+    date: 2026-08-15
   - version: v1.0.0
-changes: Initial version established
-date: 2026-07-17
+    changes: Initial version established
+    date: 2026-07-17
 ---
 
 # 多因子选股筛选器数据字典
 
-> **Version**：v1.0.0  
-> **Date**：2026-07-05（版本号补标）  
+> **Version**：v1.0.1  
+> **Date**：2026-08-15（系统性核对）  
 > **模块代号**：DA-007
 
 ## 模块概述

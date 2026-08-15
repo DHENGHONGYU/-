@@ -51,17 +51,17 @@ export function CycleRetrospectivePanel(): React.JSX.Element {
         </div>
         <div className="mt-2 grid grid-cols-3 gap-3 text-center">
           <div>
-            <div className="text-xl font-bold">{report.totalPredictions}</div>
+            <div className="text-h2 font-bold">{report.totalPredictions}</div>
             <div className="text-xs text-muted-foreground">总预测</div>
           </div>
           <div>
-            <div className="text-xl font-bold text-destructive">
+            <div className="text-h2 font-bold text-destructive">
               {(report.directionAccuracy * 100).toFixed(1)}%
             </div>
             <div className="text-xs text-muted-foreground">方向准确率</div>
           </div>
           <div>
-            <div className="text-xl font-bold text-success">
+            <div className="text-h2 font-bold text-success">
               {(report.rangeAccuracy * 100).toFixed(1)}%
             </div>
             <div className="text-xs text-muted-foreground">幅度准确率</div>

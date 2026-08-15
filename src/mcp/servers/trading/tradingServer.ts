@@ -310,7 +310,25 @@ export class TradingServer extends MCPServerBase {
           { name: 'orderHistory', description: '交易历史 JSON', required: false },
         ],
         generator: async (args) => {
-          const report = JSON.parse(args.tradeReviewReport ?? '{}')
+          const parsed: unknown = JSON.parse(args.tradeReviewReport ?? '{}')
+          const report: Record<string, unknown> =
+            typeof parsed === 'object' && parsed !== null ? (parsed as Record<string, unknown>) : {}
+          const summary: Record<string, unknown> =
+            typeof report.summary === 'object' && report.summary !== null
+              ? (report.summary as Record<string, unknown>)
+              : {}
+          const discipline: Record<string, unknown> =
+            typeof report.disciplineAnalysis === 'object' && report.disciplineAnalysis !== null
+              ? (report.disciplineAnalysis as Record<string, unknown>)
+              : {}
+          const errors: Record<string, unknown> =
+            typeof report.errorAnalysis === 'object' && report.errorAnalysis !== null
+              ? (report.errorAnalysis as Record<string, unknown>)
+              : {}
+          const toDisplay = (v: unknown): string =>
+            typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean'
+              ? String(v)
+              : 'N/A'
           return [
             {
               role: 'system',
@@ -325,11 +343,11 @@ export class TradingServer extends MCPServerBase {
                 type: 'text',
                 text: [
                   '请基于以下交易复盘报告进行深度分析：',
-                  `胜率: ${report.summary?.winRate ?? 'N/A'}`,
-                  `盈亏比: ${report.summary?.profitLossRatio ?? 'N/A'}`,
-                  `纪律评分: ${report.disciplineAnalysis?.overallScore ?? 'N/A'}`,
-                  `主要错误: ${JSON.stringify(report.errorAnalysis?.topErrors ?? [])}`,
-                  `改进方向: ${JSON.stringify(report.disciplineAnalysis?.improvements ?? [])}`,
+                  `胜率: ${toDisplay(summary.winRate)}`,
+                  `盈亏比: ${toDisplay(summary.profitLossRatio)}`,
+                  `纪律评分: ${toDisplay(discipline.overallScore)}`,
+                  `主要错误: ${JSON.stringify(errors.topErrors ?? [])}`,
+                  `改进方向: ${JSON.stringify(discipline.improvements ?? [])}`,
                   '请给出具体的改进建议和行动计划。',
                 ].join('\n'),
               },

@@ -4,6 +4,7 @@ import { useHotSectorState } from './hotSector/useHotSectorState'
 import { HotSectorToolbar } from './hotSector/HotSectorToolbar'
 import { SectorCard } from './hotSector/SectorCard'
 import { RepresentativePanel } from './hotSector/RepresentativePanel'
+import { EmptyState } from '@/components/molecules/EmptyState'
 
 /**
  * 热门板块纳入意向候选池 - 嵌入式区块（来源一·热门赛道）
@@ -113,11 +114,15 @@ export default function HotSectorSection(): React.JSX.Element {
           />
         ))}
         {rankedSectors.length === 0 && (
-          <p className="rounded-md bg-muted px-3 py-6 text-center text-sm text-muted-foreground">
-            {hotSectors.length > 0 && timelyOnly
-              ? '当前没有近一周内有评分的板块，可关闭"仅看近一周"查看全部'
-              : '暂无热门板块数据'}
-          </p>
+          <EmptyState
+            title="暂无热门板块"
+            description={
+              hotSectors.length > 0 && timelyOnly
+                ? '当前没有近一周内有评分的板块，可关闭"仅看近一周"查看全部'
+                : '暂无热门板块数据'
+            }
+            className="py-6"
+          />
         )}
       </div>
 

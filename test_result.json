@@ -1,0 +1,18 @@
+{
+  "FULL_REGISTRATION_COMPLETE": false,
+  "lazy_registration_already_started_skip": false,
+  "lazy_registration_failed": false,
+  "CORE_REGISTRATION_COMPLETE": false,
+  "AGENT_READY": false,
+  "BOOTSTRAP_COMPLETE": false,
+  "BOOTSTRAP_TIMING": null,
+  "errors": [],
+  "warnings": [
+    "[WARN] [bootstrapService][安全配置] 主 LLM API Key 未配置。请在「系统设置 → 密钥管理」中配置，以启用完整功能。 {}",
+    "[WARN] [bootstrapService][安全配置] Tushare Token 未配置。请在「系统设置 → 密钥管理」中配置，以启用完整功能。 {}",
+    "[WARN] [bootstrapService][安全配置] Qwen API Key 未配置。请在「系统设置 → 密钥管理」中配置，以启用完整功能。 {}",
+    "[WARN] [bootstrapService][安全配置] 主 LLM API Key 未配置。请在「系统设置 → 密钥管理」中配置，以启用完整功能。 {}",
+    "[WARN] [bootstrapService][安全配置] Tushare Token 未配置。请在「系统设置 → 密钥管理」中配置，以启用完整功能。 {}",
+    "[WARN] [bootstrapService][安全配置] Qwen API Key 未配置。请在「系统设置 → 密钥管理」中配置，以启用完整功能。 {}"
+  ]
+}

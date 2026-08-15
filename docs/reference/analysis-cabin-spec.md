@@ -1,4 +1,5 @@
 ---
+doc_id: V9-DOC-REF-912
 title: analysis-cabin-spec
 code_version: "2.0.0-rc.1"
 tier: important
@@ -14,7 +15,7 @@ change_log:
 # Analysis 舱规格（analysis-cabin-spec）
 
 > **定位**：analysis 舱（投研分析中枢）的职责边界、页面、路由、数据流定义。补「4 舱缺 spec」缺口。
-> **权威契约**：`../../AGENTS.md` §一/§二；路由见 `./06-routing-specs.md`；总览见 `../explanation/cabins-overview.md`。
+> **权威契约**：`../../AGENTS.md` §一/§二；路由见 `../explanation/06-routing-specs.md`；总览见 `../explanation/cabins-overview.md`。
 > **状态**：✅ P0 新增（骨架版）
 
 ---
@@ -57,6 +58,6 @@ change_log:
 ## 6. 文档锚点
 
 - 总览：`../explanation/cabins-overview.md`
-- 路由：`./06-routing-specs.md`
+- 路由：`../explanation/06-routing-specs.md`
 - 组件：`./atomic-component-system.md`
 - 服务：`./services-catalog.md`（analysis / scoring / screening / backtest / stock-analysis / stockpool）

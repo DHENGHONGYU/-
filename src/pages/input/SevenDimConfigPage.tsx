@@ -111,7 +111,7 @@ function StrategyCard({
   const colorToken = COLOR_TOKENS[STRATEGY_COLOR_TOKEN[templateId]]
   return (
     <Card
-      className={`cursor-pointer transition-all duration-200 ${
+      className={`cursor-pointer transition-shadow transition-colors duration-200 ${
         isActive ? 'ring-2 ring-primary/20' : 'hover:shadow-elevation-2'
       } ${disabled ? 'pointer-events-none opacity-50' : ''}`}
       style={{ borderColor: colorToken.hex, borderWidth: isActive ? 2 : 1 }}
@@ -175,13 +175,13 @@ function DimensionRow({
   const colorBar = DIMENSION_COLORS[dim.code] ?? 'bg-tertiary'
 
   return (
-    <div className="py-3 transition-all duration-200">
+    <div className="py-3 transition-[padding] duration-200">
       <div className="flex items-start gap-3">
         {/* 维度色块 */}
-        <div className={`mt-1 h-3 w-3 shrink-0 rounded-full transition-all duration-200 ${colorBar}`} />
+        <div className={`mt-1 h-3 w-3 shrink-0 rounded-full transition-colors duration-200 ${colorBar}`} />
 
         {/* 开关 */}
-        <div className="mt-0.5 transition-all duration-200">
+        <div className="mt-0.5 transition-colors duration-200">
           <Switch
             checked={dim.enabled}
             onChange={onToggle}

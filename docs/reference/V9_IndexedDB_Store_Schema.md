@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-REF-972
+title: "V9 IndexedDB Store Schema 文档"
+domain: ref
+status: active
+last_updated: 2026-08-15
+---
+
 # V9 IndexedDB Store Schema 文档
 
 > **版本**：v21  

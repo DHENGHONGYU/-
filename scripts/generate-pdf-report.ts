@@ -11,7 +11,8 @@ import { fileURLToPath } from 'node:url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const rootDir = join(__dirname, '..')
 
-const markdownPath = join(rootDir, 'docs', 'reports', 'docs/reports/audit/2026-07-09-undocumented-files-report.md')
+// 原 <docs/reports/audit/2026-07-09-undocumented-files-report.md> 路径已归档/删除
+const markdownPath = join(rootDir, 'docs', 'reports', 'docs', 'reports', 'audit', '2026-07-09-undocumented-files-report.md')
 const pdfPath = join(rootDir, 'docs', 'reports', '2026-07-09-undocumented-files-report.pdf')
 
 async function generatePdf() {

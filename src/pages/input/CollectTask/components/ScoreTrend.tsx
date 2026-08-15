@@ -61,7 +61,7 @@ function ScoreBar({ score, date }: { score: number; date: string }): React.JSX.E
   return (
     <div className="flex-1 flex flex-col items-center gap-1">
       <div
-        className="w-full rounded-t transition-all hover:opacity-80"
+        className="w-full rounded-t transition-[height] hover:opacity-80"
         style={{ height: `${height}%`, backgroundColor: color, minHeight: '4px' }}
         title={`${date}: ${score.toFixed(2)}`}
       />

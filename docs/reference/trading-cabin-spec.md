@@ -22,7 +22,7 @@ date: 2026-07-17
 # Trading 舱规格（trading-cabin-spec）
 
 > **定位**：trading 舱（交易与持仓）的职责边界、页面、路由、数据流。补「4 舱缺 spec」缺口。
-> **权威契约**：`../../AGENTS.md`；路由见 `./06-routing-specs.md`；总览见 `../explanation/cabins-overview.md`。
+> **权威契约**：`../../AGENTS.md`；路由见 `../explanation/06-routing-specs.md`；总览见 `../explanation/cabins-overview.md`。
 > **状态**：? P0 新增（骨架版）
 
 ---
@@ -58,5 +58,5 @@ date: 2026-07-17
 ## 6. 文档锚点
 
 - 总览：`../explanation/cabins-overview.md`
-- 路由：`./06-routing-specs.md`
+- 路由：`../explanation/06-routing-specs.md`
 - 服务：`./services-catalog.md`（trading / trade / portfolio）

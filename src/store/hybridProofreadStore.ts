@@ -51,56 +51,58 @@ export const useHybridProofreadStore = create<HybridProofreadState>((set, get) =
   scanProgress: 0,
   scanStatus: 'idle',
 
-  startScan: async (projectId: string, projectName: string, projectPath: string) => {
-    if (get().isScanning) {
-      logger.warn('[HybridProofreadStore] Scan already in progress')
-      return
-    }
-
-    set({
-      isScanning: true,
-      error: null,
-      scanStatus: 'scanning',
-      scanProgress: 0,
-      report: null,
-      localScan: null,
-      cloudRisk: null,
-    })
-
-    try {
-      logger.info(`[HybridProofreadStore] Starting full proofread for project: ${projectId}`)
-
-      const result = await runFullProofread(projectId, projectName, projectPath)
-
-      if (result.success && result.report) {
-        set({
-          report: result.report,
-          localScan: result.report.local_scan,
-          cloudRisk: result.report.cloud_risk,
-          scanStatus: 'completed',
-          scanProgress: 100,
-          lastScanTime: Date.now(),
-        })
-
-        logger.info(`[HybridProofreadStore] Proofread completed`, {
-          totalIssues: result.report.total_issues,
-          riskLevel: result.report.overall_risk_level,
-        })
-      } else {
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        throw new Error(result.error || 'Unknown error during proofread')
+  startScan: (projectId: string, projectName: string, projectPath: string) => {
+    void (async () => {
+      if (get().isScanning) {
+        logger.warn('[HybridProofreadStore] Scan already in progress')
+        return
       }
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error)
-      logger.error('[HybridProofreadStore] Scan failed', { error: message })
+
       set({
-        error: message,
-        scanStatus: 'error',
+        isScanning: true,
+        error: null,
+        scanStatus: 'scanning',
         scanProgress: 0,
+        report: null,
+        localScan: null,
+        cloudRisk: null,
       })
-    } finally {
-      set({ isScanning: false })
-    }
+
+      try {
+        logger.info(`[HybridProofreadStore] Starting full proofread for project: ${projectId}`)
+
+        const result = await runFullProofread(projectId, projectName, projectPath)
+
+        if (result.success && result.report) {
+          set({
+            report: result.report,
+            localScan: result.report.local_scan,
+            cloudRisk: result.report.cloud_risk,
+            scanStatus: 'completed',
+            scanProgress: 100,
+            lastScanTime: Date.now(),
+          })
+
+          logger.info(`[HybridProofreadStore] Proofread completed`, {
+            totalIssues: result.report.total_issues,
+            riskLevel: result.report.overall_risk_level,
+          })
+        } else {
+          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+          throw new Error(result.error || 'Unknown error during proofread')
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error)
+        logger.error('[HybridProofreadStore] Scan failed', { error: message })
+        set({
+          error: message,
+          scanStatus: 'error',
+          scanProgress: 0,
+        })
+      } finally {
+        set({ isScanning: false })
+      }
+    })()
   },
 
   cancelScan: () => {
@@ -113,34 +115,36 @@ export const useHybridProofreadStore = create<HybridProofreadState>((set, get) =
     logger.info('[HybridProofreadStore] Scan cancelled')
   },
 
-  syncRules: async () => {
-    if (get().isSyncingRules) {
-      logger.warn('[HybridProofreadStore] Rules sync already in progress')
-      return
-    }
+  syncRules: () => {
+    void (async () => {
+      if (get().isSyncingRules) {
+        logger.warn('[HybridProofreadStore] Rules sync already in progress')
+        return
+      }
 
-    set({ isSyncingRules: true })
+      set({ isSyncingRules: true })
 
-    try {
-      const result: RulesSyncResult = await ruleEngine.syncRules()
+      try {
+        const result: RulesSyncResult = await ruleEngine.syncRules()
 
-      set({
-        rulesVersion: result.latest_version,
-        rules: ruleEngine.getRules(),
-      })
+        set({
+          rulesVersion: result.latest_version,
+          rules: ruleEngine.getRules(),
+        })
 
-      logger.info('[HybridProofreadStore] Rules synced', {
-        updated: result.updated,
-        version: result.latest_version,
-        ruleCount: ruleEngine.getRules().length,
-      })
-    } catch (error) {
-      logger.error('[HybridProofreadStore] Rules sync failed', {
-        error: error instanceof Error ? error.message : String(error),
-      })
-    } finally {
-      set({ isSyncingRules: false })
-    }
+        logger.info('[HybridProofreadStore] Rules synced', {
+          updated: result.updated,
+          version: result.latest_version,
+          ruleCount: ruleEngine.getRules().length,
+        })
+      } catch (error) {
+        logger.error('[HybridProofreadStore] Rules sync failed', {
+          error: error instanceof Error ? error.message : String(error),
+        })
+      } finally {
+        set({ isSyncingRules: false })
+      }
+    })()
   },
 
   refreshRules: () => {

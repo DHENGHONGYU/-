@@ -102,3 +102,20 @@ python/data_service/_test_sw_*.py
 
 # Legacy token generation (removed 2026-08-15, prevent regeneration)
 src/generated/
+
+# Temporary artifacts (cleanup 2026-08-15) — 禁止提交的运行时/调试产物
+dogfood-output/
+test-screenshots/
+test_screenshots/
+test_output/
+dispatch-round6.json
+e2e-debug-homepage.png
+finsight-v9-ui-review-delivery-v5.zip
+hook-out*.txt
+test_race_condition.py
+test_screenshot_1.png
+test_playwright.py
+test_finsight.py
+uc-error.txt
+violation-code.txt
+violation-details.txt

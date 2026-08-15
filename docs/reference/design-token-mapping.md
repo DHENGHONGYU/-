@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-REF-938
+title: "V9 设计令牌映射表"
+domain: ref
+status: active
+last_updated: 2026-08-15
+---
+
 # V9 设计令牌映射表
 
 > **文档编号**: DOC-TOKENS-002  

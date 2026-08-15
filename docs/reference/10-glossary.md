@@ -164,7 +164,7 @@ V9 采用**单表多状态**模型：所有标的统一存储在 `stocks` Store�
 | `researchStatus` | `ResearchStatus` | 所处研究阶段 |
 | `source` | `DataSource` | 数据来源 |
 | `dataVersion` | `number` | 数据版本 |
-| `dataQuality` | `object` | 数据质量 `{ basic, kline, finance, lastChecked? }`，详见 `03-architecture-standards.md` §3.7.2 |
+| `dataQuality` | `object` | 数据质量 `{ basic, kline, finance, lastChecked? }`，详见 `../explanation/03-architecture-standards.md` §3.7.2 |
 | `industryCode` | `string?` | 行业代码，用于主题映射与组合集中度控制 |
 | `theme` | `string[]?` | 主题标签，一只股票可同时属于多个主题 |
 | `sector` | `string?` | 板块/Sector 名称，用于展示与行业评分匹配 |

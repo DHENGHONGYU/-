@@ -23,7 +23,7 @@ import { dirname } from 'node:path'
  * import { safeWriteFileSync } from '@/lib/safeFs'
  *
  * // 自动创建 docs/reports/ 目录
- * safeWriteFileSync('docs/reports/report-2026-08-08.md', content)
+ * safeWriteFileSync('docs/reports/<your-report>.md', content)  // 示例路径，实际文件不存在
  * ```
  */
 export function safeWriteFileSync(

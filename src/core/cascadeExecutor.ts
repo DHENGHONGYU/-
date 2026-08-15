@@ -177,7 +177,7 @@ class CascadeExecutor {
   private indexToField(indexName: string): string {
     const base = indexName.replace(/^by-/, '')
     // kebab-case 转 camelCase: workflow-id → workflowId
-    return base.replace(/-([a-z])/g, (_, c) => c.toUpperCase())
+    return base.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())
   }
 
   /**

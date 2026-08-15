@@ -22,9 +22,7 @@ import type { BuyPointType, SellPointType } from '@/types/modules/buySellPoint.t
 const BUY_TYPES_ORDER: BuyPointType[] = [
   'buy_pivot',
   'buy_breakout',
-  'buy_turning',
   'buy_dip',
-  'buy_divergence',
   'buy_safety_margin',
   'composite_buy',
 ]

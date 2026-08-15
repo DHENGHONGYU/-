@@ -28,6 +28,23 @@
 
 - `src/main.tsx` —— 从 120 行内联验证逻辑简化为 2 行：`import { verifyDesignTokensOnReady }` + `verifyDesignTokensOnReady()`
 - `src/store/themeStore.ts` —— `applyTheme()` 函数在主题切换后通过 `requestAnimationFrame` 延迟一帧自动调用 `verifyDesignTokens()`，覆盖 setMode / toggleTheme / cycleMode / system listener / rehydrate 全部 5 条主题切换路径
+- **颜色契约统一（文档→代码对齐）**：品牌主色从文档描述"翡翠绿 #0D9165"统一为代码真相源"Apple Blue #007AFF（`--primary: 210 100% 50%`）"，消除跨 9 个文件的双线叙事。宋瓷语义色（汝窑天青、官窑粉青等）降级为装饰性扩展，不参与功能语义。涉及文件：
+  - `docs/specs/04-ui-ux-specs.md`（v2.5.0 → v2.6.0）—— 主色、CSS 变量（含浅色/暗色双模）、设计原则全部对齐 V5 Apple Business Design；Widget 状态与图表组件状态标注由"?? 未实现"更正为"✅ 已实现"
+  - `AGENTS.md` —— 单一克制强调色描述 + 令牌管线一致性描述更新
+  - `prompts/component-prompt-template.md` —— 设计体系描述更新
+  - `docs/explanation/a11y-contrast-report.md` —— 重点颜色 + 色板体系更新
+  - `docs/explanation/adr-005-portalshell-dark-kimi-layout.md` —— 品牌色体系描述更新
+  - `docs/reference/architecture-version-comparison.md` —— PortalShell 主题对比更新
+  - `docs/meta/functional-module-guide.md` —— 开发约定 #3 更新
+  - `docs/assets/team-handbook-html/01-design-philosophy.html` —— 亮色强调色更新
+  - `docs/guides/how-to/COLOR-TOKEN-GUIDE.md` —— 颜色令牌指南更新（移除已废弃 `generate:tokens` 命令，强调色从 emerald 更新为 Apple Blue）
+  - `UI-Design-Review-Report.md` —— 追加修复状态标注
+
+- **UI 优化 P0-P1 任务执行**（2026-08-15）：
+  - **P0 死代码删除**：`src/theme.config.ts`（@deprecated，全仓 0 引用）；`src/components/molecules/AppErrorState.tsx` + `AppErrorState.test.tsx`（100% 代码重复，0 引用）
+  - **P1 字体迁移**：`text-2xl` → `text-h1`（69 处/31 文件）、`text-xl` → `text-h2`（36 处/16 文件），统一为项目自定义排版阶梯（h1: 1.5rem/lh 1.25/w700, h2: 1.25rem/lh 1.3/w600）。涉及 44 个唯一文件共 105 处替换
+  - **P1 Agent 预热优化**：`src/App.tsx` 启动静默预热 fallback 从 10 秒缩短至 3 秒，加速 Agent 就绪
+  - **P1 sidebarConfig 确认**：`src/config/sidebarConfig.ts` 已存在，`PortallShell.tsx` 已正确引用，无需额外操作
 
 ### Removed
 

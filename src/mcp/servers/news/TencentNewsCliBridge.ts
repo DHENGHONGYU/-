@@ -30,6 +30,9 @@ import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
 
+/** 非零退出时错误 tail 的最大展示长度（字符） */
+const ERROR_TAIL_MAX_CHARS = 300
+
 /** CLI 调用错误分类 */
 export type CliErrorKind = 'spawn' | 'timeout' | 'nonzero' | 'empty' | 'unavailable'
 
@@ -41,6 +44,15 @@ export class CliError extends Error {
     this.name = 'CliError'
     this.kind = kind
   }
+}
+
+/** 渲染进程经 preload 暴露的腾讯新闻 IPC 调用入口（Electron main 承载 CLI） */
+interface TencentNewsIpcApi {
+  invoke: (command: string, args: string) => Promise<string>
+  health: () => Promise<{ available: boolean; bin: string; note: string }>
+}
+interface WindowWithTencentNews {
+  tencentnews?: TencentNewsIpcApi
 }
 
 /**
@@ -106,6 +118,9 @@ export class TencentNewsCliBridge {
    * @throws {CliError} spawn 失败 / 超时 / 非零退出 / 空输出 / 非 Node 环境
    */
   async invoke(command: string, args = ''): Promise<string> {
+    // Electron 渲染进程无 child_process：优先走 preload 暴露的 IPC 入口（main 进程承载 CLI）
+    const ipc = this.resolveIpcTarget()
+    if (ipc) return ipc(command, args)
     const cp = await this.loadChildProcess()
     const argv = [command, ...this.tokenize(args)]
     const bin = this.resolveBin()
@@ -128,6 +143,7 @@ export class TencentNewsCliBridge {
    * 供 check_health / 资源解析使用，不真正拉数。
    */
   async isAvailable(): Promise<boolean> {
+    if (this.resolveIpcTarget()) return true
     try {
       await this.loadChildProcess()
     } catch {
@@ -140,6 +156,13 @@ export class TencentNewsCliBridge {
     } catch {
       return false
     }
+  }
+
+  /** 解析 Electron 渲染进程经 preload 暴露的腾讯新闻 IPC 调用入口（无则 null → 走 child_process/降级） */
+  private resolveIpcTarget(): ((command: string, args: string) => Promise<string>) | null {
+    const g = globalThis as unknown as { window?: WindowWithTencentNews }
+    const api = g.window?.tencentnews?.invoke
+    return typeof api === 'function' ? api : null
   }
 
   // ── 内部方法 ──
@@ -219,7 +242,7 @@ export class TencentNewsCliBridge {
           resolve(out)
         } else {
           const tailBuf = errChunks.length > 0 ? Buffer.concat(errChunks) : out
-          const tail = decodeCliBytes(tailBuf).slice(-300)
+          const tail = decodeCliBytes(tailBuf).slice(-ERROR_TAIL_MAX_CHARS)
           reject(new CliError(`CLI 非零退出 code=${String(code)}：${tail}`, 'nonzero'))
         }
       })

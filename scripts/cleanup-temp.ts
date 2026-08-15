@@ -2,7 +2,7 @@
 /**
  * cleanup-temp.ts — 按保留期清理 temp/ 下的临时产物
  *
- * 保留策略（来源：docs/how-to/FILE-MANAGEMENT-GUIDE.md §6.2）：
+ * 保留策略（来源：docs/guides/how-to/FILE-MANAGEMENT-GUIDE.md §6.2）：
  *   .log           7 天
  *   .json / .txt   14 天
  *   .test.ts       1 天（验证完成后应立即删除，此处兜底）

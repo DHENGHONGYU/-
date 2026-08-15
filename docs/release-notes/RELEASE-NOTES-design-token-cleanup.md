@@ -25,7 +25,7 @@
 
 项目存在两套并行令牌系统：
 - **V5 Apple Business**（`src/index.css`）：主色 `#007AFF`、背景 `#F2F2F7`、16px 圆角
-- **旧版 slate**（`src/generated/tokens.css`）：暗色 primary `#157958`（翡翠绿），与 Apple Blue 冲突
+- **旧版 slate**（src/generated/tokens.css）：暗色 primary `#157958`（翡翠绿），与 Apple Blue 冲突
 
 暗色模式切换时存在色值错乱风险。
 
@@ -33,9 +33,9 @@
 
 | 文件 | 类型 | 操作 |
 |------|------|------|
-| `src/generated/tokens.css` | 旧版 slate 色彩令牌（178 行） | 已删除 |
-| `src/generated/tokens.ts` | 旧版 TypeScript 常量 | 已删除 |
-| `scripts/generate-tokens.ts` | 令牌自动生成器 | 已删除 |
+| src/generated/tokens.css | 旧版 slate 色彩令牌（178 行） | 已删除 |
+| src/generated/tokens.ts | 旧版 TypeScript 常量 | 已删除 |
+| scripts/generate-tokens.ts | 令牌自动生成器 | 已删除 |
 | `design-tokens/tokens.json` | 旧版令牌源数据 | 已删除 |
 | `package.json` `prebuild` 钩子 | `generate:tokens` 调用 | 已移除 |
 | `src/main.tsx` `import` | `import './generated/tokens.css'` | 已移除 |
@@ -236,9 +236,9 @@ DEV 守卫验证通过，生产环境零运行时开销。
 
 | 文件 | 说明 |
 |------|------|
-| `src/generated/tokens.css` | 旧版 slate 色彩令牌 |
-| `src/generated/tokens.ts` | 旧版 TypeScript 常量 |
-| `scripts/generate-tokens.ts` | 令牌自动生成器 |
+| src/generated/tokens.css | 旧版 slate 色彩令牌 |
+| src/generated/tokens.ts | 旧版 TypeScript 常量 |
+| scripts/generate-tokens.ts | 令牌自动生成器 |
 | `design-tokens/tokens.json` | 旧版令牌源数据 |
 
 ---

@@ -535,7 +535,7 @@ git commit -m "feat(blueprint): add automated blueprint consistency scanner"
 
 **Files:**
 - Modify: `.github/workflows/ci.yml` 或等效 CI 配置（若存在；当前项目无此文件则跳过 Step 1）
-- Modify: `./08-implementation-plan.md`
+- Modify: `../guides/08-implementation-plan.md`
 
 - [ ] **Step 1: 在 CI 中增加蓝图校验步骤（如 CI 存在）**
 
@@ -546,7 +546,7 @@ git commit -m "feat(blueprint): add automated blueprint consistency scanner"
 
 - [ ] **Step 2: 在实现计划文档中引用蓝图**
 
-在 `./08-implementation-plan.md` 顶部追加：
+在 `../guides/08-implementation-plan.md` 顶部追加：
 
 ```markdown
 ## 数据关系与时间关系蓝图
@@ -591,7 +591,7 @@ git commit -m "docs(blueprint): integrate blueprint into dev workflow and CI"
 **4. Known gaps discovered during planning (resolved in execution):**
 - ~~`news_bookmarks` Store 已在 `STORE_NAME` 中定义，但 `src/data/types.ts` 中缺少对应的 `NewsBookmark` TypeScript 接口~~ → 已迁移 `src/store/analysisNewsStore.ts` 的 `NewsBookmarkRecord` 到 `src/data/types.ts` 的 `NewsBookmark`。
 - ~~`./v9-数据血缘追踪.md` 标注 `DB_VERSION = 15`，而 `src/config/dbConfig.ts` 实际导出 `DB_VERSION = 14`~~ → 已修正文档为 DB_VERSION = 14。
-- 项目当前无 `.github/workflows/ci.yml`，Task 6 的 CI 步骤为条件性，仅当 CI 配置存在时追加；否则仅更新 `./08-implementation-plan.md`。
+- 项目当前无 `.github/workflows/ci.yml`，Task 6 的 CI 步骤为条件性，仅当 CI 配置存在时追加；否则仅更新 `../guides/08-implementation-plan.md`。
 
 ---
 

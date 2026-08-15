@@ -56,7 +56,7 @@ function HistoryBar({ ratio }: { ratio: number }): React.JSX.Element {
   return (
     <div className="h-2 w-full overflow-hidden rounded-full" style={{ backgroundColor: `rgba(${COLOR_TOKENS.success.rgb}, 0.12)` }}>
       <div
-        className="h-full rounded-full transition-all"
+        className="h-full rounded-full transition-[width]"
         style={{ width: `${Math.round(ratio * 100)}%`, backgroundColor: color }}
       />
     </div>

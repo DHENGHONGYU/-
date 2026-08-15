@@ -356,7 +356,7 @@ archive/
 | **P1** | `./directory-structure-guide.md` | directory-structure-guide.md | 目录结构规范、命名规则、归档流程 | 全文 |
 | **P1** | `./governance.md` | governance.md | 文档治理规范、版本控制策略 | §七 |
 | **P1** | `../reference/api-contract.md` | api-contract.md | API 契约定义、接口规范 | §3.6 |
-| **P1** | `../reference/06-routing-specs.md` | 06-routing-specs.md | 路由规范、页面注册规则 | §4.3 |
+| **P1** | `../explanation/06-routing-specs.md` | 06-routing-specs.md | 路由规范、页面注册规则 | §4.3 |
 | **P1** | `../how-to/code-review-guide.md` | code-review-guide.md | 代码审查规范、检查清单 | §8.2 |
 | **P2** | `../reference/jsdoc-convention.md` | jsdoc-convention.md | JSDoc 编写规范 | §3.3 |
 | **P2** | `../explanation/quality-gates-baseline.md` | quality-gates-baseline.md | 质量门禁基线、阈值标准 | §4.2 |

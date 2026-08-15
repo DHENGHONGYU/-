@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-GUIDE-033
+title: "03 · UI 组件设计思路（UI Component Design）"
+domain: guide
+status: active
+last_updated: 2026-08-15
+---
+
 # 03 · UI 组件设计思路（UI Component Design）
 
 > 本文回答"**UI 怎么写、怎么复用**"。权威基线：`docs/reference/atomic-component-system.md`、`docs/reference/../reference/ui-migration-checklist.md`、`docs/reference/widget-integration-checklist.md`、`docs/reference/design-token-mapping.md`、`eslint.colors.config.js`、`docs/reference/jsdoc-convention.md`、`docs/reference/complexity-governance.md`。
@@ -62,7 +70,7 @@
 ### 4.1 lint:colors（强制令牌）
 - 配置：`eslint.colors.config.js` + `eslint-rules/no-hardcoded-colors.js`（level: error）。
 - 检测：HEX / RGB / HSL 字符串与模板字面量；Tailwind 数字色类 `text|bg|border|ring|from|to|via-{red|blue|…}-\d{2,3}`。
-- 豁免：`src/constants/theme.tokens.ts`、`src/config/chartColors.ts`、`src/config/themeRegistry.ts`、`src/theme.config.ts`、`src/generated/*`、`tests/`。
+- 豁免：`src/constants/theme.tokens.ts`、`src/config/chartColors.ts`、`src/config/themeRegistry.ts`、`src/theme.config.ts`、`src/index.css`（V5 令牌唯一真相源）、`tests/`。
 
 ### 4.2 红涨绿跌固定色（最重要例外）
 所有个股/指数/ETF 涨跌幅必须用 `STOCK_COLOR_TOKENS`；**暗色模式不变**；禁止用 `COLOR_TOKENS.up/down` 替代。`cockpit.constants.ts` 的 `STOCK_COLOR_MAPPING` 已 `@deprecated`，改用 `STOCK_COLOR_TOKENS`。

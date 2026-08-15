@@ -227,6 +227,6 @@ componentDidCatch(error: Error, info: ErrorInfo) {
 ## 7. 相关链接
 
 - `./v9-system-blueprint.md` §7.1、§9、D19
-- `./04-ui-ux-specs.md` §4.5（ErrorBoundary 组件清单）
+- `../specs/04-ui-ux-specs.md` §4.5（ErrorBoundary 组件清单）
 - `./feedback-loop-spec.md` §6
 - `./chart-integration.md` §5.3（图表渲染错误处理）

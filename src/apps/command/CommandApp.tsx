@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router'
+import { PageHeader } from '@/components/templates'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { getLogger } from '@/lib/logger'
@@ -25,6 +26,7 @@ const ComponentShowcasePage = React.lazy(() => import('@/pages/command/showcase/
 const HealthDashboardPage = React.lazy(() => import('@/pages/command/health/HealthDashboardPage'))
 const StressOverviewPage = React.lazy(() => import('@/pages/command/test/StressOverviewPage'))
 const SystemHealthPanel = React.lazy(() => import('@/pages/command/SystemHealthPanel'))
+const MCPServerDashboardPage = React.lazy(() => import('@/pages/command/MCPServerDashboardPage'))
 
 /**
  * 总控舱子路由分发
@@ -42,9 +44,8 @@ const SystemHealthPanel = React.lazy(() => import('@/pages/command/SystemHealthP
  *
  * 路由映射：
  * - /command/config → ConfigApp（懒加载）
- * - /command（默认） → 系统监控面板
- *
- * 注意：/command/agents 由 PortalShell 通过 isAgentPath 单独处理，不在此分发。
+ * - /command/agents → 由 PortalShell 通过 isAgentPath 单独处理，此处 fallback 到 Hub 首页
+ * - /command（默认） → 总控舱 Hub 首页
  */
 const BRANCH_INFO: Record<string, { branch: string; componentName: string }> = {
   '/command/hub': { branch: 'hub', componentName: 'CommandHubPage' },
@@ -54,6 +55,8 @@ const BRANCH_INFO: Record<string, { branch: string; componentName: string }> = {
   '/command/showcase': { branch: 'showcase', componentName: 'ComponentShowcasePage' },
   '/command/health': { branch: 'health', componentName: 'HealthDashboardPage' },
   '/command/test': { branch: 'stress', componentName: 'StressOverviewPage' },
+  '/command/agents': { branch: 'agents', componentName: 'CommandHubPage' },
+  '/command/mcp-servers': { branch: 'mcp-servers', componentName: 'MCPServerDashboardPage' },
 }
 
 function renderCommandContent(path: string): React.ReactNode {
@@ -96,12 +99,17 @@ function renderCommandContent(path: string): React.ReactNode {
           <StressOverviewPage />
         </React.Suspense>
       )
-    default:
+    case '/command/agents':
+      // /command/agents 由 PortalShell 通过 isAgentPath 单独处理，此处作为 fallback
+      return <CommandHubPage />
+    case '/command/mcp-servers':
       return (
-        <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载系统监控中...</div>}>
-          <SystemMonitorPage />
+        <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载 MCP 服务面板中...</div>}>
+          <MCPServerDashboardPage />
         </React.Suspense>
       )
+    default:
+      return <CommandHubPage />
   }
 }
 
@@ -119,7 +127,7 @@ export default function CommandApp(): React.JSX.Element {
       logger.info('[CommandApp] 路由切换', { from: prevPath, to: path })
     }
 
-    const { branch, componentName } = BRANCH_INFO[path] ?? { branch: 'default', componentName: 'SystemMonitorPage' }
+    const { branch, componentName } = BRANCH_INFO[path] ?? { branch: 'default', componentName: 'CommandHubPage' }
 
     logger.info('[CommandApp] 渲染总控舱', {
       path,
@@ -135,29 +143,20 @@ export default function CommandApp(): React.JSX.Element {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-10 border-b bg-background/95 px-4 py-3 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-              <Settings className="h-4 w-4" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold">总控舱</h1>
-              <p className="text-xs text-muted-foreground hidden sm:block">
-                系统监控 · 配置管理 · 智能体调度 · MCP 服务
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
+      <PageHeader
+        title="总控舱"
+        description="系统监控 · 配置管理 · 智能体调度 · MCP 服务"
+        actions={
+          <>
             <Button variant="ghost" size="sm" className="rounded-full" asChild>
               <Link to="/cockpit">驾驶舱</Link>
             </Button>
             <Button variant="secondary" size="sm" className="rounded-full" asChild>
               <Link to="/">返回首页</Link>
             </Button>
-          </div>
-        </div>
-      </header>
+          </>
+        }
+      />
       <main className="mx-auto max-w-7xl p-4">{content}</main>
     </div>
   )
@@ -223,7 +222,7 @@ function CommandHubPage(): React.JSX.Element {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">总控舱</h1>
+        <h1 className="text-h1 font-bold tracking-tight">总控舱</h1>
         <p className="text-muted-foreground">系统监控 · 配置管理 · 智能体调度 · MCP 服务</p>
       </div>
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

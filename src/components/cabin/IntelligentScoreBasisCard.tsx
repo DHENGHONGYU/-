@@ -2,7 +2,14 @@ import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
+import { cn } from '@/lib/utils'
 import type { IntelligentScore, ResearchLog } from '@/data/types'
+
+function getScoreColorClass(score: number): string {
+  if (score >= 4.0) return 'text-[hsl(var(--stock-up))]'
+  if (score >= 3.0) return 'text-primary'
+  return 'text-[hsl(var(--stock-down))]'
+}
 
 const MAX_LOG_ENTRIES = 10
 
@@ -164,7 +171,7 @@ export function IntelligentScoreBasisCard({ result, history, logs }: Props): Rea
                           />
                         </td>
                         <td className="px-3 py-2">{new Date(record.scoredAt).toLocaleString()}</td>
-                        <td className="px-3 py-2">{record.overallScore?.toFixed(2) ?? 'N/A'}</td>
+                        <td className={cn('px-3 py-2', record.overallScore != null && getScoreColorClass(record.overallScore))}>{record.overallScore?.toFixed(2) ?? 'N/A'}</td>
                         <td className="px-3 py-2">
                           {overallDelta !== null ? (
                             <span className={overallDelta > 0 ? 'text-success' : overallDelta < 0 ? 'text-destructive' : ''}>
@@ -235,7 +242,7 @@ export function IntelligentScoreBasisCard({ result, history, logs }: Props): Rea
                       <tr className="border-t bg-muted/50">
                         <td className="px-3 py-2 font-medium">综合分</td>
                         {selectedRecords.map((record) => (
-                          <td key={getRecordId(record)} className="px-3 py-2 font-medium">
+                          <td key={getRecordId(record)} className={cn('px-3 py-2 font-medium', record.overallScore != null && getScoreColorClass(record.overallScore))}>
                             {record.overallScore?.toFixed(2) ?? 'N/A'}
                           </td>
                         ))}

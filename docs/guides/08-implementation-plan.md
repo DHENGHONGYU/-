@@ -1,4 +1,5 @@
 ---
+doc_id: V9-DOC-GUIDE-024
 title: 08-implementation-plan
 tier: important
 code_version: "2.0.0-rc.1"
@@ -182,7 +183,7 @@ change_log:
 
 ## 5. Phase 4：发布准备（v1.0.0）
 
-- [ ] 完整功能验收（对照 `02-functional-specs.md` 与 `09-quality-gates.md`）。
+- [ ] 完整功能验收（对照 `../specs/02-functional-specs.md` 与 `09-quality-gates.md`）。
 - [ ] 文档更新：确保所有 `docs/` 与代码一致，`../../../CHANGELOG.md` 更新到 v1.0.0。
 - [ ] 数据迁移测试：从 v0.9.0 数据导出 → v1.0.0 导入，验证无丢失。
 - [ ] 离线可用性验证：断网后核心页面可加载、数据可读取、评分可运行。

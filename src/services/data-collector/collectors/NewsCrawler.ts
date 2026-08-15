@@ -108,7 +108,7 @@ export class NewsCrawler extends BaseCollector {
   private async collectSentiment(symbol: string): Promise<RawMarketData> {
     logger.info('[NewsCrawler] 开始情感分析', { symbol })
 
-    const news = this.newsCache.get(symbol) || this.generateMockNews(symbol)
+    const news = this.newsCache.get(symbol) ?? this.generateMockNews(symbol)
     const sentiment = this.analyzeSentiment(news)
 
     logger.info('[NewsCrawler] 情感分析完成', { symbol, sentiment: sentiment.score })
@@ -131,7 +131,7 @@ export class NewsCrawler extends BaseCollector {
         source: sources[0]!.name,
         sourceUrl: sources[0]!.baseUrl,
         url: `${sources[0]!.baseUrl}/article/${Date.now()}`,
-        publishedAt: Date.now() - 3600000,
+        publishedAt: Date.now() - 1 * HOUR_MS,
         sentiment: this.analyzeTextSentiment(`${stockName}发布季度财报，业绩超预期35%`),
         keywords: ['财报', '业绩', '超预期'],
         category: 'financial',
@@ -139,11 +139,11 @@ export class NewsCrawler extends BaseCollector {
       {
         id: `news_${Date.now()}_2`,
         title: '行业政策利好，相关板块集体上涨',
-        summary: '国家出台相关政策利好，行业迎来发展新机遇，板块内个股普遍上涨。',
+        summary: '近期行业政策密集出台，预计相关板块将迎来估值修复行情。',
         source: sources[1]!.name,
         sourceUrl: sources[1]!.baseUrl,
         url: `${sources[1]!.baseUrl}/news/${Date.now()}`,
-        publishedAt: Date.now() - 7200000,
+        publishedAt: Date.now() - 2 * HOUR_MS,
         sentiment: this.analyzeTextSentiment('行业政策利好，相关板块集体上涨'),
         keywords: ['政策', '利好', '板块'],
         category: 'policy',
@@ -203,7 +203,7 @@ export class NewsCrawler extends BaseCollector {
         targetPrice: this.generateTargetPrice(),
         analyst: analysts[0]!,
         institution: institutions[0]!,
-        publishDate: new Date(Date.now() - 86400000).toISOString().split('T')[0]!,
+        publishDate: new Date(Date.now() - 1 * DAY_MS).toISOString().split('T')[0]!,
         summary: `${stockName}基本面稳健，盈利能力持续提升。预计未来三年净利润复合增长率达25%，给予买入评级。`,
         keyPoints: ['盈利能力持续提升', '市场份额稳步增长', '估值合理'],
         industry: this.getIndustry(symbol),
@@ -306,7 +306,7 @@ export class NewsCrawler extends BaseCollector {
       '600519': '贵州茅台',
       '688981': '中芯国际',
     }
-    return nameMap[symbol.replace(/\.[A-Z]+$/, '')] || `股票${symbol}`
+    return nameMap[symbol.replace(/\.[A-Z]+$/, '')] ?? `股票${symbol}`
   }
 
   /**
@@ -323,7 +323,7 @@ export class NewsCrawler extends BaseCollector {
       '600519': '白酒',
       '688981': '半导体制造',
     }
-    return industryMap[symbol.replace(/\.[A-Z]+$/, '')] || '未知行业'
+    return industryMap[symbol.replace(/\.[A-Z]+$/, '')] ?? '未知行业'
   }
 
   /**

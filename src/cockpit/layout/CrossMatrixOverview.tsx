@@ -175,7 +175,7 @@ function FragmentRow({
       {/* 单元格 */}
       {COCKPIT_CROSS_PERSPECTIVES.map((p) => {
         const key = `${domain.id}:${p.id}`
-        const count = matrixCounts.get(key) || 0
+        const count = matrixCounts.get(key) ?? 0
         const titles = matrixTitles.get(key) ?? []
         const isActiveCell = isActiveRow && activePerspective === p.id
         const tooltip =

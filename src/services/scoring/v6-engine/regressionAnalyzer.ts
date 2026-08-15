@@ -27,7 +27,7 @@ function transpose(m: readonly (readonly number[])[]): number[][] {
   if (m.length === 0) return []
   const rows = m.length
   const cols = m[0]?.length ?? 0
-  const result: number[][] = Array.from({ length: cols }, () => new Array(rows).fill(0))
+  const result: number[][] = Array.from({ length: cols }, () => new Array<number>(rows).fill(0))
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       result[j]![i] = m[i]![j] ?? 0
@@ -41,7 +41,7 @@ function multiply(a: readonly (readonly number[])[], b: readonly (readonly numbe
   const rowsA = a.length
   const colsA = a[0]?.length ?? 0
   const colsB = b[0]?.length ?? 0
-  const result: number[][] = Array.from({ length: rowsA }, () => new Array(colsB).fill(0))
+  const result: number[][] = Array.from({ length: rowsA }, () => new Array<number>(colsB).fill(0))
   for (let i = 0; i < rowsA; i++) {
     for (let j = 0; j < colsB; j++) {
       let sum = 0
