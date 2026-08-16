@@ -1,5 +1,5 @@
 ---
-name: "v9-constant-migration"
+name: "constant-migration"
 description: "迁移跨层重复常量（如股票池 RESEARCH_STATUS / DEFAULT_POOL_GROUP），将业务常量归位到 src/constants/，消除 config 层与 constants 层的重复定义，并批量修复导入路径、测试 mock 与文档注释。Invoke when user asks to migrate constants between layers, eliminate duplicate constant definitions, move business constants from src/config to src/constants, or clean up stockpool constant duplication."
 version: v1.0.0
 last_updated: 2026-08-11

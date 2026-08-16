@@ -127,3 +127,6 @@ tools/*.zip
 tmp_audit_*.txt
 test_result.json
 test_screenshot_*.png
+
+# P2 skill mirror — WorkBuddy 加载用副本（由 .agents/skills/ 拷贝，非源，避免重复提交）
+.workbuddy/skills/

@@ -32,8 +32,8 @@ gates: []
 - 发现 `DataBridge.forward()` 报 `Unknown action` 或 `ACL_PERMISSION_DENIED`
 - 怀疑存在 `dataLayer.stocks` / `dataLayer.v6Scores` 等直接访问遗留代码
 
+gates: []
 ---
-
 ## 二、执行前检查清单
 
 1. **确认当前 DB_VERSION 与 Store 总数**：读取 `src/config/dbConfig.ts` 中 `DB_VERSION`、`STORE_NAME`。

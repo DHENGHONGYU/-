@@ -10,8 +10,12 @@
 - `TencentNewsCliBridge` **不是孤儿**：`tencentNewsServer.ts:18/138/155/171` 真实消费，NewsServer 与 WeStockServer 是平行 MCP Server。**禁止误删**。
 - 真实优化项（非阻塞）：抽取 `BaseCliBridge` 供 WestockCliBridge/TencentNewsCliBridge 共用。
 
-## 治理缺口（待对齐）
-- AGENTS.md 技能路由表引用 `v9-collection-pipeline-testing`（mandatory）等 L1 物理技能，但本环境 Skill 索引**未安装**（Skill 调用报 "Can not find skill"）。相关门禁（tsc:prod/audit:layers/vitest）暂以手动执行等效替代。
+## 技能治理（已闭环·2026-08-16）
+- **权威真相源是 `skill-registry.json`**：`projectPhysicalSkills`（18，自然 slug，无 v9- 前缀）= 真正的本地 `.agents/skills/*` 物理技能；`virtualPlatformSkills`（19，v9-* 名）= TRAE CN 平台虚拟技能，**设计上无本地 SKILL.md**（非"缺失"）；`externalPluginSkills`（9）。合计 46。
+- **AGENTS.md L1 索引曾把 19 个虚拟 v9-* 谎称为"L1 物理"**——这是唯一真实错位；已重写为 18 自然名物理技能。勿再据 AGENTS.md 旧索引判定"v9-* 物理缺失"。
+- **WorkBuddy 加载器只扫 `.workbuddy/skills/`，不扫 `.agents/skills/`**：已将 18 物理技能镜像（cp -r）至 `.workbuddy/skills/`（Windows 不支持 symlink），`.gitignore` 已忽略该镜像目录。漂移自愈：`npm run skill:mirror`（`scripts/skill-mirror.cjs`，覆盖式镜像+清理孤儿）；`.agents/skills/*` 更新后跑一次即可。
+- `collection-pipeline-testing`（数据采集 mandatory 门禁）是本轮唯一新增物理技能（由虚拟转物理，自然名）。
+- **frontmatter 声明失真（已闭环）**：实测物理 SKILL.md 仅用 `name`/`description`/`version`/`last_updated`/`change_log`，无 `triggers`/`gates`/`mandatory` 三字段；AGENTS.md L65 已纠正——该三字段机器可读真相源指向 `skill-registry.json`。勿再据 AGENTS.md 旧路由表声称"SKILL.md 含三字段"。
 
 ## 门禁真值基线（勿被过时报告误导）
 - `tsc:prod` 全量仍含 `src/components/chart/**` 8 处既有未提交错误（与 MCP 整合无关），本任务相关 src/electron 文件 0 错误。

@@ -1,5 +1,5 @@
 ---
-name: "v9-collection-pipeline-testing"
+name: "collection-pipeline-testing"
 description: "数据采集管线（data-collector）端到端测试与门禁。Invoke when 改动 src/services/data-collector/**、src/store/sevenDimConfigStore.ts、src/types/modules/collection.types.ts，或相关 vitest 失败；用于验证采集主链路（多源编排、MCP 源接入、CLI 桥接、降级与计分）在类型安全、层合规与真实取数层面的完整性。"
 version: v1.0.0
 last_updated: 2026-08-16

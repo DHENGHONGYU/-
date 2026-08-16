@@ -37,30 +37,36 @@ change_log:
 >
 > **文档与复杂度规范**：为提升代码可维护性，新增公共函数、组件、Hook、Store 必须补充 JSDoc（见 `docs/03-development/jsdoc-convention.md`）；新增代码应避免深层嵌套、长链式条件与过长函数（见 `docs/03-development/complexity-governance.md`）。
 >
-> **项目级 SKILL 索引**（三层分离，单一真相源见 `.trae/skills/skill-registry.json`，合计 45 项；MAND=mandatory 强制，adv=advisory 建议）：
-> - **L1 项目物理技能（16 项）**：物理存放目录 `.agents/skills/*/SKILL.md`（非 `.trae/skills/`；`.trae/skills/` 仅存放 INDEX.md 与 skill-registry.json 索引文件，无技能本体）。按业务域分五类：
->   - **文档治理 doc-governance（4）**：`v9-doc-encoding-remediation`（adv）、`stale-path-reference-audit`（adv）、`cross-index-governance`（MAND）、`doc-management-principles`（adv）
->   - **代码质量 code-quality（8）**：`v9-module-sync-checklist`（MAND）、`v9-bash-conventions`（adv）、`v9-tsc-gate-scope-audit`（adv）、`v9-tsc-test-error-diagnosis`（adv）、`v9-health-audit`（adv）、`v9-code-quality-audit`（MAND）、`v9-dev-checklist`（adv）、`v9-color-token-remediation`（adv）
->   - **数据流 data-flow（3）**：`v9-collection-pipeline-testing`（MAND）、`v9-data-flow-integrity-audit`（MAND）、`v9-mock-data-diagnosis`（adv）
->   - **部署运维 devops（1）**：`v9-windows-env-path-doctor`（adv）
->   - **架构治理 architecture（4）**：`v9-databridge-migration`（MAND）、`architecture-debt-remediation`（MAND）、`component-health-check`（adv）、`v9-constant-migration`（MAND）
+> **项目级 SKILL 索引**（三层分离，单一真相源见 `.trae/skills/skill-registry.json`，合计 46 项；MAND=mandatory 强制，adv=advisory 建议）：
+> - **L1 项目物理技能（18 项）**：物理存放目录 `.agents/skills/*/SKILL.md`（非 `.trae/skills/`；`.trae/skills/` 仅存放 INDEX.md 与 skill-registry.json 索引文件，无技能本体）。按 registry `categoriesStats` 分十一类（名称均为自然 slug，无 `v9-` 前缀）：
+>   - **架构治理 architecture（4）**：`architecture-cleanup`（adv）、`architecture-radar-scan`（adv）、`constant-migration`（MAND）、`databridge-migration`（MAND）
+>   - **数据库治理 db-governance（1）**：`db-reference-audit`（adv）
+>   - **文档治理 doc-governance（2）**：`doc-freshness-governance`（MAND）、`docs-as-mirror`（adv）
+>   - **特性运行时 feature-runtime（1）**：`feature-window-context-doc`（adv）
+>   - **行业评分 industry-score（2）**：`industry-score`（adv）、`industry-score-mapping`（adv）
+>   - **V6 分析 v6-analysis（3）**：`intelligent-score`（adv）、`v6-docx-output`（adv）、`v6-stock-analysis-model`（adv）
+>   - **MCP 安全 mcp-security（1）**：`mcp-ui-acl-authorization`（adv）
+>   - **板块分析 sector-analysis（1）**：`sector-analysis-framework`（adv）
+>   - **类型安全 type-safety（1）**：`type-safety-contract`（adv）
+>   - **估值 valuation（1）**：`valuation-financial-analysis`（adv）
+>   - **数据流 data-flow（1）**：`collection-pipeline-testing`（MAND）
 > - **L2 外部插件技能（9 项）**：物理存放目录 `plugins/*/skills/*/SKILL.md`；由 TRAE CN 插件加载，不在 `.agents/skills/` 中重复复制。
-> - **L3 平台内置虚拟技能（20 项）**：定义于 AGENTS.md §平台内置虚拟 SKILL 索引（L38-L43），由 TRAE CN 平台内置，无本地物理目录。
-> - **禁止混加计数**：L1（16）+ L2（9）+ L3（20）= 45 条登记，任何声明不得绕过此分层。
+> - **L3 平台内置虚拟技能（19 项）**：定义见 `.trae/skills/skill-registry.json` 的 `virtualPlatformSkills`（本索引仅计项数，不重复枚举；其 `v9-*` 为 TRAE CN 平台内置，无本地物理目录）。注：`collection-pipeline-testing` 已于 2026-08-16 由 L3 虚拟转为 L1 物理，故虚拟由 20 降为 19。
+> - **禁止混加计数**：L1（18）+ L2（9）+ L3（19）= 46 条登记，任何声明不得绕过此分层。
 
-> ⚠️ **技能安装态勘误（2026-08-16）**：经实地核查，本索引/路由表与物理落盘、加载器存在两层结构性错位，特此标注以免"声明强制却无法加载"的契约失信：
-> 1. **`v9-collection-pipeline-testing` 已补装（2026-08-16）**：原物理缺失 → 已新建 `.agents/skills/v9-collection-pipeline-testing/SKILL.md`；另完成 `constant-migration`→`v9-constant-migration`、`databridge-migration`→`v9-databridge-migration` 加前缀重命名（含 `name` 字段同步）。该技能为数据采集链路 mandatory 门禁；本轮相关改动已按其既定门禁**手动等效执行**并通过（`tsc:prod` 0、`audit:layers` 0、`audit:acl-consistency` 0、穿透全链 vitest 4 passed/1 skipped）。**残留**：仍有 11+ 个声明 `v9-*` 物理缺失、`architecture-debt-remediation`/`cross-index-governance` 无对应物理体；14 个物理技能未声明（两套分类法不一致，详见报告 §6）。
-> 2. **命名前缀不一致**：索引/registry 用 `v9-*` 名，而 `.agents/skills/` 物理 slug 多为**无前缀同名**（`constant-migration`/`databridge-migration`）或**完全不同名**（`architecture-cleanup` 等）；且另有 14 个物理技能未在本索引声明。即便在读取 `.agents/skills/` 的 TRAE CN，声明名亦可能无法解析到物理目录。
-> 3. **加载器路径错位**：WorkBuddy 加载器仅扫描 `~/.workbuddy/skills/` 与 `{workspace}/.workbuddy/skills/`，**不扫 `.agents/skills/`**，故物理存在的 L1 技能在本环境不可经 `Skill()` 加载（用户级仅 `v9-color-token-remediation` 可加载）。
-> 完整映射、缺口、剩余决策与加载器 caveat（含 frontmatter `triggers`/`gates`/`mandatory` 声明失真）见 `deliverables/AGENTS-skill-governance-reconciliation.md` §6。
+> ⚠️ **技能治理对齐记录（2026-08-16，方案B + P2 已闭环）**：本索引/路由表曾与物理落盘、registry、加载器存在结构性错位，经两轮核查与对齐，现状态如下：
+> 1. **真相态已对齐（方案B 反向对齐）**：registry（`skill-registry.json`）为单一真相源——`projectPhysicalSkills` 18 项（自然 slug，无 `v9-` 前缀）、`externalPluginSkills` 9 项、`virtualPlatformSkills` 19 项（含 `v9-*` 平台虚拟技能，无本地 SKILL.md）。本轮执行：(a) 撤销上一轮误加的 `v9-` 前缀重命名（`v9-constant-migration`/`v9-databridge-migration` → 还原 `constant-migration`/`databridge-migration`）；(b) 将新建采集门禁由 `v9-collection-pipeline-testing` 改名为自然名 `collection-pipeline-testing` 并登记为 L1 物理（mandatory，data-flow），同步 registry 由 virtual 转 projectPhysical（virtual 20→19、physical 17→18、total 维持 46）；(c) 本索引 L1 段已重写为 18 自然名物理技能（按 registry 分类与 mandatory 标记），"v9-* 即物理"的谎言已消除；(d) 路由表采集行已改用自然名 `collection-pipeline-testing`。
+> 2. **加载器路径错位已缓解（P2 镜像）**：WorkBuddy 加载器仅扫描 `~/.workbuddy/skills/` 与 `{workspace}/.workbuddy/skills/`、**不扫 `.agents/skills/`**；本环境 available_skills 仅含用户级 `v9-color-token-remediation` 等，不含项目 L1 技能。已执行 P2：将 18 个 L1 物理技能镜像至 `D:\FinSightV9\.workbuddy\skills\`（Windows 不支持 symlink，采用 `cp -r` 拷贝；已校验每目录含 SKILL.md 且 `name` 字段与目录一致）——WorkBuddy 现可经 `Skill()` 加载。⚠️ 拷贝存在漂移风险：`.agents/skills/*` 更新后需重新同步——已提供自愈脚本 `npm run skill:mirror`（见 `scripts/skill-mirror.cjs`，覆盖式镜像 + 清理孤儿目录）；或开启 Developer Mode 改用 symlink。
+> 3. **frontmatter 声明失真（已纠正）**：原路由表称 SKILL.md frontmatter 含 `triggers`/`gates`/`mandatory` 机器可读字段。实测所有物理 SKILL.md 仅用 `name`/`description`/`version`/`last_updated`/`change_log`，**无此三字段**；`triggers`/`gates`/`mandatory` 确为机器可读真相源，但存放于 `skill-registry.json` 而非 SKILL.md。已在下方匹配规则（L65）纠正指向 registry，未强行改写 18 个 SKILL.md。
+> 完整映射、缺口与对齐决策见 `deliverables/AGENTS-skill-governance-reconciliation.md`。
 
 ### 技能路由表（任务开始时必须先匹配，v1.5.3 新增）
 
-> **匹配规则**：先文件信号（改动路径），再关键词信号（用户表述/问题现象）；命中 **mandatory** 技能时，其「交付前必跑」未全绿不得声明"完成"。各技能的完整触发词与 gates 以其 SKILL.md frontmatter（`triggers` / `gates` / `mandatory` 字段）为单一真相源，本表为会话级路由摘要。
+> **匹配规则**：先文件信号（改动路径），再关键词信号（用户表述/问题现象）；命中 **mandatory** 技能时，其「交付前必跑」未全绿不得声明"完成"。各技能的完整触发词与 gates 以其 **registry 条目**（`.trae/skills/skill-registry.json` 的 `triggers` / `gates` / `mandatory` 字段）为**机器可读单一真相源**；SKILL.md frontmatter 仅承载人类可读元数据（`name`/`description`/`version`/`last_updated`/`change_log`）。本表为会话级路由摘要。
 
 | 信号（满足任一即触发） | 必加载技能 | 类型 | 交付前必跑 |
 |---|---|---|---|
-| 改动 `src/services/data-collector/**`、`src/store/sevenDimConfigStore.ts`、`src/types/modules/collection.types.ts`，或相关 vitest 失败 | `v9-collection-pipeline-testing` | mandatory | `npx tsc --noEmit` + `npm run tsc:prod` + `npm run audit:layers` + 相关 vitest |
+| 改动 `src/services/data-collector/**`、`src/store/sevenDimConfigStore.ts`、`src/types/modules/collection.types.ts`，或相关 vitest 失败 | `collection-pipeline-testing` | mandatory | `npx tsc --noEmit` + `npm run tsc:prod` + `npm run audit:layers` + 相关 vitest |
 | 新增 EnvelopeAction / 写入新 store、改动 `src/core/databridge*.ts` 或 `src/config/dbConfig.ts`、排查按钮无响应 / 假绿灯 / 跨板块数据异常 | `v9-data-flow-integrity-audit` | mandatory | 该技能 §三 阶段 1–6 + `npm run audit:acl-consistency` |
 | 排查 Mock 残留 / 假数据 / 信息孤岛、Mock→真实切换、上线前 Mock 清理审计 | `v9-mock-data-diagnosis` | advisory | 三维 Grep 扫描（每项 file:line 证据）+ 诊断报告归档 `outputs/` |
 | 环境迁移 / 换电脑 / 用户目录绝对路径硬编码（C:/Users/<user>/...）、DELL↔Huawei 等多用户机器可移植、路径静默失效排查 | `v9-windows-env-path-doctor` | advisory | `scripts/scan.cjs --verify-current` 输出可移植（crossUser=0 且 sameUserHardcode=0）+ 仅修 src/scripts/configs 真实硬编码 |

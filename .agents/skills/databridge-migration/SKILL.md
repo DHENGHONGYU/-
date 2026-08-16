@@ -1,5 +1,5 @@
 ---
-name: "v9-databridge-migration"
+name: "databridge-migration"
 description: "将直接操作 dataLayer 的代码迁移到 DataBridge 信封协议。涵盖 core/层违规修复、services/读取改为 dataBridge.query、写操作改为 dataBridge.forward + 新增 ENVELOPE_ACTION/Handler、迁移时保留业务逻辑、持久化实体类型归位。Invoke when user finds direct dataLayer.stocks/v6Scores/dailyQuotes/orders access in core/ or services/ layers, or when audit:layers reports violations."
 version: v1.2.0
 last_updated: 2026-08-11
