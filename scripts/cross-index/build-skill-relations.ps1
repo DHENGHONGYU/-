@@ -21,7 +21,7 @@ foreach ($prop in Get-Member -InputObject $masterIndex.documents -MemberType Not
 $skillDirs = @(
     ".trae/skills/architecture-debt-remediation",
     ".trae/skills/cross-index-governance",
-    ".trae/skills/v9-collection-pipeline-testing",
+    ".agents/skills/collection-pipeline-testing",
     ".trae/skills/v9-data-flow-integrity-audit",
     ".trae/skills/v9-mock-data-diagnosis",
     "plugins/ifind",

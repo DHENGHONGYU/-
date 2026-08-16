@@ -44,7 +44,7 @@
                                                 },
                           "V9-SKILL-COLLECTION":  {
                                                       "skill_id":  "V9-SKILL-COLLECTION",
-                                                      "path":  ".trae/skills/v9-collection-pipeline-testing/SKILL.md",
+                                                      "path":  ".agents/skills/collection-pipeline-testing/SKILL.md",
                                                       "name":  "collection-pipeline-testing",
                                                       "doc_count":  4,
                                                       "covers_docs":  [

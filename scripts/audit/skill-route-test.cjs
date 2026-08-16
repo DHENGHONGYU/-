@@ -179,7 +179,7 @@ const scenarios = [
   // 技巧：extractKeywords 会把技能名本身和其短名加入 exacts，所以用技能名也能可靠命中
   { name: 'Bash 命令约定',           matchType: 'exact', matchValue: 'Bash 命令',              expected: 'v9-bash-conventions',            reason: '命中 bash 信号列关键字' },
   { name: '模块改动十域同步',         matchType: 'exact', matchValue: '任何代码改动交付前',       expected: 'v9-module-sync-checklist',       reason: 'mandatory 闸口 - 模块改动' },
-  { name: '采集链路测试',             matchType: 'exact', matchValue: 'sevenDimConfigStore',       expected: 'v9-collection-pipeline-testing', reason: '数据采集链路七维配置修改' },
+  { name: '采集链路测试',             matchType: 'exact', matchValue: 'sevenDimConfigStore',       expected: 'collection-pipeline-testing',   reason: '数据采集链路七维配置修改（方案B 后物理名由 v9-collection-pipeline-testing 改为 collection-pipeline-testing）' },
   { name: '跨板块数据异常',           matchType: 'exact', matchValue: '跨板块数据异常',           expected: 'v9-data-flow-integrity-audit',   reason: 'DataBridge + 跨板块数据异常' },
   { name: 'Mock 残留诊断',            matchType: 'exact', matchValue: 'Mock 残留',                expected: 'v9-mock-data-diagnosis',         reason: 'Mock→真实切换前的残留扫描' },
   { name: '文档乱码修复前置',         matchType: 'exact', matchValue: '文档乱码',                 expected: 'v9-doc-encoding-remediation',    reason: 'GBK 二次损坏风险预检' },

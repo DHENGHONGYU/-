@@ -130,7 +130,7 @@ function parseInterfaces(filePath: string): InterfaceInfo[] {
     const body = extractBalancedBody(content, startIndex)
     if (body === null) continue
 
-    const fields = extractFields(body)
+    const fields = [...extractFields(body), ...collectNestedFieldPaths(body)]
     interfaces.push({ name, fields })
   }
 
@@ -209,6 +209,84 @@ function extractFields(body: string): string[] {
   }
 
   return fields
+}
+
+/**
+ * 剥离源码注释（块注释与行注释），避免注释中的 `{`/`}` 干扰字段解析。
+ */
+function stripComments(src: string): string {
+  return src
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\/\/[^\n]*/g, '')
+}
+
+/**
+ * 收集 interface 中的「嵌套字段 dotted 路径」（如 `meta.reportId`），仅用于校验嵌套 keyPath/index。
+ * 设计原则：只【追加】路径，绝不替换 extractFields 的顶层提取结果——
+ * 这样使用嵌套 keyPath 的 store（如 proofread_reports 的 `meta.reportId`）能被识别，
+ * 同时不会因重写顶层解析器而误伤其它 store 的顶层索引字段。
+ * 仅对紧跟冒号后的行内对象字面量 `{ ... }` 下钻；不展开类型引用（如 `ReadonlyArray<{...}>`）。
+ */
+function collectNestedFieldPaths(body: string): string[] {
+  const src = stripComments(body)
+  const paths: string[] = []
+  const n = src.length
+  let i = 0
+  let depth = 0
+  const nameAtDepth: Array<string | null> = [null]
+
+  const currentPrefix = (): string => {
+    const parts: string[] = []
+    for (let d = 1; d <= depth; d++) {
+      const nm = nameAtDepth[d]
+      if (nm) parts.push(nm)
+    }
+    return parts.join('.')
+  }
+
+  while (i < n) {
+    const ch = src[i]
+    if (ch === '{') {
+      depth++
+      if (nameAtDepth[depth] === undefined) nameAtDepth[depth] = null
+      i++
+      continue
+    }
+    if (ch === '}') {
+      nameAtDepth[depth] = null
+      if (depth > 0) depth--
+      i++
+      continue
+    }
+    if (ch === ';' || ch === '\n' || ch === '\r' || ch === ' ' || ch === '\t' || ch === ',') {
+      i++
+      continue
+    }
+    const rest = src.slice(i)
+    const m = rest.match(/^(?:readonly\s+)?([A-Za-z_$][\w$]*)\s*\??\s*:/)
+    if (!m) {
+      const nl = src.indexOf('\n', i)
+      i = nl === -1 ? n : nl + 1
+      continue
+    }
+    const fieldName = m[1]
+    const prefix = currentPrefix()
+    paths.push(prefix ? `${prefix}.${fieldName}` : fieldName)
+    i += m[0].length
+    // 跳过空白与换行，定位值起始字符
+    let j = i
+    while (j < n && (src[j] === ' ' || src[j] === '\t' || src[j] === '\n' || src[j] === '\r')) j++
+    if (src[j] === '{') {
+      nameAtDepth[depth + 1] = fieldName
+      i = j
+      continue
+    }
+    // 基本类型 / 类型引用：跳到语句结束（';'）
+    const semi = src.indexOf(';', i)
+    i = semi === -1 ? n : semi + 1
+  }
+
+  return paths
 }
 
 // ============================================================
@@ -459,6 +537,9 @@ const STORE_TO_TYPE_MAP: Record<string, string> = {
   workflow_schedules: 'ScheduleDef',
   workflow_triggers: 'TriggerDef',
   workflow_runs: 'WorkflowRun',
+  // proofread_reports 的真实实体类型为 FileImportProofreadReport（src/types/modules/data-sync.types.ts），
+  // 切勿误映射到 src/data/types/types.hybridProofread.ts 中同名但功能不同的代码安全扫描类型 ProofreadReport。
+  proofread_reports: 'FileImportProofreadReport',
 }
 
 function inferTypeName(storeName: string): string {
@@ -809,6 +890,16 @@ function main(): void {
   const interfaces = fs.existsSync(typesDir)
     ? collectInterfaces(typesDir)
     : parseInterfaces(TYPES_FILE)
+  // proofread_reports 的真实实体类型为 FileImportProofreadReport，定义在 src/types/modules/data-sync.types.ts，
+  // 不在默认扫描目录 src/data/types 内。定点注入该文件中的「非碰撞」接口（含 FileImportProofreadReport），
+  // 避免扩大全目录扫描导致 Stock/RbacUser 等同名类型被 modules 版本覆盖而引发回归。
+  const proofreadTypeFile = path.join(PROJECT_ROOT, 'src', 'types', 'modules', 'data-sync.types.ts')
+  if (fs.existsSync(proofreadTypeFile)) {
+    const existingNames = new Set(interfaces.map((x) => x.name))
+    for (const iface of parseInterfaces(proofreadTypeFile)) {
+      if (!existingNames.has(iface.name)) interfaces.push(iface)
+    }
+  }
   const storeNames = parseStoreNames(DB_CONFIG_FILE)
   const schemaStores = parseStoreSchemas(DB_SCHEMA_FILE, storeNames)
   const migrationStores = parseMigrationSchemas(DB_MIGRATIONS_FILE, storeNames)

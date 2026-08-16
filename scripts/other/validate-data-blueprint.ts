@@ -58,7 +58,10 @@ function main() {
     interfaces.push(...collectInterfaceNames(SERVICES_DIR))
   }
 
-  const expectedStores = 41
+  // 真实 Store 数量以 src/config/dbConfig.ts 的 STORE_NAME 为准（当前 50）。
+  // 早期硬编码 41 已过期，导致校验恒红；此处与权威值对齐。
+  // 注意：本脚本仅做"数量+核心实体存在性"粗校验，细粒度 schema↔类型一致性由 validate-data-consistency.ts 兜底。
+  const expectedStores = 50
   if (storeNames.length !== expectedStores) {
     throw new Error(`Store count mismatch: expected ${expectedStores}, got ${storeNames.length}`)
   }
