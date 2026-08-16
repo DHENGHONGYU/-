@@ -2,7 +2,7 @@
   "$schema": "https://design-tokens.github.io/community-group/format/",
   "$description": "V9 代码令牌到 Figma / MasterGo 设计变量的反向映射（Project → Figma）",
   "version": "1.0.0",
-  "lastUpdated": "2026-08-15",
+  "lastUpdated": "2026-08-16",
   "mappings": [
     {
       "project": "CHART_PALETTE.grid",
