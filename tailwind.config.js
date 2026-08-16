@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+﻿/** @type {import('tailwindcss').Config} */
 export default {
   darkMode: 'class',
   content: [
@@ -80,6 +80,9 @@ export default {
         'elevation-1': 'var(--shadow-sm)',
         'elevation-2': 'var(--shadow-md)',
         'elevation-3': 'var(--shadow-lg)',
+        // ===== V6: surface depth =====
+        'surface-elevated': 'var(--surface-elevated)',
+        'surface-floating': 'var(--surface-floating)',
       },
       fontFamily: {
         sans: ['DM Sans', 'SF Pro Display', 'Inter', 'PingFang SC', 'Microsoft YaHei', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],

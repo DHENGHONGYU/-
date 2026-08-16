@@ -60,7 +60,7 @@ export function RankedCard({
   return (
     <Card
       className={cn(
-        'cursor-pointer transition-transform transition-shadow duration-200 hover:shadow-elevation-2 hover:scale-[1.02]',
+        'cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         onClick && 'active:scale-[0.98]',
         className,
       )}

@@ -9,20 +9,20 @@
  *
  * @module constants/theme/portal
  * @created 2026-07-15
-/** 门户布局容器令牌  * @doc []
+/** 门户布局容器令牌（V6：宋瓷暖灰激活）  * @doc []
 */
 export const PORTAL_LAYOUT_TOKENS = {
-  /** 整个 Shell 背景（Apple 商务风：浅灰 #F2F2F7） */
+  /** 整个 Shell 背景（V6：暖象牙灰，替代 V5 冷蓝灰） */
   shellBg: 'bg-background',
-  /** 顶栏背景（带透明毛玻璃） */
-  headerBg: 'bg-background/80 backdrop-blur-xl',
+  /** 顶栏背景（带透明毛玻璃，V6：象牙底微暖） */
+  headerBg: 'bg-ivory/80 backdrop-blur-xl',
   /** 顶栏下边框 */
   headerBorder: 'border-border/60',
-  /** 侧边栏背景 */
-  sidebarBg: 'bg-muted/40 backdrop-blur-sm',
+  /** 侧边栏背景（V6：宋瓷暖灰） */
+  sidebarBg: 'bg-warm-gray/40 backdrop-blur-sm',
   /** 侧边栏右边框 */
   sidebarBorder: 'border-border/50',
-  /** 主内容区背景（Apple：白卡片悬浮于浅灰底，而非整块白色） */
+  /** 主内容区背景 */
   mainBg: 'bg-background',
   /** 主内容区内边距 */
   mainPadding: 'p-5 sm:p-6 lg:p-7',
@@ -32,14 +32,14 @@ export const PORTAL_LAYOUT_TOKENS = {
 
 /** 舱室切换器令牌 */
 export const PORTAL_CABIN_TOKENS = {
-  /** 舱室切换器容器背景 */
-  containerBg: 'bg-muted/60 backdrop-blur-sm',
+  /** 舱室切换器容器背景（V6：宋瓷暖灰激活，替代冷 muted） */
+  containerBg: 'bg-warm-gray/60 backdrop-blur-sm',
   /** 当前激活舱室 */
   active: 'bg-card text-foreground shadow-sm shadow-primary/5',
   /** 未激活舱室 */
-  inactive: 'text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-300 ease-out',
+  inactive: 'text-muted-foreground hover:text-foreground hover:bg-warm-gray/40 transition-all duration-300 ease-out',
   /** 驾驶舱入口（独立于五舱） */
-  cockpit: 'text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-300',
+  cockpit: 'text-muted-foreground hover:text-foreground hover:bg-warm-gray/40 transition-all duration-300',
 } as const
 
 /** 侧边栏导航令牌 */
@@ -86,12 +86,12 @@ export const PORTAL_STATUS_TOKENS = {
 
 /** 品牌令牌 */
 export const PORTAL_BRAND_TOKENS = {
-  /** Logo 渐变 */
-  logoGradient: 'from-primary to-emerald-600',
+  /** Logo 渐变（V6：汝窑天青替代纯蓝，更温润） */
+  logoGradient: 'from-ru-blue to-primary',
   /** Logo 文字色 */
   logoText: 'text-white',
   /** Logo 阴影 */
-  logoShadow: 'shadow-primary/20',
+  logoShadow: 'shadow-ru-blue/20',
 } as const
 
 /** 聚合门户令牌（L6 设计系统扩展） */
