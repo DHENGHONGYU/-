@@ -248,8 +248,8 @@ export default function IndustryDashboardPage(): React.JSX.Element {
   const renderSortArrow = (columnKey: SortKey) => {
     if (sortKey === columnKey) {
       return sortOrder === 'asc'
-        ? <ChevronUp className="inline h-3.5 w-3.5 ml-1" />
-        : <ChevronDown className="inline h-3.5 w-3.5 ml-1" />
+        ? <ChevronUp className="inline h-3.5 w-3.5 ml-1 transition-transform duration-200" />
+        : <ChevronDown className="inline h-3.5 w-3.5 ml-1 transition-transform duration-200" />
     }
     return <span className="inline ml-1 text-muted">↕</span>
   }
@@ -419,7 +419,7 @@ export default function IndustryDashboardPage(): React.JSX.Element {
                   <TableHead className="w-12">#</TableHead>
                   <TableHead>行业</TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted select-none"
+                    className="cursor-pointer hover:bg-muted/50 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors duration-150"
                     onClick={() => {
                       setSortKey('composite')
                       setSortOrder(sortKey === 'composite' && sortOrder === 'desc' ? 'asc' : 'desc')
@@ -428,7 +428,7 @@ export default function IndustryDashboardPage(): React.JSX.Element {
                     综合评分{renderSortArrow('composite')}
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted select-none"
+                    className="cursor-pointer hover:bg-muted/50 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors duration-150"
                     onClick={() => {
                       setSortKey('prosperity')
                       setSortOrder(sortKey === 'prosperity' && sortOrder === 'desc' ? 'asc' : 'desc')
@@ -437,7 +437,7 @@ export default function IndustryDashboardPage(): React.JSX.Element {
                     景气度{renderSortArrow('prosperity')}
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted select-none"
+                    className="cursor-pointer hover:bg-muted/50 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors duration-150"
                     onClick={() => {
                       setSortKey('valuation')
                       setSortOrder(sortKey === 'valuation' && sortOrder === 'desc' ? 'asc' : 'desc')
@@ -446,7 +446,7 @@ export default function IndustryDashboardPage(): React.JSX.Element {
                     估值{renderSortArrow('valuation')}
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-muted select-none"
+                    className="cursor-pointer hover:bg-muted/50 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors duration-150"
                     onClick={() => {
                       setSortKey('trend')
                       setSortOrder(sortKey === 'trend' && sortOrder === 'desc' ? 'asc' : 'desc')

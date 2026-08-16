@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router'
 import {
   Database,
@@ -204,26 +204,13 @@ function SystemStatusOverview(): React.JSX.Element {
 function PortfolioHero(): React.JSX.Element {
   const isMobile = useMediaQuery('(max-width: 767px)')
   const portfolio = useTradingStore((s) => s.portfolio)
+  const portfolioLoading = useTradingStore((s) => s.portfolioLoading)
   const riskMetrics = useOrderStore((s) => s.riskMetrics)
   const pnlSummary = useOrderStore((s) => s.pnlSummary)
   const positions = useOrderStore((s) => s.positions)
 
   const hasPortfolio = portfolio != null
   const hasPositions = positions.length > 0
-
-  if (!hasPortfolio && !hasPositions) {
-    return (
-      <section
-        className="mb-6 rounded-lg p-6 bg-card"
-        style={{ boxShadow: 'var(--shadow-sm)' }}
-      >
-        <EmptyState
-          title="暂无持仓数据"
-          description="请先在交易舱录入持仓"
-        />
-      </section>
-    )
-  }
 
   const totalAssets = useMemo(() => portfolio?.totalValue ?? 0, [portfolio])
 
@@ -272,6 +259,33 @@ function PortfolioHero(): React.JSX.Element {
       sharpeLabel: label,
     }
   }, [hasPositions, riskMetrics.sharpeRatio, riskMetrics.maxDrawdown])
+
+  if (portfolioLoading) {
+    return (
+      <section
+        className="mb-6 rounded-lg p-6 bg-card"
+        style={{ boxShadow: 'var(--shadow-sm)' }}
+      >
+        <Skeleton variant="text" className="h-4 w-24 mb-4" />
+        <Skeleton variant="text" className="h-8 w-48 mb-2" />
+        <Skeleton variant="text" className="h-5 w-32" />
+      </section>
+    )
+  }
+
+  if (!hasPortfolio && !hasPositions) {
+    return (
+      <section
+        className="mb-6 rounded-lg p-6 bg-card"
+        style={{ boxShadow: 'var(--shadow-sm)' }}
+      >
+        <EmptyState
+          title="暂无持仓数据"
+          description="请先在交易舱录入持仓"
+        />
+      </section>
+    )
+  }
 
   return (
     <section
@@ -345,6 +359,7 @@ function PortfolioHero(): React.JSX.Element {
  */
 function SignalList(): React.JSX.Element {
   const signals = useTradingStore((s) => s.signals)
+  const displaySignals = useMemo(() => signals.slice(0, 10), [signals])
 
   if (signals.length === 0) {
     return (
@@ -365,8 +380,6 @@ function SignalList(): React.JSX.Element {
       </section>
     )
   }
-
-  const displaySignals = useMemo(() => signals.slice(0, 10), [signals])
 
   return (
     <section

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Badge } from '@/components/atoms/Badge'
-import { Brain, FileDown, FileJson, FileText, Settings2, UploadCloud } from 'lucide-react'
+import { Brain, FileDown, FileJson, FileText, Settings2, UploadCloud, Zap, ZapOff } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Input } from '@/components/atoms/Input'
 import { Progress } from '@/components/atoms/Progress'
 import { Textarea } from '@/components/atoms/Textarea'
 import { Tooltip } from '@/components/atoms/Tooltip'
+import { Switch } from '@/components/atoms/Switch'
+import { Label } from '@/components/atoms/Label'
 import { StockSelector } from '@/components/organisms/input/StockSelector'
 import { toStockOption } from '@/constants/stockList'
 import { ScoreFactorDeltaPanel } from '@/components/organisms/shared/ScoreFactorDeltaPanel'
@@ -188,6 +190,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
   const files = useIntelligentScoreStore((s) => s.files)
   const reportText = useIntelligentScoreStore((s) => s.reportText)
   const llmConfig = useIntelligentScoreStore((s) => s.llmConfig)
+  const transparencyConfig = useIntelligentScoreStore((s) => s.transparencyConfig)
   const showConfig = useIntelligentScoreStore((s) => s.showConfig)
   const configReady = useIntelligentScoreStore(selectConfigReady)
   const progress = useIntelligentScoreStore((s) => s.progress)
@@ -206,6 +209,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
   const setFiles = useIntelligentScoreStore((s) => s.setFiles)
   const setReportText = useIntelligentScoreStore((s) => s.setReportText)
   const setLlmConfig = useIntelligentScoreStore((s) => s.setLlmConfig)
+  const toggleLlm = useIntelligentScoreStore((s) => s.toggleLlm)
   const setShowConfig = useIntelligentScoreStore((s) => s.setShowConfig)
   const loadStocks = useIntelligentScoreStore((s) => s.loadStocks)
   const loadHistory = useIntelligentScoreStore((s) => s.loadHistory)
@@ -245,10 +249,13 @@ export default function IntelligentScorePage(): React.JSX.Element {
     }
   }, [symbol, trendPeriod, loadScoreTrend])
 
+  const llmEnabled = transparencyConfig.enableLlm
   const runTooltip = loading
     ? '评分运行中，请稍候...'
     : !configReady
-      ? 'LLM 未配置：请填写 baseURL、API Key 与模型名称后再运行评分'
+      ? llmEnabled
+        ? 'LLM 未配置：请填写 baseURL、API Key 与模型名称后再运行评分；或关闭 LLM 开关使用纯 V6 引擎评分'
+        : undefined
       : undefined
 
   return (
@@ -299,6 +306,33 @@ export default function IntelligentScorePage(): React.JSX.Element {
                   {showConfig ? '收起' : '展开'}
                 </Button>
               </div>
+
+              {/* LLM 总开关 — 关闭时使用纯 V6 引擎评分，无需 LLM 配置 */}
+              <div className="flex items-center justify-between rounded-md border border-border/40 bg-muted/20 p-3">
+                <div className="flex items-center gap-2">
+                  {llmEnabled ? (
+                    <Zap className="h-4 w-4 text-info" />
+                  ) : (
+                    <ZapOff className="h-4 w-4 text-muted-foreground" />
+                  )}
+                  <div className="space-y-0.5">
+                    <Label className="text-sm font-medium">
+                      {llmEnabled ? 'LLM 增强模式' : '纯 V6 引擎模式'}
+                    </Label>
+                    <p className="text-xs text-muted-foreground">
+                      {llmEnabled
+                        ? 'V6 实时因子评分 + LLM 文本增强（需配置 LLM）'
+                        : '仅使用 V6 11 层因子引擎，数据驱动评分，无需 LLM'}
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  checked={llmEnabled}
+                  onChange={() => toggleLlm()}
+                  aria-label="切换 LLM 增强模式"
+                />
+              </div>
+
               {showConfig && (
                 <div className="space-y-2 rounded-md border p-3">
                   <Input
@@ -306,6 +340,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
                     aria-label="大模型 Base URL"
                     value={llmConfig.baseURL}
                     onChange={(e) => setLlmConfig((prev: LlmConfig) => ({ ...prev, baseURL: e.target.value }))}
+                    disabled={!llmEnabled}
                   />
                   <Input
                     type="password"
@@ -313,20 +348,29 @@ export default function IntelligentScorePage(): React.JSX.Element {
                     aria-label="大模型 API Key"
                     value={llmConfig.apiKey}
                     onChange={(e) => setLlmConfig((prev: LlmConfig) => ({ ...prev, apiKey: e.target.value }))}
+                    disabled={!llmEnabled}
                   />
                   <Input
                     placeholder="Model，如 deepseek-chat / deepseek-reasoner"
                     aria-label="大模型 Model"
                     value={llmConfig.model}
                     onChange={(e) => setLlmConfig((prev: LlmConfig) => ({ ...prev, model: e.target.value }))}
+                    disabled={!llmEnabled}
                   />
                   <p className="text-xs text-muted-foreground">
                     支持 OpenAI 兼容接口，推荐 DeepSeek / Kimi / 硅基流动等国内模型。
                   </p>
                 </div>
               )}
-              {!configReady && (
-                <p className="text-xs text-destructive">LLM 未配置，无法开始评分</p>
+              {llmEnabled && !configReady && (
+                <p className="text-xs text-destructive">
+                  LLM 模式已开启但未配置，请填写 baseURL、API Key 与模型；或关闭 LLM 开关使用纯 V6 引擎评分
+                </p>
+              )}
+              {!llmEnabled && (
+                <p className="text-xs text-success">
+                  ✓ 纯 V6 引擎模式：无需配置 LLM，基于 11 层因子数据驱动评分
+                </p>
               )}
             </div>
 

@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo } from 'react'
+import { memo, useCallback, useEffect, useMemo } from 'react'
 import { Link } from 'react-router'
 import { Wallet } from 'lucide-react'
 import { useTradingStore } from '@/store/tradingStore'
@@ -27,6 +27,7 @@ import {
   DualFactorEvaluationPanel,
   evaluateDualFactor,
   EmptyState,
+  Skeleton,
   type DualFactorResult,
   type TechnicalSignal,
 } from '@/components/molecules'
@@ -65,7 +66,7 @@ const PortfolioPage = memo(() => {
 
   // 双因子评估：从 pfStrategyResult 获取技术信号 + 行业评分，计算共振结果
   const dualFactorResults = useMemo<DualFactorResult[]>(() => {
-    if (!pfStrategyResult || !pfStrategyResult.selected.length) return []
+    if (!pfStrategyResult?.selected.length) return []
 
     return pfStrategyResult.selected.map((candidate) => {
       // 从 composite 综合评分推导技术信号：≥3.5 买入，<2.0 卖出，其余观望
@@ -92,6 +93,16 @@ const PortfolioPage = memo(() => {
       return evaluateDualFactor(technicalSignal, industryScore)
     })
   }, [pfStrategyResult, industrySectors])
+
+  const holdingsMarketValue = useMemo(
+    () => portfolio?.holdings.reduce((s, h) => s + h.marketValue, 0) ?? 0,
+    [portfolio?.holdings],
+  )
+
+  const handleLoadPortfolio = useCallback(() => {
+    logger.info('[PortfolioPage] 加载投资组合')
+    void loadPortfolio()
+  }, [loadPortfolio])
 
   return (
     <ErrorBoundary>
@@ -131,7 +142,7 @@ const PortfolioPage = memo(() => {
 
         {/* 组合 KPI Hero 卡 */}
         {portfolio && (
-          <div className="grid grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 transition-opacity duration-300">
             <Card>
               <CardContent className="p-3 text-center">
                 <p className="text-xs text-muted-foreground">总资产</p>
@@ -144,7 +155,7 @@ const PortfolioPage = memo(() => {
               <CardContent className="p-3 text-center">
                 <p className="text-xs text-muted-foreground">持仓市值</p>
                 <p className="text-lg font-bold">
-                  <Currency value={portfolio.holdings.reduce((s, h) => s + h.marketValue, 0)} compact decimals={1} />
+                  <Currency value={holdingsMarketValue} compact decimals={1} />
                 </p>
               </CardContent>
             </Card>
@@ -185,10 +196,7 @@ const PortfolioPage = memo(() => {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => {
-              logger.info('[PortfolioPage] 加载投资组合')
-              void loadPortfolio()
-            }}
+            onClick={handleLoadPortfolio}
             disabled={portfolioLoading || pfLoading}
           >
             {portfolioLoading || pfLoading ? '加载中...' : '加载投资组合'}
@@ -208,7 +216,11 @@ const PortfolioPage = memo(() => {
           </CardHeader>
           <CardContent>
             {portfolioLoading ? (
-              <p className="text-sm text-muted-foreground">加载中...</p>
+              <div className="space-y-3">
+                <Skeleton variant="text" className="h-4 w-32" />
+                <Skeleton variant="text" className="h-4 w-48" />
+                <Skeleton variant="text" className="h-4 w-24" />
+              </div>
             ) : !portfolio ? (
               <div className="space-y-2">
                 <p className="text-sm text-muted-foreground">暂无组合数据</p>
@@ -217,7 +229,7 @@ const PortfolioPage = memo(() => {
                 </p>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-2 transition-opacity duration-300">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                   <div>
                     <span className="text-muted-foreground">组合名称：</span>
@@ -333,16 +345,26 @@ const PortfolioPage = memo(() => {
         )}
 
         {/* 双因子评估（技术信号 × 行业景气度 → 共振才操作） */}
-        {!pfStrategyResult ? (
+        {pfLoading && !pfStrategyResult ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>双因子评估</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <Skeleton variant="text" className="h-4 w-40" />
+                <Skeleton variant="text" className="h-4 w-56" />
+                <Skeleton variant="text" className="h-4 w-32" />
+              </div>
+            </CardContent>
+          </Card>
+        ) : !pfStrategyResult ? (
           <EmptyState
             title="暂无策略筛选结果"
             description="请先在交易舱扫描信号并加载行业评分"
             action={{
               label: '加载投资组合',
-              onClick: () => {
-                logger.info('[PortfolioPage] 空状态点击加载投资组合')
-                void loadPortfolio()
-              },
+              onClick: handleLoadPortfolio,
             }}
           />
         ) : (

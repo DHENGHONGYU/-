@@ -18,6 +18,7 @@ import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import type { IntelligentScore, ResearchLog, Stock } from '@/data/types'
 import {
+  getDefaultLlmConfig,
   getDefaultLlmTransparencyConfig,
   type LlmTransparencyConfig,
 } from '@/config/llmConfig'
@@ -234,7 +235,7 @@ const initialState: Omit<
   stocks: [],
   files: [],
   reportText: '',
-  llmConfig: getDefaultLlmTransparencyConfig(),
+  llmConfig: getDefaultLlmConfig(),
   transparencyConfig: getDefaultLlmTransparencyConfig(),
   showConfig: false,
   progress: { ...INITIAL_PROGRESS },
