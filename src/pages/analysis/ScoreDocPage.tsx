@@ -5,6 +5,7 @@ import { Button } from '@/components/atoms/Button'
 import { StockSelector } from '@/components/organisms/input/StockSelector'
 import { toStockOption } from '@/constants/stockList'
 import { PageContainer, PageHeader } from '@/components/templates'
+import { ErrorState, EmptyState } from '@/components/molecules'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -121,13 +122,13 @@ export default function ScoreDocPage(): React.JSX.Element {
           </div>
 
           {error && (
-            <p className="text-sm text-destructive">{error}</p>
+            <ErrorState error={error} variant="inline" />
           )}
 
           {!symbol ? (
             <p className="text-muted-foreground">请选择股票代码</p>
           ) : versions.length === 0 ? (
-            <p className="text-muted-foreground">暂无评分记录</p>
+            <EmptyState title="暂无评分记录" />
           ) : (
             <ScoreDocVersionTable versions={versions} />
           )}

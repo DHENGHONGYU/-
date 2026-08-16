@@ -1,4 +1,6 @@
-interface PercentProps {
+import React from 'react'
+
+interface PercentProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** 百分比数值（如 5.2 表示 5.2%） */
   value: number
   /** 小数位数，默认 2 */
@@ -7,8 +9,6 @@ interface PercentProps {
   showSign?: boolean
   /** 是否根据正负自动着色，默认 true */
   colored?: boolean
-  /** 自定义 className */
-  className?: string
 }
 
 /**
@@ -16,13 +16,17 @@ interface PercentProps {
  * - 自动着色：正数 var(--stock-up) 红色，负数 var(--stock-down) 绿色
  * - 正数显示 + 号
  */
-export function Percent({
-  value,
-  decimals = 2,
-  showSign = true,
-  colored = true,
-  className = '',
-}: PercentProps) {
+export const Percent = React.forwardRef<HTMLSpanElement, PercentProps>((
+  {
+    value,
+    decimals = 2,
+    showSign = true,
+    colored = true,
+    className = '',
+    ...rest
+  },
+  ref
+) => {
   const sign = showSign
     ? value > 0
       ? '+'
@@ -43,8 +47,10 @@ export function Percent({
     : ''
 
   return (
-    <span className={`${colorClass} ${className}`.trim()}>
+    <span className={`${colorClass} ${className}`.trim()} ref={ref} {...rest}>
       {display}
     </span>
   )
-}
+})
+
+Percent.displayName = 'Percent'

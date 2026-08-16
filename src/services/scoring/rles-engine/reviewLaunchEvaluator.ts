@@ -142,10 +142,10 @@ function evaluateD3(input: RlesInput): RlesDimension {
       } else if (sw.signalType === 'trial') secondWaveBoost = 6
     }
   }
-  // MAS 市场宽度（预留，当前中性）
+  // MAS 市场宽度（breadthFactor 接入，0-100；缺失中性 50）
   const breadth = input.marketBreadth != null ? clamp100(input.marketBreadth) : 50
   const score = clamp100(
-    ratingBase * 0.5 + goldenBoost + sectorFund * 0.2 + secondWaveStrength * 0.1 + secondWaveBoost,
+    ratingBase * 0.42 + sectorFund * 0.2 + secondWaveStrength * 0.13 + breadth * 0.13 + goldenBoost + secondWaveBoost,
   )
   const swDesc = sw
     ? sw.detected
@@ -159,7 +159,7 @@ function evaluateD3(input: RlesInput): RlesDimension {
     weight: WEIGHTS.D3,
     detail: input.goldenBuyDetected
       ? `检出黄金买点 + ${swDesc}`
-      : `评级基分 ${ratingBase.toFixed(0)}，板块资金 ${sectorFund.toFixed(0)}，${swDesc}`,
+      : `评级基分 ${ratingBase.toFixed(0)}，板块资金 ${sectorFund.toFixed(0)}，市场宽度 ${breadth.toFixed(0)}，${swDesc}`,
     subScores: { ratingBase, goldenBoost, sectorFund, secondWaveStrength, secondWaveBoost, breadth },
   }
 }

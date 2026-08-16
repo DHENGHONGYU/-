@@ -11,7 +11,7 @@
  *   6. GBK 解码后中文文本解析验证（模拟 Vite proxy 转换后场景）
  *   7. 字段不足异常处理
  *   8. change=0 时 prevClose 推导
- *   9. 港股 K 线空响应降级
+ *   9. 港股 K 线（hk00700 代码修复）：成功解析 + 空响应/异常降级
  *  10. Vite proxy URL 路径验证（GBK 编码转换后）
  *
  * @covers_docs [V9-DOC-BACK-012, V9-DOC-DATA-047, V9-DOC-FRONT-020]
@@ -138,8 +138,22 @@ const SINA_HK_INSUFFICIENT = `var hq_str_rt_hk00700="TENCENT,腾讯控股,479.00
  *  样本须包含足够字段以避免索引越界返回 0。 */
 const TENCENT_A_600519 = `v_sh600519="1~贵州茅台~600519~1309.22~1308.55~1308.66~24976~12060~12916~1309.22~2~1309.21~5~1309.20~97~1309.19~3~1309.18~13~1309.23~1~1309.28~1~1309.70~1~1309.79~2~1309.80~1~~20260807~15:00:00/00/~~1315.28~1301.00~~327456.00";`
 
-/** 腾讯港股 K 线空响应 */
+/** 腾讯港股 K 线空响应（接口返回空 data → 降级为空数组） */
 const TENCENT_HK_KLINE_EMPTY = { code: 0, msg: '', data: {} }
+
+/** 腾讯港股 K 线真实响应 — data key 为 hk00700（无 s_ 前缀） */
+const TENCENT_HK_KLINE_JSON = {
+  code: 0,
+  msg: '',
+  data: {
+    hk00700: {
+      qfqday: [
+        ['2026-08-06', '479.000', '478.800', '483.200', '475.400', '16319939.000'],
+        ['2026-08-07', '478.800', '480.000', '482.000', '476.000', '15000000.000'],
+      ],
+    },
+  },
+}
 
 /** 腾讯批量行情 — A 股 + 港股混合 */
 const TENCENT_BATCH_MIXED = `v_sh600519="1~贵州茅台~600519~1309.22~1308.55~1308.66~24976~12060~12916~1309.22~2~1309.21~5~1309.20~97~1309.19~3~1309.18~13~1309.23~1~1309.28~1~1309.70~1~1309.79~2~1309.80~1~~20260807~15:00:00/00/";v_s_hk00700="100~腾讯控股~00700~478.800~-0.400~-0.08~16319939.0~7803757295.250~~43488.0714";v_s_hk09988="200~阿里巴巴-SW~09988~82.300~0.500~0.61~12345678~1016254321.000~~50.000";`
@@ -415,7 +429,16 @@ describe('港股代码转换边界', () => {
 // 6. 港股 K 线降级场景
 // ============================================================
 
-describe('港股 K 线降级', () => {
+describe('港股 K 线（hk00700 代码修复）', () => {
+  test('0700.HK 腾讯 K 线返回真实数据 → 成功解析港股 K 线', async () => {
+    mockFetch.mockResolvedValue(createJsonResponse(TENCENT_HK_KLINE_JSON))
+    const klines = await tencentKline('0700.HK', 'day', 10)
+    expect(klines).toHaveLength(2)
+    expect(klines[0]!.date).toBe('2026-08-06')
+    expect(klines[0]!.close).toBe(478.8)
+    expect(klines[0]!.source).toBe('tencent')
+  })
+
   test('0700.HK 腾讯 K 线返回空 data → 返回空数组', async () => {
     mockFetch.mockResolvedValue(createJsonResponse(TENCENT_HK_KLINE_EMPTY))
     const klines = await tencentKline('0700.HK', 'day', 10)
@@ -432,13 +455,14 @@ describe('港股 K 线降级', () => {
     await expect(tencentKline('0700.HK', 'day', 10)).rejects.toThrow('HTTP 500')
   })
 
-  test('0700.HK 腾讯 K 线 URL 使用 s_hk 代码', async () => {
-    mockFetch.mockResolvedValue(createJsonResponse(TENCENT_HK_KLINE_EMPTY))
+  test('0700.HK 腾讯 K 线 URL 使用 hk00700 代码（非 s_hk）', async () => {
+    mockFetch.mockResolvedValue(createJsonResponse(TENCENT_HK_KLINE_JSON))
     await tencentKline('0700.HK', 'day', 10)
 
     const url = mockFetch.mock.calls[0]?.[0] as string
     expect(url).toContain('/api/proxy/tencent-kline/')
-    expect(url).toContain('s_hk00700')
+    expect(url).toContain('hk00700')
+    expect(url).not.toContain('s_hk00700')
   })
 })
 

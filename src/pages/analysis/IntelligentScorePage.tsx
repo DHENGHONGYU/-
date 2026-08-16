@@ -15,6 +15,7 @@ import { ScoreFactorDeltaPanel } from '@/components/organisms/shared/ScoreFactor
 import { ScoreUpdateAlert } from '@/components/organisms/shared/ScoreUpdateAlert'
 import { PageContainer, PageHeader } from '@/components/templates'
 import { ScoreGauge } from '@/components/molecules/ScoreGauge'
+import { ErrorState } from '@/components/molecules'
 import { MultiPeriodTrendChart } from '@/components/organisms/analysis/score/MultiPeriodTrendChart'
 import { IntelligentScoreExplanation } from '@/components/organisms/analysis/score/IntelligentScoreExplanation'
 import type { ScoreTrendPeriod } from '@/types/modules/score.types'
@@ -472,7 +473,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
               </div>
               {/* 当 error 非空时显示错误信息，否则显示正常进度消息 */}
               {error && (
-                <p className="mt-3 text-xs text-destructive">{error}</p>
+                <ErrorState error={error} variant="inline" />
               )}
               {!error && progressMessage && (
                 <p className="mt-3 text-xs text-muted-foreground">{progressMessage}</p>

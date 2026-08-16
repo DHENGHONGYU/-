@@ -19,6 +19,7 @@ import { ChangeLogPanel } from '@/components/organisms/strategy/ChangeLogPanel'
 import { useStrategySnapshotStore } from '@/store/strategySnapshotStore'
 import { getLogger } from '@/lib/logger'
 import { PageContainer, PageHeader } from '@/components/templates'
+import { LoadingState, ErrorState, EmptyState } from '@/components/molecules'
 import { useStrategyExport } from './hooks/useStrategyExport'
 
 
@@ -292,10 +293,10 @@ export default function StrategySnapshotPage(): React.JSX.Element {
             </div>
           </div>
 
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && <ErrorState error={error} variant="inline" />}
 
           {loading ? (
-            <p className="text-sm text-muted-foreground">加载中...</p>
+            <LoadingState variant="spinner" message="加载中..." />
           ) : (
             <div className="grid gap-4 md:grid-cols-3">
               {GROUP_CONFIG.map((group) => (
@@ -311,9 +312,9 @@ export default function StrategySnapshotPage(): React.JSX.Element {
         </TabsContent>
 
         <TabsContent value="history" className="space-y-4">
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && <ErrorState error={error} variant="inline" />}
           {loading ? (
-            <p className="text-sm text-muted-foreground">加载中...</p>
+            <LoadingState variant="spinner" message="加载中..." />
           ) : (
             <div className="grid gap-4 lg:grid-cols-3">
               <Card className="lg:col-span-1">
@@ -362,7 +363,7 @@ export default function StrategySnapshotPage(): React.JSX.Element {
                 </CardHeader>
                 <CardContent>
                   {snapshots.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">暂无历史快照</p>
+                    <EmptyState title="暂无历史快照" />
                   ) : (
                     <ul className="space-y-2">
                       {snapshots.map((snapshot) => (

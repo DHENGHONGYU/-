@@ -8,6 +8,7 @@
 
 import React, { useEffect } from 'react'
 import { PageHeader } from '@/components/templates'
+import { ErrorState, EmptyState } from '@/components/molecules'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
@@ -50,11 +51,24 @@ export default function ReviewLaunchPage(): React.JSX.Element {
   const symbol = useReviewLaunchStore((s) => s.symbol)
   const result = useReviewLaunchStore((s) => s.result)
   const secondWave = useReviewLaunchStore((s) => s.secondWaveSignal)
+  const marketBreadth = useReviewLaunchStore((s) => s.marketBreadth)
+  const rotationScore = useReviewLaunchStore((s) => s.rotationScore)
+  const chip = useReviewLaunchStore((s) => s.chip)
+  const hardRisks = useReviewLaunchStore((s) => s.hardRisks)
   const loading = useReviewLaunchStore((s) => s.loading)
   const error = useReviewLaunchStore((s) => s.error)
   const setSymbol = useReviewLaunchStore((s) => s.setSymbol)
   const runEvaluation = useReviewLaunchStore((s) => s.runEvaluation)
   const reset = useReviewLaunchStore((s) => s.reset)
+
+  const chipRiskLabel =
+    chip == null
+      ? '—'
+      : chip.riskLevel === 'high'
+        ? '高'
+        : chip.riskLevel === 'medium'
+          ? '中'
+          : '低'
 
   useEffect(() => {
     if (error) logger.warn('[ReviewLaunchPage]', { error })
@@ -91,7 +105,7 @@ export default function ReviewLaunchPage(): React.JSX.Element {
           <Button size="sm" onClick={() => void runEvaluation()} disabled={loading || !symbol}>
             {loading ? '评估中...' : '运行评估'}
           </Button>
-          {error && <span className="text-sm text-destructive">{error}</span>}
+          {error && <ErrorState error={error} variant="inline" />}
         </CardContent>
       </Card>
 
@@ -172,6 +186,53 @@ export default function ReviewLaunchPage(): React.JSX.Element {
             </Card>
           </div>
 
+          {/* 增强因子（板块/筹码/市场宽度/硬风险） */}
+          <Card>
+            <CardHeader>
+              <CardTitle>增强因子明细</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm sm:grid-cols-4">
+                <div>
+                  <div className="text-xs text-muted-foreground">市场宽度 (MAS)</div>
+                  <div className="font-medium">{marketBreadth != null ? marketBreadth.toFixed(0) : '—'}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-muted-foreground">板块景气 f1</div>
+                  <div className="font-medium">{rotationScore ? rotationScore.f1Jingqi.toFixed(0) : '—'}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-muted-foreground">板块资金 f2</div>
+                  <div className="font-medium">{rotationScore ? rotationScore.f2Zijin.toFixed(0) : '—'}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-muted-foreground">筹码风险</div>
+                  <div className="font-medium">
+                    {chip == null ? '—' : `${chipRiskLabel} (${chip.score.toFixed(0)})`}
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs text-muted-foreground">三条禁令：</span>
+                {hardRisks.length === 0 ? (
+                  <Badge variant="outline">未命中</Badge>
+                ) : (
+                  hardRisks.map((t) => (
+                    <Badge key={t} variant="destructive">
+                      {t}
+                    </Badge>
+                  ))
+                )}
+              </div>
+              {rotationScore && (
+                <p className="text-xs text-muted-foreground">
+                  板块：{rotationScore.sectorName}
+                  {rotationScore.swLevel1 ? `（${rotationScore.swLevel1}/${rotationScore.swLevel2 ?? ''}/${rotationScore.swLevel3 ?? ''}）` : ''}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+
           {/* 主升浪二波形态诊断 */}
           {secondWave && (
             <Card>
@@ -212,11 +273,10 @@ export default function ReviewLaunchPage(): React.JSX.Element {
       )}
 
       {!result && !loading && (
-        <Card>
-          <CardContent className="p-6 text-center text-sm text-muted-foreground">
-            选择标的并运行评估，RLES 将给出复盘启动就绪度与分流建议
-          </CardContent>
-        </Card>
+        <EmptyState
+          title="选择标的并运行评估"
+          description="RLES 将给出复盘启动就绪度与分流建议"
+        />
       )}
     </div>
   )

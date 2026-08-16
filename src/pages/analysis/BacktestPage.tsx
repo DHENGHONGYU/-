@@ -7,8 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/atoms/Badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/atoms/Table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/molecules/Tabs'
-import { Download, RotateCcw, Play, BarChart3, TrendingUp, AlertCircle, Info, History } from 'lucide-react'
+import { Download, RotateCcw, Play, BarChart3, TrendingUp, Info, History } from 'lucide-react'
 import { PageContainer, PageHeader } from '@/components/templates'
+import { ErrorState } from '@/components/molecules'
 import { useBacktestStore, type BacktestStrategy } from '@/store/backtestStore'
 import { COLOR_TOKENS, CHART_PALETTE, THEME_TOKENS, STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 
@@ -146,12 +147,7 @@ export default function BacktestPage(): React.JSX.Element {
 
       // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
       {(error ?? '') !== '' && (
-        <Card className={`border-destructive/50 bg-destructive/5`}>
-          <CardContent className="flex items-center gap-3">
-            <AlertCircle className={`h-5 w-5 text-destructive`} />
-            <span className="text-destructive">{error}</span>
-          </CardContent>
-        </Card>
+        <ErrorState error={error ?? ''} variant="card" />
       )}
 
       {results && (

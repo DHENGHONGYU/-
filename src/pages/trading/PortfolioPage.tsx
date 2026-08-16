@@ -20,13 +20,13 @@ import {
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { PageContainer, PageHeader } from '@/components/templates'
 import {
   CapitalAllocationPanel,
   DualFactorEvaluationPanel,
   evaluateDualFactor,
   EmptyState,
+  ErrorState,
   Skeleton,
   type DualFactorResult,
   type TechnicalSignal,
@@ -206,7 +206,7 @@ const PortfolioPage = memo(() => {
         {/* 加载/错误提示 */}
         // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
         {(pfError ?? '') !== '' && (
-          <p className={`text-sm ${COLOR_TOKENS.danger.tailwind}`}>错误：{pfError}</p>
+          <ErrorState error={pfError ?? ''} variant="inline" />
         )}
 
         {/* 核心组合 */}
@@ -222,12 +222,10 @@ const PortfolioPage = memo(() => {
                 <Skeleton variant="text" className="h-4 w-24" />
               </div>
             ) : !portfolio ? (
-              <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">暂无组合数据</p>
-                <p className="text-xs text-muted-foreground">
-                  请先加载观察池和持仓数据，然后点击"加载投资组合"构建核心组合。
-                </p>
-              </div>
+              <EmptyState
+                title="暂无组合数据"
+                description="请先加载观察池和持仓数据，然后点击&quot;加载投资组合&quot;构建核心组合。"
+              />
             ) : (
               <div className="space-y-2 transition-opacity duration-300">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">

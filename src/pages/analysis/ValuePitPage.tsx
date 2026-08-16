@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router'
-import { Target, RefreshCw, ChevronDown, ChevronUp, AlertCircle, CheckCircle, XCircle, Clock } from 'lucide-react'
+import { Target, RefreshCw, ChevronDown, ChevronUp, CheckCircle, XCircle, Clock } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
 import { Progress } from '@/components/atoms/Progress'
+import { LoadingState, ErrorState, EmptyState } from '@/components/molecules'
 import { PageContainer, PageHeader } from '@/components/templates'
 import {
   Breadcrumb,
@@ -89,10 +90,7 @@ export default function ValuePitPage(): React.JSX.Element {
   if (loading) {
     return (
       <PageContainer>
-        <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4">
-          <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">正在计算价值洼地评分...</p>
-        </div>
+        <LoadingState variant="spinner" message="正在计算价值洼地评分..." />
       </PageContainer>
     )
   }
@@ -104,14 +102,7 @@ export default function ValuePitPage(): React.JSX.Element {
   if (error) {
     return (
       <PageContainer>
-        <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4">
-          <AlertCircle className="h-8 w-8 text-destructive" />
-          <p className="text-sm text-destructive">{error}</p>
-          <Button variant="outline" onClick={runAnalysis}>
-            <RefreshCw className="mr-2 h-4 w-4" />
-            重试
-          </Button>
-        </div>
+        <ErrorState error={error} onRetry={runAnalysis} variant="card" />
       </PageContainer>
     )
   }
@@ -123,14 +114,10 @@ export default function ValuePitPage(): React.JSX.Element {
   if (combinedResults.length === 0) {
     return (
       <PageContainer>
-        <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4">
-          <Target className="h-8 w-8 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">暂无评分数据</p>
-          <Button variant="outline" onClick={runAnalysis}>
-            <RefreshCw className="mr-2 h-4 w-4" />
-            刷新
-          </Button>
-        </div>
+        <EmptyState
+          title="暂无评分数据"
+          action={{ label: '刷新', onClick: runAnalysis }}
+        />
       </PageContainer>
     )
   }

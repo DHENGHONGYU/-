@@ -6,7 +6,7 @@
  *   1. A 股行情（tencentQuote）：验证 Vite proxy URL + 腾讯行情解析
  *   2. 港股行情（tencentQuote）：验证 s_hk00700 代码转换 + 港股行情解析
  *   3. A 股 K 线（tencentKline）：验证 Vite proxy URL + qfqday 解析
- *   4. 港股 K 线（tencentKline）：腾讯接口不支持港股 K 线 → 返回空数组（不抛异常）
+ *   4. 港股 K 线（tencentKline）：腾讯 K 线接口港股代码为 hk00700（无 s_ 前缀）→ 成功解析（此前 s_hk00700 导致 param error）
  *   5. 新浪港股行情（sinaQuote）：验证 rt_hk00700 代码转换 + 新浪行情解析
  *   6. Vite proxy URL 路径验证：所有 fetch 请求必须走 /api/proxy/... 同源路径
  *   7. 异常降级：网络错误 / HTTP 500 / 超时（AbortError）→ DirectDataAPIError
@@ -170,8 +170,23 @@ const TENCENT_A_KLINE_DAY_ONLY_JSON = {
 /** 腾讯 K 线 v_pv_none_match 错误响应（param 参数被错误编码时返回） */
 const TENCENT_KLINE_VPV_NONE_MATCH = 'v_pv_none_match="1";'
 
-/** 腾讯港股 K 线空响应（腾讯 K 线接口不支持港股） */
+/** 腾讯港股 K 线空响应（接口返回空 data → 降级为空数组） */
 const TENCENT_HK_KLINE_EMPTY_JSON = { code: 0, msg: '', data: {} }
+
+/** 腾讯港股 K 线真实响应 — 注意 data key 为 hk00700（无 s_ 前缀，区别于实时行情的 s_hk00700） */
+const TENCENT_HK_KLINE_JSON = {
+  code: 0,
+  msg: '',
+  data: {
+    hk00700: {
+      qfqday: [
+        ['2026-08-06', '479.000', '478.800', '483.200', '475.400', '16319939.000'],
+        ['2026-08-07', '478.800', '480.000', '482.000', '476.000', '15000000.000'],
+      ],
+    },
+  },
+}
+
 
 /** 新浪港股行情真实响应（0700.HK 腾讯控股） */
 const SINA_HK_QUOTE_RAW = `var hq_str_rt_hk00700="TENCENT,腾讯控股,479.000,479.200,483.200,475.400,478.800,-0.400,-0.083,478.600,478.800,7803757295.250,16319939,17.403,0.000,675.134,411.000,2026/08/07,16:08:22,1";`
@@ -319,10 +334,36 @@ describe('directDataAPI 集成测试 — Vite proxy + 港股代码转换', () =>
   })
 
   // ============================================================
-  // 4. 港股 K 线（tencentKline）— 腾讯接口不支持港股 K 线
+  // 4. 港股 K 线（tencentKline）— 腾讯 K 线接口港股代码为 hk00700（无 s_ 前缀）
   // ============================================================
   describe('港股 K 线 tencentKline', () => {
-    test('0700.HK → 腾讯返回空数据 → 返回空数组（不抛异常）', async () => {
+    test('0700.HK → hk00700 代码 + 真实港股 K 线解析成功', async () => {
+      mockFetch.mockResolvedValue(createJsonResponse(TENCENT_HK_KLINE_JSON))
+
+      const klines = await tencentKline('0700.HK', 'day', 10)
+
+      expect(klines).toHaveLength(2)
+      expect(klines[0]!.date).toBe('2026-08-06')
+      expect(klines[0]!.open).toBe(479.0)
+      expect(klines[0]!.close).toBe(478.8)
+      expect(klines[0]!.high).toBe(483.2)
+      expect(klines[0]!.low).toBe(475.4)
+      expect(klines[0]!.volume).toBe(16319939)
+      expect(klines[0]!.source).toBe('tencent')
+    })
+
+    test('0700.HK → fetch URL 包含 hk00700（非 s_hk00700）', async () => {
+      mockFetch.mockResolvedValue(createJsonResponse(TENCENT_HK_KLINE_JSON))
+
+      await tencentKline('0700.HK', 'day', 10)
+
+      const calledUrl = mockFetch.mock.calls[0]?.[0] as string
+      expect(calledUrl).toContain('/api/proxy/tencent-kline/')
+      expect(calledUrl).toContain('hk00700')
+      expect(calledUrl).not.toContain('s_hk00700')
+    })
+
+    test('0700.HK → 腾讯返回空 data → 返回空数组（降级）', async () => {
       mockFetch.mockResolvedValue(createJsonResponse(TENCENT_HK_KLINE_EMPTY_JSON))
 
       const klines = await tencentKline('0700.HK', 'day', 10)
@@ -330,17 +371,7 @@ describe('directDataAPI 集成测试 — Vite proxy + 港股代码转换', () =>
       expect(klines).toEqual([])
     })
 
-    test('0700.HK → fetch URL 包含 s_hk00700', async () => {
-      mockFetch.mockResolvedValue(createJsonResponse(TENCENT_HK_KLINE_EMPTY_JSON))
-
-      await tencentKline('0700.HK', 'day', 10)
-
-      const calledUrl = mockFetch.mock.calls[0]?.[0] as string
-      expect(calledUrl).toContain('/api/proxy/tencent-kline/')
-      expect(calledUrl).toContain('s_hk00700')
-    })
-
-    test('0700.HK → v_pv_none_match 响应（非 JSON）→ 抛出 Error（触发上层降级）', async () => {
+    test('v_pv_none_match 响应（非 JSON）→ 抛出 Error（触发上层降级）', async () => {
       // v_pv_none_match 是腾讯 K 线参数错误时返回的纯文本响应（非 JSON）
       // tencentKline 调用 response.json() 会抛 SyntaxError，被包装为 DirectDataAPIError
       // 这是预期行为：让上层 orchestrator 捕获后降级到下一个数据源
@@ -934,8 +965,8 @@ describe('directDataAPI 集成测试 — Vite proxy + 港股代码转换', () =>
       expect(klines.some((k) => k.date === '2026-08-07')).toBe(true)
     })
 
-    test('tencentKline 港股返回空 → 不降级（腾讯不支持港股 K 线），直接返回空数组', async () => {
-      // 腾讯港股 K 线返回空 data（不抛异常），orchestrator 无需降级
+    test('tencentKline 港股返回空 data → 不降级（直接返回空数组）', async () => {
+      // 腾讯港股 K 线（hk00700）返回空 data（不抛异常），orchestrator 无需降级
       mockFetch.mockResolvedValueOnce(createJsonResponse(TENCENT_HK_KLINE_EMPTY_JSON))
 
       const klines = await tencentKline('0700.HK', 'day', 10)

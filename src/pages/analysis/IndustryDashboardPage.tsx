@@ -24,6 +24,7 @@ import type {
   TrendDirection,
 } from '@/data/types/types.sector'
 import { Loading, Empty } from '@/components/molecules/states'
+import { ErrorState } from '@/components/molecules'
 
 const logger = getLogger()
 
@@ -233,14 +234,7 @@ export default function IndustryDashboardPage(): React.JSX.Element {
   if (error) {
     return (
       <PageContainer>
-        <Card>
-          <CardContent className="p-8 text-center">
-            <p className="text-destructive">{error}</p>
-            <Button variant="outline" size="sm" onClick={handleRefresh} className="mt-2">
-              重试
-            </Button>
-          </CardContent>
-        </Card>
+        <ErrorState error={error} onRetry={handleRefresh} variant="card" />
       </PageContainer>
     )
   }

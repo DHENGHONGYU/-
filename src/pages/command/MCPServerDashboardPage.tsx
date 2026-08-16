@@ -8,6 +8,7 @@ import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
 import { PageContainer, PageHeader } from '@/components/templates'
+import { LoadingState, ErrorState, EmptyState } from '@/components/molecules'
 import { useMCPServerStore } from '@/store/mcpServerStore'
 import { mcpRegistry } from '@/mcp/core/registry'
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'
@@ -96,30 +97,20 @@ export default function MCPServerDashboardPage(): React.JSX.Element {
 
       {isLoading && (
         <Card>
-          <CardContent className="py-8 text-center text-muted-foreground">
-            <RefreshCw className="h-8 w-8 mx-auto mb-2 animate-spin" />
-            <p>加载中...</p>
+          <CardContent className="py-8">
+            <LoadingState variant="spinner" message="加载中..." />
           </CardContent>
         </Card>
       )}
 
       // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
       {(error ?? '') !== '' && (
-        <Card className="border-destructive/50">
-          <CardContent className="py-4">
-            <p className="text-destructive">{error}</p>
-          </CardContent>
-        </Card>
+        <ErrorState error={error ?? ''} variant="card" />
       )}
 
       // 静默回退(空字符串兜底)：确认数据源可能为 undefined/null
       {!isLoading && (error ?? '') === '' && servers.length === 0 && (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-16 text-muted-foreground">
-            <Server className="h-12 w-12 mb-3 opacity-30" />
-            <p>暂无已注册的 MCP Server</p>
-          </CardContent>
-        </Card>
+        <EmptyState title="暂无已注册的 MCP Server" />
       )}
 
       <div className="space-y-4">

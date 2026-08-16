@@ -20,6 +20,7 @@ import {
 } from '@/components/atoms/Breadcrumb'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { PageContainer, PageHeader } from '@/components/templates'
+import { LoadingState, ErrorState, EmptyState } from '@/components/molecules'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
@@ -180,10 +181,10 @@ const RiskControlPage = memo(() => {
 
         {/* 加载/错误状态 */}
         {loading && (
-          <p className="text-sm text-muted-foreground">加载风控数据中...</p>
+          <LoadingState variant="spinner" message="加载风控数据中..." />
         )}
         {error && (
-          <p className={`text-sm ${COLOR_TOKENS.danger.tailwind}`}>错误：{error}</p>
+          <ErrorState error={error} variant="inline" />
         )}
 
         {/* 裁决记录列表 */}
@@ -193,7 +194,7 @@ const RiskControlPage = memo(() => {
           </CardHeader>
           <CardContent>
             {verdicts.length === 0 ? (
-              <p className="text-sm text-muted-foreground">暂无风控裁决记录</p>
+              <EmptyState title="暂无风控裁决记录" />
             ) : (
               <div className="space-y-2">
                 {verdicts.slice(0, 20).map((verdict) => (

@@ -1,4 +1,6 @@
-interface CurrencyProps {
+import React from 'react'
+
+interface CurrencyProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** 金额数值 */
   value: number
   /** 货币符号，默认 ¥ */
@@ -9,8 +11,6 @@ interface CurrencyProps {
   showSign?: boolean
   /** 是否使用紧凑模式（万/亿），默认 false */
   compact?: boolean
-  /** 自定义 className */
-  className?: string
 }
 
 /**
@@ -19,14 +19,18 @@ interface CurrencyProps {
  * - 正数显示 + 号
  * - 支持紧凑模式（万/亿）
  */
-export function Currency({
-  value,
-  symbol = '¥',
-  decimals = 2,
-  showSign = true,
-  compact = false,
-  className = '',
-}: CurrencyProps) {
+export const Currency = React.forwardRef<HTMLSpanElement, CurrencyProps>((
+  {
+    value,
+    symbol = '¥',
+    decimals = 2,
+    showSign = true,
+    compact = false,
+    className = '',
+    ...rest
+  },
+  ref
+) => {
   const absValue = Math.abs(value)
   const sign = value > 0 ? '+' : value < 0 ? '-' : ''
 
@@ -44,8 +48,10 @@ export function Currency({
   }
 
   return (
-    <span className={className}>
+    <span className={className} ref={ref} {...rest}>
       {showSign && sign}{symbol}{display}
     </span>
   )
-}
+})
+
+Currency.displayName = 'Currency'

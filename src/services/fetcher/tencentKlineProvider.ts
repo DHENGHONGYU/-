@@ -15,6 +15,7 @@ import {
   type KlineItem,
   DirectDataAPIError,
   buildTencentCode,
+  buildTencentKlineCode,
   safeNumber,
   fetchWithTimeout,
   isAbortError,
@@ -86,8 +87,9 @@ export async function tencentBatchQuotes(codes: string[]): Promise<StockQuote[]>
  */
 export async function tencentKline(code: string, period = 'day', count: number): Promise<KlineItem[]> {
   const startTs = Date.now()
-  const tencentCode = buildTencentCode(code)
-  const url = `${TENCENT_KLINE_API_BASE}appstock/app/fqkline/get?param=${tencentCode},${period},,,${count},qfq`
+  // 注意：K 线接口港股代码为 hk00700（无 s_ 前缀），必须用 buildTencentKlineCode
+  const klineCode = buildTencentKlineCode(code)
+  const url = `${TENCENT_KLINE_API_BASE}appstock/app/fqkline/get?param=${klineCode},${period},,,${count},qfq`
   logger.info('[directDataAPI] tencentKline start', { code, period, count, url })
 
   try {
@@ -98,7 +100,7 @@ export async function tencentKline(code: string, period = 'day', count: number):
     const json = (await response.json()) as Record<string, unknown>
     const latency = Date.now() - startTs
     logger.info('[directDataAPI] tencentKline parsed', { code, latency })
-    return parseTencentKline(json, code)
+    return parseTencentKline(json, klineCode)
   } catch (err) {
     const latency = Date.now() - startTs
     const aborted = isAbortError(err)
@@ -118,12 +120,10 @@ function resolveStockData(json: Record<string, unknown>, code: string): Record<s
     logger.warn('[directDataAPI] parseTencentKline: no data field', { code })
     return null
   }
-  const tencentCode = buildTencentCode(code)
-  const stockData = data[tencentCode] as Record<string, unknown> | undefined
+  // code 已是 buildTencentKlineCode 推导的腾讯 K 线代码（A 股 sh600519 / 港股 hk00700）
+  const stockData = data[code] as Record<string, unknown> | undefined
   if (stockData) return stockData
-  const direct = data[code] as Record<string, unknown> | undefined
-  if (direct) return direct
-  logger.warn('[directDataAPI] parseTencentKline: no stock entry', { code, tencentCode })
+  logger.warn('[directDataAPI] parseTencentKline: no stock entry', { code })
   return null
 }
 

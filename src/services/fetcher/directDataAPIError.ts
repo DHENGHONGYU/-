@@ -95,6 +95,24 @@ export function buildTencentCode(code: string): string {
   return `${prefix}${bare}`
 }
 
+/**
+ * 构建腾讯 K 线请求代码：A 股 sh600519 / 港股 hk00700（不带 s_ 前缀）。
+ *
+ * ⚠️ 与 buildTencentCode 的差异（关键 bug 修复）：
+ * 腾讯 K 线接口（web.ifzq.gtimg.cn/appstock/app/fqkline/get）的港股数据 key 为
+ * `hk00700`（无 s_ 前缀），而实时行情接口为 `s_hk00700`。此前 tencentKline 复用
+ * buildTencentCode 导致港股 K 线 URL 与解析 key 均为错误的 `s_hk00700`，腾讯返回
+ * `param error` / `v_pv_none_match` → 港股 K 线恒为空。本函数专用于 K 线，修正该错位。
+ */
+export function buildTencentKlineCode(code: string): string {
+  const prefix = getMarketPrefix(code)
+  const bare = stripCodeSuffix(code)
+  if (prefix === 'hk') {
+    return `hk${bare.padStart(HK_CODE_LENGTH, '0')}`
+  }
+  return `${prefix}${bare}`
+}
+
 /** 构建新浪行情请求代码：A 股 sh600519 / 港股 rt_hk00700 */
 export function buildSinaCode(code: string): string {
   const prefix = getMarketPrefix(code)
