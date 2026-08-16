@@ -66,7 +66,7 @@ describe('fetchNews — westock + 腾讯新闻 合并（维度 05 质量提升�
     tencentMock.mockResolvedValue([mk('X', 'tencentnews', 'u-x2')]) // 同标题不同 url
     const items = await fetchNews('sh600519', 'hot_news')
     expect(items.length).toBe(1)
-    expect(items[0]._source).toBe('westock')
+    expect(items[0]?._source).toBe('westock')
   })
 
   it('hot_news：westock 为空 → 仅腾讯新闻', async () => {
@@ -82,7 +82,7 @@ describe('fetchNews — westock + 腾讯新闻 合并（维度 05 质量提升�
     tencentMock.mockResolvedValue(null)
     const items = await fetchNews('sh600519', 'hot_news')
     expect(items.length).toBe(1)
-    expect(items[0]._source).toBe('westock')
+    expect(items[0]?._source).toBe('westock')
   })
 
   it('hot_news：双源超 10 条 → 截断前 10（westock 前 8 优先）', async () => {
@@ -100,7 +100,7 @@ describe('fetchNews — westock + 腾讯新闻 合并（维度 05 质量提升�
     const items = await fetchNews('sh600519', 'announcement')
     expect(tencentMock).not.toHaveBeenCalled()
     expect(items.length).toBe(1)
-    expect(items[0]._source).toBe('westock')
+    expect(items[0]?._source).toBe('westock')
   })
 
   it('hot_news：双源均失败/空 → 返回 []（走降级链，不抛）', async () => {
