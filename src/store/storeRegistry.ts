@@ -82,6 +82,7 @@ export const STORE_REGISTRY: ReadonlyArray<StoreRegistryEntry> = [
   { id: 'PredictionStore', filePath: 'src/store/predictionStore', status: 'active' },
   { id: 'RegistrationContractStore', filePath: 'src/store/registrationContractStore', status: 'active' },
   { id: 'ResearchPoolStore', filePath: 'src/store/researchPoolStore', status: 'active' },
+  { id: 'ReviewLaunchStore', filePath: 'src/store/reviewLaunchStore', status: 'active' },
   { id: 'RiskStore', filePath: 'src/store/riskStore', status: 'active' },
   { id: 'RotationSignalStore', filePath: 'src/store/rotationSignalStore', status: 'active' },
   { id: 'RuntimeTradingConfigStore', filePath: 'src/store/runtimeTradingConfigStore', status: 'active' },
