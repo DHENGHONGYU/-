@@ -106,19 +106,19 @@
 
 ### 8.2 关键修正（推翻前文两处表述）
 
-- ❌ 旧表述"Chroma 缺失=风险" → **更正**：向量检索主动选用**本地 HNSW**（`hnswIndex.ts` + `vectorProvider.ts` + transformers.js 本地嵌入），受 **ADR-014（vector-search-over-tfidf，状态 Proposed）** 约束，嵌入随文档存 `local_docs.embedding`、索引态存 `vector_index_meta`(v33)。**比外部 Chroma 更契合"本地化+随时调用"原则**。真正待办是 ADR-014 `Proposed→Accepted` + 确认向量模块生产就绪，而非"补 Chroma"。
+- ❌ 旧表述"Chroma 缺失=风险" → **更正**：向量检索主动选用**本地 HNSW**（`hnswIndex.ts` + `vectorProvider.ts` + transformers.js 本地嵌入），受 **ADR-014（vector-search-over-tfidf，状态已 Accepted·2026-08-16）** 约束，嵌入随文档存 `local_docs.embedding`、索引态存 `vector_index_meta`(v33)。**比外部 Chroma 更契合"本地化+随时调用"原则**。真正待办是 ADR-014 `Proposed→Accepted` + 确认向量模块生产就绪，而非"补 Chroma"。
 - ❌ 旧表述"Store 24 vs 50+ 漂移" → **更正**：权威 `STORE_NAME` 实际 = **50**（validate-data-blueprint "got 50"）；文档资产清单"24"、校验脚本期望"41"均陈旧；`audit-store-coverage` 的"64"是更宽的受控 Store 集合（含 Zustand 封装）。治理动作：把文档与校验脚本期望统一到 50。
 
 ### 8.3 实锤缺陷（回答"是否已兜底"的核心证据）
 
-`validate-data-consistency` 原报 **2 错误（实为同一问题两行输出）**，已于 **2026-08-16 修复**，现 **0 错误**（仅余 6 个预存在 WARNING）。
+`validate-data-consistency` 原报 **2 错误（实为同一问题两行输出）**，已于 **2026-08-16（P0 轮）修复**；另余 **6 个 WARNING** 已于同日（待办补充轮）清零——现 **0 错误、0 警告、73 项通过、退出码 0**。
 
 1. **`proofread_reports`（报告输出库）校验误报——根因在校验脚本，不在业务代码**（已修复）：
    - 真实实体类型是 `FileImportProofreadReport`（`src/types/modules/data-sync.types.ts:271`），其 `meta: { reportId, generatedAt, fileHash, ... }` 嵌套结构与 schema `src/data/db-schema.ts:497` 的 `keyPath:'meta.reportId'`、索引 `meta.generatedAt`/`meta.fileHash` **完全一致**；生成器（`src/services/file-import/proofreadReportGenerator.ts:233`）与消费者（`src/store/fileImportStore.ts:126` 取 `report.meta.reportId`、`src/data/dataLayerContentStores.ts:301` 按 `reportId` 查）均按 `meta.reportId` 读写。
    - **误报根因**：① 校验脚本 `STORE_TO_TYPE_MAP` 缺 `proofread_reports` 条目，启发式误推到 `src/data/types/types.hybridProofread.ts:92` 中**同名但功能完全不同的 `ProofreadReport`（代码安全扫描，扁平 `id`）**；② 原 `extractFields` 仅取顶层字段，无法识别嵌套 `meta.reportId`。故报"主键字段不存在"。
    - ⚠️ **历史诊断纠错**：早期曾建议"在 `ProofreadReport` 接口补 `meta` 或改 schema 为扁平 `reportId`"——这是**假修复方向**：动业务代码会破坏运行时（消费者/生成器均依赖 `meta.reportId`）。正确做法是修校验脚本（认对类型 + 支持嵌套 keyPath），业务代码一律不动。
    - 修复落点：`scripts/other/validate-data-consistency.ts` —— ① `STORE_TO_TYPE_MAP` 增 `proofread_reports: 'FileImportProofreadReport'`；② 定点注入 `data-sync.types.ts` 的非碰撞接口（避免扩大全目录扫描引发 `Stock`/`RbacUser` 等同名类型被 modules 版本覆盖的回归，曾因此瞬间引入 21 个误报）；③ 新增 `collectNestedFieldPaths`（带注释剥离）仅【追加】嵌套路径，保留原始顶层提取以零回归。
-- 修复后另余 **6 个 warning（预存在、非阻断）**：`analysis_results` / `collection_history` / `conflict_log` / `file_import_records` / `schedule_configs` 缺映射实体类型（靠启发式推断），归属 P1/P2 资产化项。
+- 6 个 WARNING（预存在）：`analysis_results` / `collection_history` / `conflict_log` / `file_import_records` / `schedule_configs` 缺映射实体类型（靠启发式推断）。已于 **2026-08-16 待办补充轮清零**：`STORE_TO_TYPE_MAP` 补 5 条精确映射（`CollectionHistoryEntry`/`GlobalScheduleConfig`/`AnalysisResultEntry`/`ConflictLogEntry`/`FileImportRecordEntry`），并为 `dataLayerContentStores.ts` 内联的 3 个非导出 `*Entry` 新增宽松解析 `parseInterfacesInclusive` 定点注入（零碰撞、零回归）。**至此存储一致性门禁彻底绿**。
 
 > **启示**：`audit-db-references` 绿 ≠ 存储层全绿。网关/ACL 层已兜底，但**细粒度 schema/类型一致性层未兜底**——这正是"报告本地化"为弱项的底层根因。同时提醒：**校验脚本本身的映射/解析缺陷会制造"假红灯"**，排障时须先验证"是代码真不一致，还是校验器看错了类型"。
 
@@ -126,7 +126,7 @@
 
 | 项 | 是否核心 | 兜底状态 |
 |---|---|---|
-| 向量库建设（本地 HNSW） | ✅ 核心 | 已建（ADR-014 仍 Proposed，待 Accepted） |
+| 向量库建设（本地 HNSW） | ✅ 核心 | 已建（ADR-014 已 Accepted·2026-08-16） |
 | 采集资料本地化 | ✅ 核心 | 已兜底（网关/ACL 绿；仅 Store 计数陈旧待校准） |
 | 输出报告本地化 | ✅ 核心 | **半兜底**：文件导出可用、`proofread_reports` 类型一致性已修（2026-08-16），但**无报告历史库** → 仍需资产化（P1） |
 | 随时调用随时分析 | ✅ 核心 | 已兜底（ACL 0 错、DataBridge query 绿） |
@@ -134,5 +134,7 @@
 ### 8.5 待办升级
 
 - **P0（已修复·2026-08-16）**：`proofread_reports` 类型一致性 —— 已定位为**校验脚本误映射**（非业务代码缺陷），在 `validate-data-consistency.ts` 修 `STORE_TO_TYPE_MAP` + 嵌套 keyPath 解析 + 定点类型注入，现 0 错误；`validate-data-blueprint` 计数漂移（41→50）同步修复。⚠️ 提醒：勿按旧诊断去改 `ProofreadReport` 业务接口（假修复）。
-- **P1**：报告资产化（新增 `generated_reports` + `report_templates` first-class store）。
-- **P2**：STORE_NAME 计数文档统一（24→50）；ADR-014 Proposed→Accepted；`DeduplicationService` 接线或显式移除；`db-reference-audit` 技能 SOP 路径（`scripts/validate-data-*.ts`）修正为 `scripts/other/`；6 个 warning store 补齐实体类型映射（消 warning）。
+- **P1（待拍板·功能开发）**：报告资产化（新增 `generated_reports` + `report_templates` first-class store + DataBridge 信封 + ACL 配置），取代纯 Electron `fs.writeFileSync` 导出即弃，支持报告历史回溯/模板复用。
+- **P2（已修复·2026-08-16 待办补充轮）**：① ADR-014 Proposed→**Accepted**（frontmatter + 正文）；② `db-reference-audit` 技能 SOP 路径 `scripts/validate-data-*.ts`→**`scripts/other/`**；③ 6 个 warning store 补齐实体类型映射（**消 warning**，见 8.3）。
+- **P2（残留·文档漂移）**：STORE_NAME 计数文档统一（24→50）——活动文档 `docs/explanation/数据治理路线图.md` 仍多处声称 24（属历史路线图验收目标，非硬错误）；`docs/archive/**` 历史快照大量声称 24/47 等，**保持原貌不改动**；已正确文档 `docs/guides/how-to/how-to-data-import-export.md` 写 50+、`validate-data-blueprint.ts` 硬编码 50。建议单列 doc-code 专项（`doc-code-dual-proofreading` 技能）统一活动文档计数，避免误改历史快照。
+- **P2（待拍板·架构决策）**：`DeduplicationService` 接线或显式移除——已注册 active 但全仓零业务调用（采集去重实际只靠 `dataVersion` 合并），属"假活跃"，需决策接入采集热路径或移出注册表。

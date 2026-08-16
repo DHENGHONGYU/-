@@ -138,6 +138,26 @@ function parseInterfaces(filePath: string): InterfaceInfo[] {
 }
 
 /**
+ * 宽松版接口解析：匹配「含或不含 export 的 interface」（如 dataLayerContentStores.ts 内联的 *Entry 类型）。
+ * 仅用于定点注入特定文件，避免改动全局 parseInterfaces 正则而误伤其它 store 的启发式推断。
+ */
+function parseInterfacesInclusive(filePath: string): InterfaceInfo[] {
+  const content = fs.readFileSync(filePath, 'utf-8')
+  const interfaces: InterfaceInfo[] = []
+  const interfaceRegex = /^\s*(?:export\s+)?interface\s+(\w+)\s*\{/gm
+  let match: RegExpExecArray | null
+  while ((match = interfaceRegex.exec(content)) !== null) {
+    const name = match[1]
+    const startIndex = match.index + match[0].length
+    const body = extractBalancedBody(content, startIndex)
+    if (body === null) continue
+    const fields = [...extractFields(body), ...collectNestedFieldPaths(body)]
+    interfaces.push({ name, fields })
+  }
+  return interfaces
+}
+
+/**
  * 递归收集指定目录下所有 .ts 文件中的 export interface。
  */
 function collectInterfaces(dir: string): InterfaceInfo[] {
@@ -540,6 +560,14 @@ const STORE_TO_TYPE_MAP: Record<string, string> = {
   // proofread_reports 的真实实体类型为 FileImportProofreadReport（src/types/modules/data-sync.types.ts），
   // 切勿误映射到 src/data/types/types.hybridProofread.ts 中同名但功能不同的代码安全扫描类型 ProofreadReport。
   proofread_reports: 'FileImportProofreadReport',
+  // 以下 5 个 store 的真实实体类型分别定义在 src/types/modules 与 src/data/dataLayerContentStores.ts（内联 *Entry），
+  // 脚本启发的单数化推断名（AnalysisResult/CollectionHistory/ConflictLog/FileImportRecord/ScheduleConfig）与真实类型名不符，
+  // 故在此显式映射以消除「缺实体类型」告警；真实类型已随定点注入纳入扫描。
+  collection_history: 'CollectionHistoryEntry',
+  schedule_configs: 'GlobalScheduleConfig',
+  analysis_results: 'AnalysisResultEntry',
+  conflict_log: 'ConflictLogEntry',
+  file_import_records: 'FileImportRecordEntry',
 }
 
 function inferTypeName(storeName: string): string {
@@ -898,6 +926,17 @@ function main(): void {
     const existingNames = new Set(interfaces.map((x) => x.name))
     for (const iface of parseInterfaces(proofreadTypeFile)) {
       if (!existingNames.has(iface.name)) interfaces.push(iface)
+    }
+  }
+  // dataLayerContentStores.ts 内联定义了 AnalysisResultEntry / ConflictLogEntry / FileImportRecordEntry（非 export），
+  // 这三个即 analysis_results / conflict_log / file_import_records 的真实实体类型，不在默认扫描目录内；
+  // 用宽松版解析（parseInterfacesInclusive）定点注入以消解「缺实体类型」告警。
+  // 该文件仅 3 个内联 interface 且带 Entry 后缀，与已扫描类型零碰撞。
+  const dataLayerStoresFile = path.join(PROJECT_ROOT, 'src', 'data', 'dataLayerContentStores.ts')
+  if (fs.existsSync(dataLayerStoresFile)) {
+    const existingNames2 = new Set(interfaces.map((x) => x.name))
+    for (const iface of parseInterfacesInclusive(dataLayerStoresFile)) {
+      if (!existingNames2.has(iface.name)) interfaces.push(iface)
     }
   }
   const storeNames = parseStoreNames(DB_CONFIG_FILE)

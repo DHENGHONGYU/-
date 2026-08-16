@@ -49,10 +49,10 @@ gates: []
 
 ```powershell
 # 蓝图一致性：Store 数量 + 核心实体 Interface 存在性
-node node_modules/tsx/dist/cli.mjs scripts/validate-data-blueprint.ts
+node node_modules/tsx/dist/cli.mjs scripts/other/validate-data-blueprint.ts
 
 # 类型-Schema 一致性：Store 主键/索引字段是否存在于 Interface
-node node_modules/tsx/dist/cli.mjs scripts/validate-data-consistency.ts
+node node_modules/tsx/dist/cli.mjs scripts/other/validate-data-consistency.ts
 
 # 交叉引用一致性（本 SKILL 新增）
 node node_modules/tsx/dist/cli.mjs scripts/audit-db-references.ts

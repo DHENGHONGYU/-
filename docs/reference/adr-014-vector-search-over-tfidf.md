@@ -4,7 +4,7 @@ type: reference
 domain: data
 phase: design
 tier: important
-status: proposed
+status: accepted
 maintainer: V9 Architecture Team
 summary: "在现有 TF-IDF 语义搜索基础上，引入基于 transformers.js 的本地向量嵌入和 HNSW 近似最近邻索引，提供更高质量的语义检索能力。采用渐进式升级策略，保持 TF-IDF 作为回退方案，确保零风险过渡。"
 tags: [data, vector-search, hnsw, semantic-search, embedding, adr, reference]
@@ -21,7 +21,7 @@ date: 2026-07-20
 
 # ADR-014: 向量搜索升级方案（HNSW + transformers.js）
 
-> **状态**: Proposed  
+> **状态**: Accepted  
 > **提出日期**: 2026-07-20  
 > **Version**: v1.0.0
 
