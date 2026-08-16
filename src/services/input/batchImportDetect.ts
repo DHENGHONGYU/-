@@ -15,7 +15,7 @@
 import { INPUT_CONFIG } from '@/config/inputConfig'
 import { getLogger } from '@/lib/logger'
 
-import { BOM_CHAR_CODE, STOCK_CODE_PATTERN, type BulkImportRow } from './batchImportParsers'
+import { BOM_CHAR_CODE, isValidStockCode, type BulkImportRow } from './batchImportParsers'
 
 const logger = getLogger()
 
@@ -41,12 +41,12 @@ export function detectDuplicates(
   const seenInBatch = new Set<string>()
 
   const result = rows.map((row) => {
-    // 代码格式校验
-    if (!STOCK_CODE_PATTERN.test(row.code)) {
+    // 代码格式校验（A股6位 / 港股4-5位，可带或不带 .HK 后缀）
+    if (!isValidStockCode(row.code)) {
       return {
         ...row,
         status: 'invalid' as const,
-        statusReason: '代码格式不合规（需为 6 位数字）',
+        statusReason: '代码格式不合规（A股6位 / 港股4-5位）',
       }
     }
     // 与意向候选池重复

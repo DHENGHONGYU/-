@@ -64,6 +64,19 @@ export const BOM_CHAR_CODE = 0xfeff
 /** A 股代码格式：6 位数字 */
 export const STOCK_CODE_PATTERN = /^\d{6}$/
 
+/**
+ * 港股代码格式：4-5 位数字，可带或不带 .HK 后缀（如 00700 / 00700.HK）。
+ * 注：系统权威字典（stockDictionary）港股用裸码 + market:'HK'，本解析器为保持
+ * 与 A 股 `.SH/.SZ` 一致的内部 symbol 约定，港股统一产出 `00700.HK` 形式。
+ */
+export const HK_STOCK_CODE_PATTERN = /^\d{4,5}(\.HK)?$/i
+
+/** 校验股票代码合法性（A股6位 / 港股4-5位，可带或不带 .HK 后缀） */
+export function isValidStockCode(raw: string): boolean {
+  const t = (raw ?? '').trim()
+  return STOCK_CODE_PATTERN.test(t) || HK_STOCK_CODE_PATTERN.test(t)
+}
+
 /** 检测交易所：6 开头 → SH，其他 → SZ */
 export function detectExchange(code: string): string {
   if (STOCK_CODE_PATTERN.test(code)) {
@@ -107,6 +120,36 @@ const PARSERS: RowParser[] = [
     const code = line
     const exchange = detectExchange(code)
     return { code, name: code, symbol: `${code}.${exchange}`, status: 'valid' }
+  },
+  // 格式5: 00700.HK,名称（港股带后缀）
+  (parts) => {
+    if (parts.length < 2) return null
+    const m = parts[0]!.match(/^(\d{4,5})\.HK$/i)
+    if (!m) return null
+    const code = m[1]!
+    const name = parts[1]!.slice(0, MAX_NAME_LENGTH)
+    return { code, name, symbol: `${code}.HK`, status: 'valid' }
+  },
+  // 格式6: 仅 00700.HK（港股带后缀，无名称）
+  (_parts, line) => {
+    const m = line.match(/^(\d{4,5})\.HK$/i)
+    if (!m) return null
+    const code = m[1]!
+    return { code, name: code, symbol: `${code}.HK`, status: 'valid' }
+  },
+  // 格式7: 00700,名称（港股裸码带名称）
+  (parts) => {
+    if (parts.length < 2) return null
+    if (!/^\d{4,5}$/.test(parts[0]!)) return null
+    const code = parts[0]!
+    const name = parts[1]!.slice(0, MAX_NAME_LENGTH)
+    return { code, name, symbol: `${code}.HK`, status: 'valid' }
+  },
+  // 格式8: 仅 00700（港股裸码）
+  (_parts, line) => {
+    if (!/^\d{4,5}$/.test(line)) return null
+    const code = line
+    return { code, name: code, symbol: `${code}.HK`, status: 'valid' }
   },
 ]
 
@@ -257,7 +300,12 @@ function extractStockCode(field: string): string | null {
   if (STOCK_CODE_PATTERN.test(trimmed)) {
     return trimmed
   }
-  const match = trimmed.match(/^(\d{6})\.(SH|SZ|BJ)$/i)
+  let match = trimmed.match(/^(\d{6})\.(SH|SZ|BJ)$/i)
+  if (match?.[1] !== undefined) {
+    return match[1]
+  }
+  // 港股：00700.HK 或裸码 00700 → 返回裸码（交易所经 resolveExchange 判定）
+  match = trimmed.match(/^(\d{4,5})(\.HK)?$/i)
   if (match?.[1] !== undefined) {
     return match[1]
   }
@@ -288,10 +336,13 @@ function buildRowFromFields(fields: string[]): BulkImportRow | null {
   return { code, name, symbol: `${code}.${exchange}`, status: 'valid' }
 }
 
-/** 从原始字段解析交易所代码：优先后缀 (.SH/.SZ/.BJ)，否则按代码规则推断 */
+/** 从原始字段解析交易所代码：优先后缀 (.SH/.SZ/.BJ/.HK)，否则按代码规则推断 */
 function resolveExchange(code: string, rawField: string): string {
-  const match = rawField.match(/\.(SH|SZ|BJ)$/i)
-  return match?.[1] !== undefined ? match[1].toUpperCase() : detectExchange(code)
+  const match = rawField.match(/\.(SH|SZ|BJ|HK)$/i)
+  if (match?.[1] !== undefined) return match[1].toUpperCase()
+  // 裸 4-5 位码按港股处理（A 股为 6 位）
+  if (/^\d{4,5}$/.test(code)) return 'HK'
+  return detectExchange(code)
 }
 
 /** 解析 CSV 文本为 BulkImportRow[] */
@@ -363,13 +414,23 @@ function parseJsonRow(item: unknown, maxRows: number, currentCount: number): Bul
 
   const obj = item as Record<string, unknown>
   const rawCode = obj.code ?? obj.symbol ?? ''
-  const code = (typeof rawCode === 'string' ? rawCode : JSON.stringify(rawCode)).trim()
+  let code = (typeof rawCode === 'string' ? rawCode : JSON.stringify(rawCode)).trim()
   const rawName = obj.name ?? ''
   const name = (typeof rawName === 'string' ? rawName : JSON.stringify(rawName)).trim()
 
-  if (!STOCK_CODE_PATTERN.test(code)) return null
+  if (!isValidStockCode(code)) return null
 
-  const exchange = detectExchange(code)
+  // 交易所判定：港股（4-5 位，可带 .HK）→ HK；A 股（6 位）→ SH/SZ
+  let exchange: string
+  const hkMatch = code.match(/^(\d{4,5})\.HK$/i)
+  if (hkMatch) {
+    exchange = 'HK'
+    code = hkMatch[1]!
+  } else if (/^\d{4,5}$/.test(code)) {
+    exchange = 'HK'
+  } else {
+    exchange = detectExchange(code)
+  }
   return {
     code,
     name: name || code,
@@ -459,8 +520,8 @@ function parseExcelHtmlTable(text: string): BulkImportRow[] {
 
     if (cells.length === 0) continue
 
-    // 跳过表头行（首格非 6 位数字）
-    if (firstRow && !STOCK_CODE_PATTERN.test(cells[0] ?? '')) {
+    // 跳过表头行（首格非股票代码）
+    if (firstRow && !isValidStockCode(cells[0] ?? '')) {
       firstRow = false
       continue
     }
