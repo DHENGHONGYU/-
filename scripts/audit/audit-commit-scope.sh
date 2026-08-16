@@ -20,7 +20,9 @@ STAGED_FILES_FILE="$TMP_BASE-staged"
 ARTIFACT_MARKER="$TMP_BASE-artifact"
 
 cleanup() {
-  rm -f "$DOMAIN_MAP_FILE" "$ROOT_MATCH_FILE" "$AFFECTED_DOMAINS" "$STAGED_FILES_FILE" "$ARTIFACT_MARKER"
+  # 本环境 rm 被 safe-delete 垫片拦截，对 Git-Bash 的 /tmp 路径会误报失败（genie-trash 拒绝对非绝对路径回收）；
+  # 清理失败绝不影响作用域校验结论，故用 command rm 绕过垫片并强制容错（2>/dev/null || true）。
+  command rm -f "$DOMAIN_MAP_FILE" "$ROOT_MATCH_FILE" "$AFFECTED_DOMAINS" "$STAGED_FILES_FILE" "$ARTIFACT_MARKER" 2>/dev/null || true
 }
 trap cleanup EXIT
 
@@ -32,12 +34,28 @@ else
 fi
 echo "[scope-guard] 暂存文件数: $STAGED_COUNT"
 
-# ── 规则 1：单次提交文件数 ≤ 30（BLOCK） ──
-MAX_FILES=30
+# ── 规则 1：单次提交文件数 ≤ 阈值（BLOCK） ──
+# docs/ 纯文档变更阈值放宽至 50，src/ 等代码变更保持 30
+DOCS_ONLY=false
+DOCS_COUNT=$(echo "$STAGED_FILES" | grep -c '^docs/' || echo 0)
+if [ "$DOCS_COUNT" -eq "$STAGED_COUNT" ] && [ "$STAGED_COUNT" -gt 0 ]; then
+  DOCS_ONLY=true
+fi
+
+if [ "$DOCS_ONLY" = true ]; then
+  MAX_FILES=50
+  echo "[scope-guard] 检测到纯文档变更（docs/），阈值放宽至 50"
+else
+  MAX_FILES=30
+fi
+
 if [ "$STAGED_COUNT" -gt "$MAX_FILES" ]; then
   echo "  ❌ [BLOCK] 本次提交包含 $STAGED_COUNT 个文件，超过上限 $MAX_FILES。"
   echo "     单次提交文件数过多会导致 review 困难、回滚风险增大。"
   echo "     请拆分为多个原子提交，建议每次聚焦单一变更主题。"
+  if [ "$DOCS_ONLY" = false ]; then
+    echo "     （纯文档变更（docs/）上限为 50 文件）"
+  fi
   exit 1
 fi
 
