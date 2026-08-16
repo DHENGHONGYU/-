@@ -28,6 +28,8 @@ interface TencentNewsToolDef {
   command: string
   /** 从 Tool 入参构造 CLI 参数串 */
   buildArgs: (args: Record<string, unknown>) => string
+  /** 单次 CLI 超时覆盖（ms）；缺省走 Bridge 实例级 20s。用于上游天然缓慢命令（如 jiaozhen 事实核查常态 >20s） */
+  timeoutMs?: number
 }
 
 /** 把 CLI 调用结果包装为 ToolResult（成功→文本；失败→isError） */
@@ -83,7 +85,7 @@ const TENCENT_NEWS_TOOL_DEFS: TencentNewsToolDef[] = [
     },
     command: 'search',
     buildArgs: (a) => {
-      const kw = String(a.keyword ?? '')
+      const kw = String((a.keyword as string) ?? '')
       const limit = a.limit != null ? ` --limit ${Number(a.limit)}` : ''
       return `${kw}${limit}`.trim()
     },
@@ -97,7 +99,9 @@ const TENCENT_NEWS_TOOL_DEFS: TencentNewsToolDef[] = [
       required: ['claim'],
     },
     command: 'jiaozhen',
-    buildArgs: (a) => String(a.claim ?? ''),
+    buildArgs: (a) => (a.claim ? ` --query=${String(a.claim as string)}` : ''),
+    // 事实核查上游常态 >20s，放宽到 60s，避免被实例级 20s 超时误杀
+    timeoutMs: 60_000,
   },
   {
     name: 'tencentnews_weather',
@@ -107,7 +111,7 @@ const TENCENT_NEWS_TOOL_DEFS: TencentNewsToolDef[] = [
       properties: { adcode: { type: 'string', description: '地区 adcode' } },
     },
     command: 'weather',
-    buildArgs: (a) => (a.adcode ? ` --adcode ${String(a.adcode)}` : ''),
+    buildArgs: (a) => (a.adcode ? ` --adcode ${String(a.adcode as string)}` : ''),
   },
 ]
 
@@ -135,7 +139,9 @@ export class TencentNewsServer extends MCPServerBase {
       inputSchema: def.inputSchema,
       handler: async (args: Record<string, unknown>): Promise<ToolResult> => {
         try {
-          const text = await tencentNewsCliBridge.invoke(def.command, def.buildArgs(args))
+          const text = await tencentNewsCliBridge.invoke(def.command, def.buildArgs(args), {
+            timeoutMs: def.timeoutMs,
+          })
           return toToolResult(text)
         } catch (err) {
           // CliError（unavailable/timeout/nonzero/empty/spawn）→ 明确失败，交采集舱降级

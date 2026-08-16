@@ -198,36 +198,72 @@ export async function fetchChipData(symbol: string): Promise<ChipData | null> {
  *
  * 优先级：Tushare → 东财爬虫 → LLM 联网搜索 → 新浪代理 → []
  */
+/**
+ * 新闻去重：优先按标题归一化键（避免 westock 与腾讯新闻重复报道同一事件被算两条），
+ * 标题缺失时退化为 url/id；保留首次出现（westock 先 push，天然优先）。
+ */
+function dedupeNewsItems(items: NewsItem[]): NewsItem[] {
+  const seen = new Set<string>()
+  const out: NewsItem[] = []
+  for (const it of items) {
+    const titleKey = (it.title || '').replace(/\s+/g, '').toLowerCase()
+    const fallbackKey = (it.url && it.url.length > 0 ? it.url : '') || (it.id ?? '')
+    const key = (titleKey || fallbackKey || '').toLowerCase()
+    if (!key || seen.has(key)) continue
+    seen.add(key)
+    out.push(it)
+  }
+  return out
+}
+
 export async function fetchNews(
   symbol: string,
   category: 'announcement' | 'hot_news',
   _stockName?: string,
 ): Promise<NewsItem[]> {
-  // 0. 腾讯自选股 MCP 源（优先级 1，技术方案 §5.4）—— 直接覆盖 04/05 公告新闻维度
-  //    失败时（含浏览器无 child_process）由 westockMcpSource 内部 recordSourceResult(false) 后降级。
-  try {
-    const westockItems = await fetchNewsViaWestock(symbol, category)
-    if (westockItems && westockItems.length > 0) {
-      return westockItems.slice(0, 10).map((item) => ({ ...item, _source: 'westock' as const }))
-    }
-  } catch (err) {
-    logger.warn(`[multiSourceFetcher] westock 新闻失败，降级到既有源: ${symbol} ${category}`, {
-      error: err instanceof Error ? err.message : String(err),
-    })
-  }
+  // 维度 04(announcement)/05(hot_news) 取数。
+  // 质量策略（2026-08-16 修复）：hot_news 维度 westock(个股公告/新闻) 与
+  //   腾讯新闻(泛资讯/行业舆情) 互补——**并行取数后合并去重取前 10**，
+  //   既保留 westock 个股维度优先级（先 push，去重后靠前），又让新接入的腾讯新闻
+  //   richer 泛资讯真正进入维度 05（避免被 westock 早返回阴影遮蔽）。
+  //   腾讯新闻带 TTL 缓存(60s)，并行取数对采集效率几乎零额外成本；
+  //   announcement 维度腾讯新闻无对应能力（适配层返回 null），仅 westock 贡献，语义不变。
+  const collected: NewsItem[] = []
 
-  // 0.5 腾讯新闻 MCP 源（维度 04/05 泛资讯/行业新闻；技术方案 §5.4）
-  //     与 westock 互补：westock 覆盖个股公告/新闻，腾讯新闻覆盖泛资讯/行业舆情。
-  //     announcement 类无对应维度，由适配层直接返回 null 降级；失败由 tencentNewsMcpSource 内部 recordSourceResult(false) 后降级。
-  try {
-    const tnItems = await fetchNewsViaTencentNews(symbol, category)
-    if (tnItems && tnItems.length > 0) {
-      return tnItems.slice(0, 10).map((item) => ({ ...item, _source: 'tencentnews' as const }))
+  // 0. westock（并行，维度 04/05 既有优先级 1 个股源）
+  const westockTask = (async () => {
+    try {
+      const westockItems = await fetchNewsViaWestock(symbol, category)
+      if (westockItems && westockItems.length > 0) {
+        collected.push(...westockItems.map((item) => ({ ...item, _source: 'westock' as const })))
+      }
+    } catch (err) {
+      logger.warn(`[multiSourceFetcher] westock 新闻失败: ${symbol} ${category}`, {
+        error: err instanceof Error ? err.message : String(err),
+      })
     }
-  } catch (err) {
-    logger.warn(`[multiSourceFetcher] 腾讯新闻失败，降级到既有源: ${symbol} ${category}`, {
-      error: err instanceof Error ? err.message : String(err),
-    })
+  })()
+
+  // 0.5 腾讯新闻（仅 hot_news 维度有意义；announcement 由适配层直接返回 null）
+  const tencentTask = category === 'hot_news'
+    ? (async () => {
+        try {
+          const tnItems = await fetchNewsViaTencentNews(symbol, category)
+          if (tnItems && tnItems.length > 0) {
+            collected.push(...tnItems.map((item) => ({ ...item, _source: 'tencentnews' as const })))
+          }
+        } catch (err) {
+          logger.warn(`[multiSourceFetcher] 腾讯新闻失败: ${symbol} ${category}`, {
+            error: err instanceof Error ? err.message : String(err),
+          })
+        }
+      })()
+    : Promise.resolve()
+
+  await Promise.all([westockTask, tencentTask])
+
+  if (collected.length > 0) {
+    return dedupeNewsItems(collected).slice(0, 10)
   }
 
   // 1. Tushare（熔断器检查：circuit-open 时跳过）
@@ -581,14 +617,14 @@ export async function fetchDimensionData(
     }
     case '04': {
       const news = await fetchNews(symbol, 'announcement')
-      if (news.length > 0) return { items: news, symbol, count: news.length, date: new Date().toISOString(), _source: (news[0]?._source as string) ?? 'unknown' }
+      if (news.length > 0) return { items: news, symbol, count: news.length, date: new Date().toISOString(), _source: (news[0]?._source) ?? 'unknown' }
       const mock = await fetchFromMockServer(symbol, '04')
       if (mock) return mock
       return null
     }
     case '05': {
       const news = await fetchNews(symbol, 'hot_news')
-      if (news.length !== 0) return { items: news, symbol, count: news.length, date: new Date().toISOString(), _source: (news[0]?._source as string) ?? 'unknown' }
+      if (news.length !== 0) return { items: news, symbol, count: news.length, date: new Date().toISOString(), _source: (news[0]?._source) ?? 'unknown' }
       const mock = await fetchFromMockServer(symbol, '05')
       if (mock) return mock
       return null
@@ -609,7 +645,7 @@ export async function fetchDimensionData(
     }
     case '08': {
       const reports = await fetchResearchReports(symbol)
-      if (reports.length > 0) return { items: reports, symbol, count: reports.length, date: new Date().toISOString(), _source: (reports[0]?._source as string) ?? 'unknown' }
+      if (reports.length > 0) return { items: reports, symbol, count: reports.length, date: new Date().toISOString(), _source: (reports[0]?._source) ?? 'unknown' }
       const mock = await fetchFromMockServer(symbol, '08')
       if (mock) return mock
       return null

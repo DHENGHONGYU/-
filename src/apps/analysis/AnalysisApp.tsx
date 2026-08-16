@@ -37,6 +37,7 @@ const NewsPage = React.lazy(() => import('@/pages/analysis/NewsPage'))
 const HotSectorPage = React.lazy(() => import('@/pages/analysis/HotSectorPage'))
 const ValuePitPage = React.lazy(() => import('@/pages/analysis/ValuePitPage'))
 const MultiFactorFilterPage = React.lazy(() => import('@/pages/analysis/MultiFactorFilterPage'))
+const ReviewLaunchPage = React.lazy(() => import('@/pages/analysis/ReviewLaunchPage'))
 
 const logger = getLogger()
 
@@ -61,6 +62,7 @@ const ANALYSIS_ROUTES: AnalysisRoute[] = [
   { path: '/analysis/hot-sector', branch: 'hot-sector', componentName: 'HotSectorPage', component: <HotSectorPage />, fallback: '加载热门板块页...' },
   { path: '/analysis/value-pit', branch: 'value-pit', componentName: 'ValuePitPage', component: <ValuePitPage />, fallback: '加载价值洼地页...' },
   { path: '/analysis/multi-factor', branch: 'multi-factor', componentName: 'MultiFactorFilterPage', component: <MultiFactorFilterPage />, fallback: '加载多因子筛选页...' },
+  { path: '/analysis/review-launch', branch: 'review-launch', componentName: 'ReviewLaunchPage', exact: false, component: <ReviewLaunchPage />, fallback: '加载复盘启动分析页...' },
 ]
 
 function matchAnalysisRoute(path: string): AnalysisRoute {

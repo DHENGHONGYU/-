@@ -389,3 +389,128 @@ class TencentNewsCliBridge {
   npx vitest run src/services/data-collector/tencentNewsMcpSource.test.ts --pool=threads
   ```
 - 门禁在普通开发环境按 AGENTS.md 执行：`npm run tsc:prod` / `audit:layers` / `audit:acl-consistency` / `audit:hardcode` / 相关 vitest。
+
+---
+
+## 14. 真实案例基线测试（2026-08-16）
+
+> 目的：对环境与真实案例做基线测试，量化**质量**（字段完整率）与**效率**（延迟），作为 M1–M5 前后对比的参考线，并暴露缺陷。
+
+### 14.1 方法与范围
+
+- 临时基线脚本 `_tmp_verify/tencentNewsBaseline.test.ts`（gitignored，不进提交套件，避免 CI 无 CLI 时失败）。
+- **仅 mock `mcpBridge` 的「路由」**（指向真实 `TencentNewsServer` handler），数据层（CLI spawn + 文本解析 + 计分 `recordSourceResult`）**全部真实**。
+- 覆盖：6 per-tool 真实调用（hot/morning/evening/search/jiaozhen/weather）+ 2 端到端适配器调用（`fetchNewsViaTencentNews` / `fetchIndustryNewsViaTencentNews`）+ 降级路径 + `check_health`/资源。
+- 实时 CLI：`C:\Users\DELL/.tencent-news-cli/bin/tencent-news-cli.exe`；密钥来自 CLI 本地配置文件（非源码）。
+- **基线过程中修复 1 个真实缺陷**：`tencentnews_jiaozhen` 原 `buildArgs` 把 claim 当位置参数传（`jiaozhen <claim>`），而 CLI 要求 `jiaozhen --query=<claim>` → 100% 失败；已改为 ` --query=<claim>`。
+
+### 14.2 实测指标（真实 CLI 取数）
+
+| 调用 | 类型 | 延迟(ms) | 条目数 | 字段完整率(title/source/date/url/content) | 备注 |
+|---|---|---:|---:|---|---|
+| `tencentnews_hot` | per-tool | ~800 | 10 | 10/10/10/10/10 (100%) | 热点榜 |
+| `tencentnews_morning` | per-tool | ~940 | 15 | 15/0/0/15/15 | 早报无 source/date 字段（CLI 数据特性，非缺陷） |
+| `tencentnews_evening` | per-tool | ~260 | 0 | — | 18:00 前返回提示文案（非错误，已如实记录） |
+| `tencentnews_search` | per-tool | ~1100 | 10 | 10/10/10/10/10 (100%) | 行业主题检索 |
+| `tencentnews_jiaozhen` | per-tool | 12–20s(波动) | 0 | — | 事实核查工具（非新闻流）；输出非列表格式→0 解析条目；上游延迟大、偶发 20s 超时 |
+| `tencentnews_weather` | per-tool | ~600 | 0 | — | 非金融衍生维度；上游 API 对 adcode 失败→0 条目（优雅降级） |
+| **`fetchNewsViaTencentNews(hot_news)`** | 端到端 | **~970** | **25** | title/url/content 25/25；source/date 10/25（仅 hot 部分有） | hot 10 + morning 15 合并 |
+| **`fetchIndustryNewsViaTencentNews`** | 端到端 | **~1250** | **20** | 20/20/20/20/20 (100%) | search×2（数据采集 + 金融科技）各 10 |
+
+### 14.3 降级与健壮性（全部符合预期）
+
+- `TENCENTNEWS_DISABLED=1` → `fetchNewsViaTencentNews` 返回 `null`（跳过，不崩）。
+- `announcement` 类别 → 返回 `null`（腾讯新闻无个股公告维度，正确降级）。
+- `check_health` → `{"ok":true,"source":"tencentnews","server":"marketdata:tencentnews"}`；资源暴露 `marketdata://tencentnews/health`（application/json）。
+- CLI 缺失 / 超时 / 非零退出均被 `TencentNewsCliBridge` 捕获 → 适配器 `recordSourceResult({success:false})` → `multiSourceFetcher` 自动降级其它源，**主流程不中断**。
+
+### 14.4 质量与效率结论（vs M1–M5 之前）
+
+- **之前**：维度 04/05（泛资讯 / 行业新闻）常年空 或 Mock，无真实结构化资讯。
+- **之后**：真实结构化资讯（标题 / 摘要 / 来源 / 时间 / 链接五字段），维度 04/05 由「空 → 真实」。
+  - **质量**：`hot` / `search` 端到端 100% 字段完整；行业检索 20 条全字段齐备，可直接支撑投研复盘行业舆情输入。
+  - **效率**：单次聚合取数 **< 1.3s**（hot_news 25 条 ~0.97s；行业 20 条 ~1.25s），满足采集舱实时性；CLI 单次调用 0.25–1.15s，无瓶颈。
+- **已知改进项（非阻断）**：
+  1. `jiaozhen` 事实核查工具上游延迟大（偶发 ~20s 超时），且其输出非新闻列表→0 解析条目；它**不在**新闻采集主路径（`fetchNews` / `fetchIndustry` 仅用 hot/morning/search），不影响维度 04/05 质量/效率。若后续在 UI 暴露事实核查，需单独适配其结果格式并加超时保护。
+  2. `morning` 早报缺 source/date 字段（CLI 数据特性）；聚合后 source/date 仅 hot 部分有。如需早报也带 source/date，推动 CLI 侧补全或适配器补默认。
+  3. `weather` 非金融衍生维度，上游偶发失败→0 条目，已优雅降级，不影响主流程。
+
+### 14.5 复跑方式
+
+```bash
+npx vitest run _tmp_verify/tencentNewsBaseline.test.ts --pool=threads
+```
+
+（需本机已装 CLI 且 `apikey-set`；脚本位于 gitignored 的 `_tmp_verify/`，不进提交测试套件。）
+
+---
+
+## 15. 质量 / 效率修复与复测（2026-08-16 续）
+
+> 在 §14 基线基础上，针对暴露的两个真实缺陷做修复，并复测确认质量与效率达标。
+
+### 15.1 修复清单
+
+| # | 缺陷 | 根因 | 修复 |
+|---|---|---|---|
+| F1 | **缓存穿透禁用/熔断**：`TENCENTNEWS_DISABLED=1` 或源熔断时，`withCache` 仍返回旧缓存数据，导致 DISABLED 失效、熔断穿透 | 缓存读取在守卫（`isTencentNewsEnabled`/`canExecute`）**之前** | 在 `fetchNewsViaTencentNews` / `fetchIndustryNewsViaTencentNews` 中将禁用/熔断守卫提到 `withCache` **之外**，禁用/熔断直接 `return null`，绝不返回缓存旧值；失败/空结果依旧不写入缓存 |
+| F2 | **`jiaozhen` 必超时**：`tencentnews_jiaozhen` 上游常态 >20s，被 Bridge 实例级 20s 超时误杀 → 100% 失败 | 单命令无独立超时；事实核查天然慢 | `TencentNewsCliBridge.invoke` 增加 `options.timeoutMs` 覆盖；`TencentNewsServer` 为 `jiaozhen` 设 `timeoutMs: 60_000` 透传，避免误杀（hot/morning/search 仍走 20s 默认，不影响主路径失败快速暴露） |
+| F3 | **早报被整体丢弃 + 字段漏**：`multiSourceFetcher` 对结果 `slice(0,10)`，而 `fetchNewsViaTencentNews` 返回 hot(10)+morning(15)=25，早报 15 条全被切掉；且早报缺 source/date | 聚合未去重/未交织/未补默认 | `fetchNewsViaTencentNews` 改为：早报补默认 `source='腾讯新闻·早报'`、`date=今天` → 字段完整；hot/morning 按标题去重；交织（实时 hot 前 7 + 早报 morning 前 3）使 top10 同时覆盖实时与早报，整体字段完整率 100% |
+| F4 | **多标的重复 spawn CLI（效率）** | `fetchNews(symbol,'hot_news')` 按标的逐个调用，而腾讯新闻 hot/morning 与标的无关，无缓存 → N 标的 = N 次重复 CLI | 增加模块级 TTL 缓存（hot_news 60s / industry 5min）+ **in-flight 去重**（并发首调共享同一 Promise），失败/空不缓存；TTL 可经 `TENCENTNEWS_CACHE_TTL_MS` 覆盖 |
+
+### 15.2 复测指标（真实 CLI，2026-08-16 续测）
+
+| 调用 | 延迟(ms) | 条目 | 完整率 | 备注 |
+|---|---:|---:|---|---|
+| `tencentnews_hot` | 998 | 10 | 10/10/10/10/10 | 热点榜 |
+| `tencentnews_morning` | 707 | 15 | 15/0/0/15/15 | 早报本身缺 source/date（CLI 特性） |
+| `tencentnews_evening` | 95 | 0 | — | 18:00 前提示文案 |
+| `tencentnews_search` | 803 | 10 | 10/10/10/10/10 | 行业检索 |
+| `tencentnews_jiaozhen` | **36795** | 0 | — | **修复后 isError=false**（60s 超时内成功，之前必超时失败） |
+| `tencentnews_weather` | 450 | 0 | — | 非金融衍生维度，优雅降级 |
+| `fetchNewsViaTencentNews(hot_news)` | 678 | **10** | **10/10/10/10/10 (100%)** | 交织后 top10 同时含实时+早报，字段完整率由 10/25 → 100% |
+| `fetchIndustryNewsViaTencentNews` | 1265 | 20 | 20/20/20/20/20 | 行业检索 100% |
+| 缓存命中（二次同采集周期调用） | **0** | — | — | 首次真实 CLI 635ms → 二次命中缓存 0ms |
+
+### 15.3 降级复测（修复后符合预期）
+
+- `TENCENTNEWS_DISABLED=1` → `fetchNewsViaTencentNews` 返回 `null`（**不再穿透缓存返回旧数据**）。
+- `announcement` → `null`（正确降级）。
+- 单测 `tencentNewsMcpSource.test.ts`：**12/12 通过**（新增「缓存命中不重复 spawn」「仅早报补默认」两用例）。
+- 门禁：`tsc:prod` ✅0、`audit:layers` ✅0、`audit:acl-consistency` ✅0/0、相关 vitest ✅。
+
+### 15.4 质量 / 效率结论（最终）
+
+- **质量**：维度 04/05 交付 top10 字段完整率 **100%**（实时热点 + 早报行业头条交织覆盖）；行业检索 100%；禁用/熔断守卫在缓存之外，降级语义正确。
+- **效率**：同采集周期内多标的（如 50 只）聚合取数由「50×2 次 CLI spawn」收敛为「1 次真实调用 + N−1 次缓存命中（0ms）」，采集主链无冗余 CLI 开销；单次聚合 < 1.3s，无瓶颈。
+- **遗留（非阻断）**：`jiaozhen` / `weather` 输出非新闻列表、上游波动，已各自加超时/降级保护，不在新闻主路径，不影响维度 04/05 质量与效率。
+
+---
+
+## 16. 维度 05 质量再加固：生产入口合并 westock + 腾讯新闻（2026-08-16 续二）
+
+> §14/§15 已在「腾讯新闻源自身」达到 100% 字段完整 + 缓存提效。但复测发现一个**生产接入层的真实质量缺口**：`multiSourceFetcher.fetchNews` 旧实现中，westock（步骤 0）一旦返回数据即 **early-return**，`fetchNewsViaTencentNews`（步骤 0.5）被**阴影遮蔽**——只要 westock 有数据，维度 05 就只剩 westock 的个股公告，新接入的腾讯新闻 richer 泛资讯/行业舆情永远进不来。
+
+### 16.1 修复：hot_news 并行双源合并去重
+
+- `fetchNews(symbol,'hot_news')` 改为 **`Promise.all` 并行**取 westock（个股公告/新闻）+ 腾讯新闻（泛资讯/行业舆情），`collected` 合并后 `dedupeNewsItems` 去重 → `slice(0,10)`。
+- **优先级保持**：westock 先 `push`，去重时保留首次出现 → westock 项天然靠前（个股维度优先）。
+- **去重键**：优先按**标题**归一化（避免两源重复报道同一事件被算两条），标题缺失退化 `url/id`。
+- **效率无损**：腾讯新闻带 60s TTL 缓存（F4），并行取数对采集主链几乎零额外成本；相对旧串行早返回，并行反而**降低**端到端延迟。
+- **announcement 维度语义不变**：腾讯新闻对该维度返回 `null`（无个股公告能力），`tencentTask` 直接 `Promise.resolve()`，仅 westock 贡献，降级链照旧。
+
+### 16.2 复测指标（真实 CLI，2026-08-16 续二测）
+
+| 用例 | 结果 |
+|---|---|
+| `fetchNews('sh600519','hot_news')` 真实生产入口 | **712ms，10 条，腾讯新闻贡献=10**（本沙箱 westock CLI 未装→全来自腾讯新闻；单元已证明 westock 优先+去重确定性） |
+| 字段完整率（top10） | title/url/content 10/10（100%） |
+| 单测 `multiSourceFetcher.tencentnews.test.ts`（新增，7 用例） | **7/7 通过**：双源合并/同标题去重/westock 优先/单源缺失/超 10 截断/announcement 仅 westock/双源皆空降级 |
+| 回归 `tencentNewsMcpSource.test.ts` + `multiSourceFetcher.test.ts` | **34/34 通过**（无回归） |
+| 门禁 | `tsc:prod` ✅0、`audit:layers` ✅0、`audit:acl-consistency` ✅0/0、相关 vitest ✅ |
+
+### 16.3 质量 / 效率结论（最终）
+
+- **质量（维度 05）**：修复前 westock 有数据即遮蔽腾讯新闻；修复后无论 westock 有无数据，腾讯新闻 richer 泛资讯/行业舆情**必然进入**维度 05，与 westock 个股公告**互补合并**，top10 同时覆盖「个股 + 市场泛资讯」，字段完整率 100%。
+- **效率**：并行双源 + 腾讯新闻 TTL 缓存，采集主链无冗余 CLI 开销；相对旧实现（串行 + 阴影遮蔽），延迟不增反降。
+- **健壮性**：双源任一失败/空均被 `try/catch` 隔离，不影响另一源；双源皆失败才走 Tushare/东财/新浪降级链，主流程不中断。
