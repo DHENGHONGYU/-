@@ -26,6 +26,9 @@
 
 ### Changed
 
+- `src/index.css` —— V5 → V6（Warmth Edition）：背景色相 240→36、卡片/次级/边框色同步温暖化、阴影从 rgba() 改为 hsl() 暖色语法、新增 `--surface-elevated`/`--surface-floating` 令牌；暗色模式同步温暖化
+- `tailwind.config.js` —— 新增 `shadow-surface-elevated`/`shadow-surface-floating` 令牌
+- `src/constants/theme/theme.tokens.portal.ts` —— 宋瓷语义色激活：舱室切换器 `bg-muted` → `bg-warm-gray`、顶栏 `bg-background` → `bg-ivory`、侧边栏 `bg-muted` → `bg-warm-gray`、Logo 渐变 `from-primary to-emerald-600` → `from-ru-blue to-primary`
 - `src/main.tsx` —— 从 120 行内联验证逻辑简化为 2 行：`import { verifyDesignTokensOnReady }` + `verifyDesignTokensOnReady()`
 - `src/store/themeStore.ts` —— `applyTheme()` 函数在主题切换后通过 `requestAnimationFrame` 延迟一帧自动调用 `verifyDesignTokens()`，覆盖 setMode / toggleTheme / cycleMode / system listener / rehydrate 全部 5 条主题切换路径
 - **颜色契约统一（文档→代码对齐）**：品牌主色从文档描述"翡翠绿 #0D9165"统一为代码真相源"Apple Blue #007AFF（`--primary: 210 100% 50%`）"，消除跨 9 个文件的双线叙事。宋瓷语义色（汝窑天青、官窑粉青等）降级为装饰性扩展，不参与功能语义。涉及文件：
@@ -45,6 +48,13 @@
   - **P1 字体迁移**：`text-2xl` → `text-h1`（69 处/31 文件）、`text-xl` → `text-h2`（36 处/16 文件），统一为项目自定义排版阶梯（h1: 1.5rem/lh 1.25/w700, h2: 1.25rem/lh 1.3/w600）。涉及 44 个唯一文件共 105 处替换
   - **P1 Agent 预热优化**：`src/App.tsx` 启动静默预热 fallback 从 10 秒缩短至 3 秒，加速 Agent 就绪
   - **P1 sidebarConfig 确认**：`src/config/sidebarConfig.ts` 已存在，`PortallShell.tsx` 已正确引用，无需额外操作
+
+- **UI 设计温度升级 V6（Warmth Edition）**（2026-08-16）：
+  - **底色温暖化**：`src/index.css` 背景色相从 240（冷蓝灰）→ 36（暖象牙灰），卡片色、次级色、边框色同步温暖化，消除"工业风格 SaaS"冷感。暗色模式同步从纯黑冷灰（hue 240）→ 微暖暗色（hue 30）
+  - **表面层级差异化**：新增 `--surface-elevated`（高优先级 Widget 聚焦阴影）和 `--surface-floating`（浮层面板阴影）两个 CSS 变量，与 `tailwind.config.js` 中的 `shadow-surface-elevated`/`shadow-surface-floating` 对齐，建立三层卡片深度系统
+  - **阴影温暖化**：`--shadow-color` 从 240 3% 45%（冷灰）→ 30 8% 40%（暖灰），`--shadow-sm/md/lg` 使用 hsl() 语法替代 rgba()，确保阴影色温与暖色底色协调
+  - **宋瓷语义色激活**：`theme.tokens.portal.ts` 中舱室切换器、顶栏、侧边栏使用 `bg-warm-gray`/`bg-ivory` 替代 `bg-muted`；Logo 渐变从 `from-primary to-emerald-600` → `from-ru-blue to-primary`（汝窑天青），阴影从 `shadow-primary/20` → `shadow-ru-blue/20`
+  - **涨跌非颜色编码验证**：`StockPriceChangeBadge`（▲/▼ + +/- 符号）和 `Percent`（+/- 符号）已实现全局非颜色编码，色盲用户可通过符号区分涨跌
 
 ### Removed
 

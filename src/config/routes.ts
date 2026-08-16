@@ -109,6 +109,12 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '分析舱 - 行业全景仪表盘',
   },
   {
+    path: '/analysis/review-launch',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'analysis',
+    description: '分析舱 - 复盘启动分析（RLES 评价体系）',
+  },
+  {
     path: '/trading/flow',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'trading',
