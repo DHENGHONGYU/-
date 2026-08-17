@@ -3,9 +3,13 @@
  */
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
 export const DB_NAME = testDbName ?? ('V6ProDB' as const)
-export const DB_VERSION = 32 as const
+export const DB_VERSION = 34 as const
 
 // DB_VERSION 升级历史：
+// v33 → v34: 新增 screening_results 存储，支撑多因子筛选结果集持久化（P0 筛选结果集持久化），
+//            取代纯内存态（刷新即丢），支持筛选历史回溯与结果复用。
+// v32 → v33: 新增 generated_reports、report_templates 存储，支撑报告资产化（P1 报告资产化），
+//            取代 Electron fs.writeFileSync 导出即弃，支持报告历史回溯与模板复用。
 // v31 → v32: 新增 profile_items、score_evidence、stock_profiles、profile_tags 存储，
 //            支撑八域资料体系与证据链（ADR-010）。
 // v30 → v31: 新增 collection_history、conflict_log、file_import_records、proofread_reports、
@@ -257,6 +261,18 @@ export const ENVELOPE_ACTION = {
   queryByIndex: 'QUERY_BY_INDEX',
   /** 保存分析结果（v30 新增） */
   saveAnalysisResult: 'SAVE_ANALYSIS_RESULT',
+  // ── 报告资产化（v33 新增，P1 报告资产化）──
+  /** 保存已生成报告历史 */
+  saveGeneratedReport: 'SAVE_GENERATED_REPORT',
+  /** 保存报告模板 */
+  saveReportTemplate: 'SAVE_REPORT_TEMPLATE',
+  /** 删除已生成报告 */
+  deleteGeneratedReport: 'DELETE_GENERATED_REPORT',
+  // ── 筛选结果集持久化（v34 新增，P0 筛选结果集持久化）──
+  /** 保存筛选结果集 */
+  saveScreeningResult: 'SAVE_SCREENING_RESULT',
+  /** 删除筛选结果集 */
+  deleteScreeningResult: 'DELETE_SCREENING_RESULT',
 } as const
 
 export type EnvelopeAction =
@@ -281,6 +297,8 @@ export const MODULE_ID = {
   missingReports: 'missingReports',
   portfolios: 'portfolios',
   tradeReviews: 'tradeReviews',
+  /** 多因子筛选域（v34 新增，P0 筛选结果集持久化） */
+  screening: 'screening',
   datalayer: 'datalayer',
   /** RBAC 权限管理模块（v24 新增） */
   rbac: 'rbac',
@@ -352,6 +370,11 @@ export const STORE_NAME = {
   scoreEvidence: 'score_evidence',
   stockProfiles: 'stock_profiles',
   profileTags: 'profile_tags',
+  // ── 报告资产化（v33 新增，P1 报告资产化）──
+  generatedReports: 'generated_reports',
+  reportTemplates: 'report_templates',
+  // ── 筛选结果集持久化（v34 新增，P0 筛选结果集持久化）──
+  screeningResults: 'screening_results',
 } as const
 
 export type StoreName = (typeof STORE_NAME)[keyof typeof STORE_NAME]
@@ -431,6 +454,9 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
       STORE_NAME.scoreEvidence,
       STORE_NAME.stockProfiles,
       STORE_NAME.profileTags,
+      // 2026-08-17 新增（v33）：报告资产化——分析产出报告与模板的读权限
+      STORE_NAME.generatedReports,
+      STORE_NAME.reportTemplates,
     ],
     write: [
       STORE_NAME.v6Scores,
@@ -445,6 +471,9 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
       STORE_NAME.scoreEvidence,
       STORE_NAME.stockProfiles,
       STORE_NAME.profileTags,
+      // 2026-08-17 新增（v33）：报告资产化——分析产出报告与模板的写权限
+      STORE_NAME.generatedReports,
+      STORE_NAME.reportTemplates,
     ],
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update],
   },
@@ -532,7 +561,7 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
   [MODULE_ID.executionLogs]: {
     read: [STORE_NAME.executionLogs],
     write: [STORE_NAME.executionLogs],
-    actions: [DB_OPERATION.insert],
+    actions: [DB_OPERATION.select, DB_OPERATION.insert],
   },
   [MODULE_ID.missingReports]: {
     read: [STORE_NAME.missingReports],
@@ -552,6 +581,13 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     // ACL_PERMISSION_DENIED（"Module tradeReviews is not allowed to perform SELECT"），
     // 导致复盘页 refresh 回滚、页面空白。
     actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete, DB_OPERATION.select],
+  },
+  [MODULE_ID.screening]: {
+    // 多因子筛选域（v34 新增，P0 筛选结果集持久化）：读取标的基础/评分用于筛选，
+    // 写入 screening_results 持久化筛选运行结果集。
+    read: [STORE_NAME.stocks, STORE_NAME.v6Scores, STORE_NAME.screeningResults],
+    write: [STORE_NAME.screeningResults],
+    actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
   },
   [MODULE_ID.datalayer]: {
     read: Object.values(STORE_NAME),

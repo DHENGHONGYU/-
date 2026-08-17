@@ -119,6 +119,8 @@ export const EVENT_NAMES = {
   TIMELINESS_ANALYSIS_COMPLETED: 'timeliness:analysis:completed',
   /** 周线复盘完成 */
   WEEKLY_REVIEW_COMPLETED: 'weekly:review:completed',
+  /** 观察池复盘完成（投研编排器缺口②） */
+  OBSERVATION_REVIEW_COMPLETED: 'observation:review:completed',
   /** 行情报价更新 */
   MARKET_QUOTE_UPDATE: 'market:quote:update',
   /** 波动预警 */

@@ -218,6 +218,26 @@ export const INDUSTRY_CHAIN_NODE_COLORS = {
 export const INDUSTRY_CHAIN_LABEL_COLOR = COLOR_TOKENS.neutral.hex
 
 // ============================================================
+// V8: 语义维度色桥接（CHART_SEMANTIC_PALETTE → 现有业务色映射）
+// ============================================================
+/**
+ * 语义维度 → 轮动因子色映射
+ * 当图表消费者需要按语义维度选色时，优先使用 CHART_SEMANTIC_PALETTE；
+ * 此映射表仅用于向后兼容现有 ROTATION_FACTOR_COLORS 引用。
+ */
+export const SEMANTIC_TO_FACTOR_COLOR = {
+  valuation: ROTATION_FACTOR_COLORS.GUZHI,      // 估值 → 蓝色
+  quality: COLOR_TOKENS.emerald.hex,             // 质量 → 翠绿
+  momentum: ROTATION_FACTOR_COLORS.ZIJIN,        // 动量 → 琥珀
+  volatility: ROTATION_FACTOR_COLORS.BETA,       // 波动 → 紫色
+  growth: ROTATION_FACTOR_COLORS.JINGQI,         // 成长 → 红色
+  sentiment: COLOR_TOKENS.warning.hex,           // 情绪 → 金色
+  risk: COLOR_TOKENS.danger.hex,                 // 风险 → 红色
+  technical: ROTATION_FACTOR_COLORS.NENGLIANG,   // 技术 → 青色
+  benchmark: COLOR_TOKENS.neutral.hex,           // 基准 → 灰色
+} as const
+
+// ============================================================
 // 资讯情感趋势配色（DA-008）
 // ============================================================
 

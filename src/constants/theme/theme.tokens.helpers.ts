@@ -329,6 +329,95 @@ export const CHART_PALETTE_PRO = {
 } as const
 
 // ============================================================
+// 图表语义色（V7：跨页面维度-颜色映射）
+// ============================================================
+/**
+ * 图表语义色 — 业务维度 → 颜色的一一映射
+ *
+ * 解决第二/三轮评审中"不同页面同一维度的图表配色不一致"问题。
+ * 所有图表组件引用此常量，而非各自选择颜色，确保跨页面认知一致性。
+ *
+ * 设计原则：
+ * - 估值 → 蓝（理性、客观）
+ * - 质量 → 绿（健康、稳健）
+ * - 动量 → 橙（活跃、动能）
+ * - 波动 → 紫（不确定、警示）
+ * - 成长 → 翠绿（生机、向上）
+ * - 情绪 → 金（热度、市场心理）
+ * - 风险 → 红（警告、危险）
+ * - 技术 → 青（精确、计算）
+ * - 基准/对比 → 灰（中性、参考）
+ */
+export const CHART_SEMANTIC_PALETTE = {
+  /** 估值维度 — 蓝色系（理性、客观） */
+  valuation: {
+    primary: '#3b82f6',      // blue-500
+    secondary: '#93c5fd',    // blue-300
+    background: '#dbeafe',   // blue-100
+    dark: '#1e40af',         // blue-800
+  },
+  /** 质量维度 — 绿色系（健康、稳健） */
+  quality: {
+    primary: '#10b981',      // emerald-500
+    secondary: '#6ee7b7',    // emerald-300
+    background: '#d1fae5',   // emerald-100
+    dark: '#065f46',         // emerald-800
+  },
+  /** 动量维度 — 橙色系（活跃、动能） */
+  momentum: {
+    primary: '#f59e0b',      // amber-500
+    secondary: '#fcd34d',    // amber-300
+    background: '#fef3c7',   // amber-100
+    dark: '#92400e',         // amber-800
+  },
+  /** 波动维度 — 紫色系（不确定、警示） */
+  volatility: {
+    primary: '#8b5cf6',      // violet-500
+    secondary: '#c4b5fd',    // violet-300
+    background: '#ede9fe',   // violet-100
+    dark: '#5b21b6',         // violet-800
+  },
+  /** 成长维度 — 翠绿色系（生机、向上） */
+  growth: {
+    primary: '#06b6d4',      // cyan-500
+    secondary: '#67e8f9',    // cyan-300
+    background: '#cffafe',   // cyan-100
+    dark: '#155e75',         // cyan-800
+  },
+  /** 情绪维度 — 金色系（热度、市场心理） */
+  sentiment: {
+    primary: '#f7b731',      // gold / TradingView MA5
+    secondary: '#fed330',    // gold-light
+    background: '#fff9db',   // gold-50
+    dark: '#92600a',         // gold-800
+  },
+  /** 风险维度 — 红色系（警告、危险） */
+  risk: {
+    primary: '#ef4444',      // red-500
+    secondary: '#fca5a5',    // red-300
+    background: '#fee2e2',   // red-100
+    dark: '#991b1b',         // red-800
+  },
+  /** 技术维度 — 青色系（精确、计算） */
+  technical: {
+    primary: '#0ea5e9',      // sky-500
+    secondary: '#7dd3fc',    // sky-300
+    background: '#e0f2fe',   // sky-100
+    dark: '#075985',         // sky-800
+  },
+  /** 基准/对比 — 灰色系（中性、参考） */
+  benchmark: {
+    primary: '#64748b',      // slate-500
+    secondary: '#94a3b8',    // slate-400
+    background: '#f1f5f9',   // slate-100
+    dark: '#334155',         // slate-700
+  },
+} as const
+
+/** 图表语义维度键 */
+export type ChartSemanticDimension = keyof typeof CHART_SEMANTIC_PALETTE
+
+// ============================================================
 // 间距令牌（Spacing Tokens）
 // ============================================================
 

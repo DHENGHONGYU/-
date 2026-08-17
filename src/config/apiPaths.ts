@@ -69,6 +69,12 @@ export const API_COLLECT_SECTORS = '/api/collect/sectors'
 /** 筹码分布采集 API（CYQ 模型，P1 阶段） */
 export const API_COLLECT_CHIP = '/api/collect/chip'
 
+/** 市场宽度（全市场涨跌家数/涨跌停）采集 API（MAS Breadth，RLES D3 时机成熟度真实源） */
+export const API_COLLECT_BREADTH = '/api/collect/breadth'
+
+/** 风险黑名单（ST/退市/违规/处罚/立案）采集 API（RLES D4 三条禁令真实源） */
+export const API_COLLECT_RISK = '/api/collect/risk'
+
 /** LLM Key 同步到 Python 服务配置端点（供 .secrets/ 读取） */
 export const API_COLLECT_CONFIG_LLM_KEY = '/api/collect/config/llm-key'
 

@@ -416,7 +416,7 @@ export function isLlmApiKeyConfigured(): boolean {
     const fullKey = `app:${LLM_API_KEY_STORAGE}`
     const raw = localStorage.getItem(fullKey)
     return !!raw?.includes('"__encrypted":true')
-  } catch (err) { console.warn('[llmConfig.ts]', err);
+  } catch (err) { logger.warn('[llmConfig.ts]', { error: err });
     return false
   }
 }

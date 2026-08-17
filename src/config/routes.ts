@@ -18,6 +18,10 @@ export interface RouteConfig {
   component: LazyExoticComponent<ComponentType<unknown>>
   category: RouteCategory
   description: string
+  /** V10: 是否已废弃/合并，标记后侧边栏自动隐藏，面包屑降级提示 */
+  deprecated?: boolean
+  /** V10: 废弃路由的重定向目标（用于面包屑导航提示） */
+  redirectTo?: string
 }
 
 /**
@@ -65,18 +69,24 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'input',
     description: '输入舱 - 批量导入（已整合至录入看板，fallback 到 /input）',
+    deprecated: true,
+    redirectTo: '/input',
   },
   {
     path: '/input/hot-sectors',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'input',
     description: '输入舱 - 热门板块（已整合至录入看板，fallback 到 /input）',
+    deprecated: true,
+    redirectTo: '/input',
   },
   {
     path: '/input/data-test',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'input',
     description: '输入舱 - 采集测试（已合并至采集监控台）',
+    deprecated: true,
+    redirectTo: '/input/collection-monitor',
   },
   {
     path: '/input/collection-monitor',
@@ -181,18 +191,24 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'output',
     description: '输出舱 - 预测校验（已合并到因子分析）',
+    deprecated: true,
+    redirectTo: '/output/factor-analysis',
   },
   {
     path: '/output/retrospective',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'output',
     description: '输出舱 - 周期复盘（已合并到因子分析）',
+    deprecated: true,
+    redirectTo: '/output/factor-analysis',
   },
   {
     path: '/output/factor-dashboard',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'output',
     description: '输出舱 - 因子画板（已合并到因子分析）',
+    deprecated: true,
+    redirectTo: '/output/factor-analysis',
   },
   {
     path: '/output/chip-strategy',
@@ -384,6 +400,8 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'analysis',
     description: '行业分析（已合并到行业全景仪表盘，自动重定向）',
+    deprecated: true,
+    redirectTo: '/analysis/industry-dashboard',
   },
   {
     path: '/analysis/backtest',
@@ -474,6 +492,8 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'trading',
     description: '执行管理（别名 → execution-plans）',
+    deprecated: true,
+    redirectTo: '/trading/execution-plans',
   },
   {
     path: '/trading/portfolio',
@@ -498,18 +518,24 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'input',
     description: '七维采集策略配置（已合并至采集策略配置）',
+    deprecated: true,
+    redirectTo: '/input/collection-strategy',
   },
   {
     path: '/input/fetcher-config',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'input',
     description: '抓取引擎配置（已合并至采集策略配置）',
+    deprecated: true,
+    redirectTo: '/input/collection-strategy',
   },
   {
     path: '/input/collect-tasks',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'input',
     description: '采集任务监控（已合并至采集监控台）',
+    deprecated: true,
+    redirectTo: '/input/collection-monitor',
   },
   {
     path: '/input/pool-board',
@@ -567,4 +593,71 @@ export function getCabinPaths(): Record<'input' | 'analysis' | 'trading' | 'outp
     output: '/output',
     command: '/command',
   }
+}
+
+// ── V10: 信息架构工具函数 ──
+
+/** 获取所有活跃路由（不含 deprecated） */
+export function getActiveRoutes(): RouteConfig[] {
+  return ROUTE_REGISTRY.filter((r) => !r.deprecated)
+}
+
+/** 获取所有废弃路由 */
+export function getDeprecatedRoutes(): RouteConfig[] {
+  return ROUTE_REGISTRY.filter((r) => r.deprecated)
+}
+
+/**
+ * 按路径查找路由（含废弃）
+ * 用于面包屑导航：访问废弃路由时仍能识别
+ */
+export function findRouteByPath(path: string): RouteConfig | undefined {
+  // 精确匹配
+  const exact = ROUTE_REGISTRY.find((r) => r.path === path)
+  if (exact) return exact
+  // 前缀匹配（支持参数化路由如 /analysis/intelligent-score/:symbol）
+  return ROUTE_REGISTRY.find((r) => {
+    const pattern = r.path.replace(/:\w+/g, '[^/]+')
+    return new RegExp(`^${pattern}$`).test(path)
+  })
+}
+
+/**
+ * 面包屑路径段
+ * 从路径生成层级面包屑，自动匹配路由描述
+ */
+export interface BreadcrumbSegment {
+  label: string
+  path: string
+  /** 是否为废弃路由目标 */
+  deprecated?: boolean
+  /** 废弃路由的迁移目标 */
+  redirectTo?: string
+}
+
+export function getBreadcrumbs(pathname: string): BreadcrumbSegment[] {
+  const segments: BreadcrumbSegment[] = [{ label: '首页', path: '/' }]
+  const parts = pathname.split('/').filter(Boolean)
+  if (parts.length === 0) return segments
+
+  let accumulated = ''
+  for (const part of parts) {
+    accumulated += `/${part}`
+    const route = findRouteByPath(accumulated)
+    if (route) {
+      segments.push({
+        label: route.description,
+        path: accumulated,
+        deprecated: route.deprecated,
+        redirectTo: route.redirectTo,
+      })
+    } else {
+      // 无匹配路由，用路径段名作为 fallback
+      segments.push({
+        label: part.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+        path: accumulated,
+      })
+    }
+  }
+  return segments
 }

@@ -138,6 +138,31 @@ export const CASCADE_CONFIG: Partial<Record<StoreName, CascadeDependency[]>> = {
       description: '权限 → 角色分配',
     },
   ],
+
+  // ── 股票池体系（P0-2 修复：补充 stock_profiles/screening_results/generated_reports）──
+  [STORE_NAME.stocks]: [
+    {
+      childStore: STORE_NAME.stockProfiles,
+      indexName: 'by-symbol',
+      foreignKey: 'symbol',
+      strategy: 'CASCADE',
+      description: '股票 → 八域资料包',
+    },
+    {
+      childStore: STORE_NAME.screeningResults,
+      indexName: 'by-symbol',
+      foreignKey: 'symbol',
+      strategy: 'CASCADE',
+      description: '股票 → 筛选结果',
+    },
+    {
+      childStore: STORE_NAME.generatedReports,
+      indexName: 'by-symbol',
+      foreignKey: 'symbol',
+      strategy: 'CASCADE',
+      description: '股票 → 生成报告',
+    },
+  ],
 }
 
 /**
