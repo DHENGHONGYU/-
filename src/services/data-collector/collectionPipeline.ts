@@ -53,12 +53,14 @@ import {
   canExecute as canSourceExecute,
   recordSourceResult,
 } from './adaptiveSourceOrchestrator'
+import { summarizeNews, digestResearch } from './kimiAIService'
+import type { NewsItem, ResearchReport } from './kimiAIService'
 
 const logger = getLogger()
 
 // ── 类型 ──
 
-type CollectionMode = 'quote' | 'kline' | 'news' | 'research' | 'competitor' | 'index' | 'chip' | 'financial' | 'unsupported'
+type CollectionMode = 'quote' | 'kline' | 'news' | 'research' | 'competitor' | 'index' | 'chip' | 'financial' | 'dividend' | 'consensus' | 'unsupported'
 
 interface RunSingleTraceOptions {
   symbol: string
@@ -98,6 +100,43 @@ const DIMENSION_TO_MODE: Readonly<Record<string, CollectionMode>> = {
   '07': 'index',
   '08': 'research',
   '09': 'financial',
+  // P1 新增维度 (2026-08-17): MCP/iFinD 优先采集
+  '10': 'unsupported',       // 热门板块 → MCP sector_data
+  '11': 'unsupported',       // 技术指标 → MCP stock_highfreq_quotes
+  '12': 'unsupported',       // 资金流向 → MCP get_stock_performance
+  '13': 'unsupported',       // 机构持仓 → MCP get_stock_shareholders
+  '14': 'unsupported',       // 估值分析 → MCP get_stock_financials
+  // P0 新增维度 (2026-08-17): 分红股本 + 一致预期
+  '15': 'dividend',          // 分红股本 → Tushare 三 API + 东财爬虫
+  '16': 'consensus',         // 一致预期 → 东财爬虫
+}
+
+// ── KIMI AI 增强辅助函数 ──
+
+/** 从采集数据中提取新闻条目 */
+function extractNewsItems(dimData: Record<string, unknown>): NewsItem[] {
+  const news = dimData.news ?? dimData.items ?? dimData.data
+  if (!Array.isArray(news)) return []
+  return news.slice(0, 10).map((n: Record<string, unknown>) => ({
+    title: String(n.title ?? ''),
+    summary: String(n.summary ?? n.content ?? '').slice(0, 500),
+    source: String(n.source ?? ''),
+    publishedAt: String(n.publishedAt ?? n.date ?? ''),
+  }))
+}
+
+/** 从采集数据中提取研报条目 */
+function extractResearchReports(dimData: Record<string, unknown>): ResearchReport[] {
+  const reports = dimData.reports ?? dimData.items ?? dimData.data
+  if (!Array.isArray(reports)) return []
+  return reports.slice(0, 8).map((r: Record<string, unknown>) => ({
+    title: String(r.title ?? ''),
+    rating: String(r.rating ?? r.reportRating ?? ''),
+    targetPrice: typeof r.targetPrice === 'number' ? r.targetPrice : undefined,
+    analyst: String(r.analyst ?? r.source ?? ''),
+    content: String(r.content ?? r.summary ?? '').slice(0, 500),
+    date: String(r.date ?? r.publishedAt ?? ''),
+  }))
 }
 
 // ── Mock 维度数据生成器（已禁用 —— MOCK 数据不真实，真实源失败直接报错）──
@@ -141,6 +180,8 @@ const DIMENSION_TO_ACTION: Readonly<Record<string, EnvelopeAction>> = {
   '06': ENVELOPE_ACTION.saveSectorScores,     // 行业竞品 → sector_scores store
   '07': ENVELOPE_ACTION.saveSectorScores,     // 关联指数 → sector_scores store
   '08': ENVELOPE_ACTION.saveResearchLog,      // 研报中心 → research_logs store
+  '15': ENVELOPE_ACTION.saveLocalDocs,        // 分红股本 → local_docs store
+  '16': ENVELOPE_ACTION.saveLocalDocs,        // 一致预期 → local_docs store
 }
 
 // ── 通用维度 mock 数据路由 ──
@@ -212,6 +253,8 @@ function getDimensionKnownSources(dimensionCode: string): string[] {
     '06': ['tushare', 'crawler', 'tencent'],
     '07': ['tushare', 'tencent'],
     '08': ['tushare', 'crawler'],
+    '15': ['tushare', 'crawler'],
+    '16': ['crawler'],
   }
   return sourceMap[dimensionCode] ?? []
 }
@@ -1003,7 +1046,7 @@ async function runSingleTraceImpl(
 
     // ── 03–08 非行情维度数据链路 ──
     // 策略：仅使用真实数据源，禁用 mock 兜底。真实源失败 = 维度失败。
-    if (mode === 'news' || mode === 'research' || mode === 'competitor' || mode === 'index' || mode === 'chip') {
+    if (mode === 'news' || mode === 'research' || mode === 'competitor' || mode === 'index' || mode === 'chip' || mode === 'dividend' || mode === 'consensus') {
       const storeAction = DIMENSION_TO_ACTION[dimensionCode]
       if (!storeAction) {
         const msg = `维度 ${dimensionCode} 无对应 DB action`
@@ -1017,7 +1060,7 @@ async function runSingleTraceImpl(
 
       try {
         const dimData = await generateDataForDimension(normalizedSymbol, dimensionCode)
-        const modeLabel = { news: '资讯', research: '研报', competitor: '竞品', index: '关联指数', chip: '筹码' }[mode]
+        const modeLabel = { news: '资讯', research: '研报', competitor: '竞品', index: '关联指数', chip: '筹码', dividend: '分红股本', consensus: '一致预期' }[mode]
 
         // MOCK 禁用：真实源失败 → 维度失败，不写入假数据
         if (dimData._source === 'mock' || dimData._mock === true) {
@@ -1072,6 +1115,43 @@ async function runSingleTraceImpl(
           message: `${modeLabel} 真实数据写入成功`,
         })
         addStage('write:success', `${modeLabel} 真实数据写入成功`, sourceLabel as QuoteDataSourceId)
+
+        // ── KIMI AI 增强: Dim 05 新闻摘要 / Dim 08 研报解读 ──
+        if (dimensionCode === '05' || dimensionCode === '08') {
+          try {
+            const aiStage = dimensionCode === '05' ? 'KIMI新闻摘要' : 'KIMI研报解读'
+            addStage('transform', `开始 ${aiStage}`, sourceLabel as QuoteDataSourceId)
+
+            if (dimensionCode === '05') {
+              const newsItems = extractNewsItems(dimData)
+              if (newsItems.length > 0) {
+                const aiResult = await summarizeNews(normalizedSymbol, '', newsItems)
+                if (aiResult) {
+                  dimData._kimiSummary = aiResult
+                  dimData.sentiment = aiResult.sentiment
+                  dimData.sentimentScore = aiResult.sentimentScore
+                  await writeMockDimensionData(normalizedSymbol, dimensionCode, { _kimiSummary: aiResult }, storeAction)
+                  addStage('transform', `${aiStage} 完成 (sentiment: ${aiResult.sentiment}, score: ${aiResult.sentimentScore})`, sourceLabel as QuoteDataSourceId)
+                }
+              }
+            } else if (dimensionCode === '08') {
+              const reports = extractResearchReports(dimData)
+              if (reports.length > 0) {
+                const aiResult = await digestResearch(normalizedSymbol, '', reports)
+                if (aiResult) {
+                  dimData._kimiDigest = aiResult
+                  await writeMockDimensionData(normalizedSymbol, dimensionCode, { _kimiDigest: aiResult }, storeAction)
+                  addStage('transform', `${aiStage} 完成 (consensus: ${aiResult.consensusRating})`, sourceLabel as QuoteDataSourceId)
+                }
+              }
+            }
+          } catch (aiErr) {
+            // KIMI AI 增强失败不阻塞主流程
+            logger.warn('[collectionPipeline] KIMI AI 增强失败（不阻塞主流程）', {
+              symbol: normalizedSymbol, dimensionCode, error: aiErr,
+            })
+          }
+        }
 
         span.result = 'success'
         span.finalSource = sourceLabel as QuoteDataSourceId

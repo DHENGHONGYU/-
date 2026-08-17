@@ -25,11 +25,11 @@ import { AKSHARE_LOCAL_BASE_URL } from '@/config/dataSourceUrls'
 import { DEFAULT_REQUEST_TIMEOUT_MS } from '@/config/timeouts'
 import { safeFetch as _safeFetch } from '@/services/shared/safeFetch'
 import { canExecute, recordSourceResult } from './adaptiveSourceOrchestrator'
-import type { ChipData, NewsItem, CompetitorData, IndexCorrelation, ResearchReport } from './dimensionDataTypes'
+import type { ChipData, NewsItem, CompetitorData, IndexCorrelation, ResearchReport, DividendShareSummary, ConsensusAndRating } from './dimensionDataTypes'
 import { fetchNewsViaWestock, fetchResearchReportsViaWestock } from './westockMcpSource'
 import { fetchNewsViaTencentNews } from './tencentNewsMcpSource'
 
-export type { ChipData, NewsItem, CompetitorData, IndexCorrelation, ResearchReport } from './dimensionDataTypes'
+export type { ChipData, NewsItem, CompetitorData, IndexCorrelation, ResearchReport, DividendShareSummary, ConsensusAndRating } from './dimensionDataTypes'
 
 import {
   tushareHolderNumber,
@@ -38,6 +38,9 @@ import {
   tushareIndustry,
   tushareIndexDaily,
   tushareResearchReports,
+  tushareDividend,
+  tushareShareFloat,
+  tushareFinaIndicator,
 } from './tushareProvider'
 import {
   mapHolderNumberToChip,
@@ -45,6 +48,7 @@ import {
   mapNewsToNewsItem,
   mapIndustryToCompetitor,
   mapReportToResearch,
+  mapToDividendShareSummary,
 } from './tushareAdapter'
 import {
   fetchEastMoneyHolderNumber,
@@ -52,6 +56,12 @@ import {
   fetchEastMoneyNews,
   fetchEastMoneyIndustry,
   fetchEastMoneyResearch,
+  fetchEastMoneyDividend,
+  fetchShareStructureFromTencent,
+  fetchEastMoneyConsensusEstimate,
+  fetchEastMoneyRatingSummary,
+  checkDividendKeywords as _checkDividendKeywords,
+  fetchFinancialSnapshot as _fetchFinancialSnapshot,
 } from './crawlerProvider'
 
 const logger = getLogger()
@@ -650,7 +660,166 @@ export async function fetchDimensionData(
       if (mock) return mock
       return null
     }
+    case '15': {
+      const data = await fetchDividendShareData(symbol)
+      if (data) return data as unknown as Record<string, unknown>
+      return null
+    }
+    case '16': {
+      const data = await fetchConsensusAndRating(symbol)
+      if (data) return data as unknown as Record<string, unknown>
+      return null
+    }
     default:
       return null
   }
+}
+
+// ============================================================
+// 维度 15 分红股本
+// ============================================================
+
+/**
+ * 获取分红股本数据（15）
+ *
+ * 优先级：Tushare（三 API 并行：dividend + fina_indicator + share_float）
+ *       → 东财爬虫（并行：分红配股 + 股本结构）
+ *       → null（调用方决定是否 mock）
+ */
+export async function fetchDividendShareData(symbol: string): Promise<DividendShareSummary | null> {
+  // 链 1: Tushare（三 API 并行）
+  if (canExecute('tushare')) {
+    try {
+      const tushareStart = Date.now()
+      const [dividendData, finaData, shareFloatData] = await Promise.all([
+        tushareDividend(symbol),
+        tushareFinaIndicator(symbol),
+        tushareShareFloat(symbol),
+      ])
+      if (finaData.length > 0 || dividendData.length > 0) {
+        const summary = mapToDividendShareSummary(symbol, finaData, dividendData, shareFloatData)
+        recordSourceResult('tushare', { success: true, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 1 })
+        return summary
+      }
+      recordSourceResult('tushare', { success: false, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 0 })
+    } catch (err) {
+      recordSourceResult('tushare', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+      logger.warn(`[multiSourceFetcher] Tushare 分红股本失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
+    }
+  }
+
+  // 链 2: 东财爬虫（并行：分红配股 + 股本结构 + 财务快照）
+  if (canExecute('crawler')) {
+    try {
+      const [dividendRecords, shareStruct, financialSnapshots] = await Promise.all([
+        fetchEastMoneyDividend(symbol),
+        fetchShareStructureFromTencent(symbol),
+        _fetchFinancialSnapshot(symbol),
+      ])
+      if (dividendRecords.length > 0) {
+        const totalShares = shareStruct?.totalShares ?? 0
+        const price = shareStruct?.price ?? 0
+        const totalDiv3Y = dividendRecords
+          .slice(0, 3)
+          .reduce((sum, d) => sum + d.cashDividendPerShare * totalShares, 0)
+
+        // 股息率：最新有效分红 / 当前股价
+        let dividendYield = 0
+        if (price > 0 && dividendRecords.length > 0) {
+          const latestValid = dividendRecords.find((d) => d.cashDividendPerShare > 0)
+          if (latestValid) {
+            dividendYield = Number(((latestValid.cashDividendPerShare / price) * 100).toFixed(2))
+          }
+        }
+
+        // 分红率：近 3 年分红总额 / 近 3 年归母净利润
+        let payoutRatio3Y = 0
+        if (totalDiv3Y > 0 && financialSnapshots.length > 0) {
+          const totalNP3Y = financialSnapshots
+            .slice(0, 3)
+            .reduce((sum, fs) => sum + fs.netProfit, 0)
+          if (totalNP3Y > 0) {
+            payoutRatio3Y = Number(((totalDiv3Y / totalNP3Y) * 100).toFixed(2))
+          }
+        }
+
+        // 回购/配股检测
+        const keywords = _checkDividendKeywords(dividendRecords)
+
+        recordSourceResult('crawler', { success: true, isMock: false, latencyMs: 0, completeness: 1 })
+        return {
+          symbol,
+          dividendYield,
+          totalDividend3Y: Number(totalDiv3Y.toFixed(2)),
+          payoutRatio3Y,
+          history: dividendRecords,
+          totalShares: shareStruct?.totalShares ?? 0,
+          floatShares: shareStruct?.floatShares ?? 0,
+          hasBuybackPlan: keywords.hasBuybackPlan,
+          hasRightsIssue: keywords.hasRightsIssue,
+          _source: 'crawler',
+        }
+      }
+    } catch (err) {
+      recordSourceResult('crawler', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+      logger.warn(`[multiSourceFetcher] 东财分红股本失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
+    }
+  }
+
+  return null
+}
+
+// ============================================================
+// 维度 16 一致预期与评级
+// ============================================================
+
+/**
+ * 获取一致预期与评级数据（16）
+ *
+ * 优先级：东财爬虫（并行：一致预期 + 评级汇总）
+ *       → null（调用方决定是否 mock）
+ */
+export async function fetchConsensusAndRating(symbol: string): Promise<ConsensusAndRating | null> {
+  // 链 1: 东财爬虫（并行：一致预期 + 评级汇总）
+  if (canExecute('crawler')) {
+    try {
+      const [estimates, rating] = await Promise.all([
+        fetchEastMoneyConsensusEstimate(symbol),
+        fetchEastMoneyRatingSummary(symbol),
+      ])
+      if (estimates.length > 0 && rating) {
+        recordSourceResult('crawler', { success: true, isMock: false, latencyMs: 0, completeness: 1 })
+        return {
+          symbol,
+          estimates,
+          rating,
+          dataDate: new Date().toISOString().split('T')[0] ?? '',
+          _source: 'crawler',
+        }
+      }
+      // 部分成功：至少有一致预期或评级
+      if (estimates.length > 0) {
+        recordSourceResult('crawler', { success: true, isMock: false, latencyMs: 0, completeness: 0.5 })
+        return {
+          symbol,
+          estimates,
+          rating: {
+            buyCount: 0, overweightCount: 0, holdCount: 0, underweightCount: 0, sellCount: 0,
+            consensusRating: 0, consensusTargetPrice: 0,
+            targetPriceHigh: 0, targetPriceLow: 0,
+            recentTrend: 'stable',
+            _source: 'crawler',
+          },
+          dataDate: new Date().toISOString().split('T')[0] ?? '',
+          _source: 'crawler',
+        }
+      }
+      recordSourceResult('crawler', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+    } catch (err) {
+      recordSourceResult('crawler', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+      logger.warn(`[multiSourceFetcher] 东财一致预期失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
+    }
+  }
+
+  return null
 }

@@ -321,3 +321,32 @@ export async function tushareAdjFactor(symbol: string): Promise<Record<string, u
     'ts_code,trade_date,adj_factor',
   )
 }
+
+// ── 15 分红股本 ──
+
+/** 15 分红送股：dividend */
+export async function tushareDividend(symbol: string): Promise<Record<string, unknown>[]> {
+  return tushareRequest(
+    'dividend',
+    { ts_code: toTushareCode(symbol) },
+    'ts_code,end_date,ann_date,div_proc,stk_div,cash_div,record_date,ex_date,base_share,plan_explain',
+  )
+}
+
+/** 15 限售股解禁：share_float */
+export async function tushareShareFloat(symbol: string): Promise<Record<string, unknown>[]> {
+  return tushareRequest(
+    'share_float',
+    { ts_code: toTushareCode(symbol) },
+    'ts_code,ann_date,float_date,float_share,float_ratio,holder_name,share_type',
+  )
+}
+
+/** 15 财务指标（含股息率/总股本/流通股本）：fina_indicator */
+export async function tushareFinaIndicator(symbol: string): Promise<Record<string, unknown>[]> {
+  return tushareRequest(
+    'fina_indicator',
+    { ts_code: toTushareCode(symbol) },
+    'ts_code,end_date,total_share,float_share,dividend_yield',
+  )
+}

@@ -35,6 +35,8 @@ import {
   klinesToDailyQuotes,
   type RealtimeQuote,
 } from './directDataAPI'
+// v33: 接入已注册待激活的 DeduplicationService（去重守卫，原零业务调用）
+import { dedupRecords, type DedupRecord } from '@/services/storage/DeduplicationService'
 import {
   tushareDaily,
   tushareStockBasic,
@@ -768,6 +770,9 @@ export async function collectAndSaveQuote(code: string): Promise<CollectionResul
         message: '准备写入行情到 IndexedDB',
       })
 
+      // v33: 激活 DeduplicationService（仅更新 seen 统计，不跳过写库——
+      // stocks 走 dataVersion 合并语义，跳过会丢失增量更新）
+      void dedupRecords('stocks', [quoteToStock(result.data, result.source)])
       await dataBridge.forward({
         meta: {
           source: MODULE_ID.fetcher,
@@ -819,6 +824,9 @@ export async function collectAndSaveKline(code: string, days: number): Promise<C
       })
 
       const dailyQuotes = klinesToDailyQuotes(code, result.data, result.source)
+      // v33: 激活 DeduplicationService（进程内 symbol::latest.date 去重统计；
+      // K 线为覆盖写语义，不跳过写库以免丢失 history 更新）
+      void dedupRecords('dailyQuotes', [dailyQuotes as unknown as DedupRecord])
       await dataBridge.forward({
         meta: {
           source: MODULE_ID.fetcher,

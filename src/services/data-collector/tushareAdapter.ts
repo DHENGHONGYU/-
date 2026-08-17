@@ -10,7 +10,10 @@
 
 import type { RealtimeQuote } from '../fetcher/directDataAPI'
 import type { KlineBar } from '@/data/types/types.marketData'
-import type { ChipData, NewsItem, CompetitorData, IndexCorrelation, ResearchReport } from './dimensionDataTypes'
+import type {
+  ChipData, NewsItem, CompetitorData, IndexCorrelation, ResearchReport,
+  DividendRecord, DividendShareSummary,
+} from './dimensionDataTypes'
 import { fromTushareCode } from './tushareProvider'
 
 /** 将 20250401 格式转换为 2025-04-01 */
@@ -188,5 +191,56 @@ export function mapReportToResearch(record: Record<string, unknown>): ResearchRe
     rating: toString(record.rating_name) || '中性',
     date: formatTradeDate(record.pub_date) || formatTradeDate(record.report_date) || new Date().toISOString().slice(0, 10),
     summary: '',
+  }
+}
+
+// ── 15 分红股本 ──
+
+/** 将 Tushare dividend 原始数据映射为 DividendRecord[] */
+export function mapDividendToRecords(raw: Record<string, unknown>[]): DividendRecord[] {
+  return raw.map((r) => ({
+    exDividendDate: formatTradeDate(r.ex_date) || toString(r.ex_date),
+    cashDividendPerShare: toNumber(r.cash_div) ?? 0,
+    bonusShareRatio: toNumber(r.stk_div) ?? 0,
+    transferShareRatio: toNumber(r.base_share) ?? 0,
+    recordDate: formatTradeDate(r.record_date) || toString(r.record_date),
+    announceDate: formatTradeDate(r.ann_date) || toString(r.ann_date),
+    planExplanation: toString(r.plan_explain),
+    _source: 'tushare' as const,
+  }))
+}
+
+/** 将 Tushare fina_indicator + dividend + share_float 合并为 DividendShareSummary */
+export function mapToDividendShareSummary(
+  symbol: string,
+  finaData: Record<string, unknown>[],
+  dividendData: Record<string, unknown>[],
+  shareFloatData: Record<string, unknown>[],
+): DividendShareSummary {
+  const latestFina = finaData[0]
+  const nextUnlock = shareFloatData[0]
+  const divHistory = mapDividendToRecords(dividendData)
+
+  const totalSharesRaw = toNumber(latestFina?.total_share) ?? 0
+  // total_share 单位：万股，转换为亿股
+  const totalShares = totalSharesRaw / 10000
+
+  const totalDiv3Y = divHistory
+    .slice(0, 3)
+    .reduce((sum, d) => sum + d.cashDividendPerShare * totalShares, 0)
+
+  return {
+    symbol,
+    dividendYield: toNumber(latestFina?.dividend_yield) ?? 0,
+    totalDividend3Y: Number(totalDiv3Y.toFixed(2)),
+    payoutRatio3Y: 0, // 需结合财务数据计算，标注 [MISSING]
+    history: divHistory,
+    totalShares: Number(totalShares.toFixed(2)),
+    floatShares: Number(((toNumber(latestFina?.float_share) ?? 0) / 10000).toFixed(2)),
+    nextUnlockDate: nextUnlock ? (formatTradeDate(nextUnlock.float_date) || toString(nextUnlock.float_date)) : undefined,
+    nextUnlockShares: nextUnlock ? Number(((toNumber(nextUnlock.float_share) ?? 0) / 10000).toFixed(2)) : undefined,
+    hasBuybackPlan: false, // 需额外检测，标注 [MISSING]
+    hasRightsIssue: false, // 需额外检测，标注 [MISSING]
+    _source: 'tushare',
   }
 }
