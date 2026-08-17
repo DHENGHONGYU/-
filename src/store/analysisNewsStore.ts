@@ -47,7 +47,7 @@ export interface AnalysisNewsState {
   fetchArticles: () => Promise<void>
   // @compliance [DF-002] generateMockArticles 封装 Service 调用，组件通过 Store action 间接调用
   // 整改背景：原 NewsPage 直接 import Service 函数，现通过 Store action 中转
-  // 相关规范：docs/archive/historical-2026-08-16/batch8/data-flow-spec.md 第5.1节（已归档）
+  // 相关规范：docs/archive/historical-2026-08-16/batch8/data-flow-spec.md（已归档） 第5.1节
   generateMockArticles: () => Promise<void>
   /** 计算情感趋势（封装 sentimentTrendEngine 的聚合与选项提取） */
   computeSentimentTrend: (dimension: SentimentTrendDimension, value?: string) => void

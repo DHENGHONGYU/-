@@ -22,6 +22,10 @@ import {
   exportScreeningResults,
 } from '@/services/screening/multiFactorScreeningEngine'
 import {
+  screeningResultStore,
+  type ScreeningRunResultRecord,
+} from '@/data/dataLayerContentStores'
+import {
   MULTI_FACTOR_SCREENING_DEFAULT_LOGIC,
   MULTI_FACTOR_SCREENING_FACTORS,
   MULTI_FACTOR_SCREENING_STORAGE_KEY,
@@ -60,6 +64,8 @@ export interface MultiFactorScreeningState {
   loading: boolean
   error: string | null
   templates: ScreeningTemplate[]
+  /** 已持久化的筛选运行历史（从 screening_results 读取，支持回溯/复用） */
+  savedRuns: ScreeningRunResultRecord[]
 
   // Actions: 条件组编辑
   addGroup: () => void
@@ -89,6 +95,9 @@ export interface MultiFactorScreeningState {
   deleteTemplate: (templateId: string) => void
   loadSavedTemplates: () => void
 
+  // Actions: 筛选结果集持久化（P0 筛选结果集持久化，v34）
+  loadSavedRuns: () => Promise<void>
+
   // Actions: 导出
   exportResults: () => void
 }
@@ -111,6 +120,7 @@ export const useMultiFactorScreeningStore = create<MultiFactorScreeningState>((s
   loading: false,
   error: null,
   templates: [],
+  savedRuns: [],
 
   addGroup: () => {
     set((state) => ({ conditionGroups: [...state.conditionGroups, createDefaultGroup()] }))
@@ -174,7 +184,27 @@ export const useMultiFactorScreeningStore = create<MultiFactorScreeningState>((s
     try {
       const stocks = await loadScreenableStocks()
       const result = runMultiFactorScreening(stocks, get().conditionGroups)
-      set({ results: result.items, loading: false })
+      // P0 筛选结果集持久化（v34）：将本次运行结果落库 screening_results，取代纯内存态（刷新即丢）
+      const runId = generateId('run')
+      const record: ScreeningRunResultRecord = {
+        runId,
+        symbol: result.items[0]?.symbol ?? '',
+        conditionGroups: get().conditionGroups,
+        items: result.items,
+        total: result.total,
+        elapsedMs: result.elapsedMs,
+        createdAt: new Date().toISOString(),
+        sourceModule: 'screening',
+      }
+      void screeningResultStore.save(record).catch((e) => {
+        const msg = e instanceof Error ? e.message : String(e)
+        logger.error('[multiFactorScreeningStore] 筛选结果集持久化失败', { error: msg })
+      })
+      set({
+        results: result.items,
+        loading: false,
+        savedRuns: [record, ...get().savedRuns].slice(0, 50),
+      })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       logger.error('[multiFactorScreeningStore] 筛选失败', { error: message })
@@ -191,6 +221,7 @@ export const useMultiFactorScreeningStore = create<MultiFactorScreeningState>((s
       loading: false,
       error: null,
       templates: [],
+      savedRuns: [],
     })
     // 同时清除持久化的模板
     try {
@@ -242,5 +273,18 @@ export const useMultiFactorScreeningStore = create<MultiFactorScreeningState>((s
 
   exportResults: () => {
     exportScreeningResults(get().results, MULTI_FACTOR_SCREENING_CSV_FILENAME_PREFIX)
+  },
+
+  // P0 筛选结果集持久化（v34）：从 screening_results 读取历史运行，支持回溯/复用
+  loadSavedRuns: async () => {
+    try {
+      const runs = await screeningResultStore.list()
+      set({
+        savedRuns: runs.sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
+      })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error('[multiFactorScreeningStore] 读取筛选历史失败', { error: message })
+    }
   },
 }))

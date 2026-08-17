@@ -43,6 +43,7 @@ import {
   type PsychologicalProfile,
 } from '@/services/trading/tradeReviewAI'
 import { classifyErrors } from '@/services/trading/tradeErrorClassifier'
+import { setOrderDataSource, setTradeReviewScoreCalculator, RealTradeReviewScoreCalculator } from '@/services/trading/tradeReviewScoring'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
 
@@ -397,6 +398,12 @@ export const useDisciplineStore = create<DisciplineState>()(
     },
   })),
 )
+
+// 将实时订单快照读取器注入交易复盘评分计算器（tradeReviewScoring 为引擎层，禁止直接依赖 store 层；
+// 此处由 store 层反向注入，满足「引擎层禁止直接依赖 store 层」架构约束，v34 复盘评分真实化）。
+setOrderDataSource(() => useOrderStore.getState().orders)
+// 复盘评分真实化落地：将真实订单驱动的计算器设为生产默认激活实现（与默认行为一致，此处显式激活便于追溯）。
+setTradeReviewScoreCalculator(new RealTradeReviewScoreCalculator())
 
 // ============================================================
 // DataBridge 订阅生命周期

@@ -7,8 +7,8 @@
  *
  * 已接线因子：
  *  - D2 策略适配度：V6 评分 + 板块景气（fetchSectorScoreForStock → f1Jingqi）
- *  - D3 时机成熟度：V6 评级 + 黄金买点 + 二波检测器 + 板块资金（f2Zijin）+ 市场宽度（fetchMarketBreadth）
- *  - D4 风险健康度：V6 风险 + 八级筹码（evaluateChipForStock）+ 三条禁令（detectHardRisks）
+ *  - D3 时机成熟度：V6 评级 + 黄金买点 + 二波检测器 + 板块资金（f2Zijin）+ 市场宽度（fetchMarketBreadthResilient）
+ *  - D4 风险健康度：V6 风险 + 八级筹码（evaluateChipForStock）+ 三条禁令（detectHardRisksResilient）
  * 任一数据源缺失时引擎自动中性降级，不阻断首版运行。
  */
 
@@ -21,10 +21,10 @@ import {
   type RlesResult,
 } from '@/services/scoring/rles-engine/reviewLaunchEvaluator'
 import { detectSecondWave, type SecondWaveSignal } from '@/services/scoring/rles-engine/secondWaveDetector'
-import { fetchMarketBreadth, computeBreadthScore } from '@/services/scoring/rles-engine/breadthFactor'
+import { fetchMarketBreadthResilient, computeBreadthScore } from '@/services/scoring/rles-engine/breadthFactor'
 import { fetchSectorScoreForStock } from '@/services/scoring/rles-engine/sectorScoreBridge'
 import { evaluateChipForStock } from '@/services/scoring/rles-engine/chipBridge'
-import { detectHardRisks } from '@/services/scoring/rles-engine/hardRiskDetector'
+import { detectHardRisksResilient } from '@/services/scoring/rles-engine/hardRiskDetector'
 import type { V6Score } from '@/data/types/types.score'
 import type { RotationSectorScore } from '@/data/types/types.rotation'
 import type { ChipResult } from '@/services/scoring/v6-engine/types'
@@ -98,10 +98,10 @@ export const useReviewLaunchStore = create<ReviewLaunchState>((set, get) => ({
       // 八级筹码（复用 K 线）
       const chip: ChipResult | null = history ? evaluateChipForStock(target, history) : null
 
-      // 市场宽度（MAS breadth）
+      // 市场宽度（MAS breadth，优先真实源 /api/collect/breadth，失败回退 mock）
       let marketBreadth: number | null = null
       try {
-        const breadthInput = await fetchMarketBreadth()
+        const breadthInput = await fetchMarketBreadthResilient()
         if (breadthInput) marketBreadth = computeBreadthScore(breadthInput)
       } catch (berr) {
         const bmsg = berr instanceof Error ? berr.message : String(berr)
@@ -117,8 +117,8 @@ export const useReviewLaunchStore = create<ReviewLaunchState>((set, get) => ({
         logger.warn('[reviewLaunchStore] 板块轮动获取失败，降级为中性', { symbol: target, error: rmsg })
       }
 
-      // 三条禁令硬风险
-      const hardRisks = detectHardRisks(target)
+      // 三条禁令硬风险（优先后端 /api/collect/risk 真实源，失败回退显式表 + 名称兜底）
+      const hardRisks = await detectHardRisksResilient(target, v6Score?.name)
 
       const input: RlesInput = {
         symbol: target,
