@@ -79,7 +79,6 @@ import {
   screeningResultStore,
 } from '@/data/dataLayerContentStores'
 import {
-  newsBookmarkStore,
   collectConfigStore,
   traceRecordStore,
   workflowDefStore,
@@ -122,7 +121,6 @@ const STORE_REGISTRY: Record<string, Record<string, unknown>> = {
   tradeReviews: tradeReviewStore,
   watchlists: watchlistStore,
   customAgents: customAgentStore,
-  newsBookmarks: newsBookmarkStore,
   collectConfig: collectConfigStore,
   traceRecords: traceRecordStore,
   workflowDefs: workflowDefStore,

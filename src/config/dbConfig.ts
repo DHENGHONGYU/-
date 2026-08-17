@@ -24,7 +24,7 @@ export const DB_VERSION = 34 as const
 // v5 → v6: 新增 rotation_scores、sector_scores、score_docs、strategy_snapshots、
 //          local_docs、news、news_stock_map、sentiment_cache 存储，支撑 V6 Pro 迁移能力。
 // v6 → v12: V9 架构升级，统一数据模型与类型系统，优化索引结构。
-// v12 → v13: 新增 news_bookmarks 存储，用于持久化资讯收藏状态。
+// v12 → v13: 新增 news_bookmarks 存储，用于持久化资讯收藏状态。（P2 已合并到 news Store，2026-08-17）
 // v13 → v14: 新增 hot_sector_scores、value_pit_scores 存储，支撑双策略体系。
 // v14 → v15: 新增 execution_logs、missing_reports 存储；hot_sector_scores 维度字段 composite 重命名为 marketEnv；value_pit_scores 移除 composite 字段。
 // v15 → v16: 新增 execution_plans（执行计划）、portfolios（投资组合）存储。
@@ -330,7 +330,6 @@ export const STORE_NAME = {
   news: 'news',
   newsStockMap: 'news_stock_map',
   sentimentCache: 'sentiment_cache',
-  newsBookmarks: 'news_bookmarks',
   hotSectorScores: 'hot_sector_scores',
   valuePitScores: 'value_pit_scores',
   executionPlans: 'execution_plans',
@@ -488,8 +487,8 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
   },
   [MODULE_ID.news]: {
-    read: [STORE_NAME.stocks, STORE_NAME.news, STORE_NAME.newsStockMap, STORE_NAME.sentimentCache, STORE_NAME.newsBookmarks, STORE_NAME.profileItems, STORE_NAME.profileTags],
-    write: [STORE_NAME.news, STORE_NAME.newsStockMap, STORE_NAME.sentimentCache, STORE_NAME.newsBookmarks, STORE_NAME.profileItems, STORE_NAME.profileTags],
+    read: [STORE_NAME.stocks, STORE_NAME.news, STORE_NAME.newsStockMap, STORE_NAME.sentimentCache, STORE_NAME.profileItems, STORE_NAME.profileTags],
+    write: [STORE_NAME.news, STORE_NAME.newsStockMap, STORE_NAME.sentimentCache, STORE_NAME.profileItems, STORE_NAME.profileTags],
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
   },
   [MODULE_ID.tradinghub]: {
