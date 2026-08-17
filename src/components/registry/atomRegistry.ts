@@ -29,4 +29,5 @@ export const ATOM_REGISTRY: ComponentEntry[] = [
   { name: 'ComplianceDisclaimer', level: 'atom', sourcePath: 'src/components/atoms/ComplianceDisclaimer.tsx', targetPath: 'src/components/atoms/ComplianceDisclaimer.tsx', status: 'active', description: '合规声明（仅供参考非投资建议）', consumers: ['ResearchReportPage', 'ReviewWizard', 'IntelligentScorePage'] },
   { name: 'Currency', level: 'atom', sourcePath: 'src/components/atoms/Currency.tsx', targetPath: 'src/components/atoms/Currency.tsx', status: 'active', description: '货币金额格式化（千分位 + 正负号 + 万/亿紧凑模式）', consumers: ['HomePage', 'PortfolioPage', '交易舱通用'] },
   { name: 'Percent', level: 'atom', sourcePath: 'src/components/atoms/Percent.tsx', targetPath: 'src/components/atoms/Percent.tsx', status: 'active', description: '百分比格式化（涨跌幅语义色 + 正负号）', consumers: ['HomePage', 'PortfolioPage', 'TradingApp'] },
+  { name: 'LazyImage', level: 'atom', sourcePath: 'src/components/atoms/LazyImage.tsx', targetPath: 'src/components/atoms/LazyImage.tsx', status: 'active', description: '图片懒加载（IntersectionObserver + 占位符）', consumers: ['NewsCard', 'PoolCard', 'ResearchReportPage'] },
 ]
