@@ -1,0 +1,28 @@
+{
+  "name": "timeline-competitor-compare",
+  "version": 1,
+  "description": "V9数据管线时间线 vs 竞品进展对照图",
+  "data": [
+    {
+      "id": "page-timeline-compare",
+      "title": "V9 时间线 vs 竞品进展对照",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1755532800000,
+      "devMetadata": {
+        "htmlSrc": "pages/timeline-compare.html",
+        "interactions": []
+      },
+      "canvasData": {
+        "x": 0,
+        "y": 0,
+        "group": 0
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": true,
+    "deviceType": "desktop",
+    "projectName": "V9 时间线 vs 竞品进展对照"
+  }
+}

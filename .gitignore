@@ -86,6 +86,13 @@ docs/reports/**
 !docs/reports/proj-195-vs-proj-260-diff.md
 !docs/reports/pra-step1-step2-final-fix-report-2026-08-17.md
 
+# Governance deliverables + analysis artifacts (explicitly tracked, do not ignore)
+# These root directories hold governance reports, deep-diagnosis outputs and
+# cross-project competitor comparisons. Keeping them here ensures reproducibility
+# and prevents accidental future ignore-rules from excluding them.
+!deliverables/
+!timeline-competitor-compare/
+
 # TSC / audit output files
 tsc_*.txt
 audit-out.txt
