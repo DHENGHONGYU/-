@@ -74,10 +74,12 @@ function initDefaultKeyGenerators(): void {
     return typeof sym === 'string' ? sym : ''
   });
 
-  // dailyQuotes: symbol + date 组合唯一
+  // dailyQuotes: DailyQuotes 真实结构为单条对象（symbol + latest: KlineBar + history[]），
+  // 最新 K 线日期在 latest.date（扁平 date 字段不存在），故按 symbol::latest.date 生成键。
   keyGenerators.set('dailyQuotes', (record: DedupRecord) => {
     const sym = typeof record.symbol === 'string' ? record.symbol : ''
-    const dt = typeof record.date === 'string' ? record.date : ''
+    const latest = record.latest as { date?: string } | undefined
+    const dt = typeof latest?.date === 'string' ? latest.date : ''
     return `${sym}::${dt}`;
   });
 

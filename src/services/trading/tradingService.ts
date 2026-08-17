@@ -4,7 +4,7 @@
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION, ORDER_DIRECTION, ORDER_STATUS, STORE_NAME } from '@/config/dbConfig'
-import { RESEARCH_STATUS } from '@/constants/pool.constants'
+import { RESEARCH_STATUS, INTENTION_STATUS } from '@/constants/pool.constants'
 import { getEffectiveTradingConfig } from '@/config/tradingConfig'
 import type { DataLayerResult, Order, Stock, Watchlist } from '@/data/types'
 import {
@@ -249,8 +249,31 @@ export async function getWatchlistStocks(): Promise<DataLayerResult<Stock[]>> {
 }
 
 /**
- * 获取全部订单
+ * 获取长期观察池（intention.watchlist）中的股票列表。
+ *
+ * 与 getWatchlistStocks()（返回 research.watching 研究池观察）区分：
+ * 本函数对应投研全链路 spec「数据跟踪」的长期观察池——即未入选、仅纳入观察的标的。
  */
+export async function getIntentionWatchlistStocks(): Promise<DataLayerResult<Stock[]>> {
+  try {
+    const result = await dataBridge.query<Stock[]>({
+      action: ENVELOPE_ACTION.queryByIndex,
+      store: STORE_NAME.stocks,
+      indexName: 'by-status',
+      indexValue: INTENTION_STATUS.watchlist,
+      source: MODULE_ID.trading,
+    })
+    if (!result.success) {
+      return { success: false, error: result.error }
+    }
+    return { success: true, data: result.data ?? [] }
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : String(err),
+    }
+  }
+}
 export async function getOrders(): Promise<DataLayerResult<Order[]>> {
   try {
     const result = await dataBridge.query<Order[]>({

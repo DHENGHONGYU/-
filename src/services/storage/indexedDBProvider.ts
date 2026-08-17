@@ -74,6 +74,9 @@ import {
   scheduleConfigStore,
   proofreadReportStore,
   analysisResultStore,
+  generatedReportStore,
+  reportTemplateStore,
+  screeningResultStore,
 } from '@/data/dataLayerContentStores'
 import {
   newsBookmarkStore,
@@ -132,6 +135,11 @@ const STORE_REGISTRY: Record<string, Record<string, unknown>> = {
   scheduleConfigs: scheduleConfigStore,
   proofreadReports: proofreadReportStore,
   analysisResults: analysisResultStore,
+  // 报告资产化（v33，P1 报告资产化）
+  generatedReports: generatedReportStore,
+  reportTemplates: reportTemplateStore,
+  // 筛选结果集持久化（v34，P0 筛选结果集持久化）
+  screeningResults: screeningResultStore,
 }
 
 /**

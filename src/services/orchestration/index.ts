@@ -73,6 +73,23 @@ export type {
   WeeklyReviewResult,
 } from './weeklyReviewScheduler'
 
+import {
+  ObservationPoolReviewer,
+  getObservationPoolReviewer,
+  startObservationPoolReviewer,
+} from './observationPoolReviewer'
+export {
+  ObservationPoolReviewer,
+  getObservationPoolReviewer,
+  startObservationPoolReviewer,
+}
+export type {
+  ObservationReviewConfig,
+  ObservationReviewResult,
+  ObservationReviewItem,
+  ObservationPoolReviewerDeps,
+} from './observationPoolReviewer'
+
 export {
   VolatilityAlertPush,
   startVolatilityAlertPush,
@@ -106,6 +123,9 @@ import { getWeeklyReviewScheduler } from './weeklyReviewScheduler'
 import { getVolatilityAlertPush } from './volatilityAlert'
 import { getChipAnomalyDetector } from './chipAnomalyDetector'
 import { getLogger } from '@/lib/logger'
+import { getIntentionWatchlistStocks } from '@/services/trading/tradingService'
+import { runV6Score } from '@/services/scoring/v6ScoreService'
+import type { V6Score } from '@/data/types'
 
 export type OrchestratorStatus = 'idle' | 'starting' | 'running' | 'failed'
 
@@ -137,6 +157,25 @@ function buildOrchestratorList(): OrchestratorEntry[] {
     { name: 'WeeklyReviewScheduler', fn: () => getWeeklyReviewScheduler().start() },
     { name: 'VolatilityAlertPush', fn: () => getVolatilityAlertPush().start() },
     { name: 'ChipAnomalyDetector', fn: () => getChipAnomalyDetector().start() },
+    {
+      name: 'ObservationPoolReviewer',
+      fn: () => {
+        const reviewer = getObservationPoolReviewer()
+        reviewer.configure({
+          getWatchlist: async () => {
+            const res = await getIntentionWatchlistStocks()
+            return (res.data ?? []).map((s) => ({ symbol: s.symbol, name: s.name }))
+          },
+          scorer: {
+            run: async (symbol: string) => {
+              const r = await runV6Score(symbol)
+              return { success: r.success, data: r.data as V6Score | undefined }
+            },
+          },
+        })
+        reviewer.start()
+      },
+    },
   ]
 }
 
@@ -208,6 +247,7 @@ export function stopOrchestration(): void {
     { name: 'WeeklyReviewScheduler', fn: () => getWeeklyReviewScheduler().stop() },
     { name: 'VolatilityAlertPush', fn: () => getVolatilityAlertPush().stop() },
     { name: 'ChipAnomalyDetector', fn: () => getChipAnomalyDetector().stop() },
+    { name: 'ObservationPoolReviewer', fn: () => getObservationPoolReviewer().stop() },
   ]
 
   for (const { name, fn } of stopEntries) {
