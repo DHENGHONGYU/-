@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest'
-import { computeBreadthScore } from './breadthFactor'
+import { describe, it, expect, vi, afterEach } from 'vitest'
+import { computeBreadthScore, fetchMarketBreadthLive } from './breadthFactor'
 
 describe('computeBreadthScore (MAS 市场宽度)', () => {
   it('强多头市场（涨多跌少 + 涨停潮）→ 高分', () => {
@@ -34,5 +34,36 @@ describe('computeBreadthScore (MAS 市场宽度)', () => {
     })
     expect(score).toBeGreaterThan(45)
     expect(score).toBeLessThan(55)
+  })
+})
+
+describe('fetchMarketBreadthLive（后端 /api/collect/breadth 真实源）', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('成功响应映射为 MarketBreadthInput（含 flat 兜底）', async () => {
+    const fake = {
+      success: true,
+      data: { up: 100, down: 50, totalStocks: 155, limitUp: 10, limitDown: 3 },
+    }
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, json: async () => fake }) as Response))
+    const r = await fetchMarketBreadthLive()
+    expect(r).toEqual({ up: 100, down: 50, flat: 0, totalStocks: 155, limitUp: 10, limitDown: 3 })
+  })
+
+  it('HTTP 非 2xx → 返回 null（触发 resilient 回退 mock）', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 500, json: async () => ({}) }) as Response))
+    expect(await fetchMarketBreadthLive()).toBeNull()
+  })
+
+  it('后端 success=false 或 totalStocks<=0 → 返回 null', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, json: async () => ({ success: false }) }) as Response))
+    expect(await fetchMarketBreadthLive()).toBeNull()
+  })
+
+  it('网络异常 → 返回 null（安全降级）', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => { throw new Error('network down') }))
+    expect(await fetchMarketBreadthLive()).toBeNull()
   })
 })

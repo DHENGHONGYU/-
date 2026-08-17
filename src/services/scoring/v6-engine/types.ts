@@ -157,6 +157,80 @@ export interface ZeroToOneEvent {
   monthsAgo: number
 }
 
+// ── P0-1: 维度 15 分红股本数据 ──
+
+/** 分红记录 */
+export interface DividendRecord {
+  /** 除权除息日 */
+  exDividendDate: string
+  /** 每股派息（税前，元） */
+  cashDividendPerShare: number
+  /** 每股送股 */
+  bonusShareRatio: number
+  /** 每股转增 */
+  transferShareRatio: number
+}
+
+/** 分红股本摘要数据（维度 15，用于 L3v 估值层） */
+export interface DividendShareData {
+  /** 近 12 个月股息率（%） */
+  dividendYield: number
+  /** 近 3 年累计分红金额（亿元） */
+  totalDividend3Y: number
+  /** 近 3 年分红率（%） */
+  payoutRatio3Y: number
+  /** 历史分红记录（近 5 年） */
+  history: DividendRecord[]
+  /** 总股本（亿股） */
+  totalShares: number
+  /** 流通股本（亿股） */
+  floatShares: number
+  /** 下一批限售股解禁数量（亿股） */
+  nextUnlockShares?: number
+}
+
+// ── P0-1: 维度 16 一致预期与评级数据 ──
+
+/** 一致预期单年数据 */
+export interface ConsensusEstimateRecord {
+  /** 预测年度 */
+  fiscalYear: number
+  /** 预测营收（亿元） */
+  revenueEstimate: number
+  /** 预测净利润（亿元） */
+  netProfitEstimate: number
+  /** 预测 EPS（元） */
+  epsEstimate: number
+  /** 分析师数量 */
+  analystCount: number
+}
+
+/** 评级汇总数据 */
+export interface RatingSummaryData {
+  /** 买入评级数 */
+  buyCount: number
+  /** 增持评级数 */
+  overweightCount: number
+  /** 持有评级数 */
+  holdCount: number
+  /** 减持/卖出评级数 */
+  underweightSellCount: number
+  /** 综合评级（1-5，1=强力买入） */
+  consensusRating: number
+  /** 综合目标价（元） */
+  consensusTargetPrice: number
+  /** 最近评级变化趋势 */
+  recentTrend: 'upgrade' | 'downgrade' | 'stable'
+}
+
+/** 一致预期与评级完整数据（维度 16，用于 L3v/L4 层） */
+export interface ConsensusData {
+  /** 未来 3 年一致预期 */
+  estimates: ConsensusEstimateRecord[]
+  /** 评级汇总 */
+  rating: RatingSummaryData
+}
+
 // ============================================================
 // 各层输入
 // ============================================================
@@ -179,6 +253,10 @@ export interface LayerInput {
     l1?: number
     l2?: number
   }
+  /** P0-1: 分红股本数据（维度 15，L3v DDM 折价因子用） */
+  dividend?: DividendShareData
+  /** P0-1: 一致预期与评级数据（维度 16，L3v/L4 预期差因子用） */
+  consensus?: ConsensusData
 }
 
 // ============================================================

@@ -14,6 +14,7 @@ import type {
   IPCConfig,
   ConfidenceConfig,
   V6ScoreEngineConfig,
+  RAGConfig,
   ChipLevel,
 } from '@/types/modules/engine.types'
 
@@ -26,6 +27,7 @@ export type {
   IPCConfig,
   ConfidenceConfig,
   V6ScoreEngineConfig,
+  RAGConfig,
   ChipLevel,
 }
 
@@ -195,6 +197,34 @@ export const CONFIDENCE_CONFIG: ConfidenceConfig = {
 }
 
 // ============================================================
+// RAG 增强评分配置
+// ============================================================
+
+/**
+ * DEFAULT_RAG_CONFIG
+ *
+ * RAG（检索增强生成）配置：在 LLM 评分时，从向量数据库检索
+ * 与当前股票和评分层最相关的研报/公告/新闻片段，注入 LLM prompt。
+ *
+ * 依赖：localEmbeddingService (bge-base-zh-v1.5) + HNSW 索引
+ * 检索范围：profile_items 中有 content 的条目
+ */
+export const DEFAULT_RAG_CONFIG: RAGConfig = {
+  /** 默认关闭，在完成幻觉检测和 Golden Dataset 回归后启用 */
+  enabled: false,
+  /** 检索 top-K 文档数 */
+  topK: 5,
+  /** 向量相似度最低阈值（0-1），低于此值的文档不纳入上下文 */
+  minSimilarity: 0.4,
+  /** 每个文档片段最大字符数（截断超长内容） */
+  maxChunkChars: 2000,
+  /** 所有上下文总字符数上限（防止 prompt 超长） */
+  maxTotalChars: 6000,
+  /** 可检索的资料类型 */
+  itemTypes: ['research_report', 'notice', 'news', 'industry_report', 'financial_report'],
+}
+
+// ============================================================
 // 引擎运行时配置
 // ============================================================
 
@@ -210,7 +240,8 @@ export const DEFAULT_ENGINE_CONFIG: V6ScoreEngineConfig = {
   riskWarnings: RISK_WARNINGS,
   offlineMode: true,
   auditEnabled: true,
-  llmEnabled: false,
+  llmEnabled: true,
+  rag: DEFAULT_RAG_CONFIG,
 }
 
 /** 部分覆盖配置 */

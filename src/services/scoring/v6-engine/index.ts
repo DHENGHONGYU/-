@@ -70,7 +70,11 @@ export { L4ScenarioCalculator, L5TMCalculator, L6HypeCalculator } from './calcul
 export { L7SecondCurveCalculator, L8ChipCalculator } from './calculators/l7_l8'
 
 // LLM 增强器
-export { LLMScoreEnhancer, llmEnhancer } from './enhancer'
+export { LLMScoreEnhancer, llmEnhancer, scoreHistoryTracker } from './enhancer'
+
+// RAG 检索器
+export { ragRetriever, RAGRetriever } from './ragRetriever'
+export type { RAGContext, RAGSnippet, MissingDataAlert } from './ragRetriever'
 
 // 便捷函数：创建配置好的引擎实例
 import { V6ScoreEngine } from './engine'

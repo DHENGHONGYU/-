@@ -136,21 +136,25 @@ function normalizeScoreOutput(
   basis: string
   missingFields: string[]
 } {
+  const normStartTs = Date.now()
   const rawDimensions = Array.isArray(raw.dimensions) ? raw.dimensions : []
 
   // 日志：打印透明度配置总览
   const enableLlm = transparencyConfig?.enableLlm ?? false
   const overrideCount = transparencyConfig?.factorOverrides?.length ?? 0
-  logger.info('[normalizeScoreOutput] 透明度配置总览', {
+  logger.info('[intelligentScoreService.normalizeScoreOutput] ==== 开始标准化 LLM 输出 ====', {
     enableLlm,
     overrideCount,
+    rawDimensionCount: rawDimensions.length,
+    expectedDimensionCount: DIMENSION_NAMES.length,
     overrides: transparencyConfig?.factorOverrides?.map((o) => ({
       factorId: o.factorId,
       useLlm: o.useLlm,
     })),
   })
 
-  const dimensions = DIMENSION_NAMES.map((expectedName) => {
+  logger.info(`[intelligentScoreService.normalizeScoreOutput] 开始遍历 ${DIMENSION_NAMES.length} 个因子`)
+  const dimensions = DIMENSION_NAMES.map((expectedName, idx) => {
     const found = rawDimensions.find(
       (d) => typeof d.name === 'string' && d.name.includes(expectedName),
     )
@@ -164,7 +168,7 @@ function normalizeScoreOutput(
       : false
 
     // 日志：逐因子打印 LLM 使用决策
-    logger.info('[normalizeScoreOutput] 因子 LLM 决策', {
+    logger.debug(`[intelligentScoreService.normalizeScoreOutput] [${idx + 1}/${DIMENSION_NAMES.length}] 因子=${expectedName}`, {
       factor: expectedName,
       globalEnableLlm: enableLlm,
       factorOverrideFound: !!factorOverride,
@@ -172,11 +176,23 @@ function normalizeScoreOutput(
       finalUsedLlm: usedLlm,
       hasLlmRawData: !!found,
       rawScore: found?.score ?? null,
+      rawScoreType: typeof (found?.score),
+      rawRationaleLen: found?.rationale?.length ?? 0,
+      rawEvidenceCount: found?.evidence?.length ?? 0,
     })
 
-    return found
+    const result = found
       ? normalizeDimensionScore(found, expectedName, usedLlm)
       : normalizeDimensionScore({ name: expectedName, score: null, rationale: '数据缺失，未参与评分' }, expectedName, usedLlm)
+
+    logger.debug(`[intelligentScoreService.normalizeScoreOutput]   → ${expectedName} 标准化结果`, {
+      normalizedScore: result.score,
+      normalizedRationaleLen: result.rationale.length,
+      normalizedEvidenceCount: result.evidence.length,
+      weight: result.weight,
+    })
+
+    return result
   })
 
   const summary = typeof raw.summary === 'string' ? raw.summary : '未生成总结'
@@ -184,6 +200,17 @@ function normalizeScoreOutput(
   const missingFields = Array.isArray(raw.missingFields)
     ? raw.missingFields.filter((item): item is string => typeof item === 'string')
     : []
+
+  const scoredCount = dimensions.filter(d => d.score !== null).length
+  logger.info('[intelligentScoreService.normalizeScoreOutput] ==== 标准化完成 ====', {
+    dimensionCount: dimensions.length,
+    scoredCount,
+    missingScoreCount: dimensions.length - scoredCount,
+    summaryLen: summary.length,
+    basisLen: basis.length,
+    missingFields,
+    totalDurationMs: Date.now() - normStartTs,
+  })
 
   return { dimensions, summary, basis, missingFields }
 }
@@ -215,49 +242,67 @@ function v6CompositeToDimensionScores(
   composite: CompositeScore,
   factorNames: string[],
 ): DimensionScore[] {
+  const mapStartTs = Date.now()
   const layers = composite.layers
   const weight = 1 / factorNames.length
 
-  return factorNames.map((name) => {
+  logger.info(`[intelligentScoreService.v6CompositeToDimensionScores] ==== 开始 V6 → 9因子映射 ====`, {
+    v6Score: composite.score,
+    v6Rating: composite.rating,
+    v6LayerCount: Object.keys(layers).length,
+    targetFactorCount: factorNames.length,
+    skippedLayers: (composite.skippedLayers ?? []).length ? (composite.skippedLayers ?? []).join(', ') : '无',
+  })
+
+  logger.info(`[intelligentScoreService.v6CompositeToDimensionScores] 遍历 ${factorNames.length} 个因子`)
+  const result = factorNames.map((name, idx) => {
     let score: number | null
     let rationale: string
     let evidence: string[]
+    let sourceLayers: string[] = []
 
     switch (name) {
       case '估值':
         score = scoreFromLayer(layers.l3v)
         rationale = layers.l3v.summary
         evidence = layers.l3v.evidence
+        sourceLayers = ['l3v']
         break
       case '成长':
         score = averageFromLayers(layers.l7, layers.l5)
         rationale = [layers.l7.summary, layers.l5.summary].filter(Boolean).join('; ')
         evidence = [...layers.l7.evidence, ...layers.l5.evidence]
+        sourceLayers = ['l7', 'l5']
         break
       case '盈利':
         score = scoreFromLayer(layers.l3f)
         rationale = layers.l3f.summary
         evidence = layers.l3f.evidence
+        sourceLayers = ['l3f']
         break
       case '质量':
         score = averageFromLayers(layers.l1, layers.l3f)
         rationale = [layers.l1.summary, layers.l3f.summary].filter(Boolean).join('; ')
         evidence = [...layers.l1.evidence, ...layers.l3f.evidence]
+        sourceLayers = ['l1', 'l3f']
         break
       case '动量':
         score = scoreFromLayer(layers.l8)
         rationale = layers.l8.summary
         evidence = layers.l8.evidence
+        sourceLayers = ['l8']
         break
       case '波动':
         score = scoreFromLayer(layers.l8)
         rationale = '波动率来自 v6 L8 技术筹码层'
         evidence = layers.l8.evidence
+        sourceLayers = ['l8']
         break
       case '流动性':
         score = scoreFromLayer(layers.l8)
         rationale = '流动性来自 v6 L8 技术筹码层'
         evidence = layers.l8.evidence
+        sourceLayers = ['l8']
         break
       case '行业':
         score = averageFromLayers(layers.lMinus1, layers.l0, layers.l2)
@@ -268,20 +313,44 @@ function v6CompositeToDimensionScores(
           ...layers.l0.evidence,
           ...layers.l2.evidence,
         ]
+        sourceLayers = ['lMinus1', 'l0', 'l2']
         break
       case '情绪':
         score = averageFromLayers(layers.l6, layers.l4)
         rationale = [layers.l6.summary, layers.l4.summary].filter(Boolean).join('; ')
         evidence = [...layers.l6.evidence, ...layers.l4.evidence]
+        sourceLayers = ['l6', 'l4']
         break
       default:
         score = null
         rationale = '未知因子'
         evidence = []
+        sourceLayers = []
     }
+
+    logger.debug(`[intelligentScoreService.v6CompositeToDimensionScores] [${idx + 1}/${factorNames.length}] 因子=${name}`, {
+      name,
+      sourceLayers: sourceLayers.join('+'),
+      rawScore: score,
+      scoreIsValid: score !== null,
+      rationaleLen: rationale?.length ?? 0,
+      evidenceCount: evidence?.length ?? 0,
+      rationalePreview: rationale?.slice(0, 60) ?? '',
+    })
 
     return { name, score, rationale, evidence, weight, usedLlm: false }
   })
+
+  const scoredCount = result.filter(d => d.score !== null).length
+  logger.info(`[intelligentScoreService.v6CompositeToDimensionScores] ==== 映射完成 ====`, {
+    totalFactors: result.length,
+    scoredFactors: scoredCount,
+    missingScoreFactors: result.length - scoredCount,
+    factorScores: result.map(d => `${d.name}=${d.score?.toFixed(2) ?? 'null'}`).join(', '),
+    totalDurationMs: Date.now() - mapStartTs,
+  })
+
+  return result
 }
 
 /**
@@ -395,24 +464,64 @@ export async function runIntelligentScore(
 
     if (v6Composite) {
       // 数据驱动：使用 v6 真实因子分数；LLM 仅做可选文本增强（不可达则跳过）
+      logger.info(`[runIntelligentScore] 模式=V6数据驱动，开始执行 v6CompositeToDimensionScores 映射`, {
+        symbol,
+        v6CompositeScore: v6Composite.score,
+        v6Rating: v6Composite.rating,
+        v6SkippedLayers: (v6Composite.skippedLayers ?? []).join(', ') || '无',
+      })
       dimensions = v6CompositeToDimensionScores(v6Composite, dimensionNames)
       if (response) {
+        logger.info(`[runIntelligentScore] LLM 响应可用，尝试文本增强 rationale`, {
+          symbol,
+          rawDimensionCount: response.content.length,
+        })
         try {
           const rawOutput = parseRawScoreOutput(response.content)
-          for (const rawDim of (rawOutput.dimensions ?? [])) {
+          const rawDims = rawOutput.dimensions ?? []
+          logger.info(`[runIntelligentScore] 开始遍历 LLM 返回的 ${rawDims.length} 个维度做文本增强`)
+          let enhancedCount = 0
+          for (const rawDim of rawDims) {
             if (rawDim.name && rawDim.rationale && rawDim.rationale !== '未提供评分依据') {
               const matched = dimensions.find((d) => d.name.includes(rawDim.name!) || rawDim.name!.includes(d.name))
               if (matched && matched.rationale.length < rawDim.rationale.length) {
+                logger.debug(`[runIntelligentScore] 文本增强匹配：${matched.name}`, {
+                  factor: matched.name,
+                  rawDimName: rawDim.name,
+                  oldRationaleLen: matched.rationale.length,
+                  newRationaleLen: rawDim.rationale.length,
+                  enhancementApplied: true,
+                })
                 matched.rationale = rawDim.rationale!
+                enhancedCount++
+              } else if (matched) {
+                logger.debug(`[runIntelligentScore] 文本增强匹配但未替换（现有的更长或相等）：${matched.name}`, {
+                  factor: matched.name,
+                  existingLen: matched.rationale.length,
+                  candidateLen: rawDim.rationale.length,
+                })
               }
             }
           }
+          logger.info(`[runIntelligentScore] LLM 文本增强完成`, {
+            symbol,
+            attemptedRawDims: rawDims.length,
+            successfullyEnhanced: enhancedCount,
+          })
         } catch {
           // LLM 解析失败不影响 v6 分数
-          logger.warn('[runIntelligentScore] LLM 文本增强解析失败，仅使用 v6 因子分数')
+          logger.warn('[runIntelligentScore] LLM 文本增强解析失败，仅使用 v6 因子分数', { symbol })
         }
+      } else {
+        logger.info(`[runIntelligentScore] LLM 文本增强跳过（无 LLM 响应），纯 V6 因子模式`, { symbol })
       }
       overallScore = v6Composite.score
+      logger.info(`[runIntelligentScore] V6 驱动结果汇总`, {
+        symbol,
+        overallScore,
+        dimensionCount: dimensions.length,
+        scoredDimensions: dimensions.filter(d => d.score !== null).length,
+      })
     } else {
       // v6 不可用：必须有 LLM 支撑，否则无法生成可信评分（禁止黑箱/崩溃）
       if (!response) {

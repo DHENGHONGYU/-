@@ -5,11 +5,19 @@
  * 宽度分，接入 RLES D3 时机成熟度。设计来源：
  * deliverables/strategy-reverse-unified-v3.2.md（"E4市场≈MAS 市场动能分级"）。
  *
- * 数据来源：MockMarketDataProvider.getMarketSentiment()（cockpit mock 源，含
- * up/down/limitUp/limitDown/totalStocks）。生产环境可替换为真实市场宽度接口。
+ * 数据来源（可切换，默认 mock 兜底）：
+ *  - fetchMarketBreadth()      → MockMarketDataProvider（cockpit mock 源，含
+ *                                up/down/limitUp/limitDown/totalStocks）
+ *  - fetchMarketBreadthLive()  → 后端 /api/collect/breadth（东财 push2 全市场涨跌家数，已落地）
+ *  - fetchMarketBreadthResilient() → 优先 live，失败回退 mock（RLES 实际调用入口）
+ *
+ * 真实源契约（collect_endpoints.py collect_breadth）：
+ *  响应 CollectResponse.data = { up, down, flat, totalStocks, limitUp, limitDown, asOf }，
+ *  失败时 success=false，前端 resilient 自动回退 mock，保证永远有分。
  */
 
 import { MockMarketDataProvider, type MarketSentiment } from '@/cockpit/data/mockDataProvider'
+import { API_COLLECT_BREADTH } from '@/config/apiPaths'
 
 /** 市场宽度计算输入（取自 MarketSentiment 的广度字段） */
 export interface MarketBreadthInput {
@@ -20,6 +28,10 @@ export interface MarketBreadthInput {
   limitUp: number
   limitDown: number
 }
+
+/** 是否启用真实市场宽度源（生产环境在 .env 置 RLES_USE_LIVE_BREADTH=true 生效） */
+export const RLES_USE_LIVE_BREADTH =
+  (typeof process !== 'undefined' && process.env?.RLES_USE_LIVE_BREADTH === 'true') || false
 
 function clamp100(n: number): number {
   if (Number.isNaN(n)) return 0
@@ -43,7 +55,7 @@ export function computeBreadthScore(s: MarketBreadthInput): number {
   return clamp100(advDecScore * 0.65 + limitScore * 0.35)
 }
 
-/** 拉取全市场情绪（涨跌家数/涨跌停），折算为市场宽度分。无数据返回 null（RLES 中性降级）。 */
+/** mock 兜底：拉取 cockpit 全市场情绪，折算为市场宽度分输入。无数据返回 null。 */
 export async function fetchMarketBreadth(): Promise<MarketBreadthInput | null> {
   try {
     const sentiment: MarketSentiment = await MockMarketDataProvider.getMarketSentiment()
@@ -58,4 +70,51 @@ export async function fetchMarketBreadth(): Promise<MarketBreadthInput | null> {
   } catch {
     return null
   }
+}
+
+/**
+ * 真实市场宽度源：后端 /api/collect/breadth（东财 push2 全市场涨跌家数）。
+ *
+ * 后端 collect_breadth 失败（success=false）或无 totalStocks 时返回 null，
+ * 由 resilient 入口回退 cockpit mock，保证 RLES 永远有宽度分（中性兜底由引擎处理）。
+ *
+ * 启用：前端 .env 置 RLES_USE_LIVE_BREADTH=true（默认 false，使用 mock）。
+ */
+export async function fetchMarketBreadthLive(): Promise<MarketBreadthInput | null> {
+  try {
+    const res = await fetch(API_COLLECT_BREADTH)
+    if (!res.ok) return null
+    const json = (await res.json()) as {
+      success?: boolean
+      data?: {
+        up: number
+        down: number
+        flat?: number
+        totalStocks: number
+        limitUp: number
+        limitDown: number
+      }
+    }
+    const d = json.data
+    if (!d || d.totalStocks <= 0) return null
+    return {
+      up: d.up,
+      down: d.down,
+      flat: d.flat ?? 0,
+      totalStocks: d.totalStocks,
+      limitUp: d.limitUp,
+      limitDown: d.limitDown,
+    }
+  } catch {
+    return null
+  }
+}
+
+/** RLES 实际调用入口：优先真实源，失败（或开关关闭）回退 mock。保证永远有分（中性兜底由引擎处理）。 */
+export async function fetchMarketBreadthResilient(): Promise<MarketBreadthInput | null> {
+  if (RLES_USE_LIVE_BREADTH) {
+    const live = await fetchMarketBreadthLive()
+    if (live && live.totalStocks > 0) return live
+  }
+  return fetchMarketBreadth()
 }

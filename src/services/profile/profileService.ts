@@ -25,6 +25,7 @@ import type {
 } from '@/data/types/types.profile'
 import { DOMAIN_META } from '@/data/types/types.profile'
 import { autoTagItem } from './tagService'
+import { ragRetriever } from '@/services/scoring/v6-engine/ragRetriever'
 
 const logger = getLogger()
 
@@ -81,6 +82,14 @@ export async function saveProfileItem(
 ): Promise<ProfileItem> {
   const finalItem = await prepareItem(item, options)
   await sendWriteEnvelope('saveProfileItem', finalItem, 'analyzer')
+
+  // ── RAG: 自动添加到向量索引（异步，不阻塞主流程） ──
+  if (finalItem.content && finalItem.content.length > 50) {
+    ragRetriever.addDocument(finalItem).catch((err) => {
+      logger.warn('[ProfileService] RAG 索引更新失败', { itemId: finalItem.id, error: err })
+    })
+  }
+
   return finalItem
 }
 
@@ -159,6 +168,15 @@ export async function bulkSaveProfileItems(
     void updateProfileStats(symbol).catch((err) => {
       logger.warn('[profileService] 更新资料包统计失败', { symbol, error: err instanceof Error ? err.message : String(err) })
     })
+
+    // ── RAG: 批量添加到向量索引（异步，不阻塞主流程） ──
+    for (const item of toSave) {
+      if (item.content && item.content.length > 50) {
+        ragRetriever.addDocument(item).catch((err) => {
+          logger.warn('[ProfileService] RAG 批量索引更新失败', { itemId: item.id, error: err })
+        })
+      }
+    }
   }
 
   logger.info(`[profileService] 批量保存完成`, {

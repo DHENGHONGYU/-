@@ -17,6 +17,7 @@ import { isLlmConfigured } from '@/config/llmConfig'
 import { chat } from '@/services/llm/llmGateway'
 import type { LlmMessage } from '@/services/llm/llmTypes'
 import { LOG_SNIPPET_MAX_CHARS } from '@/constants/math.constants'
+import { ragRetriever, type RAGContext } from './ragRetriever'
 
 const logger = getLogger()
 
@@ -65,6 +66,140 @@ export interface LlmEnhancementResult {
 
 /** 可被 LLM 增强的层 */
 const LLM_ENHANCEABLE_LAYERS: ReadonlySet<LayerId> = new Set<LayerId>(['l0', 'l1', 'l2', 'l4', 'l5', 'l6', 'l7'])
+
+// ── P0-3: LLM 输出校验阈值 ──
+const VALIDATION = {
+  /** 评分范围 [0, 5] */
+  SCORE_MIN: 0,
+  SCORE_MAX: 5,
+  /** P4-1 R006: LLM 评分与规则引擎评分最大允许偏差（超过此值且无强引证时拒绝） */
+  MAX_SCORE_DEVIATION: 1.5,
+  /** 强引证最少数量（超过 MAX_SCORE_DEVIATION 时至少需要 N 条 citation） */
+  MIN_STRONG_CITATIONS: 2,
+  /** 摘要最小长度（字符），过短视为无效 */
+  MIN_SUMMARY_LENGTH: 5,
+  /** 风险条目数上限（超过此值视为可疑） */
+  MAX_RISKS: 10,
+  /** P4-2 R007: 同一股票前后两次评分最大跳变（超过此值告警） */
+  MAX_SCORE_JUMP: 2.0,
+  /** P4-3: 假阳性关键词（LLM 幻觉常见模式），命中 ≥ 2 个时触发硬失败 */
+  SUSPICIOUS_KEYWORDS: [
+    '根据最新财报', '根据公开信息', '众所周知', '毫无疑问',
+    '据内部消息', '据可靠来源', '可以确定', '必然',
+  ],
+  /** P4-3: 假阳性关键词命中数触发硬失败的阈值 */
+  SUSPICIOUS_KEYWORD_HARD_FAILURE_THRESHOLD: 2,
+}
+
+/**
+ * P4-2 R007: 评分历史追踪器 — 时序一致性校验
+ * 记录每只股票最近一次全量评分，检测评分跳变 > MAX_SCORE_JUMP
+ */
+class ScoreHistoryTracker {
+  private history = new Map<string, { score: number; timestamp: number; layerScores: Record<string, number> }>()
+
+  /** 记录一次评分 */
+  record(symbol: string, compositeScore: number, layerScores: Record<string, number>): void {
+    this.history.set(symbol, {
+      score: compositeScore,
+      timestamp: Date.now(),
+      layerScores: { ...layerScores },
+    })
+  }
+
+  /** 获取上次评分记录 */
+  get(symbol: string): { score: number; timestamp: number; layerScores: Record<string, number> } | undefined {
+    return this.history.get(symbol)
+  }
+
+  /** P4-2 R007: 检测评分跳变 */
+  checkJump(symbol: string, currentScore: number): string | null {
+    const prev = this.history.get(symbol)
+    if (!prev) return null
+    const jump = Math.abs(currentScore - prev.score)
+    if (jump > VALIDATION.MAX_SCORE_JUMP) {
+      return `[警告] R007 评分时序跳变: ${prev.score.toFixed(2)} → ${currentScore.toFixed(2)} (跳变 ${jump.toFixed(2)} > ${VALIDATION.MAX_SCORE_JUMP})`
+    }
+    return null
+  }
+
+  /** 清空历史 */
+  clear(): void {
+    this.history.clear()
+  }
+}
+
+/** 全局评分历史追踪器单例 */
+export const scoreHistoryTracker = new ScoreHistoryTracker()
+
+/**
+ * P0-3: LLM 输出校验结果
+ */
+interface ValidationResult {
+  /** 是否通过校验 */
+  passed: boolean
+  /** 校验失败原因 */
+  failures: string[]
+  /** 修正后的评分（如有必要） */
+  correctedScore?: number
+}
+
+/**
+ * P0-3: 校验 LLM 增强输出的数值准确性
+ * 对标 FinTrustRAG NCTS + FinGround 原子声明验证
+ */
+function validateLLmOutput(result: LlmEnhancementResult, baseScore: number): ValidationResult {
+  const failures: string[] = []
+
+  // 1. 评分范围校验（硬失败）
+  if (result.score !== undefined) {
+    if (!Number.isFinite(result.score)) {
+      failures.push(`[硬失败] LLM 评分非有限数: ${result.score}`)
+    } else if (result.score < VALIDATION.SCORE_MIN || result.score > VALIDATION.SCORE_MAX) {
+      failures.push(`[硬失败] LLM 评分超出范围 [0,5]: ${result.score.toFixed(2)}`)
+    }
+  }
+
+  // 2. 评分偏离度校验（硬失败）
+  if (result.score !== undefined && Number.isFinite(result.score) && Number.isFinite(baseScore)) {
+    const deviation = Math.abs(result.score - baseScore)
+    if (deviation > VALIDATION.MAX_SCORE_DEVIATION) {
+      // 大幅偏离时必须有强引证
+      if (result.citations.length < VALIDATION.MIN_STRONG_CITATIONS) {
+        failures.push(
+          `[硬失败] LLM 评分偏离 ${deviation.toFixed(2)} (规则=${baseScore.toFixed(2)}, LLM=${result.score.toFixed(2)})` +
+          ` 超过最大偏差 ${VALIDATION.MAX_SCORE_DEVIATION} 且仅有 ${result.citations.length} 条引证` +
+          ` (需要 ≥ ${VALIDATION.MIN_STRONG_CITATIONS})`,
+        )
+      }
+    }
+  }
+
+  // 3. 摘要长度校验（软失败，仅警告）
+  if (result.summary !== undefined && result.summary.length < VALIDATION.MIN_SUMMARY_LENGTH) {
+    failures.push(`[警告] LLM 摘要过短: ${result.summary.length} 字符 (最小 ${VALIDATION.MIN_SUMMARY_LENGTH})`)
+  }
+
+  // 4. 风险条目数校验（软失败）
+  if (result.risks && result.risks.length > VALIDATION.MAX_RISKS) {
+    failures.push(`[警告] LLM 风险条目过多: ${result.risks.length} (最大 ${VALIDATION.MAX_RISKS})`)
+  }
+
+  // 5. P4-3: 假阳性关键词检测（命中 ≥ 2 个时升级为硬失败）
+  if (result.rationale) {
+    const hits = VALIDATION.SUSPICIOUS_KEYWORDS.filter(kw => result.rationale!.includes(kw))
+    if (hits.length >= VALIDATION.SUSPICIOUS_KEYWORD_HARD_FAILURE_THRESHOLD) {
+      failures.push(`[硬失败] LLM 理由含 ${hits.length} 个可疑关键词（疑似幻觉）: ${hits.join(', ')}`)
+    } else if (hits.length > 0) {
+      failures.push(`[警告] LLM 理由含可疑关键词: ${hits.join(', ')}`)
+    }
+  }
+
+  return {
+    passed: failures.filter(f => f.startsWith('[硬失败]')).length === 0,
+    failures,
+  }
+}
 
 /**
  * LLMScoreEnhancer
@@ -127,6 +262,31 @@ export class LLMScoreEnhancer {
 
         try {
           const enhanced = await this.callLLM(calculator.layerId, baseResult, input)
+
+          // P0-3: LLM 输出数值准确性和事实一致性校验
+          const validation = validateLLmOutput(enhanced, baseResult.score)
+          if (!validation.passed) {
+            logger.warn(
+              `[LLMScoreEnhancer] 层 ${calculator.layerId} LLM 输出校验失败: ${validation.failures.join('; ')}`,
+            )
+            // 硬失败时回退到规则引擎评分
+            const fallbackEvidence = [...baseResult.evidence]
+            if (validation.failures.length > 0) {
+              fallbackEvidence.push(`[LLM校验失败(已拒绝)] ${validation.failures[0]}`)
+            }
+            return {
+              ...baseResult,
+              evidence: fallbackEvidence,
+            }
+          }
+
+          // 软失败（警告）记录到 evidence，但不阻断
+          const warnFailures = validation.failures.filter(f => f.startsWith('[警告]'))
+          if (warnFailures.length > 0) {
+            logger.info(
+              `[LLMScoreEnhancer] 层 ${calculator.layerId} LLM 输出校验警告: ${warnFailures.join('; ')}`,
+            )
+          }
 
           // [M2 依据追溯闸] 检查 LLM 是否提供了引证来源
           const hasCitations = enhanced.citations.length > 0
@@ -213,7 +373,80 @@ export class LLMScoreEnhancer {
     const safeSummary = baseResult.summary ?? '无摘要'
     const safeEvidence = Array.isArray(baseResult.evidence) ? baseResult.evidence.join('；') : ''
 
-    const systemPrompt = `你是一位专业的股票分析师，请对以下评分层的规则引擎结果进行复核和增强。
+    // ── RAG: 检索语义上下文 ──
+    let ragContext: RAGContext | null = null
+    try {
+      ragContext = await ragRetriever.retrieve(
+        input.stock.symbol,
+        input.stock.name,
+        input.stock.sector,
+        layerId as LayerId,
+        baseResult.layerName,
+        safeSummary,
+      )
+    } catch (ragErr) {
+      logger.warn(
+        `[LLMScoreEnhancer] RAG 检索失败，继续使用无 RAG 模式: ${
+          ragErr instanceof Error ? ragErr.message : String(ragErr)
+        }`,
+      )
+    }
+
+    const hasRAG = ragContext?.success && ragContext.snippets.length > 0
+
+    // ── 构建 RAG 上下文文本 ──
+    let ragContextText = ''
+    if (hasRAG) {
+      const snippetTexts = ragContext!.snippets.map((s, i) =>
+        `[RAG-${i + 1}] 来源:${s.source} | 类型:${s.itemType} | 相似度:${s.similarity.toFixed(2)} | 情绪:${s.sentiment}\n标题:${s.title}\n内容:${s.content}`,
+      )
+      ragContextText = snippetTexts.join('\n\n')
+    }
+
+    // ── 构建缺失数据预警文本 ──
+    let missingDataText = ''
+    if (ragContext?.missingDataAlert) {
+      const alert = ragContext.missingDataAlert
+      missingDataText = `\n【数据覆盖度预警】\n${alert.message}\n${alert.recommendedAction}\n`
+    }
+
+    const systemPrompt = hasRAG
+      ? `你是一位专业的股票分析师，请对以下评分层的规则引擎结果进行复核和增强。
+
+当前层：${baseResult.layerName}
+规则引擎评分：${safeScore.toFixed(2)}/5
+规则引擎摘要：${safeSummary}
+已有证据：${safeEvidence}
+
+以下是从研报/公告/新闻库中检索到的与该股票和当前评分层最相关的参考资料：
+
+${ragContextText}
+${missingDataText}
+请基于上述参考资料，对规则引擎的评分进行复核。你可以：
+1. 如果规则引擎评分与参考资料一致，则保持原评分
+2. 如果参考资料提供了新的信息，调整评分并给出理由
+3. 任何评分调整必须附带引用依据（citations），引用来源必须是上述参考资料中的内容
+
+请以 JSON 格式返回增强建议：
+{
+  "score": number,         // 修正后的评分（0-5），如果规则引擎评分合理则保持原值
+  "summary": "string",     // 增强后的摘要
+  "rationale": "string",   // 增强理由
+  "risks": ["string"],     // 额外识别到的风险
+  "citations": [           // 引证依据数组；若调整评分则必须提供至少一条
+    {
+      "source": "string",  // 引用来源：研报/新闻/财报/行业报告/公告等
+      "content": "string", // 引用的关键内容摘要
+      "url": "string",     // 可选：引用链接
+      "date": "string"     // 可选：引用时间
+    }
+  ]
+}
+
+重要：若你认为当前评分为合理而不做调整，citations 数组可为空。
+若你调整了评分（score 不同于规则引擎评分），则必须提供至少一条 citations 以证明调整依据，
+且 citations 的内容必须来自上述参考资料。`
+      : `你是一位专业的股票分析师，请对以下评分层的规则引擎结果进行复核和增强。
 
 当前层：${baseResult.layerName}
 规则引擎评分：${safeScore.toFixed(2)}/5
@@ -239,7 +472,20 @@ export class LLMScoreEnhancer {
 重要：若你认为当前评分为合理而不做调整，citations 数组可为空。
 若你调整了评分（score 不同于原始值），则必须提供至少一条 citations 以证明调整依据。`
 
-    const userPrompt = `请对以下股票进行 ${baseResult.layerName} 的复核增强：
+    const userPrompt = hasRAG
+      ? `请对以下股票进行 ${baseResult.layerName} 的复核增强：
+
+股票：${input.stock.symbol} ${input.stock.name ?? ''}
+行业：${input.stock.sector ?? '未知'}
+规则引擎当前评分：${safeScore.toFixed(2)}/5
+评分摘要：${safeSummary}
+
+请基于系统提示中提供的参考资料，判断规则引擎评分是否需要调整。
+
+请返回 JSON 格式的增强建议。
+注意：若你调整了评分，必须在 citations 字段中至少提供一条引用来源以证明依据，
+且引用内容必须来自系统提示中提供的参考资料。`
+      : `请对以下股票进行 ${baseResult.layerName} 的复核增强：
 股票：${input.stock.symbol} ${input.stock.name ?? ''}
 行业：${input.stock.sector ?? '未知'}
 规则引擎当前评分：${safeScore.toFixed(2)}/5

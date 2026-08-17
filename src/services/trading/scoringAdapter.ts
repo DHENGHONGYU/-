@@ -138,7 +138,15 @@ export async function getCompositeScore(
   const v6Value = v6Score?.score ?? null
   const intelligentValue = intelligentScore?.overallScore ?? null
   const industryValue = industryScore?.sectorSnapshot?.composite ?? industryScore?.overallScore ?? null
-  const valuationValue = v6Score?.factors?.估值 ?? null
+  // 估值因子分：V6 分层引擎的层 ID 为 'l3v'(L3b 估值水平) / 'lMinus1'(L-1 行业评分估值)，
+  // 旧代码读取 factors['估值']（该键从不产生）导致 valuationScore 恒为 null，使价值洼地分类无法触发。
+  // 此处按真实层 ID 取值，并回退到任一层标签含"估值"的分层，保证估值分可达。
+  const factors = v6Score?.factors ?? {}
+  const valuationValue =
+    factors['l3v'] ??
+    factors['lMinus1'] ??
+    Object.entries(factors).find(([k]) => /估值/.test(k))?.[1] ??
+    null
 
   let composite = weightedAverage([
     { value: v6Value, weight: weights.v6 },

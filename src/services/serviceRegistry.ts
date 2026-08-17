@@ -32,6 +32,7 @@ export const SERVICE_REGISTRY: ReadonlyArray<ServiceRegistryEntry> = [
   { id: 'CollectedDataSyncService', filePath: 'src/services/data-collector/collectedDataSyncService', status: 'active' },
   { id: 'CollectionProgressService', filePath: 'src/services/pool/collectionProgressService', status: 'active' },
   { id: 'CollectionReportService', filePath: 'src/services/data-collector/collectionReportService', status: 'active' },
+  { id: 'KimiAIService', filePath: 'src/services/data-collector/kimiAIService', status: 'active' },
   { id: 'CollectionService', filePath: 'src/services/pool/collectionService', status: 'active' },
   { id: 'CommunitySyncService', filePath: 'src/services/profile/communitySyncService', status: 'active' },
   { id: 'ConfigExportService', filePath: 'src/services/collection/configExportService', status: 'active' },
