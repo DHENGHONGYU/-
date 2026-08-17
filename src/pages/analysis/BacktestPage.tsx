@@ -8,6 +8,7 @@ import { Badge } from '@/components/atoms/Badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/atoms/Table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/molecules/Tabs'
 import { Download, RotateCcw, Play, BarChart3, TrendingUp, Info, History } from 'lucide-react'
+import { EmptyState } from '@/components/organisms/shared'
 import { PageContainer, PageHeader } from '@/components/templates'
 import { ErrorState } from '@/components/molecules'
 import { useBacktestStore, type BacktestStrategy } from '@/store/backtestStore'
@@ -314,15 +315,11 @@ export default function BacktestPage(): React.JSX.Element {
       )}
 
       {!results && !loading && (
-        <Card>
-          <CardContent className="text-center py-12">
-            <BarChart3 className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2">开始策略回测</h3>
-            <p className="text-muted-foreground">
-              选择策略类型和日期范围，点击"开始回测"按钮验证策略绩效
-            </p>
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={<BarChart3 className="h-16 w-16 text-muted-foreground/40" />}
+          title="开始策略回测"
+          description="选择策略类型和日期范围，点击「开始回测」按钮验证策略绩效"
+        />
       )}
       // 静默回退：确认数据源和兜底意图
       {history.length > 0 && (

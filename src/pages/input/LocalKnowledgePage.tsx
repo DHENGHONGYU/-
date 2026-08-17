@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { Link } from 'react-router'
-import { FolderOpen, Search, BarChart3, Plus } from 'lucide-react'
+import { FolderOpen, Search, BarChart3, Plus, FileText } from 'lucide-react'
 import { useToast } from '@/hooks/useToast'
 import {
   Breadcrumb,
@@ -24,6 +24,7 @@ import { LocalDocCard } from '@/components/organisms/localDoc/LocalDocCard'
 import { useLocalKnowledgeStore, type LocalKnowledgeTab } from '@/store/localKnowledgeStore'
 import type { LocalDoc } from '@/data/types'
 import { getLogger } from '@/lib/logger'
+import { EmptyState } from '@/components/organisms/shared'
 import { PageContainer, PageHeader } from '@/components/templates'
 
 const logger = getLogger()
@@ -184,7 +185,12 @@ export default function LocalKnowledgePage(): React.JSX.Element {
           </div>
 
           {docs.length === 0 ? (
-            <p className="text-sm text-muted-foreground">暂无文档，点击“导入示例数据”进行测试。</p>
+            <EmptyState
+              icon={<FileText />}
+              title="暂无文档"
+              description={'点击"导入示例数据"进行测试。'}
+              action={{ label: '导入示例数据', onClick: () => void handleImportSamples() }}
+            />
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {docs.map((doc) => (

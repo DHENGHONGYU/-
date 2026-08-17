@@ -16,7 +16,7 @@ import { useMemo, useState } from 'react'
 import { Activity, BarChart3, Grid3x3, LineChart as LineIcon, Play, RefreshCw } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
-import { Skeleton } from '@/components/molecules/states/Skeleton'
+import { LoadingState, ErrorState, EmptyState } from '@/components/molecules'
 import { PageContainer, PageHeader } from '@/components/templates'
 import { usePerfMetricsStore } from '@/store/perfMetricsStore'
 import { useStressTest } from '@/hooks/useStressTest'
@@ -117,12 +117,7 @@ export default function StressOverviewPage(): React.JSX.Element {
   if (isLoading && !latest) {
     return (
       <PageContainer className="space-y-4">
-        <Skeleton className="h-8 w-64" />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-32" />
-          ))}
-        </div>
+        <LoadingState variant="skeleton" rows={6} message="加载压测数据..." />
       </PageContainer>
     )
   }
@@ -145,28 +140,17 @@ export default function StressOverviewPage(): React.JSX.Element {
       />
 
       {localError && (
-        <div className="text-sm" style={{ color: COLOR_TOKENS.danger.hex }}>
-          压测执行失败：{localError}
-        </div>
+        <ErrorState error={localError} variant="card" />
       )}
 
       {/* 空态 */}
       {!latest && (
-        <Card>
-          <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
-            <Grid3x3 className="h-10 w-10" style={{ color: CHART_PALETTE.axis }} />
-            <div>
-              <p className="font-medium text-foreground">暂无压测数据</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                点击右上角「运行压测」触发 V6 评分引擎 / 双策略分析 / 轮动检测的集中压力测试。
-              </p>
-            </div>
-            <Button variant="outline" size="sm" onClick={() => void handleRun()} disabled={isLoading}>
-              <Play className="mr-2 h-4 w-4" />
-              立即运行
-            </Button>
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={<BarChart3 className="h-10 w-10 text-muted-foreground/40" />}
+          title="暂无压测数据"
+          description="点击右上角「运行压测」触发 V6 评分引擎 / 双策略分析 / 轮动检测的集中压力测试。"
+          action={{ label: '立即运行', onClick: () => void handleRun() }}
+        />
       )}
 
       {/* 关键指标卡 */}

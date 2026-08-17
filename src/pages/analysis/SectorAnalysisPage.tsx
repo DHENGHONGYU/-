@@ -6,6 +6,7 @@ import { Button } from '@/components/atoms/Button'
 import { PageContainer, PageHeader } from '@/components/templates'
 import { useSectorAnalysisStore } from '@/store/sectorAnalysisStore'
 import { SectorRotationHeatmap } from '@/components/organisms/analysis/sector/SectorRotationHeatmap'
+import { LoadingState, ErrorState, EmptyState } from '@/components/molecules'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
@@ -35,8 +36,8 @@ export default function SectorAnalysisPage(): React.JSX.Element {
     return (
       <PageContainer>
         <Card>
-          <CardContent className="p-8 text-center text-muted-foreground">
-            加载中...
+          <CardContent>
+            <LoadingState message="加载中..." />
           </CardContent>
         </Card>
       </PageContainer>
@@ -47,11 +48,8 @@ export default function SectorAnalysisPage(): React.JSX.Element {
     return (
       <PageContainer>
         <Card>
-          <CardContent className="p-8 text-center text-destructive">
-            <p>{error}</p>
-            <Button variant="outline" size="sm" onClick={handleRetry} className="mt-2">
-              重试
-            </Button>
+          <CardContent>
+            <ErrorState error={error} onRetry={handleRetry} />
           </CardContent>
         </Card>
       </PageContainer>
@@ -116,7 +114,7 @@ export default function SectorAnalysisPage(): React.JSX.Element {
         </CardHeader>
         <CardContent>
           {industryScores.length === 0 ? (
-            <p className="text-muted-foreground">暂无行业评分数据</p>
+            <EmptyState title="暂无行业评分数据" />
           ) : (
             <div className="space-y-2">
               {industryScores.slice(0, 10).map((score) => (

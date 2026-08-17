@@ -13,6 +13,7 @@ import {
 } from '@/components/atoms/Table'
 import { Skeleton } from '@/components/molecules/states/Skeleton'
 import { Badge } from '@/components/atoms/Badge'
+import { EmptyState } from '@/components/organisms/shared'
 import {
   HOLDING_ACTION,
   HOLDING_ACTION_LABELS,
@@ -57,23 +58,6 @@ function SkeletonRow(): React.JSX.Element {
   )
 }
 
-/** 空数据状态 */
-function EmptyState(): React.JSX.Element {
-  return (
-    <TableRow>
-      <td colSpan={9} className="h-48 text-center p-4 align-middle">
-        <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
-          <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-          </svg>
-          <p className="text-sm">暂无持仓数据</p>
-          <p className="text-xs">调整筛选条件或添加持仓后重试</p>
-        </div>
-      </td>
-    </TableRow>
-  )
-}
-
 /**
  * HoldingsTable
  */
@@ -113,7 +97,14 @@ export default function HoldingsTable({
               <SkeletonRow key={i} />
             ))
           ) : data.length === 0 ? (
-            <EmptyState />
+            <TableRow>
+              <td colSpan={9} className="h-48 text-center p-4 align-middle">
+                <EmptyState
+                  title="暂无持仓数据"
+                  description="调整筛选条件或添加持仓后重试"
+                />
+              </td>
+            </TableRow>
           ) : (
             data.map((item) => {
               const pnlColorClass = getPnlColorClass(item.floatingPnl)

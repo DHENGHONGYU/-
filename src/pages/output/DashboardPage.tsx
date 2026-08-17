@@ -1,5 +1,6 @@
 import { memo, useEffect } from 'react'
 import { Link } from 'react-router'
+import { BarChart3, Newspaper } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import {
@@ -11,6 +12,7 @@ import {
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
+import { EmptyState, LoadingState } from '@/components/organisms/shared'
 import { useCommandStore } from '@/store/commandStore'
 import { useScoreDocStore } from '@/store/scoreDocStore'
 import { useDisciplineStore } from '@/store/disciplineStore'
@@ -130,7 +132,11 @@ const DashboardPage = memo(() => {
             </CardHeader>
             <CardContent>
               {!latestReport ? (
-                <p className="text-sm text-muted-foreground">暂无复盘数据</p>
+                <EmptyState
+                  icon={<BarChart3 />}
+                  title="暂无复盘数据"
+                  description="尚未生成交易复盘报告"
+                />
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
@@ -174,9 +180,13 @@ const DashboardPage = memo(() => {
             </CardHeader>
             <CardContent>
               {sectorLoading ? (
-                <p className="text-sm text-muted-foreground">加载中...</p>
+                <LoadingState message="加载中..." />
               ) : topIndustries.length === 0 ? (
-                <p className="text-sm text-muted-foreground">暂无行业评分数据</p>
+                <EmptyState
+                  icon={<BarChart3 />}
+                  title="暂无行业评分数据"
+                  description="行业评分数据尚未生成"
+                />
               ) : (
                 <div className="space-y-2">
                   {topIndustries.map((score) => {
@@ -208,7 +218,11 @@ const DashboardPage = memo(() => {
             </CardHeader>
             <CardContent>
               {versions.length === 0 ? (
-                <p className="text-sm text-muted-foreground">暂无研报记录</p>
+                <EmptyState
+                  icon={<Newspaper />}
+                  title="暂无研报记录"
+                  description="尚未生成评分研报"
+                />
               ) : (
                 <div className="max-h-64 space-y-2 overflow-y-auto">
                   {versions.slice(0, 10).map((version) => (

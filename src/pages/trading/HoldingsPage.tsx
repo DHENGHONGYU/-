@@ -11,7 +11,7 @@
  * - 组件内禁止出现 'BUY'、'CORE'、'#ef4444' 等硬编码
  */
 
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type React from 'react'
 import { Link } from 'react-router'
 import { FileText, TrendingUp } from 'lucide-react'
@@ -35,6 +35,7 @@ import type { HoldingAction } from '@/constants/trade.constants'
 import { useHoldingsStore, buildHoldingsParams, initHoldingsStoreSubscriptions } from '@/store/holdingsStore'
 import { usePageGuard } from '@/hooks/usePageGuard'
 import { getLogger } from '@/lib/logger'
+import { ErrorState } from '@/components/organisms/shared'
 import { PageContainer, PageHeader } from '@/components/templates'
 
 const logger = getLogger()
@@ -56,6 +57,7 @@ export default function HoldingsPage(): React.JSX.Element {
   const { toast } = useToast()
   const isMountedRef = useRef(true)
   const { guardProps } = usePageGuard('holdings')
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   // 清理标记
   useEffect(() => {
@@ -108,12 +110,9 @@ export default function HoldingsPage(): React.JSX.Element {
       logger.error('[HoldingsPage] 持仓数据加载异常', {
         error: error.message,
       })
-      toast({
-        title: '加载失败',
-        description: error.message || '网络请求异常',
-        variant: 'error',
-      })
+      setLoadError(error.message || '网络请求异常')
     } else if (responseCode === 200) {
+      setLoadError(null)
       logger.info('[HoldingsPage] 持仓数据加载完成', {
         total: pagination.total,
         page: pagination.page,
@@ -125,7 +124,7 @@ export default function HoldingsPage(): React.JSX.Element {
         code: responseCode,
         message: responseMessage,
       })
-      toast({ title: '加载失败', description: responseMessage || '未知错误', variant: 'error' })
+      setLoadError(responseMessage || '未知错误')
     }
     setLoading({ isListLoading: false })
   }, [buildParams, fetchData, setLoading, toast, pagination, data])
@@ -301,11 +300,18 @@ export default function HoldingsPage(): React.JSX.Element {
       />
 
       {/* 数据表格 */}
-      <HoldingsTable
-        data={data}
-        isLoading={loading.isListLoading}
-        onAction={handleAction}
-      />
+      {loadError ? (
+        <ErrorState
+          error={loadError}
+          onRetry={() => { setLoadError(null); void loadData() }}
+        />
+      ) : (
+        <HoldingsTable
+          data={data}
+          isLoading={loading.isListLoading}
+          onAction={handleAction}
+        />
+      )}
 
       {/* 分页 */}
       <Pagination

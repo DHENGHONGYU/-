@@ -17,6 +17,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { Progress } from '@/components/atoms/Progress'
+import { EmptyState } from '@/components/organisms/shared'
+import { Database } from 'lucide-react'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import type { ScoreStats, DimHealth } from '../hooks/useCollectionTaskStats'
 
@@ -181,7 +183,11 @@ export function DataQualityTab({
         </CardHeader>
         <CardContent>
           {totalDims === 0 ? (
-            <p className="text-center text-sm text-muted-foreground">暂无采集数据</p>
+            <EmptyState
+              icon={<Database />}
+              title="暂无采集数据"
+              description="尚未执行采集任务或采集数据为空"
+            />
           ) : (
             <div className="overflow-auto">
               <table className="w-full text-sm">
