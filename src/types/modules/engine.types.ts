@@ -104,6 +104,22 @@ export interface IPCConfig {
 }
 
 /** V6 评分引擎配置 */
+/** RAG 增强评分配置 */
+export interface RAGConfig {
+  /** 是否启用 RAG 增强 */
+  enabled: boolean
+  /** 检索 top-K 文档数 */
+  topK: number
+  /** 向量相似度最低阈值 */
+  minSimilarity: number
+  /** 每个文档片段最大字符数 */
+  maxChunkChars: number
+  /** 所有上下文总字符数上限 */
+  maxTotalChars: number
+  /** 可检索的资料类型 */
+  itemTypes: string[]
+}
+
 export interface V6ScoreEngineConfig {
   weights: V6ScoreWeightsConfig
   thresholds: V6ScoreThresholdsConfig
@@ -114,6 +130,8 @@ export interface V6ScoreEngineConfig {
   offlineMode: boolean
   auditEnabled: boolean
   llmEnabled: boolean
+  /** RAG 增强评分配置 */
+  rag: RAGConfig
 }
 
 /** 审计条目 */

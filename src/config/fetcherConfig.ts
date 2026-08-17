@@ -9,6 +9,12 @@
 
 import { isLlmApiKeyConfigured } from './llmConfig'
 
+/** 东方财富 F10 分红配股 API 路径 */
+export const EASTMONEY_F10_BONUS_API = '/api/proxy/em-f10/PC_HSF10/BonusFinancing/PageAjax'
+
+/** 东方财富 F10 盈利预测 API 路径 */
+export const EASTMONEY_F10_PROFIT_API = '/api/proxy/em-f10/PC_HSF10/ProfitForecast/PageAjax'
+
 export type FetcherFrequency =
   | 'realtime'
   | '1h'

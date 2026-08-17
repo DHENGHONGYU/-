@@ -8,6 +8,7 @@ import { widgetRegistry } from '@/cockpit/core/widgetRegistry'
 import { widgetEngine } from '@/cockpit/core/widgetEngine'
 import { MarketDataProvider, useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import { CockpitCrossLayout } from '@/cockpit/layout/CockpitCrossLayout'
+import { getColorTailwind, getStockColorClass } from '@/constants/theme.tokens'
 import { getLogger } from '@/lib/logger'
 import { useIntentionPoolStore } from '@/store/intentionPoolStore'
 import { useTradingStore } from '@/store/tradingStore'
@@ -428,7 +429,7 @@ function KpiSummaryBar(): React.JSX.Element {
       </div>
       <div className="flex flex-col items-center gap-1">
         <span className="text-xs text-muted-foreground">今日盈亏</span>
-        <span className={cn('text-lg font-bold', hasPnl && (todayPnl >= 0 ? 'text-emerald-500' : 'text-red-500'))}>
+        <span className={cn('text-lg font-bold', hasPnl && getStockColorClass(todayPnl))}>
           {hasPnl ? `${todayPnl >= 0 ? '+' : ''}${formatCurrency(todayPnl)}` : '--'}
         </span>
       </div>
@@ -446,7 +447,7 @@ function KpiSummaryBar(): React.JSX.Element {
       </div>
       <div className="flex flex-col items-center gap-1">
         <span className="text-xs text-muted-foreground">引擎状态</span>
-        <span className={cn('text-lg font-bold', isRunning ? 'text-emerald-500' : 'text-muted-foreground')}>
+        <span className={cn('text-lg font-bold', isRunning ? getColorTailwind('success') : 'text-muted-foreground')}>
           {engineStatusLabel}
         </span>
       </div>

@@ -22,6 +22,7 @@ import {
   TENCENT_API_BASE,
 } from '@/config/marketDataEndpoints'
 import { DATA_COLLECTION_TIMEOUT_MS } from '@/config/timeouts'
+import { EASTMONEY_F10_BONUS_API, EASTMONEY_F10_PROFIT_API } from '@/config/fetcherConfig'
 import { safeFetch as _safeFetch } from '@/services/shared/safeFetch'
 import type { ChipData, NewsItem, CompetitorData, ResearchReport, DividendRecord, ConsensusEstimate, RatingSummary } from './dimensionDataTypes'
 import type { KlineBar } from '@/data/types/types.marketData'
@@ -301,9 +302,6 @@ export async function fetchBaostockKline(symbol: string, days: number): Promise<
 
 // ── 15 分红股本：东财 F10 分红配股 ──
 
-/** 东财 F10 分红配股端点 */
-const EASTMONEY_F10_BONUS_API = '/api/proxy/em-f10/PC_HSF10/BonusFinancing/PageAjax'
-
 /** 东财分红配股响应中单条记录（实际 API 使用 fhyx 数组） */
 interface EmBonusRecord {
   SECUCODE?: string
@@ -445,9 +443,6 @@ export async function fetchShareStructureFromTencent(symbol: string): Promise<Te
 }
 
 // ── 16 一致预期与评级：东财 F10 盈利预测 ──
-
-/** 东财 F10 盈利预测 API */
-const EASTMONEY_F10_PROFIT_API = '/api/proxy/em-f10/PC_HSF10/ProfitForecast/PageAjax'
 
 /** 东财盈利预测-机构预测记录 */
 interface EmProfitForecastRecord {

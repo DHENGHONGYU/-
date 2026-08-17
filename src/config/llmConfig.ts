@@ -240,6 +240,9 @@ export const LLM_MODEL_PRESETS: LlmPreset[] = [
 /** 默认 LLM Base URL（DeepSeek API 地址），用于 UI placeholder 和默认配置 */
 export const DEFAULT_LLM_BASE_URL = 'https://api.deepseek.com'
 
+/** KIMI (Moonshot) API Base URL，与 LLM_MODEL_PRESETS 中 kimi preset 保持同步 */
+export const KIMI_BASE_URL = 'https://api.moonshot.cn'
+
 /** 根据 preset id 获取预设 */
 export function getPresetById(id: string): LlmPreset | undefined {
   return LLM_MODEL_PRESETS.find((p) => p.id === id)

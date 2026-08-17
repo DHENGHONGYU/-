@@ -48,7 +48,7 @@
 export type QuoteDataSourceId = 'tencent' | 'sina' | 'netease' | 'akshare' | 'tushare' | 'mock'
 
 /** 业务数据源类型（用于七维配置中的维度数据源） */
-export type DataSourceType = 'akshare' | 'ifind' | 'tushare' | 'yahoo' | 'tianyancha' | 'scholar' | 'cache'
+export type DataSourceType = 'mcp' | 'akshare' | 'ifind' | 'tushare' | 'yahoo' | 'tianyancha' | 'scholar' | 'cache'
 
 /** 采集频率 */
 export type UpdateFrequency =
@@ -56,8 +56,10 @@ export type UpdateFrequency =
   | '1h'
   | '3h'
   | 'daily'
+  | '2d'
   | '3d'
   | 'weekly'
+  | '2w'
   | 'biweekly'
   | 'monthly'
   | 'quarterly'

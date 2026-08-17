@@ -26,7 +26,7 @@
  */
 
 import { getLogger } from '@/lib/logger'
-import { getDefaultLlmConfig, getLlmApiKeyAsync, getPresetById, isLlmApiKeyConfigured } from '@/config/llmConfig'
+import { getDefaultLlmConfig, getLlmApiKeyAsync, getPresetById, isLlmApiKeyConfigured, KIMI_BASE_URL } from '@/config/llmConfig'
 import type { LlmMessage } from '@/services/llm/llmTypes'
 import { KIMI_CONFIG, KIMI_DAILY_QUOTA, KIMI_TASK_PRIORITY } from './kimiAIStrategy'
 
@@ -170,7 +170,7 @@ async function callKimiAPI(
 
   // 使用 KIMI 预设配置
   const kimiPreset = getPresetById('kimi')
-  const baseURL = kimiPreset?.baseURL ?? 'https://api.moonshot.cn'
+  const baseURL = kimiPreset?.baseURL ?? KIMI_BASE_URL
   const model = 'kimi-k2.7-code' // 月度会员推荐模型
 
   const finalApiKey = apiKey || defaultConfig.apiKey

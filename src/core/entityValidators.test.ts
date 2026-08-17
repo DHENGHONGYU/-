@@ -35,62 +35,62 @@ describe('entityValidators', () => {
     })
 
     it('direction 仅支持 buy/sell', () => {
-      const r1 = validateOrder({ symbol: 'TEST', direction: 'buy', quantity: 10, price: 10 })
+      const r1 = validateOrder({ symbol: '600519.SH', direction: 'buy', quantity: 10, price: 10 })
       expect(r1.valid).toBe(true)
-      const r2 = validateOrder({ symbol: 'TEST', direction: 'sell', quantity: 10, price: 10 })
+      const r2 = validateOrder({ symbol: '600519.SH', direction: 'sell', quantity: 10, price: 10 })
       expect(r2.valid).toBe(true)
-      const r3 = validateOrder({ symbol: 'TEST', direction: 'hold' as any, quantity: 10, price: 10 })
+      const r3 = validateOrder({ symbol: '600519.SH', direction: 'hold' as any, quantity: 10, price: 10 })
       expect(r3.valid).toBe(false)
       expect(r3.errors.some(e => e.includes('direction'))).toBe(true)
     })
 
     it('quantity 必须为正数', () => {
-      const r1 = validateOrder({ symbol: 'TEST', direction: 'buy', quantity: 0, price: 10 })
+      const r1 = validateOrder({ symbol: '600519.SH', direction: 'buy', quantity: 0, price: 10 })
       expect(r1.valid).toBe(false)
       expect(r1.errors.some(e => e.includes('quantity'))).toBe(true)
 
-      const r2 = validateOrder({ symbol: 'TEST', direction: 'buy', quantity: -5, price: 10 })
+      const r2 = validateOrder({ symbol: '600519.SH', direction: 'buy', quantity: -5, price: 10 })
       expect(r2.valid).toBe(false)
     })
 
     it('quantity 超过 100 万报错', () => {
-      const result = validateOrder({ symbol: 'TEST', direction: 'buy', quantity: 2_000_000, price: 10 })
+      const result = validateOrder({ symbol: '600519.SH', direction: 'buy', quantity: 2_000_000, price: 10 })
       expect(result.valid).toBe(false)
       expect(result.errors.some(e => e.includes('quantity'))).toBe(true)
     })
 
     it('price 必须为正数', () => {
-      const r1 = validateOrder({ symbol: 'TEST', direction: 'buy', quantity: 10, price: 0 })
+      const r1 = validateOrder({ symbol: '600519.SH', direction: 'buy', quantity: 10, price: 0 })
       expect(r1.valid).toBe(false)
-      const r2 = validateOrder({ symbol: 'TEST', direction: 'buy', quantity: 10, price: -1 })
+      const r2 = validateOrder({ symbol: '600519.SH', direction: 'buy', quantity: 10, price: -1 })
       expect(r2.valid).toBe(false)
     })
 
     it('price 超过 1,000,000 报错', () => {
-      const result = validateOrder({ symbol: 'TEST', direction: 'buy', quantity: 1, price: 2_000_000 })
+      const result = validateOrder({ symbol: '600519.SH', direction: 'buy', quantity: 1, price: 2_000_000 })
       expect(result.valid).toBe(false)
       expect(result.errors.some(e => e.includes('price'))).toBe(true)
     })
 
     it('quantity 为 Infinity 报错', () => {
-      const result = validateOrder({ symbol: 'TEST', direction: 'buy', quantity: Infinity, price: 10 })
+      const result = validateOrder({ symbol: '600519.SH', direction: 'buy', quantity: Infinity, price: 10 })
       expect(result.valid).toBe(false)
     })
 
     it('quantity 为 NaN 报错', () => {
-      const result = validateOrder({ symbol: 'TEST', direction: 'buy', quantity: NaN, price: 10 })
+      const result = validateOrder({ symbol: '600519.SH', direction: 'buy', quantity: NaN, price: 10 })
       expect(result.valid).toBe(false)
     })
 
-    it('symbol 长度超过 20 报错', () => {
-      const result = validateOrder({ symbol: 'A'.repeat(21), direction: 'buy', quantity: 10, price: 10 })
+    it('symbol 格式非法时报错', () => {
+      const result = validateOrder({ symbol: '600519', direction: 'buy', quantity: 10, price: 10 })
       expect(result.valid).toBe(false)
       expect(result.errors.some(e => e.includes('symbol'))).toBe(true)
     })
 
     it('amount 与预期差距过大时报错', () => {
       const result = validateOrder({
-        symbol: 'TEST',
+        symbol: '600519.SH',
         direction: 'buy',
         quantity: 100,
         price: 100,
@@ -102,7 +102,7 @@ describe('entityValidators', () => {
 
     it('amount 在容差范围内通过', () => {
       const result = validateOrder({
-        symbol: 'TEST',
+        symbol: '600519.SH',
         direction: 'buy',
         quantity: 100,
         price: 100.005,
@@ -149,40 +149,40 @@ describe('entityValidators', () => {
     })
 
     it('score 不能为空', () => {
-      const result = validateV6Score({ symbol: 'TEST' })
+      const result = validateV6Score({ symbol: '600519.SH' })
       expect(result.valid).toBe(false)
       expect(result.errors.some(e => e.includes('score'))).toBe(true)
     })
 
     it('score 范围 [0, 5]', () => {
-      const r1 = validateV6Score({ symbol: 'TEST', score: -1, factors: { a: 1 }, algorithmVersion: 'v1' })
+      const r1 = validateV6Score({ symbol: '600519.SH', score: -1, factors: { a: 1 }, algorithmVersion: 'v1' })
       expect(r1.valid).toBe(false)
 
-      const r2 = validateV6Score({ symbol: 'TEST', score: 6, factors: { a: 1 }, algorithmVersion: 'v1' })
+      const r2 = validateV6Score({ symbol: '600519.SH', score: 6, factors: { a: 1 }, algorithmVersion: 'v1' })
       expect(r2.valid).toBe(false)
 
-      const r3 = validateV6Score({ symbol: 'TEST', score: 0, factors: { a: 1 }, algorithmVersion: 'v1' })
+      const r3 = validateV6Score({ symbol: '600519.SH', score: 0, factors: { a: 1 }, algorithmVersion: 'v1' })
       expect(r3.valid).toBe(true)
 
-      const r4 = validateV6Score({ symbol: 'TEST', score: 5, factors: { a: 1 }, algorithmVersion: 'v1' })
+      const r4 = validateV6Score({ symbol: '600519.SH', score: 5, factors: { a: 1 }, algorithmVersion: 'v1' })
       expect(r4.valid).toBe(true)
     })
 
     it('factors 不能为空对象', () => {
-      const result = validateV6Score({ symbol: 'TEST', score: 3, factors: {}, algorithmVersion: 'v1' })
+      const result = validateV6Score({ symbol: '600519.SH', score: 3, factors: {}, algorithmVersion: 'v1' })
       expect(result.valid).toBe(false)
       expect(result.errors.some(e => e.includes('factors'))).toBe(true)
     })
 
     it('algorithmVersion 不能为空', () => {
-      const result = validateV6Score({ symbol: 'TEST', score: 3, factors: { a: 1 } })
+      const result = validateV6Score({ symbol: '600519.SH', score: 3, factors: { a: 1 } })
       expect(result.valid).toBe(false)
       expect(result.errors.some(e => e.includes('algorithmVersion'))).toBe(true)
     })
 
     it('calculatedAt 为无效时间戳时报错', () => {
       const result = validateV6Score({
-        symbol: 'TEST',
+        symbol: '600519.SH',
         score: 3,
         factors: { a: 1 },
         algorithmVersion: 'v1',
@@ -196,12 +196,12 @@ describe('entityValidators', () => {
   describe('assertV6ScoreValid()', () => {
     it('有效评分返回数据', () => {
       const score = assertV6ScoreValid({
-        symbol: 'TEST',
+        symbol: '600519.SH',
         score: 4.5,
         factors: { quality: 90 },
         algorithmVersion: 'v4.3',
       })
-      expect(score.symbol).toBe('TEST')
+      expect(score.symbol).toBe('600519.SH')
     })
 
     it('无效评分抛出 Error', () => {
@@ -230,20 +230,20 @@ describe('entityValidators', () => {
     })
 
     it('无 name 返回错误', () => {
-      const result = validateStock({ symbol: 'TEST', researchStatus: 'candidate' })
+      const result = validateStock({ symbol: '600519.SH', researchStatus: 'candidate' })
       expect(result.valid).toBe(false)
       expect(result.errors.some(e => e.includes('name'))).toBe(true)
     })
 
     it('无 researchStatus 返回错误', () => {
-      const result = validateStock({ symbol: 'TEST', name: 'Test' })
+      const result = validateStock({ symbol: '600519.SH', name: 'Test' })
       expect(result.valid).toBe(false)
       expect(result.errors.some(e => e.includes('researchStatus'))).toBe(true)
     })
 
     it('price 为负数报错', () => {
       const result = validateStock({
-        symbol: 'TEST',
+        symbol: '600519.SH',
         name: 'Test',
         researchStatus: 'candidate',
         price: -10,
@@ -254,7 +254,7 @@ describe('entityValidators', () => {
 
     it('price 为 Infinity 报错', () => {
       const result = validateStock({
-        symbol: 'TEST',
+        symbol: '600519.SH',
         name: 'Test',
         researchStatus: 'candidate',
         price: Infinity,
@@ -264,7 +264,7 @@ describe('entityValidators', () => {
 
     it('pe/pb/roe 为有限数通过校验', () => {
       const result = validateStock({
-        symbol: 'TEST',
+        symbol: '600519.SH',
         name: 'Test',
         researchStatus: 'candidate',
         pe: NaN,
@@ -275,7 +275,7 @@ describe('entityValidators', () => {
 
     it('不提供 price/pe/pb/roe 不校验', () => {
       const result = validateStock({
-        symbol: 'TEST',
+        symbol: '600519.SH',
         name: 'Test',
         researchStatus: 'candidate',
       })

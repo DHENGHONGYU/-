@@ -17,6 +17,7 @@ import {
   formatStockCode,
   isValidStockCodeStrict,
   isValidSymbolWithExchange,
+  validateSymbolFormat,
   isValidPercent,
   isValidScore,
   isValidPrice,
@@ -55,12 +56,64 @@ describe('股票代码验证', () => {
   })
 
   it('isValidSymbolWithExchange: 校验带交易所后缀', () => {
+    // A股
     expect(isValidSymbolWithExchange('600519.SH')).toBe(true)
     expect(isValidSymbolWithExchange('000001.SZ')).toBe(true)
     expect(isValidSymbolWithExchange('000001.BJ')).toBe(true)
+    // 港股
+    expect(isValidSymbolWithExchange('00700.HK')).toBe(true)
+    expect(isValidSymbolWithExchange('1.HK')).toBe(true)
+    expect(isValidSymbolWithExchange('12345.HK')).toBe(true)
+    // 美股
+    expect(isValidSymbolWithExchange('AAPL.US')).toBe(true)
+    expect(isValidSymbolWithExchange('GOOGL.US')).toBe(true)
+    expect(isValidSymbolWithExchange('A.US')).toBe(true)
+    // 非法格式
     expect(isValidSymbolWithExchange('600519.HK')).toBe(false)
     expect(isValidSymbolWithExchange('60051')).toBe(false)
     expect(isValidSymbolWithExchange('')).toBe(false)
+    expect(isValidSymbolWithExchange('INVALID')).toBe(false)
+    expect(isValidSymbolWithExchange('600519')).toBe(false)
+  })
+
+  it('validateSymbolFormat: 合法格式返回 null', () => {
+    expect(validateSymbolFormat('600519.SH')).toBeNull()
+    expect(validateSymbolFormat('000001.SZ')).toBeNull()
+    expect(validateSymbolFormat('830799.BJ')).toBeNull()
+    expect(validateSymbolFormat('00700.HK')).toBeNull()
+    expect(validateSymbolFormat('AAPL.US')).toBeNull()
+  })
+
+  it('validateSymbolFormat: 非法格式返回错误信息', () => {
+    // 无交易所后缀
+    const r1 = validateSymbolFormat('600519')
+    expect(r1).not.toBeNull()
+    expect(r1).toContain('symbol 格式非法')
+
+    // 完全非法字符串
+    const r2 = validateSymbolFormat('INVALID')
+    expect(r2).not.toBeNull()
+    expect(r2).toContain('symbol 格式非法')
+
+    // 空字符串
+    const r3 = validateSymbolFormat('')
+    expect(r3).not.toBeNull()
+    expect(r3).toContain('不能为空')
+
+    // 纯空格
+    const r4 = validateSymbolFormat('   ')
+    expect(r4).not.toBeNull()
+    expect(r4).toContain('不能为空')
+
+    // A股代码 + 港股后缀
+    const r5 = validateSymbolFormat('600519.HK')
+    expect(r5).not.toBeNull()
+    expect(r5).toContain('symbol 格式非法')
+
+    // 长度不足
+    const r6 = validateSymbolFormat('12345.SH')
+    expect(r6).not.toBeNull()
+    expect(r6).toContain('symbol 格式非法')
   })
 
   it('formatStockCode: 补零至 6 位', () => {

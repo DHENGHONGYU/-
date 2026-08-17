@@ -24,15 +24,19 @@
  * @doc [V9-DOC-DATA-051]
  */
 
+import { KIMI_BASE_URL, getPresetById } from '@/config/llmConfig'
+
 // ============================================================
 // KIMI API 配置
 // ============================================================
 
+const kimiPreset = getPresetById('kimi')
+
 export const KIMI_CONFIG = {
   /** API 端点 */
-  endpoint: 'https://api.moonshot.cn/v1/chat/completions',
+  endpoint: `${KIMI_BASE_URL}/v1/chat/completions`,
   /** 默认模型 (月度会员推荐 32k) */
-  model: 'moonshot-v1-32k',
+  model: kimiPreset?.defaultModel ?? 'kimi-k2.7-code',
   /** 月度 token 预算 */
   monthlyTokenBudget: 1_000_000,
   /** 每日 token 预算 (约 30 天) */

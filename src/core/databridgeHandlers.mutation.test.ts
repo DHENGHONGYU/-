@@ -137,6 +137,80 @@ describe('databridgeHandlers (mutation)', () => {
       expect(dbModule!.db.put).not.toHaveBeenCalled()
     })
 
+    it('symbol 格式非法时抛出 EnvelopeError（无交易所后缀）', async () => {
+      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.insertStock)!
+      const envelope = makeEnvelope(ENVELOPE_ACTION.insertStock, {
+        symbol: '600519',
+        name: 'Test',
+      })
+
+      const promise = handler.handle(envelope, STORE_NAME.stocks)
+      await expect(promise).rejects.toThrow(EnvelopeError)
+      await expect(promise).rejects.toThrow('symbol 格式非法')
+      expect(dbModule!.db.put).not.toHaveBeenCalled()
+    })
+
+    it('symbol 格式非法时抛出 EnvelopeError（完全非法字符串）', async () => {
+      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.insertStock)!
+      const envelope = makeEnvelope(ENVELOPE_ACTION.insertStock, {
+        symbol: 'INVALID',
+        name: 'Test',
+      })
+
+      const promise = handler.handle(envelope, STORE_NAME.stocks)
+      await expect(promise).rejects.toThrow(EnvelopeError)
+      await expect(promise).rejects.toThrow('symbol 格式非法')
+      expect(dbModule!.db.put).not.toHaveBeenCalled()
+    })
+
+    it('A股 symbol 格式正确通过校验', async () => {
+      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.insertStock)!
+      const stock: Partial<Stock> = {
+        symbol: '600519.SH',
+        name: '贵州茅台',
+        researchStatus: 'screening',
+        source: 'manual',
+        dataVersion: 1,
+      }
+      const envelope = makeEnvelope(ENVELOPE_ACTION.insertStock, stock)
+
+      await handler.handle(envelope, STORE_NAME.stocks)
+
+      expect(dbModule!.db.put).toHaveBeenCalledWith(STORE_NAME.stocks, stock)
+    })
+
+    it('港股 symbol 格式正确通过校验', async () => {
+      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.insertStock)!
+      const stock: Partial<Stock> = {
+        symbol: '00700.HK',
+        name: '腾讯控股',
+        researchStatus: 'screening',
+        source: 'manual',
+        dataVersion: 1,
+      }
+      const envelope = makeEnvelope(ENVELOPE_ACTION.insertStock, stock)
+
+      await handler.handle(envelope, STORE_NAME.stocks)
+
+      expect(dbModule!.db.put).toHaveBeenCalledWith(STORE_NAME.stocks, stock)
+    })
+
+    it('美股 symbol 格式正确通过校验', async () => {
+      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.insertStock)!
+      const stock: Partial<Stock> = {
+        symbol: 'AAPL.US',
+        name: 'Apple Inc.',
+        researchStatus: 'screening',
+        source: 'manual',
+        dataVersion: 1,
+      }
+      const envelope = makeEnvelope(ENVELOPE_ACTION.insertStock, stock)
+
+      await handler.handle(envelope, STORE_NAME.stocks)
+
+      expect(dbModule!.db.put).toHaveBeenCalledWith(STORE_NAME.stocks, stock)
+    })
+
     it('日志记录正确', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.insertStock)!
       const envelope = makeEnvelope(ENVELOPE_ACTION.insertStock, {
@@ -222,6 +296,19 @@ describe('databridgeHandlers (mutation)', () => {
       )
     })
 
+    it('symbol 格式非法时抛出 EnvelopeError', async () => {
+      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStock)!
+      const envelope = makeEnvelope(ENVELOPE_ACTION.updateStock, {
+        symbol: '600519',
+      })
+
+      const promise = handler.handle(envelope, STORE_NAME.stocks)
+      await expect(promise).rejects.toThrow(EnvelopeError)
+      await expect(promise).rejects.toThrow('symbol 格式非法')
+      expect(dbModule!.db.get).not.toHaveBeenCalled()
+      expect(dbModule!.db.put).not.toHaveBeenCalled()
+    })
+
     it('日志记录正确', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStock)!
       vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
@@ -290,6 +377,20 @@ describe('databridgeHandlers (mutation)', () => {
       await expect(promiseStatus).rejects.toThrow('Stock not found')
       expect(dbModule!.db.put).not.toHaveBeenCalled()
     })
+
+    it('symbol 格式非法时抛出 EnvelopeError', async () => {
+      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStockStatus)!
+      const envelope = makeEnvelope(ENVELOPE_ACTION.updateStockStatus, {
+        symbol: 'INVALID',
+        status: 'research',
+      })
+
+      const promise = handler.handle(envelope, STORE_NAME.stocks)
+      await expect(promise).rejects.toThrow(EnvelopeError)
+      await expect(promise).rejects.toThrow('symbol 格式非法')
+      expect(dbModule!.db.get).not.toHaveBeenCalled()
+      expect(dbModule!.db.put).not.toHaveBeenCalled()
+    })
   })
 
   // ──────────────────────────────────────────
@@ -345,6 +446,20 @@ describe('databridgeHandlers (mutation)', () => {
       const promiseGroup = handler.handle(envelope, STORE_NAME.stocks)
       await expect(promiseGroup).rejects.toThrow(EnvelopeError)
       await expect(promiseGroup).rejects.toThrow('Stock not found')
+      expect(dbModule!.db.put).not.toHaveBeenCalled()
+    })
+
+    it('symbol 格式非法时抛出 EnvelopeError', async () => {
+      const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStockGroup)!
+      const envelope = makeEnvelope(ENVELOPE_ACTION.updateStockGroup, {
+        symbol: '00700',
+        group: '测试组',
+      })
+
+      const promise = handler.handle(envelope, STORE_NAME.stocks)
+      await expect(promise).rejects.toThrow(EnvelopeError)
+      await expect(promise).rejects.toThrow('symbol 格式非法')
+      expect(dbModule!.db.get).not.toHaveBeenCalled()
       expect(dbModule!.db.put).not.toHaveBeenCalled()
     })
   })
