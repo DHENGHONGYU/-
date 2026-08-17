@@ -129,53 +129,59 @@ TSX_RUN scripts/doc-gatekeeper.ts
 
 # 11. 文档同步审计（warn 模式）
 echo ""
-echo "📝 [11/19] 运行 audit:docs（文档同步检查）..."
+echo "📝 [11/20] 运行 audit:docs（文档同步检查）..."
 TSX_RUN scripts/audit/audit-doc-sync.ts && TSX_RUN scripts/audit/audit-version-drift.ts || true
 
-# 12. 设计令牌映射校验
+# 12. doc_id 注册表反向一致性审计（P0 BLOCK）
+#     验收报告后续建议：防止 doc_id 注册表再次漂移
 echo ""
-echo "🎨 [12/19] 运行 verify:tokens（设计令牌映射校验）..."
+echo "📋 [12/20] 运行 audit:doc-id-reverse（doc_id 注册表反向一致性，P0 BLOCK）..."
+BLOCK TSX_RUN scripts/audit/audit-doc-id-reverse.ts
+
+# 13. 设计令牌映射校验
+echo ""
+echo "🎨 [13/20] 运行 verify:tokens（设计令牌映射校验）..."
 TSX_RUN scripts/verify-design-tokens.ts
 
-# 13. 令牌消费审计
+# 14. 令牌消费审计
 echo ""
-echo "🪙 [13/19] 运行 audit:tokens（令牌消费检查）..."
+echo "🪙 [14/20] 运行 audit:tokens（令牌消费检查）..."
 TSX_RUN scripts/other/token-scan.cjs
 
-# 14. JSDoc 文档门禁（基线采集，当前不阻断）
+# 15. JSDoc 文档门禁（基线采集，当前不阻断）
 echo ""
-echo "📖 [14/19] 运行 audit:jsdoc（JSDoc 覆盖检查）..."
+echo "📖 [15/20] 运行 audit:jsdoc（JSDoc 覆盖检查）..."
 TSX_RUN scripts/audit/audit-jsdoc.ts || true
 
-# 15. 驾驶舱 Widget 三处注册一致性审计（tsx 段错误容错）
+# 16. 驾驶舱 Widget 三处注册一致性审计（tsx 段错误容错）
 echo ""
-echo "🧩 [15/19] 运行 audit:widget-registry（Widget 三处注册一致性检查）..."
+echo "🧩 [16/20] 运行 audit:widget-registry（Widget 三处注册一致性检查）..."
 TSX_RUN scripts/audit/audit-widget-registry.ts || true
 
-# 16. AI 输出校验门禁（tsx 段错误容错）
+# 17. AI 输出校验门禁（tsx 段错误容错）
 echo ""
-echo "🤖 [16/19] 运行 audit:ai-output（AI 输出三道校验检查）..."
+echo "🤖 [17/20] 运行 audit:ai-output（AI 输出三道校验检查）..."
 TSX_RUN scripts/audit/audit-ai-output.ts || true
 
-# 17. ACL 权限矩阵一致性审计（tsx 段错误容错）
+# 18. ACL 权限矩阵一致性审计（tsx 段错误容错）
 echo ""
-echo "🔐 [17/19] 运行 audit:acl-consistency（ACL 权限矩阵一致性检查）..."
+echo "🔐 [18/20] 运行 audit:acl-consistency（ACL 权限矩阵一致性检查）..."
 TSX_RUN scripts/audit/audit-acl-consistency.ts || true
 
-# 18. 组件注册表一致性审计（registry P0 阻断）
+# 19. 组件注册表一致性审计（registry P0 阻断）
 #     用户要求纳入 pre-commit 的三条门禁之 #2（对应 npm run audit:registry）
 #     - 正向：已注册组件的 sourcePath 文件是否存在
 #     - 反向：存在的组件源文件是否已在 registry 中注册
 echo ""
-echo "🧩 [18/19] 运行 audit:registry（组件注册表一致性审计，P0 BLOCK）..."
+echo "🧩 [19/20] 运行 audit:registry（组件注册表一致性审计，P0 BLOCK）..."
 BLOCK TSX_RUN scripts/audit/audit-registry.ts
 
-# 19. 注册表契约测试（registryContract P0 阻断）
+# 20. 注册表契约测试（registryContract P0 阻断）
 #     用户要求纳入 pre-commit 的三条门禁之 #3（对应 vitest run registryContract.test.ts）
 #     - 白名单组件不可在 page/app 层直接 JSX 引用
 #     - reserved components 的 consumers=pending-integration 约束
 echo ""
-echo "🧪 [19/19] 运行 vitest registryContract（注册表契约，P0 BLOCK）..."
+echo "🧪 [20/20] 运行 vitest registryContract（注册表契约，P0 BLOCK）..."
 BLOCK VITEST_RUN run src/components/registry/registryContract.test.ts
 
 # 20. 文档目录-内容匹配（warn 模式）
@@ -207,7 +213,39 @@ else
   echo "✅ 测试类型检查通过"
 fi
 
+# 21. 文档健康度审计提醒（月度/季度，非阻断）
+echo ""
+echo "📅 [warn] 文档健康度审计提醒..."
+CURRENT_DAY=$(date +%d 2>/dev/null || echo "01")
+CURRENT_MONTH=$(date +%m 2>/dev/null || echo "01")
+# 每月1号提醒月度审计
+if [ "$CURRENT_DAY" = "01" ]; then
+  echo "   📋 今天是月初 ($(date +%Y-%m-%d 2>/dev/null))，建议执行月度文档健康度审计："
+  echo "      npm run audit:doc-health:monthly"
+  # 季度首月（1/4/7/10月）提醒季度审计
+  if [ "$CURRENT_MONTH" = "01" ] || [ "$CURRENT_MONTH" = "04" ] || [ "$CURRENT_MONTH" = "07" ] || [ "$CURRENT_MONTH" = "10" ]; then
+    echo "   📊 今天是季度首月，建议执行季度全量文档健康度审计："
+    echo "      npm run audit:doc-health:quarterly"
+  fi
+else
+  # 检查上次审计报告日期，超过30天提醒
+  LATEST_AUDIT=$(ls -t docs/reports/audit/doc-health-orchestrator-*.md 2>/dev/null | head -n 1)
+  if [ -n "$LATEST_AUDIT" ]; then
+    AUDIT_DATE=$(echo "$LATEST_AUDIT" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+    AUDIT_EPOCH=$(date -d "$AUDIT_DATE" +%s 2>/dev/null || echo "0")
+    NOW_EPOCH=$(date +%s 2>/dev/null || echo "0")
+    DAYS_SINCE=$(( (NOW_EPOCH - AUDIT_EPOCH) / 86400 ))
+    if [ "$DAYS_SINCE" -gt 30 ] 2>/dev/null; then
+      echo "   ⚠️ 上次文档健康度审计已过去 $DAYS_SINCE 天（$AUDIT_DATE），建议执行："
+      echo "      npm run audit:doc-health:monthly"
+    fi
+  else
+    echo "   ℹ️ 尚未执行过文档健康度审计，建议首次执行："
+    echo "      npm run audit:doc-health:quarterly"
+  fi
+fi
+
 echo ""
 echo "================================================"
-echo "✅ V9 预提交门禁通过：核心 P0 门禁（secrets / tsc:prod / layers / atomic / db-references / audit:registry / vitest registryContract）已真阻断；其余为 warn。允许提交。"
+echo "✅ V9 预提交门禁通过：核心 P0 门禁（secrets / tsc:prod / layers / atomic / db-references / doc-id-reverse / audit:registry / vitest registryContract）已真阻断；其余为 warn。允许提交。"
 echo ""
