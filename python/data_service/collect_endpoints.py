@@ -1617,6 +1617,213 @@ def collect_sectors(request: SectorCollectRequest) -> CollectResponse:
         )
 
 
+# ---------------------------------------------------------------------------
+# 市场宽度采集（MAS Breadth，RLES D3 时机成熟度因子真实源，2026-08-17 新增）
+# ---------------------------------------------------------------------------
+
+
+class BreadthData(BaseModel):
+    """全市场涨跌广度（对应前端 MarketBreadthInput）"""
+
+    up: int
+    down: int
+    flat: int
+    totalStocks: int
+    limitUp: int
+    limitDown: int
+    asOf: str
+
+
+# 市场宽度缓存：东财 push2 拉全市场约 1-2 秒，60s 内复用避免高频打满
+_BREADTH_CACHE: dict[str, Any] = {"data": None, "ts": 0.0}
+_BREADTH_TTL = 60
+
+
+def fetch_market_breadth() -> BreadthData | None:
+    """拉取全市场涨跌家数/涨跌停（东财 push2 qt/clist）。
+
+    数据源：push2.eastmoney.com/api/qt/clist/get（fs 覆盖沪深京 A 股），
+    取 f3 涨跌幅，统计 上涨/下跌/平盘/涨停/跌停。60s 缓存，失败返回 None
+    （前端 resilient 入口回退 cockpit mock）。
+
+    涨停/跌停判定兼容 10%（主板）与 20%（双创/北交所）：
+    f3>=9.9 或 >=19.9 视为涨停；f3<=-9.9 或 <=-19.9 视为跌停。
+    """
+    now = time.time()
+    if _BREADTH_CACHE["data"] is not None and now - _BREADTH_CACHE["ts"] < _BREADTH_TTL:
+        return _BREADTH_CACHE["data"]
+
+    import requests
+
+    url = (
+        "https://push2.eastmoney.com/api/qt/clist/get"
+        "?pn=1&pz=6000&po=1&np=1&fltt=2&invt=2"
+        "&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23"
+        "&fields=f3,f12,f14"
+    )
+    try:
+        logger.info("[breadth] 请求东财全市场涨跌家数: url=%s timeout=12s", url)
+        t0 = time.perf_counter()
+        r = requests.get(
+            url, timeout=12,
+            headers={"Referer": "https://quote.eastmoney.com/", "User-Agent": "Mozilla/5.0"},
+        )
+        http_ms = (time.perf_counter() - t0) * 1000
+        payload = r.json()
+        items = (payload.get("data") or {}).get("diff") or {}
+        logger.info("[breadth] 东财响应: status=%d elapsed=%.1fms items=%d", r.status_code, http_ms, len(items))
+        if not items:
+            logger.warning("[breadth] 东财返回空，宽度源降级为 None")
+            return None
+
+        up = down = flat = limit_up = limit_down = 0
+        for it in items.values():
+            chg = _safe_float(it.get("f3"))
+            if chg is None:
+                continue
+            if chg > 0:
+                up += 1
+            elif chg < 0:
+                down += 1
+            else:
+                flat += 1
+            if chg >= 9.9 or chg >= 19.9:
+                limit_up += 1
+            elif chg <= -9.9 or chg <= -19.9:
+                limit_down += 1
+
+        data = BreadthData(
+            up=up, down=down, flat=flat,
+            totalStocks=up + down + flat,
+            limitUp=limit_up, limitDown=limit_down,
+            asOf=datetime.now().isoformat(),
+        )
+        _BREADTH_CACHE["data"] = data
+        _BREADTH_CACHE["ts"] = now
+        logger.info(
+            "[breadth] 市场宽度统计完成: up=%d down=%d flat=%d limitUp=%d limitDown=%d",
+            up, down, flat, limit_up, limit_down,
+        )
+        return data
+    except requests.exceptions.Timeout as e:
+        logger.error("[breadth] 东财超时（12s），宽度源降级为 None: %s", e)
+        return None
+    except Exception as e:
+        logger.error("[breadth] 拉取失败，宽度源降级为 None: %s", e, exc_info=True)
+        return None
+
+
+@app.post("/api/collect/breadth", response_model=CollectResponse)
+def collect_breadth() -> CollectResponse:
+    """拉取全市场涨跌广度（RLES 市场宽度因子真实源）。
+
+    数据源：东财 push2 qt/clist（覆盖沪深京 A 股）。失败降级为 success=False，
+    前端 resilient 入口回退 cockpit mock。
+    """
+    logger.info("[breadth] 收到市场宽度采集请求")
+    try:
+        data = fetch_market_breadth()
+        if data is None:
+            return CollectResponse(
+                success=False, symbol="*", dimension="breadth",
+                error="东财全市场涨跌家数获取失败（已回退 mock）",
+                fetched_at=datetime.now().isoformat(),
+            )
+        return CollectResponse(
+            success=True, symbol="*", dimension="breadth",
+            data=data.model_dump(), records=1,
+            fetched_at=datetime.now().isoformat(),
+        )
+    except Exception as e:
+        logger.error("[breadth] 采集异常: %s", e, exc_info=True)
+        return CollectResponse(
+            success=False, symbol="*", dimension="breadth", error=str(e),
+            fetched_at=datetime.now().isoformat(),
+        )
+
+
+# ---------------------------------------------------------------------------
+# 风险黑名单采集（ST/退市/违规，hardRisks 真实源，2026-08-17 新增）
+# ---------------------------------------------------------------------------
+
+
+class RiskCollectRequest(BaseModel):
+    symbol: str
+
+
+class RiskCollectData(BaseModel):
+    symbol: str
+    name: Optional[str] = None
+    flags: list[str] = []
+    asOf: str
+
+
+# 后端权威黑名单（symbol → (category, reason)）。生产环境应从交易所退市预警/
+# ST 特别处理列表/监管处罚公告/立案调查公告每日同步维护。当前为空占位。
+BACKEND_FORBIDDEN_STOCKS: dict[str, tuple[str, str]] = {}
+
+
+def _derive_risk_flags_from_name(name: str | None) -> list[str]:
+    """由官方证券名称推导风险标签（交易所强制 ST/*ST/退市 前缀，权威度高）。"""
+    flags: list[str] = []
+    if not name:
+        return flags
+    upper = name.upper()
+    if "退" in name:
+        flags.append("delisting:名称含退市")
+    if "*ST" in upper:
+        flags.append("st:名称含*ST风险警示")
+    elif upper.startswith("ST"):
+        flags.append("st:名称含ST风险警示")
+    return flags
+
+
+def fetch_stock_risk_flags(symbol: str) -> RiskCollectData:
+    """获取单股风险标签：后端黑名单 + 名称推导（东财/腾讯名称含 ST/退市前缀）。"""
+    flags: list[str] = []
+    name: str | None = None
+
+    forbidden = BACKEND_FORBIDDEN_STOCKS.get(symbol)
+    if forbidden:
+        flags.append(f"{forbidden[0]}:{forbidden[1]}")
+
+    try:
+        tq = fetch_tencent_quote(symbol)
+        if tq:
+            name = tq.get("name")
+    except Exception as e:
+        logger.warning("[risk] 腾讯名称查询失败（不影响黑名单判定）: symbol=%s error=%s", symbol, e)
+
+    flags.extend(_derive_risk_flags_from_name(name))
+    return RiskCollectData(
+        symbol=symbol, name=name, flags=flags,
+        asOf=datetime.now().isoformat(),
+    )
+
+
+@app.post("/api/collect/risk", response_model=CollectResponse)
+def collect_risk(request: RiskCollectRequest) -> CollectResponse:
+    """拉取单股风险标签（ST/退市/违规/处罚/立案）。
+
+    数据源：后端 BACKEND_FORBIDDEN_STOCKS + 腾讯名称（ST/退市前缀权威推导）。
+    命中任一条即触发 RLES 风险降级 ×0.73。
+    """
+    logger.info("[risk] 收到风险标签采集请求: symbol=%s", request.symbol)
+    try:
+        data = fetch_stock_risk_flags(request.symbol)
+        return CollectResponse(
+            success=True, symbol=request.symbol, dimension="risk",
+            data=data.model_dump(), records=len(data.flags),
+            fetched_at=datetime.now().isoformat(),
+        )
+    except Exception as e:
+        logger.error("[risk] 采集异常: %s", e, exc_info=True)
+        return CollectResponse(
+            success=False, symbol=request.symbol, dimension="risk", error=str(e),
+            fetched_at=datetime.now().isoformat(),
+        )
+
+
 @app.get("/health", response_model=HealthCheckResponse)
 def health_check() -> HealthCheckResponse:
     """服务健康检查"""

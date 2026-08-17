@@ -11,6 +11,8 @@ from datetime import datetime
 import time
 
 import pytest
+import requests
+import collect_endpoints
 from fastapi.testclient import TestClient
 
 from collect_endpoints import (
@@ -2200,3 +2202,111 @@ class TestHealthCheckResponseModel:
         )
         assert resp.error == "db down"
         assert resp.status == "degraded"
+
+
+# ============================================================
+# 市场宽度采集（MAS Breadth，/api/collect/breadth，2026-08-17 新增）
+# ============================================================
+
+
+class _FakeBreadthResp:
+    status_code = 200
+
+    def __init__(self, items: dict) -> None:
+        self._items = items
+
+    def json(self):
+        return {"data": {"diff": self._items}}
+
+
+class TestCollectBreadth:
+    """POST /api/collect/breadth 端点测试（mock 东财 push2 网络）"""
+
+    def test_breadth_success_counts(self, client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+        collect_endpoints._BREADTH_CACHE["data"] = None
+        collect_endpoints._BREADTH_CACHE["ts"] = 0.0
+        fake_items = {
+            "1": {"f3": "5.1", "f12": "600519", "f14": "贵州茅台"},
+            "2": {"f3": "-2.3", "f12": "000001", "f14": "平安银行"},
+            "3": {"f3": "10.0", "f12": "000002", "f14": "万科A"},
+            "4": {"f3": "-10.0", "f12": "000003", "f14": "某退"},
+            "5": {"f3": "0.0", "f12": "000004", "f14": "平盘股"},
+        }
+        monkeypatch.setattr(
+            "requests.get", lambda *a, **k: _FakeBreadthResp(fake_items)
+        )
+        resp = client.post("/api/collect/breadth")
+        assert resp.status_code == 200
+        body = resp.json()
+        assert body["success"] is True
+        d = body["data"]
+        assert d["up"] == 2          # 5.1, 10.0
+        assert d["down"] == 2        # -2.3, -10.0
+        assert d["flat"] == 1        # 0.0
+        assert d["limitUp"] == 1     # 10.0
+        assert d["limitDown"] == 1   # -10.0
+        assert d["totalStocks"] == 5
+
+    def test_breadth_empty_payload_fallback(self, client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+        collect_endpoints._BREADTH_CACHE["data"] = None
+        collect_endpoints._BREADTH_CACHE["ts"] = 0.0
+        monkeypatch.setattr("requests.get", lambda *a, **k: _FakeBreadthResp({}))
+        resp = client.post("/api/collect/breadth")
+        assert resp.status_code == 200
+        assert resp.json()["success"] is False
+
+    def test_breadth_network_failure_fallback(self, client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+        collect_endpoints._BREADTH_CACHE["data"] = None
+        collect_endpoints._BREADTH_CACHE["ts"] = 0.0
+        def boom(*a, **k):
+            raise RuntimeError("network down")
+        monkeypatch.setattr("requests.get", boom)
+        resp = client.post("/api/collect/breadth")
+        assert resp.status_code == 200
+        assert resp.json()["success"] is False
+
+
+# ============================================================
+# 风险黑名单采集（ST/退市，/api/collect/risk，2026-08-17 新增）
+# ============================================================
+
+
+class TestCollectRisk:
+    """POST /api/collect/risk 端点测试（mock 腾讯名称查询）"""
+
+    def test_risk_st_detected(self, client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setattr(
+            collect_endpoints, "fetch_tencent_quote", lambda s: {"name": "*ST 某某"}
+        )
+        resp = client.post("/api/collect/risk", json={"symbol": "600001"})
+        assert resp.status_code == 200
+        body = resp.json()
+        assert body["success"] is True
+        flags = body["data"]["flags"]
+        assert any(f.startswith("st:") for f in flags)
+
+    def test_risk_delisting_detected(self, client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setattr(
+            collect_endpoints, "fetch_tencent_quote", lambda s: {"name": "某某退"}
+        )
+        resp = client.post("/api/collect/risk", json={"symbol": "600002"})
+        body = resp.json()
+        assert body["success"] is True
+        assert any(f.startswith("delisting:") for f in body["data"]["flags"])
+
+    def test_risk_clean_stock(self, client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setattr(
+            collect_endpoints, "fetch_tencent_quote", lambda s: {"name": "贵州茅台"}
+        )
+        resp = client.post("/api/collect/risk", json={"symbol": "600519"})
+        body = resp.json()
+        assert body["success"] is True
+        assert body["data"]["flags"] == []
+
+    def test_risk_name_query_failure_still_ok(self, client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+        def boom(s):
+            raise RuntimeError("quote down")
+        monkeypatch.setattr(collect_endpoints, "fetch_tencent_quote", boom)
+        resp = client.post("/api/collect/risk", json={"symbol": "600519"})
+        assert resp.status_code == 200
+        assert resp.json()["success"] is True
