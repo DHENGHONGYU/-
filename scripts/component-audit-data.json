@@ -3,7 +3,7 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Badge.tsx",
     "componentName": "Badge",
     "relativePath": "src\\components\\atoms\\Badge.tsx",
-    "importCount": 120,
+    "importCount": 126,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\apps\\analysis\\AnalysisApp.tsx",
@@ -16,13 +16,33 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\components\\InputDashboardPoolTable.tsx",
+        "relativePath": "src\\apps\\input\\components\\InputDashboardPoolTable.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\components\\InputDashboardStats.tsx",
+        "relativePath": "src\\apps\\input\\components\\InputDashboardStats.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\apps\\input\\DataTestPanel.tsx",
         "relativePath": "src\\apps\\input\\DataTestPanel.tsx",
         "importLine": 0
       },
       {
-        "filePath": "D:\\FinSightV9\\src\\apps\\input\\HotSectorSection.tsx",
-        "relativePath": "src\\apps\\input\\HotSectorSection.tsx",
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\hotSector\\RepresentativePanel.tsx",
+        "relativePath": "src\\apps\\input\\hotSector\\RepresentativePanel.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\hotSector\\SectorCard.tsx",
+        "relativePath": "src\\apps\\input\\hotSector\\SectorCard.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\hotSector\\StockItem.tsx",
+        "relativePath": "src\\apps\\input\\hotSector\\StockItem.tsx",
         "importLine": 0
       },
       {
@@ -381,6 +401,11 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ScoreComparisonPage.tsx",
         "relativePath": "src\\pages\\analysis\\ScoreComparisonPage.tsx",
         "importLine": 0
@@ -566,8 +591,18 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\pages\\output\\TradeReviewPage.tsx",
+        "relativePath": "src\\pages\\output\\TradeReviewPage.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\pages\\trading\\components\\HoldingsTable.tsx",
         "relativePath": "src\\pages\\trading\\components\\HoldingsTable.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\components\\TradingFlowHeader.tsx",
+        "relativePath": "src\\pages\\trading\\components\\TradingFlowHeader.tsx",
         "importLine": 0
       },
       {
@@ -591,11 +626,6 @@
         "importLine": 0
       },
       {
-        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\TradingFlowPage.tsx",
-        "relativePath": "src\\pages\\trading\\TradingFlowPage.tsx",
-        "importLine": 0
-      },
-      {
         "filePath": "D:\\FinSightV9\\src\\showcase\\StockDataShowcase.tsx",
         "relativePath": "src\\showcase\\StockDataShowcase.tsx",
         "importLine": 0
@@ -606,7 +636,7 @@
         "importLine": 0
       }
     ],
-    "lines": 62
+    "lines": 67
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Breadcrumb.tsx",
@@ -620,7 +650,7 @@
         "importLine": 0
       }
     ],
-    "lines": 123
+    "lines": 197
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Button.test.tsx",
@@ -634,7 +664,7 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Button.tsx",
     "componentName": "Button",
     "relativePath": "src\\components\\atoms\\Button.tsx",
-    "importCount": 106,
+    "importCount": 117,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\apps\\analysis\\AnalysisApp.tsx",
@@ -657,13 +687,43 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\components\\InputDashboardPoolTable.tsx",
+        "relativePath": "src\\apps\\input\\components\\InputDashboardPoolTable.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\apps\\input\\DataTestPanel.tsx",
         "relativePath": "src\\apps\\input\\DataTestPanel.tsx",
         "importLine": 0
       },
       {
-        "filePath": "D:\\FinSightV9\\src\\apps\\input\\HotSectorSection.tsx",
-        "relativePath": "src\\apps\\input\\HotSectorSection.tsx",
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\hotSector\\HotSectorToolbar.tsx",
+        "relativePath": "src\\apps\\input\\hotSector\\HotSectorToolbar.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\hotSector\\RepresentativePanel.tsx",
+        "relativePath": "src\\apps\\input\\hotSector\\RepresentativePanel.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\hotSector\\SectorCard.tsx",
+        "relativePath": "src\\apps\\input\\hotSector\\SectorCard.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\hotSector\\StockItem.tsx",
+        "relativePath": "src\\apps\\input\\hotSector\\StockItem.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\HotSectorPage.tsx",
+        "relativePath": "src\\apps\\input\\HotSectorPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\InputApp.tsx",
+        "relativePath": "src\\apps\\input\\InputApp.tsx",
         "importLine": 0
       },
       {
@@ -742,6 +802,11 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\components\\molecules\\OnboardingGuide.tsx",
+        "relativePath": "src\\components\\molecules\\OnboardingGuide.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\components\\molecules\\SearchBar.tsx",
         "relativePath": "src\\components\\molecules\\SearchBar.tsx",
         "importLine": 0
@@ -799,6 +864,11 @@
       {
         "filePath": "D:\\FinSightV9\\src\\components\\organisms\\input\\TraceReplayPanel.tsx",
         "relativePath": "src\\components\\organisms\\input\\TraceReplayPanel.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\components\\organisms\\input\\wizard-steps\\ConfigTemplateCard.tsx",
+        "relativePath": "src\\components\\organisms\\input\\wizard-steps\\ConfigTemplateCard.tsx",
         "importLine": 0
       },
       {
@@ -927,8 +997,18 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\MultiFactorFilterPage.tsx",
+        "relativePath": "src\\pages\\analysis\\MultiFactorFilterPage.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\NewsPage.tsx",
         "relativePath": "src\\pages\\analysis\\NewsPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ReviewLaunchPage.tsx",
         "importLine": 0
       },
       {
@@ -1137,8 +1217,18 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\components\\TradingFlowHeader.tsx",
+        "relativePath": "src\\pages\\trading\\components\\TradingFlowHeader.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\pages\\trading\\components\\VirtualizedHoldingsTable.tsx",
         "relativePath": "src\\pages\\trading\\components\\VirtualizedHoldingsTable.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\HoldingsPage.tsx",
+        "relativePath": "src\\pages\\trading\\HoldingsPage.tsx",
         "importLine": 0
       },
       {
@@ -1152,11 +1242,6 @@
         "importLine": 0
       },
       {
-        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\TradingFlowPage.tsx",
-        "relativePath": "src\\pages\\trading\\TradingFlowPage.tsx",
-        "importLine": 0
-      },
-      {
         "filePath": "D:\\FinSightV9\\src\\showcase\\UIComponentShowcase.tsx",
         "relativePath": "src\\showcase\\UIComponentShowcase.tsx",
         "importLine": 0
@@ -1167,7 +1252,7 @@
         "importLine": 0
       }
     ],
-    "lines": 67
+    "lines": 72
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Card.test.tsx",
@@ -1175,13 +1260,13 @@
     "relativePath": "src\\components\\atoms\\Card.test.tsx",
     "importCount": 0,
     "importers": [],
-    "lines": 126
+    "lines": 127
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Card.tsx",
     "componentName": "Card",
     "relativePath": "src\\components\\atoms\\Card.tsx",
-    "importCount": 115,
+    "importCount": 124,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\apps\\analysis\\AnalysisApp.tsx",
@@ -1204,8 +1289,23 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\components\\InputDashboardPoolTable.tsx",
+        "relativePath": "src\\apps\\input\\components\\InputDashboardPoolTable.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\components\\InputDashboardStats.tsx",
+        "relativePath": "src\\apps\\input\\components\\InputDashboardStats.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\apps\\input\\DataTestPanel.tsx",
         "relativePath": "src\\apps\\input\\DataTestPanel.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\hotSector\\RepresentativePanel.tsx",
+        "relativePath": "src\\apps\\input\\hotSector\\RepresentativePanel.tsx",
         "importLine": 0
       },
       {
@@ -1286,6 +1386,16 @@
       {
         "filePath": "D:\\FinSightV9\\src\\components\\cabin\\IntelligentScoreBasisCard.tsx",
         "relativePath": "src\\components\\cabin\\IntelligentScoreBasisCard.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\components\\molecules\\CapitalAllocationPanel.tsx",
+        "relativePath": "src\\components\\molecules\\CapitalAllocationPanel.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\components\\molecules\\DualFactorEvaluationPanel.tsx",
+        "relativePath": "src\\components\\molecules\\DualFactorEvaluationPanel.tsx",
         "importLine": 0
       },
       {
@@ -1386,6 +1496,11 @@
       {
         "filePath": "D:\\FinSightV9\\src\\components\\organisms\\input\\wizard-steps\\CollectionStrategyStep.tsx",
         "relativePath": "src\\components\\organisms\\input\\wizard-steps\\CollectionStrategyStep.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\components\\organisms\\input\\wizard-steps\\ConfigTemplateCard.tsx",
+        "relativePath": "src\\components\\organisms\\input\\wizard-steps\\ConfigTemplateCard.tsx",
         "importLine": 0
       },
       {
@@ -1511,6 +1626,16 @@
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\IntelligentScorePage.tsx",
         "relativePath": "src\\pages\\analysis\\IntelligentScorePage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\MultiFactorFilterPage.tsx",
+        "relativePath": "src\\pages\\analysis\\MultiFactorFilterPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ReviewLaunchPage.tsx",
         "importLine": 0
       },
       {
@@ -1739,6 +1864,11 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\components\\TradingFlowSummary.tsx",
+        "relativePath": "src\\pages\\trading\\components\\TradingFlowSummary.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\pages\\trading\\PortfolioPage.tsx",
         "relativePath": "src\\pages\\trading\\PortfolioPage.tsx",
         "importLine": 0
@@ -1759,7 +1889,7 @@
         "importLine": 0
       }
     ],
-    "lines": 181
+    "lines": 186
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Checkbox.test.tsx",
@@ -1773,16 +1903,26 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Checkbox.tsx",
     "componentName": "Checkbox",
     "relativePath": "src\\components\\atoms\\Checkbox.tsx",
-    "importCount": 10,
+    "importCount": 12,
     "importers": [
       {
-        "filePath": "D:\\FinSightV9\\src\\apps\\input\\HotSectorSection.tsx",
-        "relativePath": "src\\apps\\input\\HotSectorSection.tsx",
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\components\\InputDashboardPoolTable.tsx",
+        "relativePath": "src\\apps\\input\\components\\InputDashboardPoolTable.tsx",
         "importLine": 0
       },
       {
-        "filePath": "D:\\FinSightV9\\src\\apps\\input\\InputDashboard.tsx",
-        "relativePath": "src\\apps\\input\\InputDashboard.tsx",
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\hotSector\\HotSectorToolbar.tsx",
+        "relativePath": "src\\apps\\input\\hotSector\\HotSectorToolbar.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\hotSector\\SectorCard.tsx",
+        "relativePath": "src\\apps\\input\\hotSector\\SectorCard.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\hotSector\\StockItem.tsx",
+        "relativePath": "src\\apps\\input\\hotSector\\StockItem.tsx",
         "importLine": 0
       },
       {
@@ -1826,7 +1966,7 @@
         "importLine": 0
       }
     ],
-    "lines": 27
+    "lines": 32
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\ComplianceDisclaimer.test.tsx",
@@ -1853,7 +1993,26 @@
         "importLine": 0
       }
     ],
-    "lines": 95
+    "lines": 100
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Currency.tsx",
+    "componentName": "Currency",
+    "relativePath": "src\\components\\atoms\\Currency.tsx",
+    "importCount": 2,
+    "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\HomePage.tsx",
+        "relativePath": "src\\pages\\HomePage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\PortfolioPage.tsx",
+        "relativePath": "src\\pages\\trading\\PortfolioPage.tsx",
+        "importLine": 0
+      }
+    ],
+    "lines": 69
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\index.ts",
@@ -1861,7 +2020,7 @@
     "relativePath": "src\\components\\atoms\\index.ts",
     "importCount": 0,
     "importers": [],
-    "lines": 96
+    "lines": 94
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Input.test.tsx",
@@ -1875,7 +2034,7 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Input.tsx",
     "componentName": "Input",
     "relativePath": "src\\components\\atoms\\Input.tsx",
-    "importCount": 35,
+    "importCount": 36,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\apps\\command\\ConfigApp.tsx",
@@ -1920,6 +2079,11 @@
       {
         "filePath": "D:\\FinSightV9\\src\\components\\organisms\\input\\StockSearch.tsx",
         "relativePath": "src\\components\\organisms\\input\\StockSearch.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\components\\organisms\\input\\wizard-steps\\ConfigTemplateCard.tsx",
+        "relativePath": "src\\components\\organisms\\input\\wizard-steps\\ConfigTemplateCard.tsx",
         "importLine": 0
       },
       {
@@ -2053,7 +2217,7 @@
         "importLine": 0
       }
     ],
-    "lines": 32
+    "lines": 37
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Label.test.tsx",
@@ -2067,7 +2231,7 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Label.tsx",
     "componentName": "Label",
     "relativePath": "src\\components\\atoms\\Label.tsx",
-    "importCount": 22,
+    "importCount": 23,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\apps\\command\\ConfigApp.tsx",
@@ -2112,6 +2276,11 @@
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\BacktestPage.tsx",
         "relativePath": "src\\pages\\analysis\\BacktestPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\IntelligentScorePage.tsx",
+        "relativePath": "src\\pages\\analysis\\IntelligentScorePage.tsx",
         "importLine": 0
       },
       {
@@ -2180,7 +2349,31 @@
         "importLine": 0
       }
     ],
-    "lines": 31
+    "lines": 36
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Percent.tsx",
+    "componentName": "Percent",
+    "relativePath": "src\\components\\atoms\\Percent.tsx",
+    "importCount": 3,
+    "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\trading\\TradingApp.tsx",
+        "relativePath": "src\\apps\\trading\\TradingApp.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\HomePage.tsx",
+        "relativePath": "src\\pages\\HomePage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\PortfolioPage.tsx",
+        "relativePath": "src\\pages\\trading\\PortfolioPage.tsx",
+        "importLine": 0
+      }
+    ],
+    "lines": 60
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Progress.test.tsx",
@@ -2307,7 +2500,7 @@
         "importLine": 0
       }
     ],
-    "lines": 42
+    "lines": 47
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Radio.test.tsx",
@@ -2329,7 +2522,7 @@
         "importLine": 0
       }
     ],
-    "lines": 114
+    "lines": 119
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Select.test.tsx",
@@ -2343,7 +2536,7 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Select.tsx",
     "componentName": "Select",
     "relativePath": "src\\components\\atoms\\Select.tsx",
-    "importCount": 33,
+    "importCount": 32,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\apps\\command\\ConfigApp.tsx",
@@ -2361,8 +2554,8 @@
         "importLine": 0
       },
       {
-        "filePath": "D:\\FinSightV9\\src\\apps\\input\\HotSectorSection.tsx",
-        "relativePath": "src\\apps\\input\\HotSectorSection.tsx",
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\hotSector\\HotSectorToolbar.tsx",
+        "relativePath": "src\\apps\\input\\hotSector\\HotSectorToolbar.tsx",
         "importLine": 0
       },
       {
@@ -2446,11 +2639,6 @@
         "importLine": 0
       },
       {
-        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ScoreDocPage.tsx",
-        "relativePath": "src\\pages\\analysis\\ScoreDocPage.tsx",
-        "importLine": 0
-      },
-      {
         "filePath": "D:\\FinSightV9\\src\\pages\\command\\agent\\AgentFeedbackPage.tsx",
         "relativePath": "src\\pages\\command\\agent\\AgentFeedbackPage.tsx",
         "importLine": 0
@@ -2511,7 +2699,7 @@
         "importLine": 0
       }
     ],
-    "lines": 82
+    "lines": 87
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Separator.test.tsx",
@@ -2548,7 +2736,7 @@
         "importLine": 0
       }
     ],
-    "lines": 28
+    "lines": 33
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Sheet.test.tsx",
@@ -2580,151 +2768,7 @@
         "importLine": 0
       }
     ],
-    "lines": 137
-  },
-  {
-    "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Skeleton.tsx",
-    "componentName": "Skeleton",
-    "relativePath": "src\\components\\atoms\\Skeleton.tsx",
-    "importCount": 27,
-    "importers": [
-      {
-        "filePath": "D:\\FinSightV9\\src\\apps\\input\\DataTestPanel.tsx",
-        "relativePath": "src\\apps\\input\\DataTestPanel.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\apps\\input\\InputDashboard.tsx",
-        "relativePath": "src\\apps\\input\\InputDashboard.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\AgentPerformanceWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\AgentPerformanceWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\AITradeReviewWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\AITradeReviewWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\FundFlowWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\FundFlowWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\InvestmentProfileWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\InvestmentProfileWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\KaiScoreWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\KaiScoreWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\MarketIndicesWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\MarketIndicesWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\MarketSentimentWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\MarketSentimentWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\ModelCompareWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\ModelCompareWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\PnLAnalysisWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\PnLAnalysisWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\PoolBoardWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\PoolBoardWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\PortfolioOverviewWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\PortfolioOverviewWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\PositionControlWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\PositionControlWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\RiskMonitorWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\RiskMonitorWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\SectorHeatmapWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\SectorHeatmapWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\SignalMonitorWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\SignalMonitorWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\SignalQualityDashboardWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\SignalQualityDashboardWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\WatchlistMoversWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\WatchlistMoversWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\WatchlistWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\WatchlistWidget.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\components\\organisms\\output\\ReviewWizard.tsx",
-        "relativePath": "src\\components\\organisms\\output\\ReviewWizard.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\pages\\command\\health\\HealthDashboardPage.tsx",
-        "relativePath": "src\\pages\\command\\health\\HealthDashboardPage.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\pages\\command\\test\\StressOverviewPage.tsx",
-        "relativePath": "src\\pages\\command\\test\\StressOverviewPage.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\pages\\input\\CollectTask\\components\\DimHealthTab.tsx",
-        "relativePath": "src\\pages\\input\\CollectTask\\components\\DimHealthTab.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\pages\\input\\FetcherConfigPage.tsx",
-        "relativePath": "src\\pages\\input\\FetcherConfigPage.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\components\\HoldingsTable.tsx",
-        "relativePath": "src\\pages\\trading\\components\\HoldingsTable.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\components\\VirtualizedHoldingsTable.tsx",
-        "relativePath": "src\\pages\\trading\\components\\VirtualizedHoldingsTable.tsx",
-        "importLine": 0
-      }
-    ],
-    "lines": 32
+    "lines": 143
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Slider.tsx",
@@ -2738,7 +2782,7 @@
         "importLine": 0
       }
     ],
-    "lines": 82
+    "lines": 87
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\statusColors.ts",
@@ -2746,21 +2790,27 @@
     "relativePath": "src\\components\\atoms\\statusColors.ts",
     "importCount": 0,
     "importers": [],
-    "lines": 55
+    "lines": 60
   },
   {
-    "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\StockPriceChange.tsx",
-    "componentName": "StockPriceChange",
-    "relativePath": "src\\components\\atoms\\StockPriceChange.tsx",
-    "importCount": 0,
-    "importers": [],
-    "lines": 36
+    "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\StockPriceChangeBadge.tsx",
+    "componentName": "StockPriceChangeBadge",
+    "relativePath": "src\\components\\atoms\\StockPriceChangeBadge.tsx",
+    "importCount": 1,
+    "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\components\\molecules\\RankedCard.tsx",
+        "relativePath": "src\\components\\molecules\\RankedCard.tsx",
+        "importLine": 0
+      }
+    ],
+    "lines": 41
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Switch.tsx",
     "componentName": "Switch",
     "relativePath": "src\\components\\atoms\\Switch.tsx",
-    "importCount": 9,
+    "importCount": 10,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\apps\\command\\ConfigApp.tsx",
@@ -2780,6 +2830,11 @@
       {
         "filePath": "D:\\FinSightV9\\src\\components\\organisms\\input\\SourcePrioritySelect.tsx",
         "relativePath": "src\\components\\organisms\\input\\SourcePrioritySelect.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\IntelligentScorePage.tsx",
+        "relativePath": "src\\pages\\analysis\\IntelligentScorePage.tsx",
         "importLine": 0
       },
       {
@@ -2808,7 +2863,7 @@
         "importLine": 0
       }
     ],
-    "lines": 50
+    "lines": 55
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Table.tsx",
@@ -2832,7 +2887,7 @@
         "importLine": 0
       }
     ],
-    "lines": 99
+    "lines": 104
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Textarea.tsx",
@@ -2881,15 +2936,21 @@
         "importLine": 0
       }
     ],
-    "lines": 32
+    "lines": 37
   },
   {
-    "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Toast.tsx",
-    "componentName": "Toast",
-    "relativePath": "src\\components\\atoms\\Toast.tsx",
-    "importCount": 0,
-    "importers": [],
-    "lines": 81
+    "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Toaster.tsx",
+    "componentName": "Toaster",
+    "relativePath": "src\\components\\atoms\\Toaster.tsx",
+    "importCount": 1,
+    "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\App.tsx",
+        "relativePath": "src\\App.tsx",
+        "importLine": 0
+      }
+    ],
+    "lines": 86
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Toggle.tsx",
@@ -2903,14 +2964,19 @@
         "importLine": 0
       }
     ],
-    "lines": 50
+    "lines": 55
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Tooltip.tsx",
     "componentName": "Tooltip",
     "relativePath": "src\\components\\atoms\\Tooltip.tsx",
-    "importCount": 3,
+    "importCount": 4,
     "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\InputDashboard.tsx",
+        "relativePath": "src\\apps\\input\\InputDashboard.tsx",
+        "importLine": 0
+      },
       {
         "filePath": "D:\\FinSightV9\\src\\components\\cockpit\\DensityToggle.tsx",
         "relativePath": "src\\components\\cockpit\\DensityToggle.tsx",
@@ -2927,7 +2993,7 @@
         "importLine": 0
       }
     ],
-    "lines": 52
+    "lines": 57
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\cabin\\index.ts",
@@ -2935,7 +3001,7 @@
     "relativePath": "src\\components\\cabin\\index.ts",
     "importCount": 0,
     "importers": [],
-    "lines": 10
+    "lines": 9
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\cabin\\IndustryHistoryCard.tsx",
@@ -2949,7 +3015,7 @@
         "importLine": 0
       }
     ],
-    "lines": 59
+    "lines": 61
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\cabin\\IndustrySkillSnapshotCard.tsx",
@@ -2977,7 +3043,7 @@
         "importLine": 0
       }
     ],
-    "lines": 292
+    "lines": 300
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\cabin\\ScoreHistoryTable.tsx",
@@ -3050,6 +3116,14 @@
     "lines": 177
   },
   {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\candlestickChart.config.ts",
+    "componentName": "CandlestickChart.config",
+    "relativePath": "src\\components\\chart\\candlestickChart.config.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 163
+  },
+  {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\CandlestickChart.tsx",
     "componentName": "CandlestickChart",
     "relativePath": "src\\components\\chart\\CandlestickChart.tsx",
@@ -3066,7 +3140,23 @@
         "importLine": 0
       }
     ],
-    "lines": 685
+    "lines": 436
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\candlestickChart.types.ts",
+    "componentName": "CandlestickChart.types",
+    "relativePath": "src\\components\\chart\\candlestickChart.types.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 76
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\candlestickChart.utils.ts",
+    "componentName": "CandlestickChart.utils",
+    "relativePath": "src\\components\\chart\\candlestickChart.utils.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 560
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\ChipDistributionChart.tsx",
@@ -3080,7 +3170,31 @@
         "importLine": 0
       }
     ],
-    "lines": 590
+    "lines": 600
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\drawing\\engine.ts",
+    "componentName": "Engine",
+    "relativePath": "src\\components\\chart\\drawing\\engine.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 393
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\drawing\\index.ts",
+    "componentName": "Index",
+    "relativePath": "src\\components\\chart\\drawing\\index.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 20
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\drawing\\types.ts",
+    "componentName": "Types",
+    "relativePath": "src\\components\\chart\\drawing\\types.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 146
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\FactorHeatmap.tsx",
@@ -3099,15 +3213,29 @@
         "importLine": 0
       }
     ],
-    "lines": 163
+    "lines": 165
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\GaugeChart.tsx",
     "componentName": "GaugeChart",
     "relativePath": "src\\components\\chart\\GaugeChart.tsx",
+    "importCount": 1,
+    "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "importLine": 0
+      }
+    ],
+    "lines": 211
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\hooks\\useChartZoom.ts",
+    "componentName": "UseChartZoom",
+    "relativePath": "src\\components\\chart\\hooks\\useChartZoom.ts",
     "importCount": 0,
     "importers": [],
-    "lines": 211
+    "lines": 279
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\index.ts",
@@ -3115,7 +3243,39 @@
     "relativePath": "src\\components\\chart\\index.ts",
     "importCount": 0,
     "importers": [],
-    "lines": 62
+    "lines": 61
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\indicators\\bollinger.ts",
+    "componentName": "Bollinger",
+    "relativePath": "src\\components\\chart\\indicators\\bollinger.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 133
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\indicators\\downsample.ts",
+    "componentName": "Downsample",
+    "relativePath": "src\\components\\chart\\indicators\\downsample.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 252
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\indicators\\ema.ts",
+    "componentName": "Ema",
+    "relativePath": "src\\components\\chart\\indicators\\ema.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 100
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\indicators\\index.ts",
+    "componentName": "Index",
+    "relativePath": "src\\components\\chart\\indicators\\index.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 25
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\indicators\\kdj.ts",
@@ -3123,7 +3283,7 @@
     "relativePath": "src\\components\\chart\\indicators\\kdj.ts",
     "importCount": 0,
     "importers": [],
-    "lines": 270
+    "lines": 273
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\indicators\\macd.ts",
@@ -3131,7 +3291,23 @@
     "relativePath": "src\\components\\chart\\indicators\\macd.ts",
     "importCount": 0,
     "importers": [],
-    "lines": 175
+    "lines": 180
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\indicators\\rsi.ts",
+    "componentName": "Rsi",
+    "relativePath": "src\\components\\chart\\indicators\\rsi.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 140
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\indicators\\volumeProfile.ts",
+    "componentName": "VolumeProfile",
+    "relativePath": "src\\components\\chart\\indicators\\volumeProfile.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 289
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\indicators\\__tests__\\kdj.test.ts",
@@ -3155,7 +3331,7 @@
     "relativePath": "src\\components\\chart\\industry\\IndustryHeatmap.test.tsx",
     "importCount": 0,
     "importers": [],
-    "lines": 66
+    "lines": 68
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\industry\\IndustryHeatmap.tsx",
@@ -3169,7 +3345,7 @@
         "importLine": 0
       }
     ],
-    "lines": 232
+    "lines": 238
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\industry\\IndustryV4Panel.test.tsx",
@@ -3193,7 +3369,7 @@
     "relativePath": "src\\components\\chart\\industry\\IndustryV4Radar.tsx",
     "importCount": 0,
     "importers": [],
-    "lines": 123
+    "lines": 125
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\industry\\SubIndicatorBar.tsx",
@@ -3201,7 +3377,7 @@
     "relativePath": "src\\components\\chart\\industry\\SubIndicatorBar.tsx",
     "importCount": 0,
     "importers": [],
-    "lines": 179
+    "lines": 181
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\industry\\TrendLineChart.test.tsx",
@@ -3233,7 +3409,7 @@
     "relativePath": "src\\components\\chart\\industry\\ValuationDistribution.tsx",
     "importCount": 0,
     "importers": [],
-    "lines": 191
+    "lines": 192
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\LineChart.tsx",
@@ -3260,18 +3436,42 @@
     "lines": 207
   },
   {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\multiPaneChart.config.ts",
+    "componentName": "MultiPaneChart.config",
+    "relativePath": "src\\components\\chart\\multiPaneChart.config.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 2
+  },
+  {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\MultiPaneChart.tsx",
     "componentName": "MultiPaneChart",
     "relativePath": "src\\components\\chart\\MultiPaneChart.tsx",
     "importCount": 0,
     "importers": [],
-    "lines": 862
+    "lines": 497
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\multiPaneChart.types.ts",
+    "componentName": "MultiPaneChart.types",
+    "relativePath": "src\\components\\chart\\multiPaneChart.types.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 106
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\multiPaneChart.utils.ts",
+    "componentName": "MultiPaneChart.utils",
+    "relativePath": "src\\components\\chart\\multiPaneChart.utils.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 577
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\ScoreRadar.tsx",
     "componentName": "ScoreRadar",
     "relativePath": "src\\components\\chart\\ScoreRadar.tsx",
-    "importCount": 2,
+    "importCount": 3,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\components\\organisms\\analysis\\score\\IntelligentScoreExplanation.tsx",
@@ -3282,9 +3482,22 @@
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\HotSectorPage.tsx",
         "relativePath": "src\\pages\\analysis\\HotSectorPage.tsx",
         "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "importLine": 0
       }
     ],
-    "lines": 94
+    "lines": 184
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\chart\\shared.config.ts",
+    "componentName": "Shared.config",
+    "relativePath": "src\\components\\chart\\shared.config.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 149
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\chart\\types.ts",
@@ -3324,7 +3537,7 @@
     "relativePath": "src\\components\\cockpit\\DensityContext.tsx",
     "importCount": 0,
     "importers": [],
-    "lines": 124
+    "lines": 128
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\cockpit\\DensityToggle.tsx",
@@ -3367,6 +3580,14 @@
     "lines": 87
   },
   {
+    "componentPath": "D:\\FinSightV9\\src\\components\\common\\MockDataBadge.tsx",
+    "componentName": "MockDataBadge",
+    "relativePath": "src\\components\\common\\MockDataBadge.tsx",
+    "importCount": 0,
+    "importers": [],
+    "lines": 129
+  },
+  {
     "componentPath": "D:\\FinSightV9\\src\\components\\componentRegistry.ts",
     "componentName": "ComponentRegistry",
     "relativePath": "src\\components\\componentRegistry.ts",
@@ -3392,6 +3613,14 @@
       }
     ],
     "lines": 248
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\CapitalAllocationPanel.tsx",
+    "componentName": "CapitalAllocationPanel",
+    "relativePath": "src\\components\\molecules\\CapitalAllocationPanel.tsx",
+    "importCount": 0,
+    "importers": [],
+    "lines": 280
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\ConfirmDialog.tsx",
@@ -3484,7 +3713,7 @@
     "relativePath": "src\\components\\molecules\\Dialog.test.tsx",
     "importCount": 0,
     "importers": [],
-    "lines": 194
+    "lines": 187
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\Dialog.tsx",
@@ -3506,14 +3735,37 @@
     "lines": 131
   },
   {
+    "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\DualFactorEvaluationPanel.tsx",
+    "componentName": "DualFactorEvaluationPanel",
+    "relativePath": "src\\components\\molecules\\DualFactorEvaluationPanel.tsx",
+    "importCount": 0,
+    "importers": [],
+    "lines": 229
+  },
+  {
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\EmptyState.tsx",
     "componentName": "EmptyState",
     "relativePath": "src\\components\\molecules\\EmptyState.tsx",
-    "importCount": 11,
+    "importCount": 23,
     "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\HotSectorSection.tsx",
+        "relativePath": "src\\apps\\input\\HotSectorSection.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\trading\\panels\\CoreResourcePanel.tsx",
+        "relativePath": "src\\apps\\trading\\panels\\CoreResourcePanel.tsx",
+        "importLine": 0
+      },
       {
         "filePath": "D:\\FinSightV9\\src\\apps\\trading\\panels\\ExecutionPlanPanel.tsx",
         "relativePath": "src\\apps\\trading\\panels\\ExecutionPlanPanel.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\trading\\TradingApp.tsx",
+        "relativePath": "src\\apps\\trading\\TradingApp.tsx",
         "importLine": 0
       },
       {
@@ -3534,6 +3786,36 @@
       {
         "filePath": "D:\\FinSightV9\\src\\components\\organisms\\analysis\\score\\ScoreHistoryPanel.tsx",
         "relativePath": "src\\components\\organisms\\analysis\\score\\ScoreHistoryPanel.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\HotSectorPage.tsx",
+        "relativePath": "src\\pages\\analysis\\HotSectorPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ScoreDocPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ScoreDocPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ValuePitPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ValuePitPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\command\\MCPServerDashboardPage.tsx",
+        "relativePath": "src\\pages\\command\\MCPServerDashboardPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\HomePage.tsx",
+        "relativePath": "src\\pages\\HomePage.tsx",
         "importLine": 0
       },
       {
@@ -3565,6 +3847,21 @@
         "filePath": "D:\\FinSightV9\\src\\pages\\input\\FetcherConfigPage.tsx",
         "relativePath": "src\\pages\\input\\FetcherConfigPage.tsx",
         "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\output\\OutputHubPage.tsx",
+        "relativePath": "src\\pages\\output\\OutputHubPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\RiskControlPage.tsx",
+        "relativePath": "src\\pages\\trading\\RiskControlPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\StrategySnapshotPage.tsx",
+        "relativePath": "src\\pages\\trading\\StrategySnapshotPage.tsx",
+        "importLine": 0
       }
     ],
     "lines": 110
@@ -3581,7 +3878,7 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\ErrorState.tsx",
     "componentName": "ErrorState",
     "relativePath": "src\\components\\molecules\\ErrorState.tsx",
-    "importCount": 8,
+    "importCount": 18,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\cockpit\\CockpitShell.tsx",
@@ -3622,6 +3919,56 @@
         "filePath": "D:\\FinSightV9\\src\\components\\widgets\\WidgetShell.tsx",
         "relativePath": "src\\components\\widgets\\WidgetShell.tsx",
         "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\BacktestPage.tsx",
+        "relativePath": "src\\pages\\analysis\\BacktestPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\HotSectorPage.tsx",
+        "relativePath": "src\\pages\\analysis\\HotSectorPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\IndustryDashboardPage.tsx",
+        "relativePath": "src\\pages\\analysis\\IndustryDashboardPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\IntelligentScorePage.tsx",
+        "relativePath": "src\\pages\\analysis\\IntelligentScorePage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ScoreDocPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ScoreDocPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ValuePitPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ValuePitPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\command\\MCPServerDashboardPage.tsx",
+        "relativePath": "src\\pages\\command\\MCPServerDashboardPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\RiskControlPage.tsx",
+        "relativePath": "src\\pages\\trading\\RiskControlPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\StrategySnapshotPage.tsx",
+        "relativePath": "src\\pages\\trading\\StrategySnapshotPage.tsx",
+        "importLine": 0
       }
     ],
     "lines": 321
@@ -3648,13 +3995,13 @@
     "relativePath": "src\\components\\molecules\\index.ts",
     "importCount": 0,
     "importers": [],
-    "lines": 74
+    "lines": 93
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\LoadingState.tsx",
     "componentName": "LoadingState",
     "relativePath": "src\\components\\molecules\\LoadingState.tsx",
-    "importCount": 3,
+    "importCount": 8,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\components\\molecules\\DataState.tsx",
@@ -3669,6 +4016,31 @@
       {
         "filePath": "D:\\FinSightV9\\src\\components\\organisms\\analysis\\score\\ScoreHistoryPanel.tsx",
         "relativePath": "src\\components\\organisms\\analysis\\score\\ScoreHistoryPanel.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\HotSectorPage.tsx",
+        "relativePath": "src\\pages\\analysis\\HotSectorPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ValuePitPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ValuePitPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\command\\MCPServerDashboardPage.tsx",
+        "relativePath": "src\\pages\\command\\MCPServerDashboardPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\RiskControlPage.tsx",
+        "relativePath": "src\\pages\\trading\\RiskControlPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\StrategySnapshotPage.tsx",
+        "relativePath": "src\\pages\\trading\\StrategySnapshotPage.tsx",
         "importLine": 0
       }
     ],
@@ -3727,6 +4099,20 @@
     "lines": 115
   },
   {
+    "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\OnboardingGuide.tsx",
+    "componentName": "OnboardingGuide",
+    "relativePath": "src\\components\\molecules\\OnboardingGuide.tsx",
+    "importCount": 1,
+    "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\App.tsx",
+        "relativePath": "src\\App.tsx",
+        "importLine": 0
+      }
+    ],
+    "lines": 112
+  },
+  {
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\RankedCard.tsx",
     "componentName": "RankedCard",
     "relativePath": "src\\components\\molecules\\RankedCard.tsx",
@@ -3738,17 +4124,22 @@
         "importLine": 0
       }
     ],
-    "lines": 116
+    "lines": 122
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\ScoreGauge.tsx",
     "componentName": "ScoreGauge",
     "relativePath": "src\\components\\molecules\\ScoreGauge.tsx",
-    "importCount": 1,
+    "importCount": 2,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\IndustryDashboardPage.tsx",
         "relativePath": "src\\pages\\analysis\\IndustryDashboardPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\IntelligentScorePage.tsx",
+        "relativePath": "src\\pages\\analysis\\IntelligentScorePage.tsx",
         "importLine": 0
       }
     ],
@@ -3811,12 +4202,103 @@
     "lines": 63
   },
   {
-    "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\states\\Error.tsx",
-    "componentName": "Error",
-    "relativePath": "src\\components\\molecules\\states\\Error.tsx",
-    "importCount": 0,
-    "importers": [],
-    "lines": 83
+    "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\states\\ErrorState.tsx",
+    "componentName": "ErrorState",
+    "relativePath": "src\\components\\molecules\\states\\ErrorState.tsx",
+    "importCount": 18,
+    "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\cockpit\\CockpitShell.tsx",
+        "relativePath": "src\\cockpit\\CockpitShell.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\components\\WidgetStateShell.tsx",
+        "relativePath": "src\\cockpit\\widgets\\components\\WidgetStateShell.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\components\\molecules\\DataState.tsx",
+        "relativePath": "src\\components\\molecules\\DataState.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\components\\molecules\\ErrorState.test.tsx",
+        "relativePath": "src\\components\\molecules\\ErrorState.test.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\components\\organisms\\analysis\\score\\ScoreFactorWaterfall.tsx",
+        "relativePath": "src\\components\\organisms\\analysis\\score\\ScoreFactorWaterfall.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\components\\organisms\\analysis\\score\\ScoreHistoryPanel.tsx",
+        "relativePath": "src\\components\\organisms\\analysis\\score\\ScoreHistoryPanel.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\components\\organisms\\output\\ReviewWizard.tsx",
+        "relativePath": "src\\components\\organisms\\output\\ReviewWizard.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\components\\widgets\\WidgetShell.tsx",
+        "relativePath": "src\\components\\widgets\\WidgetShell.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\BacktestPage.tsx",
+        "relativePath": "src\\pages\\analysis\\BacktestPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\HotSectorPage.tsx",
+        "relativePath": "src\\pages\\analysis\\HotSectorPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\IndustryDashboardPage.tsx",
+        "relativePath": "src\\pages\\analysis\\IndustryDashboardPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\IntelligentScorePage.tsx",
+        "relativePath": "src\\pages\\analysis\\IntelligentScorePage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ScoreDocPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ScoreDocPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ValuePitPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ValuePitPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\command\\MCPServerDashboardPage.tsx",
+        "relativePath": "src\\pages\\command\\MCPServerDashboardPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\RiskControlPage.tsx",
+        "relativePath": "src\\pages\\trading\\RiskControlPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\StrategySnapshotPage.tsx",
+        "relativePath": "src\\pages\\trading\\StrategySnapshotPage.tsx",
+        "importLine": 0
+      }
+    ],
+    "lines": 82
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\states\\index.ts",
@@ -3864,8 +4346,13 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\states\\Skeleton.tsx",
     "componentName": "Skeleton",
     "relativePath": "src\\components\\molecules\\states\\Skeleton.tsx",
-    "importCount": 27,
+    "importCount": 30,
     "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\components\\InputDashboardStats.tsx",
+        "relativePath": "src\\apps\\input\\components\\InputDashboardStats.tsx",
+        "importLine": 0
+      },
       {
         "filePath": "D:\\FinSightV9\\src\\apps\\input\\DataTestPanel.tsx",
         "relativePath": "src\\apps\\input\\DataTestPanel.tsx",
@@ -3874,6 +4361,11 @@
       {
         "filePath": "D:\\FinSightV9\\src\\apps\\input\\InputDashboard.tsx",
         "relativePath": "src\\apps\\input\\InputDashboard.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\trading\\TradingApp.tsx",
+        "relativePath": "src\\apps\\trading\\TradingApp.tsx",
         "importLine": 0
       },
       {
@@ -3957,11 +4449,6 @@
         "importLine": 0
       },
       {
-        "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\WatchlistMoversWidget.tsx",
-        "relativePath": "src\\cockpit\\widgets\\WatchlistMoversWidget.tsx",
-        "importLine": 0
-      },
-      {
         "filePath": "D:\\FinSightV9\\src\\cockpit\\widgets\\WatchlistWidget.tsx",
         "relativePath": "src\\cockpit\\widgets\\WatchlistWidget.tsx",
         "importLine": 0
@@ -3982,8 +4469,18 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\pages\\HomePage.tsx",
+        "relativePath": "src\\pages\\HomePage.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\pages\\input\\CollectTask\\components\\DimHealthTab.tsx",
         "relativePath": "src\\pages\\input\\CollectTask\\components\\DimHealthTab.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\input\\CollectTask\\components\\TaskListTab.tsx",
+        "relativePath": "src\\pages\\input\\CollectTask\\components\\TaskListTab.tsx",
         "importLine": 0
       },
       {
@@ -4016,7 +4513,7 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\Tabs.tsx",
     "componentName": "Tabs",
     "relativePath": "src\\components\\molecules\\Tabs.tsx",
-    "importCount": 9,
+    "importCount": 10,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\apps\\trading\\panels\\ExecutionPlanPanel.tsx",
@@ -4056,6 +4553,11 @@
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\command\\agent\\LlmManagement\\index.tsx",
         "relativePath": "src\\pages\\command\\agent\\LlmManagement\\index.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\output\\FactorAnalysisHubPage.tsx",
+        "relativePath": "src\\pages\\output\\FactorAnalysisHubPage.tsx",
         "importLine": 0
       },
       {
@@ -4176,7 +4678,7 @@
         "importLine": 0
       }
     ],
-    "lines": 216
+    "lines": 219
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\analysis\\score\\MultiPeriodTrendChart.tsx",
@@ -4264,7 +4766,7 @@
         "importLine": 0
       }
     ],
-    "lines": 267
+    "lines": 269
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\analysis\\signal\\SignalQualityTrendChart.tsx",
@@ -4542,7 +5044,54 @@
         "importLine": 0
       }
     ],
-    "lines": 274
+    "lines": 294
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\input\\StockSelector.test.tsx",
+    "componentName": "StockSelector.test",
+    "relativePath": "src\\components\\organisms\\input\\StockSelector.test.tsx",
+    "importCount": 0,
+    "importers": [],
+    "lines": 310
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\input\\StockSelector.tsx",
+    "componentName": "StockSelector",
+    "relativePath": "src\\components\\organisms\\input\\StockSelector.tsx",
+    "importCount": 6,
+    "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\IntelligentScorePage.tsx",
+        "relativePath": "src\\pages\\analysis\\IntelligentScorePage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ScoreComparisonPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ScoreComparisonPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ScoreDocPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ScoreDocPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\HomePage.tsx",
+        "relativePath": "src\\pages\\HomePage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\showcase\\RealtimeQuoteShowcase.tsx",
+        "relativePath": "src\\showcase\\RealtimeQuoteShowcase.tsx",
+        "importLine": 0
+      }
+    ],
+    "lines": 385
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\input\\TraceReplayPanel.tsx",
@@ -4567,12 +5116,44 @@
     "lines": 98
   },
   {
+    "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\input\\wizard-steps\\ConfigTemplateCard.tsx",
+    "componentName": "ConfigTemplateCard",
+    "relativePath": "src\\components\\organisms\\input\\wizard-steps\\ConfigTemplateCard.tsx",
+    "importCount": 0,
+    "importers": [],
+    "lines": 276
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\input\\wizard-steps\\dataSourceConfig.config.ts",
+    "componentName": "DataSourceConfig.config",
+    "relativePath": "src\\components\\organisms\\input\\wizard-steps\\dataSourceConfig.config.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 41
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\input\\wizard-steps\\dataSourceConfig.types.ts",
+    "componentName": "DataSourceConfig.types",
+    "relativePath": "src\\components\\organisms\\input\\wizard-steps\\dataSourceConfig.types.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 17
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\input\\wizard-steps\\dataSourceConfig.utils.ts",
+    "componentName": "DataSourceConfig.utils",
+    "relativePath": "src\\components\\organisms\\input\\wizard-steps\\dataSourceConfig.utils.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 72
+  },
+  {
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\input\\wizard-steps\\DataSourceConfigStep.tsx",
     "componentName": "DataSourceConfigStep",
     "relativePath": "src\\components\\organisms\\input\\wizard-steps\\DataSourceConfigStep.tsx",
     "importCount": 0,
     "importers": [],
-    "lines": 656
+    "lines": 292
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\input\\wizard-steps\\ExecutionMonitorStep.tsx",
@@ -4580,7 +5161,7 @@
     "relativePath": "src\\components\\organisms\\input\\wizard-steps\\ExecutionMonitorStep.tsx",
     "importCount": 0,
     "importers": [],
-    "lines": 370
+    "lines": 374
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\input\\wizard-steps\\TaskPreviewStep.tsx",
@@ -4589,6 +5170,14 @@
     "importCount": 0,
     "importers": [],
     "lines": 256
+  },
+  {
+    "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\input\\wizard-steps\\useDataSourceConfig.ts",
+    "componentName": "UseDataSourceConfig",
+    "relativePath": "src\\components\\organisms\\input\\wizard-steps\\useDataSourceConfig.ts",
+    "importCount": 0,
+    "importers": [],
+    "lines": 134
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\localDoc\\LocalDocCard.tsx",
@@ -4655,14 +5244,6 @@
     "lines": 43
   },
   {
-    "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\output\\ChipStrategyReviewPanel.tsx",
-    "componentName": "ChipStrategyReviewPanel",
-    "relativePath": "src\\components\\organisms\\output\\ChipStrategyReviewPanel.tsx",
-    "importCount": 0,
-    "importers": [],
-    "lines": 102
-  },
-  {
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\output\\CycleRetrospectiveView.tsx",
     "componentName": "CycleRetrospectiveView",
     "relativePath": "src\\components\\organisms\\output\\CycleRetrospectiveView.tsx",
@@ -4674,8 +5255,13 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\output\\prediction\\CycleRetrospectivePanel.tsx",
     "componentName": "CycleRetrospectivePanel",
     "relativePath": "src\\components\\organisms\\output\\prediction\\CycleRetrospectivePanel.tsx",
-    "importCount": 1,
+    "importCount": 2,
     "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\output\\FactorAnalysisHubPage.tsx",
+        "relativePath": "src\\pages\\output\\FactorAnalysisHubPage.tsx",
+        "importLine": 0
+      },
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\output\\RetrospectivePage.tsx",
         "relativePath": "src\\pages\\output\\RetrospectivePage.tsx",
@@ -4688,8 +5274,13 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\output\\prediction\\FactorDashboardPanel.tsx",
     "componentName": "FactorDashboardPanel",
     "relativePath": "src\\components\\organisms\\output\\prediction\\FactorDashboardPanel.tsx",
-    "importCount": 1,
+    "importCount": 2,
     "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\output\\FactorAnalysisHubPage.tsx",
+        "relativePath": "src\\pages\\output\\FactorAnalysisHubPage.tsx",
+        "importLine": 0
+      },
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\output\\FactorDashboardPage.tsx",
         "relativePath": "src\\pages\\output\\FactorDashboardPage.tsx",
@@ -4702,8 +5293,13 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\output\\prediction\\PredictionPanel.tsx",
     "componentName": "PredictionPanel",
     "relativePath": "src\\components\\organisms\\output\\prediction\\PredictionPanel.tsx",
-    "importCount": 1,
+    "importCount": 2,
     "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\output\\FactorAnalysisHubPage.tsx",
+        "relativePath": "src\\pages\\output\\FactorAnalysisHubPage.tsx",
+        "importLine": 0
+      },
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\output\\PredictionPage.tsx",
         "relativePath": "src\\pages\\output\\PredictionPage.tsx",
@@ -4754,7 +5350,7 @@
         "importLine": 0
       }
     ],
-    "lines": 552
+    "lines": 553
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\pool\\BatchCollectionPanel.tsx",
@@ -4851,14 +5447,6 @@
     "lines": 108
   },
   {
-    "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\pool\\usePoolDataFromStore.ts",
-    "componentName": "UsePoolDataFromStore",
-    "relativePath": "src\\components\\organisms\\pool\\usePoolDataFromStore.ts",
-    "importCount": 0,
-    "importers": [],
-    "lines": 142
-  },
-  {
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\scoreDoc\\ScoreDocVersionTable.tsx",
     "componentName": "ScoreDocVersionTable",
     "relativePath": "src\\components\\organisms\\scoreDoc\\ScoreDocVersionTable.tsx",
@@ -4870,7 +5458,7 @@
         "importLine": 0
       }
     ],
-    "lines": 122
+    "lines": 129
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\shared\\ErrorBoundary.test.tsx",
@@ -4884,7 +5472,7 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\shared\\ErrorBoundary.tsx",
     "componentName": "ErrorBoundary",
     "relativePath": "src\\components\\organisms\\shared\\ErrorBoundary.tsx",
-    "importCount": 18,
+    "importCount": 21,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\App.tsx",
@@ -4892,8 +5480,18 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\apps\\analysis\\AnalysisApp.tsx",
+        "relativePath": "src\\apps\\analysis\\AnalysisApp.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\apps\\output\\OutputApp.tsx",
         "relativePath": "src\\apps\\output\\OutputApp.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\trading\\TradingApp.tsx",
+        "relativePath": "src\\apps\\trading\\TradingApp.tsx",
         "importLine": 0
       },
       {
@@ -4929,6 +5527,11 @@
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\output\\DashboardPage.tsx",
         "relativePath": "src\\pages\\output\\DashboardPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\output\\FactorAnalysisHubPage.tsx",
+        "relativePath": "src\\pages\\output\\FactorAnalysisHubPage.tsx",
         "importLine": 0
       },
       {
@@ -5007,7 +5610,7 @@
         "importLine": 0
       }
     ],
-    "lines": 239
+    "lines": 241
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\shared\\MemoryModeBanner.tsx",
@@ -5035,11 +5638,16 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\shared\\PageSkeleton.tsx",
     "componentName": "PageSkeleton",
     "relativePath": "src\\components\\organisms\\shared\\PageSkeleton.tsx",
-    "importCount": 10,
+    "importCount": 11,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\App.tsx",
         "relativePath": "src\\App.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\analysis\\AnalysisApp.tsx",
+        "relativePath": "src\\apps\\analysis\\AnalysisApp.tsx",
         "importLine": 0
       },
       {
@@ -5210,7 +5818,7 @@
         "importLine": 0
       }
     ],
-    "lines": 68
+    "lines": 74
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\system\\AgentHealthCard.tsx",
@@ -5323,20 +5931,6 @@
     "lines": 378
   },
   {
-    "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\system\\OrchestratorStatusPanel.tsx",
-    "componentName": "OrchestratorStatusPanel",
-    "relativePath": "src\\components\\organisms\\system\\OrchestratorStatusPanel.tsx",
-    "importCount": 1,
-    "importers": [
-      {
-        "filePath": "D:\\FinSightV9\\src\\App.tsx",
-        "relativePath": "src\\App.tsx",
-        "importLine": 0
-      }
-    ],
-    "lines": 81
-  },
-  {
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\system\\SystemArchitectureDiagram.test.tsx",
     "componentName": "SystemArchitectureDiagram.test",
     "relativePath": "src\\components\\organisms\\system\\SystemArchitectureDiagram.test.tsx",
@@ -5406,7 +6000,7 @@
         "importLine": 0
       }
     ],
-    "lines": 383
+    "lines": 387
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\registry\\atomRegistry.ts",
@@ -5422,7 +6016,7 @@
     "relativePath": "src\\components\\registry\\moleculeRegistry.ts",
     "importCount": 0,
     "importers": [],
-    "lines": 31
+    "lines": 35
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\registry\\organismRegistry.ts",
@@ -5430,7 +6024,7 @@
     "relativePath": "src\\components\\registry\\organismRegistry.ts",
     "importCount": 0,
     "importers": [],
-    "lines": 151
+    "lines": 161
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\registry\\registryContract.test.ts",
@@ -5438,7 +6032,7 @@
     "relativePath": "src\\components\\registry\\registryContract.test.ts",
     "importCount": 0,
     "importers": [],
-    "lines": 210
+    "lines": 207
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\registry\\registryTypes.ts",
@@ -5492,8 +6086,13 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\templates\\PageContainer.tsx",
     "componentName": "PageContainer",
     "relativePath": "src\\components\\templates\\PageContainer.tsx",
-    "importCount": 53,
+    "importCount": 55,
     "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\HotSectorPage.tsx",
+        "relativePath": "src\\apps\\input\\HotSectorPage.tsx",
+        "importLine": 0
+      },
       {
         "filePath": "D:\\FinSightV9\\src\\components\\templates\\PageContainer.test.tsx",
         "relativePath": "src\\components\\templates\\PageContainer.test.tsx",
@@ -5700,6 +6299,11 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\pages\\output\\FactorAnalysisHubPage.tsx",
+        "relativePath": "src\\pages\\output\\FactorAnalysisHubPage.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\pages\\output\\FactorDashboardPage.tsx",
         "relativePath": "src\\pages\\output\\FactorDashboardPage.tsx",
         "importLine": 0
@@ -5774,8 +6378,38 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\templates\\PageHeader.tsx",
     "componentName": "PageHeader",
     "relativePath": "src\\components\\templates\\PageHeader.tsx",
-    "importCount": 51,
+    "importCount": 58,
     "importers": [
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\analysis\\AnalysisApp.tsx",
+        "relativePath": "src\\apps\\analysis\\AnalysisApp.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\command\\CommandApp.tsx",
+        "relativePath": "src\\apps\\command\\CommandApp.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\HotSectorPage.tsx",
+        "relativePath": "src\\apps\\input\\HotSectorPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\input\\InputApp.tsx",
+        "relativePath": "src\\apps\\input\\InputApp.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\output\\OutputApp.tsx",
+        "relativePath": "src\\apps\\output\\OutputApp.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\apps\\trading\\TradingApp.tsx",
+        "relativePath": "src\\apps\\trading\\TradingApp.tsx",
+        "importLine": 0
+      },
       {
         "filePath": "D:\\FinSightV9\\src\\components\\templates\\PageHeader.test.tsx",
         "relativePath": "src\\components\\templates\\PageHeader.test.tsx",
@@ -5814,6 +6448,11 @@
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\NewsPage.tsx",
         "relativePath": "src\\pages\\analysis\\NewsPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ReviewLaunchPage.tsx",
+        "relativePath": "src\\pages\\analysis\\ReviewLaunchPage.tsx",
         "importLine": 0
       },
       {
@@ -5932,11 +6571,6 @@
         "importLine": 0
       },
       {
-        "filePath": "D:\\FinSightV9\\src\\pages\\HomePage.tsx",
-        "relativePath": "src\\pages\\HomePage.tsx",
-        "importLine": 0
-      },
-      {
         "filePath": "D:\\FinSightV9\\src\\pages\\input\\CollectTask\\index.tsx",
         "relativePath": "src\\pages\\input\\CollectTask\\index.tsx",
         "importLine": 0
@@ -5969,6 +6603,11 @@
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\output\\DashboardPage.tsx",
         "relativePath": "src\\pages\\output\\DashboardPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\output\\FactorAnalysisHubPage.tsx",
+        "relativePath": "src\\pages\\output\\FactorAnalysisHubPage.tsx",
         "importLine": 0
       },
       {
@@ -6007,6 +6646,11 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\components\\TradingFlowHeader.tsx",
+        "relativePath": "src\\pages\\trading\\components\\TradingFlowHeader.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\pages\\trading\\HoldingsPage.tsx",
         "relativePath": "src\\pages\\trading\\HoldingsPage.tsx",
         "importLine": 0
@@ -6025,14 +6669,9 @@
         "filePath": "D:\\FinSightV9\\src\\pages\\trading\\StrategySnapshotPage.tsx",
         "relativePath": "src\\pages\\trading\\StrategySnapshotPage.tsx",
         "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\pages\\trading\\TradingFlowPage.tsx",
-        "relativePath": "src\\pages\\trading\\TradingFlowPage.tsx",
-        "importLine": 0
       }
     ],
-    "lines": 64
+    "lines": 69
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\templates\\SidebarLayout.tsx",
@@ -6062,6 +6701,6 @@
         "importLine": 0
       }
     ],
-    "lines": 188
+    "lines": 191
   }
 ]
