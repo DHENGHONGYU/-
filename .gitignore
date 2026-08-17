@@ -76,7 +76,7 @@ e2e/full-coverage/test-results-e2e/
 
 # Reports (generated)
 reports/
-# 精准白名单：仅纳入本次 5 个治理产物，其余 docs/reports 内容保持忽略
+# 精准白名单：仅纳入 6 个治理产物，其余 docs/reports 内容保持忽略
 !docs/reports/
 docs/reports/**
 !docs/reports/registry-doc-id-audit-2026-08-13.md
@@ -84,6 +84,7 @@ docs/reports/**
 !docs/reports/registry-fill-checklist-V9-DOC-QA.md
 !docs/reports/registry-duplicate-docid-3-groups.md
 !docs/reports/proj-195-vs-proj-260-diff.md
+!docs/reports/pra-step1-step2-final-fix-report-2026-08-17.md
 
 # TSC / audit output files
 tsc_*.txt
@@ -130,3 +131,6 @@ test_screenshot_*.png
 
 # P2 skill mirror — WorkBuddy 加载用副本（由 .agents/skills/ 拷贝，非源，避免重复提交）
 .workbuddy/skills/
+
+# Stray prototype — 单文件 HTML 原型（非构建物，勿入版本库）
+stock-collector/
