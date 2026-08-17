@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-META-006
+title: "V9 文档风格统一标准（doc-style-standard）"
+domain: meta
+status: active
+last_updated: 2026-08-17
+---
+
+---
 title: V9 文档风格统一标准（doc-style-standard）
 type: meta
 domain: project

@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-META-010
+title: "V9 文档风格指南与命名规范"
+domain: meta
+status: active
+last_updated: 2026-08-17
+---
+
+---
 title: V9 文档风格指南与命名规范
 type: meta
 domain: project

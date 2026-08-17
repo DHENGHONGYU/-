@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-GUIDE-048
+title: "01 · 设计与原创思路（Design & Original Thinking）"
+domain: guide
+status: active
+last_updated: 2026-08-17
+---
+
+---
 doc_id: V9-DOC-GUIDE-031
 title: "01 · 设计与原创思路（Design & Original Thinking）"
 domain: guide
@@ -50,7 +58,7 @@ FinSightV9 不是又一个"看盘软件"，而是定位为：
 
 ## 3. 宋韵美学（Song-yun Aesthetic）
 
-设计指南见 `../../archive/historical-2026-08-16/batch8/song-aesthetics.md（已归档）`，落地令牌见 `../../archive/historical-2026-08-16/batch8/ui-design-system.md`（命名语言 **"Refined Finance"**）。
+设计指南见 `../../archive/historical-2026-08-16/batch8/song-aesthetics.md（已归档）`，落地令牌见 `../../archive/historical-2026-08-16/batch8/ui-design-system.md`（已归档）（命名语言 **"Refined Finance"**）。
 
 ### 3.1 明暗双模铁律
 - **亮色**：默认 `stone` 暖灰系（底 `stone-50/100`、正文 `stone-800`、强调 `emerald-500` 低饱和绿=宋韵点翠）。

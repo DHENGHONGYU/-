@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-META-012
+title: "V9 文档标签分类体系（Tag Taxonomy）"
+domain: meta
+status: active
+last_updated: 2026-08-17
+---
+
 ﻿---
 title: 文档标签分类体系（受控词表）
 type: meta

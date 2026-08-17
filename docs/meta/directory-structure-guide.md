@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-META-005
+title: "V9 项目目录结构规范与使用指南"
+domain: meta
+status: active
+last_updated: 2026-08-17
+---
+
+---
 title: directory-structure-guide
 type: meta
 domain: project
@@ -183,7 +191,7 @@ PortalShell (src/portal/PortalShell.tsx)
 | 类型定义 | snake_case | `backtest.types.ts`, `trade.types.ts` |
 | 配置文件 | snake_case | `api_paths.ts`, `llm_config.ts` |
 | 测试文件 | `.test.ts/.test.tsx` | `utils.test.ts`, `Button.test.tsx` |
-| 文档文件 | PascalCase / 中文 | `../archive/historical-2026-08-16/batch7/docs/explanation/03-architecture-standards.md（已归档）`, `../archive/historical-2026-08-16/batch7/docs/reference/V9数据宪法.md` |
+| 文档文件 | PascalCase / 中文 | `../archive/historical-2026-08-16/batch7/docs/explanation/03-architecture-standards.md（已归档）`, `../archive/historical-2026-08-16/batch7/docs/reference/V9数据宪法.md`（已归档） |
 | 脚本文件 | kebab-case（正式） | `audit-layer-calls.ts`, `generate-report.ts` |
 
 ### 3.2 目录命名规则

@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-META-007
+title: "触发事件 → 更新动作 一一映射权威表"
+domain: meta
+status: active
+last_updated: 2026-08-17
+---
+
+---
 title: 触发事件 → 更新动作 一一映射权威表
 type: meta
 domain: project
@@ -114,7 +122,7 @@ date: 2026-07-17
 > 维护者：架构治理（里程碑 M1 / T1 产出；N2/N3 收尾）
 > 关联文档：`scripts/docs-tool/doc-update-trigger.ts` 的 `TRIGGER_RULES`（原「文档自动更新体系-架构梳理与任务清单」已删除，约束已并入本文件）
 3. **与代码同步**：本表的 **T1–T14** 必须与 `scripts/docs-tool/doc-update-trigger.ts` 的 `TRIGGER_RULES` 保持同步。代码改动 `TRIGGER_RULES` 时，本表须同步修订（反之亦然）。
-> **路径基准（N2 修订后，2026-08-15 归档更新）**：原指向的 9 个文档已归档至 `archive/historical-2026-08-16/batch7/`（`data-definition.md`、`state-management.md`、`routing-specs.md` 等），4 个 design 文档已归档至 `archive/historical-2026-08-16/batch8/`（`../archive/historical-2026-08-16/batch8/component-library-guide.md`、`../archive/historical-2026-08-16/batch8/component-specs.md`、`../archive/historical-2026-08-16/batch8/ui-design-system.md`、`../archive/historical-2026-08-16/batch8/page-structure.md`）。`../guides/how-to/hooks-guide.md` 实际路径为 `docs/guides/how-to/hooks-guide.md`（T7 引用正确）。
+> **路径基准（N2 修订后，2026-08-15 归档更新）**：原指向的 9 个文档已归档至 `archive/historical-2026-08-16/batch7/`（`data-definition.md`、`state-management.md`、`routing-specs.md` 等），4 个 design 文档已归档至 `archive/historical-2026-08-16/batch8/`（`../archive/historical-2026-08-16/batch8/component-library-guide.md`（已归档）、`../archive/historical-2026-08-16/batch8/component-specs.md`（已归档）、`../archive/historical-2026-08-16/batch8/ui-design-system.md`（已归档）、`../archive/historical-2026-08-16/batch8/page-structure.md`（已归档））。`../guides/how-to/hooks-guide.md` 实际路径为 `docs/guides/how-to/hooks-guide.md`（T7 引用正确）。
 
 > **一致性治理说明（2026-07-21）**：上方 §二 主矩阵已采用 pr-6 重组后的真实权威路径
 > （`docs/reference/...`、`docs/explanation/...`、`docs/guides/how-to/...` 等），并由 N2 对齐磁盘。

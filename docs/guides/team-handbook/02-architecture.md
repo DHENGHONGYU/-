@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-GUIDE-049
+title: "02 · 整体架构设计思路（Overall Architecture）"
+domain: guide
+status: active
+last_updated: 2026-08-17
+---
+
+---
 doc_id: V9-DOC-GUIDE-032
 title: "02 · 整体架构设计思路（Overall Architecture）"
 domain: guide
@@ -8,7 +16,7 @@ last_updated: 2026-08-15
 
 # 02 · 整体架构设计思路（Overall Architecture）
 
-> 本文回答"**系统怎么搭、模块怎么连、未来怎么扩**"。权威基线：`AGENTS.md`（分层契约）、`../../archive/historical-2026-08-16/batch8/system-architecture.md（已归档）`、`docs/explanation/architecture.md`、`../../archive/historical-2026-08-16/batch7/docs/reference/gateway-write-permission-spec.md`、`../../archive/historical-2026-08-16/batch8/adr-001-pure-frontend-architecture.md`。
+> 本文回答"**系统怎么搭、模块怎么连、未来怎么扩**"。权威基线：`AGENTS.md`（分层契约）、`../../archive/historical-2026-08-16/batch8/system-architecture.md（已归档）`、`docs/explanation/architecture.md`、`../../archive/historical-2026-08-16/batch7/docs/reference/gateway-write-permission-spec.md`（已归档）、`../../archive/historical-2026-08-16/batch8/adr-001-pure-frontend-architecture.md`（已归档）。
 > ⚠️ 见 `README.md` 文档漂移提示：Gateway 网关当前为**目标架构**，DataBridge 仍直连 `db`。
 
 ---

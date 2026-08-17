@@ -196,14 +196,44 @@ maintainer: Documentation Team
 - 明显的临时文件
 
 ### 4.3 归档前准备
+
 | 步骤 | 操作 | 说明 |
 |------|------|------|
 | 1 | 内容完整性检查 | 确保文档内容完整，不缺页 |
 | 2 | Frontmatter 更新 | 添加归档状态、归档原因、归档日期 |
-| 3 | 引用修复 | 把指向该文档的引用改指向替代文档 |
+| 3 | **引用扫描与修复** | **强制步骤：扫描全仓引用，添加（已归档）注解或更新路径** |
 | 4 | 清单登记 | 在归档清单中登记 |
 | 5 | 备份 | 归档前做一次完整备份 |
 | 6 | 审批 | 文档管理员审批确认 |
+
+#### 步骤 3 引用扫描与修复（强制）
+
+归档前**必须**执行全仓交叉引用审计，确保归档后不会产生断链：
+
+```bash
+# 1. 运行全仓审计，确认当前断链基线
+npm run audit:doc-code-references
+
+# 2. 归档文件后，再次运行审计
+# 将所有新增的断链引用添加（已归档）注解或更新为替代文档路径
+npm run audit:doc-code-references
+
+# 3. 验证审计门禁通过（断裂率必须为 0.00%）
+```
+
+**修复策略**：
+
+| 场景 | 操作 | 示例 |
+|------|------|------|
+| 归档文件有替代文档 | 更新引用路径为替代文档 | `<old-doc.md>` → `<new-doc.md>` |
+| 归档文件无替代文档 | 在引用后添加 `（已归档）` 注解 | `` `<path/to/old.md>`（已归档）`` |
+| 归档文件已完全废弃 | 在引用后添加 `（已废弃）` 注解 | `` `<path/to/old.md>`（已废弃）`` |
+
+**检查清单**：
+- [ ] 归档前运行 `npm run audit:doc-code-references`，记录基线
+- [ ] 归档后再次运行审计，确认无新增断链
+- [ ] 所有新断链引用已添加注解或更新路径
+- [ ] 审计门禁 `断裂率 0.00%` 通过 |
 
 ### 4.4 归档执行
 
@@ -309,24 +339,95 @@ docs/archive/
 ---
 
 ## 七、当前归档状态
-### 7.1 现有归档统计
+
+### 7.1 归档统计（2026-08-17 更新）
 
 | 指标 | 数值 |
 |------|------|
-| 归档文档总数 | 125 份 |
-| 活跃文档总数 | 584 份 |
-| 死文档率 | ~17.6% |
+| 归档文档总数 | 427 份 |
+| 活跃文档总数 | 332 份 |
+| 死文档率 | 0% (已全量清理) |
+| Level A (重要) | 44 份 |
+| Level B (普通) | 323 份 |
+| Level C (草稿) | 60 份 |
 
-### 7.2 归档文档分布
+### 7.2 归档目录结构
 
-（待完整审计后补充详细分类统计）
+```
+docs/archive/
+├── README.md                    # 归档说明
+├── archive-inventory.md         # 归档清单（Markdown）
+├── archive-inventory.csv        # 归档清单（CSV，427条）
+├── important/                   # A级：重要历史文档（44份）
+│   ├── architecture/
+│   ├── explanation/
+│   ├── reference/
+│   └── specs/
+├── normal/                      # B级：普通历史文档（323份）
+│   ├── explanation/
+│   ├── guides/
+│   ├── lessons/
+│   ├── meta/
+│   ├── reference/
+│   ├── release-notes/
+│   └── reports/
+└── drafts/                      # C级：草稿与临时（60份）
+    ├── deprecated/
+    ├── date-prefix/
+    └── temp/
+```
 
-### 7.3 下一步计划
+### 7.3 定期审计机制（已建立）
 
-- [ ] 完成全量死文档审计
-- [ ] 按分级标准重新整理归档目录
-- [ ] 补充完整的归档清单
-- [ ] 建立定期审计机制
+#### 7.3.1 审计脚本
+
+| 脚本 | 用途 | 执行频率 |
+|------|------|----------|
+| `scripts/audit/audit-dead-docs.ps1` | 死文档全量扫描（8类检测） | 季度 |
+| `scripts/audit/audit-quarterly-doc-health.ps1` | 季度文档健康度（断链/过期/元数据） | 季度 |
+| `scripts/audit/audit-doc-health-orchestrator.ps1` | 统一编排器（串联上述所有检查） | 月度/季度 |
+
+#### 7.3.2 NPM Scripts
+
+| 命令 | 说明 |
+|------|------|
+| `npm run audit:dead-docs` | 死文档审计（Dry Run） |
+| `npm run audit:dead-docs:execute` | 死文档审计（执行归档） |
+| `npm run audit:quarterly-doc-health` | 季度文档健康度审计 |
+| `npm run audit:doc-health` | 全量文档健康度审计（full 模式） |
+| `npm run audit:doc-health:monthly` | 月度快速审计（跳过死文档扫描） |
+| `npm run audit:doc-health:quarterly` | 季度全量审计（含死文档扫描） |
+
+#### 7.3.3 调度任务
+
+| 任务 | 调度 | 首次执行 |
+|------|------|----------|
+| 月度文档死文档审计 | 每月1日 09:00 (Asia/Shanghai) | 2026-09-01 |
+| 季度全量文档健康度审计 | 1/4/7/10月1日 10:00 (Asia/Shanghai) | 2026-10-01 |
+
+#### 7.3.4 Pre-commit 门禁提醒
+
+每次 `git commit` 时，pre-commit hook 会自动检查：
+- 月初（1号）提醒执行月度审计
+- 季度首月（1/4/7/10月）提醒执行季度审计
+- 距上次审计超过30天提醒补充审计
+
+#### 7.3.5 审计报告位置
+
+所有审计报告输出到 `docs/reports/audit/`：
+- `doc-health-orchestrator-{date}.md` — 综合编排报告
+- `doc-health-orchestrator-{date}.json` — 结构化数据（支持趋势对比）
+- `dead-docs-audit-{date}.md` — 死文档详细报告
+- `dead-docs-audit-{date}.csv` — 死文档清单（CSV）
+- `quarterly-doc-health-{date}.md` — 季度健康度详细报告
+- `quarterly-doc-health-{date}.json` — 健康度结构化数据
+
+### 7.4 已完成事项
+
+- [x] 完成全量死文档审计（2026-08-17，识别94篇死文档）
+- [x] 按分级标准重新整理归档目录（A/B/C三级，427个文件）
+- [x] 补充完整的归档清单（archive-inventory.md + archive-inventory.csv）
+- [x] 建立定期审计机制（脚本/门禁/调度）
 
 ---
 

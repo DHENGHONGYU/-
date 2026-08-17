@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-META-011
+title: "V9 Markdown 文档体系梳理与重构方案"
+domain: meta
+status: active
+last_updated: 2026-08-17
+---
+
+---
 title: V9 Markdown 文档体系梳理与重构方案
 type: meta
 domain: architecture
@@ -81,7 +89,7 @@ code_version: 2.0.0
 |------|------|----------|
 | 系统入口 | 项目/文档总 README | 根 `README.md`、`../../README.md` |
 | 架构总览 | 分层、舱室、PortalShell | `../archive/historical-2026-08-16/batch7/docs/explanation/architecture/overview.md（已归档）`、`docs/explanation/ARCHITECTURE.md` |
-| 数据宪法/字典 | 数据定义规范、主数据字典 | `docs/reference/v9数据宪法.md`（P0）、`../archive/historical-2026-08-16/batch7/docs/reference/data-definition.md（已归档）`、`../archive/historical-2026-08-16/batch8/ai-center-data-definition.md` |
+| 数据宪法/字典 | 数据定义规范、主数据字典 | `docs/reference/v9数据宪法.md`（P0）、`../archive/historical-2026-08-16/batch7/docs/reference/data-definition.md（已归档）`、`../archive/historical-2026-08-16/batch8/ai-center-data-definition.md`（已归档） |
 | API 契约 | 27 个 service 契约 | docs/reference/*-contract.md、`../archive/historical-2026-08-16/batch7/docs/explanation/architecture/api-contracts.md（已归档）` |
 | ADR 决策 | 架构决策记录 | docs/reference/adr-*.md、docs/explanation/adr-*.md |
 | 板块说明 | 各舱/模块/子系统说明 | `docs/reference/modules/*`、`../archive/historical-2026-08-16/batch7/docs/explanation/cabins-overview.md（已归档）`、`team-handbook/*` |
@@ -97,7 +105,7 @@ code_version: 2.0.0
 | 定期更新报告 | 文档治理/同步报告 | 已归档 |
 | 复盘/诊断 | 故障 RCA、功能遗漏诊断 | 2026-07-12 安全审计报告（已删除）、`docs/assets/team-handbook-html/supplementary/V9_MCP_Server与Agent功能遗漏诊断.html` |
 | 计划/看板 | 整改计划、执行看板 | `../archive/historical-2026-08-16/batch6/docs/reference/meta/doc-auto-update-kanban.md（已归档）`、prompt-execute-remediation.md（已删除） |
-| 验证基线 | 集成基线比对、完成度校验 | 已归档、`../archive/historical-2026-08-16/batch7/docs/explanation/design/quality-audit-plan.md` |
+| 验证基线 | 集成基线比对、完成度校验 | 已归档、`../archive/historical-2026-08-16/batch7/docs/explanation/design/quality-audit-plan.md`（已归档） |
 
 ---
 

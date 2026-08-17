@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-ARCH-059
+title: "04. UI/UX 规范"
+domain: arch
+status: active
+last_updated: 2026-08-17
+---
+
 ﻿---
 title: 04. UI/UX 规范
 type: explanation

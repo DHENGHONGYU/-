@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-GUIDE-047
+title: "组件命名规范与文档模板标准"
+domain: guide
+status: active
+last_updated: 2026-08-17
+---
+
+---
 doc_id: V9-DOC-GUIDE-030
 title: "组件命名规范与文档模板标准"
 domain: guide

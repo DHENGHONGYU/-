@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-GUIDE-050
+title: "03 · UI 组件设计思路（UI Component Design）"
+domain: guide
+status: active
+last_updated: 2026-08-17
+---
+
+---
 doc_id: V9-DOC-GUIDE-033
 title: "03 · UI 组件设计思路（UI Component Design）"
 domain: guide

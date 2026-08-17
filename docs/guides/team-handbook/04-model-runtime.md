@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-GUIDE-051
+title: "04 · 模型运行思路（Model Runtime & Data Flow）"
+domain: guide
+status: active
+last_updated: 2026-08-17
+---
+
+---
 doc_id: V9-DOC-GUIDE-034
 title: "04 · 模型运行思路（Model Runtime & Data Flow）"
 domain: guide

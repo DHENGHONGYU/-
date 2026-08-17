@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-GUIDE-052
+title: "V9 团队开发操作指南"
+domain: guide
+status: active
+last_updated: 2026-08-17
+---
+
+---
 title: 团队开发操作指南
 type: reference
 domain: project
@@ -1402,7 +1410,7 @@ change_log:
 | | 新增 Service | [how-to-add-service.md](../how-to/how-to-add-service.md) |
 | | 新增 Widget | [how-to-add-widget.md](../how-to/how-to-add-widget.md) |
 | | 代码评审 | [code-review-guide.md](../how-to/code-review-guide.md) |
-| **经验教训** | 完整教训库 | [development-lessons-learned.md（已归档）](../../archive/historical-2026-08-16/batch6/docs/reports/project-management/development-lessons-learned.md) |
+| **经验教训** | 完整教训库 | [development-lessons-learned.md（已归档）](../../archive/historical-2026-08-16/batch6/docs/reports/project-management/development-lessons-learned.md（已归档）) |
 | | 教训摘要 | lessons-learned-summary.md（已归档） |
 | | 项目历程 | project-development-journey.md（已归档） |
 

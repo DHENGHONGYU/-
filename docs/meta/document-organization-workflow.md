@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-META-009
+title: "V9 文档整理工作流程指南"
+domain: meta
+status: active
+last_updated: 2026-08-17
+---
+
 ﻿---
 title: V9 文档整理工作流程指南
 type: meta
