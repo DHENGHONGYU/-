@@ -56,7 +56,7 @@ describe('DataBridge', () => {
           target: ENVELOPE_TARGET.db,
           traceId: 'test-1',
         },
-        { symbol: '600519' },
+        { symbol: '600519.SH' },
       )
       const invalidEnvelope = { ...envelope, meta: { ...envelope.meta, source: '' as ModuleId } }
 

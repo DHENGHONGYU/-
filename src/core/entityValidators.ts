@@ -15,6 +15,7 @@
 */
 
 import type { Order, V6Score, Stock } from '@/data/types'
+import { validateSymbolFormat } from '@/lib/validation'
 
 // ============================================================================
 // 类型定义
@@ -86,10 +87,8 @@ function validateSymbol(symbol: unknown): string | null {
   if (symbol === null || symbol === undefined || typeof symbol !== 'string' || symbol.trim().length === 0) {
     return 'symbol 不能为空'
   }
-  if (symbol.length > 20) {
-    return 'symbol 长度不能超过 20 个字符'
-  }
-  return null
+  // P0-6: 使用全局 symbol 格式校验（A股/港股/美股）
+  return validateSymbolFormat(symbol)
 }
 
 function validateDirection(direction: unknown): string | null {

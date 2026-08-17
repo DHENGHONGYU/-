@@ -558,4 +558,36 @@ export function createSchema(
     ],
   })
 
+  // ── generatedReports：已生成报告历史（v33 新增，P1 报告资产化）──
+  // 取代 Electron fs.writeFileSync 导出即弃，支持报告历史回溯与模板复用。
+  ensureStore(db, STORE_NAME.generatedReports, logger, {
+    storeOptions: { keyPath: 'reportId' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-symbol', keyPath: 'symbol' },
+      { name: 'by-generatedAt', keyPath: 'generatedAt' },
+      { name: 'by-template', keyPath: 'templateId' },
+    ],
+  })
+
+  // ── reportTemplates：报告模板库（v33 新增，P1 报告资产化）──
+  ensureStore(db, STORE_NAME.reportTemplates, logger, {
+    storeOptions: { keyPath: 'templateId' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-name', keyPath: 'name' },
+    ],
+  })
+
+  // ── screeningResults：筛选结果集持久化（v34 新增，P0 筛选结果集持久化）──
+  // 取代 multiFactorScreeningStore 纯内存态 results（刷新即丢），支持筛选历史回溯与结果复用。
+  ensureStore(db, STORE_NAME.screeningResults, logger, {
+    storeOptions: { keyPath: 'runId' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-symbol', keyPath: 'symbol' },
+      { name: 'by-createdAt', keyPath: 'createdAt' },
+    ],
+  })
+
 }

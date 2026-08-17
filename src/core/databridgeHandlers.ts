@@ -14,6 +14,7 @@ import { ENVELOPE_ACTION, STORE_NAME, type StoreName } from '@/config/dbConfig'
 import { db, now } from '@/data/db'
 import type { CustomAgent, Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
+import { validateSymbolFormat } from '@/lib/validation'
 import { EnvelopeError, type StandardEnvelope } from './envelope'
 import { cascadeExecutor } from './cascadeExecutor'
 import { CascadeError } from '@/types/modules/cascade.types'
@@ -159,6 +160,11 @@ class InsertStockHandler implements EnvelopeHandler {
         `insertStock Rejected: missing or empty "symbol" field (traceId=${traceId})`,
       )
     }
+    // P0-6: symbol 格式全局校验（A股/港股/美股）
+    const symbolError = validateSymbolFormat(stock.symbol)
+    if (symbolError !== null) {
+      throw new EnvelopeError(`insertStock Rejected: ${symbolError} (traceId=${envelope.meta.traceId})`)
+    }
     logger.debug(`[DataBridge] DB insertStock: symbol="${stock.symbol}"`)
     await db.put(store, stock)
   }
@@ -174,6 +180,11 @@ class UpdateStockHandler implements EnvelopeHandler {
 
   async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
     const update = envelope.payload as Partial<Stock> & { symbol: string }
+    // P0-6: symbol 格式全局校验（A股/港股/美股）
+    const symbolError = validateSymbolFormat(update.symbol)
+    if (symbolError !== null) {
+      throw new EnvelopeError(`updateStock Rejected: ${symbolError} (traceId=${envelope.meta.traceId})`)
+    }
     logger.debug(`[DataBridge] DB updateStock: symbol="${update.symbol}"`)
     const existing = await db.get<Stock>(store, update.symbol)
     if (!existing) {
@@ -196,6 +207,11 @@ class UpdateStockStatusHandler implements EnvelopeHandler {
 
   async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
     const { symbol, status } = envelope.payload as { symbol: string; status: string }
+    // P0-6: symbol 格式全局校验
+    const symbolError = validateSymbolFormat(symbol)
+    if (symbolError !== null) {
+      throw new EnvelopeError(`updateStockStatus Rejected: ${symbolError} (traceId=${envelope.meta.traceId})`)
+    }
     logger.debug(`[DataBridge] DB updateStockStatus: symbol="${symbol}", status="${status}"`)
     const existing = await db.get<Stock>(store, symbol)
     if (!existing) {
@@ -223,6 +239,11 @@ class UpdateStockGroupHandler implements EnvelopeHandler {
 
   async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
     const { symbol, group } = envelope.payload as { symbol: string; group: string }
+    // P0-6: symbol 格式全局校验
+    const symbolError = validateSymbolFormat(symbol)
+    if (symbolError !== null) {
+      throw new EnvelopeError(`updateStockGroup Rejected: ${symbolError} (traceId=${envelope.meta.traceId})`)
+    }
     logger.debug(`[DataBridge] DB updateStockGroup: symbol="${symbol}", group="${group}"`)
     const existing = await db.get<Stock>(store, symbol)
     if (!existing) {
@@ -291,6 +312,7 @@ class DeleteStockHandler implements EnvelopeHandler {
       STORE_NAME.hotSectorScores,
       STORE_NAME.valuePitScores,
       STORE_NAME.financialReports,
+      STORE_NAME.stockProfiles,
     ]
     for (const s of stores) {
       try {
@@ -316,6 +338,8 @@ class DeleteStockHandler implements EnvelopeHandler {
       STORE_NAME.traceRecords,
       STORE_NAME.analysisResults,
       STORE_NAME.conflictLog,
+      STORE_NAME.screeningResults,
+      STORE_NAME.generatedReports,
     ]
     for (const s of stores) {
       await this.deleteBySymbolIndex(s, symbol)
@@ -643,6 +667,13 @@ export function createHandlerRegistry(): HandlerRegistry {
       ENVELOPE_ACTION.holdingsDataLoaded,
       ENVELOPE_ACTION.tradeActionExecuted,
       ENVELOPE_ACTION.loadHoldingsData,
+      // 报告资产化（v33 新增，P1 报告资产化）
+      ENVELOPE_ACTION.saveGeneratedReport,
+      ENVELOPE_ACTION.saveReportTemplate,
+      ENVELOPE_ACTION.deleteGeneratedReport,
+      // 筛选结果集持久化（v34 新增，P0 筛选结果集持久化）
+      ENVELOPE_ACTION.saveScreeningResult,
+      ENVELOPE_ACTION.deleteScreeningResult,
     ])
   )
 

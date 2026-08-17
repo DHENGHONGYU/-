@@ -13,6 +13,8 @@ import type { Stock } from './types.stock'
 /** V6 评分结果 */
 export interface V6Score {
   symbol: string
+  /** 证券名称（runV6Score 由 Stock.name 填充，提供名称兜底用） */
+  name?: string
   score: number
   factors: Record<string, number>
   algorithmVersion: string

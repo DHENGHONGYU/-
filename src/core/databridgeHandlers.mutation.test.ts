@@ -46,13 +46,13 @@ describe('databridgeHandlers (mutation)', () => {
   describe('PutHandler', () => {
     it('正常保存数据（普通操作使用 debug 级别日志）', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.saveScores)!
-      const envelope = makeEnvelope(ENVELOPE_ACTION.saveScores, { symbol: '600519', score: 85 })
+      const envelope = makeEnvelope(ENVELOPE_ACTION.saveScores, { symbol: '600519.SH', score: 85 })
 
       await handler.handle(envelope, STORE_NAME.v6Scores)
 
       expect(dbModule!.db.put).toHaveBeenCalledTimes(1)
       expect(dbModule!.db.put).toHaveBeenCalledWith(STORE_NAME.v6Scores, {
-        symbol: '600519',
+        symbol: '600519.SH',
         score: 85,
       })
       expect(logger.debug).toHaveBeenCalledWith(
@@ -64,7 +64,7 @@ describe('databridgeHandlers (mutation)', () => {
     it('财务数据保存使用 info 级别日志', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.saveFinancialReport)!
       const payload = {
-        symbol: '600519',
+        symbol: '600519.SH',
         reportDate: '2024-Q1',
         revenue: 1000000,
         netProfit: 500000,
@@ -82,7 +82,7 @@ describe('databridgeHandlers (mutation)', () => {
 
     it('db.put 抛出异常时正确传播', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.saveScores)!
-      const envelope = makeEnvelope(ENVELOPE_ACTION.saveScores, { symbol: '600519' })
+      const envelope = makeEnvelope(ENVELOPE_ACTION.saveScores, { symbol: '600519.SH' })
       const putMock = vi.mocked(dbModule!.db.put)
       putMock.mockRejectedValueOnce(new Error('DB error'))
 
@@ -97,7 +97,7 @@ describe('databridgeHandlers (mutation)', () => {
     it('正常插入股票', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.insertStock)!
       const stock: Partial<Stock> = {
-        symbol: '600519',
+        symbol: '600519.SH',
         name: '贵州茅台',
         researchStatus: 'screening',
         source: 'manual',
@@ -140,7 +140,7 @@ describe('databridgeHandlers (mutation)', () => {
     it('日志记录正确', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.insertStock)!
       const envelope = makeEnvelope(ENVELOPE_ACTION.insertStock, {
-        symbol: '000001',
+        symbol: '000001.SZ',
         name: '平安银行',
         researchStatus: 'research',
         source: 'manual',
@@ -160,7 +160,7 @@ describe('databridgeHandlers (mutation)', () => {
   // ──────────────────────────────────────────
   describe('UpdateStockHandler', () => {
     const existingStock: Stock = {
-      symbol: '600519',
+      symbol: '600519.SH',
       name: '贵州茅台',
       researchStatus: 'screening',
       source: 'manual',
@@ -172,16 +172,16 @@ describe('databridgeHandlers (mutation)', () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStock)!
       vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStock, {
-        symbol: '600519',
+        symbol: '600519.SH',
         price: 1800,
       })
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
-      expect(dbModule!.db.get).toHaveBeenCalledWith(STORE_NAME.stocks, '600519')
+      expect(dbModule!.db.get).toHaveBeenCalledWith(STORE_NAME.stocks, '600519.SH')
       expect(dbModule!.db.put).toHaveBeenCalledTimes(1)
       const putArg = vi.mocked(dbModule!.db.put).mock.calls[0]![1] as Stock
-      expect(putArg.symbol).toBe('600519')
+      expect(putArg.symbol).toBe('600519.SH')
       expect(putArg.name).toBe('贵州茅台')
       expect(putArg.price).toBe(1800)
     })
@@ -189,7 +189,7 @@ describe('databridgeHandlers (mutation)', () => {
     it('dataVersion 递增', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStock)!
       vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
-      const envelope = makeEnvelope(ENVELOPE_ACTION.updateStock, { symbol: '600519' })
+      const envelope = makeEnvelope(ENVELOPE_ACTION.updateStock, { symbol: '600519.SH' })
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
@@ -200,7 +200,7 @@ describe('databridgeHandlers (mutation)', () => {
     it('updatedAt 更新', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStock)!
       vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
-      const envelope = makeEnvelope(ENVELOPE_ACTION.updateStock, { symbol: '600519' })
+      const envelope = makeEnvelope(ENVELOPE_ACTION.updateStock, { symbol: '600519.SH' })
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
@@ -211,7 +211,7 @@ describe('databridgeHandlers (mutation)', () => {
     it('股票不存在时抛出 EnvelopeError', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStock)!
       vi.mocked(dbModule!.db.get).mockResolvedValueOnce(undefined)
-      const envelope = makeEnvelope(ENVELOPE_ACTION.updateStock, { symbol: '999999' })
+      const envelope = makeEnvelope(ENVELOPE_ACTION.updateStock, { symbol: '999999.SZ' })
 
       const promise = handler.handle(envelope, STORE_NAME.stocks)
       await expect(promise).rejects.toThrow(EnvelopeError)
@@ -225,7 +225,7 @@ describe('databridgeHandlers (mutation)', () => {
     it('日志记录正确', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStock)!
       vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
-      const envelope = makeEnvelope(ENVELOPE_ACTION.updateStock, { symbol: '600519' })
+      const envelope = makeEnvelope(ENVELOPE_ACTION.updateStock, { symbol: '600519.SH' })
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
@@ -240,7 +240,7 @@ describe('databridgeHandlers (mutation)', () => {
   // ──────────────────────────────────────────
   describe('UpdateStockStatusHandler', () => {
     const existingStock: Stock = {
-      symbol: '600519',
+      symbol: '600519.SH',
       name: '贵州茅台',
       researchStatus: 'screening',
       source: 'manual',
@@ -252,7 +252,7 @@ describe('databridgeHandlers (mutation)', () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStockStatus)!
       vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStockStatus, {
-        symbol: '600519',
+        symbol: '600519.SH',
         status: 'research',
       })
 
@@ -267,7 +267,7 @@ describe('databridgeHandlers (mutation)', () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStockStatus)!
       vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStockStatus, {
-        symbol: '600519',
+        symbol: '600519.SH',
         status: 'research',
       })
 
@@ -281,7 +281,7 @@ describe('databridgeHandlers (mutation)', () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStockStatus)!
       vi.mocked(dbModule!.db.get).mockResolvedValueOnce(undefined)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStockStatus, {
-        symbol: '999999',
+        symbol: '999999.SZ',
         status: 'research',
       })
 
@@ -297,7 +297,7 @@ describe('databridgeHandlers (mutation)', () => {
   // ──────────────────────────────────────────
   describe('UpdateStockGroupHandler', () => {
     const existingStock: Stock = {
-      symbol: '600519',
+      symbol: '600519.SH',
       name: '贵州茅台',
       researchStatus: 'screening',
       source: 'manual',
@@ -309,7 +309,7 @@ describe('databridgeHandlers (mutation)', () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStockGroup)!
       vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStockGroup, {
-        symbol: '600519',
+        symbol: '600519.SH',
         group: '白酒板块',
       })
 
@@ -324,7 +324,7 @@ describe('databridgeHandlers (mutation)', () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStockGroup)!
       vi.mocked(dbModule!.db.get).mockResolvedValueOnce(existingStock)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStockGroup, {
-        symbol: '600519',
+        symbol: '600519.SH',
         group: '白酒板块',
       })
 
@@ -338,7 +338,7 @@ describe('databridgeHandlers (mutation)', () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.updateStockGroup)!
       vi.mocked(dbModule!.db.get).mockResolvedValueOnce(undefined)
       const envelope = makeEnvelope(ENVELOPE_ACTION.updateStockGroup, {
-        symbol: '999999',
+        symbol: '999999.SZ',
         group: '测试组',
       })
 
@@ -457,9 +457,9 @@ describe('databridgeHandlers (mutation)', () => {
     it('正常批量写入', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.bulkInsertStock)!
       const items = [
-        { symbol: '600519', name: '贵州茅台' },
-        { symbol: '000001', name: '平安银行' },
-        { symbol: '601318', name: '中国平安' },
+        { symbol: '600519.SH', name: '贵州茅台' },
+        { symbol: '000001.SZ', name: '平安银行' },
+        { symbol: '601318.SH', name: '中国平安' },
       ]
       const envelope = makeEnvelope(ENVELOPE_ACTION.bulkInsertStock, items)
 
@@ -508,7 +508,7 @@ describe('databridgeHandlers (mutation)', () => {
 
     it('事务失败时抛出 EnvelopeError', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.bulkInsertStock)!
-      const envelope = makeEnvelope(ENVELOPE_ACTION.bulkInsertStock, [{ symbol: '600519' }])
+      const envelope = makeEnvelope(ENVELOPE_ACTION.bulkInsertStock, [{ symbol: '600519.SH' }])
 
       vi.mocked(dbModule!.db.withTransaction).mockRejectedValueOnce(
         new Error('Transaction failed'),
@@ -525,7 +525,7 @@ describe('databridgeHandlers (mutation)', () => {
 
     it('性能日志包含 duration 和 avgPerItem', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.bulkInsertStock)!
-      const items = [{ symbol: '600519' }, { symbol: '000001' }]
+      const items = [{ symbol: '600519.SH' }, { symbol: '000001.SZ' }]
       const envelope = makeEnvelope(ENVELOPE_ACTION.bulkInsertStock, items)
 
       const objectStoreMock = { put: vi.fn() }

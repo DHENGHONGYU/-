@@ -55,6 +55,9 @@ export {
   scheduleConfigStore, // v31 调度配置
   proofreadReportStore, // v31 校对报告
   analysisResultStore, // v30 分析结果
+  generatedReportStore, // v33 报告资产化
+  reportTemplateStore, // v33 报告资产化
+  screeningResultStore, // v34 筛选结果集持久化
 } from './dataLayerContentStores'
 export {
   newsBookmarkStore, // v13 资讯收藏
@@ -108,6 +111,9 @@ import {
   scheduleConfigStore,
   proofreadReportStore,
   analysisResultStore,
+  generatedReportStore,
+  reportTemplateStore,
+  screeningResultStore,
 } from './dataLayerContentStores'
 import {
   newsBookmarkStore,
@@ -193,6 +199,11 @@ export const dataLayer = {
   scheduleConfigs: scheduleConfigStore,
   proofreadReports: proofreadReportStore,
   analysisResults: analysisResultStore,
+  // 报告资产化（v33，P1 报告资产化）
+  generatedReports: generatedReportStore,
+  reportTemplates: reportTemplateStore,
+  // 筛选结果集持久化（v34，P0 筛选结果集持久化）
+  screeningResults: screeningResultStore,
   // 八域资料体系（v32，ADR-010）
   profileItems: profileItemStore,
   scoreEvidence: scoreEvidenceStore,

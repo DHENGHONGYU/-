@@ -151,7 +151,7 @@ describe('databridgeHandlers (edge)', () => {
   describe('DeleteStockHandler', () => {
     it('正常删除股票主记录', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteStock)!
-      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteStock, { symbol: '600519' })
+      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteStock, { symbol: '600519.SH' })
 
       vi.mocked(dbModule.db.delete).mockResolvedValue(undefined)
       vi.mocked(dbModule.db.getAllByIndex).mockResolvedValue([])
@@ -159,7 +159,7 @@ describe('databridgeHandlers (edge)', () => {
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
-      expect(dbModule.db.delete).toHaveBeenCalledWith(STORE_NAME.stocks, '600519')
+      expect(dbModule.db.delete).toHaveBeenCalledWith(STORE_NAME.stocks, '600519.SH')
       expect(logger.info).toHaveBeenCalledWith(
         expect.stringContaining('deleteStock'),
       )
@@ -167,7 +167,7 @@ describe('databridgeHandlers (edge)', () => {
 
     it('级联删除主键表（v6Scores/dailyQuotes 等）', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteStock)!
-      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteStock, { symbol: '600519' })
+      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteStock, { symbol: '600519.SH' })
       vi.mocked(dbModule.db.getAllByIndex).mockResolvedValue([])
       vi.mocked(dbModule.db.getAll).mockResolvedValue([])
 
@@ -183,12 +183,12 @@ describe('databridgeHandlers (edge)', () => {
 
     it('级联删除索引表（intelligentScores/scoreDocs 等）', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteStock)!
-      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteStock, { symbol: '600519' })
+      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteStock, { symbol: '600519.SH' })
       vi.mocked(dbModule.db.getAll).mockResolvedValue([])
 
       const indexedRecords = [
-        { id: 'rec-1', symbol: '600519' },
-        { id: 'rec-2', symbol: '600519' },
+        { id: 'rec-1', symbol: '600519.SH' },
+        { id: 'rec-2', symbol: '600519.SH' },
       ]
       vi.mocked(dbModule.db.getAllByIndex).mockResolvedValue(indexedRecords)
 
@@ -207,13 +207,13 @@ describe('databridgeHandlers (edge)', () => {
 
     it('级联删除扫描表（orders/signals/watchlists）', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteStock)!
-      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteStock, { symbol: '600519' })
+      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteStock, { symbol: '600519.SH' })
       vi.mocked(dbModule.db.getAllByIndex).mockResolvedValue([])
 
       const scannedRecords = [
-        { id: 'order-1', symbol: '600519' },
-        { id: 'order-2', symbol: '000001' },
-        { id: 'signal-1', symbol: '600519' },
+        { id: 'order-1', symbol: '600519.SH' },
+        { id: 'order-2', symbol: '000001.SZ' },
+        { id: 'signal-1', symbol: '600519.SH' },
       ]
       vi.mocked(dbModule.db.getAll).mockResolvedValue(scannedRecords)
 
@@ -228,7 +228,7 @@ describe('databridgeHandlers (edge)', () => {
 
     it('单个级联 store 失败不影响其他（容错）', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteStock)!
-      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteStock, { symbol: '600519' })
+      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteStock, { symbol: '600519.SH' })
 
       const deleteMock = vi.mocked(dbModule.db.delete)
       deleteMock.mockImplementation((store: StoreName) => {
@@ -242,7 +242,7 @@ describe('databridgeHandlers (edge)', () => {
 
       await handler.handle(envelope, STORE_NAME.stocks)
 
-      expect(deleteMock).toHaveBeenCalledWith(STORE_NAME.stocks, '600519')
+      expect(deleteMock).toHaveBeenCalledWith(STORE_NAME.stocks, '600519.SH')
       expect(logger.warn).toHaveBeenCalledWith(
         expect.stringContaining('级联删除失败'),
         expect.any(Object),
@@ -251,7 +251,7 @@ describe('databridgeHandlers (edge)', () => {
 
     it('日志记录完整（开始和结束）', async () => {
       const handler = getHandlerFromRegistry(ENVELOPE_ACTION.deleteStock)!
-      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteStock, { symbol: '600519' })
+      const envelope = makeEnvelope(ENVELOPE_ACTION.deleteStock, { symbol: '600519.SH' })
       vi.mocked(dbModule.db.getAllByIndex).mockResolvedValue([])
       vi.mocked(dbModule.db.getAll).mockResolvedValue([])
 

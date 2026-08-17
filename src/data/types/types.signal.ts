@@ -30,7 +30,7 @@ export interface Signal {
   createdAt: number
 }
 
-/** 研究日志 */
+/** 研究日志（P0-5：统一字段结构，补充 audit 审计元数据） */
 export interface ResearchLog {
   id?: number
   traceId: string
@@ -40,4 +40,11 @@ export interface ResearchLog {
   targetType: string
   targetCode: string
   payload?: string
+  /** 审计元数据（P0-5：对齐 writeAuditLog 结构，与 AuditMeta 保持一致） */
+  audit?: {
+    createdAt: number
+    updatedAt: number
+    version: number
+    operator: string
+  }
 }

@@ -113,10 +113,10 @@ describe('databridgeQueries', () => {
 
   describe('queryByIndex', () => {
     it('成功时返回索引匹配的数据', async () => {
-      const mockData = [{ symbol: '600519', score: 90 }]
+      const mockData = [{ symbol: '600519.SH', score: 90 }]
       mockQuery.mockResolvedValue({ success: true, data: mockData })
 
-      const result = await queryByIndex('v6_scores', 'by-symbol', '600519')
+      const result = await queryByIndex('v6_scores', 'by-symbol', '600519.SH')
 
       expect(result).toEqual(mockData)
       expect(mockQuery).toHaveBeenCalledWith(
@@ -124,7 +124,7 @@ describe('databridgeQueries', () => {
           action: 'QUERY_BY_INDEX',
           store: 'v6_scores',
           indexName: 'by-symbol',
-          indexValue: '600519',
+          indexValue: '600519.SH',
         }),
       )
     })
@@ -204,7 +204,7 @@ describe('databridgeQueries', () => {
 
     it('payload 正确透传', async () => {
       mockForward.mockResolvedValue(undefined)
-      const payload = { symbol: '600519', name: '贵州茅台' }
+      const payload = { symbol: '600519.SH', name: '贵州茅台' }
 
       await sendWriteEnvelope('insertStock', payload)
 

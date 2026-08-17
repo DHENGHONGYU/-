@@ -5,6 +5,8 @@
 // V6 规范：事件名格式 `widget:{widgetId}:{event}`
 // 支持数据同步与状态同步
 
+import { getLogger } from '@/lib/logger'
+
 type WidgetEventCallback = (data: unknown) => void
 
 class WidgetEventBusImpl {
@@ -31,7 +33,7 @@ class WidgetEventBusImpl {
         try {
           callback(data)
         } catch (error) {
-          console.error(`[WidgetEventBus] Error in callback for event "${event}":`, error)
+          getLogger().error(`[WidgetEventBus] Error in callback for event "${event}":`, { error })
         }
       })
     }

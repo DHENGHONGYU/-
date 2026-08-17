@@ -27,6 +27,7 @@ import type {
 } from './types'
 import { sendWriteEnvelope, queryGet, queryList, queryByIndex } from './dataLayerHelpers'
 import { nanoid } from 'nanoid'
+import type { ScreeningConditionGroup, ScreeningResultItem } from '@/types/modules/screening.types'
 
 export const researchLogStore = {
   async list(): Promise<ResearchLog[]> {
@@ -308,6 +309,145 @@ export const proofreadReportStore = {
   async getByFileHash(fileHash: string): Promise<FileImportProofreadReport | undefined> {
     const list = await queryByIndex<FileImportProofreadReport>(STORE_NAME.proofreadReports, 'by-fileHash', fileHash)
     return list[0]
+  },
+}
+
+/**
+ * 已生成报告（内联类型，数据层操作专用；与 generated_reports store 对齐：keyPath=reportId）
+ * 取代 Electron fs.writeFileSync 导出即弃，支持报告历史回溯、按 symbol / 模板检索。
+ */
+export interface GeneratedReport {
+  /** 报告唯一 ID（主键） */
+  reportId: string
+  /** 关联标的（可选，通用报告无标的） */
+  symbol?: string
+  /** 所用模板 ID（可选） */
+  templateId?: string
+  /** 报告标题 */
+  title: string
+  /** 报告类型：strategy | proofread | scoreDoc | hybrid 等 */
+  type: string
+  /** 报告正文（HTML / Markdown） */
+  content: string
+  /** 导出格式 */
+  format: 'html' | 'markdown' | 'docx'
+  /** 生成时间（ISO 字符串，索引 by-generatedAt） */
+  generatedAt: string
+  /** 来源模块 */
+  sourceModule: string
+  /** 附加元数据 */
+  meta?: Record<string, unknown>
+}
+
+/**
+ * 报告模板（内联类型，数据层操作专用；与 report_templates store 对齐：keyPath=templateId）
+ */
+export interface ReportTemplate {
+  /** 模板唯一 ID（主键） */
+  templateId: string
+  /** 模板名称（索引 by-name） */
+  name: string
+  /** 模板类型：strategy | proofread | scoreDoc 等 */
+  type: string
+  /** 模板描述 */
+  description?: string
+  /** 模板正文（含变量占位符） */
+  content: string
+  /** 模板变量占位符列表 */
+  variables?: string[]
+  /** 创建时间（ISO） */
+  createdAt: string
+  /** 更新时间（ISO） */
+  updatedAt: string
+}
+
+/** 已生成报告 Store — generated_reports（v33 新增，P1 报告资产化） */
+export const generatedReportStore = {
+  async save(report: GeneratedReport): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveGeneratedReport', report, 'analyzer')
+  },
+
+  async get(reportId: string): Promise<GeneratedReport | undefined> {
+    return queryGet<GeneratedReport>(STORE_NAME.generatedReports, reportId)
+  },
+
+  async list(): Promise<GeneratedReport[]> {
+    return queryList<GeneratedReport>(STORE_NAME.generatedReports)
+  },
+
+  async getBySymbol(symbol: string): Promise<GeneratedReport[]> {
+    return queryByIndex<GeneratedReport>(STORE_NAME.generatedReports, 'by-symbol', symbol)
+  },
+
+  async getByTemplate(templateId: string): Promise<GeneratedReport[]> {
+    return queryByIndex<GeneratedReport>(STORE_NAME.generatedReports, 'by-template', templateId)
+  },
+
+  async remove(reportId: string): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('deleteGeneratedReport', { reportId, _deleted: true }, 'analyzer')
+  },
+}
+
+/** 报告模板 Store — report_templates（v33 新增，P1 报告资产化） */
+export const reportTemplateStore = {
+  async save(template: ReportTemplate): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveReportTemplate', template, 'analyzer')
+  },
+
+  async get(templateId: string): Promise<ReportTemplate | undefined> {
+    return queryGet<ReportTemplate>(STORE_NAME.reportTemplates, templateId)
+  },
+
+  async list(): Promise<ReportTemplate[]> {
+    return queryList<ReportTemplate>(STORE_NAME.reportTemplates)
+  },
+}
+
+/**
+ * 筛选结果集记录（内联类型，数据层操作专用；与 screening_results store 对齐：keyPath=runId）
+ * 取代 multiFactorScreeningStore 纯内存态 results（刷新即丢），支持筛选历史回溯与结果复用。
+ */
+export interface ScreeningRunResultRecord {
+  /** 本次筛选运行唯一 ID（主键） */
+  runId: string
+  /** 关联标的（用于 by-symbol 索引；取结果集首个命中标的，空结果集为 ''） */
+  symbol: string
+  /** 筛选条件组快照（用于回溯/复用） */
+  conditionGroups: ScreeningConditionGroup[]
+  /** 筛选结果项列表 */
+  items: ScreeningResultItem[]
+  /** 命中总数 */
+  total: number
+  /** 耗时（毫秒） */
+  elapsedMs: number
+  /** 模板名（可选，若由模板触发） */
+  templateName?: string
+  /** 创建时间（ISO 字符串，索引 by-createdAt） */
+  createdAt: string
+  /** 来源模块 */
+  sourceModule: string
+}
+
+/** 筛选结果集 Store — screening_results（v34 新增，P0 筛选结果集持久化） */
+export const screeningResultStore = {
+  async save(record: ScreeningRunResultRecord): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveScreeningResult', record, 'screening')
+  },
+
+  async get(runId: string): Promise<ScreeningRunResultRecord | undefined> {
+    return queryGet<ScreeningRunResultRecord>(STORE_NAME.screeningResults, runId)
+  },
+
+  async list(): Promise<ScreeningRunResultRecord[]> {
+    return queryList<ScreeningRunResultRecord>(STORE_NAME.screeningResults)
+  },
+
+  async getBySymbol(symbol: string): Promise<ScreeningRunResultRecord[]> {
+    return queryByIndex<ScreeningRunResultRecord>(STORE_NAME.screeningResults, 'by-symbol', symbol)
+  },
+
+  async remove(runId: string): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('deleteScreeningResult', { runId, _deleted: true }, 'screening')
   },
 }
 

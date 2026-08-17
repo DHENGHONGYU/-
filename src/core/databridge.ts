@@ -164,6 +164,13 @@ const ACTION_TO_STORE_MAP: Record<string, StoreName> = {
   [ENVELOPE_ACTION.saveStockProfile]: STORE_NAME.stockProfiles,
   [ENVELOPE_ACTION.saveProfileTag]: STORE_NAME.profileTags,
   [ENVELOPE_ACTION.deleteProfileTag]: STORE_NAME.profileTags,
+  // ── 报告资产化（v33 新增，P1 报告资产化）──
+  [ENVELOPE_ACTION.saveGeneratedReport]: STORE_NAME.generatedReports,
+  [ENVELOPE_ACTION.saveReportTemplate]: STORE_NAME.reportTemplates,
+  [ENVELOPE_ACTION.deleteGeneratedReport]: STORE_NAME.generatedReports,
+  // ── 筛选结果集持久化（v34 新增，P0 筛选结果集持久化）──
+  [ENVELOPE_ACTION.saveScreeningResult]: STORE_NAME.screeningResults,
+  [ENVELOPE_ACTION.deleteScreeningResult]: STORE_NAME.screeningResults,
 }
 
 // 查询动作集合（目标 store 由 payload 传入，**不**走 ACTION_TO_STORE_MAP）
@@ -472,14 +479,22 @@ export class DataBridge {
 
   private async writeQueryAuditLog(request: QueryRequest, source: ModuleId): Promise<void> {
     const targetCode = request.key ?? request.indexValue?.toString() ?? request.action
+    const now = Date.now()
     await db.put(STORE_NAME.researchLogs, {
       traceId: `query-${nanoid(8)}`,
-      timestamp: Date.now(),
+      timestamp: now,
       actor: source,
       action: request.action,
       targetType: request.store,
       targetCode,
       payload: JSON.stringify({ indexName: request.indexName }),
+      // P0-5: 补充 audit 审计元数据，对齐 writeAuditLog 结构
+      audit: {
+        createdAt: now,
+        updatedAt: now,
+        version: 1,
+        operator: source,
+      },
     })
   }
 

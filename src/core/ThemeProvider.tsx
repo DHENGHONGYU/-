@@ -42,11 +42,15 @@ function getStoredTheme(): ThemeMode | null {
   if (typeof window === 'undefined') {
     return null
   }
-  const stored = localStorage.getItem('v9-theme')
-  if (stored === 'light' || stored === 'dark' || stored === 'system') {
-    return stored
+  try {
+    const stored = localStorage.getItem('v9-theme')
+    if (stored === 'light' || stored === 'dark' || stored === 'system') {
+      return stored
+    }
+    return null
+  } catch {
+    return null
   }
-  return null
 }
 
 /**
@@ -56,7 +60,9 @@ function storeTheme(mode: ThemeMode): void {
   if (typeof window === 'undefined') {
     return
   }
-  localStorage.setItem('v9-theme', mode)
+  try {
+    localStorage.setItem('v9-theme', mode)
+  } catch { /* localStorage 不可用时静默失败 */ }
 }
 
 /**
