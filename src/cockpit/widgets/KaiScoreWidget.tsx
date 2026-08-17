@@ -82,7 +82,7 @@ export default function KaiScoreWidget({ config, data }: KaiScoreWidgetProps): R
           <Skeleton variant="rect" className="h-32" />
         </div>
       }
-      className="h-full flex flex-col"
+      className="h-full flex flex-col widget-card-elevated"
     >
       <div className="flex-1 overflow-auto space-y-4">
         {/* 顶部指标卡 */}

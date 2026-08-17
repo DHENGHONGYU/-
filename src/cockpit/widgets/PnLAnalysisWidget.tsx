@@ -56,6 +56,7 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
       onRetry={() => void refresh()}
       emptyTitle="暂无盈亏数据"
       emptyDescription="完成交易后将自动生成盈亏分析与收益曲线"
+      className="widget-card-elevated"
       skeleton={(
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

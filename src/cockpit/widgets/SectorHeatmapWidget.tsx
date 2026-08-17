@@ -53,6 +53,7 @@ export default function SectorHeatmapWidget({ config }: SectorHeatmapWidgetProps
       visualState={visualState}
       error={error}
       onRetry={() => refreshWidget(config.instanceId)}
+      className="widget-card-elevated"
       skeleton={
         <div className="space-y-4">
           <Skeleton className="h-32" />

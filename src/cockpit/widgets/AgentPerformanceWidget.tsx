@@ -54,6 +54,7 @@ const AgentPerformanceWidget = memo(function AgentPerformanceWidget({ config }: 
       loadingLabel="加载智能体健康数据…"
       emptyTitle="暂无智能体健康数据"
       emptyDescription="系统监控启动后将自动采集 Agent 性能快照"
+      className="widget-card-elevated"
       skeleton={
         <div className="grid gap-3 sm:grid-cols-2">
           {[1, 2, 3, 4].map((i) => (

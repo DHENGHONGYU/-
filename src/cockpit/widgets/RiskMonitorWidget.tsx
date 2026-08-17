@@ -35,6 +35,7 @@ const RiskMonitorWidget = memo(function RiskMonitorWidget({ config }: RiskMonito
       onRetry={() => void refresh()}
       emptyTitle="暂无风险数据"
       emptyDescription="完成交易后将自动计算VaR、回撤、波动率等风险指标"
+      className="widget-card-elevated"
       skeleton={(
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

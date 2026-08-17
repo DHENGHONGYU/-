@@ -76,7 +76,7 @@ export default function InvestmentProfileWidget({ config, data }: InvestmentProf
           </div>
         </div>
       }
-      className="h-full flex flex-col"
+      className="h-full flex flex-col widget-card-elevated"
     >
       <div className="flex-1 overflow-auto space-y-4">
         {/* 核心指标卡片 */}

@@ -159,6 +159,7 @@ const SignalQualityDashboardWidget = memo(
         visualState={visualState}
         error={error ?? undefined}
         onRetry={() => void loadReviews()}
+        className="widget-card-elevated"
         loadingLabel="加载复盘数据中…"
         emptyTitle="暂无复盘数据"
         emptyDescription="点击下方按钮加载历史信号复盘记录"

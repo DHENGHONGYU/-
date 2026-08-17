@@ -129,6 +129,7 @@ export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWid
       error={error}
       onRetry={() => refreshWidget(config.instanceId)}
       loadingLabel="加载持仓数据中…"
+      className="widget-card-elevated"
       skeleton={
         <div className="space-y-4">
           <Skeleton variant="text" className={cn('bg-muted', 'h-10 w-full')} />

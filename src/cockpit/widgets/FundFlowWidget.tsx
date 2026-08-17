@@ -70,6 +70,7 @@ export default function FundFlowWidget(props: FundFlowWidgetProps): React.JSX.El
       loadingLabel="加载资金流向…"
       emptyTitle="暂无资金流向数据"
       emptyDescription="当前未获取到主力资金、北向资金等流向数据"
+      className="widget-card-elevated"
       skeleton={
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (

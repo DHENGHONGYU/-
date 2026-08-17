@@ -101,6 +101,7 @@ export default function MarketSentimentWidget({ config }: MarketSentimentWidgetP
       visualState={visualState}
       error={error}
       onRetry={() => refreshWidget(config.instanceId)}
+      className="widget-card-elevated"
       skeleton={
         <div className="space-y-4">
           <Skeleton className="h-16" />

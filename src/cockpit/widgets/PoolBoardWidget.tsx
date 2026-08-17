@@ -77,7 +77,7 @@ export default function PoolBoardWidget({ config }: PoolBoardWidgetProps): React
           </Badge>
         </div>
       }
-      className="h-full flex flex-col"
+      className="h-full flex flex-col widget-card-elevated"
     >
       <div className="flex-1 overflow-auto flex flex-col">
         {/* ── 工具栏 ── */}

@@ -114,6 +114,7 @@ export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps
       visualState={visualState}
       error={error}
       onRetry={() => refreshWidget(config.instanceId)}
+      className="widget-card-elevated"
       titleAction={
         <Badge variant="outline" className="mt-1">
           基于 AI 双引擎分析

@@ -56,6 +56,7 @@ export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): Re
       loadingLabel="加载大盘行情中…"
       emptyTitle="暂无大盘行情"
       emptyDescription="当前未获取到指数数据，请检查数据源或稍后重试"
+      className="widget-card-elevated"
       skeleton={
         <div className="grid grid-cols-2 gap-4">
           {[1, 2, 3, 4].map((i) => (

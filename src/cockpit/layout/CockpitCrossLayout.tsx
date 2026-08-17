@@ -14,6 +14,7 @@
  */
 
 import { useMemo, useState, type ReactNode } from 'react'
+import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Tabs, TabsList, TabsTrigger } from '@/components/molecules/Tabs'
 import { COCKPIT_LAYOUT, COCKPIT_CROSS_DOMAINS, COCKPIT_CROSS_PERSPECTIVES, DRAWER_WIDGETS } from '@/constants/cockpit.constants'
@@ -65,6 +66,8 @@ export function CockpitCrossLayout({
   const [activeDomain, setActiveDomain] = useState<WidgetDomain>('market')
   const [activePerspective, setActivePerspective] = useState<WidgetPerspective>('overview')
   const [matrixVisible, setMatrixVisible] = useState(showMatrixOverview)
+  /** V9: 移动端左轨折叠状态 */
+  const [mobileRailOpen, setMobileRailOpen] = useState(false)
 
   /** 从 widgetRegistry 获取每个实例的 domain/perspective 元数据 */
   const instanceMetaMap = useMemo(() => {
@@ -147,9 +150,36 @@ export function CockpitCrossLayout({
 
   return (
     <div className={cn('flex h-full', className)}>
+      {/* ─── 移动端左轨切换按钮 ─── */}
+      <button
+        type="button"
+        onClick={() => setMobileRailOpen((v) => !v)}
+        className={cn(
+          'absolute left-2 top-2 z-30 rounded-md p-2 md:hidden',
+          'bg-card border shadow-sm hover:bg-muted',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+        )}
+        aria-label={mobileRailOpen ? '关闭业务域导航' : '打开业务域导航'}
+      >
+        {mobileRailOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+      </button>
+
+      {/* ─── 移动端左轨遮罩 ─── */}
+      {mobileRailOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-black/20 md:hidden"
+          onClick={() => setMobileRailOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* ───── 左轨：业务域 Rail ───── */}
       <aside
-        className="flex w-48 shrink-0 flex-col border-r bg-card/50"
+        className={cn(
+          'flex w-48 shrink-0 flex-col border-r bg-card/50',
+          'hidden md:flex',
+          mobileRailOpen && 'fixed inset-y-0 left-0 z-20 flex md:hidden w-56',
+        )}
         style={{ paddingTop: COCKPIT_LAYOUT.SECTION_GAP }}
       >
         {/* 矩阵总览切换 */}
@@ -282,7 +312,7 @@ export function CockpitCrossLayout({
               {/* 网格型 Widget */}
               {gridInstances.length > 0 && (
                 <div
-                  className="grid grid-cols-1 gap-4 lg:grid-cols-2"
+                  className="grid grid-cols-1 gap-4 sm:grid-cols-2"
                   style={{ gap: COCKPIT_LAYOUT.WIDGET_GAP }}
                 >
                   {gridInstances.map((instance) => (

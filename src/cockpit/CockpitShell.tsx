@@ -421,7 +421,7 @@ function KpiSummaryBar(): React.JSX.Element {
   const engineStatusLabel = isRunning ? '运行中' : '待机'
 
   return (
-    <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 px-4 py-3 border-b border-border bg-card/50">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 px-4 py-3 border-b border-border bg-card/50">
       <div className="flex flex-col items-center gap-1">
         <span className="text-xs text-muted-foreground">总资产</span>
         <span className="text-lg font-bold">{totalValue != null ? formatCurrency(totalValue) : '--'}</span>

@@ -49,6 +49,7 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
       loadingLabel="加载自选行情…"
       emptyTitle="暂无自选标的"
       emptyDescription="当前观察池为空，添加股票后将自动展示行情"
+      className="widget-card-elevated"
       skeleton={
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[1, 2, 3, 4].map((i) => (

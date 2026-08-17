@@ -93,7 +93,7 @@ export default function ModelCompareWidget({ config, data }: ModelCompareWidgetP
           </div>
         </div>
       }
-      className="h-full flex flex-col"
+      className="h-full flex flex-col widget-card-elevated"
     >
       <div className="flex-1 overflow-auto space-y-4">
         {/* 顶部模型指标卡 */}

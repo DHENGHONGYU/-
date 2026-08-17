@@ -69,7 +69,7 @@ const HotSectorWidget = memo(function HotSectorWidget({ config, data }: HotSecto
       visualState={visualState}
       emptyTitle={UI_TEXT.analysis.hotSector.noData}
       emptyDescription="当前未获取到热门板块评分与跟进建议"
-      className="h-full flex flex-col"
+      className="h-full flex flex-col widget-card-elevated"
     >
       <div className="flex-1 overflow-auto space-y-4">
         <div className="space-y-3">

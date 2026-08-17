@@ -64,6 +64,7 @@ const PositionControlWidget = memo(function PositionControlWidget({ config }: Po
       error={error}
       onRetry={() => void refresh()}
       loadingLabel="加载仓位数据中…"
+      className="widget-card-elevated"
       skeleton={
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

@@ -67,6 +67,7 @@ const SignalMonitorWidget = memo(function SignalMonitorWidget({ config }: Signal
       onRetry={() => void refresh()}
       emptyTitle="暂无交易信号"
       emptyDescription="添加股票到观察池后将自动生成信号"
+      className="widget-card-elevated"
       skeleton={(
         <div className="space-y-3">
           {[1, 2, 3, 4, 5].map((i) => (

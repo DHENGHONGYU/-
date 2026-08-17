@@ -73,7 +73,7 @@ export default function ValuePitWidget({ config, data }: ValuePitWidgetProps): R
       visualState={visualState}
       emptyTitle={UI_TEXT.analysis.valuePit.noData}
       emptyDescription="当前未获取到价值洼地候选与建仓信号"
-      className="h-full flex flex-col"
+      className="h-full flex flex-col widget-card-elevated"
     >
       <div className="flex-1 overflow-auto space-y-4">
         <div className="space-y-3">
