@@ -94,7 +94,7 @@ function ensureStore(
  * stocks / v6Scores / intelligentScores / industryScores / orders / watchlists /
  * signals / researchLogs / dailyQuotes / rotationScores / sectorScores / scoreDocs /
  * strategySnapshots / localDocs / news / newsStockMap / sentimentCache /
- * newsBookmarks / hotSectorScores / valuePitScores / executionLogs / missingReports /
+ * hotSectorScores / valuePitScores / executionLogs / missingReports /
  * executionPlans / portfolios / tradeReviews / financialReports / schemaMigrations
  *
  * 增量 store（由 migration 创建，不在本函数处理）：
@@ -298,12 +298,6 @@ export function createSchema(
     ],
   })
 
-  // ── newsBookmarks：资讯收藏（v13 新增） ──
-  ensureStore(db, STORE_NAME.newsBookmarks, logger, {
-    storeOptions: { keyPath: 'id' },
-    indexes: [{ name: 'by-bookmarked-at', keyPath: 'bookmarkedAt' }],
-  })
-
   // ── hotSectorScores：双策略评分-热门板块（v14 新增） ──
   ensureStore(db, STORE_NAME.hotSectorScores, logger, {
     storeOptions: { keyPath: 'symbol' },
@@ -488,7 +482,7 @@ export function createSchema(
     indexes: [
       { name: 'by-timestamp', keyPath: 'timestamp' },
       { name: 'by-hash', keyPath: 'fileHash' },
-      { name: 'by-fileName', keyPath: 'fileName' },
+      { name: 'by-file-name', keyPath: 'fileName' },
     ],
   })
 
@@ -565,7 +559,7 @@ export function createSchema(
     logLevel: 'info',
     indexes: [
       { name: 'by-symbol', keyPath: 'symbol' },
-      { name: 'by-generatedAt', keyPath: 'generatedAt' },
+      { name: 'by-generated-at', keyPath: 'generatedAt' },
       { name: 'by-template', keyPath: 'templateId' },
     ],
   })
@@ -586,7 +580,7 @@ export function createSchema(
     logLevel: 'info',
     indexes: [
       { name: 'by-symbol', keyPath: 'symbol' },
-      { name: 'by-createdAt', keyPath: 'createdAt' },
+      { name: 'by-created-at', keyPath: 'createdAt' },
     ],
   })
 

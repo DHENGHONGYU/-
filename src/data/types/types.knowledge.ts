@@ -40,6 +40,8 @@ export interface NewsArticle {
   relatedStocks: string[]
   keywords: string[]
   hash: string
+  /** P2 合并: 收藏时间戳（原 newsBookmarks Store 字段，合并到 news） */
+  bookmarkedAt?: number
 }
 
 /** 股票-资讯多对多关联 */
@@ -62,10 +64,4 @@ export interface SentimentCache {
   method: 'rule' | 'llm' | 'hybrid'
   analyzedAt: number
   llmModel?: string
-}
-
-/** 资讯收藏 */
-export interface NewsBookmark {
-  id: string
-  bookmarkedAt: number
 }

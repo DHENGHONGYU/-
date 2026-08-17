@@ -454,17 +454,6 @@ export function makeCustomAgent(overrides: Record<string, unknown> = {}) {
   }
 }
 
-export function makeNewsBookmark(overrides: Record<string, unknown> = {}) {
-  return {
-    id: 'bm-001',
-    newsId: 'news-001',
-    symbol: '600519',
-    note: '重要新闻',
-    createdAt: 1700000000000,
-    ...overrides,
-  }
-}
-
 export function makeCollectConfig(overrides: Record<string, unknown> = {}) {
   return {
     id: 'cfg-001',

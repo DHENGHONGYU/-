@@ -93,7 +93,6 @@ import {
   tradeReviewStore,
   watchlistStore,
   customAgentStore,
-  newsBookmarkStore,
   collectConfigStore,
   traceRecordStore,
   workflowDefStore,
@@ -1537,7 +1536,6 @@ describe('dataLayer', () => {
       expect(dataLayer.tradeReviews).toBe(tradeReviewStore)
       expect(dataLayer.watchlists).toBe(watchlistStore)
       expect(dataLayer.customAgents).toBe(customAgentStore)
-      expect(dataLayer.newsBookmarks).toBe(newsBookmarkStore)
       expect(dataLayer.collectConfig).toBe(collectConfigStore)
       expect(dataLayer.traceRecords).toBe(traceRecordStore)
       expect(dataLayer.workflowDefs).toBe(workflowDefStore)
@@ -1547,8 +1545,8 @@ describe('dataLayer', () => {
       expect(dataLayer.manager).toBe(dataManager)
     })
 
-    it('共计 47 个属性', () => {
-      expect(Object.keys(dataLayer)).toHaveLength(47)
+    it('共计 46 个属性', () => {
+      expect(Object.keys(dataLayer)).toHaveLength(46)
     })
   })
 

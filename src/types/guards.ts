@@ -18,7 +18,6 @@ import type {
   IntelligentScore,
   LocalDoc,
   NewsArticle,
-  NewsBookmark,
   NewsStockMap,
   Order,
   OrderDirection,
@@ -246,11 +245,12 @@ export function isNewsArticle(value: unknown): value is NewsArticle {
 }
 
 /**
- * 判定是否为资讯收藏对象
+ * 判定是否为资讯收藏对象（已废弃：P2 合并到 NewsArticle.bookmarkedAt）
+ * @deprecated
  */
-export function isNewsBookmark(value: unknown): value is NewsBookmark {
+export function isNewsBookmark(value: unknown): value is { id: string; bookmarkedAt: number } {
   if (!isObject(value)) return false
-  const candidate = value as Partial<NewsBookmark>
+  const candidate = value as { id: string; bookmarkedAt: number }
   return isNonEmptyString(candidate.id) && typeof candidate.bookmarkedAt === 'number'
 }
 

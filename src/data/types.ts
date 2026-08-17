@@ -158,7 +158,6 @@ export type {
   NewsArticle,
   NewsStockMap,
   SentimentCache,
-  NewsBookmark,
 } from './types/types.knowledge'
 
 // ============================================================

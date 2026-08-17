@@ -265,7 +265,7 @@ export const fileImportRecordStore = {
   },
 
   async listByFileName(fileName: string): Promise<FileImportRecordEntry[]> {
-    return queryByIndex<FileImportRecordEntry>(STORE_NAME.fileImportRecords, 'by-fileName', fileName)
+    return queryByIndex<FileImportRecordEntry>(STORE_NAME.fileImportRecords, 'by-file-name', fileName)
   },
 }
 
@@ -331,7 +331,7 @@ export interface GeneratedReport {
   content: string
   /** 导出格式 */
   format: 'html' | 'markdown' | 'docx'
-  /** 生成时间（ISO 字符串，索引 by-generatedAt） */
+  /** 生成时间（ISO 字符串，索引 by-generated-at） */
   generatedAt: string
   /** 来源模块 */
   sourceModule: string
@@ -422,7 +422,7 @@ export interface ScreeningRunResultRecord {
   elapsedMs: number
   /** 模板名（可选，若由模板触发） */
   templateName?: string
-  /** 创建时间（ISO 字符串，索引 by-createdAt） */
+  /** 创建时间（ISO 字符串，索引 by-created-at） */
   createdAt: string
   /** 来源模块 */
   sourceModule: string

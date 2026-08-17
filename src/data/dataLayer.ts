@@ -60,7 +60,6 @@ export {
   screeningResultStore, // v34 筛选结果集持久化
 } from './dataLayerContentStores'
 export {
-  newsBookmarkStore, // v13 资讯收藏
   collectConfigStore, // v25 采集配置
   traceRecordStore, // v27 采集链路追踪
   workflowDefStore, // v28 工作流定义
@@ -116,7 +115,6 @@ import {
   screeningResultStore,
 } from './dataLayerContentStores'
 import {
-  newsBookmarkStore,
   collectConfigStore,
   traceRecordStore,
   workflowDefStore,
@@ -181,8 +179,6 @@ export const dataLayer = {
   watchlists: watchlistStore,
   // 阶段 B-1：用户自定义智能体
   customAgents: customAgentStore,
-  // v13 资讯收藏
-  newsBookmarks: newsBookmarkStore,
   // v25 采集配置
   collectConfig: collectConfigStore,
   // v27 采集链路追踪

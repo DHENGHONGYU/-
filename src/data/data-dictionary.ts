@@ -12,6 +12,98 @@
  *
  * @doc [V9-DOC-DATA-001, V9-DOC-DATA-047]
  * @created 2026-08-17 — P0-1 修复
+ *
+ * ============================================================
+ * P1 命名规范（2026-08-17 修复）
+ * ============================================================
+ *
+ * 1. 时间字段命名规范（P1-R2）
+ *    - createdAt / updatedAt：记录创建/更新时间（用于审计追踪）
+ *    - 禁止使用裸 timestamp 作为字段名（语义模糊）
+ *    - 业务时间字段使用动词过去分词 + At 格式：
+ *      generatedAt, publishedAt, bookmarkedAt, detectedAt, startedAt,
+ *      calculatedAt, analyzedAt, appliedAt, addedAt, reportDate
+ *    - 索引命名统一使用 kebab-case：by-created-at, by-updated-at
+ *
+ * 2. id 字段类型规范（P1-R3）
+ *    - 新 Store 统一使用 string 类型 id（nanoid 生成）
+ *    - 禁止新增 autoIncrement: true（number 类型 id）
+ *    - 现有 autoIncrement Store（intelligentScores, industryScores,
+ *      researchLogs, executionLogs, missingReports）标记为 @deprecated-id
+ *    - 特殊 keyPath（symbol, docId, reportId, traceId, runId, scheduleId）例外
+ *
+ * 3. version 字段语义（P1-R4）
+ *    - scoreDocs.version：评分文档版本号（v1, v2, ...）
+ *    - strategySnapshots.version：策略快照版本号（唯一索引）
+ *    - schemaMigrations.version：DB Schema 迁移版本号
+ *    - 各 Store 使用独立版本号，互不冲突
+ *
+ * 4. source 字段语义（P1-R5）
+ *    - news.source：资讯来源 URL
+ *    - profileItems.source：数据采集来源（akshare / ifind / tushare）
+ *    - traceRecords.source：采集链路来源
+ *    - 同名字段不同语义是合法的，需在字段描述中明确说明
+ *
+ * 5. 索引命名规范（P1-N1）
+ *    - 统一使用 kebab-case：by-symbol, by-created-at, by-symbol-version
+ *    - 格式：by-{field-name}（多字段用 - 连接）
+ *    - 已修复 3 处 camelCase 违规（v34）：by-fileName→by-file-name,
+ *      by-generatedAt→by-generated-at, by-createdAt→by-created-at
+ *
+ * 6. Store 命名规范（P1-N3）
+ *    - 物理 Store 名：snake_case（如 daily_quotes）
+ *    - JS 常量名：camelCase（如 dailyQuotes）
+ *    - 索引名：kebab-case（如 by-symbol）
+ *    - 通过 STORE_NAME 枚举统一映射，禁止跨层直接使用物理名
+ *
+ * ============================================================
+ * P2 Store 合并方案（2026-08-17）
+ * ============================================================
+ *
+ * 当前现状：50 个 Store（27 基线 + 23 增量），部分可合并以降低维护复杂度。
+ *
+ * 【合并候选 1】newsBookmarks → news（低风险）✅ 已完成 2026-08-17
+ *   - newsBookmarks 仅存 { id, bookmarkedAt }，本质是 News 的收藏标记
+ *   - 方案：News 类型新增 bookmarkedAt?: number 字段，删除 newsBookmarks Store
+ *   - 影响范围：8 文件（config/dbSchema/dataLayer/dataLayerInternalStores/
+ *     indexedDBProvider/storeChannels/dataDictionary）
+ *   - 状态：@completed 已合并，newsBookmarks Store 已删除
+ *
+ * 【合并候选 2】workflowTriggers → workflowSchedules（中风险）
+ *   - workflowTriggers 与 workflowSchedules 均为调度配置，字段高度重叠
+ *   - 方案：WorkflowSchedule 新增 triggerType/triggerConfig 字段
+ *   - 影响范围：13 文件（含 databridge/cascadeConfig/MCP server）
+ *   - 状态：@deferred 待专项迁移 Sprint
+ *
+ * 【合并候选 3】executionLogs → executionPlans（中风险）
+ *   - executionLogs 是 executionPlans 的执行日志子项
+ *   - 方案：ExecutionPlan 新增 logs?: ExecutionLog[] 字段
+ *   - 影响范围：16 文件（含 databridge/cascadeConfig/rolePermissionMapper/
+ *     MCP server/mcpAuditLogger）
+ *   - 状态：@deferred 待专项迁移 Sprint
+ *
+ * 【合并候选 4】scoreEvidence → scoreDocs（中风险）
+ *   - scoreEvidence 是 scoreDocs 的评分证据附件
+ *   - 方案：ScoreDoc 新增 evidence?: ScoreEvidence[] 字段
+ *   - 影响范围：待评估
+ *   - 状态：@deferred 待评估
+ *
+ * 【合并候选 5】collectionHistory → collectConfig（中风险）
+ *   - collectionHistory 是 collectConfig 的采集历史记录
+ *   - 方案：CollectConfig 新增 history?: CollectionRecord[] 字段
+ *   - 影响范围：待评估
+ *   - 状态：@deferred 待评估
+ *
+ * 【不推荐合并】
+ *   - hotSectorScores + valuePitScores：keyPath 不同（date vs symbol）
+ *   - rotationScores + sectorScores：keyPath 不同（id vs date）
+ *   - 跨域合并：语义差异大，强行合并会引入冗余 type 字段
+ *
+ * 执行原则：
+ *   1. 优先合并 1:1 附属关系（如 newsBookmarks 附属 news）
+ *   2. 禁止合并 keyPath 不同的 Store
+ *   3. 合并后需全量数据迁移 + 消费者更新 + 测试验证
+ *   4. 每次合并独立提交，不可批量合并
  */
 
 import { STORE_NAME } from '@/config/dbConfig'
@@ -756,26 +848,6 @@ export const DATA_DICTIONARY: Record<StoreName, StoreDef> = {
     dependsOn: [],
   },
 
-  [STORE_NAME.newsBookmarks]: {
-    name: STORE_NAME.newsBookmarks,
-    keyPath: 'id',
-    autoIncrement: false,
-    introducedAt: 'v13',
-    domain: '资讯',
-    description: '资讯收藏',
-    fields: [
-      { name: 'id', type: 'string', required: true, description: '收藏 ID' },
-      { name: 'newsId', type: 'string', required: false, description: '新闻 ID', foreignKey: { store: STORE_NAME.news, field: 'id' } },
-      { name: 'bookmarkedAt', type: 'number', required: false, description: '收藏时间戳' },
-    ],
-    indexes: [
-      { name: 'by-bookmarked-at', keyPath: 'bookmarkedAt', unique: false, description: '按收藏时间排序' },
-    ],
-    dependsOn: [
-      { store: STORE_NAME.news, field: 'newsId', description: 'N:1 收藏↔新闻' },
-    ],
-  },
-
   // ── 资料域（八域资料体系 ADR-010） ──
   [STORE_NAME.profileItems]: {
     name: STORE_NAME.profileItems,
@@ -969,7 +1041,7 @@ export const DATA_DICTIONARY: Record<StoreName, StoreDef> = {
     indexes: [
       { name: 'by-timestamp', keyPath: 'timestamp', unique: false, description: '按时间戳排序' },
       { name: 'by-hash', keyPath: 'fileHash', unique: false, description: '按文件哈希查询' },
-      { name: 'by-fileName', keyPath: 'fileName', unique: false, description: '按文件名查询' },
+      { name: 'by-file-name', keyPath: 'fileName', unique: false, description: '按文件名查询' },
     ],
     dependsOn: [],
   },
@@ -1150,7 +1222,7 @@ export const DATA_DICTIONARY: Record<StoreName, StoreDef> = {
     ],
     indexes: [
       { name: 'by-symbol', keyPath: 'symbol', unique: false, description: '按股票代码查询' },
-      { name: 'by-generatedAt', keyPath: 'generatedAt', unique: false, description: '按生成时间排序' },
+      { name: 'by-generated-at', keyPath: 'generatedAt', unique: false, description: '按生成时间排序' },
       { name: 'by-template', keyPath: 'templateId', unique: false, description: '按模板 ID 查询' },
     ],
     dependsOn: [
@@ -1195,7 +1267,7 @@ export const DATA_DICTIONARY: Record<StoreName, StoreDef> = {
     ],
     indexes: [
       { name: 'by-symbol', keyPath: 'symbol', unique: false, description: '按股票代码查询' },
-      { name: 'by-createdAt', keyPath: 'createdAt', unique: false, description: '按创建时间排序' },
+      { name: 'by-created-at', keyPath: 'createdAt', unique: false, description: '按创建时间排序' },
     ],
     dependsOn: [
       { store: STORE_NAME.stocks, field: 'symbol', description: 'N:1 筛选结果↔股票' },

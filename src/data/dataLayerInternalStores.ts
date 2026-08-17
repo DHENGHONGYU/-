@@ -1,8 +1,7 @@
 /**
  * @fileoverview 内部/新增 Store 统一入口
  *
- * 包含 7 个在 `audit-db-references.ts` 中识别为未暴露的 Store：
- * - newsBookmarkStore: 资讯收藏
+ * 包含 6 个在 `audit-db-references.ts` 中识别为未暴露的 Store：
  * - collectConfigStore: 采集配置模板
  * - traceRecordStore: 采集链路追踪
  * - workflowDefStore: 工作流定义
@@ -16,7 +15,6 @@
 import { STORE_NAME } from '@/config/dbConfig'
 import type {
   CollectionTraceSpan,
-  NewsBookmark,
   PersistedWizardConfig,
   WorkflowDef,
   WorkflowRun,
@@ -25,25 +23,6 @@ import type {
 } from './types'
 import type { DataLayerResult } from './types'
 import { sendWriteEnvelope, queryGet, queryList, queryByIndex } from './dataLayerHelpers'
-
-// ── 资讯收藏（v13 新增） ──
-export const newsBookmarkStore = {
-  async save(bookmark: NewsBookmark): Promise<DataLayerResult<void>> {
-    return sendWriteEnvelope('newsArticleBookmarked', bookmark, 'news')
-  },
-
-  async get(id: string): Promise<NewsBookmark | undefined> {
-    return queryGet<NewsBookmark>(STORE_NAME.newsBookmarks, id)
-  },
-
-  async list(): Promise<NewsBookmark[]> {
-    return queryList<NewsBookmark>(STORE_NAME.newsBookmarks)
-  },
-
-  async listByBookmarkedAt(since: number): Promise<NewsBookmark[]> {
-    return queryByIndex<NewsBookmark>(STORE_NAME.newsBookmarks, 'by-bookmarked-at', since)
-  },
-}
 
 // ── 采集配置模板（v25 新增） ──
 export const collectConfigStore = {
