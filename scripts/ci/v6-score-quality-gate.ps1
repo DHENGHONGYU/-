@@ -1,16 +1,16 @@
-# FinSightV9 V6 评分引擎 CI 质量门禁
-# P3: 评分质量门禁嵌入 CI 流水线
-# 对标 Langfuse 门禁方案：Golden Dataset 回归 → 领域评估器 → PASS/FAIL
+# FinSightV9 V6 Score Engine CI Quality Gate
+# P3: Score quality gate embedded in CI pipeline
+# Reference: Langfuse gate scheme - Golden Dataset regression -> Domain evaluator -> PASS/FAIL
 #
-# 使用方式：
+# Usage:
 #   powershell -ExecutionPolicy Bypass -File scripts/ci/v6-score-quality-gate.ps1
 #   npm run audit:score-quality
 #
-# 门禁标准：
-#   - Golden Dataset 回归通过率 >= 85%
-#   - 评分范围 [0, 5] 合规率 = 100%
-#   - 无硬失败校验错误
-#   - 数据覆盖率 >= 70%
+# Gate standards:
+#   - Golden Dataset regression pass rate >= 85%
+#   - Score range [0, 5] compliance = 100%
+#   - No hard-failure validation errors
+#   - Data coverage >= 70%
 #
 # @created 2026-08-17 P3
 # @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-066]
@@ -22,62 +22,100 @@ param(
     [string]$ReportPath = 'docs/reports/ci/score-quality-gate-report.json'
 )
 
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Continue'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = Resolve-Path "$ScriptDir\..\.."
 
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  V6 评分引擎 CI 质量门禁" -ForegroundColor Cyan
-Write-Host "  模式: $Mode" -ForegroundColor Cyan
+Write-Host "  V6 Score Engine CI Quality Gate" -ForegroundColor Cyan
+Write-Host "  Mode: $Mode" -ForegroundColor Cyan
 Write-Host "  $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 
 # ============================================================
-# 1. 运行 Golden Dataset 回归测试
+# 1. Run Golden Dataset regression test
 # ============================================================
-Write-Host "`n[1/4] 运行 Golden Dataset 回归测试..." -ForegroundColor Yellow
+Write-Host "`n[1/4] Running Golden Dataset regression test..." -ForegroundColor Yellow
 
-$testResult = & npx vitest run tests/golden-dataset/scoring-regression.test.ts --reporter=json 2>&1
-$testExitCode = $LASTEXITCODE
+Push-Location $ProjectRoot
+try {
+    npx vitest run tests/golden-dataset/scoring-regression.test.ts --reporter=verbose 2>&1 | Out-Null
+    $testExitCode = $LASTEXITCODE
+} finally {
+    Pop-Location
+}
 
 if ($testExitCode -ne 0) {
-    Write-Host "  [FAIL] Golden Dataset 回归测试未通过 (exit code: $testExitCode)" -ForegroundColor Red
+    Write-Host "  [FAIL] Golden Dataset regression test failed (exit code: $testExitCode)" -ForegroundColor Red
+    $goldenPassed = $false
     if ($Mode -eq 'strict') {
         exit 1
     }
 } else {
-    Write-Host "  [PASS] Golden Dataset 回归测试通过" -ForegroundColor Green
+    Write-Host "  [PASS] Golden Dataset regression test passed" -ForegroundColor Green
+    $goldenPassed = $true
 }
 
 # ============================================================
-# 2. 运行 tsc:prod 类型检查
+# 2. Run tsc:prod type check
 # ============================================================
-Write-Host "`n[2/4] 运行 tsc:prod 类型检查..." -ForegroundColor Yellow
+Write-Host "`n[2/4] Running tsc:prod type check..." -ForegroundColor Yellow
 
-$tscResult = & npx tsc --noEmit -p tsconfig.prod.json 2>&1
-$tscExitCode = $LASTEXITCODE
+Push-Location $ProjectRoot
+try {
+    npx tsc --noEmit -p tsconfig.prod.json 2>&1 | Out-Null
+    $tscExitCode = $LASTEXITCODE
+} finally {
+    Pop-Location
+}
 
 if ($tscExitCode -ne 0) {
-    $tscErrors = ($tscResult | Select-String -Pattern 'error TS\d+' | Measure-Object).Count
-    Write-Host "  [FAIL] tsc:prod 发现 $tscErrors 个类型错误" -ForegroundColor Red
+    Write-Host "  [FAIL] tsc:prod type check failed (exit code: $tscExitCode)" -ForegroundColor Red
+    $tscPassed = $false
     if ($Mode -eq 'strict' -or $Mode -eq 'normal') {
         exit 1
     }
 } else {
-    Write-Host "  [PASS] tsc:prod 类型检查通过" -ForegroundColor Green
+    Write-Host "  [PASS] tsc:prod type check passed" -ForegroundColor Green
+    $tscPassed = $true
 }
 
 # ============================================================
-# 3. 运行审计脚本
+# 3. Run formula verifier tests
 # ============================================================
-Write-Host "`n[3/4] 运行评分引擎审计..." -ForegroundColor Yellow
+Write-Host "`n[3/5] Running formula verifier tests..." -ForegroundColor Yellow
 
-# 检查评分引擎核心文件是否存在
+Push-Location $ProjectRoot
+try {
+    npx vitest run src/services/scoring/v6-engine/calculators/formulaVerifier.test.ts --reporter=verbose 2>&1 | Out-Null
+    $formulaExitCode = $LASTEXITCODE
+} finally {
+    Pop-Location
+}
+
+if ($formulaExitCode -ne 0) {
+    Write-Host "  [FAIL] Formula verifier tests failed (exit code: $formulaExitCode)" -ForegroundColor Red
+    $formulaPassed = $false
+    if ($Mode -eq 'strict') {
+        exit 1
+    }
+} else {
+    Write-Host "  [PASS] Formula verifier tests passed" -ForegroundColor Green
+    $formulaPassed = $true
+}
+
+# ============================================================
+# 4. Check required files
+# ============================================================
+Write-Host "`n[4/5] Checking score engine core files..." -ForegroundColor Yellow
+
 $requiredFiles = @(
     'src/services/scoring/v6-engine/engine.ts',
     'src/services/scoring/v6-engine/enhancer.ts',
+    'src/services/scoring/v6-engine/crossValidator.ts',
     'src/services/scoring/v6-engine/calculators/l3/l3v-valuation.ts',
     'src/services/scoring/v6-engine/calculators/l3/ddm.ts',
+    'src/services/scoring/v6-engine/calculators/formulaVerifier.ts',
     'tests/golden-dataset/scores.json',
     'tests/golden-dataset/scoring-regression.test.ts'
 )
@@ -91,18 +129,20 @@ foreach ($file in $requiredFiles) {
 }
 
 if ($missingFiles.Count -gt 0) {
-    Write-Host "  [FAIL] 缺少必需文件: $($missingFiles -join ', ')" -ForegroundColor Red
+    Write-Host "  [FAIL] Missing required files: $($missingFiles -join ', ')" -ForegroundColor Red
+    $filesPassed = $false
     if ($Mode -eq 'strict') {
         exit 1
     }
 } else {
-    Write-Host "  [PASS] 所有评分引擎核心文件完整" -ForegroundColor Green
+    Write-Host "  [PASS] All score engine core files present" -ForegroundColor Green
+    $filesPassed = $true
 }
 
 # ============================================================
-# 4. 生成门禁报告
+# 5. Generate gate report
 # ============================================================
-Write-Host "`n[4/4] 生成门禁报告..." -ForegroundColor Yellow
+Write-Host "`n[5/5] Generating gate report..." -ForegroundColor Yellow
 
 $reportDir = Split-Path -Parent (Join-Path $ProjectRoot $ReportPath)
 if (-not (Test-Path $reportDir)) {
@@ -114,20 +154,24 @@ $report = @{
     mode = $Mode
     checks = @{
         goldenDataset = @{
-            passed = ($testExitCode -eq 0)
+            passed = $goldenPassed
             exitCode = $testExitCode
         }
         typeCheck = @{
-            passed = ($tscExitCode -eq 0)
+            passed = $tscPassed
             exitCode = $tscExitCode
         }
+        formulaVerifier = @{
+            passed = $formulaPassed
+            exitCode = $formulaExitCode
+        }
         fileIntegrity = @{
-            passed = ($missingFiles.Count -eq 0)
+            passed = $filesPassed
             missingFiles = $missingFiles
         }
     }
     overall = @{
-        passed = ($testExitCode -eq 0 -and $tscExitCode -eq 0 -and $missingFiles.Count -eq 0)
+        passed = ($goldenPassed -and $tscPassed -and $formulaPassed -and $filesPassed)
     }
 }
 
@@ -135,16 +179,16 @@ $reportJson = $report | ConvertTo-Json -Depth 4
 $reportFullPath = Join-Path $ProjectRoot $ReportPath
 $reportJson | Out-File -FilePath $reportFullPath -Encoding UTF8
 
-Write-Host "  报告已保存至: $ReportPath" -ForegroundColor Gray
+Write-Host "  Report saved to: $ReportPath" -ForegroundColor Gray
 
 if ($report.overall.passed) {
     Write-Host "`n========================================" -ForegroundColor Green
-    Write-Host "  [PASS] CI 质量门禁全部通过" -ForegroundColor Green
+    Write-Host "  [PASS] CI Quality Gate - All checks passed" -ForegroundColor Green
     Write-Host "========================================" -ForegroundColor Green
     exit 0
 } else {
     Write-Host "`n========================================" -ForegroundColor Red
-    Write-Host "  [FAIL] CI 质量门禁未通过" -ForegroundColor Red
+    Write-Host "  [FAIL] CI Quality Gate - Some checks failed" -ForegroundColor Red
     Write-Host "========================================" -ForegroundColor Red
     exit 1
 }

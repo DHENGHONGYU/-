@@ -325,7 +325,7 @@ export default defineConfig({
           'charts': ['recharts', 'lightweight-charts'],
           'pdf': ['jspdf', 'jspdf-autotable'],
           'excel': ['xlsx'],
-          'purify': ['dompurify'],
+          // V12: dompurify 僵尸 chunk 已删除（项目使用自定义 xssSanitizer.ts，零依赖）
           'html2canvas': ['html2canvas'],
         },
       },

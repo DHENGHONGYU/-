@@ -1,13 +1,13 @@
 === 组件复用审计报告 ===
-生成时间: 2026-08-17T14:22:48.148Z
+生成时间: 2026-08-17T16:49:34.171Z
 版本: v0.9.11 P2-CMP-002
 
 
-总计组件: 248
+总计组件: 250
 
 ✅ 可复用组件 (≥2次): 50
 ⚠️  单次使用组件: 65
-❌ 未使用组件: 133
+❌ 未使用组件: 135
 
 --- 单次使用组件 (建议审查) ---
   Breadcrumb (197行, src\pages\output\TradeReviewPage.tsx)
@@ -20,8 +20,8 @@
   IndustrySkillSnapshotCard (44行, src\pages\analysis\IndustryScorePage.tsx)
   IntelligentScoreBasisCard (300行, src\pages\analysis\IntelligentScorePage.tsx)
   AreaChart (182行, src\components\organisms\analysis\score\MultiPeriodTrendChart.tsx)
-  ChipDistributionChart (600行, src\pages\output\ChipStrategyReviewPage.tsx)
-  GaugeChart (211行, src\pages\analysis\ReviewLaunchPage.tsx)
+  ChipDistributionChart (601行, src\pages\output\ChipStrategyReviewPage.tsx)
+  GaugeChart (219行, src\pages\analysis\ReviewLaunchPage.tsx)
   IndustryHeatmap (238行, src\pages\analysis\IndustryDashboardPage.tsx)
   DataQualityIndicator (110行, src\pages\analysis\IndustryDashboardPage.tsx)
   OnboardingGuide (112行, src\App.tsx)
@@ -46,9 +46,10 @@
   Card.test (127行) - src\components\atoms\Card.test.tsx
   Checkbox.test (102行) - src\components\atoms\Checkbox.test.tsx
   ComplianceDisclaimer.test (36行) - src\components\atoms\ComplianceDisclaimer.test.tsx
-  Index (94行) - src\components\atoms\index.ts
+  Index (96行) - src\components\atoms\index.ts
   Input.test (101行) - src\components\atoms\Input.test.tsx
   Label.test (96行) - src\components\atoms\Label.test.tsx
+  LazyImage (101行) - src\components\atoms\LazyImage.tsx
   Progress.test (103行) - src\components\atoms\Progress.test.tsx
   Radio.test (79行) - src\components\atoms\Radio.test.tsx
   Select.test (54行) - src\components\atoms\Select.test.tsx
@@ -61,12 +62,11 @@
   ScoreSnapshot (37行) - src\components\cabin\ScoreSnapshot.tsx
   ScoreSummary (43行) - src\components\cabin\ScoreSummary.tsx
   CandlestickChart.config (163行) - src\components\chart\candlestickChart.config.ts
-  CandlestickChart.types (76行) - src\components\chart\candlestickChart.types.ts
 
 --- 大组件分析 (>300行) ---
   ✅ CandlestickChart (436行, 使用2次)
   ❌ CandlestickChart.utils (560行, 使用0次)
-  ⚠️ ChipDistributionChart (600行, 使用1次)
+  ⚠️ ChipDistributionChart (601行, 使用1次)
   ❌ Engine (393行, 使用0次)
   ❌ IndustryV4Panel.test (465行, 使用0次)
   ❌ TrendLineChart.test (340行, 使用0次)
@@ -74,7 +74,7 @@
   ❌ MultiPaneChart (497行, 使用0次)
   ❌ MultiPaneChart.utils (577行, 使用0次)
   ❌ ExtremeStressTest.test (416行, 使用0次)
-  ✅ ErrorState (321行, 使用18次)
+  ✅ ErrorState (321行, 使用23次)
   ⚠️ MultiFactorFilterPanel (318行, 使用1次)
   ⚠️ SignalQualityTrendChart (302行, 使用1次)
   ❌ ApiTestDialog.test (458行, 使用0次)
@@ -99,8 +99,8 @@
 2. 大组件拆分建议:
    - 以下组件过大且使用次数少，建议拆分:
      * IntelligentScoreBasisCard (300行) - src\components\cabin\IntelligentScoreBasisCard.tsx
-     * ChipDistributionChart (600行) - src\components\chart\ChipDistributionChart.tsx
-     * GaugeChart (211行) - src\components\chart\GaugeChart.tsx
+     * ChipDistributionChart (601行) - src\components\chart\ChipDistributionChart.tsx
+     * GaugeChart (219行) - src\components\chart\GaugeChart.tsx
      * IndustryHeatmap (238行) - src\components\chart\industry\IndustryHeatmap.tsx
      * IntelligentScoreExplanation (219行) - src\components\organisms\analysis\score\IntelligentScoreExplanation.tsx
      * ScoreFactorWaterfall (274行) - src\components\organisms\analysis\score\ScoreFactorWaterfall.tsx

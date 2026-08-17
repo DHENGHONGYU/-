@@ -6,6 +6,10 @@
     <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#10b981" />
+    <!-- V12: 预连接到数据 API 源，减少 DNS/TLS 握手延迟 -->
+    <link rel="preconnect" href="https://qt.gtimg.cn" crossorigin />
+    <link rel="preconnect" href="https://push2.eastmoney.com" crossorigin />
+    <link rel="preconnect" href="https://push2his.eastmoney.com" crossorigin />
     <title>智能投研复盘系统 V9</title>
     <!--
       P1-2 安全合规：原两段内联脚本已外置为 public/theme-boot.js
