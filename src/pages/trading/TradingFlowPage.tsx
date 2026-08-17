@@ -47,7 +47,7 @@ export default function TradingFlowPage(): React.JSX.Element {
       />
 
       {/* 四区域布局 */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         {/* 左侧：交易信号 */}
         <div className="lg:col-span-2">
           <TradingSignalPanel

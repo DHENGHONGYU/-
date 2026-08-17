@@ -142,7 +142,7 @@ const PortfolioPage = memo(() => {
 
         {/* 组合 KPI Hero 卡 */}
         {portfolio && (
-          <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 transition-opacity duration-300">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 transition-opacity duration-300">
             <Card>
               <CardContent className="p-3 text-center">
                 <p className="text-xs text-muted-foreground">总资产</p>

@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
-import { Menu, Target, Sun, Moon, Monitor, type LucideIcon } from 'lucide-react'
+import { Menu, Target, Sun, Moon, Monitor, Search, type LucideIcon } from 'lucide-react'
 import { CABINS, PANEL_ITEMS } from '@/config/sidebarConfig'
 import { cn } from '@/lib/utils'
 import { PORTAL_TOKENS } from '@/constants/theme.tokens'
@@ -8,6 +8,7 @@ import { useThemeStore, type ThemeMode } from '@/store/themeStore'
 import { PageSkeleton } from '@/components/organisms/shared/PageSkeleton'
 import { SignalSpectrum } from '@/components/cockpit/SignalSpectrum'
 import { Sheet, SheetContent, SheetClose } from '@/components/atoms/Sheet'
+import { AutoBreadcrumb } from '@/components/atoms/Breadcrumb'
 import { useWorkflowStore, type CabinType } from '@/store/workflowStore'
 import { checkFetcherHealth } from '@/services/fetcher/fetcherService'
 import { getLogger } from '@/lib/logger'
@@ -125,6 +126,39 @@ export default function PortalShell(): React.JSX.Element {
 
   const activeGroups = PANEL_ITEMS[activeCabin]
 
+  /** V10: 侧边栏搜索过滤 */
+  const [sidebarSearch, setSidebarSearch] = useState('')
+  /** V11: 搜索框 ref（用于 Ctrl+K 快捷键聚焦） */
+  const sidebarSearchRef = useRef<HTMLInputElement>(null)
+
+  /** V11: Ctrl+K / Cmd+K 快捷键唤起侧边栏搜索 */
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault()
+        sidebarSearchRef.current?.focus()
+        sidebarSearchRef.current?.select()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+  const filteredGroups = useMemo(() => {
+    if (!sidebarSearch.trim()) return activeGroups
+    const q = sidebarSearch.toLowerCase()
+    return activeGroups
+      .map((group) => ({
+        ...group,
+        items: group.items.filter(
+          (item) =>
+            item.label.toLowerCase().includes(q) ||
+            item.path.toLowerCase().includes(q) ||
+            group.group.toLowerCase().includes(q),
+        ),
+      }))
+      .filter((g) => g.items.length > 0)
+  }, [activeGroups, sidebarSearch])
+
   const fetcherStatusDot = cn(
     'h-2 w-2 rounded-full',
     fetcherOk === null ? status.checking : fetcherOk ? status.connected : status.disconnected,
@@ -143,51 +177,82 @@ export default function PortalShell(): React.JSX.Element {
           {activeCabinDef?.label}
         </span>
       </div>
+
+      {/* V10: 侧边栏搜索 */}
+      <div className="px-3 py-2">
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="text"
+            ref={sidebarSearchRef}
+            placeholder="搜索页面… (Ctrl+K)"
+            value={sidebarSearch}
+            onChange={(e) => setSidebarSearch(e.target.value)}
+            className="w-full rounded-md border bg-background py-1.5 pl-8 pr-2 text-xs text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+          {sidebarSearch && (
+            <button
+              type="button"
+              onClick={() => setSidebarSearch('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      </div>
+
       <div className="flex-1 overflow-y-auto py-3">
-        {activeGroups.map((group) => (
-          <div key={group.group} className="mb-2">
-            <div className={cn('px-4 py-1.5 text-[11px] font-medium tracking-wider', nav.groupLabel)}>
-              {group.group}
-            </div>
-            <ul className="space-y-0.5 px-2">
-              {group.items.map((item) => {
-                const Icon = item.icon
-                const active = isActivePath(location.pathname, item.path)
-                return (
-                  <li key={item.key}>
-                    <button
-                      onClick={() => {
-                        logger.info('[PortalShell] 侧边栏导航', {
-                          cabin: activeCabin,
-                          item: item.key,
-                          label: item.label,
-                          path: item.path,
-                          currentPath: location.pathname,
-                        })
-                        void navigate(item.path)
-                        onNavigate?.()
-                      }}
-                      className={cn(
-                        'group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all duration-200 ease-out',
-                        active
-                          ? cn(
-                              'relative font-medium',
-                              nav.active,
-                              'before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:rounded-full',
-                              nav.activeIndicator,
-                            )
-                          : nav.inactive,
-                      )}
-                    >
-                      <Icon className={cn('h-4 w-4 shrink-0 transition-colors duration-200', active ? nav.iconActive : nav.iconInactive)} />
-                      <span className="truncate">{item.label}</span>
-                    </button>
-                  </li>
-                )
-              })}
-            </ul>
+        {filteredGroups.length === 0 ? (
+          <div className="px-4 py-8 text-center text-xs text-muted-foreground">
+            未找到匹配的页面
           </div>
-        ))}
+        ) : (
+          filteredGroups.map((group) => (
+            <div key={group.group} className="mb-2">
+              <div className={cn('px-4 py-1.5 text-[11px] font-medium tracking-wider', nav.groupLabel)}>
+                {group.group}
+              </div>
+              <ul className="space-y-0.5 px-2">
+                {group.items.map((item) => {
+                  const Icon = item.icon
+                  const active = isActivePath(location.pathname, item.path)
+                  return (
+                    <li key={item.key}>
+                      <button
+                        onClick={() => {
+                          logger.info('[PortalShell] 侧边栏导航', {
+                            cabin: activeCabin,
+                            item: item.key,
+                            label: item.label,
+                            path: item.path,
+                            currentPath: location.pathname,
+                          })
+                          void navigate(item.path)
+                          onNavigate?.()
+                        }}
+                        className={cn(
+                          'group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all duration-200 ease-out',
+                          active
+                            ? cn(
+                                'relative font-medium',
+                                nav.active,
+                                'before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:rounded-full',
+                                nav.activeIndicator,
+                              )
+                            : nav.inactive,
+                        )}
+                      >
+                        <Icon className={cn('h-4 w-4 shrink-0 transition-colors duration-200', active ? nav.iconActive : nav.iconInactive)} />
+                        <span className="truncate">{item.label}</span>
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          ))
+        )}
         <div className="h-6" />
       </div>
     </>
@@ -299,6 +364,8 @@ export default function PortalShell(): React.JSX.Element {
 
         <main className={cn('min-w-0 flex-1 overflow-auto', layout.mainBg)}>
           <div className={cn('mx-auto flex min-h-full flex-col', layout.mainMaxWidth, layout.mainPadding)}>
+            {/* V10: 自动面包屑导航 */}
+            <AutoBreadcrumb className="px-0 py-2 border-b border-border/30" />
             <div className="my-auto">
               <React.Suspense fallback={<PageSkeleton />}>
                 <ActiveApp />

@@ -316,8 +316,8 @@ export default function StrategySnapshotPage(): React.JSX.Element {
           {loading ? (
             <LoadingState variant="spinner" message="加载中..." />
           ) : (
-            <div className="grid gap-4 lg:grid-cols-3">
-              <Card className="lg:col-span-1">
+            <div className="grid gap-4 md:grid-cols-3">
+              <Card className="md:col-span-1">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">

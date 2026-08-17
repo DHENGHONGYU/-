@@ -118,7 +118,9 @@ function loadConfig(): AppConfig {
 }
 
 function saveConfig(config: AppConfig): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(config))
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(config))
+  } catch { /* localStorage 不可用时静默失败 */ }
 }
 
 // ============================================================
@@ -176,7 +178,7 @@ export default function ConfigApp(): React.JSX.Element {
     try {
       const stored = localStorage.getItem(LLM_CONFIG_KEY)
       return stored ? (JSON.parse(stored) as PartialLlmConfig) : {}
-    } catch (err) { console.warn('[ConfigApp.tsx]', err);
+    } catch (err) { logger.warn('[ConfigApp.tsx]', { error: err });
       return {}
     }
   })

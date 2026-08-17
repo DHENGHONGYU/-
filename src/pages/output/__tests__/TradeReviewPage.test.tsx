@@ -14,6 +14,7 @@ vi.mock('lucide-react', () => ({
   BarChart3: () => <svg data-testid="icon-bar-chart" />,
   Download: () => <svg data-testid="icon-download" />,
   RefreshCw: () => <svg data-testid="icon-refresh" />,
+  Sparkles: () => <svg data-testid="icon-sparkles" />,
   TrendingUp: () => <svg data-testid="icon-trending" />,
 }))
 
@@ -120,9 +121,10 @@ describe('TradeReviewPage 拆分后功能验证', () => {
 
   it('渲染生成复盘报告卡片', () => {
     renderPage()
-    // "生成复盘报告" 同时出现在卡片标题和按钮上
-    expect(screen.getAllByText('生成复盘报告').length).toBeGreaterThanOrEqual(2)
-    expect(screen.getByText('交易记录数量')).toBeInTheDocument()
+    // 源码当前布局：卡片标签 = "交易记录"（卡片标题），按钮 = "生成复盘报告"（按钮）。
+    // 历史注释"卡片标题和按钮都出现生成复盘报告"已不匹配，锚点对齐源码实现（拆分后卡片标题改为纯"交易记录"）。
+    expect(screen.getByText('交易记录')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /生成复盘报告/ })).toBeInTheDocument()
   })
 
   it('显示交易记录数量为 0', () => {
@@ -246,8 +248,17 @@ describe('TradeReviewPage 带 review 数据场景', () => {
     renderPage()
     expect(screen.getByText('总交易笔数')).toBeInTheDocument()
     expect(screen.getByText('10')).toBeInTheDocument()
-    expect(screen.getByText('胜率')).toBeInTheDocument()
-    expect(screen.getByText('60.0%')).toBeInTheDocument()
+    const winRateLabel = screen.getByText('胜率')
+    expect(winRateLabel).toBeInTheDocument()
+    // 注意：TradeReviewSummary 把「数值」和「%」拆为 value + suffix 两个相邻 span（结构拆分便于色调与后缀样式分离）。
+    // Testing-Library getByText 仅对单个 TextNode 匹配，因此改用「定位胜率所在 MetricCell → 断言其合并 textContent」的方式。
+    const winRateMetricCell = winRateLabel.closest('.relative.pl-3')
+    expect(winRateMetricCell).not.toBeNull()
+    const winRateText = winRateMetricCell!.textContent?.replace(/\s+/g, '') ?? ''
+    expect(winRateText).toContain('胜率')
+    expect(winRateText).toContain('60.0')
+    expect(winRateText).toContain('%')
+    expect(winRateText).toContain('优秀') // winRate=60 >= 50 → tone=优秀
   })
 
   it('渲染心理画像组件', () => {

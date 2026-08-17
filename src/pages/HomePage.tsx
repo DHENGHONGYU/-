@@ -292,8 +292,8 @@ function PortfolioHero(): React.JSX.Element {
       className="mb-6 rounded-lg p-6 bg-card"
       style={{ boxShadow: 'var(--shadow-sm)' }}
     >
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:items-center">
-        <div className="lg:col-span-1">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:items-center">
+        <div className="md:col-span-1">
           <p className="text-sm text-muted-foreground">组合总资产</p>
           <p
             className="mt-1 font-bold font-mono text-foreground"
@@ -313,7 +313,7 @@ function PortfolioHero(): React.JSX.Element {
             </p>
           )}
         </div>
-        <div className="lg:col-span-2">
+        <div className="md:col-span-2">
           <div className={`grid grid-cols-2 gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
             <div>
               <p className="text-xs text-muted-foreground">今日盈亏</p>

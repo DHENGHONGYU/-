@@ -628,8 +628,8 @@ export default function IntelligentScorePage(): React.JSX.Element {
 
       {/* ============ 下部：趋势图（8）+ 智能解释（4） ============ */}
       {symbol && (
-        <div className="grid gap-6 lg:grid-cols-12">
-          <div className="lg:col-span-8">
+        <div className="grid gap-6 md:grid-cols-12">
+          <div className="md:col-span-8">
             <MultiPeriodTrendChart
               data={trendData}
               period={trendPeriod}
@@ -639,7 +639,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
             />
           </div>
           {result && (
-            <div className="lg:col-span-4">
+            <div className="md:col-span-4">
               <IntelligentScoreExplanation result={result} />
             </div>
           )}

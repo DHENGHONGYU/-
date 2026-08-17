@@ -14,6 +14,15 @@ import type { TradingPosition, RiskRules, CreateOrderForm, SignalOrderInput } fr
 
 const logger = getLogger()
 
+/** localStorage 存储键名：风控规则持久化 */
+const RISK_RULES_STORAGE_KEY = 'finsight_risk_rules'
+
+/** 默认风控规则 */
+const DEFAULT_RISK_RULES: RiskRules = {
+  stopLossPercent: 10,
+  takeProfitPercent: 20,
+}
+
 /** Seeded random constants (LCG-based pseudo-random for deterministic mock data) */
 const HASH_MULTIPLIER = 31
 const LCG_MULTIPLIER = 1103515245
@@ -44,10 +53,14 @@ export function useTradingFlowData() {
   const loadOrders = useTradingStore((s) => s.loadOrders)
   const scanSignals = useTradingStore((s) => s.scanSignals)
 
-  // 风控规则状态
-  const [, setRiskRules] = useState<RiskRules>({
-    stopLossPercent: 10,
-    takeProfitPercent: 20,
+  // 风控规则状态（初始化时从 localStorage 恢复）
+  const [riskRules, setRiskRules] = useState<RiskRules>(() => {
+    try {
+      const saved = localStorage.getItem(RISK_RULES_STORAGE_KEY)
+      return saved ? JSON.parse(saved) : DEFAULT_RISK_RULES
+    } catch {
+      return DEFAULT_RISK_RULES
+    }
   })
 
   // 风险预警
@@ -445,12 +458,16 @@ export function useTradingFlowData() {
       afterState: rules,
     })
     setRiskRules(rules)
+    try {
+      localStorage.setItem(RISK_RULES_STORAGE_KEY, JSON.stringify(rules))
+    } catch {
+      /* localStorage 不可用时静默失败 */
+    }
     logger.info('[TradingFlowPage] 更新风控规则 - 成功', {
       timestamp: new Date().toISOString(),
       operation: 'UPDATE_RISK_RULES',
       statusCode: 200,
     })
-    // TODO[阻塞·API]: riskStore 无 persistRiskRules 持久化 API；待补全后落盘 IndexedDB。
   }
 
   // 数据源选择：开发环境使用模拟数据，生产环境使用真实数据
@@ -534,6 +551,7 @@ export function useTradingFlowData() {
     displayOrders,
     positions,
     riskMetrics,
+    riskRules,
     riskAlerts,
     handleCreateOrderFromSignal,
     handleCreateOrder,
