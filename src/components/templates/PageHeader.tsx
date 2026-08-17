@@ -24,6 +24,7 @@
 
 import React from 'react'
 import { cn } from '@/lib/utils'
+import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 
 export interface PageHeaderProps {
   /** 标题（建议用字符串，自动套用 h1 排版阶梯） */
@@ -34,6 +35,10 @@ export interface PageHeaderProps {
   actions?: React.ReactNode
   /** 附加类名 */
   className?: string
+  /** V11: 浏览器标签页标题（未提供时自动使用 title 字符串值） */
+  documentTitle?: string
+  /** V11: 所属舱室名（用于 document.title 格式化，未提供时自动从路径推导） */
+  cabin?: string
 }
 
 /**
@@ -46,7 +51,13 @@ export function PageHeader({
   description,
   actions,
   className,
+  documentTitle,
+  cabin,
 }: PageHeaderProps): React.JSX.Element {
+  // V11: 自动同步浏览器标签页标题
+  const titleStr = documentTitle ?? (typeof title === 'string' ? title : '')
+  useDocumentTitle(titleStr, cabin)
+
   return (
     <header
       className={cn(

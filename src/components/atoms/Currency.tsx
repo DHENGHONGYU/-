@@ -31,8 +31,20 @@ export const Currency = React.forwardRef<HTMLSpanElement, CurrencyProps>((
   },
   ref
 ) => {
+  if (value === undefined || value === null || isNaN(value)) {
+    return <span className={className} ref={ref} {...rest}>--</span>
+  }
+
+  if (value === 0) {
+    return (
+      <span className={className} ref={ref} {...rest}>
+        {showSign ? '±0' : '0'}
+      </span>
+    )
+  }
+
   const absValue = Math.abs(value)
-  const sign = value > 0 ? '+' : value < 0 ? '-' : ''
+  const sign = value > 0 ? '+' : '-'
 
   let display: string
   if (compact) {

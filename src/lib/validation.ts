@@ -8,7 +8,12 @@
  * - 新增股票代码严格校验（A股/港股/美股）（VAL-003）
  * - 新增 URL 协议白名单校验（XSS-003）
  * - 新增 API Key 脱敏函数（LEAK-004）
-  * @doc [V9-DOC-FRONT-037]
+ */
+
+import { getLogger } from '@/lib/logger'
+
+/**
+ * @doc [V9-DOC-FRONT-037]
 */
 
 import { safeRegex } from './safeRegex'
@@ -150,12 +155,36 @@ export function isValidStockCodeStrict(
 }
 
 /**
- * 验证带交易所后缀的股票代码（如 600519.SH、00700.HK、AAPL.US）。
+ * 验证带交易所后缀的股票代码（P0-6：扩展支持 A股/港股/美股）。
+ *
+ * 格式：CODE.EXCHANGE
+ * - A股: 600519.SH / 000001.SZ / 830799.BJ
+ * - 港股: 00700.HK
+ * - 美股: AAPL.US / GOOGL.US
  */
 export function isValidSymbolWithExchange(symbol: string): boolean {
   if (typeof symbol !== 'string' || symbol.length === 0) return false
-  // 格式：CODE.EXCHANGE，如 600519.SH、000001.SZ、00700.HK
-  return /^\d{6}\.(SH|SZ|BJ)$/i.test(symbol.trim())
+  const trimmed = symbol.trim()
+  // A股: 6位数字 + .SH/.SZ/.BJ
+  if (/^\d{6}\.(SH|SZ|BJ)$/i.test(trimmed)) return true
+  // 港股: 1-5位数字 + .HK
+  if (/^\d{1,5}\.HK$/i.test(trimmed)) return true
+  // 美股: 1-5位大写字母 + .US
+  if (/^[A-Z]{1,5}\.US$/i.test(trimmed)) return true
+  return false
+}
+
+/**
+ * P0-6: 校验 symbol 格式并返回错误信息，合法则返回 null。
+ */
+export function validateSymbolFormat(symbol: string): string | null {
+  if (!symbol || symbol.trim().length === 0) {
+    return 'symbol 不能为空'
+  }
+  if (!isValidSymbolWithExchange(symbol)) {
+    return `symbol 格式非法: "${symbol}"，期望格式如 600519.SH / 00700.HK / AAPL.US`
+  }
+  return null
 }
 
 // ============================================================
@@ -244,7 +273,7 @@ export function isValidLlmBaseURL(baseURL: string): boolean {
       return false
     }
     return true
-  } catch (err) { console.warn('[validation.ts]', err);
+  } catch (err) { getLogger().warn('[validation.ts]', { error: err });
     return false
   }
 }

@@ -735,7 +735,7 @@ export class WorkflowServer extends MCPServerBase {
           let payload: { defs?: WorkflowDef[]; schedules?: ScheduleDef[]; triggers?: TriggerDef[] }
           try {
             payload = JSON.parse(args.data as string) as { defs?: WorkflowDef[]; schedules?: ScheduleDef[]; triggers?: TriggerDef[] }
-          } catch (err) { console.warn('[workflowServer.ts]', err);
+          } catch (err) { logger.warn('[workflowServer.ts]', { error: err });
             return this.err('data 不是有效的 JSON 字符串')
           }
           const stats = { imported: 0, skipped: 0, errors: 0 }
@@ -1252,7 +1252,7 @@ export class WorkflowServer extends MCPServerBase {
     const joined = this.extractText(res)
     try {
       return JSON.parse(joined)
-    } catch (err) { console.warn('[workflowServer.ts]', err);
+    } catch (err) { logger.warn('[workflowServer.ts]', { error: err });
       return joined
     }
   }

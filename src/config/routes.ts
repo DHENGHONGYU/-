@@ -249,17 +249,22 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     category: 'command',
     description: '智能体详情',
   },
+  // V11: 以下旧智能体路由已合并到面板（task-panel / model-config / optimization-panel），标记废弃
   {
     path: '/command/agents/trigger',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'command',
-    description: '智能体任务触发',
+    description: '智能体任务触发（已合并至任务管理面板）',
+    deprecated: true,
+    redirectTo: '/command/agents/task-panel',
   },
   {
     path: '/command/agents/tasks',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'command',
-    description: '智能体任务列表',
+    description: '智能体任务列表（已合并至任务管理面板）',
+    deprecated: true,
+    redirectTo: '/command/agents/task-panel',
   },
   {
     path: '/command/agents/custom',
@@ -271,7 +276,9 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     path: '/command/agents/llm',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'command',
-    description: 'LLM 管理',
+    description: 'LLM 管理（已合并至模型配置面板）',
+    deprecated: true,
+    redirectTo: '/command/agents/model-config',
   },
   {
     path: '/command/agents/capability-graph',
@@ -289,13 +296,17 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     path: '/command/agents/feedback',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'command',
-    description: '反馈控制台',
+    description: '反馈控制台（已合并至任务管理面板）',
+    deprecated: true,
+    redirectTo: '/command/agents/task-panel',
   },
   {
     path: '/command/agents/model-upgrade',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'command',
-    description: '模型升级',
+    description: '模型升级（已合并至模型配置面板）',
+    deprecated: true,
+    redirectTo: '/command/agents/model-config',
   },
   {
     path: '/command/agents/data-labels',
@@ -307,19 +318,25 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     path: '/command/agents/api-config',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'command',
-    description: 'API 配置',
+    description: 'API 配置（已合并至模型配置面板）',
+    deprecated: true,
+    redirectTo: '/command/agents/model-config',
   },
   {
     path: '/command/agents/skill-audit',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'command',
-    description: 'Skill 核查',
+    description: 'Skill 核查（已合并至优化建议面板）',
+    deprecated: true,
+    redirectTo: '/command/agents/optimization-panel',
   },
   {
     path: '/command/agents/optimization',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'command',
-    description: '优化建议',
+    description: '优化建议（已合并至优化建议面板）',
+    deprecated: true,
+    redirectTo: '/command/agents/optimization-panel',
   },
   {
     path: '/command/agents/changelog',
@@ -367,17 +384,22 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     category: 'command',
     description: '组件示例库',
   },
+  // V11: /command/health 和 /command/monitor 已合并到 /command/system-health
   {
     path: '/command/health',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'command',
-    description: '架构健康度仪表盘',
+    description: '架构健康度仪表盘（已合并至系统健康）',
+    deprecated: true,
+    redirectTo: '/command/system-health',
   },
   {
     path: '/command/monitor',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'command',
-    description: '系统监控',
+    description: '系统监控（已合并至系统健康）',
+    deprecated: true,
+    redirectTo: '/command/system-health',
   },
   {
     path: '/command/config',
@@ -641,20 +663,51 @@ export function getBreadcrumbs(pathname: string): BreadcrumbSegment[] {
   if (parts.length === 0) return segments
 
   let accumulated = ''
-  for (const part of parts) {
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i]!
     accumulated += `/${part}`
     const route = findRouteByPath(accumulated)
+
     if (route) {
+      // V11: 参数化路由：检查当前段是否为参数值（路径包含 :param 模式）
+      const isParamRoute = route.path.includes(':')
+      const label = route.description
+
+      // 如果是参数化路由，且当前段不是路由路径中的字面段，则它是参数值
+      if (isParamRoute) {
+        const routeParts = route.path.split('/').filter(Boolean)
+        const lastRoutePart = routeParts[routeParts.length - 1] ?? ''
+        if (lastRoutePart && lastRoutePart.startsWith(':') && lastRoutePart !== part) {
+          // 当前段是参数值，追加到标签中
+          segments.push({
+            label: `${label} · ${part}`,
+            path: accumulated,
+            deprecated: route.deprecated,
+            redirectTo: route.redirectTo,
+          })
+          continue
+        }
+      }
+
       segments.push({
-        label: route.description,
+        label,
         path: accumulated,
         deprecated: route.deprecated,
         redirectTo: route.redirectTo,
       })
     } else {
-      // 无匹配路由，用路径段名作为 fallback
+      // 无匹配路由，检查上一段是否为参数化路由
+      if (i > 0) {
+        const prevAccumulated = accumulated.substring(0, accumulated.lastIndexOf(`/${part}`))
+        const prevRoute = findRouteByPath(prevAccumulated)
+        if (prevRoute?.path.includes(':')) {
+          // 当前段是参数值，跳过（已在上段标签中显示）
+          continue
+        }
+      }
+      // 常规 fallback
       segments.push({
-        label: part.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+        label: (part ?? '').replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
         path: accumulated,
       })
     }

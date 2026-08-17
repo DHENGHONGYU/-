@@ -1,11 +1,15 @@
 /**
  * @fileoverview Breadcrumb Atom层组件（Atom层组件）
  * @module components/atoms/Breadcrumb
+ *
+ * V10: 新增 AutoBreadcrumb — 自动从路由注册表生成面包屑，支持废弃路由降级提示
  */
 
-import { ChevronRight, MoreHorizontal } from 'lucide-react'
+import { ChevronRight, MoreHorizontal, AlertTriangle } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { cloneElement, forwardRef, isValidElement, type HTMLAttributes } from 'react'
+import { cloneElement, forwardRef, isValidElement, useMemo, type HTMLAttributes } from 'react'
+import { useLocation, Link } from 'react-router'
+import { getBreadcrumbs } from '@/config/routes'
 
 /**
  * Breadcrumb
@@ -125,3 +129,68 @@ export const BreadcrumbEllipsis = forwardRef<HTMLSpanElement, HTMLAttributes<HTM
   ),
 )
 BreadcrumbEllipsis.displayName = 'BreadcrumbEllipsis'
+
+// ============================================================
+// V10: AutoBreadcrumb — 自动路由感知面包屑
+// ============================================================
+
+/**
+ * AutoBreadcrumb
+ *
+ * 从 ROUTE_REGISTRY 自动生成面包屑导航，无需手动传入路径段。
+ * 废弃路由自动显示降级提示（⚠️ 已迁移至 …）。
+ *
+ * 用法：
+ * <AutoBreadcrumb className="px-4 py-2" />
+ */
+export function AutoBreadcrumb({ className, ...props }: HTMLAttributes<HTMLElement>): React.JSX.Element {
+  const { pathname } = useLocation()
+  const segments = useMemo(() => getBreadcrumbs(pathname), [pathname])
+
+  // 首页不需要面包屑
+  if (segments.length <= 1) {
+    return <nav className={cn('flex', className)} {...props} />
+  }
+
+  return (
+    <Breadcrumb className={className} {...props}>
+      <BreadcrumbList>
+        {segments.map((segment, i) => {
+          const isLast = i === segments.length - 1
+
+          return (
+            <BreadcrumbItem key={segment.path}>
+              {!isLast ? (
+                <BreadcrumbLink asChild>
+                  <Link to={segment.path} className="text-xs">
+                    {segment.label}
+                  </Link>
+                </BreadcrumbLink>
+              ) : (
+                <BreadcrumbPage className="text-xs font-medium">
+                  {segment.label}
+                </BreadcrumbPage>
+              )}
+
+              {/* 废弃路由降级提示 */}
+              {isLast && segment.deprecated && segment.redirectTo && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-warning/10 px-2 py-0.5 text-[10px] text-warning ml-1">
+                  <AlertTriangle className="h-3 w-3" />
+                  已迁移至{' '}
+                  <Link
+                    to={segment.redirectTo}
+                    className="underline hover:text-warning/80"
+                  >
+                    {segment.redirectTo}
+                  </Link>
+                </span>
+              )}
+
+              {!isLast && <BreadcrumbSeparator />}
+            </BreadcrumbItem>
+          )
+        })}
+      </BreadcrumbList>
+    </Breadcrumb>
+  )
+}

@@ -79,6 +79,10 @@
     --tracking-latin-tight: -0.02em;
     --tracking-latin-normal: 0em;
     --tracking-latin-wide: 0.05em;
+
+    /* ===== V7: 排版温度令牌（标题暖色相微调） ===== */
+    --heading-warm: 30 8% 12%;
+    --heading-warm-secondary: 30 5% 18%;
   }
   .dark {
     --background: 30 6% 10%;
@@ -92,7 +96,7 @@
     --secondary: 30 5% 16%;
     --secondary-foreground: 30 12% 96%;
     --muted: 30 5% 16%;
-    --muted-foreground: 30 5% 56%;
+    --muted-foreground: 30 5% 64%;
     --accent: 30 5% 20%;
     --accent-foreground: 30 12% 96%;
     --destructive: 4 100% 67%;
@@ -114,14 +118,116 @@
     --shadow-lg: 0 8px 24px -8px hsl(30 8% 8% / 0.50);
     --surface-elevated: 0 4px 12px -2px hsl(30 8% 8% / 0.45);
     --surface-floating: 0 8px 24px -4px hsl(30 8% 8% / 0.55);
+
+    /* V7: 暗色模式排版温度 */
+    --heading-warm: 30 12% 96%;
+    --heading-warm-secondary: 30 10% 88%;
   }
   * { @apply border-border; }
   body { @apply bg-background text-foreground antialiased; font-feature-settings: "tnum"; font-size: 14px; line-height: 1.6; letter-spacing: var(--tracking-cjk-body); }
   h1 { @apply text-h1 font-bold text-foreground; letter-spacing: var(--tracking-cjk-heading); }
-  h2 { @apply text-h2 font-semibold text-foreground; letter-spacing: var(--tracking-cjk-heading); }
-  h3 { @apply text-h3 font-semibold text-foreground; letter-spacing: var(--tracking-cjk-heading); }
+  h2 { @apply text-h2 font-semibold; letter-spacing: var(--tracking-cjk-heading); color: hsl(var(--heading-warm)); }
+  h3 { @apply text-h3 font-semibold; letter-spacing: var(--tracking-cjk-heading); color: hsl(var(--heading-warm-secondary)); }
   h4 { @apply text-h4 font-semibold text-foreground; letter-spacing: var(--tracking-cjk-heading); }
   p { @apply leading-relaxed; letter-spacing: var(--tracking-cjk-body); }
   span, div, li, td, th, label { letter-spacing: var(--tracking-cjk-body); }
   .font-mono, [class*="font-mono"] { letter-spacing: var(--tracking-latin-tight); }
+}
+
+/* ===== V7: 表面层级工具类 ===== */
+@layer components {
+  /** 高优先级 Widget — 聚焦卡片，使用 surface-elevated 阴影 */
+  .widget-card-elevated {
+    box-shadow: var(--surface-elevated);
+    border-color: hsl(var(--warm-gray) / 0.6);
+  }
+  /** 浮层面板 — 弹窗/工具提示，使用 surface-floating 阴影 */
+  .widget-card-floating {
+    box-shadow: var(--surface-floating);
+    border-color: hsl(var(--border) / 0.8);
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     V9 Responsive Edition — 响应式工具类
+     ════════════════════════════════════════════════════════════ */
+
+  /** 页面统一容器 — 自动适配断点内边距 */
+  .page-container {
+    @apply mx-auto w-full max-w-7xl px-3 sm:px-4 md:px-6 lg:px-8;
+  }
+
+  /** 响应式图表高度 — 基于视口宽度自动缩放 */
+  .chart-responsive {
+    --chart-height: 280px;
+    height: var(--chart-height);
+  }
+  @media (min-width: 640px) {
+    .chart-responsive { --chart-height: 320px; }
+  }
+  @media (min-width: 1024px) {
+    .chart-responsive { --chart-height: 380px; }
+  }
+
+  /** 响应式标题 — 移动端自动缩小字号 */
+  .heading-responsive {
+    @apply text-xl font-bold tracking-tight;
+  }
+  @media (min-width: 768px) {
+    .heading-responsive { @apply text-2xl; }
+  }
+  @media (min-width: 1024px) {
+    .heading-responsive { @apply text-3xl; }
+  }
+
+  /** 移动端触摸优化 — 最小点击区域 44px */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  /** 卡片网格 — 自动适配列数 */
+  .card-grid {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+  .card-grid-sm {
+    @apply grid gap-3;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+
+  /** 数据表格 — 移动端水平滚动 */
+  .table-responsive {
+    @apply -mx-3 overflow-x-auto px-3 sm:mx-0 sm:px-0;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /** 两栏布局 — 移动端堆叠，md 以上并排 */
+  .layout-two-col {
+    @apply grid gap-6;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 768px) {
+    .layout-two-col { grid-template-columns: 1fr 1fr; }
+  }
+
+  /** 侧边栏容器 — 移动端隐藏，md 以上显示 */
+  .sidebar-panel {
+    @apply hidden md:flex md:w-60 md:shrink-0 md:flex-col md:border-r;
+  }
+
+  /** 移动端底部导航栏 — md 以上隐藏 */
+  .mobile-bottom-nav {
+    @apply fixed bottom-0 left-0 right-0 z-20 flex md:hidden;
+  }
+
+  /** 统计卡片行列 — 自适应断点 */
+  .stats-grid {
+    @apply grid gap-3;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 640px) {
+    .stats-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .stats-grid { grid-template-columns: repeat(6, 1fr); }
+  }
 }

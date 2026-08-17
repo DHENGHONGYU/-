@@ -40,7 +40,7 @@ export function useMcpMigration(): McpMigrationApi {
     try {
       const text = result.content[0]?.text ?? '{}'
       return JSON.parse(text) as T
-    } catch (err) { console.warn('[useMcpMigration.ts]', err);
+    } catch (err) { logger.warn('[useMcpMigration.ts]', { error: err });
       return result.content[0]?.text as unknown as T
     }
   }

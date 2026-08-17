@@ -10,7 +10,7 @@
  * 纯 UI 层 Hook，不改变现有 Store 接口。
  *
  * @see src/core/refreshCoordinator.ts -- 跨 Store 刷新协调
- * @see docs/archive/historical-2026-08-16/batch8/freshness-alerts.md -- 数据新鲜度告警策略（已归档）
+ * @see docs/archive/historical-2026-08-16/batch8/freshness-alerts.md（已归档） -- 数据新鲜度告警策略
   * @doc [V9-DOC-PROJ-177, V9-DOC-PROJ-239]
 */
 

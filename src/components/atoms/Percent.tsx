@@ -27,6 +27,10 @@ export const Percent = React.forwardRef<HTMLSpanElement, PercentProps>((
   },
   ref
 ) => {
+  if (value === undefined || value === null || isNaN(value)) {
+    return <span className={className} ref={ref} {...rest}>--</span>
+  }
+
   const sign = showSign
     ? value > 0
       ? '+'
@@ -43,7 +47,7 @@ export const Percent = React.forwardRef<HTMLSpanElement, PercentProps>((
       ? 'text-[hsl(var(--stock-up))]'
       : value < 0
         ? 'text-[hsl(var(--stock-down))]'
-        : ''
+        : 'text-[hsl(var(--muted-foreground))]'
     : ''
 
   return (

@@ -35,6 +35,13 @@ interface OnboardingGuideProps {
 
 const STORAGE_KEY = 'finsight_onboarding_dismissed'
 
+const safeGetLocalStorage = (key: string): string | null => {
+  try { return localStorage.getItem(key) } catch { return null }
+}
+const safeSetLocalStorage = (key: string, value: string): void => {
+  try { localStorage.setItem(key, value) } catch { /* silently fail */ }
+}
+
 export function OnboardingGuide({ visible, onClose }: OnboardingGuideProps) {
   const [isVisible, setIsVisible] = useState(visible ?? false)
   const [currentStep, setCurrentStep] = useState(0)
@@ -43,7 +50,7 @@ export function OnboardingGuide({ visible, onClose }: OnboardingGuideProps) {
     if (visible !== undefined) {
       setIsVisible(visible)
     } else {
-      const dismissed = localStorage.getItem(STORAGE_KEY)
+      const dismissed = safeGetLocalStorage(STORAGE_KEY)
       if (!dismissed) {
         setIsVisible(true)
       }
@@ -52,7 +59,7 @@ export function OnboardingGuide({ visible, onClose }: OnboardingGuideProps) {
 
   const handleDismiss = () => {
     setIsVisible(false)
-    localStorage.setItem(STORAGE_KEY, 'true')
+    safeSetLocalStorage(STORAGE_KEY, 'true')
     onClose?.()
   }
 
