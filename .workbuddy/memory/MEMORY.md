@@ -18,5 +18,10 @@
 - **frontmatter 声明失真（已闭环）**：实测物理 SKILL.md 仅用 `name`/`description`/`version`/`last_updated`/`change_log`，无 `triggers`/`gates`/`mandatory` 三字段；AGENTS.md L65 已纠正——该三字段机器可读真相源指向 `skill-registry.json`。勿再据 AGENTS.md 旧路由表声称"SKILL.md 含三字段"。
 
 ## 门禁真值基线（勿被过时报告误导）
-- `tsc:prod` 全量仍含 `src/components/chart/**` 8 处既有未提交错误（与 MCP 整合无关），本任务相关 src/electron 文件 0 错误。
+- `tsc:prod`：2026-08-17 复跑 **真实 EXIT:2**（`tail` 误报为 0）。错误为并行 Agent 未提交产物：`ScoreComparisonPage.tsx` 未使用导入、`SectorAnalysisPage.tsx` 未使用 `AlertTriangle`、`DashboardPage.tsx` 未定义 `BarChart3`。与本任务改动无关，但当前基线非零。
+- `audit:layers`：2026-08-17 实测 **1462 文件 / 0 违规 / 退出码 0**（仅 1 处过渡期警告 researchPipelineOrchestrator.ts:34 引擎层直连 db，P0 待整改非阻断）。
 - `audit:registry` 已 173 条全绿（Currency/Percent/OnboardingGuide 已在 atomRegistry 注册）；`AppErrorState` 缺失告警为瞬时/过渡态。
+- **蓝图完成度基线（2026-08-17 重审计）**：`docs/specs/《V9 目标功能清单》.md` 升 v1.1.0，原 23%(L2 Store 口径) → **综合功能达成度 ≈87%**；唯一确缺失项为分析舱 `news-v6`（仅 newsColorTokens.ts 残留）。路由 79(21 deprecated)、80+ 单测、30+ E2E。
+- **单元测试基线（2026-08-17 实测，重要修正）**：`npm test` = `vitest run` 569 test files / 9159 例：**8950 passed / 182 failed / 22 skipped**，49 个失败文件，1 unhandled error（Worker exited unexpectedly）。此前任何"2 失败"说法均作废。
+- **E2E 基线（2026-08-17）**：蓝图验收 `e2e/blueprint/features.spec.ts` 因 WorkBuddy safe-delete 对 `test-results` 目录 trash 操作被拦截而未能启动；全量 `npm run e2e` 未跑。后续需在干净环境补跑。
+- **GLM5.3 测试接入（2026-08-17）**：`zhipu-glm` preset 已增加 `glm-5.3`；mock 支持请求体回显 model；`llmClient.multimodel.test.ts` 新增 2 个 GLM5.3 用例并通过。

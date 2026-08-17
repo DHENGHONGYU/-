@@ -1,7 +1,4 @@
 {
-  "name": "timeline-competitor-compare",
-  "version": 1,
-  "description": "V9数据管线时间线 vs 竞品进展对照图",
   "data": [
     {
       "id": "page-timeline-compare",
@@ -9,14 +6,21 @@
       "type": "page",
       "version": 1,
       "createdAt": 1755532800000,
-      "devMetadata": {
-        "htmlSrc": "pages/timeline-compare.html",
-        "interactions": []
-      },
       "canvasData": {
         "x": 0,
         "y": 0,
-        "group": 0
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 2070,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-1af7c06a",
+          "measuredAt": 1786979594728
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/timeline-compare.html",
+        "interactions": []
       }
     }
   ],

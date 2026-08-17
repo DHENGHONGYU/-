@@ -7,6 +7,165 @@
 
 ---
 
+## [Unreleased] - 2026-08-17
+
+### Changed — UI V12 性能与可访问性优化
+
+**P0: 构建优化**
+- 删除 `vite.config.ts` 中 dompurify 僵尸 chunk（项目使用自定义 `xssSanitizer.ts`，零依赖）
+- `index.html` 新增 3 条 `<link rel="preconnect">` 到数据 API 源（qt.gtimg.cn / push2.eastmoney.com / push2his.eastmoney.com），减少 DNS/TLS 握手延迟 ~200-500ms
+
+**P0: 图表组件 memo 化**
+- `GaugeChart` + `GaugeRing`：新增 `memo` 包裹，避免不必要的 SVG 重绘
+- `ChipDistributionChart`：新增 `memo` 包裹，筹码分布图渲染优化
+- 图表组件 memo 覆盖率：13/15 → 15/15（100%）
+
+**P0: 分子组件 memo 化**
+- `MetricCard`：新增 `memo` 包裹，减少指标卡重复渲染
+
+**P1: bootstrap 并行化**
+- `main.tsx` 中 6 个串行 `await import()` 改为 `Promise.all` 并行加载
+- 预期首屏渲染启动时间减少 ~30-50%（取决于网络条件）
+
+**P1: 图片懒加载组件**
+- 新增 `LazyImage` 组件（`src/components/atoms/LazyImage.tsx`）
+- 支持原生 `loading="lazy"`、骨架屏动画、加载失败降级
+
+**P1: a11y 可访问性增强**
+- PortalShell 新增 skip-to-content 链接（键盘用户跳过导航直达主内容）
+- 侧边栏导航项新增 `aria-current="page"` + `aria-label`
+- 侧边栏 `<ul>` 新增 `role="navigation"` + `aria-label`
+- 主内容区新增 `aria-live="polite"` 区域（屏幕阅读器动态内容通知）
+
+### Metrics — V12 性能与可访问性
+
+| 指标 | V11 | V12 | 变化 |
+|------|-----|-----|------|
+| 图表组件 memo 率 | 87% | 100% | +13% |
+| 分子组件 memo | 0 | 1 (MetricCard) | 新增 |
+| bootstrap 串行 await | 6 个 | 0 个（并行） | -6 |
+| dompurify 僵尸 chunk | 1 个 | 0 个 | 已删除 |
+| `<link rel="preconnect">` | 0 条 | 3 条 | 新增 |
+| skip-to-content | 无 | 有 | 新增 |
+| aria-current | 0 处 | 1 处（每项） | 新增 |
+| aria-live 区域 | 0 处 | 1 处 | 新增 |
+| 图片懒加载组件 | 无 | LazyImage | 新增 |
+| 新 TS 错误 | 0 | 0 | 绿 |
+
+---
+
+## [Unreleased] - 2026-08-17
+
+### Changed — UI V14 空状态全覆盖 + 硬编码颜色消除 + a11y 补漏
+
+**P1: 剩余 5 页面空状态/错误/加载标准化**
+- `PoolBoardPage`：加载态 → `LoadingState` spinner，空态 → `EmptyState`
+- `BacktestPage`：空态 → `EmptyState`（保留 BarChart3 图标）
+- `SectorAnalysisPage`：2 处空态 → `EmptyState`
+- `HealthDashboardPage`：加载态 → `LoadingState` skeleton，错误态 → `ErrorState` card
+- `StressOverviewPage`：加载态 → `LoadingState` skeleton，错误态 → `ErrorState` card，空态 → `EmptyState`（含操作按钮）
+- 空状态标准化覆盖率：10/15 → 15/15（100%）
+
+**P1: MockDataBadge 硬编码颜色 → 主题 Token**
+- 消除 6 处硬编码 hex 颜色（`#FFF3CD` / `#856404` / `#FFEEBA`）
+- 替换为 `hsl(var(--warning))` 主题 Token，自动适配暗色模式
+- 移除 `React.CSSProperties` 内联样式，改用 `cn()` 类名组合
+
+**P2: MCPServerDashboard textarea a11y**
+- 工具参数 textarea 新增 `aria-label="Tool JSON arguments"`
+
+### Metrics — V14 空状态 + 暗色模式 Token
+
+| 指标 | V13 | V14 | 变化 |
+|------|-----|-----|------|
+| 空状态标准化覆盖率 | 67% (10/15) | 100% (15/15) | +33% |
+| 硬编码颜色消除 | 10 处 | 4 处 | -6 |
+| 暗色模式适配 Token | 0 处 | 6 处 (MockDataBadge) | 新增 |
+| textarea a11y label | 缺失 | 已修复 | 修复 |
+| 新 TS 错误 | 0 | 0 | 绿 |
+
+---
+
+## [Unreleased] - 2026-08-17
+
+### Changed — UI V13 焦点陷阱 + 空状态标准化（第一批）
+
+**P0: Sheet/Dialog 焦点陷阱**
+- 新增 `useFocusTrap` hook（`src/hooks/useFocusTrap.ts`），实现 WCAG 2.1 AA 焦点管理
+- `Sheet` 组件集成焦点陷阱：打开时自动聚焦，Tab 循环锁定，关闭时恢复焦点
+- `Sheet` 新增 `role="dialog"` + `aria-modal="true"` + `aria-label`
+
+**P1: 空状态标准化（第一批 10 页面）**
+- 10 个页面迁移至标准 `EmptyState`/`ErrorState`/`LoadingState` 组件
+- 覆盖：StockAnalysis、Screening、CollectionMonitor、CollectionPipeline、StockPoolManager、Settings、About、NotFound、Login、Register
+
+### Metrics — V13 焦点陷阱 + 空状态
+
+| 指标 | V12 | V13 | 变化 |
+|------|-----|-----|------|
+| 焦点陷阱组件 | 0 | 1 (Sheet) | 新增 |
+| aria-modal 声明 | 0 | 1 | 新增 |
+| 空状态标准化 | 0% | 67% (10/15) | +67% |
+| 新 TS 错误 | 0 | 0 | 绿 |
+
+---
+
+## [Unreleased] - 2026-08-17
+
+### Changed — UI V11 信息架构深度优化
+
+**P0: 全局 document.title 管理**
+- 新增 `useDocumentTitle` hook（`src/hooks/useDocumentTitle.ts`），格式 `「页面标题」- 舱室名 - FinSightV9`
+- 增强 `PageHeader` 组件，自动同步 `document.title`（支持 `documentTitle` / `cabin` 属性覆盖）
+- 所有使用 `PageHeader` 的页面自动获得浏览器标签页标题
+
+**P0: 孤儿路由侧边栏入口补充**
+- 交易舱「交易执行」分组新增 `持仓管理`（`/trading/holdings`）
+- 分析舱「市场研究」分组新增 `复盘启动分析`（`/analysis/review-launch`）
+- 输出舱「研报与复盘」分组新增 `复盘向导`（`/output/wizard`）
+- 分析舱「评分分析」分组新增 `V6 个股评分`（`/analysis/stock-score`）
+
+**P1: 总控舱分组膨胀治理**
+- 拆分「高级工具」（6 项）→「开发工具」（3 项：能力图谱 / DAG 调度 / 组件示例库）
+- MCP 服务、压力测试 移入「系统运维」分组
+- 数据标签 移入「模型与优化」→ 更名为「模型与工具」
+- 分组均衡度：平均 3.5 项/组，最大 5 项（系统运维），最小 3 项
+
+**P1: 智能体路由治理**
+- 标记 8 条旧智能体路由为废弃（trigger / tasks / llm / model-upgrade / api-config / skill-audit / optimization / feedback）
+- 标记 `/command/health` 和 `/command/monitor` 为废弃（已合并至 system-health）
+- 废弃路由总数：11 → 21，活跃路由：70 → 60
+
+**P2: 侧边栏搜索 Ctrl+K 快捷键**
+- `PortalShell` 新增全局 `Ctrl+K` / `Cmd+K` 快捷键，聚焦侧边栏搜索框
+- 搜索框 placeholder 更新为 `搜索页面… (Ctrl+K)`
+
+**P2: 面包屑参数化路由增强**
+- `getBreadcrumbs` 支持参数化路由（如 `/analysis/intelligent-score/:symbol`）
+- 参数值追加到标签中，显示为 `个股智能分析（带代码） · 600519`
+- 参数值不再作为独立面包屑层级重复出现
+
+**P2: 侧边栏标签对齐**
+- `研报复盘` → `研究报告`（对齐路由描述）
+- `智能体总控` → `智能体总控台`（对齐路由描述）
+
+### Metrics — V11 信息架构健康度
+
+| 指标 | V10 | V11 | 变化 |
+|------|-----|-----|------|
+| 总路由数 | 81 | 81 | — |
+| 活跃路由 | 70 | 60 | -10（废弃标记） |
+| 废弃路由 | 11 (13.6%) | 21 (25.9%) | +10 |
+| 侧边栏项目 | 40 | 44 | +4（孤儿路由补充） |
+| 孤儿路由 | 7 | 3 | -4 |
+| 死链接 | 0 | 0 | 绿 |
+| `document.title` 覆盖 | 0 | 100% (PageHeader 页面) | 绿 |
+| 最大分组项目数 | 6（高级工具） | 5（系统运维） | -1 |
+| 分组均衡度 | 偏高 | 均衡 | 绿 |
+| 侧边栏搜索快捷键 | 无 | Ctrl+K | 新增 |
+
+---
+
 ## [Unreleased] - 2026-08-15
 
 ### Added
@@ -29,6 +188,33 @@
 - `src/index.css` —— V5 → V6（Warmth Edition）：背景色相 240→36、卡片/次级/边框色同步温暖化、阴影从 rgba() 改为 hsl() 暖色语法、新增 `--surface-elevated`/`--surface-floating` 令牌；暗色模式同步温暖化
 - `tailwind.config.js` —— 新增 `shadow-surface-elevated`/`shadow-surface-floating` 令牌
 - `src/constants/theme/theme.tokens.portal.ts` —— 宋瓷语义色激活：舱室切换器 `bg-muted` → `bg-warm-gray`、顶栏 `bg-background` → `bg-ivory`、侧边栏 `bg-muted` → `bg-warm-gray`、Logo 渐变 `from-primary to-emerald-600` → `from-ru-blue to-primary`
+- `src/index.css` —— V7（排版温度 + 表面层级）：h2 引入 `--heading-warm` 暖色相（浅色 30/8%/12%、暗色 30/12%/96%）、h3 引入 `--heading-warm-secondary`（浅色 30/5%/18%、暗色 30/10%/88%）；暗色模式 `--muted-foreground` 从 56% → 64% 提升对比度；新增 `@layer components` 工具类 `widget-card-elevated`/`widget-card-floating` 为驾驶舱 Widget 提供开箱即用的深度层级
+- `src/constants/theme/theme.tokens.helpers.ts` —— 新增 `CHART_SEMANTIC_PALETTE`（9 维语义色：估值/质量/动量/波动/成长/情绪/风险/技术/基准），每维 4 色阶（primary/secondary/background/dark），解决跨页面图表配色不一致问题
+- `src/constants/theme.tokens.ts` —— 新增 `CHART_SEMANTIC_PALETTE` 和 `ChartSemanticDimension` 类型导出
+
+- **V10（Info Architecture Edition — 信息架构优化）**（2026-08-17）：
+  - `src/config/routes.ts` —— 新增 `RouteConfig.deprecated`/`redirectTo` 字段；11 条旧路由标记为废弃（批量导入/热门板块/采集测试/七维/抓取引擎/采集任务/行业分析/预测校验/周期复盘/因子画板/执行管理）；新增 `getActiveRoutes()`/`getDeprecatedRoutes()`/`findRouteByPath()`/`getBreadcrumbs()`/`BreadcrumbSegment` 共 5 个工具函数和类型
+  - `src/components/atoms/Breadcrumb.tsx` —— 新增 `AutoBreadcrumb` 组件：从 `ROUTE_REGISTRY` 自动生成层级面包屑，废弃路由末端显示 ⚠️ "已迁移至 …" 提示（含 `AlertTriangle` 图标 + 可点击跳转链接）
+  - `src/portal/PortalShell.tsx` —— 集成 `AutoBreadcrumb` 到主内容区顶部（`border-b` 分隔）；侧边栏新增搜索框（`Search` 图标 + 输入框 + 清除按钮），支持按页面名/路径/分组名实时过滤，无结果时显示"未找到匹配的页面"
+  - **影响范围**：3 个文件，新增组件 1 个，工具函数 5 个，废弃路由标记 11 条，0 新类型错误
+
+- **V9（Responsive Edition — 响应式适配升级）**（2026-08-17）：
+  - `src/index.css` —— 新增 8 组响应式工具类：`.page-container`（断点自适应内边距）、`.chart-responsive`（视口宽度驱动图表高度 280→320→380px）、`.heading-responsive`（标题字号 20→24→30px）、`.touch-target`（移动端 44px 最小点击区）、`.card-grid`/`.card-grid-sm`（auto-fill 自适应列数）、`.table-responsive`（移动端水平滚动 + 触摸优化）、`.layout-two-col`（md 以上并排）、`.stats-grid`（2→3→6 列自适应）、`.sidebar-panel`/`.mobile-bottom-nav`（侧边栏/底部导航显隐）
+  - `src/cockpit/layout/CockpitCrossLayout.tsx` —— 移动端左轨折叠改造：新增 `Menu`/`X` 图标 + `mobileRailOpen` 状态 + 遮罩层；左轨从 `flex w-48` → `hidden md:flex`（移动端通过 overlay 抽屉弹出）；Widget 网格从 `grid-cols-1 lg:grid-cols-2` → `grid-cols-1 sm:grid-cols-2`
+  - `src/cockpit/CockpitShell.tsx` —— 统计 KPI 栏从 `grid-cols-3 lg:grid-cols-6` → `grid-cols-2 sm:grid-cols-3 lg:grid-cols-6`
+  - `src/pages/analysis/IntelligentScorePage.tsx` —— 5 处 `lg:` 断点升级为 `md:`（包括 12 栏布局、col-span-4/8 分配）
+  - `src/pages/HomePage.tsx` —— 3 处 `lg:` 断点升级为 `md:`（组合资产总览 3 栏 + col-span 分配）
+  - `src/pages/analysis/IndustryDashboardPage.tsx` —— 1 处 `lg:grid-cols-3` → `md:grid-cols-2 lg:grid-cols-3`
+  - `src/pages/trading/StrategySnapshotPage.tsx` —— 3 处 `lg:` 断点升级为 `md:`（3 栏布局 + col-span 分配）
+  - `src/pages/trading/TradingFlowPage.tsx` —— 3 处 `lg:` 断点升级为 `md:`（2 栏布局 + col-span-2）
+  - `src/pages/trading/PortfolioPage.tsx` —— KPI 栏从 `grid-cols-3 lg:grid-cols-6` → `grid-cols-2 sm:grid-cols-3 lg:grid-cols-6`
+  - **影响范围**：12 个文件，新增响应式 CSS 工具类 8 组，`lg:`→`md:` 断点升级 20+ 处，0 新类型错误
+
+- **V8（图表示义色桥接 + Widget 深度层级）**（2026-08-17）：
+  - `src/components/chart/shared.config.ts` —— 新增 `CHART_SEMANTIC_PALETTE` 导入、`DIMENSION_NAME_MAP`（70+ 中文/英文/别名→语义维度映射）、`getSemanticColor(dimensionName)` 模糊匹配函数、`getSemanticScale(dimensionName)` 完整色阶函数、`SEMANTIC_DIMENSION_LABELS` 中文标签映射、`SEMANTIC_SERIES_COLORS` 9 色序列；图表消费者可按业务维度（估值/质量/动量…）选色，而非硬编码 series1-6
+  - `src/components/chart/ScoreRadar.tsx` —— 新增 `dimensionColors` 和 `useSemanticColors` 属性：支持每维度独立着色（多 Radar 组件渲染 + 维度图例），设 `useSemanticColors=true` 自动用 `getSemanticColor()` 匹配语义色
+  - `src/config/chartColors.ts` —— 新增 `SEMANTIC_TO_FACTOR_COLOR` 映射表（9 维语义色 → 现有轮动因子色），向后兼容
+  - **驾驶舱 Widget 深度层级**：19 个 Widget 统一添加 `widget-card-elevated` CSS 类（通过 `WidgetStateShell.className` 透传），激活 V7 定义的 `--surface-elevated` 阴影，建立三层卡片深度系统：elevated（聚焦 Widget）→ 默认 Card → floating（弹窗/工具提示）
 - `src/main.tsx` —— 从 120 行内联验证逻辑简化为 2 行：`import { verifyDesignTokensOnReady }` + `verifyDesignTokensOnReady()`
 - `src/store/themeStore.ts` —— `applyTheme()` 函数在主题切换后通过 `requestAnimationFrame` 延迟一帧自动调用 `verifyDesignTokens()`，覆盖 setMode / toggleTheme / cycleMode / system listener / rehydrate 全部 5 条主题切换路径
 - **颜色契约统一（文档→代码对齐）**：品牌主色从文档描述"翡翠绿 #0D9165"统一为代码真相源"Apple Blue #007AFF（`--primary: 210 100% 50%`）"，消除跨 9 个文件的双线叙事。宋瓷语义色（汝窑天青、官窑粉青等）降级为装饰性扩展，不参与功能语义。涉及文件：

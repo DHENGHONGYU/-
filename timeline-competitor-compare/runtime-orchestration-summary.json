@@ -244,6 +244,30 @@
         "nodeId": "page-timeline-compare",
         "htmlSrc": "pages/timeline-compare.html"
       }
-    ]
+    ],
+    "expectedDispatches": [
+      {
+        "nodeId": "page-timeline-compare",
+        "pageId": "page-timeline-compare",
+        "targetPageId": "page-timeline-compare",
+        "htmlSrc": "pages/timeline-compare.html",
+        "packetType": "FreePagePacket",
+        "status": "completed",
+        "changedFiles": [
+          "pages/timeline-compare.html"
+        ],
+        "toolCallLedger": {
+          "source": "main-agent-runtime-trace",
+          "traceDigest": "dispatch-20260817-timeline-compare",
+          "todoWriteCalls": 0,
+          "previewCalls": 0,
+          "validationScriptCalls": 0,
+          "helperScriptWrites": 0
+        },
+        "recordedAt": "2026-08-17T15:12:37.087Z",
+        "source": "record-dispatch-completion.mjs"
+      }
+    ],
+    "mainAgentPostDispatchMutations": []
   }
 }

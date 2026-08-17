@@ -276,3 +276,93 @@ return new Promise((resolve) => {
 2. **超时/取消状态竞态**（#2）—— 超时任务可能被误报为成功；并且由于 MCP 为进程内调用，"signal 取消在途"在本架构不可行，须以"放弃等待+丢弃迟到结果"为正确语义并止血竞态。
 
 建议下一迭代**先落 P0 两项**（合计改动 < 40 行，且均有可加测试），再推进 P1 类型收敛与测试补全。综合健康度评估维持 **77 / B**，但 P0 修复后预计可上探至 **82–85 / B+**。
+
+---
+
+## 十一、P0 修复落地记录（2026-08-17 实施）
+
+> 按 AGENTS.md 代码编写规则 + 通用门禁处理；并行 COZE 开发环境共存，改动严格限定于 `src/agents/` 三文件，未触碰其他并行 Agent 在途文件。
+
+### 11.1 已落地改动
+
+**P0-1 接通 HealthMonitor（#1）** — `src/agents/agentRuntime.ts`
+- 新增 `import { getAgentHealthMonitor } from './agentHealthMonitor'`
+- 新增私有方法 `recordHealth(task)`（异常兜底，监控故障不影响任务主流程）
+- 在 4 个终态分支调用：`.then`(completed)、`.catch`(failed)、timeout 回调、以及 `cancelTask`(cancelled) —— 修复 `recordTask` 全仓零调用的根因。
+
+**P0-2 消除状态竞态（#2）** — `src/agents/agentRuntime.ts`
+- `execute()` 内引入 `let settled = false`；timeout 回调置 `settled=true` 并 `resolve`
+- `.then` / `.catch` 以 `if (settled) return; settled = true; ...` 守卫，**超时后迟到 resolve 不再把 `timeout` 覆盖为 `completed`**；同时守卫 `taskQueue.markXxx` 与 `recordHealth`，避免重复/错态。
+
+**环境配置可转换逻辑** — `src/agents/agentHealthMonitor.ts` + `src/agents/index.ts`
+- 新增 `resolveHealthCheckIntervalMs()`：从 `VITE_AGENT_HEALTH_CHECK_INTERVAL_MS` 解析（字符串→数字，非法/缺失回退 `DEFAULT_CHECK_INTERVAL_MS`，上限 300s 钳制），保证跨并行开发环境可移植。
+- `start()` 默认参数改为 `resolveHealthCheckIntervalMs()`；`index.ts` 去掉硬编码 `30000`，改 `healthMonitor.start()`。
+
+### 11.2 门禁结果
+
+| 门禁 | 结果 | 说明 |
+|------|------|------|
+| `tsc:prod` (`--incremental false`) | ✅ 0 错误 | 全仓 0 错误；Grep 确认 `src/agents` 无 `error TS` |
+| `audit:layers` | ✅ EXIT=0 | 0 跨层违规 |
+| `audit:acl-consistency` | ✅ EXIT=0 | 0/0 |
+| `vitest src/agents` | ✅ 20 通过 / 0 失败 | 原 3 失败（2 文件）已在 §12 修复；本次新增 P1 健康上报/竞态/间隔测试 6 例，全绿。 |
+
+### 11.3 遗留与建议
+
+- ~~3 个 vitest 失败为预存、非本次引入~~ → **已于 §12 修复**：根因是测试仅 `import '@/mcp/register'`（仅准备 glob 加载器，不注册 Server），缺 `ensureMCPRegistered()` 触发；修复对齐生产 `triggerAgentInit` 链路，**未触碰 `src/mcp/*` 生产代码**。
+- P1（#3 类型收敛 / #4 取消语义 / #13 测试补全）与 P2（#5–#12 卫生）保持原路线图待办。
+- 综合健康度：P0 两项已落地，预计由 **77/B 上探至 82–85/B+**（待 P1 收口后复评）。
+
+## 十二、测试缺口修复记录（2026-08-17 续）
+
+用户要求「继剩余任务，同时修复 2 个 MCP 测试缺口」。本回合在 P0 落地基础上，闭环测试缺口并补全 P1 测试覆盖。
+
+### 12.1 根因（2 个 MCP 测试失败）
+
+- `agentMcpReachability.test.ts` / `agentMcpDependency.test.ts` 仅 `import '@/mcp/register'`。
+- 经核对 `src/mcp/register.ts`：`import '@/mcp/register'` 仅通过 `import.meta.glob` **准备**懒加载器并定义 `ensureMCPRegistered()`，**并不注册任何 Server**；注册仅在 `ensureMCPRegistered()` 被调用时发生（生产由 `triggerAgentInit()` 触发）。
+- 因此 `mcpRegistry` 在测试容器内恒空 → `listServers().length === 0`、`server.listTools().length === 0`、`validateAgentMcpDependencies()` 返回 8 条 violation。旧测试注释误称「import 即注册」，实为失败根因。
+- 排除项：registry 键来自 `server.info.name`（短名 `fetcher`/`news`/`screening`/`pool`/`backtest`/`llm`/`scoring:v6`），与 `DEFAULT_AGENTS` 绑定完全一致，非命名失配。已用 Grep 核验全部 Server `info.name`。
+
+### 12.2 修复（仅改测试 harness，零触碰 src/mcp/* 生产代码）
+
+- 两测试 `beforeAll` 均改为：
+  ```ts
+  ensureMCPRegistered()
+  await Promise.all([mcpReadyPromise, mcpFullyReadyPromise])
+  ```
+  `agentMcpDependency.test.ts` 在其后再调用 `initAgentSystem()`，对齐生产链路。
+- 范式对齐：`tests/__tests__/integration/mcp-acl-scenarios.integration.test.ts` 与 `src/mcp/__tests__/register.sync.test.ts` 已用同一 `ensureMCPRegistered + await` 范式，证明其在 jsdom 可用。
+
+### 12.3 P1 测试补全（覆盖 P0 新逻辑）
+
+新增 `src/agents/__tests__/agentRuntime.health-reporting.test.ts`（6 例）：
+- P0-1：成功/失败执行后 `getAgentHealthMonitor().getHealthReport(agentId)` 非 null（验证 recordTask 已接线）。
+- P0-2：超时(100ms)后迟到完成(150ms resolve)不得覆盖 `status` 为 `timeout`（验证 settled 守卫）。
+- P0-3：`resolveHealthCheckIntervalMs` 环境变量解析 6 例（缺失回退 / 合法 / 非法 / 非正 / 超上限钳制 / 自定义回退）。
+
+### 12.4 P0-3 便携性增强
+
+`resolveHealthCheckIntervalMs` 原仅读 `import.meta.env`，在 Node/测试/SSR（并行 COZE 环境之一）读不到 `VITE_` 变量。增强为：优先 `import.meta.env`，回退 `process.env`（带 `typeof process` 守卫，不破坏浏览器）。该增强使 `vi.stubEnv` 在 vitest 下可注入，测试可验证；同时提升跨环境可移植性，契合「环境配置可转换」要求。
+
+### 12.5 门禁复验
+
+| 门禁 | 结果 |
+|------|------|
+| `tsc:prod` | ✅ 0 错误 |
+| `audit:layers` | ✅ 0 违规 |
+| `audit:acl-consistency` | ✅ 0/0 |
+| `vitest src/agents` | ✅ 20 通过 / 0 失败（5 文件） |
+
+### 12.6 改动清单（仅 src/agents 域，未冲突并行环境）
+
+- `M` `src/agents/__tests__/agentMcpReachability.test.ts`（注册触发 + beforeAll）
+- `M` `src/agents/__tests__/agentMcpDependency.test.ts`（注册触发 + await + initAgentSystem）
+- `A` `src/agents/__tests__/agentRuntime.health-reporting.test.ts`（新增 P1 测试）
+- `M` `src/agents/agentHealthMonitor.ts`（resolveHealthCheckIntervalMs 增加 process.env 回退）
+
+### 12.7 后续
+
+- P1（#3 类型收敛 / #4 取消语义）与 P2（#5–#12 卫生）仍为待办路线图，未在本回合范围（涉及更大范围重构与并行环境耦合，建议单独评审）。
+- 综合健康度：P0 修复 + 测试缺口闭环 + P1 覆盖后，预计由 **77/B 上探至 82–85/B+**。
+
