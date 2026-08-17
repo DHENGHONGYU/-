@@ -560,6 +560,11 @@ const STORE_TO_TYPE_MAP: Record<string, string> = {
   // proofread_reports 的真实实体类型为 FileImportProofreadReport（src/types/modules/data-sync.types.ts），
   // 切勿误映射到 src/data/types/types.hybridProofread.ts 中同名但功能不同的代码安全扫描类型 ProofreadReport。
   proofread_reports: 'FileImportProofreadReport',
+  // 报告资产化（v33 新增，P1 报告资产化）：实体类型内联定义于 src/data/dataLayerContentStores.ts
+  generated_reports: 'GeneratedReport',
+  report_templates: 'ReportTemplate',
+  // 筛选结果集持久化（v34 新增，P0 筛选结果集持久化）：实体类型内联定义于 src/data/dataLayerContentStores.ts
+  screening_results: 'ScreeningRunResultRecord',
   // 以下 5 个 store 的真实实体类型分别定义在 src/types/modules 与 src/data/dataLayerContentStores.ts（内联 *Entry），
   // 脚本启发的单数化推断名（AnalysisResult/CollectionHistory/ConflictLog/FileImportRecord/ScheduleConfig）与真实类型名不符，
   // 故在此显式映射以消除「缺实体类型」告警；真实类型已随定点注入纳入扫描。

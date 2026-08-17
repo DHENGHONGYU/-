@@ -134,6 +134,15 @@ function isPseudoReference(target: string): boolean {
   if (target.endsWith('/')) return true // 纯目录引用（尾斜杠）
   // 占位符文件名：Xxx/xxx 前缀表示模板示例（如 XxxWidget.tsx、xxx.types.ts、useXxxStore.ts）
   if (/\b[Xx]xx\w*\.(?:ts|tsx|js|jsx)\b/.test(target)) return true
+  // 构建产物目录：node_modules / dist / build / .next 等绝不可能被文档引用
+  if (/\bnode_modules\b/.test(target)) return true
+  if (/\b(?:dist|build|\.next|coverage|\.turbo)\b/.test(target)) return true
+  // 占位语义名称：TODO / FIXME / WIP / TBD / PLACEHOLDER
+  if (/\b(?:TODO|FIXME|WIP|TBD|PLACEHOLDER)\b/i.test(target)) return true
+  // React Hook 模板：useXxx / useSomething 形如 use+大写字母+驼峰
+  if (/\buse[A-Z][a-z]+[A-Z]\w*\.(?:ts|tsx)\b/.test(target)) return true
+  // CamelCase 模板占位：SomeComponent / MyWidget 等大写开头的模板示例
+  if (/\b(?:[A-Z][a-z]+){2,}\.tsx?\b/.test(target)) return true
   return false
 }
 
