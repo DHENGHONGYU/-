@@ -276,6 +276,20 @@ export default defineConfig({
         rewrite: (path) => path.replace('/api/proxy/em-f10/', '/'),
         headers: { Referer: 'https://emweb.securities.eastmoney.com/' },
       },
+      // 东财 datacenter API 代理（一致预期/评级等）
+      '/api/proxy/em-dc': {
+        target: 'https://datacenter.eastmoney.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace('/api/proxy/em-dc/', '/'),
+        headers: { Referer: 'https://data.eastmoney.com/' },
+      },
+      // 东财 push2 行情 API 代理（总股本/流通股本等）
+      '/api/proxy/em-push2': {
+        target: 'https://push2.eastmoney.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace('/api/proxy/em-push2/', '/'),
+        headers: { Referer: 'https://quote.eastmoney.com/' },
+      },
       // 东方财富股吧代理
       '/api/proxy/em-guba': {
         target: 'https://guba.eastmoney.com',
