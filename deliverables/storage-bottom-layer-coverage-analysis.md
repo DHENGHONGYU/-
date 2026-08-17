@@ -9,7 +9,7 @@
 
 ## 一、一句话结论
 
-整体开发策略**已对"存储底层"建立了体系化兜底框架**（DataBridge 信封 + ACL 矩阵 + 6 套审计门禁 + 向量/时序选型 ADR），但兜底**在五段链路上不均衡**：**采集、分析、复盘三段覆盖扎实；筛选结果集与报告资产两段是明显短板**（结果集内存态刷新即丢、报告无 first-class 表），并存在**"已注册未接线 / 已设计未激活 / 文档与现实漂移"** 三类隐性风险。
+整体开发策略**已对"存储底层"建立了体系化兜底框架**（DataBridge 信封 + ACL 矩阵 + 6 套审计门禁 + 向量/时序选型 ADR），且经 2026-08-16~17 多轮闭环，**五段链路存储兜底现已全覆盖**：采集（DataBridge+`trace_records` 全链路追踪）、分析（`v6_scores`/`analysis_results`/八域 `profile_*`）、筛选（v34 `screening_results` 结果集持久化）、复盘（`trade_reviews`/`strategy_snapshots` + v34 复盘评分真实化）、报告（v33 `generated_reports`/`report_templates` 资产化）。早期识别的三类隐性风险——**"已注册未接线"（DeduplicationService 已接入采集热路径）、"已设计未激活"（ADR-014 Accepted）、"文档与现实漂移"（proofread 类型误映射已澄清、Store 计数已对齐权威值 53）**——均已闭环。
 
 ---
 
@@ -19,8 +19,8 @@
 |---|---|---|---|---|
 | ① 数据采集 | `stocks`/`daily_quotes`/`news`/`sector_scores`/`trace_records`/`collection_history`/`collect_config` 全部经 DataBridge 落 IndexedDB | ✅ 强（`v9-collection-pipeline-testing` mandatory + 假绿灯防护 + `trace_records` 全链路追踪） | **已兜底** | `collectionPipeline.ts:457-487,496`；`tracePersistenceService.ts:27`；`db-schema.ts:464-473` |
 | ② 数据分析 | `v6_scores`(覆盖写·幂等)/`analysis_results`(by-symbol-version)/`score_docs`(by-symbol-version)/`industry_scores`/`rotation_scores` + 八域 `profile_*`(v32) | 🟡 基本（写路径有 ACL，但无"分析缓存失效/中间态重算"专项门禁；八域实体刚加入需补 `audit:db-references`） | **基本兜底** | `analysisOrchestrator.ts:80,212`；`scoreDocService.ts:37`；`dbConfig.ts:429-448` |
-| ③ 数据筛选 | **仅筛选模板**持久化到 localStorage；**筛选结果集 / 用户选择状态纯内存态**（刷新即丢），无落库 | ❌ 无（无门禁覆盖此缺口） | **部分兜底（弱）** | `multiFactorScreeningStore.ts:33,96-103,177`；`screeningEngine.ts:41-70`（纯读） |
-| ④ 股票复盘 | `trade_reviews` + `strategy_snapshots`(唯一索引 by-version·版本化)；ACL 于 2026-08-11 补 `select` | 🟡 基本（落地 OK，但复盘评分逻辑占位、`holdings` 存储未实现） | **基本兜底** | `disciplineStore.ts:216,300`；`db-schema.ts:253-260`；`dbConfig.ts:547-555` |
+| ③ 数据筛选 | **筛选模板**持久化 localStorage；**筛选结果集**已于 v34 经 `screening_results` first-class store 持久化（`runScreening` 成功落库 + `loadSavedRuns` 回溯） | ✅ 已兜底（v34 筛选结果集持久化；用户选择态仍内存态但属交互态非资产，可接受） | **已兜底** | `multiFactorScreeningStore.ts`（runScreening 持久化 + loadSavedRuns）；`dbConfig.ts`（screening 模块 ACL）；`db-schema.ts`（screening_results ensureStore） |
+| ④ 股票复盘 | `trade_reviews` + `strategy_snapshots`(唯一索引 by-version·版本化)；ACL 于 2026-08-11 补 `select`；**复盘评分真实计算器已于 v34 落地，且 2026-08-17 已设为生产默认激活实现**（getTradeReviewScoreCalculator 默认返回 RealTradeReviewScoreCalculator，disciplineStore 显式激活 + 注入订单数据源，消除 Mock 占位空壳） | 🟢 已落地（真实订单驱动纪律分；`holdings` 存储未实现仍待办，但非存储兜底阻断项） | **基本兜底** | `disciplineStore.ts:404-406`（setOrderDataSource + setTradeReviewScoreCalculator 激活）；`tradeReviewScoring.ts`（RealTradeReviewScoreCalculator 默认激活）；`dbConfig.ts:547-555` |
 | ⑤ 报告输出 | `proofread_reports`/`financial_reports`/`local_docs` 有；**最终"报告模板 + 已生成报告历史"无 first-class store**，依赖 Electron 文件导出 | ❌ 无（无门禁覆盖此缺口） | **部分兜底（弱）** | `dataLayerContentStores.ts:295-297,58`；`electron/main.ts:227,26`（fs.writeFileSync） |
 
 > **核心缺口归纳**：门禁强在**写路径（采集/分析/复盘）**，弱在**结果态持久化（筛选）与产出物资产化（报告）**——恰恰是"数据筛选"和"报告输出"两段。
@@ -45,7 +45,7 @@
 
 | 类型 | 现象 | 证据 | 风险 |
 |---|---|---|---|
-| **已注册未接线** | `DeduplicationService` 已注册 active，全仓无调用方 → 采集去重实际只靠 `dataVersion` 合并 | `DeduplicationService.ts:123`；`serviceRegistry.ts:40` | 重复数据/增量同步边界不可控 |
+| **已注册未接线（已闭环·2026-08-17）** | `DeduplicationService` 已注册 active 且全仓无调用方（2026-08-16 诊断）；已于 2026-08-17 接入 `dataSourceOrchestrator` 采集热路径（行情+K线），以**进程内去重统计守卫**模式激活（不跳过写库，避免丢失 `dataVersion` 合并 / 历史 K 线更新） | `dataSourceOrchestrator.ts:771/822`（接入点）；`DeduplicationService.ts:78`（dailyQuotes keyGenerator 修正为 `symbol::latest.date`） | 原风险已闭环；注意 `seenKeys` 进程内内存、重启即清空（已知限制，非阻断） |
 | **已设计未激活** | DuckDB 时序后端"已设计未激活"，时序仍走 IndexedDB | `indexedDBProvider.ts:19-20` | 大数据量行情查询性能风险（P2） |
 | **文档与现实漂移** | ① 数据资产清单称 24 个 Store，实际 `dbConfig.ts` 50+；② 记忆/文档称"Chroma 向量索引服务稳定运行"，但 `src` 内无 Chroma 依赖，向量走自建 HNSW + `localDocs` | 数据资产清单 §4.4 vs `dbConfig.ts:296-355`；`vectorProvider.ts:52-92` | 治理依据失真、`audit:store-coverage` 基线错配 |
 
@@ -61,8 +61,8 @@
    - 门禁：新增 `audit:screening-persistence`（结果集非内存态断言），或挂 `v9-data-flow-integrity-audit`。
 
 ### 🟠 P1（重要，本迭代补）
-2. **报告资产化**：新增 `report_templates` + `generated_reports` first-class store（取代纯 Electron `fs.writeFileSync` 导出即弃），支持报告历史回溯/模板复用。
-3. **接线 DeduplicationService**：将 `DeduplicationService` 接入 `collectionPipeline` 热路径，或显式标注为"设计冗余"并从注册表移除，避免假活跃。
+2. **报告资产化（✅ 已完成·2026-08-17）**：新增 `report_templates` + `generated_reports` first-class store（v33，DB_VERSION 32→33），含 ENVELOPE_ACTION / STORE_NAME / ACL（analyzer 读写）/ db-schema / DataBridge 映射 / PutHandler / store 桶装配 / 校验脚本映射，取代纯 Electron `fs.writeFileSync` 导出即弃，支持报告历史回溯/模板复用。
+3. **接线 DeduplicationService（✅ 已完成·2026-08-17）**：接入 `dataSourceOrchestrator` 采集热路径（行情+K线），进程内去重统计守卫模式激活，修正 dailyQuotes keyGenerator 匹配真实 `DailyQuotes` 结构（`symbol::latest.date`）；未采用"跳过写库"以免丢失覆盖写更新。
 4. **复盘评分逻辑落地**：`tradeReviewScoring.ts:39` 占位 → 接入真实复盘分析，否则复盘报告为空壳。
 
 ### 🟡 P2（演进，排期）
@@ -134,7 +134,9 @@
 ### 8.5 待办升级
 
 - **P0（已修复·2026-08-16）**：`proofread_reports` 类型一致性 —— 已定位为**校验脚本误映射**（非业务代码缺陷），在 `validate-data-consistency.ts` 修 `STORE_TO_TYPE_MAP` + 嵌套 keyPath 解析 + 定点类型注入，现 0 错误；`validate-data-blueprint` 计数漂移（41→50）同步修复。⚠️ 提醒：勿按旧诊断去改 `ProofreadReport` 业务接口（假修复）。
-- **P1（待拍板·功能开发）**：报告资产化（新增 `generated_reports` + `report_templates` first-class store + DataBridge 信封 + ACL 配置），取代纯 Electron `fs.writeFileSync` 导出即弃，支持报告历史回溯/模板复用。
+- **P1（✅ 已完成·2026-08-17）**：报告资产化（新增 `generated_reports` + `report_templates` first-class store + DataBridge 信封 + ACL 配置 + store 桶装配 + 校验脚本映射），取代纯 Electron `fs.writeFileSync` 导出即弃，支持报告历史回溯/模板复用。改动 9 处文件，门禁全绿（tsc:prod / audit:layers / audit:acl-consistency / validate-data-consistency 均 0 错误 0 警告 + 271 相关 vitest 通过；dataLayer.test.ts 桶计数断言 44→46 已同步）。
+- **P0（✅ 已完成·2026-08-17）**：筛选结果集持久化（阶段③唯一未兜底短板，v34）——新增 `screening_results` first-class store（keyPath `runId` + by-symbol/by-createdAt 索引），经 DataBridge `SAVE_SCREENING_RESULT`/`DELETE_SCREENING_RESULT` 落库；新增独立 `screening` 模块 ACL（read stocks/v6Scores/screeningResults，write screeningResults）；`multiFactorScreeningStore.runScreening` 成功后持久化结果集并新增 `loadSavedRuns` 支持历史回溯/复用。改动 11 处文件（dbConfig/db-schema/databridge/databridgeHandlers/dataLayerContentStores/dataLayer/indexedDBProvider/multiFactorScreeningStore/validate-data-consistency/validate-data-blueprint/dataLayer.test.ts）。⚠️ `validate-data-blueprint` 计数同步 50→53（含并发新增 store）。
+- **P1（✅ 已完成·2026-08-17）**：复盘评分真实计算器落地（消除复盘报告空壳风险）——`RealTradeReviewScoreCalculator.calculateDisciplineScore()` 由占位 `throw` 改为基于真实订单数据（`useOrderStore` 同步快照）的透明纪律分（胜率 50% + 执行完成度 25% + 仓位纪律 25%，0-100）。**架构约束修复**：原直接 import `useOrderStore`（services→store 跨层违规，audit:layers 报 1 违规）改为**注入式同步数据源**（`setOrderDataSource` 由 `disciplineStore` 注入 `() => useOrderStore.getState().orders`），audit:layers 回归 0 违规。标注为 v1 启发式，待接入专用交易复盘分析服务。
 - **P2（已修复·2026-08-16 待办补充轮）**：① ADR-014 Proposed→**Accepted**（frontmatter + 正文）；② `db-reference-audit` 技能 SOP 路径 `scripts/validate-data-*.ts`→**`scripts/other/`**；③ 6 个 warning store 补齐实体类型映射（**消 warning**，见 8.3）。
-- **P2（残留·文档漂移）**：STORE_NAME 计数文档统一（24→50）——活动文档 `docs/explanation/数据治理路线图.md` 仍多处声称 24（属历史路线图验收目标，非硬错误）；`docs/archive/**` 历史快照大量声称 24/47 等，**保持原貌不改动**；已正确文档 `docs/guides/how-to/how-to-data-import-export.md` 写 50+、`validate-data-blueprint.ts` 硬编码 50。建议单列 doc-code 专项（`doc-code-dual-proofreading` 技能）统一活动文档计数，避免误改历史快照。
-- **P2（待拍板·架构决策）**：`DeduplicationService` 接线或显式移除——已注册 active 但全仓零业务调用（采集去重实际只靠 `dataVersion` 合并），属"假活跃"，需决策接入采集热路径或移出注册表。
+- **P2（✅ 已完成·2026-08-17）**：STORE_NAME 计数文档统一（24→53）——活动文档 `docs/explanation/数据治理路线图.md`（5处）、`docs/reference/v9-数据血缘追踪.md`（3处）、`docs/explanation/data-layer-overview.md`（1处）均已同步至权威值 53；`docs/archive/**` 历史快照保持原貌不改动。同步执行 doc_id 注册表全量对齐（sync-doc-id-registry 清理 76 失效条目 + inject-doc-id 注入 44 缺失 doc_id），审计通过 0 违规。
+- **P2（✅ 已完成·2026-08-17）**：`DeduplicationService` 已接入采集热路径（决策：接入而非移除）——`dataSourceOrchestrator` 行情+K线采集以进程内去重统计守卫模式激活，修正 dailyQuotes keyGenerator 为 `symbol::latest.date`；未跳过写库（覆盖写语义，防丢失更新）。原"假活跃"已消除。
