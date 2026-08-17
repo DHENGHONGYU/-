@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-GUIDE-043
+title: "如何新增一个 Store（Zustand + withBroadcast）"
+domain: guide
+status: active
+last_updated: 2026-08-17
+---
+
+---
 doc_id: V9-DOC-GUIDE-027
 title: "如何新增一个 Store（Zustand + withBroadcast）"
 domain: guide

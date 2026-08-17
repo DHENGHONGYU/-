@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-DEV-018
+title: "V9 常见问题排查指南"
+domain: dev
+status: active
+last_updated: 2026-08-17
+---
+
+---
 title: V9 常见问题排查指南
 type: how-to
 domain: project

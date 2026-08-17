@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-DEV-011
+title: "自定义 Hook 使用指南"
+domain: dev
+status: active
+last_updated: 2026-08-17
+---
+
+---
 doc_id: V9-DOC-DEV-004
 title: "自定义 Hook 使用指南"
 domain: dev

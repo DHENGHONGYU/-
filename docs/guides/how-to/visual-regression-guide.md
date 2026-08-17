@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-DEV-022
+title: "V9 视觉回归基线管理规范"
+domain: dev
+status: active
+last_updated: 2026-08-17
+---
+
 ﻿---
 doc_id: V9-DOC-DEV-009
 title: visual-regression-guide

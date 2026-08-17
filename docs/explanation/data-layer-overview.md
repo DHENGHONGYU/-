@@ -491,7 +491,7 @@ src/pages/ 或 src/components/  ← UI 层（仅通过 Store 获取数据）
 
 ## 8. Repository 统一仓储契约（D-02）
 
-`repository.ts` 提供 **Repository<T>** 接口与 `createRepository()` 工厂函数，目标是为分散在 24+ store 中的异构数据访问提供统一契约。
+`repository.ts` 提供 **Repository<T>** 接口与 `createRepository()` 工厂函数，目标是为分散在 53+ store 中的异构数据访问提供统一契约。
 
 ```typescript
 export interface Repository<T, TKey = string> {

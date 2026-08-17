@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-GUIDE-037
+title: "08. 实施计划"
+domain: guide
+status: active
+last_updated: 2026-08-17
+---
+
+---
 doc_id: V9-DOC-GUIDE-024
 title: 08-implementation-plan
 tier: important

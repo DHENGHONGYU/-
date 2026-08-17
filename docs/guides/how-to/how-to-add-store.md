@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-DEV-013
+title: "如何新增一个 Store（Zustand + withBroadcast）"
+domain: dev
+status: active
+last_updated: 2026-08-17
+---
+
+---
 title: how-to-add-store
 code_version: "2.0.0-rc.1"
 tier: important

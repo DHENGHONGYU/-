@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-DEV-016
+title: "如何导入导出与备份 V9 数据"
+domain: dev
+status: active
+last_updated: 2026-08-17
+---
+
+---
 title: 如何导入导出与备份 V9 数据
 type: how-to
 domain: data

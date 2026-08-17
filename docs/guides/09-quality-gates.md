@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-GUIDE-038
+title: "09. 质量门禁"
+domain: guide
+status: active
+last_updated: 2026-08-17
+---
+
+---
 title: 09. 质量门禁
 type: reference
 domain: qa

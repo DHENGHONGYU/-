@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-DEV-020
+title: "V9-DOC-GUIDE-012：`no-unsafe-*` 14 种修复模式手册"
+domain: dev
+status: active
+last_updated: 2026-08-17
+---
+
+---
 title: '@typescript-eslint/no-unsafe-* 系列规则 14 种修复模式实战手册'
 doc_id: V9-DOC-GUIDE-012
 domain: guide

@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-DEV-017
+title: "如何运行采集与评分流水线"
+domain: dev
+status: active
+last_updated: 2026-08-17
+---
+
+---
 title: 如何运行采集与评分流水线
 type: how-to
 domain: data

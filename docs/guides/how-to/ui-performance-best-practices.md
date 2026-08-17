@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-DEV-021
+title: "UI 性能最佳实践"
+domain: dev
+status: active
+last_updated: 2026-08-17
+---
+
+---
 title: UI性能最佳实践
 type: guide
 domain: frontend

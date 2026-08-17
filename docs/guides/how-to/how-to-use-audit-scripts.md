@@ -197,7 +197,7 @@ node scripts/audit/audit-circuit-breaker-reset.mjs
 node scripts/audit/audit-test-catalog-coverage.mjs
 ```
 
-**检查内容**：扫描所有 `*.test.{ts,tsx}` 文件，检查是否在 `docs/reference/test-catalog.md`（已归档至 `docs/archive/historical-2026-08-16/batch6/docs/reference/test-catalog.md`）中收录，防止测试收录遗漏。
+**检查内容**：扫描所有 `*.test.{ts,tsx}` 文件，检查是否在 `docs/reference/test-catalog.md`（已归档至 `docs/archive/historical-2026-08-16/batch6/docs/reference/test-catalog.md（已归档）`）中收录，防止测试收录遗漏。
 
 **使用时机**：
 - 新增测试文件后必跑
@@ -242,7 +242,7 @@ node scripts/audit/audit-test-duplicates.mjs
 
 **关联报告**：`../../archive/historical-2026-08-16/batch7/docs/reports/test-duplicate-cleanup-suggestions-2026-08-09.md（已归档）`
 
-**关联技术债**：TD-012（已完成）、TD-015（P2 完成，P3 暂缓）— 详见 TECH-DEBT.md（已归档至 `docs/archive/historical-2026-08-16/batch6/docs/reports/TECH-DEBT.md`）
+**关联技术债**：TD-012（已完成）、TD-015（P2 完成，P3 暂缓）— 详见 TECH-DEBT.md（已归档至 `docs/archive/historical-2026-08-16/batch6/docs/reports/TECH-DEBT.md（已归档）`）
 
 **关联治理报告**：
 - [directDataAPI 迁移验证报告](../../../deliverables/software-company/directDataAPI-migration-report-2026-08-09.md)

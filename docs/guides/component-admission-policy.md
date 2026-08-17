@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-GUIDE-039
+title: "组件新增准入政策"
+domain: guide
+status: active
+last_updated: 2026-08-17
+---
+
+---
 title: 组件新增准入政策
 type: guide
 domain: frontend

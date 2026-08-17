@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-GUIDE-036
+title: "07. 运营策略"
+domain: guide
+status: active
+last_updated: 2026-08-17
+---
+
+---
 doc_id: V9-DOC-GUIDE-037
 title: "07. 运营策略"
 domain: guide
@@ -97,7 +105,7 @@ npm run build
 
 > **目的**：防止 V10 / v6-pro-cockpit 等外部参考文档被误读为 V9 当前必须遵循的规则。
 
-`docs/explanation/implementation/` 中部分文档（如 `../archive/historical-2026-08-16/batch7/docs/explanation/v10-architecture-alignment.md（已归档）`、`<宸插綊妗?`、`../archive/historical-2026-08-16/batch7/docs/reference/v6-cockpit-ui-reference.md`、`../archive/historical-2026-08-16/batch7/docs/explanation/trading-core-factors.md`）属于**外部参考蓝图**，其状态统一标记为：
+`docs/explanation/implementation/` 中部分文档（如 `../archive/historical-2026-08-16/batch7/docs/explanation/v10-architecture-alignment.md（已归档）`、`<宸插綊妗?`、`../archive/historical-2026-08-16/batch7/docs/reference/v6-cockpit-ui-reference.md`（已归档）、`../archive/historical-2026-08-16/batch7/docs/explanation/trading-core-factors.md`（已归档））属于**外部参考蓝图**，其状态统一标记为：
 
 ```
 Status: Future Reference / Deferred

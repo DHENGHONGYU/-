@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-DEV-015
+title: "如何配置 V6 评分引擎权重与阈值"
+domain: dev
+status: active
+last_updated: 2026-08-17
+---
+
+---
 title: 如何配置 V6 评分引擎权重与阈值
 type: how-to
 domain: backend

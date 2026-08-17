@@ -1,4 +1,12 @@
 ---
+doc_id: V9-DOC-GUIDE-041
+title: "V9 智能投研复盘系统 — 新成员 30 分钟上手指南"
+domain: guide
+status: active
+last_updated: 2026-08-17
+---
+
+---
 doc_id: V9-DOC-GUIDE-026
 title: getting-started
 last_updated: 2026-08-13
