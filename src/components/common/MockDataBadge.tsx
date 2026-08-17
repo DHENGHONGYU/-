@@ -9,6 +9,7 @@
  */
 
 import React from 'react'
+import { cn } from '@/lib/utils'
 import type { DataRecordMeta } from '@/types/data/DataRecordMeta'
 
 /** MockDataBadge 属性 */
@@ -23,33 +24,22 @@ export interface MockDataBadgeProps {
   className?: string
 }
 
-/** Mock 数据标签样式 */
-const badgeStyle: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: '2px',
-  padding: '2px 6px',
-  borderRadius: '4px',
-  fontSize: '12px',
-  lineHeight: '1.4',
-  fontWeight: 500,
-  whiteSpace: 'nowrap',
-  userSelect: 'none',
-}
+/** Mock 数据标签基础样式（使用主题 Token，消除硬编码颜色） */
+const badgeBase = cn(
+  'inline-flex items-center gap-[2px] px-[6px] py-[2px] rounded text-xs leading-[1.4] font-medium whitespace-nowrap select-none',
+)
 
-const mockStyle: React.CSSProperties = {
-  ...badgeStyle,
-  background: '#FFF3CD',
-  color: '#856404',
-  border: '1px solid #FFEEBA',
-}
+/** Mock 数据样式（警告色） */
+const mockBadge = cn(
+  badgeBase,
+  'bg-[hsl(var(--warning)/0.15)] text-[hsl(var(--warning))] border border-[hsl(var(--warning)/0.3)]',
+)
 
-const degradedStyle: React.CSSProperties = {
-  ...badgeStyle,
-  background: '#FFF3CD',
-  color: '#856404',
-  border: '1px solid #FFEEBA',
-}
+/** 降级数据样式（与 Mock 相同警告色） */
+const degradedBadge = cn(
+  badgeBase,
+  'bg-[hsl(var(--warning)/0.15)] text-[hsl(var(--warning))] border border-[hsl(var(--warning)/0.3)]',
+)
 
 /**
  * MockDataBadge 组件
@@ -69,11 +59,7 @@ export function MockDataBadge({ meta, size = 'default', className }: MockDataBad
   if (meta.isMock || meta.reliability === 'mock') {
     return (
       <span
-        className={className}
-        style={{
-          ...mockStyle,
-          ...(isSmall ? { fontSize: '10px', padding: '1px 4px' } : {}),
-        }}
+        className={cn(mockBadge, isSmall && 'text-[10px] px-1 py-px', className)}
         title={meta.mockReason ? `原因: ${meta.mockReason}` : '模拟数据'}
       >
         {isSmall ? '⚠' : '⚠ 模拟数据'}
@@ -85,11 +71,7 @@ export function MockDataBadge({ meta, size = 'default', className }: MockDataBad
   if (meta.reliability === 'degraded') {
     return (
       <span
-        className={className}
-        style={{
-          ...degradedStyle,
-          ...(isSmall ? { fontSize: '10px', padding: '1px 4px' } : {}),
-        }}
+        className={cn(degradedBadge, isSmall && 'text-[10px] px-1 py-px', className)}
         title="数据来源降级，可能不完整"
       >
         {isSmall ? '↓' : '↓ 降级数据'}

@@ -26,25 +26,39 @@ async function bootstrap(): Promise<void> {
 
     installGlobalErrorHandler()
 
-    const { setStrategyAnalyzers } = await import('@/core/databridgeStrategyRouter')
-    const { setFeedbackServices } = await import('@/core/feedbackOrchestrator')
-    const { setPipelineServices } = await import('@/core/pipelineScheduler')
-    const { setScoreTriggerServices, scoreAutoTrigger } = await import('@/services/scoring/scoreAutoTrigger')
-    const { setIndustryAnalysisServices } = await import('@/services/scoring/v6ScoreService')
-    const {
-      runFullIndustryAnalysis,
-      getStockIndustryV4Analysis,
-      invalidateIndustryCache,
-      v4ToIndustryScoreData,
-      runFullIndustryAnalysisEnhanced,
-      getStockIndustryV4AnalysisEnhanced,
-    } = await import('@/services/analysis/industryAnalysisService')
-
-    const { analyze: analyzeHotSector } = await import('@/services/scoring/hotSectorAnalyzer')
-    const { detect: detectRotation } = await import('@/services/scoring/rotationSignalDetector')
-    const { analyze: analyzeValuePit } = await import('@/services/scoring/valuePitAnalyzer')
-    const { runV6Score, getV6ScoreQuality } = await import('@/services/scoring/v6ScoreService')
-    const { fetchStockBasic, fetchStockKline, fetchFinancial } = await import('@/services/fetcher/fetcherService')
+    // V12: 并行加载所有 service 模块，消除串行 await 链
+    const [
+      { setStrategyAnalyzers },
+      { setFeedbackServices },
+      { setPipelineServices },
+      { setScoreTriggerServices, scoreAutoTrigger },
+      { setIndustryAnalysisServices },
+      {
+        runFullIndustryAnalysis,
+        getStockIndustryV4Analysis,
+        invalidateIndustryCache,
+        v4ToIndustryScoreData,
+        runFullIndustryAnalysisEnhanced,
+        getStockIndustryV4AnalysisEnhanced,
+      },
+      { analyze: analyzeHotSector },
+      { detect: detectRotation },
+      { analyze: analyzeValuePit },
+      { runV6Score, getV6ScoreQuality },
+      { fetchStockBasic, fetchStockKline, fetchFinancial },
+    ] = await Promise.all([
+      import('@/core/databridgeStrategyRouter'),
+      import('@/core/feedbackOrchestrator'),
+      import('@/core/pipelineScheduler'),
+      import('@/services/scoring/scoreAutoTrigger'),
+      import('@/services/scoring/v6ScoreService'),
+      import('@/services/analysis/industryAnalysisService'),
+      import('@/services/scoring/hotSectorAnalyzer'),
+      import('@/services/scoring/rotationSignalDetector'),
+      import('@/services/scoring/valuePitAnalyzer'),
+      import('@/services/scoring/v6ScoreService'), // 同一模块，第二次 import 从缓存解析
+      import('@/services/fetcher/fetcherService'),
+    ])
 
     setStrategyAnalyzers({
       analyzeHotSector,

@@ -18,6 +18,7 @@ import { chat } from '@/services/llm/llmGateway'
 import type { LlmMessage } from '@/services/llm/llmTypes'
 import { LOG_SNIPPET_MAX_CHARS } from '@/constants/math.constants'
 import { ragRetriever, type RAGContext } from './ragRetriever'
+import { DEFAULT_RAG_CONFIG } from './config'
 
 const logger = getLogger()
 
@@ -375,21 +376,23 @@ export class LLMScoreEnhancer {
 
     // ── RAG: 检索语义上下文 ──
     let ragContext: RAGContext | null = null
-    try {
-      ragContext = await ragRetriever.retrieve(
-        input.stock.symbol,
-        input.stock.name,
-        input.stock.sector,
-        layerId as LayerId,
-        baseResult.layerName,
-        safeSummary,
-      )
-    } catch (ragErr) {
-      logger.warn(
-        `[LLMScoreEnhancer] RAG 检索失败，继续使用无 RAG 模式: ${
-          ragErr instanceof Error ? ragErr.message : String(ragErr)
-        }`,
-      )
+    if (DEFAULT_RAG_CONFIG.enabled) {
+      try {
+        ragContext = await ragRetriever.retrieve(
+          input.stock.symbol,
+          input.stock.name,
+          input.stock.sector,
+          layerId as LayerId,
+          baseResult.layerName,
+          safeSummary,
+        )
+      } catch (ragErr) {
+        logger.warn(
+          `[LLMScoreEnhancer] RAG 检索失败，继续使用无 RAG 模式: ${
+            ragErr instanceof Error ? ragErr.message : String(ragErr)
+          }`,
+        )
+      }
     }
 
     const hasRAG = ragContext?.success && ragContext.snippets.length > 0

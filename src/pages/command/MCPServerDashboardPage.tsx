@@ -213,6 +213,7 @@ export default function MCPServerDashboardPage(): React.JSX.Element {
                                 value={toolArgs}
                                 onChange={(e) => setToolArgs(e.target.value)}
                                 placeholder="JSON arguments..."
+                                aria-label="Tool JSON arguments"
                               />
                               <Button
                                 size="sm"

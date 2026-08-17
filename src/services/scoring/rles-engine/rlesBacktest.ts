@@ -19,6 +19,9 @@ import { detectSecondWave, type SecondWaveSignal } from './secondWaveDetector'
 import { evaluateChipForStock } from './chipBridge'
 import { fetchKlineData } from '@/services/collect'
 
+/** 默认回测 K 线数量 */
+const DEFAULT_BAR_COUNT = 260
+
 // ── 类型 ───────────────────────────────────────────────────────────
 export interface BacktestConfig {
   /** 持有期（交易日），默认 20 */
@@ -256,7 +259,7 @@ export function runBacktest(
 }
 
 // ── live 入口（需后端 K 线服务可用） ─────────────────────────────
-export async function fetchBarsLive(symbol: string, count = 260): Promise<KlineBar[]> {
+export async function fetchBarsLive(symbol: string, count = DEFAULT_BAR_COUNT): Promise<KlineBar[]> {
   const d = await fetchKlineData({ symbol, period: 'daily', adjust: 'qfq', count })
   if (!d) return []
   const merged = d.latest ? [...d.history, d.latest] : [...d.history]
@@ -270,7 +273,7 @@ export async function runLiveBacktest(
   const fd = config.forwardDays ?? 20
   const all: BacktestSample[] = []
   for (const symbol of symbols) {
-    const bars = await fetchBarsLive(symbol, config.count ?? 260)
+    const bars = await fetchBarsLive(symbol, config.count ?? DEFAULT_BAR_COUNT)
     if (bars.length < 60) continue
     all.push(...collectSamplesFromBars(symbol, bars, config))
   }

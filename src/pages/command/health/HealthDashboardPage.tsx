@@ -12,14 +12,14 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
-import { Skeleton } from '@/components/molecules/states/Skeleton'
+import { LoadingState, ErrorState } from '@/components/molecules'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { PageContainer, PageHeader } from '@/components/templates'
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'
 import type { HealthMetric, HealthReport } from '@/types/modules/health.types'
 import MechanismHealthPanel from './components/MechanismHealthPanel'
 import SystemArchitectureWidget from '@/cockpit/widgets/SystemArchitectureWidget'
-import { Activity, AlertCircle, CheckCircle2, RefreshCw, ShieldAlert, XCircle } from 'lucide-react'
+import { Activity, AlertCircle, CheckCircle2, RefreshCw, XCircle } from 'lucide-react'
 
 function statusIcon(status: HealthMetric['status']) {
   switch (status) {
@@ -106,12 +106,7 @@ export default function HealthDashboardPage(): React.JSX.Element {
   if (loading) {
     return (
       <PageContainer className="space-y-4">
-        <Skeleton className="h-8 w-64" />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-32" />
-          ))}
-        </div>
+        <LoadingState variant="skeleton" rows={6} message="加载健康报告..." />
       </PageContainer>
     )
   }
@@ -119,14 +114,11 @@ export default function HealthDashboardPage(): React.JSX.Element {
   if (error || !report) {
     return (
       <PageContainer className="space-y-4">
-        <div className="flex items-center gap-2 text-destructive">
-          <ShieldAlert className="h-5 w-5" />
-          <span>加载健康报告失败：{error ?? fallback.error}</span>
-        </div>
-        <Button variant="outline" size="sm" onClick={() => void load()}>
-          <RefreshCw className="mr-2 h-4 w-4" />
-          重试
-        </Button>
+        <ErrorState
+          error={error ?? fallback.error}
+          onRetry={() => void load()}
+          variant="card"
+        />
       </PageContainer>
     )
   }

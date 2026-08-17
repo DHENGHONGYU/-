@@ -14,8 +14,31 @@ const logger = getLogger()
 /** 默认健康检查间隔（毫秒） */
 const DEFAULT_CHECK_INTERVAL_MS = 30_000
 
+/** 健康检查间隔环境变量名（Vite 注入，跨并行开发环境可配置） */
+const ENV_HEALTH_CHECK_INTERVAL = 'VITE_AGENT_HEALTH_CHECK_INTERVAL_MS'
+
+/** 健康检查间隔硬上限（毫秒），防止误配导致高频检查拖垮主线程 */
+const MAX_CHECK_INTERVAL_MS = 300_000
+
 /** 警告阈值比例（相对于最大失败率） */
 const WARNING_THRESHOLD_RATIO = 0.5
+
+/**
+ * 从环境变量解析健康检测间隔（毫秒）——「环境配置可转换」逻辑。
+ * 转换规则：环境变量为字符串需转为数字；非法/缺失/非正回退默认；
+ * 超出上限则钳制，保证跨多套并行开发环境（COZE）可移植且安全。
+ */
+export function resolveHealthCheckIntervalMs(fallback: number = DEFAULT_CHECK_INTERVAL_MS): number {
+  const env = (import.meta as { env?: Record<string, string | undefined> }).env
+  // 环境配置可转换：优先 Vite 注入的 import.meta.env，回退 Node/测试/SSR 的 process.env，
+  // 保证跨多套并行开发环境（COZE 含 Node 宿主）均可读取同一配置键。
+  const raw =
+    env?.[ENV_HEALTH_CHECK_INTERVAL] ??
+    (typeof process !== 'undefined' ? process.env[ENV_HEALTH_CHECK_INTERVAL] : undefined)
+  const parsed = raw != null ? Number(raw) : NaN
+  if (!Number.isFinite(parsed) || parsed <= 0) return fallback
+  return Math.min(parsed, MAX_CHECK_INTERVAL_MS)
+}
 
 export interface HealthThresholds {
   maxFailureRate: number // 0.0 ~ 1.0
@@ -50,7 +73,7 @@ export class AgentHealthMonitor {
     logger.info('[AgentHealthMonitor] Initialized', { thresholds: this.thresholds })
   }
 
-  start(checkInterval = DEFAULT_CHECK_INTERVAL_MS): void {
+  start(checkInterval = resolveHealthCheckIntervalMs()): void {
     if (this.running) {
       logger.warn('[AgentHealthMonitor] Already running')
       return

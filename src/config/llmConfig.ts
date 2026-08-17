@@ -157,7 +157,7 @@ export const LLM_MODEL_PRESETS: LlmPreset[] = [
     provider: 'Zhipu AI',
     baseURL: 'https://open.bigmodel.cn/api/paas/v4',
     defaultModel: 'glm-5-turbo',
-    models: ['glm-5', 'glm-5-turbo', 'glm-4-flashx', 'glm-4-flash'],
+    models: ['glm-5', 'glm-5-turbo', 'glm-5.3', 'glm-4-flashx', 'glm-4-flash'],
     contextWindow: 128_000,
     inputPrice: '$0.70',
     outputPrice: '$2.10',
@@ -242,6 +242,9 @@ export const DEFAULT_LLM_BASE_URL = 'https://api.deepseek.com'
 
 /** KIMI (Moonshot) API Base URL，与 LLM_MODEL_PRESETS 中 kimi preset 保持同步 */
 export const KIMI_BASE_URL = 'https://api.moonshot.cn'
+
+/** LLM API 默认超时（毫秒） */
+export const LLM_DEFAULT_TIMEOUT = 10000
 
 /** 根据 preset id 获取预设 */
 export function getPresetById(id: string): LlmPreset | undefined {

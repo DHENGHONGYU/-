@@ -22,6 +22,7 @@ import { BatchCollectionPanel } from '@/components/organisms/pool/BatchCollectio
 import { useResearchPoolStore } from '@/store/researchPoolStore'
 import { eventBus } from '@/lib/eventBus'
 import { cn } from '@/lib/utils'
+import { LoadingState, EmptyState } from '@/components/molecules'
 import type { CollectionProgress as ProgressType } from '@/types/modules/collection.types'
 
 /**
@@ -164,22 +165,12 @@ const PoolBoardPage: React.FC = () => {
 
       {/* 主内容区 */}
       {loading ? (
-        <div className="py-12 text-center">
-          <div
-            className={cn(
-              'mx-auto h-8 w-8 animate-spin rounded-full border-2',
-              'border-muted border-t-primary',
-            )}
-          />
-          <p className={cn('mt-2 text-sm', 'text-muted-foreground')}>加载研究池数据...</p>
-        </div>
+        <LoadingState variant="spinner" message="加载研究池数据..." />
       ) : items.length === 0 ? (
-        <div className="py-12 text-center">
-          <p className={cn('text-sm', 'text-muted-foreground')}>研究池为空</p>
-          <p className={cn('mt-1 text-xs', 'text-muted-foreground/70')}>
-            在个股分析页面点击"加入研究池"或使用批量导入功能
-          </p>
-        </div>
+        <EmptyState
+          title="研究池为空"
+          description="在个股分析页面点击「加入研究池」或使用批量导入功能"
+        />
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (

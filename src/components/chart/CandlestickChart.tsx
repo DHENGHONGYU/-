@@ -16,7 +16,7 @@ import {
   type Time,
   type ISeriesMarkersPluginApi,
 } from 'lightweight-charts'
-import { CHART_PALETTE_PRO, STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
+import { CHART_PALETTE_PRO, STOCK_COLOR_TOKENS, CHART_INDICATOR_COLORS } from '@/constants/theme.tokens'
 import type { CandlestickChartProps, TooltipData } from './candlestickChart.types'
 import {
   PERIOD_OPTIONS,
@@ -318,7 +318,7 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
         ? EMA_OVERLAY_OPTIONS.map(({ period: p, color }) => ({ label: `EMA${p}`, color }))
         : []),
       ...(overlay === 'bollinger' || overlay === 'all'
-        ? [{ label: 'BOLL', color: '#60a5fa' }]
+        ? [{ label: 'BOLL', color: CHART_INDICATOR_COLORS.blue }]
         : []),
     ]
 

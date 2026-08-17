@@ -4,7 +4,7 @@
  * 用途：评分 0-100、风险等级、覆盖率、进度百分比 的图形化展示
  * 零外部依赖，纯 SVG 绘制，支持宋韵色阶（天青→赭石→胭脂）
  */
-import React, { useMemo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { CHART_PALETTE } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
 
@@ -60,7 +60,7 @@ function getColor(value: number, max: number, mode: 'score' | 'progress' | 'risk
 /**
  * GaugeChart
  */
-export function GaugeChart({
+function GaugeChart({
   value,
   max = 100,
   size = 140,
@@ -158,8 +158,12 @@ export function GaugeChart({
   )
 }
 
+const GaugeChartMemo = memo(GaugeChart)
+GaugeChartMemo.displayName = 'GaugeChart'
+export { GaugeChartMemo as GaugeChart }
+
 /** 紧凑型进度环 — 用于卡片内联展示 */
-export function GaugeRing({
+function GaugeRing({
   value,
   max = 100,
   size = 48,
@@ -208,3 +212,7 @@ export function GaugeRing({
     </svg>
   )
 }
+
+const GaugeRingMemo = memo(GaugeRing)
+GaugeRingMemo.displayName = 'GaugeRing'
+export { GaugeRingMemo as GaugeRing }

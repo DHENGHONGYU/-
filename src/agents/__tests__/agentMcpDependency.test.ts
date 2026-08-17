@@ -7,11 +7,15 @@
   * @covers_docs [V9-DOC-AI-006, V9-DOC-AI-003, V9-DOC-AI-007, V9-DOC-AI-002, V9-DOC-AI-005]
 */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
-import '@/mcp/register'
+import { ensureMCPRegistered, mcpReadyPromise, mcpFullyReadyPromise } from '@/mcp/register'
 import { initAgentSystem, shutdownAgentSystem, validateAgentMcpDependencies } from '@/agents'
 
 describe('Agent MCP dependency invariant (F5)', () => {
-  beforeAll(() => {
+  beforeAll(async () => {
+    // 生产链路：triggerAgentInit → ensureMCPRegistered → await mcpReadyPromise → initAgentSystem。
+    // 须先触发 MCP 注册并等待就绪，否则 DEFAULT_AGENTS 依赖校验会因 Server 未注册而失败。
+    ensureMCPRegistered()
+    await Promise.all([mcpReadyPromise, mcpFullyReadyPromise])
     initAgentSystem()
   })
 

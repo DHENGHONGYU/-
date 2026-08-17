@@ -14,6 +14,7 @@
 import type { Time, LineData } from 'lightweight-charts'
 import type { CandlestickChartData } from '../types'
 import { getLogger } from '@/lib/logger'
+import { CHART_INDICATOR_COLORS } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
@@ -91,9 +92,9 @@ export function computeMultiEMA(
  * 对标 TradingView 暗色主题风格，在深色背景下高辨识度
  */
 export const EMA_COLORS: Record<number, string> = {
-  12: '#60a5fa',  // blue-400
-  26: '#fbbf24',  // amber-400
-  50: '#a78bfa',  // violet-400
+  12: CHART_INDICATOR_COLORS.blue,  // blue-400
+  26: CHART_INDICATOR_COLORS.amber,  // amber-400
+  50: CHART_INDICATOR_COLORS.violet,  // violet-400
 } as const
 
 /** 默认 EMA 周期组 */

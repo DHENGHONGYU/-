@@ -10,7 +10,7 @@
  */
 
 import type { Time, LineData, HistogramData } from 'lightweight-charts'
-import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS, CHART_INDICATOR_COLORS } from '@/constants/theme.tokens'
 import type { CandlestickChartData } from '../types'
 import { getLogger } from '@/lib/logger'
 
@@ -169,9 +169,9 @@ export function getLatestMACD(
  */
 export const MACD_COLORS = {
   /** DIF 线 - 浅蓝 */
-  dif: '#60a5fa',
+  dif: CHART_INDICATOR_COLORS.blue,
   /** DEA 线 - 金色 */
-  dea: '#fbbf24',
+  dea: CHART_INDICATOR_COLORS.amber,
   /** 正值柱状 - 红色半透明 */
   histogramPositive: STOCK_COLOR_TOKENS.up.hexAlpha50,
   /** 负值柱状 - 绿色半透明 */

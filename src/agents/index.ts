@@ -244,9 +244,9 @@ export function initAgentSystem(): void {
   }
   logger.info(`[AgentSystem] MCP dependency check: ${depViolations.length} violations in ${(_d1-_d0).toFixed(2)}ms`)
 
-  // 启动健康监控（30s 检查周期）
+  // 启动健康监控（间隔由 resolveHealthCheckIntervalMs 解析：环境变量可配，默认 30s）
   const _h0 = performance.now()
-  healthMonitor.start(30000)
+  healthMonitor.start()
   const _h1 = performance.now()
   logger.info(`[AgentSystem] healthMonitor.start: ${(_h1-_h0).toFixed(2)}ms`)
 

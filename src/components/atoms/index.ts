@@ -72,6 +72,8 @@ export { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 export { Currency } from './Currency'
 export { Percent } from './Percent'
 export { StockPriceChangeBadge } from './StockPriceChangeBadge'
+export { LazyImage } from './LazyImage'
+export type { LazyImageProps } from './LazyImage'
 
 export {
   DEFAULT_BADGE,

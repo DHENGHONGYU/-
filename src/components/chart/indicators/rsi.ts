@@ -18,6 +18,7 @@
 import type { Time, LineData } from 'lightweight-charts'
 import type { CandlestickChartData } from '../types'
 import { getLogger } from '@/lib/logger'
+import { CHART_INDICATOR_COLORS } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
@@ -125,11 +126,11 @@ export function computeRSI(
  */
 export const RSI_COLORS = {
   /** RSI 线 - 紫色（TradingView 默认） */
-  line: '#a78bfa',
+  line: CHART_INDICATOR_COLORS.violet,
   /** 超买线 (70) - 红色 */
-  overbought: '#ef5350',
+  overbought: CHART_INDICATOR_COLORS.rsiOverbought,
   /** 超卖线 (30) - 绿色 */
-  oversold: '#26a69a',
+  oversold: CHART_INDICATOR_COLORS.rsiOversold,
   /** 中轴线 (50) - 半透明灰 */
   midline: 'rgba(148, 163, 184, 0.4)',
 } as const

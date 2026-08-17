@@ -18,6 +18,7 @@
 import type { Time, LineData } from 'lightweight-charts'
 import type { CandlestickChartData } from '../types'
 import { getLogger } from '@/lib/logger'
+import { CHART_INDICATOR_COLORS } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
@@ -117,11 +118,11 @@ export function computeBollinger(
 /** Bollinger Bands 颜色配置（暗色主题） */
 export const BOLL_COLORS = {
   /** 上轨 - 浅蓝 */
-  upper: '#60a5fa',
+  upper: CHART_INDICATOR_COLORS.blue,
   /** 中轨（SMA）- 琥珀色 */
-  middle: '#fbbf24',
+  middle: CHART_INDICATOR_COLORS.amber,
   /** 下轨 - 浅蓝 */
-  lower: '#60a5fa',
+  lower: CHART_INDICATOR_COLORS.blue,
   /** 填充区域 - 蓝色 8% 透明 */
   fill: 'rgba(96, 165, 250, 0.08)',
 } as const

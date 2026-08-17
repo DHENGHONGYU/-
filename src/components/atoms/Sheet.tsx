@@ -6,6 +6,7 @@
 import { type ButtonHTMLAttributes, type HTMLAttributes, forwardRef, useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
 import { X } from 'lucide-react'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 
 export interface SheetProps extends HTMLAttributes<HTMLDivElement> {
   open?: boolean
@@ -21,6 +22,9 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
     const internalRef = useRef<HTMLDivElement>(null)
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const sheetRef = (ref as React.RefObject<HTMLDivElement>) != null ? (ref as React.RefObject<HTMLDivElement>) : internalRef
+
+    // V13: 焦点陷阱 — 打开时自动聚焦，Tab 循环锁定
+    const focusTrapRef = useFocusTrap(open ?? false)
 
     useEffect(() => {
       const handleEscape = (e: KeyboardEvent) => {
@@ -44,15 +48,19 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
     if ((open ?? false) !== true) return <></>
 
     return (
-      <div className="fixed inset-0 z-50">
+      <div ref={focusTrapRef} className="fixed inset-0 z-50">
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
           onClick={() => onOpenChange?.(false)}
           data-testid="sheet-overlay"
+          aria-hidden="true"
         />
         <div
           ref={sheetRef}
           data-state={(open ?? false) === true ? 'open' : 'closed'}
+          role="dialog"
+          aria-modal="true"
+          aria-label="侧边面板"
           className={cn(
             'fixed z-50 gap-4 bg-background p-6 shadow-lg',
             sideClasses[side],

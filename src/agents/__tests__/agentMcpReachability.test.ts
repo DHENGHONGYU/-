@@ -2,11 +2,12 @@
  * @test_id V9-TEST-ST-002
  * @covers_docs [V9-DOC-AI-006, V9-DOC-AI-003, V9-DOC-AI-007, V9-DOC-AI-002, V9-DOC-AI-005]
  */
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeAll } from 'vitest'
 import { mcpRegistry } from '@/mcp/core/registry'
-// 副作用导入：registerAllServers() 经由 Vite import.meta.glob 同步注册所有 enabled Server。
-// 在 Vitest(jsdom) 环境下 import.meta.glob 可用，因此此处能拿到真实注册表。
-import '@/mcp/register'
+// 注册触发：@/mcp/register 仅准备 glob 加载器，并不注册 Server；
+// 须显式调用 ensureMCPRegistered() 并等待核心/全量 Server 就绪，Server 才会真正注册进
+// mcpRegistry（与生产 triggerAgentInit 链路一致）。旧注释误称 import 即注册，实为测试失败根因。
+import { ensureMCPRegistered, mcpReadyPromise, mcpFullyReadyPromise } from '@/mcp/register'
 
 /**
  * Agent → MCP Server 运行时可达性冒烟测试
@@ -32,6 +33,11 @@ const AGENT_SERVER_BINDINGS: ReadonlyArray<{ id: string; mcpServerName: string }
 ]
 
 describe('Agent → MCP Server 运行时可达性', () => {
+  beforeAll(async () => {
+    ensureMCPRegistered()
+    await Promise.all([mcpReadyPromise, mcpFullyReadyPromise])
+  })
+
   it('应已注册全部 Agent 引用的 MCP Server（无悬空 Agent）', () => {
     const registered = mcpRegistry.listServers().map((rs) => rs.server.info.name)
     expect(registered.length).toBeGreaterThan(0)

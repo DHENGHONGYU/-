@@ -14,6 +14,7 @@
  */
 
 import type { Time } from 'lightweight-charts'
+import { CHART_INDICATOR_COLORS } from '@/constants/theme.tokens'
 
 /** 画线工具类型 */
 export type DrawingToolType = 'trendLine' | 'horizontalLine' | 'rayLine'
@@ -111,24 +112,24 @@ export interface DrawingToolConfig {
 
 /** 默认画线工具配置 */
 export const DEFAULT_DRAWING_CONFIG: DrawingToolConfig = {
-  defaultColor: '#60a5fa',
+  defaultColor: CHART_INDICATOR_COLORS.blue,
   defaultLineWidth: 1,
   defaultLineStyle: 'solid',
   defaultOpacity: 0.8,
-  selectedColor: '#fbbf24',
+  selectedColor: CHART_INDICATOR_COLORS.amber,
   snapTolerance: 5,
 }
 
 /** 画线工具颜色预设 */
 export const DRAWING_COLOR_PRESETS = [
-  '#60a5fa', // 浅蓝
-  '#fbbf24', // 金色
-  '#f87171', // 浅红
-  '#4ade80', // 浅绿
-  '#a78bfa', // 紫色
-  '#fb923c', // 橙色
-  '#e879f9', // 品红
-  '#2dd4bf', // 青色
+  CHART_INDICATOR_COLORS.blue,     // 浅蓝
+  CHART_INDICATOR_COLORS.amber,     // 金色
+  CHART_INDICATOR_COLORS.drawingRed,   // 浅红
+  CHART_INDICATOR_COLORS.drawingGreen, // 浅绿
+  CHART_INDICATOR_COLORS.violet,   // 紫色
+  CHART_INDICATOR_COLORS.drawingOrange, // 橙色
+  CHART_INDICATOR_COLORS.drawingMagenta, // 品红
+  CHART_INDICATOR_COLORS.drawingTeal,  // 青色
 ] as const
 
 /** 线条样式映射（lightweight-charts LineStyle） */

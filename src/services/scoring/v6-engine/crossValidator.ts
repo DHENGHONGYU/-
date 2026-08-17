@@ -219,6 +219,100 @@ function checkIndustryDivergence(
   return undefined
 }
 
+/** R008: 一致预期与实际偏差 — L3v 估值与一致预期评级严重背离 */
+function checkConsensusGap(
+  composite: CompositeScore,
+  _config: CrossValidatorConfig,
+): CrossValidationIssue | undefined {
+  const l3v = composite.layers.l3v
+  if (!l3v) return undefined
+
+  const l3vScore = l3v.score
+  const l3vEvidence = (l3v.evidence ?? []).join(' ')
+
+  // 检测 evidence 中是否包含一致预期评级数据
+  const ratingMatch = l3vEvidence.match(/综合评级[：:]\s*([\d.]+)/)
+  const buyRatioMatch = l3vEvidence.match(/买入[：:]\s*(\d+)/)
+  if (!ratingMatch?.[1] || !buyRatioMatch?.[1]) return undefined
+
+  const consensusRating = parseFloat(ratingMatch[1])
+  const buyCount = parseInt(buyRatioMatch[1], 10)
+
+  // 一致预期评级高（≥ 4.0）但 L3v 评分低（≤ 2.5）→ 背离
+  if (consensusRating >= 4.0 && l3vScore <= 2.5) {
+    return {
+      ruleId: 'R008',
+      severity: 'warning',
+      title: '一致预期乐观但估值评分悲观',
+      description: `一致预期综合评级 ${consensusRating.toFixed(1)}（买入 ${buyCount} 家），但 L3v 估值评分仅 ${l3vScore.toFixed(2)}（偏低）。可能存在市场定价偏差，或规则引擎低估了估值修复空间。`,
+      layers: ['l3v'],
+      scores: { l3v: l3vScore, consensusRating, buyCount },
+    }
+  }
+
+  // 一致预期评级低（≤ 2.5）但 L3v 评分高（≥ 4.0）→ 背离
+  if (consensusRating <= 2.5 && l3vScore >= 4.0) {
+    return {
+      ruleId: 'R008',
+      severity: 'critical',
+      title: '一致预期悲观但估值评分乐观',
+      description: `一致预期综合评级仅 ${consensusRating.toFixed(1)}（买入 ${buyCount} 家），但 L3v 估值评分达 ${l3vScore.toFixed(2)}（偏高）。估值评分可能过于乐观，需警惕估值陷阱。`,
+      layers: ['l3v'],
+      scores: { l3v: l3vScore, consensusRating, buyCount },
+    }
+  }
+
+  return undefined
+}
+
+/** R009: 财务数据时效性 — 财务报告引用超过 6 个月 */
+function checkDataStaleness(
+  composite: CompositeScore,
+  _config: CrossValidatorConfig,
+): CrossValidationIssue | undefined {
+  const l3f = composite.layers.l3f
+  if (!l3f) return undefined
+
+  const l3fEvidence = (l3f.evidence ?? []).join(' ')
+  const l3fSummary = l3f.summary ?? ''
+  const combined = l3fEvidence + ' ' + l3fSummary
+
+  // 检测财务数据日期引用（匹配 YYYY 年份或 YYYY-MM 格式）
+  const dateMatches = combined.matchAll(/(\d{4})[年-]?(\d{1,2})?/g)
+  const now = new Date()
+  const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 6, 1)
+
+  let staleCount = 0
+  const staleDates: string[] = []
+
+  for (const match of dateMatches) {
+    const year = parseInt(match[1] ?? '', 10)
+    const month = match[2] ? Number(match[2]) : 6
+    if (isNaN(year) || year < 2000 || year > now.getFullYear()) continue
+
+    const refDate = new Date(year, month - 1, 1)
+    if (refDate < sixMonthsAgo && refDate.getFullYear() >= now.getFullYear() - 3) {
+      staleCount++
+      if (staleDates.length < 3) {
+        staleDates.push(match[0])
+      }
+    }
+  }
+
+  if (staleCount >= 2) {
+    return {
+      ruleId: 'R009',
+      severity: 'warning',
+      title: '财务数据时效性不足',
+      description: `L3f 财务健康层引用了 ${staleCount} 处超过 6 个月的旧数据（如 ${staleDates.join('、')}），评分可能未反映最新财务状况。建议更新数据后重评。`,
+      layers: ['l3f'],
+      scores: { staleCount, staleDates: staleDates.join(', ') },
+    }
+  }
+
+  return undefined
+}
+
 // ============================================================
 // 入口
 // ============================================================
@@ -246,6 +340,8 @@ export function crossValidate(
     checkHypeBubbleScenarioPositive(composite, config),
     checkHighScoreLowCoverage(composite, config),
     checkIndustryDivergence(composite, config),
+    checkConsensusGap(composite, config),
+    checkDataStaleness(composite, config),
   ]
 
   for (const issue of checks) {

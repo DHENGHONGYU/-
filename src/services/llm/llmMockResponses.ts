@@ -13,6 +13,7 @@
  */
 
 import type { LlmPreset } from '@/config/llmConfig'
+import { LLM_DEFAULT_TIMEOUT } from '@/config/llmConfig'
 
 /** 各预设的 Mock 成功响应内容 */
 export const MOCK_PRESET_RESPONSES: Record<string, {
@@ -153,6 +154,17 @@ export function createMockFetchImpl(
   const presetData = (MOCK_PRESET_RESPONSES[presetId] ?? MOCK_PRESET_RESPONSES.deepseek)!
 
   return (_url: string, options?: RequestInit) => {
+    // 优先从请求体回显 model，支持同一 preset 下多模型测试（如 GLM5.3）
+    let requestedModel = presetData.model
+    try {
+      const body = options?.body ? JSON.parse(options.body as string) : {}
+      if (typeof body.model === 'string' && body.model.length > 0) {
+        requestedModel = body.model
+      }
+    } catch {
+      // 忽略非 JSON body，回退到 preset 默认模型
+    }
+
     if (mode === 'timeout') {
       return new Promise<Response>((_resolve, reject) => {
         if (options?.signal) {
@@ -175,7 +187,7 @@ export function createMockFetchImpl(
         id: `chatcmpl-mock-${presetId}`,
         object: 'chat.completion',
         created: Date.now(),
-        model: presetData.model,
+        model: requestedModel,
         choices: [
           {
             index: 0,
@@ -206,7 +218,7 @@ export function createMockConfig(preset: LlmPreset, apiKey: string = 'sk-mock-te
     model: preset.defaultModel,
     maxTokens: 1024,
     temperature: 0.7,
-    timeout: 10000,
+    timeout: LLM_DEFAULT_TIMEOUT,
   }
 }
 

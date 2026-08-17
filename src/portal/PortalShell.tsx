@@ -213,7 +213,7 @@ export default function PortalShell(): React.JSX.Element {
               <div className={cn('px-4 py-1.5 text-[11px] font-medium tracking-wider', nav.groupLabel)}>
                 {group.group}
               </div>
-              <ul className="space-y-0.5 px-2">
+              <ul className="space-y-0.5 px-2" role="navigation" aria-label={`${activeCabinDef?.label} 导航`}>
                 {group.items.map((item) => {
                   const Icon = item.icon
                   const active = isActivePath(location.pathname, item.path)
@@ -231,6 +231,8 @@ export default function PortalShell(): React.JSX.Element {
                           void navigate(item.path)
                           onNavigate?.()
                         }}
+                        aria-current={active ? 'page' : undefined}
+                        aria-label={item.label}
                         className={cn(
                           'group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all duration-200 ease-out',
                           active
@@ -261,6 +263,13 @@ export default function PortalShell(): React.JSX.Element {
 
   return (
     <div className={cn('flex min-h-screen flex-col', layout.shellBg)} data-testid="portal-shell">
+      {/* V12: Skip-to-content — 键盘用户跳过导航直达主内容 */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:text-primary-foreground focus:shadow-lg focus:outline-none"
+      >
+        跳到主内容
+      </a>
       {/* 顶栏 */}
       <header
         className={cn(
@@ -362,7 +371,9 @@ export default function PortalShell(): React.JSX.Element {
           {renderSidebarNav()}
         </aside>
 
-        <main className={cn('min-w-0 flex-1 overflow-auto', layout.mainBg)}>
+        <main id="main-content" className={cn('min-w-0 flex-1 overflow-auto', layout.mainBg)}>
+          {/* V12: aria-live 区域 — 屏幕阅读器动态内容通知 */}
+          <div aria-live="polite" aria-atomic="true" className="sr-only" role="status" />
           <div className={cn('mx-auto flex min-h-full flex-col', layout.mainMaxWidth, layout.mainPadding)}>
             {/* V10: 自动面包屑导航 */}
             <AutoBreadcrumb className="px-0 py-2 border-b border-border/30" />

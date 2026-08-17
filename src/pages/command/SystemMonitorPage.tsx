@@ -24,6 +24,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Car
 import { Badge } from '@/components/atoms/Badge'
 import { Dialog, DialogContent } from '@/components/molecules/Dialog'
 import { PageContainer, PageHeader } from '@/components/templates'
+import { LoadingState } from '@/components/molecules'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { ConfirmDialog } from '@/components/molecules/ConfirmDialog'
 import MigrationPanel from '@/components/organisms/system/MigrationPanel'
@@ -92,7 +93,7 @@ export default function SystemMonitorPage(): React.JSX.Element {
         />
         <Card>
           <CardContent>
-            <div className="h-32 animate-pulse rounded-md bg-muted" />
+            <LoadingState message="加载中..." />
           </CardContent>
         </Card>
       </PageContainer>

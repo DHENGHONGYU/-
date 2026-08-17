@@ -48,6 +48,11 @@ import type { LayerId } from '@/types/modules/engine.types'
 import { DEFAULT_RAG_CONFIG } from './config'
 import type { RAGConfig } from '@/types/modules/engine.types'
 
+/** 嵌入向量维度 */
+const EMBEDDING_DIM = 768
+/** 文本块最大长度（字符数） */
+const CHUNK_MAX_LENGTH = 1200
+
 const logger = getLogger()
 
 // ─── 类型 ────────────────────────────────────────────────────
@@ -291,7 +296,7 @@ function buildEmbeddingText(item: ProfileItem, cleanedContent: string): string {
   }
 
   // 清洗后内容（前 1200 字符）
-  parts.push(cleanedContent.slice(0, 1200))
+  parts.push(cleanedContent.slice(0, CHUNK_MAX_LENGTH))
 
   return parts.join('\n')
 }
@@ -527,7 +532,7 @@ export class RAGRetriever {
 
       // 个股索引
       if (!this.stockIndices.has(item.symbol)) {
-        const idx = new HNSWIndex('cosine', 768)
+        const idx = new HNSWIndex('cosine', EMBEDDING_DIM)
         idx.initIndex(100, { M: 16, efConstruction: 200 })
         idx.setEf(32)
         this.stockIndices.set(item.symbol, idx)
@@ -537,7 +542,7 @@ export class RAGRetriever {
       // 行业索引
       if (sector !== '未知') {
         if (!this.sectorIndices.has(sector)) {
-          const idx = new HNSWIndex('cosine', 768)
+          const idx = new HNSWIndex('cosine', EMBEDDING_DIM)
           idx.initIndex(100, { M: 16, efConstruction: 200 })
           idx.setEf(32)
           this.sectorIndices.set(sector, idx)

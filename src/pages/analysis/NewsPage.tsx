@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router'
-import { RefreshCw, Sparkles } from 'lucide-react'
+import { RefreshCw, Sparkles, Newspaper } from 'lucide-react'
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
 import { PageContainer, PageHeader } from '@/components/templates'
@@ -23,6 +23,7 @@ import { NewsCard } from '@/components/organisms/news/NewsCard'
 import { NewsFilterPanel, type NewsFilterState } from '@/components/organisms/news/NewsFilterPanel'
 import { NewsSentimentTrend } from '@/components/organisms/analysis/news/NewsSentimentTrend'
 import { useAnalysisNewsStore } from '@/store/analysisNewsStore'
+import { EmptyState } from '@/components/molecules'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
@@ -111,7 +112,15 @@ export default function NewsPage(): React.JSX.Element {
         <main>
           {articles.length === 0 ? (
             <div className="flex flex-col items-center justify-center rounded-lg border bg-card py-16 text-center shadow-sm">
-              <p className="text-muted-foreground">暂无资讯，点击生成模拟资讯</p>
+              <EmptyState
+                icon={<Newspaper className="h-12 w-12 text-muted-foreground/40" />}
+                title="暂无资讯"
+                description="当前没有符合条件的资讯，点击下方按钮生成模拟资讯"
+                action={{
+                  label: '生成模拟资讯',
+                  onClick: () => void handleGenerateMock(),
+                }}
+              />
             </div>
           ) : (
             <div className="space-y-4">

@@ -25,6 +25,8 @@ import type { ScoreComparisonResult, DimensionComparisonItem } from '@/types/mod
 import { cn } from '@/lib/utils'
 import { StockSelector } from '@/components/organisms/input/StockSelector'
 import { toStockOption } from '@/constants/stockList'
+import { EmptyState } from '@/components/molecules'
+import { TrendingUp, TrendingDown } from 'lucide-react'
 
 const logger = getLogger()
 
@@ -199,7 +201,11 @@ function TopChangesSection({
         </CardHeader>
         <CardContent>
           {rising.length === 0 ? (
-            <div className="text-sm text-muted-foreground">暂无上升维度</div>
+            <EmptyState
+              icon={<TrendingUp className="h-8 w-8 text-muted-foreground/40" />}
+              title="暂无上升维度"
+              description="当前比对结果中暂无上升的评分维度"
+            />
           ) : (
             <div className="space-y-2">
               {rising.map((d) => (
@@ -222,7 +228,11 @@ function TopChangesSection({
         </CardHeader>
         <CardContent>
           {falling.length === 0 ? (
-            <div className="text-sm text-muted-foreground">暂无下降维度</div>
+            <EmptyState
+              icon={<TrendingDown className="h-8 w-8 text-muted-foreground/40" />}
+              title="暂无下降维度"
+              description="当前比对结果中暂无下降的评分维度"
+            />
           ) : (
             <div className="space-y-2">
               {falling.map((d) => (

@@ -333,8 +333,10 @@ describe('L3vValuationCalculator', () => {
   })
 
   it('正常输入：PE中等 → 合理', async () => {
+    // 保持估值指标内部一致：PE=25、netProfit=5 → marketCap=125；
+    // 避免默认 marketCap=1000e8 导致 EV/EBITDA 与 PS 极端偏高，把 score 拉低到 2.7。
     const input = createInput({
-      stock: { peg: undefined, pe: 25 },
+      stock: { peg: undefined, pe: 25, marketCap: 125 },
     })
     const result = await L3vValuationCalculator.calculate(input)
     expect(result.score).toBeGreaterThanOrEqual(3)

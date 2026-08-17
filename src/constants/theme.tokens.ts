@@ -57,7 +57,7 @@ export { COLOR_SHADES, twText, twBg, twBorder } from './theme/theme.tokens.shade
 
 // L3/4 辅助类（暗色/悬停/渐变 + 图表调色板 + 间距令牌 + 徽章状态色）
 // ============================================================
-export { DARK, HOVER, FOCUS, FILL, GRADIENT, DIVIDE, CHART_PALETTE, CHART_PALETTE_PRO, CHART_SEMANTIC_PALETTE, SPACING_TOKENS } from './theme/theme.tokens.helpers'
+export { DARK, HOVER, FOCUS, FILL, GRADIENT, DIVIDE, CHART_PALETTE, CHART_PALETTE_PRO, CHART_SEMANTIC_PALETTE, CHART_INDICATOR_COLORS, SPACING_TOKENS } from './theme/theme.tokens.helpers'
 export type { SpacingKey } from './theme/theme.tokens.helpers'
 export type { ChartSemanticDimension } from './theme/theme.tokens.helpers'
 export { BADGE_COLORS } from './theme/theme.tokens.badges'

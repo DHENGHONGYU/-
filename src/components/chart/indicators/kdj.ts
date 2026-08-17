@@ -16,6 +16,7 @@
 import type { Time, LineData } from 'lightweight-charts'
 import type { CandlestickChartData } from '../types'
 import { getLogger } from '@/lib/logger'
+import { CHART_INDICATOR_COLORS } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
@@ -264,9 +265,9 @@ export function getLatestKDJ(
  */
 export const KDJ_COLORS = {
   /** K 线 - 浅蓝 */
-  k: '#60a5fa',
+  k: CHART_INDICATOR_COLORS.blue,
   /** D 线 - 金色 */
-  d: '#fbbf24',
+  d: CHART_INDICATOR_COLORS.amber,
   /** J 线 - 紫色 */
-  j: '#a78bfa',
+  j: CHART_INDICATOR_COLORS.violet,
 } as const

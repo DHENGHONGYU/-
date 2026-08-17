@@ -15,7 +15,8 @@
  * @updated 2026-08-10 - 像素级精准渲染 + 买卖点标记
  */
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
 import { CHART_PALETTE, COLOR_SHADES, THEME_TOKENS } from '@/constants/theme.tokens'
 import type { CollectChipData } from '@/services/fetcher/fetcherTypes'
 import { getLogger } from '@/lib/logger'
@@ -596,4 +597,4 @@ function LegendItem({
   )
 }
 
-export default ChipDistributionChart
+export default memo(ChipDistributionChart)

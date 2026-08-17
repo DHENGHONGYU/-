@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent } from '@/components/atoms'
 import { COLOR_TOKENS, type ColorTokenKey, getColorHex } from '@/constants/theme.tokens'
@@ -59,7 +60,7 @@ function resolveColorToken(raw: string | undefined): string | undefined {
  *
  * 组合：Card + 标题 + 数值 + 趋势变化
  */
-export function MetricCard({
+function MetricCard({
   title,
   value,
   unit,
@@ -112,3 +113,9 @@ export function MetricCard({
     </Card>
   )
 }
+
+const MetricCardMemo = memo(MetricCard)
+MetricCardMemo.displayName = 'MetricCard'
+
+export { MetricCardMemo as MetricCard }
+export default MetricCardMemo

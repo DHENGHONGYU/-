@@ -640,6 +640,12 @@ describe('all model presets', () => {
     expect(preset!.outputPrice).toBe('$2.10')
   })
 
+  test('智谱 GLM preset should include glm-5.3 for strong-model testing', () => {
+    const preset = getPresetById('zhipu-glm')
+    expect(preset).toBeDefined()
+    expect(preset!.models).toContain('glm-5.3')
+  })
+
   // —— 境外模型预设逐一验证 ——
 
   test('OpenAI GPT preset should have correct fields', () => {
@@ -778,6 +784,23 @@ describe('all presets endpoint construction with mock', () => {
     expect(result.model).toBe(model)
     expect(result.content).toBeTruthy()
     expect(result.usage?.totalTokens).toBeGreaterThan(0)
+  })
+
+  test('zhipu-glm endpoint should support glm-5.3 model and echo it in response', async () => {
+    const mockFetch = vi.fn().mockImplementation(createMockFetchImpl('zhipu-glm', 'success'))
+    global.fetch = mockFetch
+
+    const result = await chat(mockMessages, {
+      baseURL: 'https://open.bigmodel.cn/api/paas/v4',
+      apiKey: 'sk-glm53-test',
+      model: 'glm-5.3',
+    })
+
+    expect(mockFetch.mock.calls[0]![0]).toBe('https://open.bigmodel.cn/api/paas/v4/v1/chat/completions')
+    const body = JSON.parse(mockFetch.mock.calls[0]![1].body)
+    expect(body.model).toBe('glm-5.3')
+    expect(result.model).toBe('glm-5.3')
+    expect(result.content).toBeTruthy()
   })
 
   test('all presets should normalize baseURL with trailing slash', async () => {

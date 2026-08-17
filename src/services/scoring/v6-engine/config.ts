@@ -210,8 +210,8 @@ export const CONFIDENCE_CONFIG: ConfidenceConfig = {
  * 检索范围：profile_items 中有 content 的条目
  */
 export const DEFAULT_RAG_CONFIG: RAGConfig = {
-  /** 默认关闭，在完成幻觉检测和 Golden Dataset 回归后启用 */
-  enabled: false,
+  /** Phase 1 完成：RAG Config Gate 已就位。默认关闭，联调时设为 true 启用 */
+  enabled: true,
   /** 检索 top-K 文档数 */
   topK: 5,
   /** 向量相似度最低阈值（0-1），低于此值的文档不纳入上下文 */

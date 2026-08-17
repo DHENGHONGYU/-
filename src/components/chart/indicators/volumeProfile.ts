@@ -26,6 +26,7 @@
 
 import type { CandlestickChartData } from '../types'
 import { getLogger } from '@/lib/logger'
+import { CHART_INDICATOR_COLORS } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
@@ -277,7 +278,7 @@ export const VOLUME_PROFILE_COLORS = {
   /** 柱体颜色（VA 外） */
   barOutside: 'rgba(96, 165, 250, 0.25)',
   /** POC 线颜色 */
-  poc: '#fbbf24',
+  poc: CHART_INDICATOR_COLORS.amber,
   /** VAH 线颜色 */
   vah: 'rgba(239, 83, 80, 0.5)',
   /** VAL 线颜色 */

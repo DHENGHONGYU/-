@@ -17,18 +17,25 @@
 
 import type { KlineBar } from '@/services/collect'
 
+/** LCG 乘数（线性同余伪随机） */
+const LCG_MULTIPLIER = 1103515245
+/** 基准年份（K 线起始日期） */
+const BASE_YEAR = 2023
+/** 默认 LCG 种子 */
+const DEFAULT_SEED = 12345
+
 /** 线性同余伪随机（确定性） */
 function lcg(seed: number): () => number {
   let s = seed >>> 0
   return () => {
-    s = (s * 1103515245 + 12345) & 0x7fffffff
+    s = (s * LCG_MULTIPLIER + DEFAULT_SEED) & 0x7fffffff
     return s / 0x7fffffff
   }
 }
 
 function fmtDate(i: number): string {
-  // 从 2023-01-02 起逐日（跳过周末近似，仅用于排序，不强求交易日历）
-  const base = new Date(Date.UTC(2023, 0, 2))
+  // 从 BASE_YEAR-01-02 起逐日（跳过周末近似，仅用于排序，不强求交易日历）
+  const base = new Date(Date.UTC(BASE_YEAR, 0, 2))
   base.setUTCDate(base.getUTCDate() + i)
   const y = base.getUTCFullYear()
   const m = String(base.getUTCMonth() + 1).padStart(2, '0')
@@ -53,7 +60,7 @@ interface BuildOpts {
 
 function buildBars(opts: BuildOpts): KlineBar[] {
   const n = opts.n ?? 260
-  const rand = lcg(opts.seed ?? 12345)
+  const rand = lcg(opts.seed ?? DEFAULT_SEED)
   const baseRet = opts.baseRet ?? 0.015
   const surgeEvery = opts.surgeEvery ?? 25
   const pullbackEvery = opts.pullbackEvery ?? 13

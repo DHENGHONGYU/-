@@ -4,6 +4,7 @@
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'
 import { taskQueue } from './taskQueue'
+import { getAgentHealthMonitor } from './agentHealthMonitor'
 
 const logger = getLogger()
 
@@ -84,8 +85,10 @@ export class AgentRuntime {
       const controller = new AbortController()
       let started = false
       let subscribed = true
+      let settled = false
 
       const timeoutId = setTimeout(() => {
+        settled = true
         taskQueue.cancel(taskId)
         task.status = 'timeout'
         task.error = `Task timeout after ${task.timeout}ms`
@@ -94,6 +97,7 @@ export class AgentRuntime {
         controller.abort()
         logger.warn(`[AgentRuntime] Task timeout: taskId="${taskId}", agentId="${agentId}", elapsed=${task.timeout}ms`)
         eventBus.emit('AGENT_TASK_TIMEOUT', { taskId, agentId, type })
+        this.recordHealth(task)
         resolve(task)
       }, effectiveTimeout)
 
@@ -110,6 +114,8 @@ export class AgentRuntime {
 
           this.runAgent(agentId, task, controller.signal)
             .then((result) => {
+              if (settled) return
+              settled = true
               task.status = 'completed'
               task.result = result
               task.completedAt = Date.now()
@@ -117,8 +123,11 @@ export class AgentRuntime {
               const duration = task.completedAt - (task.startedAt ?? task.createdAt)
               logger.info(`[AgentRuntime] Task completed: taskId="${taskId}", duration=${duration}ms`)
               eventBus.emit('AGENT_TASK_COMPLETED', { taskId, agentId, type, result })
+              this.recordHealth(task)
             })
             .catch((error) => {
+              if (settled) return
+              settled = true
               task.status = 'failed'
               task.error = error instanceof Error ? error.message : String(error)
               task.completedAt = Date.now()
@@ -126,6 +135,7 @@ export class AgentRuntime {
               const duration = task.completedAt - (task.startedAt ?? task.createdAt)
               logger.error(`[AgentRuntime] Task failed: taskId="${taskId}", duration=${duration}ms, error="${task.error}"`)
               eventBus.emit('AGENT_TASK_FAILED', { taskId, agentId, type, error: task.error })
+              this.recordHealth(task)
             })
             .finally(() => {
               clearTimeout(timeoutId)
@@ -172,6 +182,19 @@ export class AgentRuntime {
 
     logger.info(`[AgentRuntime] MCP call completed: ${serverName}.${toolName}`)
     return { success: true, serverName, toolName, result }
+  }
+
+  /**
+   * 将终态任务上报至健康监控（P0-1 修复：此前 recordTask 从未被调用，
+   * 导致 getAllReports() 恒为空、系统级 Agent 健康维度清零）。
+   * 异常兜底，避免监控故障影响任务主流程。
+   */
+  private recordHealth(task: AgentTask): void {
+    try {
+      getAgentHealthMonitor().recordTask(task)
+    } catch (err) {
+      logger.warn(`[AgentRuntime] recordHealth skipped: ${err instanceof Error ? err.message : String(err)}`)
+    }
   }
 
   async executeParallel(tasks: Array<{ agentId: string; type: string; payload: unknown; timeout?: number }>): Promise<AgentTask[]> {
@@ -228,6 +251,7 @@ export class AgentRuntime {
 
       logger.info(`[AgentRuntime] Task cancelled: id="${id}"`)
       eventBus.emit('AGENT_TASK_CANCELLED', { taskId: id })
+      this.recordHealth(task)
       return true
     }
 

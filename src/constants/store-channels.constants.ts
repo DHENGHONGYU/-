@@ -160,7 +160,6 @@ export const STORE_DISPLAY_NAMES = {
   news: '资讯',
   news_stock_map: '资讯-股票映射',
   sentiment_cache: '情感缓存',
-  news_bookmarks: '资讯收藏',
   hot_sector_scores: '热门板块评分',
   value_pit_scores: '价值洼地评分',
   execution_plans: '执行计划',

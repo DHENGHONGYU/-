@@ -418,6 +418,39 @@ export const CHART_SEMANTIC_PALETTE = {
 export type ChartSemanticDimension = keyof typeof CHART_SEMANTIC_PALETTE
 
 // ============================================================
+// 图表技术指标颜色（Chart Technical Indicator Colors）
+// ============================================================
+
+/**
+ * 图表技术指标与绘图工具颜色令牌
+ * @description 统一管理 K 线图技术指标线、绘图工具等的颜色，
+ * 消除组件中硬编码的 Tailwind HEX 颜色（如 #60a5fa）。
+ * 所有颜色均来自 Tailwind CSS 调色板，与 shadcn/ui 主题对齐。
+ */
+export const CHART_INDICATOR_COLORS = {
+  /** 蓝色线 — BOLL 上轨/下轨、EMA12、KDJ-K、MACD-DIF、绘图默认色 */
+  blue: '#60a5fa',       // blue-400
+  /** 金色线 — BOLL 中轨、EMA26、KDJ-D、MACD-DEA、成交量 POC、绘图选中色 */
+  amber: '#fbbf24',      // amber-400
+  /** 紫色线 — EMA50、KDJ-J、RSI 线 */
+  violet: '#a78bfa',     // violet-400
+  /** RSI 超买线 */
+  rsiOverbought: '#ef5350', // red-500
+  /** RSI 超卖线 */
+  rsiOversold: '#26a69a',   // teal-500
+  /** 绘图工具 — 红色 */
+  drawingRed: '#f87171',    // red-400
+  /** 绘图工具 — 绿色 */
+  drawingGreen: '#4ade80',  // green-400
+  /** 绘图工具 — 橙色 */
+  drawingOrange: '#fb923c', // orange-400
+  /** 绘图工具 — 品红 */
+  drawingMagenta: '#e879f9', // fuchsia-400
+  /** 绘图工具 — 青色 */
+  drawingTeal: '#2dd4bf',   // teal-400
+} as const
+
+// ============================================================
 // 间距令牌（Spacing Tokens）
 // ============================================================
 
