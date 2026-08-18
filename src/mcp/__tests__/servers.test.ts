@@ -22,9 +22,13 @@ import { MCPBridge } from '../bridge/mcpBridge'
 
 // 触发全局注册（确保 register.ts 中的 Server 已注册到全局单例）
 import '../register'
-import { registerAllServers } from '../register'
-// 复现生产启动注册：填充全局 mcpRegistry，供 MCPBridge.getStats 断言（否则 registry 为空 → totalTools<20）
-registerAllServers()
+import { mcpRegistry } from '../core/registry'
+// 复现生产启动注册：直接、确定性地向全局单例注册 3 个核心 Server，
+// 供 MCPBridge.getStats 断言（register.ts 不自动注册；import.meta.glob 懒加载需经
+// ensureMCPRegistered 异步链路，单元测试直接注册以可靠填充 registry）
+mcpRegistry.register(new V6ScoringServer(), { priority: 'high', modulePath: '@/mcp/servers/scoring/v6ScoringServer' })
+mcpRegistry.register(new DataFetcherServer(), { priority: 'high', modulePath: '@/mcp/servers/fetcher/dataFetcherServer' })
+mcpRegistry.register(new TradingServer(), { priority: 'medium', modulePath: '@/mcp/servers/trading/tradingServer' })
 
 // ============================================================
 // V6ScoringServer 测试
