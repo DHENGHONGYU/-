@@ -1,39 +1,48 @@
-import { Minimize2, Maximize2, Square } from 'lucide-react'
-import { Tooltip } from '@/components/atoms/Tooltip'
-import { useDensity, type DensityLevel } from './DensityContext'
+import { useDensity, type DensityLevel } from '@/components/cockpit/DensityContext'
+import { cn } from '@/lib/utils'
 
-const DENSITY_ICONS = {
-  compact: <Minimize2 className="h-3.5 w-3.5" />,
-  normal: <Square className="h-3.5 w-3.5" />,
-  expanded: <Maximize2 className="h-3.5 w-3.5" />,
-}
-
-const DENSITY_LABELS: Record<DensityLevel, string> = {
-  compact: '紧凑',
-  normal: '标准',
-  expanded: '宽松',
-}
+const OPTIONS: { level: DensityLevel; label: string; title: string }[] = [
+  { level: 'compact', label: '紧凑', title: '紧凑密度' },
+  { level: 'normal', label: '标准', title: '标准密度' },
+  { level: 'expanded', label: '宽松', title: '宽松密度' },
+]
 
 /**
  * DensityToggle
+ * 三段式密度切换控件：紧凑 / 标准 / 宽松。
+ * 通过 DensityContext 读取当前密度并调用 setDensity 切换。
  */
 export function DensityToggle(): React.JSX.Element {
   const { density, setDensity } = useDensity()
 
   return (
-    <div className="flex items-center gap-0.5 bg-muted/50 rounded-md p-0.5">
-      {(Object.keys(DENSITY_ICONS) as DensityLevel[]).map((level) => (
-        <Tooltip key={level} content={DENSITY_LABELS[level]} side="bottom">
+    <div
+      role="group"
+      aria-label="数据密度切换"
+      className="bg-muted rounded-lg p-0.5 inline-flex"
+    >
+      {OPTIONS.map((opt) => {
+        const active = density === opt.level
+        return (
           <button
-            onClick={() => setDensity(level)}
-            className={`p-1.5 rounded transition-colors ${density === level ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
-            aria-label={DENSITY_LABELS[level]}
-            title={DENSITY_LABELS[level]}
+            key={opt.level}
+            type="button"
+            aria-pressed={active}
+            title={opt.title}
+            onClick={() => setDensity(opt.level)}
+            className={cn(
+              'rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
+              active
+                ? 'bg-background shadow-sm text-foreground'
+                : 'text-muted-foreground hover:text-foreground',
+            )}
           >
-            {DENSITY_ICONS[level]}
+            {opt.label}
           </button>
-        </Tooltip>
-      ))}
+        )
+      })}
     </div>
   )
 }
+
+export default DensityToggle

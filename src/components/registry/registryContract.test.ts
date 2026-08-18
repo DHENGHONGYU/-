@@ -35,26 +35,16 @@ const PROJECT_ROOT = (() => {
   return p
 })()
 
-/** 允许的 @internal 预留组件白名单（对齐 2026-08-13 P0-2 的 @internal 标记） */
+/** 允许的 @internal 预留组件白名单（2026-08-18 第九轮治理：7 个真僵尸组件已清理） */
 const RESERVED_INTERNAL = [
-  // Cabin 域评分四卡
-  'ScoreSnapshot',
-  'ScoreItem',
-  'ScoreSummary',
-  'ScoreHistoryTable',
-  // Chart 域行业 v4 五卡
-  'IndustryV4Panel',
+  // Chart 域行业 v4 二子组件（父组件 IndustryV4Panel 已删除）
   'IndustryV4Radar',
   'SubIndicatorBar',
-  'TrendLineChart',
-  'ValuationDistribution',
 ] as const
 // type ReservedName = (typeof RESERVED_INTERNAL)[number]
 
-/** 同目录父子组合允许例外：父面板 IndustryV4Panel 内部可直接引用 2 个子组件 */
-const SAME_DIR_SIBLING_EXCEPTIONS: Record<string, Set<string>> = {
-  'src/components/chart/industry/IndustryV4Panel.tsx': new Set(['IndustryV4Radar', 'SubIndicatorBar']),
-}
+/** 同目录父子组合允许例外：（IndustryV4Panel 已删除，无需例外） */
+const SAME_DIR_SIBLING_EXCEPTIONS: Record<string, Set<string>> = {}
 
 const ALL_SRC_DIR = join(PROJECT_ROOT, 'src')
 
