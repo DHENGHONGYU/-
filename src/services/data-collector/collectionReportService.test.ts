@@ -14,6 +14,7 @@ import {
   formatCollectionTimeRange,
 } from './collectionReportService'
 import type { CollectionTraceSpan, CollectionTaskRuntime } from '@/types/modules/collection.types'
+import { DEFAULT_DIMENSIONS } from '@/config/collectConfig'
 
 vi.mock('@/lib/logger', () => ({
   getLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }),
@@ -61,10 +62,10 @@ function makeTask(
 }
 
 describe('collectionReportService', () => {
-  it('空数据时返回 8 个维度，状态均为 not_ready', () => {
+  it('空数据时返回默认维度个数的维度，状态均为 not_ready', () => {
     const report = buildCollectionReport({}, {})
-    expect(report.progressItems).toHaveLength(8)
-    expect(report.reportItems).toHaveLength(8)
+    expect(report.progressItems).toHaveLength(DEFAULT_DIMENSIONS.length)
+    expect(report.reportItems).toHaveLength(DEFAULT_DIMENSIONS.length)
     expect(report.overallProgress).toBe(0)
     expect(report.hasRunningTask).toBe(false)
     for (const item of report.progressItems) {
@@ -130,8 +131,8 @@ describe('collectionReportService', () => {
       { [s1.traceId]: s1, [s2.traceId]: s2 },
       {},
     )
-    // 01 与 02 完成，其余 6 个维度 not_ready(0 进度)
-    expect(report.overallProgress).toBe(Math.round((100 + 100 + 0 * 6) / 8))
+    // 01 与 02 完成，其余 (DEFAULT_DIMENSIONS.length - 2) 个维度 not_ready(0 进度)
+    expect(report.overallProgress).toBe(Math.round((100 + 100 + 0 * (DEFAULT_DIMENSIONS.length - 2)) / DEFAULT_DIMENSIONS.length))
   })
 
   it('formatCollectionTime 处理空值与正常时间', () => {
