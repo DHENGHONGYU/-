@@ -40,10 +40,9 @@ import {
 } from '@/services/scoring/v6-engine/hallucinationDetector'
 import type {
   HallucinationSample,
-  RAGSnippet,
   LLMCitation,
 } from '@/services/scoring/v6-engine/hallucinationDetector'
-import type { RAGContext, MissingDataAlert } from '@/services/scoring/v6-engine/ragRetriever'
+import type { RAGContext, RAGSnippet } from '@/services/scoring/v6-engine/ragRetriever'
 
 // ============================================================
 // 类型定义
@@ -219,6 +218,7 @@ class SmartRAGSimulator {
     sentiment: string
     title: string
     content: string
+    publishedAt?: number
   }> {
     // Step 1: 提取 RAG 区段（从"参考资料："到下一个指令性文本）
     // 避免最后一个 RAG 片段的内容被后续 prompt 指令污染
@@ -236,13 +236,14 @@ class SmartRAGSimulator {
     let match
     while ((match = snippetRegex.exec(ragSection)) !== null) {
       snippets.push({
-        index: parseInt(match[1]),
-        source: match[2].trim(),
-        itemType: match[3].trim(),
-        similarity: parseFloat(match[4]),
-        sentiment: match[5].trim(),
-        title: match[6].trim(),
-        content: match[7].trim(),
+        index: parseInt(match[1]!),
+        source: match[2]!.trim(),
+        itemType: match[3]!.trim(),
+        similarity: parseFloat(match[4]!),
+        sentiment: match[5]!.trim(),
+        title: match[6]!.trim(),
+        content: match[7]!.trim(),
+        publishedAt: Date.now(),
       })
     }
     return snippets
@@ -340,7 +341,7 @@ class SmartRAGSimulator {
       if (sentences.length === 0) continue
 
       // 选最长的句子作为引用内容（更可能包含关键信息）
-      const bestSentence = sentences.sort((a, b) => b.length - a.length)[0]
+      const bestSentence = sentences.sort((a, b) => b.length - a.length)[0]!
       citations.push({
         source: snippet.source,
         content: bestSentence,
@@ -490,10 +491,6 @@ function buildLayerInput(symbol: string, name: string, sector: string): Paramete
       netProfitYoY: 10,
       grossMargin: 40,
       netMargin: 15,
-      roe: 15,
-      eps: 5,
-      pe: 20,
-      pb: 5,
     },
     quotes: {
       latestClose: 100,
@@ -508,45 +505,42 @@ function buildLayerInput(symbol: string, name: string, sector: string): Paramete
         l0: 0.05,
         l1: 0.15,
         l2: 0.10,
-        l3a: 0.10,
         l3f: 0.10,
         l3v: 0.10,
-        l3i: 0.05,
         l4: 0.05,
         l5: 0.05,
         l6: 0.05,
         l7: 0.10,
         l8: 0.05,
       },
-      scoreRange: { min: 0, max: 5 },
-      ratingLevels: [],
-      llm: {
-        enabled: false,
-        enhanceableLayers: [],
-        provider: 'deepseek',
-        model: 'deepseek-chat',
-        maxTokens: 2000,
-        temperature: 0.7,
-        timeout: 60000,
-        retryAttempts: 3,
-        retryDelayMs: 1000,
-        circuitBreaker: {
-          failureThreshold: 5,
-          recoveryTimeoutMs: 30000,
-        },
+      thresholds: {
+        rating: { strongBuy: 4, buy: 3, hold: 2, sell: 1 },
+        layerScore: { min: 0, max: 5 },
+        composite: { min: 0, max: 5 },
       },
+      ipc: {
+        ocr: { superStrong: 5, strong: 4, medium: 3, weak: 2, ocrAccelSignal: 1 },
+        mce: { trackLevel: 3, categoryLevel: 2, segmentLevel: 1, decay3m: 0.9, decay6m: 0.8, decay12m: 0.7 },
+        tims: { disruptive: 5, significant: 4, differentiated: 3, follower: 2, laggard: 1 },
+        ipcWeights: { ocr: 0.4, mce: 0.3, tims: 0.3 },
+        ipcStages: { broken: 5, near: 4, before: 3, far: 2 },
+      },
+      confidence: {
+        sourceGrades: {},
+        ess: { minEvidence: 1, sufficientThreshold: 3 },
+      },
+      industries: [],
+      riskWarnings: { red: [], yellow: [] },
+      offlineMode: false,
+      auditEnabled: false,
+      llmEnabled: false,
       rag: {
         enabled: true,
         topK: 5,
         minSimilarity: 0.4,
-        maxContextChars: 8000,
-        maxSnippetsPerTier: 3,
-        timeDecayDays: 365,
-        tiers: [
-          { tier: 1, label: '个股索引', maxSnippets: 3 },
-          { tier: 2, label: '行业索引', maxSnippets: 2 },
-          { tier: 3, label: '全局索引', maxSnippets: 1 },
-        ],
+        maxTotalChars: 8000,
+        maxChunkChars: 2000,
+        itemTypes: ['research_report', 'industry_report', 'news', 'notice'],
       },
     },
   }
@@ -585,8 +579,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
 
   describe('场景 1：有 RAG 上下文 + 评分不变', () => {
     it('应通过 enhancer 完整管线，引用可追溯，幻觉检测通过', async () => {
-      const mtStock = dataset.stocks.find(s => s.symbol === 'sh.600519')!
-      const rags = STOCK_RAG_TEMPLATES['sh.600519']
+      const rags = STOCK_RAG_TEMPLATES['sh.600519'] || []
       mockRagRetrieve.mockResolvedValue(buildRAGContext(rags))
 
       const enhancer = createEnhancer()
@@ -620,22 +613,22 @@ describe('RAG 真实 LLM 联调集成测试', () => {
       // 验证：幻觉检测 — 从 enhancer 输出构造 HallucinationSample 并检测
       const citations: LLMCitation[] = result.evidence
         .filter(e => e.startsWith('[引用:'))
-        .map(e => {
+        .map((e): LLMCitation | null => {
           const sourceEnd = e.indexOf(']')
           if (sourceEnd === -1) return null
-          const source = e.substring(4, sourceEnd) // skip '[引用:'
-          const rest = e.substring(sourceEnd + 2) // skip '] '
-          // 提取日期（格式： (YYYY-MM-DD)）
+          const source = e.substring(4, sourceEnd)
+          const rest = e.substring(sourceEnd + 2)
           const dateMatch = rest.match(/\s+\((\d{4}-\d{2}-\d{2})\)/)
           const date = dateMatch ? dateMatch[1] : undefined
           const content = dateMatch ? rest.substring(0, rest.lastIndexOf(` (${dateMatch[1]})`)) : rest
-          return { source, content, date }
+          const citation: LLMCitation = { source, content }
+          if (date) citation.date = date
+          return citation
         })
         .filter((c): c is LLMCitation => c !== null)
 
       const sample: HallucinationSample = {
-        stockSymbol: 'sh.600519',
-        stockName: '贵州茅台',
+        symbol: 'sh.600519',
         layerId: 'l1',
         ruleScore: 4.2,
         llmOutput: {
@@ -643,6 +636,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
           summary: result.summary,
           rationale: result.evidence.find(e => e.startsWith('[LLM增强]'))?.replace('[LLM增强] ', '') || '',
           citations,
+          risks: [],
         },
         ragContext: rags,
       }
@@ -663,8 +657,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
 
   describe('场景 2：有 RAG 上下文 + 有依据调整', () => {
     it('应通过 enhancer 完整管线，引用可追溯，幻觉检测通过', async () => {
-      const ndStock = dataset.stocks.find(s => s.symbol === 'sz.300750')!
-      const rags = STOCK_RAG_TEMPLATES['sz.300750']
+      const rags = STOCK_RAG_TEMPLATES['sz.300750'] || []
       mockRagRetrieve.mockResolvedValue(buildRAGContext(rags))
 
       const enhancer = createEnhancer()
@@ -687,21 +680,22 @@ describe('RAG 真实 LLM 联调集成测试', () => {
       // 提取引用（手动解析，与场景 1 保持一致）
       const citations: LLMCitation[] = result.evidence
         .filter(e => e.startsWith('[引用:'))
-        .map(e => {
+        .map((e): LLMCitation | null => {
           const sourceEnd = e.indexOf(']')
           if (sourceEnd === -1) return null
-          const source = e.substring(4, sourceEnd) // skip '[引用:'
-          const rest = e.substring(sourceEnd + 2) // skip '] '
+          const source = e.substring(4, sourceEnd)
+          const rest = e.substring(sourceEnd + 2)
           const dateMatch = rest.match(/\s+\((\d{4}-\d{2}-\d{2})\)/)
           const date = dateMatch ? dateMatch[1] : undefined
           const content = dateMatch ? rest.substring(0, rest.lastIndexOf(` (${dateMatch[1]})`)) : rest
-          return { source, content, date }
+          const citation: LLMCitation = { source, content }
+          if (date) citation.date = date
+          return citation
         })
         .filter((c): c is LLMCitation => c !== null)
 
       const sample: HallucinationSample = {
-        stockSymbol: 'sz.300750',
-        stockName: '宁德时代',
+        symbol: 'sz.300750',
         layerId: 'l1',
         ruleScore: 3.5,
         llmOutput: {
@@ -709,6 +703,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
           summary: result.summary,
           rationale: result.evidence.find(e => e.startsWith('[LLM增强]'))?.replace('[LLM增强] ', '') || '',
           citations,
+          risks: [],
         },
         ragContext: rags,
       }
@@ -754,16 +749,18 @@ describe('RAG 真实 LLM 联调集成测试', () => {
       // 幻觉检测 — 无 RAG 上下文时不应有引用捏造
       const citations: LLMCitation[] = result.evidence
         .filter(e => e.startsWith('[引用:'))
-        .map(e => {
+        .map((e): LLMCitation | null => {
           const match = e.match(/\[引用:(.+?)\]\s+(.+?)(?:\s+\((.+?)\))?(?:\s+链接:(.+?))?$/)
           if (!match) return null
-          return { source: match[1], content: match[2], date: match[3] || undefined, url: match[4] || undefined }
+          const citation: LLMCitation = { source: match[1]!, content: match[2]! }
+          if (match[3]) citation.date = match[3]
+          if (match[4]) citation.url = match[4]
+          return citation
         })
         .filter((c): c is LLMCitation => c !== null)
 
       const sample: HallucinationSample = {
-        stockSymbol: 'sh.601318',
-        stockName: '中国平安',
+        symbol: 'sh.601318',
         layerId: 'l1',
         ruleScore: 3.8,
         llmOutput: {
@@ -771,6 +768,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
           summary: result.summary,
           rationale: result.evidence.find(e => e.startsWith('[LLM增强]'))?.replace('[LLM增强] ', '') || '',
           citations,
+          risks: [],
         },
         ragContext: [],
       }
@@ -786,13 +784,12 @@ describe('RAG 真实 LLM 联调集成测试', () => {
 
   describe('场景 4：有 RAG 上下文 + LLM 捏造引用（门禁应拦截）', () => {
     it('应检测到捏造引用，门禁报告标记为 WARN/FAIL', async () => {
-      const rags = STOCK_RAG_TEMPLATES['sh.600519']
+      const rags = STOCK_RAG_TEMPLATES['sh.600519'] || []
       mockRagRetrieve.mockResolvedValue(buildRAGContext(rags))
 
       // 直接构造 HallucinationSample（绕过 enhancer），模拟 LLM 捏造引用场景
       const sample: HallucinationSample = {
-        stockSymbol: 'sh.600519',
-        stockName: '贵州茅台',
+        symbol: 'sh.600519',
         layerId: 'l1',
         ruleScore: 4.2,
         llmOutput: {
@@ -806,6 +803,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
               date: '2026-08-01',
             },
           ],
+          risks: [],
         },
         ragContext: rags,
       }
@@ -822,8 +820,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
       mockRagRetrieve.mockResolvedValue(buildRAGContext(rags))
 
       const sample: HallucinationSample = {
-        stockSymbol: 'sh.600519',
-        stockName: '贵州茅台',
+        symbol: 'sh.600519',
         layerId: 'l1',
         ruleScore: 4.2,
         llmOutput: {
@@ -856,7 +853,8 @@ describe('RAG 真实 LLM 联调集成测试', () => {
 
         // 有 RAG 的股票：模拟基于 RAG 的有依据输出
         if (rags.length > 0) {
-          const prompt = `[RAG-1] 来源:${rags[0].source} | 类型:${rags[0].itemType} | 相似度:${rags[0].similarity.toFixed(2)} | 情绪:${rags[0].sentiment}\n标题:${rags[0].title}\n内容:${rags[0].content}`
+          const firstRag = rags[0]!
+          const prompt = `[RAG-1] 来源:${firstRag.source} | 类型:${firstRag.itemType} | 相似度:${firstRag.similarity.toFixed(2)} | 情绪:${firstRag.sentiment}\n标题:${firstRag.title}\n内容:${firstRag.content}`
           const response = smartSimulator.generate(prompt, stock.expectedScoreRange.min, 'L1-护城河分析')
           const parsed = JSON.parse(response.content) as {
             score: number
@@ -867,8 +865,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
           }
 
           samples.push({
-            stockSymbol: stock.symbol,
-            stockName: stock.name,
+            symbol: stock.symbol,
             layerId: 'l1',
             ruleScore: stock.expectedScoreRange.min,
             llmOutput: {
@@ -883,8 +880,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
         } else {
           // 无 RAG 的股票：评分不变
           samples.push({
-            stockSymbol: stock.symbol,
-            stockName: stock.name,
+            symbol: stock.symbol,
             layerId: 'l1',
             ruleScore: stock.expectedScoreRange.min,
             llmOutput: {
