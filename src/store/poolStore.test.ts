@@ -186,8 +186,8 @@ describe('intentionPoolStore', () => {
     mockQuery.mockResolvedValueOnce({ success: false })
     const result = await useIntentionPoolStore.getState().addItem({ symbol: 'NVDA', name: 'NVIDIA', source: 'manual' })
     expect(result).toBe(true)
-    // addItem 调用 forward 2 次：1) insertStock 录入意向池  2) updateStock 自动流转到研究池
-    expect(mockForward).toHaveBeenCalledTimes(2)
+    // addItem 调用 forward 1 次（insertStock 录入意向池；自动流转研究池已移除）
+    expect(mockForward).toHaveBeenCalledTimes(1)
   })
 
   it('updateItem symbol 自动 trim + toUpperCase', async () => {
