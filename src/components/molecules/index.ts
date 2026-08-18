@@ -40,20 +40,20 @@ export {
 
 export { Tabs, TabsContent, TabsList, TabsTrigger } from './Tabs'
 
-export { FormField } from './FormField'
-export type { FormFieldProps } from './FormField'
 
 export { MetricCard } from './MetricCard'
 export type { MetricCardProps } from './MetricCard'
 
-export { SearchBar } from './SearchBar'
-export type { SearchBarProps } from './SearchBar'
+
+export { DataQualityIndicator } from './DataQualityIndicator'
+export type { DataQualityIndicatorProps } from './DataQualityIndicator'
+
+export { CapitalAllocationPanel } from './CapitalAllocationPanel'
+export type { CapitalAllocationPanelProps } from './CapitalAllocationPanel'
 
 export { OnboardingGuide } from './OnboardingGuide'
 // 注：OnboardingGuideProps 为源文件内部接口，暂不对外 barrel 导出
 
-export { FilterChip } from './FilterChip'
-export type { FilterChipProps } from './FilterChip'
 
 // 行业分析组件（v2.9.5 新增）
 export { SignalBadge } from './SignalBadge'
@@ -68,16 +68,12 @@ export type { TrendArrowProps } from './TrendArrow'
 export { RankedCard } from './RankedCard'
 export type { RankedCardProps } from './RankedCard'
 
-export { DataQualityIndicator } from './DataQualityIndicator'
-export type { DataQualityIndicatorProps } from './DataQualityIndicator'
 
 // P3 交互状态组件
 export { Loading, Empty, Skeleton } from './states'
 export type { LoadingProps, EmptyProps, SkeletonProps } from './states'
 
 // 资金管理与双因子评估组件（v9 资金管理双轨框架）
-export { CapitalAllocationPanel } from './CapitalAllocationPanel'
-export type { CapitalAllocationPanelProps } from './CapitalAllocationPanel'
 
 export {
   DualFactorEvaluationPanel,
