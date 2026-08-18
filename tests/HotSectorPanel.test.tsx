@@ -56,7 +56,7 @@ vi.mock('@/hooks/useToast', () => ({
 }))
 
 // 延迟导入被测组件，确保 mock 先注册
-const HotSectorPanel = (await import('@/apps/input/HotSectorPanel')).default
+const HotSectorPanel = (await import('@/apps/input/HotSectorSection')).default
 
 // ============================================================
 // 测试辅助函数
