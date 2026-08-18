@@ -23,6 +23,21 @@ const MAX_CHECK_INTERVAL_MS = 300_000
 /** 警告阈值比例（相对于最大失败率） */
 const WARNING_THRESHOLD_RATIO = 0.5
 
+/** 每个 Agent 保留的最大任务记录数（健康统计滑动窗口上限） */
+const MAX_TASK_RECORDS_PER_AGENT = 100
+
+/** 连续失败达到该次数即判定为 critical */
+const CRITICAL_CONSECUTIVE_FAILURES = 5
+
+/** 默认健康阈值：最大失败率（0.0 ~ 1.0） */
+const DEFAULT_MAX_FAILURE_RATE = 0.3
+
+/** 默认健康阈值：最大平均执行耗时（毫秒） */
+const DEFAULT_MAX_AVG_EXECUTION_TIME_MS = 10000
+
+/** 默认健康阈值：最小心跳间隔（毫秒） */
+const DEFAULT_MIN_HEARTBEAT_INTERVAL_MS = 60000
+
 /**
  * 从环境变量解析健康检测间隔（毫秒）——「环境配置可转换」逻辑。
  * 转换规则：环境变量为字符串需转为数字；非法/缺失/非正回退默认；
@@ -65,9 +80,9 @@ export class AgentHealthMonitor {
 
   constructor(thresholds: Partial<HealthThresholds> = {}) {
     this.thresholds = {
-      maxFailureRate: 0.3,
-      maxAvgExecutionTime: 10000,
-      minHeartbeatInterval: 60000,
+      maxFailureRate: DEFAULT_MAX_FAILURE_RATE,
+      maxAvgExecutionTime: DEFAULT_MAX_AVG_EXECUTION_TIME_MS,
+      minHeartbeatInterval: DEFAULT_MIN_HEARTBEAT_INTERVAL_MS,
       ...thresholds,
     }
     logger.info('[AgentHealthMonitor] Initialized', { thresholds: this.thresholds })
@@ -101,8 +116,8 @@ export class AgentHealthMonitor {
   recordTask(task: AgentTask): void {
     const list = this.tasks.get(task.agentId) ?? []
     list.push(task)
-    // 保留最近 100 条记录
-    if (list.length > 100) {
+    // 保留最近 MAX_TASK_RECORDS_PER_AGENT 条记录（滑动窗口）
+    if (list.length > MAX_TASK_RECORDS_PER_AGENT) {
       list.shift()
     }
     this.tasks.set(task.agentId, list)
@@ -132,7 +147,7 @@ export class AgentHealthMonitor {
     const consecutiveFailures = this._countConsecutiveFailures(taskList)
 
     let status: AgentHealthReport['status'] = 'healthy'
-    if (failureRate > this.thresholds.maxFailureRate || consecutiveFailures >= 5) {
+    if (failureRate > this.thresholds.maxFailureRate || consecutiveFailures >= CRITICAL_CONSECUTIVE_FAILURES) {
       status = 'critical'
     } else if (failureRate > this.thresholds.maxFailureRate * WARNING_THRESHOLD_RATIO || avgExecutionTime > this.thresholds.maxAvgExecutionTime) {
       status = 'warning'

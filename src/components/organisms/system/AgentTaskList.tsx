@@ -65,6 +65,7 @@ const STATUS_BADGE_CONFIG: Record<TaskStatus, StatusBadgeConfig> = {
   completed: { variant: 'success', text: '已完成' },
   failed: { variant: 'destructive', text: '失败' },
   timeout: { variant: 'warning', text: '超时' },
+  cancelled: { variant: 'secondary', text: '已取消' },
 }
 
 // ============================================================

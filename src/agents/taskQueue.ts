@@ -47,7 +47,7 @@ export class TaskQueue {
   private completed = new Map<string, QueuedTask>()
   private listeners = new Set<TaskQueueListener>()
   private maxConcurrentPerAgent = new Map<string, number>()
-  private drainTimers = new Map<string, ReturnType<typeof queueMicrotask> | number>()
+  private drainScheduled = new Set<string>()
 
   setMaxConcurrent(agentId: string, max: number): void {
     this.maxConcurrentPerAgent.set(agentId, max)
@@ -63,15 +63,13 @@ export class TaskQueue {
 
     this.pending.set(fullTask.id, fullTask)
     const stats = this.getStats()
-    const pendingIds = Array.from(this.pending.keys())
-    logger.info(`[TaskQueue] Enqueued`, {
+    logger.debug(`[TaskQueue] Enqueued`, {
       taskId: fullTask.id,
       agentId: fullTask.agentId,
       type: fullTask.type,
       priority: fullTask.priority,
       queueSize: stats.pending,
       totalTasks: stats.total,
-      remainingTaskIds: pendingIds,
     })
 
     this.notify(fullTask)
@@ -147,14 +145,20 @@ export class TaskQueue {
     this.scheduleDrain(task.agentId)
   }
 
-  markTimeout(taskId: string): void {
-    const task = this.running.get(taskId)
+  /**
+   * 任务超时终态（pending 与 running 均适用）。
+   * 单对象真相源重构后，超时仅需在此统一将任务置 'timeout' 并移入 completed；
+   * agentRuntime 侧以此作为唯一终态来源，不再区分队列态（诊断 #5 收敛）。
+   */
+  timeout(taskId: string): void {
+    const task = this.running.get(taskId) ?? this.pending.get(taskId)
     if (!task) return
 
     task.status = 'timeout'
     task.error = `Task timeout after ${task.timeout}ms`
     task.completedAt = Date.now()
     this.running.delete(taskId)
+    this.pending.delete(taskId)
     this.completed.set(taskId, task)
 
     logger.warn(`[TaskQueue] Timeout: taskId="${taskId}"`)
@@ -243,13 +247,13 @@ export class TaskQueue {
   }
 
   private scheduleDrain(agentId: string): void {
-    if (this.drainTimers.has(agentId)) return
+    if (this.drainScheduled.has(agentId)) return
 
-    const timerId = queueMicrotask(() => {
-      this.drainTimers.delete(agentId)
+    this.drainScheduled.add(agentId)
+    queueMicrotask(() => {
+      this.drainScheduled.delete(agentId)
       this.drain(agentId)
     })
-    this.drainTimers.set(agentId, timerId)
   }
 
   private drain(agentId: string): void {
