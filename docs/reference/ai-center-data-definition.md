@@ -206,6 +206,8 @@ change_log:
 
 ## 五、Agent 运行时类型（补充）
 
+> ⚠️ **已废弃（2026-08-18）**：本节描述的 4 个接口 `AgentModuleInput` / `AgentModuleOutput` / `AgentDefinition` / `AgentInstance`（原 `src/types/modules/agent.types.ts`）已于类型收敛（诊断 P1 #3 + P2 #11）中**删除**——经全工作区核验 `src/` 零外部引用，运行时类型真相源已统一为 `src/agents/agentRuntime.ts` 的 `AgentTask` / `AgentConfig`。本节仅作历史归档，不再反映当前代码；下方「来源」行号已失效。
+>
 > 以下为 `src/types/modules/agent.types.ts` 中 Agent 运行时核心类型，与 AI Center 数据字典关联。
 
 ### 5.1 AgentModuleInput — Agent 模块输入

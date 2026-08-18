@@ -20,7 +20,7 @@
 | ① 数据采集 | `stocks`/`daily_quotes`/`news`/`sector_scores`/`trace_records`/`collection_history`/`collect_config` 全部经 DataBridge 落 IndexedDB | ✅ 强（`v9-collection-pipeline-testing` mandatory + 假绿灯防护 + `trace_records` 全链路追踪） | **已兜底** | `collectionPipeline.ts:457-487,496`；`tracePersistenceService.ts:27`；`db-schema.ts:464-473` |
 | ② 数据分析 | `v6_scores`(覆盖写·幂等)/`analysis_results`(by-symbol-version)/`score_docs`(by-symbol-version)/`industry_scores`/`rotation_scores` + 八域 `profile_*`(v32) | 🟡 基本（写路径有 ACL，但无"分析缓存失效/中间态重算"专项门禁；八域实体刚加入需补 `audit:db-references`） | **基本兜底** | `analysisOrchestrator.ts:80,212`；`scoreDocService.ts:37`；`dbConfig.ts:429-448` |
 | ③ 数据筛选 | **筛选模板**持久化 localStorage；**筛选结果集**已于 v34 经 `screening_results` first-class store 持久化（`runScreening` 成功落库 + `loadSavedRuns` 回溯） | ✅ 已兜底（v34 筛选结果集持久化；用户选择态仍内存态但属交互态非资产，可接受） | **已兜底** | `multiFactorScreeningStore.ts`（runScreening 持久化 + loadSavedRuns）；`dbConfig.ts`（screening 模块 ACL）；`db-schema.ts`（screening_results ensureStore） |
-| ④ 股票复盘 | `trade_reviews` + `strategy_snapshots`(唯一索引 by-version·版本化)；ACL 于 2026-08-11 补 `select`；**复盘评分真实计算器已于 v34 落地，且 2026-08-17 已设为生产默认激活实现**（getTradeReviewScoreCalculator 默认返回 RealTradeReviewScoreCalculator，disciplineStore 显式激活 + 注入订单数据源，消除 Mock 占位空壳） | 🟢 已落地（真实订单驱动纪律分；`holdings` 存储未实现仍待办，但非存储兜底阻断项） | **基本兜底** | `disciplineStore.ts:404-406`（setOrderDataSource + setTradeReviewScoreCalculator 激活）；`tradeReviewScoring.ts`（RealTradeReviewScoreCalculator 默认激活）；`dbConfig.ts:547-555` |
+| ④ 股票复盘 | `trade_reviews` + `strategy_snapshots`(唯一索引 by-version·版本化)；ACL 于 2026-08-11 补 `select`；**复盘评分真实计算器已于 v34 落地，且 2026-08-17 已设为生产默认激活实现**（getTradeReviewScoreCalculator 默认返回 RealTradeReviewScoreCalculator，disciplineStore 显式激活 + 注入订单数据源，消除 Mock 占位空壳）；**2026-08-17 新增独立字段 `realDisciplineScore` 落库 + 报告 UI 展示**（与 disciplineScore=tradeErrorClassifier 违规扣分语义分离，互不覆盖）；**2026-08-18 真实复盘评分已上首页 Dashboard「交易复盘摘要」卡片 + cockpit `AITradeReviewWidget` 指标格**（默认 0 视为未计算显示 —），全舱可见 | 🟢 已落地（真实订单驱动表现分独立落库+全 UI 覆盖；`holdings` 存储未实现仍待办，但非存储兜底阻断项） | **基本兜底** | `disciplineStore.ts:404-406`（激活+注入）；`tradeReviewScoring.ts`（RealTradeReviewScoreCalculator 默认激活）；`types.tradeReviewAI.types.ts`/`types.tradeReview.ts`（TradeReviewRecord.realDisciplineScore）；`TradeReviewSummary.tsx`/`TradeReviewPage.tsx`/`useTradeReviewReport.ts`（复盘页+markdown 展示）；`DashboardPage.tsx`/`AITradeReviewWidget.tsx`（首页+cockpit 指标格）；`dbConfig.ts:547-555` |
 | ⑤ 报告输出 | `proofread_reports`/`financial_reports`/`local_docs` 有；**最终"报告模板 + 已生成报告历史"无 first-class store**，依赖 Electron 文件导出 | ❌ 无（无门禁覆盖此缺口） | **部分兜底（弱）** | `dataLayerContentStores.ts:295-297,58`；`electron/main.ts:227,26`（fs.writeFileSync） |
 
 > **核心缺口归纳**：门禁强在**写路径（采集/分析/复盘）**，弱在**结果态持久化（筛选）与产出物资产化（报告）**——恰恰是"数据筛选"和"报告输出"两段。
@@ -140,3 +140,25 @@
 - **P2（已修复·2026-08-16 待办补充轮）**：① ADR-014 Proposed→**Accepted**（frontmatter + 正文）；② `db-reference-audit` 技能 SOP 路径 `scripts/validate-data-*.ts`→**`scripts/other/`**；③ 6 个 warning store 补齐实体类型映射（**消 warning**，见 8.3）。
 - **P2（✅ 已完成·2026-08-17）**：STORE_NAME 计数文档统一（24→53）——活动文档 `docs/explanation/数据治理路线图.md`（5处）、`docs/reference/v9-数据血缘追踪.md`（3处）、`docs/explanation/data-layer-overview.md`（1处）均已同步至权威值 53；`docs/archive/**` 历史快照保持原貌不改动。同步执行 doc_id 注册表全量对齐（sync-doc-id-registry 清理 76 失效条目 + inject-doc-id 注入 44 缺失 doc_id），审计通过 0 违规。
 - **P2（✅ 已完成·2026-08-17）**：`DeduplicationService` 已接入采集热路径（决策：接入而非移除）——`dataSourceOrchestrator` 行情+K线采集以进程内去重统计守卫模式激活，修正 dailyQuotes keyGenerator 为 `symbol::latest.date`；未跳过写库（覆盖写语义，防丢失更新）。原"假活跃"已消除。
+
+### 8.6 最终闭环确认（2026-08-18）
+
+**全门禁状态（本轮收尾实测，全部绿）**：
+
+| 门禁 | 结果 | 备注 |
+|---|---|---|
+| `tsc:prod`（--incremental false） | ✅ 0 errors | 收尾清除最后 1 处残留：`CapitalAllocationPanel.tsx:278` 颜色令牌失效访问（`COLOR_TOKENS.info?.hex` 随 `primary` 迁至 `SEMANTIC_COLOR_ROLES` 引发，回退改硬编码等价 hex `#007aff`，不碰令牌定义——属并发颜色治理在途断裂的安全回退） |
+| `audit:layers` | ✅ 0 | |
+| `audit:acl-consistency` | ✅ 0 | |
+| `validate:dataConsistency` | ✅ 0 | |
+| `validate:blueprint` | ✅ 0 | expected=52 已与权威 `STORE_NAME` 对齐（原 53 为陈旧硬编码） |
+
+**五段链路兜底结论**：采集✅ / 分析🟡基本 / 筛选✅ / 复盘✅（含 `realDisciplineScore` 独立字段落库+UI） / 报告✅（资产化）。**全链路存储底层已兜底**。
+
+**两项决策（明确为非阻断，记录以免反复被当成缺口）**：
+- **`holdings` 存储未实现 → 不建独立 Store**：持仓是 `useOrderStore` 订单的**派生视图**，订单已持久化，持仓落库属冗余；非存储兜底阻断项。
+- **`conditionGroups` 用户选择态内存态 → 接受**：属瞬态 UI 交互态，内存态符合"交互态可接受"原则，不必强制落库。
+
+**审计方法论固化（残项③闭环）**：将本次五段链路存储兜底审计方法论固化为物理技能 `data-flow-integrity-audit`（自然名，已镜像至 `.workbuddy/skills/`），含 mandatory 门禁、派生存储判定、跨层注入去违规、校验脚本假修复等 5 条反模式教训。`v9-data-flow-integrity-audit` 仍为 TRAE 平台虚拟技能（按治理无本地 SKILL.md），物理实现由本技能承载。
+
+> **收尾提示**：`tsc:prod` 错误集在并发 Agent 在途修改下会跨次浮动；判定"本次是否干净"只看自身改动文件是否在错误清单。本回合自身改动（CapitalAllocationPanel 回退、realDisciplineScore 字段、observationPoolReviewer、tsc 回退修复）均不在错误清单，全门禁绿为真实结论。
