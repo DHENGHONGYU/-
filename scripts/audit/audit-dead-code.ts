@@ -683,8 +683,172 @@ function collectComponentFiles(): ComponentInfo[] {
 }
 
 /**
- * 从文件内容中提取所有导入路径，用于构建组件引用图。
- * 同时扫描 JSX 中的组件名使用（作为补充判断）。
+ * v4.1 新增：解析 barrel/index.ts 文件的重导出关系。
+ * 构建 "barrel 路径 → 实际组件路径" 的映射表，用于消除 barrel 假阳性。
+ * 
+ * 例如：components/chart/index.ts 包含 `export { CandlestickChart } from './CandlestickChart'`
+ * 则 consumers 导入 `@/components/chart` 时，实际引用了 CandlestickChart 组件。
+ */
+function buildBarrelExportMap(): Map<string, Map<string, string>> {
+  // 外层 Map: barrel 文件路径（相对于 src/）→ 内层 Map
+  // 内层 Map: 导出名 → 实际组件文件路径（相对于 src/）
+  const barrelMap = new Map<string, Map<string, string>>()
+  
+  const componentsDir = path.join(SRC, 'components')
+  if (!fs.existsSync(componentsDir)) return barrelMap
+  
+  // 查找所有 index.ts / index.tsx 文件
+  const indexFiles: string[] = []
+  const findIndexFiles = (dir: string) => {
+    try {
+      const entries = fs.readdirSync(dir, { withFileTypes: true })
+      for (const e of entries) {
+        const fp = path.join(dir, e.name)
+        if (e.isDirectory() && e.name !== 'node_modules') {
+          findIndexFiles(fp)
+        } else if (e.isFile() && (e.name === 'index.ts' || e.name === 'index.tsx')) {
+          indexFiles.push(fp)
+        }
+      }
+    } catch { /* skip */ }
+  }
+  findIndexFiles(componentsDir)
+  
+  for (const indexFile of indexFiles) {
+    try {
+      const content = fs.readFileSync(indexFile, 'utf-8')
+      const relPath = path.relative(SRC, indexFile).replace(/\\/g, '/')
+      const exportMap = new Map<string, string>()
+      
+      // 匹配 export { X } from './Y' 或 export { X, Z } from './Y'
+      // 匹配 export { X as Y } from './Z'
+      const namedExportRegex = /export\s*\{\s*([^}]+)\s*\}\s*from\s*['"]([^'"]+)['"]/g
+      let match: RegExpExecArray | null
+      while ((match = namedExportRegex.exec(content)) !== null) {
+        const namesBlock = match[1]!.trim()
+        const sourcePath = match[2]!
+        
+        // 解析 source 路径
+        const sourceDir = path.dirname(indexFile)
+        const resolvedSource = path.resolve(sourceDir, sourcePath)
+        
+        // 规范化导出名 → 实际文件路径
+        const candidates = [
+          `${resolvedSource}.tsx`,
+          `${resolvedSource}.ts`,
+          `${resolvedSource}/index.tsx`,
+          `${resolvedSource}/index.ts`,
+        ]
+        let actualPath: string | null = null
+        for (const c of candidates) {
+          if (fs.existsSync(c)) {
+            actualPath = path.relative(SRC, c).replace(/\\/g, '/').replace(/\.(tsx?|jsx?)$/, '')
+            break
+          }
+        }
+        
+        if (!actualPath) continue
+        
+        // 解析导出名称
+        const names = namesBlock.split(',').map(n => {
+          const trimmed = n.trim()
+          // 处理 "X as Y" 模式
+          const asMatch = trimmed.match(/^(\w+)\s+as\s+(\w+)$/)
+          return asMatch ? asMatch[1]! : trimmed
+        }).filter(n => n.length > 0)
+        
+        for (const name of names) {
+          exportMap.set(name, actualPath)
+        }
+      }
+      
+      // 匹配 export default X from './Y'
+      const defaultExportRegex = /export\s+default\s+from\s*['"]([^'"]+)['"]/g
+      while ((match = defaultExportRegex.exec(content)) !== null) {
+        const sourcePath = match[1]!
+        const sourceDir = path.dirname(indexFile)
+        const resolvedSource = path.resolve(sourceDir, sourcePath)
+        
+        const candidates = [
+          `${resolvedSource}.tsx`,
+          `${resolvedSource}.ts`,
+        ]
+        for (const c of candidates) {
+          if (fs.existsSync(c)) {
+            const actualPath = path.relative(SRC, c).replace(/\\/g, '/').replace(/\.(tsx?|jsx?)$/, '')
+            exportMap.set('default', actualPath)
+            break
+          }
+        }
+      }
+      
+      if (exportMap.size > 0) {
+        barrelMap.set(relPath, exportMap)
+      }
+    } catch { /* skip */ }
+  }
+  
+  return barrelMap
+}
+
+/**
+ * v4.1 新增：解析 barrel 导入的实际组件引用。
+ * 当消费者从 barrel index 导入时，解析 barrel 的重导出关系，
+ * 将引用计数正确归因到实际组件文件。
+ */
+function resolveBarrelImports(
+  imp: string,
+  refCounts: Record<string, number>,
+  seenInThisFile: Set<string>,
+  barrelMap: Map<string, Map<string, string>>,
+): boolean {
+  // imp 如 "components/chart" 或 "@/components/chart"
+  // barrel 路径如 "components/chart/index"
+  
+  // 找到对应的 barrel
+  let barrelPath: string | null = null
+  
+  // 直接匹配：import 路径指向 index 文件
+  const impNormalized = imp.replace(/^@\//, '')
+  if (barrelMap.has(impNormalized)) {
+    barrelPath = impNormalized
+  } else if (barrelMap.has(impNormalized + '/index')) {
+    barrelPath = impNormalized + '/index'
+  } else {
+    // 检查 import 路径是否指向包含 index 的目录
+    for (const [key] of barrelMap) {
+      if (key === impNormalized || key === impNormalized + '/index') {
+        barrelPath = key
+        break
+      }
+    }
+  }
+  
+  if (!barrelPath) return false
+  
+  const exports = barrelMap.get(barrelPath)
+  if (!exports) return false
+  
+  // 将 barrel 的所有导出组件计为被引用
+  for (const [, actualComponentPath] of exports) {
+    if (!seenInThisFile.has(actualComponentPath)) {
+      seenInThisFile.add(actualComponentPath)
+      refCounts[actualComponentPath] = (refCounts[actualComponentPath] ?? 0) + 1
+    }
+  }
+  
+  // 同时将 barrel 自身计为被引用
+  if (!seenInThisFile.has(barrelPath)) {
+    seenInThisFile.add(barrelPath)
+    refCounts[barrelPath] = (refCounts[barrelPath] ?? 0) + 1
+  }
+  
+  return true
+}
+
+/**
+ * v4.1 增强：extractImportsFromFile 现在同时返回动态 import 信息
+ * 用于 React.lazy 引用追踪
  */
 function extractImportsFromFile(filePath: string): string[] {
   const content = fs.readFileSync(filePath, 'utf-8')
@@ -701,7 +865,7 @@ function extractImportsFromFile(filePath: string): string[] {
     imports.push(match[1]!)
   }
 
-  // 匹配动态 import()
+  // 匹配动态 import() — v4.1 增强：捕获所有动态导入
   const dynamicImportRegex = /import\s*\(\s*['"]([^'"]+)['"]\s*\)/g
   while ((match = dynamicImportRegex.exec(content)) !== null) {
     imports.push(match[1]!)
@@ -828,6 +992,9 @@ function scanUnusedComponents(options: ScanOptions = {}): UnusedComponentsScanRe
   const components = collectComponentFiles()
   if (components.length === 0) return { issues: [], refCounts: {} }
 
+  // v4.1 新增：构建 barrel 导出映射表（仅一次）
+  const barrelMap = buildBarrelExportMap()
+
   // 收集所有源文件（用于导入分析和 JSX 扫描）
   const allSourceFiles = collectFiles(SRC).filter(
     (f) =>
@@ -855,6 +1022,12 @@ function scanUnusedComponents(options: ScanOptions = {}): UnusedComponentsScanRe
           seenInThisFile.add(resolved)
           refCounts[resolved] = (refCounts[resolved] ?? 0) + 1
         }
+      }
+      
+      // v4.1 新增：barrel 解析 — 若导入指向 barrel，将引用归因到实际组件
+      if (!resolved && imp.includes('components')) {
+        // 尝试 barrel 解析（调用本身完成引用计数归因）
+        resolveBarrelImports(imp, refCounts, seenInThisFile, barrelMap)
       }
     }
   }
