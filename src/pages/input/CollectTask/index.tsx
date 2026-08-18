@@ -31,6 +31,7 @@ import {
   BarChart3,
   LayoutDashboard,
 } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { Badge } from '@/components/atoms'
 import {
@@ -81,6 +82,17 @@ export default function CollectTaskPage(): React.JSX.Element {
   const stats = useCollectionRuntimeStore((s) => s.stats)
   const isLoading = false
 
+  // P0-3：演示模式（sessionStorage.POOL_FORCE_DEMO='1'）下显式标注 Mock 数据，
+  // 避免与真实采集任务混淆。真实数据路径不受影响。
+  const [isDemoMode, setIsDemoMode] = useState(false)
+  useEffect(() => {
+    try {
+      setIsDemoMode(typeof sessionStorage !== 'undefined' && sessionStorage.getItem('POOL_FORCE_DEMO') === '1')
+    } catch {
+      setIsDemoMode(false)
+    }
+  }, [])
+
   return (
     <ErrorBoundary>
       <PageContainer className="space-y-6">
@@ -89,7 +101,16 @@ export default function CollectTaskPage(): React.JSX.Element {
         <PageHeader
           title="采集任务监控"
           description="任务列表 · 维度健康度 · 采集日志 · 链路可视化"
-          actions={<Badge variant="outline">D-1 框架</Badge>}
+          actions={
+            <>
+              <Badge variant="outline">D-1 框架</Badge>
+              {isDemoMode && (
+                <Badge variant="warning">
+                  演示模式 · Mock 数据
+                </Badge>
+              )}
+            </>
+          }
         />
 
         <CollectTaskStatsCards

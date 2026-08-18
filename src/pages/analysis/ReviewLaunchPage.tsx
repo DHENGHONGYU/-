@@ -7,11 +7,20 @@
  */
 
 import React, { useEffect } from 'react'
+import { Link } from 'react-router'
 import { PageHeader } from '@/components/templates'
 import { ErrorState, EmptyState } from '@/components/molecules'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from '@/components/atoms/Breadcrumb'
 import { ScoreRadar } from '@/components/chart/ScoreRadar'
 import { GaugeChart } from '@/components/chart/GaugeChart'
 import { StockSelector } from '@/components/organisms/input/StockSelector'
@@ -80,6 +89,21 @@ export default function ReviewLaunchPage(): React.JSX.Element {
 
   return (
     <div className="space-y-4 p-4">
+      <Breadcrumb aria-label="breadcrumb">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild><Link to="/">首页</Link></BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild><Link to="/analysis">分析</Link></BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>复盘启动分析</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <PageHeader
         title="复盘启动分析 · RLES 评价体系"
         description="数据就绪度(D1) · 策略适配度(D2) · 时机成熟度(D3) · 风险健康度(D4)"
