@@ -107,3 +107,28 @@ it('定时调度：启用后按间隔自动复盘，start 不立即执行', asyn
   reviewer.stop()
   vi.useRealTimers()
 })
+
+it('autoEnroll 开启时自动将晋升候选入研究池（未达门槛排除）', async () => {
+  const enrollMock = vi.fn(async () => {})
+  const reviewer = new ObservationPoolReviewer({ promotionThreshold: 3.0, autoEnroll: true })
+  const deps = makeDeps(
+    { '600000.SH': 4.2, '000001.SZ': 2.1, '300750.SZ': 3.5 },
+    { enrollToResearchPool: enrollMock },
+  )
+  const r = await reviewer.run(deps)
+  // 600000(4.2) 与 300750(3.5) 越过门槛 → 入池；000001(2.1) 未达 → 不入池
+  expect([...r.enrolled].sort()).toEqual(['300750.SZ', '600000.SH'])
+  expect(enrollMock).toHaveBeenCalledTimes(2)
+  expect(enrollMock).toHaveBeenCalledWith('600000.SH', '浦发银行')
+  expect(enrollMock).toHaveBeenCalledWith('300750.SZ', '宁德时代')
+  expect(r.enrolled).not.toContain('000001.SZ')
+})
+
+it('autoEnroll 未开启时即使注入 enrollToResearchPool 也不入池', async () => {
+  const enrollMock = vi.fn(async () => {})
+  const reviewer = new ObservationPoolReviewer({ promotionThreshold: 3.0, autoEnroll: false })
+  const deps = makeDeps({ '600000.SH': 4.2 }, { enrollToResearchPool: enrollMock })
+  const r = await reviewer.run(deps)
+  expect(r.enrolled).toEqual([])
+  expect(enrollMock).not.toHaveBeenCalled()
+})

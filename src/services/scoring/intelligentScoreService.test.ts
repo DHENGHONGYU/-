@@ -351,3 +351,93 @@ describe('V6 引擎计算逻辑', () => {
     }
   })
 })
+
+// ============================================================
+// GLM5.3 弱模型（混元类）输出容错 — 数值分仍由 V6 数据驱动
+// ============================================================
+// 用户约束：混元/GLM5.3 等弱模型能力偏弱，可能返回 Markdown 围栏包裹的非标准 JSON。
+// 本组验证：即便 LLM 返回 ```json 围栏 + 越界 score，数值综合分必须保持 V6 数据驱动（3.75），
+// LLM 仅做 rationale 文本增强，绝不覆盖数据驱动评分（P1-3：降低高确定性计算的 LLM 依赖）。
+
+describe('GLM5.3 弱模型输出容错（数值分数据驱动不被覆盖）', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    hoisted.engineState.calculateAll = async () => hoisted.mockComposite
+    hoisted.mockSendWriteEnvelope.mockResolvedValue({ success: true })
+    hoisted.mockBuildFinancialData.mockResolvedValue({ dataStatus: 'missing' } as const)
+    hoisted.mockValidate.mockReturnValue({
+      passed: true,
+      severity: 'info' as const,
+      issues: [],
+      score: 0,
+      blockCount: 0,
+      warnCount: 0,
+    })
+  })
+
+  test('GLM5.3 返回 ```json 围栏 + 越界 score → 综合分仍为 V6 数据驱动 3.75', async () => {
+    // 模拟 GLM5.3/混元弱模型：用 Markdown 代码围栏包裹 JSON，且给出越界 overall=9.9
+    // rawDim.name 使用真实因子名「质量」（对应 V6 l1 护城河层），确保与维度匹配触发 rationale 增强
+    const fenced = [
+      '```json',
+      JSON.stringify({
+        dimensions: [
+          { name: '质量', score: 9.9, rationale: 'GLM5.3 生成的关于质量维度的详细分析理由，长度足以触发 rationale 增强替换条件。' },
+        ],
+        overall: 9.9,
+      }),
+      '```',
+    ].join('\n')
+
+    hoisted.mockQuery
+      .mockResolvedValueOnce({ success: true, data: createMockStock() })
+      .mockResolvedValueOnce({ success: true, data: createMockQuotes() })
+    hoisted.mockChat.mockResolvedValueOnce({ content: fenced, model: 'glm-5.3' })
+
+    const result = await runIntelligentScore({
+      ...baseInput,
+      llmConfig: { model: 'glm-5.3', baseURL: 'http://x', apiKey: 'k' },
+      transparencyConfig: { enableLlm: true, showTransparencyPanel: false, baseURL: '', apiKey: '', model: '' },
+    })
+
+    // ① LLM 被调用（弱模型参与增强）
+    expect(hoisted.mockChat).toHaveBeenCalledTimes(1)
+    // ② 模型回显为 glm-5.3
+    expect(result.success).toBe(true)
+    if (result.success) {
+      // ③ 核心：综合分必须保持 V6 数据驱动，绝不被 LLM 的越界 9.9 覆盖
+      expect(result.data!.overallScore).toBe(3.75)
+      expect(result.data!.scoreProvenance).toBe('data-driven')
+      expect(result.data!.summary).toBe(fenced)
+      // ④ LLM 越界 score 被忽略，未污染任一维度数值
+      const moat = result.data!.dimensionScores.find((d) => d.name === '质量')
+      expect(moat).toBeDefined()
+      if (moat) {
+        expect(moat.score).not.toBe(9.9)
+        // ⑤ rationale 被 GLM5.3 长文本增强替换
+        expect(moat.rationale).toContain('GLM5.3 生成的关于质量维度的详细分析理由')
+      }
+    }
+  })
+
+  test('GLM5.3 返回非法 JSON → 解析失败仅静默跳过增强，评分仍数据驱动', async () => {
+    hoisted.mockQuery
+      .mockResolvedValueOnce({ success: true, data: createMockStock() })
+      .mockResolvedValueOnce({ success: true, data: createMockQuotes() })
+    // 弱模型返回完全不可解析的文本
+    hoisted.mockChat.mockResolvedValueOnce({ content: '抱歉，我无法生成评分。', model: 'glm-5.3' })
+
+    const result = await runIntelligentScore({
+      ...baseInput,
+      llmConfig: { model: 'glm-5.3', baseURL: 'http://x', apiKey: 'k' },
+      transparencyConfig: { enableLlm: true, showTransparencyPanel: false, baseURL: '', apiKey: '', model: '' },
+    })
+
+    expect(result.success).toBe(true)
+    if (result.success) {
+      // 解析失败不影响 V6 因子分数（不崩溃、不黑箱）
+      expect(result.data!.overallScore).toBe(3.75)
+      expect(result.data!.scoreProvenance).toBe('data-driven')
+    }
+  })
+})

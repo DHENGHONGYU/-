@@ -25,7 +25,7 @@ import { AKSHARE_LOCAL_BASE_URL } from '@/config/dataSourceUrls'
 import { DEFAULT_REQUEST_TIMEOUT_MS } from '@/config/timeouts'
 import { safeFetch as _safeFetch } from '@/services/shared/safeFetch'
 import { canExecute, recordSourceResult } from './adaptiveSourceOrchestrator'
-import type { ChipData, NewsItem, CompetitorData, IndexCorrelation, ResearchReport, DividendShareSummary, ConsensusAndRating } from './dimensionDataTypes'
+import type { ChipData, NewsItem, CompetitorData, IndexCorrelation, ResearchReport, DividendShareSummary, ConsensusAndRating, ConsensusEstimate, RatingSummary } from './dimensionDataTypes'
 import { fetchNewsViaWestock, fetchResearchReportsViaWestock } from './westockMcpSource'
 import { fetchNewsViaTencentNews } from './tencentNewsMcpSource'
 
@@ -60,6 +60,7 @@ import {
   fetchShareStructureFromTencent,
   fetchEastMoneyConsensusEstimate,
   fetchEastMoneyRatingSummary,
+  fetchIfindTargetPrice,
   checkDividendKeywords as _checkDividendKeywords,
   fetchFinancialSnapshot as _fetchFinancialSnapshot,
 } from './crawlerProvider'
@@ -617,8 +618,37 @@ export async function fetchResearchReports(symbol: string, _stockName?: string):
 export async function fetchDimensionData(
   symbol: string,
   dimensionCode: string,
+  stockName?: string,
 ): Promise<Record<string, unknown> | null> {
-  // 1. 依次尝试: 真实 API → Mock 服务 → null(由调用方回退到内联 mock)
+  // 维度策略：
+  //   04/05/08 (公告/新闻/研报): 腾讯 MCP 优先 → iFinD MCP 补充 → 爬虫兜底
+  //   其他维度 (03/06/07/10-14): iFinD MCP 优先 → 腾讯 MCP 补充 → 爬虫兜底
+  const NEWS_DIMENSIONS = new Set(['04', '05', '08'])
+  const isNewsDimension = NEWS_DIMENSIONS.has(dimensionCode)
+
+  if (!isNewsDimension) {
+    // 优先级 0: iFinD MCP 采集（覆盖维度 03/06/07/10-14 的专业金融数据）
+    if (canExecute('ifind_mcp') || canExecute('tencent_mcp')) {
+      try {
+        const { collectDimensionViaMcp } = await import('./ifindMcpCollector')
+        const mcpResult = await collectDimensionViaMcp(symbol, dimensionCode)
+        if (mcpResult && mcpResult.success) {
+          return {
+            ...mcpResult.data,
+            _source: 'ifind_mcp',
+            _dimensionName: mcpResult.dimensionName,
+            _successCount: mcpResult.successCount,
+            _queryCount: mcpResult.queryCount,
+          }
+        }
+      } catch {
+        // MCP 失败静默降级到既有链路
+      }
+    }
+  }
+
+  // 1. 依次尝试: 腾讯 MCP（新闻维度 04/05/08 已在 fetchNews/fetchResearchReports 内优先）
+  //    → 真实 API → Mock 服务 → null(由调用方回退到内联 mock)
   switch (dimensionCode) {
     case '03': {
       const chip = await fetchChipData(symbol)
@@ -626,15 +656,37 @@ export async function fetchDimensionData(
       return fetchFromMockServer(symbol, '03')
     }
     case '04': {
+      // 优先级 1: 腾讯 MCP（westock 公告）已内置于 fetchNews
       const news = await fetchNews(symbol, 'announcement')
       if (news.length > 0) return { items: news, symbol, count: news.length, date: new Date().toISOString(), _source: (news[0]?._source) ?? 'unknown' }
+      // 优先级 2: iFinD MCP 补充（腾讯 MCP 失败后降级）
+      if (canExecute('ifind_mcp')) {
+        try {
+          const { collectDimensionViaMcp } = await import('./ifindMcpCollector')
+          const mcpResult = await collectDimensionViaMcp(symbol, '04')
+          if (mcpResult && mcpResult.success) {
+            return { ...mcpResult.data, _source: 'ifind_mcp', _dimensionName: mcpResult.dimensionName }
+          }
+        } catch { /* 降级 */ }
+      }
       const mock = await fetchFromMockServer(symbol, '04')
       if (mock) return mock
       return null
     }
     case '05': {
+      // 优先级 1: 腾讯 MCP（westock + tencentnews 并行）已内置于 fetchNews
       const news = await fetchNews(symbol, 'hot_news')
       if (news.length !== 0) return { items: news, symbol, count: news.length, date: new Date().toISOString(), _source: (news[0]?._source) ?? 'unknown' }
+      // 优先级 2: iFinD MCP 补充
+      if (canExecute('ifind_mcp')) {
+        try {
+          const { collectDimensionViaMcp } = await import('./ifindMcpCollector')
+          const mcpResult = await collectDimensionViaMcp(symbol, '05')
+          if (mcpResult && mcpResult.success) {
+            return { ...mcpResult.data, _source: 'ifind_mcp', _dimensionName: mcpResult.dimensionName }
+          }
+        } catch { /* 降级 */ }
+      }
       const mock = await fetchFromMockServer(symbol, '05')
       if (mock) return mock
       return null
@@ -654,10 +706,32 @@ export async function fetchDimensionData(
       return null
     }
     case '08': {
+      // 优先级 1: 腾讯 MCP（westock 研报）已内置于 fetchResearchReports
       const reports = await fetchResearchReports(symbol)
       if (reports.length > 0) return { items: reports, symbol, count: reports.length, date: new Date().toISOString(), _source: (reports[0]?._source) ?? 'unknown' }
+      // 优先级 2: iFinD MCP 补充
+      if (canExecute('ifind_mcp')) {
+        try {
+          const { collectDimensionViaMcp } = await import('./ifindMcpCollector')
+          const mcpResult = await collectDimensionViaMcp(symbol, '08')
+          if (mcpResult && mcpResult.success) {
+            return { ...mcpResult.data, _source: 'ifind_mcp', _dimensionName: mcpResult.dimensionName }
+          }
+        } catch { /* 降级 */ }
+      }
       const mock = await fetchFromMockServer(symbol, '08')
       if (mock) return mock
+      return null
+    }
+    // 维度 10-14: 热门板块/技术指标/资金流向/机构持仓/估值分析
+    // 统一走 MCP 采集（已在函数入口处理），此处作为 MCP 失败后的兜底
+    case '10':
+    case '11':
+    case '12':
+    case '13':
+    case '14': {
+      // MCP 已在入口尝试，此处兜底返回 null
+      // （如果 MCP 失败，说明该维度暂无可用数据源）
       return null
     }
     case '15': {
@@ -666,7 +740,7 @@ export async function fetchDimensionData(
       return null
     }
     case '16': {
-      const data = await fetchConsensusAndRating(symbol)
+      const data = await fetchConsensusAndRating(symbol, stockName)
       if (data) return data as unknown as Record<string, unknown>
       return null
     }
@@ -776,48 +850,63 @@ export async function fetchDividendShareData(symbol: string): Promise<DividendSh
 /**
  * 获取一致预期与评级数据（16）
  *
- * 优先级：东财爬虫（并行：一致预期 + 评级汇总）
+ * 优先级：iFinD MCP（目标价）+ 东财爬虫（一致预期 EPS/营收/净利）并行
+ *       → 东财爬虫（iFinD 不可用时完整降级）
  *       → null（调用方决定是否 mock）
  */
-export async function fetchConsensusAndRating(symbol: string): Promise<ConsensusAndRating | null> {
-  // 链 1: 东财爬虫（并行：一致预期 + 评级汇总）
-  if (canExecute('crawler')) {
+export async function fetchConsensusAndRating(symbol: string, stockName?: string): Promise<ConsensusAndRating | null> {
+  // 链 0: iFinD MCP（目标价）+ 东财爬虫（一致预期）并行
+  if (canExecute('ifind_mcp') || canExecute('crawler')) {
     try {
-      const [estimates, rating] = await Promise.all([
-        fetchEastMoneyConsensusEstimate(symbol),
-        fetchEastMoneyRatingSummary(symbol),
+      const ifindTask = canExecute('ifind_mcp')
+        ? fetchIfindTargetPrice(symbol, stockName ?? symbol)
+        : Promise.resolve(null)
+
+      const crawlerEstimatesTask = canExecute('crawler')
+        ? fetchEastMoneyConsensusEstimate(symbol)
+        : Promise.resolve([] as ConsensusEstimate[])
+
+      const crawlerRatingTask = canExecute('crawler')
+        ? fetchEastMoneyRatingSummary(symbol)
+        : Promise.resolve(null)
+
+      const [ifindTarget, estimates, crawlerRating] = await Promise.all([
+        ifindTask,
+        crawlerEstimatesTask,
+        crawlerRatingTask,
       ])
-      if (estimates.length > 0 && rating) {
-        recordSourceResult('crawler', { success: true, isMock: false, latencyMs: 0, completeness: 1 })
+
+      if (estimates.length > 0 || crawlerRating || ifindTarget) {
+        // 构建评级：iFinD 目标价优先，东财评级补充
+        const rating: RatingSummary = {
+          buyCount: ifindTarget?.buyCount ?? crawlerRating?.buyCount ?? 0,
+          overweightCount: ifindTarget?.overweightCount ?? crawlerRating?.overweightCount ?? 0,
+          holdCount: crawlerRating?.holdCount ?? 0,
+          underweightCount: crawlerRating?.underweightCount ?? 0,
+          sellCount: ifindTarget?.sellCount ?? crawlerRating?.sellCount ?? 0,
+          consensusRating: crawlerRating?.consensusRating ?? 0,
+          consensusTargetPrice: ifindTarget?.targetPrice ?? crawlerRating?.consensusTargetPrice ?? 0,
+          targetPriceHigh: ifindTarget?.targetPrice ?? 0, // iFinD 仅返回综合值，最高/最低暂不可用
+          targetPriceLow: ifindTarget?.targetPrice ?? 0,
+          recentTrend: crawlerRating?.recentTrend ?? 'stable',
+          _source: ifindTarget ? 'ifind_mcp' : 'crawler',
+        }
+
+        const source = ifindTarget ? 'ifind_mcp+crawler' : 'crawler'
+        recordSourceResult(source, { success: true, isMock: false, latencyMs: 0, completeness: ifindTarget ? 1 : 0.8 })
+
         return {
           symbol,
           estimates,
           rating,
           dataDate: new Date().toISOString().split('T')[0] ?? '',
-          _source: 'crawler',
-        }
-      }
-      // 部分成功：至少有一致预期或评级
-      if (estimates.length > 0) {
-        recordSourceResult('crawler', { success: true, isMock: false, latencyMs: 0, completeness: 0.5 })
-        return {
-          symbol,
-          estimates,
-          rating: {
-            buyCount: 0, overweightCount: 0, holdCount: 0, underweightCount: 0, sellCount: 0,
-            consensusRating: 0, consensusTargetPrice: 0,
-            targetPriceHigh: 0, targetPriceLow: 0,
-            recentTrend: 'stable',
-            _source: 'crawler',
-          },
-          dataDate: new Date().toISOString().split('T')[0] ?? '',
-          _source: 'crawler',
+          _source: source,
         }
       }
       recordSourceResult('crawler', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
     } catch (err) {
       recordSourceResult('crawler', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
-      logger.warn(`[multiSourceFetcher] 东财一致预期失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
+      logger.warn(`[multiSourceFetcher] 一致预期失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
     }
   }
 

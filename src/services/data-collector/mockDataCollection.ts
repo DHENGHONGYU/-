@@ -16,6 +16,7 @@ import { DATA_COLLECTION_TIMEOUT_MS } from '@/config/timeouts'
 import { DEFAULT_WS_URL } from '@/config/dataSourceUrls'
 import { MockStockAnalysisScoringStrategy } from '@/services/stock-analysis/scoringStrategy'
 import { getTradeReviewScoreCalculator } from '@/services/trading/tradeReviewScoring'
+import { STOCK_COLOR_TOKENS, CHART_PALETTE } from '@/constants/theme.tokens'
 
 /** 评分数据生成策略实例（P5-7：评分计算从采集层移回分析层） */
 const stockAnalysisScoring = new MockStockAnalysisScoringStrategy()
@@ -568,7 +569,7 @@ function generateModelComparisonPayload(): ModelComparison {
 
 /** 生成股票池看板 payload */
 function generatePoolBoardPayload(): PoolBoard {
-  const statusColors = ['#22c55e', '#3b82f6', '#f59e0b', '#9ca3af']
+  const statusColors = [STOCK_COLOR_TOKENS.down.hex, CHART_PALETTE.series1, CHART_PALETTE.series3, STOCK_COLOR_TOKENS.neutral.hex]
   const statusLabels = ['活跃', '温热', '冷清', '冷淡']
   const items: PoolBoardItem[] = [
     { code: '600519', name: '贵州茅台' },

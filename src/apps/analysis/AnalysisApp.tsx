@@ -34,6 +34,7 @@ const IntelligentScorePage = React.lazy(() => import('@/pages/analysis/Intellige
 const ScoreDocPage = React.lazy(() => import('@/pages/analysis/ScoreDocPage'))
 const ScoreComparisonPage = React.lazy(() => import('@/pages/analysis/ScoreComparisonPage'))
 const NewsPage = React.lazy(() => import('@/pages/analysis/NewsPage'))
+const NewsV6Page = React.lazy(() => import('@/pages/analysis/NewsV6Page'))
 const HotSectorPage = React.lazy(() => import('@/pages/analysis/HotSectorPage'))
 const ValuePitPage = React.lazy(() => import('@/pages/analysis/ValuePitPage'))
 const MultiFactorFilterPage = React.lazy(() => import('@/pages/analysis/MultiFactorFilterPage'))
@@ -59,6 +60,7 @@ const ANALYSIS_ROUTES: AnalysisRoute[] = [
   { path: '/analysis/score-docs', branch: 'score-docs', componentName: 'ScoreDocPage', component: <ScoreDocPage />, fallback: '加载评分文档页...' },
   { path: '/analysis/score-comparison', branch: 'score-comparison', componentName: 'ScoreComparisonPage', component: <ScoreComparisonPage />, fallback: '加载评分比对看板...' },
   { path: '/analysis/news', branch: 'news', componentName: 'NewsPage', component: <NewsPage />, fallback: '加载新闻页...' },
+  { path: '/analysis/news-v6', branch: 'news-v6', componentName: 'NewsV6Page', component: <NewsV6Page />, fallback: '加载新闻 V6 页...' },
   { path: '/analysis/hot-sector', branch: 'hot-sector', componentName: 'HotSectorPage', component: <HotSectorPage />, fallback: '加载热门板块页...' },
   { path: '/analysis/value-pit', branch: 'value-pit', componentName: 'ValuePitPage', component: <ValuePitPage />, fallback: '加载价值洼地页...' },
   { path: '/analysis/multi-factor', branch: 'multi-factor', componentName: 'MultiFactorFilterPage', component: <MultiFactorFilterPage />, fallback: '加载多因子筛选页...' },

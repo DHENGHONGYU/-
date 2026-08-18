@@ -634,6 +634,68 @@ export async function fetchEastMoneyRatingSummary(symbol: string): Promise<Ratin
   }
 }
 
+// ── 16 一致预期：iFinD 目标价 ──
+
+/** iFinD 目标价代理返回结构 */
+interface IfindTargetPriceResponse {
+  code: number
+  data?: {
+    targetPrice: number
+    analystCount: number
+    buyCount: number
+    overweightCount: number
+    sellCount: number
+  }
+  message?: string
+  warning?: string
+}
+
+/**
+ * 通过 iFinD MCP 代理获取机构目标价。
+ *
+ * 调用 Vite 代理中间件 `/api/proxy/ifind/target-price`，
+ * 该中间件封装 iFinD JSON-RPC 2.0 协议（session 初始化 + tools/call）。
+ *
+ * @param symbol 股票代码（如 600519.SH）
+ * @param name 股票名称（如 贵州茅台），用于 iFinD 查询
+ */
+export async function fetchIfindTargetPrice(
+  symbol: string,
+  name: string,
+): Promise<{
+  targetPrice: number
+  analystCount: number
+  buyCount: number
+  overweightCount: number
+  sellCount: number
+} | null> {
+  try {
+    const params = new URLSearchParams({ symbol, name })
+    const url = `/api/proxy/ifind/target-price?${params.toString()}`
+    const resp = await safeFetch(url, 45000) // iFinD API 可能较慢，60s 超时
+    if (!resp) return null
+    const data = (await resp.json()) as IfindTargetPriceResponse
+    if (data.code !== 0 || !data.data) {
+      logger.warn('[crawlerProvider] iFinD 目标价代理返回异常', { symbol, code: data.code, message: data.message, warning: data.warning })
+      return null
+    }
+    if (data.data.targetPrice <= 0) {
+      logger.info('[crawlerProvider] iFinD 目标价为 0，可能暂无机构覆盖', { symbol, warning: data.warning })
+      return null
+    }
+    return {
+      targetPrice: data.data.targetPrice,
+      analystCount: data.data.analystCount,
+      buyCount: data.data.buyCount,
+      overweightCount: data.data.overweightCount,
+      sellCount: data.data.sellCount,
+    }
+  } catch (err) {
+    logger.warn('[crawlerProvider] iFinD 目标价获取失败', { symbol, error: err instanceof Error ? err.message : String(err) })
+    return null
+  }
+}
+
 // ── 降级辅助：回购/配股关键词检测 ──
 
 /**

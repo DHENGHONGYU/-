@@ -60,7 +60,7 @@ const logger = getLogger()
 
 // ── 类型 ──
 
-type CollectionMode = 'quote' | 'kline' | 'news' | 'research' | 'competitor' | 'index' | 'chip' | 'financial' | 'dividend' | 'consensus' | 'unsupported'
+type CollectionMode = 'quote' | 'kline' | 'news' | 'research' | 'competitor' | 'index' | 'chip' | 'financial' | 'dividend' | 'consensus' | 'sector' | 'technical' | 'fund_flow' | 'institutional' | 'valuation' | 'unsupported'
 
 interface RunSingleTraceOptions {
   symbol: string
@@ -101,11 +101,11 @@ const DIMENSION_TO_MODE: Readonly<Record<string, CollectionMode>> = {
   '08': 'research',
   '09': 'financial',
   // P1 新增维度 (2026-08-17): MCP/iFinD 优先采集
-  '10': 'unsupported',       // 热门板块 → MCP sector_data
-  '11': 'unsupported',       // 技术指标 → MCP stock_highfreq_quotes
-  '12': 'unsupported',       // 资金流向 → MCP get_stock_performance
-  '13': 'unsupported',       // 机构持仓 → MCP get_stock_shareholders
-  '14': 'unsupported',       // 估值分析 → MCP get_stock_financials
+  '10': 'sector',            // 热门板块 → MCP sector_data
+  '11': 'technical',         // 技术指标 → MCP stock_highfreq_quotes
+  '12': 'fund_flow',         // 资金流向 → MCP get_stock_performance
+  '13': 'institutional',     // 机构持仓 → MCP get_stock_shareholders
+  '14': 'valuation',         // 估值分析 → MCP get_stock_financials
   // P0 新增维度 (2026-08-17): 分红股本 + 一致预期
   '15': 'dividend',          // 分红股本 → Tushare 三 API + 东财爬虫
   '16': 'consensus',         // 一致预期 → 东财爬虫
@@ -247,14 +247,19 @@ async function generateDataForDimension(symbol: string, dimensionCode: string): 
  */
 function getDimensionKnownSources(dimensionCode: string): string[] {
   const sourceMap: Record<string, string[]> = {
-    '03': ['tushare', 'crawler', 'sina'],
-    '04': ['tushare', 'crawler', 'sina'],
-    '05': ['tushare', 'crawler', 'sina'],
-    '06': ['tushare', 'crawler', 'tencent'],
-    '07': ['tushare', 'tencent'],
-    '08': ['tushare', 'crawler'],
-    '15': ['tushare', 'crawler'],
-    '16': ['crawler'],
+    '03': ['ifind_mcp', 'tencent_mcp', 'tushare', 'crawler', 'sina'],
+    '04': ['ifind_mcp', 'tencent_mcp', 'tushare', 'crawler', 'sina'],
+    '05': ['ifind_mcp', 'tencent_mcp', 'tushare', 'crawler', 'sina'],
+    '06': ['ifind_mcp', 'tencent_mcp', 'tushare', 'crawler', 'tencent'],
+    '07': ['ifind_mcp', 'tencent_mcp', 'tushare', 'tencent'],
+    '08': ['ifind_mcp', 'tencent_mcp', 'tushare', 'crawler'],
+    '10': ['ifind_mcp', 'tencent_mcp'],
+    '11': ['ifind_mcp', 'tencent_mcp'],
+    '12': ['ifind_mcp', 'tencent_mcp'],
+    '13': ['ifind_mcp', 'tencent_mcp'],
+    '14': ['ifind_mcp', 'tencent_mcp'],
+    '15': ['ifind_mcp', 'tencent_mcp', 'tushare', 'crawler'],
+    '16': ['ifind_mcp', 'tencent_mcp', 'crawler'],
   }
   return sourceMap[dimensionCode] ?? []
 }
@@ -268,6 +273,8 @@ function mapSourceLabelToId(label: string): string {
     tencent: 'tencent',
     llm: 'llm',
     real: 'tushare',
+    ifind_mcp: 'ifind_mcp',
+    tencent_mcp: 'tencent_mcp',
   }
   const mapped: string = labelMap[label] ?? ''
   if (mapped !== '') return mapped
@@ -286,12 +293,12 @@ function mapSourceLabelToId(label: string): string {
  * akshare 依赖 Python :8000 服务，环境不稳定时首请求即超时浪费 ~5s。
  */
 const BUSINESS_TO_QUOTE_SOURCE: Readonly<Record<string, QuoteDataSourceId[]>> = {
-  akshare: ['tencent', 'sina', 'akshare'],
-  ifind: ['tencent', 'sina'],
-  yahoo: ['tencent', 'sina'],
-  tianyancha: ['mock'],
-  scholar: ['mock'],
-  cache: ['mock'],
+  akshare: ['ifind_mcp', 'tencent_mcp', 'tencent', 'sina', 'akshare'],
+  ifind: ['ifind_mcp', 'tencent_mcp', 'tencent', 'sina'],
+  yahoo: ['ifind_mcp', 'tencent_mcp', 'tencent', 'sina'],
+  tianyancha: ['ifind_mcp', 'tencent_mcp', 'mock'],
+  scholar: ['ifind_mcp', 'tencent_mcp', 'mock'],
+  cache: ['ifind_mcp', 'tencent_mcp', 'mock'],
 }
 
 // ── 事件发射 ──

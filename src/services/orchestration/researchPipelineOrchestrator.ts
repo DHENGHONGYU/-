@@ -21,6 +21,7 @@
 import { getLogger } from '@/lib/logger'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
+import { queryGet } from '@/core/databridgeQueries'
 import {
   ENVELOPE_ACTION,
   STORE_NAME,
@@ -31,7 +32,6 @@ import { getDefaultStrategyRuleConfig, type StrategyRuleConfig } from '@/config/
 import type { ThemeConfig } from '@/config/themeRegistry'
 import { klinesToDailyQuotes } from '@/services/data-collector/directDataAPI'
 import { importStocks } from '@/services/input/batchImportExecutor'
-import { db } from '@/data/db'
 import {
   POOL_TYPE,
   INTENTION_STATUS,
@@ -364,7 +364,7 @@ export async function runResearchPipeline(
             dq as unknown as Record<string, unknown>,
           ),
         )
-        const back = await db.get<any>(STORE_NAME.dailyQuotes, code)
+        const back = await queryGet<any>(STORE_NAME.dailyQuotes, code)
         s2.dqPersistOk = back != null
       } catch (e) {
         s2.klineError = (s2.klineError ?? '') + ` dq:${e}`

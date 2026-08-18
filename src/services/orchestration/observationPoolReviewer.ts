@@ -32,6 +32,8 @@ export interface ObservationReviewConfig {
   intervalMs?: number
   /** 晋升研究池的评分阈值（V6 0-5 尺度），默认 3.0 */
   promotionThreshold?: number
+  /** 是否自动将晋升候选标的入研究池，默认 false（需显式开启，避免误入池污染研究池） */
+  autoEnroll?: boolean
 }
 
 export type ObservationRecommendation = 'promote' | 'hold' | 'watch'
@@ -58,6 +60,8 @@ export interface ObservationReviewResult {
   items: ObservationReviewItem[]
   /** 可晋升研究池的标的 symbol 列表 */
   promotionCandidates: string[]
+  /** 本次复盘实际自动入研究池的标的 symbol 列表（autoEnroll 开启且入池成功） */
+  enrolled: string[]
   summary: {
     total: number
     promotionEligible: number
@@ -79,12 +83,52 @@ export interface ObservationPoolReviewerDeps {
   isInResearchPool?: (symbol: string) => Promise<boolean> | boolean
   /** 晋升阈值（V6 0-5 尺度），不传则取 config.promotionThreshold */
   promotionThreshold?: number
+  /** 复盘快照持久化器（可选；提供则支持跨重启评分漂移比对，否则纯内存态） */
+  persister?: ObservationReviewPersister
+  /** 晋升动作：将观察池标的入研究池（可选；提供且 autoEnroll 开启时自动入池）。由调用方注入真实 researchPoolStore.addItem */
+  enrollToResearchPool?: (symbol: string, name: string) => Promise<void> | void
+}
+
+// ---- 复盘快照持久化契约（与数据层 ObservationReviewRecord 解耦；由调用方注入实现） ----
+
+export interface ObservationReviewPersistItem {
+  symbol: string
+  name: string
+  previousScore: number | null
+  currentScore: number
+  scoreDelta: number | null
+  meetsResearchThreshold: boolean
+  promotionEligible: boolean
+  recommendation: ObservationRecommendation
+}
+
+export interface ObservationReviewPersistSummary {
+  total: number
+  promotionEligible: number
+  improved: number
+  declined: number
+  unchanged: number
+}
+
+export interface ObservationReviewPersistRecord {
+  reviewId: string
+  generatedAt: number
+  items: ObservationReviewPersistItem[]
+  summary: ObservationReviewPersistSummary
+}
+
+export interface ObservationReviewPersister {
+  /** 载入上次复盘评分快照（symbol -> score），用于漂移计算；首次/无数据为空 */
+  loadLastScores(): Promise<Map<string, number>>
+  /** 持久化一次复盘结果 */
+  saveReview(record: ObservationReviewPersistRecord): Promise<void>
 }
 
 const DEFAULT_CONFIG: Required<ObservationReviewConfig> = {
   enabled: false,
   intervalMs: 24 * 60 * 60 * 1000,
   promotionThreshold: 3.0,
+  autoEnroll: false,
 }
 
 // ---- 观察池复盘调度器 ----
@@ -98,6 +142,8 @@ export class ObservationPoolReviewer {
   private lastScores: Map<string, number> = new Map()
   /** 定时/手动复盘所需的依赖（由调用方注入） */
   private deps: ObservationPoolReviewerDeps | null = null
+  /** 是否已从持久化器载入过基线（仅首次载入一次，模拟重启后恢复） */
+  private baselineLoaded = false
 
   constructor(config?: ObservationReviewConfig) {
     this.config = { ...DEFAULT_CONFIG, ...config }
@@ -172,6 +218,18 @@ export class ObservationPoolReviewer {
   async run(deps: ObservationPoolReviewerDeps): Promise<ObservationReviewResult> {
     const threshold = deps.promotionThreshold ?? this.config.promotionThreshold
     const watchlist = await deps.getWatchlist()
+
+    // 载入跨重启基线（仅首次）：若提供持久化器则从库恢复上次评分快照，使重启后仍能计算漂移
+    if (deps.persister && !this.baselineLoaded) {
+      try {
+        const restored = await deps.persister.loadLastScores()
+        if (this.lastScores.size === 0) this.lastScores = restored
+      } catch {
+        // 持久化不可用（测试/未初始化）时不阻断复盘
+      }
+      this.baselineLoaded = true
+    }
+
     const items: ObservationReviewItem[] = []
     const promotionCandidates: string[] = []
 
@@ -207,11 +265,31 @@ export class ObservationPoolReviewer {
     const declined = items.filter((i) => i.scoreDelta !== null && i.scoreDelta < 0).length
     const unchanged = items.filter((i) => i.scoreDelta === null || i.scoreDelta === 0).length
 
+    // 自动入池：autoEnroll 开启且注入 enrollToResearchPool 时，将晋升候选标的一一入研究池。
+    // researchPoolStore.addItem 自带 DB 去重，重复入池安全返回 false，不阻断复盘。
+    const enrolled: string[] = []
+    if (this.config.autoEnroll && deps.enrollToResearchPool) {
+      for (const item of items) {
+        if (!item.promotionEligible) continue
+        try {
+          await deps.enrollToResearchPool(item.symbol, item.name)
+          enrolled.push(item.symbol)
+          logger.info('[ObservationPoolReviewer] 自动晋升入研究池', { symbol: item.symbol, name: item.name })
+        } catch (err) {
+          logger.warn('[ObservationPoolReviewer] 自动入研究池失败（已跳过，不阻断复盘）', {
+            symbol: item.symbol,
+            error: err instanceof Error ? err.message : String(err),
+          })
+        }
+      }
+    }
+
     const result: ObservationReviewResult = {
       id: nanoid(12),
       generatedAt: Date.now(),
       items,
       promotionCandidates,
+      enrolled,
       summary: {
         total: items.length,
         promotionEligible: promotionCandidates.length,
@@ -219,6 +297,21 @@ export class ObservationPoolReviewer {
         declined,
         unchanged,
       },
+    }
+
+    // 持久化复盘快照（支持跨重启评分漂移比对；失败不阻断复盘）
+    if (deps.persister) {
+      const record: ObservationReviewPersistRecord = {
+        reviewId: result.id,
+        generatedAt: result.generatedAt,
+        items: result.items.map((i) => ({ ...i })),
+        summary: result.summary,
+      }
+      try {
+        await deps.persister.saveReview(record)
+      } catch {
+        // 持久化失败（测试/未初始化）时不阻断复盘
+      }
     }
 
     this.reviews.push(result)
@@ -246,6 +339,7 @@ export class ObservationPoolReviewer {
   clear(): void {
     this.reviews = []
     this.lastScores.clear()
+    this.baselineLoaded = false
     logger.info('[ObservationPoolReviewer] 已清空')
   }
 }

@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/molecules/states'
 import { WidgetStateShell } from './components/WidgetStateShell'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
+import { useDisciplineStore } from '@/store/disciplineStore'
 import { STOCK_COLOR_TOKENS, COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
 
 interface AITradeReviewWidgetProps {
@@ -17,6 +18,7 @@ interface AITradeReviewWidgetProps {
 export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps): React.JSX.Element {
   const { data, loadingMap, errorMap, refreshWidget } = useMarketData()
   const tradeReview = data.tradeReview
+  const realDisciplineScore = useDisciplineStore((s) => s.realDisciplineScore)
   const loading = loadingMap[config.instanceId] ?? true
   const error = errorMap[config.instanceId]
 
@@ -33,7 +35,7 @@ export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps
 
     return (
       <div className="space-y-4">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           <div className="text-center">
             <div className="flex justify-center mb-2">
               <Target className={`h-6 w-6 ${COLOR_TOKENS.info.tailwind}`} />
@@ -66,6 +68,16 @@ export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps
             </div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>纪律评分</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>目标: 80+</div>
+          </div>
+          <div className="text-center">
+            <div className="flex justify-center mb-2">
+              <AlertCircle className={`h-6 w-6 ${realDisciplineScore >= 80 ? COLOR_TOKENS.success.tailwind : COLOR_TOKENS.orange.tailwind}`} />
+            </div>
+            <div className={`text-h1 font-bold ${realDisciplineScore >= 80 ? COLOR_TOKENS.success.tailwind : COLOR_TOKENS.orange.tailwind}`}>
+              {realDisciplineScore > 0 ? realDisciplineScore : '—'}
+            </div>
+            <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>真实复盘评分</div>
+            <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>订单驱动</div>
           </div>
         </div>
 

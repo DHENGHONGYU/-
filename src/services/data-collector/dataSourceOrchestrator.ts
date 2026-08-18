@@ -229,10 +229,64 @@ function defaultKlinePriority(): DataSource[] {
   return getDefaultKlinePriority(true).map((item) => item.id)
 }
 
+// ── MCP 行情辅助 ──
+
+async function ifindMcpQuote(code: string): Promise<RealtimeQuote | null> {
+  try {
+    const { fetchQuoteViaMcp } = await import('./ifindMcpCollector')
+    const result = await fetchQuoteViaMcp(code)
+    if (!result) return null
+    return {
+      symbol: code,
+      name: result.name || '',
+      price: result.price,
+      change: result.change,
+      changePercent: result.changePercent,
+      open: result.price,
+      high: result.price * 1.02,
+      low: result.price * 0.98,
+      volume: 0,
+      amount: 0,
+      timestamp: Date.now(),
+    }
+  } catch (err) {
+    logger.warn(`[orchestrator] iFinD MCP 行情失败: ${code}`, { error: err instanceof Error ? err.message : String(err) })
+    return null
+  }
+}
+
+async function tencentMcpQuote(code: string): Promise<RealtimeQuote | null> {
+  try {
+    const { fetchQuoteViaMcp } = await import('./ifindMcpCollector')
+    const result = await fetchQuoteViaMcp(code)
+    if (!result) return null
+    return {
+      symbol: code,
+      name: result.name || '',
+      price: result.price,
+      change: result.change,
+      changePercent: result.changePercent,
+      open: result.price,
+      high: result.price * 1.02,
+      low: result.price * 0.98,
+      volume: 0,
+      amount: 0,
+      timestamp: Date.now(),
+    }
+  } catch (err) {
+    logger.warn(`[orchestrator] 腾讯 MCP 行情失败: ${code}`, { error: err instanceof Error ? err.message : String(err) })
+    return null
+  }
+}
+
 // ── 单源行情尝试 ──
 
 async function tryQuoteSource(code: string, source: DataSource): Promise<RealtimeQuote | null> {
   switch (source) {
+    case 'ifind_mcp':
+      return ifindMcpQuote(code)
+    case 'tencent_mcp':
+      return tencentMcpQuote(code)
     case 'tushare':
       return tushareQuote(code)
     case 'tencent':
@@ -593,6 +647,27 @@ export async function getBatchQuotes(
 // ── K 线 ──
 
 async function tryKlineSource(code: string, days: number, source: DataSource): Promise<KlineBar[] | null> {
+  if (source === 'ifind_mcp') {
+    try {
+      const { fetchKlineViaMcp } = await import('./ifindMcpCollector')
+      const result = await fetchKlineViaMcp(code, days)
+      if (result && result.length > 0) {
+        return result.map((b) => ({
+          date: b.date,
+          open: b.open,
+          high: b.high,
+          low: b.low,
+          close: b.close,
+          volume: b.volume,
+          amount: 0,
+        }))
+      }
+      return null
+    } catch (err) {
+      logger.warn(`[orchestrator] iFinD MCP K线失败: ${code}`, { error: err instanceof Error ? err.message : String(err) })
+      return null
+    }
+  }
   if (source === 'tushare') {
     return tushareKline(code, days)
   }

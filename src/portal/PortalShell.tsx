@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { Menu, Target, Sun, Moon, Monitor, Search, type LucideIcon } from 'lucide-react'
-import { CABINS, PANEL_ITEMS } from '@/config/sidebarConfig'
+import { CABINS, PANEL_ITEMS, findSidebarItemByPath } from '@/config/sidebarConfig'
+import { useRecentlyVisited } from '@/hooks/useRecentlyVisited'
 import { cn } from '@/lib/utils'
 import { PORTAL_TOKENS } from '@/constants/theme.tokens'
 import { useThemeStore, type ThemeMode } from '@/store/themeStore'
@@ -126,6 +127,19 @@ export default function PortalShell(): React.JSX.Element {
 
   const activeGroups = PANEL_ITEMS[activeCabin]
 
+  /** V17: 最近访问页面 */
+  const recentPaths = useRecentlyVisited()
+  const recentGroup = useMemo(() => {
+    // 只在无搜索时展示最近访问
+    const items = recentPaths
+      .map((p) => findSidebarItemByPath(p))
+      .filter((item): item is NonNullable<typeof item> => item !== null && item.cabin === activeCabin)
+      .map((item) => ({ key: item.key, label: item.label, path: item.path, icon: item.icon }))
+
+    if (items.length === 0) return null
+    return { group: '最近访问', items }
+  }, [recentPaths, activeCabin])
+
   /** V10: 侧边栏搜索过滤 */
   const [sidebarSearch, setSidebarSearch] = useState('')
   /** V11: 搜索框 ref（用于 Ctrl+K 快捷键聚焦） */
@@ -144,20 +158,26 @@ export default function PortalShell(): React.JSX.Element {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
   const filteredGroups = useMemo(() => {
-    if (!sidebarSearch.trim()) return activeGroups
-    const q = sidebarSearch.toLowerCase()
-    return activeGroups
-      .map((group) => ({
-        ...group,
-        items: group.items.filter(
-          (item) =>
-            item.label.toLowerCase().includes(q) ||
-            item.path.toLowerCase().includes(q) ||
-            group.group.toLowerCase().includes(q),
-        ),
-      }))
-      .filter((g) => g.items.length > 0)
-  }, [activeGroups, sidebarSearch])
+    const base = sidebarSearch.trim()
+      ? activeGroups
+          .map((group) => ({
+            ...group,
+            items: group.items.filter(
+              (item) =>
+                item.label.toLowerCase().includes(sidebarSearch.toLowerCase()) ||
+                item.path.toLowerCase().includes(sidebarSearch.toLowerCase()) ||
+                group.group.toLowerCase().includes(sidebarSearch.toLowerCase()),
+            ),
+          }))
+          .filter((g) => g.items.length > 0)
+      : activeGroups
+
+    // 无搜索时，在最前面加入最近访问组
+    if (!sidebarSearch.trim() && recentGroup) {
+      return [recentGroup, ...base]
+    }
+    return base
+  }, [activeGroups, sidebarSearch, recentGroup])
 
   const fetcherStatusDot = cn(
     'h-2 w-2 rounded-full',

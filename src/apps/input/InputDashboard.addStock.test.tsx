@@ -11,6 +11,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { MemoryRouter } from 'react-router'
 import InputDashboard from './InputDashboard'
 import type { Stock } from '@/data/types'
 
@@ -199,14 +200,18 @@ describe('InputDashboard + addStock 联动测试', () => {
   })
 
   it('点击"仅录入"按钮触发 addStock 调用', async () => {
-    render(<InputDashboard />)
+    render(
+      <MemoryRouter>
+        <InputDashboard />
+      </MemoryRouter>,
+    )
 
     // 填写表单
     fillAddForm('300712', '永福股份')
 
     // 点击"仅录入"按钮
     const onlyAddBtn = screen.getAllByRole('button').find(
-      (b) => b.textContent?.trim() === '仅录入',
+      (b) => b.textContent?.trim() === '仅代码',
     )
     expect(onlyAddBtn).toBeDefined()
     fireEvent.click(onlyAddBtn!)
@@ -221,11 +226,15 @@ describe('InputDashboard + addStock 联动测试', () => {
   })
 
   it('addStock 成功后调用 store.refresh（UI 状态更新触发点）', async () => {
-    render(<InputDashboard />)
+    render(
+      <MemoryRouter>
+        <InputDashboard />
+      </MemoryRouter>,
+    )
 
     fillAddForm('300712', '永福股份')
     const onlyAddBtn = screen.getAllByRole('button').find(
-      (b) => b.textContent?.trim() === '仅录入',
+      (b) => b.textContent?.trim() === '仅代码',
     )!
     fireEvent.click(onlyAddBtn)
 
@@ -236,11 +245,15 @@ describe('InputDashboard + addStock 联动测试', () => {
   })
 
   it('addStock 成功后输入框被清空', async () => {
-    render(<InputDashboard />)
+    render(
+      <MemoryRouter>
+        <InputDashboard />
+      </MemoryRouter>,
+    )
 
     fillAddForm('300712', '永福股份')
     const onlyAddBtn = screen.getAllByRole('button').find(
-      (b) => b.textContent?.trim() === '仅录入',
+      (b) => b.textContent?.trim() === '仅代码',
     )!
     fireEvent.click(onlyAddBtn)
 
@@ -254,11 +267,15 @@ describe('InputDashboard + addStock 联动测试', () => {
   })
 
   it('添加成功后显示成功消息', async () => {
-    render(<InputDashboard />)
+    render(
+      <MemoryRouter>
+        <InputDashboard />
+      </MemoryRouter>,
+    )
 
     fillAddForm('300712', '永福股份')
     const onlyAddBtn = screen.getAllByRole('button').find(
-      (b) => b.textContent?.trim() === '仅录入',
+      (b) => b.textContent?.trim() === '仅代码',
     )!
     fireEvent.click(onlyAddBtn)
 
@@ -284,7 +301,11 @@ describe('InputDashboard + addStock 联动测试', () => {
       }
     })
 
-    render(<InputDashboard />)
+    render(
+      <MemoryRouter>
+        <InputDashboard />
+      </MemoryRouter>,
+    )
 
     // 初始状态：表格应显示"暂无候选股票"
     await waitFor(() => {
@@ -294,7 +315,7 @@ describe('InputDashboard + addStock 联动测试', () => {
     // 填写表单并点击"仅录入"
     fillAddForm('300712', '永福股份')
     const onlyAddBtn = screen.getAllByRole('button').find(
-      (b) => b.textContent?.trim() === '仅录入',
+      (b) => b.textContent?.trim() === '仅代码',
     )!
     fireEvent.click(onlyAddBtn)
 
@@ -319,7 +340,11 @@ describe('InputDashboard + addStock 联动测试', () => {
       error: '股票代码格式错误',
     })
 
-    render(<InputDashboard />)
+    render(
+      <MemoryRouter>
+        <InputDashboard />
+      </MemoryRouter>,
+    )
 
     // 等待初始化 refresh 完成
     await waitFor(() => {
@@ -328,7 +353,7 @@ describe('InputDashboard + addStock 联动测试', () => {
 
     fillAddForm('INVALID', '未知股票')
     const onlyAddBtn = screen.getAllByRole('button').find(
-      (b) => b.textContent?.trim() === '仅录入',
+      (b) => b.textContent?.trim() === '仅代码',
     )!
     fireEvent.click(onlyAddBtn)
 
@@ -341,11 +366,15 @@ describe('InputDashboard + addStock 联动测试', () => {
   })
 
   it('空代码名称时不调用 addStock，直接显示验证提示', async () => {
-    render(<InputDashboard />)
+    render(
+      <MemoryRouter>
+        <InputDashboard />
+      </MemoryRouter>,
+    )
 
     // 空值直接点击
     const onlyAddBtn = screen.getAllByRole('button').find(
-      (b) => b.textContent?.trim() === '仅录入',
+      (b) => b.textContent?.trim() === '仅代码',
     )!
     fireEvent.click(onlyAddBtn)
 
@@ -368,11 +397,15 @@ describe('InputDashboard + addStock 联动测试', () => {
       }
     })
 
-    render(<InputDashboard />)
+    render(
+      <MemoryRouter>
+        <InputDashboard />
+      </MemoryRouter>,
+    )
 
     fillAddForm('300712', '永福股份')
     const onlyAddBtn = screen.getAllByRole('button').find(
-      (b) => b.textContent?.trim() === '仅录入',
+      (b) => b.textContent?.trim() === '仅代码',
     )!
     fireEvent.click(onlyAddBtn)
 

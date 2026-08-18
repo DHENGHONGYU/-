@@ -81,15 +81,15 @@ export function buildFactorContributions(trail: ScoreAuditTrail): FactorContribu
     if (w == null) missingWeights.push(id)
   }
   if (missingFactors.length > 0) {
-    logger.warn('[V6Engine] 因子贡献度缺失', { factor: missingFactors.join(', ') })
+    logger.warn('[V6ScoreEngine.buildFactorContributions] 因子贡献度缺失', { factor: missingFactors.join(', ') })
   }
   if (invalidScores.length > 0) {
     for (const msg of invalidScores) {
-      logger.warn(`[V6Engine] 因子贡献度无效评分，跳过该层。原因: ${msg}`)
+      logger.warn(`[V6ScoreEngine.buildFactorContributions] 因子贡献度无效评分，跳过该层。原因: ${msg}`)
     }
   }
   if (missingWeights.length > 0) {
-    logger.warn('[V6Engine] 因子权重缺失', { factor: missingWeights.join(', ') })
+    logger.warn('[V6ScoreEngine.buildFactorContributions] 因子权重缺失', { factor: missingWeights.join(', ') })
   }
 
   const activeLayers = ALL_LAYER_IDS.filter((id) => {

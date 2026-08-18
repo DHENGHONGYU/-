@@ -166,12 +166,34 @@ function parseUsage(raw: RawUsage | undefined): LlmUsage | undefined {
   }
 }
 
+/**
+ * 去除 LLM（尤其弱模型如混元）常包裹的 markdown 代码围栏，便于安全解析 JSON。
+ * 弱模型常返回 ```json ... ``` 或 ``` ... ``` 包裹的内容，需先剥离再解析。
+ */
+function stripJsonFences(content: string): string {
+  const fenced = content.match(/```(?:json)?\s*([\s\S]*?)```/i)
+  if (fenced) return fenced[1]!.trim()
+  return content.trim()
+}
+
+/**
+ * 安全解析 JSON，失败时返回 undefined（不抛异常）。
+ * 用于混元等弱模型返回非标准 / 截断 JSON 时的确定性兜底。
+ */
+export function safeParseJson<T = unknown>(content: string): T | undefined {
+  try {
+    return JSON.parse(stripJsonFences(content)) as T
+  } catch {
+    return undefined
+  }
+}
+
 function parseStructuredContent<T>(content: string, structured?: LlmStructuredOptions<T>): T | undefined {
   if (!structured) return undefined
 
   let parsed: unknown
   try {
-    parsed = JSON.parse(content)
+    parsed = JSON.parse(stripJsonFences(content))
   } catch (err) {
     logger.warn('[llmClient] 结构化输出 JSON 解析失败', { error: err, contentPreview: content.slice(0, 200) })
     throw new LlmApiError(`结构化输出 JSON 解析失败: ${content.slice(0, 100)}`)
