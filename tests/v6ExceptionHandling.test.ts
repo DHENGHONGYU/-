@@ -195,10 +195,12 @@ describe('engine.ts 异常处理', () => {
       // NaN 层应被跳过，不影响其他层
       expect(Number.isFinite(result.score)).toBe(true)
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('l0 层评分无效'),
+        expect.stringContaining('层跳过 [l0'),
+        expect.anything(),
       )
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('原因: score 为 NaN'),
+        expect.stringContaining('score 为 NaN'),
+        expect.anything(),
       )
     })
 
@@ -226,10 +228,12 @@ describe('engine.ts 异常处理', () => {
       // 未提供的层（如 l2/l3v/...）为 undefined，应被安全跳过
       expect(Number.isFinite(result.score)).toBe(true)
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('l2 层评分无效'),
+        expect.stringContaining('层跳过 [l2'),
+        expect.anything(),
       )
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('原因: layer 缺失 (undefined)'),
+        expect.stringContaining('layer 缺失 (undefined)'),
+        expect.anything(),
       )
     })
 
@@ -244,10 +248,12 @@ describe('engine.ts 异常处理', () => {
 
       expect(Number.isFinite(result.score)).toBe(true)
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('l0 层评分无效'),
+        expect.stringContaining('层跳过 [l0'),
+        expect.anything(),
       )
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('原因: score 为 +Infinity'),
+        expect.stringContaining('score 为 +Infinity'),
+        expect.anything(),
       )
     })
 
@@ -262,10 +268,12 @@ describe('engine.ts 异常处理', () => {
 
       expect(Number.isFinite(result.score)).toBe(true)
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('l0 层评分无效'),
+        expect.stringContaining('层跳过 [l0'),
+        expect.anything(),
       )
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('原因: score 为 -Infinity'),
+        expect.stringContaining('score 为 -Infinity'),
+        expect.anything(),
       )
     })
 
@@ -280,10 +288,12 @@ describe('engine.ts 异常处理', () => {
 
       expect(Number.isFinite(result.score)).toBe(true)
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('l0 层评分无效'),
+        expect.stringContaining('层跳过 [l0'),
+        expect.anything(),
       )
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('原因: score 类型非法'),
+        expect.stringContaining('score 类型非法'),
+        expect.anything(),
       )
     })
 
@@ -302,10 +312,12 @@ describe('engine.ts 异常处理', () => {
       expect(Number.isFinite(result.score)).toBe(true)
       expect(result.score).toBeGreaterThan(0)
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('l2 层评分无效'),
+        expect.stringContaining('层跳过 [l2'),
+        expect.anything(),
       )
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('原因: score 为 +Infinity'),
+        expect.stringContaining('score 为 +Infinity'),
+        expect.anything(),
       )
     })
   })
@@ -518,6 +530,7 @@ describe('v6ScoreService.ts 异常处理', () => {
 
       expect(mockLogger.warn).toHaveBeenCalledWith(
         expect.stringContaining('stock.price 无效'),
+        expect.anything(),
       )
     })
 
@@ -532,6 +545,7 @@ describe('v6ScoreService.ts 异常处理', () => {
 
       expect(mockLogger.warn).toHaveBeenCalledWith(
         expect.stringContaining('stock.price 无效'),
+        expect.anything(),
       )
     })
   })

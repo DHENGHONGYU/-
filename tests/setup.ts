@@ -21,8 +21,71 @@
 import 'fake-indexeddb/auto'
 import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
-import { afterEach } from 'vitest'
+import { afterEach, vi } from 'vitest'
 import { eventBus } from '@/lib/eventBus'
+
+// ============================================================
+// 全局 lightweight-charts Mock（TD-010 衍生）
+// lightweight-charts v5 在 jsdom 下因 canvas/requestAnimationFrame 缺失会
+// 抛错并触发 "Worker exited unexpectedly"，级联拖垮同 fork 内其他测试文件。
+// 图表在 jsdom 中本就无法真实绘制，统一替换为可链式调用的 no-op 代理，
+// 既消除崩溃，又不改变任何测试对图表元素的可断言性（图表节点仍渲染）。
+// 若某测试需真实图表行为，可在文件内 vi.mock('lightweight-charts', ...) 覆盖。
+const { __chartChain } = vi.hoisted(() => {
+  const chain = new Proxy(function () {}, {
+    get: (_t, prop) => (prop === 'then' ? undefined : chain),
+    apply: () => chain,
+    construct: () => chain,
+  })
+  return { __chartChain: chain }
+})
+
+/**
+ * lightweight-charts 全局 no-op 代理 mock。
+ * 关键：必须提供 has / ownKeys / getOwnPropertyDescriptor 陷阱，
+ * 否则 vitest 在解析 `import { createChart } from 'lightweight-charts'` 这类
+ * 命名导出时校验 'createChart' in moduleNamespace 失败并抛
+ * "No createChart export is defined on the lightweight-charts mock"。
+ * 任意命名导出都返回 __chartChain（可链式调用的 no-op），
+ * 既消除 jsdom 下 canvas/RAF 缺失导致的 "Worker exited unexpectedly" 级联崩溃，
+ * 又不改变图表节点在 DOM 中的可断言性。
+ */
+vi.mock('lightweight-charts', () => {
+  const EXPORT_KEYS = [
+    'createChart',
+    'CandlestickSeries',
+    'LineSeries',
+    'HistogramSeries',
+    'AreaSeries',
+    'BarSeries',
+    'BaselineSeries',
+    'createSeriesMarkers',
+    'createImageWatermark',
+    'ColorType',
+    'CrosshairMode',
+    'LineStyle',
+    'LineType',
+    'PriceScaleMode',
+    'LineWidth',
+    'AutoScaleMargins',
+    'LineType',
+  ]
+  const handler: ProxyHandler<Record<string, unknown>> = {
+    get: (_t, prop) =>
+      prop === 'then' || prop === '__esModule' ? undefined : __chartChain,
+    has: (_t, prop) => prop !== 'then' && prop !== '__esModule',
+    ownKeys: () => EXPORT_KEYS,
+    getOwnPropertyDescriptor: (_t, prop) => {
+      if (prop === 'then' || prop === '__esModule') return undefined
+      return {
+        enumerable: true,
+        configurable: true,
+        get: () => __chartChain,
+      }
+    },
+  }
+  return new Proxy({}, handler)
+})
 
 // 为每个测试文件生成独立的 IndexedDB 名称，避免并行运行时的状态污染与事务竞争
 process.env.TEST_DB_NAME = `V6ProDB-test-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`

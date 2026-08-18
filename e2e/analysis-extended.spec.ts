@@ -132,6 +132,30 @@ test.describe('分析舱扩展功能测试', () => {
       await expect(combobox).toBeVisible()
       await expect(combobox.locator('option:checked')).toHaveText('全部')
     })
+  })
+
+  test.describe('智能资讯 V6 页面（蓝图第 19 项）', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto('/#/analysis/news-v6')
+      await expect(page.getByRole('heading', { name: '智能资讯 V6', level: 1 })).toBeVisible({ timeout: 10000 })
+    })
+
+    test('应显示智能资讯 V6 标题', async ({ page }) => {
+      await expect(page.getByRole('heading', { name: '智能资讯 V6', level: 1 })).toBeVisible()
+    })
+
+    test('应显示 V6 标识 Badge', async ({ page }) => {
+      await expect(page.getByText('News V6')).toBeVisible()
+    })
+
+    test('应显示生成模拟资讯按钮', async ({ page }) => {
+      await expect(page.getByRole('button', { name: '生成模拟资讯' })).toBeVisible()
+    })
+
+    test('应显示切换到经典版的链接', async ({ page }) => {
+      await expect(page.getByRole('link', { name: '切换到经典版 →' })).toBeVisible()
+    })
+  })
 
     test('应显示来源输入框', async ({ page }) => {
       await expect(page.getByRole('textbox', { name: '来源' })).toBeVisible()

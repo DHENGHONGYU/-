@@ -63,29 +63,29 @@ describe('ScreeningEngine', () => {
   })
 
   it('promotes candidate to screened when v6 score and data quality meet thresholds', async () => {
-    await seedCandidate('HIGH.CANDIDATE', 3.5, { basic: true, kline: true, finance: false })
+    await seedCandidate('600101.SH', 3.5, { basic: true, kline: true, finance: false })
 
     const result = await runScreening()
     expect(result.success).toBe(true)
-    expect(result.data?.promotedToScreened).toContain('HIGH.CANDIDATE')
+    expect(result.data?.promotedToScreened).toContain('600101.SH')
 
-    const updated = await dataLayer.stocks.get('HIGH.CANDIDATE')
+    const updated = await dataLayer.stocks.get('600101.SH')
     expect(updated?.researchStatus).toBe('screened')
   })
 
   it('does not promote candidate when v6 score is too low', async () => {
-    await seedCandidate('LOW.CANDIDATE', 2.0, { basic: true, kline: true, finance: false })
+    await seedCandidate('600102.SH', 2.0, { basic: true, kline: true, finance: false })
 
     const result = await runScreening()
     expect(result.success).toBe(true)
     expect(result.data?.promotedToScreened).toHaveLength(0)
 
-    const updated = await dataLayer.stocks.get('LOW.CANDIDATE')
+    const updated = await dataLayer.stocks.get('600102.SH')
     expect(updated?.researchStatus).toBe('candidate')
   })
 
   it('does not promote candidate when data quality is insufficient', async () => {
-    await seedCandidate('BAD.Quality', 4.0, { basic: true, kline: false, finance: false })
+    await seedCandidate('600103.SH', 4.0, { basic: true, kline: false, finance: false })
 
     const result = await runScreening()
     expect(result.success).toBe(true)
@@ -93,21 +93,21 @@ describe('ScreeningEngine', () => {
   })
 
   it('promotes screened to deepDive when v6 score and finance quality meet thresholds', async () => {
-    await seedScreened('HIGH.SCREENED', 4.5, { basic: true, kline: true, finance: true })
+    await seedScreened('600104.SH', 4.5, { basic: true, kline: true, finance: true })
 
     const result = await runScreening()
     expect(result.success).toBe(true)
-    expect(result.data?.promotedToDeepDive).toContain('HIGH.SCREENED')
+    expect(result.data?.promotedToDeepDive).toContain('600104.SH')
 
-    const updated = await dataLayer.stocks.get('HIGH.SCREENED')
+    const updated = await dataLayer.stocks.get('600104.SH')
     expect(updated?.researchStatus).toBe('deepDive')
   })
 
   it('screenSingleStock promotes a specific candidate', async () => {
-    await seedCandidate('SINGLE.CANDIDATE', 3.5, { basic: true, kline: true, finance: false })
+    await seedCandidate('600105.SH', 3.5, { basic: true, kline: true, finance: false })
 
-    const result = await screenSingleStock('SINGLE.CANDIDATE')
+    const result = await screenSingleStock('600105.SH')
     expect(result.success).toBe(true)
-    expect(result.data?.promotedToScreened).toContain('SINGLE.CANDIDATE')
+    expect(result.data?.promotedToScreened).toContain('600105.SH')
   })
 })

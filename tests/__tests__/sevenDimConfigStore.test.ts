@@ -87,11 +87,13 @@ describe('sevenDimConfigStore - 初始状态', () => {
 })
 
 describe('sevenDimConfigStore - 策略模板切换', () => {
-  it(`full 模板启用 ${DIMENSION_COUNT} 个维度 (01-10)`, () => {
+  it(`full 模板启用 ${DIMENSION_COUNT} 个维度 (01-16)`, () => {
     const state = useSevenDimConfigStore.getState()
     expect(state.enabledCount()).toBe(DIMENSION_COUNT)
     const enabledCodes = state.dimensions.filter((d) => d.enabled).map((d) => d.code)
-    expect(enabledCodes).toEqual(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'])
+    const fullTemplate = STRATEGY_TEMPLATES.find((t) => t.id === 'full')!
+    // DEFAULT_DIMENSIONS 与 full 模板的 code 顺序不同，按集合比较
+    expect([...enabledCodes].sort()).toEqual([...fullTemplate.dimensions].sort())
   })
 
   it('切换到 growth 模板启用 5 个维度', () => {
@@ -106,9 +108,10 @@ describe('sevenDimConfigStore - 策略模板切换', () => {
     expect(useSevenDimConfigStore.getState().enabledCount()).toBe(4)
   })
 
-  it('切换到 cycle 模板启用 6 个维度', () => {
+  it('切换到 cycle 模板启用对应维度', () => {
     useSevenDimConfigStore.getState().applyTemplate('cycle')
-    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(6)
+    const cycleTemplate = STRATEGY_TEMPLATES.find((t) => t.id === 'cycle')!
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(cycleTemplate.dimensions.length)
   })
 
   it(`切换到 full 模板启用全部 ${DIMENSION_COUNT} 个维度`, () => {

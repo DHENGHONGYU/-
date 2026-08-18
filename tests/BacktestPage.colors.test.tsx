@@ -94,12 +94,14 @@ function setupStore(overrides: Partial<{
   mockUseBacktestStore.mockReturnValue({
     config: buildConfig(),
     results: null,
+    history: [],
     loading: false,
     error: null,
     setConfig: vi.fn(),
     runBacktest: vi.fn(),
     clearResults: vi.fn(),
     exportReport: vi.fn(),
+    exportReportById: vi.fn(),
     ...overrides,
   })
 }
@@ -136,7 +138,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
 
       const totalReturn = screen.getByText(UI_TEXT.errors.totalReturn)
       const metricCard = totalReturn.closest('div')?.parentElement
-      const valueEl = metricCard?.querySelector('.text-xl.font-bold')
+      const valueEl = metricCard?.querySelector('.font-bold')
 
       expect(valueEl?.className).toContain(STOCK_COLOR_MAPPING.UP_CLASS)
       expect(valueEl?.className).toContain('text-red-500')
@@ -151,7 +153,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
 
       const totalReturn = screen.getByText(UI_TEXT.errors.totalReturn)
       const metricCard = totalReturn.closest('div')?.parentElement
-      const valueEl = metricCard?.querySelector('.text-xl.font-bold')
+      const valueEl = metricCard?.querySelector('.font-bold')
 
       expect(valueEl?.className).toContain(STOCK_COLOR_MAPPING.DOWN_CLASS)
       expect(valueEl?.className).toContain('text-green-500')
@@ -166,7 +168,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
 
       const annualizedReturn = screen.getByText(UI_TEXT.errors.annualizedReturn)
       const metricCard = annualizedReturn.closest('div')?.parentElement
-      const valueEl = metricCard?.querySelector('.text-xl.font-bold')
+      const valueEl = metricCard?.querySelector('.font-bold')
 
       expect(valueEl?.className).toContain(STOCK_COLOR_MAPPING.UP_CLASS)
     })
@@ -180,7 +182,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
 
       const annualizedReturn = screen.getByText(UI_TEXT.errors.annualizedReturn)
       const metricCard = annualizedReturn.closest('div')?.parentElement
-      const valueEl = metricCard?.querySelector('.text-xl.font-bold')
+      const valueEl = metricCard?.querySelector('.font-bold')
 
       expect(valueEl?.className).toContain(STOCK_COLOR_MAPPING.DOWN_CLASS)
     })
@@ -194,7 +196,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
 
       const totalReturn = screen.getByText(UI_TEXT.errors.totalReturn)
       const metricCard = totalReturn.closest('div')?.parentElement
-      const valueEl = metricCard?.querySelector('.text-xl.font-bold')
+      const valueEl = metricCard?.querySelector('.font-bold')
 
       // value >= 0 ? UP_CLASS : DOWN_CLASS → 边界值 0 走 UP
       expect(valueEl?.className).toContain(STOCK_COLOR_MAPPING.UP_CLASS)

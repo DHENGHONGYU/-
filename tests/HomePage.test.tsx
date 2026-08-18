@@ -26,9 +26,9 @@ describe('HomePage', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByRole('link', { name: /进入输入舱/i })).toHaveAttribute('href', '/input')
+    expect(screen.getByRole('link', { name: /输入舱/i })).toHaveAttribute('href', '/input')
     expect(screen.getByRole('link', { name: /打开驾驶舱/i })).toHaveAttribute('href', '/cockpit')
-    expect(screen.getByRole('link', { name: /总控中心/i })).toHaveAttribute('href', '/command')
+    expect(screen.getByRole('link', { name: /总控舱/i })).toHaveAttribute('href', '/command')
   })
 
   it('renders feature descriptions', () => {
@@ -38,9 +38,9 @@ describe('HomePage', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByText('录入候选股票，管理股票池，批量导入，热门板块')).toBeInTheDocument()
-    expect(screen.getByText('V4/V6 评分，行业分析，策略回测')).toBeInTheDocument()
-    expect(screen.getByText('交易信号，模拟盘执行，持仓管理')).toBeInTheDocument()
-    expect(screen.getByText('研究报告，数据导出')).toBeInTheDocument()
+    expect(screen.getByText('双源输入 · 数据采集')).toBeInTheDocument()
+    expect(screen.getByText('多因子模型 · 深度研究')).toBeInTheDocument()
+    expect(screen.getByText('持仓管理 · 交易复盘')).toBeInTheDocument()
+    expect(screen.getByText('报告生成 · 策略回测')).toBeInTheDocument()
   })
 })

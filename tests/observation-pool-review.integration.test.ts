@@ -32,7 +32,9 @@ import { runResearchPipeline, type ResearchPipelineDeps } from '@/services/orche
 import { CORE_RESOURCE_THEME } from '@/config/themeRegistry'
 import { getDefaultStrategyRuleConfig } from '@/config/strategyRules'
 import { ObservationPoolReviewer } from '@/services/orchestration/observationPoolReviewer'
+import type { ObservationReviewPersister, ObservationReviewPersistRecord } from '@/services/orchestration/observationPoolReviewer'
 import { getIntentionWatchlistStocks } from '@/services/trading/tradingService'
+import { observationReviewStore, type ObservationReviewRecord } from '@/data/dataLayerContentStores'
 import { rotationScoreStore } from '@/data/dataLayerScoreStores'
 import type { RotationSectorScore } from '@/data/types'
 
@@ -126,6 +128,27 @@ function normalizeSymbol(code: string): string {
 }
 
 const libMap = new Map(MOCK_STOCK_LIBRARY.map((s) => [s.symbol, s]))
+
+// 真实持久化器：落 observation_reviews 存储（与 index.ts 生产接线同源，经数据层 store）
+const testPersister: ObservationReviewPersister = {
+  async loadLastScores() {
+    const list = await observationReviewStore.list()
+    let latest: ObservationReviewRecord | undefined
+    for (const r of list) if (!latest || r.generatedAt > latest.generatedAt) latest = r
+    const m = new Map<string, number>()
+    if (latest) for (const it of latest.items) m.set(it.symbol, it.currentScore)
+    return m
+  },
+  async saveReview(record: ObservationReviewPersistRecord) {
+    await observationReviewStore.save({
+      reviewId: record.reviewId,
+      generatedAt: record.generatedAt,
+      items: record.items,
+      summary: record.summary,
+      sourceModule: 'system',
+    })
+  },
+}
 
 it(
   '观察池定期复盘（缺口②）：管线落地观察池 → 真实V6复盘 → 漂移/晋升候选 → 报告',
@@ -239,9 +262,14 @@ it(
       scorer: { run: realScorer },
       isInResearchPool: (symbol: string) => researchSet.has(symbol),
       promotionThreshold,
+      persister: testPersister,
     }
 
     const cycle1 = await reviewer.run(reviewerDeps)
+    // ── 跨重启持久化验证：新建 reviewer 实例（清空内存基线，模拟进程重启），
+    //    从 observation_reviews 库恢复上次评分快照，相同评分器下 previousScore 应非空且漂移≈0 ──
+    const restartReviewer = new ObservationPoolReviewer({ promotionThreshold })
+    const restartCycle = await restartReviewer.run({ ...reviewerDeps, scorer: { run: realScorer } })
     const cycle2 = await reviewer.run({ ...reviewerDeps, scorer: { run: boostedScorer } })
 
     // ── 报告 ──
@@ -260,7 +288,9 @@ it(
         observation: pipeline.stage6.perStock.filter((r) => r.destination === 'observation').map((r) => r.code),
       },
       cycle1,
+      restartCycle,
       cycle2,
+      persistedReviewCount: (await observationReviewStore.list()).length,
       referentialIntegrity,
     }
     writeFileSync(path.join(outDir, 'observation-review-report.json'), JSON.stringify(report, null, 2), 'utf-8')
@@ -313,6 +343,17 @@ it(
     for (const item of cycle1.items) {
       expect(['promote', 'hold', 'watch']).toContain(item.recommendation)
     }
+
+    // ── 跨重启持久化断言（缺口② 真正闭环：重启后仍能比对上次评分）──
+    // 新实例内存基线为空，应从 observation_reviews 库恢复上次评分快照
+    for (const item of restartCycle.items) {
+      expect(item.previousScore, '重启后从库恢复的 previousScore 应非空（持久化生效）').not.toBeNull()
+    }
+    // 重启后用相同评分器 → 评分漂移应≈0（全部 unchanged），证明恢复的是真实上次快照而非重新基线
+    expect(restartCycle.summary.unchanged, '重启后用相同评分器应全部 unchanged（delta≈0）').toBe(restartCycle.summary.total)
+    expect(restartCycle.summary.total, '重启复盘应覆盖观察池全部标的').toBe(pipeline.stage6.observationCount)
+    // 库中应已持久化复盘快照（至少 cycle1 与 restart 两份）
+    expect(report.persistedReviewCount, '应已持久化复盘快照到 observation_reviews').toBeGreaterThanOrEqual(1)
   },
   300000,
 )
@@ -355,10 +396,14 @@ function renderObservationHtml(r: any): string {
  <div class="card"><div class="v">${r.cycle1.summary.promotionEligible}</div><div class="l">首次·晋升候选</div></div>
  <div class="card"><div class="v">${r.cycle2.summary.promotionEligible}</div><div class="l">二次·晋升候选</div></div>
  <div class="card"><div class="v">${r.cycle2.summary.improved}</div><div class="l">二次·评分上升</div></div>
+ <div class="card"><div class="v">${r.restartCycle.summary.unchanged}</div><div class="l">重启·基线恢复</div></div>
+ <div class="card"><div class="v">${r.persistedReviewCount}</div><div class="l">已持久化快照</div></div>
 </div>
 <div class="note"><b>机制说明：</b>观察池（intention.watchlist）标的定期重新执行 V6 评分，计算相较上次复盘的评分漂移，
 并标记「可晋升研究池」（评分越过门槛且当前不在研究池）。二次复盘以「模拟评分上调 +0.3」演示漂移与晋升变化；
-真实环境由 ObservationPoolReviewer 定时器（默认 24h）或手动触发驱动。</div>
+真实环境由 ObservationPoolReviewer 定时器（默认 24h）或手动触发驱动。
+<b>跨重启持久化：</b>每次复盘快照落 observation_reviews 存储（v35）；新建实例（模拟进程重启）能从库恢复上次评分基线，
+相同评分器下漂移≈0，证明「定期复盘校对分析」在重启后仍能正确比对历史，不再沦为内存死列表。</div>
 
 <h2>观察池定期复盘明细（首次 / 二次漂移）</h2>
 <table><thead><tr><th>代码</th><th>名称</th><th>首次评分</th><th>上次评分</th><th>二次漂移</th><th>达研究门槛</th><th>晋升候选</th><th>推荐</th></tr></thead><tbody>${obsRows}</tbody></table>

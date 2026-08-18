@@ -72,7 +72,7 @@ describe('CommandApp', () => {
   })
 
   it('renders action buttons', async () => {
-    renderWithRouter(<CommandApp />)
+    renderWithRouter(<CommandApp />, ['/command/monitor'])
     // R5 修改:mount 时自动 loadStats,isLoading 短暂为 true,按钮文本变"加载中..."
     // 用 findByRole 异步等待按钮文本恢复"刷新统计"
     expect(await screen.findByRole('button', { name: /刷新统计/i })).toBeInTheDocument()
@@ -80,7 +80,7 @@ describe('CommandApp', () => {
   })
 
   it('loads and displays stats when clicking 刷新统计', async () => {
-    renderWithRouter(<CommandApp />)
+    renderWithRouter(<CommandApp />, ['/command/monitor'])
     await userEvent.click(await screen.findByRole('button', { name: /刷新统计/i }))
 
     await waitFor(() => {
@@ -94,7 +94,7 @@ describe('CommandApp', () => {
   })
 
   it('calls resetAll and refreshes stats when confirming reset', async () => {
-    renderWithRouter(<CommandApp />)
+    renderWithRouter(<CommandApp />, ['/command/monitor'])
     await userEvent.click(await screen.findByRole('button', { name: /刷新统计/i }))
     await waitFor(() => screen.getByText('12'))
 
@@ -117,7 +117,7 @@ describe('CommandApp', () => {
   it('does not reset when user cancels', async () => {
     vi.stubGlobal('confirm', vi.fn(() => false))
 
-    renderWithRouter(<CommandApp />)
+    renderWithRouter(<CommandApp />, ['/command/monitor'])
     await userEvent.click(await screen.findByRole('button', { name: /重置数据/i }))
 
     expect(vi.mocked(systemService.resetAll)).not.toHaveBeenCalled()
@@ -131,7 +131,7 @@ describe('CommandApp', () => {
       error: '服务不可用',
     })
 
-    renderWithRouter(<CommandApp />)
+    renderWithRouter(<CommandApp />, ['/command/monitor'])
     await userEvent.click(await screen.findByRole('button', { name: /刷新统计/i }))
 
     await waitFor(() => {
@@ -146,11 +146,11 @@ describe('CommandApp', () => {
   it('renders CommandHubPage with nav cards at /command/hub', () => {
     renderWithRouter(<CommandApp />, ['/command/hub'])
 
-    // Hub 页面标题(2xl 字号,区别于 SystemMonitor 的 xl 字号)
-    expect(screen.getByText('系统监控')).toBeInTheDocument()
+    // Hub 页面导航卡片标题（当前组件实际渲染的文案）
+    expect(screen.getByText('系统健康')).toBeInTheDocument()
     expect(screen.getByText('配置管理')).toBeInTheDocument()
-    expect(screen.getByText('智能体总控台')).toBeInTheDocument()
-    expect(screen.getByText('MCP Server 管理')).toBeInTheDocument()
+    expect(screen.getByText('智能体总控')).toBeInTheDocument()
+    expect(screen.getByText('MCP 服务')).toBeInTheDocument()
   })
 
   it('renders ConfigApp via Suspense at /command/config', async () => {
@@ -195,7 +195,7 @@ describe('CommandApp', () => {
   // 新增:加载骨架分支覆盖
   // ══════════════════════════════════════════════════════════════
 
-  it('shows loading skeleton when isLoading is true and stats is null', () => {
+  it('shows loading skeleton when isLoading is true and stats is null', async () => {
     // 直接设置 store 状态为 loading,并用 no-op loadStats 防止 useEffect 重置状态
     const store = useCommandStore
     const originalLoadStats = store.getState().loadStats
@@ -210,16 +210,22 @@ describe('CommandApp', () => {
       },
     })
 
-    renderWithRouter(<CommandApp />)
+    try {
+      renderWithRouter(<CommandApp />, ['/command/monitor'])
 
-    expect(document.querySelector('.animate-pulse')).toBeInTheDocument()
-
-    // 恢复原始状态,避免影响后续测试
-    store.setState({
-      isLoading: originalIsLoading,
-      stats: originalStats,
-      loadStats: originalLoadStats,
-    })
+      // 等待懒加载的 SystemMonitorPage 解析并进入加载分支（当前 LoadingState 默认 spinner 变体,
+      // 展示「加载中...」文案而非 animate-pulse 骨架）
+      await waitFor(() => {
+        expect(screen.getByText('加载中...')).toBeInTheDocument()
+      })
+    } finally {
+      // 无论断言是否通过都恢复原始状态,避免污染后续测试
+      store.setState({
+        isLoading: originalIsLoading,
+        stats: originalStats,
+        loadStats: originalLoadStats,
+      })
+    }
   })
 
   // ══════════════════════════════════════════════════════════════
@@ -227,13 +233,14 @@ describe('CommandApp', () => {
   // ══════════════════════════════════════════════════════════════
 
   it('opens migration dialog when clicking V6 迁移 button', async () => {
-    renderWithRouter(<CommandApp />)
+    renderWithRouter(<CommandApp />, ['/command/monitor'])
     await screen.findByRole('button', { name: /刷新统计/i })
 
     await userEvent.click(screen.getByRole('button', { name: /V6 迁移/i }))
 
+    // 迁移面板内容随 Dialog 渲染（组件使用 Radix Dialog，非原生 <dialog>.showModal）
     await waitFor(() => {
-      expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled()
+      expect(screen.getByText('V6 Pro → V9 数据迁移')).toBeInTheDocument()
     })
   })
 
@@ -242,7 +249,7 @@ describe('CommandApp', () => {
   // ══════════════════════════════════════════════════════════════
 
   it('displays success message with token class after successful reset', async () => {
-    renderWithRouter(<CommandApp />)
+    renderWithRouter(<CommandApp />, ['/command/monitor'])
     await userEvent.click(await screen.findByRole('button', { name: /刷新统计/i }))
     await waitFor(() => screen.getByText('12'))
 

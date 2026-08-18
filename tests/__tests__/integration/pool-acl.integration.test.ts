@@ -48,7 +48,7 @@ import type { Stock } from '@/data/types'
 // 常量
 // ============================================================
 
-const TEST_STOCK_SYMBOL = 'TEST001'
+const TEST_STOCK_SYMBOL = '600001.SH'
 const TEST_STOCK_NAME = '测试股票'
 
 // ============================================================
@@ -295,11 +295,11 @@ describe('所有 ResearchStatus 状态流转', () => {
   })
 
   it('应能存储和查询 candidate 状态的股票', { timeout: 60000 }, async () => {
-    await addTestStock({ symbol: 'TEST_CANDIDATE', researchStatus: RESEARCH_STATUS.candidate })
+    await addTestStock({ symbol: '600002.SH', researchStatus: RESEARCH_STATUS.candidate })
     const result = await dataBridge.query<Stock>({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
-      key: 'TEST_CANDIDATE',
+      key: '600002.SH',
       source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
@@ -307,11 +307,11 @@ describe('所有 ResearchStatus 状态流转', () => {
   })
 
   it('应能存储和查询 screened 状态的股票', { timeout: 60000 }, async () => {
-    await addTestStock({ symbol: 'TEST_SCREENED', researchStatus: RESEARCH_STATUS.screened })
+    await addTestStock({ symbol: '600003.SH', researchStatus: RESEARCH_STATUS.screened })
     const result = await dataBridge.query<Stock>({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
-      key: 'TEST_SCREENED',
+      key: '600003.SH',
       source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
@@ -319,11 +319,11 @@ describe('所有 ResearchStatus 状态流转', () => {
   })
 
   it('应能存储和查询 deepDive 状态的股票', { timeout: 60000 }, async () => {
-    await addTestStock({ symbol: 'TEST_DEEPDIVE', researchStatus: RESEARCH_STATUS.deepDive })
+    await addTestStock({ symbol: '600004.SH', researchStatus: RESEARCH_STATUS.deepDive })
     const result = await dataBridge.query<Stock>({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
-      key: 'TEST_DEEPDIVE',
+      key: '600004.SH',
       source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
@@ -331,11 +331,11 @@ describe('所有 ResearchStatus 状态流转', () => {
   })
 
   it('应能存储和查询 watching 状态的股票', { timeout: 60000 }, async () => {
-    await addTestStock({ symbol: 'TEST_WATCHING', researchStatus: RESEARCH_STATUS.watching })
+    await addTestStock({ symbol: '600005.SH', researchStatus: RESEARCH_STATUS.watching })
     const result = await dataBridge.query<Stock>({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
-      key: 'TEST_WATCHING',
+      key: '600005.SH',
       source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
@@ -343,11 +343,11 @@ describe('所有 ResearchStatus 状态流转', () => {
   })
 
   it('应能存储和查询 archived 状态的股票', { timeout: 60000 }, async () => {
-    await addTestStock({ symbol: 'TEST_ARCHIVED', researchStatus: RESEARCH_STATUS.archived })
+    await addTestStock({ symbol: '600006.SH', researchStatus: RESEARCH_STATUS.archived })
     const result = await dataBridge.query<Stock>({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
-      key: 'TEST_ARCHIVED',
+      key: '600006.SH',
       source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
@@ -391,7 +391,7 @@ describe('ACL 拒绝验证', () => {
         timestamp: Date.now(),
       },
       payload: {
-        symbol: 'FETCHER001',
+        symbol: '600007.SH',
         name: 'fetcher写入股票',
         researchStatus: RESEARCH_STATUS.candidate,
         source: DATA_SOURCE.akshare,
@@ -406,7 +406,7 @@ describe('ACL 拒绝验证', () => {
     const queryResult = await dataBridge.query<Stock>({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
-      key: 'FETCHER001',
+      key: '600007.SH',
       source: MODULE_ID.fetcher,
     })
     expect(queryResult.success).toBe(true)
@@ -416,7 +416,7 @@ describe('ACL 拒绝验证', () => {
     const verifyResult = await dataBridge.query<Stock>({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
-      key: 'FETCHER001',
+      key: '600007.SH',
       source: MODULE_ID.pool,
     })
     expect(verifyResult.success).toBe(true)

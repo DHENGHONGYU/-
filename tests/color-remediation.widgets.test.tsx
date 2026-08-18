@@ -302,8 +302,8 @@ describe('颜色整改 - A 股惯例验证（批次 E）', () => {
       const labels = screen.getAllByText('贪婪')
       const sentimentLabel = labels.find((el) => el.className.includes('px-2'))
       expect(sentimentLabel).toBeDefined()
-      expect(sentimentLabel?.className).toContain('bg-red-100')
-      expect(sentimentLabel?.className).toContain('text-red-700')
+      expect(sentimentLabel?.className).toContain('bg-destructive/10')
+      expect(sentimentLabel?.className).toContain('text-destructive')
     })
 
     it('恐慌贪婪指数 < 50（恐慌=看跌）应渲染绿色标签（A 股惯例）', () => {
@@ -319,8 +319,8 @@ describe('颜色整改 - A 股惯例验证（批次 E）', () => {
       const labels = screen.getAllByText('恐慌')
       const sentimentLabel = labels.find((el) => el.className.includes('px-2'))
       expect(sentimentLabel).toBeDefined()
-      expect(sentimentLabel?.className).toContain('bg-green-100')
-      expect(sentimentLabel?.className).toContain('text-green-700')
+      expect(sentimentLabel?.className).toContain('bg-success/10')
+      expect(sentimentLabel?.className).toContain('text-success')
     })
 
     it('恐慌贪婪指数 = 50（边界）应渲染绿色标签（< 50 走 panic 分支）', () => {
@@ -334,8 +334,8 @@ describe('颜色整改 - A 股惯例验证（批次 E）', () => {
 
       // 边界值 50 不满足 > 50，走 else 分支（绿色）
       const label = screen.getByText(UI_TEXT.errors.neutral)
-      expect(label.className).toContain('bg-green-100')
-      expect(label.className).toContain('text-green-700')
+      expect(label.className).toContain('bg-success/10')
+      expect(label.className).toContain('text-success')
     })
 
     it('不应再使用国际惯例（贪婪=绿、恐慌=红）', () => {

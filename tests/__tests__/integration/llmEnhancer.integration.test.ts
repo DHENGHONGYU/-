@@ -165,8 +165,14 @@ function buildLlmEnhanceResponse(options: {
 }): string {
   // M2 依据追溯闸：当 mock 调整评分但未显式提供 citations 时，自动补充默认引用，
   // 确保测试聚焦在增强合并逻辑本身，而非被引证闸回退。
+  // 注：validateLLmOutput 偏离度闸门要求偏离 >1.5 时需 ≥2 条引证，故默认补充 2 条以对齐该防御阈值。
   const defaultCitations: Citation[] | undefined =
-    typeof options.score === 'number' ? [{ source: '测试研报', content: '测试引用内容' }] : undefined
+    typeof options.score === 'number'
+      ? [
+          { source: '测试研报', content: '测试引用内容一' },
+          { source: '测试新闻', content: '测试引用内容二' },
+        ]
+      : undefined
 
   return JSON.stringify({
     score: options.score,
@@ -476,7 +482,7 @@ describe('LLMScoreEnhancer 集成测试 — L4/L7 增强层 LLM 调用场景', (
     })
 
     it('LLM 返回带 ```json 代码块包装的 JSON 时应正确解析', async () => {
-      const wrappedJson = '```json\n{"score":4.6,"summary":"代码块包装的响应","rationale":"理由","risks":["风险"],"citations":[{"source":"测试研报","content":"测试引用"}]}\n```'
+      const wrappedJson = '```json\n{"score":4.6,"summary":"代码块包装的响应","rationale":"理由","risks":["风险"],"citations":[{"source":"测试研报","content":"测试引用一"},{"source":"测试新闻","content":"测试引用二"}]}\n```'
       mockLlmChatSuccess(wrappedJson)
 
       enhancer.configure(VALID_LLM_CONFIG)
@@ -955,7 +961,7 @@ describe('LLMScoreEnhancer 集成测试 — L4/L7 增强层 LLM 调用场景', (
                   content: JSON.stringify({
                     score: 4.7,
                     summary: 'L7 动态响应',
-                    citations: [{ source: '测试研报', content: 'L7 测试引用' }],
+                    citations: [{ source: '测试研报', content: 'L7 测试引用一' }, { source: '测试新闻', content: 'L7 测试引用二' }],
                   }),
                 },
               },
@@ -965,7 +971,7 @@ describe('LLMScoreEnhancer 集成测试 — L4/L7 增强层 LLM 调用场景', (
             JSON.stringify({
               score: 4.7,
               summary: 'L7 动态响应',
-              citations: [{ source: '测试研报', content: 'L7 测试引用' }],
+              citations: [{ source: '测试研报', content: 'L7 测试引用一' }, { source: '测试新闻', content: 'L7 测试引用二' }],
             }),
         } as Response
       })

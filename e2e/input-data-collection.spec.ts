@@ -117,9 +117,15 @@ test.describe('数据采集功能测试', () => {
       await expect(page.getByRole('columnheader', { name: '进度' })).toBeVisible()
     })
 
-    test('应显示Mock任务数据', async ({ page }) => {
-      await expect(page.locator('text=TASK-20260701-001')).toBeVisible()
-      await expect(page.locator('text=TASK-20260701-002')).toBeVisible()
+    test('演示模式应显式标注（Mock 数据不再混入真实列表）', async ({ page }) => {
+      // P0-3：开启演示模式并刷新，验证页面显式标注「演示模式 · Mock 数据」徽标，
+      // 且不再残留旧的 Mock 任务 ID（TASK-20260701-001/002 已于 2026-08-07 移除）。
+      await page.evaluate(() => sessionStorage.setItem('POOL_FORCE_DEMO', '1'))
+      await page.reload()
+      await expect(page.getByRole('heading', { name: '采集任务监控' })).toBeVisible({ timeout: 10000 })
+      await expect(page.getByText('演示模式 · Mock 数据').first()).toBeVisible()
+      // 旧 Mock 任务 ID 不应再出现
+      await expect(page.locator('text=TASK-20260701-001')).toHaveCount(0)
     })
 
     test('评分卡片Tab应可切换', async ({ page }) => {

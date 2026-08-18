@@ -12,6 +12,7 @@ runRouteAudits('analysis', [
   { path: '/analysis/industry-dashboard', description: '行业全景仪表盘', category: 'analysis', inBlueprint: false },
   { path: '/analysis/score-docs', description: '评分文档版本库', category: 'analysis', inBlueprint: false },
   { path: '/analysis/news', description: '智能资讯', category: 'analysis', inBlueprint: false },
+  { path: '/analysis/news-v6', description: '智能资讯 V6（newsColors 语义化令牌视觉风格）', category: 'analysis', inBlueprint: true },
   { path: '/analysis/score-comparison', description: '历史评分比对看板', category: 'analysis', inBlueprint: false },
   { path: '/analysis/hot-sector', description: '热门板块策略选股（五维评分）', category: 'analysis', inBlueprint: false },
   { path: '/analysis/value-pit', description: '价值洼地策略选股', category: 'analysis', inBlueprint: false },

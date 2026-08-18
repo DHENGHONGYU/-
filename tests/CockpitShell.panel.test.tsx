@@ -171,21 +171,21 @@ describe('CockpitShell 交叉布局', () => {
     render(<CockpitShell />)
 
     // 域标题在左侧导航和矩阵总览中均出现，用 getAllByText
-    expect(screen.getAllByText('研究全景').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('市场背景').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('AI 决策').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('持仓观察').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('智能研判').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('市场总览').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('AI 辅助').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('持仓与风控').length).toBeGreaterThan(0)
   })
 
   it('域标题显示 Widget 计数', () => {
     render(<CockpitShell />)
 
     // 市场背景 6 个 — 在左侧导航按钮中显示计数
-    const marketButtons = screen.getAllByText('市场背景')
+    const marketButtons = screen.getAllByText('市场总览')
     const marketButton = marketButtons.find((el) => el.closest('button'))
     expect(marketButton?.closest('button')?.textContent).toMatch(/6/)
-    // 研究全景 4 个
-    const researchButtons = screen.getAllByText('研究全景')
+    // 智能研判 4 个
+    const researchButtons = screen.getAllByText('智能研判')
     const researchButton = researchButtons.find((el) => el.closest('button'))
     expect(researchButton?.closest('button')?.textContent).toMatch(/4/)
   })
@@ -197,7 +197,7 @@ describe('CockpitShell 交叉布局', () => {
     render(<CockpitShell />)
 
     // 市场背景域默认激活，导航按钮应有激活样式
-    const marketButtons = screen.getAllByText('市场背景')
+    const marketButtons = screen.getAllByText('市场总览')
     const marketButton = marketButtons.find((el) => el.closest('button'))
     expect(marketButton).toBeDefined()
   })
@@ -217,8 +217,8 @@ describe('CockpitShell 交叉布局', () => {
   it('点击域标题切换激活域', () => {
     render(<CockpitShell />)
 
-    // 研究全景默认不激活，点击后应切换
-    const researchButtons = screen.getAllByText('研究全景')
+    // 智能研判默认不激活，点击后应切换
+    const researchButtons = screen.getAllByText('智能研判')
     const researchButton = researchButtons.find((el) => el.closest('button'))
     expect(researchButton).toBeDefined()
 
@@ -253,7 +253,7 @@ describe('CockpitShell 交叉布局', () => {
   it('顶部导航显示添加 Widget 和重置布局按钮', () => {
     render(<CockpitShell />)
 
-    expect(screen.getByText('添加 Widget')).toBeDefined()
+    expect(screen.getByText('添加组件')).toBeDefined()
     expect(screen.getByText('重置布局')).toBeDefined()
   })
 })

@@ -426,6 +426,7 @@ describe('LLM 降级机制测试', () => {
       mockLlmChatSuccess(JSON.stringify({
         score: -1.5,
         summary: '增强摘要',
+        citations: [{ source: '测试研报', content: '负分截断引用一' }, { source: '测试新闻', content: '负分截断引用二' }],
       }))
 
       enhancer.configure(VALID_LLM_CONFIG)

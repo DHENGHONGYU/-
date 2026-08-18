@@ -71,7 +71,7 @@ describe('NewsPage', () => {
     )
 
     expect(screen.getByRole('heading', { name: '智能资讯' })).toBeInTheDocument()
-    expect(await screen.findByText('暂无资讯，点击生成模拟资讯')).toBeInTheDocument()
+    expect(await screen.findByText('暂无资讯')).toBeInTheDocument()
   })
 
   it('generates mock articles and displays cards', async () => {
@@ -81,11 +81,11 @@ describe('NewsPage', () => {
       </MemoryRouter>,
     )
 
-    await userEvent.click(screen.getByRole('button', { name: /生成模拟资讯/i }))
+    await userEvent.click(screen.getAllByRole('button', { name: /生成模拟资讯/i })[0])
 
     await waitFor(
       () => {
-        expect(screen.queryByText('暂无资讯，点击生成模拟资讯')).not.toBeInTheDocument()
+        expect(screen.queryByText('暂无资讯')).not.toBeInTheDocument()
       },
       { timeout: 10000 },
     )
@@ -101,10 +101,10 @@ describe('NewsPage', () => {
       </MemoryRouter>,
     )
 
-    await userEvent.click(screen.getByRole('button', { name: /生成模拟资讯/i }))
+    await userEvent.click(screen.getAllByRole('button', { name: /生成模拟资讯/i })[0])
     await waitFor(
       () => {
-        expect(screen.queryByText('暂无资讯，点击生成模拟资讯')).not.toBeInTheDocument()
+        expect(screen.queryByText('暂无资讯')).not.toBeInTheDocument()
       },
       { timeout: 10000 },
     )
@@ -127,10 +127,10 @@ describe('NewsPage', () => {
       </MemoryRouter>,
     )
 
-    await userEvent.click(screen.getByRole('button', { name: /生成模拟资讯/i }))
+    await userEvent.click(screen.getAllByRole('button', { name: /生成模拟资讯/i })[0])
     await waitFor(
       () => {
-        expect(screen.queryByText('暂无资讯，点击生成模拟资讯')).not.toBeInTheDocument()
+        expect(screen.queryByText('暂无资讯')).not.toBeInTheDocument()
       },
       { timeout: 10000 },
     )
