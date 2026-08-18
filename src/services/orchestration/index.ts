@@ -128,7 +128,7 @@ import { getChipAnomalyDetector } from './chipAnomalyDetector'
 import { getLogger } from '@/lib/logger'
 import { getIntentionWatchlistStocks } from '@/services/trading/tradingService'
 import { runV6Score } from '@/services/scoring/v6ScoreService'
-import type { V6Score, Stock } from '@/data/types'
+import type { Stock } from '@/data/types'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME, DATA_SOURCE } from '@/config/dbConfig'
@@ -169,8 +169,9 @@ function buildOrchestratorList(): OrchestratorEntry[] {
     {
       name: 'ObservationPoolReviewer',
       fn: () => {
+        // enabled:true —— 开启 24h 周期定时复盘调度（spec 缺口②「定期自动复盘调度」）
         // autoEnroll:true —— 观察池复盘发现达门槛且不在研究池的标的，自动晋升入研究池
-        const reviewer = getObservationPoolReviewer({ autoEnroll: true })
+        const reviewer = getObservationPoolReviewer({ enabled: true, autoEnroll: true })
         // 复盘快照持久化器：经 DataBridge 落 observation_reviews 存储（spec 缺口② 闭环，跨重启漂移比对）
         const observationReviewPersister: ObservationReviewPersister = {
           async loadLastScores() {
@@ -204,7 +205,7 @@ function buildOrchestratorList(): OrchestratorEntry[] {
                   action: ENVELOPE_ACTION.saveObservationReview,
                   traceId: `obs-review-${record.reviewId}`,
                 },
-                full as unknown as Record<string, unknown>,
+                full,
               ),
             )
           },
@@ -217,7 +218,7 @@ function buildOrchestratorList(): OrchestratorEntry[] {
           scorer: {
             run: async (symbol: string) => {
               const r = await runV6Score(symbol)
-              return { success: r.success, data: r.data as V6Score | undefined }
+              return { success: r.success, data: r.data }
             },
           },
           // 权威判定：直接查 stocks store，symbol 属研究池(pool==='research')即视为已晋升

@@ -162,3 +162,15 @@
 **审计方法论固化（残项③闭环）**：将本次五段链路存储兜底审计方法论固化为物理技能 `data-flow-integrity-audit`（自然名，已镜像至 `.workbuddy/skills/`），含 mandatory 门禁、派生存储判定、跨层注入去违规、校验脚本假修复等 5 条反模式教训。`v9-data-flow-integrity-audit` 仍为 TRAE 平台虚拟技能（按治理无本地 SKILL.md），物理实现由本技能承载。
 
 > **收尾提示**：`tsc:prod` 错误集在并发 Agent 在途修改下会跨次浮动；判定"本次是否干净"只看自身改动文件是否在错误清单。本回合自身改动（CapitalAllocationPanel 回退、realDisciplineScore 字段、observationPoolReviewer、tsc 回退修复）均不在错误清单，全门禁绿为真实结论。
+
+---
+
+## 六、补充：观察池定期复盘存储闭环（spec 缺口② · 2026-08-18）
+
+> spec 缺口②（观察池定期自动复盘调度）属独立功能域，但其 `observation_reviews` store 接线与编排器激活属存储底层事项，补录于此以免审计盲区。
+
+- **`observation_reviews` store 全链路接线闭环**：此前 outputs 日志海量 `NotFoundError: No objectStore named observation_reviews`，根因是 object store 未在 `createSchema` 注册 + dataLayer handler 未接，致「跨重启持久化」实际失效（空壳）。已于 2026-08-18 补齐：`db-schema.ts:587` ensureStore 注册、`databridge.ts:175` action→store 映射、`databridgeHandlers.ts:678` handler 注册、`dbConfig.ts:281` ENVELOPE_ACTION 枚举、`data-dictionary.ts:1433` 字典条目、`validate-data-blueprint.ts` 扫描盲区修复。集成测试 `tests/observation-pool-review.integration.test.ts` 通过（store 注册真实生效，日志 `clear: store="observation_reviews"` 由 NotFoundError 转为 WARN）。
+- **ObservationPoolReviewer 编排器生产真激活（教训）**：`observationPoolReviewer.ts` 实现「定时调度 + 跨重启持久化 + 晋升自动入池 + 事件广播」；`start()` 受 `config.enabled` 门控（默认 `false`）。bootstrap 接线入口 `index.ts` 的 `buildOrchestratorList` 条目经核查**曾仅传 `autoEnroll:true`、漏传 `enabled:true`**，导致周期定时复盘（24h）在生产环境**从未真正启用**（仅手动「立即复盘」按钮可用）——此为"已接线进 `buildOrchestratorList` ≠ 生产真正启用"的**二级陷阱**（比"是否接线"更隐蔽）。已于 2026-08-18 修正为 `getObservationPoolReviewer({ enabled: true, autoEnroll: true })`，激活周期定时调度。
+- **UI 可见性**：`src/cockpit/widgets/WatchlistWidget.tsx` 接入复盘摘要面板（订阅 `OBSERVATION_REVIEW_COMPLETED` + 初始 `getLastReview()`，条件渲染统计：标的数 / 评分↑↓ / 平稳 / 晋升候选 chip / 已自动入池）+ 「立即复盘」手动触发按钮（loading 态 + 异常降级）。`WatchlistWidget.test.tsx` 8/8 零影响。
+- **自动入池集成测试**：`tests/observation-pool-auto-enroll.integration.test.ts`（fake-indexeddb，不依赖真实行情）3/3 通过，覆盖 autoEnroll 开启入池 / 关闭不入池 / 已在池不重复 + DB 去重返回 false。
+- **门禁验证（2026-08-18 末）**：`tsc:prod` EXIT 0 / `audit:layers` 0 违规 / `audit:acl-consistency` 0 ERROR / `validate:blueprint` PASS(53 stores) / `validate:dataConsistency` 通过 / 观察池 3 测试 10/10。
