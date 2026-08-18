@@ -818,7 +818,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
     })
 
     it('应检测到无证据调整，门禁报告标记为 WARN', async () => {
-      const rags = STOCK_RAG_TEMPLATES['sh.600519']
+      const rags = STOCK_RAG_TEMPLATES['sh.600519'] || []
       mockRagRetrieve.mockResolvedValue(buildRAGContext(rags))
 
       const sample: HallucinationSample = {
@@ -831,6 +831,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
           summary: '基于主观判断调整评分',
           rationale: '综合考虑各方面因素，评分应上调',
           citations: [],
+          risks: [],
         },
         ragContext: rags,
       }
@@ -875,6 +876,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
               summary: parsed.summary,
               rationale: parsed.rationale,
               citations: parsed.citations,
+              risks: parsed.risks,
             },
             ragContext: rags,
           })
@@ -890,6 +892,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
               summary: '当前评分已合理',
               rationale: '无额外参考资料',
               citations: [],
+              risks: [],
             },
             ragContext: [],
           })
@@ -900,7 +903,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
       const suiteResult = runHallucinationSuite(samples)
 
       // 综合幻觉率
-      const totalSamples = suiteResult.totalSamples
+      const totalSamples = suiteResult.samplesChecked
       const fabricatedCount = suiteResult.metrics.fabricatedCitations
       const unsupportedCount = suiteResult.metrics.unsupportedAdjustments
       const contradictoryCount = suiteResult.metrics.contradictoryClaims
@@ -928,7 +931,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
 
   describe('场景 5b：Golden Stock 得分回归', () => {
     it('有 RAG 上下文的股票，评分调整应在合理范围', async () => {
-      const rags = STOCK_RAG_TEMPLATES['sh.600519']
+      const rags = STOCK_RAG_TEMPLATES['sh.600519'] || []
       mockRagRetrieve.mockResolvedValue(buildRAGContext(rags))
 
       const enhancer = createEnhancer()
@@ -947,7 +950,7 @@ describe('RAG 真实 LLM 联调集成测试', () => {
 
       // 评分应在 Golden Dataset 预期范围内
       const mtStock = dataset.stocks.find(s => s.symbol === 'sh.600519')!
-      const expected = mtStock.expectedLayers['l1']
+      const expected = mtStock.expectedLayers['l1']!
       expect(result.score).toBeGreaterThanOrEqual(expected.min)
       expect(result.score).toBeLessThanOrEqual(expected.max)
     })
