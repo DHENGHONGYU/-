@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN" class="dark">
 <head>
     <meta charset="UTF-8">
@@ -62,6 +62,34 @@
   --state-warning: #F39C12;
   --state-error: #E74C3C;
   --state-info: #3498DB;
+
+  /* Pipeline layer colors */
+  --layer-input: #3498DB;
+  --layer-input-light: rgba(52,152,219,0.15);
+  --layer-input-border: rgba(52,152,219,0.25);
+  --layer-core: #00B4D8;
+  --layer-core-light: rgba(0,180,216,0.15);
+  --layer-core-border: rgba(0,180,216,0.25);
+  --layer-analysis: #2ECC71;
+  --layer-analysis-light: rgba(46,204,113,0.15);
+  --layer-analysis-border: rgba(46,204,113,0.25);
+  --layer-decision: #F39C12;
+  --layer-decision-light: rgba(243,156,18,0.15);
+  --layer-decision-border: rgba(243,156,18,0.25);
+  --layer-review: #9B59B6;
+  --layer-review-light: rgba(155,89,182,0.15);
+  --layer-review-border: rgba(155,89,182,0.25);
+  --layer-governance: #E74C3C;
+  --layer-governance-light: rgba(231,76,60,0.15);
+  --layer-governance-border: rgba(231,76,60,0.25);
+
+  /* Score heatmap */
+  --score-high-bg: rgba(46,204,113,0.18);
+  --score-high-ink: #2ECC71;
+  --score-mid-ink: var(--ink-2);
+  --score-low-bg: rgba(231,76,60,0.12);
+  --score-low-ink: #E74C3C;
+  --score-low-bg-strong: rgba(231,76,60,0.15);
 
   /* Semantic aliases */
   --brand-background: var(--bg);
@@ -201,19 +229,19 @@
 
             <!-- Workflow Layers Legend -->
             <div class="flex flex-wrap gap-3 mb-6">
-                <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style="background: rgba(52,152,219,0.15); color: #3498DB; border: 1px solid rgba(52,152,219,0.25);">
+                <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style="background: var(--layer-input-light); color: var(--layer-input); border: 1px solid var(--layer-input-border);">
                     <i data-lucide="download" class="w-3.5 h-3.5"></i> 输入层
                 </span>
-                <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style="background: rgba(0,180,216,0.15); color: #00B4D8; border: 1px solid rgba(0,180,216,0.25);">
+                <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style="background: var(--layer-core-light); color: var(--layer-core); border: 1px solid var(--layer-core-border);">
                     <i data-lucide="database" class="w-3.5 h-3.5"></i> 核心数据层
                 </span>
-                <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style="background: rgba(46,204,113,0.15); color: #2ECC71; border: 1px solid rgba(46,204,113,0.25);">
+                <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style="background: var(--layer-analysis-light); color: var(--layer-analysis); border: 1px solid var(--layer-analysis-border);">
                     <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i> 分析层
                 </span>
-                <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style="background: rgba(243,156,18,0.15); color: #F39C12; border: 1px solid rgba(243,156,18,0.25);">
+                <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style="background: var(--layer-decision-light); color: var(--layer-decision); border: 1px solid var(--layer-decision-border);">
                     <i data-lucide="target" class="w-3.5 h-3.5"></i> 决策层
                 </span>
-                <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style="background: rgba(155,89,182,0.15); color: #9B59B6; border: 1px solid rgba(155,89,182,0.25);">
+                <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium" style="background: var(--layer-review-light); color: var(--layer-review); border: 1px solid var(--layer-review-border);">
                     <i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i> 复盘层
                 </span>
             </div>
@@ -223,10 +251,10 @@
                 <div class="flex gap-0 min-w-max">
                     <!-- P1: 采集 - 输入层 -->
                     <div class="w-44 flex-shrink-0">
-                        <div class="h-1.5 rounded-t-sm" style="background: #3498DB;"></div>
+                        <div class="h-1.5 rounded-t-sm" style="background: var(--layer-input);"></div>
                         <div class="p-3 border-x border-b rounded-b-md" style="background: var(--surface); border-color: var(--line);">
                             <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(52,152,219,0.2); color: #3498DB;">P1</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: var(--layer-input-light); color: var(--layer-input);">P1</span>
                                 <span class="text-sm font-semibold" style="color: var(--ink);">采集</span>
                             </div>
                             <div class="text-[11px] leading-relaxed" style="color: var(--ink-3);">
@@ -241,10 +269,10 @@
 
                     <!-- P2: 清洗 -->
                     <div class="w-44 flex-shrink-0">
-                        <div class="h-1.5 rounded-t-sm" style="background: #3498DB;"></div>
+                        <div class="h-1.5 rounded-t-sm" style="background: var(--layer-input);"></div>
                         <div class="p-3 border-x border-b rounded-b-md" style="background: var(--surface); border-color: var(--line);">
                             <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(52,152,219,0.2); color: #3498DB;">P2</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: var(--layer-input-light); color: var(--layer-input);">P2</span>
                                 <span class="text-sm font-semibold" style="color: var(--ink);">清洗</span>
                             </div>
                             <div class="text-[11px] leading-relaxed" style="color: var(--ink-3);">
@@ -258,10 +286,10 @@
 
                     <!-- P3: V6评分 -->
                     <div class="w-44 flex-shrink-0">
-                        <div class="h-1.5 rounded-t-sm" style="background: #00B4D8;"></div>
+                        <div class="h-1.5 rounded-t-sm" style="background: var(--layer-core);"></div>
                         <div class="p-3 border-x border-b rounded-b-md" style="background: var(--surface); border-color: var(--line);">
                             <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(0,180,216,0.2); color: #00B4D8;">P3</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: var(--layer-core-light); color: var(--layer-core);">P3</span>
                                 <span class="text-sm font-semibold" style="color: var(--ink);">V6评分</span>
                             </div>
                             <div class="text-[11px] leading-relaxed" style="color: var(--ink-3);">
@@ -275,10 +303,10 @@
 
                     <!-- P4: 双策略评分 -->
                     <div class="w-44 flex-shrink-0">
-                        <div class="h-1.5 rounded-t-sm" style="background: #2ECC71;"></div>
+                        <div class="h-1.5 rounded-t-sm" style="background: var(--layer-analysis);"></div>
                         <div class="p-3 border-x border-b rounded-b-md" style="background: var(--surface); border-color: var(--line);">
                             <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(46,204,113,0.2); color: #2ECC71;">P4</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: var(--layer-analysis-light); color: var(--layer-analysis);">P4</span>
                                 <span class="text-sm font-semibold" style="color: var(--ink);">双策略评分</span>
                             </div>
                             <div class="text-[11px] leading-relaxed" style="color: var(--ink-3);">
@@ -292,10 +320,10 @@
 
                     <!-- P5: 板块轮动 -->
                     <div class="w-44 flex-shrink-0">
-                        <div class="h-1.5 rounded-t-sm" style="background: #2ECC71;"></div>
+                        <div class="h-1.5 rounded-t-sm" style="background: var(--layer-analysis);"></div>
                         <div class="p-3 border-x border-b rounded-b-md" style="background: var(--surface); border-color: var(--line);">
                             <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(46,204,113,0.2); color: #2ECC71;">P5</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: var(--layer-analysis-light); color: var(--layer-analysis);">P5</span>
                                 <span class="text-sm font-semibold" style="color: var(--ink);">板块轮动</span>
                             </div>
                             <div class="text-[11px] leading-relaxed" style="color: var(--ink-3);">
@@ -309,10 +337,10 @@
 
                     <!-- P6: 交易信号 -->
                     <div class="w-44 flex-shrink-0">
-                        <div class="h-1.5 rounded-t-sm" style="background: #F39C12;"></div>
+                        <div class="h-1.5 rounded-t-sm" style="background: var(--layer-decision);"></div>
                         <div class="p-3 border-x border-b rounded-b-md" style="background: var(--surface); border-color: var(--line);">
                             <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(243,156,18,0.2); color: #F39C12;">P6</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: var(--layer-decision-light); color: var(--layer-decision);">P6</span>
                                 <span class="text-sm font-semibold" style="color: var(--ink);">交易信号</span>
                             </div>
                             <div class="text-[11px] leading-relaxed" style="color: var(--ink-3);">
@@ -326,10 +354,10 @@
 
                     <!-- P7: 交易订单 -->
                     <div class="w-44 flex-shrink-0">
-                        <div class="h-1.5 rounded-t-sm" style="background: #F39C12;"></div>
+                        <div class="h-1.5 rounded-t-sm" style="background: var(--layer-decision);"></div>
                         <div class="p-3 border-x border-b rounded-b-md" style="background: var(--surface); border-color: var(--line);">
                             <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(243,156,18,0.2); color: #F39C12;">P7</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: var(--layer-decision-light); color: var(--layer-decision);">P7</span>
                                 <span class="text-sm font-semibold" style="color: var(--ink);">交易订单</span>
                             </div>
                             <div class="text-[11px] leading-relaxed" style="color: var(--ink-3);">
@@ -343,10 +371,10 @@
 
                     <!-- P8: 交易复盘 -->
                     <div class="w-44 flex-shrink-0">
-                        <div class="h-1.5 rounded-t-sm" style="background: #9B59B6;"></div>
+                        <div class="h-1.5 rounded-t-sm" style="background: var(--layer-review);"></div>
                         <div class="p-3 border-x border-b rounded-b-md" style="background: var(--surface); border-color: var(--line);">
                             <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(155,89,182,0.2); color: #9B59B6;">P8</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: var(--layer-review-light); color: var(--layer-review);">P8</span>
                                 <span class="text-sm font-semibold" style="color: var(--ink);">交易复盘</span>
                             </div>
                             <div class="text-[11px] leading-relaxed" style="color: var(--ink-3);">
@@ -360,10 +388,10 @@
 
                     <!-- P9: 资讯处理 -->
                     <div class="w-44 flex-shrink-0">
-                        <div class="h-1.5 rounded-t-sm" style="background: #00B4D8;"></div>
+                        <div class="h-1.5 rounded-t-sm" style="background: var(--layer-core);"></div>
                         <div class="p-3 border-x border-b rounded-b-md" style="background: var(--surface); border-color: var(--line);">
                             <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(0,180,216,0.2); color: #00B4D8;">P9</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: var(--layer-core-light); color: var(--layer-core);">P9</span>
                                 <span class="text-sm font-semibold" style="color: var(--ink);">资讯处理</span>
                             </div>
                             <div class="text-[11px] leading-relaxed" style="color: var(--ink-3);">
@@ -377,10 +405,10 @@
 
                     <!-- P10: 智能评分 -->
                     <div class="w-44 flex-shrink-0">
-                        <div class="h-1.5 rounded-t-sm" style="background: #2ECC71;"></div>
+                        <div class="h-1.5 rounded-t-sm" style="background: var(--layer-analysis);"></div>
                         <div class="p-3 border-x border-b rounded-b-md" style="background: var(--surface); border-color: var(--line);">
                             <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(46,204,113,0.2); color: #2ECC71;">P10</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: var(--layer-analysis-light); color: var(--layer-analysis);">P10</span>
                                 <span class="text-sm font-semibold" style="color: var(--ink);">智能评分</span>
                             </div>
                             <div class="text-[11px] leading-relaxed" style="color: var(--ink-3);">
@@ -394,10 +422,10 @@
 
                     <!-- P11: 行业评分 -->
                     <div class="w-44 flex-shrink-0">
-                        <div class="h-1.5 rounded-t-sm" style="background: #2ECC71;"></div>
+                        <div class="h-1.5 rounded-t-sm" style="background: var(--layer-analysis);"></div>
                         <div class="p-3 border-x border-b rounded-b-md" style="background: var(--surface); border-color: var(--line);">
                             <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(46,204,113,0.2); color: #2ECC71;">P11</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: var(--layer-analysis-light); color: var(--layer-analysis);">P11</span>
                                 <span class="text-sm font-semibold" style="color: var(--ink);">行业评分</span>
                             </div>
                             <div class="text-[11px] leading-relaxed" style="color: var(--ink-3);">
@@ -411,10 +439,10 @@
 
                     <!-- P12: 缺失报告 -->
                     <div class="w-44 flex-shrink-0">
-                        <div class="h-1.5 rounded-t-sm" style="background: #E74C3C;"></div>
+                        <div class="h-1.5 rounded-t-sm" style="background: var(--layer-governance);"></div>
                         <div class="p-3 border-x border-b rounded-b-md" style="background: var(--surface); border-color: var(--line);">
                             <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(231,76,60,0.2); color: #E74C3C;">P12</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: var(--layer-governance-light); color: var(--layer-governance);">P12</span>
                                 <span class="text-sm font-semibold" style="color: var(--ink);">缺失报告</span>
                             </div>
                             <div class="text-[11px] leading-relaxed" style="color: var(--ink-3);">
@@ -428,10 +456,10 @@
 
                     <!-- P13: 执行计划 -->
                     <div class="w-44 flex-shrink-0">
-                        <div class="h-1.5 rounded-t-sm" style="background: #F39C12;"></div>
+                        <div class="h-1.5 rounded-t-sm" style="background: var(--layer-decision);"></div>
                         <div class="p-3 border-x border-b rounded-b-md" style="background: var(--surface); border-color: var(--line);">
                             <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(243,156,18,0.2); color: #F39C12;">P13</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: var(--layer-decision-light); color: var(--layer-decision);">P13</span>
                                 <span class="text-sm font-semibold" style="color: var(--ink);">执行计划</span>
                             </div>
                             <div class="text-[11px] leading-relaxed" style="color: var(--ink-3);">
@@ -445,10 +473,10 @@
 
                     <!-- P14: 组合再平衡 -->
                     <div class="w-44 flex-shrink-0">
-                        <div class="h-1.5 rounded-t-sm" style="background: #F39C12;"></div>
+                        <div class="h-1.5 rounded-t-sm" style="background: var(--layer-decision);"></div>
                         <div class="p-3 border-x border-b rounded-b-md" style="background: var(--surface); border-color: var(--line);">
                             <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(243,156,18,0.2); color: #F39C12;">P14</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: var(--layer-decision-light); color: var(--layer-decision);">P14</span>
                                 <span class="text-sm font-semibold" style="color: var(--ink);">组合再平衡</span>
                             </div>
                             <div class="text-[11px] leading-relaxed" style="color: var(--ink-3);">
@@ -462,10 +490,10 @@
 
                     <!-- P15: 执行日志 -->
                     <div class="w-44 flex-shrink-0">
-                        <div class="h-1.5 rounded-t-sm" style="background: #9B59B6;"></div>
+                        <div class="h-1.5 rounded-t-sm" style="background: var(--layer-review);"></div>
                         <div class="p-3 border-x border-b rounded-b-md" style="background: var(--surface); border-color: var(--line);">
                             <div class="flex items-center gap-1.5 mb-1">
-                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: rgba(155,89,182,0.2); color: #9B59B6;">P15</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background: var(--layer-review-light); color: var(--layer-review);">P15</span>
                                 <span class="text-sm font-semibold" style="color: var(--ink);">执行日志</span>
                             </div>
                             <div class="text-[11px] leading-relaxed" style="color: var(--ink-3);">
@@ -501,8 +529,133 @@
         <section id="score-comparison" class="mb-12">
             <div class="flex items-center gap-3 mb-5">
                 <i data-lucide="radar" class="w-5 h-5" style="color: var(--brand);"></i>
-                <h2 class="text-xl font-semibold" style="color: var(--ink);">七维度竞品评分对比（热力图）</h2>
+                <h2 class="text-xl font-semibold" style="color: var(--ink);">七维度竞品评分对比</h2>
             </div>
+
+            <!-- Radar Chart + Legend -->
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
+                <div class="lg:col-span-2 p-5 rounded-lg" style="background: var(--surface); border: 1px solid var(--line);">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm font-semibold" style="color: var(--ink);">能力雷达图</span>
+                        <span class="text-xs" style="color: var(--ink-3);">V9 vs 头部三强</span>
+                    </div>
+                    <svg viewBox="0 0 320 320" class="w-full max-w-[300px] mx-auto">
+                        <!-- Radar grid (4 heptagon rings for scores 2.5 / 5 / 7.5 / 10) -->
+                        <g style="stroke: var(--line); stroke-width: 1; fill: none;">
+                            <polygon points="160,30 261.6,78.9 286.7,188.9 216.4,277.1 103.6,277.1 33.3,188.9 58.4,78.9" />
+                            <polygon points="160,62.5 236.2,99.2 255.1,181.7 202.3,247.8 117.7,247.8 64.9,181.7 83.8,99.2" />
+                            <polygon points="160,95 210.8,119.5 223.4,174.5 188.2,218.6 131.8,218.6 96.6,174.5 109.2,119.5" />
+                            <polygon points="160,127.5 185.4,139.7 191.7,167.2 174.1,189.3 145.9,189.3 128.3,167.2 134.6,139.7" />
+                        </g>
+                        <!-- 7 axis lines from center -->
+                        <g style="stroke: var(--line); stroke-width: 1;">
+                            <line x1="160" y1="160" x2="160" y2="30" />
+                            <line x1="160" y1="160" x2="261.6" y2="78.9" />
+                            <line x1="160" y1="160" x2="286.7" y2="188.9" />
+                            <line x1="160" y1="160" x2="216.4" y2="277.1" />
+                            <line x1="160" y1="160" x2="103.6" y2="277.1" />
+                            <line x1="160" y1="160" x2="33.3" y2="188.9" />
+                            <line x1="160" y1="160" x2="58.4" y2="78.9" />
+                        </g>
+                        <!-- Score labels on top axis -->
+                        <g style="fill: var(--ink-3); font-size: 9px;">
+                            <text x="152" y="33">10</text>
+                            <text x="152" y="65">7.5</text>
+                            <text x="152" y="98">5</text>
+                            <text x="152" y="130">2.5</text>
+                        </g>
+                        <!-- Axis labels (7 dimensions) -->
+                        <g style="fill: var(--ink-2); font-size: 10px; font-weight: 500;">
+                            <text x="160" y="18" text-anchor="middle">功能完整度</text>
+                            <text x="292" y="73" text-anchor="start">数据能力</text>
+                            <text x="308" y="193" text-anchor="start">AI智能化</text>
+                            <text x="225" y="298" text-anchor="middle">隐私本地化</text>
+                            <text x="95" y="298" text-anchor="middle">用户体验</text>
+                            <text x="12" y="193" text-anchor="end">商业化能力</text>
+                            <text x="28" y="73" text-anchor="end">生态壁垒</text>
+                        </g>
+                        <!-- FinSightV9 polygon: [8.5, 9.0, 8.09, 9.5, 8.0, 6.0, 7.0] -->
+                        <polygon
+                            points="160,49.5 251.5,87.1 262.5,183.4 213.6,271.3 114.9,253.7 84.0,177.4 88.9,103.3"
+                            style="fill: rgba(0,180,216,0.2); stroke: var(--brand); stroke-width: 2;" />
+                        <!-- Wind Alice polygon: [9.8, 10.0, 9.5, 6.0, 8.5, 9.0, 10.0] -->
+                        <polygon
+                            points="160,32.6 261.6,78.9 280.4,187.5 193.8,230.3 112.1,259.6 45.9,186.0 58.4,78.9"
+                            style="fill: rgba(46,204,113,0.08); stroke: var(--score-high-ink); stroke-width: 1.5; stroke-dasharray: 4,3;" />
+                        <!-- 同花顺 polygon: [9.5, 9.8, 8.8, 5.0, 8.5, 9.5, 9.5] -->
+                        <polygon
+                            points="160,36.5 259.6,80.6 271.5,185.5 188.2,218.6 112.1,259.6 39.6,187.5 63.4,83.0"
+                            style="fill: none; stroke: var(--layer-decision); stroke-width: 1.5; stroke-dasharray: 2,3;" />
+                        <!-- Center dot -->
+                        <circle cx="160" cy="160" r="3" style="fill: var(--ink-3);" />
+                    </svg>
+                    <!-- Legend -->
+                    <div class="flex flex-wrap gap-x-4 gap-y-2 justify-center mt-2 text-xs">
+                        <span class="flex items-center gap-1.5">
+                            <span class="w-3 h-0.5" style="background: var(--brand);"></span>
+                            <span style="color: var(--ink-2);">FinSightV9</span>
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <span class="w-3 h-0.5 border-dashed" style="background: var(--score-high-ink); border-top: 2px dashed var(--score-high-ink);"></span>
+                            <span style="color: var(--ink-2);">Wind Alice</span>
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <span class="w-3 h-0.5" style="border-top: 2px dotted var(--layer-decision);"></span>
+                            <span style="color: var(--ink-2);">同花顺</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Key insights panel -->
+                <div class="lg:col-span-3 space-y-3">
+                    <div class="p-4 rounded-lg" style="background: var(--surface); border: 1px solid var(--line);">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-md flex items-center justify-center flex-shrink-0" style="background: var(--brand-light);">
+                                <i data-lucide="shield-check" class="w-4 h-4" style="color: var(--brand);"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-semibold mb-0.5" style="color: var(--ink);">隐私本地化：9.5 分，全榜第二</div>
+                                <div class="text-xs leading-relaxed" style="color: var(--ink-3);">仅次于开源项目 OpenAshare（9.8 分），远超所有商业产品（同花顺 5.0、东方财富 5.0、Wind Alice 6.0）。纯前端 IndexedDB 架构，数据零上传。</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-lg" style="background: var(--surface); border: 1px solid var(--line);">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-md flex items-center justify-center flex-shrink-0" style="background: var(--score-low-bg);">
+                                <i data-lucide="alert-triangle" class="w-4 h-4" style="color: var(--score-low-ink);"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-semibold mb-0.5" style="color: var(--ink);">商业化能力：6.0 分，最大短板</div>
+                                <div class="text-xs leading-relaxed" style="color: var(--ink-3);">目前无任何定价与收入设计。但纯前端架构边际服务成本接近零，适合开源免费 + 增值订阅模式变现。</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-lg" style="background: var(--surface); border: 1px solid var(--line);">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-md flex items-center justify-center flex-shrink-0" style="background: var(--layer-analysis-light);">
+                                <i data-lucide="target" class="w-4 h-4" style="color: var(--score-high-ink);"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-semibold mb-0.5" style="color: var(--ink);">空位竞争力：研究闭环纵深</div>
+                                <div class="text-xs leading-relaxed" style="color: var(--ink-3);">调研中无竞品完整覆盖「池管理 → 多维评分 → 信号 → 模拟交易 → 复盘笔记」全链路。功能完整度 8.5 分与 QMT、人大 FinSight 持平，但闭环形态不同。</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-lg" style="background: var(--surface); border: 1px solid var(--line);">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-md flex items-center justify-center flex-shrink-0" style="background: var(--layer-decision-light);">
+                                <i data-lucide="database" class="w-4 h-4" style="color: var(--layer-decision);"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-semibold mb-0.5" style="color: var(--ink);">数据能力需校准：自评 9.0 vs 调研证据</div>
+                                <div class="text-xs leading-relaxed" style="color: var(--ink-3);">AKShare 社区级接口在稳定性、权威性、实时性上均弱于商业底座（Wind、通达信、同花顺）。评分引擎方法论再完善，输入质量上限锁定输出质量。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Heatmap table -->
             <div class="overflow-x-auto">
                 <table class="w-full text-xs border-collapse" style="min-width: 900px;">
                     <thead>
@@ -521,48 +674,48 @@
                     <tbody>
                         <!-- Wind Alice -->
                         <tr style="border-bottom: 1px solid var(--line);">
-                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">Wind Alice</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.18); color: #2ECC71;">9.8</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.2); color: #2ECC71;">10.0</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.18); color: #2ECC71;">9.5</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.12); color: #E74C3C;">6.0</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.15); color: #2ECC71;">9.0</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.2); color: #2ECC71;">10.0</td><td class="p-3 text-center font-bold" style="background: rgba(46,204,113,0.15); color: #2ECC71;">8.97</td>
+                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">Wind Alice</td><td class="p-3 text-center font-medium" style="background: var(--score-high-bg); color: var(--score-high-ink);">9.8</td><td class="p-3 text-center font-medium" style="background: var(--layer-analysis-light); color: var(--layer-analysis);">10.0</td><td class="p-3 text-center font-medium" style="background: var(--score-high-bg); color: var(--score-high-ink);">9.5</td><td class="p-3 text-center font-medium" style="background: var(--score-low-bg); color: var(--score-low-ink);">6.0</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-medium" style="background: var(--layer-analysis-light); color: var(--score-high-ink);">9.0</td><td class="p-3 text-center font-medium" style="background: var(--layer-analysis-light); color: var(--layer-analysis);">10.0</td><td class="p-3 text-center font-bold" style="background: var(--layer-analysis-light); color: var(--score-high-ink);">8.97</td>
                         </tr>
                         <!-- 同花顺 -->
                         <tr style="border-bottom: 1px solid var(--line);">
-                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">同花顺</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.18); color: #2ECC71;">9.5</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.18); color: #2ECC71;">9.8</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.8</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.15); color: #E74C3C;">5.0</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.18); color: #2ECC71;">9.5</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.18); color: #2ECC71;">9.5</td><td class="p-3 text-center font-bold" style="color: var(--ink-2);">8.66</td>
+                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">同花顺</td><td class="p-3 text-center font-medium" style="background: var(--score-high-bg); color: var(--score-high-ink);">9.5</td><td class="p-3 text-center font-medium" style="background: var(--score-high-bg); color: var(--score-high-ink);">9.8</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.8</td><td class="p-3 text-center font-medium" style="background: var(--score-low-bg-strong); color: var(--score-low-ink);">5.0</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-medium" style="background: var(--score-high-bg); color: var(--score-high-ink);">9.5</td><td class="p-3 text-center font-medium" style="background: var(--score-high-bg); color: var(--score-high-ink);">9.5</td><td class="p-3 text-center font-bold" style="color: var(--ink-2);">8.66</td>
                         </tr>
                         <!-- 东方财富 -->
                         <tr style="border-bottom: 1px solid var(--line);">
-                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">东方财富</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.15); color: #2ECC71;">9.2</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.18); color: #2ECC71;">9.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.15); color: #E74C3C;">5.0</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.2</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.18); color: #2ECC71;">9.8</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.15); color: #2ECC71;">9.2</td><td class="p-3 text-center font-bold" style="color: var(--ink-2);">8.49</td>
+                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">东方财富</td><td class="p-3 text-center font-medium" style="background: var(--layer-analysis-light); color: var(--score-high-ink);">9.2</td><td class="p-3 text-center font-medium" style="background: var(--score-high-bg); color: var(--score-high-ink);">9.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-medium" style="background: var(--score-low-bg-strong); color: var(--score-low-ink);">5.0</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.2</td><td class="p-3 text-center font-medium" style="background: var(--score-high-bg); color: var(--score-high-ink);">9.8</td><td class="p-3 text-center font-medium" style="background: var(--layer-analysis-light); color: var(--score-high-ink);">9.2</td><td class="p-3 text-center font-bold" style="color: var(--ink-2);">8.49</td>
                         </tr>
                         <!-- FinSightV9 (highlighted) -->
                         <tr style="border-bottom: 1px solid var(--line);">
-                            <td class="p-3 font-bold sticky left-0 z-10" style="background: rgba(0,180,216,0.1); color: var(--brand); border-left: 3px solid var(--brand);">FinSightV9</td><td class="p-3 text-center font-bold" style="background: rgba(0,180,216,0.08); color: var(--brand);">8.5</td><td class="p-3 text-center font-bold" style="background: rgba(0,180,216,0.1); color: var(--brand);">9.0</td><td class="p-3 text-center font-bold" style="background: rgba(0,180,216,0.1); color: var(--brand);">8.09</td><td class="p-3 text-center font-bold" style="background: rgba(0,180,216,0.15); color: var(--brand);">9.5</td><td class="p-3 text-center font-bold" style="background: rgba(0,180,216,0.08); color: var(--brand);">8.0</td><td class="p-3 text-center font-bold" style="background: rgba(231,76,60,0.12); color: #E74C3C;">6.0</td><td class="p-3 text-center font-bold" style="background: rgba(0,180,216,0.08); color: var(--brand);">7.0</td><td class="p-3 text-center font-bold" style="background: rgba(0,180,216,0.12); color: var(--brand);">8.01</td>
+                            <td class="p-3 font-bold sticky left-0 z-10" style="background: rgba(0,180,216,0.1); color: var(--brand); border-left: 3px solid var(--brand);">FinSightV9</td><td class="p-3 text-center font-bold" style="background: rgba(0,180,216,0.08); color: var(--brand);">8.5</td><td class="p-3 text-center font-bold" style="background: rgba(0,180,216,0.1); color: var(--brand);">9.0</td><td class="p-3 text-center font-bold" style="background: rgba(0,180,216,0.1); color: var(--brand);">8.09</td><td class="p-3 text-center font-bold" style="background: rgba(0,180,216,0.15); color: var(--brand);">9.5</td><td class="p-3 text-center font-bold" style="background: rgba(0,180,216,0.08); color: var(--brand);">8.0</td><td class="p-3 text-center font-bold" style="background: var(--score-low-bg); color: var(--score-low-ink);">6.0</td><td class="p-3 text-center font-bold" style="background: rgba(0,180,216,0.08); color: var(--brand);">7.0</td><td class="p-3 text-center font-bold" style="background: rgba(0,180,216,0.12); color: var(--brand);">8.01</td>
                         </tr>
                         <!-- 人大FinSight -->
                         <tr style="border-bottom: 1px solid var(--line);">
-                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">人大FinSight</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.0</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.15); color: #2ECC71;">9.2</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.0</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.12); color: #E74C3C;">6.0</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-bold" style="color: var(--ink-2);">7.81</td>
+                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">人大FinSight</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.0</td><td class="p-3 text-center font-medium" style="background: var(--layer-analysis-light); color: var(--score-high-ink);">9.2</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.0</td><td class="p-3 text-center font-medium" style="background: var(--score-low-bg); color: var(--score-low-ink);">6.0</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-bold" style="color: var(--ink-2);">7.81</td>
                         </tr>
                         <!-- QMT/Ptrade -->
                         <tr style="border-bottom: 1px solid var(--line);">
-                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">QMT/Ptrade</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.15); color: #2ECC71;">9.0</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.15); color: #E74C3C;">5.0</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.15); color: #2ECC71;">9.0</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.08); color: #E74C3C;">6.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.0</td><td class="p-3 text-center font-bold" style="color: var(--ink-2);">7.64</td>
+                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">QMT/Ptrade</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-medium" style="background: var(--layer-analysis-light); color: var(--score-high-ink);">9.0</td><td class="p-3 text-center font-medium" style="background: var(--score-low-bg-strong); color: var(--score-low-ink);">5.0</td><td class="p-3 text-center font-medium" style="background: var(--layer-analysis-light); color: var(--score-high-ink);">9.0</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.08); color: var(--score-low-ink);">6.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.0</td><td class="p-3 text-center font-bold" style="color: var(--ink-2);">7.64</td>
                         </tr>
                         <!-- 雪球 -->
                         <tr style="border-bottom: 1px solid var(--line);">
-                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">雪球</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.0</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.5</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.15); color: #E74C3C;">4.0</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.15); color: #2ECC71;">8.8</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.0</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.15); color: #2ECC71;">9.0</td><td class="p-3 text-center font-bold" style="color: var(--ink-2);">7.40</td>
+                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">雪球</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.0</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.5</td><td class="p-3 text-center font-medium" style="background: var(--score-low-bg-strong); color: var(--score-low-ink);">4.0</td><td class="p-3 text-center font-medium" style="background: var(--layer-analysis-light); color: var(--score-high-ink);">8.8</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.0</td><td class="p-3 text-center font-medium" style="background: var(--layer-analysis-light); color: var(--score-high-ink);">9.0</td><td class="p-3 text-center font-bold" style="color: var(--ink-2);">7.40</td>
                         </tr>
                         <!-- OpenAshare -->
                         <tr style="border-bottom: 1px solid var(--line);">
-                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">OpenAshare</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.0</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-medium" style="background: rgba(46,204,113,0.18); color: #2ECC71;">9.8</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.12); color: #E74C3C;">6.0</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.15); color: #E74C3C;">4.0</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.08); color: #E74C3C;">6.5</td><td class="p-3 text-center font-bold" style="color: var(--ink-2);">7.04</td>
+                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">OpenAshare</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.0</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-medium" style="background: var(--score-high-bg); color: var(--score-high-ink);">9.8</td><td class="p-3 text-center font-medium" style="background: var(--score-low-bg); color: var(--score-low-ink);">6.0</td><td class="p-3 text-center font-medium" style="background: var(--score-low-bg-strong); color: var(--score-low-ink);">4.0</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.08); color: var(--score-low-ink);">6.5</td><td class="p-3 text-center font-bold" style="color: var(--ink-2);">7.04</td>
                         </tr>
                         <!-- 聚宽 -->
                         <tr style="border-bottom: 1px solid var(--line);">
-                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">聚宽</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.0</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.08); color: #E74C3C;">6.5</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.12); color: #E74C3C;">5.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.0</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.08); color: #E74C3C;">6.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.0</td><td class="p-3 text-center font-bold" style="color: var(--ink-2);">7.00</td>
+                            <td class="p-3 font-semibold sticky left-0 z-10" style="background: var(--surface); color: var(--ink);">聚宽</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.0</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.5</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.08); color: var(--score-low-ink);">6.5</td><td class="p-3 text-center font-medium" style="background: var(--score-low-bg); color: var(--score-low-ink);">5.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">8.0</td><td class="p-3 text-center font-medium" style="background: rgba(231,76,60,0.08); color: var(--score-low-ink);">6.5</td><td class="p-3 text-center font-medium" style="color: var(--ink-2);">7.0</td><td class="p-3 text-center font-bold" style="color: var(--ink-2);">7.00</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="flex items-center gap-5 mt-4 text-xs" style="color: var(--ink-2);">
-                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background: rgba(46,204,113,0.2);"></span> 9.0-10.0 领先</span>
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background: var(--score-high-bg);"></span> 9.0-10.0 领先</span>
                 <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background: var(--surface); border: 1px solid var(--line);"></span> 7.0-8.9 中性</span>
-                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background: rgba(231,76,60,0.15);"></span> &lt;7.0 短板</span>
-                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background: rgba(0,180,216,0.12); border: 1px solid var(--brand-border);"></span> FinSightV9 高亮</span>
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background: var(--score-low-bg-strong);"></span> &lt;7.0 短板</span>
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background: var(--brand-light); border: 1px solid var(--brand-border);"></span> FinSightV9 高亮</span>
             </div>
         </section>
 
@@ -592,42 +745,42 @@
                         </thead>
                         <tbody>
                             <tr style="border-bottom: 1px solid var(--line);">
-                                <td class="p-2.5 font-medium" style="color: var(--ink);">实时行情</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td>
+                                <td class="p-2.5 font-medium" style="color: var(--ink);">实时行情</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--line);">
-                                <td class="p-2.5 font-medium" style="color: var(--ink);">研究池管理</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #F39C12;">&#9651;</td><td class="p-2.5 text-center" style="color: #F39C12;">&#9651;</td>
+                                <td class="p-2.5 font-medium" style="color: var(--ink);">研究池管理</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--layer-decision);">&#9651;</td><td class="p-2.5 text-center" style="color: var(--layer-decision);">&#9651;</td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--line);">
-                                <td class="p-2.5 font-medium" style="color: var(--ink);">多维评分</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #F39C12;">&#9651;</td><td class="p-2.5 text-center" style="color: #F39C12;">&#9651;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td>
+                                <td class="p-2.5 font-medium" style="color: var(--ink);">多维评分</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--layer-decision);">&#9651;</td><td class="p-2.5 text-center" style="color: var(--layer-decision);">&#9651;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--line);">
-                                <td class="p-2.5 font-medium" style="color: var(--ink);">策略回测</td><td class="p-2.5 text-center" style="color: #F39C12;">&#9651;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #F39C12;">&#9651;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td>
+                                <td class="p-2.5 font-medium" style="color: var(--ink);">策略回测</td><td class="p-2.5 text-center" style="color: var(--layer-decision);">&#9651;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--layer-decision);">&#9651;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--line);">
-                                <td class="p-2.5 font-medium" style="color: var(--ink);">模拟交易</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td>
+                                <td class="p-2.5 font-medium" style="color: var(--ink);">模拟交易</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--line);">
-                                <td class="p-2.5 font-medium" style="color: var(--ink);">复盘笔记</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #F39C12;">&#9651;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td>
+                                <td class="p-2.5 font-medium" style="color: var(--ink);">复盘笔记</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--layer-decision);">&#9651;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--line);">
-                                <td class="p-2.5 font-medium" style="color: var(--ink);">本地隐私</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td>
+                                <td class="p-2.5 font-medium" style="color: var(--ink);">本地隐私</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--line);">
-                                <td class="p-2.5 font-medium" style="color: var(--ink);">离线可用</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td>
+                                <td class="p-2.5 font-medium" style="color: var(--ink);">离线可用</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--line);">
-                                <td class="p-2.5 font-medium" style="color: var(--ink);">AI增强</td><td class="p-2.5 text-center" style="color: #F39C12;">&#9651;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #F39C12;">&#9651;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td>
+                                <td class="p-2.5 font-medium" style="color: var(--ink);">AI增强</td><td class="p-2.5 text-center" style="color: var(--layer-decision);">&#9651;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--layer-decision);">&#9651;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td>
                             </tr>
                             <tr>
-                                <td class="p-2.5 font-medium" style="color: var(--ink);">社区生态</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #2ECC71;">&#10003;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td><td class="p-2.5 text-center" style="color: #E74C3C;">&#10007;</td>
+                                <td class="p-2.5 font-medium" style="color: var(--ink);">社区生态</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-high-ink);">&#10003;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td><td class="p-2.5 text-center" style="color: var(--score-low-ink);">&#10007;</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="flex items-center gap-5 mt-3 text-xs" style="color: var(--ink-2);">
-                    <span class="flex items-center gap-1.5"><span style="color: #2ECC71;">&#10003;</span> 完整</span>
-                    <span class="flex items-center gap-1.5"><span style="color: #F39C12;">&#9651;</span> 部分</span>
-                    <span class="flex items-center gap-1.5"><span style="color: #E74C3C;">&#10007;</span> 缺失</span>
+                    <span class="flex items-center gap-1.5"><span style="color: var(--score-high-ink);">&#10003;</span> 完整</span>
+                    <span class="flex items-center gap-1.5"><span style="color: var(--layer-decision);">&#9651;</span> 部分</span>
+                    <span class="flex items-center gap-1.5"><span style="color: var(--score-low-ink);">&#10007;</span> 缺失</span>
                 </div>
             </section>
 
@@ -650,32 +803,32 @@
                             <tr style="border-bottom: 1px solid var(--line);">
                                 <td class="p-3 font-medium" style="color: var(--ink);">果仁网</td>
                                 <td class="p-3" style="color: var(--ink-2);">1,080 - 6,998 元/年</td>
-                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium" style="background: rgba(52,152,219,0.15); color: #3498DB;">订阅制</span></td>
+                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium" style="background: var(--layer-input-light); color: var(--layer-input);">订阅制</span></td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--line);">
                                 <td class="p-3 font-medium" style="color: var(--ink);">米筐 RQData</td>
                                 <td class="p-3" style="color: var(--ink-2);">3,000 - 10,000 元/年</td>
-                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium" style="background: rgba(52,152,219,0.15); color: #3498DB;">数据订阅</span></td>
+                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium" style="background: var(--layer-input-light); color: var(--layer-input);">数据订阅</span></td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--line);">
                                 <td class="p-3 font-medium" style="color: var(--ink);">东方财富 Choice</td>
                                 <td class="p-3" style="color: var(--ink-2);">1.8 万 - 2.9 万元/年</td>
-                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium" style="background: rgba(52,152,219,0.15); color: #3498DB;">订阅制</span></td>
+                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium" style="background: var(--layer-input-light); color: var(--layer-input);">订阅制</span></td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--line);">
                                 <td class="p-3 font-medium" style="color: var(--ink);">Wind Alice</td>
                                 <td class="p-3" style="color: var(--ink-2);">100 元 = 10,000 积分</td>
-                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium" style="background: rgba(243,156,18,0.15); color: #F39C12;">积分制</span></td>
+                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium" style="background: rgba(243,156,18,0.15); color: var(--layer-decision);">积分制</span></td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--line);">
                                 <td class="p-3 font-medium" style="color: var(--ink);">QMT / Ptrade</td>
                                 <td class="p-3" style="color: var(--ink-2);">免费（资产门槛）</td>
-                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium" style="background: rgba(46,204,113,0.15); color: #2ECC71;">券商渠道</span></td>
+                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium" style="background: var(--layer-analysis-light); color: var(--score-high-ink);">券商渠道</span></td>
                             </tr>
                             <tr>
                                 <td class="p-3 font-bold" style="color: var(--brand);">FinSightV9</td>
-                                <td class="p-3 font-bold" style="color: #2ECC71;">免费开源</td>
-                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold" style="background: rgba(46,204,113,0.18); color: #2ECC71;">开源 + 增值</span></td>
+                                <td class="p-3 font-bold" style="color: var(--score-high-ink);">免费开源</td>
+                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold" style="background: var(--score-high-bg); color: var(--score-high-ink);">开源 + 增值</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -694,35 +847,35 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div class="p-4 rounded-lg" style="background: var(--surface); border: 1px solid var(--line);">
                     <div class="flex items-center gap-2 mb-2">
-                        <i data-lucide="monitor" class="w-4 h-4" style="color: #3498DB;"></i>
+                        <i data-lucide="monitor" class="w-4 h-4" style="color: var(--layer-input);"></i>
                         <span class="text-sm font-semibold" style="color: var(--ink);">传统行情终端</span>
                     </div>
                     <p class="text-xs leading-relaxed" style="color: var(--ink-3);">同花顺（MAU 3,500 万+）、东方财富（MAU 1,742 万+）、大智慧（MAU 1,209 万）、通达信</p>
                 </div>
                 <div class="p-4 rounded-lg" style="background: var(--surface); border: 1px solid var(--line);">
                     <div class="flex items-center gap-2 mb-2">
-                        <i data-lucide="message-circle" class="w-4 h-4" style="color: #F39C12;"></i>
+                        <i data-lucide="message-circle" class="w-4 h-4" style="color: var(--layer-decision);"></i>
                         <span class="text-sm font-semibold" style="color: var(--ink);">投资社区</span>
                     </div>
                     <p class="text-xs leading-relaxed" style="color: var(--ink-3);">雪球（注册 7,800 万+）、叩富问财（年访问 3,000 万+）</p>
                 </div>
                 <div class="p-4 rounded-lg" style="background: var(--surface); border: 1px solid var(--line);">
                     <div class="flex items-center gap-2 mb-2">
-                        <i data-lucide="code-2" class="w-4 h-4" style="color: #2ECC71;"></i>
+                        <i data-lucide="code-2" class="w-4 h-4" style="color: var(--score-high-ink);"></i>
                         <span class="text-sm font-semibold" style="color: var(--ink);">在线量化</span>
                     </div>
                     <p class="text-xs leading-relaxed" style="color: var(--ink-3);">聚宽（注册 40 万+）、米筐、果仁网（VIP 1,080-6,998 元/年）</p>
                 </div>
                 <div class="p-4 rounded-lg" style="background: var(--surface); border: 1px solid var(--line);">
                     <div class="flex items-center gap-2 mb-2">
-                        <i data-lucide="building-2" class="w-4 h-4" style="color: #9B59B6;"></i>
+                        <i data-lucide="building-2" class="w-4 h-4" style="color: var(--layer-review);"></i>
                         <span class="text-sm font-semibold" style="color: var(--ink);">券商系量化</span>
                     </div>
                     <p class="text-xs leading-relaxed" style="color: var(--ink-3);">迅投 QMT、恒生 Ptrade（免费，需券商资产门槛）</p>
                 </div>
                 <div class="p-4 rounded-lg" style="background: var(--surface); border: 1px solid var(--line);">
                     <div class="flex items-center gap-2 mb-2">
-                        <i data-lucide="cloud" class="w-4 h-4" style="color: #E74C3C;"></i>
+                        <i data-lucide="cloud" class="w-4 h-4" style="color: var(--score-low-ink);"></i>
                         <span class="text-sm font-semibold" style="color: var(--ink);">机构数据下沉</span>
                     </div>
                     <p class="text-xs leading-relaxed" style="color: var(--ink-3);">Wind Alice（积分制，100 元 = 10,000 积分）</p>
@@ -755,3 +908,4 @@
     <script>lucide.createIcons();</script>
 </body>
 </html>
+
