@@ -3,9 +3,12 @@
  */
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
 export const DB_NAME = testDbName ?? ('V6ProDB' as const)
-export const DB_VERSION = 34 as const
+export const DB_VERSION = 35 as const
 
 // DB_VERSION 升级历史：
+// v34 → v35: 新增 observation_reviews 存储，支撑观察池定期复盘快照持久化（spec 缺口② 闭环），
+//            取代 ObservationPoolReviewer 纯内存态 lastScores（重启即清），支持跨重启评分漂移比对与晋升候选跟踪。
+//            复用 MODULE_ID.system 作为持久化源（已有全量 ACL），不新增独立 ACL 模块。
 // v33 → v34: 新增 screening_results 存储，支撑多因子筛选结果集持久化（P0 筛选结果集持久化），
 //            取代纯内存态（刷新即丢），支持筛选历史回溯与结果复用。
 // v32 → v33: 新增 generated_reports、report_templates 存储，支撑报告资产化（P1 报告资产化），
@@ -46,6 +49,7 @@ export const DATA_SOURCE = {
   manual: 'manual',
   import: 'import',
   akshare: 'akshare',
+  system: 'system',
 } as const
 
 export type DataSource = (typeof DATA_SOURCE)[keyof typeof DATA_SOURCE]
@@ -273,6 +277,11 @@ export const ENVELOPE_ACTION = {
   saveScreeningResult: 'SAVE_SCREENING_RESULT',
   /** 删除筛选结果集 */
   deleteScreeningResult: 'DELETE_SCREENING_RESULT',
+  // ── 观察池复盘持久化（v35 新增，spec 缺口② 闭环）──
+  /** 保存观察池复盘快照 */
+  saveObservationReview: 'SAVE_OBSERVATION_REVIEW',
+  /** 删除观察池复盘快照 */
+  deleteObservationReview: 'DELETE_OBSERVATION_REVIEW',
 } as const
 
 export type EnvelopeAction =
@@ -374,6 +383,8 @@ export const STORE_NAME = {
   reportTemplates: 'report_templates',
   // ── 筛选结果集持久化（v34 新增，P0 筛选结果集持久化）──
   screeningResults: 'screening_results',
+  // ── 观察池复盘持久化（v35 新增，spec 缺口② 闭环）──
+  observationReviews: 'observation_reviews',
 } as const
 
 export type StoreName = (typeof STORE_NAME)[keyof typeof STORE_NAME]

@@ -227,3 +227,19 @@ export function getSidebarItemsByCabin(cabin: CabinType): Array<{ key: string; l
     group.items.map((item) => ({ key: item.key, label: item.label, path: item.path })),
   )
 }
+
+/**
+ * 按路径查找侧边栏项（跨所有舱室）。
+ * 用于最近访问、面包屑等需要从路径反查标签/图标的场景。
+ */
+export function findSidebarItemByPath(path: string): (PanelItem & { cabin: CabinType; group: string }) | null {
+  for (const cabin of Object.keys(PANEL_ITEMS) as CabinType[]) {
+    for (const group of PANEL_ITEMS[cabin]) {
+      const found = group.items.find((item) => item.path === path)
+      if (found) {
+        return { ...found, cabin, group: group.group }
+      }
+    }
+  }
+  return null
+}

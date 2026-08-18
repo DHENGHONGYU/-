@@ -19,8 +19,41 @@ import type {
   SourcePriorityItem,
 } from '@/types/modules/collection.types'
 
-/** 已注册的数据源端点列表 */
+/** 已注册的数据源端点列表
+ * 优先级架构（2026-08-18）：MCP 优先 > 爬虫次选 > iFinD 兜底
+ *   1. ifind_mcp — 同花顺 iFinD MCP 专业金融数据（14 维度全覆盖）
+ *   2. tencent_mcp — 腾讯自选股 MCP（免费新闻/公告/研报）
+ *   3. tencent / sina — 直连行情 API（实时行情 + K 线）
+ *   4. tushare — Tushare Pro（财务数据补充）
+ *   5. crawler — 东方财富等爬虫兜底
+ */
 export const DATA_SOURCE_ENDPOINTS: DataSourceEndpoint[] = [
+  {
+    id: 'ifind_mcp',
+    name: '同花顺 iFinD MCP',
+    type: 'mcp',
+    baseUrl: 'mcp://ifind',
+    timeoutMs: 15000,
+    retries: 2,
+    enabled: true,
+    supportsQuote: true,
+    supportsKline: true,
+    requiresProxy: false,
+    description: '同花顺 iFinD MCP 专业金融数据（14 维度全覆盖）',
+  },
+  {
+    id: 'tencent_mcp',
+    name: '腾讯自选股 MCP',
+    type: 'mcp',
+    baseUrl: 'mcp://tencent',
+    timeoutMs: 10000,
+    retries: 2,
+    enabled: true,
+    supportsQuote: true,
+    supportsKline: false,
+    requiresProxy: false,
+    description: '腾讯自选股 MCP 免费数据（新闻/公告/研报）',
+  },
   {
     id: 'tencent',
     name: '腾讯财经',
@@ -108,20 +141,27 @@ export const DATA_SOURCE_ENDPOINT_MAP: Readonly<Record<QuoteDataSourceId, DataSo
     return map
   }, {} as Record<QuoteDataSourceId, DataSourceEndpoint>)
 
-/** 默认行情数据源优先级（Tushare Pro → 腾讯 → 新浪 → Mock） */
+/** 默认行情数据源优先级（MCP 优先 → 直行情 → Mock）
+ * 架构：iFinD MCP → 腾讯 MCP → 腾讯/新浪直连 → Tushare → Mock
+ */
 export const DEFAULT_QUOTE_PRIORITY: SourcePriorityItem[] = [
-  { id: 'tushare', priority: 1, enabled: true },
-  { id: 'tencent', priority: 2, enabled: true },
-  { id: 'sina', priority: 3, enabled: true },
-  { id: 'mock', priority: 4, enabled: true },
+  { id: 'ifind_mcp', priority: 1, enabled: true },
+  { id: 'tencent_mcp', priority: 2, enabled: true },
+  { id: 'tencent', priority: 3, enabled: true },
+  { id: 'sina', priority: 4, enabled: true },
+  { id: 'tushare', priority: 5, enabled: true },
+  { id: 'mock', priority: 6, enabled: true },
 ]
 
-/** 默认 K 线数据源优先级（Tushare Pro → 腾讯日 K 线 → 网易（已不可用） → Mock） */
+/** 默认 K 线数据源优先级（MCP 优先 → 直行情 → Mock）
+ * 架构：iFinD MCP → 腾讯直连 → 网易（已不可用）→ Tushare → Mock
+ */
 export const DEFAULT_KLINE_PRIORITY: SourcePriorityItem[] = [
-  { id: 'tushare', priority: 1, enabled: true },
+  { id: 'ifind_mcp', priority: 1, enabled: true },
   { id: 'tencent', priority: 2, enabled: true },
   { id: 'netease', priority: 3, enabled: false },
-  { id: 'mock', priority: 4, enabled: true },
+  { id: 'tushare', priority: 4, enabled: true },
+  { id: 'mock', priority: 5, enabled: true },
 ]
 
 /**

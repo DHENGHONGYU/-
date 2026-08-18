@@ -674,6 +674,9 @@ export function createHandlerRegistry(): HandlerRegistry {
       // 筛选结果集持久化（v34 新增，P0 筛选结果集持久化）
       ENVELOPE_ACTION.saveScreeningResult,
       ENVELOPE_ACTION.deleteScreeningResult,
+      // 观察池复盘持久化（v35 新增，spec 缺口② 闭环）
+      ENVELOPE_ACTION.saveObservationReview,
+      ENVELOPE_ACTION.deleteObservationReview,
     ])
   )
 

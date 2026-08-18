@@ -468,6 +468,12 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '智能资讯',
   },
   {
+    path: '/analysis/news-v6',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'analysis',
+    description: '智能资讯 V6（newsColors 语义化令牌视觉风格）',
+  },
+  {
     path: '/analysis/score-comparison',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'analysis',
