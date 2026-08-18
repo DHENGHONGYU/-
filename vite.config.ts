@@ -1,8 +1,15 @@
 import { defineConfig, type UserConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'node:path'
+import fs from 'node:fs'
 import https from 'node:https'
 import zlib from 'node:zlib'
+import { createRequire } from 'node:module'
+
+const _require = createRequire(import.meta.url)
+const { callIfindTool, parseTargetPriceFromSummary } = _require(
+  path.resolve(__dirname ?? path.dirname(new URL(import.meta.url).pathname), 'scripts/lib/ifindClient.cjs')
+)
 
 /**
  * 预存失败测试文件治理清单（2026-08-09 快照）
@@ -143,6 +150,76 @@ export default defineConfig({
             res.statusCode = 500
             res.setHeader('Content-Type', 'application/json')
             res.end(JSON.stringify({ code: 500, message: 'Tencent Kline proxy internal error' }))
+          }
+        })
+      },
+    },
+    {
+      // iFinD 目标价查询代理
+      // 桥接浏览器端采集管线与 iFinD JSON-RPC 2.0 API，
+      // 解析 get_stock_summary 返回的 markdown 表格中的目标价数据。
+      name: 'ifind-target-price-proxy',
+      apply: 'serve',
+      configureServer(server) {
+        server.middlewares.use('/api/proxy/ifind/target-price', async (req, res) => {
+          try {
+            const reqUrl = new URL(req.url ?? '/', 'http://localhost')
+            const symbol = reqUrl.searchParams.get('symbol')
+            const name = reqUrl.searchParams.get('name') || symbol
+            if (!symbol) {
+              res.statusCode = 400
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ code: 400, message: 'Missing symbol parameter' }))
+              return
+            }
+
+            // 优先从环境变量读取 token，否则从配置文件读取
+            let token = process.env.IFIND_AUTH_TOKEN
+            if (!token) {
+              try {
+                const configPath = path.resolve(__dirname, 'scripts/lib/ifindConfig.json')
+                const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
+                token = config.IFIND_AUTH_TOKEN
+              } catch {
+                // 配置文件不存在或无法读取
+              }
+            }
+            if (!token || token === 'your ifind api key') {
+              res.statusCode = 500
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ code: 500, message: 'iFinD auth token not configured' }))
+              return
+            }
+
+            // 构建查询：使用股票名称（iFinD 需要中文名称）
+            const query = `${name} 最新估值水平和目标价`
+
+            const result = await callIfindTool('get_stock_summary', { query }, token)
+            if (!result.ok) {
+              res.statusCode = 502
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ code: 502, message: 'iFinD API error', detail: result.error }))
+              return
+            }
+
+            const parsed = parseTargetPriceFromSummary(result.data)
+            if (!parsed) {
+              res.statusCode = 200
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ code: 0, data: { targetPrice: 0, analystCount: 0, buyCount: 0, overweightCount: 0, sellCount: 0 }, warning: 'Failed to parse target price from iFinD response' }))
+              return
+            }
+
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ code: 0, data: parsed }))
+          } catch (err) {
+            console.error('[ifind-target-price-proxy] error:', err)
+            if (!res.headersSent) {
+              res.statusCode = 500
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ code: 500, message: 'iFinD proxy internal error', detail: err instanceof Error ? err.message : String(err) }))
+            }
           }
         })
       },
