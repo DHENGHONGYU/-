@@ -54,6 +54,88 @@
 
 ---
 
+## [Unreleased] - 2026-08-18
+
+### Changed — UI V17 信息架构升级：最近访问 + 侧边栏查找工具
+
+**P1: 最近访问侧边栏分组**
+- 新增 `useRecentlyVisited` hook（`src/hooks/useRecentlyVisited.ts`）
+- 自动追踪用户最近访问的侧边栏页面，最多 5 条，300ms 防抖
+- localStorage 持久化，跨会话保留
+- 当前激活页面自动排除，避免重复高亮
+- 仅追踪侧边栏已注册页面（通过 `getAllSidebarPaths` 校验）
+- 搜索时隐藏最近访问组，避免干扰搜索结果
+
+**P1: 侧边栏路径查找工具**
+- 新增 `findSidebarItemByPath(path)` 工具函数（`src/config/sidebarConfig.ts`）
+- 支持跨舱室按路径反查 item（含 label / icon / cabin / group）
+- 供最近访问、面包屑、跳转链接等场景复用
+
+### Metrics — V17 信息架构升级
+
+| 指标 | V16 | V17 | 变化 |
+|------|-----|-----|------|
+| 最近访问功能 | 无 | 有（5 条 / 跨会话） | 新增 |
+| 侧边栏查找工具函数 | 2 个 | 3 个（+findSidebarItemByPath） | +1 |
+| 新 TS 错误 | 0 | 0 | 绿 |
+
+---
+
+## [Unreleased] - 2026-08-18
+
+### Changed — UI V16 硬编码颜色令牌化 + 按钮无障碍标签补全
+
+**P1: 硬编码 Hex 颜色 → 主题 Token**
+- `src/components/chart/indicators/macd.ts`：MACD 柱状图颜色 `#ef444480` / `#22c55e80` → `STOCK_COLOR_TOKENS.up.hexAlpha50` / `STOCK_COLOR_TOKENS.down.hexAlpha50`
+- `src/domain/trading/markers.ts`：买卖点标注颜色 `#ef4444` / `#22c55e` / `#dc2626` / `#16a34a` → `STOCK_COLOR_TOKENS.up.hex` / `STOCK_COLOR_TOKENS.down.hex`
+- `src/services/data-collector/mockDataCollection.ts`：状态色 `#22c55e` / `#3b82f6` / `#f59e0b` / `#9ca3af` → `STOCK_COLOR_TOKENS` + `CHART_PALETTE`
+- 消除 3 个文件 10 处硬编码 hex 颜色
+
+**P2: 按钮 aria-label 补全**
+- `OnboardingGuide.tsx`：关闭按钮 (X) 新增 `aria-label="关闭"`，步骤指示点新增 `aria-label="第 N 步"`
+- `DensityToggle.tsx`：密度切换按钮新增 `aria-label`（紧凑/标准/宽松）
+- 扫描 23 个文件，其余 21 个按钮已有文字内容，无需额外标签
+
+### Metrics — V16 颜色令牌化 + 无障碍
+
+| 指标 | V15 | V16 | 变化 |
+|------|-----|-----|------|
+| 硬编码 hex 颜色（生产代码） | 10 处 | 0 处 | -10 |
+| 按钮 aria-label 缺失 | 25 文件 | 23 文件（仅 2 个需修复） | 已修复 |
+| 新 TS 错误 | 0 | 0 | 绿 |
+
+---
+
+## [Unreleased] - 2026-08-18
+
+### Changed — UI V15 图表无障碍 + 面包屑导航 + 硬编码颜色修复
+
+**P0: 图表组件无障碍**
+- 13 个图表组件新增 `role="img"` + `aria-label`：
+  `GaugeChart`、`ChipDistributionChart`、`LineChart`、`BarChart`、`AreaChart`、`FactorHeatmap`、`MultiPaneChart`、`ScoreRadar`、`CandlestickChart`、`TrendLineChart`、`IndustryHeatmap`、`IndustryV4Radar`、`SubIndicatorBar`、`ValuationDistribution`
+- 图表组件无障碍覆盖率：0% → 100%
+
+**P1: 关键页面面包屑导航**
+- `PoolBoardPage`：首页 > 研究候选池
+- `ReviewLaunchPage`：首页 > 分析 > 复盘启动
+- `IntelligentScorePage`：首页 > 分析 > 智能评分
+- `IndustryScorePage`：首页 > 分析 > 行业评分
+- 面包屑覆盖率：4 个关键分析页面全部补全
+
+**P2: CapitalAllocationPanel 硬编码 fallback 颜色**
+- 兜底值 `#007aff` → `hsl(var(--primary))`，适配暗色模式
+
+### Metrics — V15 图表无障碍 + 面包屑
+
+| 指标 | V14 | V15 | 变化 |
+|------|-----|-----|------|
+| 图表组件 aria-label | 0% | 100% (14/14) | +100% |
+| 关键页面面包屑 | 0 | 4 | 新增 |
+| 硬编码颜色消除 | 4 处 | 10 处 | -6 |
+| 新 TS 错误 | 0 | 0 | 绿 |
+
+---
+
 ## [Unreleased] - 2026-08-17
 
 ### Changed — UI V14 空状态全覆盖 + 硬编码颜色消除 + a11y 补漏
