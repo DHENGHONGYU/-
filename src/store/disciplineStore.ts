@@ -43,7 +43,7 @@ import {
   type PsychologicalProfile,
 } from '@/services/trading/tradeReviewAI'
 import { classifyErrors } from '@/services/trading/tradeErrorClassifier'
-import { setOrderDataSource, setTradeReviewScoreCalculator, RealTradeReviewScoreCalculator } from '@/services/trading/tradeReviewScoring'
+import { setOrderDataSource, setTradeReviewScoreCalculator, getTradeReviewScoreCalculator, RealTradeReviewScoreCalculator } from '@/services/trading/tradeReviewScoring'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
 
@@ -61,6 +61,8 @@ export interface DisciplineState {
   tradeErrors: TradeError[]
   /** 纪律评分 */
   disciplineScore: number
+  /** 真实订单驱动的交易表现分（RealTradeReviewScoreCalculator，独立于 disciplineScore 语义） */
+  realDisciplineScore: number
   /** 技能发展路径标题列表 */
   skillRoadmap: string[]
   /** 心理画像 */
@@ -107,6 +109,7 @@ const initialState: Omit<
   latestReport: null,
   tradeErrors: [],
   disciplineScore: 100,
+  realDisciplineScore: 0,
   skillRoadmap: [],
   psychologicalProfile: null,
   loading: true,
@@ -169,6 +172,7 @@ export const useDisciplineStore = create<DisciplineState>()(
         latestReport: state.latestReport,
         tradeErrors: state.tradeErrors,
         disciplineScore: state.disciplineScore,
+        realDisciplineScore: state.realDisciplineScore,
         skillRoadmap: state.skillRoadmap,
         psychologicalProfile: state.psychologicalProfile,
         lastUpdated: state.lastUpdated,
@@ -199,6 +203,9 @@ export const useDisciplineStore = create<DisciplineState>()(
         // 同步执行错误分类，获取完整 DetectedError 列表用于独立状态与持久化
         const classification = classifyErrors(targetOrders)
 
+        // 真实订单驱动的交易表现分（独立语义，不覆盖 disciplineScore）
+        const realScore = getTradeReviewScoreCalculator().calculateDisciplineScore()
+
         // 持久化复盘摘要
         const record: TradeReviewRecord = {
           id: 'latest',
@@ -206,6 +213,7 @@ export const useDisciplineStore = create<DisciplineState>()(
           report,
           tradeErrors: classification.errors,
           ...derived,
+          realDisciplineScore: realScore,
         }
 
         try {
@@ -230,6 +238,7 @@ export const useDisciplineStore = create<DisciplineState>()(
           latestReport: report,
           tradeErrors: classification.errors,
           ...derived,
+          realDisciplineScore: realScore,
           loading: false,
           error: null,
           isRefreshing: false,
@@ -238,12 +247,14 @@ export const useDisciplineStore = create<DisciplineState>()(
 
         logger.info('[disciplineStore] recalculate 完成', {
           disciplineScore: derived.disciplineScore,
+          realDisciplineScore: realScore,
           totalTrades: report.summary.totalTrades,
         })
         // 复盘脉搏广播：LoopBanner 等下游依赖 DISCIPLINE_CHANGED 感知复盘阶段活性
         withBroadcast(EVENT_NAMES.DISCIPLINE_CHANGED, {
           action: 'recalculate',
           disciplineScore: derived.disciplineScore,
+          realDisciplineScore: realScore,
           totalTrades: report.summary.totalTrades,
         })
       } catch (err) {
@@ -283,6 +294,7 @@ export const useDisciplineStore = create<DisciplineState>()(
         latestReport: state.latestReport,
         tradeErrors: state.tradeErrors,
         disciplineScore: state.disciplineScore,
+        realDisciplineScore: state.realDisciplineScore,
         skillRoadmap: state.skillRoadmap,
         psychologicalProfile: state.psychologicalProfile,
         lastUpdated: state.lastUpdated,
@@ -321,6 +333,7 @@ export const useDisciplineStore = create<DisciplineState>()(
           latestReport: record.report,
           tradeErrors: record.tradeErrors,
           disciplineScore: record.disciplineScore,
+          realDisciplineScore: record.realDisciplineScore ?? 0,
           skillRoadmap: record.skillRoadmap,
           psychologicalProfile: record.psychologicalProfile,
           loading: false,
@@ -331,12 +344,14 @@ export const useDisciplineStore = create<DisciplineState>()(
 
         logger.info('[disciplineStore] refresh 完成', {
           disciplineScore: record.disciplineScore,
+          realDisciplineScore: record.realDisciplineScore ?? 0,
           generatedAt: record.generatedAt,
         })
         // 复盘脉搏广播：仅在有持久化记录恢复时广播；无记录/失败路径不广播
         withBroadcast(EVENT_NAMES.DISCIPLINE_CHANGED, {
           action: 'refresh',
           disciplineScore: record.disciplineScore,
+          realDisciplineScore: record.realDisciplineScore ?? 0,
           generatedAt: record.generatedAt,
         })
       } catch (err) {
@@ -381,9 +396,11 @@ export const useDisciplineStore = create<DisciplineState>()(
       try {
         const report = generateReview(orders)
         const derived = extractReviewDerived(report)
+        const realScore = getTradeReviewScoreCalculator().calculateDisciplineScore()
         set({
           latestReport: report,
           ...derived,
+          realDisciplineScore: realScore,
           loading: false,
           error: null,
           lastUpdated: Date.now(),
