@@ -45,7 +45,7 @@
 // ============================================================
 
 /** 直连行情数据源标识（用于 dataSourceOrchestrator 的降级链） */
-export type QuoteDataSourceId = 'tencent' | 'sina' | 'netease' | 'akshare' | 'tushare' | 'mock'
+export type QuoteDataSourceId = 'tencent' | 'sina' | 'netease' | 'akshare' | 'tushare' | 'mock' | 'ifind_mcp' | 'tencent_mcp'
 
 /** 业务数据源类型（用于七维配置中的维度数据源） */
 export type DataSourceType = 'mcp' | 'akshare' | 'ifind' | 'tushare' | 'yahoo' | 'tianyancha' | 'scholar' | 'cache'
@@ -121,7 +121,7 @@ export interface StrategyTemplate {
 export interface DataSourceEndpoint {
   id: QuoteDataSourceId
   name: string
-  type: 'http' | 'python' | 'mock'
+  type: 'http' | 'python' | 'mock' | 'mcp'
   /** 基础 URL */
   baseUrl: string
   /** 默认超时（毫秒） */

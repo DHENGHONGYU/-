@@ -103,6 +103,15 @@ export class AgentConfigManager {
     if (config.maxConcurrent <= 0) {
       errors.push('maxConcurrent must be greater than 0')
     }
+    // mcpServerName / defaultToolName 为可选字段，runAgent 内有 `?? agentId` / `?? task.type` 回退。
+    // 但若显式提供了空串/纯空白，空串非 nullish 会绕过回退，导致调用空 Server/Tool 名而失败。
+    // 故「提供即非空」：校验显式空值，提前失败，避免运行期静默错误。
+    if (config.mcpServerName !== undefined && (!config.mcpServerName || config.mcpServerName.trim().length === 0)) {
+      errors.push('mcpServerName must not be empty if provided')
+    }
+    if (config.defaultToolName !== undefined && (!config.defaultToolName || config.defaultToolName.trim().length === 0)) {
+      errors.push('defaultToolName must not be empty if provided')
+    }
 
     const valid = errors.length === 0
     if (!valid) {

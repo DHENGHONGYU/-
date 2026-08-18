@@ -451,6 +451,68 @@ export const screeningResultStore = {
   },
 }
 
+/**
+ * 观察池复盘快照记录（内联类型，数据层操作专用；与 observation_reviews store 对齐：keyPath=reviewId）
+ * 取代 ObservationPoolReviewer 纯内存态 lastScores（重启即清），支持跨重启评分漂移比对与晋升候选跟踪（spec 缺口② 闭环）。
+ */
+export type ObservationReviewRecommendationValue = 'promote' | 'hold' | 'watch'
+
+export interface ObservationReviewSnapshotItem {
+  symbol: string
+  name: string
+  /** 上次复盘评分；首次为 null */
+  previousScore: number | null
+  /** 本次复盘评分（V6 0-5 尺度） */
+  currentScore: number
+  /** 评分漂移 = currentScore - previousScore；首次为 null */
+  scoreDelta: number | null
+  meetsResearchThreshold: boolean
+  promotionEligible: boolean
+  recommendation: ObservationReviewRecommendationValue
+}
+
+export interface ObservationReviewRecordSummary {
+  total: number
+  promotionEligible: number
+  improved: number
+  declined: number
+  unchanged: number
+}
+
+export interface ObservationReviewRecord {
+  /** 复盘运行唯一 ID（主键） */
+  reviewId: string
+  /** 生成时间戳（索引 by-generated-at） */
+  generatedAt: number
+  items: ObservationReviewSnapshotItem[]
+  summary: ObservationReviewRecordSummary
+  /** 来源模块 */
+  sourceModule: string
+}
+
+/** 观察池复盘快照 Store — observation_reviews（v35 新增，spec 缺口② 闭环） */
+export const observationReviewStore = {
+  async save(record: ObservationReviewRecord): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveObservationReview', record, 'system')
+  },
+
+  async get(reviewId: string): Promise<ObservationReviewRecord | undefined> {
+    return queryGet<ObservationReviewRecord>(STORE_NAME.observationReviews, reviewId)
+  },
+
+  async list(): Promise<ObservationReviewRecord[]> {
+    return queryList<ObservationReviewRecord>(STORE_NAME.observationReviews)
+  },
+
+  async getBySymbol(symbol: string): Promise<ObservationReviewRecord[]> {
+    return queryByIndex<ObservationReviewRecord>(STORE_NAME.observationReviews, 'by-symbol', symbol)
+  },
+
+  async remove(reviewId: string): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('deleteObservationReview', { reviewId, _deleted: true }, 'system')
+  },
+}
+
 /** 分析结果条目（内联类型，数据层操作专用；与 analysis_results store 对齐：keyPath=docId） */
 interface AnalysisResultEntry {
   docId: string

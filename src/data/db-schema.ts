@@ -584,4 +584,15 @@ export function createSchema(
     ],
   })
 
+  // ── observationReviews：观察池定期复盘快照持久化（v35 新增，spec 缺口② 闭环）──
+  // 取代 ObservationPoolReviewer 纯内存态 lastScores（重启即清），支持跨重启评分漂移比对与晋升候选跟踪。
+  ensureStore(db, STORE_NAME.observationReviews, logger, {
+    storeOptions: { keyPath: 'reviewId' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-symbol', keyPath: 'symbol' },
+      { name: 'by-generated-at', keyPath: 'generatedAt' },
+    ],
+  })
+
 }

@@ -1429,6 +1429,29 @@ export const DATA_DICTIONARY: Record<StoreName, StoreDef> = {
     indexes: [],
     dependsOn: [],
   },
+
+  [STORE_NAME.observationReviews]: {
+    name: STORE_NAME.observationReviews,
+    keyPath: 'reviewId',
+    autoIncrement: false,
+    introducedAt: 'v35',
+    domain: '观察池',
+    description: '观察池复盘快照（v35 新增，spec 缺口② 闭环，替代纯内存态 lastScores，支持跨重启评分漂移比对与晋升候选跟踪）',
+    tsType: 'ObservationReviewRecord',
+    tsTypeFile: 'src/data/dataLayerContentStores.ts',
+    fields: [
+      { name: 'reviewId', type: 'string', required: true, description: '复盘运行唯一 ID（主键）' },
+      { name: 'generatedAt', type: 'number', required: true, description: '生成时间戳' },
+      { name: 'items', type: 'array', required: true, description: '复盘快照条目数组（含 symbol/评分漂移/推荐）' },
+      { name: 'summary', type: 'object', required: true, description: '复盘汇总（总数/可晋升/改善/下滑/不变）' },
+      { name: 'sourceModule', type: 'string', required: false, description: '来源模块' },
+    ],
+    indexes: [
+      { name: 'by-generated-at', keyPath: 'generatedAt', unique: false, description: '按生成时间排序' },
+      { name: 'by-symbol', keyPath: 'items.symbol', unique: false, description: '按条目内 symbol 查询' },
+    ],
+    dependsOn: [],
+  },
 }
 
 // ============================================================

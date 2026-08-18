@@ -22,6 +22,7 @@ import {
   SELL_POINT_COLORS,
   SELL_POINT_NAMES,
 } from '@/config/buySellPointConfig'
+import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 
 const BUY_TYPES = new Set<string>([
   'buy_dip',
@@ -62,7 +63,7 @@ export function signalsToMarkers(signals: Signal[]): ChartMarker[] {
         color = SELL_POINT_COLORS[pointType]
         name = SELL_POINT_NAMES[pointType]
       } else {
-        color = isBuy ? '#ef4444' : '#22c55e'
+        color = isBuy ? STOCK_COLOR_TOKENS.up.hex : STOCK_COLOR_TOKENS.down.hex
         name = isBuy ? '买入' : '卖出'
       }
       return {
@@ -84,7 +85,7 @@ export function ordersToMarkers(orders: Order[]): ChartMarker[] {
       time: new Date(o.createdAt).toISOString().slice(0, 10),
       position: isBuy ? 'belowBar' : 'aboveBar',
       shape: isBuy ? 'circle' : 'square',
-      color: isBuy ? '#dc2626' : '#16a34a',
+      color: isBuy ? STOCK_COLOR_TOKENS.up.hex : STOCK_COLOR_TOKENS.down.hex,
       text: `${isBuy ? '买' : '卖'} ${o.price.toFixed(2)}`,
       size: 2,
     }

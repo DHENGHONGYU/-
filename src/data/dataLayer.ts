@@ -58,6 +58,7 @@ export {
   generatedReportStore, // v33 报告资产化
   reportTemplateStore, // v33 报告资产化
   screeningResultStore, // v34 筛选结果集持久化
+  observationReviewStore, // v35 观察池复盘持久化
 } from './dataLayerContentStores'
 export {
   collectConfigStore, // v25 采集配置
@@ -113,6 +114,7 @@ import {
   generatedReportStore,
   reportTemplateStore,
   screeningResultStore,
+  observationReviewStore,
 } from './dataLayerContentStores'
 import {
   collectConfigStore,
@@ -200,6 +202,8 @@ export const dataLayer = {
   reportTemplates: reportTemplateStore,
   // 筛选结果集持久化（v34，P0 筛选结果集持久化）
   screeningResults: screeningResultStore,
+  // 观察池复盘持久化（v35，spec 缺口② 闭环）
+  observationReviews: observationReviewStore,
   // 八域资料体系（v32，ADR-010）
   profileItems: profileItemStore,
   scoreEvidence: scoreEvidenceStore,
