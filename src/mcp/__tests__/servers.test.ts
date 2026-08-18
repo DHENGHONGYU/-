@@ -22,6 +22,9 @@ import { MCPBridge } from '../bridge/mcpBridge'
 
 // 触发全局注册（确保 register.ts 中的 Server 已注册到全局单例）
 import '../register'
+import { registerAllServers } from '../register'
+// 复现生产启动注册：填充全局 mcpRegistry，供 MCPBridge.getStats 断言（否则 registry 为空 → totalTools<20）
+registerAllServers()
 
 // ============================================================
 // V6ScoringServer 测试
@@ -106,15 +109,16 @@ describe('DataFetcherServer', () => {
   })
 
   describe('listTools', () => {
-    it('应返回 5 个 Tool', () => {
+    it('应返回 6 个 Tool', () => {
       const tools = server.listTools()
-      expect(tools).toHaveLength(5)
+      expect(tools).toHaveLength(6)
       const names = tools.map((t) => t.name)
       expect(names).toContain('fetch_stock_basic')
       expect(names).toContain('fetch_stocks_basic')
       expect(names).toContain('fetch_kline')
       expect(names).toContain('refresh_symbol')
       expect(names).toContain('test_source_connectivity')
+      expect(names).toContain('check_health')
     })
   })
 
