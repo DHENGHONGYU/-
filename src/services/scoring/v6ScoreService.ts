@@ -43,7 +43,7 @@ export function formatScore(score: number): string {
  * 若数据库中无记录，返回空对象（引擎各层会降级处理）。
  */
 export async function buildFinancialData(symbol: string): Promise<FinancialData> {
-  logger.info('[v6ScoreService] buildFinancialData 开始读取财务数据', { symbol })
+  logger.info(`[v6ScoreService.buildFinancialData] ==== 开始构建财务数据 ====`, { symbol })
 
   const reportResult = await dataBridge.query<{
     revenue: number
@@ -69,7 +69,7 @@ export async function buildFinancialData(symbol: string): Promise<FinancialData>
   })
 
   if (!reportResult.success || !reportResult.data) {
-    logger.info('[v6ScoreService] buildFinancialData 未找到财务数据，标记为 missing', { symbol })
+    logger.warn(`[v6ScoreService.buildFinancialData] 未找到财务数据，标记为 missing`, { symbol, errorCode: reportResult.error ?? 'NO_DATA' })
     return { dataStatus: 'missing' }
   }
   const report = reportResult.data
@@ -95,16 +95,16 @@ export async function buildFinancialData(symbol: string): Promise<FinancialData>
   const totalFields = Object.keys(financialData).length
   financialData.dataStatus = fieldCount === 0 ? 'missing' : fieldCount < totalFields ? 'partial' : 'complete'
 
-  logger.info('[v6ScoreService] buildFinancialData 财务数据加载成功', {
+  logger.info(`[v6ScoreService.buildFinancialData] ==== 财务数据构建完成 ====`, {
     symbol,
-    reportDate: report.reportDate,
     dataStatus: financialData.dataStatus,
+    fieldCount,
+    totalFields,
+    missingCount: totalFields - fieldCount,
+    reportDate: report.reportDate,
     revenue: financialData.revenue,
     netProfit: financialData.netProfit,
     grossMargin: financialData.grossMargin,
-    netMargin: financialData.netMargin,
-    rdRatio: financialData.rdRatio,
-    fieldCount,
   })
 
   return financialData
@@ -731,19 +731,30 @@ export async function runV6ScoreBatch(
  * 获取评分质量指标
  */
 export function getV6ScoreQuality(
-  _symbol: string,
+  symbol: string,
   factors: Record<string, number>,
 ): V6ScoreQuality {
   const missingLayers = ALL_LAYER_IDS.filter(
     (id) => factors[id] === undefined || factors[id] === null,
   )
   const validCount = ALL_LAYER_IDS.length - missingLayers.length
-  return {
-    dataCompleteness: (validCount / ALL_LAYER_IDS.length) * 100,
+  const dataCompleteness = (validCount / ALL_LAYER_IDS.length) * 100
+  const result: V6ScoreQuality = {
+    dataCompleteness,
     hasQuotes: true,
     hasBasicData: validCount >= 3,
     missingLayers,
   }
+  logger.info(`[v6ScoreService.getV6ScoreQuality] ==== 评分质量诊断 ====`, {
+    symbol,
+    totalLayers: ALL_LAYER_IDS.length,
+    validCount,
+    missingCount: missingLayers.length,
+    dataCompletenessPct: `${dataCompleteness.toFixed(0)}%`,
+    missingLayers: missingLayers.length > 0 ? missingLayers.join(', ') : '无',
+    hasBasicData: result.hasBasicData,
+  })
+  return result
 }
 
 // ============================================================

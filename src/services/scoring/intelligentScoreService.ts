@@ -573,12 +573,18 @@ export async function runIntelligentScore(
     }
 
     // V9-003: AI 输出三道校验（持久化前拦截异常数据）
+    logger.info(`[runIntelligentScore] ==== 开始持久化前评分校验 ====`, {
+      symbol,
+      scoreProvenance: score.scoreProvenance,
+      overallScore: score.overallScore,
+      v6EngineScore: v6Composite?.score,
+    })
     const validationReport = validateScoreBeforeSave(score, {
       v6EngineScore: v6Composite?.score,
     })
     if (validationReport.severity === 'block') {
       const msg = `评分校验未通过（${validationReport.issues.filter((i) => i.severity === 'block').length} 项阻塞），不保存`
-      logger.error('[runIntelligentScore] ' + msg, { symbol, issues: validationReport.issues })
+      logger.error(`[runIntelligentScore] 评分校验阻塞: ${msg}`, { symbol, issues: validationReport.issues })
       return { success: false, error: msg }
     }
     if (validationReport.severity === 'warn') {
@@ -587,6 +593,17 @@ export async function runIntelligentScore(
         warns: validationReport.issues.filter((i) => i.severity === 'warn'),
       })
     }
+    const blockCount = validationReport.issues.filter((i) => i.severity === 'block').length
+    const warnCount = validationReport.issues.filter((i) => i.severity === 'warn').length
+    const infoCount = validationReport.issues.filter((i) => i.severity === 'info').length
+    logger.info(`[runIntelligentScore] ==== 评分校验完成（通过）====`, {
+      symbol,
+      severity: validationReport.severity,
+      blockCount,
+      warnCount,
+      infoCount,
+      pass: true,
+    })
 
     currentStep = 'saveResult'
     reportProgress(currentStep, 'running', '保存评分结果...')

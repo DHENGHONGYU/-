@@ -268,6 +268,9 @@ export interface TradeReviewRecord {
   report: TradeReviewReport
   tradeErrors: TradeError[]
   disciplineScore: number
+  /** 真实订单驱动的交易表现分（RealTradeReviewScoreCalculator：胜率+执行+仓位纪律）。
+   *  与 disciplineScore（tradeErrorClassifier 违规扣分，纪律遵守度）语义不同，独立落库不覆盖。 */
+  realDisciplineScore?: number
   skillRoadmap: string[]
   psychologicalProfile: PsychologicalProfile | null
 }
