@@ -131,7 +131,7 @@ describe('InputApp', () => {
     await waitFor(() => {
       expect(screen.getByText(UI_TEXT.input.dashboard.enterCandidateStock)).toBeInTheDocument()
     })
-    expect(screen.getByRole('button', { name: new RegExp('^' + UI_TEXT.errors.entryOnly + '$') })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: new RegExp('^' + '直接录入' + '$') })).toBeInTheDocument()
     // "批量导入"现为看板内的子分段 tab 按钮（与"逐项输入"同一分组）
     expect(screen.getByRole('button', { name: new RegExp(UI_TEXT.errors.batchImport, 'i') })).toBeInTheDocument()
     // "热门板块纳入"现为录入区域顶层 tab 切换按钮（同页显示 HotSectorSection，非路由跳转）
@@ -146,7 +146,7 @@ describe('InputApp', () => {
     const nameInput = screen.getByPlaceholderText(/股票名称/)
     await userEvent.type(codeInput, '000001.SZ')
     await userEvent.type(nameInput, '平安银行')
-    await userEvent.click(screen.getByRole('button', { name: new RegExp('^' + UI_TEXT.errors.entryOnly + '$') }))
+    await userEvent.click(screen.getByRole('button', { name: new RegExp('^' + '直接录入' + '$') }))
 
     await waitFor(() => {
       expect(inputService.addStock).toHaveBeenCalledWith(
