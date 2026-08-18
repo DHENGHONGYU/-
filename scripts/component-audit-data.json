@@ -401,6 +401,11 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\NewsV6Page.tsx",
+        "relativePath": "src\\pages\\analysis\\NewsV6Page.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ReviewLaunchPage.tsx",
         "relativePath": "src\\pages\\analysis\\ReviewLaunchPage.tsx",
         "importLine": 0
@@ -408,11 +413,6 @@
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ScoreComparisonPage.tsx",
         "relativePath": "src\\pages\\analysis\\ScoreComparisonPage.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\SectorAnalysisPage.tsx",
-        "relativePath": "src\\pages\\analysis\\SectorAnalysisPage.tsx",
         "importLine": 0
       },
       {
@@ -797,11 +797,6 @@
         "importLine": 0
       },
       {
-        "filePath": "D:\\FinSightV9\\src\\components\\molecules\\ErrorState.tsx",
-        "relativePath": "src\\components\\molecules\\ErrorState.tsx",
-        "importLine": 0
-      },
-      {
         "filePath": "D:\\FinSightV9\\src\\components\\molecules\\OnboardingGuide.tsx",
         "relativePath": "src\\components\\molecules\\OnboardingGuide.tsx",
         "importLine": 0
@@ -809,6 +804,11 @@
       {
         "filePath": "D:\\FinSightV9\\src\\components\\molecules\\SearchBar.tsx",
         "relativePath": "src\\components\\molecules\\SearchBar.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\components\\molecules\\states\\ErrorState.tsx",
+        "relativePath": "src\\components\\molecules\\states\\ErrorState.tsx",
         "importLine": 0
       },
       {
@@ -1007,6 +1007,11 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\NewsV6Page.tsx",
+        "relativePath": "src\\pages\\analysis\\NewsV6Page.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ReviewLaunchPage.tsx",
         "relativePath": "src\\pages\\analysis\\ReviewLaunchPage.tsx",
         "importLine": 0
@@ -1019,11 +1024,6 @@
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ScoreDocPage.tsx",
         "relativePath": "src\\pages\\analysis\\ScoreDocPage.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\SectorAnalysisPage.tsx",
-        "relativePath": "src\\pages\\analysis\\SectorAnalysisPage.tsx",
         "importLine": 0
       },
       {
@@ -1266,7 +1266,7 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\atoms\\Card.tsx",
     "componentName": "Card",
     "relativePath": "src\\components\\atoms\\Card.tsx",
-    "importCount": 124,
+    "importCount": 123,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\apps\\analysis\\AnalysisApp.tsx",
@@ -1646,11 +1646,6 @@
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ScoreDocPage.tsx",
         "relativePath": "src\\pages\\analysis\\ScoreDocPage.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\SectorAnalysisPage.tsx",
-        "relativePath": "src\\pages\\analysis\\SectorAnalysisPage.tsx",
         "importLine": 0
       },
       {
@@ -3628,7 +3623,7 @@
     "relativePath": "src\\components\\molecules\\CapitalAllocationPanel.tsx",
     "importCount": 0,
     "importers": [],
-    "lines": 280
+    "lines": 282
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\ConfirmDialog.tsx",
@@ -3727,11 +3722,16 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\Dialog.tsx",
     "componentName": "Dialog",
     "relativePath": "src\\components\\molecules\\Dialog.tsx",
-    "importCount": 2,
+    "importCount": 3,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\components\\organisms\\input\\ApiTestDialog.tsx",
         "relativePath": "src\\components\\organisms\\input\\ApiTestDialog.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\NewsV6Page.tsx",
+        "relativePath": "src\\pages\\analysis\\NewsV6Page.tsx",
         "importLine": 0
       },
       {
@@ -3817,6 +3817,11 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\NewsV6Page.tsx",
+        "relativePath": "src\\pages\\analysis\\NewsV6Page.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\PoolBoardPage.tsx",
         "relativePath": "src\\pages\\analysis\\PoolBoardPage.tsx",
         "importLine": 0
@@ -3834,11 +3839,6 @@
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ScoreDocPage.tsx",
         "relativePath": "src\\pages\\analysis\\ScoreDocPage.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\SectorAnalysisPage.tsx",
-        "relativePath": "src\\pages\\analysis\\SectorAnalysisPage.tsx",
         "importLine": 0
       },
       {
@@ -3941,7 +3941,7 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\ErrorState.tsx",
     "componentName": "ErrorState",
     "relativePath": "src\\components\\molecules\\ErrorState.tsx",
-    "importCount": 23,
+    "importCount": 22,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\cockpit\\CockpitShell.tsx",
@@ -4019,11 +4019,6 @@
         "importLine": 0
       },
       {
-        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\SectorAnalysisPage.tsx",
-        "relativePath": "src\\pages\\analysis\\SectorAnalysisPage.tsx",
-        "importLine": 0
-      },
-      {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ValuePitPage.tsx",
         "relativePath": "src\\pages\\analysis\\ValuePitPage.tsx",
         "importLine": 0
@@ -4059,7 +4054,7 @@
         "importLine": 0
       }
     ],
-    "lines": 321
+    "lines": 7
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\FilterChip.tsx",
@@ -4089,7 +4084,7 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\LoadingState.tsx",
     "componentName": "LoadingState",
     "relativePath": "src\\components\\molecules\\LoadingState.tsx",
-    "importCount": 15,
+    "importCount": 14,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\components\\molecules\\DataState.tsx",
@@ -4119,11 +4114,6 @@
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\PoolBoardPage.tsx",
         "relativePath": "src\\pages\\analysis\\PoolBoardPage.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\SectorAnalysisPage.tsx",
-        "relativePath": "src\\pages\\analysis\\SectorAnalysisPage.tsx",
         "importLine": 0
       },
       {
@@ -4328,7 +4318,7 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\states\\ErrorState.tsx",
     "componentName": "ErrorState",
     "relativePath": "src\\components\\molecules\\states\\ErrorState.tsx",
-    "importCount": 23,
+    "importCount": 22,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\cockpit\\CockpitShell.tsx",
@@ -4406,11 +4396,6 @@
         "importLine": 0
       },
       {
-        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\SectorAnalysisPage.tsx",
-        "relativePath": "src\\pages\\analysis\\SectorAnalysisPage.tsx",
-        "importLine": 0
-      },
-      {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ValuePitPage.tsx",
         "relativePath": "src\\pages\\analysis\\ValuePitPage.tsx",
         "importLine": 0
@@ -4446,7 +4431,7 @@
         "importLine": 0
       }
     ],
-    "lines": 82
+    "lines": 397
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\molecules\\states\\index.ts",
@@ -4794,11 +4779,16 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\analysis\\news\\NewsSentimentTrend.tsx",
     "componentName": "NewsSentimentTrend",
     "relativePath": "src\\components\\organisms\\analysis\\news\\NewsSentimentTrend.tsx",
-    "importCount": 1,
+    "importCount": 2,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\NewsPage.tsx",
         "relativePath": "src\\pages\\analysis\\NewsPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\NewsV6Page.tsx",
+        "relativePath": "src\\pages\\analysis\\NewsV6Page.tsx",
         "importLine": 0
       }
     ],
@@ -4896,14 +4886,8 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\analysis\\sector\\SectorRotationHeatmap.tsx",
     "componentName": "SectorRotationHeatmap",
     "relativePath": "src\\components\\organisms\\analysis\\sector\\SectorRotationHeatmap.tsx",
-    "importCount": 1,
-    "importers": [
-      {
-        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\SectorAnalysisPage.tsx",
-        "relativePath": "src\\pages\\analysis\\SectorAnalysisPage.tsx",
-        "importLine": 0
-      }
-    ],
+    "importCount": 0,
+    "importers": [],
     "lines": 269
   },
   {
@@ -5357,11 +5341,16 @@
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\news\\NewsFilterPanel.tsx",
     "componentName": "NewsFilterPanel",
     "relativePath": "src\\components\\organisms\\news\\NewsFilterPanel.tsx",
-    "importCount": 1,
+    "importCount": 2,
     "importers": [
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\NewsPage.tsx",
         "relativePath": "src\\pages\\analysis\\NewsPage.tsx",
+        "importLine": 0
+      },
+      {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\NewsV6Page.tsx",
+        "relativePath": "src\\pages\\analysis\\NewsV6Page.tsx",
         "importLine": 0
       }
     ],
@@ -5992,7 +5981,7 @@
         "importLine": 0
       }
     ],
-    "lines": 278
+    "lines": 279
   },
   {
     "componentPath": "D:\\FinSightV9\\src\\components\\organisms\\system\\EngineStatusCard.tsx",
@@ -6280,6 +6269,11 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\NewsV6Page.tsx",
+        "relativePath": "src\\pages\\analysis\\NewsV6Page.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ScoreComparisonPage.tsx",
         "relativePath": "src\\pages\\analysis\\ScoreComparisonPage.tsx",
         "importLine": 0
@@ -6287,11 +6281,6 @@
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ScoreDocPage.tsx",
         "relativePath": "src\\pages\\analysis\\ScoreDocPage.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\SectorAnalysisPage.tsx",
-        "relativePath": "src\\pages\\analysis\\SectorAnalysisPage.tsx",
         "importLine": 0
       },
       {
@@ -6597,6 +6586,11 @@
         "importLine": 0
       },
       {
+        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\NewsV6Page.tsx",
+        "relativePath": "src\\pages\\analysis\\NewsV6Page.tsx",
+        "importLine": 0
+      },
+      {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ReviewLaunchPage.tsx",
         "relativePath": "src\\pages\\analysis\\ReviewLaunchPage.tsx",
         "importLine": 0
@@ -6609,11 +6603,6 @@
       {
         "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\ScoreDocPage.tsx",
         "relativePath": "src\\pages\\analysis\\ScoreDocPage.tsx",
-        "importLine": 0
-      },
-      {
-        "filePath": "D:\\FinSightV9\\src\\pages\\analysis\\SectorAnalysisPage.tsx",
-        "relativePath": "src\\pages\\analysis\\SectorAnalysisPage.tsx",
         "importLine": 0
       },
       {

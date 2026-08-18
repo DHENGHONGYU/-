@@ -1,13 +1,13 @@
 === 组件复用审计报告 ===
-生成时间: 2026-08-17T16:49:34.171Z
+生成时间: 2026-08-18T00:33:44.674Z
 版本: v0.9.11 P2-CMP-002
 
 
 总计组件: 250
 
-✅ 可复用组件 (≥2次): 50
-⚠️  单次使用组件: 65
-❌ 未使用组件: 135
+✅ 可复用组件 (≥2次): 52
+⚠️  单次使用组件: 62
+❌ 未使用组件: 136
 
 --- 单次使用组件 (建议审查) ---
   Breadcrumb (197行, src\pages\output\TradeReviewPage.tsx)
@@ -29,17 +29,17 @@
   SignalBadge (85行, src\pages\analysis\IndustryDashboardPage.tsx)
   TrendArrow (68行, src\pages\analysis\IndustryDashboardPage.tsx)
   AnalysisTemplateCards (84行, src\apps\analysis\AnalysisApp.tsx)
-  NewsSentimentTrend (168行, src\pages\analysis\NewsPage.tsx)
   IntelligentScoreExplanation (219行, src\pages\analysis\IntelligentScorePage.tsx)
   MultiPeriodTrendChart (114行, src\pages\analysis\IntelligentScorePage.tsx)
   ScoreFactorWaterfall (274行, src\components\organisms\analysis\score\IntelligentScoreExplanation.tsx)
   MultiFactorFilterPanel (318行, src\pages\analysis\MultiFactorFilterPage.tsx)
-  SectorRotationHeatmap (269行, src\pages\analysis\SectorAnalysisPage.tsx)
   SignalQualityTrendChart (302行, src\cockpit\widgets\SignalQualityDashboardWidget.tsx)
   CollectionProgressPanel (91行, src\pages\input\CollectTask\index.tsx)
   CollectionReportPanel (87行, src\pages\input\CollectTask\index.tsx)
   ApiTestDialog (219行, src\pages\input\SevenDimConfigPage.tsx)
   CollectionPlanPanel (277行, src\pages\input\SevenDimConfigPage.tsx)
+  CollectionSwimlane (219行, src\pages\input\CollectTask\index.tsx)
+  DataCollectionWizard (203行, src\pages\trading\TradingFlowPage.tsx)
 
 --- 未使用组件 (建议删除或审查) ---
   Button.test (163行) - src\components\atoms\Button.test.tsx
@@ -74,7 +74,7 @@
   ❌ MultiPaneChart (497行, 使用0次)
   ❌ MultiPaneChart.utils (577行, 使用0次)
   ❌ ExtremeStressTest.test (416行, 使用0次)
-  ✅ ErrorState (321行, 使用23次)
+  ✅ ErrorState (397行, 使用22次)
   ⚠️ MultiFactorFilterPanel (318行, 使用1次)
   ⚠️ SignalQualityTrendChart (302行, 使用1次)
   ❌ ApiTestDialog.test (458行, 使用0次)
@@ -92,7 +92,7 @@
 --- 复用性建议 ---
 
 1. 单次使用组件优化建议:
-   - 发现 65 个单次使用组件
+   - 发现 62 个单次使用组件
    - 建议审查这些组件是否可以合并到使用方
    - 或考虑是否存在其他页面也需要类似功能
 
@@ -105,7 +105,6 @@
      * IntelligentScoreExplanation (219行) - src\components\organisms\analysis\score\IntelligentScoreExplanation.tsx
      * ScoreFactorWaterfall (274行) - src\components\organisms\analysis\score\ScoreFactorWaterfall.tsx
      * MultiFactorFilterPanel (318行) - src\components\organisms\analysis\screening\MultiFactorFilterPanel.tsx
-     * SectorRotationHeatmap (269行) - src\components\organisms\analysis\sector\SectorRotationHeatmap.tsx
      * SignalQualityTrendChart (302行) - src\components\organisms\analysis\signal\SignalQualityTrendChart.tsx
      * ApiTestDialog (219行) - src\components\organisms\input\ApiTestDialog.tsx
      * CollectionPlanPanel (277行) - src\components\organisms\input\CollectionPlanPanel.tsx
@@ -117,7 +116,7 @@
      * CollectionProgress (278行) - src\components\organisms\pool\CollectionProgress.tsx
      * LLMConfigWidget (241行) - src\components\organisms\shared\LLMConfigWidget.tsx
      * AgentHealthCard (203行) - src\components\organisms\system\AgentHealthCard.tsx
-     * AgentTaskList (278行) - src\components\organisms\system\AgentTaskList.tsx
+     * AgentTaskList (279行) - src\components\organisms\system\AgentTaskList.tsx
      * EngineStatusCard (312行) - src\components\organisms\system\EngineStatusCard.tsx
      * LogStreamPanel (313行) - src\components\organisms\system\LogStreamPanel.tsx
      * MigrationPanel (378行) - src\components\organisms\system\MigrationPanel.tsx

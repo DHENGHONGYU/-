@@ -565,6 +565,8 @@ const STORE_TO_TYPE_MAP: Record<string, string> = {
   report_templates: 'ReportTemplate',
   // 筛选结果集持久化（v34 新增，P0 筛选结果集持久化）：实体类型内联定义于 src/data/dataLayerContentStores.ts
   screening_results: 'ScreeningRunResultRecord',
+  // 观察池复盘持久化（v35 新增，spec 缺口② 闭环）：实体类型内联定义于 src/data/dataLayerContentStores.ts
+  observation_reviews: 'ObservationReviewRecord',
   // 以下 5 个 store 的真实实体类型分别定义在 src/types/modules 与 src/data/dataLayerContentStores.ts（内联 *Entry），
   // 脚本启发的单数化推断名（AnalysisResult/CollectionHistory/ConflictLog/FileImportRecord/ScheduleConfig）与真实类型名不符，
   // 故在此显式映射以消除「缺实体类型」告警；真实类型已随定点注入纳入扫描。
