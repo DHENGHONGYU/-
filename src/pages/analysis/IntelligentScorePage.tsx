@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router'
 import { Badge } from '@/components/atoms/Badge'
 import { Brain, FileDown, FileJson, FileText, Settings2, UploadCloud, Zap, ZapOff } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
@@ -16,6 +17,14 @@ import { ScoreUpdateAlert } from '@/components/organisms/shared/ScoreUpdateAlert
 import { PageContainer, PageHeader } from '@/components/templates'
 import { ScoreGauge } from '@/components/molecules/ScoreGauge'
 import { ErrorState } from '@/components/molecules'
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from '@/components/atoms/Breadcrumb'
 import { MultiPeriodTrendChart } from '@/components/organisms/analysis/score/MultiPeriodTrendChart'
 import { IntelligentScoreExplanation } from '@/components/organisms/analysis/score/IntelligentScoreExplanation'
 import type { ScoreTrendPeriod } from '@/types/modules/score.types'
@@ -261,6 +270,21 @@ export default function IntelligentScorePage(): React.JSX.Element {
 
   return (
     <PageContainer className="space-y-6">
+      <Breadcrumb aria-label="breadcrumb">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild><Link to="/">首页</Link></BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild><Link to="/analysis">分析</Link></BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>V6 个股智能评分</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <PageHeader title="V6 个股智能评分" description="多源资料综合评估" />
 
       {/* ============ 顶部：输入区 + 进度区 ============ */}

@@ -102,7 +102,7 @@ export const AreaChart = memo(
       }
 
       return (
-        <div ref={ref} className={cn('w-full', className)}>
+        <div ref={ref} className={cn('w-full', className)} role="img" aria-label="面积图">
           <ResponsiveContainer width="100%" height={height}>
             <RechartsArea
               data={safeData}

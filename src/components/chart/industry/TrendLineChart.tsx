@@ -76,7 +76,7 @@ const TrendLineChart = forwardRef<HTMLDivElement, TrendLineChartProps>(
     usePerfTrace('TrendLineChart', { points: data.length, series: series.length })
 
     return (
-      <div ref={ref} style={{ width: '100%', height }} {...divProps}>
+      <div ref={ref} style={{ width: '100%', height }} {...divProps} role="img" aria-label="趋势折线图">
         <ResponsiveContainer width="100%" height="100%">
           <RechartsLine
             data={data}

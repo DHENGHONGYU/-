@@ -27,6 +27,7 @@ export function DensityToggle(): React.JSX.Element {
           <button
             onClick={() => setDensity(level)}
             className={`p-1.5 rounded transition-colors ${density === level ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+            aria-label={DENSITY_LABELS[level]}
             title={DENSITY_LABELS[level]}
           >
             {DENSITY_ICONS[level]}

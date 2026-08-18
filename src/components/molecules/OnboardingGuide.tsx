@@ -79,7 +79,7 @@ export function OnboardingGuide({ visible, onClose }: OnboardingGuideProps) {
         <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
           新手指引 · {currentStep + 1}/{STEPS.length}
         </span>
-        <button onClick={handleDismiss} className="text-muted-foreground hover:text-foreground">
+        <button onClick={handleDismiss} className="text-muted-foreground hover:text-foreground" aria-label="关闭">
           <X className="w-4 h-4" />
         </button>
       </div>
@@ -100,6 +100,7 @@ export function OnboardingGuide({ visible, onClose }: OnboardingGuideProps) {
             <button
               key={i}
               onClick={() => setCurrentStep(i)}
+              aria-label={`第 ${i + 1} 步`}
               className={`w-2 h-2 rounded-full transition-colors ${
                 i === currentStep ? 'bg-primary' : 'bg-muted'
               }`}

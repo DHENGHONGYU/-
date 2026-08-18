@@ -323,7 +323,7 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
     ]
 
     return (
-      <div {...divProps}>
+      <div {...divProps} role="img" aria-label="K线图">
         {showToolbar && (
           <div style={toolbarContainerStyle}>
             {/* 周期切换按钮组 */}

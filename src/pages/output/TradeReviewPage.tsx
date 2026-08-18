@@ -31,6 +31,7 @@ const TradeReviewPage: React.FC = () => {
     loading,
     generating,
     review,
+    realDisciplineScore,
     generateReport,
     downloadReport,
   } = useTradeReviewReport()
@@ -136,6 +137,7 @@ const TradeReviewPage: React.FC = () => {
                   winRate={review.report.summary.winRate}
                   profitLossRatio={review.report.summary.profitLossRatio}
                   disciplineScore={review.report.summary.disciplineScore}
+                  realDisciplineScore={realDisciplineScore}
                 />
                 {review.report.buySellPointReview && (
                   <Card className="shadow-sm">

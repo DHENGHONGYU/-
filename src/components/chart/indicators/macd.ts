@@ -133,7 +133,7 @@ export function computeMACD(
   const histogram: Array<HistogramData<Time> | null> = data.map((item, i) => ({
     time: item.time,
     value: histogramValues[i]!,
-    color: histogramValues[i]! >= 0 ? '#ef444480' : '#22c55e80',
+    color: histogramValues[i]! >= 0 ? STOCK_COLOR_TOKENS.up.hexAlpha50 : STOCK_COLOR_TOKENS.down.hexAlpha50,
   }))
   
   return { dif, dea, histogram }

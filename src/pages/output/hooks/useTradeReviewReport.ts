@@ -28,6 +28,7 @@ export function useTradeReviewReport() {
   const { toast } = useToast()
 
   const latestReport = useDisciplineStore((s) => s.latestReport)
+  const realDisciplineScore = useDisciplineStore((s) => s.realDisciplineScore)
   const loadOrdersFromStore = useDisciplineStore((s) => s.loadOrders)
   const generateReviewReport = useDisciplineStore((s) => s.generateReviewReport)
   const refreshReport = useDisciplineStore((s) => s.refresh)
@@ -152,7 +153,7 @@ export function useTradeReviewReport() {
   const downloadReport = useCallback((): void => {
     if (!review) return
 
-    const content = buildReportMarkdown(review.report)
+    const content = buildReportMarkdown(review.report, realDisciplineScore)
     const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -177,13 +178,14 @@ export function useTradeReviewReport() {
     loading,
     generating,
     review,
+    realDisciplineScore,
     loadOrders,
     generateReport,
     downloadReport,
   }
 }
 
-function buildReportMarkdown(report: TradeReviewReport): string {
+function buildReportMarkdown(report: TradeReviewReport, realDisciplineScore?: number): string {
   const lines: string[] = []
   lines.push('# 交易复盘报告')
   lines.push(`- 生成时间：${new Date(report.generatedAt).toLocaleString('zh-CN')}`)
@@ -199,6 +201,7 @@ function buildReportMarkdown(report: TradeReviewReport): string {
   lines.push(`- 平均亏损：${report.summary.avgLoss.toFixed(2)}%`)
   lines.push(`- 总盈亏：${report.summary.totalPnL.toFixed(2)} (${report.summary.totalPnLPercent.toFixed(2)}%)`)
   lines.push(`- 纪律评分：${report.summary.disciplineScore.toFixed(1)}`)
+  lines.push(`- 真实复盘评分：${realDisciplineScore !== undefined ? realDisciplineScore.toFixed(1) : '—'}（胜率+执行+仓位纪律，独立于纪律评分）`)
   lines.push(`- 错误总数：${report.summary.totalErrors}`)
   lines.push('')
 

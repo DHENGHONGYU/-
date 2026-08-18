@@ -84,7 +84,7 @@ const ValuationDistribution = forwardRef<HTMLDivElement, ValuationDistributionPr
     }, [data, currentValue])
 
     return (
-      <div ref={ref} style={{ width: '100%', height }} {...divProps}>
+      <div ref={ref} style={{ width: '100%', height }} {...divProps} role="img" aria-label="估值分布图">
         <ResponsiveContainer width="100%" height="100%">
           <RechartsBar
             data={data}

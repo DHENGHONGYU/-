@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { Link } from 'react-router'
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
@@ -7,6 +8,14 @@ import { Progress } from '@/components/atoms/Progress'
 import { Textarea } from '@/components/atoms/Textarea'
 import { Tooltip } from '@/components/atoms/Tooltip'
 import { PageContainer, PageHeader } from '@/components/templates'
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from '@/components/atoms/Breadcrumb'
 import { ScoreFactorDeltaPanel } from '@/components/organisms/shared/ScoreFactorDeltaPanel'
 import { ScoreUpdateAlert } from '@/components/organisms/shared/ScoreUpdateAlert'
 import { IndustrySkillSnapshotCard } from '@/components/cabin/IndustrySkillSnapshotCard'
@@ -99,6 +108,21 @@ export default function IndustryScorePage(): React.JSX.Element {
 
   return (
     <PageContainer className="space-y-4">
+      <Breadcrumb aria-label="breadcrumb">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild><Link to="/">首页</Link></BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild><Link to="/analysis">分析</Link></BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>V4 行业评分</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <PageHeader title="V4 行业评分 · 第四次工业革命稀缺核心资源" />
 
       <Card>

@@ -34,6 +34,7 @@ const DashboardPage = memo(() => {
   const versions = useScoreDocStore((s) => s.versions)
 
   const latestReport = useDisciplineStore((s) => s.latestReport)
+  const realDisciplineScore = useDisciplineStore((s) => s.realDisciplineScore)
   const refreshDiscipline = useDisciplineStore((s) => s.refresh)
 
   const industryScores = useSectorAnalysisStore((s) => s.industryScores)
@@ -138,7 +139,7 @@ const DashboardPage = memo(() => {
                   description="尚未生成交易复盘报告"
                 />
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   <div>
                     <p className="text-xs text-muted-foreground">总交易笔数</p>
                     <p className="text-h2 font-bold">{latestReport.summary.totalTrades}</p>
@@ -165,6 +166,18 @@ const DashboardPage = memo(() => {
                       }`}
                     >
                       {latestReport.summary.disciplineScore}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">真实复盘评分</p>
+                    <p
+                      className={`text-h2 font-bold ${
+                        realDisciplineScore >= 80
+                          ? COLOR_TOKENS.success.tailwind
+                          : COLOR_TOKENS.warning.tailwind
+                      }`}
+                    >
+                      {realDisciplineScore > 0 ? realDisciplineScore : '—'}
                     </p>
                   </div>
                 </div>

@@ -94,7 +94,7 @@ export const BarChart = memo(
       const isHorizontal = layout === 'vertical'
 
       return (
-        <div ref={ref} className={cn('w-full', className)}>
+        <div ref={ref} className={cn('w-full', className)} role="img" aria-label="柱状图">
           <ResponsiveContainer width="100%" height={height}>
             <RechartsBar
               data={safeData}

@@ -66,7 +66,7 @@ const IndustryV4Radar = forwardRef<HTMLDivElement, IndustryV4RadarProps>(
     }))
 
     return (
-      <div ref={ref} style={{ height, width: '100%' }} {...divProps}>
+      <div ref={ref} style={{ height, width: '100%' }} {...divProps} role="img" aria-label="行业雷达图">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart
             data={chartData}

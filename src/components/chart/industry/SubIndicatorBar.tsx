@@ -69,7 +69,7 @@ const SubIndicatorBar = forwardRef<HTMLDivElement, SubIndicatorBarProps>(
     ]
 
     return (
-      <div ref={ref} style={{ width: '100%', height }} {...divProps}>
+      <div ref={ref} style={{ width: '100%', height }} {...divProps} role="img" aria-label="子指标柱状图">
         <ResponsiveContainer width="100%" height="100%">
           <RechartsBar
             data={sortedData}

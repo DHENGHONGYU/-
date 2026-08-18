@@ -15,6 +15,7 @@
  */
 
 import React, { useCallback, useState } from 'react'
+import { Link } from 'react-router'
 import { usePoolBoardData } from '@/hooks/pool/usePoolBoardData'
 import { usePoolBoardCollect } from '@/hooks/pool/usePoolBoardCollect'
 import { StockOverviewCard } from '@/components/organisms/pool/StockOverviewCard'
@@ -23,6 +24,14 @@ import { useResearchPoolStore } from '@/store/researchPoolStore'
 import { eventBus } from '@/lib/eventBus'
 import { cn } from '@/lib/utils'
 import { LoadingState, EmptyState } from '@/components/molecules'
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from '@/components/atoms/Breadcrumb'
 import type { CollectionProgress as ProgressType } from '@/types/modules/collection.types'
 
 /**
@@ -64,6 +73,19 @@ const PoolBoardPage: React.FC = () => {
 
   return (
     <div className="mx-auto max-w-7xl p-6">
+      {/* 面包屑导航 */}
+      <Breadcrumb aria-label="breadcrumb" className="mb-4">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild><Link to="/">首页</Link></BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>研究候选池</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
       {/* 页面标题区 */}
       <div className="mb-6">
         <div className="flex items-start justify-between">

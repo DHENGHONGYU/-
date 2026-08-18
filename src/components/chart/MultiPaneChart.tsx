@@ -387,7 +387,7 @@ const MultiPaneChart = forwardRef<HTMLDivElement, MultiPaneChartProps>(
     }
 
     return (
-      <div {...divProps}>
+      <div {...divProps} role="img" aria-label="多面板技术图表">
         {showToolbar && (
           <div
             style={{

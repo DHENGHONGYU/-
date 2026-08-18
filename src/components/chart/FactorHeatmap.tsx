@@ -78,7 +78,7 @@ const FactorHeatmap = forwardRef<HTMLDivElement, FactorHeatmapProps>(
     }))
 
     return (
-      <div ref={ref} {...divProps}>
+      <div ref={ref} {...divProps} role="img" aria-label="因子热力图">
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', height }}>
           {groupedData.map((group) => (
             <div key={group.category}>

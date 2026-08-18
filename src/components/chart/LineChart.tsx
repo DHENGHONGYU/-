@@ -136,7 +136,7 @@ export const LineChart = memo(
       }
 
       return (
-        <div ref={ref} className={cn('w-full', className)}>
+        <div ref={ref} className={cn('w-full', className)} role="img" aria-label="折线图">
           <ResponsiveContainer width="100%" height={height}>
             <RechartsLine
               data={safeData}

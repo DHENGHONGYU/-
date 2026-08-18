@@ -203,7 +203,7 @@ export function ChipDistributionChart({
   }
 
   return (
-    <div className={className} style={{ width: '100%' }}>
+    <div className={className} style={{ width: '100%' }} role="img" aria-label="筹码分布图">
       {/* 统计指标头 */}
       <div
         style={{

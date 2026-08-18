@@ -93,7 +93,7 @@ const ScoreRadar = forwardRef<HTMLDivElement, ScoreRadarProps>(
     // V8: 多维度独立着色模式
     if (resolvedDimensionColors && pivotedData) {
       return (
-        <div ref={ref} style={{ height }} {...divProps}>
+        <div ref={ref} style={{ height }} {...divProps} role="img" aria-label="评分雷达图">
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={pivotedData} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
               <PolarGrid stroke={CHART_PALETTE.gridLight} />

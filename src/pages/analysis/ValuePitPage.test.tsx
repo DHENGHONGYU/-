@@ -26,7 +26,9 @@ vi.mock('@/lib/logger', () => ({
   getLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }),
 }))
 
-// Mock all lucide-react icons
+// Mock all lucide-react icons used by the component under test.
+// Keep this list in sync with the icons imported by ValuePitPage and its
+// child states (EmptyState/LoadingState/ErrorState).
 vi.mock('lucide-react', () => ({
   Target: () => <svg data-testid="icon-target" />,
   RefreshCw: () => <svg data-testid="icon-refresh" />,
@@ -36,6 +38,10 @@ vi.mock('lucide-react', () => ({
   CheckCircle: () => <svg data-testid="icon-check" />,
   XCircle: () => <svg data-testid="icon-x" />,
   Clock: () => <svg data-testid="icon-clock" />,
+  Inbox: () => <svg data-testid="icon-inbox" />,
+  Loader2: () => <svg data-testid="icon-loader" />,
+  RotateCcw: () => <svg data-testid="icon-rotate" />,
+  WifiOff: () => <svg data-testid="icon-wifi-off" />,
 }))
 
 vi.mock('react-router', async (importOriginal) => {

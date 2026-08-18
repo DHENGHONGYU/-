@@ -12,6 +12,8 @@ interface TradeReviewSummaryProps {
   winRate: number
   profitLossRatio: number
   disciplineScore: number
+  /** 真实订单驱动的交易表现分（RealTradeReviewScoreCalculator），可选展示 */
+  realDisciplineScore?: number
   loading?: boolean
 }
 
@@ -83,6 +85,7 @@ export function TradeReviewSummary({
   winRate,
   profitLossRatio,
   disciplineScore,
+  realDisciplineScore,
   loading,
 }: TradeReviewSummaryProps): React.JSX.Element {
   return (
@@ -91,7 +94,7 @@ export function TradeReviewSummary({
         <CardTitle className="text-base font-semibold">交易摘要</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2 lg:grid-cols-5">
           <MetricCell
             label="总交易笔数"
             value={String(totalTrades)}
@@ -114,6 +117,12 @@ export function TradeReviewSummary({
             label="纪律评分"
             value={disciplineScore.toFixed(1)}
             tone={disciplineTone(disciplineScore)}
+            loading={loading}
+          />
+          <MetricCell
+            label="真实复盘评分"
+            value={realDisciplineScore !== undefined ? realDisciplineScore.toFixed(1) : '—'}
+            tone={realDisciplineScore !== undefined ? disciplineTone(realDisciplineScore) : undefined}
             loading={loading}
           />
         </div>

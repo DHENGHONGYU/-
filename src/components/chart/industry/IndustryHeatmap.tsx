@@ -126,7 +126,7 @@ const IndustryHeatmap = forwardRef<HTMLDivElement, IndustryHeatmapProps>(
     }, [data, groupByCategory])
 
     return (
-      <div ref={ref} style={{ width: '100%', height, overflow: 'auto' }} {...divProps}>
+      <div ref={ref} style={{ width: '100%', height, overflow: 'auto' }} {...divProps} role="img" aria-label="行业热力图">
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {groupedData.map((group) => (
             <div key={group.category || 'default'}>
