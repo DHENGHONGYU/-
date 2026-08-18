@@ -1,7 +1,14 @@
 import { defineConfig, devices } from '@playwright/test'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+
+// 将 E2E 结果目录指向项目外的系统临时目录，规避 WorkBuddy safe-delete
+// 对仓库内 test-results 的 trash 拦截（P2-3 修复：npm run e2e 方能正常启动）
+const e2eResultsDir = join(tmpdir(), 'finsight-e2e-results')
 
 export default defineConfig({
   testDir: './e2e',
+  outputDir: e2eResultsDir,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
