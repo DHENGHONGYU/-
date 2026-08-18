@@ -7,7 +7,7 @@
 import { useEffect } from 'react'
 import { LoadingState } from '@/components/molecules/LoadingState'
 import { EmptyState } from '@/components/molecules/EmptyState'
-import { ErrorState } from '@/components/molecules/ErrorState'
+import { ErrorState } from '@/components/molecules/states/ErrorState'
 import { useScoreDocStore } from '@/store/scoreDocStore'
 
 interface ScoreHistoryPanelProps {

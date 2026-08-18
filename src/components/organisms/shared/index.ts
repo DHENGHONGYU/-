@@ -10,7 +10,7 @@
 
 export { EmptyState } from '@/components/molecules/EmptyState'
 export type { EmptyStateProps, EmptyStateAction } from '@/components/molecules/EmptyState'
-export { ErrorState } from '@/components/molecules/ErrorState'
-export type { ErrorStateProps } from '@/components/molecules/ErrorState'
+export { ErrorState } from '@/components/molecules/states/ErrorState'
+export type { ErrorStateProps } from '@/components/molecules/states/ErrorState'
 export { LoadingState } from '@/components/molecules/LoadingState'
 export type { LoadingStateProps } from '@/components/molecules/LoadingState'

@@ -8,8 +8,8 @@
 export { LoadingState } from './LoadingState'
 export type { LoadingStateProps } from './LoadingState'
 
-export { ErrorState } from './ErrorState'
-export type { ErrorStateProps } from './ErrorState'
+export { ErrorState } from './states/ErrorState'
+export type { ErrorStateProps } from './states/ErrorState'
 
 export { EmptyState } from './EmptyState'
 export type { EmptyStateProps, EmptyStateAction } from './EmptyState'
@@ -71,7 +71,7 @@ export type { RankedCardProps } from './RankedCard'
 export { DataQualityIndicator } from './DataQualityIndicator'
 export type { DataQualityIndicatorProps } from './DataQualityIndicator'
 
-// P3 交互状态组件（ErrorState 与 ./ErrorState 重名，不通过桶导出，需直引 @/components/molecules/states/Error）
+// P3 交互状态组件
 export { Loading, Empty, Skeleton } from './states'
 export type { LoadingProps, EmptyProps, SkeletonProps } from './states'
 

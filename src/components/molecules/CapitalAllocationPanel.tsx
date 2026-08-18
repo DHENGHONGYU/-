@@ -272,8 +272,10 @@ function DrawdownRow({
   )
 }
 
-/** 安全获取颜色 hex（避免 undefined 报错） */
+/** 安全获取颜色 hex（避免 undefined 报错）
+ * 注：COLOR_TOKENS 不含 `primary`（该语义色已迁至 SEMANTIC_COLOR_ROLES），
+ * 故 'primary' 取不到时直接回退到 info 等价 hex，避免对已重构令牌的硬依赖。 */
 function getColorHexSafe(key: string): string {
   const token = (COLOR_TOKENS as Record<string, { hex?: string }>)[key]
-  return token?.hex ?? '#6366f1'
+  return token?.hex ?? COLOR_TOKENS.info.hex
 }

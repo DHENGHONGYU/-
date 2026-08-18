@@ -184,6 +184,23 @@ echo ""
 echo "🧪 [20/20] 运行 vitest registryContract（注册表契约，P0 BLOCK）..."
 BLOCK VITEST_RUN run src/components/registry/registryContract.test.ts
 
+# 21. RAG 增强评分门禁（Phase 5 CI 集成）
+#     当 RAG 相关源文件（ragRetriever.ts / enhancer.ts / hallucinationDetector.ts /
+#     ragE2EPipeline.test.ts / ragPerformance.bench.test.ts / ragRealLLMIntegration.test.ts /
+#     ragHallucinationRegression.test.ts）被暂存时，运行 Golden Dataset 回归 + 幻觉检测
+#     门禁不通过则 BLOCK 提交
+echo ""
+echo "🔬 [21/20] 运行 RAG 幻觉检测门禁（条件触发）..."
+RAG_FILES_CHANGED=$(git diff --cached --name-only | grep -E 'src/services/scoring/v6-engine/(ragRetriever\.ts|enhancer\.ts|hallucinationDetector\.ts|ragE2EPipeline\.test\.ts|ragPerformance\.bench\.test\.ts|ragRealLLMIntegration\.test\.ts|ragHallucinationRegression\.test\.ts)' || true)
+if [ -n "$RAG_FILES_CHANGED" ]; then
+  echo "   📋 检测到 RAG 相关文件变更:"
+  echo "$RAG_FILES_CHANGED" | sed 's/^/      /'
+  echo "   🧪 运行 Golden Dataset 回归 + 幻觉检测..."
+  BLOCK VITEST_RUN run src/services/scoring/v6-engine/ragHallucinationRegression.test.ts
+else
+  echo "   ✅ 无 RAG 相关文件变更，跳过门禁"
+fi
+
 # 20. 文档目录-内容匹配（warn 模式）
 echo ""
 echo "📂 [warn] 运行 audit:path-match（文档目录-内容匹配检查，warn 模式）..."
@@ -214,6 +231,31 @@ else
 fi
 
 # 21. 文档健康度审计提醒（月度/季度，非阻断）
+# 22. 硬编码审计（warn 模式：仅提醒 Critical/Major，不阻断）
+#     目标：将 audit:hardcode 以 warn 模式纳入 pre-commit，逐步收敛 Critical/Major 至 0
+#     当前基线：0 Critical / 0 Major / 139 Warning / 5 Info
+echo ""
+echo "🎨 [warn] 运行 audit:hardcode（硬编码审计，warn 模式）..."
+HARDCODE_REPORT=$(TSX_RUN scripts/audit/audit-hardcode.ts 2>&1)
+HARDCODE_EXIT=$?
+if [ "$HARDCODE_EXIT" -eq 2 ]; then
+  echo "   ⚠️  audit:hardcode 执行错误（exit=2），跳过本次告警"
+elif [ "$HARDCODE_EXIT" -ne 0 ]; then
+  HARDCODE_CRITICAL=$(echo "$HARDCODE_REPORT" | grep -oE 'Critical:\s*[0-9]+' | grep -oE '[0-9]+')
+  HARDCODE_MAJOR=$(echo "$HARDCODE_REPORT" | grep -oE 'Major:\s*[0-9]+' | grep -oE '[0-9]+')
+  HARDCODE_WARNING=$(echo "$HARDCODE_REPORT" | grep -oE 'Warning:\s*[0-9]+' | grep -oE '[0-9]+')
+  CRITICAL_COUNT=${HARDCODE_CRITICAL:-0}
+  MAJOR_COUNT=${HARDCODE_MAJOR:-0}
+  WARNING_COUNT=${HARDCODE_WARNING:-0}
+  echo "   ⚠️ 硬编码审计发现: Critical=$CRITICAL_COUNT / Major=$MAJOR_COUNT / Warning=$WARNING_COUNT"
+  if [ "$CRITICAL_COUNT" -gt 0 ] || [ "$MAJOR_COUNT" -gt 0 ]; then
+    echo "   🔴 Critical/Major 项未清零，建议尽快修复后再提交"
+    echo "   💡 运行 npm run audit:hardcode 查看详情"
+  fi
+else
+  echo "   ✅ 硬编码审计通过（0 Critical / 0 Major）"
+fi
+
 echo ""
 echo "📅 [warn] 文档健康度审计提醒..."
 CURRENT_DAY=$(date +%d 2>/dev/null || echo "01")
@@ -247,5 +289,5 @@ fi
 
 echo ""
 echo "================================================"
-echo "✅ V9 预提交门禁通过：核心 P0 门禁（secrets / tsc:prod / layers / atomic / db-references / doc-id-reverse / audit:registry / vitest registryContract）已真阻断；其余为 warn。允许提交。"
+echo "✅ V9 预提交门禁通过：核心 P0 门禁（secrets / tsc:prod / layers / atomic / db-references / doc-id-reverse / audit:registry / vitest registryContract）已真阻断；hardcode/hardcode 审计为 warn 模式（0 Critical / 0 Major 基线）。允许提交。"
 echo ""

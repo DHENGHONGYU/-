@@ -11,7 +11,7 @@
 
 import { memo, type ReactNode } from 'react'
 import { LoadingState, type LoadingStateProps } from '@/components/molecules/LoadingState'
-import { ErrorState, type ErrorStateProps } from '@/components/molecules/ErrorState'
+import { ErrorState, type ErrorStateProps } from '@/components/molecules/states/ErrorState'
 import { EmptyState, type EmptyStateProps } from '@/components/molecules/EmptyState'
 import { cn } from '@/lib/utils'
 
