@@ -78,6 +78,7 @@ import {
   getObservationPoolReviewer,
   startObservationPoolReviewer,
 } from './observationPoolReviewer'
+import type { ObservationReviewPersister, ObservationReviewPersistRecord } from './observationPoolReviewer'
 export {
   ObservationPoolReviewer,
   getObservationPoolReviewer,
@@ -88,6 +89,8 @@ export type {
   ObservationReviewResult,
   ObservationReviewItem,
   ObservationPoolReviewerDeps,
+  ObservationReviewPersister,
+  ObservationReviewPersistRecord,
 } from './observationPoolReviewer'
 
 export {
@@ -125,7 +128,13 @@ import { getChipAnomalyDetector } from './chipAnomalyDetector'
 import { getLogger } from '@/lib/logger'
 import { getIntentionWatchlistStocks } from '@/services/trading/tradingService'
 import { runV6Score } from '@/services/scoring/v6ScoreService'
-import type { V6Score } from '@/data/types'
+import type { V6Score, Stock } from '@/data/types'
+import { dataBridge } from '@/core/databridge'
+import { EnvelopeFactory } from '@/core/envelope'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME, DATA_SOURCE } from '@/config/dbConfig'
+import type { ObservationReviewRecord } from '@/data/dataLayerContentStores'
+import { POOL_TYPE, RESEARCH_STATUS, DEFAULT_POOL_GROUP } from '@/constants/pool.constants'
+import { nanoid } from 'nanoid'
 
 export type OrchestratorStatus = 'idle' | 'starting' | 'running' | 'failed'
 
@@ -160,7 +169,46 @@ function buildOrchestratorList(): OrchestratorEntry[] {
     {
       name: 'ObservationPoolReviewer',
       fn: () => {
-        const reviewer = getObservationPoolReviewer()
+        // autoEnroll:true —— 观察池复盘发现达门槛且不在研究池的标的，自动晋升入研究池
+        const reviewer = getObservationPoolReviewer({ autoEnroll: true })
+        // 复盘快照持久化器：经 DataBridge 落 observation_reviews 存储（spec 缺口② 闭环，跨重启漂移比对）
+        const observationReviewPersister: ObservationReviewPersister = {
+          async loadLastScores() {
+            const res = await dataBridge.query<ObservationReviewRecord[]>({
+              action: ENVELOPE_ACTION.queryList,
+              store: STORE_NAME.observationReviews,
+              source: MODULE_ID.system,
+            })
+            const list = res.data ?? []
+            let latest: ObservationReviewRecord | undefined
+            for (const r of list) {
+              if (!latest || r.generatedAt > latest.generatedAt) latest = r
+            }
+            const m = new Map<string, number>()
+            if (latest) for (const it of latest.items) m.set(it.symbol, it.currentScore)
+            return m
+          },
+          async saveReview(record: ObservationReviewPersistRecord) {
+            const full: ObservationReviewRecord = {
+              reviewId: record.reviewId,
+              generatedAt: record.generatedAt,
+              items: record.items,
+              summary: record.summary,
+              sourceModule: MODULE_ID.system,
+            }
+            await dataBridge.forward(
+              EnvelopeFactory.create(
+                {
+                  source: MODULE_ID.system,
+                  target: ENVELOPE_TARGET.db,
+                  action: ENVELOPE_ACTION.saveObservationReview,
+                  traceId: `obs-review-${record.reviewId}`,
+                },
+                full as unknown as Record<string, unknown>,
+              ),
+            )
+          },
+        }
         reviewer.configure({
           getWatchlist: async () => {
             const res = await getIntentionWatchlistStocks()
@@ -172,6 +220,42 @@ function buildOrchestratorList(): OrchestratorEntry[] {
               return { success: r.success, data: r.data as V6Score | undefined }
             },
           },
+          // 权威判定：直接查 stocks store，symbol 属研究池(pool==='research')即视为已晋升
+          isInResearchPool: async (symbol: string) => {
+            const res = await dataBridge.query<Stock>({
+              action: ENVELOPE_ACTION.queryGet,
+              store: STORE_NAME.stocks,
+              key: symbol.trim().toUpperCase(),
+              source: MODULE_ID.system,
+            })
+            return res.success && res.data?.pool === POOL_TYPE.research
+          },
+          // 晋升动作：调研究池 Store 入池（自带 DB 去重，重复安全返回 false）
+          enrollToResearchPool: async (symbol: string, name: string) => {
+            const normalizedSymbol = symbol.trim().toUpperCase()
+            const fullStock: Stock = {
+              symbol: normalizedSymbol,
+              name,
+              pool: POOL_TYPE.research,
+              researchStatus: RESEARCH_STATUS.candidate,
+              source: DATA_SOURCE.system,
+              group: DEFAULT_POOL_GROUP,
+              dataVersion: 1,
+              ingestedAt: Date.now(),
+              updatedAt: Date.now(),
+            }
+            const envelope = EnvelopeFactory.create(
+              {
+                source: MODULE_ID.system,
+                target: ENVELOPE_TARGET.db,
+                action: ENVELOPE_ACTION.insertStock,
+                traceId: `orchestrator-research-enroll-${nanoid(8)}-${normalizedSymbol}`,
+              },
+              fullStock,
+            )
+            await dataBridge.forward(envelope)
+          },
+          persister: observationReviewPersister,
         })
         reviewer.start()
       },
