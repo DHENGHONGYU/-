@@ -1,4 +1,4 @@
-import { memo, useState, useMemo, useCallback, useEffect } from 'react'
+import { memo } from 'react'
 import { Link } from 'react-router'
 import { ArrowLeft, Filter, Layers, TrendingUp, AlertTriangle, Target, Download, Search, ChevronRight, Gauge, BookOpen, Scale, BarChart3, Activity, RefreshCw, FileText, Trash2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
@@ -24,17 +24,14 @@ import {
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { PageContainer, PageHeader } from '@/components/templates'
 import { CandlestickChart, ChipDistributionChart } from '@/components/chart'
-import { useToast } from '@/hooks/useToast'
-import { useIntentionPoolStore } from '@/store/intentionPoolStore'
-import { useResearchPoolStore } from '@/store/researchPoolStore'
-import { usePositionPoolStore } from '@/store/positionPoolStore'
 import { useChipStrategyCharts } from '@/hooks/chip/useChipStrategyCharts'
-import type { PoolItem } from '@/types/modules/pool.types'
+import { useChipStockAnalysis } from '@/hooks/chip/useChipStockAnalysis'
+import { useChipSignalTable } from '@/hooks/chip/useChipSignalTable'
 import { cn } from '@/lib/utils'
-import { MOCK_EXAMPLES, type MockExample } from '@/fixtures/chipStrategyMockData'
-import { CHIP_SIGNALS, FILTER_OPTIONS, type ChipAnalysisResult, type FilterType, type StockChipInput } from '@/domain/chip/types'
-import { computeActualMatch, analyzeStockChips, logGrayZoneDecision, exportChipStrategyExcel } from '@/domain/chip/analysis'
-import { getDebugLogContent, clearDebugLog, getDebugLogCount, downloadDebugLogFile } from '@/domain/chip/debugLog'
+import { MOCK_EXAMPLES } from '@/fixtures/chipStrategyMockData'
+import { FILTER_OPTIONS } from '@/domain/chip/types'
+import { computeActualMatch } from '@/domain/chip/analysis'
+import { getDebugLogContent, clearDebugLog, getDebugLogCount } from '@/domain/chip/debugLog'
 import { getPositionLabel, getEnergyLabel, getActionBadgeVariant, getActionColor } from '@/domain/chip/helpers'
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -45,156 +42,41 @@ export { getDebugLogContent, clearDebugLog, getDebugLogCount }
 // ============================================================
 
 export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
-  const [filter, setFilter] = useState<FilterType>('all')
-  const { toast } = useToast()
+  // === 个股筹码分析（业务逻辑提取到 Hook）===
+  const stockAnalysis = useChipStockAnalysis()
+  const {
+    selectedSymbol,
+    turnover,
+    volumeRatio,
+    return60d,
+    priceChange,
+    analysisResult,
+    poolOptions,
+    selectedOption,
+    setTurnover,
+    setVolumeRatio,
+    setReturn60d,
+    setPriceChange,
+    handleSelectStock,
+    handleAnalyze,
+    handleReset,
+  } = stockAnalysis
 
-  // === 个股筹码分析 state ===
-  const [selectedSymbol, setSelectedSymbol] = useState<string>('')
-  const [turnover, setTurnover] = useState<string>('')
-  const [volumeRatio, setVolumeRatio] = useState<string>('')
-  const [return60d, setReturn60d] = useState<string>('')
-  const [priceChange, setPriceChange] = useState<string>('')
-  const [analysisResult, setAnalysisResult] = useState<ChipAnalysisResult | null>(null)
-  // 灰色地带日志条数（用于按钮 badge 实时展示）
-  const [debugLogCount, setDebugLogCount] = useState<number>(0)
-
-  // 三个股票池合并（下拉式菜单数据源）
-  const intentionItems = useIntentionPoolStore((s) => s.items)
-  const researchItems = useResearchPoolStore((s) => s.items)
-  const positionItems = usePositionPoolStore((s) => s.items)
-  const refreshIntention = useIntentionPoolStore((s) => s.refresh)
-  const refreshResearch = useResearchPoolStore((s) => s.refresh)
-  const refreshPosition = usePositionPoolStore((s) => s.refresh)
-
-  useEffect(() => {
-    void refreshIntention()
-    void refreshResearch()
-    void refreshPosition()
-  }, [refreshIntention, refreshResearch, refreshPosition])
-
-  // 将 MOCK_EXAMPLES 转为 PoolItem 格式，合并到下拉菜单
-  const mockPoolItems = useMemo<PoolItem[]>(() => MOCK_EXAMPLES.map((ex) => ({
-    symbol: ex.stock.symbol,
-    name: ex.stock.name,
-    pool: 'intention',
-    status: 'screening',
-    price: ex.stock.price,
-    pe: ex.stock.pe,
-    pb: ex.stock.pb,
-    roe: undefined,
-    marketCap: undefined,
-    source: 'manual',
-    dataVersion: 0,
-    ingestedAt: Date.now(),
-    updatedAt: Date.now(),
-    industryCode: undefined,
-    theme: [],
-    sector: ex.stock.sector,
-    group: 'mock',
-    screenReason: ex.scenario,
-  })), [])
-
-  // 模拟示例的筹码指标索引
-  const mockChipMap = useMemo(() => {
-    const m = new Map<string, MockExample>()
-    for (const ex of MOCK_EXAMPLES) m.set(ex.stock.symbol, ex)
-    return m
-  }, [])
-
-  // 合并去重：模拟示例 > 持仓池 > 研究池 > 意向池
-  const poolOptions = useMemo(() => {
-    const map = new Map<string, { item: PoolItem; label: string }>()
-    for (const item of mockPoolItems) {
-      map.set(item.symbol, { item, label: '模拟示例' })
-    }
-    for (const item of positionItems) {
-      map.set(item.symbol, { item, label: '持仓池' })
-    }
-    for (const item of researchItems) {
-      if (!map.has(item.symbol)) map.set(item.symbol, { item, label: '研究池' })
-    }
-    for (const item of intentionItems) {
-      if (!map.has(item.symbol)) map.set(item.symbol, { item, label: '意向池' })
-    }
-    return Array.from(map.values()).sort((a, b) => {
-      // 模拟示例排在最前
-      if (a.label === '模拟示例' && b.label !== '模拟示例') return -1
-      if (a.label !== '模拟示例' && b.label === '模拟示例') return 1
-      return a.item.symbol.localeCompare(b.item.symbol)
-    })
-  }, [mockPoolItems, intentionItems, researchItems, positionItems])
-
-  // 当前选中的股票
-  const selectedOption = useMemo(
-    () => poolOptions.find((o) => o.item.symbol === selectedSymbol) ?? null,
-    [poolOptions, selectedSymbol],
-  )
-
-  // 选择股票时，若为模拟示例则自动填充筹码指标
-  const handleSelectStock = useCallback((symbol: string) => {
-    setSelectedSymbol(symbol)
-    setAnalysisResult(null)
-    const mock = mockChipMap.get(symbol)
-    if (mock) {
-      setTurnover(String(mock.chip.turnover))
-      setVolumeRatio(String(mock.chip.volumeRatio))
-      setReturn60d(String(mock.chip.return60d))
-      setPriceChange(String(mock.chip.priceChange))
-    }
-  }, [mockChipMap])
-
-  // 触发分析
-  const handleAnalyze = useCallback(() => {
-    if (!selectedOption) {
-      toast({ title: '请先选择股票', variant: 'error' })
-      return
-    }
-    const t = parseFloat(turnover)
-    const v = parseFloat(volumeRatio)
-    const r60 = parseFloat(return60d)
-    const pc = parseFloat(priceChange)
-    if (Number.isNaN(t) || Number.isNaN(v) || Number.isNaN(r60) || Number.isNaN(pc)) {
-      toast({ title: '请填入有效的换手率/量比/60日收益/当日涨跌', variant: 'error' })
-      return
-    }
-    const input: StockChipInput = {
-      symbol: selectedOption.item.symbol,
-      name: selectedOption.item.name,
-      turnover: t,
-      volumeRatio: v,
-      return60d: r60,
-      priceChange: pc,
-      pe: selectedOption.item.pe,
-      pb: selectedOption.item.pb,
-      industryCode: selectedOption.item.industryCode,
-      sector: selectedOption.item.sector,
-      poolLabel: selectedOption.label,
-    }
-    const result = analyzeStockChips(input)
-    // 灰色地带日志打印：持有/观望信号的详细原因记录到 debug.log（内存缓冲）
-    logGrayZoneDecision(input, result)
-    // 同步刷新日志条数 badge
-    setDebugLogCount(getDebugLogCount())
-    setAnalysisResult(result)
-    toast({
-      title: '分析完成',
-      description: `${selectedOption.item.name} → ${result.tradeSignal}`,
-    })
-  }, [selectedOption, turnover, volumeRatio, return60d, priceChange, toast])
-
-  // 重置
-  const handleReset = useCallback(() => {
-    setSelectedSymbol('')
-    setTurnover('')
-    setVolumeRatio('')
-    setReturn60d('')
-    setPriceChange('')
-    setAnalysisResult(null)
-  }, [])
+  // === 信号筛选表（业务逻辑提取到 Hook）===
+  const signalTable = useChipSignalTable()
+  const {
+    filter,
+    setFilter,
+    filteredSignals,
+    signalCounts,
+    debugLogCount,
+    handleExportExcel,
+    handleDownloadDebugLog,
+    handleClearDebugLog,
+  } = signalTable
 
   // === K线图 + 筹码分布图数据（随 symbol 变动自动加载）===
   const chartData = useChipStrategyCharts(
-    // 静默回退：确认数据源和兜底意图
     selectedSymbol || null,
     selectedOption?.item.price,
     turnover ? parseFloat(turnover) : undefined,
@@ -202,55 +84,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
     analysisResult?.tradeAction,
   )
 
-  const filteredSignals = useMemo(() => {
-    if (filter === 'all') return CHIP_SIGNALS
-    return CHIP_SIGNALS.filter((s) => {
-      if (filter === 'buy') return s.tradeAction === 'buy'
-      if (filter === 'sell') return s.tradeAction === 'sell'
-      if (filter === 'hold') return s.tradeAction === 'hold'
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (filter === 'escape') return s.tradeAction === 'escape'
-      return true
-    })
-  }, [filter])
-
-  const buyCount = CHIP_SIGNALS.filter((s) => s.tradeAction === 'buy').length
-  const sellCount = CHIP_SIGNALS.filter((s) => s.tradeAction === 'sell').length
-  const holdCount = CHIP_SIGNALS.filter((s) => s.tradeAction === 'hold').length
-  const escapeCount = CHIP_SIGNALS.filter((s) => s.tradeAction === 'escape').length
-
-  /** 导出筹码信号矩阵到 Excel */
-  const handleExportExcel = useCallback(async () => {
-    try {
-      const { count, filename } = await exportChipStrategyExcel(filteredSignals)
-      toast({ title: '导出成功', description: `已导出 ${count} 条信号到 ${filename}` })
-    } catch (err) {
-      toast({ title: '导出失败', description: err instanceof Error ? err.message : '未知错误', variant: 'error' })
-    }
-  }, [filteredSignals, toast])
-
-  /** 下载 debug.log（灰色地带判定归档） */
-  const handleDownloadDebugLog = useCallback(() => {
-    try {
-      const count = getDebugLogCount()
-      if (count === 0) {
-        toast({ title: '暂无日志', description: '还没有灰色地带判定日志，请先分析个股后重试', variant: 'warning' })
-        return
-      }
-      downloadDebugLogFile()
-      toast({ title: '下载成功', description: `已下载 ${count} 条灰色地带判定日志` })
-    } catch (err) {
-      toast({ title: '下载失败', description: err instanceof Error ? err.message : '未知错误', variant: 'error' })
-    }
-  }, [toast])
-
-  /** 清空 debug 日志缓冲区 */
-  const handleClearDebugLog = useCallback(() => {
-    const count = getDebugLogCount()
-    clearDebugLog()
-    setDebugLogCount(0)
-    toast({ title: '已清空', description: `已清空 ${count} 条灰色地带判定日志` })
-  }, [toast])
+  const { buy: buyCount, sell: sellCount, hold: holdCount, escape: escapeCount } = signalCounts
 
   return (
     <ErrorBoundary>
@@ -397,41 +231,7 @@ export default memo(function ChipStrategyReviewPage(): React.JSX.Element {
                     size="sm"
                     variant={ex.expectedAction === 'buy' ? 'default' : ex.expectedAction === 'escape' ? 'danger' : 'outline'}
                     onClick={() => {
-                      handleSelectStock(ex.stock.symbol)
-                      setTurnover(String(ex.chip.turnover))
-                      setVolumeRatio(String(ex.chip.volumeRatio))
-                      setReturn60d(String(ex.chip.return60d))
-                      setPriceChange(String(ex.chip.priceChange))
-                      // 延迟一拍后自动分析，确保 state 更新完成
-                      setTimeout(() => {
-                        const t = ex.chip.turnover
-                        const v = ex.chip.volumeRatio
-                        const r60 = ex.chip.return60d
-                        const pc = ex.chip.priceChange
-                        const input: StockChipInput = {
-                          symbol: ex.stock.symbol,
-                          name: ex.stock.name,
-                          turnover: t,
-                          volumeRatio: v,
-                          return60d: r60,
-                          priceChange: pc,
-                          pe: ex.stock.pe,
-                          pb: ex.stock.pb,
-                          industryCode: undefined,
-                          sector: ex.stock.sector,
-                          poolLabel: '模拟示例',
-                        }
-                        const result = analyzeStockChips(input)
-                        // 灰色地带日志打印：持有/观望信号的详细原因记录到 debug.log（内存缓冲）
-                        logGrayZoneDecision(input, result)
-                        // 同步刷新日志条数 badge
-                        setDebugLogCount(getDebugLogCount())
-                        setAnalysisResult(result)
-                        toast({
-                          title: `示例分析完成：${ex.scenario}`,
-                          description: `${ex.stock.name} → ${result.tradeSignal}`,
-                        })
-                      }, 50)
+                      stockAnalysis.handleQuickExample(ex)
                     }}
                     className="text-xs"
                   >
