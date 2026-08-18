@@ -101,7 +101,7 @@
     "cssPreflightEvidence": {
       "applies": true,
       "status": "passed",
-      "command": "node {SKILL_DIR}/shared-runtime/deterministic-tooling/apply-html-head-contract.mjs d:\\FinSightV9\\timeline-competitor-compare\\colors_and_type.css d:\\FinSightV9\\timeline-competitor-compare\\.preflight\\preflight.html --title=\"Preflight\" --lang=zh-CN --prefix=brand",
+      "command": "node {SKILL_DIR}/shared-runtime/deterministic-tooling/apply-html-head-contract.mjs {PROJECT_DIR}/timeline-competitor-compare/colors_and_type.css {PROJECT_DIR}/timeline-competitor-compare/.preflight/preflight.html --title=\"Preflight\" --lang=zh-CN --prefix=brand",
       "brandPrefix": "brand",
       "checks": {
         "themeVars": "present",
@@ -155,15 +155,15 @@
           ]
         },
         "skillRuntime": {
-          "skillDir": "c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design",
-          "deterministicToolDir": "c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling",
+          "skillDir": "{SKILL_DIR}",
+          "deterministicToolDir": "{SKILL_DIR}/shared-runtime/deterministic-tooling",
           "toolPaths": {
-            "applyHtmlHeadContract": "c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\apply-html-head-contract.mjs",
-            "recordDispatchCompletion": "c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\record-dispatch-completion.mjs",
-            "buildPageDispatchManifest": "c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\build-page-dispatch-manifest.mjs",
-            "validateDesignWorkspace": "c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\validate-design-workspace.mjs",
-            "validateFinishReadiness": "c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\validate-finish-readiness.mjs",
-            "validateRestoreContract": "c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\validate-restore-contract.mjs"
+            "applyHtmlHeadContract": "{SKILL_DIR}/shared-runtime/deterministic-tooling/apply-html-head-contract.mjs",
+            "recordDispatchCompletion": "{SKILL_DIR}/shared-runtime/deterministic-tooling/record-dispatch-completion.mjs",
+            "buildPageDispatchManifest": "{SKILL_DIR}/shared-runtime/deterministic-tooling/build-page-dispatch-manifest.mjs",
+            "validateDesignWorkspace": "{SKILL_DIR}/shared-runtime/deterministic-tooling/validate-design-workspace.mjs",
+            "validateFinishReadiness": "{SKILL_DIR}/shared-runtime/deterministic-tooling/validate-finish-readiness.mjs",
+            "validateRestoreContract": "{SKILL_DIR}/shared-runtime/deterministic-tooling/validate-restore-contract.mjs"
           },
           "requiredForPageSubAgent": [
             "applyHtmlHeadContract",
@@ -172,15 +172,15 @@
           "pathInjection": "absolute",
           "pathContract": "Do not use {SKILL_DIR} placeholders inside Page Sub-Agent packets; use toolPaths.* absolute paths.",
           "commandTemplates": {
-            "recordDispatchCompletion": "node \"c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\record-dispatch-completion.mjs\" \"d:\\FinSightV9\\timeline-competitor-compare\" --node-id=\"page-timeline-compare\" --html-src=\"pages/timeline-compare.html\" --status=completed --changed-files=<comma-separated-project-relative-files> --trace-digest=<main-agent-runtime-trace-digest> --tool-ledger-json=<tool-ledger-json-or-file>"
+            "recordDispatchCompletion": "node \"{SKILL_DIR}/shared-runtime/deterministic-tooling/record-dispatch-completion.mjs\" \"{PROJECT_DIR}/timeline-competitor-compare\" --node-id=\"page-timeline-compare\" --html-src=\"pages/timeline-compare.html\" --status=completed --changed-files=<comma-separated-project-relative-files> --trace-digest=<main-agent-runtime-trace-digest> --tool-ledger-json=<tool-ledger-json-or-file>"
           }
         },
-        "cssFilePath": "d:\\FinSightV9\\timeline-competitor-compare\\colors_and_type.css",
-        "htmlFilePath": "d:\\FinSightV9\\timeline-competitor-compare\\pages\\timeline-compare.html",
+        "cssFilePath": "{PROJECT_DIR}/timeline-competitor-compare/colors_and_type.css",
+        "htmlFilePath": "{PROJECT_DIR}/timeline-competitor-compare/pages/timeline-compare.html",
         "brandPrefix": "brand",
         "aestheticsMode": "free-explore",
         "toolDisciplineBlockPresent": true,
-        "fillHtmlHeadCommand": "node \"c:\\Users\\DELL\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\apply-html-head-contract.mjs\" \"d:\\FinSightV9\\timeline-competitor-compare\\colors_and_type.css\" \"d:\\FinSightV9\\timeline-competitor-compare\\pages\\timeline-compare.html\" --title=\"V9 时间线 vs 竞品进展对照\" --lang=\"zh-CN\" --prefix=\"brand\"",
+        "fillHtmlHeadCommand": "node \"{SKILL_DIR}/shared-runtime/deterministic-tooling/apply-html-head-contract.mjs\" \"{PROJECT_DIR}/timeline-competitor-compare/colors_and_type.css\" \"{PROJECT_DIR}/timeline-competitor-compare/pages/timeline-compare.html\" --title=\"V9 时间线 vs 竞品进展对照\" --lang=\"zh-CN\" --prefix=\"brand\"",
         "headFillMode": "skeleton-first",
         "viewportMode": "document-scroll",
         "completionSchemaExpected": "compact",
@@ -268,6 +268,24 @@
         "source": "record-dispatch-completion.mjs"
       }
     ],
-    "mainAgentPostDispatchMutations": []
+    "mainAgentPostDispatchMutations": [
+      {
+        "path": "pages/timeline-compare.html",
+        "owner": "main-agent",
+        "nodeId": "page-timeline-compare",
+        "changedAt": "2026-08-17T15:30:00.000Z",
+        "mutationType": "targeted-repair",
+        "description": "Replaced inline hardcoded colors with CSS variable references; added 7-axis SVG radar chart and 4 key insight cards to the score comparison section.",
+        "trigger": "validation hardcoded-color warning + visual enhancement",
+        "changedFiles": ["pages/timeline-compare.html"]
+      },
+      {
+        "path": "timeline-competitor-compare.design",
+        "owner": "main-agent",
+        "mutationType": "canvas-layout-snapshot",
+        "description": "Canvas runtime added layoutSnapshot after page rendering measurement.",
+        "trigger": "canvas auto-measure"
+      }
+    ]
   }
 }
