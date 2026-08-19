@@ -10,7 +10,7 @@ summary: "trading 舱（交易与持仓）的职责边界、页面、路由、�
 tags: [backend, trading, input-cabin, spec, reference]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-BACK-013
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-149]
 change_log:

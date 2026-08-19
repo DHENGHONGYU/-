@@ -10,7 +10,7 @@ summary: "说明如何注册 Tushare Pro、获取 Token 并在本地 .env.local 
 tags: [tushare, token, data-source, configuration]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-044
 change_log:
   - version: v1.0.0

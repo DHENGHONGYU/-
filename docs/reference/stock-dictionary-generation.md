@@ -10,7 +10,7 @@ summary: "股票字典（src/services/stock/stockDictionary.ts）作为全市场
 tags: [reference, stock-dictionary, data-generation, automation, development]
 version: v1.0.0
 last_updated: 2026-07-19
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DEV-001
 change_log:
   - version: v1.0.0

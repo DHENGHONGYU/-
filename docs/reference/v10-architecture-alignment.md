@@ -10,7 +10,7 @@ summary: "V10 20 个 Store 中，V9 已有或近期可扩展的 Store："
 tags: [architecture, report, reference, design, documentation]
 version: v0.9.0
 last_updated: 2026-06-24
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-ARCH-005
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-295]
 change_log:

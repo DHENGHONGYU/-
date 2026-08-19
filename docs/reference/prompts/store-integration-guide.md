@@ -18,7 +18,7 @@ summary: "定位：本文档是 `src/store/` 目录的权威开发指南，指�
 tags: [data, integration, store]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-059
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-DATA-061, V9-DOC-DATA-073, V9-DOC-AI-012, V9-DOC-PROJ-149]
 change_log:
