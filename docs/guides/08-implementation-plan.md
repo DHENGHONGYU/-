@@ -10,7 +10,7 @@ last_updated: 2026-08-17
 doc_id: V9-DOC-GUIDE-024
 title: 08-implementation-plan
 tier: important
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 version: v2.5.0
 last_updated: 2026-07-05
 change_log:

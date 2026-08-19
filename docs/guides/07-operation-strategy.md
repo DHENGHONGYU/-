@@ -26,7 +26,7 @@ summary: "本文档定义 V9 的开发流程、版本策略、风险控制与架
 tags: [backend, strategy, reference, service, api]
 version: v2.5.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-BACK-009
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182]
 change_log:

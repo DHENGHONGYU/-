@@ -10,7 +10,7 @@ summary: "面向开发者的 V9 质量审计脚本使用指南，覆盖 40+ 审�
 tags: [qa, audit, quality, gate, testing]
 version: v1.2.0
 last_updated: 2026-08-09
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-QA-116
 related_docs: [V9-DOC-QA-108]
 change_log:

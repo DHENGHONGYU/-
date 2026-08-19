@@ -18,7 +18,7 @@ summary: "面向日常运维场景的 V9 数据导入导出操作指南，覆盖
 tags: [data, import, export, backup, migration, indexeddb]
 version: v1.0.0
 last_updated: 2026-07-19
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-078
 related_docs: [V9-DOC-DATA-035, V9-DOC-DATA-069]
 referenced_by: [V9-DOC-PROJ-349]

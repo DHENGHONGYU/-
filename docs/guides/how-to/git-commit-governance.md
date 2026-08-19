@@ -10,7 +10,7 @@ summary: "V9 Git 提交规范守卫使用指南：commit-msg 信息格式校验�
 tags: [qa, git, hook, commit, gate, windows]
 version: v1.0.0
 last_updated: 2026-08-13
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-QA-121
 related_docs: [V9-DOC-QA-116, V9-DOC-PROJ-903]
 change_log:

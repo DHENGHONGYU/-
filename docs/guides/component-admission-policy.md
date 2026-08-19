@@ -17,7 +17,7 @@ summary: "本文档规定 V9 项目中新增 UI 组件的准入门槛、审批�
 tags: [component, governance, admission, policy, atomic-design]
 version: v1.0.0
 last_updated: 2026-07-25
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-GUIDE-021
 tier: T1
 change_log:

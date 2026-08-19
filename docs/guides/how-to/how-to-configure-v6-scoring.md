@@ -18,7 +18,7 @@ summary: "面向开发者与投研用户的 V6 评分引擎配置指南，覆盖
 tags: [backend, scoring, v6, configuration, factors, weights]
 version: v2.0.0
 last_updated: 2026-08-09
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-BACK-046
 related_docs: [V9-DOC-BACK-020, V9-DOC-DATA-077]
 change_log:

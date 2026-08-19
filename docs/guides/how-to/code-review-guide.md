@@ -1,6 +1,6 @@
 ---
 title: code-review-guide
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 tier: reference
 status: active
 version: v1.0.0

@@ -10,7 +10,7 @@ summary: "MCP 服务器以 CLI 能力对外暴露、并按技能路由表映射�
 tags: [mcp, cli, skill, ai, architecture, workflow]
 version: v1.1.0
 last_updated: 2026-07-21
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-ARCH-058
 change_log:
   - version: v1.0.0

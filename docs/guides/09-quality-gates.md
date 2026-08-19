@@ -18,7 +18,7 @@ summary: "本文档定义 V9 的上线前质量门禁、CI 流水线、测试策
 tags: [qa, quality, reference]
 version: v2.5.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-QA-065
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-QA-108]
 change_log:

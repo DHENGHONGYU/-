@@ -10,7 +10,7 @@ summary: "数据流架构收敛方案，Widget → Store 双通道统一，包�
 tags: [data, architecture, widget, store, convergence]
 version: v1.2
 last_updated: 2026-07-18
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-030
 change_log:
   - version: v1.2

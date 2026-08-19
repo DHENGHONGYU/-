@@ -18,7 +18,7 @@ summary: "定义从视觉设计产物（.zip）到可运行生产代码的端到
 tags: [workflow, design, frontend, audit, tokens]
 version: v1.2.0
 last_updated: 2026-08-15
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-GUIDE-DESIGN-CODE-001
 referenced_by: [V9-DOC-QA-065, V9-DOC-PROJ-016]
 change_log:

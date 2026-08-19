@@ -18,7 +18,7 @@ summary: "15 分钟上手的采集+评分全流程操作指南，覆盖数据采
 tags: [data, collection, scoring, pipeline, v6]
 version: v1.0.0
 last_updated: 2026-07-19
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-077
 related_docs: [V9-DOC-DATA-015, V9-DOC-BACK-020]
 referenced_by: [V9-DOC-BACK-046]

@@ -18,7 +18,7 @@ summary: "面向日常使用与开发调试的 V9 故障排查手册，覆盖采
 tags: [project, troubleshooting, debug, faq, support]
 version: v1.0.0
 last_updated: 2026-07-19
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-349
 related_docs: [V9-DOC-DATA-078]
 change_log:
