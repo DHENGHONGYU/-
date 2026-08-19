@@ -12,13 +12,13 @@ import type { StockSearchResult } from '@/services/input/inputService'
 import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
 import { Info, Zap, FileText, LineChart } from 'lucide-react'
-import HotSectorSection from './HotSectorSection'
 import InputFlowOverview from './components/InputFlowOverview'
 import type { InputTab, ManualMode } from './inputDashboard.types'
 import { TAB_BASE, TAB_ACTIVE, TAB_INACTIVE } from './inputDashboard.utils'
 import { useInputDashboardData } from './hooks/useInputDashboardData'
 import InputDashboardStats from './components/InputDashboardStats'
 import InputDashboardPoolTable from './components/InputDashboardPoolTable'
+import { useNavigate } from 'react-router'
 
 // 批量导入区块懒加载（整合自原 BulkImportPanel 独立页）
 const BulkImportPanel = lazy(() => import('./BulkImportPanel'))
@@ -51,6 +51,7 @@ export default function InputDashboard(): React.JSX.Element {
   const [searchMode, setSearchMode] = useState<'fill' | 'add'>('fill')
   const [activeTab, setActiveTab] = useState<InputTab>('manual')
   const [manualMode, setManualMode] = useState<ManualMode>('single')
+  const navigate = useNavigate()
 
   return (
     <div className="space-y-6">
@@ -89,11 +90,12 @@ export default function InputDashboard(): React.JSX.Element {
                 自行意向输入
               </button>
               <button
-                onClick={() => setActiveTab('hot-sector')}
-                className={`${TAB_BASE} ${activeTab === 'hot-sector' ? TAB_ACTIVE : TAB_INACTIVE}`}
+                onClick={() => navigate('/input/hot-sectors')}
+                className={`${TAB_BASE} ${TAB_INACTIVE}`}
+                title="在新页面查看热门板块"
               >
                 <LineChart className="mr-1.5 inline h-3.5 w-3.5" />
-                热门板块纳入
+                热门板块（独立页）
               </button>
             </div>
           </div>
@@ -297,10 +299,6 @@ export default function InputDashboard(): React.JSX.Element {
             </div>
           )}
 
-          {/* ── Tab 2: 热门板块纳入 ── */}
-          {activeTab === 'hot-sector' && (
-            <HotSectorSection />
-          )}
         </CardContent>
       </Card>
 

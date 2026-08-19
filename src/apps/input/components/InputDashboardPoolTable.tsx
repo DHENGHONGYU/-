@@ -12,7 +12,7 @@ import { Checkbox } from '@/components/atoms/Checkbox'
 import { cn } from '@/lib/utils'
 import { formatPrice, formatMarketCap } from '@/lib/precision'
 import { findStockBySymbol } from '@/lib/stockDictionary'
-import { Download, Trash2, RefreshCw, ArrowRightLeft } from 'lucide-react'
+import { Download, Trash2, RefreshCw, ArrowRightLeft, ArrowUpRight } from 'lucide-react'
 import { getMarketLabel } from '../inputDashboard.utils'
 import type { PoolItem, IntentionPoolItem } from '@/types/modules/pool.types'
 
@@ -66,7 +66,16 @@ export default function InputDashboardPoolTable({
     <Card className="shadow-sm border-border/40">
       <CardHeader className="pb-3">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <CardTitle className="text-base font-semibold">意向候选池清单</CardTitle>
+          <CardTitle className="text-base font-semibold">
+            <Link
+              to="/input/intention-pool"
+              className="group inline-flex items-center gap-1 transition-colors hover:text-primary"
+              title="前往意向输入池独立页"
+            >
+              意向候选池清单
+              <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground transition-colors group-hover:text-primary" />
+            </Link>
+          </CardTitle>
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[11px] font-medium text-muted-foreground">
               {collected}/{allStocks.length} 已采

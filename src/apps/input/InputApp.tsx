@@ -15,6 +15,8 @@ import InputDashboard from './InputDashboard'
 import LocalKnowledgePage from '@/pages/input/LocalKnowledgePage'
 import CollectionMonitorPanel from './CollectionMonitorPanel'
 import CollectionStrategyPage from './CollectionStrategyPage'
+import HotSectorPage from './HotSectorPage'
+import IntentionPoolPage from './IntentionPoolPage'
 import { InputFlowErrorBoundary } from '@/components/organisms/input/InputFlowErrorBoundary'
 import { getLogger } from '@/lib/logger'
 
@@ -34,6 +36,10 @@ const INPUT_ROUTES: InputRoute[] = [
   // 合并后的新路由
   { path: '/input/collection-monitor', branch: 'collection-monitor', componentName: 'CollectionMonitorPanel', component: <CollectionMonitorPanel />, fallback: '加载采集监控台中...' },
   { path: '/input/collection-strategy', branch: 'collection-strategy', componentName: 'CollectionStrategyPage', component: <CollectionStrategyPage />, fallback: '加载采集策略配置中...' },
+  // 热门板块独立页（从录入看板 Tab 拆分，筛选代表股纳入意向候选池）
+  { path: '/input/hot-sectors', branch: 'hot-sectors', componentName: 'HotSectorPage', component: <HotSectorPage />, fallback: '加载热门板块中...' },
+  // 意向输入池独立页（从录入看板底部清单区块拆分，双源注入标的的集中管理）
+  { path: '/input/intention-pool', branch: 'intention-pool', componentName: 'IntentionPoolPage', component: <IntentionPoolPage />, fallback: '加载意向输入池中...' },
   // 保留旧路由兼容（重定向到合并组件）
   { path: '/input/data-test', branch: 'data-test', componentName: 'CollectionMonitorPanel', component: <CollectionMonitorPanel />, fallback: '' },
   { path: '/input/collect-tasks', branch: 'collect-tasks', componentName: 'CollectionMonitorPanel', component: <CollectionMonitorPanel />, fallback: '' },
@@ -78,8 +84,9 @@ const logger = getLogger()
  * - /input/fetcher-config  → FetcherConfigPage（懒加载）
  * - /input/collect-tasks   → CollectTaskPage（懒加载）
  * - /input/pool-board      → PoolBoardPage（懒加载）
+ * - /input/hot-sectors     → HotSectorPage（热门板块独立页，从录入看板 Tab 拆分）
+ * - /input/intention-pool  → IntentionPoolPage（意向输入池独立页，从录入看板底部清单拆分）
  * - /input/bulk-import     → 已整合至 InputDashboard（fallback 到录入看板）
- * - /input/hot-sectors     → 已整合至 InputDashboard（fallback 到录入看板）
  * - /input（默认）         → InputDashboard
  */
 export default function InputApp(): React.JSX.Element {
