@@ -10,7 +10,7 @@ summary: "版本: v1.0 | 日期: 2026-07-07 构建工具: Vite v6.4.3 状?*: ?�
 tags: [project, optimization, changelog, performance, log]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-216
 related_docs: [V9-DOC-PROJ-184]
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]

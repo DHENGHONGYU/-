@@ -10,7 +10,7 @@ summary: ": 2026-07-12 汾: v1.0 ģ: data-collector ļ: 3 עͷ: 28"
 tags: [data, collection, jsdoc]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-048
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 change_log:

@@ -2,7 +2,7 @@
 doc_id: V9-DOC-REF-928
 title: data-definition
 tier: important
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 version: v1.2.1
 last_updated: 2026-08-15
 change_log:

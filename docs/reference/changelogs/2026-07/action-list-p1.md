@@ -10,7 +10,7 @@ summary: "## 批次执行顺序 按依赖关系与风险由低到高执行："
 tags: [project, changelog, plan]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-213
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-QA-035, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:

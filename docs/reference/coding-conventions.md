@@ -10,7 +10,7 @@ summary: "定位：汇总 `../../AGENTS.md` 中的工程约束为一页可速查
 tags: [project, spec, reference]
 version: v1.1.0
 last_updated: 2026-08-09
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-225
 referenced_by: [V9-DOC-PROJ-032, V9-DOC-META-000, V9-DOC-BACK-026, V9-DOC-QA-009, V9-DOC-PROJ-176, V9-DOC-PROJ-294, V9-DOC-PROJ-149]
 change_log:
