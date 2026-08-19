@@ -390,9 +390,43 @@ npm run audit:doc-integrity
 
 ---
 
+## 十一、实战案例：SOP Suite v1.0.0 双轨版本校对闭环
+
+> 本条作为「文档双轨版本校对 + last_updated 与 change_log 闭环」的**完整落地案例**，供后续同类文档体系化建设参考。
+> 参考文档集：`docs/guides/sops/*`（README 总览 + S01~S07 正文，共 8 篇）。
+
+### 11.1 双轨版本对齐结果（本次 PR）
+
+| 文档 | frontmatter.version | frontmatter.code_version | frontmatter.last_updated | change_log 首项 → 版本匹配 R1 规则？ |
+|------|-------------------|------------------------|------------------------|---------------------------------|
+| sops/README.md（总览） | v1.0.0 | 2.0.0-rc.1 | 2026-08-19 | ✅ P1 首项 v1.0.0 与 frontmatter 一致 |
+| S01 dev-env-setup | v1.0.0 | 2.0.0-rc.1 | 2026-08-19 | ✅ 同上 |
+| S02 dev-workflow | v1.0.0 | 2.0.0-rc.1 | 2026-08-19 | ✅ 同上 |
+| S03 code-review | v1.0.0 | 2.0.0-rc.1 | 2026-08-19 | ✅ 同上 |
+| S04 pre-merge-integration | v1.0.0 | 2.0.0-rc.1 | 2026-08-19 | ✅ 同上 |
+| S05 pre-launch-checklist | v1.0.0 | 2.0.0-rc.1 | 2026-08-19 | ✅ 同上 |
+| S06 release-deployment | v1.0.0 | 2.0.0-rc.1 | 2026-08-19 | ✅ 同上 |
+| S07 ops-incident-response | v1.0.0 | 2.0.0-rc.1 | 2026-08-19 | ✅ 同上 |
+
+### 11.2 增量同步承诺（SOP 生命周期绑定）
+
+1. **code_version 双轨绑定**：SOP 头部 `code_version` 字段严格对应产品版本号（本例 `2.0.0-rc.1`）。当 AGENTS.md / package.json bump 到正式版（v2.0.0 / v2.1.0）时：
+   - 受影响的 3 篇 P0 SOP（S04/S05/S06）必须在同个发布 PR 中**至少**检查 3 处是否过时：§2 命令集、§3 通过阈值、§4 Top 失败条目；对照本 SKILL §三 R2 规则 PATCH++（1.0.0 → 1.0.1）并补 change_log 首项。
+2. **last_updated 必改**：SOP 任何正文修改（哪怕一个单词 typo），R3 规则要求同步 bump last_updated 到当日日期，且在 change_log 有对应条目，禁止「改了正文没改 version/日期」。
+3. **AGENTS 契约版本驱动**：当 AGENTS.md 从 v1.6.0 → v1.7.0 升级时，本 SOP Suite 按 FR-5 要求强制评审：S05 §2 STEP 命令集 / §3.1 分级阈值 / §4.B 25 股票清单三处内容。评审结论写入 change_log 并 bump 次版本号 v1.x.0（Minor）。
+4. **3 门禁验证**：每次 SOP 修订 PR 必须通过 `npm run file:check`（命名规范）+ `npm run audit:docs`（文档同步）+ `npm run audit:doc-id:fix --dry-run`（doc_id 三向）。全部 exit 0 才允许合入。
+
+### 11.3 本案例回链（双向引用闭环）
+
+- **从 SOP Suite 到本 SKILL**：[sops/README.md §四 版本兼容矩阵](../../docs/guides/sops/README.md#四版本兼容矩阵sop-v100--code_version-200-rc1) 末尾声明「SOP 大版本 Review 一次；AGENTS 契约大版本升级同步评审」的流程依据，即本 SKILL §十一规则。
+- **从本 SKILL 到 SOP Suite**：第 11.1 + 11.2 节描述的 8 篇文档，路径全部落在 `docs/guides/sops/*.md`，可直接 Grep `doc_id: V9-DOC-SOP-00[0-7]` 验证。
+
+---
+
 ## 变更日志
 
 | 版本 | 日期 | 变更摘要 |
 |------|------|----------|
-| v0.9.0-draft | 2026-08-11 | 草稿：基准校对 6 步法 + 增量决策树 + 双版本职责分离 + 三门禁验证 + 代码-文档触发矩阵 + 异常处理 + 6 条待确认事项 |
+| v1.1.0 | 2026-08-19 | 新增 §十一 实战案例：SOP Suite v1.0.0 双轨版本校对 8 篇文档对齐表 + code_version/last_updated 增量承诺 4 条 + 回链到 sops/README.md；doc-management-principles L3 虚拟技能对 SOP 十目录 guides/sops/ 归类合规性自然达成 |
 | v1.0.0 | 2026-08-11 | 定稿：R1/R4/R5/R6按草稿；R2改为基准校对强制PATCH++（含非三位版本先补零）；R3批次重切为Batch1全A+P0BC / Batch2仅非P0B / Batch3仅非P0C；6项用户确认闭环 |
+| v0.9.0-draft | 2026-08-11 | 草稿：基准校对 6 步法 + 增量决策树 + 双版本职责分离 + 三门禁验证 + 代码-文档触发矩阵 + 异常处理 + 6 条待确认事项 |

@@ -203,11 +203,75 @@ npm run audit
 | `architecture-radar-scan` | 文档编写前调用，确认架构无漂移；文档编写后调用，验证目录映射 100% 覆盖 |
 | `type-safety-contract` | 文档涉及类型定义修改时，确保不破坏现有类型约束 |
 | `databridge-migration` | 文件迁移后同步更新文档，确保新旧路径都有说明 |
+| `doc-management-principles`（L3 虚拟）| 十目录架构与 Frontmatter 8 字段标准 — 本例 SOP Suite 存放在 `docs/guides/sops/`（属于 guides 下的操作指南子目录）、Frontmatter 含 title/type/domain/phase/tier/status/maintainer/summary/tags/version/last_updated/code_version/doc_id/related_docs/covers_docs/covers_code/referenced_by/change_log 共 18 字段 → 远超虚拟技能要求的 Frontmatter 最小 8 字段强制规范 |
 
 ---
 
-## 八、版本记录
+## 八、实战案例：SOP Suite v1.0.0 编写 —— 五大原则落地证据
+
+> 本条作为本 SKILL「Truth-First / Scan-Before-Write / Exhaustiveness / Bidirectional-Linking / Version-Pinning」五大原则的**完整落地案例**。对应产物：
+> `docs/guides/sops/` 目录 8 篇文档（1 总览 README + 7 正文 S01–S07）。
+
+### 8.1 Truth-First（真相源优先，不凭记忆）
+
+**原则要求**：文档编写前必须打开并阅读架构契约的当前版本（AGENTS.md / package.json 当前版本），逐条对比，冲突以契约为准改文档。
+
+**本次落地证据**：
+1. **真相源 1：AGENTS.md v1.6.0** —— S05 §2 24 步门禁完全取自 AGENTS.md §七 22 步 pre-commit + STEP 23/24 延伸；S02 §2.C 速查表 22/6 与 §七 严格一致；S04/S06/S07 的真数禁止（v1.6.0 新增条款）、MCP Registry=17 条目、DB_VERSION=35 等硬约束均在对应 SOP 中引用。
+2. **真相源 2：package.json** —— 所有 `npm run <xxx>` 命令在 Task 0 执行前已导出 `temp/sop-command-reference.json` 命令清单（255 条），确保 SOP 中使用的每个命令名真实存在（不存在的命令会在 Task 13 自检验证中失败）。
+3. **真相源 3：质量阈值基线** —— S05 §3.4 6 维度评分权重与 `docs/reports/上线前全面校验报告-v2.0.0.md §1.1` 完全一致（15+20+20+15+15+15=100%）。
+
+**冲突处理承诺写入文档**：所有 SOP 文档底部「文档兼容性声明 / 冲突处理原则」均显式声明「冲突以 AGENTS.md 当前版本编号为准 + 同步修订 SOP（附 change_log）」。
+
+### 8.2 Scan-Before-Write（编写前扫描真相，零凭空假设）
+
+**原则要求**：编写任何文档前，先扫文件系统确认目标路径、Frontmatter、引用文档存在性、doc_id 无冲突；不假设任何路径。
+
+**本次落地证据**（对应 Task 0 准备工作 4 结果）：
+
+| 扫描项（Task 0 R1-R4） | 方法 | 结果 |
+|----------------------|------|------|
+| R1 创建目录前检查是否已存在 | `Test-Path docs/guides/sops` → 不存在 → 新建 | 一次创建成功 |
+| R2 doc_id 冲突扫描（V9-DOC-SOP-000~007） | Grep 全仓 `V9-DOC-SOP-00` → 0 命中 | 0 冲突 → 8 个 id 合法可用 |
+| R3 package.json 命令完整性 | Node 脚本读取 package.json scripts 排序写 JSON 引用库 | 255 条 ≥ Task 9 FR-5 要求的 180 条 |
+| R4 被引用文档存在性（8+2 篇 FR-3 目标文档） | Glob 每篇路径 | 10/10 全部命中（git-commit、audit-scripts、testing-strategy、09-quality-gates、module-completion、troubleshooting、DEPLOYMENT-CHECKLIST、校验报告v2.0.0 + 扩展 2 篇） |
+
+### 8.3 Exhaustiveness（穷尽性原则，零漏阶段）
+
+**原则要求**：覆盖所有文件归属，不出现「有 XX 类模块但文档没写」的信息孤岛；对阶段型流程，确保首尾相连不跳跃。
+
+**本次落地证据**：
+- **阶段穷尽**：S01（Onboarding）→ S02（编码/提交）→ S03（Review）→ S04（集成）→ S05（上线体检）→ S06（部署）→ S07（运维/应急/复盘），7 个阶段 100% 覆盖「从新人 Clone 到线上 P0 故障 RCA 结束」的完整 **SDLC 闭环时间线**，无跳跃阶段。
+- **目录穷尽**：docs/guides/sops/ 目录共 8 篇文档，对应 8 个 doc_id SOP-000~007；任一 doc_id 在 REGISTRY_INDEX、README §六 双向链路、`audit:doc-id:fix --dry-run` 脚本检测中均无 orphan。
+- **章节穷尽**：7 篇正文 SOP 严格五段式标准（§一前置 → §二步骤 → §三通过 → §四失败 → §五归档），无缺章节；S05/S07 额外补真数/值守独立子章（仍在 §二/§三 之内）。
+
+### 8.4 Bidirectional-Linking（双向引用，防信息孤岛）
+
+**原则要求**：文档 → 文档、文档 → 代码、代码 → 文档 均双向引用，禁止「写了一篇文档但没人知道在哪里」。
+
+**本次落地证据**（至少 4 类注册/引用 — 与 Task 9-12 一一对应）：
+1. **REGISTRY_INDEX.md**（`docs/meta/REGISTRY_INDEX.md §六`）—— 8 doc_id ↔ 路径 ↔ covers_code/docs 四向交叉索引 1 张大表（含 AGENTS.md、package.json、.husky/*、scripts/*.cjs、6 篇被引用文档）。
+2. **AGENTS.md 双引用注入点**（契约真相源 → SOP Suite）：
+   - 文档头部「📋 SOP 规范体系」声明：sops/README.md 为第一入口
+   - §七 验证命令结尾：「验证命令 ↔ SOP 质量门禁速查表对应关系」交叉链接 S02/S04/S05
+3. **8 篇被引用文档回链**（how-to/模块标准/故障排查/git 治理/09-gates/testing-strategy，共 6 篇 × 文末追加 🔗 交叉引用）：每篇明确规则真相源 / 操作落地路径对应关系，并在 SOP 中补 gap-1/2/3 共 3 个原文档未覆盖的缺口。
+4. **元文档 2 篇案例**（doc-freshness-governance §十一 / 本 SKILL §八）：把 SOP Suite 作为完整案例写进「文档如何编写、如何校对」的元技能文档中，形成"文档治理文档 → 文档案例"的双向链路。
+5. **Frontmatter 阶段链式 referenced_by**：S01 → referenced_by [S02] → S02 → referenced_by [S03, S04] → S03 → referenced_by [S04] → S04 → referenced_by [S05] → S05 → referenced_by [S06] → S06 → referenced_by [S07]。sops/README §六 有完整链路图。
+
+### 8.5 Version-Pinning（版本锁定，确保兼容性）
+
+**原则要求**：文档 Head 必须声明「本文档基于 X 版本的契约 Y 编写；Y 升级时必须重评对应 SOP Z 处」。
+
+**本次落地证据**：
+- 8 篇 SOP Frontmatter **统一 code_version = `"2.0.0-rc.1"` + 明确 last_updated = `2026-08-19` + change_log 首项 v1.0.0 全部一致**；
+- 每篇 SOP Frontmatter / 文末兼容性声明均明确：**SOP 基于 AGENTS.md v1.6.0 编写；AGENTS 大版本升级或 code_version 次版本增加时，重评关键内容**（S05 特别列出 3 处必评：§2 STEP 命令集 / §3.1 分级阈值 / §4.B 25 股票清单）；
+- S06 §2.A HOTFIX 豁免规则与 package.json 版本号严格绑定，任何 RC / HOTFIX 分支都必须使用 `npm version`（读 .nvmrc 中的 NPM semver 语义）官方工具 bump，禁止手写版本号绕校验。
+
+---
+
+## 九、版本记录（原 §八 重排为 §九）
 
 | 版本 | 日期 | 变更摘要 |
 |------|------|----------|
+| v1.1.0 | 2026-08-19 | 新增 §八 实战案例：SOP Suite v1.0.0 编写五大原则落地证据 5 小节（Truth-First：3 真相源对照 / Scan-Before-Write：Task 0 R1–R4 4 结果 / Exhaustiveness：7 阶段+目录+章节穷尽 / Bidirectional-Linking：5 类注册链路 + Frontmatter 链式 / Version-Pinning：code_version v2.0.0-rc.1 统一）；§七 协同关系表新增 doc-management-principles 条目；原 §八 版本记录升为 §九 |
 | v1.0.0 | 2026-07-20 | 初始版本：基于 FILE-MANAGEMENT-GUIDE-RCA-report.md 的 7 条教训和 5 条核心原则提炼，覆盖 Truth-First、Scan-Before-Write、Exhaustiveness、Bidirectional Linking、Version Pinning 五大原则 |
