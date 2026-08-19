@@ -76,9 +76,13 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     path: '/input/hot-sectors',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'input',
-    description: '输入舱 - 热门板块（已整合至录入看板，fallback 到 /input）',
-    deprecated: true,
-    redirectTo: '/input',
+    description: '输入舱 - 热门板块（独立于录入看板，筛选代表股纳入意向候选池）',
+  },
+  {
+    path: '/input/intention-pool',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'input',
+    description: '输入舱 - 意向输入池（双源注入标的的集中管理与采集）',
   },
   {
     path: '/input/data-test',

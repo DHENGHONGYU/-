@@ -19,6 +19,7 @@ import {
   Database,
   Upload,
   Flame,
+  Inbox,
   Activity,
   BarChart3,
   TrendingUp,
@@ -82,7 +83,9 @@ export const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
       group: '候选池管理',
       items: [
         { key: 'dashboard', label: '录入看板', path: '/input', icon: LayoutDashboard },
+        { key: 'intention-pool', label: '意向输入池', path: '/input/intention-pool', icon: Inbox },
         { key: 'pool-board', label: '研究候选池', path: '/input/pool-board', icon: Database },
+        { key: 'hot-sectors', label: '热门板块', path: '/input/hot-sectors', icon: Flame },
         { key: 'local-knowledge', label: '本地知识库', path: '/input/local-knowledge', icon: BookOpen },
       ],
     },
