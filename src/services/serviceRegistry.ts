@@ -93,6 +93,7 @@ export const SERVICE_REGISTRY: ReadonlyArray<ServiceRegistryEntry> = [
   { id: 'ScorePageService', filePath: 'src/services/analysis/scorePageService', status: 'active' },
   { id: 'ScoreTrendService', filePath: 'src/services/analysis/scoreTrendService', status: 'active' },
   { id: 'SeedService', filePath: 'src/services/system/seedService', status: 'active' },
+  { id: 'SimilarStockRecallService', filePath: 'src/services/analysis/similarStockRecallService', status: 'active' },
   { id: 'StrategySnapshotService', filePath: 'src/services/trading/strategySnapshotService', status: 'active' },
   { id: 'StressTestService', filePath: 'src/services/perf/stressTestService', status: 'active' },
   { id: 'SystemMonitorService', filePath: 'src/services/system/systemMonitorService', status: 'active' },
