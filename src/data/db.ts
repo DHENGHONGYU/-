@@ -61,7 +61,41 @@ export class V6Database {
       return
     }
     logger.debug('[DB] Waiting for database initialization...')
-    await this._readyPromise
+
+    // P0-8 修复：给 _readyPromise 加 5s 超时守卫，防止 vitest 环境下 db.init()
+    // 未被调用时 forever pending（vitest 全局无 beforeAll db.init / 测试文件忘记调用）。
+    // 超时抛明确错误：修复前表现为 "test hangs forever"，极难定位；
+    // 修复后直接抛 Error 并给出 "test file missing db.init()" 提示。
+    await new Promise<void>((resolve, reject) => {
+      let settled = false
+
+      const timeout = setTimeout(() => {
+        if (settled) return
+        settled = true
+        reject(new Error(
+          '[DB] ready() timeout after 5000ms. ' +
+          'Database not initialized. Call db.init() first or ensure tests/setup.ts global ' +
+          'beforeAll db.init() is enabled. If using vitest environment=node, consider calling ' +
+          'db.init() in your test file beforeAll. Make sure import \"fake-indexeddb/auto\" runs ' +
+          'before any db module import.'
+        ))
+      }, 5000)
+
+      Promise.resolve(this._readyPromise)
+        .then(() => {
+          if (settled) return
+          settled = true
+          clearTimeout(timeout)
+          resolve()
+        })
+        .catch((err) => {
+          if (settled) return
+          settled = true
+          clearTimeout(timeout)
+          reject(err)
+        })
+    })
+
     logger.debug('[DB] Database initialization confirmed ready')
   }
 

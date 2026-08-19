@@ -105,6 +105,12 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '输入舱 - 采集策略配置（七维策略 + 抓取引擎）',
   },
   {
+    path: '/input/system-test',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'input',
+    description: '输入舱 - 系统测试看板（页面审计/采集质量/存储映射/评分校验）',
+  },
+  {
     path: '/analysis/hub',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'analysis',

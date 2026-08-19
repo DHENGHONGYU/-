@@ -84,6 +84,23 @@ export class MCPAuditLogger {
     traceId: string,
     durationMs: number,
   ): Promise<void> {
+    // P0-9 修复：测试环境下不写入审计日志，避免：
+    //   1. IndexedDB 未初始化时海量 "Database not initialized" 错误
+    //      淹没真实测试失败（阶段 0 25 files 回归中 >160 行 stderr 污染）；
+    //   2. 审计写入耗时拖慢测试执行（测试环境不需要审计持久化）。
+    // 与 db.ready() 守卫形成双重兜底：即使 VITEST 守卫被绕过，
+    // db.ts ready() 超时也会给出明确错误（不挂死）。
+    if (
+      (typeof process !== 'undefined' && process.env?.NODE_ENV === 'test') ||
+      (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITEST) ||
+      // globalThis 上 vitest 运行时注入的变量：用 any 断言避免 ts-expect-error "未使用"
+      // （typeof <未声明标识符> 在 TS 里不报错，@ts-expect-error 会被判成 Unused）
+      typeof (globalThis as any).__vitest__ !== 'undefined' ||
+      typeof (globalThis as any).vi !== 'undefined'
+    ) {
+      return
+    }
+
     const auditStartTime = performance.now()
 
     try {

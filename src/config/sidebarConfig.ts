@@ -47,6 +47,7 @@ import {
   Layers,
   ClipboardCheck,
   Wand2,
+  Bug,
   type LucideIcon,
 } from 'lucide-react'
 import type { CabinType } from '@/store/workflowStore'
@@ -94,6 +95,7 @@ export const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
       items: [
         { key: 'collection-monitor', label: '采集监控台', path: '/input/collection-monitor', icon: Radar },
         { key: 'collection-strategy', label: '采集策略配置', path: '/input/collection-strategy', icon: SlidersHorizontal },
+        { key: 'system-test', label: '系统测试看板', path: '/input/system-test', icon: Bug },
       ],
     },
   ],
