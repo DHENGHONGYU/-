@@ -10,7 +10,7 @@ summary: "在现有 TF-IDF 语义搜索基础上，引入基于 transformers.js 
 tags: [data, vector-search, hnsw, semantic-search, embedding, adr, reference]
 version: v1.0.0
 last_updated: 2026-07-20
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-080
 referenced_by: []
 change_log:

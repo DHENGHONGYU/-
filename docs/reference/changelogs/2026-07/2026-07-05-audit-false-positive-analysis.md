@@ -1,7 +1,7 @@
 ---
 title: 2026-07-05-audit-false-positive-analysis
 tier: reference
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 version: v1.0.0
 last_updated: 2026-08-11
 change_log:

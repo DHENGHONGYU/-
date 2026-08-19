@@ -10,7 +10,7 @@ summary: "V9 输入舱（/input）负责数据输入与采集配置。初期设�
 tags: [frontend, input-cabin, adr, reference, component, ui]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-FRONT-001
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-149]
 change_log:

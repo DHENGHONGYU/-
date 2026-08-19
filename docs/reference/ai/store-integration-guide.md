@@ -10,7 +10,7 @@ summary: "该路径为旧文档入口，当前内容指向现有的 Store 集成
 tags: [data, integration, store]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-073
 related_docs: [V9-DOC-DATA-059, V9-DOC-DATA-055]
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
