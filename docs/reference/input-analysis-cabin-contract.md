@@ -10,7 +10,7 @@ summary: "定义「分析舱」调用「输入舱」意向候选池数据的只�
 tags: [backend, input-cabin, analysis-cabin, contract, interface]
 version: v1.0.0
 last_updated: 2026-08-14
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-BACK-047
 referenced_by: [V9-DOC-PROJ-046, V9-DOC-PROJ-053]
 change_log:

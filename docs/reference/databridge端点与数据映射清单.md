@@ -2,7 +2,7 @@
 doc_id: V9-DOC-REF-934
 title: databridge端点与数据映射清单
 tier: important
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 version: v1.0.0
 last_updated: 2026-07-05
 change_log:

@@ -10,7 +10,7 @@ summary: "覆盖 12 家国内外 LLM 供应商的配置切换、CLI 测试工具
 tags: [ai, llm, multi-model, testing, cli]
 version: v1.0.0
 last_updated: 2026-08-15
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-AI-034
 referenced_by: []
 change_log:

@@ -10,7 +10,7 @@ summary: "原始 Kimi 安装路径（system prompt 硬编码，每次对话自�
 tags: [project, registry, reference, governance, documentation]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-097
 related_docs: [V9-DOC-PROJ-219, V9-DOC-PROJ-220, V9-DOC-FRONT-045, V9-DOC-PROJ-206, V9-DOC-PROJ-208, V9-DOC-PROJ-201, V9-DOC-DATA-040, V9-DOC-PROJ-196, V9-DOC-PROJ-190]
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-149]

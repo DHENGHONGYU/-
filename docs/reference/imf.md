@@ -10,7 +10,7 @@ summary: "数据域: 国际货币基金组织（IMF）全球宏观经济数据 �
 tags: [data-source, macro, reference, project]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-220
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-097, V9-DOC-PROJ-149]
 change_log:
