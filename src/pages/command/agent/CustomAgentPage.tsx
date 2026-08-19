@@ -21,6 +21,8 @@ import { nanoid } from 'nanoid'
 import { useCustomAgentStore } from '@/store/customAgentStore'
 import type { CustomAgent } from '@/data/types'
 import { getLogger } from '@/lib/logger'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import { ConfirmDialog } from '@/components/molecules/ConfirmDialog'
 
 const logger = getLogger()
 
@@ -89,6 +91,9 @@ function toCustomAgentEntity(config: CustomAgentConfig, existing?: CustomAgent):
  * 排版走 TYPOGRAPHY_SCALE（text-h2/text-h3），消除 text-white/bg-white 裸用法。
  */
 const CustomAgentPage: React.FC = () => {
+  // P0-7 修复：沙箱环境可用的 confirm（不依赖 window.confirm）
+  const { confirm, dialogProps } = useConfirmDialog()
+
   // 阶段 B-1：从 store 读取列表；表单中间态仍用本地 useState（editingAgent）
   const agents = useCustomAgentStore((s) => s.agents)
   const storeLoading = useCustomAgentStore((s) => s.loading)
@@ -126,10 +131,17 @@ const CustomAgentPage: React.FC = () => {
    * 删除智能体（阶段 B-1：走 useCustomAgentStore → IDB）
    */
   const handleDeleteAgent = useCallback(async (agentId: string) => {
-    if (window.confirm('确定要删除这个智能体吗？')) {
+    const ok = await confirm({
+      title: '确定删除该智能体？',
+      description: '删除后，智能体的配置、历史任务与运行数据将一并移除，不可恢复。',
+      confirmLabel: '删除',
+      cancelLabel: '取消',
+      variant: 'danger',
+    })
+    if (ok) {
       await deleteAgent(agentId)
     }
-  }, [deleteAgent])
+  }, [confirm, deleteAgent])
 
   /**
    * 切换智能体启用状态（阶段 B-1：持久化到 IDB）
@@ -514,6 +526,7 @@ const CustomAgentPage: React.FC = () => {
           </Card>
         </div>
       )}
+      <ConfirmDialog {...dialogProps} />
     </PageContainer>
   )
 }

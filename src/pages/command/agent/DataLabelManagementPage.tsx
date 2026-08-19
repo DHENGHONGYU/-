@@ -18,6 +18,8 @@ import { Badge } from '@/components/atoms/Badge'
 import { Card } from '@/components/atoms/Card'
 
 import { nanoid } from 'nanoid'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import { ConfirmDialog } from '@/components/molecules/ConfirmDialog'
 /**
  * 数据标签接口
  */
@@ -45,6 +47,9 @@ interface DataLabel {
  * - 查看标签使用示例数
  */
 const DataLabelManagementPage: React.FC = () => {
+  // P0-7 修复：沙箱可用的确认对话框
+  const { confirm, dialogProps } = useConfirmDialog()
+
   // 状态管理
   const [labels, setLabels] = useState<DataLabel[]>([
     {
@@ -149,11 +154,19 @@ const DataLabelManagementPage: React.FC = () => {
   /**
    * 删除标签
    */
-  const handleDeleteLabel = useCallback((labelId: string) => {
-    if (window.confirm('确定要删除这个标签吗？关联的示例数据将保留但不再标记。')) {
+  const handleDeleteLabel = useCallback(async (labelId: string) => {
+    const ok = await confirm({
+      title: '确定删除该数据标签？',
+      description: '关联的示例数据将保留但不再标记。此操作不可恢复。',
+      confirmLabel: '删除',
+      cancelLabel: '取消',
+      variant: 'danger',
+    })
+    if (ok) {
       setLabels(prev => prev.filter(l => l.id !== labelId))
     }
-  }, [])
+   
+  }, [confirm])
 
   /**
    * 导入标签
@@ -454,6 +467,7 @@ const DataLabelManagementPage: React.FC = () => {
           </Card>
         </div>
       )}
+      <ConfirmDialog {...dialogProps} />
     </PageContainer>
   )
 }

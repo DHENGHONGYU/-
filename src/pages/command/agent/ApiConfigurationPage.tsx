@@ -22,6 +22,8 @@ import { TUSHARE_API } from '@/config/dataSourceUrls'
 import { API_ENDPOINT_PLACEHOLDER } from '@/config/uiPlaceholders'
 
 import { nanoid } from 'nanoid'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import { ConfirmDialog } from '@/components/molecules/ConfirmDialog'
 
 /**
  * API配置接口
@@ -74,6 +76,9 @@ interface ApiPermission {
  * 排版走 TYPOGRAPHY_SCALE（text-h2/text-h3），消除 text-white/bg-white 裸用法。
  */
 const ApiConfigurationPage: React.FC = () => {
+  // P0-7 修复：用 useConfirmDialog 代替 window.confirm，iframe / 沙箱环境可用
+  const { confirm, dialogProps } = useConfirmDialog()
+
   // 状态管理
   const [apis, setApis] = useState<ApiConfig[]>([
     {
@@ -238,11 +243,19 @@ const ApiConfigurationPage: React.FC = () => {
   /**
    * 删除API配置
    */
-  const handleDeleteApi = useCallback((apiId: string) => {
-    if (window.confirm('确定要删除这个API配置吗？相关的智能体将无法使用该API。')) {
+  const handleDeleteApi = useCallback(async (apiId: string) => {
+    const ok = await confirm({
+      title: '确定删除该 API 配置？',
+      description: '删除后，相关的智能体将无法使用该 API。此操作不可恢复。',
+      confirmLabel: '删除',
+      cancelLabel: '取消',
+      variant: 'danger',
+    })
+    if (ok) {
       setApis(prev => prev.filter(a => a.id !== apiId))
     }
-  }, [])
+   
+  }, [confirm])
 
   /**
    * 测试API连接
@@ -551,6 +564,7 @@ const ApiConfigurationPage: React.FC = () => {
           </Card>
         </div>
       )}
+      <ConfirmDialog {...dialogProps} />
     </PageContainer>
   )
 }

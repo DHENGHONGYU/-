@@ -365,7 +365,12 @@ function PriceSlider({ label, value, max, onChange }: PriceSliderProps): React.J
         step="0.1"
         value={sliderValue}
         onChange={(e) => {
+          // P0-5 修复：Number() 直接落盘前加 isFinite + clamp 守卫。
+          // 修复前：输入非数字 e.target.value = '' / 'abc' 时 Number 得 NaN，
+          // onChange(NaN) 作为价格语义写入配置 → 后续比较/计算全挂。
           const v = Number(e.target.value)
+          if (!Number.isFinite(v)) return
+          if (v < 0) return
           onChange(v >= max ? Number.POSITIVE_INFINITY : v)
         }}
       />

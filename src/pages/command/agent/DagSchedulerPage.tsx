@@ -20,6 +20,8 @@ import { Badge } from '@/components/atoms/Badge'
 import { Card } from '@/components/atoms/Card'
 
 import { nanoid } from 'nanoid'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import { ConfirmDialog } from '@/components/molecules/ConfirmDialog'
 /**
  * DAG工作流接口
  */
@@ -64,6 +66,9 @@ interface DagTask {
  * - 手动触发/暂停/停止工作流
  */
 const DagSchedulerPage: React.FC = () => {
+  // P0-7 修复：iframe 可用的 confirm 对话框
+  const { confirm, dialogProps } = useConfirmDialog()
+
   // 状态管理
   const [workflows, setWorkflows] = useState<DagWorkflow[]>([
     {
@@ -230,11 +235,19 @@ const DagSchedulerPage: React.FC = () => {
   /**
    * 删除工作流
    */
-  const handleDeleteWorkflow = useCallback((workflowId: string) => {
-    if (window.confirm('确定要删除这个工作流吗？')) {
+  const handleDeleteWorkflow = useCallback(async (workflowId: string) => {
+    const ok = await confirm({
+      title: '确定删除该工作流？',
+      description: '工作流及其调度配置、历史运行记录将一并删除，不可恢复。',
+      confirmLabel: '删除',
+      cancelLabel: '取消',
+      variant: 'danger',
+    })
+    if (ok) {
       setWorkflows(prev => prev.filter(w => w.id !== workflowId))
     }
-  }, [])
+   
+  }, [confirm])
 
   /**
    * 切换工作流状态
@@ -533,6 +546,7 @@ const DagSchedulerPage: React.FC = () => {
           </Card>
         </div>
       )}
+      <ConfirmDialog {...dialogProps} />
     </PageContainer>
   )
 }
