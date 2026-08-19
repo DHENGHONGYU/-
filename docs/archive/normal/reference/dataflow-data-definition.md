@@ -10,7 +10,7 @@ summary: "v1.2.0 新增。getStats() 返回的缓存统计对象。"
 tags: [data, data-definition, dataflow, reference, store]
 version: v1.2.1
 last_updated: 2026-08-15
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-018
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182]
 change_log:

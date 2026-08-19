@@ -10,7 +10,7 @@ summary: "阻塞说明：N1–N5 与 P1/P2 主体加固（A3/A4/A5/A6/A7/A9/A10/
 tags: [project, kanban, automation, documentation, reference]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-099
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 change_log:

@@ -10,7 +10,7 @@ summary: "所有 DATA_DEFINITION* 文档的唯一索引（Single Source of Truth
 tags: [data, data-definition, registry, reference, store]
 version: v1.1.0
 last_updated: 2026-08-15
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-017
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-122, V9-DOC-PROJ-176, V9-DOC-PROJ-182]
 change_log:

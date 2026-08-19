@@ -10,7 +10,7 @@ summary: "research_logs store  DataBridge "
 tags: [contract, api, reference, data, data-definition, store]
 version: v0.9.0-migration-implemented
 last_updated: 2026-06-25
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-020
 related_docs: [V9-DOC-META-000, V9-DOC-DATA-007, V9-DOC-DATA-019, V9-DOC-PROJ-193, V9-DOC-PROJ-174, V9-DOC-PROJ-164]
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-DATA-007, V9-DOC-PROJ-164, V9-DOC-PROJ-176, V9-DOC-DATA-019, V9-DOC-PROJ-182, V9-DOC-PROJ-193, docs/meta/deprecated-docs/old-versions/registry-index-v1.0.0-02-design.md, V9-DOC-PROJ-149]

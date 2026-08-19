@@ -10,7 +10,7 @@ summary: "参考 `F:\投资赛道分析\dashboard_v2.html` 的 Kimi 经典布局
 tags: [frontend, input-cabin, api]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-FRONT-024
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-164, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:
