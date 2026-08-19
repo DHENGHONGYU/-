@@ -6,7 +6,7 @@ last_updated: 2026-08-19
 code_version: "2.0.0-rc.1"
 change_log:
   - version: v1.6.0
-    changes: "2026-08-19 增量闭环：对齐 Husky v2 真阻断 20 步门禁 + scope-guard v2（≤30 单提交 / 跨域≤2）；补齐 tsc:prod/tsc:test 双 tsconfig 作用域与 tsc --force 日常；MCP Registry 15 条目（10 enabled + 5 disabled）；DB_VERSION=35（基线 29 + 增量 24=53 Store）；驾驶舱 USER_SCENES 结果优先视图；设计令牌 V8 Apple 冷色调；提交卫生（禁止 git add -A / --only 精确提交）；ESLint 生产域警告清零；上线前测试禁止 MOCK 必须真数；tsc 增量编译幻影错误防呆"
+    changes: "2026-08-19 增量闭环：对齐 Husky v2 真阻断 20 步门禁 + scope-guard v2（≤30 单提交 / 跨域≤2）；补齐 tsc:prod/tsc:test 双 tsconfig 作用域与 tsc --force 日常；MCP Registry 17 条目（12 enabled + 5 disabled，含 data-collector:main + marketdata 双子源）；DB_VERSION=35（基线 29 + 增量 24=53 Store）；驾驶舱 USER_SCENES 结果优先视图；设计令牌 V8 Apple 冷色调；提交卫生（禁止 git add -A / --only 精确提交）；ESLint 生产域警告清零；上线前测试禁止 MOCK 必须真数；tsc 增量编译幻影错误防呆；新增 audit:agents-consistency 契约一致性 P0 断言（A1~A7 七项，husky [22/20] 步）+ T15 doc-trigger"
     date: 2026-08-19
   - version: v1.5.6
     changes: "基准日校对(2026-08-11)：R1取真值(P2 正文版本声明行=v1.5.5) → R2 PATCH++(v1.5.6) / last_updated 刷新 / change_log 闭环"
@@ -1412,14 +1412,17 @@ git status --short            # 确认工作区状态
 
 ### 14.3 权限矩阵配置
 
-权限矩阵定义于 `src/config/mcpAclMatrix.ts` 的 `MCP_ACL_MATRIX` 常量；MCP Server Registry 定义于 `src/config/mcpServerRegistry.ts` 的 `MCP_SERVER_REGISTRY`（v1.6.0 起共 15 条目：10 enabled + 5 disabled；严禁 UI 层向已 disabled Server 放行 ACL，否则会形成 UI→MCP→失败死链路）。
+权限矩阵定义于 `src/config/mcpAclMatrix.ts` 的 `MCP_ACL_MATRIX` 常量；MCP Server Registry 定义于 `src/config/mcpServerRegistry.ts` 的 `MCP_SERVER_REGISTRY`（v1.6.0 起共 **17 条目：12 enabled + 5 disabled**；严禁 UI 层向已 disabled Server 放行 ACL，否则会形成 UI→MCP→失败死链路）。
 
 ```typescript
 export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> = {
   agent:  { allowedServers: ['*'], allowedTools: ['*'] },
-  // v1.6.0 ui 实际 = 10 查询类：fetcher / pool / scoring:v6 / news / llm / screening / backtest / system / marketdata / trading(只读)
-  // 已 disabled 5 个（analysis / portfolio / knowledge / execution / workflow:main）—— UI 一律 ❌，防止假链路
-  ui:     { allowedServers: ['fetcher','pool','scoring:v6','news','llm','screening','backtest','trading','system','marketdata'],
+  // v1.6.0 ui 实际 ACL allowedServers = 10 逻辑前缀：fetcher / pool / scoring:v6 / news / llm / screening / backtest / system / marketdata / trading(只读)
+  //   注：marketdata 前缀覆盖 2 个 enabled Server（marketdata:westock + marketdata:tencentnews）；
+  //       data-collector:main 为内部采集专用 Server（enabled=true 但不在 ui ACL）；
+  //       两者合计使 registry enabled 数量（12）比 UI 允许前缀数（10）多出 2，属正常设计。
+  // 已 disabled 5 个（analysis:main / portfolio:main / knowledge:local / execution:main / workflow:main）—— UI 一律 ❌，防止假链路
+  ui:     { allowedServers: ['fetcher','pool','scoring:v6','news','llm','screening','backtest','system','trading','marketdata'],
             allowedTools: ['health_check','list_*','get_*','fetch_*','scan_signals','get_orders','westock_*','query_*','read_*','list_pool_*','export_*',...] },
   ci:     { allowedServers: ['system'], allowedTools: ['get_*','generate_migration_report'] },
   system: { allowedServers: ['*'], allowedTools: ['*'] },
@@ -1427,8 +1430,8 @@ export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> 
 ```
 
 **Server 白名单三向一致性强制规则（v1.6.0）**：
-- 新增/启用/禁用 Server，须同步改三处：① `mcpServerRegistry.ts`（enabled boolean + 恢复条件注释）② `mcpAclMatrix.ts`（ui allowedServers，写操作类绝不出现在 ui）③ `docs/guides/how-to/mcp-acl-guide.md` §3.2 权限矩阵表格
-- 校验命令：`npm run audit:skill-coverage` 中 MCP 段 + `npx vitest run src/mcp/__tests__/mcpAclInterceptor.test.ts`
+- 新增/启用/禁用 Server，须同步改三处：① `mcpServerRegistry.ts`（enabled boolean + 恢复条件注释）② `mcpAclMatrix.ts`（ui allowedServers，写操作类绝不出现在 ui）③ `docs/guides/how-to/mcp-acl-guide.md` §3.2 权限矩阵表格；**三处任一遗漏**都会被 `npm run audit:agents-consistency` A3 断言（P0 BLOCK）捕捉
+- 校验命令：`npm run audit:skill-coverage` 中 MCP 段 + `npx vitest run src/mcp/__tests__/mcpAclInterceptor.test.ts` + `npm run audit:agents-consistency`
 - 僵尸 Server 清理模板：置 `enabled:false` + 在下方追加 3 行注释「恢复条件 / 恢复审批 / 恢复检查项」；**禁止直接从数组删除条目**，避免已存在的 transport/bridge 路由空引用。
 
 **通配符规则**：
@@ -1748,9 +1751,12 @@ FinSightV9 是**个人本地投研复盘工具**，定位决定了部署架构�
 | 修改 token / 颜色相关代码 | `npm run audit:tokens`（基线只减不增） |
 | 新增/修改组件、Widget、Registry（atom/molecule/organism/template） | `npm run audit:registry` + `npx vitest run src/components/registry/registryContract.test.ts` |
 | 新增/移动/重命名文档或改 frontmatter（doc_id / related_docs / covers_code） | `npm run audit:doc-id:changed` |
-| 改动 tsconfig.prod.json / tsconfig.test.json / tsc 脚本 | `npm run tsc:prod` + `npm run tsc:test` 均 0 错误；连续报错不一致时补 `tsc --force` |
-| 改动 MCP server/ACL/registry | `npx vitest run src/mcp/__tests__/mcpAclInterceptor.test.ts` + `npm run audit:skill-coverage` |
-| 准备上线发布 | 执行 §十.3「上线前真数测试」清单：Mock 开关关闭 + 真实数据源 + 关键业务路径真跑 |
+| 改动 tsconfig.prod.json / tsconfig.test.json / tsc 脚本 | `npm run tsc:prod` + `npm run tsc:test` 均 0 错误；连续报错不一致时补 `tsc --force` + `npm run audit:agents-consistency`（tsconfig 双文件存在性 P1 断言） |
+| 改动 MCP server/ACL/registry | `npx vitest run src/mcp/__tests__/mcpAclInterceptor.test.ts` + `npm run audit:skill-coverage` + `npm run audit:agents-consistency`（MCP 三元组一致性 P0 断言） |
+| 改动 DB_VERSION / STORE_NAME / Schema 升级 | `npm run audit:db-references` + `npm run audit:acl-consistency` + `npm run audit:agents-consistency`（DB_VERSION + Store 总数 P0 断言） |
+| 改动 AGENTS.md 「事实表段」（§14.3 / §7.2 USER_SCENES / Schema 段数字 / MCP 条目） | **首条** 跑 `npm run audit:agents-consistency`；失败先修复漂移再做其他验证（Husky [22/20] 步已强制） |
+| 改动 USER_SCENES / cockpit.constants.ts 场景映射 | `npm run audit:widget-registry` + `npm run audit:agents-consistency`（4 场景 ID 集合 P0 断言） |
+| 准备上线发布 | 执行 §十.3「上线前真数测试」清单：Mock 开关关闭 + 真实数据源 + 关键业务路径真跑 + `npm run audit:agents-consistency:strict`（P1 也阻断） |
 
 ### 16.6 长命令与超时纪律
 
