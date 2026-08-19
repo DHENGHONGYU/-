@@ -22,7 +22,7 @@ const {
     debug: vi.fn(),
   },
   mockCallTool: vi.fn(),
-  mockConfirm: vi.fn<Parameters<() => Promise<boolean>>, Promise<boolean>>(
+  mockConfirm: vi.fn<(...args: unknown[]) => Promise<boolean>>(
     () => Promise.resolve(true),
   ),
 }))

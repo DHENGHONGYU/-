@@ -10,7 +10,7 @@ summary: "作者身份：资深审计合伙人，20 年审计从业经验。本�
 tags: [qa, audit, workflow]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-QA-110
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-149]
 change_log:

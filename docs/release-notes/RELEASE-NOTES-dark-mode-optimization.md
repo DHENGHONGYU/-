@@ -2,7 +2,7 @@
 doc_id: V9-DOC-PROJ-374
 title: 深色模式优化 Release Notes
 tier: important
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 date: 2026-08-09
 version: v1.0.0
 last_updated: 2026-08-11
