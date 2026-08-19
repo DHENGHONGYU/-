@@ -10,7 +10,7 @@ summary: "上线后 48h 值守模板（3+ 岗：架构师 OnCall / 前端值班 
 tags: [sop, operations, incident-response, oncall, p0-matrix, rca-template]
 version: v1.0.0
 last_updated: 2026-08-19
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-SOP-007
 related_docs:
   - V9-DOC-TR-001   # how-to-troubleshooting.md（引用原文 5 大类 + 补 gap-3）

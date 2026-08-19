@@ -10,7 +10,7 @@ summary: "该路径为旧文档入口，当前内容指向现有质量门禁说�
 tags: [qa, quality, standards]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-QA-108
 related_docs: [V9-DOC-QA-065, V9-DOC-QA-010]
 referenced_by: [V9-DOC-META-000, docs/guides/how-to/how-to-use-audit-scripts.md, V9-DOC-PROJ-176, V9-DOC-QA-010]

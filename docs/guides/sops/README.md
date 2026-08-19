@@ -10,7 +10,7 @@ summary: "覆盖 FinSight V9 开发全生命周期 7 个连续阶段的标准操
 tags: [sop-index, sdlc, overview, procedure-suite, quality-gateway]
 version: v1.0.0
 last_updated: 2026-08-19
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-SOP-000
 related_docs:
   - V9-DOC-SOP-001

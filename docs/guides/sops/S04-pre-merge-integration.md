@@ -10,7 +10,7 @@ summary: "PR 合入主干前的标准集成测试流程：单模块准入 → ga
 tags: [sop, integration, pre-merge, gate-quick, CI-comparison, test-stable]
 version: v1.0.0
 last_updated: 2026-08-19
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-SOP-004
 related_docs:
   - V9-DOC-QA-065     # 质量门禁 09-quality-gates.md

@@ -1,4 +1,4 @@
-﻿---
+---
 title: 剩余复杂度整改任务清单与计划（2026-07-12）
 type: how-to
 domain: qa
@@ -10,7 +10,7 @@ summary: "基准：`complexity-baseline-current.json`（实测 93 项 = 64 深�
 tags: [qa, complexity, remediation]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-QA-064
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-157]
 change_log:

@@ -18,7 +18,7 @@ summary: "**文档定位**：团队日常开发的统一操作手册，整合开
 tags: [project, guide, reference, component, governance, documentation]
 version: v1.0.1
 last_updated: 2026-08-12
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-121
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 change_log:

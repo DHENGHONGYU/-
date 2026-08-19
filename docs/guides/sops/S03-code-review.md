@@ -10,7 +10,7 @@ summary: "PR 模板 8 字段清单（≥ 6）；3 轮次 Review 检查矩阵（�
 tags: [sop, code-review, pr-template, review-checklist, cross-module-impact]
 version: v1.0.0
 last_updated: 2026-08-19
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-SOP-003
 related_docs:
   - V9-DOC-MOD-STD      # module-completion-standard.md

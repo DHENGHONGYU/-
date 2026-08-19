@@ -10,7 +10,7 @@ summary: "2.0.0 正式版上线前 24 步强制体检流程：环境校验→类
 tags: [sop, pre-launch, release, quality-gate, real-data, no-mock, checklist]
 version: v1.0.0
 last_updated: 2026-08-19
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-SOP-005
 related_docs:
   - V9-DOC-QA-065   # 质量门禁 09-quality-gates.md

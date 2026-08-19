@@ -9,7 +9,7 @@ last_updated: 2026-08-17
 ﻿---
 doc_id: V9-DOC-DEV-009
 title: visual-regression-guide
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 tier: important
 version: v1.0.0
 last_updated: 2026-08-11

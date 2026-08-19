@@ -9,7 +9,7 @@ summary: "基于 FinSightV9 项目 30+ 僵尸组件深度诊断与 6 大根因�
 tags: [component, governance, lessons-learned, zombie-component, best-practices]
 version: v1.0.0
 last_updated: 2026-07-25
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-GUIDE-023
 tier: T1
 change_log:

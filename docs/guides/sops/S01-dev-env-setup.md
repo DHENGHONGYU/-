@@ -10,7 +10,7 @@ summary: "新成员从零 60 分钟内完成可启动环境：Git/Node（与 .nv
 tags: [sop, onboarding, env-setup, cross-platform, venv, nvm]
 version: v1.0.0
 last_updated: 2026-08-19
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-SOP-001
 related_docs:
   - V9-DOC-TR-001   # how-to-troubleshooting.md

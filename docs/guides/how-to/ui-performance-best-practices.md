@@ -18,7 +18,7 @@ summary: "动画性能优化、暗色模式兼容性、响应式断点规范"
 tags: [frontend, performance, animation, dark-mode, responsive, component]
 version: v1.0.0
 last_updated: 2026-08-15
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-FRONT-061
 change_log:
   - version: v1.0.0

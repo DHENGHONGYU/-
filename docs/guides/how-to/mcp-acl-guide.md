@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-DEV-005
 title: mcp-acl-guide
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 tier: important
 version: v1.2.0
 last_updated: 2026-08-15

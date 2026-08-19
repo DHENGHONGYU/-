@@ -17,7 +17,7 @@ summary: "本文档定义 V9 项目中功能模块的完成标准（Definition o
 tags: [module, dod, completion-standard, governance, quality-gate]
 version: v1.0.0
 last_updated: 2026-07-25
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-GUIDE-022
 tier: T1
 change_log:

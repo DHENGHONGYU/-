@@ -10,7 +10,7 @@ summary: "按 semver 2.0 规范版本号（含 RC/HOTFIX 豁免）→ 文件单�
 tags: [sop, release, deployment, semver, rollback, tagging]
 version: v1.0.0
 last_updated: 2026-08-19
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-SOP-006
 related_docs:
   - V9-DOC-REP-051   # DEPLOYMENT-CHECKLIST-2026-08-14.md
