@@ -297,9 +297,30 @@ console.log(getComponentStats()) // { total: 10, active: 0, available: 10, ... }
 
 ---
 
+## 六、文档 Frontmatter 注册表（Doc ID Registry · SOP Suite）
+
+> **本节目的**：为整套 SOP Suite（docs/guides/sops/ 8 篇文档）建立 doc_id → 路径 → 关联代码/文档 的双向索引，供 `audit:doc-id` / `audit:doc-id-reverse` 脚本查询，避免文档孤岛。  
+> **格式**：每行 = 1 个 `V9-DOC-SOP-*` 文档。
+
+| doc_id | 标题（中文） | 路径（相对仓库根） | covers_docs（引用的文档路径） | covers_code（引用的真相源代码/脚本） |
+|--------|------------|------------------|--------------------------|-----------------------------------|
+| **V9-DOC-SOP-000** | SDLC 七阶段 SOP 总览 | `docs/guides/sops/README.md` | S01~S07 全部正文 | AGENTS.md、package.json、.husky/pre-commit、.husky/pre-push、scripts/env-path-guard.cjs、scripts/ensure-venv.cjs、scripts/run-venv-python.cjs |
+| **V9-DOC-SOP-001** | 开发环境搭建 SOP | `docs/guides/sops/S01-dev-env-setup.md` | docs/guides/how-to/how-to-troubleshooting.md、docs/guides/how-to/git-commit-governance.md | .nvmrc、AGENTS.md §十六、scripts/ensure-venv.cjs、scripts/run-venv-python.cjs、.vscode/extensions.json、.vscode/settings.json |
+| **V9-DOC-SOP-002** | 日常开发与提交 SOP | `docs/guides/sops/S02-dev-workflow.md` | docs/guides/how-to/git-commit-governance.md、docs/guides/09-quality-gates.md | AGENTS.md §七（22 步门禁）、package.json scripts、.husky/pre-commit、.husky/pre-push、.husky/commit-msg、PULL_REQUEST_TEMPLATE.md |
+| **V9-DOC-SOP-003** | 代码审查 SOP | `docs/guides/sops/S03-code-review.md` | docs/guides/module-completion-standard.md、docs/guides/how-to/git-commit-governance.md、docs/guides/09-quality-gates.md | .github/CODEOWNERS、src/**/*.ts(x) type exports、tests/**、docs/reports/code-review/ 归档 |
+| **V9-DOC-SOP-004** | 合并前集成测试 SOP | `docs/guides/sops/S04-pre-merge-integration.md` | docs/guides/how-to/how-to-use-audit-scripts.md、docs/guides/module-completion-standard.md、docs/guides/testing-strategy.md、docs/guides/09-quality-gates.md | package.json gate:quick/test:stable/test:e2e-verify/test:ci/audit:layers/audit:acl-consistency、tsconfig.prod.json、tests/quarantine.list |
+| **V9-DOC-SOP-005** | 上线前全面体检 SOP | `docs/guides/sops/S05-pre-launch-checklist.md` | docs/guides/09-quality-gates.md、docs/guides/how-to/how-to-use-audit-scripts.md、docs/guides/testing-strategy.md、docs/reports/上线前全面校验报告-v2.0.0.md、AGENTS.md v1.6.0 | AGENTS.md §七 全量、package.json 全部 audit:* / tsc:* / test:* / validate:* / complexity-scan、.env.example、tests/e2e-verify-25stocks.integration.test.ts、scripts/build-health-report.ts |
+| **V9-DOC-SOP-006** | 版本发布与部署 SOP | `docs/guides/sops/S06-release-deployment.md` | docs/reports/testing/DEPLOYMENT-CHECKLIST-2026-08-14.md、docs/guides/sops/S05-pre-launch-checklist.md、docs/guides/how-to/git-commit-governance.md | package.json build / verify:* / scripts/build-manifest.cjs、scripts/verify-build-sri.cjs、CHANGELOG.md、dist/（构建产物）、Edge Pages CLI 配置 |
+| **V9-DOC-SOP-007** | 上线后运维与应急 SOP | `docs/guides/sops/S07-ops-incident-response.md` | docs/guides/how-to/how-to-troubleshooting.md、docs/guides/sops/S06-release-deployment.md | Sentry SDK 接入代码、scripts/ops/logs-locate-fast.cjs、docs/reports/rca/ 归档目录、飞书 Bot Webhook 配置 |
+
+**合计注册条目**：`8 条`（1 条总览 + 7 条正文 SOP）。与 docs/guides/sops/README.md §六「双向引用说明」对齐。
+
+---
+
 ## 五、变更日志
 
 | 版本 | 日期 | 变更摘要 |
-|------|------|---------| 
+|------|------|---------|
+| v1.2.0 | 2026-08-19 | 新增 §六 文档 Doc ID 注册表（SOP Suite）：注册 V9-DOC-SOP-000 ~ 007 共 8 条 SOP，建立 doc_id ↔ 路径 ↔ covers_code/docs 四向交叉索引。 |
 | v1.1.0 | 2026-07-05 | Store 注册表更新为实际 47 个 Zustand Store 完整清单；新增 §2.5 UseCase 模块（11 个）；新增 §2.6 交易计算纯函数模块（6 个）；修正 Store 注册表文件路径与查询方式 |
 | v1.0.0 | 2026-07-05 | 初始版本：三层注册体系文档化（Widget/Store/Component） |
