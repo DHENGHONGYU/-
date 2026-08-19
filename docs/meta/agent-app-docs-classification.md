@@ -18,7 +18,7 @@ summary: "场景标签：`@scene#17:\"Agent 应用\"` 生成时间：2026-07-16 
 tags: [ai, agent, registry, documentation]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-AI-031
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-331, V9-DOC-PROJ-175]
 change_log:

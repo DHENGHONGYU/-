@@ -10,7 +10,7 @@ summary: "00-meta directory document index and navigation entry"
 tags: [meta, documentation, index, project, governance, checklist]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-175
 related_docs: [V9-DOC-PROJ-016, V9-DOC-META-000, V9-DOC-PROJ-026, V9-DOC-PROJ-316, V9-DOC-PROJ-315, V9-DOC-PROJ-317, V9-DOC-PROJ-321, V9-DOC-QA-111, V9-DOC-PROJ-320, V9-DOC-ARCH-047, V9-DOC-PROJ-007, V9-DOC-PROJ-010, V9-DOC-PROJ-325, V9-DOC-AI-031, V9-DOC-PROJ-338, V9-DOC-PROJ-184]
 referenced_by: [V9-DOC-META-000]

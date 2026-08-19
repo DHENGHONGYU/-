@@ -18,7 +18,7 @@ summary: **梳理范围：全项目业务 .md 共 **1238 份（排除 `node_modu
 tags: [architecture, refactor, documentation]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-ARCH-047
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-331, V9-DOC-PROJ-175]
 change_log:

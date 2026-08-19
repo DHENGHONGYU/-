@@ -1,6 +1,6 @@
 ---
 title: docs/meta/ai-index/.ai-index/README.md
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-306
 version: v1.0.0
 last_updated: 2026-08-11

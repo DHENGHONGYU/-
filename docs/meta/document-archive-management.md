@@ -10,7 +10,7 @@ summary: "文档定位：定义死文档的判定标准、审计流程、归档�
 tags: [project, audit, spec, documentation, management]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-321
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-CROSSINDEX-001, V9-DOC-PROJ-320, V9-DOC-PROJ-017, V9-DOC-PROJ-175]
 change_log:

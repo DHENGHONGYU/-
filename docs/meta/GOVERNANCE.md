@@ -10,7 +10,7 @@ summary: "V9 文档治理宪法：基于 Diátaxis + 数字前缀的实际分类
 tags: [project, governance, documentation, meta, diataxis]
 version: v2.0.0
 last_updated: 2026-07-19
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-016
 referenced_by: [V9-DOC-PROJ-032, V9-DOC-META-000, V9-DOC-PROJ-CROSSINDEX-001, V9-DOC-PROJ-217, V9-DOC-PROJ-175, V9-DOC-PROJ-218]
 change_log:

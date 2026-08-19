@@ -18,7 +18,7 @@ summary: V9 项目文档 Frontmatter 元数据的完整规范，包括字段定�
 tags: [frontmatter, metadata, standard, specification, governance, documentation, spec]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-026
 related_docs: [V9-DOC-PROJ-017, V9-DOC-PROJ-316, V9-DOC-PROJ-315, V9-DOC-QA-111]
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-017, V9-DOC-PROJ-175]

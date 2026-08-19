@@ -10,7 +10,7 @@ summary: "文档定位：定义 V9 项目文档的三维分类体系、层级结
 tags: [project, system, spec, documentation]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-316
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-320, V9-DOC-PROJ-017, V9-DOC-PROJ-026, V9-DOC-PROJ-317, V9-DOC-PROJ-175]
 change_log:

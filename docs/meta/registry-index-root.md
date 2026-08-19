@@ -10,7 +10,7 @@ summary: "Document category index registry with domain and type-based library na
 tags: [project, registry, migration, documentation, governance]
 version: v1.1.0
 last_updated: 2026-08-15
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-185
 related_docs: [V9-DOC-META-003, V9-DOC-PROJ-184]
 change_log:

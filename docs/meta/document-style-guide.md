@@ -18,7 +18,7 @@ summary: "文档定位：定义项目文档的命名规则、格式标准、结�
 tags: [project, guide, standards]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-315
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-320, V9-DOC-PROJ-026, V9-DOC-PROJ-317, V9-DOC-PROJ-175]
 change_log:

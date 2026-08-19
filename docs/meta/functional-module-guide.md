@@ -7,7 +7,7 @@ summary: "写入流程：UI/Store → Service → DataBridge.forward(StandardEnv
 tags: [project, guide, checklist, component, governance, documentation]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-015
 referenced_by: [V9-DOC-META-000]
 change_log:

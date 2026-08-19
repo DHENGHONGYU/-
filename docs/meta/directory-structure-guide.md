@@ -18,7 +18,7 @@ summary: "为 APP 开发团队建立规范的文件管理体系；本版基于 2
 tags: [project, guide, meta, component, governance, documentation]
 version: v3.1.1
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-007
 referenced_by: [V9-DOC-PROJ-032, V9-DOC-META-000, V9-DOC-QA-114, docs/archive/00-meta-historical/V9-PRE-LAUNCH-AUDIT-REPORT-20260713.md, V9-DOC-QA-113, docs/archive/00-meta-historical/directory-structure-audit-report.md, V9-DOC-PROJ-175]
 change_log:
