@@ -211,3 +211,33 @@ afterEach(async () => {
     /* noop */
   }
 })
+
+// ============================================================
+// 全局 DB 初始化（P0-8 修复：防止 db.ready() 永远 pending 挂死全量测试）
+// ============================================================
+//
+// 问题根因（InputApp.test.tsx L77 注释 + 阶段 0 前 3 轮命令挂死实证）：
+//   tests/setup.ts 只 import 'fake-indexeddb/auto' 但不调用 db.init()，
+//   db.ready() 内部 await this._readyPromise 永远不 resolve，vitest 无限等待。
+//   之前约 44 个测试文件在各自 beforeAll 中手动 db.init()，但跨文件组合/共享单例
+//   场景下（MCP 工具调用触发 auditLogger → saveExecutionLog → databridge.ready）
+//   会命中 "没 beforeAll 就 await ready" 的时序窗口。
+//
+// 修复：
+//   beforeAll 全局动态 import db 并 init()；同时 db.ts ready() 另加 5s 超时兜底。
+//   幂等保证：db.init() L39 有 if (this._isReady) return，与 44 文件中已有的
+//   beforeAll db.init() 不会重复开销。
+//
+// 注意：依旧保持动态 import() 形式，避免 setup.ts 静态加载 db 模块导致
+// 测试文件的 vi.mock(db-connection) 失效（注释 L186-187 契约）。
+beforeAll(async () => {
+  try {
+    const { db } = await import('@/data/db')
+    await db.init()
+  } catch (err) {
+    // 某些纯 node 环境审计测试（@vitest-environment node）不需要 IndexedDB；
+    // fake-indexeddb 初始化异常时仅 warn，不阻断文件运行。
+    const msg = err instanceof Error ? err.message : String(err)
+    console.warn('[tests/setup] global db.init() skipped', { error: msg })
+  }
+})

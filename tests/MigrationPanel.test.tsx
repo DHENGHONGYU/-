@@ -10,6 +10,10 @@ import MigrationPanel from '@/components/organisms/system/MigrationPanel'
 const {
   mockLogger,
   mockCallTool,
+  // P0-7 window.confirm → useConfirmDialog 对应测试 mock：
+  //   替代 vi.spyOn(window, 'confirm').mockReturnValue(true/false)
+  //   用例通过 mockConfirm.mockImplementation(() => Promise.resolve(true|false)) 控制返回
+  mockConfirm,
 } = vi.hoisted(() => ({
   mockLogger: {
     info: vi.fn(),
@@ -18,6 +22,9 @@ const {
     debug: vi.fn(),
   },
   mockCallTool: vi.fn(),
+  mockConfirm: vi.fn<Parameters<() => Promise<boolean>>, Promise<boolean>>(
+    () => Promise.resolve(true),
+  ),
 }))
 
 vi.mock('@/lib/logger', () => ({
@@ -28,6 +35,24 @@ vi.mock('@/mcp/bridge/mcpBridge', () => ({
   mcpBridge: {
     callTool: mockCallTool,
   },
+}))
+
+// P0-7 修复后：useConfirmDialog 替代 window.confirm
+//  - 用 mockConfirm 控制所有 confirm 对话框的返回值（true 确认 / false 取消）
+//  - dialogProps.open=false 保证 <Dialog> 不 render 为 open，从而不会走
+//    useEffect → dialog.showModal()，绕过 jsdom 未实现 HTMLDialogElement.showModal 的限制
+//    (TypeError: dialog.showModal is not a function)
+vi.mock('@/hooks/useConfirmDialog', () => ({
+  useConfirmDialog: () => ({
+    confirm: mockConfirm,
+    dialogProps: {
+      open: false,
+      options: { title: '', description: '' },
+      onConfirm: vi.fn(),
+      onCancel: vi.fn(),
+      onOpenChange: vi.fn(),
+    },
+  }),
 }))
 
 // ══════════════════════════════════════════════════════════════
@@ -378,7 +403,7 @@ describe('MigrationPanel', () => {
   // 用例 8:handleImport 覆盖路径 — 用户取消,验证取消日志
   // ──────────────────────────────────────────────────────────────
   it('handleImport with overwrite=true: user cancels confirm, logs cancel', async () => {
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false)
+    mockConfirm.mockImplementationOnce(() => Promise.resolve(false))
 
     await uploadFile()
 
@@ -409,14 +434,14 @@ describe('MigrationPanel', () => {
       '[MigrationPanel] overwrite=true,触发二次确认对话框',
     )
 
-    confirmSpy.mockRestore()
+    mockConfirm.mockClear()
   })
 
   // ──────────────────────────────────────────────────────────────
   // 用例 9:handleImport 覆盖路径 — 备份成功,验证备份完成日志
   // ──────────────────────────────────────────────────────────────
   it('handleImport with overwrite=true: backup succeeds, logs backup complete + exportAll', async () => {
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
+    mockConfirm.mockImplementationOnce(() => Promise.resolve(true))
 
     // mock export_data 返回成功
     const backupData = {
@@ -497,14 +522,14 @@ describe('MigrationPanel', () => {
       )
     })
 
-    confirmSpy.mockRestore()
+    mockConfirm.mockClear()
   })
 
   // ──────────────────────────────────────────────────────────────
   // 用例 10:handleImport 覆盖路径 — 备份失败,验证中止日志
   // ──────────────────────────────────────────────────────────────
   it('handleImport with overwrite=true: backup fails, logs error and aborts', async () => {
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
+    mockConfirm.mockImplementationOnce(() => Promise.resolve(true))
 
     mockCallTool.mockImplementation(async (_server: string, tool: string) => {
       switch (tool) {
@@ -541,14 +566,14 @@ describe('MigrationPanel', () => {
     // 断言:import_to_v9 不应被调用(已中止)
     expect(mockCallTool).not.toHaveBeenCalledWith('system', 'import_to_v9', expect.anything())
 
-    confirmSpy.mockRestore()
+    mockConfirm.mockClear()
   })
 
   // ──────────────────────────────────────────────────────────────
   // 用例 11:handleImport 覆盖路径 — 备份异常,验证异常日志
   // ──────────────────────────────────────────────────────────────
   it('handleImport with overwrite=true: backup throws, logs exception', async () => {
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
+    mockConfirm.mockImplementationOnce(() => Promise.resolve(true))
 
     mockCallTool.mockImplementation(async (_server: string, tool: string) => {
       switch (tool) {
@@ -579,7 +604,7 @@ describe('MigrationPanel', () => {
       )
     })
 
-    confirmSpy.mockRestore()
+    mockConfirm.mockClear()
   })
 
   // ──────────────────────────────────────────────────────────────
@@ -623,7 +648,7 @@ describe('MigrationPanel', () => {
   // ──────────────────────────────────────────────────────────────
   it('handleDownloadBackup: logs start and downloaded', async () => {
     // 通过覆盖式导入成功路径触发备份,然后点击下载备份按钮
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
+    mockConfirm.mockImplementationOnce(() => Promise.resolve(true))
     const backupData = { stocks: [{ symbol: 'X' }] }
     mockCallTool.mockImplementation(async (_server: string, tool: string, args: Record<string, unknown>) => {
       switch (tool) {
@@ -698,7 +723,7 @@ describe('MigrationPanel', () => {
       )
     })
 
-    confirmSpy.mockRestore()
+    mockConfirm.mockClear()
     clickSpy.mockRestore()
   })
 
@@ -706,7 +731,7 @@ describe('MigrationPanel', () => {
   // 用例 14:handleRollback — 验证回滚日志(warn + info×2)
   // ──────────────────────────────────────────────────────────────
   it('handleRollback: logs warn start + trigger download + complete', async () => {
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
+    mockConfirm.mockImplementationOnce(() => Promise.resolve(true))
     const backupData = { stocks: [{ symbol: 'X' }] }
     
     mockCallTool.mockImplementation(async (_server: string, tool: string) => {
@@ -773,7 +798,7 @@ describe('MigrationPanel', () => {
       }),
     )
 
-    confirmSpy.mockRestore()
+    mockConfirm.mockClear()
   })
 
   // ──────────────────────────────────────────────────────────────
@@ -822,7 +847,7 @@ describe('MigrationPanel', () => {
   // 覆盖分支:backupResult.error ?? '未知错误'(L164)的 ?? false 分支
   // ──────────────────────────────────────────────────────────────
   it('handleImport with overwrite=true: backup fails without error field, uses 未知错误', async () => {
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
+    mockConfirm.mockImplementationOnce(() => Promise.resolve(true))
 
     // success=false 且无 error 字段,触发 ?? '未知错误'
     mockCallTool.mockImplementation(async (_server: string, tool: string) => {
@@ -857,7 +882,7 @@ describe('MigrationPanel', () => {
 
     // import_to_v9 不应被调用(已中止)
     expect(mockCallTool).not.toHaveBeenCalledWith('system', 'import_to_v9', expect.anything())
-    confirmSpy.mockRestore()
+    mockConfirm.mockClear()
   })
 
   // ──────────────────────────────────────────────────────────────
@@ -981,7 +1006,7 @@ describe('MigrationPanel', () => {
   // 覆盖分支:backupData[store]?.length ?? 0(L148)的 ?. 和 ?? false 分支
   // ──────────────────────────────────────────────────────────────
   it('handleImport with overwrite=true: backupData with undefined store value covers ?.length ?? 0', async () => {
-    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
+    mockConfirm.mockImplementationOnce(() => Promise.resolve(true))
 
     // backupData 中 emptyStore 的值为 null,触发 backupData[store]?.length 的 ?. false 分支
     const backupData = {
@@ -1024,6 +1049,6 @@ describe('MigrationPanel', () => {
       )
     })
 
-    confirmSpy.mockRestore()
+    mockConfirm.mockClear()
   })
 })
