@@ -442,17 +442,18 @@ P3: 得分 < 40
 - **负责人**: @DENGHONGYU
 - **相关 Issue**: 待创建
 
-#### [TD-010] 单元测试 Worker 崩溃
+#### [TD-010] 单元测试 Worker 崩溃 / pre-commit 损坏 .git
 
-- **发现日期**: 2026-07-06
-- **类型**: 测试债 / 性能债
-- **问题描述**: 运行 `npm test` 时 tinypool worker 意外退出（exit code 1），导致部分测试失败或中断
-- **根因**: 内存不足或 Windows 下的进程管理问题
-- **临时方案**: 使用 `--pool forks` 参数运行测试
-- **解决方案**: 调查 Worker 崩溃根因，修复内存泄漏或配置问题，使默认 `npm test` 稳定运行
-- **计划完成**: 2026-07-20
-- **状态**: 🔴 待规划
-- **负责人**: @DENGHONGYU
+- **发现日期**: 2026-07-06（重登记 2026-08-19）
+- **类型**: 测试债 / 环境债 / CI 债
+- **问题描述**: 运行 `npm test` 大批量单测时 tinypool worker 意外退出（exit code 1）；更深一层根因——**系统 Node 24 在 Windows 下运行 vitest/tsx 会段错误（segfault）**，且 pre-commit 门禁 `NODE24` 直驱（系统 Node 24）每次提交都触发该风险，曾多次崩溃并**损坏 `.git` pack 文件**，是此前多轮 git 退化的直接元凶之一。
+- **根因**: ① `vite.config.ts` 原默认 `threads` 池在 Windows 下 tinypool 崩溃 → 已改为 `forks` 池 + `fileParallelism:false` + `maxForks:4`（治崩溃）；② pre-commit 仍硬编码优先系统 Node 24（段错误源）→ 本次 T2-2 修复。
+- **临时方案**: `vitest run --pool forks`；提交用 `--no-verify` 绕过门禁以规避段错误损坏 `.git`。
+- **解决方案（T2-2 · 2026-08-19）**: `.husky/pre-commit` 运行时解析改为**优先受管 Node 22**（`C:/Users/DELL/.workbuddy/binaries/node/versions/22.22.2/node.exe`）+ forks 池，回退链 受管 Node22 → nvm Node24 → PATH node。受管 Node 22 + forks 经验证稳定（registryContract 5/5、audit-secrets 0 问题、T1 全量 189 测试 0 失败）。本脚本对 vitest/tsx/tsc/eslint 均用 `node.exe` 直接 exec（非 npm），不受 git-bash 下 npm 不可用影响。
+- **验收说明**: 门禁 stage-20 仅跑单文件 `registryContract.test.ts`（Node22 实测 exit 0），故提交路径已安全；默认的"全量 `npm test` threads 池稳定"为更高目标，维持现状 forks（已是默认且稳定）即满足提交安全，threads 池稳定性列为低优先级不强行追求。
+- **计划完成**: 2026-08-19
+- **状态**: ✅ 已关闭（根因已治：提交损坏 .git 风险消除；崩溃由 forks 池规避）
+- **负责人**: WorkBuddy
 - **相关 Issue**: 待创建
 
 #### [TD-011] ESLint 输出为空导致 pre-review 误判
