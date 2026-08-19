@@ -482,3 +482,17 @@ PR 模板中增加"模块新增专项检查"section（仅新增模块时勾选�
 ---
 
 > **维护说明**：本标准由架构组和产品组共同维护，随项目迭代持续更新。如有疑问或建议，请提交 Issue 或联系架构组。
+
+---
+
+## 🔗 SOP 交叉引用（SOP 中如何使用本标准）
+
+> 本文档定义「单模块**准入验收清单**」。在 SDLC 7 阶段 SOP Suite 中，本标准被以下 SOP 引用：
+>
+> | 引用场景 | 对应 SOP 位置 | 补充说明 |
+> |---------|--------------|---------|
+> | 合入前集成测试准入（PR 影响的模块先过本清单）| [S04 §一 PC-3 + §二 STEP 1 单模块准入复核](../sops/S04-pre-merge-integration.md#一前置条件prerequisites) | S04 STEP 1 提供 `audit:module-completion --scope` 自动审计命令，将本 §2 清单自动化 |
+> | 跨模块 Code Review 时识别"被调用方契约变更" | [S03 §二 2.C + §4 Fix-2](../sops/S03-code-review.md#四常见失败与修复top-5--含模块标准-gap-2-补充) | **补 gap-2**：本标准 §5 仅定义模块内的验收项，对「跨模块 Review 时快速定位被调用方的类型契约变动」未覆盖；S03 §2.C 提供 3 步标准化定位脚本（含 `audit:cross-module-contracts` 辅助）并在 §4 Fix-2 处给出失败修复路径 |
+> | 上线前体检中按模块抽检 | [S05 §2 STEP 21 杂项 JSDoc/tests 审计](../sops/S05-pre-launch-checklist.md#step-21--jsdoc--测试覆盖--消费令牌审计-warn) | 若 `audit:module-completion` 全量跑发现问题时，P1 WARN 必须在 2 周内修复 |
+>
+> **更新同步**：本标准每次大版本升级（如 S1-S12 清单结构调整）时，需同步更新 S04/S03/S05 中引用的段落锚点与 audit:module-completion 脚本，确保文档间一致性。

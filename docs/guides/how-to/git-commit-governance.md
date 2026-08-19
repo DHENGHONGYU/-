@@ -147,3 +147,18 @@ PowerShell 无法直接解析 `sh`，需显式调用 Git Bash：
 - **变更验证**：修改脚本后运行 §4 的验证用例，确认退出码符合预期后再提交。
 
 > **最后验证**：修改本文档或脚本后，运行 `npm run audit:docs` 与 `npm run file:check` 确认文档一致性。
+
+---
+
+## 🔗 SOP 交叉引用（日常开发 → 提交标准化）
+
+> 本文档定义「Git 提交/分支/合并的**规则**」（Conventional 规范、Scope 列表、Husky 钩子、Rebase 策略）。对应的**标准操作步骤**由 [S02 日常开发与提交 SOP](../sops/S02-dev-workflow.md) 承载，两者关系：**本篇 = 规则**、**S02 = 操作**。
+>
+> | 本篇章节 | S02 对应段落 | 补充的治理缺口（原文未覆盖） |
+> |---------|------------|-------------------------|
+> | §1 Conventional 规范 + §1.2 Scope 列表 | S02 §2.B 3 类合法提交方式（Standard Conventional / 速提 / SkAI 智能）+ 禁止 GUI/IDE 插件提交 | 明确 3 类提交方式；禁止 git gui / VSCode 插件（Husky scope-guard 可能被绕过）；本篇仅写了"怎么写规范"，未写"用什么工具提交" |
+> | §2 Husky 钩子（pre-commit / commit-msg / pre-push） | S02 §2.C pre-commit 22 步 + pre-push 6 步**速查表**（表格式 + 判定 + Tip） | 提供一张"背表 + 速记口诀（层硬僵密实测）"；本篇 §2 列出了钩子，但没有一张一目了然的表给 commit 前 30 秒快速过 |
+> | §3 Scope Guard / §4 Rebase vs Merge | S02 §2.A 7 型分支命名 + Git Worktree 并行 + Squash 3 条适用规则 | 补充 worktree 并行开发命令（多任务避免 stash 混乱）；本篇写了 merge vs rebase 抽象策略，没写具体"多分支怎么办"命令 |
+> | §5 失败处理（仅写了"如何通过"） | S02 §4 Fix-1：**pre-commit 失败时只回退部分暂存文件的 3 步标准回滚** | **补 gap-1**：治理文档 §5 最大的缺口 — 只描述"失败 → 重新 fix → 重新 commit"的笼统路径，没写最常用的操作「已经暂存 A+B+C 文件，pre-commit 仅因 C 文件失败，要怎么只提交 A、B，留 C 后面修」的标准操作（`git stash push <rest>` → commit → pop）；以及对应的禁忌（禁止 `git reset --hard` 丢工作） |
+>
+> 一致性承诺：当本篇调整 Conventional scope 列表 / Husky 钩子步骤 / Merge 策略时，S02 §2.A/§2.B/§2.C 同步更新；S02 的版本号与本篇版本号保持一致。

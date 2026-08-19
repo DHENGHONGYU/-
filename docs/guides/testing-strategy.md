@@ -618,3 +618,21 @@ context = browser.new_context(color_scheme="light")
 ```
 
 > **变更**: 2026-07-05 | v1.2.0 | 新增 §10 Playwright 回归测试策略 | 质量治理小组
+
+---
+
+## 🔗 SOP 交叉引用（测试策略 ↔ 各阶段测试执行 SOP）
+
+> 本文档定义「测试**策略**」（分层：Unit / Integration / E2E / RAG / ACL 扩展、可信测试定义、Quarantine 机制、框架选型）。对应的**阶段化执行 SOP**将策略落地为具体步骤、通过率阈值、证据归档。以下 3 篇 SOP 直接引用本篇核心定义，并补充操作缺口：
+
+| 本文档核心定义 | 引用 SOP | 落地位置 + 补充操作 |
+|-------------|---------|------------------|
+| 可信单元测试（排除 Quarantine List + 3 条件稳定）| S04 合并前集成测试 | [S04 §二 STEP 3 可信测试](sops/S04-pre-merge-integration.md#step-3--可信单元测试排除 quarantineblock)：集成场景通过率 ≥ 99.2%；补充 `npm run test:stable` 命令与 CI vs 本地双检流程；补充 §4 Fix-7「CI vs 本地通过率差 > 5 用例」修复 |
+| 可信单元测试同上 | S05 上线前全面体检 | [S05 §二 STEP 23](sops/S05-pre-launch-checklist.md#step-23--可信单元测试teststable排除-quarantine-block)：上线场景通过率 ≥ **99.6%**（更严格）；失败处理：< 0.4% 失败时必须紧急修复，不允许直接丢 Quarantine（需架构师审批） |
+| E2E 测试分层（AkShare 真数据 vs Mock）| S05 真数测试章节（🟥 强制独立） | [S05 §3.3 真数测试](sops/S05-pre-launch-checklist.md#33-真数测试章节-fr-5-强制条款禁止-mock必须真数)：**禁止 MOCK** 硬约束；**AkShare 启动命令**（`uvicorn collect_endpoints:app --port 8000`）；**25+ 股票覆盖清单**（5 类市场各 5 只）；`npm run test:e2e-verify` 官方校验套件调用（补测试策略原文未给出的真数场景命令细节）|
+| E2E 简化集（集成阶段用）| S04 集成 E2E 冒烟 | [S04 §二 STEP 7](sops/S04-pre-merge-integration.md#step-7--e2e-快速冒烟3-分钟block)：11 只最小集 98% 通过阈值，允许单只偶发网络超时 |
+| RAG 幻觉检测门禁定义 | S05 / S07 运维 | [S05 §二 STEP 22 test:rag-gate](sops/S05-pre-launch-checklist.md#step-22--rag-幻觉检测门禁block)：Hallucination Rate ≤ 1%；[S07 §二 2.B 巡检](sops/S07-ops-incident-response.md)：值守期间 Sentry Top 1 Error 超过 3× 涨幅时回溯到 RAG 层 |
+| Playwright 回归测试策略（§10） | S06 发布部署阶段的灰度观察 | [S06 §二 2.D-1 灰度观察](sops/S06-release-deployment.md#d-1-灰度发布10-流量观察--15-分钟)：灰度 15 分钟内自动触发 Playwright 核心路径回归（登录 → 首页 → 看板 → 个股页 → V6 报告），作为灰度放行第 5 项隐式条件 |
+| XSS E2E 14 条 Payload 安全回归 | S05 / S07 | [S05 §2.X](sops/S05-pre-launch-checklist.md) 安全域要求；[S07 §二 2.B 巡检第 10 项](sops/S07-ops-incident-response.md#2b--48h-标准化巡检-checklist每-4-小时一次)：每 4 小时 `--xss-only` 14 条必过，≤ 13 直接 P0 |
+
+> 更新原则：策略大版本变动（Unit/Integration 分层重划、Quarantine 机制替换、新框架引入）→ 本篇 + 以上 3 篇 SOP 同步修订 PR 合并。

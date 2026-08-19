@@ -349,3 +349,19 @@ jobs:
 3. 新增路由一致性审计项（门禁 #10）。
 4. 死代码/路由审计补充路由-文件漂移列。
 5. 偏差收敛计划新增输入舱配置缺失与路由一致性审计项。
+
+---
+
+## 🔗 SOP 交叉引用（阈值/定义 ↔ 操作步骤映射）
+
+> 本文档是**质量门禁的唯一真相源**（所有阈值、门编号、Block/Warn 分级）。所有门禁的**实际操作步骤、Top 失败修复、证据归档**按 SDLC 阶段被以下 3 篇核心 P0 SOP 承载：
+
+| 本文档章节 | 对应 SOP（操作层面） | 对齐方式 |
+|----------|-------------------|---------|
+| §2 Husky v2 pre-commit 22 步门禁（Block 阈值） | [S02 §2.C 速查表第一部分 22 步](sops/S02-dev-workflow.md#2c--husky-门禁速查表) | 编号完全一致（env-check→rag-gate）；S02 加「失败 Tip」列 |
+| §3 pre-push 6 步速查（层 硬 僵 密 型 测） | [S02 §2.C 第二部分 pre-push 表](sops/S02-dev-workflow.md#pre-push-6-步速查push-必跑引用-agentsmd-husky-v2-scope-guard) | 6 步完全对齐；S02 加速记口诀 |
+| §4 Gate:Quick 定义（集成场景） | [S04 §二 STEP 2 gate:quick 详解](sops/S04-pre-merge-integration.md#step-2--gatequick-快速门禁block--集成核心) | S04 增加 7 子门禁耗时目标 + 可信单元测试 99.2% 阈值 |
+| §5 上线前综合体检 24 步（Block/P1 分级）+ §6 6 维度加权评分 | [S05 §2 24 步 Block 17 项 + §3.4 评分模板](sops/S05-pre-launch-checklist.md) | 分级、维度与权重（15+20+20+15+15+15=100%）完全一致；S05 补充命令参数示例 / 通过标准 / 失败修复 / 真数独立章节 |
+| §1 总览「可信单元测试」定义 | [S04 §二 STEP 3 可信单元测试](sops/S04-pre-merge-integration.md#step-3--可信单元测试排除 quarantineblock) + [S07 §三 Gold/Silver 通过标准中的可信要求](sops/S07-ops-incident-response.md) | 定义完全引用 testing-strategy.md |
+
+> **一致性承诺（重要）**：本文件调整门禁编号 / Block 阈值 / 评分权重时，上述 SOP 的对应段落必须在**同一次 PR 中同步修改**并通过 `audit:agents-consistency:strict` 验证；禁止「改了 quality-gates 阈值忘了 SOP」。

@@ -519,3 +519,18 @@ npm run audit:hardcode > hardcode-audit.txt
 ---
 
 > **维护提示**：本文档随问题库的积累持续更新。发现新的高频问题或排查路径失效时，请补充对应章节并更新 `change_log`，保持排查手册与实际代码行为一致。
+
+---
+
+## 🔗 SOP 交叉引用（阶段化场景的故障排查总入口）
+
+> 本文档是「**故障知识库**」。在具体阶段的 SOP 中，本手册已被直接引用并**补全了 2 个高频缺口**（原文未覆盖的场景，对应 gap-1 / gap-3）：
+>
+> | 阶段 | 对应 SOP 引用位置 | 补充的缺口条目 |
+> |------|------------------|-------------|
+> | 新成员环境搭建（Node 版本装错）| [S01 §4 Fix-1](../sops/S01-dev-env-setup.md#四常见失败与修复top-5--含-troubleshooting-缺口补充) | **补 gap-1**：首次 nvm install 时装错 Node 版本（例：v20 而 .nvmrc 要 v22）的 3 步不残留回退（uninstall → cache clear → 重装）；原文 §5.2 仅写了 venv 修复，没覆盖 Node 版本误装的最常见 onboarding 坑 |
+> | 日常开发 pre-commit 失败回退部分暂存 | [S02 §4 Fix-1](../sops/S02-dev-workflow.md#四常见失败与修复top-5--含治理文档缺口补充) | 跨文档引用（来自 git-commit-governance）|
+> | 夜间值班无法快速定位日志路径 | [S07 §4 Fix-3](../sops/S07-ops-incident-response.md#四常见失败与修复top-5--含-troubleshooting-gap-3-补) | **补 gap-3**：夜班同事不熟悉项目，**1 分钟 4 源标准定位法**（Sentry → 本地日志包 → IndexedDB error_logs → CDN/Edge Pages 访问日志），附 `scripts/ops/logs-locate-fast.cjs` 直达脚本；原文 §3 分问题描述了路径，但没有阶段化「夜间值班」的四源聚合定位 |
+> | 上线前 24 步体检中失败定位 | [S05 §四 Top 5 失败修复](../sops/S05-pre-launch-checklist.md#四常见失败与修复top-5--block-级) | 将本 §2 类型幻影错误 + §5 Python/venv 问题已整合进 S05 对应修复 |
+>
+> 原则：**问题分类 / 诊断命令**以本篇为真相源；**失败发生在哪个阶段 → 先查对应 SOP 的 §四（常见失败与修复）**，因为那里列出的条目一定经过本阶段的真实事故验证，比通用排查手册更"热"。
