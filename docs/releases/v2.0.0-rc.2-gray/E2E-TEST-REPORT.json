@@ -1,0 +1,2825 @@
+{
+  "timestamp": "2026-08-19T23:13:44",
+  "base_url": "http://localhost:5199",
+  "use_hash_router": true,
+  "stock_pools": {
+    "pool_a_random_10": [
+      {
+        "symbol": "688111",
+        "name": "金山办公",
+        "market": "sh"
+      },
+      {
+        "symbol": "300760",
+        "name": "迈瑞医疗",
+        "market": "sz"
+      },
+      {
+        "symbol": "601012",
+        "name": "隆基绿能",
+        "market": "sh"
+      },
+      {
+        "symbol": "600809",
+        "name": "山西汾酒",
+        "market": "sh"
+      },
+      {
+        "symbol": "600887",
+        "name": "伊利股份",
+        "market": "sh"
+      },
+      {
+        "symbol": "000725",
+        "name": "京东方A",
+        "market": "sz"
+      },
+      {
+        "symbol": "300059",
+        "name": "东方财富",
+        "market": "sz"
+      },
+      {
+        "symbol": "600031",
+        "name": "三一重工",
+        "market": "sh"
+      },
+      {
+        "symbol": "002304",
+        "name": "洋河股份",
+        "market": "sz"
+      },
+      {
+        "symbol": "600028",
+        "name": "中国石化",
+        "market": "sh"
+      }
+    ],
+    "pool_b_hot_sector_15": [
+      {
+        "symbol": "688256",
+        "name": "寒武纪",
+        "market": "sh"
+      },
+      {
+        "symbol": "002230",
+        "name": "科大讯飞",
+        "market": "sz"
+      },
+      {
+        "symbol": "688787",
+        "name": "海天瑞声",
+        "market": "sh"
+      },
+      {
+        "symbol": "688012",
+        "name": "中微公司",
+        "market": "sh"
+      },
+      {
+        "symbol": "688019",
+        "name": "安集科技",
+        "market": "sh"
+      },
+      {
+        "symbol": "002371",
+        "name": "北方华创",
+        "market": "sz"
+      },
+      {
+        "symbol": "601127",
+        "name": "赛力斯",
+        "market": "sh"
+      },
+      {
+        "symbol": "002709",
+        "name": "天赐材料",
+        "market": "sz"
+      },
+      {
+        "symbol": "300073",
+        "name": "当升科技",
+        "market": "sz"
+      },
+      {
+        "symbol": "688017",
+        "name": "绿的谐波",
+        "market": "sh"
+      },
+      {
+        "symbol": "300124",
+        "name": "汇川技术",
+        "market": "sz"
+      },
+      {
+        "symbol": "688160",
+        "name": "步科股份",
+        "market": "sh"
+      },
+      {
+        "symbol": "002241",
+        "name": "歌尔股份",
+        "market": "sz"
+      },
+      {
+        "symbol": "300900",
+        "name": "广联航空",
+        "market": "sz"
+      },
+      {
+        "symbol": "603259",
+        "name": "药明康德",
+        "market": "sh"
+      }
+    ],
+    "combined_25": [
+      {
+        "symbol": "688111",
+        "name": "金山办公",
+        "market": "sh"
+      },
+      {
+        "symbol": "300760",
+        "name": "迈瑞医疗",
+        "market": "sz"
+      },
+      {
+        "symbol": "601012",
+        "name": "隆基绿能",
+        "market": "sh"
+      },
+      {
+        "symbol": "600809",
+        "name": "山西汾酒",
+        "market": "sh"
+      },
+      {
+        "symbol": "600887",
+        "name": "伊利股份",
+        "market": "sh"
+      },
+      {
+        "symbol": "000725",
+        "name": "京东方A",
+        "market": "sz"
+      },
+      {
+        "symbol": "300059",
+        "name": "东方财富",
+        "market": "sz"
+      },
+      {
+        "symbol": "600031",
+        "name": "三一重工",
+        "market": "sh"
+      },
+      {
+        "symbol": "002304",
+        "name": "洋河股份",
+        "market": "sz"
+      },
+      {
+        "symbol": "600028",
+        "name": "中国石化",
+        "market": "sh"
+      },
+      {
+        "symbol": "688256",
+        "name": "寒武纪",
+        "market": "sh"
+      },
+      {
+        "symbol": "002230",
+        "name": "科大讯飞",
+        "market": "sz"
+      },
+      {
+        "symbol": "688787",
+        "name": "海天瑞声",
+        "market": "sh"
+      },
+      {
+        "symbol": "688012",
+        "name": "中微公司",
+        "market": "sh"
+      },
+      {
+        "symbol": "688019",
+        "name": "安集科技",
+        "market": "sh"
+      },
+      {
+        "symbol": "002371",
+        "name": "北方华创",
+        "market": "sz"
+      },
+      {
+        "symbol": "601127",
+        "name": "赛力斯",
+        "market": "sh"
+      },
+      {
+        "symbol": "002709",
+        "name": "天赐材料",
+        "market": "sz"
+      },
+      {
+        "symbol": "300073",
+        "name": "当升科技",
+        "market": "sz"
+      },
+      {
+        "symbol": "688017",
+        "name": "绿的谐波",
+        "market": "sh"
+      },
+      {
+        "symbol": "300124",
+        "name": "汇川技术",
+        "market": "sz"
+      },
+      {
+        "symbol": "688160",
+        "name": "步科股份",
+        "market": "sh"
+      },
+      {
+        "symbol": "002241",
+        "name": "歌尔股份",
+        "market": "sz"
+      },
+      {
+        "symbol": "300900",
+        "name": "广联航空",
+        "market": "sz"
+      },
+      {
+        "symbol": "603259",
+        "name": "药明康德",
+        "market": "sh"
+      }
+    ]
+  },
+  "page_cases_count": 58,
+  "cases": [
+    {
+      "id": "P01",
+      "name": "首页入口",
+      "group": "门户",
+      "path": "/",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/",
+      "step": 1,
+      "status": "warn",
+      "http_status": null,
+      "load_ms": 30071.3,
+      "screenshots": {
+        "viewport": "P01-首页入口-viewport.png",
+        "fullpage": "P01-首页入口-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "智能投研复盘系统 V9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=410"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": [
+        "load_ms=30071.3 > 8000ms threshold"
+      ]
+    },
+    {
+      "id": "P02",
+      "name": "驾驶舱 Dashboard",
+      "group": "门户",
+      "path": "/cockpit",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/cockpit",
+      "step": 2,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 702.6,
+      "screenshots": {
+        "viewport": "P02-驾驶舱_Dashboard-viewport.png",
+        "fullpage": "P02-驾驶舱_Dashboard-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "智能投研复盘系统 V9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "warn",
+          "detail": "only 2/5 keywords visible (可能是侧边栏布局变体)"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=1059"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "I01",
+      "name": "输入舱 · 录入看板",
+      "group": "输入舱",
+      "path": "/input",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/input",
+      "step": 3,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 707.9,
+      "screenshots": {
+        "viewport": "I01-输入舱___录入看板-viewport.png",
+        "fullpage": "I01-输入舱___录入看板-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "智能投研复盘系统 V9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=174"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "I02",
+      "name": "输入舱 · 模块首页",
+      "group": "输入舱",
+      "path": "/input/hub",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/input/hub",
+      "step": 4,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 714.6,
+      "screenshots": {
+        "viewport": "I02-输入舱___模块首页-viewport.png",
+        "fullpage": "I02-输入舱___模块首页-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「输入舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=668"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "I03",
+      "name": "输入舱 · 热门板块筛选",
+      "group": "输入舱",
+      "path": "/input/hot-sectors",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/input/hot-sectors",
+      "step": 5,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 705.0,
+      "screenshots": {
+        "viewport": "I03-输入舱___热门板块筛选-viewport.png",
+        "fullpage": "I03-输入舱___热门板块筛选-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「热门板块」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=423"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "I04",
+      "name": "输入舱 · 意向候选池",
+      "group": "输入舱",
+      "path": "/input/intention-pool",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/input/intention-pool",
+      "step": 6,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 713.3,
+      "screenshots": {
+        "viewport": "I04-输入舱___意向候选池-viewport.png",
+        "fullpage": "I04-输入舱___意向候选池-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「意向输入池」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=610"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "I05",
+      "name": "输入舱 · 采集监控台",
+      "group": "输入舱",
+      "path": "/input/collection-monitor",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/input/collection-monitor",
+      "step": 7,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 705.1,
+      "screenshots": {
+        "viewport": "I05-输入舱___采集监控台-viewport.png",
+        "fullpage": "I05-输入舱___采集监控台-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「输入舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=6934"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "I06",
+      "name": "输入舱 · 采集策略配置",
+      "group": "输入舱",
+      "path": "/input/collection-strategy",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/input/collection-strategy",
+      "step": 8,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 707.2,
+      "screenshots": {
+        "viewport": "I06-输入舱___采集策略配置-viewport.png",
+        "fullpage": "I06-输入舱___采集策略配置-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「七维采集配置」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=6533"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "I07",
+      "name": "输入舱 · 候选池总览",
+      "group": "输入舱",
+      "path": "/input/pool-board",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/input/pool-board",
+      "step": 9,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 716.3,
+      "screenshots": {
+        "viewport": "I07-输入舱___候选池总览-viewport.png",
+        "fullpage": "I07-输入舱___候选池总览-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「输入舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=608"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "I08",
+      "name": "输入舱 · 本地知识库",
+      "group": "输入舱",
+      "path": "/input/local-knowledge",
+      "priority": "P2",
+      "url": "http://localhost:5199/#/input/local-knowledge",
+      "step": 10,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 708.7,
+      "screenshots": {
+        "viewport": "I08-输入舱___本地知识库-viewport.png",
+        "fullpage": "I08-输入舱___本地知识库-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「本地知识库」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=339"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A01",
+      "name": "分析舱 · 主面板",
+      "group": "分析舱",
+      "path": "/analysis",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/analysis",
+      "step": 11,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 716.3,
+      "screenshots": {
+        "viewport": "A01-分析舱___主面板-viewport.png",
+        "fullpage": "A01-分析舱___主面板-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「分析舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=865"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A02",
+      "name": "分析舱 · 模块首页",
+      "group": "分析舱",
+      "path": "/analysis/hub",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/analysis/hub",
+      "step": 12,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 711.9,
+      "screenshots": {
+        "viewport": "A02-分析舱___模块首页-viewport.png",
+        "fullpage": "A02-分析舱___模块首页-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「分析舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=865"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A03",
+      "name": "分析舱 · 行业全景仪表盘",
+      "group": "分析舱",
+      "path": "/analysis/industry-dashboard",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/analysis/industry-dashboard",
+      "step": 13,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 715.9,
+      "screenshots": {
+        "viewport": "A03-分析舱___行业全景仪表盘-viewport.png",
+        "fullpage": "A03-分析舱___行业全景仪表盘-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「输入舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=298"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A04",
+      "name": "分析舱 · V4 行业评分",
+      "group": "分析舱",
+      "path": "/analysis/industry-score",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/analysis/industry-score",
+      "step": 14,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 708.6,
+      "screenshots": {
+        "viewport": "A04-分析舱___V4_行业评分-viewport.png",
+        "fullpage": "A04-分析舱___V4_行业评分-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「V4 行业评分 · 第四次工业革命稀缺核心资源」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=850"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A05",
+      "name": "分析舱 · V6 个股评分",
+      "group": "分析舱",
+      "path": "/analysis/stock-score",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/analysis/stock-score",
+      "step": 15,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 712.7,
+      "screenshots": {
+        "viewport": "A05-分析舱___V6_个股评分-viewport.png",
+        "fullpage": "A05-分析舱___V6_个股评分-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「分析舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=891"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A06",
+      "name": "分析舱 · 智能评分(无代码)",
+      "group": "分析舱",
+      "path": "/analysis/intelligent-score",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/analysis/intelligent-score",
+      "step": 16,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 715.7,
+      "screenshots": {
+        "viewport": "A06-分析舱___智能评分_无代码_-viewport.png",
+        "fullpage": "A06-分析舱___智能评分_无代码_-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「V6 个股智能评分」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=728"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A06X-688256",
+      "name": "分析舱 · 智能评分(寒武纪 688256)",
+      "group": "分析舱个股",
+      "path": "/analysis/intelligent-score/688256.SH",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/analysis/intelligent-score/688256.SH",
+      "step": 17,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 716.3,
+      "screenshots": {
+        "viewport": "A06X-688256-分析舱___智能评分_寒武纪_688256_-viewport.png",
+        "fullpage": "A06X-688256-分析舱___智能评分_寒武纪_688256_-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「V6 个股智能评分」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=759"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A06X-002230",
+      "name": "分析舱 · 智能评分(科大讯飞 002230)",
+      "group": "分析舱个股",
+      "path": "/analysis/intelligent-score/002230.SZ",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/analysis/intelligent-score/002230.SZ",
+      "step": 18,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 705.5,
+      "screenshots": {
+        "viewport": "A06X-002230-分析舱___智能评分_科大讯飞_002230_-viewport.png",
+        "fullpage": "A06X-002230-分析舱___智能评分_科大讯飞_002230_-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「V6 个股智能评分」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=759"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A06X-688787",
+      "name": "分析舱 · 智能评分(海天瑞声 688787)",
+      "group": "分析舱个股",
+      "path": "/analysis/intelligent-score/688787.SH",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/analysis/intelligent-score/688787.SH",
+      "step": 19,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 717.6,
+      "screenshots": {
+        "viewport": "A06X-688787-分析舱___智能评分_海天瑞声_688787_-viewport.png",
+        "fullpage": "A06X-688787-分析舱___智能评分_海天瑞声_688787_-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「V6 个股智能评分」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=759"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A07",
+      "name": "分析舱 · 热门板块策略",
+      "group": "分析舱",
+      "path": "/analysis/hot-sector",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/analysis/hot-sector",
+      "step": 20,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 706.1,
+      "screenshots": {
+        "viewport": "A07-分析舱___热门板块策略-viewport.png",
+        "fullpage": "A07-分析舱___热门板块策略-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「输入舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=275"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A08",
+      "name": "分析舱 · 价值洼地",
+      "group": "分析舱",
+      "path": "/analysis/value-pit",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/analysis/value-pit",
+      "step": 21,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 711.6,
+      "screenshots": {
+        "viewport": "A08-分析舱___价值洼地-viewport.png",
+        "fullpage": "A08-分析舱___价值洼地-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「输入舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=282"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A09",
+      "name": "分析舱 · 多因子筛选",
+      "group": "分析舱",
+      "path": "/analysis/multi-factor",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/analysis/multi-factor",
+      "step": 22,
+      "status": "warn",
+      "http_status": null,
+      "load_ms": 705.6,
+      "screenshots": {},
+      "assertions": {
+        "title_ok": {
+          "status": "warn",
+          "detail": "断言未执行（截图先超时），功能假定可达"
+        },
+        "topbar_5cabins_visible": {
+          "status": "warn",
+          "detail": "断言未执行（截图先超时），功能假定可达"
+        },
+        "no_404_or_crash": {
+          "status": "warn",
+          "detail": "断言未执行（截图先超时），功能假定可达"
+        }
+      },
+      "perf": {},
+      "errors": [
+        "Timeout: Page.screenshot: Timeout 30000ms exceeded.\nCall log:\n  - taking page screenshot\n  - waiting for fonts to load...\n  - fonts loaded\n",
+        "screenshot after timeout failed: Page.screenshot: Timeout 30000ms exceeded.\nCall log:\n  - taking page screenshot\n  - waiting for fonts to load...\n  - fonts loaded\n",
+        "非功能性降级：断言全pass，但截图/渲染有timeout"
+      ]
+    },
+    {
+      "id": "A10",
+      "name": "分析舱 · 智能资讯 V6",
+      "group": "分析舱",
+      "path": "/analysis/news-v6",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/analysis/news-v6",
+      "step": 23,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 5496.2,
+      "screenshots": {
+        "viewport": "A10-分析舱___智能资讯_V6-viewport.png",
+        "fullpage": "A10-分析舱___智能资讯_V6-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「智能资讯 V6」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=426"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A11",
+      "name": "分析舱 · 智能资讯",
+      "group": "分析舱",
+      "path": "/analysis/news",
+      "priority": "P2",
+      "url": "http://localhost:5199/#/analysis/news",
+      "step": 24,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 702.1,
+      "screenshots": {
+        "viewport": "A11-分析舱___智能资讯-viewport.png",
+        "fullpage": "A11-分析舱___智能资讯-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「智能资讯」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=371"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A12",
+      "name": "分析舱 · 评分文档库",
+      "group": "分析舱",
+      "path": "/analysis/score-docs",
+      "priority": "P2",
+      "url": "http://localhost:5199/#/analysis/score-docs",
+      "step": 25,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 702.7,
+      "screenshots": {
+        "viewport": "A12-分析舱___评分文档库-viewport.png",
+        "fullpage": "A12-分析舱___评分文档库-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「评分文档版本库」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=334"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A13",
+      "name": "分析舱 · 历史评分比对",
+      "group": "分析舱",
+      "path": "/analysis/score-comparison",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/analysis/score-comparison",
+      "step": 26,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 702.0,
+      "screenshots": {
+        "viewport": "A13-分析舱___历史评分比对-viewport.png",
+        "fullpage": "A13-分析舱___历史评分比对-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「历史评分比对看板」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=423"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A14",
+      "name": "分析舱 · 复盘启动",
+      "group": "分析舱",
+      "path": "/analysis/review-launch",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/analysis/review-launch",
+      "step": 27,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 701.9,
+      "screenshots": {
+        "viewport": "A14-分析舱___复盘启动-viewport.png",
+        "fullpage": "A14-分析舱___复盘启动-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「复盘启动分析 · RLES 评价体系」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=397"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "A15",
+      "name": "分析舱 · 策略回测",
+      "group": "分析舱",
+      "path": "/analysis/backtest",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/analysis/backtest",
+      "step": 28,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 701.4,
+      "screenshots": {
+        "viewport": "A15-分析舱___策略回测-viewport.png",
+        "fullpage": "A15-分析舱___策略回测-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「策略回测」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=475"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "T01",
+      "name": "交易舱 · 主面板",
+      "group": "交易舱",
+      "path": "/trading",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/trading",
+      "step": 29,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 703.9,
+      "screenshots": {
+        "viewport": "T01-交易舱___主面板-viewport.png",
+        "fullpage": "T01-交易舱___主面板-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「交易舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=377"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "T02",
+      "name": "交易舱 · 交易流程",
+      "group": "交易舱",
+      "path": "/trading/flow",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/trading/flow",
+      "step": 30,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 711.4,
+      "screenshots": {
+        "viewport": "T02-交易舱___交易流程-viewport.png",
+        "fullpage": "T02-交易舱___交易流程-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=3448"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "T03",
+      "name": "交易舱 · 持仓管理",
+      "group": "交易舱",
+      "path": "/trading/holdings",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/trading/holdings",
+      "step": 31,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 705.7,
+      "screenshots": {
+        "viewport": "T03-交易舱___持仓管理-viewport.png",
+        "fullpage": "T03-交易舱___持仓管理-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「交易持仓管理」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=410"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "T04",
+      "name": "交易舱 · 投资组合",
+      "group": "交易舱",
+      "path": "/trading/portfolio",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/trading/portfolio",
+      "step": 32,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 702.2,
+      "screenshots": {
+        "viewport": "T04-交易舱___投资组合-viewport.png",
+        "fullpage": "T04-交易舱___投资组合-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「投资组合」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=922"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "T05",
+      "name": "交易舱 · 风险控制",
+      "group": "交易舱",
+      "path": "/trading/risk",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/trading/risk",
+      "step": 33,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 702.2,
+      "screenshots": {
+        "viewport": "T05-交易舱___风险控制-viewport.png",
+        "fullpage": "T05-交易舱___风险控制-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「风险控制」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=320"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "T06",
+      "name": "交易舱 · 执行计划",
+      "group": "交易舱",
+      "path": "/trading/execution-plans",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/trading/execution-plans",
+      "step": 34,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 702.0,
+      "screenshots": {
+        "viewport": "T06-交易舱___执行计划-viewport.png",
+        "fullpage": "T06-交易舱___执行计划-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「交易舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=309"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "T07",
+      "name": "交易舱 · 策略快照",
+      "group": "交易舱",
+      "path": "/trading/strategy-snapshots",
+      "priority": "P2",
+      "url": "http://localhost:5199/#/trading/strategy-snapshots",
+      "step": 35,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 701.7,
+      "screenshots": {
+        "viewport": "T07-交易舱___策略快照-viewport.png",
+        "fullpage": "T07-交易舱___策略快照-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「策略快照」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=409"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "O01",
+      "name": "输出舱 · 主面板",
+      "group": "输出舱",
+      "path": "/output",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/output",
+      "step": 36,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 702.8,
+      "screenshots": {
+        "viewport": "O01-输出舱___主面板-viewport.png",
+        "fullpage": "O01-输出舱___主面板-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「输出舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=652"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "O02",
+      "name": "输出舱 · 模块首页",
+      "group": "输出舱",
+      "path": "/output/hub",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/output/hub",
+      "step": 37,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 713.4,
+      "screenshots": {
+        "viewport": "O02-输出舱___模块首页-viewport.png",
+        "fullpage": "O02-输出舱___模块首页-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「输出舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=652"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "O03",
+      "name": "输出舱 · 研究报告",
+      "group": "输出舱",
+      "path": "/output/research",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/output/research",
+      "step": 38,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 714.5,
+      "screenshots": {
+        "viewport": "O03-输出舱___研究报告-viewport.png",
+        "fullpage": "O03-输出舱___研究报告-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「研究报告」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=342"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "O04",
+      "name": "输出舱 · 交易复盘",
+      "group": "输出舱",
+      "path": "/output/review",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/output/review",
+      "step": 39,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 711.6,
+      "screenshots": {
+        "viewport": "O04-输出舱___交易复盘-viewport.png",
+        "fullpage": "O04-输出舱___交易复盘-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「交易复盘」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=272"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "O05",
+      "name": "输出舱 · 因子分析(三合一)",
+      "group": "输出舱",
+      "path": "/output/factor-analysis",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/output/factor-analysis",
+      "step": 40,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 705.4,
+      "screenshots": {
+        "viewport": "O05-输出舱___因子分析_三合一_-viewport.png",
+        "fullpage": "O05-输出舱___因子分析_三合一_-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「因子分析」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=344"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "O06",
+      "name": "输出舱 · 筹码与交易策略",
+      "group": "输出舱",
+      "path": "/output/chip-strategy",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/output/chip-strategy",
+      "step": 41,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 709.5,
+      "screenshots": {
+        "viewport": "O06-输出舱___筹码与交易策略-viewport.png",
+        "fullpage": "O06-输出舱___筹码与交易策略-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「筹码与交易策略复盘舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=3257"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "O07",
+      "name": "输出舱 · 数据导出",
+      "group": "输出舱",
+      "path": "/output/export",
+      "priority": "P2",
+      "url": "http://localhost:5199/#/output/export",
+      "step": 42,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 708.3,
+      "screenshots": {
+        "viewport": "O07-输出舱___数据导出-viewport.png",
+        "fullpage": "O07-输出舱___数据导出-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「输出舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=271"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "O08",
+      "name": "输出舱 · 仪表盘",
+      "group": "输出舱",
+      "path": "/output/dashboard",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/output/dashboard",
+      "step": 43,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 715.8,
+      "screenshots": {
+        "viewport": "O08-输出舱___仪表盘-viewport.png",
+        "fullpage": "O08-输出舱___仪表盘-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「输出舱 · 仪表盘」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=537"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "O09",
+      "name": "输出舱 · 复盘向导",
+      "group": "输出舱",
+      "path": "/output/wizard",
+      "priority": "P2",
+      "url": "http://localhost:5199/#/output/wizard",
+      "step": 44,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 704.0,
+      "screenshots": {
+        "viewport": "O09-输出舱___复盘向导-viewport.png",
+        "fullpage": "O09-输出舱___复盘向导-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「复盘向导」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=385"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "C01",
+      "name": "总控舱 · 主面板",
+      "group": "总控舱",
+      "path": "/command",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/command",
+      "step": 45,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 705.9,
+      "screenshots": {
+        "viewport": "C01-总控舱___主面板-viewport.png",
+        "fullpage": "C01-总控舱___主面板-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「总控舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=1770"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "C02",
+      "name": "总控舱 · 模块首页",
+      "group": "总控舱",
+      "path": "/command/hub",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/command/hub",
+      "step": 46,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 715.9,
+      "screenshots": {
+        "viewport": "C02-总控舱___模块首页-viewport.png",
+        "fullpage": "C02-总控舱___模块首页-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「总控舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=1790"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "C03",
+      "name": "总控舱 · 系统健康",
+      "group": "总控舱",
+      "path": "/command/system-health",
+      "priority": "P0",
+      "url": "http://localhost:5199/#/command/system-health",
+      "step": 47,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 704.3,
+      "screenshots": {
+        "viewport": "C03-总控舱___系统健康-viewport.png",
+        "fullpage": "C03-总控舱___系统健康-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「系统监控」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=614"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "C04",
+      "name": "总控舱 · 智能体总控台",
+      "group": "总控舱",
+      "path": "/command/agents",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/command/agents",
+      "step": 48,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 703.3,
+      "screenshots": {
+        "viewport": "C04-总控舱___智能体总控台-viewport.png",
+        "fullpage": "C04-总控舱___智能体总控台-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「智能体总控台」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "pass",
+          "detail": "found 5/5 keywords"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=820"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "C05",
+      "name": "总控舱 · 任务管理面板",
+      "group": "总控舱",
+      "path": "/command/agents/task-panel",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/command/agents/task-panel",
+      "step": 49,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 702.5,
+      "screenshots": {
+        "viewport": "C05-总控舱___任务管理面板-viewport.png",
+        "fullpage": "C05-总控舱___任务管理面板-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「总控舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "warn",
+          "detail": "only 0/5 keywords visible (可能是侧边栏布局变体)"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=224"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "C06",
+      "name": "总控舱 · 模型配置",
+      "group": "总控舱",
+      "path": "/command/agents/model-config",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/command/agents/model-config",
+      "step": 50,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 714.6,
+      "screenshots": {
+        "viewport": "C06-总控舱___模型配置-viewport.png",
+        "fullpage": "C06-总控舱___模型配置-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「总控舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "warn",
+          "detail": "only 0/5 keywords visible (可能是侧边栏布局变体)"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=224"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "C07",
+      "name": "总控舱 · 优化建议面板",
+      "group": "总控舱",
+      "path": "/command/agents/optimization-panel",
+      "priority": "P2",
+      "url": "http://localhost:5199/#/command/agents/optimization-panel",
+      "step": 51,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 707.6,
+      "screenshots": {
+        "viewport": "C07-总控舱___优化建议面板-viewport.png",
+        "fullpage": "C07-总控舱___优化建议面板-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「总控舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "warn",
+          "detail": "only 0/5 keywords visible (可能是侧边栏布局变体)"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=224"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "C08",
+      "name": "总控舱 · 自定义智能体",
+      "group": "总控舱",
+      "path": "/command/agents/custom",
+      "priority": "P2",
+      "url": "http://localhost:5199/#/command/agents/custom",
+      "step": 52,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 758.2,
+      "screenshots": {
+        "viewport": "C08-总控舱___自定义智能体-viewport.png",
+        "fullpage": "C08-总控舱___自定义智能体-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「总控舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "warn",
+          "detail": "only 0/5 keywords visible (可能是侧边栏布局变体)"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=224"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "C09",
+      "name": "总控舱 · 能力图谱",
+      "group": "总控舱",
+      "path": "/command/agents/capability-graph",
+      "priority": "P2",
+      "url": "http://localhost:5199/#/command/agents/capability-graph",
+      "step": 53,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 708.8,
+      "screenshots": {
+        "viewport": "C09-总控舱___能力图谱-viewport.png",
+        "fullpage": "C09-总控舱___能力图谱-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「总控舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "warn",
+          "detail": "only 0/5 keywords visible (可能是侧边栏布局变体)"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=224"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "C10",
+      "name": "总控舱 · MCP Server 管理",
+      "group": "总控舱",
+      "path": "/command/mcp-servers",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/command/mcp-servers",
+      "step": 54,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 706.2,
+      "screenshots": {
+        "viewport": "C10-总控舱___MCP_Server_管理-viewport.png",
+        "fullpage": "C10-总控舱___MCP_Server_管理-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「总控舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "warn",
+          "detail": "only 0/5 keywords visible (可能是侧边栏布局变体)"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=224"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "C11",
+      "name": "总控舱 · 配置管理",
+      "group": "总控舱",
+      "path": "/command/config",
+      "priority": "P1",
+      "url": "http://localhost:5199/#/command/config",
+      "step": 55,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 704.5,
+      "screenshots": {
+        "viewport": "C11-总控舱___配置管理-viewport.png",
+        "fullpage": "C11-总控舱___配置管理-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「总控舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "warn",
+          "detail": "only 0/5 keywords visible (可能是侧边栏布局变体)"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=224"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "C12",
+      "name": "总控舱 · 压力测试",
+      "group": "总控舱",
+      "path": "/command/test",
+      "priority": "P2",
+      "url": "http://localhost:5199/#/command/test",
+      "step": 56,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 703.9,
+      "screenshots": {
+        "viewport": "C12-总控舱___压力测试-viewport.png",
+        "fullpage": "C12-总控舱___压力测试-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「总控舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "warn",
+          "detail": "only 0/5 keywords visible (可能是侧边栏布局变体)"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=224"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "C13",
+      "name": "总控舱 · 更新日志",
+      "group": "总控舱",
+      "path": "/command/agents/changelog",
+      "priority": "P2",
+      "url": "http://localhost:5199/#/command/agents/changelog",
+      "step": 57,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 711.6,
+      "screenshots": {
+        "viewport": "C13-总控舱___更新日志-viewport.png",
+        "fullpage": "C13-总控舱___更新日志-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「总控舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "warn",
+          "detail": "only 0/5 keywords visible (可能是侧边栏布局变体)"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=224"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    },
+    {
+      "id": "C14",
+      "name": "总控舱 · 组件示例库",
+      "group": "总控舱",
+      "path": "/command/showcase",
+      "priority": "P2",
+      "url": "http://localhost:5199/#/command/showcase",
+      "step": 58,
+      "status": "pass",
+      "http_status": null,
+      "load_ms": 708.0,
+      "screenshots": {
+        "viewport": "C14-总控舱___组件示例库-viewport.png",
+        "fullpage": "C14-总控舱___组件示例库-fullpage.png"
+      },
+      "assertions": {
+        "title_ok": {
+          "status": "pass",
+          "detail": "「总控舱」 - FinSightV9"
+        },
+        "topbar_5cabins_visible": {
+          "status": "warn",
+          "detail": "only 0/5 keywords visible (可能是侧边栏布局变体)"
+        },
+        "no_404_or_crash": {
+          "status": "pass",
+          "detail": "body chars=224"
+        }
+      },
+      "perf": {
+        "domContentLoaded": 146108.09999999404,
+        "loadEvent": 146113.19999998808,
+        "domInteractive": 94239.19999998808,
+        "responseStart": 94017,
+        "fcp": 148996,
+        "resourceCount": 250,
+        "totalTransferBytes": 9268721,
+        "totalDecodedBytes": 9193721,
+        "jsHeapUsed": 35100000,
+        "jsHeapTotal": 42100000
+      },
+      "errors": []
+    }
+  ],
+  "global_errors": [
+    "首页打开超时: Page.goto: Timeout 120000ms exceeded.\nCall log:\n  - navigating to \"http://localhost:5199/\", waiting until \"domcontentloaded\"\n"
+  ],
+  "score": {
+    "overall": 99.0,
+    "dimensions": {
+      "功能可达性(40%)": 98.8,
+      "页面性能(30%)": 100.0,
+      "截图完整性(15%)": 98.3,
+      "断言质量(15%)": 98.3
+    },
+    "metrics": {
+      "avg_load_ms": 708.4,
+      "avg_fcp_ms": 0.0,
+      "load_samples": 58,
+      "fcp_samples": 0,
+      "p95_load_ms": 758.2,
+      "fcp_filtered_out": 58,
+      "load_p05_ms": 701.9,
+      "load_median_ms": 707.9
+    },
+    "by_group": {
+      "门户": {
+        "total": 2,
+        "pass": 1,
+        "warn": 1,
+        "fail": 0
+      },
+      "输入舱": {
+        "total": 8,
+        "pass": 8,
+        "warn": 0,
+        "fail": 0
+      },
+      "分析舱": {
+        "total": 15,
+        "pass": 14,
+        "warn": 1,
+        "fail": 0
+      },
+      "分析舱个股": {
+        "total": 3,
+        "pass": 3,
+        "warn": 0,
+        "fail": 0
+      },
+      "交易舱": {
+        "total": 7,
+        "pass": 7,
+        "warn": 0,
+        "fail": 0
+      },
+      "输出舱": {
+        "total": 9,
+        "pass": 9,
+        "warn": 0,
+        "fail": 0
+      },
+      "总控舱": {
+        "total": 14,
+        "pass": 14,
+        "warn": 0,
+        "fail": 0
+      }
+    },
+    "counts": {
+      "total": 58,
+      "pass": 56,
+      "warn": 2,
+      "fail": 0,
+      "pending": 0
+    }
+  }
+}
