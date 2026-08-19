@@ -6,7 +6,7 @@ last_updated: 2026-08-19
 code_version: "2.0.0-rc.1"
 change_log:
   - version: v1.6.0
-    changes: "2026-08-19 增量闭环：对齐 Husky v2 真阻断 20 步门禁 + scope-guard v2（≤30 单提交 / 跨域≤2）；补齐 tsc:prod/tsc:test 双 tsconfig 作用域与 tsc --force 日常；MCP Registry 17 条目（12 enabled + 5 disabled，含 data-collector:main + marketdata 双子源）；DB_VERSION=35（基线 29 + 增量 24=53 Store）；驾驶舱 USER_SCENES 结果优先视图；设计令牌 V8 Apple 冷色调；提交卫生（禁止 git add -A / --only 精确提交）；ESLint 生产域警告清零；上线前测试禁止 MOCK 必须真数；tsc 增量编译幻影错误防呆；新增 audit:agents-consistency 契约一致性 P0 断言（A1~A7 七项，husky [22/20] 步）+ T15 doc-trigger"
+    changes: "2026-08-19 增量闭环：对齐 Husky v2 真阻断 20 步门禁 + scope-guard v2（≤30 单提交 / 跨域≤2）；补齐 tsc:prod/tsc:test 双 tsconfig 作用域与 tsc --force 日常；MCP Registry 17 条目（12 enabled + 5 disabled，含 data-collector:main + marketdata 双子源）；DB_VERSION=35（基线 29 + 增量 24=53 Store）；驾驶舱 USER_SCENES 结果优先视图；设计令牌 V8 Apple 冷色调；提交卫生（禁止 git add -A / --only 精确提交）；ESLint 生产域警告清零；上线前测试禁止 MOCK 必须真数；tsc 增量编译幻影错误防呆；新增 audit:agents-consistency 契约一致性 P0 断言（A1~A7 七项，husky [22/20] 步）+ T15 doc-trigger；**新增 SOP Suite 双引用注入点：文档头部「SOP 规范体系」声明（sops/README.md 为团队流程第一入口）+ §七 验证命令尾部「验证命令↔SOP 质量门禁速查表对应关系」交叉链接 S02/S04/S05**"
     date: 2026-08-19
   - version: v1.5.6
     changes: "基准日校对(2026-08-11)：R1取真值(P2 正文版本声明行=v1.5.5) → R2 PATCH++(v1.5.6) / last_updated 刷新 / change_log 闭环"
@@ -41,6 +41,12 @@ change_log:
 > **提示词模板与检查清单**：为降低 AI 上下文漂移与人工返工，本项目在 `prompts/` 目录维护系统提示词模板，在 `docs/` 目录维护 `ui-migration-checklist.md`、`widget-integration-checklist.md`、`ai-memory-layer.md` 与 `ai-generate-audit-fix-loop.md`。AI 辅助开发时应优先加载对应模板，执行迁移、新增 Widget、记忆检索或飞轮流程时应按文档逐项核对。
 >
 > **文档与复杂度规范**：为提升代码可维护性，新增公共函数、组件、Hook、Store 必须补充 JSDoc（见 `docs/03-development/jsdoc-convention.md`）；新增代码应避免深层嵌套、长链式条件与过长函数（见 `docs/03-development/complexity-governance.md`）。
+>
+> **📋 SOP 规范体系（团队开发流程第一入口）**：本项目已按 SDLC 7 阶段建立**标准化操作 SOP Suite**，所有"**怎么做** / 具体操作步骤 / 失败修复 / 证据归档"的问题，请第一时间打开 [SOP 总览 README](docs/guides/sops/README.md) 而不是零散翻 how-to。7 篇正文覆盖：
+> - S01 环境搭建 / S02 日常开发与提交（含 pre-commit 22 步、pre-push 6 步速查表）/ S03 代码审查（PR 8 字段模板 + 55 项 Review 矩阵）
+> - S04 合并前集成测试（gate:quick + 可信单元测试 ≥ 99.2%）/ **S05 上线前全面体检（24 步强制门禁 + 真数测试，🟥 核心）**
+> - S06 版本发布与部署（SemVer + 单向同步 + 双回滚）/ S07 上线后运维与应急（48h 值守 + P0 5 层上报矩阵）
+> SOP 文档基于当前 AGENTS.md v1.6.0 契约编写；命令与阈值与本 §七 严格一致，遇冲突以本契约为准，同步修订对应 SOP（Frontmatter code_version 对齐）。
 >
 > **项目级 SKILL 索引**（三层分离，单一真相源见 `.trae/skills/skill-registry.json`，合计 46 项；MAND=mandatory 强制，adv=advisory 建议）：
 > - **L1 项目物理技能（18 项）**：物理存放目录 `.agents/skills/*/SKILL.md`（非 `.trae/skills/`；`.trae/skills/` 仅存放 INDEX.md 与 skill-registry.json 索引文件，无技能本体）。按 registry `categoriesStats` 分十一类（名称均为自然 slug，无 `v9-` 前缀）：
@@ -972,6 +978,13 @@ npm run gate:quick       # 分层 + Mock + ACL + 原子组件 + 文档(doc-gate 
 npm run gate:dev         # lint-staged + tsc:prod + layers + atomic + db-refs + store-coverage + acl + deadcode --staged
 ```
 
+> **🔗 验证命令 ↔ SOP 质量门禁速查表对应关系**：
+> 以上命令在 3 篇**最高优先级 P0 SOP** 中有完整的操作步骤、通过标准、Top 5 失败修复路径与证据归档清单：
+> - **日常提交场景**（pre-commit 22 步 / pre-push 6 步速查）→ 打开 [S02 §2.C Husky 门禁速查表](docs/guides/sops/S02-dev-workflow.md#2c--husky-门禁速查表)
+> - **合并前集成**（gate:quick 7 子门禁详解 + 可信单元测试 + CI 对比）→ [S04 §二 STEP 2–9](docs/guides/sops/S04-pre-merge-integration.md)
+> - **上线前体检**（24 步 17 项 BLOCK + 真数测试独立章节 + 6 维度评分综合 Go/No-Go）→ [S05 §2 STEP 1–24 + §3.3 真数 + §3.4 评分模板](docs/guides/sops/S05-pre-launch-checklist.md)
+> 冲突处理原则：**本 §七 验证命令 = 唯一真相源**；SOP 为操作/解读层，不重写命令语义与参数。当本 §七 与 SOP 命令不一致时，以 AGENTS.md 当前版本编号（v1.6.0）为准并同步修正 SOP（含 Frontmatter last_updated 与 change_log 追加）。
+
 ### 7.1 Token 消耗控制规则（v1.3.0 新增）
 
 **背景**：知识图谱构建和 AI 辅助开发过程中存在严重的 Token 无谓消耗（月度 1.4M-2.3M tokens），主要来源于脚本重复解析、AI 重复搜索、架构合规检查冗余。
@@ -1823,3 +1836,4 @@ npm run validate:blueprint
 | 文档治理宪法 | `docs/GOVERNANCE.md` | `docs/` 目录治理规则 |
 | 编码规范摘要 | `docs/standards/coding-conventions.md` | AGENTS.md 工程约束速查版 |
 | Widget 开发指南 | `docs/widget-development-guide.md` | 驾驶舱 Widget 扩展指南 |
+

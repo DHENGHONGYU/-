@@ -154,6 +154,7 @@ _cleanup_registry_22.cjs
 _find_reg_entries.cjs
 matrix_snap.txt
 .workbuddy/memory/2026-08-19.md
+.workbuddy/memory/MEMORY.md
 scripts/audit/analyze-warnings.cjs
 scripts/audit/fix-lint-warnings.cjs
 scripts/audit/lint-check.txt
