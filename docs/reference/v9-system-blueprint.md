@@ -10,7 +10,7 @@ summary: "已被 docs/explanation/system-architecture.md（v1.1）取代的早�
 tags: [architecture, system, reference, design, documentation, deprecated]
 version: v0.9.1-deprecated
 last_updated: 2026-08-15
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-ARCH-010
 related_docs: [V9-DOC-META-000, V9-DOC-DATA-001, V9-DOC-PROJ-295, V9-DOC-PROJ-174, V9-DOC-PROJ-164, V9-DOC-PROJ-176]
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-164, V9-DOC-PROJ-176, V9-DOC-DATA-001, V9-DOC-PROJ-182, V9-DOC-PROJ-179, V9-DOC-PROJ-295, docs/meta/deprecated-docs/old-versions/registry-index-v1.0.0-02-design.md, V9-DOC-PROJ-149]

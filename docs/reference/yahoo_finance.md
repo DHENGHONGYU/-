@@ -10,7 +10,7 @@ summary: "数据域: Yahoo Finance 全球股票数据 原始路径:..."
 tags: [data-source, finance, reference, project]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-196
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-097, V9-DOC-PROJ-149]
 change_log:
