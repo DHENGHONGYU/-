@@ -19,6 +19,7 @@ import { PageSkeleton } from '@/components/organisms/shared/PageSkeleton'
 import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
 import { Sparkles } from 'lucide-react'
+import SimilarStockRecallCard from '@/components/organisms/analysis/SimilarStockRecallCard'
 import {
   useAnalysisStore,
   // 派生查询 Hook（通过 export * 从 .derived.ts 导入）
@@ -174,6 +175,8 @@ export default function AnalysisApp(): React.JSX.Element {
           }
         />
         <AnalysisTemplateCards />
+        {/* Phase 1: 相似股票语义召回 — 零侵入辅助入口，不修改原有评分流程 */}
+        <SimilarStockRecallCard />
         <V6ScoreCard />
       </>
     )

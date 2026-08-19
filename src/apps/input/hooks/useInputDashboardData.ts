@@ -253,9 +253,12 @@ export function useInputDashboardData() {
 
   const handleBatchDelete = useCallback(async (): Promise<void> => {
     if (selectedSymbols.length === 0) return
+    // PoolStoreApi 当前暴露单条 deleteItem(symbol): Promise<boolean>
+    // 此处并发执行并聚合成功数，避免依赖已下线的批量 deleteItems
     const store = useIntentionPoolStore.getState()
     try {
-      const count = await store.deleteItems(selectedSymbols)
+      const results = await Promise.all(selectedSymbols.map((sym) => store.deleteItem(sym)))
+      const count = results.filter((ok) => ok === true).length
       setSelectedSymbols([])
       if (count === 0) {
         logger.warn('[InputDashboard] 批量删除失败', { symbols: selectedSymbols })
