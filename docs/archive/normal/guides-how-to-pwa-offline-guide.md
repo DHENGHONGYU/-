@@ -10,7 +10,7 @@ summary: "本文档规定 V9 作为纯前端 PWA 的离线化实施细节，包�
 tags: [project, guide, implementation, component, how-to]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-071
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-157, V9-DOC-PROJ-149]
 change_log:

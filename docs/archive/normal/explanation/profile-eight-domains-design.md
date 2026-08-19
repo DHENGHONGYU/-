@@ -10,7 +10,7 @@ summary: "八域资料体系设计：D1-D8 八个研究域对应 V6 评分模型
 tags: [data, profile, design, explanation, evidence-chain]
 version: v1.1.0
 last_updated: 2026-07-21
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-029
 related_docs: [V9-DOC-DATA-028]
 change_log:

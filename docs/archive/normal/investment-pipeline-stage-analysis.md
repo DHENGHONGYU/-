@@ -10,7 +10,7 @@ summary: "本文档把 V9 投资研究流程拆分为 13 个阶段，逐项说�
 tags: [backend, research, plan]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-BACK-032
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-164, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:

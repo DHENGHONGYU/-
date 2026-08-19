@@ -10,7 +10,7 @@ summary: "功能域: 浏览器自动化控制（导航、点击、输入、截�
 tags: [frontend, plan, explanation]
 version: 1.9.21
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-FRONT-045
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-331, V9-DOC-PROJ-176, V9-DOC-PROJ-097, V9-DOC-PROJ-149]
 change_log:

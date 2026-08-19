@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-EXP-954
 title: 状态管理规范
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 version: v1.1.0
 last_updated: 2026-07-22
 change_log:
