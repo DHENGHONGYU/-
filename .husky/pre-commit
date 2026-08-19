@@ -203,6 +203,15 @@ else
   echo "   ✅ 无 RAG 相关文件变更，跳过门禁"
 fi
 
+# 22. AGENTS.md 契约 ↔ 真相源 一致性（P0 条件触发）
+#     当 AGENTS.md / src/config/dbConfig.ts / src/config/mcpServerRegistry.ts /
+#     src/constants/cockpit.constants.ts / tsconfig.prod.json / tsconfig.test.json
+#     任一暂存时执行；P0 漂移（DB_VERSION/Store数/MCP条目/USER_SCENES）→ BLOCK。
+#     --changed 由脚本内部做暂存过滤，无需此处再套条件（双保险）。
+echo ""
+echo "🗂️  [22/20] 运行 audit:agents-consistency（契约一致性，条件触发，P0 BLOCK）..."
+BLOCK TSX_RUN scripts/audit/audit-agents-consistency.ts --changed
+
 # 20. 文档目录-内容匹配（warn 模式）
 echo ""
 echo "📂 [warn] 运行 audit:path-match（文档目录-内容匹配检查，warn 模式）..."
