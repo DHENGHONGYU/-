@@ -10,7 +10,7 @@ summary: "本文档定义 V9 的分析引擎、交易引擎、评分模型与跨
 tags: [backend, spec, reference, service, api]
 version: v2.5.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-BACK-001
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-ARCH-026, V9-DOC-BACK-038, V9-DOC-PROJ-176, V9-DOC-ARCH-030, V9-DOC-PROJ-182, V9-DOC-BACK-040, V9-DOC-DATA-003, V9-DOC-BACK-028, V9-DOC-PROJ-218, V9-DOC-BACK-035, V9-DOC-PROJ-149, V9-DOC-BACK-030]
 change_log:

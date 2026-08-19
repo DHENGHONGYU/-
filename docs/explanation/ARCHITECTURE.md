@@ -10,7 +10,7 @@ summary: "本文档面向后续接入的 AI 智能体与研发人员，说明驾
 tags: [architecture, plan, explanation, design, strategy]
 version: v1.0.0
 last_updated: 2026-08-13
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-ARCH-002
 referenced_by: [V9-DOC-PROJ-032, V9-DOC-META-000, V9-DOC-FRONT-021, V9-DOC-PROJ-217, V9-DOC-PROJ-176, V9-DOC-ARCH-040, V9-DOC-PROJ-149, V9-DOC-PROJ-230]
 change_log:

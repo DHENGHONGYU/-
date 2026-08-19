@@ -10,7 +10,7 @@ summary: "多因子选股筛选器（DA-007）支持基于 PE、PB、ROE、市�
 tags: [data, data-definition, screening, plan, factor, explanation]
 version: v1.0.0
 last_updated: 2026-08-15
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-011
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:

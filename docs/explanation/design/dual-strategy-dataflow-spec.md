@@ -10,7 +10,7 @@ summary: "V9 双策略体系与数据流架构规格 - explanation documentation
 tags: [data, strategy, dataflow, dual-strategy, data-definition, store, spec, architecture, explanation]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-008
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-ARCH-026, V9-DOC-DATA-007, V9-DOC-PROJ-176, V9-DOC-ARCH-030, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:

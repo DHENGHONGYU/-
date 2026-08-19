@@ -10,7 +10,7 @@ summary: "V9 双策略规格与现有实现的差异分析报告，识别缺口�
 tags: [backend, strategy, dual-strategy, gap-analysis, service, api, analysis, explanation]
 version: v1.0.0
 last_updated: 2026-06-27
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-BACK-006
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:

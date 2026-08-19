@@ -10,7 +10,7 @@ summary: "本文档是 src/data/ 与 src/core/databridge.ts 的权威全景说�
 tags: [data, plan, architecture, explanation, data-definition, store, strategy]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-003
 related_docs: [V9-DOC-PROJ-271, V9-DOC-DATA-005, V9-DOC-BACK-001]
 referenced_by: [V9-DOC-META-000, V9-DOC-DATA-056, V9-DOC-PROJ-176, V9-DOC-PROJ-156, V9-DOC-PROJ-149]

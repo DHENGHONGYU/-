@@ -10,7 +10,7 @@ summary: "V9 智能评分系统的核心竞争力在于自提炼的评分因子�
 tags: [backend, factor, plan, explanation, service, api, strategy]
 version: v0.9.0
 last_updated: 2026-06-24
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-BACK-007
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-164, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:

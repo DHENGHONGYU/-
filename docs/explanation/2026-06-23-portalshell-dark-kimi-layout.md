@@ -1,6 +1,6 @@
 ---
 title: 2026-06-23-portalshell-dark-kimi-layout
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 tier: reference
 version: v0.9.0-docs-review
 last_updated: 2026-06-24
