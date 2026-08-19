@@ -149,3 +149,15 @@ _audit2.txt
 cockpit_snap.txt
 scripts/audit/lint-output.txt
 scripts/audit/prod-warnings-detail.txt
+# 2026-08-19 iteration-1 WIP 收尾：registry 清理临时脚本 / lint 扫描快照 / workbuddy 当日日记 / 矩阵快照
+_cleanup_registry_22.cjs
+_find_reg_entries.cjs
+matrix_snap.txt
+.workbuddy/memory/2026-08-19.md
+scripts/audit/analyze-warnings.cjs
+scripts/audit/fix-lint-warnings.cjs
+scripts/audit/lint-check.txt
+scripts/audit/lint-check2.txt
+scripts/audit/lint-json-output.json
+# dist 验证沙箱（一次性构建产物，非源码）
+dist-verify/
