@@ -10,7 +10,7 @@ summary: "V9 系统架构的唯一真相源，定义五层架构、调用规则�
 tags: [architecture, standards, spec, design, explanation]
 version: v2.5.0
 last_updated: 2026-07-05
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-ARCH-004
 change_log:
   - version: v2.5.0

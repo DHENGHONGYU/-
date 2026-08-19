@@ -10,7 +10,7 @@ summary: "V9 路由规范：路由定义、命名与导航规则（事实源 src
 tags: [frontend, routing, spec, plan, component, ui, strategy, architecture, explanation]
 version: v3.4.0
 last_updated: 2026-08-13
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-FRONT-004
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-DATA-034, V9-DOC-PROJ-176, V9-DOC-PROJ-218, V9-DOC-PROJ-149]
 change_log:

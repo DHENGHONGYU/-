@@ -10,7 +10,7 @@ summary: "## 背景 V9 当前已通过 ADR-008 引入「第四次工业革命稀
 tags: [backend, strategy, adr, dual-strategy]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-BACK-041
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-ARCH-030, V9-DOC-PROJ-182, V9-DOC-BACK-040, V9-DOC-PROJ-149]
 change_log:

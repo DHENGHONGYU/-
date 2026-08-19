@@ -10,7 +10,7 @@ summary: "?# 批次 A：让 V6 架构主导 V9（评分入口 + 舱室入口单�
 tags: [architecture, batch, reference]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-ARCH-023
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:

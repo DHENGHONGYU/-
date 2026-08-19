@@ -10,7 +10,7 @@ summary: "在现有 JS 计算基础上，引入 DuckDB WASM 作为时序数据�
 tags: [data, duckdb, wasm, timeseries, sql, adr, explanation]
 version: v1.0.0
 last_updated: 2026-07-20
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-079
 referenced_by: []
 change_log:

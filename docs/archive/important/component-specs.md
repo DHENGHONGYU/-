@@ -10,7 +10,7 @@ summary: "唯一事实源（single source of truth）：本文件是 V9 设计�
 tags: [frontend, component, design, standards]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-FRONT-050
 referenced_by: [V9-DOC-META-000]
 change_log:

@@ -10,7 +10,7 @@ summary: "Architecture Decision Record: 补齐筛选引擎、信号持久化与�
 tags: [backend, screening, adr, plan, stocks, explanation]
 version: v0.9.0-docs-review
 last_updated: 2026-06-24
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-BACK-015
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-164, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:
