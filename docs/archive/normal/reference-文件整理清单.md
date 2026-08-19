@@ -10,7 +10,7 @@ summary: "文件整理清单 - reference documentation (project)"
 tags: [project, checklist, reference, governance, documentation]
 version: v1.3.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-120
 change_log:
   - version: v1.3.0

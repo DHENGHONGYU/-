@@ -1,4 +1,4 @@
-﻿---
+---
 title: README
 type: reference
 domain: project
@@ -10,7 +10,7 @@ summary: "reference 目录索引：八类文档的现有锚点与缺口标记。
 tags: [index, documentation, reference, project, governance]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-102
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182]
 change_log:

@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-EXP-951
 title: refactor-impact-analysis-2026-06-27
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 tier: important
 version: v1.0.0
 last_updated: 2026-08-11

@@ -10,7 +10,7 @@ summary: "## 1. 定位 V9 前端采用五舱（cabin）架构，页面统一置�
 tags: [frontend, plan, explanation]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-FRONT-039
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-149]
 change_log:

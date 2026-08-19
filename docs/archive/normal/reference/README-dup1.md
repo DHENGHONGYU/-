@@ -10,7 +10,7 @@ summary: "ai directory document index and navigation entry"
 tags: [ai, documentation, index, mcp]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-AI-012
 related_docs: [V9-DOC-AI-004, V9-DOC-DATA-059, V9-DOC-BACK-026, V9-DOC-AI-006]
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]

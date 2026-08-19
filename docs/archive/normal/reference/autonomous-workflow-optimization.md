@@ -10,7 +10,7 @@ summary: "版本: v1.0.0 | 日期: 2026-07-04 适用范围: AI辅助开发全流
 tags: [ai, optimization, workflow]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-AI-019
 related_docs: [V9-DOC-PROJ-083, V9-DOC-QA-093, V9-DOC-PROJ-243]
 referenced_by: [V9-DOC-META-000, V9-DOC-AI-020, V9-DOC-PROJ-176]
