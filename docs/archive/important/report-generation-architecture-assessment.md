@@ -10,7 +10,7 @@ summary: "报告版本: v3.0.0 编制日期: 2026-07-20 专项主题: 20页研�
 tags: [architecture, report, plan]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 change_log:
   - version: v1.0.0
 changes: Initial version established

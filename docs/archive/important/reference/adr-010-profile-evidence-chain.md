@@ -10,7 +10,7 @@ summary: "八域资料体系与证据链架构：将分散的资讯/研报/公�
 tags: [data, profile, evidence-chain, scoring, adr, reference, data-definition]
 version: v1.1.0
 last_updated: 2026-07-21
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-028
 referenced_by: [docs/explanation/design/profile-eight-domains-design.md]
 change_log:

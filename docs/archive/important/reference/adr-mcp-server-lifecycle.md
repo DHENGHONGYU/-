@@ -10,7 +10,7 @@ summary: "V9 项目 MCP 层经历了从 18 个 Server 到 13 个 Server 的治�
 tags: [ai, adr, mcp, reference, documentation]
 version: v1.1.0
 last_updated: 2026-08-15
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-AI-005
 referenced_by: [V9-DOC-META-000, V9-DOC-PROD-005, V9-DOC-PROJ-176, V9-DOC-PROJ-149, V9-DOC-ARCH-013]
 change_log:

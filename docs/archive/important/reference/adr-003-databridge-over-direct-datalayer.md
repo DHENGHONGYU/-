@@ -10,7 +10,7 @@ summary: "V9 作为纯前端智能投研系统，所有数据持久化于本地 
 tags: [data, databridge, adr, reference, data-definition, store]
 version: v1.1.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-013
 referenced_by: [V9-DOC-META-000, V9-DOC-PROD-005, V9-DOC-DATA-056, V9-DOC-PROJ-176, V9-DOC-PROJ-156, V9-DOC-ARCH-041, V9-DOC-PROJ-149, V9-DOC-ARCH-013]
 change_log:

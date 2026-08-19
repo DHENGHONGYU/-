@@ -10,7 +10,7 @@ summary: "将 InputDashboard 内联的 addStock 提交流程抽离为可复用 u
 tags: [frontend, input-cabin, zustand, error-boundary, adr, reference, hooks, concurrency]
 version: v1.0.0
 last_updated: 2026-08-09
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-FRONT-002
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-108, V9-DOC-PROJ-176]
 change_log:

@@ -2,7 +2,7 @@
 doc_id: V9-DOC-PROJ-365
 title: v9-strategy-architecture
 tier: important
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 version: v0.9.8
 last_updated: 2026-06-29
 change_log:

@@ -10,7 +10,7 @@ summary: "本文档规定 V9 系统中所有用户操作的反馈机制，包括
 tags: [project, spec, reference, governance, documentation]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-091
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 change_log:
