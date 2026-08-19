@@ -10,7 +10,7 @@ summary: "基于 A 股个人投资者的投资年限、资产规模、研究深�
 tags: [product, ux, reference, strategy, vision]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROD-002
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 change_log:

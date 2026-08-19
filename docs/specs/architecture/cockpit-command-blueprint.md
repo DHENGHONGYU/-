@@ -14,7 +14,7 @@ type: spec
 domain: architecture
 phase: design
 doc_id: V9-DOC-ARCH-050
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 last_updated: 2026-07-24
 maintainer: V9 Architecture Team
 version: v2.0.0

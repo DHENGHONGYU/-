@@ -10,7 +10,7 @@ summary: "01-requirements directory document index and navigation entry"
 tags: [requirements, index, documentation, reference, product]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROD-004
 related_docs: [V9-DOC-PROJ-073]
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]

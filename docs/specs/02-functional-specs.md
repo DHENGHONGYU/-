@@ -10,7 +10,7 @@ summary: "用户故事：作为投资者，我想查看行业评分与板块轮�
 tags: [project, spec, reference, governance, documentation]
 version: v2.5.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-073
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROD-004, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:
