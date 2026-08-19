@@ -10,7 +10,7 @@ summary: "V9 设计系统颜色令牌多源分裂的根治方案（可行性评�
 tags: [frontend, token, refactor]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-FRONT-049
 referenced_by: [V9-DOC-META-000]
 change_log:

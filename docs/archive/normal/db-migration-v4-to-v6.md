@@ -10,7 +10,7 @@ summary: "## 1. 概述 本文档规定 `V6ProDB` 从版本 `4` 升级到版本 `
 tags: [data, registry, migration]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-069
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-164, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:

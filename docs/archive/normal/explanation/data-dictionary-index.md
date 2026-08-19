@@ -10,7 +10,7 @@ summary: "本文档汇总 V9 项目所有模块级数据字典入口，便于快
 tags: [data, data-definition, registry, plan, architecture, explanation]
 version: v1.7.0
 last_updated: 2026-08-15
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-005
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-PROJ-032, V9-DOC-META-000, V9-DOC-PROJ-058, V9-DOC-PROJ-119, V9-DOC-PROJ-176, V9-DOC-DATA-003, V9-DOC-PROJ-193, V9-DOC-PROJ-149]
 change_log:

@@ -10,7 +10,7 @@ summary: "design directory document index and navigation entry"
 tags: [project, design, plan, checklist, architecture]
 version: v1.0.0
 last_updated: 2026-07-17
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-159
 related_docs: [V9-DOC-FRONT-007, V9-DOC-FRONT-021]
 change_log:
