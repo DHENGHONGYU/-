@@ -19,8 +19,87 @@ import {
 } from '@/services/data-collector/collectedDataSyncService'
 import { getLogger } from '@/lib/logger'
 import type { CollectionConfig } from '@/types/modules/collection.types'
+import { getStorageFor } from '@/services/storage/storageFactory'
+import { embedText } from '@/services/system/localEmbeddingService'
+import { queryGet, queryList } from '@/data/dataLayerHelpers'
+import { STORE_NAME } from '@/config/dbConfig'
+import type { VectorRecord } from '@/services/storage/storageProvider'
 
 const logger = getLogger()
+
+/**
+ * 构造单只股票的向量化语料（基于已采集落盘的 IndexedDB 数据）。
+ * 优先取基本信息 + 概念 + 近期资讯标题，拼接为文本送嵌入模型。
+ */
+async function buildSymbolCorpus(symbol: string): Promise<string | null> {
+  const stock = await queryGet<Record<string, unknown>>(STORE_NAME.stocks, symbol)
+  if (!stock) return null
+  const chunks: string[] = []
+  const push = (label: string, val: unknown): void => {
+    if (val == null) return
+    const text = typeof val === 'string' ? val : JSON.stringify(val)
+    if (text.trim() === '') return
+    chunks.push(`${label}：${text}`)
+  }
+  push('代码', symbol)
+  push('名称', stock['name'])
+  push('行业', stock['industry'])
+  push('概念', Array.isArray(stock['concepts']) ? (stock['concepts'] as unknown[]).join('、') : stock['concepts'])
+  push('简介', stock['description'] ?? stock['summary'])
+  // 近期新闻 / 公告标题（最多 10 条，丰富语义）
+  const news = await queryList<Record<string, unknown>>(STORE_NAME.news)
+  const related = news.filter(
+    (n) =>
+      n['symbol'] === symbol ||
+      (Array.isArray(n['symbols']) && (n['symbols'] as unknown[]).includes(symbol)),
+  )
+  if (related.length > 0) {
+    const titles = related
+      .slice(0, 10)
+      .map((n) => String(n['title'] ?? ''))
+      .filter(Boolean)
+    if (titles.length > 0) push('近期资讯', titles.join('；'))
+  }
+  return chunks.length > 0 ? chunks.join('\n') : null
+}
+
+/**
+ * 采集完成后为每只股票生成嵌入向量并写入向量存储（localDocs + HNSW 索引）。
+ * 非阻塞、容错：任何失败仅记录日志，不影响采集主流程与已有同步结果。
+ */
+async function embedCollectedSymbols(symbols: string[]): Promise<void> {
+  const provider = (await getStorageFor('vector')) as unknown as {
+    upsertVector: (r: VectorRecord) => Promise<{ success: boolean; error?: string }>
+  }
+  let embedded = 0
+  for (const symbol of symbols) {
+    try {
+      const text = await buildSymbolCorpus(symbol)
+      if (!text) {
+        logger.warn('[collectionService] 向量化跳过：无可用已采集数据', { symbol })
+        continue
+      }
+      const res = await embedText(text)
+      if (!res.success) {
+        logger.warn('[collectionService] 向量化跳过（嵌入失败）', { symbol, error: res.error })
+        continue
+      }
+      const upsert = await provider.upsertVector({
+        id: `collected:${symbol}`,
+        vector: res.vector,
+        metadata: { symbol, category: 'collected' },
+      })
+      if (upsert.success) embedded++
+      else logger.warn('[collectionService] 向量写入失败', { symbol, error: upsert.error })
+    } catch (err) {
+      logger.warn('[collectionService] 向量化异常（已跳过）', {
+        symbol,
+        error: err instanceof Error ? err.message : String(err),
+      })
+    }
+  }
+  logger.info('[collectionService] 向量化完成', { total: symbols.length, embedded })
+}
 
 export interface PoolCollectionResult {
   /** 实际执行采集的维度数 */
@@ -159,6 +238,8 @@ async function kickoffSync(
       symbolCount: result.symbolCount,
       batchDir: result.batchDir,
     })
+    // 向量化（异步、非阻塞，失败仅记录日志）：将已采集数据落地为嵌入向量
+    void embedCollectedSymbols(symbols)
   } else {
     logger.warn('[collectionService] 资料同步失败', {
       parentTaskId,
