@@ -441,8 +441,15 @@ export function classifyBreakoutStyle(
   fundFlow?: FundFlowContext,
 ): BreakoutTradeStyle {
   const T = V6_CALCULATOR_THRESHOLDS
-  const t = turnover ?? 0.001
-  const v = volumeRatio ?? 0.5
+  const turnoverMissing = turnover === undefined
+  const volumeRatioMissing = volumeRatio === undefined
+  if (turnoverMissing || volumeRatioMissing) {
+    logger.debug(
+      `[L8] classifyBreakoutStyle 参数缺失: turnover=${turnoverMissing ? 'undefined' : String(turnover)}, volumeRatio=${volumeRatioMissing ? 'undefined' : String(volumeRatio)}，使用保守默认值`,
+    )
+  }
+  const t = turnoverMissing ? 0.001 : turnover
+  const v = volumeRatioMissing ? 0.5 : volumeRatio
   const tpct = t * 100 // 百分比视角
 
   // 8 种风格：优先匹配高能量 / 高量比模式

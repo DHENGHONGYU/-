@@ -229,7 +229,7 @@ it(
           key: code,
           source: MODULE_ID.pool,
         })
-        stockUpdateOk = st.success && !!st.data && Number.isFinite(st.data.price) && st.data.price > 0
+        stockUpdateOk = st.success && !!st.data && Number.isFinite(st.data.price) && st.data.price! > 0
       } catch (e) {
         s2.enrichError = String(e)
       }

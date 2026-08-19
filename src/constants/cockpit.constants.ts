@@ -636,6 +636,209 @@ export const COCKPIT_CROSS_PERSPECTIVES: readonly { id: WidgetPerspective; label
   { id: 'risk', label: '风控' },
 ]
 
+// ============================================================
+// 用户场景分组（结果优先视图）
+// ============================================================
+
+/**
+ * 结果优先视图：用户场景区块定义
+ *
+ * 按使用者维度而非技术架构组织驾驶舱首屏内容。
+ * 与 COCKPIT_CROSS_DOMAINS / COCKPIT_CROSS_PERSPECTIVES 并存，
+ * 两套映射互不干扰——交叉布局供技术钻取，用户场景供日常使用。
+ */
+export type UserSceneId = 'today_snapshot' | 'portfolio_status' | 'market_scan' | 'deep_dive'
+
+export const USER_SCENES: readonly { id: UserSceneId; label: string; icon: string; description: string }[] = [
+  { id: 'today_snapshot',    label: '今日快照', icon: '⚡', description: '今日盈亏、信号、市场情绪 — 快速掌握' },
+  { id: 'portfolio_status',  label: '持仓状态', icon: '💼', description: '持仓、风险、仓位 — 我的资产' },
+  { id: 'market_scan',       label: '市场扫描', icon: '📊', description: '指数、板块、资金流 — 市场全景' },
+  { id: 'deep_dive',         label: '深度钻取', icon: '🔍', description: 'K线、评分、AI研判 — 技术分析' },
+]
+
+/**
+ * Widget → 用户场景映射（结果优先视图）
+ *
+ * 每个 Widget 归属一个用户场景区块，ResultsFirstOverview 据此分组渲染。
+ * 未在映射中的 Widget 自动归入「深度钻取」区块。
+ */
+export const WIDGET_USER_SCENE_MAP: Record<string, UserSceneId> = {
+  // 今日快照 — 「今天怎样？」
+  pnlAnalysis:      'today_snapshot',
+  signalMonitor:    'today_snapshot',
+  marketSentiment:  'today_snapshot',
+  catalystEvent:    'today_snapshot',
+
+  // 持仓状态 — 「我持有什么？风险如何？」
+  portfolioOverview: 'portfolio_status',
+  positionControl:   'portfolio_status',
+  riskMonitor:       'portfolio_status',
+  watchlist:         'portfolio_status',
+
+  // 市场扫描 — 「市场整体怎样？」
+  marketIndices:     'market_scan',
+  sectorHeatmap:     'market_scan',
+  fundFlow:          'market_scan',
+  industryChain:     'market_scan',
+
+  // 深度钻取 — 「深入分析」
+  stockChart:        'deep_dive',
+  kaiScore:          'deep_dive',
+  aiTradeReview:     'deep_dive',
+  modelCompare:      'deep_dive',
+  stockChat:         'deep_dive',
+  investmentProfile: 'deep_dive',
+  poolBoard:         'deep_dive',
+  hotSector:         'deep_dive',
+  valuePit:          'deep_dive',
+  signalQuality:     'deep_dive',
+  keyDataCalendar:   'deep_dive',
+  agentPerformance:  'deep_dive',
+}
+
+/**
+ * 结果优先视图：各区块默认展开状态
+ */
+export const USER_SCENE_DEFAULT_EXPANDED: Record<UserSceneId, boolean> = {
+  today_snapshot: true,
+  portfolio_status: true,
+  market_scan: true,
+  deep_dive: true,
+}
+
+// ============================================================
+// 三页整合（投资者决策视角）
+// ============================================================
+
+/**
+ * 驾驶舱三页 ID
+ *
+ * 整合原先的 4 个用户场景 + 钻取工具，从投资者决策路径重新分配为：
+ *   1. today   今日决策   — 盘前看什么 / 今日有什么信号 / 是否需要立即行动
+ *   2. my      我的组合   — 我持有什么 / 盈亏多少 / 风险敞口多大
+ *   3. market  市场与机会 — 市场整体怎样 / 哪些板块有机会 / 深度分析工具
+ */
+export type DecisionPageId = 'today' | 'my' | 'market'
+
+export interface DecisionPageMeta {
+  id: DecisionPageId
+  label: string
+  icon: string
+  /** 一句话说明，出现在 Tab 下方 */
+  tagline: string
+  /** 该页面内的次级分组（折叠/不折叠），用户可滚动连续浏览 */
+  sections: DecisionSection[]
+}
+
+export interface DecisionSection {
+  id: string
+  label: string
+  icon: string
+  /** 默认展开 */
+  defaultExpanded: boolean
+  /** 该区块所属 widgetId 列表（按顺序渲染） */
+  widgets: string[]
+}
+
+export const DECISION_PAGES: readonly DecisionPageMeta[] = [
+  {
+    id: 'today',
+    label: '今日决策',
+    icon: '🎯',
+    tagline: '盘前准备 · 今日信号 · 需不需要立即动',
+    sections: [
+      {
+        id: 'signals_today',
+        label: '今日信号与事件',
+        icon: '⚡',
+        defaultExpanded: true,
+        widgets: ['signalMonitor', 'catalystEvent', 'keyDataCalendar'],
+      },
+      {
+        id: 'market_mood',
+        label: '市场情绪与温度',
+        icon: '🌡️',
+        defaultExpanded: true,
+        widgets: ['marketSentiment', 'marketIndices'],
+      },
+      {
+        id: 'today_quality',
+        label: '历史信号复盘',
+        icon: '📝',
+        defaultExpanded: false,
+        widgets: ['signalQuality', 'agentPerformance'],
+      },
+    ],
+  },
+  {
+    id: 'my',
+    label: '我的组合',
+    icon: '💼',
+    tagline: '持仓分布 · 盈亏业绩 · 风险敞口',
+    sections: [
+      {
+        id: 'portfolio_core',
+        label: '组合与盈亏',
+        icon: '💰',
+        defaultExpanded: true,
+        widgets: ['portfolioOverview', 'pnlAnalysis'],
+      },
+      {
+        id: 'position_risk',
+        label: '仓位与风险',
+        icon: '🛡️',
+        defaultExpanded: true,
+        widgets: ['positionControl', 'riskMonitor'],
+      },
+      {
+        id: 'watchlist',
+        label: '自选池',
+        icon: '⭐',
+        defaultExpanded: false,
+        widgets: ['watchlist', 'investmentProfile'],
+      },
+    ],
+  },
+  {
+    id: 'market',
+    label: '市场与机会',
+    icon: '🧭',
+    tagline: '板块资金 · 机会策略 · AI 深度研判',
+    sections: [
+      {
+        id: 'market_scan',
+        label: '市场全景扫描',
+        icon: '📊',
+        defaultExpanded: true,
+        widgets: ['sectorHeatmap', 'fundFlow', 'industryChain'],
+      },
+      {
+        id: 'opportunity',
+        label: '机会池与策略',
+        icon: '🎣',
+        defaultExpanded: true,
+        widgets: ['kaiScore', 'poolBoard', 'hotSector', 'valuePit'],
+      },
+      {
+        id: 'deep_dive',
+        label: '深度钻取工具',
+        icon: '🔍',
+        defaultExpanded: false,
+        widgets: ['modelCompare', 'aiTradeReview', 'stockChat'],
+      },
+    ],
+  },
+]
+
+/** 未在 DECISION_PAGES 中声明的 Widget 归入此页此区块 */
+export const DECISION_PAGE_FALLBACK: { page: DecisionPageId; section: string } = {
+  page: 'market',
+  section: 'deep_dive',
+}
+
+/** 三页默认页（首屏进入即看到） */
+export const DECISION_PAGE_DEFAULT: DecisionPageId = 'today'
+
 /**
  * 重型 Widget 收为 Sheet 抽屉触发（Phase 1 步骤 1.5）
  *

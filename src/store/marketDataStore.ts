@@ -232,6 +232,10 @@ const actions = {
     const state = useMarketDataStore.getState()
 
     // 更新 loading 状态
+    const hasInstanceId = instanceId !== undefined && instanceId !== ''
+    if (!hasInstanceId && config.silent !== true) {
+      logger.debug(`[marketDataStore] fetchDataSource: ${key} 未提供 instanceId，跳过 per-instance loading/error map 更新`)
+    }
     useMarketDataStore.setState({
       status: 'loading',
       dataSources: {
@@ -242,11 +246,11 @@ const actions = {
           error: null,
         },
       },
-      loadingMap: (instanceId ?? '') !== ''
-        ? { ...state.loadingMap, [instanceId!]: true }
+      loadingMap: hasInstanceId
+        ? { ...state.loadingMap, [instanceId]: true }
         : state.loadingMap,
-      errorMap: (instanceId ?? '') !== ''
-        ? { ...state.errorMap, [instanceId!]: null }
+      errorMap: hasInstanceId
+        ? { ...state.errorMap, [instanceId]: null }
         : state.errorMap,
     })
 
@@ -272,11 +276,11 @@ const actions = {
             error: message,
           },
         },
-        loadingMap: (instanceId ?? '') !== ''
-          ? { ...state.loadingMap, [instanceId!]: false }
+        loadingMap: hasInstanceId
+          ? { ...state.loadingMap, [instanceId]: false }
           : state.loadingMap,
-        errorMap: (instanceId ?? '') !== ''
-          ? { ...state.errorMap, [instanceId!]: message }
+        errorMap: hasInstanceId
+          ? { ...state.errorMap, [instanceId]: message }
           : state.errorMap,
       })
     }

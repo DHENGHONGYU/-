@@ -27,7 +27,7 @@ export function useChipSignalTable() {
       if (filter === 'buy') return s.tradeAction === 'buy'
       if (filter === 'sell') return s.tradeAction === 'sell'
       if (filter === 'hold') return s.tradeAction === 'hold'
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+       
       if (filter === 'escape') return s.tradeAction === 'escape'
       return true
     })

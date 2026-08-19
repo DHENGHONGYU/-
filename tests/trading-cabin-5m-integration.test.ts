@@ -106,7 +106,7 @@ const SCORE_DESIGN: Record<string, StockSizing> = {
 }
 
 function makeScoreView(symbol: string): CompositeScoreView {
-  const s = SCORE_DESIGN[symbol]
+  const s = SCORE_DESIGN[symbol]!
   return {
     symbol,
     v6Score: s.composite,
@@ -132,7 +132,7 @@ describe('交易舱综合测试：20只股票×500万资金', () => {
     vi.spyOn(hotSectorService, 'getHotSectors').mockResolvedValue([
       { code: '801120.SW', name: '半导体', score: 92, trend: 'up', factors: { momentum: 90, fundFlow: 88, valuation: 70, sentiment: 85 }, stocks: [] },
       { code: '801750.SW', name: '人工智能', score: 90, trend: 'up', factors: { momentum: 92, fundFlow: 86, valuation: 65, sentiment: 88 }, stocks: [] },
-      { code: '801080.SW', name: '锂电', score: 72, trend: 'flat', factors: { momentum: 45, fundFlow: 60, valuation: 80, sentiment: 65 }, stocks: [] },
+      { code: '801080.SW', name: '锂电', score: 72, trend: 'neutral', factors: { momentum: 45, fundFlow: 60, valuation: 80, sentiment: 65 }, stocks: [] },
       { code: '801150.SW', name: '医药', score: 74, trend: 'up', factors: { momentum: 60, fundFlow: 68, valuation: 78, sentiment: 72 }, stocks: [] },
       { code: '801180.SW', name: '白酒', score: 78, trend: 'up', factors: { momentum: 62, fundFlow: 72, valuation: 82, sentiment: 80 }, stocks: [] },
     ])
@@ -154,15 +154,15 @@ describe('交易舱综合测试：20只股票×500万资金', () => {
     const sectors: Record<string, string[]> = { '科技/半导体/AI': [], '医药': [], '锂电': [], '生物制药': [], '白酒消费': [] }
     stocks.forEach((s) => {
       if (['半导体', 'AI服务器', '人工智能', '机器视觉', '通信设备', '互联网'].some((k) => s.sector?.includes(k))) {
-        sectors['科技/半导体/AI'].push(s.symbol)
+        sectors['科技/半导体/AI']!.push(s.symbol)
       } else if (s.sector?.includes('医药') || s.sector?.includes('医疗')) {
-        sectors['医药'].push(s.symbol)
+        sectors['医药']!.push(s.symbol)
       } else if (s.sector?.includes('锂电') || s.sector?.includes('新能源')) {
-        sectors['锂电'].push(s.symbol)
+        sectors['锂电']!.push(s.symbol)
       } else if (s.sector?.includes('生物制药')) {
-        sectors['生物制药'].push(s.symbol)
+        sectors['生物制药']!.push(s.symbol)
       } else if (s.sector?.includes('白酒')) {
-        sectors['白酒消费'].push(s.symbol)
+        sectors['白酒消费']!.push(s.symbol)
       }
     })
 
@@ -223,15 +223,11 @@ describe('交易舱综合测试：20只股票×500万资金', () => {
   // 测试3：500万资金组合构建 + 资金分配校对
   // ----------------------------------------------------------
   it('T3-组合构建：500万资金分配，验证单仓位上限/权重约束', async () => {
-    const momentumMap: Record<string, number> = {}
-    Object.entries(SCORE_DESIGN).forEach(([sym, s]) => { momentumMap[sym] = s.momentum })
-
     // 先运行策略引擎获取分类，再构建组合
-    const { portfolio, strategyResult } = await buildStrategyFilteredPortfolio({
+    const { portfolio } = await buildStrategyFilteredPortfolio({
       theme: CORE_RESOURCE_THEME,
       stocks: CABIN_20_STOCKS,
       totalPortfolioValue: TOTAL_PORTFOLIO_VALUE,
-      momentumMap,
     })
 
     console.log('\n========== [T3] 500万组合构建结果 ==========')
@@ -404,7 +400,6 @@ describe('交易舱综合测试：20只股票×500万资金', () => {
       theme: CORE_RESOURCE_THEME,
       stocks: CABIN_20_STOCKS,
       totalPortfolioValue: TOTAL_PORTFOLIO_VALUE,
-      momentumMap,
     })
 
     console.log('\n' + '='.repeat(72))

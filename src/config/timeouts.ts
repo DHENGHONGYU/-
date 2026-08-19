@@ -30,3 +30,6 @@ export const RESILIENCE_BACKOFF_BASE_MS = 200
 
 /** 降级链退避最大延迟（ms）— 指数退避上限 */
 export const RESILIENCE_BACKOFF_MAX_MS = 2_000
+
+/** iFinD 目标价接口超时（ms）— 同花顺 iFinD API 聚合查询可能较慢，默认 45s */
+export const IFIND_TARGET_PRICE_TIMEOUT_MS = 45_000

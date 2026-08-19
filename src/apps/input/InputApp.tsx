@@ -1,7 +1,16 @@
 import React, { useEffect, useRef, useState, Suspense } from 'react'
-import { useLocation } from 'react-router'
+import { Link, useLocation } from 'react-router'
 import { Button } from '@/components/atoms/Button'
-import { PageHeader } from '@/components/templates/PageHeader'
+import { PageContainer, PageHeader } from '@/components/templates'
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from '@/components/atoms/Breadcrumb'
+import { Radar } from 'lucide-react'
 import InputDashboard from './InputDashboard'
 import LocalKnowledgePage from '@/pages/input/LocalKnowledgePage'
 import CollectionMonitorPanel from './CollectionMonitorPanel'
@@ -106,11 +115,32 @@ export default function InputApp(): React.JSX.Element {
   const matched = matchInputRoute(path)
 
   return (
-    <div className="space-y-4">
+    <PageContainer className="space-y-6">
+      <Breadcrumb aria-label="breadcrumb">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild><Link to="/">首页</Link></BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>输入舱</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <PageHeader
         title="输入舱"
         description="股票数据录入与采集管理"
-        actions={<Button variant="outline" size="sm" onClick={() => window.location.hash = '#/input/collection-monitor'}>采集监控</Button>}
+        actions={
+          <Button
+            variant="outline"
+            size="sm"
+            className="shadow-sm"
+            onClick={() => window.location.hash = '#/input/collection-monitor'}
+          >
+            <Radar className="mr-1.5 h-3.5 w-3.5" />
+            采集监控
+          </Button>
+        }
       />
       <InputFlowErrorBoundary
         label="InputApp"
@@ -124,6 +154,6 @@ export default function InputApp(): React.JSX.Element {
           <InputDashboard key={resetKey} />
         )}
       </InputFlowErrorBoundary>
-    </div>
+    </PageContainer>
   )
 }

@@ -166,7 +166,7 @@ function createClassMutation(): MutationRecord {
     removedNodes: [] as unknown as NodeList,
     nextSibling: null,
     previousSibling: null,
-  } as MutationRecord
+  } as unknown as MutationRecord
 }
 
 /** 等待微任务 + 定时器刷新（避免 act 导致无限重渲染） */

@@ -10,10 +10,10 @@ import { useStockAdd } from '@/hooks/useStockAdd'
 import { StockSearch } from '@/components/organisms/input/StockSearch'
 import type { StockSearchResult } from '@/services/input/inputService'
 import { getLogger } from '@/lib/logger'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
-import { Info } from 'lucide-react'
+import { Info, Zap, FileText, LineChart } from 'lucide-react'
 import HotSectorSection from './HotSectorSection'
+import InputFlowOverview from './components/InputFlowOverview'
 import type { InputTab, ManualMode } from './inputDashboard.types'
 import { TAB_BASE, TAB_ACTIVE, TAB_INACTIVE } from './inputDashboard.utils'
 import { useInputDashboardData } from './hooks/useInputDashboardData'
@@ -53,61 +53,73 @@ export default function InputDashboard(): React.JSX.Element {
   const [manualMode, setManualMode] = useState<ManualMode>('single')
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* ─── 流程总览条（新 UI） ─── */}
+      <InputFlowOverview />
+
       {/* ─── 新用户引导 ─── */}
       {!loading && stats.total === 0 && (
-        <div className="bg-primary/10 border border-primary/20 rounded-lg p-3 flex items-center gap-3">
-          <Info className="w-5 h-5 text-primary shrink-0" />
-          <div>
-            <p className="text-sm font-medium">新用户引导</p>
-            <p className="text-xs text-muted-foreground">1. 录入股票 → 2. 启动采集 → 3. 查看评分</p>
+        <div className="flex items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 p-4 shadow-sm">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <Info className="h-4 w-4" />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-semibold">开始您的投研之旅</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              Step 1：录入股票标的 → Step 2：启动深度采集 → Step 3：进入分析舱查看智能评分
+            </p>
           </div>
         </div>
       )}
+
+      {/* ─── 统计卡片 ─── */}
       <InputDashboardStats loading={loading} stats={stats} fetcherOk={fetcherOk} />
 
       {/* ─── 录入 Tab 切换区 ─── */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>录入候选股票</CardTitle>
-            <div className={cn('inline-flex rounded-xl bg-muted/60 p-1')}>
+      <Card className="shadow-sm border-border/40">
+        <CardHeader className="pb-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <CardTitle className="text-base font-semibold">录入候选股票</CardTitle>
+            <div className={cn('inline-flex self-start rounded-xl bg-muted/50 p-1 sm:self-auto')}>
               <button
                 onClick={() => setActiveTab('manual')}
                 className={`${TAB_BASE} ${activeTab === 'manual' ? TAB_ACTIVE : TAB_INACTIVE}`}
               >
+                <Zap className="mr-1.5 inline h-3.5 w-3.5" />
                 自行意向输入
               </button>
               <button
                 onClick={() => setActiveTab('hot-sector')}
                 className={`${TAB_BASE} ${activeTab === 'hot-sector' ? TAB_ACTIVE : TAB_INACTIVE}`}
               >
+                <LineChart className="mr-1.5 inline h-3.5 w-3.5" />
                 热门板块纳入
               </button>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-5 pt-3">
           {/* ── Tab 1: 自行意向输入 ── */}
           {activeTab === 'manual' && (
-            <>
+            <div className="space-y-5">
               {/* 子分段：逐项 / 批量 — 下划线 Tab 样式 */}
-              <div className="inline-flex border-b border-border">
+              <div className="inline-flex border-b border-border/60">
                 <button
                   onClick={() => setManualMode('single')}
                   className={cn(
-                    'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
+                    'px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px',
                     manualMode === 'single'
                       ? 'border-primary text-foreground'
                       : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30',
                   )}
                 >
+                  <FileText className="mr-1.5 inline h-3.5 w-3.5" />
                   逐项输入
                 </button>
                 <button
                   onClick={() => setManualMode('bulk')}
                   className={cn(
-                    'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
+                    'px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px',
                     manualMode === 'bulk'
                       ? 'border-primary text-foreground'
                       : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30',
@@ -118,10 +130,11 @@ export default function InputDashboard(): React.JSX.Element {
               </div>
 
               {manualMode === 'single' ? (
-                <>
-                  <div className="flex items-center gap-2">
+                <div className="space-y-4">
+                  {/* 搜索栏 */}
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                     <StockSearch
-                      className="flex-1 max-w-md"
+                      className="flex-1 sm:max-w-md"
                       mode={searchMode}
                       onSelect={(result: StockSearchResult): void => {
                         setSymbol(result.symbol)
@@ -134,13 +147,13 @@ export default function InputDashboard(): React.JSX.Element {
                       }}
                     />
                     {/* 搜索模式 Chip — 搜索框右侧 */}
-                    <div className="inline-flex gap-1 shrink-0">
+                    <div className="inline-flex gap-1 self-start sm:self-auto shrink-0">
                       <button
                         onClick={() => setSearchMode('fill')}
                         className={cn(
-                          'rounded-full px-3 py-1 text-xs font-medium transition-colors',
+                          'rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
                           searchMode === 'fill'
-                            ? 'bg-primary/10 text-primary'
+                            ? 'bg-primary/10 text-primary shadow-sm'
                             : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
                         )}
                       >
@@ -149,9 +162,9 @@ export default function InputDashboard(): React.JSX.Element {
                       <button
                         onClick={() => setSearchMode('add')}
                         className={cn(
-                          'rounded-full px-3 py-1 text-xs font-medium transition-colors',
+                          'rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
                           searchMode === 'add'
-                            ? 'bg-primary/10 text-primary'
+                            ? 'bg-primary/10 text-primary shadow-sm'
                             : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
                         )}
                       >
@@ -159,23 +172,25 @@ export default function InputDashboard(): React.JSX.Element {
                       </button>
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-2">
+
+                  {/* 输入+操作行 */}
+                  <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                     <Input
-                      className="min-w-[160px] flex-1"
+                      className="h-10 min-w-[160px] sm:flex-1"
                       placeholder="股票代码，如 600519.SH"
                       aria-label="股票代码"
                       value={symbol}
                       onChange={(e) => setSymbol(e.target.value)}
                     />
                     <Input
-                      className="min-w-[120px] flex-1"
+                      className="h-10 min-w-[120px] sm:flex-1"
                       placeholder="股票名称"
                       aria-label="股票名称"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
                     <Select
-                      className="h-10 min-w-[140px] flex-1"
+                      className="h-10 min-w-[140px] sm:flex-1"
                       value={group}
                       onChange={(e) => setGroup(e.target.value)}
                       aria-label="目标分组"
@@ -188,57 +203,74 @@ export default function InputDashboard(): React.JSX.Element {
                         </SelectItem>
                       ))}
                     </Select>
-                    <Tooltip content="仅录入代码，不启动采集" side="bottom">
-                      <Button
-                        className="min-w-[100px]"
-                        variant="default"
-                        onClick={() => void handleAdd(false, false)}
-                        disabled={submitting}
-                      >
-                        {submitting ? '处理中...' : '仅代码'}
-                      </Button>
-                    </Tooltip>
-                    <Tooltip content="采集三表+行情数据，约30秒" side="bottom">
-                      <Button
-                        className="min-w-[100px]"
-                        variant="secondary"
-                        onClick={() => void handleAdd(true, false)}
-                        disabled={submitting}
-                      >
-                        {submitting ? '处理中...' : '基础资料'}
-                      </Button>
-                    </Tooltip>
-                    <Tooltip content="采集研报+公告+三表+行情，约2分钟" side="bottom">
-                      <Button
-                        className="min-w-[100px]"
-                        variant="secondary"
-                        onClick={() => void handleAdd(true, true)}
-                        disabled={submitting}
-                      >
-                        {submitting ? '处理中...' : '深度资料'}
-                      </Button>
-                    </Tooltip>
+                    <div className="flex flex-wrap gap-2 pt-1 sm:pt-0 sm:border-l sm:pl-2 sm:border-border/40">
+                      <Tooltip content="仅录入代码，不启动采集" side="bottom">
+                        <Button
+                          className="min-w-[96px] shadow-sm"
+                          variant="outline"
+                          onClick={() => void handleAdd(false, false)}
+                          disabled={submitting}
+                        >
+                          {submitting ? '处理中...' : '仅代码'}
+                        </Button>
+                      </Tooltip>
+                      <Tooltip content="采集三表+行情数据，约30秒" side="bottom">
+                        <Button
+                          className="min-w-[96px] shadow-sm"
+                          variant="secondary"
+                          onClick={() => void handleAdd(true, false)}
+                          disabled={submitting}
+                        >
+                          {submitting ? '处理中...' : '基础资料'}
+                        </Button>
+                      </Tooltip>
+                      <Tooltip content="采集研报+公告+三表+行情，约2分钟" side="bottom">
+                        <Button
+                          className="min-w-[96px] shadow-sm"
+                          variant="default"
+                          onClick={() => void handleAdd(true, true)}
+                          disabled={submitting}
+                        >
+                          {submitting ? '处理中...' : '深度资料'}
+                        </Button>
+                      </Tooltip>
+                    </div>
                   </div>
-                  <div className="flex flex-wrap items-center gap-3 text-sm">
-                    <span className="text-muted-foreground">采集服务状态：</span>
+
+                  {/* 采集服务状态行 */}
+                  <div className="flex flex-wrap items-center gap-3 rounded-md border border-border/40 bg-muted/20 px-3.5 py-2.5 text-sm">
+                    <span className="text-xs font-medium text-muted-foreground">采集服务状态：</span>
                     {fetcherOk === null ? (
                       <Skeleton className="h-6 w-16" />
                     ) : fetcherOk ? (
-                      <Badge className={`${COLOR_TOKENS.up.bgClass} ${COLOR_TOKENS.up.tailwind}`}>已连接</Badge>
+                      <Badge className="bg-success/10 text-success border-success/20">
+                        <span className="flex items-center gap-1">
+                          <span className="inline-block h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
+                          已连接
+                        </span>
+                      </Badge>
                     ) : (
-                      <Badge variant="destructive">未连接</Badge>
+                      <Badge variant="destructive">
+                        <span className="flex items-center gap-1">
+                          <span className="inline-block h-1.5 w-1.5 rounded-full bg-destructive" />
+                          未连接
+                        </span>
+                      </Badge>
                     )}
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => void handleRefreshHealth()}
                       disabled={fetcherOk === null}
+                      className="ml-auto h-8 text-xs"
                     >
                       {fetcherOk === null ? '检查中...' : '刷新'}
                     </Button>
                   </div>
+
+                  {/* 消息提示 */}
                   {(message !== '' || (error != null && error !== '')) && (
-                    <p className="text-sm text-muted-foreground">
+                    <div className="rounded-md border border-border/40 bg-muted/10 px-3.5 py-2.5 text-sm text-muted-foreground">
                       {message !== ''
                         ? message
                         : (() => {
@@ -253,16 +285,16 @@ export default function InputDashboard(): React.JSX.Element {
                             }
                             return error as string
                           })()}
-                    </p>
+                    </div>
                   )}
-                </>
+                </div>
               ) : (
                 // 批量导入区块（整合自原独立页）
                 <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">加载批量导入...</div>}>
                   <BulkImportPanel />
                 </Suspense>
               )}
-            </>
+            </div>
           )}
 
           {/* ── Tab 2: 热门板块纳入 ── */}

@@ -20,7 +20,7 @@ export interface SheetProps extends HTMLAttributes<HTMLDivElement> {
 export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
   ({ className, open, onOpenChange, side = 'right', children, ...props }, ref) => {
     const internalRef = useRef<HTMLDivElement>(null)
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+     
     const sheetRef = (ref as React.RefObject<HTMLDivElement>) != null ? (ref as React.RefObject<HTMLDivElement>) : internalRef
 
     // V13: 焦点陷阱 — 打开时自动聚焦，Tab 循环锁定

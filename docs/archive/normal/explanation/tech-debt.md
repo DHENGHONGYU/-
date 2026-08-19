@@ -6,6 +6,16 @@
 
 ---
 
+> **2026-08-19 状态更新**（技术债任务安排 + 双向交叉测试，WorkBuddy）：
+> - **本轮动作**：完成 `deliverables/tech-debt-task-plan.md`（去噪 + 三迭代排期 + 任务卡 + 派发模型 + §6 测试补充策略）；关闭 TD-004/005/006/007（无效/误报），核实 TD-001 待定。
+> - **门禁实测（当前树，含并行 Agent 在途改动）**：`tsc:prod` 0 错 ✅；`audit:registry` 0 问题 ✅；`audit:layers` 0 违规 ✅；`registryContract.test.ts`（NODE22+forks）绿 ✅。
+> - **⚠️ TD-001 待核实**：domain 层拆分（`domain/scoring/energy` 等）疑似已解决 O(n²)，待专人确认后关闭。
+> - **🔴 池 store 收敛被清空（TD-012）**：`src/store/helpers/createPoolStore.ts` 此前已实现但被并行 Agent 树重置（`git reset --hard` + `git clean`）清空，需按 T1-1 重做。
+> - **✅ TD-013 真实数据债**：`researchPoolStore.toPoolItem` 的 `researchNote: stock.sector` 为复制粘贴疑似错误，转 T1-2 修复。
+> - **覆盖率基线未知（TD-003）**：台账「src/services 65%」为 2026-07-05 旧 claim，从未用 `--coverage` 实测（被 TD-010 Worker 崩溃阻断）；T2-1 第 0 步=测真实基线。
+
+---
+
 > **2026-08-13 状态更新**（实时工具验证）：
 > - **audit:layers**: 0 违规 ✅
 > - **audit:mcp**: 8 违规（从 13 降至 8，5 条 C 类通过 domain 层彻底解决）
@@ -318,7 +328,7 @@ P3: 得分 < 40
 - **根因**: 使用嵌套循环，时间复杂度 O(n²)
 - **解决方案**: 优化为哈希表，时间复杂度 O(n)
 - **计划完成**: 2026-07-12
-- **状态**: 🟡 进行中
+- **状态**: ⚠️ 待核实（domain 层拆分疑似已解决 O(n²)，2026-08-19 待专人确认）
 - **负责人**: @xiaoying-ying
 - **相关 Issue**: #123
 
@@ -358,7 +368,7 @@ P3: 得分 < 40
 - **根因**: 开发时未及时添加注释
 - **解决方案**: 补充 JSDoc 注释，生成 API 文档
 - **计划完成**: 2026-08-02
-- **状态**: 🔴 待规划
+- **状态**: ❌ 已关闭（无效·`src/services/api.ts` 不存在，2026-08-19 双重校对）
 - **负责人**: @xiaoying-ying
 - **相关 Issue**: #126
 
@@ -374,7 +384,7 @@ P3: 得分 < 40
 - **根因**: 未拆分函数
 - **解决方案**: 拆分为 `validateInput()` + `calculate()` + `normalize()`
 - **计划完成**: 2026-08-15
-- **状态**: 🔴 待规划
+- **状态**: ❌ 已关闭（无效·`calculateScore` 未找到/已删，2026-08-19 双重校对）
 - **负责人**: @xiaoying-ying
 - **相关 Issue**: #127
 
@@ -386,7 +396,7 @@ P3: 得分 < 40
 - **根因**: 快速开发时未提取为配置
 - **解决方案**: 提取为 `src/config/api.ts`
 - **计划完成**: 2026-08-30
-- **状态**: 🔴 待规划
+- **状态**: ❌ 已关闭（已清·端点集中至 `src/config/marketDataEndpoints.ts`，2026-08-19 双重校对）
 - **负责人**: @xiaoying-ying
 - **相关 Issue**: #128
 
@@ -402,7 +412,7 @@ P3: 得分 < 40
 - **根因**: 开发时未及时添加注释
 - **解决方案**: 补充 JSDoc 注释
 - **计划完成**: 待规划
-- **状态**: 🔴 待规划
+- **状态**: ❌ 已关闭（误报·2026-07-12 复核 tsc 瞬时误报，非真实债务）
 - **负责人**: 未分配
 - **相关 Issue**: #129
 
@@ -456,6 +466,32 @@ P3: 得分 < 40
 - **状态**: ✅ 已完成
 - **负责人**: @DENGHONGYU
 - **相关 Issue**: 无
+
+---
+
+#### [TD-012] 池 store 重复样板代码（被清空待重做）
+
+- **发现日期**: 2026-08-19（本轮重登记）
+- **类型**: 代码债 / 设计债
+- **问题描述**: `positionPoolStore` / `researchPoolStore` / `intentionPoolStore` 三池 store 存在大量重复样板（refresh/addItem/updateItem/updateStatus/updateGroup/订阅等），应收敛为 `src/store/helpers/createPoolStore.ts` 工厂。
+- **根因**: 三池各自独立实现，未抽取公共工厂。
+- **解决方案**: 工厂函数 `createPoolStore<Item, Status>(config)` 收敛公共逻辑，三池退化为薄包装，**保留全部 20+ 外部导出名/签名**（`useXxxPoolStore`、`getXxxPoolTotalCount/ItemBySymbol/Groups`、`initXxxPoolStoreSubscriptions`、`_resetXxxPoolStoreSubscriptionsForTest`、`toPoolItem`）。
+- **计划完成**: 本周
+- **状态**: 🔴 待规划（此前已实现但被并行 Agent 树重置清空，需按 T1-1 重做）
+- **负责人**: WorkBuddy
+- **相关 Issue**: 待创建
+
+#### [TD-013] researchNote 复制粘贴疑似错误（真实数据债）
+
+- **发现日期**: 2026-08-19（本轮重登记）
+- **类型**: 数据债 / 代码债
+- **问题描述**: `researchPoolStore.toPoolItem` 中 `researchNote: stock.sector` 疑似复制粘贴错误（`researchNote` 应为备注字段，却填了 `sector` 板块字段）。
+- **根因**: 字段映射笔误。
+- **解决方案**: 核实 `Stock` 类型真实字段，修正 `researchNote` 来源并补单测（T1-2）。
+- **计划完成**: 本周
+- **状态**: 🔴 待规划
+- **负责人**: WorkBuddy
+- **相关 Issue**: 待创建
 
 ---
 

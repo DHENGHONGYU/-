@@ -142,3 +142,10 @@ test_screenshot_*.png
 
 # Stray prototype — 单文件 HTML 原型（非构建物，勿入版本库）
 stock-collector/
+
+# User scratch / ad-hoc 临时产物（一次性调试脚本、快照、lint 输出文本）
+# 避免 scope-guard rule-4 阻止合法工作提交；这些文件不在项目结构中。
+_audit2.txt
+cockpit_snap.txt
+scripts/audit/lint-output.txt
+scripts/audit/prod-warnings-detail.txt

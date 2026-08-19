@@ -86,6 +86,7 @@ export default {
       },
       fontFamily: {
         sans: ['DM Sans', 'SF Pro Display', 'Inter', 'PingFang SC', 'Microsoft YaHei', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        mono: ['SF Mono', 'JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
       },
       fontSize: {
         // ===== 统一设计系统 · 排版阶梯（单一信息层级） =====
@@ -113,6 +114,15 @@ export default {
         caption: ['0.75rem', { lineHeight: '1.4', fontWeight: '400' }],
         /** 标签 / 微型标注 */
         overline: ['0.6875rem', { lineHeight: '1.4', fontWeight: '600', letterSpacing: '0.08em' }],
+      },
+      spacing: {
+        '4.5': '1.125rem',
+        '18': '4.5rem',
+        '22': '5.5rem',
+      },
+      maxWidth: {
+        'container': '1200px',
+        'portal': '1440px',
       },
     },
   },

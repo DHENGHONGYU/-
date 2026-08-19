@@ -61,7 +61,7 @@ const PortfolioPage = memo(() => {
     })
     void loadPortfolio()
     // loadPortfolio 为 Zustand action，引用稳定；仅在组件挂载时触发一次
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [])
 
   // 双因子评估：从 pfStrategyResult 获取技术信号 + 行业评分，计算共振结果

@@ -8,8 +8,8 @@
 export { LoadingState } from './LoadingState'
 export type { LoadingStateProps } from './LoadingState'
 
-export { ErrorState } from './states/ErrorState'
 export type { ErrorStateProps } from './states/ErrorState'
+export { ErrorState } from './ErrorState'
 
 export { EmptyState } from './EmptyState'
 export type { EmptyStateProps, EmptyStateAction } from './EmptyState'

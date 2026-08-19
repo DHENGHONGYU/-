@@ -249,7 +249,7 @@ describe('TradingApp', () => {
         <TradingApp />
       </MemoryRouter>
     )
-    expect(screen.getAllByRole('button', { name: /加载观察池/i })[0]).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: /加载观察池/i })[0]!).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /加载持仓/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /扫描信号/i })).toBeInTheDocument()
   })
@@ -265,7 +265,7 @@ describe('TradingApp', () => {
         <TradingApp />
       </MemoryRouter>
     )
-    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0]!)
 
     await waitFor(() => {
       expect(screen.getByText('000001.SZ')).toBeInTheDocument()
@@ -284,7 +284,7 @@ describe('TradingApp', () => {
         <TradingApp />
       </MemoryRouter>
     )
-    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0]!)
     await waitFor(() => screen.getByText('000001.SZ'))
 
     await userEvent.click(screen.getByRole('button', { name: /买入/i }))
@@ -306,7 +306,7 @@ describe('TradingApp', () => {
         <TradingApp />
       </MemoryRouter>
     )
-    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0]!)
     await waitFor(() => screen.getByText('000001.SZ'))
 
     // 直接设置 orderStore 状态，因为 orderStore.refresh() 从 dataLayer 读取
@@ -338,7 +338,7 @@ describe('TradingApp', () => {
         <TradingApp />
       </MemoryRouter>
     )
-    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0]!)
     await waitFor(() => screen.getByText('000001.SZ'))
 
     // 直接设置 orderStore 状态
@@ -373,7 +373,7 @@ describe('TradingApp', () => {
         <TradingApp />
       </MemoryRouter>
     )
-    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0]!)
     await waitFor(() => screen.getByText('000001.SZ'))
 
     await userEvent.click(screen.getByRole('button', { name: /买入/i }))
@@ -441,7 +441,7 @@ describe('TradingApp', () => {
         <TradingApp />
       </MemoryRouter>
     )
-    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0]!)
     await waitFor(() => screen.getByText('000001.SZ'))
 
     // 使用 getAllByText 获取所有匹配元素，取第一个（观察池卡片中的）
@@ -467,7 +467,7 @@ describe('TradingApp', () => {
         <TradingApp />
       </MemoryRouter>
     )
-    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0]!)
     await waitFor(() => screen.getByText('000001.SZ'))
 
     // 使用 getAllByText 获取所有匹配元素，取第一个（观察池卡片中的）
@@ -487,7 +487,7 @@ describe('TradingApp', () => {
         <TradingApp />
       </MemoryRouter>
     )
-    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0]!)
     await waitFor(() => screen.getByText('000001.SZ'))
 
     // 使用 getAllByText 获取所有匹配元素，取第一个（观察池卡片中的）
@@ -507,7 +507,7 @@ describe('TradingApp', () => {
         <TradingApp />
       </MemoryRouter>
     )
-    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0]!)
 
     await waitFor(() => {
       expect(screen.getByText(/观察池与交易建议已更新/)).toBeInTheDocument()
@@ -530,7 +530,7 @@ describe('TradingApp', () => {
         <TradingApp />
       </MemoryRouter>
     )
-    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0]!)
 
     await waitFor(() => {
       expect(screen.getByText('000001.SZ')).toBeInTheDocument()
@@ -554,7 +554,7 @@ describe('TradingApp', () => {
         <TradingApp />
       </MemoryRouter>
     )
-    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: /加载观察池/i })[0]!)
     await waitFor(() => screen.getByText('000001.SZ'))
 
     await userEvent.click(screen.getByRole('button', { name: /买入/i }))

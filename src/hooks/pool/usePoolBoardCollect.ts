@@ -194,7 +194,7 @@ export function usePoolBoardCollect(
       const avgPercent = progressValues.length > 0
         ? Math.round(progressValues.reduce((sum, p) => sum + p.completionPercent, 0) / progressValues.length)
         : 0
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+       
       const status = collectErrorRef.current ? 'ERROR' : forceStoppedRef.current ? 'DISCONNECTED' : 'SUCCESS'
       logger.info('[usePoolBoardCollect] 批量采集结束 — 最终结果摘要', {
         avgPercent,

@@ -223,7 +223,7 @@ describe('strategySnapshotService — IndexedDB 数据完整性检查', () => {
 
       // 严格递增
       for (let i = 1; i < versions.length; i++) {
-        expect(versions[i]).toBeGreaterThan(versions[i - 1])
+        expect(versions[i]).toBeGreaterThan(versions[i - 1]!)
       }
 
       // 无重复

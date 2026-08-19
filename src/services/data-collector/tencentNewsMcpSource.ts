@@ -191,7 +191,7 @@ function interleaveHotMorning(hot: RawNewsItem[], morning: RawNewsItem[], cap = 
  *      链接: <url>
  */
 export function parseTencentNewsText(text: string): RawNewsItem[] {
-  if (!text || !text.trim()) return []
+  if (!text?.trim()) return []
   const blocks = text.split(/\n(?=\d+\.\s*标题[：:])/)
   const items: RawNewsItem[] = []
   for (const b of blocks) {

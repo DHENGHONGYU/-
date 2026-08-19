@@ -1,19 +1,24 @@
 ---
 title: AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 status: active
-version: v1.5.6
-last_updated: 2026-08-11
+version: v1.6.0
+last_updated: 2026-08-19
 code_version: "2.0.0-rc.1"
 change_log:
+  - version: v1.6.0
+    changes: "2026-08-19 增量闭环：对齐 Husky v2 真阻断 20 步门禁 + scope-guard v2（≤30 单提交 / 跨域≤2）；补齐 tsc:prod/tsc:test 双 tsconfig 作用域与 tsc --force 日常；MCP Registry 15 条目（10 enabled + 5 disabled）；DB_VERSION=35（基线 29 + 增量 24=53 Store）；驾驶舱 USER_SCENES 结果优先视图；设计令牌 V8 Apple 冷色调；提交卫生（禁止 git add -A / --only 精确提交）；ESLint 生产域警告清零；上线前测试禁止 MOCK 必须真数；tsc 增量编译幻影错误防呆"
+    date: 2026-08-19
   - version: v1.5.6
     changes: "基准日校对(2026-08-11)：R1取真值(P2 正文版本声明行=v1.5.5) → R2 PATCH++(v1.5.6) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-11
 ---
 # AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 
-> **版本**: v1.5.6 | **日期**: 2026-08-11
+> **版本**: v1.6.0 | **日期**: 2026-08-19
 > **适用范围**: 所有 AI 辅助开发工具（Claude Code、Cursor、Trae 等）
 > **强制等级**: 所有 AI 生成的代码必须遵守以下约束
+>
+> **v1.6.0 变更（本轮增量，2026-08-19）**：Husky 预提交门禁升级 v2（tsc:prod / audit:registry / vitest registryContract / audit:doc-id-reverse --changed-only 均升级 BLOCK 真阻断）；提交作用域守卫 scope-guard v2（单提交文件数≤30/纯文档≤50、跨顶层域≤2、src+docs 删除≤30、阻断临时产物混入）；tsconfig 拆分 tsconfig.prod.json（源码+lib，零测试）与 tsconfig.test.json（源码+测试）、日常执行 `tsc --force` 防增量编译幻影错误；MCP Server Registry 清理为 **15 条目（10 enabled + 5 disabled）**：analysis/portfolio/knowledge/execution 四个僵尸 Server 与 workflow:main（保留通道校验）统一置 `enabled:false`，UI 侧 ACL 已同步移除对应 UI 放行行；新增腾讯自选股 `marketdata`（只读）；IndexedDB `DB_VERSION=35`，`STORE_NAME` 已扩展为 53 项（基线 29 + 增量 24）；驾驶舱默认视图切换为**结果优先（USER_SCENES：今日快照 / 持仓状态 / 市场扫描 / 深度钻取）**，与交叉矩阵并存可一键切换；设计令牌升级 V8（Apple 冷色调）：背景 Apple System Gray HSL 240 24% 96%、卡片纯白、圆角 1rem、静态阴影 alpha≤0.05、浮层 alpha≤0.08、字体 DM Sans→SF Pro→PingFang CJK 字距；**提交卫生硬约束**：禁止 `git add -A`；提交前必须核对 staged 数与目标一致；关键提交一律使用 `git commit --only <paths>` 物理防夹带；上线前测试**禁止使用 MOCK**，必须使用真实数据；ESLint 生产域警告按子域豁免清零（目标 = 0 warnings）
 >
 > **v1.5.5 变更**：落地技能触发机制迭代 3——pre-push 挂 `skill-router --enforce --since <base>` 强制模式（mandatory 命中未确认即拦截，旁路 `SKILL_GATE_CONFIRM=1 git push`）；`skill-router.cjs` 新增 `--since`（推送范围三点 diff）与环境变量旁路；`.trae/rules` 追加技能路由规则段（与 registry/AGENTS.md 三方同步）；注册 2 个定时任务（L5 调度层）：「Mock 残留周检」`40 3 * * 1`、「技能健康度月检」`17 8 1 * *`（Asia/Shanghai）
 >
@@ -113,7 +118,7 @@ src/hooks/        ← 自定义 React Hooks（跨组件共享逻辑；含 usePoo
 src/devtools/     ← 开发环境调试工具（DEV 注入）
 src/fixtures/     ← Mock 数据供给（测试数据）
 src/i18n/         ← 国际化配置与翻译资源
-src/mcp/          ← MCP 服务器层（15 个子服务器：analysis/backtest/data-collector/...）
+src/mcp/          ← MCP 服务器层（Registry 共 15 条目：10 enabled + 5 disabled；fetcher/scoring/news/llm/screening/backtest/trading/system/marketdata + pool + data-collector；analysis/portfolio/knowledge/execution 与 workflow:main 已 disabled 保留通道校验；详见 src/config/mcpServerRegistry.ts）
 src/schema/       ← Zod/JSON Schema 校验定义（类型守卫扩展）
 src/showcase/     ← 组件展示页（开发环境专用，不进入生产构建）
 src/generated/    ← 代码自动生成产物（令牌/类型/脚本输出）
@@ -911,16 +916,25 @@ routes.ts（48条路由）→ PortalShell → App 分发器（AnalysisApp/Tradin
 ## 七、验证命令速查
 
 ```powershell
-# 类型检查
+# 类型检查（源码域：tsconfig.prod.json 零测试作用域；推荐日常优先跑，避免 tsc test 报错阻塞代码侧提交）
+npm run tsc:prod
+
+# 类型检查（测试域：tsconfig.test.json；改测试文件、类型契约漂移、strictNullChecks/noUncheckedIndexedAccess 暴露时必跑）
+npm run tsc:test
+
+# 防增量编译幻影错误：每日 / 连续两次 tsc 报错文件数不一致时，强制重新类型检查（基于全量 emit，禁用缓存）
+npx tsc --force -p tsconfig.prod.json --noEmit
+
+# 一次性类型检查（全包含测试域，不推荐作门禁，仅作诊断）
 npx tsc --noEmit
 
-# ESLint
+# ESLint（目标：生产域 src/ 下 warnings = 0；tests/ 警告为非目标）
 npm run lint
 
-# 单元测试
+# 单元测试（上线前测试禁止 MOCK，必须用真实数据；见 §十.3）
 npm test -- --run
 
-# 生产构建
+# 生产构建（prebuild 已内嵌 tsc:prod，无需手动重跑）
 npm run build
 
 # 架构审计
@@ -934,13 +948,28 @@ npm run audit:deadcode   # 死代码
 npm run audit:docs       # 文档同步
 npm run audit:token      # Token 消耗检测
 npm run audit:widget-registry # Widget 注册完整性审计
+npm run audit:registry   # 组件注册表一致性（原子/分子/有机体/模板 四 Registry，Husky v2 BLOCK P0 门禁）
+npm run audit:doc-id     # doc_id ↔ frontmatter ↔ 文件路径 三向一致性（全仓扫描）
+npm run audit:doc-id:changed # 同上，仅扫本次改动文件（--changed-only；Husky v2 第 12 步 BLOCK）
+npm run audit:skill-coverage # SKILL frontmatter ↔ registry ↔ AGENTS.md 三方一致性
+npm run audit:secrets    # SAST-lite 密钥扫描（Husky v2 BLOCK）
+npm run audit:db-references # DB 定义交叉引用（Husky v2 BLOCK）
+
+# 数据资产与蓝图一致性（DataBridge/Store/契约变更时必跑）
+npm run validate:dataConsistency # 数据血缘 & 契约一致性
+npm run validate:blueprint       # 数据蓝图 & 真实 Schema 对齐
+
+# 技能路由匹配与镜像（L1 物理技能 ↔ .workbuddy 镜像 同步）
+npm run skill:route      # 手工查询命中技能
+npm run skill:mirror     # 将 .agents/skills 镜像到 .workbuddy/skills（Windows cp -r，DELL/Huawei 多机镜像）
 
 # 股票字典生成与校验（数据资产门禁）
 npm run build:stock-dict          # akshare 重新生成 stockDictionary.ts（受管 venv python，T14 触发规则）
 npm run build:stock-dict:verify   # 校验四交易所完整性 + 零重复（T14 触发规则）
 
 # 快速门禁（提交前推荐）
-npm run gate:quick       # 分层 + Mock + 原子组件 + 文档 + DB 引用
+npm run gate:quick       # 分层 + Mock + ACL + 原子组件 + 文档(doc-gate + audit:doc-id) + DB 引用 + deadcode
+npm run gate:dev         # lint-staged + tsc:prod + layers + atomic + db-refs + store-coverage + acl + deadcode --staged
 ```
 
 ### 7.1 Token 消耗控制规则（v1.3.0 新增）
@@ -959,26 +988,37 @@ npm run audit:token
 # 期望：0 violations, Token 消耗 < 50,000/会话
 ```
 
-### 7.2 驾驶舱 Widget 布局治理（v1.5.0 新增）
+### 7.2 驾驶舱 Widget 布局治理（v1.5.0 新增；v1.6.0 补 USER_SCENES 结果优先视图）
 
-**背景**：驾驶舱是 FinSightV9 的主入口，Widget 的默认排列直接影响新用户的首次体验。产品定位为**股票研究复盘系统**（非实时交易系统），布局设计需体现「研究全景→深度分析→市场背景→持仓观察→系统运维」的五层梯度。
+**背景**：驾驶舱是 FinSightV9 的主入口，Widget 的默认排列直接影响新用户的首次体验。产品定位为**股票研究复盘系统**（非实时交易系统），布局设计需体现「研究全景→深度分析→市场背景→持仓观察→系统运维」的五层梯度。v1.6.0 起，**默认首屏为"结果优先"用户场景视图**，与原有"交叉矩阵"技术视图并存，可一键切换（用户场景与技术矩阵两套映射互不干扰）。
 
-**布局原则**：
+**布局原则（原技术五层梯度，交叉矩阵视图保留）**：
 - **L1 研究全景**（首屏）：KAI 评分 + 股票池全景 + 投资画像 — 回答「我在研究什么？」
 - **L2 深度分析**（核心区）：AI 对比 + AI 复盘 + 策略信号 — 回答「怎么分析？」
 - **L3 市场背景**（辅助层）：大盘指数 + 板块热力 + 资金流向 — 提供研究上下文
 - **L4 持仓观察**（末端）：持仓概览 + 自选股 — 仅跟踪，非交易 ⚠️
 - **L5 系统运维**（末区）：引擎状态 + 风控 + Agent 性能 — 默认折叠
 
+**USER_SCENES 结果优先视图（v1.6.0 默认首屏）**：
+
+| 场景 ID | 区块名称 | Widget 数量（默认） | 回答用户问题 |
+|---------|---------|---------|-------------|
+| `today_snapshot` | 今日快照 | 4（盈亏/信号/情绪/催化） | 「今天怎样？」 |
+| `portfolio_status` | 持仓状态 | 4（组合/仓位/风控/自选） | 「我持有什么？风险如何？」 |
+| `market_scan` | 市场扫描 | 4（指数/板块/资金流/热点） | 「市场整体怎样？」 |
+| `deep_dive` | 深度钻取 | K 线/评分/AI 研判/历史复盘等（未显式归入上方三类的 Widget 默认落到此处） | 「怎么分析？技术深挖」 |
+
+> 真相源：`src/constants/cockpit.constants.ts` → `USER_SCENES`（4 项） + `WIDGET_USER_SCENE_MAP`（Widget→场景映射）。渲染：`src/cockpit/layout/ResultsFirstOverview.tsx`；切换入口在 `CockpitCrossLayout.tsx`（顶部「切换到技术矩阵 / 返回结果视图」按钮）。
+
 **变更规则**：
-- 修改 `defaultLayout` 必须更新 `widgetRegistry.ts` 的 `createDefaultInstances()`
-- 新增 Widget 同步更新三处：`widgetRegistry.ts` + `DEFAULT_WIDGET_CONFIG` + `WIDGET_DEFAULT_DATA_SOURCE`
-- 变更后必须运行 `npm run audit:widget-registry` 确认 23/23 覆盖
+- 修改 `defaultLayout` / USER_SCENES 映射必须同步更新：① `widgetRegistry.ts` 的 `createDefaultInstances()`；② `cockpit.constants.ts` 的 `WIDGET_USER_SCENE_MAP`；③ 如涉及结果优先首屏，需补 `ResultsFirstOverview.tsx` 的分类渲染测试
+- 新增 Widget 同步更新三处：`widgetRegistry.ts` + `DEFAULT_WIDGET_CONFIG` + `WIDGET_DEFAULT_DATA_SOURCE`；并在 `WIDGET_USER_SCENE_MAP` 中显式归入四大场景之一
+- 变更后必须运行：`npm run audit:widget-registry` + `npm run audit:registry` + `npx vitest run src/components/registry/registryContract.test.ts`
 
 **验证命令**：
 ```powershell
 npm run audit:widget-registry
-# 期望：0 P0 violations, 0 P1 warnings, 23/23 widgets placed
+# 期望：0 P0 violations, 0 P1 warnings, 所有已注册 Widget 均在 USER_SCENE_MAP / defaultLayout 之一出现
 ```
 
 ### 7.3 Mock 模块安全审查（v1.5.0 新增）
@@ -1029,21 +1069,30 @@ grep -rn 'refreshStats' src/store/sevenDimConfigStore.ts                    # �
 grep -rn 'auditRecord' src/services/data-collector/collectionPipeline.ts    # 应有 4 处（3 调用 + 1 定义）
 ```
 
-- 修改 IndexedDB schema 必须递增 `DB_VERSION`（`src/config/dbConfig.ts`）
-- 新增 store 必须在 `STORE_NAME` 中注册
+- 修改 IndexedDB schema 必须递增 `DB_VERSION`（`src/config/dbConfig.ts`）；当前 `DB_VERSION = 35`（真相源单一）
+- 新增 store 必须在 `STORE_NAME` 中注册；当前 53 项，`Object.keys(STORE_NAME).length === 53` 是 audit:db-references 的一致性断言
 - **新增 store 必须在 `ACL_MATRIX` 中添加对应的 read/write 白名单**（v1.4.7 强化）
   - 同时运行 `npm run audit:acl-consistency` 验证调用方有对应权限
   - 教训：2026-07-18 03-08 维度采集报 ACL Permission denied，因 fetcher 缺 news/sectorScores/researchLogs 写权限
 - **新增 ENVELOPE_ACTION 必须在 `ACTION_TO_STORE_MAP` 和 `databridgeHandlers.ts` 中同步注册**（v1.4.9 新增）
   - 运行 `npm run audit:acl-consistency` 验证 action→store→handler 配对一致性
   - 教训：2026-07-18 `saveTraceRecord` 未注册到 PutHandler，fallback 到裸 put → keyPath 失败
-- 新增 store 必须有创建逻辑，按以下规则选择位置（v1.3.5 明确）：
+- 新增 store 必须有创建逻辑，按以下规则选择位置（v1.3.5 明确；v1.6.0 对齐 DB_VERSION=35 实际）：
   - **基线 store**（首次安装时就需要的核心 store）→ 在 `createSchema`（`src/data/db-schema.ts`）中添加
   - **增量 store**（版本升级时新增的 store）→ 在对应版本的 `Migration.up()`（`src/data/db-migrations.ts` 或 `src/data/migrations/`）中添加
   - 禁止在两处同时添加同一 store 的创建逻辑（违反 DRY 原则）
   - 当前基线 store 清单（由 createSchema 创建，共 29 个）：stocks / v6Scores / intelligentScores / industryScores / orders / watchlists / signals / researchLogs / dailyQuotes / financialReports / rotationScores / sectorScores / scoreDocs / strategySnapshots / localDocs / news / newsStockMap / sentimentCache / newsBookmarks / hotSectorScores / valuePitScores / executionLogs / missingReports / executionPlans / portfolios / tradeReviews / schemaMigrations / collectConfig / customAgents
-  - 当前增量 store 清单（由 migration 创建）：RBAC 6 表（rbac_users / rbac_roles / rbac_permissions / rbac_user_roles / rbac_role_permissions / rbac_permission_audit_logs，由 rbacMigrationV24 创建）
-  - 注意：schemaMigrations 表本身由 createSchema 创建（基线），但它的"种子数据"由 seed_schema_migrations_tracker migration 写入；customAgents 同理（store 由 createSchema 创建，种子数据由 seed_custom_agents_tracker migration 写入）
+  - 当前增量 store 清单（由 migration 创建，共 24 个）：
+    - v24（RBAC 5+1 表）：rbac_users / rbac_roles / rbac_permissions / rbac_user_roles / rbac_role_permissions / rbac_permission_audit_logs
+    - v27：traceRecords
+    - v28（Workflow 4 表）：workflowDefs / workflowSchedules / workflowTriggers / workflowRuns
+    - v30：analysisResults
+    - v31（双通道同步 5 表）：collectionHistory / conflictLog / fileImportRecords / proofreadReports / scheduleConfigs
+    - v32（八域资料 4 表）：profileItems / scoreEvidence / stockProfiles / profileTags
+    - v33（报告资产化 2 表）：generatedReports / reportTemplates
+    - v34：screeningResults
+    - v35：observationReviews
+  - 注意：schemaMigrations 表本身由 createSchema 创建（基线），但它的"种子数据"由 seed_schema_migrations_tracker migration 写入；customAgents 同理（store 由 createSchema 创建，种子数据由 seed_custom_agents_tracker migration 写入）。`seed_*` 迁移不得重复创建基线 store。
 - 新增 ENVELOPE_ACTION 必须在 `DataBridge.routeToDB()` 中添加对应 case
 - **修改 ACL_MATRIX / ENVELOPE_ACTION / ACTION_TO_STORE_MAP / databridgeHandlers 后必跑 `npm run audit:acl-consistency`**（v1.4.9 新增）
   - T13 触发规则：见 `docs/00-meta/doc-trigger-action-map.md`
@@ -1363,16 +1412,24 @@ git status --short            # 确认工作区状态
 
 ### 14.3 权限矩阵配置
 
-权限矩阵定义于 `src/config/mcpAclMatrix.ts` 的 `MCP_ACL_MATRIX` 常量：
+权限矩阵定义于 `src/config/mcpAclMatrix.ts` 的 `MCP_ACL_MATRIX` 常量；MCP Server Registry 定义于 `src/config/mcpServerRegistry.ts` 的 `MCP_SERVER_REGISTRY`（v1.6.0 起共 15 条目：10 enabled + 5 disabled；严禁 UI 层向已 disabled Server 放行 ACL，否则会形成 UI→MCP→失败死链路）。
 
 ```typescript
 export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> = {
   agent:  { allowedServers: ['*'], allowedTools: ['*'] },
-  ui:     { allowedServers: [9个查询类Server], allowedTools: ['health_check','list_*','get_*','fetch_*',...] },
+  // v1.6.0 ui 实际 = 10 查询类：fetcher / pool / scoring:v6 / news / llm / screening / backtest / system / marketdata / trading(只读)
+  // 已 disabled 5 个（analysis / portfolio / knowledge / execution / workflow:main）—— UI 一律 ❌，防止假链路
+  ui:     { allowedServers: ['fetcher','pool','scoring:v6','news','llm','screening','backtest','trading','system','marketdata'],
+            allowedTools: ['health_check','list_*','get_*','fetch_*','scan_signals','get_orders','westock_*','query_*','read_*','list_pool_*','export_*',...] },
   ci:     { allowedServers: ['system'], allowedTools: ['get_*','generate_migration_report'] },
   system: { allowedServers: ['*'], allowedTools: ['*'] },
 }
 ```
+
+**Server 白名单三向一致性强制规则（v1.6.0）**：
+- 新增/启用/禁用 Server，须同步改三处：① `mcpServerRegistry.ts`（enabled boolean + 恢复条件注释）② `mcpAclMatrix.ts`（ui allowedServers，写操作类绝不出现在 ui）③ `docs/guides/how-to/mcp-acl-guide.md` §3.2 权限矩阵表格
+- 校验命令：`npm run audit:skill-coverage` 中 MCP 段 + `npx vitest run src/mcp/__tests__/mcpAclInterceptor.test.ts`
+- 僵尸 Server 清理模板：置 `enabled:false` + 在下方追加 3 行注释「恢复条件 / 恢复审批 / 恢复检查项」；**禁止直接从数组删除条目**，避免已存在的 transport/bridge 路由空引用。
 
 **通配符规则**：
 - `'*'`：匹配任意字符串
@@ -1644,8 +1701,30 @@ FinSightV9 是**个人本地投研复盘工具**，定位决定了部署架构�
 1. 测试、审计、构建一律走 `package.json` npm scripts，禁止直接调用裸 `vitest` / `tsc` 绕过门禁参数：
    - 单元测试：`npm run test`（即 `vitest run`）
    - 快速门禁：`npm run gate:quick`（完整清单见 §七）
-   - 类型检查：`npm run tsc:prod`
+   - 类型检查：`npm run tsc:prod`（生产域，零测试）；测试域改测试/类型契约时补 `npm run tsc:test`
+   - 幻影错误排查：每日一次 `npx tsc --force -p tsconfig.prod.json --noEmit`，或当连续两次 tsc:prod 报错文件集合不一致时立即跑
 2. 有依赖关系的多步命令用 `&&` 串联；相互独立的只读命令应并行发起，禁止串行等待。
+3. Husky 预提交门禁（v2，20 步）在 `.husky/pre-commit` 中执行，**BLOCK 级失败必须先修复再提交，禁止 `--no-verify` 绕过**；`--no-verify` 仅允许用于：① 与用户显式确认且必须写清 commit body 原因；② 生产域门禁已本地全绿但测试/文档 WIP 阻塞（事后必须 24h 内补齐对应门禁）。
+
+### 16.3.1 提交卫生硬约束（v1.6.0 新增，scope-guard v2 + 三向门禁对齐）
+
+> 归因：2026-08 并行 Agent 工作树出现「WIP 混夹带提交 → 关键门禁 --no-verify 绕过 → 断链死锁 6h」恶性事故。以下三条为 BLOCK 级硬约束，配合 scope-guard v2 脚本（scripts/audit/audit-commit-scope.sh）执行。
+
+**提交作用域守卫 v2（Husky 第 0 步，先于任何其他脚本运行）**：
+- 规则 1（文件数阈值）：单次提交暂存文件 ≤ 30；纯文档（staged 全部在 `docs/`）阈值放宽至 50；超出 → BLOCK。
+- 规则 2（跨域）：staged 文件不能同时出现在 ≥ 3 个顶层域。顶层域 = `components | hooks | services | store | lib | pages | portal | apps | cockpit | types | constants | config | styles | core | data | domain | agents | fixtures | i18n | schema | mcp | generated` + `scripts | docs | prompts | tests | .husky | deliverables | outputs`；跨域计数 ≥ 3 → BLOCK。代码+文档跨域是目前允许的唯一双通道（计数=2）。
+- 规则 3（大规模删除）：`src/` 与 `docs/` 合计删除项 > 30 → BLOCK。
+- 规则 4（产物混入）：`test-output.txt`、`.log`、`coverage/`、`dist-test/`、`*.tmp.*`、`*~`、Thumbs.db、`.DS_Store` 等临时/生成文件不得进入暂存区 → BLOCK。
+- 触发超限时的唯一合规修复：① 拆分为多个原子提交；② 使用 `git commit --only <paths>` 物理限定提交范围；③ 清理不相关暂存 `git restore --staged <paths>`。
+
+**Git 提交卫生铁律（BLOCK 级）**：
+1. **禁止 `git add -A` / `git add .`**：任何情况下都不得使用递归 add。请使用 `git add <精确路径>` 逐文件/逐目录加入暂存，避免夹带 WIP、生成产物、本地机器路径硬编码。
+2. **提交前必做 staged 数核对**：`git diff --cached --name-only | wc -l`（或 `git status --short`）立即与"目标提交数"对比，不一致必须返工。
+3. **关键提交一律使用 `git commit --only <paths>`**：尤其在"其他 WIP 文件数量>0"的并行开发环境下，`--only` 可物理阻断非目标文件混入。推荐形式：
+   ```bash
+   git commit --only d:/FinSightV9/AGENTS.md --only d:/FinSightV9/package.json -m "..."
+   ```
+4. **禁止使用 `--no-verify` 作为"常规通道"**：除非用户明确确认 + commit body 写明原因 + 24h 内补清对应门禁（tsc:prod / audit:registry / registryContract / audit:doc-id / audit:layers / scope-guard / secrets）。
 
 ### 16.4 禁止命令清单
 
@@ -1653,10 +1732,11 @@ FinSightV9 是**个人本地投研复盘工具**，定位决定了部署架构�
 |------|--------|
 | 权限 | 任何需要 sudo / 管理员权限的命令 |
 | 删除 | `rm -rf` 指向 `src/`、`docs/`、`scripts/` 等受管目录；跨盘符删除 |
-| Git | `git push --force`、`git reset --hard`、`git clean -fd`（未经用户显式确认） |
-| 配置 | 修改 `.env`、`.env.local`、`.env.development.local`（密钥类文件只读） |
-| 依赖 | 未经用户确认的 `npm install` / `pip install` 新依赖 |
+| Git | `git push --force`、`git reset --hard`、`git clean -fd`（未经用户显式确认）、**`git add -A` 与 `git add .`**（递归 add，禁止用作"省事通道"） |
+| 配置 | 修改 `.env`、`.env.local`、`.env.development.local`（密钥类文件只读）；TS/JS VITE_ 前缀变量明文存放密钥 → 一律改为 UI 配置页 AES-GCM 加密写入 localStorage |
+| 依赖 | 未经用户确认的 `npm install` / `pip install` 新依赖；引入后端微服务（FastAPI/Kafka/云端数据库）未经 §十三 必要性评估 ≥ 70 分 |
 | 进程 | 交互式或常驻进程命令；调试启动的 dev server 用完必须终止，禁止残留后台 Node/Vite 进程 |
+| 上线前测试 | **使用 MOCK/fixtures 假数据作为上线前"通过"证据**（用户偏好：上线前测试必须走真实数据；详见 §十.3） |
 
 ### 16.5 执行后联动义务
 
@@ -1666,12 +1746,65 @@ FinSightV9 是**个人本地投研复盘工具**，定位决定了部署架构�
 | 文件迁移 / 目录重构 | `npm run audit:layers` + §二 全文件类型旧路径扫描 |
 | 回滚操作 | §二 回滚验证流程五项（tsc / audit:docs / 接口文档 / audit:layers / test） |
 | 修改 token / 颜色相关代码 | `npm run audit:tokens`（基线只减不增） |
+| 新增/修改组件、Widget、Registry（atom/molecule/organism/template） | `npm run audit:registry` + `npx vitest run src/components/registry/registryContract.test.ts` |
+| 新增/移动/重命名文档或改 frontmatter（doc_id / related_docs / covers_code） | `npm run audit:doc-id:changed` |
+| 改动 tsconfig.prod.json / tsconfig.test.json / tsc 脚本 | `npm run tsc:prod` + `npm run tsc:test` 均 0 错误；连续报错不一致时补 `tsc --force` |
+| 改动 MCP server/ACL/registry | `npx vitest run src/mcp/__tests__/mcpAclInterceptor.test.ts` + `npm run audit:skill-coverage` |
+| 准备上线发布 | 执行 §十.3「上线前真数测试」清单：Mock 开关关闭 + 真实数据源 + 关键业务路径真跑 |
 
 ### 16.6 长命令与超时纪律
 
 1. 单命令默认预算 60s；构建 / 全量测试类命令须显式声明预期耗时。
 2. 禁止交互式命令；可能长时间运行的命令必须先给出退出条件。
 3. 每条命令附一句中文说明（为什么跑）；失败时如实报告退出码与 stderr，禁止掩盖为"成功"。
+
+---
+
+### 16.7 ESLint 生产域警告清零（v1.6.0 新增）
+
+**目标**：生产域（`src/**`，不含 `tests/`、`benchmarks/`、`docs/`、`scripts/audit` 测试桩）ESLint warnings = 0；测试域警告不纳入 BLOCK 门禁但作为 P1 债务。
+
+**子域豁免原则**（必须在 `eslint.config.js` 显式写入 files/ignores + rules，不得对整仓放开）：
+- MCP Server：`require-await`、`no-unnecessary-condition`、`strict-boolean-expressions`（CLI 工具链与 handler 接口形态允许冗余 return/await）
+- Service 层：`require-await`、`@typescript-eslint/no-unnecessary-condition`（兜底分支/防御式编程）
+- Cockpit / UI 层（components/cockpit/pages）：`strict-boolean-expressions`、`@typescript-eslint/prefer-nullish-coalescing`（红涨绿跌三态分级允许 truthy/falsy 判断）
+- Core/Store/Agent/Config：按模块小范围豁免，证据链需落在 `eslint.config.js` 注释中
+- Data/Lib/Domain：禁止任何 warning-level 豁免（硬错；例外需单独 ADR）
+
+**验证**：
+```powershell
+# 生产域 Lint 警告扫描：0 warnings
+npm run lint 2>&1 | tail -n 20
+# 如存在警告但全在 tests/，视为通过；一旦 src/ 出现 warning 视为未达标
+```
+
+---
+
+## 十.3 上线前测试必须走真实数据（v1.6.0 新增，用户偏好固化）
+
+> 背景：用户偏好明确要求「上线前测试 = 真实数据；MOCK 假绿灯一律不作为上线证据」。本节固化为 BLOCK 级流程。
+
+**强制规则**：
+1. 上线前测试**不允许**使用 `src/fixtures/`、vitest `vi.mock`、`mockDataProvider.ts` 的 `isSampleData=true` 数据作为通过依据。
+2. 数据来源切换开关（如 `VITE_DATA_SOURCE_TYPE`）必须置 `real`，且真实后端（AkShare uvicorn collect_endpoints）必须健康（`/health` 200 OK）。
+3. Cockpit 示例数据 Badge（`SampleDataBadge`）：上线前真数测试时应 **0 出现**；如仍出现则视为数据链路未闭环。
+4. 关键业务路径（采集→评分→筛选→复盘→报告）每段必须存在真实数据产生、**持久化**（IndexedDB store）、**派生视图**、**资产化**（报告文件）四步闭环证据。
+5. 验收报告必须附：`tsc:prod` 0 错误、`audit:layers` 0 违规、`audit:acl-consistency` 0 违规、`validate:dataConsistency` 0 违规、`validate:blueprint` 0 违规 + 全链路真数截图。
+
+**流程速查**：
+```powershell
+# (a) 切真实数据源；启动 Python 采集服务
+# Windows PowerShell 例（uvicorn 受管，见 §十六 Python 固化）
+$env:VITE_DATA_SOURCE_TYPE="real"
+# uvicorn collect_endpoints:app --host 0.0.0.0 --port 8000 --reload
+# (b) 跑生产门禁 + 数据一致性门禁
+npm run tsc:prod
+npm run audit:layers
+npm run audit:acl-consistency
+npm run validate:dataConsistency
+npm run validate:blueprint
+# (c) 关键路径真数 UI 测试并截图存 outputs/prelaunch-YYYY-MM-DD/
+```
 
 ---
 
@@ -1684,5 +1817,3 @@ FinSightV9 是**个人本地投研复盘工具**，定位决定了部署架构�
 | 文档治理宪法 | `docs/GOVERNANCE.md` | `docs/` 目录治理规则 |
 | 编码规范摘要 | `docs/standards/coding-conventions.md` | AGENTS.md 工程约束速查版 |
 | Widget 开发指南 | `docs/widget-development-guide.md` | 驾驶舱 Widget 扩展指南 |
-
-```

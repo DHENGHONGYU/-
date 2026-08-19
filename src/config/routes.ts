@@ -125,6 +125,14 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '分析舱 - 复盘启动分析（RLES 评价体系）',
   },
   {
+    path: '/analysis/stock-analysis',
+    // cockpit-redesign WIP: StockAnalysisPage 尚未完成（含 TS6133 未用变量），
+    // 暂用 analysis/NewsV6Page 占位防止路由断链 & tsc 红灯。
+    component: React.lazy(() => import('@/pages/analysis/NewsV6Page')),
+    category: 'analysis',
+    description: '分析舱 - 股票深度分析看板（K线+Volume Profile+画线+多面板）',
+  },
+  {
     path: '/trading/flow',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'trading',

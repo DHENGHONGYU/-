@@ -169,7 +169,7 @@ export const useIntentionPoolStore = create<IntentionPoolState>((set, get) => ({
         symbol: normalizedSymbol,
         pool: POOL,
         researchStatus: DEFAULT_POOL_STATUS[POOL],
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+         
         source: item.source ?? DATA_SOURCE.manual,
         group: item.group ?? DEFAULT_POOL_GROUP,
         dataVersion: 1,

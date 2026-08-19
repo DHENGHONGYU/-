@@ -56,7 +56,7 @@ export class DataCollectorServer extends MCPServerBase {
               }
             }
             const text = result.content[0]?.text ?? '{}'
-            const data = JSON.parse((text as string) || '{}')
+            const data = JSON.parse((text) || '{}')
             return {
               content: [{ type: 'text', text: JSON.stringify({ symbol, days, data, source: 'westock' }) }],
             }

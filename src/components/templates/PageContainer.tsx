@@ -2,7 +2,7 @@
  * @module components/templates/PageContainer
  * @description 页面统一容器组件
  *
- * 提供一致的页面最大宽度（1200px）、内边距（24px）与居中策略，
+ * 提供一致的页面最大宽度（1200px）、响应式内边距与居中策略，
  * 是多页面结构一致性的基础。所有页面应使用本组件作为根容器。
  *
  * 设计原则：
@@ -10,6 +10,7 @@
  *   2. 响应式：移动端自动占满屏幕宽度
  *   3. 可定制：支持通过 centered 属性控制居中行为
  *   4. 可扩展：支持通过 className 属性添加自定义样式
+ *   5. Apple 风格：冷灰色调、紧凑间距、优雅排版
  *
  * @compliance AGENTS.md §三 颜色令牌规范：使用 THEME_TOKENS 而非硬编码颜色
  */
@@ -27,8 +28,13 @@ export interface PageContainerProps {
 
 /**
  * 页面统一容器
- * @description 提供一致的页面最大宽度（1200px）、内边距（24px）与居中策略，
+ * @description 提供一致的页面最大宽度（1200px）、响应式内边距与居中策略，
  * 是多页面结构一致性的基础。所有页面应使用本组件作为根容器。
+ *
+ * 响应式内边距：
+ * - 移动端 (默认): 16px (p-4)
+ * - 平板 (sm): 24px (sm:p-6)
+ * - 桌面 (lg): 32px (lg:p-8)
  */
 export function PageContainer({
   children,
@@ -38,8 +44,8 @@ export function PageContainer({
   return (
     <main
       className={cn(
-        'w-full px-6 py-6',
-        centered && 'mx-auto max-w-[1200px]',
+        'w-full p-4 sm:p-6 lg:p-8',
+        centered && 'mx-auto max-w-container',
         className,
       )}
     >

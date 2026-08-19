@@ -21,7 +21,7 @@ import {
   EASTMONEY_INDUSTRY_API_UNAVAILABLE,
   TENCENT_API_BASE,
 } from '@/config/marketDataEndpoints'
-import { DATA_COLLECTION_TIMEOUT_MS } from '@/config/timeouts'
+import { DATA_COLLECTION_TIMEOUT_MS, IFIND_TARGET_PRICE_TIMEOUT_MS } from '@/config/timeouts'
 import { EASTMONEY_F10_BONUS_API, EASTMONEY_F10_PROFIT_API } from '@/config/fetcherConfig'
 import { safeFetch as _safeFetch } from '@/services/shared/safeFetch'
 import type { ChipData, NewsItem, CompetitorData, ResearchReport, DividendRecord, ConsensusEstimate, RatingSummary } from './dimensionDataTypes'
@@ -672,7 +672,7 @@ export async function fetchIfindTargetPrice(
   try {
     const params = new URLSearchParams({ symbol, name })
     const url = `/api/proxy/ifind/target-price?${params.toString()}`
-    const resp = await safeFetch(url, 45000) // iFinD API 可能较慢，60s 超时
+    const resp = await safeFetch(url, IFIND_TARGET_PRICE_TIMEOUT_MS) // iFinD API 可能较慢，45s 超时
     if (!resp) return null
     const data = (await resp.json()) as IfindTargetPriceResponse
     if (data.code !== 0 || !data.data) {

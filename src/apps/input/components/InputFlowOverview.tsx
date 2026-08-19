@@ -39,7 +39,7 @@ export default function InputFlowOverview(): React.JSX.Element {
   ]
 
   return (
-    <div className="rounded-lg border border-border bg-card px-4 py-3">
+    <div className="rounded-lg border border-border/40 bg-card px-4 py-3 shadow-sm">
       <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
         {STEPS.map((step, i) => {
           const isCurrent = step.key === 'input'
@@ -50,23 +50,23 @@ export default function InputFlowOverview(): React.JSX.Element {
               <Link
                 to={step.path}
                 className={cn(
-                  'group flex min-w-0 flex-1 items-center gap-2.5 rounded-md px-3 py-2 transition-colors hover:bg-muted/60',
-                  isCurrent && 'bg-muted/70 ring-1 ring-border',
+                  'group flex min-w-0 flex-1 items-center gap-2.5 rounded-md px-3 py-2 transition-all hover:bg-muted/60',
+                  isCurrent && 'bg-primary/5 ring-1 ring-primary/20',
                 )}
               >
                 <span
                   className={cn(
                     'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold',
-                    isCurrent ? 'bg-info/10 text-info' : 'bg-muted text-muted-foreground',
+                    isCurrent ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground',
                   )}
                 >
                   {i + 1}
                 </span>
-                <Icon className={cn('h-4 w-4 shrink-0', isCurrent ? 'text-info' : 'text-muted-foreground')} />
+                <Icon className={cn('h-4 w-4 shrink-0', isCurrent ? 'text-primary' : 'text-muted-foreground')} />
                 <div className="min-w-0">
                   <div className={cn('text-sm font-medium', isCurrent ? 'text-foreground' : 'text-muted-foreground')}>
                     {step.title}
-                    {isCurrent && <span className="ml-1.5 text-[10px] text-info">当前</span>}
+                    {isCurrent && <span className="ml-1.5 text-[10px] text-primary">当前</span>}
                   </div>
                   <div className="truncate text-xs text-muted-foreground/70">{metrics[i]}</div>
                 </div>

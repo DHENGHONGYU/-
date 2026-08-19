@@ -31,6 +31,8 @@ export interface DataSourceConfig {
   params?: Record<string, unknown>
   /** 是否启用 */
   enabled: boolean
+  /** 是否静默采集（跳过 per-instance loading/error 更新，避免 UI 抖动） */
+  silent?: boolean
 }
 
 /** 原始市场数据（来自 API 或 WebSocket） */

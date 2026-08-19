@@ -89,7 +89,7 @@ export const useHotSectorStore = create<HotSectorState>((set, get) => ({
     logger.info(`[hotSectorStore] refreshScore: ${symbol}`)
   },
 
-  // eslint-disable-next-line @typescript-eslint/require-await -- synchronous scoring, async for API compatibility
+   
   fetchScores: async (inputs) => {
     const { isRefreshing } = get()
     if (isRefreshing) {

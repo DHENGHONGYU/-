@@ -85,8 +85,8 @@ describe('GLM5.3 回归测试（zhipu-glm）', () => {
     // 结构化内容被解析为对象
     expect(typeof result.parsed).toBe('object')
     const parsed = result.parsed as { supplements: Array<{ name: string; score: number }> }
-    expect(parsed.supplements[0].name).toBe('成长')
-    expect(parsed.supplements[0].score).toBeCloseTo(4.2, 1)
+    expect(parsed.supplements[0]!.name).toBe('成长')
+    expect(parsed.supplements[0]!.score).toBeCloseTo(4.2, 1)
   })
 
   test('GLM5.3 下 HTTP 500 应抛出 LlmApiError', async () => {
@@ -124,8 +124,8 @@ describe('GLM5.3 回归测试（zhipu-glm）', () => {
     }, { responseFormat: { type: 'json_object' } })
 
     const parsed = result.parsed as { supplements: Array<{ name: string; score: number }> }
-    expect(parsed.supplements[0].name).toBe('情绪')
-    expect(parsed.supplements[0].score).toBeCloseTo(3.5, 1)
+    expect(parsed.supplements[0]!.name).toBe('情绪')
+    expect(parsed.supplements[0]!.score).toBeCloseTo(3.5, 1)
   })
 
   test('safeParseJson 对非法 JSON 返回 undefined 且不抛异常', () => {

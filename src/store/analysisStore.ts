@@ -268,7 +268,7 @@ export const useAnalysisStore = create<AnalysisState>((set, get) => ({
         set({ trendData: data, trendLoading: false })
         logger.info(`[analysisStore] loadTrend 完成: ${data.points.length} 个周期点`)
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+         
         const message = result.error ?? '无法加载趋势数据'
         logger.error(`[analysisStore] loadTrend 失败: ${message}`)
         set({ trendLoading: false, trendError: message })

@@ -1,8 +1,16 @@
 import React, { useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router'
-import { PageHeader } from '@/components/templates'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from '@/components/atoms/Breadcrumb'
 import { getLogger } from '@/lib/logger'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import EngineStatusWidget from '@/cockpit/widgets/EngineStatusWidget'
@@ -15,6 +23,8 @@ import {
   Server,
   Settings,
   Target,
+  Home,
+  Gauge,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -142,23 +152,40 @@ export default function CommandApp(): React.JSX.Element {
   const content = renderCommandContent(path)
 
   return (
-    <div className="min-h-screen bg-background">
+    <PageContainer className="space-y-6">
+      <Breadcrumb aria-label="breadcrumb">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild><Link to="/">首页</Link></BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>总控舱</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <PageHeader
         title="总控舱"
         description="系统监控 · 配置管理 · 智能体调度 · MCP 服务"
         actions={
           <>
-            <Button variant="ghost" size="sm" className="rounded-full" asChild>
-              <Link to="/cockpit">驾驶舱</Link>
+            <Button variant="ghost" size="sm" className="shadow-sm" asChild>
+              <Link to="/cockpit">
+                <Gauge className="mr-1.5 h-3.5 w-3.5" />
+                驾驶舱
+              </Link>
             </Button>
-            <Button variant="secondary" size="sm" className="rounded-full" asChild>
-              <Link to="/">返回首页</Link>
+            <Button variant="secondary" size="sm" className="shadow-sm" asChild>
+              <Link to="/">
+                <Home className="mr-1.5 h-3.5 w-3.5" />
+                返回首页
+              </Link>
             </Button>
           </>
         }
       />
-      <main className="mx-auto max-w-7xl p-4">{content}</main>
-    </div>
+      <main>{content}</main>
+    </PageContainer>
   )
 }
 
@@ -221,29 +248,25 @@ function summaryWidgetConfig(widgetId: string, title: string): WidgetConfig {
 function CommandHubPage(): React.JSX.Element {
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-h1 font-bold tracking-tight">总控舱</h1>
-        <p className="text-muted-foreground">系统监控 · 配置管理 · 智能体调度 · MCP 服务</p>
-      </div>
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {HUB_NAV_CARDS.map((card) => {
           const Icon = card.icon
           return (
-            <Card key={card.title} className="transition-shadow hover:shadow-elevation-2">
+            <Card key={card.title} className="shadow-sm border-border/40 transition-all hover:shadow-md hover:-translate-y-0.5">
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
-                    <Icon className="h-4 w-4" />
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Icon className="h-4.5 w-4.5" />
                   </div>
-                  <CardTitle className="text-base">{card.title}</CardTitle>
+                  <CardTitle className="text-base font-semibold">{card.title}</CardTitle>
                 </div>
-                <CardDescription>{card.description}</CardDescription>
+                <CardDescription className="text-xs leading-relaxed mt-1">{card.description}</CardDescription>
               </CardHeader>
-              <CardContent>
-                <Button variant="ghost" size="sm" className="w-full justify-between rounded-full" asChild>
+              <CardContent className="pt-0">
+                <Button variant="outline" size="sm" className="w-full justify-between shadow-sm" asChild>
                   <Link to={card.path}>
                     进入
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </Button>
               </CardContent>
@@ -254,7 +277,7 @@ function CommandHubPage(): React.JSX.Element {
 
       {/* 运维摘要：从 Cockpit 移出的轻量版 Widget（蓝图 Phase 2 步骤 2.1） */}
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold tracking-tight">运维摘要</h2>
+        <h2 className="text-sm font-semibold tracking-tight">运维摘要</h2>
         <div className="grid gap-4 lg:grid-cols-3">
           <EngineStatusWidget config={summaryWidgetConfig('engineStatus', '引擎状态')} />
           <SystemArchitectureWidget config={summaryWidgetConfig('systemArchitecture', '系统架构')} />

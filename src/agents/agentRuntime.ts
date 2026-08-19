@@ -22,7 +22,7 @@ const RETRY_MAX_DELAY_MS = 30000
  */
 function resolveEnvNumber(name: string, fallback: number): number {
   const metaVal = (typeof import.meta !== 'undefined' && (import.meta as { env?: Record<string, string | undefined> }).env?.[name]) as string | undefined
-  const procVal = (typeof process !== 'undefined' ? process.env?.[name] : undefined) as string | undefined
+  const procVal = (typeof process !== 'undefined' ? process.env?.[name] : undefined)
   const raw = metaVal ?? procVal
   if (raw == null) return fallback
   const parsed = Number(raw)

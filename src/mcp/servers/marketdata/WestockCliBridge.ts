@@ -223,7 +223,7 @@ export class WestockCliBridge {
 
   /** 容错解析：剥离日志/前导文本，取首个合法 JSON 文档（对象或数组，支持跨行） */
   private parseJson(raw: string): unknown {
-    if (!raw || !raw.trim()) throw new CliError('CLI 返回空输出', 'parse')
+    if (!raw?.trim()) throw new CliError('CLI 返回空输出', 'parse')
     const trimmed = raw.trim()
     // 先尝试整段解析
     try {

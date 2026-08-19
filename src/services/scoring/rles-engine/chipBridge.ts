@@ -32,6 +32,6 @@ export function evaluateChipForStock(symbol: string, klineHistory: KlineBar[]): 
   }
   const quotes = quotesToQuoteData(dailyQuotes)
   const stock: StockBasicData = { symbol } as StockBasicData
-  const financials: FinancialData = {} as FinancialData
+  const financials: FinancialData = {}
   return evaluateChip({ stock, financials, quotes, config: DEFAULT_ENGINE_CONFIG })
 }

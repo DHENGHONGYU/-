@@ -83,7 +83,7 @@ export function StockSelector({
       initialKeyword: initialKeyword || '(none)',
       preselectedValue: value || '(none)',
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, [])
 
   const selectedStock = useMemo(() => {

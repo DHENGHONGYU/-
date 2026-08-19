@@ -78,7 +78,7 @@ vi.mock('@/services/data-collector/collectionPipeline', () => ({
 vi.mock('@/services/analysis/industryAnalysisService', async (importOriginal) => {
   const actual = await importOriginal()
   return {
-    ...actual,
+    ...(actual as object),
     runFullIndustryAnalysis: mockRunFullIndustryAnalysis,
     invalidateIndustryCache: vi.fn(),
     getCachedV4Analyses: vi.fn(() => null),
@@ -89,7 +89,7 @@ vi.mock('@/services/analysis/industryAnalysisService', async (importOriginal) =>
 vi.mock('@/services/scoring/v6ScoreService', async (importOriginal) => {
   const actual = await importOriginal()
   return {
-    ...actual,
+    ...(actual as object),
     runV6ScoreBatch: mockRunV6ScoreBatch,
     runV6Score: vi.fn(),
   }
@@ -100,7 +100,7 @@ vi.mock('@/services/scoring/v6ScoreService', async (importOriginal) => {
 vi.mock('@/services/scoring/v6-engine', async (importOriginal) => {
   const actual = await importOriginal()
   return {
-    ...actual,
+    ...(actual as object),
     quotesToQuoteData: (quotes: { history?: Array<{ close?: number }> }) => {
       const history = quotes.history ?? []
       const latestClose = history[history.length - 1]?.close ?? 0
@@ -216,7 +216,7 @@ describe('QualityGate P0 修复验证', () => {
       return Promise.resolve({ success: true, data: { symbol: 'test' } })
     })
 
-    const result = await dataBridge.query({ store: STORE_NAME.stocks, key: '000001' })
+    const result = await dataBridge.query({ action: 'QUERY_GET', store: STORE_NAME.stocks, key: '000001' })
     console.log('[diag] result:', JSON.stringify(result))
     console.log('[diag] mockQuery calls:', mockQuery.mock.calls.length)
   })

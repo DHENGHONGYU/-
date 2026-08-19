@@ -132,11 +132,13 @@ echo ""
 echo "📝 [11/20] 运行 audit:docs（文档同步检查）..."
 TSX_RUN scripts/audit/audit-doc-sync.ts && TSX_RUN scripts/audit/audit-version-drift.ts || true
 
-# 12. doc_id 注册表反向一致性审计（P0 BLOCK）
-#     验收报告后续建议：防止 doc_id 注册表再次漂移
+# 12. doc_id 注册表反向一致性审计（B 系统方案 · 差分扫描 + 违规分级）
+#     - --changed-only：仅校验本次提交涉及的 .md 文件，避免并发 Agent 文档 churn 无辜 BLOCK 个人全绿提交
+#     - 阻断型(BLOCKING)：missing-file（真实断链）；警告型(WARNING)：unregistered-doc / no-doc-id / id-mismatch（transient 状态）
+#     - 退出码仅由阻断型违规决定，警告型只在报告中提示
 echo ""
-echo "📋 [12/20] 运行 audit:doc-id-reverse（doc_id 注册表反向一致性，P0 BLOCK）..."
-BLOCK TSX_RUN scripts/audit/audit-doc-id-reverse.ts
+echo "📋 [12/20] 运行 audit:doc-id-reverse（doc_id 反向一致性，BLOCK 仅阻断 missing-file，差分扫描）..."
+BLOCK TSX_RUN scripts/audit/audit-doc-id-reverse.ts --changed-only
 
 # 13. 设计令牌映射校验
 echo ""

@@ -504,7 +504,7 @@ export class RAGRetriever {
     if (!this.config.itemTypes.includes(item.itemType)) return
 
     try {
-      const cleaned = cleanContent(item.content!, this.config.maxChunkChars)
+      const cleaned = cleanContent(item.content, this.config.maxChunkChars)
       const labels = extractLabels(item)
       const embedText_ = buildEmbeddingText(item, cleaned.content)
 

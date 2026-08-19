@@ -84,6 +84,8 @@
     "audit:docs": "tsx scripts/audit/audit-doc-sync.ts && tsx scripts/audit/audit-version-drift.ts",
     "audit:doc-id": "tsx scripts/audit/audit-doc-id-reverse.ts",
     "audit:doc-id:json": "tsx scripts/audit/audit-doc-id-reverse.ts --json",
+    "audit:doc-id:changed": "tsx scripts/audit/audit-doc-id-reverse.ts --changed-only",
+    "audit:doc-id:fix": "tsx scripts/audit/audit-doc-id-reverse.ts --fix",
     "gen:doc-code-xref": "tsx scripts/fix/gen-doc-code-xref-index.ts",
     "classify:orphan-docs": "tsx scripts/fix/classify-orphan-docs.ts",
     "audit:doc-integrity": "tsx scripts/audit/audit-doc-integrity.ts",

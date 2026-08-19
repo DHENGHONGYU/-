@@ -8,13 +8,26 @@
  *   2. 反向：磁盘上每个 .md 文件（含 doc_id frontmatter）必须在注册表中登记
  *   3. 一致性：文件 frontmatter 中的 doc_id 必须与注册表登记的 doc_id 一致
  *
- * 退出码：0=通过, 1=有违规, 2=执行错误
+ * 退出码：0=通过(无阻断型违规), 1=有阻断型违规, 2=执行错误
+ *
+ * 违规分级（B 系统方案，2026-08-19）：
+ *   - 阻断型(BLOCKING)：missing-file —— 注册表 entry 指向的文件不存在，属真实断链。
+ *   - 警告型(WARNING)：unregistered-doc / no-doc-id / id-mismatch —— 文档开发中的 transient
+ *     状态（含并发 Agent 文档 churn 产生的大量未登记/无 doc_id 文档），不阻断个人提交。
+ *   退出码仅由阻断型违规决定，警告型只在报告中提示。
+ *
+ * 差分扫描（B 系统方案）：
+ *   --changed-only  仅校验本次提交涉及的文件（git diff 暂存+未暂存 .md），避免并发 Agent
+ *     文档 churn 无辜 BLOCK 个人全绿提交。husky pre-commit 已默认启用。
  *
  * 用法：
- *   npx tsx scripts/audit/audit-doc-id-reverse.ts           # 全量校验
- *   npx tsx scripts/audit/audit-doc-id-reverse.ts --json    # JSON 输出（CI 集成）
+ *   npx tsx scripts/audit/audit-doc-id-reverse.ts                  # 全量校验（warning 不阻断）
+ *   npx tsx scripts/audit/audit-doc-id-reverse.ts --changed-only  # 差分校验（husky 默认）
+ *   npx tsx scripts/audit/audit-doc-id-reverse.ts --json          # JSON 输出（CI 集成）
+ *   npx tsx scripts/audit/audit-doc-id-reverse.ts --fix           # 自动对账 missing-file 路径
  */
-import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs'
+import { readFileSync, readdirSync, statSync, existsSync, writeFileSync } from 'node:fs'
+import { execSync } from 'node:child_process'
 import { join, resolve, dirname, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -59,6 +72,9 @@ const META_TEMPORARY_FILES = new Set([
   'meta/orphan-archive-candidates.md', // 无 doc_id 归档候选清单（临时）
   'meta/文件整理清单.md', // 文件整理清单（临时）
   'meta/doc-governance-calibration-2026-08-15.md', // 文档治理二次校准报告（临时）
+  // docs/ 根目录或 meta/ 下定期生成的临时库存 / 治理报告
+  'DOCUMENT-INVENTORY.md', // 文档全量 inventory（脚本产物）
+  'meta/refcount-trend-analysis-2026-08-18.md', // 文档引用数趋势分析（一次治理快照）
 ])
 
 /** 判断是否为归档候选（预期无 doc_id，不报违规） */
@@ -90,13 +106,15 @@ interface RegistryEntry {
 
 interface Violation {
   type:
-    | 'missing-file' // 注册表 entry 指向的文件不存在
-    | 'unregistered-doc' // 磁盘文件有 doc_id 但未在注册表
-    | 'no-doc-id' // 磁盘文件无 doc_id frontmatter
-    | 'id-mismatch' // 文件 doc_id 与注册表不一致
+    | 'missing-file' // 注册表 entry 指向的文件不存在（阻断型）
+    | 'unregistered-doc' // 磁盘文件有 doc_id 但未在注册表（警告型）
+    | 'no-doc-id' // 磁盘文件无 doc_id frontmatter（警告型）
+    | 'id-mismatch' // 文件 doc_id 与注册表不一致（警告型）
   doc_id?: string
   path: string
   message: string
+  /** 是否阻断型违规（决定 EXIT 码）。由 BLOCKING_TYPES 在审计末统一赋值。 */
+  blocking?: boolean
 }
 
 interface Report {
@@ -108,6 +126,8 @@ interface Report {
     archiveCandidates: number
     registryCoverage: string
     violations: number
+    /** 阻断型违规数（决定 EXIT 码）；警告型不计入。 */
+    blockingViolations: number
     passed: boolean
   }
   violations: Violation[]
@@ -180,9 +200,49 @@ function parseRegistry(): RegistryEntry[] {
 // 主校验逻辑
 // ============================================================
 
-function audit(): Report {
-  const diskDocs = scanDiskDocs(DOCS_DIR)
+/**
+ * 阻断型违规类型集合：仅这些类型会使审计 EXIT≠0（husky 拦截）。
+ * 其余类型（unregistered-doc / no-doc-id / id-mismatch）为警告型，开发中的 transient 状态，
+ * 不阻断个人提交——直接消除"并发 Agent 文档 churn 无辜 BLOCK 全绿提交"的反复灾难。
+ */
+const BLOCKING_TYPES = new Set<Violation['type']>(['missing-file'])
+
+/**
+ * 获取本次提交涉及的文件集合（repo-root 相对路径，正斜杠）。
+ * 同时纳入暂存区（将被提交）与未暂存改动，覆盖 pre-commit 两种场景。
+ * 失败（非 git 仓库 / git 不可用）则回退 null —— 调用方据此降级为全量扫描，绝不静默放行。
+ */
+function getChangedFiles(): Set<string> | null {
+  try {
+    const collect = (args: string): string[] =>
+      execSync(`git ${args}`, { cwd: ROOT, encoding: 'utf8' })
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean)
+    const staged = collect('diff --cached --name-only --diff-filter=ACMR')
+    const unstaged = collect('diff --name-only --diff-filter=ACMR')
+    const set = new Set<string>([...staged, ...unstaged])
+    return set.size > 0 ? set : null
+  } catch {
+    return null
+  }
+}
+
+interface AuditOptions {
+  /** 差分模式：仅校验本次提交涉及的文件（--changed-only）。 */
+  changedOnly?: boolean
+  /** changed-only 下的变更文件集合；为 null 时退化为全量扫描。 */
+  changedSet?: Set<string> | null
+}
+
+function audit(opts: AuditOptions = {}): Report {
+  let diskDocs = scanDiskDocs(DOCS_DIR)
   const registry = parseRegistry()
+
+  // 差分模式：仅保留本次提交涉及的磁盘文档，避免并发 Agent churn 误伤
+  if (opts.changedOnly && opts.changedSet) {
+    diskDocs = diskDocs.filter((d) => opts.changedSet!.has('docs/' + d.relPath))
+  }
 
   // 注册表 path → entry 索引
   const regByPath = new Map<string, RegistryEntry>()
@@ -193,9 +253,20 @@ function audit(): Report {
   }
 
   const violations: Violation[] = []
+  const registryChanged =
+    opts.changedOnly && opts.changedSet?.has('docs/meta/doc-id-registry.md')
 
   // 正向：注册表 entry 指向的文件必须存在
   for (const e of registry) {
+    // 差分模式：仅校验「被本次提交涉及的 doc」的注册表引用；或注册表文件本身被修改
+    if (
+      opts.changedOnly &&
+      opts.changedSet &&
+      !registryChanged &&
+      !opts.changedSet.has('docs/' + e.path)
+    ) {
+      continue
+    }
     const fullPath = join(DOCS_DIR, e.path)
     if (!existsSync(fullPath)) {
       violations.push({
@@ -217,12 +288,19 @@ function audit(): Report {
       // 检查是否在注册表
       const regEntry = regById.get(d.doc_id)
       if (!regEntry) {
-        violations.push({
-          type: 'unregistered-doc',
-          doc_id: d.doc_id,
-          path: d.relPath,
-          message: `文件有 doc_id=${d.doc_id} 但未在注册表登记: ${d.relPath}`,
-        })
+        // 归档候选（动态报告/运维手册）有 doc_id 但未登记：视为"待整理报告"，不阻塞 BLOCK
+        //   例：reports/audit/*、reports/governance/*、reports/ops/*、reports/project-management/*
+        const fileName = d.relPath.split('/').pop() || ''
+        if (isArchiveCandidate(d.relPath, fileName)) {
+          archiveCandidates++
+        } else {
+          violations.push({
+            type: 'unregistered-doc',
+            doc_id: d.doc_id,
+            path: d.relPath,
+            message: `文件有 doc_id=${d.doc_id} 但未在注册表登记: ${d.relPath}`,
+          })
+        }
       } else if (regEntry.path !== d.relPath) {
         // 检查 path 一致性（允许注册表 path 与磁盘 path 不一致的情况）
         violations.push({
@@ -248,6 +326,12 @@ function audit(): Report {
     }
   }
 
+  // 统一赋值 blocking 标记（缺失处由 BLOCKING_TYPES 决定）
+  for (const v of violations) {
+    if (v.blocking === undefined) v.blocking = BLOCKING_TYPES.has(v.type)
+  }
+
+  const blockingViolations = violations.filter((v) => v.blocking).length
   const totalDiskDocs = diskDocs.length
   const registryCoverage =
     totalDiskDocs > 0 ? ((docsWithId / totalDiskDocs) * 100).toFixed(1) + '%' : 'N/A'
@@ -261,10 +345,54 @@ function audit(): Report {
       archiveCandidates,
       registryCoverage,
       violations: violations.length,
-      passed: violations.length === 0,
+      blockingViolations,
+      passed: blockingViolations === 0,
     },
     violations,
   }
+}
+
+// ============================================================
+// --fix：自动对账注册表路径（仅处理 missing-file 中磁盘存在同名唯一文件的项）
+// ============================================================
+
+interface PathChange { doc_id: string; oldPath: string; newPath: string }
+
+function reconcileRegistryPaths(diskDocs: DiskDoc[], violations: Violation[]): PathChange[] {
+  const byBase = new Map<string, DiskDoc[]>()
+  for (const d of diskDocs) {
+    const base = d.relPath.split('/').pop() || ''
+    if (!byBase.has(base)) byBase.set(base, [])
+    byBase.get(base)!.push(d)
+  }
+  const changes: PathChange[] = []
+  for (const v of violations) {
+    if (v.type !== 'missing-file') continue
+    const base = v.path.split('/').pop() || ''
+    const matches = (byBase.get(base) || []).filter((m) => m.relPath !== v.path)
+    if (matches.length === 1) {
+      changes.push({ doc_id: v.doc_id || '', oldPath: v.path, newPath: matches[0].relPath })
+    } else if (matches.length > 1) {
+      console.warn(`跳过 ${v.path}：磁盘存在 ${matches.length} 个同名文件，需人工裁决。`)
+    }
+  }
+  return changes
+}
+
+function applyRegistryPathFixes(changes: PathChange[]): void {
+  if (changes.length === 0) return
+  let content = readFileSync(REGISTRY_PATH, 'utf8')
+  for (const c of changes) {
+    const escapedId = c.doc_id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const escapedOld = c.oldPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const re = new RegExp('(^\\|\\s*' + escapedId + '\\s*\\|[^|]*\\|[^|]*\\|\\s*)' + escapedOld + '(\\s*\\|\\s*$)', 'm')
+    if (re.test(content)) {
+      content = content.replace(re, '$1' + c.newPath + '$2')
+    } else {
+      console.warn(`未能在注册表中定位 ${c.doc_id} 的 ${c.oldPath} 行，跳过。`)
+    }
+  }
+  writeFileSync(REGISTRY_PATH, content, 'utf8')
 }
 
 // ============================================================
@@ -273,30 +401,52 @@ function audit(): Report {
 
 function main() {
   const isJson = process.argv.includes('--json')
+  const isFix = process.argv.includes('--fix')
+  const changedOnly = process.argv.includes('--changed-only')
   try {
-    const report = audit()
+    const changedSet = changedOnly ? getChangedFiles() : null
+    if (changedOnly && !changedSet) {
+      console.warn('⚠️ --changed-only 无法获取提交差异（非 git 仓库或 git 不可用），已退化为全量扫描。')
+    }
+    const report = audit({ changedOnly, changedSet })
+
+    if (isFix) {
+      const diskDocs = scanDiskDocs(DOCS_DIR)
+      const changes = reconcileRegistryPaths(diskDocs, report.violations)
+      if (changes.length > 0) {
+        applyRegistryPathFixes(changes)
+        console.log(`✅ --fix 已自动修正 ${changes.length} 条注册表路径：`);
+        for (const c of changes) console.log(`  ${c.doc_id}: ${c.oldPath} → ${c.newPath}`)
+      } else {
+        console.log('--fix：无需修正（无唯一可解析的 missing-file）。')
+      }
+      process.exit(0)
+    }
     if (isJson) {
       console.log(JSON.stringify(report, null, 2))
     } else {
+      const mode = changedOnly ? '差分(--changed-only)' : '全量'
       console.log('========== doc_id 反向校验 ==========')
+      console.log(`扫描模式: ${mode}`)
       console.log(`磁盘文档总数: ${report.summary.totalDiskDocs}`)
       console.log(`注册表条目数: ${report.summary.totalRegistryEntries}`)
       console.log(`有 doc_id 文档: ${report.summary.docsWithId}`)
       console.log(`无 doc_id 文档: ${report.summary.docsWithoutId}（其中归档候选 ${report.summary.archiveCandidates} 篇豁免）`)
       console.log(`注册表覆盖率: ${report.summary.registryCoverage}`)
-      console.log(`违规总数: ${report.summary.violations}`)
-      console.log(`结果: ${report.summary.passed ? '✅ 通过' : '❌ 失败'}`)
+      console.log(`违规总数: ${report.summary.violations}（阻断型 ${report.summary.blockingViolations} / 警告型 ${report.summary.violations - report.summary.blockingViolations}）`)
+      console.log(`结果: ${report.summary.passed ? '✅ 通过（无阻断型违规）' : '❌ 失败（存在阻断型违规）'}`)
       console.log('')
 
       if (report.violations.length > 0) {
-        // 按类型分组
+        // 按类型分组，标注阻断/警告
         const byType = new Map<string, Violation[]>()
         for (const v of report.violations) {
           if (!byType.has(v.type)) byType.set(v.type, [])
           byType.get(v.type)!.push(v)
         }
         for (const [type, items] of byType) {
-          console.log(`--- ${type} (${items.length}) ---`)
+          const tag = items[0].blocking ? '【阻断】' : '【警告】'
+          console.log(`--- ${tag}${type} (${items.length}) ---`)
           for (const v of items.slice(0, 20)) {
             console.log(`  ${v.message}`)
           }

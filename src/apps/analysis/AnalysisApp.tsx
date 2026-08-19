@@ -3,13 +3,22 @@ import { Link, useLocation, useNavigate, useSearchParams } from 'react-router'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from '@/components/atoms/Breadcrumb'
 import { useToast } from '@/hooks/useToast'
 import { AnalysisTemplateCards } from '@/components/organisms/analysis/hub/AnalysisTemplateCards'
-import { PageHeader } from '@/components/templates/PageHeader'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { PageSkeleton } from '@/components/organisms/shared/PageSkeleton'
 import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
+import { Sparkles } from 'lucide-react'
 import {
   useAnalysisStore,
   // 派生查询 Hook（通过 export * 从 .derived.ts 导入）
@@ -151,22 +160,42 @@ export default function AnalysisApp(): React.JSX.Element {
       </Suspense>
     ) : (
       // ── 默认视图：分析模板卡片 + V6 九维评分卡片 ────────────────────────────────
-      <div className="space-y-4">
+      <>
         <PageHeader
           title="分析舱"
           description="多因子深度研究工作台"
           actions={
-            <Button size="sm" variant="secondary" asChild>
-              <Link to="/analysis/intelligent-score">快速评分</Link>
+            <Button size="sm" variant="secondary" asChild className="shadow-sm">
+              <Link to="/analysis/intelligent-score">
+                <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                快速评分
+              </Link>
             </Button>
           }
         />
         <AnalysisTemplateCards />
         <V6ScoreCard />
-      </div>
+      </>
     )
 
-  return <ErrorBoundary>{content}</ErrorBoundary>
+  return (
+    <ErrorBoundary>
+      <PageContainer className="space-y-6">
+        <Breadcrumb aria-label="breadcrumb">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild><Link to="/">首页</Link></BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>分析舱</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        {content}
+      </PageContainer>
+    </ErrorBoundary>
+  )
 }
 
 // ── V6 评分卡片（接入 analysisStore + 派生查询 Hook）─────────────────────────
@@ -230,136 +259,167 @@ function V6ScoreCard(): React.JSX.Element {
   }
 
   return (
-    <div className="space-y-4 p-4">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>分析舱 · V6 九维评分</CardTitle>
-            <Badge variant="outline">
-              {scope === 'intention' ? '意向候选池' : '全量标的'}
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {/* 作用域切换 + 批量评分工具条 */}
-          <div className="flex flex-wrap items-center gap-2">
+    <Card className="shadow-sm border-border/40">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-base font-semibold">分析舱 · V6 九维评分</CardTitle>
+          <Badge variant="outline" className="border-border/50">
+            {scope === 'intention' ? '意向候选池' : '全量标的'}
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-5 pt-3">
+        {/* 作用域切换 + 批量评分工具条 */}
+        <div className="flex flex-wrap items-center gap-2 rounded-md border border-border/40 bg-muted/20 px-3.5 py-2.5">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void loadStocks('all')}
+            disabled={loading}
+            className="shadow-sm"
+          >
+            加载全部标的
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => void loadStocks('intention')}
+            disabled={loading}
+            className="shadow-sm"
+          >
+            加载意向候选池
+          </Button>
+          {scope === 'intention' && unscoredCandidates.length > 0 && (
             <Button
-              variant="secondary"
               size="sm"
-              onClick={() => void loadStocks('all')}
+              onClick={() =>
+                void runBatchScoreAction(unscoredCandidates.map((c) => c.symbol))
+              }
               disabled={loading}
+              className="ml-auto shadow-sm"
             >
-              加载全部标的
+              {loading ? '评分中...' : `批量评分（${unscoredCandidates.length}）`}
             </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => void loadStocks('intention')}
-              disabled={loading}
-            >
-              加载意向候选池
-            </Button>
-            {scope === 'intention' && unscoredCandidates.length > 0 && (
-              <Button
-                size="sm"
-                onClick={() =>
-                  void runBatchScoreAction(unscoredCandidates.map((c) => c.symbol))
-                }
-                disabled={loading}
-              >
-                {loading ? '评分中...' : `批量评分（${unscoredCandidates.length}）`}
-              </Button>
-            )}
-          </div>
+          )}
+        </div>
 
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {/* 意向候选池作用域：展示输入舱候选（含来源溯源与已有评分） */}
-            {scope === 'intention' && candidates.length === 0 && (
-              <div className="col-span-full rounded-md border border-dashed p-6 text-center">
-                <p className="text-sm text-muted-foreground">
-                  暂无意向候选，请先在输入舱录入股票或纳入热门板块核心标的
-                </p>
-                <Button variant="secondary" size="sm" asChild className="mt-2">
-                  <Link to="/input">去输入舱录入 →</Link>
-                </Button>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* 意向候选池作用域：展示输入舱候选（含来源溯源与已有评分） */}
+          {scope === 'intention' && candidates.length === 0 && (
+            <div className="col-span-full flex flex-col items-center justify-center rounded-md border border-dashed border-border/50 bg-muted/10 py-12 text-center">
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-muted/60">
+                <Sparkles className="h-6 w-6 opacity-50 text-muted-foreground" />
               </div>
-            )}
-            {scope === 'intention' &&
-              candidates.map((candidate) => {
-                const score = scoreMap.get(candidate.symbol)
-                const source = sourceMeta(candidate.screenSource)
-                return (
-                  <div
-                    key={candidate.symbol}
-                    className="rounded-md border p-3 hover:bg-accent"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex min-w-0 items-center gap-2">
-                        <span className="font-medium">{candidate.symbol}</span>
-                        <span className={`truncate text-xs ${source.className}`}>
+              <p className="text-sm font-medium text-muted-foreground">
+                暂无意向候选
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground/70">
+                请先在输入舱录入股票或纳入热门板块核心标的
+              </p>
+              <Button variant="secondary" size="sm" asChild className="mt-4 shadow-sm">
+                <Link to="/input">去输入舱录入 →</Link>
+              </Button>
+            </div>
+          )}
+          {scope === 'intention' &&
+            candidates.map((candidate) => {
+              const score = scoreMap.get(candidate.symbol)
+              const source = sourceMeta(candidate.screenSource)
+              return (
+                <div
+                  key={candidate.symbol}
+                  className="rounded-lg border border-border/40 p-4 transition-colors hover:bg-muted/30"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex min-w-0 flex-col">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-mono text-sm font-semibold">{candidate.symbol}</span>
+                        <span className={`truncate text-[11px] font-medium ${source.className}`}>
                           {source.label}
                         </span>
                         {candidate.group != null && (
-                          <span className="truncate text-xs text-muted-foreground">
+                          <Badge variant="outline" className="border-border/40 text-[10px] h-4.5 px-1.5">
                             {candidate.group}
-                          </span>
+                          </Badge>
                         )}
                       </div>
-                      <Badge variant={score ? 'default' : 'outline'} className={score && cn(getScoreColorClass(score.score))}>
-                        {score ? `V6: ${score.score.toFixed(2)}` : '未评分'}
-                      </Badge>
+                      <p className="mt-1 text-sm text-muted-foreground">{candidate.name}</p>
                     </div>
-                    <p className="text-sm text-muted-foreground">{candidate.name}</p>
-                    <Button
-                      className="mt-2"
-                      size="sm"
-                      disabled={loading}
-                      onClick={() => void handleScoreAction(candidate.symbol)}
+                    <Badge
+                      variant={score ? 'default' : 'outline'}
+                      className={cn(
+                        'shrink-0 text-[11px] font-semibold',
+                        score && !getScoreColorClass(score.score).includes('stock-up') && getScoreColorClass(score.score).includes('primary') ? 'bg-primary/10 text-primary border-primary/20' : '',
+                        score ? getScoreColorClass(score.score) : 'border-border/50',
+                      )}
                     >
-                      {loading ? '评分中...' : '运行评分'}
-                    </Button>
+                      {score ? `V6: ${score.score.toFixed(2)}` : '未评分'}
+                    </Badge>
                   </div>
-                )
-              })}
-
-            {/* 全量作用域：展示全部标的（向后兼容） */}
-            {scope !== 'intention' && stocks.length === 0 && (
-              <div className="col-span-full rounded-md border border-dashed p-6 text-center">
-                <p className="text-sm text-muted-foreground">暂无标的，请先在输入舱录入股票</p>
-                <Button variant="secondary" size="sm" asChild className="mt-2">
-                  <Link to="/input">去输入舱录入 →</Link>
-                </Button>
-              </div>
-            )}
-            {scope !== 'intention' &&
-              stocks.map((stock) => {
-                const score = scoreMap.get(stock.symbol)
-                return (
-                  <div
-                    key={stock.symbol}
-                    className="rounded-md border p-3 hover:bg-accent"
+                  <Button
+                    className="mt-3 w-full shadow-sm"
+                    size="sm"
+                    variant="secondary"
+                    disabled={loading}
+                    onClick={() => void handleScoreAction(candidate.symbol)}
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">{stock.symbol}</span>
-                      <Badge variant={score ? 'default' : 'outline'} className={score && cn(getScoreColorClass(score.score))}>
-                        {score ? `V6: ${score.score.toFixed(2)}` : '未评分'}
-                      </Badge>
+                    {loading ? '评分中...' : '运行评分'}
+                  </Button>
+                </div>
+              )
+            })}
+
+          {/* 全量作用域：展示全部标的（向后兼容） */}
+          {scope !== 'intention' && stocks.length === 0 && (
+            <div className="col-span-full flex flex-col items-center justify-center rounded-md border border-dashed border-border/50 bg-muted/10 py-12 text-center">
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-muted/60">
+                <Sparkles className="h-6 w-6 opacity-50 text-muted-foreground" />
+              </div>
+              <p className="text-sm font-medium text-muted-foreground">暂无标的</p>
+              <p className="mt-1 text-xs text-muted-foreground/70">请先在输入舱录入股票</p>
+              <Button variant="secondary" size="sm" asChild className="mt-4 shadow-sm">
+                <Link to="/input">去输入舱录入 →</Link>
+              </Button>
+            </div>
+          )}
+          {scope !== 'intention' &&
+            stocks.map((stock) => {
+              const score = scoreMap.get(stock.symbol)
+              return (
+                <div
+                  key={stock.symbol}
+                  className="rounded-lg border border-border/40 p-4 transition-colors hover:bg-muted/30"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex min-w-0 flex-col">
+                      <span className="font-mono text-sm font-semibold">{stock.symbol}</span>
+                      <p className="mt-1 text-sm text-muted-foreground">{stock.name}</p>
                     </div>
-                    <p className="text-sm text-muted-foreground">{stock.name}</p>
-                    <Button
-                      className="mt-2"
-                      size="sm"
-                      disabled={loading}
-                      onClick={() => void handleScoreAction(stock.symbol)}
+                    <Badge
+                      variant={score ? 'default' : 'outline'}
+                      className={cn(
+                        'shrink-0 text-[11px] font-semibold',
+                        score && !getScoreColorClass(score.score).includes('stock-up') && getScoreColorClass(score.score).includes('primary') ? 'bg-primary/10 text-primary border-primary/20' : '',
+                        score ? getScoreColorClass(score.score) : 'border-border/50',
+                      )}
                     >
-                      {loading ? '评分中...' : '运行评分'}
-                    </Button>
+                      {score ? `V6: ${score.score.toFixed(2)}` : '未评分'}
+                    </Badge>
                   </div>
-                )
-              })}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+                  <Button
+                    className="mt-3 w-full shadow-sm"
+                    size="sm"
+                    variant="secondary"
+                    disabled={loading}
+                    onClick={() => void handleScoreAction(stock.symbol)}
+                  >
+                    {loading ? '评分中...' : '运行评分'}
+                  </Button>
+                </div>
+              )
+            })}
+        </div>
+      </CardContent>
+    </Card>
   )
 }

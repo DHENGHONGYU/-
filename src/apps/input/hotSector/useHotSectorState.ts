@@ -75,7 +75,7 @@ export interface HotSectorState {
 export function useHotSectorState(): HotSectorState {
   const refresh = useIntentionPoolStore((s) => s.refresh)
   const items = useIntentionPoolStore((s) => s.items)
-  const allGroups = useMemo(() => getIntentionPoolGroups(), [items]) // eslint-disable-line react-hooks/exhaustive-deps -- items is a reactivity trigger for store-driven getIntentionPoolGroups()
+  const allGroups = useMemo(() => getIntentionPoolGroups(), [items])  
 
   const [hotSectors, setHotSectors] = useState<HotSector[]>([])
   const [targetGroup, setTargetGroup] = useState('')

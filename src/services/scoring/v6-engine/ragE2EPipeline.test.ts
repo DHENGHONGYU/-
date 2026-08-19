@@ -34,6 +34,7 @@ import {
   formatHallucinationReport,
 } from '@/services/scoring/v6-engine/hallucinationDetector'
 import type { LayerInput, LayerScore, LayerCalculator } from '@/services/scoring/v6-engine/types'
+import { DEFAULT_ENGINE_CONFIG } from '@/services/scoring/v6-engine/config'
 
 // ============================================================
 // Mock 设置
@@ -131,13 +132,13 @@ class SmartRAGSimulator {
     let match
     while ((match = snippetRegex.exec(ragSection)) !== null) {
       snippets.push({
-        index: parseInt(match[1]),
-        source: match[2].trim(),
-        itemType: match[3].trim(),
-        similarity: parseFloat(match[4]),
-        sentiment: match[5].trim(),
-        title: match[6].trim(),
-        content: match[7].trim(),
+        index: parseInt(match[1]!),
+        source: match[2]!.trim(),
+        itemType: match[3]!.trim(),
+        similarity: parseFloat(match[4]!),
+        sentiment: match[5]!.trim(),
+        title: match[6]!.trim(),
+        content: match[7]!.trim(),
       })
     }
     return snippets
@@ -193,11 +194,11 @@ class SmartRAGSimulator {
       const sentences = this.extractQuotableSentences(snippet.content)
       if (sentences.length === 0) continue
 
-      const bestSentence = sentences.sort((a, b) => b.length - a.length)[0]
+      const bestSentence = sentences.sort((a, b) => b.length - a.length)[0]!
       citations.push({
         source: snippet.source,
         content: bestSentence,
-        date: new Date(Date.now()).toISOString().split('T')[0],
+        date: new Date(Date.now()).toISOString().split('T')[0]!,
       })
       usedSources.add(snippet.source)
     }
@@ -342,12 +343,15 @@ function createMockCalculator(
   const id = layerId as LayerCalculator['layerId']
   return {
     layerId: id,
-    layerName,
     calculate: async (_input: LayerInput): Promise<LayerScore> => ({
+      layerId: id,
+      layerName,
       score,
       summary: `规则引擎${layerName}评分：${score.toFixed(2)}/5`,
       evidence: [`规则引擎证据1：${layerName}基础评估`, `规则引擎证据2：行业对标分析`],
       risks: score < 3 ? ['评分偏低风险'] : [],
+      weight: 1,
+      weightedScore: score,  dataSources: [],
       participated: true,
       auditTrail: [],
     }),
@@ -364,10 +368,7 @@ function buildLayerInput(
     financials: {},
     quotes: {},
     industryScore: undefined,
-    config: { weights: {} as Record<string, number>, offlineMode: false, llmEnabled: true, auditEnabled: false },
-    chipDistribution: undefined,
-    dailyQuotes: undefined,
-    sectorPeers: [],
+    config: DEFAULT_ENGINE_CONFIG,
   }
 }
 
@@ -406,7 +407,7 @@ describe('Phase 3 E2E Pipeline: Profile → RAG → LLM → 幻觉检测', () =>
         { id: 'l7', name: 'L7-第二曲线', score: 3.2 },
       ]
 
-      const rags = STOCK_RAG_TEMPLATES['sh.600519']
+      const rags = STOCK_RAG_TEMPLATES['sh.600519']!
       mocks.mockRagRetrieve.mockResolvedValue(buildRAGContext(rags))
 
       mocks.mockChat.mockImplementation(
@@ -431,7 +432,7 @@ describe('Phase 3 E2E Pipeline: Profile → RAG → LLM → 幻觉检测', () =>
         const hasCitationEvidence = result.evidence.some((e) => e.startsWith('[引用:'))
         const citations: LLMCitation[] = result.evidence
           .filter((e) => e.startsWith('[引用:'))
-          .map((e) => {
+          .map((e): LLMCitation | null => {
             const sourceEnd = e.indexOf(']')
             if (sourceEnd === -1) return null
             const source = e.substring(4, sourceEnd)
@@ -446,8 +447,7 @@ describe('Phase 3 E2E Pipeline: Profile → RAG → LLM → 幻觉检测', () =>
           .filter((c): c is LLMCitation => c !== null)
 
         const sample: HallucinationSample = {
-          stockSymbol: 'sh.600519',
-          stockName: '贵州茅台',
+          symbol: 'sh.600519',
           layerId: layer.id,
           ruleScore: layer.score,
           llmOutput: {
@@ -455,9 +455,10 @@ describe('Phase 3 E2E Pipeline: Profile → RAG → LLM → 幻觉检测', () =>
             summary: result.summary,
             rationale:
               result.evidence.find((e) => e.startsWith('[LLM增强]'))?.replace('[LLM增强] ', '') || '',
+            risks: [],
             citations,
           },
-          ragContext: rags,
+          ragContext: buildRAGContext(rags).snippets,
         }
 
         const hallucinations = detectSampleHallucination(sample)
@@ -524,7 +525,7 @@ describe('Phase 3 E2E Pipeline: Profile → RAG → LLM → 幻觉检测', () =>
 
   describe('E2E-3: 管线容错 — LLM 调用失败', () => {
     it('LLM 调用抛出异常时，enhancer 应回退到规则引擎评分', async () => {
-      const rags = STOCK_RAG_TEMPLATES['sh.600900']
+      const rags = STOCK_RAG_TEMPLATES['sh.600900']!
       mocks.mockRagRetrieve.mockResolvedValue(buildRAGContext(rags))
 
       mocks.mockChat.mockRejectedValue(new Error('LLM API timeout'))
@@ -594,7 +595,7 @@ describe('Phase 3 E2E Pipeline: Profile → RAG → LLM → 幻觉检测', () =>
 
   describe('E2E-5: 跨层一致性', () => {
     it('同一股票不同层之间的评分应保持逻辑一致性', async () => {
-      const rags = STOCK_RAG_TEMPLATES['sh.600519']
+      const rags = STOCK_RAG_TEMPLATES['sh.600519']!
       mocks.mockRagRetrieve.mockResolvedValue(buildRAGContext(rags))
 
       mocks.mockChat.mockImplementation(
@@ -640,7 +641,7 @@ describe('Phase 3 E2E Pipeline: Profile → RAG → LLM → 幻觉检测', () =>
 
   describe('E2E-6: 管线性能', () => {
     it('单层管线耗时应在合理范围（< 500ms）', async () => {
-      const rags = STOCK_RAG_TEMPLATES['sh.600519']
+      const rags = STOCK_RAG_TEMPLATES['sh.600519']!
       mocks.mockRagRetrieve.mockResolvedValue(buildRAGContext(rags))
 
       mocks.mockChat.mockImplementation(
@@ -670,7 +671,7 @@ describe('Phase 3 E2E Pipeline: Profile → RAG → LLM → 幻觉检测', () =>
     })
 
     it('6 层并发管线总耗时应在合理范围', async () => {
-      const rags = STOCK_RAG_TEMPLATES['sh.600519']
+      const rags = STOCK_RAG_TEMPLATES['sh.600519']!
       mocks.mockRagRetrieve.mockResolvedValue(buildRAGContext(rags))
 
       mocks.mockChat.mockImplementation(
@@ -759,7 +760,7 @@ describe('Phase 3 E2E Pipeline: Profile → RAG → LLM → 幻觉检测', () =>
 
         const citations: LLMCitation[] = result.evidence
           .filter((e) => e.startsWith('[引用:'))
-          .map((e) => {
+          .map((e): LLMCitation | null => {
             const sourceEnd = e.indexOf(']')
             if (sourceEnd === -1) return null
             const source = e.substring(4, sourceEnd)
@@ -774,8 +775,7 @@ describe('Phase 3 E2E Pipeline: Profile → RAG → LLM → 幻觉检测', () =>
           .filter((c): c is LLMCitation => c !== null)
 
         samples.push({
-          stockSymbol: stock.symbol,
-          stockName: stock.name,
+          symbol: stock.symbol,
           layerId: 'l1',
           ruleScore: 3.5,
           llmOutput: {
@@ -783,9 +783,10 @@ describe('Phase 3 E2E Pipeline: Profile → RAG → LLM → 幻觉检测', () =>
             summary: result.summary,
             rationale:
               result.evidence.find((e) => e.startsWith('[LLM增强]'))?.replace('[LLM增强] ', '') || '',
+            risks: [],
             citations,
           },
-          ragContext: rags || [],
+          ragContext: rags ? buildRAGContext(rags).snippets : [],
         })
       }
 

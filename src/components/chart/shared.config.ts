@@ -106,13 +106,13 @@ const DIMENSION_NAME_MAP: Record<string, ChartSemanticDimension> = {
 export function getSemanticColor(dimensionName: string): string {
   const dim = DIMENSION_NAME_MAP[dimensionName]
   if (dim && dim in CHART_SEMANTIC_PALETTE) {
-    return CHART_SEMANTIC_PALETTE[dim as keyof typeof CHART_SEMANTIC_PALETTE].primary
+    return CHART_SEMANTIC_PALETTE[dim].primary
   }
   // 模糊匹配：遍历所有维度名，包含关系
   for (const [key, value] of Object.entries(DIMENSION_NAME_MAP)) {
     if (dimensionName.includes(key) || key.includes(dimensionName)) {
       if (value in CHART_SEMANTIC_PALETTE) {
-        return CHART_SEMANTIC_PALETTE[value as keyof typeof CHART_SEMANTIC_PALETTE].primary
+        return CHART_SEMANTIC_PALETTE[value].primary
       }
     }
   }
@@ -130,7 +130,7 @@ export function getSemanticScale(dimensionName: string): {
 } {
   const dim = DIMENSION_NAME_MAP[dimensionName]
   if (dim && dim in CHART_SEMANTIC_PALETTE) {
-    return CHART_SEMANTIC_PALETTE[dim as keyof typeof CHART_SEMANTIC_PALETTE]
+    return CHART_SEMANTIC_PALETTE[dim]
   }
   return CHART_SEMANTIC_PALETTE.benchmark
 }

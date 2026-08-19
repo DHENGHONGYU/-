@@ -122,7 +122,7 @@ export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
 
   // ── 初始化 ─────────────────────────────────────────────
   const initialize = useCallback(() => {
-    // eslint-disable-next-line @typescript-eslint/require-await
+     
     void (async () => {
       try {
         const defaultConfig = getDefaultLlmConfig()

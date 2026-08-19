@@ -4,58 +4,69 @@
 
 /* ╔══════════════════════════════════════════════════════════════╗
    ║  FinSight V9 · Design Token Source of Truth                ║
-   ║  Version: V6 (Warmth Edition)                              ║
-   ║  V5→V6: 冷蓝灰→暖象牙灰，消除工业风格冷感                  ║
+   ║  Version: V8 (Apple Business Edition)                      ║
+   ║  V7→V8: 暖象牙灰→Apple冷白，对齐Apple Human Interface      ║
+   ║         Guidelines · iOS/MacOS Design Tokens               ║
+   ║  - 背景: HSL 240 24% 96% (Apple System Gray #F5F5F7)      ║
+   ║  - 卡片: HSL 0 0% 100% (纯白)                               ║
+   ║  - 主色: HSL 210 100% 50% (Apple Blue #007AFF)            ║
+   ║  - 阴影: alpha ≤ 0.05 (静态) / ≤ 0.08 (浮层)                ║
    ╚══════════════════════════════════════════════════════════════╝ */
 
 @layer base {
   :root {
-    --background: 36 20% 96%;
-    --foreground: 30 5% 12%;
-    --card: 40 33% 98%;
-    --card-foreground: 30 5% 12%;
-    --popover: 40 33% 98%;
-    --popover-foreground: 30 5% 12%;
+    /* ===== Apple Business 冷色调设计令牌 ===== */
+    --background: 240 24% 96%;
+    --foreground: 240 3% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 3% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 3% 12%;
     --primary: 210 100% 50%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 36 15% 95%;
-    --secondary-foreground: 30 8% 12%;
-    --muted: 36 15% 95%;
-    --muted-foreground: 30 3% 52%;
-    --accent: 36 15% 95%;
-    --accent-foreground: 30 8% 12%;
-    --destructive: 4 100% 59%;
+    --secondary: 240 5% 94%;
+    --secondary-foreground: 240 3% 12%;
+    --muted: 240 5% 94%;
+    --muted-foreground: 240 2% 45%;
+    --accent: 240 5% 94%;
+    --accent-foreground: 240 3% 12%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 36 10% 88%;
-    --input: 36 10% 88%;
+    --border: 240 6% 88%;
+    --input: 240 6% 88%;
     --ring: 210 100% 50%;
     --radius: 1rem;
+    /* ===== 语义化颜色令牌 ===== */
     --ru-blue: 205 35% 70%;
     --guan-green: 145 15% 65%;
     --cinnabar: 5 65% 52%;
-    --ivory: 40 33% 94%;
-    --warm-gray: 30 12% 88%;
-    --surface-2: 36 15% 93%;
-    --text-tertiary: 30 3% 45%;
-    --divider: 36 10% 86%;
-    --success: 142 56% 49%;
+    --ivory: 240 20% 96%;
+    --warm-gray: 240 6% 88%;
+    --surface-2: 240 5% 93%;
+    --text-tertiary: 240 2% 40%;
+    --divider: 240 6% 86%;
+    /* ===== 状态颜色 ===== */
+    --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
     --warning: 36 100% 50%;
     --warning-foreground: 0 0% 100%;
     --info: 210 100% 50%;
     --info-foreground: 0 0% 100%;
-    --shadow-color: 30 8% 40%;
-    --shadow-sm: 0 1px 2px 0 hsl(30 8% 40% / 0.04);
-    --shadow-md: 0 2px 6px -1px hsl(30 8% 35% / 0.05);
-    --shadow-lg: 0 8px 24px -8px hsl(30 8% 35% / 0.08);
-    --surface-elevated: 0 4px 12px -2px hsl(30 8% 35% / 0.06);
-    --surface-floating: 0 8px 24px -4px hsl(30 8% 35% / 0.08);
+    /* ===== 阴影令牌 (alpha ≤ 0.05 静态, ≤ 0.08 浮层) ===== */
+    --shadow-color: 240 3% 12%;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 2px 6px -1px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 8px 24px -8px rgba(0, 0, 0, 0.08);
+    --surface-elevated: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+    --surface-floating: 0 8px 24px -4px rgba(0, 0, 0, 0.08);
+    /* ===== 股票/评分颜色 ===== */
     --stock-up: 0 84% 60%;
-    --stock-down: 142 56% 49%;
-    --stock-neutral: 30 3% 52%;
-    --score-high: 142 56% 49%;
+    --stock-down: 142 71% 45%;
+    --stock-neutral: 240 2% 45%;
+    --score-high: 142 71% 45%;
     --score-mid: 36 100% 50%;
-    --score-low: 4 100% 59%;
+    --score-low: 0 84% 60%;
+    /* ===== 字体大小 (Apple Typography) ===== */
     --fs-display: 1.75rem;
     --fs-h1: 1.5rem;
     --fs-h2: 1.25rem;
@@ -68,10 +79,12 @@
     --fs-body-sm: 0.8125rem;
     --fs-caption: 0.75rem;
     --fs-overline: 0.6875rem;
+    /* ===== 行高 ===== */
     --lh-tight: 1.2;
     --lh-snug: 1.3;
     --lh-normal: 1.4;
     --lh-relaxed: 1.6;
+    /* ===== 字间距 ===== */
     --tracking-cjk-heading: 0em;
     --tracking-cjk-body: 0.015em;
     --tracking-cjk-caption: 0.02em;
@@ -80,48 +93,49 @@
     --tracking-latin-normal: 0em;
     --tracking-latin-wide: 0.05em;
 
-    /* ===== V7: 排版温度令牌（标题暖色相微调） ===== */
-    --heading-warm: 30 8% 12%;
-    --heading-warm-secondary: 30 5% 18%;
+    /* ===== V8: Apple 冷色排版令牌 ===== */
+    --heading-warm: 240 3% 12%;
+    --heading-warm-secondary: 240 2% 20%;
   }
   .dark {
-    --background: 30 6% 10%;
-    --foreground: 30 12% 96%;
-    --card: 30 5% 14%;
-    --card-foreground: 30 12% 96%;
-    --popover: 30 5% 14%;
-    --popover-foreground: 30 12% 96%;
+    /* ===== 暗色模式 Apple 设计令牌 ===== */
+    --background: 240 5% 8%;
+    --foreground: 240 10% 96%;
+    --card: 240 4% 12%;
+    --card-foreground: 240 10% 96%;
+    --popover: 240 4% 12%;
+    --popover-foreground: 240 10% 96%;
     --primary: 210 100% 60%;
-    --primary-foreground: 30 6% 10%;
-    --secondary: 30 5% 16%;
-    --secondary-foreground: 30 12% 96%;
-    --muted: 30 5% 16%;
-    --muted-foreground: 30 5% 64%;
-    --accent: 30 5% 20%;
-    --accent-foreground: 30 12% 96%;
-    --destructive: 4 100% 67%;
-    --destructive-foreground: 30 6% 10%;
-    --border: 30 5% 24%;
-    --input: 30 5% 24%;
+    --primary-foreground: 240 5% 8%;
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 240 10% 96%;
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 3% 60%;
+    --accent: 240 4% 20%;
+    --accent-foreground: 240 10% 96%;
+    --destructive: 0 84% 67%;
+    --destructive-foreground: 240 5% 8%;
+    --border: 240 4% 24%;
+    --input: 240 4% 24%;
     --ring: 210 100% 60%;
-    --surface-2: 30 5% 20%;
-    --text-tertiary: 30 5% 50%;
-    --divider: 30 5% 28%;
-    --success: 142 69% 48%;
+    --surface-2: 240 4% 20%;
+    --text-tertiary: 240 3% 45%;
+    --divider: 240 4% 28%;
+    --success: 142 71% 48%;
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 55%;
     --warning-foreground: 0 0% 100%;
     --info: 217 91% 65%;
     --info-foreground: 0 0% 100%;
-    --shadow-sm: 0 1px 2px 0 hsl(30 8% 8% / 0.35);
-    --shadow-md: 0 2px 6px -1px hsl(30 8% 8% / 0.40);
-    --shadow-lg: 0 8px 24px -8px hsl(30 8% 8% / 0.50);
-    --surface-elevated: 0 4px 12px -2px hsl(30 8% 8% / 0.45);
-    --surface-floating: 0 8px 24px -4px hsl(30 8% 8% / 0.55);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 2px 6px -1px rgba(0, 0, 0, 0.40);
+    --shadow-lg: 0 8px 24px -8px rgba(0, 0, 0, 0.50);
+    --surface-elevated: 0 4px 12px -2px rgba(0, 0, 0, 0.45);
+    --surface-floating: 0 8px 24px -4px rgba(0, 0, 0, 0.55);
 
-    /* V7: 暗色模式排版温度 */
-    --heading-warm: 30 12% 96%;
-    --heading-warm-secondary: 30 10% 88%;
+    /* V8: 暗色模式 Apple 排版 */
+    --heading-warm: 240 10% 96%;
+    --heading-warm-secondary: 240 8% 88%;
   }
   * { @apply border-border; }
   body { @apply bg-background text-foreground antialiased; font-feature-settings: "tnum"; font-size: 14px; line-height: 1.6; letter-spacing: var(--tracking-cjk-body); }

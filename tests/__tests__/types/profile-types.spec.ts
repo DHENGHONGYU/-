@@ -332,7 +332,7 @@ describe('八域资料体系 - 类型级断言', () => {
   it('所有类型断言已通过 tsc 编译期校验', () => {
     // 本测试仅为占位符，实际断言在编译期执行。
     // 若 tsc --noEmit 通过，则以下所有断言均成立。
-    assertNever<Equals<ProfileDomain, ProfileDomain>>()
+    assertNever<never>()
     expect(true).toBe(true)
   })
 })

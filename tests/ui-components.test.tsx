@@ -185,7 +185,7 @@ describe('Toggle', () => {
   const user = userEvent.setup()
 
   it('应该渲染 children', () => {
-    render(<Toggle>开关</Toggle>)
+    render(<Toggle pressed={false}>开关</Toggle>)
     expect(screen.getByRole('button', { name: '开关' })).toBeInTheDocument()
   })
 
@@ -233,17 +233,17 @@ describe('Toggle', () => {
   })
 
   it('应该apply variant styles correctly', () => {
-    const { rerender } = render(<Toggle variant="default">默认</Toggle>)
+    const { rerender } = render(<Toggle pressed={false} variant="default">默认</Toggle>)
     // variant=default + 未 pressed = bg-secondary（Apple 商务风令牌 v2）
     expect(screen.getByRole('button')).toHaveClass('bg-secondary')
 
-    rerender(<Toggle variant="outline">轮廓</Toggle>)
+    rerender(<Toggle pressed={false} variant="outline">轮廓</Toggle>)
     expect(screen.getByRole('button')).toHaveClass('border')
   })
 
   it('应该apply default control size（THEME_TOKENS.controlSizes.md = h-10）', () => {
     // Toggle 默认使用 THEME_TOKENS.controlSizes.md，不通过 size prop 切换
-    const { rerender } = render(<Toggle>默认控件高度</Toggle>)
+    const { rerender } = render(<Toggle pressed={false}>默认控件高度</Toggle>)
     expect(screen.getByRole('button')).toHaveClass('h-10')
 
     // pressed 态 → bg-primary
@@ -252,13 +252,13 @@ describe('Toggle', () => {
   })
 
   it('应该是 disabled when disabled prop is true', () => {
-    render(<Toggle disabled>禁用</Toggle>)
+    render(<Toggle pressed={false} disabled>禁用</Toggle>)
     expect(screen.getByRole('button')).toBeDisabled()
   })
 
   it('应该forward onClick handler', async () => {
     const handleClick = vi.fn()
-    render(<Toggle onClick={handleClick}>点击</Toggle>)
+    render(<Toggle pressed={false} onClick={handleClick}>点击</Toggle>)
 
     await user.click(screen.getByRole('button'))
     expect(handleClick).toHaveBeenCalled()

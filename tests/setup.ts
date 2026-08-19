@@ -32,7 +32,7 @@ import { eventBus } from '@/lib/eventBus'
 // 既消除崩溃，又不改变任何测试对图表元素的可断言性（图表节点仍渲染）。
 // 若某测试需真实图表行为，可在文件内 vi.mock('lightweight-charts', ...) 覆盖。
 const { __chartChain } = vi.hoisted(() => {
-  const chain = new Proxy(function () {}, {
+  const chain: any = new Proxy(function () {}, {
     get: (_t, prop) => (prop === 'then' ? undefined : chain),
     apply: () => chain,
     construct: () => chain,

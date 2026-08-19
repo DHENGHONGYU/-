@@ -19,7 +19,7 @@
  * @covers_docs [V9-DOC-BACK-012, V9-DOC-BACK-023]
 */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import {
@@ -29,9 +29,9 @@ import {
 } from '@/services/scoring/v6-engine/hallucinationDetector'
 import type {
   HallucinationSample,
-  RAGSnippet,
   LLMCitation,
 } from '@/services/scoring/v6-engine/hallucinationDetector'
+import type { RAGSnippet } from '@/services/scoring/v6-engine/ragRetriever'
 
 // ============================================================
 // Golden Dataset 类型

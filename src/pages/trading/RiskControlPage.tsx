@@ -52,7 +52,7 @@ const RiskControlPage = memo(() => {
       circuitState,
       verdictsCount: verdicts.length,
     })
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])  
 
   const triStateColor =
     triState === 'blocked'

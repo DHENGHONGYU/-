@@ -30,8 +30,9 @@ import { runV6Score, getAllV6Scores } from '@/services/scoring/v6ScoreService'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { ENVELOPE_ACTION, STORE_NAME, MODULE_ID, ENVELOPE_TARGET } from '@/config/dbConfig'
-import { detectExchange, type RealtimeQuote, type KlineBar } from '@/services/input/batchImportParsers'
-import { buildTencentCode } from '@/services/fetcher/directDataAPIError'
+import { detectExchange } from '@/services/input/batchImportParsers'
+import { type KlineBar } from '@/services/data-collector/directDataAPI'
+import { buildTencentCode, type StockQuote } from '@/services/fetcher/directDataAPIError'
 import { parseTencentQuote } from '@/services/fetcher/tencentQuoteProvider'
 import { MOCK_STOCK_LIBRARY } from '@/services/input/mockStockLibrary'
 import type { Stock } from '@/data/types'
@@ -222,20 +223,17 @@ it(
 
       // 采集：实时行情（真实腾讯）
       const tq = performance.now()
-      let quote: RealtimeQuote | null = null
+      let quote: StockQuote | null = null
       let quoteOk = false
-      let quoteFailed = false
       try {
         const q = await fetchRealQuote(code)
-        quote = (q as unknown as RealtimeQuote) ?? null
+        quote = q ?? null
         quoteOk = !!quote && Number.isFinite(quote.price) && quote.price > 0
         if (!quoteOk) {
-          quoteFailed = true
           realQuoteFails++
         }
         s2.quoteSource = 'tencent-real'
       } catch (e) {
-        quoteFailed = true
         realQuoteFails++
         s2.quoteError = String(e)
       }
@@ -326,7 +324,7 @@ it(
           key: code,
           source: MODULE_ID.pool,
         })
-        stockUpdateOk = st.success && !!st.data && Number.isFinite(st.data.price) && st.data.price > 0
+        stockUpdateOk = st.success && !!st.data && Number.isFinite(st.data.price) && st.data.price! > 0
       } catch (e) {
         s2.enrichError = String(e)
       }

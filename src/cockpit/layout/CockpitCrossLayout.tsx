@@ -1,34 +1,33 @@
 /**
  * @module cockpit/layout/CockpitCrossLayout
- * @description 驾驶舱纵横交叉布局骨架
+ * @description 驾驶舱主布局（投资者决策三页模式）
  *
- * 纵轴（业务域）：research | market | ai | portfolio
- * 横轴（视角）：overview | analysis | signal | risk
+ * 整合原双视图（结果视图/技术矩阵）与四用户场景分散区块，
+ * 按投资使用者决策路径重组为三页 Tab：
  *
- * 引用现有组件：
- * - Tabs / TabsList / TabsTrigger（`@/components/molecules/Tabs`）→ 视角切换
- * - COCKPIT_LAYOUT 间距令牌（`@/constants/cockpit.constants`）
- * - WidgetDomain / WidgetPerspective 类型（`@/types/modules/widget.types`）
+ *   1. 🎯 今日决策   — 信号、事件、情绪（盘前需不需要动）
+ *   2. 💼 我的组合   — 持仓、盈亏、风险、自选（我的资产怎么样）
+ *   3. 🧭 市场与机会 — 全景、策略池、AI 深度工具（下一步做什么）
  *
- * 设计原则：不重写原子组件，仅做排列组合与重新引用
+ * 保留的基础设施：
+ * - CrossMatrixOverview（域×视角交叉矩阵）：以「钻取 → 矩阵」方式保留
+ * - Tabs / TabsList / TabsTrigger：用于视角切换（在市场页交叉钻取内）
+ * - 所有间距令牌（COCKPIT_LAYOUT）
  */
 
 import { useMemo, useState, type ReactNode } from 'react'
-import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Tabs, TabsList, TabsTrigger } from '@/components/molecules/Tabs'
-import { COCKPIT_LAYOUT, COCKPIT_CROSS_DOMAINS, COCKPIT_CROSS_PERSPECTIVES, DRAWER_WIDGETS } from '@/constants/cockpit.constants'
+import {
+  COCKPIT_LAYOUT,
+  COCKPIT_CROSS_DOMAINS,
+  COCKPIT_CROSS_PERSPECTIVES,
+  DRAWER_WIDGETS,
+} from '@/constants/cockpit.constants'
 import type { WidgetConfig, WidgetDomain, WidgetPerspective } from '@/types/modules/widget.types'
 import { widgetRegistry } from '@/cockpit/core/widgetRegistry'
 import { CrossMatrixOverview } from './CrossMatrixOverview'
+import { DecisionPagesOverview } from './DecisionPagesOverview'
 import { WidgetSheetDrawer } from './WidgetSheetDrawer'
-
-// ============================================================
-// 常量定义
-// ============================================================
-
-// 业务域/视角展示元数据统一从 cockpit.constants.ts 导入（COCKPIT_CROSS_DOMAINS / COCKPIT_CROSS_PERSPECTIVES），
-// 避免与 CrossMatrixOverview 双处定义漂移
 
 // ============================================================
 // 组件 Props
@@ -39,7 +38,7 @@ export interface CockpitCrossLayoutProps {
   instances: WidgetConfig[]
   /** 单个 Widget 渲染回调（由 CockpitShell 传入 WidgetWrapper） */
   renderWidget: (instance: WidgetConfig) => ReactNode
-  /** 是否显示矩阵总览首屏（默认 true） */
+  /** 矩阵总览在钻取模式下是否默认展开（默认 true） */
   showMatrixOverview?: boolean
   /** 矩阵单元格点击回调 */
   onMatrixCellClick?: (domain: WidgetDomain, perspective: WidgetPerspective) => void
@@ -54,7 +53,7 @@ export interface CockpitCrossLayoutProps {
 /**
  * CockpitCrossLayout
  *
- * 纵横交叉布局：左轨业务域 × 顶部视角 Tab → 交叉点 Widget 网格
+ * 顶部三 Tab（决策页）+ 钻取抽屉保留技术矩阵视图
  */
 export function CockpitCrossLayout({
   instances,
@@ -63,11 +62,12 @@ export function CockpitCrossLayout({
   onMatrixCellClick,
   className,
 }: CockpitCrossLayoutProps) {
+  // —— 技术钻取：矩阵模式状态（仅当用户从「市场与机会 → 钻取工具 → 打开矩阵」时呈现）
   const [activeDomain, setActiveDomain] = useState<WidgetDomain>('market')
   const [activePerspective, setActivePerspective] = useState<WidgetPerspective>('overview')
   const [matrixVisible, setMatrixVisible] = useState(showMatrixOverview)
-  /** V9: 移动端左轨折叠状态 */
-  const [mobileRailOpen, setMobileRailOpen] = useState(false)
+  // 是否显示矩阵区块本身（三页模式下默认折叠，用户需要技术分析时可展开）
+  const [drillMatrixOpen, setDrillMatrixOpen] = useState(false)
 
   /** 从 widgetRegistry 获取每个实例的 domain/perspective 元数据 */
   const instanceMetaMap = useMemo(() => {
@@ -95,7 +95,7 @@ export function CockpitCrossLayout({
     return counts
   }, [instances, instanceMetaMap])
 
-  /** 按域×视角分组的实例标题（用于矩阵单元格 tooltip 一眼洞悉） */
+  /** 按域×视角分组的实例标题（用于矩阵单元格 tooltip） */
   const matrixTitles = useMemo(() => {
     const titles = new Map<string, string[]>()
     for (const inst of instances) {
@@ -110,7 +110,7 @@ export function CockpitCrossLayout({
     return titles
   }, [instances, instanceMetaMap])
 
-  /** 各业务域 Widget 计数（左轨徽标，预计算避免每次 render 重算） */
+  /** 各业务域 Widget 计数 */
   const domainCounts = useMemo(() => {
     const counts = new Map<WidgetDomain, number>()
     for (const inst of instances) {
@@ -149,199 +149,171 @@ export function CockpitCrossLayout({
   }
 
   return (
-    <div className={cn('flex h-full', className)}>
-      {/* ─── 移动端左轨切换按钮 ─── */}
-      <button
-        type="button"
-        onClick={() => setMobileRailOpen((v) => !v)}
-        className={cn(
-          'absolute left-2 top-2 z-30 rounded-md p-2 md:hidden',
-          'bg-card border shadow-sm hover:bg-muted',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-        )}
-        aria-label={mobileRailOpen ? '关闭业务域导航' : '打开业务域导航'}
-      >
-        {mobileRailOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-      </button>
+    <div className={cn('flex h-full min-h-[600px] flex-col', className)}>
+      {/* ───── 决策三页（主内容） ───── */}
+      <div className="flex-1 overflow-y-auto">
+        <DecisionPagesOverview instances={instances} renderWidget={renderWidget} />
 
-      {/* ─── 移动端左轨遮罩 ─── */}
-      {mobileRailOpen && (
-        <div
-          className="fixed inset-0 z-20 bg-black/20 md:hidden"
-          onClick={() => setMobileRailOpen(false)}
-          aria-hidden="true"
-        />
-      )}
+        {/* ───── 技术矩阵钻取区（折叠，保留给高级用户 / 调试） ───── */}
+        <section className="mt-10 rounded-xl border border-dashed bg-card/50">
+          <button
+            type="button"
+            onClick={() => setDrillMatrixOpen((v) => !v)}
+            className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left hover:bg-muted/40"
+            aria-expanded={drillMatrixOpen}
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-lg">🔬</span>
+              <span className="text-sm font-semibold">技术钻取：业务域 × 视角 矩阵</span>
+              <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
+                高级
+              </span>
+            </div>
+            <span className="text-xs text-muted-foreground">
+              {drillMatrixOpen ? '收起' : '展开'}
+            </span>
+          </button>
 
-      {/* ───── 左轨：业务域 Rail ───── */}
-      <aside
-        className={cn(
-          'flex w-48 shrink-0 flex-col border-r bg-card/50',
-          'hidden md:flex',
-          mobileRailOpen && 'fixed inset-y-0 left-0 z-20 flex md:hidden w-56',
-        )}
-        style={{ paddingTop: COCKPIT_LAYOUT.SECTION_GAP }}
-      >
-        {/* 矩阵总览切换 */}
-        <button
-          type="button"
-          aria-pressed={matrixVisible}
-          onClick={() => setMatrixVisible((v) => !v)}
-          className={cn(
-            'mx-3 mb-3 rounded-md px-3 py-2 text-left text-xs font-medium transition-colors',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-            matrixVisible
-              ? 'bg-primary/10 text-primary'
-              : 'text-muted-foreground hover:bg-muted',
-          )}
-        >
-          {matrixVisible ? '◉ 矩阵总览' : '○ 矩阵总览'}
-        </button>
-
-        {/* 域列表 */}
-        <nav className="flex flex-col gap-1 px-3">
-          {COCKPIT_CROSS_DOMAINS.map((domain) => {
-            const isActive = activeDomain === domain.id
-            const domainCount = domainCounts.get(domain.id) ?? 0
-
-            return (
-              <button
-                key={domain.id}
-                type="button"
-                aria-pressed={isActive}
-                onClick={() => setActiveDomain(domain.id)}
-                className={cn(
-                  'flex items-center justify-between rounded-md px-3 py-2.5 text-left text-sm transition-all',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-                  isActive
-                    ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'text-foreground hover:bg-muted',
-                )}
-              >
-                <span className="flex items-center gap-2">
-                  <span className="text-base">{domain.icon}</span>
-                  {domain.label}
-                </span>
-                <span
-                  className={cn(
-                    'rounded-full px-1.5 py-0.5 text-xs',
-                    isActive ? 'bg-primary-foreground/20' : 'bg-muted',
-                  )}
-                >
-                  {domainCount}
-                </span>
-              </button>
-            )
-          })}
-        </nav>
-
-        {/* 底部说明 */}
-        <div className="mt-auto p-3 text-xs text-muted-foreground">
-          <p>纵轴：业务域</p>
-          <p>横轴：视角</p>
-          <p className="mt-1">点击矩阵总览可快速定位</p>
-        </div>
-      </aside>
-
-      {/* ───── 主内容区 ───── */}
-      <div
-        className="flex flex-1 flex-col overflow-hidden"
-        style={{ paddingLeft: COCKPIT_LAYOUT.ZONE_PADDING }}
-      >
-        {/* 视角 Tab（横轴） */}
-        <Tabs
-          value={activePerspective}
-          onValueChange={(v) => setActivePerspective(v as WidgetPerspective)}
-          className="shrink-0"
-        >
-          <TabsList className="h-9">
-            {COCKPIT_CROSS_PERSPECTIVES.map((p) => {
-              const key = `${activeDomain}:${p.id}`
-              const count = matrixCounts.get(key) ?? 0
-              return (
-                <TabsTrigger
-                  key={p.id}
-                  value={p.id}
-                  disabled={count === 0}
-                  className="gap-1.5 text-xs"
-                >
-                  {p.label}
-                  {count > 0 && (
-                    <span className="rounded-full bg-muted-foreground/20 px-1 text-[10px]">
-                      {count}
-                    </span>
-                  )}
-                </TabsTrigger>
-              )
-            })}
-          </TabsList>
-        </Tabs>
-
-        {/* 内容区域：矩阵总览 or Widget 网格 */}
-        <div
-          className="flex-1 overflow-y-auto"
-          style={{ paddingTop: COCKPIT_LAYOUT.SECTION_HEADER_GAP }}
-        >
-          {matrixVisible ? (
-            <CrossMatrixOverview
-              matrixCounts={matrixCounts}
-              matrixTitles={matrixTitles}
-              activeDomain={activeDomain}
-              activePerspective={activePerspective}
-              onCellClick={handleMatrixClick}
-            />
-          ) : crossInstances.length === 0 ? (
-            <div className="flex h-full items-center justify-center text-muted-foreground">
-              <div className="text-center">
-                <p className="text-lg font-medium">当前交叉点无 Widget</p>
-                <p className="mt-1 text-sm">
-                  {COCKPIT_CROSS_DOMAINS.find((d) => d.id === activeDomain)?.label} ×{' '}
-                  {COCKPIT_CROSS_PERSPECTIVES.find((p) => p.id === activePerspective)?.label}
-                </p>
+          {drillMatrixOpen && (
+            <div className="border-t p-4">
+              {/* 域与视角快速切换条 */}
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                <div className="flex flex-wrap gap-1">
+                  {COCKPIT_CROSS_DOMAINS.map((domain) => {
+                    const isActive = activeDomain === domain.id
+                    const cnt = domainCounts.get(domain.id) ?? 0
+                    return (
+                      <button
+                        key={domain.id}
+                        type="button"
+                        aria-pressed={isActive}
+                        onClick={() => setActiveDomain(domain.id)}
+                        className={cn(
+                          'flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs transition-all',
+                          isActive
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-muted text-foreground hover:bg-muted/70',
+                        )}
+                      >
+                        <span>{domain.icon}</span>
+                        <span>{domain.label}</span>
+                        <span className={cn(
+                          'rounded-full px-1 text-[10px]',
+                          isActive ? 'bg-primary-foreground/20' : 'bg-background/80',
+                        )}>
+                          {cnt}
+                        </span>
+                      </button>
+                    )
+                  })}
+                </div>
+                <div className="mx-1 hidden h-5 w-px bg-border sm:block" />
+                <div className="flex flex-wrap gap-1">
+                  {COCKPIT_CROSS_PERSPECTIVES.map((p) => {
+                    const key = `${activeDomain}:${p.id}`
+                    const cnt = matrixCounts.get(key) ?? 0
+                    const isActive = activePerspective === p.id
+                    return (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => setActivePerspective(p.id)}
+                        className={cn(
+                          'rounded-md px-2.5 py-1.5 text-xs transition-all',
+                          isActive
+                            ? 'bg-primary/15 text-primary ring-1 ring-primary/30'
+                            : 'bg-muted text-foreground hover:bg-muted/70',
+                        )}
+                        disabled={cnt === 0}
+                      >
+                        {p.label}
+                        {cnt > 0 && (
+                          <span className="ml-1 rounded-full bg-background/80 px-1 text-[10px] text-muted-foreground">
+                            {cnt}
+                          </span>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
                 <button
                   type="button"
-                  onClick={() => setMatrixVisible(true)}
-                  className="mt-3 text-sm text-primary hover:underline"
+                  onClick={() => setMatrixVisible((v) => !v)}
+                  className={cn(
+                    'ml-auto rounded-md px-2.5 py-1.5 text-xs font-medium',
+                    matrixVisible
+                      ? 'bg-primary/10 text-primary ring-1 ring-primary/20'
+                      : 'text-muted-foreground hover:bg-muted',
+                  )}
                 >
-                  查看矩阵总览选择其他交叉点
+                  {matrixVisible ? '◉ 矩阵总览' : '○ 矩阵总览'}
                 </button>
               </div>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {/* 网格型 Widget */}
-              {gridInstances.length > 0 && (
-                <div
-                  className="grid grid-cols-1 gap-4 sm:grid-cols-2"
-                  style={{ gap: COCKPIT_LAYOUT.WIDGET_GAP }}
-                >
-                  {gridInstances.map((instance) => (
-                    <div key={instance.instanceId} className="min-h-0">
-                      {renderWidget(instance)}
-                    </div>
-                  ))}
-                </div>
-              )}
 
-              {/* 抽屉型 Widget 触发卡片 */}
-              {drawerInstances.length > 0 && (
-                <div
-                  className="grid grid-cols-1 gap-3 sm:grid-cols-2"
-                  style={{ gap: COCKPIT_LAYOUT.WIDGET_GAP }}
-                >
-                  {drawerInstances.map((instance) => (
-                    <WidgetSheetDrawer
-                      key={instance.instanceId}
-                      instance={instance}
-                      renderWidget={renderWidget}
-                    />
-                  ))}
-                </div>
-              )}
+              {/* 钻取区内容 */}
+              <div style={{ paddingTop: COCKPIT_LAYOUT.SECTION_HEADER_GAP }}>
+                {matrixVisible ? (
+                  <CrossMatrixOverview
+                    matrixCounts={matrixCounts}
+                    matrixTitles={matrixTitles}
+                    activeDomain={activeDomain}
+                    activePerspective={activePerspective}
+                    onCellClick={handleMatrixClick}
+                  />
+                ) : crossInstances.length === 0 ? (
+                  <div className="flex h-full items-center justify-center p-8 text-muted-foreground">
+                    <div className="text-center">
+                      <p className="text-lg font-medium">当前交叉点无组件</p>
+                      <p className="mt-1 text-sm">
+                        {COCKPIT_CROSS_DOMAINS.find((d) => d.id === activeDomain)?.label} ×{' '}
+                        {COCKPIT_CROSS_PERSPECTIVES.find((p) => p.id === activePerspective)?.label}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setMatrixVisible(true)}
+                        className="mt-3 text-sm text-primary hover:underline"
+                      >
+                        打开矩阵总览选择其他交叉点
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {gridInstances.length > 0 && (
+                      <div
+                        className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+                        style={{ gap: COCKPIT_LAYOUT.WIDGET_GAP }}
+                      >
+                        {gridInstances.map((instance) => (
+                          <div key={instance.instanceId} className="min-h-0">
+                            {renderWidget(instance)}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {drawerInstances.length > 0 && (
+                      <div
+                        className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+                        style={{ gap: COCKPIT_LAYOUT.WIDGET_GAP }}
+                      >
+                        {drawerInstances.map((instance) => (
+                          <WidgetSheetDrawer
+                            key={instance.instanceId}
+                            instance={instance}
+                            renderWidget={renderWidget}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           )}
-        </div>
+        </section>
       </div>
     </div>
   )
 }
+
+export default CockpitCrossLayout

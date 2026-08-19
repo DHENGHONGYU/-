@@ -86,7 +86,7 @@ function HoldingsRow({ holding, onAction }: HoldingsRowProps): React.JSX.Element
       <div className="text-right tabular-nums">{formatPercent(holding.marketValueRatio * 100)}</div>
       {/* 策略类型标签 */}
       <div>
-        {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition */}
+        { }
         {strategyConfig ? (
           <Badge
             variant="outline"

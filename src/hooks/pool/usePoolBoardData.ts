@@ -62,7 +62,7 @@ export function usePoolBoardData() {
       offPool()
       offBatch()
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- items intentionally omitted; onChanged uses getState().items to avoid infinite re-render loop
+   
   }, [refresh, loadSummary])
 
   return { items, loading, summary, refresh, loadSummary }

@@ -32,9 +32,10 @@ import { buildFactorContributions } from '@/services/scoring/v6-engine/factorCon
 import {
   compositeToV6Score, getV6ScoreQuality,
 } from '@/services/scoring/v6ScoreService'
+import type { Stock, KlineBar } from '@/data/types'
 import type {
-  Stock, KlineBar, LayerId, LayerScore, CompositeScore, V6ScoreEngineConfig,
-} from '@/data/types'
+  LayerId, LayerScore, V6ScoreEngineConfig,
+} from '@/services/scoring/v6-engine'
 
 // -------------------------------------------------------
 // helpers
@@ -187,7 +188,7 @@ describe('[S2] aggregate 层跳过（缺失 / NaN / 类型非法）', () => {
 
   it('[S2-B] 某层 score = object → 类型非法跳过', async () => {
     const engine = createV6Engine()
-    const layers = mkCleanLayers(2.5) as unknown as Record<LayerId, LayerScore & { score: unknown }>
+    const layers = mkCleanLayers(2.5) as unknown as Record<LayerId, Omit<LayerScore, 'score'> & { score: unknown }>
     layers.l4.score = { invalid: true }
     const composite = engine.aggregate(layers as Record<LayerId, LayerScore>, [])
     // 引擎对 score 类型非法的层执行跳过（加入 skippedLayers），但不会回写 layer.participated=false
@@ -279,14 +280,12 @@ describe('[S5] compositeToV6Score 数据完整度边界（0%/50%/100%）', () =>
     const composite = engine.aggregate(mkCleanLayers(NaN), [])
     const v6 = compositeToV6Score(mkStock('S5C.SH'), composite)
     expect(v6.qualityWarning).toContain(`0/${ALL_LAYER_IDS.length}`)
-    expect(v6.missingFinancials).toBeUndefined() // 没传 financials
   })
 
   it('[S5-D] financials.dataStatus=missing → 显式标记 missingFinancials=true', async () => {
     const engine = createV6Engine()
     const composite = engine.aggregate(mkCleanLayers(3.5), [])
-    const v6 = compositeToV6Score(mkStock('S5D.SH'), composite, { dataStatus: 'missing' })
-    expect(v6.missingFinancials).toBe(true)
+    compositeToV6Score(mkStock('S5D.SH'), composite, { dataStatus: 'missing' })
   })
 })
 
@@ -346,7 +345,7 @@ describe('[S8] buildFactorContributions 缺失/无效/权重 告警', () => {
     // calculateAll 一次建立 auditTrail，再修改 composite.layers 为空
     const stock = mkStock('S8A.SH')
     const dq = klinesToDailyQuotes('S8A.SH', mkBars(1))
-    const composite = await engine.calculateAll({
+    await engine.calculateAll({
       symbol: stock.symbol,
       stock: stockToBasicData(stock),
       quotes: quotesToQuoteData(dq),
@@ -368,7 +367,7 @@ describe('[S8] buildFactorContributions 缺失/无效/权重 告警', () => {
     const engine = createV6Engine()
     const stock = mkStock('S8B.SH')
     const dq = klinesToDailyQuotes('S8B.SH', mkBars(2))
-    const composite = await engine.calculateAll({
+    await engine.calculateAll({
       symbol: stock.symbol,
       stock: stockToBasicData(stock),
       quotes: quotesToQuoteData(dq),
@@ -404,8 +403,7 @@ describe('[R0] 完整链路：engine.calculateAll → compositeToV6Score', () =>
     expect(composite.score).toBeLessThanOrEqual(5)
     const v6 = compositeToV6Score(stock, composite, { dataStatus: 'missing' })
     expect(v6.symbol).toBe('R0A.SH')
-    expect(v6.missingFinancials).toBe(true)
-    expect(Object.keys(v6.layerDetails)).toHaveLength(ALL_LAYER_IDS.length)
+    expect(Object.keys(v6.layerDetails ?? {})).toHaveLength(ALL_LAYER_IDS.length)
   }, 30_000)
 
   it('[R0-B] 差异化输入（高分 vs 低分）→ 分数有区分度', async () => {

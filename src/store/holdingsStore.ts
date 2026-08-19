@@ -197,13 +197,13 @@ export const useHoldingsStore = create<HoldingsState>((set) => ({
     }
   },
 
-  // eslint-disable-next-line @typescript-eslint/require-await -- placeholder async for API compatibility
+   
   executeTrade: async (_opts) => {
     logger.info('[holdingsStore] executeTrade called', { opts: _opts })
     return { success: true, message: 'Trade executed' }
   },
 
-  // eslint-disable-next-line @typescript-eslint/require-await -- placeholder async for API compatibility
+   
   exportCSV: async (_params) => {
     set((s) => ({ loading: { ...s.loading, isExporting: true } }))
     try {

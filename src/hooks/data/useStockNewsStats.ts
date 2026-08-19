@@ -21,7 +21,7 @@ export function useStockNewsStats(symbol: string): {
     setLoading(true)
     void (async () => {
       const result = await getStockNewsStats(symbol)
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+       
       if (!cancelled) {
         setStats(result)
         setLoading(false)

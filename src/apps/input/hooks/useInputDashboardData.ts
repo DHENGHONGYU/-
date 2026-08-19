@@ -6,6 +6,7 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { checkFetcherHealth } from '@/services/fetcher/fetcherService'
 import { fetchBasicDataUseCase } from '@/services/useCase/fetcherOrchestrator.useCase'
+import { syncIntentionToResearch } from '@/services/pool/syncIntentionToResearch'
 import { useIntentionPoolStore, getIntentionPoolGroups } from '@/store/intentionPoolStore'
 import { getLogger } from '@/lib/logger'
 import { createDebugLogger } from '@/lib/debugToolkit'
@@ -95,8 +96,13 @@ export function useInputDashboardData() {
         hasPrice: result.data?.price,
         elapsedMs: result.data ? 'completed' : 'n/a',
       })
-      if (!result.success) {
+      const ok = result.success
+      if (!ok) {
         logger.warn('[InputDashboard] 采集失败', { symbol, error: result.error })
+      } else {
+        // 采集高质量完成 → 同步晋升到研究池（pool-board「意向候选池」可见）
+        const promoted = await syncIntentionToResearch(symbol)
+        logger.info('[InputDashboard] 采集完成并触发晋升', { symbol, collected: ok, promoted })
       }
       debug.log('handleCollectStock 刷新前', { symbol })
       await refresh()
@@ -190,7 +196,16 @@ export function useInputDashboardData() {
         failCount,
         detail,
       })
-      logger.info('[InputDashboard] 批量采集完成', { successCount, failCount, total: toCollect.length })
+
+      // 采集成功的部分 → 同步晋升到研究池（pool-board「意向候选池」可见）
+      const promotedSymbols: string[] = []
+      for (const r of results) {
+        if (r.status === 'fulfilled' && r.value.result.success) {
+          const ok = await syncIntentionToResearch(r.value.symbol)
+          if (ok) promotedSymbols.push(r.value.symbol)
+        }
+      }
+      logger.info('[InputDashboard] 批量采集完成', { successCount, failCount, total: toCollect.length, promoted: promotedSymbols.length })
       debug.log('handleCollectAll 刷新前候选池', {
         poolSize: allStocks.length,
       })

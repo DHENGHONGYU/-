@@ -13,6 +13,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { placeBuyOrder, placeSellOrder } from '@/services/trading/use-cases/placeOrder'
+import type { Order } from '@/data/types/types.order'
 
 // Mock tradingService 中的 createOrderWithRiskCheck
 vi.mock('@/services/trading/tradingService', () => ({
@@ -22,12 +23,14 @@ vi.mock('@/services/trading/tradingService', () => ({
 import { createOrderWithRiskCheck } from '@/services/trading/tradingService'
 
 describe('Trading Use Cases - placeOrder', () => {
-  const mockOrder = {
+  const mockOrder: Order = {
     id: 'order-123',
     symbol: '600519.SH',
     direction: 'buy',
     quantity: 100,
     price: 1000,
+    amount: 100 * 1000,
+    accountType: 'paper',
     status: 'pending',
     createdAt: Date.now(),
   }
@@ -76,7 +79,7 @@ describe('Trading Use Cases - placeOrder', () => {
         direction: 'sell', // 故意传错
       })
 
-      const callArg = vi.mocked(createOrderWithRiskCheck).mock.calls[0][0]
+      const callArg = vi.mocked(createOrderWithRiskCheck).mock.calls[0]![0]
       expect(callArg.direction).toBe('buy')
     })
 
@@ -127,7 +130,7 @@ describe('Trading Use Cases - placeOrder', () => {
         direction: 'buy',
       })
 
-      const callArg = vi.mocked(createOrderWithRiskCheck).mock.calls[0][0]
+      const callArg = vi.mocked(createOrderWithRiskCheck).mock.calls[0]![0]
       expect(callArg.symbol).toBe('000001.SZ')
     })
   })
@@ -172,7 +175,7 @@ describe('Trading Use Cases - placeOrder', () => {
         direction: 'buy', // 故意传错
       })
 
-      const callArg = vi.mocked(createOrderWithRiskCheck).mock.calls[0][0]
+      const callArg = vi.mocked(createOrderWithRiskCheck).mock.calls[0]![0]
       expect(callArg.direction).toBe('sell')
     })
 

@@ -19,12 +19,14 @@ import { db } from '@/data/db'
 import { useResearchPoolStore } from '@/store/researchPoolStore'
 import { DATA_SOURCE } from '@/config/dbConfig'
 import { ObservationPoolReviewer } from '@/services/orchestration/observationPoolReviewer'
+import type { PipelineScorer } from '@/services/orchestration/researchPipelineOrchestrator'
+import type { V6Score } from '@/data/types/types.score'
 
 const THRESHOLD = 3.0
 
 interface CaseFixture {
   watchlist: { symbol: string; name: string }[]
-  scorer: { run: (symbol: string) => Promise<{ success: boolean; data: { score: number } }> }
+  scorer: PipelineScorer
 }
 
 // 构造一组用例：highSyms 达门槛（THRESHOLD+1），lowSyms 未达（THRESHOLD-1）
@@ -34,9 +36,16 @@ function buildCase(highSyms: string[], lowSyms: string[]): CaseFixture {
   return {
     watchlist,
     scorer: {
-      run: async (symbol: string) => ({
+      run: async (symbol: string): Promise<{ success: boolean; data: V6Score }> => ({
         success: true,
-        data: { score: highSet.has(symbol) ? THRESHOLD + 1 : THRESHOLD - 1 },
+        data: {
+          symbol,
+          score: highSet.has(symbol) ? THRESHOLD + 1 : THRESHOLD - 1,
+          factors: {},
+          algorithmVersion: 'test',
+          calculatedAt: Date.now(),
+          dataVersion: 1,
+        },
       }),
     },
   }

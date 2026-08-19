@@ -65,7 +65,7 @@ vi.mock('@/services/data-collector/qualityMetricsCollector', () => ({
 vi.mock('@/services/data-collector/collectionPipeline', async (importOriginal) => {
   const actual = await importOriginal()
   return {
-    ...actual,
+    ...(actual as object),
     runBatchTrace: vi.fn().mockResolvedValue([]),
     createDefaultCollectionConfig: () => ({ dimensions: [], timeout: 30000 }),
   }
@@ -74,7 +74,7 @@ vi.mock('@/services/data-collector/collectionPipeline', async (importOriginal) =
 vi.mock('@/services/analysis/industryAnalysisService', async (importOriginal) => {
   const actual = await importOriginal()
   return {
-    ...actual,
+    ...(actual as object),
     runFullIndustryAnalysis: mockRunFullIndustryAnalysis,
     invalidateIndustryCache: vi.fn(),
     getCachedV4Analyses: vi.fn(() => null),
@@ -84,7 +84,7 @@ vi.mock('@/services/analysis/industryAnalysisService', async (importOriginal) =>
 vi.mock('@/services/scoring/v6ScoreService', async (importOriginal) => {
   const actual = await importOriginal()
   return {
-    ...actual,
+    ...(actual as object),
     runV6ScoreBatch: mockRunV6ScoreBatch,
     runV6Score: vi.fn(),
   }
@@ -93,7 +93,7 @@ vi.mock('@/services/scoring/v6ScoreService', async (importOriginal) => {
 vi.mock('@/services/scoring/v6-engine', async (importOriginal) => {
   const actual = await importOriginal()
   return {
-    ...actual,
+    ...(actual as object),
     quotesToQuoteData: (quotes: { history?: Array<{ close?: number }> }) => {
       const history = quotes.history ?? []
       const latestClose = history[history.length - 1]?.close ?? 0
@@ -196,8 +196,8 @@ function makeMockImpl(
 
 describe('QualityGate P0-3 异常场景', () => {
   let qualityGate: import('@/services/orchestration/qualityGate').QualityGate
-  let eventBus: import('@/lib/eventBus').EventBus
-  let EVENT_NAMES: import('@/constants/store-channels.constants').EventNames
+  let eventBus: typeof import('@/lib/eventBus').eventBus
+  let EVENT_NAMES: typeof import('@/constants/store-channels.constants').EVENT_NAMES
 
   beforeEach(async () => {
     vi.clearAllMocks()

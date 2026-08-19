@@ -12,8 +12,10 @@ import {
   ArrowUp,
   ArrowDown,
   Search,
+  Gauge,
 } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { PageContainer } from '@/components/templates/PageContainer'
 import { EmptyState } from '@/components/molecules/EmptyState'
@@ -27,6 +29,7 @@ import { Currency } from '@/components/atoms/Currency'
 import { Percent } from '@/components/atoms/Percent'
 import { formatLargeNumber } from '@/lib/precision'
 import { mcpBridge } from '@/mcp'
+import { cn } from '@/lib/utils'
 import type { TradingSignal } from '@/services/trading/signalGenerator'
 
 interface FeatureCardProps {
@@ -92,11 +95,11 @@ const SIGNAL_DIRECTION_LABEL: Record<string, string> = {
   hold: '持有信号',
 }
 
-const SIGNAL_DIRECTION_COLOR: Record<string, string> = {
-  buy: 'hsl(var(--stock-up))',
-  sell: 'hsl(var(--stock-down))',
-  watch: 'hsl(var(--warning))',
-  hold: 'hsl(var(--muted-foreground))',
+const SIGNAL_DIRECTION_CLS: Record<string, string> = {
+  buy: 'text-success bg-success/10 border-success/30',
+  sell: 'text-danger bg-danger/10 border-danger/30',
+  watch: 'text-warning bg-warning/10 border-warning/30',
+  hold: 'text-muted-foreground bg-muted border-border/50',
 }
 
 // ============================================================
@@ -112,8 +115,6 @@ function formatTime(ts: number): string {
  * 系统状态总览卡片
  */
 function SystemStatusOverview(): React.JSX.Element {
-  const isMobile = useMediaQuery('(max-width: 767px)')
-  void isMobile
   const poolItems = useIntentionPoolStore((s) => s.items)
   const signals = useTradingStore((s) => s.signals)
   const taskStatuses = useCollectionRuntimeStore((s) => s.taskStatuses)
@@ -173,23 +174,22 @@ function SystemStatusOverview(): React.JSX.Element {
   ], [poolItems.length, signals.length, taskCount, completedTasks, fetcherOk])
 
   return (
-    <section className={`grid grid-cols-2 gap-4 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+    <section className="grid grid-cols-2 gap-5 md:grid-cols-4">
       {statusCards.map((s) => {
         const Icon = s.icon
         return (
           <Link
             key={s.label}
             to={s.to}
-            className="flex flex-col gap-2 rounded-lg p-5 bg-card"
-            style={{ boxShadow: 'var(--shadow-sm)' }}
+            className="group flex flex-col gap-2.5 rounded-xl border border-border/40 bg-card p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
           >
-            <div className={`flex h-8 w-8 items-center justify-center rounded-md ${s.bgColor} ${s.color}`}>
-              <Icon className="h-4 w-4" />
+            <div className={cn('flex h-9 w-9 items-center justify-center rounded-lg', s.bgColor, s.color)}>
+              <Icon className="h-4.5 w-4.5" />
             </div>
-            <p className="mt-1 font-bold font-mono text-foreground" style={{ fontSize: 'var(--fs-display)', lineHeight: 'var(--lh-tight)' }}>
+            <p className="mt-1 font-mono text-3xl font-bold text-foreground tracking-tight">
               {s.value}
             </p>
-            <p className="text-sm text-muted-foreground">{s.label}</p>
+            <p className="text-[13px] font-medium text-foreground">{s.label}</p>
             <p className="text-xs text-muted-foreground">{s.hint}</p>
           </Link>
         )
@@ -202,7 +202,6 @@ function SystemStatusOverview(): React.JSX.Element {
  * 组合总览 Hero —— 从 useTradingStore + useOrderStore 读取真实数据
  */
 function PortfolioHero(): React.JSX.Element {
-  const isMobile = useMediaQuery('(max-width: 767px)')
   const portfolio = useTradingStore((s) => s.portfolio)
   const portfolioLoading = useTradingStore((s) => s.portfolioLoading)
   const riskMetrics = useOrderStore((s) => s.riskMetrics)
@@ -218,7 +217,7 @@ function PortfolioHero(): React.JSX.Element {
     todayPnL,
     todayPnLPercent,
     todayIsUp,
-    todayColor,
+    todayCls,
   } = useMemo(() => {
     const pnl = hasPortfolio ? pnlSummary.totalUnrealizedPnl : 0
     const pnlPct = totalAssets > 0 ? (pnl / totalAssets) * 100 : 0
@@ -227,7 +226,7 @@ function PortfolioHero(): React.JSX.Element {
       todayPnL: pnl,
       todayPnLPercent: pnlPct,
       todayIsUp: isUp,
-      todayColor: isUp ? 'hsl(var(--stock-up))' : 'hsl(var(--stock-down))',
+      todayCls: isUp ? 'text-stock-up' : 'text-stock-down',
     }
   }, [hasPortfolio, pnlSummary.totalUnrealizedPnl, totalAssets])
 
@@ -262,12 +261,9 @@ function PortfolioHero(): React.JSX.Element {
 
   if (portfolioLoading) {
     return (
-      <section
-        className="mb-6 rounded-lg p-6 bg-card"
-        style={{ boxShadow: 'var(--shadow-sm)' }}
-      >
-        <Skeleton variant="text" className="h-4 w-24 mb-4" />
-        <Skeleton variant="text" className="h-8 w-48 mb-2" />
+      <section className="rounded-xl border border-border/40 bg-card p-6 shadow-sm">
+        <Skeleton variant="text" className="mb-4 h-4 w-24" />
+        <Skeleton variant="text" className="mb-2 h-8 w-48" />
         <Skeleton variant="text" className="h-5 w-32" />
       </section>
     )
@@ -275,10 +271,16 @@ function PortfolioHero(): React.JSX.Element {
 
   if (!hasPortfolio && !hasPositions) {
     return (
-      <section
-        className="mb-6 rounded-lg p-6 bg-card"
-        style={{ boxShadow: 'var(--shadow-sm)' }}
-      >
+      <section className="rounded-xl border border-border/40 bg-card p-6 shadow-sm">
+        <div className="mb-4 flex items-center gap-2">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <Gauge className="h-4.5 w-4.5" />
+          </div>
+          <div>
+            <h2 className="text-base font-semibold text-foreground">组合总览</h2>
+            <p className="text-xs text-muted-foreground">实时持仓与风险指标</p>
+          </div>
+        </div>
         <EmptyState
           title="暂无持仓数据"
           description="请先在交易舱录入持仓"
@@ -288,64 +290,73 @@ function PortfolioHero(): React.JSX.Element {
   }
 
   return (
-    <section
-      className="mb-6 rounded-lg p-6 bg-card"
-      style={{ boxShadow: 'var(--shadow-sm)' }}
-    >
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:items-center">
+    <section className="rounded-xl border border-border/40 bg-card p-6 shadow-sm">
+      <div className="mb-5 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <Gauge className="h-4.5 w-4.5" />
+          </div>
+          <div>
+            <h2 className="text-base font-semibold text-foreground">组合总览</h2>
+            <p className="text-xs text-muted-foreground">实时持仓与风险指标</p>
+          </div>
+        </div>
+        <Badge variant="outline" className="border-border/50 text-[11px]">
+          数据同步 · 实时
+        </Badge>
+      </div>
+
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:items-center">
         <div className="md:col-span-1">
-          <p className="text-sm text-muted-foreground">组合总资产</p>
-          <p
-            className="mt-1 font-bold font-mono text-foreground"
-            style={{ fontSize: 'var(--fs-display)', lineHeight: 'var(--lh-tight)' }}
-          >
+          <p className="text-[13px] text-muted-foreground">组合总资产</p>
+          <p className="mt-1.5 font-mono text-4xl font-bold text-foreground tracking-tight">
             ¥{formatLargeNumber(totalAssets)}
           </p>
           {hasPositions && todayPnL !== 0 && (
-            <p className="mt-1 flex items-center gap-1.5 text-sm" style={{ color: todayColor }}>
+            <p className={cn('mt-2 flex items-center gap-1.5 text-[13px] font-medium', todayCls)}>
               {todayIsUp ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
               今日 <Currency value={todayPnL} compact decimals={0} /> (<Percent value={todayPnLPercent} decimals={2} />)
             </p>
           )}
           {hasPositions && todayPnL === 0 && (
-            <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+            <p className="mt-2 flex items-center gap-1.5 text-[13px] text-muted-foreground">
               今日暂无变动
             </p>
           )}
         </div>
         <div className="md:col-span-2">
-          <div className={`grid grid-cols-2 gap-6 ${isMobile ? 'grid-cols-2' : 'grid-cols-4'}`}>
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
             <div>
-              <p className="text-xs text-muted-foreground">今日盈亏</p>
-              <p className="mt-1 font-semibold" style={{ color: todayColor }}>
+              <p className="text-[12px] text-muted-foreground">今日盈亏</p>
+              <p className={cn('mt-1.5 text-lg font-semibold', todayCls)}>
                 <Percent value={todayPnLPercent} decimals={2} />
               </p>
-              <p className="mt-0.5 text-sm text-foreground">
+              <p className="mt-0.5 text-[13px] text-foreground">
                 <Currency value={todayPnL} compact decimals={0} />
               </p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">年初至今</p>
-              <p className="mt-1 font-semibold" style={{ color: ytdIsUp ? 'hsl(var(--stock-up))' : 'hsl(var(--stock-down))' }}>
+              <p className="text-[12px] text-muted-foreground">年初至今</p>
+              <p className={cn('mt-1.5 text-lg font-semibold', ytdIsUp ? 'text-stock-up' : 'text-stock-down')}>
                 <Percent value={ytdReturnPercent} decimals={2} />
               </p>
-              <p className="mt-0.5 text-sm text-foreground">
+              <p className="mt-0.5 text-[13px] text-foreground">
                 <Currency value={ytdReturn} compact decimals={0} />
               </p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">夏普比率</p>
-              <p className="mt-1 font-mono font-semibold text-foreground">
+              <p className="text-[12px] text-muted-foreground">夏普比率</p>
+              <p className="mt-1.5 font-mono text-lg font-semibold text-foreground">
                 {hasPositions ? sharpeRatio.toFixed(2) : '—'}
               </p>
-              <p className="mt-0.5 text-xs" style={{ color: 'hsl(var(--success))' }}>{sharpeLabel}</p>
+              <p className="mt-0.5 text-[11px] text-success">{sharpeLabel}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">最大回撤</p>
-              <p className="mt-1 font-semibold" style={{ color: 'hsl(var(--stock-down))' }}>
+              <p className="text-[12px] text-muted-foreground">最大回撤</p>
+              <p className="mt-1.5 text-lg font-semibold text-stock-down">
                 {hasPositions ? <Percent value={maxDrawdown} decimals={2} /> : '—'}
               </p>
-              <p className="mt-0.5 text-xs text-muted-foreground">历史</p>
+              <p className="mt-0.5 text-[11px] text-muted-foreground">历史</p>
             </div>
           </div>
         </div>
@@ -361,57 +372,59 @@ function SignalList(): React.JSX.Element {
   const signals = useTradingStore((s) => s.signals)
   const displaySignals = useMemo(() => signals.slice(0, 10), [signals])
 
+  const header = (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-warning/10 text-warning">
+          <Zap className="h-4.5 w-4.5" />
+        </div>
+        <div>
+          <h2 className="text-base font-semibold text-foreground">最新交易信号</h2>
+          <p className="text-xs text-muted-foreground">{signals.length} 条信号待处理</p>
+        </div>
+      </div>
+      <Link to="/trading" className="text-xs font-medium text-primary hover:underline">
+        查看全部 →
+      </Link>
+    </div>
+  )
+
   if (signals.length === 0) {
     return (
-      <section
-        className="mt-6 rounded-lg p-6 bg-card"
-        style={{ boxShadow: 'var(--shadow-sm)' }}
-      >
-        <div className="flex items-center justify-between">
-          <h2 className="font-semibold text-foreground" style={{ fontSize: 'var(--fs-h3)', lineHeight: 'var(--lh-tight)' }}>
-            最新交易信号
-          </h2>
-          <Link to="/trading" className="text-xs text-primary">查看全部</Link>
+      <section className="rounded-xl border border-border/40 bg-card p-6 shadow-sm">
+        {header}
+        <div className="mt-4">
+          <EmptyState
+            title="暂无交易信号"
+            description="请先在交易舱扫描信号"
+          />
         </div>
-        <EmptyState
-          title="暂无交易信号"
-          description="请先在交易舱扫描信号"
-        />
       </section>
     )
   }
 
   return (
-    <section
-      className="mt-6 rounded-lg p-6 bg-card"
-      style={{ boxShadow: 'var(--shadow-sm)' }}
-    >
-      <div className="flex items-center justify-between">
-        <h2 className="font-semibold text-foreground" style={{ fontSize: 'var(--fs-h3)', lineHeight: 'var(--lh-tight)' }}>
-          最新交易信号
-        </h2>
-        <Link to="/trading" className="text-xs text-primary">查看全部</Link>
-      </div>
-      <div className="mt-3 space-y-0">
-        {displaySignals.map((signal: TradingSignal, idx: number) => {
-          const dirColor = SIGNAL_DIRECTION_COLOR[signal.direction] ?? 'hsl(var(--muted-foreground))'
+    <section className="rounded-xl border border-border/40 bg-card p-6 shadow-sm">
+      {header}
+      <div className="mt-4 divide-y divide-border/40 border-t border-border/40">
+        {displaySignals.map((signal: TradingSignal) => {
+          const dirCls = SIGNAL_DIRECTION_CLS[signal.direction] ?? SIGNAL_DIRECTION_CLS.hold
           const label = SIGNAL_DIRECTION_LABEL[signal.direction] ?? signal.direction
+          const scoreColor = signal.direction === 'buy' ? 'text-success' : signal.direction === 'sell' ? 'text-danger' : 'text-muted-foreground'
           return (
             <div
               key={signal.id}
-              className="flex items-center gap-3 py-3"
-              style={{ borderTop: idx === 0 ? '1px solid hsl(var(--divider))' : '1px solid hsl(var(--divider))' }}
+              className="flex items-center gap-4 py-3 transition-colors hover:bg-muted/20"
             >
-              <span
-                className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
-                style={{ background: `${dirColor} / 0.1`, color: dirColor }}
-              >
+              <Badge variant="outline" className={cn('border text-[11px]', dirCls)}>
                 {label}
+              </Badge>
+              <span className="min-w-[72px] text-[13px] font-semibold text-foreground">{signal.symbol}</span>
+              <span className="flex-1 truncate text-[13px] text-muted-foreground">{signal.rationale}</span>
+              <span className="hidden font-mono text-[11px] text-muted-foreground sm:block">{formatTime(signal.createdAt)}</span>
+              <span className={cn('font-mono text-[13px] font-semibold', scoreColor)}>
+                评分 {(signal.confidence * 10).toFixed(1)}
               </span>
-              <span className="text-sm font-medium text-foreground">{signal.symbol}</span>
-              <span className="flex-1 text-sm text-muted-foreground">{signal.rationale}</span>
-              <span className="font-mono text-xs text-muted-foreground">{formatTime(signal.createdAt)}</span>
-              <span className="font-mono text-sm" style={{ color: dirColor }}>评分 {(signal.confidence * 10).toFixed(1)}</span>
             </div>
           )
         })}
@@ -435,25 +448,26 @@ export default function HomePage(): React.JSX.Element {
   }, [navigate])
 
   return (
-    <PageContainer>
+    <PageContainer className="space-y-6">
       {/* 1. Page Header with badge */}
-      <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <span
-            className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium text-primary"
-            style={{ background: 'hsl(var(--primary) / 0.1)' }}
-          >
+          <Badge variant="outline" className="border-primary/20 bg-primary/5 text-primary">
+            <Gauge className="mr-1.5 h-3 w-3" />
             投资组合总览
-          </span>
-          <h1 className="mt-2 font-semibold text-foreground" style={{ fontSize: 'var(--fs-h1)', lineHeight: 'var(--lh-tight)' }}>
+          </Badge>
+          <h1 className="mt-2 text-2xl font-semibold text-foreground tracking-tight sm:text-[28px]">
             智能投研复盘系统 V9
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             多维度投研分析 · 实时行情 · 策略回测 · 风险管控
           </p>
         </div>
-        <Button asChild size="lg">
-          <Link to="/cockpit">打开驾驶舱</Link>
+        <Button asChild size="lg" className="shadow-sm">
+          <Link to="/cockpit">
+            <BarChart3 className="mr-2 h-4 w-4" />
+            打开驾驶舱
+          </Link>
         </Button>
       </header>
 
@@ -461,17 +475,14 @@ export default function HomePage(): React.JSX.Element {
       <PortfolioHero />
 
       {/* 3. Quick Stock Analysis */}
-      <section
-        className="mb-6 rounded-lg p-5 bg-card"
-        style={{ boxShadow: 'var(--shadow-sm)' }}
-      >
+      <section className="rounded-xl border border-border/40 bg-card p-5 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary/10">
-              <Search className="h-5 w-5 text-primary" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <Search className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="font-semibold text-foreground">快速选股分析</h2>
+              <h2 className="text-[15px] font-semibold text-foreground">快速选股分析</h2>
               <p className="text-xs text-muted-foreground">搜索股票名称或代码，一键跳转智能评分</p>
             </div>
           </div>
@@ -491,22 +502,23 @@ export default function HomePage(): React.JSX.Element {
       <SystemStatusOverview />
 
       {/* 5. Feature Cabin Entry Cards (5-column grid) */}
-      <section className="mt-6 grid gap-3" style={{ gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)' }}>
+      <section className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {CABIN_FEATURES.map((feature) => {
           const Icon = feature.icon
           return (
             <Link
               key={feature.title}
               to={feature.to}
-              className="flex flex-col gap-2 rounded-lg p-5 transition-shadow hover:shadow-elevation-2 bg-card"
-              style={{ boxShadow: 'var(--shadow-sm)' }}
+              className="group flex flex-col gap-2.5 rounded-xl border border-border/40 bg-card p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md hover:border-primary/30"
             >
-              <div className={`flex h-10 w-10 items-center justify-center rounded-md ${feature.bgColor} ${feature.color}`}>
+              <div className={cn('flex h-10 w-10 items-center justify-center rounded-lg', feature.bgColor, feature.color)}>
                 <Icon className="h-5 w-5" />
               </div>
-              <p className="mt-1 text-sm font-semibold text-foreground">{feature.title}</p>
+              <p className="mt-1 text-[14px] font-semibold text-foreground">{feature.title}</p>
               <p className="text-xs text-muted-foreground">{feature.desc}</p>
-              <span className="mt-auto pt-2 text-xs text-primary">进入 →</span>
+              <span className="mt-auto pt-2 text-xs font-medium text-primary/80 transition-transform group-hover:text-primary group-hover:translate-x-0.5">
+                进入 →
+              </span>
             </Link>
           )
         })}

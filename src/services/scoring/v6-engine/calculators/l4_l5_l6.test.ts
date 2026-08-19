@@ -333,9 +333,9 @@ describe('L4ScenarioCalculator.calculate', () => {
     expect(result.layerId).toBe('l4')
     expect(result.layerName).toBe('L4 情景推演')
     expect(result.score).toBe(3)
-    // DEFAULT_WEIGHTS.l4 由 0.08 调整为 0.04（权重重新分配），同步更新 weightedScore
-    expect(result.weight).toBe(0.04)
-    expect(result.weightedScore).toBeCloseTo(0.12, 2) // 3 * 0.04
+    // DEFAULT_WEIGHTS.l4 = 0.05（权重重新分配），同步更新 weightedScore
+    expect(result.weight).toBe(0.05)
+    expect(result.weightedScore).toBeCloseTo(0.15, 2) // 3 * 0.05
     expect(result.dataSources).toContain('行情数据')
     expect(result.dataSources).toContain('财报数据')
     expect(result.risks).toEqual([])

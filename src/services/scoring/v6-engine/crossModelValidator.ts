@@ -245,7 +245,7 @@ export class CrossModelValidator {
         caller: 'system',
         allowFallback: false,
         // 通过 presetId 指定模型
-      } as LlmGatewayOptions & { presetId?: string })
+      })
 
       const rawContent = response.content
       const score = extractScore(rawContent)

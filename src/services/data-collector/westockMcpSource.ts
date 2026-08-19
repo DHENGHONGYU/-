@@ -52,7 +52,7 @@ async function callWestockTool(
       return null
     }
     const text = result.content[0]?.text
-    const data = text ? JSON.parse(text as string) : null
+    const data = text ? JSON.parse(text) : null
     recordSourceResult(SOURCE, { success: true, isMock: false, latencyMs, completeness: 1 })
     return data
   } catch (err) {

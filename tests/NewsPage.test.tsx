@@ -81,7 +81,7 @@ describe('NewsPage', () => {
       </MemoryRouter>,
     )
 
-    await userEvent.click(screen.getAllByRole('button', { name: /生成模拟资讯/i })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: /生成模拟资讯/i })[0]!)
 
     await waitFor(
       () => {
@@ -101,7 +101,7 @@ describe('NewsPage', () => {
       </MemoryRouter>,
     )
 
-    await userEvent.click(screen.getAllByRole('button', { name: /生成模拟资讯/i })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: /生成模拟资讯/i })[0]!)
     await waitFor(
       () => {
         expect(screen.queryByText('暂无资讯')).not.toBeInTheDocument()
@@ -127,7 +127,7 @@ describe('NewsPage', () => {
       </MemoryRouter>,
     )
 
-    await userEvent.click(screen.getAllByRole('button', { name: /生成模拟资讯/i })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: /生成模拟资讯/i })[0]!)
     await waitFor(
       () => {
         expect(screen.queryByText('暂无资讯')).not.toBeInTheDocument()

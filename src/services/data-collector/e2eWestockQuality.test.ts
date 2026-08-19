@@ -150,7 +150,7 @@ describe('E2E 腾讯自选股(westock) 接入前后质量对比', () => {
   const verifySamples: Array<Record<string, unknown>> = []
 
   beforeAll(() => {
-    // eslint-disable-next-line no-console
+     
     console.log(`[E2E] 随机抽取 ${stocks.length} 只股票 (seed=${SEED}): ${stocks.join(', ')}`)
   })
 
@@ -222,7 +222,7 @@ describe('E2E 腾讯自选股(westock) 接入前后质量对比', () => {
           delta: (aComposite - bComposite).toFixed(1),
         })
 
-        // eslint-disable-next-line no-console
+         
         console.log(`[E2E] ${stock} | AFTER=${aComposite.toFixed(1)} BEFORE=${bComposite.toFixed(1)} Δ=${(aComposite - bComposite).toFixed(1)}`)
       }
 
@@ -246,7 +246,7 @@ describe('E2E 腾讯自选股(westock) 接入前后质量对比', () => {
       const md = buildReport({ stocks, rows, agg, deltaComp, reliability, grade, verifySamples, westockTotal, westockOk })
       const outPath = resolve(__dirname, '../../../deliverables/E2E-westock-quality-report.md')
       writeFileSync(outPath, md, 'utf8')
-      // eslint-disable-next-line no-console
+       
       console.log(`[E2E] 报告已写入: ${outPath}`)
       console.log(`[E2E] 综合分 AFTER=${agg.aComp!.toFixed(1)} BEFORE=${agg.bComp!.toFixed(1)} 提升=${deltaComp.toFixed(1)} 评级=${grade} westock可用率=${reliability.toFixed(1)}%`)
 

@@ -80,7 +80,7 @@ export default function StrategySnapshotPage(): React.JSX.Element {
           error: state.error,
         })
       })
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+     
     } else if (activeTab === 'history') {
       logger.info('[StrategySnapshotPage] 开始加载历史快照数据')
       void loadHistorySnapshots().then(() => {
@@ -166,7 +166,7 @@ export default function StrategySnapshotPage(): React.JSX.Element {
   }
 
   // 导出选中快照为 JSON
-  // eslint-disable-next-line @typescript-eslint/require-await
+   
   async function handleExportSnapshotJson() {
     if (!selectedSnapshot) {
       logger.warn('[StrategySnapshotPage][CLICK] 导出JSON跳过：未选中快照')

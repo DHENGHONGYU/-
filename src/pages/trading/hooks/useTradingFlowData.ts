@@ -214,7 +214,7 @@ export function useTradingFlowData() {
         stack: err instanceof Error ? err.stack : undefined,
       })
     })
-  }, [loadStocks, loadOrders, scanSignals]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [loadStocks, loadOrders, scanSignals])  
 
   // 监听数据变化
   useEffect(() => {

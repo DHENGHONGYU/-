@@ -32,7 +32,7 @@ function extractAlertScript(): string {
   const m = ci.match(/script: \|\n([\s\S]*?)(?=\n      - |\n  [a-z])/)
   if (!m) throw new Error('❌ 未在 ci.yml 中找到 Alert on PR failure 的 script 块')
   // 去除 YAML 12 空格缩进
-  return m[1].replace(/^ {12}/gm, '').trim()
+  return m[1]!.replace(/^ {12}/gm, '').trim()
 }
 
 /** 去除 require('fs') / require('path') — 这些由测试参数注入 */
@@ -136,7 +136,7 @@ describe('registry-gate CI Alert — 评论去重 & 失败告警', () => {
       const { github } = await runAlert({
         reportJson: { failures: ['x'], warnings: [], allPassed: false },
       })
-      const body = github._calls.createComment.mock.calls[0][0].body
+      const body = github._calls.createComment.mock.calls[0]![0].body
       expect(body).toContain('<!-- registry-gate-report-tag:v1 -->')
     })
 
@@ -144,7 +144,7 @@ describe('registry-gate CI Alert — 评论去重 & 失败告警', () => {
       const { github } = await runAlert({
         reportJson: { failures: ['x'], warnings: [], allPassed: false },
       })
-      const params = github._calls.createComment.mock.calls[0][0]
+      const params = github._calls.createComment.mock.calls[0]![0]
       expect(params.owner).toBe('test-owner')
       expect(params.repo).toBe('test-repo')
       expect(params.issue_number).toBe(42)
@@ -179,7 +179,7 @@ describe('registry-gate CI Alert — 评论去重 & 失败告警', () => {
         reportJson: { failures: ['y'], warnings: [], allPassed: false },
         existingComments: [oldComment],
       })
-      const body = github._calls.updateComment.mock.calls[0][0].body
+      const body = github._calls.updateComment.mock.calls[0]![0].body
       expect(body).toContain('<!-- registry-gate-report-tag:v1 -->')
     })
 
@@ -224,7 +224,7 @@ describe('registry-gate CI Alert — 评论去重 & 失败告警', () => {
           allPassed: false,
         },
       })
-      const body = github._calls.createComment.mock.calls[0][0].body
+      const body = github._calls.createComment.mock.calls[0]![0].body
       expect(body).toContain('阻塞级回归（2 条）')
       expect(body).toContain('⛔ `PortfolioService id 重名`')
       expect(body).toContain('⛔ `SkeletonLegacy 缺字段`')
@@ -234,7 +234,7 @@ describe('registry-gate CI Alert — 评论去重 & 失败告警', () => {
       const { github } = await runAlert({
         reportJson: { failures: [], warnings: ['minor issue'], allPassed: false },
       })
-      const body = github._calls.createComment.mock.calls[0][0].body
+      const body = github._calls.createComment.mock.calls[0]![0].body
       expect(body).toContain('非阻塞警告（1 条）')
       expect(body).toContain('⚠️ `minor issue`')
     })
@@ -249,7 +249,7 @@ describe('registry-gate CI Alert — 评论去重 & 失败告警', () => {
           baseline: { componentSubRegistries: 4 },
         },
       })
-      const body = github._calls.createComment.mock.calls[0][0].body
+      const body = github._calls.createComment.mock.calls[0]![0].body
       expect(body).toContain('条目数快照')
       expect(body).toContain('| 64 | 62 | 166 | 4 |')
     })
@@ -259,7 +259,7 @@ describe('registry-gate CI Alert — 评论去重 & 失败告警', () => {
         reportJson: { failures: ['x'], warnings: [], allPassed: false },
         sha: '0123456789abcdef',
       })
-      const body = github._calls.createComment.mock.calls[0][0].body
+      const body = github._calls.createComment.mock.calls[0]![0].body
       expect(body).toContain('`01234567`')
     })
 
@@ -271,7 +271,7 @@ describe('registry-gate CI Alert — 评论去重 & 失败告警', () => {
           allPassed: false,
         },
       })
-      const body = github._calls.createComment.mock.calls[0][0].body
+      const body = github._calls.createComment.mock.calls[0]![0].body
       expect(body).not.toContain('`反引号`')
       expect(body).toContain("'反引号'")
     })
@@ -283,7 +283,7 @@ describe('registry-gate CI Alert — 评论去重 & 失败告警', () => {
       const { github } = await runAlert({
         reportJson: { failures: [], warnings: [], allPassed: false },
       })
-      const body = github._calls.createComment.mock.calls[0][0].body
+      const body = github._calls.createComment.mock.calls[0]![0].body
       expect(body).toContain('阻塞级回归（0 条）')
       expect(body).toContain('_(空)_')
     })
@@ -296,7 +296,7 @@ describe('registry-gate CI Alert — 评论去重 & 失败告警', () => {
         reportJson: 'NOT VALID JSON {{{',
       })
       expect(github._calls.createComment).toHaveBeenCalledTimes(1)
-      const body = github._calls.createComment.mock.calls[0][0].body
+      const body = github._calls.createComment.mock.calls[0]![0].body
       // 默认初始化 { failures: [], warnings: [], allPassed: false }
       expect(body).toContain('阻塞级回归（0 条）')
     })

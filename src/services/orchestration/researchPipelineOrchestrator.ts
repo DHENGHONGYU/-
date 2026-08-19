@@ -221,7 +221,7 @@ export interface PipelineResult {
  * 取评分低于该层权重加权均值 50% 的层作为建议补足维度。
  */
 function deriveBacktrackPlan(score: V6Score | undefined): string[] {
-  if (!score || !score.layerDetails) return ['无分层明细，建议补齐基础行情与财务数据']
+  if (!score?.layerDetails) return ['无分层明细，建议补齐基础行情与财务数据']
   const layers = Object.entries(score.layerDetails) as [string, { score?: number; weight?: number }][]
   if (layers.length === 0) return ['无分层明细']
   const planned: string[] = []
@@ -361,7 +361,7 @@ export async function runResearchPipeline(
         await dataBridge.forward(
           EnvelopeFactory.create(
             { source: MODULE_ID.fetcher, target: ENVELOPE_TARGET.db, action: ENVELOPE_ACTION.saveDailyQuotes, traceId: `pipe-dq-${code}` },
-            dq as unknown as Record<string, unknown>,
+            dq,
           ),
         )
         const back = await queryGet<any>(STORE_NAME.dailyQuotes, code)
@@ -389,7 +389,7 @@ export async function runResearchPipeline(
             marketCap: ref.marketCap,
             updatedAt: Date.now(),
             ...enrichFields,
-          } as unknown as Record<string, unknown>,
+          },
         ),
       )
       const st = await dataBridge.query<Stock>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.stocks, key: code, source: MODULE_ID.pool })
@@ -436,7 +436,7 @@ export async function runResearchPipeline(
     if (lowScore) {
       triggered++
       rec.calibrationTriggered = true
-      const sc = (s3.layerDetails as unknown as V6Score) ?? undefined
+      const sc = (s3.layerDetails as V6Score) ?? undefined
       rec.backtrackPlan = deriveBacktrackPlan(sc)
       if (calibrator) {
         const cal = await calibrator.calibrate(s3.code)

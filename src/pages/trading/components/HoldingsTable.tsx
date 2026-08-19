@@ -150,7 +150,7 @@ export default function HoldingsTable({
                   </TableCell>
                   {/* 策略类型标签 */}
                   <TableCell>
-                    {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition */}
+                    { }
                     {strategyConfig ? (
                       <Badge
                         variant="outline"

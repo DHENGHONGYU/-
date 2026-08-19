@@ -1098,6 +1098,9 @@ async function runSingleTraceImpl(
         // 真实数据写入
         // 真实数据写入
         const sourceLabel = dimData._source as string || 'real'
+        if (!dimData._source) {
+          logger.warn(`[collectionPipeline] ${normalizedSymbol}/${dimensionCode} 数据缺失 _source 字段，默认标记为 'real'`)
+        }
         addStage('source:success', `${sourceLabel}:${mode} 数据获取成功`, sourceLabel as QuoteDataSourceId)
         emit(COLLECTION_EVENTS.TRANSFORM, {
           traceId, taskId, dimensionCode, symbol: normalizedSymbol,

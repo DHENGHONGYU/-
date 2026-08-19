@@ -252,7 +252,7 @@ function DimensionRow({
               <span>频率: {FREQUENCY_LABELS[dim.frequency]}</span>
               <span>·</span>
               <span>源: {dim.sources.map((s) => {
-                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                   
                   return DATA_SOURCE_LABELS[s] ?? s
                 }).join(' > ')}</span>
               <span>·</span>

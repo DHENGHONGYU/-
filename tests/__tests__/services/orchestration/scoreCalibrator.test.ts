@@ -376,7 +376,7 @@ describe('ScoreCalibrator', () => {
 
       const reviewList = calibrator.getManualReviewList()
       expect(reviewList.length).toBe(1)
-      expect(reviewList[0].symbol).toBe('600519')
+      expect(reviewList[0]!.symbol).toBe('600519')
     })
   })
 })

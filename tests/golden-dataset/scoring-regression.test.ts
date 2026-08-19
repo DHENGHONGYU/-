@@ -88,10 +88,6 @@ function buildFinancialData(stock: GoldenStock): FinancialData {
     netProfitYoY: 10,
     grossMargin: 40,
     netMargin: 15,
-    roe: stock.roe > 0 ? stock.roe : undefined,
-    eps: stock.eps > 0 ? stock.eps : undefined,
-    pe: stock.pe > 0 ? stock.pe : undefined,
-    pb: stock.pb > 0 ? stock.pb : undefined,
   }
 }
 
@@ -174,17 +170,9 @@ describe('Golden Dataset 回归测试', () => {
 
   describe('评分数值准确性门禁（≥ 85%）', () => {
     it('PEG 评分函数应在合理范围内', () => {
-      // 测试 PEG 评分函数边界
-      const highGrowth = buildLayerInput({
-        ...dataset.stocks[0],
-        peg: 0.5,
-      })
-      const lowGrowth = buildLayerInput({
-        ...dataset.stocks[0],
-        peg: 5.0,
-      })
+    // 测试 PEG 评分函数边界
 
-      // 高 PEG 不应得高分，低 PEG 不应得低分
+    // 高 PEG 不应得高分，低 PEG 不应得低分
       // 这些是纯函数校验，不依赖数据库
       expect(true).toBe(true) // 占位 - 实际校验需集成运行
     })

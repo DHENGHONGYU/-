@@ -254,8 +254,8 @@ export class DrawingManager {
       )
     } else if (visibleRange) {
       data.push(
-        { time: visibleRange.from as Time, value: line.price },
-        { time: visibleRange.to as Time, value: line.price },
+        { time: visibleRange.from, value: line.price },
+        { time: visibleRange.to, value: line.price },
       )
     }
 

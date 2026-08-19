@@ -8,23 +8,27 @@ import { cn } from '@/lib/utils'
 import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
 
 /**
- * Card
+ * Card - Apple 风格卡片组件
+ * @description 使用纯白背景、16px 圆角、轻微阴影和优雅的悬停过渡
+ * 符合 Apple Human Interface Guidelines：
+ *   - 背景: 纯白 (#FFFFFF)
+ *   - 圆角: 16px (1rem)
+ *   - 阴影: 静态 alpha ≤ 0.05, 悬停 alpha ≤ 0.08
+ *   - 过渡: 200ms ease-in-out
  */
 export const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => {
     const tokens = {
       radius: THEME_TOKENS.radius.lg,
       background: COLOR_TOKENS.bgCard.tailwind,
-      border: 'shadow-elevation-1', // Apple 风格：无边框，仅阴影悬浮
     }
     return (
       <div
         ref={ref}
         className={cn(
           tokens.radius,
-          tokens.border,
           tokens.background,
-          'text-card-foreground',
+          'text-card-foreground shadow-elevation-1 transition-shadow duration-200 hover:shadow-elevation-2',
           className,
         )}
         {...props}

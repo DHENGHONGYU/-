@@ -103,7 +103,7 @@ function instantiateFromModule(
 
     const instance = new ServerCtor() as MCPServer
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+     
     if ((instance.info ?? null) === null || (instance.listTools ?? null) === null) {
       logger.error(`[MCP:register] "${exportName}" does not implement MCPServer interface`)
       return null

@@ -1,12 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router'
+import { Link, useLocation } from 'react-router'
 import { Download } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { Select, SelectItem } from '@/components/atoms/Select'
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from '@/components/atoms/Breadcrumb'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
-import { PageHeader } from '@/components/templates/PageHeader'
+import { PageContainer, PageHeader } from '@/components/templates'
 import {
   useOutputStore,
   selectExportData,
@@ -144,20 +152,20 @@ function DataExportPanel(): React.JSX.Element {
   }
 
   return (
-    <div className="space-y-4 p-4">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+    <div className="space-y-6">
+      <Card className="shadow-sm border-border/40">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-base font-semibold">
             输出舱 · 数据导出
-            <Badge variant="secondary">JSON / CSV</Badge>
+            <Badge variant="outline" className="border-border/50 text-[11px]">JSON / CSV</Badge>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center gap-3">
+        <CardContent className="space-y-5 pt-3">
+          <div className="flex flex-wrap items-center gap-2 rounded-md border border-border/40 bg-muted/20 px-3.5 py-2.5">
             <Select
               value={format}
               onChange={(e) => setFormat(e.target.value as 'json' | 'csv')}
-              className="w-28"
+              className="w-28 h-9"
             >
               <SelectItem value="json">JSON</SelectItem>
               <SelectItem value="csv">CSV</SelectItem>
@@ -173,20 +181,25 @@ function DataExportPanel(): React.JSX.Element {
                 })
               }}
               disabled={isExporting}
+              className="shadow-sm"
             >
               {isExporting ? '导出中...' : '导出全部数据'}
             </Button>
             {exportData && (
-              <Button variant="outline" size="sm" onClick={handleDownload}>
-                <Download className="mr-1.5 h-4 w-4" />
+              <Button variant="outline" size="sm" onClick={handleDownload} className="ml-auto shadow-sm">
+                <Download className="mr-1.5 h-3.5 w-3.5" />
                 下载数据
               </Button>
             )}
           </div>
-          {message && <p className="text-sm text-muted-foreground">{message}</p>}
+          {message && (
+            <div className="rounded-md border border-border/40 bg-muted/10 px-3.5 py-2.5 text-sm text-muted-foreground">
+              {message}
+            </div>
+          )}
           {exportData && (
             <div>
-              <pre className="max-h-96 overflow-auto rounded-md bg-muted p-4 text-xs">
+              <pre className="max-h-96 overflow-auto rounded-md border border-border/40 bg-muted/40 p-4 text-[11px] leading-relaxed font-mono">
                 {exportData.length > MAX_PREVIEW_LENGTH
                   ? `${exportData.slice(0, MAX_PREVIEW_LENGTH)}\n\n... [数据已截断，共 ${exportData.length} 字符，仅显示前 ${MAX_PREVIEW_LENGTH} 字符，请点击"下载数据"查看完整内容]`
                   : exportData}
@@ -251,14 +264,25 @@ export default function OutputApp(): React.JSX.Element {
   const matched = matchOutputRoute(path)
 
   return (
-    <div className="space-y-4">
+    <PageContainer className="space-y-6">
+      <Breadcrumb aria-label="breadcrumb">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild><Link to="/">首页</Link></BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>输出舱</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <PageHeader
         title="输出舱"
         description="研究报告生成与数据导出"
       />
       <ErrorBoundary
       fallback={
-        <div className="p-4 text-sm text-muted-foreground">
+        <div className="p-4 text-sm text-muted-foreground rounded-md border border-destructive/30 bg-destructive/5">
           输出舱加载失败，请刷新页面重试。若问题持续，请检查网络连接后联系管理员。
         </div>
       }
@@ -267,6 +291,6 @@ export default function OutputApp(): React.JSX.Element {
         {matched.component}
       </React.Suspense>
     </ErrorBoundary>
-    </div>
+    </PageContainer>
   )
 }

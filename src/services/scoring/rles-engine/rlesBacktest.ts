@@ -110,9 +110,9 @@ function rank(arr: number[]): number[] {
   let i = 0
   while (i < idx.length) {
     let j = i
-    while (j + 1 < idx.length && idx[j + 1]![0]! === idx[i]![0]!) j++
+    while (j + 1 < idx.length && idx[j + 1]![0] === idx[i]![0]) j++
     const avg = (i + j) / 2 + 1
-    for (let k = i; k <= j; k++) ranks[idx[k]![1]!] = avg
+    for (let k = i; k <= j; k++) ranks[idx[k]![1]] = avg
     i = j + 1
   }
   return ranks

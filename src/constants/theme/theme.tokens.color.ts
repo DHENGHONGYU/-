@@ -103,11 +103,11 @@ export const COLOR_TOKENS = {
   // 背景色（高级灰色系 · Apple 卡片白）
   // ============================================================
   /** 卡片背景（Apple 设计令牌：纯白 #FFFFFF，配合阴影悬浮） */
-  bgCard: { hex: '#ffffff', tailwind: 'bg-white', rgb: '255, 255, 255' },
+  bgCard: { hex: '#ffffff', tailwind: 'bg-card', rgb: '255, 255, 255' },
   /** 悬停背景 */
-  bgHover: { hex: '#f5f5f5', tailwind: 'bg-neutral-100', rgb: '245, 245, 245' },
+  bgHover: { hex: '#f5f5f5', tailwind: 'bg-muted', rgb: '245, 245, 245' },
   /** 次要背景 */
-  bgMuted: { hex: '#e5e5e5', tailwind: 'bg-neutral-200', rgb: '229, 229, 229' },
+  bgMuted: { hex: '#e5e5e5', tailwind: 'bg-muted', rgb: '229, 229, 229' },
   /** 浅色信号背景（保留语义色，但调整为更中性的灰度） */
   bgEmerald50: { hex: '#f0fdf4', tailwind: 'bg-emerald-50', rgb: '240, 253, 244' },
   /** 浅色绿背景 */

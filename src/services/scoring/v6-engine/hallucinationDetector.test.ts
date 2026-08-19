@@ -20,9 +20,9 @@ import {
 } from '@/services/scoring/v6-engine/hallucinationDetector'
 import type {
   HallucinationSample,
-  RAGSnippet,
   LLMCitation,
 } from '@/services/scoring/v6-engine/hallucinationDetector'
+import type { RAGSnippet } from '@/services/scoring/v6-engine/ragRetriever'
 
 // ─── 测试辅助 ────────────────────────────────────────────────
 

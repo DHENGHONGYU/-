@@ -124,7 +124,7 @@ export function crossValidate(
 
   for (const field of numericFields) {
     const values = extractFieldValues(sourceData, field)
-    const validValues = Object.values(values).filter(v => v !== null && v !== undefined) as number[]
+    const validValues = Object.values(values).filter(v => v !== null && v !== undefined)
 
     if (validValues.length < 2) {
       continue // 跳过单源字段
