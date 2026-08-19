@@ -20,6 +20,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import type { Stock } from '@/data/types'
+import type { ResearchPoolItem } from '@/types/modules/pool.types'
 
 // ─── Mock 依赖模块 ───────────────────────────────────────────
 
@@ -282,6 +283,37 @@ describe('researchPoolStore 单元测试', () => {
       const stateAfter = useResearchPoolStore.getState()
       expect(stateAfter.loading).toBe(false)
       expect(stateAfter.isRefreshing).toBe(false)
+    })
+  })
+
+  // ═══════════════════════════════════════════════════════════
+  // 套件2.5：toPoolItem researchNote 映射 (TD-013)
+  // ═══════════════════════════════════════════════════════════
+
+  describe('toPoolItem researchNote 映射 (TD-013)', () => {
+    it('researchNote 不再错误复制 sector（应为 undefined，而非板块值）', async () => {
+      const stocks = [makeStock({ symbol: '000001', sector: '银行', pool: 'research' })]
+      mockQuerySuccess(stocks)
+
+      await useResearchPoolStore.getState().refresh()
+
+      const item = getResearchPoolItemBySymbol('000001') as ResearchPoolItem
+      expect(item).toBeDefined()
+      expect(item.sector).toBe('银行')
+      // 修复前 researchNote === sector（'银行'），修复后应为 undefined
+      expect(item.researchNote).toBeUndefined()
+      expect(item.researchNote).not.toBe(item.sector)
+    })
+
+    it('refresh 后 researchNote 与 sector 字段相互独立（不同板块值也不泄漏）', async () => {
+      const stocks = [makeStock({ symbol: '600519', sector: '白酒', pool: 'research' })]
+      mockQuerySuccess(stocks)
+
+      await useResearchPoolStore.getState().refresh()
+
+      const item = getResearchPoolItemBySymbol('600519') as ResearchPoolItem
+      expect(item.sector).toBe('白酒')
+      expect(item.researchNote).toBeUndefined()
     })
   })
 

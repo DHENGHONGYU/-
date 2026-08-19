@@ -485,11 +485,11 @@ P3: 得分 < 40
 
 - **发现日期**: 2026-08-19（本轮重登记）
 - **类型**: 数据债 / 代码债
-- **问题描述**: `researchPoolStore.toPoolItem` 中 `researchNote: stock.sector` 疑似复制粘贴错误（`researchNote` 应为备注字段，却填了 `sector` 板块字段）。
+- **问题描述**: `researchPoolStore.toPoolItem` 中 `researchNote: stock.sector` 疑似复制粘贴错误（`researchNote` 应为备注字段，却填了 `sector` 板块字段）。经核查该笔误早于 T1-1（e9ed4568 原文件即如此），且 `Stock` 类型无 `researchNote` 来源字段、全代码库零消费。
 - **根因**: 字段映射笔误。
-- **解决方案**: 核实 `Stock` 类型真实字段，修正 `researchNote` 来源并补单测（T1-2）。
-- **计划完成**: 本周
-- **状态**: 🔴 待规划
+- **解决方案**: 已于 2026-08-19 T1-2 完成——`Stock` 无 researchNote 来源字段，映射由 `stock.sector` 改为 `undefined`（杜绝板块值泄漏进备注），并在 `researchPoolStore.test.ts` 新增回归用例断言 `researchNote !== sector`。若后续 `Stock` 模型新增 `researchNote` 字段，应改为 `stock.researchNote`（已在代码注释标注）。
+- **计划完成**: 2026-08-19
+- **状态**: ✅ 已关闭（T1-2 修复）
 - **负责人**: WorkBuddy
 - **相关 Issue**: 待创建
 

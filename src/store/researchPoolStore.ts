@@ -6,8 +6,8 @@
  * 共享逻辑见 `@/store/helpers/createPoolStore`；本文件仅保留 pool 特定的
  * toPoolItem 映射与全部外部消费点导出名/签名。
  *
- * 注：toPoolItem 中 `researchNote: stock.sector` 为已知复制粘贴疑似错误（TD-013），
- * 此处行为保持不变，待 T1-2 单独修正。
+ * toPoolItem 中 `researchNote` 的复制粘贴错误（原 `stock.sector` 误作研究备注，TD-013）
+ * 已于 T1-2 修复：Stock 无 researchNote 来源字段，统一映射为 undefined。
  *
  * @doc [V9-DOC-PROJ-108, V9-DOC-BACK-011, V9-DOC-DATA-024, V9-DOC-DATA-032, V9-DOC-DATA-031]
 */
@@ -39,7 +39,11 @@ function toPoolItem(stock: Stock): PoolItem {
     theme: stock.theme,
     sector: stock.sector,
     group: stock.group,
-    researchNote: stock.sector,
+    // TD-013 修复：原 `researchNote: stock.sector` 为复制粘贴错误（板块字段误作研究备注）。
+    // Stock 类型无 researchNote 来源字段（研究备注为研究池特有，应由 addItem/update 输入提供，
+    // 而非从原始 Stock 映射），故此处不再从 Stock 取值，统一为 undefined，杜绝板块值泄漏进备注。
+    // 若后续 Stock 模型新增 researchNote 字段，应改为 `researchNote: stock.researchNote`。
+    researchNote: undefined,
   } as PoolItem
 }
 
