@@ -7,6 +7,8 @@ import { MigrationUploadTab } from './migration/MigrationUploadTab'
 import { MigrationPreviewTab } from './migration/MigrationPreviewTab'
 import { MigrationReportTab } from './migration/MigrationReportTab'
 import type { MigrationReport, V6ExportShape, V9ImportShape } from '@/services/system/v6MigrationService'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import { ConfirmDialog } from '@/components/molecules/ConfirmDialog'
 
 const logger = getLogger()
 
@@ -21,6 +23,9 @@ export interface BackupSnapshot {
  * MigrationPanel
  */
 export default function MigrationPanel(): React.JSX.Element {
+  // P0-7 修复：覆盖式导入二次确认改用 useConfirmDialog（window.confirm 在 iframe 被禁用）
+  const { confirm, dialogProps } = useConfirmDialog()
+
   const [rawJson, setRawJson] = useState<unknown>(null)
   const [v6Export, setV6Export] = useState<V6ExportShape | null>(null)
   const [transformed, setTransformed] = useState<V9ImportShape | null>(null)
@@ -99,12 +104,14 @@ export default function MigrationPanel(): React.JSX.Element {
 
   async function prepareBackup(): Promise<BackupSnapshot | null> {
     logger.info('[MigrationPanel] overwrite=true,触发二次确认对话框')
-    const confirmed = window.confirm(
-      '⚠️ 警告:覆盖式导入将删除现有数据!\n\n' +
-      '系统将在导入前自动备份当前数据。\n' +
-      '如导入失败,可使用「回滚到备份」按钮恢复。\n\n' +
-      '确定继续执行覆盖式导入?'
-    )
+    const confirmed = await confirm({
+      title: '⚠️ 覆盖式导入将删除现有数据',
+      description:
+        '系统将在导入前自动备份当前数据；如导入失败，可使用「回滚到备份」按钮恢复。是否继续执行覆盖式导入？',
+      confirmLabel: '确认导入',
+      cancelLabel: '取消',
+      variant: 'danger',
+    })
     if (!confirmed) {
       logger.info('[MigrationPanel] 用户取消覆盖式导入')
       return null
@@ -373,6 +380,7 @@ export default function MigrationPanel(): React.JSX.Element {
           </TabsContent>
         </Tabs>
       </CardContent>
+      <ConfirmDialog {...dialogProps} />
     </Card>
   )
 }

@@ -17,6 +17,7 @@ import CollectionMonitorPanel from './CollectionMonitorPanel'
 import CollectionStrategyPage from './CollectionStrategyPage'
 import HotSectorPage from './HotSectorPage'
 import IntentionPoolPage from './IntentionPoolPage'
+import InputTestDashboard from './InputTestDashboard'
 import { InputFlowErrorBoundary } from '@/components/organisms/input/InputFlowErrorBoundary'
 import { getLogger } from '@/lib/logger'
 
@@ -34,6 +35,7 @@ interface InputRoute {
 
 const INPUT_ROUTES: InputRoute[] = [
   // 合并后的新路由
+  { path: '/input/system-test', branch: 'system-test', componentName: 'InputTestDashboard', component: <InputTestDashboard />, fallback: '加载测试看板中...' },
   { path: '/input/collection-monitor', branch: 'collection-monitor', componentName: 'CollectionMonitorPanel', component: <CollectionMonitorPanel />, fallback: '加载采集监控台中...' },
   { path: '/input/collection-strategy', branch: 'collection-strategy', componentName: 'CollectionStrategyPage', component: <CollectionStrategyPage />, fallback: '加载采集策略配置中...' },
   // 热门板块独立页（从录入看板 Tab 拆分，筛选代表股纳入意向候选池）
