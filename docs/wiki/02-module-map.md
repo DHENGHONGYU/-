@@ -43,7 +43,7 @@ tag: FINAL
 
 | 目录 | 职责 | 关键内容 |
 |------|------|---------|
-| `src/config/` | 配置层（零硬编码锚点） | `dbConfig.ts`（DB_VERSION=35 / 53 STORE_NAME / 98 ENVELOPE_ACTION / 17 ENVELOPE_TARGET）、`routes.ts`（路由注册表 ROUTE_REGISTRY）、`mcpAclMatrix.ts`、`mcpServerRegistry.ts`（15 条目 MCP 注册表）、各业务配置 |
+| `src/config/` | 配置层（零硬编码锚点） | `dbConfig.ts`（DB_VERSION=35 / 53 STORE_NAME / **97 ENVELOPE_ACTION** / **14 ENVELOPE_TARGET**）、`routes.ts`（路由注册表 ROUTE_REGISTRY）、`mcpAclMatrix.ts`、`mcpServerRegistry.ts`（15 条目 MCP 注册表）、各业务配置 |
 | `src/constants/` | 常量层（零依赖） | `theme.tokens.ts`（V5 Apple Business Design Tokens）、`stockList.ts`、`uiText.ts`、`cockpit.constants.ts` 等；**禁止依赖任何运行时模块** |
 | `src/types/` | 零依赖纯类型 | `base.types.ts`、`role.types.ts`、`widget.ts`、`guards.ts`、`modules/`（mcp/databridge/collector 子域类型） |
 | `src/lib/` | 库函数（30+ 模块） | `logger.ts`、`eventBus.ts`、`errors.ts`、`xssSanitizer.ts`、`validation.ts`、`precision.ts`、`localStorageManager.ts`、`withBroadcast.ts`、`safeRegex.ts`、`perf.ts`、`format.ts`、`date.ts`、`designTokenVerifier.ts` 等；只有**白名单子集**可被 core/domain 层依赖 |
