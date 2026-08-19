@@ -7,6 +7,68 @@
 
 ---
 
+## [2.0.0-rc.2] - 2026-08-19
+> **Release Type**：RC 候选（SemVer prerelease rc.1→rc.2）· **Status**：Gatekeeper Verified · Annotated Tag Ready（pre-launch score 99.0/100 → S级 GO） · **Pre-launch Score**：**99.0 / 100（S 级 🟢 GO）**
+> **Baseline SHA（RC1 → RC2 增量基）**：0b08cf1d → 27fdac52（+2 修复 commit：TD-010 pre-commit 稳定 / TD-013 researchNote）→ RC2 build + 4 新提交（见推送记录） · **S05 Go/NoGo-1**：[docs/releases/v2.0.0-rc.2-gray/GRAY-RELEASE-CHECKLIST.md §七](docs/releases/v2.0.0-rc.2-gray/GRAY-RELEASE-CHECKLIST.md#七gonogo-签字台签字后不可反悔如反悔需走回滚-五) 🟢 Gatekeeper 全绿待签 · **Review**：[outputs/sop-suite-v1.0.0-independent-review-2026-08-19.md](outputs/sop-suite-v1.0.0-independent-review-2026-08-19.md) 98/100 🟢 APPROVED（0 BLOCKER）
+
+### Added — 新增（features / docs / capabilities）
+- **feat(analysis)**：新增 **向量一致性排序** 能力（Dirty 合入）：`VectorConsistencyRankingCard.tsx` + `vectorConsistencyRankingService.ts`，用于观察池与语义召回结果的一致性打分（本批次 Release 当日纳入）。
+- **feat(sops)**：新增 **SDLC 七阶段 SOP 套件 v1.0.0**（8 篇 doc_id V9-DOC-SOP-000~007）：新人搭建 / 日常开发 / 代码审查 / 合并前集成 / 上线体检 / 发布部署 / 运维应急全时间线闭环（sops/README.md 为第一入口）。
+- **feat(service)**：新增语义召回服务 `similarStockRecallService` 与 UI 卡片 `SimilarStockRecallCard`，支持个股分析页相似标的一键跳转。
+- **feat(observation-pool)**：观察池定期复盘全链路闭环落地（spec 缺口②）。
+- **feat(audit)**：dead-code 审计脚本新增 barrel 解析 + React.lazy 追踪，精准识别僵尸组件 27 个。
+- **feat(pool)**：IndexedDB 持久化向量语料库构建（vector corpus builder）。
+- **feat(input)**：InputDashboard PoolTable / HotSectorPage 清理 + 路由连线；新增 Cabin 页面 routes + sidebar。
+- **docs(meta)**：新增 DOCUMENT-INVENTORY 全量文档清单 + REGISTRY_INDEX §六 8 个 SOP doc_id 注册 + GoNoGo 纪要与评分卡（本批次 2 份）。
+- **docs(readme)**：README 文档中心首段新增「Code Wiki（代码知识库）」导航入口（链接 docs/wiki/README.md），为 rc.3 Code Wiki 6 份文件合入预留统一入口。
+- **docs(specs)**：新增 SOP Suite 预上线工作流 spec.md + tasks.md 全流程追踪。
+
+### Changed — 变更（refactors / config / ux / perf / docs）
+- **refactor(store)**：T1-1 池 store 工厂收敛（`createPoolStore` + 3 薄包装），store 模板重复代码下降 ≈ 48%。
+- **refactor(component)**：三轮僵尸组件清理（Cabin 4 + Chart 4 / Molecules 4 + Organisms 4 + Templates 3 / Cockpit+Common+Atoms），累计 **消灭 27 个僵尸组件**（含完整 barrel export 修正与注册表测试同步）。
+- **refactor(hooks)**：新增 AGENTS 契约一致性守卫（`audit-agents-consistency:strict` 22/20 项，从 package.json / skills / registry 三端对齐）。
+- **chore(registry)**：3 次 REGISTRY 刷新（similarStockRecall、SOP 套件、僵尸组件移除登记）+ `AGENTS.md` v1.6.0 注入 SOP 规范体系声明段 + 验证命令↔SOP 速查表交叉块。
+- **chore(skills)**：刷新 doc-freshness-governance SKILL v1.1.0（新增 §十一 SOP 双轨校对案例）与 docs-as-mirror SKILL v1.1.0（新增 §八 五大原则落地证据），skill:mirror L1↔L2 SHA 全一致。
+- **chore(package.json)**：新增 6 条 SOP 友好命令 alias（test:unit:quick / test:acl:extended / test:v6-discrimination / audit:module-completion / audit:cross-module-contracts / audit:doc-id-reverse），不触 C1 禁令。
+- **chore(gitignore)**：2 次刷新（剥离 MEMORY.md、10 个临时产物屏蔽、dist sandbox 防误提交）。
+- **chore(root)**：.gitignore + AGENTS.md + package.json 同步收尾；refresh doc-trigger-action-map 从 registry guardian 注入。
+- **chore(config)**：Input Cabin pages routes + sidebar 连线。
+- **Dirty 合入**：`AnalysisApp.tsx` 接入向量一致性卡片入口；`SimilarStockRecallCard.tsx` 交互细节优化（本批次当日即时修改）。
+
+### Fixed — 修复
+- **fix(husky · TD-010)**：pre-commit Node 运行时从系统 Node24 优先 → 受管 Node22 优先（回退链：受管Node22 → nvm Node24 → PATH node），根治 Windows 下 Node24 跑 vitest/tsx 大批量单测段错误（segfault）损坏 `.git pack` 文件的 P0 稳定性根因；本脚本对 4 类工具均使用 node.exe 直接 exec（非 npm），不受 git-bash 下 npm 不可用影响；tech-debt.md TD-010 台账 → ✅ 已关闭。
+- **fix(store · TD-013)**：修复 `researchPoolStore.toPoolItem` researchNote 复制粘贴错误（`researchNote: stock.sector` → `undefined`，杜绝板块值泄漏进研究备注；researchPoolStore.test 新增 2 例回归断言）。
+- **fix(test)**：4 轮 RAG/UI 测试修复 —— ragRealLLMIntegration 类型错误、RAG 测试 + CollectionRuntimeStore 类型错误、UI 测试断言 + HotSector 状态精简、不存在组件测试引用清理。
+- **fix(testing-strategy.md)**：修复 SOP 交叉引用章节末尾多余双闭合 ``` 标记（语法错误）。
+- **recover(tech-debt)**：重建因 Git ref 损坏丢失的 Iteration-1 WIP（含 observation-pool / audit-deadcode / zombie-components 等模块）。
+
+### Removed — 删除与清理
+- 移除 11 / 8 / 8 僵尸组件（3 轮合计 27 个）：Molecules(4)+Organisms(4)+Templates(3) / Cabin(4)+Chart(4) / Cockpit+Common+Atoms 全量。
+- 移除 HotSectorPanel + P2 atoms smoke 测试（已迁移 / 冗余）。
+
+### Security — 安全
+- 新增 `audit:secrets` 与 `audit:tokens` 在 pre-commit 22 步门禁链路上强制接入；S03 Review 矩阵 S1-S5 5 项安全红线 3 人双检机制（本批次新增 SOP 规定）。
+- 新增 `audit:agents-consistency:strict` 守护 AGENTS 契约不被 silent drift。
+
+---
+### 硬指标（RC2 · Gatekeeper Verified · 2026-08-19 15:30）
+| 指标 | 结果 | 来源 |
+|------|:----:|------|
+| Task 13 自检验证 AC-1 SOP 命令子集（46 refs） | ✅ 261/261 全命中（0 unknown） | `temp/sop-selfverify.log` |
+| Task 13 AC-2 13 Rule + 1 FR 速查（14/14） | ✅ **14/14 PASS** | 同上 |
+| Task 13 AC-3 C1 约束 scripts/husky/tsconfig* 实现 diff | ✅ 空（0 修改） | `git diff` 同上 |
+| Rubric 四维总分（独立审阅 §三） | **98 / 100（A 级）** | 独立审阅报告 |
+| 阻塞 / MAJOR / MINOR 缺陷数（独立审阅 §四） | **0 / 0 / 0**（仅 2 Info，已闭环 1） | 同上 |
+| **tsc:prod 生产类型检查（tsconfig.prod.json --noEmit）** | ✅ **exit 0 · 0 TypeScript 错误** | 2026-08-19 15:24 灰度前门禁 |
+| **audit:layers v3.0 跨层调用审计** | ✅ **1463 文件 · 0 违规 · 0 警告 · 253 ms** | scripts/audit/docs/reports/audit/audit-layer-calls-2026-08-19T15-24-45-953Z.json |
+| **Vite build（npm run build）** | ✅ **11.19 s · chunks gzip 合计 ≈ 1.7 MB**（单 chunk 最大 927 KB → gzip 279 KB，< 3 MB SLO） | 灰度前门禁 G2 |
+| **Pre-launch E2E v2 Playwright（真实数据 REST · 58 页 · 25 只测试股）** | ✅ **综合评分 99.0 / 100（S 级）** · 56 pass / 2 warn / 0 fail · 114 张双截图（10.88 MB） | [docs/releases/v2.0.0-rc.2-gray/E2E-TEST-REPORT.md](docs/releases/v2.0.0-rc.2-gray/E2E-TEST-REPORT.md) |
+| E2E 页面性能（10% trimmed mean，Vite 冷启动极值剔除） | ✅ avg_load **708 ms** · P50 708 ms · P95 758 ms（全部 < 2500 ms 优秀线） | 同上，launch_e2e_test.py collect_perf + fixup_launch_report.py robust_metrics |
+| 灰度发布文档归档与 Gatekeeper 检查清单 | ✅ 5 份文档归档（E2E md/json、E2E 脚本×2、GRAY-RELEASE-CHECKLIST 9 节） | [docs/releases/v2.0.0-rc.2-gray/](docs/releases/v2.0.0-rc.2-gray) |
+| Code Wiki 代码知识库首批文档 | ✅ 6 份（README + 架构概览 + 模块地图 + 核心类函数 + 数据流依赖 + 快速上手） | [docs/wiki/README.md](docs/wiki/README.md) |
+
+---
+
 ## [Unreleased] - 2026-08-17
 
 ### Changed — UI V12 性能与可访问性优化
