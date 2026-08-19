@@ -10,7 +10,7 @@ summary: "V6 输入舱本身已是一个完整原型，使用 Tabs 导航组织�
 tags: [frontend, cockpit, reference, widget, component]
 version: v0.9.0
 last_updated: 2026-06-24
-code_version: "2.0.0-rc.1"
+code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-FRONT-012
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-164, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:
