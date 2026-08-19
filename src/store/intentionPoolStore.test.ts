@@ -36,7 +36,7 @@ vi.mock('nanoid', () => ({
   nanoid: () => 'mock-id-12345',
 }))
 
-vi.mock('@/store/helpers/withBroadcast', () => ({
+vi.mock('@/lib/withBroadcast', () => ({
   withBroadcast: vi.fn(),
 }))
 
@@ -112,7 +112,7 @@ import {
   initIntentionPoolStoreSubscriptions,
   _resetIntentionPoolStoreSubscriptionsForTest,
 } from './intentionPoolStore'
-import { withBroadcast } from '@/store/helpers/withBroadcast'
+import { withBroadcast } from '@/lib/withBroadcast'
 import { EnvelopeFactory } from '@/core/envelope'
 import { ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/config/dbConfig'
 
