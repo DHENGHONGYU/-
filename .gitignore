@@ -175,6 +175,9 @@ scripts/tmp_*.cjs
 scripts/temp-*.cjs
 scripts/calc-coverage.cjs
 scripts/coverage_gap_matrix.py
+# —— 远程校对同步包（GitHub 不通时的离线 git bundle；非源码，网络恢复后可重建）
+#   注：scripts/ops/ 不忽略 —— 同步脚本本身属于运维策略，版本化
+.gitbundle/
 # —— tests/e2e 运行时产物（截图、诊断输出文本）；保留 PWA 测试脚本（_pwa_*.py / pwa-cache-verify.py）
 tests/e2e/artifacts/
 # —— 一次性设计工作目录（.design 二进制工程文件，非源码交付物）
