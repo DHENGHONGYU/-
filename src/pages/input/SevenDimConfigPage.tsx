@@ -14,7 +14,8 @@
  */
 
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
+import { useToast } from '@/hooks/useToast'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { getLogger } from '@/lib/logger'
@@ -312,6 +313,8 @@ function DimensionRow({
  */
 export default function SevenDimConfigPage() {
   const store = useSevenDimConfigStore()
+  const navigate = useNavigate()
+  const { toast } = useToast()
   const [showApiTest, setShowApiTest] = useState(false)
   const [expandedCode, setExpandedCode] = useState<string | null>(null)
   const [kimiPlan, setKimiPlan] = useState('free')
@@ -526,7 +529,15 @@ export default function SevenDimConfigPage() {
               <Button
                 variant="ghost"
                 className="w-full"
-                onClick={() => store.reset()}
+                onClick={() => {
+                  store.reset()
+                  toast({
+                    variant: 'info',
+                    title: '配置已重置为默认',
+                    description: '建议进入采集监控台执行采集',
+                  })
+                  navigate('/input/collection-monitor')
+                }}
                 disabled={isDisabled}
               >
                 重置为默认

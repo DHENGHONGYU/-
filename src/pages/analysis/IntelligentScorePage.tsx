@@ -43,6 +43,9 @@ import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
 import type { IntelligentScore } from '@/data/types'
 import { COLOR_SHADES } from '@/constants/theme.tokens'
+import { eventBus } from '@/lib/eventBus'
+import { EVENT_NAMES } from '@/constants/store-channels.constants'
+import { useToast } from '@/hooks/useToast'
 
 const logger = getLogger()
 
@@ -121,18 +124,18 @@ function exportToPDF(score: IntelligentScore): void {
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 40px; color: ${COLOR_SHADES.gray.hex[800]}; }
     h1 { color: ${COLOR_SHADES.emerald.hex[500]}; border-bottom: 2px solid ${COLOR_SHADES.emerald.hex[500]}; padding-bottom: 10px; }
-    h2 { color: ${COLOR_SHADES.emerald.hex[600]}; margin-top: 30px; }
+    h2 { color: ${COLOR_SHADES.emerald.hex[600]}; margin-top: 32px; }
     .score { font-size: 48px; font-weight: bold; color: ${COLOR_SHADES.emerald.hex[500]}; }
     .meta { color: ${COLOR_SHADES.gray.hex[500]}; margin: 20px 0; }
-    .dimension { margin: 15px 0; padding: 15px; background: ${COLOR_SHADES.gray.hex[100]}; border-radius: 8px; }
+    .dimension { margin: 16px 0; padding: 16px; background: ${COLOR_SHADES.gray.hex[100]}; border-radius: 8px; }
     .dimension-name { font-weight: bold; color: ${COLOR_SHADES.emerald.hex[600]}; }
     .dimension-score { float: right; font-size: 18px; font-weight: bold; }
     .llm-badge { background: ${COLOR_SHADES.blue.hex[100]}; color: ${COLOR_SHADES.blue.hex[700]}; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-left: 8px; }
-    .basis { background: ${COLOR_SHADES.amber.hex[100]}; padding: 15px; border-radius: 8px; margin: 20px 0; }
-    .summary { background: ${COLOR_SHADES.emerald.hex[50]}; padding: 15px; border-radius: 8px; margin: 20px 0; }
+    .basis { background: ${COLOR_SHADES.amber.hex[100]}; padding: 16px; border-radius: 8px; margin: 24px 0; }
+    .summary { background: ${COLOR_SHADES.emerald.hex[50]}; padding: 16px; border-radius: 8px; margin: 24px 0; }
     .missing { color: ${COLOR_SHADES.red.hex[600]}; }
     .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid ${COLOR_SHADES.gray.hex[300]}; color: ${COLOR_SHADES.gray.hex[400]}; font-size: 12px; }
-    @media print { body { padding: 20px; } }
+    @media print { body { padding: 24px; } }
   </style>
 </head>
 <body>
@@ -142,7 +145,7 @@ function exportToPDF(score: IntelligentScore): void {
     <p><strong>使用模型</strong>: ${score.configSnapshot.model}</p>
   </div>
 
-  <div style="text-align: center; margin: 30px 0;">
+  <div style="text-align: center; margin: 32px 0;">
     <div class="score">${score.overallScore?.toFixed(2) ?? 'N/A'}</div>
     <div style="color: ${COLOR_SHADES.gray.hex[500]};">综合评分 / 5.0</div>
   </div>
@@ -226,6 +229,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
   const loadLogs = useIntelligentScoreStore((s) => s.loadLogs)
   const runScore = useIntelligentScoreStore((s) => s.runScore)
   const loadScoreTrend = useIntelligentScoreStore((s) => s.loadScoreTrend)
+  const { toast } = useToast()
 
   useEffect(() => {
     logger.info('[IntelligentScorePage] 初始化，加载股票列表')
@@ -238,6 +242,25 @@ export default function IntelligentScorePage(): React.JSX.Element {
     void loadHistory(symbol)
     void loadLogs(symbol)
   }, [symbol, loadHistory, loadLogs])
+
+  useEffect(() => {
+    const off = eventBus.on(EVENT_NAMES.QUALITY_GATE_PASSED, () => {
+      logger.info('[IntelligentScorePage] 采集完成事件，刷新数据')
+      void loadStocks()
+      if (symbol) {
+        void loadHistory(symbol)
+        void loadLogs(symbol)
+      }
+      toast({
+        variant: 'info',
+        title: '新数据已到达',
+        description: '分析结果已更新',
+      })
+    })
+    return () => {
+      off()
+    }
+  }, [loadStocks, loadHistory, loadLogs, symbol, toast])
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const selected = event.target.files

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router'
-import { RefreshCw, AlertCircle, CheckCircle2, XCircle, Clock, X } from 'lucide-react'
+import { RefreshCw, AlertCircle, CheckCircle2, XCircle, Clock, X, Eye, ChevronUp } from 'lucide-react'
 import { Card, CardContent } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
@@ -53,6 +53,7 @@ const FILTER_TABS = [
 export default function AgentTasksPage(): React.JSX.Element {
   const [statusFilter, setStatusFilter] = useState('')
   const [autoRefresh, setAutoRefresh] = useState(true)
+  const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null)
   const store = useAgentStore()
 
   useEffect(() => {
@@ -166,38 +167,76 @@ export default function AgentTasksPage(): React.JSX.Element {
                 <tbody>
                   {sortedTasks.map((task) => {
                     const StatusIcon = STATUS_ICONS[task.status] ?? Clock
+                    const canViewResult = task.status === 'completed' || task.status === 'failed'
+                    const isExpanded = expandedTaskId === task.id
                     return (
-                      <tr key={task.id} className="border-b text-sm hover:bg-muted/50">
-                        <td className="p-3 font-mono text-xs">{task.id.slice(0, 12)}...</td>
-                        <td className="p-3">{task.agentId || task.id.split('-')[0]}</td>
-                        <td className="p-3">{task.type}</td>
-                        <td className="p-3">
-                          <Badge variant={STATUS_VARIANTS[task.status] ?? 'secondary'}>
-                            <StatusIcon className="mr-1 h-3 w-3" />
-                            {STATUS_LABELS[task.status] ?? task.status}
-                          </Badge>
-                        </td>
-                        <td className="p-3 text-muted-foreground">
-                          {new Date(task.createdAt).toLocaleString()}
-                        </td>
-                        <td className="p-3 text-muted-foreground">
-                          {task.completedAt && task.startedAt
-                            ? `${task.completedAt - task.startedAt}ms`
-                            : '-'}
-                        </td>
-                        <td className="p-3">
-                          {task.status === 'running' && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleCancel(task.id)}
-                            >
-                              <X className="mr-1 h-3 w-3" />
-                              取消
-                            </Button>
-                          )}
-                        </td>
-                      </tr>
+                      <React.Fragment key={task.id}>
+                        <tr className="border-b text-sm hover:bg-muted/50">
+                          <td className="p-3 font-mono text-xs">{task.id.slice(0, 12)}...</td>
+                          <td className="p-3">{task.agentId || task.id.split('-')[0]}</td>
+                          <td className="p-3">{task.type}</td>
+                          <td className="p-3">
+                            <Badge variant={STATUS_VARIANTS[task.status] ?? 'secondary'}>
+                              <StatusIcon className="mr-1 h-3 w-3" />
+                              {STATUS_LABELS[task.status] ?? task.status}
+                            </Badge>
+                          </td>
+                          <td className="p-3 text-muted-foreground">
+                            {new Date(task.createdAt).toLocaleString()}
+                          </td>
+                          <td className="p-3 text-muted-foreground">
+                            {task.completedAt && task.startedAt
+                              ? `${task.completedAt - task.startedAt}ms`
+                              : '-'}
+                          </td>
+                          <td className="p-3">
+                            <div className="flex items-center gap-1">
+                              {task.status === 'running' && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleCancel(task.id)}
+                                >
+                                  <X className="mr-1 h-3 w-3" />
+                                  取消
+                                </Button>
+                              )}
+                              {canViewResult && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => setExpandedTaskId(isExpanded ? null : task.id)}
+                                >
+                                  {isExpanded ? <ChevronUp className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                                  {isExpanded ? '收起' : '结果'}
+                                </Button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                        {isExpanded && (
+                          <tr className="border-b bg-muted/30">
+                            <td colSpan={7} className="p-4">
+                              <div className="rounded-md border bg-background p-3">
+                                <div className="mb-2 text-xs font-medium text-muted-foreground">执行结果</div>
+                                {task.error ? (
+                                  <pre className="whitespace-pre-wrap break-words text-sm text-destructive-foreground">
+                                    {task.error}
+                                  </pre>
+                                ) : task.result ? (
+                                  <pre className="whitespace-pre-wrap break-words text-sm text-foreground">
+                                    {typeof task.result === 'string'
+                                      ? task.result
+                                      : JSON.stringify(task.result, null, 2)}
+                                  </pre>
+                                ) : (
+                                  <span className="text-sm text-muted-foreground">无结果数据</span>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
                     )
                   })}
                 </tbody>

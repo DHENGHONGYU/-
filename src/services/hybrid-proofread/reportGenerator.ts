@@ -329,7 +329,7 @@ export class ReportGenerator {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>代码安全校对报告 - ${report.project_name}</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1008px; margin: 0 auto; padding: 2rem; }
     h1 { color: ${CSS_COLOR_H1}; }
     h2 { color: ${CSS_COLOR_H2}; border-bottom: 2px solid ${CSS_COLOR_BORDER}; padding-bottom: 0.5rem; }
     .info-box { background: ${CSS_COLOR_BG}; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }

@@ -4,6 +4,7 @@ import { Server, ToggleLeft, ToggleRight, Wrench, BookOpen, FileText, Play, Eye,
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
+import { Switch } from '@/components/atoms/Switch'
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
@@ -34,8 +35,8 @@ export default function MCPServerDashboardPage(): React.JSX.Element {
   const [toolResult, setToolResult] = useState<string | null>(null)
   const [toolError, setToolError] = useState<string | null>(null)
 
-  // 仅在挂载时拉取一次,使用 getState() 避免整个 store 引用变更触发死循环
-  // (refreshServers 内 set() 产生新 state 引用 → [store] 依赖变更 → 重跑 → 无限循环)
+  const [autoRefresh, setAutoRefresh] = useState(true)
+
   useEffect(() => {
     logger.info('[MCPServerDashboard] Mounted')
     void useMCPServerStore.getState().refreshServers()
@@ -43,6 +44,14 @@ export default function MCPServerDashboardPage(): React.JSX.Element {
       logger.info('[MCPServerDashboard] Unmounted')
     }
   }, [])
+
+  useEffect(() => {
+    if (!autoRefresh) return
+    const interval = setInterval(() => {
+      void useMCPServerStore.getState().refreshServers()
+    }, 30000)
+    return () => clearInterval(interval)
+  }, [autoRefresh])
 
   const handleToggle = useCallback((name: string, enabled: boolean) => {
     store.toggleServer(name, enabled)
@@ -88,10 +97,16 @@ export default function MCPServerDashboardPage(): React.JSX.Element {
         title="MCP Server 管理"
         description="管理所有已注册的 MCP Server，查看工具、资源和 Prompt"
         actions={
-          <Button variant="outline" size="sm" onClick={() => store.refreshServers()}>
-            <RefreshCw className="mr-2 h-4 w-4" />
-            刷新
-          </Button>
+          <div className="flex items-center gap-3">
+            <label className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Switch checked={autoRefresh} onChange={(e) => setAutoRefresh(e.target.checked)} />
+              自动健康检查 (30s)
+            </label>
+            <Button variant="outline" size="sm" onClick={() => store.refreshServers()}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              立即刷新
+            </Button>
+          </div>
         }
       />
 
