@@ -88,6 +88,12 @@ function getChangedFiles(opts) {
 }
 
 // ---------- 匹配 ----------
+// 跨层收敛冗余（P1-2）：物理层为准。registry 虚拟层冗余条目带 `aliasOf` 字段，声明其权威物理副本。
+// 当该物理技能命中时，丢弃对应虚拟别名命中，收敛为一份 mandatory 判定（其 gates 与物理副本一致）。
+function isVirtual(hit) {
+  return String(hit.skill.path || '').includes('virtual');
+}
+
 function matchSkills(registry, files, prompt) {
   const hits = [];
   // 三层分离匹配：physical（projectPhysicalSkills）+ virtual（virtualPlatformSkills）都纳入
@@ -117,9 +123,19 @@ function matchSkills(registry, files, prompt) {
       }
     }
   }
+  // 收敛：物理层已命中的，其虚拟 `aliasOf` 别名不再重复计入
+  const matchedPhysical = new Set();
+  for (const h of hits) {
+    if (!isVirtual(h)) matchedPhysical.add(h.skill.name);
+  }
+  const deduped = [];
+  for (const h of hits) {
+    if (isVirtual(h) && h.skill.aliasOf && matchedPhysical.has(h.skill.aliasOf)) continue;
+    deduped.push(h);
+  }
   // mandatory 排前面
-  hits.sort((a, b) => Number(b.skill.mandatory) - Number(a.skill.mandatory));
-  return hits;
+  deduped.sort((a, b) => Number(b.skill.mandatory) - Number(a.skill.mandatory));
+  return deduped;
 }
 
 // ---------- 日志 ----------

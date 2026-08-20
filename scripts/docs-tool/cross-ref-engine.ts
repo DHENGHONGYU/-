@@ -132,6 +132,11 @@ function isPseudoReference(target: string): boolean {
   if (/:\d+$/.test(target)) return true // 行号后缀
   if (target.includes('--')) return true // 命令行 flag
   if (target.endsWith('/')) return true // 纯目录引用（尾斜杠）
+  // git status / diff 状态标记（如 `M CHANGELOG.md`、`git add -A` 输出文本），非文件引用
+  if (/^(?:[MADR?!]{1,2}\s+\S+)/.test(target)) return true
+  if (target.includes(' -A')) return true // git 命令 flag 示例文本
+  // 生成产物目录：outputs/ deliverables/ 为构建/输送产物，非仓库内源文档，不做文件存在性断言
+  if (/^(?:outputs|deliverables)\//.test(target)) return true
   // 设计令牌：大写下划线令牌 + 尺寸刻度后缀（如 RADIUS.md / SPACING.sm / BORDER_WIDTH.lg）非文件引用
   if (/^[A-Z][A-Z0-9_]*\.(?:xs|sm|md|lg|xl|2xl|3xl|base)$/.test(target)) return true
   // 占位符文件名：Xxx/xxx 前缀表示模板示例（如 XxxWidget.tsx、xxx.types.ts、useXxxStore.ts）
@@ -314,6 +319,28 @@ export function scanCodeReferences(filePath: string): Reference[] {
  */
 const EXTERNALIZED_NAMESPACES = ['/archive/']
 
+/** 懒加载的 docs 树 basename → 相对路径 索引，供裸名 .md 引用兜底使用 */
+let DOCS_INDEX_BUILT = false
+const DOCS_BASENAME_INDEX = new Set<string>()
+
+function ensureDocsIndex(rootDir: string): void {
+  if (DOCS_INDEX_BUILT) return
+  const docsDir = join(rootDir, 'docs')
+  const walk = (dir: string): void => {
+    if (!existsSync(dir)) return
+    for (const item of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, item.name)
+      if (item.isDirectory()) {
+        if (!item.name.startsWith('.') && item.name !== 'archive') walk(full)
+      } else if (item.name.endsWith('.md')) {
+        DOCS_BASENAME_INDEX.add(item.name)
+      }
+    }
+  }
+  walk(docsDir)
+  DOCS_INDEX_BUILT = true
+}
+
 function isExternalizedTarget(target: string): boolean {
   const norm = target.replace(/\\/g, '/')
   return EXTERNALIZED_NAMESPACES.some((ns) => norm.includes(ns))
@@ -325,6 +352,11 @@ export function validateReference(ref: Reference, rootDir: string): boolean {
 
   const rootPrefix = rootDir.replace(/[\\/]$/, '') + (process.platform === 'win32' ? '\\' : '/')
 
+  const exists = (p: string): boolean =>
+    existsSync(p) || existsSync(p + '.ts') || existsSync(p + '.tsx') || existsSync(p + '.md')
+  // 绝对路径（如 file:///... 剥离后）仅按磁盘原样校验，不追加后缀。
+  const existsFile = (p: string): boolean => existsSync(p)
+
   // 代码位置后缀（行号/行列/行范围，支持 : 或 / 分隔，以及逗号分隔的多位置如 :52,134）和 Markdown 锚点不应影响文件存在性判断
   const locationSuffix = /(\.\w+)?(?::\d+(?:[-/]\d+)?(?:,\d+)*(?::\d+)?)$/
   let baseTarget = ref.target
@@ -333,6 +365,13 @@ export function validateReference(ref: Reference, rootDir: string): boolean {
   }
   if (baseTarget.includes('#')) {
     baseTarget = baseTarget.split('#')[0]
+  }
+
+  // 绝对路径 URI（file:/// 前缀）剥离后按磁盘绝对路径直接校验
+  const fileScheme = /^file:\/\/\//i
+  if (fileScheme.test(baseTarget)) {
+    const absolute = baseTarget.replace(fileScheme, '').replace(/\\/g, '/')
+    return existsFile(absolute)
   }
 
   let fullPath: string
@@ -345,10 +384,28 @@ export function validateReference(ref: Reference, rootDir: string): boolean {
     fullPath = resolve(sourceDir, baseTarget)
   }
 
-  const exists = (p: string): boolean =>
-    existsSync(p) || existsSync(p + '.ts') || existsSync(p + '.tsx') || existsSync(p + '.md')
-
   if (exists(fullPath)) return true
+
+  // src/scripts 目录前缀引用（无扩展名）→ 依次尝试常见模块文件后缀补全
+  if (baseTarget.startsWith('src/') || baseTarget.startsWith('scripts/')) {
+    const base = fullPath
+    for (const suffix of ['.constants.ts', '.types.ts', '.config.ts', '.index.ts', '.useCase.ts', '.service.ts', '.test.ts', '.ts', '.tsx', '.js']) {
+      if (existsSync(base + suffix)) return true
+    }
+  }
+
+  // 文档内相对引用：目标以不带 docs/ 前缀的已知绝对前缀出现（如 guides/...、meta/...、reference/...）
+  // 当源目录基准解析失败时，退回以仓库根 + docs/ 为基准重试，避免对既有文档简写链接误报断链。
+  if (!baseTarget.startsWith('docs/')) {
+    const reAnchor = resolve(rootDir, 'docs', baseTarget)
+    if (exists(reAnchor)) return true
+  }
+
+  // 裸名 .md 引用（无路径分隔符）：懒加载一次 docs 树 basename 索引，命中即视为有效
+  if (!baseTarget.includes('/') && !baseTarget.includes('\\') && baseTarget.endsWith('.md')) {
+    ensureDocsIndex(rootDir)
+    if (DOCS_BASENAME_INDEX.has(baseTarget)) return true
+  }
 
   // 兜底 A：根级裸名引用（无斜杠）
   if (!baseTarget.includes('/') && !baseTarget.includes('\\')) {
