@@ -13,7 +13,7 @@ FinSightV9 是一个**纯前端、本地优先的个人 A 股投研复盘系统*
 本手册把分散的"设计思路、架构、组件规范、模型运行、竞品定位"**收敛到同一目录**，作为团队分享与 onboarding 的单一入口。它不是文档的替代品，而是**导航图 + 精华萃取**。
 
 > ⚠️ 文档漂移提示（编写时已核正）
-> 1. **Gateway 网关**：`../../archive/historical-2026-08-16/batch7/docs/reference/gateway-write-permission-spec.md（已归档）` 描述的 `dataGateway.execute()` 是**目标架构**，当前 `core/databridge.ts` 仍直接 `import { db }` 写库，尚未收口。手册中相关处已标注"目标/现状"。
+> 1. **Gateway 网关**：v1.7.0 data/gateway 门面重构已**全面闭环**（AGENTS.md v1.7.0 / 代码 v2.0.0-rc.2）。`src/data/gateway/{index.ts, gateway.types.ts}` 为唯一允许直写 `dataLayer`/`db` 的门面；core 层统一 `import { gateway }`，services/store/pages 经 dataLayerStore → DataBridge → gateway 链路。手册相关处已同步为"已落地"。
 > 2. **MCP 规模**：当前为 **15 个 enabled Server**（P0 清理后），非早期文档所述的"20+"。
 > 3. **五因子**：指**板块轮动五因子**（合成种子，UI 标"示例"），与个股 V6 十一层引擎、九维智能评分是**三个不同概念**，请勿混淆。
 

@@ -18,6 +18,13 @@ change_log:
     changes: "DEPRECATED（2026-07-14）；2026-08-15 系统性核对：仍保持废弃状态，最新定义见 docs/explanation/design/multi-factor-screening-data-definition.md v1.0.1 与 docs/reference/data-dictionary-index.md v1.1.0。"
     date: 2026-08-15
 ---
+covers_code:
+  - src/types/modules/screening.types.ts
+  - src/store/multiFactorScreeningStore.ts
+  - src/services/screening/multiFactorScreeningEngine.ts
+  - src/config/multiFactorScreeningConfig.ts
+  - src/config/routes.ts
+
 
 # DEPRECATED - multi-factor-screening-data-definition.md
 

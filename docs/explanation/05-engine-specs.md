@@ -21,6 +21,16 @@ change_log:
     changes: Initial version established
     date: 2026-07-17
 ---
+covers_code:
+  - src/config/scoreFactors.ts
+  - src/config/dbConfig.ts
+  - src/data/db.ts
+  - src/config/fetcherConfig.ts
+  - src/data/types.ts
+  - src/services/scoring/v6ScoreService.ts
+  - src/services/scoring/intelligentScoreService.ts
+  - src/services/scoring/intelligentScorePrompt.ts
+
 
 # 05. 引擎规格
 

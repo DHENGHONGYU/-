@@ -193,6 +193,7 @@ date: 2026-07-17
 | V9-DOC-PROJ-375 | project | "FinSightV9 v2.0.0-rc.2 Release Notes (Draft)" | release-notes/RELEASE-NOTES-v2.0.0-rc.2.md |
 | V9-DOC-PROJ-376 | project | "FinSightV9 v2.0.0-rc.1 Release Notes" | release-notes/RELEASE-NOTES.md |
 | V9-DOC-PROJ-377 | project | "最终 Commit Message（请确认）" | releases/COMMIT-FINAL.md |
+| V9-DOC-DOCS-000 | project | V9 文档体系总览与导航 | README.md |
 | V9-DOC-QA-005 | qa | security-test-plan | reports/testing/security-test-plan.md |
 | V9-DOC-QA-027 | qa | 2026-07-04-ui-testing-optimization | reference/2026-07-04-ui-testing-optimization.md |
 | V9-DOC-QA-028 | qa | ai-generate-audit-fix-loop | reference/ai-generate-audit-fix-loop.md |

@@ -101,17 +101,17 @@ last_updated: 2026-08-15
 
 ---
 
-## 7. 核心基础设施（DataBridge 现状 vs 网关目标）
+## 7. 核心基础设施（DataBridge 与 Gateway 门面链路）
 
-| 模块 | 现状 | 目标 |
-|------|------|------|
-| 写入口 | `core/databridge.ts` 直接 `import { db }` + `db.put`（见第 16、681 行） | 改为 `dataGateway.execute()`，仅 Gateway 能直写 `dataLayer` |
-| 信封 | `envelope.ts` `StandardEnvelope{meta,payload}` | 同现状 |
-| ACL | `acl.ts` `ACL_MATRIX` module→store→operation | 下沉到 Gateway "最后一公里"二次校验（纵深防御） |
-| 缓存 | `memoryCache.ts` 读缓存（10s TTL/200 LRU） | 同现状 |
-| 事件 | `eventBus.ts` 写后广播 `${store}Changed` | 同现状 |
+| 模块 | 现状（v2.0.0-rc.2 · gateway 已闭环） |
+|------|------|
+| 写入口 | **DataBridge 写操作委托 `data/gateway/`（DataGatewayImpl 单例）**；core 层统一 `import { gateway } from '@/data/gateway'`；services/store/pages 经 dataLayerStore（`sendWriteEnvelope`/`queryGet`）→ DataBridge → gateway 链路。仅 `data/gateway/` 能直写 `dataLayer`/`db`；直接 `import { db }` 或用 IDBTransaction 属架构违规（audit:db-references 拦截） |
+| 信封 | `envelope.ts` `StandardEnvelope{meta,payload}` |
+| ACL | `acl.ts` `ACL_MATRIX` module→store→operation；Gateway 层再做"最后一公里"二次校验（纵深防御） |
+| 缓存 | `memoryCache.ts` 读缓存（10s TTL/200 LRU） |
+| 事件 | `eventBus.ts` 写后广播 `${store}Changed` |
 
-> ⚠️ 文档中"services 写仅经 DataBridge → data/gateway/"目前**未完全落地**；DataGateway 仅存在于 `../../archive/historical-2026-08-16/batch7/docs/reference/gateway-write-permission-spec.md（已归档）`。手册表述为"目标架构/待迁移"。
+> ✅ v1.7.0 data/gateway 门面重构已**全面闭环**（AGENTS.md v1.7.0 / 代码 v2.0.0-rc.2）：`src/data/gateway/{index.ts, gateway.types.ts}` 提供 `IGateway`/`DataGatewayImpl` 单例，含生命周期/事务/CRUD/批量/级联/数据管理/仓储工厂 8 类 API。原"目标架构/待迁移"表述已过期。
 
 ### Web Worker 池（算力卸载）
 - `src/services/workers/v6ScoreWorker.ts`：Vite 模块 Worker，**纯计算、不触及 IndexedDB/DOM**。

@@ -191,7 +191,7 @@ doc_id: V9-DOC-WIKI-002
 | `src/pages/` vs `src/apps/` | `pages/` 是**页面组件**（单个路由的 React 组件）；`apps/` 是五舱**分发器**（路由匹配后懒加载 pages/ 或自身内部 pages） |
 | `src/store/` vs `src/services/` | Store 只管**状态 + 订阅 + selector + 跨 Tab 广播**；业务逻辑、外部 IO、数据写入一律下沉 Services |
 | `src/services/fetcher/` vs `src/services/data-collector/` | `fetcher/` 是**底层 HTTP 客户端**（单请求超时/重试/健康检查 + Provider 家族）；`data-collector/` 是**七层采集流水线**（按维度配置多源优先级、编排多请求、写入 IDB、失败降级、调度器） |
-| `data/` vs `data/gateway`（AGENTS.md 契约） | 契约提及 `data/gateway/` 作为"写入口"角色；**实际物理目录不存在**，该角色由 `core/databridge.ts:routeToDB()` 私有方法 + `core/databridgeRouter.ts` 承担，直接写 `db`（V6Database）而非经 gateway 中间层 |
+| `src/data/` vs `src/data/gateway/` | `data/` 持有 IndexedDB 连接（V6Database）、Schema/Migrations、仓储、dataLayer 子模块聚合；`data/gateway/`（`index.ts`+`gateway.types.ts`）是**唯一允许直接操作 `dataLayer`/`db` 的门面**（`IGateway`/`DataGatewayImpl` 单例，含生命周期/事务/CRUD/批量/级联/数据管理/仓储工厂 8 类 API）。core 层统一 `import { gateway } from '@/data/gateway'`；services/store/pages 经 dataLayerStore → DataBridge → gateway 链路。直接 `import { db }` / 直接使用 IDBTransaction 属架构违规（audit:db-references 拦截） |
 
 ## 6. 下一站
 
@@ -209,7 +209,7 @@ doc_id: V9-DOC-WIKI-002
 | 2 | services 子域数 | 30+（粗略）| **38**（逐一列全目录）| `src/services/` 磁盘实查 |
 | 3 | Store 注册表条目数 | 63 | **66**（51 active + 15 deprecated）| `storeRegistry.ts` 逐行 status 计数 |
 | 4 | Store 磁盘文件数 | 63（与注册表混淆）| **78**（排除 \*.test.ts）| `Get-ChildItem src/store/*.ts -Exclude *.test.ts` |
-| 5 | data/ 与 gateway/ 职责混淆 | 写为"数据网关" | **data/：DAO & 查询 DSL；gateway/：外部 API 接入 & 协议转换**；`data/gateway/` 物理目录不存在（由 core 层承担）| 实际文件分布 + AGENTS.md 契约差异 |
+| 5 | data/ 与 gateway/ 职责混淆 | 写为"数据网关" | **data/：DAO & 查询 DSL + gateway 门面**；`data/gateway/` 物理目录已存在（v1.7.0 闭环，`index.ts`+`gateway.types.ts`，`DataGatewayImpl` 单例），是唯一允许直写 `dataLayer`/`db` 的入口；core 层统一 `import { gateway }` | `src/data/gateway/` 文件实查 + AGENTS.md v1.7.0 契约 |
 | 6 | scripts/ 目录 audit:\* 数 | 67 audit\* | **66 audit\*** | `package.json` 脚本前缀计数 |
 | 7 | STORE_NAME 枚举数 | 50 左右 | **53**（与 DB_VERSION=35 对应）| `dbConfig.ts` L323-L388 逐行 |
 

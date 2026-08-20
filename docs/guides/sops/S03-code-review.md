@@ -66,7 +66,7 @@ change_log:
 | 2 | **📝 变更摘要**（Summary） | `修复 V6 评分引擎在 ST 股上的评分归一化溢出 bug (#TCK-3421)，新增 2 条边界测试` | ≤ 3 行中文；含 Issue/Task 关联 ID |
 | 3 | **🧩 影响范围**（Affected Modules / Scopes） | `scoring: L-5 财务估值层 · dataLayer: STOCKS schema v35 新增字段 ` | 必须与 commit scope 一致；跨模块需列出全部 |
 | 4 | **🔬 测试覆盖**（Testing） | `npm run test:stable：V6 相关 312 条 + 新增 2 条 = 314/314；E2E lite 11/11；手动：截图展示修复前后分差` | 自动化命令 + 手动验证均列出 |
-| 5 | **📑 相关文档**（Related Docs） | `docs/guides/sops/S05-pre-launch-checklist.md §4.B 25 股票清单已同步更新` / `docs/reports/rca/2026-08-15-score-overflow.md` | 文档 PR 合并进同一 PR 或附 link |
+| 5 | **📑 相关文档**（Related Docs） | `docs/guides/sops/S05-pre-launch-checklist.md §4.B 25 股票清单已同步更新` / `docs/reports/pre-launch/2026-08-19_v2.0.0-rc.2/06-scorecard.md` | 文档 PR 合并进同一 PR 或附 link |
 | 6 | **⚠️ 风险评估**（Risk Assessment · Low/Medium/High） | `Medium：影响范围仅 ST 股样本（<3% 代码），但归一化溢出可能连带 L-8 技术筹码分析` | P0 级功能标 High；并在 §下方加「架构师强制复签」标签 |
 | 7 | **🧪 截图 / 录屏**（Screenshots · UI/交互类必填） | （左侧 Before 截图，右侧 After 截图，对比表格） | UI PR 缺此 = BLOCK |
 | 8 | **✅ PR Owner 自检清单**（Self-Check） | `[x] Conventional 规范消息；[x] 本地 pre-commit 22 步全 BLOCK=0；[x] 无新增 `any` / `@ts-ignore`；[x] 新增 JSDoc 覆盖公开方法` | 4 项全勾选 = 通过 |
