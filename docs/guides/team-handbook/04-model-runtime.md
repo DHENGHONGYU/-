@@ -3,15 +3,20 @@ doc_id: V9-DOC-GUIDE-051
 title: "04 · 模型运行思路（Model Runtime & Data Flow）"
 domain: guide
 status: active
-last_updated: 2026-08-17
----
-
----
-doc_id: V9-DOC-GUIDE-034
-title: "04 · 模型运行思路（Model Runtime & Data Flow）"
-domain: guide
-status: active
-last_updated: 2026-08-15
+last_updated: 2026-08-21
+tier: L3
+related_docs:
+  - V9-DOC-EXP-005
+  - V9-DOC-REF-022
+covers_code:
+  - src/services/scoring/
+  - src/services/data-collector/
+  - src/services/llm/
+  - src/core/
+  - src/data/
+  - src/agents/
+  - src/mcp/
+owners: ["tech-debt/iteration-1"]
 ---
 
 # 04 · 模型运行思路（Model Runtime & Data Flow）
