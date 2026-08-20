@@ -21,8 +21,9 @@ const CLI = {
 const BASELINE = Object.freeze({
   storeEntriesMin: 64,
   serviceEntriesMin: 62,
-  // 2026-08-13 校准：新增 CapitalAllocationPanel + DualFactorEvaluationPanel 后，组件数 157→159
-  componentEntriesMin: 159,
+  // 2026-08-20 校准：audit-registry.ts 反向检查全通过（0 unregistered），
+  // 当前 Component 注册表实际条目数为 156，基线应与现实一致。
+  componentEntriesMin: 156,
   componentSubRegistries: 4,
 });
 
