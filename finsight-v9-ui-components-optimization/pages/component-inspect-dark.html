@@ -70,84 +70,137 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
     <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
-    <style type="text/tailwindcss">
-  @theme inline {
-    --color-background: var(--v9-background);
-    --color-foreground: var(--v9-foreground);
-    --color-card: var(--v9-card);
-    --color-card-foreground: var(--v9-card-foreground);
-    --color-popover: var(--v9-popover);
-    --color-popover-foreground: var(--v9-popover-foreground);
-    --color-primary: var(--v9-primary);
-    --color-primary-foreground: var(--v9-primary-foreground);
-    --color-muted: var(--v9-muted);
-    --color-muted-foreground: var(--v9-muted-foreground);
-    --color-border: var(--v9-border);
-    --color-input: var(--v9-input);
-    --color-ring: var(--v9-ring);
+    <style type="text/tailwindcss">  @theme inline {
+    --color-background: hsl(var(--v9-background));
+    --color-foreground: hsl(var(--v9-foreground));
+    --color-card: hsl(var(--v9-card));
+    --color-card-foreground: hsl(var(--v9-card-foreground));
+    --color-popover: hsl(var(--v9-popover));
+    --color-popover-foreground: hsl(var(--v9-popover-foreground));
+    --color-primary: hsl(var(--v9-primary));
+    --color-primary-foreground: hsl(var(--v9-primary-foreground));
+    --color-muted: hsl(var(--v9-muted));
+    --color-muted-foreground: hsl(var(--v9-muted-foreground));
+    --color-border: hsl(var(--v9-border));
+    --color-input: hsl(var(--v9-input));
+    --color-ring: hsl(var(--v9-ring));
+    --color-success: hsl(var(--v9-success));
+    --color-success-foreground: hsl(var(--v9-success-foreground));
+    --color-warning: hsl(var(--v9-warning));
+    --color-warning-foreground: hsl(var(--v9-warning-foreground));
+    --color-error: hsl(var(--v9-error));
+    --color-error-foreground: hsl(var(--v9-error-foreground));
+    --color-info: hsl(var(--v9-info));
+    --color-info-foreground: hsl(var(--v9-info-foreground));
+    --color-surface: hsl(var(--v9-surface));
+    --color-surface-2: hsl(var(--v9-surface-2));
+    --color-surface-3: hsl(var(--v9-surface-3));
     --radius-sm: var(--v9-radius-sm);
     --radius-md: var(--v9-radius-md);
     --radius-lg: var(--v9-radius-lg);
   }
   @layer base {
-    body { background: var(--v9-background); color: var(--v9-foreground); }
+    body { background: hsl(var(--v9-background)); color: hsl(var(--v9-foreground)); }
     td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
     th { @apply whitespace-nowrap; }
   }
-    </style>
-    <style id="semantic-token-fallback">
-      .bg-background { background-color: var(--v9-background); }
-      .text-background { color: var(--v9-background); }
-      .border-background { border-color: var(--v9-background); }
-      .ring-background { --tw-ring-color: var(--v9-background); }
-      .bg-foreground { background-color: var(--v9-foreground); }
-      .text-foreground { color: var(--v9-foreground); }
-      .border-foreground { border-color: var(--v9-foreground); }
-      .ring-foreground { --tw-ring-color: var(--v9-foreground); }
-      .bg-card { background-color: var(--v9-card); }
-      .text-card { color: var(--v9-card); }
-      .border-card { border-color: var(--v9-card); }
-      .ring-card { --tw-ring-color: var(--v9-card); }
-      .bg-card-foreground { background-color: var(--v9-card-foreground); }
-      .text-card-foreground { color: var(--v9-card-foreground); }
-      .border-card-foreground { border-color: var(--v9-card-foreground); }
-      .ring-card-foreground { --tw-ring-color: var(--v9-card-foreground); }
-      .bg-popover { background-color: var(--v9-popover); }
-      .text-popover { color: var(--v9-popover); }
-      .border-popover { border-color: var(--v9-popover); }
-      .ring-popover { --tw-ring-color: var(--v9-popover); }
-      .bg-popover-foreground { background-color: var(--v9-popover-foreground); }
-      .text-popover-foreground { color: var(--v9-popover-foreground); }
-      .border-popover-foreground { border-color: var(--v9-popover-foreground); }
-      .ring-popover-foreground { --tw-ring-color: var(--v9-popover-foreground); }
-      .bg-primary { background-color: var(--v9-primary); }
-      .text-primary { color: var(--v9-primary); }
-      .border-primary { border-color: var(--v9-primary); }
-      .ring-primary { --tw-ring-color: var(--v9-primary); }
-      .bg-primary-foreground { background-color: var(--v9-primary-foreground); }
-      .text-primary-foreground { color: var(--v9-primary-foreground); }
-      .border-primary-foreground { border-color: var(--v9-primary-foreground); }
-      .ring-primary-foreground { --tw-ring-color: var(--v9-primary-foreground); }
-      .bg-muted { background-color: var(--v9-muted); }
-      .text-muted { color: var(--v9-muted); }
-      .border-muted { border-color: var(--v9-muted); }
-      .ring-muted { --tw-ring-color: var(--v9-muted); }
-      .bg-muted-foreground { background-color: var(--v9-muted-foreground); }
-      .text-muted-foreground { color: var(--v9-muted-foreground); }
-      .border-muted-foreground { border-color: var(--v9-muted-foreground); }
-      .ring-muted-foreground { --tw-ring-color: var(--v9-muted-foreground); }
-      .bg-border { background-color: var(--v9-border); }
-      .text-border { color: var(--v9-border); }
-      .border-border { border-color: var(--v9-border); }
-      .ring-border { --tw-ring-color: var(--v9-border); }
-      .bg-input { background-color: var(--v9-input); }
-      .text-input { color: var(--v9-input); }
-      .border-input { border-color: var(--v9-input); }
-      .ring-input { --tw-ring-color: var(--v9-input); }
-      .bg-ring { background-color: var(--v9-ring); }
-      .text-ring { color: var(--v9-ring); }
-      .border-ring { border-color: var(--v9-ring); }
-      .ring-ring { --tw-ring-color: var(--v9-ring); }
+    </style>    <style id="semantic-token-fallback">
+      .bg-background { background-color: hsl(var(--v9-background)); }
+      .text-background { color: hsl(var(--v9-background)); }
+      .border-background { border-color: hsl(var(--v9-background)); }
+      .ring-background { --tw-ring-color: hsl(var(--v9-background)); }
+      .bg-foreground { background-color: hsl(var(--v9-foreground)); }
+      .text-foreground { color: hsl(var(--v9-foreground)); }
+      .border-foreground { border-color: hsl(var(--v9-foreground)); }
+      .ring-foreground { --tw-ring-color: hsl(var(--v9-foreground)); }
+      .bg-card { background-color: hsl(var(--v9-card)); }
+      .text-card { color: hsl(var(--v9-card)); }
+      .border-card { border-color: hsl(var(--v9-card)); }
+      .ring-card { --tw-ring-color: hsl(var(--v9-card)); }
+      .bg-card-foreground { background-color: hsl(var(--v9-card-foreground)); }
+      .text-card-foreground { color: hsl(var(--v9-card-foreground)); }
+      .border-card-foreground { border-color: hsl(var(--v9-card-foreground)); }
+      .ring-card-foreground { --tw-ring-color: hsl(var(--v9-card-foreground)); }
+      .bg-popover { background-color: hsl(var(--v9-popover)); }
+      .text-popover { color: hsl(var(--v9-popover)); }
+      .border-popover { border-color: hsl(var(--v9-popover)); }
+      .ring-popover { --tw-ring-color: hsl(var(--v9-popover)); }
+      .bg-popover-foreground { background-color: hsl(var(--v9-popover-foreground)); }
+      .text-popover-foreground { color: hsl(var(--v9-popover-foreground)); }
+      .border-popover-foreground { border-color: hsl(var(--v9-popover-foreground)); }
+      .ring-popover-foreground { --tw-ring-color: hsl(var(--v9-popover-foreground)); }
+      .bg-primary { background-color: hsl(var(--v9-primary)); }
+      .text-primary { color: hsl(var(--v9-primary)); }
+      .border-primary { border-color: hsl(var(--v9-primary)); }
+      .ring-primary { --tw-ring-color: hsl(var(--v9-primary)); }
+      .bg-primary-foreground { background-color: hsl(var(--v9-primary-foreground)); }
+      .text-primary-foreground { color: hsl(var(--v9-primary-foreground)); }
+      .border-primary-foreground { border-color: hsl(var(--v9-primary-foreground)); }
+      .ring-primary-foreground { --tw-ring-color: hsl(var(--v9-primary-foreground)); }
+      .bg-muted { background-color: hsl(var(--v9-muted)); }
+      .text-muted { color: hsl(var(--v9-muted)); }
+      .border-muted { border-color: hsl(var(--v9-muted)); }
+      .ring-muted { --tw-ring-color: hsl(var(--v9-muted)); }
+      .bg-muted-foreground { background-color: hsl(var(--v9-muted-foreground)); }
+      .text-muted-foreground { color: hsl(var(--v9-muted-foreground)); }
+      .border-muted-foreground { border-color: hsl(var(--v9-muted-foreground)); }
+      .ring-muted-foreground { --tw-ring-color: hsl(var(--v9-muted-foreground)); }
+      .bg-border { background-color: hsl(var(--v9-border)); }
+      .text-border { color: hsl(var(--v9-border)); }
+      .border-border { border-color: hsl(var(--v9-border)); }
+      .ring-border { --tw-ring-color: hsl(var(--v9-border)); }
+      .bg-input { background-color: hsl(var(--v9-input)); }
+      .text-input { color: hsl(var(--v9-input)); }
+      .border-input { border-color: hsl(var(--v9-input)); }
+      .ring-input { --tw-ring-color: hsl(var(--v9-input)); }
+      .bg-ring { background-color: hsl(var(--v9-ring)); }
+      .text-ring { color: hsl(var(--v9-ring)); }
+      .border-ring { border-color: hsl(var(--v9-ring)); }
+      .ring-ring { --tw-ring-color: hsl(var(--v9-ring)); }
+      .bg-success { background-color: hsl(var(--v9-success)); }
+      .text-success { color: hsl(var(--v9-success)); }
+      .border-success { border-color: hsl(var(--v9-success)); }
+      .ring-success { --tw-ring-color: hsl(var(--v9-success)); }
+      .bg-success-foreground { background-color: hsl(var(--v9-success-foreground)); }
+      .text-success-foreground { color: hsl(var(--v9-success-foreground)); }
+      .border-success-foreground { border-color: hsl(var(--v9-success-foreground)); }
+      .ring-success-foreground { --tw-ring-color: hsl(var(--v9-success-foreground)); }
+      .bg-warning { background-color: hsl(var(--v9-warning)); }
+      .text-warning { color: hsl(var(--v9-warning)); }
+      .border-warning { border-color: hsl(var(--v9-warning)); }
+      .ring-warning { --tw-ring-color: hsl(var(--v9-warning)); }
+      .bg-warning-foreground { background-color: hsl(var(--v9-warning-foreground)); }
+      .text-warning-foreground { color: hsl(var(--v9-warning-foreground)); }
+      .border-warning-foreground { border-color: hsl(var(--v9-warning-foreground)); }
+      .ring-warning-foreground { --tw-ring-color: hsl(var(--v9-warning-foreground)); }
+      .bg-error { background-color: hsl(var(--v9-error)); }
+      .text-error { color: hsl(var(--v9-error)); }
+      .border-error { border-color: hsl(var(--v9-error)); }
+      .ring-error { --tw-ring-color: hsl(var(--v9-error)); }
+      .bg-error-foreground { background-color: hsl(var(--v9-error-foreground)); }
+      .text-error-foreground { color: hsl(var(--v9-error-foreground)); }
+      .border-error-foreground { border-color: hsl(var(--v9-error-foreground)); }
+      .ring-error-foreground { --tw-ring-color: hsl(var(--v9-error-foreground)); }
+      .bg-info { background-color: hsl(var(--v9-info)); }
+      .text-info { color: hsl(var(--v9-info)); }
+      .border-info { border-color: hsl(var(--v9-info)); }
+      .ring-info { --tw-ring-color: hsl(var(--v9-info)); }
+      .bg-info-foreground { background-color: hsl(var(--v9-info-foreground)); }
+      .text-info-foreground { color: hsl(var(--v9-info-foreground)); }
+      .border-info-foreground { border-color: hsl(var(--v9-info-foreground)); }
+      .ring-info-foreground { --tw-ring-color: hsl(var(--v9-info-foreground)); }
+      .bg-surface { background-color: hsl(var(--v9-surface)); }
+      .text-surface { color: hsl(var(--v9-surface)); }
+      .border-surface { border-color: hsl(var(--v9-surface)); }
+      .ring-surface { --tw-ring-color: hsl(var(--v9-surface)); }
+      .bg-surface-2 { background-color: hsl(var(--v9-surface-2)); }
+      .text-surface-2 { color: hsl(var(--v9-surface-2)); }
+      .border-surface-2 { border-color: hsl(var(--v9-surface-2)); }
+      .ring-surface-2 { --tw-ring-color: hsl(var(--v9-surface-2)); }
+      .bg-surface-3 { background-color: hsl(var(--v9-surface-3)); }
+      .text-surface-3 { color: hsl(var(--v9-surface-3)); }
+      .border-surface-3 { border-color: hsl(var(--v9-surface-3)); }
+      .ring-surface-3 { --tw-ring-color: hsl(var(--v9-surface-3)); }
     </style>
     <style>
       .no-scrollbar::-webkit-scrollbar { display: none; }
