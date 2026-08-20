@@ -329,6 +329,6 @@ npx tsc --noEmit
 
 ## 9. 相关文档
 
-- [V9 AGENTS.md](../../AGENTS.md) — 分层规则与依赖方向
-- [file-management-guide.md](../how-to/file-management-guide.md) — 文件入-移-出全生命周期
-- [核心数据策略报告](../explanation/core-data-strategy-report.md) — 数据架构、数据库定义、传递协议与蓝图校对
+- [V9 AGENTS.md](../../../meta/AGENTS.md) — 分层规则与依赖方向
+- [file-management-guide.md](../../../guides/how-to/FILE-MANAGEMENT-GUIDE.md) — 文件入-移-出全生命周期
+- [核心数据策略报告](../../normal/reports/core-data-strategy-report.md) — 数据架构、数据库定义、传递协议与蓝图校对

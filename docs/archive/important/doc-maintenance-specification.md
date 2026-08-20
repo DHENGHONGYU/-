@@ -4,7 +4,7 @@ title: V9 文档维护规范 — 创建、链接、检查、更新全生命周�
 status: active
 version: v1.0.0
 last_updated: 2026-08-03
-code_version: 2.0.0-rc.1
+code_version: 2.0.0-rc.2
 category: governance
 tier: mandatory
 maintainer: V9 Dev Team
@@ -21,7 +21,7 @@ change_log:
 
 > **适用范围**: FinSightV9 项目 `docs/` 目录下所有 Markdown 文档
 > **强制等级**: mandatory（违规将阻断提交）
-> **关联文档**: [breaking-changes-report-2026-08-03.md](breaking-changes-report-2026-08-03.md) | [governance-summary-2026-08-03.md](governance-summary-2026-08-03.md)
+> **关联文档**: [breaking-changes-report-2026-08-03.md](../normal/reports/breaking-changes-report-2026-08-03.md) | [governance-summary-2026-08-03.md](../normal/reports/reports-governance-governance-summary-2026-08-03.md)
 
 ---
 

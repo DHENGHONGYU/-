@@ -3,7 +3,7 @@ title: 下一阶段架构优化计划 — 高频变更模块治理
 status: active
 version: v1.0.1
 last_updated: 2026-08-11
-code_version: 2.0.0-rc.1
+code_version: 2.0.0-rc.2
 category: governance
 tags: [governance, architecture, optimization-plan, high-frequency-modules]
 change_log:
@@ -17,7 +17,7 @@ change_log:
 > **制定日期**: 2026-08-10
 > **制定依据**: 2026-08-10 技术债治理经验 + git log 高频变更模块统计
 > **治理周期**: 2026-08-11 ~ 2026-08-31（预计 3 周）
-> **关联文档**: [技术债治理完整总结报告](tech-debt-governance-summary-2026-08-10.md)
+> **关联文档**: [技术债治理完整总结报告](../normal/reports/tech-debt-governance-summary-2026-08-10.md)
 
 ---
 

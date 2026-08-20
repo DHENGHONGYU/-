@@ -291,7 +291,7 @@ npx tsc --noEmit
 
 ## 6. 相关文档
 
-- [V9 AGENTS.md](../../AGENTS.md) — 分层规则
-- [Glossary](./10-glossary.md) — 废弃命名映射表
+- [V9 AGENTS.md](../../../meta/AGENTS.md) — 分层规则
+- [Glossary](../../../reference/10-glossary.md) — 废弃命名映射表
 - [Gateway 写入权限规范](./gateway-write-permission-spec.md) — 写入收口规范
-- [核心数据策略报告](../explanation/core-data-strategy-report.md) — 数据架构、数据库定义、传递协议与蓝图校对
+- [核心数据策略报告](../../normal/reports/core-data-strategy-report.md) — 数据架构、数据库定义、传递协议与蓝图校对

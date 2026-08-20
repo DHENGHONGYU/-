@@ -11,7 +11,7 @@ change_log:
   - version: v1.0.0
     changes: "补齐 frontmatter 元数据（baseline 2026-08-11，自动推断 type=report）"
     date: 2026-08-11
-code_version: 2.0.0-rc.1
+code_version: 2.0.0-rc.2
 ---
 # FinSightV9 下一阶段架构优化计划（v2，2026-08-10 更新）
 

@@ -267,8 +267,8 @@ const state = useScoreStore() // 导致不必要的重渲染
 
 ## 7. 相关文档
 
-- [V9 数据宪法](../../reference/v9数据宪法.md)
+- [V9 数据宪法](../normal/reference/V9数据宪法.md)
 - [数据流引擎规范](../../reference/dataflow-engine-spec.md)
-- [双策略数据流规范](dual-strategy-dataflow-spec.md)
-- [数据交互协议](../../reference/data-interaction-protocols.md)
+- [双策略数据流规范](../../explanation/design/dual-strategy-dataflow-spec.md)
+- [数据交互协议](../normal/reference/data-interaction-protocols.md)
 - [Widget 错误处理](../../reference/widget-error-handling.md)
