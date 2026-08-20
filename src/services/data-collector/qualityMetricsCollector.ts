@@ -98,7 +98,8 @@ class QualityMetricsCollector {
       this.metrics.mockSuccesses += successInc
     }
     this.metrics.sourceCounts[source] = (this.metrics.sourceCounts[source] || 0) + 1
-    this.metrics.fallbackCount += fallbackChain.length - 1
+    // Math.max 下溢保护：空 fallbackChain(主源直连)时不得产生 -1 负数（V9-TEST-UT-FALLBACK-001 F-08）
+    this.metrics.fallbackCount += Math.max(0, fallbackChain.length - 1)
     this.metrics.totalLatency += latency
     this.metrics.avgLatency = Math.round(this.metrics.totalLatency / this.metrics.totalCollects)
     // 含 mock 的整体成功率
