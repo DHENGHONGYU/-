@@ -168,9 +168,11 @@ dist-verify/
 .trae-html-share-packages/
 ts-error-retrospective/
 tsc-error-analysis/
-# —— scripts 下的 tmp_ 前缀调试脚本/输出 + 临时覆盖率矩阵
+# —— scripts 下的 tmp_ / temp- 前缀调试脚本/输出 + 临时覆盖率矩阵
 scripts/audit/tmp_*.cjs
 scripts/audit/tmp_*.json
+scripts/tmp_*.cjs
+scripts/temp-*.cjs
 scripts/calc-coverage.cjs
 scripts/coverage_gap_matrix.py
 # —— tests/e2e 运行时产物（截图、诊断输出文本）；保留 PWA 测试脚本（_pwa_*.py / pwa-cache-verify.py）

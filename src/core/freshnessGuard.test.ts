@@ -84,6 +84,24 @@ describe('freshnessGuard', () => {
         outputTime: 500,
         inputName: 'in',
         inputTime: 1000,
+      }, 'generic', true)).toThrow(FreshnessError)
+    })
+
+    it('FreshnessError 包含 check 信息', () => {
+      setFreshnessConfig({ blocking: true })
+      expect(() => checkFreshness({
+        outputName: 'out',
+        outputTime: 500,
+        inputName: 'in',
+        inputTime: 1000,
+      }, 'generic', true)).toThrow(FreshnessError)
+    })
+      setFreshnessConfig({ blocking: true })
+      expect(() => checkFreshness({
+        outputName: 'out',
+        outputTime: 500,
+        inputName: 'in',
+        inputTime: 1000,
       })).toThrow(FreshnessError)
     })
 
