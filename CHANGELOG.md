@@ -1,4 +1,4 @@
-# 更新日志
+﻿# 更新日志
 
 > 本日志按 [SemVer](https://semver.org/lang/zh-CN/) 记录 V9 智能投研复盘系统的版本变更、架构决策与验收数据。  
 > 未发布版本以 `Unreleased` 开头；已发布版本附带构建与测试硬指标。
@@ -9,7 +9,7 @@
 
 ## [2.0.0-rc.2] - 2026-08-19
 > **Release Type**：RC 候选（SemVer prerelease rc.1→rc.2）· **Status**：Gatekeeper Verified · Annotated Tag Ready（pre-launch score 99.0/100 → S级 GO） · **Pre-launch Score**：**99.0 / 100（S 级 🟢 GO）**
-> **Baseline SHA（RC1 → RC2 增量基）**：0b08cf1d → 27fdac52（+2 修复 commit：TD-010 pre-commit 稳定 / TD-013 researchNote）→ RC2 build + 4 新提交（见推送记录） · **S05 Go/NoGo-1**：[docs/releases/v2.0.0-rc.2-gray/GRAY-RELEASE-CHECKLIST.md §七](docs/releases/v2.0.0-rc.2-gray/GRAY-RELEASE-CHECKLIST.md#七gonogo-签字台签字后不可反悔如反悔需走回滚-五) 🟢 Gatekeeper 全绿待签 · **Review**：[outputs/sop-suite-v1.0.0-independent-review-2026-08-19.md](outputs/sop-suite-v1.0.0-independent-review-2026-08-19.md) 98/100 🟢 APPROVED（0 BLOCKER）
+> **Baseline SHA（RC1 → RC2 增量基）**：0b08cf1d → 27fdac52（+2 修复 commit：TD-010 pre-commit 稳定 / TD-013 researchNote）→ RC2 build +17 commits（build bump · wiki 入库 · E2E+灰度归档 · 477 docs sweep · guardian 注入；HEAD=53e3440） · **S05 Go/NoGo-1**：[docs/releases/v2.0.0-rc.2-gray/GRAY-RELEASE-CHECKLIST.md §七](docs/releases/v2.0.0-rc.2-gray/GRAY-RELEASE-CHECKLIST.md#七gonogo-签字台签字后不可反悔如反悔需走回滚-五) 🟢 Gatekeeper 全绿待签 · **Review**：[outputs/sop-suite-v1.0.0-independent-review-2026-08-19.md](outputs/sop-suite-v1.0.0-independent-review-2026-08-19.md) 98/100 🟢 APPROVED（0 BLOCKER）
 
 ### Added — 新增（features / docs / capabilities）
 - **feat(analysis)**：新增 **向量一致性排序** 能力（Dirty 合入）：`VectorConsistencyRankingCard.tsx` + `vectorConsistencyRankingService.ts`，用于观察池与语义召回结果的一致性打分（本批次 Release 当日纳入）。
@@ -20,7 +20,8 @@
 - **feat(pool)**：IndexedDB 持久化向量语料库构建（vector corpus builder）。
 - **feat(input)**：InputDashboard PoolTable / HotSectorPage 清理 + 路由连线；新增 Cabin 页面 routes + sidebar。
 - **docs(meta)**：新增 DOCUMENT-INVENTORY 全量文档清单 + REGISTRY_INDEX §六 8 个 SOP doc_id 注册 + GoNoGo 纪要与评分卡（本批次 2 份）。
-- **docs(readme)**：README 文档中心首段新增「Code Wiki（代码知识库）」导航入口（链接 docs/wiki/README.md），为 rc.3 Code Wiki 6 份文件合入预留统一入口。
+- **docs(wiki)**：新增 Code Wiki（代码知识库）全量 6 份文件，覆盖架构总览 / 模块边界图 / 核心类与函数清单 / 数据流与依赖图 / 入门快速上手指南 / 索引目录；commit f4a7b04 合入，配合 docs(readme) 导航入口。
+- **docs(readme)**：README 文档中心首段新增「Code Wiki（代码知识库）」导航入口（链接 docs/wiki/README.md），与 docs(wiki) 6 份知识库文件对应。
 - **docs(specs)**：新增 SOP Suite 预上线工作流 spec.md + tasks.md 全流程追踪。
 
 ### Changed — 变更（refactors / config / ux / perf / docs）
