@@ -103,16 +103,18 @@ describe('dualStrategyEngine', () => {
   })
 
   it('应该orchestrate hot sector and value pit analysis', async () => {
+    // P0-6: InsertStockHandler 校验 symbol 格式（A股 6位数字+SH/SZ/BJ / 港股 数字+HK / 美股 字母+US），
+    // 必须使用合法格式 symbol，否则 dataLayer.stocks.add 静默失败导致后续 analyze 查不到 stock。
     const stocks: Stock[] = [
-      buildStock('HOT', { sector: '人工智能' }),
-      buildStock('PIT', { sector: '集成电路' }),
+      buildStock('600001.SH', { sector: '人工智能' }),
+      buildStock('600002.SH', { sector: '集成电路' }),
     ]
 
     for (const stock of stocks) {
       await dataLayer.stocks.add(stock)
       // HOT: 高 V6 → 热门路径
       // PIT: 中等 V6 → 洼地路径
-      const v6 = stock.symbol === 'HOT' ? 4.2 : 3.0
+      const v6 = stock.symbol === '600001.SH' ? 4.2 : 3.0
       await dataLayer.v6Scores.save(buildV6Score(stock.symbol, v6))
       await dataLayer.dailyQuotes.save(buildDailyQuotes(stock.symbol))
       await dataLayer.industryScores.save(buildIndustryScore(stock.sector!, 4.0))
@@ -131,17 +133,17 @@ describe('dualStrategyEngine', () => {
   })
 
   it('应该持久化 scores when persistScores is true', async () => {
-    const stock = buildStock('PERSIST', { sector: '人工智能' })
+    const stock = buildStock('600003.SH', { sector: '人工智能' })
     await dataLayer.stocks.add(stock)
-    await dataLayer.v6Scores.save(buildV6Score('PERSIST', 4.2))
-    await dataLayer.dailyQuotes.save(buildDailyQuotes('PERSIST'))
+    await dataLayer.v6Scores.save(buildV6Score('600003.SH', 4.2))
+    await dataLayer.dailyQuotes.save(buildDailyQuotes('600003.SH'))
     await dataLayer.industryScores.save(buildIndustryScore('人工智能', 4.0))
 
     const result = await runDualStrategy([stock])
 
     expect(result.success).toBe(true)
     expect(result.data).toBeDefined()
-    const hotPersisted = await dataLayer.hotSectorScores.get('PERSIST')
+    const hotPersisted = await dataLayer.hotSectorScores.get('600003.SH')
     expect(hotPersisted).toBeDefined()
   })
 })

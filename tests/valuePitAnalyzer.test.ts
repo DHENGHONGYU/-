@@ -92,15 +92,17 @@ describe('valuePitAnalyzer', () => {
   })
 
   it('应该analyze stocks within V6 band and persist scores', async () => {
+    // P0-6: InsertStockHandler 校验 symbol 格式（A股 6位数字+SH/SZ/BJ / 港股 数字+HK / 美股 字母+US），
+    // 必须使用合法格式 symbol，否则 dataLayer.stocks.add 静默失败导致后续 analyze 查不到 stock。
     const stocks: Stock[] = [
-      buildStock('A', { sector: '人工智能' }),
-      buildStock('B', { sector: '集成电路' }),
-      buildStock('C', { sector: '新能源汽车' }),
+      buildStock('600001.SH', { sector: '人工智能' }),
+      buildStock('600002.SH', { sector: '集成电路' }),
+      buildStock('600003.SH', { sector: '新能源汽车' }),
     ]
 
     for (const stock of stocks) {
       await dataLayer.stocks.add(stock)
-      await dataLayer.v6Scores.save(buildV6Score(stock.symbol, stock.symbol === 'C' ? 4.5 : 3.0))
+      await dataLayer.v6Scores.save(buildV6Score(stock.symbol, stock.symbol === '600003.SH' ? 4.5 : 3.0))
       await dataLayer.dailyQuotes.save(buildDailyQuotes(stock.symbol))
     }
 
@@ -123,10 +125,10 @@ describe('valuePitAnalyzer', () => {
   })
 
   it('应该exclude stocks outside V6 value pit band', async () => {
-    const lowStock = buildStock('LOW', { sector: '人工智能' })
+    const lowStock = buildStock('600004.SH', { sector: '人工智能' })
     await dataLayer.stocks.add(lowStock)
-    await dataLayer.v6Scores.save(buildV6Score('LOW', 1.5))
-    await dataLayer.dailyQuotes.save(buildDailyQuotes('LOW'))
+    await dataLayer.v6Scores.save(buildV6Score('600004.SH', 1.5))
+    await dataLayer.dailyQuotes.save(buildDailyQuotes('600004.SH'))
 
     const result = await analyzeValuePits([lowStock])
 
@@ -135,10 +137,10 @@ describe('valuePitAnalyzer', () => {
   })
 
   it('应该classify trigger action across wait/probe/immediate', async () => {
-    const stock = buildStock('EDGE', { sector: '人工智能' })
+    const stock = buildStock('600005.SH', { sector: '人工智能' })
     await dataLayer.stocks.add(stock)
-    await dataLayer.v6Scores.save(buildV6Score('EDGE', 3.0))
-    await dataLayer.dailyQuotes.save(buildDailyQuotes('EDGE'))
+    await dataLayer.v6Scores.save(buildV6Score('600005.SH', 3.0))
+    await dataLayer.dailyQuotes.save(buildDailyQuotes('600005.SH'))
     await dataLayer.industryScores.save(buildIndustryScore('人工智能', 4.2))
     await saveDefaultRotationScores()
 
@@ -151,10 +153,10 @@ describe('valuePitAnalyzer', () => {
   })
 
   it('应该respect custom rule thresholds', async () => {
-    const stock = buildStock('THRESH', { sector: '人工智能' })
+    const stock = buildStock('600006.SH', { sector: '人工智能' })
     await dataLayer.stocks.add(stock)
-    await dataLayer.v6Scores.save(buildV6Score('THRESH', 2.7))
-    await dataLayer.dailyQuotes.save(buildDailyQuotes('THRESH'))
+    await dataLayer.v6Scores.save(buildV6Score('600006.SH', 2.7))
+    await dataLayer.dailyQuotes.save(buildDailyQuotes('600006.SH'))
 
     const strictRules = getDefaultDualStrategyRuleConfig()
     strictRules.valuePitV6Min = 3.0

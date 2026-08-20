@@ -181,7 +181,10 @@ it('冗余设计 E2E 验证（R1 配置冗余 / R2 降级 / R3 幂等 / R4 隔�
   const r2Ok = mark('R2-degradation', r2QuoteOk && r2KlineOk, r2Detail)
 
   // ── R3：写入幂等性（动态，同 symbol ×3） ──
-  const sym = 'REDUNDANCY001.SH'
+  // P0-6: 必须使用合法格式 symbol（6位数字+SH/SZ/BJ / 1-5位数字+HK / 1-5位字母+US），
+  // 否则 importStocks 被 InsertStockHandler 拒绝，后续 runV6Score 因查不到 Stock 而早退，
+  // 导致 v6Count=0 触发 R3 幂等假失败。
+  const sym = '600999.SH'
   await importStocks([{ code: sym, name: '冗余测试', symbol: sym, status: 'valid' }])
   const dq = klinesToDailyQuotes(sym, deterministicKlines(sym))
   for (let i = 0; i < 3; i++) {
@@ -263,6 +266,6 @@ it('冗余设计 E2E 验证（R1 配置冗余 / R2 降级 / R3 幂等 / R4 隔�
 
   const outPath = path.resolve('outputs', 'e2e-verify-redundancy.report.json')
   writeFileSync(outPath, JSON.stringify(report, null, 2), 'utf-8')
-  // eslint-disable-next-line no-console
+   
   console.log(`[冗余设计验证] 得分=${redundancyScore}(${grade}) R1-5=${JSON.stringify(rScores)} findings=${findings.length}`)
 })

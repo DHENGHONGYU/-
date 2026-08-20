@@ -144,6 +144,9 @@ describe('fetcherService', () => {
   })
 
   it('checkFetcherHealth should return ok when service is healthy', async () => {
+    // P0-6: checkFetcherHealth 在 VITE_DATA_SOURCE_TYPE !== 'real' 时短路返回 ok=true，
+    // 不真正调用 fetch。必须 stubEnv 为 'real' 才能验证健康检查走真实 /health 请求路径。
+    vi.stubEnv('VITE_DATA_SOURCE_TYPE', 'real')
     global.fetch = mockFetch({ status: 'ok', service: 'v9-data-collector', version: '0.1.0' }, true)
 
     const result = await checkFetcherHealth()
@@ -152,6 +155,8 @@ describe('fetcherService', () => {
   })
 
   it('checkFetcherHealth should return error when service is down', async () => {
+    // P0-6: 同上，必须切到 real 模式才会触发 fetch 调用，否则短路 ok=true 掩盖真实失败。
+    vi.stubEnv('VITE_DATA_SOURCE_TYPE', 'real')
     global.fetch = vi.fn().mockRejectedValue(new TypeError('Failed to fetch'))
 
     const result = await checkFetcherHealth()

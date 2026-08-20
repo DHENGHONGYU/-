@@ -89,11 +89,17 @@ describe('hotSectorAnalyzer', () => {
   })
 
   it('应该analyze stocks above V6 threshold and persist scores', async () => {
-    const stocks: Stock[] = [buildStock('A'), buildStock('B'), buildStock('C')]
+    // P0-6: InsertStockHandler 校验 symbol 格式（A股 6位数字+SH/SZ/BJ / 港股 数字+HK / 美股 字母+US），
+    // 必须使用合法格式 symbol，否则 dataLayer.stocks.add 静默失败导致后续 analyze 查不到 stock。
+    const stocks: Stock[] = [
+      buildStock('600001.SH'),
+      buildStock('600002.SH'),
+      buildStock('600003.SH'),
+    ]
 
     for (const stock of stocks) {
       await dataLayer.stocks.add(stock)
-      await dataLayer.v6Scores.save(buildV6Score(stock.symbol, stock.symbol === 'C' ? 3.0 : 4.2))
+      await dataLayer.v6Scores.save(buildV6Score(stock.symbol, stock.symbol === '600003.SH' ? 3.0 : 4.2))
       await dataLayer.dailyQuotes.save(buildDailyQuotes(stock.symbol))
     }
 
@@ -101,19 +107,19 @@ describe('hotSectorAnalyzer', () => {
 
     expect(result.success).toBe(true)
     expect(result.data).toHaveLength(2)
-    expect(result.data?.map((s) => s.symbol).sort()).toEqual(['A', 'B'])
+    expect(result.data?.map((s) => s.symbol).sort()).toEqual(['600001.SH', '600002.SH'])
 
-    const persisted = await getLatestHotSectorScore('A')
+    const persisted = await getLatestHotSectorScore('600001.SH')
     expect(persisted).toBeDefined()
-    expect(persisted?.symbol).toBe('A')
+    expect(persisted?.symbol).toBe('600001.SH')
     expect(persisted?.score).toBeGreaterThanOrEqual(0)
     expect(persisted?.score).toBeLessThanOrEqual(5)
   })
 
   it('应该返回 empty array for no matching stocks', async () => {
-    const stocks: Stock[] = [buildStock('LOW')]
+    const stocks: Stock[] = [buildStock('600004.SH')]
     await dataLayer.stocks.add(stocks[0]!)
-    await dataLayer.v6Scores.save(buildV6Score('LOW', 2.0))
+    await dataLayer.v6Scores.save(buildV6Score('600004.SH', 2.0))
 
     const result = await analyzeHotSectors(stocks)
 
@@ -122,10 +128,10 @@ describe('hotSectorAnalyzer', () => {
   })
 
   it('应该classify trigger action based on composite score', async () => {
-    const stock = buildStock('EDGE', { sector: '半导体' })
+    const stock = buildStock('600005.SH', { sector: '半导体' })
     await dataLayer.stocks.add(stock)
-    await dataLayer.v6Scores.save(buildV6Score('EDGE', 3.6))
-    await dataLayer.dailyQuotes.save(buildDailyQuotes('EDGE'))
+    await dataLayer.v6Scores.save(buildV6Score('600005.SH', 3.6))
+    await dataLayer.dailyQuotes.save(buildDailyQuotes('600005.SH'))
     await dataLayer.industryScores.save(buildIndustryScore('半导体', 4.5))
 
     const result = await analyzeHotSectors([stock])
@@ -137,9 +143,9 @@ describe('hotSectorAnalyzer', () => {
   })
 
   it('应该respect custom rule thresholds', async () => {
-    const stock = buildStock('THRESH')
+    const stock = buildStock('600006.SH')
     await dataLayer.stocks.add(stock)
-    await dataLayer.v6Scores.save(buildV6Score('THRESH', 3.4))
+    await dataLayer.v6Scores.save(buildV6Score('600006.SH', 3.4))
 
     const strictRules = getDefaultDualStrategyRuleConfig()
     strictRules.hotSectorV6Min = 3.5
