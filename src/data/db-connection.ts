@@ -20,6 +20,8 @@ const logger = getLogger()
 
 let dbInstance: IDBDatabase | null = null
 
+const MAX_RECURSIVE_OPENDB_ATTEMPTS = 3
+
 /**
  * 重置 dbInstance 状态（仅供测试使用）
  * 业务代码禁止调用，否则会导致连接泄露
@@ -70,13 +72,13 @@ export function deleteDB(): Promise<void> {
  *
  * @returns IDBDatabase 实例
  */
-export async function openDB(): Promise<IDBDatabase> {
+export async function openDB(attempt: number = 1): Promise<IDBDatabase> {
   if (dbInstance) {
     logger.debug('[DB] Returning existing database instance')
     return Promise.resolve(dbInstance)
   }
 
-  logger.info(`[DB] Opening database "${DB_NAME}" with target version ${DB_VERSION}...`)
+  logger.info(`[DB] Opening database "${DB_NAME}" with target version ${DB_VERSION}... (attempt ${attempt}/${MAX_RECURSIVE_OPENDB_ATTEMPTS})`)
 
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION)
@@ -87,12 +89,17 @@ export async function openDB(): Promise<IDBDatabase> {
       if (error?.name === 'VersionError') {
         logger.warn(`[DB] Version conflict: existing DB version higher than requested v${DB_VERSION}`)
         if (import.meta.env.DEV) {
-          logger.warn('[DB] DEV mode: attempting to delete old database and recreate...')
+          if (attempt >= MAX_RECURSIVE_OPENDB_ATTEMPTS) {
+            logger.error(`[DB] DEV mode: max retry attempts (${MAX_RECURSIVE_OPENDB_ATTEMPTS}) reached, giving up`)
+            reject(new Error(`[DB] VersionError: max retry attempts (${MAX_RECURSIVE_OPENDB_ATTEMPTS}) reached. Manual intervention required.`))
+            return
+          }
+          logger.warn(`[DB] DEV mode: attempting to delete old database and recreate... (attempt ${attempt}/${MAX_RECURSIVE_OPENDB_ATTEMPTS})`)
           deleteDB()
             .then(() => {
               dbInstance = null
               logger.info('[DB] Reopening database after deletion...')
-              openDB().then(resolve).catch(reject)
+              openDB(attempt + 1).then(resolve).catch(reject)
             })
             .catch((e) => {
               logger.error('[DB] Failed to delete old database:', { error: e instanceof Error ? e.message : String(e) })

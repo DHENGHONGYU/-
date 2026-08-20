@@ -37,22 +37,28 @@ const PREEXISTING_TEST_FAILURES = [
   // A1 部分修复：文案已修，仍有权重归一化失败（1 个）
   'tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts',
   // A2 类：组件结构重构 / mock 失败 / 渲染流程变化（3 个，2026-08-09 已修复 IndustryChainWidget + BulkImportPanel）
-  'tests/data/TradeReviewPage.test.tsx',
-  'tests/services-other/InputApp.test.tsx',
+  'tests/TradeReviewPage.test.tsx',
+  'tests/InputApp.test.tsx',
   'src/cockpit/widgets/PortfolioOverviewWidget.kpi-negative.test.tsx',
   // 业务逻辑漂移待修复（1 个）
-  'tests/services-scoring/v6Lifecycle.test.ts',
+  'tests/v6Lifecycle.test.ts',
   // 接口/mock 漂移（6 个）
-  'tests/services-other/hotSectorService.test.ts',
+  'tests/hotSectorService.test.ts',
   'src/mcp/__tests__/servers.test.ts',
   'src/services/data-collector/collectionReportService.test.ts',
   'src/store/poolStore.test.ts',
-  'tests/services-llm/intelligentScore.test.ts',
-  'tests/misc/CockpitShell.panel.test.tsx',
-  // 僵尸测试：引用的组件已被删除或重命名（3 个，2026-08-10 确认）
-  'tests/HotSectorPanel.test.tsx',          // HotSectorPanel → HotSectorSection（重命名）
+  'tests/intelligentScore.test.ts',
+  'tests/CockpitShell.panel.test.tsx',
+  // 僵尸测试：引用的组件已被删除或重命名（2 个，2026-08-10 确认）
   'tests/p2-3-p3-2.test.tsx',               // SearchBar 组件已删除
-  'tests/__tests__/P2-new-atoms-smoke.test.tsx', // Popover/Menu/Pagination 组件已删除
+  // 2026-08-20 Task 5 清理：移除 2 条已删除文件的僵尸条目（HotSectorPanel → 已删除，P2-new-atoms-smoke → 已删除）
+  // 2026-08-20 Task 5 清理：修正 6 条幽灵路径（tests/ 目录扁平化，子目录已移除）
+  //   tests/data/TradeReviewPage.test.tsx → tests/TradeReviewPage.test.tsx ✓
+  //   tests/services-other/InputApp.test.tsx → tests/InputApp.test.tsx ✓
+  //   tests/services-scoring/v6Lifecycle.test.ts → tests/v6Lifecycle.test.ts ✓
+  //   tests/services-other/hotSectorService.test.ts → tests/hotSectorService.test.ts ✓
+  //   tests/services-llm/intelligentScore.test.ts → tests/intelligentScore.test.ts ✓
+  //   tests/misc/CockpitShell.panel.test.tsx → tests/CockpitShell.panel.test.tsx ✓
 ]
 
 export default defineConfig({
