@@ -175,7 +175,7 @@ src/hooks/        ← 自定义 React Hooks（跨组件共享逻辑；含 usePoo
 src/devtools/     ← 开发环境调试工具（DEV 注入）
 src/fixtures/     ← Mock 数据供给（测试数据）
 src/i18n/         ← 国际化配置与翻译资源
-src/mcp/          ← MCP 服务器层（Registry 共 15 条目：10 enabled + 5 disabled；fetcher/scoring/news/llm/screening/backtest/trading/system/marketdata + pool + data-collector；analysis/portfolio/knowledge/execution 与 workflow:main 已 disabled 保留通道校验；详见 src/config/mcpServerRegistry.ts）
+src/mcp/          ← MCP 服务器层（Registry 共 17 条目：13 enabled + 4 disabled；fetcher/scoring/news/llm/screening/backtest/trading/system/marketdata + pool + data-collector；analysis/portfolio/knowledge/execution 与 workflow:main 已 disabled 保留通道校验；详见 src/config/mcpServerRegistry.ts）
 src/schema/       ← Zod/JSON Schema 校验定义（类型守卫扩展）
 src/showcase/     ← 组件展示页（开发环境专用，不进入生产构建）
 src/generated/    ← 代码自动生成产物（令牌/类型/脚本输出）
