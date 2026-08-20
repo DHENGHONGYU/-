@@ -234,3 +234,104 @@ describe('logger', () => {
     })
   })
 })
+
+// ====================================================================
+// 缺口补全（logger.ts STMTS 9 uncov / branches 31）
+// ====================================================================
+describe('logger — gap coverage (JSON.stringify catch / undefined context / 四级别组合)', () => {
+  describe('formatJson JSON.stringify 抛错 → catch 降级输出 _parseError: true', () => {
+    it('context 含 circular → stringify 抛错走 catch（第 56 行）', () => {
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+      setLogFormat('json')
+      setLogLevel('info')
+      const logger = getLogger()
+      const obj: Record<string, unknown> = { name: 'ok' }
+      obj.self = obj
+      logger.info('event with circular', obj)
+
+      const output = logSpy.mock.calls[0]![0] as string
+      const parsed = JSON.parse(output)
+      expect(parsed._parseError).toBe(true)
+      expect(parsed.message).toBe('event with circular')
+      expect(parsed.level).toBe('INFO')
+      expect(parsed.timestamp).toBeDefined()
+
+      logSpy.mockRestore()
+    })
+
+    it('context 含 BigInt → stringify 抛错也走 catch', () => {
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+      setLogFormat('json')
+      setLogLevel('info')
+      const logger = getLogger()
+      logger.info('bigint test', { big: 9007199254740993n })
+
+      const output = logSpy.mock.calls[0]![0] as string
+      const parsed = JSON.parse(output)
+      expect(parsed._parseError).toBe(true)
+      expect(parsed.message).toBe('bigint test')
+
+      logSpy.mockRestore()
+    })
+  })
+
+  describe('formatJson context 中 value=undefined 的字段跳过（第 49 行 if）', () => {
+    it('上下文中 undefined 的字段不会写入 entry JSON', () => {
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+      setLogFormat('json')
+      setLogLevel('info')
+      const logger = getLogger()
+      logger.info('mixed', { keep: 'value', drop: undefined, alsoKeep: 42 })
+
+      const parsed = JSON.parse(logSpy.mock.calls[0]![0] as string)
+      expect(parsed.keep).toBe('value')
+      expect(parsed.alsoKeep).toBe(42)
+      // drop 字段因 value===undefined 被跳过
+      expect(Object.prototype.hasOwnProperty.call(parsed, 'drop')).toBe(false)
+
+      logSpy.mockRestore()
+    })
+  })
+
+  describe('四个级别 debug/warn/error × pretty 有上下文 / × json 无上下文', () => {
+    it('debug/warn/error pretty 格式含上下文时，首参包含 msg 与 JSON 片段', () => {
+      const dbg = vi.spyOn(console, 'debug').mockImplementation(() => {})
+      const wrn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const err = vi.spyOn(console, 'error').mockImplementation(() => {})
+      setLogFormat('pretty'); setLogLevel('debug')
+      const logger = getLogger()
+
+      logger.debug('dbg', { a: 1 })
+      logger.warn('wrn', { b: 2 })
+      logger.error('err', { c: 3 })
+
+      expect(dbg.mock.calls[0]![0] as string).toContain('dbg')
+      expect(dbg.mock.calls[0]![1]).toEqual({ a: 1 })
+      expect(wrn.mock.calls[0]![0] as string).toContain('wrn')
+      expect(wrn.mock.calls[0]![1]).toEqual({ b: 2 })
+      expect(err.mock.calls[0]![0] as string).toContain('err')
+      expect(err.mock.calls[0]![1]).toEqual({ c: 3 })
+
+      dbg.mockRestore(); wrn.mockRestore(); err.mockRestore()
+    })
+
+    it('debug/warn/error json 格式 无上下文 → entry 仍包含 level/message/timestamp', () => {
+      const dbg = vi.spyOn(console, 'debug').mockImplementation(() => {})
+      const wrn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const err = vi.spyOn(console, 'error').mockImplementation(() => {})
+      setLogFormat('json'); setLogLevel('debug')
+      const logger = getLogger()
+
+      logger.debug('dbg-ctx'); logger.warn('wrn-ctx'); logger.error('err-ctx')
+
+      const d = JSON.parse(dbg.mock.calls[0]![0] as string)
+      expect(d.level).toBe('DEBUG'); expect(d.message).toBe('dbg-ctx'); expect(d.timestamp).toBeDefined()
+      const w = JSON.parse(wrn.mock.calls[0]![0] as string)
+      expect(w.level).toBe('WARN'); expect(w.message).toBe('wrn-ctx')
+      const e = JSON.parse(err.mock.calls[0]![0] as string)
+      expect(e.level).toBe('ERROR'); expect(e.message).toBe('err-ctx')
+
+      dbg.mockRestore(); wrn.mockRestore(); err.mockRestore()
+    })
+  })
+})

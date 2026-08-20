@@ -370,3 +370,131 @@ describe('配置名称校验 validateConfigName', () => {
     expect(protocolResult.error).toContain('特殊字符')
   })
 })
+
+// ====================================================================
+// 缺口补全（STMTS uncov 10 / branches 126 → 目标清零）
+// ====================================================================
+describe('validation — gap coverage (branches 剩余未覆盖)', () => {
+  describe('validateConfigName 非字符串参数（第 65 行 typeof check）', () => {
+    it('非字符串（number/null/undefined/object）应返回「名称必须为字符串」', () => {
+      // @ts-expect-error 故意传非法类型，校验运行时防护
+      expect(validateConfigName(123).valid).toBe(false);
+      expect(validateConfigName(123 as unknown as string).error).toBe('名称必须为字符串')
+      // @ts-expect-error 故意传 null
+      expect(validateConfigName(null).valid).toBe(false)
+      // @ts-expect-error 故意传 undefined
+      expect(validateConfigName(undefined).valid).toBe(false)
+      // @ts-expect-error 故意传 object
+      expect(validateConfigName({}).valid).toBe(false)
+    })
+  })
+
+  describe('formatStockCode 非纯数字原样返回（第 126 行）', () => {
+    it('非纯数字（如港股 00700.HK、美股 AAPL、字母）原样返回', () => {
+      expect(formatStockCode('00700.HK')).toBe('00700.HK')
+      expect(formatStockCode('AAPL')).toBe('AAPL')
+      expect(formatStockCode('AAPL.US')).toBe('AAPL.US')
+      expect(formatStockCode('600519.SH')).toBe('600519.SH')
+      expect(formatStockCode('code123')).toBe('code123')
+    })
+  })
+
+  describe('isValidStockCodeStrict / isValidSymbolWithExchange / validateSymbolFormat 非字符串参数', () => {
+    it('isValidStockCodeStrict 非字符串或空字符串 → false', () => {
+      // @ts-expect-error 故意传 number
+      expect(isValidStockCodeStrict(600519 as unknown as string, 'A')).toBe(false)
+      // @ts-expect-error 故意传 null
+      expect(isValidStockCodeStrict(null as unknown as string)).toBe(false)
+      expect(isValidStockCodeStrict('', 'A')).toBe(false)
+    })
+    it('isValidSymbolWithExchange 非字符串 → false', () => {
+      // @ts-expect-error 故意传 number
+      expect(isValidSymbolWithExchange(0 as unknown as string)).toBe(false)
+    })
+    it('validateSymbolFormat 非真值（null/undefined）应判空', () => {
+      // @ts-expect-error 故意传 null
+      expect(validateSymbolFormat(null as unknown as string)).toContain('不能为空')
+      // @ts-expect-error 故意传 undefined
+      expect(validateSymbolFormat(undefined as unknown as string)).toContain('不能为空')
+    })
+  })
+
+  describe('isValidPercent / isValidScore / isValidPrice 非数字/NaN 分支', () => {
+    it('非 number 或 NaN 应返回 false', () => {
+      // @ts-expect-error 故意传字符串
+      expect(isValidPercent('50')).toBe(false)
+      // @ts-expect-error 故意传 NaN
+      expect(isValidPercent(NaN as unknown as number)).toBe(false)
+      // @ts-expect-error 故意传字符串 score
+      expect(isValidScore('60')).toBe(false)
+      // @ts-expect-error 故意传 NaN
+      expect(isValidScore(NaN as unknown as number)).toBe(false)
+    })
+  })
+
+  describe('isValidLlmApiKey 超长(> 256) + 非字符串', () => {
+    it('长度 > 256 返回 false', () => {
+      const long = 'a'.repeat(257)
+      expect(isValidLlmApiKey(long)).toBe(false)
+    })
+    it('非字符串参数', () => {
+      // @ts-expect-error 故意传 null
+      expect(isValidLlmApiKey(null as unknown as string)).toBe(false)
+      // @ts-expect-error 故意传 number
+      expect(isValidLlmApiKey(123 as unknown as string)).toBe(false)
+    })
+  })
+
+  describe('isValidLlmModel 超长(> 128) + 非字符串', () => {
+    it('长度 > 128 返回 false', () => {
+      const long = 'a'.repeat(129)
+      expect(isValidLlmModel(long)).toBe(false)
+    })
+    it('非字符串参数', () => {
+      // @ts-expect-error 故意传 number
+      expect(isValidLlmModel(0 as unknown as string)).toBe(false)
+    })
+  })
+
+  describe('isValidLlmBaseURL 非危险协议但不在白名单（例如 ftp:）', () => {
+    it('ftp: 协议不被危险黑名单拦截 → try new URL → 不在 ALLOWED → false', () => {
+      // ftp 不在 DANGEROUS（第 247 行），能通过第 266 行检查 → 进入 try URL 分支 → return false
+      expect(isValidLlmBaseURL('ftp://files.example.com/model.bin')).toBe(false)
+    })
+    it('ws: / wss: 协议也返回 false（非 allowed list）', () => {
+      expect(isValidLlmBaseURL('ws://localhost:8080')).toBe(false)
+      expect(isValidLlmBaseURL('wss://chat.example.com')).toBe(false)
+    })
+  })
+
+  describe('isSensitiveField 非字符串 + 词边界分支', () => {
+    it('非字符串字段名返回 false（第 386 行）', () => {
+      // @ts-expect-error 故意传 number
+      expect(isSensitiveField(0 as unknown as string)).toBe(false)
+      // @ts-expect-error 故意传 undefined
+      expect(isSensitiveField(undefined as unknown as string)).toBe(false)
+    })
+    it('词边界匹配：前缀为连字符/点号时命中（x-token-x / .token. 等）', () => {
+      expect(isSensitiveField('x-token-value')).toBe(true)
+      expect(isSensitiveField('my.api_key.here')).toBe(true)
+      expect(isSensitiveField('user/authorization/jwt')).toBe(true)
+    })
+    it('词边界反向：token 作为单词子串时命中不到（tokenize / authorize 等）', () => {
+      // tokenize → "token" 后紧跟 ize（都是字母），不匹配 `[^a-z0-9_]` 边界 → 应为 false
+      expect(isSensitiveField('tokenize')).toBe(false)
+      // authorize 以 "auth" 开头但 "auth" 后是 orize（字母），无边界 → false
+      expect(isSensitiveField('authorize')).toBe(false)
+      // authentication 以 auth 开头，无边界 → false
+      expect(isSensitiveField('authentication')).toBe(false)
+    })
+  })
+
+  describe('sanitizeObject maxDepth < 0 返回原对象（第 422 行）', () => {
+    it('传入 maxDepth=-1 时直接返回，不做遍历', () => {
+      const obj = { apiKey: 'sk-abcdef1234567890', nested: { token: 'abcd12345678' } }
+      const r = sanitizeObject(obj, -1)
+      // 返回引用相同（实际返回原对象，不脱敏）
+      expect(r).toBe(obj)
+    })
+  })
+})
