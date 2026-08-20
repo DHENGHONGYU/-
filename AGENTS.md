@@ -1,10 +1,13 @@
 ---
 title: AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 status: active
-version: v1.6.0
-last_updated: 2026-08-19
-code_version: "2.0.0-rc.1"
+version: v1.7.0
+last_updated: 2026-08-20
+code_version: "2.0.0-rc.2"
 change_log:
+  - version: v1.7.0
+    changes: "2026-08-20 架构重构闭环：data/gateway 门面全面落地完成 Phase 0~5；Phase 0 增补过渡期白名单（5 个 core 文件）并升级 audit-db-references.ts RULE_7 检测非白名单 import db；Phase 1 完成 Clean Architecture/DDD Hexagonal/React BFF+UnitOfWork 三方案评估，选型 React BFF + UnitOfWork；Phase 2 创建 src/data/gateway/（IGateway 接口 + DataGatewayImpl 实现 + 事务/CRUD/批量/级联/数据管理/工厂方法）；Phase 3 迁移 5 个过渡期文件（transaction/cascadeExecutor/databridgeHandlers/databridgeRouter/databridge），白名单清零；Phase 4 新增 ITransactionContext 事务上下文 + runInTransactionWithContext 类型安全 API，迁移 rebalancePortfolioUseCase，RULE_8 检测非 data/ 层直接使用 IDBTransaction；Wiki 同步标注 data/gateway 重构闭环；tsc:prod / audit:db-references 全绿"
+    date: 2026-08-20
   - version: v1.6.0
     changes: "2026-08-19 增量闭环：对齐 Husky v2 真阻断 20 步门禁 + scope-guard v2（≤30 单提交 / 跨域≤2）；补齐 tsc:prod/tsc:test 双 tsconfig 作用域与 tsc --force 日常；MCP Registry 17 条目（12 enabled + 5 disabled，含 data-collector:main + marketdata 双子源）；DB_VERSION=35（基线 29 + 增量 24=53 Store）；驾驶舱 USER_SCENES 结果优先视图；设计令牌 V8 Apple 冷色调；提交卫生（禁止 git add -A / --only 精确提交）；ESLint 生产域警告清零；上线前测试禁止 MOCK 必须真数；tsc 增量编译幻影错误防呆；新增 audit:agents-consistency 契约一致性 P0 断言（A1~A7 七项，husky [22/20] 步）+ T15 doc-trigger；**新增 SOP Suite 双引用注入点：文档头部「SOP 规范体系」声明（sops/README.md 为团队流程第一入口）+ §七 验证命令尾部「验证命令↔SOP 质量门禁速查表对应关系」交叉链接 S02/S04/S05**"
     date: 2026-08-19
@@ -14,11 +17,21 @@ change_log:
 ---
 # AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 
-> **版本**: v1.6.0 | **日期**: 2026-08-19
+> **版本**: v1.7.0 | **日期**: 2026-08-20
 > **适用范围**: 所有 AI 辅助开发工具（Claude Code、Cursor、Trae 等）
 > **强制等级**: 所有 AI 生成的代码必须遵守以下约束
 >
-> **v1.6.0 变更（本轮增量，2026-08-19）**：Husky 预提交门禁升级 v2（tsc:prod / audit:registry / vitest registryContract / audit:doc-id-reverse --changed-only 均升级 BLOCK 真阻断）；提交作用域守卫 scope-guard v2（单提交文件数≤30/纯文档≤50、跨顶层域≤2、src+docs 删除≤30、阻断临时产物混入）；tsconfig 拆分 tsconfig.prod.json（源码+lib，零测试）与 tsconfig.test.json（源码+测试）、日常执行 `tsc --force` 防增量编译幻影错误；MCP Server Registry 清理为 **15 条目（10 enabled + 5 disabled）**：analysis/portfolio/knowledge/execution 四个僵尸 Server 与 workflow:main（保留通道校验）统一置 `enabled:false`，UI 侧 ACL 已同步移除对应 UI 放行行；新增腾讯自选股 `marketdata`（只读）；IndexedDB `DB_VERSION=35`，`STORE_NAME` 已扩展为 53 项（基线 29 + 增量 24）；驾驶舱默认视图切换为**结果优先（USER_SCENES：今日快照 / 持仓状态 / 市场扫描 / 深度钻取）**，与交叉矩阵并存可一键切换；设计令牌升级 V8（Apple 冷色调）：背景 Apple System Gray HSL 240 24% 96%、卡片纯白、圆角 1rem、静态阴影 alpha≤0.05、浮层 alpha≤0.08、字体 DM Sans→SF Pro→PingFang CJK 字距；**提交卫生硬约束**：禁止 `git add -A`；提交前必须核对 staged 数与目标一致；关键提交一律使用 `git commit --only <paths>` 物理防夹带；上线前测试**禁止使用 MOCK**，必须使用真实数据；ESLint 生产域警告按子域豁免清零（目标 = 0 warnings）
+> **v1.7.0 变更（本轮增量，2026-08-20）**：data/gateway 门面架构重构**全面闭环**，完成 Phase 0~5 全部工作：
+> - **Phase 0 过渡期白名单**：在 5 个 core 文件临时允许 import { db }，同步升级 audit-db-references.ts RULE_7 禁止非白名单直接导入
+> - **Phase 1 方案选型**：完成 Clean Architecture / DDD 六边形 / React BFF + UnitOfWork 三方案评估，最终选型 React BFF + UnitOfWork（最优匹配项目现状）
+> - **Phase 2 Gateway 创建**：新建 src/data/gateway/ 模块（`IGateway` 接口定义 + `DataGatewayImpl` 单例实现 + 生命周期/事务/CRUD/批量/级联/数据管理/仓储工厂 8 类 API）
+> - **Phase 3 核心迁移**：逐个迁移 5 个过渡期文件（transaction.ts → cascadeExecutor.ts → databridgeHandlers.ts → databridgeRouter.ts → databridge.ts），迁移完成后过渡期白名单清零
+> - **Phase 4 业务重构**：新增 `ITransactionContext` 事务上下文接口 + `runInTransactionWithContext` 类型安全 API，迁移 rebalancePortfolioUseCase；强化 RULE_8 检测非 data/ 层直接使用 IDBTransaction
+> - **Phase 5 契约收尾**：AGENTS.md 升至 v1.7.0（代码版本 2.0.0-rc.2），Wiki 同步标注 data/gateway 重构闭环，门禁全绿
+>
+> 自此**所有业务代码必须 100% 通过 `data/gateway/` 门面访问数据库**：`core/` 层统一 import { gateway } from '@/data/gateway'；services/、store/、pages/ 层通过 dataLayerStore（sendWriteEnvelope/queryGet 等）→ DataBridge → gateway 链路访问；业务代码直接 import { db }、直接使用 IDBTransaction 均属架构违规，会被 audit:db-references 门禁拦截。
+>
+> **v1.6.0 变更（2026-08-19）**：Husky 预提交门禁升级 v2（tsc:prod / audit:registry / vitest registryContract / audit:doc-id-reverse --changed-only 均升级 BLOCK 真阻断）；提交作用域守卫 scope-guard v2（单提交文件数≤30/纯文档≤50、跨顶层域≤2、src+docs 删除≤30、阻断临时产物混入）；tsconfig 拆分 tsconfig.prod.json（源码+lib，零测试）与 tsconfig.test.json（源码+测试）、日常执行 `tsc --force` 防增量编译幻影错误；MCP Server Registry 清理为 **15 条目（10 enabled + 5 disabled）**：analysis/portfolio/knowledge/execution 四个僵尸 Server 与 workflow:main（保留通道校验）统一置 `enabled:false`，UI 侧 ACL 已同步移除对应 UI 放行行；新增腾讯自选股 `marketdata`（只读）；IndexedDB `DB_VERSION=35`，`STORE_NAME` 已扩展为 53 项（基线 29 + 增量 24）；驾驶舱默认视图切换为**结果优先（USER_SCENES：今日快照 / 持仓状态 / 市场扫描 / 深度钻取）**，与交叉矩阵并存可一键切换；设计令牌升级 V8（Apple 冷色调）：背景 Apple System Gray HSL 240 24% 96%、卡片纯白、圆角 1rem、静态阴影 alpha≤0.05、浮层 alpha≤0.08、字体 DM Sans→SF Pro→PingFang CJK 字距；**提交卫生硬约束**：禁止 `git add -A`；提交前必须核对 staged 数与目标一致；关键提交一律使用 `git commit --only <paths>` 物理防夹带；上线前测试**禁止使用 MOCK**，必须使用真实数据；ESLint 生产域警告按子域豁免清零（目标 = 0 warnings）
 >
 > **v1.5.5 变更**：落地技能触发机制迭代 3——pre-push 挂 `skill-router --enforce --since <base>` 强制模式（mandatory 命中未确认即拦截，旁路 `SKILL_GATE_CONFIRM=1 git push`）；`skill-router.cjs` 新增 `--since`（推送范围三点 diff）与环境变量旁路；`.trae/rules` 追加技能路由规则段（与 registry/AGENTS.md 三方同步）；注册 2 个定时任务（L5 调度层）：「Mock 残留周检」`40 3 * * 1`、「技能健康度月检」`17 8 1 * *`（Asia/Shanghai）
 >
@@ -1583,6 +1596,7 @@ npx tsc --noEmit | findstr /R "mcpAcl mcpBridge MCPServer MCPClient"
 
 | 版本 | 日期 | 变更摘要 |
 |------|------|----------|
+| **v1.7.0** | **2026-08-20** | **data/gateway 架构重构全面闭环（Phase 0~5）**：Phase 0 增补 5 个 core 文件过渡期白名单 + audit-db-references.ts RULE_7；Phase 1 三方案评估选型 React BFF + UnitOfWork；Phase 2 新建 src/data/gateway/（IGateway 接口 + DataGatewayImpl 实现）；Phase 3 迁移 5 个过渡期文件，白名单清零；Phase 4 新增 ITransactionContext 事务上下文 + runInTransactionWithContext，强化 RULE_8；Phase 5 AGENTS.md 升至 v1.7.0（代码版本 2.0.0-rc.2）+ Wiki 同步闭环；自此所有业务代码必须 100% 通过 data/gateway 门面访问数据库 |
 | v1.5.2 | 2026-07-20 | 新增 §十六 Bash 使用约定（16.1-16.6）：Git Bash 路径规范、受管 venv Python 固化、命令入口统一（npm scripts）、禁止命令清单、执行后联动义务、长命令与超时纪律 |
 | v1.4.9 | 2026-07-18 | §七.4 新增数据质量断言三件套规则（auditRecord + recordCollect + refreshStats）；§七 验证命令新增 `audit:acl-consistency`；§八 新增 ENVELOPE_ACTION → handler 注册一致性规则；新增 `scripts/audit/audit-acl-consistency.ts` 门禁脚本；Husky pre-commit 扩展为 16 项 |
 | v1.4.8 | 2026-07-18 | §八 强化 ACL 白名单约束（新增 store → 必跑 audit:acl-consistency）；增加 §四 状态假红灯教训（recordCollect + recordWrite + refreshStats 三件套） |
