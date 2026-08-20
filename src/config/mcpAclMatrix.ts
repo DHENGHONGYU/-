@@ -66,6 +66,8 @@ export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> 
       'trading',
       // 腾讯自选股数据源（技术方案 §5.1）：仅只读 westock_* Tool
       'marketdata',
+      // 2026-08-20 恢复：IndustryDashboardPage / IndustryScorePage 需调用 analyze_industry_v4
+      'analysis',
     ],
     allowedTools: [
       'health_check',
@@ -89,6 +91,8 @@ export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> 
       // 腾讯自选股数据源（只读实采，前缀通配覆盖全部 westock_* Tool）
       'westock_*',
       'check_health',
+      // 2026-08-20 恢复：行业分析工具
+      'analyze_industry_v4',
     ],
   },
 

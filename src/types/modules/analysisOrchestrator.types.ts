@@ -47,6 +47,36 @@ export interface FeedbackLoopResult {
   message: string
 }
 
+/** 证据项 —— 结论依据的最小单元 */
+export interface EvidenceItem {
+  /** 证据关联的结论维度：rating / risk / opportunity */
+  dimension: 'rating' | 'risk' | 'opportunity'
+  /** 证据摘要（一句话） */
+  summary: string
+  /** 数据来源 */
+  source: string
+  /** 数据时间戳 */
+  timestamp: number
+  /** 关键数值（可选） */
+  metricValue?: string
+  /** 证据强度评分 1-5 */
+  strength: number
+}
+
+/** 结构化证据链 —— 每个分析结论的完整依据 */
+export interface EvidenceChain {
+  /** 证据项列表 */
+  items: EvidenceItem[]
+  /** 证据覆盖的维度数 */
+  coverage: number
+  /** 证据链整体置信度（0-1） */
+  confidence: number
+  /** 生成时间戳 */
+  generatedAt: number
+  /** 生成模型 */
+  model: string
+}
+
 export interface AnalysisConclusion {
   rating: 'strong_buy' | 'buy' | 'hold' | 'sell' | 'strong_sell'
   summary: string
@@ -55,6 +85,8 @@ export interface AnalysisConclusion {
   consistentWithV6: boolean
   /** P2-2: LLM 置信度（0-1） */
   confidence?: number
+  /** P0-2: 结构化证据链 */
+  evidenceChain?: EvidenceChain
 }
 
 /** P2-2: 报告章节（支持二十页结构扩展） */

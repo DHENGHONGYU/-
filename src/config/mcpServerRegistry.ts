@@ -96,10 +96,8 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     modulePath: '@/mcp/servers/analysis/analysisServer',
     exportName: 'AnalysisServer',
     priority: 'medium',
-    enabled: false,
-    // 恢复条件：Agent 分析编排需求明确时（如多维度交叉分析 Agent）
-    // 恢复审批：架构评审会议
-    // 恢复检查项：tsc, audit:layers, Agent 注册, ACL 更新, ADR 更新
+    enabled: true,
+    // 2026-08-20 恢复：IndustryDashboardPage / IndustryScorePage 需调用 analyze_industry_v4
   },
   {
     name: 'news:main',
