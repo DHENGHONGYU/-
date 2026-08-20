@@ -1,15 +1,18 @@
----
+﻿---
 title: AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 status: active
-version: v1.7.0
+version: v1.7.1
 last_updated: 2026-08-20
 code_version: "2.0.0-rc.2"
 change_log:
+  - version: v1.7.1
+    changes: "2026-08-20 新增 Skill 双保险规定：§项目级 SKILL 索引段新增「骨架模板强制执行（双保险）」醒目 BLOCK，明确新建 SKILL.md 必须 cp _SKILL-TEMPLATE.md 起步，禁止手写空白文件；§变更纪律拆出独立小节「新增 Skill 强制流程（双保险）」，明确 cp 命令、禁止项与 RULE-TPL 脚本强审联动（文档强制+脚本 exit 1 双保险），与 audit-skill-coverage.cjs 形成闭环"
+    date: 2026-08-20
   - version: v1.7.0
     changes: "2026-08-20 架构重构闭环：data/gateway 门面全面落地完成 Phase 0~5；Phase 0 增补过渡期白名单（5 个 core 文件）并升级 audit-db-references.ts RULE_7 检测非白名单 import db；Phase 1 完成 Clean Architecture/DDD Hexagonal/React BFF+UnitOfWork 三方案评估，选型 React BFF + UnitOfWork；Phase 2 创建 src/data/gateway/（IGateway 接口 + DataGatewayImpl 实现 + 事务/CRUD/批量/级联/数据管理/工厂方法）；Phase 3 迁移 5 个过渡期文件（transaction/cascadeExecutor/databridgeHandlers/databridgeRouter/databridge），白名单清零；Phase 4 新增 ITransactionContext 事务上下文 + runInTransactionWithContext 类型安全 API，迁移 rebalancePortfolioUseCase，RULE_8 检测非 data/ 层直接使用 IDBTransaction；Wiki 同步标注 data/gateway 重构闭环；tsc:prod / audit:db-references 全绿"
     date: 2026-08-20
   - version: v1.6.0
-    changes: "2026-08-19 增量闭环：对齐 Husky v2 真阻断 20 步门禁 + scope-guard v2（≤30 单提交 / 跨域≤2）；补齐 tsc:prod/tsc:test 双 tsconfig 作用域与 tsc --force 日常；MCP Registry 17 条目（12 enabled + 5 disabled，含 data-collector:main + marketdata 双子源）；DB_VERSION=35（基线 29 + 增量 24=53 Store）；驾驶舱 USER_SCENES 结果优先视图；设计令牌 V8 Apple 冷色调；提交卫生（禁止 git add -A / --only 精确提交）；ESLint 生产域警告清零；上线前测试禁止 MOCK 必须真数；tsc 增量编译幻影错误防呆；新增 audit:agents-consistency 契约一致性 P0 断言（A1~A7 七项，husky [22/20] 步）+ T15 doc-trigger；**新增 SOP Suite 双引用注入点：文档头部「SOP 规范体系」声明（sops/README.md 为团队流程第一入口）+ §七 验证命令尾部「验证命令↔SOP 质量门禁速查表对应关系」交叉链接 S02/S04/S05**"
+    changes: "2026-08-19 增量闭环：对齐 Husky v2 真阻断 20 步门禁 + scope-guard v2（≤30 单提交 / 跨域≤2）；补齐 tsc:prod/tsc:test 双 tsconfig 作用域与 tsc --force 日常；MCP Registry 17 条目（13 enabled + 4 disabled，含 data-collector:main + marketdata 双子源）；DB_VERSION=35（基线 29 + 增量 24=53 Store）；驾驶舱 USER_SCENES 结果优先视图；设计令牌 V8 Apple 冷色调；提交卫生（禁止 git add -A / --only 精确提交）；ESLint 生产域警告清零；上线前测试禁止 MOCK 必须真数；tsc 增量编译幻影错误防呆；新增 audit:agents-consistency 契约一致性 P0 断言（A1~A7 七项，husky [22/20] 步）+ T15 doc-trigger；**新增 SOP Suite 双引用注入点：文档头部「SOP 规范体系」声明（sops/README.md 为团队流程第一入口）+ §七 验证命令尾部「验证命令↔SOP 质量门禁速查表对应关系」交叉链接 S02/S04/S05**"
     date: 2026-08-19
   - version: v1.5.6
     changes: "基准日校对(2026-08-11)：R1取真值(P2 正文版本声明行=v1.5.5) → R2 PATCH++(v1.5.6) / last_updated 刷新 / change_log 闭环"
@@ -17,7 +20,7 @@ change_log:
 ---
 # AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 
-> **版本**: v1.7.0 | **日期**: 2026-08-20
+> **版本**: v1.7.1 | **日期**: 2026-08-20
 > **适用范围**: 所有 AI 辅助开发工具（Claude Code、Cursor、Trae 等）
 > **强制等级**: 所有 AI 生成的代码必须遵守以下约束
 >
@@ -61,9 +64,9 @@ change_log:
 > - S06 版本发布与部署（SemVer + 单向同步 + 双回滚）/ S07 上线后运维与应急（48h 值守 + P0 5 层上报矩阵）
 > SOP 文档基于当前 AGENTS.md v1.6.0 契约编写；命令与阈值与本 §七 严格一致，遇冲突以本契约为准，同步修订对应 SOP（Frontmatter code_version 对齐）。
 >
-> **项目级 SKILL 索引**（三层分离，单一真相源见 `.trae/skills/skill-registry.json`，合计 46 项；MAND=mandatory 强制，adv=advisory 建议）：
-> - **L1 项目物理技能（18 项）**：物理存放目录 `.agents/skills/*/SKILL.md`（非 `.trae/skills/`；`.trae/skills/` 仅存放 INDEX.md 与 skill-registry.json 索引文件，无技能本体）。按 registry `categoriesStats` 分十一类（名称均为自然 slug，无 `v9-` 前缀）：
->   - **架构治理 architecture（4）**：`architecture-cleanup`（adv）、`architecture-radar-scan`（adv）、`constant-migration`（MAND）、`databridge-migration`（MAND）
+> **项目级 SKILL 索引**（三层分离，单一真相源见 `.trae/skills/skill-registry.json`，合计 49 项；MAND=mandatory 强制，adv=advisory 建议）：
+> - **L1 项目物理技能（21 项）**：物理存放目录 `.agents/skills/*/SKILL.md`（非 `.trae/skills/`；`.trae/skills/` 仅存放 INDEX.md 与 skill-registry.json 索引文件，无技能本体；`_SKILL-TEMPLATE.md` 为官方骨架模板不计入 L1 技能计数，实际注册 L1=21，与 skill-registry.json `projectPhysicalSkills[]` 数组长度对齐）。按 registry `categoriesStats` 分 13 类（名称均为自然 slug，无 `v9-` 前缀）：
+>   - **架构治理 architecture（5）**：`architecture-cleanup`（adv）、`architecture-radar-scan`（adv）、`constant-migration`（MAND）、`databridge-migration`（MAND）、`gateway-facade-refactor`（adv, v1.7.0 新增，端到端 6 阶段门面化重构 SOP）
 >   - **数据库治理 db-governance（1）**：`db-reference-audit`（adv）
 >   - **文档治理 doc-governance（2）**：`doc-freshness-governance`（MAND）、`docs-as-mirror`（adv）
 >   - **特性运行时 feature-runtime（1）**：`feature-window-context-doc`（adv）
@@ -73,10 +76,16 @@ change_log:
 >   - **板块分析 sector-analysis（1）**：`sector-analysis-framework`（adv）
 >   - **类型安全 type-safety（1）**：`type-safety-contract`（adv）
 >   - **估值 valuation（1）**：`valuation-financial-analysis`（adv）
->   - **数据流 data-flow（1）**：`collection-pipeline-testing`（MAND）
+>   - **数据流 data-flow（2）**：`collection-pipeline-testing`（MAND）、`data-flow-integrity-audit`（MAND, v1.7.0 补登记孤儿目录，原 L3 虚拟技能物理化）
+>   - **质量门禁治理 quality-gate-governance（1）**：`collection-pipeline-governance`（adv, v1.7.0 新增 GAP-01，采集管线配置/降级/字典/CI 全链路治理 SOP）
 > - **L2 外部插件技能（9 项）**：物理存放目录 `plugins/*/skills/*/SKILL.md`；由 TRAE CN 插件加载，不在 `.agents/skills/` 中重复复制。
-> - **L3 平台内置虚拟技能（19 项）**：定义见 `.trae/skills/skill-registry.json` 的 `virtualPlatformSkills`（本索引仅计项数，不重复枚举；其 `v9-*` 为 TRAE CN 平台内置，无本地物理目录）。注：`collection-pipeline-testing` 已于 2026-08-16 由 L3 虚拟转为 L1 物理，故虚拟由 20 降为 19。
-> - **禁止混加计数**：L1（18）+ L2（9）+ L3（19）= 46 条登记，任何声明不得绕过此分层。
+> - **L3 平台内置虚拟技能（19 项）**：定义见 `.trae/skills/skill-registry.json` 的 `virtualPlatformSkills`（本索引仅计项数，不重复枚举；其 `v9-*` 为 TRAE CN 平台内置，无本地物理目录）。
+> - **禁止混加计数**：L1（21）+ L2（9）+ L3（19）= 49 条登记，任何声明不得绕过此分层。
+>
+> 🔴 **骨架模板强制执行（双保险，v1.7.1 升级）**：所有新增 L1 物理 Skill（`.agents/skills/*/SKILL.md`）**一律以官方骨架模板为起点，禁止从空白文件手写**。
+> - **保险一（文档契约强制）**：第一步必须复制模板——`cp .agents/skills/_SKILL-TEMPLATE.md .agents/skills/<skill-slug>/SKILL.md`，严禁使用 `mkdir && touch SKILL.md`、直接 WriteFile 空骨架、或粘贴非模板版本的 SKILL.md；复制成功后再按 slug/版本/日期/业务域填充内容。
+> - **保险二（脚本强审 exit 1）**：`npm run audit:skill-coverage` 的 RULE-TPL 规则，会对 `last_updated ≥ 2026-08-20` 或 `change_log` 含「5 段式骨架模板」字样的新技能，逐项核对 Frontmatter 6 字段 + 正文 5 大段（一/触发 二/前置 三/SOP 四/教训 五/交付物），缺任一段或结构不匹配**直接 exit 1 阻断**，配合 `skill:mirror` 才能注册生效。
+> - **合规证明（建议在 change_log 中留痕）**：在 change_log 首条写上 `基于 S 级 Skill 5 段式骨架模板 [_SKILL-TEMPLATE.md](.agents/skills/_SKILL-TEMPLATE.md) 创建`，RULE-TPL 将据此命中强审链路。
 
 > ⚠️ **技能治理对齐记录（2026-08-16，方案B + P2 已闭环）**：本索引/路由表曾与物理落盘、registry、加载器存在结构性错位，经两轮核查与对齐，现状态如下：
 > 1. **真相态已对齐（方案B 反向对齐）**：registry（`skill-registry.json`）为单一真相源——`projectPhysicalSkills` 18 项（自然 slug，无 `v9-` 前缀）、`externalPluginSkills` 9 项、`virtualPlatformSkills` 19 项（含 `v9-*` 平台虚拟技能，无本地 SKILL.md）。本轮执行：(a) 撤销上一轮误加的 `v9-` 前缀重命名（`v9-constant-migration`/`v9-databridge-migration` → 还原 `constant-migration`/`databridge-migration`）；(b) 将新建采集门禁由 `v9-collection-pipeline-testing` 改名为自然名 `collection-pipeline-testing` 并登记为 L1 物理（mandatory，data-flow），同步 registry 由 virtual 转 projectPhysical（virtual 20→19、physical 17→18、total 维持 46）；(c) 本索引 L1 段已重写为 18 自然名物理技能（按 registry 分类与 mandatory 标记），"v9-* 即物理"的谎言已消除；(d) 路由表采集行已改用自然名 `collection-pipeline-testing`。
@@ -111,7 +120,36 @@ change_log:
 | 创建/编辑/移动 `docs/` 目录任意文档、文档录入与管理整体原则、十目录架构/Frontmatter标准/命名规范 | `doc-management-principles` | advisory | 该技能三环闭环治理清单 + frontmatter 必备字段校验 |
 | audit:layers 报出 config 层与 constants 层同一业务常量双份定义、Grep 硬编码报出 `/src/config.*RESEARCH_STATUS/` 等业务常量泄漏、跨层重复常量迁移 | `v9-constant-migration` | mandatory | 迁移后 `npm run audit:layers` = 0 + `npx tsc --noEmit` 0 错误 + 测试 mock 路径更新校验 |
 
-> **变更纪律**：新增技能 = ① 新建 `.trae/skills/<name>/SKILL.md`（frontmatter 含 `triggers`/`gates`/`mandatory`）→ ② 同步 `.trae/skills/skill-registry.json`（L1 注册表）→ ③ 更新本索引与路由表 → ④ 跑 `npm run audit:skill-coverage` 校验三方一致。钩子状态：pre-commit 挂 `--remind --log`（提醒模式，命中记录写入 `.trae/skills/usage.log`）；pre-push 挂 `--enforce --since <base>`（强制模式，mandatory 命中未确认即拦截，旁路 `SKILL_GATE_CONFIRM=1 git push`）。`npm run skill:route` 可随时手工查询。
+### 新增 Skill 强制流程（双保险，v1.7.1 升级 · 替代原「变更纪律」长段落）
+
+> **双保险定义**：保险一 = **AGENTS.md 文档契约强制**（本条规定）；保险二 = **`audit-skill-coverage.cjs` RULE-TPL 脚本强审**（exit 1 阻断）。**任何新增 L1 物理 Skill 必须二者同时满足，缺一不可。**
+
+#### 🔴 Step 0 起步铁律（必走 cp，禁止手写空白）
+
+**第一步必须复制官方骨架模板，禁止从空白文件手写/WriteFile SKILL.md。** 标准命令（Windows Bash / Git Bash / PowerShell 通用）：
+```bash
+# 项目根目录执行（强制 — 不走这步 = 直接触发 RULE-TPL 阻断）
+mkdir -p .agents/skills/<skill-slug>
+cp .agents/skills/_SKILL-TEMPLATE.md .agents/skills/<skill-slug>/SKILL.md
+```
+
+**严格禁止的反模式（v1.7.1 明确列项）**：
+- ❌ `mkdir .agents/skills/xxx && touch .agents/skills/xxx/SKILL.md` → 空白文件起步
+- ❌ 直接 `WriteFile` 往 `SKILL.md` 写正文，**不复制 `_SKILL-TEMPLATE.md`** → 结构漂移
+- ❌ 从其他已有 Skill 「复制粘贴再改」（不带模板的 Frontmatter/段标题）→ 段标题不匹配 RULE-TPL 正则
+- ❌ 先写内容后补模板 → 缺段 / 乱段无法审计
+
+复制成功后，按业务域依次填充：`name`、`description`（含 4 个具体触发条件摘要）、`version`、`last_updated`、`change_log` 首条标注「基于 S 级 Skill 5 段式骨架模板创建」、`mandatory`、以及正文 5 大段（§一 4~8 条可判定触发条件 / §二 前置检查表格 ≥ 5 项 / §三 阶段化 SOP ≥ 3 个 Phase / §四 陷阱与教训 ≥ 8 条 / §五 完成交付物清单 ≥ 6 项 + 必要充分条件声明）。
+
+---
+
+#### Step 1→5 标准链路
+
+**新增技能 = Step 0（cp 模板）** → ① 填充 SKILL.md 6 字段 + 5 大段 → ② 同步 `.trae/skills/skill-registry.json`（新增 L1 条目：id/name/path/category/level/tags/mandatory/createdAt/updatedAt/description/triggers{gates}/notes；summary.count +1、categoriesStats 同步；totalEntries = L1+L2+L3 重算）→ ③ 更新 `.agents/skills/README.md`（导航表新行 + 末尾 YAML registry 新块 `id, name, description, created, cat, level, mandatory`）→ ④ 更新本索引（L1 技能列表分类插入）与路由表（命中条件/类型/交付前必跑）→ ⑤ 跑 `npm run audit:skill-coverage`（三方一致 + RULE-TPL）+ `npm run skill:mirror`（加载器错位镜像）。
+
+**钩子状态**：pre-commit 挂 `--remind --log`（提醒模式，命中记录写入 `.trae/skills/usage.log`）；pre-push 挂 `--enforce --since <base>`（强制模式，mandatory 命中未确认即拦截，旁路 `SKILL_GATE_CONFIRM=1 git push`）。`npm run skill:route` 可随时手工查询。
+
+**RULE-TPL 强审重申（与保险一联动）**：`npm run audit:skill-coverage` 会对 `last_updated ≥ 2026-08-20` 或 `change_log` 含「5 段式骨架模板」字样的新技能做 **Frontmatter 6 字段 + 正文 5 大段（一/触发 二/前置 三/SOP 四/教训 五/交付物）** 逐项扫描，缺任一段即 exit 1。
 
 ---
 
@@ -1438,7 +1476,7 @@ git status --short            # 确认工作区状态
 
 ### 14.3 权限矩阵配置
 
-权限矩阵定义于 `src/config/mcpAclMatrix.ts` 的 `MCP_ACL_MATRIX` 常量；MCP Server Registry 定义于 `src/config/mcpServerRegistry.ts` 的 `MCP_SERVER_REGISTRY`（v1.6.0 起共 **17 条目：12 enabled + 5 disabled**；严禁 UI 层向已 disabled Server 放行 ACL，否则会形成 UI→MCP→失败死链路）。
+权限矩阵定义于 `src/config/mcpAclMatrix.ts` 的 `MCP_ACL_MATRIX` 常量；MCP Server Registry 定义于 `src/config/mcpServerRegistry.ts` 的 `MCP_SERVER_REGISTRY`（v1.6.0 起共 **17 条目：13 enabled + 4 disabled**；严禁 UI 层向已 disabled Server 放行 ACL，否则会形成 UI→MCP→失败死链路）。
 
 ```typescript
 export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> = {
