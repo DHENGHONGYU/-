@@ -20,7 +20,7 @@
  *
  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
  */
-import { db } from '@/data/db'
+import { gateway } from '@/data/gateway'
 import { getCascadeDependencies } from '@/config/cascadeConfig'
 import type { StoreName } from '@/config/dbConfig'
 import type { CascadeResult, CascadeTarget, CascadeStrategy } from '@/types/modules/cascade.types'
@@ -81,7 +81,7 @@ class CascadeExecutor {
       // 2. 查询当前层子记录数
       let count = 0
       try {
-        const records = await db.getAllByIndex(dep.childStore, dep.indexName, id)
+        const records = await gateway.queryByIndex(dep.childStore, dep.indexName, id)
         count = records.length
       } catch (err) {
         // 索引不存在或 store 未就绪，跳过（容错）
@@ -116,7 +116,7 @@ class CascadeExecutor {
   ): Promise<CascadeTarget | null> {
     switch (strategy) {
       case 'CASCADE': {
-        const deleted = await db.deleteByIndex(childStore, indexName, value)
+        const deleted = await gateway.deleteByIndex(childStore, indexName, value)
         return {
           store: childStore,
           strategy: 'CASCADE',
@@ -135,13 +135,13 @@ class CascadeExecutor {
 
       case 'SET_NULL': {
         // 将外键字段置空
-        const records = await db.getAllByIndex<Record<string, unknown>>(childStore, indexName, value)
+        const records = await gateway.queryByIndex<Record<string, unknown>>(childStore, indexName, value)
         for (const record of records) {
           const keyPath = this.getKeyPath(childStore)
           if (keyPath && record[keyPath] !== undefined) {
             const fieldName = this.indexToField(indexName)
             const updated = { ...record, [fieldName]: null }
-            await db.put(childStore, updated)
+            await gateway.put(childStore, updated)
           }
         }
         return {
@@ -152,11 +152,11 @@ class CascadeExecutor {
       }
 
       case 'SOFT_DELETE': {
-        const records = await db.getAllByIndex<Record<string, unknown>>(childStore, indexName, value)
+        const records = await gateway.queryByIndex<Record<string, unknown>>(childStore, indexName, value)
         const now = new Date().toISOString()
         for (const record of records) {
           const updated = { ...record, deletedAt: now }
-          await db.put(childStore, updated)
+          await gateway.put(childStore, updated)
         }
         return {
           store: childStore,

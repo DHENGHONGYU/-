@@ -8,7 +8,7 @@
 */
 
 import type { StoreName } from '@/config/dbConfig'
-import { db } from '@/data/db'
+import { gateway } from '@/data/gateway'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
@@ -37,7 +37,7 @@ export async function runInTransaction<T>(
   logger.info(`[Transaction] runInTransaction() called: stores=[${storeNames.join(', ')}], mode="${mode}"`)
 
   try {
-    const result = await db.withTransaction(storeNames, mode, callback)
+    const result = await gateway.runInTransaction(storeNames, mode, callback)
     const duration = Date.now() - startTs
     logger.info(`[Transaction] runInTransaction() completed: stores=[${storeNames.join(', ')}], mode="${mode}", duration=${duration}ms`)
     return result

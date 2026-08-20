@@ -471,6 +471,101 @@ function audit(): AuditIssue[] {
     }
   }
 
+  // 7. RULE_7: 检查非白名单文件 import { db } from '@/data/db'
+  const DB_IMPORT_EXEMPT_DIRS = [
+    'src/data/db',
+    'src/data/db-schema',
+    'src/data/migrations/',
+    'src/data/dataLayer',
+    'src/data/repository',
+    'src/data/gateway',  // Gateway 作为数据门面，允许直接操作 db
+  ]
+  // 当前白名单（已全部迁移完成，清空白名单）
+  const DB_IMPORT_WHITELIST = new Set([
+    // 所有过渡期文件已完成迁移，白名单已清空
+    // 'src/core/databridge.ts' 已迁移，从白名单移除
+    // 'src/core/databridgeRouter.ts' 已迁移，从白名单移除
+    // 'src/core/databridgeHandlers.ts' 已迁移，从白名单移除
+    // 'src/core/cascadeExecutor.ts' 已迁移，从白名单移除
+    // 'src/core/transaction.ts' 已迁移，从白名单移除
+  ])
+  const dbImportRegex = /import\s*\{\s*[^}]*\bdb\b[^}]*\}\s*from\s*['"]@\/data\/db['"]/
+  for (const file of walkFiles(ROOT, ['.ts', '.tsx'])) {
+    const rel = path.relative(ROOT, file).replace(/\\/g, '/')
+    if (rel.includes('.test.') || rel.includes('.spec.')) continue
+    if (DB_IMPORT_EXEMPT_DIRS.some(dir => rel.startsWith(dir))) continue
+    if (DB_IMPORT_WHITELIST.has(rel)) continue
+    if (rel.startsWith('scripts/') || rel.startsWith('outputs/')) continue
+    
+    const content = readFile(file)
+    if (dbImportRegex.test(content)) {
+      issues.push({
+        severity: 'error',
+        message: `RULE_7: 非白名单文件直接 import { db } from '@/data/db': ${rel}`,
+        detail: '根据 AGENTS.md 规则，仅允许 src/data/ 层自身和特定白名单文件直接操作 db。',
+      })
+    }
+  }
+
+  // 8. RULE_8: 检查 data/ 层之外直接使用 IDBTransaction 进行数据操作
+  const TX_USAGE_EXEMPT_DIRS = [
+    'src/data/db-connection',
+    'src/data/db-schema',
+    'src/data/db-migrations',
+    'src/data/db.test',
+    'src/data/db.ts',  // 数据库实现本身
+    'src/data/gateway',  // Gateway 实现需要使用 IDBTransaction
+    'src/core/transaction.ts',  // 事务封装本身
+    'src/core/idbPreflight.ts',  // 预检工具
+  ]
+  // 允许的事务回调模式（传递 tx 参数但仅用于读取操作或被 Gateway 封装）
+  const allowedTxPatterns = [
+    /runInTransaction.*\(.*tx.*=>/,  // Gateway/DataBridge 的事务回调
+    /runInTransactionWithContext.*\(.*ctx.*=>/,  // 新的上下文事务回调
+  ]
+  // 检测实际的代码使用（排除注释和 JSDoc）
+  const idbTransactionCodeRegex = /(?<!\*\/)(?<!\/\/)(?<!\s*\*)(?:import|param|type|:)\s*[^;{}\n]*IDBTransaction[^;{}\n]*/
+  for (const file of walkFiles(ROOT, ['.ts', '.tsx'])) {
+    const rel = path.relative(ROOT, file).replace(/\\/g, '/')
+    if (rel.includes('.test.') || rel.includes('.spec.')) continue
+    if (TX_USAGE_EXEMPT_DIRS.some(dir => rel.startsWith(dir))) continue
+    if (rel.startsWith('scripts/') || rel.startsWith('outputs/')) continue
+    
+    const content = readFile(file)
+    // 检查是否包含实际的 IDBTransaction 使用（排除注释行）
+    const lines = content.split('\n')
+    let hasActualUsage = false
+    for (const line of lines) {
+      const trimmedLine = line.trim()
+      // 跳过注释行
+      if (trimmedLine.startsWith('//') || trimmedLine.startsWith('*') || trimmedLine.startsWith('* ')) continue
+      // 检查是否在代码中使用 IDBTransaction
+      if (IDBTransactionCodePattern(line)) {
+        hasActualUsage = true
+        break
+      }
+    }
+    
+    if (hasActualUsage) {
+      // 检查是否允许的事务模式
+      const isAllowed = allowedTxPatterns.some(pattern => pattern.test(content))
+      if (!isAllowed) {
+        issues.push({
+          severity: 'error',
+          message: `RULE_8: 非 data/ 层文件直接使用 IDBTransaction: ${rel}`,
+          detail: '根据 AGENTS.md 规则，业务代码应通过 gateway.runInTransactionWithContext() 使用事务上下文，避免直接操作 IDBTransaction。',
+        })
+      }
+    }
+  }
+
+  // 辅助函数：检查行中是否包含 IDBTransaction 的实际代码使用
+  function IDBTransactionCodePattern(line: string): boolean {
+    // 匹配 IDBTransaction 作为类型注解或参数类型
+    const pattern = /:\s*IDBTransaction\b|IDBTransaction\s*[>,)]|IDBTransaction\[\]/
+    return pattern.test(line)
+  }
+
   return issues
 }
 

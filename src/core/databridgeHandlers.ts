@@ -11,7 +11,7 @@
   * @doc [V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008, V9-DOC-BACK-012, V9-DOC-PROJ-002]
 */
 import { ENVELOPE_ACTION, STORE_NAME, type StoreName } from '@/config/dbConfig'
-import { db, now } from '@/data/db'
+import { gateway, now } from '@/data/gateway'
 import type { CustomAgent, Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 import { validateSymbolFormat } from '@/lib/validation'
@@ -62,7 +62,7 @@ class PutHandler implements EnvelopeHandler {
         netProfit: report.netProfit,
         fieldCount: Object.keys(payload as Record<string, unknown>).length,
       })
-      await db.put(store, payload)
+      await gateway.put(store, payload)
       const duration = Date.now() - startTime
       logger.info(`[DataBridge] PutHandler 财务数据保存完成`, {
         action: meta.action,
@@ -72,7 +72,7 @@ class PutHandler implements EnvelopeHandler {
       })
     } else {
       logger.debug(`[DataBridge] DB put: action="${meta.action}", store="${store}"`)
-      await db.put(store, payload)
+      await gateway.put(store, payload)
     }
   }
 }
@@ -138,7 +138,7 @@ class DeleteHandler implements EnvelopeHandler {
       })
     }
 
-    await db.delete(store, id)
+    await gateway.delete(store, id)
   }
 }
 
@@ -166,7 +166,7 @@ class InsertStockHandler implements EnvelopeHandler {
       throw new EnvelopeError(`insertStock Rejected: ${symbolError} (traceId=${envelope.meta.traceId})`)
     }
     logger.debug(`[DataBridge] DB insertStock: symbol="${stock.symbol}"`)
-    await db.put(store, stock)
+    await gateway.put(store, stock)
   }
 }
 
@@ -186,13 +186,13 @@ class UpdateStockHandler implements EnvelopeHandler {
       throw new EnvelopeError(`updateStock Rejected: ${symbolError} (traceId=${envelope.meta.traceId})`)
     }
     logger.debug(`[DataBridge] DB updateStock: symbol="${update.symbol}"`)
-    const existing = await db.get<Stock>(store, update.symbol)
+    const existing = await gateway.get<Stock>(store, update.symbol)
     if (!existing) {
       logger.warn(`[DataBridge] DB updateStock failed: Stock not found "${update.symbol}"`)
       throw new EnvelopeError(`Stock not found: ${update.symbol}`)
     }
     const newDataVersion = existing.dataVersion + 1
-    await db.put(store, { ...existing, ...update, updatedAt: Date.now(), dataVersion: newDataVersion })
+    await gateway.put(store, { ...existing, ...update, updatedAt: Date.now(), dataVersion: newDataVersion })
   }
 }
 
@@ -213,13 +213,13 @@ class UpdateStockStatusHandler implements EnvelopeHandler {
       throw new EnvelopeError(`updateStockStatus Rejected: ${symbolError} (traceId=${envelope.meta.traceId})`)
     }
     logger.debug(`[DataBridge] DB updateStockStatus: symbol="${symbol}", status="${status}"`)
-    const existing = await db.get<Stock>(store, symbol)
+    const existing = await gateway.get<Stock>(store, symbol)
     if (!existing) {
       logger.warn(`[DataBridge] DB updateStockStatus failed: Stock not found "${symbol}"`)
       throw new EnvelopeError(`Stock not found: ${symbol}`)
     }
     const newDataVersion = (existing.dataVersion ?? 0) + 1
-    await db.put(store, {
+    await gateway.put(store, {
       ...existing,
       researchStatus: status,
       updatedAt: Date.now(),
@@ -245,13 +245,13 @@ class UpdateStockGroupHandler implements EnvelopeHandler {
       throw new EnvelopeError(`updateStockGroup Rejected: ${symbolError} (traceId=${envelope.meta.traceId})`)
     }
     logger.debug(`[DataBridge] DB updateStockGroup: symbol="${symbol}", group="${group}"`)
-    const existing = await db.get<Stock>(store, symbol)
+    const existing = await gateway.get<Stock>(store, symbol)
     if (!existing) {
       logger.warn(`[DataBridge] DB updateStockGroup failed: Stock not found "${symbol}"`)
       throw new EnvelopeError(`Stock not found: ${symbol}`)
     }
     const newDataVersion = (existing.dataVersion ?? 0) + 1
-    await db.put(store, {
+    await gateway.put(store, {
       ...existing,
       group,
       updatedAt: Date.now(),
@@ -271,14 +271,14 @@ class CustomAgentSaveHandler implements EnvelopeHandler {
 
   async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
     const agent = envelope.payload as Omit<CustomAgent, 'createdAt' | 'updatedAt'> & { createdAt?: number }
-    const existing = await db.get<CustomAgent>(store, agent.id)
+    const existing = await gateway.get<CustomAgent>(store, agent.id)
     const full: CustomAgent = {
       ...agent,
       createdAt: existing?.createdAt ?? agent.createdAt ?? now(),
       updatedAt: now(),
     }
     logger.debug(`[DataBridge] DB saveCustomAgent: id="${agent.id}"`)
-    await db.put(store, full)
+    await gateway.put(store, full)
   }
 }
 
@@ -295,7 +295,7 @@ class DeleteStockHandler implements EnvelopeHandler {
     logger.info(`[DataBridge] DB deleteStock: symbol="${symbol}" — 开始级联删除`)
 
     // 1. 删除 Stock 主记录
-    await db.delete(store, symbol)
+    await gateway.delete(store, symbol)
 
     // 2-4. 级联删除关联表
     await this.deleteSymbolKeyRecords(symbol)
@@ -316,7 +316,7 @@ class DeleteStockHandler implements EnvelopeHandler {
     ]
     for (const s of stores) {
       try {
-        await db.delete(s, symbol)
+        await gateway.delete(s, symbol)
         logger.debug(`[DataBridge] 级联删除: ${s} symbol="${symbol}"`)
       } catch (err) {
         logger.warn(`[DataBridge] 级联删除失败(主键): ${s}`, { error: err instanceof Error ? err.message : String(err) })
@@ -349,10 +349,10 @@ class DeleteStockHandler implements EnvelopeHandler {
   /** 按 by-symbol 索引级联删除某标的记录，单 store 失败不影响其他 store */
   private async deleteBySymbolIndex(store: StoreName, symbol: string): Promise<void> {
     try {
-      const records = await db.getAllByIndex<{ id: string; symbol?: string }>(store, 'by-symbol', symbol)
+      const records = await gateway.queryByIndex<{ id: string; symbol?: string }>(store, 'by-symbol', symbol)
       const ids = records.map((r) => r.id).filter((id): id is string => Boolean(id))
       for (const id of ids) {
-        await db.delete(store, id)
+        await gateway.delete(store, id)
       }
       if (ids.length > 0) {
         logger.debug(`[DataBridge] 级联删除(索引): ${store} count=${ids.length}`)
@@ -374,10 +374,10 @@ class DeleteStockHandler implements EnvelopeHandler {
   /** 全表扫描按 symbol 匹配后级联删除，单 store 失败不影响其他 store */
   private async deleteBySymbolScan(store: StoreName, symbol: string): Promise<void> {
     try {
-      const allRecords = await db.getAll<{ id: string; symbol?: string }>(store)
+      const allRecords = await gateway.getAll<{ id: string; symbol?: string }>(store)
       const toDelete = allRecords.filter((r) => r.symbol === symbol && Boolean(r.id))
       for (const rec of toDelete) {
-        await db.delete(store, rec.id)
+        await gateway.delete(store, rec.id)
       }
       if (toDelete.length > 0) {
         logger.debug(`[DataBridge] 级联删除(扫描): ${store} count=${toDelete.length}`)
@@ -402,12 +402,12 @@ class DeleteExecutionPlanHandler implements EnvelopeHandler {
     const { id } = envelope.payload as { id: string }
     logger.info(`[DataBridge] DB deleteExecutionPlan: id="${id}" — 开始级联删除`)
 
-    await db.delete(store, id)
+    await gateway.delete(store, id)
 
     try {
-      const logs = await db.getAllByIndex<{ id: string }>(STORE_NAME.executionLogs, 'by-plan', id)
+      const logs = await gateway.queryByIndex<{ id: string }>(STORE_NAME.executionLogs, 'by-plan', id)
       for (const log of logs) {
-        await db.delete(STORE_NAME.executionLogs, log.id)
+        await gateway.delete(STORE_NAME.executionLogs, log.id)
       }
       if (logs.length > 0) {
         logger.debug(`[DataBridge] 级联删除: executionLogs by-plan="${id}" count=${logs.length}`)
@@ -434,7 +434,7 @@ class DeleteWorkflowDefHandler implements EnvelopeHandler {
     const { id } = envelope.payload as { id: string }
     logger.info(`[DataBridge] DB deleteWorkflowDef: id="${id}" — 开始级联删除`)
 
-    await db.delete(store, id)
+    await gateway.delete(store, id)
 
     const childStores = [
       { store: STORE_NAME.workflowSchedules, index: 'by-workflow-id', keyField: 'id' },
@@ -444,11 +444,11 @@ class DeleteWorkflowDefHandler implements EnvelopeHandler {
 
     for (const child of childStores) {
       try {
-        const records = await db.getAllByIndex<Record<string, unknown>>(child.store, child.index, id)
+        const records = await gateway.queryByIndex<Record<string, unknown>>(child.store, child.index, id)
         for (const rec of records) {
           const key = rec[child.keyField]
           if (typeof key === 'string') {
-            await db.delete(child.store, key)
+            await gateway.delete(child.store, key)
           }
         }
         if (records.length > 0) {
@@ -503,7 +503,7 @@ class BulkHandler implements EnvelopeHandler {
     const startTime = Date.now()
 
     try {
-      await db.withTransaction([store], 'readwrite', (tx) => {
+      await gateway.runInTransaction([store], 'readwrite', (tx) => {
         const objectStore = tx.objectStore(store)
         for (const item of items) {
           objectStore.put(item)

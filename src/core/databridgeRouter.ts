@@ -15,7 +15,7 @@
 
 import type { StandardEnvelope } from './envelope'
 import { ENVELOPE_ACTION, type StoreName } from '@/config/dbConfig'
-import { db } from '@/data/db'
+import { gateway } from '@/data/gateway'
 import { getLogger } from '@/lib/logger'
 import type { QueryRequest } from './databridge.types'
 
@@ -107,7 +107,7 @@ export async function routeToManager(envelope: StandardEnvelope): Promise<void> 
     switch (meta.action) {
       case ENVELOPE_ACTION.resetAll: {
         logger.info('[DataBridgeRouter] Manager resetAll: clearing entire database')
-        await db.reset()
+        await gateway.resetAll()
         break
       }
       case ENVELOPE_ACTION.importAll: {
@@ -115,12 +115,12 @@ export async function routeToManager(envelope: StandardEnvelope): Promise<void> 
         const tableCount = Object.keys(data).length
         const totalRecords = Object.values(data).reduce((sum, arr) => sum + arr.length, 0)
         logger.info(`[DataBridgeRouter] Manager importAll: ${tableCount} tables, ${totalRecords} records`)
-        await db.import(data)
+        await gateway.importData(data)
         break
       }
       case ENVELOPE_ACTION.exportAll: {
         logger.info('[DataBridgeRouter] Manager exportAll: exporting all data')
-        await db.export()
+        await gateway.exportData()
         break
       }
       default: {

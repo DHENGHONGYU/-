@@ -6,9 +6,13 @@
  * - signalStore: 信号 save/list/listBySymbol
  * - executionPlanStore: 执行计划 save/get/getAll/getBySymbol/list/update/delete
  * - executionLogStore: 执行日志 save/getByPlanId/listByPlan/getBySymbol/listBySymbol/list/getAll
- * - portfolioStore: 持仓 save/saveWithTx/get/getWithTx/list
+ * - portfolioStore: 持仓 save/get/list
  * - tradeReviewStore: 交易复盘 save/getLatest
-  * @doc [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-DATA-031]
+ *
+ * 注意：事务内操作请使用 gateway.runInTransactionWithContext()，
+ * 它提供类型安全的 ITransactionContext 进行 CRUD 操作。
+ *
+ *  @doc [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-DATA-031]
 */
 import { STORE_NAME } from '@/config/dbConfig'
 import { generateId, now } from './db'
@@ -133,26 +137,8 @@ export const portfolioStore = {
     return sendWriteEnvelope('savePortfolio', portfolio, 'tradinghub')
   },
 
-  async saveWithTx(portfolio: Portfolio, tx: IDBTransaction): Promise<void> {
-    const store = tx.objectStore(STORE_NAME.portfolios)
-    await new Promise<void>((resolve, reject) => {
-      const request = store.put(portfolio)
-      request.onsuccess = () => resolve()
-      request.onerror = () => reject(request.error instanceof Error ? request.error : new Error(String(request.error)))
-    })
-  },
-
   async get(id: string): Promise<Portfolio | undefined> {
     return queryGet<Portfolio>(STORE_NAME.portfolios, id)
-  },
-
-  async getWithTx(id: string, tx: IDBTransaction): Promise<Portfolio | undefined> {
-    const store = tx.objectStore(STORE_NAME.portfolios)
-    return new Promise<Portfolio | undefined>((resolve, reject) => {
-      const request = store.get(id)
-      request.onsuccess = () => resolve(request.result as Portfolio | undefined)
-      request.onerror = () => reject(request.error instanceof Error ? request.error : new Error(String(request.error)))
-    })
   },
 
   async list(): Promise<Portfolio[]> {

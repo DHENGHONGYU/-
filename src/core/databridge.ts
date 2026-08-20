@@ -20,7 +20,7 @@
 */
 
 import { ENVELOPE_ACTION, ENVELOPE_TARGET, STORE_NAME, type ModuleId, type StoreName } from '@/config/dbConfig'
-import { db } from '@/data/db'
+import { gateway } from '@/data/gateway'
 import { CHANGED_SUFFIX } from '@/constants/store-channels.constants'
 import { eventBus } from '@/lib/eventBus'
 import { getLogger } from '@/lib/logger'
@@ -225,12 +225,12 @@ export class DataBridge {
    * 应用启动时调用，幂等：已初始化则直接返回。
    */
   async init(): Promise<void> {
-    if (db.isReady()) {
+    if (gateway.isReady()) {
       logger.debug('[DataBridge] init() called but already initialized, skipping')
       return
     }
     logger.info('[DataBridge] init() called, initializing database...')
-    await db.init()
+    await gateway.init()
     logger.info('[DataBridge] init() completed, database ready')
   }
 
@@ -289,9 +289,9 @@ export class DataBridge {
    * 等待数据库就绪（query 内部抽出，降低主函数嵌套深度）
    */
   private async waitForDbReady(): Promise<void> {
-    if (db.isReady()) return
+    if (gateway.isReady()) return
     logger.info('[DataBridge] query() waiting for database ready...')
-    await db.ready()
+    await gateway.ready()
     logger.info('[DataBridge] query() database ready confirmed')
   }
 
@@ -315,25 +315,25 @@ export class DataBridge {
     switch (request.action) {
       case ENVELOPE_ACTION.queryGet: {
         assertQueryGetKey(request)
-        logger.debug(`[DataBridge] query() executing db.get: store="${request.store}", key="${request.key}"`)
-        const getResult = await db.get(request.store, request.key!) as T
-        logger.debug(`[DataBridge] query() db.get completed: found=${getResult != null}`)
+        logger.debug(`[DataBridge] query() executing gateway.get: store="${request.store}", key="${request.key}"`)
+        const getResult = await gateway.get(request.store, request.key!) as T
+        logger.debug(`[DataBridge] query() gateway.get completed: found=${getResult != null}`)
         return getResult
       }
       case ENVELOPE_ACTION.queryList: {
-        logger.debug(`[DataBridge] query() executing db.getAll: store="${request.store}"`)
-        const listResult = await db.getAll(request.store) as T
+        logger.debug(`[DataBridge] query() executing gateway.getAll: store="${request.store}"`)
+        const listResult = await gateway.getAll(request.store) as T
         const listLength = Array.isArray(listResult) ? listResult.length : 'N/A'
-        logger.debug(`[DataBridge] query() db.getAll completed: resultCount=${listLength}`)
+        logger.debug(`[DataBridge] query() gateway.getAll completed: resultCount=${listLength}`)
         return listResult
       }
       case ENVELOPE_ACTION.queryByIndex: {
         assertQueryByIndexKey(request)
         const indexValueStr = typeof request.indexValue === 'string' ? request.indexValue : JSON.stringify(request.indexValue)
-        logger.debug(`[DataBridge] query() executing db.getAllByIndex: store="${request.store}", indexName="${request.indexName}", indexValue="${indexValueStr}"`)
-        const indexResult = await db.getAllByIndex(request.store, request.indexName!, request.indexValue as string) as T
+        logger.debug(`[DataBridge] query() executing gateway.queryByIndex: store="${request.store}", indexName="${request.indexName}", indexValue="${indexValueStr}"`)
+        const indexResult = await gateway.queryByIndex(request.store, request.indexName!, request.indexValue as string) as T
         const indexListLength = Array.isArray(indexResult) ? indexResult.length : 'N/A'
-        logger.debug(`[DataBridge] query() db.getAllByIndex completed: resultCount=${indexListLength}`)
+        logger.debug(`[DataBridge] query() gateway.queryByIndex completed: resultCount=${indexListLength}`)
         return indexResult
       }
       default: {
@@ -396,7 +396,7 @@ export class DataBridge {
       logger.error(`[DataBridge] exportAll audit log failed`, { error: err })
     })
 
-    const data = await db.export()
+    const data = await gateway.exportData()
     const duration = Date.now() - startTs
     logger.info(`[DataBridge] exportAllData() completed: tables=${Object.keys(data).length}, duration=${duration}ms`)
     return data
@@ -429,7 +429,7 @@ export class DataBridge {
       logger.error(`[DataBridge] importAll audit log failed`, { error: err })
     })
 
-    await db.import(data)
+    await gateway.importData(data)
     this.invalidateAll()
 
     const duration = Date.now() - startTs
@@ -462,7 +462,7 @@ export class DataBridge {
       logger.error(`[DataBridge] resetAll audit log failed`, { error: err })
     })
 
-    await db.reset()
+    await gateway.resetAll()
     this.invalidateAll()
 
     const duration = Date.now() - startTs
@@ -483,7 +483,7 @@ export class DataBridge {
   private async writeQueryAuditLog(request: QueryRequest, source: ModuleId): Promise<void> {
     const targetCode = request.key ?? request.indexValue?.toString() ?? request.action
     const now = Date.now()
-    await db.put(STORE_NAME.researchLogs, {
+    await gateway.put(STORE_NAME.researchLogs, {
       traceId: `query-${nanoid(8)}`,
       timestamp: now,
       actor: source,
@@ -726,7 +726,7 @@ export class DataBridge {
       const handler = this.handlerRegistry.findHandler(meta.action)
       if (!handler) {
         logger.warn(`[DataBridge] No handler found for action: "${meta.action}", falling back to default put`)
-        await db.put(store, envelope.payload)
+        await gateway.put(store, envelope.payload)
       } else {
         await handler.handle(envelope, store)
       }
@@ -759,7 +759,7 @@ export class DataBridge {
     logger.debug(`[DataBridge] writeAuditLog(): action="${meta.action}", targetType="${store}", targetCode="${targetCode}"`)
 
     const now = Date.now()
-    await db.put(STORE_NAME.researchLogs, {
+    await gateway.put(STORE_NAME.researchLogs, {
       traceId: meta.traceId,
       timestamp: now,
       actor: meta.source,

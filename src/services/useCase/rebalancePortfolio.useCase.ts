@@ -1,18 +1,21 @@
 /**
  * @module services/useCase/rebalancePortfolio.useCase
- * @note P1-12（已确认合规）：dataLayer store 内部通过 sendWriteEnvelope() → DataBridge 写入，
+ * @note P1-12（已确认合规）: dataLayer store 内部通过 sendWriteEnvelope() → DataBridge 写入，
  *   queryList/queryGet 走 DataBridge 查询，是 DataBridge 的类型安全包装层。
  *   符合 services → data 分层规则（AGENTS.md §一），无需迁移。
+ *
+ * Phase 4 变更：使用 gateway.runInTransactionWithContext() 替代直接操作 IDBTransaction，
+ * 通过 ITransactionContext 提供类型安全的 CRUD 操作，避免绕过 Gateway 的安全机制。
+ *
  * @description 投资组合再平衡用例
  *
  * 将原先 portfolioService 中的 rebalance 业务逻辑抽取为独立 UseCase，
  * 包含完整的业务流程编排：参数校验→数据获取→业务逻辑→结果返回。
-  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-021, V9-DOC-BACK-033, V9-DOC-BACK-027]
+ * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-021, V9-DOC-BACK-033, V9-DOC-BACK-027]
 */
 
 import { getLogger } from '@/lib/logger'
-import { portfolioStore } from '@/data/dataLayerTradingStores'
-import { runInTransaction } from '@/core/transaction'
+import { gateway } from '@/data/gateway'
 import { STORE_NAME } from '@/config/dbConfig'
 import type { Portfolio, Order } from '@/data/types'
 import {
@@ -65,15 +68,15 @@ export async function rebalancePortfolioUseCase(
   })
 
   try {
-    // 2. 事务内获取组合数据并执行再平衡
-    return await runInTransaction<Portfolio | undefined>(
+    // 2. 事务内获取组合数据并执行再平衡（使用 Gateway 的上下文事务）
+    return await gateway.runInTransactionWithContext<Portfolio | undefined>(
       [STORE_NAME.portfolios],
       'readwrite',
-      async (tx) => {
+      async (ctx) => {
         // 3. 获取组合数据
         let portfolio: Portfolio | undefined
         try {
-          portfolio = await portfolioStore.getWithTx(portfolioId, tx)
+          portfolio = await ctx.get<Portfolio>(STORE_NAME.portfolios, portfolioId)
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err)
           logger.error(`[RebalancePortfolioUseCase] 获取组合失败: ${message}`, { portfolioId })
@@ -149,9 +152,9 @@ function updateHoldingForOrder(
           updatedAt: now,
         }
 
-        // 9. 保存更新后的组合
+        // 9. 保存更新后的组合（使用事务上下文的 put 方法）
         try {
-          await portfolioStore.saveWithTx(updated, tx)
+          await ctx.put(STORE_NAME.portfolios, updated)
         } catch (err) {
           const message = err instanceof Error ? err.message : String(err)
           logger.error(`[RebalancePortfolioUseCase] 保存组合失败: ${message}`, { portfolioId })
