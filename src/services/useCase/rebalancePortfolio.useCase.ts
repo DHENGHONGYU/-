@@ -23,7 +23,7 @@ import {
   DEFAULT_MAX_HOLDING_WEIGHT,
   DEFAULT_REBALANCE_THRESHOLD,
 } from '@/constants/execution.constants'
-import { checkPortfolioRebalanceFreshness } from '@/core/freshnessGuard'
+import { checkPortfolioRebalanceFreshness, FreshnessError } from '@/core/freshnessGuard'
 
 const logger = getLogger()
 
@@ -90,7 +90,19 @@ export async function rebalancePortfolioUseCase(
 
         // 4. Freshness 校验：组合更新时间必须晚于最新订单创建时间
         const latestOrderCreatedAt = orders.length > 0 ? Math.max(...orders.map((o) => o.createdAt)) : 0
-        checkPortfolioRebalanceFreshness(now, latestOrderCreatedAt, portfolioId)
+        try {
+          checkPortfolioRebalanceFreshness(now, latestOrderCreatedAt, portfolioId)
+        } catch (freshnessErr) {
+          if (freshnessErr instanceof FreshnessError) {
+            logger.error(
+              `[RebalancePortfolioUseCase] Freshness BLOCKED: portfolioId="${portfolioId}" ` +
+              `output="${freshnessErr.check.output}(${freshnessErr.check.outputTime}) ` +
+              `input="${freshnessErr.check.input}(${freshnessErr.check.inputTime})" — 拒绝组合再平衡`,
+            )
+            return undefined
+          }
+          throw freshnessErr
+        }
 
 function updateHoldingForOrder(
   holding: Portfolio['holdings'][number],

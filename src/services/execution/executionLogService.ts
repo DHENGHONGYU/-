@@ -17,7 +17,7 @@ import { getLogger } from '@/lib/logger'
 import { executionLogStore } from '@/data/dataLayerTradingStores'
 import type { ExecutionPlan, ExecutionLog } from '@/data/types'
 import { EXECUTION_LOG_ACTION, type ExecutionLogAction } from '@/constants/execution.constants'
-import { checkExecutionLogFreshness } from '@/core/freshnessGuard'
+import { checkExecutionLogFreshness, FreshnessError } from '@/core/freshnessGuard'
 import { generateId } from '@/lib/utils'
 
 const logger = getLogger()
@@ -45,7 +45,19 @@ export async function writeLog(
 
   try {
     // Freshness 校验：日志时间戳必须晚于计划创建时间
-    checkExecutionLogFreshness(now, plan.createdAt, plan.id)
+    try {
+      checkExecutionLogFreshness(now, plan.createdAt, plan.id)
+    } catch (freshnessErr) {
+      if (freshnessErr instanceof FreshnessError) {
+        logger.error(
+          `[executionLogService] Freshness BLOCKED: planId="${plan.id}" ` +
+          `output="${freshnessErr.check.output}(${freshnessErr.check.outputTime}) ` +
+          `input="${freshnessErr.check.input}(${freshnessErr.check.inputTime})" — 拒绝写入执行日志`,
+        )
+        return undefined
+      }
+      throw freshnessErr
+    }
 
     const id = generateId()
     const log: ExecutionLog = {

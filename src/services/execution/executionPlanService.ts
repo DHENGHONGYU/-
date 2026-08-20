@@ -33,7 +33,7 @@ import {
   DEFAULT_MAX_POSITION_PCT,
   DEFAULT_ACCOUNT_TYPE,
 } from '@/constants/execution.constants'
-import { checkExecutionPlanFreshness } from '@/core/freshnessGuard'
+import { checkExecutionPlanFreshness, FreshnessError } from '@/core/freshnessGuard'
 import { executionLogService } from './executionLogService'
 import { nanoid } from 'nanoid'
 
@@ -140,7 +140,19 @@ export async function createPlan(signal: Signal, options: CreatePlanOptions = {}
     }
 
     // Freshness 校验：执行计划创建时间必须晚于信号创建时间
-    checkExecutionPlanFreshness(plan.createdAt, signal.createdAt, plan.id)
+    try {
+      checkExecutionPlanFreshness(plan.createdAt, signal.createdAt, plan.id)
+    } catch (freshnessErr) {
+      if (freshnessErr instanceof FreshnessError) {
+        logger.error(
+          `[executionPlanService] Freshness BLOCKED: planId="${plan.id}" signalId="${signal.id}" ` +
+          `output="${freshnessErr.check.output}(${freshnessErr.check.outputTime}) ` +
+          `input="${freshnessErr.check.input}(${freshnessErr.check.inputTime})" — 拒绝创建执行计划`,
+        )
+        return undefined
+      }
+      throw freshnessErr
+    }
 
     try {
       await savePlanViaBridge(plan)
