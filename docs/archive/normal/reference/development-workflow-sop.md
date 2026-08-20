@@ -19,7 +19,7 @@ change_log:
 > **文档体系版本**: v2.0.0 | **本文档修订**: rev.1 | **日期**: 2026-07-13
 > **适用范围**: 所有 FinSightV9 开发者（AI 辅助 + 人工编码）
 > **强制等级**: 必须遵守
-> **关联文档**: [AGENTS.md](../../AGENTS.md) v1.4.6+ | [architecture.md](../explanation/architecture.md) | [governance.md](../00-meta/governance.md) | [CHANGELOG.md](../../CHANGELOG.md)
+> **关联文档**: [AGENTS.md](../../../meta/AGENTS.md) v1.4.6+ | [architecture.md](../../important/explanation/v9-strategy-architecture.md) | [governance.md](../complexity-governance.md) | [CHANGELOG.md](../reports/reports-CHANGELOG.md)
 
 ---
 
@@ -161,7 +161,7 @@ npm run scaffold:widget
 npm run audit:layers
 ```
 
-**依赖方向规则速查表**（来自 [AGENTS.md](../../AGENTS.md) §一）：
+**依赖方向规则速查表**（来自 [AGENTS.md](../../../meta/AGENTS.md) §一）：
 
 ```
 pages/ + components/  →  store/ + services/（禁止直接调用 dataLayer/db）
@@ -215,7 +215,7 @@ npm run complexity-scan
 
 ### 3.5 MCP 权限控制（新增/修改 MCP Server 时）
 
-所有 MCP 工具调用必须经过双端权限校验（来自 [AGENTS.md](../../AGENTS.md) §十四）：
+所有 MCP 工具调用必须经过双端权限校验（来自 [AGENTS.md](../../../meta/AGENTS.md) §十四）：
 
 - **Client 端**：`mcpAclInterceptor.check(caller, server, tool)`
 - **Server 端**：`MCPServerBase.assertServerPermission(caller, tool)`
@@ -230,7 +230,7 @@ npm run complexity-scan
 
 ### 3.6 本地优先原则（新增外部依赖/数据源时）
 
-FinSightV9 是个人本地投研复盘工具，新增模块必须遵守（来自 [AGENTS.md](../../AGENTS.md) §十五）：
+FinSightV9 是个人本地投研复盘工具，新增模块必须遵守（来自 [AGENTS.md](../../../meta/AGENTS.md) §十五）：
 
 - ❌ 不引入后端微服务（FastAPI / Kafka / 云端多数据库集群）
 - ✅ 重计算走 Web Worker 或 WASM
@@ -422,7 +422,7 @@ git commit --no-verify -m "hotfix(scope): 紧急修复描述"
 
 ### 7.3 自主决策边界（AI 辅助编码）
 
-根据 [AGENTS.md](../../AGENTS.md) §十：
+根据 [AGENTS.md](../../../meta/AGENTS.md) §十：
 
 | 类型 | 示例 | 是否需要人工确认 |
 |------|------|----------------|

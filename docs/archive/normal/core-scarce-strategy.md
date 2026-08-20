@@ -141,6 +141,6 @@ core-scarce 标的在双策略评分中：
 ## 8. 相关文档
 
 - [选股策略总文档](./stock-selection-strategy.md)
-- [ADR-008: 第四次工业革命稀缺核心资源策略](../implementation/adr/2026-06-24-adopt-v6-core-resource-trading-strategy.md)
-- [架构文档](../architecture/v9-strategy-architecture.md)
-- [引擎规格](../05-engine-specs.md)
+- [ADR-008: 第四次工业革命稀缺核心资源策略](../drafts/date-prefix/2026-06-24-adopt-v6-core-resource-trading-strategy.md)
+- [架构文档](../important/architecture/v9-strategy-architecture.md)
+- [引擎规格](../../explanation/05-engine-specs.md)

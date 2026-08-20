@@ -26,7 +26,7 @@ date: 2026-07-19
 > **文档版本**: v1.1.0  
 > **状态**: Stable（全部基础设施已落地）  
 > **创建日期**: 2026-07-19  
-> **架构决策**: [ADR-010: 八域资料体系与评分证据链架构](../../reference/adr-010-profile-evidence-chain.md)
+> **架构决策**: [ADR-010: 八域资料体系与评分证据链架构](../../important/reference/adr-010-profile-evidence-chain.md)
 
 ---
 
@@ -366,7 +366,7 @@ L1 护城河（l1）层得分
 
 ## 7. 衍生指标引擎
 
-`derived_metric` 型证据的结构化数据支撑，详细设计见 [衍生指标计算引擎设计规范（V9-DOC-DATA-030）](./derived-metrics-engine-design.md)。
+`derived_metric` 型证据的结构化数据支撑，详细设计见 [衍生指标计算引擎设计规范（V9-DOC-DATA-030）](../derived-metrics-engine-design.md)。
 
 ### 7.1 指标体系（4 大类 20+ 指标）
 

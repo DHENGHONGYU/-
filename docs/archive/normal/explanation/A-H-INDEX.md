@@ -35,47 +35,47 @@ change_log:
 ## 二、逐类索引（仅列真实文件）
 
 ### [A] 导航与治理
-- [文档治理宪法](../meta/GOVERNANCE.md)
-- [目录结构指南](../meta/directory-structure-guide.md)
-- [文档注册索引](../meta/registry-index.md)
-- [文档自动更新触发映射](../meta/doc-trigger-action-map.md)
-- [文档与文件管理优化方案](../00-meta/doc-file-management-optimization-plan.md)
+- [文档治理宪法](../../../meta/GOVERNANCE.md)
+- [目录结构指南](../../../meta/directory-structure-guide.md)
+- [文档注册索引](../meta-registry-index.md)
+- [文档自动更新触发映射](../../../meta/doc-trigger-action-map.md)
+- 文档与文件管理优化方案
 - [需求 / 愿景 / 架构标准](01-requirements/)（含 `../reference/v9-system-blueprint.md`、`01-vision-and-goals.md`、`../specs/02-functional-specs.md`、`03-architecture-standards.md`、`v9数据宪法.md`）
 - [数字目录结构总入口](../explanation/README.md)
 
 ### [B] 架构设计
 - [架构概览](overview.md)
-- [子系统架构（architecture.md）](ARCHITECTURE.md)
+- [子系统架构（architecture.md）](../../../explanation/ARCHITECTURE.md)
 - [舱室总览](cabins-overview.md)
-- [服务目录](../reference/services-catalog.md)
+- [服务目录](../../../reference/services-catalog.md)
 - [舱室业务规格](02-design/cabins/)（`*-cabin-spec.md`、`*-strategy.md`）
 - [合规审计](02-design/architecture/compliance/)
 - [架构决策记录 ADR](02-design/architecture/adr/)
 
 ### [C] 功能模块
 - [舱室业务规格](02-design/cabins/)
-- [数据定义](design/data-definition.md)
-- [数据字典索引](design/data-dictionary-index.md)
+- [数据定义](../../../explanation/design/multi-factor-screening-data-definition.md)
+- [数据字典索引](data-dictionary-index.md)
 - [各类业务数据定义](02-design/standards/)（`*-data-definition.md`）
 
 ### [D] 技术规范
-- [编码规范](../reference/coding-conventions.md)
-- [JSDoc 规范](jsdoc-convention.md)
-- [复杂度治理](complexity-governance.md)
+- [编码规范](../../../reference/coding-conventions.md)
+- [JSDoc 规范](../jsdoc-convention.md)
+- [复杂度治理](../complexity-governance.md)
 - [设计令牌](02-design/standards/design-tokens/)
 - [开发工作流 SOP](../reference/development-workflow-sop.md)
-- [代码评审指南](../guides/how-to/code-review-guide.md)
-- [网关写入权限规范](../reference/gateway-write-permission-spec.md)
+- [代码评审指南](../../../guides/how-to/code-review-guide.md)
+- [网关写入权限规范](../../important/reference/gateway-write-permission-spec.md)
 
 ### [E] 测试策略
-- [测试策略](../guides/testing-strategy.md)
+- [测试策略](../../../guides/testing-strategy.md)
 - [测试用例](04-testing/test-cases/)
 - [测试门禁](04-testing/gates/)
 - [测试报告](04-testing/reports/)
 - [审计 / 自动化测试报告](04-testing/audit-reports/)
 
 ### [F] AI 辅助工程治理
-- [系统提示词模板](../../prompts/system-prompt-template.md)
+- 系统提示词模板
 - [组件 / 服务 / Store / 类型提示词模板](../../prompts/)
 - [检查清单](03-development/checklists/)
 - [AI 记忆与文档自动更新](03-development/ai/)

@@ -26,7 +26,7 @@
 > - **domain/ 层**: 已创建（scoring/energy, trading/markers, collection/pipeline, export/strategySnapshotExport）
 > - **审计脚本**: audit-layer-calls.ts v3.7 白名单已同步（移除已迁移的 lib/scoring 等条目）
 > - **DataBridge 级联删除**: DeleteStockHandler 增强（+8 store）、DeleteExecutionPlanHandler/DeleteWorkflowDefHandler 新增
-> - 关联文档：[MCP 债务修复方案](../../reports/governance/mcp-direct-service-import-debt-fix-plan-2026-08-12.md) | [P1 清理清单](../../reports/project-management/01-p1-debt-cleanup-todo.md)
+> - 关联文档：[MCP 债务修复方案](../reports/mcp-direct-service-import-debt-fix-plan-2026-08-12.md) | [P1 清理清单](../reports/01-p1-debt-cleanup-todo.md)
 
 ---
 

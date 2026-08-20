@@ -348,6 +348,6 @@ function isHotSector(
 
 - [选股策略总文档](./stock-selection-strategy.md)
 - [价值洼地策略](./value-bargain-strategy.md)
-- [ADR-009: 双策略体系](../implementation/adr/2026-06-27-dual-strategy-system.md)
-- [架构文档](../architecture/v9-strategy-architecture.md)
-- [引擎规格](../05-engine-specs.md)
+- [ADR-009: 双策略体系](../drafts/date-prefix/2026-06-27-dual-strategy-system.md)
+- [架构文档](../important/architecture/v9-strategy-architecture.md)
+- [引擎规格](../../explanation/05-engine-specs.md)

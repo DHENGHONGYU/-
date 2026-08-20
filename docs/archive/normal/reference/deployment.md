@@ -24,7 +24,7 @@ date: 2026-07-17
 
 > **文档体系版本**: v2.0.0 | **本文档修订**: rev.1 | **兼容 AGENTS.md**: v1.4.3+
 > **定位**: 定义 V9 纯前端应用的构建产物、部署配置、数据库升级、环境变量、CI/CD 门禁及回滚方案，补 H 类「部署」缺口。
-> **相关文档**: [AGENTS.md](../../AGENTS.md) §八（数据库版本管理）、[runbook.md](../explanation/runbook.md)（日常运维）、[architecture/overview.md](../explanation/overview.md)（全局架构）
+> **相关文档**: [AGENTS.md](../../../meta/AGENTS.md) §八（数据库版本管理）、[runbook.md](../reports/runbook.md)（日常运维）、[architecture/overview.md](../explanation/overview.md)（全局架构）
 
 ---
 
@@ -452,11 +452,11 @@ IndexedDB **不支持直接回滚版本**。若 Schema 升级导致数据损坏�
 | 文档 | 路径 | 说明 |
 |------|------|------|
 | AGENTS.md | `../../AGENTS.md` | 工程分层契约、数据库版本管理 §八、回滚验证流程 §二 |
-| 运维手册 | [runbook.md](../explanation/runbook.md) | 日常运维、故障处置、健康监控 |
+| 运维手册 | [runbook.md](../reports/runbook.md) | 日常运维、故障处置、健康监控 |
 | 全局架构 | [architecture/overview.md](../explanation/overview.md) | 分层架构、数据流、三级加载链 |
-| 文档治理 | [governance.md](../00-meta/governance.md) | 文档生命周期、保鲜规则、DoD |
-| 路由规格 | [06-routing-specs.md](../explanation/06-routing-specs.md) | 路由注册、三级加载链详细规格 |
-| 引擎规格 | [05-engine-specs.md](../explanation/05-engine-specs.md) | L0-L8 引擎分层、确定性层定义 |
+| 文档治理 | [governance.md](../complexity-governance.md) | 文档生命周期、保鲜规则、DoD |
+| 路由规格 | [06-routing-specs.md](../../important/explanation/06-routing-specs.md) | 路由注册、三级加载链详细规格 |
+| 引擎规格 | [05-engine-specs.md](../../../explanation/05-engine-specs.md) | L0-L8 引擎分层、确定性层定义 |
 
 ---
 

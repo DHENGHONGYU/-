@@ -38,7 +38,7 @@ change_log:
 | 文件 | 角色 | 状态 |
 |------|------|------|
 | [`./data-definition.md`](./data-definition.md) | **唯一主字典（SSOT）** v2.0.0（2026-08-15） | ✅ 现行 |
-| [`./《V9核心数据字典与类型定义（整合版）》.md`](./《V9核心数据字典与类型定义（整合版）》.md) | **全局整合版** v1.5（2026-08-15） — 覆盖 P0/P1/P2 共 175+ 实体 | ✅ 现行 |
+| [`./《V9核心数据字典与类型定义（整合版）》.md`](../../../reference/《V9核心数据字典与类型定义（整合版）》.md) | **全局整合版** v1.5（2026-08-15） — 覆盖 P0/P1/P2 共 175+ 实体 | ✅ 现行 |
 | `./data-definition.md`（根，交易持仓） | 源文件（mtime 2026-07-08，13,337 B） | ⛔ 已并入主字典后 `git rm` |
 | `./data-definition.md`（数据采集） | 源文件（mtime 2026-07-08，13,827 B） | ⛔ 已并入主字典后移除（untracked） |
 | `./data-definition.md`（Cockpit Widget） | 源文件（mtime 2026-07-06，26,654 B） | ⛔ 已并入主字典后移除（untracked） |
@@ -51,35 +51,35 @@ change_log:
 
 | 文件 | 归属子域 | 版本 | 状态 |
 |------|----------|------|------|
-| [`../explanation/design/ai-center-data-definition.md`](../explanation/design/ai-center-data-definition.md) | ai-center | v1.2.0 | ✅ 现行（设计阶段视图） |
-| [`../explanation/design/news-data-definition.md`](../explanation/design/news-data-definition.md) | news | v1.0.0 | ✅ 现行（设计阶段视图） |
-| [`../explanation/design/dataflow-data-definition.md`](../explanation/design/dataflow-data-definition.md) | dataflow | v1.2.0 | ✅ 现行（设计阶段视图） |
-| [`../explanation/design/multi-factor-screening-data-definition.md`](../explanation/design/multi-factor-screening-data-definition.md) | screening | v1.0.0 | ✅ 现行（设计阶段视图） |
-| [`./seven-dim-config-data-definition.md`](./seven-dim-config-data-definition.md) | seven-dim-config | v1.0.0 | ✅ 现行（reference 视图） |
+| [`../explanation/design/ai-center-data-definition.md`](../ai-center-data-definition.md) | ai-center | v1.2.0 | ✅ 现行（设计阶段视图） |
+| [`../explanation/design/news-data-definition.md`](news-data-definition.md) | news | v1.0.0 | ✅ 现行（设计阶段视图） |
+| [`../explanation/design/dataflow-data-definition.md`](dataflow-data-definition.md) | dataflow | v1.2.0 | ✅ 现行（设计阶段视图） |
+| [`../explanation/design/multi-factor-screening-data-definition.md`](../../../explanation/design/multi-factor-screening-data-definition.md) | screening | v1.0.0 | ✅ 现行（设计阶段视图） |
+| [`./seven-dim-config-data-definition.md`](../seven-dim-config-data-definition.md) | seven-dim-config | v1.0.0 | ✅ 现行（reference 视图） |
 
 ### 2.2 reference 副本（按目录归类保留，内容与 §2.1 一致或为子集）
 
 | 文件 | 归属子域 | 版本 | 状态 |
 |------|----------|------|------|
-| [`./ai-center-data-definition.md`](./ai-center-data-definition.md) | ai-center | v1.2.0 | ✅ reference 视图 |
+| [`./ai-center-data-definition.md`](../ai-center-data-definition.md) | ai-center | v1.2.0 | ✅ reference 视图 |
 | [`./news-data-definition.md`](./news-data-definition.md) | news | v1.0.0 | ✅ reference 视图 |
 | [`./dataflow-data-definition.md`](./dataflow-data-definition.md) | dataflow | v1.2.0 | ✅ reference 视图 |
-| [`./multi-factor-screening-data-definition.md`](./multi-factor-screening-data-definition.md) | screening | v1.0.0 | ✅ reference 视图 |
-| [`./cockpit/data-definition.md`](./cockpit/data-definition.md) | cockpit | v1.2.0 | ✅ 主字典 §C 内容副本 |
-| [`./news/data-definition.md`](./news/data-definition.md) | news | v1.2.0 | ✅ 主字典 §B 内容副本 |
-| [`./data-collection/data-definition.md`](./data-collection/data-definition.md) | data-collection | v1.2.0 | ✅ 主字典 §B 内容副本 |
+| [`./multi-factor-screening-data-definition.md`](../../../explanation/design/multi-factor-screening-data-definition.md) | screening | v1.0.0 | ✅ reference 视图 |
+| [`./cockpit/data-definition.md`](../../../reference/cockpit/data-definition.md) | cockpit | v1.2.0 | ✅ 主字典 §C 内容副本 |
+| [`./news/data-definition.md`](../../../reference/news/data-definition.md) | news | v1.2.0 | ✅ 主字典 §B 内容副本 |
+| [`./data-collection/data-definition.md`](../../../reference/data-collection/data-definition.md) | data-collection | v1.2.0 | ✅ 主字典 §B 内容副本 |
 
 ### 2.3 DEPRECATED 副本（已声明废弃，保留以供历史参考）
 
 | 文件 | 归属子域 | 废弃日期 | 替代位置 |
 |------|----------|----------|----------|
-| [`../explanation/ai-center-data-definition.md`](../explanation/ai-center-data-definition.md) | ai-center | 2026-07-14 | → §2.1 design 版 + 主字典 |
+| [`../explanation/ai-center-data-definition.md`](../ai-center-data-definition.md) | ai-center | 2026-07-14 | → §2.1 design 版 + 主字典 |
 | [`../explanation/news-data-definition.md`](../explanation/news-data-definition.md) | news | 2026-07-14 | → §2.1 design 版 + 主字典 |
 | [`../explanation/dataflow-data-definition.md`](../explanation/dataflow-data-definition.md) | dataflow | 2026-07-14 | → §2.1 design 版 + 主字典 |
-| [`../explanation/multi-factor-screening-data-definition.md`](../explanation/multi-factor-screening-data-definition.md) | screening | 2026-07-14 | → §2.1 design 版 + 主字典 |
-| [`../explanation/seven-dim-config-data-definition.md`](../explanation/seven-dim-config-data-definition.md) | seven-dim-config | 2026-07-14 | → §2.2 reference 版 |
-| [`./backtest-data-definition.md`](./backtest-data-definition.md) | backtest | 2026-07-14 | → 主字典整合版 |
-| [`./risk-derived-data-definition.md`](./risk-derived-data-definition.md) | risk | 2026-07-14 | → 主字典整合版 + `src/store/riskStore.derived.ts` |
+| [`../explanation/multi-factor-screening-data-definition.md`](../../../explanation/design/multi-factor-screening-data-definition.md) | screening | 2026-07-14 | → §2.1 design 版 + 主字典 |
+| [`../explanation/seven-dim-config-data-definition.md`](../seven-dim-config-data-definition.md) | seven-dim-config | 2026-07-14 | → §2.2 reference 版 |
+| [`./backtest-data-definition.md`](../../../reference/backtest-data-definition.md) | backtest | 2026-07-14 | → 主字典整合版 |
+| [`./risk-derived-data-definition.md`](../../../reference/risk-derived-data-definition.md) | risk | 2026-07-14 | → 主字典整合版 + `src/store/riskStore.derived.ts` |
 
 > **整合状态**：5 份独立域定义有现行版本（§2.1 + §2.2 reference 副本），7 份 DEPRECATED 副本已登记指向替代位置。
 > **引用规范**：新增域定义统一 `kebab-case` + `./data-definition.md` 后缀，并必须在此索引登记。
@@ -100,7 +100,7 @@ change_log:
 | `ENVELOPE_TARGET` 数量 | 11 | 11 | ✅ |
 | `ENVELOPE_ACTION` 数量 | 80+ | 80+ | ✅ |
 
-> 详见 [`src/config/dbConfig.ts`](../../src/config/dbConfig.ts) 与 [`./《V9核心数据字典与类型定义（整合版）》.md`](./《V9核心数据字典与类型定义（整合版）》.md) §3 ModuleId 与附录 D.3。
+> 详见 [`src/config/dbConfig.ts`](../../src/config/dbConfig.ts) 与 [`./《V9核心数据字典与类型定义（整合版）》.md`](../../../reference/《V9核心数据字典与类型定义（整合版）》.md) §3 ModuleId 与附录 D.3。
 
 ## 5. 命名约定（GOVERNANCE 对齐）
 

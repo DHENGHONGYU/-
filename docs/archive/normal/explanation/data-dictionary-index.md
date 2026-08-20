@@ -30,7 +30,7 @@ change_log:
 > **Status**: Current  
 > **Version**: v1.7.0  
 > **Last Updated**: 2026-08-15  
-> ⚠️ **权威 SSOT**：本文件为设计阶段视图，权威索引请以 [`docs/reference/data-dictionary-index.md`](../../reference/data-dictionary-index.md)（v1.1.0，2026-08-15）为准。  
+> ⚠️ **权威 SSOT**：本文件为设计阶段视图，权威索引请以 [`docs/reference/data-dictionary-index.md`](../reference/data-dictionary-index.md)（v1.1.0，2026-08-15）为准。  
 > 本文档汇总 V9 项目所有模块级数据字典入口，便于快速查找字段定义、枚举值、服务 API 与 DataBridge 映射。  
 > **代码权威源**：`DB_VERSION=32` · `STORE_NAME=50` · `MODULE_ID=20` · `ENVELOPE_TARGET=11` · `ENVELOPE_ACTION=80+`（见 [`src/config/dbConfig.ts`](../../../src/config/dbConfig.ts)）。
 

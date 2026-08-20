@@ -42,10 +42,10 @@ V9 选股策略体系由 **四分类选股（strategyEngine）** 与 **双策略
 
 | 分类 | 标识 | 优先级 | 核心逻辑 | 详细文档 |
 |------|------|--------|----------|----------|
-| 核心稀缺资源 | `core-scarce` | 第一梯队 | 匹配主题 + 综合分达标 | [core-scarce-strategy.md](./core-scarce-strategy.md) |
-| 热门赛道 | `hot-momentum` | 第二梯队 | 板块热门 + 动量达标 | [hot-momentum-strategy.md](./hot-momentum-strategy.md) |
-| 价值洼地 | `value-bargain` | 第二梯队 | 估值分高 + 综合分适中 | [value-bargain-strategy.md](./value-bargain-strategy.md) |
-| 观察仓 | `watchlist` | 第三梯队 | 暂不参与交易，持续跟踪 | [watchlist-strategy.md](./watchlist-strategy.md) |
+| 核心稀缺资源 | `core-scarce` | 第一梯队 | 匹配主题 + 综合分达标 | [core-scarce-strategy.md](../core-scarce-strategy.md) |
+| 热门赛道 | `hot-momentum` | 第二梯队 | 板块热门 + 动量达标 | [hot-momentum-strategy.md](../hot-momentum-strategy.md) |
+| 价值洼地 | `value-bargain` | 第二梯队 | 估值分高 + 综合分适中 | [value-bargain-strategy.md](../value-bargain-strategy.md) |
+| 观察仓 | `watchlist` | 第三梯队 | 暂不参与交易，持续跟踪 | [watchlist-strategy.md](../watchlist-strategy.md) |
 
 ### 2.2 分类判定流程
 
@@ -184,12 +184,12 @@ V9 策略体系采用三梯队优先级结构，决定标的在交易执行与�
 
 ## 8. 相关文档
 
-- [核心稀缺资源策略](./core-scarce-strategy.md)
-- [热门赛道策略](./hot-momentum-strategy.md)
-- [价值洼地策略](./value-bargain-strategy.md)
-- [观察仓策略](./watchlist-strategy.md)
-- [架构文档](v9-strategy-architecture.md)
-- [ADR-008: 第四次工业革命稀缺核心资源策略](../../reference/2026-06-24-adopt-v6-core-resource-trading-strategy.md)
-- [ADR-009: 双策略体系](2026-06-27-dual-strategy-system.md)
-- [引擎规格](../05-engine-specs.md)
-- [架构标准](../03-architecture-standards.md)
+- [核心稀缺资源策略](../core-scarce-strategy.md)
+- [热门赛道策略](../hot-momentum-strategy.md)
+- [价值洼地策略](../value-bargain-strategy.md)
+- [观察仓策略](../watchlist-strategy.md)
+- [架构文档](../../important/architecture/v9-strategy-architecture.md)
+- [ADR-008: 第四次工业革命稀缺核心资源策略](../../../reference/2026-06-24-adopt-v6-core-resource-trading-strategy.md)
+- [ADR-009: 双策略体系](../../drafts/date-prefix/2026-06-27-dual-strategy-system.md)
+- [引擎规格](../../../explanation/05-engine-specs.md)
+- [架构标准](../../important/explanation/03-architecture-standards.md)

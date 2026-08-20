@@ -189,5 +189,5 @@ watchlist 判定条件（满足任一）：
 - [核心稀缺资源策略](./core-scarce-strategy.md)
 - [热门赛道策略](./hot-momentum-strategy.md)
 - [价值洼地策略](./value-bargain-strategy.md)
-- [架构文档](../architecture/v9-strategy-architecture.md)
-- [ADR-009: 双策略体系](../implementation/adr/2026-06-27-dual-strategy-system.md)
+- [架构文档](../important/architecture/v9-strategy-architecture.md)
+- [ADR-009: 双策略体系](../drafts/date-prefix/2026-06-27-dual-strategy-system.md)

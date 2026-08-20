@@ -176,9 +176,9 @@ interface StockDataQuality {
  V9 
 
 - [](../00-meta/../explanation/design/registry-index.md)
-- [V9 ](../explanation/design/data-flow-spec.md)
-- [V9 ](data-flow-spec.md)
-- [V9 Data Constitution?](V9.md)
+- [V9 ](../../important/data-flow-spec.md)
+- [V9 ](../../important/data-flow-spec.md)
+- V9 Data Constitution?
 - [](../explanation/design/../explanation/design/registry-index.md)
-- [V9 ](../explanation/design/00-readme.md)
+- [V9 ](../explanation/00-readme.md)
 

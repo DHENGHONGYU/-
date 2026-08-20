@@ -168,5 +168,5 @@ npx playwright test <module-spec> --project=chromium
 ## 当前进度
 
 > **全部完成**。所有 24 个任务已执行完毕，综合评估报告已生成。
-> 详见 [自动化测试综合评估报告](../explanation/design/automation-test-evaluation.md)
+> 详见 自动化测试综合评估报告
 

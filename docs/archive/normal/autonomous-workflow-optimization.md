@@ -512,7 +512,7 @@ const rules: WorkflowRule[] = [
 - [AGENTS.md](../../../AGENTS.md) — AI 行为约束契约
 - CHANGELOG.md（已归档） — 版本变更日志
 - [09-quality-gates.md](../../guides/09-quality-gates.md) — 质量门禁
-- [implementation-governance.md](./implementation-governance.md) — 实施治理
+- [implementation-governance.md](./explanation/implementation-governance.md) — 实施治理
 
 ### 7.2 术语表
 

@@ -25,7 +25,7 @@ date: 2026-07-17
 > **Version**: v1.0.0 | **日期**: 2026-07-08
 > **方案状态**: ? 方案制定完成，待审批实施
 > **前置依赖**: PR-7（tradeErrorClassifier 拆分）已完成
-> **关联审计报告**: [pr-8-dedup-audit-report.md](./pr-8-dedup-audit-report.md)
+> **关联审计报告**: [pr-8-dedup-audit-report.md](../reports/pr-8-dedup-audit-report.md)
 > **架构原则**: AP-007 重复代码检测（策略 A：保守合并）
 
 ---
@@ -351,8 +351,8 @@ Remove-Item src/services/scoring/_shared -Recurse -ErrorAction SilentlyContinue
 
 ## 七、参考文档
 
-- [PR-8 审计报告](./pr-8-dedup-audit-report.md)
-- [PR-7 变更日志](../../../reports/CHANGELOG.md)
+- [PR-8 审计报告](../reports/pr-8-dedup-audit-report.md)
+- [PR-7 变更日志](../reports/reports-CHANGELOG.md)
 - 边界定义同步文档
-- [架构标准 §3.16 模块拆分架构原则](../../../explanation/03-architecture-standards.md)
-- [AP-007 重复代码检测策略 A（保守合并）](../../../explanation/03-architecture-standards.md)
+- [架构标准 §3.16 模块拆分架构原则](../../important/explanation/03-architecture-standards.md)
+- [AP-007 重复代码检测策略 A（保守合并）](../../important/explanation/03-architecture-standards.md)

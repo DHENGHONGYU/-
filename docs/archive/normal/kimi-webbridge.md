@@ -26,7 +26,7 @@ change_log:
 
 > **功能域**: 浏览器自动化控制（导航、点击、输入、截图、PDF 保存）  
 > **版本**: 1.9.21  
-> **原始路径**: [`plugins/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/SKILL.md)（扁平化） / [`plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md)（嵌套）  
+> **原始路径**: [`plugins/kimi-webbridge/SKILL.md`](../../explanation/production-release-checklist-SKILL.md)（扁平化） / [`plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md`](../../explanation/production-release-checklist-SKILL.md)（嵌套）  
 > **同步日期**: 2025-07-12
 
 ---
@@ -207,4 +207,4 @@ PDF 大小上限 100 MB，超过则拒绝。
 
 ---
 
-*本文档与 [`plugins/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/SKILL.md) 同步，更新时请同时修改两者。*
+*本文档与 [`plugins/kimi-webbridge/SKILL.md`](../../explanation/production-release-checklist-SKILL.md) 同步，更新时请同时修改两者。*

@@ -26,12 +26,12 @@ change_log:
 
 | 文档 | 路径 | 职责 |
 |------|------|------|
-| 工程分层契约 | [`../../../AGENTS.md`](../../../AGENTS.md) | 分层规则、四步集成、依赖方向铁律 |
-| 新增 Service 实操 | [`../../guides/how-to/how-to-add-service.md`](../../guides/how-to/how-to-add-service.md) | 15 分钟快速创建 Service 的模板与踩坑指南 |
-| 服务子域目录 | [`../services-catalog.md`](../services-catalog.md) | 24 子域清单与职责摘要 |
-| 全局架构总览 | [`../../explanation/overview.md`](../../explanation/overview.md) | 数据流、三级加载链、引擎分层 |
-| 新增 Store 指南 | [`../../guides/how-to/how-to-add-store.md`](../../guides/how-to/how-to-add-store.md) | Service 的上游消费方（Zustand Store） |
-| 编码规范 | [`../coding-conventions.md`](../coding-conventions.md) | JSDoc、复杂度、命名规范 |
+| 工程分层契约 | [`../../../AGENTS.md`](../../../meta/AGENTS.md) | 分层规则、四步集成、依赖方向铁律 |
+| 新增 Service 实操 | [`../../guides/how-to/how-to-add-service.md`](../../../guides/how-to/how-to-add-service.md) | 15 分钟快速创建 Service 的模板与踩坑指南 |
+| 服务子域目录 | [`../services-catalog.md`](../../../reference/services-catalog.md) | 24 子域清单与职责摘要 |
+| 全局架构总览 | [`../../explanation/overview.md`](../explanation/cabins-overview.md) | 数据流、三级加载链、引擎分层 |
+| 新增 Store 指南 | [`../../guides/how-to/how-to-add-store.md`](../../../guides/how-to/how-to-add-store.md) | Service 的上游消费方（Zustand Store） |
+| 编码规范 | [`../coding-conventions.md`](../../../guides/standards/coding-conventions.md) | JSDoc、复杂度、命名规范 |
 | 数据库配置 | `src/config/dbConfig.ts` | `STORE_NAME`、`ACL_MATRIX`、`ENVELOPE_ACTION` 定义 |
 | Envelope 工厂 | `src/core/envelope.ts` | 信封构造与类型守卫 |
 | DataBridge 核心 | `src/core/databridge.ts` | 路由分发与 ACL 校验 |
@@ -416,7 +416,7 @@ npm run audit:layers
 ### 5.1 子域目录命名
 
 - 子域目录：`kebab-case`（如 `data-collector/`、`hybrid-proofread/`）。
-- 子域数量：当前 24 个（详见 [`services-catalog.md`](../services-catalog.md)）。
+- 子域数量：当前 24 个（详见 [`services-catalog.md`](../../../reference/services-catalog.md)）。
 - 新增子域须经架构组评审，避免职责重叠。
 
 ### 5.2 Service 文件命名
@@ -526,7 +526,7 @@ errorBus.report({
 
 ### 7.1 创建前
 
-- [ ] 确认 Service 的职责边界，不与其他 24 子域重叠（参考 [`services-catalog.md`](../services-catalog.md)）。
+- [ ] 确认 Service 的职责边界，不与其他 24 子域重叠（参考 [`services-catalog.md`](../../../reference/services-catalog.md)）。
 - [ ] 确定数据类型，已在 `src/types/modules/` 或 `src/data/types.ts` 中定义 Interface。
 - [ ] 确认对应的 IndexedDB store：
   - [ ] 在 `src/config/dbConfig.ts` 的 `STORE_NAME` 中注册（新增 store 时）。

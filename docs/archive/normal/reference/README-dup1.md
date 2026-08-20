@@ -26,7 +26,7 @@ date: 2026-07-17
 
 ## 入口
 
-- AI 相关提示词：[../prompts/README.md](../prompts/README.md)
-- Store 集成指南：[../prompts/store-integration-guide.md](../prompts/store-integration-guide.md)
-- Service 集成指南：[../prompts/service-integration-guide.md](../prompts/service-integration-guide.md)
-- Agent 运行时规范：[../agent-runtime-spec.md](../agent-runtime-spec.md)
+- AI 相关提示词：[../prompts/README.md](README.md)
+- Store 集成指南：[../prompts/store-integration-guide.md](../../../reference/prompts/store-integration-guide.md)
+- Service 集成指南：[../prompts/service-integration-guide.md](../../../reference/prompts/service-integration-guide.md)
+- Agent 运行时规范：[../agent-runtime-spec.md](../../important/agent-runtime-spec.md)

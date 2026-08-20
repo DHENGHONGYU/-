@@ -26,6 +26,6 @@ date: 2026-07-17
 
 ## 入口
 
-- 数据层总览：[../explanation/data-layer-overview.md](../explanation/data-layer-overview.md)
-- 数据桥接 ADR：[../reference/adr-003-databridge-over-direct-datalayer.md](../adr-003-databridge-over-direct-datalayer.md)
-- IndexedDB 方案 ADR：[../reference/adr-002-indexeddb-over-localstorage.md](../adr-002-indexeddb-over-localstorage.md)
+- 数据层总览：[../explanation/data-layer-overview.md](../../../explanation/data-layer-overview.md)
+- 数据桥接 ADR：[../reference/adr-003-databridge-over-direct-datalayer.md](../../important/reference/adr-003-databridge-over-direct-datalayer.md)
+- IndexedDB 方案 ADR：[../reference/adr-002-indexeddb-over-localstorage.md](../../../reference/adr-002-indexeddb-over-localstorage.md)

@@ -18,7 +18,7 @@ change_log:
 > **版本**: v1.0.0 | **日期**: 2026-07-13
 > **适用范围**: 所有 `src/` 下的 TypeScript / TSX 文件
 > **强制等级**: 必须遵守
-> **关联文档**: [AGENTS.md](../../AGENTS.md) §三
+> **关联文档**: [AGENTS.md](../../meta/AGENTS.md) §三
 
 ---
 
