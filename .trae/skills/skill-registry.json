@@ -1,12 +1,12 @@
 {
-  "_comment": "V9 Skill L1 Registry — 单一真相源（3 layers）：(1) projectPhysical: .agents/skills/ 18项；(2) externalPlugins: plugins/*/skills/ 9项；(3) virtualPlatform: 平台内置虚拟19项，定义于 AGENTS.md §技能索引与路由表。三层分离，总计 46 条登记（不可混加计数）。",
+  "_comment": "V9 Skill L1 Registry — 单一真相源（3 layers）：(1) projectPhysical: .agents/skills/ 22个目录实际存在（含 _SKILL-TEMPLATE.md 官方骨架模板不计入 L1 计数，实际 L1 物理 21 条登记：projectPhysicalSkills[] 数组实际长度 = 21）；data-flow-integrity-audit 孤儿目录已补登记；新增 collection-pipeline-governance=GAP-01 采集管线全链路治理；★ RULE-TPL 模板门禁（AGENTS.md 变更纪律强制）：last_updated ≥ 2026-08-20 或 change_log 含「5 段式骨架模板」的新技能必须命中 S 级 5 大段标题，否则 audit:skill-coverage exit 1，禁止四端登记；(2) externalPlugins: plugins/*/skills/ 9项；(3) virtualPlatform: 平台内置虚拟19项，定义于 AGENTS.md §技能索引与路由表。三层分离，总计 49 条登记（不可混加计数）。",
   "schemaVersion": "1.1.0",
   "lastVerifiedAt": "2026-08-15T21:43:18.000Z",
   "generatedAt": "2026-08-11T21:30:00+08:00",
   "summary": {
-    "totalEntries": 46,
+    "totalEntries": 49,
     "projectPhysicalSkills": {
-      "count": 18,
+      "count": 21,
       "location": ".agents/skills/*/SKILL.md"
     },
     "externalPluginSkills": {
@@ -19,7 +19,7 @@
     },
     "mandatoryCount": 11,
     "categoriesStats": {
-      "architecture": 8,
+      "architecture": 10,
       "db-governance": 1,
       "doc-governance": 6,
       "feature-runtime": 1,
@@ -29,7 +29,9 @@
       "sector-analysis": 1,
       "type-safety": 1,
       "valuation": 1,
-      "data-flow": 3,
+      "data-flow": 4,
+      "quality-gate-governance": 2,
+      "quality-gate": 1,
       "plugin-external": 9,
       "code-quality": 7,
       "ui-design": 1,
@@ -197,6 +199,41 @@
         "events": []
       },
       "gates": []
+    },
+    {
+      "id": "V9-SKILL-GATEWAY-FACADE-REFACTOR",
+      "name": "gateway-facade-refactor",
+      "category": "architecture",
+      "path": ".agents/skills/gateway-facade-refactor/SKILL.md",
+      "mandatory": false,
+      "description": "端到端执行 Gateway 门面化架构重构 6 阶段 SOP：过渡期白名单建立→方案评估选型→门面接口+单例实现→核心文件叶到根迁移+白名单清零→业务模块重构与事务上下文 API 设计→契约/Wiki/版本号同步+门禁全绿。Invoke when 需要将散落在多层的直接数据访问（裸 db/IDBTransaction/dataLayer 调用）收敛到统一门面层，或 audit:db-references/audit:layers 报告大量跨层违规。",
+      "triggers": {
+        "keywords": [
+          "Gateway 门面重构",
+          "架构分层",
+          "跨层访问收敛",
+          "过渡期白名单",
+          "data/gateway",
+          "门面化重构",
+          "import { db } 违规",
+          "IDBTransaction 违规",
+          "架构重构"
+        ],
+        "files": [
+          "src/data/gateway/**/*.ts",
+          "src/core/transaction.ts",
+          "src/core/cascadeExecutor.ts",
+          "src/core/dataBridge/**/*.ts",
+          "scripts/audit/audit-db-references.ts"
+        ],
+        "events": []
+      },
+      "gates": [
+        "npm run tsc:prod",
+        "npm run audit:db-references",
+        "npm run audit:layers",
+        "npm run audit:acl-consistency"
+      ]
     },
     {
       "id": "V9-SKILL-INDUSTRY-SCORE",
@@ -434,6 +471,48 @@
       ]
     },
     {
+      "id": "V9-SKILL-COLLECTION-PIPELINE-GOVERNANCE",
+      "name": "collection-pipeline-governance",
+      "category": "quality-gate-governance",
+      "path": ".agents/skills/collection-pipeline-governance/SKILL.md",
+      "mandatory": false,
+      "description": "采集管线全链路治理 SOP：7 维配置安全修改、新 MCP/REST 数据源接入、降级阈值与计分策略调整、月度 API 预算评估、stock 字典增量重建、真实取数回归 6 大场景闭环。Invoke when 修改 sevenDimConfigStore（启用/停用维度、频率、模板）、接入新数据源（BaseCollector/Tushare/IFind/MCP 源）、调整 SourcePriorityManager/QualityMetricsCollector/DegradationScorer 参数、或 build:stock-dict/data-collector:dry-run 门禁失败。",
+      "triggers": {
+        "keywords": [
+          "七维配置改动",
+          "sevenDimConfigStore",
+          "新数据源接入",
+          "MCP 源接入",
+          "降级阈值调整",
+          "QualityMetrics",
+          "stock 字典重建",
+          "build:stock-dict",
+          "data-collector:dry-run",
+          "月度 API 预算"
+        ],
+        "files": [
+          "src/services/data-collector/**",
+          "src/store/sevenDimConfigStore.ts",
+          "src/types/modules/collection.types.ts",
+          "src/services/data-collector/SourcePriorityManager.ts",
+          "src/services/data-collector/qualityMetricsCollector.ts",
+          "src/data/dataLayerHelpers.ts",
+          "scripts/lib/stock-dict-builder/**"
+        ],
+        "events": [
+          "pre-push"
+        ]
+      },
+      "gates": [
+        "npm run tsc:prod",
+        "npm run audit:layers",
+        "npm run data-collector:dry-run",
+        "npm run build:stock-dict",
+        "npm run test:services:collection-pipeline:prod"
+      ],
+      "status": "physical-active"
+    },
+    {
       "id": "V9-SKILL-COLLECTION-PIPE",
       "name": "collection-pipeline-testing",
       "category": "data-flow",
@@ -461,6 +540,40 @@
         "npm run tsc:prod",
         "npm run audit:layers",
         "相关 vitest"
+      ],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-DATA-FLOW-INTEGRITY-AUDIT",
+      "name": "data-flow-integrity-audit",
+      "category": "data-flow",
+      "path": ".agents/skills/data-flow-integrity-audit/SKILL.md",
+      "mandatory": true,
+      "description": "对 V9 数据流的「存储底层兜底」做全链路审计：按 采集→分析→筛选→复盘→报告 五段，逐一核对过程产物是否已被持久化（IndexedDB Store / 派生视图 / 资产化），识别「已注册未接线 / 已设计未激活 / 文档漂移」三类隐性风险，并运行 mandatory 门禁（tsc:prod / audit:layers / audit:acl-consistency / validate-data-consistency / validate:blueprint）确认兜底闭环。Invoke when user asks to audit storage coverage, verify data-flow persistence, check whether a pipeline stage is backed by storage, or review the five-stage (collection/analysis/screening/review/report) storage bottom-layer.",
+      "triggers": {
+        "keywords": [
+          "存储兜底",
+          "全链路存储审计",
+          "五段存储矩阵",
+          "Store 覆盖度",
+          "已注册未接线",
+          "已设计未激活",
+          "validate-data-consistency"
+        ],
+        "files": [
+          "scripts/other/validate-data-consistency.ts",
+          "scripts/other/validate-data-blueprint.ts",
+          "src/config/dbConfig.ts",
+          "src/core/dataBridge/actionToStoreMap.ts"
+        ],
+        "events": []
+      },
+      "gates": [
+        "npm run tsc:prod",
+        "npm run audit:layers",
+        "npm run audit:acl-consistency",
+        "npm run validate:data-consistency",
+        "npm run validate:blueprint"
       ],
       "status": "physical-active"
     }
