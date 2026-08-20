@@ -104,4 +104,5 @@ export const SERVICE_REGISTRY: ReadonlyArray<ServiceRegistryEntry> = [
   { id: 'UnifiedStockService', filePath: 'src/services/unifiedStockService', status: 'active' },
   { id: 'V6MigrationService', filePath: 'src/services/system/v6MigrationService', status: 'active' },
   { id: 'V6ScoreService', filePath: 'src/services/scoring/v6ScoreService', status: 'active' },
+  { id: 'VectorConsistencyRankingService', filePath: 'src/services/analysis/vectorConsistencyRankingService', status: 'active' },
 ]
