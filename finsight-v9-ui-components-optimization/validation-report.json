@@ -8,7 +8,7 @@
     "name": "solo-design",
     "version": "2026.08.06.19.15.08",
     "version_source": "skill-release-manifest.json",
-    "runtime_skill_dir": "%USERPROFILE%\\.trae-cn\\builtin\\design\\default\\skills\\solo-design",
+    "runtime_skill_dir": "<trae-home>\\builtin\\design\\default\\skills\\solo-design",
     "recorded_at": null,
     "expected_version": "2026.08.06.19.15.08",
     "status": "manifest_fallback",
@@ -42,7 +42,7 @@
   "terminalState": null,
   "nextCheck": {
     "type": "finish-readiness",
-    "command": "node \"%USERPROFILE%\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\validate-finish-readiness.mjs\" \"d:\\FinSightV9\\finsight-v9-ui-components-optimization\" --check=all",
+    "command": "node \"<trae-home>\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\validate-finish-readiness.mjs\" \"<workspace>\\finsight-v9-ui-components-optimization\" --check=all",
     "fullValidationAllowed": false,
     "reason": "workspace validation passed; run complete finish readiness before final delivery"
   },
@@ -56,7 +56,7 @@
       "name": "solo-design",
       "version": "2026.08.06.19.15.08",
       "version_source": "skill-release-manifest.json",
-      "runtime_skill_dir": "%USERPROFILE%\\.trae-cn\\builtin\\design\\default\\skills\\solo-design",
+      "runtime_skill_dir": "<trae-home>\\builtin\\design\\default\\skills\\solo-design",
       "recorded_at": null,
       "expected_version": "2026.08.06.19.15.08",
       "status": "manifest_fallback",
@@ -69,7 +69,7 @@
     "repairActionTable": [],
     "nextCheck": {
       "type": "finish-readiness",
-      "command": "node \"%USERPROFILE%\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\validate-finish-readiness.mjs\" \"d:\\FinSightV9\\finsight-v9-ui-components-optimization\" --check=all",
+      "command": "node \"<trae-home>\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\validate-finish-readiness.mjs\" \"<workspace>\\finsight-v9-ui-components-optimization\" --check=all",
       "fullValidationAllowed": false,
       "reason": "workspace validation passed; run complete finish readiness before final delivery"
     },
@@ -81,17 +81,17 @@
     ]
   },
   "projectFileHashes": {
-    "finsight-v9-ui-components-optimization.design": "7b59d443c3b6166fbd8f48513349b21ed19ff44dcf17133e943fc3575769136e",
+    "finsight-v9-ui-components-optimization.design": "bfe913cfe1ef5cfab312514c7a74fb5a8e3339dc9e6a5f67ce1dbdd3011e0f7a",
     "colors_and_type.css": "7eec40787dda98ffa15f1ab6a489715899ca05d7c53886254ce7cdb1c43ba667",
-    "pages/component-inspect-dark.html": "367d481c773c078286ea91aca1132cb6ed6a609bc21ecf288ab0c4d88218e466",
-    "pages/component-inspect.html": "4a94cc9b8d39087596e5c56c9dcbf9011e4d9e6f92262e425f9d24a2b23f59e1",
-    "pages/filter-states-inspect-dark.html": "ac11aa368452e311dcc7c23cdab7314eaa08e0dd5f148935ba9f38cd01054d7f",
-    "pages/filter-states-inspect.html": "92930cd94913eabfbd8c1e4a003a512193df40d179cc8815843088f763248bea",
-    "pages/ui-components-showcase-dark.html": "182b93c80c9813108d6180ffe7040922b53c8b3a91dc4ce87fd184c592f870c1",
-    "pages/ui-components-showcase.html": "c06150b831bbaf9253c842aab13360d9ea6cd69ef3e018ae470ae9e414ed76ce"
+    "pages/component-inspect-dark.html": "f506191b8e2027eb58bfbc667e6ee4342c31ff17c3b72a9327ddd23c76e31fb1",
+    "pages/component-inspect.html": "d21adc1000c8f3305008c8a42f26e5afa84f2ee2480f8716545fd04ffc2d94ec",
+    "pages/filter-states-inspect-dark.html": "d2e3284d95e01db7ffd7f20e345a1fc0390b96b7e02bc128274923d2377e9a56",
+    "pages/filter-states-inspect.html": "a9dca95a3dcff45dcb4faa793bd5e3089bf4d0d159d3d608c2391e3926a8b1c5",
+    "pages/ui-components-showcase-dark.html": "aaade58bcc8fa555d432b9324fa65ecb494927a56911784a96723739459f3bfc",
+    "pages/ui-components-showcase.html": "5abe1ec30d5d96dcc0a672ef8eec9f7d51951e539be045f3e90a3f1367ae6ed9"
   },
-  "designDir": "d:\\FinSightV9\\finsight-v9-ui-components-optimization",
+  "designDir": "<workspace>\\finsight-v9-ui-components-optimization",
   "expectedPages": null,
   "requireInteractions": null,
-  "checkedAt": "2026-08-20T07:22:47.427Z"
+  "checkedAt": "2026-08-20T12:42:56.676Z"
 }
