@@ -162,3 +162,22 @@ scripts/audit/lint-check2.txt
 scripts/audit/lint-json-output.json
 # dist 验证沙箱（一次性构建产物，非源码）
 dist-verify/
+
+# 2026-08-21 校对迭代本周产物：一次性分析归档 / tmp 调试脚本 / PWA E2E 运行快照 / 设计工作目录
+# —— HTML/ZIP 分析快照（可重新生成，非源码）
+.trae-html-share-packages/
+ts-error-retrospective/
+tsc-error-analysis/
+# —— scripts 下的 tmp_ 前缀调试脚本/输出 + 临时覆盖率矩阵
+scripts/audit/tmp_*.cjs
+scripts/audit/tmp_*.json
+scripts/calc-coverage.cjs
+scripts/coverage_gap_matrix.py
+# —— tests/e2e 运行时产物（截图、诊断输出文本）；保留 PWA 测试脚本（_pwa_*.py / pwa-cache-verify.py）
+tests/e2e/artifacts/
+# —— 一次性设计工作目录（.design 二进制工程文件，非源码交付物）
+finsight-v9-ui-components-optimization/
+# —— package-lock.json 同步提交；单文件交付报告保留在 deliverables/ 中
+
+# 2026-08-21 文件整理契约：需要清理的文件/文档统一转移到 D:\转移文件清单V9
+# （沙箱白名单已就绪，无需项目内暂存目录；任何整理均直接转移到契约终态目录）

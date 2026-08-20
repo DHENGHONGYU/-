@@ -1,4 +1,4 @@
-﻿/** @type {import('tailwindcss').Config} */
+/** @type {import('tailwindcss').Config} */
 export default {
   darkMode: 'class',
   content: [
@@ -46,6 +46,26 @@ export default {
         cinnabar: 'hsl(var(--cinnabar))',
         ivory: 'hsl(var(--ivory))',
         'warm-gray': 'hsl(var(--warm-gray))',
+
+        // ===== V9 表面层级（四级表面） =====
+        'v9-background': 'hsl(var(--v9-background))',
+        'v9-card': 'hsl(var(--v9-card))',
+        'v9-popover': 'hsl(var(--v9-popover))',
+        'v9-surface-2': 'hsl(var(--v9-surface-2))',
+        'v9-surface-3': 'hsl(var(--v9-surface-3))',
+        'v9-border': 'hsl(var(--v9-border))',
+        'v9-muted': 'hsl(var(--v9-muted))',
+        'v9-primary': 'hsl(var(--v9-primary))',
+
+        // ===== 状态色低浓度表面（Badge/Alert 等） =====
+        'success-15': 'hsl(var(--success-15))',
+        'success-30': 'hsl(var(--success-30))',
+        'warning-15': 'hsl(var(--warning-15))',
+        'warning-30': 'hsl(var(--warning-30))',
+        'destructive-15': 'hsl(var(--destructive-15))',
+        'destructive-30': 'hsl(var(--destructive-30))',
+        'info-15': 'hsl(var(--info-15))',
+        'info-30': 'hsl(var(--info-30))',
 
         // ===== 统一设计系统 · 语义色角色 =====
         /** 次级表面：卡片内嵌 / 悬浮底 / 嵌套区块 */
