@@ -18,6 +18,13 @@ change_log:
 changes: Initial version established
 date: 2026-07-17
 ---
+covers_code:
+  - src/config/hybridProofreadConfig.ts
+  - src/services/hybrid-proofread/hashService.ts
+  - src/services/hybrid-proofread/ruleEngine.ts
+  - src/services/hybrid-proofread/localCollector.ts
+  - src/services/hybrid-proofread/reportGenerator.ts
+
 
 # hybrid-proofread-contract.md — 混合校对（人机协同校验）服务接口契约
 

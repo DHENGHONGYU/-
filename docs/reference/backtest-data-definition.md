@@ -21,6 +21,12 @@ change_log:
     changes: Initial version established
     date: 2026-07-17
 ---
+covers_code:
+  - src/store/backtestStore.ts
+  - src/types/modules/backtest.types.ts
+  - src/constants/backtest.constants.ts
+  - src/services/export/backtestExportService.ts
+
 
 # DEPRECATED - backtest-data-definition.md
 

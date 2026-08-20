@@ -18,6 +18,9 @@ change_log:
 changes: Initial version established
 date: 2026-07-17
 ---
+covers_code:
+  - src/config/fetcherConfig.ts
+
 
 # fetcher-contract.md — 行情/资讯抓取服务
 

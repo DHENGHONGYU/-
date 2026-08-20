@@ -18,6 +18,10 @@ change_log:
 changes: Initial version established
 date: 2026-07-17
 ---
+covers_code:
+  - src/services/analysis/rotationScoreService.ts
+  - src/data/types.ts
+
 
 > **Status**: Current  
 > **Version**: v1.0.0  

@@ -10,6 +10,10 @@ change_log:
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
 ---
+covers_code:
+  - src/services/execution/executionLogService.test.ts
+  - src/services/execution/executionPlanService.test.ts
+
 
 
 # execution-contract.md — 交易执行子域接口契约

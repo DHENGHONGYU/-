@@ -5,6 +5,13 @@ domain: ref
 status: active
 last_updated: 2026-08-15
 ---
+covers_code:
+  - src/services/news/newsService.ts
+  - src/data/types.ts
+  - src/services/news/sentimentAnalyzer.ts
+  - src/services/news/stockLinker.ts
+  - src/data/dataLayer.ts
+
 
 > **Version**: v1.2.0  
 > **Last Updated**: 2026-07-06  

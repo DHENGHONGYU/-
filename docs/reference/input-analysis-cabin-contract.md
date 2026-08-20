@@ -18,6 +18,14 @@ change_log:
     changes: 初稿：输入舱 → 分析舱 数据调用接口方案（契约类型 + 防腐层服务 + Store 消费 + URL 交接 + 批量评分）
     date: 2026-08-14
 ---
+covers_code:
+  - src/types/modules/analysis.types.ts
+  - src/services/input/intentionPoolService.ts
+  - src/store/analysisStore.ts
+  - src/services/input/intentionPoolService.test.ts
+  - src/store/analysisStore.test.ts
+  - src/apps/input/InputDashboard.addStock.test.tsx
+
 
 # input-analysis-cabin-contract.md — 输入舱 → 分析舱 数据调用接口契约
 

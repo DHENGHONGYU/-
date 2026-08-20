@@ -18,6 +18,10 @@ change_log:
 changes: Initial version established
 date: 2026-07-17
 ---
+covers_code:
+  - src/types/modules/collection.types.ts
+  - src/services/collection/collectionWizardPersistence.test.ts
+
 
 # collection-contract.md — 数据采集子域接口契约
 

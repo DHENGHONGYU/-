@@ -13,6 +13,13 @@ change_log:
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-07-06
 ---
+covers_code:
+  - src/services/news/newsService.ts
+  - src/data/types.ts
+  - src/services/news/sentimentAnalyzer.ts
+  - src/services/news/stockLinker.ts
+  - src/data/dataLayer.ts
+
 
 
 > **Version**: v1.2.1  

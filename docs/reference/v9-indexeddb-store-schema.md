@@ -18,6 +18,12 @@ change_log:
 changes: Initial version established
 date: 2026-07-17
 ---
+covers_code:
+  - src/data/types.ts
+  - src/data/db.ts
+  - src/services/trading/tradeReviewAI.types.ts
+  - src/config/dbConfig.ts
+
 
 # V9 IndexedDB Store Schema 文档
 

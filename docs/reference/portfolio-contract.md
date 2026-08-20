@@ -10,6 +10,10 @@ change_log:
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
 ---
+covers_code:
+  - src/constants/execution.constants.ts
+  - src/services/portfolio/portfolioService.test.ts
+
 
 
 # portfolio-contract.md — 投资组合（Portfolio）接口契约

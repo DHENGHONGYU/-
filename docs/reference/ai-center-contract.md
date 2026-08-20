@@ -18,6 +18,11 @@ change_log:
 changes: Initial version established
 date: 2026-07-17
 ---
+covers_code:
+  - src/constants/ai-center.constants.ts
+  - src/constants/health.constants.ts
+  - src/services/ai-center/aiCenterProvider.ts
+
 
 # ai-center-contract.md — AI 中心接口契约
 

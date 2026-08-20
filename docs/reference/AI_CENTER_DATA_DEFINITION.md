@@ -5,6 +5,13 @@ domain: ref
 status: active
 last_updated: 2026-08-15
 ---
+covers_code:
+  - src/types/modules/agent.types.ts
+  - src/constants/ai-center.constants.ts
+  - src/constants/health.constants.ts
+  - src/types/modules/ai-center.types.ts
+  - src/agents/agentRuntime.ts
+
 
 > **Version**: v1.2.0  
 > **Last Updated**: 2026-07-06  

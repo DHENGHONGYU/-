@@ -18,6 +18,12 @@ change_log:
 changes: Initial version established
 date: 2026-07-17
 ---
+covers_code:
+  - src/config/llmConfig.ts
+  - src/services/llm/llmClient.ts
+  - src/services/llm/llmClient.test.ts
+  - src/services/llm/llmClient.multimodel.test.ts
+
 
 # llm-contract.md — 大模型服务接口契约
 

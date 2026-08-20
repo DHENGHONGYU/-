@@ -10,6 +10,16 @@ change_log:
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
 ---
+covers_code:
+  - src/config/rotationConfig.ts
+  - src/config/dbConfig.ts
+  - src/config/thresholds.ts
+  - src/services/scoring/v6-engine/config.ts
+  - src/config/mathConstants.ts
+  - src/services/analysis/__tests__/dataFreshnessGuard.test.ts
+  - src/services/analysis/__tests__/scoreDocService.test.ts
+  - src/services/analysis/__tests__/scoreTrendService.test.ts
+
 
 
 # analysis-contract.md — 投研分析核心子域接口契约

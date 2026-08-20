@@ -11,6 +11,9 @@ change_log:
     changes: "DEPRECATED（2026-07-14）；2026-08-15 系统性核对：仍保持废弃状态，最新定义见 docs/reference/data-dictionary-index.md v1.1.0、《V9核心数据字典与类型定义（整合版）》.md v1.5 与 src/store/riskStore.derived.ts。"
     date: 2026-08-15
 ---
+covers_code:
+  - src/store/riskStore.derived.ts
+
 
 
 

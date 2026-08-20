@@ -18,6 +18,9 @@ change_log:
 changes: Initial version established
 date: 2026-07-17
 ---
+covers_code:
+  - src/services/export/__tests__/backtestExportService.test.ts
+
 
 # export-contract.md — 导出服务接口契约
 

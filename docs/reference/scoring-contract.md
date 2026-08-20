@@ -10,6 +10,10 @@ change_log:
     changes: "P0 版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
 ---
+covers_code:
+  - src/services/scoring/v6-engine/config.ts
+  - src/config/strategyRules.ts
+
 
 # scoring-contract.md — 评分引擎服务
 

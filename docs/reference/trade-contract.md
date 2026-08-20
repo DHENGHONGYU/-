@@ -18,6 +18,10 @@ change_log:
 changes: Initial version established
 date: 2026-07-17
 ---
+covers_code:
+  - src/constants/trade.constants.ts
+  - src/services/trading/portfolioService.ts
+
 
 # trade-contract.md — 交易域接口契约
 

@@ -13,6 +13,13 @@ change_log:
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-07-06
 ---
+covers_code:
+  - src/types/modules/agent.types.ts
+  - src/constants/ai-center.constants.ts
+  - src/constants/health.constants.ts
+  - src/types/modules/ai-center.types.ts
+  - src/agents/agentRuntime.ts
+
 
 
 > **Version**: v1.2.1  

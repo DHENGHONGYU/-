@@ -18,6 +18,9 @@ change_log:
 changes: Initial version established
 date: 2026-07-17
 ---
+covers_code:
+  - src/config/collectConfig.ts
+
 
 # data-collector-contract.md — 数据采集编排服务
 

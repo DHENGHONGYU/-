@@ -5,6 +5,12 @@ domain: ref
 status: active
 last_updated: 2026-08-15
 ---
+covers_code:
+  - src/data/types.ts
+  - src/data/db.ts
+  - src/services/trading/tradeReviewAI.types.ts
+  - src/config/dbConfig.ts
+
 
 # V9 IndexedDB Store Schema 文档
 
