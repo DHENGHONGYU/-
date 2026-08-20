@@ -17,6 +17,7 @@ import { widgetEngine } from '@/cockpit/core/widgetEngine'
 import { PRELOAD_WIDGETS } from '@/constants/cockpit.constants'
 import { useRuntimeTradingConfigStore } from '@/store/runtimeTradingConfigStore'
 import { triggerAgentInit } from '@/agents'
+import { DensityProvider } from '@/components/cockpit/DensityContext'
 
 const logger = getLogger()
 const _bootstrapStartTs = Date.now()
@@ -243,8 +244,10 @@ export default function App(): React.JSX.Element {
     <HashRouter>
       <ErrorBoundary>
         <ToastProvider>
-          <AppContent />
-          <Toaster />
+          <DensityProvider>
+            <AppContent />
+            <Toaster />
+          </DensityProvider>
         </ToastProvider>
       </ErrorBoundary>
     </HashRouter>

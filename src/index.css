@@ -45,6 +45,15 @@
     --surface-2: 240 5% 93%;
     --text-tertiary: 240 2% 40%;
     --divider: 240 6% 86%;
+    /* ===== V9 四级表面层级（与 shadcn 标准变量映射但保持独立命名空间） ===== */
+    --v9-background: 240 24% 96%;
+    --v9-card: 0 0% 100%;
+    --v9-popover: 0 0% 100%;
+    --v9-surface-2: 240 5% 93%;
+    --v9-surface-3: 240 5% 90%;
+    --v9-border: 240 6% 88%;
+    --v9-muted: 240 5% 94%;
+    --v9-primary: 210 100% 50%;
     /* ===== 状态颜色 ===== */
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
@@ -52,6 +61,15 @@
     --warning-foreground: 0 0% 100%;
     --info: 210 100% 50%;
     --info-foreground: 0 0% 100%;
+    /* ===== 状态色低浓度背景/边框（Badge/Alert 等表面态） ===== */
+    --success-15: 142 71% 45% / 0.15;
+    --success-30: 142 71% 45% / 0.30;
+    --warning-15: 36 100% 50% / 0.15;
+    --warning-30: 36 100% 50% / 0.30;
+    --destructive-15: 0 84% 60% / 0.15;
+    --destructive-30: 0 84% 60% / 0.30;
+    --info-15: 210 100% 50% / 0.15;
+    --info-30: 210 100% 50% / 0.30;
     /* ===== 阴影令牌 (alpha ≤ 0.05 静态, ≤ 0.08 浮层) ===== */
     --shadow-color: 240 3% 12%;
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
@@ -99,34 +117,53 @@
   }
   .dark {
     /* ===== 暗色模式 Apple 设计令牌 ===== */
-    --background: 240 5% 8%;
+    --background: 240 10% 5%;
     --foreground: 240 10% 96%;
-    --card: 240 4% 12%;
+    --card: 240 8% 9%;
     --card-foreground: 240 10% 96%;
-    --popover: 240 4% 12%;
+    --popover: 240 7% 14%;
     --popover-foreground: 240 10% 96%;
-    --primary: 210 100% 60%;
+    --primary: 210 100% 56%;
     --primary-foreground: 240 5% 8%;
     --secondary: 240 4% 16%;
     --secondary-foreground: 240 10% 96%;
-    --muted: 240 4% 16%;
+    --muted: 240 6% 18%;
     --muted-foreground: 240 3% 60%;
     --accent: 240 4% 20%;
     --accent-foreground: 240 10% 96%;
     --destructive: 0 84% 67%;
     --destructive-foreground: 240 5% 8%;
-    --border: 240 4% 24%;
-    --input: 240 4% 24%;
+    --border: 240 5% 24%;
+    --input: 240 5% 24%;
     --ring: 210 100% 60%;
     --surface-2: 240 4% 20%;
     --text-tertiary: 240 3% 45%;
     --divider: 240 4% 28%;
+    /* ===== V9 四级表面层级（深色） ===== */
+    --v9-background: 240 10% 5%;
+    --v9-card: 240 8% 9%;
+    --v9-popover: 240 7% 14%;
+    --v9-surface-2: 240 4% 20%;
+    --v9-surface-3: 240 4% 24%;
+    --v9-border: 240 5% 24%;
+    --v9-muted: 240 6% 18%;
+    --v9-primary: 210 100% 56%;
+    /* ===== 状态颜色 ===== */
     --success: 142 71% 48%;
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 55%;
     --warning-foreground: 0 0% 100%;
     --info: 217 91% 65%;
     --info-foreground: 0 0% 100%;
+    /* ===== 状态色低浓度背景/边框（深色） ===== */
+    --success-15: 142 71% 48% / 0.15;
+    --success-30: 142 71% 48% / 0.30;
+    --warning-15: 38 92% 55% / 0.15;
+    --warning-30: 38 92% 55% / 0.30;
+    --destructive-15: 0 84% 67% / 0.15;
+    --destructive-30: 0 84% 67% / 0.30;
+    --info-15: 217 91% 65% / 0.15;
+    --info-30: 217 91% 65% / 0.30;
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.35);
     --shadow-md: 0 2px 6px -1px rgba(0, 0, 0, 0.40);
     --shadow-lg: 0 8px 24px -8px rgba(0, 0, 0, 0.50);
