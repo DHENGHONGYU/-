@@ -253,3 +253,19 @@ date: 2026-07-17
 | V9-DOC-SOP-MERGE-v2.1.0 | project | SOP Merge v2.1.0 | reports/release-management/merge-sop-v2.1.0.md |
 | V9-DOC-TECH-027 | misc | no-unsafe 大盘扫描与 Batch 4/5 拆分报告（GOV-P1-01） | reports/governance/no-unsafe-inventory-2026-08-15.md |
 | V9-DOC-TESTING-001 | testing | 4 项功能缺陷与性能优化 Issue — 修复验证报告（fact-check 参数 / Store 计数 / useCallback 稳定化 / 市值缓存） | reports/testing/four-issue-fix-verification-report-2026-08-16.md |
+| V9-DOC-DESIGN-001 | design | G3-B 芯片对齐（设计规格） | design/G3-B-CHIP-ALIGNMENT-DESIGN.md |
+| V9-DOC-IMPL-001 | impl | 行业图表整合（实现） | explanation/implementation/industry-chart-integration-2026-08-20.md |
+| V9-DOC-IMPL-002 | impl | 密度表数据整合方案 | explanation/implementation/density-table-integration-plan-2026-08-20.md |
+| V9-DOC-META-013 | meta | 开发手册索引 | meta/development-manual-index.md |
+| V9-DOC-META-014 | meta | 模块注册体系镜像索引 | meta/registry-index.md |
+| V9-DOC-REF-987 | reference | 设计令牌决策映射图 | reference/design-token-decision-map.md |
+| V9-DOC-SOP-001 | sop | S01 开发环境搭建 | guides/sops/S01-dev-env-setup.md |
+| V9-DOC-SOP-002 | sop | S02 开发工作流 | guides/sops/S02-dev-workflow.md |
+| V9-DOC-SOP-004 | sop | S04 合入前集成 | guides/sops/S04-pre-merge-integration.md |
+| V9-DOC-SOP-006 | sop | S06 发布部署 | guides/sops/S06-release-deployment.md |
+| V9-DOC-SOP-007 | sop | S07 运维事件响应 | guides/sops/S07-ops-incident-response.md |
+| V9-DOC-WIKI-001 | wiki | 01 架构总览 | wiki/01-architecture-overview.md |
+| V9-DOC-WIKI-002 | wiki | 02 模块地图 | wiki/02-module-map.md |
+| V9-DOC-WIKI-003 | wiki | 03 核心类与函数 | wiki/03-core-classes-functions.md |
+| V9-DOC-WIKI-004 | wiki | 04 数据流与依赖 | wiki/04-data-flow-and-dependencies.md |
+| V9-DOC-WIKI-005 | wiki | 05 项目运行方式 | wiki/05-getting-started.md |

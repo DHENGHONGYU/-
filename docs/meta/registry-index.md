@@ -11,6 +11,7 @@ code_version: 2.0.0-rc.2
 maintainer: V9 Architecture Team
 summary: "V9 全量文档索引，按类别聚合，由每日文档验证流程自动生成。"
 tags: [project, registry]
+doc_id: V9-DOC-META-014
 ---
 
 # 文档索引

@@ -1,218 +1,189 @@
 {
     "version":  "v1.0",
-    "generated_at":  "2026-07-19T12:01:12+08:00",
+    "generated_at":  "2026-08-21T00:53:10+08:00",
     "stats":  {
-                  "total_skills":  7,
-                  "docs_covered_by_skills":  25
+                  "total_skills":  9,
+                  "docs_covered_by_skills":  17
               },
     "skill_to_docs":  {
-                          "V9-SKILL-CROSSINDEX":  {
-                                                      "skill_id":  "V9-SKILL-CROSSINDEX",
-                                                      "path":  ".trae/skills/cross-index-governance/SKILL.md",
-                                                      "name":  "cross-index-governance",
-                                                      "doc_count":  4,
-                                                      "covers_docs":  [
-                                                                          "V9-DOC-ARCH-018",
-                                                                          "V9-DOC-ARCH-044",
-                                                                          "V9-DOC-PROJ-288",
-                                                                          "V9-DOC-DATA-038"
-                                                                      ]
-                                                  },
-                          "V9-SKILL-ARCH-DEBT":  {
-                                                     "skill_id":  "V9-SKILL-ARCH-DEBT",
-                                                     "path":  ".trae/skills/architecture-debt-remediation/SKILL.md",
-                                                     "name":  "architecture-debt-remediation",
-                                                     "doc_count":  3,
-                                                     "covers_docs":  [
-                                                                         "V9-DOC-ARCH-018",
-                                                                         "V9-DOC-ARCH-032",
-                                                                         "V9-DOC-ARCH-005"
-                                                                     ]
-                                                 },
-                          "V9-SKILL-DATAFLOW":  {
-                                                    "skill_id":  "V9-SKILL-DATAFLOW",
-                                                    "path":  ".trae/skills/v9-data-flow-integrity-audit/SKILL.md",
-                                                    "name":  "data-flow-integrity-audit",
-                                                    "doc_count":  5,
+                          "V9-PLUGIN-TYC":  {
+                                                "skill_id":  "V9-PLUGIN-TYC",
+                                                "path":  "plugins/tianyancha/SKILL.md",
+                                                "name":  "tianyancha",
+                                                "doc_count":  1,
+                                                "covers_docs":  "V9-DOC-PROJ-201"
+                                            },
+                          "V9-PLUGIN-IFIND":  {
+                                                  "skill_id":  "V9-PLUGIN-IFIND",
+                                                  "path":  "plugins/ifind/SKILL.md",
+                                                  "name":  "ifind",
+                                                  "doc_count":  3,
+                                                  "covers_docs":  [
+                                                                      "V9-DOC-PROJ-219",
+                                                                      "V9-DOC-PROJ-107",
+                                                                      "V9-DOC-BACK-040"
+                                                                  ]
+                                              },
+                          "V9-PLUGIN-KIMI":  {
+                                                 "skill_id":  "V9-PLUGIN-KIMI",
+                                                 "path":  "plugins/kimi-webbridge/SKILL.md",
+                                                 "name":  "kimi-webbridge",
+                                                 "doc_count":  5,
+                                                 "covers_docs":  [
+                                                                     "V9-DOC-FRONT-045",
+                                                                     "V9-DOC-FRONT-056",
+                                                                     "V9-DOC-FRONT-002",
+                                                                     "V9-DOC-AI-017",
+                                                                     "V9-DOC-AI-033"
+                                                                 ]
+                                             },
+                          "V9-PLUGIN-YAHOO":  {
+                                                  "skill_id":  "V9-PLUGIN-YAHOO",
+                                                  "path":  "plugins/yahoo_finance/SKILL.md",
+                                                  "name":  "yahoo_finance",
+                                                  "doc_count":  3,
+                                                  "covers_docs":  [
+                                                                      "V9-DOC-PROJ-196",
+                                                                      "V9-DOC-PROJ-107",
+                                                                      "V9-DOC-BACK-040"
+                                                                  ]
+                                              },
+                          "V9-PLUGIN-SCHOLAR":  {
+                                                    "skill_id":  "V9-PLUGIN-SCHOLAR",
+                                                    "path":  "plugins/scholar/SKILL.md",
+                                                    "name":  "scholar",
+                                                    "doc_count":  2,
                                                     "covers_docs":  [
-                                                                        "V9-DOC-DATA-008",
-                                                                        "V9-DOC-DATA-006",
-                                                                        "V9-DOC-BACK-002",
-                                                                        "V9-DOC-DATA-018",
-                                                                        "V9-DOC-DATA-002"
+                                                                        "V9-DOC-PROJ-206",
+                                                                        "V9-DOC-BACK-011"
                                                                     ]
                                                 },
-                          "V9-SKILL-COLLECTION":  {
-                                                      "skill_id":  "V9-SKILL-COLLECTION",
-                                                      "path":  ".agents/skills/collection-pipeline-testing/SKILL.md",
-                                                      "name":  "collection-pipeline-testing",
-                                                      "doc_count":  4,
-                                                      "covers_docs":  [
-                                                                          "V9-DOC-DATA-054",
-                                                                          "V9-DOC-QA-046",
-                                                                          "V9-DOC-DATA-036",
-                                                                          "V9-DOC-DATA-064"
-                                                                      ]
-                                                  },
-                          "V9-SKILL-MOCK-DIAG":  {
-                                                     "skill_id":  "V9-SKILL-MOCK-DIAG",
-                                                     "path":  ".trae/skills/v9-mock-data-diagnosis/SKILL.md",
-                                                     "name":  "mock-data-diagnosis",
-                                                     "doc_count":  4,
-                                                     "covers_docs":  [
-                                                                         "V9-DOC-QA-053",
-                                                                         "V9-DOC-QA-069",
-                                                                         "V9-DOC-DATA-038",
-                                                                         "V9-DOC-DATA-048"
-                                                                     ]
+                          "V9-PLUGIN-YUANDIAN":  {
+                                                     "skill_id":  "V9-PLUGIN-YUANDIAN",
+                                                     "path":  "plugins/yuandian_law/SKILL.md",
+                                                     "name":  "yuandian_law",
+                                                     "doc_count":  1,
+                                                     "covers_docs":  "V9-DOC-PROJ-190"
                                                  },
-                          "V9-SKILL-GATEKEEPER":  {
-                                                      "skill_id":  "V9-SKILL-GATEKEEPER",
-                                                      "path":  ".trae/skills/v9-gatekeeper/SKILL.md",
-                                                      "name":  "v9-gatekeeper",
-                                                      "doc_count":  4,
-                                                      "covers_docs":  [
-                                                                          "V9-DOC-FRONT-004",
-                                                                          "V9-DOC-PROJ-331",
-                                                                          "V9-DOC-QA-069",
-                                                                          "V9-DOC-QA-066"
-                                                                      ]
-                                                  }
+                          "V9-SKILL-UNKNOWN":  {
+                                                   "skill_id":  "V9-SKILL-UNKNOWN",
+                                                   "path":  ".agents/skills/collection-pipeline-testing/SKILL.md",
+                                                   "name":  "collection-pipeline-testing",
+                                                   "doc_count":  0,
+                                                   "covers_docs":  [
+
+                                                                   ]
+                                               },
+                          "V9-PLUGIN-SEC":  {
+                                                "skill_id":  "V9-PLUGIN-SEC",
+                                                "path":  "plugins/sec_edgar/SKILL.md",
+                                                "name":  "sec_edgar",
+                                                "doc_count":  3,
+                                                "covers_docs":  [
+                                                                    "V9-DOC-PROJ-330",
+                                                                    "V9-DOC-AI-015",
+                                                                    "V9-DOC-QA-074"
+                                                                ]
+                                            },
+                          "V9-PLUGIN-IMF":  {
+                                                "skill_id":  "V9-PLUGIN-IMF",
+                                                "path":  "plugins/imf/SKILL.md",
+                                                "name":  "imf",
+                                                "doc_count":  1,
+                                                "covers_docs":  "V9-DOC-PROJ-220"
+                                            }
                       },
     "doc_to_skills":  {
-                          "V9-DOC-PROJ-232":  {
-                                                  "doc_id":  "V9-DOC-PROJ-232",
-                                                  "path":  "docs/ops/deployment.md",
-                                                  "covered_by":  "V9-SKILL-DEVOPS"
+                          "V9-DOC-PROJ-206":  {
+                                                  "doc_id":  "V9-DOC-PROJ-206",
+                                                  "path":  "docs/reference/scholar.md",
+                                                  "covered_by":  "V9-PLUGIN-SCHOLAR"
                                               },
-                          "V9-DOC-DATA-048":  {
-                                                  "doc_id":  "V9-DOC-DATA-048",
-                                                  "path":  "docs/reference/changelogs/2026-07/jsdoc-update-summary-data-collector-20260712.md",
-                                                  "covered_by":  "V9-SKILL-MOCK-DIAG"
-                                              },
-                          "V9-DOC-QA-053":  {
-                                                "doc_id":  "V9-DOC-QA-053",
-                                                "path":  "docs/reports/audit/file-system-diagnosis-report-2026-07-20.md",
-                                                "covered_by":  "V9-SKILL-MOCK-DIAG"
+                          "V9-DOC-AI-015":  {
+                                                "doc_id":  "V9-DOC-AI-015",
+                                                "path":  "docs/reference/security-model.md",
+                                                "covered_by":  "V9-PLUGIN-SEC"
                                             },
-                          "V9-DOC-DATA-036":  {
-                                                  "doc_id":  "V9-DOC-DATA-036",
-                                                  "path":  "docs/reference/data-collection-route-ui-audit.md",
-                                                  "covered_by":  "V9-SKILL-COLLECTION"
-                                              },
-                          "V9-DOC-PROJ-218":  {
-                                                  "doc_id":  "V9-DOC-PROJ-218",
-                                                  "path":  "docs/reference/deployment.md",
-                                                  "covered_by":  "V9-SKILL-DEVOPS"
-                                              },
-                          "V9-DOC-PROJ-331":  {
-                                                  "doc_id":  "V9-DOC-PROJ-331",
-                                                  "path":  "docs/00-meta/type-domain-audit-worksheet.md",
-                                                  "covered_by":  "V9-SKILL-GATEKEEPER"
-                                              },
-                          "V9-DOC-DATA-006":  {
-                                                  "doc_id":  "V9-DOC-DATA-006",
-                                                  "path":  "docs/explanation/design/dataflow-data-definition.md",
-                                                  "covered_by":  "V9-SKILL-DATAFLOW"
-                                              },
-                          "V9-DOC-QA-091":  {
-                                                "doc_id":  "V9-DOC-QA-091",
-                                                "path":  "docs/explanation/design/automation-test-evaluation.md",
-                                                "covered_by":  "V9-SKILL-DEVOPS"
+                          "V9-DOC-AI-033":  {
+                                                "doc_id":  "V9-DOC-AI-033",
+                                                "path":  "docs/00-meta/p1-01-llm-management-split-report.md",
+                                                "covered_by":  "V9-PLUGIN-KIMI"
                                             },
-                          "V9-DOC-PROJ-288":  {
-                                                  "doc_id":  "V9-DOC-PROJ-288",
-                                                  "path":  "docs/explanation/b批次组件集成测试报告-b6-2026-07-08.md",
-                                                  "covered_by":  "V9-SKILL-CROSSINDEX"
-                                              },
-                          "V9-DOC-BACK-002":  {
-                                                  "doc_id":  "V9-DOC-BACK-002",
-                                                  "path":  "docs/reference/dataflow-engine-spec.md",
-                                                  "covered_by":  "V9-SKILL-DATAFLOW"
-                                              },
-                          "V9-DOC-DATA-018":  {
-                                                  "doc_id":  "V9-DOC-DATA-018",
-                                                  "path":  "docs/reference/dataflow-data-definition.md",
-                                                  "covered_by":  "V9-SKILL-DATAFLOW"
-                                              },
-                          "V9-DOC-ARCH-032":  {
-                                                  "doc_id":  "V9-DOC-ARCH-032",
-                                                  "path":  "docs/explanation/system-architecture.md",
-                                                  "covered_by":  "V9-SKILL-ARCH-DEBT"
-                                              },
-                          "V9-DOC-ARCH-044":  {
-                                                  "doc_id":  "V9-DOC-ARCH-044",
-                                                  "path":  "docs/reports/retrospectives/complexity-optimization-plan.md",
-                                                  "covered_by":  "V9-SKILL-CROSSINDEX"
-                                              },
-                          "V9-DOC-DATA-064":  {
-                                                  "doc_id":  "V9-DOC-DATA-064",
-                                                  "path":  "docs/explanation/design/data-collection-gap-analysis.md",
-                                                  "covered_by":  "V9-SKILL-COLLECTION"
-                                              },
-                          "V9-DOC-ARCH-005":  {
-                                                  "doc_id":  "V9-DOC-ARCH-005",
-                                                  "path":  "docs/reference/v10-architecture-alignment.md",
-                                                  "covered_by":  "V9-SKILL-ARCH-DEBT"
-                                              },
-                          "V9-DOC-QA-069":  {
-                                                "doc_id":  "V9-DOC-QA-069",
-                                                "path":  "docs/reports/audit/type-error-diagnosis-report.md",
-                                                "covered_by":  [
-                                                                   "V9-SKILL-GATEKEEPER",
-                                                                   "V9-SKILL-MOCK-DIAG"
-                                                               ]
-                                            },
-                          "V9-DOC-QA-050":  {
-                                                "doc_id":  "V9-DOC-QA-050",
-                                                "path":  "docs/reference/automation-test-plan.md",
-                                                "covered_by":  "V9-SKILL-DEVOPS"
-                                            },
-                          "V9-DOC-ARCH-018":  {
-                                                  "doc_id":  "V9-DOC-ARCH-018",
-                                                  "path":  "docs/explanation/design/v6-v9-architecture-audit-action-list.md",
-                                                  "covered_by":  [
-                                                                     "V9-SKILL-ARCH-DEBT",
-                                                                     "V9-SKILL-CROSSINDEX"
-                                                                 ]
-                                              },
-                          "V9-DOC-DATA-008":  {
-                                                  "doc_id":  "V9-DOC-DATA-008",
-                                                  "path":  "docs/explanation/design/dual-strategy-dataflow-spec.md",
-                                                  "covered_by":  "V9-SKILL-DATAFLOW"
-                                              },
-                          "V9-DOC-QA-046":  {
-                                                "doc_id":  "V9-DOC-QA-046",
-                                                "path":  "docs/reports/audit/2026-07-09-collection-plan-panel-v6-audit.md",
-                                                "covered_by":  "V9-SKILL-COLLECTION"
-                                            },
-                          "V9-DOC-QA-066":  {
-                                                "doc_id":  "V9-DOC-QA-066",
-                                                "path":  "docs/reports/audit/typescript错误处理和类型安全检测报告.md",
-                                                "covered_by":  "V9-SKILL-GATEKEEPER"
-                                            },
-                          "V9-DOC-DATA-038":  {
-                                                  "doc_id":  "V9-DOC-DATA-038",
-                                                  "path":  "docs/reference/changelogs/2026-07/2026-07-05-databridge-query-implementation.md",
-                                                  "covered_by":  [
-                                                                     "V9-SKILL-CROSSINDEX",
-                                                                     "V9-SKILL-MOCK-DIAG"
-                                                                 ]
-                                              },
-                          "V9-DOC-DATA-002":  {
-                                                  "doc_id":  "V9-DOC-DATA-002",
-                                                  "path":  "docs/explanation/dataflow-data-definition.md",
-                                                  "covered_by":  "V9-SKILL-DATAFLOW"
-                                              },
-                          "V9-DOC-FRONT-004":  {
-                                                   "doc_id":  "V9-DOC-FRONT-004",
-                                                   "path":  "docs/explanation/design/06-routing-specs.md",
-                                                   "covered_by":  "V9-SKILL-GATEKEEPER"
+                          "V9-DOC-FRONT-045":  {
+                                                   "doc_id":  "V9-DOC-FRONT-045",
+                                                   "path":  "docs/explanation/kimi-webbridge.md",
+                                                   "covered_by":  "V9-PLUGIN-KIMI"
                                                },
-                          "V9-DOC-DATA-054":  {
-                                                  "doc_id":  "V9-DOC-DATA-054",
-                                                  "path":  "docs/reference/data-collection-task-list.md",
-                                                  "covered_by":  "V9-SKILL-COLLECTION"
+                          "V9-DOC-PROJ-190":  {
+                                                  "doc_id":  "V9-DOC-PROJ-190",
+                                                  "path":  "docs/reference/yuandian_law.md",
+                                                  "covered_by":  "V9-PLUGIN-YUANDIAN"
+                                              },
+                          "V9-DOC-PROJ-107":  {
+                                                  "doc_id":  "V9-DOC-PROJ-107",
+                                                  "path":  "docs/reference/stock-analysis-contract.md",
+                                                  "covered_by":  [
+                                                                     "V9-PLUGIN-IFIND",
+                                                                     "V9-PLUGIN-YAHOO"
+                                                                 ]
+                                              },
+                          "V9-DOC-QA-074":  {
+                                                "doc_id":  "V9-DOC-QA-074",
+                                                "path":  "docs/reference/audit-b4-4-security.md",
+                                                "covered_by":  "V9-PLUGIN-SEC"
+                                            },
+                          "V9-DOC-BACK-011":  {
+                                                  "doc_id":  "V9-DOC-BACK-011",
+                                                  "path":  "docs/reference/refactor-research-pool-rename-plan.md",
+                                                  "covered_by":  "V9-PLUGIN-SCHOLAR"
+                                              },
+                          "V9-DOC-FRONT-056":  {
+                                                   "doc_id":  "V9-DOC-FRONT-056",
+                                                   "path":  "docs/explanation/2026-06-23-portalshell-dark-kimi-layout.md",
+                                                   "covered_by":  "V9-PLUGIN-KIMI"
+                                               },
+                          "V9-DOC-FRONT-002":  {
+                                                   "doc_id":  "V9-DOC-FRONT-002",
+                                                   "path":  "docs/explanation/adr-005-portalshell-dark-kimi-layout.md",
+                                                   "covered_by":  "V9-PLUGIN-KIMI"
+                                               },
+                          "V9-DOC-PROJ-330":  {
+                                                  "doc_id":  "V9-DOC-PROJ-330",
+                                                  "path":  "docs/00-meta/secondary-verification-report-2026-07-15.md",
+                                                  "covered_by":  "V9-PLUGIN-SEC"
+                                              },
+                          "V9-DOC-BACK-040":  {
+                                                  "doc_id":  "V9-DOC-BACK-040",
+                                                  "path":  "docs/explanation/stock-selection-strategy.md",
+                                                  "covered_by":  [
+                                                                     "V9-PLUGIN-IFIND",
+                                                                     "V9-PLUGIN-YAHOO"
+                                                                 ]
+                                              },
+                          "V9-DOC-PROJ-201":  {
+                                                  "doc_id":  "V9-DOC-PROJ-201",
+                                                  "path":  "docs/reference/tianyancha.md",
+                                                  "covered_by":  "V9-PLUGIN-TYC"
+                                              },
+                          "V9-DOC-AI-017":  {
+                                                "doc_id":  "V9-DOC-AI-017",
+                                                "path":  "docs/reference/llm-contract.md",
+                                                "covered_by":  "V9-PLUGIN-KIMI"
+                                            },
+                          "V9-DOC-PROJ-219":  {
+                                                  "doc_id":  "V9-DOC-PROJ-219",
+                                                  "path":  "docs/reference/ifind.md",
+                                                  "covered_by":  "V9-PLUGIN-IFIND"
+                                              },
+                          "V9-DOC-PROJ-196":  {
+                                                  "doc_id":  "V9-DOC-PROJ-196",
+                                                  "path":  "docs/reference/yahoo_finance.md",
+                                                  "covered_by":  "V9-PLUGIN-YAHOO"
+                                              },
+                          "V9-DOC-PROJ-220":  {
+                                                  "doc_id":  "V9-DOC-PROJ-220",
+                                                  "path":  "docs/reference/imf.md",
+                                                  "covered_by":  "V9-PLUGIN-IMF"
                                               }
                       }
 }
