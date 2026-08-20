@@ -7,6 +7,34 @@
 
 ---
 
+## [Unreleased] — 2026-08-20
+> **Release Type**：Hotfix 迭代（UI Consistency · Cabin 风格统一） · **Status**：双向回归验证通过（tsc:prod+audit:layers+vitest 全绿） · **改动面**：4 文件 × UI 层（pages/apps），零 Store/Service/Type 变更
+> **设计基准**：`IntelligentScorePage.tsx` + `WidgetStateShell.tsx` 9 条量化基准（B1 PageContainer·B2 面包屑·B3 卡规格·B4 CardHeader pb-3·B5 CardTitle·B6 CardContent pt-3 space-y-5·B7 icon rounded-xl·B8 Switch 容器 bg-muted/20·B9 颜色/token 零硬编码）
+
+### Changed — 变更（UX 一致化）
+- **style(ui)**：首页 `HomePage.tsx` 8 处裸 `<section>`/裸 `<Link>` 统一换为 `<Card>` + shadow-sm / border-border/40；导航卡 hover 从 `hover:shadow-md + translate-y-0.5` 降为 `hover:bg-muted/30 + border-primary/30`（低侵略性颜色过渡）；顶层接入 `<PageContainer className="space-y-6">` + 面包屑；`<PageHeader>` 替换 `Badge+h1` 原始组合；图标容器 rounded-lg→rounded-xl。
+- **style(trading)**：交易舱 `TradingApp.tsx` 根壳从 `div.space-y-4.p-4` → `PageContainer.space-y-6`；新增首页→交易舱 `<Breadcrumb>`；TradingDashboard 主卡补齐 shadow-sm+border-border/40；2 处卡身 CardHeader/CardTitle/CardContent 对齐 B3-B6；消除硬编码 `hsl(var(--stock-up))`/`hsl(var(--stock-down))` → 换 `text-stock-up`、`text-stock-down`、`bg-stock-up/15` 语义 token；`COLOR_TOKENS.success.tailwind` 常量直用 → 换 Badge variant="outline" 组件化。
+- **style(command-config)**：总控舱配置页 `ConfigApp.tsx` 根壳 `div.space-y-4.p-4` → `PageContainer.space-y-6`；页头从裸 `h1.text-h1.font-bold` → `PageHeader(title=配置管理, description=交易参数·采集频率·显示主题·LLM 模型)` + actions 内 `Badge(已自动保存) variant=outline`；4 张配置卡（交易 / 采集 / 显示 / LLM模型）统一 shadow-sm + border-border/40 + pb-3/text-base font-semibold/pt-3 space-y-5；2 处 Switch 容器补齐 `rounded-md border-border/40 bg-muted/20 p-3` + 辅助说明；移除未使用 COLOR_TOKENS import。
+- **style(command-hub)**：总控舱 Hub `CommandApp.tsx` 5 张模块导航卡 hover 从 `hover:shadow-md + translate-y-0.5` 降为颜色过渡（同 HomePage 强度）；图标容器 rounded-lg→rounded-xl；网格 gap-4→gap-5；`CardContent` 从 `pt-0` 规范为 `pt-3 space-y-5`。
+
+### Verification Matrix — 双向回归证据
+| 门禁 | 结果 | 关键数值 |
+|---|---|---|
+| tsc:prod（tsconfig.prod.json --noEmit） | ✅ PASS | 0 errors（目标 4 文件 0） |
+| tsc 全量（tests included） | ⚠️ PASS（delta=0） | 错误全锁定 tests/* 契约漂移 5 套件（five-capsule-zod / localStorageCrypto / logHelpers / hot-sector-timeliness / refresh-coordinator）|
+| audit:layers（跨层调用 1496 份） | ✅ PASS | 0 violation / 0 warning |
+| audit:hardcode（1555 份） | ⚠️ PASS（delta=0） | Critical:1 / Warn:137 / Info:5，目标文件名均未命中，零新增硬编码 |
+| vitest 针对性（trading-use-cases / tradingService / commandStore / pageStore） | ✅ PASS | 4 suite, 73/73 tests green |
+
+### Fixed — 修复（本批次 §D 遗漏清单的增量闭合）
+- **fix(lint)**：清理 3 处无效 `// eslint-disable-next-line react-hooks/exhaustive-deps` 注释（`TradingApp.tsx` ×2、`ConfigApp.tsx` ×1）；`eslint --fix` 后 `npx eslint {4目标文件} --max-warnings=0` 回归 0 warnings。
+- **fix(ux-architecture)**：`ConfigApp.tsx` 「恢复默认」 Button 从外层 `sm:flex-row justify-between` wrapper 提升至 `PageHeader.actions` 与「已自动保存」Badge 同槽；消除一层冗余嵌套，结构语义与 PageContainer 设计意图对齐。
+- **fix(scripts/audit-visual)**：修复视觉审计脚本基准目录 ROOT 上溯仅 1 级（错把 `scripts/src/components/chart` 当根）→ 修正为 `resolve(__dirname, '..', '..')` 回到项目根，使 `scripts/audit/audit-visual.ts` 真正扫描 `src/components/chart`、`src/cockpit/widgets` 等真实目录；`npm run audit:visual` 回归 Exit 0。
+- **test(e2e · 新增)**：补充 `scripts/pw_smoke_4routes_ui_sync.py`（Playwright Python 同步 API V3），选择 `npm run preview`（dist 静态产物，无冷编译）作为目标，完成 /、/trading、/command、/command/config 4 路由烟雾，产出 4 张截图 `outputs/ui-design/smoke-{home,trading,command-hub,config}.png`，全部关键 selector 命中、导航无失败，Exit 0；Vite dev 首请求冷编译（>35s）为先前 Playwright CLI 挂起根因，preview 方案规避后具备可复现性。
+- **docs(sync)**：`outputs/ui-design/ui-sync-omission-test-analysis-2026-08-21.md` §D 表 + §D1 追踪表补齐 O1–O5 闭环记录，§D 完成率 6/6 全部从「❌未覆盖 / ⚠️保留」→「✅本轮已完成」。
+
+---
+
 ## [2.0.0-rc.2] - 2026-08-19
 > **Release Type**：RC 候选（SemVer prerelease rc.1→rc.2）· **Status**：Gatekeeper Verified · Annotated Tag Ready（pre-launch score 99.0/100 → S级 GO） · **Pre-launch Score**：**99.0 / 100（S 级 🟢 GO）**
 > **Baseline SHA（RC1 → RC2 增量基）**：0b08cf1d → 27fdac52（+2 修复 commit：TD-010 pre-commit 稳定 / TD-013 researchNote）→ RC2 build +17 commits（build bump · wiki 入库 · E2E+灰度归档 · 477 docs sweep · guardian 注入；HEAD=53e3440） · **S05 Go/NoGo-1**：[docs/releases/v2.0.0-rc.2-gray/GRAY-RELEASE-CHECKLIST.md §七](docs/releases/v2.0.0-rc.2-gray/GRAY-RELEASE-CHECKLIST.md#七gonogo-签字台签字后不可反悔如反悔需走回滚-五) 🟢 Gatekeeper 全绿待签 · **Review**：[outputs/sop-suite-v1.0.0-independent-review-2026-08-19.md](outputs/sop-suite-v1.0.0-independent-review-2026-08-19.md) 98/100 🟢 APPROVED（0 BLOCKER）
