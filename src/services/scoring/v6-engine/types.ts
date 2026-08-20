@@ -125,6 +125,8 @@ export interface QuoteData {
   marginBalance?: number[]
   /** ★ v4.5.4 当日成交金额（元），用于蓝筹股豁免低流动性拦截 */
   dailyTurnoverAmount?: number
+  /** ★ G3-B Phase 3 · 历史每日换手率（%，与 KlineBar.turnoverRate 对齐），长度与 history/volumeHistory 相同；缺省则筹码算法回退 linear */
+  turnoverRateHistory?: number[]
 }
 
 /** 行业评分数据（来自 L-1 映射） */
@@ -603,6 +605,8 @@ export function quotesToQuoteData(quotes: DailyQuotes): QuoteData {
     latestReturn1d,
     history: history.map((bar) => bar.close),
     volumeHistory: history.map((bar) => bar.volume),
+    // G3-B Phase 3：KlineBar.turnoverRate 是 %，直接透传（算法内部 ÷ 100 转小数）
+    turnoverRateHistory: history.map((bar) => (typeof bar.turnoverRate === 'number' && Number.isFinite(bar.turnoverRate) ? bar.turnoverRate : 3)),
   }
 }
 

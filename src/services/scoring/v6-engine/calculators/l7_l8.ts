@@ -304,11 +304,18 @@ export function evaluateChip(input: LayerInput): ChipResult {
   let profitRatioValue: number | null = null
   const histCloses = q.history
   const histVolumes = q.volumeHistory
+  // G3-B Phase 3：KlineBar.turnoverRate 是 % 形式，÷ 100 转成算法用的小数
+  const histTurnoverRatesPct = q.turnoverRateHistory
+  const turnoverRates = histTurnoverRatesPct?.length
+    ? histTurnoverRatesPct.map((trPct) => trPct / 100)
+    : undefined
   if (histCloses && histVolumes && histCloses.length >= 2 && histVolumes.length >= 2) {
     distribution = calcChipDistribution(histCloses, histVolumes, {
       windowDays: V6_CALCULATOR_THRESHOLDS.L8_CHIP_DIST_WINDOW_DAYS,
       bucketCount: V6_CALCULATOR_THRESHOLDS.L8_CHIP_DIST_BUCKETS,
       currentPrice: q.latestClose,
+      decayModel: 'hybrid',
+      turnoverRates,
     })
 
     if (distribution.source === 'real' && distribution.buckets.length > 0) {

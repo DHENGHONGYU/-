@@ -107,5 +107,7 @@ export function quotesToQuoteData(quotes: DailyQuotes): QuoteData {
     avgTurnover20d,
     history: history.map((bar) => bar.close),
     volumeHistory: history.map((bar) => bar.volume),
+    // G3-B Phase 3：KlineBar.turnoverRate 是 %，直接透传（算法内部 ÷ 100 转小数）
+    turnoverRateHistory: history.map((bar) => (typeof bar.turnoverRate === 'number' && Number.isFinite(bar.turnoverRate) ? bar.turnoverRate : 3)),
   }
 }
