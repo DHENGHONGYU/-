@@ -8,6 +8,7 @@ version: 2.0.0
 last_updated: 2026-08-19
 code_version: "2.0.0-rc.2"
 tag: FINAL
+doc_id: V9-DOC-WIKI-003
 ---
 
 # 03 - 关键类与函数 🏁

@@ -1,3 +1,11 @@
+---
+doc_id: V9-DOC-DESIGN-001
+title: G3-B-CHIP-ALIGNMENT-DESIGN
+status: active
+last_updated: 2026-08-21
+maintainer: FinSightV9 Team
+---
+
 # G3-B 详细设计 · 筹码算法对齐 CYQ + Golden Test
 
 > **doc_id**: V9-RC2-CHIP-ALIGN-DESIGN
