@@ -340,10 +340,10 @@ export function ExecutionMonitorStep(): React.JSX.Element {
         <Card className={COLOR_TOKENS.success.bgClass}>
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 mt-0.5 text-white" />
+              <CheckCircle2 className="w-5 h-5 mt-0.5 text-success-foreground" />
               <div>
-                <div className="font-medium text-white">采集任务已完成</div>
-                <div className="text-sm text-white/90 mt-1">
+                <div className="font-medium text-success-foreground">采集任务已完成</div>
+                <div className="text-sm text-success-foreground/90 mt-1">
                   所有维度数据采集成功，数据已写入系统
                 </div>
               </div>

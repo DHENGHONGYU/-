@@ -3,7 +3,7 @@
  * 从 CandlestickChart.tsx 提取，包含周期选项、复权选项、均线配置、样式常量
  */
 import type { CSSProperties } from 'react'
-import { CHART_PALETTE_PRO } from '@/constants/theme.tokens'
+import { CHART_PALETTE_PRO, COLOR_SHADES } from '@/constants/theme.tokens'
 import { EMA_COLORS, BOLL_COLORS, RSI_COLORS } from './indicators'
 
 // 重新导出共享配置，保持向后兼容
@@ -90,7 +90,7 @@ export const maLegendContainerStyle: CSSProperties = {
   gap: '0.75rem',
   padding: '2px 8px',
   borderRadius: '6px',
-  background: 'rgba(19,23,34,0.8)',
+  background: CHART_PALETTE_PRO.bg + 'cc',
   backdropFilter: 'blur(4px)',
   fontSize: '0.72rem',
   fontWeight: 500,
@@ -125,7 +125,7 @@ export const tooltipContainerStyle: CSSProperties = {
   background: 'rgba(19,23,34,0.92)',
   backdropFilter: 'blur(8px)',
   border: `1px solid ${CHART_PALETTE_PRO.grid}`,
-  boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+  boxShadow: '0 4px 20px ' + COLOR_SHADES.gray.hex[800] + '80',
   fontSize: '0.74rem',
   fontFeatureSettings: 'tnum',
   color: CHART_PALETTE_PRO.axis,

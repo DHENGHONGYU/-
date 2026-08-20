@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>筛选状态放大检查（浅色）</title>
+    <style id="theme-vars">
+/*
+  FinSight V9 UI 组件优化呈现 - 主题合同（浅色模式）
+  基于 V9 UI/UX 规范 v2.6.0：Apple Business Design + Light PortalShell
+*/
+:root {
+  --v9-primary: 210 100% 50%;
+  --v9-primary-foreground: 0 0% 100%;
+  --v9-background: 240 20% 99%;
+  --v9-foreground: 240 10% 4%;
+  --v9-card: 0 0% 100%;
+  --v9-card-foreground: 240 10% 4%;
+  --v9-popover: 0 0% 100%;
+  --v9-popover-foreground: 240 10% 4%;
+  --v9-surface: 240 20% 97%;
+  --v9-surface-2: 240 14% 94%;
+  --v9-surface-3: 240 10% 91%;
+  --v9-muted: 240 14% 95%;
+  --v9-muted-foreground: 240 5% 40%;
+  --v9-border: 240 10% 89%;
+  --v9-input: 240 10% 89%;
+  --v9-ring: 210 100% 60%;
+  --v9-success: 142 76% 40%;
+  --v9-success-foreground: 0 0% 100%;
+  --v9-warning: 36 100% 45%;
+  --v9-warning-foreground: 0 0% 100%;
+  --v9-error: 4 85% 56%;
+  --v9-error-foreground: 0 0% 100%;
+  --v9-info: 210 100% 50%;
+  --v9-info-foreground: 0 0% 100%;
+  --v9-radius-sm: 0.25rem;
+  --v9-radius-md: 0.5rem;
+  --v9-radius-lg: 1rem;
+  --v9-radius-pill: 9999px;
+  --v9-shadow-dropdown: 0 1px 2px hsl(240 6% 4% / 0.04), 0 1px 1px hsl(240 6% 4% / 0.03);
+  --v9-shadow-popover: 0 8px 24px -8px hsl(240 6% 4% / 0.12);
+  --v9-shadow-modal: 0 24px 60px -20px hsl(240 6% 4% / 0.18);
+  --v9-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --v9-font-mono: "SF Mono", "SFMono-Regular", ui-monospace, "Cascadia Mono", "Segoe UI Mono", monospace;
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--v9-background);
+    --color-foreground: var(--v9-foreground);
+    --color-card: var(--v9-card);
+    --color-card-foreground: var(--v9-card-foreground);
+    --color-popover: var(--v9-popover);
+    --color-popover-foreground: var(--v9-popover-foreground);
+    --color-primary: var(--v9-primary);
+    --color-primary-foreground: var(--v9-primary-foreground);
+    --color-muted: var(--v9-muted);
+    --color-muted-foreground: var(--v9-muted-foreground);
+    --color-border: var(--v9-border);
+    --color-input: var(--v9-input);
+    --color-ring: var(--v9-ring);
+    --radius-sm: var(--v9-radius-sm);
+    --radius-md: var(--v9-radius-md);
+    --radius-lg: var(--v9-radius-lg);
+  }
+  @layer base {
+    body { background: var(--v9-background); color: var(--v9-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--v9-background); }
+      .text-background { color: var(--v9-background); }
+      .border-background { border-color: var(--v9-background); }
+      .ring-background { --tw-ring-color: var(--v9-background); }
+      .bg-foreground { background-color: var(--v9-foreground); }
+      .text-foreground { color: var(--v9-foreground); }
+      .border-foreground { border-color: var(--v9-foreground); }
+      .ring-foreground { --tw-ring-color: var(--v9-foreground); }
+      .bg-card { background-color: var(--v9-card); }
+      .text-card { color: var(--v9-card); }
+      .border-card { border-color: var(--v9-card); }
+      .ring-card { --tw-ring-color: var(--v9-card); }
+      .bg-card-foreground { background-color: var(--v9-card-foreground); }
+      .text-card-foreground { color: var(--v9-card-foreground); }
+      .border-card-foreground { border-color: var(--v9-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--v9-card-foreground); }
+      .bg-popover { background-color: var(--v9-popover); }
+      .text-popover { color: var(--v9-popover); }
+      .border-popover { border-color: var(--v9-popover); }
+      .ring-popover { --tw-ring-color: var(--v9-popover); }
+      .bg-popover-foreground { background-color: var(--v9-popover-foreground); }
+      .text-popover-foreground { color: var(--v9-popover-foreground); }
+      .border-popover-foreground { border-color: var(--v9-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--v9-popover-foreground); }
+      .bg-primary { background-color: var(--v9-primary); }
+      .text-primary { color: var(--v9-primary); }
+      .border-primary { border-color: var(--v9-primary); }
+      .ring-primary { --tw-ring-color: var(--v9-primary); }
+      .bg-primary-foreground { background-color: var(--v9-primary-foreground); }
+      .text-primary-foreground { color: var(--v9-primary-foreground); }
+      .border-primary-foreground { border-color: var(--v9-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--v9-primary-foreground); }
+      .bg-muted { background-color: var(--v9-muted); }
+      .text-muted { color: var(--v9-muted); }
+      .border-muted { border-color: var(--v9-muted); }
+      .ring-muted { --tw-ring-color: var(--v9-muted); }
+      .bg-muted-foreground { background-color: var(--v9-muted-foreground); }
+      .text-muted-foreground { color: var(--v9-muted-foreground); }
+      .border-muted-foreground { border-color: var(--v9-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--v9-muted-foreground); }
+      .bg-border { background-color: var(--v9-border); }
+      .text-border { color: var(--v9-border); }
+      .border-border { border-color: var(--v9-border); }
+      .ring-border { --tw-ring-color: var(--v9-border); }
+      .bg-input { background-color: var(--v9-input); }
+      .text-input { color: var(--v9-input); }
+      .border-input { border-color: var(--v9-input); }
+      .ring-input { --tw-ring-color: var(--v9-input); }
+      .bg-ring { background-color: var(--v9-ring); }
+      .text-ring { color: var(--v9-ring); }
+      .border-ring { border-color: var(--v9-ring); }
+      .ring-ring { --tw-ring-color: var(--v9-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen bg-background text-foreground antialiased">
+  <div class="max-w-[900px] mx-auto px-6 py-12 space-y-16">
+
+    <section class="space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium border border-primary/20">
+        <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i>
+        <span>细节检查 · 筛选状态</span>
+      </div>
+      <h1 class="text-2xl font-semibold tracking-tight text-foreground">多条件筛选 — Loading & Error 状态</h1>
+      <p class="text-sm text-muted-foreground max-w-2xl leading-relaxed">
+        放大展示筛选条在加载中与错误状态下的视觉表现，关注图标-文字间距、状态色对比度、边框与背景层次。
+      </p>
+    </section>
+
+    <!-- Loading State - Large -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">Loading 状态</h2>
+        <span class="text-xs text-muted-foreground font-mono">w-96 · 放大 1.25×</span>
+      </div>
+
+      <div class="bg-card rounded-xl border border-border p-8 space-y-6">
+        <!-- Loading: filter bar full width -->
+        <div class="space-y-2">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">完整筛选条 · 加载中</p>
+          <div class="flex items-center gap-3 px-4 py-3 rounded-lg bg-background border border-border">
+            <i data-lucide="loader-2" class="w-5 h-5 text-primary animate-spin"></i>
+            <div class="flex-1 space-y-1.5">
+              <p class="text-sm font-medium text-foreground">正在加载筛选结果…</p>
+              <div class="flex items-center gap-2">
+                <div class="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
+                  <div class="h-full w-2/5 bg-primary rounded-full" style="animation: pulse 1.5s ease-in-out infinite;"></div>
+                </div>
+                <span class="text-xs text-muted-foreground font-mono tabular-nums">38%</span>
+              </div>
+            </div>
+            <button type="button" class="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading: inline chip -->
+        <div class="space-y-2">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">筛选芯片 · 加载中</p>
+          <div class="flex flex-wrap gap-3">
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/40 bg-primary/10 text-primary text-sm font-medium">
+              <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+              <span>行业匹配中</span>
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-background text-foreground text-sm font-medium opacity-60">
+              <i data-lucide="loader-2" class="w-4 h-4 text-muted-foreground animate-spin"></i>
+              <span class="text-muted-foreground">估值计算</span>
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-background text-muted-foreground text-sm font-medium">
+              <span>资金流向</span>
+              <span class="inline-flex items-center justify-center min-w-[1.5rem] h-6 px-1.5 rounded-full bg-muted text-muted-foreground text-xs font-mono tabular-nums">…</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading: search input -->
+        <div class="space-y-2">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">搜索输入框 · 加载中</p>
+          <div class="relative max-w-md">
+            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground"></i>
+            <input type="text" value="贵州" disabled class="w-full h-11 pl-11 pr-12 rounded-lg bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground cursor-wait">
+            <div class="absolute right-3 top-1/2 -translate-y-1/2">
+              <i data-lucide="loader-2" class="w-5 h-5 text-primary animate-spin"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skeleton loading -->
+        <div class="space-y-2">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">骨架屏 · 选项加载</p>
+          <div class="max-w-sm rounded-lg bg-background border border-border p-3 space-y-2">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 rounded-sm bg-muted animate-pulse"></div>
+              <div class="flex-1 h-4 rounded bg-muted animate-pulse" style="width: 60%;"></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 rounded-sm bg-muted animate-pulse"></div>
+              <div class="flex-1 h-4 rounded bg-muted animate-pulse" style="width: 80%;"></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 rounded-sm bg-muted animate-pulse"></div>
+              <div class="flex-1 h-4 rounded bg-muted animate-pulse" style="width: 45%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Error State - Large -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">Error 状态</h2>
+        <span class="text-xs text-muted-foreground font-mono">w-96 · 放大 1.25×</span>
+      </div>
+
+      <div class="bg-card rounded-xl border border-border p-8 space-y-6">
+        <!-- Error: filter bar full width -->
+        <div class="space-y-2">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">完整筛选条 · 错误</p>
+          <div class="flex items-start gap-3 px-4 py-3 rounded-lg bg-error/[0.08] border border-error/30">
+            <i data-lucide="alert-circle" class="w-5 h-5 text-error flex-shrink-0 mt-0.5"></i>
+            <div class="flex-1 space-y-1">
+              <p class="text-sm font-medium text-foreground">筛选条件冲突</p>
+              <p class="text-xs text-muted-foreground">"市盈率 &lt; 0" 与 "盈利公司" 无法同时生效，请调整后重试。</p>
+              <div class="flex items-center gap-3 pt-1">
+                <button type="button" class="text-xs font-medium text-error hover:underline underline-offset-2">查看冲突条件</button>
+                <button type="button" class="text-xs font-medium text-primary hover:underline underline-offset-2">一键修正</button>
+              </div>
+            </div>
+            <button type="button" class="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-error/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring flex-shrink-0">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Error: inline chip -->
+        <div class="space-y-2">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">筛选芯片 · 错误</p>
+          <div class="flex flex-wrap gap-3">
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-error/40 bg-error/10 text-error text-sm font-medium">
+              <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+              <span>市盈率 &lt; 0</span>
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-error/30 bg-background text-error text-sm font-medium">
+              <span>无效区间</span>
+              <i data-lucide="info" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Error: search input -->
+        <div class="space-y-2">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">搜索输入框 · 错误</p>
+          <div class="space-y-1.5 max-w-md">
+            <div class="relative">
+              <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground"></i>
+              <input type="text" value="asdfghjkl" class="w-full h-11 pl-11 pr-12 rounded-lg bg-background border border-error text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error/50">
+              <div class="absolute right-3 top-1/2 -translate-y-1/2">
+                <i data-lucide="alert-circle" class="w-5 h-5 text-error"></i>
+              </div>
+            </div>
+            <p class="text-xs text-error flex items-center gap-1">
+              <i data-lucide="info" class="w-3.5 h-3.5"></i>
+              <span>未找到匹配的股票代码或名称</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Warning: soft warning -->
+        <div class="space-y-2">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">Warning · 软警告（非错误）</p>
+          <div class="flex items-center gap-3 px-4 py-3 rounded-lg bg-warning/[0.08] border border-warning/30">
+            <i data-lucide="alert-triangle" class="w-5 h-5 text-warning flex-shrink-0"></i>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-foreground">筛选结果较少</p>
+              <p class="text-xs text-muted-foreground">当前条件仅匹配 3 只股票，建议放宽部分条件。</p>
+            </div>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-warning/20 text-warning text-xs font-mono tabular-nums">3 只</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Annotations -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-semibold text-foreground">设计要点标注</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="rounded-lg border border-border bg-card p-4 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-semibold">1</span>
+            <h3 class="text-sm font-semibold text-foreground">图标尺寸与间距</h3>
+          </div>
+          <p class="text-xs text-muted-foreground leading-relaxed">状态图标 20×20px，与文字间距 12px（gap-3），保证图标不抢戏但清晰可辨。</p>
+        </div>
+        <div class="rounded-lg border border-border bg-card p-4 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-semibold">2</span>
+            <h3 class="text-sm font-semibold text-foreground">状态色使用</h3>
+          </div>
+          <p class="text-xs text-muted-foreground leading-relaxed">错误仅用 8% 背景 + 30% 边框 + 100% 图标/标题，避免满屏红色造成视觉噪音。</p>
+        </div>
+        <div class="rounded-lg border border-border bg-card p-4 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-semibold">3</span>
+            <h3 class="text-sm font-semibold text-foreground">关闭按钮位置</h3>
+          </div>
+          <p class="text-xs text-muted-foreground leading-relaxed">右上角关闭按钮与内容顶部对齐，不点用垂直空间，同时保留 44×44px 点击热区。</p>
+        </div>
+        <div class="rounded-lg border border-border bg-card p-4 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-semibold">4</span>
+            <h3 class="text-sm font-semibold text-foreground">加载进度条</h3>
+          </div>
+          <p class="text-xs text-muted-foreground leading-relaxed">高度 6px，圆角与容器一致，主色填充 + 百分比数字，提供明确的进度感知。</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.lucide) { lucide.createIcons(); }
+    });
+  </script>
+  <style>
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</body>
+</html>

@@ -55,11 +55,11 @@ function stageColor(stage: CollectionLifecycleStage, error?: string) {
 function resultColorClass(result: CollectionTraceSpan['result']): string {
   switch (result) {
     case 'success':
-      return COLOR_TOKENS.success.bgClass
+      return `${COLOR_TOKENS.success.bgClass} text-success-foreground`
     case 'partial':
-      return COLOR_TOKENS.warning.bgClass
+      return `${COLOR_TOKENS.warning.bgClass} text-warning-foreground`
     default:
-      return COLOR_TOKENS.danger.bgClass
+      return `${COLOR_TOKENS.danger.bgClass} text-destructive-foreground`
   }
 }
 
@@ -99,7 +99,7 @@ function TraceCard({ span }: { span: CollectionTraceSpan }): React.JSX.Element {
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold">{span.symbol}</span>
           <Badge variant="outline">{span.dimensionCode}</Badge>
-          <Badge className={`text-white ${resultColorClass(span.result)}`}>
+          <Badge className={resultColorClass(span.result)}>
             {span.result === 'success' ? '成功' : span.result === 'partial' ? '部分' : '失败'}
           </Badge>
         </div>

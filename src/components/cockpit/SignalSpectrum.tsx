@@ -72,7 +72,7 @@ export function SignalSpectrum({
         />
         <div
           className={cn(
-            'absolute top-1/2 -translate-x-1/2 -translate-y-1/2 border-2 border-white shadow',
+            'absolute top-1/2 -translate-x-1/2 -translate-y-1/2 border-2 border-border shadow',
             THEME_TOKENS.radius.full,
             SIZE_MAP[size].track,
           )}

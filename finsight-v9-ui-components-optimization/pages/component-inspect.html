@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件放大检查（浅色）</title>
+    <style id="theme-vars">
+/*
+  FinSight V9 UI 组件优化呈现 - 主题合同（浅色模式）
+  基于 V9 UI/UX 规范 v2.6.0：Apple Business Design + Light PortalShell
+*/
+:root {
+  --v9-primary: 210 100% 50%;
+  --v9-primary-foreground: 0 0% 100%;
+  --v9-background: 240 20% 99%;
+  --v9-foreground: 240 10% 4%;
+  --v9-card: 0 0% 100%;
+  --v9-card-foreground: 240 10% 4%;
+  --v9-popover: 0 0% 100%;
+  --v9-popover-foreground: 240 10% 4%;
+  --v9-surface: 240 20% 97%;
+  --v9-surface-2: 240 14% 94%;
+  --v9-surface-3: 240 10% 91%;
+  --v9-muted: 240 14% 95%;
+  --v9-muted-foreground: 240 5% 40%;
+  --v9-border: 240 10% 89%;
+  --v9-input: 240 10% 89%;
+  --v9-ring: 210 100% 60%;
+  --v9-success: 142 76% 40%;
+  --v9-success-foreground: 0 0% 100%;
+  --v9-warning: 36 100% 45%;
+  --v9-warning-foreground: 0 0% 100%;
+  --v9-error: 4 85% 56%;
+  --v9-error-foreground: 0 0% 100%;
+  --v9-info: 210 100% 50%;
+  --v9-info-foreground: 0 0% 100%;
+  --v9-radius-sm: 0.25rem;
+  --v9-radius-md: 0.5rem;
+  --v9-radius-lg: 1rem;
+  --v9-radius-pill: 9999px;
+  --v9-shadow-dropdown: 0 1px 2px hsl(240 6% 4% / 0.04), 0 1px 1px hsl(240 6% 4% / 0.03);
+  --v9-shadow-popover: 0 8px 24px -8px hsl(240 6% 4% / 0.12);
+  --v9-shadow-modal: 0 24px 60px -20px hsl(240 6% 4% / 0.18);
+  --v9-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --v9-font-mono: "SF Mono", "SFMono-Regular", ui-monospace, "Cascadia Mono", "Segoe UI Mono", monospace;
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--v9-background);
+    --color-foreground: var(--v9-foreground);
+    --color-card: var(--v9-card);
+    --color-card-foreground: var(--v9-card-foreground);
+    --color-popover: var(--v9-popover);
+    --color-popover-foreground: var(--v9-popover-foreground);
+    --color-primary: var(--v9-primary);
+    --color-primary-foreground: var(--v9-primary-foreground);
+    --color-muted: var(--v9-muted);
+    --color-muted-foreground: var(--v9-muted-foreground);
+    --color-border: var(--v9-border);
+    --color-input: var(--v9-input);
+    --color-ring: var(--v9-ring);
+    --radius-sm: var(--v9-radius-sm);
+    --radius-md: var(--v9-radius-md);
+    --radius-lg: var(--v9-radius-lg);
+  }
+  @layer base {
+    body { background: var(--v9-background); color: var(--v9-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--v9-background); }
+      .text-background { color: var(--v9-background); }
+      .border-background { border-color: var(--v9-background); }
+      .ring-background { --tw-ring-color: var(--v9-background); }
+      .bg-foreground { background-color: var(--v9-foreground); }
+      .text-foreground { color: var(--v9-foreground); }
+      .border-foreground { border-color: var(--v9-foreground); }
+      .ring-foreground { --tw-ring-color: var(--v9-foreground); }
+      .bg-card { background-color: var(--v9-card); }
+      .text-card { color: var(--v9-card); }
+      .border-card { border-color: var(--v9-card); }
+      .ring-card { --tw-ring-color: var(--v9-card); }
+      .bg-card-foreground { background-color: var(--v9-card-foreground); }
+      .text-card-foreground { color: var(--v9-card-foreground); }
+      .border-card-foreground { border-color: var(--v9-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--v9-card-foreground); }
+      .bg-popover { background-color: var(--v9-popover); }
+      .text-popover { color: var(--v9-popover); }
+      .border-popover { border-color: var(--v9-popover); }
+      .ring-popover { --tw-ring-color: var(--v9-popover); }
+      .bg-popover-foreground { background-color: var(--v9-popover-foreground); }
+      .text-popover-foreground { color: var(--v9-popover-foreground); }
+      .border-popover-foreground { border-color: var(--v9-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--v9-popover-foreground); }
+      .bg-primary { background-color: var(--v9-primary); }
+      .text-primary { color: var(--v9-primary); }
+      .border-primary { border-color: var(--v9-primary); }
+      .ring-primary { --tw-ring-color: var(--v9-primary); }
+      .bg-primary-foreground { background-color: var(--v9-primary-foreground); }
+      .text-primary-foreground { color: var(--v9-primary-foreground); }
+      .border-primary-foreground { border-color: var(--v9-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--v9-primary-foreground); }
+      .bg-muted { background-color: var(--v9-muted); }
+      .text-muted { color: var(--v9-muted); }
+      .border-muted { border-color: var(--v9-muted); }
+      .ring-muted { --tw-ring-color: var(--v9-muted); }
+      .bg-muted-foreground { background-color: var(--v9-muted-foreground); }
+      .text-muted-foreground { color: var(--v9-muted-foreground); }
+      .border-muted-foreground { border-color: var(--v9-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--v9-muted-foreground); }
+      .bg-border { background-color: var(--v9-border); }
+      .text-border { color: var(--v9-border); }
+      .border-border { border-color: var(--v9-border); }
+      .ring-border { --tw-ring-color: var(--v9-border); }
+      .bg-input { background-color: var(--v9-input); }
+      .text-input { color: var(--v9-input); }
+      .border-input { border-color: var(--v9-input); }
+      .ring-input { --tw-ring-color: var(--v9-input); }
+      .bg-ring { background-color: var(--v9-ring); }
+      .text-ring { color: var(--v9-ring); }
+      .border-ring { border-color: var(--v9-ring); }
+      .ring-ring { --tw-ring-color: var(--v9-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen bg-background text-foreground antialiased">
+  <div class="max-w-[1100px] mx-auto px-6 py-12 space-y-16">
+
+    <!-- Header -->
+    <section class="space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium border border-primary/20">
+        <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i>
+        <span>组件细节检查 · 放大 1.25×</span>
+      </div>
+      <h1 class="text-2xl font-semibold tracking-tight text-foreground">高频组件放大检查</h1>
+      <p class="text-sm text-muted-foreground max-w-2xl leading-relaxed">
+        按钮、输入框、下拉菜单、状态徽章、开关、表格、分页、日期选择器等高频组件的全状态审视，关注间距、对比度、焦点环与交互反馈。
+      </p>
+    </section>
+
+    <!-- 01 · Buttons -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">01 · 按钮 Button</h2>
+        <span class="text-xs text-muted-foreground font-mono">5 variants × 5 states × 3 sizes</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border p-6 space-y-8">
+
+        <!-- Variants -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <p class="text-xs text-muted-foreground uppercase tracking-wider">变体 Variants</p>
+            <span class="text-xs text-muted-foreground">默认尺寸 · md</span>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 active:bg-primary/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+              <i data-lucide="plus" class="w-4 h-4"></i>Primary
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-secondary text-secondary-foreground text-sm font-medium border border-border hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              Secondary
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-background text-foreground text-sm font-medium border border-border hover:border-primary hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              Outline
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-transparent text-foreground text-sm font-medium hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              Ghost
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-transparent text-primary text-sm font-medium hover:bg-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              Link
+            </button>
+          </div>
+        </div>
+
+        <!-- States -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <p class="text-xs text-muted-foreground uppercase tracking-wider">状态 States</p>
+            <span class="text-xs text-muted-foreground">Primary · md</span>
+          </div>
+          <div class="flex flex-wrap gap-3 items-center">
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              Default
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary/80 text-primary-foreground text-sm font-medium cursor-pointer ring-2 ring-ring ring-offset-2 ring-offset-background transition-colors">
+              Focused
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary/70 text-primary-foreground text-sm font-medium">
+              Pressed
+            </button>
+            <button type="button" disabled class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary/40 text-primary-foreground/60 text-sm font-medium cursor-not-allowed">
+              Disabled
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading states - detailed -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <p class="text-xs text-muted-foreground uppercase tracking-wider">加载状态 Loading</p>
+            <span class="text-xs text-muted-foreground">spinner 与文字等宽对齐 · 不跳动</span>
+          </div>
+          <div class="flex flex-wrap gap-3 items-center">
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium">
+              <i data-lucide="loader-2" class="w-4 h-4 animate-spin opacity-90"></i>
+              <span>加载中</span>
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-background text-foreground text-sm font-medium border border-border">
+              <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-primary"></i>
+              <span>处理中…</span>
+            </button>
+            <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium w-32">
+              <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-error text-error-foreground text-sm font-medium">
+              <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+              <span>正在删除</span>
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-foreground opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-primary-foreground"></span>
+              </span>
+              <span>实时同步中</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sizes -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <p class="text-xs text-muted-foreground uppercase tracking-wider">尺寸 Sizes</p>
+            <span class="text-xs text-muted-foreground">Primary</span>
+          </div>
+          <div class="flex flex-wrap gap-3 items-center">
+            <button type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary text-primary-foreground text-xs font-medium">
+              <i data-lucide="plus" class="w-3 h-3"></i>SM
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium">
+              <i data-lucide="plus" class="w-4 h-4"></i>MD
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-primary text-primary-foreground text-base font-medium">
+              <i data-lucide="plus" class="w-5 h-5"></i>LG
+            </button>
+            <button type="button" class="inline-flex items-center justify-center w-9 h-9 rounded-md bg-primary text-primary-foreground">
+              <i data-lucide="settings" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Destructive -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <p class="text-xs text-muted-foreground uppercase tracking-wider">危险操作 Destructive</p>
+            <span class="text-xs text-muted-foreground">Error semantic</span>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-error text-error-foreground text-sm font-medium hover:bg-error/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error/50">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>删除
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-background text-error text-sm font-medium border border-error/30 hover:bg-error/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error/50">
+              Outline
+            </button>
+            <button type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-transparent text-error text-sm font-medium hover:bg-error/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error/50">
+              Ghost
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 · Input -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">02 · 输入框 Input</h2>
+        <span class="text-xs text-muted-foreground font-mono">6 states × 4 variants</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border p-6 space-y-8">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+          <div class="space-y-1.5">
+            <label class="text-sm font-medium text-foreground">默认 Default</label>
+            <input type="text" placeholder="请输入股票代码" class="w-full h-10 px-3 rounded-md bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring transition-colors">
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-sm font-medium text-foreground">聚焦 Focused</label>
+            <input type="text" value="600519" class="w-full h-10 px-3 rounded-md bg-background border-ring text-sm text-foreground ring-2 ring-ring/30 focus-visible:outline-none">
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-sm font-medium text-foreground">禁用 Disabled</label>
+            <input type="text" value="不可编辑" disabled class="w-full h-10 px-3 rounded-md bg-muted border border-border text-sm text-muted-foreground cursor-not-allowed opacity-60">
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-sm font-medium text-foreground">只读 Readonly</label>
+            <input type="text" value="只读内容" readonly class="w-full h-10 px-3 rounded-md bg-muted/50 border border-border text-sm text-foreground cursor-default">
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-sm font-medium text-error">错误 Error</label>
+            <input type="text" value="无效格式" class="w-full h-10 px-3 rounded-md bg-background border border-error text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error/50">
+            <p class="text-xs text-error flex items-center gap-1"><i data-lucide="info" class="w-3 h-3"></i>请输入正确的股票代码</p>
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-sm font-medium text-success">成功 Success</label>
+            <div class="relative">
+              <input type="text" value="贵州茅台" class="w-full h-10 px-3 pr-10 rounded-md bg-background border border-success/50 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success/30">
+              <i data-lucide="check-circle-2" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-success"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- With icons & affixes -->
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">带图标/前后缀 With icons &amp; affixes</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+            <div class="relative">
+              <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"></i>
+              <input type="text" placeholder="搜索" class="w-full h-10 pl-9 pr-3 rounded-md bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring">
+            </div>
+            <div class="relative">
+              <input type="text" value="finsight" class="w-full h-10 pl-3 pr-16 rounded-md bg-background border border-border text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring">
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">.com</span>
+            </div>
+            <div class="flex rounded-md border border-border overflow-hidden focus-within:ring-2 focus-within:ring-ring focus-within:border-ring">
+              <span class="inline-flex items-center px-3 bg-muted text-muted-foreground text-sm border-r border-border">https://</span>
+              <input type="text" value="finsight" class="flex-1 h-10 px-3 bg-background text-sm text-foreground focus-visible:outline-none">
+            </div>
+            <div class="relative">
+              <i data-lucide="tag" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"></i>
+              <input type="text" placeholder="标签" class="w-full h-10 pl-9 pr-20 rounded-md bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring">
+              <button type="button" class="absolute right-1 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 px-2 py-1 rounded bg-primary text-primary-foreground text-xs font-medium">
+                <i data-lucide="plus" class="w-3 h-3"></i>添加
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 · Dropdown -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">03 · 下拉菜单 Dropdown</h2>
+        <span class="text-xs text-muted-foreground font-mono">6 menu types</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="space-y-2">
+            <p class="text-xs text-muted-foreground uppercase tracking-wider">基础菜单</p>
+            <div class="rounded-lg bg-popover border border-border overflow-hidden" style="box-shadow: var(--v9-shadow-popover);">
+              <ul class="py-1">
+                <li><button type="button" class="w-full flex items-center gap-2 px-3 py-2 text-sm text-popover-foreground hover:bg-muted"><i data-lucide="edit" class="w-4 h-4 text-muted-foreground"></i>编辑</button></li>
+                <li><button type="button" class="w-full flex items-center gap-2 px-3 py-2 text-sm text-popover-foreground hover:bg-muted"><i data-lucide="copy" class="w-4 h-4 text-muted-foreground"></i>复制</button></li>
+                <li><button type="button" class="w-full flex items-center gap-2 px-3 py-2 text-sm text-popover-foreground hover:bg-muted"><i data-lucide="share-2" class="w-4 h-4 text-muted-foreground"></i>分享</button></li>
+                <li class="border-t border-border my-1"></li>
+                <li><button type="button" class="w-full flex items-center gap-2 px-3 py-2 text-sm text-error hover:bg-error/10"><i data-lucide="trash-2" class="w-4 h-4"></i>删除</button></li>
+              </ul>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <p class="text-xs text-muted-foreground uppercase tracking-wider">带选中态</p>
+            <div class="rounded-lg bg-popover border border-border overflow-hidden" style="box-shadow: var(--v9-shadow-popover);">
+              <ul class="py-1">
+                <li>
+                  <button type="button" class="w-full flex items-center gap-2 px-3 py-2 text-sm text-popover-foreground bg-primary/10 hover:bg-primary/15">
+                    <i data-lucide="check" class="w-4 h-4 text-primary"></i><span>按评分排序</span>
+                  </button>
+                </li>
+                <li><button type="button" class="w-full flex items-center gap-2 px-3 py-2 text-sm text-popover-foreground hover:bg-muted"><span class="w-4 h-4"></span>按涨跌幅排序</button></li>
+                <li><button type="button" class="w-full flex items-center gap-2 px-3 py-2 text-sm text-popover-foreground hover:bg-muted"><span class="w-4 h-4"></span>按市值排序</button></li>
+              </ul>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <p class="text-xs text-muted-foreground uppercase tracking-wider">分组菜单</p>
+            <div class="rounded-lg bg-popover border border-border overflow-hidden" style="box-shadow: var(--v9-shadow-popover);">
+              <ul class="py-1">
+                <li class="px-3 py-1.5 text-xs font-semibold text-muted-foreground bg-background/40">显示</li>
+                <li><button type="button" class="w-full flex items-center justify-between px-3 py-2 text-sm text-popover-foreground hover:bg-muted"><span>代码</span><span class="text-xs text-muted-foreground">⌘1</span></button></li>
+                <li><button type="button" class="w-full flex items-center justify-between px-3 py-2 text-sm text-popover-foreground hover:bg-muted"><span>名称</span><span class="text-xs text-muted-foreground">⌘2</span></button></li>
+                <li class="border-t border-border my-1"></li>
+                <li class="px-3 py-1.5 text-xs font-semibold text-muted-foreground bg-background/40">操作</li>
+                <li><button type="button" class="w-full flex items-center justify-between px-3 py-2 text-sm text-popover-foreground hover:bg-muted"><span>导出</span><span class="text-xs text-muted-foreground">⌘E</span></button></li>
+              </ul>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <p class="text-xs text-muted-foreground uppercase tracking-wider">多选菜单</p>
+            <div class="rounded-lg bg-popover border border-border overflow-hidden" style="box-shadow: var(--v9-shadow-popover);">
+              <div class="px-3 py-2 border-b border-border flex items-center justify-between">
+                <span class="text-xs font-medium text-foreground">显示列</span>
+                <button type="button" class="text-xs text-primary hover:underline">全选</button>
+              </div>
+              <ul class="py-1 max-h-[200px]">
+                <li><button class="w-full flex items-center gap-2 px-3 py-2 text-sm text-popover-foreground hover:bg-muted">
+                  <span class="w-4 h-4 rounded-sm border border-primary bg-primary flex items-center justify-center"><i data-lucide="check" class="w-3 h-3 text-primary-foreground"></i></span><span>代码</span>
+                </button></li>
+                <li><button class="w-full flex items-center gap-2 px-3 py-2 text-sm text-popover-foreground hover:bg-muted">
+                  <span class="w-4 h-4 rounded-sm border border-primary bg-primary flex items-center justify-center"><i data-lucide="check" class="w-3 h-3 text-primary-foreground"></i></span><span>名称</span>
+                </button></li>
+                <li><button class="w-full flex items-center gap-2 px-3 py-2 text-sm text-popover-foreground hover:bg-muted">
+                  <span class="w-4 h-4 rounded-sm border border-border"></span><span>涨跌幅</span>
+                </button></li>
+                <li><button class="w-full flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:bg-muted">
+                  <span class="w-4 h-4 rounded-sm border border-border opacity-40"></span><span>市盈率 (禁用)</span>
+                </button></li>
+              </ul>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <p class="text-xs text-muted-foreground uppercase tracking-wider">单选菜单</p>
+            <div class="rounded-lg bg-popover border border-border overflow-hidden" style="box-shadow: var(--v9-shadow-popover);">
+              <ul class="py-1">
+                <li><button class="w-full flex items-center gap-2 px-3 py-2 text-sm text-popover-foreground bg-primary/10 hover:bg-primary/15">
+                  <span class="w-4 h-4 rounded-full border-2 border-primary flex items-center justify-center"><span class="w-2 h-2 rounded-full bg-primary"></span></span><span>日线</span>
+                </button></li>
+                <li><button class="w-full flex items-center gap-2 px-3 py-2 text-sm text-popover-foreground hover:bg-muted">
+                  <span class="w-4 h-4 rounded-full border-2 border-border"></span><span>周线</span>
+                </button></li>
+                <li><button class="w-full flex items-center gap-2 px-3 py-2 text-sm text-popover-foreground hover:bg-muted">
+                  <span class="w-4 h-4 rounded-full border-2 border-border"></span><span>月线</span>
+                </button></li>
+              </ul>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <p class="text-xs text-muted-foreground uppercase tracking-wider">级联子菜单</p>
+            <div class="flex gap-0.5">
+              <div class="rounded-lg bg-popover border border-border overflow-hidden" style="box-shadow: var(--v9-shadow-popover);">
+                <ul class="py-1 w-40">
+                  <li><button class="w-full flex items-center justify-between px-3 py-2 text-sm text-popover-foreground hover:bg-muted"><span>新建</span><i data-lucide="chevron-right" class="w-3.5 h-3.5 text-muted-foreground"></i></button></li>
+                  <li><button class="w-full flex items-center justify-between px-3 py-2 text-sm text-popover-foreground bg-muted"><span>导出</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button></li>
+                  <li><button class="w-full px-3 py-2 text-sm text-popover-foreground hover:bg-muted text-left">打印</button></li>
+                </ul>
+              </div>
+              <div class="rounded-lg bg-popover border border-border overflow-hidden -ml-0.5" style="box-shadow: var(--v9-shadow-popover);">
+                <ul class="py-1 w-36">
+                  <li><button class="w-full px-3 py-2 text-sm text-popover-foreground hover:bg-muted text-left">Excel (.xlsx)</button></li>
+                  <li><button class="w-full px-3 py-2 text-sm text-popover-foreground hover:bg-muted text-left">CSV (.csv)</button></li>
+                  <li><button class="w-full px-3 py-2 text-sm text-popover-foreground hover:bg-muted text-left">PDF (.pdf)</button></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 · Badges -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">04 · 状态徽章 Badge</h2>
+        <span class="text-xs text-muted-foreground font-mono">5 variants × 3 sizes</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border p-6 space-y-8">
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">语义变体 Semantic variants</p>
+          <div class="flex flex-wrap gap-3 items-center">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/15 text-primary text-xs font-medium border border-primary/25">
+              <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>主色 Primary
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-success/15 text-success text-xs font-medium border border-success/25">
+              <span class="w-1.5 h-1.5 rounded-full bg-success"></span>成功 Success
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-warning/15 text-warning text-xs font-medium border border-warning/25">
+              <span class="w-1.5 h-1.5 rounded-full bg-warning"></span>警告 Warning
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error/15 text-error text-xs font-medium border border-error/25">
+              <span class="w-1.5 h-1.5 rounded-full bg-error"></span>错误 Error
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-muted text-muted-foreground text-xs font-medium border border-border">
+              <span class="w-1.5 h-1.5 rounded-full bg-muted-foreground/60"></span>默认 Default
+            </span>
+          </div>
+        </div>
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">尺寸与计数 Sizes &amp; counters</p>
+          <div class="flex flex-wrap items-center gap-4">
+            <span class="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-full bg-primary text-primary-foreground text-[10px] font-mono font-bold tabular-nums">9</span>
+            <span class="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-full bg-error text-error-foreground text-xs font-mono font-bold tabular-nums">99+</span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/15 text-primary text-xs font-medium border border-primary/25">
+              待办
+              <span class="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-full bg-primary text-primary-foreground text-[10px] font-mono font-bold tabular-nums">5</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-success/15 text-success text-sm font-medium border border-success/25">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
+              </span>
+              实时同步
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 · Toggle / Checkbox / Radio -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">05 · 开关与选择</h2>
+        <span class="text-xs text-muted-foreground font-mono">Switch / Checkbox / Radio</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="space-y-3">
+            <p class="text-xs text-muted-foreground uppercase tracking-wider">开关 Switch</p>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between"><label class="text-sm text-foreground">开启</label>
+                <button type="button" role="switch" aria-checked="true" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                  <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-background shadow-md ring-0 transition-transform translate-x-5"></span>
+                </button>
+              </div>
+              <div class="flex items-center justify-between"><label class="text-sm text-foreground">关闭</label>
+                <button type="button" role="switch" aria-checked="false" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-border bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                  <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-background shadow-md ring-0 transition-transform translate-x-0"></span>
+                </button>
+              </div>
+              <div class="flex items-center justify-between"><label class="text-sm text-muted-foreground">禁用</label>
+                <button type="button" role="switch" aria-checked="true" disabled class="relative inline-flex h-6 w-11 shrink-0 cursor-not-allowed rounded-full border-2 border-transparent bg-primary/40 opacity-60">
+                  <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-background shadow-md translate-x-5"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <p class="text-xs text-muted-foreground uppercase tracking-wider">复选框 Checkbox</p>
+            <div class="space-y-3">
+              <label class="flex items-center gap-2.5 cursor-pointer">
+                <span class="w-5 h-5 rounded border border-primary bg-primary flex items-center justify-center"><i data-lucide="check" class="w-3.5 h-3.5 text-primary-foreground"></i></span>
+                <span class="text-sm text-foreground">已选中</span>
+              </label>
+              <label class="flex items-center gap-2.5 cursor-pointer">
+                <span class="w-5 h-5 rounded border border-border bg-background"></span>
+                <span class="text-sm text-foreground">未选中</span>
+              </label>
+              <label class="flex items-center gap-2.5 cursor-pointer">
+                <span class="w-5 h-5 rounded border border-primary bg-primary flex items-center justify-center"><span class="w-2.5 h-0.5 bg-primary-foreground rounded-sm"></span></span>
+                <span class="text-sm text-foreground">半选</span>
+              </label>
+              <label class="flex items-center gap-2.5 cursor-not-allowed opacity-60">
+                <span class="w-5 h-5 rounded border border-border bg-muted"></span>
+                <span class="text-sm text-muted-foreground">禁用</span>
+              </label>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <p class="text-xs text-muted-foreground uppercase tracking-wider">单选 Radio</p>
+            <div class="space-y-3">
+              <label class="flex items-center gap-2.5 cursor-pointer">
+                <span class="w-5 h-5 rounded-full border-2 border-primary flex items-center justify-center"><span class="w-2.5 h-2.5 rounded-full bg-primary"></span></span>
+                <span class="text-sm text-foreground">已选中</span>
+              </label>
+              <label class="flex items-center gap-2.5 cursor-pointer">
+                <span class="w-5 h-5 rounded-full border-2 border-border"></span>
+                <span class="text-sm text-foreground">未选中</span>
+              </label>
+              <label class="flex items-center gap-2.5 cursor-not-allowed opacity-60">
+                <span class="w-5 h-5 rounded-full border-2 border-border bg-muted"></span>
+                <span class="text-sm text-muted-foreground">禁用</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 · Tabs / Segmented -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">06 · 标签页与分段</h2>
+        <span class="text-xs text-muted-foreground font-mono">Tabs / Segmented</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border p-6 space-y-8">
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">分段控制器 Segmented</p>
+          <div class="flex flex-wrap gap-4">
+            <div class="inline-flex p-1 rounded-lg bg-background border border-border">
+              <button class="px-4 py-1.5 rounded-md text-sm font-medium bg-primary text-primary-foreground shadow-sm">日度</button>
+              <button class="px-4 py-1.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">周线</button>
+              <button class="px-4 py-1.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">月线</button>
+            </div>
+            <div class="inline-flex p-1 rounded-full bg-background border border-border">
+              <button class="px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-primary-foreground shadow-sm">全部</button>
+              <button class="px-4 py-1.5 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">持有</button>
+              <button class="px-4 py-1.5 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">观察</button>
+              <button class="px-4 py-1.5 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">已清仓</button>
+            </div>
+          </div>
+        </div>
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">下划线式 Underline tabs</p>
+          <div class="border-b border-border">
+            <div class="flex gap-6 -mb-px">
+              <button class="pb-2.5 text-sm font-medium text-primary border-b-2 border-primary">概览</button>
+              <button class="pb-2.5 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">行情</button>
+              <button class="pb-2.5 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">财务</button>
+              <button class="pb-2.5 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">筹码</button>
+              <button class="pb-2.5 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent">公告</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 · Table -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">07 · 表格 Table</h2>
+        <span class="text-xs text-muted-foreground font-mono">股票列表 · 排序/选中/斑马纹</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border overflow-hidden">
+        <div class="px-5 py-3 border-b border-border flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <h3 class="text-sm font-semibold text-foreground">自选股列表</h3>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-xs font-mono tabular-nums">12 只</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-background border border-border text-xs text-foreground hover:border-primary transition-colors">
+              <i data-lucide="filter" class="w-3.5 h-3.5"></i>筛选
+            </button>
+            <button class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-background border border-border text-xs text-foreground hover:border-primary transition-colors">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>导出
+            </button>
+          </div>
+        </div>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-border bg-muted/30">
+              <th class="w-10 px-4 py-2.5 text-left">
+                <span class="w-4 h-4 rounded border border-primary bg-primary flex items-center justify-center"><i data-lucide="check" class="w-3 h-3 text-primary-foreground"></i></span>
+              </th>
+              <th class="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">
+                <button class="inline-flex items-center gap-1 hover:text-foreground">代码<i data-lucide="arrow-up-down" class="w-3 h-3"></i></button>
+              </th>
+              <th class="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">名称</th>
+              <th class="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">
+                <button class="inline-flex items-center gap-1 text-foreground">最新价<i data-lucide="arrow-up" class="w-3 h-3 text-primary"></i></button>
+              </th>
+              <th class="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">涨跌幅</th>
+              <th class="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">评分</th>
+              <th class="px-4 py-2.5 text-center text-xs font-medium text-muted-foreground">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-border hover:bg-muted/30 transition-colors bg-primary/[0.03]">
+              <td class="px-4 py-3"><span class="w-4 h-4 rounded border border-primary bg-primary flex items-center justify-center"><i data-lucide="check" class="w-3 h-3 text-primary-foreground"></i></span></td>
+              <td class="px-4 py-3 font-mono text-foreground">600519</td>
+              <td class="px-4 py-3 text-foreground font-medium">贵州茅台</td>
+              <td class="px-4 py-3 text-right font-mono tabular-nums text-foreground">1,688.50</td>
+              <td class="px-4 py-3 text-right font-mono tabular-nums text-error">+2.35%</td>
+              <td class="px-4 py-3 text-right">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-success/15 text-success text-xs font-medium">86.5</span>
+              </td>
+              <td class="px-4 py-3 text-center">
+                <button class="inline-flex items-center justify-center w-7 h-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+              </td>
+            </tr>
+            <tr class="border-b border-border hover:bg-muted/30 transition-colors">
+              <td class="px-4 py-3"><span class="w-4 h-4 rounded border border-primary bg-primary flex items-center justify-center"><i data-lucide="check" class="w-3 h-3 text-primary-foreground"></i></span></td>
+              <td class="px-4 py-3 font-mono text-foreground">300750</td>
+              <td class="px-4 py-3 text-foreground font-medium">宁德时代</td>
+              <td class="px-4 py-3 text-right font-mono tabular-nums text-foreground">215.80</td>
+              <td class="px-4 py-3 text-right font-mono tabular-nums text-success">-1.20%</td>
+              <td class="px-4 py-3 text-right">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-primary/15 text-primary text-xs font-medium">78.2</span>
+              </td>
+              <td class="px-4 py-3 text-center">
+                <button class="inline-flex items-center justify-center w-7 h-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+              </td>
+            </tr>
+            <tr class="border-b border-border hover:bg-muted/30 transition-colors bg-muted/[0.02]">
+              <td class="px-4 py-3"><span class="w-4 h-4 rounded border border-border"></span></td>
+              <td class="px-4 py-3 font-mono text-foreground">601318</td>
+              <td class="px-4 py-3 text-foreground">中国平安</td>
+              <td class="px-4 py-3 text-right font-mono tabular-nums text-foreground">48.25</td>
+              <td class="px-4 py-3 text-right font-mono tabular-nums text-error">+0.85%</td>
+              <td class="px-4 py-3 text-right">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-warning/15 text-warning text-xs font-medium">71.0</span>
+              </td>
+              <td class="px-4 py-3 text-center">
+                <button class="inline-flex items-center justify-center w-7 h-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+              </td>
+            </tr>
+            <tr class="border-b border-border hover:bg-muted/30 transition-colors">
+              <td class="px-4 py-3"><span class="w-4 h-4 rounded border border-border"></span></td>
+              <td class="px-4 py-3 font-mono text-muted-foreground opacity-60">000001</td>
+              <td class="px-4 py-3 text-muted-foreground opacity-60">平安银行</td>
+              <td class="px-4 py-3 text-right font-mono tabular-nums text-muted-foreground opacity-60">11.52</td>
+              <td class="px-4 py-3 text-right font-mono tabular-nums text-success opacity-60">-0.43%</td>
+              <td class="px-4 py-3 text-right opacity-60">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-muted text-muted-foreground text-xs font-medium">58.7</span>
+              </td>
+              <td class="px-4 py-3 text-center opacity-40">
+                <button class="inline-flex items-center justify-center w-7 h-7 rounded-md text-muted-foreground" disabled><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+              </td>
+            </tr>
+            <tr class="hover:bg-muted/30 transition-colors bg-muted/[0.02]">
+              <td class="px-4 py-3"><span class="w-4 h-4 rounded border border-border"></span></td>
+              <td class="px-4 py-3 font-mono text-foreground">600036</td>
+              <td class="px-4 py-3 text-foreground">招商银行</td>
+              <td class="px-4 py-3 text-right font-mono tabular-nums text-foreground">36.18</td>
+              <td class="px-4 py-3 text-right font-mono tabular-nums text-error">+1.57%</td>
+              <td class="px-4 py-3 text-right">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-success/15 text-success text-xs font-medium">82.3</span>
+              </td>
+              <td class="px-4 py-3 text-center">
+                <button class="inline-flex items-center justify-center w-7 h-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="px-5 py-3 border-t border-border bg-muted/20 flex items-center justify-between text-xs text-muted-foreground">
+          <span>已选 2 / 12 只</span>
+          <div class="flex items-center gap-1">
+            <button class="p-1.5 rounded hover:bg-muted transition-colors"><i data-lucide="chevrons-left" class="w-3.5 h-3.5"></i></button>
+            <button class="p-1.5 rounded hover:bg-muted transition-colors"><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>
+            <span class="px-2 font-mono tabular-nums">1 / 3</span>
+            <button class="p-1.5 rounded hover:bg-muted transition-colors text-foreground"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>
+            <button class="p-1.5 rounded hover:bg-muted transition-colors"><i data-lucide="chevrons-right" class="w-3.5 h-3.5"></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 · Pagination -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">08 · 分页 Pagination</h2>
+        <span class="text-xs text-muted-foreground font-mono">3 styles × states</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border p-6 space-y-8">
+
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">数字分页 Numbered</p>
+          <nav class="inline-flex items-center gap-1">
+            <button class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-background border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-colors"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+            <button class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-primary text-primary-foreground text-sm font-medium">1</button>
+            <button class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-background border border-border text-foreground text-sm hover:border-primary transition-colors">2</button>
+            <button class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-background border border-border text-foreground text-sm hover:border-primary transition-colors">3</button>
+            <span class="px-1 text-muted-foreground">…</span>
+            <button class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-background border border-border text-foreground text-sm hover:border-primary transition-colors">12</button>
+            <button class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-background border border-border text-foreground hover:text-foreground hover:border-primary transition-colors"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+          </nav>
+        </div>
+
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">带每页条数 With page size</p>
+          <div class="flex flex-wrap items-center gap-4">
+            <nav class="inline-flex items-center gap-1">
+              <button class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-background border border-border text-muted-foreground hover:text-foreground hover:border-primary transition-colors"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+              <button class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-primary text-primary-foreground text-sm font-medium">1</button>
+              <button class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-background border border-border text-foreground text-sm hover:border-primary transition-colors">2</button>
+              <button class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-background border border-border text-foreground text-sm hover:border-primary transition-colors">3</button>
+              <button class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-background border border-border text-foreground hover:text-foreground hover:border-primary transition-colors"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </nav>
+            <div class="inline-flex items-center gap-2 text-xs text-muted-foreground">
+              <span>每页</span>
+              <select class="h-8 px-2 rounded-md bg-background border border-border text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <option>20</option>
+                <option>50</option>
+                <option>100</option>
+              </select>
+              <span>条</span>
+            </div>
+            <span class="text-xs text-muted-foreground">共 256 条</span>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">简洁模式 Compact</p>
+          <div class="flex items-center justify-between max-w-md">
+            <span class="text-xs text-muted-foreground">显示 1–20 条，共 256 条</span>
+            <div class="inline-flex items-center gap-2">
+              <button class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-background border border-border text-xs text-foreground hover:border-primary transition-colors">
+                <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>上一页
+              </button>
+              <button class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-background border border-border text-xs text-foreground hover:border-primary transition-colors">
+                下一页<i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 · Date picker -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">09 · 日期选择器 Date Picker</h2>
+        <span class="text-xs text-muted-foreground font-mono">Range picker + calendar</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border p-6 space-y-8">
+
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">单日期 Single date</p>
+          <div class="relative max-w-xs">
+            <i data-lucide="calendar" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"></i>
+            <input type="text" value="2026-08-20" class="w-full h-10 pl-9 pr-3 rounded-md bg-background border border-border text-sm text-foreground font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring">
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">日期范围 Date range</p>
+          <div class="inline-flex items-center rounded-md border border-border bg-background overflow-hidden">
+            <div class="relative">
+              <i data-lucide="calendar-days" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"></i>
+              <input type="text" value="2026-08-01" class="h-10 pl-9 pr-3 bg-transparent text-sm text-foreground font-mono tabular-nums focus-visible:outline-none w-40">
+            </div>
+            <span class="px-2 text-muted-foreground">→</span>
+            <div class="relative">
+              <input type="text" value="2026-08-20" class="h-10 pl-3 pr-9 bg-transparent text-sm text-foreground font-mono tabular-nums focus-visible:outline-none w-40">
+              <button class="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                <i data-lucide="x" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">日历面板 Calendar panel</p>
+          <div class="rounded-lg bg-popover border border-border p-4 w-72" style="box-shadow: var(--v9-shadow-popover);">
+            <div class="flex items-center justify-between mb-3">
+              <button class="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+              <span class="text-sm font-semibold text-foreground">2026 年 8 月</span>
+              <button class="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+            <div class="grid grid-cols-7 gap-0.5 text-center mb-1">
+              <span class="text-[10px] text-muted-foreground font-medium py-1">日</span>
+              <span class="text-[10px] text-muted-foreground font-medium py-1">一</span>
+              <span class="text-[10px] text-muted-foreground font-medium py-1">二</span>
+              <span class="text-[10px] text-muted-foreground font-medium py-1">三</span>
+              <span class="text-[10px] text-muted-foreground font-medium py-1">四</span>
+              <span class="text-[10px] text-muted-foreground font-medium py-1">五</span>
+              <span class="text-[10px] text-muted-foreground font-medium py-1">六</span>
+            </div>
+            <div class="grid grid-cols-7 gap-0.5">
+              <span class="text-xs text-muted-foreground/40 h-8 flex items-center justify-center rounded">27</span>
+              <span class="text-xs text-muted-foreground/40 h-8 flex items-center justify-center rounded">28</span>
+              <span class="text-xs text-muted-foreground/40 h-8 flex items-center justify-center rounded">29</span>
+              <span class="text-xs text-muted-foreground/40 h-8 flex items-center justify-center rounded">30</span>
+              <span class="text-xs text-muted-foreground/40 h-8 flex items-center justify-center rounded">31</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">1</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">2</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">3</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">4</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">5</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">6</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">7</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">8</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">9</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">10</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">11</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">12</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">13</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">14</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">15</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">16</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">17</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">18</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">19</span>
+              <span class="text-xs h-8 flex items-center justify-center rounded bg-primary text-primary-foreground font-medium cursor-pointer">20</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">21</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">22</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">23</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">24</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">25</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">26</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">27</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">28</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">29</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">30</span>
+              <span class="text-xs text-foreground h-8 flex items-center justify-center rounded hover:bg-muted cursor-pointer">31</span>
+            </div>
+            <div class="flex items-center justify-between pt-3 mt-3 border-t border-border">
+              <button class="text-xs text-primary hover:underline">今天</button>
+              <button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-primary text-primary-foreground text-xs font-medium">确定</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 · Progress / Slider -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">10 · 进度条与滑块</h2>
+        <span class="text-xs text-muted-foreground font-mono">Progress / Slider</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border p-6 space-y-8">
+
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">进度条 Progress bar</p>
+          <div class="space-y-4 max-w-md">
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-foreground font-medium">数据采集进度</span>
+                <span class="text-muted-foreground font-mono tabular-nums">68%</span>
+              </div>
+              <div class="h-2 rounded-full bg-muted overflow-hidden">
+                <div class="h-full bg-primary rounded-full transition-all" style="width: 68%;"></div>
+              </div>
+            </div>
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-foreground font-medium">评分计算</span>
+                <span class="text-success font-mono tabular-nums">完成</span>
+              </div>
+              <div class="h-2 rounded-full bg-muted overflow-hidden">
+                <div class="h-full bg-success rounded-full" style="width: 100%;"></div>
+              </div>
+            </div>
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-foreground font-medium">报告生成</span>
+                <span class="text-warning font-mono tabular-nums">排队中</span>
+              </div>
+              <div class="h-2 rounded-full bg-muted overflow-hidden">
+                <div class="h-full bg-warning rounded-full animate-pulse" style="width: 15%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">滑块 Slider</p>
+          <div class="space-y-5 max-w-md">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="text-sm text-foreground">评分阈值</label>
+                <span class="text-xs font-mono tabular-nums text-primary bg-primary/10 px-2 py-0.5 rounded">75</span>
+              </div>
+              <div class="relative h-5 flex items-center">
+                <div class="absolute inset-x-0 h-1.5 rounded-full bg-muted"></div>
+                <div class="absolute left-0 h-1.5 rounded-full bg-primary" style="width: 50%;"></div>
+                <div class="absolute w-5 h-5 rounded-full bg-background border-2 border-primary shadow-md cursor-grab" style="left: 50%; transform: translateX(-50%);"></div>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="text-sm text-foreground">价格区间</label>
+                <span class="text-xs font-mono tabular-nums text-muted-foreground">¥10 – ¥500</span>
+              </div>
+              <div class="relative h-5 flex items-center">
+                <div class="absolute inset-x-0 h-1.5 rounded-full bg-muted"></div>
+                <div class="absolute h-1.5 rounded-full bg-primary" style="left: 5%; right: 60%;"></div>
+                <div class="absolute w-5 h-5 rounded-full bg-background border-2 border-primary shadow-md cursor-grab" style="left: 5%; transform: translateX(-50%);"></div>
+                <div class="absolute w-5 h-5 rounded-full bg-background border-2 border-primary shadow-md cursor-grab" style="left: 40%; transform: translateX(-50%);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 · Tooltip -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">11 · 气泡提示 Tooltip</h2>
+        <span class="text-xs text-muted-foreground font-mono">4 directions</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border p-6">
+        <div class="flex flex-wrap items-center justify-center gap-12 py-8">
+          <div class="relative">
+            <button class="w-10 h-10 rounded-full bg-background border border-border text-foreground hover:border-primary hover:text-primary transition-colors">
+              <i data-lucide="info" class="w-4 h-4 mx-auto"></i>
+            </button>
+            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 rounded bg-popover-foreground text-background text-xs whitespace-nowrap" style="box-shadow: var(--v9-shadow-dropdown);">
+              顶部提示
+              <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-popover-foreground"></div>
+            </div>
+          </div>
+          <div class="relative">
+            <button class="w-10 h-10 rounded-full bg-background border border-border text-foreground hover:border-primary hover:text-primary transition-colors">
+              <i data-lucide="info" class="w-4 h-4 mx-auto"></i>
+            </button>
+            <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 rounded bg-popover-foreground text-background text-xs whitespace-nowrap" style="box-shadow: var(--v9-shadow-dropdown);">
+              底部提示
+              <div class="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-popover-foreground"></div>
+            </div>
+          </div>
+          <div class="relative">
+            <button class="w-10 h-10 rounded-full bg-background border border-border text-foreground hover:border-primary hover:text-primary transition-colors">
+              <i data-lucide="info" class="w-4 h-4 mx-auto"></i>
+            </button>
+            <div class="absolute right-full top-1/2 -translate-y-1/2 mr-2 px-2 py-1 rounded bg-popover-foreground text-background text-xs whitespace-nowrap" style="box-shadow: var(--v9-shadow-dropdown);">
+              左侧提示
+              <div class="absolute left-full top-1/2 -translate-y-1/2 border-4 border-transparent border-l-popover-foreground"></div>
+            </div>
+          </div>
+          <div class="relative">
+            <button class="w-10 h-10 rounded-full bg-background border border-border text-foreground hover:border-primary hover:text-primary transition-colors">
+              <i data-lucide="info" class="w-4 h-4 mx-auto"></i>
+            </button>
+            <div class="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 rounded bg-popover-foreground text-background text-xs whitespace-nowrap" style="box-shadow: var(--v9-shadow-dropdown);">
+              右侧提示
+              <div class="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-popover-foreground"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 · 表单验证反馈 Form validation -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">12 · 表单验证反馈</h2>
+        <span class="text-xs text-muted-foreground font-mono">3 validation levels × field types</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border p-6 space-y-8">
+
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">单字段验证 Field-level</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl">
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-sm font-medium text-foreground">股票代码</label>
+                <span class="text-xs text-success flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>格式正确</span>
+              </div>
+              <input type="text" value="600519" class="w-full h-10 px-3 rounded-md bg-background border border-success/50 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success/30">
+            </div>
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-sm font-medium text-error">股票代码</label>
+                <span class="text-xs text-error flex items-center gap-1"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>格式错误</span>
+              </div>
+              <input type="text" value="9999" class="w-full h-10 px-3 rounded-md bg-background border border-error text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error/50">
+              <p class="text-xs text-error">请输入 6 位数字股票代码</p>
+            </div>
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-sm font-medium text-warning">持仓数量</label>
+                <span class="text-xs text-warning flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>建议核对</span>
+              </div>
+              <input type="text" value="10000" class="w-full h-10 px-3 rounded-md bg-background border border-warning/50 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning/40">
+              <p class="text-xs text-warning">单笔持仓超过总仓位 30%，请注意集中度风险</p>
+            </div>
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-sm font-medium text-foreground">止损价格</label>
+                <span class="text-xs text-muted-foreground">可选</span>
+              </div>
+              <input type="text" placeholder="输入止损价格" class="w-full h-10 px-3 rounded-md bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring">
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">表单级反馈 Form-level</p>
+          <div class="space-y-4 max-w-2xl">
+            <div class="flex items-start gap-3 p-4 rounded-lg bg-success/[0.08] border border-success/30">
+              <i data-lucide="check-circle-2" class="w-5 h-5 text-success flex-shrink-0 mt-0.5"></i>
+              <div class="flex-1 space-y-1">
+                <p class="text-sm font-medium text-foreground">策略保存成功</p>
+                <p class="text-xs text-muted-foreground">双均线交叉策略已保存，将在下次开盘前自动回测并生成信号。</p>
+              </div>
+              <button class="text-xs text-success font-medium hover:underline">查看</button>
+            </div>
+            <div class="flex items-start gap-3 p-4 rounded-lg bg-error/[0.08] border border-error/30">
+              <i data-lucide="x-circle" class="w-5 h-5 text-error flex-shrink-0 mt-0.5"></i>
+              <div class="flex-1 space-y-1">
+                <p class="text-sm font-medium text-foreground">提交失败，请修正以下问题</p>
+                <ul class="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+                  <li>股票代码格式不正确</li>
+                  <li>止损价格必须低于当前价格</li>
+                  <li>策略名称不能为空</li>
+                </ul>
+              </div>
+              <button class="text-xs text-error font-medium hover:underline">展开详情</button>
+            </div>
+            <div class="flex items-start gap-3 p-4 rounded-lg bg-warning/[0.08] border border-warning/30">
+              <i data-lucide="alert-triangle" class="w-5 h-5 text-warning flex-shrink-0 mt-0.5"></i>
+              <div class="flex-1 space-y-1">
+                <p class="text-sm font-medium text-foreground">数据不完整</p>
+                <p class="text-xs text-muted-foreground">部分财务数据延迟，请确认是否基于现有数据继续生成报告。</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button class="px-2.5 py-1 rounded bg-background border border-border text-xs text-foreground hover:border-primary transition-colors">取消</button>
+                <button class="px-2.5 py-1 rounded bg-warning text-warning-foreground text-xs font-medium">继续</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">内联校验 Inline validation</p>
+          <div class="max-w-md space-y-4">
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-sm font-medium text-foreground">密码强度</label>
+                <span class="text-xs text-success font-medium">强</span>
+              </div>
+              <input type="password" value="********" class="w-full h-10 px-3 rounded-md bg-background border border-success/50 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success/30">
+              <div class="flex gap-1">
+                <span class="flex-1 h-1 rounded-full bg-success"></span>
+                <span class="flex-1 h-1 rounded-full bg-success"></span>
+                <span class="flex-1 h-1 rounded-full bg-success"></span>
+                <span class="flex-1 h-1 rounded-full bg-success"></span>
+              </div>
+              <p class="text-xs text-muted-foreground">包含大小写字母、数字和特殊字符</p>
+            </div>
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-sm font-medium text-foreground">用户名</label>
+                <span class="text-xs flex items-center gap-1">
+                  <i data-lucide="loader-2" class="w-3.5 h-3.5 text-primary animate-spin"></i>
+                  <span class="text-muted-foreground">检查中…</span>
+                </span>
+              </div>
+              <input type="text" value="trader_01" class="w-full h-10 px-3 rounded-md bg-background border border-border text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 · 空状态 Empty states -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">13 · 空状态 Empty States</h2>
+        <span class="text-xs text-muted-foreground font-mono">4 scenarios · with action</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border p-6 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Empty search -->
+          <div class="rounded-lg bg-background border border-border p-8 text-center space-y-3">
+            <div class="w-14 h-14 mx-auto rounded-full bg-muted flex items-center justify-center">
+              <i data-lucide="search-x" class="w-7 h-7 text-muted-foreground"></i>
+            </div>
+            <h3 class="text-base font-semibold text-foreground">未找到匹配结果</h3>
+            <p class="text-sm text-muted-foreground leading-relaxed">尝试调整搜索关键词，或检查筛选条件是否过于严格。</p>
+            <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-sm font-medium mx-auto">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>重置筛选
+            </button>
+          </div>
+
+          <!-- Empty list -->
+          <div class="rounded-lg bg-background border border-border p-8 text-center space-y-3">
+            <div class="w-14 h-14 mx-auto rounded-full bg-muted flex items-center justify-center">
+              <i data-lucide="clipboard-list" class="w-7 h-7 text-muted-foreground"></i>
+            </div>
+            <h3 class="text-base font-semibold text-foreground">暂无自选股</h3>
+            <p class="text-sm text-muted-foreground leading-relaxed">添加关注的股票，实时跟踪价格变动与评分变化。</p>
+            <div class="flex items-center justify-center gap-2">
+              <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-sm font-medium">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>添加股票
+              </button>
+              <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-background border border-border text-foreground text-sm font-medium hover:border-primary transition-colors">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>导入
+              </button>
+            </div>
+          </div>
+
+          <!-- Empty data / loading -->
+          <div class="rounded-lg bg-background border border-border p-8 text-center space-y-3">
+            <div class="w-14 h-14 mx-auto rounded-full bg-muted flex items-center justify-center">
+              <i data-lucide="loader-2" class="w-7 h-7 text-primary animate-spin"></i>
+            </div>
+            <h3 class="text-base font-semibold text-foreground">正在加载数据</h3>
+            <p class="text-sm text-muted-foreground leading-relaxed">首次加载可能需要 10–30 秒，正在从多源采集并计算评分…</p>
+            <div class="max-w-xs mx-auto">
+              <div class="h-1.5 rounded-full bg-muted overflow-hidden">
+                <div class="h-full w-2/5 bg-primary rounded-full animate-pulse"></div>
+              </div>
+              <p class="text-xs text-muted-foreground mt-1.5 font-mono tabular-nums">38%</p>
+            </div>
+          </div>
+
+          <!-- Empty error / failed -->
+          <div class="rounded-lg bg-background border border-border p-8 text-center space-y-3">
+            <div class="w-14 h-14 mx-auto rounded-full bg-error/10 flex items-center justify-center">
+              <i data-lucide="wifi-off" class="w-7 h-7 text-error"></i>
+            </div>
+            <h3 class="text-base font-semibold text-foreground">数据加载失败</h3>
+            <p class="text-sm text-muted-foreground leading-relaxed">网络连接异常，或数据源暂时不可用。请稍后重试。</p>
+            <div class="flex items-center justify-center gap-2">
+              <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-sm font-medium">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>重试
+              </button>
+              <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-background border border-border text-foreground text-sm font-medium hover:border-primary transition-colors">
+                <i data-lucide="settings" class="w-3.5 h-3.5"></i>数据源设置
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 · 弹窗 Dialog / Modal -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">14 · 弹窗 Dialog</h2>
+        <span class="text-xs text-muted-foreground font-mono">4 types · with overlay</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border p-6 space-y-8">
+
+        <!-- Confirmation dialog -->
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">确认弹窗 Confirmation</p>
+          <div class="relative rounded-lg bg-background border border-border overflow-hidden max-w-md" style="box-shadow: var(--v9-shadow-modal);">
+            <div class="px-5 py-4 border-b border-border flex items-center justify-between">
+              <h3 class="text-base font-semibold text-foreground">删除股票池</h3>
+              <button class="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                <i data-lucide="x" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <div class="px-5 py-4 space-y-3">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-error/15 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="alert-triangle" class="w-5 h-5 text-error"></i>
+                </div>
+                <div class="space-y-1.5">
+                  <p class="text-sm font-medium text-foreground">确认删除"自选股 A 股池"？</p>
+                  <p class="text-sm text-muted-foreground leading-relaxed">删除后股票池内 128 只股票的分组与备注将被移除，此操作不可撤销。</p>
+                </div>
+              </div>
+              <label class="flex items-center gap-2 cursor-pointer pt-1">
+                <span class="w-4 h-4 rounded border border-border"></span>
+                <span class="text-xs text-muted-foreground">同时删除池内所有自定义标签</span>
+              </label>
+            </div>
+            <div class="px-5 py-3 border-t border-border bg-muted/30 flex items-center justify-end gap-2">
+              <button class="px-3 py-1.5 rounded-md bg-background border border-border text-foreground text-sm font-medium hover:border-primary transition-colors">取消</button>
+              <button class="px-3 py-1.5 rounded-md bg-error text-error-foreground text-sm font-medium hover:bg-error/90 transition-colors flex items-center gap-1.5">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>确认删除
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form dialog -->
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">表单弹窗 Form dialog</p>
+          <div class="relative rounded-lg bg-background border border-border overflow-hidden max-w-lg" style="box-shadow: var(--v9-shadow-modal);">
+            <div class="px-5 py-4 border-b border-border flex items-center justify-between">
+              <h3 class="text-base font-semibold text-foreground">新建交易策略</h3>
+              <button class="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                <i data-lucide="x" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <div class="px-5 py-4 space-y-4">
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-foreground">策略名称 <span class="text-error">*</span></label>
+                <input type="text" placeholder="例如：双均线交叉策略" class="w-full h-9 px-3 rounded-md bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring">
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                  <label class="text-sm font-medium text-foreground">策略类型</label>
+                  <select class="w-full h-9 px-3 rounded-md bg-background border border-border text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                    <option>趋势跟踪</option>
+                    <option>均值回归</option>
+                    <option>套利</option>
+                  </select>
+                </div>
+                <div class="space-y-1.5">
+                  <label class="text-sm font-medium text-foreground">时间周期</label>
+                  <select class="w-full h-9 px-3 rounded-md bg-background border border-border text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                    <option>日线</option>
+                    <option>周线</option>
+                    <option>60分钟</option>
+                  </select>
+                </div>
+              </div>
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-foreground">策略描述</label>
+                <textarea rows="3" placeholder="描述策略逻辑与适用场景…" class="w-full px-3 py-2 rounded-md bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground resize-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-ring"></textarea>
+              </div>
+            </div>
+            <div class="px-5 py-3 border-t border-border bg-muted/30 flex items-center justify-between">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <span class="w-4 h-4 rounded border border-primary bg-primary flex items-center justify-center">
+                  <i data-lucide="check" class="w-3 h-3 text-primary-foreground"></i>
+                </span>
+                <span class="text-xs text-foreground">立即回测</span>
+              </label>
+              <div class="flex items-center gap-2">
+                <button class="px-3 py-1.5 rounded-md bg-background border border-border text-foreground text-sm font-medium hover:border-primary transition-colors">取消</button>
+                <button class="px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">创建策略</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info dialog -->
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">信息弹窗 Info dialog</p>
+          <div class="relative rounded-lg bg-background border border-border overflow-hidden max-w-md" style="box-shadow: var(--v9-shadow-modal);">
+            <div class="px-5 py-4 border-b border-border">
+              <h3 class="text-base font-semibold text-foreground">股票评分详情</h3>
+            </div>
+            <div class="px-5 py-4 space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-foreground font-medium">综合评分</span>
+                <span class="text-2xl font-bold text-success font-mono tabular-nums">86.5</span>
+              </div>
+              <div class="space-y-2.5">
+                <div class="space-y-1">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-muted-foreground">基本面</span>
+                    <span class="text-foreground font-mono tabular-nums">92</span>
+                  </div>
+                  <div class="h-1.5 rounded-full bg-muted overflow-hidden">
+                    <div class="h-full bg-success rounded-full" style="width: 92%;"></div>
+                  </div>
+                </div>
+                <div class="space-y-1">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-muted-foreground">技术面</span>
+                    <span class="text-foreground font-mono tabular-nums">78</span>
+                  </div>
+                  <div class="h-1.5 rounded-full bg-muted overflow-hidden">
+                    <div class="h-full bg-primary rounded-full" style="width: 78%;"></div>
+                  </div>
+                </div>
+                <div class="space-y-1">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-muted-foreground">资金面</span>
+                    <span class="text-foreground font-mono tabular-nums">84</span>
+                  </div>
+                  <div class="h-1.5 rounded-full bg-muted overflow-hidden">
+                    <div class="h-full bg-warning rounded-full" style="width: 84%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="px-5 py-3 border-t border-border bg-muted/30 flex items-center justify-end gap-2">
+              <button class="px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-sm font-medium">查看完整报告</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 15 · 导航栏 Navigation -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">15 · 导航栏 Navigation</h2>
+        <span class="text-xs text-muted-foreground font-mono">Top nav · Side nav · Breadcrumb</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border p-6 space-y-8">
+
+        <!-- Top navigation -->
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">顶部导航 Top navigation</p>
+          <div class="rounded-lg border border-border overflow-hidden" style="box-shadow: var(--v9-shadow-dropdown);">
+            <div class="h-12 bg-background border-b border-border flex items-center px-4 gap-6">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-md bg-primary flex items-center justify-center">
+                  <span class="text-primary-foreground font-bold text-xs">F9</span>
+                </div>
+                <span class="font-semibold text-foreground text-sm">FinSight V9</span>
+              </div>
+              <nav class="flex items-center gap-1 flex-1">
+                <button class="px-3 py-1.5 rounded-md text-sm font-medium text-primary bg-primary/10">概览</button>
+                <button class="px-3 py-1.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">股票池</button>
+                <button class="px-3 py-1.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">策略</button>
+                <button class="px-3 py-1.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">复盘</button>
+                <button class="px-3 py-1.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">报告</button>
+              </nav>
+              <div class="flex items-center gap-2">
+                <button class="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors relative">
+                  <i data-lucide="bell" class="w-4 h-4"></i>
+                  <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-error border-2 border-background"></span>
+                </button>
+                <button class="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                  <i data-lucide="settings" class="w-4 h-4"></i>
+                </button>
+                <div class="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-medium border border-primary/30">
+                  Z
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Side navigation -->
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">侧边导航 Side navigation</p>
+          <div class="flex rounded-lg border border-border overflow-hidden" style="box-shadow: var(--v9-shadow-dropdown);">
+            <div class="w-52 bg-background border-r border-border py-3 flex flex-col gap-0.5">
+              <div class="px-3 py-2 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">数据中心</div>
+              <button class="mx-2 px-3 py-2 rounded-md text-sm font-medium text-primary bg-primary/10 flex items-center gap-2">
+                <i data-lucide="database" class="w-4 h-4"></i>数据采集
+              </button>
+              <button class="mx-2 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted flex items-center gap-2 transition-colors">
+                <i data-lucide="hard-drive" class="w-4 h-4"></i>数据存储
+              </button>
+              <button class="mx-2 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted flex items-center gap-2 transition-colors">
+                <i data-lucide="api" class="w-4 h-4"></i>数据调用
+              </button>
+              <div class="px-3 pt-3 pb-1 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">分析</div>
+              <button class="mx-2 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted flex items-center gap-2 transition-colors">
+                <i data-lucide="gauge" class="w-4 h-4"></i>智能评分
+              </button>
+              <button class="mx-2 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted flex items-center justify-between transition-colors">
+                <span class="flex items-center gap-2">
+                  <i data-lucide="filter" class="w-4 h-4"></i>条件筛选
+                </span>
+                <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+              </button>
+              <button class="mx-2 ml-6 px-3 py-1.5 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-muted flex items-center gap-2 transition-colors">
+                评分筛选
+              </button>
+              <button class="mx-2 ml-6 px-3 py-1.5 rounded-md text-xs text-primary bg-primary/10 flex items-center gap-2 font-medium">
+                资金筛选
+              </button>
+              <div class="px-3 pt-3 pb-1 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">交易</div>
+              <button class="mx-2 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted flex items-center gap-2 transition-colors">
+                <i data-lucide="scale" class="w-4 h-4"></i>交易策略
+              </button>
+              <button class="mx-2 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted flex items-center gap-2 transition-colors">
+                <i data-lucide="bar-chart-3" class="w-4 h-4"></i>复盘分析
+                <span class="ml-auto inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-full bg-error text-error-foreground text-[10px] font-mono font-bold">3</span>
+              </button>
+            </div>
+            <div class="flex-1 bg-card/50 p-4 flex items-center justify-center">
+              <p class="text-xs text-muted-foreground">主内容区</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Breadcrumb -->
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">面包屑 Breadcrumb</p>
+          <div class="flex flex-wrap items-center gap-6">
+            <nav class="flex items-center gap-1.5 text-sm">
+              <a href="#" class="text-muted-foreground hover:text-foreground transition-colors">首页</a>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-muted-foreground/50"></i>
+              <a href="#" class="text-muted-foreground hover:text-foreground transition-colors">股票池</a>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-muted-foreground/50"></i>
+              <span class="text-foreground font-medium">自选股 A 股池</span>
+            </nav>
+            <nav class="flex items-center gap-1 text-sm">
+              <button class="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted">
+                <i data-lucide="home" class="w-4 h-4"></i>
+              </button>
+              <span class="text-muted-foreground/50">/</span>
+              <a href="#" class="px-1.5 py-1 rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">数据中心</a>
+              <span class="text-muted-foreground/50">/</span>
+              <a href="#" class="px-1.5 py-1 rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">数据采集</a>
+              <span class="text-muted-foreground/50">/</span>
+              <span class="px-1.5 py-1 text-foreground font-medium">行情数据</span>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 16 · Tabs 增强 -->
+    <section class="space-y-5">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-lg font-semibold text-foreground">16 · 标签页增强 Tabs</h2>
+        <span class="text-xs text-muted-foreground font-mono">4 styles · with badges & icons</span>
+      </div>
+      <div class="bg-card rounded-xl border border-border p-6 space-y-8">
+
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">带图标与徽章 With icons &amp; badges</p>
+          <div class="border-b border-border">
+            <div class="flex gap-1 -mb-px">
+              <button class="inline-flex items-center gap-2 px-4 pb-2.5 text-sm font-medium text-primary border-b-2 border-primary">
+                <i data-lucide="activity" class="w-4 h-4"></i>行情
+                <span class="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-full bg-primary text-primary-foreground text-[10px] font-mono font-bold">12</span>
+              </button>
+              <button class="inline-flex items-center gap-2 px-4 pb-2.5 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent hover:border-border transition-colors">
+                <i data-lucide="file-text" class="w-4 h-4"></i>财务
+              </button>
+              <button class="inline-flex items-center gap-2 px-4 pb-2.5 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent hover:border-border transition-colors">
+                <i data-lucide="coins" class="w-4 h-4"></i>筹码
+                <span class="inline-flex items-center px-1.5 py-0.5 rounded bg-warning/15 text-warning text-[10px] font-medium">更新</span>
+              </button>
+              <button class="inline-flex items-center gap-2 px-4 pb-2.5 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent hover:border-border transition-colors">
+                <i data-lucide="newspaper" class="w-4 h-4"></i>公告
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">卡片式标签 Card tabs</p>
+          <div class="rounded-lg border border-border overflow-hidden">
+            <div class="flex border-b border-border bg-muted/20">
+              <button class="flex-1 px-4 py-3 text-sm font-medium text-foreground bg-background border-r border-border relative">
+                基本信息
+                <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"></span>
+              </button>
+              <button class="flex-1 px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-r border-border transition-colors">
+                财务指标
+              </button>
+              <button class="flex-1 px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                技术分析
+              </button>
+            </div>
+            <div class="p-4 bg-background">
+              <p class="text-sm text-muted-foreground">当前内容区 · 基本信息</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground uppercase tracking-wider">垂直标签 Vertical tabs</p>
+          <div class="flex rounded-lg border border-border overflow-hidden">
+            <div class="w-40 border-r border-border bg-muted/20 py-2 flex flex-col gap-0.5">
+              <button class="px-3 py-2 text-sm font-medium text-primary bg-primary/10 border-l-2 border-primary text-left">概览</button>
+              <button class="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted text-left transition-colors">持仓明细</button>
+              <button class="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted text-left transition-colors">交易记录</button>
+              <button class="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted text-left transition-colors">收益分析</button>
+              <button class="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted text-left transition-colors">风险指标</button>
+            </div>
+            <div class="flex-1 p-4 bg-background">
+              <p class="text-sm text-muted-foreground">内容区 · 概览</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.lucide) { lucide.createIcons(); }
+    });
+  </script>
+</body>
+</html>

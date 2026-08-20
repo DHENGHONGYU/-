@@ -57,6 +57,21 @@ function stageColor(stage: CollectionLifecycleStage, error?: string): ColorToken
   }
 }
 
+function getColorFgClass(key: ColorTokenKey): string {
+  switch (key) {
+    case 'success':
+      return 'text-success-foreground'
+    case 'danger':
+      return 'text-destructive-foreground'
+    case 'warning':
+      return 'text-warning-foreground'
+    case 'info':
+      return 'text-info-foreground'
+    default:
+      return 'text-white'
+  }
+}
+
 function stageLabel(stage: CollectionLifecycleStage): string {
   switch (stage) {
     case 'triggered':
@@ -169,7 +184,7 @@ function SwimlaneRow({ span }: { span: CollectionTraceSpan }): React.JSX.Element
                 return (
                   <div
                     key={index}
-                    className={`absolute top-1 h-4 rounded text-[9px] leading-4 text-white ${getColorBgClass(colorKey)}`}
+                    className={`absolute top-1 h-4 rounded text-[9px] leading-4 ${getColorBgClass(colorKey)} ${getColorFgClass(colorKey)}`}
                     style={{ left: `${left}%`, width: `${width}%` }}
                     title={`${stageLabel(stage.stage)}${stage.sourceId ? ` (${stage.sourceId})` : ''}: ${stage.message}`}
                   >

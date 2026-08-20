@@ -12,7 +12,7 @@ const SENTIMENT_CONFIG: Record<
   NewsArticle['sentiment'],
   { label: string; variant: 'default' | 'secondary' | 'outline' | 'destructive'; className: string }
 > = {
-  positive: { label: '正面', variant: 'default', className: 'bg-success text-white hover:bg-success/80' },
+  positive: { label: '正面', variant: 'default', className: 'bg-success text-success-foreground hover:bg-success/80' },
   negative: { label: '负面', variant: 'destructive', className: '' },
   neutral: { label: '中性', variant: 'secondary', className: 'bg-muted-foreground text-white hover:bg-muted-foreground/80' },
 }

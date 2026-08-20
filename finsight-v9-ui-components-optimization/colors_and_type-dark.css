@@ -1,0 +1,61 @@
+/*
+  FinSight V9 UI 组件优化呈现 — 主题合同（深色模式·增强对比度）
+  基于 V9 UI/UX 规范 v2.6.0：Apple Business Design + 深色 PortalShell
+  四级表面层次：画布(0) → 卡片(1) → 浮层(2) → 模态(3)
+  增强说明：
+  - 表格行 hover 背景提高到 surface-2，避免与卡片底色过于接近
+  - 斑马纹使用更明确的 surface-1 级别，行边界可辨
+  - 分页栏背景从 muted 提升到 surface-2，与表格体形成层级差
+  - 表头背景加粗描边，区分列头与数据行
+*/
+
+:root {
+  /* 品牌主色 */
+  --v9-primary: 210 100% 56%;
+  --v9-primary-foreground: 0 0% 100%;
+
+  /* 深色背景层级（四级表面） */
+  --v9-background: 240 10% 5%;
+  --v9-foreground: 240 8% 96%;
+  --v9-card: 240 8% 9%;
+  --v9-card-foreground: 240 8% 96%;
+  --v9-popover: 240 7% 14%;
+  --v9-popover-foreground: 240 8% 96%;
+
+  /* 表面层级 */
+  --v9-surface: 240 6% 14%;
+  --v9-surface-2: 240 6% 18%;
+  --v9-surface-3: 240 5% 23%;
+
+  /* 辅助色 */
+  --v9-muted: 240 6% 18%;
+  --v9-muted-foreground: 240 4% 60%;
+  --v9-border: 240 5% 24%;
+  --v9-input: 240 6% 14%;
+  --v9-ring: 210 100% 60%;
+
+  /* 状态色（功能性） */
+  --v9-success: 142 70% 50%;
+  --v9-success-foreground: 0 0% 100%;
+  --v9-warning: 36 100% 54%;
+  --v9-warning-foreground: 0 0% 4%;
+  --v9-error: 4 90% 68%;
+  --v9-error-foreground: 0 0% 100%;
+  --v9-info: 210 100% 56%;
+  --v9-info-foreground: 0 0% 100%;
+
+  /* 圆角 */
+  --v9-radius-sm: 0.25rem;
+  --v9-radius-md: 0.5rem;
+  --v9-radius-lg: 1rem;
+  --v9-radius-pill: 9999px;
+
+  /* 阴影（仅用于浮动层） */
+  --v9-shadow-dropdown: 0 2px 6px hsl(240 10% 2% / 0.3), 0 1px 2px hsl(240 10% 2% / 0.2);
+  --v9-shadow-popover: 0 12px 36px -12px hsl(240 10% 2% / 0.6), 0 4px 10px hsl(240 10% 2% / 0.35);
+  --v9-shadow-modal: 0 32px 88px -24px hsl(240 10% 2% / 0.75), 0 8px 20px hsl(240 10% 2% / 0.45);
+
+  /* 字体 */
+  --v9-font-sans: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --v9-font-mono: "SF Mono", "SFMono-Regular", ui-monospace, "Cascadia Mono", "Segoe UI Mono", monospace;
+}

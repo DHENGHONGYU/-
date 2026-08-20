@@ -92,7 +92,7 @@ export const CapitalAllocationPanel = memo(function CapitalAllocationPanel({
           <div className="text-sm font-medium">分仓比例</div>
           <div className="flex h-8 w-full overflow-hidden rounded-md">
             <div
-              className="flex items-center justify-center text-xs font-medium text-white"
+              className="flex items-center justify-center text-xs font-medium text-success-foreground"
               style={{
                 width: `${config.patientCapitalPct * 100}%`,
                 backgroundColor: getColorHexSafe('scoreHigh'),
@@ -101,7 +101,7 @@ export const CapitalAllocationPanel = memo(function CapitalAllocationPanel({
               耐心资本 {fmtPct(config.patientCapitalPct, 0)}
             </div>
             <div
-              className="flex items-center justify-center text-xs font-medium text-white"
+              className="flex items-center justify-center text-xs font-medium text-primary-foreground"
               style={{
                 width: `${config.betaYieldPct * 100}%`,
                 backgroundColor: getColorHexSafe('primary'),

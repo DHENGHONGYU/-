@@ -31,9 +31,9 @@ const SIGNAL_COLORS: Record<string, string> = {
 
 const SIGNAL_TEXT_COLORS: Record<string, string> = {
   strong_buy: 'text-white',
-  buy: 'text-white',
+  buy: 'text-success-foreground',
   hold: 'text-foreground',
-  reduce: 'text-white',
+  reduce: 'text-warning-foreground',
   strong_reduce: 'text-white',
   observe: 'text-foreground',
 }

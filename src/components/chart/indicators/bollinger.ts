@@ -124,7 +124,7 @@ export const BOLL_COLORS = {
   /** 下轨 - 浅蓝 */
   lower: CHART_INDICATOR_COLORS.blue,
   /** 填充区域 - 蓝色 8% 透明 */
-  fill: 'rgba(96, 165, 250, 0.08)',
+  fill: CHART_INDICATOR_COLORS.blue + '14',
 } as const
 
 /** 默认 Bollinger 参数 */

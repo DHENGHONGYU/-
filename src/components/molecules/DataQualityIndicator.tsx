@@ -20,7 +20,7 @@ const getQualityStatus = (completeness: number): {
     return {
       label: '数据充足',
       color: COLOR_TOKENS.success.bgClass,
-      textColor: 'text-white',
+      textColor: 'text-success-foreground',
       icon: CheckCircle,
     }
   }
@@ -28,14 +28,14 @@ const getQualityStatus = (completeness: number): {
     return {
       label: '数据一般',
       color: COLOR_TOKENS.warning.bgClass,
-      textColor: 'text-white',
+      textColor: 'text-warning-foreground',
       icon: AlertCircle,
     }
   }
   return {
     label: '数据不足',
     color: COLOR_TOKENS.danger.bgClass,
-    textColor: 'text-white',
+    textColor: 'text-destructive-foreground',
     icon: XCircle,
   }
 }

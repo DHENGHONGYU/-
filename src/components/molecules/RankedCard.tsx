@@ -29,7 +29,7 @@ export interface RankedCardProps {
 }
 
 const RANK_COLORS: Record<number, string> = {
-  1: 'bg-amber-500 text-white text-lg font-bold',
+  1: 'bg-amber-500 text-warning-foreground text-lg font-bold',
   2: 'bg-muted text-muted-foreground',
   3: 'bg-muted text-muted-foreground',
   4: 'border border-border text-muted-foreground',

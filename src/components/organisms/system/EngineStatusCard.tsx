@@ -266,7 +266,7 @@ function EngineStatusCard(): React.JSX.Element {
                             <Badge
                               variant="outline"
                               className={cn(
-                                'border-transparent text-white',
+                                'border-transparent text-success-foreground',
                                 COLOR_TOKENS.success.bgClass,
                               )}
                             >

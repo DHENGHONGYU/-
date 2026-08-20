@@ -1,0 +1,147 @@
+{
+  "data": [
+    {
+      "id": "page-ui-components-showcase",
+      "title": "UI 组件优化呈现（浅色）",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787187050456,
+      "canvasData": {
+        "x": 0,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 2744,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-12b3ed72",
+          "measuredAt": 1787210999304
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/ui-components-showcase.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-ui-components-showcase-dark",
+      "title": "UI 组件优化呈现（深色）",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787187050456,
+      "canvasData": {
+        "x": 480,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 2744,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-20290111",
+          "measuredAt": 1787210999304
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/ui-components-showcase-dark.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-filter-states-inspect",
+      "title": "筛选状态放大检查（浅色）",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787187510794,
+      "canvasData": {
+        "x": 960,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 1727,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-e3f0a848",
+          "measuredAt": 1787210999304
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/filter-states-inspect.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-filter-states-inspect-dark",
+      "title": "筛选状态放大检查（深色）",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787187510794,
+      "canvasData": {
+        "x": 1440,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 1727,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-2156cf95",
+          "measuredAt": 1787210999304
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/filter-states-inspect-dark.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-component-inspect",
+      "title": "组件放大检查（浅色）",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787189522609,
+      "canvasData": {
+        "x": 1920,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 9793,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-3cf748ab",
+          "measuredAt": 1787210999304
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/component-inspect.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-component-inspect-dark",
+      "title": "组件放大检查（深色）",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787189522609,
+      "canvasData": {
+        "x": 2400,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 9793,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-c27f7242",
+          "measuredAt": 1787210999304
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/component-inspect-dark.html",
+        "interactions": []
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": true,
+    "deviceType": "desktop",
+    "projectName": "FinSight V9 UI 组件优化呈现（明暗对照）"
+  }
+}

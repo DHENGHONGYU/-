@@ -67,6 +67,21 @@ function stageColor(stage: CollectionLifecycleStage, error?: string): keyof type
   }
 }
 
+function getColorFgClass(key: keyof typeof COLOR_TOKENS): string {
+  switch (key) {
+    case 'success':
+      return 'text-success-foreground'
+    case 'danger':
+      return 'text-destructive-foreground'
+    case 'warning':
+      return 'text-warning-foreground'
+    case 'info':
+      return 'text-info-foreground'
+    default:
+      return 'text-white'
+  }
+}
+
 function formatDuration(ms: number): string {
   if (ms < 1000) return `${ms}ms`
   return `${(ms / 1000).toFixed(2)}s`
@@ -205,7 +220,7 @@ export default function TraceReplayPanel({ spans }: TraceReplayPanelProps): Reac
             {currentStage && (
               <div className="rounded-md border p-3">
                 <div className="flex items-center gap-2">
-                  <Badge className={`text-white ${getColorBgClass(stageColor(currentStage.stage, currentStage.error))}`}>
+                  <Badge className={`${getColorBgClass(stageColor(currentStage.stage, currentStage.error))} ${getColorFgClass(stageColor(currentStage.stage, currentStage.error))}`}>
                     {STAGE_LABELS[currentStage.stage]}
                   </Badge>
                   {currentStage.sourceId && (

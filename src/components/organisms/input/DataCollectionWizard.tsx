@@ -121,9 +121,9 @@ export function DataCollectionWizard(): React.JSX.Element {
                       w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium
                       transition-colors
                       ${isCompleted
-                        ? `${COLOR_TOKENS.success.bgClass} text-white`
+                        ? `${COLOR_TOKENS.success.bgClass} text-success-foreground`
                         : isActive
-                          ? `${COLOR_TOKENS.info.bgClass} text-white`
+                          ? `${COLOR_TOKENS.info.bgClass} text-info-foreground`
                           : `${COLOR_SHADES.gray[200]} ${COLOR_SHADES.gray[500]}`
                       }
                     `}
