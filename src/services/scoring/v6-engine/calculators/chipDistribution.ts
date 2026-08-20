@@ -1,15 +1,23 @@
 /**
  * 筹码分布计算 + 穿透率（PAS）+ 乖离率（BIAS）+ 获利盘比例（PRO）指标
  *
- * 基于历史 K 线收盘价和成交量，使用时间衰减法构建筹码分布模型。
+ * 基于历史 K 线收盘价、成交量和换手率，使用混合衰减法构建筹码分布模型。
  * PAS（Penetration Ability Score）衡量股价穿越筹码分布空间的能力。
  * BIAS（Chip Deviation Rate）衡量股价偏离筹码重心的程度。
  * PRO（Profit Ratio）衡量收盘价下方筹码占比，反映获利盘比例。
+ *
+ * 衰减模型（v4.1 - G3-B 对齐 CYQ）：
+ * - hybrid（默认）：线性时间权重 × 换手率衰减因子
+ *   weight_i = linearWeight_i × max(0.1, 1 - turnoverRate_i)
+ *   保留时间优先语义 + 叠加成交活跃度语义
+ * - linear（回退）：纯线性时间衰减 weight_i = (i+1)/N
+ *   当 turnoverRates 未提供时自动回退
  *
  * @module services/scoring/v6-engine/calculators/chipDistribution
  * @doc TASK-03: 补充筹码穿透率（PAS）指标
  * @doc TASK-04: 补充筹码乖离率（BIAS）指标
  * @doc TASK-05: 补充获利盘比例（PRO）指标
+ * @doc G3-B: 2026-08-20 换手率衰减对齐 CYQ 算法
  */
 
 import { V6_CALCULATOR_THRESHOLDS } from '@/config/thresholds'
@@ -55,16 +63,24 @@ export interface ChipDistribution {
 // ============================================================
 
 /**
- * 从历史收盘价和成交量构建筹码分布
+ * 从历史收盘价、成交量和换手率构建筹码分布
  *
- * 算法：
- * 1. 取最近 windowDays 天的收盘价和成交量
+ * 算法（G3-B hybrid 混合衰减模型）：
+ * 1. 取最近 windowDays 天的收盘价、成交量和换手率
  * 2. 在 [min, max] 价格区间创建 bucketCount 个等宽桶
- * 3. 将每日成交量按时间衰减权重分配到对应价格桶
- * 4. 计算 VWAP、集中度、获利盘比例
+ * 3. 计算每日权重：
+ *    - linearWeight_i = (i + 1) / daysUsed  （线性基础权重，越近越高）
+ *    - turnoverFactor_i = max(0.1, 1 - turnoverRate_i)  （换手率衰减因子）
+ *    - combinedWeight_i = linearWeight_i × turnoverFactor_i
+ *    - normalizedWeight_i = combinedWeight_i / Σ(combinedWeight_j)
+ * 4. 将每日成交量按归一化权重分配到对应价格桶
+ * 5. 计算 VWAP、集中度、获利盘比例
  *
- * 时间衰减：第 i 天（从最早=0 开始）的权重 = (i + 1) / daysUsed
- * 即越近的交易日权重越高
+ * 向后兼容：turnoverRates 未提供时，自动回退到纯线性衰减
+ *
+ * @param closes 收盘价序列
+ * @param volumes 成交量序列
+ * @param options 配置选项（含 turnoverRates）
  */
 export function calcChipDistribution(
   closes: number[],
@@ -73,11 +89,15 @@ export function calcChipDistribution(
     windowDays?: number
     bucketCount?: number
     currentPrice?: number
+    decayModel?: 'hybrid' | 'linear'
+    turnoverRates?: number[]
   } = {},
 ): ChipDistribution {
   const windowDays = options.windowDays ?? V6_CALCULATOR_THRESHOLDS.L8_CHIP_DIST_WINDOW_DAYS
   const bucketCount = options.bucketCount ?? V6_CALCULATOR_THRESHOLDS.L8_CHIP_DIST_BUCKETS
   const currentPrice = options.currentPrice
+  const decayModel = options.decayModel ?? 'hybrid'
+  const turnoverRates = options.turnoverRates
 
   const minLen = Math.min(closes.length, volumes.length)
   const startIdx = Math.max(0, minLen - windowDays)
@@ -99,6 +119,11 @@ export function calcChipDistribution(
 
   const sliceCloses = closes.slice(startIdx, minLen)
   const sliceVolumes = volumes.slice(startIdx, minLen)
+  const sliceTurnoverRates = turnoverRates && turnoverRates.length > 0
+    ? turnoverRates.slice(Math.max(0, turnoverRates.length - daysUsed))
+    : undefined
+
+  const useHybrid = decayModel === 'hybrid' && sliceTurnoverRates !== undefined
 
   let priceMin = Infinity
   let priceMax = -Infinity
@@ -120,6 +145,23 @@ export function calcChipDistribution(
     chipAmount: 0,
   }))
 
+  const rawWeights = new Float64Array(daysUsed)
+  for (let i = 0; i < daysUsed; i++) {
+    const linearWeight = (i + 1) / daysUsed
+
+    if (useHybrid) {
+      const tr = sliceTurnoverRates![i]
+      const turnoverFactor = Math.max(0.1, 1 - (tr ?? 0.03))
+      rawWeights[i] = linearWeight * turnoverFactor
+    } else {
+      rawWeights[i] = linearWeight
+    }
+  }
+
+  const totalWeight = useHybrid
+    ? rawWeights.reduce((a, b) => a + b, 0)
+    : 1
+
   let totalChips = 0
   let vwapSum = 0
 
@@ -128,8 +170,8 @@ export function calcChipDistribution(
     const volume = sliceVolumes[i]!
     if (close == null || volume == null || volume <= 0) continue
 
-    const weight = (i + 1) / daysUsed
-    const weightedVolume = volume * weight
+    const normalizedWeight = useHybrid ? rawWeights[i]! / totalWeight : rawWeights[i]!
+    const weightedVolume = volume * normalizedWeight
 
     let idx = Math.floor((close - priceMin) / bucketWidth)
     idx = Math.min(Math.max(0, idx), bucketCount - 1)

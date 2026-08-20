@@ -347,8 +347,8 @@ export const V6_CALCULATOR_THRESHOLDS = {
   L8_CHIP_PROFIT_LOW: 0.2,
   L8_CHIP_PROFIT_MID_LOW: 0.4,
   L8_CHIP_PROFIT_MID_HIGH: 0.6,
-  // 筹码分布计算参数
-  L8_CHIP_DIST_WINDOW_DAYS: 60,
+  // 筹码分布计算参数（G3-B 2026-08-20：窗口 60→250，对齐后端 CYQ 近一年筹码视角）
+  L8_CHIP_DIST_WINDOW_DAYS: 250,
   L8_CHIP_DIST_BUCKETS: 50,
 
   // L8 换手率-量比协同指标体系阈值（TVR, v4.4）
