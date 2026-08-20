@@ -20,8 +20,36 @@ export { RadioGroup, Radio } from './Radio'
 export type { RadioGroupProps, RadioProps } from './Radio'
 
 export { Switch } from './Switch'
+export type { SwitchProps } from './Switch'
 
 export { Slider } from './Slider'
+
+export { Pagination } from './Pagination'
+export type { PaginationProps } from './Pagination'
+
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuGroup,
+} from './DropdownMenu'
+export type {
+  DropdownMenuProps,
+  DropdownMenuTriggerProps,
+  DropdownMenuContentProps,
+  DropdownMenuItemProps,
+  DropdownMenuCheckboxItemProps,
+  DropdownMenuRadioItemProps,
+  DropdownMenuLabelProps,
+  DropdownMenuSeparatorProps,
+  DropdownMenuShortcutProps,
+} from './DropdownMenu'
 
 export { Toggle } from './Toggle'
 

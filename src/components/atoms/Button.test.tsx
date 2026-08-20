@@ -3,14 +3,14 @@
  *
  * 覆盖场景：
  * 1. 默认渲染：使用 primary variant + md size
- * 2. 6 种 variant 样式生效
+ * 2. 10 种 variant 样式生效
  * 3. 3 种 size 样式生效
  * 4. asChild 透传 children className/ref
  * 5. click 事件冒泡
  * 6. disabled 状态
  * 7. ref 转发
  * 8. 自定义 className 合并
- * 9. isLoading 状态
+ * 9. isLoading 状态：显示 spinner、禁用点击、宽度不跳动
  */
 
 import { describe, expect, it, vi } from 'vitest'
@@ -42,17 +42,37 @@ describe('Button', () => {
     expect(screen.getByRole('button')).toHaveClass('hover:bg-accent')
   })
 
+  it('variant=link 应用 link 样式', () => {
+    render(<Button variant="link">链接</Button>)
+    const btn = screen.getByRole('button')
+    expect(btn).toHaveClass('text-primary')
+    expect(btn).toHaveClass('underline-offset-4')
+  })
+
   it('variant=danger 应用主题感知的 destructive 语义令牌', () => {
     render(<Button variant="danger">危险</Button>)
-    // 迁移后：改用语义令牌 bg-destructive + text-destructive-foreground（明暗一致）
     const btn = screen.getByRole('button')
     expect(btn).toHaveClass('bg-destructive')
     expect(btn).toHaveClass('text-destructive-foreground')
   })
 
+  it('variant=danger-outline 应用线框危险样式', () => {
+    render(<Button variant="danger-outline">危险轮廓</Button>)
+    const btn = screen.getByRole('button')
+    expect(btn).toHaveClass('border-destructive')
+    expect(btn).toHaveClass('text-destructive')
+    expect(btn).toHaveClass('hover:bg-destructive/10')
+  })
+
+  it('variant=danger-ghost 应用幽灵危险样式', () => {
+    render(<Button variant="danger-ghost">危险幽灵</Button>)
+    const btn = screen.getByRole('button')
+    expect(btn).toHaveClass('text-destructive')
+    expect(btn).toHaveClass('hover:bg-destructive/10')
+  })
+
   it('variant=success 应用主题感知的 success 语义令牌', () => {
     render(<Button variant="success">成功</Button>)
-    // 迁移后：改用语义令牌 bg-success + text-success-foreground（明暗一致）
     const btn = screen.getByRole('button')
     expect(btn).toHaveClass('bg-success')
     expect(btn).toHaveClass('text-success-foreground')
@@ -76,9 +96,11 @@ describe('Button', () => {
   it('asChild=true 时透传 children className/ref/事件', () => {
     const handleClick = vi.fn()
     const ref = createRef<HTMLAnchorElement>()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const forwardedRef = ref as any
     render(
       // asChild 时 Button 实际渲染 children，ref 指向 anchor
-      <Button asChild variant="primary" size="md" onClick={handleClick} ref={ref as any}>
+      <Button asChild variant="primary" size="md" onClick={handleClick} ref={forwardedRef}>
         <a href="/test" className="custom-link">
           链接
         </a>
@@ -116,7 +138,7 @@ describe('Button', () => {
     )
     const btn = screen.getByRole('button')
     expect(btn).toBeDisabled()
-    expect(btn).toHaveClass('disabled:opacity-50')
+    expect(btn).toHaveClass('disabled:opacity-60')
     fireEvent.click(btn)
     expect(handleClick).not.toHaveBeenCalled()
   })
@@ -152,11 +174,18 @@ describe('Button', () => {
     expect(ref.current).toBeInstanceOf(HTMLButtonElement)
   })
 
-  it('isLoading 时显示加载状态', () => {
-    render(<Button isLoading>加载中</Button>)
+  it('isLoading 时显示 spinner、禁用点击并保留文字占位', () => {
+    const handleClick = vi.fn()
+    render(
+      <Button isLoading onClick={handleClick}>
+        加载中
+      </Button>,
+    )
     const btn = screen.getByRole('button')
-    // isLoading 只是透传到 button 元素，不会自动设置 disabled
-    expect(btn).toBeInTheDocument()
+    expect(btn).toBeDisabled()
     expect(btn).toHaveTextContent('加载中')
+    expect(btn.querySelector('svg')).toBeInTheDocument()
+    fireEvent.click(btn)
+    expect(handleClick).not.toHaveBeenCalled()
   })
 })

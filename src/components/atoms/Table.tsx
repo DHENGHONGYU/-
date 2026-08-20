@@ -10,6 +10,14 @@ import { THEME_TOKENS } from '@/constants/theme.tokens'
 /**
  * Table 系列组件 — 标准数据表格
  *
+ * V9 表格色阶规范：
+ * - 表头：bg-muted/30 + 底部 border
+ * - 行分割线：border-border
+ * - 行悬停：bg-v9-surface-2
+ * - 斑马纹：bg-muted/[0.02]
+ * - 行选中：bg-primary/[0.03]
+ * - 禁用行：opacity-60
+ *
  * 用法：
  * <Table>
  *   <TableHeader>
@@ -40,7 +48,11 @@ Table.displayName = 'Table'
 
 export const TableHeader = forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>(
   ({ className, ...props }, ref) => (
-    <thead ref={ref} className={cn('[&_tr]:border-b', className)} {...props} />
+    <thead
+      ref={ref}
+      className={cn('[&_tr]:border-b [&_tr]:bg-muted/30', className)}
+      {...props}
+    />
   ),
 )
 TableHeader.displayName = 'TableHeader'
@@ -56,12 +68,26 @@ export const TableBody = forwardRef<HTMLTableSectionElement, HTMLAttributes<HTML
 )
 TableBody.displayName = 'TableBody'
 
+export const TableFooter = forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>(
+  ({ className, ...props }, ref) => (
+    <tfoot
+      ref={ref}
+      className={cn('border-t bg-muted/20 font-medium', className)}
+      {...props}
+    />
+  ),
+)
+TableFooter.displayName = 'TableFooter'
+
 export const TableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElement>>(
   ({ className, ...props }, ref) => (
     <tr
       ref={ref}
       className={cn(
-        'border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted',
+        'border-b transition-colors',
+        'hover:bg-v9-surface-2',
+        'data-[state=selected]:bg-primary/[0.03]',
+        'data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-60',
         className,
       )}
       {...props}
@@ -101,3 +127,14 @@ export const TableCell = forwardRef<HTMLTableCellElement, TdHTMLAttributes<HTMLT
   ),
 )
 TableCell.displayName = 'TableCell'
+
+export const TableCaption = forwardRef<HTMLTableCaptionElement, HTMLAttributes<HTMLTableCaptionElement>>(
+  ({ className, ...props }, ref) => (
+    <caption
+      ref={ref}
+      className={cn('mt-4 text-sm text-muted-foreground', className)}
+      {...props}
+    />
+  ),
+)
+TableCaption.displayName = 'TableCaption'

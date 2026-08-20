@@ -11,12 +11,15 @@
  * 7. ref 转发
  * 8. className 合并
  * 9. ARIA 属性透传
+ * 10. error / success 状态与文案
+ * 11. startAdornment / endAdornment
  */
 
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { createRef } from 'react'
 import { Input } from '@/components/atoms/Input'
+import { Search, Calendar } from 'lucide-react'
 
 describe('Input', () => {
   it('默认渲染 input 元素', () => {
@@ -69,11 +72,10 @@ describe('Input', () => {
     expect(ref.current).toBeInstanceOf(HTMLInputElement)
   })
 
-  it('自定义 className 合并', () => {
+  it('自定义 className 合并到 input 元素', () => {
     render(<Input className="custom-input" data-testid="input" />)
     const input = screen.getByTestId('input')
     expect(input).toHaveClass('custom-input')
-    expect(input).toHaveClass('h-10') // 默认样式
   })
 
   it('ARIA 属性（如 aria-label, aria-invalid）正确透传', () => {
@@ -96,5 +98,32 @@ describe('Input', () => {
     fireEvent.blur(input)
     expect(handleFocus).toHaveBeenCalledTimes(1)
     expect(handleBlur).toHaveBeenCalledTimes(1)
+  })
+
+  it('error 状态显示错误边框、图标与文案', () => {
+    render(<Input error errorText="必填项" data-testid="input" />)
+    const wrapper = screen.getByTestId('input').parentElement
+    expect(wrapper).toHaveClass('border-destructive')
+    expect(screen.getByText('必填项')).toBeInTheDocument()
+    expect(document.querySelector('[data-testid=input] ~ span svg')).toBeInTheDocument()
+  })
+
+  it('success 状态显示成功边框与对勾图标', () => {
+    render(<Input success data-testid="input" />)
+    const wrapper = screen.getByTestId('input').parentElement
+    expect(wrapper).toHaveClass('border-success')
+    expect(document.querySelector('[data-testid=input] ~ span svg')).toBeInTheDocument()
+  })
+
+  it('前缀图标正确渲染', () => {
+    render(<Input startAdornment={<Search className="h-4 w-4" />} data-testid="input" />)
+    const wrapper = screen.getByTestId('input').parentElement
+    expect(wrapper?.querySelector('svg')).toBeInTheDocument()
+  })
+
+  it('后缀元素正确渲染', () => {
+    render(<Input endAdornment={<Calendar className="h-4 w-4" />} data-testid="input" />)
+    const wrapper = screen.getByTestId('input').parentElement
+    expect(wrapper?.querySelector('svg')).toBeInTheDocument()
   })
 })
