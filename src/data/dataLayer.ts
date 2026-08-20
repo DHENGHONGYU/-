@@ -18,7 +18,7 @@
  * - dataLayerWatchlistStore.ts: watchlistStore（观察列表快照，修复 C4 孤立表）
   * @doc []
 */
-import { db } from './db'
+import { gateway } from '@/data/gateway'
 
 // re-export 子模块的 store，保持原导入路径兼容
 export { stockStore, dailyQuoteStore, financialReportStore } from './dataLayerStockStores'
@@ -137,15 +137,15 @@ import {
  */
 export const dataManager = {
   async reset(): Promise<void> {
-    await db.reset()
+    await gateway.resetAll()
   },
 
   async export(): Promise<Record<string, unknown[]>> {
-    return db.export()
+    return gateway.exportData()
   },
 
   async import(data: Record<string, unknown[]>): Promise<void> {
-    await db.import(data)
+    await gateway.importData(data)
   },
 }
 

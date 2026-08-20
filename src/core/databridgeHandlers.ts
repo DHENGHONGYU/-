@@ -503,12 +503,7 @@ class BulkHandler implements EnvelopeHandler {
     const startTime = Date.now()
 
     try {
-      await gateway.runInTransaction([store], 'readwrite', (tx) => {
-        const objectStore = tx.objectStore(store)
-        for (const item of items) {
-          objectStore.put(item)
-        }
-      })
+      await gateway.batchPut(store, items)
 
       const duration = Date.now() - startTime
       logger.info(`[DataBridge] BulkHandler 批量写入完成`, {
