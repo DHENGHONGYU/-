@@ -179,5 +179,5 @@ Date:   2026-08-15 01:50:29
 
 ## 相关文档
 
-- [设计令牌清理工作总结总结报告](./SUMMARY-design-token-cleanup-v3.md)（已归档）
+- [设计令牌清理工作总结总结报告](../archive/normal/reports/SUMMARY-design-token-cleanup-v3.md)（已归档）
 

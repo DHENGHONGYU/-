@@ -10,7 +10,7 @@ summary: "FinSight V9 Design Token System V8 Apple Business Edition 完整规范
 tags: [design-tokens, apple-design, css-variables, tailwind, color-system, typography]
 version: v2.0.0
 last_updated: 2026-08-19
-code_version: 8.0.0
+code_version: 2.0.0-rc.2
 tier: T0
 related_docs:
   - V9-DOC-REF-940
@@ -600,7 +600,7 @@ npx tsc --noEmit
 ## 相关文档
 
 - [V9 编码规范](coding-conventions.md)
-- [组件命名规范](component-naming-conventions.md)
-- [质量门禁](quality-gates.md)
+- [组件命名规范](../guides/standards/component-naming-conventions.md)
+- [质量门禁](../guides/standards/quality-gates.md)
 - [Tailwind CSS 文档](https://tailwindcss.com/docs)
 - [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/)

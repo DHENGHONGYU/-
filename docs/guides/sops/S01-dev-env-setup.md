@@ -34,7 +34,7 @@ change_log:
 
 | # | 文档 | 引用/补充说明 |
 |---|------|--------------|
-| 1 | [How to 故障排查指南](./how-to/how-to-troubleshooting.md) | 原文 5 大分类（类型/构建/网络/权限/性能）已覆盖常见问题，本文不重写；§4 Fix-1 补充**缺口 1：首次使用 nvm 时装错 Node 版本（如 nvm install 20 而非 22），如何 3 步回退不残留**。 |
+| 1 | [How to 故障排查指南](../how-to/how-to-troubleshooting.md) | 原文 5 大分类（类型/构建/网络/权限/性能）已覆盖常见问题，本文不重写；§4 Fix-1 补充**缺口 1：首次使用 nvm 时装错 Node 版本（如 nvm install 20 而非 22），如何 3 步回退不残留**。 |
 | 2 | [AGENTS.md v1.6.0 §十六 Bash 约定](../../../AGENTS.md) | Windows 双平台命令规范、脚本禁止写死用户名等真相源。 |
 
 ---

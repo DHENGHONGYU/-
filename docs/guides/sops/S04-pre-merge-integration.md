@@ -37,7 +37,7 @@ change_log:
 | # | 文档 | 引用位置 | 说明 |
 |---|------|---------|------|
 | 1 | [质量门禁标准](../09-quality-gates.md) | §3 通过标准 | gate:quick、可信单元测试等阈值的真相源 |
-| 2 | [如何使用质量审计脚本](./how-to/how-to-use-audit-scripts.md) | §2 STEP 2–7 的命令参数说明 + §4 Top 失败修复 | 本 SOP 仅补充 2 条**集成专项**失败（见 §4 Fix-7/8），其余 6 类失败按该文档 §6.2 处理 |
+| 2 | [如何使用质量审计脚本](../how-to/how-to-use-audit-scripts.md) | §2 STEP 2–7 的命令参数说明 + §4 Top 失败修复 | 本 SOP 仅补充 2 条**集成专项**失败（见 §4 Fix-7/8），其余 6 类失败按该文档 §6.2 处理 |
 | 3 | [模块完成度标准](../module-completion-standard.md) | §一 PC-3 / §二 STEP 1 | 单模块进入集成前的准入条件 |
 | 4 | [测试策略文档](../testing-strategy.md) | §二 STEP 3 可信测试定义 | Quarantine 机制说明、稳定测试子集的维护流程 |
 
@@ -80,7 +80,7 @@ foreach ($m in $affected) { npm run audit:module-completion -- --scope $m }
 npm run gate:quick
 ```
 
-**7 个子门禁详解（从 [如何使用审计脚本](./how-to/how-to-use-audit-scripts.md) §3.1 引用）**：
+**7 个子门禁详解（从 [如何使用审计脚本](../how-to/how-to-use-audit-scripts.md) §3.1 引用）**：
 
 | 子步骤（内部） | 命令 | 目标耗时 | 目的 |
 |--------------|------|---------|------|
@@ -237,7 +237,7 @@ node scripts/report-integration.js --pr $env:PR_NUMBER --sha $(git rev-parse HEA
 
 ## 四、常见失败与修复（Top 8）
 
-> **Fix 1–6** 来自 [如何使用质量审计脚本](./how-to/how-to-use-audit-scripts.md) §6.2（引用不重写）：
+> **Fix 1–6** 来自 [如何使用质量审计脚本](../how-to/how-to-use-audit-scripts.md) §6.2（引用不重写）：
 > - Fix-1 TSC_PROD_FAIL：`tsc --force` 清幻影错误 + `audit:layers` 定位跨层 import
 > - Fix-2 RAG_FAIL：Golden 增补 + 双审 + `test:rag-all` 5 件套
 > - Fix-3 ACL_FAIL：`actions.acl.ts` 补齐缺失 → `mcpAclInterceptor` 自动生成
@@ -266,7 +266,7 @@ npx vitest run <失败文件名> --retry=2
 
 ### Fix-8（本 SOP 补充 · 集成专项 2）**Merge Dry-run 出现跨模块冲突**
 
-- **典型症状**：`git merge --no-ff --no-commit origin/main` 后 `src/core/router.tsx`、`AGENTS.md`、`package.json` 三文件被标 UNMERGED
+- **典型症状**：`git merge --no-ff --no-commit origin/main` 后 `src/App.tsx`、`AGENTS.md`、`package.json` 三文件被标 UNMERGED
 - **根因分类**：① 多人同时新增路由；② 多人修改 package.json scripts；③ AGENTS.md 多人版本号 bump
 - **标准修复命令**：
 
@@ -274,12 +274,12 @@ npx vitest run <失败文件名> --retry=2
 # (1) 交互式 rebase + 解决冲突（推荐）
 git rebase -i origin/main
 # → 编辑冲突文件（优先使用"合并双方 + 去重"策略：
-#    router.tsx 两侧新增路由均保留；package.json 脚本先合并再按名字排序去重）
+#    App.tsx 两侧新增路由均保留；package.json 脚本先合并再按名字排序去重）
 
 # (2) 冲突解决后重跑 Merge Dry-run（STEP 11），直至无冲突
 ```
 
-- **对应文档**：[git-commit-governance.md §4 Rebase vs Merge 规则](./how-to/git-commit-governance.md#四rebase-vs-merge-策略规范)
+- **对应文档**：[git-commit-governance.md §4 Rebase vs Merge 规则](../how-to/git-commit-governance.md)
 
 ---
 

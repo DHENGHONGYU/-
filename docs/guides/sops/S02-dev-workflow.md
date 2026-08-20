@@ -35,7 +35,7 @@ change_log:
 
 | # | 文档 | 本 SOP 引用方式 |
 |---|------|---------------|
-| 1 | [Git 提交治理规范](./how-to/git-commit-governance.md) | 原文 §1-§5 定义了 Conventional、Scope 列表、Husky 钩子、Rebase 策略，本文**不重写**；仅在 §4 Fix-1 处补充 governance 文档的**缺口：pre-commit 失败后如何回退部分暂存文件**（1 个缺口）。 |
+| 1 | [Git 提交治理规范](../how-to/git-commit-governance.md) | 原文 §1-§5 定义了 Conventional、Scope 列表、Husky 钩子、Rebase 策略，本文**不重写**；仅在 §4 Fix-1 处补充 governance 文档的**缺口：pre-commit 失败后如何回退部分暂存文件**（1 个缺口）。 |
 | 2 | [质量门禁](../09-quality-gates.md) §Husky v2 scope-guard | §二 2.C 的 pre-commit 22 步速查表**直接引用其编号和阈值**（避免双重定义）。 |
 
 ---

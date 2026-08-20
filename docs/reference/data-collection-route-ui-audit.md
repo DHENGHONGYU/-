@@ -246,7 +246,7 @@ V6ݹ `/data-hub` 4TabV9Ǩ
 |:---:|:---|:---|:---:|
 | F-01 | `/input/seven-dim` עᵽ `ROUTE_REGISTRY` | [routes.ts](../../src/config/routes.ts) | ?  |
 | F-02 | 滻 OutputApp  PlaceholderPanel  ʵҳ | [OutputApp.tsx](../../src/apps/output/OutputApp.tsx) | ?  |
-| F-03 | ͬ docs/06-routing-specs.md ·ɱ | [06-routing-specs.md](../explanation/06-routing-specs.md)（已归档） |  |
+| F-03 | ͬ docs/06-routing-specs.md ·ɱ | [06-routing-specs.md](../archive/important/explanation/06-routing-specs.md)（已归档） |  |
 
 ### 6.2 ŻP1 - UIϹ棩
 

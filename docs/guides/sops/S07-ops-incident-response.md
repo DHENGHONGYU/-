@@ -35,7 +35,7 @@ change_log:
 
 | # | 文档 | 引用/补充说明 |
 |---|------|--------------|
-| 1 | [How to 故障排查指南](./how-to/how-to-troubleshooting.md) | 5 大故障分类（类型/构建/网络/权限/性能）+ 对应诊断命令均引用不重写；§4 Fix-3 补 **gap-3：夜间值班同事不熟悉项目，1 分钟内定位日志存放在哪里（Sentry / 本地 / IndexedDB / 边缘 CDN 四源定位法）**。 |
+| 1 | [How to 故障排查指南](../how-to/how-to-troubleshooting.md) | 5 大故障分类（类型/构建/网络/权限/性能）+ 对应诊断命令均引用不重写；§4 Fix-3 补 **gap-3：夜间值班同事不熟悉项目，1 分钟内定位日志存放在哪里（Sentry / 本地 / IndexedDB / 边缘 CDN 四源定位法）**。 |
 | 2 | [S06 发布部署 SOP](./S06-release-deployment.md) | 回滚双方案（镜像回滚 / index-history 替换）在本 SOP §二 2.D 直接调用。 |
 
 ---

@@ -35,9 +35,9 @@ change_log:
 
 | # | 文档 | 引用位置 | 说明 |
 |---|------|---------|------|
-| 1 | [上线前部署校验清单（DEPLOYMENT-CHECKLIST v1.0.0）](../reports/testing/DEPLOYMENT-CHECKLIST-2026-08-14.md) | §二 2.D 灰度/正式命令行 与 §4 部署后监控补充 | 本文档 §2.D 与其保持步骤一致，§4 追加 30 分钟监控项（不重写） |
+| 1 | [上线前部署校验清单（DEPLOYMENT-CHECKLIST v1.0.0）](../../reports/testing/DEPLOYMENT-CHECKLIST-2026-08-14.md) | §二 2.D 灰度/正式命令行 与 §4 部署后监控补充 | 本文档 §2.D 与其保持步骤一致，§4 追加 30 分钟监控项（不重写） |
 | 2 | [S05 上线前全面体检](./S05-pre-launch-checklist.md) | §一 PC-1 | 前置硬性依赖 |
-| 3 | [Git 提交治理规范](./how-to/git-commit-governance.md) | §二 2.B Tag 信息格式 | Tag message 模板 |
+| 3 | [Git 提交治理规范](../how-to/git-commit-governance.md) | §二 2.B Tag 信息格式 | Tag message 模板 |
 
 ---
 
@@ -171,7 +171,7 @@ Write-Output "✅ C-3 本地 Entry 预校验通过：HTTP 200 + <title> 含 V9/F
 
 ### 2.D · 灰度 / 正式 / 回滚三段命令
 
-> 本节步骤主体与 [DEPLOYMENT-CHECKLIST v1.0.0](../reports/testing/DEPLOYMENT-CHECKLIST-2026-08-14.md) §2 保持一致，命令行参数已对齐。
+> 本节步骤主体与 [DEPLOYMENT-CHECKLIST v1.0.0](../../reports/testing/DEPLOYMENT-CHECKLIST-2026-08-14.md) §2 保持一致，命令行参数已对齐。
 
 #### D-1 灰度发布（10% 流量，观察 ≥ 15 分钟）
 
@@ -294,7 +294,7 @@ BLOCK>0 → 执行 D-3 回滚，回到 S05 阶段重新体检
 | E3 | 构建清单 + SRI 校验 | `03-build-manifest.json` + `04-sri-verify.log` | `cp temp/build-manifest.json 03-build-manifest.json` + 重定向 |
 | E4 | 灰度观察 15 分钟截图（或 Sentry Apdex 导出） | `05-canary-15min.png / .csv` | Sentry 平台导出 |
 | E5 | 正式发布 Entry curl 原始结果 | `06-entry-check.html` | `Invoke-WebRequest $DEPLOY_URL -OutFile 06-entry-check.html` |
-| E6 | 双回滚预案可用性验证记录（必须记录方案 A/B 预演结果） | `07-rollback-verification.md` | 人工记录「方案 A 预演成功 / 方案 B 预演成功」双勾选 |
+| E6 | 双回滚预案可用性验证记录（必须记录方案 A/B 预演结果） | 07-rollback-verification 记录文件（发布时生成） | 人工记录「方案 A 预演成功 / 方案 B 预演成功」双勾选 |
 
 **归档目录**：`docs/reports/release/YYYY-MM-DD_v<版本号>/`
 

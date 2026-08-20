@@ -1252,7 +1252,7 @@ npm run audit:atomic
 - [ ] Router 版本兼容性验证
 - [ ] SKILL 方法论与代码权重表对齐
 
-> **完整教训库**：[development-lessons-learned.md（已归档）](../../archive/historical-2026-08-16/batch6/docs/reports/project-management/development-lessons-learned.md)、lessons-learned-summary.md（已归档）
+> **完整教训库**：[development-lessons-learned.md（已归档）](../../archive/normal/reports/development-lessons-learned.md)、lessons-learned-summary.md（已归档）
 
 ---
 

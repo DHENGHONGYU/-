@@ -25,9 +25,9 @@ date: 2026-07-17
 > **定位**：本文档是 `src/data/` 与 `src/core/databridge.ts` 的权威全景说明，面向需要理解数据流、新增 store、排查数据一致性问题的开发者与 AI Agent。
 > **合规基准**：基于 `../../AGENTS.md` v1.4.3 §八（数据库版本管理）及 `src/data/` 实际源码编写。
 > **关联文档**：
-> - [架构总览](overview.md)（已归档） — 全局分层与依赖方向
+> - [架构总览](../archive/normal/explanation/overview.md)（已归档） — 全局分层与依赖方向
 > - [AGENTS.md](../../AGENTS.md) — 工程契约（禁止跨层调用、四步集成、DB_VERSION 规则）
-> - [数据字典索引](design/data-dictionary-index.md)（已归档） — 字段级定义唯一索引
+> - [数据字典索引](../archive/normal/explanation/data-dictionary-index.md)（已归档） — 字段级定义唯一索引
 > - [引擎规格](./05-engine-specs.md) — L0-L8 引擎分层说明
 
 ---
@@ -362,7 +362,7 @@ L0 基础层          → types/types.dataLayer.ts
 | `Portfolio` | `types.portfolio.ts` | 投资组合（holdings / theme / metrics） |
 | `UnifiedStockData` | 由 `unifiedStockService` 聚合产出 | 数据融合统一契约，被 store 与各页面消费 |
 
-> **字段级定义** → 查询 [数据字典索引](design/data-dictionary-index.md)（已归档）。
+> **字段级定义** → 查询 [数据字典索引](../archive/normal/explanation/data-dictionary-index.md)（已归档）。
 
 ---
 
@@ -516,7 +516,7 @@ export interface Repository<T, TKey = string> {
 
 所有字段级数据字典统一在以下索引中管理：
 
-→ **[数据字典索引](design/data-dictionary-index.md)（已归档）**
+→ **[数据字典索引](../archive/normal/explanation/data-dictionary-index.md)（已归档）**
 
 该索引维护：
 - 1 份整合主字典（`../reference/data-definition.md`（已归档））— 全模块字段定义 SSOT

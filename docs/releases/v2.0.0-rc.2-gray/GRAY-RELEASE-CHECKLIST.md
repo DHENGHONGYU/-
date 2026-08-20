@@ -143,7 +143,7 @@
 2. **后端 sidecar 止血**（如独立部署）
    - veFaaS/Lambda 别名回切到 `$LATEST-rc1`
 3. **数据兜底**（如 IndexedDB schema 变更）
-   - 迁移脚本 `scripts/migrations/rollback-to-rc1.ts`（预存；迁移可逆）
+   - 迁移脚本 rollback-to-rc1（预存；迁移可逆；rc.1→rc.2 schema 未变更，无实际数据迁移）
 4. **通告**
    - 内部群发「FinSightV9 rc.2 灰度 P0 回滚」+ 根因初判；SOP-007 运维应急 §3.2 P0 事件单启动
 5. **恢复验证**
@@ -158,7 +158,7 @@
 
 ### 5.4 P2 缺陷登记
 
-- 在 `docs/tech-debt.md` 新增 TD-xxx 条目；优先级 `P2-GrayPost`
+- 在 `docs/archive/normal/explanation/tech-debt.md` 新增 TD-xxx 条目；优先级 `P2-GrayPost`
 - 纳入 rc.3 版本计划，不阻断灰度推广
 
 ---

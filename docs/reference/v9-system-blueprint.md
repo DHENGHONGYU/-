@@ -27,10 +27,10 @@ change_log:
 # V9 系统蓝图（已废弃）
 
 > **Status**: Deprecated  
-> **⚠️ 路径归档说明（2026-08-16）**：本文档已废弃，被 [system-architecture.md](../explanation/system-architecture.md) 取代。文中引用的目标文件（如 `system-architecture.md`、`03-architecture-standards.md`、`06-routing-specs.md`、`feedback-loop-spec.md` 等）已归档或重组。本文档仅保留作为历史参考，路径不再更新。  
+> **⚠️ 路径归档说明（2026-08-16）**：本文档已废弃，被 [system-architecture.md](../archive/important/system-architecture.md) 取代。文中引用的目标文件（如 `system-architecture.md`、`03-architecture-standards.md`、`06-routing-specs.md`、`feedback-loop-spec.md` 等）已归档或重组。本文档仅保留作为历史参考，路径不再更新。  
 > **Version**: v0.9.1-deprecated  
 > **Last Updated**: 2026-08-15  
-> **取代文档**: [`../explanation/system-architecture.md`](../explanation/system-architecture.md)（已归档，v1.1，2026-08-13）  
+> **取代文档**: [`../explanation/system-architecture.md`](../archive/important/system-architecture.md)（已归档，v1.1，2026-08-13）  
 >
 > **废弃原因**：本文档内容大量空白、版本停留在 v0.9.0-migration-implemented（2026-06-24），系统架构权威描述已迁移至 `../explanation/system-architecture.md`（已归档）。新内容请勿在此追加，仅保留作为历史参考。  
 > 相关历史文档：v10-architecture-whitepaper（已归档）、`../explanation/completeness-profile-batch4.md`（已归档）
@@ -465,6 +465,6 @@ interface StandardEnvelope {
 - [data-security-and-privacy](../specs/product/data-security-and-privacy.md)
 - [V9  ?? ](../reports/上线前全面校验报告-v2.0.0.md)
 - [](../explanation/design/../explanation/design/registry-index.md)
-- [V9 ](../explanation/design/00-readme.md)（已归档）
+- [V9 ](../archive/normal/explanation/00-readme.md)（已归档）
 - [](../00-meta/REGISTRY_INDEX.md)
 

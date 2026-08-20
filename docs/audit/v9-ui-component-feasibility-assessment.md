@@ -523,5 +523,5 @@
 
 ## 📁 相关文档
 
-- [V6-V9 UI 组件比对报告](./v6-v9-ui-component-comparison-report.md)（已归档）
-- [UI 设计系统文档](../explanation/implementation/ui-design-system.md)（已归档）
+- [V6-V9 UI 组件比对报告](../archive/normal/reports/v6-v9-ui-component-comparison-report.md)（已归档）
+- [UI 设计系统文档](../archive/normal/ui-design-system.md)（已归档）

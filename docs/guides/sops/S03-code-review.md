@@ -37,7 +37,7 @@ change_log:
 | # | 文档 | 引用/补充说明 |
 |---|------|--------------|
 | 1 | [模块完成度标准](../module-completion-standard.md) | 单模块准入条件清单原文（§2 S1~S12）被本文 §一 PC-2 引用；§4 Fix-2 **补充 gap-2**：跨模块 Review 时，原文档 §5 仅列出模块内检查项，未描述「调用方 Reviewer 如何快速识别被调用模块的契约改变点」，本文 Fix-2 提供 3 步标准化定位法。 |
-| 2 | [Git 提交治理规范](./how-to/git-commit-governance.md) | §二 2.A Conventional 消息格式引用；Scope 列表引用。 |
+| 2 | [Git 提交治理规范](../how-to/git-commit-governance.md) | §二 2.A Conventional 消息格式引用；Scope 列表引用。 |
 | 3 | [质量门禁标准](../09-quality-gates.md) §Husky v2 scope-guard | §二 2.B 检查矩阵条目与门禁阈值对齐。 |
 
 ---

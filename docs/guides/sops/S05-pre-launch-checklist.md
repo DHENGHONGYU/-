@@ -39,9 +39,9 @@ change_log:
 | # | 文档 | 本 SOP 引用位置 | 文档版本 |
 |---|------|----------------|---------|
 | 1 | [质量门禁标准](../09-quality-gates.md) | §2 P0/P1/P2 分级阈值基线 | v2.5.0 |
-| 2 | [如何使用质量审计脚本](./how-to/how-to-use-audit-scripts.md) | §2 各审计子步骤的输出解读与命令详解 | v1.2.0 |
-| 3 | [测试策略文档](./testing-strategy.md) | §4 真数测试章节，测试分层与框架说明 | v1.2.0 |
-| 4 | [上线前全面校验报告 v2.0.0](../reports/上线前全面校验报告-v2.0.0.md) | §3.4 6 维度加权评分模板（维度与权重一致，数值为模板示例） | v1.0.0 |
+| 2 | [如何使用质量审计脚本](../how-to/how-to-use-audit-scripts.md) | §2 各审计子步骤的输出解读与命令详解 | v1.2.0 |
+| 3 | [测试策略文档](../testing-strategy.md) | §4 真数测试章节，测试分层与框架说明 | v1.2.0 |
+| 4 | [上线前全面校验报告 v2.0.0](../../reports/上线前全面校验报告-v2.0.0.md) | §3.4 6 维度加权评分模板（维度与权重一致，数值为模板示例） | v1.0.0 |
 | 5 | [AGENTS.md v1.6.0 契约](../../../AGENTS.md) | 全程命令与阈值的唯一真相源（§七验证命令 + §十六 Bash 约定） | v1.6.0 |
 
 ---
@@ -391,7 +391,7 @@ ELSE                                                           → BLOCK>0，真
 
 ### 3.4 六维度加权综合评分模板
 
-> 维度与权重源自 [上线前全面校验报告 v2.0.0](../reports/上线前全面校验报告-v2.0.0.md) §1.1。每次上线体检时将 **得分** 列填入实际数值。
+> 维度与权重源自 [上线前全面校验报告 v2.0.0](../../reports/上线前全面校验报告-v2.0.0.md) §1.1。每次上线体检时将 **得分** 列填入实际数值。
 
 | 维度 | 权重 | 检查项摘要 | 得分（0-100，填入） | 加权得分 = 权重×得分/100 | 等级（≥90绿/80-89黄/<80红） |
 |------|:---:|-----------|:---:|:---:|:---:|
@@ -429,8 +429,8 @@ ELSE                                                           → BLOCK>0，真
 | E2 | test:stable JUnit / JSON 报告 | `02-test-stable-report.xml/.json` | `vitest run --reporter=junit --outputFile.junit=...` |
 | E3 | tsc:prod + tsc:test 原始输出 | `03-tsc-prod.log`、`04-tsc-test.log` | 重定向 2>&1 |
 | E4 | 真数 25 股票校验结果（含 HTTP 响应摘要） | `05-realdata-25stocks.json` | `npm run test:e2e-verify -- --reporter=json` 输出 |
-| E5 | 六维度综合评分表（§3.4 填写版 + 计算过程） | `06-scorecard.xlsx 或 .md` | 人工填 §3.4 模板后保存 |
-| E6 | Go/No-Go 会议纪要（含签字） | `07-go-nogo-minutes.md` | §3.2 决策记录 + 参会人签名 |
+| E5 | 六维度综合评分表（§3.4 填写版 + 计算过程） | [06-scorecard 实例](../../reports/pre-launch/2026-08-19_v2.0.0-rc.2/06-scorecard.md) | 人工填 §3.4 模板后保存 |
+| E6 | Go/No-Go 会议纪要（含签字） | [07-go-nogo-minutes 实例](../../reports/pre-launch/2026-08-19_v2.0.0-rc.2/07-go-nogo-minutes.md) | §3.2 决策记录 + 参会人签名 |
 | E7 | 版本号 + Git SHA 指纹 | `08-version-fingerprint.txt` | `node -e "console.log(require('./package.json').version);" ; git rev-parse HEAD > 08-version-fingerprint.txt` |
 | E8 | 构建产物体积 / 哈希清单 | `09-build-manifest.json` | `npm run build:health`（内部调 `scripts/build-health-report.ts`） |
 
