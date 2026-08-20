@@ -12,6 +12,7 @@ import {
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
 import { useToast } from '@/hooks/useToast'
+import { useDensityConfig } from '@/components/cockpit/DensityContext'
 import { AnalysisTemplateCards } from '@/components/organisms/analysis/hub/AnalysisTemplateCards'
 import { PageContainer, PageHeader } from '@/components/templates'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
@@ -20,6 +21,7 @@ import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
 import { Sparkles } from 'lucide-react'
 import SimilarStockRecallCard from '@/components/organisms/analysis/SimilarStockRecallCard'
+import VectorConsistencyRankingCard from '@/components/organisms/analysis/VectorConsistencyRankingCard'
 import {
   useAnalysisStore,
   // 派生查询 Hook（通过 export * 从 .derived.ts 导入）
@@ -177,6 +179,8 @@ export default function AnalysisApp(): React.JSX.Element {
         <AnalysisTemplateCards />
         {/* Phase 1: 相似股票语义召回 — 零侵入辅助入口，不修改原有评分流程 */}
         <SimilarStockRecallCard />
+        {/* Phase 2: 向量一致性融合排名 — 基于 V6 评分 + 语义相似度的双轨排序 */}
+        <VectorConsistencyRankingCard />
         <V6ScoreCard />
       </>
     )
@@ -206,6 +210,7 @@ export default function AnalysisApp(): React.JSX.Element {
 // 派生查询接入：useIsLoadingAny (合并 loading || trendLoading)、useErrorUnion (合并 error ?? trendError)
 
 function V6ScoreCard(): React.JSX.Element {
+  const { spacing, padding } = useDensityConfig()
   // ── 接入 analysisStore，替代本地 useState ────────────────────────────────────
   const stocks = useAnalysisStore((s) => s.stocks)
   const candidates = useAnalysisStore((s) => s.candidates)
@@ -306,7 +311,7 @@ function V6ScoreCard(): React.JSX.Element {
           )}
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className={`grid ${spacing} sm:grid-cols-2 lg:grid-cols-3`}>
           {/* 意向候选池作用域：展示输入舱候选（含来源溯源与已有评分） */}
           {scope === 'intention' && candidates.length === 0 && (
             <div className="col-span-full flex flex-col items-center justify-center rounded-md border border-dashed border-border/50 bg-muted/10 py-12 text-center">
@@ -331,7 +336,7 @@ function V6ScoreCard(): React.JSX.Element {
               return (
                 <div
                   key={candidate.symbol}
-                  className="rounded-lg border border-border/40 p-4 transition-colors hover:bg-muted/30"
+                  className={`rounded-lg border border-border/40 ${padding} transition-colors hover:bg-muted/30`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex min-w-0 flex-col">
@@ -391,7 +396,7 @@ function V6ScoreCard(): React.JSX.Element {
               return (
                 <div
                   key={stock.symbol}
-                  className="rounded-lg border border-border/40 p-4 transition-colors hover:bg-muted/30"
+                  className={`rounded-lg border border-border/40 ${padding} transition-colors hover:bg-muted/30`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex min-w-0 flex-col">

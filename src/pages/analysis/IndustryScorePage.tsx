@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Link } from 'react-router'
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
@@ -20,6 +20,13 @@ import { ScoreFactorDeltaPanel } from '@/components/organisms/shared/ScoreFactor
 import { ScoreUpdateAlert } from '@/components/organisms/shared/ScoreUpdateAlert'
 import { IndustrySkillSnapshotCard } from '@/components/cabin/IndustrySkillSnapshotCard'
 import { IndustryHistoryCard } from '@/components/cabin/IndustryHistoryCard'
+import { IndustryV4Radar, SubIndicatorBar } from '@/components/chart/industry'
+import type {
+  IndustryV4RadarDataItem,
+  IndustryV4RadarSeries,
+} from '@/components/chart/industry/IndustryV4Radar'
+import type { SubIndicatorBarDataItem } from '@/components/chart/industry/SubIndicatorBar'
+import { CHART_PALETTE } from '@/constants/theme.tokens'
 import { HOT_TRACKS } from '@/constants/sectorConstants'
 import {
   useIndustryScoreStore,
@@ -33,11 +40,105 @@ import {
 import type { LlmConfig } from '@/config/llmConfig'
 import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
+import type { IndustryScore } from '@/data/types'
 
 function getScoreColorClass(score: number): string {
   if (score >= 4.0) return 'text-[hsl(var(--stock-up))]'
   if (score >= 3.0) return 'text-primary'
   return 'text-[hsl(var(--stock-down))]'
+}
+
+/**
+ * 行业评分 7 维 → IndustryV4RadarDataItem（雷达图复用）
+ */
+function industryScoreToRadarData(
+  score: IndustryScore,
+  previous: IndustryScore | undefined,
+): IndustryV4RadarDataItem[] {
+  const dims = score.dimensionScores.map((d) => ({
+    dimension: d.name,
+    label: d.name,
+    score: d.score ?? 0,
+    fullMark: 5,
+    prev: previous?.dimensionScores.find((p) => p.name === d.name)?.score ?? 0,
+  }))
+  return dims.concat([
+    {
+      dimension: '综合评分',
+      label: '综合评分',
+      score: score.overallScore ?? 0,
+      fullMark: 5,
+      prev: previous?.overallScore ?? 0,
+    },
+  ]) as IndustryV4RadarDataItem[] & Array<{ prev: number }>
+}
+
+function radarSeriesFromScore(_score: IndustryScore): IndustryV4RadarSeries[] {
+  return [
+    { name: '本次评分', dataKey: 'score', color: CHART_PALETTE.series1, fillOpacity: 0.3 },
+    { name: '上次评分', dataKey: 'prev', color: CHART_PALETTE.series5, fillOpacity: 0.15 },
+  ]
+}
+
+/**
+ * 各维度 score + weight + evidence_count → SubIndicatorBar（子指标柱状图复用）
+ */
+function industryScoreToSubIndicator(score: IndustryScore): SubIndicatorBarDataItem[] {
+  return score.dimensionScores.map((d) => ({
+    name: d.name,
+    label: d.name,
+    value: d.score,
+    maxValue: 5,
+    unit: '',
+    category: d.weight > 1 ? '高权重' : '标准',
+  }))
+}
+
+/**
+ * 评分可视化区块：左 7 维雷达图（对比上次），右 维度得分柱状图
+ */
+function ScoreVisualizationBlock({
+  score,
+  previous,
+}: {
+  score: IndustryScore
+  previous: IndustryScore | undefined
+}): React.JSX.Element {
+  const radarData = useMemo(() => industryScoreToRadarData(score, previous), [score, previous])
+  const series = useMemo(() => radarSeriesFromScore(score), [score])
+  const barData = useMemo(() => industryScoreToSubIndicator(score), [score])
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4 border border-border rounded-xl bg-muted/20">
+      <div>
+        <h4 className="text-sm font-semibold text-muted-foreground mb-2">
+          7 维行业评分雷达{previous ? '（本次 vs 上次）' : ''}
+        </h4>
+        <IndustryV4Radar
+          data={radarData}
+          series={series}
+          height={320}
+          showLegend
+          maxValue={5}
+          radarConfig={{ strokeWidth: 2, dot: true, fillOpacity: 0.3 }}
+        />
+      </div>
+      <div>
+        <h4 className="text-sm font-semibold text-muted-foreground mb-2">各维度得分（0-5）</h4>
+        <SubIndicatorBar
+          data={barData}
+          height={320}
+          layout="vertical"
+          showGrid
+          showTooltip
+          barColor={CHART_PALETTE.series1}
+          barRadius={4}
+          labelPosition="right"
+          sortByValue="desc"
+        />
+      </div>
+    </div>
+  )
 }
 
 const logger = getLogger()
@@ -294,7 +395,7 @@ export default function IndustryScorePage(): React.JSX.Element {
                       评分结果 · {result.name}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-6">
                     <div className="flex items-center gap-4">
                       <div className={cn('text-4xl font-bold', result.overallScore !== null && getScoreColorClass(result.overallScore))}>
                         {result.overallScore !== null ? result.overallScore.toFixed(2) : '—'}
@@ -306,6 +407,9 @@ export default function IndustryScorePage(): React.JSX.Element {
                         </Badge>
                       )}
                     </div>
+
+                    {/* 可视化：七维雷达图 + 维度得分柱状图 */}
+                    <ScoreVisualizationBlock score={result} previous={previousResult} />
 
                     <div className="space-y-3">
                       {DIMENSION_ORDER.map((name) => {

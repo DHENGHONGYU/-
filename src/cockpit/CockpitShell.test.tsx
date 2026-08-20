@@ -18,8 +18,14 @@ import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import type { ReactNode, ComponentType } from 'react'
 import CockpitShell from '@/cockpit/CockpitShell'
+import { DensityProvider } from '@/components/cockpit/DensityContext'
 import type { WidgetTemplate } from '@/cockpit/core/widgetRegistry'
 import type { WidgetConfig, MarketData } from '@/types/modules/widget.types'
+
+// 辅助函数：包裹 DensityProvider
+function renderWithDensity(ui: React.ReactElement) {
+  return render(<DensityProvider>{ui}</DensityProvider>)
+}
 
 // ============================================================
 // Mock 1: logger（避免真实日志输出）
@@ -201,7 +207,7 @@ describe('CockpitShell', () => {
   }
 
   it('渲染不崩溃，且包裹 MarketDataProvider', () => {
-    render(<CockpitShell />)
+    renderWithDensity(<CockpitShell />)
 
     expect(screen.getByTestId('market-provider')).toBeInTheDocument()
     // CockpitCrossLayout 现用原生 CSS Grid，不再依赖 react-grid-layout
@@ -209,20 +215,20 @@ describe('CockpitShell', () => {
   })
 
   it('渲染 header 标题 "驾驶舱"', () => {
-    render(<CockpitShell />)
+    renderWithDensity(<CockpitShell />)
 
     expect(screen.getByText('驾驶舱')).toBeInTheDocument()
   })
 
   it('渲染 "添加 Widget" 按钮和 "返回首页" 链接', () => {
-    render(<CockpitShell />)
+    renderWithDensity(<CockpitShell />)
 
     expect(screen.getByText('添加 Widget')).toBeInTheDocument()
     expect(screen.getByText('返回首页')).toBeInTheDocument()
   })
 
   it('空实例时渲染 Widget 数量 Badge 显示 "0 Widget"', () => {
-    render(<CockpitShell />)
+    renderWithDensity(<CockpitShell />)
 
     // 徽标结构：<span>{n}</span> Widget —— 用 textContent 精确匹配外层徽标
     expect(
@@ -233,7 +239,7 @@ describe('CockpitShell', () => {
   it('渲染采集任务统计 Badge（显示 running/total）', () => {
     setupMarketDataHook({ total: 10, running: 3, error: 1 })
 
-    render(<CockpitShell />)
+    renderWithDensity(<CockpitShell />)
 
     expect(
       screen.getByText((_, node) => node?.textContent === '3/10 采集任务'),
@@ -241,13 +247,13 @@ describe('CockpitShell', () => {
   })
 
   it('挂载时调用 widgetRegistry.getAllInstances 获取实例列表', () => {
-    render(<CockpitShell />)
+    renderWithDensity(<CockpitShell />)
 
     expect(mockGetAllInstances).toHaveBeenCalledTimes(1)
   })
 
   it('挂载时订阅 widgetRegistry 事件（用于响应实例增删）', () => {
-    render(<CockpitShell />)
+    renderWithDensity(<CockpitShell />)
 
     expect(mockSubscribe).toHaveBeenCalledTimes(1)
     // 订阅回调应为函数
@@ -256,7 +262,7 @@ describe('CockpitShell', () => {
   })
 
   it('卸载时调用 unsubscribe 清理订阅（AGENTS.md §3 事件监听清理）', () => {
-    const { unmount } = render(<CockpitShell />)
+    const { unmount } = renderWithDensity(<CockpitShell />)
 
     // 挂载时订阅，但尚未取消订阅
     expect(mockSubscribe).toHaveBeenCalledTimes(1)
@@ -293,7 +299,7 @@ describe('CockpitShell', () => {
     mockMountInstance.mockResolvedValue(true)
     mockLoadComponent.mockResolvedValue(() => null)
 
-    render(<CockpitShell />)
+    renderWithDensity(<CockpitShell />)
 
     expect(
       screen.getByText((_, node) => node?.textContent === '2 Widget'),
@@ -308,7 +314,7 @@ describe('CockpitShell', () => {
     // 设置无效 JSON（loadLayout 的 catch 块应吞掉错误）
     localStorage.setItem('v9_cockpit_layout', '{invalid json')
 
-    render(<CockpitShell />)
+    renderWithDensity(<CockpitShell />)
 
     // 验证：header "驾驶舱" 仍能渲染（说明 loadLayout 已吞掉错误）
     expect(screen.getByText('驾驶舱')).toBeInTheDocument()
@@ -333,7 +339,7 @@ describe('CockpitShell', () => {
     ])
     mockMountInstance.mockResolvedValueOnce(false)
 
-    const { unmount } = render(<CockpitShell />)
+    const { unmount } = renderWithDensity(<CockpitShell />)
 
     // 关闭矩阵总览，使 WidgetWrapper 实例渲染进入错误态
     dismissMatrixOverview()
@@ -362,7 +368,7 @@ describe('CockpitShell', () => {
     ])
     mockMountInstance.mockRejectedValueOnce(new Error('组件挂载异常'))
 
-    render(<CockpitShell />)
+    renderWithDensity(<CockpitShell />)
 
     // 关闭矩阵总览，使 WidgetWrapper 实例渲染进入错误态
     dismissMatrixOverview()
@@ -394,7 +400,7 @@ describe('CockpitShell', () => {
     // 加载组件
     mockLoadComponent.mockResolvedValueOnce(() => null)
 
-    render(<CockpitShell />)
+    renderWithDensity(<CockpitShell />)
 
     // 关闭矩阵总览，使 WidgetWrapper 实例渲染进入错误态
     dismissMatrixOverview()
@@ -432,7 +438,7 @@ describe('CockpitShell', () => {
     // loadComponent 返回 null（组件未找到场景）
     mockLoadComponent.mockResolvedValueOnce(null)
 
-    render(<CockpitShell />)
+    renderWithDensity(<CockpitShell />)
 
     // 关闭矩阵总览，使 WidgetWrapper 实例渲染进入未找到态
     dismissMatrixOverview()

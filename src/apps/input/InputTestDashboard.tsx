@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @module InputTestDashboard
  * @description 输入舱系统测试看板 - 从系统测试师角度对输入舱进行全面测试。
  *
@@ -20,6 +20,7 @@ import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/atoms/Card'
 import { cn } from '@/lib/utils'
+import { twText } from '@/constants/theme/theme.tokens.shades'
 import { getLogger } from '@/lib/logger'
 import { useCollectionRuntimeStore } from '@/store/collectionRuntimeStore'
 import { dataBridge } from '@/core/databridge'
@@ -1048,7 +1049,7 @@ export default function InputTestDashboard(): React.JSX.Element {
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
-            <Flame className="h-4 w-4 text-orange-500" />
+            <Flame className={`h-4 w-4 ${twText('warning')}`} />
             <CardTitle className="text-base">热门板块判断依据与评分原则校验</CardTitle>
           </div>
           <CardDescription>热门板块评分维度、权重配置、及时性要求、动态排序逻辑</CardDescription>
@@ -1286,7 +1287,7 @@ export default function InputTestDashboard(): React.JSX.Element {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <GitBranch className="h-4 w-4 text-purple-500" />
+              <GitBranch className={`h-4 w-4 ${twText('info')}`} />
               <CardTitle className="text-base">数据链覆盖度分析与缺口检测</CardTitle>
             </div>
             <Badge variant="outline" className="text-xs">
@@ -1481,9 +1482,9 @@ export default function InputTestDashboard(): React.JSX.Element {
               <p className="text-lg font-bold text-info">{STORAGE_MAPPINGS.length}</p>
               <p className="text-[10px] text-muted-foreground">个数据域映射</p>
             </div>
-            <div className="rounded-md border border-orange-500/20 bg-orange-500/5 p-3">
+            <div className="rounded-md border border-warning/20 bg-warning/5 p-3">
               <p className="text-xs text-muted-foreground">热门板块</p>
-              <p className="text-lg font-bold text-orange-500">{hotSectors.length}</p>
+              <p className={`text-lg font-bold ${twText('warning')}`}>{hotSectors.length}</p>
               <p className="text-[10px] text-muted-foreground">个板块备选</p>
             </div>
             <div className="rounded-md border border-primary/20 bg-primary/5 p-3">

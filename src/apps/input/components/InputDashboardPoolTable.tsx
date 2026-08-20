@@ -15,6 +15,8 @@ import { findStockBySymbol } from '@/lib/stockDictionary'
 import { Download, Trash2, RefreshCw, ArrowRightLeft, ArrowUpRight } from 'lucide-react'
 import { getMarketLabel } from '../inputDashboard.utils'
 import type { PoolItem, IntentionPoolItem } from '@/types/modules/pool.types'
+import { useDensityConfig } from '@/components/cockpit/DensityContext'
+import { DensityToggle } from '@/components/cockpit/DensityToggle'
 
 interface InputDashboardPoolTableProps {
   allStocks: PoolItem[]
@@ -44,6 +46,8 @@ export default function InputDashboardPoolTable({
   onCollectStock,
   onDeleteStock,
 }: InputDashboardPoolTableProps): React.JSX.Element {
+  const { rowHeight, fontSize, padding } = useDensityConfig()
+
   // 双源输入来源标签（spec 2.4.15）：hot-sector=来源一/热门板块，manual=来源二/自定义检索
   const isIntentionItem = (item: PoolItem): item is IntentionPoolItem =>
     item.pool === 'intention'
@@ -77,6 +81,7 @@ export default function InputDashboardPoolTable({
             </Link>
           </CardTitle>
           <div className="flex flex-wrap items-center gap-2">
+            <DensityToggle />
             <span className="text-[11px] font-medium text-muted-foreground">
               {collected}/{allStocks.length} 已采
             </span>
@@ -143,19 +148,19 @@ export default function InputDashboardPoolTable({
           </div>
         ) : (
           <div className="overflow-x-auto rounded-md border border-border/40">
-            <table className="w-full text-sm">
+            <table className={cn('w-full', fontSize)}>
               <thead>
-                <tr className="border-b border-border/40 bg-muted/30 text-muted-foreground">
-                  <th className="w-10 whitespace-nowrap px-3 py-2.5 text-center text-[11px] font-semibold uppercase tracking-wide">选择</th>
-                  <th className="whitespace-nowrap px-3 py-2.5 text-left text-[11px] font-semibold uppercase tracking-wide">代码</th>
-                  <th className="whitespace-nowrap px-3 py-2.5 text-left text-[11px] font-semibold uppercase tracking-wide">名称</th>
-                  <th className="whitespace-nowrap px-3 py-2.5 text-left text-[11px] font-semibold uppercase tracking-wide">板块</th>
-                  <th className="whitespace-nowrap px-3 py-2.5 text-left text-[11px] font-semibold uppercase tracking-wide">三级分类</th>
-                  <th className="whitespace-nowrap px-3 py-2.5 text-center text-[11px] font-semibold uppercase tracking-wide">来源</th>
-                  <th className="whitespace-nowrap px-3 py-2.5 text-right text-[11px] font-semibold uppercase tracking-wide">最新价</th>
-                  <th className="whitespace-nowrap px-3 py-2.5 text-right text-[11px] font-semibold uppercase tracking-wide">总市值</th>
-                  <th className="whitespace-nowrap px-3 py-2.5 text-center text-[11px] font-semibold uppercase tracking-wide">采集状态</th>
-                  <th className="whitespace-nowrap px-3 py-2.5 text-center text-[11px] font-semibold uppercase tracking-wide">操作</th>
+                <tr className="border-b border-border/40 bg-muted/30 text-muted-foreground" style={{ height: rowHeight }}>
+                  <th className={cn('w-10 whitespace-nowrap text-center text-[11px] font-semibold uppercase tracking-wide', padding)}>选择</th>
+                  <th className={cn('whitespace-nowrap text-left text-[11px] font-semibold uppercase tracking-wide', padding)}>代码</th>
+                  <th className={cn('whitespace-nowrap text-left text-[11px] font-semibold uppercase tracking-wide', padding)}>名称</th>
+                  <th className={cn('whitespace-nowrap text-left text-[11px] font-semibold uppercase tracking-wide', padding)}>板块</th>
+                  <th className={cn('whitespace-nowrap text-left text-[11px] font-semibold uppercase tracking-wide', padding)}>三级分类</th>
+                  <th className={cn('whitespace-nowrap text-center text-[11px] font-semibold uppercase tracking-wide', padding)}>来源</th>
+                  <th className={cn('whitespace-nowrap text-right text-[11px] font-semibold uppercase tracking-wide', padding)}>最新价</th>
+                  <th className={cn('whitespace-nowrap text-right text-[11px] font-semibold uppercase tracking-wide', padding)}>总市值</th>
+                  <th className={cn('whitespace-nowrap text-center text-[11px] font-semibold uppercase tracking-wide', padding)}>采集状态</th>
+                  <th className={cn('whitespace-nowrap text-center text-[11px] font-semibold uppercase tracking-wide', padding)}>操作</th>
                 </tr>
               </thead>
               <tbody className={cn('divide-y', 'divide-border/40')}>
@@ -172,46 +177,47 @@ export default function InputDashboardPoolTable({
                           ? 'bg-primary/5'
                           : 'hover:bg-muted/30',
                       )}
+                      style={{ height: rowHeight }}
                     >
-                      <td className="whitespace-nowrap px-3 py-2.5 text-center">
+                      <td className={cn('whitespace-nowrap text-center', padding)}>
                         <Checkbox
                           checked={selectedSymbols.includes(item.symbol)}
                           onChange={() => onToggleSelect(item.symbol)}
                           aria-label={`选择 ${item.symbol}`}
                         />
                       </td>
-                      <td className="whitespace-nowrap px-3 py-2.5 font-mono text-xs font-medium text-foreground/90">
+                      <td className={cn('whitespace-nowrap font-mono font-medium text-foreground/90', padding)}>
                         {item.symbol}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-2.5 text-sm font-medium">
+                      <td className={cn('whitespace-nowrap font-medium', padding)}>
                         {item.name}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-2.5 text-xs text-muted-foreground">
+                      <td className={cn('whitespace-nowrap text-muted-foreground', padding)}>
                         {item.sector ?? (dictItem ? getMarketLabel(dictItem.market) : '-')}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-2.5 text-xs text-muted-foreground">
+                      <td className={cn('whitespace-nowrap text-muted-foreground', padding)}>
                         {item.industryCode ?? '-'}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-2.5 text-center">
+                      <td className={cn('whitespace-nowrap text-center', padding)}>
                         <Badge className={cn('border text-[10px] px-2 py-0.5 font-medium', screenSourceMeta(item).className)}>
                           {screenSourceMeta(item).label}
                         </Badge>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-2.5 text-right font-mono text-xs tabular-nums">
+                      <td className={cn('whitespace-nowrap text-right font-mono tabular-nums', padding)}>
                         {isCollected ? (
                           <span className="text-foreground/90">{formatPrice(item.price)}</span>
                         ) : (
                           <span className="text-muted-foreground/50">—</span>
                         )}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-2.5 text-right font-mono text-xs tabular-nums">
+                      <td className={cn('whitespace-nowrap text-right font-mono tabular-nums', padding)}>
                         {item.marketCap !== undefined ? (
                           <span className="text-foreground/90">{formatMarketCap(item.marketCap)}</span>
                         ) : (
                           <span className="text-muted-foreground/50">—</span>
                         )}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-2.5 text-center">
+                      <td className={cn('whitespace-nowrap text-center', padding)}>
                         {isCollecting ? (
                           <Badge className="bg-info/10 text-info border-info/20 px-2 py-0.5 text-[10px]">
                             <span className="flex items-center gap-1 justify-center">
@@ -225,7 +231,7 @@ export default function InputDashboardPoolTable({
                           <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-border/50 text-muted-foreground">待采</Badge>
                         )}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-2.5 text-center">
+                      <td className={cn('whitespace-nowrap text-center', padding)}>
                         <div className="flex items-center justify-center gap-1">
                           <Button
                             size="sm"

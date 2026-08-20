@@ -8,6 +8,7 @@ import { widgetRegistry } from '@/cockpit/core/widgetRegistry'
 import { widgetEngine } from '@/cockpit/core/widgetEngine'
 import { MarketDataProvider, useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import { CockpitCrossLayout } from '@/cockpit/layout/CockpitCrossLayout'
+import { DensityToggle } from '@/components/cockpit/DensityToggle'
 import { getColorTailwind, getStockColorClass } from '@/constants/theme.tokens'
 import { getLogger } from '@/lib/logger'
 import { useIntentionPoolStore } from '@/store/intentionPoolStore'
@@ -20,7 +21,7 @@ import { Alert } from '@/components/molecules/Alert'
 import { ComplianceDisclaimer } from '@/components/atoms/ComplianceDisclaimer'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { ConfirmDialog } from '@/components/molecules/ConfirmDialog'
-import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { useMediaQuery, BREAKPOINT_MOBILE } from '@/hooks/useMediaQuery'
 import { cn } from '@/lib/utils'
 import type { WidgetConfig, MarketData } from '@/types/modules/widget.types'
 
@@ -458,7 +459,7 @@ function KpiSummaryBar(): React.JSX.Element {
 function CockpitContent(): React.JSX.Element {
   const [instances, setInstances] = useState<WidgetConfig[]>([])
   // 移动端降级：禁用纵横布局，改为简单纵向堆叠
-  const isMobile = useMediaQuery('(max-width: 767px)')
+  const isMobile = useMediaQuery(BREAKPOINT_MOBILE)
 
   const { confirm, dialogProps: confirmDialogProps } = useConfirmDialog()
 
@@ -537,6 +538,7 @@ function CockpitContent(): React.JSX.Element {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <DensityToggle />
             <Button variant="ghost" size="sm" className="rounded-full" onClick={handleAddWidget}>
               <Plus className="h-4 w-4 mr-1" />
               添加组件

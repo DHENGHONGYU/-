@@ -21,8 +21,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Car
 import { Button } from '@/components/atoms/Button'
 import { MultiFactorFilterPanel } from '@/components/organisms/analysis/screening/MultiFactorFilterPanel'
 import { useMultiFactorScreeningStore } from '@/store/multiFactorScreeningStore'
+import { useDensityConfig } from '@/components/cockpit/DensityContext'
 
 export default function MultiFactorFilterPage(): React.JSX.Element {
+  const { rowHeight, fontSize, padding } = useDensityConfig()
   const results = useMultiFactorScreeningStore((s) => s.results)
   const loading = useMultiFactorScreeningStore((s) => s.loading)
   const error = useMultiFactorScreeningStore((s) => s.error)
@@ -101,30 +103,30 @@ export default function MultiFactorFilterPage(): React.JSX.Element {
             ) : (
               <>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                  <table className={`w-full ${fontSize}`}>
                     <thead>
-                      <tr className="border-b text-left text-muted-foreground">
-                        <th className="px-3 py-2 font-medium">代码</th>
-                        <th className="px-3 py-2 font-medium">名称</th>
-                        <th className="px-3 py-2 font-medium">行业</th>
-                        <th className="px-3 py-2 font-medium">PE</th>
-                        <th className="px-3 py-2 font-medium">PB</th>
-                        <th className="px-3 py-2 font-medium">ROE(%)</th>
-                        <th className="px-3 py-2 font-medium">市值(亿)</th>
-                        <th className="px-3 py-2 font-medium">匹配条件组</th>
+                      <tr className="border-b text-left text-muted-foreground" style={{ height: rowHeight }}>
+                        <th className={`${padding} font-medium`}>代码</th>
+                        <th className={`${padding} font-medium`}>名称</th>
+                        <th className={`${padding} font-medium`}>行业</th>
+                        <th className={`${padding} font-medium`}>PE</th>
+                        <th className={`${padding} font-medium`}>PB</th>
+                        <th className={`${padding} font-medium`}>ROE(%)</th>
+                        <th className={`${padding} font-medium`}>市值(亿)</th>
+                        <th className={`${padding} font-medium`}>匹配条件组</th>
                       </tr>
                     </thead>
                     <tbody>
                       {results.slice(0, 20).map((item) => (
-                        <tr key={item.symbol} className="border-b hover:bg-muted/50">
-                          <td className="px-3 py-2 font-mono">{item.symbol}</td>
-                          <td className="px-3 py-2 font-medium">{item.name}</td>
-                          <td className="px-3 py-2 text-muted-foreground">{item.sector ?? '-'}</td>
-                          <td className="px-3 py-2">{item.pe?.toFixed(1) ?? '-'}</td>
-                          <td className="px-3 py-2">{item.pb?.toFixed(2) ?? '-'}</td>
-                          <td className="px-3 py-2">{item.roe?.toFixed(1) ?? '-'}</td>
-                          <td className="px-3 py-2">{item.marketCap?.toFixed(0) ?? '-'}</td>
-                          <td className="px-3 py-2 text-xs text-primary">
+                        <tr key={item.symbol} className="border-b hover:bg-muted/50" style={{ height: rowHeight }}>
+                          <td className={`${padding} font-mono`}>{item.symbol}</td>
+                          <td className={`${padding} font-medium`}>{item.name}</td>
+                          <td className={`${padding} text-muted-foreground`}>{item.sector ?? '-'}</td>
+                          <td className={padding}>{item.pe?.toFixed(1) ?? '-'}</td>
+                          <td className={padding}>{item.pb?.toFixed(2) ?? '-'}</td>
+                          <td className={padding}>{item.roe?.toFixed(1) ?? '-'}</td>
+                          <td className={padding}>{item.marketCap?.toFixed(0) ?? '-'}</td>
+                          <td className={`${padding} text-xs text-primary`}>
                             {item.matchedGroups.length}/{conditionGroups.length}
                           </td>
                         </tr>

@@ -13,6 +13,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import InputDashboard from './InputDashboard'
+import { DensityProvider } from '@/components/cockpit/DensityContext'
 import type { Stock } from '@/data/types'
 
 // ─── Mock 依赖 ──────────────────────────────────────────────
@@ -202,7 +203,9 @@ describe('InputDashboard + addStock 联动测试', () => {
   it('点击"仅录入"按钮触发 addStock 调用', async () => {
     render(
       <MemoryRouter>
-        <InputDashboard />
+        <DensityProvider>
+          <InputDashboard />
+        </DensityProvider>
       </MemoryRouter>,
     )
 
@@ -228,7 +231,9 @@ describe('InputDashboard + addStock 联动测试', () => {
   it('addStock 成功后调用 store.refresh（UI 状态更新触发点）', async () => {
     render(
       <MemoryRouter>
-        <InputDashboard />
+        <DensityProvider>
+          <InputDashboard />
+        </DensityProvider>
       </MemoryRouter>,
     )
 
@@ -247,7 +252,9 @@ describe('InputDashboard + addStock 联动测试', () => {
   it('addStock 成功后输入框被清空', async () => {
     render(
       <MemoryRouter>
-        <InputDashboard />
+        <DensityProvider>
+          <InputDashboard />
+        </DensityProvider>
       </MemoryRouter>,
     )
 
@@ -269,7 +276,9 @@ describe('InputDashboard + addStock 联动测试', () => {
   it('添加成功后显示成功消息', async () => {
     render(
       <MemoryRouter>
-        <InputDashboard />
+        <DensityProvider>
+          <InputDashboard />
+        </DensityProvider>
       </MemoryRouter>,
     )
 
@@ -303,7 +312,9 @@ describe('InputDashboard + addStock 联动测试', () => {
 
     render(
       <MemoryRouter>
-        <InputDashboard />
+        <DensityProvider>
+          <InputDashboard />
+        </DensityProvider>
       </MemoryRouter>,
     )
 
@@ -342,7 +353,9 @@ describe('InputDashboard + addStock 联动测试', () => {
 
     render(
       <MemoryRouter>
-        <InputDashboard />
+        <DensityProvider>
+          <InputDashboard />
+        </DensityProvider>
       </MemoryRouter>,
     )
 
@@ -368,7 +381,9 @@ describe('InputDashboard + addStock 联动测试', () => {
   it('空代码名称时不调用 addStock，直接显示验证提示', async () => {
     render(
       <MemoryRouter>
-        <InputDashboard />
+        <DensityProvider>
+          <InputDashboard />
+        </DensityProvider>
       </MemoryRouter>,
     )
 
@@ -399,7 +414,9 @@ describe('InputDashboard + addStock 联动测试', () => {
 
     render(
       <MemoryRouter>
-        <InputDashboard />
+        <DensityProvider>
+          <InputDashboard />
+        </DensityProvider>
       </MemoryRouter>,
     )
 

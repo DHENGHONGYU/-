@@ -31,6 +31,8 @@ import {
   type DualFactorResult,
   type TechnicalSignal,
 } from '@/components/molecules'
+import { DensityToggle } from '@/components/cockpit/DensityToggle'
+import { useDensityConfig } from '@/components/cockpit/DensityContext'
 
 const logger = getLogger()
 
@@ -41,6 +43,8 @@ function getScoreColorClass(score: number): string {
 }
 
 const PortfolioPage = memo(() => {
+  const { spacing, padding } = useDensityConfig()
+
   const loadPortfolio = useTradingStore((s) => s.loadPortfolio)
   const stocks = useTradingStore((s) => s.stocks)
   const orders = useTradingStore((s) => s.orders)
@@ -131,12 +135,15 @@ const PortfolioPage = memo(() => {
           title="投资组合"
           description="资金双轨配置（30% 耐心资本 + 70% 博收益）+ 核心组合管理 + 双因子评估"
           actions={
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/trading/holdings">
-                <Wallet className="mr-2 h-4 w-4" />
-                持仓明细
-              </Link>
-            </Button>
+            <div className="flex items-center gap-2">
+              <DensityToggle />
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/trading/holdings">
+                  <Wallet className="mr-2 h-4 w-4" />
+                  持仓明细
+                </Link>
+              </Button>
+            </div>
           }
         />
 
@@ -239,9 +246,9 @@ const PortfolioPage = memo(() => {
                   </div>
                 </div>
                 {portfolio.holdings.length > 0 && (
-                  <div className="mt-3 space-y-2">
+                  <div className={cn('mt-3 space-y-2', spacing)}>
                     {/* 表头 */}
-                    <div className="grid grid-cols-[1fr_auto_auto_auto_auto] items-center gap-2 rounded-md bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground">
+                    <div className={cn('grid grid-cols-[1fr_auto_auto_auto_auto] items-center gap-2 rounded-md bg-muted/50 text-xs text-muted-foreground', padding)}>
                       <span>名称</span>
                       <span className="text-right">当前价</span>
                       <span className="text-right">持仓市值</span>
@@ -265,7 +272,7 @@ const PortfolioPage = memo(() => {
                       return (
                         <div
                           key={holding.symbol}
-                          className="grid grid-cols-[1fr_auto_auto_auto_auto] items-center gap-2 rounded-md border p-3"
+                          className={cn('grid grid-cols-[1fr_auto_auto_auto_auto] items-center gap-2 rounded-md border', padding)}
                         >
                           <div>
                             <span className="font-medium">{holding.symbol}</span>

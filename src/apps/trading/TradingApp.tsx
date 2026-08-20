@@ -1,17 +1,25 @@
-import React, { useCallback, useEffect, useMemo, useRef, Suspense } from 'react'
-import { useLocation } from 'react-router'
+﻿import React, { useCallback, useEffect, useMemo, useRef, Suspense } from 'react'
+import { Link, useLocation } from 'react-router'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { Percent } from '@/components/atoms/Percent'
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from '@/components/atoms/Breadcrumb'
 import { useTradingStore } from '@/store/tradingStore'
 import { CoreResourcePanel } from './panels/CoreResourcePanel'
 import { getLogger } from '@/lib/logger'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { cn } from '@/lib/utils'
 import { EmptyState } from '@/components/molecules/EmptyState'
 import { Skeleton } from '@/components/molecules'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
-import { PageHeader } from '@/components/templates/PageHeader'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { useToast } from '@/hooks/useToast'
 import { AlertTriangle } from 'lucide-react'
 
@@ -94,15 +102,15 @@ function TradingDashboard(): React.JSX.Element {
   const signalDirectionClass = (direction: string): string => {
     switch (direction) {
       case 'buy':
-        return 'bg-[hsl(var(--stock-up)/0.15)] text-[hsl(var(--stock-up))]'
+        return 'text-stock-up bg-stock-up/15'
       case 'sell':
-        return 'bg-[hsl(var(--stock-down)/0.15)] text-[hsl(var(--stock-down))]'
+        return 'text-stock-down bg-stock-down/15'
       case 'watch':
-        return 'bg-[hsl(var(--warning)/0.15)] text-[hsl(var(--warning))]'
+        return 'text-warning bg-warning/15'
       case 'hold':
-        return 'bg-muted text-muted-foreground'
+        return 'text-muted-foreground bg-muted'
       default:
-        return 'bg-muted text-muted-foreground'
+        return 'text-muted-foreground bg-muted'
     }
   }
 
@@ -117,11 +125,11 @@ function TradingDashboard(): React.JSX.Element {
   }, [handleSell, toast])
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>交易舱 · 模拟盘</CardTitle>
+    <Card className="shadow-sm border-border/40">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base font-semibold">交易舱 · 模拟盘</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-5 pt-3">
         <div className="flex flex-wrap gap-2">
           <Button variant="secondary" size="sm" onClick={() => void loadStocks()}>
             加载观察池
@@ -140,7 +148,7 @@ function TradingDashboard(): React.JSX.Element {
 
         <h3 className="text-sm font-semibold">观察池交易建议</h3>
         {stocks.length === 0 && isRefreshing ? (
-          <div className="space-y-3">
+          <div className="space-y-5">
             <Skeleton variant="text" className="h-16 w-full" />
             <Skeleton variant="text" className="h-16 w-full" />
             <Skeleton variant="text" className="h-16 w-full" />
@@ -152,7 +160,7 @@ function TradingDashboard(): React.JSX.Element {
             action={{ label: '加载观察池', onClick: () => void loadStocks() }}
           />
         ) : (
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 transition-opacity duration-300">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 transition-opacity duration-300">
             {stocks.map((stock) => {
               const advice = adviceMap[stock.symbol]
               const signal = advice?.signal
@@ -160,9 +168,10 @@ function TradingDashboard(): React.JSX.Element {
               return (
                 <div
                   key={stock.symbol}
-                  className={`rounded-md border p-3 hover:bg-accent ${
-                    isRiskBlocked ? 'border-l-4 border-destructive' : ''
-                  }`}
+                  className={cn(
+                    'rounded-lg border border-border/40 p-3 transition-colors hover:bg-muted/30',
+                    isRiskBlocked ? 'border-l-4 border-destructive' : undefined,
+                  )}
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-medium">
@@ -196,12 +205,12 @@ function TradingDashboard(): React.JSX.Element {
                         </p>
                       )}
                       {advice.risk != null && !advice.risk.ok && (
-                        <p className={COLOR_TOKENS.danger.tailwind}>
+                        <p className="text-destructive text-xs font-medium">
                           风控阻塞：{advice.risk.blocks.join('；')}
                         </p>
                       )}
                       {advice.risk != null && advice.risk.ok && advice.risk.warnings.length > 0 && (
-                        <p className={COLOR_TOKENS.warning.tailwind}>
+                        <p className="text-warning text-xs">
                           风控提示：{advice.risk.warnings.join('；')}
                         </p>
                       )}
@@ -210,7 +219,7 @@ function TradingDashboard(): React.JSX.Element {
                   <div className="mt-2 flex gap-2">
                     <Button
                       size="sm"
-                      className="min-w-[80px] bg-[hsl(var(--stock-up))] hover:bg-[hsl(var(--stock-up)/0.9)] text-white"
+                      className="min-w-[80px] bg-stock-up hover:bg-stock-up/90 text-white"
                       onClick={() => void onBuy(stock)}
                       disabled={processingSymbols.has(stock.symbol)}
                     >
@@ -219,7 +228,7 @@ function TradingDashboard(): React.JSX.Element {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="min-w-[80px] border-[hsl(var(--stock-down))] text-[hsl(var(--stock-down))]"
+                      className="min-w-[80px] border-stock-down text-stock-down"
                       onClick={() => void onSell(stock)}
                       disabled={processingSymbols.has(stock.symbol)}
                     >
@@ -244,9 +253,9 @@ function TradingDashboard(): React.JSX.Element {
         ) : (
           <>
             <h3 className="text-sm font-semibold">全部信号 ({signals.length})</h3>
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {signals.map((signal) => (
-                <div key={signal.id} className="rounded-md border p-3 text-xs">
+                <div key={signal.id} className="rounded-lg border border-border/40 p-3 text-xs transition-colors hover:bg-muted/30">
                   <div className="flex items-center justify-between">
                     <span className="font-medium">{signal.symbol}</span>
                     <span className={`rounded px-1.5 py-0.5 font-medium ${signalDirectionClass(signal.direction)}`}>
@@ -264,11 +273,11 @@ function TradingDashboard(): React.JSX.Element {
         {orders.length === 0 ? (
           <EmptyState title="暂无持仓记录" />
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {orders.map((order) => (
               <div
                 key={order.id}
-                className="flex items-center justify-between rounded-md border p-3"
+                className="flex items-center justify-between rounded-lg border border-border/40 p-3 transition-colors hover:bg-muted/30"
               >
                 <span>
                   {order.symbol} · {order.direction} · {order.quantity}股
@@ -337,24 +346,35 @@ export default function TradingApp(): React.JSX.Element {
       ordersCount: orders.length,
       signalsCount: signals.length,
     })
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])  
 
   // 首屏自动加载数据
   useEffect(() => {
     void loadStocks()
     void loadOrders()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])  
 
   const matched = useMemo(() => matchTradingRoute(path), [path])
 
   return (
     <ErrorBoundary>
-      <div className="space-y-4 p-4">
+      <PageContainer className="space-y-6">
+        <Breadcrumb aria-label="breadcrumb">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild><Link to="/">首页</Link></BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>交易舱</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <PageHeader
           title="交易舱"
           description="模拟盘交易与信号管理"
           actions={
-            <Button onClick={() => void loadStocks()}>加载观察池</Button>
+            <Button onClick={() => void loadStocks()} className="shadow-sm">加载观察池</Button>
           }
         />
         {matched.component != null ? (
@@ -364,7 +384,7 @@ export default function TradingApp(): React.JSX.Element {
         ) : (
           <TradingDashboard />
         )}
-      </div>
+      </PageContainer>
     </ErrorBoundary>
   )
 }

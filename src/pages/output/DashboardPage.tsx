@@ -1,8 +1,9 @@
-import { memo, useEffect } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { BarChart3, Newspaper } from 'lucide-react'
+import { AlertTriangle, BarChart3, CheckCircle2, Newspaper, XCircle, Clock } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
+import { Button } from '@/components/atoms/Button'
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -20,6 +21,7 @@ import { useSectorAnalysisStore } from '@/store/sectorAnalysisStore'
 import { COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
 import { getLogger } from '@/lib/logger'
 import { PageContainer, PageHeader } from '@/components/templates'
+import { scanAllReportQualities, type QualityScanResult } from '@/services/orchestration/reportQualityChecker'
 
 const logger = getLogger()
 
@@ -41,11 +43,27 @@ const DashboardPage = memo(() => {
   const sectorLoading = useSectorAnalysisStore((s) => s.loading)
   const fetchSectorAnalysis = useSectorAnalysisStore((s) => s.fetchSectorAnalysis)
 
+  const [qualityScan, setQualityScan] = useState<QualityScanResult | null>(null)
+  const [qualityLoading, setQualityLoading] = useState(false)
+
+  const runQualityScan = async (): Promise<void> => {
+    setQualityLoading(true)
+    try {
+      const result = await scanAllReportQualities()
+      setQualityScan(result)
+    } catch (err) {
+      logger.error('[DashboardPage] 质量扫描失败', { error: err })
+    } finally {
+      setQualityLoading(false)
+    }
+  }
+
   useEffect(() => {
     logger.info('[DashboardPage] 挂载，加载真实统计')
     void loadStats()
     void refreshDiscipline()
     void fetchSectorAnalysis()
+    void runQualityScan()
   }, [loadStats, refreshDiscipline, fetchSectorAnalysis])
 
   const totalScoreDocs = versions.length
@@ -257,6 +275,122 @@ const DashboardPage = memo(() => {
             </CardContent>
           </Card>
         </div>
+
+        {/* 报告质量红线告警 —— P0-3 */}
+        <Card className={(qualityScan?.redAlerts ?? 0) > 0 ? 'border-destructive/50' : ''}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <div>
+              <CardTitle className="flex items-center gap-2 text-base">
+                {qualityLoading ? (
+                  <Clock className="h-4 w-4 animate-pulse text-muted-foreground" />
+                ) : qualityScan && qualityScan.redAlerts > 0 ? (
+                  <XCircle className="h-5 w-5 text-destructive" />
+                ) : qualityScan && qualityScan.yellowAlerts > 0 ? (
+                  <AlertTriangle className="h-5 w-5 text-warning" />
+                ) : (
+                  <CheckCircle2 className="h-5 w-5 text-success" />
+                )}
+                报告质量监控
+                <Badge variant="secondary" className="text-xs">
+                  {qualityScan ? `${qualityScan.totalReports} 份报告` : '扫描中...'}
+                </Badge>
+              </CardTitle>
+              <CardDescription>
+                {qualityScan
+                  ? `通过率 ${(qualityScan.summary.passRate * 100).toFixed(0)}% · 平均分 ${qualityScan.summary.avgScore}`
+                  : '正在扫描报告质量状态...'}
+              </CardDescription>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                void runQualityScan()
+              }}
+              disabled={qualityLoading}
+            >
+              {qualityLoading ? '扫描中...' : '重新扫描'}
+            </Button>
+          </CardHeader>
+          <CardContent>
+            {qualityLoading ? (
+              <LoadingState message="正在扫描报告质量..." />
+            ) : !qualityScan || qualityScan.totalReports === 0 ? (
+              <EmptyState
+                icon={<Newspaper />}
+                title="暂无报告数据"
+                description="生成分析报告后将自动进行质量检查"
+              />
+            ) : (
+              <div className="space-y-4">
+                {/* 告警汇总 */}
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="flex flex-col items-center rounded-md border border-destructive/30 bg-destructive/5 p-3">
+                    <span className="text-2xl font-bold text-destructive">{qualityScan.redAlerts}</span>
+                    <span className="text-xs text-muted-foreground">红色告警</span>
+                  </div>
+                  <div className="flex flex-col items-center rounded-md border border-warning/30 bg-warning/5 p-3">
+                    <span className="text-2xl font-bold text-warning">{qualityScan.yellowAlerts}</span>
+                    <span className="text-xs text-muted-foreground">黄色警告</span>
+                  </div>
+                  <div className="flex flex-col items-center rounded-md border border-success/30 bg-success/5 p-3">
+                    <span className="text-2xl font-bold text-success">{qualityScan.greenAlerts}</span>
+                    <span className="text-xs text-muted-foreground">通过报告</span>
+                  </div>
+                </div>
+
+                {/* 高频问题 */}
+                {qualityScan.summary.mostCommonIssues.length > 0 && (
+                  <div className="rounded-md border border-border/40 bg-muted/20 p-3">
+                    <p className="mb-2 text-xs font-medium text-muted-foreground">高频问题 TOP5</p>
+                    <div className="flex flex-wrap gap-2">
+                      {qualityScan.summary.mostCommonIssues.map((issue) => (
+                        <Badge key={issue} variant="outline" className="text-xs">
+                          {issue}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 红色告警详情 */}
+                {qualityScan.redAlerts > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-destructive">需立即修复的报告</p>
+                    <div className="max-h-48 space-y-1 overflow-y-auto">
+                      {qualityScan.reports
+                        .filter((r) => r.overallLevel === 'red')
+                        .slice(0, 5)
+                        .map((r) => (
+                          <div
+                            key={r.docId}
+                            className="flex items-center justify-between rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm"
+                          >
+                            <div>
+                              <span className="font-medium">{r.symbol}</span>
+                              <div className="mt-0.5 flex gap-1">
+                                {r.missingCriticalDeliverables.map((d) => (
+                                  <Badge key={d} variant="destructive" className="text-[10px]">
+                                    {d}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <span className="text-sm font-bold text-destructive">{r.score}分</span>
+                              <div className="text-[10px] text-muted-foreground">
+                                {new Date(r.createdAt).toLocaleDateString('zh-CN')}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </PageContainer>
     </ErrorBoundary>
   )

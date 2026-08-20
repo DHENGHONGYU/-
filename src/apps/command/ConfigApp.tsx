@@ -15,6 +15,7 @@ import { Label } from '@/components/atoms/Label'
 import { Switch } from '@/components/atoms/Switch'
 import { Select, SelectItem } from '@/components/atoms/Select'
 import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -25,10 +26,10 @@ import {
 } from '@/components/atoms/Breadcrumb'
 import { LLMConfigWidget } from '@/components/organisms/shared/LLMConfigWidget'
 import { isLlmConfigured, type PartialLlmConfig } from '@/config/llmConfig'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { getLogger } from '@/lib/logger'
 import { toSafeNumberInRange } from '@/lib/safeCoerce'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { ConfirmDialog } from '@/components/molecules/ConfirmDialog'
 import { useRuntimeTradingConfigStore } from '@/store/runtimeTradingConfigStore'
 
@@ -200,7 +201,7 @@ export default function ConfigApp(): React.JSX.Element {
   // 初始化时应用主题
   useEffect(() => {
     applyTheme(config.theme)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])  
 
   // 监听系统主题变化（当 theme 为 system 时）
   useEffect(() => {
@@ -280,9 +281,9 @@ export default function ConfigApp(): React.JSX.Element {
   }, [confirm])
 
   return (
-    <div className="space-y-4 p-4">
+    <PageContainer className="space-y-6">
       {/* 面包屑 */}
-      <Breadcrumb>
+      <Breadcrumb aria-label="breadcrumb">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
@@ -303,24 +304,29 @@ export default function ConfigApp(): React.JSX.Element {
       </Breadcrumb>
 
       {/* 页面标题 + 操作 */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-h1 font-bold">配置管理</h1>
-        <div className="flex items-center gap-2">
-          {saved && (
-            <span className={`text-sm ${COLOR_TOKENS.success.tailwind}`}>已自动保存</span>
-          )}
-          <Button variant="outline" size="sm" onClick={() => void handleResetToDefault()}>
-            恢复默认
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="配置管理"
+        description="交易参数 · 采集频率 · 显示主题 · LLM 模型"
+        actions={
+          <div className="flex items-center gap-2">
+            {saved ? (
+              <Badge variant="outline" className="border-success/40 bg-success/5 text-success text-[11px]">
+                已自动保存
+              </Badge>
+            ) : null}
+            <Button variant="outline" size="sm" onClick={() => void handleResetToDefault()} className="shadow-sm shrink-0">
+              恢复默认
+            </Button>
+          </div>
+        }
+      />
 
       {/* 交易配置组 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>交易配置</CardTitle>
+      <Card className="shadow-sm border-border/40">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base font-semibold">交易配置</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="pt-3 space-y-5">
           <div className="grid gap-4 sm:grid-cols-2">
             {/* 组合总资金 */}
             <div className="space-y-2">
@@ -379,8 +385,11 @@ export default function ConfigApp(): React.JSX.Element {
           </div>
 
           {/* 是否启用模拟交易 */}
-          <div className="flex items-center justify-between rounded-md border p-3">
-            <Label htmlFor="enablePaperTrading">启用模拟交易</Label>
+          <div className="flex items-center justify-between rounded-md border border-border/40 bg-muted/20 p-3">
+            <div>
+              <Label htmlFor="enablePaperTrading">启用模拟交易</Label>
+              <p className="text-[11px] text-muted-foreground mt-0.5">开启后所有下单仅写入本地 Mock，不触发真实交易</p>
+            </div>
             <Switch
               id="enablePaperTrading"
               checked={config.enablePaperTrading}
@@ -391,11 +400,11 @@ export default function ConfigApp(): React.JSX.Element {
       </Card>
 
       {/* 数据采集配置组 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>数据采集配置</CardTitle>
+      <Card className="shadow-sm border-border/40">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base font-semibold">数据采集配置</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="pt-3 space-y-5">
           <div className="grid gap-4 sm:grid-cols-2">
             {/* 数据刷新间隔 */}
             <div className="space-y-2">
@@ -414,8 +423,11 @@ export default function ConfigApp(): React.JSX.Element {
             </div>
 
             {/* 是否自动刷新 */}
-            <div className="flex items-center justify-between rounded-md border p-3 sm:col-span-2">
-              <Label htmlFor="autoRefresh">自动刷新数据</Label>
+            <div className="flex items-center justify-between rounded-md border border-border/40 bg-muted/20 p-3 sm:col-span-2">
+              <div>
+                <Label htmlFor="autoRefresh">自动刷新数据</Label>
+                <p className="text-[11px] text-muted-foreground mt-0.5">按刷新间隔自动拉取行情与信号</p>
+              </div>
               <Switch
                 id="autoRefresh"
                 checked={config.autoRefresh}
@@ -427,11 +439,11 @@ export default function ConfigApp(): React.JSX.Element {
       </Card>
 
       {/* 显示配置组 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>显示配置</CardTitle>
+      <Card className="shadow-sm border-border/40">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base font-semibold">显示配置</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="pt-3 space-y-5">
           <div className="grid gap-4 sm:grid-cols-2">
             {/* 主题 */}
             <div className="space-y-2">
@@ -469,11 +481,11 @@ export default function ConfigApp(): React.JSX.Element {
       </Card>
 
       {/* LLM 模型配置 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>LLM 模型配置</CardTitle>
+      <Card className="shadow-sm border-border/40">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base font-semibold">LLM 模型配置</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-3 space-y-5">
           <LLMConfigWidget
             value={llmConfig}
             onChange={handleLlmConfigChange}
@@ -485,6 +497,6 @@ export default function ConfigApp(): React.JSX.Element {
 
       {/* 命令式确认对话框（由 useConfirmDialog 驱动渲染） */}
       <ConfirmDialog {...dialogProps} />
-    </div>
+    </PageContainer>
   )
 }
