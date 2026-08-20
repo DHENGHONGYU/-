@@ -5,6 +5,9 @@
  * 职责：把「信号」（改动文件 / 用户提示词）匹配到 `.trae/skills/skill-registry.json`
  * 中的技能，输出命中清单与该技能的交付前必跑门禁（gates）。
  *
+ * 匹配范围（三层分离）：projectPhysicalSkills（物理盘）+ virtualPlatformSkills（虚拟层）
+ * —— 虚拟层 mandatory 技能的 gates 也经此强制层上钩（P1-3），实现跨层统一 gate 入口。
+ *
  * 用法：
  *   node scripts/skill-router.cjs                      # 默认 --remind，取暂存区改动（为空则取工作区改动）
  *   node scripts/skill-router.cjs --remind --log       # 提醒并追加命中日志（pre-commit 挂载方式）
@@ -87,24 +90,31 @@ function getChangedFiles(opts) {
 // ---------- 匹配 ----------
 function matchSkills(registry, files, prompt) {
   const hits = [];
-  // 兼容多种注册表格式：skills / projectPhysicalSkills
-  const skills = registry.skills || registry.projectPhysicalSkills || [];
-  for (const skill of skills) {
-    const fileHits = [];
-    for (const glob of skill.triggers.files || []) {
-      const re = globToRegex(glob);
-      for (const f of files) {
-        if (re.test(f)) fileHits.push({ glob, file: f });
+  // 三层分离匹配：physical（projectPhysicalSkills）+ virtual（virtualPlatformSkills）都纳入
+  // 覆盖 L4 强制层的门禁执行——P1-3（虚拟层失配）：此前只扫物理层，virtual 的 mandatory gates 从不上钩。
+  // registry.virtualPlatformSkills[].path 形如 "AGENTS.md#L38-L43 (virtual, no SKILL.md)"，仅用于展示。
+  const layers = [
+    registry.skills || registry.projectPhysicalSkills || [],
+    registry.virtualPlatformSkills || [],
+  ];
+  for (const skills of layers) {
+    for (const skill of skills) {
+      const fileHits = [];
+      for (const glob of skill.triggers.files || []) {
+        const re = globToRegex(glob);
+        for (const f of files) {
+          if (re.test(f)) fileHits.push({ glob, file: f });
+        }
       }
-    }
-    const keywordHits = [];
-    if (prompt) {
-      for (const kw of skill.triggers.keywords || []) {
-        if (kw && prompt.includes(kw)) keywordHits.push(kw);
+      const keywordHits = [];
+      if (prompt) {
+        for (const kw of skill.triggers.keywords || []) {
+          if (kw && prompt.includes(kw)) keywordHits.push(kw);
+        }
       }
-    }
-    if (fileHits.length > 0 || keywordHits.length > 0) {
-      hits.push({ skill, fileHits, keywordHits });
+      if (fileHits.length > 0 || keywordHits.length > 0) {
+        hits.push({ skill, fileHits, keywordHits });
+      }
     }
   }
   // mandatory 排前面

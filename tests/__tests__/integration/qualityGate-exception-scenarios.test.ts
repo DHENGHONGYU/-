@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @test_id V9-TEST-UT-P0-QG-EX
  * QualityGate P0-3 异常场景测试
  *
@@ -48,19 +48,23 @@ vi.mock('@/core/databridge', () => ({
   },
 }))
 
-vi.mock('@/services/data-collector/qualityMetricsCollector', () => ({
-  getQualityMetrics: () => ({
-    snapshot: () => ({
-      successRate: 1.0,
-      completeness: 1.0,
-      writeRate: 1.0,
-      totalTasks: 8,
-      completedTasks: 8,
-      failedTasks: 0,
-      dimensionStats: {},
+vi.mock('@/services/data-collector/qualityMetricsCollector', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...(actual as object),
+    getQualityMetrics: () => ({
+      snapshot: () => ({
+        successRate: 1.0,
+        completeness: 1.0,
+        writeRate: 1.0,
+        totalTasks: 8,
+        completedTasks: 8,
+        failedTasks: 0,
+        dimensionStats: {},
+      }),
     }),
-  }),
-}))
+  }
+})
 
 vi.mock('@/services/data-collector/collectionPipeline', async (importOriginal) => {
   const actual = await importOriginal()

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @test_id V9-TEST-UT-P0-QG
  * QualityGate P0 修复验证测试
  *
@@ -54,25 +54,33 @@ vi.mock('@/core/databridge', () => ({
 }))
 
 // --- Mock getQualityMetrics ---
-vi.mock('@/services/data-collector/qualityMetricsCollector', () => ({
-  getQualityMetrics: () => ({
-    snapshot: () => ({
-      successRate: 1.0,
-      completeness: 1.0,
-      writeRate: 1.0,
-      totalTasks: 8,
-      completedTasks: 8,
-      failedTasks: 0,
-      dimensionStats: {},
+vi.mock('@/services/data-collector/qualityMetricsCollector', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...(actual as object),
+    getQualityMetrics: () => ({
+      snapshot: () => ({
+        successRate: 1.0,
+        completeness: 1.0,
+        writeRate: 1.0,
+        totalTasks: 8,
+        completedTasks: 8,
+        failedTasks: 0,
+        dimensionStats: {},
+      }),
     }),
-  }),
-}))
+  }
+})
 
 // --- Mock runBatchTrace (retry 逻辑用) ---
-vi.mock('@/services/data-collector/collectionPipeline', () => ({
-  runBatchTrace: vi.fn().mockResolvedValue([]),
-  createDefaultCollectionConfig: () => ({ dimensions: [], timeout: 30000 }),
-}))
+vi.mock('@/services/data-collector/collectionPipeline', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...(actual as object),
+    runBatchTrace: vi.fn().mockResolvedValue([]),
+    createDefaultCollectionConfig: () => ({ dimensions: [], timeout: 30000 }),
+  }
+})
 
 // --- Mock runFullIndustryAnalysis: 捕获入参 ---
 vi.mock('@/services/analysis/industryAnalysisService', async (importOriginal) => {

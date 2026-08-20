@@ -7,7 +7,8 @@ import { fileURLToPath } from 'node:url'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = resolve(__filename, '..')
-const ROOT = resolve(__dirname, '..')
+// 审计脚本位于 scripts/audit/，需上溯 2 级到项目根；fallback 到 process.cwd() 保持与 npm 脚本一致
+const ROOT = resolve(__dirname, '..', '..')
 
 interface VisualIssue {
   type: 'error' | 'warning' | 'info'

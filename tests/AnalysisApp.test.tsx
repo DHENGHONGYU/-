@@ -3,17 +3,20 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
 import AnalysisApp from '@/apps/analysis/AnalysisApp'
+import { DensityProvider } from '@/components/cockpit/DensityContext'
 import * as analysisService from '@/services/analysis/analysisService'
 import * as v6ScoreService from '@/services/scoring/v6ScoreService'
 import { useToast } from '@/hooks/useToast'
 import type { Stock, V6Score } from '@/data/types'
 import { UI_TEXT } from '@/constants/uiText'
 
-// 辅助函数：包裹组件提供 Router 上下文
+// 辅助函数：包裹组件提供 Router + DensityProvider 上下文
 const renderWithRouter = (ui: React.ReactElement) => {
   return render(
     <MemoryRouter>
-      {ui}
+      <DensityProvider>
+        {ui}
+      </DensityProvider>
     </MemoryRouter>
   )
 }

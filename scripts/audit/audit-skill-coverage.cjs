@@ -24,7 +24,9 @@ const REGISTRY_PATH = path.join(ROOT, '.trae', 'skills', 'skill-registry.json');
 const AGENTS_PATH = path.join(ROOT, 'AGENTS.md');
 
 const violations = [];
+const warnings = [];
 const v = (msg) => violations.push(msg);
+const w = (msg) => warnings.push(msg);
 
 // ---------- 极简 frontmatter 解析（仅支持本项目受控格式） ----------
 function parseFrontmatter(filePath) {
@@ -99,8 +101,11 @@ function parseFrontmatter(filePath) {
 function main() {
   console.log('');
   console.log('╔════════════════════════════════════════════════════════════╗');
-  console.log('║  技能触发机制健康度审计 — audit-skill-coverage.cjs v1.0    ║');
+  console.log('║  技能触发机制健康度审计 — audit-skill-coverage.cjs v1.1    ║');
   console.log('╚════════════════════════════════════════════════════════════╝');
+  console.log('');
+  console.log('  [RULE-TPL 强制推广] 新技能（last_updated ≥ 2026-08-20 或 change_log 含「5 段式骨架模板」）');
+  console.log('              必须命中 S 级 5 大段标题（一/触发 二/前置 三/SOP 四/教训 五/交付物），缺任一段 exit 1');
   console.log('');
 
   // 读取 registry
@@ -239,8 +244,79 @@ function main() {
     }
   }
 
+  // ⑥ RULE-TPL：S 级 5 段式骨架强制推广
+  //    - 强 FAIL：change_log.changes 含「5 段式骨架模板」字样（明确声明基于模板创建/补齐）——缺任一段直接 exit 1
+  //    - 弱 WARN：last_updated ≥ 2026-08-20（今天及以后编辑过但尚未补 change_log 信号）——仅出 WARN，不阻断
+  //    这给历史技能（今天可能有 last_updated 元数据回写但未迁移）留出迁移 Batch-A/B 窗口，不会被新门禁一刀切锁死。
+  const TPL_CUTOFF_DATE = '2026-08-20';
+  const TPL_SIGNAL_IN_CL = '5 段式骨架模板';
+  const TPL_SECTIONS = [
+    ['§一 触发条件',   /## 一、触发条件/],
+    ['§二 前置检查',   /## 二、前置检查/],
+    ['§三 阶段化 SOP', /## 三、阶段化 SOP/],
+    ['§四 陷阱与经验教训', /## 四、陷阱与经验教训/],
+    ['§五 完成交付物清单', /## 五、完成交付物清单/],
+  ];
+  for (const name of skillDirs) {
+    const p = path.join(SKILLS_DIR, name, 'SKILL.md');
+    const text = fs.readFileSync(p, 'utf8');
+    const rawFm = parseFrontmatter(p);
+    const lu = typeof rawFm.last_updated === 'string' ? rawFm.last_updated : null;
+    const clStr = Array.isArray(rawFm.change_log) ? rawFm.change_log.map(x => (x && x.changes) ? x.changes : String(x)).join('\n') : '';
+    const hasSignal = clStr.includes(TPL_SIGNAL_IN_CL);
+    const justTouched = (lu && lu >= TPL_CUTOFF_DATE);
+    if (!hasSignal && !justTouched) continue;
+    const missing = TPL_SECTIONS.filter(([, re]) => !re.test(text)).map(([label]) => label);
+    if (missing.length > 0) {
+      if (hasSignal) {
+        v(`RULE-TPL FAIL（${name}）: 缺少 ${missing.length} 段 — ${missing.join('、')}；请从 .agents/skills/_SKILL-TEMPLATE.md 复制骨架（change_log 含「5 段式骨架模板」信号，已启用严格 FAIL）`);
+      } else {
+        w(`RULE-TPL WARN（${name}）: 缺少 ${missing.length} 段 — ${missing.join('、')}（last_updated=${lu} ≥ ${TPL_CUTOFF_DATE}；属于待迁移存量技能，暂不阻断；迁移时在 change_log 补「5 段式骨架模板」信号后转为严格 FAIL）`);
+      }
+    }
+    // 内容质量子项初筛：均为 WARN（不因存量技能升 FAIL）
+    const triggersCount = (text.match(/显式触发|脚本\/审计触发|设计\/协议触发/g) || []).length;
+    if (triggersCount < 3 && (hasSignal || justTouched)) {
+      w(`RULE-TPL WARN（${name}）: 一/触发条件 可判定规则仅 ${triggersCount} 条，目标 ≥ 4`);
+    }
+    const phases = (text.match(/Phase [0-4]/g) || []);
+    const phaseSet = new Set(phases);
+    if (phaseSet.size < 4 && (hasSignal || justTouched)) {
+      w(`RULE-TPL WARN（${name}）: 三/阶段化 SOP 仅 ${phaseSet.size} 个 Phase 标记（${[...phaseSet].sort().join(',') || '无'}），目标 ≥ 4`);
+    }
+    // ---------- §四 陷阱与经验教训：双维度判定（条目数统计 + 扩展关键词） ----------
+    // 先把 §四 单独切出来（在 §四 标题和 §五 标题之间 / 或文件末尾）
+    const s4Start = text.indexOf('## 四、陷阱与经验教训');
+    const s4EndA = text.indexOf('## 五、完成交付物清单', s4Start > 0 ? s4Start : 0);
+    const s4 = s4Start >= 0 ? text.slice(s4Start, (s4EndA > s4Start) ? s4EndA : text.length) : '';
+    // a) 教训条目表行数：表格里 | # | ... | 之后的条目行（行首 | N |）
+    const lessonTableRows = s4 ? (s4.match(/^\|\s*\d+\s*\|/gm) || []).length : 0;
+    // b) 编号列表条目数：行首 N. / N、（§四 正文范围）
+    const lessonListItems = s4 ? (s4.match(/^\s*\d+\s*[.、、]/gm) || []).length : 0;
+    const lessonEntries = Math.max(lessonTableRows, lessonListItems); // 取两者较大值（有时混合用）
+    // c) 扩展关键词（覆盖教训表三列常用词：陷阱/教训/踩坑 + 反模式/误区/决策陷阱 / 后果 规避 避免 防止）
+    const lessonKeywords = (s4.match(/陷阱|教训|踩坑|反模式|常见误区|决策陷阱|后果|规避|避免|防止/g) || []).length;
+    // 判定：只要「条目数 ≥ 8」或「关键词命中 ≥ 8」任一满足，就算合格；两者都不满足才 WARN
+    const lessonsQualified = (lessonEntries >= 8) || (lessonKeywords >= 8);
+    if (!lessonsQualified && (hasSignal || justTouched)) {
+      const evidence = `条目数=${lessonEntries}（表行=${lessonTableRows}/列表=${lessonListItems}），关键词命中=${lessonKeywords}`;
+      w(`RULE-TPL WARN（${name}）: 四/陷阱与经验教训 条目不足（目标 ≥ 8 条）；${evidence}）`);
+    }
+    // 向后兼容：保留原 lessonsCount 变量名（若后续其他位置引用）
+    const lessonsCount = lessonEntries || lessonKeywords;
+    const deliverablesCount = (text.match(/\| # \||交付物/g) || []).length;
+    if (deliverablesCount < 3 && (hasSignal || justTouched)) {
+      w(`RULE-TPL WARN（${name}）: 五/完成交付物清单 仅 ${deliverablesCount} 命中，目标 ≥ 10 项清单表`);
+    }
+  }
+
   // ---------- 报告 ----------
   console.log('');
+  if (warnings.length > 0) {
+    console.log(`🟡 RULE-TPL ${warnings.length} 条待迁移存量提示（WARN，不阻断 exit）：`);
+    for (const msg of warnings) console.log(`  - ${msg}`);
+    console.log('');
+  }
   if (violations.length === 0) {
     console.log(`✅ 全绿：${skillDirs.length} 个技能三方一致（frontmatter ↔ registry ↔ AGENTS.md），触发路径齐全。`);
     process.exit(0);
@@ -248,7 +324,7 @@ function main() {
   console.log(`🔴 发现 ${violations.length} 处违规：`);
   for (const msg of violations) console.log(`  - ${msg}`);
   console.log('');
-  console.log('⚠️  修复后重跑 npm run audit:skill-coverage；新增技能请按 AGENTS.md 技能路由表「变更纪律」三步走。');
+  console.log('⚠️  修复后重跑 npm run audit:skill-coverage；新增技能请按 AGENTS.md 技能路由表「变更纪律」三步走（含 RULE-TPL：基于 _SKILL-TEMPLATE.md 创建并在 change_log 写「5 段式骨架模板」信号）。');
   process.exit(1);
 }
 

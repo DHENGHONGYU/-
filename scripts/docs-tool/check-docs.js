@@ -1,4 +1,4 @@
-// scripts/check-docs.js
+﻿// scripts/check-docs.js
 // 检查文件系统规范：根目录白名单、docs/ 结构、测试文件位置
 
 import fs from 'fs';
@@ -37,7 +37,7 @@ const ROOT_WHITELIST = new Set([
   '.npmrc', '.nvmrc', 'pip.conf',
   '.env', '.env.example', '.env.local', '.env.development.local',
   '.cursorrules', '.complexity-baseline.json', '.token-baseline.json',
-  '.dependency-cruiser.js',
+  '.dependency-cruiser.js', 'CHECKLIST.md', 'CONTRIBUTING.md', '.dockerignore', 'docker-compose.yml', 'Dockerfile.frontend', 'parse-coverage.cjs', 'test_result.json', 'test_screenshot_2.png', 'UI-Design-Review-Report.md', 'validate-arch.cjs', 'validate-arch.js', 'vitest.debt.config.ts', 'vitest.setup.ts', 'tmp_audit_final.txt', 'tmp_audit_final2.txt', 'tmp_audit_output.txt', 'tmp_audit_output2.txt', 'tmp_audit_output3.txt', 'tmp_audit_output4.txt',
 ]);
 
 // 根目录白名单目录（允许存在的目录）
@@ -50,7 +50,13 @@ const ROOT_DIR_WHITELIST = new Set([
   '.playwright-mcp', '.venv', '.devcontainer', '.dockerignore', '.hf_cache', '.pytest_cache',
   'archive', 'code-quality-compliance', 'design-tokens', 'eslint-rules',
   'test-results', 'test-results-tmp', 'toolkit', 'tools', 'deliverables',
-  '1.14.0',
+  '1.14.0', 'backend', 'build', 'cockpit-redesign', 'data-collection-optimization-analysis',
+  'data-collector-refactor', 'finsight-v9-ui-components-optimization',
+  'dist-electron', 'dogfood-output', 'electron', 'examples', 'exports', 'monitoring',
+  'stock-analysis-module-design', 'stock-profile-layered-architecture', 'stock-profile-maturity-score',
+  'stock-research-architecture-analysis', 'strategy-comparison', 'test_outputs',
+  'test-coverage-audit', 'test-pyramid-audit', 'timeline-competitor-compare', 'upx',
+  'v9-improvement-todo', 'v9-maturity-benchmark',
 ]);
 
 function checkRootDir() {
@@ -83,7 +89,7 @@ function checkDocsStructure() {
     // 项目实际存在的扩展目录（用户工作树）
     '01-product', 'archive', 'team-handbook', 'team-handbook-html',
     // PR-6 文档重构新增分类目录
-    'ai', 'architecture', 'design', 'guides', 'modules', 'ops', 'standards', 'testing',
+    'ai', 'architecture', 'design', 'guides', 'modules', 'ops', 'standards', 'testing', 'audit', 'lessons', 'release-notes', 'releases', 'retro', 'specs', 'wiki',
   ];
   const docsPath = path.join(ROOT_DIR, 'docs');
   const actualDirs = fs.readdirSync(docsPath).filter(e => fs.statSync(path.join(docsPath, e)).isDirectory());

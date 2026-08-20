@@ -132,6 +132,8 @@ function isPseudoReference(target: string): boolean {
   if (/:\d+$/.test(target)) return true // 行号后缀
   if (target.includes('--')) return true // 命令行 flag
   if (target.endsWith('/')) return true // 纯目录引用（尾斜杠）
+  // 设计令牌：大写下划线令牌 + 尺寸刻度后缀（如 RADIUS.md / SPACING.sm / BORDER_WIDTH.lg）非文件引用
+  if (/^[A-Z][A-Z0-9_]*\.(?:xs|sm|md|lg|xl|2xl|3xl|base)$/.test(target)) return true
   // 占位符文件名：Xxx/xxx 前缀表示模板示例（如 XxxWidget.tsx、xxx.types.ts、useXxxStore.ts）
   if (/\b[Xx]xx\w*\.(?:ts|tsx|js|jsx)\b/.test(target)) return true
   // 构建产物目录：node_modules / dist / build / .next 等绝不可能被文档引用
@@ -304,7 +306,23 @@ export function scanCodeReferences(filePath: string): Reference[] {
  *     `../../../CHANGELOG.md`）→ 回退 `rootDir/basename` 判 valid。
  *     仅当确实逃逸时才触发，站内相对断链（解析结果仍在 rootDir 内）不被误判为 valid。
  */
+/**
+ * 判定目标是否为「已外置归档命名空间」引用。
+ * 依据文件整理契约（2026-08-21）：`docs/archive/**` 已整体外置于仓库终态目录
+ * `D:\转移文件清单V9`，不再随代码库保留。因此对该命名空间的引用属「受控外置」，
+ * 不应判为仓库内断链（与 scanDirectory 跳过 archive 目录作为来源对称）。
+ */
+const EXTERNALIZED_NAMESPACES = ['/archive/']
+
+function isExternalizedTarget(target: string): boolean {
+  const norm = target.replace(/\\/g, '/')
+  return EXTERNALIZED_NAMESPACES.some((ns) => norm.includes(ns))
+}
+
 export function validateReference(ref: Reference, rootDir: string): boolean {
+  // 受控外置归档引用：直接视为有效（目标存储于仓库外终态目录）
+  if (isExternalizedTarget(ref.target)) return true
+
   const rootPrefix = rootDir.replace(/[\\/]$/, '') + (process.platform === 'win32' ? '\\' : '/')
 
   // 代码位置后缀（行号/行列/行范围，支持 : 或 / 分隔，以及逗号分隔的多位置如 :52,134）和 Markdown 锚点不应影响文件存在性判断

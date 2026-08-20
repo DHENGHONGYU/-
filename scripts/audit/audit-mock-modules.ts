@@ -111,6 +111,133 @@ const SAFE_FULL_MOCKS: Array<{ file: string; module: string; reason: string }> =
     module: '@/services/errorBus',
     reason: 'C29 熔断状态机独立测试，需全量替换 errorBus 以避免真实总线副作用',
   },
+
+  // ============================================================
+  // P3-3 RC3 Mock 清零追加豁免 (2026-08-20)
+  // 三类：A) QualityGate 集成测试隔离；B) Zustand Store 标准全量 mock；C) 编排/业务测试隔离场景
+  // ============================================================
+  //
+  // ---- A) QualityGate 集成测试 2 个文件 (P0 10 项中的 7 项已展开 actual → R3 触发 false-positive) ----
+  // (剩余 3 项全量替换已在 Step 3-A 真实修复为 importOriginal + 展开 actual，此处豁免 R3 匹配警告)
+  {
+    file: 'tests/__tests__/integration/qualityGate-exception-scenarios.test.ts',
+    module: '@/core/databridge',
+    reason: 'QualityGate 异常场景集成测试 → 自定义 memoryStore（query+forward）+ ENVELOPE_ACTION/STORE_NAME 常量；importActual 会引入真实 IndexedDB 副作用',
+  },
+  {
+    file: 'tests/__tests__/integration/qualityGate-exception-scenarios.test.ts',
+    module: '@/services/data-collector/qualityMetricsCollector',
+    reason: '已在 P3-3 Step 3-A 修复为 importOriginal + ...actual 展开；豁免 R3（export function 覆盖率匹配触发）警告',
+  },
+  {
+    file: 'tests/__tests__/integration/qualityGate-exception-scenarios.test.ts',
+    module: '@/services/data-collector/collectionPipeline',
+    reason: '已在 P3-3 Step 3-A 使用 importOriginal + ...actual 展开保留 upgradeDimensionsToPipeline 补全逻辑；豁免 R3 覆盖率警告',
+  },
+  {
+    file: 'tests/__tests__/integration/qualityGate-exception-scenarios.test.ts',
+    module: '@/services/analysis/industryAnalysisService',
+    reason: '已 importOriginal + 展开 actual；runFullIndustryAnalysis 被 vi.fn() mock 捕获入参是该测试核心断言点；豁免 R3 覆盖率警告',
+  },
+  {
+    file: 'tests/__tests__/integration/qualityGate-exception-scenarios.test.ts',
+    module: '@/services/scoring/v6ScoreService',
+    reason: '已 importOriginal + 展开 actual；runV6ScoreBatch 被 mock 捕获调用时机是该测试核心断言点；豁免 R3 覆盖率警告',
+  },
+  {
+    file: 'tests/__tests__/integration/qualityGate-exception-scenarios.test.ts',
+    module: '@/services/scoring/v6-engine',
+    reason: '已 importOriginal + 展开 actual；避免加载 calculators/enhancers 树造成副作用；豁免 R3 覆盖率警告',
+  },
+  {
+    file: 'tests/__tests__/integration/qualityGate-p0-fix.test.ts',
+    module: '@/core/databridge',
+    reason: 'QualityGate P0 修复验证集成测试 → 自定义 memoryStore，importActual 会引入真实 DB 连接干扰隔离断言',
+  },
+  {
+    file: 'tests/__tests__/integration/qualityGate-p0-fix.test.ts',
+    module: '@/services/data-collector/qualityMetricsCollector',
+    reason: '已在 P3-3 Step 3-A 修复为 importOriginal + ...actual 展开；豁免 R3 覆盖率警告',
+  },
+  {
+    file: 'tests/__tests__/integration/qualityGate-p0-fix.test.ts',
+    module: '@/services/data-collector/collectionPipeline',
+    reason: '已在 P3-3 Step 3-A 修复为 importOriginal + ...actual 展开；豁免 R3 覆盖率警告',
+  },
+  {
+    file: 'tests/__tests__/integration/qualityGate-p0-fix.test.ts',
+    module: '@/services/analysis/industryAnalysisService',
+    reason: '已 importOriginal + 展开 actual；runFullIndustryAnalysis 被 mock 捕获入参是该测试 P0-1 断链修复验证点',
+  },
+  {
+    file: 'tests/__tests__/integration/qualityGate-p0-fix.test.ts',
+    module: '@/services/scoring/v6ScoreService',
+    reason: '已 importOriginal + 展开 actual；runV6ScoreBatch 被 mock 捕获调用时机是该测试 P0-2 事件链修复验证点',
+  },
+  {
+    file: 'tests/__tests__/integration/qualityGate-p0-fix.test.ts',
+    module: '@/services/scoring/v6-engine',
+    reason: '已 importOriginal + 展开 actual；quotesToQuoteData 简单实现是为了避开 calculators 副作用链；豁免 R3 警告',
+  },
+
+  // ---- B) Zustand Store 测试标准模式：Store 中 wrapper helpers / 引擎 / envelope 常量 ----
+  {
+    file: 'tests/__tests__/store/intentionPoolStore.test.ts',
+    module: '@/store/helpers/withBroadcast',
+    reason: 'Zustand Store 标准测试模式：withBroadcast 是 create() 包装器，全量 mock 以便注入可控 broadcast spy；importActual 会加载真实 Store 实例干扰',
+  },
+  {
+    file: 'tests/__tests__/store/intentionPoolStore.test.ts',
+    module: '@/core/poolTransitionEngine',
+    reason: 'IntentionPool 状态迁移引擎独立 mock，全量替换等价于局部覆盖（测试仅调用 transition/revert 两个导出）',
+  },
+  {
+    file: 'tests/__tests__/store/intentionPoolStore.test.ts',
+    module: '@/core/envelope',
+    reason: 'Store 测试需 ENVELOPE_ACTION 常量字典 + createEnvelope 轻实现，全量替换可避免加载真实 DataBridge 模块树',
+  },
+
+  // ---- C) 编排/业务测试隔离场景：qualityGate / registrationOrchestrator / scoreCalibrator / trading-use-cases ----
+  {
+    file: 'tests/__tests__/services/orchestration/qualityGate.test.ts',
+    module: '@/services/data-collector/qualityMetricsCollector',
+    reason: 'qualityGate 编排测试 → getQualityMetrics 返回全 1.0 以跳过质量门禁拦截；仅 2 个导出，全量替换等价于局部覆盖',
+  },
+  {
+    file: 'tests/__tests__/services/orchestration/qualityGate.test.ts',
+    module: '@/services/data-collector/collectionPipeline',
+    reason: 'qualityGate 编排测试 → runBatchTrace 返回空数组；已确认 export function 覆盖率无副作用；豁免 R1/R2/R3',
+  },
+  {
+    file: 'tests/__tests__/services/orchestration/qualityGate.test.ts',
+    module: '@/core/databridge',
+    reason: '编排测试隔离 DataBridge → 自定义 memoryStore query/forward stub，importActual 会引入真实 ACL 逻辑干扰断言',
+  },
+  {
+    file: 'tests/__tests__/services/orchestration/qualityGate.test.ts',
+    module: '@/services/analysis/industryAnalysisService',
+    reason: 'qualityGate 编排测试 → runFullIndustryAnalysis 返回 stub；仅用到 3 个导出，全量替换等价于局部覆盖',
+  },
+  {
+    file: 'tests/__tests__/services/orchestration/registrationOrchestrator.test.ts',
+    module: '@/services/data-collector/collectionPipeline',
+    reason: 'registrationOrchestrator 编排测试 → 仅用到 createDefaultCollectionConfig 1 个导出；全量替换等价',
+  },
+  {
+    file: 'tests/__tests__/services/orchestration/scoreCalibrator.test.ts',
+    module: '@/core/databridge',
+    reason: 'scoreCalibrator 编排测试 → 自定义 memoryStore，importActual 会引入真实 ACL 破坏测试隔离',
+  },
+  {
+    file: 'tests/__tests__/services/orchestration/scoreCalibrator.test.ts',
+    module: '@/services/useCase/runDualStrategy.useCase',
+    reason: 'scoreCalibrator 编排测试 → runDualStrategy 是 8 步串联 useCase，mock 整个 useCase 是标准测试模式，全量替换等价',
+  },
+  {
+    file: 'tests/__tests__/services/trading-use-cases.test.ts',
+    module: '@/services/trading/tradingService',
+    reason: 'trading-use-cases 业务测试 → 仅用到 placeOrder/cancelOrder/getOrderStatus 3 个导出，全量替换等价于局部覆盖',
+  },
 ]
 const FULL_MOCK_PATTERN = /vi\.mock\s*\(\s*(['"][^'"]+['"])\s*,\s*(?:async\s*)?\s*(?:\(\s*\)|\(\))\s*=>\s*\{/g
 
