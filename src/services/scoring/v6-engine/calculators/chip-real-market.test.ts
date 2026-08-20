@@ -1,4 +1,4 @@
-/**
+﻿/**
  * G3-B Golden Test · 阶段 B（实盘风格数据验证）
  *
  * 验证三大维度：
@@ -405,13 +405,13 @@ describe('G3-B Phase B · 实盘 vs 合成 · 算法行为一致性', () => {
       closes: c.klines.map((k) => k.close),
       volumes: c.klines.map((k) => k.volume),
       turnoverRates: c.klines.map((k) => (k.turnoverRate ?? 3) / 100),
-      currentPrice: c.klines[c.klines.length - 1].close,
+      currentPrice: c.klines[c.klines.length - 1]!.close,
     })))
     const bLowDiff = computeAvgDiff(phaseBLow.map((c) => ({
       closes: c.klines.map((k) => k.close),
       volumes: c.klines.map((k) => k.volume),
       turnoverRates: c.klines.map((k) => (k.turnoverRate ?? 3) / 100),
-      currentPrice: c.klines[c.klines.length - 1].close,
+      currentPrice: c.klines[c.klines.length - 1]!.close,
     })))
 
     console.log('\n===== 阶段 A/B 高/低换手差异对比 =====')
