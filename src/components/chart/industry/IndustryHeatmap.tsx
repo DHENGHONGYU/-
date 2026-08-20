@@ -36,6 +36,7 @@ export interface IndustryHeatmapProps extends ComponentPropsWithoutRef<'div'> {
   groupByCategory?: boolean
   cellMinHeight?: number
   onCellClick?: (item: IndustryHeatmapDataItem) => void
+  highlightCode?: string
 }
 
 const COLOR_SCHEMES: Record<HeatmapColorScheme, { low: string; mid: string; high: string }> = {
@@ -77,6 +78,7 @@ const IndustryHeatmap = forwardRef<HTMLDivElement, IndustryHeatmapProps>(
       groupByCategory = false,
       cellMinHeight = 56,
       onCellClick,
+      highlightCode,
       ...divProps
     },
     ref,
@@ -179,7 +181,10 @@ const IndustryHeatmap = forwardRef<HTMLDivElement, IndustryHeatmapProps>(
                         minHeight: cellMinHeight,
                         fontSize: '11px',
                         cursor: onCellClick ? 'pointer' : 'default',
-                        transition: 'transform 0.15s ease',
+                        transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                        boxShadow: highlightCode === item.code
+                          ? `0 0 0 2px ${CHART_PALETTE.accent}, 0 2px 8px rgba(0,0,0,0.08)`
+                          : undefined,
                       }}
                       onMouseEnter={(e) => {
                         if (onCellClick) {

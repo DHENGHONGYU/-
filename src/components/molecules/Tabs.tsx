@@ -1,9 +1,12 @@
 import { createContext, useContext, useState, type HTMLAttributes, forwardRef, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 
+type TabsVariant = 'pills' | 'underline'
+
 interface TabsContextValue {
   value: string
   onValueChange: (value: string) => void
+  variant: TabsVariant
 }
 
 const TabsContext = createContext<TabsContextValue | null>(null)
@@ -18,13 +21,14 @@ export interface TabsProps extends HTMLAttributes<HTMLDivElement> {
   defaultValue?: string
   value?: string
   onValueChange?: (value: string) => void
+  variant?: TabsVariant
 }
 
 /**
  * Tabs
  */
 export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
-  ({ defaultValue = '', value, onValueChange, className, children, ...props }, ref) => {
+  ({ defaultValue = '', value, onValueChange, variant = 'pills', className, children, ...props }, ref) => {
     const [internalValue, setInternalValue] = useState(defaultValue)
     const isControlled = value !== undefined
     const activeValue = isControlled ? value : internalValue
@@ -36,8 +40,9 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
           onValueChange?.(v)
           if (!isControlled) setInternalValue(v)
         },
+        variant,
       }),
-      [activeValue, onValueChange, isControlled],
+      [activeValue, onValueChange, isControlled, variant],
     )
 
     return (
@@ -55,16 +60,22 @@ Tabs.displayName = 'Tabs'
  * TabsList
  */
 export const TabsList = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        'inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground',
-        className,
-      )}
-      {...props}
-    />
-  ),
+  ({ className, ...props }, ref) => {
+    const { variant } = useTabs()
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'inline-flex items-center justify-center text-muted-foreground',
+          variant === 'pills' && 'h-10 rounded-md bg-muted p-1',
+          variant === 'underline' && 'border-b border-border',
+          className,
+        )}
+        {...props}
+      />
+    )
+  },
 )
 TabsList.displayName = 'TabsList'
 
@@ -78,7 +89,7 @@ export interface TabsTriggerProps extends HTMLAttributes<HTMLButtonElement> {
  */
 export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
   ({ className, value, disabled, ...props }, ref) => {
-    const { value: activeValue, onValueChange } = useTabs()
+    const { value: activeValue, onValueChange, variant } = useTabs()
     const isActive = activeValue === value
 
     return (
@@ -90,10 +101,17 @@ export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
         disabled={disabled}
         onClick={() => onValueChange(value)}
         className={cn(
-          'inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-colors',
+          'inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
           'disabled:pointer-events-none disabled:opacity-50',
-          isActive && 'bg-background text-foreground shadow-sm',
+          variant === 'pills' && [
+            'rounded-sm px-3 py-1.5',
+            isActive && 'bg-background text-foreground shadow-sm',
+          ],
+          variant === 'underline' && [
+            'px-1 py-2.5 border-b-2 border-transparent hover:text-foreground',
+            isActive && 'border-primary text-foreground',
+          ],
           className,
         )}
         {...props}

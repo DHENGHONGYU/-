@@ -29,6 +29,8 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle'
 export interface PageHeaderProps {
   /** 标题（建议用字符串，自动套用 h1 排版阶梯） */
   title: React.ReactNode
+  /** 顶部眉批（Badge/Tooltip 等小标签，用于标识页面身份或状态） */
+  eyebrow?: React.ReactNode
   /** 辅助描述 */
   description?: React.ReactNode
   /** 右侧操作区（按钮、筛选器等） */
@@ -43,11 +45,12 @@ export interface PageHeaderProps {
 
 /**
  * 页面统一页头
- * @description 提供一致的页头结构：标题（h1 排版阶梯）+ 描述（辅助文字）
- * + 右侧操作区，下方以分隔线收口。建立清晰的页面信息层级。
+ * @description 提供一致的页头结构：眉批(可选) + 标题(h1 排版阶梯) + 描述(可选)
+ * + 右侧操作区(可选)，下方以分隔线收口。建立清晰的页面信息层级。
  */
 export function PageHeader({
   title,
+  eyebrow,
   description,
   actions,
   className,
@@ -66,6 +69,7 @@ export function PageHeader({
       )}
     >
       <div className="space-y-1.5">
+        {eyebrow != null && <div className="inline-flex">{eyebrow}</div>}
         <h1 className="text-h1 text-foreground">{title}</h1>
         {description != null && (
           <p className="text-body-sm text-muted-foreground">{description}</p>

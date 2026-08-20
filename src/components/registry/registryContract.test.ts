@@ -35,12 +35,8 @@ const PROJECT_ROOT = (() => {
   return p
 })()
 
-/** 允许的 @internal 预留组件白名单（2026-08-18 第九轮治理：7 个真僵尸组件已清理） */
-const RESERVED_INTERNAL = [
-  // Chart 域行业 v4 二子组件（父组件 IndustryV4Panel 已删除）
-  'IndustryV4Radar',
-  'SubIndicatorBar',
-] as const
+/** 允许的 @internal 预留组件白名单（2026-08-20 IndustryV4Radar / SubIndicatorBar 已接入页面，不再预留） */
+const RESERVED_INTERNAL = [] as const
 // type ReservedName = (typeof RESERVED_INTERNAL)[number]
 
 /** 同目录父子组合允许例外：（IndustryV4Panel 已删除，无需例外） */

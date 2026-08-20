@@ -102,8 +102,8 @@ export const ORGANISM_REGISTRY: ComponentEntry[] = [
   { name: 'candlestickChartTypes', level: 'organism', sourcePath: 'src/components/chart/candlestickChart.types.ts', targetPath: 'src/components/chart/candlestickChart.types.ts', status: 'active', description: 'K线图类型', consumers: ['CandlestickChart'] },
   { name: 'candlestickChartUtils', level: 'organism', sourcePath: 'src/components/chart/candlestickChart.utils.ts', targetPath: 'src/components/chart/candlestickChart.utils.ts', status: 'active', description: 'K线图工具', consumers: ['CandlestickChart'] },
   { name: 'IndustryHeatmap', level: 'organism', sourcePath: 'src/components/chart/industry/IndustryHeatmap.tsx', targetPath: 'src/components/chart/industry/IndustryHeatmap.tsx', status: 'active', description: '行业热力图', consumers: ['IndustryDashboardPage', 'HotSectorPage'] },
-  { name: 'IndustryV4Radar', level: 'organism', sourcePath: 'src/components/chart/industry/IndustryV4Radar.tsx', targetPath: 'src/components/chart/industry/IndustryV4Radar.tsx', status: 'active', description: '行业 V4 雷达图', consumers: ['TBD - pending integration'] },
-  { name: 'SubIndicatorBar', level: 'organism', sourcePath: 'src/components/chart/industry/SubIndicatorBar.tsx', targetPath: 'src/components/chart/industry/SubIndicatorBar.tsx', status: 'active', description: '行业子指标柱状图', consumers: ['TBD - pending integration'] },
+  { name: 'IndustryV4Radar', level: 'organism', sourcePath: 'src/components/chart/industry/IndustryV4Radar.tsx', targetPath: 'src/components/chart/industry/IndustryV4Radar.tsx', status: 'active', description: '行业 V4 雷达图', consumers: ['IndustryDashboardPage', 'IndustryScorePage'] },
+  { name: 'SubIndicatorBar', level: 'organism', sourcePath: 'src/components/chart/industry/SubIndicatorBar.tsx', targetPath: 'src/components/chart/industry/SubIndicatorBar.tsx', status: 'active', description: '行业子指标柱状图', consumers: ['IndustryDashboardPage', 'IndustryScorePage'] },
 
   // --- Input 域 ---
   { name: 'CollectionPlanPanel', level: 'organism', sourcePath: 'src/components/organisms/input/CollectionPlanPanel.tsx', targetPath: 'src/components/organisms/input/CollectionPlanPanel.tsx', status: 'active', description: '采集计划面板', consumers: ['CollectTaskPage', 'InputDashboard', 'SevenDimConfigPage'] },
@@ -143,7 +143,7 @@ export const ORGANISM_REGISTRY: ComponentEntry[] = [
 
   // --- Cockpit 域 ---
   { name: 'SignalSpectrum', level: 'organism', sourcePath: 'src/components/cockpit/SignalSpectrum.tsx', targetPath: 'src/components/cockpit/SignalSpectrum.tsx', status: 'active', description: '信号频谱（cockpit 域，仅 registry 标注不物理搬）', consumers: ['PortalShell', 'CockpitShell', 'TradingSignalPanel'] },
-  { name: 'DensityContext', level: 'organism', sourcePath: 'src/components/cockpit/DensityContext.tsx', targetPath: 'src/components/cockpit/DensityContext.tsx', status: 'active', description: '信息密度 Context', consumers: ['PortalShell', 'CockpitShell', 'DensityToggle'] },
-  { name: 'DensityToggle', level: 'organism', sourcePath: 'src/components/cockpit/DensityToggle.tsx', targetPath: 'src/components/cockpit/DensityToggle.tsx', status: 'active', description: '信息密度切换', consumers: ['PortalShell', 'CockpitShell', 'PageHeader'] },
+  { name: 'DensityContext', level: 'organism', sourcePath: 'src/components/cockpit/DensityContext.tsx', targetPath: 'src/components/cockpit/DensityContext.tsx', status: 'active', description: '信息密度 Context', consumers: ['App', 'CockpitShell', 'DensityToggle'] },
+  { name: 'DensityToggle', level: 'organism', sourcePath: 'src/components/cockpit/DensityToggle.tsx', targetPath: 'src/components/cockpit/DensityToggle.tsx', status: 'active', description: '信息密度切换', consumers: ['CockpitShell', 'PortfolioPage', 'InputDashboardPoolTable', 'IndustryDashboardPage'] },
   { name: 'StockSelector', level: 'organism', sourcePath: 'src/components/organisms/input/StockSelector.tsx', targetPath: 'src/components/organisms/input/StockSelector.tsx', status: 'active', description: '股票选择器（下拉搜索 + 选中态）', consumers: ['ScoreDocPage', 'AnalysisApp', 'InputDashboard'] }
 ]

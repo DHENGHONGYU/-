@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { X, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
+import { SampleDataBadge } from '@/components/common/SampleDataBadge'
 
 interface OnboardingStep {
   title: string
@@ -76,9 +77,12 @@ export function OnboardingGuide({ visible, onClose }: OnboardingGuideProps) {
   return (
     <div className="fixed bottom-4 right-4 z-50 w-80 bg-card border border-border rounded-xl shadow-lg p-4 animate-in slide-in-from-bottom-4">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-          新手指引 · {currentStep + 1}/{STEPS.length}
-        </span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+            新手指引 · {currentStep + 1}/{STEPS.length}
+          </span>
+          <SampleDataBadge label="引导模式" />
+        </div>
         <button onClick={handleDismiss} className="text-muted-foreground hover:text-foreground" aria-label="关闭">
           <X className="w-4 h-4" />
         </button>

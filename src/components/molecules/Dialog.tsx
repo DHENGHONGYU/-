@@ -38,7 +38,7 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(
         ref={dialogRef}
         className={cn(
           'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2',
-          'm-0 max-h-[85vh] w-full max-w-lg rounded-lg border bg-background p-0 shadow-lg backdrop:bg-black/50',
+          'm-0 max-h-[85vh] w-full max-w-lg rounded-lg border-border bg-background p-0 shadow-[0_24px_60px_-20px_hsl(var(--foreground)/0.18)] backdrop:bg-black/50',
           'open:animate-in open:fade-in-0 open:zoom-in-95',
           className,
         )}

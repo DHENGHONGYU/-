@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @fileoverview P5 复盘成品卡导出工具
  *
  * 将一份 TradeReviewReport 序列化为「自包含、可独立预览/分享」的 HTML 文档：
@@ -86,10 +86,14 @@ export function buildReviewArtifactHtml(report: TradeReviewReport, generatedAt: 
   const profile = errorAnalysis.psychologicalProfile
   const score = Math.max(0, Math.min(100, summary.disciplineScore))
 
+  // 布局常量（消除硬编码 px 值，集中管理便于响应式调整）
+  const CARD_MAX_WIDTH = '760px'
+  const MOBILE_BREAKPOINT = '600px'
+
   const css = `
     * { box-sizing: border-box; }
     body { margin:0; background:${COLOR_TOKENS.bgMuted.hex}; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif; color:${COLOR_TOKENS.textPrimary.hex}; }
-    .card { max-width:760px; margin:24px auto; background:${COLOR_TOKENS.bgCard.hex}; border:1px solid ${COLOR_TOKENS.border.hex}; border-radius:8px; overflow:hidden; }
+    .card { max-width:${CARD_MAX_WIDTH}; margin:24px auto; background:${COLOR_TOKENS.bgCard.hex}; border:1px solid ${COLOR_TOKENS.border.hex}; border-radius:8px; overflow:hidden; }
     .header { display:flex; align-items:center; justify-content:space-between; padding:16px 24px; background:${COLOR_TOKENS.textPrimary.hex}; color:${COLOR_TOKENS.bgCard.hex}; }
     .header .title { font-size:18px; font-weight:700; }
     .header .sub { font-size:12px; color:${COLOR_TOKENS.bgCard.hex}; margin-top:2px; }
@@ -104,7 +108,7 @@ export function buildReviewArtifactHtml(report: TradeReviewReport, generatedAt: 
     .profile .root { font-size:13px; color:${COLOR_TOKENS.textSecondary.hex}; }
     .skillbar { display:flex; align-items:center; justify-content:space-between; border:1px solid ${COLOR_TOKENS.border.hex}; border-radius:8px; padding:12px 16px; }
     .footer { border-top:1px solid ${COLOR_TOKENS.border.hex}; padding:12px 24px; font-size:12px; color:${COLOR_TOKENS.textMuted.hex}; }
-    @media (max-width:600px){ .grid4,.grid3{ grid-template-columns:repeat(2,1fr);} .card{margin:12px;} .body{padding:16px;} }
+    @media (max-width:${MOBILE_BREAKPOINT}){ .grid4,.grid3{ grid-template-columns:repeat(2,1fr);} .card{margin:12px;} .body{padding:16px;} }
   `
 
   const html = `<!DOCTYPE html>
