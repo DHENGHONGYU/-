@@ -14,6 +14,7 @@ change_log:
   - date: 2026-06-27
     author: Quality Auditor
     desc: 初始创建：审计执行计划
+code_version: 2.0.0-rc.2
 ---
 
 # V9 模块完成度逆向校验 — 执行计划

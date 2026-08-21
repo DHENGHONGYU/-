@@ -1,3 +1,8 @@
+---
+title: docs/archive/normal/reference-superpowers-2026-06-29-data-relationship-blueprint.md
+code_version: 2.0.0-rc.2
+---
+
 # V9 数据库数据关系与时间关系蓝图计划
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.

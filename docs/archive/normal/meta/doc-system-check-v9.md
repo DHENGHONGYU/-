@@ -4,6 +4,7 @@ title: "智能投研复盘系统 V9 — 文档归类体系体检报告"
 domain: meta
 status: active
 last_updated: 2026-08-15
+code_version: 2.0.0-rc.2
 ---
 
 ﻿---

@@ -1,3 +1,8 @@
+---
+title: docs/archive/normal/guides/solo-review.md
+code_version: 2.0.0-rc.2
+---
+
 # SOLO-REVIEW.md — 单人开发代码审查指南
 
 > **版本**: v1.0.0 | **日期**: 2026-07-05

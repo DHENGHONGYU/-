@@ -4,6 +4,7 @@ title: "股票池看板迁移至分析舱 — 可行性方案论证"
 domain: ref
 status: active
 last_updated: 2026-08-15
+code_version: 2.0.0-rc.2
 ---
 
 # 股票池看板迁移至分析舱 — 可行性方案论证

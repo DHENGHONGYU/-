@@ -4,6 +4,7 @@ title: "多因子选股筛选器数据字典"
 domain: ref
 status: active
 last_updated: 2026-08-15
+code_version: 2.0.0-rc.2
 ---
 
 # 多因子选股筛选器数据字典

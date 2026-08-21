@@ -4,6 +4,7 @@ title: "AI 中心 Vue3 组件示例"
 domain: ref
 status: active
 last_updated: 2026-08-15
+code_version: 2.0.0-rc.2
 ---
 
 # AI 中心 Vue3 组件示例

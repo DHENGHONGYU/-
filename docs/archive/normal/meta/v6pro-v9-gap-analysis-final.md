@@ -7,6 +7,7 @@ change_log:
   - version: v2.1.0
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-07-02
+code_version: 2.0.0-rc.2
 ---
 
 # V6 Pro → V9 架构差异分析报告

@@ -34,6 +34,7 @@ change_log:
   - version: v1.2.0
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-07-05
+code_version: 2.0.0-rc.2
 ---
 
 # DataBridge 端点与数据映射清单

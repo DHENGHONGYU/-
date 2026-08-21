@@ -1,3 +1,8 @@
+---
+title: docs/archive/normal/guides/code-review-training.md
+code_version: 2.0.0-rc.2
+---
+
 # 代码审查者培训材料
 
 > **版本**: v1.0.0 | **日期**: 2026-07-05

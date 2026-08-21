@@ -4,6 +4,7 @@ title: "Pull Request: P0 级资金安全修复 + P1 路由挂载 + 测试覆盖�
 domain: ref
 status: active
 last_updated: 2026-08-15
+code_version: 2.0.0-rc.2
 ---
 
 # Pull Request: P0 级资金安全修复 + P1 路由挂载 + 测试覆盖增强

@@ -4,6 +4,7 @@ title: "Security Model — V9 智能投研复盘系统安全架构"
 domain: arch
 status: active
 last_updated: 2026-08-15
+code_version: 2.0.0-rc.2
 ---
 
 # Security Model — V9 智能投研复盘系统安全架构

@@ -9,6 +9,7 @@ change_log:
   - version: v1.0.0
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-06-27
+code_version: 2.0.0-rc.2
 ---
 
 # 热门赛道策略（hot-momentum）

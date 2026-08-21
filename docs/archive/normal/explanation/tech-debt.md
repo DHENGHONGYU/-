@@ -1,3 +1,8 @@
+---
+title: docs/archive/normal/explanation/tech-debt.md
+code_version: 2.0.0-rc.2
+---
+
 # TECH-DEBT.md — 技术债管理文档
 
 > **版本**: v1.1.0 | **日期**: 2026-08-13
