@@ -1,12 +1,15 @@
 ---
 doc_id: V9-DOC-GUIDE-035
 title: Widget 开发指南
-version: v1.2.0
-last_updated: 2026-08-13
+version: v1.2.2
+last_updated: 2026-08-22
 maintainer: Quality Auditor
 status: active
 change_log:
-  - version: v1.2.0
+  - version: v1.2.2
+    changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.2.1) → R2 PATCH++(v1.2.2) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
+- version: v1.2.0
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-07-05
   - version: v1.2.1

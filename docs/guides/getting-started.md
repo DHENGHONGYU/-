@@ -1,10 +1,14 @@
 ---
-doc_id: V9-DOC-GUIDE-041
 title: "V9 智能投研复盘系统 — 新成员 30 分钟上手指南"
 domain: project
 status: active
-last_updated: 2026-08-17
+last_updated: 2026-08-22
 code_version: 2.0.0-rc.2
+version: v1.0.1
+change_log:
+  - version: v1.0.1
+    changes: "基准日校对(2026-08-22)：R1取真值(P2 正文版本声明行=v1.0.0) → R2 PATCH++(v1.0.1) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
 ---
 covers_code:
   - src/data/types.ts
