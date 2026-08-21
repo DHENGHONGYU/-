@@ -26,9 +26,8 @@ import type { SubIndicatorBarDataItem } from '@/components/chart/industry/SubInd
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/atoms'
 import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
-import { dataBridge } from '@/core/databridge'
+import { dataBridge, ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/core/databridge'
 import { mcpBridge } from '@/mcp'
-import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import { CHART_PALETTE } from '@/constants/theme.tokens'
 import type {
   IndustryV4AnalysisEnhanced,
