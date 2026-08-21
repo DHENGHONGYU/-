@@ -1,3 +1,8 @@
+---
+title: docs/test-strategy.md
+code_version: 2.0.0-rc.2
+---
+
 # 测试策略：isProgrammingError 子类原型链极端边界用例
 
 **文档编号**：V9-DOC-TEST-001

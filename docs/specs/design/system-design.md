@@ -4,6 +4,7 @@ title: "申万宏源 3 级行业分类 — 系统设计文档"
 domain: architecture
 status: active
 last_updated: 2026-08-15
+code_version: 2.0.0-rc.2
 ---
 covers_code:
   - src/services/stock/swIndustryMap.ts
