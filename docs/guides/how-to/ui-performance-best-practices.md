@@ -1,17 +1,17 @@
 ---
 doc_id: V9-DOC-DEV-021
 title: "UI 性能最佳实践"
-domain: dev
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
 
 ---
 title: UI性能最佳实践
-type: guide
+type: how-to
 domain: frontend
 phase: development
-tier: guide
+tier: standard
 status: active
 maintainer: V9 Architecture Team
 summary: "动画性能优化、暗色模式兼容性、响应式断点规范"

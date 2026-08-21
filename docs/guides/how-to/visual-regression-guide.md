@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-DEV-022
 title: "V9 视觉回归基线管理规范"
-domain: dev
+domain: project
 status: active
 last_updated: 2026-08-17
 ---

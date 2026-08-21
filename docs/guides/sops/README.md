@@ -1,9 +1,9 @@
 ---
 title: SDLC 七阶段 SOP 总览（Standard Operating Procedures）
-type: index
-domain: sops
-phase: overview
-tier: T0
+type: reference
+domain: project
+phase: planning
+tier: important
 status: active
 maintainer: V9 Architecture Team
 summary: "覆盖 FinSight V9 开发全生命周期 7 个连续阶段的标准操作 SOP 体系（S01→S07）：环境搭建 → 日常开发 → 代码审查 → 集成测试 → 上线体检 → 发布部署 → 运维应急。含阶段流转图、快速选择指南、版本兼容矩阵、与 7 篇 SOP 的双向链接。"

@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-DEV-008
 title: "PathTrace 模块 GitHub Actions 部署与版本门控指南"
-domain: dev
+domain: project
 status: active
 last_updated: 2026-08-15
 ---

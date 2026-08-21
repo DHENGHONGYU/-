@@ -1,9 +1,9 @@
 ---
 title: S01 · 开发环境搭建 SOP
-type: sop
-domain: dev-environment
-phase: onboarding
-tier: T2
+type: how-to
+domain: project
+phase: requirements
+tier: reference
 status: active
 maintainer: V9 Architecture Team
 summary: "新成员从零 60 分钟内完成可启动环境：Git/Node（与 .nvmrc 一致）/Python venv + AkShare/依赖安装/Husky/IDE 插件；跨平台 Windows + macOS/Linux 双命令集；引用 how-to-troubleshooting.md 并补充缺口 1：首次 Node 版本装错的 3 步回退。"

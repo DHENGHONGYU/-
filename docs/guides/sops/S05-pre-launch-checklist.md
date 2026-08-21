@@ -1,9 +1,9 @@
 ---
 title: S05 · 上线前全面体检 SOP
-type: sop
-domain: release
-phase: pre-launch
-tier: T1
+type: how-to
+domain: product
+phase: planning
+tier: standard
 status: active
 maintainer: V9 Architecture Team
 summary: "2.0.0 正式版上线前 24 步强制体检流程：环境校验→类型双检→核心门禁→Mock清扫→真数测试→RAG幻觉门禁→复杂度不增→契约一致性→文档审计→可信测试→构建验证，附P0/P1/P2分级与6维度综合评分模板。"

@@ -1,9 +1,9 @@
 ---
 title: S04 · 合并前集成测试 SOP
-type: sop
-domain: integration
-phase: pre-merge
-tier: T1
+type: how-to
+domain: backend
+phase: development
+tier: standard
 status: active
 maintainer: V9 Architecture Team
 summary: "PR 合入主干前的标准集成测试流程：单模块准入 → gate:quick 快速门禁 → 可信单元测试（排除 quarantine ≥99.2%）→ tsc:prod + audit:layers + ACL 一致性 → CI 对比 → E2E 冒烟，附本地 vs CI 结果双检与 merge dry-run 冲突预防。"
@@ -23,6 +23,9 @@ change_log:
     changes: "Initial version：抽取 22 步门禁与 pre-push 6 步子集，定义合并前集成测试的标准链路与阈值，补充 CI vs 本地双检与冲突预防 dry-run。"
     date: 2026-08-19
 ---
+covers_code:
+  - src/App.tsx
+
 
 # S04 · 合并前集成测试 SOP
 

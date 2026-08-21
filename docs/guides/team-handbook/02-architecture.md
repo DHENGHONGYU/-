@@ -1,10 +1,15 @@
 ---
 doc_id: V9-DOC-GUIDE-049
 title: "02 · 整体架构设计思路（Overall Architecture）"
-domain: guide
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/lib/withBroadcast.ts
+  - src/services/workers/v6ScoreTaskScheduler.ts
+  - src/services/system/aiMemoryService.ts
+
 
 ---
 doc_id: V9-DOC-GUIDE-032

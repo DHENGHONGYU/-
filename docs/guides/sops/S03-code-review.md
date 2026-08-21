@@ -1,9 +1,9 @@
 ---
 title: S03 · 代码审查（Code Review）SOP
-type: sop
-domain: code-review
-phase: review
-tier: T2
+type: how-to
+domain: qa
+phase: testing
+tier: reference
 status: active
 maintainer: V9 Architecture Team
 summary: "PR 模板 8 字段清单（≥ 6）；3 轮次 Review 检查矩阵（快速审 25 项 / 深度审 20 项 / 架构师复签 10 项）；单模块准入引用 module-completion-standard.md 并补 gap-2：跨模块 Review 时如何快速定位「被调用方契约变更」。"

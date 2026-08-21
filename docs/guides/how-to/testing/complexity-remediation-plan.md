@@ -18,6 +18,16 @@ change_log:
 changes: Initial version established
 date: 2026-07-17
 ---
+covers_code:
+  - src/services/llm/llmClient.ts
+  - src/data/db.ts
+  - src/services/input/inputService.ts
+  - src/services/news/newsService.ts
+  - src/services/data-collector/directDataAPI.ts
+  - src/services/fetcher/dataSourceRegistry.ts
+  - src/services/fetcher/directDataAPI.ts
+  - src/services/news/stockLinker.ts
+
 
 # 剩余复杂度整改任务清单与计划（2026-07-12）
 

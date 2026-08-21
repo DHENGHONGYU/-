@@ -1,4 +1,7 @@
 ---
+type: how-to
+domain: ai
+phase: development
 doc_id: V9-DOC-DEV-005
 title: mcp-acl-guide
 code_version: "2.0.0-rc.2"
@@ -13,6 +16,11 @@ change_log:
     changes: "P0 版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
 ---
+covers_code:
+  - src/config/mcpAclMatrix.ts
+  - src/config/mcpServerRegistry.ts
+  - src/mcp/__tests__/mcpAclInterceptor.test.ts
+
 
 
 # MCP 权限控制开发指南

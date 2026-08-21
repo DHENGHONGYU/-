@@ -1,10 +1,15 @@
 ---
 doc_id: V9-DOC-GUIDE-052
 title: "V9 团队开发操作指南"
-domain: guide
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/constants/cockpit.constants.ts
+  - src/core/acl.ts
+  - src/cockpit/core/widgetRegistry.ts
+
 
 ---
 title: 团队开发操作指南

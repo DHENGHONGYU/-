@@ -1,9 +1,9 @@
 ---
 title: S02 · 日常开发与提交 SOP
-type: sop
-domain: dev-workflow
-phase: implementation
-tier: T2
+type: how-to
+domain: project
+phase: development
+tier: reference
 status: active
 maintainer: V9 Architecture Team
 summary: "分支 7 型命名策略 + git worktree 并行开发 + squash merge 三规则；3 类合法提交方式（Conventional 规范 / git commit -m 速提 / SkAI agent 智能提交），禁止 git gui / IDE 插件提交；附 pre-commit 22 步 + pre-push 6 步门禁速查表，补充 governance 文档的 1 个回滚缺口。"

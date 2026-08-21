@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-GUIDE-047
 title: "组件命名规范与文档模板标准"
-domain: guide
+domain: project
 status: active
 last_updated: 2026-08-17
 ---

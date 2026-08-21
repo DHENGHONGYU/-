@@ -1,9 +1,9 @@
 ---
 title: S06 · 版本发布与部署 SOP
-type: sop
-domain: release-deploy
+type: how-to
+domain: project
 phase: deployment
-tier: T1
+tier: standard
 status: active
 maintainer: V9 Architecture Team
 summary: "按 semver 2.0 规范版本号（含 RC/HOTFIX 豁免）→ 文件单向同步（package.json → CHANGELOG → Git Tag，禁止反向）→ 构建产物三校验（清单+哈希+Entry）→ 灰度/正式/回滚三段部署命令。附部署后 30 分钟监控清单与双回滚预案。"

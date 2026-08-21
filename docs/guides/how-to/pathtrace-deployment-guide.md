@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-DEV-007
 title: "PathTrace 模块部署与配置指南"
-domain: dev
+domain: project
 status: active
 last_updated: 2026-08-15
 ---

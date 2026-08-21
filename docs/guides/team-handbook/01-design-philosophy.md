@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-GUIDE-048
 title: "01 · 设计与原创思路（Design & Original Thinking）"
-domain: guide
+domain: project
 status: active
 last_updated: 2026-08-17
 ---

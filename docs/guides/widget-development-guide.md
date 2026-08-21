@@ -13,6 +13,12 @@ change_log:
     changes: "文档新鲜度刷新：twBg/twText/twBorder 已废弃，确认令牌引用一致性"
     date: 2026-08-13
 ---
+covers_code:
+  - src/constants/cockpit.constants.ts
+  - src/cockpit/core/widgetRegistry.ts
+  - src/constants/theme.tokens.ts
+  - src/types/modules/widget.types.ts
+
 
 # Widget 开发指南
 

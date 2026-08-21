@@ -1,14 +1,14 @@
 ---
 doc_id: V9-DOC-GUIDE-045
 title: "模块完成标准（Definition of Done）"
-domain: guide
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
 
 ---
 title: 模块完成标准（DoD）
-type: guide
+type: how-to
 domain: project
 phase: development
 status: active
@@ -19,7 +19,7 @@ version: v1.0.0
 last_updated: 2026-07-25
 code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-GUIDE-022
-tier: T1
+tier: standard
 change_log:
   - version: v1.0.0
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"

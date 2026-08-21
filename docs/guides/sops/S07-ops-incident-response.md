@@ -1,9 +1,9 @@
 ---
 title: S07 · 上线后运维与应急 SOP
-type: sop
-domain: operations
-phase: post-launch
-tier: T2
+type: how-to
+domain: project
+phase: deployment
+tier: reference
 status: active
 maintainer: V9 Architecture Team
 summary: "上线后 48h 值守模板（3+ 岗：架构师 OnCall / 前端值班 / 产品值班 + 飞书值班群）；P0 故障 5 层分级上报矩阵（发现/影响/临时修复/永久修复/复盘）+ RCA 模板；引用 troubleshooting.md 并补 gap-3：夜间值班 1 分钟快速定位日志路径法。"

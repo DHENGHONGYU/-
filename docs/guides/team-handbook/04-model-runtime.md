@@ -1,10 +1,10 @@
 ---
 doc_id: V9-DOC-GUIDE-051
 title: "04 · 模型运行思路（Model Runtime & Data Flow）"
-domain: guide
+domain: project
 status: active
 last_updated: 2026-08-21
-tier: L3
+tier: standard
 related_docs:
   - V9-DOC-EXP-005
   - V9-DOC-REF-022

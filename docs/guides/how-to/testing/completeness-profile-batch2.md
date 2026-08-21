@@ -1,5 +1,9 @@
 ---
+type: how-to
+domain: qa
+phase: testing
 title: completeness-profile-batch2
+doc_id: V9-DOC-HOW-PROJ-503
 tier: important
 code_version: "2.0.0-rc.2"
 version: v1.0.0

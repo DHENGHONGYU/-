@@ -1,10 +1,14 @@
 ---
 doc_id: V9-DOC-GUIDE-046
 title: "V9 编码规范（Coding Conventions）"
-domain: guide
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/services/scoring/v6-engine/config.ts
+  - src/data/types.ts
+
 
 ---
 doc_id: V9-DOC-GUIDE-029

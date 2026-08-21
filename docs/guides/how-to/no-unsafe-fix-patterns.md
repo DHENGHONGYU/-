@@ -1,16 +1,19 @@
 ---
 doc_id: V9-DOC-DEV-020
 title: "V9-DOC-GUIDE-012：`no-unsafe-*` 14 种修复模式手册"
-domain: dev
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - scripts/audit/apply-no-unsafe-fix-patterns.cjs
+
 
 ---
 title: '@typescript-eslint/no-unsafe-* 系列规则 14 种修复模式实战手册'
 doc_id: V9-DOC-GUIDE-012
 domain: guide
-type: guide
+type: how-to
 summary: 基于 GOV-P1-03 Batch 4/5 人工清零实战（42 文件 125 处违规）提炼出的可机械复用模式，含模式编号、根因、Before/After、风险点、适用域；是编写自动化修复脚本（apply-no-unsafe-fix-patterns.cjs）的权威输入。
 last_updated: 2026-08-15
 version: 1.0.0
