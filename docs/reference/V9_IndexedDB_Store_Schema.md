@@ -4,7 +4,7 @@ title: "V9 IndexedDB Store Schema 文档"
 domain: ref
 status: active
 last_updated: 2026-08-15
----
+
 covers_code:
   - src/data/types.ts
   - src/data/db.ts
@@ -12,6 +12,7 @@ covers_code:
   - src/config/dbConfig.ts
 
 
+---
 # V9 IndexedDB Store Schema 文档
 
 > **版本**：v21  

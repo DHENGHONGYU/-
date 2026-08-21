@@ -17,7 +17,7 @@ change_log:
   - version: v1.0.0
 changes: Initial version established
 date: 2026-07-17
----
+
 covers_code:
   - src/config/hybridProofreadConfig.ts
   - src/services/hybrid-proofread/hashService.ts
@@ -26,6 +26,7 @@ covers_code:
   - src/services/hybrid-proofread/reportGenerator.ts
 
 
+---
 # hybrid-proofread-contract.md — 混合校对（人机协同校验）服务接口契约
 
 > **定位**：定义 `hybrid-proofread` 子域的接口契约、职责边界、数据流与依赖关系。  

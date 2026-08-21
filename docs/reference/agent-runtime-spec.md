@@ -12,10 +12,12 @@ change_log:
   - date: 2026-06-25
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
----
+
 covers_code:
   - src/agents/agentRuntime.ts
 
+
+---
 > **Status**: Current  
 > **Version**: v0.9.0-migration-implemented  
 > **Last Updated**: 2026-06-25

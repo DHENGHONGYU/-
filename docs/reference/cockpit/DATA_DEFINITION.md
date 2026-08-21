@@ -4,13 +4,14 @@ title: "Cockpit Widget 框架数据字典"
 domain: ref
 status: active
 last_updated: 2026-08-15
----
+
 covers_code:
   - src/types/modules/widget.types.ts
   - src/constants/cockpit.constants.ts
   - src/cockpit/core/widgetRegistry.ts
 
 
+---
 > **Version**: v1.2.0  
 > **Last Updated**: 2026-07-06  
 > **Maintainer**: 架构资产治理官

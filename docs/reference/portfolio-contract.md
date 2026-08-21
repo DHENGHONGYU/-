@@ -9,13 +9,13 @@ change_log:
   - version: v1.0.0
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
----
+
 covers_code:
   - src/constants/execution.constants.ts
   - src/services/portfolio/portfolioService.test.ts
 
 
-
+---
 # portfolio-contract.md — 投资组合（Portfolio）接口契约
 
 > **定位**：定义 `portfolio` 子域的接口契约、职责边界、数据流与依赖关系。  

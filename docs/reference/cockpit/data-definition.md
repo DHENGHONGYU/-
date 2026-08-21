@@ -12,14 +12,14 @@ change_log:
   - version: v1.2.0
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-07-06
----
+
 covers_code:
   - src/types/modules/widget.types.ts
   - src/constants/cockpit.constants.ts
   - src/cockpit/core/widgetRegistry.ts
 
 
-
+---
 > **Version**: v1.2.1  
 > **Last Updated**: 2026-08-15  
 > **Maintainer**: 架构资产治理官

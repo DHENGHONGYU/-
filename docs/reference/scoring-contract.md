@@ -9,12 +9,13 @@ change_log:
   - version: v1.0.0
     changes: "P0 版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
----
+
 covers_code:
   - src/services/scoring/v6-engine/config.ts
   - src/config/strategyRules.ts
 
 
+---
 # scoring-contract.md — 评分引擎服务
 
 > **定位**：V9 核心投研评分引擎，包含 v6 十一层递进式评分（L-1~L8）、热门板块/价值洼地双策略评分、轮动信号检测。  

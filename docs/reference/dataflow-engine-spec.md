@@ -9,13 +9,14 @@ change_log:
   - version: v0.9.0-migration-implemented
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-06-25
----
+
 covers_code:
   - src/core/dataflow/dataflowEngine.ts
   - src/core/dataflow/dataflowTypes.ts
   - src/lib/eventBus.ts
 
 
+---
 > **Status**: Current  
 > **Version**: v0.9.0-migration-implemented  
 > **Last Updated**: 2026-06-25

@@ -17,12 +17,13 @@ change_log:
   - version: v1.0.0
 changes: Initial version established
 date: 2026-07-17
----
+
 covers_code:
   - src/config/inputConfig.ts
   - src/services/input/mockStockLibrary.ts
 
 
+---
 # input-contract.md — 输入处理子域接口契约
 
 > **定位**：定义 `input` 子域的接口契约、职责边界、数据流与依赖关系。  

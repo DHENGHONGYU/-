@@ -17,11 +17,12 @@ change_log:
   - version: v1.0.0
 changes: Initial version established
 date: 2026-07-17
----
+
 covers_code:
   - src/config/collectConfig.ts
 
 
+---
 # data-collector-contract.md — 数据采集编排服务
 
 > **定位**：协调 fetcher 服务执行数据采集任务，管理采集管道、质量检测、缺失报告补全。  

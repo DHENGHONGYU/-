@@ -20,7 +20,7 @@ change_log:
   - version: v1.0.0
     changes: Initial version established
     date: 2026-07-17
----
+
 covers_code:
   - src/config/scoreFactors.ts
   - src/config/dbConfig.ts
@@ -32,6 +32,7 @@ covers_code:
   - src/services/scoring/intelligentScorePrompt.ts
 
 
+---
 # 05. 引擎规格
 
 > **Status**: Current  

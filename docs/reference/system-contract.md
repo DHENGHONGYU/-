@@ -9,7 +9,7 @@ change_log:
   - version: v1.0.0
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
----
+
 covers_code:
   - src/services/system/localDocService.ts
   - src/constants/health.constants.ts
@@ -20,7 +20,7 @@ covers_code:
   - src/services/system/bootstrapService.test.ts
 
 
-
+---
 # system-contract.md — 系统级服务接口契约
 
 > **定位**：定义 `system` 子域的接口契约、职责边界、数据流与依赖关系。  

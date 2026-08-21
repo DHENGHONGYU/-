@@ -17,7 +17,7 @@ change_log:
   - version: v1.0.0
 changes: Initial version established
 date: 2026-07-17
----
+
 covers_code:
   - src/data/types.ts
   - src/data/db.ts
@@ -25,6 +25,7 @@ covers_code:
   - src/config/dbConfig.ts
 
 
+---
 # V9 IndexedDB Store Schema 文档
 
 > **版本**：v21  

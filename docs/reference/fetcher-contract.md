@@ -17,11 +17,12 @@ change_log:
   - version: v1.0.0
 changes: Initial version established
 date: 2026-07-17
----
+
 covers_code:
   - src/config/fetcherConfig.ts
 
 
+---
 # fetcher-contract.md — 行情/资讯抓取服务
 
 > **定位**：统一外部行情/资讯 API 适配层，负责采集、限流、缓存、错误恢复。  

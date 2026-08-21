@@ -17,12 +17,13 @@ change_log:
   - version: v1.0.0
 changes: Initial version established
 date: 2026-07-17
----
+
 covers_code:
   - src/config/rbacThresholds.ts
   - src/services/rbac/permissionRevocationService.ts
 
 
+---
 # rbac-contract.md — RBAC 权限管理子域接口契约
 
 > **定位**：定义 `rbac` 子域的接口契约、职责边界、数据流与依赖关系。  

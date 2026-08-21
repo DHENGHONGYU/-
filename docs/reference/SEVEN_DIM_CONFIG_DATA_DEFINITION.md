@@ -4,12 +4,13 @@ title: "七维采集配置模块 — 数据字典"
 domain: ref
 status: active
 last_updated: 2026-08-15
----
+
 covers_code:
   - src/config/collectConfig.ts
   - src/store/sevenDimConfigStore.ts
 
 
+---
 > **Version**: v1.0.0
 > **Last Updated**: 2026-07-01
 > **Maintainer**: 架构资产治理官

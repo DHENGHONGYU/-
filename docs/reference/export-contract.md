@@ -17,11 +17,12 @@ change_log:
   - version: v1.0.0
 changes: Initial version established
 date: 2026-07-17
----
+
 covers_code:
   - src/services/export/__tests__/backtestExportService.test.ts
 
 
+---
 # export-contract.md — 导出服务接口契约
 
 > **定位**：定义 `export` 子域的接口契约、职责边界、数据流与依赖关系。  

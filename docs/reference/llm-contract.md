@@ -17,7 +17,7 @@ change_log:
   - version: v1.0.0
 changes: Initial version established
 date: 2026-07-17
----
+
 covers_code:
   - src/config/llmConfig.ts
   - src/services/llm/llmClient.ts
@@ -25,6 +25,7 @@ covers_code:
   - src/services/llm/llmClient.multimodel.test.ts
 
 
+---
 # llm-contract.md — 大模型服务接口契约
 
 > **定位**：定义 `llm` 子域的接口契约、职责边界、数据流与依赖关系。  

@@ -12,13 +12,13 @@ change_log:
   - version: v1.0.0
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-07-01
----
+
 covers_code:
   - src/config/collectConfig.ts
   - src/store/sevenDimConfigStore.ts
 
 
-
+---
 > **Version**: v1.0.1
 > **Last Updated**: 2026-08-15
 > **Maintainer**: 架构资产治理官

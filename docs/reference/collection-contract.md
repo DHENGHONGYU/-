@@ -17,12 +17,13 @@ change_log:
   - version: v1.0.0
 changes: Initial version established
 date: 2026-07-17
----
+
 covers_code:
   - src/types/modules/collection.types.ts
   - src/services/collection/collectionWizardPersistence.test.ts
 
 
+---
 # collection-contract.md — 数据采集子域接口契约
 
 > **定位**：定义 `collection` 子域的接口契约、职责边界、数据流与依赖关系。  

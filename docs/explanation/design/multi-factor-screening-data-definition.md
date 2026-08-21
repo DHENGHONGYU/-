@@ -20,7 +20,7 @@ change_log:
   - version: v1.0.0
     changes: Initial version established
     date: 2026-07-17
----
+
 covers_code:
   - src/types/modules/screening.types.ts
   - src/store/multiFactorScreeningStore.ts
@@ -29,6 +29,7 @@ covers_code:
   - src/config/routes.ts
 
 
+---
 # 多因子选股筛选器数据字典
 
 > **Version**：v1.0.1  

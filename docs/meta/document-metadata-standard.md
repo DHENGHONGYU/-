@@ -3,7 +3,7 @@ doc_id: V9-DOC-META-008
 title: "V9 文档元数据标准规范"
 domain: meta
 status: active
-last_updated: 2026-08-17
+last_updated: 2026-08-21
 ---
 
 ---
@@ -16,13 +16,17 @@ status: active
 maintainer: Documentation Team
 summary: V9 项目文档 Frontmatter 元数据的完整规范，包括字段定义、枚举值、验证规则、模板示例和迁移指南
 tags: [frontmatter, metadata, standard, specification, governance, documentation, spec]
-version: v1.0.0
-last_updated: 2026-07-17
+version: v1.0.1
+last_updated: 2026-08-21
 code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-026
 related_docs: [V9-DOC-PROJ-017, V9-DOC-PROJ-316, V9-DOC-PROJ-315, V9-DOC-QA-111]
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-017, V9-DOC-PROJ-175]
 change_log:
+  - version: v1.0.1
+    date: 2026-08-21
+    author: Documentation Team
+    desc: 新增 doc_id 豁免规则章节，明确五类文档可豁免
   - version: v1.0.0
 doc_system_version: v1.0.0
 changes: Initial version established
@@ -31,8 +35,8 @@ date: 2026-07-17
 
 # V9 文档元数据标准规范
 
-> **标准版本**：v1.0.0
-> **生效日期**：2026-07-17
+> **标准版本**：v1.0.1
+> **生效日期**：2026-08-21
 > **适用范围**：V9 项目所有 Markdown 技术文档
 > **维护方**：文档治理小组
 
@@ -400,6 +404,31 @@ doc_id: V9-DOC-T2D3-001
 - 分配后永久不变，文件移动/重命名都不改变
 - 由文档管理员统一分配
 - 新增文档时申请，避免冲突时按顺序递增
+**豁免规则**：
+
+以下类别文档**不需要** `doc_id`：
+
+| 类别 | 目录/位置 | 说明 |
+|------|----------|------|
+| 成果报告类 | `reports/` | 审计报告、测试报告等一次性成果 |
+| 发布记录类 | `releases/`、`release-notes/` | 版本发布说明、CHANGELOG |
+| 复盘经验类 | `retro/`、`lessons/` | 项目复盘、踩坑记录 |
+| 机器生成索引 | `DOCUMENT-INVENTORY.md` 等 | 脚本自动生成的清单 |
+| 归档历史 | `archive/` | 已归档历史文档 |
+
+以下类别文档**必须有** `doc_id`：
+
+| 类别 | 目录 | 说明 |
+|------|------|------|
+| 技术契约 | `reference/` | API 契约、数据规范 |
+| 设计文档 | `explanation/` | 架构设计、ADR |
+| 操作指南 | `guides/` | SOP、how-to |
+| 产品规格 | `specs/` | 功能规格 |
+| 知识库 | `wiki/` | Code Wiki |
+| 治理规范 | `meta/` | 元数据标准 |
+| 审计入口 | `audit/` | 审计框架 |
+
+> **判断标准**：若文档被代码/测试/架构/其他文档显式引用，则必须有 `doc_id`；纯成果输出且不被引用的记录类文档可豁免。
 
 ---
 

@@ -20,7 +20,7 @@ change_log:
   - version: v1.0.0
     changes: Initial version established
     date: 2026-07-17
----
+
 covers_code:
   - src/store/backtestStore.ts
   - src/types/modules/backtest.types.ts
@@ -28,6 +28,7 @@ covers_code:
   - src/services/export/backtestExportService.ts
 
 
+---
 # DEPRECATED - backtest-data-definition.md
 
 > ⚠️ **此文件已废弃**（2026-07-14）

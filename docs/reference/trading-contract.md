@@ -17,13 +17,14 @@ change_log:
   - version: v1.0.0
 changes: Initial version established
 date: 2026-07-17
----
+
 covers_code:
   - src/config/tradingConfig.ts
   - src/config/thresholds.ts
   - src/config/themeRegistry.ts
 
 
+---
 # trading-contract.md — 交易业务子域接口契约
 
 > **定位**：定义 `trading` 子域的接口契约、职责边界、数据流与依赖关系。  

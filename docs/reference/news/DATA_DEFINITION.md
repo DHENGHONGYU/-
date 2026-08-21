@@ -4,7 +4,7 @@ title: "新闻资讯模块数据字典"
 domain: ref
 status: active
 last_updated: 2026-08-15
----
+
 covers_code:
   - src/services/news/newsService.ts
   - src/data/types.ts
@@ -13,6 +13,7 @@ covers_code:
   - src/data/dataLayer.ts
 
 
+---
 > **Version**: v1.2.0  
 > **Last Updated**: 2026-07-06  
 > **Maintainer**: 架构资产治理官
