@@ -1,3 +1,8 @@
+---
+title: docs/archive/important/mcp-architecture-remediation-plan-2026-07-08.md
+code_version: 2.0.0-rc.2
+---
+
 # MCP 架构整改行动计划
 
 > **基于文档**: mcp-architecture-audit-report-2026-07-08.md

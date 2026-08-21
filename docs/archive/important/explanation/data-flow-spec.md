@@ -4,6 +4,7 @@ title: "V9 数据流规范"
 domain: exp
 status: active
 last_updated: 2026-08-15
+code_version: 2.0.0-rc.2
 ---
 
 # V9 数据流规范

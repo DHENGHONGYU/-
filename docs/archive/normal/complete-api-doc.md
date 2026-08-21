@@ -1,3 +1,8 @@
+---
+title: docs/archive/normal/complete-api-doc.md
+code_version: 2.0.0-rc.2
+---
+
 # V9 智能投研复盘系统 - API 文档
 
 > 生成时间: 2026-07-12T08:33:40Z

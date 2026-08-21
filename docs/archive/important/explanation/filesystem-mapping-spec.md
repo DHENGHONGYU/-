@@ -4,6 +4,7 @@ title: "文件系统映射规范"
 domain: proj
 status: active
 last_updated: 2026-08-15
+code_version: 2.0.0-rc.2
 ---
 
 # 文件系统映射规范

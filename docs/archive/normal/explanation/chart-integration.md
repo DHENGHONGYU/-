@@ -12,6 +12,7 @@ change_log:
   - date: 2026-06-27
     author: Documentation Governor
     desc: 首次起草图表技术选型、组件 API、DataBridge 对接与性能优化策略
+code_version: 2.0.0-rc.2
 ---
 
 # V9 图表组件集成规格

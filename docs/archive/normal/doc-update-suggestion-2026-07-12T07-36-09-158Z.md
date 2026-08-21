@@ -1,3 +1,8 @@
+---
+title: docs/archive/normal/doc-update-suggestion-2026-07-12T07-36-09-158Z.md
+code_version: 2.0.0-rc.2
+---
+
 # 文档更新建议草稿
 
 > 生成时间: 2026-07-12T07:36:09.158Z

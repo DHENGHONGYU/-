@@ -1,3 +1,8 @@
+---
+title: docs/archive/archive-inventory.md
+code_version: 2.0.0-rc.2
+---
+
 ﻿# V9 Archive Inventory
 
 > Generated: 2026-08-17

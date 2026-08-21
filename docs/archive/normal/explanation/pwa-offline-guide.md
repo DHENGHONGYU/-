@@ -12,6 +12,7 @@ change_log:
   - date: 2026-06-27
     author: Documentation Governor
     desc: 首次定义 Service Worker 注册策略、缓存清单、更新机制与 Lighthouse 测试标准
+code_version: 2.0.0-rc.2
 ---
 
 # V9 PWA 离线化实施指南

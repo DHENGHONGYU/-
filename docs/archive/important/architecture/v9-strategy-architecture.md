@@ -16,6 +16,7 @@ change_log:
   - version: v0.9.8
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-06-29
+code_version: 2.0.0-rc.2
 ---
 
 # V9 策略架构文档

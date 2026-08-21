@@ -4,6 +4,7 @@ title: "衍生指标计算引擎设计规范"
 domain: proj
 status: active
 last_updated: 2026-08-15
+code_version: 2.0.0-rc.2
 ---
 
 # 衍生指标计算引擎设计规范

@@ -1,3 +1,8 @@
+---
+title: docs/archive/important/mcp-architecture-audit-report-2026-07-08.md
+code_version: 2.0.0-rc.2
+---
+
 # MCP 架构规则与逻辑全面二次审查报告
 
 > **审查日期**: 2026-07-08
