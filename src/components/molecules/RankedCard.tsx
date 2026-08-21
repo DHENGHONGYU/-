@@ -4,7 +4,7 @@ import { Badge } from '@/components/atoms'
 import { SignalBadge } from './SignalBadge'
 import { ScoreGauge } from './ScoreGauge'
 import { StockPriceChangeBadge } from '@/components/atoms/StockPriceChangeBadge'
-import type { RotationSignalType } from '@/data/types/types.sector'
+import type { RotationSignalType } from '@/types'
 
 export interface RankedCardProps {
   rank: number

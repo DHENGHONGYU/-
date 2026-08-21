@@ -22,7 +22,7 @@ import { EmptyState } from '@/components/molecules/EmptyState'
 import { ErrorState } from '@/components/molecules/states/ErrorState'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import type { FactorContribution, ScoreAuditTrail } from '@/services/scoring/v6-engine'
-import type { DimensionScore } from '@/data/types'
+import type { DimensionScore } from '@/types'
 
 // ============================================================
 // Types

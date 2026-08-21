@@ -10,7 +10,7 @@ import {
 } from '@/components/atoms/Table'
 import React from 'react'
 import { cn } from '@/lib/utils'
-import type { ScoreDocVersion } from '@/data/types'
+import type { ScoreDocVersion } from '@/types'
 
 function getScoreColorClass(score: number): string {
   if (score >= 4.0) return 'text-[hsl(var(--stock-up))]'

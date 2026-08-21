@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { cn } from '@/lib/utils'
-import type { StrategyGroupItem } from '@/data/types'
+import type { StrategyGroupItem } from '@/types'
 
 function getScoreColorClass(score: number): string {
   if (score >= 4.0) return 'text-[hsl(var(--stock-up))]'

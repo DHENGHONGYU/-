@@ -1,4 +1,4 @@
-import type { NewsArticle } from '@/data/types'
+import type { NewsArticle } from '@/types'
 import { Badge } from '@/components/atoms/Badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { THEME_TOKENS } from '@/constants/theme/theme.tokens.base'

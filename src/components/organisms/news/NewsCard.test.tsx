@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { NewsCard } from './NewsCard'
-import type { NewsArticle } from '@/data/types'
+import type { NewsArticle } from '@/types'
 
 const baseArticle: NewsArticle = {
   id: 'a1',

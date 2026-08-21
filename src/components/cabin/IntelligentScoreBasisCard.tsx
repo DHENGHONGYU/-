@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Car
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
 import { cn } from '@/lib/utils'
-import type { IntelligentScore, ResearchLog } from '@/data/types'
+import type { IntelligentScore, ResearchLog } from '@/types'
 
 function getScoreColorClass(score: number): string {
   if (score >= 4.0) return 'text-[hsl(var(--stock-up))]'

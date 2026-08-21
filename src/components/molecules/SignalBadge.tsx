@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/atoms'
 import { STOCK_COLOR_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
-import type { RotationSignalType } from '@/data/types/types.sector'
+import type { RotationSignalType } from '@/types'
 
 export interface SignalBadgeProps {
   signal: RotationSignalType

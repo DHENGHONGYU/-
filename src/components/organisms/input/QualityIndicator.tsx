@@ -1,7 +1,7 @@
 import React from 'react'
 import { Badge } from '@/components/atoms/Badge'
 import { COLOR_SHADES } from '@/constants/theme.tokens'
-import type { StockDataQuality } from '@/data/types'
+import type { StockDataQuality } from '@/types'
 
 export interface QualityIndicatorProps {
   quality?: StockDataQuality

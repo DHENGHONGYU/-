@@ -15,7 +15,7 @@ import { ScoreRadar } from '@/components/chart/ScoreRadar'
 import { FactorHeatmap, type FactorHeatmapData } from '@/components/chart/FactorHeatmap'
 import { ScoreFactorWaterfall } from '@/components/organisms/analysis/score/ScoreFactorWaterfall'
 import { sanitizeLlmOutput } from '@/lib/xssSanitizer'
-import type { IntelligentScore } from '@/data/types'
+import type { IntelligentScore } from '@/types'
 import {
   INTELLIGENT_SCORE_EXPLANATION_CONFIG,
   INTELLIGENT_SCORE_EXPLANATION_LABELS,

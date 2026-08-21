@@ -1,7 +1,7 @@
 import { getSafeString, fallback } from '@/lib/safeCoerce'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
-import type { LocalDoc } from '@/data/types'
+import type { LocalDoc } from '@/types'
 
 export interface LocalDocCardProps {
   doc: LocalDoc

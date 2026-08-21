@@ -15,7 +15,7 @@ import {
 import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
 import { STOCK_COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
-import type { Signal, SignalSnapshot } from '@/data/types/types.signal'
+import type { Signal, SignalSnapshot } from '@/types'
 
 const logger = getLogger()
 

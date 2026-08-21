@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
-import type { IndustryScore, ResearchLog } from '@/data/types'
+import type { IndustryScore, ResearchLog } from '@/types'
 
 const MAX_LOG_ENTRIES = 10
 

@@ -9,7 +9,7 @@ import { describe, test, expect } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { UI_TEXT } from '@/constants/uiText'
 import { IntelligentScoreExplanation } from '../IntelligentScoreExplanation'
-import type { IntelligentScore } from '@/data/types'
+import type { IntelligentScore } from '@/types'
 
 function createResult(overrides: Partial<IntelligentScore> = {}): IntelligentScore {
   return {

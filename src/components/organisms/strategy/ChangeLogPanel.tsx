@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
-import type { StrategySnapshot } from '@/data/types'
+import type { StrategySnapshot } from '@/types'
 
 export interface ChangeLogPanelProps {
   snapshot: StrategySnapshot

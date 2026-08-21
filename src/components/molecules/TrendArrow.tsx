@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
-import type { TrendDirection, TrendStrength } from '@/data/types/types.sector'
+import type { TrendDirection, TrendStrength } from '@/types'
 
 export interface TrendArrowProps {
   direction: TrendDirection

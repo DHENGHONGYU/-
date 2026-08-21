@@ -37,7 +37,7 @@ import {
 import { useToast } from '@/hooks/useToast.tsx'
 import { useAnalysisStore } from '@/store/analysisStore'
 import type { AnalysisCandidate } from '@/types/modules/analysis.types'
-import type { Stock } from '@/data/types'
+import type { Stock } from '@/types'
 import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
 import {
@@ -189,13 +189,13 @@ export default function VectorConsistencyRankingCard({
     effectTargetRef.current = effectiveTarget
     void runFullBuild(effectiveTarget)
     // 仅在 数据源 或 有效研究目标变化时触发（alpha 变化走 recalcFusedOnly）
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [effectiveTarget, scope, candidates.length, stocks.length, scores.length])
 
   // effect 2：滑杆 α 变化 → 仅融合重排
   useEffect(() => {
     recalcFusedOnly()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [alpha])
 
   const onClickScore = useCallback(
