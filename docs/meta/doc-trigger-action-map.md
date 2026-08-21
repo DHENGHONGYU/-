@@ -1,10 +1,20 @@
 ---
 doc_id: V9-DOC-META-007
 title: "触发事件 → 更新动作 一一映射权威表"
-domain: meta
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - scripts/docs-tool/doc-update-trigger.ts
+  - src/core/databridge.ts
+  - src/config/dbConfig.ts
+  - src/data/dataLayer.ts
+  - scripts/audit/audit-mock-modules.ts
+  - src/core/databridgeHandlers.ts
+  - src/services/stock/stockDictionary.ts
+  - src/config/mcpServerRegistry.ts
+
 
 ---
 title: 触发事件 → 更新动作 一一映射权威表

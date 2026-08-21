@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: data
+phase: design
 title: 全局接口契约（API Contract）
 doc_id: V9-DOC-REF-905
 tier: important

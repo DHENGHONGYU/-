@@ -1,5 +1,9 @@
 ---
+type: reference
+domain: qa
+phase: testing
 title: completeness-profile-p1
+doc_id: V9-DOC-REF-PROJ-742
 tier: important
 code_version: "2.0.0-rc.2"
 version: v1.0.0

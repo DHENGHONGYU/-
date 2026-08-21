@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-PROJ-372
 title: "directDataAPI Bug 修复说明（2026-08-09）"
-domain: proj
+domain: project
 status: active
 last_updated: 2026-08-15
 ---

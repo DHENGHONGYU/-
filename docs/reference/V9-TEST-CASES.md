@@ -1,5 +1,9 @@
 ---
+type: reference
+domain: qa
+phase: testing
 title: v9-test-cases
+doc_id: V9-DOC-REF-QA-450
 code_version: "2.0.0-rc.2"
 tier: important
 version: v1.0.0

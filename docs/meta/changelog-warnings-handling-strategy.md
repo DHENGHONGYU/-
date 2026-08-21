@@ -9,6 +9,9 @@ change_log:
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
 ---
+covers_code:
+  - scripts/audit/audit-doc-integrity.ts
+
 
 
 # CHANGELOG 警告处理策略

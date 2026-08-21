@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: data
+phase: design
 doc_id: V9-DOC-REF-909
 title: ai-center-data-definition
 tier: important

@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-META-008
 title: "V9 文档元数据标准规范"
-domain: meta
+domain: project
 status: active
 last_updated: 2026-08-21
 ---

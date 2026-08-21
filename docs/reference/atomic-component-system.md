@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: frontend
+phase: design
 doc_id: V9-DOC-REF-914
 title: atomic-component-system
 code_version: "2.0.0-rc.2"
@@ -10,6 +13,9 @@ change_log:
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-07-10
 ---
+covers_code:
+  - scripts/audit/audit-atomic.ts
+
 
 
 # V9 原子组件构成体系（Atomic Design System）

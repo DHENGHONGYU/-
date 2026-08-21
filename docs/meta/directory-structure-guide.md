@@ -1,10 +1,20 @@
 ---
 doc_id: V9-DOC-META-005
 title: "V9 项目目录结构规范与使用指南"
-domain: meta
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - scripts/audit/audit-layer-calls.ts
+  - scripts/audit/audit-atomic.ts
+  - scripts/audit/audit-doc-sync.ts
+  - scripts/audit/audit-jsdoc.ts
+  - scripts/audit/audit-widget-registry.ts
+  - scripts/audit/audit-color-tokens.ts
+  - scripts/audit/audit-token-consumption.ts
+  - scripts/audit/audit-ai-output.ts
+
 
 ---
 title: directory-structure-guide

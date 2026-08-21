@@ -2,7 +2,7 @@
 title: V9 AI Agents 索引
 type: meta
 domain: ai
-phase: maintenance
+phase: deployment
 tier: reference
 status: active
 maintainer: V9 Architecture Team

@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-REF-910
 title: "AI 智能体调度中心 / 健康监控 / 诊断分析 — 数据字典"
-domain: ref
+domain: data
 status: active
 last_updated: 2026-08-15
 

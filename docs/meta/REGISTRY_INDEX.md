@@ -1,10 +1,18 @@
 ---
 doc_id: V9-DOC-META-003
 title: "V9 模块注册体系索引"
-domain: meta
+domain: project
 status: active
 last_updated: 2026-08-15
 ---
+covers_code:
+  - src/store/storeRegistry.ts
+  - src/services/serviceRegistry.ts
+  - src/cockpit/core/widgetRegistry.ts
+  - src/constants/cockpit.constants.ts
+  - src/store/helpers/withBroadcast.ts
+  - src/components/componentRegistry.ts
+
 
 # V9 模块注册体系索引
 

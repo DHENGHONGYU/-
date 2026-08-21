@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-META-004
 title: "Agent 应用 · 文档分类索引表"
-domain: meta
+domain: project
 status: active
 last_updated: 2026-08-17
 ---

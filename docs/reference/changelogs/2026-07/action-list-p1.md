@@ -18,6 +18,16 @@ change_log:
 changes: Initial version established
 date: 2026-07-17
 ---
+covers_code:
+  - src/core/transaction.ts
+  - src/data/db.ts
+  - src/services/useCase/getUnifiedStockView.useCase.ts
+  - src/services/useCase/rebalancePortfolio.useCase.ts
+  - src/services/useCase/runDualStrategy.useCase.ts
+  - src/services/useCase/generateTradeReview.useCase.ts
+  - src/core/freshnessGuard.ts
+  - src/services/llm/llmGateway.ts
+
 
 # P1 批次行动清单 — 2026-07-05
 

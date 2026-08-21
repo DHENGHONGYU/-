@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-REF-972
 title: "V9 IndexedDB Store Schema 文档"
-domain: ref
+domain: data
 status: active
 last_updated: 2026-08-15
 

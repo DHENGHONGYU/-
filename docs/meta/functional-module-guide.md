@@ -1,4 +1,7 @@
 ---
+type: meta
+domain: project
+phase: development
 title: 功能模块分类图示与开发者必读清单
 tier: important
 status: active
@@ -14,7 +17,11 @@ change_log:
   - version: v1.0.0
 changes: Initial version established
 date: 2026-07-17
----meta
+---
+covers_code:
+  - src/config/marketDataEndpoints.ts
+  - src/config/collectConfig.ts
+meta
 domain: project
 tier: important
 doc_id: V9-DOC-PROJ-015

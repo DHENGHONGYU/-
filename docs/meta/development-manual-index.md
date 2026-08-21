@@ -2,8 +2,8 @@
 title: V9 开发手册索引（Development Manual Index）
 type: meta
 domain: project
-phase: maintenance
-tier: T0
+phase: deployment
+tier: important
 status: active
 maintainer: V9 Architecture Team
 summary: "FinSightV9 全栈开发规则、编码规范、测试策略、接口约定的一站式索引，覆盖 SDLC 七阶段 90+ 篇核心文档"
@@ -77,6 +77,9 @@ change_log:
     changes: Initial version：9 大分类 60+ 篇文档索引，覆盖 SDLC 全生命周期
     date: 2026-08-20
 ---
+covers_code:
+  - src/data/types.ts
+
 
 # V9 开发手册索引
 
