@@ -1,6 +1,6 @@
 ---
 title: "MCP Server CLI Skill 策略"
-type: strategy
+type: explanation
 domain: architecture
 phase: development
 tier: reference
@@ -20,6 +20,10 @@ change_log:
     changes: 依据 src/mcp/ 实际结构与技能路由体系重建正文基线；状态由"待重写"转为"已重建基线"
     date: 2026-07-21
 ---
+covers_code:
+  - src/mcp/register.ts
+  - scripts/skill-router.cjs
+
 
 # MCP Server CLI Skill 策略
 

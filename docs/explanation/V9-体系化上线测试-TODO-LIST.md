@@ -1,5 +1,9 @@
 ---
+type: explanation
+domain: qa
+phase: testing
 title: v9-体系化上线测试-todo-list
+doc_id: V9-DOC-EXP-PROJ-811
 tier: important
 code_version: "2.0.0-rc.2"
 version: v1.0.0

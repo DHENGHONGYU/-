@@ -1,16 +1,20 @@
 ---
 doc_id: V9-DOC-DEV-016
 title: "如何导入导出与备份 V9 数据"
-domain: dev
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/config/dbConfig.ts
+  - src/data/db-migrations.ts
+
 
 ---
 title: 如何导入导出与备份 V9 数据
 type: how-to
 domain: data
-phase: operation
+phase: deployment
 tier: standard
 status: active
 maintainer: V9 Architecture Team

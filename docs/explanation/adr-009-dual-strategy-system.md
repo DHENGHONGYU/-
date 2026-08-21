@@ -18,6 +18,9 @@ change_log:
 changes: Initial version established
 date: 2026-07-17
 ---
+covers_code:
+  - src/data/db-schema.ts
+
 
 # ADR-009: 引入热门板块与价值洼地双策略体系
 

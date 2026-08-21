@@ -1,10 +1,16 @@
 ---
 doc_id: V9-DOC-DEV-012
 title: "如何新增一个 Service（DataBridge + Envelope 路由）"
-domain: dev
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/config/dbConfig.ts
+  - src/data/types.ts
+  - src/core/envelope.ts
+  - src/core/databridge.ts
+
 
 ---
 title: how-to-add-service

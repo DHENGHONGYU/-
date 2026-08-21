@@ -1,10 +1,16 @@
 ---
 doc_id: V9-DOC-GUIDE-038
 title: "09. 质量门禁"
-domain: guide
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/config/dbConfig.ts
+  - src/data/types.ts
+  - src/config/llmConfig.ts
+  - src/config/thresholds.ts
+
 
 ---
 title: 09. 质量门禁

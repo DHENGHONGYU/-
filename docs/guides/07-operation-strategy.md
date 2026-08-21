@@ -1,10 +1,13 @@
 ---
 doc_id: V9-DOC-GUIDE-036
 title: "07. 运营策略"
-domain: guide
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/data/db.ts
+
 
 ---
 doc_id: V9-DOC-GUIDE-037

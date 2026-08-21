@@ -1,16 +1,20 @@
 ---
 doc_id: V9-DOC-DEV-017
 title: "如何运行采集与评分流水线"
-domain: dev
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/config/dbConfig.ts
+  - src/services/scoring/v6-engine/config.ts
+
 
 ---
 title: 如何运行采集与评分流水线
 type: how-to
 domain: data
-phase: operation
+phase: deployment
 tier: standard
 status: active
 maintainer: V9 Architecture Team

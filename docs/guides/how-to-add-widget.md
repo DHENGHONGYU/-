@@ -1,10 +1,14 @@
 ---
 doc_id: V9-DOC-GUIDE-044
 title: "如何新增一个 Widget（WidgetShell + 事件总线）"
-domain: guide
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/types/widget.ts
+  - src/cockpit/core/widgetRegistry.ts
+
 
 ---
 doc_id: V9-DOC-GUIDE-028

@@ -1,6 +1,6 @@
 ---
 title: V9 文档体系总览与导航
-type: guide
+type: how-to
 domain: project
 phase: planning
 tier: important

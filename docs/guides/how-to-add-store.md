@@ -1,10 +1,16 @@
 ---
 doc_id: V9-DOC-GUIDE-043
 title: "如何新增一个 Store（Zustand + withBroadcast）"
-domain: guide
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/constants/store-channels.constants.ts
+  - src/data/types.ts
+  - src/store/sectorAnalysisStore.test.ts
+  - src/lib/withBroadcast.ts
+
 
 ---
 doc_id: V9-DOC-GUIDE-027

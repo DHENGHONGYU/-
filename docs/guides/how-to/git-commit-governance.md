@@ -2,7 +2,7 @@
 title: git-commit-governance
 type: how-to
 domain: qa
-phase: operation
+phase: deployment
 tier: standard
 status: active
 maintainer: V9 Architecture Team

@@ -1,10 +1,19 @@
 ---
 doc_id: V9-DOC-GUIDE-037
 title: "08. 实施计划"
-domain: guide
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/config/themeRegistry.ts
+  - src/config/routes.ts
+  - src/data/db.ts
+  - src/config/fetcherConfig.ts
+  - src/services/unifiedStockService.ts
+  - src/services/pool/poolService.ts
+  - src/config/inputConfig.ts
+
 
 ---
 doc_id: V9-DOC-GUIDE-024

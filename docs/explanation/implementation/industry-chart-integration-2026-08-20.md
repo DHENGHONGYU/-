@@ -1,11 +1,12 @@
 ---
+phase: development
 doc_id: V9-DOC-IMPL-001
 title: 行业分析图表组件接入技术文档
 date: 2026-08-20
 status: active
-type: implementation
+type: explanation
 tier: important
-domain: analysis
+domain: backend
 related_docs:
   - V9-DOC-DATA-016
   - V9-DOC-RT-003

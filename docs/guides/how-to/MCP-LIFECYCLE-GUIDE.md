@@ -1,10 +1,15 @@
 ---
 doc_id: V9-DOC-DEV-019
 title: "MCP 生命周期管理指南（入-移-出）"
-domain: dev
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/mcp/core/server.ts
+  - src/config/mcpAclMatrix.ts
+  - src/mcp/__tests__/mcpAclInterceptor.test.ts
+
 
 ---
 doc_id: V9-DOC-DEV-006

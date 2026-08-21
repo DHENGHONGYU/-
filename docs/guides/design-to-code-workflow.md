@@ -1,14 +1,14 @@
 ---
 doc_id: V9-DOC-GUIDE-040
 title: "Design→Code 工作流规范"
-domain: guide
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
 
 ---
 title: Design→Code 工作流规范
-type: guide
+type: how-to
 domain: frontend
 phase: design
 tier: important

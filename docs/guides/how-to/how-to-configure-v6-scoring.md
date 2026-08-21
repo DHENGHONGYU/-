@@ -1,16 +1,20 @@
 ---
 doc_id: V9-DOC-DEV-015
 title: "如何配置 V6 评分引擎权重与阈值"
-domain: dev
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/services/scoring/v6-engine/config.ts
+  - src/services/scoring/v6-engine/types.ts
+
 
 ---
 title: 如何配置 V6 评分引擎权重与阈值
 type: how-to
 domain: backend
-phase: configuration
+phase: design
 tier: standard
 status: active
 maintainer: V9 Architecture Team

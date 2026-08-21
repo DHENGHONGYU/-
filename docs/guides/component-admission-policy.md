@@ -1,14 +1,21 @@
 ---
 doc_id: V9-DOC-GUIDE-039
 title: "组件新增准入政策"
-domain: guide
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/components/componentRegistry.ts
+  - src/components/atoms/index.ts
+  - src/components/molecules/index.ts
+  - src/components/organisms/index.ts
+  - src/components/templates/index.ts
+
 
 ---
 title: 组件新增准入政策
-type: guide
+type: how-to
 domain: frontend
 phase: development
 status: active
@@ -19,7 +26,7 @@ version: v1.0.0
 last_updated: 2026-07-25
 code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-GUIDE-021
-tier: T1
+tier: standard
 change_log:
   - version: v1.0.0
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"

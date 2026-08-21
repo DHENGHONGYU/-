@@ -1,10 +1,16 @@
 ---
 doc_id: V9-DOC-DEV-010
 title: "V9 文件管理规范"
-domain: dev
+domain: project
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/config/dbConfig.ts
+  - src/data/db-schema.ts
+  - src/data/db-migrations.ts
+  - scripts/cleanup-temp.ts
+
 
 ---
 doc_id: V9-DOC-DEV-010
