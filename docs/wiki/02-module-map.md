@@ -3,12 +3,14 @@ title: 02 - 模块职责地图
 type: reference
 domain: architecture
 status: frozen
-maintainer: FinSightV9 Team
-version: 2.0.0
-last_updated: 2026-08-19
+version: 2.0.1
+last_updated: 2026-08-22
 code_version: "2.0.0-rc.2"
 tag: FINAL
-doc_id: V9-DOC-WIKI-002
+change_log:
+  - version: 2.0.1
+    changes: "基准日校对(2026-08-22)：R1取真值(P4 frontmatter.version 裸值=2.0.0) → R2 PATCH++(2.0.1) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
 ---
 
 # 02 - 模块职责地图 🏁
