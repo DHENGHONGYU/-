@@ -1,5 +1,9 @@
 ---
+type: reference
+domain: project
+phase: design
 title: file-system-assessment-v2
+doc_id: V9-DOC-REF-PROJ-242
 tier: important
 code_version: "2.0.0-rc.2"
 version: v1.0.0

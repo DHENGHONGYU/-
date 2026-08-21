@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: frontend
+phase: design
 doc_id: V9-DOC-REF-952
 title: pwa-offline-guide
 tier: important

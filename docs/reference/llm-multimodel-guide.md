@@ -2,8 +2,8 @@
 title: llm-multimodel-guide.md — 多模型 LLM 配置与测试实战指南
 type: reference
 domain: ai
-phase: operation
-tier: practical
+phase: deployment
+tier: standard
 status: active
 maintainer: V9 AI Team
 summary: "覆盖 12 家国内外 LLM 供应商的配置切换、CLI 测试工具使用、单元测试运行、日志调优与故障排查全流程。"
@@ -18,6 +18,16 @@ change_log:
     changes: Initial version — 12 模型预设、CLI 工具、测试指南
 date: 2026-08-15
 ---
+covers_code:
+  - src/services/llm/llmMockResponses.ts
+  - src/config/llmConfig.ts
+  - scripts/llm-cli.mjs
+  - src/services/llm/llmClient.ts
+  - src/services/llm/llmClient.multimodel.test.ts
+  - src/services/llm/llmClient.test.ts
+  - scripts/test-deepseek-live.mjs
+  - src/lib/logger.ts
+
 
 # 多模型 LLM 配置与测试实战指南
 

@@ -11,7 +11,7 @@ tags: [design-tokens, apple-design, css-variables, tailwind, color-system, typog
 version: v2.0.0
 last_updated: 2026-08-19
 code_version: 2.0.0-rc.2
-tier: T0
+tier: important
 related_docs:
   - V9-DOC-REF-940
   - V9-DOC-GUIDE-001
@@ -27,6 +27,11 @@ change_log:
     changes: "P0 版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
 ---
+covers_code:
+  - src/constants/theme/theme.tokens.color.ts
+  - src/constants/theme.tokens.ts
+  - src/config/chartColors.ts
+
 
 # FinSight V9 Design Token System
 

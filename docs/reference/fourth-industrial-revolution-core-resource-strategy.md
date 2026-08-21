@@ -13,6 +13,16 @@ change_log:
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
 ---
+covers_code:
+  - src/services/trading/tradingService.ts
+  - src/config/themeRegistry.ts
+  - src/services/trading/scoringAdapter.ts
+  - src/services/trading/portfolioBuilder.ts
+  - src/services/trading/strategyEngine.ts
+  - src/services/trading/signalGenerator.ts
+  - src/services/trading/positionSizer.ts
+  - src/services/trading/riskEngine.ts
+
 # 第四次工业革命稀缺核心资源 — 交易策略解析与 V9 采用方案
 
 > **Status**: Accepted / Phase 1 Implemented  

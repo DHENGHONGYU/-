@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: data
+phase: design
 doc_id: V9-DOC-REF-928
 title: data-definition
 tier: important

@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-REF-943
 title: "KPI 口径目录（Store → MetricCard 消费映射）"
-domain: ref
+domain: data
 status: active
 last_updated: 2026-08-15
 ---

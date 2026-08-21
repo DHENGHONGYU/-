@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: data
+phase: design
 doc_id: V9-DOC-REF-934
 title: databridge端点与数据映射清单
 tier: important

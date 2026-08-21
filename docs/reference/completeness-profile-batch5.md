@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: qa
+phase: testing
 doc_id: V9-DOC-REF-925
 title: completeness-profile-batch5
 tier: important

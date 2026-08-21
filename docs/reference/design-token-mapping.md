@@ -1,10 +1,18 @@
 ---
 doc_id: V9-DOC-REF-938
 title: "V9 设计令牌映射表"
-domain: ref
+domain: data
 status: active
 last_updated: 2026-08-15
 ---
+covers_code:
+  - src/config/chartColors.ts
+  - src/constants/theme.tokens.ts
+  - src/constants/theme/theme.tokens.base.ts
+  - src/constants/theme/theme.tokens.color.ts
+  - src/constants/theme/theme.tokens.stock.ts
+  - src/constants/theme/theme.tokens.design.ts
+
 
 # V9 设计令牌映射表
 

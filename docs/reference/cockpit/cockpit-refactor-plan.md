@@ -1,10 +1,15 @@
 ---
 doc_id: V9-DOC-REF-919
 title: "驾驶舱重构方案总结"
-domain: ref
+domain: data
 status: active
 last_updated: 2026-08-15
 ---
+covers_code:
+  - src/cockpit/core/widgetRegistry.ts
+  - src/constants/cockpit.constants.ts
+  - src/types/modules/widget.types.ts
+
 
 # 驾驶舱重构方案总结
 

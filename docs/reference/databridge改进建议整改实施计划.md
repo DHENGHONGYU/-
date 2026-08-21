@@ -1,5 +1,9 @@
 ---
+type: reference
+domain: data
+phase: retrospective
 title: databridge改进建议整改实施计划
+doc_id: V9-DOC-REF-DATA-638
 tier: important
 code_version: "2.0.0-rc.2"
 version: v1.0.0

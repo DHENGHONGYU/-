@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: data
+phase: planning
 doc_id: V9-DOC-REF-930
 title: data-collection-task-list
 tier: important

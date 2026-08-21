@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: qa
+phase: testing
 doc_id: V9-DOC-REF-926
 title: completeness-profile
 tier: important

@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: frontend
+phase: design
 title: jsdoc-convention
 tier: important
 code_version: "2.0.0-rc.2"
@@ -11,6 +14,9 @@ change_log:
     changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
 ---
+covers_code:
+  - src/services/scoring/v6-engine/config.ts
+
 
 
 # JSDoc 与文档门禁规范

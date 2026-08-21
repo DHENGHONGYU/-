@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: frontend
+phase: design
 doc_id: V9-DOC-REF-923
 title: command-cabin-spec
 code_version: "2.0.0-rc.2"

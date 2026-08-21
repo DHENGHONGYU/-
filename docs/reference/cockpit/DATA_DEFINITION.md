@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-REF-921
 title: "Cockpit Widget 框架数据字典"
-domain: ref
+domain: data
 status: active
 last_updated: 2026-08-15
 

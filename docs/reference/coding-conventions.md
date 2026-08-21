@@ -21,6 +21,11 @@ change_log:
     changes: Initial version established
     date: 2026-07-17
 ---
+covers_code:
+  - src/services/scoring/v6-engine/config.ts
+  - src/data/types.ts
+  - src/lib/safeFs.ts
+
 
 # V9 编码规范（Coding Conventions）
 
