@@ -14,7 +14,7 @@
  */
 
 import { useEffect, useCallback, useRef, useState } from 'react'
-import type { IChartApi } from 'lightweight-charts'
+import type { IChartApi, Time } from 'lightweight-charts'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
@@ -147,8 +147,7 @@ export function useChartZoom(options: UseChartZoomOptions): UseChartZoomReturn {
   // 缩放到指定范围
   const zoomToRange = useCallback((from: number, to: number) => {
     if (!chart) return
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    chart.timeScale().setVisibleRange({ from, to } as any)
+    chart.timeScale().setVisibleRange({ from: from as Time, to: to as Time })
   }, [chart])
 
   // 缩放步进
@@ -255,7 +254,7 @@ export function useChartZoom(options: UseChartZoomOptions): UseChartZoomReturn {
       resetZoom()
     }
 
-    const chartEl = (chart as any)._chartElement as HTMLElement | undefined
+    const chartEl = (chart as unknown as { _chartElement?: HTMLElement })._chartElement
     if (chartEl) {
       chartEl.addEventListener('dblclick', handleDblClick)
       return () => {

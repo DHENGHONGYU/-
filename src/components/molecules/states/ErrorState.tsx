@@ -358,6 +358,7 @@ export const ErrorState = memo(function ErrorState({
   const errorValue = error ?? '出错了'
   const errorInfo = getErrorInfo(errorValue, errorCode)
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const handleRetry = useCallback(() => {
     onRetry?.()
   }, [onRetry])

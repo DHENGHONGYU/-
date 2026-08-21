@@ -369,7 +369,9 @@ export class DrawingManager {
         if (typeof d.time === 'number' && typeof time === 'number') {
           return d.time === time
         }
-        return String(d.time) === String(time)
+        const dTimeStr = typeof d.time === 'string' ? d.time : typeof d.time === 'number' ? String(d.time) : ''
+        const timeStr = typeof time === 'string' ? time : typeof time === 'number' ? String(time) : ''
+        return dTimeStr === timeStr
       })
       return item?.close ?? null
     } catch {

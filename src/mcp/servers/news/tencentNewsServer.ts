@@ -99,7 +99,7 @@ const TENCENT_NEWS_TOOL_DEFS: TencentNewsToolDef[] = [
       required: ['claim'],
     },
     command: 'jiaozhen',
-    buildArgs: (a) => (a.claim ? ` --query=${String(a.claim)}` : ''),
+    buildArgs: (a) => (typeof a.claim === 'string' ? ` --query=${a.claim}` : ''),
     // 事实核查上游常态 >20s，放宽到 60s，避免被实例级 20s 超时误杀
     timeoutMs: 60_000,
   },
@@ -111,7 +111,7 @@ const TENCENT_NEWS_TOOL_DEFS: TencentNewsToolDef[] = [
       properties: { adcode: { type: 'string', description: '地区 adcode' } },
     },
     command: 'weather',
-    buildArgs: (a) => (a.adcode ? ` --adcode ${String(a.adcode)}` : ''),
+    buildArgs: (a) => (typeof a.adcode === 'string' ? ` --adcode ${a.adcode}` : ''),
   },
 ]
 

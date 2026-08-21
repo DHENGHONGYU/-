@@ -41,7 +41,7 @@ function toToolResult(data: unknown): ToolResult {
 }
 
 function toErrorResult(err: unknown): ToolResult {
-  const msg = err instanceof Error ? err.message : String(err)
+  const msg = err instanceof Error ? err.message : typeof err === 'string' ? err : 'Unknown error'
   return { content: [{ type: 'text', text: msg }], isError: true }
 }
 
@@ -63,8 +63,8 @@ const WESTOCK_TOOL_DEFS: WestockToolDef[] = [
     },
     command: 'search',
     buildArgs: (a) => {
-      const kw = String(a.keyword ?? '')
-      const type = a.type ? ` --type ${String(a.type)}` : ''
+      const kw = typeof a.keyword === 'string' ? a.keyword : ''
+      const type = typeof a.type === 'string' ? ` --type ${a.type}` : ''
       return `${kw}${type}`
     },
   },
@@ -85,12 +85,12 @@ const WESTOCK_TOOL_DEFS: WestockToolDef[] = [
     },
     command: 'kline',
     buildArgs: (a) => {
-      const codes = String(a.codes ?? '')
-      const period = a.period ? ` --period ${String(a.period)}` : ''
+      const codes = typeof a.codes === 'string' ? a.codes : ''
+      const period = typeof a.period === 'string' ? ` --period ${a.period}` : ''
       const limit = a.limit != null ? ` --limit ${Number(a.limit)}` : ''
-      const fq = a.fq ? ` --fq ${String(a.fq)}` : ''
-      const start = a.start ? ` --start ${String(a.start)}` : ''
-      const end = a.end ? ` --end ${String(a.end)}` : ''
+      const fq = typeof a.fq === 'string' ? ` --fq ${a.fq}` : ''
+      const start = typeof a.start === 'string' ? ` --start ${a.start}` : ''
+      const end = typeof a.end === 'string' ? ` --end ${a.end}` : ''
       return `${codes}${period}${limit}${fq}${start}${end}`
     },
   },
@@ -107,7 +107,7 @@ const WESTOCK_TOOL_DEFS: WestockToolDef[] = [
     },
     command: 'finance',
     buildArgs: (a) => {
-      const codes = String(a.codes ?? '')
+      const codes = typeof a.codes === 'string' ? a.codes : ''
       const num = a.num != null ? ` --num ${Number(a.num)}` : ''
       return `${codes}${num}`
     },
@@ -125,8 +125,8 @@ const WESTOCK_TOOL_DEFS: WestockToolDef[] = [
     },
     command: 'technical',
     buildArgs: (a) => {
-      const codes = String(a.codes ?? '')
-      const indicator = a.indicator ? ` --indicator ${String(a.indicator)}` : ''
+      const codes = typeof a.codes === 'string' ? a.codes : ''
+      const indicator = typeof a.indicator === 'string' ? ` --indicator ${a.indicator}` : ''
       return `${codes}${indicator}`
     },
   },
@@ -139,7 +139,7 @@ const WESTOCK_TOOL_DEFS: WestockToolDef[] = [
       required: ['code'],
     },
     command: 'fund flow',
-    buildArgs: (a) => String(a.code ?? ''),
+    buildArgs: (a) => typeof a.code === 'string' ? a.code : '',
   },
   {
     name: 'westock_north_holding',
@@ -152,7 +152,7 @@ const WESTOCK_TOOL_DEFS: WestockToolDef[] = [
       },
     },
     command: 'fund north-holding',
-    buildArgs: (a) => (a.code ? String(a.code) : a.sectorId ? String(a.sectorId) : ''),
+    buildArgs: (a) => (typeof a.code === 'string' ? a.code : typeof a.sectorId === 'string' ? a.sectorId : ''),
   },
   {
     name: 'westock_report_list',
@@ -167,7 +167,7 @@ const WESTOCK_TOOL_DEFS: WestockToolDef[] = [
     },
     command: 'report list',
     buildArgs: (a) => {
-      const code = String(a.code ?? '')
+      const code = typeof a.code === 'string' ? a.code : ''
       const limit = a.limit != null ? ` --limit ${Number(a.limit)}` : ''
       return `${code}${limit}`
     },
@@ -186,9 +186,9 @@ const WESTOCK_TOOL_DEFS: WestockToolDef[] = [
     },
     command: 'notice list',
     buildArgs: (a) => {
-      const code = String(a.code ?? '')
+      const code = typeof a.code === 'string' ? a.code : ''
       const limit = a.limit != null ? ` --limit ${Number(a.limit)}` : ''
-      const type = a.type != null && String(a.type).length > 0 ? ` --type ${String(a.type)}` : ''
+      const type = typeof a.type === 'string' && a.type.length > 0 ? ` --type ${a.type}` : ''
       return `${code}${limit}${type}`
     },
   },
@@ -201,7 +201,7 @@ const WESTOCK_TOOL_DEFS: WestockToolDef[] = [
       required: ['sectorId'],
     },
     command: 'sector constituent',
-    buildArgs: (a) => String(a.sectorId ?? ''),
+    buildArgs: (a) => typeof a.sectorId === 'string' ? a.sectorId : '',
   },
   {
     name: 'westock_sector_valuation',
@@ -212,7 +212,7 @@ const WESTOCK_TOOL_DEFS: WestockToolDef[] = [
       required: ['sectorId'],
     },
     command: 'sector valuation',
-    buildArgs: (a) => String(a.sectorId ?? ''),
+    buildArgs: (a) => typeof a.sectorId === 'string' ? a.sectorId : '',
   },
   {
     name: 'westock_index_constituent',
@@ -223,7 +223,7 @@ const WESTOCK_TOOL_DEFS: WestockToolDef[] = [
       required: ['indexCode'],
     },
     command: 'index constituent',
-    buildArgs: (a) => String(a.indexCode ?? ''),
+    buildArgs: (a) => typeof a.indexCode === 'string' ? a.indexCode : '',
   },
   {
     name: 'westock_macro',
@@ -239,10 +239,10 @@ const WESTOCK_TOOL_DEFS: WestockToolDef[] = [
     },
     command: 'macro indicator',
     buildArgs: (a) => {
-      const indicator = a.indicator ? String(a.indicator) : ''
-      const year = a.year ? ` --year ${String(a.year)}` : ''
-      const date = a.date ? ` --date ${String(a.date)}` : ''
-      const region = a.region ? ` --region ${String(a.region)}` : ''
+      const indicator = typeof a.indicator === 'string' ? a.indicator : ''
+      const year = typeof a.year === 'string' ? ` --year ${a.year}` : ''
+      const date = typeof a.date === 'string' ? ` --date ${a.date}` : ''
+      const region = typeof a.region === 'string' ? ` --region ${a.region}` : ''
       return `${indicator}${year}${date}${region}`.trim()
     },
   },
@@ -255,7 +255,7 @@ const WESTOCK_TOOL_DEFS: WestockToolDef[] = [
       required: ['code'],
     },
     command: 'etf detail',
-    buildArgs: (a) => String(a.code ?? ''),
+    buildArgs: (a) => typeof a.code === 'string' ? a.code : '',
   },
 ]
 

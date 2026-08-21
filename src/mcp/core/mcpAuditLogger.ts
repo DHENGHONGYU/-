@@ -92,10 +92,13 @@ export class MCPAuditLogger {
     // db.ts ready() 超时也会给出明确错误（不挂死）。
     if (
       (typeof process !== 'undefined' && process.env?.NODE_ENV === 'test') ||
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITEST) ||
       // globalThis 上 vitest 运行时注入的变量：用 any 断言避免 ts-expect-error "未使用"
       // （typeof <未声明标识符> 在 TS 里不报错，@ts-expect-error 会被判成 Unused）
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       typeof (globalThis as any).__vitest__ !== 'undefined' ||
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       typeof (globalThis as any).vi !== 'undefined'
     ) {
       return
