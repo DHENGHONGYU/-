@@ -13,6 +13,7 @@
  */
 
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
+import type { Dirent } from 'node:fs'
 import { join, resolve, dirname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline'
@@ -143,12 +144,24 @@ function collectDocFiles(): string[] {
   // docs/ 下所有 .md
   function walk(dir: string): void {
     if (!existsSync(dir)) return
-    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    let entries: Dirent[]
+    try {
+      entries = readdirSync(dir, { withFileTypes: true })
+    } catch {
+      return
+    }
+    for (const entry of entries) {
       const fullPath = join(dir, entry.name)
-      if (entry.isDirectory()) {
-        walk(fullPath)
-      } else if (entry.name.endsWith('.md')) {
-        files.push(fullPath)
+      try {
+        const st = statSync(fullPath)
+        if (st.isDirectory()) {
+          walk(fullPath)
+        } else if (st.isFile() && entry.name.endsWith('.md')) {
+          files.push(fullPath)
+        }
+      } catch {
+        // 跳过无法 stat 的条目（权限/符号链接等）
+        continue
       }
     }
   }
@@ -159,12 +172,26 @@ function collectDocFiles(): string[] {
   // 根级关键文档
   for (const name of ROOT_DOC_FILES) {
     const fullPath = join(ROOT, name)
-    if (existsSync(fullPath)) files.push(fullPath)
+    if (existsSync(fullPath)) {
+      try {
+        const st = statSync(fullPath)
+        if (st.isFile()) files.push(fullPath)
+      } catch {
+        // 跳过
+      }
+    }
   }
 
   // .husky/pre-commit 虽然不是 md，但包含门禁命令引用
   const huskyPath = join(ROOT, '.husky', 'pre-commit')
-  if (existsSync(huskyPath)) files.push(huskyPath)
+  if (existsSync(huskyPath)) {
+    try {
+      const st = statSync(huskyPath)
+      if (st.isFile()) files.push(huskyPath)
+    } catch {
+      // 跳过
+    }
+  }
 
   return [...new Set(files)].sort()
 }
@@ -471,7 +498,13 @@ export function scan(): Report {
   let allDocContent = ''
 
   for (const filePath of docFiles) {
-    const content = readFileSync(filePath, 'utf-8')
+    let content: string
+    try {
+      content = readFileSync(filePath, 'utf-8')
+    } catch {
+      // 跳过无法读取的文件（可能是目录或权限问题）
+      continue
+    }
     allDocContent += `\n${content}`
 
     const relativePath = filePath.replace(/\\/g, '/').replace(`${ROOT.replace(/\\/g, '/')}/`, '')
