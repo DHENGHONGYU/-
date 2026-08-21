@@ -1,10 +1,13 @@
 ---
-doc_id: V9-DOC-IMPL-002
 title: density-table-integration-plan-2026-08-20
 status: active
-last_updated: 2026-08-21
-maintainer: FinSightV9 Team
+last_updated: 2026-08-22
 code_version: 2.0.0-rc.2
+version: v1.0.1
+change_log:
+  - version: v1.0.1
+    changes: "基准日校对(2026-08-22)：R1取真值(P2 正文版本声明行=v1.0) → R2 PATCH++(v1.0.1) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
 ---
 
 # 表格组件自动消费 DensityConfig 实施方案

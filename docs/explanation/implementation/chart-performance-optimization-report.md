@@ -1,6 +1,12 @@
 ---
 title: docs/explanation/implementation/chart-performance-optimization-report.md
 code_version: 2.0.0-rc.2
+version: v1.0.1
+last_updated: 2026-08-22
+change_log:
+  - version: v1.0.1
+    changes: "基准日校对(2026-08-22)：R1取真值(P2 正文版本声明行=v1.0) → R2 PATCH++(v1.0.1) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
 ---
 
 # 多副图联动方案性能优化报告

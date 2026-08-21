@@ -1,10 +1,14 @@
 ---
-doc_id: V9-DOC-META-005
 title: "V9 项目目录结构规范与使用指南"
 domain: project
 status: active
-last_updated: 2026-08-17
+last_updated: 2026-08-22
 code_version: 2.0.0-rc.2
+version: v3.1.2
+change_log:
+  - version: v3.1.2
+    changes: "基准日校对(2026-08-22)：R1取真值(P2 正文版本声明行=v3.1.1) → R2 PATCH++(v3.1.2) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
 ---
 covers_code:
   - scripts/audit/audit-layer-calls.ts

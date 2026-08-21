@@ -8,13 +8,16 @@ status: active
 maintainer: V9 Architecture Team
 summary: "For agentic workers: REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended)..."
 tags: [qa, optimization, test, testing, component, reference]
-version: v1.0.0
-last_updated: 2026-08-13
+version: v1.0.2
+last_updated: 2026-08-22
 code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-QA-027
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:
-  - version: v1.0.0
+  - version: v1.0.2
+    changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.1) → R2 PATCH++(v1.0.2) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
+- version: v1.0.0
     changes: Initial version established
     date: 2026-07-17
   - version: v1.0.1
