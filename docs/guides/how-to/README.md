@@ -53,6 +53,25 @@ date: 2026-07-17
 
 ---
 
+## 🔖 SOP 体系 · 按开发阶段索引
+
+> **Diataxis 分类**：Tutorial + How-to 融合的阶段化时间线
+> **定位**：覆盖 SDLC 完整 7 阶段（Onboarding → 开发 → CR → 集成 → 上线体检 → 发布 → 运维应急），**新人/资深/QA/DevOps 通用第一入口**
+> **总览**：[**SOP 体系总览 README**](../sops/README.md)（含 7 阶段流转图 + 4 场景决策树）
+> **真相源契约**：[AGENTS.md §十七](../../../AGENTS.md#十七sop-体系索引v160-新增--sdlc-全流程标准操作-procedure-suite)（所有命令与阈值冲突以契约为准）
+
+| 阶段 | SOP 文档 | 一句话用途 | 规范等级 |
+|-----|---------|-----------|:--------:|
+| 🆕 新人入职 | [S01 · 开发环境搭建](../sops/S01-dev-env-setup.md) | 9 步从零到可启动（Node/npm/venv/AkShare/Vite/Husky/首次验证），跨平台双命令 | 🟧 T2 · P1 |
+| 💻 日常编码 | [S02 · 开发与提交](../sops/S02-dev-workflow.md) | 分支策略/模块 DoD/十域同步/Gate:dev 预检/pre-commit 22/6 速查 + `git commit --only` | 🟧 T2 · P1 |
+| 🔍 代码审查 | [S03 · Code Review](../sops/S03-code-review.md) | 三轮 55+ 项检查矩阵（架构/安全/质量）+ 5 级严重度 + 不合格 PR 模板 | 🟧 T2 · P1 |
+| 🧪 Merge 前 | [**S04 · 合并前集成测试**](../sops/S04-pre-merge-integration.md) | 14 步集成：Gate:quick/可信测试(≥99.2%)/类型双检/复杂度不增/构建烟雾/CI双检 | 🟥 **T1 · P0🔥** |
+| ✅ Release 前 | [**S05 · 上线前全面体检**](../sops/S05-pre-launch-checklist.md) | **最核心**：24 步门禁 17 BLOCK + 真数测试（禁MOCK/25股票）+ 6 维评分 ≥90 GO | 🟥 **T1 · P0🔥** |
+| 🚀 发布部署 | [**S06 · 版本发布与部署**](../sops/S06-release-deployment.md) | SemVer 规则/三文件单向同步防错/Web+Electron 双端构建/灰度&回滚 A+B双方案 | 🟥 **T1 · P0🔥** |
+| 🚨 上线后 | [S07 · 运维与应急响应](../sops/S07-ops-incident-response.md) | 48h 值守排班/告警 SLA（5/15/60min）/4 源日志定位/热修复/RCA 模板 | 🟧 T2 · P1 |
+
+---
+
 ## 📂 其他文档分类
 
 - 入门教学类文档见 [../tutorials/](../tutorials/)

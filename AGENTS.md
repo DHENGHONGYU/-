@@ -1,4 +1,4 @@
-﻿---
+---
 title: AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 status: active
 version: v1.7.1
@@ -1848,6 +1848,40 @@ FinSightV9 是**个人本地投研复盘工具**，定位决定了部署架构�
 npm run lint 2>&1 | tail -n 20
 # 如存在警告但全在 tests/，视为通过；一旦 src/ 出现 warning 视为未达标
 ```
+
+---
+
+## 十七、SOP 体系索引（v1.6.0 新增 · SDLC 全流程标准操作 Procedure Suite）
+
+> **归因**：2026-08-19 新增首套按开发全生命周期（SDLC）串联的 7 阶段标准操作 SOP 体系。解决原有文档按功能域零散分布、新成员找不到"按时间线该做什么"、上线体检每次靠经验漏项的问题。
+>
+> **使用定位**：
+> - 新人 onboarding：**S01 → S02 → S03** 依次走完即可独立完成首次提交
+> - 功能 Merge 前：走 **S04** 集成测试（T1 P0 强制）
+> - Release 候选版发布前：走 **S05** 全面体检（T1 P0 强制，含真数测试禁令 + 6 维评分模板）
+> - 评分 ≥ 80 后进入 **S06** 发布部署；上线后进入 **S07** 运维与应急
+> - 总览入口见 `docs/guides/sops/README.md`（V9-DOC-SOP-000）
+>
+> **冲突处理原则**：本 §十七 仅索引，命令语义与阈值以 **§七 验证命令速查 = 唯一真相源** 为准；SOP 为操作/解读层，凡与本 AGENTS.md 契约冲突处一律以当前 v1.6.0（及后续变更的版本号）契约为准，并同步修订 SOP Frontmatter last_updated + change_log。
+
+### 17.1 8 篇 SOP 索引表（1 总览 + 7 正文 · doc_id ↔ 路径 ↔ 用途）
+
+| 编号 | doc_id | SOP 标题 | 相对路径 | 一句话用途 | 规范等级 |
+|:----:|:------|---------|:--------|-----------|:--------:|
+| 00 | `V9-DOC-SOP-000` | SDLC 七阶段 SOP 体系总览 | `docs/guides/sops/README.md` | 7 阶段流转图 + 快速选择指南（新员工/开发/上线/故障 4 场景跳转）+ 版本兼容矩阵 | T0 入口 |
+| 01 | `V9-DOC-SOP-001` | 开发环境搭建 SOP | `docs/guides/sops/S01-dev-env-setup.md` | 9 步从零到可启动：Node 版本对齐 + npm ci + Python venv/AkShare + Vite 代理 + Husky 安装 + 首次全量验证 | T2 · 🟧 P1 |
+| 02 | `V9-DOC-SOP-002` | 日常开发与代码提交 SOP | `docs/guides/sops/S02-dev-workflow.md` | 分支策略 + 模块 DoD 6 要素 + 十域同步清单 + Gate:dev 预检 + pre-commit 22/6 速查 + `git commit --only` 防夹带实操 | T2 · 🟧 P1 |
+| 03 | `V9-DOC-SOP-003` | 代码审查 SOP | `docs/guides/sops/S03-code-review.md` | 三轮 55+ 项检查矩阵（架构/安全/质量三维）+ Blocker→Nitpick 5 级严重度 + 不合格 PR 评论模板 + 多角色 Reviewer SLA | T2 · 🟧 P1 |
+| 04 | `V9-DOC-SOP-004` | 合并前集成测试 SOP | `docs/guides/sops/S04-pre-merge-integration.md` | 14 步集成：Gate:quick 7 子门禁 + 可信单元测试（≥99.2%）+ 类型双检 + 复杂度不增 + 构建烟雾 + CI vs 本地双检 + 统一质量聚合报告 | T1 · 🟥 P0🔥 |
+| 05 | `V9-DOC-SOP-005` | 上线前全面体检 SOP | `docs/guides/sops/S05-pre-launch-checklist.md` | **最核心**：24 步门禁 17 项 BLOCK + 真数测试独立章节（**禁止 MOCK** / AkShare 启动 / 25+ 股票清单）+ P0/P1/P2 分级表 + 6 维度加权评分（≥90 GO/<80 No-Go） | T1 · 🟥 P0🔥 |
+| 06 | `V9-DOC-SOP-006` | 版本发布与部署 SOP | `docs/guides/sops/S06-release-deployment.md` | SemVer 2.0 规则（4 类 RC/Beta/Alpha/HOTFIX 豁免）+ 三文件单向同步（pkg→CHANGELOG→Git Tag 反向防错）+ Web/Electron 双端构建校验 + 灰度/回滚 A+B 双方案 | T1 · 🟥 P0🔥 |
+| 07 | `V9-DOC-SOP-007` | 上线后运维与应急 SOP | `docs/guides/sops/S07-ops-incident-response.md` | 48h 值守 3 岗 6 人排班模板 + P0/P1/P2 告警 SLA（5min/15min/1h）+ 问题排查 4 源日志定位法 + 热修复分支策略 + RCA 标准模板 7 章 | T2 · 🟧 P1 |
+
+### 17.2 本节（§十七）触发 audit:agents-consistency 豁免说明
+
+- 本节为**索引类章节**（仅增加文字说明与链接表格），不涉及 §14.3 MCP 条目数、§7.2 USER_SCENES 场景、DB_VERSION、STORE_NAME 总数等 **P0 数字断言真相源**的变更。
+- 因此，向本节追加/调整 SOP 链接与描述时，**不会触发 `audit:agents-consistency` A1~A4 的 P0 BLOCK 漂移**（但仍会被 Husky [22/20] `--changed` 模式触发完整 7 项断言运行，A5/A6 frontmatter 合法性校验仍生效）。
+- 如需修改事实表段（如 MCP Server 从 17 变 18），必须同步更新 AGENTS.md 对应数字并立即跑 `npm run audit:agents-consistency` 修正漂移。
 
 ---
 

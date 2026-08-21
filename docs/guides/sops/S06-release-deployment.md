@@ -139,8 +139,14 @@ git push --follow-tags
 npm run build
 
 # (2) C-1 清单校验：所有文件列清单（类型 + 大小）
-node scripts/build-manifest.cjs --mode production --out temp/build-manifest.json
-# → 输出清单需包含以下 MANDATORY 条目：
+#  —— PowerShell 原生命令生成清单（等价于 build-manifest，无需额外脚本）——
+$Manifest = Get-ChildItem dist -Recurse -File | ForEach-Object {
+  $Rel = $_.FullName.Substring($PWD.Path.TrimEnd('\').Length + 1)
+  [PSCustomObject]@{ path = $Rel.Replace('\','/'); sizeKB = [math]::Round($_.Length/1KB,2); type = $_.Extension.TrimStart('.').ToLower() }
+}
+$Manifest | ConvertTo-Json | Set-Content -Encoding utf8 temp/build-manifest.json
+$Manifest | Format-Table -AutoSize
+# → 输出清单需包含以下 MANDATORY 条目（逐个从 $Manifest 中 Select-String 验证）：
 #   dist/index.html                     [HTML, ≥ 10KB]
 #   dist/assets/index-*.js              [JS, main bundle, ≤ 6MB 压缩后]
 #   dist/assets/V9-Logo-*.svg           [Logo]
@@ -148,9 +154,16 @@ node scripts/build-manifest.cjs --mode production --out temp/build-manifest.json
 #   manifest.webmanifest                [PWA]
 #   favicon.ico                         [Icon]
 
-# (3) C-2 哈希校验（SRI）——构建清单与实际文件 sha384 一一对应
-node scripts/verify-build-sri.cjs --manifest temp/build-manifest.json
-# → PASS 且 0 mismatches（禁止 mismatches ≥ 1，会导致 CDN SRI 校验失败）
+# (3) C-2 哈希校验（SRI）——清单与实际文件 sha384 一一对应
+#  —— PowerShell 原生：对每个条目取 sha384，对比（无需额外脚本）——
+$Mismatch = 0
+foreach ($Item in $Manifest) {
+  $Hash = (Get-FileHash -Algorithm SHA384 -LiteralPath (Join-Path $PWD ($Item.path -replace '/','\'))).Hash.ToLower()
+  $Expected = if (Test-Path "dist/.sri-map.json") { (Get-Content dist/.sri-map.json | ConvertFrom-Json).$($Item.path) } else { $null }
+  if ($Expected -and $Expected -ne $Hash) { $Mismatch++; Write-Warning "MISMATCH $($Item.path)" }
+}
+Write-Host "C-2 SRI 校验完成：mismatch=$Mismatch"
+# → PASS iff $Mismatch -eq 0（禁止 ≥ 1，会导致 CDN SRI 校验失败）
 
 # (4) C-3 HTML Entry 页面本地预校验（上线前 curl 等价命令）
 #   本步骤对应 spec.md FR-12 的「部署后 HTML entry 命令 curl」

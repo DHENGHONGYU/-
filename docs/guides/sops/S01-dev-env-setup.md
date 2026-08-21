@@ -135,8 +135,9 @@ npm ci
 # —— Windows（项目使用"受管 venv"，路径固定在 AGENTS.md §十六，禁止自己配 venv 根目录）———
 # 4.1 若 Python ≥ 3.11 尚未安装：
 winget install Python.Python.3.11 -e
-# 4.2 创建受管 venv（项目脚本自带创建器，自动配好路径）
-node scripts/ensure-venv.cjs
+# 4.2 创建受管 venv（目录与 AGENTS.md §十六保持一致，禁止自己改 venv 根目录）
+# Windows 默认位于 $env:USERPROFILE\.workbuddy\binaries\python\envs\default\
+python -m venv "$env:USERPROFILE\.workbuddy\binaries\python\envs\default"
 # 4.3 安装 AkShare + 后端依赖（使用 PyPI 国内镜像加速，推荐阿里镜像）
 node scripts/run-venv-python.cjs -m pip install --upgrade pip
 node scripts/run-venv-python.cjs -m pip install akshare uvicorn fastapi pandas numpy  `
@@ -148,7 +149,8 @@ node scripts/run-venv-python.cjs -c "import akshare; print('akshare version =', 
 ```bash
 # —— macOS / Linux ——
 brew install python@3.11 || sudo apt install python3.11 python3.11-venv
-node scripts/ensure-venv.cjs
+# macOS/Linux 受管 venv 位于 $HOME/.workbuddy/binaries/python/envs/default/
+python3.11 -m venv "$HOME/.workbuddy/binaries/python/envs/default"
 node scripts/run-venv-python.cjs -m pip install --upgrade pip
 node scripts/run-venv-python.cjs -m pip install akshare uvicorn fastapi pandas numpy \
   -i https://mirrors.aliyun.com/pypi/simple/

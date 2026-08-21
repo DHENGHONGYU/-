@@ -43,6 +43,25 @@ date: 2026-07-17
 
 ---
 
+## 标准操作流程体系（SOP Suite · 1 总览 + 7 正文）
+
+> **性质**：Meta 索引登记（本体文档存放在 `docs/guides/sops/` 目录，此处为治理侧登记 + doc_id 速查）
+> **注册契约**：8 篇 doc_id 均已在 [REGISTRY_INDEX.md §六（Doc ID 注册表）](REGISTRY_INDEX.md#六文档-doc-id-注册表规范v120) 全量登记（V9-DOC-SOP-000 ~ 007）
+> **架构契约引用**：[AGENTS.md §十七](../../../AGENTS.md#十七sop-体系索引v160-新增--sdlc-全流程标准操作-procedure-suite)
+
+| doc_id | SOP 标题 | 路径 | 规范等级 | 一句话用途 |
+|:------|---------|:-----|:--------:|-----------|
+| V9-DOC-SOP-000 | SDLC 七阶段 SOP 总览 | `docs/guides/sops/README.md` | T0 入口 | 7 阶段流转图 + 快速选择决策树（新员工/开发/上线/故障 4 场景跳转） |
+| V9-DOC-SOP-001 | 开发环境搭建 SOP | `docs/guides/sops/S01-dev-env-setup.md` | T2 · P1 | 9 步从零到可启动；跨平台双命令（Win + macOS/Linux）；Node/venv/AkShare 就位 |
+| V9-DOC-SOP-002 | 日常开发与提交 SOP | `docs/guides/sops/S02-dev-workflow.md` | T2 · P1 | 分支策略/模块 DoD/十域同步/pre-commit 速查/`git commit --only` 防夹带实操 |
+| V9-DOC-SOP-003 | 代码审查 SOP | `docs/guides/sops/S03-code-review.md` | T2 · P1 | 三轮 55+ 项检查矩阵（架构/安全/质量三维）+ Blocker→Nitpick 5 级严重度 + SLA |
+| V9-DOC-SOP-004 | 合并前集成测试 SOP | `docs/guides/sops/S04-pre-merge-integration.md` | **T1 · P0🔥** | 14 步集成：Gate:quick 7 子门禁 + 可信单元测试(≥99.2%) + CI vs 本地双检 |
+| V9-DOC-SOP-005 | 上线前全面体检 SOP | `docs/guides/sops/S05-pre-launch-checklist.md` | **T1 · P0🔥** | **最核心**：24 步门禁 17 BLOCK + 真数测试（禁MOCK/25股票）+ 6 维评分模板 |
+| V9-DOC-SOP-006 | 版本发布与部署 SOP | `docs/guides/sops/S06-release-deployment.md` | **T1 · P0🔥** | SemVer 2.0/三文件单向同步防错/Web+Electron双端构建/灰度 10%/回滚 A+B |
+| V9-DOC-SOP-007 | 上线后运维与应急 SOP | `docs/guides/sops/S07-ops-incident-response.md` | T2 · P1 | 48h 值守 3 岗 6 人/P0 告警 SLA(5min)/4 源日志定位法/RCA 标准模板 |
+
+---
+
 ## ?? 其他元文档
 
 | 文件 | 类型 | 说明 |

@@ -215,9 +215,25 @@ npm run validate:blueprint
 ### STEP 14 — 报告生成 + Reviewer 二次签名
 
 ```powershell
-node scripts/report-integration.js --pr $env:PR_NUMBER --sha $(git rev-parse HEAD)
-# 产物：docs/reports/integration/YYYY-MM-DD_P<pnum>_<sha7>.md
+# 运行集成测试套件 + 质量聚合（统一的集成产物入口）
+npm run test:integration
+npm run gate:aggregate
+# 归档：把 2 条命令输出复制到下方模板，另存为
+# docs/reports/integration/$(Get-Date -Format yyyy-MM-dd)_P${env:PR_NUMBER}_$($(git rev-parse HEAD).Substring(0,7)).md
 ```
+
+**报告模板（复制后在目标文件中填写）**：
+
+| 段落 | 内容 |
+|---|---|
+| PR 号 / SHA | `$env:PR_NUMBER` / `$(git rev-parse HEAD)` |
+| gate:quick | 粘贴 BLOCK/WARN/INFO 汇总表 |
+| test:stable | 通过率（需 ≥ 99.2%）+ 用例总数 + quarantine 列表 |
+| tsc:prod / tsc:test | error 数 + 处理方式说明 |
+| E2E 冒烟 | 通过率 + 失败单只股票清单（如有） |
+| 复杂度 | ΔComplexity（必须 ≤ 基线） |
+| 构建产物 | build 耗时 + bundle 尺寸 |
+| 结论 | Go / Need-fix（需附修复路径） |
 
 将产物附到 PR 评论中，@ 2 名 Reviewer 追加"集成测试签名 Approve"。
 
