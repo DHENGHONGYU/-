@@ -27,12 +27,10 @@ const ROOT = resolve(__dirname, '..', '..')
 const DOCS_DIR = join(ROOT, 'docs')
 const APPLY = process.argv.includes('--apply')
 
-// 契约/规格聚焦目录：reference + explanation（数据契约、API 契约、规范、设计说明）
-const TARGET_DIRS = ['reference', 'explanation']
-// 契约性文件名关键词：命中任一即视为契约/定义/规范类
-const CONTRACT_KEYWORDS = /contract|data-definition|definition|schema|spec\b|-spec|data-spec/i
-// 明确排除：分析/报告/迁移/指南/路线图/审计记录等非契约类（避免向分析类注入）
-const EXCLUDE_BY_NAME = /report|audit|migration|roadmap|comparison|glossary|walkthrough|checklist|blueprint|optimization|integration-guide|examples|legacy|plan-i|overview|architecture-alignment|v6pro-to-v9|2026-\d{2}-\d{2}|dataflow-spec|10-glossary/i
+// 覆盖 active 级文档的 covers_code 补全（包括 important 和 standard）
+const TARGET_DIRS = ['reference', 'explanation', 'guides', 'wiki', 'specs', 'meta', 'architecture', 'blueprints', 'reports', 'release-notes']
+// 明确排除：报告类/日志类（这些是成果输出，不需要 covers_code）
+const EXCLUDE_BY_NAME = /report|audit|migration|roadmap|comparison|glossary|walkthrough|checklist|blueprint|optimization|integration-guide|examples|legacy|plan-i|overview|architecture-alignment|v6pro-to-v9|2026-\d{2}-\d{2}|dataflow-spec|10-glossary|deep[- ]dive|analysis|review|release[- ]note|change[- ]log|变更摘要/i
 const MAX_CODE = 8
 
 interface Candidate {
@@ -70,17 +68,24 @@ function main() {
   for (const abs of mdFiles) {
     const rel = relative(ROOT, abs).replace(/\\/g, '/')
     const seg = rel.split('/')
-    // 只看 reference/explanation 顶层（含其子目录），跳过报告/日志/存档
+    
+    // 只看指定目录（含其子目录），跳过报告/日志/存档
     const isTarget = TARGET_DIRS.some((d) => rel === `docs/${d}` || rel.startsWith(`docs/${d}/`))
     if (!isTarget) continue
-    // 仅保留契约性文件名（命中 CONTRACT_KEYWORDS），且不被 EXCLUDE_BY_NAME 排除
-    if (!CONTRACT_KEYWORDS.test(basename(rel))) continue
+    
+    // 排除特定文件名的文档
     if (EXCLUDE_BY_NAME.test(rel)) continue
 
     const content = readFileSync(abs, 'utf8')
     const fm = parseFrontmatter(content)
     // 无 frontmatter 或已有 covers_code 的直接跳过
     if (!fm || fm.map.has('covers_code')) continue
+    
+    // 检查文档状态：处理 active 级文档，或没有明确状态的文档（视为 active）
+    const status = fm.map.get('status') || 'active'
+    if (status === 'deprecated' || status === 'archived' || status === 'draft') continue
+    
+    // 现在处理所有 active 级文档（包括 important 和 standard），只要有强代码引用
 
     const refs = scanDocReferences(abs).filter((r) => r.type === 'doc-to-code')
     const strong = refs.filter((r) => r.target.match(/\.(ts|tsx|js|jsx|json|cjs|mjs)$/) && validateReference(r, ROOT))

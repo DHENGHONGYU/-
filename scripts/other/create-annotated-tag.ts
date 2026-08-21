@@ -23,15 +23,14 @@
  *   - 幂等：若同版本 Tag 已存在则 --apply 时退出 1（禁止覆盖已推远端的 Tag）。
  */
 
-import { readFileSync, existsSync, writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import os from 'node:os'
 import { fileURLToPath } from 'node:url'
 
-// ES Module 环境下的 __filename / __dirname 等价物（Node 22+ 不提供 CommonJS 全局变量）
+// ES Module 环境下的 __filename 等价物（Node 22+ 不提供 CommonJS 全局变量）
 const __filename = fileURLToPath(import.meta.url)
-const __dirname = resolve(__filename, '..')
 
 // ---------- 参数解析 ----------
 type CliArgs = {
@@ -44,7 +43,7 @@ type CliArgs = {
 function parseArgs(argv: string[]): CliArgs {
   const args: CliArgs = { dryRun: true, apply: false, help: false }
   for (let i = 0; i < argv.length; i++) {
-    const a = argv[i]
+    const a = argv[i]!
     switch (a) {
       case '--dry-run': args.dryRun = true; args.apply = false; break
       case '--apply':   args.apply = true;  args.dryRun = false; break
