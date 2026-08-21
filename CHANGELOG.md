@@ -1,9 +1,32 @@
-﻿# 更新日志
+# 更新日志
 
 > 本日志按 [SemVer](https://semver.org/lang/zh-CN/) 记录 V9 智能投研复盘系统的版本变更、架构决策与验收数据。  
 > 未发布版本以 `Unreleased` 开头；已发布版本附带构建与测试硬指标。
 > 
 > ⚠️ **历史引用声明**：本日志中 v2.4.0 之前的条目引用的部分文档路径（如 `docs/03-architecture-standards.md`、`docs/CODE-REVIEW.md`、`docs/reports/code-graph.json` 等）可能因文档体系重构（SDLC 目录重组）已发生变更。如需最新路径，请查询 `docs/README.md` 或 `docs/00-meta/` 索引。
+
+---
+
+## [Unreleased] — 2026-08-21
+> **Release Type**：Feature 迭代（双轨评分分歧度 · 影子评分 + 三层置信路由） · **Status**：门禁验证通过（tsc:prod 0 错误 / vitest 15/15 / audit:layers 0 违规） · **改动面**：5 文件（types.score.ts / intelligentScoreService.ts / intelligentScoreService.test.ts / types.ts / IntelligentScorePage.tsx），零 BREAKING（纯新增可选字段）
+> **设计基准**：业界混合风控架构对标（Visa Risk Manager / Stripe Radar / FICO Falcon：LLM 负责意图捕获与解释生成，确定性规则层掌握最终决策权）——方案 D（V6 主导 + LLM 增强）+ C/E 组合（影子评分 + 分歧监控分层路由）
+
+### Added — 新增（features / capabilities）
+- **feat(scoring · 双轨评分分歧度)**：新增 `DualTrackDivergence` 类型与 `computeDualTrackDivergence()` 计算函数——当 V6 综合分与 LLM 影子分同时存在时，计算综合分 delta + 因子级 max delta + Top3 分歧因子，挂载至 `IntelligentScore.dualTrackDivergence` 可选字段（影子分只算不用，不参与主分计算，天然防污染）。
+- **feat(scoring · 三层置信路由)**：分歧度驱动置信分层——`consistent`（delta≤0.5）高置信直接放行 / `moderate`（0.5<delta≤1.0）自动降置信标记 / `divergent`（delta>1.0）标记"双轨分歧，建议人工复核"；分歧即认知不确定性（ensemble uncertainty），分歧大的样本正是最需人工介入的样本。
+- **feat(ui · 分歧展示)**：`IntelligentScorePage.tsx` 评分结果大卡新增"双轨评分分歧度"区块——按 tier 渲染置信徽标（一致·高置信 / 中度分歧·已降置信 / 高度分歧·建议人工复核）+ V6 vs LLM 影子分偏离 + 最大因子级偏离 + Top3 分歧因子列表（因子偏离着色）；JSON / MD / PDF 三导出同步纳入分歧度字段。
+- **test(scoring)**：`intelligentScoreService.test.ts` 新增 `computeDualTrackDivergence` 专项测试组——LLM 无有效维度返回 undefined（无法构成影子分）、双轨一致（consistent）、中度分歧（moderate）、高度分歧（divergent）、Top3 分歧因子排序、LLM 分数越界钳制（1-5）、`runIntelligentScore` 集成挂载断言；全套 15/15 通过。
+
+### Verification Matrix — 门禁证据
+| 门禁 | 结果 | 关键数值 |
+|---|---|---|
+| tsc:prod（tsconfig.prod.json --noEmit） | ✅ PASS | 0 errors |
+| vitest 针对性（intelligentScoreService.test.ts） | ✅ PASS | 15/15 tests green |
+| audit:layers（跨层调用 1496 份） | ✅ PASS | 0 violation / 0 warning |
+| audit:hardcode（1555 份） | ⚠️ PASS（delta=0） | 目标文件零命中，137 Warning 均为历史存量债务 |
+
+### Docs — 文档同步
+- **docs(audit)**：`outputs/data-flow-integrity-audit-2026-08-21.md` §六 修订——业界方案对标结论（朴素集成投票为反模式，V9 "V6 主导 + LLM 增强" 符合最佳实践），P1 建议（影子评分 + 分歧路由）本轮已落地实施。
 
 ---
 

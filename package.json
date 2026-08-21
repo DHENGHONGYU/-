@@ -9,7 +9,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint src/ --ext .ts,.tsx --max-warnings 370",
+    "lint": "eslint src/ --ext .ts,.tsx --max-warnings 367",
     "lint:colors": "eslint --config eslint.colors.config.js",
     "test": "node -e \"console.log('[test] START | time='+new Date().toISOString()+' | cmd=vitest run')\" && vitest run && node -e \"console.log('[test] PASS | time='+new Date().toISOString())\" || node -e \"console.error('[test] FAIL | time='+new Date().toISOString());process.exit(1)\"",
     "test:watch": "vitest",
