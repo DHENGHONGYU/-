@@ -62,8 +62,17 @@ const logger = getLogger()
 
 type CollectionMode = 'quote' | 'kline' | 'news' | 'research' | 'competitor' | 'index' | 'chip' | 'financial' | 'dividend' | 'consensus' | 'sector' | 'technical' | 'fund_flow' | 'institutional' | 'valuation' | 'unsupported'
 
-/** 非行情维度的受限 mode 子集（handleNonQuoteMode 专用） */
-type NonQuoteMode = 'news' | 'research' | 'competitor' | 'index' | 'chip' | 'dividend' | 'consensus'
+/** 非行情维度的受限 mode 子集（handleNonQuoteMode 专用）
+ * 2026-08-21 接线修复：补 sector/technical/fund_flow/institutional/valuation 5 个 mode，
+ * 原 dispatch 缺失导致维度 10-14 恒报「未知采集模式」（已注册未接线 P0）。 */
+type NonQuoteMode = 'news' | 'research' | 'competitor' | 'index' | 'chip' | 'dividend' | 'consensus' | 'sector' | 'technical' | 'fund_flow' | 'institutional' | 'valuation'
+
+/** 走 handleNonQuoteMode 的非行情 mode 全集（替代超长 || 链，防遗漏）
+ * 导出供 dispatch 完整性回归测试断言：DIMENSION_TO_MODE 与 dispatch 不得再漂移。 */
+export const NON_QUOTE_MODES: ReadonlySet<CollectionMode> = new Set([
+  'news', 'research', 'competitor', 'index', 'chip', 'dividend', 'consensus',
+  'sector', 'technical', 'fund_flow', 'institutional', 'valuation',
+])
 
 interface RunSingleTraceOptions {
   symbol: string
@@ -148,20 +157,37 @@ function extractResearchReports(dimData: Record<string, unknown>): ResearchRepor
 
 // ── 通用维度 mock 写入 ──
 
-/** 非行情维度（03–08）的统一 mock 写入入口 */
+/** 非行情维度（03–08, 10–16）的统一 mock 写入入口 */
 async function writeMockDimensionData(
   symbol: string,
   dimensionCode: string,
   data: Record<string, unknown>,
   action: EnvelopeAction,
 ): Promise<void> {
+  // local_docs keyPath=id：MCP/爬虫返回的维度数据常无 id 字段，缺 id 时合成，
+  // 防 PutHandler db.put() 抛错（2026-08-21 接线修复，同时补齐 15/16 隐患）
+  if (data.id == null || (typeof data.id === 'string' && data.id.trim() === '')) {
+    data.id = `dim-${dimensionCode}-${symbol}-${new Date().toISOString().slice(0, 10)}`
+  }
+
   // WAP Audit：校验 mock 数据关键字段
   const storeForDim: Record<string, string> = {
     '03': 'news', '04': 'news', '05': 'news',
     '06': 'sectorScores', '07': 'sectorScores',
     '08': 'researchLogs',
+    '10': 'localDocs', '11': 'localDocs', '12': 'localDocs',
+    '13': 'localDocs', '14': 'localDocs', '15': 'localDocs', '16': 'localDocs',
   }
   const targetStore = storeForDim[dimensionCode] ?? ''
+
+  // local_docs schema 字段补齐：symbol（by-symbol 索引可查）/ category / addedAt
+  if (targetStore === 'localDocs') {
+    data.symbol = data.symbol ?? symbol
+    data.category = data.category ?? `collection_dim_${dimensionCode}`
+    data.addedAt = data.addedAt ?? Date.now()
+    data.name = data.name ?? `维度${dimensionCode}·${symbol}`
+  }
+
   if (targetStore !== '') auditRecord(targetStore, data)
 
   await dataBridge.forward({
@@ -176,14 +202,23 @@ async function writeMockDimensionData(
   })
 }
 
-/** 维度 → ENVELOPE_ACTION 映射（非行情维度写入时使用） */
-const DIMENSION_TO_ACTION: Readonly<Record<string, EnvelopeAction>> = {
+/** 维度 → ENVELOPE_ACTION 映射（非行情维度写入时使用）
+ * 导出供 data-collector:dry-run 静态接线校验（防「已注册未接线」漂移）。 */
+export const DIMENSION_TO_ACTION: Readonly<Record<string, EnvelopeAction>> = {
   '03': ENVELOPE_ACTION.saveNews,             // 筹码 → news store (带 _mock 标记)
   '04': ENVELOPE_ACTION.saveNews,             // 重大事项 → news store
   '05': ENVELOPE_ACTION.saveNews,             // 热点新闻 → news store
   '06': ENVELOPE_ACTION.saveSectorScores,     // 行业竞品 → sector_scores store
   '07': ENVELOPE_ACTION.saveSectorScores,     // 关联指数 → sector_scores store
   '08': ENVELOPE_ACTION.saveResearchLog,      // 研报中心 → research_logs store
+  // 2026-08-21 接线修复：10-14 统一写 local_docs（沿用 15/16 先例）；
+  // 不写 hot_sector_scores —— 该 store 是双策略评分存储（keyPath=symbol），
+  // 写入原始采集数据会覆盖 analyzer/dualStrategyStore 的策略评分。
+  '10': ENVELOPE_ACTION.saveLocalDocs,        // 热门板块 → local_docs store
+  '11': ENVELOPE_ACTION.saveLocalDocs,        // 技术指标 → local_docs store
+  '12': ENVELOPE_ACTION.saveLocalDocs,        // 资金流向 → local_docs store
+  '13': ENVELOPE_ACTION.saveLocalDocs,        // 机构持仓 → local_docs store
+  '14': ENVELOPE_ACTION.saveLocalDocs,        // 估值分析 → local_docs store
   '15': ENVELOPE_ACTION.saveLocalDocs,        // 分红股本 → local_docs store
   '16': ENVELOPE_ACTION.saveLocalDocs,        // 一致预期 → local_docs store
 }
@@ -446,6 +481,7 @@ function auditRecord(storeName: string, payload: unknown): void {
     sectorScores: ['id'],
     researchLogs: ['id'],
     traceRecords: ['traceId'],
+    localDocs: ['id'],
   }
 
   const required = requiredFields[storeName]
@@ -964,7 +1000,7 @@ async function handleNonQuoteMode(ctx: SingleTraceContext): Promise<TraceResult>
     return { success: false, symbol, dimensionCode, latency: ctx.span.totalDurationMs, fallbackCount: 0, error: msg }
   }
 
-  const modeLabel = { news: '资讯', research: '研报', competitor: '竞品', index: '关联指数', chip: '筹码', dividend: '分红股本', consensus: '一致预期' }[mode]
+  const modeLabel = { news: '资讯', research: '研报', competitor: '竞品', index: '关联指数', chip: '筹码', dividend: '分红股本', consensus: '一致预期', sector: '热门板块', technical: '技术指标', fund_flow: '资金流向', institutional: '机构持仓', valuation: '估值分析' }[mode]
 
   try {
     const dimData = await generateDataForDimension(symbol, dimensionCode)
@@ -1230,7 +1266,8 @@ async function runSingleTraceImpl(
     if (mode === 'quote') return handleQuoteMode(ctx)
     if (mode === 'kline') return handleKlineMode(ctx)
     if (mode === 'financial') return handleFinancialMode(ctx)
-    if (mode === 'news' || mode === 'research' || mode === 'competitor' || mode === 'index' || mode === 'chip' || mode === 'dividend' || mode === 'consensus') {
+    // 2026-08-21 接线修复：集合判定替代 || 链，覆盖维度 03-08/10-16 全部非行情 mode
+    if (NON_QUOTE_MODES.has(mode)) {
       return handleNonQuoteMode(ctx)
     }
 
