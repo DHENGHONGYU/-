@@ -1,10 +1,14 @@
 ---
-doc_id: V9-DOC-PROJ-362
 title: "V9 间距令牌规范（Spacing Tokens）"
 domain: proj
 status: active
-last_updated: 2026-08-15
+last_updated: 2026-08-22
 code_version: 2.0.0-rc.2
+version: v0.9.15
+change_log:
+  - version: v0.9.15
+    changes: "基准日校对(2026-08-22)：R1取真值(P2 正文版本声明行=v0.9.14) → R2 PATCH++(v0.9.15) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
 ---
 
 # V9 间距令牌规范（Spacing Tokens）

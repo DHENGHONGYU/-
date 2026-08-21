@@ -1,10 +1,14 @@
 ---
-doc_id: V9-DOC-REF-936
 title: "数据流引擎（DataFlow Engine）数据字典"
 domain: ref
 status: active
-last_updated: 2026-08-15
+last_updated: 2026-08-22
 code_version: 2.0.0-rc.2
+version: v1.2.1
+change_log:
+  - version: v1.2.1
+    changes: "基准日校对(2026-08-22)：R1取真值(P2 正文版本声明行=v1.2.0) → R2 PATCH++(v1.2.1) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
 ---
 
 # 数据流引擎（DataFlow Engine）数据字典
