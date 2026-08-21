@@ -4,6 +4,7 @@ title: "V9-DOC-GUIDE-012：`no-unsafe-*` 14 种修复模式手册"
 domain: project
 status: active
 last_updated: 2026-08-17
+code_version: 2.0.0-rc.2
 ---
 covers_code:
   - scripts/audit/apply-no-unsafe-fix-patterns.cjs

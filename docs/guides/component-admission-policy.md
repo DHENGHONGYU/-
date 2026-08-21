@@ -4,6 +4,7 @@ title: "组件新增准入政策"
 domain: project
 status: active
 last_updated: 2026-08-17
+code_version: 2.0.0-rc.2
 ---
 covers_code:
   - src/components/componentRegistry.ts

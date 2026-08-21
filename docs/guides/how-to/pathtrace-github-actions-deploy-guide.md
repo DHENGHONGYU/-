@@ -4,6 +4,7 @@ title: "PathTrace 模块 GitHub Actions 部署与版本门控指南"
 domain: project
 status: active
 last_updated: 2026-08-15
+code_version: 2.0.0-rc.2
 ---
 
 # PathTrace 模块 GitHub Actions 部署与版本门控指南

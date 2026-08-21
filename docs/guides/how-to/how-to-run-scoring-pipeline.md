@@ -4,6 +4,7 @@ title: "如何运行采集与评分流水线"
 domain: project
 status: active
 last_updated: 2026-08-17
+code_version: 2.0.0-rc.2
 ---
 covers_code:
   - src/config/dbConfig.ts

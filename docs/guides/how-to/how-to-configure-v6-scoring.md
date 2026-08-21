@@ -4,6 +4,7 @@ title: "如何配置 V6 评分引擎权重与阈值"
 domain: project
 status: active
 last_updated: 2026-08-17
+code_version: 2.0.0-rc.2
 ---
 covers_code:
   - src/services/scoring/v6-engine/config.ts

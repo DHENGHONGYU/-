@@ -1,4 +1,9 @@
 ---
+title: docs/guides/CODE-REVIEW.md
+code_version: 2.0.0-rc.2
+---
+
+---
 title: code-review
 type: reference
 domain: project

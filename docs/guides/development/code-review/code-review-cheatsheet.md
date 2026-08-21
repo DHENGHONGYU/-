@@ -1,3 +1,8 @@
+---
+title: docs/guides/development/code-review/code-review-cheatsheet.md
+code_version: 2.0.0-rc.2
+---
+
 # 代码审查快速参考卡片
 
 > **打印建议**: 将本节打印并贴在显示器旁，或使用 asciiflow.com 转换为 ASCII 艺术

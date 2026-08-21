@@ -4,6 +4,7 @@ title: "如何新增一个 Widget（WidgetShell + 事件总线）"
 domain: project
 status: active
 last_updated: 2026-08-17
+code_version: 2.0.0-rc.2
 ---
 covers_code:
   - src/types/widget.ts

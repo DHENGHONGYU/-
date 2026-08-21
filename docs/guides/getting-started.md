@@ -4,6 +4,7 @@ title: "V9 智能投研复盘系统 — 新成员 30 分钟上手指南"
 domain: project
 status: active
 last_updated: 2026-08-17
+code_version: 2.0.0-rc.2
 ---
 covers_code:
   - src/data/types.ts
