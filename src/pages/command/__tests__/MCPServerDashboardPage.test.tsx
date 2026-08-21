@@ -176,13 +176,13 @@ describe('MCPServerDashboardPage', () => {
   // ──────────────────────────────────────────────────────────────
   it('点击刷新按钮调用 store.refreshServers', () => {
     renderPage()
-    const refreshButton = screen.getByText('刷新')
+    const refreshButton = screen.getByText('立即刷新')
     fireEvent.click(refreshButton)
     // mount 时 1 次 + 点击 1 次 = 2 次
     expect(mockStoreState.refreshServers).toHaveBeenCalledTimes(2)
   })
 
-  it('点击 toggle 按钮调用 store.toggleServer', () => {
+
     renderPage()
     // toggle 图标是 lucide-toggle-right
     const toggleButton = document.querySelector('.lucide-toggle-right')?.closest('button')

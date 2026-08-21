@@ -24,7 +24,7 @@ import { twText } from '@/constants/theme/theme.tokens.shades'
 import { getLogger } from '@/lib/logger'
 import { useCollectionRuntimeStore } from '@/store/collectionRuntimeStore'
 import { dataBridge } from '@/core/databridge'
-import { ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, STORE_NAME, MODULE_ID, type StoreName } from '@/config/dbConfig'
 import { DYNAMIC_SCORE_WEIGHTS, MOMENTUM_WEIGHTS } from './hotSector.config'
 import { getTimeliness, TIMELY_WINDOW_DAYS } from './hotSector.utils'
 import { getHotSectors } from '@/services/input/hotSectorService'
@@ -431,7 +431,7 @@ export default function InputTestDashboard(): React.JSX.Element {
           stores.map(async (store) => {
             const result = await dataBridge.query({
               action: ENVELOPE_ACTION.queryList,
-              store: store as any,
+              store: store as unknown as StoreName,
               source: MODULE_ID.pool,
             })
             return { store, ok: result.success, count: result.success ? (result.data as unknown[]).length : 0 }
@@ -458,7 +458,7 @@ export default function InputTestDashboard(): React.JSX.Element {
           stores.map(async (store) => {
             const result = await dataBridge.query({
               action: ENVELOPE_ACTION.queryList,
-              store: store as any,
+              store: store as unknown as StoreName,
               source: MODULE_ID.pool,
             })
             return { store, count: result.success ? (result.data as unknown[]).length : -1 }

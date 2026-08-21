@@ -61,6 +61,7 @@ function exportToJSON(score: IntelligentScore): void {
     basis: score.basis,
     missingFields: score.missingFields,
     model: score.configSnapshot.model,
+    dualTrackDivergence: score.dualTrackDivergence,
   }
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
@@ -89,7 +90,14 @@ ${score.dimensionScores.map(d => `- **${d.name}**: ${d.score?.toFixed(1) ?? 'N/A
 
 ${score.basis}
 
-## AI 总结
+${score.dualTrackDivergence ? `## 双轨评分分歧度
+
+- **置信分层**: ${score.dualTrackDivergence.tier === 'consistent' ? '一致 · 高置信' : score.dualTrackDivergence.tier === 'moderate' ? '中度分歧 · 已降置信' : '高度分歧 · 建议人工复核'}
+- **V6 规则分**: ${score.dualTrackDivergence.v6OverallScore.toFixed(2)} / LLM 影子分: ${score.dualTrackDivergence.llmOverallScore.toFixed(2)}（偏离 ${score.dualTrackDivergence.compositeDelta.toFixed(2)}）
+- **最大因子级偏离**: ${score.dualTrackDivergence.maxFactorDelta.toFixed(2)}
+${score.dualTrackDivergence.topDivergentFactors.length > 0 ? `- **分歧最大因子**: ${score.dualTrackDivergence.topDivergentFactors.map(f => `${f.name}(${f.v6Score?.toFixed(1) ?? '—'}→${f.llmScore?.toFixed(1) ?? '—'})`).join('、')}` : ''}
+
+` : ''}## AI 总结
 
 ${score.summary}
 
@@ -163,6 +171,15 @@ function exportToPDF(score: IntelligentScore): void {
   <h2>评分依据</h2>
   <div class="basis">${score.basis}</div>
 
+  ${score.dualTrackDivergence ? `
+  <h2>双轨评分分歧度</h2>
+  <div style="margin: 16px 0; padding: 16px; background: ${COLOR_SHADES.amber.hex[100]}; border-radius: 8px;">
+    <p><strong>置信分层</strong>: ${score.dualTrackDivergence.tier === 'consistent' ? '一致 · 高置信' : score.dualTrackDivergence.tier === 'moderate' ? '中度分歧 · 已降置信' : '高度分歧 · 建议人工复核'}</p>
+    <p><strong>V6 规则分</strong>: ${score.dualTrackDivergence.v6OverallScore.toFixed(2)} <strong>LLM 影子分</strong>: ${score.dualTrackDivergence.llmOverallScore.toFixed(2)}（综合偏离 ${score.dualTrackDivergence.compositeDelta.toFixed(2)}）</p>
+    <p><strong>最大因子级偏离</strong>: ${score.dualTrackDivergence.maxFactorDelta.toFixed(2)}</p>
+    ${score.dualTrackDivergence.topDivergentFactors.length > 0 ? `<p><strong>分歧最大因子</strong>: ${score.dualTrackDivergence.topDivergentFactors.map(f => `${f.name}(${f.v6Score?.toFixed(1) ?? '—'}→${f.llmScore?.toFixed(1) ?? '—'})`).join('、')}</p>` : ''}
+  </div>
+  ` : ''}
   <h2>AI 总结</h2>
   <div class="summary">${score.summary}</div>
 
@@ -614,6 +631,67 @@ export default function IntelligentScorePage(): React.JSX.Element {
                 className="w-full max-w-md"
               />
             </div>
+
+            {/* 双轨评分分歧度（Champion-Challenger 影子评分：V6 冠军定方向，LLM 影子分只算不用） */}
+            {result.dualTrackDivergence && (
+              <div className="rounded-lg border border-border/40 p-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm font-medium">双轨评分分歧度</span>
+                  {result.dualTrackDivergence.tier === 'consistent' && (
+                    <Badge variant="default" className="text-xs" title="综合分偏离 ≤ 0.5，双轨结论一致">
+                      一致 · 高置信
+                    </Badge>
+                  )}
+                  {result.dualTrackDivergence.tier === 'moderate' && (
+                    <Badge variant="secondary" className="text-xs" title="0.5 < 综合分偏离 ≤ 1.0，自动降低置信标记">
+                      中度分歧 · 已降置信
+                    </Badge>
+                  )}
+                  {result.dualTrackDivergence.tier === 'divergent' && (
+                    <Badge variant="destructive" className="text-xs" title="综合分偏离 > 1.0，建议人工复核">
+                      高度分歧 · 建议人工复核
+                    </Badge>
+                  )}
+                </div>
+                <div className="mt-3 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-3">
+                  <div className="space-y-1">
+                    <p className="text-xs text-muted-foreground">V6 规则分 vs LLM 影子分</p>
+                    <p className="tabular-nums font-medium">
+                      {result.dualTrackDivergence.v6OverallScore.toFixed(2)}
+                      <span className="mx-1 text-muted-foreground">vs</span>
+                      {result.dualTrackDivergence.llmOverallScore.toFixed(2)}
+                      <span className="ml-2 text-xs text-muted-foreground">
+                        偏离 {result.dualTrackDivergence.compositeDelta.toFixed(2)}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-xs text-muted-foreground">最大因子级偏离</p>
+                    <p className="tabular-nums font-medium">{result.dualTrackDivergence.maxFactorDelta.toFixed(2)}</p>
+                  </div>
+                  {result.dualTrackDivergence.topDivergentFactors.length > 0 && (
+                    <div className="space-y-1 sm:col-span-1">
+                      <p className="text-xs text-muted-foreground">分歧最大因子</p>
+                      <ul className="space-y-0.5">
+                        {result.dualTrackDivergence.topDivergentFactors.map((f) => (
+                          <li key={f.name} className="flex items-center justify-between gap-2 text-xs">
+                            <span className="truncate text-muted-foreground">{f.name}</span>
+                            <span
+                              className={cn(
+                                'shrink-0 tabular-nums',
+                                f.delta > 1.0 ? 'text-destructive' : f.delta > 0.5 ? 'text-primary' : 'text-muted-foreground',
+                              )}
+                            >
+                              {f.v6Score?.toFixed(1) ?? '—'}→{f.llmScore?.toFixed(1) ?? '—'}(Δ{f.delta.toFixed(1)})
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* 维度评分：2 列网格，维度名+分数 Progress 一行，依据/证据卡片在下 */}
             <div className="grid gap-x-6 gap-y-4 md:grid-cols-2">

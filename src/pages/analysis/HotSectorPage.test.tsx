@@ -36,6 +36,7 @@ vi.mock('@/lib/logger', () => ({
 vi.mock('lucide-react', () => ({
   TrendingUp: () => <svg data-testid="icon-trending" />,
   RefreshCw: () => <svg data-testid="icon-refresh" />,
+  RotateCcw: () => <svg data-testid="icon-rotate-ccw" />,
   ChevronDown: () => <svg data-testid="icon-chevron-down" />,
   ChevronUp: () => <svg data-testid="icon-chevron-up" />,
   AlertCircle: () => <svg data-testid="icon-alert" />,

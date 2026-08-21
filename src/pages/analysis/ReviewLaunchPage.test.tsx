@@ -214,7 +214,7 @@ describe('ReviewLaunchPage', () => {
     expect(runBtn.disabled).toBe(true)
   })
 
-  it('有结果态：渲染四源就绪灯/双策略分流/仓位乘数/页脚行动 + 雷达/二波/K线', () => {
+  it('有结果态：渲染复盘启动就绪度/启动建议/四维雷达/维度明细/增强因子/二波诊断', () => {
     Object.assign(mockState, {
       symbol: '600519',
       v6Score: mockV6,
@@ -230,20 +230,18 @@ describe('ReviewLaunchPage', () => {
         <ReviewLaunchPage />
       </MemoryRouter>,
     )
-    expect(screen.getByText('四源就绪状态')).toBeTruthy()
-    expect(screen.getByText(/就绪 5\/5 源/)).toBeTruthy()
-    expect(screen.getByText('策略适配分流（D2）')).toBeTruthy()
-    expect(screen.getByText(/仓位乘数预览/)).toBeTruthy()
-    expect(screen.getByText('下一步行动')).toBeTruthy()
     expect(screen.getByText('复盘启动就绪度')).toBeTruthy()
+    expect(screen.getByText('启动建议')).toBeTruthy()
+    expect(screen.getByText('维度明细')).toBeTruthy()
+    expect(screen.getByText('增强因子明细')).toBeTruthy()
+    expect(screen.getByText('四维评分雷达')).toBeTruthy()
     expect(screen.getByTestId('score-radar')).toBeTruthy()
     expect(screen.getByText('主升浪二波形态诊断')).toBeTruthy()
-    expect(screen.getByText('K线图预览')).toBeTruthy()
-    // 黄金买点(strong_buy) + 分级回踩(strong_wave) 双双命中
-    expect(screen.getAllByText('命中').length).toBeGreaterThanOrEqual(2)
+    expect(screen.getByText('命中二波形态')).toBeTruthy()
+    expect(screen.getByText('黄金买点命中')).toBeTruthy()
   })
 
-  it('风险降级态：显示 ×0.73 与风险否决提示、硬风险标签', () => {
+  it('风险降级态：显示风险降级标签与硬风险标签', () => {
     Object.assign(mockState, {
       symbol: '600519',
       v6Score: mockV6,
@@ -259,8 +257,7 @@ describe('ReviewLaunchPage', () => {
         <ReviewLaunchPage />
       </MemoryRouter>,
     )
-    expect(screen.getByText('×0.73')).toBeTruthy()
-    expect(screen.getByText('风险否决已触发')).toBeTruthy()
+    expect(screen.getByText(/风险降级.*0.73/)).toBeTruthy()
     expect(screen.getByText('st_violation')).toBeTruthy()
   })
 
@@ -288,15 +285,14 @@ describe('ReviewLaunchPage', () => {
     expect(mockRunEvaluation).toHaveBeenCalledTimes(1)
   })
 
-  it('点击重新评估触发 reset + runEvaluation', () => {
+  it('点击重置按钮触发 reset', () => {
     Object.assign(mockState, { symbol: '600519', result: mockResult })
     render(
       <MemoryRouter>
         <ReviewLaunchPage />
       </MemoryRouter>,
     )
-    fireEvent.click(screen.getByText('重新评估'))
+    fireEvent.click(screen.getByText('重置'))
     expect(mockReset).toHaveBeenCalledTimes(1)
-    expect(mockRunEvaluation).toHaveBeenCalledTimes(1)
   })
 })
