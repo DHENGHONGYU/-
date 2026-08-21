@@ -11,6 +11,7 @@
  */
 
 import { describe, it, expect } from 'vitest'
+import { z } from 'zod'
 import {
   // 5 舱顶层 DTO schema
   Z_INPUT_STOCK_POOL_DTO, Z_ANALYSIS_V6_SCORE_DTO, Z_TRADING_PNL_DTO,
@@ -41,14 +42,14 @@ describe('P3-1/Zod/舱1 InputStockPool', () => {
     expect(r.success).toBe(true)
   })
   it('(2/3) NEGATIVE: symbol 非 6 位数字（如 5 位）→ 失败并命中 items[0].symbol', () => {
-    const bad = { ...GOOD, items: [{ ...GOOD.items[0], symbol: '12345' }] }
+    const bad = { ...GOOD, items: [{ ...GOOD.items[0]!, symbol: '12345' }] }
     const r = Z_INPUT_STOCK_POOL_DTO.safeParse(bad)
-    expect(r.success).toBe(false); if (!r.success) expect(r.error.issues[0].path.join('.')).toMatch(/symbol/)
+    expect(r.success).toBe(false); if (!r.success) expect(r.error.issues[0]!.path.join('.')).toMatch(/symbol/)
   })
   it('(3/3) NEGATIVE: extra field strict 严格模式 → 失败 unknown keys', () => {
     const extra = { ...GOOD, _drift_field: true } as unknown as InputStockPoolDto
     const r = Z_INPUT_STOCK_POOL_DTO.safeParse(extra)
-    expect(r.success).toBe(false); if (!r.success) expect(r.error.issues[0].code).toBe('unrecognized_keys')
+    expect(r.success).toBe(false); if (!r.success) expect(r.error.issues[0]!.code).toBe('unrecognized_keys')
   })
   it('子: Z_MOCK_STOCK 仅 name/industry 必需 → 最简 payload 成功', () => {
     expect(Z_MOCK_STOCK.safeParse({ symbol: '600000', name: '浦发银行', industry: '银行' }).success).toBe(true)
@@ -81,12 +82,12 @@ describe('P3-1/Zod/舱2 AnalysisV6Score', () => {
         points: [{ period: '2026-Q3', composite: 101, count: 1, dimensions: { moat: 90 } }] },
     }
     const r = Z_SCORE_TREND_DATA.safeParse(bad.trendSnapshot)
-    expect(r.success).toBe(false); if (!r.success) expect(r.error.issues[0].message).toMatch(/不得 > 100/)
+    expect(r.success).toBe(false); if (!r.success) expect(r.error.issues[0]!.message).toMatch(/不得 > 100/)
   })
   it('(3/3) NEGATIVE: ScoreComparisonMode 非法 enum → 失败', () => {
     const bad = { ...GOOD, comparison: { ...GOOD.comparison!, mode: 'cross-version' } } as any
     const r = Z_ANALYSIS_V6_SCORE_DTO.safeParse(bad)
-    expect(r.success).toBe(false); if (!r.success) expect(/invalid_(enum_)?value/.test(r.error.issues[0].code)).toBe(true)
+    expect(r.success).toBe(false); if (!r.success) expect(/invalid_(enum_)?value/.test(r.error.issues[0]!.code)).toBe(true)
   })
 })
 
@@ -112,14 +113,14 @@ describe('P3-1/Zod/舱3 TradingPnL', () => {
   it('(2/3) NEGATIVE: 伪造 totalFloatingPnl ≠ sum → refine 失败', () => {
     const bad: TradingPnlDto = { ...GOOD, totalFloatingPnl: 999_999 }
     const r = Z_TRADING_PNL_DTO.safeParse(bad)
-    expect(r.success).toBe(false); if (!r.success) expect(r.error.issues[0].path.join('.')).toMatch(/totalFloatingPnl/)
+    expect(r.success).toBe(false); if (!r.success) expect(r.error.issues[0]!.path.join('.')).toMatch(/totalFloatingPnl/)
   })
   it('(3/3) NEGATIVE: strategyType 非法 STRATEGY → enum 失败', () => {
     const bad = { ...GOOD, holdings: [{ ...GOOD.holdings[0], strategyType: 'MOMENTUM' }] } as any
-    const r = Z_HOLDING_ITEM.safeParse(bad.holdings[0])
+    const r = Z_HOLDING_ITEM.safeParse(bad.holdings[0]!)
     expect(r.success).toBe(false)
     // Zod v4.4+ 对 z.enum 内联的 string 字面量冲突会使用 `invalid_value`（语义等价于 invalid_enum_value）
-    if (!r.success) expect(/invalid_(enum_)?value/.test(r.error.issues[0].code)).toBe(true)
+    if (!r.success) expect(/invalid_(enum_)?value/.test(r.error.issues[0]!.code)).toBe(true)
   })
 })
 
@@ -143,7 +144,7 @@ describe('P3-1/Zod/舱4 OutputDocExport', () => {
       scores: { overall: 98.5, integrity: 99, consistency: 98, correctness: 100, crossref: 97 },
       issuesSummary: { critical: [], high: [], medium: [], low: [] } },
     qualityGate: { status: 'pass', passed: true, threshold: 80, actual: 98.5, blockingReasons: [] },
-  } satisfies z.infer<typeof Z_DAILY_DOC_VALIDATION_REPORT>
+  } as z.infer<typeof Z_DAILY_DOC_VALIDATION_REPORT>
   const GOOD: OutputDocExportDto = {
     exportId: '550e8400-e29b-41d4-a716-446655440003',
     exportedAt: new Date('2026-08-20T17:05:00+08:00').toISOString(),
@@ -209,12 +210,12 @@ describe('P3-1/Zod/舱5 ControlHealthDash', () => {
   it('(2/3) NEGATIVE: refreshIntervalMs 2000 (小于 5000) → 失败', () => {
     const bad = { ...GOOD, refreshIntervalMs: 2000 }
     const r = Z_CONTROL_HEALTH_DASH_DTO.safeParse(bad)
-    expect(r.success).toBe(false); if (!r.success) expect(r.error.issues[0].message).toMatch(/刷新间隔不得 < 5s/)
+    expect(r.success).toBe(false); if (!r.success) expect(r.error.issues[0]!.message).toMatch(/刷新间隔不得 < 5s/)
   })
   it('(3/3) NEGATIVE: HealthReport overallScore 150 → 越界失败', () => {
     const bad = { ...GOOD.report, overallScore: 150 }
     const r = Z_HEALTH_REPORT.safeParse(bad)
-    expect(r.success).toBe(false); if (!r.success) expect(r.error.issues[0].message).toMatch(/必须 ≤ 100/)
+    expect(r.success).toBe(false); if (!r.success) expect(r.error.issues[0]!.message).toMatch(/必须 ≤ 100/)
   })
 })
 

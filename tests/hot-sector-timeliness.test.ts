@@ -105,7 +105,7 @@ describe('rankSectorsByDynamicScore — 动态权重排序', () => {
       80 * DYNAMIC_SCORE_WEIGHTS.original +
       capitalWeight * DYNAMIC_SCORE_WEIGHTS.capital +
       momentumWeight * DYNAMIC_SCORE_WEIGHTS.momentum
-    expect(ranked[0].dynamicScore).toBeCloseTo(expectedDynamic, 5)
+    expect(ranked![0]!.dynamicScore).toBeCloseTo(expectedDynamic, 5)
   })
 
   it('H-05-b: 多板块按 dynamicScore 降序排列', async () => {
@@ -113,8 +113,8 @@ describe('rankSectorsByDynamicScore — 动态权重排序', () => {
     const sectorLow = makeSector({ score: 40, factors: { fundFlow: 30, momentum: 30, sentiment: 30, valuation: 30 } })
     const sectorHigh = makeSector({ score: 90, factors: { fundFlow: 90, momentum: 90, sentiment: 90, valuation: 90 } })
     const ranked = rankSectorsByDynamicScore([sectorLow, sectorHigh])
-    expect(ranked[0].dynamicScore).toBeGreaterThan(ranked[1].dynamicScore)
-    expect(ranked[0].code).toBe(sectorHigh.code)
+    expect(ranked![0]!.dynamicScore).toBeGreaterThan(ranked[1]!.dynamicScore)
+    expect(ranked![0]!.code).toBe(sectorHigh.code)
   })
 
   it('H-05-c: 空列表返回空', async () => {
@@ -195,7 +195,7 @@ describe('extractRepresentativeStocks — 代表股抽取', () => {
     try {
       const picks = extractRepresentativeStocks(sectors as never, { timelyOnly: true })
       expect(picks.map((p) => p.symbol)).toEqual(['SH001'])
-      expect(picks[0].timely).toBe(true)
+      expect(picks![0]!.timely).toBe(true)
     } finally {
       vi.useRealTimers()
     }

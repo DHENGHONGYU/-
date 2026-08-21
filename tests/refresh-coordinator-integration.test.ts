@@ -19,7 +19,7 @@ import { refreshCoordinator } from '@/core/refreshCoordinator'
 describe('RefreshCoordinator — 跨 Store 刷新协调', () => {
   beforeEach(() => {
     const storeIds = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-    storeIds.forEach((id) => (refreshCoordinator as never).done?.(id) ?? (refreshCoordinator as never).clearPending?.(id))
+    storeIds.forEach((id) => (refreshCoordinator as any).done?.(id) ?? (refreshCoordinator as any).clearPending?.(id))
   })
 
   it('C-01: coordinateRefresh 同一 store 并发调用串行化', async () => {
@@ -87,14 +87,14 @@ describe('RefreshCoordinator — 跨 Store 刷新协调', () => {
   })
 
   it('C-07: register / waitFor / done 协同 — 手动 done 立即释放等待', async () => {
-    let resolveFn: (() => void) | null = null
+    let resolveFn: any = null
     const longRefresh = new Promise<void>((r) => { resolveFn = r })
     ;(refreshCoordinator as { register: (id: string, p: Promise<void>) => void }).register('G', longRefresh)
 
     let waited = false
     const waiter = refreshCoordinator.waitFor('G').then(() => { waited = true })
 
-    resolveFn?.()
+    resolveFn!()
     refreshCoordinator.done('G')
 
     await new Promise((r) => setTimeout(r, 10))
