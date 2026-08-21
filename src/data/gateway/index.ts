@@ -13,7 +13,7 @@
 
 import { db } from '@/data/db';
 import { cascadeExecutor } from '@/core/cascadeExecutor';
-import { createRepository } from '@/data/repository';
+import { createRepository, type RepositoryConfig } from '@/data/repository';
 import { getLogger } from '@/lib/logger';
 import { now } from '@/lib/utils';
 import type { StoreName } from '@/config/dbConfig';
@@ -171,7 +171,7 @@ class DataGatewayImpl implements IGateway {
     config: IRepositoryConfig<T, TKey>,
   ): IRepository<T, TKey> {
     logger.debug(`[Gateway] createRepository: store=${config.store}`);
-    return createRepository<T, TKey>(config as any) as IRepository<T, TKey>;
+    return createRepository<T, TKey>(config as unknown as RepositoryConfig<T, TKey>);
   }
 }
 
@@ -203,7 +203,7 @@ class TransactionContextImpl implements ITransactionContext {
     return new Promise<T | undefined>((resolve, reject) => {
       const request = objectStore.get(key);
       request.onsuccess = () => resolve(request.result as T | undefined);
-      request.onerror = () => reject(request.error);
+      request.onerror = () => reject(request.error ?? new Error('IndexedDB request failed'));
     });
   }
   
@@ -212,7 +212,7 @@ class TransactionContextImpl implements ITransactionContext {
     return new Promise<T[]>((resolve, reject) => {
       const request = objectStore.getAll();
       request.onsuccess = () => resolve((request.result ?? []) as T[]);
-      request.onerror = () => reject(request.error);
+      request.onerror = () => reject(request.error ?? new Error('IndexedDB request failed'));
     });
   }
   
@@ -226,7 +226,7 @@ class TransactionContextImpl implements ITransactionContext {
     return new Promise<T[]>((resolve, reject) => {
       const request = index.getAll(value);
       request.onsuccess = () => resolve((request.result ?? []) as T[]);
-      request.onerror = () => reject(request.error);
+      request.onerror = () => reject(request.error ?? new Error('IndexedDB request failed'));
     });
   }
   
@@ -235,7 +235,7 @@ class TransactionContextImpl implements ITransactionContext {
     return new Promise<void>((resolve, reject) => {
       const request = objectStore.put(value);
       request.onsuccess = () => resolve();
-      request.onerror = () => reject(request.error);
+      request.onerror = () => reject(request.error ?? new Error('IndexedDB request failed'));
     });
   }
   
@@ -244,7 +244,7 @@ class TransactionContextImpl implements ITransactionContext {
     return new Promise<void>((resolve, reject) => {
       const request = objectStore.delete(key);
       request.onsuccess = () => resolve();
-      request.onerror = () => reject(request.error);
+      request.onerror = () => reject(request.error ?? new Error('IndexedDB request failed'));
     });
   }
 }

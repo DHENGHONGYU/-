@@ -46,6 +46,34 @@ export interface DimensionScore {
   usedLlm?: boolean
 }
 
+/**
+ * 双轨评分分歧度（Champion-Challenger 影子评分模式）
+ *
+ * 当 V6 规则引擎（冠军，主分来源）与 LLM 影子评分（挑战者，仅比对不参与主分计算）
+ * 同时存在时记录两者偏离度，用于置信分层路由：
+ * consistent=一致（高置信）→ 直接放行；moderate=中度分歧 → 降置信标记；
+ * divergent=高度分歧 → 建议人工复核。分歧即认知不确定性，分歧大的样本最需人工介入。
+ */
+export interface DualTrackDivergence {
+  /** V6 引擎综合分（冠军分，主分来源，0-5 分制） */
+  v6OverallScore: number
+  /** LLM 影子综合分（挑战者分，已评分因子均值，1-5 分制钳位） */
+  llmOverallScore: number
+  /** 综合分分歧 |LLM - V6|（0-4 分制） */
+  compositeDelta: number
+  /** 因子级最大分歧 |LLM - V6|（0-4 分制） */
+  maxFactorDelta: number
+  /** 分歧最大的前 3 个因子（按 delta 降序） */
+  topDivergentFactors: Array<{
+    name: string
+    v6Score: number | null
+    llmScore: number | null
+    delta: number
+  }>
+  /** 置信分层路由结果 */
+  tier: 'consistent' | 'moderate' | 'divergent'
+}
+
 /** 智能评分结果 */
 export interface IntelligentScore {
   id?: number
@@ -75,6 +103,8 @@ export interface IntelligentScore {
   scoreProvenance?: 'data-driven' | 'llm-synthetic'
   /** 底层评分所依据数据的血缘（继承自 stock.dataProvenance）：real / mock / unknown */
   dataProvenance?: 'real' | 'mock' | 'unknown'
+  /** 双轨评分分歧度（V6 冠军分 vs LLM 影子分，仅 V6 驱动且 LLM 响应可解析时填充） */
+  dualTrackDivergence?: DualTrackDivergence
 }
 
 /** 行业评分维度 */

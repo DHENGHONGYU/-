@@ -76,7 +76,7 @@ export class V6Database {
           '[DB] ready() timeout after 5000ms. ' +
           'Database not initialized. Call db.init() first or ensure tests/setup.ts global ' +
           'beforeAll db.init() is enabled. If using vitest environment=node, consider calling ' +
-          'db.init() in your test file beforeAll. Make sure import \"fake-indexeddb/auto\" runs ' +
+          'db.init() in your test file beforeAll. Make sure import "fake-indexeddb/auto" runs ' +
           'before any db module import.'
         ))
       }, 5000)
@@ -92,7 +92,7 @@ export class V6Database {
           if (settled) return
           settled = true
           clearTimeout(timeout)
-          reject(err)
+          reject(err instanceof Error ? err : new Error(typeof err === 'string' ? err : 'DB initialization failed'))
         })
     })
 

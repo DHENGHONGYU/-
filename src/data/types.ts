@@ -70,6 +70,7 @@ export type {
 export type {
   V6Score,
   DimensionScore,
+  DualTrackDivergence,
   IntelligentScore,
   IndustryDimensionScore,
   IndustryScore,
