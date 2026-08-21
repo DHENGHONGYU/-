@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-02T11:03:46.174Z",
-  "deeplyNestedBlocks": 67,
+  "generatedAt": "2026-08-21T16:53:10.606Z",
+  "deeplyNestedBlocks": 81,
   "longElseIfChains": 0,
-  "duplicateIfConditions": 3
+  "duplicateIfConditions": 11
 }
