@@ -1,4 +1,4 @@
-#!/usr/bin/env pwsh
+﻿#!/usr/bin/env pwsh
 <#
 .SYNOPSIS
   V9 全量死文档审计脚本
@@ -49,6 +49,21 @@ $allDocs = @(Get-ChildItem "docs/" -Recurse -Filter "*.md" |
   Where-Object { $_.FullName -notmatch '\\archive\\' -and $_.FullName -notmatch '\\node_modules\\' })
 
 $totalDocs = $allDocs.Count
+
+# ── Load registered doc-id paths (active doc whitelist) ──
+# 已登记 doc_id 的文档视为活跃文档：即使 archive 存在同名副本（历史快照）
+# 或文件名命中关键词/日期前缀，也不判死，避免系统性误报。
+$registeredDocs = @{}
+$registryFile = "docs/meta/doc-id-registry.md"
+if (Test-Path $registryFile) {
+  Get-Content $registryFile -Encoding UTF8 | ForEach-Object {
+    if ($_ -match '^\|\s*V9-DOC-[A-Za-z0-9-]+\s*\|[^|]*\|[^|]*\|\s*([^|]+?)\s*\|') {
+      $p = $Matches[1].Trim().Replace('\', '/')
+      if ($p -and $p -match '\.md$') { $registeredDocs[('docs/' + $p).ToLower()] = $true }
+    }
+  }
+}
+Write-Host ("[+] Registered doc-id whitelist loaded: {0} entries" -f $registeredDocs.Count) -ForegroundColor DarkCyan
 
 # ── Results containers ──
 $deadDocs = [System.Collections.ArrayList]::new()
@@ -119,7 +134,10 @@ $allDocs | Where-Object { $_.FullName -match '\\deprecated\\' } | ForEach-Object
 
 # ── 4. Date-prefix temp records ──
 Write-Host "[4/8] Scanning date-prefix temp records..." -ForegroundColor Yellow
-$allDocs | Where-Object { $_.Name -match '^\d{4}-\d{2}-\d{2}-' } | ForEach-Object {
+# changelogs/、adr/、retro/ 目录下的日期前缀是正式归档命名惯例（变更日志、ADR、复盘记录），豁免
+$allDocs | Where-Object {
+  $_.Name -match '^\d{4}-\d{2}-\d{2}-' -and $_.FullName -notmatch '\\(changelogs|adr|retro)\\'
+} | ForEach-Object {
   $relPath = Get-RelativePath $_.FullName
   if ($relPath -notin $categories.deprecated_prefix -and $relPath -notin $categories.deprecated_dir) {
     $categories.date_prefix_temp += $relPath
@@ -142,6 +160,12 @@ $allDocs | Where-Object {
   if ($relPath -match '^docs/reports/') { return $false }
   if ($relPath -match '^docs/release-notes/') { return $false }
   if ($relPath -match '^docs/lessons/') { return $false }
+  # 灰度/版本发布报告目录：报告类文档的正式归属地
+  if ($relPath -match '^docs/releases/') { return $false }
+  # changelogs/ 变更日志目录：文件名天然含 report/summary 字样，与 date-prefix 豁免逻辑一致
+  if ($relPath -match '/changelogs/') { return $false }
+  # 已登记 doc_id 的文档为正式文档，文件名命中关键词不判死
+  if ($registeredDocs.ContainsKey($relPath.ToLower())) { return $false }
   foreach ($kw in $reportKeywords) {
     if ($name -match $kw) { return $true }
   }
@@ -158,17 +182,28 @@ $allDocs | Where-Object {
 
 # ── 6. Duplicate with archive ──
 Write-Host "[6/8] Scanning archive duplicates..." -ForegroundColor Yellow
+# 仅当内容与 archive 副本完全一致时才判定为死副本；
+# 内容不同 = 活跃演进版（archive 中只是历史快照）；已登记 doc_id 的一律不判死。
 $allDocs | ForEach-Object {
   $relPath = Get-RelativePath $_.FullName
   if ($relPath -in $categories.deprecated_prefix -or $relPath -in $categories.deprecated_dir) { return }
+  if ($registeredDocs.ContainsKey($relPath.ToLower())) { return }
   $nameKey = $_.Name.ToLower()
   if ($archiveFiles.ContainsKey($nameKey)) {
-    $categories.duplicate_archive += $relPath
-    $null = $deadDocs.Add([PSCustomObject]@{
-      Path = $relPath; Size = $_.Length; Category = 'Duplicate in archive'; Level = 'B';
-      Reason = "Same filename exists in archive: $($archiveFiles[$nameKey])";
-      LastModified = $_.LastWriteTime.ToString('yyyy-MM-dd')
-    })
+    $sameContent = $false
+    try {
+      $hashActive = (Get-FileHash -LiteralPath $_.FullName -Algorithm MD5).Hash
+      $hashArchive = (Get-FileHash -LiteralPath $archiveFiles[$nameKey] -Algorithm MD5).Hash
+      $sameContent = ($hashActive -eq $hashArchive)
+    } catch { $sameContent = $false }
+    if ($sameContent) {
+      $categories.duplicate_archive += $relPath
+      $null = $deadDocs.Add([PSCustomObject]@{
+        Path = $relPath; Size = $_.Length; Category = 'Duplicate in archive'; Level = 'B';
+        Reason = "Content identical to archive copy: $($archiveFiles[$nameKey])";
+        LastModified = $_.LastWriteTime.ToString('yyyy-MM-dd')
+      })
+    }
   }
 }
 
@@ -287,10 +322,14 @@ $reportLines += '---'
 $reportLines += ''
 $reportLines += '## Recommended Actions'
 $reportLines += ''
-$reportLines += '1. **Level C (Draft/Temp)**: Move to docs/archive/drafts/ immediately'
-$reportLines += '2. **Level B (Normal)**: Review and move to docs/archive/normal/ after confirmation'
+$reportLines += '1. **Level C (Draft/Temp)**: Move to D:\转移文件清单V9 immediately'
+$reportLines += '2. **Level B (Normal)**: Review and move to D:\转移文件清单V9 after confirmation'
 $reportLines += '3. **Level A (Important)**: Keep or move to docs/archive/important/ with preservation'
 $reportLines += '4. Run cross-reference audit after archiving: npm run audit:doc-code-references'
+$reportLines += ''
+$reportLines += '> Detection guards: docs registered in doc-id-registry.md are never flagged;'
+$reportLines += '> archive duplicates require identical content hash; changelogs/ and adr/'
+$reportLines += '> directories are exempt from date-prefix detection.'
 $reportLines += ''
 $reportLines += '---'
 $reportLines += ''
