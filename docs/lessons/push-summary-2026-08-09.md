@@ -1,3 +1,8 @@
+---
+title: docs/lessons/push-summary-2026-08-09.md
+code_version: 2.0.0-rc.2
+---
+
 # 提交摘要报告 — 2026-08-09
 
 > **推送范围**: `acae1425..1ba246fd`（main → origin/main）

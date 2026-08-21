@@ -17,6 +17,7 @@ covers_code:
   - src/agents/
   - src/mcp/
 owners: ["tech-debt/iteration-1"]
+code_version: 2.0.0-rc.2
 ---
 
 # 04 · 模型运行思路（Model Runtime & Data Flow）

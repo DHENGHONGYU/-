@@ -4,6 +4,7 @@ title: "directDataAPI Bug 修复说明（2026-08-09）"
 domain: project
 status: active
 last_updated: 2026-08-15
+code_version: 2.0.0-rc.2
 ---
 
 # directDataAPI Bug 修复说明（2026-08-09）

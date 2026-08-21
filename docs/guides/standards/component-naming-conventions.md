@@ -4,6 +4,7 @@ title: "组件命名规范与文档模板标准"
 domain: project
 status: active
 last_updated: 2026-08-17
+code_version: 2.0.0-rc.2
 ---
 
 ---

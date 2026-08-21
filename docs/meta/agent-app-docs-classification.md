@@ -4,6 +4,7 @@ title: "Agent 应用 · 文档分类索引表"
 domain: project
 status: active
 last_updated: 2026-08-17
+code_version: 2.0.0-rc.2
 ---
 
 ---

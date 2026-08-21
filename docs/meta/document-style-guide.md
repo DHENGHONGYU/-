@@ -4,6 +4,7 @@ title: "V9 文档风格指南与命名规范"
 domain: project
 status: active
 last_updated: 2026-08-17
+code_version: 2.0.0-rc.2
 ---
 
 ---

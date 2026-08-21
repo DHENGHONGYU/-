@@ -4,6 +4,7 @@ type: meta
 domain: project
 status: active
 last_updated: 2026-08-21
+code_version: 2.0.0-rc.2
 ---
 
 # 文档↔代码 直接关系快速索引

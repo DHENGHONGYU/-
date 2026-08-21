@@ -12,6 +12,7 @@ change_log:
   - version: v1.2.1
     changes: "文档新鲜度刷新：twBg/twText/twBorder 已废弃，确认令牌引用一致性"
     date: 2026-08-13
+code_version: 2.0.0-rc.2
 ---
 covers_code:
   - src/constants/cockpit.constants.ts

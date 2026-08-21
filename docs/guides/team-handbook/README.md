@@ -1,3 +1,8 @@
+---
+title: docs/guides/team-handbook/README.md
+code_version: 2.0.0-rc.2
+---
+
 # FinSightV9 团队体系手册（Team Handbook）
 
 > 版本基线：以 `AGENTS.md`（架构契约，当前 v1.4.6）为权威真相源。

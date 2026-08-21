@@ -4,6 +4,7 @@ title: "触发事件 → 更新动作 一一映射权威表"
 domain: project
 status: active
 last_updated: 2026-08-17
+code_version: 2.0.0-rc.2
 ---
 covers_code:
   - scripts/docs-tool/doc-update-trigger.ts

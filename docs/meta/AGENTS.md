@@ -1,4 +1,9 @@
 ---
+title: docs/meta/AGENTS.md
+code_version: 2.0.0-rc.2
+---
+
+---
 title: V9 AI Agents 索引
 type: meta
 domain: ai
