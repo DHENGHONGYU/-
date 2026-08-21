@@ -180,7 +180,7 @@ describe('lib/debugToolkit', () => {
       vi.useRealTimers()
       const txt = exportDebugLogs('ExportTimer')
       // durationMs != 0 时显示 "(50ms)"，否则 timeEnd 消息本身含 "ms"
-      expect(txt).toMatch(/ms[\)]?/)
+      expect(txt).toMatch(/ms[)]?/)
       // 确保 50ms 确实被记录
       const entry = getDebugLogs('ExportTimer').find((e) => e.durationMs !== undefined)!
       expect(entry).toBeDefined()

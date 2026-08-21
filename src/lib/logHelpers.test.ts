@@ -73,7 +73,7 @@ describe('logHelpers (1) safeStringify branches (via withLogging entry/result)',
     const wrapped = withLogging('m', 'op', async (p: { payload: string }) => p)
     await wrapped({ payload: long })
     const info = getLogMock('info')
-    const entryCtx = info.mock.calls[0][1] as Record<string, unknown>
+    const entryCtx = info.mock.calls[0]![1] as Record<string, unknown>
     const v = entryCtx.arg0 as string // arg0 = safeStringify({ payload: long })
     // payload 字段值被截断
     expect(v).toContain(`${long.slice(0, 200)}…`)
@@ -82,14 +82,14 @@ describe('logHelpers (1) safeStringify branches (via withLogging entry/result)',
   it('function 值 → [Function]', async () => {
     const wrapped = withLogging('m', 'op', async (p: { only: () => void }) => p)
     await wrapped({ only() {} })
-    const entryCtx = getLogMock('info').mock.calls[0][1] as Record<string, unknown>
+    const entryCtx = getLogMock('info').mock.calls[0]![1] as Record<string, unknown>
     expect((entryCtx.arg0 as string)).toContain('[Function]')
   })
 
   it('Error 值 → name:message 映射', async () => {
     const wrapped = withLogging('m', 'op', async (p: { err: Error }) => p)
     await wrapped({ err: new Error('boom') })
-    const entryCtx = getLogMock('info').mock.calls[0][1] as Record<string, unknown>
+    const entryCtx = getLogMock('info').mock.calls[0]![1] as Record<string, unknown>
     expect((entryCtx.arg0 as string)).toContain('"name":"Error"')
     expect((entryCtx.arg0 as string)).toContain('"message":"boom"')
   })
@@ -98,7 +98,7 @@ describe('logHelpers (1) safeStringify branches (via withLogging entry/result)',
     const d = new Date('2025-01-02T03:04:05.000Z')
     const wrapped = withLogging('m', 'op', async (d: Date) => d)
     await wrapped(d)
-    const entryCtx = getLogMock('info').mock.calls[0][1] as Record<string, unknown>
+    const entryCtx = getLogMock('info').mock.calls[0]![1] as Record<string, unknown>
     // 单非对象参数 → { arg0: safeStringify(Date) } = ISO string
     expect(entryCtx.arg0).toBe('2025-01-02T03:04:05.000Z')
   })
@@ -110,10 +110,10 @@ describe('logHelpers (1) safeStringify branches (via withLogging entry/result)',
     a.self = a
     const wrapped = withLogging('m', 'op', async (_tag: string, circular: unknown) => circular)
     await wrapped('tag', a)
-    const entryCtx = getLogMock('info').mock.calls[0][1] as Record<string, unknown>
+    const entryCtx = getLogMock('info').mock.calls[0]![1] as Record<string, unknown>
     const arrArgs = entryCtx.args as string[]
     expect(arrArgs).toHaveLength(2)
-    const json = arrArgs[1]
+    const json = arrArgs[1]!
     expect(typeof json).toBe('string')
     expect(json.length).toBeGreaterThan(0)
     // WeakSet replacer 检测循环引用 → 插入 [Circular] 标记
@@ -124,7 +124,7 @@ describe('logHelpers (1) safeStringify branches (via withLogging entry/result)',
     const wrapped = withLogging('m', 'op', async (fn: () => number) => fn())
     const r = await wrapped(() => 42)
     expect(r).toBe(42)
-    const entryCtx = getLogMock('info').mock.calls[0][1] as Record<string, unknown>
+    const entryCtx = getLogMock('info').mock.calls[0]![1] as Record<string, unknown>
     expect(entryCtx.arg0).toBe('[Function]')
   })
 })
@@ -141,7 +141,7 @@ describe('logHelpers (2) buildEntryContext logic (via withLogging args)', () => 
     expect(r).toBe(42)
     const info = getLogMock('info')
     // 入口调用
-    const entryCtx = info.mock.calls[0][1] as Record<string, unknown>
+    const entryCtx = info.mock.calls[0]![1] as Record<string, unknown>
     expect(entryCtx.args).toBe('[]')
   })
 
@@ -150,7 +150,7 @@ describe('logHelpers (2) buildEntryContext logic (via withLogging args)', () => 
       async (p: { a: number; b: string; c: boolean }) => p,
       { argsPick: ['a', 'c', 'missing'] })
     await wrapped({ a: 1, b: 'skip', c: true })
-    const entryCtx = getLogMock('info').mock.calls[0][1] as Record<string, unknown>
+    const entryCtx = getLogMock('info').mock.calls[0]![1] as Record<string, unknown>
     expect(entryCtx).toEqual({ a: 1, c: true })
   })
 
@@ -158,7 +158,7 @@ describe('logHelpers (2) buildEntryContext logic (via withLogging args)', () => 
     const wrapped = withLogging('m', 'op',
       async (p: { symbol: string; taskId: string; secret: string }) => p)
     await wrapped({ symbol: '600519', taskId: 't1', secret: 'nope' })
-    const entryCtx = getLogMock('info').mock.calls[0][1] as Record<string, unknown>
+    const entryCtx = getLogMock('info').mock.calls[0]![1] as Record<string, unknown>
     expect(entryCtx).toEqual({ symbol: '600519', taskId: 't1' })
     expect('secret' in entryCtx).toBe(false)
   })
@@ -167,7 +167,7 @@ describe('logHelpers (2) buildEntryContext logic (via withLogging args)', () => 
     const wrapped = withLogging('m', 'op',
       async (p: { foo: number; bar: string }) => p)
     await wrapped({ foo: 42, bar: 'baz' })
-    const entryCtx = getLogMock('info').mock.calls[0][1] as Record<string, unknown>
+    const entryCtx = getLogMock('info').mock.calls[0]![1] as Record<string, unknown>
     expect(typeof entryCtx.arg0).toBe('string')
     expect(entryCtx.arg0).toContain('foo')
   })
@@ -175,7 +175,7 @@ describe('logHelpers (2) buildEntryContext logic (via withLogging args)', () => 
   it('单基本类型参数 → { arg0: stringify }', async () => {
     const wrapped = withLogging('m', 'op', async (s: string) => s.length)
     await wrapped('hello')
-    const entryCtx = getLogMock('info').mock.calls[0][1] as Record<string, unknown>
+    const entryCtx = getLogMock('info').mock.calls[0]![1] as Record<string, unknown>
     expect(entryCtx.arg0).toBe('hello')
   })
 
@@ -183,7 +183,7 @@ describe('logHelpers (2) buildEntryContext logic (via withLogging args)', () => 
     const wrapped = withLogging('m', 'op',
       async (s: string, n: number, b: boolean) => ({ s, n, b }))
     await wrapped('a', 1, true)
-    const entryCtx = getLogMock('info').mock.calls[0][1] as Record<string, unknown>
+    const entryCtx = getLogMock('info').mock.calls[0]![1] as Record<string, unknown>
     expect(entryCtx.args).toEqual(['a', '1', 'true'])
   })
 })
@@ -197,7 +197,7 @@ describe('logHelpers (3) buildResultContext logic (via withLogging + opts)', () 
   it('result = null → { result: "null" }', async () => {
     const wrapped = withLogging('m', 'op', async () => null)
     await wrapped()
-    const exit = getLogMock('info').mock.calls[1][1] as Record<string, unknown>
+    const exit = getLogMock('info').mock.calls[1]![1] as Record<string, unknown>
     expect(exit.result).toBe('null')
     expect(typeof exit.durationMs).toBe('number')
   })
@@ -207,7 +207,7 @@ describe('logHelpers (3) buildResultContext logic (via withLogging + opts)', () 
       async () => ({ success: true, count: 100, big: 'x'.repeat(10000) }),
       { resultKeys: ['success', 'count', 'absent'] })
     await wrapped()
-    const exit = getLogMock('info').mock.calls[1][1] as Record<string, unknown>
+    const exit = getLogMock('info').mock.calls[1]![1] as Record<string, unknown>
     expect(exit).toMatchObject({ success: true, count: 100 })
     expect('big' in exit).toBe(false)
   })
@@ -217,7 +217,7 @@ describe('logHelpers (3) buildResultContext logic (via withLogging + opts)', () 
       { id: 1, name: 'one' }, { id: 2, name: 'two' },
     ])
     await wrapped()
-    const exit = getLogMock('info').mock.calls[1][1] as Record<string, unknown>
+    const exit = getLogMock('info').mock.calls[1]![1] as Record<string, unknown>
     expect(exit.resultType).toBe('array')
     expect(exit.length).toBe(2)
     expect(exit.first).toContain('one')
@@ -226,7 +226,7 @@ describe('logHelpers (3) buildResultContext logic (via withLogging + opts)', () 
   it('数组空 → first undefined', async () => {
     const wrapped = withLogging('m', 'op', async () => [] as number[])
     await wrapped()
-    const exit = getLogMock('info').mock.calls[1][1] as Record<string, unknown>
+    const exit = getLogMock('info').mock.calls[1]![1] as Record<string, unknown>
     expect(exit.resultType).toBe('array')
     expect(exit.length).toBe(0)
     expect(exit.first).toBeUndefined()
@@ -237,7 +237,7 @@ describe('logHelpers (3) buildResultContext logic (via withLogging + opts)', () 
       success: true, count: 10, source: 'sina', other: 'nope',
     }))
     await wrapped()
-    const exit = getLogMock('info').mock.calls[1][1] as Record<string, unknown>
+    const exit = getLogMock('info').mock.calls[1]![1] as Record<string, unknown>
     expect(exit).toMatchObject({ success: true, count: 10, source: 'sina' })
     expect('other' in exit).toBe(false)
   })
@@ -247,7 +247,7 @@ describe('logHelpers (3) buildResultContext logic (via withLogging + opts)', () 
       k1: 1, k2: 2, k3: 3, k4: 4, k5: 5, k6: 6,
     }))
     await wrapped()
-    const exit = getLogMock('info').mock.calls[1][1] as Record<string, unknown>
+    const exit = getLogMock('info').mock.calls[1]![1] as Record<string, unknown>
     expect(exit.resultType).toBe('object')
     const keys = (exit.keys as string).split(',').sort()
     expect(keys.length).toBe(5)
@@ -256,7 +256,7 @@ describe('logHelpers (3) buildResultContext logic (via withLogging + opts)', () 
   it('基本类型非 null → { result: stringify }', async () => {
     const wrapped = withLogging('m', 'op', async () => 42)
     await wrapped()
-    const exit = getLogMock('info').mock.calls[1][1] as Record<string, unknown>
+    const exit = getLogMock('info').mock.calls[1]![1] as Record<string, unknown>
     expect(exit.result).toBe('42')
   })
 })
@@ -306,8 +306,8 @@ describe('logHelpers (4) logEntry/logExit/logException API', () => {
     logExit(ctx, { success: true })
     const info = getLogMock('info')
     const lastCall = info.mock.calls[info.mock.calls.length - 1]
-    expect(lastCall[0]).toBe('[m] op 出口')
-    const c = lastCall[1] as Record<string, unknown>
+    expect(lastCall![0]).toBe('[m] op 出口')
+    const c = lastCall![1] as Record<string, unknown>
     expect(c.success).toBe(true)
     expect(typeof c.durationMs).toBe('number')
   })
@@ -317,7 +317,7 @@ describe('logHelpers (4) logEntry/logExit/logException API', () => {
     logExit(ctx, 'ok', { level: 'debug' })
     const debug = getLogMock('debug')
     expect(debug).toHaveBeenCalledTimes(1)
-    expect(debug.mock.calls[0][0]).toBe('[m] op 出口')
+    expect(debug.mock.calls[0]![0]).toBe('[m] op 出口')
     expect(getLogMock('info')).toHaveBeenCalledTimes(1) // 仅 entry
   })
 
@@ -326,7 +326,7 @@ describe('logHelpers (4) logEntry/logExit/logException API', () => {
     // TS 允许只传一个参数（arguments.length = 1）
     ;(logExit as (c: unknown) => void)(ctx)
     const info = getLogMock('info')
-    const exitCall = info.mock.calls[info.mock.calls.length - 1][1] as Record<string, unknown>
+    const exitCall = info.mock.calls[info.mock.calls.length - 1]![1] as Record<string, unknown>
     expect('result' in exitCall).toBe(false)
     expect('resultType' in exitCall).toBe(false)
     expect(typeof exitCall.durationMs).toBe('number')
@@ -338,7 +338,7 @@ describe('logHelpers (4) logEntry/logExit/logException API', () => {
     logException(ctx, err)
     const er = getLogMock('error')
     expect(er).toHaveBeenCalledTimes(1)
-    const c = er.mock.calls[0][1] as Record<string, unknown>
+    const c = er.mock.calls[0]![1] as Record<string, unknown>
     expect(c.a).toBe(1)
     expect(c.error).toBe('fail')
     expect(c.errorName).toBe('Error')
@@ -349,7 +349,7 @@ describe('logHelpers (4) logEntry/logExit/logException API', () => {
   it('logException: 非 Error (string) → error=string, errorName=typeof', () => {
     const ctx = logEntry('m', 'op')
     logException(ctx, 'string error')
-    const c = getLogMock('error').mock.calls[0][1] as Record<string, unknown>
+    const c = getLogMock('error').mock.calls[0]![1] as Record<string, unknown>
     expect(c.error).toBe('string error')
     expect(c.errorName).toBe('string')
     expect('stack' in c).toBe(false)
@@ -360,7 +360,7 @@ describe('logHelpers (4) logEntry/logExit/logException API', () => {
     const err = new Error('no stack')
     delete err.stack
     logException(ctx, err)
-    const c = getLogMock('error').mock.calls[0][1] as Record<string, unknown>
+    const c = getLogMock('error').mock.calls[0]![1] as Record<string, unknown>
     expect('stack' in c).toBe(false)
   })
 })
@@ -379,8 +379,8 @@ describe('logHelpers (5) withLogging (async/sync) wrappers', () => {
     expect(fn).toHaveBeenCalledWith(3, 4)
     const info = getLogMock('info')
     // entry + exit
-    expect(info.mock.calls[0][0]).toContain('入口')
-    expect(info.mock.calls[1][0]).toContain('出口')
+    expect(info.mock.calls[0]![0]).toContain('入口')
+    expect(info.mock.calls[1]![0]).toContain('出口')
   })
 
   it('withLogging 异步抛错：logException + rethrow', async () => {
@@ -389,7 +389,7 @@ describe('logHelpers (5) withLogging (async/sync) wrappers', () => {
     const wrapped = withLogging('net', 'fetch', fn)
     await expect(wrapped()).rejects.toThrow('network')
     expect(getLogMock('error')).toHaveBeenCalledTimes(1)
-    const c = getLogMock('error').mock.calls[0][1] as Record<string, unknown>
+    const c = getLogMock('error').mock.calls[0]![1] as Record<string, unknown>
     expect(c.error).toBe('network')
   })
 
@@ -406,7 +406,7 @@ describe('logHelpers (5) withLogging (async/sync) wrappers', () => {
     const fn = vi.fn((_x: number) => { throw new TypeError('bad') })
     const wrapped = withLoggingSync('math', 'double', fn)
     expect(() => wrapped(1)).toThrow('bad')
-    const c = getLogMock('error').mock.calls[0][1] as Record<string, unknown>
+    const c = getLogMock('error').mock.calls[0]![1] as Record<string, unknown>
     expect(c.errorName).toBe('TypeError')
   })
 })
@@ -437,7 +437,7 @@ describe('logHelpers (6) branch logging utilities', () => {
   it('logBranchSwitch info 级别', () => {
     logBranchSwitch(logger, 'parser', 'parse', '港股', {}, 'info')
     expect(logger.info).toHaveBeenCalled()
-    expect((logger.info as unknown as ReturnType<typeof vi.fn>).mock.calls[0][0]).toBe(
+    expect((logger.info as unknown as ReturnType<typeof vi.fn>).mock.calls[0]![0]).toBe(
       '[parser] parse: 港股 分支',
     )
   })
@@ -445,8 +445,8 @@ describe('logHelpers (6) branch logging utilities', () => {
   it('logFallback 默认 debug；input + fallback + extra 合并', () => {
     logFallback(logger, 'quotes', 'mapQuote', '000001.SZ', '000001', { market: 'sz' })
     const call = (logger.debug as unknown as ReturnType<typeof vi.fn>).mock.calls[0]
-    expect(call[0]).toBe('[quotes] mapQuote: 回退')
-    expect(call[1]).toEqual({ input: '000001.SZ', fallback: '000001', market: 'sz' })
+    expect(call![0]).toBe('[quotes] mapQuote: 回退')
+    expect(call![1]).toEqual({ input: '000001.SZ', fallback: '000001', market: 'sz' })
   })
 
   it('logFallback warn 级别（关键降级路径）', () => {
@@ -457,8 +457,8 @@ describe('logHelpers (6) branch logging utilities', () => {
   it('logGuardWarn 固定 warn 级别 + reason 格式化', () => {
     logGuardWarn(logger, 'codeMap', 'lengthGate', '代码长度 > 10，存在碰撞风险', { code: '000001.SZ-EXTRA' })
     const call = (logger.warn as unknown as ReturnType<typeof vi.fn>).mock.calls[0]
-    expect(call[0]).toBe('[codeMap] lengthGate: 守卫触发 — 代码长度 > 10，存在碰撞风险')
-    expect(call[1]).toEqual({ code: '000001.SZ-EXTRA' })
+    expect(call![0]).toBe('[codeMap] lengthGate: 守卫触发 — 代码长度 > 10，存在碰撞风险')
+    expect(call![1]).toEqual({ code: '000001.SZ-EXTRA' })
   })
 
   it('createBranchLogger 绑定 ns，批量调用省参', () => {
@@ -508,8 +508,8 @@ describe('logHelpers (7) reportFallbackEvent & reportFallbackForSymbol', () => {
     })
     // 1. warn 日志
     const call = (logger.warn as unknown as ReturnType<typeof vi.fn>).mock.calls[0]
-    expect(call[0]).toBe('[collector] fallback:kline_fallback — 腾讯 kline 空')
-    expect(call[1]).toMatchObject({
+    expect(call![0]).toBe('[collector] fallback:kline_fallback — 腾讯 kline 空')
+    expect(call![1]).toMatchObject({
       target: { type: 'stock', code: '600519' },
       from: 'tencent', to: 'sina', market: 'CN',
     })
@@ -536,7 +536,7 @@ describe('logHelpers (7) reportFallbackEvent & reportFallbackForSymbol', () => {
       actor: 'A', event: 'chip_price_sanitize', target: { type: 'chip', code: 'BABA' },
     })
     const call = (logger.warn as unknown as ReturnType<typeof vi.fn>).mock.calls[0]
-    expect(call[0]).toBe('[A] fallback:chip_price_sanitize — 无原因')
+    expect(call![0]).toBe('[A] fallback:chip_price_sanitize — 无原因')
     expect(call[1].from).toBeUndefined()
   })
 
@@ -722,7 +722,7 @@ describe('logHelpers (8) queryFallbackLogs & exportFallbackLogsToCsv', () => {
     expect(urlRevokeSpy).toHaveBeenCalledWith('blob:fake-url')
 
     expect(logger.info).toHaveBeenCalledTimes(1)
-    const infoArg = (logger.info as unknown as ReturnType<typeof vi.fn>).mock.calls[0][1] as Record<string, unknown>
+    const infoArg = (logger.info as unknown as ReturnType<typeof vi.fn>).mock.calls[0]![1] as Record<string, unknown>
     expect(infoArg.rows).toBe(3)
     expect(infoArg.days).toBe(14)
   })
