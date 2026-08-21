@@ -8,15 +8,18 @@ status: active
 maintainer: V9 Architecture Team
 summary: "定位：定义 `collection` 子域的接口契约、职责边界、数据流与依赖关系。 关联：`./services-catalog.md`（24 子域总览）、`../../AGENTS.md`..."
 tags: [data, collection, contract]
-version: v1.0.0
-last_updated: 2026-07-17
+version: v1.0.1
+last_updated: 2026-08-22
 code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-050
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-149]
 change_log:
+  - version: v1.0.1
+    changes: "代码侧变更确认兼容：collectionPipeline 维度10-14 dispatch 接线修复 + local_docs 写入兜底 + MonthlyBudgetGuard 预算守卫补实现"
+    date: 2026-08-22
   - version: v1.0.0
-changes: Initial version established
-date: 2026-07-17
+    changes: Initial version established
+    date: 2026-07-17
 
 covers_code:
   - src/types/modules/collection.types.ts

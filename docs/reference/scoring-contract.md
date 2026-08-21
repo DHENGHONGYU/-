@@ -6,9 +6,12 @@ doc_id: V9-DOC-REF-955
 title: scoring-contract
 code_version: "2.0.0-rc.2"
 tier: important
-version: v1.0.0
-last_updated: 2026-08-11
+version: v1.0.1
+last_updated: 2026-08-22
 change_log:
+  - version: v1.0.1
+    changes: "代码侧变更确认兼容：v6-engine 复杂度扁平化重构（嵌套压平 + 辅助函数抽取，无行为变更）"
+    date: 2026-08-22
   - version: v1.0.0
     changes: "P0 版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
