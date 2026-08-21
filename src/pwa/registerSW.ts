@@ -167,7 +167,7 @@ export async function registerSW(callbacks: PwaRegisterCallbacks = {}): Promise<
     //      此处纯 best-effort，失败不影响注册结果，静默吞掉仅 debug。
     queueMicrotask(async () => {
       try { await registration.update() }
-      catch (_err) { /* ignore — periodic browser update checks cover this */ }
+      catch { /* ignore — periodic browser update checks cover this */ }
     })
 
     return { updateSW, offlineReady, needRefresh }
