@@ -1,10 +1,14 @@
 ---
-doc_id: V9-DOC-ARCH-059
 title: "04. UI/UX 规范"
 domain: architecture
 status: active
-last_updated: 2026-08-17
+last_updated: 2026-08-22
 code_version: 2.0.0-rc.2
+version: v2.6.1
+change_log:
+  - version: v2.6.1
+    changes: "基准日校对(2026-08-22)：R1取真值(P2 正文版本声明行=v2.6.0) → R2 PATCH++(v2.6.1) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
 ---
 covers_code:
   - src/components/componentRegistry.ts

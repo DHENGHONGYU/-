@@ -1,10 +1,13 @@
 ---
-doc_id: V9-DOC-DESIGN-001
 title: G3-B-CHIP-ALIGNMENT-DESIGN
 status: active
-last_updated: 2026-08-21
-maintainer: FinSightV9 Team
+last_updated: 2026-08-22
 code_version: 2.0.0-rc.2
+version: 1.0.1
+change_log:
+  - version: 1.0.1
+    changes: "基准日校对(2026-08-22)：R1取真值(P2 正文版本声明行=1.0) → R2 PATCH++(1.0.1) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
 ---
 
 # G3-B 详细设计 · 筹码算法对齐 CYQ + Golden Test
