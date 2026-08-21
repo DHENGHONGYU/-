@@ -416,7 +416,11 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     read: [STORE_NAME.stocks, STORE_NAME.financialReports, STORE_NAME.traceRecords, STORE_NAME.collectConfig,
       // P2: 补充可写目标的 read 权限（2026-07-18 四维扫描发现）
       STORE_NAME.collectionHistory, STORE_NAME.conflictLog, STORE_NAME.fileImportRecords,
-      STORE_NAME.proofreadReports, STORE_NAME.researchLogs, STORE_NAME.sectorScores, STORE_NAME.news],
+      STORE_NAME.proofreadReports, STORE_NAME.researchLogs, STORE_NAME.sectorScores, STORE_NAME.news,
+      // 2026-08-21 修复：新增 localDocs 至 read/write。
+      // 维度 10-16（热门板块/技术指标/资金流向/机构持仓/估值分析/分红股本/一致预期）经
+      // saveLocalDocs 写入 local_docs，原配置未授权，fail-closed 导致采集写入必被拒。
+      STORE_NAME.localDocs],
     write: [
       STORE_NAME.stocks,
       STORE_NAME.dailyQuotes,
@@ -432,6 +436,8 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
       STORE_NAME.news,
       STORE_NAME.sectorScores,
       STORE_NAME.researchLogs,
+      // ── 10-16 维度采集目标存储（2026-08-21 新增，见 read 侧注释） ──
+      STORE_NAME.localDocs,
     ],
     actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete, DB_OPERATION.select],
   },
