@@ -5,14 +5,14 @@
  * 配置驱动的 MCP Server 自动注册与热更新。
  * 新增/移除/禁用 Server 只需修改此文件，无需改动注册逻辑。
  *
- * 当前状态（2026-08-15 P0-3 僵尸 Server 清理后）：
- *   15 个 Registry 条目 → 10 enabled + 5 disabled
+ * 当前状态（2026-08-21 刷新）：
+ *   17 个 Registry 条目 → 13 enabled + 4 disabled
  *   已移除 3 个 Server（export/trade/input）的 MCP 包装层：
  *   - export: 降级为纯 Service 函数（backtestExportService 保留）
  *   - trade: 合并入 trading:main（holdingsService 删除，功能由 trading 覆盖）
  *   - input: MCP 层移除（inputService 保留在 services/input/，业务代码直接调用）
- *   已 Disabled 5 个 Server（代码保留，恢复条件见各条目注释）：
- *   - analysis:main / portfolio:main / knowledge:local / execution:main / workflow:main
+ *   已 Disabled 4 个 Server（代码保留，恢复条件见各条目注释）：
+ *   - portfolio:main / knowledge:local / execution:main / workflow:main（analysis:main 已于 2026-08-20 恢复启用）
  *   - 同步清理：mcpAclMatrix.ts ui 角色已移除对应 allowedServers 入口
  *   复盘待办进展：
  *   P0 ✅ 已执行 —— export/trade/input MCP 层清理完毕（2026-07-20）
