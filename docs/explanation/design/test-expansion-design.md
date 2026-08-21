@@ -1,3 +1,8 @@
+---
+title: docs/explanation/design/test-expansion-design.md
+code_version: 2.0.0-rc.2
+---
+
 # 测试扩充设计方案
 
 > **版本**: v1.0 | **日期**: 2026-07-12

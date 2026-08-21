@@ -4,6 +4,7 @@ title: density-table-integration-plan-2026-08-20
 status: active
 last_updated: 2026-08-21
 maintainer: FinSightV9 Team
+code_version: 2.0.0-rc.2
 ---
 
 # 表格组件自动消费 DensityConfig 实施方案

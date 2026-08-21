@@ -1,3 +1,8 @@
+---
+title: docs/explanation/design/blueprints/README.md
+code_version: 2.0.0-rc.2
+---
+
 # Blueprints
 
 > **定位**：系统架构蓝图、流程设计图、技术方案可视化。

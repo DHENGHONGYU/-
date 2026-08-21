@@ -22,6 +22,7 @@ tags:
   - chart
   - integration
   - orphan-component-revival
+code_version: 2.0.0-rc.2
 ---
 
 # 行业分析图表组件接入技术文档

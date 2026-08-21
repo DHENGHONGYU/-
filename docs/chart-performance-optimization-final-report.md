@@ -1,3 +1,8 @@
+---
+title: docs/chart-performance-optimization-final-report.md
+code_version: 2.0.0-rc.2
+---
+
 # 多副图联动方案 - 最终性能优化报告
 
 **版本**: v2.0  

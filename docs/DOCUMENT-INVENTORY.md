@@ -1,3 +1,8 @@
+---
+title: docs/DOCUMENT-INVENTORY.md
+code_version: 2.0.0-rc.2
+---
+
 ﻿# V9 文档资产清单
 
 > 自动生成于 2026-08-19 08:31:55

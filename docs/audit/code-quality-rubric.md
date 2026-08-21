@@ -1,3 +1,8 @@
+---
+title: docs/audit/code-quality-rubric.md
+code_version: 2.0.0-rc.2
+---
+
 # 代码质量量化考核标准（v1.0）
 
 > 本标准基于项目 Hard Constraints 和 Engineering Conventions 制定，量化考核 6 大维度。

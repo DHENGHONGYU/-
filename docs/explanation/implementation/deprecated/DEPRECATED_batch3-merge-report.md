@@ -1,3 +1,8 @@
+---
+title: docs/explanation/implementation/deprecated/DEPRECATED_batch3-merge-report.md
+code_version: 2.0.0-rc.2
+---
+
 # Batch-3 全量回归测试报告
 
 > 生成时间：2026-06-25  

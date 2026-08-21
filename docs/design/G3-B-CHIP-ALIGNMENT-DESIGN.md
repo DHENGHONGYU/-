@@ -4,6 +4,7 @@ title: G3-B-CHIP-ALIGNMENT-DESIGN
 status: active
 last_updated: 2026-08-21
 maintainer: FinSightV9 Team
+code_version: 2.0.0-rc.2
 ---
 
 # G3-B 详细设计 · 筹码算法对齐 CYQ + Golden Test
