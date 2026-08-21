@@ -275,14 +275,25 @@ function main() {
       }
     }
     // 内容质量子项初筛：均为 WARN（不因存量技能升 FAIL）
+    // 阈值与 AGENTS.md 「新增 Skill 强制流程」契约基准对齐（§二 Step 0 填充标准）：
+    //   §一 4~8 条可判定触发条件 → WARN 阈值 <4；§三 ≥ 3 个 Phase → WARN 阈值 <3
     const triggersCount = (text.match(/显式触发|脚本\/审计触发|设计\/协议触发/g) || []).length;
-    if (triggersCount < 3 && (hasSignal || justTouched)) {
+    if (triggersCount < 4 && (hasSignal || justTouched)) {
       w(`RULE-TPL WARN（${name}）: 一/触发条件 可判定规则仅 ${triggersCount} 条，目标 ≥ 4`);
     }
     const phases = (text.match(/Phase [0-4]/g) || []);
     const phaseSet = new Set(phases);
-    if (phaseSet.size < 4 && (hasSignal || justTouched)) {
-      w(`RULE-TPL WARN（${name}）: 三/阶段化 SOP 仅 ${phaseSet.size} 个 Phase 标记（${[...phaseSet].sort().join(',') || '无'}），目标 ≥ 4`);
+    if (phaseSet.size < 3 && (hasSignal || justTouched)) {
+      w(`RULE-TPL WARN（${name}）: 三/阶段化 SOP 仅 ${phaseSet.size} 个 Phase 标记（${[...phaseSet].sort().join(',') || '无'}），目标 ≥ 3`);
+    }
+    // ---------- §二 前置检查清单：契约基准 ≥ 5 项表格条目（AGENTS.md §二 Step 0） ----------
+    // 切出 §二（在 §二 标题与 §三 标题之间），统计 `| N |` 表格条目行数
+    const s2Start = text.indexOf('## 二、前置检查');
+    const s3Start = text.indexOf('## 三、阶段化 SOP');
+    const s2 = s2Start >= 0 ? text.slice(s2Start, (s3Start > s2Start) ? s3Start : text.length) : '';
+    const preCheckRows = s2 ? (s2.match(/^\|\s*\d+\s*\|/gm) || []).length : 0;
+    if (preCheckRows < 5 && (hasSignal || justTouched)) {
+      w(`RULE-TPL WARN（${name}）: 二/前置检查清单 表格条目仅 ${preCheckRows} 项，目标 ≥ 5`);
     }
     // ---------- §四 陷阱与经验教训：双维度判定（条目数统计 + 扩展关键词） ----------
     // 先把 §四 单独切出来（在 §四 标题和 §五 标题之间 / 或文件末尾）
@@ -304,9 +315,10 @@ function main() {
     }
     // 向后兼容：保留原 lessonsCount 变量名（若后续其他位置引用）
     const lessonsCount = lessonEntries || lessonKeywords;
+    // §五 完成交付物清单：契约基准 ≥ 6 项清单表（AGENTS.md §二 Step 0），与契约对齐
     const deliverablesCount = (text.match(/\| # \||交付物/g) || []).length;
-    if (deliverablesCount < 3 && (hasSignal || justTouched)) {
-      w(`RULE-TPL WARN（${name}）: 五/完成交付物清单 仅 ${deliverablesCount} 命中，目标 ≥ 10 项清单表`);
+    if (deliverablesCount < 6 && (hasSignal || justTouched)) {
+      w(`RULE-TPL WARN（${name}）: 五/完成交付物清单 仅 ${deliverablesCount} 命中，目标 ≥ 6 项清单表`);
     }
   }
 

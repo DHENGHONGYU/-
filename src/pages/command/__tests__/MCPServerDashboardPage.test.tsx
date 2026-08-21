@@ -182,7 +182,7 @@ describe('MCPServerDashboardPage', () => {
     expect(mockStoreState.refreshServers).toHaveBeenCalledTimes(2)
   })
 
-
+  it('点击 toggle 按钮调用 store.toggleServer', () => {
     renderPage()
     // toggle 图标是 lucide-toggle-right
     const toggleButton = document.querySelector('.lucide-toggle-right')?.closest('button')

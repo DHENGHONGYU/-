@@ -522,10 +522,14 @@ export function scan(): Report {
   }
 
   // 反向检查：pre-commit 脚本必须在 SOP 中说明
-  const sopPath = join(ROOT, SOP_PATH)
-  const sopContent = existsSync(sopPath) ? readFileSync(sopPath, 'utf-8') : ''
-  const reverseFindings = checkPreCommitScriptsDocumented(sopContent)
-  violations.push(...reverseFindings)
+  // SOP_PATH 为空时跳过反向检查（已归档）
+  let reverseFindings: Finding[] = []
+  if (SOP_PATH) {
+    const sopPath = join(ROOT, SOP_PATH)
+    const sopContent = existsSync(sopPath) ? readFileSync(sopPath, 'utf-8') : ''
+    reverseFindings = checkPreCommitScriptsDocumented(sopContent)
+    violations.push(...reverseFindings)
+  }
 
   return {
     violations,
