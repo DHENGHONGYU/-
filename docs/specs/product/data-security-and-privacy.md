@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: data
+phase: design
 doc_id: V9-DOC-ARCH-056
 title: data-security-and-privacy
 code_version: "2.0.0-rc.2"

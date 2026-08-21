@@ -1,10 +1,18 @@
 ---
 doc_id: V9-DOC-ARCH-054
 title: "申万宏源 3 级行业分类 — 系统设计文档"
-domain: arch
+domain: architecture
 status: active
 last_updated: 2026-08-15
 ---
+covers_code:
+  - src/services/stock/swIndustryMap.ts
+  - src/services/stock/industryLookup.ts
+  - src/services/stock/stockDictionary.ts
+  - src/services/input/inputService.ts
+  - src/components/organisms/input/StockSearch.test.tsx
+  - src/store/inputHubStore.ts
+
 
 # 申万宏源 3 级行业分类 — 系统设计文档
 

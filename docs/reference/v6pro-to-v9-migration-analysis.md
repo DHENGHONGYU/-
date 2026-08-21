@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: data
+phase: retrospective
 doc_id: V9-DOC-REF-986
 title: v6pro-to-v9-migration-analysis
 tier: important

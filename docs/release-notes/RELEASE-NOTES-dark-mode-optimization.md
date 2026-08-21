@@ -1,4 +1,7 @@
 ---
+type: reports
+domain: frontend
+phase: deployment
 doc_id: V9-DOC-PROJ-374
 title: 深色模式优化 Release Notes
 tier: important

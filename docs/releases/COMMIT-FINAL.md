@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-PROJ-377
 title: "最终 Commit Message（请确认）"
-domain: proj
+domain: project
 status: active
 last_updated: 2026-08-15
 ---

@@ -1,8 +1,8 @@
 ---
 title: 股票字典生成与校验
 type: reference
-domain: development
-phase: implementation
+domain: project
+phase: development
 tier: important
 status: active
 maintainer: V9 Product Team (Xu)
@@ -17,6 +17,11 @@ change_log:
     changes: Initial version established
     date: 2026-07-19
 ---
+covers_code:
+  - src/services/stock/stockDictionary.ts
+  - scripts/run-venv-python.cjs
+  - scripts/docs-tool/doc-update-trigger.ts
+
 
 # 股票字典生成与校验
 

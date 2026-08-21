@@ -1,16 +1,16 @@
 ---
 doc_id: V9-DOC-ARCH-060
 title: "Cockpit / Command 结构设计蓝图"
-domain: arch
+domain: architecture
 status: active
 last_updated: 2026-08-17
 ---
 
 ﻿---
 title: cockpit-command-blueprint
-tier: T0
+tier: important
 status: active
-type: spec
+type: reference
 domain: architecture
 phase: design
 doc_id: V9-DOC-ARCH-050

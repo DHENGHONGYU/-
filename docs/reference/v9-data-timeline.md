@@ -21,6 +21,9 @@ change_log:
     changes: Initial version established
     date: 2026-07-17
 ---
+covers_code:
+  - src/config/dbConfig.ts
+
 
 # V9 数据时间关系与生命周期蓝图
 

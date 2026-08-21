@@ -2,7 +2,7 @@
 title: Tushare Pro Token 配置与注册指引
 type: reference
 domain: data
-phase: implementation
+phase: development
 tier: standard
 status: active
 maintainer: V9 Engineering Team
@@ -17,6 +17,11 @@ change_log:
     changes: Initial version established
 date: 2026-07-17
 ---
+covers_code:
+  - src/services/data-collector/tushareProvider.ts
+  - src/config/marketDataEndpoints.ts
+  - scripts/verify-tushare-token.ts
+
 
 # Tushare Pro Token 配置与注册指引
 

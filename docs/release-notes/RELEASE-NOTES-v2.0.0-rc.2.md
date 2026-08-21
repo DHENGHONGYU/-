@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-PROJ-375
 title: "FinSightV9 v2.0.0-rc.2 Release Notes (Draft)"
-domain: proj
+domain: project
 status: active
 last_updated: 2026-08-15
 ---

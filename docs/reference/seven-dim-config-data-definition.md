@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: data
+phase: design
 doc_id: V9-DOC-REF-957
 title: seven-dim-config-data-definition
 tier: important

@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-REF-963
 title: "回归测试套件模板"
-domain: ref
+domain: data
 status: active
 last_updated: 2026-08-15
 ---

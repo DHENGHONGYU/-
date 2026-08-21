@@ -1,11 +1,12 @@
 ---
+phase: design
 title: ADR-010 Cockpit/Command 职责边界与纵横交叉布局
 status: accepted
 date: 2026-07-24
 doc_id: V9-ADR-010
-type: adr
+type: explanation
 domain: architecture
-tier: T0
+tier: important
 version: v1.0.0
 last_updated: 2026-08-11
 change_log:

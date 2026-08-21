@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: data
+phase: design
 doc_id: V9-DOC-REF-969
 title: v6-to-v9-migration-spec
 code_version: "2.0.0-rc.2"

@@ -1,4 +1,7 @@
 ---
+type: reference
+domain: product
+phase: planning
 doc_id: V9-DOC-ARCH-055
 title: competitive-analysis
 code_version: "2.0.0-rc.2"

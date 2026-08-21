@@ -1,10 +1,20 @@
 ---
 doc_id: V9-DOC-ARCH-059
 title: "04. UI/UX 规范"
-domain: arch
+domain: architecture
 status: active
 last_updated: 2026-08-17
 ---
+covers_code:
+  - src/components/componentRegistry.ts
+  - src/components/atoms/Button.tsx
+  - src/components/atoms/Card.tsx
+  - src/components/atoms/Input.tsx
+  - src/components/atoms/Badge.tsx
+  - src/components/atoms/Progress.tsx
+  - src/components/molecules/states/Skeleton.tsx
+  - src/components/atoms/Checkbox.tsx
+
 
 ﻿---
 title: 04. UI/UX 规范

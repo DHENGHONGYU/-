@@ -1,7 +1,7 @@
 ---
 doc_id: V9-DOC-PROJ-373
 title: "GitHub 连接问题网络排查报告"
-domain: proj
+domain: project
 status: active
 last_updated: 2026-08-15
 ---
