@@ -1,6 +1,6 @@
 ---
 title: 01 - 项目整体架构
-type: wiki
+type: reference
 domain: architecture
 status: frozen
 maintainer: FinSightV9 Team

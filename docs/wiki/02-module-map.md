@@ -1,6 +1,6 @@
 ---
 title: 02 - 模块职责地图
-type: wiki
+type: reference
 domain: architecture
 status: frozen
 maintainer: FinSightV9 Team

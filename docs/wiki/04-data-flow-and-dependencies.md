@@ -1,6 +1,6 @@
 ---
 title: 04 - 依赖关系与数据流
-type: wiki
+type: reference
 domain: architecture
 status: frozen
 maintainer: FinSightV9 Team

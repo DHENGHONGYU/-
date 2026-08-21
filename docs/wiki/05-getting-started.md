@@ -1,6 +1,6 @@
 ---
 title: 05 - 项目运行方式
-type: wiki
+type: reference
 domain: architecture
 status: frozen
 maintainer: FinSightV9 Team
