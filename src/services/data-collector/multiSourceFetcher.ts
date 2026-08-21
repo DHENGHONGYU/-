@@ -138,21 +138,30 @@ async function fetchTencentQuote(symbol: string): Promise<Record<string, string>
  *
  * 优先级：Tushare stk_holdernumber → 东财股东户数 → 新浪代理 → null
  */
+/** 从 Tushare 拉取筹码数据；无有效记录时记录失败并返回 null（守卫式） */
+async function fetchChipFromTushare(symbol: string): Promise<ChipData | null> {
+  const tushareStart = Date.now()
+  const records = await tushareHolderNumber(symbol)
+  if (records.length === 0) {
+    recordSourceResult('tushare', { success: false, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 0 })
+    return null
+  }
+  const latest = records[0]
+  if (!latest) {
+    recordSourceResult('tushare', { success: false, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 0 })
+    return null
+  }
+  const chip = mapHolderNumberToChip(latest)
+  recordSourceResult('tushare', { success: true, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 1 })
+  return { ...chip, _source: 'tushare' }
+}
+
 export async function fetchChipData(symbol: string): Promise<ChipData | null> {
   // 1. Tushare（熔断器检查：circuit-open 时跳过）
   if (canExecute('tushare')) {
     try {
-      const tushareStart = Date.now()
-      const records = await tushareHolderNumber(symbol)
-      if (records.length > 0) {
-        const latest = records[0]
-        if (latest) {
-          const chip = mapHolderNumberToChip(latest)
-          recordSourceResult('tushare', { success: true, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 1 })
-          return { ...chip, _source: 'tushare' }
-        }
-      }
-      recordSourceResult('tushare', { success: false, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 0 })
+      const chip = await fetchChipFromTushare(symbol)
+      if (chip) return chip
     } catch (err) {
       recordSourceResult('tushare', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
       logger.warn(`[multiSourceFetcher] Tushare 筹码失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
@@ -359,20 +368,29 @@ function getRecentTradeDate(daysAgo: number): string {
  *
  * 优先级：Tushare stock_basic → 东财行业 → 腾讯代理 → []
  */
+/** 从 Tushare 拉取行业竞品数据；无有效记录时记录失败并返回 null（守卫式） */
+async function fetchCompetitorFromTushare(symbol: string): Promise<CompetitorData[] | null> {
+  const tushareStart = Date.now()
+  const records = await tushareIndustry(symbol)
+  if (records.length === 0) {
+    recordSourceResult('tushare', { success: false, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 0 })
+    return null
+  }
+  const first = records[0]
+  if (!first) {
+    recordSourceResult('tushare', { success: false, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 0 })
+    return null
+  }
+  recordSourceResult('tushare', { success: true, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 1 })
+  return [mapIndustryToCompetitor(first)].map((item) => ({ ...item, _source: 'tushare' }))
+}
+
 export async function fetchCompetitorData(symbol: string): Promise<CompetitorData[]> {
   // 1. Tushare（熔断器检查）
   if (canExecute('tushare')) {
     try {
-      const tushareStart = Date.now()
-      const records = await tushareIndustry(symbol)
-      if (records.length > 0) {
-        const first = records[0]
-        if (first) {
-          recordSourceResult('tushare', { success: true, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 1 })
-          return [mapIndustryToCompetitor(first)].map((item) => ({ ...item, _source: 'tushare' }))
-        }
-      }
-      recordSourceResult('tushare', { success: false, isMock: false, latencyMs: Date.now() - tushareStart, completeness: 0 })
+      const records = await fetchCompetitorFromTushare(symbol)
+      if (records) return records
     } catch (err) {
       recordSourceResult('tushare', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
       logger.warn(`[multiSourceFetcher] Tushare 行业失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
@@ -425,6 +443,54 @@ export async function fetchCompetitorData(symbol: string): Promise<CompetitorDat
  *
  * 优先级：Tushare 指数日线 + 标的 K线 计算 Pearson → 原有兜底
  */
+/** 基于个股收盘 Map 计算单个指数与个股的相关性/Beta（守卫式） */
+async function computeSingleIndexCorrelation(
+  idx: { code: string; name: string },
+  stockMap: Map<string, number>,
+): Promise<IndexCorrelation> {
+  const indexRecords = await tushareIndexDaily(idx.code, getRecentTradeDate(90), getRecentTradeDate(0))
+  const pairs: Array<[number, number]> = []
+  indexRecords.forEach((r) => {
+    const date = String(r.trade_date)
+    const close = Number(r.close)
+    if (stockMap.has(date)) pairs.push([stockMap.get(date)!, close])
+  })
+  const correlation = pairs.length > 5 ? calculatePearson(pairs) : 0
+  return {
+    indexCode: idx.code,
+    indexName: idx.name,
+    correlation: Number(correlation.toFixed(4)),
+    beta: pairs.length > 5 ? calculateBeta(pairs) : undefined,
+    _source: 'tushare',
+  }
+}
+
+/** 尝试用 Tushare 计算真实相关性（守卫式）；样本不足或无相关时记录失败并返回 null */
+async function computeTushareIndexCorrelation(
+  indices: Array<{ code: string; name: string }>,
+  symbol: string,
+): Promise<IndexCorrelation[] | null> {
+  const { tushareDaily } = await import('./tushareProvider')
+  const stockRecords = await tushareDaily(symbol, getRecentTradeDate(90), getRecentTradeDate(0))
+  const stockMap = new Map<string, number>()
+  stockRecords.forEach((r) => {
+    const date = String(r.trade_date)
+    const close = Number(r.close)
+    if (date && Number.isFinite(close)) stockMap.set(date, close)
+  })
+  if (stockMap.size <= 10) {
+    recordSourceResult('tushare', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+    return null
+  }
+  const results = await Promise.all(indices.map((idx) => computeSingleIndexCorrelation(idx, stockMap)))
+  if (!results.some((r) => r.correlation !== 0)) {
+    recordSourceResult('tushare', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+    return null
+  }
+  recordSourceResult('tushare', { success: true, isMock: false, latencyMs: 0, completeness: 1 })
+  return results
+}
+
 export async function fetchIndexCorrelation(symbol: string): Promise<IndexCorrelation[]> {
   const indices = [
     { code: '000300.SH', name: '沪深300' },
@@ -435,41 +501,8 @@ export async function fetchIndexCorrelation(symbol: string): Promise<IndexCorrel
   // 1. 尝试用 Tushare 计算真实相关性（熔断器检查）
   if (canExecute('tushare')) {
     try {
-      const { tushareDaily } = await import('./tushareProvider')
-      const stockRecords = await tushareDaily(symbol, getRecentTradeDate(90), getRecentTradeDate(0))
-      const stockMap = new Map<string, number>()
-      stockRecords.forEach((r) => {
-        const date = String(r.trade_date)
-        const close = Number(r.close)
-        if (date && Number.isFinite(close)) stockMap.set(date, close)
-      })
-
-      if (stockMap.size > 10) {
-        const results = await Promise.all(
-          indices.map(async (idx) => {
-            const indexRecords = await tushareIndexDaily(idx.code, getRecentTradeDate(90), getRecentTradeDate(0))
-            const pairs: Array<[number, number]> = []
-            indexRecords.forEach((r) => {
-              const date = String(r.trade_date)
-              const close = Number(r.close)
-              if (stockMap.has(date)) pairs.push([stockMap.get(date)!, close])
-            })
-            const correlation = pairs.length > 5 ? calculatePearson(pairs) : 0
-            return {
-              indexCode: idx.code,
-              indexName: idx.name,
-              correlation: Number(correlation.toFixed(4)),
-              beta: pairs.length > 5 ? calculateBeta(pairs) : undefined,
-              _source: 'tushare',
-            }
-          }),
-        )
-        if (results.some((r) => r.correlation !== 0)) {
-          recordSourceResult('tushare', { success: true, isMock: false, latencyMs: 0, completeness: 1 })
-          return results
-        }
-      }
-      recordSourceResult('tushare', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
+      const results = await computeTushareIndexCorrelation(indices, symbol)
+      if (results) return results
     } catch (err) {
       recordSourceResult('tushare', { success: false, isMock: false, latencyMs: 0, completeness: 0 })
       logger.warn(`[multiSourceFetcher] Tushare 指数相关失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
@@ -615,6 +648,49 @@ export async function fetchResearchReports(symbol: string, _stockName?: string):
  * 统一拉取入口：按维度码获取真实数据。
  * 若所有数据源不可用，返回 null（由调用方决定 mock 回退）。
  */
+
+/** 非新闻维度（03/06/07/10-14）MCP 采集（守卫式）；失败静默降级返回 null */
+async function collectNonNewsDimensionViaMcp(
+  symbol: string,
+  dimensionCode: string,
+): Promise<Record<string, unknown> | null> {
+  if (!canExecute('ifind_mcp') && !canExecute('tencent_mcp')) return null
+  try {
+    const { collectDimensionViaMcp } = await import('./ifindMcpCollector')
+    const mcpResult = await collectDimensionViaMcp(symbol, dimensionCode)
+    if (mcpResult && mcpResult.success) {
+      return {
+        ...mcpResult.data,
+        _source: 'ifind_mcp',
+        _dimensionName: mcpResult.dimensionName,
+        _successCount: mcpResult.successCount,
+        _queryCount: mcpResult.queryCount,
+      }
+    }
+  } catch {
+    // MCP 失败静默降级到既有链路
+  }
+  return null
+}
+
+/** 新闻维度（04/05/08）iFinD MCP 补充（守卫式）；腾讯 MCP 失败后降级尝试 */
+async function collectSupplementaryMcp(
+  symbol: string,
+  dimensionCode: string,
+): Promise<Record<string, unknown> | null> {
+  if (!canExecute('ifind_mcp')) return null
+  try {
+    const { collectDimensionViaMcp } = await import('./ifindMcpCollector')
+    const mcpResult = await collectDimensionViaMcp(symbol, dimensionCode)
+    if (mcpResult && mcpResult.success) {
+      return { ...mcpResult.data, _source: 'ifind_mcp', _dimensionName: mcpResult.dimensionName }
+    }
+  } catch {
+    /* 降级 */
+  }
+  return null
+}
+
 export async function fetchDimensionData(
   symbol: string,
   dimensionCode: string,
@@ -628,23 +704,8 @@ export async function fetchDimensionData(
 
   if (!isNewsDimension) {
     // 优先级 0: iFinD MCP 采集（覆盖维度 03/06/07/10-14 的专业金融数据）
-    if (canExecute('ifind_mcp') || canExecute('tencent_mcp')) {
-      try {
-        const { collectDimensionViaMcp } = await import('./ifindMcpCollector')
-        const mcpResult = await collectDimensionViaMcp(symbol, dimensionCode)
-        if (mcpResult && mcpResult.success) {
-          return {
-            ...mcpResult.data,
-            _source: 'ifind_mcp',
-            _dimensionName: mcpResult.dimensionName,
-            _successCount: mcpResult.successCount,
-            _queryCount: mcpResult.queryCount,
-          }
-        }
-      } catch {
-        // MCP 失败静默降级到既有链路
-      }
-    }
+    const mcpResult = await collectNonNewsDimensionViaMcp(symbol, dimensionCode)
+    if (mcpResult) return mcpResult
   }
 
   // 1. 依次尝试: 腾讯 MCP（新闻维度 04/05/08 已在 fetchNews/fetchResearchReports 内优先）
@@ -660,15 +721,8 @@ export async function fetchDimensionData(
       const news = await fetchNews(symbol, 'announcement')
       if (news.length > 0) return { items: news, symbol, count: news.length, date: new Date().toISOString(), _source: (news[0]?._source) ?? 'unknown' }
       // 优先级 2: iFinD MCP 补充（腾讯 MCP 失败后降级）
-      if (canExecute('ifind_mcp')) {
-        try {
-          const { collectDimensionViaMcp } = await import('./ifindMcpCollector')
-          const mcpResult = await collectDimensionViaMcp(symbol, '04')
-          if (mcpResult && mcpResult.success) {
-            return { ...mcpResult.data, _source: 'ifind_mcp', _dimensionName: mcpResult.dimensionName }
-          }
-        } catch { /* 降级 */ }
-      }
+      const mcpResult = await collectSupplementaryMcp(symbol, '04')
+      if (mcpResult) return mcpResult
       const mock = await fetchFromMockServer(symbol, '04')
       if (mock) return mock
       return null
@@ -678,15 +732,8 @@ export async function fetchDimensionData(
       const news = await fetchNews(symbol, 'hot_news')
       if (news.length !== 0) return { items: news, symbol, count: news.length, date: new Date().toISOString(), _source: (news[0]?._source) ?? 'unknown' }
       // 优先级 2: iFinD MCP 补充
-      if (canExecute('ifind_mcp')) {
-        try {
-          const { collectDimensionViaMcp } = await import('./ifindMcpCollector')
-          const mcpResult = await collectDimensionViaMcp(symbol, '05')
-          if (mcpResult && mcpResult.success) {
-            return { ...mcpResult.data, _source: 'ifind_mcp', _dimensionName: mcpResult.dimensionName }
-          }
-        } catch { /* 降级 */ }
-      }
+      const mcpResult = await collectSupplementaryMcp(symbol, '05')
+      if (mcpResult) return mcpResult
       const mock = await fetchFromMockServer(symbol, '05')
       if (mock) return mock
       return null
@@ -710,15 +757,8 @@ export async function fetchDimensionData(
       const reports = await fetchResearchReports(symbol)
       if (reports.length > 0) return { items: reports, symbol, count: reports.length, date: new Date().toISOString(), _source: (reports[0]?._source) ?? 'unknown' }
       // 优先级 2: iFinD MCP 补充
-      if (canExecute('ifind_mcp')) {
-        try {
-          const { collectDimensionViaMcp } = await import('./ifindMcpCollector')
-          const mcpResult = await collectDimensionViaMcp(symbol, '08')
-          if (mcpResult && mcpResult.success) {
-            return { ...mcpResult.data, _source: 'ifind_mcp', _dimensionName: mcpResult.dimensionName }
-          }
-        } catch { /* 降级 */ }
-      }
+      const mcpResult = await collectSupplementaryMcp(symbol, '08')
+      if (mcpResult) return mcpResult
       const mock = await fetchFromMockServer(symbol, '08')
       if (mock) return mock
       return null
@@ -760,6 +800,55 @@ export async function fetchDimensionData(
  *       → 东财爬虫（并行：分红配股 + 股本结构）
  *       → null（调用方决定是否 mock）
  */
+
+/** 从东财爬虫构造分红股本摘要；无任意续数据时返回 null（守卫式） */
+async function fetchDividendFromCrawler(symbol: string): Promise<DividendShareSummary | null> {
+  const [dividendRecords, shareStruct, financialSnapshots] = await Promise.all([
+    fetchEastMoneyDividend(symbol),
+    fetchShareStructureFromTencent(symbol),
+    _fetchFinancialSnapshot(symbol),
+  ])
+  if (dividendRecords.length === 0) return null
+
+  const totalShares = shareStruct?.totalShares ?? 0
+  const price = shareStruct?.price ?? 0
+  const totalDiv3Y = dividendRecords
+    .slice(0, 3)
+    .reduce((sum, d) => sum + d.cashDividendPerShare * totalShares, 0)
+
+  // 股息率：最新有效分红 / 当前股价
+  let dividendYield = 0
+  const latestValid = price > 0 ? dividendRecords.find((d) => d.cashDividendPerShare > 0) : undefined
+  if (latestValid) {
+    dividendYield = Number(((latestValid.cashDividendPerShare / price) * 100).toFixed(2))
+  }
+
+  // 分红率：近 3 年分红总额 / 近 3 年归母净利润
+  let payoutRatio3Y = 0
+  const totalNP3Y = totalDiv3Y > 0
+    ? financialSnapshots.slice(0, 3).reduce((sum, fs) => sum + fs.netProfit, 0)
+    : 0
+  if (totalNP3Y > 0) {
+    payoutRatio3Y = Number(((totalDiv3Y / totalNP3Y) * 100).toFixed(2))
+  }
+
+  // 回购/配股检测
+  const keywords = _checkDividendKeywords(dividendRecords)
+
+  return {
+    symbol,
+    dividendYield,
+    totalDividend3Y: Number(totalDiv3Y.toFixed(2)),
+    payoutRatio3Y,
+    history: dividendRecords,
+    totalShares: shareStruct?.totalShares ?? 0,
+    floatShares: shareStruct?.floatShares ?? 0,
+    hasBuybackPlan: keywords.hasBuybackPlan,
+    hasRightsIssue: keywords.hasRightsIssue,
+    _source: 'crawler',
+  }
+}
+
 export async function fetchDividendShareData(symbol: string): Promise<DividendShareSummary | null> {
   // 链 1: Tushare（三 API 并行）
   if (canExecute('tushare')) {
@@ -785,54 +874,10 @@ export async function fetchDividendShareData(symbol: string): Promise<DividendSh
   // 链 2: 东财爬虫（并行：分红配股 + 股本结构 + 财务快照）
   if (canExecute('crawler')) {
     try {
-      const [dividendRecords, shareStruct, financialSnapshots] = await Promise.all([
-        fetchEastMoneyDividend(symbol),
-        fetchShareStructureFromTencent(symbol),
-        _fetchFinancialSnapshot(symbol),
-      ])
-      if (dividendRecords.length > 0) {
-        const totalShares = shareStruct?.totalShares ?? 0
-        const price = shareStruct?.price ?? 0
-        const totalDiv3Y = dividendRecords
-          .slice(0, 3)
-          .reduce((sum, d) => sum + d.cashDividendPerShare * totalShares, 0)
-
-        // 股息率：最新有效分红 / 当前股价
-        let dividendYield = 0
-        if (price > 0 && dividendRecords.length > 0) {
-          const latestValid = dividendRecords.find((d) => d.cashDividendPerShare > 0)
-          if (latestValid) {
-            dividendYield = Number(((latestValid.cashDividendPerShare / price) * 100).toFixed(2))
-          }
-        }
-
-        // 分红率：近 3 年分红总额 / 近 3 年归母净利润
-        let payoutRatio3Y = 0
-        if (totalDiv3Y > 0 && financialSnapshots.length > 0) {
-          const totalNP3Y = financialSnapshots
-            .slice(0, 3)
-            .reduce((sum, fs) => sum + fs.netProfit, 0)
-          if (totalNP3Y > 0) {
-            payoutRatio3Y = Number(((totalDiv3Y / totalNP3Y) * 100).toFixed(2))
-          }
-        }
-
-        // 回购/配股检测
-        const keywords = _checkDividendKeywords(dividendRecords)
-
+      const summary = await fetchDividendFromCrawler(symbol)
+      if (summary) {
         recordSourceResult('crawler', { success: true, isMock: false, latencyMs: 0, completeness: 1 })
-        return {
-          symbol,
-          dividendYield,
-          totalDividend3Y: Number(totalDiv3Y.toFixed(2)),
-          payoutRatio3Y,
-          history: dividendRecords,
-          totalShares: shareStruct?.totalShares ?? 0,
-          floatShares: shareStruct?.floatShares ?? 0,
-          hasBuybackPlan: keywords.hasBuybackPlan,
-          hasRightsIssue: keywords.hasRightsIssue,
-          _source: 'crawler',
-        }
+        return summary
       }
     } catch (err) {
       recordSourceResult('crawler', { success: false, isMock: false, latencyMs: 0, completeness: 0 })

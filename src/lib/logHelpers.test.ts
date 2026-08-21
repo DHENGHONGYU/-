@@ -456,7 +456,7 @@ describe('logHelpers (6) branch logging utilities', () => {
 
   it('logGuardWarn 固定 warn 级别 + reason 格式化', () => {
     logGuardWarn(logger, 'codeMap', 'lengthGate', '代码长度 > 10，存在碰撞风险', { code: '000001.SZ-EXTRA' })
-    const call = (logger.warn as unknown as ReturnType<typeof vi.fn>).mock.calls[0]
+    const call = (logger.warn as unknown as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call![0]).toBe('[codeMap] lengthGate: 守卫触发 — 代码长度 > 10，存在碰撞风险')
     expect(call![1]).toEqual({ code: '000001.SZ-EXTRA' })
   })
@@ -468,7 +468,7 @@ describe('logHelpers (6) branch logging utilities', () => {
     bl.guardWarn('codeGate', '超长', { s: 'xxx' })
 
     expect(logger.debug).toHaveBeenCalledWith('[fetch] parse: A股 分支', { s: '600519' })
-    const infoCall = (logger.info as unknown as ReturnType<typeof vi.fn>).mock.calls[0]
+    const infoCall = (logger.info as unknown as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(infoCall[0]).toBe('[fetch] retry: 回退')
     expect(infoCall[1].input).toBe('sina')
     expect(infoCall[1].fallback).toBe('tencent')
@@ -507,7 +507,7 @@ describe('logHelpers (7) reportFallbackEvent & reportFallbackForSymbol', () => {
       target: { type: 'stock', code: '600519' },
     })
     // 1. warn 日志
-    const call = (logger.warn as unknown as ReturnType<typeof vi.fn>).mock.calls[0]
+    const call = (logger.warn as unknown as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call![0]).toBe('[collector] fallback:kline_fallback — 腾讯 kline 空')
     expect(call![1]).toMatchObject({
       target: { type: 'stock', code: '600519' },
@@ -515,7 +515,8 @@ describe('logHelpers (7) reportFallbackEvent & reportFallbackForSymbol', () => {
     })
     // 2. sendWriteEnvelope 被调
     expect(dlhMod.sendWriteEnvelope).toHaveBeenCalledTimes(1)
-    const [action, payload, origin] = vi.mocked(dlhMod.sendWriteEnvelope).mock.calls[0]
+    const sendCall = vi.mocked(dlhMod.sendWriteEnvelope).mock.calls[0]!
+    const [action, payload, origin] = sendCall
     expect(action).toBe('saveResearchLog')
     expect(origin).toBe('system')
     const pl = payload as ResearchLog
@@ -523,7 +524,7 @@ describe('logHelpers (7) reportFallbackEvent & reportFallbackForSymbol', () => {
     expect(pl.action).toBe('fallback:kline_fallback')
     expect(pl.targetCode).toBe('600519')
     expect(pl.traceId).toMatch(/^fallback-kline_fallback-\d+-[a-z0-9]{6}$/)
-    const parsed = JSON.parse(pl.payload)
+    const parsed = JSON.parse(pl.payload!)
     expect(parsed).toMatchObject({
       module: 'collector', event: 'kline_fallback',
       fallbackFrom: 'tencent', fallbackTo: 'sina', reason: '腾讯 kline 空',
@@ -535,7 +536,7 @@ describe('logHelpers (7) reportFallbackEvent & reportFallbackForSymbol', () => {
     reportFallbackEvent({
       actor: 'A', event: 'chip_price_sanitize', target: { type: 'chip', code: 'BABA' },
     })
-    const call = (logger.warn as unknown as ReturnType<typeof vi.fn>).mock.calls[0]
+    const call = (logger.warn as unknown as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(call![0]).toBe('[A] fallback:chip_price_sanitize — 无原因')
     expect(call[1].from).toBeUndefined()
   })
@@ -548,7 +549,7 @@ describe('logHelpers (7) reportFallbackEvent & reportFallbackForSymbol', () => {
     // 让 microtask 推进
     await Promise.resolve()
     await Promise.resolve()
-    const dbg = (logger.debug as unknown as ReturnType<typeof vi.fn>).mock.calls[0]
+    const dbg = (logger.debug as unknown as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(dbg[0]).toContain('[research_logs] 写入失败')
     expect(dbg[1].error).toBe('db down')
     expect(dbg[1].event).toBe('kline_fallback')
@@ -571,7 +572,7 @@ describe('logHelpers (7) reportFallbackEvent & reportFallbackForSymbol', () => {
     } finally {
       Math.random = origRandom
     }
-    const dbg = (logger.debug as unknown as ReturnType<typeof vi.fn>).mock.calls[0]
+    const dbg = (logger.debug as unknown as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(dbg[0]).toContain('报告函数异常')
     expect(dbg[1].error).toBe('bad random')
   })
@@ -582,7 +583,7 @@ describe('logHelpers (7) reportFallbackEvent & reportFallbackForSymbol', () => {
       fromTo: { from: 1, to: 2 }, reason: 'R', extra: { x: 1 },
     })
     expect(logger.warn).toHaveBeenCalledTimes(1)
-    const [, ctx] = (logger.warn as unknown as ReturnType<typeof vi.fn>).mock.calls[0]
+    const [, ctx] = (logger.warn as unknown as ReturnType<typeof vi.fn>).mock.calls[0]!
     expect(ctx.target).toEqual({ type: 'stock', code: '00700.HK' })
     expect(ctx.from).toBe(1)
     expect(ctx.to).toBe(2)
@@ -688,7 +689,7 @@ describe('logHelpers (8) queryFallbackLogs & exportFallbackLogsToCsv', () => {
 
     // Blob & URL & DOM 调用链验证
     expect(Blob).toHaveBeenCalledTimes(1)
-    const blobArg = (Blob as unknown as ReturnType<typeof vi.fn>).mock.calls[0]
+    const blobArg = (Blob as unknown as ReturnType<typeof vi.fn>).mock.calls[0]!
     const csvContent = blobArg[0][0] as string
     expect(csvContent.startsWith('\uFEFF')).toBe(true) // BOM
 

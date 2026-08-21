@@ -26,7 +26,7 @@ function meta(fileName: string, overrides: Partial<StoreMeta> = {}): StoreMeta {
   return {
     fileName,
     filePath: `/src/store/${fileName}.ts`,
-    hookName: 'use' + fileName[0].toUpperCase() + fileName.slice(1),
+    hookName: 'use' + fileName[0]!.toUpperCase() + fileName.slice(1),
     deprecated: false,
     isFacade: false,
     aggregates: [],
@@ -77,24 +77,24 @@ describe('lib/store-audit/index (re-exported from @/lib/store-audit)', () => {
         ['parentStore', ['childStore']],
       ])
       markFacadeStores(metas, graph)
-      expect(metas[0].isFacade).toBe(true)
-      expect(metas[0].aggregates).toEqual(['childStore'])
+      expect(metas[0]!.isFacade).toBe(true)
+      expect(metas[0]!.aggregates).toEqual(['childStore'])
     })
 
     it('deps.length = 0（graph.get 返回 []，空数组分支）→ 保持原样', () => {
       const metas = [meta('solitaryStore')]
       const graph = new Map<string, string[]>([['solitaryStore', []]])
       markFacadeStores(metas, graph)
-      expect(metas[0].isFacade).toBe(false)
-      expect(metas[0].aggregates).toEqual([])
+      expect(metas[0]!.isFacade).toBe(false)
+      expect(metas[0]!.aggregates).toEqual([])
     })
 
     it('graph 中不存在对应 key → ?? [] 分支命中，保持原样', () => {
       const metas = [meta('orphanStore')]
       const graph = new Map<string, string[]>()
       markFacadeStores(metas, graph)
-      expect(metas[0].isFacade).toBe(false)
-      expect(metas[0].aggregates).toEqual([])
+      expect(metas[0]!.isFacade).toBe(false)
+      expect(metas[0]!.aggregates).toEqual([])
     })
 
     it('多 Store 混合：部分 Facade，部分 Leaf，互不干扰', () => {
@@ -107,9 +107,9 @@ describe('lib/store-audit/index (re-exported from @/lib/store-audit)', () => {
         ['aggStore', ['leafStore1', 'leafStore2']],
       ])
       markFacadeStores(metas, graph)
-      expect(metas[0].isFacade).toBe(true)
-      expect(metas[1].isFacade).toBe(false)
-      expect(metas[2].isFacade).toBe(false)
+      expect(metas[0]!.isFacade).toBe(true)
+      expect(metas[1]!.isFacade).toBe(false)
+      expect(metas[2]!.isFacade).toBe(false)
     })
   })
 

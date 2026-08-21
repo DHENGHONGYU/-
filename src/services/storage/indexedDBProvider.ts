@@ -179,51 +179,53 @@ export class IndexedDBProvider implements StorageProvider {
 
   async list<T>(options?: ListOptions): Promise<ListResult<T>> {
     try {
-      const opts = options ?? {}
-      if ((opts.store ?? '') !== '') {
-        const store = this.resolveStore(opts.store)
-        if (store && typeof store.list === 'function') {
-          const result = await (store.list as () => Promise<T[]>)()
-
-          let filtered = result
-
-          // 按字段过滤
-          if (opts.filter) {
-            for (const [key, value] of Object.entries(opts.filter)) {
-              filtered = filtered.filter((item) => {
-                const itemRecord = item as Record<string, unknown>
-                return itemRecord[key] === value
-              })
-            }
-          }
-
-          // 排序
-          if ((opts.orderBy ?? '') !== '') {
-            const orderBy = opts.orderBy!
-            filtered = [...filtered].sort((a, b) => {
-              const aVal = (a as Record<string, unknown>)[orderBy]
-              const bVal = (b as Record<string, unknown>)[orderBy]
-              if (typeof aVal === 'number' && typeof bVal === 'number') {
-                return opts.orderDir === 'desc' ? bVal - aVal : aVal - bVal
-              }
-              return 0
-            })
-          }
-
-          // 限制
-          const limit = opts.limit ?? 0
-          if (limit > 0 && filtered.length > limit) {
-            filtered = filtered.slice(0, limit)
-          }
-
-          return { success: true, data: filtered }
-        }
+      const store = this.resolveStore(options?.store)
+      if (!store || typeof store.list !== 'function') {
+        return { success: true, data: [] }
       }
-
-      return { success: true, data: [] }
+      const opts = options ?? {}
+      const result = await (store.list as () => Promise<T[]>)()
+      return { success: true, data: this.postProcessList(result, opts) }
     } catch (err) {
       return { success: false, data: [], error: err instanceof Error ? err.message : String(err) }
     }
+  }
+
+  /** 对 list 结果依次执行 过滤 → 排序 → 限制 */
+  private postProcessList<T>(result: T[], opts: ListOptions): T[] {
+    const filtered = this.applyFilter(result, opts.filter)
+    const ordered = this.applyOrderBy(filtered, opts.orderBy, opts.orderDir)
+    return this.applyLimit(ordered, opts.limit)
+  }
+
+  private applyFilter<T>(items: T[], filter?: Record<string, unknown>): T[] {
+    if (!filter) return items
+    let filtered = items
+    for (const [key, value] of Object.entries(filter)) {
+      filtered = filtered.filter((item) => {
+        const itemRecord = item as Record<string, unknown>
+        return itemRecord[key] === value
+      })
+    }
+    return filtered
+  }
+
+  private applyOrderBy<T>(items: T[], orderBy?: string, orderDir?: 'asc' | 'desc'): T[] {
+    if ((orderBy ?? '') === '') return items
+    return [...items].sort((a, b) => {
+      const aVal = (a as Record<string, unknown>)[orderBy!]
+      const bVal = (b as Record<string, unknown>)[orderBy!]
+      if (typeof aVal === 'number' && typeof bVal === 'number') {
+        return orderDir === 'desc' ? bVal - aVal : aVal - bVal
+      }
+      return 0
+    })
+  }
+
+  private applyLimit<T>(items: T[], limit?: number): T[] {
+    const l = limit ?? 0
+    if (l > 0 && items.length > l) return items.slice(0, l)
+    return items
   }
 
   async save<T>(data: T, options?: SaveOptions): Promise<QueryResult<void>> {

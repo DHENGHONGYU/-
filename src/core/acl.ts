@@ -127,27 +127,8 @@ export class AclEngine {
       }
 
       // ── 版本控制覆盖 ──
-      if (apiVersion) {
-        const overrideKey = `${module}:${apiVersion}`
-        const override = this.versionedOverrides.get(overrideKey)
-        if (override) {
-          if (override.level === 'deny') {
-            return { allowed: false, reason: `Module ${module} v${apiVersion} is denied by versioned override` }
-          }
-          if (override.level === 'readonly' && operation !== DB_OPERATION.select) {
-            return { allowed: false, reason: `Module ${module} v${apiVersion} is read-only (operation ${operation} denied)` }
-          }
-          // 如果有 storeOverrides，用 override 中的 store 列表替代 ACL_MATRIX
-          if (override.storeOverrides) {
-            const allowedStores =
-              operation === DB_OPERATION.select ? override.storeOverrides.read : override.storeOverrides.write
-            if (!allowedStores?.includes(store)) {
-              return { allowed: false, reason: `Module ${module} v${apiVersion} cannot ${operation} on store ${store} (versioned override)` }
-            }
-            return { allowed: true, reason: 'Permission granted (versioned override)' }
-          }
-        }
-      }
+      const overrideResult = this.checkVersionedOverride({ module, store, operation, apiVersion })
+      if (overrideResult) return overrideResult
 
       if (!(permission.actions ?? []).includes(operation)) {
         return { allowed: false, reason: `Module ${module} is not allowed to perform ${operation}` }
@@ -168,6 +149,36 @@ export class AclEngine {
         reason: `ACL check error: ${err instanceof Error ? err.message : String(err)}`,
       }
     }
+  }
+
+  /**
+   * 版本控制覆盖判定（fail-closed）。
+   * 无 apiVersion / 无对应 override / 无 storeOverrides 时返回 null，交由主流程按 ACL_MATRIX 判定；
+   * null 表示"本覆盖不介入结果"，而非权限放行。
+   */
+  private checkVersionedOverride({
+    module,
+    store,
+    operation,
+    apiVersion,
+  }: AclCheckInput): AclCheckResult | null {
+    if (!apiVersion) return null
+    const override = this.versionedOverrides.get(`${module}:${apiVersion}`)
+    if (!override) return null
+    if (override.level === 'deny') {
+      return { allowed: false, reason: `Module ${module} v${apiVersion} is denied by versioned override` }
+    }
+    if (override.level === 'readonly' && operation !== DB_OPERATION.select) {
+      return { allowed: false, reason: `Module ${module} v${apiVersion} is read-only (operation ${operation} denied)` }
+    }
+    // 如果有 storeOverrides，用 override 中的 store 列表替代 ACL_MATRIX
+    if (!override.storeOverrides) return null
+    const allowedStores =
+      operation === DB_OPERATION.select ? override.storeOverrides.read : override.storeOverrides.write
+    if (!allowedStores?.includes(store)) {
+      return { allowed: false, reason: `Module ${module} v${apiVersion} cannot ${operation} on store ${store} (versioned override)` }
+    }
+    return { allowed: true, reason: 'Permission granted (versioned override)' }
   }
 
   /**

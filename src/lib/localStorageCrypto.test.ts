@@ -14,7 +14,7 @@
  *   - 用 vi.resetModules() + beforeEach 的动态 import() 重置模块级缓存 Map，
  *     而不是 require.cache（ESM 环境里不存在）。
  */
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import type { EncryptedPayload } from './localStorageCrypto'
 
 type EC = typeof import('./localStorageCrypto')
@@ -156,7 +156,7 @@ describe('lib/localStorageCrypto', () => {
       const { getOrCreateCryptoKey } = await loadModule(true)
       const k = await getOrCreateCryptoKey('users')
       expect(isDummyKey(k)).toBe(true)
-      expect((k as DummyKey).ns).toBe('users')
+      expect((k as unknown as DummyKey).ns).toBe('users')
       expect(calls.some(c => c.startsWith('subtle.importKey(raw, users:https://app.example.com:8443'))).toBe(true)
       expect(calls.some(c => c.startsWith('subtle.deriveKey(PBKDF2 it=100000, ns=users'))).toBe(true)
       expect(calls.filter(c => c.startsWith('subtle.importKey')).length).toBe(1)

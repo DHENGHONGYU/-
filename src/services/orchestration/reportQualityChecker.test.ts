@@ -3,9 +3,9 @@
  * @created 2026-08-20
  */
 
-import { describe, it, expect, beforeEach } from 'vitest'
-import { checkReportQuality, type ReportQualityStatus } from './reportQualityChecker'
-import type { AnalysisResult, ReportSection, EvidenceChain, AnalysisConclusion } from '@/types/modules/analysisOrchestrator.types'
+import { describe, it, expect } from 'vitest'
+import { checkReportQuality } from './reportQualityChecker'
+import type { AnalysisResult } from '@/types/modules/analysisOrchestrator.types'
 
 function createMockResult(overrides: Partial<AnalysisResult> = {}): AnalysisResult {
   const now = Date.now()

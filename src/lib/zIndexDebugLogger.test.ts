@@ -52,7 +52,7 @@ function makeElement(tag = 'div', id = ''): HTMLElement {
 }
 
 describe('lib/zIndexDebugLogger', () => {
-  let csSpy: ReturnType<typeof vi.spyOn>
+  let csSpy: any
 
   beforeEach(() => {
     csSpy = vi.spyOn(window, 'getComputedStyle').mockImplementation(
@@ -349,13 +349,12 @@ describe('lib/zIndexDebugLogger', () => {
 // 缺口补全（zIndexDebugLogger 25 uncov MutationObserver 分支 + scanNode 边角）
 // ====================================================================
 describe('zIndexDebugLogger — gap coverage (MutationObserver callback / window-MO-ssr / scanNode edges)', () => {
-  let csSpy: ReturnType<typeof vi.spyOn>
+  let csSpy: any
   let consoleDbg: ReturnType<typeof vi.spyOn>
   let originalMutationObserver: typeof MutationObserver
   let savedCb: MutationCallback | null
   let observeSpy: ReturnType<typeof vi.fn>
   let disconnectSpy: ReturnType<typeof vi.fn>
-  let installedRoot: Node | null
 
   function installMockMO(): void {
     // 替换全局 MutationObserver：构造函数捕获 callback 与 observe/disconnect
@@ -364,7 +363,6 @@ describe('zIndexDebugLogger — gap coverage (MutationObserver callback / window
         savedCb = cb
       }
       observe(target: Node, options: MutationObserverInit): void {
-        installedRoot = target
         observeSpy(target, options)
       }
       disconnect(): void { disconnectSpy() }
@@ -383,7 +381,6 @@ describe('zIndexDebugLogger — gap coverage (MutationObserver callback / window
     savedCb = null
     observeSpy = vi.fn()
     disconnectSpy = vi.fn()
-    installedRoot = null
     originalMutationObserver = globalThis.MutationObserver
     vi.clearAllMocks()
     Object.defineProperty(import.meta, 'env', {

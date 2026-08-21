@@ -121,6 +121,14 @@ interface EmShareholderResponse {
   sdltgd_date?: Array<{ END_DATE?: string }>
 }
 
+/** 根据持股集中度变化比例解析趋势：>5% 递减，<-5% 递增，否则稳定 */
+function resolveHolderTrend(ratio: number | undefined): ChipData['trend'] {
+  if (ratio == null) return 'stable'
+  if (ratio > 5) return 'decreasing'
+  if (ratio < -5) return 'increasing'
+  return 'stable'
+}
+
 /**
  * 获取东方财富股东户数（筹码数据）。
  *
@@ -142,13 +150,6 @@ export async function fetchEastMoneyHolderNumber(symbol: string): Promise<ChipDa
     const latest = gdrs[0]
     if (!latest) return null
 
-    // 解析持股集中度趋势
-    let trend: ChipData['trend'] = 'stable'
-    if (latest.TOTAL_NUM_RATIO != null) {
-      if (latest.TOTAL_NUM_RATIO > 5) trend = 'decreasing'
-      else if (latest.TOTAL_NUM_RATIO < -5) trend = 'increasing'
-    }
-
     // 将 HOLD_FOCUS 映射为 concentration 数值（非常集中≈80, 较集中≈60, 一般≈40, 较分散≈25, 非常分散≈10）
     const focusMap: Record<string, number> = {
       '非常集中': 80,
@@ -163,7 +164,7 @@ export async function fetchEastMoneyHolderNumber(symbol: string): Promise<ChipDa
       shareholderCount: latest.HOLDER_TOTAL_NUM != null ? Number(latest.HOLDER_TOTAL_NUM) : undefined,
       avgSharesPerHolder: latest.AVG_FREE_SHARES != null ? Number(latest.AVG_FREE_SHARES) : undefined,
       concentration,
-      trend,
+      trend: resolveHolderTrend(latest.TOTAL_NUM_RATIO),
       date: latest.END_DATE ? latest.END_DATE.slice(0, 10) : new Date().toISOString().slice(0, 10),
     }
   } catch (err) {
@@ -503,6 +504,51 @@ interface EmProfitForecastResponse {
   yctj_chart?: EmYctjChartRecord[]
 }
 
+/** 将单条 EPS 预测累加进对应财年的区间映射 */
+function accumulateEps(
+  epsRangeMap: Map<number, { high: number; low: number; orgCodes: Set<string> }>,
+  year: number,
+  eps: number,
+  orgCode: string | undefined,
+): void {
+  const existing = epsRangeMap.get(year)
+  if (!existing) {
+    epsRangeMap.set(year, {
+      high: eps,
+      low: eps,
+      orgCodes: new Set(orgCode ? [orgCode] : []),
+    })
+    return
+  }
+  existing.high = Math.max(existing.high, eps)
+  existing.low = Math.min(existing.low, eps)
+  if (orgCode) existing.orgCodes.add(orgCode)
+}
+
+/**
+ * 从各分析师预测记录中聚合各财年的 EPS 区间与分析师代码集合。
+ *
+ * @param individualRecords 排除"近六月平均"后的独立分析师记录
+ */
+function buildEpsRangeMap(
+  individualRecords: EmProfitForecastRecord[],
+): Map<number, { high: number; low: number; orgCodes: Set<string> }> {
+  const epsRangeMap = new Map<number, { high: number; low: number; orgCodes: Set<string> }>()
+  for (const rec of individualRecords) {
+    const years = [
+      { y: rec.YEAR1, eps: rec.EPS1 },
+      { y: rec.YEAR2, eps: rec.EPS2 },
+      { y: rec.YEAR3, eps: rec.EPS3 },
+      { y: rec.YEAR4, eps: rec.EPS4 },
+    ]
+    for (const yr of years) {
+      if (yr.y == null || yr.eps == null) continue
+      accumulateEps(epsRangeMap, yr.y, yr.eps, rec.ORG_CODE)
+    }
+  }
+  return epsRangeMap
+}
+
 /**
  * 获取东财分析师一致预期数据（通过 F10 盈利预测 API）。
  *
@@ -529,30 +575,7 @@ export async function fetchEastMoneyConsensusEstimate(symbol: string): Promise<C
 
     // 从 jgyc 中提取各财年的独立分析师预测（排除"近六月平均"），计算 epsHigh/epsLow 和 analystCount
     const individualRecords = jgyc.filter((r) => r.ORG_NAME_ABBR !== '近六月平均')
-    const epsRangeMap = new Map<number, { high: number; low: number; orgCodes: Set<string> }>()
-    for (const rec of individualRecords) {
-      const years = [
-        { y: rec.YEAR1, eps: rec.EPS1 },
-        { y: rec.YEAR2, eps: rec.EPS2 },
-        { y: rec.YEAR3, eps: rec.EPS3 },
-        { y: rec.YEAR4, eps: rec.EPS4 },
-      ]
-      for (const yr of years) {
-        if (yr.y == null || yr.eps == null) continue
-        const existing = epsRangeMap.get(yr.y)
-        if (existing) {
-          existing.high = Math.max(existing.high, yr.eps)
-          existing.low = Math.min(existing.low, yr.eps)
-          if (rec.ORG_CODE) existing.orgCodes.add(rec.ORG_CODE)
-        } else {
-          epsRangeMap.set(yr.y, {
-            high: yr.eps,
-            low: yr.eps,
-            orgCodes: new Set(rec.ORG_CODE ? [rec.ORG_CODE] : []),
-          })
-        }
-      }
-    }
+    const epsRangeMap = buildEpsRangeMap(individualRecords)
 
     const estimates: ConsensusEstimate[] = []
     const years = [
@@ -583,6 +606,24 @@ export async function fetchEastMoneyConsensusEstimate(symbol: string): Promise<C
   }
 }
 
+/** 比较不同周期的机构综合评级数值，推算近期评级趋势 */
+function resolveRatingTrend(rating: EmRatingStatRecord, pjtj: EmRatingStatRecord[]): RatingSummary['recentTrend'] {
+  const rating3m = pjtj.find((r) => r.DATE_TYPE === '3月内')
+  const rating1m = pjtj.find((r) => r.DATE_TYPE === '1月内')
+  if (rating1m && rating3m) {
+    const diff1m3m = (rating1m.COMPRE_RATING_NUM ?? 0) - (rating3m.COMPRE_RATING_NUM ?? 0)
+    if (diff1m3m > 0.05) return 'upgrade'
+    if (diff1m3m < -0.05) return 'downgrade'
+    return 'stable'
+  }
+  if (rating3m) {
+    const diff3m6m = (rating3m.COMPRE_RATING_NUM ?? 0) - (rating.COMPRE_RATING_NUM ?? 0)
+    if (diff3m6m > 0.05) return 'upgrade'
+    if (diff3m6m < -0.05) return 'downgrade'
+  }
+  return 'stable'
+}
+
 /**
  * 获取东财个股评级汇总（通过 F10 盈利预测 API）。
  *
@@ -602,18 +643,7 @@ export async function fetchEastMoneyRatingSummary(symbol: string): Promise<Ratin
     if (!rating) return null
 
     // 评级趋势：比较不同 DATE_TYPE 的 COMPRE_RATING_NUM
-    let recentTrend: 'upgrade' | 'downgrade' | 'stable' = 'stable'
-    const rating3m = pjtj.find((r) => r.DATE_TYPE === '3月内')
-    const rating1m = pjtj.find((r) => r.DATE_TYPE === '1月内')
-    if (rating1m && rating3m) {
-      const diff1m3m = (rating1m.COMPRE_RATING_NUM ?? 0) - (rating3m.COMPRE_RATING_NUM ?? 0)
-      if (diff1m3m > 0.05) recentTrend = 'upgrade'
-      else if (diff1m3m < -0.05) recentTrend = 'downgrade'
-    } else if (rating3m) {
-      const diff3m6m = (rating3m.COMPRE_RATING_NUM ?? 0) - (rating.COMPRE_RATING_NUM ?? 0)
-      if (diff3m6m > 0.05) recentTrend = 'upgrade'
-      else if (diff3m6m < -0.05) recentTrend = 'downgrade'
-    }
+    const recentTrend = resolveRatingTrend(rating, pjtj)
 
     return {
       buyCount: Number(rating.RATING_BUY_NUM ?? 0),

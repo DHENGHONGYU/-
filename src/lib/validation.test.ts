@@ -402,20 +402,20 @@ describe('validation — gap coverage (branches 剩余未覆盖)', () => {
   describe('isValidStockCodeStrict / isValidSymbolWithExchange / validateSymbolFormat 非字符串参数', () => {
     it('isValidStockCodeStrict 非字符串或空字符串 → false', () => {
       // @ts-expect-error 故意传 number
-      expect(isValidStockCodeStrict(600519 as unknown as string, 'A')).toBe(false)
+      expect(isValidStockCodeStrict(600519, 'A')).toBe(false)
       // @ts-expect-error 故意传 null
-      expect(isValidStockCodeStrict(null as unknown as string)).toBe(false)
+      expect(isValidStockCodeStrict(null)).toBe(false)
       expect(isValidStockCodeStrict('', 'A')).toBe(false)
     })
     it('isValidSymbolWithExchange 非字符串 → false', () => {
       // @ts-expect-error 故意传 number
-      expect(isValidSymbolWithExchange(0 as unknown as string)).toBe(false)
+      expect(isValidSymbolWithExchange(0)).toBe(false)
     })
     it('validateSymbolFormat 非真值（null/undefined）应判空', () => {
       // @ts-expect-error 故意传 null
-      expect(validateSymbolFormat(null as unknown as string)).toContain('不能为空')
+      expect(validateSymbolFormat(null)).toContain('不能为空')
       // @ts-expect-error 故意传 undefined
-      expect(validateSymbolFormat(undefined as unknown as string)).toContain('不能为空')
+      expect(validateSymbolFormat(undefined)).toContain('不能为空')
     })
   })
 
@@ -423,12 +423,10 @@ describe('validation — gap coverage (branches 剩余未覆盖)', () => {
     it('非 number 或 NaN 应返回 false', () => {
       // @ts-expect-error 故意传字符串
       expect(isValidPercent('50')).toBe(false)
-      // @ts-expect-error 故意传 NaN
-      expect(isValidPercent(NaN as unknown as number)).toBe(false)
+      expect(isValidPercent(NaN)).toBe(false)
       // @ts-expect-error 故意传字符串 score
       expect(isValidScore('60')).toBe(false)
-      // @ts-expect-error 故意传 NaN
-      expect(isValidScore(NaN as unknown as number)).toBe(false)
+      expect(isValidScore(NaN)).toBe(false)
     })
   })
 
@@ -439,9 +437,9 @@ describe('validation — gap coverage (branches 剩余未覆盖)', () => {
     })
     it('非字符串参数', () => {
       // @ts-expect-error 故意传 null
-      expect(isValidLlmApiKey(null as unknown as string)).toBe(false)
+      expect(isValidLlmApiKey(null)).toBe(false)
       // @ts-expect-error 故意传 number
-      expect(isValidLlmApiKey(123 as unknown as string)).toBe(false)
+      expect(isValidLlmApiKey(123)).toBe(false)
     })
   })
 
@@ -452,7 +450,7 @@ describe('validation — gap coverage (branches 剩余未覆盖)', () => {
     })
     it('非字符串参数', () => {
       // @ts-expect-error 故意传 number
-      expect(isValidLlmModel(0 as unknown as string)).toBe(false)
+      expect(isValidLlmModel(0)).toBe(false)
     })
   })
 
@@ -470,9 +468,9 @@ describe('validation — gap coverage (branches 剩余未覆盖)', () => {
   describe('isSensitiveField 非字符串 + 词边界分支', () => {
     it('非字符串字段名返回 false（第 386 行）', () => {
       // @ts-expect-error 故意传 number
-      expect(isSensitiveField(0 as unknown as string)).toBe(false)
+      expect(isSensitiveField(0)).toBe(false)
       // @ts-expect-error 故意传 undefined
-      expect(isSensitiveField(undefined as unknown as string)).toBe(false)
+      expect(isSensitiveField(undefined)).toBe(false)
     })
     it('词边界匹配：前缀为连字符/点号时命中（x-token-x / .token. 等）', () => {
       expect(isSensitiveField('x-token-value')).toBe(true)

@@ -221,6 +221,104 @@ async function embedBatchWithRetry(texts: string[]): Promise<number[][] | null> 
 }
 
 // ============================================================
+// 辅助：批量迁移运行状态
+// ============================================================
+
+/** 迁移过程的累计状态（贯穿全部批次） */
+interface MigrationRunState {
+  /** 成功迁移数 */
+  migrated: number
+  /** 已处理文档数 */
+  done: number
+  /** 失败文档详情 */
+  failures: { id: string; name: string; error: string }[]
+}
+
+// ============================================================
+// 辅助：整批失败后的逐条兜底
+// ============================================================
+
+async function fallbackPerDoc(
+  batch: LocalDoc[],
+  targetDim: number,
+  state: MigrationRunState,
+  total: number,
+  onProgress?: MigrationOptions['onProgress'],
+): Promise<void> {
+  for (const doc of batch) {
+    try {
+      const r = await embedText(doc.content || '')
+      if (r.success && r.vector.length === targetDim) {
+        doc.embedding = r.vector
+        await saveDocViaBridge(doc)
+        state.migrated++
+        logger.info(`[Migration] Per-doc fallback saved: ${doc.name}`)
+      } else {
+        state.failures.push({
+          id: doc.id,
+          name: doc.name,
+          error: `All retries exhausted, frontend fallback also failed`,
+        })
+      }
+    } catch (err) {
+      state.failures.push({
+        id: doc.id,
+        name: doc.name,
+        error: err instanceof Error ? err.message : String(err),
+      })
+    }
+    state.done++
+    onProgress?.(state.done, total, doc.name)
+  }
+}
+
+// ============================================================
+// 辅助：逐条写回 IndexedDB
+// ============================================================
+
+async function writeBackBatch(
+  batch: LocalDoc[],
+  vectors: number[][],
+  targetDim: number,
+  state: MigrationRunState,
+  total: number,
+  onProgress?: MigrationOptions['onProgress'],
+): Promise<void> {
+  for (let j = 0; j < batch.length; j++) {
+    const doc = batch[j]
+    const vector = vectors[j]
+
+    if (!doc || vector?.length !== targetDim) {
+      if (doc) {
+        state.failures.push({
+          id: doc.id,
+          name: doc.name,
+          error: `Dimension mismatch: expected ${targetDim}, got ${vector?.length}`,
+        })
+      }
+      state.done++
+      onProgress?.(state.done, total, doc?.name)
+      continue
+    }
+
+    try {
+      doc.embedding = vector
+      await saveDocViaBridge(doc)
+      state.migrated++
+    } catch (err) {
+      state.failures.push({
+        id: doc.id,
+        name: doc.name,
+        error: err instanceof Error ? err.message : String(err),
+      })
+    }
+
+    state.done++
+    onProgress?.(state.done, total, doc.name)
+  }
+}
+
+// ============================================================
 // 主函数：rebuildAllEmbeddings
 // ============================================================
 
@@ -280,9 +378,7 @@ export async function rebuildAllEmbeddings(
   }
 
   // 3. 分批处理
-  let migrated = 0
-  const failures: { id: string; name: string; error: string }[] = []
-  let done = 0
+  const state: MigrationRunState = { migrated: 0, done: 0, failures: [] }
 
   for (let i = 0; i < toMigrate.length; i += batchSize) {
     const batch = toMigrate.slice(i, i + batchSize)
@@ -297,78 +393,23 @@ export async function rebuildAllEmbeddings(
     if (!vectors) {
       // 整批失败 → 逐条兜底：尝试用前端 ONNX 逐条挽救
       logger.warn(`[Migration] Batch ${batchNum} fully failed, trying per-doc fallback`)
-      for (const doc of batch) {
-        try {
-          const r = await embedText(doc.content || '')
-          if (r.success && r.vector.length === targetDim) {
-            doc.embedding = r.vector
-            await saveDocViaBridge(doc)
-            migrated++
-            logger.info(`[Migration] Per-doc fallback saved: ${doc.name}`)
-          } else {
-            failures.push({
-              id: doc.id,
-              name: doc.name,
-              error: `All retries exhausted, frontend fallback also failed`,
-            })
-          }
-        } catch (err) {
-          failures.push({
-            id: doc.id,
-            name: doc.name,
-            error: err instanceof Error ? err.message : String(err),
-          })
-        }
-        done++
-        onProgress?.(done, toMigrate.length, doc.name)
-      }
+      await fallbackPerDoc(batch, targetDim, state, toMigrate.length, onProgress)
       continue
     }
 
     // 3b. 逐条写回 IndexedDB
-    for (let j = 0; j < batch.length; j++) {
-      const doc = batch[j]
-      const vector = vectors[j]
-
-      if (!doc || vector?.length !== targetDim) {
-        if (doc) {
-          failures.push({
-            id: doc.id,
-            name: doc.name,
-            error: `Dimension mismatch: expected ${targetDim}, got ${vector?.length}`,
-          })
-        }
-        done++
-        onProgress?.(done, toMigrate.length, doc?.name)
-        continue
-      }
-
-      try {
-        doc.embedding = vector
-        await saveDocViaBridge(doc)
-        migrated++
-      } catch (err) {
-        failures.push({
-          id: doc.id,
-          name: doc.name,
-          error: err instanceof Error ? err.message : String(err),
-        })
-      }
-
-      done++
-      onProgress?.(done, toMigrate.length, doc.name)
-    }
+    await writeBackBatch(batch, vectors, targetDim, state, toMigrate.length, onProgress)
 
     // 批间短暂休息，避免阻塞 UI 线程
     await new Promise(resolve => setTimeout(resolve, 10))
   }
 
   const elapsedMs = Math.round(performance.now() - startTime)
-  const failed = failures.length
+  const failed = state.failures.length
 
   logger.info('[Migration] Completed', {
     total: allDocs.length,
-    migrated,
+    migrated: state.migrated,
     skipped,
     failed,
     elapsedMs,
@@ -377,9 +418,9 @@ export async function rebuildAllEmbeddings(
   return {
     total: allDocs.length,
     skipped,
-    migrated,
+    migrated: state.migrated,
     failed,
-    failures,
+    failures: state.failures,
     elapsedMs,
   }
 }

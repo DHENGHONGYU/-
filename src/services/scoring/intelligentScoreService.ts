@@ -408,6 +408,134 @@ export function computeDualTrackDivergence(
   }
 }
 
+/** 计算 V6 综合评分；V6 引擎不可用（数据不足/异常）时回退 null，并记录告警日志 */
+async function calculateV6Composite(
+  symbol: string,
+  stock: Stock | undefined,
+): Promise<CompositeScore | null> {
+  try {
+    const quotesResult = await dataBridge.query<DailyQuotes>({
+      action: ENVELOPE_ACTION.queryGet,
+      store: STORE_NAME.dailyQuotes,
+      key: symbol,
+    })
+    const quotesOrNull = quotesResult.success ? quotesResult.data : null
+
+    const engine = createV6Engine()
+    const inputSymbol = stock?.symbol ?? symbol
+    const input = {
+      symbol: inputSymbol,
+      stock: stock ? stockToBasicData(stock) : stockToBasicData({ price: 0 } as Stock),
+      financials: await buildFinancialData(inputSymbol),
+      quotes: quotesOrNull
+        ? quotesToQuoteData(quotesOrNull)
+        : { latestClose: stock?.price ?? 0, history: [], volumeHistory: [] },
+    }
+    return await engine.calculateAll(input)
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    logger.warn('[runIntelligentScore] V6 引擎不可用，将回退 LLM', { symbol, error: msg })
+    return null
+  }
+}
+
+interface LlmAnalysisResult {
+  response: LlmResponse | null
+  error: string | null
+}
+
+/** 调用 LLM 生成评分分析；LLM 不可达时返回 null 并记录告警日志 */
+async function runLlmAnalysis(
+  symbol: string,
+  stock: Stock | undefined,
+  supplementaryTexts: string[],
+  reportText: string,
+  llmConfig: Partial<LlmConfig>,
+): Promise<LlmAnalysisResult> {
+  const messages = buildIntelligentScorePrompt({ symbol, stock, supplementaryTexts, reportText })
+  try {
+    const response = await chat(messages, llmConfig)
+    return { response, error: null }
+  } catch (err) {
+    const error = err instanceof Error ? err.message : String(err)
+    logger.warn('[runIntelligentScore] LLM 调用失败，将按数据可用性决策', { symbol, error })
+    return { response: null, error }
+  }
+}
+
+interface LlmEnhancementResult {
+  divergence: DualTrackDivergence | undefined
+  enhancedCount: number
+}
+
+/** 使用 LLM 响应做文本增强：解析 LLM 输出、计算双轨分歧度并按更长依据覆盖 v6 因子 rationale */
+function applyLlmTextEnhancement(
+  symbol: string,
+  response: LlmResponse,
+  v6Composite: CompositeScore,
+  dimensions: DimensionScore[],
+): LlmEnhancementResult {
+  try {
+    const rawOutput = parseRawScoreOutput(response.content)
+    const rawDims = rawOutput.dimensions ?? []
+    // 双轨分歧度：LLM 影子分只算不用，不参与主分计算（防黑箱污染主分）
+    const divergence = computeDualTrackDivergence(v6Composite.score, dimensions, rawOutput)
+    if (divergence) {
+      logger.info('[runIntelligentScore] 双轨分歧度计算完成', {
+        symbol,
+        tier: divergence.tier,
+        v6OverallScore: divergence.v6OverallScore,
+        llmOverallScore: divergence.llmOverallScore,
+        compositeDelta: divergence.compositeDelta,
+        maxFactorDelta: divergence.maxFactorDelta,
+      })
+      if (divergence.tier === 'divergent') {
+        logger.warn('[runIntelligentScore] 双轨高度分歧，建议人工复核', {
+          symbol,
+          compositeDelta: divergence.compositeDelta,
+          topDivergentFactors: divergence.topDivergentFactors.map((f) => f.name),
+        })
+      }
+    }
+    logger.info(`[runIntelligentScore] 开始遍历 LLM 返回的 ${rawDims.length} 个维度做文本增强`)
+    let enhancedCount = 0
+    for (const rawDim of rawDims) {
+      if (!rawDim.name || !rawDim.rationale || rawDim.rationale === '未提供评分依据') {
+        continue
+      }
+      const matched = dimensions.find((d) => d.name.includes(rawDim.name!) || rawDim.name!.includes(d.name))
+      if (!matched) continue
+      if (matched.rationale.length >= rawDim.rationale.length) {
+        logger.debug(`[runIntelligentScore] 文本增强匹配但未替换（现有的更长或相等）：${matched.name}`, {
+          factor: matched.name,
+          existingLen: matched.rationale.length,
+          candidateLen: rawDim.rationale.length,
+        })
+        continue
+      }
+      logger.debug(`[runIntelligentScore] 文本增强匹配：${matched.name}`, {
+        factor: matched.name,
+        rawDimName: rawDim.name,
+        oldRationaleLen: matched.rationale.length,
+        newRationaleLen: rawDim.rationale.length,
+        enhancementApplied: true,
+      })
+      matched.rationale = rawDim.rationale!
+      enhancedCount++
+    }
+    logger.info(`[runIntelligentScore] LLM 文本增强完成`, {
+      symbol,
+      attemptedRawDims: rawDims.length,
+      successfullyEnhanced: enhancedCount,
+    })
+    return { divergence, enhancedCount }
+  } catch {
+    // LLM 解析失败不影响 v6 分数
+    logger.warn('[runIntelligentScore] LLM 文本增强解析失败，仅使用 v6 因子分数', { symbol })
+    return { divergence: undefined, enhancedCount: 0 }
+  }
+}
+
 /**
  * runIntelligentScore
  */
@@ -451,30 +579,11 @@ export async function runIntelligentScore(
       logger.info('[runIntelligentScore] 基础数据不完整，跳过 V6 引擎', { symbol, missingFields: basicMissingFields })
       reportProgress(currentStep, 'done', `基础数据缺失 ${basicMissingFields.join(', ')}，将使用 LLM 评分`)
     } else {
-      try {
-        const quotesResult = await dataBridge.query<DailyQuotes>({
-          action: ENVELOPE_ACTION.queryGet,
-          store: STORE_NAME.dailyQuotes,
-          key: symbol,
-        })
-        const quotesOrNull = quotesResult.success ? quotesResult.data : null
-
-        const engine = createV6Engine()
-        const inputSymbol = stock?.symbol ?? symbol
-        const input = {
-          symbol: inputSymbol,
-          stock: stock ? stockToBasicData(stock) : stockToBasicData({ price: 0 } as Stock),
-          financials: await buildFinancialData(inputSymbol),
-          quotes: quotesOrNull
-            ? quotesToQuoteData(quotesOrNull)
-            : { latestClose: stock?.price ?? 0, history: [], volumeHistory: [] },
-        }
-        const composite = await engine.calculateAll(input)
-        v6Composite = composite
+      const composite = await calculateV6Composite(symbol, stock)
+      v6Composite = composite
+      if (composite) {
         reportProgress(currentStep, 'done', `V6 引擎完成，综合分 ${composite.score.toFixed(2)}`)
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err)
-        logger.warn('[runIntelligentScore] V6 引擎不可用，将回退 LLM', { symbol, error: msg })
+      } else {
         reportProgress(currentStep, 'done', 'V6 引擎数据不足，将使用 LLM 评分')
       }
     }
@@ -490,19 +599,16 @@ export async function runIntelligentScore(
 
     currentStep = 'llmAnalysis'
     let response: LlmResponse | null = null
-    let llmError: string | null = null
 
     const llmEnabled = transparencyConfig?.enableLlm ?? true
     if (llmEnabled && llmConfig) {
       reportProgress(currentStep, 'running', '调用大模型进行评分分析...')
-      const messages = buildIntelligentScorePrompt({ symbol, stock, supplementaryTexts, reportText })
-      try {
-        response = await chat(messages, llmConfig)
+      const analysis = await runLlmAnalysis(symbol, stock, supplementaryTexts, reportText, llmConfig)
+      response = analysis.response
+      if (response) {
         reportProgress(currentStep, 'done', `模型 ${response.model} 返回分析结果`)
-      } catch (err) {
-        llmError = err instanceof Error ? err.message : String(err)
-        logger.warn('[runIntelligentScore] LLM 调用失败，将按数据可用性决策', { symbol, error: llmError })
-        reportProgress(currentStep, 'done', `LLM 不可达（${llmError}），按既有数据决策`)
+      } else {
+        reportProgress(currentStep, 'done', `LLM 不可达（${analysis.error}），按既有数据决策`)
       }
     } else {
       logger.info('[runIntelligentScore] LLM 未启用，跳过 LLM 分析', { symbol, enableLlm: llmEnabled })
@@ -532,61 +638,8 @@ export async function runIntelligentScore(
           symbol,
           rawDimensionCount: response.content.length,
         })
-        try {
-          const rawOutput = parseRawScoreOutput(response.content)
-          const rawDims = rawOutput.dimensions ?? []
-          // 双轨分歧度：LLM 影子分只算不用，不参与主分计算（防黑箱污染主分）
-          dualTrackDivergence = computeDualTrackDivergence(v6Composite.score, dimensions, rawOutput)
-          if (dualTrackDivergence) {
-            logger.info('[runIntelligentScore] 双轨分歧度计算完成', {
-              symbol,
-              tier: dualTrackDivergence.tier,
-              v6OverallScore: dualTrackDivergence.v6OverallScore,
-              llmOverallScore: dualTrackDivergence.llmOverallScore,
-              compositeDelta: dualTrackDivergence.compositeDelta,
-              maxFactorDelta: dualTrackDivergence.maxFactorDelta,
-            })
-            if (dualTrackDivergence.tier === 'divergent') {
-              logger.warn('[runIntelligentScore] 双轨高度分歧，建议人工复核', {
-                symbol,
-                compositeDelta: dualTrackDivergence.compositeDelta,
-                topDivergentFactors: dualTrackDivergence.topDivergentFactors.map((f) => f.name),
-              })
-            }
-          }
-          logger.info(`[runIntelligentScore] 开始遍历 LLM 返回的 ${rawDims.length} 个维度做文本增强`)
-          let enhancedCount = 0
-          for (const rawDim of rawDims) {
-            if (rawDim.name && rawDim.rationale && rawDim.rationale !== '未提供评分依据') {
-              const matched = dimensions.find((d) => d.name.includes(rawDim.name!) || rawDim.name!.includes(d.name))
-              if (matched && matched.rationale.length < rawDim.rationale.length) {
-                logger.debug(`[runIntelligentScore] 文本增强匹配：${matched.name}`, {
-                  factor: matched.name,
-                  rawDimName: rawDim.name,
-                  oldRationaleLen: matched.rationale.length,
-                  newRationaleLen: rawDim.rationale.length,
-                  enhancementApplied: true,
-                })
-                matched.rationale = rawDim.rationale!
-                enhancedCount++
-              } else if (matched) {
-                logger.debug(`[runIntelligentScore] 文本增强匹配但未替换（现有的更长或相等）：${matched.name}`, {
-                  factor: matched.name,
-                  existingLen: matched.rationale.length,
-                  candidateLen: rawDim.rationale.length,
-                })
-              }
-            }
-          }
-          logger.info(`[runIntelligentScore] LLM 文本增强完成`, {
-            symbol,
-            attemptedRawDims: rawDims.length,
-            successfullyEnhanced: enhancedCount,
-          })
-        } catch {
-          // LLM 解析失败不影响 v6 分数
-          logger.warn('[runIntelligentScore] LLM 文本增强解析失败，仅使用 v6 因子分数', { symbol })
-        }
+        const enhancement = applyLlmTextEnhancement(symbol, response, v6Composite, dimensions)
+        dualTrackDivergence = enhancement.divergence
       } else {
         logger.info(`[runIntelligentScore] LLM 文本增强跳过（无 LLM 响应），纯 V6 因子模式`, { symbol })
       }
