@@ -151,7 +151,10 @@ export function calcChipDistribution(
 
     if (useHybrid) {
       const tr = sliceTurnoverRates![i]
-      const turnoverFactor = Math.max(0.1, 1 - (tr ?? 0.03))
+      // FALLBACK: 若个别交易日换手率缺失，使用历史日均中位数 0.03 作为显式回退。
+      // 该值已在 V6 L8 计分文档中备案；长期应在数据预处理层保证 turnoverRates 完整。
+      const MISSING_TURNOVER_FALLBACK = 0.03
+      const turnoverFactor = Math.max(0.1, 1 - (tr ?? MISSING_TURNOVER_FALLBACK))
       rawWeights[i] = linearWeight * turnoverFactor
     } else {
       rawWeights[i] = linearWeight

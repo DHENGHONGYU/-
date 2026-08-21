@@ -186,7 +186,7 @@ export async function searchSimilarStocks(
       } else {
         name = symbol
       }
-    } catch (_e) {
+    } catch {
       // stocks store 读取失败不阻塞结果，退化为只显示代码
       name = symbol
     }

@@ -5,7 +5,7 @@ import { calculateWeightedScore, getEnabledStockFactorNames } from '@/config/sco
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
 import { sendWriteEnvelope } from '@/core/databridgeQueries'
-import type { DataLayerResult, DailyQuotes, DimensionScore, IntelligentScore, Stock } from '@/data/types'
+import type { DataLayerResult, DailyQuotes, DimensionScore, DualTrackDivergence, IntelligentScore, Stock } from '@/data/types'
 import type { LlmConfig, LlmTransparencyConfig } from '@/config/llmConfig'
 import { chat, LlmApiError } from '@/services/llm/llmGateway'
 import type { LlmResponse } from '@/services/llm/llmTypes'
@@ -354,6 +354,61 @@ function v6CompositeToDimensionScores(
 }
 
 /**
+ * computeDualTrackDivergence — 双轨评分分歧度计算（Champion-Challenger 影子评分模式）
+ *
+ * V6 规则引擎为冠军（主分来源），LLM 影子分为挑战者（只算不用，不参与主分计算）。
+ * 返回 undefined 的情形：LLM 输出无任何有效评分维度（无法构成影子分）。
+ * 置信分层路由阈值：compositeDelta ≤ 0.5 → consistent；≤ 1.0 → moderate；> 1.0 → divergent。
+ */
+export function computeDualTrackDivergence(
+  v6CompositeScore: number,
+  v6Dimensions: DimensionScore[],
+  llmRaw: RawScoreOutput,
+): DualTrackDivergence | undefined {
+  // 收集 LLM 影子分（与 normalizeDimensionScore 相同的 1-5 钳位语义）
+  const llmScored = (llmRaw.dimensions ?? []).filter(
+    (d): d is RawDimension & { score: number } =>
+      typeof d.score === 'number' && Number.isFinite(d.score),
+  )
+  if (llmScored.length === 0) return undefined
+
+  const llmOverallScore =
+    llmScored.reduce((sum, d) => sum + Math.max(1, Math.min(5, d.score)), 0) / llmScored.length
+
+  // 因子级匹配（与文本增强一致的模糊匹配策略：双向 includes）
+  const factorDeltas: NonNullable<IntelligentScore['dualTrackDivergence']>['topDivergentFactors'] = []
+  for (const v6Dim of v6Dimensions) {
+    if (v6Dim.score === null) continue
+    const matched = llmScored.find(
+      (d) => d.name && (v6Dim.name.includes(d.name) || d.name.includes(v6Dim.name)),
+    )
+    if (!matched) continue
+    const llmScore = Math.max(1, Math.min(5, matched.score))
+    factorDeltas.push({
+      name: v6Dim.name,
+      v6Score: v6Dim.score,
+      llmScore,
+      delta: Math.abs(llmScore - v6Dim.score),
+    })
+  }
+
+  const compositeDelta = Math.abs(llmOverallScore - v6CompositeScore)
+  const maxFactorDelta =
+    factorDeltas.length > 0 ? Math.max(...factorDeltas.map((f) => f.delta)) : 0
+  const tier: DualTrackDivergence['tier'] =
+    compositeDelta <= 0.5 ? 'consistent' : compositeDelta <= 1.0 ? 'moderate' : 'divergent'
+
+  return {
+    v6OverallScore: v6CompositeScore,
+    llmOverallScore,
+    compositeDelta,
+    maxFactorDelta,
+    topDivergentFactors: factorDeltas.sort((a, b) => b.delta - a.delta).slice(0, 3),
+    tier,
+  }
+}
+
+/**
  * runIntelligentScore
  */
 export async function runIntelligentScore(
@@ -461,6 +516,7 @@ export async function runIntelligentScore(
     const dimensionNames = getEnabledStockFactorNames()
     let dimensions: DimensionScore[]
     let overallScore: number | null
+    let dualTrackDivergence: DualTrackDivergence | undefined
 
     if (v6Composite) {
       // 数据驱动：使用 v6 真实因子分数；LLM 仅做可选文本增强（不可达则跳过）
@@ -479,6 +535,25 @@ export async function runIntelligentScore(
         try {
           const rawOutput = parseRawScoreOutput(response.content)
           const rawDims = rawOutput.dimensions ?? []
+          // 双轨分歧度：LLM 影子分只算不用，不参与主分计算（防黑箱污染主分）
+          dualTrackDivergence = computeDualTrackDivergence(v6Composite.score, dimensions, rawOutput)
+          if (dualTrackDivergence) {
+            logger.info('[runIntelligentScore] 双轨分歧度计算完成', {
+              symbol,
+              tier: dualTrackDivergence.tier,
+              v6OverallScore: dualTrackDivergence.v6OverallScore,
+              llmOverallScore: dualTrackDivergence.llmOverallScore,
+              compositeDelta: dualTrackDivergence.compositeDelta,
+              maxFactorDelta: dualTrackDivergence.maxFactorDelta,
+            })
+            if (dualTrackDivergence.tier === 'divergent') {
+              logger.warn('[runIntelligentScore] 双轨高度分歧，建议人工复核', {
+                symbol,
+                compositeDelta: dualTrackDivergence.compositeDelta,
+                topDivergentFactors: dualTrackDivergence.topDivergentFactors.map((f) => f.name),
+              })
+            }
+          }
           logger.info(`[runIntelligentScore] 开始遍历 LLM 返回的 ${rawDims.length} 个维度做文本增强`)
           let enhancedCount = 0
           for (const rawDim of rawDims) {
@@ -555,6 +630,7 @@ export async function runIntelligentScore(
         : 'LLM 生成评分（数据不足，未触发 v6 引擎，黑箱合成）',
       scoreProvenance: v6Composite ? 'data-driven' : 'llm-synthetic',
       dataProvenance: stock?.dataProvenance ?? (stock?.dataSource ? 'real' : 'unknown'),
+      dualTrackDivergence,
       missingFields: finalMissingFields,
       sourceSnapshot: {
         stock,

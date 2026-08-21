@@ -118,10 +118,10 @@ function extractNewsItems(dimData: Record<string, unknown>): NewsItem[] {
   const news = dimData.news ?? dimData.items ?? dimData.data
   if (!Array.isArray(news)) return []
   return news.slice(0, 10).map((n: Record<string, unknown>) => ({
-    title: String(n.title ?? ''),
-    summary: String(n.summary ?? n.content ?? '').slice(0, 500),
-    source: String(n.source ?? ''),
-    publishedAt: String(n.publishedAt ?? n.date ?? ''),
+    title: typeof n.title === 'string' ? n.title : '',
+    summary: typeof n.summary === 'string' ? n.summary : typeof n.content === 'string' ? n.content : '',
+    source: typeof n.source === 'string' ? n.source : '',
+    publishedAt: typeof n.publishedAt === 'string' ? n.publishedAt : typeof n.date === 'string' ? n.date : '',
   }))
 }
 
@@ -130,14 +130,15 @@ function extractResearchReports(dimData: Record<string, unknown>): ResearchRepor
   const reports = dimData.reports ?? dimData.items ?? dimData.data
   if (!Array.isArray(reports)) return []
   return reports.slice(0, 8).map((r: Record<string, unknown>) => ({
-    title: String(r.title ?? ''),
-    rating: String(r.rating ?? r.reportRating ?? ''),
+    title: typeof r.title === 'string' ? r.title : '',
+    rating: typeof r.rating === 'string' ? r.rating : typeof r.reportRating === 'string' ? r.reportRating : '',
     targetPrice: typeof r.targetPrice === 'number' ? r.targetPrice : undefined,
-    analyst: String(r.analyst ?? r.source ?? ''),
-    content: String(r.content ?? r.summary ?? '').slice(0, 500),
-    date: String(r.date ?? r.publishedAt ?? ''),
+    analyst: typeof r.analyst === 'string' ? r.analyst : typeof r.source === 'string' ? r.source : '',
+    content: typeof r.content === 'string' ? r.content : typeof r.summary === 'string' ? r.summary : '',
+    date: typeof r.date === 'string' ? r.date : typeof r.publishedAt === 'string' ? r.publishedAt : '',
   }))
 }
+
 
 // ── Mock 维度数据生成器（已禁用 —— MOCK 数据不真实，真实源失败直接报错）──
 // 保留代码供开发参考，生产环境不调用。历史代码见 git log collectionPipeline.ts。

@@ -160,7 +160,7 @@ export interface Stage3Record {
   layersFinite: boolean
   noNaN: boolean
   scoreError?: string
-  layerDetails?: unknown | null
+  layerDetails?: unknown
 }
 
 export interface Stage4Record {
@@ -364,10 +364,11 @@ export async function runResearchPipeline(
             dq,
           ),
         )
-        const back = await queryGet<any>(STORE_NAME.dailyQuotes, code)
+        const back = await queryGet(STORE_NAME.dailyQuotes, code)
         s2.dqPersistOk = back != null
       } catch (e) {
-        s2.klineError = (s2.klineError ?? '') + ` dq:${e}`
+        const dqErr = e instanceof Error ? e.message : typeof e === 'string' ? e : 'Unknown error'
+        s2.klineError = (s2.klineError ?? '') + ` dq:${dqErr}`
       }
     }
 
@@ -395,7 +396,8 @@ export async function runResearchPipeline(
       const st = await dataBridge.query<Stock>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.stocks, key: code, source: MODULE_ID.pool })
       s2.stockUpdateOk = st.success && !!st.data && Number.isFinite(st.data.price) && (st.data.price ?? 0) > 0
     } catch (e) {
-      s2.klineError = (s2.klineError ?? '') + ` upd:${e}`
+      const updErr = e instanceof Error ? e.message : typeof e === 'string' ? e : 'Unknown error'
+        s2.klineError = (s2.klineError ?? '') + ` upd:${updErr}`
     }
 
     // 评分：V6

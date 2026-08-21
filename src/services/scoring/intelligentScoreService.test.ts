@@ -12,8 +12,8 @@
  */
 
 import { describe, test, expect, vi, beforeEach } from 'vitest'
-import { runIntelligentScore } from './intelligentScoreService'
-import type { Stock, DailyQuotes, KlineBar } from '@/data/types'
+import { runIntelligentScore, computeDualTrackDivergence } from './intelligentScoreService'
+import type { Stock, DailyQuotes, KlineBar, DimensionScore } from '@/data/types'
 
 // ============================================================
 // Mocks（全部经 vi.hoisted，规避 TDZ）
@@ -348,6 +348,8 @@ describe('V6 引擎计算逻辑', () => {
       expect(result.data!.overallScore).toBe(3.75)
       expect(result.data!.scoreProvenance).toBe('data-driven')
       expect(result.data!.summary).toBe('LLM 分析摘要')
+      // LLM 返回纯文本（非 JSON）→ 影子分不可解析 → 无分歧度
+      expect(result.data!.dualTrackDivergence).toBeUndefined()
     }
   })
 })
@@ -417,6 +419,11 @@ describe('GLM5.3 弱模型输出容错（数值分数据驱动不被覆盖）', 
         // ⑤ rationale 被 GLM5.3 长文本增强替换
         expect(moat.rationale).toContain('GLM5.3 生成的关于质量维度的详细分析理由')
       }
+      // ⑥ 双轨分歧度：LLM 越界 9.9 钳位为 5.0，与 V6 3.75 的 delta=1.25 → 高度分歧被捕获
+      expect(result.data!.dualTrackDivergence).toBeDefined()
+      expect(result.data!.dualTrackDivergence!.tier).toBe('divergent')
+      expect(result.data!.dualTrackDivergence!.llmOverallScore).toBe(5.0)
+      expect(result.data!.dualTrackDivergence!.compositeDelta).toBeCloseTo(1.25, 5)
     }
   })
 
@@ -438,6 +445,143 @@ describe('GLM5.3 弱模型输出容错（数值分数据驱动不被覆盖）', 
       // 解析失败不影响 V6 因子分数（不崩溃、不黑箱）
       expect(result.data!.overallScore).toBe(3.75)
       expect(result.data!.scoreProvenance).toBe('data-driven')
+      // 解析失败 → 无分歧度（影子分不可构成）
+      expect(result.data!.dualTrackDivergence).toBeUndefined()
     }
+  })
+})
+
+// ============================================================
+// 双轨评分分歧度（Champion-Challenger 影子评分，纯函数）
+// ============================================================
+// 验证 computeDualTrackDivergence 的三层置信路由与钳位语义：
+// consistent（delta≤0.5）/ moderate（0.5<delta≤1.0）/ divergent（delta>1.0）。
+// LLM 影子分只算不用，不参与主分计算。
+
+function makeDim(name: string, score: number): DimensionScore {
+  return { name, score, rationale: '测试理由', evidence: [], weight: 1 / 9 }
+}
+
+describe('双轨评分分歧度 computeDualTrackDivergence', () => {
+  test('LLM 无有效评分维度 → undefined（无法构成影子分）', () => {
+    const dims = [makeDim('估值', 3.5)]
+    expect(computeDualTrackDivergence(3.75, dims, {})).toBeUndefined()
+    expect(computeDualTrackDivergence(3.75, dims, { dimensions: [] })).toBeUndefined()
+    expect(computeDualTrackDivergence(3.75, dims, { dimensions: [{ name: '估值' }] })).toBeUndefined()
+  })
+
+  test('双轨一致（delta≤0.5）→ tier=consistent', () => {
+    const dims = [makeDim('估值', 3.5), makeDim('成长', 4.0)]
+    // llmOverall=(3.4+4.2)/2=3.8，delta=|3.8-3.75|=0.05
+    const div = computeDualTrackDivergence(3.75, dims, {
+      dimensions: [
+        { name: '估值', score: 3.4 },
+        { name: '成长', score: 4.2 },
+      ],
+    })
+    expect(div).toBeDefined()
+    expect(div!.tier).toBe('consistent')
+    expect(div!.v6OverallScore).toBe(3.75)
+    expect(div!.llmOverallScore).toBeCloseTo(3.8, 5)
+    expect(div!.compositeDelta).toBeCloseTo(0.05, 5)
+    expect(div!.maxFactorDelta).toBeCloseTo(0.2, 5)
+  })
+
+  test('中度分歧（0.5<delta≤1.0）→ tier=moderate', () => {
+    // llmOverall=4.4，delta=|4.4-3.75|=0.65
+    const div = computeDualTrackDivergence(3.75, [makeDim('估值', 3.5)], {
+      dimensions: [{ name: '估值', score: 4.4 }],
+    })
+    expect(div).toBeDefined()
+    expect(div!.tier).toBe('moderate')
+    expect(div!.compositeDelta).toBeCloseTo(0.65, 5)
+  })
+
+  test('高度分歧（delta>1.0）→ tier=divergent，topDivergentFactors 按 delta 降序取前3', () => {
+    const dims = [makeDim('估值', 3.5), makeDim('质量', 4.5), makeDim('动量', 2.0), makeDim('盈利', 3.0)]
+    // llmOverall=(1.0+1.0+1.0+3.0)/4=1.5，delta=|1.5-3.75|=2.25 → divergent
+    const div = computeDualTrackDivergence(3.75, dims, {
+      dimensions: [
+        { name: '估值', score: 1.0 },
+        { name: '质量', score: 1.0 },
+        { name: '动量', score: 1.0 },
+        { name: '盈利', score: 3.0 },
+      ],
+    })
+    expect(div).toBeDefined()
+    expect(div!.tier).toBe('divergent')
+    expect(div!.compositeDelta).toBeCloseTo(2.25, 5)
+    expect(div!.maxFactorDelta).toBeCloseTo(3.5, 5) // 质量 |1.0-4.5|=3.5
+    expect(div!.topDivergentFactors.length).toBe(3)
+    expect(div!.topDivergentFactors[0]!.name).toBe('质量')
+    expect(div!.topDivergentFactors[0]!.delta).toBeCloseTo(3.5, 5)
+  })
+
+  test('LLM 越界分钳位到 1-5（与 normalizeDimensionScore 语义一致）', () => {
+    // 9.9 钳位为 5.0 → llmOverall=5.0，delta=|5.0-3.75|=1.25
+    const div = computeDualTrackDivergence(3.75, [makeDim('质量', 4.5)], {
+      dimensions: [{ name: '质量', score: 9.9 }],
+    })
+    expect(div).toBeDefined()
+    expect(div!.llmOverallScore).toBe(5.0)
+    expect(div!.compositeDelta).toBeCloseTo(1.25, 5)
+    expect(div!.tier).toBe('divergent')
+  })
+
+  test('因子名不匹配 → 因子级 delta 不计入，但影子综合分仍按全量 LLM 评分计算', () => {
+    const div = computeDualTrackDivergence(3.75, [makeDim('估值', 3.5)], {
+      dimensions: [{ name: '盈利能力', score: 1.0 }],
+    })
+    expect(div).toBeDefined()
+    // '盈利能力' 与 '估值' 不匹配 → 无因子级 delta
+    expect(div!.maxFactorDelta).toBe(0)
+    expect(div!.topDivergentFactors).toEqual([])
+    // 影子综合分仍为 1.0 → delta=2.75 → divergent
+    expect(div!.compositeDelta).toBeCloseTo(2.75, 5)
+    expect(div!.tier).toBe('divergent')
+  })
+
+  test('V6 因子分缺失（null）→ 该因子跳过因子级比对', () => {
+    const dims = [makeDim('估值', 3.5), { name: '情绪', score: null, rationale: 'r', evidence: [], weight: 1 / 9 }]
+    const div = computeDualTrackDivergence(3.75, dims, {
+      dimensions: [
+        { name: '估值', score: 3.4 },
+        { name: '情绪', score: 1.0 },
+      ],
+    })
+    expect(div).toBeDefined()
+    // 情绪因子 V6 侧为 null → 不进入因子比对；估值 delta=0.1
+    expect(div!.topDivergentFactors.length).toBe(1)
+    expect(div!.topDivergentFactors[0]!.name).toBe('估值')
+  })
+
+  test('边界校对：delta 恰为 0.5 → consistent（阈值 ≤0.5 含边界）', () => {
+    // v6=3.75，LLM 单维度 4.25 → llmOverall=4.25，delta=|4.25-3.75|=0.5
+    const div = computeDualTrackDivergence(3.75, [makeDim('估值', 3.5)], {
+      dimensions: [{ name: '估值', score: 4.25 }],
+    })
+    expect(div).toBeDefined()
+    expect(div!.compositeDelta).toBeCloseTo(0.5, 5)
+    expect(div!.tier).toBe('consistent')
+  })
+
+  test('边界校对：delta 恰为 1.0 → moderate（阈值 ≤1.0 含边界）', () => {
+    // v6=3.75，LLM 单维度 4.75 → delta=|4.75-3.75|=1.0
+    const div = computeDualTrackDivergence(3.75, [makeDim('估值', 3.5)], {
+      dimensions: [{ name: '估值', score: 4.75 }],
+    })
+    expect(div).toBeDefined()
+    expect(div!.compositeDelta).toBeCloseTo(1.0, 5)
+    expect(div!.tier).toBe('moderate')
+  })
+
+  test('边界校对：delta 略超 1.0 → divergent（阈值 >1.0 不含边界）', () => {
+    // v6=3.75，LLM 单维度 4.76 → delta=|4.76-3.75|=1.01 > 1.0
+    const div = computeDualTrackDivergence(3.75, [makeDim('估值', 3.5)], {
+      dimensions: [{ name: '估值', score: 4.76 }],
+    })
+    expect(div).toBeDefined()
+    expect(div!.compositeDelta).toBeCloseTo(1.01, 5)
+    expect(div!.tier).toBe('divergent')
   })
 })

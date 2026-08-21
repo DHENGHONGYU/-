@@ -237,7 +237,7 @@ async function withRetry<T>(
   }
 
   recordFailure(taskName)
-  throw lastError
+  throw lastError instanceof Error ? lastError : new Error(typeof lastError === 'string' ? lastError : 'Unknown error')
 }
 
 // ============================================================
@@ -310,7 +310,7 @@ export async function summarizeNews(
     logger.info(`[kimiAIService] 新闻摘要完成: ${symbol} sentiment=${parsed.sentiment} tokens=${tokensUsed} remaining=${check.remaining - 1}`)
     return parsed
   } catch (err) {
-    logger.error(`[kimiAIService] 新闻摘要失败: ${err}`)
+    logger.error(`[kimiAIService] 新闻摘要失败: ${err instanceof Error ? err.message : typeof err === 'string' ? err : 'Unknown error'}`)
     return null
   }
 }
@@ -380,7 +380,7 @@ export async function digestResearch(
     logger.info(`[kimiAIService] 研报解读完成: ${symbol} consensus=${parsed.consensusRating} remaining=${check.remaining - 1}`)
     return parsed
   } catch (err) {
-    logger.error(`[kimiAIService] 研报解读失败: ${err}`)
+    logger.error(`[kimiAIService] 研报解读失败: ${err instanceof Error ? err.message : typeof err === 'string' ? err : 'Unknown error'}`)
     return null
   }
 }
@@ -452,7 +452,7 @@ export async function detectAnomalies(
     }
     return parsed
   } catch (err) {
-    logger.error(`[kimiAIService] 异常检测失败: ${err}`)
+    logger.error(`[kimiAIService] 异常检测失败: ${err instanceof Error ? err.message : typeof err === 'string' ? err : 'Unknown error'}`)
     return null
   }
 }
@@ -526,7 +526,7 @@ export async function generateDailyReport(
     logger.info(`[kimiAIService] 日报生成完成: ${input.symbol} remaining=${check.remaining - 1}`)
     return parsed
   } catch (err) {
-    logger.error(`[kimiAIService] 日报生成失败: ${err}`)
+    logger.error(`[kimiAIService] 日报生成失败: ${err instanceof Error ? err.message : typeof err === 'string' ? err : 'Unknown error'}`)
     return null
   }
 }

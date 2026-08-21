@@ -509,7 +509,7 @@ export function aggregateMcpResults(
         Object.assign(data, parsed)
         successCount++
       } catch (e) {
-        errors.push(`[${query.name}] 解析失败: ${e}`)
+        errors.push(`[${query.name}] 解析失败: ${e instanceof Error ? e.message : typeof e === 'string' ? e : 'Unknown error'}`)
       }
     } else if (resp.error) {
       errors.push(`[${query.name}] ${resp.error}`)

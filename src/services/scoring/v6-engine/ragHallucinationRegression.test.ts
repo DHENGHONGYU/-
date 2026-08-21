@@ -261,15 +261,13 @@ function simulateLLMWithUnsupportedAdjustment(
 // 加载 Golden Dataset
 // ============================================================
 
-let dataset: GoldenDataset
-
 function loadDataset(): GoldenDataset {
   const path = resolve(__dirname, '..', '..', '..', '..', 'tests', 'golden-dataset', 'scores.json')
   const raw = readFileSync(path, 'utf-8')
   return JSON.parse(raw) as GoldenDataset
 }
 
-dataset = loadDataset()
+const dataset = loadDataset()
 
 // ============================================================
 // 获取 Golden Stock 的 RAG 上下文

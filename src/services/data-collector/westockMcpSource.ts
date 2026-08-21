@@ -33,7 +33,7 @@ function isWestockEnabled(): boolean {
 async function callWestockTool(
   toolName: string,
   args: Record<string, unknown>,
-): Promise<unknown | null> {
+): Promise<unknown> {
   if (!isWestockEnabled()) {
     logger.debug(`[westockMcpSource] WESTOCK_DISABLED，跳过 ${SOURCE}`)
     return null

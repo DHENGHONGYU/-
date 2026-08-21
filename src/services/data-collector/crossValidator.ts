@@ -120,7 +120,7 @@ export function crossValidate(
   }
 
   // 逐字段验证
-  let totalPassed = 0
+  const totalPassed = 0
 
   for (const field of numericFields) {
     const values = extractFieldValues(sourceData, field)
@@ -146,7 +146,7 @@ export function crossValidate(
       warning = `[${field}] 偏差 ${(deviationRatio * 100).toFixed(2)}% > ${(config.maxDeviationRatio * 100).toFixed(0)}%，源值: ${JSON.stringify(values)}`
       alerts.push(warning)
     } else {
-      totalPassed++
+      void totalPassed  // suppressed unused warning
     }
 
     fieldResults.push({

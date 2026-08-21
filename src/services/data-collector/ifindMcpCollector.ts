@@ -97,7 +97,7 @@ async function executeMcpCall(
   } catch (err) {
     const latencyMs = Date.now() - start
     recordSourceResult(source, { success: false, isMock: false, latencyMs, completeness: 0 })
-    const errorMsg = err instanceof Error ? err.message : String(err)
+    const errorMsg = err instanceof Error ? err.message : typeof err === 'string' ? err : 'Unknown error'
     logger.warn(`[ifindMcpCollector] ${serverName}.${toolName} 调用异常`, { error: errorMsg })
     return { success: false, data: null, error: errorMsg, latencyMs, source }
   }
@@ -129,10 +129,10 @@ export async function fetchQuoteViaMcp(
     )
     if (callResult.success && callResult.data) {
       const data = callResult.data as Record<string, unknown>
-      const price = parseFloat(String(data.current_price ?? data.price ?? 0))
-      const name = String(data.name ?? symbolName ?? '')
-      const change = parseFloat(String(data.change ?? 0))
-      const changePercent = parseFloat(String(data.change_percent ?? data.changePercent ?? 0))
+      const price = Number(data.current_price ?? data.price ?? 0)
+      const name = typeof data.name === 'string' ? data.name : typeof symbolName === 'string' ? symbolName : ''
+      const change = Number(data.change ?? 0)
+      const changePercent = Number(data.change_percent ?? data.changePercent ?? 0)
       if (price > 0) {
         logger.info(`[ifindMcpCollector] iFinD MCP 行情采集成功: ${symbol}`, { price, latencyMs: callResult.latencyMs })
         return { price, name, change, changePercent }
@@ -212,10 +212,10 @@ async function fetchQuoteViaTencentMcp(
 
     const item = items[0] as Record<string, unknown>
     return {
-      price: parseFloat(String(item.current_price ?? item.price ?? 0)),
-      name: String(item.name ?? ''),
-      change: parseFloat(String(item.change ?? 0)),
-      changePercent: parseFloat(String(item.change_percent ?? 0)),
+      price: Number(item.current_price ?? item.price ?? 0),
+      name: typeof item.name === 'string' ? item.name : '',
+      change: Number(item.change ?? 0),
+      changePercent: Number(item.change_percent ?? 0),
     }
   } catch {
     return null
@@ -236,12 +236,12 @@ function parseKlineResponse(raw: Record<string, unknown>, days: number): Array<{
     if (!item || typeof item !== 'object') continue
     const bar = item as Record<string, unknown>
     bars.push({
-      date: String(bar.date ?? bar.trade_date ?? ''),
-      open: parseFloat(String(bar.open ?? 0)),
-      high: parseFloat(String(bar.high ?? 0)),
-      low: parseFloat(String(bar.low ?? 0)),
-      close: parseFloat(String(bar.close ?? bar.price ?? 0)),
-      volume: parseFloat(String(bar.volume ?? 0)),
+      date: typeof bar.date === 'string' ? bar.date : typeof bar.trade_date === 'string' ? bar.trade_date : '',
+      open: Number(bar.open ?? 0),
+      high: Number(bar.high ?? 0),
+      low: Number(bar.low ?? 0),
+      close: Number(bar.close ?? bar.price ?? 0),
+      volume: Number(bar.volume ?? 0),
     })
   }
   return bars
@@ -289,7 +289,7 @@ export async function collectDimensionViaMcp(
         Object.assign(data, parsed)
         successCount++
       } catch (e) {
-        errors.push(`[${query.name}] 解析失败: ${e}`)
+        errors.push(`[${query.name}] 解析失败: ${e instanceof Error ? e.message : typeof e === 'string' ? e : 'Unknown error'}`)
       }
     } else if (callResult.error) {
       errors.push(`[${query.name}] ${callResult.error}`)

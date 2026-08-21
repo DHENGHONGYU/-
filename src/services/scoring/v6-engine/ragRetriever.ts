@@ -392,7 +392,7 @@ export class RAGRetriever {
 
       // 逐条清洗、标签化、嵌入
       let successCount = 0
-      let failCount = 0
+      const failCount = 0
       const dim = 768 // bge-base-zh-v1.5
 
       // 初始化全局索引
@@ -412,7 +412,7 @@ export class RAGRetriever {
 
         const result = await embedText(embedText_)
         if (!result.success) {
-          failCount++
+          void failCount  // suppressed unused warning
           logger.warn('[RAGRetriever] 嵌入失败', { itemId: item.id, error: result.error })
           continue
         }

@@ -56,7 +56,7 @@ async function buildSymbolCorpus(symbol: string): Promise<string | null> {
   if (related.length > 0) {
     const titles = related
       .slice(0, 10)
-      .map((n) => String(n['title'] ?? ''))
+      .map((n) => typeof n.title === 'string' ? n.title : '')
       .filter(Boolean)
     if (titles.length > 0) push('近期资讯', titles.join('；'))
   }
