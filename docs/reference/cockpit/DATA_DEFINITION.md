@@ -11,6 +11,7 @@ covers_code:
   - src/cockpit/core/widgetRegistry.ts
 
 
+code_version: 2.0.0-rc.2
 ---
 > **Version**: v1.2.0  
 > **Last Updated**: 2026-07-06  

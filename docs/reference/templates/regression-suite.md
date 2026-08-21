@@ -4,6 +4,7 @@ title: "回归测试套件模板"
 domain: data
 status: active
 last_updated: 2026-08-15
+code_version: 2.0.0-rc.2
 ---
 
 # 回归测试套件模板

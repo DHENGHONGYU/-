@@ -10,6 +10,7 @@ covers_code:
   - src/store/sevenDimConfigStore.ts
 
 
+code_version: 2.0.0-rc.2
 ---
 > **Version**: v1.0.0
 > **Last Updated**: 2026-07-01

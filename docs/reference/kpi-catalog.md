@@ -4,6 +4,7 @@ title: "KPI 口径目录（Store → MetricCard 消费映射）"
 domain: data
 status: active
 last_updated: 2026-08-15
+code_version: 2.0.0-rc.2
 ---
 
 # KPI 口径目录（Store → MetricCard 消费映射）

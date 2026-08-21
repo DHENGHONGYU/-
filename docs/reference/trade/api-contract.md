@@ -4,6 +4,7 @@ title: "交易持仓管理模块 API 契约文档"
 domain: data
 status: active
 last_updated: 2026-08-15
+code_version: 2.0.0-rc.2
 ---
 
 > **Version**: v1.1.0  

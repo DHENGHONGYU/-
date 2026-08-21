@@ -4,6 +4,7 @@ title: "V9 文档标签分类体系（Tag Taxonomy）"
 domain: project
 status: active
 last_updated: 2026-08-17
+code_version: 2.0.0-rc.2
 ---
 
 ﻿---

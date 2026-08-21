@@ -1,3 +1,8 @@
+---
+title: docs/reference/changelogs/2026-08/2026-08-14-analysis-input-cabin-interface-report.md
+code_version: 2.0.0-rc.2
+---
+
 # 分析舱调用输入舱数据接口方案 — 实现报告 2026-08-14
 
 > **生成时间**：2026-08-14

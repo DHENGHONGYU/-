@@ -1,3 +1,8 @@
+---
+title: docs/reference/BACKTEST_DATA_DEFINITION.md
+code_version: 2.0.0-rc.2
+---
+
 # 策略回测模块数据字典
 
 > **Status**: Current  

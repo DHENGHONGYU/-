@@ -4,6 +4,7 @@ title: design-token-decision-map
 status: active
 last_updated: 2026-08-21
 maintainer: FinSightV9 Team
+code_version: 2.0.0-rc.2
 ---
 
 # UI 修改决策映射表（FRONT-020）
