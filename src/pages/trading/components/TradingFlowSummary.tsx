@@ -5,7 +5,7 @@
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import type { TradingSignal } from '@/services/trading/signalGenerator'
-import type { Order } from '@/data/types'
+import type { Order } from '@/types'
 import type { TradingPosition } from '../tradingFlow.types'
 
 interface TradingFlowSummaryProps {

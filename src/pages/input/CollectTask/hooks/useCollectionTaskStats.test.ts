@@ -33,7 +33,7 @@ vi.mock('@/mcp/bridge/mcpBridge', () => ({
 import { useCollectionRuntimeStore } from '@/store/collectionRuntimeStore'
 import { useSevenDimConfigStore, type SevenDimConfigState } from '@/store/sevenDimConfigStore'
 import { useIntelligentScoreStore } from '@/store/intelligentScoreStore'
-import type { IntelligentScore } from '@/data/types/types.score'
+import type { IntelligentScore } from '@/types'
 import { useCollectionTaskStats } from '../hooks/useCollectionTaskStats'
 import type { CollectionTaskRuntime, CollectionTraceSpan } from '@/types/modules/collection.types'
 

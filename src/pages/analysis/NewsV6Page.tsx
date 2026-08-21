@@ -17,7 +17,7 @@ import { NewsFilterPanel, type NewsFilterState } from '@/components/organisms/ne
 import { NewsSentimentTrend } from '@/components/organisms/analysis/news/NewsSentimentTrend'
 import { useAnalysisNewsStore } from '@/store/analysisNewsStore'
 import { EmptyState } from '@/components/molecules'
-import type { NewsArticle } from '@/data/types'
+import type { NewsArticle } from '@/types'
 import { newsColors, type NewsCategory } from '@/constants/newsColorTokens'
 import { getLogger } from '@/lib/logger'
 

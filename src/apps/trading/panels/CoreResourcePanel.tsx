@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Car
 import { Badge } from '@/components/atoms/Badge'
 import { EmptyState } from '@/components/molecules/EmptyState'
 import { cn } from '@/lib/utils'
-import type { Portfolio, StrategyClassification, StrategyResult } from '@/data/types'
+import type { Portfolio, StrategyClassification, StrategyResult } from '@/types'
 
 export interface CoreResourcePanelProps {
   portfolio?: Portfolio

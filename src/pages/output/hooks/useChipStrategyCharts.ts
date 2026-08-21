@@ -14,7 +14,7 @@ import { API_COLLECT_CHIP } from '@/config/apiPaths'
 import { getLogger } from '@/lib/logger'
 import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 import { sendWriteEnvelope } from '@/core/databridgeQueries'
-import type { ResearchLog } from '@/data/types/types.signal'
+import type { ResearchLog } from '@/types'
 // 内联常量定义（原 @/constants/defaults 模块不存在）
 const DEFAULT_NUMERIC = 0
 const EMPTY_STRING = ''

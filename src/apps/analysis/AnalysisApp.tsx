@@ -29,7 +29,7 @@ import {
   useErrorUnion,
 } from '@/store/analysisStore'
 import type { AnalysisScope } from '@/types/modules/analysis.types'
-import type { ScreenSource } from '@/data/types/types.stock'
+import type { ScreenSource } from '@/types'
 
 function getScoreColorClass(score: number): string {
   if (score >= 4.0) return 'text-[hsl(var(--stock-up))]'

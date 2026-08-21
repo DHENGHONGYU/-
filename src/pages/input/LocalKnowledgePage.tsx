@@ -22,7 +22,7 @@ import {
 } from '@/components/molecules/Tabs'
 import { LocalDocCard } from '@/components/organisms/localDoc/LocalDocCard'
 import { useLocalKnowledgeStore, type LocalKnowledgeTab } from '@/store/localKnowledgeStore'
-import type { LocalDoc } from '@/data/types'
+import type { LocalDoc } from '@/types'
 import { getLogger } from '@/lib/logger'
 import { EmptyState } from '@/components/organisms/shared'
 import { PageContainer, PageHeader } from '@/components/templates'

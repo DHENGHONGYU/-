@@ -14,7 +14,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import InputDashboard from './InputDashboard'
 import { DensityProvider } from '@/components/cockpit/DensityContext'
-import type { Stock } from '@/data/types'
+import type { Stock } from '@/types'
 
 // ─── Mock 依赖 ──────────────────────────────────────────────
 

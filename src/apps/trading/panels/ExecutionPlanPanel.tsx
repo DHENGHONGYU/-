@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/molecules
 import { useExecutionStore } from '@/store/executionStore'
 import { initExecutionStoreSubscriptions } from '@/store/executionStoreSubscriptions'
 import { ExecutionPlanCard } from '../components/ExecutionPlanCard'
-import type { ExecutionPlan } from '@/data/types'
+import type { ExecutionPlan } from '@/types'
 import { RefreshCw } from 'lucide-react'
 
 type FilterTab = 'all' | 'active' | 'completed' | 'cancelled' | 'reviewed'

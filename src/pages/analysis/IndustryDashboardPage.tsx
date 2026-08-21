@@ -34,7 +34,7 @@ import type {
   IndustryRotationSignal,
   RotationSignalType,
   TrendDirection,
-} from '@/data/types/types.sector'
+} from '@/types'
 import { Loading, Empty } from '@/components/molecules/states'
 import { ErrorState } from '@/components/molecules'
 import { DensityToggle } from '@/components/cockpit/DensityToggle'

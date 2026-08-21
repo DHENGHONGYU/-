@@ -14,7 +14,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
-import type { ValuePitScore } from '@/data/types'
+import type { ValuePitScore } from '@/types'
 import type { RotationSignal } from '@/types/modules/strategy.types'
 import { useValuePitStore, type ValuePitSectorResult } from '@/store/valuePitStore'
 import { getLogger } from '@/lib/logger'

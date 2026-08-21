@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
-import type { Order } from '@/data/types'
+import type { Order } from '@/types'
 import type { TradeReviewReport } from '@/types/modules/tradeReviewAI.types'
 import { useToast } from '@/hooks/useToast'
 import { useDisciplineStore } from '@/store/disciplineStore'

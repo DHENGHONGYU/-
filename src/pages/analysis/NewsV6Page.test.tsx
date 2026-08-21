@@ -2,7 +2,7 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import NewsV6Page from './NewsV6Page'
-import type { NewsArticle } from '@/data/types'
+import type { NewsArticle } from '@/types'
 
 // ------------------------------------------------------------------
 // vi.hoisted mocks

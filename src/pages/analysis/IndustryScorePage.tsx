@@ -40,7 +40,7 @@ import {
 import type { LlmConfig } from '@/config/llmConfig'
 import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
-import type { IndustryScore } from '@/data/types'
+import type { IndustryScore } from '@/types'
 
 function getScoreColorClass(score: number): string {
   if (score >= 4.0) return 'text-[hsl(var(--stock-up))]'

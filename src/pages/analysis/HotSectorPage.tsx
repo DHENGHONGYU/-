@@ -13,7 +13,7 @@ import {
   BreadcrumbLink,
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
-import type { HotSectorScore } from '@/data/types'
+import type { HotSectorScore } from '@/types'
 import { useHotSectorStore } from '@/store/hotSectorStore'
 import { getLogger } from '@/lib/logger'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'

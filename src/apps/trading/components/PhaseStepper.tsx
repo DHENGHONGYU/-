@@ -1,6 +1,6 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
-import type { ExecutionPhase } from '@/data/types'
+import type { ExecutionPhase } from '@/types'
 import { Loader2 } from 'lucide-react'
 
 export interface PhaseStepperProps {

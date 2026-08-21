@@ -11,7 +11,7 @@ import {
   exportBatchSnapshotsToExcel,
 } from '@/domain/export/strategySnapshotExport'
 import { getLogger } from '@/lib/logger'
-import type { StrategySnapshot, StrategyGroupItem } from '@/data/types'
+import type { StrategySnapshot, StrategyGroupItem } from '@/types'
 
 const logger = getLogger()
 

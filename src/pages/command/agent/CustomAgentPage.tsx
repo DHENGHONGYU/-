@@ -19,7 +19,7 @@ import { Label } from '@/components/atoms/Label'
 
 import { nanoid } from 'nanoid'
 import { useCustomAgentStore } from '@/store/customAgentStore'
-import type { CustomAgent } from '@/data/types'
+import type { CustomAgent } from '@/types'
 import { getLogger } from '@/lib/logger'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 import { ConfirmDialog } from '@/components/molecules/ConfirmDialog'

@@ -16,7 +16,7 @@ import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { useScoreDocStore } from '@/store/scoreDocStore'
 import { useToast } from '@/hooks/useToast'
 import { usePageGuard } from '@/hooks/usePageGuard'
-import type { ScoreDocVersion } from '@/data/types'
+import type { ScoreDocVersion } from '@/types'
 import { PageContainer, PageHeader } from '@/components/templates'
 
 export default memo(function ResearchReportPage(): React.JSX.Element {

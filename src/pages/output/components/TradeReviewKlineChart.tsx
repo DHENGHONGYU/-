@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Car
 import { CandlestickChart } from '@/components/chart'
 import type { CandlestickChartData } from '@/components/chart'
 import { useTradeReviewKline } from '@/hooks/trading/useTradeReviewKline'
-import type { Order } from '@/data/types'
+import type { Order } from '@/types'
 import { cn } from '@/lib/utils'
 import {
   BUY_POINT_COLORS,

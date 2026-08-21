@@ -8,7 +8,7 @@ import { collectKline } from '@/services/fetcher/fetcherClient'
 import { ordersToMarkers } from '@/domain/trading/markers'
 import type { KlinePeriod, KlineAdjust } from '@/types/modules/tradeReviewAI.types'
 import type { CandlestickChartData } from '@/components/chart'
-import type { Order } from '@/data/types'
+import type { Order } from '@/types'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()

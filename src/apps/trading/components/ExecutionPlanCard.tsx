@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
 import { PhaseStepper } from './PhaseStepper'
-import type { ExecutionPlan, ExecutionPhase, RiskCheckItem } from '@/data/types'
+import type { ExecutionPlan, ExecutionPhase, RiskCheckItem } from '@/types'
 import { ChevronDown, ChevronUp, ShieldAlert, ShieldCheck, Info } from 'lucide-react'
 import { COLOR_SHADES } from '@/constants/theme.tokens'
 

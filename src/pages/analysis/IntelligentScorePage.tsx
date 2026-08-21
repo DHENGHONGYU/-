@@ -41,7 +41,7 @@ import {
 import { DEFAULT_LLM_BASE_URL, type LlmConfig } from '@/config/llmConfig'
 import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
-import type { IntelligentScore } from '@/data/types'
+import type { IntelligentScore } from '@/types'
 import { COLOR_SHADES } from '@/constants/theme.tokens'
 import { eventBus } from '@/lib/eventBus'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
