@@ -1,10 +1,14 @@
 ---
 name: "<skill-slug>"
 description: "<做什么，一句话说明功能范围> Invoke when <4 个具体触发条件的摘要，例如：XXX 改动时、YYY 脚本失败时、用户要求 ZZZ 时或架构审计报告违规时>。"
-version: "v1.0.0"
-last_updated: "<YYYY-MM-DD>"
+version: v1.0.1
+last_updated: 2026-08-22
+code_version: "2.0.0-rc.1"
 change_log:
-  - version: v1.0.0
+  - version: v1.0.1
+    changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.0) → R2 PATCH++(v1.0.1) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
+- version: v1.0.0
     changes: "初始版本，基于 S 级 Skill 5 段式骨架模板创建"
     date: "<YYYY-MM-DD>"
 mandatory: false  # 若为 P0 治理类，改为 true；否则保留 false
