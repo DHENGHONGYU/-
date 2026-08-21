@@ -365,16 +365,19 @@ export async function compareSnapshots(id1: string, id2: string): Promise<Snapsh
     if (!in1 && in2) {
       diff.added++;
       diff.details.push(`+ ${key}`);
-    } else if (in1 && !in2) {
+      continue;
+    }
+    if (in1 && !in2) {
       diff.removed++;
       diff.details.push(`- ${key}`);
-    } else if (in1 && in2) {
-      const v1 = JSON.stringify(map1.get(key));
-      const v2 = JSON.stringify(map2.get(key));
-      if (v1 !== v2) {
-        diff.modified++;
-        diff.details.push(`~ ${key}`);
-      }
+      continue;
+    }
+    if (!in1 || !in2) continue;
+    const v1 = JSON.stringify(map1.get(key));
+    const v2 = JSON.stringify(map2.get(key));
+    if (v1 !== v2) {
+      diff.modified++;
+      diff.details.push(`~ ${key}`);
     }
   }
 

@@ -305,6 +305,22 @@ function buildEmbeddingText(item: ProfileItem, cleanedContent: string): string {
 // RAG 检索器（深度版）
 // ============================================================
 
+/** 在总字符预算内对片段内容做截断（扁平化：早退守卫） */
+function sliceContentForBudget(
+  content: string,
+  totalChars: number,
+  maxTotalChars: number,
+): { content: string; shouldBreak: boolean } {
+  if (totalChars + content.length <= maxTotalChars) {
+    return { content, shouldBreak: false }
+  }
+  const remaining = maxTotalChars - totalChars
+  if (remaining <= 200) {
+    return { content, shouldBreak: true }
+  }
+  return { content: content.slice(0, remaining) + '...[截断]', shouldBreak: false }
+}
+
 export class RAGRetriever {
   /** 全局 HNSW 索引（跨行业兜底） */
   private globalIndex: HNSWIndex | null = null
@@ -385,8 +401,9 @@ export class RAGRetriever {
         // 归集到行业分组（使用 relatedLayers 或 domain 推断）
         const sector = this.inferSector(item)
         if (sector) {
-          if (!sectorGroups.has(sector)) sectorGroups.set(sector, [])
-          sectorGroups.get(sector)!.push(item)
+          const sectorGroup = sectorGroups.get(sector)
+          if (sectorGroup) sectorGroup.push(item)
+          else sectorGroups.set(sector, [item])
         }
       }
 
@@ -757,20 +774,11 @@ export class RAGRetriever {
         if (!item) continue
 
         const cleaned = cleanContent(item.content ?? item.summary, this.config.maxChunkChars)
-        let content = cleaned.content
+        const sliced = sliceContentForBudget(cleaned.content, totalChars, this.config.maxTotalChars)
+        if (sliced.shouldBreak) break
 
-        // 检查总字符数限制
-        if (totalChars + content.length > this.config.maxTotalChars) {
-          const remaining = this.config.maxTotalChars - totalChars
-          if (remaining > 200) {
-            content = content.slice(0, remaining) + '...[截断]'
-          } else {
-            break
-          }
-        }
-
-        enriched.push({ ...snippet, content })
-        totalChars += content.length
+        enriched.push({ ...snippet, content: sliced.content })
+        totalChars += sliced.content.length
       } catch {
         // 跳过获取失败的文档
       }

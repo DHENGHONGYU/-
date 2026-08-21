@@ -173,6 +173,50 @@ function volumeConfirmed(
   return prevAvg > 0 && recentAvg > prevAvg * 1.1
 }
 
+function resolveStrongTrend(
+  adx: number,
+  diPlus: number,
+  diMinus: number,
+  m5Positive: boolean,
+  m20Positive: boolean,
+  bullishArrangement: boolean,
+  bearishArrangement: boolean,
+  volumeConfirmation: boolean,
+): { signal: TrendTechnicalTimingOutput['signal']; confidence: number; rationale: string } | null {
+  if (diPlus > diMinus && m5Positive && m20Positive && bullishArrangement) {
+    return {
+      signal: volumeConfirmation ? 'strong_buy' : 'buy',
+      confidence: volumeConfirmation ? 0.85 : 0.7,
+      rationale: `ADX ${adx.toFixed(1)} 强势，DI+ 领先，多周期动量向上，均线多头排列${volumeConfirmation ? '，量能配合' : ''}`,
+    }
+  }
+  if (diMinus > diPlus && !m5Positive && !m20Positive && bearishArrangement) {
+    return {
+      signal: volumeConfirmation ? 'strong_sell' : 'sell',
+      confidence: volumeConfirmation ? 0.85 : 0.7,
+      rationale: `ADX ${adx.toFixed(1)} 强势，DI- 领先，多周期动量向下，均线空头排列${volumeConfirmation ? '，量能配合' : ''}`,
+    }
+  }
+  return null
+}
+
+function resolveFormingTrend(
+  adx: number,
+  diPlus: number,
+  diMinus: number,
+  m5Positive: boolean,
+  bullishArrangement: boolean,
+  bearishArrangement: boolean,
+): { signal: TrendTechnicalTimingOutput['signal']; confidence: number; rationale: string } | null {
+  if (diPlus > diMinus && m5Positive && bullishArrangement) {
+    return { signal: 'buy', confidence: 0.6, rationale: `ADX ${adx.toFixed(1)} 趋势形成中，偏多信号` }
+  }
+  if (diMinus > diPlus && !m5Positive && bearishArrangement) {
+    return { signal: 'sell', confidence: 0.6, rationale: `ADX ${adx.toFixed(1)} 趋势形成中，偏空信号` }
+  }
+  return null
+}
+
 function determineSignal(
   adx: number,
   diPlus: number,
@@ -190,36 +234,23 @@ function determineSignal(
   const bullishArrangement = ma.ma5 !== undefined && ma.ma20 !== undefined && ma.ma5 > ma.ma20
   const bearishArrangement = ma.ma5 !== undefined && ma.ma20 !== undefined && ma.ma5 < ma.ma20
 
-  let signal: TrendTechnicalTimingOutput['signal'] = 'hold'
-  let confidence = 0.5
-  let rationale = '趋势与动量信号中性，维持观望'
+  const signal: TrendTechnicalTimingOutput['signal'] = 'hold'
+  const confidence = 0.5
+  const rationale = '趋势与动量信号中性，维持观望'
 
   if (trendStrong) {
-    if (diPlus > diMinus && m5Positive && m20Positive && bullishArrangement) {
-      signal = volumeConfirmation ? 'strong_buy' : 'buy'
-      confidence = volumeConfirmation ? 0.85 : 0.7
-      rationale = `ADX ${adx.toFixed(1)} 强势，DI+ 领先，多周期动量向上，均线多头排列${volumeConfirmation ? '，量能配合' : ''}`
-    } else if (diMinus > diPlus && !m5Positive && !m20Positive && bearishArrangement) {
-      signal = volumeConfirmation ? 'strong_sell' : 'sell'
-      confidence = volumeConfirmation ? 0.85 : 0.7
-      rationale = `ADX ${adx.toFixed(1)} 强势，DI- 领先，多周期动量向下，均线空头排列${volumeConfirmation ? '，量能配合' : ''}`
-    }
-  } else if (trendWeak) {
-    rationale = `ADX ${adx.toFixed(1)} 偏弱，趋势不明，建议观望`
-    confidence = 0.5
-  } else {
-    // 20 <= ADX <= 25，趋势形成中
-    if (diPlus > diMinus && m5Positive && bullishArrangement) {
-      signal = 'buy'
-      confidence = 0.6
-      rationale = `ADX ${adx.toFixed(1)} 趋势形成中，偏多信号`
-    } else if (diMinus > diPlus && !m5Positive && bearishArrangement) {
-      signal = 'sell'
-      confidence = 0.6
-      rationale = `ADX ${adx.toFixed(1)} 趋势形成中，偏空信号`
-    }
+    const strong = resolveStrongTrend(
+      adx, diPlus, diMinus, m5Positive, m20Positive, bullishArrangement, bearishArrangement, volumeConfirmation,
+    )
+    if (strong) return strong
+    return { signal, confidence: 0.5, rationale: '趋势与动量信号中性，维持观望' }
   }
-
+  if (trendWeak) {
+    return { signal, confidence: 0.5, rationale: `ADX ${adx.toFixed(1)} 偏弱，趋势不明，建议观望` }
+  }
+  // 20 <= ADX <= 25，趋势形成中
+  const forming = resolveFormingTrend(adx, diPlus, diMinus, m5Positive, bullishArrangement, bearishArrangement)
+  if (forming) return forming
   return { signal, confidence, rationale }
 }
 

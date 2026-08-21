@@ -398,6 +398,20 @@ export class MockStockAnalysisScoringStrategy implements StockAnalysisScoringStr
  *
  * @convergence Phase D: 替代 Mock 占位实现，当数据源不可用时优雅降级（非 throw）。
  */
+
+/** 渲染标的的基础信息摘要（扁平化：将嵌套 try/catch 收敛到独立辅助函数；LLM 不可用时降级用） */
+async function buildFundamentalInfo(target: string): Promise<string> {
+  try {
+    const stock = await stockStore.get(target)
+    if (stock) {
+      return `\n\n### 基本信息\n- 代码：${stock.symbol}\n- 名称：${stock.name ?? '未知'}\n- 状态：${stock.researchStatus ?? '候选'}`
+    }
+  } catch {
+    // 静默
+  }
+  return ''
+}
+
 export class RealStockAnalysisScoringStrategy implements StockAnalysisScoringStrategy {
   /**
    * 获取投资画像 / KAI 评分
@@ -646,15 +660,7 @@ export class RealStockAnalysisScoringStrategy implements StockAnalysisScoringStr
       logger.warn('[RealStockAnalysisScoringStrategy] LLM 调用失败，返回基础分析', { error: String(err) })
 
       // LLM 不可用时，返回基础数据驱动的分析
-      let fundamentalInfo = ''
-      try {
-        const stock = await stockStore.get(target)
-        if (stock) {
-          fundamentalInfo = `\n\n### 基本信息\n- 代码：${stock.symbol}\n- 名称：${stock.name ?? '未知'}\n- 状态：${stock.researchStatus ?? '候选'}`
-        }
-      } catch {
-        // 静默
-      }
+      const fundamentalInfo = await buildFundamentalInfo(target)
 
       return {
         id: `assistant_${nanoid(8)}`,

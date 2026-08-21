@@ -841,6 +841,65 @@ export const TVR_LEVELS: TVRLevel[] = [
  * - ES 顶底信号：地量地价/天量天价
  * - TVR 综合评分：前八级加权 + chipFlow 加成
  */
+
+/** TVR-04 CN 资金性质推断（早退守卫扁平化） */
+function resolveCapitalNature(
+  levels: Record<TVRLevel, number | null>,
+  signals: string[],
+  turnover: number,
+  volumeRatio: number,
+  isPriceUp: boolean,
+  isPriceDown: boolean,
+): string {
+  const isHighTurnover = turnover >= V6_CALCULATOR_THRESHOLDS.L8_MFC_TURNOVER_MILD
+  const isHighVR = volumeRatio >= V6_CALCULATOR_THRESHOLDS.L8_MFC_VR_MILD
+  const isLowVR = volumeRatio < V6_CALCULATOR_THRESHOLDS.L8_MFC_VR_NORMAL
+  if (isHighTurnover && isHighVR && isPriceUp) {
+    levels.CN = 5
+    return '主力进场'
+  }
+  if (isHighTurnover && isHighVR && isPriceDown) {
+    levels.CN = 1
+    signals.push('主力出货')
+    return '主力出货'
+  }
+  if (!isHighTurnover && isHighVR) {
+    levels.CN = 4
+    return '主力吸筹'
+  }
+  if (isHighTurnover && isLowVR) {
+    levels.CN = 2
+    signals.push('诱多/对倒')
+    return '诱多/对倒'
+  }
+  levels.CN = 3
+  return '中性'
+}
+
+/** TVR-06 DV 量价背离识别（早退守卫扁平化） */
+function resolveDivergence(
+  levels: Record<TVRLevel, number | null>,
+  signals: string[],
+  isPriceUp: boolean,
+  isPriceDown: boolean,
+  volumeRatio: number,
+): void {
+  const isVRUp = volumeRatio >= V6_CALCULATOR_THRESHOLDS.L8_MFC_VR_NORMAL
+  const isVRDown = volumeRatio < V6_CALCULATOR_THRESHOLDS.L8_MFC_VR_LOW
+  if (isPriceUp && isVRDown) {
+    levels.DV = 1.5
+    signals.push('价涨量缩(背离)')
+  } else if (isPriceDown && isVRUp) {
+    levels.DV = 1.5
+    signals.push('价跌量增(背离)')
+  } else if (isPriceUp && isVRUp) {
+    levels.DV = 4.5
+    signals.push('量价齐升')
+  } else {
+    levels.DV = 3
+  }
+}
+
 export function evaluateTurnoverVolumeSynergy(input: LayerInput): TurnoverVolumeSynergyResult {
   const { quotes: q } = input
   const levels: Record<TVRLevel, number | null> = {
@@ -912,26 +971,7 @@ export function evaluateTurnoverVolumeSynergy(input: LayerInput): TurnoverVolume
   // ---- TVR-04 CN 资金性质推断 ----
   let capitalNature = '中性'
   if (turnover !== undefined && volumeRatio !== undefined) {
-    const isHighTurnover = turnover >= V6_CALCULATOR_THRESHOLDS.L8_MFC_TURNOVER_MILD
-    const isHighVR = volumeRatio >= V6_CALCULATOR_THRESHOLDS.L8_MFC_VR_MILD
-    const isLowVR = volumeRatio < V6_CALCULATOR_THRESHOLDS.L8_MFC_VR_NORMAL
-    if (isHighTurnover && isHighVR && isPriceUp) {
-      levels.CN = 5
-      capitalNature = '主力进场'
-    } else if (isHighTurnover && isHighVR && isPriceDown) {
-      levels.CN = 1
-      capitalNature = '主力出货'
-      signals.push('主力出货')
-    } else if (!isHighTurnover && isHighVR) {
-      levels.CN = 4
-      capitalNature = '主力吸筹'
-    } else if (isHighTurnover && isLowVR) {
-      levels.CN = 2
-      capitalNature = '诱多/对倒'
-      signals.push('诱多/对倒')
-    } else {
-      levels.CN = 3
-    }
+    capitalNature = resolveCapitalNature(levels, signals, turnover, volumeRatio, isPriceUp, isPriceDown)
   }
 
   // ---- TVR-05 AS 异动信号检测 ----
@@ -950,20 +990,7 @@ export function evaluateTurnoverVolumeSynergy(input: LayerInput): TurnoverVolume
 
   // ---- TVR-06 DV 量价背离识别 ----
   if (priceChange !== undefined && volumeRatio !== undefined) {
-    const isVRUp = volumeRatio >= V6_CALCULATOR_THRESHOLDS.L8_MFC_VR_NORMAL
-    const isVRDown = volumeRatio < V6_CALCULATOR_THRESHOLDS.L8_MFC_VR_LOW
-    if (isPriceUp && isVRDown) {
-      levels.DV = 1.5
-      signals.push('价涨量缩(背离)')
-    } else if (isPriceDown && isVRUp) {
-      levels.DV = 1.5
-      signals.push('价跌量增(背离)')
-    } else if (isPriceUp && isVRUp) {
-      levels.DV = 4.5
-      signals.push('量价齐升')
-    } else {
-      levels.DV = 3
-    }
+    resolveDivergence(levels, signals, isPriceUp, isPriceDown, volumeRatio)
   }
 
   // ---- TVR-07 BC 突破确认度 ----

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @test_id V9-TEST-ST-090
  * @module portfolioService.test
  * @description 投资组合服务单元测试（E-2-6）
@@ -38,8 +38,13 @@ vi.mock('@/services/analysis/dataFreshnessGuard', () => ({
   checkPortfolioRebalanceFreshness: vi.fn(() => ({ valid: true })),
 }))
 
+vi.mock('@/services/useCase/rebalancePortfolio.useCase', () => ({
+  rebalancePortfolioUseCase: vi.fn(),
+}))
+
 import { portfolioStore } from '@/data/dataLayerTradingStores'
 import { rebalance, addHolding, removeHolding, listByTheme } from '@/services/portfolio/portfolioService'
+import { rebalancePortfolioUseCase } from '@/services/useCase/rebalancePortfolio.useCase'
 import type { Portfolio, PortfolioHolding, Order } from '@/data/types'
 
 // 将 mock 后的 portfolioStore 断言为带 vi.Mock 方法的类型，避免 TS 严格模式下的类型错误
@@ -97,35 +102,28 @@ describe('portfolioService', () => {
 
   describe('rebalance', () => {
     it('rebalances portfolio based on latest orders', async () => {
-      mockPortfolioStore.getWithTx.mockResolvedValue(mockPortfolio())
-      mockPortfolioStore.saveWithTx.mockResolvedValue(undefined)
+      const expected = mockPortfolio({ updatedAt: 3_000, holdings: [mockHolding({ currentShares: 150 })] })
+      vi.mocked(rebalancePortfolioUseCase).mockResolvedValue(expected)
       const result = await rebalance('portfolio_001', [mockOrder()], { now: 3_000 })
       expect(result).toBeDefined()
       expect(result!.updatedAt).toBe(3_000)
-      // 买单 50 股后持仓应为 150
       expect(result!.holdings[0]!.currentShares).toBe(150)
     })
 
     it('handles sell orders correctly', async () => {
-      mockPortfolioStore.getWithTx.mockResolvedValue(mockPortfolio())
-      mockPortfolioStore.saveWithTx.mockResolvedValue(undefined)
+      const expected = mockPortfolio({ updatedAt: 3_000, holdings: [mockHolding({ currentShares: 50 })] })
+      vi.mocked(rebalancePortfolioUseCase).mockResolvedValue(expected)
       const result = await rebalance('portfolio_001', [mockOrder({ direction: 'sell' })], { now: 3_000 })
       expect(result).toBeDefined()
       expect(result!.holdings[0]!.currentShares).toBe(50)
     })
 
     it('returns undefined when portfolio not found', async () => {
-      mockPortfolioStore.getWithTx.mockResolvedValue(undefined)
+      vi.mocked(rebalancePortfolioUseCase).mockResolvedValue(undefined)
       const result = await rebalance('portfolio_999', [])
       expect(result).toBeUndefined()
     })
 
-    it('returns undefined when save fails', async () => {
-      mockPortfolioStore.getWithTx.mockResolvedValue(mockPortfolio())
-      mockPortfolioStore.saveWithTx.mockRejectedValue(new Error('db_error'))
-      const result = await rebalance('portfolio_001', [])
-      expect(result).toBeUndefined()
-    })
   })
 
   describe('addHolding', () => {

@@ -114,25 +114,25 @@ export function analyzeCorrelations(
       pearsonMatrix[layerA][layerB] = Math.round(r * 1000) / 1000
       spearmanMatrix[layerA][layerB] = Math.round(rho * 1000) / 1000
 
-      if (layerA !== layerB) {
-        allAbsCorrelations.push(Math.abs(r))
-        const cell: CorrelationCell = {
-          layerA: layerA,
-          layerB: layerB,
-          pearson: r,
-          spearman: rho,
-          interpretation: interpretCorrelation(r),
-        }
+      if (layerA === layerB) continue
 
-        if (Math.abs(r) > 0.7) {
-          significantPairs.push(cell)
-        }
-        if (Math.abs(r) > 0.8) {
-          redundantPairs.push(cell)
-        }
-        if (Math.abs(r) < 0.3) {
-          independentPairs.push(cell)
-        }
+      allAbsCorrelations.push(Math.abs(r))
+      const cell: CorrelationCell = {
+        layerA: layerA,
+        layerB: layerB,
+        pearson: r,
+        spearman: rho,
+        interpretation: interpretCorrelation(r),
+      }
+
+      if (Math.abs(r) > 0.7) {
+        significantPairs.push(cell)
+      }
+      if (Math.abs(r) > 0.8) {
+        redundantPairs.push(cell)
+      }
+      if (Math.abs(r) < 0.3) {
+        independentPairs.push(cell)
       }
     }
   }

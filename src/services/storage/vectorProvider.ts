@@ -48,6 +48,37 @@ const MIN_SIMILARITY = 0.3
 /** HNSW 索引持久化专用 Key（存入 localDocs store） */
 const HNSW_INDEX_DOC_ID = '__hnsw_index_v1__'
 
+/** HNSW 结果按阈值过滤为向量搜索结果（扁平化） */
+function collectKnnResults(
+  ids: string[],
+  distances: number[],
+  threshold: number,
+): VectorSearchResult[] {
+  const results: VectorSearchResult[] = []
+  for (let i = 0; i < ids.length; i++) {
+    const score = 1 - distances[i]! // cosine distance -> similarity
+    if (score < threshold) continue
+    results.push({ id: ids[i]!, score, metadata: {} })
+  }
+  return results
+}
+
+/** 全量扫描候选按阈值过滤为向量搜索结果（扁平化） */
+function collectScanResults(
+  allDocs: LocalDoc[],
+  vector: number[],
+  threshold: number,
+): VectorSearchResult[] {
+  const results: VectorSearchResult[] = []
+  for (const doc of allDocs) {
+    if (!doc.embedding || doc.embedding.length === 0) continue
+    const score = cosineSimilarity(vector, doc.embedding)
+    if (score < threshold) continue
+    results.push({ id: doc.id, score, metadata: { name: doc.name, symbol: doc.symbol, category: doc.category } })
+  }
+  return results
+}
+
 /**
  * VectorProvider — 基于 IndexedDB + HNSW 内存索引的向量存储
  *
@@ -263,16 +294,12 @@ export class VectorProviderImpl implements StorageProvider {
       await this.ensureIndexLoaded()
       const threshold = query.minScore ?? MIN_SIMILARITY
 
-      const results: VectorSearchResult[] = []
+      let results: VectorSearchResult[] = []
 
       if (this.hnsw && this.hnsw.getCurrentCount() > 0) {
         // HNSW 路径：O(log n) 近似最近邻
         const knn = this.hnsw.searchKnn(query.vector, query.topK * 2)
-        for (let i = 0; i < knn.ids.length; i++) {
-          const score = 1 - knn.distances[i]! // cosine distance -> similarity
-          if (score < threshold) continue
-          results.push({ id: knn.ids[i]!, score, metadata: {} })
-        }
+        results = collectKnnResults(knn.ids, knn.distances, threshold)
         logger.info('[VectorProvider] HNSW 搜索完成', {
           queryDim: query.vector.length,
           candidates: knn.ids.length,
@@ -281,16 +308,7 @@ export class VectorProviderImpl implements StorageProvider {
       } else {
         // 全量扫描回退
         const allDocs = await queryList<LocalDoc>(STORE_NAME.localDocs)
-        for (const doc of allDocs) {
-          if (!doc.embedding || doc.embedding.length === 0) continue
-          const score = cosineSimilarity(query.vector, doc.embedding)
-          if (score < threshold) continue
-          results.push({
-            id: doc.id,
-            score,
-            metadata: { name: doc.name, symbol: doc.symbol, category: doc.category },
-          })
-        }
+        results = collectScanResults(allDocs, query.vector, threshold)
         results.sort((a, b) => b.score - a.score)
         logger.info('[VectorProvider] 全量扫描回退完成', {
           queryDim: query.vector.length,

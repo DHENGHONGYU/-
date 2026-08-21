@@ -14,7 +14,7 @@
 */
 
 import { getLogger } from '@/lib/logger'
-import type { LayerInput, LayerScore, LayerCalculator } from '../../types'
+import type { LayerInput, LayerScore, LayerCalculator, ConsensusEstimateRecord } from '../../types'
 import { LAYER_LABELS } from '../../types'
 import { V6_CALCULATOR_THRESHOLDS } from '@/config/thresholds'
 import { matchIndustryBenchmark, clamp } from './utils'
@@ -152,6 +152,62 @@ function scoreDdmDividend(input: LayerInput): { adjust: number; evidence: string
  * P0-1: 一致预期差因子评分
  * 基于维度 16 一致预期数据，评估当前估值与市场预期的偏差
  */
+
+/** 一致预期 EPS 增速评分：返回调整分，并向 evidence 追加依据 */
+function applyEpsGrowthScore(
+  estimates: ConsensusEstimateRecord[],
+  evidence: string[],
+): number {
+  if (estimates.length < 2) return 0
+  const thisYear = estimates[0]!
+  const nextYear = estimates[1]!
+  if (thisYear.epsEstimate <= 0) return 0
+  const epsGrowth = (nextYear.epsEstimate - thisYear.epsEstimate) / thisYear.epsEstimate * 100
+  if (epsGrowth >= CONSENSUS_THRESHOLDS.HIGH_EPS_GROWTH) {
+    evidence.push(`一致预期 EPS 增速: ${epsGrowth.toFixed(1)}% ≥ ${CONSENSUS_THRESHOLDS.HIGH_EPS_GROWTH}% → +0.5`)
+    return 0.5
+  }
+  if (epsGrowth < 0) {
+    evidence.push(`一致预期 EPS 负增长: ${epsGrowth.toFixed(1)}% → -0.5`)
+    return -0.5
+  }
+  return 0
+}
+
+/** EV/EBITDA 分级评分：返回调整分，并向 evidence 追加依据 */
+function scoreEvEbitda(evEbitda: number, evidence: string[]): number {
+  if (evEbitda < MULTI_FACTOR_VALUATION.EV_EBITDA_LOW) {
+    evidence.push(`EV/EBITDA=${evEbitda.toFixed(1)} < ${MULTI_FACTOR_VALUATION.EV_EBITDA_LOW} → 低估 +0.5`)
+    return 0.5
+  }
+  if (evEbitda < MULTI_FACTOR_VALUATION.EV_EBITDA_MID) {
+    evidence.push(`EV/EBITDA=${evEbitda.toFixed(1)} < ${MULTI_FACTOR_VALUATION.EV_EBITDA_MID} → 合理 +0.3`)
+    return 0.3
+  }
+  if (evEbitda > MULTI_FACTOR_VALUATION.EV_EBITDA_HIGH) {
+    evidence.push(`EV/EBITDA=${evEbitda.toFixed(1)} > ${MULTI_FACTOR_VALUATION.EV_EBITDA_HIGH} → 高估 -0.5`)
+    return -0.5
+  }
+  return 0
+}
+
+/** PS 分级评分：返回调整分，并向 evidence 追加依据 */
+function scorePs(ps: number, evidence: string[]): number {
+  if (ps < MULTI_FACTOR_VALUATION.PS_LOW) {
+    evidence.push(`PS=${ps.toFixed(1)} < ${MULTI_FACTOR_VALUATION.PS_LOW} → 低估 +0.5`)
+    return 0.5
+  }
+  if (ps < MULTI_FACTOR_VALUATION.PS_MID) {
+    evidence.push(`PS=${ps.toFixed(1)} < ${MULTI_FACTOR_VALUATION.PS_MID} → 合理 +0.3`)
+    return 0.3
+  }
+  if (ps > MULTI_FACTOR_VALUATION.PS_HIGH) {
+    evidence.push(`PS=${ps.toFixed(1)} > ${MULTI_FACTOR_VALUATION.PS_HIGH} → 偏高 -0.3`)
+    return -0.3
+  }
+  return 0
+}
+
 function scoreConsensusGap(input: LayerInput): { adjust: number; evidence: string[] } {
   const { consensus, stock } = input
   const evidence: string[] = []
@@ -167,20 +223,7 @@ function scoreConsensusGap(input: LayerInput): { adjust: number; evidence: strin
     consensus.estimates[0]
 
   // 1. 一致预期 EPS 增速评分
-  if (consensus.estimates.length >= 2) {
-    const thisYear = consensus.estimates[0]!
-    const nextYear = consensus.estimates[1]!
-    if (thisYear.epsEstimate > 0) {
-      const epsGrowth = (nextYear.epsEstimate - thisYear.epsEstimate) / thisYear.epsEstimate * 100
-      if (epsGrowth >= CONSENSUS_THRESHOLDS.HIGH_EPS_GROWTH) {
-        adjust += 0.5
-        evidence.push(`一致预期 EPS 增速: ${epsGrowth.toFixed(1)}% ≥ ${CONSENSUS_THRESHOLDS.HIGH_EPS_GROWTH}% → +0.5`)
-      } else if (epsGrowth < 0) {
-        adjust -= 0.5
-        evidence.push(`一致预期 EPS 负增长: ${epsGrowth.toFixed(1)}% → -0.5`)
-      }
-    }
-  }
+  adjust += applyEpsGrowthScore(consensus.estimates, evidence)
 
   // 2. 当前 PE 与一致预期隐含 PE 对比
   if (stock.pe !== undefined && stock.pe > 0 && currentEstimate && currentEstimate.epsEstimate > 0) {
@@ -251,32 +294,14 @@ function scoreMultiFactorValuation(input: LayerInput): { adjust: number; evidenc
     const ebitda = financials.netProfit * 1.5
     if (ebitda > 0) {
       const evEbitda = ev / ebitda
-      if (evEbitda < MULTI_FACTOR_VALUATION.EV_EBITDA_LOW) {
-        adjust += 0.5
-        evidence.push(`EV/EBITDA=${evEbitda.toFixed(1)} < ${MULTI_FACTOR_VALUATION.EV_EBITDA_LOW} → 低估 +0.5`)
-      } else if (evEbitda < MULTI_FACTOR_VALUATION.EV_EBITDA_MID) {
-        adjust += 0.3
-        evidence.push(`EV/EBITDA=${evEbitda.toFixed(1)} < ${MULTI_FACTOR_VALUATION.EV_EBITDA_MID} → 合理 +0.3`)
-      } else if (evEbitda > MULTI_FACTOR_VALUATION.EV_EBITDA_HIGH) {
-        adjust -= 0.5
-        evidence.push(`EV/EBITDA=${evEbitda.toFixed(1)} > ${MULTI_FACTOR_VALUATION.EV_EBITDA_HIGH} → 高估 -0.5`)
-      }
+      adjust += scoreEvEbitda(evEbitda, evidence)
     }
   }
 
   // 2. PS 评分（市销率，适用于高成长低利润/亏损公司）
   if (stock.marketCap && financials.revenue && financials.revenue > 0) {
     const ps = stock.marketCap / financials.revenue
-    if (ps < MULTI_FACTOR_VALUATION.PS_LOW) {
-      adjust += 0.5
-      evidence.push(`PS=${ps.toFixed(1)} < ${MULTI_FACTOR_VALUATION.PS_LOW} → 低估 +0.5`)
-    } else if (ps < MULTI_FACTOR_VALUATION.PS_MID) {
-      adjust += 0.3
-      evidence.push(`PS=${ps.toFixed(1)} < ${MULTI_FACTOR_VALUATION.PS_MID} → 合理 +0.3`)
-    } else if (ps > MULTI_FACTOR_VALUATION.PS_HIGH) {
-      adjust -= 0.3
-      evidence.push(`PS=${ps.toFixed(1)} > ${MULTI_FACTOR_VALUATION.PS_HIGH} → 偏高 -0.3`)
-    }
+    adjust += scorePs(ps, evidence)
   }
 
   adjust = Math.max(-MULTI_FACTOR_VALUATION.MAX_ADJUST, Math.min(MULTI_FACTOR_VALUATION.MAX_ADJUST, adjust))

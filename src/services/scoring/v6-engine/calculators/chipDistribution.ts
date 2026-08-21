@@ -82,6 +82,22 @@ export interface ChipDistribution {
  * @param volumes 成交量序列
  * @param options 配置选项（含 turnoverRates）
  */
+
+/** 计算当前价格下的获利盘比例（扁平化：将获利盘累积逻辑抽取为独立辅助函数）
+ * 命名区别于文末导出 API calcProfitRatio(distribution, currentPrice)，避免 TS2393 冲突 */
+function calcProfitRatioFromBuckets(buckets: PriceBucket[], currentPrice: number, totalChips: number): number {
+  let profitChips = 0
+  for (const b of buckets) {
+    if (b.priceMax <= currentPrice) {
+      profitChips += b.chipAmount
+    } else if (b.priceMin < currentPrice) {
+      const ratio = (currentPrice - b.priceMin) / (b.priceMax - b.priceMin)
+      profitChips += b.chipAmount * ratio
+    }
+  }
+  return profitChips / totalChips
+}
+
 export function calcChipDistribution(
   closes: number[],
   volumes: number[],
@@ -224,16 +240,7 @@ export function calcChipDistribution(
 
   let profitRatio: number | null = null
   if (currentPrice !== undefined) {
-    let profitChips = 0
-    for (const b of buckets) {
-      if (b.priceMax <= currentPrice) {
-        profitChips += b.chipAmount
-      } else if (b.priceMin < currentPrice) {
-        const ratio = (currentPrice - b.priceMin) / (b.priceMax - b.priceMin)
-        profitChips += b.chipAmount * ratio
-      }
-    }
-    profitRatio = profitChips / totalChips
+    profitRatio = calcProfitRatioFromBuckets(buckets, currentPrice, totalChips)
   }
 
   return {

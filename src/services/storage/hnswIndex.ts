@@ -413,6 +413,15 @@ export class HNSWIndex {
 
   // ─── 内部方法 ──────────────────────────────────────────────
 
+  /** 将结果堆裁剪到 ef 上限（扁平化：将堆重建逻辑收敛为辅助方法） */
+  private trimResults(results: MinHeap, ef: number): void {
+    if (results.size <= ef) return
+    const arr: HeapItem[] = []
+    while (results.size > 0) arr.push(results.pop()!)
+    arr.pop()
+    for (const item of arr) results.push(item)
+  }
+
   private searchLayer(query: number[], entryId: string, ef: number, layer: number): Array<{ id: string; distance: number }> {
     const visited = new Set<string>()
     const candidates = new MinHeap()
@@ -444,10 +453,7 @@ export class HNSWIndex {
           candidates.push({ id: neighborId, distance: dist })
           results.push({ id: neighborId, distance: dist })
           if (results.size > ef) {
-            const arr: HeapItem[] = []
-            while (results.size > 0) arr.push(results.pop()!)
-            arr.pop()
-            for (const item of arr) results.push(item)
+            this.trimResults(results, ef)
           }
         }
       }

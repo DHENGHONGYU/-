@@ -115,11 +115,10 @@ function balancedSlice(text: string, open: string, close: string): string | null
       continue
     }
     if (ch === '"' || ch === "'") { inStr = true; strChar = ch; continue }
-    if (ch === open) depth++
-    else if (ch === close) {
-      depth--
-      if (depth === 0) return text.slice(start, i + 1)
-    }
+    if (ch === open) { depth++; continue }
+    if (ch !== close) continue
+    depth--
+    if (depth === 0) return text.slice(start, i + 1)
   }
   return null
 }

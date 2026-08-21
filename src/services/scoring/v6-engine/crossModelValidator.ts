@@ -200,6 +200,57 @@ function extractCitations(rawContent: string): string[] {
 // 主模块
 // ============================================================
 
+/** 综合一致性 → 严重程度解析（扁平化：早退守卫替代多段 else-if 嵌套） */
+function resolveAgreementSeverity(
+  passedCount: number,
+  scoreConsistent: boolean,
+  summaryConsistent: boolean,
+  scoreDelta: number,
+  scoreDeltaThreshold: number,
+): { severity: CrossModelAgreement['severity']; recommendation: string } {
+  if (passedCount === 3) {
+    return { severity: 'consistent', recommendation: '双模型输出高度一致，LLM 增强结果可信' }
+  }
+  if (passedCount === 2) {
+    if (!scoreConsistent) {
+      return { severity: 'minor', recommendation: `评分偏差 ${scoreDelta.toFixed(2)} > ${scoreDeltaThreshold}，采用主模型评分但降置信度` }
+    }
+    if (!summaryConsistent) {
+      return { severity: 'minor', recommendation: '双模型摘要不一致，但评分接近，采用主模型结果' }
+    }
+    return { severity: 'minor', recommendation: '引证重叠度低，但评分和摘要一致，采用主模型结果' }
+  }
+  if (passedCount === 1) {
+    if (scoreConsistent) {
+      return { severity: 'major', recommendation: '评分一致但摘要和引证严重分歧，建议人工复核' }
+    }
+    return { severity: 'major', recommendation: `双模型分歧显著（评分偏差 ${scoreDelta.toFixed(2)}），建议回退到规则引擎评分` }
+  }
+  return { severity: 'critical', recommendation: '双模型输出完全不一致，强制回退到规则引擎评分，并标记高风险' }
+}
+
+/** 最终采用策略（扁平化：早退守卫替代多层嵌套 if/else-if） */
+function resolveFinalStrategy(
+  primary: ModelScore,
+  secondary: ModelScore,
+  severity: CrossModelAgreement['severity'],
+  baseScore: number,
+): { finalScore: number | null; useLlmResult: boolean } {
+  if (!primary.success && !secondary.success) {
+    return { finalScore: baseScore, useLlmResult: false }
+  }
+  if (severity === 'critical') {
+    return { finalScore: baseScore, useLlmResult: false }
+  }
+  if (severity === 'major') {
+    if (primary.score !== null && secondary.score !== null) {
+      return { finalScore: (primary.score + secondary.score) / 2, useLlmResult: true }
+    }
+    return { finalScore: baseScore, useLlmResult: false }
+  }
+  return { finalScore: primary.score ?? secondary.score ?? baseScore, useLlmResult: primary.score !== null || secondary.score !== null }
+}
+
 /**
  * 多模型交叉验证器
  *
@@ -324,35 +375,13 @@ export class CrossModelValidator {
     const overallConsistent = passedCount >= 2
 
     // 5. 严重程度
-    let severity: CrossModelAgreement['severity']
-    let recommendation: string
-
-    if (passedCount === 3) {
-      severity = 'consistent'
-      recommendation = '双模型输出高度一致，LLM 增强结果可信'
-    } else if (passedCount === 2) {
-      if (!scoreConsistent) {
-        severity = 'minor'
-        recommendation = `评分偏差 ${scoreDelta.toFixed(2)} > ${this.config.scoreDeltaThreshold}，采用主模型评分但降置信度`
-      } else if (!summaryConsistent) {
-        severity = 'minor'
-        recommendation = '双模型摘要不一致，但评分接近，采用主模型结果'
-      } else {
-        severity = 'minor'
-        recommendation = '引证重叠度低，但评分和摘要一致，采用主模型结果'
-      }
-    } else if (passedCount === 1) {
-      if (scoreConsistent) {
-        severity = 'major'
-        recommendation = '评分一致但摘要和引证严重分歧，建议人工复核'
-      } else {
-        severity = 'major'
-        recommendation = `双模型分歧显著（评分偏差 ${scoreDelta.toFixed(2)}），建议回退到规则引擎评分`
-      }
-    } else {
-      severity = 'critical'
-      recommendation = '双模型输出完全不一致，强制回退到规则引擎评分，并标记高风险'
-    }
+    const { severity, recommendation } = resolveAgreementSeverity(
+      passedCount,
+      scoreConsistent,
+      summaryConsistent,
+      scoreDelta,
+      this.config.scoreDeltaThreshold,
+    )
 
     return {
       scoreDelta: scoreDelta === Infinity ? -1 : scoreDelta,
@@ -404,31 +433,7 @@ export class CrossModelValidator {
     const agreement = this.assessAgreement(primary, secondary)
 
     // 判定最终采用策略
-    let finalScore: number | null
-    let useLlmResult: boolean
-
-    if (!primary.success && !secondary.success) {
-      // 双模型都失败 → 回退
-      finalScore = baseScore
-      useLlmResult = false
-    } else if (agreement.severity === 'critical') {
-      // 严重分歧 → 回退
-      finalScore = baseScore
-      useLlmResult = false
-    } else if (agreement.severity === 'major') {
-      // 显著分歧 → 取两者平均（如果评分都存在）或回退
-      if (primary.score !== null && secondary.score !== null) {
-        finalScore = (primary.score + secondary.score) / 2
-        useLlmResult = true
-      } else {
-        finalScore = baseScore
-        useLlmResult = false
-      }
-    } else {
-      // 一致或轻微分歧 → 采用主模型
-      finalScore = primary.score ?? secondary.score ?? baseScore
-      useLlmResult = primary.score !== null || secondary.score !== null
-    }
+    const { finalScore, useLlmResult } = resolveFinalStrategy(primary, secondary, agreement.severity, baseScore)
 
     logger.info('[CrossModelValidator] 交叉验证完成', {
       severity: agreement.severity,

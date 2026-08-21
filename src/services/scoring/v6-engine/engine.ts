@@ -58,6 +58,18 @@ function sanitizeScore(score: unknown, layerId: string, context: string): number
   return score
 }
 
+/** 聚合时解析某层被跳过的具体原因（NaN/Infinity/缺失等） */
+function resolveLayerSkipReason(layer: LayerScore | null | undefined): string {
+  if (layer == null) return 'layer 缺失 (undefined)'
+  if (typeof layer.score !== 'number') {
+    return `score 类型非法 (${typeof layer.score} = ${String(layer.score)})`
+  }
+  if (Number.isNaN(layer.score)) return 'score 为 NaN'
+  if (layer.score === Infinity) return 'score 为 +Infinity'
+  if (layer.score === -Infinity) return 'score 为 -Infinity'
+  return `score 非有限值 (${layer.score})`
+}
+
 // ============================================================
 // V6ScoreEngine
 // ============================================================
@@ -338,20 +350,7 @@ export class V6ScoreEngine {
 
       // NaN/缺失防护：layer 缺失或 score 非有限值（NaN/±Infinity/非数字）时跳过该层，并记录具体原因
       if (layer == null || !Number.isFinite(layer.score)) {
-        let reason: string
-        if (layer == null) {
-          reason = 'layer 缺失 (undefined)'
-        } else if (typeof layer.score !== 'number') {
-          reason = `score 类型非法 (${typeof layer.score} = ${String(layer.score)})`
-        } else if (Number.isNaN(layer.score)) {
-          reason = 'score 为 NaN'
-        } else if (layer.score === Infinity) {
-          reason = 'score 为 +Infinity'
-        } else if (layer.score === -Infinity) {
-          reason = 'score 为 -Infinity'
-        } else {
-          reason = `score 非有限值 (${layer.score})`
-        }
+        const reason = resolveLayerSkipReason(layer)
         logger.warn(`[V6ScoreEngine.aggregate] 层跳过 [${layerId}/${layerName}] — ${reason}`, {
           layerId,
           layerName,

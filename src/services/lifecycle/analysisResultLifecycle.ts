@@ -134,6 +134,29 @@ function tombstoneResult(result: AnalysisResult): AnalysisResult {
 }
 
 /**
+ * 非 dryRun 时写入归档/墓碑化的分析结果信封。
+ * 抽取为独立辅助函数以压低循环内的嵌套深度。
+ */
+async function persistAnalysisResult(
+  item: { docId: string },
+  payload: AnalysisResult,
+  dryRun: boolean,
+  tracePrefix: string,
+): Promise<void> {
+  if (dryRun) return
+  const envelope = EnvelopeFactory.create(
+    {
+      source: MODULE_ID.analyzer,
+      target: 'db' as const,
+      action: ENVELOPE_ACTION.saveAnalysisResult,
+      traceId: `${tracePrefix}-${item.docId}`,
+    },
+    payload,
+  )
+  await dataBridge.forward(envelope)
+}
+
+/**
  * 扫描并归档过期分析结果。
  *
  * @param thresholdDays 软归档阈值（默认 90 天）
@@ -185,19 +208,7 @@ export async function archiveOldResults(
         const afterSize = estimateSize(compressed)
         stats.bytesReclaimed += Math.max(0, beforeSize - afterSize)
         stats.compressed++
-
-        if (!dryRun) {
-          const envelope = EnvelopeFactory.create(
-            {
-              source: MODULE_ID.analyzer,
-              target: 'db' as const,
-              action: ENVELOPE_ACTION.saveAnalysisResult,
-              traceId: `lifecycle-archive-${item.docId}`,
-            },
-            compressed,
-          )
-          await dataBridge.forward(envelope)
-        }
+        await persistAnalysisResult(item, compressed, dryRun, 'lifecycle-archive')
       }
     }
   } catch (err) {
@@ -260,19 +271,7 @@ export async function cleanupOldArchives(
         const afterSize = estimateSize(tombstone)
         stats.bytesReclaimed += Math.max(0, beforeSize - afterSize)
         stats.deleted++
-
-        if (!dryRun) {
-          const envelope = EnvelopeFactory.create(
-            {
-              source: MODULE_ID.analyzer,
-              target: 'db' as const,
-              action: ENVELOPE_ACTION.saveAnalysisResult,
-              traceId: `lifecycle-tombstone-${item.docId}`,
-            },
-            tombstone,
-          )
-          await dataBridge.forward(envelope)
-        }
+        await persistAnalysisResult(item, tombstone, dryRun, 'lifecycle-tombstone')
       } else {
         stats.skipped++
       }

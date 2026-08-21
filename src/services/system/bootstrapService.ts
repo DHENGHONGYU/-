@@ -78,6 +78,30 @@ export async function initializeApp(options?: InitOptions): Promise<void> {
   }
 }
 
+/**
+ * 处理一次种子数据初始化失败：记录日志、判断是否耗尽重试，返回下次等待时长。
+ * 抽取为独立辅助函数以压低重试循环内的嵌套深度。
+ */
+function buildSeedFailureOutcome(
+  retryCount: number,
+  errorMessage: string,
+  hooks?: BootstrapHooks,
+): { exhausted: boolean; retryDelayMs: number } {
+  logger.error('[bootstrapService] 种子数据初始化失败', {
+    error: errorMessage,
+    retryCount,
+  })
+
+  if (retryCount >= MAX_SEED_RETRIES) {
+    hooks?.onSeedFailure?.(errorMessage, retryCount)
+    return { exhausted: true, retryDelayMs: 0 }
+  }
+
+  const retryDelayMs = SEED_RETRY_BASE_DELAY_MS * Math.pow(2, retryCount - 1)
+  logger.warn(`[bootstrapService] 种子数据重试第 ${retryCount} 次，${retryDelayMs}ms 后重试...`)
+  return { exhausted: false, retryDelayMs }
+}
+
 async function seedWithRetry(hooks?: BootstrapHooks): Promise<void> {
   let retryCount = 0
 
@@ -89,19 +113,9 @@ async function seedWithRetry(hooks?: BootstrapHooks): Promise<void> {
     } catch (err) {
       retryCount++
       const errorMessage = err instanceof Error ? err.message : String(err)
-      logger.error('[bootstrapService] 种子数据初始化失败', {
-        error: errorMessage,
-        retryCount,
-      })
-
-      if (retryCount >= MAX_SEED_RETRIES) {
-        hooks?.onSeedFailure?.(errorMessage, retryCount)
-        return
-      }
-
-      const delay = SEED_RETRY_BASE_DELAY_MS * Math.pow(2, retryCount - 1)
-      logger.warn(`[bootstrapService] 种子数据重试第 ${retryCount} 次，${delay}ms 后重试...`)
-      await new Promise((resolve) => setTimeout(resolve, delay))
+      const outcome = buildSeedFailureOutcome(retryCount, errorMessage, hooks)
+      if (outcome.exhausted) return
+      await new Promise((resolve) => setTimeout(resolve, outcome.retryDelayMs))
     }
   }
 }

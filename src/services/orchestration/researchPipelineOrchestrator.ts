@@ -245,6 +245,60 @@ function deriveBacktrackPlan(score: V6Score | undefined): string[] {
  * @param input 股票输入列表（含 8 持仓必含 + 随机 + 港股）
  * @param deps 注入依赖（采集器必填，其余真实引擎）
  */
+
+/**
+ * 将 K 线数据转换为 daily_quotes 并持久化，回填 s2 的执行状态。
+ * 抽取为独立辅助函数以压低 Stage2 采集循环内的嵌套深度。
+ */
+async function persistDailyQuotesStage(
+  code: string,
+  s2: Pick<Stage2Record, 'klineError' | 'dqPersistOk'>,
+  klines: KlineBar[],
+): Promise<void> {
+  if (klines.length === 0) return
+  try {
+    const dq = klinesToDailyQuotes(code, klines)
+    await dataBridge.forward(
+      EnvelopeFactory.create(
+        { source: MODULE_ID.fetcher, target: ENVELOPE_TARGET.db, action: ENVELOPE_ACTION.saveDailyQuotes, traceId: `pipe-dq-${code}` },
+        dq,
+      ),
+    )
+    const back = await queryGet(STORE_NAME.dailyQuotes, code)
+    s2.dqPersistOk = back != null
+  } catch (e) {
+    const dqErr = e instanceof Error ? e.message : typeof e === 'string' ? e : 'Unknown error'
+    s2.klineError = (s2.klineError ?? '') + ` dq:${dqErr}`
+  }
+}
+
+/**
+ * 对单只个股执行校准（低分触发）：若低分则回溯调参并在需要时重评。
+ * 返回是否触发校准（0/1），复现原循环内 triggered 累计逻辑，且压低循环嵌套深度。
+ */
+async function runCalibrationForRecord(
+  rec: Stage4Record,
+  s3: Stage3Record,
+  calibrator: ResearchPipelineDeps['calibrator'],
+  scorer: ResearchPipelineDeps['scorer'],
+): Promise<number> {
+  if (!rec.lowScore) return 0
+  rec.calibrationTriggered = true
+  const sc = (s3.layerDetails as V6Score) ?? undefined
+  rec.backtrackPlan = deriveBacktrackPlan(sc)
+  if (calibrator) {
+    const cal = await calibrator.calibrate(s3.code)
+    rec.reFetched = cal.reFetched
+    rec.reScored = cal.reScored
+    rec.backtrackPlan = cal.backtrackPlan.length ? cal.backtrackPlan : rec.backtrackPlan
+    if (cal.reScored) {
+      const sr = await scorer.run(s3.code)
+      rec.scoreAfter = sr.data?.score ?? s3.score
+    }
+  }
+  return 1
+}
+
 export async function runResearchPipeline(
   input: PipelineStockInput[],
   deps: ResearchPipelineDeps,
@@ -355,22 +409,7 @@ export async function runResearchPipeline(
       s2.klineError = String(e)
     }
 
-    if (klines.length > 0) {
-      try {
-        const dq = klinesToDailyQuotes(code, klines)
-        await dataBridge.forward(
-          EnvelopeFactory.create(
-            { source: MODULE_ID.fetcher, target: ENVELOPE_TARGET.db, action: ENVELOPE_ACTION.saveDailyQuotes, traceId: `pipe-dq-${code}` },
-            dq,
-          ),
-        )
-        const back = await queryGet(STORE_NAME.dailyQuotes, code)
-        s2.dqPersistOk = back != null
-      } catch (e) {
-        const dqErr = e instanceof Error ? e.message : typeof e === 'string' ? e : 'Unknown error'
-        s2.klineError = (s2.klineError ?? '') + ` dq:${dqErr}`
-      }
-    }
+    await persistDailyQuotesStage(code, s2, klines)
 
     // stock 更新（行情价 + 参考估值回填 + 板块/行业代码回填）
     const enr = sectorResolver?.(code)
@@ -435,22 +474,7 @@ export async function runResearchPipeline(
       scoreBefore: s3.score,
       scoreAfter: s3.score,
     }
-    if (lowScore) {
-      triggered++
-      rec.calibrationTriggered = true
-      const sc = (s3.layerDetails as V6Score) ?? undefined
-      rec.backtrackPlan = deriveBacktrackPlan(sc)
-      if (calibrator) {
-        const cal = await calibrator.calibrate(s3.code)
-        rec.reFetched = cal.reFetched
-        rec.reScored = cal.reScored
-        rec.backtrackPlan = cal.backtrackPlan.length ? cal.backtrackPlan : rec.backtrackPlan
-        if (cal.reScored) {
-          const sr = await scorer.run(s3.code)
-          rec.scoreAfter = sr.data?.score ?? s3.score
-        }
-      }
-    }
+    triggered += await runCalibrationForRecord(rec, s3, calibrator, scorer)
     stage4PerStock.push(rec)
   }
 

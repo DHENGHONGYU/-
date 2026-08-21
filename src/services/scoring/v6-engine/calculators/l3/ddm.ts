@@ -186,6 +186,18 @@ function calculateIntrinsicValue(
 // ============================================================
 
 /**
+ * DDM 安全边际 → 评分映射（扁平化：早退守卫替代多段 else-if）
+ */
+function mapDdmScore(marginOfSafety: number): number {
+  if (marginOfSafety >= 30) return 5.0
+  if (marginOfSafety >= 20) return 4.5
+  if (marginOfSafety >= 10) return 4.0
+  if (marginOfSafety >= 0) return 3.0
+  if (marginOfSafety >= -10) return 2.0
+  return 1.0
+}
+
+/**
  * 执行两阶段 DDM 估值
  *
  * @param input DDM 模型输入参数
@@ -237,20 +249,7 @@ export function calculateDdm(input: DdmInput): DdmOutput {
   derivation.push(`估值判断: ${valuation === 'undervalued' ? '低估' : valuation === 'overvalued' ? '高估' : '合理'}`)
 
   // DDM 评分映射
-  let ddmScore: number
-  if (marginOfSafety >= 30) {
-    ddmScore = 5.0
-  } else if (marginOfSafety >= 20) {
-    ddmScore = 4.5
-  } else if (marginOfSafety >= 10) {
-    ddmScore = 4.0
-  } else if (marginOfSafety >= 0) {
-    ddmScore = 3.0
-  } else if (marginOfSafety >= -10) {
-    ddmScore = 2.0
-  } else {
-    ddmScore = 1.0
-  }
+  const ddmScore = mapDdmScore(marginOfSafety)
 
   return {
     intrinsicValuePerShare: Math.round(intrinsicValue * 100) / 100,

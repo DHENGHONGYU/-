@@ -122,6 +122,22 @@ function evaluateD2(input: RlesInput): RlesDimension {
 }
 
 // ── D3 时机成熟度（权重 0.40） ───────────────────────────────────
+
+/** 二波信号加成解析（扁平化：早退守卫 + switch 替代多层嵌套 if/else-if） */
+function resolveSecondWaveBoost(sw: SecondWaveSignal | null | undefined): number {
+  if (!sw || !sw.detected) return 0
+  switch (sw.signalType) {
+    case 'strong_wave':
+      return 12
+    case 'trial':
+      return 6
+    case 'pullback':
+      return sw.pullbackLevel === 'ma5' ? 8 : sw.pullbackLevel === 'ma10' ? 6 : sw.pullbackLevel === 'ma20' ? 4 : 2
+    default:
+      return 0
+  }
+}
+
 function evaluateD3(input: RlesInput): RlesDimension {
   const v6 = input.v6Score
   const ratingBase = v6 ? RATING_TIMING_BASE[v6.rating ?? 'hold'] ?? 55 : 50
@@ -129,19 +145,9 @@ function evaluateD3(input: RlesInput): RlesDimension {
   // 板块资金因子（F2）作为板块动量代理
   const sectorFund = input.rotationScore ? clamp100(input.rotationScore.f2Zijin) : 50
   // 二波检测器：命中后按信号类型/回踩层级给差异化加成
-  let secondWaveStrength = 50
-  let secondWaveBoost = 0
   const sw = input.secondWaveSignal
-  if (sw) {
-    secondWaveStrength = sw.strength
-    if (sw.detected) {
-      if (sw.signalType === 'strong_wave') secondWaveBoost = 12
-      else if (sw.signalType === 'pullback') {
-        secondWaveBoost =
-          sw.pullbackLevel === 'ma5' ? 8 : sw.pullbackLevel === 'ma10' ? 6 : sw.pullbackLevel === 'ma20' ? 4 : 2
-      } else if (sw.signalType === 'trial') secondWaveBoost = 6
-    }
-  }
+  const secondWaveStrength = sw ? sw.strength : 50
+  const secondWaveBoost = resolveSecondWaveBoost(sw)
   // MAS 市场宽度（breadthFactor 接入，0-100；缺失中性 50）
   const breadth = input.marketBreadth != null ? clamp100(input.marketBreadth) : 50
   const score = clamp100(

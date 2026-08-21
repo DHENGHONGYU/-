@@ -220,20 +220,17 @@ export async function retryWithBackoff<T>(
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
-      if (attempt > 0) {
-        const delay = Math.pow(2, attempt - 1) * 100; // 100, 200, 400, ...
-        logger.debug(`Retry attempt ${attempt}/${maxRetries}, waiting ${delay}ms`);
-        await new Promise((resolve) => setTimeout(resolve, delay));
-      }
       return await fn();
     } catch (error) {
       lastError = error;
-      if (attempt < maxRetries) {
-        logger.warn(
-          `Attempt ${attempt + 1}/${maxRetries + 1} failed, will retry: ${(error as Error)?.message ?? error}`,
-        );
-      }
     }
+    if (attempt >= maxRetries) continue;
+    const delay = Math.pow(2, attempt) * 100; // 100, 200, 400, ...
+    logger.debug(`Retry attempt ${attempt + 1}/${maxRetries}, waiting ${delay}ms`);
+    logger.warn(
+      `Attempt ${attempt + 1}/${maxRetries + 1} failed, will retry: ${(lastError as Error)?.message ?? String(lastError)}`,
+    );
+    await new Promise((resolve) => setTimeout(resolve, delay));
   }
 
   logger.error(`All ${maxRetries + 1} attempts exhausted`);

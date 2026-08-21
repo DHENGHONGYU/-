@@ -546,6 +546,32 @@ export interface BatchScoreResult {
 }
 
 /**
+ * 构建单个标的的引擎输入（扁平化：将 try/catch 收敛到独立辅助函数）。
+ * 成功返回 { input }，失败返回 { error }，日志在本函数内完成。
+ */
+async function buildEngineInputItem(
+  stock: Stock,
+  quotes: DailyQuotes | null,
+  index: number,
+  total: number,
+): Promise<{ input: V6ScoreInput } | { error: string }> {
+  logger.debug(`[v6ScoreService.runV6ScoreBatch] [${index}/${total}] 构建 ${stock.symbol} 输入...`)
+  try {
+    const input = await buildEngineInput(stock, quotes)
+    return { input }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    const stack = err instanceof Error ? err.stack : undefined
+    logger.error(`[v6ScoreService.runV6ScoreBatch] [${index}/${total}] ${stock.symbol} 输入构建失败`, {
+      symbol: stock.symbol,
+      error: msg,
+      stack,
+    })
+    return { error: msg }
+  }
+}
+
+/**
  * runV6ScoreBatch
  */
 export async function runV6ScoreBatch(
@@ -621,21 +647,13 @@ export async function runV6ScoreBatch(
         errors.push({ symbol: r.symbol, error: 'Stock not found' })
         continue
       }
-      try {
-        logger.debug(`[v6ScoreService.runV6ScoreBatch] [${inputIndex}/${stockResults.length}] 构建 ${r.symbol} 输入...`)
-        const input = await buildEngineInput(r.stock, r.quotes ?? null)
-        inputs.push({ stock: r.stock, input })
-        logger.debug(`[v6ScoreService.runV6ScoreBatch] [${inputIndex}/${stockResults.length}] ${r.symbol} 输入构建完成，已累计 ${inputs.length} 条`)
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err)
-        const stack = err instanceof Error ? err.stack : undefined
-        logger.error(`[v6ScoreService.runV6ScoreBatch] [${inputIndex}/${stockResults.length}] ${r.symbol} 输入构建失败`, {
-          symbol: r.symbol,
-          error: msg,
-          stack,
-        })
-        errors.push({ symbol: r.symbol, error: msg })
+      const built = await buildEngineInputItem(r.stock, r.quotes ?? null, inputIndex, stockResults.length)
+      if ('error' in built) {
+        errors.push({ symbol: r.stock.symbol, error: built.error })
+        continue
       }
+      inputs.push({ stock: r.stock, input: built.input })
+      logger.debug(`[v6ScoreService.runV6ScoreBatch] [${inputIndex}/${stockResults.length}] ${r.stock.symbol} 输入构建完成，已累计 ${inputs.length} 条`)
     }
     logger.info(`[v6ScoreService.runV6ScoreBatch] 引擎输入组装完成`, {
       successCount: inputs.length,
