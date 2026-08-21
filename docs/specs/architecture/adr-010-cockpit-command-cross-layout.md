@@ -13,6 +13,7 @@ change_log:
   - version: v1.0.0
     changes: "P0 版本闭环(2026-08-11)：补全 change_log 初始条目"
     date: 2026-08-11
+code_version: 2.0.0-rc.2
 ---
 
 # ADR-010: Cockpit/Command 职责边界与纵横交叉布局

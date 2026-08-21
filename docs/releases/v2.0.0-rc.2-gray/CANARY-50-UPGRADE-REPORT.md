@@ -1,3 +1,8 @@
+---
+title: docs/releases/v2.0.0-rc.2-gray/CANARY-50-UPGRADE-REPORT.md
+code_version: 2.0.0-rc.2
+---
+
 ﻿# Canary 50% 灰度发布升级报告
 
 > **报告时间**: 2026-08-20 09:06 (Asia/Shanghai)

@@ -1,3 +1,8 @@
+---
+title: docs/reports/pra-step1-step2-final-fix-report-2026-08-17.md
+code_version: 2.0.0-rc.2
+---
+
 # PR-A Step 1 + Step 2 最终修复与归档报告
 
 > 生成时间：2026-08-17

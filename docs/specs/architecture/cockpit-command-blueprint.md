@@ -4,6 +4,7 @@ title: "Cockpit / Command 结构设计蓝图"
 domain: architecture
 status: active
 last_updated: 2026-08-17
+code_version: 2.0.0-rc.2
 ---
 
 ﻿---

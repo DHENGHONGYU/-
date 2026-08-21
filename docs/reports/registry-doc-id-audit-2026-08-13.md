@@ -1,3 +1,8 @@
+---
+title: docs/reports/registry-doc-id-audit-2026-08-13.md
+code_version: 2.0.0-rc.2
+---
+
 # 注册表与文档对比报告
 
 > 生成时间：2026-08-12

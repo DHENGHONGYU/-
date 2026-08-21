@@ -1,3 +1,8 @@
+---
+title: docs/releases/v2.0.0-rc.2-gray/GRAY-RELEASE-CHECKLIST.md
+code_version: 2.0.0-rc.2
+---
+
 # FinSightV9 v2.0.0-rc.2 灰度发布检查清单（Gatekeeper Checklist）
 
 > **版本**: v2.0.0-rc.2 · 十五五 20 大新兴行业增强版 · **发布轨道**: 灰度（Canary）→ 全量

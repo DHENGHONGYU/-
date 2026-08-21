@@ -1,3 +1,8 @@
+---
+title: docs/releases/PR-design-token-cleanup.md
+code_version: 2.0.0-rc.2
+---
+
 # PR: 设计令牌清理与验证 Utility 重构
 
 ## 变更类型

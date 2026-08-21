@@ -1,3 +1,8 @@
+---
+title: docs/release-notes/COMMIT-LOG-design-token-cleanup-v4.md
+code_version: 2.0.0-rc.2
+---
+
 ﻿# 设计令牌清理工作 Commit 记录归档
 
 > **归档日期**：2026-08-14  

@@ -1,3 +1,8 @@
+---
+title: docs/releases/v2.0.0-rc.2-gray/CANARY-10-START-REPORT.md
+code_version: 2.0.0-rc.2
+---
+
 ﻿# Canary 10% 灰度发布启动报告
 
 > **启动时间**: 2026-08-20

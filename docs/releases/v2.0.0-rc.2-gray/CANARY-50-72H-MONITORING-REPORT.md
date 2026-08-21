@@ -1,3 +1,8 @@
+---
+title: docs/releases/v2.0.0-rc.2-gray/CANARY-50-72H-MONITORING-REPORT.md
+code_version: 2.0.0-rc.2
+---
+
 ﻿# Canary 50% 72h 观察期监控报告
 
 > **报告时间**: 2026-08-23 09:06 (Asia/Shanghai) [模拟]

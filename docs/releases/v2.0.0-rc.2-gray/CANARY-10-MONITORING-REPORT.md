@@ -1,3 +1,8 @@
+---
+title: docs/releases/v2.0.0-rc.2-gray/CANARY-10-MONITORING-REPORT.md
+code_version: 2.0.0-rc.2
+---
+
 ﻿# Canary 10% 灰度发布监控报告
 
 > **报告时间**: 2026-08-20 08:51:56 (Asia/Shanghai)

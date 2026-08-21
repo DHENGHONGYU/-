@@ -1,3 +1,8 @@
+---
+title: docs/retro/2026-08-09-vite-proxy-hk-code-retrospective.md
+code_version: 2.0.0-rc.2
+---
+
 # 技术复盘：Vite Proxy 配置与港股代码转换（2026-08-09）
 
 ## 概述

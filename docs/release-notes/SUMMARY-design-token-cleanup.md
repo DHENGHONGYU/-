@@ -1,3 +1,8 @@
+---
+title: docs/release-notes/SUMMARY-design-token-cleanup.md
+code_version: 2.0.0-rc.2
+---
+
 # 设计令牌清理工作总结报告
 
 > **报告日期**：2026-08-15  

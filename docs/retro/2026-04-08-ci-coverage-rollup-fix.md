@@ -1,3 +1,8 @@
+---
+title: docs/retro/2026-04-08-ci-coverage-rollup-fix.md
+code_version: 2.0.0-rc.2
+---
+
 # CI 配置与覆盖率 Rollup 解析错误 - 技术复盘笔记
 
 > 时间：2026-04-08
