@@ -1,10 +1,25 @@
 ---
 title: AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 status: active
-version: v1.7.1
-last_updated: 2026-08-20
+version: v1.7.6
+last_updated: 2026-08-23
 code_version: "2.0.0-rc.2"
 change_log:
+  - version: v1.7.6
+    changes: "2026-08-23 遗留问题整改 P1/P3 收尾：① P1 全仓「七维」过时文案统一——9 个代码文件 + 8 个活跃文档统一为十六维/采集策略配置（事实性七维：dataDimensions 进度展示域、collectionProgressService、行业评分 V4 七因子、sevenDim* 历史标识符、SevenDimConfigPage 测试锁定标题一律保留）；② P3 collectionPipeline.ts（1555 行）拆分为 facade（~440 行）+ 7 个 src/services/data-collector/pipeline/ 子模块（Types/Mappings/Events/Audit/Writers/DataGen/Handlers），公开 API 与导入路径零破坏（13 处消费方不变）；③ P2 测试侧补同步——collection-dry-run COLLECTION_ACTION_STORE 补登记 saveDimensionCollectData、dataLayer 属性计数 49→50、dataRelationship blueprint Store 计数 55→56；④ mockFallbackPolicy EWMA 断言适配重试×熔断交互（单源重试 3 次达熔断阈值被跳过为预期行为）。门禁全绿（tsc 全量/prod/test=0 / layers=0 / acl=0 / db-references=0 / blueprint 56 / dataConsistency=0 / agents-consistency A1-A7 / 采集域 vitest 251 例）"
+    date: 2026-08-23
+  - version: v1.7.5
+    changes: "2026-08-23 遗留问题整改 P2：维度 11-14 采集数据脱离 local_docs——DB_VERSION 37→38，新增 dimension_collect_data 存储（STORE_NAME 合计 56 项，基线 28 + 增量 28 = 56 Store，keyPath=id，by-symbol/by-dimension/by-collected-at 三索引）；新增 ENVELOPE_ACTION.saveDimensionCollectData + PutHandler 注册 + ACTION_TO_STORE_MAP 映射 + fetcher ACL 读写放行；collectionPipeline 维度 11-14 改道专用存储（15/16 仍写 local_docs）；validate-data-blueprint expectedStores 同步 56；全部 DB_VERSION/Store 数字面量同步（审计脚本要求全仓一致）"
+    date: 2026-08-23
+  - version: v1.7.4
+    changes: "2026-08-22 采集质量整改（P0 三项 + 契约对齐）：① P0-1 接通 pipeline 重试循环——dataSourceOrchestrator 新增 attemptQuoteSourceOnce/attemptKlineSourceOnce + maxAttemptsForPolicy/backoffDelayMs/sleep，行情与 K 线单源按 dimension.retryPolicy 指数退避重试（默认 DEFAULT_RETRY_POLICY），新增 COLLECTION_EVENTS.RETRY 事件；collectionPipeline 两处调用点传入 retryPolicy: dimension.retryPolicy。② P0-2 qualityMetrics 落库——DB_VERSION 36→37，新增 quality_metrics_history 存储（STORE_NAME 54→55 项，基线 28 + 增量 27 = 55 Store），ENVELOPE_ACTION.saveQualityMetricsHistory + PutHandler + ACTION_TO_STORE_MAP + fetcher ACL 读写 + db-schema ensureStore(by-captured-at 索引) + migration 种子 + dataLayer 三处暴露 + data-dictionary 登记 + types.qualityMetricsHistory.ts + qualityMetricsPersistence.ts（永不阻塞，空窗口跳过），sevenDimConfigStore 采集收尾三路径接线。③ P0-3 collectionPipeline.contract.test.ts 35 例契约单测。修复并行合并残留语法（tushareProvider/llmSearchAgent/rsi/volumeProfile/health.constants/trade.constants）。门禁全绿（tsc:prod=0 / acl=0 / db-references=0 / agents-consistency 对齐）"
+    date: 2026-08-22
+  - version: v1.7.3
+    changes: "2026-08-22 采集本地文件即时落盘（用户原则：采集来源稳定可采集、应采都采、及时存储当地文件、文件夹须配置化）：新增 src/config/collectionFileStorage.ts（config 层文件夹接口配置单一真相源：rootDir + 16 维 folder/filePattern/enabled 映射，命名模板支持 {symbol}/{date}/{dimension} 占位符，目录约定与 collectedDataSyncService 批量导出同树）；新增 src/services/data-collector/localFilePersistService.ts（永不抛出契约：Electron 环境经 window.fileSync IPC 落盘，纯浏览器降级 warn 跳过，绝不阻塞采集主链路）；collectionPipeline 四个写库成功点全接线（01 行情 update/insert 双路径、02 K线、03–08+10–16 统一写入入口、09 财务）；collectedDataSyncService 导出 ElectronFileSyncAPI 供跨模块共享 window 类型；新增 localFilePersistService.test.ts 10 例单测全绿；门禁全绿（tsc:prod=0 / audit:layers=0 / acl-consistency=0 / db-references=0 / dataConsistency exit 0 / agents-consistency 通过）"
+    date: 2026-08-22
+  - version: v1.7.2
+    changes: "2026-08-22 采集能力缺口补齐：DB_VERSION 35→36，新增 sector_collect_data 存储（维度 10 热门板块采集数据结构化落库，脱离 local_docs 过渡方案，与 hot_sector_scores 双策略评分存储隔离）；STORE_NAME 53→54 项（基线 29 + 增量 25=54 Store）；新增 ENVELOPE_ACTION.saveSectorCollectData + PutHandler 注册 + ACTION_TO_STORE_MAP 映射 + fetcher ACL 读写放行；collectionPipeline 维度 10 改道专用存储；validate-data-blueprint expectedStores 同步 54；全部 DB_VERSION/Store 数字面量同步（审计脚本要求全仓一致）"
+    date: 2026-08-22
   - version: v1.7.1
     changes: "2026-08-20 新增 Skill 双保险规定：§项目级 SKILL 索引段新增「骨架模板强制执行（双保险）」醒目 BLOCK，明确新建 SKILL.md 必须 cp _SKILL-TEMPLATE.md 起步，禁止手写空白文件；§变更纪律拆出独立小节「新增 Skill 强制流程（双保险）」，明确 cp 命令、禁止项与 RULE-TPL 脚本强审联动（文档强制+脚本 exit 1 双保险），与 audit-skill-coverage.cjs 形成闭环"
     date: 2026-08-20
@@ -12,7 +27,7 @@ change_log:
     changes: "2026-08-20 架构重构闭环：data/gateway 门面全面落地完成 Phase 0~5；Phase 0 增补过渡期白名单（5 个 core 文件）并升级 audit-db-references.ts RULE_7 检测非白名单 import db；Phase 1 完成 Clean Architecture/DDD Hexagonal/React BFF+UnitOfWork 三方案评估，选型 React BFF + UnitOfWork；Phase 2 创建 src/data/gateway/（IGateway 接口 + DataGatewayImpl 实现 + 事务/CRUD/批量/级联/数据管理/工厂方法）；Phase 3 迁移 5 个过渡期文件（transaction/cascadeExecutor/databridgeHandlers/databridgeRouter/databridge），白名单清零；Phase 4 新增 ITransactionContext 事务上下文 + runInTransactionWithContext 类型安全 API，迁移 rebalancePortfolioUseCase，RULE_8 检测非 data/ 层直接使用 IDBTransaction；Wiki 同步标注 data/gateway 重构闭环；tsc:prod / audit:db-references 全绿"
     date: 2026-08-20
   - version: v1.6.0
-    changes: "2026-08-19 增量闭环：对齐 Husky v2 真阻断 20 步门禁 + scope-guard v2（≤30 单提交 / 跨域≤2）；补齐 tsc:prod/tsc:test 双 tsconfig 作用域与 tsc --force 日常；MCP Registry 17 条目（13 enabled + 4 disabled，含 data-collector:main + marketdata 双子源）；DB_VERSION=35（基线 29 + 增量 24=53 Store）；驾驶舱 USER_SCENES 结果优先视图；设计令牌 V8 Apple 冷色调；提交卫生（禁止 git add -A / --only 精确提交）；ESLint 生产域警告清零；上线前测试禁止 MOCK 必须真数；tsc 增量编译幻影错误防呆；新增 audit:agents-consistency 契约一致性 P0 断言（A1~A7 七项，husky [22/20] 步）+ T15 doc-trigger；**新增 SOP Suite 双引用注入点：文档头部「SOP 规范体系」声明（sops/README.md 为团队流程第一入口）+ §七 验证命令尾部「验证命令↔SOP 质量门禁速查表对应关系」交叉链接 S02/S04/S05**"
+    changes: "2026-08-19 增量闭环：对齐 Husky v2 真阻断 20 步门禁 + scope-guard v2（≤30 单提交 / 跨域≤2）；补齐 tsc:prod/tsc:test 双 tsconfig 作用域与 tsc --force 日常；MCP Registry 17 条目（13 enabled + 4 disabled，含 data-collector:main + marketdata 双子源）；DB_VERSION=38（基线 28 + 增量 28 = 56 Store）；驾驶舱 USER_SCENES 结果优先视图；设计令牌 V8 Apple 冷色调；提交卫生（禁止 git add -A / --only 精确提交）；ESLint 生产域警告清零；上线前测试禁止 MOCK 必须真数；tsc 增量编译幻影错误防呆；新增 audit:agents-consistency 契约一致性 P0 断言（A1~A7 七项，husky [22/20] 步）+ T15 doc-trigger；**新增 SOP Suite 双引用注入点：文档头部「SOP 规范体系」声明（sops/README.md 为团队流程第一入口）+ §七 验证命令尾部「验证命令↔SOP 质量门禁速查表对应关系」交叉链接 S02/S04/S05**"
     date: 2026-08-19
   - version: v1.5.6
     changes: "基准日校对(2026-08-11)：R1取真值(P2 正文版本声明行=v1.5.5) → R2 PATCH++(v1.5.6) / last_updated 刷新 / change_log 闭环"
@@ -20,9 +35,19 @@ change_log:
 ---
 # AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 
-> **版本**: v1.7.1 | **日期**: 2026-08-20
+> **版本**: v1.7.6 | **日期**: 2026-08-23
 > **适用范围**: 所有 AI 辅助开发工具（Claude Code、Cursor、Trae 等）
 > **强制等级**: 所有 AI 生成的代码必须遵守以下约束
+>
+> **v1.7.6 变更（本轮增量，2026-08-23）**：遗留问题整改 P1/P3 收尾——① P1 全仓「七维」过时文案统一（9 代码文件 + 8 活跃文档 → 十六维/采集策略配置；事实性七维与测试锁定标题保留）；② P3 `collectionPipeline.ts`（1555 行）拆分为 **facade + 7 个 `pipeline/` 子模块**（pipelineTypes/ pipelineMappings/ pipelineEvents/ pipelineAudit/ pipelineWriters/ pipelineDataGen/ pipelineHandlers），**公开 API 与导入路径零破坏**（runSingleTrace/runBatchTrace/createDefaultCollectionConfig/resolve*/DIMENSION_TO_ACTION/NON_QUOTE_MODES 等 13 处消费方导入不变）；③ P2 测试侧补同步（dry-run action→store 映射、dataLayer 50 属性、blueprint 56 Store）；④ EWMA 测试断言适配重试×熔断交互。门禁全绿（tsc 全量=0 / layers=0 / acl=0 / db-references=0 / blueprint 56 / dataConsistency=0 / agents-consistency A1-A7 / 采集域 vitest 251 例）
+>
+> **v1.7.5 变更（本轮增量，2026-08-23）**：遗留问题整改 P2——维度 11-14（技术指标/资金流向/机构持仓/估值分析）采集数据脱离 local_docs 过渡方案：`DB_VERSION` 37→38，新增 `dimension_collect_data` 通用专用存储（`STORE_NAME` 合计 56 项，基线 28 + 增量 28 = 56 Store，keyPath=id + by-symbol/by-dimension/by-collected-at 三索引）；新增 `ENVELOPE_ACTION.saveDimensionCollectData`（PutHandler 注册 + ACTION_TO_STORE_MAP 映射 + fetcher ACL 读写放行）；`collectionPipeline` 维度 11-14 改道专用存储（15/16 仍写 local_docs 待后续立项）；`validate-data-blueprint` expectedStores 同步 56；沿用 sector_collect_data（v36）先例
+>
+> **v1.7.4 变更（本轮增量，2026-08-22）**：采集质量整改（P0 三项）——① P0-1 接通 pipeline 重试循环：`dataSourceOrchestrator` 新增单源重试包装（`attemptQuoteSourceOnce`/`attemptKlineSourceOnce` + `maxAttemptsForPolicy`/`backoffDelayMs`），行情与 K 线按 `dimension.retryPolicy` 指数退避重试，新增 `COLLECTION_EVENTS.RETRY` 事件；② P0-2 qualityMetrics 落库：`DB_VERSION` 36→37，新增 `quality_metrics_history` 存储（`STORE_NAME` 54→55 项，基线 28 + 增量 27 = 55 Store），完成 ENVELOPE_ACTION/PutHandler/ACTION_TO_STORE_MAP/ACL/schema/migration/dataLayer/data-dictionary 八处注册，新增 `qualityMetricsPersistence.ts`（永不阻塞、空窗口跳过）并在 `sevenDimConfigStore` 采集收尾三路径接线；③ P0-3 新增 `collectionPipeline.contract.test.ts` 35 例契约单测。另修复并行合并残留语法破坏（6 个文件）。门禁全绿（tsc:prod=0 / acl=0 / db-references=0 / agents-consistency 对齐）
+>
+> **v1.7.3 变更（本轮增量，2026-08-22）**：采集数据本地文件即时落盘——新增 `src/config/collectionFileStorage.ts`（文件夹接口配置单一真相源：rootDir + 16 维 folder/filePattern/enabled 映射，命名模板支持 `{symbol}/{date}/{dimension}` 占位符，目录约定与 collectedDataSyncService 批量导出同树）；新增 `src/services/data-collector/localFilePersistService.ts`（永不抛出：Electron 经 window.fileSync IPC 落盘，纯浏览器降级 warn 跳过，不阻塞采集主链路）；collectionPipeline 四个写库成功点全接线（01 行情 update/insert、02 K线、03–08+10–16 统一写入、09 财务）；新增 10 例单测全绿
+>
+> **v1.7.2 变更（本轮增量，2026-08-22）**：采集能力缺口补齐——`DB_VERSION` 35→36，新增 `sector_collect_data` 存储（`STORE_NAME` 53→54 项，基线 29 + 增量 25）：维度 10（热门板块）采集数据脱离 local_docs 过渡方案结构化落库；新增 `ENVELOPE_ACTION.saveSectorCollectData`（PutHandler 注册 + ACTION_TO_STORE_MAP 映射 + fetcher ACL 读写放行四位置同步）；collectionPipeline 维度 10 改道专用存储；`validate-data-blueprint` expectedStores 同步 54
 >
 > **v1.7.0 变更（本轮增量，2026-08-20）**：data/gateway 门面架构重构**全面闭环**，完成 Phase 0~5 全部工作：
 > - **Phase 0 过渡期白名单**：在 5 个 core 文件临时允许 import { db }，同步升级 audit-db-references.ts RULE_7 禁止非白名单直接导入
@@ -34,7 +59,7 @@ change_log:
 >
 > 自此**所有业务代码必须 100% 通过 `data/gateway/` 门面访问数据库**：`core/` 层统一 import { gateway } from '@/data/gateway'；services/、store/、pages/ 层通过 dataLayerStore（sendWriteEnvelope/queryGet 等）→ DataBridge → gateway 链路访问；业务代码直接 import { db }、直接使用 IDBTransaction 均属架构违规，会被 audit:db-references 门禁拦截。
 >
-> **v1.6.0 变更（2026-08-19）**：Husky 预提交门禁升级 v2（tsc:prod / audit:registry / vitest registryContract / audit:doc-id-reverse --changed-only 均升级 BLOCK 真阻断）；提交作用域守卫 scope-guard v2（单提交文件数≤30/纯文档≤50、跨顶层域≤2、src+docs 删除≤30、阻断临时产物混入）；tsconfig 拆分 tsconfig.prod.json（源码+lib，零测试）与 tsconfig.test.json（源码+测试）、日常执行 `tsc --force` 防增量编译幻影错误；MCP Server Registry 清理为 **15 条目（10 enabled + 5 disabled）**：analysis/portfolio/knowledge/execution 四个僵尸 Server 与 workflow:main（保留通道校验）统一置 `enabled:false`，UI 侧 ACL 已同步移除对应 UI 放行行；新增腾讯自选股 `marketdata`（只读）；IndexedDB `DB_VERSION=35`，`STORE_NAME` 已扩展为 53 项（基线 29 + 增量 24）；驾驶舱默认视图切换为**结果优先（USER_SCENES：今日快照 / 持仓状态 / 市场扫描 / 深度钻取）**，与交叉矩阵并存可一键切换；设计令牌升级 V8（Apple 冷色调）：背景 Apple System Gray HSL 240 24% 96%、卡片纯白、圆角 1rem、静态阴影 alpha≤0.05、浮层 alpha≤0.08、字体 DM Sans→SF Pro→PingFang CJK 字距；**提交卫生硬约束**：禁止 `git add -A`；提交前必须核对 staged 数与目标一致；关键提交一律使用 `git commit --only <paths>` 物理防夹带；上线前测试**禁止使用 MOCK**，必须使用真实数据；ESLint 生产域警告按子域豁免清零（目标 = 0 warnings）
+> **v1.6.0 变更（2026-08-19）**：Husky 预提交门禁升级 v2（tsc:prod / audit:registry / vitest registryContract / audit:doc-id-reverse --changed-only 均升级 BLOCK 真阻断）；提交作用域守卫 scope-guard v2（单提交文件数≤30/纯文档≤50、跨顶层域≤2、src+docs 删除≤30、阻断临时产物混入）；tsconfig 拆分 tsconfig.prod.json（源码+lib，零测试）与 tsconfig.test.json（源码+测试）、日常执行 `tsc --force` 防增量编译幻影错误；MCP Server Registry 清理为 **15 条目（10 enabled + 5 disabled）**：analysis/portfolio/knowledge/execution 四个僵尸 Server 与 workflow:main（保留通道校验）统一置 `enabled:false`，UI 侧 ACL 已同步移除对应 UI 放行行；新增腾讯自选股 `marketdata`（只读）；IndexedDB `DB_VERSION=38`，`STORE_NAME` 已扩展为 56 项（基线 28 + 增量 28）；驾驶舱默认视图切换为**结果优先（USER_SCENES：今日快照 / 持仓状态 / 市场扫描 / 深度钻取）**，与交叉矩阵并存可一键切换；设计令牌升级 V8（Apple 冷色调）：背景 Apple System Gray HSL 240 24% 96%、卡片纯白、圆角 1rem、静态阴影 alpha≤0.05、浮层 alpha≤0.08、字体 DM Sans→SF Pro→PingFang CJK 字距；**提交卫生硬约束**：禁止 `git add -A`；提交前必须核对 staged 数与目标一致；关键提交一律使用 `git commit --only <paths>` 物理防夹带；上线前测试**禁止使用 MOCK**，必须使用真实数据；ESLint 生产域警告按子域豁免清零（目标 = 0 warnings）
 >
 > **v1.5.5 变更**：落地技能触发机制迭代 3——pre-push 挂 `skill-router --enforce --since <base>` 强制模式（mandatory 命中未确认即拦截，旁路 `SKILL_GATE_CONFIRM=1 git push`）；`skill-router.cjs` 新增 `--since`（推送范围三点 diff）与环境变量旁路；`.trae/rules` 追加技能路由规则段（与 registry/AGENTS.md 三方同步）；注册 2 个定时任务（L5 调度层）：「Mock 残留周检」`40 3 * * 1`、「技能健康度月检」`17 8 1 * *`（Asia/Shanghai）
 >
@@ -1133,20 +1158,20 @@ grep -rn 'refreshStats' src/store/sevenDimConfigStore.ts                    # �
 grep -rn 'auditRecord' src/services/data-collector/collectionPipeline.ts    # 应有 4 处（3 调用 + 1 定义）
 ```
 
-- 修改 IndexedDB schema 必须递增 `DB_VERSION`（`src/config/dbConfig.ts`）；当前 `DB_VERSION = 35`（真相源单一）
-- 新增 store 必须在 `STORE_NAME` 中注册；当前 53 项，`Object.keys(STORE_NAME).length === 53` 是 audit:db-references 的一致性断言
+- 修改 IndexedDB schema 必须递增 `DB_VERSION`（`src/config/dbConfig.ts`）；当前 `DB_VERSION = 38`（真相源单一）
+- 新增 store 必须在 `STORE_NAME` 中注册；当前 56 项（基线 28 + 增量 28 = 56），`Object.keys(STORE_NAME).length === 56` 是 validate:blueprint 的一致性断言
 - **新增 store 必须在 `ACL_MATRIX` 中添加对应的 read/write 白名单**（v1.4.7 强化）
   - 同时运行 `npm run audit:acl-consistency` 验证调用方有对应权限
   - 教训：2026-07-18 03-08 维度采集报 ACL Permission denied，因 fetcher 缺 news/sectorScores/researchLogs 写权限
 - **新增 ENVELOPE_ACTION 必须在 `ACTION_TO_STORE_MAP` 和 `databridgeHandlers.ts` 中同步注册**（v1.4.9 新增）
   - 运行 `npm run audit:acl-consistency` 验证 action→store→handler 配对一致性
   - 教训：2026-07-18 `saveTraceRecord` 未注册到 PutHandler，fallback 到裸 put → keyPath 失败
-- 新增 store 必须有创建逻辑，按以下规则选择位置（v1.3.5 明确；v1.6.0 对齐 DB_VERSION=35 实际）：
+- 新增 store 必须有创建逻辑，按以下规则选择位置（v1.3.5 明确；v1.7.5 对齐 DB_VERSION=38 实际）：
   - **基线 store**（首次安装时就需要的核心 store）→ 在 `createSchema`（`src/data/db-schema.ts`）中添加
   - **增量 store**（版本升级时新增的 store）→ 在对应版本的 `Migration.up()`（`src/data/db-migrations.ts` 或 `src/data/migrations/`）中添加
   - 禁止在两处同时添加同一 store 的创建逻辑（违反 DRY 原则）
   - 当前基线 store 清单（由 createSchema 创建，共 29 个）：stocks / v6Scores / intelligentScores / industryScores / orders / watchlists / signals / researchLogs / dailyQuotes / financialReports / rotationScores / sectorScores / scoreDocs / strategySnapshots / localDocs / news / newsStockMap / sentimentCache / newsBookmarks / hotSectorScores / valuePitScores / executionLogs / missingReports / executionPlans / portfolios / tradeReviews / schemaMigrations / collectConfig / customAgents
-  - 当前增量 store 清单（由 migration 创建，共 24 个）：
+  - 当前增量 store 清单（由 migration 创建，共 28 个）：
     - v24（RBAC 5+1 表）：rbac_users / rbac_roles / rbac_permissions / rbac_user_roles / rbac_role_permissions / rbac_permission_audit_logs
     - v27：traceRecords
     - v28（Workflow 4 表）：workflowDefs / workflowSchedules / workflowTriggers / workflowRuns
@@ -1156,6 +1181,9 @@ grep -rn 'auditRecord' src/services/data-collector/collectionPipeline.ts    # �
     - v33（报告资产化 2 表）：generatedReports / reportTemplates
     - v34：screeningResults
     - v35：observationReviews
+    - v36：sectorCollectData
+    - v37：qualityMetricsHistory
+    - v38：dimensionCollectData
   - 注意：schemaMigrations 表本身由 createSchema 创建（基线），但它的"种子数据"由 seed_schema_migrations_tracker migration 写入；customAgents 同理（store 由 createSchema 创建，种子数据由 seed_custom_agents_tracker migration 写入）。`seed_*` 迁移不得重复创建基线 store。
 - 新增 ENVELOPE_ACTION 必须在 `DataBridge.routeToDB()` 中添加对应 case
 - **修改 ACL_MATRIX / ENVELOPE_ACTION / ACTION_TO_STORE_MAP / databridgeHandlers 后必跑 `npm run audit:acl-consistency`**（v1.4.9 新增）
