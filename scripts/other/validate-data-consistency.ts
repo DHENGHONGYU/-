@@ -567,6 +567,12 @@ const STORE_TO_TYPE_MAP: Record<string, string> = {
   screening_results: 'ScreeningRunResultRecord',
   // 观察池复盘持久化（v35 新增，spec 缺口② 闭环）：实体类型内联定义于 src/data/dataLayerContentStores.ts
   observation_reviews: 'ObservationReviewRecord',
+  // 板块采集专用持久化（v36 新增，维度10 与 daily_quotes 解耦）：实体类型内联定义于 src/data/dataLayerContentStores.ts
+  sector_collect_data: 'SectorCollectDataRecord',
+  // 采集质量指标历史（v37 新增，P0-2 整改）：实体类型定义于 src/data/types/types.qualityMetricsHistory.ts
+  quality_metrics_history: 'QualityMetricsHistoryRecord',
+  // 维度 11-14 采集数据通用专用存储（v38 新增，2026-08-23 遗留问题整改 P2）：实体类型内联定义于 src/data/dataLayerContentStores.ts
+  dimension_collect_data: 'DimensionCollectDataRecord',
   // 以下 5 个 store 的真实实体类型分别定义在 src/types/modules 与 src/data/dataLayerContentStores.ts（内联 *Entry），
   // 脚本启发的单数化推断名（AnalysisResult/CollectionHistory/ConflictLog/FileImportRecord/ScheduleConfig）与真实类型名不符，
   // 故在此显式映射以消除「缺实体类型」告警；真实类型已随定点注入纳入扫描。

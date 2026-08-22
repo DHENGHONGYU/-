@@ -36,6 +36,9 @@ const COLLECTION_ACTION_STORE: Readonly<Record<string, string>> = {
   [ENVELOPE_ACTION.saveSectorScores]: STORE_NAME.sectorScores,
   [ENVELOPE_ACTION.saveResearchLog]: STORE_NAME.researchLogs,
   [ENVELOPE_ACTION.saveLocalDocs]: STORE_NAME.localDocs,
+  [ENVELOPE_ACTION.saveSectorCollectData]: STORE_NAME.sectorCollectData,
+  // v38（2026-08-23 遗留问题整改 P2）：维度 11-14 通用专用存储，与 ACTION_TO_STORE_MAP 对齐
+  [ENVELOPE_ACTION.saveDimensionCollectData]: STORE_NAME.dimensionCollectData,
 }
 
 /** dispatch 分支实际覆盖的 mode 全集（与 runSingleTraceImpl 对齐） */
