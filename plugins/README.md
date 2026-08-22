@@ -1,5 +1,10 @@
 # 插件目录索引
 
+<!-- WIKI-ADAPTER: source=wiki/ -->
+
+> **跨平台契约入口**：本目录为 KIMI / 外部插件平台的薄适配层，插件技能体系统一登记于 [wiki/skills/INDEX.md](../wiki/skills/INDEX.md)（L2 段），平台环境卡见 [wiki/platforms/kimi-plugins.md](../wiki/platforms/kimi-plugins.md)，契约见 [wiki/CONTRACT.md](../wiki/CONTRACT.md)。
+> 新增/删除插件须三方同步：`plugins/<name>/SKILL.md` ↔ `.trae/skills/skill-registry.json`（externalPluginSkills）↔ wiki/skills/INDEX.md。
+
 > **用途**: 快速定位所有插件技能文件，兼容 VS Code / TRAE / Kimi Code 等编辑器  
 > **同步日期**: 2025-07-12
 

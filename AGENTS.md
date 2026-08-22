@@ -1,10 +1,16 @@
 ---
 title: AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 status: active
-version: v1.7.6
+version: v1.7.8
 last_updated: 2026-08-23
 code_version: "2.0.0-rc.2"
 change_log:
+  - version: v1.7.8
+    changes: "2026-08-23 跨平台 WIKI 统一为环境配置契约：新建顶层 wiki/ 单一真相源（README 双视角入口 + CONTRACT 契约正文 + platform-config.registry.json 机器注册表 + 6 张平台环境配置卡 + 环境统一配置 + 统一技能索引），各平台目录（.trae/.workbuddy/.qoder/plugins/.cursorrules）改为薄适配层（WIKI-ADAPTER 标记指针）；docs/wiki 五篇代码 Wiki git mv 至 wiki/code-wiki 并登记 _redirect-map.json；.cursorrules GBK 乱码修复为 UTF-8；新增 scripts/audit/audit-platform-docs.cjs 防漂移门禁（挂 gate:quick）"
+    date: 2026-08-23
+  - version: v1.7.7
+    changes: "2026-08-23 跨平台 SKILL 体系统一（TRAE/WorkBuddy/Qoder/VSCode/Kimi）：① 镜像 junction 化——重写 scripts/skill-mirror.cjs 为幂等联接契约（已是正确 junction→联接复用；旧 cp 副本→清理重建；非 Windows/失败→降级 cp），.workbuddy/skills 改为指向 .agents/skills 的目录联接，消除物理双份漂移；② 孤儿归位——skill-5seg-migration 由 .trae/skills/ git mv 至 .agents/skills/ 并登记 registry（L1 21→22、合计 49→50、doc-governance 7）；③ 格式统一——22 个 L1 SKILL 正文已 5/5 段合规，批量补全 frontmatter skill_id 对齐 registry + PATCH++ + change_log 留痕，修复 5 个文件 YAML 缩进瑕疵；④ 索引去重——.agents/skills/README.md 重写为唯一人类可读统一索引（含跨平台加载契约表），.trae/skills/INDEX.md 降级为轻量指针，机器真相源唯一保留 skill-registry.json。门禁全绿（audit:skill-coverage RULE-TPL 22/22）"
+    date: 2026-08-23
   - version: v1.7.6
     changes: "2026-08-23 遗留问题整改 P1/P3 收尾：① P1 全仓「七维」过时文案统一——9 个代码文件 + 8 个活跃文档统一为十六维/采集策略配置（事实性七维：dataDimensions 进度展示域、collectionProgressService、行业评分 V4 七因子、sevenDim* 历史标识符、SevenDimConfigPage 测试锁定标题一律保留）；② P3 collectionPipeline.ts（1555 行）拆分为 facade（~440 行）+ 7 个 src/services/data-collector/pipeline/ 子模块（Types/Mappings/Events/Audit/Writers/DataGen/Handlers），公开 API 与导入路径零破坏（13 处消费方不变）；③ P2 测试侧补同步——collection-dry-run COLLECTION_ACTION_STORE 补登记 saveDimensionCollectData、dataLayer 属性计数 49→50、dataRelationship blueprint Store 计数 55→56；④ mockFallbackPolicy EWMA 断言适配重试×熔断交互（单源重试 3 次达熔断阈值被跳过为预期行为）。门禁全绿（tsc 全量/prod/test=0 / layers=0 / acl=0 / db-references=0 / blueprint 56 / dataConsistency=0 / agents-consistency A1-A7 / 采集域 vitest 251 例）"
     date: 2026-08-23
@@ -35,9 +41,13 @@ change_log:
 ---
 # AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 
-> **版本**: v1.7.6 | **日期**: 2026-08-23
+> **版本**: v1.7.8 | **日期**: 2026-08-23
 > **适用范围**: 所有 AI 辅助开发工具（Claude Code、Cursor、Trae 等）
 > **强制等级**: 所有 AI 生成的代码必须遵守以下约束
+>
+> **v1.7.8 变更（本轮增量，2026-08-23）**：跨平台 WIKI 统一为环境配置契约——新建顶层 `wiki/` 单一真相源（`wiki/README.md` 开发者/使用者双视角入口、`wiki/CONTRACT.md` 契约正文、`wiki/platform-config.registry.json` 机器注册表、6 张平台环境配置卡、统一环境配置与技能索引），TRAE/WorkBuddy/KIMI/Qoder/Cursor-VSCode 平台目录一律改为薄适配层（`WIKI-ADAPTER` 标记指针，禁内容副本）；`docs/wiki` 五篇代码 Wiki 迁至 `wiki/code-wiki/` 并登记重定向；`.cursorrules` GBK 乱码修复为 UTF-8；新增 `scripts/audit/audit-platform-docs.cjs` 防漂移门禁并挂 `gate:quick`
+>
+> **v1.7.7 变更（2026-08-23）**：跨平台 SKILL 体系统一——`.workbuddy/skills` 由 cp 镜像改为指向 `.agents/skills` 的 **Windows 目录联接（junction）**（`npm run skill:mirror` 升级为幂等联接契约，联接复用/降级 cp 兜底）；孤儿 `skill-5seg-migration` 归位 `.agents/skills/` 并登记 registry（L1=22、合计 50）；22 个 L1 SKILL 全量对齐 5 段式骨架（补 skill_id + 元数据升版留痕）；`.agents/skills/README.md` 重写为唯一人类可读统一索引（含五平台加载契约表），`.trae/skills/INDEX.md` 降级指针，机器真相源唯一保留 `skill-registry.json`
 >
 > **v1.7.6 变更（本轮增量，2026-08-23）**：遗留问题整改 P1/P3 收尾——① P1 全仓「七维」过时文案统一（9 代码文件 + 8 活跃文档 → 十六维/采集策略配置；事实性七维与测试锁定标题保留）；② P3 `collectionPipeline.ts`（1555 行）拆分为 **facade + 7 个 `pipeline/` 子模块**（pipelineTypes/ pipelineMappings/ pipelineEvents/ pipelineAudit/ pipelineWriters/ pipelineDataGen/ pipelineHandlers），**公开 API 与导入路径零破坏**（runSingleTrace/runBatchTrace/createDefaultCollectionConfig/resolve*/DIMENSION_TO_ACTION/NON_QUOTE_MODES 等 13 处消费方导入不变）；③ P2 测试侧补同步（dry-run action→store 映射、dataLayer 50 属性、blueprint 56 Store）；④ EWMA 测试断言适配重试×熔断交互。门禁全绿（tsc 全量=0 / layers=0 / acl=0 / db-references=0 / blueprint 56 / dataConsistency=0 / agents-consistency A1-A7 / 采集域 vitest 251 例）
 >
@@ -81,6 +91,8 @@ change_log:
 
 > **提示词模板与检查清单**：为降低 AI 上下文漂移与人工返工，本项目在 `prompts/` 目录维护系统提示词模板，在 `docs/` 目录维护 `ui-migration-checklist.md`、`widget-integration-checklist.md`、`ai-memory-layer.md` 与 `ai-generate-audit-fix-loop.md`。AI 辅助开发时应优先加载对应模板，执行迁移、新增 Widget、记忆检索或飞轮流程时应按文档逐项核对。
 >
+> **🌐 跨平台 WIKI 统一契约（v1.7.8 新增）**：`wiki/` 是 TRAE/WorkBuddy/KIMI/Qoder/Cursor/VS Code 各平台 WIKI 与环境配置的**单一真相源**（总入口 `wiki/README.md`，契约正文 `wiki/CONTRACT.md`，机器注册表 `wiki/platform-config.registry.json`）；各平台目录仅存薄适配指针，禁止内容副本；变更后必跑 `npm run audit:platform-docs`。
+>
 > **文档与复杂度规范**：为提升代码可维护性，新增公共函数、组件、Hook、Store 必须补充 JSDoc（见 `docs/03-development/jsdoc-convention.md`）；新增代码应避免深层嵌套、长链式条件与过长函数（见 `docs/03-development/complexity-governance.md`）。
 >
 > **📋 SOP 规范体系（团队开发流程第一入口）**：本项目已按 SDLC 7 阶段建立**标准化操作 SOP Suite**，所有"**怎么做** / 具体操作步骤 / 失败修复 / 证据归档"的问题，请第一时间打开 [SOP 总览 README](docs/guides/sops/README.md) 而不是零散翻 how-to。7 篇正文覆盖：
@@ -89,11 +101,11 @@ change_log:
 > - S06 版本发布与部署（SemVer + 单向同步 + 双回滚）/ S07 上线后运维与应急（48h 值守 + P0 5 层上报矩阵）
 > SOP 文档基于当前 AGENTS.md v1.6.0 契约编写；命令与阈值与本 §七 严格一致，遇冲突以本契约为准，同步修订对应 SOP（Frontmatter code_version 对齐）。
 >
-> **项目级 SKILL 索引**（三层分离，单一真相源见 `.trae/skills/skill-registry.json`，合计 49 项；MAND=mandatory 强制，adv=advisory 建议）：
-> - **L1 项目物理技能（21 项）**：物理存放目录 `.agents/skills/*/SKILL.md`（非 `.trae/skills/`；`.trae/skills/` 仅存放 INDEX.md 与 skill-registry.json 索引文件，无技能本体；`_SKILL-TEMPLATE.md` 为官方骨架模板不计入 L1 技能计数，实际注册 L1=21，与 skill-registry.json `projectPhysicalSkills[]` 数组长度对齐）。按 registry `categoriesStats` 分 13 类（名称均为自然 slug，无 `v9-` 前缀）：
+> **项目级 SKILL 索引**（三层分离，单一真相源见 `.trae/skills/skill-registry.json`，合计 50 项；MAND=mandatory 强制，adv=advisory 建议；人类可读统一索引见 `wiki/skills/INDEX.md` 与 `.agents/skills/README.md`（同源同频），含 TRAE/WorkBuddy/Qoder/VSCode/Kimi 五平台加载契约表）：
+> - **L1 项目物理技能（22 项）**：物理存放目录 `.agents/skills/*/SKILL.md`（非 `.trae/skills/`；`.trae/skills/` 仅存放 INDEX.md 与 skill-registry.json 索引文件，无技能本体；`_SKILL-TEMPLATE.md` 为官方骨架模板不计入 L1 技能计数，实际注册 L1=22，与 skill-registry.json `projectPhysicalSkills[]` 数组长度对齐）。WorkBuddy/Qoder 经 `.workbuddy/skills` 目录联接（junction → `.agents/skills`）加载同一物理源；VSCode 无技能目录，经本契约文件（AGENTS.md）加载。按 registry `categoriesStats` 分 13 类（名称均为自然 slug，无 `v9-` 前缀）：
 >   - **架构治理 architecture（5）**：`architecture-cleanup`（adv）、`architecture-radar-scan`（adv）、`constant-migration`（MAND）、`databridge-migration`（MAND）、`gateway-facade-refactor`（adv, v1.7.0 新增，端到端 6 阶段门面化重构 SOP）
 >   - **数据库治理 db-governance（1）**：`db-reference-audit`（adv）
->   - **文档治理 doc-governance（2）**：`doc-freshness-governance`（MAND）、`docs-as-mirror`（adv）
+>   - **文档治理 doc-governance（3）**：`doc-freshness-governance`（MAND）、`docs-as-mirror`（adv）、`skill-5seg-migration`（adv, v1.7.7 由 `.trae/skills/` 孤儿归位，5 段式骨架迁移 SOP）
 >   - **特性运行时 feature-runtime（1）**：`feature-window-context-doc`（adv）
 >   - **行业评分 industry-score（2）**：`industry-score`（adv）、`industry-score-mapping`（adv）
 >   - **V6 分析 v6-analysis（3）**：`intelligent-score`（adv）、`v6-docx-output`（adv）、`v6-stock-analysis-model`（adv）
@@ -105,7 +117,7 @@ change_log:
 >   - **质量门禁治理 quality-gate-governance（1）**：`collection-pipeline-governance`（adv, v1.7.0 新增 GAP-01，采集管线配置/降级/字典/CI 全链路治理 SOP）
 > - **L2 外部插件技能（9 项）**：物理存放目录 `plugins/*/skills/*/SKILL.md`；由 TRAE CN 插件加载，不在 `.agents/skills/` 中重复复制。
 > - **L3 平台内置虚拟技能（19 项）**：定义见 `.trae/skills/skill-registry.json` 的 `virtualPlatformSkills`（本索引仅计项数，不重复枚举；其 `v9-*` 为 TRAE CN 平台内置，无本地物理目录）。
-> - **禁止混加计数**：L1（21）+ L2（9）+ L3（19）= 49 条登记，任何声明不得绕过此分层。
+> - **禁止混加计数**：L1（22）+ L2（9）+ L3（19）= 50 条登记，任何声明不得绕过此分层。
 >
 > 🔴 **骨架模板强制执行（双保险，v1.7.1 升级）**：所有新增 L1 物理 Skill（`.agents/skills/*/SKILL.md`）**一律以官方骨架模板为起点，禁止从空白文件手写**。
 > - **保险一（文档契约强制）**：第一步必须复制模板——`cp .agents/skills/_SKILL-TEMPLATE.md .agents/skills/<skill-slug>/SKILL.md`，严禁使用 `mkdir && touch SKILL.md`、直接 WriteFile 空骨架、或粘贴非模板版本的 SKILL.md；复制成功后再按 slug/版本/日期/业务域填充内容。
@@ -114,7 +126,7 @@ change_log:
 
 > ⚠️ **技能治理对齐记录（2026-08-16，方案B + P2 已闭环）**：本索引/路由表曾与物理落盘、registry、加载器存在结构性错位，经两轮核查与对齐，现状态如下：
 > 1. **真相态已对齐（方案B 反向对齐）**：registry（`skill-registry.json`）为单一真相源——`projectPhysicalSkills` 18 项（自然 slug，无 `v9-` 前缀）、`externalPluginSkills` 9 项、`virtualPlatformSkills` 19 项（含 `v9-*` 平台虚拟技能，无本地 SKILL.md）。本轮执行：(a) 撤销上一轮误加的 `v9-` 前缀重命名（`v9-constant-migration`/`v9-databridge-migration` → 还原 `constant-migration`/`databridge-migration`）；(b) 将新建采集门禁由 `v9-collection-pipeline-testing` 改名为自然名 `collection-pipeline-testing` 并登记为 L1 物理（mandatory，data-flow），同步 registry 由 virtual 转 projectPhysical（virtual 20→19、physical 17→18、total 维持 46）；(c) 本索引 L1 段已重写为 18 自然名物理技能（按 registry 分类与 mandatory 标记），"v9-* 即物理"的谎言已消除；(d) 路由表采集行已改用自然名 `collection-pipeline-testing`。
-> 2. **加载器路径错位已缓解（P2 镜像）**：WorkBuddy 加载器仅扫描 `~/.workbuddy/skills/` 与 `{workspace}/.workbuddy/skills/`、**不扫 `.agents/skills/`**；本环境 available_skills 仅含用户级 `v9-color-token-remediation` 等，不含项目 L1 技能。已执行 P2：将 18 个 L1 物理技能镜像至 `D:\FinSightV9\.workbuddy\skills\`（Windows 不支持 symlink，采用 `cp -r` 拷贝；已校验每目录含 SKILL.md 且 `name` 字段与目录一致）——WorkBuddy 现可经 `Skill()` 加载。⚠️ 拷贝存在漂移风险：`.agents/skills/*` 更新后需重新同步——已提供自愈脚本 `npm run skill:mirror`（见 `scripts/skill-mirror.cjs`，覆盖式镜像 + 清理孤儿目录）；或开启 Developer Mode 改用 symlink。
+> 2. **加载器路径错位已根治（junction 单一物理源，v1.7.7 升级）**：WorkBuddy/Qoder 加载器仅扫描 `~/.workbuddy/skills/` 与 `{workspace}/.workbuddy/skills/`、**不扫 `.agents/skills/`**。原 P2 采用 `cp -r` 镜像存在双份漂移风险，v1.7.7 已改为 **Windows 目录联接（junction）**：`.workbuddy/skills` → `.agents/skills`（`mklink /J` 无需管理员权限），物理上只有一份。`npm run skill:mirror` 已重写为**幂等联接契约**（已是正确联接→输出"联接复用"跳过；旧 cp 副本→清理后重建联接；非 Windows/建联接失败→降级 cp 并警告）；新克隆机器跑一次 `npm run skill:mirror` 即可重建。
 > 3. **frontmatter 声明失真（已纠正）**：原路由表称 SKILL.md frontmatter 含 `triggers`/`gates`/`mandatory` 机器可读字段。实测所有物理 SKILL.md 仅用 `name`/`description`/`version`/`last_updated`/`change_log`，**无此三字段**；`triggers`/`gates`/`mandatory` 确为机器可读真相源，但存放于 `skill-registry.json` 而非 SKILL.md。已在下方匹配规则（L65）纠正指向 registry，未强行改写 18 个 SKILL.md。
 > 完整映射、缺口与对齐决策见 `deliverables/AGENTS-skill-governance-reconciliation.md`。
 
