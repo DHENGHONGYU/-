@@ -78,7 +78,7 @@ FinSight V9 是一款**面向中国 A 股个人投资者的智能投研复盘系
 | 构建 | Vite `^6.0.0` | 开发服务器（端口 5199，predev 钩子自动运行 `tsc:prod`）+ 生产构建 |
 | 状态管理 | Zustand `^5.0.0`（注册表 66 条：51 active + 15 deprecated；磁盘 78 文件含 derived/utility/index） + `withBroadcast` 跨 Tab 广播 | 全局状态 |
 | 路由 | React Router `^7.0.0`（HashRouter） | SPA 路由 |
-| 数据存储 | IndexedDB 原生 API（DB_VERSION=35，53 个 STORE_NAME 枚举） | 本地持久化 |
+| 数据存储 | IndexedDB 原生 API（DB_VERSION=36，54 个 STORE_NAME 枚举） | 本地持久化 |
 | 图表 | Recharts `^3.9.1` + lightweight-charts `^5.2.0` | 业务图表 + 专业 K 线 |
 | UI 样式 | Tailwind CSS `^3.4.15` + 自研 Design Tokens（V5 Apple Business 冷色调） | 视觉系统 |
 | 虚拟列表 | @tanstack/react-virtual `^3.14.4` | 大数据量渲染 |

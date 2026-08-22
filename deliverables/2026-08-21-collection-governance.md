@@ -3,9 +3,13 @@ domain: data-collection
 doc\_id: V9-DELIVER-20260821-COLLECTION
 title: 输入舱数据采集能力跃迁治理报告（维度 10-16 接线修复）
 code\_version: "2.0.0-rc.2"
-version: v1.1.0
+version: v1.2.0
 last\_updated: 2026-08-22
 change\_log:
+
+* version: v1.2.0
+  changes: "2026-08-22 第三轮+第四轮跃迁闭环：③ 维度 10 专用存储 sector\_collect\_data（DB\_VERSION 35→36，Store 53→54，ENVELOPE\_ACTION.saveSectorCollectData 四位置同步，validate:dataConsistency 类型映射补齐）；④ 采集本地文件即时落盘（用户原则：应采都采+及时存储+文件夹配置化）——新增 config/collectionFileStorage.ts 文件夹接口配置（16 维映射+命名模板）与 localFilePersistService.ts（永不抛出、Electron fileSync 落盘、浏览器降级不阻塞），collectionPipeline 四个写库成功点全接线，10 例单测全绿；七门禁全绿（tsc:prod/layers/acl/db-references/dataConsistency/blueprint/agents-consistency）"
+  date: 2026-08-22
 
 * version: v1.1.0
   changes: "2026-08-22 GAP-4 闭环：MonthlyBudgetGuard 补实现（15 例单测一次全绿 + sanityCheck），data-collector:dry-run / test:services:collection-pipeline:prod 两 npm 脚本落地，Skill 漂移消除；GAP-3 闭环：WESTOCK\_LIVE\_E2E=1 实测通过（可用率 100% 30/30，评级 A）；缺口4 复核：portfolioService.test.ts 已被并行会话修复，其 ragRetriever.ts 尚存 TS6133 在途错误（非本次引入）；六门禁实测全绿"
@@ -85,7 +89,7 @@ change\_log:
 ## 六、遗留缺口（下一轮跃迁候选）
 
 1. **~~GAP-4 治理工具链缺失~~**~~（P1）~~ **✅ 已闭环（2026-08-22）**：`src/services/data-collector/MonthlyBudgetGuard.ts` 补实现（纯函数式：月度预算推导 / 加权计划预估 / ok-warning-critical-exceeded 四级判定 / sanityCheck 自检，阈值口径与 Skill 触发条件 7 对齐）；`data-collector:dry-run`（tests/collection-dry-run.test.ts，5 模板 × 16 维静态接线四环校验，防「已注册未接线」漂移，报告落盘 outputs/collection-dry-run.json）与 `test:services:collection-pipeline:prod`（--mode production）两 npm 脚本落地。验证：`MonthlyBudgetGuard.test.ts` **15 例全绿** + dry-run 4 例全绿（full 模板 16/16 接线，计划 405 次/月 vs 预算 62000 次/月）+ `tsc:prod` / `audit:layers` / `audit:acl-consistency` / `audit:db-references` / `validate:blueprint`（53 Store / 984 接口）/ `validate:dataConsistency` 六门禁实测全绿。
-2. **维度 10 的存储升级路径**（P2）：当前写 local\_docs 为过渡方案；若下游需要结构化消费热门板块数据，应新增专用 store（需走 DB\_VERSION 增量 + data-flow-integrity-audit 全流程）。
+2. **~~维度 10 的存储升级路径~~**~~（P2）~~ **✅ 已闭环（2026-08-22，第三轮）**：新增 `sector_collect_data` 专用 store（DB\_VERSION 35→36，Store 53→54），维度 10 采集数据脱离 local\_docs 过渡方案结构化落库；详见 §八。
 3. **~~Live E2E 环境~~**~~（P1）~~ **✅ 已闭环（2026-08-22）**：`WESTOCK_LIVE_E2E=1` 真实取数实测通过——vitest 派生进程可正常拉起 CLI（npx 缓存复用），10 只股票维度 04/05/08 接入前后对比：westock 可用率 100%（30/30），04 公告/05 新闻综合 97.3，08 研报 89.6，评级 A；报告见 deliverables/E2E-westock-quality-report.md。
 4. **并发编辑风险（持续观察）**：`portfolioService.test.ts` 的语法错误已被并行会话修复（tsc:test 该文件归零）；但其会话的 `ragRetriever.ts` 存在在途 TS6133（未使用变量）错误——非本次变更引入，交付前需并行会话自行清零。
 
@@ -93,3 +97,53 @@ change\_log:
 
 **修复前**：16 维配置注册，实际可成功采集 9 维（01/02/03-08/09），7 维恒失败（10-16）。
 **修复后**：16 维全部具备真实采集通路（MCP 映射、fetcher、写入 action、ACL、主键兜底五层齐备），dispatch 完整性由回归测试锁死防漂移。
+
+## 八、第三轮跃迁：维度 10 专用存储（2026-08-22，AGENTS.md v1.7.2）
+
+**动因**：§六.2 遗留缺口——维度 10（热门板块）写 local\_docs 仅为过渡方案，下游结构化消费需要专用存储。
+
+**变更（13 文件）**：
+
+| 层 | 文件 | 变更 |
+| --- | --- | --- |
+| config | `src/config/dbConfig.ts` | DB\_VERSION 35→36；STORE\_NAME 53→54（基线 29 + 增量 25）；新增 `ENVELOPE_ACTION.saveSectorCollectData`；fetcher ACL 读写放行 |
+| data | `db-schema.ts` / `db-migrations.ts` | ensureStore（keyPath=id + by-symbol/by-collected-at 索引）；v36 迁移标记 |
+| data | `dataLayerContentStores.ts` / `dataLayer.ts` | `SectorCollectDataRecord` 内联类型 + `sectorCollectDataStore` 工厂 + 接线 |
+| core | `databridge.ts` / `databridgeHandlers.ts` | ACTION\_TO\_STORE\_MAP 映射 + PutHandler 注册 |
+| services | `collectionPipeline.ts` | 维度 10 改道 saveSectorCollectData；storeForDim '10'→sectorCollectData；字段补齐（symbol/dimensionCode/collectedAt/source）；auditRecord 规则 ['id','symbol'] |
+| 门禁脚本 | `validate-data-blueprint.ts` / `validate-data-consistency.ts` | expectedStores=54；STORE\_TO\_TYPE\_MAP 补 sector\_collect\_data→SectorCollectDataRecord |
+| 测试 | `tests/collection-dry-run.test.ts` | 静态接线映射表补新 action |
+| 契约文档 | `AGENTS.md`（v1.7.2）+ Wiki×4 + S05/S07 | 全部 DB\_VERSION/Store 数字面量同步 36/54（审计脚本要求全仓一致） |
+
+## 九、第四轮跃迁：采集本地文件即时落盘（2026-08-22，AGENTS.md v1.7.3）
+
+**用户原则**：采集来源稳定可采集、采集内容可存储、应采都采、采集**及时存储当地文件**，且当地文件夹必须有**对应的文件夹接口配置**。
+
+**设计**：
+
+```
+src/config/collectionFileStorage.ts        ← 文件夹接口配置（config 层单一真相源）
+    rootDir = 'outputs/collected-data'
+    dimensions: '01'-'16' → { folder, filePattern, enabled }
+    命名模板占位符：{symbol} {date} {dimension}
+    目录约定与 collectedDataSyncService 批量导出同树：{rootDir}/{symbol}/{维度文件夹}/{文件}
+
+src/services/data-collector/localFilePersistService.ts  ← 即时落盘服务
+    persistCollectedDataToLocalFile()：永不抛出契约
+      Electron 环境 → window.fileSync.writeFiles IPC 写真实文件系统
+      纯浏览器环境 → warn 降级跳过，绝不阻塞采集主链路
+    落盘信封：{ _meta:{symbol,dimensionCode,source,collectedAt,version}, data }
+```
+
+**接线点（collectionPipeline 四个写库成功路径全覆盖）**：
+
+| 维度 | 写库函数 | 落盘时机 |
+| --- | --- | --- |
+| 01 行情 | `writeQuoteToStock` | updateStock 成功 + insertStock 成功双路径 |
+| 02 K线 | `writeKlineToDailyQuotes` | saveDailyQuotes 成功后 |
+| 03–08 / 10–16 | `writeMockDimensionData`（统一写入入口） | forward 成功后 |
+| 09 财务 | `handleFinancialMode` | fetchFinancial 写库后，同一份返回数据落盘 |
+
+**验证**：`localFilePersistService.test.ts` 10 例单测全绿（browser-env 降级 / 维度未登记 / 成功路径路径与信封断言 / success:false / IPC 抛异常 / 总开关 / 16 维配置完整性 / 占位符替换）；七门禁全绿——`tsc:prod`=0、`audit:layers`=0、`audit:acl-consistency`=0 ERROR 0 WARN、`audit:db-references`=0、`validate:dataConsistency` exit 0（54 Store）、`audit:agents-consistency` 全部断言通过、vitest（落盘 10 + dry-run 4 + 管线 37 + 批量同步 21）全绿。
+
+**与批量导出的分工**：本服务管「采后即存」（每链路写库成功立即落盘）；`collectedDataSyncService` 管「整批归档 + 汇总报告」（批次目录 + \_summary.md）。两者共用同一目录树，互为补充。

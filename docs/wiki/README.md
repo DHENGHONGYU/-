@@ -50,7 +50,7 @@ FinSight V9（智能投研复盘系统）的代码知识库。面向中国 A 股
 | 产品定位 | A 股个人投研决策与复盘工具（纯前端 PWA，本地数据主权） | README.md |
 | 技术栈 | React 19.0 + TypeScript 5.7 + Vite 6 + Zustand 5 + Tailwind CSS 3.4 + React Router 7 | package.json 依赖版本 |
 | 路由 | React Router 7（HashRouter） | App.tsx |
-| 数据库 | IndexedDB `V6ProDB`，DB_VERSION = 35，53 个 Object Store（STORE_NAME 枚举） | dbConfig.ts 脚本统计 |
+| 数据库 | IndexedDB `V6ProDB`，DB_VERSION = 36，54 个 Object Store（STORE_NAME 枚举） | dbConfig.ts 脚本统计 |
 | 开发端口 | Vite dev server: **5199**；Electron 开发模式独立 dev server URL: **3000**（VITE_DEV_SERVER_URL） | vite.config.ts L234 + package.json electron:dev |
 | Python 侧车 | Collector :8000 / Embedding :8001 / Daemon :8765 | electron/sidecar.ts + vite.config.ts 代理 |
 | Store 层 | 注册表 66 条（51 active / 15 deprecated）；磁盘 78 文件（含 derived/index/utility） | storeRegistry.ts 行数 + 目录统计 |
@@ -108,7 +108,7 @@ FinSight V9（智能投研复盘系统）的代码知识库。面向中国 A 股
 | 12 | Husky pre-commit 主步数 | 模糊"20 步左右" | **22 主步**（编号 [0/19]→[22/20]，P0 BLOCK 10 项 + P1 WARN 12 项）| `.husky/pre-commit` 脚本逐段标号 |
 | 13 | Husky pre-push 主步数 | 模糊"5 步左右" | **6 主步** 串行（skill-router → gate:quick → widget → complexity → test:stable → build；第 7 步 gate:aggregate 非阻塞）| `.husky/pre-push` + `package.json` gate:* 命令拆解 |
 | 14 | data / gateway 职责漂移 | 写为"数据网关" | **data/：数据访问对象 & 查询 DSL；gateway/：外部 API 接入 & 协议转换**（已在 02-module-map §2 辨析段澄清）| `src/data/` + `src/lib/gateway/` 实际文件分布 |
-| 15 | STORE_NAME 枚举数 | "50 个左右" | **53**（与 DB_VERSION=35 对应）| `dbConfig.ts` L323-L388 逐行计数 |
+| 15 | STORE_NAME 枚举数 | "50 个左右" | **54**（与 DB_VERSION=36 对应）| `dbConfig.ts` L323-L388 逐行计数 |
 
 ---
 

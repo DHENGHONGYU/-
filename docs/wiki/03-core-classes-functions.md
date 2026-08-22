@@ -25,7 +25,7 @@ change_log:
 
 ```typescript
 export const DB_NAME = 'V6ProDB'                  // IndexedDB 数据库名
-export const DB_VERSION = 35                       // 当前版本（v35 新增 observation_reviews）
+export const DB_VERSION = 36                       // 当前版本（v36 新增 sector_collect_data）
 export const STORE_NAME = { ... }                  // 53 个 Object Store 精确枚举
 export const ENVELOPE_TARGET = {                   // 14 个目标（已核对 dbConfig.ts L80-L103）
   db, analyzer, ui, tradinghub, system, event,
@@ -188,7 +188,7 @@ engine.calculateAll(context)              // 全量评分流程（层序遍历 +
 data-collector/
 ├─ collectionPipeline.ts        # 主流水线：维度配置→优先级→编排→写IDB；真实源失败降级 mock
 ├─ dataSourceOrchestrator.ts    # 多源编排（并行/串行/超时控制）
-├─ SourcePriorityManager.ts     # 优先级（健康度/延迟/成功率加权）
+├─ adaptiveSourceOrchestrator.ts # 自适应源编排（熔断器/EWMA 健康指标/综合评分链重排）
 ├─ TaskScheduler.ts             # 任务调度（cron/手动/事件）
 ├─ DataIntegrityGuard.ts        # 完整性守卫（字段缺失/越界/重复）
 ├─ crossValidator.ts            # 跨源交叉验证
@@ -208,7 +208,7 @@ data-collector/
 └─ config/ + schemas/           # 采集维度配置与 Schema
 ```
 
-启动触发：[sevenDimConfigStore.ts](../../src/store/sevenDimConfigStore.ts) 七维配置变更 → pipeline 调度。
+启动触发：[sevenDimConfigStore.ts](../../src/store/sevenDimConfigStore.ts) 采集配置变更（历史沿用“七维”命名，实际十六维） → pipeline 调度。
 
 ## 4. 数据源接入（src/services/fetcher/）
 

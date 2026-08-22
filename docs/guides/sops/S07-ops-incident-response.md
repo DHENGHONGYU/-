@@ -102,7 +102,7 @@ change_log:
 | 性能 | Lighthouse CI：首页性能分（生产域） | `npx lhci autorun --collect.url=https://<域名>` | Perf ≥ 85 分 | Perf < 70 → **P1** |
 | 性能 | Apdex T = 2s | APM 平台（如接入） | Apdex ≥ 0.95 | Apdex < 0.8 → **P1** |
 | 性能 | JS Bundle 体积：主 chunk ≤ 6MB（压缩前） | `dist/assets/index-*.js` size + gzip | ≤ 6MB | 超 +20% → **P1**（超基线） |
-| 数据 | IndexedDB schema 版本 = N？（v2.x DB_VERSION） | DevTools Application → Storage → IDB | 版本号 = DB_VERSION = 35 | 版本号≠ → **P1**（migration 失败） |
+| 数据 | IndexedDB schema 版本 = N？（v2.x DB_VERSION） | DevTools Application → Storage → IDB | 版本号 = DB_VERSION = 36 | 版本号≠ → **P1**（migration 失败） |
 | 数据 | V6 评分接口返回 200（抽样 3 只股票） | UI 操作或 curl API | 3/3 成功；无 HTTP 500 | 任意 1 条 5xx → **P1** |
 | 安全 | XSS Payload 14 条（E2E XSS）快速回归 | `npm run test:e2e-verify -- --xss-only` | 14/14 通过（引用 DEPLOYMENT-CHECKLIST） | ≤13 → **P0** |
 | 反馈 | 飞书/客服用户反馈通道有无"页面异常/白屏/数据错" | 产品值班检查邮件 / 群 / 工单 | 0 条 P0 反馈 | 白屏/崩溃类 → **P0**；数据错 → **P1** |

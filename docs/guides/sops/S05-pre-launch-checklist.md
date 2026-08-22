@@ -158,7 +158,7 @@ npm run audit:db-references
 ```
 
 **作用**：三向对齐 `STORE_NAME` 枚举 ↔ Schema/Migration ↔ `ENVELOPE_ACTION → ACTION_TO_STORE_MAP` ↔ `ACL_MATRIX`。  
-**预期输出**：`DB_VERSION=35 / Stores: 53 / Mismatches: 0`（AGENTS.md v1.6.0 契约基线）。  
+**预期输出**：`DB_VERSION=36 / Stores: 54 / Mismatches: 0`（AGENTS.md v1.7.2 契约基线）。  
 **失败修复**：SKILL `db-reference-audit`。
 
 ### STEP 11 — MCP 架构一致性审计 [WARN]
@@ -233,7 +233,7 @@ npm run audit:agents-consistency:strict
 - A2 scope-guard v2 规则匹配
 - A3 tsc:prod / tsc:test 双 tsconfig 作用域
 - A4 MCP Registry 15 条目（10+5）
-- A5 DB_VERSION=35 / Stores=53
+- A5 DB_VERSION=36 / Stores=54
 - A6 USER_SCENES 结果优先视图
 - A7 设计令牌 V8 Apple 冷色调
 

@@ -46,7 +46,7 @@ change_log:
 
 | 目录 | 职责 | 关键内容 |
 |------|------|---------|
-| `src/config/` | 配置层（零硬编码锚点） | `dbConfig.ts`（DB_VERSION=35 / 53 STORE_NAME / **97 ENVELOPE_ACTION** / **14 ENVELOPE_TARGET**）、`routes.ts`（路由注册表 ROUTE_REGISTRY）、`mcpAclMatrix.ts`、`mcpServerRegistry.ts`（15 条目 MCP 注册表）、各业务配置 |
+| `src/config/` | 配置层（零硬编码锚点） | `dbConfig.ts`（DB_VERSION=36 / 54 STORE_NAME / **99 ENVELOPE_ACTION** / **14 ENVELOPE_TARGET**）、`routes.ts`（路由注册表 ROUTE_REGISTRY）、`mcpAclMatrix.ts`、`mcpServerRegistry.ts`（15 条目 MCP 注册表）、各业务配置 |
 | `src/constants/` | 常量层（零依赖） | `theme.tokens.ts`（V5 Apple Business Design Tokens）、`stockList.ts`、`uiText.ts`、`cockpit.constants.ts` 等；**禁止依赖任何运行时模块** |
 | `src/types/` | 零依赖纯类型 | `base.types.ts`、`role.types.ts`、`widget.ts`、`guards.ts`、`modules/`（mcp/databridge/collector 子域类型） |
 | `src/lib/` | 库函数（30+ 模块） | `logger.ts`、`eventBus.ts`、`errors.ts`、`xssSanitizer.ts`、`validation.ts`、`precision.ts`、`localStorageManager.ts`、`withBroadcast.ts`、`safeRegex.ts`、`perf.ts`、`format.ts`、`date.ts`、`designTokenVerifier.ts` 等；只有**白名单子集**可被 core/domain 层依赖 |
@@ -95,7 +95,7 @@ change_log:
 | 子域 | 核心文件 | 职责 |
 |------|---------|------|
 | `fetcher/` | `fetcherClient.ts`、`directDataAPI.ts`、`fetcherService.ts`、`types.ts`、`orchestrator/`（ports/adapters/phaseOrchestrator/resilienceChain 端口适配器架构）、`providers/`（tencentQuote/tencentKline/sinaQuote/akshare/neteaseHistory/mock）、`dataSourceRegistry.ts`、`fetcherAdapter.ts` | 数据源接入客户端：带超时/重试/健康检查的 HTTP 封装；腾讯/新浪/AKShare/网易 Provider；数据源注册表与编排器（端口适配器架构） |
-| `data-collector/` | `collectionPipeline.ts`、`dataSourceOrchestrator.ts`、`SourcePriorityManager.ts`、`TaskScheduler.ts`、`DataIntegrityGuard.ts`、`crossValidator.ts`、`collectors/`（BaseCollector→Live/Mock/Rest/WebSocket/NewsCrawler）、`adapters/`（tushareAdapter/westockMcpSource/tencentNewsMcpSource/ifindMcpCollector/llmSearchAgent + llmSearchCache） | 采集流水线：按维度配置生成数据源优先级 → 编排调用 → 写入 IndexedDB；真实源失败降级 mock；含多种外部适配器 |
+| `data-collector/` | `collectionPipeline.ts`、`dataSourceOrchestrator.ts`、`adaptiveSourceOrchestrator.ts`、`TaskScheduler.ts`、`DataIntegrityGuard.ts`、`crossValidator.ts`、`collectors/`（BaseCollector→Live/Mock/Rest/WebSocket/NewsCrawler）、`adapters/`（tushareAdapter/westockMcpSource/tencentNewsMcpSource/ifindMcpCollector/llmSearchAgent + llmSearchCache） | 采集流水线：按维度配置生成数据源优先级 → 编排调用 → 写入 IndexedDB；真实源失败降级 mock；含多种外部适配器 |
 | `fetcher` 根级 `collect.ts` | `fetchBasicData` / `fetchKlineData` | 前端侧 `/api/collect/*` 调用封装（遗留顶层服务文件） |
 | `data-sync/` | `conflictResolver.ts`、`updateExecutor.ts`、`stalenessDetector.ts` | 双通道数据同步：冲突解析、字段合并（字段级合并+人工冲突）、过期检测、全局调度 |
 | `data-sync-search/` | `searchEngine.ts`、`semanticSearcher.ts`、`historySearcher.ts` | 数据同步检索：代码/文档/历史/语义四向搜索 |
@@ -170,7 +170,7 @@ change_log:
 | `researchPoolStore.ts` / `intentionPoolStore.ts` | active | 研究池 / 意向池 |
 | `collectionRuntimeStore.ts` / `collectionWizardStore.ts` | active | 采集运行时 / 采集向导 |
 | `hotSectorStore.ts` / `rotationSignalStore.ts` / `valuePitStore.ts` | active | 三大策略状态 |
-| `sevenDimConfigStore.ts` | active | 七维采集配置（data-collector Pipeline 触发源） |
+| `sevenDimConfigStore.ts` | active | 采集维度配置（历史沿用“七维”命名，实际已扩至十六维；data-collector Pipeline 触发源） |
 | `riskStore.ts` / `dualStrategyStore.ts` / `signalStore.ts` / `signalAdviceStore.ts` / `signalQualityStore.ts` | active | 风险 / 双策略 / 信号 / 信号建议 / 信号质量 |
 | `backtestStore.ts` / `strategySnapshotStore.ts` / `executionStore.ts` / `reviewLaunchStore.ts` | active | 回测 / 策略快照 / 执行 / 复盘启动 |
 | `industryScoreStore.ts` / `industryDashboardStore.ts` / `sectorAnalysisStore.ts` | active | 行业评分 / 行业仪表盘 / 板块分析 |
@@ -213,6 +213,6 @@ change_log:
 | 4 | Store 磁盘文件数 | 63（与注册表混淆）| **78**（排除 \*.test.ts）| `Get-ChildItem src/store/*.ts -Exclude *.test.ts` |
 | 5 | data/ 与 gateway/ 职责混淆 | 写为"数据网关" | **data/：DAO & 查询 DSL + gateway 门面**；`data/gateway/` 物理目录已存在（v1.7.0 闭环，`index.ts`+`gateway.types.ts`，`DataGatewayImpl` 单例），是唯一允许直写 `dataLayer`/`db` 的入口；core 层统一 `import { gateway }` | `src/data/gateway/` 文件实查 + AGENTS.md v1.7.0 契约 |
 | 6 | scripts/ 目录 audit:\* 数 | 67 audit\* | **66 audit\*** | `package.json` 脚本前缀计数 |
-| 7 | STORE_NAME 枚举数 | 50 左右 | **53**（与 DB_VERSION=35 对应）| `dbConfig.ts` L323-L388 逐行 |
+| 7 | STORE_NAME 枚举数 | 50 左右 | **54**（与 DB_VERSION=36 对应）| `dbConfig.ts` L323-L388 逐行 |
 
 > 完整 24 项漂移清单、两轮轮次归属、验证方法声明 → 见 [README.md §修订记录](README.md#🏁-修订记录--24-项事实漂移全清单v200-final)
