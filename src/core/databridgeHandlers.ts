@@ -672,6 +672,12 @@ export function createHandlerRegistry(): HandlerRegistry {
       // 观察池复盘持久化（v35 新增，spec 缺口② 闭环）
       ENVELOPE_ACTION.saveObservationReview,
       ENVELOPE_ACTION.deleteObservationReview,
+      // 维度 10 热门板块采集数据（v36 新增）
+      ENVELOPE_ACTION.saveSectorCollectData,
+      // 采集质量指标历史（v37 新增，P0-2 整改）
+      ENVELOPE_ACTION.saveQualityMetricsHistory,
+      // 维度 11-14 采集数据（v38 新增，2026-08-23 遗留问题整改 P2）
+      ENVELOPE_ACTION.saveDimensionCollectData,
     ])
   )
 

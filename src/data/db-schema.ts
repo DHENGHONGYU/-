@@ -595,4 +595,40 @@ export function createSchema(
     ],
   })
 
+  // ── sectorCollectData：维度 10（热门板块）采集数据结构化存储（v36 新增，2026-08-22 采集能力缺口补齐）──
+  // 取代 local_docs 过渡方案：维度 10 原始采集记录独立落库，下游可按 symbol/采集时间结构化消费，
+  // 且与 hot_sector_scores（双策略评分，keyPath=symbol）严格隔离，避免覆盖策略评分。
+  ensureStore(db, STORE_NAME.sectorCollectData, logger, {
+    storeOptions: { keyPath: 'id' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-symbol', keyPath: 'symbol' },
+      { name: 'by-collected-at', keyPath: 'collectedAt' },
+    ],
+  })
+
+  // ── qualityMetricsHistory：采集质量指标历史（v37 新增，P0-2 整改）──
+  // 持久化 QualityMetricsCollector 的快照，解决质量指标纯内存刷新即丢问题，
+  // 支撑 KPI 历史趋势看板与质量回归对比。
+  ensureStore(db, STORE_NAME.qualityMetricsHistory, logger, {
+    storeOptions: { keyPath: 'id' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-captured-at', keyPath: 'capturedAt' },
+    ],
+  })
+
+  // ── dimensionCollectData：维度 11-14 采集数据通用专用存储（v38 新增，2026-08-23 遗留问题整改 P2）──
+  // 维度 11（技术指标）/12（资金流向）/13（机构持仓）/14（估值分析）采集记录脱离 local_docs
+  // 过渡方案独立落库，下游可按 symbol/维度码/采集时间结构化消费；沿用 sector_collect_data（v36）先例。
+  ensureStore(db, STORE_NAME.dimensionCollectData, logger, {
+    storeOptions: { keyPath: 'id' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-symbol', keyPath: 'symbol' },
+      { name: 'by-dimension', keyPath: 'dimensionCode' },
+      { name: 'by-collected-at', keyPath: 'collectedAt' },
+    ],
+  })
+
 }

@@ -211,4 +211,58 @@ export const MIGRATIONS: readonly Migration[] = [
       })
     },
   },
+  // ── v36 sector_collect_data 版本标记（维度 10 热门板块采集数据结构化存储） ──
+  // store 本身由 createSchema（db-schema.ts）幂等创建；此处仅记录版本标记（沿用 v26/28/29 模式）
+  {
+    version: 36,
+    name: 'seed_sector_collect_data_tracker',
+    up({ tx }) {
+      if (!tx) return
+      if (tx.db.objectStoreNames.contains(STORE_NAME.schemaMigrations)) {
+        const tracker = tx.objectStore(STORE_NAME.schemaMigrations)
+        tracker.put({
+          id: 'sector_collect_data_initialized',
+          version: 36,
+          appliedAt: Date.now(),
+          note: 'sector_collect_data store created by createSchema (baseline)',
+        })
+      }
+    },
+  },
+  // ── v37 quality_metrics_history 版本标记（采集质量指标快照持久化，P0-2 整改） ──
+  // store 本身由 createSchema（db-schema.ts）幂等创建；此处仅记录版本标记（沿用 v36 模式）
+  {
+    version: 37,
+    name: 'seed_quality_metrics_history_tracker',
+    up({ tx }) {
+      if (!tx) return
+      if (tx.db.objectStoreNames.contains(STORE_NAME.schemaMigrations)) {
+        const tracker = tx.objectStore(STORE_NAME.schemaMigrations)
+        tracker.put({
+          id: 'quality_metrics_history_initialized',
+          version: 37,
+          appliedAt: Date.now(),
+          note: 'quality_metrics_history store created by createSchema (baseline)',
+        })
+      }
+    },
+  },
+  // ── v38 dimension_collect_data 版本标记（维度 11-14 采集数据专用存储，遗留问题整改 P2） ──
+  // store 本身由 createSchema（db-schema.ts）幂等创建；此处仅记录版本标记（沿用 v36/v37 模式）
+  {
+    version: 38,
+    name: 'seed_dimension_collect_data_tracker',
+    up({ tx }) {
+      if (!tx) return
+      if (tx.db.objectStoreNames.contains(STORE_NAME.schemaMigrations)) {
+        const tracker = tx.objectStore(STORE_NAME.schemaMigrations)
+        tracker.put({
+          id: 'dimension_collect_data_initialized',
+          version: 38,
+          appliedAt: Date.now(),
+          note: 'dimension_collect_data store created by createSchema (baseline)',
+        })
+      }
+    },
+  },
 ]

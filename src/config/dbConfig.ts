@@ -3,9 +3,16 @@
  */
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
 export const DB_NAME = testDbName ?? ('V6ProDB' as const)
-export const DB_VERSION = 35 as const
+export const DB_VERSION = 38 as const
 
 // DB_VERSION 升级历史：
+// v37 → v38: 新增 dimension_collect_data 存储，维度 11-14（技术指标/资金流向/机构持仓/估值分析）
+//            采集数据脱离 local_docs 过渡方案，通用专用存储结构化落库（2026-08-23 遗留问题整改 P2），
+//            keyPath=id，by-symbol/by-dimension/by-collected-at 三索引。
+// v36 → v37: 新增 quality_metrics_history 存储，采集质量指标快照持久化（P0-2 整改），
+//            解决质量指标纯内存刷新即丢问题，支撑 KPI 历史趋势，keyPath=id，by-captured-at 索引。
+// v35 → v36: 新增 sector_collect_data 存储，维度 10（热门板块）采集数据结构化落库，
+//            脱离 local_docs 过渡方案（2026-08-22 采集能力缺口补齐），keyPath=id，by-symbol/by-collected-at 双索引。
 // v34 → v35: 新增 observation_reviews 存储，支撑观察池定期复盘快照持久化（spec 缺口② 闭环），
 //            取代 ObservationPoolReviewer 纯内存态 lastScores（重启即清），支持跨重启评分漂移比对与晋升候选跟踪。
 //            复用 MODULE_ID.system 作为持久化源（已有全量 ACL），不新增独立 ACL 模块。
@@ -282,6 +289,15 @@ export const ENVELOPE_ACTION = {
   saveObservationReview: 'SAVE_OBSERVATION_REVIEW',
   /** 删除观察池复盘快照 */
   deleteObservationReview: 'DELETE_OBSERVATION_REVIEW',
+  // ── 维度 10 热门板块采集数据（v36 新增，2026-08-22 采集能力缺口补齐）──
+  /** 保存热门板块采集数据 */
+  saveSectorCollectData: 'SAVE_SECTOR_COLLECT_DATA',
+  // ── 采集质量指标历史（v37 新增，P0-2 整改）──
+  /** 保存采集质量指标快照 */
+  saveQualityMetricsHistory: 'SAVE_QUALITY_METRICS_HISTORY',
+  // ── 维度 11-14 采集数据（v38 新增，2026-08-23 遗留问题整改 P2）──
+  /** 保存维度采集数据（维度 11-14 通用专用存储，脱离 local_docs） */
+  saveDimensionCollectData: 'SAVE_DIMENSION_COLLECT_DATA',
 } as const
 
 export type EnvelopeAction =
@@ -385,6 +401,12 @@ export const STORE_NAME = {
   screeningResults: 'screening_results',
   // ── 观察池复盘持久化（v35 新增，spec 缺口② 闭环）──
   observationReviews: 'observation_reviews',
+  // ── 维度 10 热门板块采集数据（v36 新增，2026-08-22 采集能力缺口补齐）──
+  sectorCollectData: 'sector_collect_data',
+  // ── 采集质量指标历史（v37 新增，P0-2 整改）──
+  qualityMetricsHistory: 'quality_metrics_history',
+  // ── 维度 11-14 采集数据（v38 新增，2026-08-23 遗留问题整改 P2）──
+  dimensionCollectData: 'dimension_collect_data',
 } as const
 
 export type StoreName = (typeof STORE_NAME)[keyof typeof STORE_NAME]
@@ -420,7 +442,16 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
       // 2026-08-21 修复：新增 localDocs 至 read/write。
       // 维度 10-16（热门板块/技术指标/资金流向/机构持仓/估值分析/分红股本/一致预期）经
       // saveLocalDocs 写入 local_docs，原配置未授权，fail-closed 导致采集写入必被拒。
-      STORE_NAME.localDocs],
+      STORE_NAME.localDocs,
+      // 2026-08-22 新增：sectorCollectData（v36）——维度 10 热门板块采集数据结构化存储，
+      // 脱离 local_docs 过渡方案；写入方为采集管线（fetcher 模块，saveSectorCollectData）。
+      STORE_NAME.sectorCollectData,
+      // 2026-08-22 新增：qualityMetricsHistory（v37）——采集质量指标快照持久化（P0-2 整改），
+      // 写入方为采集管线收尾（fetcher 模块，saveQualityMetricsHistory）。
+      STORE_NAME.qualityMetricsHistory,
+      // 2026-08-23 新增：dimensionCollectData（v38）——维度 11-14 采集数据专用存储，
+      // 脱离 local_docs 过渡方案；写入方为采集管线（fetcher 模块，saveDimensionCollectData）。
+      STORE_NAME.dimensionCollectData],
     write: [
       STORE_NAME.stocks,
       STORE_NAME.dailyQuotes,
@@ -438,6 +469,12 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
       STORE_NAME.researchLogs,
       // ── 10-16 维度采集目标存储（2026-08-21 新增，见 read 侧注释） ──
       STORE_NAME.localDocs,
+      // ── 维度 10 采集目标存储（2026-08-22 新增，v36） ──
+      STORE_NAME.sectorCollectData,
+      // ── 采集质量指标历史（2026-08-22 新增，v37，P0-2 整改） ──
+      STORE_NAME.qualityMetricsHistory,
+      // ── 维度 11-14 采集目标存储（2026-08-23 新增，v38，遗留问题整改 P2） ──
+      STORE_NAME.dimensionCollectData,
     ],
     actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete, DB_OPERATION.select],
   },
@@ -446,7 +483,7 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     write: [STORE_NAME.stocks],
     // 修复 2026-07-08: 添加 DB_OPERATION.select，允许 poolStore 通过 DataBridge 查询 stocks/v6Scores
     // 原配置仅允许 insert/update/delete，导致 poolStore.refresh() 触发 ACL_PERMISSION_DENIED
-    // 修复 2026-08-02: read 增加 trace_records，允许研究候选池展示七维采集进度（collectionProgressService 以 pool 模块读取 trace_records）
+    // 修复 2026-08-02: read 增加 trace_records，允许研究候选池展示采集进度（collectionProgressService 以 pool 模块读取 trace_records）
     // 修复 2026-08-10: read 增加 rotation_scores，hotSectorService 改为从 rotationScores store 读取热门板块（按 hot-momentum-strategy.md §2.5），原配置缺失导致 ACL_PERMISSION_DENIED
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
   },

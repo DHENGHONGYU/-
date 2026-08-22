@@ -550,7 +550,7 @@ export function buildSummaryMarkdown(
 // ============================================================
 
 /** Electron preload 暴露的文件同步 API（window.fileSync） */
-interface ElectronFileSyncAPI {
+export interface ElectronFileSyncAPI {
   writeFiles: (params: {
     rootDir: string
     files: Array<{ relativePath: string; content: string }>

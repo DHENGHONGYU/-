@@ -59,6 +59,9 @@ export {
   reportTemplateStore, // v33 报告资产化
   screeningResultStore, // v34 筛选结果集持久化
   observationReviewStore, // v35 观察池复盘持久化
+  sectorCollectDataStore, // v36 维度 10 热门板块采集数据
+  qualityMetricsHistoryStore, // v37 采集质量指标历史（P0-2 整改）
+  dimensionCollectDataStore, // v38 维度 11-14 采集数据（遗留问题整改 P2）
 } from './dataLayerContentStores'
 export {
   collectConfigStore, // v25 采集配置
@@ -115,6 +118,9 @@ import {
   reportTemplateStore,
   screeningResultStore,
   observationReviewStore,
+  sectorCollectDataStore,
+  qualityMetricsHistoryStore,
+  dimensionCollectDataStore,
 } from './dataLayerContentStores'
 import {
   collectConfigStore,
@@ -204,6 +210,12 @@ export const dataLayer = {
   screeningResults: screeningResultStore,
   // 观察池复盘持久化（v35，spec 缺口② 闭环）
   observationReviews: observationReviewStore,
+  // 维度 10 热门板块采集数据（v36，2026-08-22 采集能力缺口补齐）
+  sectorCollectData: sectorCollectDataStore,
+  // 采集质量指标历史（v37，P0-2 整改）
+  qualityMetricsHistory: qualityMetricsHistoryStore,
+  // 维度 11-14 采集数据（v38，2026-08-23 遗留问题整改 P2）
+  dimensionCollectData: dimensionCollectDataStore,
   // 八域资料体系（v32，ADR-010）
   profileItems: profileItemStore,
   scoreEvidence: scoreEvidenceStore,

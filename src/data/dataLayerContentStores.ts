@@ -28,6 +28,7 @@ import type {
 import { sendWriteEnvelope, queryGet, queryList, queryByIndex } from './dataLayerHelpers'
 import { nanoid } from 'nanoid'
 import type { ScreeningConditionGroup, ScreeningResultItem } from '@/types/modules/screening.types'
+import type { QualityMetricsHistoryRecord } from './types/types.qualityMetricsHistory'
 
 export const researchLogStore = {
   async list(): Promise<ResearchLog[]> {
@@ -510,6 +511,112 @@ export const observationReviewStore = {
 
   async remove(reviewId: string): Promise<DataLayerResult<void>> {
     return sendWriteEnvelope('deleteObservationReview', { reviewId, _deleted: true }, 'system')
+  },
+}
+
+/**
+ * 维度 10（热门板块）采集数据记录（内联类型，数据层操作专用；与 sector_collect_data store 对齐：keyPath=id）
+ * v36 新增（2026-08-22 采集能力缺口补齐）：脱离 local_docs 过渡方案，结构化落库供下游消费；
+ * 与 hot_sector_scores（双策略评分，keyPath=symbol）严格隔离。
+ * 注：采集管线写入时允许附加 MCP 原始字段（IndexedDB 透传），本接口仅约束核心字段。
+ */
+export interface SectorCollectDataRecord {
+  /** 记录唯一 ID（主键，管线合成：dim-10-{symbol}-{date}） */
+  id: string
+  /** 关联股票代码（索引 by-symbol） */
+  symbol: string
+  /** 采集维度码，固定 '10' */
+  dimensionCode: string
+  /** 采集时间戳（索引 by-collected-at） */
+  collectedAt: number
+  /** 数据来源标签（ifind_mcp / tencent_mcp / ...） */
+  source?: string
+  /** 板块代码（申万二级） */
+  sectorCode?: string
+  /** 板块名称 */
+  sectorName?: string
+  /** 综合评分 / 信号 / 预警等级等 MCP 返回字段按需透传 */
+  score?: number
+  signal?: string
+  alertLevel?: string
+  total?: number
+}
+
+/** 维度 10 热门板块采集数据 Store — sector_collect_data（v36 新增，2026-08-22 采集能力缺口补齐） */
+export const sectorCollectDataStore = {
+  async save(record: SectorCollectDataRecord): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveSectorCollectData', record, 'system')
+  },
+
+  async get(id: string): Promise<SectorCollectDataRecord | undefined> {
+    return queryGet<SectorCollectDataRecord>(STORE_NAME.sectorCollectData, id)
+  },
+
+  async list(): Promise<SectorCollectDataRecord[]> {
+    return queryList<SectorCollectDataRecord>(STORE_NAME.sectorCollectData)
+  },
+
+  async getBySymbol(symbol: string): Promise<SectorCollectDataRecord[]> {
+    return queryByIndex<SectorCollectDataRecord>(STORE_NAME.sectorCollectData, 'by-symbol', symbol)
+  },
+}
+
+/** 采集质量指标历史 Store — quality_metrics_history（v37 新增，P0-2 整改） */
+export const qualityMetricsHistoryStore = {
+  async save(record: QualityMetricsHistoryRecord): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveQualityMetricsHistory', record, 'fetcher')
+  },
+
+  async get(id: string): Promise<QualityMetricsHistoryRecord | undefined> {
+    return queryGet<QualityMetricsHistoryRecord>(STORE_NAME.qualityMetricsHistory, id)
+  },
+
+  async list(): Promise<QualityMetricsHistoryRecord[]> {
+    return queryList<QualityMetricsHistoryRecord>(STORE_NAME.qualityMetricsHistory)
+  },
+}
+
+/**
+ * 维度 11-14 采集数据记录（内联类型，数据层操作专用；与 dimension_collect_data store 对齐：keyPath=id）
+ * v38 新增（2026-08-23 遗留问题整改 P2）：维度 11（技术指标）/12（资金流向）/13（机构持仓）/14（估值分析）
+ * 采集数据脱离 local_docs 过渡方案，通用专用存储结构化落库；沿用 sector_collect_data（v36）先例。
+ * 注：采集管线写入时允许附加 MCP 原始字段（IndexedDB 透传），本接口仅约束核心字段。
+ */
+export interface DimensionCollectDataRecord {
+  /** 记录唯一 ID（主键，管线合成：dim-{dimensionCode}-{symbol}-{date}） */
+  id: string
+  /** 关联股票代码（索引 by-symbol） */
+  symbol: string
+  /** 采集维度码（'11'/'12'/'13'/'14'，索引 by-dimension） */
+  dimensionCode: string
+  /** 采集时间戳（索引 by-collected-at） */
+  collectedAt: number
+  /** 数据来源标签（ifind_mcp / tencent_mcp / ...） */
+  source?: string
+  /** 维度数据载荷（各维度结构化字段按需透传） */
+  payload?: Record<string, unknown>
+}
+
+/** 维度 11-14 采集数据 Store — dimension_collect_data（v38 新增，2026-08-23 遗留问题整改 P2） */
+export const dimensionCollectDataStore = {
+  async save(record: DimensionCollectDataRecord): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveDimensionCollectData', record, 'fetcher')
+  },
+
+  async get(id: string): Promise<DimensionCollectDataRecord | undefined> {
+    return queryGet<DimensionCollectDataRecord>(STORE_NAME.dimensionCollectData, id)
+  },
+
+  async list(): Promise<DimensionCollectDataRecord[]> {
+    return queryList<DimensionCollectDataRecord>(STORE_NAME.dimensionCollectData)
+  },
+
+  async getBySymbol(symbol: string): Promise<DimensionCollectDataRecord[]> {
+    return queryByIndex<DimensionCollectDataRecord>(STORE_NAME.dimensionCollectData, 'by-symbol', symbol)
+  },
+
+  async getByDimension(dimensionCode: string): Promise<DimensionCollectDataRecord[]> {
+    return queryByIndex<DimensionCollectDataRecord>(STORE_NAME.dimensionCollectData, 'by-dimension', dimensionCode)
   },
 }
 

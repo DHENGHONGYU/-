@@ -173,7 +173,12 @@ const ACTION_TO_STORE_MAP: Record<string, StoreName> = {
   [ENVELOPE_ACTION.deleteScreeningResult]: STORE_NAME.screeningResults,
   // ── 观察池复盘持久化（v35 新增，spec 缺口② 闭环）──
   [ENVELOPE_ACTION.saveObservationReview]: STORE_NAME.observationReviews,
+  [ENVELOPE_ACTION.saveSectorCollectData]: STORE_NAME.sectorCollectData,
   [ENVELOPE_ACTION.deleteObservationReview]: STORE_NAME.observationReviews,
+  // ── 采集质量指标历史（v37 新增，P0-2 整改）──
+  [ENVELOPE_ACTION.saveQualityMetricsHistory]: STORE_NAME.qualityMetricsHistory,
+  // ── 维度 11-14 采集数据（v38 新增，2026-08-23 遗留问题整改 P2）──
+  [ENVELOPE_ACTION.saveDimensionCollectData]: STORE_NAME.dimensionCollectData,
 }
 
 // 查询动作集合（目标 store 由 payload 传入，**不**走 ACTION_TO_STORE_MAP）
