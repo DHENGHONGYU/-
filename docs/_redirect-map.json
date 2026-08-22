@@ -2728,6 +2728,48 @@
       "diataxis_category": "reference",
       "status": "completed",
       "reason": "DC-20260809-01 D8: 重复文档清理，保留 kebab-case 版"
+    },
+    {
+      "old_path": "docs/wiki/README.md",
+      "new_path": "wiki/code-wiki/README.md",
+      "diataxis_category": "reference",
+      "status": "completed",
+      "reason": "跨平台 WIKI 统一契约：代码 Wiki 迁至顶层 wiki/ 单一真相源"
+    },
+    {
+      "old_path": "docs/wiki/01-architecture-overview.md",
+      "new_path": "wiki/code-wiki/01-architecture-overview.md",
+      "diataxis_category": "reference",
+      "status": "completed",
+      "reason": "跨平台 WIKI 统一契约：代码 Wiki 迁至顶层 wiki/ 单一真相源"
+    },
+    {
+      "old_path": "docs/wiki/02-module-map.md",
+      "new_path": "wiki/code-wiki/02-module-map.md",
+      "diataxis_category": "reference",
+      "status": "completed",
+      "reason": "跨平台 WIKI 统一契约：代码 Wiki 迁至顶层 wiki/ 单一真相源"
+    },
+    {
+      "old_path": "docs/wiki/03-core-classes-functions.md",
+      "new_path": "wiki/code-wiki/03-core-classes-functions.md",
+      "diataxis_category": "reference",
+      "status": "completed",
+      "reason": "跨平台 WIKI 统一契约：代码 Wiki 迁至顶层 wiki/ 单一真相源"
+    },
+    {
+      "old_path": "docs/wiki/04-data-flow-and-dependencies.md",
+      "new_path": "wiki/code-wiki/04-data-flow-and-dependencies.md",
+      "diataxis_category": "reference",
+      "status": "completed",
+      "reason": "跨平台 WIKI 统一契约：代码 Wiki 迁至顶层 wiki/ 单一真相源"
+    },
+    {
+      "old_path": "docs/wiki/05-getting-started.md",
+      "new_path": "wiki/code-wiki/05-getting-started.md",
+      "diataxis_category": "reference",
+      "status": "completed",
+      "reason": "跨平台 WIKI 统一契约：代码 Wiki 迁至顶层 wiki/ 单一真相源"
     }
   ],
   "preserved_directories": [

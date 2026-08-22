@@ -64,8 +64,8 @@ FinSight V9（智能投研复盘系统）的代码知识库。面向中国 A 股
 ## 与其他文档的关系
 
 - 架构契约唯一真相源：[AGENTS.md](../../AGENTS.md)（冲突以契约为准；契约与实现漂移见各文档"契约差异标注"）
-- 团队流程 SOP：[docs/guides/sops/README.md](../guides/sops/README.md)
-- 文档注册索引：[docs/meta/REGISTRY_INDEX.md](../meta/REGISTRY_INDEX.md)
+- 团队流程 SOP：[docs/guides/sops/README.md](../../docs/guides/sops/README.md)
+- 文档注册索引：[docs/meta/REGISTRY_INDEX.md](../../docs/meta/REGISTRY_INDEX.md)
 
 > 维护约定：本 Wiki 基于实际代码扫描生成（2026-08-19 二次核对版本）。触发重评条件：
 > - DB_VERSION 升级、新增/删除 STORE_NAME

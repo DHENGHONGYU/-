@@ -8,12 +8,15 @@ status: active
 maintainer: V9 Architecture Team
 summary: "V9 doc_id Registry - meta documentation (project)"
 tags: [project, registry, meta, documentation, governance]
-version: v1.0.0
-last_updated: 2026-07-17
+version: v1.1.0
+last_updated: 2026-08-23
 code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-PROJ-186
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-CROSSINDEX-001, V9-DOC-PROJ-017]
 change_log:
+  - version: v1.1.0
+    changes: "跨平台 WIKI 统一契约：V9-DOC-WIKI-001~005 因 docs/wiki git mv 至 wiki/code-wiki 改登记新路径（原 ID 转移给顶层 wiki/ 新文档）；新增 V9-DOC-WIKI-001~011 顶层 wiki/ 单一真相源 11 篇（../wiki/ 相对路径）；新增 V9-DOC-WIKI-CODEWIKI-README code-wiki 总览"
+    date: 2026-08-23
   - version: v1.0.0
 changes: Initial version established
 date: 2026-07-17
@@ -265,8 +268,15 @@ date: 2026-07-17
 | V9-DOC-SOP-004 | sop | S04 合入前集成 | guides/sops/S04-pre-merge-integration.md |
 | V9-DOC-SOP-006 | sop | S06 发布部署 | guides/sops/S06-release-deployment.md |
 | V9-DOC-SOP-007 | sop | S07 运维事件响应 | guides/sops/S07-ops-incident-response.md |
-| V9-DOC-WIKI-001 | wiki | 01 架构总览 | wiki/01-architecture-overview.md |
-| V9-DOC-WIKI-002 | wiki | 02 模块地图 | wiki/02-module-map.md |
-| V9-DOC-WIKI-003 | wiki | 03 核心类与函数 | wiki/03-core-classes-functions.md |
-| V9-DOC-WIKI-004 | wiki | 04 数据流与依赖 | wiki/04-data-flow-and-dependencies.md |
-| V9-DOC-WIKI-005 | wiki | 05 项目运行方式 | wiki/05-getting-started.md |
+| V9-DOC-WIKI-001 | wiki | V9 统一 WIKI 总入口 | ../wiki/README.md |
+| V9-DOC-WIKI-002 | wiki | 跨平台 WIKI 统一契约 | ../wiki/CONTRACT.md |
+| V9-DOC-WIKI-003 | wiki | 平台配置机器注册表 | ../wiki/platform-config.registry.json |
+| V9-DOC-WIKI-004 | wiki | 平台环境配置卡 — TRAE | ../wiki/platforms/trae.md |
+| V9-DOC-WIKI-005 | wiki | 平台环境配置卡 — WorkBuddy | ../wiki/platforms/workbuddy.md |
+| V9-DOC-WIKI-006 | wiki | 平台环境配置卡 — Qoder | ../wiki/platforms/qoder.md |
+| V9-DOC-WIKI-007 | wiki | 平台环境配置卡 — KIMI 插件 | ../wiki/platforms/kimi-plugins.md |
+| V9-DOC-WIKI-008 | wiki | 平台环境配置卡 — Cursor / VS Code | ../wiki/platforms/cursor-vscode.md |
+| V9-DOC-WIKI-009 | wiki | 平台环境配置卡 — Agents 全局目录 | ../wiki/platforms/agents-global.md |
+| V9-DOC-WIKI-010 | wiki | 运行环境统一配置 | ../wiki/environment/environment-setup.md |
+| V9-DOC-WIKI-011 | wiki | V9 统一技能索引 | ../wiki/skills/INDEX.md |
+| V9-DOC-WIKI-CODEWIKI-README | wiki | Code Wiki 总览（原 docs/wiki 迁入） | ../wiki/code-wiki/README.md |

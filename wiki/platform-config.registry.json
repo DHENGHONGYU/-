@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "1.0.0",
+  "doc_id": "V9-DOC-WIKI-003",
+  "last_updated": "2026-08-23",
+  "sourceOfTruth": "wiki/",
+  "contract": "wiki/CONTRACT.md",
+  "adapterMarker": "<!-- WIKI-ADAPTER: source=wiki/ -->",
+  "platforms": [
+    {
+      "id": "trae",
+      "name": "TRAE",
+      "dirs": [".trae"],
+      "adapterFiles": [".trae/skills/INDEX.md"],
+      "machineFiles": [".trae/skills/skill-registry.json", ".trae/skills/usage.log"],
+      "generated": false,
+      "contentSource": ["wiki/skills/INDEX.md", ".trae/skills/skill-registry.json"],
+      "syncMechanism": "manual + npm run audit:platform-docs",
+      "card": "wiki/platforms/trae.md"
+    },
+    {
+      "id": "workbuddy",
+      "name": "WorkBuddy",
+      "dirs": [".workbuddy"],
+      "adapterFiles": [".workbuddy/skills/README.md"],
+      "machineFiles": [],
+      "generated": false,
+      "contentSource": [".agents/skills/"],
+      "syncMechanism": "npm run skill:mirror (copy-based mirror, no symlink on Windows)",
+      "card": "wiki/platforms/workbuddy.md"
+    },
+    {
+      "id": "kimi-plugins",
+      "name": "KIMI / 外部插件",
+      "dirs": ["plugins"],
+      "adapterFiles": ["plugins/README.md"],
+      "machineFiles": [],
+      "generated": false,
+      "contentSource": ["wiki/skills/INDEX.md"],
+      "syncMechanism": "manual registration",
+      "card": "wiki/platforms/kimi-plugins.md"
+    },
+    {
+      "id": "qoder",
+      "name": "Qoder",
+      "dirs": [".qoder"],
+      "adapterFiles": [],
+      "machineFiles": [".qoder/repowiki/wiki_plan.yaml", ".qoder/repowiki/zh/meta/repowiki-metadata.json"],
+      "generated": true,
+      "contentSource": [],
+      "syncMechanism": "platform auto-regeneration (do not hand-edit)",
+      "card": "wiki/platforms/qoder.md"
+    },
+    {
+      "id": "cursor-vscode",
+      "name": "Cursor / VS Code",
+      "dirs": [],
+      "adapterFiles": [".cursorrules"],
+      "machineFiles": [],
+      "generated": false,
+      "contentSource": ["wiki/CONTRACT.md", "prompts/"],
+      "syncMechanism": "manual",
+      "card": "wiki/platforms/cursor-vscode.md"
+    },
+    {
+      "id": "agents-global",
+      "name": "全局契约（AGENTS.md / .agents）",
+      "dirs": [".agents"],
+      "adapterFiles": [".agents/skills/README.md"],
+      "machineFiles": [],
+      "generated": false,
+      "contentSource": ["wiki/CONTRACT.md", "wiki/skills/INDEX.md"],
+      "syncMechanism": "manual + npm run audit:skill-coverage",
+      "card": "wiki/platforms/agents-global.md"
+    }
+  ],
+  "audit": {
+    "command": "npm run audit:platform-docs",
+    "script": "scripts/audit/audit-platform-docs.cjs",
+    "checks": [
+      "core-files-exist",
+      "registry-vs-physical-consistency",
+      "adapter-marker-valid",
+      "no-knowledge-duplicates"
+    ]
+  }
+}
