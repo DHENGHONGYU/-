@@ -90,7 +90,7 @@ function extractFrontmatter(content: string): string | null {
 function parseFrontmatter(fm: string): Frontmatter {
   const versionMatch = fm.match(/^version:\s*["']?([^"'\n]+)["']?$/m)
   const lastUpdatedMatch = fm.match(/^last_updated:\s*(\d{4}-\d{2}-\d{2})/m)
-  const hasChangeLog = /^change_log:/.test(fm)
+  const hasChangeLog = /^change_log:/m.test(fm)
 
   // 提取 change_log 最新条目的 version 和 date
   let changeLogLatestVersion: string | null = null

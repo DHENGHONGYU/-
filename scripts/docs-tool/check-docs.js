@@ -30,7 +30,7 @@ const ROOT_WHITELIST = new Set([
   'docs/explanation/README.md', 'AGENTS.md', 'CHANGELOG.md', 'README.md', '.gitignore', '.gitattributes',
   'package.json', 'package-lock.json', 'index.html',
   'tsconfig.json', 'tsconfig.api.json', 'tsconfig.scripts.json', 'tsconfig.test.json', 'tsconfig.prod.json',
-  'vite.config.ts', 'playwright.config.ts', 'playwright.config.manual.ts', 'playwright.blueprint.config.ts',
+  'vite.config.ts', 'playwright.config.ts',
   'eslint.config.js', 'eslint.colors.config.js',
   'postcss.config.js', 'tailwind.config.js',
   'api-extractor.json', 'cspell.json',

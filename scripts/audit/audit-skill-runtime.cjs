@@ -33,10 +33,12 @@ const ok = (msg) => passed.push(msg);
 
 const REQUIRED_FIELDS = ['skill_id', 'name', 'description', 'version', 'last_updated', 'mandatory'];
 
-// ---------- 极简 frontmatter 字段提取（只取顶层标量，受控格式） ----------
+// ---------- 极简 frontmatter 字段提取（只取顶层标量，受控格式；兼容引号包裹值） ----------
 function parseFrontmatter(filePath) {
   let text;
   try { text = fs.readFileSync(filePath, 'utf-8'); } catch (e) { return { error: `不可读: ${e.message}` }; }
+  text = text.replace(/^\uFEFF/, ''); // 容忍 BOM（外部脚本回写可能引入，导致首行 --- 失配）
+  text = text.replace(/\r\n/g, '\n'); // 归一 CRLF（外部工具回写可能引入，行尾 \r 会破坏字段正则）
   const lines = text.split('\n');
   if (lines[0].trim() !== '---') return { error: '缺少起始 ---' };
   const closeIdx = lines.findIndex((l, i) => i > 0 && l.trim() === '---');
@@ -44,7 +46,7 @@ function parseFrontmatter(filePath) {
   const fm = {};
   for (const raw of lines.slice(1, closeIdx)) {
     const top = raw.match(/^([A-Za-z_]+):\s*(.*)$/);
-    if (top) fm[top[1]] = top[2].trim().replace(/^["']|["']$/g, '');
+    if (top) fm[top[1]] = top[2].trim().replace(/^["']+|["']+$/g, '');
   }
   return fm;
 }
