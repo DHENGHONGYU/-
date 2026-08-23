@@ -1,10 +1,13 @@
 ---
 title: docs/reference/BACKTEST_DATA_DEFINITION.md
 code_version: 2.0.0-rc.2
-version: v2.4.1
+version: v2.4.2
 last_updated: 2026-08-22
 change_log:
-  - version: v2.4.1
+  - version: v2.4.2
+    changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v2.4.1) → R2 PATCH++(v2.4.2) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
+- version: v2.4.1
     changes: "基准日校对(2026-08-22)：R1取真值(P2 正文版本声明行=v2.4.0) → R2 PATCH++(v2.4.1) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
 ---

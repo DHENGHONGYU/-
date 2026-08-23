@@ -602,6 +602,36 @@ npx tsc --noEmit
 
 ---
 
+## 附录：UI 决策速查表（原 design-token-decision-map）
+
+> 4 场景 × 22 条规则，快速查阅「该用什么令牌」。
+
+| 场景 | 元素 | 令牌 | 值 | 禁止 |
+|------|------|------|----|------|
+| 颜色 | 主按钮 | `primary` | #2563eb | 非令牌色 |
+| 颜色 | 次按钮 | `secondary` | #6b7280 | 灰色硬编码 |
+| 颜色 | 成功/错误/警告 | `success/error/warning` | #22c55e/#ef4444/#f59e0b | 各自硬编码 |
+| 颜色 | 表头/斑马纹 | `bg.hover/bg.alt` | rgba(0,0,0,.03) | 硬编码灰 |
+| 颜色 | 边框/聚焦 | `border/border.focus` | #e5e7eb/#2563eb | #d1d5db 等 |
+| 颜色 | 占位/滚动条 | `text.disabled` | #9ca3af | #888/#aaa |
+| 字号 | 正文/辅助 | `sm/xs` | 14px/12px | 13/15/11/13 |
+| 字号 | 卡片/弹窗标题 | `md` | 16px | 15/17/18/20 |
+| 字号 | 页面/仪表盘标题 | `lg/title` | 20px/18px | 18/22/16/20 |
+| 字号 | Badge/按钮文字 | `xs/sm` | 12px/14px | 11/13/12/16 |
+| 字号 | 数值展示/表格 | `lg/sm` | 20px/14px | 18/24/13/15 |
+| 间距 | 卡片内边距 | `SPACING[16/24]` | 16/24px | 14/18/20/28 |
+| 间距 | 组件间/卡片间 | `SPACING[8/24]` | 8/24px | 6/10/12/20/28 |
+| 间距 | Label-Input/表单行 | `SPACING[8/16]` | 8/16px | 6/10/14/18 |
+| 间距 | 弹窗 body/header | `SPACING[24/16]` | 24/16px | 20/28/14/18 |
+| 间距 | 行高/列表项 | `1.5×/SPACING[8]` | 1.5×/8px | 1.2/1.3/1.8 |
+| 间距 | Tab/Nav | `SPACING[12/16]` | 12/16px | 10/14/18 |
+| 圆角 | 按钮/Badge/Input | `RADIUS.sm` | 4px | 2/6/8 |
+| 圆角 | 卡片/Panel | `RADIUS.md` | 8px | 6/12/10/16 |
+| 圆角 | Modal/Drawer | `RADIUS.md/lg` | 8/16px | 12/16/8/24 |
+| 圆角 | Avatar/Pill | `rounded-full` | 圆形 | 方形 |
+
+---
+
 ## 相关文档
 
 - [V9 编码规范](coding-conventions.md)

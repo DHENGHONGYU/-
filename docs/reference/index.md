@@ -30,19 +30,19 @@ date: 2026-07-17
 
 ## 已同步插件清单（9 个）
 
-### 路径对照表（推荐直接使用「扁平化路径」）
+> 8 个数据源插件已合并为单一索引文档：[外部数据源插件参考索引](plugins-reference.md)
 
-| 插件名称 | 数据域 | 本地整理文档 | 扁平化 SKILL 路径（推荐） | 原始嵌套 SKILL 路径 |
-|---------|--------|------------|------------------------|-------------------|
-| **ifind** | 同花顺金融数据（A股/港股/美股） | [ifind.md](ifind.md) | [`plugins/ifind/SKILL.md`](../../plugins/ifind/SKILL.md) | [`plugins/ifind/skills/ifind/SKILL.md`](../../plugins/ifind/skills/ifind/SKILL.md) |
-| **imf** | IMF 全球宏观经济数据 | [imf.md](imf.md) | [`plugins/imf/SKILL.md`](../../plugins/imf/SKILL.md) | [`plugins/imf/skills/imf/SKILL.md`](../../plugins/imf/skills/imf/SKILL.md) |
-| **kimi-webbridge** | 浏览器自动化控制 | [kimi-webbridge.md](../archive/normal/kimi-webbridge.md)（已归档） | [`plugins/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/SKILL.md) | [`plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md) |
-| **scholar** | 学术文献检索 | [scholar.md](scholar.md) | [`plugins/scholar/SKILL.md`](../../plugins/scholar/SKILL.md) | [`plugins/scholar/skills/scholar/SKILL.md`](../../plugins/scholar/skills/scholar/SKILL.md) |
-| **sec_edgar** | 美国 SEC 上市公司财报 | [sec_edgar.md](sec_edgar.md) | [`plugins/sec_edgar/SKILL.md`](../../plugins/sec_edgar/SKILL.md) | [`plugins/sec_edgar/skills/sec_edgar/SKILL.md`](../../plugins/sec_edgar/skills/sec_edgar/SKILL.md) |
-| **tianyancha** | 天眼查企业数据库 | [tianyancha.md](tianyancha.md) | [`plugins/tianyancha/SKILL.md`](../../plugins/tianyancha/SKILL.md) | [`plugins/tianyancha/skills/tianyancha/SKILL.md`](../../plugins/tianyancha/skills/tianyancha/SKILL.md) |
-| **world_bank_open_data** | 世界银行开放数据 | [world_bank_open_data.md](world_bank_open_data.md) | [`plugins/world_bank_open_data/SKILL.md`](../../plugins/world_bank_open_data/SKILL.md) | [`plugins/world_bank_open_data/skills/world_bank_open_data/SKILL.md`](../../plugins/world_bank_open_data/skills/world_bank_open_data/SKILL.md) |
-| **yahoo_finance** | Yahoo Finance 股票数据 | [yahoo_finance.md](yahoo_finance.md) | [`plugins/yahoo_finance/SKILL.md`](../../plugins/yahoo_finance/SKILL.md) | [`plugins/yahoo_finance/skills/yahoo_finance/SKILL.md`](../../plugins/yahoo_finance/skills/yahoo_finance/SKILL.md) |
-| **yuandian_law** | 元典法律数据库 | [yuandian_law.md](yuandian_law.md) | [`plugins/yuandian_law/SKILL.md`](../../plugins/yuandian_law/SKILL.md) | [`plugins/yuandian_law/skills/yuandian_law/SKILL.md`](../../plugins/yuandian_law/skills/yuandian_law/SKILL.md) |
+| 插件名称 | 数据域 | 扁平化 SKILL 路径（推荐） |
+|---------|--------|------------------------|
+| **ifind** | 同花顺金融数据（A股/港股/美股） | [`plugins/ifind/SKILL.md`](../../plugins/ifind/SKILL.md) |
+| **imf** | IMF 全球宏观经济数据 | [`plugins/imf/SKILL.md`](../../plugins/imf/SKILL.md) |
+| **kimi-webbridge** | 浏览器自动化控制 | [`plugins/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/SKILL.md) |
+| **scholar** | 学术文献检索 | [`plugins/scholar/SKILL.md`](../../plugins/scholar/SKILL.md) |
+| **sec_edgar** | 美国 SEC 上市公司财报 | [`plugins/sec_edgar/SKILL.md`](../../plugins/sec_edgar/SKILL.md) |
+| **tianyancha** | 天眼查企业数据库 | [`plugins/tianyancha/SKILL.md`](../../plugins/tianyancha/SKILL.md) |
+| **world_bank_open_data** | 世界银行开放数据 | [`plugins/world_bank_open_data/SKILL.md`](../../plugins/world_bank_open_data/SKILL.md) |
+| **yahoo_finance** | Yahoo Finance 股票数据 | [`plugins/yahoo_finance/SKILL.md`](../../plugins/yahoo_finance/SKILL.md) |
+| **yuandian_law** | 元典法律数据库 | [`plugins/yuandian_law/SKILL.md`](../../plugins/yuandian_law/SKILL.md) |
 
 ---
 

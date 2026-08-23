@@ -8,12 +8,18 @@ status: active
 maintainer: V9 Architecture Team
 summary: "定位：定义 `collection` 子域的接口契约、职责边界、数据流与依赖关系。 关联：`./services-catalog.md`（24 子域总览）、`../../AGENTS.md`..."
 tags: [data, collection, contract]
-version: v1.0.1
-last_updated: 2026-08-22
+version: v1.0.3
+last_updated: 2026-08-23
 code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-DATA-050
 referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-149]
 change_log:
+  - version: v1.0.3
+    changes: "遗留问题整改兼容性确认（2026-08-23）：下游 data-collector 维度 11-14 改道 dimension_collect_data 专用存储（DB v38）与 collectionPipeline facade 拆分（公开 API 零破坏）不影响本子域向导配置持久化契约；配套全仓「七维」过时文案统一（采集策略配置页/错误提示/路由描述），接口契约无 BREAKING"
+    date: 2026-08-23
+  - version: v1.0.2
+    changes: "代码侧变更确认兼容（采集管线卫生整改 2026-08-23）：退避策略统一到 computePolicyBackoffMs 唯一入口 + dataSourceOrchestrator/adaptiveSourceOrchestrator 新增 19 例独立单测 + 死代码清理 + 七维→16 维注释对齐，接口契约无 BREAKING"
+    date: 2026-08-23
   - version: v1.0.1
     changes: "代码侧变更确认兼容：collectionPipeline 维度10-14 dispatch 接线修复 + local_docs 写入兜底 + MonthlyBudgetGuard 预算守卫补实现"
     date: 2026-08-22
