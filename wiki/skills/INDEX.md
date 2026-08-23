@@ -125,5 +125,6 @@ change_log:
 ## 四、变更纪律
 
 1. 新增/变更技能三方同步：SKILL.md frontmatter ↔ `skill-registry.json` ↔ 本索引（AGENTS.md 索引段下次升级对齐）。
-2. 交付前必跑：`npm run audit:skill-coverage`；L1 变更后另跑 `npm run skill:mirror`。
-3. 会话级路由摘要见 AGENTS.md「技能路由表」。
+2. 交付前必跑：`npm run audit:skill-coverage`；`skill:mirror` 仅新克隆/联接失效时重建（junction 对内容变更透明）。
+3. registry 触发词变更后跑 `npm run test:skill-router` 路由回归；评分度量见 `npm run skill:scorecard`（详见 [.agents/skills/README.md](../../.agents/skills/README.md) §六）。
+4. 会话级路由摘要见 AGENTS.md「技能路由表」。

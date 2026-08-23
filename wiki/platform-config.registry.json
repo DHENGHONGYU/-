@@ -25,7 +25,7 @@
       "machineFiles": [],
       "generated": false,
       "contentSource": [".agents/skills/"],
-      "syncMechanism": "npm run skill:mirror (copy-based mirror, no symlink on Windows)",
+      "syncMechanism": "npm run skill:mirror (junction .workbuddy/skills -> .agents/skills, idempotent; cp fallback)",
       "card": "wiki/platforms/workbuddy.md"
     },
     {

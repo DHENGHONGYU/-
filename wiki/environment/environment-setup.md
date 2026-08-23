@@ -70,6 +70,6 @@ docker compose up -d frontend  # 容器方式（依赖 data-collector 服务）
 | `npm run audit:layers` | 分层调用合规 |
 | `npm run audit:platform-docs` | 跨平台 WIKI 契约一致性（本契约配套） |
 | `npm run gate:quick` | pre-push 快速门禁聚合 |
-| `npm run skill:mirror` | WorkBuddy 技能镜像自愈 |
+| `npm run skill:mirror` | WorkBuddy 技能联接重建（幂等：联接复用/旧 cp 清理重建/降级 cp） |
 
 完整门禁速查见 AGENTS.md §七 与 [docs/guides/sops/README.md](../../docs/guides/sops/README.md)（S02/S04/S05）。

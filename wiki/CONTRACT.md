@@ -40,7 +40,7 @@ change_log:
 |---|---|---|---|---|---|
 | TRAE | `.trae/` | `.trae/skills/INDEX.md`（指针） | `wiki/skills/INDEX.md` | 人工 + 审计 | 历史曾漂移（19 项旧索引）；改由指针消除 |
 | TRAE（机器真相） | `.trae/skills/` | `skill-registry.json` | registry 自身 | `audit:skill-coverage` 三方一致性 | 保持机器真相源地位，不改写 |
-| WorkBuddy | `.workbuddy/skills/` | `README.md`（指针） | `.agents/skills/`（物理技能） | `npm run skill:mirror` 覆盖式镜像 | 拷贝漂移；禁手改副本，改源头后重跑镜像 |
+| WorkBuddy | `.workbuddy/skills/` | `README.md`（指针） | `.agents/skills/`（物理技能） | `npm run skill:mirror` junction 联接 | 物理单份零漂移；禁手改联接内文件，改源头 `.agents/skills/` 即生效 |
 | KIMI / 外部插件 | `plugins/` | `plugins/README.md`（指针） | `wiki/skills/INDEX.md` L2 段 | 人工登记 | 新增插件须同步登记 |
 | Qoder | `.qoder/repowiki/` | 无 | 平台自动生成 | 平台重生成 | `generated: true` 禁手改 |
 | Cursor / VS Code | `.cursorrules` + `prompts/` | `.cursorrules`（薄适配） | `wiki/CONTRACT.md` + `prompts/*.md` | 人工 | 文件必须保持 UTF-8（历史 GBK 乱码教训） |

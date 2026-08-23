@@ -116,7 +116,7 @@ EOF
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 22
           cache: 'npm'
       - name: Install deps
         run: npm ci
@@ -171,7 +171,7 @@ EOF
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 22
           cache: 'npm'
 
       - name: Install deps

@@ -37,7 +37,7 @@ change_log:
 ## 维护约定
 
 - AGENTS.md 升级遵循版本化流程：`last_updated` / `code_version` / `change_log` 同步，基准日校对三步法（R1 取真值 → R2 PATCH++ → 闭环）。
-- `.agents/skills/` 变更后须重跑 `npm run skill:mirror`（同步 WorkBuddy 镜像）与 `npm run audit:skill-coverage`。
+- `.agents/skills/` 变更后须重跑 `npm run audit:skill-coverage`；内容经 junction 对 WorkBuddy 透明，无需重跑 `skill:mirror`（仅新克隆/联接失效时重建）。
 - AGENTS.md 保持「最小改动原则」：跨平台体系性内容下沉 `wiki/`，AGENTS.md 只留契约声明与指针。
 
 ## 与真相源的映射

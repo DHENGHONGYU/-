@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       # --ignore-scripts: 禁止执行包安装脚本（防供应链攻击）
       # --no-audit: 跳过安装时审计（在单独 audit job 中执行）
@@ -42,7 +42,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
       # 真实 tsc:prod 门禁（原 scripts/check-types.sh 不存在 → 假绿灯，已修复为真实类型检查）
@@ -55,7 +55,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
       - run: npx tsx scripts/verify-all-routes.ts
@@ -67,7 +67,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
       # test:clean = 全量 vitest run（不跳过任何测试，失败即 CI 红）
@@ -88,7 +88,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
       # 1. 运行 5 件套测试，输出 JSON 结果到 outputs/test-results/chart-tests.json
@@ -118,7 +118,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
       # 运行测试并生成覆盖率报告（全量，不跳过任何测试）
@@ -142,7 +142,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       # Python 环境（doc-tier-validate.py 需要）
       - uses: actions/setup-python@0b93647e04c5672476a5b030e1f4e16f85c6f85f # v5.3.0
@@ -190,7 +190,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
       # P1 重要检查：循环依赖为错误级别会阻止合并
@@ -215,7 +215,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
       # 统一量化质量门禁聚合（SonarQube 式加权质量分 + 趋势基线，非阻塞报告）
@@ -303,7 +303,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
       - name: Run contract validation tests
@@ -320,7 +320,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
       - name: DataBridge 数据流转集成测试（executionPlanService.dataflow）
@@ -354,7 +354,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
       - name: P0-1 种子数据初始化/重试 + P0-2 编排容错 + P0-3 内存降级（bootstrapService 23 + seedService 9 = 32 项用例）
@@ -379,7 +379,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
       - name: Run snapshot tests
@@ -402,7 +402,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
       - name: Extract API documentation
@@ -470,7 +470,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - name: Fix npm registry for CI (npmmirror → npmjs)
         run: sed -i 's|https://registry.npmmirror.com|https://registry.npmjs.org|g' package-lock.json

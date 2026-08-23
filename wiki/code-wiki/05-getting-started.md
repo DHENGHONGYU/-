@@ -177,7 +177,7 @@ npm run audit:secrets             # 密钥泄露
 | `npm run system:health` | 系统健康仪表盘 |
 | `npm run generate:storeGraph` | Store 依赖图生成 |
 | `npm run skill:route` | 技能路由查询 |
-| `npm run skill:mirror` | L1 技能镜像同步（.agents → .workbuddy） |
+| `npm run skill:mirror` | WorkBuddy 技能联接重建（.workbuddy/skills → .agents/skills junction，幂等） |
 
 ## 7. 故障排查速查
 

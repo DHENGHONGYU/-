@@ -22,7 +22,7 @@ jobs:
           fetch-depth: 0  # 需要完整 git 历史以计算文档时效性
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
 

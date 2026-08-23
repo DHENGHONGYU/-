@@ -30,7 +30,7 @@ change_log:
 | 平台 | 专属目录 | 适配文件 | 内容来源（真相源） | 同步机制 |
 |---|---|---|---|---|
 | TRAE | `.trae/` | `.trae/skills/INDEX.md`（指针） | `wiki/skills/INDEX.md` + `.trae/skills/skill-registry.json`（机器真相） | 人工 + `audit:platform-docs` |
-| WorkBuddy | `.workbuddy/` | `.workbuddy/skills/README.md`（指针） | `.agents/skills/`（经 `npm run skill:mirror` 覆盖式镜像） | `skill:mirror` 自愈 |
+| WorkBuddy | `.workbuddy/` | `.workbuddy/skills/README.md`（指针） | `.agents/skills/`（经 `npm run skill:mirror` junction 联接） | `skill:mirror` 幂等重建 |
 | KIMI / 外部插件 | `plugins/` | `plugins/README.md`（指针） | `wiki/skills/INDEX.md` L2 段 | 人工登记 |
 | Qoder | `.qoder/repowiki/` | 无（机器生成产物，禁手改） | 平台自动生成，登记于契约 | 平台自动重生成 |
 | Cursor / VS Code | `.cursorrules` / `prompts/` | `.cursorrules`（薄适配） | `wiki/CONTRACT.md` + `prompts/*.md` | 人工 |
