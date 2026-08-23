@@ -19,11 +19,17 @@ import { reportWebVitals } from './webVitals'
 type MetricCb = (m: { name: string; delta: number; id: string }) => void
 type MetricFn = (cb: MetricCb) => void
 
-const mockOnCLS = vi.fn<MetricFn>()
-const mockOnFCP = vi.fn<MetricFn>()
-const mockOnLCP = vi.fn<MetricFn>()
-const mockOnTTFB = vi.fn<MetricFn>()
-const mockOnINP = vi.fn<MetricFn>()
+// 2026-08-23 Token Plan 处理事项修复：vi.mock 工厂被提升到文件顶部，
+// 直接引用顶层 const（mockInfo 等）会触发 "Cannot access before initialization"，
+// 改用 vi.hoisted 保证 mock 句柄与工厂同步提升。
+const { mockOnCLS, mockOnFCP, mockOnLCP, mockOnTTFB, mockOnINP, mockInfo } = vi.hoisted(() => ({
+  mockOnCLS: vi.fn<(cb: (m: { name: string; delta: number; id: string }) => void) => void>(),
+  mockOnFCP: vi.fn<(cb: (m: { name: string; delta: number; id: string }) => void) => void>(),
+  mockOnLCP: vi.fn<(cb: (m: { name: string; delta: number; id: string }) => void) => void>(),
+  mockOnTTFB: vi.fn<(cb: (m: { name: string; delta: number; id: string }) => void) => void>(),
+  mockOnINP: vi.fn<(cb: (m: { name: string; delta: number; id: string }) => void) => void>(),
+  mockInfo: vi.fn(),
+}))
 
 vi.mock('web-vitals', () => ({
   onCLS: (cb: MetricCb) => mockOnCLS(cb),
@@ -33,9 +39,8 @@ vi.mock('web-vitals', () => ({
   onINP: (cb: MetricCb) => mockOnINP(cb),
 }))
 
-const mockInfo = vi.fn()
 vi.mock('./logger', () => ({
-  getLogger: vi.fn().mockReturnValue({
+  getLogger: () => ({
     info: mockInfo,
     warn: vi.fn(),
     error: vi.fn(),

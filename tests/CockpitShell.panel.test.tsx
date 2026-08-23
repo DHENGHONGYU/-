@@ -1,10 +1,10 @@
 /**
  * @fileoverview CockpitShell 交叉布局渲染测试
- * @description 验证 v6 交叉布局（4 domain × 4 perspective）的核心渲染行为：
- *  1. 4 个域（研究全景/市场背景/AI 决策/持仓观察）正确渲染
- *  2. 域标题、Widget 计数正确显示
- *  3. 域切换交互正常工作
- *  4. 空实例列表处理
+ * @description 验证驾驶舱布局（三页决策模式 + 技术钻取矩阵）的核心渲染行为：
+ *  1. 展开「技术钻取」后 4 个域（智能研判/市场总览/AI 辅助/持仓与风控）正确渲染
+ *  2. 域导航按钮显示 Widget 计数、激活态正确（默认市场总览域）
+ *  3. 域切换交互正常工作（aria-pressed 翻转）
+ *  4. 空实例列表处理 + 三页决策模式页面标题渲染
  *
  * @since v2.8.0 - 2026-08-09
  * @doc cockpit-cross-layout
@@ -44,10 +44,13 @@ vi.mock('@/cockpit/core/widgetRegistry', () => ({
   },
 }))
 
-// widgetEngine — 懒加载 mock
+// widgetEngine — 懒加载 mock（2026-08-23 补齐 mountInstance/unmountInstance，
+// 此前缺失导致 WidgetWrapper 挂载链路 TypeError）
 vi.mock('@/cockpit/core/widgetEngine', () => ({
   widgetEngine: {
     loadComponent: vi.fn().mockResolvedValue(() => null),
+    mountInstance: vi.fn().mockResolvedValue(true),
+    unmountInstance: vi.fn(),
     refreshInstance: vi.fn().mockResolvedValue(true),
   },
 }))
@@ -72,6 +75,36 @@ vi.mock('react-router', () => ({
 // ============================================================
 const CockpitShellModule = await import('@/cockpit/CockpitShell')
 const CockpitShell = CockpitShellModule.default
+// CockpitShell 内置 DensityToggle 依赖 DensityContext，测试须用 DensityProvider 包裹（与应用真实挂载一致）
+const { DensityProvider } = await import('@/components/cockpit/DensityContext')
+
+/** 统一渲染入口：包裹 DensityProvider，对齐应用真实挂载链路 */
+function renderShell() {
+  return render(
+    <DensityProvider>
+      <CockpitShell />
+    </DensityProvider>,
+  )
+}
+
+/**
+ * 展开「技术钻取」折叠区，使域×视角导航按钮可见。
+ * 2026-08-23 better-harness F-003：驾驶舱已演进为三页决策模式，
+ * 域导航按钮仅在技术钻取区展开后渲染（CockpitCrossLayout drillMatrixOpen 默认 false）。
+ */
+function expandTechnicalDrilldown(): void {
+  fireEvent.click(screen.getByRole('button', { name: /技术钻取/ }))
+}
+
+/**
+ * 定位域导航按钮（按 aria-pressed 属性区分：矩阵单元格按钮的 aria-label 也含域名）。
+ */
+function getDomainButton(label: RegExp): HTMLButtonElement {
+  const buttons = screen.getAllByRole('button', { name: label })
+  const nav = buttons.find((b) => b.hasAttribute('aria-pressed'))
+  if (!nav) throw new Error(`未找到域导航按钮: ${label}`)
+  return nav
+}
 
 // ============================================================
 // 测试数据构建
@@ -167,43 +200,40 @@ describe('CockpitShell 交叉布局', () => {
   // ----------------------------------------------------------
   // 域标题渲染
   // ----------------------------------------------------------
-  it('渲染全部 4 个域标题', () => {
-    render(<CockpitShell />)
+  it('展开技术钻取后渲染全部 4 个域导航按钮', () => {
+    renderShell()
+    expandTechnicalDrilldown()
 
-    // 域标题在左侧导航和矩阵总览中均出现，用 getAllByText
-    expect(screen.getAllByText('智能研判').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('市场总览').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('AI 辅助').length).toBeGreaterThan(0)
-    expect(screen.getAllByText('持仓与风控').length).toBeGreaterThan(0)
+    expect(getDomainButton(/智能研判/)).toBeDefined()
+    expect(getDomainButton(/市场总览/)).toBeDefined()
+    expect(getDomainButton(/AI 辅助/)).toBeDefined()
+    expect(getDomainButton(/持仓与风控/)).toBeDefined()
   })
 
-  it('域标题显示 Widget 计数', () => {
-    render(<CockpitShell />)
+  it('域导航按钮显示 Widget 计数', () => {
+    renderShell()
+    expandTechnicalDrilldown()
 
-    // 市场背景 6 个 — 在左侧导航按钮中显示计数
-    const marketButtons = screen.getAllByText('市场总览')
-    const marketButton = marketButtons.find((el) => el.closest('button'))
-    expect(marketButton?.closest('button')?.textContent).toMatch(/6/)
-    // 智能研判 4 个
-    const researchButtons = screen.getAllByText('智能研判')
-    const researchButton = researchButtons.find((el) => el.closest('button'))
-    expect(researchButton?.closest('button')?.textContent).toMatch(/4/)
+    // 市场背景域 6 个实例 — 按钮文本含域标题 + 计数徽标（"6"）
+    expect(getDomainButton(/市场总览/).textContent).toMatch(/6/)
+    // 智能研判域 4 个实例 — 计数徽标为 "4"
+    expect(getDomainButton(/智能研判/).textContent).toMatch(/4/)
   })
 
   // ----------------------------------------------------------
   // 默认激活域
   // ----------------------------------------------------------
-  it('默认激活市场背景域', () => {
-    render(<CockpitShell />)
+  it('默认激活市场总览域', () => {
+    renderShell()
+    expandTechnicalDrilldown()
 
-    // 市场背景域默认激活，导航按钮应有激活样式
-    const marketButtons = screen.getAllByText('市场总览')
-    const marketButton = marketButtons.find((el) => el.closest('button'))
-    expect(marketButton).toBeDefined()
+    // CockpitCrossLayout 默认 activeDomain='market'，域按钮以 aria-pressed 标记激活态
+    expect(getDomainButton(/市场总览/).getAttribute('aria-pressed')).toBe('true')
+    expect(getDomainButton(/智能研判/).getAttribute('aria-pressed')).toBe('false')
   })
 
   it('非激活域的 Widget 不渲染', () => {
-    render(<CockpitShell />)
+    renderShell()
 
     // research domain 的 Widget 不在默认视图中
     expect(screen.queryByText('KAI 选股综合评分')).toBeNull()
@@ -215,18 +245,17 @@ describe('CockpitShell 交叉布局', () => {
   // 域切换交互
   // ----------------------------------------------------------
   it('点击域标题切换激活域', () => {
-    render(<CockpitShell />)
+    renderShell()
+    expandTechnicalDrilldown()
 
-    // 智能研判默认不激活，点击后应切换
-    const researchButtons = screen.getAllByText('智能研判')
-    const researchButton = researchButtons.find((el) => el.closest('button'))
-    expect(researchButton).toBeDefined()
+    // 智能研判默认不激活，点击后 aria-pressed 翻转，市场总览失去激活态
+    const researchButton = getDomainButton(/智能研判/)
+    expect(researchButton.getAttribute('aria-pressed')).toBe('false')
 
-    fireEvent.click(researchButton!.closest('button')!)
+    fireEvent.click(researchButton)
 
-    // 切换后研究全景域被激活（按钮 class 变化）
-    const clickedButton = researchButton!.closest('button')
-    expect(clickedButton).toBeDefined()
+    expect(researchButton.getAttribute('aria-pressed')).toBe('true')
+    expect(getDomainButton(/市场总览/).getAttribute('aria-pressed')).toBe('false')
   })
 
   // ----------------------------------------------------------
@@ -235,23 +264,37 @@ describe('CockpitShell 交叉布局', () => {
   it('空实例列表不渲染域 Widget', () => {
     mockGetAllInstances.mockReturnValue([])
 
-    render(<CockpitShell />)
+    renderShell()
 
     // 域标题仍渲染（来自常量），但无 Widget 标题
     expect(screen.queryByText('大盘指数')).toBeNull()
   })
 
   // ----------------------------------------------------------
+  // 三页决策模式（主视图）
+  // ----------------------------------------------------------
+  it('三页决策模式默认渲染三个决策页标题', () => {
+    renderShell()
+
+    // DecisionPagesOverview 为主视图，无需展开钻取区即可见页标题/Tab
+    expect(screen.getAllByText(/今日决策/).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/我的组合/).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/市场与机会/).length).toBeGreaterThan(0)
+    // 技术钻取区默认折叠（域导航按钮不可见）
+    expect(screen.queryAllByRole('button', { name: /智能研判/ })).toHaveLength(0)
+  })
+
+  // ----------------------------------------------------------
   // 顶部导航
   // ----------------------------------------------------------
   it('顶部导航显示驾驶舱标题', () => {
-    render(<CockpitShell />)
+    renderShell()
 
     expect(screen.getByText('驾驶舱')).toBeDefined()
   })
 
   it('顶部导航显示添加 Widget 和重置布局按钮', () => {
-    render(<CockpitShell />)
+    renderShell()
 
     expect(screen.getByText('添加组件')).toBeDefined()
     expect(screen.getByText('重置布局')).toBeDefined()

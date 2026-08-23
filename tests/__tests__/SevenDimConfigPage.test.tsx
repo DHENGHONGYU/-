@@ -21,6 +21,7 @@ import { UI_TEXT } from '@/constants/uiText'
 import SevenDimConfigPage from '@/pages/input/SevenDimConfigPage'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { STRATEGY_TEMPLATES, DEFAULT_DIMENSIONS, DIMENSION_COUNT } from '@/config/collectConfig'
+import { ToastProvider } from '@/hooks/useToast'
 
 // Mock ErrorBoundary
 vi.mock('@/components/ErrorBoundary', () => ({
@@ -40,9 +41,12 @@ beforeEach(() => {
  * Arrange-Act-Assert 辅助：渲染页面
  */
 function renderPage() {
+  // 2026-08-23 Token Plan 处理事项修复：页面新增 useToast 依赖，须包裹 ToastProvider（否则 61 例全挂）
   return render(
     <MemoryRouter initialEntries={['/input/seven-dim']}>
-      <SevenDimConfigPage />
+      <ToastProvider>
+        <SevenDimConfigPage />
+      </ToastProvider>
     </MemoryRouter>,
   )
 }

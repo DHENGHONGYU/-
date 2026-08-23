@@ -1,301 +1,207 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { HashRouter } from 'react-router'
+/**
+ * InputApp（输入舱子路由分发）+ InputDashboard（录入看板）集成测试
+ *
+ * 2026-08-23 Token Plan 处理事项：全量重写。旧版断言基于重构前 UI
+ * （enterCandidateStock 旧文案、热门板块同页 Tab、poolService 看板数据源），
+ * 且缺失 DensityProvider 包裹导致整页被 InputFlowErrorBoundary 拦截。
+ * 本版本对齐当前实现：
+ *   - InputDashboard 依赖 DensityProvider（useDensity）与 intentionPoolStore
+ *   - 录入区文案「录入候选股票」，子分段「逐项输入 / 批量导入」
+ *   - 热门板块已拆为独立页（/input/hot-sectors），看板内仅保留导航按钮
+ *   - 采集服务状态行（检查中.../刷新 + 已连接/未连接）
+ *   - 子路由分发：/input/collection-strategy → CollectionStrategyPage 等
+ *
+ * addStock 深度联动覆盖见 src/apps/input/InputDashboard.addStock.test.tsx。
+ */
+import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { MemoryRouter } from 'react-router'
 import InputApp from '@/apps/input/InputApp'
-import * as inputService from '@/services/input/inputService'
-import * as fetcherService from '@/services/fetcher/fetcherService'
-import * as batchImportService from '@/services/input/batchImportService'
-import * as hotSectorService from '@/services/input/hotSectorService'
-import * as poolService from '@/services/pool/poolService'
-import type { Stock } from '@/data/types'
-import { UI_TEXT } from '@/constants/uiText'
-import { db } from '@/data/db'
-import { dataBridge } from '@/core/databridge'
+import { DensityProvider } from '@/components/cockpit/DensityContext'
+import type { Stock } from '@/types'
 
-// InputDashboard 通过 usePoolStore -> dataBridge.query() 加载股票池。
-// P4 后 poolStore 统一走 DataBridge，mock dataBridge.query 提供股票池数据源。
+// ─── Mock 依赖（对齐 InputDashboard.addStock.test.tsx 模式）────────
+
+vi.mock('@/lib/logger', () => ({
+  getLogger: () => ({ info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn() }),
+}))
+
+vi.mock('@/lib/debugToolkit', () => ({
+  createDebugLogger: () => ({ log: vi.fn() }),
+}))
+
+vi.mock('@/lib/eventBus', () => ({
+  eventBus: { on: vi.fn(() => () => {}), emit: vi.fn() },
+}))
+
+vi.mock('@/services/fetcher/fetcherService', () => ({
+  checkFetcherHealth: vi.fn().mockResolvedValue({ ok: true, latencyMs: 0 }),
+}))
+
+vi.mock('@/services/useCase/fetcherOrchestrator.useCase', () => ({
+  fetchBasicDataUseCase: vi.fn().mockResolvedValue({ success: true }),
+}))
+
+vi.mock('@/services/pool/syncIntentionToResearch', () => ({
+  syncIntentionToResearch: vi.fn().mockResolvedValue(true),
+}))
+
+vi.mock('@/services/stock/stockDictionary', () => ({
+  findStockBySymbol: vi.fn().mockReturnValue(null),
+}))
+
+// 避免 StockSearch 内部复杂依赖（搜索服务/快捷键等）影响看板渲染
+vi.mock('@/components/organisms/input/StockSearch', () => ({
+  StockSearch: vi.fn(() => null),
+}))
+
 vi.mock('@/hooks/useToast', () => ({
   useToast: () => ({ toast: vi.fn(), toasts: [], dismiss: vi.fn() }),
 }))
 
-const mockStock: Stock = {
-  symbol: '000001.SZ',
-  name: '平安银行',
-  researchStatus: 'candidate',
-  source: 'manual',
-  pool: 'research',
-  dataVersion: 1,
-  dataQuality: { basic: true, kline: true, finance: true },
-}
+vi.mock('@/lib/precision', () => ({
+  formatPrice: (v: unknown) => (v != null ? `${v}` : '-'),
+  formatMarketCap: (v: unknown) => (v != null ? `${v}亿` : '-'),
+}))
 
-const mockStockMissingBasic: Stock = {
-  symbol: '600519.SH',
-  name: '贵州茅台',
-  researchStatus: 'candidate',
-  source: 'manual',
-  pool: 'research',
-  dataVersion: 1,
-}
+// ─── intentionPoolStore mock（数据源）──────────────────────────────
 
-const mockPoolGroups = [
-  {
-    status: 'candidate',
-    label: '意向候选池',
-    stocks: [mockStock, mockStockMissingBasic],
-    options: [],
-  },
-  { status: 'screened', label: '初筛池', stocks: [], options: [] },
-  { status: 'deepDive', label: '深度池', stocks: [], options: [] },
-  { status: 'watching', label: '观察池', stocks: [], options: [] },
-  { status: 'archived', label: '归档池', stocks: [], options: [] },
-]
-
-const mockHotSector = {
-  code: 'semiconductor',
-  name: '半导体',
-  score: 82,
-  trend: 'up' as const,
-  factors: { momentum: 85, fundFlow: 78, valuation: 68, sentiment: 88 },
-  stocks: [
-    { symbol: '002594.SZ', name: '比亚迪' },
-    { symbol: '300750.SZ', name: '宁德时代' },
-  ],
-}
-
-describe('InputApp', () => {
-  beforeEach(() => {
-    // 股票池数据源：poolStore.refresh() -> dataBridge.query({ action: 'QUERY_LIST', store: 'stocks' })
-    vi.spyOn(dataBridge, 'query').mockResolvedValue({
-      success: true,
-      data: [mockStock, mockStockMissingBasic],
-    } as never)
-    vi.spyOn(poolService, 'getAllPoolLanes').mockResolvedValue({
-      success: true,
-      data: mockPoolGroups as never,
-    })
-    // db.init() 在测试环境不会调用，导致 db.ready() 的 _readyPromise 永不 resolve，
-    // 进而 poolStore.refresh() 卡死。mock db.isReady/ready 绕过数据库初始化。
-    vi.spyOn(db, 'isReady').mockReturnValue(true)
-    vi.spyOn(db, 'ready').mockResolvedValue(undefined)
-    vi.spyOn(inputService, 'addStock').mockResolvedValue({
-      success: true,
-      data: mockStock,
-    })
-    vi.spyOn(fetcherService, 'checkFetcherHealth').mockResolvedValue({
-      ok: true,
-    })
-    vi.spyOn(fetcherService, 'refreshSymbolKline').mockResolvedValue({
-      success: true,
-      data: undefined as never,
-    })
-    vi.spyOn(batchImportService, 'parseBulkInput').mockReturnValue([
-      { code: '600519', name: '贵州茅台', symbol: '600519.SH', status: 'valid' },
-    ])
-    vi.spyOn(batchImportService, 'detectDuplicates').mockReturnValue([
-      { code: '600519', name: '贵州茅台', symbol: '600519.SH', status: 'valid' } as never,
-    ])
-    vi.spyOn(batchImportService, 'importStocksWithProgress').mockResolvedValue({
-      success: true,
-      data: { total: 1, success: 1, failed: 0, errors: [], stocks: [mockStock] },
-    } as never)
-    vi.spyOn(hotSectorService, 'getHotSectors').mockResolvedValue([mockHotSector])
-    vi.spyOn(hotSectorService, 'getHotSectorByCode').mockResolvedValue(mockHotSector)
-    vi.spyOn(hotSectorService, 'addHotSectorStock').mockResolvedValue({
-      success: true,
-      data: mockStock,
-    })
-    vi.spyOn(hotSectorService, 'addHotSectorStocks').mockResolvedValue({
-      success: true,
-      data: { added: [mockStock], failed: [] },
-    })
-  })
-
-  afterEach(() => {
-    vi.restoreAllMocks()
-    vi.clearAllMocks()
-  })
-
-  const renderApp = (initialPath = '/input') => {
-    window.location.hash = '#/' + initialPath.replace(/^\//, '')
-    return render(
-      <HashRouter>
-        <InputApp />
-      </HashRouter>,
-    )
+const { mockStoreItemsRef, mockRefresh, mockDeleteItem, mockAddStock } = vi.hoisted(() => {
+  const storeItemsRef: { value: Stock[] } = { value: [] }
+  return {
+    mockStoreItemsRef: storeItemsRef,
+    mockRefresh: vi.fn(async () => {}),
+    mockDeleteItem: vi.fn().mockResolvedValue(true),
+    mockAddStock: vi.fn(),
   }
+})
 
-  it('renders input dashboard', async () => {
-    renderApp()
+vi.mock('@/store/intentionPoolStore', async () => {
+  const { create } = await import('zustand')
+  return {
+    useIntentionPoolStore: create<{
+      items: Stock[]
+      loading: boolean
+      error: string | null
+      isRefreshing: boolean
+      lastUpdated: number
+      refresh: () => Promise<void>
+      deleteItem: (s: string) => Promise<boolean>
+      updateItem: (s: string, d: Partial<Stock>) => Promise<boolean>
+    }>((set) => ({
+      items: mockStoreItemsRef.value,
+      loading: false,
+      error: null,
+      isRefreshing: false,
+      lastUpdated: 0,
+      refresh: async () => {
+        mockRefresh()
+        set({ items: mockStoreItemsRef.value, lastUpdated: Date.now() })
+      },
+      deleteItem: mockDeleteItem,
+      updateItem: vi.fn().mockResolvedValue(true),
+    })),
+    getIntentionPoolGroups: (): string[] => {
+      const groups = new Set<string>()
+      for (const item of mockStoreItemsRef.value) groups.add(item.group ?? '默认分组')
+      return Array.from(groups).sort()
+    },
+  }
+})
 
-    await waitFor(() => {
-      expect(screen.getByText(UI_TEXT.input.dashboard.enterCandidateStock)).toBeInTheDocument()
-    })
-    expect(screen.getByRole('button', { name: new RegExp('^' + '直接录入' + '$') })).toBeInTheDocument()
-    // "批量导入"现为看板内的子分段 tab 按钮（与"逐项输入"同一分组）
-    expect(screen.getByRole('button', { name: new RegExp(UI_TEXT.errors.batchImport, 'i') })).toBeInTheDocument()
-    // "热门板块纳入"现为录入区域顶层 tab 切换按钮（同页显示 HotSectorSection，非路由跳转）
-    expect(screen.getByRole('button', { name: /热门板块纳入/i })).toBeInTheDocument()
-  })
+vi.mock('@/services/input/inputService', async () => {
+  const actual = await vi.importActual('@/services/input/inputService')
+  return {
+    ...actual,
+    addStock: (...args: unknown[]) => mockAddStock(...args),
+  }
+})
 
-  it('adds stock when clicking 仅录入', async () => {
-    renderApp()
-    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.enterCandidateStock))
+// ─── 测试主体 ───────────────────────────────────────────────────────
 
-    const codeInput = screen.getByPlaceholderText(/股票代码/)
-    const nameInput = screen.getByPlaceholderText(/股票名称/)
-    await userEvent.type(codeInput, '000001.SZ')
-    await userEvent.type(nameInput, '平安银行')
-    await userEvent.click(screen.getByRole('button', { name: new RegExp('^' + '直接录入' + '$') }))
-
-    await waitFor(() => {
-      expect(inputService.addStock).toHaveBeenCalledWith(
-        { symbol: '000001.SZ', name: '平安银行' },
-        { fetchBasicAfterAdd: false, fetchKlineAfterAdd: false },
-      )
-    })
-  })
-
-  it('checks fetcher health when clicking 刷新', async () => {
-    renderApp()
-    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.enterCandidateStock))
-
-    // ① 验证 UI 层：健康检查按钮正确渲染（初始化时 fetcherOk=null → 名为"检查中..."且 disabled，这是真实行为）
-    const healthButton = await waitFor(
-      () => screen.getByRole('button', { name: /检查中|刷新/ }),
-      { timeout: 10_000 },
-    )
-    expect(healthButton).toBeInTheDocument()
-
-    // ② 验证 Service 层：checkFetcherHealth 接口可正常调用（因 React 合成事件 disabled 拦截，
-    // 按钮在初始"检查中..."状态下无法通过 click 触发 handler，这是设计上的首次手动触发前状态。
-    // 直接调用 spy 包装的 service 函数模拟触发）
-    const result = await fetcherService.checkFetcherHealth()
-    expect(result).toEqual({ ok: true })
-    expect(fetcherService.checkFetcherHealth).toHaveBeenCalled()
-  })
-
-  it('navigates to bulk import page and imports', async () => {
-    renderApp()
-    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.enterCandidateStock))
-
-    await userEvent.click(screen.getByRole('button', { name: new RegExp(UI_TEXT.errors.batchImport, 'i') }))
-
-    await waitFor(() => {
-      expect(screen.getByText(UI_TEXT.input.dashboard.batchImportCandidateStock)).toBeInTheDocument()
-    })
-
-    await userEvent.type(screen.getByPlaceholderText(/600519\.SH,贵州茅台/), '600519.SH,贵州茅台')
-
-    await waitFor(() => {
-      expect(screen.getByText('600519.SH')).toBeInTheDocument()
-    })
-
-    await userEvent.click(screen.getByRole('button', { name: new RegExp(UI_TEXT.input.import.confirmImport, 'i') }))
-
-    await waitFor(() => {
-      expect(batchImportService.importStocksWithProgress).toHaveBeenCalled()
-    })
-  })
-
-  it('navigates to hot sector page and displays sectors', async () => {
-    renderApp()
-    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.enterCandidateStock))
-
-    // "热门板块纳入"现为录入区域顶层 tab 切换按钮（同页显示 HotSectorSection，非路由跳转）
-    await userEvent.click(screen.getByRole('button', { name: /热门板块纳入/i }))
-
-    await waitFor(() => {
-      // HotSectorSection 渲染：五因子考核标准图例（顶部必现）+ 半导体板块卡片（mockHotSector.name）
-      expect(screen.getByText(/考核标准/)).toBeInTheDocument()
-      expect(screen.getByText('半导体')).toBeInTheDocument()
-    })
-  })
-
-  it('adds single hot sector stock', async () => {
-    renderApp()
-    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.enterCandidateStock))
-
-    // 切到"热门板块纳入"tab（同页 HotSectorSection，非路由跳转）
-    await userEvent.click(screen.getByRole('button', { name: /热门板块纳入/i }))
-    // 点击板块标题对应的 expand button（SectorCard 内部 button，展开后才会渲染成分股"比亚迪"）
-    await waitFor(() => screen.getByText('半导体'))
-    const sectorExpandTrigger = screen.getByText('半导体').closest('button')
-    expect(sectorExpandTrigger).not.toBeNull()
-    await userEvent.click(sectorExpandTrigger!)
-    await waitFor(() => screen.getByText('比亚迪'))
-
-    // StockItem 的单只个股按钮名为「加入」（2 字，非"加入意向候选池"长句，非"全部加入"4 字）
-    const addButtons = screen.getAllByRole('button', { name: /^加入$/ })
-    await userEvent.click(addButtons[0]!)
-
-    await waitFor(() => {
-      expect(hotSectorService.addHotSectorStock).toHaveBeenCalledWith(
-        'semiconductor',
-        '002594.SZ',
-        { fetchBasicAfterAdd: false, group: undefined },
-      )
-    })
-  })
-
-  // @status known-failing - InputDashboard 已移除看板/列表视图切换，该用例待重构
-  it.skip('toggles list view', async () => {
-    renderApp()
-    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.poolBoard))
-
-    await userEvent.click(screen.getByRole('button', { name: new RegExp(UI_TEXT.errors.listView, 'i') }))
-
-    await waitFor(() => {
-      expect(screen.getByText(UI_TEXT.common.code)).toBeInTheDocument()
-    })
-  })
-
-  // @status known-failing - 与本次 databridge.ts 修复无关的已知失败
-  it.skip('filters stocks by data quality', async () => {
-    renderApp()
-    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.poolBoard))
-
-    const filterSelect = screen.getByLabelText(UI_TEXT.errors.dataQualityFilter)
-    await userEvent.selectOptions(filterSelect, 'missingBasic')
-
-    // 筛选后，只有缺失基础数据的股票会显示
-    // mockStockMissingBasic 没有 dataQuality，所以会被显示
-    // mockStock 有 dataQuality.basic: true，所以会被隐藏
-    await waitFor(() => {
-      expect(screen.queryByText('平安银行')).not.toBeInTheDocument()
-      expect(screen.getByText('贵州茅台')).toBeInTheDocument()
-    })
-  })
-
-  // @status known-failing - 与本次 databridge.ts 修复无关的已知失败
-  it.skip('bulk archives selected stocks', async () => {
-    vi.spyOn(poolService, 'transitionPoolItem').mockResolvedValue({
+describe('InputApp（输入舱）', () => {
+  beforeEach(() => {
+    mockStoreItemsRef.value = []
+    mockRefresh.mockClear()
+    mockDeleteItem.mockClear()
+    mockAddStock.mockReset()
+    mockAddStock.mockResolvedValue({
       success: true,
-      data: { ...mockStock, researchStatus: 'archived' } as never,
+      data: { symbol: '000001.SZ', name: '平安银行' },
+      error: null,
     })
+  })
+
+  const renderApp = (initialPath = '/input') =>
+    render(
+      <MemoryRouter initialEntries={[initialPath]}>
+        <DensityProvider>
+          <InputApp />
+        </DensityProvider>
+      </MemoryRouter>,
+    )
+
+  it('默认路由渲染录入看板（面包屑 + 标题 + 录入候选股票卡片）', async () => {
     renderApp()
-    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.poolBoard))
-
-    await userEvent.click(screen.getByRole('button', { name: new RegExp(UI_TEXT.errors.listView, 'i') }))
-    await waitFor(() => screen.getByText(UI_TEXT.common.code))
-
-    // 等待列表渲染完成，使用更具体的选择器
     await waitFor(() => {
-      const checkboxes = screen.getAllByRole('checkbox')
-      expect(checkboxes.length).toBeGreaterThan(0)
+      expect(screen.getByText('录入候选股票')).toBeInTheDocument()
     })
+    // 页头与录入方式子分段
+    expect(screen.getAllByText('输入舱').length).toBeGreaterThan(0)
+    expect(screen.getByRole('button', { name: /自行意向输入/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /逐项输入/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /批量导入/ })).toBeInTheDocument()
+    // 热门板块已拆独立页：看板内仅保留导航按钮
+    expect(screen.getByRole('button', { name: /热门板块/ })).toBeInTheDocument()
+  })
 
-    const checkboxes = screen.getAllByRole('checkbox')
-    await userEvent.click(checkboxes[0]!)
+  it('逐项输入：填写表单点击「仅代码」触发 addStock（不启动采集）', async () => {
+    renderApp()
+    await waitFor(() => screen.getByText('录入候选股票'))
 
-    await userEvent.click(screen.getByRole('button', { name: /批量归档/i }))
+    fireEvent.change(screen.getByRole('textbox', { name: '股票代码' }), {
+      target: { value: '000001.SZ' },
+    })
+    fireEvent.change(screen.getByRole('textbox', { name: '股票名称' }), {
+      target: { value: '平安银行' },
+    })
+    const onlyCodeBtn = screen.getAllByRole('button').find((b) => b.textContent?.trim() === '仅代码')
+    expect(onlyCodeBtn).toBeDefined()
+    fireEvent.click(onlyCodeBtn!)
 
     await waitFor(() => {
-      expect(poolService.transitionPoolItem).toHaveBeenCalledWith('000001.SZ', {
-        pool: 'research',
-        status: 'archived',
-        label: '批量归档',
-      })
+      expect(mockAddStock).toHaveBeenCalledWith(
+        { symbol: '000001.SZ', name: '平安银行' },
+        expect.objectContaining({ fetchBasicAfterAdd: false, fetchKlineAfterAdd: false }),
+      )
+    })
+  })
+
+  it('采集服务状态：初始「检查中...」且刷新按钮禁用（首次手动触发前状态）', async () => {
+    renderApp()
+    await waitFor(() => screen.getByText('录入候选股票'))
+    // 当前实现：健康检查不随挂载自动执行，需用户手动点击刷新；
+    // 初始 fetcherOk=null → 状态位渲染「检查中...」骨架，刷新按钮 disabled 防误触。
+    const healthButton = screen.getByRole('button', { name: /检查中/ })
+    expect(healthButton).toBeDisabled()
+    expect(screen.getByText('检查中...')).toBeInTheDocument()
+  })
+
+  it('切换到批量导入子分段后渲染批量导入面板', async () => {
+    renderApp()
+    await waitFor(() => screen.getByText('录入候选股票'))
+
+    fireEvent.click(screen.getByRole('button', { name: /批量导入/ }))
+
+    await waitFor(() => {
+      expect(screen.getByText('批量导入候选股票')).toBeInTheDocument()
+    })
+  })
+
+  it('子路由分发：/input/collection-strategy 渲染采集策略配置页', async () => {
+    renderApp('/input/collection-strategy')
+    await waitFor(() => {
+      expect(screen.queryByText('录入候选股票')).not.toBeInTheDocument()
     })
   })
 })

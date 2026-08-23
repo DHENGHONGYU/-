@@ -193,13 +193,20 @@ export class WorkflowServer extends MCPServerBase {
       logger.warn('[WorkflowServer] load triggers from IndexedDB failed', { error: err })
     }
 
-    // D2: 从 IndexedDB 加载未完成的 runs + 标记中断
+    // D2: 从 IndexedDB 加载未完成的 runs + 标记中断。
+    // 2026-08-23 Token Plan 处理事项修复：水合只补录内存中不存在的 run（与 C1 defs 语义一致），
+    // 且恢复中断仅作用于从存储水合的记录——否则构造函数异步水合完成时会把正在执行的活 run
+    // （status='running'）误标 'failed'，造成 executeRun 日志 success 但轮询读到 failed 的竞态假红。
     try {
       const storedRuns = this.runRepo ? await this.runRepo.getAll() : []
+      const hydratedRuns: WorkflowRun[] = []
       for (const r of storedRuns) {
-        this.runs.set(r.runId, r)
+        if (!this.runs.has(r.runId)) {
+          this.runs.set(r.runId, r)
+          hydratedRuns.push(r)
+        }
       }
-      this.recoverIncompleteRuns()
+      this.recoverIncompleteRuns(hydratedRuns)
       this.pruneExpiredRuns()
     } catch (err) {
       logger.warn('[WorkflowServer] load runs from IndexedDB failed', { error: err })
@@ -215,18 +222,23 @@ export class WorkflowServer extends MCPServerBase {
         store: STORE_NAME.workflowDefs,
         writeAction: 'saveWorkflowDef',
         deleteAction: 'deleteWorkflowDef',
+        // 2026-08-23 Token Plan 处理事项修复：DeleteWorkflowDefHandler 期望载荷 { id }，
+        // 缺省 deleteKeyField='key' 导致 key=undefined 的 DataError，删除级联失败
+        deleteKeyField: 'id',
         keyOf: (d) => d.id,
       })
       this.scheduleRepo = createRepository<ScheduleDef>({
         store: STORE_NAME.workflowSchedules,
         writeAction: 'saveWorkflowSchedule',
         deleteAction: 'deleteWorkflowSchedule',
+        deleteKeyField: 'id',
         keyOf: (s) => s.id,
       })
       this.triggerRepo = createRepository<TriggerDef>({
         store: STORE_NAME.workflowTriggers,
         writeAction: 'saveWorkflowTrigger',
         deleteAction: 'deleteWorkflowTrigger',
+        deleteKeyField: 'id',
         keyOf: (t) => t.id,
       })
       this.runRepo = createRepository<WorkflowRun>({
@@ -297,9 +309,9 @@ export class WorkflowServer extends MCPServerBase {
    * 恢复中断的运行（D2）：标记 status='running' 的 run 为失败。
    * 进程崩溃时正在执行的 run 会卡在 running 态，需要标记为 failed。
    */
-  private recoverIncompleteRuns(): void {
+  private recoverIncompleteRuns(hydratedRuns: WorkflowRun[]): void {
     let count = 0
-    for (const [, r] of this.runs) {
+    for (const r of hydratedRuns) {
       if (r.status === 'running') {
         r.status = 'failed'
         r.error = 'interrupted by server restart'

@@ -277,14 +277,15 @@ describe('评分拍照比对穿行测试 — 5 只随机抽样股票', () => {
   // 3. 分值变化分析 — 5 类典型场景
   // -----------------------------------------------------------
   describe('3. 分值变化分析', () => {
-    it('300227.SZ — composite 上升(+0.30),评级不变(buy→buy)', async () => {
+    it('300227.SZ — composite 上升(+0.30),评级不变(strong_buy→strong_buy)', async () => {
       const sample = SAMPLE_STOCKS[0]!
       await saveScoreDoc(makeScoreDocInput(sample, 1))
       const v2 = await saveScoreDoc(makeScoreDocInput(sample, 2))
       const delta = v2.data!.changeFromPrev!.compositeDelta
       expect(delta).toBe(0.30)
-      expect(getRating(sample.v1Composite)).toBe('buy')
-      expect(getRating(sample.v2Composite)).toBe('buy')
+      // 2026-08-23 对齐生产新口径(3.5/2.6/1.7/0.9):3.50 与 3.80 均 ≥ strongBuy(3.5)
+      expect(getRating(sample.v1Composite)).toBe('strong_buy')
+      expect(getRating(sample.v2Composite)).toBe('strong_buy')
     })
 
     it('300518.SZ — composite 下降(-0.16),评级不变(buy→buy)', async () => {
@@ -320,13 +321,14 @@ describe('评分拍照比对穿行测试 — 5 只随机抽样股票', () => {
       expect(getRating(sample.v2Composite)).toBe('strong_buy')
     })
 
-    it('688615.SH — composite 大幅下降(-1.45),评级跨档降级(hold→sell)', async () => {
+    it('688615.SH — composite 大幅下降(-1.45),评级跨档降级(buy→sell)', async () => {
       const sample = SAMPLE_STOCKS[4]!
       await saveScoreDoc(makeScoreDocInput(sample, 1))
       const v2 = await saveScoreDoc(makeScoreDocInput(sample, 2))
       const delta = v2.data!.changeFromPrev!.compositeDelta
       expect(delta).toBe(-1.45)
-      expect(getRating(sample.v1Composite)).toBe('hold')
+      // 2026-08-23 对齐生产新口径:2.95 ≥ buy(2.6) → buy;1.50 < hold(1.7) 且 ≥ sell(0.9) → sell
+      expect(getRating(sample.v1Composite)).toBe('buy')
       expect(getRating(sample.v2Composite)).toBe('sell')
     })
   })
@@ -335,12 +337,13 @@ describe('评分拍照比对穿行测试 — 5 只随机抽样股票', () => {
   // 4. 评分判断标准的充分性与合理性
   // -----------------------------------------------------------
   describe('4. 评分判断标准充分性核查', () => {
-    it('4.1 评级阈值完整性:strongBuy(4.0)/buy(3.0)/hold(2.0)/sell(1.0) 四档完整', () => {
+    it('4.1 评级阈值完整性:strongBuy(3.5)/buy(2.6)/hold(1.7)/sell(0.9) 四档完整', () => {
+      // 2026-08-23 对齐生产新口径(让 1.7-2.6 分布落入 buy/sell/hold 三段)
       const { rating } = DEFAULT_THRESHOLDS
-      expect(rating.strongBuy).toBe(4.0)
-      expect(rating.buy).toBe(3.0)
-      expect(rating.hold).toBe(2.0)
-      expect(rating.sell).toBe(1.0)
+      expect(rating.strongBuy).toBe(3.5)
+      expect(rating.buy).toBe(2.6)
+      expect(rating.hold).toBe(1.7)
+      expect(rating.sell).toBe(0.9)
       // 阈值递减
       expect(rating.strongBuy).toBeGreaterThan(rating.buy)
       expect(rating.buy).toBeGreaterThan(rating.hold)
@@ -400,8 +403,8 @@ describe('评分拍照比对穿行测试 — 5 只随机抽样股票', () => {
 
       const stats = await getFileLibraryStats()
       expect(stats.success).toBe(true)
-      // coreStocks 统计基于 DEFAULT_THRESHOLDS.rating.strongBuy(4.0)
-      // 因 4.20 >= 4.0,所以 coreStocks >= 1
+      // coreStocks 统计基于 DEFAULT_THRESHOLDS.rating.strongBuy(3.5)
+      // 因 4.20 >= 3.5,所以 coreStocks >= 1
       expect(stats.data!.coreStocks).toBeGreaterThanOrEqual(1)
     })
   })
@@ -457,11 +460,12 @@ describe('评分拍照比对穿行测试 — 5 只随机抽样股票', () => {
       expect(change.l3vDelta).toBe(-5)
     })
 
-    it('5.5 评级临界点:composite=3.0 → buy,2.99 → hold,4.0 → strong_buy', () => {
-      expect(getRating(3.0)).toBe('buy')
-      expect(getRating(2.99)).toBe('hold')
-      expect(getRating(4.0)).toBe('strong_buy')
-      expect(getRating(3.99)).toBe('buy')
+    it('5.5 评级临界点:composite=2.6 → buy,2.59 → hold,3.5 → strong_buy', () => {
+      // 2026-08-23 对齐生产新口径临界点(旧口径 3.0/4.0 已下线)
+      expect(getRating(2.6)).toBe('buy')
+      expect(getRating(2.59)).toBe('hold')
+      expect(getRating(3.5)).toBe('strong_buy')
+      expect(getRating(3.49)).toBe('buy')
     })
 
     it('5.6 校验失败:symbol 为空', () => {
@@ -596,7 +600,8 @@ describe('评分拍照比对穿行测试 — 5 只随机抽样股票', () => {
       }
       const md = buildReportMarkdown(doc)
       expect(md).toContain('平安银行')
-      expect(md).toContain('综合评分：**4.20**')
+      // 生产口径输出为「综合评分：4.20」(无加粗标记)
+      expect(md).toContain('综合评分：4.20')
       expect(md).toContain('投资建议')
       expect(md).toContain('目标价')
       expect(md).toContain('风险1')
@@ -637,7 +642,7 @@ describe('评分拍照比对穿行测试 — 5 只随机抽样股票', () => {
 
       const stats = await getFileLibraryStats()
       expect(stats.success).toBe(true)
-      // 300926.SZ V2 composite=4.20 >= 4.0(strongBuy 阈值)
+      // 300926.SZ V2 composite=4.20 >= 3.5(strongBuy 阈值)
       expect(stats.data!.coreStocks).toBeGreaterThanOrEqual(1)
     })
   })
@@ -779,7 +784,7 @@ describe('评分拍照比对穿行测试 — 5 只随机抽样股票', () => {
       reportLines.push('')
       reportLines.push(`总计: ${walkthroughResults.length} 只股票, ${totalSteps} 个步骤, ${totalPass ? totalSteps : 0} 通过`)
       reportLines.push('==============================================')
-      // eslint-disable-next-line no-console
+       
       console.log(reportLines.join('\n'))
 
       // 断言
@@ -787,14 +792,14 @@ describe('评分拍照比对穿行测试 — 5 只随机抽样股票', () => {
       expect(totalPass).toBe(true)
       expect(totalSteps).toBe(80) // 5 × 16 = 80
 
-      // 验证跨档场景
+      // 验证跨档场景(2026-08-23 对齐生产新口径:688615 由 2.95 → 1.50 即 buy → sell)
       const upgradeCase = walkthroughResults.find((r) => r.stockCode === '300926.SZ')!
       expect(upgradeCase.ratingV1).toBe('buy')
       expect(upgradeCase.ratingV2).toBe('strong_buy')
       expect(upgradeCase.compositeDelta).toBe(1.09)
 
       const downgradeCase = walkthroughResults.find((r) => r.stockCode === '688615.SH')!
-      expect(downgradeCase.ratingV1).toBe('hold')
+      expect(downgradeCase.ratingV1).toBe('buy')
       expect(downgradeCase.ratingV2).toBe('sell')
       expect(downgradeCase.compositeDelta).toBe(-1.45)
     })
