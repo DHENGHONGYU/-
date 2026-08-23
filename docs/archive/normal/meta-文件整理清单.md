@@ -4,9 +4,12 @@ domain: meta
 status: archived
 last_updated: 2026-08-22
 code_version: 2.0.0-rc.2
-version: v1.3.1
+version: v1.3.2
 change_log:
-  - version: v1.3.1
+  - version: v1.3.2
+    changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.3.1) → R2 PATCH++(v1.3.2) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
+- version: v1.3.1
     changes: "基准日校对(2026-08-22)：R1取真值(P2 正文版本声明行=v1.3.0) → R2 PATCH++(v1.3.1) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
 ---
