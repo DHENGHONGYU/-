@@ -1,0 +1,53 @@
+{
+  "_comment": "L2 路由回归 fixture —— 信号→期望命中语料。expect 为必须命中集合（实际命中可以是超集）；exclude 为禁止命中集合。修改 .trae/skills/skill-registry.json 触发词后跑 npm run test:skill-router 回归。",
+  "cases": [
+    {
+      "name": "文件信号：改动采集管线 → collection-pipeline-testing（mandatory）",
+      "files": ["src/services/data-collector/collectionPipeline.ts"],
+      "expect": ["collection-pipeline-testing"]
+    },
+    {
+      "name": "文件信号：改动 sevenDimConfigStore → collection-pipeline-testing",
+      "files": ["src/store/sevenDimConfigStore.ts"],
+      "expect": ["collection-pipeline-testing"]
+    },
+    {
+      "name": "关键词信号：5 段式迁移诉求 → skill-5seg-migration",
+      "prompt": "请把新技能做 5 段式迁移，RULE-TPL 缺段报错了",
+      "expect": ["skill-5seg-migration"]
+    },
+    {
+      "name": "关键词信号：dataLayer 违规 → databridge-migration",
+      "prompt": "core 层直接访问 dataLayer 违规，需要做 DataBridge迁移",
+      "expect": ["databridge-migration"]
+    },
+    {
+      "name": "关键词信号：版本漂移 → doc-freshness-governance",
+      "prompt": "文档出现版本漂移，帮我做一次校对文档与基准日校对",
+      "expect": ["doc-freshness-governance"]
+    },
+    {
+      "name": "文件信号：config/constants 改动 → constant-migration + db-reference-audit（databridge-migration 只盯 core/services/gateway）",
+      "files": ["src/config/dbConfig.ts", "src/constants/trade.constants.ts"],
+      "expect": ["constant-migration", "db-reference-audit"],
+      "exclude": ["databridge-migration"]
+    },
+    {
+      "name": "文件信号：技能本体改动 → skill-5seg-migration",
+      "files": [".agents/skills/intelligent-score/SKILL.md"],
+      "expect": ["skill-5seg-migration"]
+    },
+    {
+      "name": "文件信号：纯文档改动 → doc-freshness-governance，不误触采集/迁移类",
+      "files": ["docs/guides/getting-started.md"],
+      "expect": ["doc-freshness-governance"],
+      "exclude": ["collection-pipeline-testing", "constant-migration", "databridge-migration"]
+    },
+    {
+      "name": "负例：无关改动 → 不误触任何物理技能",
+      "files": ["README.md"],
+      "expect": [],
+      "exclude": ["collection-pipeline-testing", "databridge-migration", "constant-migration", "skill-5seg-migration", "doc-freshness-governance"]
+    }
+  ]
+}
