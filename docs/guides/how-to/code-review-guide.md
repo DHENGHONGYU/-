@@ -1,12 +1,14 @@
----
-title: code-review-guide
+---title: code-review-guide
 code_version: "2.0.0-rc.2"
 tier: reference
 status: active
-version: v1.0.3
-last_updated: 2026-08-22
+version: v1.0.4
+last_updated: 2026-08-23
 doc_id: V9-DOC-HOW-904
 change_log:
+  - version: 1.0.4
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.3 / 正文 v1.0.0) → 取真值 max=1.0.3 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v1.0.3
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.2) → R2 PATCH++(v1.0.3) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -24,7 +26,7 @@ change_log:
 
 # 代码评审指南与质量门禁 SOP
 
-> **版本**: v1.0.0 | **日期**: 2026-07-12
+> **版本**: v1.0.4 | **日期**: 2026-07-12
 > **基于**: `AGENTS.md v1.4.5` 架构契约
 > **适用范围**: 所有 PR / MR 代码评审,以及分支合并前的质量把控
 > **维护者**: 资深开发工程师

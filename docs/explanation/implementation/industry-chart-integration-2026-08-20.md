@@ -1,5 +1,4 @@
----
-phase: development
+---phase: development
 title: 行业分析图表组件接入技术文档
 date: 2026-08-20
 status: active
@@ -20,9 +19,12 @@ tags:
   - integration
   - orphan-component-revival
 code_version: 2.0.0-rc.2
-version: v1.0.1
-last_updated: 2026-08-22
+version: v1.0.2
+last_updated: 2026-08-23
 change_log:
+  - version: 1.0.2
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.1 / 正文 v1.0.0) → 取真值 max=1.0.1 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v1.0.1
     changes: "基准日校对(2026-08-22)：R1取真值(P2 正文版本声明行=v1.0.0) → R2 PATCH++(v1.0.1) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -31,7 +33,7 @@ change_log:
 # 行业分析图表组件接入技术文档
 
 > **创建日期**: 2026-08-20
-> **版本**: v1.0.0
+> **版本**: v1.0.2
 > **作者**: AI Agent
 > **状态**: ✅ 已完成
 

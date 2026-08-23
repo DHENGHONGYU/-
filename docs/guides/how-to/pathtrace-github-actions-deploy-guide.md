@@ -1,11 +1,13 @@
----
-title: "PathTrace 模块 GitHub Actions 部署与版本门控指南"
+---title: "PathTrace 模块 GitHub Actions 部署与版本门控指南"
 domain: project
 status: active
-last_updated: 2026-08-22
+last_updated: 2026-08-23
 code_version: 2.0.0-rc.2
-version: v1.0.2
+version: v1.0.3
 change_log:
+  - version: 1.0.3
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.2 / 正文 v1.0.0) → 取真值 max=1.0.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v1.0.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.1) → R2 PATCH++(v1.0.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -18,7 +20,7 @@ change_log:
 
 > **工作流文件**: `.github/workflows/pathtrace-ci.yml`
 > **应用范围**: `scripts/PathTrace.ps*`, `deploy-pathtrace-module.ps1`, `test-pathtrace-global.ps1`
-> **版本**: v1.0.0
+> **版本**: v1.0.3
 > **最后更新**: 2026-08-09
 
 ---

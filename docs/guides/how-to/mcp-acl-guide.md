@@ -1,14 +1,16 @@
----
-type: how-to
+---type: how-to
 domain: ai
 phase: development
 doc_id: V9-DOC-DEV-005
 title: mcp-acl-guide
 code_version: "2.0.0-rc.2"
 tier: important
-version: v1.2.1
-last_updated: 2026-08-22
+version: v1.2.2
+last_updated: 2026-08-23
 change_log:
+  - version: 1.2.2
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.2.1 / 正文 v1.1.0) → 取真值 max=1.2.1 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v1.2.1
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.2.0) → R2 PATCH++(v1.2.1) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -28,7 +30,7 @@ covers_code:
 
 # MCP 权限控制开发指南
 
-> **版本**: v1.1.0 | **日期**: 2026-07-22
+> **版本**: v1.2.2 | **日期**: 2026-07-22
 > **适用范围**: 所有通过 MCP 协议调用工具的开发场景
 > **相关规范**: [AGENTS.md §十四 MCP 权限控制规范](../../meta/AGENTS.md) | [MCP 生命周期管理指南（入-移-出）](./MCP-LIFECYCLE-GUIDE.md)
 

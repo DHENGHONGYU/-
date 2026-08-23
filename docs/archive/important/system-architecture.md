@@ -1,11 +1,13 @@
----
-doc_id: V9-DOC-EXP-963
+---doc_id: V9-DOC-EXP-963
 title: system-architecture
 tier: important
 code_version: "2.0.0-rc.2"
-version: v1.1.2
-last_updated: 2026-08-22
+version: v1.1.3
+last_updated: 2026-08-23
 change_log:
+  - version: 1.1.3
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.1.2 / 正文 v1.1) → 取真值 max=1.1.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v1.1.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.1.1) → R2 PATCH++(v1.1.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -23,7 +25,7 @@ change_log:
 
 # 智能投研复盘系统 V9 — 系统架构与设计文档
 
-> **版本**：v1.1 · **日期**：2026-08-13
+> **版本**：v1.1.3 · **日期**：2026-08-13
 > **范围**：全系统分层架构、核心模块职责、数据流、设计令牌与质量门禁
 > **配套可视化**：`docs/explanation/architecture/architecture-diagrams.html`（浏览器打开，含分层图 / 数据流图 / 舱室地图）
 > **取代文档**：`docs/reference/v9-system-blueprint.md`（v0.9.1-deprecated，2026-08-15 起标记为 deprecated）

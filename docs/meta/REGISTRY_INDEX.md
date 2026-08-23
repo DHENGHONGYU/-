@@ -1,11 +1,13 @@
----
-title: "V9 模块注册体系索引"
+---title: "V9 模块注册体系索引"
 domain: project
 status: active
-last_updated: 2026-08-22
+last_updated: 2026-08-23
 code_version: 2.0.0-rc.2
-version: v1.1.2
+version: v1.1.3
 change_log:
+  - version: 1.1.3
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.1.2 / 正文 v1.1.0) → 取真值 max=1.1.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v1.1.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.1.1) → R2 PATCH++(v1.1.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -24,7 +26,7 @@ covers_code:
 
 # V9 模块注册体系索引
 
-> **版本**: v1.1.0 | **日期**: 2026-07-05 | **对应代码版本**: v2.5.0
+> **版本**: v1.1.3 | **日期**: 2026-07-05 | **对应代码版本**: v2.5.0
 > **适用范围**: Store / Component / Widget 三层注册体系
 
 ---

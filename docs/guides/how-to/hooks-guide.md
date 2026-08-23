@@ -1,11 +1,13 @@
----
-title: "自定义 Hook 使用指南"
+---title: "自定义 Hook 使用指南"
 domain: project
 status: active
-last_updated: 2026-08-22
+last_updated: 2026-08-23
 code_version: 2.0.0-rc.2
-version: v1.0.2
+version: v1.0.3
 change_log:
+  - version: 1.0.3
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.2 / 正文 v1.0.0) → 取真值 max=1.0.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v1.0.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.1) → R2 PATCH++(v1.0.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -25,7 +27,7 @@ last_updated: 2026-08-15
 # 自定义 Hook 使用指南
 
 > **Status**: Current  
-> **Version**: v1.0.0  
+> **Version**: v1.0.3  
 > **Last Updated**: 2026-07-12  
 > **Related**: `src/hooks/`、`../../archive/historical-2026-08-16/batch7/docs/explanation/implementation/data-flow-spec.md（已归档）`、`AGENTS.md` §三 事件监听清理
 

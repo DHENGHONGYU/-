@@ -1,11 +1,13 @@
----
-title: "Design→Code 工作流规范"
+---title: "Design→Code 工作流规范"
 domain: project
 status: active
-last_updated: 2026-08-22
+last_updated: 2026-08-23
 code_version: 2.0.0-rc.2
-version: v1.0.2
+version: v1.0.3
 change_log:
+  - version: 1.0.3
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.2 / 正文 v1.0.0) → 取真值 max=1.0.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v1.0.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.1) → R2 PATCH++(v1.0.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -44,7 +46,7 @@ change_log:
 # Design→Code 工作流规范
 
 > **Status**: Active
-> **Version**: v1.0.0
+> **Version**: v1.0.3
 > **适用范围**: 所有涉及 UI 视觉设计→前端代码实现的变更
 > **强制等级**: 设计师与前端开发者必须遵守
 > **配套文档**: [09. 质量门禁](09-quality-gates.md)（门禁标准定义）、[coding-conventions.md](standards/coding-conventions.md)

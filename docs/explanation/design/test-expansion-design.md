@@ -1,9 +1,11 @@
----
-title: docs/explanation/design/test-expansion-design.md
+---title: docs/explanation/design/test-expansion-design.md
 code_version: 2.0.0-rc.2
-version: v1.0.2
-last_updated: 2026-08-22
+version: v1.0.3
+last_updated: 2026-08-23
 change_log:
+  - version: 1.0.3
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.2 / 正文 v1.0) → 取真值 max=1.0.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v1.0.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.1) → R2 PATCH++(v1.0.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -14,7 +16,7 @@ change_log:
 
 # 测试扩充设计方案
 
-> **版本**: v1.0 | **日期**: 2026-07-12
+> **版本**: v1.0.3 | **日期**: 2026-07-12
 > **适用范围**: `scripts/` 目录下所有审计与工具脚本的测试覆盖
 > **核心原则**: 系统化设计、功能域合并、逻辑一致性、架构连贯性
 

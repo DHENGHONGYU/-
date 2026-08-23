@@ -30,8 +30,6 @@ covers_code:
   - src/services/scoring/v6ScoreService.ts
   - src/services/scoring/intelligentScoreService.ts
   - src/services/scoring/intelligentScorePrompt.ts
-
-
 ---
 # 05. 引擎规格
 

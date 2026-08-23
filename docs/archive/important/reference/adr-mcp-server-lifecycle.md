@@ -14,12 +14,12 @@ code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-AI-005
 referenced_by: [V9-DOC-META-000, V9-DOC-PROD-005, V9-DOC-PROJ-176, V9-DOC-PROJ-149, V9-DOC-ARCH-013]
 change_log:
-  - version: v1.0.0
-    changes: Initial version established
-    date: 2026-07-17
   - version: v1.1.0
     changes: "P0-3 僵尸 Server 清理：补全 §2.3 ACL 清理 Checklist 执行记录，修正 §3.2 最终 Registry 配置描述（10 enabled + 5 disabled），新增 §3.3 本次清理记录"
     date: 2026-08-15
+  - version: v1.0.0
+    changes: Initial version established
+    date: 2026-07-17
 ---
 
 # ADR-013: MCP Server 生命周期管理 SOP

@@ -12,18 +12,17 @@ version: v1.1.0
 last_updated: 2026-07-21
 code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-ARCH-058
-change_log:
-  - version: v1.0.0
-    changes: 编码损坏事件后重建 frontmatter 骨架（正文待 P3 重写）
-    date: 2026-07-19
-  - version: v1.1.0
-    changes: 依据 src/mcp/ 实际结构与技能路由体系重建正文基线；状态由"待重写"转为"已重建基线"
-    date: 2026-07-21
----
 covers_code:
   - src/mcp/register.ts
   - scripts/skill-router.cjs
-
+change_log:
+  - version: v1.1.0
+    changes: 依据 src/mcp/ 实际结构与技能路由体系重建正文基线；状态由"待重写"转为"已重建基线"
+    date: 2026-07-21
+  - version: v1.0.0
+    changes: 编码损坏事件后重建 frontmatter 骨架（正文待 P3 重写）
+    date: 2026-07-19
+---
 
 # MCP Server CLI Skill 策略
 

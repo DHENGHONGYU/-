@@ -1,11 +1,13 @@
----
-title: "颜色令牌生命周期管理指南（入-移-出）"
+---title: "颜色令牌生命周期管理指南（入-移-出）"
 domain: project
 status: active
-last_updated: 2026-08-22
+last_updated: 2026-08-23
 code_version: 2.0.0-rc.2
-version: v1.0.2
+version: v1.0.3
 change_log:
+  - version: 1.0.3
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.2 / 正文 v1.0.0) → 取真值 max=1.0.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v1.0.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.1) → R2 PATCH++(v1.0.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -36,7 +38,7 @@ change_log:
 
 # 颜色令牌生命周期管理指南（入-移-出）
 
-> **版本**: v1.0.0 | **日期**: 2026-07-22
+> **版本**: v1.0.3 | **日期**: 2026-07-22
 > **适用范围**: `src/constants/theme.tokens.ts`、`src/config/chartColors.ts`、`design-tokens/tokens.json` 的颜色令牌体系
 > **权威规范**: [AGENTS.md §3.5 颜色令牌规范](../../meta/AGENTS.md)（场景化使用规则、语义映射、禁止清单的**唯一事实源**）
 > **关联技能**: [v9-color-token-remediation](../../../.agents/skills/architecture-cleanup/SKILL.md)（令牌单源收敛）

@@ -1,11 +1,13 @@
----
-title: "如何配置 V6 评分引擎权重与阈值"
+---title: "如何配置 V6 评分引擎权重与阈值"
 domain: project
 status: active
-last_updated: 2026-08-22
+last_updated: 2026-08-23
 code_version: 2.0.0-rc.2
-version: v2.0.2
+version: v2.0.3
 change_log:
+  - version: 2.0.3
+    changes: "基准校对(2026-08-23)：A类双轨(fm v2.0.2 / 正文 v2.0.0) → 取真值 max=2.0.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v2.0.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v2.0.1) → R2 PATCH++(v2.0.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -44,7 +46,7 @@ change_log:
 
 # 如何配置 V6 评分引擎权重与阈值
 
-> **版本**：v2.0.0  
+> **版本**：v2.0.3  
 > **更新日期**：2026-08-09  
 > **适用范围**：需要调整 V6 评分引擎的 11 层因子权重、行业估值基准、评级阈值，或进行策略回测验证的开发者与投研用户
 ---

@@ -1,11 +1,13 @@
----
-title: "V9 UI 设计系统"
+---title: "V9 UI 设计系统"
 domain: exp
 status: active
-last_updated: 2026-08-22
+last_updated: 2026-08-23
 code_version: 2.0.0-rc.2
-version: v2.2.2
+version: v2.2.3
 change_log:
+  - version: 2.2.3
+    changes: "基准校对(2026-08-23)：A类双轨(fm v2.2.2 / 正文 v2.2.0) → 取真值 max=2.2.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v2.2.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v2.2.1) → R2 PATCH++(v2.2.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -17,7 +19,7 @@ change_log:
 # V9 UI 设计系统
 
 > **Status**: Current  
-> **Version**: v2.2.0  
+> **Version**: v2.2.3  
 > **Last Updated**: 2026-06-30  
 > **Related**: `src/index.css`, `tailwind.config.js`, `src/constants/theme.tokens.ts`
 

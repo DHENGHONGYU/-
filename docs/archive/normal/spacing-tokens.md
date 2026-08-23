@@ -1,11 +1,13 @@
----
-title: "V9 间距令牌规范（Spacing Tokens）"
+---title: "V9 间距令牌规范（Spacing Tokens）"
 domain: proj
 status: active
-last_updated: 2026-08-22
+last_updated: 2026-08-23
 code_version: 2.0.0-rc.2
-version: v0.9.16
+version: v0.9.17
 change_log:
+  - version: 0.9.17
+    changes: "基准校对(2026-08-23)：A类双轨(fm v0.9.16 / 正文 v0.9.14) → 取真值 max=0.9.16 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v0.9.16
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v0.9.15) → R2 PATCH++(v0.9.16) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -16,7 +18,7 @@ change_log:
 
 # V9 间距令牌规范（Spacing Tokens）
 
-> **版本**: v0.9.14 P5-SPACE
+> **版本**: v0.9.17 P5-SPACE
 > **状态**: 已实施
 > **最后更新**: 2026-06-30
 

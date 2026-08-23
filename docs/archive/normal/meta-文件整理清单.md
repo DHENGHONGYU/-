@@ -1,11 +1,13 @@
----
-title: "V9 项目文件整理清单"
+---title: "V9 项目文件整理清单"
 domain: meta
 status: archived
-last_updated: 2026-08-22
+last_updated: 2026-08-23
 code_version: 2.0.0-rc.2
-version: v1.3.2
+version: v1.3.3
 change_log:
+  - version: 1.3.3
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.3.2 / 正文 v1.3.0) → 取真值 max=1.3.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v1.3.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.3.1) → R2 PATCH++(v1.3.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -16,7 +18,7 @@ change_log:
 
 # V9 项目文件整理清单
 
-> **Version**: v1.3.0  
+> **Version**: v1.3.3  
 > **生成时间**：2026-06-29  
 > **更新人**：Documentation Governor  
 > **目的**：按内容分类、标记重复文件、建议清理项  

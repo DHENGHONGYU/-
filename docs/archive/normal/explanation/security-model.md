@@ -1,11 +1,13 @@
----
-title: "Security Model — V9 智能投研复盘系统安全架构"
+---title: "Security Model — V9 智能投研复盘系统安全架构"
 domain: arch
 status: active
-last_updated: 2026-08-22
+last_updated: 2026-08-23
 code_version: 2.0.0-rc.2
-version: v1.0.2
+version: v1.0.3
 change_log:
+  - version: 1.0.3
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.2 / 正文 v1.0.0) → 取真值 max=1.0.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v1.0.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.1) → R2 PATCH++(v1.0.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -16,7 +18,7 @@ change_log:
 
 # Security Model — V9 智能投研复盘系统安全架构
 
-> **版本**: v1.0.0 | **日期**: 2026-07-10
+> **版本**: v1.0.3 | **日期**: 2026-07-10
 > **适用范围**: V9 全栈安全架构
 > **安全等级**: 金融级（纵深防御 + 最小权限 + 全链路审计）
 

@@ -1,11 +1,13 @@
----
-title: "如何运行采集与评分流水线"
+---title: "如何运行采集与评分流水线"
 domain: project
 status: active
-last_updated: 2026-08-22
+last_updated: 2026-08-23
 code_version: 2.0.0-rc.2
-version: v1.0.2
+version: v1.0.3
 change_log:
+  - version: 1.0.3
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.2 / 正文 v1.0.0) → 取真值 max=1.0.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v1.0.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.1) → R2 PATCH++(v1.0.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -42,7 +44,7 @@ change_log:
 
 # 如何运行采集与评分流水线
 
-> **版本**：v1.0.0  
+> **版本**：v1.0.3  
 > **更新日期**：2026-07-19  
 > **适用范围**：需要在 15 分钟内完成从数据采集到 V6 评分出分的完整流程，并能自行排查常见问题的用户与开发者
 ---

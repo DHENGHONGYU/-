@@ -1,11 +1,13 @@
----
-title: "V9 智能投研复盘系统 — 新成员 30 分钟上手指南"
+---title: "V9 智能投研复盘系统 — 新成员 30 分钟上手指南"
 domain: project
 status: active
-last_updated: 2026-08-22
+last_updated: 2026-08-23
 code_version: 2.0.0-rc.2
-version: v1.0.2
+version: v1.0.3
 change_log:
+  - version: 1.0.3
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.2 / 正文 v1.0.0) → 取真值 max=1.0.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v1.0.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.1) → R2 PATCH++(v1.0.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -41,7 +43,7 @@ date: 2026-07-17
 
 # V9 智能投研复盘系统 — 新成员 30 分钟上手指南
 
-> **Version**：v1.0.0  
+> **Version**：v1.0.3  
 > **Date**：2026-07-12  
 > **目标读者**：新加入的开发者、AI Agent（ onboarding 第一站）  
 > **阅读时长**：30 分钟（含 5 分钟实操）
