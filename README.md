@@ -143,7 +143,7 @@ FinSightV9/
 - 🔧 [开发规范](docs/meta/)
 - 📋 [API 契约](docs/reference/)
 - 📝 [更新日志](CHANGELOG.md)
-- 📦 [发布说明](docs/release-notes/RELEASE-NOTES-design-token-cleanup.md) — 设计令牌清理与 Utility 重构
+- 📦 [发布说明](docs/release-notes/RELEASE-NOTES-design-token-v4.md) — 设计令牌清理与 Utility 重构
 
 ## 开发规范
 

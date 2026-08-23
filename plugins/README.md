@@ -98,7 +98,7 @@ plugins/
 
 | 问题 | 原因 | 解决方案 |
 |------|------|---------|
-| 点击 `C:\Users\DELL\...` 路径打不开 | 这是 Kimi 安装目录，不在工作区 | 使用本目录下的 `plugins/<name>/SKILL.md` |
+| 点击插件路径打不开 | 路径不在工作区内 | 使用本目录下的 `plugins/<name>/SKILL.md` |
 | `plugins/ifind/skills/ifind/SKILL.md` 找不到 | 路径重复嵌套，已隐藏 | 使用 `plugins/ifind/SKILL.md` |
 | 资源管理器中看不到 `skills/` 目录 | 被 `files.exclude` 隐藏 | 直接展开 `plugins/<name>/` 看 `SKILL.md` |
 

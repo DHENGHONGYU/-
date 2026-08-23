@@ -20,7 +20,6 @@ const { callIfindTool, parseTargetPriceFromSummary } = _require(
  *
  * 已修复待验证（A1 类纯文案漂移，3 个）—— 不排除，让测试验证修复：
  *   - tests/misc/IntelligentScorePage.test.tsx
- *   - tests/services-analysis/scoreDocService.test.ts
  *   - tests/__tests__/scripts/audit-dead-code.test.ts
  *
  * 部分修复（A1 文案漂移已修复，但仍有其他预存失败，1 个）—— 排除：
