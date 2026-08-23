@@ -1,12 +1,12 @@
 {
-  "_comment": "V9 Skill L1 Registry — 单一真相源（3 layers）：(1) projectPhysical: .agents/skills/ 23个目录实际存在（含 _SKILL-TEMPLATE.md 官方骨架模板不计入 L1 计数，实际 L1 物理 22 条登记：projectPhysicalSkills[] 数组实际长度 = 22）；2026-08-23 孤儿归位：skill-5seg-migration 从 .trae/skills/ 迁入 .agents/skills/ 并登记（恢复「.trae/skills 仅存索引文件」约定）；★ RULE-TPL 模板门禁（AGENTS.md 变更纪律强制）：last_updated ≥ 2026-08-20 或 change_log 含「5 段式骨架模板」的新技能必须命中 S 级 5 大段标题，否则 audit:skill-coverage exit 1，禁止四端登记；(2) externalPlugins: plugins/*/skills/ 9项；(3) virtualPlatform: 平台内置虚拟19项，定义于 AGENTS.md §技能索引与路由表。三层分离，总计 50 条登记（不可混加计数）。",
+  "_comment": "V9 Skill L1 Registry — 单一真相源（2 layers + 跨平台统一）：(1) projectPhysical: .agents/skills/ 39个目录（含 _SKILL-TEMPLATE.md 官方骨架模板不计入，实际 L1 物理 38 条登记）。2026-08-23 跨平台体系统一：16 个检查/分析/校对类虚拟技能物理化迁入（用户级 ~/.trae-cn 与 ~/.workbuddy 归位，S 级 5 段式），3 个影子重复（v9-data-flow-integrity-audit / v9-databridge-migration / v9-constant-migration 虚拟别名）删除，虚拟层清零；.workbuddy/skills 为 junction，TRAE/Qoder/WorkBuddy/VSCode 全平台从同一物理目录加载。★ RULE-TPL 模板门禁：last_updated ≥ 2026-08-20 或 change_log 含「5 段式骨架模板」的新技能必须命中 S 级 5 大段标题，否则 audit:skill-coverage exit 1。(2) externalPlugins: plugins/*/skills/ 9项。两层分离，总计 47 条登记。",
   "schemaVersion": "1.1.0",
-  "lastVerifiedAt": "2026-08-21T09:00:00.000Z",
-  "generatedAt": "2026-08-21T17:00:00+08:00",
+  "lastVerifiedAt": "2026-08-23T12:00:00.000Z",
+  "generatedAt": "2026-08-23T20:00:00+08:00",
   "summary": {
-    "totalEntries": 50,
+    "totalEntries": 47,
     "projectPhysicalSkills": {
-      "count": 22,
+      "count": 38,
       "location": ".agents/skills/*/SKILL.md"
     },
     "externalPluginSkills": {
@@ -14,12 +14,12 @@
       "location": "plugins/*/skills/*/SKILL.md"
     },
     "virtualPlatformSkills": {
-      "count": 19,
-      "location": "AGENTS.md §平台内置虚拟SKILL索引（L38-L43），由TRAE CN平台内置，无本地物理目录"
+      "count": 0,
+      "location": "已清零（2026-08-23 物理化归位：16 项转物理 + 3 项影子重复删除，全平台统一从 .agents/skills/ 加载）"
     },
-    "mandatoryCount": 12,
+    "mandatoryCount": 9,
     "categoriesStats": {
-      "architecture": 9,
+      "architecture": 7,
       "db-governance": 1,
       "doc-governance": 7,
       "feature-runtime": 1,
@@ -29,12 +29,12 @@
       "sector-analysis": 1,
       "type-safety": 1,
       "valuation": 1,
-      "data-flow": 4,
       "quality-gate-governance": 1,
-      "plugin-external": 9,
+      "data-flow": 3,
       "code-quality": 7,
       "ui-design": 1,
-      "devops": 1
+      "devops": 1,
+      "plugin-external": 9
     }
   },
   "projectPhysicalSkills": [
@@ -601,6 +601,428 @@
         "npm run audit:skill-coverage"
       ],
       "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-DOC-ENCODING",
+      "name": "doc-encoding-remediation",
+      "category": "doc-governance",
+      "path": ".agents/skills/doc-encoding-remediation/SKILL.md",
+      "mandatory": false,
+      "description": "文档编码乱码诊断与安全转码：发现 .md/.ts 中文乱码、中文变问号、或准备执行文档链接修复（fix-doc-refs 等）前，先用确定性判据诊断编码（严格 UTF-8 失败且 gb18030 成功 = GBK）、四重护栏安全转码（备份+往返校验）、固化根因（scripts/lib/encoding.ts 的 readTextAdaptive/writeTextUtf8）。Invoke when 文档乱码、GBK 二次损坏风险排查、链接修复前置编码确认、或新增文本读写脚本时。",
+      "triggers": {
+        "keywords": [
+          "文档乱码",
+          "中文变问号",
+          "GBK",
+          "fix-doc-refs",
+          "编码损坏"
+        ],
+        "files": [
+          "docs/**/*.md",
+          "scripts/fix/**/*encoding*"
+        ],
+        "events": []
+      },
+      "gates": [],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-STALE-PATH",
+      "name": "stale-path-reference-audit",
+      "category": "doc-governance",
+      "path": ".agents/skills/stale-path-reference-audit/SKILL.md",
+      "mandatory": false,
+      "description": "文件重梳（迁移/改名/删除）后的失效路径引用（僵尸链接）检测与整改：四类扫描（A 代码脚本硬编码路径 / B 文档触发规则 / C 文档内部链接 / D 注释提及）+ 重定向表批量修复。是文件迁移 SOP 的官方残留扫描检查实现。Invoke when 文件移动/重命名/删除后残留失效链接扫描、脚本引用的文件找不到、文档链接大面积失效、或 move 操作退回检查时。",
+      "triggers": {
+        "keywords": [
+          "失效链接",
+          "僵尸路径",
+          "重命名残留",
+          "move 退回检查",
+          "doc-refs 修复前置"
+        ],
+        "files": [
+          "docs/**/*.md",
+          "*.md",
+          "scripts/fix/**/*.cjs"
+        ],
+        "events": []
+      },
+      "gates": [],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-CROSSINDEX",
+      "name": "cross-index-governance",
+      "category": "doc-governance",
+      "path": ".agents/skills/cross-index-governance/SKILL.md",
+      "mandatory": true,
+      "description": "文档交叉索引治理：批量补全 doc_id/related_docs/covers_code/covers_docs 等字段，建立文档↔代码↔测试↔SKILL 四向交叉索引的六阶段方法论（基线→文档间→测试→代码→SKILL→审计运维），含字节级编码安全、路径解析修复、写前删后、收敛验证循环。Invoke when 建立文档交叉索引、批量补全 frontmatter、孤儿文档扫描、未解析链接修复、或文档生命周期治理时。",
+      "triggers": {
+        "keywords": [
+          "交叉索引",
+          "doc_id",
+          "related_docs",
+          "covers_code",
+          "covers_docs"
+        ],
+        "files": [
+          "docs/**/*.md",
+          ".trae/skills/INDEX.md"
+        ],
+        "events": []
+      },
+      "gates": [
+        "npm run audit:docs"
+      ],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-DOC-PRINCIPLES",
+      "name": "doc-management-principles",
+      "category": "doc-governance",
+      "path": ".agents/skills/doc-management-principles/SKILL.md",
+      "mandatory": false,
+      "description": "文档录入与管理整体原则：十目录架构（specs/guides/reference/explanation/reports/archive/assets/meta/audit/lessons）+ Frontmatter 标准（12 必备字段）+ 命名规范 + 开发全生命周期质量链 + 三环闭环治理（audit→lessons→meta）+ 文档操作安全规则。适用于所有开发平台的统一文档标准。Invoke when 创建/编辑/移动/组织 docs/ 下任何文档、判断文档落位目录、或编写 frontmatter 时。",
+      "triggers": {
+        "keywords": [
+          "文档录入",
+          "十目录架构",
+          "Frontmatter 标准",
+          "三环闭环治理"
+        ],
+        "files": [
+          "docs/**/*",
+          "docs/00-meta/*"
+        ],
+        "events": []
+      },
+      "gates": [],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-MODULE-SYNC",
+      "name": "module-sync-checklist",
+      "category": "code-quality",
+      "path": ".agents/skills/module-sync-checklist/SKILL.md",
+      "mandatory": true,
+      "description": "模块改动十域同步校对清单（交付闸口）：严禁代码先行，类型/消费者/测试/Mock/监控/注册表/文档/配置/Store/记忆十域必须与代码同批落地，证据化验证+门禁全绿方可声称完成。Invoke when 任何代码改动交付前、重构/接口变更/重命名、新增 skill 或注册表变更、或怀疑卫星产物未同步时。",
+      "triggers": {
+        "keywords": [
+          "模块同步",
+          "十域",
+          "交付闸口",
+          "同步校对"
+        ],
+        "files": [
+          "src/services/**",
+          "src/store/**",
+          "src/core/**",
+          "src/pages/**",
+          "src/components/**"
+        ],
+        "events": []
+      },
+      "gates": [
+        "npx tsc --noEmit",
+        "npm run tsc:prod",
+        "npm run audit:layers",
+        "npm run audit:acl-consistency"
+      ],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-BASH",
+      "name": "bash-conventions",
+      "category": "code-quality",
+      "path": ".agents/skills/bash-conventions/SKILL.md",
+      "mandatory": false,
+      "description": "项目级 Shell/Bash 执行规范与命令速查：Git Bash 路径规范（/g/ ↔ G:\\\\ 转换）、Python 解释器固化（受管 .venv，package.json 为真相源）、验证与门禁命令速查、执行后联动义务（改什么跑什么）、禁止命令清单。Invoke when 在本项目运行任何构建/测试/审计脚本与 Git 命令前、排查命令路径错误、或改完代码不确定该跑哪几条门禁时。",
+      "triggers": {
+        "keywords": [
+          "Bash",
+          "shell",
+          "npm run",
+          "venv python",
+          "命令入口"
+        ],
+        "files": [
+          "package.json",
+          "scripts/*.sh",
+          "scripts/*.cjs",
+          "scripts/*.mjs"
+        ],
+        "events": []
+      },
+      "gates": [],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-TSC-GATE-SCOPE",
+      "name": "tsc-gate-scope-audit",
+      "category": "code-quality",
+      "path": ".agents/skills/tsc-gate-scope-audit/SKILL.md",
+      "mandatory": false,
+      "description": "tsc 门禁误锁诊断与修复：当 pre-commit 的 tsc:prod（或 build/dev 的类型检查）报错阻塞提交，但错误全部位于 *.test.ts/*.spec.ts 等测试文件时，诊断为 tsconfig 作用域误配（生产类型检查越权扫描测试），并给出无需 --no-verify 的合规修复（收窄门禁作用域）。Invoke when tsc:prod 红灯但源码零错误、类型检查全在测试文件、门禁假红阻塞提交、或改动 tsconfig/package.json tsc 脚本后需回归验证时。",
+      "triggers": {
+        "keywords": [
+          "tsc:prod",
+          "tsconfig.prod.json",
+          "tsc 门禁",
+          "测试文件类型错误阻塞"
+        ],
+        "files": [
+          "tsconfig*.json",
+          "package.json",
+          ".husky/pre-*"
+        ],
+        "events": []
+      },
+      "gates": [
+        "npm run tsc:prod"
+      ],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-TSC-TEST-DIAG",
+      "name": "tsc-test-error-diagnosis",
+      "category": "code-quality",
+      "path": ".agents/skills/tsc-test-error-diagnosis/SKILL.md",
+      "mandatory": false,
+      "description": "tsc:test 测试文件类型错误系统性诊断与修复：契约漂移(≈60%)、严格空检暴露(≈25%)、vi.mock 提升陷阱(≈10%)、未使用声明(≈5%)、脚本替换缺陷五大根因归类，逐文件五步法（定位→根因→验证→修复→提炼）合规清零。Invoke when npm run tsc:test 退出码非 0、测试文件类型错误爆发（TS2305/TS2322/TS2339/TS2532/TS1011）、重构后测试批量飘红、或测试类型历史债务清理时。",
+      "triggers": {
+        "keywords": [
+          "tsc:test",
+          "TS2305",
+          "TS2322",
+          "TS2339",
+          "TS2532",
+          "TS1011",
+          "vi.mock 提升陷阱"
+        ],
+        "files": [
+          "tsconfig.test.json",
+          "tests/**/*.test.ts(x)",
+          "tests/**/test-utils.ts"
+        ],
+        "events": []
+      },
+      "gates": [
+        "npm run tsc:test",
+        "npm run tsc:prod"
+      ],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-HEALTH-AUDIT",
+      "name": "health-audit",
+      "category": "code-quality",
+      "path": ".agents/skills/health-audit/SKILL.md",
+      "mandatory": false,
+      "description": "健康度复检与状态自洽审计：用实时工具（git/tsc/vitest/automation list）复验进度与健康度，杜绝采信记忆/治理文档导致的假绿灯/假红灯/状态失准，输出评分雷达与行业对标。Invoke when 二次开发前体检、用户要求'再次检查进度和健康度'、门禁回归定位、或文档 vs 现实矛盾核对时。",
+      "triggers": {
+        "keywords": [
+          "健康度复检",
+          "再次检查进度",
+          "行业对标",
+          "假绿灯排查"
+        ],
+        "files": [
+          "outputs/dev-health-review-*.md",
+          "package.json",
+          "AGENTS.md"
+        ],
+        "events": []
+      },
+      "gates": [],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-CODE-QUALITY",
+      "name": "code-quality-audit",
+      "category": "code-quality",
+      "path": ".agents/skills/code-quality-audit/SKILL.md",
+      "mandatory": true,
+      "description": "代码质量合规审查：把代码质量从主观感觉变成可逐项核对、可机器断言的合规体检。覆盖分层/依赖方向/类型安全/零硬编码/事件清理/日志规范 + DataBridge/Envelope/ACL 数据接口协议。Invoke when 用户要求审查代码质量、新模块集成/提交前合规体检、排查直连 db 被拦/ACL 权限拒绝/事件泄漏、或需要可测试质量门禁时。",
+      "triggers": {
+        "keywords": [
+          "代码质量",
+          "合规审查",
+          "新模块集成",
+          "PR review 代码质量"
+        ],
+        "files": [
+          "src/**/*.ts",
+          "src/**/*.tsx"
+        ],
+        "events": []
+      },
+      "gates": [
+        "npx tsc --noEmit",
+        "npm run audit:layers",
+        "npm run audit:acl-consistency",
+        "npm run audit:hardcode"
+      ],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-DEV-CHECKLIST",
+      "name": "dev-checklist",
+      "category": "code-quality",
+      "path": ".agents/skills/dev-checklist/SKILL.md",
+      "mandatory": false,
+      "description": "开发快速检查清单：新组件/新模块/PR Review 三场景，正向+逆向双向校验（正向防漏项保覆盖率，逆向防误判保准确率），自动化命令兜底。Invoke when 新增组件提交 PR 前、新功能模块开发完成、Review 他人 PR、或用户说'检查一下/过一下清单'时。",
+      "triggers": {
+        "keywords": [
+          "dev checklist",
+          "新组件",
+          "新模块",
+          "PR review",
+          "双向校验"
+        ],
+        "files": [
+          "src/**/*.ts(x)",
+          "tests/**/*"
+        ],
+        "events": []
+      },
+      "gates": [
+        "npx tsc --noEmit"
+      ],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-COLOR-TOKEN",
+      "name": "color-token-remediation",
+      "category": "ui-design",
+      "path": ".agents/skills/color-token-remediation/SKILL.md",
+      "mandatory": false,
+      "description": "设计令牌单源收敛整改 SOP：七层颜色架构映射（index.css HSL ↔ tokens.json ↔ 生成产物 ↔ 语义角色 ↔ 令牌常量 ↔ 主题令牌 ↔ 独立图表调色板）、verify:colorSoT 门禁、CHART_PALETTE/CHART_TOKENS 双调色板坑、低风险优先工作流与防假闭环核验清单。Invoke when 颜色/间距/字体令牌整改、改色后门禁验证、图表中性色收敛、或删冗余色族时。",
+      "triggers": {
+        "keywords": [
+          "颜色令牌",
+          "HEX 硬编码",
+          "chartColors",
+          "theme.tokens"
+        ],
+        "files": [
+          "src/constants/theme.tokens.ts",
+          "src/config/chartColors.ts",
+          "src/**/*.ts(x)"
+        ],
+        "events": []
+      },
+      "gates": [
+        "npm run audit:tokens",
+        "npm run verify:colorSoT",
+        "npm run audit:hardcode"
+      ],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-MOCK-DIAG",
+      "name": "mock-data-diagnosis",
+      "category": "data-flow",
+      "path": ".agents/skills/mock-data-diagnosis/SKILL.md",
+      "mandatory": false,
+      "description": "Mock 数据残留三维诊断与数据校对：维度 1 数据传递链路残留（直接引用/初始值污染/默认策略污染/静默降级/持久化污染五形态）、维度 2 信息孤岛识别（平行通道/同名重复模块/声明≠实际/绕过 DataBridge 四信号）、维度 3 Mock↔真实切换兼容性风险。输出 P0/P1/P2 分级遗留清单与修复路线图。Invoke when Mock→真实环境过渡前清理审计、数据流健康度检查、假数据/信息孤岛排查、或上线前 Mock 就绪度评估时。",
+      "triggers": {
+        "keywords": [
+          "Mock 残留",
+          "假数据",
+          "信息孤岛",
+          "Mock→真实切换",
+          "上线前 Mock 清理"
+        ],
+        "files": [
+          "src/fixtures/**",
+          "tests/**/*.ts",
+          "scripts/migrate/*.ts"
+        ],
+        "events": []
+      },
+      "gates": [
+        "npm run audit:mock-modules"
+      ],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-ENV-PATH",
+      "name": "windows-env-path-doctor",
+      "category": "devops",
+      "path": ".agents/skills/windows-env-path-doctor/SKILL.md",
+      "mandatory": false,
+      "description": "Windows 环境路径硬编码诊断与修复：开发环境跨机器迁移（用户目录变化）时，自动识别当前用户、全量扫描项目残留的旧用户绝对路径（C:/Users/<user>/...）、给出可移植修复方案（%USERPROFILE%/os.homedir()/相对路径），并 --verify-current 正向校验。Invoke when 环境迁移/换电脑、路径静默失效排查、用户目录硬编码清理、或迁移后构建脚本假成功时。",
+      "triggers": {
+        "keywords": [
+          "环境迁移",
+          "换电脑",
+          "C:/Users",
+          "用户目录硬编码",
+          "DELL Huawei 迁移"
+        ],
+        "files": [
+          "package.json",
+          "scripts/configs/*.cjs",
+          ".env*"
+        ],
+        "events": []
+      },
+      "gates": [
+        "scripts/scan.cjs --verify-current"
+      ],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-ARCH-DEBT",
+      "name": "architecture-debt-remediation",
+      "category": "architecture",
+      "path": ".agents/skills/architecture-debt-remediation/SKILL.md",
+      "mandatory": true,
+      "description": "架构债务系统性治理：层违规修复、services 直连 dataLayer 迁移 DataBridge、未使用组件清理、大组件拆分（≤300 行）、Lint warnings 清理、巡检机制建立。先扫描建基线、先 P0 后 P1、分批验证。Invoke when 清理架构债务、修复 audit:* 警告、重构 services/dataLayer 耦合、拆分大组件、或清理未使用组件时。",
+      "triggers": {
+        "keywords": [
+          "架构债务",
+          "死组件",
+          "lint 清理",
+          "大组件重构",
+          "层调用违规"
+        ],
+        "files": [
+          "src/components/**",
+          "src/pages/**",
+          ".eslintrc*"
+        ],
+        "events": []
+      },
+      "gates": [
+        "npm run audit:layers",
+        "npx tsc --noEmit"
+      ],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-COMP-HEALTH",
+      "name": "component-health-check",
+      "category": "architecture",
+      "path": ".agents/skills/component-health-check/SKILL.md",
+      "mandatory": false,
+      "description": "组件健康度审计与治理：六步法（死代码审计→注册表审计→原子层级审计→注册体检→命名冲突排查→治理建议），僵尸组件判定三条件、保留价值五要素评分（0-10 分映射 P0–P3 分级处置）、五类常见模式识别与标准报告模板。只诊断不删除。Invoke when 检查组件健康度/僵尸组件/死代码、新增组件或重构后验证注册与引用、季度清理盘点、或命名冲突排查时。",
+      "triggers": {
+        "keywords": [
+          "僵尸组件",
+          "命名冲突",
+          "组件注册一致性",
+          "消费方验证"
+        ],
+        "files": [
+          "src/components/**",
+          "src/**/registry.ts"
+        ],
+        "events": []
+      },
+      "gates": [],
+      "status": "physical-active"
     }
   ],
   "externalPluginSkills": [
@@ -686,507 +1108,5 @@
       "purpose": "中国法律/法规/判例检索"
     }
   ],
-  "virtualPlatformSkills": [
-    {
-      "id": "V9-VIRT-DOC-ENCODING",
-      "name": "v9-doc-encoding-remediation",
-      "category": "doc-governance",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": false,
-      "description": "文档编码乱码诊断与安全转码，GBK 二次损坏前置修复。对应 AGENTS.md L39 doc-governance(1/4)。",
-      "triggers": {
-        "keywords": [
-          "文档乱码",
-          "中文变问号",
-          "GBK",
-          "fix-doc-refs",
-          "编码损坏"
-        ],
-        "files": [
-          "docs/**/*.md",
-          "scripts/fix/**/*encoding*"
-        ],
-        "events": []
-      },
-      "gates": [],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-STALE-PATH",
-      "name": "stale-path-reference-audit",
-      "category": "doc-governance",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": false,
-      "description": "僵尸路径/失效链接扫描，迁移后残留检测。对应 AGENTS.md L39 doc-governance(2/4)。",
-      "triggers": {
-        "keywords": [
-          "失效链接",
-          "僵尸路径",
-          "重命名残留",
-          "move 退回检查",
-          "doc-refs 修复前置"
-        ],
-        "files": [
-          "docs/**/*.md",
-          "*.md",
-          "scripts/fix/**/*.cjs"
-        ],
-        "events": []
-      },
-      "gates": [],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-CROSSINDEX",
-      "name": "cross-index-governance",
-      "category": "doc-governance",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": true,
-      "description": "文档↔代码↔测试↔SKILL 四向交叉索引治理，frontmatter 批量补全。对应 AGENTS.md L39 doc-governance(3/4, MAND)。",
-      "triggers": {
-        "keywords": [
-          "交叉索引",
-          "doc_id",
-          "related_docs",
-          "covers_code",
-          "covers_docs"
-        ],
-        "files": [
-          "docs/**/*.md",
-          ".trae/skills/INDEX.md"
-        ],
-        "events": []
-      },
-      "gates": [
-        "npm run audit:docs"
-      ],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-DOC-MGMT",
-      "name": "doc-management-principles",
-      "category": "doc-governance",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": false,
-      "description": "文档录入与管理整体原则：十目录架构/Frontmatter标准/命名规范/三环闭环治理。对应 AGENTS.md L39 doc-governance(4/4)。",
-      "triggers": {
-        "keywords": [
-          "文档录入",
-          "十目录架构",
-          "Frontmatter 标准",
-          "三环闭环治理"
-        ],
-        "files": [
-          "docs/**/*",
-          "docs/00-meta/*"
-        ],
-        "events": []
-      },
-      "gates": [],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-MODULE-SYNC",
-      "name": "v9-module-sync-checklist",
-      "category": "code-quality",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": true,
-      "description": "模块改动十域同步校对（交付闸口）。对应 AGENTS.md L40 code-quality(1/8, MAND)。",
-      "triggers": {
-        "keywords": [
-          "模块同步",
-          "十域",
-          "交付闸口",
-          "同步校对"
-        ],
-        "files": [
-          "src/services/**",
-          "src/store/**",
-          "src/core/**",
-          "src/pages/**",
-          "src/components/**"
-        ],
-        "events": []
-      },
-      "gates": [
-        "npx tsc --noEmit",
-        "npm run tsc:prod",
-        "npm run audit:layers",
-        "npm run audit:acl-consistency"
-      ],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-BASH-CONV",
-      "name": "v9-bash-conventions",
-      "category": "code-quality",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": false,
-      "description": "Bash 执行规范与命令速查。对应 AGENTS.md L40 code-quality(2/8)。",
-      "triggers": {
-        "keywords": [
-          "Bash",
-          "shell",
-          "npm run",
-          "venv python",
-          "命令入口"
-        ],
-        "files": [
-          "package.json",
-          "scripts/*.sh",
-          "scripts/*.cjs",
-          "scripts/*.mjs"
-        ],
-        "events": []
-      },
-      "gates": [],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-TSC-GATE-SCOPE",
-      "name": "v9-tsc-gate-scope-audit",
-      "category": "code-quality",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": false,
-      "description": "tsc 门禁误锁诊断与修复，类型门禁作用域对齐。对应 AGENTS.md L40 code-quality(3/8)。",
-      "triggers": {
-        "keywords": [
-          "tsc:prod",
-          "tsconfig.prod.json",
-          "tsc 门禁",
-          "测试文件类型错误阻塞"
-        ],
-        "files": [
-          "tsconfig*.json",
-          "package.json",
-          ".husky/pre-*"
-        ],
-        "events": []
-      },
-      "gates": [
-        "npm run tsc:prod"
-      ],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-TSC-TEST-ERR",
-      "name": "v9-tsc-test-error-diagnosis",
-      "category": "code-quality",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": false,
-      "description": "tsc:test 测试类型错误系统性诊断：契约漂移/严格空检/vi.mock 提升陷阱。对应 AGENTS.md L40 code-quality(4/8)。",
-      "triggers": {
-        "keywords": [
-          "tsc:test",
-          "TS2305",
-          "TS2322",
-          "TS2339",
-          "TS2532",
-          "TS1011",
-          "vi.mock 提升陷阱"
-        ],
-        "files": [
-          "tsconfig.test.json",
-          "tests/**/*.test.ts(x)",
-          "tests/**/test-utils.ts"
-        ],
-        "events": []
-      },
-      "gates": [
-        "npm run tsc:test",
-        "npm run tsc:prod"
-      ],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-HEALTH-AUDIT",
-      "name": "v9-health-audit",
-      "category": "code-quality",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": false,
-      "description": "开发进度/健康度复检、行业对标、评分与状态自洽校验。对应 AGENTS.md L40 code-quality(5/8)。",
-      "triggers": {
-        "keywords": [
-          "健康度复检",
-          "再次检查进度",
-          "行业对标",
-          "假绿灯排查"
-        ],
-        "files": [
-          "outputs/dev-health-review-*.md",
-          "package.json",
-          "AGENTS.md"
-        ],
-        "events": []
-      },
-      "gates": [],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-CQ-AUDIT",
-      "name": "v9-code-quality-audit",
-      "category": "code-quality",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": true,
-      "description": "代码质量合规审查：分层/DataBridge/ACL/类型安全/零硬编码/事件清理/日志规范。对应 AGENTS.md L40 code-quality(6/8, MAND)。",
-      "triggers": {
-        "keywords": [
-          "代码质量",
-          "合规审查",
-          "新模块集成",
-          "PR review 代码质量"
-        ],
-        "files": [
-          "src/**/*.ts",
-          "src/**/*.tsx"
-        ],
-        "events": []
-      },
-      "gates": [
-        "npx tsc --noEmit",
-        "npm run audit:layers",
-        "npm run audit:acl-consistency",
-        "npm run audit:hardcode"
-      ],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-DEV-CHECKLIST",
-      "name": "v9-dev-checklist",
-      "category": "code-quality",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": false,
-      "description": "新组件/新模块/PR Review 三场景快速检查清单。对应 AGENTS.md L40 code-quality(7/8)。",
-      "triggers": {
-        "keywords": [
-          "dev checklist",
-          "新组件",
-          "新模块",
-          "PR review",
-          "双向校验"
-        ],
-        "files": [
-          "src/**/*.ts(x)",
-          "tests/**/*"
-        ],
-        "events": []
-      },
-      "gates": [
-        "npx tsc --noEmit"
-      ],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-COLOR-TOKEN-REM",
-      "name": "v9-color-token-remediation",
-      "category": "ui-design",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": false,
-      "description": "颜色令牌新增/重命名/废弃管理与硬编码排查。对应 AGENTS.md L40 code-quality(8/8)。",
-      "triggers": {
-        "keywords": [
-          "颜色令牌",
-          "HEX 硬编码",
-          "chartColors",
-          "theme.tokens"
-        ],
-        "files": [
-          "src/constants/theme.tokens.ts",
-          "src/config/chartColors.ts",
-          "src/**/*.ts(x)"
-        ],
-        "events": []
-      },
-      "gates": [
-        "npm run audit:tokens",
-        "npm run verify:colorSoT",
-        "npm run audit:hardcode"
-      ],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-DATAFLOW-INTEG",
-      "name": "v9-data-flow-integrity-audit",
-      "category": "data-flow",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": true,
-      "description": "按钮-数据联动/跨板块数据传递/数据呈现全链路完整性审计。对应 AGENTS.md L41 data-flow(2/3, MAND)。",
-      "triggers": {
-        "keywords": [
-          "按钮无响应",
-          "假绿灯",
-          "跨板块数据异常",
-          "数据联动失效"
-        ],
-        "files": [
-          "src/core/databridge*.ts",
-          "src/config/dbConfig.ts",
-          "src/store/*Store.ts"
-        ],
-        "events": []
-      },
-      "gates": [
-        "npm run audit:acl-consistency"
-      ],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-MOCK-DIAG",
-      "name": "v9-mock-data-diagnosis",
-      "category": "data-flow",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": false,
-      "description": "Mock 残留诊断、信息孤岛识别、Mock→真实切换就绪度评估。对应 AGENTS.md L41 data-flow(3/3)。",
-      "triggers": {
-        "keywords": [
-          "Mock 残留",
-          "假数据",
-          "信息孤岛",
-          "Mock→真实切换",
-          "上线前 Mock 清理"
-        ],
-        "files": [
-          "src/fixtures/**",
-          "tests/**/*.ts",
-          "scripts/migrate/*.ts"
-        ],
-        "events": []
-      },
-      "gates": [
-        "npm run audit:mock-modules"
-      ],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-WIN-PATH-DR",
-      "name": "v9-windows-env-path-doctor",
-      "category": "devops",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": false,
-      "description": "Windows 用户目录绝对路径硬编码可移植诊断（DELL↔Huawei 迁移）。对应 AGENTS.md L42 devops 唯一项。",
-      "triggers": {
-        "keywords": [
-          "环境迁移",
-          "换电脑",
-          "C:/Users",
-          "用户目录硬编码",
-          "DELL Huawei 迁移"
-        ],
-        "files": [
-          "package.json",
-          "scripts/configs/*.cjs",
-          ".env*"
-        ],
-        "events": []
-      },
-      "gates": [
-        "scripts/scan.cjs --verify-current"
-      ],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-DATABRIDGE-MIG",
-      "name": "v9-databridge-migration",
-      "aliasOf": "databridge-migration",
-      "category": "architecture",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": true,
-      "description": "将直接操作 dataLayer 的代码迁移到 DataBridge 信封协议。对应 AGENTS.md L43 architecture(1/4, MAND)。",
-      "triggers": {
-        "keywords": [
-          "audit:layers 越权读写 dataLayer",
-          "dataLayer.stocks",
-          "dataLayer.v6Scores"
-        ],
-        "files": [
-          "src/core/**/*.ts",
-          "src/services/**/*.ts"
-        ],
-        "events": []
-      },
-      "gates": [
-        "npm run audit:layers",
-        "npm run audit:acl-consistency"
-      ],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-ARCH-DEBT-REM",
-      "name": "architecture-debt-remediation",
-      "category": "architecture",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": true,
-      "description": "V9 架构债务系统性修复：层违规/死组件/大组件重构/lint 清理。对应 AGENTS.md L43 architecture(2/4, MAND)。",
-      "triggers": {
-        "keywords": [
-          "架构债务",
-          "死组件",
-          "lint 清理",
-          "大组件重构",
-          "层调用违规"
-        ],
-        "files": [
-          "src/components/**",
-          "src/pages/**",
-          ".eslintrc*"
-        ],
-        "events": []
-      },
-      "gates": [
-        "npm run audit:layers",
-        "npx tsc --noEmit"
-      ],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-COMP-HEALTH",
-      "name": "component-health-check",
-      "category": "architecture",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": false,
-      "description": "组件健康度审计与治理：僵尸组件/命名冲突/注册一致性。对应 AGENTS.md L43 architecture(3/4)。",
-      "triggers": {
-        "keywords": [
-          "僵尸组件",
-          "命名冲突",
-          "组件注册一致性",
-          "消费方验证"
-        ],
-        "files": [
-          "src/components/**",
-          "src/**/registry.ts"
-        ],
-        "events": []
-      },
-      "gates": [],
-      "status": "virtual-active"
-    },
-    {
-      "id": "V9-VIRT-CONST-MIGRATE",
-      "name": "v9-constant-migration",
-      "aliasOf": "constant-migration",
-      "category": "architecture",
-      "path": "AGENTS.md#L38-L43 (virtual, no SKILL.md)",
-      "mandatory": true,
-      "description": "跨层重复业务常量迁移到 src/constants/，消除 config 与 constants 双份定义。对应 AGENTS.md L43 architecture(4/4, MAND)。",
-      "triggers": {
-        "keywords": [
-          "RESEARCH_STATUS",
-          "DEFAULT_POOL_GROUP",
-          "跨层常量重复",
-          "constants 迁移"
-        ],
-        "files": [
-          "src/config/**/*.ts",
-          "src/constants/**/*.ts"
-        ],
-        "events": []
-      },
-      "gates": [
-        "npm run audit:layers",
-        "npx tsc --noEmit"
-      ],
-      "status": "virtual-active"
-    }
-  ]
+  "virtualPlatformSkills": []
 }

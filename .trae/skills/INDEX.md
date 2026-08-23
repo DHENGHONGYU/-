@@ -8,10 +8,13 @@ status: active
 maintainer: current developer
 summary: "指针文件：技能统一索引已迁至 wiki/skills/INDEX.md，本文件不再维护内容副本"
 tags: [project, skill, meta, governance, index]
-version: v2.0.0
+version: v2.0.1
 last_updated: 2026-08-23
 doc_id: V9-DOC-PROJ-SKILLINDEX-001
 change_log:
+  - version: v2.0.1
+    changes: "虚拟清零同步：L1 物理 22→38（16 项虚拟转物理 + 3 项影子删除，合计 47），指针行计数刷新"
+    date: 2026-08-23
   - version: v2.0.0
     changes: "跨平台 WIKI 统一契约：改写为指针文件，内容真相源迁至 wiki/skills/INDEX.md（机器真相源仍为同目录 skill-registry.json）"
     date: 2026-08-23
@@ -38,6 +41,6 @@ change_log:
 ## 本目录约定
 
 `.trae/skills/` **仅存放索引文件，无技能本体**：`INDEX.md`（本指针）+ `skill-registry.json`（机器真相源，`audit:skill-coverage` 依赖路径不可迁移）+ `usage.log`。
-技能本体一律位于 `.agents/skills/*/SKILL.md`（L1 物理 22 项，5 段式骨架）；WorkBuddy / Qoder 经 `.workbuddy/skills` 目录联接（junction）加载，重建命令：`npm run skill:mirror`。
+技能本体一律位于 `.agents/skills/*/SKILL.md`（L1 物理 38 项，5 段式骨架）；WorkBuddy / Qoder 经 `.workbuddy/skills` 目录联接（junction）加载，重建命令：`npm run skill:mirror`。
 
 变更纪律：新增/变更技能三方同步（SKILL.md frontmatter ↔ skill-registry.json ↔ wiki/skills/INDEX.md），交付前跑 `npm run audit:skill-coverage`。

@@ -28,19 +28,19 @@
     }
   },
   "remoteUser": "node",
-  "forwardPorts": [5173, 4173],
+  "forwardPorts": [5199, 3199],
   "portsAttributes": {
-    "5173": {
+    "5199": {
       "label": "Vite Dev Server",
       "onAutoForward": "notify"
     },
-    "4173": {
-      "label": "Vite Preview",
+    "3199": {
+      "label": "Playwright Blueprint E2E",
       "onAutoForward": "silent"
     }
   },
   "mounts": [
-    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/node/.ssh,type=bind,consistency=cached"
+    "source=${localEnv:USERPROFILE}/.ssh,target=/home/node/.ssh,type=bind,consistency=cached"
   ],
   "runArgs": ["--env-file", ".env"],
   "containerEnv": {
