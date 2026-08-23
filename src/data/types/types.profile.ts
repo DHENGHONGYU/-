@@ -20,6 +20,8 @@
  * @doc [V9-DOC-DATA-028, V9-DOC-DATA-029, V9-DOC-DATA-030, V9-DOC-DATA-031]
  */
 
+import { COLOR_SHADES } from '@/constants/theme.tokens'
+
 // ============================================================
 // 核心枚举
 // ============================================================
@@ -96,7 +98,7 @@ export interface ProfileCrossReference {
 }
 
 // ============================================================
-// 域元数据
+// 域元数据 — 颜色全部从 COLOR_SHADES 读取，禁止裸 hex
 // ============================================================
 
 export interface DomainMeta {
@@ -113,7 +115,7 @@ export const DOMAIN_META: Record<ProfileDomain, DomainMeta> = {
     domain: 'D1',
     name: '行业产业',
     description: '行业景气度、产业链、竞争格局、市场规模',
-    color: '#3b82f6',
+    color: COLOR_SHADES.blue.hex[500],
     icon: '🏭',
     layers: ['lMinus1', 'l0'],
   },
@@ -121,7 +123,7 @@ export const DOMAIN_META: Record<ProfileDomain, DomainMeta> = {
     domain: 'D2',
     name: '政策监管',
     description: '政策法规、监管动态、行业标准',
-    color: '#8b5cf6',
+    color: COLOR_SHADES.purple.hex[500],
     icon: '📋',
     layers: ['l0'],
   },
@@ -129,7 +131,7 @@ export const DOMAIN_META: Record<ProfileDomain, DomainMeta> = {
     domain: 'D3',
     name: '公司基本面',
     description: '商业模式、护城河、主营业务、产能扩张',
-    color: '#10b981',
+    color: COLOR_SHADES.emerald.hex[500],
     icon: '🏢',
     layers: ['l1'],
   },
@@ -137,7 +139,7 @@ export const DOMAIN_META: Record<ProfileDomain, DomainMeta> = {
     domain: 'D4',
     name: '竞争对比',
     description: '竞品分析、市场份额、行业排名、龙头优势',
-    color: '#f59e0b',
+    color: COLOR_SHADES.amber.hex[500],
     icon: '⚔️',
     layers: ['l2'],
   },
@@ -145,7 +147,7 @@ export const DOMAIN_META: Record<ProfileDomain, DomainMeta> = {
     domain: 'D5',
     name: '财务分析',
     description: '财务报表、ROE、现金流、杜邦分析、分红',
-    color: '#06b6d4',
+    color: COLOR_SHADES.cyan.hex[500],
     icon: '📊',
     layers: ['l3f'],
   },
@@ -153,7 +155,7 @@ export const DOMAIN_META: Record<ProfileDomain, DomainMeta> = {
     domain: 'D6',
     name: '估值定价',
     description: 'PE/PB、目标价、评级、估值分位、一致预期',
-    color: '#ef4444',
+    color: COLOR_SHADES.red.hex[500],
     icon: '💰',
     layers: ['l3v'],
   },
@@ -161,7 +163,7 @@ export const DOMAIN_META: Record<ProfileDomain, DomainMeta> = {
     domain: 'D7',
     name: '成长前沿',
     description: '第二曲线、新业务、情景推演、业绩兑现、Hype周期',
-    color: '#ec4899',
+    color: COLOR_SHADES.pink.hex[500],
     icon: '🚀',
     layers: ['l4', 'l5', 'l6'],
   },
@@ -169,7 +171,7 @@ export const DOMAIN_META: Record<ProfileDomain, DomainMeta> = {
     domain: 'D8',
     name: '市场信号',
     description: '筹码博弈、技术面、资金流向、龙虎榜、量价',
-    color: '#6366f1',
+    color: COLOR_SHADES.indigo.hex[500],
     icon: '📈',
     layers: ['l7', 'l8'],
   },

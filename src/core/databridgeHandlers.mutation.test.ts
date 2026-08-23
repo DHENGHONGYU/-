@@ -27,6 +27,11 @@ vi.mock('@/lib/logger', async () => {
   const { mockLogger } = await import('./databridgeHandlers.test-utils')
   return { getLogger: () => mockLogger }
 })
+// handler 的 now() 来自 @/data/gateway（re-export from @/lib/utils），须在此 mock
+vi.mock('@/lib/utils', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/utils')>()
+  return { ...actual, now: () => 1700000000000 }
+})
 
 const logger = mockLogger! // vi.mock 工厂闭包引用同模块顶层 import，TS 判定可能 undefined（hoisting 陷阱），运行时必定义
 
@@ -594,10 +599,10 @@ describe('databridgeHandlers (mutation)', () => {
         'readwrite',
         expect.any(Function),
       )
-      expect(putMock).toHaveBeenCalledTimes(3)
-      expect(putMock).toHaveBeenCalledWith(items[0])
-      expect(putMock).toHaveBeenCalledWith(items[1])
-      expect(putMock).toHaveBeenCalledWith(items[2])
+      expect(dbModule!.db.put).toHaveBeenCalledTimes(3)
+      expect(dbModule!.db.put).toHaveBeenCalledWith(STORE_NAME.stocks, items[0])
+      expect(dbModule!.db.put).toHaveBeenCalledWith(STORE_NAME.stocks, items[1])
+      expect(dbModule!.db.put).toHaveBeenCalledWith(STORE_NAME.stocks, items[2])
     })
 
     it('空数组时跳过', async () => {

@@ -327,7 +327,7 @@ function SimpleError({ title, description, onRetry, retryLabel = '重试', actio
  * - 传入 `error` 或 `variant` → 旧版 API（三模式错误展示）
  * - 仅传入 `title`/`description` → 新版 API（简化错误展示）
  */
-export const ErrorState = memo(function ErrorState({
+export const ErrorState = memo(function ErrorStateBase({
   error,
   onRetry,
   variant = 'card',

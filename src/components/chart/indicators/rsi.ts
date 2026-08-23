@@ -18,7 +18,8 @@
 import type { Time, LineData } from 'lightweight-charts'
 import type { CandlestickChartData } from '../types'
 import { getLogger } from '@/lib/logger'
-import { CHART_INDICATOR_COLORS } from '@/constants/theme.tokens'
+import { CHART_INDICATOR_COLORS, COLOR_SHADES } from '@/constants/theme.tokens'
+import { hexToRgba } from '@/lib/utils'
 
 const logger = getLogger()
 
@@ -132,7 +133,7 @@ export const RSI_COLORS = {
   /** 超卖线 (30) - 绿色 */
   oversold: CHART_INDICATOR_COLORS.rsiOversold,
   /** 中轴线 (50) - 半透明灰 */
-  midline: 'rgba(148, 163, 184, 0.4)',
+  midline: hexToRgba(COLOR_SHADES.slate.hex[400], 0.4),
 } as const
 
 /** 默认 RSI 参数 */

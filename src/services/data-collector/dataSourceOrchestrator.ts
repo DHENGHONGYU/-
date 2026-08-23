@@ -2,7 +2,10 @@
  * @fileoverview 数据源编排器 — 四层降级策略（配置化版本）。
  *
  * 职责：
- * - B-3: 按配置的数据源优先级链执行降级（腾讯 → 新浪 → AKShare → Mock）
+ * - B-3: 按配置的数据源优先级链执行降级。默认链（见 dataSourceRegistry）：
+ *        iFinD MCP → 腾讯自选股 MCP → 腾讯/新浪直连 → Tushare → Mock；
+ *        业务侧声明的 `akshare` 映射为本地代理（行情恒返回 null / K 线走 baostock 代理），
+ *        浏览器环境下无独立 Python 服务时静默降级，不阻塞链路。
  * - B-4: 采集结果通过 DataBridge.forward() 写入 IndexedDB
  * - 在降级、源成功/失败、写入等关键节点 emit 生命周期事件
  *
@@ -19,7 +22,8 @@ import type { DailyQuotes } from '@/data/types'
 import type { KlineBar } from '@/data/types/types.marketData'
 import { eventBus } from '@/lib/eventBus'
 import { COLLECTION_EVENTS } from '@/types/modules/collection.types'
-import type { QuoteDataSourceId } from '@/types/modules/collection.types'
+import type { QuoteDataSourceId, RetryPolicy } from '@/types/modules/collection.types'
+import { DEFAULT_RETRY_POLICY } from '@/config/collectConfig'
 import {
   getDefaultQuotePriority,
   getDefaultKlinePriority,
@@ -46,7 +50,7 @@ import {
 import { mapDailyToQuote, mapDailyToKlines } from './tushareAdapter'
 import { fetchBaostockKline } from './crawlerProvider'
 import { getQualityMetrics } from './qualityMetricsCollector'
-import { orderChainAdaptive, recordSourceResult, canExecute } from './adaptiveSourceOrchestrator'
+import { orderChainAdaptive, recordSourceResult, canExecute, computePolicyBackoffMs } from './adaptiveSourceOrchestrator'
 
 const logger = getLogger()
 
@@ -77,6 +81,8 @@ export interface QuoteFetchConfig {
    * 生产环境应传 false：全源失败返回 success:false，不写库、不计成功。
    */
   allowMockFallback?: boolean
+  /** 重试策略（缺省 DEFAULT_RETRY_POLICY）；对单源瞬时失败指数退避重试，重试耗尽再降级 */
+  retryPolicy?: RetryPolicy
 }
 
 export interface KlineFetchConfig {
@@ -86,6 +92,8 @@ export interface KlineFetchConfig {
   dimensionCode?: string
   /** 同 QuoteFetchConfig.allowMockFallback */
   allowMockFallback?: boolean
+  /** 重试策略（同 QuoteFetchConfig.retryPolicy） */
+  retryPolicy?: RetryPolicy
 }
 
 // ── Mock 数据常量 ──
@@ -188,9 +196,11 @@ function mockKlines(code: string, days: number): KlineBar[] {
 }
 
 // ── AKShare 占位（Python 库，浏览器不可用） ──
+// 保留占位而非删除：让配置侧声明的 'akshare' 源在降级链中可观测（debug 日志 + trace），
+// 待后端 sidecar 提供 HTTP 端点后在此接线（见 backend/sidecar_entry.py）。
 
 async function akshareQuote(_code: string): Promise<RealtimeQuote | null> {
-  logger.debug('[orchestrator] AKShare 层跳过（浏览器不可用）')
+  logger.debug('[orchestrator] AKShare 层跳过（浏览器不可用，静默降级到下一源）')
   return null
 }
 
@@ -257,8 +267,9 @@ async function ifindMcpQuote(code: string): Promise<RealtimeQuote | null> {
 
 async function tencentMcpQuote(code: string): Promise<RealtimeQuote | null> {
   try {
-    const { fetchQuoteViaMcp } = await import('./ifindMcpCollector')
-    const result = await fetchQuoteViaMcp(code)
+    // P1-1 修复：直连腾讯 MCP（westock server），不再复用 fetchQuoteViaMcp 的 iFinD→tencent 内部降级链
+    const { fetchQuoteViaTencentMcp } = await import('./ifindMcpCollector')
+    const result = await fetchQuoteViaTencentMcp(code)
     if (!result) return null
     return {
       symbol: code,
@@ -317,6 +328,19 @@ function createTraceId(prefix: string, code: string): string {
   return `${prefix}-${code}-${Date.now()}`
 }
 
+/** 延迟等待（重试退避用） */
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+/** 计算单个源的最大尝试次数（1 + maxRetries），至少 1 次 */
+function maxAttemptsForPolicy(policy: RetryPolicy): number {
+  return Math.max(1, 1 + Math.max(0, Math.floor(policy.maxRetries)))
+}
+
+// 退避延迟统一复用 adaptiveSourceOrchestrator.computeRetryDelayMs
+//（指数退避 + 全抖动，避免双份实现漂移；2026-08-23 卫生整改）
+
 /** 单源行情尝试结果（区分成功 / 空 / 异常，便于调用方精确保留事件序列） */
 type QuoteAttempt =
   | { kind: 'success'; result: CollectionResult<RealtimeQuote> }
@@ -331,6 +355,8 @@ type KlineAttempt =
 
 /**
  * 尝试单个行情数据源（由 getQuoteWithConfig 的降级循环调用）。
+ * P0-1 接通重试策略：对瞬时失败（空结果/异常）按指数退避重试，
+ * 重试耗尽仍失败才返回，由降级循环切换到下一数据源。
  * 精确保留 SOURCE_SUCCESS / SOURCE_FAIL 事件与质量指标采集语义；
  * 每次尝试同步记录 EWMA 源健康指标（recordSourceResult）供自适应链排序消费。
  */
@@ -343,13 +369,51 @@ async function attemptQuoteSource(
   config: QuoteFetchConfig,
   start: number,
 ): Promise<QuoteAttempt> {
-  const attemptStart = Date.now()
-
   // P0 优化：熔断器检查 — circuit-open 的源直接跳过，不发网络请求
   if (source !== 'mock' && !canExecute(source)) {
     logger.debug(`[orchestrator] 行情源 ${source} 熔断中，跳过: ${code}`)
     return { kind: 'empty' }
   }
+
+  const policy = config.retryPolicy ?? DEFAULT_RETRY_POLICY
+  const maxAttempts = maxAttemptsForPolicy(policy)
+  let lastOutcome: QuoteAttempt = { kind: 'empty' }
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    lastOutcome = await attemptQuoteSourceOnce(code, source, index, chain, traceId, config, start)
+    if (lastOutcome.kind === 'success') return lastOutcome
+
+    const isLastAttempt = attempt >= maxAttempts - 1
+    if (isLastAttempt) break
+
+    const delay = computePolicyBackoffMs(policy, attempt)
+    logger.warn(`[orchestrator] 行情源 ${source} 第 ${attempt + 1}/${maxAttempts} 次尝试失败(${lastOutcome.kind})，${delay}ms 后重试: ${code}`)
+    emitLifecycleEvent(COLLECTION_EVENTS.RETRY, {
+      traceId,
+      taskId: config.taskId,
+      dimensionCode: config.dimensionCode,
+      symbol: code,
+      sourceId: source,
+      durationMs: delay,
+      message: `${source} 第 ${attempt + 1}/${maxAttempts} 次尝试失败，${delay}ms 后重试`,
+    })
+    await sleep(delay)
+  }
+
+  return lastOutcome
+}
+
+/** 单次行情源尝试（无重试、无熔断检查；由 attemptQuoteSource 的重试循环调用） */
+async function attemptQuoteSourceOnce(
+  code: string,
+  source: DataSource,
+  index: number,
+  chain: DataSource[],
+  traceId: string,
+  config: QuoteFetchConfig,
+  start: number,
+): Promise<QuoteAttempt> {
+  const attemptStart = Date.now()
 
   try {
     const result = await tryQuoteSource(code, source)
@@ -392,6 +456,12 @@ async function attemptQuoteSource(
  * 尝试单个 K 线数据源（由 getKlineWithConfig 的降级循环调用）。
  * 每次尝试同步记录 EWMA 源健康指标（recordSourceResult），完整度按返回条数/请求天数估算。
  */
+/**
+ * 尝试单个 K 线数据源（由 getKlineWithConfig 的降级循环调用）。
+ * P0-1 接通重试策略：对瞬时失败（空结果/异常）按指数退避重试，
+ * 重试耗尽仍失败才返回，由降级循环切换到下一数据源。
+ * 每次尝试同步记录 EWMA 源健康指标（recordSourceResult），完整度按返回条数/请求天数估算。
+ */
 async function attemptKlineSource(
   code: string,
   days: number,
@@ -402,13 +472,52 @@ async function attemptKlineSource(
   config: KlineFetchConfig,
   start: number,
 ): Promise<KlineAttempt> {
-  const attemptStart = Date.now()
-
   // P0 优化：熔断器检查 — circuit-open 的源直接跳过，不发网络请求
   if (source !== 'mock' && !canExecute(source)) {
     logger.debug(`[orchestrator] K线源 ${source} 熔断中，跳过: ${code}`)
     return { kind: 'empty' }
   }
+
+  const policy = config.retryPolicy ?? DEFAULT_RETRY_POLICY
+  const maxAttempts = maxAttemptsForPolicy(policy)
+  let lastOutcome: KlineAttempt = { kind: 'empty' }
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    lastOutcome = await attemptKlineSourceOnce(code, days, source, index, chain, traceId, config, start)
+    if (lastOutcome.kind === 'success') return lastOutcome
+
+    const isLastAttempt = attempt >= maxAttempts - 1
+    if (isLastAttempt) break
+
+    const delay = computePolicyBackoffMs(policy, attempt)
+    logger.warn(`[orchestrator] K 线源 ${source} 第 ${attempt + 1}/${maxAttempts} 次尝试失败(${lastOutcome.kind})，${delay}ms 后重试: ${code}`)
+    emitLifecycleEvent(COLLECTION_EVENTS.RETRY, {
+      traceId,
+      taskId: config.taskId,
+      dimensionCode: config.dimensionCode,
+      symbol: code,
+      sourceId: source,
+      durationMs: delay,
+      message: `${source} K 线第 ${attempt + 1}/${maxAttempts} 次尝试失败，${delay}ms 后重试`,
+    })
+    await sleep(delay)
+  }
+
+  return lastOutcome
+}
+
+/** 单次 K 线源尝试（无重试、无熔断检查；由 attemptKlineSource 的重试循环调用） */
+async function attemptKlineSourceOnce(
+  code: string,
+  days: number,
+  source: DataSource,
+  index: number,
+  chain: DataSource[],
+  traceId: string,
+  config: KlineFetchConfig,
+  start: number,
+): Promise<KlineAttempt> {
+  const attemptStart = Date.now()
 
   try {
     const result = await tryKlineSource(code, days, source)
@@ -832,7 +941,8 @@ export async function getKline(code: string, days: number): Promise<CollectionRe
 
 /**
  * 采集实时行情并写入 IndexedDB（经 DataBridge.forward）
- */
+ * @deprecated P2-1: 生产路径已统一至 collectionPipeline.handleQuoteMode（含 updateStock/insertStock 双路径 + 本地文件落盘）。
+ * 此函数仅保留供测试和简单集成使用，新代码应通过 runSingleTrace({ dimensionCode: '01' }) 调用。 */
 export async function collectAndSaveQuote(code: string): Promise<CollectionResult<RealtimeQuote>> {
   const result = await getQuote(code)
 
@@ -885,7 +995,8 @@ export async function collectAndSaveQuote(code: string): Promise<CollectionResul
 
 /**
  * 采集 K 线并写入 IndexedDB
- */
+ * @deprecated P2-1: 生产路径已统一至 collectionPipeline.handleKlineMode（含本地文件落盘）。
+ * 此函数仅保留供测试和简单集成使用，新代码应通过 runSingleTrace({ dimensionCode: '02' }) 调用。 */
 export async function collectAndSaveKline(code: string, days: number): Promise<CollectionResult<DailyQuotes>> {
   const result = await getKline(code, days)
 

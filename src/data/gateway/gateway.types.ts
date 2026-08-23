@@ -48,6 +48,8 @@ export interface IRepositoryConfig<T, TKey = string> {
   readonly store: StoreName;
   readonly writeAction: string;
   readonly deleteAction: string;
+  /** delete 载荷的键名，缺省 'key'；按目标 Handler 的载荷形状指定（如 stocks 用 'symbol'） */
+  readonly deleteKeyField?: string;
   readonly keyOf: (entity: T) => TKey;
 }
 

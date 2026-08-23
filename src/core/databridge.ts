@@ -222,7 +222,13 @@ function inferStore(action: string): StoreName {
 export class DataBridge {
   private subscribers = new Map<string, Set<EnvelopeCallback>>()
   private fallbackQueue: FallbackQueue = fallbackQueue
-  private handlerRegistry: HandlerRegistry = createHandlerRegistry()
+  private _handlerRegistry: HandlerRegistry | null = null
+  private get handlerRegistry(): HandlerRegistry {
+    if (!this._handlerRegistry) {
+      this._handlerRegistry = createHandlerRegistry()
+    }
+    return this._handlerRegistry
+  }
   private readCache = new MemoryCache<unknown>({ namespace: 'databridge:read', defaultTTL: 10_000, maxSize: 200 })
 
   /**

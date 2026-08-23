@@ -8,7 +8,7 @@ import {
   API_TRADE_POSITIONS,
   API_TRADE_SIGNALS,
 } from '@/config/apiPaths'
-import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS, COLOR_SHADES, CHART_PALETTE } from '@/constants/theme.tokens'
 import { DataSourceConfig, DataSourceType, WidgetDomain, WidgetPerspective } from '@/types/modules/widget.types'
 
 /**
@@ -93,33 +93,15 @@ export const FUND_FLOW_NAMES: Record<string, string> = {
   [FUND_FLOW_TYPES.NORTH]: '北向净流入',
 }
 
-export const SECTOR_COLOR_MAPPING = {
-  STRONG_UP: 'bg-green-500',
-  UP: 'bg-green-400',
-  WEAK_UP: 'bg-green-300',
-  FLAT: 'bg-gray-300',
-  WEAK_DOWN: 'bg-red-300',
-  DOWN: 'bg-red-400',
-  STRONG_DOWN: 'bg-red-500',
-}
-
-export const SENTIMENT_LEVELS = {
-  EXTREME_FEAR: { min: 0, max: 20, label: '极度恐惧', color: 'bg-red-600' },
-  FEAR: { min: 20, max: 40, label: '恐惧', color: 'bg-red-400' },
-  NEUTRAL: { min: 40, max: 60, label: '中性', color: 'bg-yellow-400' },
-  GREEDY: { min: 60, max: 80, label: '贪婪', color: 'bg-green-400' },
-  EXTREME_GREEDY: { min: 80, max: 100, label: '极度贪婪', color: 'bg-green-600' },
-}
-
 /** 评分等级映射
  * @remarks 用于 KAI 评分、投资画像等指标状态展示
  */
 export const SCORE_LEVELS = {
-  EXCELLENT: { min: 80, max: 100, label: '优秀', color: '#22c55e', bgClass: 'bg-green-500' },
-  GOOD: { min: 60, max: 80, label: '良好', color: '#3b82f6', bgClass: 'bg-blue-500' },
-  AVERAGE: { min: 40, max: 60, label: '一般', color: '#f59e0b', bgClass: 'bg-amber-500' },
-  POOR: { min: 20, max: 40, label: '较弱', color: '#f97316', bgClass: 'bg-orange-500' },
-  BAD: { min: 0, max: 20, label: '差', color: '#ef4444', bgClass: 'bg-red-500' },
+  EXCELLENT: { min: 80, max: 100, label: '优秀', color: COLOR_SHADES.green.hex[500], bgClass: 'bg-green-500' },
+  GOOD: { min: 60, max: 80, label: '良好', color: COLOR_SHADES.blue.hex[500], bgClass: 'bg-blue-500' },
+  AVERAGE: { min: 40, max: 60, label: '一般', color: COLOR_SHADES.amber.hex[500], bgClass: 'bg-amber-500' },
+  POOR: { min: 20, max: 40, label: '较弱', color: COLOR_SHADES.orange.hex[500], bgClass: 'bg-orange-500' },
+  BAD: { min: 0, max: 20, label: '差', color: COLOR_SHADES.red.hex[500], bgClass: 'bg-red-500' },
 }
 
 /** KAI 选股评分维度名称映射
@@ -170,20 +152,20 @@ export const CHAT_DEMO_TARGETS = [
  * @remarks 用于股票池列表状态条颜色
  */
 export const POOL_STATUS_COLORS = {
-  ACTIVE: { color: '#22c55e', bgClass: 'bg-green-500', label: '活跃' },
-  WARM: { color: '#3b82f6', bgClass: 'bg-blue-500', label: '温热' },
-  COOL: { color: '#f59e0b', bgClass: 'bg-amber-500', label: '冷清' },
-  COLD: { color: '#9ca3af', bgClass: 'bg-gray-400', label: '冷淡' },
+  ACTIVE: { color: COLOR_SHADES.green.hex[500], bgClass: 'bg-green-500', label: '活跃' },
+  WARM: { color: COLOR_SHADES.blue.hex[500], bgClass: 'bg-blue-500', label: '温热' },
+  COOL: { color: COLOR_SHADES.amber.hex[500], bgClass: 'bg-amber-500', label: '冷清' },
+  COLD: { color: COLOR_SHADES.gray.hex[400], bgClass: 'bg-gray-400', label: '冷淡' },
 }
 
 export const COLORS = {
-  UP: '#22c55e',
-  DOWN: '#ef4444',
-  NEUTRAL: '#9ca3af',
-  PRIMARY: '#3b82f6',
-  SECONDARY: '#6b7280',
-  BACKGROUND: '#f8fafc',
-  CARD: '#ffffff',
+  UP: COLOR_SHADES.green.hex[500],
+  DOWN: COLOR_SHADES.red.hex[500],
+  NEUTRAL: COLOR_SHADES.gray.hex[400],
+  PRIMARY: COLOR_SHADES.blue.hex[500],
+  SECONDARY: COLOR_SHADES.gray.hex[500],
+  BACKGROUND: COLOR_SHADES.slate.hex[50],
+  CARD: CHART_PALETTE.heatmapTextLight,
 }
 
 /**

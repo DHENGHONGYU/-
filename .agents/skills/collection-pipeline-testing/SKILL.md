@@ -1,9 +1,13 @@
 ---
+skill_id: V9-SKILL-COLLECTION-PIPE
 name: "collection-pipeline-testing"
 description: "数据采集管线（data-collector）端到端测试与门禁。Invoke when 改动 src/services/data-collector/**、src/store/sevenDimConfigStore.ts、src/types/modules/collection.types.ts，或相关 vitest 失败；用于验证采集主链路（多源编排、MCP 源接入、CLI 桥接、降级与计分）在类型安全、层合规与真实取数层面的完整性。上线前测试必须跑本技能（禁止 MOCK）。"
-version: "v1.0.2"
-last_updated: "2026-08-21"
+version: "v1.0.3"
+last_updated: "2026-08-23"
 change_log:
+  - version: v1.0.3
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
   - version: v1.0.2
     changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
     date: 2026-08-21

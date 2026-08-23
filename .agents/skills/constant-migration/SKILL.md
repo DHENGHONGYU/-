@@ -1,9 +1,13 @@
 ---
+skill_id: V9-SKILL-CONSTANT-MIGRATION
 name: "constant-migration"
 description: "迁移跨层重复常量（如股票池 RESEARCH_STATUS / DEFAULT_POOL_GROUP），将业务常量归位到 src/constants/，消除 config 层与 constants 层的重复定义，并批量修复导入路径、测试 mock 与文档注释。Invoke when user asks to migrate constants between layers, eliminate duplicate constant definitions, move business constants from src/config to src/constants, audit:layers 报 config 层与 constants 层存在同一业务常量双份定义，或 Grep 硬编码报出 /src/config.*RESEARCH_STATUS/ 这类业务常量泄漏模式。"
-version: "v1.0.2"
-last_updated: "2026-08-21"
+version: "v1.0.3"
+last_updated: "2026-08-23"
 change_log:
+  - version: v1.0.3
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
   - version: v1.0.2
     changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
     date: 2026-08-21

@@ -26,7 +26,29 @@
 
 import type { CandlestickChartData } from '../types'
 import { getLogger } from '@/lib/logger'
+import { hexToRgba } from '@/lib/utils'
 import { CHART_INDICATOR_COLORS } from '@/constants/theme.tokens'
+
+/**
+ * Volume Profile 颜色配置
+ * 暗色主题，对标 TradingView Volume Profile 配色
+ */
+export const VOLUME_PROFILE_COLORS = {
+  /** 柱体颜色（VA 内） */
+  barVA: hexToRgba(CHART_INDICATOR_COLORS.blue, 0.65),
+  /** 柱体颜色（VA 外） */
+  barOutside: hexToRgba(CHART_INDICATOR_COLORS.blue, 0.25),
+  /** POC 线颜色 */
+  poc: CHART_INDICATOR_COLORS.amber,
+  /** VAH 线颜色 */
+  vah: hexToRgba(CHART_INDICATOR_COLORS.rsiOverbought, 0.5),
+  /** VAL 线颜色 */
+  val: hexToRgba(CHART_INDICATOR_COLORS.rsiOversold, 0.5),
+  /** 买入量颜色 */
+  buyVolume: hexToRgba(CHART_INDICATOR_COLORS.rsiOverbought, 0.4),
+  /** 卖出量颜色 */
+  sellVolume: hexToRgba(CHART_INDICATOR_COLORS.rsiOversold, 0.4),
+} as const
 
 const logger = getLogger()
 
@@ -254,7 +276,6 @@ export function computeVolumeProfile(
   }
 }
 
-/** 空结果 */
 function emptyResult(): VolumeProfileResult {
   return {
     bars: [],
@@ -267,24 +288,3 @@ function emptyResult(): VolumeProfileResult {
     tickSize: 0,
   }
 }
-
-/**
- * Volume Profile 颜色配置
- * 暗色主题，对标 TradingView Volume Profile 配色
- */
-export const VOLUME_PROFILE_COLORS = {
-  /** 柱体颜色（VA 内） */
-  barVA: 'rgba(96, 165, 250, 0.65)',
-  /** 柱体颜色（VA 外） */
-  barOutside: 'rgba(96, 165, 250, 0.25)',
-  /** POC 线颜色 */
-  poc: CHART_INDICATOR_COLORS.amber,
-  /** VAH 线颜色 */
-  vah: 'rgba(239, 83, 80, 0.5)',
-  /** VAL 线颜色 */
-  val: 'rgba(38, 166, 154, 0.5)',
-  /** 买入量颜色 */
-  buyVolume: 'rgba(239, 83, 80, 0.4)',
-  /** 卖出量颜色 */
-  sellVolume: 'rgba(38, 166, 154, 0.4)',
-} as const

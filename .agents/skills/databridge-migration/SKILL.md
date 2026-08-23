@@ -1,9 +1,13 @@
 ---
+skill_id: V9-SKILL-DATABRIDGE-MIGRATION
 name: "databridge-migration"
 description: "将直接操作 dataLayer 的代码迁移到 DataBridge 信封协议。涵盖 core/层违规修复、services/读取改为 dataBridge.query、写操作改为 dataBridge.forward + 新增 ENVELOPE_ACTION/Handler、迁移时保留业务逻辑、持久化实体类型归位。Invoke when user finds direct dataLayer.stocks/v6Scores/dailyQuotes/orders access in core/ or services/ layers, audit:layers reports violations, 或需要新增写入 stocks/v6Scores/dailyQuotes/orders 等 store 必须新增 ENVELOPE_ACTION 的场景。"
-version: "v1.2.2"
-last_updated: "2026-08-21"
+version: "v1.2.3"
+last_updated: "2026-08-23"
 change_log:
+  - version: v1.2.3
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
   - version: v1.2.2
     changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
     date: 2026-08-21

@@ -3,7 +3,7 @@
  * @description 采集策略配置 — 合并原「七维采集配置」与「抓取引擎配置」为统一 Tab 面板。
  *
  * 两个 Tab：
- * - 七维策略：原 SevenDimConfigPage（七维采集维度开关、优先级、降级链配置）
+ * - 采集策略：原 SevenDimConfigPage（十六维采集维度开关、优先级、降级链配置；历史沿用“七维”命名）
  * - 抓取引擎：原 FetcherConfigPage（数据源 URL、超时、重试、编码等抓取器参数）
  *
  * 合并理由：
@@ -29,7 +29,7 @@ export default function CollectionStrategyPage(): React.JSX.Element {
       <div>
         <h2 className="text-lg font-semibold">采集策略配置</h2>
         <p className="text-sm text-muted-foreground">
-          七维采集维度 · 抓取引擎参数 · 降级链与重试策略
+          多维采集维度（十六维） · 抓取引擎参数 · 降级链与重试策略
         </p>
       </div>
 
@@ -38,7 +38,7 @@ export default function CollectionStrategyPage(): React.JSX.Element {
           onClick={() => setActiveTab('seven-dim')}
           className={`${TAB_BASE} ${activeTab === 'seven-dim' ? TAB_ACTIVE : TAB_INACTIVE}`}
         >
-          七维策略
+          采集策略
         </button>
         <button
           onClick={() => setActiveTab('fetcher')}

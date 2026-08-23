@@ -259,12 +259,8 @@ export async function registerLazyServers(): Promise<number> {
   logger.info(`[MCP:register] ▶ lazy registration complete: ${registered}/${totalLazy} servers in ${_lazyElapsed}ms (failed=${_failed})`,
     mcpRegistry.getStats())
 
-  if (fullyReadyResolver) {
-    fullyReadyResolver()
-    fullyReadyResolver = null
-  }
-  logger.info(`[MCP:register] ▶ FULL REGISTRATION COMPLETE (total=${Date.now() - _mcpImportTs}ms from import)`)
-
+  // 注：fullyReady resolve 职责已收敛至 ensureMCPRegistered() 的 Promise.all 编排（核心 + lazy 均完成后统一放行），
+  // 本函数不再自行 resolve，避免与核心链路并行时序下的「过早放行」语义缺陷。
   return registered
 }
 
@@ -288,11 +284,29 @@ export const mcpReadyPromise: Promise<void> = new Promise<void>((resolve) => {
  * 全量 Server 就绪信号（含 lazy 加载）
  *
  * 供需要所有 Server 都就绪的场景使用（如全量工具列表导出）。
+ *
+ * 语义契约（2026-08-23 修正）：仅当核心与非核心两条注册链路均完成（含无 lazy 条目、
+ * 失败兜底等所有路径）才 resolve，由 `ensureMCPRegistered()` 统一编排。
  */
 let fullyReadyResolver: (() => void) | null = null
 export const mcpFullyReadyPromise: Promise<void> = new Promise<void>((resolve) => {
   fullyReadyResolver = resolve
 })
+
+/** 统一 resolve 入口（幂等：重复调用无副作用），保证就绪信号不会永远 pending */
+function resolveMcpReady(): void {
+  if (mcpReadyResolver) {
+    mcpReadyResolver()
+    mcpReadyResolver = null
+  }
+}
+
+function resolveMcpFullyReady(): void {
+  if (fullyReadyResolver) {
+    fullyReadyResolver()
+    fullyReadyResolver = null
+  }
+}
 
 // ============================================================
 // 兼容同步调用场景
@@ -326,6 +340,10 @@ export function registerAllServers(): void {
   const stats = mcpRegistry.getStats()
   const _regElapsed = (performance.now() - _regStart).toFixed(1)
   logger.info(`[MCP:register] sync registration complete (${_regElapsed}ms)`, stats)
+
+  // 同步全量注册完成后两条就绪信号立即放行（幂等，若异步链路已 resolve 则为无副作用 no-op）
+  resolveMcpReady()
+  resolveMcpFullyReady()
 }
 
 // ============================================================
@@ -447,7 +465,7 @@ let autoRegistered = false
  *
  * 调用后：
  * 1. 核心 Server 立即加载并注册 → `mcpReadyPromise` resolve
- * 2. 非核心 Server 在后台异步加载 → `mcpFullyReadyPromise` resolve
+ * 2. 核心与非核心链路均完成（含无 lazy 条目、失败兜底等所有路径）→ `mcpFullyReadyPromise` resolve
  *
  * 幂等：多次调用仅执行一次。
  */
@@ -460,42 +478,39 @@ export function ensureMCPRegistered(): void {
   const elapsed = Date.now() - _mcpImportTs
   logger.info(`[MCP:register] ▶ TRIGGER REGISTER (import→elapsed=${elapsed}ms)`)
 
-  // 1. 注册核心 Server（阻塞 Promise 链）
+  // 1. 注册核心 Server（阻塞 Promise 链）；失败兜底同样放行就绪信号，避免调用方永久挂起。
   const _coreStart = performance.now()
   logger.info('[MCP:register]   starting core server registration (blocking)...')
-  registerCoreServers()
-    .then(() => {
-      const _coreElapsed = (performance.now() - _coreStart).toFixed(1)
-      logger.info(`[MCP:register]   ✅ core registration promise resolved in ${_coreElapsed}ms`)
-      if (mcpReadyResolver) {
-        mcpReadyResolver()
-        mcpReadyResolver = null
-      }
-      logger.info(`[MCP:register] ▶ CORE REGISTRATION COMPLETE (total=${Date.now() - _mcpImportTs}ms from import)`)
-    })
+  const coreDone = registerCoreServers()
     .catch((err) => {
       logger.error('[MCP:register]   ❌ core registration failed', { error: String(err), stack: err instanceof Error ? err.stack : undefined })
-      if (mcpReadyResolver) {
-        mcpReadyResolver()
-        mcpReadyResolver = null
-      }
+    })
+    .finally(() => {
+      const _coreElapsed = (performance.now() - _coreStart).toFixed(1)
+      logger.info(`[MCP:register]   ✅ core registration promise settled in ${_coreElapsed}ms`)
+      resolveMcpReady()
+      logger.info(`[MCP:register] ▶ CORE REGISTRATION COMPLETE (total=${Date.now() - _mcpImportTs}ms from import)`)
     })
 
-  // 2. 后台注册非核心 Server（不阻塞）
+  // 2. 后台注册非核心 Server（不阻塞）。
+  //    注：依赖 registerCoreServers() 的同步前缀段先行写入 lazyEntries（分割循环在首个 await 之前完成）。
   logger.info('[MCP:register]   starting lazy server registration (background)...')
   const _lazyStart = performance.now()
-  registerLazyServers()
+  const lazyDone = registerLazyServers()
     .then((count) => {
       const _lazyElapsed = (performance.now() - _lazyStart).toFixed(1)
       logger.info(`[MCP:register]   ✅ lazy registration resolved: ${count} servers in ${_lazyElapsed}ms`)
     })
     .catch((err) => {
       logger.error('[MCP:register]   ❌ lazy registration failed', { error: String(err), stack: err instanceof Error ? err.stack : undefined })
-      if (fullyReadyResolver) {
-        fullyReadyResolver()
-        fullyReadyResolver = null
-      }
     })
+
+  // 3. 全量就绪统一编排：两条链路均 settle 后才 resolve，杜绝「单独等待过早放行」
+  //    与「无 lazy 条目永不 resolve」两类语义缺陷。
+  void Promise.all([coreDone, lazyDone]).then(() => {
+    resolveMcpFullyReady()
+    logger.info(`[MCP:register] ▶ FULL REGISTRATION COMPLETE (total=${Date.now() - _mcpImportTs}ms from import)`)
+  })
 }
 
 // 模块加载日志

@@ -1,9 +1,13 @@
 ---
+skill_id: V9-SKILL-FEATURE-WINDOW-CONTEXT-DOC
 name: "feature-window-context-doc"
 description: "诊断并修复功能窗口上下文文档无法打开的问题，覆盖IDE侧、浏览器侧、运行时侧三类场景。Invoke when user reports '无法打开功能窗口上下文文档'、'help window not opening'、'context document fails to load'、'功能窗口打不开'、'文档弹窗空白'、'点击帮助无反应'等关键词，或在安装新开发环境后遇到功能窗口/帮助面板/上下文文档加载失败；Kimi WebBridge 自动化时 snapshot/click 无反应、新克隆后首次启动 IDE 侧边栏空白。"
-version: "v1.0.1"
-last_updated: "2026-08-21"
+version: "v1.0.2"
+last_updated: "2026-08-23"
 change_log:
+  - version: v1.0.2
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
   - version: v1.0.1
     changes: "Batch-B P0-1 段补齐：基于 S 级 Skill 5 段式骨架模板重构，原 8 段自定义长文（触发条件+根因分类+诊断5步+环境检查清单+根因速查表+红线清单+验证命令+变更日志，含 Step4/Step5 重复段与 G 类 Kimi 客户端专项）合并重映射为标准一~五段；§二前置检查合并场景分类铁律+环境基线表格化（7 项），保留原 6 类根因概率速查为 §二附录；§三诊断 SOP 拆 5 个 Phase（场景锁定→IDE侧→浏览器/运行时→Kimi客户端/WebBridge→验证修复）；§四扩展至 8 条教训（后果+规避双字段），固化 npm ci 禁止 npm install 等红线；§五交付物≥10 项+必要且充分条件声明。"
     date: 2026-08-21

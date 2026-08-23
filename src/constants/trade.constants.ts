@@ -10,6 +10,7 @@ import {
   API_TRADE_CLOSE_POSITION,
   API_TRADE_HOLDINGS_EXPORT,
 } from '@/config/apiPaths'
+import { COLOR_SHADES } from '@/constants/theme.tokens'
 
 // ============================================================
 // 交易方向枚举
@@ -84,24 +85,24 @@ export const HOLDING_ACTION_LABELS: Record<HoldingAction, string> = {
 }
 
 // ============================================================
-// A股涨跌颜色映射（红涨绿跌）
+// A股涨跌颜色映射（红涨绿跌）— 全部从 COLOR_SHADES 读取，禁止裸 hex
 // ============================================================
 
 /** 涨跌颜色常量 */
 export const PNL_COLORS = {
   /** 上涨 / 正收益 - 红色 */
-  UP: '#ef4444',
-  UP_HEX: '#ef4444',
+  UP: COLOR_SHADES.red.hex[500],
+  UP_HEX: COLOR_SHADES.red.hex[500],
   UP_CLASS: 'text-red-500',
   UP_BG_CLASS: 'bg-red-50',
   /** 下跌 / 负收益 - 绿色 */
-  DOWN: '#22c55e',
-  DOWN_HEX: '#22c55e',
+  DOWN: COLOR_SHADES.green.hex[500],
+  DOWN_HEX: COLOR_SHADES.green.hex[500],
   DOWN_CLASS: 'text-green-500',
   DOWN_BG_CLASS: 'bg-green-50',
   /** 中性 / 平盘 - 灰色 */
-  NEUTRAL: '#6b7280',
-  NEUTRAL_HEX: '#6b7280',
+  NEUTRAL: COLOR_SHADES.gray.hex[500],
+  NEUTRAL_HEX: COLOR_SHADES.gray.hex[500],
   NEUTRAL_CLASS: 'text-gray-500',
   NEUTRAL_BG_CLASS: 'bg-gray-50',
 } as const

@@ -1,7 +1,7 @@
 /**
  * @fileoverview 候选池批量采集服务
  *
- * 对研究候选池（research pool）内的指定标的，按当前七维配置启用的维度
+ * 对研究候选池（research pool）内的指定标的，按当前采集配置（sevenDimConfigStore，历史沿用“七维”命名，实际已扩至十六维）启用的维度
  * 执行并发批量采集。配置复用 SevenDimConfigStore，标的由调用方传入，
  * 避免与原「意向池采集」入口耦合。
  *
@@ -115,10 +115,10 @@ export interface PoolCollectionResult {
 }
 
 /**
- * 对指定股票列表执行当前已启用的七维度批量采集。
+ * 对指定股票列表执行当前已启用的多维度（最多十六维）批量采集。
  *
  * @param symbols 待采集标的代码列表
- * @param config 采集配置（通常复用七维配置页中的配置）
+ * @param config 采集配置（通常复用采集策略配置页中的配置）
  * @param options.autoSync 采集完成后是否自动同步到本地（默认 true）
  * @returns 采集结果摘要
  * @throws 当没有启用任何维度，或所有维度均失败时抛出
@@ -137,7 +137,7 @@ export async function collectPoolSymbols(
   const enabledDims = config.dimensions.filter((d) => d.enabled && d.code.length > 0)
 
   if (enabledDims.length === 0) {
-    throw new Error('没有可用的采集维度，请先到「七维配置」页面启用至少一个维度并配置数据源')
+    throw new Error('没有可用的采集维度，请先到「采集策略配置」页面启用至少一个维度并配置数据源')
   }
 
   const parentTaskId = `pool-collect-${Date.now()}`

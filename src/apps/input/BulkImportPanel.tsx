@@ -196,7 +196,7 @@ export default function BulkImportPanel(): React.JSX.Element {
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
-  // ── 立即采集：导入完成后直接触发七维度采集 ──
+  // ── 立即采集：导入完成后直接触发多维度采集（当前最多十六维） ──
   const handleStartCollection = async (): Promise<void> => {
     // 从预览中提取所有有效代码（包括重复的，因为可能需要重新采集）
     const symbols = importPreview
@@ -210,7 +210,7 @@ export default function BulkImportPanel(): React.JSX.Element {
 
     const config = useSevenDimConfigStore.getState().getCollectionConfig()
     setIsCollecting(true)
-    setCollectMessage(`正在采集 ${symbols.length} 只标的的七维度数据...`)
+    setCollectMessage(`正在采集 ${symbols.length} 只标的的多维度数据...`)
 
     try {
       const result = await collectPoolSymbols(symbols, config)

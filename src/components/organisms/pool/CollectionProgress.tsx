@@ -18,7 +18,7 @@ import {
 import { cn } from '@/lib/utils'
 import { eventBus } from '@/lib/eventBus'
 import { COLLECTION_EVENTS } from '@/types/modules/collection.types'
-import { PROGRESS_REFRESH_EVENT } from '@/pages/analysis/hooks/usePoolBoardCollect'
+import { PROGRESS_REFRESH_EVENT } from '@/hooks/pool/usePoolBoardCollect'
 
 export interface CollectionProgressProps {
   symbol: string

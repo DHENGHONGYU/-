@@ -189,8 +189,10 @@ export async function fetchKlineViaMcp(
 
 /**
  * 腾讯 MCP 行情辅助采集（通过 westock server）。
+ * @remarks P1-1 修复：导出供 dataSourceOrchestrator.tencentMcpQuote 直连，
+ * 避免与 fetchQuoteViaMcp 共享 iFinD→tencent 内部降级链导致重试冗余。
  */
-async function fetchQuoteViaTencentMcp(
+export async function fetchQuoteViaTencentMcp(
   symbol: string,
 ): Promise<{ price: number; name: string; change: number; changePercent: number } | null> {
   try {

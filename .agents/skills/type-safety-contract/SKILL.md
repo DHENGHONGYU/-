@@ -1,9 +1,13 @@
 ---
+skill_id: V9-SKILL-TYPE-SAFETY-CONTRACT
 name: "type-safety-contract"
 description: "修改 TypeScript 类型前强制6步安全契约：不变式锚定→影响范围扫描→变更方案→边界守卫(any/never/null)→分层原子执行→tsc+类型级测试验证。Invoke when user asks to modify/refactor/rename a TypeScript interface, type, or generic, or before any type-definition edit, to prevent type-erosion and CI breakage；v9-tsc-test-error-diagnosis 报出测试文件类型错误批处理后需要回归验证、新增导出类型前、公共类型 BREAKING 变更前。"
-version: "v1.0.2"
-last_updated: "2026-08-21"
+version: "v1.0.3"
+last_updated: "2026-08-23"
 change_log:
+  - version: v1.0.3
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
   - version: v1.0.2
     changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
     date: 2026-08-21

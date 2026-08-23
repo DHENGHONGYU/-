@@ -10,8 +10,8 @@ status: active
 maintainer: current developer
 summary: "以基准日为锚点，统一校对文档双轨版本、last_updated 与 change_log 闭环；并在后续增量变更中保持同频更新。"
 tags: [governance, documentation, versioning, freshness, audit]
-version: "v1.0.2"
-last_updated: "2026-08-21"
+version: v1.0.5
+last_updated: 2026-08-23
 doc_id: V9-SKILL-DOC-FRESH-001
 mandatory: true
 triggers:
@@ -43,7 +43,14 @@ related_docs:
   - "V9-DOC-PROJ-SKILLINDEX-001"  # .trae/skills/INDEX.md
   - "V9-DOC-PROJ-007"   # directory-structure-guide.md
 tier: T0
+code_version: "2.0.0-rc.1"
 change_log:
+  - version: v1.0.5
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
+  - version: v1.0.4
+    changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.3) → R2 PATCH++(v1.0.4) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
   - version: v1.0.3
     changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×2），词命中 ≥6，满足 RULE-TPL §一 可判定规则校验。"
     date: 2026-08-21

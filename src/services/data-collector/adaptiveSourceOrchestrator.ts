@@ -8,6 +8,7 @@
  */
 
 import { getLogger } from '@/lib/logger'
+import type { RetryPolicy } from '@/types/modules/collection.types'
 
 const logger = getLogger()
 
@@ -407,4 +408,27 @@ export function computeRetryDelayMs(
   const capped = Math.min(baseDelayMs * Math.pow(factor, Math.max(0, attempt)), maxDelayMs)
   const jitterFactor = 1 - clamp01(jitterRatio) + Math.random() * clamp01(jitterRatio)
   return Math.floor(capped * jitterFactor)
+}
+
+/**
+ * 将采集配置 `RetryPolicy` 适配为统一退避延迟（退避逻辑唯一入口）。
+ *
+ * 字段映射：initialDelayMs→baseDelayMs、backoffMultiplier→factor；
+ * 上限沿用 DEFAULT_ADAPTIVE_CONFIG.retry.maxDelayMs，全抖动 [0, capped]。
+ * dataSourceOrchestrator 的行情/K 线重试循环应调用本函数，禁止另写退避实现。
+ *
+ * @param policy 采集配置重试策略（retryPolicy ?? DEFAULT_RETRY_POLICY）
+ * @param attempt 重试序号（从 0 开始）
+ */
+export function computePolicyBackoffMs(policy: RetryPolicy, attempt: number): number {
+  const adapted: AdaptiveSourceConfig = {
+    ...DEFAULT_ADAPTIVE_CONFIG,
+    retry: {
+      baseDelayMs: Math.max(1, policy.initialDelayMs),
+      maxDelayMs: DEFAULT_ADAPTIVE_CONFIG.retry.maxDelayMs,
+      factor: Math.max(1, policy.backoffMultiplier),
+      jitterRatio: DEFAULT_ADAPTIVE_CONFIG.retry.jitterRatio,
+    },
+  }
+  return computeRetryDelayMs(attempt, adapted)
 }

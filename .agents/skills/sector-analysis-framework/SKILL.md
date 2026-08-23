@@ -1,9 +1,13 @@
 ---
+skill_id: V9-SKILL-SECTOR-ANALYSIS-FRAMEWORK
 name: "sector-analysis-framework"
 description: "执行六维度板块分析框架，包括板块轮动信号、政策环境、外部竞争、技术跃迁、下游市场和基金估值分析。Invoke when 用户要求全面分析行业板块、评估板块轮动配置机会、编制板块综合评分卡或跟踪六维度信号时。"
-version: "v1.0.3"
-last_updated: "2026-08-21"
+version: "v1.0.4"
+last_updated: "2026-08-23"
 change_log:
+  - version: v1.0.4
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
   - version: v1.0.3
     changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
     date: 2026-08-21

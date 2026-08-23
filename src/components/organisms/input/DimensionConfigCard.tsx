@@ -2,7 +2,7 @@
  * @module DimensionConfigCard
  * @description 维度高级配置聚合卡片。
  *
- * 整合数据源优先级、字段选择、重试/超时/降级策略，供七维配置页复用。
+ * 整合数据源优先级、字段选择、重试/超时/降级策略，供采集配置页复用。
  */
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'

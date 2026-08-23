@@ -10,14 +10,15 @@ describe('PageContainer', () => {
   it('默认渲染并居中（限制最大宽度 1200px）', () => {
     render(<PageContainer><span>内容</span></PageContainer>)
     const main = screen.getByText('内容').closest('main')!
-    expect(main).toHaveClass('mx-auto', 'max-w-[1200px]', 'px-6', 'py-6')
+    expect(main).toHaveClass('mx-auto', 'max-w-container')
+    expect(main).toHaveClass('w-full', 'p-4')
   })
 
   it('centered=false 时不限制最大宽度', () => {
     render(<PageContainer centered={false}><span>内容</span></PageContainer>)
     const main = screen.getByText('内容').closest('main')!
-    expect(main).not.toHaveClass('mx-auto', 'max-w-[1200px]')
-    expect(main).toHaveClass('px-6', 'py-6')
+    expect(main).not.toHaveClass('mx-auto', 'max-w-container')
+    expect(main).toHaveClass('w-full', 'p-4')
   })
 
   it('透传自定义类名', () => {

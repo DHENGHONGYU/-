@@ -1545,8 +1545,9 @@ describe('dataLayer', () => {
       expect(dataLayer.manager).toBe(dataManager)
     })
 
-    it('共计 47 个属性', () => {
-      expect(Object.keys(dataLayer)).toHaveLength(47)
+    it('共计 50 个属性', () => {
+      // v38（2026-08-23 遗留问题整改 P2）：新增 dimensionCollectData 暴露，49→50
+      expect(Object.keys(dataLayer)).toHaveLength(50)
     })
   })
 

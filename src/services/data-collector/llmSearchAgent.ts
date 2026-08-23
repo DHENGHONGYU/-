@@ -65,7 +65,7 @@ function isNodeEnv(): boolean {
  */
 async function callQwen(systemPrompt: string, userPrompt: string): Promise<string | null> {
   const apiKey = getApiKey()
-  if ((apiKey ?? '') === '') {
+  if (!apiKey) {
     logger.info('[llmSearchAgent] Qwen API Key 未配置，跳过 LLM 搜索')
     return null
   }
@@ -118,7 +118,7 @@ async function callQwen(systemPrompt: string, userPrompt: string): Promise<strin
     }
 
     const content = json.output?.choices?.[0]?.message?.content ?? null
-    if ((content ?? '') === '') {
+    if (!content || content === '') {
       logger.warn('[llmSearchAgent] Qwen API 返回空内容')
       return null
     }
@@ -271,7 +271,7 @@ export async function searchAnnouncements(
   stockName: string,
 ): Promise<NewsItem[]> {
   const apiKey = getApiKey()
-  if ((apiKey ?? '') === '') {
+  if (!apiKey) {
     logger.info('[llmSearchAgent] DeepSeek API Key 未配置，跳过公告搜索')
     return []
   }
@@ -281,9 +281,9 @@ export async function searchAnnouncements(
   const userPrompt = buildAnnouncementPrompt(symbol, stockName)
   const text = await callQwen(ANNOUNCEMENT_SYSTEM_PROMPT, userPrompt)
 
-  if ((text ?? '') === '') return []
+  if (!text || text === '') return []
 
-  const rawItems = extractJsonArray<RawAnnouncement>(text!)
+  const rawItems = extractJsonArray<RawAnnouncement>(text)
   if (rawItems.length === 0) return []
 
   return rawItems.map((item, index) => ({
@@ -309,7 +309,7 @@ export async function searchNews(
   stockName: string,
 ): Promise<NewsItem[]> {
   const apiKey = getApiKey()
-  if ((apiKey ?? '') === '') {
+  if (!apiKey) {
     logger.info('[llmSearchAgent] DeepSeek API Key 未配置，跳过新闻搜索')
     return []
   }
@@ -319,9 +319,9 @@ export async function searchNews(
   const userPrompt = buildNewsPrompt(symbol, stockName)
   const text = await callQwen(NEWS_SYSTEM_PROMPT, userPrompt)
 
-  if ((text ?? '') === '') return []
+  if (!text || text === '') return []
 
-  const rawItems = extractJsonArray<RawNews>(text!)
+  const rawItems = extractJsonArray<RawNews>(text)
   if (rawItems.length === 0) return []
 
   return rawItems.map((item, index) => ({
@@ -347,7 +347,7 @@ export async function searchReports(
   stockName: string,
 ): Promise<ResearchReport[]> {
   const apiKey = getApiKey()
-  if ((apiKey ?? '') === '') {
+  if (!apiKey) {
     logger.info('[llmSearchAgent] DeepSeek API Key 未配置，跳过研报搜索')
     return []
   }
@@ -357,9 +357,9 @@ export async function searchReports(
   const userPrompt = buildReportsPrompt(symbol, stockName)
   const text = await callQwen(REPORTS_SYSTEM_PROMPT, userPrompt)
 
-  if ((text ?? '') === '') return []
+  if (!text || text === '') return []
 
-  const rawItems = extractJsonArray<RawReport>(text!)
+  const rawItems = extractJsonArray<RawReport>(text)
   if (rawItems.length === 0) return []
 
   return rawItems.map((item, index) => ({

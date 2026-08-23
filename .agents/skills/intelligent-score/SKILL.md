@@ -1,9 +1,13 @@
 ---
+skill_id: V9-SKILL-INTELLIGENT-SCORE
 name: "intelligent-score"
 description: "智能评分技能：执行个股综合智能评分，整合多维度因子输出智能评分结果。Invoke when 用户在个股智能评分页面点击开始、stocks基础数据变化、上传新补充资料或行业报告、距上次评分超过3.5天需要刷新时。"
-version: "v1.0.4"
-last_updated: "2026-08-21"
+version: "v1.0.5"
+last_updated: "2026-08-23"
 change_log:
+  - version: v1.0.5
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
   - version: v1.0.4
     changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
     date: 2026-08-21

@@ -1,9 +1,10 @@
 /**
  * @module sevenDimConfigStore
- * @description 七维采集配置 Store（Zustand），支持全层级配置与持久化。
+ * @description 采集配置 Store（Zustand，历史沿用 sevenDim 命名），支持全层级配置与持久化。
+ * 维度已从七维扩展至十六维（01 行情 … 16 一致性预期），2026-08-23 注释对齐。
  *
  * 职责：
- * - 管理 10 个采集维度的高级配置（启用、频率、数据源、字段、策略、优先级）
+ * - 管理 16 个采集维度的高级配置（启用、频率、数据源、字段、策略、优先级）
  * - 管理当前策略模板与全局参数
  * - 提供配置序列化 / 反序列化能力
  * - 通过 DataBridge.forward() 持久化到 IndexedDB
@@ -37,6 +38,7 @@ import {
   DEFAULT_TIMEOUT_POLICY,
 } from '@/config/collectConfig'
 import { upgradeDimensionsToPipeline, runBatchTrace } from '@/services/data-collector/collectionPipeline'
+import { persistQualitySnapshot } from '@/services/data-collector/qualityMetricsPersistence'
 import { useCollectionRuntimeStore } from '@/store/collectionRuntimeStore'
 import { useIntentionPoolStore } from '@/store/intentionPoolStore'
 
@@ -627,14 +629,20 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
           .map((f) => (f.reason instanceof Error ? f.reason.message : String(f.reason)))
           .join('; ')
         logger.error('[SevenDimConfigStore] 并发采集部分失败', { failures: failures.length, errors: errMsg })
+        // P0-2：部分失败路径也落库质量快照（不阻塞主链路）
+        void persistQualitySnapshot({ reason: 'collection-partial-fail' })
       } else {
         logger.info('[SevenDimConfigStore] 并发采集完成')
+        // P0-2：采集完成后持久化质量指标快照（不阻塞主链路）
+        void persistQualitySnapshot({ reason: 'collection-complete' })
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       logger.error('[SevenDimConfigStore] 采集失败', { error: message })
       runtime.setRunning(false)
       set({ isCollecting: false, collectingDimensions: [], error: message })
+      // P0-2：异常路径也落库质量快照（不阻塞主链路）
+      void persistQualitySnapshot({ reason: 'collection-error' })
     }
   },
 

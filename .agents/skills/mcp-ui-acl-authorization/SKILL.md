@@ -1,9 +1,13 @@
 ---
+skill_id: V9-SKILL-MCP-UI-ACL-AUTHORIZATION
 name: "mcp-ui-acl-authorization"
 description: "为 V9 MCP 体系的 ui 角色显式配置查询/导出类 Tool 授权，同时保持写操作被拒绝。处理 MCP Server 清理、合并或下线后，ACL 矩阵与测试契约、历史 Agent 配置、UI 调用点的同步。Invoke when user needs to authorize UI-layer MCP tools, reconcile ACL matrix after server removal/merge, fix mcpAclInterceptor test failures related to ui role permissions, audit:mcp 报告权限契约断裂，或 UI 组件收到 allowed=false 却需要只读类工具放行。"
-version: "v1.0.2"
-last_updated: "2026-08-21"
+version: "v1.0.3"
+last_updated: "2026-08-23"
 change_log:
+  - version: v1.0.3
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
   - version: v1.0.2
     changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
     date: 2026-08-21

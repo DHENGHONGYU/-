@@ -1,9 +1,13 @@
 ---
+skill_id: V9-SKILL-INDUSTRY-SCORE-MAPPING
 name: "industry-score-mapping"
 description: "从行业分析报告中自动提取SKILL-C/SKILL-N评分，按个股自动匹配行业并注入行业评分到V6个股分析模型中作为L-1层。Invoke when 分析个股需检索行业评分、V6模型执行L-1层、行业分析报告预制版本更新或个股-行业映射表扩充时。"
-version: "v1.0.4"
-last_updated: "2026-08-21"
+version: "v1.0.5"
+last_updated: "2026-08-23"
 change_log:
+  - version: v1.0.5
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
   - version: v1.0.4
     changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
     date: 2026-08-21

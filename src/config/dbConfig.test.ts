@@ -95,7 +95,7 @@ describe('dbConfig', () => {
     expect(Object.keys(RESEARCH_STATUS)).toHaveLength(5)
 
     // DATA_SOURCE
-    expect(Object.keys(DATA_SOURCE)).toHaveLength(3)
+    expect(Object.keys(DATA_SOURCE)).toHaveLength(4)
 
     // ORDER_DIRECTION
     expect(Object.keys(ORDER_DIRECTION)).toHaveLength(2)

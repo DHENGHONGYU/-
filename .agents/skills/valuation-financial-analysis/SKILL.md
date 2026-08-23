@@ -1,9 +1,13 @@
 ---
+skill_id: V9-SKILL-VALUATION-FINANCIAL-ANALYSIS
 name: "valuation-financial-analysis"
 description: "执行财务分析与估值模型，包括财务指标计算、估值方法应用、情景分析和目标价推导。Invoke when 用户评估公司财务健康度、计算估值倍数PE/PEG/DCF、构建三情景推导目标价、或检查财务红黄预警信号时。"
-version: "v1.0.3"
-last_updated: "2026-08-21"
+version: "v1.0.4"
+last_updated: "2026-08-23"
 change_log:
+  - version: v1.0.4
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
   - version: v1.0.3
     changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
     date: 2026-08-21

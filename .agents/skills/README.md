@@ -8,7 +8,7 @@ last_updated: 2026-08-23
 related_strategy: docs/03-development/mcp-cli-skill-strategy.md
 change_log:
   - version: v2.1.0
-    changes: "新增技能评估体系段（三层校对 + 四维评分）：audit:skill-runtime（L1 运行时加载冒烟，E2E 调用测试的确定性替代）、test:skill-router（L2 路由匹配回归，9 条信号→命中语料）、skill:scorecard（四维评分卡：结构 40/可发现 30/运行 20/质量 10，报告归档 deliverables/）"
+    changes: "新增 §六 技能评估体系：运行时冒烟（audit:skill-runtime）+ 路由回归（test:skill-router）+ 四维评分卡（skill:scorecard，仅度量）"
     date: 2026-08-23
   - version: v2.0.0
     changes: "跨平台 SKILL 体系统一：重写为五平台（TRAE/WorkBuddy/Qoder/VSCode/Kimi）唯一人类可读统一索引；删除与 skill-registry.json 重复的 YAML 注册表段（机器真相源唯一化）；新增跨平台加载契约表与环境配置通用原则（junction 单一物理源防多备份）；L1 物理 22 项（含孤儿归位的 skill-5seg-migration）+ L2 插件 9 项 + L3 虚拟 19 项 = 50 项登记"
@@ -104,16 +104,15 @@ change_log:
 - L1（22）+ L2（9）+ L3（19）= **50 条登记**，三层分离，任何声明不得混加计数。
 - 一致性由 `npm run audit:skill-coverage` 三方校验（frontmatter ↔ registry ↔ AGENTS.md），RULE-TPL 对 5 段式结构强审。
 
-## 六、技能评估体系（三层校对 + 四维评分，v2.1.0 新增）
+## 六、技能评估体系（v2.1.0 新增）
 
-> 设计原则：真实逐个调用 `Skill()` 代价高、不可断言、跨平台不可复现；故以确定性脚本覆盖 E2E 调用测试的可验证子集，评分与门禁分离（评分是度量，门禁才阻断）。
+> 结构/三方一致性归 §五 的 `audit:skill-coverage`（单一职责）；以下三条只补运行时、路由与度量，评分不阻断。
 
-| 命令 | 层级 | 职责 | 阻断 |
-|---|---|---|---|
-| `npm run audit:skill-coverage` | L0 静态 | frontmatter↔registry↔AGENTS.md 三方一致 + RULE-TPL 五段结构 | ✅ exit 1 |
-| `npm run audit:skill-runtime` | L1 运行时 | junction 有效 + 目录枚举 + frontmatter 六字段 + 清单比对 + 五段可加载（E2E 加载冒烟） | ✅ exit 1 |
-| `npm run test:skill-router` | L2 路由 | 信号→命中回归（[fixtures](../../scripts/test/skill-router-fixtures.json) 9 条：文件/关键词/负例） | ✅ exit 1 |
-| `npm run skill:scorecard` | 评分 | 四维加权（结构 40/可发现 30/运行 20/质量 10），报告归档 `deliverables/YYYY-MM-DD-skill-scorecard.md` | ❌ 仅度量 |
+| 命令 | 职责 | 阻断 |
+|---|---|---|
+| `npm run audit:skill-runtime` | 运行时加载冒烟：junction 有效 + 目录↔registry 清单一致 + frontmatter 可解析 | ✅ |
+| `npm run test:skill-router` | 路由回归：9 条信号→命中语料（[fixtures](../../scripts/test/skill-router-fixtures.json)） | ✅ |
+| `npm run skill:scorecard` | 四维评分（结构 40/发现 30/运行 20/质量 10），归档 `deliverables/` | ❌ |
 
 ## 七、维护规范
 
@@ -128,7 +127,4 @@ change_log:
 - [V9 AGENTS.md（跨平台通用行为契约）](../../AGENTS.md)
 - [skill-registry.json（机器可读单一真相源）](../../.trae/skills/skill-registry.json)
 - [skill-mirror.cjs（联接初始化契约）](../../scripts/skill-mirror.cjs)
-- [audit-skill-runtime.cjs（L1 运行时加载冒烟）](../../scripts/audit/audit-skill-runtime.cjs)
-- [skill-router.test.cjs（L2 路由回归）](../../scripts/test/skill-router.test.cjs)
-- [skill-scorecard.cjs（四维评分卡）](../../scripts/audit/skill-scorecard.cjs)
 - [plugins/README.md（Kimi 插件导航）](../../plugins/README.md)

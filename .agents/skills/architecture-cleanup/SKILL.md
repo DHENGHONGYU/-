@@ -1,9 +1,17 @@
 ---
+skill_id: V9-SKILL-ARCHITECTURE-CLEANUP
 name: "architecture-cleanup"
 description: "执行项目架构清理：识别并修复跨层调用违规、合并/迁移错位目录中的重复服务、统一领域命名与 UI 文案。强调先扫描真相源、再小步重构、每步验证的飞轮。Invoke when user asks to clean up architecture smells, fix layer violations, consolidate duplicate services, or align domain naming across UI and services，audit:layers 报 store/components 直接依赖 data/、audit:deadcode 报残影目录、或怀疑同职责服务 2+ 份拷贝并存。"
-version: "v1.0.2"
-last_updated: "2026-08-21"
+version: v1.0.4
+last_updated: 2026-08-23
+code_version: "2.0.0-rc.1"
 change_log:
+  - version: v1.0.4
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
+  - version: v1.0.3
+    changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.2) → R2 PATCH++(v1.0.3) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
   - version: v1.0.2
     changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥4，满足 RULE-TPL §一 可判定规则校验。"
     date: 2026-08-21

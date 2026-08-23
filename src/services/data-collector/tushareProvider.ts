@@ -150,7 +150,7 @@ export async function tushareRequest(
     throw new TushareProviderError('Tushare Token 未配置', 'TOKEN_MISSING', apiName)
   }
 
-  const body: TushareRequest = { api_name: apiName, token: token ?? '', params, fields }
+  const body: TushareRequest = { api_name: apiName, token: token!, params, fields }
 
   // 解析当前环境适用的 Tushare API URL（浏览器走 Vite 代理，Node 直连）
   const url = resolveTushareUrl()
@@ -221,9 +221,8 @@ export function fromTushareCode(tsCode: string): string {
 /** 01 股票基本信息：stock_basic */
 export async function tushareStockBasic(symbol?: string): Promise<Record<string, unknown>[]> {
   const params: Record<string, string | number | string[]> = {}
-  const sym = symbol ?? ''
-  if (sym !== '') {
-    params.ts_code = toTushareCode(sym)
+  if (symbol) {
+    params.ts_code = toTushareCode(symbol)
   }
   return tushareRequest('stock_basic', params, 'ts_code,name,industry,list_date,list_status')
 }

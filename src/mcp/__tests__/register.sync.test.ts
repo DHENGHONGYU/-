@@ -39,12 +39,13 @@ describe('syncWithConfig (F2/F3): modulePath-based reconciliation', () => {
   })
 
   it('对禁用 Server 的注册实例执行注销（modulePath 匹配）', () => {
-    // 构造一个与禁用配置项（analysis, enabled:false）同 modulePath 的 Server 实例
-    const analysisEntry = MCP_SERVER_REGISTRY.find((e) => e.modulePath.includes('/analysis/'))!
-    expect(analysisEntry.enabled).toBe(false)
+    // 动态选取任一禁用配置条目（不绑定具体 Server：analysis:main 已于 2026-08-20 恢复启用，
+    // 旧实现硬编码 /analysis/ 路径并断言 enabled===false，与 registry 契约漂移）
+    const disabledEntry = MCP_SERVER_REGISTRY.find((e) => !e.enabled)!
+    expect(disabledEntry.enabled).toBe(false)
 
     const fakeServer: MCPServer = {
-      info: { name: 'analysis', version: '0.0.0', description: 'fake for F2 test' },
+      info: { name: 'sync-test-fake', version: '0.0.0', description: 'fake for F2 test' },
       listTools: () => [],
       callTool: async () => ({ content: [], isError: false }),
       listResources: () => [],
@@ -52,14 +53,14 @@ describe('syncWithConfig (F2/F3): modulePath-based reconciliation', () => {
       listPrompts: () => [],
       getPrompt: async () => [],
     }
-    mcpRegistry.register(fakeServer, { priority: 'medium', modulePath: analysisEntry.modulePath })
-    expect(mcpRegistry.getServer('analysis')).toBeDefined()
+    mcpRegistry.register(fakeServer, { priority: 'medium', modulePath: disabledEntry.modulePath })
+    expect(mcpRegistry.getServer('sync-test-fake')).toBeDefined()
 
     const result = syncWithConfig()
 
-    // analysis 在配置中为 disabled → 应被注销
-    expect(mcpRegistry.getServer('analysis')).toBeUndefined()
-    expect(result.removed).toContain(analysisEntry.modulePath)
+    // 该条目在配置中为 disabled → 同 modulePath 的注册实例应被注销
+    expect(mcpRegistry.getServer('sync-test-fake')).toBeUndefined()
+    expect(result.removed).toContain(disabledEntry.modulePath)
     // 其余启用 Server 不受影响
     expect(mcpRegistry.listServers().length).toBe(enabledConfigCount)
   })

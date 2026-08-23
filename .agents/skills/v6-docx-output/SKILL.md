@@ -1,9 +1,13 @@
 ---
+skill_id: V9-SKILL-V6-DOCX-OUTPUT
 name: "v6-docx-output"
 description: "V6股票分析报告专业Word文档输出技能。包含：一句话总结注入规则、专业排版格式规范（封面/字体/表格/评分条/结论框/页眉页脚）、docx-js生成脚本模板。Invoke when 导出V6分析报告到专业Word格式、生成stock分析报告.docx文件、批量输出V6报告时。"
-version: "v1.0.4"
-last_updated: "2026-08-21"
+version: "v1.0.5"
+last_updated: "2026-08-23"
 change_log:
+  - version: v1.0.5
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
   - version: v1.0.4
     changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
     date: 2026-08-21

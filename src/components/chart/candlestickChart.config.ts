@@ -3,7 +3,8 @@
  * 从 CandlestickChart.tsx 提取，包含周期选项、复权选项、均线配置、样式常量
  */
 import type { CSSProperties } from 'react'
-import { CHART_PALETTE_PRO, COLOR_SHADES } from '@/constants/theme.tokens'
+import { hexToRgba } from '@/lib/utils'
+import { CHART_PALETTE_PRO, COLOR_SHADES, STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 import { EMA_COLORS, BOLL_COLORS, RSI_COLORS } from './indicators'
 
 // 重新导出共享配置，保持向后兼容
@@ -70,7 +71,7 @@ export function getToolbarButtonStyle(isActive: boolean): CSSProperties {
     borderRadius: '4px',
     cursor: 'pointer',
     background: isActive
-      ? 'rgba(255,255,255,0.1)'
+      ? hexToRgba(CHART_PALETTE_PRO.contrast, 0.1)
       : 'transparent',
     color: isActive
       ? CHART_PALETTE_PRO.contrast
@@ -122,7 +123,7 @@ export const tooltipContainerStyle: CSSProperties = {
   minWidth: 160,
   padding: '8px 10px',
   borderRadius: '8px',
-  background: 'rgba(19,23,34,0.92)',
+  background: CHART_PALETTE_PRO.bg + 'eb',
   backdropFilter: 'blur(8px)',
   border: `1px solid ${CHART_PALETTE_PRO.grid}`,
   boxShadow: '0 4px 20px ' + COLOR_SHADES.gray.hex[800] + '80',
@@ -148,15 +149,20 @@ export const tooltipValuesStyle: CSSProperties = {
 }
 
 /** 价格变动脉冲动画关键帧（注入到 document） */
+const PULSE_UP = hexToRgba(STOCK_COLOR_TOKENS.up.hex, 0.4)
+const PULSE_UP_0 = hexToRgba(STOCK_COLOR_TOKENS.up.hex, 0)
+const PULSE_DOWN = hexToRgba(STOCK_COLOR_TOKENS.down.hex, 0.4)
+const PULSE_DOWN_0 = hexToRgba(STOCK_COLOR_TOKENS.down.hex, 0)
+
 export const PRICE_PULSE_KEYFRAMES = `
 @keyframes v9-price-pulse-up {
-  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-  70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  0% { box-shadow: 0 0 0 0 ${PULSE_UP}; }
+  70% { box-shadow: 0 0 0 6px ${PULSE_UP_0}; }
+  100% { box-shadow: 0 0 0 0 ${PULSE_UP_0}; }
 }
 @keyframes v9-price-pulse-down {
-  0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-  70% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+  0% { box-shadow: 0 0 0 0 ${PULSE_DOWN}; }
+  70% { box-shadow: 0 0 0 6px ${PULSE_DOWN_0}; }
+  100% { box-shadow: 0 0 0 0 ${PULSE_DOWN_0}; }
 }
 `

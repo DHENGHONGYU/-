@@ -1,6 +1,7 @@
 import { forwardRef, memo, type ComponentPropsWithoutRef, useMemo } from 'react'
-import { CHART_PALETTE } from '@/constants/theme.tokens'
+import { CHART_PALETTE, CHART_PALETTE_PRO } from '@/constants/theme.tokens'
 import { THEME_TOKENS } from '@/constants/theme/theme.tokens.base'
+import { hexToRgba } from '@/lib/utils'
 import { usePerfTrace } from '@/hooks/usePerfTrace'
 
 /** ITU-R BT.601 luminance coefficients */
@@ -183,7 +184,7 @@ const IndustryHeatmap = forwardRef<HTMLDivElement, IndustryHeatmapProps>(
                         cursor: onCellClick ? 'pointer' : 'default',
                         transition: 'transform 0.15s ease, box-shadow 0.15s ease',
                         boxShadow: highlightCode === item.code
-                          ? `0 0 0 2px ${CHART_PALETTE.accent}, 0 2px 8px rgba(0,0,0,0.08)`
+                          ? `0 0 0 2px ${CHART_PALETTE.accent}, 0 2px 8px ${hexToRgba(CHART_PALETTE_PRO.bg, 0.08)}`
                           : undefined,
                       }}
                       onMouseEnter={(e) => {

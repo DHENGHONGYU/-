@@ -120,8 +120,9 @@ export const COLOR_SHADES = {
   },
   indigo: {
     100: 'bg-indigo-100',
+    500: 'text-indigo-500',
     700: 'text-indigo-700',
-    hex: { 100: '#e0e7ff', 700: '#4338ca' },
+    hex: { 100: '#e0e7ff', 500: '#6366f1', 700: '#4338ca' },
   },
   teal: {
     100: 'bg-teal-100',
@@ -130,8 +131,13 @@ export const COLOR_SHADES = {
   },
   cyan: {
     100: 'bg-cyan-100',
+    500: 'text-cyan-500',
     700: 'text-cyan-700',
-    hex: { 100: '#cffafe', 700: '#0e7490' },
+    hex: { 100: '#cffafe', 500: '#06b6d4', 700: '#0e7490' },
+  },
+  pink: {
+    500: 'text-pink-500',
+    hex: { 500: '#ec4899' },
   },
   orange: {
     100: 'bg-orange-100',

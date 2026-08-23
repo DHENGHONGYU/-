@@ -401,7 +401,7 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
                 fontFamily: 'monospace',
                 padding: '2px 8px',
                 borderRadius: '4px',
-                background: 'rgba(19,23,34,0.7)',
+                background: CHART_PALETTE_PRO.bg + 'b3',
                 backdropFilter: 'blur(4px)',
                 color: data[data.length - 1]!.close >= data[data.length - 1]!.open
                   ? positiveColor

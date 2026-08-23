@@ -1,9 +1,13 @@
 ---
+skill_id: V9-SKILL-INDUSTRY-SCORE
 name: "industry-score"
 description: "行业评分技能：执行行业级别的综合评分分析，输出行业得分供个股分析模型 L-1 层使用。Invoke when 用户在行业评分页面触发评分、sectorSkillData 量化数据更新、上传新行业资料或政策研报文本、距上次评分超过 3.5 天需要刷新时。"
-version: "v1.0.4"
-last_updated: "2026-08-21"
+version: "v1.0.5"
+last_updated: "2026-08-23"
 change_log:
+  - version: v1.0.5
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
   - version: v1.0.4
     changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
     date: 2026-08-21

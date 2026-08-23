@@ -4,6 +4,8 @@
   * @doc []
 */
 
+import { COLOR_SHADES } from '@/constants/theme.tokens'
+
 // ============================================================
 // 健康状态枚举
 // @remarks 与服务端 healthStatus/statusCode 保持一一映射
@@ -18,7 +20,7 @@ export const HEALTH_STATUS = {
 export type HealthStatus = (typeof HEALTH_STATUS)[keyof typeof HEALTH_STATUS]
 
 /**
- * 健康状态映射表
+ * 健康状态映射表 — 颜色全部从 COLOR_SHADES 读取，禁止裸 hex
  */
 export const HEALTH_STATUS_MAP: Record<
   HealthStatus,
@@ -32,28 +34,28 @@ export const HEALTH_STATUS_MAP: Record<
 > = {
   [HEALTH_STATUS.HEALTHY]: {
     label: '正常',
-    color: '#22c55e',
+    color: COLOR_SHADES.green.hex[500],
     bgClass: 'bg-green-500',
     textClass: 'text-green-500',
     icon: 'check-circle',
   },
   [HEALTH_STATUS.WARNING]: {
     label: '预警',
-    color: '#f59e0b',
+    color: COLOR_SHADES.amber.hex[500],
     bgClass: 'bg-amber-500',
     textClass: 'text-amber-500',
     icon: 'alert-triangle',
   },
   [HEALTH_STATUS.CRITICAL]: {
     label: '异常',
-    color: '#ef4444',
+    color: COLOR_SHADES.red.hex[500],
     bgClass: 'bg-red-500',
     textClass: 'text-red-500',
     icon: 'x-circle',
   },
   [HEALTH_STATUS.UNKNOWN]: {
     label: '未知',
-    color: '#9ca3af',
+    color: COLOR_SHADES.gray.hex[400],
     bgClass: 'bg-gray-400',
     textClass: 'text-gray-400',
     icon: 'help-circle',
@@ -91,6 +93,9 @@ export const DIAGNOSTIC_LEVEL = {
 
 export type DiagnosticLevel = (typeof DIAGNOSTIC_LEVEL)[keyof typeof DIAGNOSTIC_LEVEL]
 
+/**
+ * 诊断等级映射表 — 颜色全部从 COLOR_SHADES 读取，禁止裸 hex
+ */
 export const DIAGNOSTIC_LEVEL_MAP: Record<
   DiagnosticLevel,
   {
@@ -99,10 +104,10 @@ export const DIAGNOSTIC_LEVEL_MAP: Record<
     bgClass: string
   }
 > = {
-  [DIAGNOSTIC_LEVEL.EXCELLENT]: { label: '优秀', color: '#22c55e', bgClass: 'bg-green-500' },
-  [DIAGNOSTIC_LEVEL.GOOD]: { label: '良好', color: '#3b82f6', bgClass: 'bg-blue-500' },
-  [DIAGNOSTIC_LEVEL.AVERAGE]: { label: '一般', color: '#f59e0b', bgClass: 'bg-amber-500' },
-  [DIAGNOSTIC_LEVEL.POOR]: { label: '较差', color: '#ef4444', bgClass: 'bg-red-500' },
+  [DIAGNOSTIC_LEVEL.EXCELLENT]: { label: '优秀', color: COLOR_SHADES.green.hex[500], bgClass: 'bg-green-500' },
+  [DIAGNOSTIC_LEVEL.GOOD]: { label: '良好', color: COLOR_SHADES.blue.hex[500], bgClass: 'bg-blue-500' },
+  [DIAGNOSTIC_LEVEL.AVERAGE]: { label: '一般', color: COLOR_SHADES.amber.hex[500], bgClass: 'bg-amber-500' },
+  [DIAGNOSTIC_LEVEL.POOR]: { label: '较差', color: COLOR_SHADES.red.hex[500], bgClass: 'bg-red-500' },
 }
 
 // ============================================================
@@ -145,7 +150,7 @@ export const V6_ENGINE_LAYERS = [
 ] as const
 
 // ============================================================
-// 系统架构分层定义
+// 系统架构分层定义 — 颜色全部从 COLOR_SHADES 读取
 // ============================================================
 export const SYSTEM_ARCHITECTURE_LAYERS = [
   {
@@ -153,55 +158,55 @@ export const SYSTEM_ARCHITECTURE_LAYERS = [
     name: '配置层',
     description: '零硬编码锚点，全局配置注入',
     modules: ['dbConfig', 'inputConfig', 'routes', 'thresholds', 'dualStrategyRules'],
-    color: '#6366f1',
+    color: COLOR_SHADES.indigo.hex[500],
   },
   {
     id: 'core',
     name: '核心层',
     description: '核心工具与类型守卫',
     modules: ['DataBridge', 'ACL', 'Envelope', 'MemoryCache'],
-    color: '#8b5cf6',
+    color: COLOR_SHADES.purple.hex[500],
   },
   {
     id: 'data',
     name: '数据层',
     description: 'IndexedDB 数据访问层',
     modules: ['dataLayer', 'db', 'types', 'queryBuilder'],
-    color: '#06b6d4',
+    color: COLOR_SHADES.cyan.hex[500],
   },
   {
     id: 'services',
     name: '服务层',
     description: '30+ 子域业务服务',
     modules: ['analysis', 'scoring', 'fetcher', 'news', 'llm', 'execution', 'portfolio', 'input', 'data-collector', 'system'],
-    color: '#10b981',
+    color: COLOR_SHADES.emerald.hex[500],
   },
   {
     id: 'agents',
     name: '智能体层',
     description: 'AI Agent 注册与调度',
     modules: ['agentRegistry', 'baseAgent', 'analysisAgent', 'researchAgent'],
-    color: '#f59e0b',
+    color: COLOR_SHADES.amber.hex[500],
   },
   {
     id: 'store',
     name: '状态层',
     description: '63个Zustand Store',
     modules: ['analysisStore', 'engineStore', 'tradingStore', 'portfolioStore'],
-    color: '#ef4444',
+    color: COLOR_SHADES.red.hex[500],
   },
   {
     id: 'pages',
     name: '页面层',
     description: '5舱页面入口',
     modules: ['input', 'analysis', 'trading', 'output', 'command'],
-    color: '#ec4899',
+    color: COLOR_SHADES.pink.hex[500],
   },
   {
     id: 'components',
     name: '组件层',
     description: 'UI组件库',
     modules: ['ui', 'cabin', 'chart', 'pool', 'news', 'strategy'],
-    color: '#f97316',
+    color: COLOR_SHADES.orange.hex[500],
   },
 ] as const

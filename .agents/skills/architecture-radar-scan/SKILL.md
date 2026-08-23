@@ -1,9 +1,17 @@
 ---
+skill_id: V9-SKILL-ARCHITECTURE-RADAR-SCAN
 name: "architecture-radar-scan"
 description: "对V9项目进行六层架构无损探测，揪出设计层面的重大遗漏与隐含腐化点，输出架构热力风险图（红/黄/绿）与分级修复方案（P0阻塞/P1严重/P2优化）。复用项目自带的5个审计脚本（audit:layers/hardcode/deadcode/component-usage/docs）与ESLint静态分析，结合人工探查覆盖循环依赖、贫血模型、防腐层缺失、大组件癌变、用例缺失、僵尸代码等12类架构缺陷。Invoke when user asks for architecture health scan, architecture audit, design flaw detection, tech debt assessment, or mentions 架构扫描/架构健康度/架构雷达/腐化点检测/遗漏点排查；版本迭代前技术债务评估、重大重构前基线建立、定期架构巡检（每两周一次）。"
-version: "v1.0.2"
-last_updated: "2026-08-21"
+version: v1.0.4
+last_updated: 2026-08-23
+code_version: "2.0.0-rc.1"
 change_log:
+  - version: v1.0.4
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
+  - version: v1.0.3
+    changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.2) → R2 PATCH++(v1.0.3) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
   - version: v1.0.2
     changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥4，满足 RULE-TPL §一 可判定规则校验。"
     date: 2026-08-21

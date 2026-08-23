@@ -62,13 +62,13 @@ const INPUT_PAGES: PageEntry[] = [
   { key: 'hot-sectors', label: '热门板块', path: '/input/hot-sectors', category: '候选池管理', status: 'active', remark: '从录入看板Tab拆分出的独立页' },
   { key: 'local-knowledge', label: '本地知识库', path: '/input/local-knowledge', category: '候选池管理', status: 'active', remark: '本地文档资产管理' },
   { key: 'collection-monitor', label: '采集监控台', path: '/input/collection-monitor', category: '采集中心', status: 'active', remark: '链路测试+任务监控合并面板' },
-  { key: 'collection-strategy', label: '采集策略配置', path: '/input/collection-strategy', category: '采集中心', status: 'active', remark: '七维策略+抓取引擎合并面板' },
+  { key: 'collection-strategy', label: '采集策略配置', path: '/input/collection-strategy', category: '采集中心', status: 'active', remark: '十六维策略+抓取引擎合并面板（历史沿用“七维”命名）' },
   { key: 'system-test', label: '系统测试看板', path: '/input/system-test', category: '采集中心', status: 'active', remark: '输入舱系统测试一体化看板' },
   // 已合并/废弃路由
   { key: 'bulk-import', label: '批量导入', path: '/input/bulk-import', category: '候选池管理', status: 'deprecated', mergedInto: '/input', remark: '已整合至录入看板，fallback到/input' },
   { key: 'data-test', label: '采集测试', path: '/input/data-test', category: '采集中心', status: 'merged', mergedInto: '/input/collection-monitor', remark: '已合并至采集监控台(链路测试Tab)' },
   { key: 'collect-tasks', label: '采集任务', path: '/input/collect-tasks', category: '采集中心', status: 'merged', mergedInto: '/input/collection-monitor', remark: '已合并至采集监控台(任务监控Tab)' },
-  { key: 'seven-dim', label: '七维采集配置', path: '/input/seven-dim', category: '采集中心', status: 'merged', mergedInto: '/input/collection-strategy', remark: '已合并至采集策略配置(七维策略Tab)' },
+  { key: 'seven-dim', label: '七维采集配置', path: '/input/seven-dim', category: '采集中心', status: 'merged', mergedInto: '/input/collection-strategy', remark: '已合并至采集策略配置(采集策略Tab)' },
   { key: 'fetcher-config', label: '抓取引擎配置', path: '/input/fetcher-config', category: '采集中心', status: 'merged', mergedInto: '/input/collection-strategy', remark: '已合并至采集策略配置(抓取引擎Tab)' },
 ]
 

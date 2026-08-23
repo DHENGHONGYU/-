@@ -1,9 +1,13 @@
 ---
+skill_id: V9-SKILL-GATEWAY-FACADE-REFACTOR
 name: "gateway-facade-refactor"
 description: "端到端执行 Gateway 门面化架构重构 6 阶段 SOP：过渡期白名单→方案选型→门面创建→核心迁移→业务重构→契约收尾与全绿验证。Invoke when 需要将散落在多层的直接数据访问（裸 db/IDBTransaction/dataLayer 调用）收敛到统一的门面层，或 audit:db-references/audit:layers 报告大量跨层违规。"
-version: v1.0.1
-last_updated: 2026-08-21
+version: v1.0.2
+last_updated: 2026-08-23
 change_log:
+  - version: v1.0.2
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
   - version: v1.0.1
     changes: "基于 S 级 5 段式骨架模板重构（迁移检查清单 Batch-C 打磨）：FM 补 mandatory=false 对齐 registry；原 5 段自定义标题重映射为标准一~五段；§二 4 项前置检查扩展为 7 项表格+先扫后改铁律；§三 6 Phase 保持完整，每 Phase 显式标注目标/交付物/模板；§五 9 项交付物扩展为 14 项+必要充分条件声明；last_updated 2026-08-21 升版激活 RULE-TPL 信号"
     date: 2026-08-21

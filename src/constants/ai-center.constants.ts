@@ -4,6 +4,8 @@
   * @doc []
 */
 
+import { COLOR_SHADES } from '@/constants/theme.tokens'
+
 // ============================================================
 // Agent 运行状态枚举
 // @remarks 与服务端 statusCode 保持一一映射
@@ -20,6 +22,7 @@ export type AgentStatus = (typeof AGENT_STATUS)[keyof typeof AGENT_STATUS]
 /**
  * Agent 状态映射表
  * @description 将服务端返回的状态码映射为中文标签、颜色、图标等 UI 展示信息
+ * — 颜色全部从 COLOR_SHADES 读取，禁止裸 hex
  */
 export const AI_AGENT_STATUS_MAP: Record<
   AgentStatus,
@@ -38,28 +41,28 @@ export const AI_AGENT_STATUS_MAP: Record<
 > = {
   [AGENT_STATUS.NORMAL]: {
     label: '正常',
-    color: '#22c55e',
+    color: COLOR_SHADES.green.hex[500],
     bgClass: 'bg-green-500',
     textClass: 'text-green-500',
     icon: 'check-circle',
   },
   [AGENT_STATUS.WARNING]: {
     label: '预警',
-    color: '#f59e0b',
+    color: COLOR_SHADES.amber.hex[500],
     bgClass: 'bg-amber-500',
     textClass: 'text-amber-500',
     icon: 'alert-triangle',
   },
   [AGENT_STATUS.ERROR]: {
     label: '异常',
-    color: '#ef4444',
+    color: COLOR_SHADES.red.hex[500],
     bgClass: 'bg-red-500',
     textClass: 'text-red-500',
     icon: 'x-circle',
   },
   [AGENT_STATUS.PAUSED]: {
     label: '已暂停',
-    color: '#9ca3af',
+    color: COLOR_SHADES.gray.hex[400],
     bgClass: 'bg-gray-400',
     textClass: 'text-gray-400',
     icon: 'pause-circle',
@@ -80,7 +83,7 @@ export const AGENT_TAG = {
 export type AgentTag = (typeof AGENT_TAG)[keyof typeof AGENT_TAG]
 
 /**
- * Agent 标签映射表
+ * Agent 标签映射表 — 颜色全部从 COLOR_SHADES 读取，禁止裸 hex
  */
 export const AGENT_TAG_MAP: Record<
   AgentTag,
@@ -93,25 +96,25 @@ export const AGENT_TAG_MAP: Record<
 > = {
   [AGENT_TAG.LLM]: {
     label: 'LLM模型',
-    color: '#8b5cf6',
+    color: COLOR_SHADES.purple.hex[500],
     bgClass: 'bg-violet-500',
     icon: 'brain',
   },
   [AGENT_TAG.KNOWLEDGE]: {
     label: '知识库',
-    color: '#3b82f6',
+    color: COLOR_SHADES.blue.hex[500],
     bgClass: 'bg-blue-500',
     icon: 'book-open',
   },
   [AGENT_TAG.TOOL]: {
     label: '工具链',
-    color: '#10b981',
+    color: COLOR_SHADES.emerald.hex[500],
     bgClass: 'bg-emerald-500',
     icon: 'wrench',
   },
   [AGENT_TAG.STRATEGY]: {
     label: '策略',
-    color: '#f59e0b',
+    color: COLOR_SHADES.amber.hex[500],
     bgClass: 'bg-amber-500',
     icon: 'trending-up',
   },
@@ -151,13 +154,13 @@ export const AGENT_TYPE_MAP: Record<
 }
 
 // ============================================================
-// 顶部总览卡片配置
+// 顶部总览卡片配置 — 颜色全部从 COLOR_SHADES 读取，禁止裸 hex
 // ============================================================
 export const AGENT_OVERVIEW_CARDS = [
-  { key: 'totalAgents', label: '智能体总数', icon: 'bot', color: '#3b82f6' },
-  { key: 'knowledgeUsage', label: '知识库使用', icon: 'book-open', color: '#8b5cf6' },
-  { key: 'taskExecutions', label: '任务执行', icon: 'zap', color: '#f59e0b' },
-  { key: 'monitorAlerts', label: '监控告警', icon: 'bell', color: '#ef4444' },
+  { key: 'totalAgents', label: '智能体总数', icon: 'bot', color: COLOR_SHADES.blue.hex[500] },
+  { key: 'knowledgeUsage', label: '知识库使用', icon: 'book-open', color: COLOR_SHADES.purple.hex[500] },
+  { key: 'taskExecutions', label: '任务执行', icon: 'zap', color: COLOR_SHADES.amber.hex[500] },
+  { key: 'monitorAlerts', label: '监控告警', icon: 'bell', color: COLOR_SHADES.red.hex[500] },
 ] as const
 
 // ============================================================

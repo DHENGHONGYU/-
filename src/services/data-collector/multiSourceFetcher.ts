@@ -82,7 +82,9 @@ async function safeFetch(url: string, timeoutMs = DEFAULT_REQUEST_TIMEOUT_MS): P
   return _safeFetch(url, { timeoutMs, requireOk: true }, '[multiSourceFetcher]')
 }
 
-/** 从本地 Mock 服务拉取维度数据（开发环境 fallback） */
+/** 从本地 Mock 服务拉取维度数据（开发环境 fallback）
+ * @deprecated AKSHARE_LOCAL_BASE_URL 本地 Python 服务已不常用，此分支仅保留为开发环境兆底。
+ * 生产环境应依赖 Tushare / 东财爬虫 / MCP 源。后续可考虑移除。 */
 async function fetchFromMockServer(symbol: string, dimensionCode: string): Promise<Record<string, unknown> | null> {
   const pathMap: Record<string, string> = {
     '03': '/collect/chip',
@@ -718,7 +720,7 @@ export async function fetchDimensionData(
     }
     case '04': {
       // 优先级 1: 腾讯 MCP（westock 公告）已内置于 fetchNews
-      const news = await fetchNews(symbol, 'announcement')
+      const news = await fetchNews(symbol, 'announcement', stockName)
       if (news.length > 0) return { items: news, symbol, count: news.length, date: new Date().toISOString(), _source: (news[0]?._source) ?? 'unknown' }
       // 优先级 2: iFinD MCP 补充（腾讯 MCP 失败后降级）
       const mcpResult = await collectSupplementaryMcp(symbol, '04')
@@ -729,7 +731,7 @@ export async function fetchDimensionData(
     }
     case '05': {
       // 优先级 1: 腾讯 MCP（westock + tencentnews 并行）已内置于 fetchNews
-      const news = await fetchNews(symbol, 'hot_news')
+      const news = await fetchNews(symbol, 'hot_news', stockName)
       if (news.length !== 0) return { items: news, symbol, count: news.length, date: new Date().toISOString(), _source: (news[0]?._source) ?? 'unknown' }
       // 优先级 2: iFinD MCP 补充
       const mcpResult = await collectSupplementaryMcp(symbol, '05')
@@ -754,7 +756,7 @@ export async function fetchDimensionData(
     }
     case '08': {
       // 优先级 1: 腾讯 MCP（westock 研报）已内置于 fetchResearchReports
-      const reports = await fetchResearchReports(symbol)
+      const reports = await fetchResearchReports(symbol, stockName)
       if (reports.length > 0) return { items: reports, symbol, count: reports.length, date: new Date().toISOString(), _source: (reports[0]?._source) ?? 'unknown' }
       // 优先级 2: iFinD MCP 补充
       const mcpResult = await collectSupplementaryMcp(symbol, '08')
@@ -764,7 +766,11 @@ export async function fetchDimensionData(
       return null
     }
     // 维度 10-14: 热门板块/技术指标/资金流向/机构持仓/估值分析
-    // 统一走 MCP 采集（已在函数入口处理），此处作为 MCP 失败后的兜底
+    // 统一走 MCP 采集（已在函数入口 collectNonNewsDimensionViaMcp 处理）。
+    // 设计决策（P2-2 评估，2026-08-23）：这些维度依赖 MCP 专业金融数据源，
+    // 无公开 API 替代，MCP 失败时由 collectionPipeline.generateDataForDimension
+    // 记录失败 + 不生成 mock，符合「真实源失败不写假数据」原则。
+    // 后续若接入新源（如 Tushare 资金流向 API），可在此处添加降级分支。
     case '10':
     case '11':
     case '12':

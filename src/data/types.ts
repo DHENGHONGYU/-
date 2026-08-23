@@ -230,7 +230,7 @@ export type {
   WorkflowRun,
   ScheduleDef,
   TriggerDef,
-} from './types/types.workflow'
+} from '@/types/modules/workflow.types'
 
 // ── Schema 迁移追踪记录类型 ──
 export type { SchemaMigrationRecord } from './types/types.schemaMigrations'

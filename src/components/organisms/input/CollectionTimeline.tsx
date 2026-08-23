@@ -26,6 +26,7 @@ const STAGE_LABELS: Record<CollectionLifecycleStage, string> = {
   'source:success': '源成功',
   'source:fail': '源失败',
   fallback: '降级',
+  retry: '重试',
   transform: '数据适配',
   'write:start': '写入开始',
   'write:success': '写入成功',

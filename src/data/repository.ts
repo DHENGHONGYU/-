@@ -55,6 +55,12 @@ export interface RepositoryConfig<T, TKey> {
   deleteAction: keyof typeof ENVELOPE_ACTION
   /** 来源模块，缺省 system（拥有全部读写权限） */
   source?: ModuleId
+  /**
+   * delete 载荷的键名，缺省 'key'（历史行为）。
+   * 不同 Handler 对删除载荷形状要求不一：DeleteStockHandler 期望 { symbol }，
+   * 通用 DeleteHandler 期望 { id }，需按目标 action 显式指定。
+   */
+  deleteKeyField?: string
   /** 从实体解析主键，用于日志与 key 透传 */
   keyOf: (entity: T) => TKey
 }
@@ -161,7 +167,8 @@ export function createRepository<T, TKey = string>(
 
     async delete(key: TKey): Promise<DataLayerResult<void>> {
       logger.info(`[Repository] ${config.store} delete: key=${String(key)}`)
-      return forward(config.deleteAction, { key: key as string })
+      const keyField = config.deleteKeyField ?? 'key'
+      return forward(config.deleteAction, { [keyField]: key as string })
     },
   }
 }

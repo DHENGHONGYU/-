@@ -1,9 +1,13 @@
 ---
+skill_id: V9-SKILL-COLLECTION-PIPELINE-GOVERNANCE
 name: "collection-pipeline-governance"
 description: "采集管线全链路治理 SOP：7 维配置安全修改、新 MCP/REST 数据源接入、降级阈值与计分策略调整、月度 API 预算评估、stock 字典增量重建、真实取数回归 6 大场景闭环。Invoke when 修改 sevenDimConfigStore（启用/停用维度、频率、模板）、接入新数据源（BaseCollector/Tushare/IFind/MCP 源）、调整 SourcePriorityManager/QualityMetricsCollector/DegradationScorer 参数、或 build:stock-dict/data-collector:dry-run/collection-pipeline:prod 门禁 FAIL 时加载。"
-version: "v1.0.1"
-last_updated: "2026-08-21"
+version: "v1.0.2"
+last_updated: "2026-08-23"
 change_log:
+  - version: v1.0.2
+    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+    date: 2026-08-23
   - version: v1.0.1
     changes: "基于 S 级 5 段式骨架模板补齐（迁移检查清单 Batch-C 打磨）：§二 6 项→7 项前置检查表格化；§五 10 项→12 项交付物（补 registry 对齐+配置快照保存声明）；§五末尾新增必要且充分条件声明；last_updated 2026-08-21 升版激活 RULE-TPL 信号；整体内容子项 14/15→15/15 全满"
     date: 2026-08-21

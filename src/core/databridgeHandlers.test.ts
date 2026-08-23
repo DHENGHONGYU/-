@@ -31,6 +31,11 @@ vi.mock('@/lib/logger', () => ({
   getLogger: () => mockLogger,
 }))
 
+vi.mock('@/lib/utils', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/utils')>()
+  return { ...actual, now: () => 1700000000000 }
+})
+
 vi.mock('@/data/db', () => ({
   db: {
     isReady: vi.fn(() => true),
@@ -760,10 +765,10 @@ describe('databridgeHandlers', () => {
         'readwrite',
         expect.any(Function),
       )
-      expect(putMock).toHaveBeenCalledTimes(3)
-      expect(putMock).toHaveBeenCalledWith(items[0])
-      expect(putMock).toHaveBeenCalledWith(items[1])
-      expect(putMock).toHaveBeenCalledWith(items[2])
+      expect(vi.mocked(dbModule.db.put)).toHaveBeenCalledTimes(3)
+      expect(vi.mocked(dbModule.db.put)).toHaveBeenCalledWith(STORE_NAME.stocks, items[0])
+      expect(vi.mocked(dbModule.db.put)).toHaveBeenCalledWith(STORE_NAME.stocks, items[1])
+      expect(vi.mocked(dbModule.db.put)).toHaveBeenCalledWith(STORE_NAME.stocks, items[2])
     })
 
     it('空数组时跳过', async () => {

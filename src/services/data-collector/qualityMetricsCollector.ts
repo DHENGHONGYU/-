@@ -34,8 +34,8 @@ export interface QualityMetrics {
   realSuccessRate: number
   /** 数据完整率（非空字段数/总字段数） */
   completeness: number
-  /** 各数据源使用次数（报价链源 + MCP 多维源 westock） */
-  sourceCounts: Record<DataSource, number>
+  /** 各数据源使用次数（报价链源 + MCP 多维源 westock）。动态递增，无需预置全量 key。 */
+  sourceCounts: Partial<Record<DataSource, number>>
   /** 降级次数 */
   fallbackCount: number
   /** 写入成功次数 */
@@ -76,7 +76,7 @@ class QualityMetricsCollector {
       mockCollects: 0,
       mockSuccesses: 0,
       completeness: 0,
-      sourceCounts: { tushare: 0, tencent: 0, sina: 0, netease: 0, akshare: 0, mock: 0, westock: 0, tencentnews: 0, ifind_mcp: 0, tencent_mcp: 0 },
+      sourceCounts: {},
       fallbackCount: 0,
       writeSuccess: 0,
       writeTotal: 0,

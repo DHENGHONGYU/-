@@ -41,6 +41,30 @@ export interface KDJResult {
 }
 
 /**
+ * 安全计算数组最小值（避免展开运算符导致栈溢出）
+ */
+function safeMin(arr: number[]): number {
+  if (arr.length === 0) return 0
+  let min = arr[0]!
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i]! < min) min = arr[i]!
+  }
+  return min
+}
+
+/**
+ * 安全计算数组最大值（避免展开运算符导致栈溢出）
+ */
+function safeMax(arr: number[]): number {
+  if (arr.length === 0) return 0
+  let max = arr[0]!
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i]! > max) max = arr[i]!
+  }
+  return max
+}
+
+/**
  * 计算 KDJ 指标
  * 
  * @param data K线数据
@@ -154,9 +178,9 @@ export function computeKDJ(
     kLast: kValues[kValues.length - 1]?.toFixed(2),
     dLast: dValues[dValues.length - 1]?.toFixed(2),
     jLast: jValues[jValues.length - 1]?.toFixed(2),
-    kRange: `[${Math.min(...kValues).toFixed(2)}, ${Math.max(...kValues).toFixed(2)}]`,
-    dRange: `[${Math.min(...dValues).toFixed(2)}, ${Math.max(...dValues).toFixed(2)}]`,
-    jRange: `[${Math.min(...jValues).toFixed(2)}, ${Math.max(...jValues).toFixed(2)}]`,
+    kRange: `[${safeMin(kValues).toFixed(2)}, ${safeMax(kValues).toFixed(2)}]`,
+    dRange: `[${safeMin(dValues).toFixed(2)}, ${safeMax(dValues).toFixed(2)}]`,
+    jRange: `[${safeMin(jValues).toFixed(2)}, ${safeMax(jValues).toFixed(2)}]`,
   })
   
   // 转换为 lightweight-charts 数据格式

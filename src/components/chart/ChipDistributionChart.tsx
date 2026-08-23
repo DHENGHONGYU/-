@@ -12,7 +12,7 @@
  *
  * @module components/chart/ChipDistributionChart
  * @created 2026-08-09 - P1 阶段筹码分布数据接入
- * @updated 2026-08-10 - 像素级精准渲染 + 买卖点标记
+ * @updated 2026-08-22 - 数值安全兜底统一至 toSingleNum
  */
 
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
@@ -93,6 +93,20 @@ export function ChipDistributionChart({
     maxTurnoverRate,
   } = data
 
+  // 数值安全兜底：运行时可能传入不完整数据，统一用 toSingleNum 记录日志
+  const safePriceMin = toSingleNum(priceMin, 'priceMin')
+  const safePriceMax = toSingleNum(priceMax, 'priceMax')
+  const safeProfitRatio = toSingleNum(profitRatio, 'profitRatio')
+  const safeAvgCost = toSingleNum(avgCost, 'avgCost')
+  const safeConcentration = toSingleNum(concentration, 'concentration')
+  const safeCurrentPrice = toSingleNum(currentPrice, 'currentPrice')
+  const safeCostCenter = toSingleNum(costCenter, 'costCenter')
+  const safeCostLow = toSingleNum(costLow, 'costLow')
+  const safeCostHigh = toSingleNum(costHigh, 'costHigh')
+  const safeCoverageRatio = toSingleNum(coverageRatio, 'coverageRatio')
+  const safeAvgTurnoverRate = toSingleNum(avgTurnoverRate, 'avgTurnoverRate')
+  const safeMaxTurnoverRate = toSingleNum(maxTurnoverRate, 'maxTurnoverRate')
+
   const containerRef = useRef<HTMLDivElement>(null)
   const [containerWidth, setContainerWidth] = useState(FALLBACK_WIDTH)
 
@@ -115,22 +129,20 @@ export function ChipDistributionChart({
 
   const { maxPct, priceToY } = useMemo(() => {
     const mp = Math.max(...chipPercent, 1)
-    const range = (priceMax ?? 0) - (priceMin ?? 0) || 1
+    const range = safePriceMax - safePriceMin || 1
     const toY = (price: number): number => {
-      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
-      const ratio = (price - (priceMin ?? 0)) / range
+      const ratio = (price - safePriceMin) / range
       return PAD_TOP + (1 - ratio) * chartHeight
     }
     return { maxPct: mp, priceToY: toY }
-  }, [chipPercent, priceMin, priceMax, chartHeight])
+  }, [chipPercent, safePriceMin, safePriceMax, chartHeight])
 
   const stats = useMemo(() => {
-    const profit = profitRatio ?? 0
+    const profit = safeProfitRatio
     const loss = 100 - profit
     const profitColor =
       profit >= 60 ? CHART_PALETTE.upColor : profit >= 30 ? CHART_PALETTE.series3 : CHART_PALETTE.downColor
-    // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
-    const coverage = coverageRatio ?? 0
+    const coverage = safeCoverageRatio
     const coverageColor =
       coverage >= 80 ? CHART_PALETTE.upColor : coverage >= 50 ? CHART_PALETTE.series3 : CHART_PALETTE.downColor
     const coverageLabel = coverage >= 80 ? '良好' : coverage >= 50 ? '一般' : '不足'
@@ -138,37 +150,29 @@ export function ChipDistributionChart({
       profit,
       loss,
       profitColor,
-      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
-      avgCost: avgCost ?? 0,
-      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
-      concentration: concentration ?? 0,
-      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
-      currentPrice: currentPrice ?? 0,
-      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
-      costCenter: costCenter ?? 0,
-      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
-      costLow: costLow ?? 0,
-      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
-      costHigh: costHigh ?? 0,
+      avgCost: safeAvgCost,
+      concentration: safeConcentration,
+      currentPrice: safeCurrentPrice,
+      costCenter: safeCostCenter,
+      costLow: safeCostLow,
+      costHigh: safeCostHigh,
       coverage,
       coverageColor,
       coverageLabel,
-      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
-      avgTurnoverRate: avgTurnoverRate ?? 0,
-      // 静默回退(数值零兜底)：确认数据源可能为 undefined/null
-      maxTurnoverRate: maxTurnoverRate ?? 0,
+      avgTurnoverRate: safeAvgTurnoverRate,
+      maxTurnoverRate: safeMaxTurnoverRate,
     }
   }, [
-    profitRatio,
-    avgCost,
-    concentration,
-    currentPrice,
-    costCenter,
-    costLow,
-    costHigh,
-    coverageRatio,
-    avgTurnoverRate,
-    maxTurnoverRate,
+    safeProfitRatio,
+    safeAvgCost,
+    safeConcentration,
+    safeCurrentPrice,
+    safeCostCenter,
+    safeCostLow,
+    safeCostHigh,
+    safeCoverageRatio,
+    safeAvgTurnoverRate,
+    safeMaxTurnoverRate,
   ])
 
   const priceLabelData = useMemo(() => {
@@ -317,7 +321,7 @@ export function ChipDistributionChart({
           {chipPercent.map((pct, i) => {
             const y = PAD_TOP + i * barHeightPx
             const widthPx = Math.max((pct / maxPct) * chartWidth, MIN_BAR_WIDTH_PX)
-            const price = priceBins[i] ?? 0
+            const price = toSingleNum(priceBins[i], `priceBins[${i}]`)
             const isProfit = currentPrice != null && price < currentPrice
             return (
               <rect

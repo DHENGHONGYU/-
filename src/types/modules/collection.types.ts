@@ -22,7 +22,7 @@
  *  │    .taskStatuses (Record<taskId, CollectionTaskRuntime>) │
  *  │    .stats        (QualityMetrics)                        │
  *  │  - dataTestStore            → 单链路/批量测试状态         │
- *  │  - sevenDimConfigStore      → 七维维度配置               │
+ *  │  - sevenDimConfigStore      → 采集维度配置（历史沿用“七维”命名，实际十六维） │
  *  └──────────────────────┬──────────────────────────────────┘
  *                         │ Store 消费
  *  ┌──────────────────────▼──────────────────────────────────┐
@@ -47,7 +47,7 @@
 /** 直连行情数据源标识（用于 dataSourceOrchestrator 的降级链） */
 export type QuoteDataSourceId = 'tencent' | 'sina' | 'netease' | 'akshare' | 'tushare' | 'mock' | 'ifind_mcp' | 'tencent_mcp'
 
-/** 业务数据源类型（用于七维配置中的维度数据源） */
+/** 业务数据源类型（用于采集配置中的维度数据源） */
 export type DataSourceType = 'mcp' | 'akshare' | 'ifind' | 'tushare' | 'yahoo' | 'tianyancha' | 'scholar' | 'cache'
 
 /** 采集频率 */
@@ -237,6 +237,7 @@ export type CollectionLifecycleStage =
   | 'source:success'
   | 'source:fail'
   | 'fallback'
+  | 'retry'
   | 'transform'
   | 'write:start'
   | 'write:success'
@@ -251,6 +252,7 @@ export const COLLECTION_EVENTS = {
   SOURCE_SUCCESS: 'collect:source:success',
   SOURCE_FAIL: 'collect:source:fail',
   FALLBACK: 'collect:fallback',
+  RETRY: 'collect:retry',
   TRANSFORM: 'collect:transform',
   WRITE_START: 'collect:write:start',
   WRITE_SUCCESS: 'collect:write:success',
