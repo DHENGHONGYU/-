@@ -113,9 +113,12 @@ describe('LocalKnowledgePage', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByText('暂无文档，点击“导入示例数据”进行测试。')).toBeInTheDocument()
-
-    await userEvent.click(screen.getByRole('button', { name: '导入示例数据' }))
+    // 2026-08-23 Token Plan 处理事项修复：新 UI 空态拆分为 EmptyState title「暂无文档」+ description，不再是单串文案
+    expect(screen.getByText('暂无文档')).toBeInTheDocument()
+    expect(screen.getByText(/导入示例数据/)).toBeInTheDocument()
+    
+    // 2026-08-23 Token Plan 处理事项修复：空态下工具栏与 EmptyState action 各有一个同名按钮，取首个容错
+    await userEvent.click(screen.getAllByRole('button', { name: '导入示例数据' })[0])
 
     expect(await screen.findByText('贵州茅台2024年研报')).toBeInTheDocument()
     expect(screen.getByText('腾讯控股财报摘要')).toBeInTheDocument()
@@ -173,7 +176,8 @@ describe('LocalKnowledgePage', () => {
       </MemoryRouter>,
     )
 
-    const importBtn = screen.getByRole('button', { name: '导入示例数据' })
+    // 2026-08-23 Token Plan 处理事项修复：空态下工具栏与 EmptyState action 各有一个「导入示例数据」按钮，取工具栏首个
+    const importBtn = screen.getAllByRole('button', { name: '导入示例数据' })[0]
     await userEvent.click(importBtn)
 
     await waitFor(() => {
@@ -197,7 +201,8 @@ describe('LocalKnowledgePage', () => {
       </MemoryRouter>,
     )
 
-    await userEvent.click(screen.getByRole('button', { name: '导入示例数据' }))
+    // 2026-08-23 Token Plan 处理事项修复：空态下工具栏与 EmptyState action 各有一个同名按钮，取首个容错
+    await userEvent.click(screen.getAllByRole('button', { name: '导入示例数据' })[0])
 
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith(
