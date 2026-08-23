@@ -1,10 +1,13 @@
 ---
 title: AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 status: active
-version: v1.7.8
+version: v1.7.10
 last_updated: 2026-08-23
 code_version: "2.0.0-rc.2"
 change_log:
+  - version: v1.7.10
+    changes: "2026-08-23 跨平台 SKILL 体系统一收尾（虚拟清零）：① 16 个检查/分析/校对类虚拟技能物理化迁入 .agents/skills/（自用户级 ~/.trae-cn/skills 与 ~/.workbuddy/skills 归位，S 级 5 段式，自然 slug 去 v9- 前缀）：module-sync-checklist（MAND）/code-quality-audit（MAND）/dev-checklist/health-audit/tsc-gate-scope-audit/tsc-test-error-diagnosis/doc-encoding-remediation/mock-data-diagnosis/windows-env-path-doctor/bash-conventions/color-token-remediation/stale-path-reference-audit/cross-index-governance（MAND）/doc-management-principles/architecture-debt-remediation（MAND）/component-health-check；② 3 组影子重复删除（v9-data-flow-integrity-audit/v9-databridge-migration/v9-constant-migration 虚拟别名 ↔ 同名物理技能）；③ skill-registry.json 虚拟层清零（L1 22→38、虚拟 19→0、合计 50→47、mandatory 9、categoriesStats 重算）；④ 路由表 14 处 v9-* 虚拟名改用物理自然名；⑤ TRAE/Qoder/WorkBuddy/VSCode 全平台经 .agents/skills/ 单一物理源（.workbuddy/skills junction）统一加载，相互调用零分叉"
+    date: 2026-08-23
   - version: v1.7.8
     changes: "2026-08-23 跨平台 WIKI 统一为环境配置契约：新建顶层 wiki/ 单一真相源（README 双视角入口 + CONTRACT 契约正文 + platform-config.registry.json 机器注册表 + 6 张平台环境配置卡 + 环境统一配置 + 统一技能索引），各平台目录（.trae/.workbuddy/.qoder/plugins/.cursorrules）改为薄适配层（WIKI-ADAPTER 标记指针）；docs/wiki 五篇代码 Wiki git mv 至 wiki/code-wiki 并登记 _redirect-map.json；.cursorrules GBK 乱码修复为 UTF-8；新增 scripts/audit/audit-platform-docs.cjs 防漂移门禁（挂 gate:quick）"
     date: 2026-08-23
@@ -101,11 +104,11 @@ change_log:
 > - S06 版本发布与部署（SemVer + 单向同步 + 双回滚）/ S07 上线后运维与应急（48h 值守 + P0 5 层上报矩阵）
 > SOP 文档基于当前 AGENTS.md v1.6.0 契约编写；命令与阈值与本 §七 严格一致，遇冲突以本契约为准，同步修订对应 SOP（Frontmatter code_version 对齐）。
 >
-> **项目级 SKILL 索引**（三层分离，单一真相源见 `.trae/skills/skill-registry.json`，合计 50 项；MAND=mandatory 强制，adv=advisory 建议；人类可读统一索引见 `wiki/skills/INDEX.md` 与 `.agents/skills/README.md`（同源同频），含 TRAE/WorkBuddy/Qoder/VSCode/Kimi 五平台加载契约表）：
-> - **L1 项目物理技能（22 项）**：物理存放目录 `.agents/skills/*/SKILL.md`（非 `.trae/skills/`；`.trae/skills/` 仅存放 INDEX.md 与 skill-registry.json 索引文件，无技能本体；`_SKILL-TEMPLATE.md` 为官方骨架模板不计入 L1 技能计数，实际注册 L1=22，与 skill-registry.json `projectPhysicalSkills[]` 数组长度对齐）。WorkBuddy/Qoder 经 `.workbuddy/skills` 目录联接（junction → `.agents/skills`）加载同一物理源；VSCode 无技能目录，经本契约文件（AGENTS.md）加载。按 registry `categoriesStats` 分 13 类（名称均为自然 slug，无 `v9-` 前缀）：
->   - **架构治理 architecture（5）**：`architecture-cleanup`（adv）、`architecture-radar-scan`（adv）、`constant-migration`（MAND）、`databridge-migration`（MAND）、`gateway-facade-refactor`（adv, v1.7.0 新增，端到端 6 阶段门面化重构 SOP）
+> **项目级 SKILL 索引**（两层分离 + 虚拟已清零，单一真相源见 `.trae/skills/skill-registry.json`，合计 47 项；MAND=mandatory 强制，adv=advisory 建议；人类可读统一索引见 `wiki/skills/INDEX.md` 与 `.agents/skills/README.md`（同源同频），含 TRAE/WorkBuddy/Qoder/VSCode/Kimi 五平台加载契约表）：
+> - **L1 项目物理技能（38 项）**：物理存放目录 `.agents/skills/*/SKILL.md`（非 `.trae/skills/`；`.trae/skills/` 仅存放 INDEX.md 与 skill-registry.json 索引文件，无技能本体；`_SKILL-TEMPLATE.md` 为官方骨架模板不计入 L1 技能计数，实际注册 L1=38，与 skill-registry.json `projectPhysicalSkills[]` 数组长度对齐）。WorkBuddy/Qoder 经 `.workbuddy/skills` 目录联接（junction → `.agents/skills`）加载同一物理源；VSCode 无技能目录，经本契约文件（AGENTS.md）加载。按 registry `categoriesStats` 分 16 类（名称均为自然 slug，无 `v9-` 前缀）：
+>   - **架构治理 architecture（7）**：`architecture-cleanup`（adv）、`architecture-radar-scan`（adv）、`constant-migration`（MAND）、`databridge-migration`（MAND）、`gateway-facade-refactor`（adv, v1.7.0 新增，端到端 6 阶段门面化重构 SOP）、`architecture-debt-remediation`（MAND, v1.7.10 物理化）、`component-health-check`（adv, v1.7.10 物理化）
 >   - **数据库治理 db-governance（1）**：`db-reference-audit`（adv）
->   - **文档治理 doc-governance（3）**：`doc-freshness-governance`（MAND）、`docs-as-mirror`（adv）、`skill-5seg-migration`（adv, v1.7.7 由 `.trae/skills/` 孤儿归位，5 段式骨架迁移 SOP）
+>   - **文档治理 doc-governance（7）**：`doc-freshness-governance`（MAND）、`docs-as-mirror`（adv）、`skill-5seg-migration`（adv, v1.7.7 由 `.trae/skills/` 孤儿归位，5 段式骨架迁移 SOP）、`doc-encoding-remediation`（adv, v1.7.10 物理化）、`stale-path-reference-audit`（adv, v1.7.10 物理化）、`cross-index-governance`（MAND, v1.7.10 物理化）、`doc-management-principles`（adv, v1.7.10 物理化）
 >   - **特性运行时 feature-runtime（1）**：`feature-window-context-doc`（adv）
 >   - **行业评分 industry-score（2）**：`industry-score`（adv）、`industry-score-mapping`（adv）
 >   - **V6 分析 v6-analysis（3）**：`intelligent-score`（adv）、`v6-docx-output`（adv）、`v6-stock-analysis-model`（adv）
@@ -113,11 +116,14 @@ change_log:
 >   - **板块分析 sector-analysis（1）**：`sector-analysis-framework`（adv）
 >   - **类型安全 type-safety（1）**：`type-safety-contract`（adv）
 >   - **估值 valuation（1）**：`valuation-financial-analysis`（adv）
->   - **数据流 data-flow（2）**：`collection-pipeline-testing`（MAND）、`data-flow-integrity-audit`（MAND, v1.7.0 补登记孤儿目录，原 L3 虚拟技能物理化）
+>   - **数据流 data-flow（3）**：`collection-pipeline-testing`（MAND）、`data-flow-integrity-audit`（MAND, v1.7.0 补登记孤儿目录，原 L3 虚拟技能物理化）、`mock-data-diagnosis`（adv, v1.7.10 物理化）
 >   - **质量门禁治理 quality-gate-governance（1）**：`collection-pipeline-governance`（adv, v1.7.0 新增 GAP-01，采集管线配置/降级/字典/CI 全链路治理 SOP）
+>   - **代码质量 code-quality（7，v1.7.10 全部物理化）**：`module-sync-checklist`（MAND）、`code-quality-audit`（MAND）、`dev-checklist`（adv）、`health-audit`（adv）、`tsc-gate-scope-audit`（adv）、`tsc-test-error-diagnosis`（adv）、`bash-conventions`（adv）
+>   - **UI 设计 ui-design（1）**：`color-token-remediation`（adv, v1.7.10 物理化）
+>   - **开发运维 devops（1）**：`windows-env-path-doctor`（adv, v1.7.10 物理化）
 > - **L2 外部插件技能（9 项）**：物理存放目录 `plugins/*/skills/*/SKILL.md`；由 TRAE CN 插件加载，不在 `.agents/skills/` 中重复复制。
-> - **L3 平台内置虚拟技能（19 项）**：定义见 `.trae/skills/skill-registry.json` 的 `virtualPlatformSkills`（本索引仅计项数，不重复枚举；其 `v9-*` 为 TRAE CN 平台内置，无本地物理目录）。
-> - **禁止混加计数**：L1（22）+ L2（9）+ L3（19）= 50 条登记，任何声明不得绕过此分层。
+> - **L3 平台内置虚拟技能（0 项，v1.7.10 已清零）**：原 19 项虚拟技能已全量物理化归位（16 项转物理 + 3 项影子重复删除），`.trae/skills/skill-registry.json` 的 `virtualPlatformSkills` 现为空数组；TRAE/Qoder/WorkBuddy/VSCode 全平台统一从 `.agents/skills/` 单一物理源加载，相互调用零分叉。
+> - **禁止混加计数**：L1（38）+ L2（9）= 47 条登记（L3=0），任何声明不得绕过此分层。
 >
 > 🔴 **骨架模板强制执行（双保险，v1.7.1 升级）**：所有新增 L1 物理 Skill（`.agents/skills/*/SKILL.md`）**一律以官方骨架模板为起点，禁止从空白文件手写**。
 > - **保险一（文档契约强制）**：第一步必须复制模板——`cp .agents/skills/_SKILL-TEMPLATE.md .agents/skills/<skill-slug>/SKILL.md`，严禁使用 `mkdir && touch SKILL.md`、直接 WriteFile 空骨架、或粘贴非模板版本的 SKILL.md；复制成功后再按 slug/版本/日期/业务域填充内容。
@@ -127,7 +133,7 @@ change_log:
 > ⚠️ **技能治理对齐记录（2026-08-16，方案B + P2 已闭环）**：本索引/路由表曾与物理落盘、registry、加载器存在结构性错位，经两轮核查与对齐，现状态如下：
 > 1. **真相态已对齐（方案B 反向对齐）**：registry（`skill-registry.json`）为单一真相源——`projectPhysicalSkills` 18 项（自然 slug，无 `v9-` 前缀）、`externalPluginSkills` 9 项、`virtualPlatformSkills` 19 项（含 `v9-*` 平台虚拟技能，无本地 SKILL.md）。本轮执行：(a) 撤销上一轮误加的 `v9-` 前缀重命名（`v9-constant-migration`/`v9-databridge-migration` → 还原 `constant-migration`/`databridge-migration`）；(b) 将新建采集门禁由 `v9-collection-pipeline-testing` 改名为自然名 `collection-pipeline-testing` 并登记为 L1 物理（mandatory，data-flow），同步 registry 由 virtual 转 projectPhysical（virtual 20→19、physical 17→18、total 维持 46）；(c) 本索引 L1 段已重写为 18 自然名物理技能（按 registry 分类与 mandatory 标记），"v9-* 即物理"的谎言已消除；(d) 路由表采集行已改用自然名 `collection-pipeline-testing`。
 > 2. **加载器路径错位已根治（junction 单一物理源，v1.7.7 升级）**：WorkBuddy/Qoder 加载器仅扫描 `~/.workbuddy/skills/` 与 `{workspace}/.workbuddy/skills/`、**不扫 `.agents/skills/`**。原 P2 采用 `cp -r` 镜像存在双份漂移风险，v1.7.7 已改为 **Windows 目录联接（junction）**：`.workbuddy/skills` → `.agents/skills`（`mklink /J` 无需管理员权限），物理上只有一份。`npm run skill:mirror` 已重写为**幂等联接契约**（已是正确联接→输出"联接复用"跳过；旧 cp 副本→清理后重建联接；非 Windows/建联接失败→降级 cp 并警告）；新克隆机器跑一次 `npm run skill:mirror` 即可重建。
-> 3. **frontmatter 声明失真（已纠正）**：原路由表称 SKILL.md frontmatter 含 `triggers`/`gates`/`mandatory` 机器可读字段。实测所有物理 SKILL.md 仅用 `name`/`description`/`version`/`last_updated`/`change_log`，**无此三字段**；`triggers`/`gates`/`mandatory` 确为机器可读真相源，但存放于 `skill-registry.json` 而非 SKILL.md。已在下方匹配规则（L65）纠正指向 registry，未强行改写 18 个 SKILL.md。
+> 3. **frontmatter 声明失真（已纠正，v1.7.10 补记）**：原路由表称 SKILL.md frontmatter 含 `triggers`/`gates`/`mandatory` 机器可读字段。早期物理技能仅用 `name`/`description`/`version`/`last_updated`/`change_log`；`triggers`/`gates` 的机器可读真相源始终在 `skill-registry.json`。v1.7.10 物理化的 16 个技能 frontmatter 增加 `mandatory` 冗余声明（与 registry 一致，冲突时以 registry 为准）。
 > 完整映射、缺口与对齐决策见 `deliverables/AGENTS-skill-governance-reconciliation.md`。
 
 ### 技能路由表（任务开始时必须先匹配，v1.5.3 新增）
@@ -137,25 +143,25 @@ change_log:
 | 信号（满足任一即触发） | 必加载技能 | 类型 | 交付前必跑 |
 |---|---|---|---|
 | 改动 `src/services/data-collector/**`、`src/store/sevenDimConfigStore.ts`、`src/types/modules/collection.types.ts`，或相关 vitest 失败 | `collection-pipeline-testing` | mandatory | `npx tsc --noEmit` + `npm run tsc:prod` + `npm run audit:layers` + 相关 vitest |
-| 新增 EnvelopeAction / 写入新 store、改动 `src/core/databridge*.ts` 或 `src/config/dbConfig.ts`、排查按钮无响应 / 假绿灯 / 跨板块数据异常 | `v9-data-flow-integrity-audit` | mandatory | 该技能 §三 阶段 1–6 + `npm run audit:acl-consistency` |
-| 排查 Mock 残留 / 假数据 / 信息孤岛、Mock→真实切换、上线前 Mock 清理审计 | `v9-mock-data-diagnosis` | advisory | 三维 Grep 扫描（每项 file:line 证据）+ 诊断报告归档 `outputs/` |
-| 环境迁移 / 换电脑 / 用户目录绝对路径硬编码（C:/Users/<user>/...）、DELL↔Huawei 等多用户机器可移植、路径静默失效排查 | `v9-windows-env-path-doctor` | advisory | `scripts/scan.cjs --verify-current` 输出可移植（crossUser=0 且 sameUserHardcode=0）+ 仅修 src/scripts/configs 真实硬编码 |
-| 执行任何 Bash 命令、路径/解释器/门禁命令选择（全局生效） | `v9-bash-conventions` | advisory | 按该技能 §4「执行后联动义务」表选必跑命令 |
-| 任何代码改动交付前（改动 `src/services\|store\|core\|pages\|components/**`）、重构/接口变更/重命名、新增 skill 或注册表变更 | `v9-module-sync-checklist` | mandatory | 十域同步清单 + `npx tsc --noEmit` + `npm run tsc:prod` + `npm run audit:layers` + `npm run audit:acl-consistency` |
-| 发现文档乱码 / 中文变问号、准备执行文档链接修复（fix-doc-refs 等）前、排查 GBK 二次损坏风险 | `v9-doc-encoding-remediation` | advisory | 三维 Grep（fix 脚本无硬编码 utf-8）+ 编码探测报告 + 复测 GBK_TOTAL=0（排除备份目录） |
+| 新增 EnvelopeAction / 写入新 store、改动 `src/core/databridge*.ts` 或 `src/config/dbConfig.ts`、排查按钮无响应 / 假绿灯 / 跨板块数据异常 | `data-flow-integrity-audit` | mandatory | 该技能 §三 阶段 1–6 + `npm run audit:acl-consistency` |
+| 排查 Mock 残留 / 假数据 / 信息孤岛、Mock→真实切换、上线前 Mock 清理审计 | `mock-data-diagnosis` | advisory | 三维 Grep 扫描（每项 file:line 证据）+ 诊断报告归档 `outputs/` |
+| 环境迁移 / 换电脑 / 用户目录绝对路径硬编码（C:/Users/<user>/...）、DELL↔Huawei 等多用户机器可移植、路径静默失效排查 | `windows-env-path-doctor` | advisory | `scripts/scan.cjs --verify-current` 输出可移植（crossUser=0 且 sameUserHardcode=0）+ 仅修 src/scripts/configs 真实硬编码 |
+| 执行任何 Bash 命令、路径/解释器/门禁命令选择（全局生效） | `bash-conventions` | advisory | 按该技能 §4「执行后联动义务」表选必跑命令 |
+| 任何代码改动交付前（改动 `src/services\|store\|core\|pages\|components/**`）、重构/接口变更/重命名、新增 skill 或注册表变更 | `module-sync-checklist` | mandatory | 十域同步清单 + `npx tsc --noEmit` + `npm run tsc:prod` + `npm run audit:layers` + `npm run audit:acl-consistency` |
+| 发现文档乱码 / 中文变问号、准备执行文档链接修复（fix-doc-refs 等）前、排查 GBK 二次损坏风险 | `doc-encoding-remediation` | advisory | 三维 Grep（fix 脚本无硬编码 utf-8）+ 编码探测报告 + 复测 GBK_TOTAL=0（排除备份目录） |
 | 文件重命名 / 迁移后残留失效链接（僵尸路径）扫描、move 操作退回检查、doc-refs 修复前置 | `stale-path-reference-audit` | advisory | 九类文件全仓 Grep 残留 + 排除生成物/备份噪声 + 交叉验证目标文件存在性 |
-| 改动 `tsconfig.json`/`tsconfig.prod.json`/`tsconfig.test.json`、`package.json` 的 tsc 脚本，或 husky `tsc:prod` 门禁报错且错误全在 `*.test.ts`/`*.test-utils.ts` | `v9-tsc-gate-scope-audit` | advisory | 三步诊断（错误分类 + git status 归因）+ 修复后 `tsc:prod` 实测 0 错误 |
-| `npm run tsc:test` 退出码非 0、测试文件类型错误爆发（TS2305/TS2322/TS2339/TS2532/TS1011）、契约漂移 / vi.mock 提升陷阱 / 严格空检暴露 | `v9-tsc-test-error-diagnosis` | advisory | 错误按 file:line 归类四大根因 + 修复后 `npm run tsc:test` 实测 0 错误且 `tsc:prod` 保持 0 |
-| 颜色令牌新增/重命名/废弃、令牌硬编码（HEX/裸色类）排查、改动 `src/constants/theme.tokens.ts` 或 `src/config/chartColors.ts` | `v9-color-token-remediation` | advisory | `npm run audit:tokens` + `npm run verify:colorSoT` + `npm run audit:hardcode` |
-| 二次开发前体检、"再次检查进度/健康度"、门禁回归定位、状态失准/假绿灯排查、文档vs现实矛盾核对 | `v9-health-audit` | advisory | tsc:prod 真实退出码=0 + audit:layers=0 + automation_update list 真实条数 vs 文档声称交叉核对 + 争议测试文件直跑 |
-| 新模块集成/PR 提交前代码合规审查、类型安全/零硬编码/事件监听清理/日志规范核查、`audit:layers`/`audit:acl-consistency` 报违规 | `v9-code-quality-audit` | mandatory | 该技能质量维度清单 + `npx tsc --noEmit` + `npm run audit:layers` + `npm run audit:acl-consistency` + `npm run audit:hardcode` |
-| 新增组件/新模块/PR Review 三场景、交付前正向+逆向双向校验 | `v9-dev-checklist` | advisory | 该技能三场景清单逐项核对 + `npx tsc --noEmit` |
-| audit:layers 报出 core/services 越权读写 dataLayer、将直接操作 dataLayer.stocks/v6Scores 等的代码迁移到 DataBridge 信封协议 | `v9-databridge-migration` | mandatory | 迁移后 `npm run audit:layers` = 0 违规 + `npm run audit:acl-consistency` 全绿 + 相关 vitest 通过 |
+| 改动 `tsconfig.json`/`tsconfig.prod.json`/`tsconfig.test.json`、`package.json` 的 tsc 脚本，或 husky `tsc:prod` 门禁报错且错误全在 `*.test.ts`/`*.test-utils.ts` | `tsc-gate-scope-audit` | advisory | 三步诊断（错误分类 + git status 归因）+ 修复后 `tsc:prod` 实测 0 错误 |
+| `npm run tsc:test` 退出码非 0、测试文件类型错误爆发（TS2305/TS2322/TS2339/TS2532/TS1011）、契约漂移 / vi.mock 提升陷阱 / 严格空检暴露 | `tsc-test-error-diagnosis` | advisory | 错误按 file:line 归类四大根因 + 修复后 `npm run tsc:test` 实测 0 错误且 `tsc:prod` 保持 0 |
+| 颜色令牌新增/重命名/废弃、令牌硬编码（HEX/裸色类）排查、改动 `src/constants/theme.tokens.ts` 或 `src/config/chartColors.ts` | `color-token-remediation` | advisory | `npm run audit:tokens` + `npm run verify:colorSoT` + `npm run audit:hardcode` |
+| 二次开发前体检、"再次检查进度/健康度"、门禁回归定位、状态失准/假绿灯排查、文档vs现实矛盾核对 | `health-audit` | advisory | tsc:prod 真实退出码=0 + audit:layers=0 + automation_update list 真实条数 vs 文档声称交叉核对 + 争议测试文件直跑 |
+| 新模块集成/PR 提交前代码合规审查、类型安全/零硬编码/事件监听清理/日志规范核查、`audit:layers`/`audit:acl-consistency` 报违规 | `code-quality-audit` | mandatory | 该技能质量维度清单 + `npx tsc --noEmit` + `npm run audit:layers` + `npm run audit:acl-consistency` + `npm run audit:hardcode` |
+| 新增组件/新模块/PR Review 三场景、交付前正向+逆向双向校验 | `dev-checklist` | advisory | 该技能三场景清单逐项核对 + `npx tsc --noEmit` |
+| audit:layers 报出 core/services 越权读写 dataLayer、将直接操作 dataLayer.stocks/v6Scores 等的代码迁移到 DataBridge 信封协议 | `databridge-migration` | mandatory | 迁移后 `npm run audit:layers` = 0 违规 + `npm run audit:acl-consistency` 全绿 + 相关 vitest 通过 |
 | V9 架构债务清理、层违规修复、死组件删除、大组件重构、lint 警告清理、审计脚本报层调用违规 | `architecture-debt-remediation` | mandatory | 该技能六步修复流程 + `npm run audit:layers` = 0 + `npx tsc --noEmit` 0 错误 |
 | 新增组件/模块重构/季度清理、僵尸组件/命名冲突/注册一致性/消费方验证 | `component-health-check` | advisory | 该技能审计脚本 + 注册表一致性校验 + 消费方引用验证 |
 | 批量补全 doc_id/related_docs/covers_code/covers_docs 字段、建立文档↔代码↔测试↔SKILL 四向交叉索引、doc 生命周期治理 | `cross-index-governance` | mandatory | 该技能批量更新脚本 + frontmatter 完整性校验 + `npm run audit:docs` |
 | 创建/编辑/移动 `docs/` 目录任意文档、文档录入与管理整体原则、十目录架构/Frontmatter标准/命名规范 | `doc-management-principles` | advisory | 该技能三环闭环治理清单 + frontmatter 必备字段校验 |
-| audit:layers 报出 config 层与 constants 层同一业务常量双份定义、Grep 硬编码报出 `/src/config.*RESEARCH_STATUS/` 等业务常量泄漏、跨层重复常量迁移 | `v9-constant-migration` | mandatory | 迁移后 `npm run audit:layers` = 0 + `npx tsc --noEmit` 0 错误 + 测试 mock 路径更新校验 |
+| audit:layers 报出 config 层与 constants 层同一业务常量双份定义、Grep 硬编码报出 `/src/config.*RESEARCH_STATUS/` 等业务常量泄漏、跨层重复常量迁移 | `constant-migration` | mandatory | 迁移后 `npm run audit:layers` = 0 + `npx tsc --noEmit` 0 错误 + 测试 mock 路径更新校验 |
 
 #### 技能协作链（v1.7.9 新增 · 触发时配对加载，不物理合并文件）
 
