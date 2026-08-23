@@ -1,0 +1,48 @@
+# Dependabot 配置（better-harness F-010，2026-08-23）
+# 与 Actions SHA 钉扎策略配套：钉扎保证供应链安全，Dependabot 负责版本升级追踪。
+# - github-actions：检测钉扎 SHA 对应的上游新版本，自动提 PR（PR 内含新 SHA + 版本注释）
+# - npm：package-lock.json 依赖更新，分组管理减少 PR 噪音
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      timezone: "Asia/Shanghai"
+    commit-message:
+      prefix: "chore(ci)"
+    labels:
+      - "dependencies"
+      - "ci"
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      timezone: "Asia/Shanghai"
+    commit-message:
+      prefix: "chore(deps)"
+    labels:
+      - "dependencies"
+    groups:
+      # 补丁/次级更新合并为单个 PR，主版本升级单独提（风险更高需人工评审）
+      production-dependencies-minor:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      development-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # 重大基础设施依赖锁定人工升级（Node 工具链 / Vite / React 主版本）
+      - dependency-name: "vite"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]

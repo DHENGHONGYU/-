@@ -103,7 +103,7 @@ jobs:
       # 3. 上传 JSON + HTML 报告作为 artifact（保留 14 天供 PR 调试）
       - name: Upload chart test report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: chart-industry-test-report
           path: |
@@ -129,7 +129,7 @@ jobs:
       # 上传覆盖率报告作为 artifact（供后续分析）
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: coverage-report
           path: coverage/
@@ -170,7 +170,7 @@ jobs:
         continue-on-error: true
       - name: Upload doc-integrity report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: doc-integrity-report
           path: docs/reports/audit/audit-doc-integrity-*.json
@@ -199,7 +199,7 @@ jobs:
       # 上传依赖分析报告
       - name: Upload dependency analysis report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: dependency-analysis-report
           path: docs/reports/dependency-analysis.*
@@ -363,7 +363,7 @@ jobs:
           CI: true
       - name: Upload bootstrap P0 test report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: bootstrap-p0-test-report
           path: |
@@ -388,7 +388,7 @@ jobs:
           CI: true
       - name: Upload snapshot report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: snapshot-report
           path: tests/__tests__/snapshot/__snapshots__/
@@ -409,7 +409,7 @@ jobs:
         run: npm run api:extract
       - name: Upload API report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: api-report
           path: docs/reports/api-report.md
@@ -443,7 +443,7 @@ jobs:
       # 上传失败截图（含 diff / actual / expected）便于调试
       - name: Upload visual regression artifacts
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: visual-regression-failures
           path: |
@@ -613,7 +613,7 @@ jobs:
       # ── 上传测试报告 + 基线快照（供审查与基线更新） ──
       - name: Upload E2E test report + golden snapshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: dark-mode-e2e-report
           path: |
@@ -625,7 +625,7 @@ jobs:
       # ── PR 失败自动评论指引 ──
       - name: Alert on PR failure
         if: failure() && github.event_name == 'pull_request'
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             const prNumber = context.payload.pull_request.number;

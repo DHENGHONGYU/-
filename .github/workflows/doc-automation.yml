@@ -60,7 +60,7 @@ jobs:
       # 上传 doc-auto-update + doc-integrity 报告作为 artifact（供后续分析）
       - name: Upload doc reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: doc-auto-update-report
           path: |

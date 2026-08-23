@@ -58,7 +58,7 @@ jobs:
           CI: true
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: dev-coverage-report
           path: coverage/
@@ -89,7 +89,7 @@ jobs:
         run: npm run report:chart
       - name: Upload chart test report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: dev-chart-industry-test-report
           path: |
@@ -119,7 +119,7 @@ jobs:
           CI: true
       - name: Upload bootstrap P0 test report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: dev-bootstrap-p0-test-report
           path: |
@@ -196,7 +196,7 @@ jobs:
             )
 
       - name: Upload registry regression report artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: dev-registry-gate-report
           path: outputs/registry-regression.json
@@ -211,7 +211,7 @@ jobs:
       # ------------------------------------------------------------------
       - name: Alert on PR failure
         if: failure() && github.event_name == 'pull_request'
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -302,14 +302,14 @@ jobs:
           CI: true
       - name: Upload JUnit XML test report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: dev-p0-core-junit-report
           path: reports/p0-core-junit.xml
           retention-days: 14
       - name: Upload P0 core test source files
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: dev-p0-core-test-files
           path: |
@@ -321,7 +321,7 @@ jobs:
       # ═══ 失败告警：自动在 PR 上评论（feat/fix 分支） ═══
       - name: Alert on PR failure
         if: failure() && github.event_name == 'pull_request'
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             const prNumber = context.payload.pull_request.number;
@@ -373,7 +373,7 @@ jobs:
       # vitest 单元测试已在 test job 中通过 npm run test:ci 自动运行（10 场景）
       - name: Upload pre-push hook test logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: dev-pre-push-hook-logs
           path: .tmp/logs/pre-push.log
@@ -381,7 +381,7 @@ jobs:
       # ═══ 失败告警：自动在 PR 上评论 ═══
       - name: Alert on PR failure
         if: failure() && github.event_name == 'pull_request'
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             const prNumber = context.payload.pull_request.number;
@@ -436,7 +436,7 @@ jobs:
         run: npm audit --audit-level=high
       - name: Upload audit report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: dev-security-audit-report
           path: .npm/audit.json

@@ -179,10 +179,12 @@ echo ""
 echo "🤖 [17/20] 运行 audit:ai-output（AI 输出三道校验检查）..."
 TSX_RUN scripts/audit/audit-ai-output.ts || true
 
-# 18. ACL 权限矩阵一致性审计（tsx 段错误容错）
+# 18. ACL 权限矩阵一致性审计（BLOCK 真阻断，与 AGENTS.md / gate:quick 对齐）
+#     2026-08-23 better-harness F-004 修复：由 '|| true' warn 模式升级为 BLOCK，
+#     消除 pre-commit 放行但 pre-push gate:quick 拦截的语义矛盾。
 echo ""
-echo "🔐 [18/20] 运行 audit:acl-consistency（ACL 权限矩阵一致性检查）..."
-TSX_RUN scripts/audit/audit-acl-consistency.ts || true
+echo "🔐 [18/22] 运行 audit:acl-consistency（ACL 权限矩阵一致性检查，P0 BLOCK）..."
+BLOCK TSX_RUN scripts/audit/audit-acl-consistency.ts
 
 # 19. 组件注册表一致性审计（registry P0 阻断）
 #     用户要求纳入 pre-commit 的三条门禁之 #2（对应 npm run audit:registry）
@@ -206,7 +208,7 @@ BLOCK VITEST_RUN run src/components/registry/registryContract.test.ts
 #     ragHallucinationRegression.test.ts）被暂存时，运行 Golden Dataset 回归 + 幻觉检测
 #     门禁不通过则 BLOCK 提交
 echo ""
-echo "🔬 [21/20] 运行 RAG 幻觉检测门禁（条件触发）..."
+echo "🔬 [21/22] 运行 RAG 幻觉检测门禁（条件触发）..."
 RAG_FILES_CHANGED=$(git diff --cached --name-only | grep -E 'src/services/scoring/v6-engine/(ragRetriever\.ts|enhancer\.ts|hallucinationDetector\.ts|ragE2EPipeline\.test\.ts|ragPerformance\.bench\.test\.ts|ragRealLLMIntegration\.test\.ts|ragHallucinationRegression\.test\.ts)' || true)
 if [ -n "$RAG_FILES_CHANGED" ]; then
   echo "   📋 检测到 RAG 相关文件变更:"
@@ -223,7 +225,7 @@ fi
 #     任一暂存时执行；P0 漂移（DB_VERSION/Store数/MCP条目/USER_SCENES）→ BLOCK。
 #     --changed 由脚本内部做暂存过滤，无需此处再套条件（双保险）。
 echo ""
-echo "🗂️  [22/20] 运行 audit:agents-consistency（契约一致性，条件触发，P0 BLOCK）..."
+echo "🗂️  [22/22] 运行 audit:agents-consistency（契约一致性，条件触发，P0 BLOCK）..."
 BLOCK TSX_RUN scripts/audit/audit-agents-consistency.ts --changed
 
 # 20. 文档目录-内容匹配（warn 模式）
@@ -314,5 +316,5 @@ fi
 
 echo ""
 echo "================================================"
-echo "✅ V9 预提交门禁通过：核心 P0 门禁（secrets / tsc:prod / layers / atomic / db-references / doc-id-reverse / audit:registry / vitest registryContract）已真阻断；hardcode/hardcode 审计为 warn 模式（0 Critical / 0 Major 基线）。允许提交。"
+echo "✅ V9 预提交门禁通过：核心 P0 门禁（secrets / tsc:prod / layers / atomic / db-references / doc-id-reverse / audit:acl-consistency / audit:registry / vitest registryContract）已真阻断；hardcode/hardcode 审计为 warn 模式（0 Critical / 0 Major 基线）。允许提交。"
 echo ""

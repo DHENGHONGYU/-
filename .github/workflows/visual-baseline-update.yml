@@ -66,7 +66,7 @@ jobs:
       # 上传更新后的基线作为 artifact（无论是否有变更）
       - name: Upload updated baselines
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: docker-baselines
           path: e2e/visual-regression.spec.ts-snapshots/
@@ -94,7 +94,7 @@ jobs:
 
       - name: Upload verification results
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: baseline-verification-failures
           path: |

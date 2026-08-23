@@ -219,7 +219,7 @@ jobs:
       # =====================================================================
       - name: 📦 1/4 Artifact · logs（3 主线 .log 原始日志）
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: skill-health-check-logs-main
           path: |
@@ -230,7 +230,7 @@ jobs:
 
       - name: 📦 2/4 Artifact · summary（verdict.md 汇总判定表）
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: skill-health-check-summary-main
           path: |
@@ -239,7 +239,7 @@ jobs:
 
       - name: 📦 3/4 Artifact · coverage（skill-coverage 专项输出 + 三方对比证据）
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: skill-health-check-coverage-report-main
           path: |
@@ -248,7 +248,7 @@ jobs:
 
       - name: 📦 4/4 Artifact · data（registry.json / INDEX.md 结构快照）
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: skill-health-check-data-main
           path: |

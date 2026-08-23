@@ -69,7 +69,7 @@ jobs:
       # =====================================================================
       - name: Archive mock weekly audit evidence (90-day retention)
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: mock-weekly-audit-${{ github.run_id }}-${{ steps.mock_audit.outputs.stamp }}
           path: |

@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Generate fresh naming report
         run: |
@@ -62,7 +62,7 @@ EOF
           fi
 
       - name: Upload Wiki deployment artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: wiki-deployment-package
           path: |
@@ -73,7 +73,7 @@ EOF
 
       - name: Post deployment notification
         if: github.event_name == 'push'
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -112,9 +112,9 @@ EOF
     schedule:
       - cron: '0 19 * * *'  # UTC 19:00 = 北京时间 03:00
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: 'npm'
@@ -123,13 +123,13 @@ EOF
       - name: Run naming audit
         run: npm run audit:naming:json 2>/dev/null || echo 'scheduled audit completed with warnings'
       - name: Upload daily report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: daily-naming-audit
           path: outputs/naming-conventions-report.json
           retention-days: 7
       - name: Post daily sync notification
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -166,10 +166,10 @@ EOF
     needs: [sync-wiki, scheduled-sync]
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: 'npm'
@@ -197,7 +197,7 @@ EOF
           CONFLUENCE_SPACE: ${{ secrets.CONFLUENCE_SPACE }}
 
       - name: Upload Confluence deployment artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c695131ce0f3a21bb6e049c944092a6 # v4.4.3
         with:
           name: confluence-deployment-package
           path: outputs/wiki-deploy/
