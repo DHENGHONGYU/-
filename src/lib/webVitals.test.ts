@@ -17,7 +17,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { reportWebVitals } from './webVitals'
 
 type MetricCb = (m: { name: string; delta: number; id: string }) => void
-type MetricFn = (cb: MetricCb) => void
 
 // 2026-08-23 Token Plan 处理事项修复：vi.mock 工厂被提升到文件顶部，
 // 直接引用顶层 const（mockInfo 等）会触发 "Cannot access before initialization"，

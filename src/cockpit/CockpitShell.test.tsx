@@ -201,9 +201,13 @@ describe('CockpitShell', () => {
     vi.restoreAllMocks()
   })
 
-  /** 关闭矩阵总览视图，使交叉点 Widget 实例进入渲染（CockpitCrossLayout 默认显示总览） */
+  /**
+   * 2026-08-23 Token Plan 处理事项修复：新三页视图（DecisionPagesOverview）下，
+   * marketIndices 实例直接落入默认页「今日决策 → 市场情绪与温度」（默认展开），
+   * 无需关闭矩阵总览；原「矩阵总览」按钮已收纳进默认折叠的技术钻取面板。
+   */
   function dismissMatrixOverview(): void {
-    fireEvent.click(screen.getByRole('button', { name: /矩阵总览/ }))
+    // no-op：保留函数名以最小化用例改动，新视图下实例默认即可见
   }
 
   it('渲染不崩溃，且包裹 MarketDataProvider', () => {
@@ -220,29 +224,31 @@ describe('CockpitShell', () => {
     expect(screen.getByText('驾驶舱')).toBeInTheDocument()
   })
 
-  it('渲染 "添加 Widget" 按钮和 "返回首页" 链接', () => {
+  it('渲染 "添加组件" 按钮和 "返回首页" 链接', () => {
     renderWithDensity(<CockpitShell />)
 
-    expect(screen.getByText('添加 Widget')).toBeInTheDocument()
+    // 2026-08-23 对齐生产新 UI：「添加 Widget」已更名为「添加组件」
+    expect(screen.getByText('添加组件')).toBeInTheDocument()
     expect(screen.getByText('返回首页')).toBeInTheDocument()
   })
 
-  it('空实例时渲染 Widget 数量 Badge 显示 "0 Widget"', () => {
+  it('空实例时渲染数据采集徽章显示 "0/0 数据采集"', () => {
     renderWithDensity(<CockpitShell />)
 
-    // 徽标结构：<span>{n}</span> Widget —— 用 textContent 精确匹配外层徽标
+    // 2026-08-23 对齐生产新 UI：header 徽章改为「跟踪标的 / 待处理信号 / {running}/{total} 数据采集」，
+    // 原「N Widget」计数徽章已移除（实例计数改由三页 Tab 呈现）
     expect(
-      screen.getByText((_, node) => node?.textContent === '0 Widget'),
+      screen.getByText((_, node) => node?.textContent === '0/0 数据采集'),
     ).toBeInTheDocument()
   })
 
-  it('渲染采集任务统计 Badge（显示 running/total）', () => {
+  it('渲染采集任务统计徽章（显示 running/total 数据采集）', () => {
     setupMarketDataHook({ total: 10, running: 3, error: 1 })
 
     renderWithDensity(<CockpitShell />)
 
     expect(
-      screen.getByText((_, node) => node?.textContent === '3/10 采集任务'),
+      screen.getByText((_, node) => node?.textContent === '3/10 数据采集'),
     ).toBeInTheDocument()
   })
 
@@ -273,7 +279,7 @@ describe('CockpitShell', () => {
     expect(mockUnsubscribe).toHaveBeenCalledTimes(1)
   })
 
-  it('非空实例时显示正确的 Widget 数量', () => {
+  it('非空实例时三页 Tab 计数正确', () => {
     const mockInstances: WidgetConfig[] = [
       {
         instanceId: 'marketIndices_1',
@@ -301,9 +307,12 @@ describe('CockpitShell', () => {
 
     renderWithDensity(<CockpitShell />)
 
-    expect(
-      screen.getByText((_, node) => node?.textContent === '2 Widget'),
-    ).toBeInTheDocument()
+    // 2026-08-23 对齐生产新 UI：实例计数由三页 Tab 徽章呈现（marketIndices→今日决策，fundFlow→市场与机会）
+    const tabs = screen.getAllByRole('tab')
+    const todayTab = tabs.find((t) => t.textContent?.includes('今日决策'))
+    const marketTab = tabs.find((t) => t.textContent?.includes('市场与机会'))
+    expect(todayTab?.textContent).toContain('1')
+    expect(marketTab?.textContent).toContain('1')
   })
 
   // ============================================================

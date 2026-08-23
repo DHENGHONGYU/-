@@ -100,9 +100,10 @@ describe('Badge 组件', () => {
     it('default 变体应用正确的 Token', () => {
       render(<Badge variant="default">默认</Badge>)
       const badge = screen.getByText('默认')
-      expect(badge.className).toContain('bg-primary')
-      expect(badge.className).toContain('text-primary-foreground')
-      expect(badge.className).toContain('border-transparent')
+      // 2026-08-23 Token Plan 处理事项修复：对齐生产软性风格规范（低浓度背景 + 同色边框 + 100% 文字）
+      expect(badge.className).toContain('bg-primary/10')
+      expect(badge.className).toContain('text-primary')
+      expect(badge.className).toContain('border-primary/30')
     })
 
     it('secondary 变体应用正确的 Token', () => {
@@ -110,7 +111,7 @@ describe('Badge 组件', () => {
       const badge = screen.getByText('次要')
       expect(badge.className).toContain('bg-secondary')
       expect(badge.className).toContain('text-secondary-foreground')
-      expect(badge.className).toContain('border-transparent')
+      expect(badge.className).toContain('border-secondary-foreground/20')
     })
 
     it('outline 变体应用正确的 Token', () => {
@@ -123,28 +124,28 @@ describe('Badge 组件', () => {
     it('destructive 变体应用正确的 Token', () => {
       render(<Badge variant="destructive">危险</Badge>)
       const badge = screen.getByText('危险')
-      // 语义令牌：bg-destructive / text-destructive-foreground（原 COLOR_TOKENS.danger.bgClass=bg-red-500 已迁移）
-      expect(badge.className).toContain('bg-destructive')
-      expect(badge.className).toContain('text-destructive-foreground')
-      expect(badge.className).toContain('border-transparent')
+      // 2026-08-23 对齐生产软性风格规范：低浓度背景 + 同色边框 + 100% 文字（原实心样式已废弃）
+      expect(badge.className).toContain('bg-destructive/10')
+      expect(badge.className).toContain('text-destructive')
+      expect(badge.className).toContain('border-destructive/30')
     })
 
     it('success 变体应用正确的 Token', () => {
       render(<Badge variant="success">成功</Badge>)
       const badge = screen.getByText('成功')
-      // 语义令牌：bg-success / text-success-foreground（与 #21C45D 规范成功色对齐）
-      expect(badge.className).toContain('bg-success')
-      expect(badge.className).toContain('text-success-foreground')
-      expect(badge.className).toContain('border-transparent')
+      // 2026-08-23 对齐生产软性风格规范（与 #21C45D 规范成功色对齐）
+      expect(badge.className).toContain('bg-success/10')
+      expect(badge.className).toContain('text-success')
+      expect(badge.className).toContain('border-success/30')
     })
 
     it('warning 变体应用正确的 Token', () => {
       render(<Badge variant="warning">警告</Badge>)
       const badge = screen.getByText('警告')
-      // 语义令牌：bg-warning / text-warning-foreground（原 COLOR_TOKENS.warning.bgClass=bg-amber-500 已迁移）
-      expect(badge.className).toContain('bg-warning')
-      expect(badge.className).toContain('text-warning-foreground')
-      expect(badge.className).toContain('border-transparent')
+      // 2026-08-23 对齐生产软性风格规范（原实心样式已废弃）
+      expect(badge.className).toContain('bg-warning/10')
+      expect(badge.className).toContain('text-warning')
+      expect(badge.className).toContain('border-warning/30')
     })
   })
 
@@ -247,28 +248,29 @@ describe('Badge 组件', () => {
   // ============================================================
 
   describe('hover 状态', () => {
+    // 2026-08-23 Token Plan 处理事项修复：对齐生产软性风格规范（hover 浓度 /15 而非实心 /80）
     it('default 变体包含 hover 样式', () => {
       render(<Badge variant="default">默认</Badge>)
       const badge = screen.getByText('默认')
-      expect(badge.className).toContain('hover:bg-primary/80')
+      expect(badge.className).toContain('hover:bg-primary/15')
     })
 
     it('destructive 变体包含 hover 样式', () => {
       render(<Badge variant="destructive">危险</Badge>)
       const badge = screen.getByText('危险')
-      expect(badge.className).toContain('hover:bg-destructive/80')
+      expect(badge.className).toContain('hover:bg-destructive/15')
     })
 
     it('success 变体包含 hover 样式', () => {
       render(<Badge variant="success">成功</Badge>)
       const badge = screen.getByText('成功')
-      expect(badge.className).toContain('hover:bg-success/80')
+      expect(badge.className).toContain('hover:bg-success/15')
     })
 
     it('warning 变体包含 hover 样式', () => {
       render(<Badge variant="warning">警告</Badge>)
       const badge = screen.getByText('警告')
-      expect(badge.className).toContain('hover:bg-warning/80')
+      expect(badge.className).toContain('hover:bg-warning/15')
     })
   })
 })

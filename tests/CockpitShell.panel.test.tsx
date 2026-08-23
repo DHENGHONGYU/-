@@ -101,7 +101,7 @@ function expandTechnicalDrilldown(): void {
  */
 function getDomainButton(label: RegExp): HTMLButtonElement {
   const buttons = screen.getAllByRole('button', { name: label })
-  const nav = buttons.find((b) => b.hasAttribute('aria-pressed'))
+  const nav = buttons.find((b) => b.hasAttribute('aria-pressed')) as HTMLButtonElement | undefined
   if (!nav) throw new Error(`未找到域导航按钮: ${label}`)
   return nav
 }

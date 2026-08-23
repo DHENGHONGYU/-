@@ -123,12 +123,14 @@ describe('SevenDimConfigPage - 策略模板卡片', () => {
 
   it('渲染价值投资描述', () => {
     renderPage()
-    expect(screen.getByText(/低频深度采集/)).toBeInTheDocument()
+    // 2026-08-23 Token Plan 处理事项修复：对齐生产真相源 collectConfig.ts（'低频复盘，聚焦基本面与筹码'）
+    expect(screen.getByText(/低频复盘/)).toBeInTheDocument()
   })
 
   it('渲染全维度描述', () => {
     renderPage()
-    expect(screen.getByText(/高频全量采集/)).toBeInTheDocument()
+    // 2026-08-23 Token Plan 处理事项修复：对齐生产真相源 collectConfig.ts（'全量复盘采集，AKShare免费 + iFinD专业 + KIMI AI增强'）
+    expect(screen.getByText(/全量复盘采集/)).toBeInTheDocument()
   })
 })
 
@@ -212,10 +214,11 @@ describe('SevenDimConfigPage - 模板切换交互', () => {
     expect(screen.getByText(`4 / ${DIMENSION_COUNT}`)).toBeInTheDocument()
   })
 
-  it('切换到 cycle 模板后维度数变为 6', () => {
+  it('切换到 cycle 模板后维度数变为 7', () => {
     renderPage()
     fireEvent.click(screen.getByText('周期轮动'))
-    expect(screen.getByText(`6 / ${DIMENSION_COUNT}`)).toBeInTheDocument()
+    // 2026-08-23 Token Plan 处理事项修复：对齐生产真相源（cycle 模板 7 维度：01/02/05/06/07/10/12）
+    expect(screen.getByText(`7 / ${DIMENSION_COUNT}`)).toBeInTheDocument()
   })
 
   it('切换模板后 "当前" 徽章移动到新模板', () => {
