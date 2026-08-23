@@ -39,6 +39,8 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
+      // 全量实测存在少量失败用例（历史存量），仍需产出覆盖率报告用于地板阈值标定（F-002）
+      reportOnFailure: true,
       include: ['src/**/*.ts', 'src/**/*.tsx'],
       exclude: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.spec.tsx', 'src/types/**'],
     },

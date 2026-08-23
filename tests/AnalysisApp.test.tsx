@@ -7,6 +7,7 @@ import { DensityProvider } from '@/components/cockpit/DensityContext'
 import * as analysisService from '@/services/analysis/analysisService'
 import * as v6ScoreService from '@/services/scoring/v6ScoreService'
 import { useToast } from '@/hooks/useToast'
+import { useAnalysisStore } from '@/store/analysisStore'
 import type { Stock, V6Score } from '@/data/types'
 import { UI_TEXT } from '@/constants/uiText'
 
@@ -45,6 +46,8 @@ const mockScore: V6Score = {
 
 describe.sequential('AnalysisApp', () => {
   beforeEach(() => {
+    // 2026-08-23 Token Plan 处理事项修复：重置 Store 防止用例间状态泄漏（新 UI 接入 analysisStore）
+    useAnalysisStore.getState().reset()
     vi.spyOn(analysisService, 'listStocks').mockResolvedValue({
       success: true,
       data: [mockStock],
@@ -65,18 +68,21 @@ describe.sequential('AnalysisApp', () => {
 
   it('renders load button', () => {
     renderWithRouter(<AnalysisApp />)
-    expect(screen.getByRole('button', { name: /加载标的/i })).toBeInTheDocument()
+    // 2026-08-23 对齐生产新 UI：「加载标的」拆分为「加载全部标的 / 加载意向候选池」双按钮
+    expect(screen.getByRole('button', { name: /加载全部标的/i })).toBeInTheDocument()
   })
 
   it('loads stocks and displays them', async () => {
     renderWithRouter(<AnalysisApp />)
-    await userEvent.click(screen.getByRole('button', { name: /加载标的/i }))
+    await userEvent.click(screen.getByRole('button', { name: /加载全部标的/i }))
 
+    // 2026-08-23 对齐生产新 UI：多张卡片（V6 评分/向量一致性排名等）可能同时展示同一标的，用 getAllByText 容错
     await waitFor(() => {
-      expect(screen.getByText('000001.SZ')).toBeInTheDocument()
+      expect(screen.getAllByText('000001.SZ').length).toBeGreaterThan(0)
     })
-    expect(screen.getByText('平安银行')).toBeInTheDocument()
-    expect(screen.getByText(new RegExp(UI_TEXT.analysis.score.notRated))).toBeInTheDocument()
+    expect(screen.getAllByText('平安银行').length).toBeGreaterThan(0)
+    // 2026-08-23 对齐生产真相源：未评分徽章为字面量 '未评分'（原 UI_TEXT.analysis.score.notRated 已移除）
+    expect(screen.getAllByText('未评分').length).toBeGreaterThan(0)
   })
 
   it('displays score badge after running score', async () => {
@@ -90,20 +96,20 @@ describe.sequential('AnalysisApp', () => {
     })
 
     renderWithRouter(<AnalysisApp />)
-    await userEvent.click(screen.getByRole('button', { name: /加载标的/i }))
-    await waitFor(() => screen.getByText('000001.SZ'))
+    await userEvent.click(screen.getByRole('button', { name: /加载全部标的/i }))
+    await waitFor(() => expect(screen.getAllByText('000001.SZ').length).toBeGreaterThan(0))
 
     await userEvent.click(screen.getByRole('button', { name: /运行评分/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(/V6: 4.25/)).toBeInTheDocument()
+      expect(screen.getAllByText(/V6: 4.25/).length).toBeGreaterThan(0)
     })
   })
 
   it('runs score when clicking 运行评分', async () => {
     renderWithRouter(<AnalysisApp />)
-    await userEvent.click(screen.getByRole('button', { name: /加载标的/i }))
-    await waitFor(() => screen.getByText('000001.SZ'))
+    await userEvent.click(screen.getByRole('button', { name: /加载全部标的/i }))
+    await waitFor(() => expect(screen.getAllByText('000001.SZ').length).toBeGreaterThan(0))
 
     await userEvent.click(screen.getByRole('button', { name: /运行评分/i }))
 
@@ -118,8 +124,8 @@ describe.sequential('AnalysisApp', () => {
     )
 
     renderWithRouter(<AnalysisApp />)
-    await userEvent.click(screen.getByRole('button', { name: /加载标的/i }))
-    await waitFor(() => screen.getByText('000001.SZ'))
+    await userEvent.click(screen.getByRole('button', { name: /加载全部标的/i }))
+    await waitFor(() => expect(screen.getAllByText('000001.SZ').length).toBeGreaterThan(0))
 
     const scoreBtn = screen.getByRole('button', { name: /运行评分/i })
     await userEvent.click(scoreBtn)
@@ -135,7 +141,7 @@ describe.sequential('AnalysisApp', () => {
     )
 
     renderWithRouter(<AnalysisApp />)
-    const loadBtn = screen.getByRole('button', { name: /加载标的/i })
+    const loadBtn = screen.getByRole('button', { name: /加载全部标的/i })
     await userEvent.click(loadBtn)
 
     await waitFor(() => {
@@ -153,7 +159,7 @@ describe.sequential('AnalysisApp', () => {
     })
 
     renderWithRouter(<AnalysisApp />)
-    await userEvent.click(screen.getByRole('button', { name: /加载标的/i }))
+    await userEvent.click(screen.getByRole('button', { name: /加载全部标的/i }))
 
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith(
@@ -172,8 +178,8 @@ describe.sequential('AnalysisApp', () => {
     })
 
     renderWithRouter(<AnalysisApp />)
-    await userEvent.click(screen.getByRole('button', { name: /加载标的/i }))
-    await waitFor(() => screen.getByText('000001.SZ'))
+    await userEvent.click(screen.getByRole('button', { name: /加载全部标的/i }))
+    await waitFor(() => expect(screen.getAllByText('000001.SZ').length).toBeGreaterThan(0))
 
     await userEvent.click(screen.getByRole('button', { name: /运行评分/i }))
 
