@@ -196,4 +196,7 @@ function main() {
   }
 }
 
-main();
+if (require.main === module) main();
+
+// 供 L2 路由回归测试（scripts/test/skill-router.test.cjs）复用匹配内核，不改变 CLI 行为。
+module.exports = { globToRegex, matchSkills };

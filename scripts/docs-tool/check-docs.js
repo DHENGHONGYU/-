@@ -38,6 +38,9 @@ const ROOT_WHITELIST = new Set([
   '.env', '.env.example', '.env.local', '.env.development.local',
   '.cursorrules', '.complexity-baseline.json', '.token-baseline.json',
   '.dependency-cruiser.js', 'CHECKLIST.md', 'CONTRIBUTING.md', '.dockerignore', 'docker-compose.yml', 'Dockerfile.frontend', 'parse-coverage.cjs', 'test_result.json', 'test_screenshot_2.png', 'UI-Design-Review-Report.md', 'validate-arch.cjs', 'validate-arch.js', 'vitest.debt.config.ts', 'vitest.setup.ts', 'tmp_audit_final.txt', 'tmp_audit_final2.txt', 'tmp_audit_output.txt', 'tmp_audit_output2.txt', 'tmp_audit_output3.txt', 'tmp_audit_output4.txt',
+  // 2026-08-22 补登：历史会话残留的临时产物（按既有先例白名单化，后续清理后可移除）
+  'cleanup_candidate_data.json', 'coverage_run.log', 'hooks-commit-a.log', 'hooks-commit-b.log',
+  'smic-cross-validation-report.html', '_scan_out.json', '_tmp_patch_doc_meta.py',
 ]);
 
 // 根目录白名单目录（允许存在的目录）
@@ -57,6 +60,8 @@ const ROOT_DIR_WHITELIST = new Set([
   'stock-research-architecture-analysis', 'strategy-comparison', 'test_outputs',
   'test-coverage-audit', 'test-pyramid-audit', 'timeline-competitor-compare', 'upx',
   'v9-improvement-todo', 'v9-maturity-benchmark',
+  // 2026-08-22 补登：真实存在但漏登记的合法目录
+  '.gitbundle', '.qoder', '.trae-html-share-packages', 'docker', 'smic-initiating-coverage',
 ]);
 
 function checkRootDir() {

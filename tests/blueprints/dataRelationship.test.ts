@@ -14,10 +14,11 @@ import type { DailyQuotes, Order, Signal, Stock, V6Score } from '@/data/types'
  *               修复后请移除 .skip 标记并从 test:clean 的 --exclude 列表中删除
  */
 describe('V9 data relationship blueprint', () => {
-  it('应该有 exactly 53 stores defined in dbConfig', () => {
+  it('应该有 exactly 56 stores defined in dbConfig', () => {
     const stores = Object.values(STORE_NAME)
-    expect(stores).toHaveLength(53)
-    expect(new Set(stores).size).toBe(53)
+    // v38（2026-08-23 遗留问题整改 P2）：新增 dimension_collect_data（维度 11-14 通用专用存储），55→56
+    expect(stores).toHaveLength(56)
+    expect(new Set(stores).size).toBe(56)
   })
 
   it('应该map core entities to expected stores', () => {

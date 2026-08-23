@@ -45,7 +45,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { runAuditPipeline, colorize, writeStderr, type AuditReport } from './_debug/_audit-pipeline'
+import { runAuditPipeline, colorize, writeStderr, type AuditReport } from './_debug/_audit-pipeline.ts'
 
 /** 硬编码/静默回退违规项 */
 export interface Finding {

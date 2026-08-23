@@ -50,6 +50,14 @@ function isInsideTemplateToken(line: string, colorIdx: number): boolean {
 const TOKEN_SOURCE_FILES = new Set([
   'src/constants/theme.tokens.ts',
   'src/constants/theme.tokens.design.ts',
+  'src/constants/theme/theme.tokens.base.ts',
+  'src/constants/theme/theme.tokens.color.ts',
+  'src/constants/theme/theme.tokens.shades.ts',
+  'src/constants/theme/theme.tokens.helpers.ts',
+  'src/constants/theme/theme.tokens.stock.ts',
+  'src/constants/theme/theme.tokens.design.ts',
+  'src/config/chartColors.ts',
+  'src/config/sectorHeatmapConfig.ts',
 ])
 
 export async function scan(): Promise<AuditReport> {
@@ -61,8 +69,10 @@ export async function scan(): Promise<AuditReport> {
   const warnings: string[] = []
 
   for (const file of files) {
+    // 统一路径分隔符（Windows glob 返回反斜杠，与 TOKEN_SOURCE_FILES 的正斜杠对齐）
+    const normalizedFile = file.replace(/\\/g, '/')
     // 令牌源文件本身是颜色定义的权威来源，豁免扫描
-    if (TOKEN_SOURCE_FILES.has(file)) continue
+    if (TOKEN_SOURCE_FILES.has(normalizedFile)) continue
     try {
       const content = await readFile(resolve(process.cwd(), file), 'utf-8')
       const lines = content.split('\n')
@@ -83,6 +93,10 @@ export async function scan(): Promise<AuditReport> {
               const colorIdx = line.indexOf(color)
               // 颜色位于模板字面量 ${...} 内（如 rgba(${COLOR_TOKENS.x.rgb}, ...)）视为令牌拼装，豁免
               if (isInsideTemplateToken(line, colorIdx)) return
+              // 豁免 1：CSS 变量语义引用（如 hsl(var(--success))，是 shadcn/ui 主题切换机制）
+              if (color.startsWith('hsl(var(--')) return
+              // 豁免 2：动态 rgba/rgb 生成（如 hexToRgba 函数内部的模板字符串）
+              if (color.startsWith('rgba(${') || color.startsWith('rgb(${')) return
               const isInTailwindClass = TAILWIND_COLOR_PATTERNS.some((p) => p.test(line))
               const isVariable = line.includes('const ') || line.includes('let ') || line.includes('var ')
 

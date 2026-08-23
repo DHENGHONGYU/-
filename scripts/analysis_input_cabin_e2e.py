@@ -10,9 +10,10 @@
 from playwright.sync_api import sync_playwright
 import re
 import os
+import shutil
 
 BASE = "http://localhost:5199"
-EXE = r"C:\Users\DELL\AppData\Local\ms-playwright\chromium-1228\chrome-win64\chrome.exe"
+EXE = os.environ.get("PLAYWRIGHT_CHROME", shutil.which("chrome") or "")
 SHOT_DIR = r"d:\FinSightV9\outputs\e2e-analysis-input"
 import os
 os.makedirs(SHOT_DIR, exist_ok=True)

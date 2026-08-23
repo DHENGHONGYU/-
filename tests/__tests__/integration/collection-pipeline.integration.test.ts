@@ -19,6 +19,7 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
+import { DEFAULT_DIMENSIONS, DIMENSION_COUNT } from '@/config/collectConfig'
 import { seedDefaultPool, seedIntentionPool } from '../../utils/seedTestData'
 
 // ============================================================
@@ -72,17 +73,18 @@ describe('采集链路完整性集成测试 (S2)', () => {
 
     const mockFn = await getMockedRunBatchTrace()
 
-    // full 模板：10 个维度全部启用（含维度 10 热门板块）
-    expect(mockFn).toHaveBeenCalledTimes(10)
+    // full 模板：全部维度启用（维度数从 collectConfig.ts 派生，禁止硬编码）
+    expect(mockFn).toHaveBeenCalledTimes(DIMENSION_COUNT)
 
     // 每次调用的 symbols 应包含全部 2 只股票
     const firstCall = mockFn.mock.calls[0]![0]
     expect(firstCall.symbols).toEqual(['000001', '600519'])
     expect(firstCall.dimensionCode).toBeTruthy()
 
-    // 10 次调用覆盖 10 个不同维度码
+    // 调用覆盖全部维度码（从 DEFAULT_DIMENSIONS 派生）
     const dimCodes = mockFn.mock.calls.map((c) => c[0]!.dimensionCode).sort()
-    expect(dimCodes).toEqual(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'])
+    const expectedCodes = DEFAULT_DIMENSIONS.map((d) => d.code).sort()
+    expect(dimCodes).toEqual(expectedCodes)
   })
 
   // === S2.2: parentTaskId 一致性 ===
@@ -115,18 +117,12 @@ describe('采集链路完整性集成测试 (S2)', () => {
 
   it('S2.4 部分维度采集失败时 error 记录失败维度数', async () => {
     const mockFn = await getMockedRunBatchTrace()
-    // 10 个维度：1 个失败（02=K线），其余成功
-    mockFn
-      .mockResolvedValueOnce([])
-      .mockRejectedValueOnce(new Error('K线采集超时'))
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
+    // 全部维度中 1 个失败（02=K线），其余成功（维度数从配置派生，禁止硬编码）
+    mockFn.mockResolvedValueOnce([])
+    mockFn.mockRejectedValueOnce(new Error('K线采集超时'))
+    for (let i = 2; i < DIMENSION_COUNT; i++) {
+      mockFn.mockResolvedValueOnce([])
+    }
 
     await useSevenDimConfigStore.getState().runCollection()
 
@@ -147,7 +143,7 @@ describe('采集链路完整性集成测试 (S2)', () => {
     await useSevenDimConfigStore.getState().runCollection()
 
     const state = useSevenDimConfigStore.getState()
-    expect(state.error).toContain('10 个维度采集失败')
+    expect(state.error).toContain(`${DIMENSION_COUNT} 个维度采集失败`)
     expect(state.isCollecting).toBe(false)
     expect(state.collectProgress).toBe(100)
   })
@@ -159,12 +155,12 @@ describe('采集链路完整性集成测试 (S2)', () => {
 
     // 第一次采集
     await useSevenDimConfigStore.getState().runCollection()
-    expect(mockFn).toHaveBeenCalledTimes(10)
+    expect(mockFn).toHaveBeenCalledTimes(DIMENSION_COUNT)
 
     // 第二次采集
     mockFn.mockClear()
     await useSevenDimConfigStore.getState().runCollection()
-    expect(mockFn).toHaveBeenCalledTimes(10)
+    expect(mockFn).toHaveBeenCalledTimes(DIMENSION_COUNT)
 
     // 两次采集的 parentTaskId 应不同（独立采集）
     const firstRunTaskIds = new Set(

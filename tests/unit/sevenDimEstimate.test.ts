@@ -169,8 +169,10 @@ describe('七维采集额度预估计算', () => {
   })
 
   describe('DEFAULT_DIMENSIONS 配置验证', () => {
-    it('应该包含 10 个维度', () => {
-      expect(DEFAULT_DIMENSIONS).toHaveLength(10)
+    it('应该包含 16 个维度', () => {
+      // 2026-08-22：维度已扩至 16（01-09 + 10-16），此断言为维度数护栏，
+      // 新增/删除维度时必须同步更新此处与 collectionPipeline.DIMENSION_TO_MODE
+      expect(DEFAULT_DIMENSIONS).toHaveLength(16)
     })
 
     it('每个维度应该包含必要字段', () => {

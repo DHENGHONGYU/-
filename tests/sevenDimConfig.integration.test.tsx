@@ -17,6 +17,7 @@ import { MemoryRouter } from 'react-router'
 import SevenDimConfigPage from '@/pages/input/SevenDimConfigPage'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { DIMENSION_COUNT } from '@/config/collectConfig'
+import { ToastProvider } from '@/hooks/useToast'
 
 // Mock logger
 vi.mock('@/lib/logger', () => ({
@@ -31,7 +32,9 @@ vi.mock('@/components/ErrorBoundary', () => ({
 function renderPage() {
   return render(
     <MemoryRouter initialEntries={['/input/seven-dim']}>
-      <SevenDimConfigPage />
+      <ToastProvider>
+        <SevenDimConfigPage />
+      </ToastProvider>
     </MemoryRouter>,
   )
 }

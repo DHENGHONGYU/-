@@ -8,6 +8,7 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
+import { ToastProvider } from '@/hooks/useToast'
 import IntelligentScorePage from '@/pages/analysis/IntelligentScorePage'
 
 describe('IntelligentScorePage', () => {
@@ -18,11 +19,13 @@ describe('IntelligentScorePage', () => {
   it('组件正常渲染', () => {
     render(
       <MemoryRouter>
-        <IntelligentScorePage />
+        <ToastProvider>
+          <IntelligentScorePage />
+        </ToastProvider>
       </MemoryRouter>,
     )
-    // 验证组件渲染了内容（检查页面标题 PageHeader title="个股智能分析"）
-    expect(screen.getAllByText(/个股智能分析/).length).toBeGreaterThan(0)
+    // 验证组件渲染了内容（检查页面标题 PageHeader title="V6 个股智能评分"）
+    expect(screen.getAllByText(/V6 个股智能评分/).length).toBeGreaterThan(0)
   })
 
   // ================================================================

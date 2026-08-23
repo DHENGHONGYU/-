@@ -3,12 +3,21 @@
  * @fileoverview MCP Server 全链路集成测试
  *
  * @description
- * 验证 16 个 MCP Server 的注册完整性、工具调用冒烟、ACL 权限、
+ * 验证当前启用 MCP Server 的注册完整性、工具调用冒烟、ACL 权限、
  * 关键链路端到端、工具调用幂等性。
  *
- * 测试结构（5 个套件，共 33 个用例）：
+ * 注册契约（对齐 src/config/mcpServerRegistry.ts，2026-08-23 同步）：
+ *   Registry 17 条目 = 13 enabled + 4 disabled（portfolio/knowledge/execution/workflow）；
+ *   analysis:main 已于 2026-08-20 恢复启用；新增 marketdata:westock /
+ *   marketdata:tencentnews 两个腾讯数据源 Server。
+ *   注册走异步链路：ensureMCPRegistered() + await [mcpReadyPromise, mcpFullyReadyPromise]
+ *   （核心链路与 lazy 链路并行，mcpFullyReadyPromise 单独等待会在核心 Server
+ *   注册完成前过早 resolve，必须双 Promise 并等；同步版 registerAllServers()
+ *   依赖模块缓存，测试冷启动下恒为空，禁用）。
+ *
+ * 测试结构（5 个套件，共 34 个用例）：
  *   套件1: 注册完整性验证（6 用例）
- *   套件2: 工具调用冒烟测试（17 用例）
+ *   套件2: 工具调用冒烟测试（18 用例）
  *   套件3: ACL 权限验证（4 用例）
  *   套件4: 关键链路端到端测试（4 用例）
  *   套件5: 工具调用幂等性（2 用例）
@@ -32,25 +41,43 @@ import {
 } from '@/config/dbConfig'
 import { RESEARCH_STATUS } from '@/constants/pool.constants'
 import { mcpRegistry } from '@/mcp/core/registry'
-import { registerAllServers } from '@/mcp/register'
+import { ensureMCPRegistered, mcpReadyPromise, mcpFullyReadyPromise } from '@/mcp/register'
+
+/**
+ * 等待核心 + lazy 两条注册链路全部完成。
+ *
+ * 2026-08-23 语义修正后，mcpFullyReadyPromise 由 ensureMCPRegistered() 统一编排：
+ * 仅当核心与非核心两条链路均完成才 resolve，单独 await 即可；此处保留 Promise.all
+ * 双等待作为防御性写法（对两个信号均幂等）。
+ */
+async function waitForAllMcpServers(): Promise<void> {
+  ensureMCPRegistered()
+  await Promise.all([mcpReadyPromise, mcpFullyReadyPromise])
+}
 
 // ============================================================
-// 期望的 16 个 MCP Server 名称（使用 info.name，非 MCP_SERVER_REGISTRY 的 name）
+// 期望的启用 MCP Server 名称（使用 info.name，非 MCP_SERVER_REGISTRY 的 name）
+// 对齐 mcpServerRegistry.ts：13 enabled，含 analysis（2026-08-20 恢复）
+// 与 marketdata:westock / marketdata:tencentnews（腾讯数据源）
 // ============================================================
 
 const EXPECTED_SERVER_NAMES: string[] = [
-  'fetcher', 'scoring:v6', 'trading', 'news', 'llm',
+  'fetcher', 'scoring:v6', 'trading', 'analysis', 'news', 'llm',
   'screening', 'backtest', 'pool', 'system', 'data-collector',
+  'marketdata:westock', 'marketdata:tencentnews',
 ]
 
 // ============================================================
 // 辅助函数
 // ============================================================
 
+/** 测试用标准 A 股 symbol（对齐 isValidSymbolWithExchange 契约：6位数字+.SH/.SZ/.BJ） */
+const TEST_SYMBOL = '600519.SH'
+
 /**
- * 添加测试股票到 stocks store
+ * 添加测试股票到 stocks store（默认贵州茅台 600519.SH）
  */
-async function addTestStock(symbol = 'TEST001', name = '测试股票'): Promise<void> {
+async function addTestStock(symbol = TEST_SYMBOL, name = '测试股票'): Promise<void> {
   await dataLayer.stocks.add({
     symbol,
     name,
@@ -98,11 +125,12 @@ afterAll(() => {
 // ============================================================
 
 describe('套件1: MCP Server 注册完整性验证', () => {
-  beforeAll(() => {
-    registerAllServers()
+  beforeAll(async () => {
+    // 异步注册链路：核心 + lazy Server 全量就绪后再断言（幂等守卫，可重复调用）
+    await waitForAllMcpServers()
   })
 
-  it('应注册所有 16 个 MCP Server', () => {
+  it('应注册所有启用的 MCP Server（13 个）', () => {
     const servers = mcpRegistry.listServers()
     const registeredNames = servers.map(s => s.server.info.name)
     for (const name of EXPECTED_SERVER_NAMES) {
@@ -162,6 +190,7 @@ describe('套件1: MCP Server 注册完整性验证', () => {
 
 describe('套件2: MCP 工具调用冒烟测试', () => {
   beforeAll(async () => {
+    await waitForAllMcpServers()
     await db.init()
     dataBridge.invalidateCache(STORE_NAME.stocks)
     dataBridge.invalidateCache(STORE_NAME.v6Scores)
@@ -187,14 +216,16 @@ describe('套件2: MCP 工具调用冒烟测试', () => {
     expect(result).toBeDefined()
   }, { timeout: 60000 })
 
-  // @status known-failing - analysis Server 已禁用（零业务调用），由 screening 覆盖筛选能力
-  it.skip('analysis: screen_stocks 应返回筛选结果', async () => {
-    const result = await callTool('analysis', 'screen_stocks')
-    expect(result).toBeDefined()
+  // analysis Server 已于 2026-08-20 恢复启用（IndustryDashboardPage / IndustryScorePage 依赖）
+  it('analysis: list_tools 应返回分析工具清单', async () => {
+    const server = mcpRegistry.listServers().find(s => s.server.info.name === 'analysis')?.server
+    expect(server).toBeDefined()
+    const tools = server!.listTools()
+    expect(tools.length).toBeGreaterThan(0)
   }, { timeout: 60000 })
 
   it('news: fetch_news 应返回新闻数据', async () => {
-    const result = await callTool('news', 'fetch_news', { symbol: 'TEST001' })
+    const result = await callTool('news', 'fetch_news', { symbol: TEST_SYMBOL })
     expect(result).toBeDefined()
   }, { timeout: 60000 })
 
@@ -216,10 +247,20 @@ describe('套件2: MCP 工具调用冒烟测试', () => {
 
   it('backtest: run_backtest 应返回回测结果', async () => {
     const result = await callTool('backtest', 'run_backtest', {
-      symbol: 'TEST001',
+      symbol: TEST_SYMBOL,
       startDate: '2024-01-01',
       endDate: '2024-06-30',
     })
+    expect(result).toBeDefined()
+  }, { timeout: 60000 })
+
+  it('marketdata:westock: check_health 应返回健康状态', async () => {
+    const result = await callTool('marketdata:westock', 'check_health')
+    expect(result).toBeDefined()
+  }, { timeout: 60000 })
+
+  it('marketdata:tencentnews: check_health 应返回健康状态', async () => {
+    const result = await callTool('marketdata:tencentnews', 'check_health')
     expect(result).toBeDefined()
   }, { timeout: 60000 })
 
@@ -235,7 +276,7 @@ describe('套件2: MCP 工具调用冒烟测试', () => {
 
   it('pool: transition_pool_item 应返回状态变更结果', async () => {
     const result = await callTool('pool', 'transition_pool_item', {
-      symbol: 'TEST001',
+      symbol: TEST_SYMBOL,
       toPool: 'research',
       toStatus: 'screened',
     })
@@ -304,7 +345,7 @@ describe('套件3: ACL 权限验证', () => {
     const result = await dataBridge.query({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
-      key: 'TEST001',
+      key: TEST_SYMBOL,
       source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
@@ -321,7 +362,7 @@ describe('套件3: ACL 权限验证', () => {
         timestamp: Date.now(),
       },
       payload: {
-        symbol: 'TEST001',
+        symbol: TEST_SYMBOL,
         researchStatus: RESEARCH_STATUS.screened,
         updatedAt: Date.now(),
       },
@@ -331,7 +372,7 @@ describe('套件3: ACL 权限验证', () => {
     const result = await dataBridge.query({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
-      key: 'TEST001',
+      key: TEST_SYMBOL,
       source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
@@ -365,7 +406,8 @@ describe('套件4: 关键链路端到端测试', () => {
   }, { timeout: 60000 })
 
   it('DataBridge 完整写入链路：forward(INSERT_STOCK) → query(QUERY_LIST) → 数据一致', async () => {
-    const symbol = 'E2E001'
+    // 标准 A 股格式（对齐 isValidSymbolWithExchange 契约）
+    const symbol = '000001.SZ'
     // 写入
     await dataBridge.forward({
       meta: {

@@ -253,8 +253,9 @@ function parseClaimed(agents: string): Claimed {
     }
     if (hits.length > 0 && hits.every((v) => v === hits[0])) storeCount = hits[0];
     else if (hits.length > 0) {
-      // 若出现基线 29 + 增量 24 = 53 的模式，优先信任加法结果
-      const sumPattern = /(\d+)\s*[+＋]\s*(\d+)\s*[=＝]\s*(\d+)/g;
+      // 若出现「基线 29 + 增量 24 = 53」的模式，优先信任加法结果；
+      // 允许加号后出现「增量/新增」等可选词（与 patterns[3]/[4] 语义一致）
+      const sumPattern = /(\d+)\s*[+＋]\s*(?:[^\n=＋=]{0,6}?)?(\d+)\s*[=＝]\s*(\d+)/g;
       for (const m of agents.matchAll(sumPattern)) {
         const a = parseInt(m[1], 10);
         const b = parseInt(m[2], 10);

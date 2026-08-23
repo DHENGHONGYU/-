@@ -6,7 +6,7 @@ const raw = fs.readFileSync(GRAPH_PATH, 'utf-8');
 const graph = JSON.parse(raw);
 
 const files = graph.files || [];
-const BASE = 'C:\\Users\\huawei\\Documents\\kimi\\Workspaces\\智能投研复盘系统V9\\';
+const BASE = path.resolve(__dirname, '..', '..') + '/';
 
 // Helper: normalize path to relative
 function rel(p) {

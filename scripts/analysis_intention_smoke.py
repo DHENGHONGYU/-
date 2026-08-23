@@ -1,5 +1,7 @@
 """UI smoke test: 分析舱 intent 作用域 (输入舱 -> 分析舱 交接)."""
 from playwright.sync_api import sync_playwright
+import os
+import shutil
 
 BASE = "http://localhost:5199"
 
@@ -7,7 +9,7 @@ def main():
     with sync_playwright() as p:
         browser = p.chromium.launch(
             headless=True,
-            executable_path=r"C:\Users\DELL\AppData\Local\ms-playwright\chromium-1228\chrome-win64\chrome.exe",
+            executable_path=os.environ.get("PLAYWRIGHT_CHROME", shutil.which("chrome")),
         )
         page = browser.new_page(viewport={"width": 1440, "height": 900})
         errors = []
