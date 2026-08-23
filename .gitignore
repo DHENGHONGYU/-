@@ -212,10 +212,34 @@ v9-maturity-benchmark/
 
 # ── 脚本审计缓存（审计 JSON 历史快照，可重新生成） ──
 scripts/docs/reports/
-scripts/audit/docs/reports/
+scripts/audit/docs/
 scripts/audit/.*.json
 scripts/audit/lint-*.json
 scripts/audit/lint-*.txt
+
+# ── docs/meta 自动生成 JSON 索引（脚本可重建，8.7 MB） ──
+docs/meta/**/*.json
+
+# ── docs/reports 审计/测试自动生成产物（可重新跑脚本生成） ──
+docs/reports/audit/
+docs/reports/testing/audit-reports/
+docs/reports/pre-launch/docs/
+docs/reports/**/*.zip
+docs/reports/**/*.patch
+docs/reports/**/*.xlsx
+docs/reports/**/*.sha256
+docs/reports/**/*.log
+docs/reports/**/*.json
+
+# ── docs/releases 二进制/脚本产物（不应在文档目录跟踪） ──
+docs/releases/**/*.json
+docs/releases/**/*.py
+
+# ── docs/reference 自动生成/过期产物 ──
+docs/reference/project/changelogs/**/*.json
+docs/reference/project/changelogs/**/*.patch
+docs/reference/meta/*.json
+docs/reference/meta/*.csv
 
 # ── 根目录散落临时产物 ──
 cleanup_candidate_data.json

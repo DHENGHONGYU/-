@@ -96,7 +96,7 @@
     "doc_to_skills":  {
                           "V9-DOC-PROJ-206":  {
                                                   "doc_id":  "V9-DOC-PROJ-206",
-                                                  "path":  "docs/reference/scholar.md",
+                                                  "path":  "docs/reference/plugins-reference.md",
                                                   "covered_by":  "V9-PLUGIN-SCHOLAR"
                                               },
                           "V9-DOC-AI-015":  {
@@ -116,7 +116,7 @@
                                                },
                           "V9-DOC-PROJ-190":  {
                                                   "doc_id":  "V9-DOC-PROJ-190",
-                                                  "path":  "docs/reference/yuandian_law.md",
+                                                  "path":  "docs/reference/plugins-reference.md",
                                                   "covered_by":  "V9-PLUGIN-YUANDIAN"
                                               },
                           "V9-DOC-PROJ-107":  {
@@ -139,7 +139,7 @@
                                               },
                           "V9-DOC-FRONT-056":  {
                                                    "doc_id":  "V9-DOC-FRONT-056",
-                                                   "path":  "docs/explanation/2026-06-23-portalshell-dark-kimi-layout.md",
+                                                   "path":  "docs/explanation/implementation/adr/2026-06-23-portalshell-dark-kimi-layout.md",
                                                    "covered_by":  "V9-PLUGIN-KIMI"
                                                },
                           "V9-DOC-FRONT-002":  {
@@ -162,7 +162,7 @@
                                               },
                           "V9-DOC-PROJ-201":  {
                                                   "doc_id":  "V9-DOC-PROJ-201",
-                                                  "path":  "docs/reference/tianyancha.md",
+                                                  "path":  "docs/reference/plugins-reference.md",
                                                   "covered_by":  "V9-PLUGIN-TYC"
                                               },
                           "V9-DOC-AI-017":  {
@@ -172,17 +172,17 @@
                                             },
                           "V9-DOC-PROJ-219":  {
                                                   "doc_id":  "V9-DOC-PROJ-219",
-                                                  "path":  "docs/reference/ifind.md",
+                                                  "path":  "docs/reference/plugins-reference.md",
                                                   "covered_by":  "V9-PLUGIN-IFIND"
                                               },
                           "V9-DOC-PROJ-196":  {
                                                   "doc_id":  "V9-DOC-PROJ-196",
-                                                  "path":  "docs/reference/yahoo_finance.md",
+                                                  "path":  "docs/reference/plugins-reference.md",
                                                   "covered_by":  "V9-PLUGIN-YAHOO"
                                               },
                           "V9-DOC-PROJ-220":  {
                                                   "doc_id":  "V9-DOC-PROJ-220",
-                                                  "path":  "docs/reference/imf.md",
+                                                  "path":  "docs/reference/plugins-reference.md",
                                                   "covered_by":  "V9-PLUGIN-IMF"
                                               }
                       }

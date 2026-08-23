@@ -1299,7 +1299,7 @@
       ]
     },
     "V9-DOC-PROJ-196": {
-      "path": "docs/reference/yahoo_finance.md",
+      "path": "docs/reference/plugins-reference.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-META-000",
@@ -1420,7 +1420,7 @@
       ]
     },
     "V9-DOC-DATA-047": {
-      "path": "docs/reference/seven-dim-config-data-definition.md",
+      "path": "docs/reference/SEVEN_DIM_CONFIG_DATA_DEFINITION.md",
       "outgoing": null,
       "incoming": "V9-DOC-PROJ-176"
     },
@@ -1562,7 +1562,7 @@
       ]
     },
     "V9-DOC-PROJ-206": {
-      "path": "docs/reference/scholar.md",
+      "path": "docs/reference/plugins-reference.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-META-000",
@@ -1973,7 +1973,7 @@
       ]
     },
     "V9-DOC-PROJ-219": {
-      "path": "docs/reference/ifind.md",
+      "path": "docs/reference/plugins-reference.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-META-000",
@@ -2163,7 +2163,7 @@
       ]
     },
     "V9-DOC-DATA-041": {
-      "path": "docs/reference/news/data-definition.md",
+      "path": "docs/reference/news/DATA_DEFINITION.md",
       "outgoing": null,
       "incoming": "V9-DOC-PROJ-176"
     },
@@ -2241,7 +2241,7 @@
       ]
     },
     "V9-DOC-DATA-008": {
-      "path": "docs/explanation/design/dual-strategy-dataflow-spec.md",
+      "path": "docs/reference/dual-strategy-dataflow-spec.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-PROJ-174",
@@ -2493,7 +2493,7 @@
       ]
     },
     "V9-DOC-DATA-040": {
-      "path": "docs/reference/world_bank_open_data.md",
+      "path": "docs/reference/plugins-reference.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-META-000",
@@ -2747,7 +2747,7 @@
       ]
     },
     "V9-DOC-QA-105": {
-      "path": "docs/explanation/2026-07-05-exception-handling-test-report.md",
+      "path": "docs/reports/testing/2026-07-05-exception-handling-test-report.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-PROJ-174",
@@ -3031,7 +3031,7 @@
       ]
     },
     "V9-DOC-PROJ-208": {
-      "path": "docs/reference/sec_edgar.md",
+      "path": "docs/reference/plugins-reference.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-META-000",
@@ -3101,7 +3101,7 @@
       "incoming": "V9-DOC-BACK-046"
     },
     "V9-DOC-FRONT-056": {
-      "path": "docs/explanation/2026-06-23-portalshell-dark-kimi-layout.md",
+      "path": "docs/explanation/implementation/adr/2026-06-23-portalshell-dark-kimi-layout.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-PROJ-174",
@@ -3243,7 +3243,7 @@
       ]
     },
     "V9-DOC-PROJ-246": {
-      "path": "docs/guides/getting-started.md",
+      "path": "docs/guides/tutorials/getting-started.md",
       "outgoing": [
         "V9-DOC-PROJ-122",
         "V9-DOC-PROJ-184"
@@ -3760,7 +3760,7 @@
       ]
     },
     "V9-DOC-QA-032": {
-      "path": "docs/reference/V9-TEST-CASES.md",
+      "path": "docs/reports/testing/V9-TEST-CASES.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-PROJ-174",
@@ -4369,7 +4369,7 @@
       ]
     },
     "V9-DOC-PROJ-113": {
-      "path": "docs/reference/v6pro-to-v9-migration-analysis.md",
+      "path": "docs/archive/normal/explanation-v6pro-to-v9-migration-analysis.md",
       "outgoing": null,
       "incoming": "V9-DOC-PROJ-176"
     },
@@ -4612,7 +4612,7 @@
       "incoming": "V9-DOC-PROJ-017"
     },
     "V9-DOC-DATA-011": {
-      "path": "docs/explanation/multi-factor-screening-data-definition.md",
+      "path": "docs/reference/multi-factor-screening-data-definition.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-PROJ-174",
@@ -4627,7 +4627,7 @@
       "incoming": "V9-DOC-PROJ-176"
     },
     "V9-DOC-DATA-058": {
-      "path": "docs/reference/ai-center-data-definition.md",
+      "path": "docs/reference/AI_CENTER_DATA_DEFINITION.md",
       "outgoing": null,
       "incoming": "V9-DOC-PROJ-176"
     },
@@ -5653,7 +5653,7 @@
       "incoming": "V9-DOC-PROJ-176"
     },
     "V9-DOC-DATA-061": {
-      "path": "docs/guides/how-to-add-store.md",
+      "path": "docs/guides/how-to/how-to-add-store.md",
       "outgoing": [
         "V9-DOC-DATA-055",
         "V9-DOC-DATA-059"
@@ -5727,7 +5727,7 @@
       ]
     },
     "V9-DOC-DATA-037": {
-      "path": "docs/reference/2026-06-20-indexeddb-over-localstorage.md",
+      "path": "docs/explanation/implementation/adr/2026-06-20-indexeddb-over-localstorage.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-PROJ-174",
@@ -6106,7 +6106,7 @@
       ]
     },
     "V9-DOC-DATA-043": {
-      "path": "docs/reference/data-collection/data-definition.md",
+      "path": "docs/reference/data-collection/DATA_DEFINITION.md",
       "outgoing": null,
       "incoming": "V9-DOC-PROJ-176"
     },
@@ -6168,7 +6168,7 @@
       ]
     },
     "V9-DOC-DATA-057": {
-      "path": "docs/reference/2026-06-29-data-relationship-blueprint.md",
+      "path": "docs/archive/normal/reference-superpowers-2026-06-29-data-relationship-blueprint.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-PROJ-174",
@@ -6396,7 +6396,7 @@
       ]
     },
     "V9-DOC-FRONT-027": {
-      "path": "docs/reference/2026-06-21-hashrouter-for-static-hosting.md",
+      "path": "docs/explanation/implementation/adr/2026-06-21-hashrouter-for-static-hosting.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-PROJ-174",
@@ -6623,7 +6623,7 @@
       ]
     },
     "V9-DOC-FRONT-034": {
-      "path": "docs/guides/how-to-add-widget.md",
+      "path": "docs/guides/how-to/how-to-add-widget.md",
       "outgoing": [
         "V9-DOC-FRONT-026",
         "V9-DOC-FRONT-017"
@@ -6678,7 +6678,7 @@
       ]
     },
     "V9-DOC-PROJ-234": {
-      "path": "docs/reference/api-contract.md",
+      "path": "docs/reference/trade/api-contract.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-PROJ-174",
@@ -7034,12 +7034,12 @@
       "incoming": null
     },
     "V9-DOC-DATA-014": {
-      "path": "docs/reference/cockpit/data-definition.md",
+      "path": "docs/reference/cockpit/DATA_DEFINITION.md",
       "outgoing": null,
       "incoming": "V9-DOC-PROJ-176"
     },
     "V9-DOC-PROJ-201": {
-      "path": "docs/reference/tianyancha.md",
+      "path": "docs/reference/plugins-reference.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-META-000",
@@ -7312,7 +7312,7 @@
       "incoming": null
     },
     "V9-DOC-PROJ-220": {
-      "path": "docs/reference/imf.md",
+      "path": "docs/reference/plugins-reference.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-META-000",
@@ -7340,7 +7340,7 @@
       "incoming": "V9-DOC-PROJ-176"
     },
     "V9-DOC-DATA-032": {
-      "path": "docs/reference/v9-indexeddb-store-schema.md",
+      "path": "docs/reference/V9_IndexedDB_Store_Schema.md",
       "outgoing": null,
       "incoming": "V9-DOC-PROJ-176"
     },
@@ -7788,7 +7788,7 @@
       ]
     },
     "V9-DOC-DATA-042": {
-      "path": "docs/reference/project/2026-06-21-databridge-over-direct-datalayer.md",
+      "path": "docs/explanation/implementation/adr/2026-06-21-databridge-over-direct-datalayer.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-PROJ-174",
@@ -8284,7 +8284,7 @@
       ]
     },
     "V9-DOC-PROJ-089": {
-      "path": "docs/reference/completeness-profile-batch1.md",
+      "path": "docs/archive/normal/reference/completeness-profile-batch1.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-PROJ-174",
@@ -8461,7 +8461,7 @@
       ]
     },
     "V9-DOC-BACK-033": {
-      "path": "docs/guides/how-to-add-service.md",
+      "path": "docs/guides/how-to/how-to-add-service.md",
       "outgoing": [
         "V9-DOC-BACK-027",
         "V9-DOC-BACK-026"
@@ -8628,7 +8628,7 @@
       ]
     },
     "V9-DOC-PROJ-190": {
-      "path": "docs/reference/yuandian_law.md",
+      "path": "docs/reference/plugins-reference.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-META-000",
@@ -8707,7 +8707,7 @@
       ]
     },
     "V9-DOC-DATA-009": {
-      "path": "docs/explanation/design/multi-factor-screening-data-definition.md",
+      "path": "docs/reference/multi-factor-screening-data-definition.md",
       "outgoing": null,
       "incoming": "V9-DOC-PROJ-176"
     },
@@ -9757,7 +9757,7 @@
       ]
     },
     "V9-DOC-DATA-060": {
-      "path": "docs/reference/backtest-data-definition.md",
+      "path": "docs/reference/BACKTEST_DATA_DEFINITION.md",
       "outgoing": null,
       "incoming": [
         "V9-DOC-PROJ-174",

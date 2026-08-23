@@ -15768,7 +15768,7 @@
                                              },
                          "V9-DOC-PROJ-113":  {
                                                  "doc_id":  "V9-DOC-PROJ-113",
-                                                 "path":  "docs/reference/v6pro-to-v9-migration-analysis.md",
+                                                 "path":  "docs/archive/normal/explanation-v6pro-to-v9-migration-analysis.md",
                                                  "covered_by":  [
                                                                     "src/apps/analysis/index.ts",
                                                                     "src/config/analysisTemplatesConfig.ts",
@@ -16601,7 +16601,7 @@
                                              },
                          "V9-DOC-DATA-011":  {
                                                  "doc_id":  "V9-DOC-DATA-011",
-                                                 "path":  "docs/explanation/multi-factor-screening-data-definition.md",
+                                                 "path":  "docs/reference/multi-factor-screening-data-definition.md",
                                                  "covered_by":  [
                                                                     "src/config/multiFactorScreeningConfig.ts",
                                                                     "src/config/screeningConfig.ts",
@@ -18764,7 +18764,7 @@
                                              },
                          "V9-DOC-DATA-047":  {
                                                  "doc_id":  "V9-DOC-DATA-047",
-                                                 "path":  "docs/reference/seven-dim-config-data-definition.md",
+                                                 "path":  "docs/reference/SEVEN_DIM_CONFIG_DATA_DEFINITION.md",
                                                  "covered_by":  [
                                                                     "src/agents/agentConfigManager.ts",
                                                                     "src/apps/input/hotSector.config.ts",
@@ -20503,7 +20503,7 @@
                                                                                                  },
                          "V9-DOC-DATA-042":  {
                                                  "doc_id":  "V9-DOC-DATA-042",
-                                                 "path":  "docs/reference/project/2026-06-21-databridge-over-direct-datalayer.md",
+                                                 "path":  "docs/explanation/implementation/adr/2026-06-21-databridge-over-direct-datalayer.md",
                                                  "covered_by":  [
                                                                     "src/core/databridge.ts",
                                                                     "src/core/databridge.types.ts",
@@ -20560,7 +20560,7 @@
                                              },
                          "V9-DOC-DATA-032":  {
                                                  "doc_id":  "V9-DOC-DATA-032",
-                                                 "path":  "docs/reference/v9-indexeddb-store-schema.md",
+                                                 "path":  "docs/reference/V9_IndexedDB_Store_Schema.md",
                                                  "covered_by":  [
                                                                     "src/constants/store-channels.constants.ts",
                                                                     "src/data/dataLayerContentStores.ts",
@@ -23039,7 +23039,7 @@
                                            },
                          "V9-DOC-DATA-008":  {
                                                  "doc_id":  "V9-DOC-DATA-008",
-                                                 "path":  "docs/explanation/design/dual-strategy-dataflow-spec.md",
+                                                 "path":  "docs/reference/dual-strategy-dataflow-spec.md",
                                                  "covered_by":  [
                                                                     "src/config/dualStrategyRules.ts",
                                                                     "src/config/strategyConfig.ts",
@@ -23492,7 +23492,7 @@
                                               },
                          "V9-DOC-DATA-061":  {
                                                  "doc_id":  "V9-DOC-DATA-061",
-                                                 "path":  "docs/guides/how-to-add-store.md",
+                                                 "path":  "docs/guides/how-to/how-to-add-store.md",
                                                  "covered_by":  [
                                                                     "src/constants/store-channels.constants.ts",
                                                                     "src/data/dataLayerContentStores.ts",
@@ -23869,7 +23869,7 @@
                                              },
                          "V9-DOC-BACK-033":  {
                                                  "doc_id":  "V9-DOC-BACK-033",
-                                                 "path":  "docs/guides/how-to-add-service.md",
+                                                 "path":  "docs/guides/how-to/how-to-add-service.md",
                                                  "covered_by":  [
                                                                     "src/core/idbPreflight.ts",
                                                                     "src/domain/collection/pipeline.ts",
@@ -24981,7 +24981,7 @@
                                                                                   },
                          "V9-DOC-DATA-009":  {
                                                  "doc_id":  "V9-DOC-DATA-009",
-                                                 "path":  "docs/explanation/design/multi-factor-screening-data-definition.md",
+                                                 "path":  "docs/reference/multi-factor-screening-data-definition.md",
                                                  "covered_by":  [
                                                                     "src/config/multiFactorScreeningConfig.ts",
                                                                     "src/config/screeningConfig.ts",
