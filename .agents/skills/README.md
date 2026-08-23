@@ -3,10 +3,13 @@ title: V9 跨平台 SKILL 统一索引
 type: registry
 domain: ai
 status: active
-version: v2.1.0
+version: v2.2.0
 last_updated: 2026-08-23
 related_strategy: docs/03-development/mcp-cli-skill-strategy.md
 change_log:
+  - version: v2.2.0
+    changes: "虚拟清零：16 个检查/分析/校对类虚拟技能物理化迁入（自用户级 ~/.trae-cn 与 ~/.workbuddy 归位），3 组影子重复删除；L1 22→38、L3 19→0、合计 50→47；新增 code-quality（7）/ui-design（1）/devops（1）分类行"
+    date: 2026-08-23
   - version: v2.1.0
     changes: "新增 §六 技能评估体系：运行时冒烟（audit:skill-runtime）+ 路由回归（test:skill-router）+ 四维评分卡（skill:scorecard，仅度量）"
     date: 2026-08-23
@@ -24,9 +27,9 @@ change_log:
     date: 2026-07-19
 ---
 
-# V9 跨平台 SKILL 统一索引 — v2.1.0
+# V9 跨平台 SKILL 统一索引 — v2.2.0
 
-> **版本**: v2.1.0 | **日期**: 2026-08-23 | **关联策略**: [MCP Server · CLI · Skill 三层协同开发策略](../../docs/03-development/mcp-cli-skill-strategy.md)
+> **版本**: v2.2.0 | **日期**: 2026-08-23 | **关联策略**: [MCP Server · CLI · Skill 三层协同开发策略](../../docs/03-development/mcp-cli-skill-strategy.md)
 > **定位**: 本文件是**唯一人类可读统一索引**，覆盖 TRAE / WorkBuddy / Qoder / VSCode / Kimi 五平台。
 > **机器真相源唯一**: [`.trae/skills/skill-registry.json`](../../.trae/skills/skill-registry.json)（triggers/gates/mandatory 机器可读字段只在此处维护；本索引不重复维护机器字段，防止双份漂移）。
 > **跨平台契约入口**（<!-- WIKI-ADAPTER: source=wiki/ -->）：平台目录布局、同步规则与禁止事项的统一契约见 [wiki/CONTRACT.md](../../wiki/CONTRACT.md)，总入口 [wiki/README.md](../../wiki/README.md)；本文件为技能域的人类可读索引，与 [wiki/skills/INDEX.md](../../wiki/skills/INDEX.md) 同源同频（变更任一方须同步另一方）。
@@ -35,7 +38,7 @@ change_log:
 
 ## 一、跨平台加载契约（环境配置通用原则）
 
-**单一物理真相源**：`.agents/skills/`（git 追踪，22 个技能目录 + `_SKILL-TEMPLATE.md` 骨架模板 + 本索引）。
+**单一物理真相源**：`.agents/skills/`（git 追踪，38 个技能目录 + `_SKILL-TEMPLATE.md` 骨架模板 + 本索引）。
 **防多备份铁律**：任何平台不得持有技能本体的第二份拷贝；加载目录差异一律用联接（junction）或指针解决。
 
 | 平台 | 加载路径 | 机制 | 说明 |
@@ -50,7 +53,7 @@ change_log:
 
 ---
 
-## 二、L1 项目物理技能（22 项 · `.agents/skills/*/SKILL.md`）
+## 二、L1 项目物理技能（38 项 · `.agents/skills/*/SKILL.md`）
 
 > 全部为 S 级 5 段式骨架（一/触发条件 二/前置检查 三/阶段化 SOP 四/陷阱教训 五/交付物清单）；`_SKILL-TEMPLATE.md` 为官方骨架模板不计入计数。
 
@@ -78,6 +81,24 @@ change_log:
 | [collection-pipeline-testing](./collection-pipeline-testing/SKILL.md) | data-flow | **MAND** |
 | [data-flow-integrity-audit](./data-flow-integrity-audit/SKILL.md) | data-flow | **MAND** |
 | [collection-pipeline-governance](./collection-pipeline-governance/SKILL.md) | quality-gate-governance | adv |
+| [module-sync-checklist](./module-sync-checklist/SKILL.md) | code-quality | **MAND** |
+| [code-quality-audit](./code-quality-audit/SKILL.md) | code-quality | **MAND** |
+| [dev-checklist](./dev-checklist/SKILL.md) | code-quality | adv |
+| [health-audit](./health-audit/SKILL.md) | code-quality | adv |
+| [tsc-gate-scope-audit](./tsc-gate-scope-audit/SKILL.md) | code-quality | adv |
+| [tsc-test-error-diagnosis](./tsc-test-error-diagnosis/SKILL.md) | code-quality | adv |
+| [bash-conventions](./bash-conventions/SKILL.md) | code-quality | adv |
+| [doc-encoding-remediation](./doc-encoding-remediation/SKILL.md) | doc-governance | adv |
+| [stale-path-reference-audit](./stale-path-reference-audit/SKILL.md) | doc-governance | adv |
+| [cross-index-governance](./cross-index-governance/SKILL.md) | doc-governance | **MAND** |
+| [doc-management-principles](./doc-management-principles/SKILL.md) | doc-governance | adv |
+| [mock-data-diagnosis](./mock-data-diagnosis/SKILL.md) | data-flow | adv |
+| [color-token-remediation](./color-token-remediation/SKILL.md) | ui-design | adv |
+| [windows-env-path-doctor](./windows-env-path-doctor/SKILL.md) | devops | adv |
+| [architecture-debt-remediation](./architecture-debt-remediation/SKILL.md) | architecture | **MAND** |
+| [component-health-check](./component-health-check/SKILL.md) | architecture | adv |
+
+> 上表后 16 行为 v2.2.0 物理化迁入（自用户级 `~/.trae-cn/skills` 与 `~/.workbuddy/skills` 归位，去 `v9-` 前缀，S 级 5 段式）。
 
 ## 三、L2 外部插件技能（9 项 · Kimi 插件生态 · `plugins/`）
 
@@ -95,13 +116,13 @@ change_log:
 | yahoo_finance | 全球行情/财报替代源 |
 | yuandian_law | 中国法律法规判例检索 |
 
-## 四、L3 平台内置虚拟技能（19 项）
+## 四、L3 平台内置虚拟技能（0 项，v2.2.0 已清零）
 
-> 定义见 `skill-registry.json` 的 `virtualPlatformSkills`（TRAE CN 平台内置，无本地物理目录；本索引仅计项数不重复枚举）。
+> 原 19 项虚拟技能已全量物理化归位（16 项转物理见 §二 + 3 项影子重复删除）；`skill-registry.json` 的 `virtualPlatformSkills` 现为空数组，全平台统一从 `.agents/skills/` 单一物理源加载，相互调用零分叉。
 
 ## 五、计数与防混加
 
-- L1（22）+ L2（9）+ L3（19）= **50 条登记**，三层分离，任何声明不得混加计数。
+- L1（38）+ L2（9）+ L3（0）= **47 条登记**，两层分离，任何声明不得混加计数。
 - 一致性由 `npm run audit:skill-coverage` 三方校验（frontmatter ↔ registry ↔ AGENTS.md），RULE-TPL 对 5 段式结构强审。
 
 ## 六、技能评估体系（v2.1.0 新增）

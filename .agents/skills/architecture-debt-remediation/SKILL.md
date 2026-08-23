@@ -8,7 +8,7 @@ change_log:
   - version: v1.0.0
     changes: "基于 S 级 Skill 5 段式骨架模板 [_SKILL-TEMPLATE.md](.agents/skills/_SKILL-TEMPLATE.md) 物理化迁移：自用户级 ~/.trae-cn/skills/architecture-debt-remediation 归位项目单一物理源（2026-07-16 P1 架构债务治理经验沉淀）"
     date: 2026-08-23
-mandatory: false
+mandatory: true
 ---
 
 # 架构债务治理（Architecture Debt Remediation） — v1.0.0

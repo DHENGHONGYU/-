@@ -167,7 +167,7 @@ rm .agents/skills/<slug>/SKILL.md.bak
 
 ## 5. 附录：14 条详细子项 × 21 项 Skill 穿透得分表（原始打分）
 
-（如需单 Skill 逐项定位缺口，可运行 `node scripts/audit/tmp_skill_migration_score.cjs` 输出 JSON 版原始数据，其中 `subPerSec` 按 section1~5 给出每项通过/总数数组。）
+（如需单 Skill 逐项定位缺口，可运行 `node scripts/audit/tmp_skill_migration_score.cjs` 输出 JSON 版原始数据，其中 `subPerSec` 按 section1~5 给出每项通过/总数数组。）【注：该 tmp_ 临时脚本已于 2026-08-23 按 better-harness F-007 清理，仅留存历史引用】
 
 ## 6. 变更记录
 

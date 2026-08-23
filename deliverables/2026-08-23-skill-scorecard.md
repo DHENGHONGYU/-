@@ -25,10 +25,10 @@ generator: scripts/audit/skill-scorecard.cjs v1.0
 | type-safety-contract | adv | 40 | 25 | 20 | 7 | **92** | A |
 | v6-stock-analysis-model | adv | 40 | 25 | 20 | 7 | **92** | A |
 | collection-pipeline-testing | MAND | 40 | 25 | 20 | 7 | **92** | A |
+| skill-5seg-migration | adv | 40 | 25 | 20 | 7 | **92** | A |
 | industry-score | adv | 40 | 22 | 20 | 7 | **89** | B |
 | intelligent-score | adv | 40 | 22 | 20 | 7 | **89** | B |
 | mcp-ui-acl-authorization | adv | 40 | 19 | 20 | 10 | **89** | B |
-| skill-5seg-migration | adv | 40 | 25 | 15 | 7 | **87** | B |
 | architecture-cleanup | adv | 40 | 15 | 20 | 10 | **85** | B |
 | industry-score-mapping | adv | 40 | 17 | 20 | 7 | **84** | B |
 | architecture-radar-scan | adv | 40 | 15 | 15 | 10 | **80** | B |
