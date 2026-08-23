@@ -6,10 +6,13 @@ doc_id: V9-DOC-DEV-005
 title: mcp-acl-guide
 code_version: "2.0.0-rc.2"
 tier: important
-version: v1.2.0
-last_updated: 2026-08-15
+version: v1.2.1
+last_updated: 2026-08-22
 change_log:
-  - version: v1.2.0
+  - version: v1.2.1
+    changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.2.0) → R2 PATCH++(v1.2.1) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
+- version: v1.2.0
     changes: "P0-3 文档对齐(2026-08-15)：§3.2 权限矩阵与 mcpAclMatrix.ts/mcpServerRegistry.ts 对齐——修正 trading 为 ui ✅(仅读)、移除 5 个已禁用 Server 的 ui ✅、新增 marketdata 行、数据列与代码实际 ACL 一致"
     date: 2026-08-15
   - version: v1.1.0

@@ -104,7 +104,7 @@ change_log:
 
 ### 6.6 运行时 Store（消费事件）
 - `collectionRuntimeStore.ts`：订阅 `COLLECTION_EVENTS`，维护 `traceSpans/logs/taskStatuses/overallProgress/stats`。
-- `sevenDimConfigStore.ts`：七维采集配置，经 `dataBridge.forward()` 持久化。
+- `sevenDimConfigStore.ts`：采集维度配置（历史沿用“七维”命名，实际十六维），经 `dataBridge.forward()` 持久化。
 - `dataTestStore.ts`：采集测试面板（单接口链路/批量测试）。
 
 ---
