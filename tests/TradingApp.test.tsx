@@ -446,7 +446,8 @@ describe('TradingApp', () => {
 
     // 使用 getAllByText 获取所有匹配元素，取第一个（观察池卡片中的）
     const symbolElements = screen.getAllByText('000001.SZ')
-    const card = symbolElements[0]!.closest('.rounded-md') as HTMLElement
+    // 2026-08-23 Token Plan 处理事项修复：观察池卡片容器真相源为 rounded-lg（TradingApp.tsx），原 rounded-md 选择器失配返回 null
+    const card = symbolElements[0]!.closest('.rounded-lg') as HTMLElement
     expect(within(card).getByText('平安银行')).toBeInTheDocument()
     expect(within(card).getByText('watching')).toBeInTheDocument()
     expect(within(card).getAllByText('买入').length).toBeGreaterThan(0)
@@ -472,7 +473,8 @@ describe('TradingApp', () => {
 
     // 使用 getAllByText 获取所有匹配元素，取第一个（观察池卡片中的）
     const symbolElements = screen.getAllByText('000001.SZ')
-    const card = symbolElements[0]!.closest('.rounded-md') as HTMLElement
+    // 2026-08-23 Token Plan 处理事项修复：观察池卡片容器真相源为 rounded-lg（TradingApp.tsx），原 rounded-md 选择器失配返回 null
+        const card = symbolElements[0]!.closest('.rounded-lg') as HTMLElement
     expect(within(card).getByText(/风控提示：仓位接近单笔上限/)).toBeInTheDocument()
   })
 
@@ -492,7 +494,8 @@ describe('TradingApp', () => {
 
     // 使用 getAllByText 获取所有匹配元素，取第一个（观察池卡片中的）
     const symbolElements = screen.getAllByText('000001.SZ')
-    const card = symbolElements[0]!.closest('.rounded-md') as HTMLElement
+    // 2026-08-23 Token Plan 处理事项修复：观察池卡片容器真相源为 rounded-lg（TradingApp.tsx），原 rounded-md 选择器失配返回 null
+        const card = symbolElements[0]!.closest('.rounded-lg') as HTMLElement
     expect(within(card).getByText(/风控阻塞：今日交易次数已达上限 5/)).toBeInTheDocument()
   })
 

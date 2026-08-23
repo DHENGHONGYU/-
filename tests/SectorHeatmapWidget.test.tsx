@@ -224,7 +224,9 @@ describe('SectorHeatmapWidget', () => {
     expect(screen.getByText('1. B')).toBeInTheDocument()
 
     // 领涨区域验证排序结果（排除热力图区域的重复文本）
-    const gainerSection = container.querySelectorAll('.grid.grid-cols-2 > div')[0]
+    // 2026-08-23 Token Plan 处理事项修复：排行区真相源 class 为 grid-cols-1 sm:grid-cols-2，
+    // 原 .grid-cols-2 选择器误命中热力图网格（grid-cols-2 sm:grid-cols-3 md:grid-cols-5）的首个板块单元
+    const gainerSection = container.querySelectorAll('.grid.grid-cols-1 > div')[0]
     expect(gainerSection).toBeTruthy()
     const gainerText = gainerSection?.textContent ?? ''
     expect(gainerText).toContain('B')
@@ -248,7 +250,8 @@ describe('SectorHeatmapWidget', () => {
     expect(screen.getByText('领跌 Top5')).toBeInTheDocument()
     expect(screen.getByText('1. Y')).toBeInTheDocument()
 
-    const loserSection = container.querySelectorAll('.grid.grid-cols-2 > div')[1]
+    // 2026-08-23 Token Plan 处理事项修复：同上，排行区选择器对齐真相源 grid-cols-1 sm:grid-cols-2
+    const loserSection = container.querySelectorAll('.grid.grid-cols-1 > div')[1]
     expect(loserSection).toBeTruthy()
     const loserText = loserSection?.textContent ?? ''
     expect(loserText).toContain('Y')
