@@ -87,11 +87,7 @@ docs/reports/**
 !docs/reports/pra-step1-step2-final-fix-report-2026-08-17.md
 
 # Governance deliverables + analysis artifacts (explicitly tracked, do not ignore)
-# These root directories hold governance reports, deep-diagnosis outputs and
-# cross-project competitor comparisons. Keeping them here ensures reproducibility
-# and prevents accidental future ignore-rules from excluding them.
 !deliverables/
-!timeline-competitor-compare/
 
 # TSC / audit output files
 tsc_*.txt
@@ -137,7 +133,8 @@ tmp_audit_*.txt
 test_result.json
 test_screenshot_*.png
 
-# P2 skill mirror — WorkBuddy 加载用副本（由 .agents/skills/ 拷贝，非源，避免重复提交）
+# WorkBuddy/Qoder 技能加载入口 — 指向 .agents/skills 的 Windows 目录联接（junction，v1.7.7 替代 cp 镜像，物理上只有一份）
+# 由 `npm run skill:mirror` 幂等创建/修复（联接复用 / 旧 cp 副本清理重建 / 降级 cp 兜底）；junction 本身不产生文件条目，忽略以防降级 cp 时误提交副本
 .workbuddy/skills/
 
 # Stray prototype — 单文件 HTML 原型（非构建物，勿入版本库）
@@ -186,3 +183,46 @@ finsight-v9-ui-components-optimization/
 
 # 2026-08-21 文件整理契约：需要清理的文件/文档统一转移到 D:\转移文件清单V9
 # （沙箱白名单已就绪，无需项目内暂存目录；任何整理均直接转移到契约终态目录）
+
+# ═══════════════════════════════════════════════════════════════
+# 2026-08-23 系统瘦身：统一治理多 AI 工具产物 + 一次性分析目录
+# ═══════════════════════════════════════════════════════════════
+
+# ── AI 工具私有目录（TRAE CN / Qoder / Playwright MCP 运行时产物） ──
+.trae-cn/
+.qoder/
+.playwright-mcp/
+.trae/logs/
+
+# ── 一次性 AI 分析工作目录（已迁入 deliverables/analysis-reports/，保留 ignore 防重建） ──
+cockpit-redesign/
+data-collection-optimization-analysis/
+data-collector-refactor/
+smic-initiating-coverage/
+stock-analysis-module-design/
+stock-profile-layered-architecture/
+stock-profile-maturity-score/
+stock-research-architecture-analysis/
+strategy-comparison/
+test-coverage-audit/
+test-pyramid-audit/
+timeline-competitor-compare/
+v9-improvement-todo/
+v9-maturity-benchmark/
+
+# ── 脚本审计缓存（审计 JSON 历史快照，可重新生成） ──
+scripts/docs/reports/
+scripts/audit/docs/reports/
+scripts/audit/.*.json
+scripts/audit/lint-*.json
+scripts/audit/lint-*.txt
+
+# ── 根目录散落临时产物 ──
+cleanup_candidate_data.json
+_scan_out.json
+hooks-commit-*.log
+_tmp_patch_*.py
+smic-cross-validation-report.html
+coverage_run.log
+UI-Design-Review-Report.md
+test_outputs/
