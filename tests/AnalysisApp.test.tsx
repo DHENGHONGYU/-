@@ -119,8 +119,10 @@ describe.sequential('AnalysisApp', () => {
   })
 
   it('disables score button while loading', async () => {
+    // 2026-08-23 Token Plan 处理事项修复：延迟窗口从 100ms 放宽到 1000ms，
+    // 避免 userEvent 异步事件链与 waitFor 轮询错过短暂的 loading 窗口（竞态假红）
     vi.spyOn(v6ScoreService, 'runV6Score').mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve({ success: true, data: mockScore }), 100)),
+      () => new Promise((resolve) => setTimeout(() => resolve({ success: true, data: mockScore }), 500)),
     )
 
     renderWithRouter(<AnalysisApp />)
