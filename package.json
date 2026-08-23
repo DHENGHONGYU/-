@@ -94,6 +94,7 @@
     "audit:skill-coverage": "node scripts/audit/audit-skill-coverage.cjs",
     "audit:skill-runtime": "node scripts/audit/audit-skill-runtime.cjs",
     "test:skill-router": "node scripts/test/skill-router.test.cjs",
+    "test:platform-docs": "node scripts/test/audit-platform-docs.test.cjs",
     "skill:scorecard": "node scripts/audit/skill-scorecard.cjs",
     "audit:layers": "tsx scripts/audit/audit-layer-calls.ts",
     "audit:mock-modules": "tsx scripts/audit/audit-mock-modules.ts",

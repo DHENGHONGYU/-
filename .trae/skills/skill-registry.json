@@ -1,12 +1,12 @@
 {
-  "_comment": "V9 Skill L1 Registry — 单一真相源（3 layers）：(1) projectPhysical: .agents/skills/ 22个目录实际存在（含 _SKILL-TEMPLATE.md 官方骨架模板不计入 L1 计数，实际 L1 物理 21 条登记：projectPhysicalSkills[] 数组实际长度 = 21）；data-flow-integrity-audit 孤儿目录已补登记；新增 collection-pipeline-governance=GAP-01 采集管线全链路治理；★ RULE-TPL 模板门禁（AGENTS.md 变更纪律强制）：last_updated ≥ 2026-08-20 或 change_log 含「5 段式骨架模板」的新技能必须命中 S 级 5 大段标题，否则 audit:skill-coverage exit 1，禁止四端登记；(2) externalPlugins: plugins/*/skills/ 9项；(3) virtualPlatform: 平台内置虚拟19项，定义于 AGENTS.md §技能索引与路由表。三层分离，总计 49 条登记（不可混加计数）。",
+  "_comment": "V9 Skill L1 Registry — 单一真相源（3 layers）：(1) projectPhysical: .agents/skills/ 23个目录实际存在（含 _SKILL-TEMPLATE.md 官方骨架模板不计入 L1 计数，实际 L1 物理 22 条登记：projectPhysicalSkills[] 数组实际长度 = 22）；2026-08-23 孤儿归位：skill-5seg-migration 从 .trae/skills/ 迁入 .agents/skills/ 并登记（恢复「.trae/skills 仅存索引文件」约定）；★ RULE-TPL 模板门禁（AGENTS.md 变更纪律强制）：last_updated ≥ 2026-08-20 或 change_log 含「5 段式骨架模板」的新技能必须命中 S 级 5 大段标题，否则 audit:skill-coverage exit 1，禁止四端登记；(2) externalPlugins: plugins/*/skills/ 9项；(3) virtualPlatform: 平台内置虚拟19项，定义于 AGENTS.md §技能索引与路由表。三层分离，总计 50 条登记（不可混加计数）。",
   "schemaVersion": "1.1.0",
   "lastVerifiedAt": "2026-08-21T09:00:00.000Z",
   "generatedAt": "2026-08-21T17:00:00+08:00",
   "summary": {
-    "totalEntries": 49,
+    "totalEntries": 50,
     "projectPhysicalSkills": {
-      "count": 21,
+      "count": 22,
       "location": ".agents/skills/*/SKILL.md"
     },
     "externalPluginSkills": {
@@ -21,7 +21,7 @@
     "categoriesStats": {
       "architecture": 9,
       "db-governance": 1,
-      "doc-governance": 6,
+      "doc-governance": 7,
       "feature-runtime": 1,
       "industry-score": 2,
       "v6-analysis": 3,
@@ -573,6 +573,32 @@
         "npm run audit:acl-consistency",
         "npm run validate:data-consistency",
         "npm run validate:blueprint"
+      ],
+      "status": "physical-active"
+    },
+    {
+      "id": "V9-SKILL-5SEG-MIGRATION",
+      "name": "skill-5seg-migration",
+      "category": "doc-governance",
+      "path": ".agents/skills/skill-5seg-migration/SKILL.md",
+      "mandatory": false,
+      "description": "执行 Skill S 级 5 段式骨架迁移的 7 步统一 SOP（三批次策略 · 标题重映射矩阵 · 15 子项速补模板）。Invoke when 需要把现有 L1 物理 Skill 从 0/1/3 段迁移到标准 5 段式、或批量多 Skill 迁移、或 RULE-TPL 报告缺段 FAIL/内容子项 WARN 时加载。",
+      "triggers": {
+        "keywords": [
+          "5 段式迁移",
+          "RULE-TPL 缺段",
+          "骨架模板迁移",
+          "Skill 格式统一",
+          "批次迁移策略"
+        ],
+        "files": [
+          ".agents/skills/**/SKILL.md",
+          ".agents/skills/_SKILL-TEMPLATE.md"
+        ],
+        "events": []
+      },
+      "gates": [
+        "npm run audit:skill-coverage"
       ],
       "status": "physical-active"
     }

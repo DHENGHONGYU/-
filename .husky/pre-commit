@@ -5,15 +5,23 @@
 set +e
 # 移除 set -e（与大量 || true 容错模式冲突），各步骤错误由 || true 显式处理
 
-# 稳定运行时解析（TD-010 根因修复 · 2026-08-19）
-# 优先使用受管 Node 22（C:/Users/DELL/.workbuddy/binaries/node/versions/22.22.2/node.exe）：
+# 稳定运行时解析（TD-010 根因修复 · 2026-08-19；可移植化 · 2026-08-22）
+# 优先使用受管 Node 22（$HOME/.workbuddy/binaries/node/versions/22.x/node.exe，glob 自动解析，
+# 不再硬编码 C:/Users/<user> 绝对路径，换机/多用户环境无需改本钩子）：
 #   系统 Node 24 在 Windows 下运行 vitest/tsx 大批量单测时会段错误（segfault），
 #   曾多次在 pre-commit 中崩溃并损坏 .git pack 文件（TD-010）。受管 Node 22 + forks 池经验证稳定。
 #   注意：本脚本对 vitest/tsx/tsc/eslint 均使用 node.exe 直接 exec（非 npm），
 #   故可安全切换到受管 Node 22（仅 npm 在 git-bash 下不可用，本脚本不依赖 npm exec）。
-#   回退链：受管 Node 22 → nvm Node 24 → PATH node → node，确保环境变动后仍可用。
-if [ -x "C:/Users/DELL/.workbuddy/binaries/node/versions/22.22.2/node.exe" ]; then
-  HOOK_NODE="C:/Users/DELL/.workbuddy/binaries/node/versions/22.22.2/node.exe"
+#   回退链：受管 Node 22.x → 受管任意版本 → nvm Node 24 → PATH node → node，确保环境变动后仍可用。
+HOOK_NODE=""
+for _managed in "$HOME/.workbuddy/binaries/node/versions/22"*/node.exe "$HOME/.workbuddy/binaries/node/versions/"*/node.exe; do
+  if [ -x "$_managed" ]; then
+    HOOK_NODE="$_managed"
+    break
+  fi
+done
+if [ -n "$HOOK_NODE" ]; then
+  :
 elif [ -x "C:/nvm4w/nodejs/node.exe" ]; then
   HOOK_NODE="C:/nvm4w/nodejs/node.exe"
 elif command -v node >/dev/null 2>&1; then

@@ -157,6 +157,18 @@ change_log:
 | 创建/编辑/移动 `docs/` 目录任意文档、文档录入与管理整体原则、十目录架构/Frontmatter标准/命名规范 | `doc-management-principles` | advisory | 该技能三环闭环治理清单 + frontmatter 必备字段校验 |
 | audit:layers 报出 config 层与 constants 层同一业务常量双份定义、Grep 硬编码报出 `/src/config.*RESEARCH_STATUS/` 等业务常量泄漏、跨层重复常量迁移 | `v9-constant-migration` | mandatory | 迁移后 `npm run audit:layers` = 0 + `npx tsc --noEmit` 0 错误 + 测试 mock 路径更新校验 |
 
+#### 技能协作链（v1.7.9 新增 · 触发时配对加载，不物理合并文件）
+
+> 以下 5 组技能在触发时任一成员命中即**同时加载配对成员**，实现「触发即双技能协同」的 consolidation 效果，同时保留各自独立 mandatory 门禁与教训。
+
+| 协作链 | 成员 A | 成员 B | 协同逻辑 |
+|---|---|---|---|
+| **doc-governance** | `doc-freshness-governance`（MAND） | `docs-as-mirror`（adv） | 版本校准 ↔ 内容镜像：改文档必同时校版本+扫真相 |
+| **architecture** | `architecture-cleanup`（adv） | `architecture-radar-scan`（adv） | 扫描 → 修复：雷达先定位，cleanup 再执行 |
+| **collection-pipeline** | `collection-pipeline-testing`（MAND） | `collection-pipeline-governance`（adv） | 门禁 ↔ 治理：testing 守交付质量，governance 守配置安全 |
+| **data-governance** | `data-flow-integrity-audit`（MAND） | `db-reference-audit`（adv） | 五段链路 ↔ DB 一致性：integrity 审存储兜底，db-reference 审引用一致 |
+| **industry-score** | `industry-score`（adv） | `industry-score-mapping`（adv） | 评分 → 映射：score 产出行业得分，mapping 注入个股模型 |
+
 ### 新增 Skill 强制流程（双保险，v1.7.1 升级 · 替代原「变更纪律」长段落）
 
 > **双保险定义**：保险一 = **AGENTS.md 文档契约强制**（本条规定）；保险二 = **`audit-skill-coverage.cjs` RULE-TPL 脚本强审**（exit 1 阻断）。**任何新增 L1 物理 Skill 必须二者同时满足，缺一不可。**
