@@ -1,6 +1,6 @@
 # E2E 真实质量对比报告：腾讯自选股(westock) MCP 接入前后
 
-> 生成时间：2026-08-23 13:37:06
+> 生成时间：2026-08-23 13:43:38
 > 方法：随机抽取 10 只股票（seed=20260815，可复现），经**真实采集管线** multiSourceFetcher 拉取维度 04(公告)/05(新闻)/08(研报)，
 > AFTER=westock 源开启（经 WestockCliBridge 真实拉起 `westock-data-skillhub` CLI，仅进程内 MCP 消息总线 mock，数据源与映射均为生产代码）；
 > BEFORE=westock 关闭 + legacy Tushare/爬虫源在本环境无 token/未启用；sina 代理为浏览器相对 URL（/api/proxy 前缀）在 headless 实测中无法解析，实际返回空。故 BEFORE 各维度为空，与方案 §10「维度 04/05/08 常年缺数」一致。
