@@ -119,21 +119,30 @@ describe.sequential('AnalysisApp', () => {
   })
 
   it('disables score button while loading', async () => {
-    // 2026-08-23 Token Plan 处理事项修复：延迟窗口从 100ms 放宽到 1000ms，
-    // 避免 userEvent 异步事件链与 waitFor 轮询错过短暂的 loading 窗口（竞态假红）
+    // 2026-08-23 Token Plan 处理事项修复：
+    // 1）改用手动受控 deferred Promise 保持 loading 状态（定时窗口在 vitest 下不稳定）；
+    // 2）loading 态下页面同时存在多个「评分中」按钮（V6 评分卡/批量评分），用 getAllByRole 容错。
+    let releaseScore!: (value: { success: true; data: V6Score }) => void
     vi.spyOn(v6ScoreService, 'runV6Score').mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve({ success: true, data: mockScore }), 500)),
+      () => new Promise((resolve) => { releaseScore = resolve }),
     )
 
     renderWithRouter(<AnalysisApp />)
     await userEvent.click(screen.getByRole('button', { name: /加载全部标的/i }))
     await waitFor(() => expect(screen.getAllByText('000001.SZ').length).toBeGreaterThan(0))
 
-    const scoreBtn = screen.getByRole('button', { name: /运行评分/i })
+    const scoreBtn = screen.getAllByRole('button', { name: /运行评分/i })[0]
     await userEvent.click(scoreBtn)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /评分中/ })).toBeDisabled()
+      const scoringBtns = screen.getAllByRole('button', { name: /评分中/ })
+      expect(scoringBtns.length).toBeGreaterThan(0)
+      for (const btn of scoringBtns) expect(btn).toBeDisabled()
+    })
+    // 释放 Promise，避免悬挂异步任务泄漏到后续用例
+    releaseScore({ success: true, data: mockScore })
+    await waitFor(() => {
+      expect(screen.getAllByRole('button', { name: /运行评分/i }).length).toBeGreaterThan(0)
     })
   })
 
