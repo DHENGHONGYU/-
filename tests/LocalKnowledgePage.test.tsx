@@ -115,7 +115,8 @@ describe('LocalKnowledgePage', () => {
 
     // 2026-08-23 Token Plan 处理事项修复：新 UI 空态拆分为 EmptyState title「暂无文档」+ description，不再是单串文案
     expect(screen.getByText('暂无文档')).toBeInTheDocument()
-    expect(screen.getByText(/导入示例数据/)).toBeInTheDocument()
+    // 2026-08-23 Token Plan 处理事项修复：「导入示例数据」同时出现于工具栏按钮/EmptyState action/描述，用 getAllByText 容错
+    expect(screen.getAllByText(/导入示例数据/).length).toBeGreaterThan(0)
     
     // 2026-08-23 Token Plan 处理事项修复：空态下工具栏与 EmptyState action 各有一个同名按钮，取首个容错
     await userEvent.click(screen.getAllByRole('button', { name: '导入示例数据' })[0])
