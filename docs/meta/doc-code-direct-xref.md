@@ -1,9 +1,13 @@
----
+---version: v1.0.1
 title: 文档↔代码 直接关系快速索引
 type: meta
 domain: project
 status: active
 last_updated: 2026-08-23
+change_log:
+  - version: 1.0.1
+    changes: "基准校对(2026-08-23)：C类缺change_log+补version=v1.0.0基线 → 取真值 max=1.0.0 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
 ---
 
 # 文档↔代码 直接关系快速索引

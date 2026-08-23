@@ -23,8 +23,6 @@ covers_code:
   - src/services/news/stockLinker.ts
   - src/services/news/__tests__/sentimentTrendEngine.test.ts
   - src/services/news/stockLinker.test.ts
-
-
 ---
 # news-contract.md — 新闻资讯子域接口契约
 

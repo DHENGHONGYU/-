@@ -21,8 +21,6 @@ date: 2026-07-17
 covers_code:
   - src/config/rbacThresholds.ts
   - src/services/rbac/permissionRevocationService.ts
-
-
 ---
 # rbac-contract.md — RBAC 权限管理子域接口契约
 

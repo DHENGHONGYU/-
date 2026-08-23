@@ -21,8 +21,6 @@ covers_code:
   - src/services/system/aiMemoryService.ts
   - src/services/system/systemService.test.ts
   - src/services/system/bootstrapService.test.ts
-
-
 ---
 # system-contract.md — 系统级服务接口契约
 

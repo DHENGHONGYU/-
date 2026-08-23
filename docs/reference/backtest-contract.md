@@ -20,8 +20,6 @@ date: 2026-07-17
 
 covers_code:
   - src/services/backtest/BacktestEngine.test.ts
-
-
 ---
 # backtest-contract.md — 回测引擎接口契约
 

@@ -17,8 +17,6 @@ covers_code:
   - src/core/dataflow/dataflowEngine.ts
   - src/core/dataflow/dataflowTypes.ts
   - src/lib/eventBus.ts
-
-
 ---
 > **Status**: Current  
 > **Version**: v0.9.0-migration-implemented  

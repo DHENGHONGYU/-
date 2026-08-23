@@ -1,11 +1,13 @@
----
-title: "V9 项目目录结构规范与使用指南"
+---title: "V9 项目目录结构规范与使用指南"
 domain: project
 status: active
-last_updated: 2026-08-22
+last_updated: 2026-08-23
 code_version: 2.0.0-rc.2
-version: v3.1.3
+version: v3.1.4
 change_log:
+  - version: 3.1.4
+    changes: "基准校对(2026-08-23)：A类双轨(fm v3.1.3 / 正文 v3.1.1) → 取真值 max=3.1.3 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v3.1.3
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v3.1.2) → R2 PATCH++(v3.1.3) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -50,7 +52,7 @@ change_log:
 
 # V9 项目目录结构规范与使用指南
 
-> **Version**: v3.1.1  
+> **Version**: v3.1.4  
 > **Last Updated**: 2026-07-15  
 > **Maintainer**: 架构资产治理官  
 > **Purpose**: 为 APP 开发团队建立规范的文件管理体系；本版基于 2026-07-13 目录结构审计修订并修复文档→代码引用，对齐权威契约 `../../AGENTS.md`

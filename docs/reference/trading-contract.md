@@ -22,8 +22,6 @@ covers_code:
   - src/config/tradingConfig.ts
   - src/config/thresholds.ts
   - src/config/themeRegistry.ts
-
-
 ---
 # trading-contract.md — 交易业务子域接口契约
 

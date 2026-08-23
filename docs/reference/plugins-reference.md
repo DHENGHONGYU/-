@@ -1,10 +1,13 @@
----
-title: "外部数据源插件参考索引"
+---title: "外部数据源插件参考索引"
 domain: project
 status: active
 last_updated: 2026-08-23
 code_version: 2.0.0-rc.2
-version: v1.0.0
+version: v1.0.1
+change_log:
+  - version: 1.0.1
+    changes: "基准校对(2026-08-23)：C类缺change_log → 取真值 max=1.0.0 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
 summary: "8 个 Kimi 插件数据源精简索引：简介 + 使用场景 + 脚本入口。完整 SKILL 文档见 plugins/*/SKILL.md"
 tags: [data-source, plugins, reference]
 ---

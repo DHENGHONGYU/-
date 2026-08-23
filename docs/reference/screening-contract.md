@@ -22,8 +22,6 @@ covers_code:
   - src/config/multiFactorScreeningConfig.ts
   - src/config/screeningConfig.ts
   - src/services/screening/multiFactorScreeningEngine.test.ts
-
-
 ---
 # screening-contract.md — 选股/筛选子域接口契约
 

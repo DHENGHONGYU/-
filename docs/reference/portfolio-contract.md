@@ -16,8 +16,6 @@ change_log:
 covers_code:
   - src/constants/execution.constants.ts
   - src/services/portfolio/portfolioService.test.ts
-
-
 ---
 # portfolio-contract.md — 投资组合（Portfolio）接口契约
 

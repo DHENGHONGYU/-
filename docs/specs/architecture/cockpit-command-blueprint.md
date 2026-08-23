@@ -1,11 +1,13 @@
----
-title: "Cockpit / Command 结构设计蓝图"
+---title: "Cockpit / Command 结构设计蓝图"
 domain: architecture
 status: active
-last_updated: 2026-08-22
+last_updated: 2026-08-23
 code_version: 2.0.0-rc.2
-version: v2.0.2
+version: v2.0.3
 change_log:
+  - version: 2.0.3
+    changes: "基准校对(2026-08-23)：A类双轨(fm v2.0.2 / 正文 v2.0.0) → 取真值 max=2.0.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v2.0.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v2.0.1) → R2 PATCH++(v2.0.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -34,7 +36,7 @@ change_log:
 
 # Cockpit / Command 结构设计蓝图
 
-> **版本**: v2.0.0 | **日期**: 2026-07-24
+> **版本**: v2.0.3 | **日期**: 2026-07-24
 > **v2.1.0 → v2.2.0 变更**: Phase 1 纵横交叉骨架全部落地（步骤 1.2-1.6 完成）；新增 CockpitCrossLayout + CrossMatrixOverview + WidgetSheetDrawer 三个组件；CockpitShell 从 ReactGridLayout 切换为纵横交叉布局；StockChat/IndustryChain 收为 Sheet 抽屉；WatchlistMovers 复用为 Watchlist 子 Tab（注：该集成实际未落地，WatchlistMoversWidget 及 watchlistMoversService 已于 2026-08-15 作为死代码删除）；tsc 0 错误，24 files / 350 tests 全绿
 > **v1.0.0 → v2.0.0 变更**: Phase 0 已落地（26→21 Widget，4 类标准 category，共享 score.ts 抽取）；新增各舱布局校对分析；新增 Cockpit-Command 组件去重与数据流治理；基于 Command 模块实际探索结果修正迁移方案
 > **核心原则**: 不重写原子组件代码，仅做排列组合与重新引用；保持数据链条传递的完整性与效率

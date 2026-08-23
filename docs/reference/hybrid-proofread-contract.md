@@ -24,8 +24,6 @@ covers_code:
   - src/services/hybrid-proofread/ruleEngine.ts
   - src/services/hybrid-proofread/localCollector.ts
   - src/services/hybrid-proofread/reportGenerator.ts
-
-
 ---
 # hybrid-proofread-contract.md — 混合校对（人机协同校验）服务接口契约
 

@@ -16,8 +16,6 @@ change_log:
 
 covers_code:
   - src/store/riskStore.derived.ts
-
-
 ---
 # DEPRECATED - risk-derived-data-definition.md
 

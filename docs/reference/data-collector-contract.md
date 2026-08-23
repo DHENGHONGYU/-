@@ -38,8 +38,6 @@ covers_code:
   - src/services/data-collector/dataSourceOrchestrator.test.ts
   - src/services/data-collector/adaptiveSourceOrchestrator.ts
   - src/services/data-collector/adaptiveSourceOrchestrator.test.ts
-
-
 ---
 # data-collector-contract.md — 数据采集编排服务
 

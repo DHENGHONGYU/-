@@ -25,8 +25,6 @@ covers_code:
   - src/services/input/intentionPoolService.test.ts
   - src/store/analysisStore.test.ts
   - src/apps/input/InputDashboard.addStock.test.tsx
-
-
 ---
 # input-analysis-cabin-contract.md — 输入舱 → 分析舱 数据调用接口契约
 

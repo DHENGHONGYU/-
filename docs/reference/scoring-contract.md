@@ -19,8 +19,6 @@ change_log:
 covers_code:
   - src/services/scoring/v6-engine/config.ts
   - src/config/strategyRules.ts
-
-
 ---
 # scoring-contract.md — 评分引擎服务
 

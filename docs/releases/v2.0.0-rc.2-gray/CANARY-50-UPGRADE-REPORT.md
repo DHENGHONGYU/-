@@ -1,9 +1,11 @@
----
-title: docs/releases/v2.0.0-rc.2-gray/CANARY-50-UPGRADE-REPORT.md
+---title: docs/releases/v2.0.0-rc.2-gray/CANARY-50-UPGRADE-REPORT.md
 code_version: 2.0.0-rc.2
-version: v2.0.2-rc.2
-last_updated: 2026-08-22
+version: v2.0.3-rc.2
+last_updated: 2026-08-23
 change_log:
+  - version: 2.0.3-rc.2
+    changes: "基准校对(2026-08-23)：A类双轨(fm v2.0.2-rc.2 / 正文 v2.0.0-rc.2) → 取真值 max=2.0.2-rc.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v2.0.2-rc.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v2.0.1-rc.2) → R2 PATCH++(v2.0.2-rc.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -15,7 +17,7 @@ change_log:
 ﻿# Canary 50% 灰度发布升级报告
 
 > **报告时间**: 2026-08-20 09:06 (Asia/Shanghai)
-> **版本**: v2.0.0-rc.2 (release commit 420ed40)
+> **版本**: v2.0.3-rc.2 (release commit 420ed40)
 > **灰度比例**: 50% (Canary Gamma 轨道)
 > **从 10% 升级**: ✅ (10% 监控 30min 全绿通过)
 > **持续时长**: 72h (升级到 100% 的观察期)

@@ -16,8 +16,6 @@ change_log:
 covers_code:
   - src/services/execution/executionLogService.test.ts
   - src/services/execution/executionPlanService.test.ts
-
-
 ---
 # execution-contract.md — 交易执行子域接口契约
 

@@ -1,7 +1,10 @@
----
-title: V6 个股分析模型规格附录
-version: v4.3.1
-last_updated: "2026-08-23"
+---title: V6 个股分析模型规格附录
+version: v4.3.2
+change_log:
+  - version: 4.3.2
+    changes: "基准校对(2026-08-23)：C类缺change_log → 取真值 max=4.3.1 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
+last_updated: 2026-08-23
 source_skill: ".agents/skills/v6-stock-analysis-model/SKILL.md §六"
 ---
 

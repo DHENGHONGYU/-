@@ -16,12 +16,12 @@ related_docs: [V9-DOC-META-000, V9-DOC-DATA-001, V9-DOC-PROJ-295, V9-DOC-PROJ-17
 referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-164, V9-DOC-PROJ-176, V9-DOC-DATA-001, V9-DOC-PROJ-182, V9-DOC-PROJ-179, V9-DOC-PROJ-295, docs/meta/deprecated-docs/old-versions/registry-index-v1.0.0-02-design.md, V9-DOC-PROJ-149]
 superseded_by: docs/explanation/system-architecture.md
 change_log:
-  - version: v0.9.0-migration-implemented
-    changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
-    date: 2026-06-24
   - version: v0.9.1-deprecated
     changes: "P0-2 文档版本漂移治理：标记为 deprecated，被 docs/explanation/system-architecture.md（v1.1）取代；正文内容大量空白不再维护，新内容统一写入 system-architecture.md"
     date: 2026-08-15
+  - version: v0.9.0-migration-implemented
+    changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
+    date: 2026-06-24
 ---
 
 # V9 系统蓝图（已废弃）

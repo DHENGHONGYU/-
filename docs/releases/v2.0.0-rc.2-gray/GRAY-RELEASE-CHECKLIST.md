@@ -1,9 +1,11 @@
----
-title: docs/releases/v2.0.0-rc.2-gray/GRAY-RELEASE-CHECKLIST.md
+---title: docs/releases/v2.0.0-rc.2-gray/GRAY-RELEASE-CHECKLIST.md
 code_version: 2.0.0-rc.2
-version: v2.0.2-rc.2
-last_updated: 2026-08-22
+version: v2.0.3-rc.2
+last_updated: 2026-08-23
 change_log:
+  - version: 2.0.3-rc.2
+    changes: "基准校对(2026-08-23)：A类双轨(fm v2.0.2-rc.2 / 正文 v2.0.0-rc.2) → 取真值 max=2.0.2-rc.2 → PATCH++ 对齐 frontmatter/正文/change_log 三轨"
+    date: 2026-08-23
   - version: v2.0.2-rc.2
     changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v2.0.1-rc.2) → R2 PATCH++(v2.0.2-rc.2) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
@@ -14,7 +16,7 @@ change_log:
 
 # FinSightV9 v2.0.0-rc.2 灰度发布检查清单（Gatekeeper Checklist）
 
-> **版本**: v2.0.0-rc.2 · 十五五 20 大新兴行业增强版 · **发布轨道**: 灰度（Canary）→ 全量
+> **版本**: v2.0.3-rc.2 · 十五五 20 大新兴行业增强版 · **发布轨道**: 灰度（Canary）→ 全量
 > **启动日期**: 2026-08-19 · **预上线综合评分**: **99.0 / 100（S 级 · GO）**
 > **上一 RC 基线**: v2.0.0-rc.1（0b08cf1d） → rc.2（27fdac52 + TD-010/TD-013 修复）
 > **验收证据链**: [E2E-TEST-REPORT.md](./E2E-TEST-REPORT.md)

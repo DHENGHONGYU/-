@@ -22,8 +22,6 @@ covers_code:
   - src/services/analysis/__tests__/dataFreshnessGuard.test.ts
   - src/services/analysis/__tests__/scoreDocService.test.ts
   - src/services/analysis/__tests__/scoreTrendService.test.ts
-
-
 ---
 # analysis-contract.md — 投研分析核心子域接口契约
 
