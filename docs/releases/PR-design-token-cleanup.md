@@ -37,7 +37,7 @@ change_log:
 ### 新增（3）
 - `src/lib/designTokenVerifier.ts` — 令牌验证 Utility（`collectDesignTokens` / `verifyDesignTokens` / `verifyDesignTokensOnReady`）
 - `src/lib/designTokenVerifier.test.ts` — 17 个单元测试
-- `docs/release-notes/RELEASE-NOTES-design-token-cleanup.md` — 完整发布说明
+- `docs/release-notes/RELEASE-NOTES-design-token-v4.md` — 完整发布说明（2026-08-23 合并汇总后由原 RELEASE-NOTES-design-token-cleanup.md 更名升级）
 
 ### 修改（5）
 - `src/main.tsx` — 120 行内联验证 → 2 行 import + 调用

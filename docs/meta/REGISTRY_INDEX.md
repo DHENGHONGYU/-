@@ -4,9 +4,12 @@ domain: project
 status: active
 last_updated: 2026-08-22
 code_version: 2.0.0-rc.2
-version: v1.1.1
+version: v1.1.2
 change_log:
-  - version: v1.1.1
+  - version: v1.1.2
+    changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.1.1) → R2 PATCH++(v1.1.2) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
+- version: v1.1.1
     changes: "基准日校对(2026-08-22)：R1取真值(P2 正文版本声明行=v1.1.0) → R2 PATCH++(v1.1.1) / last_updated 刷新 / change_log 闭环"
     date: 2026-08-22
 ---
@@ -148,7 +151,7 @@ interface StoreRegistryEntry {
 | 42 | `marketDataStore` | market | 行情数据 |
 | 43 | `mcpServerStore` | system | MCP 服务器 |
 | 44 | `pageStore` | system | 页面状态 |
-| 45 | `sevenDimConfigStore` | system | 七维配置 |
+| 45 | `sevenDimConfigStore` | system | 采集维度配置（历史沿用“七维”命名，实际十六维） |
 | 46 | `systemMonitorStore` | system | 系统监控 |
 | 47 | `widgetStore` | widget | Widget 实例状态 |
 

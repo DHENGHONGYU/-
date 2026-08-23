@@ -31,13 +31,11 @@ date: 2026-07-17
 | V9-ADR-010 | architecture | ADR-010 Cockpit/Command 职责边界与纵横交叉布局 | specs/architecture/adr-010-cockpit-command-cross-layout.md |
 | V9-DOC-AI-008 | ai | ai-center-vue3-examples | explanation/ai-center-vue3-examples.md |
 | V9-DOC-AI-010 | ai | ai-center-contract | reference/ai-center-contract.md |
-| V9-DOC-AI-014 | ai | agent-audit-report | reference/agent-audit-report.md |
 | V9-DOC-AI-017 | ai | llm-contract.md — 大模型服务接口契约 | reference/llm-contract.md |
 | V9-DOC-AI-034 | ai | llm-multimodel-guide.md — 多模型 LLM 配置与测试实战指南 | reference/llm-multimodel-guide.md |
 | V9-DOC-AI-036 | ai | "Service 集成开发指南" | reference/prompts/service-integration-guide.md |
 | V9-DOC-AI-037 | ai | "Store 集成开发指南" | reference/prompts/store-integration-guide.md |
 | V9-DOC-ARCH-002 | architecture | architecture | explanation/ARCHITECTURE.md |
-| V9-DOC-ARCH-005 | architecture | V10 架构白皮书与 V9 对齐报告 | reference/v10-architecture-alignment.md |
 | V9-DOC-ARCH-007 | architecture | ADR-007: 补齐筛选引擎、信号持久化与复盘引擎 | explanation/adr-007-screening-signal-persistence-review.md |
 | V9-DOC-ARCH-008 | architecture | ADR-008: 采用 V6 核心资源交易策略 | explanation/adr-008-v6-core-resource-trading-strategy.md |
 | V9-DOC-ARCH-009 | architecture | ADR-009: 引入热门板块与价值洼地双策略体系 | explanation/adr-009-dual-strategy-system.md |
@@ -51,7 +49,6 @@ date: 2026-07-17
 | V9-DOC-ARCH-058 | architecture | MCP Server CLI Skill 策略 | guides/development/mcp-cli-skill-strategy.md |
 | V9-DOC-ARCH-059 | arch | 04. UI/UX 规范 | specs/04-ui-ux-specs.md |
 | V9-DOC-ARCH-060 | arch | Cockpit / Command 结构设计蓝图 | specs/architecture/cockpit-command-blueprint.md |
-| V9-DOC-AUDIT-018 | audit | no-unsafe-* 审计 JSON 报告归档索引 | reports/audit/no-unsafe-audit-INDEX.md |
 | V9-DOC-AUDIT-STABILITY-001 | audit | DataBridge 系统稳定性评估报告 | audit/reports/system/databridge-stability-assessment-20260726.md |
 | V9-DOC-AUTO-06E838 | auto | "评分拍照比对功能模块 — 补充穿行测试报告" | reports/optimization/walkthrough-scoredoc-report_optimization.md |
 | V9-DOC-AUTO-67F745 | auto | 上线前全面校验报告-v2.0.0 | reports/上线前全面校验报告-v2.0.0.md |
@@ -61,35 +58,29 @@ date: 2026-07-17
 | V9-DOC-BACK-007 | backend | 因子提炼、扩容与追踪路径分析 | explanation/factor-tracking-roadmap.md |
 | V9-DOC-BACK-012 | backend | Rotation Score Service 实现规格 | reference/rotation-score-spec.md |
 | V9-DOC-BACK-013 | backend | Trading 舱规格（trading-cabin-spec） | reference/trading-cabin-spec.md |
-| V9-DOC-BACK-018 | backend | ձȶԹģ  䴩вԱ | reference/walkthrough-scoredoc-report.md |
 | V9-DOC-BACK-019 | backend | trading-contract.md — 交易业务子域接口契约 | reference/trading-contract.md |
 | V9-DOC-BACK-021 | backend | pwa-contract.md — PWA Service Worker 接口契约 | reference/pwa-contract.md |
 | V9-DOC-BACK-022 | backend | screening-contract.md — 选股/筛选子域接口契约 | reference/screening-contract.md |
 | V9-DOC-BACK-023 | backend | V9 服务子域目录（Services Catalog） | reference/services-catalog.md |
-| V9-DOC-BACK-025 | backend | ADR-008: 采用 v6-pro-cockpit "第四次工业革命稀缺核心资源" 交易策略 | reference/2026-06-24-adopt-v6-core-resource-trading-strategy.md |
 | V9-DOC-BACK-047 | backend | 输入舱→分析舱数据调用接口契约 | reference/input-analysis-cabin-contract.md |
 | V9-DOC-DATA-003 | data | data-layer-overview | explanation/data-layer-overview.md |
-| V9-DOC-DATA-008 | data | V9 双策略体系与数据流架构规格 | explanation/design/dual-strategy-dataflow-spec.md |
-| V9-DOC-DATA-009 | data | multi-factor-screening-data-definition | explanation/design/multi-factor-screening-data-definition.md |
-| V9-DOC-DATA-011 | data | multi-factor-screening-data-definition | explanation/multi-factor-screening-data-definition.md |
+| V9-DOC-DATA-008 | data | V9 双策略体系与数据流架构规格 | reference/dual-strategy-dataflow-spec.md |
+| V9-DOC-DATA-009 | data | multi-factor-screening-data-definition | reference/multi-factor-screening-data-definition.md |
+| V9-DOC-DATA-011 | data | multi-factor-screening-data-definition | reference/multi-factor-screening-data-definition.md |
 | V9-DOC-DATA-015 | data | data-collector 服务契约 | reference/data-collector-contract.md |
 | V9-DOC-DATA-021 | data | V9 双策略体系与数据流架构规格 | reference/dual-strategy-dataflow-spec.md |
 | V9-DOC-DATA-022 | data | multi-factor-screening-data-definition | reference/multi-factor-screening-data-definition.md |
 | V9-DOC-DATA-030 | data | Data Flow Convergence Plan | guides/development/data-flow-convergence-plan.md |
-| V9-DOC-DATA-032 | data | V9 IndexedDB Store Schema 文档 | reference/v9-indexeddb-store-schema.md |
+| V9-DOC-DATA-031 | data | 数据采集质量提升与稳定性优化整体方案 | guides/development/data-collection-quality-improvement-plan.md |
 | V9-DOC-DATA-035 | data | ADR-002: IndexedDB 替代 localStorage | reference/adr-002-indexeddb-over-localstorage.md |
 | V9-DOC-DATA-036 | data | data-collection-route-ui-audit | reference/data-collection-route-ui-audit.md |
-| V9-DOC-DATA-037 | data | ADR-002: IndexedDB 替代 localStorage | reference/2026-06-20-indexeddb-over-localstorage.md |
+| V9-DOC-DATA-037 | data | ADR-002: IndexedDB 替代 localStorage | explanation/implementation/adr/2026-06-20-indexeddb-over-localstorage.md |
 | V9-DOC-DATA-039 | data | V9 数据时间关系与生命周期蓝图 | reference/v9-data-timeline.md |
-| V9-DOC-DATA-040 | data | World Bank Open Data 插件 | reference/world_bank_open_data.md |
-| V9-DOC-DATA-042 | data | ADR-003: DataBridge 替代直接 dataLayer 写入 | reference/project/2026-06-21-databridge-over-direct-datalayer.md |
+| V9-DOC-DATA-042 | data | ADR-003: DataBridge 替代直接 dataLayer 写入 | explanation/implementation/adr/2026-06-21-databridge-over-direct-datalayer.md |
 | V9-DOC-DATA-044 | data | Tushare Pro Token 配置与注册指引 | reference/tushare-token-setup.md |
-| V9-DOC-DATA-048 | data | JSDoc ĵ嵥 - Data Collector ģ | reference/changelogs/2026-07/jsdoc-update-summary-data-collector-20260712.md |
 | V9-DOC-DATA-049 | data | data_link_sequence_diagram | reference/data_link_sequence_diagram.md |
 | V9-DOC-DATA-050 | data | collection-contract.md — 数据采集子域接口契约 | reference/collection-contract.md |
-| V9-DOC-DATA-057 | data | V9 数据库数据关系与时间关系蓝图计划 | reference/2026-06-29-data-relationship-blueprint.md |
-| V9-DOC-DATA-060 | data | DEPRECATED - backtest-data-definition.md | reference/backtest-data-definition.md |
-| V9-DOC-DATA-073 | data | Store 集成指南 | reference/ai/store-integration-guide.md |
+| V9-DOC-DATA-073 | data | Store 集成指南 | reference/prompts/store-integration-guide.md |
 | V9-DOC-DATA-080 | data | ADR-014: 向量搜索升级方案（HNSW + transformers.js） | reference/adr-014-vector-search-over-tfidf.md |
 | V9-DOC-DEV-001 | dev | 股票字典生成与校验 | reference/stock-dictionary-generation.md |
 | V9-DOC-DEV-005 | dev | mcp-acl-guide | guides/how-to/mcp-acl-guide.md |
@@ -125,12 +116,12 @@ date: 2026-07-17
 | V9-DOC-GUIDE-038 | guide | 09. 质量门禁 | guides/09-quality-gates.md |
 | V9-DOC-GUIDE-039 | guide | 组件新增准入政策 | guides/component-admission-policy.md |
 | V9-DOC-GUIDE-040 | guide | Design→Code 工作流规范 | guides/design-to-code-workflow.md |
-| V9-DOC-GUIDE-041 | guide | V9 智能投研复盘系统 — 新成员 30 分钟上手指南 | guides/getting-started.md |
-| V9-DOC-GUIDE-042 | guide | 如何新增 Service | guides/how-to-add-service.md |
-| V9-DOC-GUIDE-043 | guide | 如何新增一个 Store（Zustand + withBroadcast） | guides/how-to-add-store.md |
-| V9-DOC-GUIDE-044 | guide | 如何新增一个 Widget（WidgetShell + 事件总线） | guides/how-to-add-widget.md |
+| V9-DOC-GUIDE-041 | guide | V9 智能投研复盘系统 — 新成员 30 分钟上手指南 | guides/tutorials/getting-started.md |
+| V9-DOC-GUIDE-042 | guide | 如何新增 Service | guides/how-to/how-to-add-service.md |
+| V9-DOC-GUIDE-043 | guide | 如何新增一个 Store（Zustand + withBroadcast） | guides/how-to/how-to-add-store.md |
+| V9-DOC-GUIDE-044 | guide | 如何新增一个 Widget（WidgetShell + 事件总线） | guides/how-to/how-to-add-widget.md |
 | V9-DOC-GUIDE-045 | guide | 模块完成标准（Definition of Done） | guides/module-completion-standard.md |
-| V9-DOC-GUIDE-046 | guide | V9 编码规范（Coding Conventions） | guides/standards/coding-conventions.md |
+| V9-DOC-GUIDE-046 | guide | V9 编码规范（Coding Conventions） | reference/coding-conventions.md |
 | V9-DOC-GUIDE-047 | guide | 组件命名规范与文档模板标准 | guides/standards/component-naming-conventions.md |
 | V9-DOC-GUIDE-048 | guide | 01 · 设计与原创思路（Design & Original Thinking） | guides/team-handbook/01-design-philosophy.md |
 | V9-DOC-GUIDE-049 | guide | 02 · 整体架构设计思路（Overall Architecture） | guides/team-handbook/02-architecture.md |
@@ -156,7 +147,7 @@ date: 2026-07-17
 | V9-DOC-PROD-008 | product | TODO-ADD-TITLE | guides/team-handbook/05-competitive-analysis.md |
 | V9-DOC-PROD-010 | product | 01. 愿景与目标 | specs/01-vision-and-goals.md |
 | V9-DOC-PROJ-015 | project | 功能模块分类图示与开发者必读清单 | meta/functional-module-guide.md |
-| V9-DOC-PROJ-056 | project | 踩坑规则门禁指南 | explanation/design/踩坑规则门禁指南.md |
+| V9-DOC-PROJ-056 | project | 踩坑规则门禁指南 | guides/踩坑规则门禁指南.md |
 | V9-DOC-PROJ-062 | project | 新闻模块 — useState → Zustand 迁移文档 | explanation/migration-news-useState-to-zustand.md |
 | V9-DOC-PROJ-073 | project | 02-functional-specs | specs/02-functional-specs.md |
 | V9-DOC-PROJ-092 | project | fetcher 服务契约 | reference/fetcher-contract.md |
@@ -165,20 +156,9 @@ date: 2026-07-17
 | V9-DOC-PROJ-101 | project | rbac-contract | reference/rbac-contract.md |
 | V9-DOC-PROJ-109 | project | trade-contract | reference/trade-contract.md |
 | V9-DOC-PROJ-185 | project | 文档索引已迁移 | meta/registry-index-root.md |
-| V9-DOC-PROJ-190 | project | Yuandian Law 插件 | reference/yuandian_law.md |
-| V9-DOC-PROJ-191 | project | ȿӹŽָ | reference/踩坑规则门禁指南.md |
+| V9-DOC-PROJ-191 | project | ȿӹŽָ | guides/踩坑规则门禁指南.md |
 | V9-DOC-PROJ-195 | project | V9 L2 状态层补齐路线图 | reference/v9-l2状态层补齐路线图.md |
-| V9-DOC-PROJ-196 | project | Yahoo Finance 插件 | reference/yahoo_finance.md |
-| V9-DOC-PROJ-201 | project | Tianyancha 插件 | reference/tianyancha.md |
 | V9-DOC-PROJ-202 | project | usecase-contract.md — 业务用例编排接口契约 | reference/useCase-contract.md |
-| V9-DOC-PROJ-206 | project | Scholar 插件 | reference/scholar.md |
-| V9-DOC-PROJ-208 | project | SEC EDGAR 插件 | reference/sec_edgar.md |
-| V9-DOC-PROJ-209 | project | 每日文档变更历史 — 2026-07-12 | reference/changelogs/2026-07/daily-doc-validation-2026-07-12.md |
-| V9-DOC-PROJ-210 | project | JSDoc 注释完整汇总报? | reference/changelogs/2026-07/jsdoc-combined-report-20260712.md |
-| V9-DOC-PROJ-213 | project | P1 批次行动清单 — 2026-07-05 | reference/changelogs/2026-07/action-list-p1.md |
-| V9-DOC-PROJ-216 | project | PR-5 构建性能优化总结 | reference/changelogs/2026-07/pr-5-build-optimization-summary.md |
-| V9-DOC-PROJ-219 | project | iFinD 插件 | reference/ifind.md |
-| V9-DOC-PROJ-220 | project | IMF 插件 | reference/imf.md |
 | V9-DOC-PROJ-221 | project | export-contract.md — 导出服务接口契约 | reference/export-contract.md |
 | V9-DOC-PROJ-225 | project | V9 编码规范（Coding Conventions） | reference/coding-conventions.md |
 | V9-DOC-PROJ-226 | project | news-contract.md — 新闻资讯子域接口契约 | reference/news-contract.md |
@@ -198,40 +178,30 @@ date: 2026-07-17
 | V9-DOC-PROJ-377 | project | "最终 Commit Message（请确认）" | releases/COMMIT-FINAL.md |
 | V9-DOC-DOCS-000 | project | V9 文档体系总览与导航 | README.md |
 | V9-DOC-QA-005 | qa | security-test-plan | reports/testing/security-test-plan.md |
-| V9-DOC-QA-027 | qa | 2026-07-04-ui-testing-optimization | reference/2026-07-04-ui-testing-optimization.md |
 | V9-DOC-QA-028 | qa | ai-generate-audit-fix-loop | reference/ai-generate-audit-fix-loop.md |
 | V9-DOC-QA-036 | qa | 板块个股清单页面 UI 交互验收清单 | reports/testing/sector-stocks-ui-acceptance-checklist.md |
-| V9-DOC-QA-048 | qa | 测试缓存清理修复总结 | reference/changelogs/2026-07/test-cache-fix-summary.md |
 | V9-DOC-QA-049 | qa | backtest-contract.md — 回测引擎接口契约 | reference/backtest-contract.md |
-| V9-DOC-QA-074 | qa | V9 前端应用安全质量审计报告 | reference/audit-b4-4-security.md |
 | V9-DOC-QA-108 | qa | 质量门禁 | guides/standards/quality-gates.md |
 | V9-DOC-QA-110 | qa | 我用 WorkBuddy 给审计团队搭了 20 个"分身"：一个审计合伙人的 AI 工作流改造实录 #WorkBuddy | assets/articles/01-tutorial-audit-workflow.md |
 | V9-DOC-REF-904 | reference | jsdoc-convention | reference/jsdoc-convention.md |
-| V9-DOC-REF-905 | reference | 全局接口契约（API Contract） | reference/api-contract.md |
+| V9-DOC-REF-905 | reference | 全局接口契约（API Contract） | reference/trade/api-contract.md |
 | V9-DOC-REF-907 | reference | Agent Runtime 实现规格 | reference/agent-runtime-spec.md |
-| V9-DOC-REF-909 | reference | ai-center-data-definition | reference/ai-center-data-definition.md |
 | V9-DOC-REF-910 | reference | "AI 智能体调度中心 / 健康监控 / 诊断分析 — 数据字典" | reference/AI_CENTER_DATA_DEFINITION.md |
 | V9-DOC-REF-912 | reference | analysis-cabin-spec | reference/analysis-cabin-spec.md |
 | V9-DOC-REF-913 | reference | analysis-contract | reference/analysis-contract.md |
 | V9-DOC-REF-914 | reference | atomic-component-system | reference/atomic-component-system.md |
 | V9-DOC-REF-919 | reference | "驾驶舱重构方案总结" | reference/cockpit/cockpit-refactor-plan.md |
-| V9-DOC-REF-920 | reference | data-definition | reference/cockpit/data-definition.md |
 | V9-DOC-REF-921 | reference | "Cockpit Widget 框架数据字典" | reference/cockpit/DATA_DEFINITION.md |
 | V9-DOC-REF-923 | reference | command-cabin-spec | reference/command-cabin-spec.md |
-| V9-DOC-REF-925 | reference | completeness-profile-batch5 | reference/completeness-profile-batch5.md |
-| V9-DOC-REF-926 | reference | completeness-profile | reference/completeness-profile.md |
-| V9-DOC-REF-928 | reference | data-definition | reference/data-collection/data-definition.md |
 | V9-DOC-REF-929 | reference | "数据采集模块数据字典" | reference/data-collection/DATA_DEFINITION.md |
 | V9-DOC-REF-930 | reference | data-collection-task-list | reference/data-collection-task-list.md |
 | V9-DOC-REF-932 | reference | data-flow-spec | reference/data-flow-spec.md |
-| V9-DOC-REF-933 | reference | databridge-split-plan | reference/databridge-split-plan.md |
 | V9-DOC-REF-934 | reference | databridge端点与数据映射清单 | reference/databridge端点与数据映射清单.md |
 | V9-DOC-REF-935 | reference | dataflow-engine-spec | reference/dataflow-engine-spec.md |
 | V9-DOC-REF-938 | reference | "V9 设计令牌映射表" | reference/design-token-mapping.md |
 | V9-DOC-REF-939 | reference | design-tokens | reference/design-tokens.md |
 | V9-DOC-REF-940 | reference | execution-contract | reference/execution-contract.md |
 | V9-DOC-REF-943 | reference | "KPI 口径目录（Store → MetricCard 消费映射）" | reference/kpi-catalog.md |
-| V9-DOC-REF-945 | reference | data-definition | reference/news/data-definition.md |
 | V9-DOC-REF-946 | reference | "新闻资讯模块数据字典" | reference/news/DATA_DEFINITION.md |
 | V9-DOC-REF-949 | reference | output-cabin-spec | reference/output-cabin-spec.md |
 | V9-DOC-REF-950 | reference | portfolio-contract | reference/portfolio-contract.md |
@@ -239,21 +209,17 @@ date: 2026-07-17
 | V9-DOC-REF-954 | reference | risk-derived-data-definition | reference/risk-derived-data-definition.md |
 | V9-DOC-REF-955 | reference | scoring-contract | reference/scoring-contract.md |
 | V9-DOC-REF-956 | reference | seven-dim-advanced-config-implementation | reference/seven-dim-advanced-config-implementation.md |
-| V9-DOC-REF-957 | reference | seven-dim-config-data-definition | reference/seven-dim-config-data-definition.md |
 | V9-DOC-REF-958 | reference | "七维采集配置模块 — 数据字典" | reference/SEVEN_DIM_CONFIG_DATA_DEFINITION.md |
 | V9-DOC-REF-962 | reference | system-contract | reference/system-contract.md |
 | V9-DOC-REF-963 | reference | "回归测试套件模板" | reference/templates/regression-suite.md |
 | V9-DOC-REF-964 | reference | "交易持仓管理模块 API 契约文档" | reference/trade/api-contract.md |
 | V9-DOC-REF-965 | reference | "交易持仓管理模块 API 契约文档" | reference/trade/API_CONTRACT.md |
-| V9-DOC-REF-969 | reference | v6-to-v9-migration-spec | reference/v6-to-v9-migration-spec.md |
 | V9-DOC-REF-971 | reference | v9-数据血缘追踪 | reference/v9-数据血缘追踪.md |
 | V9-DOC-REF-972 | reference | "V9 IndexedDB Store Schema 文档" | reference/V9_IndexedDB_Store_Schema.md |
 | V9-DOC-REF-978 | reference | _contract-template | reference/_contract-template.md |
 | V9-DOC-REF-980 | reference | "V9 核心数据字典与类型定义（整合版）" | reference/《V9核心数据字典与类型定义（整合版）》.md |
-| V9-DOC-REF-982 | reference | 功能模块数据契约 | reference/《功能模块数据契约》.md |
 | V9-DOC-REF-984 | reference | 网页测试检索校对纳入采集方案分析 | reference/网页测试检索校对纳入采集方案分析.md |
 | V9-DOC-REF-985 | reference | 第四次工业革命稀缺核心资源 — 交易策略解析与 V9 采用方案 | reference/fourth-industrial-revolution-core-resource-strategy.md |
-| V9-DOC-REF-986 | reference | v6pro-to-v9-migration-analysis | reference/v6pro-to-v9-migration-analysis.md |
 | V9-DOC-SOP-MERGE-v2.1.0 | project | SOP Merge v2.1.0 | reports/release-management/merge-sop-v2.1.0.md |
 | V9-DOC-TECH-027 | misc | no-unsafe 大盘扫描与 Batch 4/5 拆分报告（GOV-P1-01） | reports/governance/no-unsafe-inventory-2026-08-15.md |
 | V9-DOC-TESTING-001 | testing | 4 项功能缺陷与性能优化 Issue — 修复验证报告（fact-check 参数 / Store 计数 / useCallback 稳定化 / 市值缓存） | reports/testing/four-issue-fix-verification-report-2026-08-16.md |
@@ -262,7 +228,6 @@ date: 2026-07-17
 | V9-DOC-IMPL-002 | impl | 密度表数据整合方案 | explanation/implementation/density-table-integration-plan-2026-08-20.md |
 | V9-DOC-META-013 | meta | 开发手册索引 | meta/development-manual-index.md |
 | V9-DOC-META-014 | meta | 模块注册体系镜像索引 | meta/registry-index.md |
-| V9-DOC-REF-987 | reference | 设计令牌决策映射图 | reference/design-token-decision-map.md |
 | V9-DOC-SOP-001 | sop | S01 开发环境搭建 | guides/sops/S01-dev-env-setup.md |
 | V9-DOC-SOP-002 | sop | S02 开发工作流 | guides/sops/S02-dev-workflow.md |
 | V9-DOC-SOP-004 | sop | S04 合入前集成 | guides/sops/S04-pre-merge-integration.md |

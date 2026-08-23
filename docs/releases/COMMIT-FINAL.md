@@ -31,7 +31,7 @@ git commit -m "refactor(design-tokens): 清除旧版双套令牌系统，确立 
   - verifyDesignTokensOnReady(): DOM 就绪 + DEV 守卫便捷封装
 - src/lib/designTokenVerifier.test.ts — 17 个单元测试（已在 75b2d61 提交）
 - docs/guides/design-to-code-workflow.md — Design→Code 工作流规范 v1.2.0
-- docs/release-notes/RELEASE-NOTES-design-token-cleanup.md — 完整发布说明
+- docs/release-notes/RELEASE-NOTES-design-token-v4.md — 完整发布说明（2026-08-23 合并汇总后由原 RELEASE-NOTES-design-token-cleanup.md 更名升级）
 - docs/releases/PR-design-token-cleanup.md — PR 描述模板
 
 ### 修改
@@ -95,7 +95,7 @@ Refs: commit 75b2d61, docs/guides/design-to-code-workflow.md v1.2.0"
 | 6 | M | src/store/themeStore.ts |
 | 7 | D | scripts/generate/generate-tokens.ts |
 | 8 | A | docs/guides/design-to-code-workflow.md |
-| 9 | A | docs/release-notes/RELEASE-NOTES-design-token-cleanup.md |
+| 9 | A | docs/release-notes/RELEASE-NOTES-design-token-cleanup.md（2026-08-23 合并汇总后更名为 RELEASE-NOTES-design-token-v4.md） |
 | 10 | A | docs/releases/COMMIT-design-token-cleanup.md |
 | 11 | A | docs/releases/PR-design-token-cleanup.md |
 | 12 | A | dogfood-output/e2e-theme-light.png |

@@ -27,7 +27,7 @@ git add scripts/generate/generate-tokens.ts \
         scripts/README.md \
         docs/guides/design-to-code-workflow.md \
         docs/guides/team-handbook/01-design-philosophy.md \
-        docs/release-notes/RELEASE-NOTES-design-token-cleanup.md \
+        docs/release-notes/RELEASE-NOTES-design-token-v4.md \
         docs/releases/PR-design-token-cleanup.md \
         dogfood-output/token-verify-v5.png \
         dogfood-output/e2e-theme-light.png \
@@ -48,7 +48,7 @@ git commit -m "refactor(design-tokens): 清除旧版双套令牌系统，确立 
   - verifyDesignTokensOnReady(): DOM 就绪 + DEV 守卫便捷封装
 - src/lib/designTokenVerifier.test.ts — 17 个单元测试（全覆盖）
 - docs/guides/design-to-code-workflow.md — Design→Code 工作流规范 v1.2.0
-- docs/release-notes/RELEASE-NOTES-design-token-cleanup.md — 完整发布说明
+- docs/release-notes/RELEASE-NOTES-design-token-v4.md — 完整发布说明（2026-08-23 合并汇总后由原 RELEASE-NOTES-design-token-cleanup.md 更名升级）
 - docs/releases/PR-design-token-cleanup.md — PR 描述模板
 
 ### 修改

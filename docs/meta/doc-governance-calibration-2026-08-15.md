@@ -183,7 +183,7 @@ change_log:
 - docs/meta/document-style-guide.md（32 条）：示例文件名去反引号 + 乱码链接修复
 - docs/reference/fourth-industrial-revolution-core-resource-strategy.md（20 条）：外部参考文件加完整前缀
 - docs/meta/markdown-reorg-framework.md（17+6 条）：归档文件标注 + 裸名引用补全
-- docs/reference/v6pro-to-v9-migration-analysis.md（30 处）：V6 Pro 外部路径转纯文字 + 目录修正
+- docs/reference/v6pro-to-v9-migration-analysis.md（30 处）：V6 Pro 外部路径转纯文字 + 目录修正（该文档现位于 `docs/archive/normal/explanation-v6pro-to-v9-migration-analysis.md`）
 - docs/guides/how-to/git-commit-governance.md（19 处）：模式说明去反引号
 
 **注册表同步**：

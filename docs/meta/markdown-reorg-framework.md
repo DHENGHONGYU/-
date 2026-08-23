@@ -79,7 +79,7 @@ code_version: 2.0.0
 | 子类 | 内容 | 代表文件 |
 |------|------|----------|
 | 行为契约 | AI/分层/四步集成强制约束 | `AGENTS.md`（项目根，P0 事实标准） |
-| 编码规范 | 类型安全、复杂度治理、lint 规则 | `docs/guides/standards/coding-conventions.md`、`../archive/historical-2026-08-16/batch8/complexity-redlines.md（已归档）` |
+| 编码规范 | 类型安全、复杂度治理、lint 规则 | `docs/reference/coding-conventions.md`、`../archive/historical-2026-08-16/batch8/complexity-redlines.md（已归档）` |
 | 质量门禁 | 12 道门禁定义与基线 | `docs/guides/standards/quality-gates.md`、`docs/guides/09-quality-gates.md`、`docs/reference/踩坑规则门禁指南.md` |
 | 测试规范 | 单测/集成/E2E 基线 | `docs/reports/testing/*`、`../archive/historical-2026-08-16/batch6/docs/reference/test-catalog.md（已归档）` |
 | 校对契约 | 文档-代码双向校对规则 | `docs/reference/hybrid-proofread-contract.md`、doc-proofreading-strategy.md（已废弃） |
@@ -106,7 +106,7 @@ code_version: 2.0.0
 
 | 子类 | 内容 | 代表文件 |
 |------|------|----------|
-| 审计/检视报告 | 架构/安全/智能体审计 | `docs/reports/audit/*`、`docs/reference/agent-audit-report.md` |
+| 审计/检视报告 | 架构/安全/智能体审计 | `docs/reports/audit/*`（agent-audit-report.md 已于 2026-08-23 合并汇总中删除，无后继） |
 | 定期更新报告 | 文档治理/同步报告 | 已归档 |
 | 复盘/诊断 | 故障 RCA、功能遗漏诊断 | 2026-07-12 安全审计报告（已删除）、`docs/assets/team-handbook-html/supplementary/V9_MCP_Server与Agent功能遗漏诊断.html` |
 | 计划/看板 | 整改计划、执行看板 | `../archive/historical-2026-08-16/batch6/docs/reference/meta/doc-auto-update-kanban.md（已归档）`、prompt-execute-remediation.md（已删除） |

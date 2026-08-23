@@ -77,8 +77,8 @@ code_version: 2.0.0
 |----------|----------|------|
 | **架构设计** | `<module>-architecture.md` / `<module>-design.md` | databridge-architecture.md |
 | **ADR 决策** | `adr-<number>-<topic>.md` | adr-001-pure-frontend.md |
-| **操作指南** | `how-to-<action>.md` / `<topic>-guide.md` | `docs/guides/how-to-add-store.md` |
-| **教程** | `<topic>-tutorial.md` / getting-started.md | `docs/guides/getting-started.md` |
+| **操作指南** | `how-to-<action>.md` / `<topic>-guide.md` | `docs/guides/how-to/how-to-add-store.md` |
+| **教程** | `<topic>-tutorial.md` / getting-started.md | `docs/guides/tutorials/getting-started.md` |
 | **规范标准** | `<domain>-conventions.md` / `<topic>-spec.md` | coding-conventions.md |
 | **报告** | `<type>-report.md` / `<topic>-audit.md` | code-quality-audit-report.md |
 | **经验教训** | `lessons-learned-<date>.md` / `<topic>-lessons.md` | lessons-learned-2026-07.md |

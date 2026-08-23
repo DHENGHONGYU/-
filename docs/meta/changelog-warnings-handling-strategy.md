@@ -131,4 +131,4 @@ if (filePath.includes('CHANGELOG.md')) {
 > 3. ✅ 已在审计脚本中设置非阻断规则
 > 4. ✅ 已制定后续维护规范
 
-> **建议**：不建议修改 CHANGELOG.md 的历史内容。如需引用历史文档，查询 `docs/meta/` 索引或 `archive/ARCHIVE_INDEX.md`。
+> **建议**：不建议修改 CHANGELOG.md 的历史内容。如需引用历史文档，查询 `docs/meta/` 索引或 `docs/_redirect-map.json`（原 `archive/ARCHIVE_INDEX.md` 已于 2026-08-23 合并汇总中删除）。

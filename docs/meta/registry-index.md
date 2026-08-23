@@ -3,15 +3,16 @@ title: 文档索引
 type: meta
 domain: project
 phase: development
-tier: important
 status: active
-version: v1.0.0
-last_updated: 2026-08-20
+version: v1.0.1
+last_updated: 2026-08-22
 code_version: 2.0.0-rc.2
-maintainer: V9 Architecture Team
 summary: "V9 全量文档索引，按类别聚合，由每日文档验证流程自动生成。"
 tags: [project, registry]
-doc_id: V9-DOC-META-014
+change_log:
+  - version: v1.0.1
+    changes: "基准日校对(2026-08-22)：R1取真值(P4 frontmatter.version 裸值=v1.0.0) → R2 PATCH++(v1.0.1) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
 ---
 
 # 文档索引
@@ -617,35 +618,26 @@ doc_id: V9-DOC-META-014
 ### reference
 
 - [{subdomain}-contract.md — {子域中文名} 接口契约](../reference/_contract-template.md)
-- [功能模块数据契约](../reference/《功能模块数据契约》.md)
 - [V9 核心数据字典与类型定义（整合版）](../reference/《V9核心数据字典与类型定义（整合版）》.md)
 - [10. 领域词汇表](../reference/10-glossary.md)
 - [ADR-002: IndexedDB 替代 localStorage](../reference/2026-06-20-indexeddb-over-localstorage.md)
 - [ADR-004: React Router HashRouter](../reference/2026-06-21-hashrouter-for-static-hosting.md)
-- [ADR-008: 采用 v6-pro-cockpit "第四次工业革命稀缺核心资源" 交易策略](../reference/2026-06-24-adopt-v6-core-resource-trading-strategy.md)
-- [V9 数据库数据关系与时间关系蓝图计划](../reference/2026-06-29-data-relationship-blueprint.md)
-- [V9 系统界面功能测试与优化执行方案](../reference/2026-07-04-ui-testing-optimization.md)
+
 - [ȿӹŽָ](../reference/踩坑规则门禁指南.md)
 - [网页测试检索校对是否纳入数据采集改进方案——比对分析与建议](../reference/网页测试检索校对纳入采集方案分析.md)
 - [ADR-002: IndexedDB 替代 localStorage](../reference/adr-002-indexeddb-over-localstorage.md)
 - [ADR-006: 输入舱拆分为四子页面](../reference/adr-006-input-cabin-subpages.md)
 - [ADR-014: 向量搜索升级方案（HNSW + transformers.js）](../reference/adr-014-vector-search-over-tfidf.md)
-- [V9 智能体检视报告](../reference/agent-audit-report.md)
 - [Agent Runtime 实现规格](../reference/agent-runtime-spec.md)
 - [AI 智能体调度中心 / 健康监控 / 诊断分析 — 数据字典](../reference/AI_CENTER_DATA_DEFINITION.md)
 - [ai-center-contract.md — AI 中心接口契约](../reference/ai-center-contract.md)
-- [AI 智能体调度中心 / 健康监控 / 诊断分析 — 数据字典](../reference/ai-center-data-definition.md)
 - [AI 生成—审计—修正飞轮](../reference/ai-generate-audit-fix-loop.md)
 - [Store 集成指南](../reference/ai/store-integration-guide.md)
 - [Analysis 舱规格（analysis-cabin-spec）](../reference/analysis-cabin-spec.md)
 - [analysis-contract.md — 投研分析核心子域接口契约](../reference/analysis-contract.md)
-- [交易持仓管理模块 API 契约文档](../reference/api-contract.md)
-- [架构设计文档版本比对](../reference/architecture-version-comparison.md)
 - [V9 原子组件构成体系（Atomic Design System）](../reference/atomic-component-system.md)
-- [V9 前端应用安全质量审计报告](../reference/audit-b4-4-security.md)
 - [策略回测模块数据字典](../reference/BACKTEST_DATA_DEFINITION.md)
 - [backtest-contract.md — 回测引擎接口契约](../reference/backtest-contract.md)
-- [DEPRECATED - backtest-data-definition.md](../reference/backtest-data-definition.md)
 - [审计脚本误报分析报告](../reference/changelogs/2026-07/2026-07-05-audit-false-positive-analysis.md)
 - [颜色硬编码治理 - P1 批次技术日志](../reference/changelogs/2026-07/2026-07-05-color-refactor-p1.md)
 - [颜色硬编码治理 - P2 批次技术日志](../reference/changelogs/2026-07/2026-07-05-color-refactor-p2.md)
@@ -665,23 +657,17 @@ doc_id: V9-DOC-META-014
 - [V9 图表组件集成规格](../reference/chart-integration.md)
 - [驾驶舱重构方案总结](../reference/cockpit/cockpit-refactor-plan.md)
 - [Cockpit Widget 框架数据字典](../reference/cockpit/DATA_DEFINITION.md)
-- [Cockpit Widget 框架数据字典](../reference/cockpit/data-definition.md)
 - [V9 编码规范（Coding Conventions）](../reference/coding-conventions.md)
 - [collection-contract.md — 数据采集子域接口契约](../reference/collection-contract.md)
 - [Command 舱规格（command-cabin-spec）](../reference/command-cabin-spec.md)
-- [V9 批次 E：输出舱 + 总控舱 + 其他 — 完成度剖面图](../reference/completeness-profile-batch5.md)
-- [V9 模块完成度剖面图 — 全量汇总](../reference/completeness-profile.md)
 - [代码复杂度专项治理规范](../reference/complexity-governance.md)
 - [Untitled](../reference/data_link_sequence_diagram.md)
 - [ݲɼģ·UIУԷ](../reference/data-collection-route-ui-audit.md)
 - [数据采集模块开发任务清单](../reference/data-collection-task-list.md)
 - [数据采集模块数据字典](../reference/data-collection/DATA_DEFINITION.md)
-- [数据采集模块数据字典](../reference/data-collection/data-definition.md)
 - [data-collector-contract.md — 数据采集编排服务](../reference/data-collector-contract.md)
 - [V9 数据流规范](../reference/data-flow-spec.md)
-- [databridge.ts 详细分拆方案](../reference/databridge-split-plan.md)
 - [DataBridge 端点与数据映射清单](../reference/databridge端点与数据映射清单.md)
-- [DataBridge 改进建议整改实施计划](../reference/databridge改进建议整改实施计划.md)
 - [DataFlow Engine 实现规格](../reference/dataflow-engine-spec.md)
 - [V9 设计令牌映射表](../reference/design-token-mapping.md)
 - [FinSight V9 Design Token System](../reference/design-tokens.md)
@@ -691,8 +677,7 @@ doc_id: V9-DOC-META-014
 - [fetcher-contract.md — 行情/资讯抓取服务](../reference/fetcher-contract.md)
 - [第四次工业革命稀缺核心资源 — 交易策略解析与 V9 采用方案](../reference/fourth-industrial-revolution-core-resource-strategy.md)
 - [hybrid-proofread-contract.md — 混合校对（人机协同校验）服务接口契约](../reference/hybrid-proofread-contract.md)
-- [iFinD 插件](../reference/ifind.md)
-- [IMF 插件](../reference/imf.md)
+- [外部数据源插件参考索引](../reference/plugins-reference.md)
 - [插件技能文档索引](../reference/index.md)
 - [input-analysis-cabin-contract.md — 输入舱 → 分析舱 数据调用接口契约](../reference/input-analysis-cabin-contract.md)
 - [input-contract.md — 输入处理子域接口契约](../reference/input-contract.md)
@@ -704,7 +689,6 @@ doc_id: V9-DOC-META-014
 - [多因子选股筛选器数据字典](../reference/multi-factor-screening-data-definition.md)
 - [news-contract.md — 新闻资讯子域接口契约](../reference/news-contract.md)
 - [新闻资讯模块数据字典](../reference/news/DATA_DEFINITION.md)
-- [新闻资讯模块数据字典](../reference/news/data-definition.md)
 - [Output 舱规格（output-cabin-spec）](../reference/output-cabin-spec.md)
 - [portfolio-contract.md — 投资组合（Portfolio）接口契约](../reference/portfolio-contract.md)
 - [ADR-003: DataBridge 替代直接 dataLayer 写入](../reference/project/2026-06-21-databridge-over-direct-datalayer.md)
@@ -716,43 +700,31 @@ doc_id: V9-DOC-META-014
 - [rbac-contract.md — RBAC 权限管理子域接口契约](../reference/rbac-contract.md)
 - [DEPRECATED - risk-derived-data-definition.md](../reference/risk-derived-data-definition.md)
 - [Rotation Score Service 实现规格](../reference/rotation-score-spec.md)
-- [Scholar 插件](../reference/scholar.md)
 - [scoring-contract.md — 评分引擎服务](../reference/scoring-contract.md)
 - [screening-contract.md — 选股/筛选子域接口契约](../reference/screening-contract.md)
-- [SEC EDGAR 插件](../reference/sec_edgar.md)
 - [V9 服务子域目录（Services Catalog）](../reference/services-catalog.md)
 - [七维采集配置模块 — 数据字典](../reference/SEVEN_DIM_CONFIG_DATA_DEFINITION.md)
 - [SevenDimConfigPage 高级配置补全方案](../reference/seven-dim-advanced-config-implementation.md)
-- [七维采集配置模块 — 数据字典](../reference/seven-dim-config-data-definition.md)
 - [股票字典生成与校验](../reference/stock-dictionary-generation.md)
 - [system-contract.md — 系统级服务接口契约](../reference/system-contract.md)
 - [回归测试套件模板](../reference/templates/regression-suite.md)
 - [任务图模板](../reference/templates/task-graph-template.md)
-- [Tianyancha 插件](../reference/tianyancha.md)
 - [trade-contract.md — 交易域接口契约](../reference/trade-contract.md)
 - [交易持仓管理模块 API 契约文档](../reference/trade/API_CONTRACT.md)
-- [交易持仓管理模块 API 契约文档](../reference/trade/api-contract.md)
 - [Trading 舱规格（trading-cabin-spec）](../reference/trading-cabin-spec.md)
 - [trading-contract.md — 交易业务子域接口契约](../reference/trading-contract.md)
 - [Tushare Pro Token 配置与注册指引](../reference/tushare-token-setup.md)
 - [UI 组件迁移检查清单](../reference/ui-migration-checklist.md)
 - [usecase-contract.md — 业务用例编排接口契约](../reference/useCase-contract.md)
-- [V10 架构白皮书与 V9 对齐报告](../reference/v10-architecture-alignment.md)
-- [V6 Pro → V9 JSON 数据迁移规范（中间文档）](../reference/v6-to-v9-migration-spec.md)
-- [V6 Pro → V9 源码比对与二次开发重点模块梳理](../reference/v6pro-to-v9-migration-analysis.md)
 - [V9 IndexedDB Store Schema 文档](../reference/V9_IndexedDB_Store_Schema.md)
 - [V9 数据血缘追踪与数据流全景图](../reference/v9-数据血缘追踪.md)
 - [V9 数据时间关系与生命周期蓝图](../reference/v9-data-timeline.md)
-- [V9 IndexedDB Store Schema 文档](../reference/v9-indexeddb-store-schema.md)
 - [V9 L2 状态层补齐路线图](../reference/v9-l2状态层补齐路线图.md)
 - [V9 系统蓝图（已废弃）](../reference/v9-system-blueprint.md)
 - [V9 智能投研复盘系统 - 测试用例清单](../reference/V9-TEST-CASES.md)
-- [ձȶԹģ  䴩вԱ](../reference/walkthrough-scoredoc-report.md)
 - [V9 Widget 错误隔离与降级规格](../reference/widget-error-handling.md)
 - [驾驶舱 Widget 集成检查清单](../reference/widget-integration-checklist.md)
-- [World Bank Open Data 插件](../reference/world_bank_open_data.md)
-- [Yahoo Finance 插件](../reference/yahoo_finance.md)
-- [Yuandian Law 插件](../reference/yuandian_law.md)
+
 
 ### release-notes
 

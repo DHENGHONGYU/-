@@ -8,13 +8,16 @@ status: active
 maintainer: V9 Architecture Team
 summary: "本文档面向后续接入的 AI 智能体与研发人员，说明驾驶舱（Cockpit）Widget 化框架的整体架构、核心数据流转、枚举映射以及新增 Widget 的标准作业程序（SOP）。 阅读本文档后，..."
 tags: [architecture, plan, explanation, design, strategy]
-version: v1.0.0
-last_updated: 2026-08-13
+version: v1.0.2
+last_updated: 2026-08-22
 code_version: "2.0.0-rc.2"
 doc_id: V9-DOC-ARCH-002
 referenced_by: [V9-DOC-PROJ-032, V9-DOC-META-000, V9-DOC-FRONT-021, V9-DOC-PROJ-217, V9-DOC-PROJ-176, V9-DOC-ARCH-040, V9-DOC-PROJ-149, V9-DOC-PROJ-230]
 change_log:
-  - version: v1.0.0
+  - version: v1.0.2
+    changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.1) → R2 PATCH++(v1.0.2) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
+- version: v1.0.0
     changes: Initial version established
     date: 2026-07-17
   - version: v1.0.1

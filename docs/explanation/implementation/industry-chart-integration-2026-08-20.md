@@ -1,13 +1,10 @@
 ---
 phase: development
-doc_id: V9-DOC-IMPL-001
 title: 行业分析图表组件接入技术文档
 date: 2026-08-20
 status: active
 type: explanation
-tier: important
 domain: backend
-related_docs:
   - V9-DOC-DATA-016
   - V9-DOC-RT-003
 covers_code:
@@ -23,6 +20,12 @@ tags:
   - integration
   - orphan-component-revival
 code_version: 2.0.0-rc.2
+version: v1.0.1
+last_updated: 2026-08-22
+change_log:
+  - version: v1.0.1
+    changes: "基准日校对(2026-08-22)：R1取真值(P2 正文版本声明行=v1.0.0) → R2 PATCH++(v1.0.1) / last_updated 刷新 / change_log 闭环"
+    date: 2026-08-22
 ---
 
 # 行业分析图表组件接入技术文档

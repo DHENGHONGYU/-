@@ -20,7 +20,7 @@ related_docs:
   - V9-DOC-QA-116
   - V9-DOC-PROJ-181
 covers_docs:
-  - docs/guides/standards/coding-conventions.md
+  - docs/reference/coding-conventions.md
   - docs/guides/standards/component-naming-conventions.md
   - docs/guides/standards/quality-gates.md
   - docs/guides/testing-strategy.md
@@ -533,7 +533,7 @@ npm run audit:doc-integrity
 | # | 文档 | 路径 |
 |:-:|------|------|
 | 1 | 踩坑规则门禁指南 | `docs/guides/踩坑规则门禁指南.md` |
-| 2 | security-model | `docs/archive/normal/reference/security-model.md` |
+| 2 | security-model | `docs/archive/normal/explanation/security-model.md` |
 | 3 | mcp-acl-guide | `docs/guides/how-to/mcp-acl-guide.md` |
 | 4 | component-admission-policy | `docs/guides/component-admission-policy.md` |
 | 5 | no-unsafe-fix-patterns | `docs/guides/how-to/no-unsafe-fix-patterns.md` |

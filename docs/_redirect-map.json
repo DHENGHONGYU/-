@@ -298,9 +298,9 @@
     },
     {
       "old_path": "01-requirements/completeness-profile-batch1.md",
-      "new_path": "docs/reference/completeness-profile-batch1.md",
+      "new_path": "docs/archive/normal/reference/completeness-profile-batch1.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "01-requirements/completeness-profile-batch4.md",
@@ -1092,13 +1092,14 @@
       "old_path": "02-design/standards/audit-b4-4-security.md",
       "new_path": "docs/reference/audit-b4-4-security.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "removed",
+      "note": "2026-08-23 文档合并汇总：目标文档整体删除，无后继"
     },
     {
       "old_path": "02-design/standards/backtest-data-definition.md",
-      "new_path": "docs/reference/backtest-data-definition.md",
+      "new_path": "docs/reference/BACKTEST_DATA_DEFINITION.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "02-design/standards/chart-integration.md",
@@ -1180,9 +1181,9 @@
     },
     {
       "old_path": "02-design/standards/multi-factor-screening-data-definition.md",
-      "new_path": "docs/explanation/multi-factor-screening-data-definition.md",
+      "new_path": "docs/reference/multi-factor-screening-data-definition.md",
       "diataxis_category": "explanation",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "02-design/standards/news-data-definition.md",
@@ -1510,15 +1511,15 @@
     },
     {
       "old_path": "03-development/migration/2026-06-20-indexeddb-over-localstorage.md",
-      "new_path": "docs/reference/2026-06-20-indexeddb-over-localstorage.md",
+      "new_path": "docs/explanation/implementation/adr/2026-06-20-indexeddb-over-localstorage.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "03-development/migration/2026-06-23-portalshell-dark-kimi-layout.md",
-      "new_path": "docs/explanation/2026-06-23-portalshell-dark-kimi-layout.md",
+      "new_path": "docs/explanation/implementation/adr/2026-06-23-portalshell-dark-kimi-layout.md",
       "diataxis_category": "explanation",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "03-development/migration/2026-06-24-adopt-v6-core-resource-trading-strategy.md",
@@ -1546,9 +1547,9 @@
     },
     {
       "old_path": "03-development/migration/2026-06-29-data-relationship-blueprint.md",
-      "new_path": "docs/reference/2026-06-29-data-relationship-blueprint.md",
+      "new_path": "docs/archive/normal/reference-superpowers-2026-06-29-data-relationship-blueprint.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "03-development/migration/2026-07-01-v6-architecture-dominance-batch-a.md",
@@ -1584,7 +1585,8 @@
       "old_path": "03-development/migration/v6-to-v9-migration-spec.md",
       "new_path": "docs/reference/v6-to-v9-migration-spec.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "removed",
+      "note": "2026-08-23 文档合并汇总：目标文档整体删除，无后继"
     },
     {
       "old_path": "03-development/migration/v6pro-to-v9-migration-analysis.md",
@@ -1594,15 +1596,15 @@
     },
     {
       "old_path": "03-development/plugins/ifind.md",
-      "new_path": "docs/reference/ifind.md",
+      "new_path": "docs/reference/plugins-reference.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "03-development/plugins/imf.md",
-      "new_path": "docs/reference/imf.md",
+      "new_path": "docs/reference/plugins-reference.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "03-development/plugins/index.md",
@@ -1618,45 +1620,46 @@
     },
     {
       "old_path": "03-development/plugins/scholar.md",
-      "new_path": "docs/reference/scholar.md",
+      "new_path": "docs/reference/plugins-reference.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "03-development/plugins/sec_edgar.md",
-      "new_path": "docs/reference/sec_edgar.md",
+      "new_path": "docs/reference/plugins-reference.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "03-development/plugins/tianyancha.md",
-      "new_path": "docs/reference/tianyancha.md",
+      "new_path": "docs/reference/plugins-reference.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "03-development/plugins/world_bank_open_data.md",
-      "new_path": "docs/reference/world_bank_open_data.md",
+      "new_path": "docs/reference/plugins-reference.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "03-development/plugins/yahoo_finance.md",
-      "new_path": "docs/reference/yahoo_finance.md",
+      "new_path": "docs/reference/plugins-reference.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "03-development/plugins/yuandian_law.md",
-      "new_path": "docs/reference/yuandian_law.md",
+      "new_path": "docs/reference/plugins-reference.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "04-testing/2026-07-04-ui-testing-optimization.md",
       "new_path": "docs/reference/2026-07-04-ui-testing-optimization.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "removed",
+      "note": "2026-08-23 文档合并汇总：目标文档整体删除，无后继"
     },
     {
       "old_path": "04-testing/automation-test-evaluation.md",
@@ -1702,9 +1705,9 @@
     },
     {
       "old_path": "04-testing/reports/2026-07-05-exception-handling-test-report.md",
-      "new_path": "docs/explanation/2026-07-05-exception-handling-test-report.md",
+      "new_path": "docs/reports/testing/2026-07-05-exception-handling-test-report.md",
       "diataxis_category": "explanation",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "04-testing/reports/a11y-contrast-report.md",
@@ -1734,7 +1737,8 @@
       "old_path": "04-testing/reports/databridge-split-plan.md",
       "new_path": "docs/reference/databridge-split-plan.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "removed",
+      "note": "2026-08-23 文档合并汇总：目标文档整体删除，无后继"
     },
     {
       "old_path": "04-testing/reports/nested-code-review-report.md",
@@ -1816,9 +1820,9 @@
     },
     {
       "old_path": "04-testing/test-cases/V9-TEST-CASES.md",
-      "new_path": "docs/reference/V9-TEST-CASES.md",
+      "new_path": "docs/reports/testing/V9-TEST-CASES.md",
       "diataxis_category": "reference",
-      "status": "pending"
+      "status": "done"
     },
     {
       "old_path": "05-deployment/PR_DESCRIPTION.md",
@@ -2675,9 +2679,9 @@
     },
     {
       "old_path": "docs/reference/SEVEN_DIM_CONFIG_DATA_DEFINITION.md",
-      "new_path": "docs/reference/seven-dim-config-data-definition.md",
+      "new_path": "docs/reference/SEVEN_DIM_CONFIG_DATA_DEFINITION.md",
       "diataxis_category": "reference",
-      "status": "completed",
+      "status": "done",
       "reason": "DC-20260809-01 D2: 重复文档清理，保留 kebab-case 版"
     },
     {
@@ -2724,9 +2728,9 @@
     },
     {
       "old_path": "docs/reference/V9_IndexedDB_Store_Schema.md",
-      "new_path": "docs/reference/v9-indexeddb-store-schema.md",
+      "new_path": "docs/reference/V9_IndexedDB_Store_Schema.md",
       "diataxis_category": "reference",
-      "status": "completed",
+      "status": "done",
       "reason": "DC-20260809-01 D8: 重复文档清理，保留 kebab-case 版"
     },
     {
