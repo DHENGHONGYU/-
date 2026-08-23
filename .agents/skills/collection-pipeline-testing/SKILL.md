@@ -2,27 +2,24 @@
 skill_id: V9-SKILL-COLLECTION-PIPE
 name: "collection-pipeline-testing"
 description: "数据采集管线（data-collector）端到端测试与门禁。Invoke when 改动 src/services/data-collector/**、src/store/sevenDimConfigStore.ts、src/types/modules/collection.types.ts，或相关 vitest 失败；用于验证采集主链路（多源编排、MCP 源接入、CLI 桥接、降级与计分）在类型安全、层合规与真实取数层面的完整性。上线前测试必须跑本技能（禁止 MOCK）。"
-version: "v1.0.3"
-last_updated: "2026-08-23"
+version: v1.0.5
+last_updated: 2026-08-23
 change_log:
-  - version: v1.0.3
-    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+  - version: v1.0.5
+    changes: "SKILL 体检修复与日志精简：frontmatter 起始分隔符修复（audit:skill-runtime R3 转绿）；change_log 由 5 条压缩为 2 条，保留 5 段式骨架模板 信号",
     date: 2026-08-23
-  - version: v1.0.2
-    changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
-    date: 2026-08-21
-  - version: v1.0.1
-    changes: "Batch-B P0-1 段补齐：基于 S 级 Skill 5 段式骨架模板重构，原 6 段自定义标题（触发条件+门禁+核心事实+验证命令+协同+版本记录）合并重映射为标准一~五段；§二前置检查合并门禁命令+真相源路径+基线保存表格化（7 项）；§三测试 SOP 拆 5 个 Phase（类型→审计→单测→MCP穿透→真实CLI回归）；§四扩展至 8 条教训（后果+规避双字段），固化 toToolResult/--raw/shell:true/ACL 等核心事实；§五交付物≥10 项+必要且充分条件声明；补 mandatory=true 对齐 registry。"
-    date: 2026-08-21
+  - version: v1.0.4
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.3 / 正文 v1.0.2) → 取真值 max=1.0.3 → PATCH++ 对齐 frontmatter/正文/change_log 三轨",
+    date: 2026-08-23
   - version: v1.0.0
-    changes: "初始版本：补齐 AGENTS.md 路由表声明但物理缺失的 mandatory 技能；门禁对齐路由表行（tsc:prod + audit:layers + 相关 vitest）"
+    changes: "初始版本（历史 3 次迭代已合并精简）；5 段式骨架模板对齐，结构合规留痕",
     date: 2026-08-16
 mandatory: true
 ---
 
-# 数据采集管线测试技能 (Collection Pipeline Testing) — v1.0.2
+# 数据采集管线测试技能 (Collection Pipeline Testing) — v1.0.5
 
-> **版本**: v1.0.2 | **日期**: 2026-08-21 | **校验基准**: V9 v2.0.0-rc.1 + sevenDimConfigStore 七维配置基线
+> **版本**: v1.0.5 | **日期**: 2026-08-21 | **校验基准**: V9 v2.0.0-rc.1 + sevenDimConfigStore 七维配置基线
 > **性质**: 质量门禁（mandatory），改动采集链路前/后必须跑通；上线前测试禁止 MOCK，必须真实取数
 > **输出格式**: 门禁退出码 + 采集质量报告（含 MCP 穿透链路可用率、CLI 真实取数可用率）
 

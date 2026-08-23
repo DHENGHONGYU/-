@@ -2,27 +2,24 @@
 skill_id: V9-SKILL-CONSTANT-MIGRATION
 name: "constant-migration"
 description: "迁移跨层重复常量（如股票池 RESEARCH_STATUS / DEFAULT_POOL_GROUP），将业务常量归位到 src/constants/，消除 config 层与 constants 层的重复定义，并批量修复导入路径、测试 mock 与文档注释。Invoke when user asks to migrate constants between layers, eliminate duplicate constant definitions, move business constants from src/config to src/constants, audit:layers 报 config 层与 constants 层存在同一业务常量双份定义，或 Grep 硬编码报出 /src/config.*RESEARCH_STATUS/ 这类业务常量泄漏模式。"
-version: "v1.0.3"
-last_updated: "2026-08-23"
+version: v1.0.5
+last_updated: 2026-08-23
 change_log:
-  - version: v1.0.3
-    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+  - version: v1.0.5
+    changes: "SKILL 体检修复与日志精简：frontmatter 起始分隔符修复（audit:skill-runtime R3 转绿）；change_log 由 5 条压缩为 2 条，保留 5 段式骨架模板 信号",
     date: 2026-08-23
-  - version: v1.0.2
-    changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
-    date: 2026-08-21
-  - version: v1.0.1
-    changes: "Batch-B P0-1 段补齐：基于 S 级 Skill 5 段式骨架模板重构，原 5 段自定义标题重映射为标准一~五段；§二前置检查表格化（7 项）；§三迁移 SOP 拆 5 个 Phase；§四扩展至 8 条教训（后果+规避双字段）；§五交付物≥10 项+必要且充分条件声明；补 mandatory 字段对齐 registry。"
-    date: 2026-08-21
+  - version: v1.0.4
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.3 / 正文 v1.0.2) → 取真值 max=1.0.3 → PATCH++ 对齐 frontmatter/正文/change_log 三轨",
+    date: 2026-08-23
   - version: v1.0.0
-    changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
+    changes: "初始版本（历史 3 次迭代已合并精简）；5 段式骨架模板对齐，结构合规留痕",
     date: 2026-08-11
 mandatory: true
 ---
 
-# 跨层常量迁移与重复定义清理 — v1.0.2
+# 跨层常量迁移与重复定义清理 — v1.0.5
 
-> **版本**: v1.0.2 | **日期**: 2026-08-21 | **校验基准**: V9 v2.0.0 / AGENTS.md 分层规则
+> **版本**: v1.0.5 | **日期**: 2026-08-21 | **校验基准**: V9 v2.0.0 / AGENTS.md 分层规则
 > **任务性质**: 代码重构，只允许修改导入路径与重复定义，禁止修改业务逻辑
 > **输出格式**: 变更清单 + 四级验证结果 + 反模式教训 + 交付物勾表
 

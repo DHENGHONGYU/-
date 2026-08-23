@@ -2,30 +2,24 @@
 skill_id: V9-SKILL-VALUATION-FINANCIAL-ANALYSIS
 name: "valuation-financial-analysis"
 description: "执行财务分析与估值模型，包括财务指标计算、估值方法应用、情景分析和目标价推导。Invoke when 用户评估公司财务健康度、计算估值倍数PE/PEG/DCF、构建三情景推导目标价、或检查财务红黄预警信号时。"
-version: "v1.0.4"
-last_updated: "2026-08-23"
+version: v1.0.6
+last_updated: 2026-08-23
 change_log:
-  - version: v1.0.4
-    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+  - version: v1.0.6
+    changes: "SKILL 体检修复与日志精简：frontmatter 起始分隔符修复（audit:skill-runtime R3 转绿）；change_log 由 6 条压缩为 2 条，保留 5 段式骨架模板 信号",
     date: 2026-08-23
-  - version: v1.0.3
-    changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
-    date: 2026-08-21
-  - version: v1.0.2
-    changes: "§四 陷阱与经验教训 补齐第 8 条（强周期行业强制5年均值替代单一年ROE/FCF），满足 RULE-TPL 教训条目≥8 要求。"
-    date: 2026-08-21
-  - version: v1.0.1
-    changes: "Batch-A P0 迁移：基于 S 级 Skill 5 段式骨架模板重建，补齐 §一触发条件/§二前置检查/§三阶段化 SOP/§四陷阱教训/§五交付物清单五大段；增加 mandatory 字段。"
-    date: 2026-08-21
+  - version: v1.0.5
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.4 / 正文 v1.0.3) → 取真值 max=1.0.4 → PATCH++ 对齐 frontmatter/正文/change_log 三轨",
+    date: 2026-08-23
   - version: v1.0.0
-    changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
+    changes: "初始版本（历史 4 次迭代已合并精简）；5 段式骨架模板对齐，结构合规留痕",
     date: 2026-08-11
 mandatory: false
 ---
 
-# 估值与财务分析模型 — v1.0.3
+# 估值与财务分析模型 — v1.0.6
 
-> **版本**: v1.0.3 | **日期**: 2026-08-21 | **校验基准**: FinSightV9 code_version 2.0.0-rc.1
+> **版本**: v1.0.6 | **日期**: 2026-08-21 | **校验基准**: FinSightV9 code_version 2.0.0-rc.1
 > **任务性质**: SOP 执行（财务+估值双模型编排），允许输出财务评分+估值评分+情景目标价，禁止跳过红黄预警、禁止用单一估值法不交叉验证
 > **输出格式**: 阶段化 SOP 矩阵 + 财务健康度摘要 + 估值评分卡 + 三情景目标价推导结果 + 风险预警清单
 

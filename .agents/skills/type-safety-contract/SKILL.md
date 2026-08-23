@@ -2,27 +2,24 @@
 skill_id: V9-SKILL-TYPE-SAFETY-CONTRACT
 name: "type-safety-contract"
 description: "修改 TypeScript 类型前强制6步安全契约：不变式锚定→影响范围扫描→变更方案→边界守卫(any/never/null)→分层原子执行→tsc+类型级测试验证。Invoke when user asks to modify/refactor/rename a TypeScript interface, type, or generic, or before any type-definition edit, to prevent type-erosion and CI breakage；v9-tsc-test-error-diagnosis 报出测试文件类型错误批处理后需要回归验证、新增导出类型前、公共类型 BREAKING 变更前。"
-version: "v1.0.3"
-last_updated: "2026-08-23"
+version: v1.0.5
+last_updated: 2026-08-23
 change_log:
-  - version: v1.0.3
-    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+  - version: v1.0.5
+    changes: "SKILL 体检修复与日志精简：frontmatter 起始分隔符修复（audit:skill-runtime R3 转绿）；change_log 由 5 条压缩为 2 条，保留 5 段式骨架模板 信号",
     date: 2026-08-23
-  - version: v1.0.2
-    changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
-    date: 2026-08-21
-  - version: v1.0.1
-    changes: "Batch-B P0-1 段补齐：基于 S 级 Skill 5 段式骨架模板重构，原 8 段自定义（触发条件+6步强制流程+五维度原理+类型级测试基线+万能Prompt模板+验证命令+红线清单+变更日志）合并重映射为标准一~五段；§二前置检查合并基线锚定+真相源+测试资产表格化（7 项），原 6 步流程核心约束放入§二铁律；§三契约执行 SOP 拆 7 个 Phase（第0步不变式→第1步扫描→第2步方案→第3步边界→第4步原子执行→第5步验证→第6步稳定性声明）；§四扩展至 8 条教训（后果+规避双字段）；§五交付物≥10 项+必要且充分条件声明，保留原类型级测试模板为§五附录。"
-    date: 2026-08-21
+  - version: v1.0.4
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.3 / 正文 v1.0.2) → 取真值 max=1.0.3 → PATCH++ 对齐 frontmatter/正文/change_log 三轨",
+    date: 2026-08-23
   - version: v1.0.0
-    changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
+    changes: "初始版本（历史 3 次迭代已合并精简）；5 段式骨架模板对齐，结构合规留痕",
     date: 2026-08-11
 mandatory: false
 ---
 
-# TypeScript 类型安全修改硬契约 (Type-Safety Contract) — v1.0.2
+# TypeScript 类型安全修改硬契约 (Type-Safety Contract) — v1.0.5
 
-> **版本**: v1.0.2 | **日期**: 2026-08-21 | **校验基准**: 项目 tsconfig.json strict 模式 + `__tests__/types/` 类型级测试基线 + v9-tsc-gate-scope-audit / v9-tsc-test-error-diagnosis 配套
+> **版本**: v1.0.5 | **日期**: 2026-08-21 | **校验基准**: 项目 tsconfig.json strict 模式 + `__tests__/types/` 类型级测试基线 + v9-tsc-gate-scope-audit / v9-tsc-test-error-diagnosis 配套
 > **性质**: 类型定义修改前/后的硬性约束；"悬在空中的类型安全"→可执行、可验证、AI 能主动规避的硬约束
 > **输出格式**: 不变式清单 → 影响范围表格（三色风险）→ 变更方案 A/B/C 选型 → 边界守卫评估 → 分层原子命令 → 双重门禁报告 → 稳定性声明
 

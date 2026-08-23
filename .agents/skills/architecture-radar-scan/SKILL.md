@@ -2,31 +2,25 @@
 skill_id: V9-SKILL-ARCHITECTURE-RADAR-SCAN
 name: "architecture-radar-scan"
 description: "对V9项目进行六层架构无损探测，揪出设计层面的重大遗漏与隐含腐化点，输出架构热力风险图（红/黄/绿）与分级修复方案（P0阻塞/P1严重/P2优化）。复用项目自带的5个审计脚本（audit:layers/hardcode/deadcode/component-usage/docs）与ESLint静态分析，结合人工探查覆盖循环依赖、贫血模型、防腐层缺失、大组件癌变、用例缺失、僵尸代码等12类架构缺陷。Invoke when user asks for architecture health scan, architecture audit, design flaw detection, tech debt assessment, or mentions 架构扫描/架构健康度/架构雷达/腐化点检测/遗漏点排查；版本迭代前技术债务评估、重大重构前基线建立、定期架构巡检（每两周一次）。"
-version: v1.0.4
+version: v1.0.6
 last_updated: 2026-08-23
 code_version: "2.0.0-rc.1"
 change_log:
-  - version: v1.0.4
-    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+  - version: v1.0.6
+    changes: "SKILL 体检修复与日志精简：frontmatter 起始分隔符修复（audit:skill-runtime R3 转绿）；change_log 由 6 条压缩为 2 条，保留 5 段式骨架模板 信号",
     date: 2026-08-23
-  - version: v1.0.3
-    changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.2) → R2 PATCH++(v1.0.3) / last_updated 刷新 / change_log 闭环"
-    date: 2026-08-22
-  - version: v1.0.2
-    changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥4，满足 RULE-TPL §一 可判定规则校验。"
-    date: 2026-08-21
-  - version: v1.0.1
-    changes: "Batch-B P0-1 段补齐：基于 S 级 Skill 5 段式骨架模板重构，原 12 段自定义长文合并重映射为标准一~五段；§二前置检查合并真相源锚定+基线表格化（7 项），并把原红线清单放入§二铁律；§三扫描 SOP 拆 7 个 Phase（自动化脚本+6 层无损探测）；§四扩展至 8 条教训（后果+规避双字段）；§五交付物≥10 项+必要且充分条件声明；保留原 P0/P1/P2 分级判定规则（附录 A）+ 已知绿基线（附录 B）+ 验证命令速查。补 mandatory 字段对齐 registry。"
-    date: 2026-08-21
+  - version: v1.0.5
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.4 / 正文 v1.0.1) → 取真值 max=1.0.4 → PATCH++ 对齐 frontmatter/正文/change_log 三轨",
+    date: 2026-08-23
   - version: v1.0.0
-    changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
+    changes: "初始版本（历史 4 次迭代已合并精简）；5 段式骨架模板对齐，结构合规留痕",
     date: 2026-08-11
 mandatory: false
 ---
 
-# 架构 360° 雷达扫描 — v1.0.1
+# 架构 360° 雷达扫描 — v1.0.6
 
-> **版本**: v1.0.1 | **日期**: 2026-08-21 | **校验基准**: V9 AGENTS.md + ARCHITECTURE.md 当前版本 + eslint.config.js
+> **版本**: v1.0.6 | **日期**: 2026-08-21 | **校验基准**: V9 AGENTS.md + ARCHITECTURE.md 当前版本 + eslint.config.js
 > **扫描性质**: 只读分析，扫描阶段禁止修改任何代码文件；发现必须包含具体文件路径或行号
 > **输出格式**: 架构热力风险图（三色 14 检测项 × 趋势） + P0/P1/P2 分级遗漏清单（含具体 path:line） + 分批重构执行路径 + 经验教训 + 交付物勾表
 

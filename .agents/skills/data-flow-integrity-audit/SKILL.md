@@ -2,31 +2,25 @@
 skill_id: V9-SKILL-DATA-FLOW-INTEGRITY-AUDIT
 name: "data-flow-integrity-audit"
 description: "对 V9 数据流的『存储底层兜底』做全链路审计：按 采集→分析→筛选→复盘→报告 五段，逐一核对过程产物是否已被持久化（IndexedDB Store / 派生视图 / 资产化），识别『已注册未接线 / 已设计未激活 / 文档漂移』三类隐性风险，并运行 mandatory 门禁（tsc:prod / audit:layers / audit:acl-consistency / validate-data-consistency / validate:blueprint）确认兜底闭环。Invoke when user asks to audit storage coverage, verify data-flow persistence, check whether a pipeline stage is backed by storage, or review the five-stage storage bottom-layer, validate-blueprint 报 5 段链路缺失或重构新增数据链路/新增 Store 后需要回归 mandatory 门禁时。"
-version: v1.0.4
+version: v1.0.6
 last_updated: 2026-08-23
 code_version: "2.0.0-rc.1"
 change_log:
-  - version: v1.0.4
-    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+  - version: v1.0.6
+    changes: "SKILL 体检修复与日志精简：frontmatter 起始分隔符修复（audit:skill-runtime R3 转绿）；change_log 由 6 条压缩为 2 条，保留 5 段式骨架模板 信号",
     date: 2026-08-23
-  - version: v1.0.3
-    changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.2) → R2 PATCH++(v1.0.3) / last_updated 刷新 / change_log 闭环"
-    date: 2026-08-22
-  - version: v1.0.2
-    changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥4，满足 RULE-TPL §一 可判定规则校验。"
-    date: 2026-08-21
-  - version: v1.0.1
-    changes: "Batch-B P0-1 段补齐：基于 S 级 Skill 5 段式骨架模板重构，原 5 段自定义标题重映射为标准一~五段；§二前置事实合并为表格化检查清单；§三五段兜底+风险扫描+门禁拆为 5 Phase；§六反模式 5 条与 §五决策陷阱合并扩充为 8 条（后果+规避双字段）；§七审查清单转为 S5 14 项交付物+必要充分条件声明；保留 mandatory=true（项目级治理门禁）。"
-    date: 2026-08-21
+  - version: v1.0.5
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.4 / 正文 v1.0.1) → 取真值 max=1.0.4 → PATCH++ 对齐 frontmatter/正文/change_log 三轨",
+    date: 2026-08-23
   - version: v1.0.0
-    changes: "初始版本：固化五段链路存储兜底审计方法论（含 mandatory 门禁、派生存储判定、跨层注入去违规等踩坑）"
+    changes: "初始版本（历史 4 次迭代已合并精简）；5 段式骨架模板对齐，结构合规留痕",
     date: 2026-08-18
 mandatory: true
 ---
 
-# 全链路存储兜底审计 — v1.0.1
+# 全链路存储兜底审计 — v1.0.6
 
-> **版本**: v1.0.1 | **日期**: 2026-08-21 | **校验基准**: V9 v2.1.0 / DB_VERSION 34+
+> **版本**: v1.0.6 | **日期**: 2026-08-21 | **校验基准**: V9 v2.1.0 / DB_VERSION 34+
 > **任务性质**: 审计与验证（**mandatory：命中触发时，交付前 5 门禁未全绿不得声明完成**），允许补充/修正校验脚本与持久化接线，禁止无评审直接改 `DB_VERSION` 或删 Store
 > **输出格式**: 五段链路兜底矩阵 + 三类隐性风险清单 + 门禁结论 + 决策记录
 

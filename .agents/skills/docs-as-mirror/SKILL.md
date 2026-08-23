@@ -2,27 +2,24 @@
 skill_id: V9-SKILL-DOCS-AS-MIRROR
 name: "docs-as-mirror"
 description: "指导 AI 编写与仓库实际状态严格一致的文档。核心原则：Truth-First（先读取真相源再编写）、Scan-Before-Write（编写前扫描实际文件系统）、Exhaustiveness（穷尽性原则覆盖所有文件归属）、Bidirectional Linking（双向引用防止信息孤岛）、Version Pinning（版本锁定确保兼容性）。Invoke when user asks to write or update any technical documentation, directory mapping guide, .gitignore documentation, file management spec, architecture description, audit:docs 报告文档与实际不一致、audit:directory 报告目录映射遗漏、新增目录/文件后需要同步更新相关文档。"
-version: "v1.0.3"
-last_updated: "2026-08-23"
+version: v1.0.5
+last_updated: 2026-08-23
 change_log:
-  - version: v1.0.3
-    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+  - version: v1.0.5
+    changes: "SKILL 体检修复与日志精简：frontmatter 起始分隔符修复（audit:skill-runtime R3 转绿）；change_log 由 5 条压缩为 2 条，保留 5 段式骨架模板 信号",
     date: 2026-08-23
-  - version: v1.0.2
-    changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
-    date: 2026-08-21
-  - version: v1.0.1
-    changes: "Batch-B P0-1 段补齐：基于 S 级 Skill 5 段式骨架模板重构，原 9 段自定义长文（触发条件+5大原则+编写前检查清单+编写后验证清单+陷阱+命令速查+协同关系+SOP Suite实战案例+版本记录）合并重映射为标准一~五段；§二前置检查合并 5 原则 + 真相源/文件系统扫描表格化（7 项）；§三 SOP 拆 5 个 Phase（真相源→扫描→穷尽→双向→版本）；§四扩展至 8 条教训（后果+规避双字段）；§五交付物≥10 项+必要且充分条件声明；原§八 SOP Suite 实战案例保留为附录 A；补 mandatory 字段对齐 registry。"
-    date: 2026-08-21
+  - version: v1.0.4
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.3 / 正文 v1.0.2) → 取真值 max=1.0.3 → PATCH++ 对齐 frontmatter/正文/change_log 三轨",
+    date: 2026-08-23
   - version: v1.0.0
-    changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
+    changes: "初始版本（历史 3 次迭代已合并精简）；5 段式骨架模板对齐，结构合规留痕",
     date: 2026-08-11
 mandatory: false
 ---
 
-# 文档镜像技能（Docs-as-Mirror） — v1.0.2
+# 文档镜像技能（Docs-as-Mirror） — v1.0.5
 
-> **版本**: v1.0.2 | **日期**: 2026-08-21 | **校验基准**: V9 AGENTS.md 当前版本 + 实际文件系统 + package.json + `docs/` 真实现状
+> **版本**: v1.0.5 | **日期**: 2026-08-21 | **校验基准**: V9 AGENTS.md 当前版本 + 实际文件系统 + package.json + `docs/` 真实现状
 > **适用性质**: 文档编写与维护的 AI 行为约束；禁止凭空捏造目录定义/规则/命令名
 > **输出格式**: 编写前扫描证据 + 文档正文（穷尽覆盖 + 双向引用 + 版本锁定） + 编写后验证报告 + 交付物勾表
 

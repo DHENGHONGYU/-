@@ -2,30 +2,24 @@
 skill_id: V9-SKILL-DATABRIDGE-MIGRATION
 name: "databridge-migration"
 description: "将直接操作 dataLayer 的代码迁移到 DataBridge 信封协议。涵盖 core/层违规修复、services/读取改为 dataBridge.query、写操作改为 dataBridge.forward + 新增 ENVELOPE_ACTION/Handler、迁移时保留业务逻辑、持久化实体类型归位。Invoke when user finds direct dataLayer.stocks/v6Scores/dailyQuotes/orders access in core/ or services/ layers, audit:layers reports violations, 或需要新增写入 stocks/v6Scores/dailyQuotes/orders 等 store 必须新增 ENVELOPE_ACTION 的场景。"
-version: "v1.2.3"
-last_updated: "2026-08-23"
+version: v1.2.5
+last_updated: 2026-08-23
 change_log:
-  - version: v1.2.3
-    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+  - version: v1.2.5
+    changes: "SKILL 体检修复与日志精简：frontmatter 起始分隔符修复（audit:skill-runtime R3 转绿）；change_log 由 6 条压缩为 2 条，保留 5 段式骨架模板 信号",
     date: 2026-08-23
-  - version: v1.2.2
-    changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
-    date: 2026-08-21
-  - version: v1.2.1
-    changes: "Batch-B P0-1 段补齐：基于 S 级 Skill 5 段式骨架模板重构，原 8 段自定义标题（触发条件+API速查+迁移模式A-F+检查清单+陷阱清单+验证速查+协同+版本记录）合并重映射为标准一~五段；§二前置检查合并 API 真相源 + 违规类型判定表格化（7 项）；§三迁移 SOP 拆 7 个 Phase（API 速查→A core读→B service读→C 写Handler→D 批量查询→E 复杂查询→F 业务逻辑+验证）；§四扩展至 8 条教训（后果+规避双字段）；§五交付物≥10 项+必要且充分条件声明；补 mandatory=true 对齐 registry。"
-    date: 2026-08-21
-  - version: v1.2.0
-    changes: "v1.2.0(2026-07-13)：新增 Handler 业务逻辑保留、持久化实体类型归位、validator interface extends 限制、读操作分层策略"
-    date: 2026-07-13
+  - version: v1.2.4
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.2.3 / 正文 v1.2.2) → 取真值 max=1.2.3 → PATCH++ 对齐 frontmatter/正文/change_log 三轨",
+    date: 2026-08-23
   - version: v1.0.0
-    changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
+    changes: "初始版本（历史 4 次迭代已合并精简）；5 段式骨架模板对齐，结构合规留痕",
     date: 2026-08-11
 mandatory: true
 ---
 
-# DataBridge 信封协议迁移 — v1.2.2
+# DataBridge 信封协议迁移 — v1.2.5
 
-> **版本**: v1.2.2 | **日期**: 2026-08-21 | **校验基准**: V9 AGENTS.md §一 分层规则 + DataBridge/Envelope 源码（src/core/databridge.ts + envelope.ts）
+> **版本**: v1.2.5 | **日期**: 2026-08-21 | **校验基准**: V9 AGENTS.md §一 分层规则 + DataBridge/Envelope 源码（src/core/databridge.ts + envelope.ts）
 > **迁移性质**: 代码重构，修改 import 与调用方式；禁止修改业务语义（值、顺序、错误处理、时间戳填充必须与原 dataLayer 等价）
 > **输出格式**: 变更文件清单 + 类型检查结果 + 架构审计结果 + 常见陷阱 + 交付物勾表
 

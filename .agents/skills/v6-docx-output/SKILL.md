@@ -2,30 +2,24 @@
 skill_id: V9-SKILL-V6-DOCX-OUTPUT
 name: "v6-docx-output"
 description: "V6股票分析报告专业Word文档输出技能。包含：一句话总结注入规则、专业排版格式规范（封面/字体/表格/评分条/结论框/页眉页脚）、docx-js生成脚本模板。Invoke when 导出V6分析报告到专业Word格式、生成stock分析报告.docx文件、批量输出V6报告时。"
-version: "v1.0.5"
-last_updated: "2026-08-23"
+version: v1.0.7
+last_updated: 2026-08-23
 change_log:
-  - version: v1.0.5
-    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+  - version: v1.0.7
+    changes: "SKILL 体检修复与日志精简：frontmatter 起始分隔符修复（audit:skill-runtime R3 转绿）；change_log 由 6 条压缩为 2 条，保留 5 段式骨架模板 信号",
     date: 2026-08-23
-  - version: v1.0.4
-    changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
-    date: 2026-08-21
-  - version: v1.0.3
-    changes: "§四 陷阱与经验教训 补齐第 8 条（docx表格width/pct总和必须=100，禁止dxa模式溢出），满足 RULE-TPL 教训条目≥8 要求。"
-    date: 2026-08-21
-  - version: v1.0.2
-    changes: "Batch-A P0 迁移：基于 S 级 Skill 5 段式骨架模板重建，补齐 §一触发条件/§二前置检查/§三阶段化 SOP/§四陷阱教训/§五交付物清单五大段；增加 mandatory 字段。"
-    date: 2026-08-21
-  - version: v1.0.1
-    changes: "基准日校对(2026-08-11)：R1取真值(P4-else 新建 v1.0.0（无任何版本信息）=v1.0.0) → R2 PATCH++(v1.0.1) / last_updated 刷新 / change_log 闭环"
+  - version: v1.0.6
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.5 / 正文 v1.0.4) → 取真值 max=1.0.5 → PATCH++ 对齐 frontmatter/正文/change_log 三轨",
+    date: 2026-08-23
+  - version: v1.0.0
+    changes: "初始版本（历史 4 次迭代已合并精简）；5 段式骨架模板对齐，结构合规留痕",
     date: 2026-08-11
 mandatory: false
 ---
 
-# V6股票分析报告专业Word文档输出规范 — v1.0.4
+# V6股票分析报告专业Word文档输出规范 — v1.0.7
 
-> **版本**: v1.0.4 | **日期**: 2026-08-21 | **校验基准**: FinSightV9 code_version 2.0.0-rc.1
+> **版本**: v1.0.7 | **日期**: 2026-08-21 | **校验基准**: FinSightV9 code_version 2.0.0-rc.1
 > **任务性质**: SOP 执行（V6 Markdown→专业Word转换），允许输出 docx 到 outputs/v6-docx/，禁止一句话总结漏注入、禁止字体/颜色令牌与主题规范不一致
 > **输出格式**: 阶段化 SOP 矩阵 + 一句话总结注入后 Markdown + 生成 docx 文件（命名规范：{股票名称}_V6v4.3价值分析报告.docx）
 

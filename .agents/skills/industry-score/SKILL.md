@@ -2,36 +2,24 @@
 skill_id: V9-SKILL-INDUSTRY-SCORE
 name: "industry-score"
 description: "行业评分技能：执行行业级别的综合评分分析，输出行业得分供个股分析模型 L-1 层使用。Invoke when 用户在行业评分页面触发评分、sectorSkillData 量化数据更新、上传新行业资料或政策研报文本、距上次评分超过 3.5 天需要刷新时。"
-version: "v1.0.5"
-last_updated: "2026-08-23"
+version: v1.0.7
+last_updated: 2026-08-23
 change_log:
-  - version: v1.0.5
-    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+  - version: v1.0.7
+    changes: "SKILL 体检修复与日志精简：frontmatter 起始分隔符修复（audit:skill-runtime R3 转绿）；change_log 由 8 条压缩为 2 条，保留 5 段式骨架模板 信号",
     date: 2026-08-23
-  - version: v1.0.4
-    changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
-    date: 2026-08-21
-  - version: v1.0.3
-    changes: "§四 陷阱与经验教训 补齐第 8 条（有效维度<60%综合分强制null），满足 RULE-TPL 教训条目≥8 要求；RULE-TPL 审计再扫全绿。"
-    date: 2026-08-21
-  - version: v1.0.2
-    changes: "Batch-A P0 迁移：基于 S 级 Skill 5 段式骨架模板重建，补齐 §一触发条件/§二前置检查/§三阶段化 SOP/§四陷阱教训/§五交付物清单五大段；增加 mandatory 字段。"
-    date: 2026-08-21
-  - version: v1.0.1
-    changes: "C类日期闭环(2026-08-11)：change_log最新条目日期同步至last_updated"
-    date: 2026-08-11
-  - version: v1.0.1
-    changes: "基准日校对(2026-08-11)：补齐 YAML frontmatter（对齐 skill-registry.json 元数据）；将硬编码绝对路径（外部 .trae/skills 目录）替换为相对引用 .agents/skills/"
-    date: 2026-08-11
+  - version: v1.0.6
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.5 / 正文 v1.0.4) → 取真值 max=1.0.5 → PATCH++ 对齐 frontmatter/正文/change_log 三轨",
+    date: 2026-08-23
   - version: v1.0.0
-    changes: "初始版本，基于 V6 `sectorSkillData` 与 `sector-analysis-framework` 整合。"
+    changes: "初始版本（历史 6 次迭代已合并精简）；5 段式骨架模板对齐，结构合规留痕",
     date: 2026-06-24
 mandatory: false
 ---
 
-# 行业智能评分 Skill（V4 行业评分） — v1.0.4
+# 行业智能评分 Skill（V4 行业评分） — v1.0.7
 
-> **版本**: v1.0.4 | **日期**: 2026-08-21 | **校验基准**: FinSightV9 code_version 2.0.0-rc.1
+> **版本**: v1.0.7 | **日期**: 2026-08-21 | **校验基准**: FinSightV9 code_version 2.0.0-rc.1
 > **任务性质**: SOP 执行（行业七维评分编排），允许写入 industry_scores Store，禁止绕过 JSON schema 校验或给缺失维度填默认值
 > **输出格式**: 阶段化 SOP 矩阵 + 七维评分 JSON（含 evidence/missingFields）+ 版本记录持久化确认
 

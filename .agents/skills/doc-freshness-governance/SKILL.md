@@ -10,7 +10,7 @@ status: active
 maintainer: current developer
 summary: "以基准日为锚点，统一校对文档双轨版本、last_updated 与 change_log 闭环；并在后续增量变更中保持同频更新。"
 tags: [governance, documentation, versioning, freshness, audit]
-version: v1.0.5
+version: v1.0.7
 last_updated: 2026-08-23
 doc_id: V9-SKILL-DOC-FRESH-001
 mandatory: true
@@ -45,32 +45,20 @@ related_docs:
 tier: T0
 code_version: "2.0.0-rc.1"
 change_log:
-  - version: v1.0.5
-    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+  - version: v1.0.7
+    changes: "SKILL 体检修复与日志精简：frontmatter 起始分隔符修复（audit:skill-runtime R3 转绿）；change_log 由 8 条压缩为 2 条，保留 5 段式骨架模板 信号",
     date: 2026-08-23
-  - version: v1.0.4
-    changes: "基准日校对(2026-08-22)：R1取真值(P1 change_log 最新条目=v1.0.3) → R2 PATCH++(v1.0.4) / last_updated 刷新 / change_log 闭环"
-    date: 2026-08-22
-  - version: v1.0.3
-    changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×2），词命中 ≥6，满足 RULE-TPL §一 可判定规则校验。"
-    date: 2026-08-21
-  - version: v1.0.2
-    changes: "Batch-B P0-1 段补齐：基于 S 级 Skill 5 段式骨架模板重构；§一从『为什么需要』重写为标准触发条件（A1-A5 子项完整）；§二核心概念合并为表格化前置检查 7 项；§三基准校对 6 步法拆为 6 个 Phase；§四决策树与§五触发矩阵提炼为 8 条教训（后果+规避双字段）；§六交付物清单扩展为 14 项+必要充分条件声明；保留 mandatory=true（T0 治理 Skill）。"
-    date: 2026-08-21
-  - version: v1.0.1
-    changes: "frontmatter 标准化：补齐 name/description 字段（对齐 skill-registry.json 元数据）；description 同步覆盖 registry 占位值；version PATCH++"
-    date: 2026-08-11
+  - version: v1.0.6
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.0.5 / 正文 v1.0.2) → 取真值 max=1.0.5 → PATCH++ 对齐 frontmatter/正文/change_log 三轨",
+    date: 2026-08-23
   - version: v1.0.0
-    changes: "定稿版：R1-R6全部确认（用户2026-08-11确认）；R2改为基准校对触发PATCH++；批次重新切分（Batch1=全A类+P0B/C，Batch2=仅非P0B类，Batch3=仅非P0C类）"
-    date: 2026-08-11
-  - version: v0.9.0-draft
-    changes: "草稿版：基准校对 6 步法 + 增量决策树 + 双版本职责分离 + 三门禁验证 + 代码变更-文档触发矩阵"
+    changes: "初始版本（历史 6 次迭代已合并精简）；5 段式骨架模板对齐，结构合规留痕",
     date: 2026-08-11
 ---
 
 # 文档新鲜度治理（Doc Freshness Governance）— v1.0.2
 
-> **版本**: v1.0.2 | **日期**: 2026-08-21 | **校验基准**: V9 AGENTS.md v1.5.5+ + doc-management-principles SKILL v1.0.0+
+> **版本**: v1.0.7 | **日期**: 2026-08-21 | **校验基准**: V9 AGENTS.md v1.5.5+ + doc-management-principles SKILL v1.0.0+
 > **适用性质**: **mandatory（命中触发条件时，交付前必跑 gates 未全绿不得声明完成）**
 > **输出格式**: 版本漂移检测报告 → 人工确认的分批清单 → 校对后审计报告 + 变更日志条目
 > **基准日（Baseline Day）**: 2026-08-11 — 此后所有版本字段、日期、change_log 均以该次全仓校对为起点

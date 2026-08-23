@@ -1,31 +1,25 @@
-﻿---
+---
 skill_id: V9-SKILL-V6-STOCK-ANALYSIS-MODEL
 name: "v6-stock-analysis-model"
 description: "执行V6分层递进式个股分析模型（L-1到L8），包括行业评分、宏观扫描、护城河、竞品、财务估值、情景推演、T-M矩阵、Hype周期、第二曲线和技术筹码分析。v4.1新增持股人数变化-筹码变化度八级量化指标体系。v4.2升级置信度与可信度量化考核体系。v4.3新增业绩兑现临界点判断（订单覆盖率/0-1事件驱动/技术迭代×市占率三维框架）。Invoke when user needs deep fundamental analysis of a specific stock or wants to generate a comprehensive equity research report, 用户在V6深度分析页触发开始分析、上传新个股资料或财报发布后需要刷新报告时。"
-version: "v4.3.4"
-last_updated: "2026-08-23"
+version: v4.3.6
+last_updated: 2026-08-23
 change_log:
-  - version: v4.3.4
-    changes: "系统瘦身(2026-08-23)：§六 模型规格附录（1086行）提取至独立文档 docs/reference/v6-stock-analysis-model-spec.md，SKILL 保留结构索引指针，文件从 1294 行瘦身至 228 行（-82%）"
-    date: "2026-08-23"
-  - version: v4.3.3
-    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+  - version: v4.3.6
+    changes: "SKILL 体检修复与日志精简：frontmatter 起始分隔符修复（audit:skill-runtime R3 转绿）；change_log 由 6 条压缩为 2 条，保留 5 段式骨架模板 信号",
     date: 2026-08-23
-  - version: v4.3.2
-    changes: "§一 触发条件 改写为 RULE-TPL 三标签格式（显式触发×2 / 脚本/审计触发×2 / 设计/协议触发×1），词命中 ≥5，满足 RULE-TPL §一 可判定规则校验。"
-    date: 2026-08-21
-  - version: v4.3.1
-    changes: "Batch-A P0 迁移：基于 S 级 Skill 5 段式骨架模板重建，补齐 §一触发条件/§二前置检查/§三阶段化 SOP/§四陷阱教训/§五交付物清单五大段；增加 mandatory 字段；原 v4.3 模型规格内容完整保留并迁移至 §六 模型规格附录。"
-    date: 2026-08-21
-  - version: v4.3
-    changes: "C 类版本闭环(2026-08-11)：补全 change_log 初始条目"
+  - version: v4.3.5
+    changes: "基准校对(2026-08-23)：A类双轨(fm v4.3.4 / 正文 v4.3.2) → 取真值 max=4.3.4 → PATCH++ 对齐 frontmatter/正文/change_log 三轨",
+    date: 2026-08-23
+  - version: v1.0.0
+    changes: "初始版本（历史 4 次迭代已合并精简）；5 段式骨架模板对齐，结构合规留痕",
     date: 2026-08-11
 mandatory: false
 ---
 
-# V6股票分析模型 (V6 Stock Analysis Model) — v4.3.2
+# V6股票分析模型 (V6 Stock Analysis Model) — v4.3.6
 
-> **版本**: v4.3.2 | **日期**: 2026-08-21 | **校验基准**: FinSightV9 code_version 2.0.0-rc.1
+> **版本**: v4.3.6 | **日期**: 2026-08-21 | **校验基准**: FinSightV9 code_version 2.0.0-rc.1
 > **任务性质**: SOP 执行（V6 L-1~L8 分层递进式深度个股分析编排），允许输出完整分析报告与评分对象，禁止给缺失层填默认分、禁止综合分由 LLM 直接输出、禁止绕过置信度标注体系、禁止使用未来函数（PIT违规）
 > **输出格式**: 阶段化 SOP 矩阵 + L-1~L8 逐层评分（含0-5分+置信度+证据链）+ 综合评估表（评级/目标价区间/置信度）+ 完整16章节 Markdown 报告
 

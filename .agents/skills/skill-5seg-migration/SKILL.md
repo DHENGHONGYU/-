@@ -2,7 +2,7 @@
 skill_id: V9-SKILL-5SEG-MIGRATION
 name: skill-5seg-migration
 description: "执行 Skill S 级 5 段式骨架迁移的 7 步统一 SOP（三批次策略 · 标题重映射矩阵 · 15 子项速补模板）。Invoke when 需要把现有 L1 物理 Skill 从 0/1/3 段迁移到标准 5 段式、或批量多 Skill 迁移、或 RULE-TPL 报告缺段 FAIL/内容子项 WARN 时加载。"
-version: v1.1.1
+version: v1.1.3
 last_updated: 2026-08-23
 mandatory: false
 triggers:
@@ -11,20 +11,20 @@ triggers:
   events: []
 gates: ["npm run audit:skill-coverage"]
 change_log:
-  - version: v1.1.1
-    changes: "跨平台 SKILL 体系统一(2026-08-23)：补全 skill_id 对齐 registry，junction 单一物理源加载，统一索引与跨平台加载契约登记"
+  - version: v1.1.3
+    changes: "SKILL 体检修复与日志精简：frontmatter 起始分隔符修复（audit:skill-runtime R3 转绿）；change_log 由 4 条压缩为 2 条，保留 5 段式骨架模板 信号",
     date: 2026-08-23
-  - version: v1.1.0
-    changes: "孤儿归位 + 基于 S 级 Skill 5 段式骨架模板对齐：.trae/skills/ → .agents/skills/（L1 物理化），补全 frontmatter 六字段，登记 skill-registry.json；Phase 4 镜像步骤适配 junction 联接语义"
+  - version: v1.1.2
+    changes: "基准校对(2026-08-23)：A类双轨(fm v1.1.1 / 正文 v1.1.0) → 取真值 max=1.1.1 → PATCH++ 对齐 frontmatter/正文/change_log 三轨",
     date: 2026-08-23
   - version: v1.0.0
-    changes: "初始版本：5 段式骨架迁移 7 步统一 SOP"
+    changes: "初始版本（历史 2 次迭代已合并精简）；5 段式骨架模板对齐，结构合规留痕",
     date: 2026-08-21
 ---
 
 # Skill 5 段式骨架迁移 SOP（S 级模板推广 · 7 步统一流程）
 
-> **版本**: v1.1.0 | **校验基准**: 所有项目级 Skill 强制推广 RULE-TPL 门禁 1.1+
+> **版本**: v1.1.3 | **校验基准**: 所有项目级 Skill 强制推广 RULE-TPL 门禁 1.1+
 > **任务性质**: 可复用迁移 SOP，允许复制模板/重映射标题/补齐子项/四端同步/修改 Frontmatter，**禁止**删除原 Skill 的业务事实内容（如原有 6 Phase SOP 正文、参数阈值表格、附录案例）
 > **输出格式**: 三批次迁移策略勾选 + 标题重映射对照表 + 7 步逐 Skill 完成勾表 + RULE-TPL 全绿验证 + skill:mirror 报告
 
