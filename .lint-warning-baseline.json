@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "generatedAt": "2026-08-23T13:15:00.000Z",
+  "scope": "eslint src/ --ext .ts,.tsx",
+  "warningBaseline": 361,
+  "errorsMustBeZero": true,
+  "note": "better-harness F-006：lint 警告 ratchet 基线，只允许降不允许升；由 scripts/audit/audit-lint-ratchet.cjs 校验并在实测更低时自动收紧（回写本文件）"
+}

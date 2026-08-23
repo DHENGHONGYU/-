@@ -32,25 +32,27 @@ const { callIfindTool, parseTargetPriceFromSummary } = _require(
  *   - tests/services-scoring/v6-score-discrimination.integration.test.ts（spread 阈值 0.5→0.4）
  *   - tests/__tests__/services/mockFallbackPolicy.spec.ts（断言改为条件式）
  *   - src/core/stockCodeUtils.test.ts（源码修复：toTencentCode 优先按后缀判断）
+ *
+ * 2026-08-23 Token Plan 处理事项：用 vitest.debt.config.ts 实测豁免清单，全部 11 项治理完毕（豁免清零）：
+ * 8 个文件实测已通过直接移出；InputApp 全量重写（新 UI）、PortfolioOverviewWidget.kpi-negative
+ * 同步 B1 升级、walkthroughScoreDoc 对齐生产新口径（评级阈值 3.5/2.6/1.7/0.9）修复后移出；
+ * CockpitShell.panel 根因为缺 DensityProvider + widgetEngine mock 不全 + 断言旧版常驻导航（新 UI 域导航
+ * 收纳于折叠钻取区），三项修复后并行批 57/57 全绿移出。
  */
 const PREEXISTING_TEST_FAILURES = [
-  // A1 部分修复：文案已修，仍有权重归一化失败（1 个）
-  'tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts',
-  // A2 类：组件结构重构 / mock 失败 / 渲染流程变化（3 个，2026-08-09 已修复 IndustryChainWidget + BulkImportPanel）
-  'tests/TradeReviewPage.test.tsx',
-  'tests/InputApp.test.tsx',
-  'src/cockpit/widgets/PortfolioOverviewWidget.kpi-negative.test.tsx',
-  // 业务逻辑漂移待修复（1 个）
-  'tests/v6Lifecycle.test.ts',
-  // 接口/mock 漂移（6 个）
-  'tests/hotSectorService.test.ts',
-  'src/mcp/__tests__/servers.test.ts',
-  'src/services/data-collector/collectionReportService.test.ts',
-  'src/store/poolStore.test.ts',
-  'tests/intelligentScore.test.ts',
-  'tests/CockpitShell.panel.test.tsx',
-  // 僵尸测试：引用的组件已被删除或重命名（2 个，2026-08-10 确认）
-  'tests/p2-3-p3-2.test.tsx',               // SearchBar 组件已删除
+  // 2026-08-23 Token Plan 处理事项修复：walkthroughScoreDoc 全部断言对齐生产新口径（评级阈值 3.5/2.6/1.7/0.9 +
+  // Markdown 无加粗格式 + 样本评级重算）后 43/43 通过，移出豁免
+  // A2 类：2026-08-23 单跑实测已全部通过，逐批移出豁免；若全量同批复现失败按套件间干扰治理
+  // 2026-08-23 Token Plan 处理事项修复：InputApp 全量重写对齐新 UI（DensityProvider +
+  // intentionPoolStore + 新版文案/路由）后 5/5 通过，移出豁免
+  // 2026-08-23 Token Plan 处理事项修复：PortfolioOverviewWidget.kpi-negative 同步 B1 升级（注入 equityCurve）后 3/3 通过，移出豁免
+  // 套件间干扰已根治（非污染而是真实缺陷）：缺 DensityProvider + widgetEngine mock 缺 mountInstance +
+  // 断言旧版常驻域导航（新 UI 收纳于折叠钻取区），2026-08-23 修复后 8/8 通过，移出豁免
+  // 2026-08-23 Token Plan 处理事项清理：以下 8 项实测已全部通过，移出排除列表：
+  //   tests/v6Lifecycle.test.ts / tests/hotSectorService.test.ts /
+  //   src/mcp/__tests__/servers.test.ts / src/services/data-collector/collectionReportService.test.ts /
+  //   src/store/poolStore.test.ts / tests/intelligentScore.test.ts /
+  //   tests/p2-3-p3-2.test.tsx（SearchBar 已删但测试已适配）
   // 2026-08-20 Task 5 清理：移除 2 条已删除文件的僵尸条目（HotSectorPanel → 已删除，P2-new-atoms-smoke → 已删除）
   // 2026-08-20 Task 5 清理：修正 6 条幽灵路径（tests/ 目录扁平化，子目录已移除）
   //   tests/data/TradeReviewPage.test.tsx → tests/TradeReviewPage.test.tsx ✓
@@ -500,7 +502,9 @@ export default defineConfig({
     // outputs/** 为交付物/临时产物目录（含独立 node 脚本 verify-arch-diagram.test.mjs
     // 与散落调试产物），非 vitest 单测，必须排除，否则会被误当测试文件收集导致
     // "(0 test)" 假红（其自定义断言框架 + process.exit 不被 vitest 识别）。
-    exclude: ['e2e/**', '**/node_modules/**', 'dist/**', 'temp/**', 'outputs/**', 'cache/**', ...PREEXISTING_TEST_FAILURES],
+    // scripts/** 同理：2026-08-23 Token Plan 处理事项，scripts/test/*.test.cjs 为独立 Node 契约脚本
+    //（node 直跑 exit 0，自带断言 + process.exit），不得被 vitest 误收为 "(0 test)" 假红。
+    exclude: ['e2e/**', '**/node_modules/**', 'dist/**', 'temp/**', 'outputs/**', 'cache/**', 'scripts/**', ...PREEXISTING_TEST_FAILURES],
     testTimeout: 30000,
     hookTimeout: 30000,
     retry: 2,

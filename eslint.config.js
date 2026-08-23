@@ -101,13 +101,8 @@ export default tseslint.config(
         'no-magic-numbers': 'off',
       },
     },
-    // Agent 层：运行时环境检测涉及 process.env 等跨平台兼容，豁免 no-unnecessary-condition
-    {
-      files: ['src/agents/**/*.ts'],
-      rules: {
-        '@typescript-eslint/no-unnecessary-condition': 'off',
-      },
-    },
+    // Agent 层：better-harness F-001 首个豁免移除（2026-08-23）——
+    // 原豁免 no-unnecessary-condition 已移除，违规处逐个修复；类型检查全量生效
     // 数据/配置/常量文件：包含大量业务数据数值（股票代码、阈值、色阶），豁免 no-magic-numbers
     {
       files: ['src/data/**/*.ts', 'src/config/**/*.ts', 'src/constants/**/*.ts', 'src/fixtures/**/*.ts'],
